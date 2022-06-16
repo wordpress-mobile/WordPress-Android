@@ -23,8 +23,13 @@ import org.wordpress.android.R.layout
 import org.wordpress.android.R.string
 import org.wordpress.android.R.xml
 import org.wordpress.android.WordPress
+import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.CHANGE_USERNAME_DISMISSED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.CHANGE_USERNAME_DISPLAYED
 import org.wordpress.android.ui.FullScreenDialogFragment
 import org.wordpress.android.ui.FullScreenDialogFragment.OnConfirmListener
+import org.wordpress.android.ui.FullScreenDialogFragment.OnDismissListener
+import org.wordpress.android.ui.FullScreenDialogFragment.OnShownListener
 import org.wordpress.android.ui.accounts.signup.BaseUsernameChangerFullScreenDialogFragment
 import org.wordpress.android.ui.accounts.signup.SettingsUsernameChangerFragment
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
@@ -48,11 +53,13 @@ import org.wordpress.android.util.ToastUtils.Duration.LONG
 import org.wordpress.android.widgets.WPSnackbar
 import javax.inject.Inject
 
-const val SNACKBAR_NO_OF_LINES_FOUR = 4
+private const val SNACKBAR_NO_OF_LINES_FOUR = 4
+private const val SOURCE = "source"
+private const val SOURCE_ACCOUNT_SETTINGS = "account_settings"
 
 @Suppress("DEPRECATION")
 class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
-        OnPreferenceChangeListener, OnConfirmListener, OnPreferenceClickListener {
+        OnPreferenceChangeListener, OnPreferenceClickListener, OnConfirmListener, OnShownListener, OnDismissListener {
     @set:Inject lateinit var uiHelpers: UiHelpers
     @set:Inject lateinit var viewModel: AccountSettingsViewModel
     private lateinit var usernamePreference: Preference
@@ -292,12 +299,25 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
                 .setOnConfirmListener(this)
                 .setHideActivityBar(true)
                 .setIsLifOnScroll(false)
-                .setOnDismissListener(null)
+                .setOnDismissListener(this)
+                .setOnShownListener(this)
                 .setContent(SettingsUsernameChangerFragment::class.java, bundle)
                 .build()
                 .show((activity as AppCompatActivity).supportFragmentManager,
                         FullScreenDialogFragment.TAG
                 )
+    }
+
+    override fun onShown() {
+        val props = mutableMapOf<String, String?>()
+        props[SOURCE] = SOURCE_ACCOUNT_SETTINGS
+        AnalyticsTracker.track(CHANGE_USERNAME_DISPLAYED, props)
+    }
+
+    override fun onDismiss() {
+        val props = mutableMapOf<String, String?>()
+        props[SOURCE] = SOURCE_ACCOUNT_SETTINGS
+        AnalyticsTracker.track(CHANGE_USERNAME_DISMISSED, props)
     }
 
     override fun onConfirm(result: Bundle?) {
