@@ -229,6 +229,10 @@ public class SiteSettingsTagListActivity extends LocaleAwareActivity
         if (getFragmentManager().getBackStackEntryCount() > 0) {
             SiteSettingsTagDetailFragment fragment = getDetailFragment();
             if (fragment != null && fragment.hasChanges()) {
+                if (!NetworkUtils.checkConnection(getBaseContext())) {
+                    hideDetailFragment();
+                    return;
+                }
                 saveTag(fragment.getTerm(), fragment.isNewTerm());
             } else {
                 hideDetailFragment();
