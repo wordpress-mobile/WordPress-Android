@@ -30,6 +30,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+@SuppressWarnings({"checkstyle:RegexpMultiline", "checkstyle:LineLength"})
 public class EditorExampleActivity extends FragmentActivity implements EditorFragmentListener,
         EditorDragAndDropListener {
     public static final String EDITOR_PARAM = "EDITOR_PARAM";
