@@ -28,6 +28,7 @@ import org.wordpress.android.ui.stats.refresh.lists.detail.PostMonthsAndYearsUse
 import org.wordpress.android.ui.stats.refresh.lists.detail.PostRecentWeeksUseCase.PostRecentWeeksUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK_DETAIL
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.VIEW_ALL
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.AuthorsUseCase.AuthorsUseCaseFactory
@@ -452,9 +453,9 @@ class StatsModule {
                 bgDispatcher,
                 mainDispatcher,
                 statsSiteProvider,
-                useCasesFactories.map { it.build(WEEKS, BLOCK) },
+                useCasesFactories.map { it.build(WEEKS, BLOCK_DETAIL) },
                 {
-                    listOf(TimeStatsType.OVERVIEW, TimeStatsType.REFERRERS, TimeStatsType.COUNTRIES)
+                    listOf(InsightType.VIEWS_AND_VISITORS, TimeStatsType.REFERRERS, TimeStatsType.COUNTRIES)
                 },
                 uiModelMapper::mapTimeStats
         )
@@ -495,7 +496,7 @@ class StatsModule {
                 bgDispatcher,
                 mainDispatcher,
                 statsSiteProvider,
-                useCasesFactories.map { it.build(WEEKS, BLOCK) },
+                useCasesFactories.map { it.build(WEEKS, BLOCK_DETAIL) },
                 { listOf(InsightType.TOTAL_LIKES, TimeStatsType.POSTS_AND_PAGES) },
                 uiModelMapper::mapTimeStats
         )
@@ -514,7 +515,7 @@ class StatsModule {
         postsCommentsUseCase: PostsCommentsUseCase
     ): List<@JvmSuppressWildcards BaseStatsUseCase<*, *>> {
         return listOf(
-                totalCommentsGranularUseCaseFactory.build(WEEKS, BLOCK),
+                totalCommentsGranularUseCaseFactory.build(WEEKS, BLOCK_DETAIL),
                 authorsCommentsUseCase,
                 postsCommentsUseCase
         )
@@ -558,7 +559,7 @@ class StatsModule {
     ): List<@JvmSuppressWildcards BaseStatsUseCase<*, *>> = listOf(
             totalFollowersUseCaseFactory.build(VIEW_ALL),
             followerTypesUseCase,
-            followersUseCaseFactory.build(BLOCK)
+            followersUseCaseFactory.build(BLOCK_DETAIL)
     )
 
     /**

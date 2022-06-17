@@ -11,7 +11,6 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.fluxc.store.StatsStore.InsightType
 import org.wordpress.android.fluxc.store.StatsStore.StatsType
-import org.wordpress.android.fluxc.store.StatsStore.TimeStatsType
 import org.wordpress.android.fluxc.store.stats.time.VisitsAndViewsStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
@@ -321,7 +320,7 @@ class ViewsAndVisitorsUseCase
     ) : GranularUseCaseFactory {
         override fun build(granularity: StatsGranularity, useCaseMode: UseCaseMode) =
                 ViewsAndVisitorsUseCase(
-                        TimeStatsType.OVERVIEW,
+                        InsightType.VIEWS_AND_VISITORS,
                         granularity,
                         visitsAndViewsStore,
                         selectedDateProvider,

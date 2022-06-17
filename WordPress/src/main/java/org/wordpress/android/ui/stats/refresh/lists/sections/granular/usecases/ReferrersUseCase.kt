@@ -79,7 +79,7 @@ class ReferrersUseCase(
         statsGranularity,
         SelectedGroup()
 ) {
-    private val itemsToLoad = if (useCaseMode == BLOCK) BLOCK_ITEM_COUNT else VIEW_ALL_ITEM_COUNT
+    private val itemsToLoad = if (useCaseMode == VIEW_ALL) VIEW_ALL_ITEM_COUNT else BLOCK_ITEM_COUNT
     private val itemsToShow = if (useCaseMode == VIEW_ALL) VIEW_ALL_ITEM_COUNT else BLOCK_ITEM_COUNT
 
     override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_referrers))
