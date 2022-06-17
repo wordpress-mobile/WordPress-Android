@@ -1739,4 +1739,8 @@ public class ActivityLauncher {
     public static void startQRCodeAuthFlow(@NonNull Context context) {
         QRCodeAuthActivity.start(context);
     }
+
+    public static void startQRCodeAuthFlowInNewStack(@NonNull Context context, String uri) {
+        // todo: add the flow
+    }
 }
