@@ -2363,6 +2363,24 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "blogging_reminders_notification_prompt_tapped";
             case BLOGGING_REMINDERS_NOTIFICATION_PROMPT_DISMISSED:
                 return "blogging_reminders_notification_prompt_dismissed";
+            case QRLOGIN_SCANNER_DISPLAYED:
+                return "qrlogin_scanner_displayed";
+            case QRLOGIN_SCANNER_DISMISSED:
+                return "qrlogin_scanner_dismissed";
+            case QRLOGIN_SCANNER_SCANNED_CODE:
+                return "qrlogin_scanner_scanned_code";
+            case QRLOGIN_VERIFY_DISPLAYED:
+                return "qrlogin_verify_displayed";
+            case QRLOGIN_VERIFY_TOKEN_VALIDATED:
+                return "qrlogin_verify_token_validated";
+            case QRLOGIN_VERIFY_CANCELLED:
+                return "qrlogin_verify_cancelled";
+            case QRLOGIN_VERIFY_APPROVED:
+                return "qrlogin_verify_approved";
+            case QRLOGIN_AUTHENTICATED:
+                return "qrlogin_authenticated";
+            case QRLOGIN_VERIFY_DISMISS:
+                return "qrlogin_verify_dismiss";
         }
         return null;
     }

@@ -1736,8 +1736,7 @@ public class ActivityLauncher {
         context.startActivity(new Intent(context, DebugCookiesActivity.class));
     }
 
-    public static void viewQRCodeAuthFlow(@NonNull Context context) {
-        Intent intent = new Intent(context, QRCodeAuthActivity.class);
-        context.startActivity(intent);
+    public static void startQRCodeAuthFlow(@NonNull Context context) {
+        QRCodeAuthActivity.start(context);
     }
 }
