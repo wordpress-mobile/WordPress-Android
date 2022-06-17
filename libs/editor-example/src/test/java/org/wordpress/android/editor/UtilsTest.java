@@ -32,7 +32,6 @@ import static org.wordpress.android.editor.Utils.splitValuePairDelimitedString;
 @Config(sdk = 18)
 @RunWith(RobolectricTestRunner.class)
 public class UtilsTest {
-
     @Test
     public void testEscapeHtml() {
         // Test null
