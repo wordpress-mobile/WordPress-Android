@@ -1,11 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-05-31 12:14:41+0000
+Translation-Revision-Date: 2022-06-17 14:08:30+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: en_GB
 -->
 <resources>
+    <string name="blogging_prompts_onboarding_prompts_loading">Blogging Prompts are loading. Please wait a moment and try again.</string>
+    <string name="hpp_bottom_helper_text">Can\'t decide? You can change the theme at any time.</string>
+    <string name="hpp_recommended_default_vertical">Blogging</string>
+    <string name="hpp_recommended_subtitle">Picked for you</string>
+    <string name="hpp_recommended_title">Best for %s</string>
+    <string name="hpp_preview_tapped_theme">Preview theme %s</string>
+    <string name="hpp_title">Choose a theme</string>
+    <string name="my_site_blogging_prompt_card_skipped_snackbar">Skipped today\'s blogging prompt</string>
+    <string name="my_site_blogging_prompt_card_menu_learn_more">Learn more</string>
+    <string name="my_site_blogging_prompt_card_attribution_dayone">From </string>
+    <string name="stats_follower_types_pie_chart_total_label">Totals</string>
+    <string name="stats_referrers_pie_chart_others">Others</string>
+    <string name="stats_referrers_pie_chart_search">Search</string>
+    <string name="stats_referrers_pie_chart_wordpress">WordPress</string>
+    <string name="stats_referrers_pie_chart_total_label">Views</string>
+    <string name="stats_action_card_schedule_post_button_label">Schedule</string>
+    <string name="stats_action_card_schedule_post_message">✍️ Schedule to post your content at its best time from your drafts.</string>
+    <string name="stats_action_card_schedule_post_title">Schedule your post</string>
+    <string name="stats_action_card_blogging_reminders_button_label">Set reminders</string>
+    <string name="stats_action_card_blogging_reminders_message">💡Set the reminder to post regularly to keep your readers engaged and attract new visitors.</string>
+    <string name="stats_action_card_blogging_reminders_title">Set your blogging reminders</string>
+    <string name="stats_action_card_grow_audience_button_label">Check the course</string>
+    <string name="stats_action_card_grow_audience_message">💡We have easily digestible lessons taught by the best bloggers to grow your blog.</string>
+    <string name="stats_action_card_grow_audience_title">Grow your audience</string>
     <string name="gutenberg_native_you_can_also_rearrange_blocks_by_tapping_a_block_and_then_tapping">You can also rearrange blocks by tapping a block and then tapping the up and down arrows that appear on the bottom left side of the block to move it up or down.</string>
     <string name="gutenberg_native_image_file_not_found">Image file not found.</string>
     <string name="gutenberg_native_drag_drop_makes_rearranging_blocks_a_breeze_press_and_hold_on_a_b">Drag &amp; drop makes rearranging blocks a breeze. Press and hold on a block, then drag it to its new location and release.</string>
@@ -858,7 +882,6 @@ Language: en_GB
     <string name="hpp_error_title">Layouts not available while offline</string>
     <string name="hpp_error_subtitle">Tap retry when you\'re back online.</string>
     <string name="hpp_retry_error">Please check your internet connection and retry.</string>
-    <string name="hpp_choose_error">There was an error while selecting the design.</string>
     <string name="delete_button_alt">Delete</string>
     <string name="label_next_button">Next</string>
     <string name="label_done_button">Done</string>
@@ -867,6 +890,7 @@ Language: en_GB
     <string name="dialog_discard_story_ok_button_edit">Discard</string>
     <string name="color_picker_label_text">Text</string>
     <string name="color_picker_label_background">Background</string>
+    <string name="hpp_choose_error">There was an error while selecting the theme.</string>
     <string name="scan">Scan</string>
     <string name="reader_discover_empty_title">Welcome!</string>
     <string name="reader_discover_no_posts_title">No recent posts</string>
@@ -880,7 +904,6 @@ Language: en_GB
     <string name="hpp_choose_button">Choose</string>
     <string name="gutenberg_native_scrollable_block_menu_closed">Scrollable block menu closed.</string>
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">Scrollable block menu opened. Select a block.</string>
-    <string name="hpp_subtitle">Pick your favourite homepage layout. You can edit and customise it later.</string>
     <string name="prepublishing_nudges_categories_action">Categories</string>
     <string name="prepublishing_nudges_home_categories_not_set">Not set</string>
     <string name="prepublishing_nudges_toolbar_title_categories">Categories</string>
@@ -890,7 +913,6 @@ Language: en_GB
     <string name="mlp_error_subtitle">Tap retry or create a blank page using the button below.</string>
     <string name="mlp_network_error_title">Layouts not available while offline</string>
     <string name="mlp_network_error_subtitle">Tap retry when you\'re back online, or create a blank page using the button below.</string>
-    <string name="hpp_title">Choose a design</string>
     <string name="login_prologue_second_subtitle_two">I am so inspired by photographer Cameron Karsten’s work. I will be trying these techniques on my next</string>
     <string name="login_prologue_fifth_subtitle_one">Pamela Nguyen</string>
     <string name="login_prologue_fifth_subtitle_two">Web News</string>

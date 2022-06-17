@@ -808,7 +808,6 @@ Language: cs_CZ
     <string name="hpp_error_title">Rozložení nejsou k dispozici v režimu offline</string>
     <string name="hpp_error_subtitle">Až budete znovu online, klepněte na opakovat.</string>
     <string name="hpp_retry_error">Zkontrolujte prosím připojení k internetu a zkuste to znovu.</string>
-    <string name="hpp_choose_error">Při výběru designu došlo k chybě.</string>
     <string name="dialog_discard_story_title_edit">Zrušit změny?</string>
     <string name="dialog_discard_story_message_edit">Jakékoli provedené změny nebudou uloženy.</string>
     <string name="dialog_discard_story_ok_button_edit">Zahodit</string>
@@ -825,10 +824,8 @@ Language: cs_CZ
     <string name="login_prologue_third_subtitle_two">Dnes jste na svém webu obdrželi &lt;b&gt;50 lajků&lt;/b&gt;</string>
     <string name="login_prologue_third_subtitle_three">&lt;b&gt;Johan Brandt&lt;/b&gt; odpověděl na váš příspěvek</string>
     <string name="hpp_choose_button">Vybrat</string>
-    <string name="hpp_subtitle">Vyberte si své oblíbené rozvržení domovské stránky. Později jej můžete upravit a přizpůsobit.</string>
     <string name="gutenberg_native_scrollable_block_menu_closed">Nabídka rolovatelného bloku uzavřena.</string>
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">Bylo otevřeno rolovací blok menu. Vyberte blok.</string>
-    <string name="hpp_title">Vyberte si design</string>
     <string name="prepublishing_nudges_toolbar_title_categories">Kategorie</string>
     <string name="mlp_error_title">Rozložení nejsou k dispozici kvůli chybě</string>
     <string name="prepublishing_nudges_categories_action">Kategorie</string>

@@ -1,11 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-06-05 15:25:02+0000
+Translation-Revision-Date: 2022-06-16 09:54:26+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: id
 -->
 <resources>
+    <string name="blogging_prompts_onboarding_prompts_loading">Prompt Blogging sedang dimuat. Harap tunggu beberapa saat lalu coba lagi.</string>
+    <string name="hpp_bottom_helper_text">Bingung memilih? Anda dapat mengganti tema kapan saja.</string>
+    <string name="hpp_recommended_default_vertical">Penulisan Blog</string>
+    <string name="hpp_recommended_subtitle">Pilihan untuk Anda</string>
+    <string name="hpp_recommended_title">Terbaik untuk %s</string>
+    <string name="hpp_preview_tapped_theme">Pratinjau tema %s</string>
+    <string name="hpp_title">Pilih tema</string>
+    <string name="my_site_blogging_prompt_card_skipped_snackbar">Prompt blogging hari ini yang dilewati</string>
+    <string name="my_site_blogging_prompt_card_menu_learn_more">Pelajari selengkapnya</string>
+    <string name="my_site_blogging_prompt_card_attribution_dayone">Dari </string>
+    <string name="stats_follower_types_pie_chart_total_label">Total</string>
+    <string name="stats_referrers_pie_chart_others">Lainnya</string>
+    <string name="stats_referrers_pie_chart_search">Cari</string>
+    <string name="stats_referrers_pie_chart_total_label">Tayangan</string>
+    <string name="stats_action_card_schedule_post_button_label">Jadwal</string>
+    <string name="stats_action_card_schedule_post_message">✍️ Jadwalkan pos untuk dipublikasikan di waktu yang terbaik dari layar konsep Anda.</string>
+    <string name="stats_action_card_schedule_post_title">Jadwalkan pos Anda</string>
+    <string name="stats_action_card_blogging_reminders_button_label">Setel pengingat</string>
+    <string name="stats_action_card_blogging_reminders_message">💡Setel pengingat untuk memublikasikan secara rutin guna mempertahankan pembaca Anda dan menarik perhatian pengunjung baru.</string>
+    <string name="stats_action_card_blogging_reminders_title">Setel pengingat blogging Anda</string>
+    <string name="stats_action_card_grow_audience_button_label">Periksa kursus</string>
+    <string name="stats_action_card_grow_audience_message">💡Kami menyediakan pelajaran yang mudah dipahami, yang dibawakan oleh blogger terbaik, untuk mengembangkan blog Anda.</string>
+    <string name="stats_action_card_grow_audience_title">Perbanyak audiens Anda</string>
     <string name="gutenberg_native_you_can_also_rearrange_blocks_by_tapping_a_block_and_then_tapping">Anda juga dapat mengatur ulang blok dengan mengetuk blok lalu mengetuk anak panah atas dan bawah yang muncul di sisi kiri bawah blok untuk memindahkannya ke atas atau ke bawah.</string>
     <string name="gutenberg_native_image_file_not_found">Berkas gambar tidak ditemukan.</string>
     <string name="gutenberg_native_drag_drop_makes_rearranging_blocks_a_breeze_press_and_hold_on_a_b">Seret &amp; lepaskan memudahkan pengaturan ulang blok. Klik dan tahan blok, kemudian seret blok tersebut ke lokasi baru lalu lepaskan.</string>
@@ -863,7 +886,7 @@ Language: id
     <string name="label_done_button">Selesai</string>
     <string name="label_next_button">Selanjutnya</string>
     <string name="delete_button_alt">Hapus</string>
-    <string name="hpp_choose_error">Terjadi error saat memilih desain.</string>
+    <string name="hpp_choose_error">Terjadi error saat memilih tema.</string>
     <string name="hpp_retry_error">Harap periksa koneksi internet Anda lalu coba lagi.</string>
     <string name="hpp_error_subtitle">Ketuk coba lagi saat  Anda kembali online.</string>
     <string name="hpp_error_title">Tata letak tidak tersedia saat offline</string>
@@ -880,8 +903,6 @@ Language: id
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">Menu blok yang dapat digulir terbuka. Pilih blok.</string>
     <string name="gutenberg_native_scrollable_block_menu_closed">Menu blok yang dapat digulir tertutup.</string>
     <string name="hpp_choose_button">Pilih</string>
-    <string name="hpp_subtitle">Pilih tata letak halaman beranda favorit Anda. Anda dapat menyunting dan menyesuaikannya nanti.</string>
-    <string name="hpp_title">Pilih desain</string>
     <string name="mlp_network_error_subtitle">Ketuk coba lagi setelah Anda kembali online atau buat halaman kosong dengan tombol di bawah ini.</string>
     <string name="mlp_network_error_title">Tata letak tidak tersedia saat offline</string>
     <string name="mlp_error_subtitle">Ketuk coba lagi atau buat halaman kosong dengan tombol di bawah ini.</string>

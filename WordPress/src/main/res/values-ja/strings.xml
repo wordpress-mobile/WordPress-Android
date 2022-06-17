@@ -1,11 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-06-10 14:25:57+0000
+Translation-Revision-Date: 2022-06-16 09:54:24+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.1
 Language: ja_JP
 -->
 <resources>
+    <string name="blogging_prompts_onboarding_prompts_loading">ブログ作成のプロンプトを読み込んでいます。 少し待ってから、もう一度お試しください。</string>
+    <string name="hpp_bottom_helper_text">決められませんか ? テーマはいつでも変更できます。</string>
+    <string name="hpp_recommended_default_vertical">ブログ</string>
+    <string name="hpp_recommended_subtitle">あなたへのおすすめ</string>
+    <string name="hpp_recommended_title">%s に最適</string>
+    <string name="hpp_preview_tapped_theme">テーマ %s をプレビュー</string>
+    <string name="hpp_title">テーマを選択</string>
+    <string name="my_site_blogging_prompt_card_skipped_snackbar">今日のブログ作成のプロンプトをスキップしました</string>
+    <string name="my_site_blogging_prompt_card_menu_learn_more">さらに詳しく</string>
+    <string name="my_site_blogging_prompt_card_attribution_dayone">から </string>
+    <string name="stats_follower_types_pie_chart_total_label">合計</string>
+    <string name="stats_referrers_pie_chart_others">その他</string>
+    <string name="stats_referrers_pie_chart_search">検索</string>
+    <string name="stats_referrers_pie_chart_total_label">表示件数</string>
+    <string name="stats_action_card_schedule_post_button_label">予約</string>
+    <string name="stats_action_card_schedule_post_message">✍️ 下書きから最適なタイミングでコンテンツを投稿するように予約します。</string>
+    <string name="stats_action_card_schedule_post_title">投稿を予約</string>
+    <string name="stats_action_card_blogging_reminders_button_label">リマインダーを設定</string>
+    <string name="stats_action_card_blogging_reminders_message">💡定期的に投稿するようにリマインダーを設定して読者の関心を維持したまま、新しい訪問者を引きつけます。</string>
+    <string name="stats_action_card_blogging_reminders_title">ブログ投稿のリマインダーを設定</string>
+    <string name="stats_action_card_grow_audience_button_label">コースを確認</string>
+    <string name="stats_action_card_grow_audience_message">💡皆さんのブログを成長させるため、優れたブロガーによるわかりやすいレッスンをご用意しています。</string>
+    <string name="stats_action_card_grow_audience_title">訪問者を増やす</string>
     <string name="gutenberg_native_you_can_also_rearrange_blocks_by_tapping_a_block_and_then_tapping">ブロックをタップし、ブロックの左下に表示される上下矢印をタップして上下に移動させることで、ブロックの配置を変更することもできます。</string>
     <string name="gutenberg_native_image_file_not_found">画像ファイルが見つかりませんでした。</string>
     <string name="gutenberg_native_drag_drop_makes_rearranging_blocks_a_breeze_press_and_hold_on_a_b">ドラッグ &amp; ドロップで簡単にブロックの位置を編集できます。 長押ししながら新しい場所にブロックをドラッグします。</string>
@@ -863,10 +886,10 @@ Language: ja_JP
     <string name="label_done_button">終了</string>
     <string name="label_next_button">次へ</string>
     <string name="delete_button_alt">削除</string>
-    <string name="hpp_choose_error">デザインの選択中にエラーが発生しました。</string>
     <string name="hpp_retry_error">ネットワーク接続を確認して、もう一度お試しください。</string>
     <string name="hpp_error_subtitle">オンラインに戻ったら、「再試行」をタップします。</string>
     <string name="hpp_error_title">レイアウトはオフラインでは利用できません</string>
+    <string name="hpp_choose_error">テーマの選択中にエラーが発生しました。</string>
     <string name="continue_site_credentials">ストアのログイン情報で続ける</string>
     <string name="login_find_your_connected_email">連携済みのメールアドレスを検索</string>
     <string name="reader_discover_no_posts_button_text">トピックをフォロー</string>
@@ -880,8 +903,6 @@ Language: ja_JP
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">スクロール可能なブロックメニューが開きました。 ブロックを選択します。</string>
     <string name="gutenberg_native_scrollable_block_menu_closed">スクロール可能なブロックメニューが閉じられました。</string>
     <string name="hpp_choose_button">選択</string>
-    <string name="hpp_subtitle">お気に入りのホームページのレイアウトを選択します。 後で編集およびカスタマイズできます。</string>
-    <string name="hpp_title">デザインを選択</string>
     <string name="mlp_network_error_subtitle">オンラインに戻ったら「再試行」をタップするか、以下のボタンを使用して白紙のページを作成します。</string>
     <string name="mlp_network_error_title">レイアウトはオフラインでは利用できません</string>
     <string name="mlp_error_subtitle">「再試行」をタップするか、以下のボタンを使用して白紙のページを作成します。</string>

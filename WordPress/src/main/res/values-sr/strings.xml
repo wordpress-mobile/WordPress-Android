@@ -122,7 +122,6 @@ Language: sr_RS
     <string name="label_done_button">Готово</string>
     <string name="label_next_button">Следеће</string>
     <string name="delete_button_alt">Обриши</string>
-    <string name="hpp_choose_error">Дошло је до грешке при одабиру дизајна.</string>
     <string name="hpp_error_subtitle">Додирните на покушај поново када се поново повежете на мрежу.</string>
     <string name="dialog_discard_story_message_edit">Било које измене неће бити сачуване.</string>
     <string name="hpp_retry_error">Молимо проверите своју интернет везу и покушајте поново.</string>
@@ -131,7 +130,6 @@ Language: sr_RS
     <string name="scan">Скенирај</string>
     <string name="login_prologue_third_subtitle_three">&lt;b&gt;Јохан Брант&lt;/b&gt; је одговорио на ваш чланак</string>
     <string name="hpp_choose_button">Одабери</string>
-    <string name="hpp_title">Одаберите дизајн</string>
     <string name="prepublishing_nudges_add_category_button">Додај категорију</string>
     <string name="prepublishing_nudges_toolbar_title_add_categories">Додај нову категорију</string>
     <string name="prepublishing_nudges_toolbar_title_categories">Категорије</string>

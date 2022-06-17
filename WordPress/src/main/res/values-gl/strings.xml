@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-06-02 13:31:52+0000
+Translation-Revision-Date: 2022-06-15 05:47:45+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: gl_ES
@@ -863,7 +863,7 @@ Language: gl_ES
     <string name="label_done_button">Feito</string>
     <string name="label_next_button">Seguinte</string>
     <string name="delete_button_alt">Borrar</string>
-    <string name="hpp_choose_error">Ocorreu un erro ao seleccionar o deseño.</string>
+    <string name="hpp_choose_error">Ocorreu un erro ao seleccionar o tema.</string>
     <string name="hpp_retry_error">Por favor, revisa a túa conexión a Internet e inténtao de novo.</string>
     <string name="hpp_error_subtitle">Toca en reintentar cando volvas a estar conectado.</string>
     <string name="hpp_error_title">Os deseños non están dispoñibles sen conexión</string>
@@ -880,8 +880,6 @@ Language: gl_ES
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">Abriuse o menú de bloques desprazable. Selecciona un bloque.</string>
     <string name="gutenberg_native_scrollable_block_menu_closed">Pechouse o menú de bloques desprazable.</string>
     <string name="hpp_choose_button">Elixir</string>
-    <string name="hpp_subtitle">Elixe o deseño de páxina de inicio que prefiras. Podes personalizalo ou cambialo máis tarde.</string>
-    <string name="hpp_title">Elixe un deseño</string>
     <string name="mlp_network_error_subtitle">Toca «Reintentar» cando volvas a estar en liña ou crea unha páxina en branco usando o seguinte botón.</string>
     <string name="mlp_network_error_title">Os deseños non están dispoñibles sen conexión</string>
     <string name="mlp_error_subtitle">Toca «Reintentar» ou crea unha páxina en branco usando o seguinte botón.</string>

@@ -841,7 +841,6 @@ Language: es_CO
     <string name="label_done_button">Hecho</string>
     <string name="label_next_button">Siguiente</string>
     <string name="delete_button_alt">Borrar</string>
-    <string name="hpp_choose_error">Ocurrió un error al seleccionar el diseño.</string>
     <string name="hpp_retry_error">Por favor, revisa tu conexión a Internet e inténtalo de nuevo.</string>
     <string name="hpp_error_subtitle">Toca en reintentar cuando vuelvas a estar conectado.</string>
     <string name="hpp_error_title">Los diseños no están disponibles sin conexión</string>
@@ -858,8 +857,6 @@ Language: es_CO
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">Se ha abierto el menú de bloques desplazable. Selecciona un bloque.</string>
     <string name="gutenberg_native_scrollable_block_menu_closed">Se ha cerrado el menú de bloques desplazable.</string>
     <string name="hpp_choose_button">Elegir</string>
-    <string name="hpp_subtitle">Elige el diseño de página de inicio que prefieras. Puedes personalizarlo o cambiarlo más tarde.</string>
-    <string name="hpp_title">Elige un diseño</string>
     <string name="mlp_network_error_subtitle">Toca «Reintentar» cuando vuelvas a estar en línea o crea una página en blanco usando el botón a continuación.</string>
     <string name="mlp_network_error_title">Los diseños no están disponibles sin conexión</string>
     <string name="mlp_error_subtitle">Toca «Reintentar» o crea una página en blanco usando el botón a continuación.</string>

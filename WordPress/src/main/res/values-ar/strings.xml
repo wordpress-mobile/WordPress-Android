@@ -1,11 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-06-02 13:54:08+0000
+Translation-Revision-Date: 2022-06-16 09:54:24+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/4.0.0-alpha.1
 Language: ar
 -->
 <resources>
+    <string name="blogging_prompts_onboarding_prompts_loading">يتم تحميل مطالبات التدوين. يُرجى الانتظار لحظة والمحاولة مرة أخرى.</string>
+    <string name="hpp_bottom_helper_text">ألا يمكنك التحديد؟ يمكنك تغيير القالب في أي وقت.</string>
+    <string name="hpp_recommended_default_vertical">التدوين</string>
+    <string name="hpp_recommended_title">الأفضل لـ %s</string>
+    <string name="hpp_preview_tapped_theme">معاينة القالب %s</string>
+    <string name="hpp_title">اختيار قالب</string>
+    <string name="my_site_blogging_prompt_card_skipped_snackbar">مطالبة التدوين اليوم التي تم تخطيها</string>
+    <string name="my_site_blogging_prompt_card_menu_learn_more">معرفة المزيد</string>
+    <string name="my_site_blogging_prompt_card_attribution_dayone">من </string>
+    <string name="stats_follower_types_pie_chart_total_label">الإجماليات</string>
+    <string name="stats_referrers_pie_chart_others">الأخرى</string>
+    <string name="stats_referrers_pie_chart_search">البحث</string>
+    <string name="stats_referrers_pie_chart_total_label"> المشاهدات</string>
+    <string name="stats_action_card_schedule_post_button_label">جدولة</string>
+    <string name="stats_action_card_schedule_post_message">✍️ يمكنك الجدولة لنشر محتواك في أفضل وقت له من مسوداتك.</string>
+    <string name="hpp_recommended_subtitle">اختارناه لك</string>
+    <string name="stats_action_card_schedule_post_title">جدولة تدوينتك</string>
+    <string name="stats_action_card_blogging_reminders_button_label">تعيين التذكيرات</string>
+    <string name="stats_action_card_blogging_reminders_message">💡قم بتعيين التذكير على النشر بانتظام للحفاظ على تفاعل قرائك وجذب زائرين جدد.</string>
+    <string name="stats_action_card_blogging_reminders_title">تعيين تذكيرات التدوين الخاصة بك</string>
+    <string name="stats_action_card_grow_audience_button_label">التحقُّق من الدورة التدريبية</string>
+    <string name="stats_action_card_grow_audience_message">💡لدينا دروس سهلة الاستيعاب يقوم بتدريسها أفضل المدونين لتكبير مدونتك.</string>
+    <string name="stats_action_card_grow_audience_title">تكبير جمهورك</string>
     <string name="gutenberg_native_you_can_also_rearrange_blocks_by_tapping_a_block_and_then_tapping">يمكنك كذلك إعادة ترتيب المكوِّنات عن طريق النقر على مكوِّن، ثم النقر على الأسهم المتجهة إلى الأعلى والأسفل التي تظهر أسفل يسار المكوِّن لنقله إلى الأعلى أو الأسفل.</string>
     <string name="gutenberg_native_image_file_not_found">لم يتم العثور على ملف الصورة.</string>
     <string name="gutenberg_native_drag_drop_makes_rearranging_blocks_a_breeze_press_and_hold_on_a_b">يجعل السحب والإفلات إعادة ترتيب المكوِّنات في المحرِّر أمرًا سهلاً للغاية. اضغط مع الاستمرار على أحد المكوِّنات، ثم اسحبه إلى موقعه الجديد وأفلته.</string>
@@ -866,7 +889,7 @@ Language: ar
     <string name="color_picker_label_text">النص</string>
     <string name="color_picker_label_background">الخلفية</string>
     <string name="hpp_error_subtitle">اضغط على إعادة المحاولة عند معاودة الاتصال بالإنترنت.</string>
-    <string name="hpp_choose_error">حدث خطأ أثناء تحديد التصميم.</string>
+    <string name="hpp_choose_error">حدث خطأ في أثناء تحديد القالب.</string>
     <string name="scan">فحص</string>
     <string name="reader_discover_empty_title">مرحبًا!</string>
     <string name="reader_discover_no_posts_title">لا توجد مقالات حديثة</string>
@@ -880,8 +903,6 @@ Language: ar
     <string name="hpp_choose_button">اختيار</string>
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">تم فتح قائمة المكوّن القابلة للتمرير. حدد مكوّنًا.</string>
     <string name="gutenberg_native_scrollable_block_menu_closed">تم قفل قائمة المكوّن القابلة للتمرير.</string>
-    <string name="hpp_subtitle">اختر تخطيط الصفحة الرئيسية المفضَّل لديك. يمكنك تعديله أو تخصيصه لاحقًا.</string>
-    <string name="hpp_title">اختيار تصميم</string>
     <string name="prepublishing_nudges_toolbar_title_add_categories">أضف تصنيفاً جديداً</string>
     <string name="prepublishing_nudges_categories_action">التصنيفات</string>
     <string name="prepublishing_nudges_home_categories_not_set">لم يتم التعيين</string>

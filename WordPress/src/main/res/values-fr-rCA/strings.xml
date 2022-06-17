@@ -1,11 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-06-10 14:25:11+0000
+Translation-Revision-Date: 2022-06-16 13:54:08+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: fr
 -->
 <resources>
+    <string name="blogging_prompts_onboarding_prompts_loading">Chargement des invites pour bloguer. Veuillez patienter un instant, puis réessayer.</string>
+    <string name="hpp_bottom_helper_text">Vous n’arrivez pas à choisir ? Vous pouvez modifier le thème à tout moment.</string>
+    <string name="hpp_recommended_default_vertical">Blogging</string>
+    <string name="hpp_recommended_subtitle">Choisi pour vous</string>
+    <string name="hpp_recommended_title">Idéal pour %s</string>
+    <string name="hpp_preview_tapped_theme">Prévisualiser le thème %s</string>
+    <string name="hpp_title">Choisir un thème</string>
+    <string name="my_site_blogging_prompt_card_skipped_snackbar">Invite pour bloguer du jour ignorée</string>
+    <string name="my_site_blogging_prompt_card_menu_learn_more">En savoir plus</string>
+    <string name="my_site_blogging_prompt_card_attribution_dayone">De </string>
+    <string name="stats_follower_types_pie_chart_total_label">Totaux</string>
+    <string name="stats_referrers_pie_chart_others">Autres</string>
+    <string name="stats_referrers_pie_chart_search">Rechercher</string>
+    <string name="stats_referrers_pie_chart_total_label">Vues</string>
+    <string name="stats_action_card_schedule_post_button_label">Planifier</string>
+    <string name="stats_action_card_schedule_post_message">✍️Planifiez la publication de vos contenus au meilleur moment à partir de vos brouillons.</string>
+    <string name="stats_action_card_schedule_post_title">Planifier la publication</string>
+    <string name="stats_action_card_blogging_reminders_button_label">Définir des rappels</string>
+    <string name="stats_action_card_blogging_reminders_message">💡Définissez des rappels de publication régulière pour que vos lecteurs restent fidèles et pour attirer de nouveaux visiteurs.</string>
+    <string name="stats_action_card_blogging_reminders_title">Définir vos rappels de blog</string>
+    <string name="stats_action_card_grow_audience_button_label">Découvrir la formation</string>
+    <string name="stats_action_card_grow_audience_message">💡Nous proposons des cours facilement assimilables donnés par les meilleurs blogueurs pour développer votre blog.</string>
+    <string name="stats_action_card_grow_audience_title">Élargir votre public</string>
     <string name="gutenberg_native_you_can_also_rearrange_blocks_by_tapping_a_block_and_then_tapping">Vous pouvez également réorganiser les blocs en appuyant sur un bloc, puis sur les flèches Haut et Bas qui apparaissent dans le coin inférieur gauche du bloc afin de le déplacer vers le haut ou vers le bas.</string>
     <string name="gutenberg_native_image_file_not_found">Fichier image introuvable.</string>
     <string name="gutenberg_native_drag_drop_makes_rearranging_blocks_a_breeze_press_and_hold_on_a_b">La fonction Glisser-déposer permet de réorganiser les blocs en un temps record. Appuyez longuement sur un bloc, faites-le glisser vers son nouvel emplacement et relâchez-le.</string>
@@ -863,7 +886,7 @@ Language: fr
     <string name="label_done_button">Terminé</string>
     <string name="label_next_button">Suivant</string>
     <string name="delete_button_alt">Supprimer</string>
-    <string name="hpp_choose_error">Une erreur s’est produite lors de la sélection du design.</string>
+    <string name="hpp_choose_error">Une erreur est survenue lors de la sélection du thème.</string>
     <string name="hpp_retry_error">Veuillez vérifier votre connexion internet, puis réessayez.</string>
     <string name="hpp_error_subtitle">Appuyez sur Réessayer lorsque vous êtes de nouveau en ligne.</string>
     <string name="hpp_error_title">Mises en page non disponibles hors connexion</string>
@@ -880,8 +903,6 @@ Language: fr
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">Menu de bloc déroulant ouvert. Sélectionner un bloc.</string>
     <string name="gutenberg_native_scrollable_block_menu_closed">Menu de bloc déroulant fermé.</string>
     <string name="hpp_choose_button">Choisir</string>
-    <string name="hpp_subtitle">Sélectionnez votre mise en page préférée pour la page d’accueil. Vous pourrez la personnaliser ou la modifier ultérieurement.</string>
-    <string name="hpp_title">Choisir un design</string>
     <string name="mlp_network_error_subtitle">Touchez réessayer quand vous serez de nouveau en ligne ou créer un page blanche en utilisant le bouton ci-dessous.</string>
     <string name="mlp_network_error_title">Les mises en page ne sont pas disponibles hors connexion</string>
     <string name="mlp_error_subtitle">Touchez réessayer ou créez une page blanche en utilisant le bouton ci-dessous.</string>

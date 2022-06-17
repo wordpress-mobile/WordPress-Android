@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-06-09 05:37:54+0000
+Translation-Revision-Date: 2022-06-13 05:36:32+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.1
 Language: pl
@@ -664,7 +664,6 @@ Language: pl
     <string name="label_done_button">Gotowe</string>
     <string name="label_next_button">Następny</string>
     <string name="delete_button_alt">Usuń</string>
-    <string name="hpp_choose_error">Wystąpił błąd podczas wyboru projektu</string>
     <string name="hpp_retry_error">Sprawdź swoje połączenie internetowe i spróbuj ponownie.</string>
     <string name="hpp_error_subtitle">Stuknij ponów kiedy będziesz spowrotem online</string>
     <string name="hpp_error_title">Szablony nie są dostępne w trybie offline</string>
@@ -681,8 +680,6 @@ Language: pl
     <string name="hpp_choose_button">Wybierz</string>
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">Otwarto przewijalne menu blokowe. Wybierz blok.</string>
     <string name="gutenberg_native_scrollable_block_menu_closed">Zamknięto przewijalne menu blokowe. </string>
-    <string name="hpp_subtitle">Wybierz swój ulubiony szablon dla strony głównej. Możesz go edytować i dostosować w późniejszym czasie.</string>
-    <string name="hpp_title">Wybierz wzór</string>
     <string name="prepublishing_nudges_toolbar_title_categories">Kategorie</string>
     <string name="prepublishing_nudges_home_categories_not_set">Nie ustawiono</string>
     <string name="prepublishing_nudges_categories_action">Kategorie</string>
@@ -2662,7 +2659,7 @@ Language: pl
     <string name="site_settings_identity_required_title">Muszą zawierać imię i email</string>
     <string name="site_settings_receive_pingbacks_title">Odbieraj pingbacki</string>
     <string name="site_settings_send_pingbacks_title">Wysyłaj pingbacki</string>
-    <string name="site_settings_allow_comments_title">Zezwól na komentarze</string>
+    <string name="site_settings_allow_comments_title">Zezwól na komentowanie</string>
     <string name="site_settings_default_format_title">Domyślny format wpisów</string>
     <string name="site_settings_default_category_title">Domyślna kategoria wpisów</string>
     <string name="site_settings_address_title">Adres</string>

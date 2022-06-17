@@ -361,7 +361,6 @@ Language: nb_NO
     <string name="reader_discover_empty_title">Velkommen!</string>
     <string name="scan">Skann</string>
     <string name="hpp_choose_button">Velg</string>
-    <string name="hpp_title">Velg en utforming</string>
     <string name="prepublishing_nudges_add_category_button">Legg til kategori</string>
     <string name="prepublishing_nudges_toolbar_title_add_categories">Legg til ny kategori</string>
     <string name="prepublishing_nudges_toolbar_title_categories">Kategorier</string>

@@ -1,11 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-06-01 16:26:12+0000
+Translation-Revision-Date: 2022-06-16 20:19:32+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: es_VE
 -->
 <resources>
+    <string name="blogging_prompts_onboarding_prompts_loading">Se están cargando los estímulos para bloguear. Espera un momento e inténtalo de nuevo.</string>
+    <string name="hpp_bottom_helper_text">¿No puedes decidirte? Puedes cambiar el tema en cualquier momento.</string>
+    <string name="hpp_recommended_default_vertical">Bloguear</string>
+    <string name="hpp_recommended_subtitle">Elegido para ti</string>
+    <string name="hpp_recommended_title">Ideal para %s</string>
+    <string name="hpp_preview_tapped_theme">Vista previa del tema %s</string>
+    <string name="hpp_title">Elige un tema</string>
+    <string name="my_site_blogging_prompt_card_skipped_snackbar">Me he saltado el estímulo para bloguear de hoy</string>
+    <string name="my_site_blogging_prompt_card_menu_learn_more">Más información</string>
+    <string name="my_site_blogging_prompt_card_attribution_dayone">Desde </string>
+    <string name="stats_follower_types_pie_chart_total_label">Totales</string>
+    <string name="stats_referrers_pie_chart_others">Otros</string>
+    <string name="stats_referrers_pie_chart_search">Buscar</string>
+    <string name="stats_referrers_pie_chart_wordpress">WordPress</string>
+    <string name="stats_referrers_pie_chart_total_label">Vistas</string>
+    <string name="stats_action_card_schedule_post_button_label">Programar</string>
+    <string name="stats_action_card_schedule_post_message">✍️ Programa para publicar tu contenido en el mejor momento desde los borradores.</string>
+    <string name="stats_action_card_schedule_post_title">Programa tu entrada</string>
+    <string name="stats_action_card_blogging_reminders_button_label">Configurar recordatorios</string>
+    <string name="stats_action_card_blogging_reminders_message">💡Configura el recordatorio de publicar regularmente para mantener a los lectores enganchados y atraer a nuevos visitantes.</string>
+    <string name="stats_action_card_blogging_reminders_title">Configura tus recordatorios de blogueo</string>
+    <string name="stats_action_card_grow_audience_button_label">Consulta el curso</string>
+    <string name="stats_action_card_grow_audience_message">💡Tenemos lecciones fáciles impartidas por los mejores blogueros para hacer crecer tu blog.</string>
+    <string name="stats_action_card_grow_audience_title">Haz crecer tu audiencia</string>
+    <string name="gutenberg_native_you_can_also_rearrange_blocks_by_tapping_a_block_and_then_tapping">También puedes reorganizar los bloques tocando un bloque y luego tocando las flechas arriba y abajo que aparecen en la parte inferior izquierda del bloque para moverlo encima o debajo de otros bloques.</string>
+    <string name="gutenberg_native_image_file_not_found">Archivo de imagen no encontrado.</string>
+    <string name="gutenberg_native_drag_drop_makes_rearranging_blocks_a_breeze_press_and_hold_on_a_b">Arrastrar y soltar hace que reordenar bloques sea algo trivial. Presiona y sujeta un bloque, luego arrástralo a su nueva ubicación y suéltalo.</string>
+    <string name="gutenberg_native_drag_drop">Arrastrar y soltar</string>
+    <string name="gutenberg_native_arrow_buttons">Botones de flechas</string>
+    <string name="gutenberg_native_1_s_currently_selected_2_s">%1$s. Seleccionado actualmente: %2$s</string>
+    <string name="quick_start_sites_type_all_tasks_completed">Todas las tareas están completas</string>
+    <string name="quick_start_list_task_complete">Tarea completada</string>
+    <string name="me_btn_scan_login_code">Explorar código de acceso</string>
+    <string name="stats_insights_followers_guide_card">💡 Puedes probar a dejar un comentario como un gesto para animar a la participación en el blog y luego ganar más seguidores.</string>
+    <string name="stats_insights_comments_guide_card">💡 Ve tus principales contribuidores tocando en VER MÁS.</string>
+    <string name="stats_insights_likes_guide_card">⭐️  Tu última entrada %1$s ha recibido %2$s me gusta.</string>
+    <string name="stats_most_popular_percent_views_empty">No hay suficiente actividad. ¡Vuelve a comprobarlo más tarde, cuando tu sitio haya tenido más visitas!</string>
+    <string name="stats_insights_latest_post_empty">Todavía no has publicado ninguna entrada. ¡Vuelve más tarde cuando hayas publicado tu primera entrada!</string>
+    <string name="stats_insights_views_and_visitors_visitors_empty_state">Si quieres probar a conseguir más visualizaciones y tráfico echa un vistazo a nuestros consejos destacados %1$s</string>
+    <string name="stats_total_followers_content_description">%1s, %2s del total de seguidores</string>
+    <string name="stats_value_percent">%1$s (%2$s%%)</string>
     <string name="pages_copy_link">Copiar enlace</string>
     <string name="quick_start_completed_tour_title">¡Enhorabuena! Ya sabes manejarte&lt;br/&gt;</string>
     <string name="quick_start_sites_type_get_to_know_app">Conoce la aplicación</string>
@@ -49,6 +90,10 @@ Language: es_VE
     <string name="photo_picker_media_thumbnail_content_description">Miniatura del medio</string>
     <string name="stats_insights_popular_title">🔥 La hora más popular</string>
     <string name="stats_insights_views_and_visitors_tooltip_count">%1$s %2$s</string>
+    <string name="stats_insights_views_and_visitors_visitors_negative">Tus visitantes de esta semana son %1$s menos que los de la semana anterior.</string>
+    <string name="stats_insights_views_and_visitors_visitors_positive">Tus visitantes de esta semana son %1$s más que los de la semana anterior.</string>
+    <string name="stats_insights_views_and_visitors_views_negative">Tus visualizaciones de esta semana son %1$s menos que las de la semana anterior.</string>
+    <string name="stats_insights_views_and_visitors_views_positive">Tus visitas de esta semana son %1$s más que las de la semana anterior.</string>
     <string name="stats_timeframe_previous_week">Semana anterior</string>
     <string name="stats_timeframe_this_week">Esta semana</string>
     <string name="scan_vault_press_active_on_site_button_text">Visitar el escritorio</string>
@@ -470,6 +515,7 @@ Language: es_VE
     <string name="gutenberg_native_three">Tres</string>
     <string name="gutenberg_native_s_social_icon">Icono social %s</string>
     <string name="gutenberg_native_mention">Mención</string>
+    <string name="gutenberg_native_new">NUEVO</string>
     <string name="gutenberg_native_preview_post">Previsualizar la entrada</string>
     <string name="gutenberg_native_preview_page">Previsualizar la página</string>
     <string name="gutenberg_native_retry">Reintentar</string>
@@ -841,7 +887,7 @@ Language: es_VE
     <string name="label_done_button">Hecho</string>
     <string name="label_next_button">Siguiente</string>
     <string name="delete_button_alt">Borrar</string>
-    <string name="hpp_choose_error">Ocurrió un error al seleccionar el diseño.</string>
+    <string name="hpp_choose_error">Se ha producido un error al elegir el tema.</string>
     <string name="hpp_retry_error">Por favor, revisa tu conexión a Internet e inténtalo de nuevo.</string>
     <string name="hpp_error_subtitle">Toca en reintentar cuando vuelvas a estar conectado.</string>
     <string name="hpp_error_title">Los diseños no están disponibles sin conexión</string>
@@ -858,8 +904,6 @@ Language: es_VE
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">Se ha abierto el menú de bloques desplazable. Selecciona un bloque.</string>
     <string name="gutenberg_native_scrollable_block_menu_closed">Se ha cerrado el menú de bloques desplazable.</string>
     <string name="hpp_choose_button">Elegir</string>
-    <string name="hpp_subtitle">Elige el diseño de página de inicio que prefieras. Puedes personalizarlo o cambiarlo más tarde.</string>
-    <string name="hpp_title">Elige un diseño</string>
     <string name="mlp_network_error_subtitle">Toca «Reintentar» cuando vuelvas a estar en línea o crea una página en blanco usando el botón a continuación.</string>
     <string name="mlp_network_error_title">Los diseños no están disponibles sin conexión</string>
     <string name="mlp_error_subtitle">Toca «Reintentar» o crea una página en blanco usando el botón a continuación.</string>

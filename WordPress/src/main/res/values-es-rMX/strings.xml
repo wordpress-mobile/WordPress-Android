@@ -106,7 +106,6 @@ Language: es_MX
     <string name="hpp_error_title">Los diseños no están disponibles sin conexión</string>
     <string name="hpp_error_subtitle">Toca en reintentar cuando vuelvas a estar conectado.</string>
     <string name="hpp_retry_error">Por favor, revisa tu conexión a Internet e inténtalo de nuevo.</string>
-    <string name="hpp_choose_error">Ha habido un error al seleccionar el diseño.</string>
     <string name="delete_button_alt">Borrar</string>
     <string name="label_next_button">Siguiente</string>
     <string name="label_done_button">Hecho</string>
@@ -128,8 +127,6 @@ Language: es_MX
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">Se ha abierto el menú de bloques desplazable. Selecciona un bloque.</string>
     <string name="gutenberg_native_scrollable_block_menu_closed">Se ha cerrado el menú de bloques desplazable.</string>
     <string name="hpp_choose_button">Elegir</string>
-    <string name="hpp_subtitle">Elige tu layout favorito de página de inicio. Puedes editarlo y personalizarlo más tarde.</string>
-    <string name="hpp_title">Elige un diseño</string>
     <string name="mlp_error_title">Los layouts no están disponibles debido a un error</string>
     <string name="prepublishing_nudges_add_category_button">Añadir categoría</string>
     <string name="prepublishing_nudges_toolbar_title_add_categories">Añadir una nueva categoría</string>
