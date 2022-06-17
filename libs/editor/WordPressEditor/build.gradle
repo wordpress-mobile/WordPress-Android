@@ -45,12 +45,6 @@ android {
         sourceCompatibility 1.8
         targetCompatibility 1.8
     }
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-    }
 
     // Avoid 'duplicate files during packaging of APK' errors
     packagingOptions {
