@@ -4,13 +4,30 @@ plugins {
 
 repositories {
     maven {
+        url "https://a8c-libs.s3.amazonaws.com/android"
+        content {
+            includeGroup "org.wordpress"
+            includeGroup "org.wordpress.aztec"
+            includeGroup "org.wordpress-mobile"
+            includeGroup "org.wordpress-mobile.gutenberg-mobile"
+        }
+    }
+    maven {
         url "https://a8c-libs.s3.amazonaws.com/android/react-native-mirror"
         content {
             includeGroup "com.facebook.react"
         }
     }
+    maven {
+        url "https://a8c-libs.s3.amazonaws.com/android/hermes-mirror"
+        content {
+            includeGroup "org.wordpress-mobile"
+        }
+    }
     google()
+    mavenCentral()
     maven { url "https://www.jitpack.io" }
+    maven { url "https://a8c-libs.s3.amazonaws.com/android/hermes-mirror" }
 }
 
 android {
