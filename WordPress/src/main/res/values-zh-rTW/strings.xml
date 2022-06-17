@@ -1,11 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-06-10 14:27:25+0000
+Translation-Revision-Date: 2022-06-16 09:54:25+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.1
 Language: zh_TW
 -->
 <resources>
+    <string name="blogging_prompts_onboarding_prompts_loading">正在載入網誌提示。 請稍後再試。</string>
+    <string name="hpp_bottom_helper_text">下不了決定嗎？ 你可以隨時變更佈景主題。</string>
+    <string name="hpp_recommended_default_vertical">撰寫網誌</string>
+    <string name="hpp_recommended_subtitle">為你精選</string>
+    <string name="hpp_recommended_title">適合 %s</string>
+    <string name="hpp_preview_tapped_theme">預覽佈景主題 %s</string>
+    <string name="hpp_title">選擇佈景主題</string>
+    <string name="my_site_blogging_prompt_card_skipped_snackbar">已略過今天的網誌提示</string>
+    <string name="my_site_blogging_prompt_card_menu_learn_more">瞭解更多</string>
+    <string name="my_site_blogging_prompt_card_attribution_dayone">來自 </string>
+    <string name="stats_follower_types_pie_chart_total_label">總計</string>
+    <string name="stats_referrers_pie_chart_others">其他</string>
+    <string name="stats_referrers_pie_chart_search">搜尋</string>
+    <string name="stats_referrers_pie_chart_total_label">檢視</string>
+    <string name="stats_action_card_schedule_post_button_label">排程</string>
+    <string name="stats_action_card_schedule_post_message">✍️ 排程即可在最合適的時間從你的草稿發表內容。</string>
+    <string name="stats_action_card_schedule_post_title">排程你的文章</string>
+    <string name="stats_action_card_blogging_reminders_button_label">設定提醒</string>
+    <string name="stats_action_card_blogging_reminders_message">💡 設定提醒以定期發表內容，持續吸引讀者並招來新的訪客。</string>
+    <string name="stats_action_card_blogging_reminders_title">設定你的網誌提醒</string>
+    <string name="stats_action_card_grow_audience_button_label">查看課程</string>
+    <string name="stats_action_card_grow_audience_message">💡 我們提供簡單易懂的課程，由最優秀的部落客教你如何經營網誌。</string>
+    <string name="stats_action_card_grow_audience_title">讀者持續成長</string>
     <string name="gutenberg_native_you_can_also_rearrange_blocks_by_tapping_a_block_and_then_tapping">若要重新排列區塊，你也可依序點選區塊和區塊左下角顯示的上下鍵，將其向上或向下移動。</string>
     <string name="gutenberg_native_image_file_not_found">找不到圖片檔案。</string>
     <string name="gutenberg_native_drag_drop_makes_rearranging_blocks_a_breeze_press_and_hold_on_a_b">拖放功能可讓你迅速重新排列區塊。 按住一個區塊，然後將其拖曳到新的位置再放開即可。</string>
@@ -863,10 +886,10 @@ Language: zh_TW
     <string name="label_done_button">完成</string>
     <string name="label_next_button">下一步</string>
     <string name="delete_button_alt">刪除</string>
-    <string name="hpp_choose_error">選取設計時發生錯誤。</string>
     <string name="hpp_retry_error">請檢查你的網際網路連線，然後再試一次。</string>
     <string name="hpp_error_subtitle">請在重新上線時點選重試。</string>
     <string name="hpp_error_title">版面配置在離線時無法使用</string>
+    <string name="hpp_choose_error">選取佈景主題時發生錯誤。</string>
     <string name="continue_site_credentials">使用商店憑證繼續</string>
     <string name="login_find_your_connected_email">尋找你連結的電子郵件</string>
     <string name="reader_discover_no_posts_button_text">追蹤主題</string>
@@ -880,8 +903,6 @@ Language: zh_TW
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">已開啟可捲動的區塊選單。 請選取一個區塊。</string>
     <string name="gutenberg_native_scrollable_block_menu_closed">已關閉可捲動的區塊選單。</string>
     <string name="hpp_choose_button">選擇</string>
-    <string name="hpp_subtitle">選擇你喜愛的首頁版面配置。 你可於稍後加以編輯及自訂。</string>
-    <string name="hpp_title">選擇一款設計</string>
     <string name="mlp_network_error_subtitle">請在重新上線時點選重試，或是使用下方按鈕建立空白頁面。</string>
     <string name="mlp_network_error_title">版面配置在離線時無法使用</string>
     <string name="mlp_error_subtitle">請點選重試或使用下方按鈕建立空白頁面。</string>

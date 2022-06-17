@@ -1,11 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-06-02 15:54:08+0000
+Translation-Revision-Date: 2022-06-16 09:54:25+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: tr
 -->
 <resources>
+    <string name="blogging_prompts_onboarding_prompts_loading">Blog İstemleri yükleniyor. Lütfen bekleyin ve tekrar deneyin.</string>
+    <string name="hpp_bottom_helper_text">Karar veremiyor musunuz? Temayı istediğiniz zaman değiştirebilirsiniz.</string>
+    <string name="hpp_recommended_default_vertical">Blog Yazma</string>
+    <string name="hpp_recommended_subtitle">Sizin için seçildi</string>
+    <string name="hpp_recommended_title">%s için en iyisi</string>
+    <string name="hpp_preview_tapped_theme">Önizleme teması %s</string>
+    <string name="hpp_title">Bir tema seçin</string>
+    <string name="my_site_blogging_prompt_card_skipped_snackbar">Bugünün blog istemi atlandı</string>
+    <string name="my_site_blogging_prompt_card_menu_learn_more">Daha fazlasını öğrenin</string>
+    <string name="my_site_blogging_prompt_card_attribution_dayone">Kimden </string>
+    <string name="stats_follower_types_pie_chart_total_label">Toplam</string>
+    <string name="stats_referrers_pie_chart_others">Diğerleri</string>
+    <string name="stats_referrers_pie_chart_search">Ara</string>
+    <string name="stats_referrers_pie_chart_total_label"> Görünümler</string>
+    <string name="stats_action_card_schedule_post_button_label">Zamanla</string>
+    <string name="stats_action_card_schedule_post_message">✍️ Taslaklarınızdan, içeriğinizi en iyi zamanda yayınlamak için zamanlayın.</string>
+    <string name="stats_action_card_schedule_post_title">Gönderilerinizi zamanlayın</string>
+    <string name="stats_action_card_blogging_reminders_button_label">Hatırlatıcı ayarla</string>
+    <string name="stats_action_card_blogging_reminders_message">💡Okuyucularınızın sürekli etkileşimini sağlamak ve yeni ziyaretçiler çekmek için hatırlatıcıyı düzenli olarak gönderi yayınlayacak şekilde ayarlayın.</string>
+    <string name="stats_action_card_blogging_reminders_title">Blog hatırlatıcılarınızı ayarlayın</string>
+    <string name="stats_action_card_grow_audience_button_label">Kursa göz at</string>
+    <string name="stats_action_card_grow_audience_message">💡Blogunuzu büyütmek için en iyi blog yazarları tarafından öğretilen ve kolayca öğrenilen derslerimiz var.</string>
+    <string name="stats_action_card_grow_audience_title">Kitlenizi genişletin</string>
     <string name="gutenberg_native_you_can_also_rearrange_blocks_by_tapping_a_block_and_then_tapping">Ayrıca bir bloka dokunup, ardından yukarı veya aşağı taşımak için blokun sol alt tarafında görünen yukarı ve aşağı oklara dokunarak blokları yeniden düzenleyebilirsiniz.</string>
     <string name="gutenberg_native_image_file_not_found">Görsel dosyası bulunamadı.</string>
     <string name="gutenberg_native_drag_drop_makes_rearranging_blocks_a_breeze_press_and_hold_on_a_b">Sürükle ve bırak yöntemi blokları yeniden düzenlemeyi çok kolay hale getirir. Bir bloku basılı tutun, ardından yeni konumuna sürükleyin ve bırakın.</string>
@@ -863,7 +886,7 @@ Language: tr
     <string name="label_done_button">Tamamlandı</string>
     <string name="label_next_button">Sonraki</string>
     <string name="delete_button_alt">Sil</string>
-    <string name="hpp_choose_error">Tasarım seçilirken bir hata oluştu.</string>
+    <string name="hpp_choose_error">Tema seçilirken bir hata oluştu.</string>
     <string name="hpp_retry_error">Lütfen internet bağlantınızı kontrol edip tekrar deneyin.</string>
     <string name="hpp_error_subtitle">Tekrar çevrimiçi olduğunuzda yeniden dene\'ye dokunun.</string>
     <string name="hpp_error_title">Çevrimdışıyken düzenler kullanılamaz</string>
@@ -880,8 +903,6 @@ Language: tr
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">Kaydırılabilir blok menüsü açıldı. Bir blok seçin.</string>
     <string name="gutenberg_native_scrollable_block_menu_closed">Kaydırılabilir blok menüsü kapandı.</string>
     <string name="hpp_choose_button">Seç</string>
-    <string name="hpp_subtitle">En sevdiğiniz ana sayfa düzenini seçin. Daha sonra özelleştirebilir ve değiştirebilirsiniz.</string>
-    <string name="hpp_title">Bir tasarım seçin</string>
     <string name="mlp_network_error_subtitle">Tekrar çevrimiçi olduğunuzda yeniden dene seçeneğine dokunun veya aşağıdaki düğmeyi kullanarak boş bir sayfa oluşturun.</string>
     <string name="mlp_network_error_title">Çevrimdışıyken düzenler kullanılamaz</string>
     <string name="mlp_error_subtitle">Yeniden dene seçeneğine dokunun veya aşağıdaki düğmeyi kullanarak boş bir sayfa oluşturun.</string>

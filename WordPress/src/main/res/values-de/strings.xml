@@ -1,11 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-06-03 09:54:24+0000
+Translation-Revision-Date: 2022-06-16 09:54:25+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: de
 -->
 <resources>
+    <string name="blogging_prompts_onboarding_prompts_loading">Blog-Vorschläge werden geladen. Bitte warte einen Moment und versuche es dann erneut.</string>
+    <string name="hpp_bottom_helper_text">Du kannst dich nicht entscheiden? Du kannst das Theme jederzeit ändern.</string>
+    <string name="my_site_blogging_prompt_card_menu_learn_more">Mehr erfahren</string>
+    <string name="stats_referrers_pie_chart_search">Suche</string>
+    <string name="stats_referrers_pie_chart_wordpress">WordPress</string>
+    <string name="stats_referrers_pie_chart_total_label">Aufrufe</string>
+    <string name="stats_action_card_schedule_post_button_label">Planen</string>
+    <string name="hpp_recommended_default_vertical">Bloggen</string>
+    <string name="hpp_recommended_subtitle">Für dich ausgewählt</string>
+    <string name="hpp_recommended_title">Das Beste für %s</string>
+    <string name="hpp_preview_tapped_theme">Vorschau für Theme %s anzeigen</string>
+    <string name="hpp_title">Wähle ein Theme</string>
+    <string name="my_site_blogging_prompt_card_skipped_snackbar">Heutigen Blog-Vorschlag übersprungen</string>
+    <string name="my_site_blogging_prompt_card_attribution_dayone">Von </string>
+    <string name="stats_follower_types_pie_chart_total_label">Gesamt</string>
+    <string name="stats_referrers_pie_chart_others">Sonstiges</string>
+    <string name="stats_action_card_schedule_post_message">✍️ Plane die Veröffentlichung deines Beitragsinhalts aus deinen Entwürfen zum besten Zeitpunkt.</string>
+    <string name="stats_action_card_schedule_post_title">Deinen Beitrag planen</string>
+    <string name="stats_action_card_blogging_reminders_button_label">Erinnerungen festlegen</string>
+    <string name="stats_action_card_blogging_reminders_message">💡 Lege eine Erinnerung fest, damit du regelmäßig Beiträge veröffentlichst und so das Interesse deiner Leser aufrechterhältst und neue Besucher gewinnst.</string>
+    <string name="stats_action_card_grow_audience_message">💡Wir haben leicht verdauliche Lektionen, die von den besten Bloggern gelehrt werden, um deinen Blog zu vergrößern.</string>
+    <string name="stats_action_card_blogging_reminders_title">Deine Blog-Erinnerungen einrichten</string>
+    <string name="stats_action_card_grow_audience_button_label">Verlauf überprüfen</string>
+    <string name="stats_action_card_grow_audience_title">Vergrößere deine Reichweite</string>
     <string name="gutenberg_native_image_file_not_found">Bilddatei nicht gefunden.</string>
     <string name="me_btn_scan_login_code">Anmeldecode scannen</string>
     <string name="gutenberg_native_1_s_currently_selected_2_s">%1$s. Aktuell ausgewählt: %2$s</string>
@@ -856,7 +880,6 @@ Language: de
     <string name="dialog_edit_story_limited_title">Eingeschränkte Story-Bearbeitung</string>
     <string name="cannot_retry_deleted_media_item_fatal">Die Medien wurden entfernt. Versuche, deine Story neu zu erstellen.</string>
     <string name="delete_button_alt">Löschen</string>
-    <string name="hpp_choose_error">Beim Auswählen des Designs ist ein Fehler aufgetreten.</string>
     <string name="label_next_button">Weiter</string>
     <string name="label_done_button">Fertig</string>
     <string name="dialog_discard_story_title_edit">Änderungen verwerfen?</string>
@@ -867,6 +890,7 @@ Language: de
     <string name="dialog_discard_story_message_edit">Änderungen werden nicht gespeichert.</string>
     <string name="hpp_retry_error">Bitte überprüfe deine Internetverbindung und versuche es erneut.</string>
     <string name="hpp_error_subtitle">Tippe auf „Erneut versuchen“, wenn du wieder online bist.</string>
+    <string name="hpp_choose_error">Beim Auswählen des Themes ist ein Fehler aufgetreten.</string>
     <string name="reader_discover_empty_title">Willkommen!</string>
     <string name="scan">Scannen</string>
     <string name="reader_discover_no_posts_title">Keine aktuellen Beiträge</string>
@@ -880,8 +904,6 @@ Language: de
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">Scrollbares Block-Menü geöffnet. Wähle einen Block aus.</string>
     <string name="gutenberg_native_scrollable_block_menu_closed">Scrollbares Block-Menü geschlossen.</string>
     <string name="hpp_choose_button">Auswählen</string>
-    <string name="hpp_subtitle">Wähle ein Layout für deine Startseite aus, das dir gefällt. Du kannst es später bearbeiten und anpassen.</string>
-    <string name="hpp_title">Wähle ein Design</string>
     <string name="mlp_network_error_subtitle">Tippe auf „erneut versuchen“, wenn du wieder online bist oder erstelle über den Button unten eine leere Seite.</string>
     <string name="mlp_network_error_title">Layouts sind offline nicht verfügbar</string>
     <string name="mlp_error_subtitle">Tippe auf „erneut versuchen“ oder erstelle über den Button unten eine leere Seite.</string>

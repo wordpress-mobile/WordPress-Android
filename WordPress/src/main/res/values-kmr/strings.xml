@@ -14,7 +14,6 @@ Language: ku_TR
     <string name="label_done_button">Qediya</string>
     <string name="label_next_button">Pêşve</string>
     <string name="delete_button_alt">Jê bibe</string>
-    <string name="hpp_choose_error">Di bijartina sêwirê de çewtiyek derket.</string>
     <string name="hpp_retry_error">Ji kerema xwe, girêdana înterneta xwe kontrol bike û dîsa biceribîne.</string>
     <string name="hpp_error_title">Di derhêlbûnê(offline) de raxistin ne berdest in</string>
     <string name="hpp_error_subtitle">Dema ku tu ji nû ve serhêl bû li dîsa biceribîneyê bitikîne.</string>
@@ -31,7 +30,6 @@ Language: ku_TR
     <string name="hpp_choose_button">Hilbijêre</string>
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">Menuya biloka şemîtonkî vebû. Bilokekê hilbijêre.</string>
     <string name="gutenberg_native_scrollable_block_menu_closed">Menuya biloka şemîtonkî hate girtin.</string>
-    <string name="hpp_title">Sêwirekê hilbijêre</string>
     <string name="mlp_network_error_subtitle">Dema ku tu ji nû ve serhêl bû li dîsa biceribîneyê bitikîne an jî bi rêya bikaranîna bişkoka jêrîn rûpeleke vala biafirîne.</string>
     <string name="mlp_network_error_title">Di derhêlbûnê(offline) de raxistin ne berdest in</string>
     <string name="mlp_error_subtitle">Li dîsa biceribîneyê bitikîne an jî bi rêya bikaranîna bişkoka jêrîn rûpeleke vala biafirîne.</string>

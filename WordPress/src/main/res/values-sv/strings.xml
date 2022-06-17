@@ -1,11 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-05-31 14:13:47+0000
+Translation-Revision-Date: 2022-06-16 10:35:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: sv_SE
 -->
 <resources>
+    <string name="blogging_prompts_onboarding_prompts_loading">Bloggningsförslag laddas. Vänta ett tag och försök sedan igen.</string>
+    <string name="hpp_bottom_helper_text">Kan du inte bestämma dig? Du kan byta tema när som helst.</string>
+    <string name="hpp_recommended_default_vertical">Bloggande</string>
+    <string name="hpp_recommended_subtitle">Utvalt för dig</string>
+    <string name="hpp_recommended_title">Bäst för %s</string>
+    <string name="hpp_preview_tapped_theme">Förhandsgranska temat %s</string>
+    <string name="hpp_title">Välj ett tema</string>
+    <string name="my_site_blogging_prompt_card_skipped_snackbar">Hoppade över dagens bloggningsförslag</string>
+    <string name="my_site_blogging_prompt_card_menu_learn_more">Läs mer</string>
+    <string name="my_site_blogging_prompt_card_attribution_dayone">Från </string>
+    <string name="stats_follower_types_pie_chart_total_label">Totalt</string>
+    <string name="stats_referrers_pie_chart_others">Övriga</string>
+    <string name="stats_referrers_pie_chart_search">Sök</string>
+    <string name="stats_referrers_pie_chart_wordpress">WordPress</string>
+    <string name="stats_referrers_pie_chart_total_label">Visningar</string>
+    <string name="stats_action_card_schedule_post_button_label">Schemalägg</string>
+    <string name="stats_action_card_schedule_post_message">✍️ Schemalägg ditt innehåll för publicering vid bästa möjliga tidpunkt från dina utkast.</string>
+    <string name="stats_action_card_schedule_post_title">Schemalägg ditt inlägg</string>
+    <string name="stats_action_card_blogging_reminders_button_label">Ställ in påminnelser</string>
+    <string name="stats_action_card_blogging_reminders_message">💡 Ställ in påminnelsen om att publicera regelbundet för att hålla dina läsare engagerade och locka nya besökare.</string>
+    <string name="stats_action_card_blogging_reminders_title">Ställ in dina bloggningspåminnelser</string>
+    <string name="stats_action_card_grow_audience_button_label">Kolla in kursen</string>
+    <string name="stats_action_card_grow_audience_message">💡 Vi har enkla lektioner om hur du får din blogg att växa, med de bästa bloggarna som lärare.</string>
+    <string name="stats_action_card_grow_audience_title">Nå en större publik</string>
     <string name="gutenberg_native_you_can_also_rearrange_blocks_by_tapping_a_block_and_then_tapping">Du kan även ändra blockens ordning genom att trycka på ett block och sedan trycka på pilarna upp/ned som visas till vänster i blocket för att flytta blocket uppåt eller nedåt.</string>
     <string name="gutenberg_native_image_file_not_found">Bildfilen hittades inte.</string>
     <string name="gutenberg_native_drag_drop_makes_rearranging_blocks_a_breeze_press_and_hold_on_a_b">Dra och släpp gör det enkelt att sortera om blocken. Tryck länge på ett block, dra det sedan till dess nya plats och släpp det sedan.</string>
@@ -863,7 +887,7 @@ Language: sv_SE
     <string name="label_done_button">Klart</string>
     <string name="label_next_button">Nästa</string>
     <string name="delete_button_alt">Ta bort</string>
-    <string name="hpp_choose_error">Ett fel uppstod när designen skulle aktiveras.</string>
+    <string name="hpp_choose_error">Ett fel uppstod när temat skulle aktiveras.</string>
     <string name="hpp_retry_error">Kontrollera din internet-anslutning och försök igen.</string>
     <string name="hpp_error_subtitle">Tryck på ”Försök igen” när du har förbindelse med internet igen.</string>
     <string name="hpp_error_title">Layouter är inte tillgängliga när du saknar internetförbindelse</string>
@@ -880,8 +904,6 @@ Language: sv_SE
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">Den rullningsbara blockmenyn har öppnats. Välj ett block.</string>
     <string name="gutenberg_native_scrollable_block_menu_closed">Den rullningsbara blockmenyn har stängts.</string>
     <string name="hpp_choose_button">Välj</string>
-    <string name="hpp_subtitle">Välj favoritlayout på din startsida Du kan anpassa eller ändra det senare.</string>
-    <string name="hpp_title">Välj en design</string>
     <string name="mlp_network_error_subtitle">Tryck på ”Försök igen” när du har internetuppkoppling igen eller skapa en tom sida med knappen nedan.</string>
     <string name="mlp_network_error_title">Layouter är inte tillgängliga när du saknar internetförbindelse</string>
     <string name="mlp_error_subtitle">Tryck på ”Försök igen” eller skapa en tom sida med hjälp av knappen nedan.</string>

@@ -863,7 +863,6 @@ Language: pt_BR
     <string name="label_done_button">Concluído</string>
     <string name="label_next_button">Seguinte</string>
     <string name="delete_button_alt">Excluir</string>
-    <string name="hpp_choose_error">Ocorreu um erro durante a seleção do design.</string>
     <string name="hpp_retry_error">Verifique sua conexão com a internet e tente novamente.</string>
     <string name="hpp_error_subtitle">Toque em tentar novamente quando estiver online.</string>
     <string name="hpp_error_title">Modelos não estão disponíveis off-line</string>
@@ -880,8 +879,6 @@ Language: pt_BR
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">Menu de blocos aberto. Escolha um bloco.</string>
     <string name="gutenberg_native_scrollable_block_menu_closed">Menu de blocos fechado.</string>
     <string name="hpp_choose_button">Escolher</string>
-    <string name="hpp_subtitle">Escolha seu modelo preferido para a página inicial. Você poderá personalizar ou alterá-lo depois.</string>
-    <string name="hpp_title">Escolha um design</string>
     <string name="mlp_network_error_subtitle">Toque em tentar novamente quando estiver online ou crie uma página vazia usando o botão abaixo.</string>
     <string name="mlp_network_error_title">Modelos não estão disponíveis off-line</string>
     <string name="mlp_error_subtitle">Toque em tentar novamente ou crie uma página vazia usando o botão abaixo.</string>

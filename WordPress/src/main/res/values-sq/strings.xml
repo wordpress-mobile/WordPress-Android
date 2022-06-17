@@ -1,22 +1,106 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-05-06 11:48:51+0000
+Translation-Revision-Date: 2022-06-17 10:23:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: sq_AL
 -->
 <resources>
+    <string name="hpp_bottom_helper_text">S’e ndani dot mendjen? Temën mund ta ndryshoni kurdo.</string>
+    <string name="hpp_recommended_default_vertical">Blogim</string>
+    <string name="hpp_recommended_subtitle">Zgjedhur për ju</string>
+    <string name="hpp_recommended_title">Më e mira për %s</string>
+    <string name="hpp_preview_tapped_theme">Parashihni temën %s</string>
+    <string name="hpp_title">Zgjidhni një temë</string>
+    <string name="my_site_blogging_prompt_card_menu_learn_more">Mësoni më tepër</string>
+    <string name="my_site_blogging_prompt_card_attribution_dayone">Nga</string>
+    <string name="stats_follower_types_pie_chart_total_label">Gjithsej</string>
+    <string name="stats_referrers_pie_chart_others">Të tjera</string>
+    <string name="stats_referrers_pie_chart_search">Kërkim</string>
+    <string name="stats_referrers_pie_chart_wordpress">WordPress</string>
+    <string name="stats_referrers_pie_chart_total_label">Parje</string>
+    <string name="stats_action_card_schedule_post_button_label">Planifikojeni</string>
+    <string name="stats_action_card_schedule_post_message">✍️ Vini në plan postim në kohën më të përshtatshme të lëndës tuaj që nga skicat tuaja.</string>
+    <string name="stats_action_card_schedule_post_title">Vini në plan postimin tuaj</string>
+    <string name="stats_action_card_blogging_reminders_button_label">Ujdisni kujtues</string>
+    <string name="stats_action_card_blogging_reminders_message">💡Ujdisni kujtues për të postuar rregullisht dhe për t’i mbajtur lexuesit tuaj të angazhuar dhe për të tërhequr vizitorë të rinj.</string>
+    <string name="stats_action_card_blogging_reminders_title">Ujdisni kujtuesit tuaj për blogim</string>
+    <string name="stats_action_card_grow_audience_button_label">Hidhini një sy kursit</string>
+    <string name="stats_action_card_grow_audience_message">💡Kemi mësime që kapen kollaj, dhënë nga bloguesit më të mirë, për të fuqizuar blogun tuaj.</string>
+    <string name="stats_action_card_grow_audience_title">Shtoni publikun tuaj</string>
+    <string name="gutenberg_native_you_can_also_rearrange_blocks_by_tapping_a_block_and_then_tapping">Blloqet mund t’i risistemoni edhe duke prekur mbi një bllok dhe mandej duke prekur shigjetat për sipër dhe poshtë që shfaqen në anën e poshtme majtas bllokut, për t’i kaluar sipër ose poshtë blloqesh të tjerë.</string>
+    <string name="gutenberg_native_image_file_not_found">S’u gjet kartelë figure.</string>
+    <string name="gutenberg_native_drag_drop_makes_rearranging_blocks_a_breeze_press_and_hold_on_a_b">“Merr &amp; vër” e bën të rrufeshëm risistemimin e blloqeve. Shtypeni dhe mbajeni të shtypur mbi një bllok, mandej tërhiqeni te vendndodhja e re për të dhe lëshojeni.</string>
+    <string name="gutenberg_native_drag_drop">Merr &amp; vër</string>
+    <string name="gutenberg_native_arrow_buttons">Butona shigjetë</string>
+    <string name="gutenberg_native_1_s_currently_selected_2_s">%1$s. Përzgjedhur aktualisht: %2$s</string>
+    <string name="quick_start_sites_type_all_tasks_completed">Krejt punët të mbaruara</string>
+    <string name="quick_start_list_task_complete">Punë e plotësuar</string>
+    <string name="me_btn_scan_login_code">Skanoni Kod Hyrje</string>
+    <string name="stats_insights_followers_guide_card">💡Mund të provoni të lini një koment, si një gjest për të nxitur angazhimin me blogun, kundrejt pasjes së më tepër ndjekësve.</string>
+    <string name="stats_insights_comments_guide_card">💡Shihni kontribuesit tuaj kryesues, duke prekur mbi SHIHNI MË TEPËR.</string>
+    <string name="stats_insights_likes_guide_card">⭐️ Postimi juaj më i ri %1$s ka marrë %2$s pëlqime.</string>
+    <string name="stats_most_popular_percent_views_empty">Pa veprimtari të mjaftueshme. Kontrolloni më vonë, kur sajti juaj të ketë më tepër vizitorë!</string>
+    <string name="stats_insights_latest_post_empty">S’keni botuar ende ndonjë postim. Kontrolloni më vonë, sapo të keni botuar postimin tuaj të parë!</string>
+    <string name="stats_insights_views_and_visitors_visitors_empty_state">Nëse doni të provoni të merrni më tepër parje dhe trafik, shihni ndihmëzat tona kryesuese për %1$s</string>
+    <string name="stats_total_followers_content_description">%1s, %2s e ndjekësve gjithsej</string>
+    <string name="stats_value_percent">%1$s (%2$s%%)</string>
+    <string name="pages_copy_link">Kopjoji lidhjen</string>
+    <string name="quick_start_completed_tour_title">Përgëzime! Dini nga shkoni&lt;br/&gt;</string>
+    <string name="quick_start_sites_type_get_to_know_app">Njihuni me aplikacionin</string>
+    <string name="quick_start_list_upload_media_subtitle">Sillni te sajti juaj media drejt e nga pajisja apo kamera juaj</string>
+    <string name="quick_start_list_upload_media_title">Ngarkoni foto ose video</string>
+    <string name="quick_start_list_check_notification_subtitle">Merrni nga xhepi përditësime të atypëratyshme</string>
+    <string name="quick_start_dialog_upload_media_message">Përzgjidhni %1$s Media %2$s që të shihni mediatekën tuaj të tanishme.</string>
+    <string name="quick_start_dialog_check_notifications_message">Merrni nga xhepi përditësime të atypëratyshme.</string>
+    <string name="quick_start_dialog_check_notifications_title">Shihni njoftimet për ju</string>
+    <string name="quick_start_dialog_check_notifications_message_short">Përzgjidhni %1$s skedë Njoftimesh %2$s që të merrni përditësime kudo që të jeni.</string>
+    <string name="quick_start_dialog_upload_media_message_short_plus">Përzgjidhni %1$s plus %2$s që të ngarkoni media. Mund ta shtoni te postimet/faqet tuaja prej çfarëdo pajisjeje.</string>
+    <string name="quick_start_dialog_follow_sites_message_short_discover">Përdorni &lt;b&gt; Zbuloni &lt;/b&gt; që të gjeni sajte dhe etiketa.</string>
+    <string name="quick_start_dialog_follow_sites_message_short_discover_and_settings">Përdorni &lt;b&gt; Zbuloni &lt;/b&gt; që të gjeni sajte dhe etiketa. Provoni të përzgjidhni %1$s Rregullime %2$s që të shtoni subjekte që ju pëlqejnë.</string>
+    <string name="photo_picker_video_thumbnail_content_description">Miniaturë Videoje</string>
+    <string name="stats_details_top_commentators">Komentatorët Kryesues</string>
+    <string name="stats_insights_total_stats_negative">%1$s më poshtë se javën e kaluar</string>
+    <string name="stats_insights_total_stats_positive">%1$s më sipër se javën e kaluar</string>
+    <string name="stats_published_years_ago">Botuar %1$d vjet më parë</string>
+    <string name="stats_published_a_year_ago">Botuar një vit më parë</string>
+    <string name="stats_published_months_ago">Botuar %1$d muaj më parë</string>
+    <string name="stats_published_a_month_ago">Botuar një muaj më parë</string>
+    <string name="stats_published_days_ago">Botuar %1$d ditë më parë</string>
+    <string name="stats_published_a_day_ago">Botuar një ditë më parë</string>
+    <string name="stats_published_hours_ago">Botuar %1$d orë më parë</string>
+    <string name="stats_published_an_hour_ago">Botuar një orë më parë</string>
+    <string name="stats_published_minutes_ago">Botuar %1$d minuta më parë</string>
+    <string name="stats_published_a_minute_ago">Botuar një minutë më parë</string>
+    <string name="stats_published_seconds_ago">Botuar pak sekonda më parë</string>
+    <string name="stats_view_total_followers">Ndjekës Gjithsej</string>
+    <string name="stats_view_total_comments">Komente Gjithsej</string>
+    <string name="stats_view_total_likes">Pëlqime Gjithsej</string>
     <string name="blogging_prompts_notification_dismiss">Hidhe tej</string>
     <string name="blogging_prompts_answer_prompt_notification_answer_action">Përgjigje</string>
     <string name="blogging_prompts_onboarding_got_it">E mora vesh</string>
     <string name="quick_start_dialog_view_your_site_message_short">Prekni &lt;b&gt;%1$s&lt;/b&gt; që të shihni sajtin tuaj</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">Përzgjidhni %1$s Lexues %2$s që të gjeni sajte të tjerë.</string>
+    <string name="photo_picker_video_thumbnail_unselected">Videoja u shpërzgjodh</string>
+    <string name="photo_picker_video_thumbnail_selected">Videoja u përzgjodh</string>
     <string name="photo_picker_media_thumbnail_content_description">Miniaturë Media</string>
     <string name="stats_insights_popular_title">Koha Më Popullore</string>
+    <string name="stats_insights_views_and_visitors_tooltip_count">%1$s %2$s</string>
+    <string name="stats_insights_views_and_visitors_visitors_negative">Vizitorët tuaj këtë javë janë %1$s më pak se sa javën e kaluar.</string>
+    <string name="stats_insights_views_and_visitors_visitors_positive">Vizitorët tuaj këtë javë janë %1$s më tepër se sa javën e kaluar.</string>
+    <string name="stats_insights_views_and_visitors_views_negative">Parjet tuaja këtë javë janë %1$s më poshtë se sa javën e kaluar.</string>
+    <string name="stats_insights_views_and_visitors_views_positive">Parjet tuaja këtë javë janë %1$s më sipër se sa javën e kaluar.</string>
+    <string name="stats_timeframe_previous_week">Java e Kaluar</string>
+    <string name="stats_timeframe_this_week">Këtë Javë</string>
+    <string name="scan_vault_press_active_on_site_button_text">Vizitoni Pultin</string>
+    <string name="scan_vault_press_active_on_site_subtitle">Sajti juaj mbrohet tashmë nga VaultPress. Më poshtë mund të gjeni një lidhje për te pulti juaj VaultPress.</string>
+    <string name="scan_vault_press_active_on_site_title">Sajti juaj ka VaultPress</string>
+    <string name="locale_picker_current_language">Gjuhë e tanishme:</string>
     <string name="hpp_choose_and_create_site">Krijoni sajt</string>
     <string name="gutenberg_native_add_blocks_11d0841f">Shtoni blloqe</string>
     <string name="initial_screen">Skena Fillestare</string>
     <string name="blogging_prompts_onboarding_notification_action">Mësoni më tepër</string>
+    <string name="blogging_prompts_onboarding_notification_text">Bëhuni një shkrues më i mirë, duke krijuar një zakon shkrimi. Prekeni që të mësoni më tepër.</string>
     <string name="new_site_creation_site_name_header_subtitle">Një emër i mirë do të ishte i shkurtër dhe që mbahet mend.\nMund ta ndryshoni më vonë.</string>
     <string name="new_site_creation_site_name_header_title">Jepini sajtit tuaj %s një emër</string>
     <string name="new_site_creation_site_name_title">Emër sajti</string>
@@ -203,6 +287,7 @@ Language: sq_AL
     <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;Falas për vitin e parë &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s /vit&lt;/s&gt;&lt;/span&gt;</string>
     <string name="domains_redirected_domains_blurb">Përkatësia juaj do të ridrejtojë për te sajti juaj te %s</string>
     <string name="gutenberg_native_create_link">Krijo lidhje</string>
+    <string name="domain_registration_result_description">Përkatësia juaj e re &lt;b&gt;%s&lt;/b&gt; po ujdiset. Mund të duhen deri në 30 minuta që përkatësia juaj të fillojë të funksionojë.</string>
     <string name="domain_registration_result_title">Përgëzime për blerjen tuaj!</string>
     <string name="domains_suggestions_select_domain">Përzgjidhni përkatësi</string>
     <string name="domains_title">Përkatësi</string>
@@ -408,6 +493,7 @@ Language: sq_AL
     <string name="gutenberg_native_three">Tre</string>
     <string name="gutenberg_native_s_social_icon">Ikonë shoqërorësh %s</string>
     <string name="gutenberg_native_mention">Përmendje</string>
+    <string name="gutenberg_native_new">I RI</string>
     <string name="gutenberg_native_preview_post">Parashiheni postimin</string>
     <string name="gutenberg_native_preview_page">Parashiheni faqen</string>
     <string name="gutenberg_native_retry">Riprovoni</string>
@@ -415,6 +501,7 @@ Language: sq_AL
     <string name="gutenberg_native_one">Një</string>
     <string name="gutenberg_native_no_preview_available">S’ka paraparje gati</string>
     <string name="gutenberg_native_text_color">Ngjyrë teksti</string>
+    <string name="gutenberg_native_padding">Mbushje</string>
     <string name="gutenberg_native_four">Katër</string>
     <string name="gutenberg_native_custom_url">URL Vetjake</string>
     <string name="gutenberg_native_create_embed">Krijo trupëzim</string>
@@ -777,7 +864,7 @@ Language: sq_AL
     <string name="label_done_button">U bë</string>
     <string name="label_next_button">Pasuesi</string>
     <string name="delete_button_alt">Fshije</string>
-    <string name="hpp_choose_error">Pati një gabim gjatë përzgjedhjes së skemës.</string>
+    <string name="hpp_choose_error">Pati një gabim gjatë përzgjedhjes së temës.</string>
     <string name="hpp_retry_error">Ju lutemi, Kontrolloni lidhjen tuaj në internet dhe riprovoni.</string>
     <string name="hpp_error_subtitle">Kur të jeni sërish i lidhur, prekni Riprovo.</string>
     <string name="hpp_error_title">S’mund të kihen skema, teksa jeni jashtë linje</string>
@@ -794,8 +881,6 @@ Language: sq_AL
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">U hap me blloqesh. Përzgjidhni një bllok.</string>
     <string name="gutenberg_native_scrollable_block_menu_closed">Menuja e blloqeve u mbyll.</string>
     <string name="hpp_choose_button">Zgjidhni</string>
-    <string name="hpp_subtitle">Zgjidhni skemën e parapëlqyer për faqen tuaj hyrëse. Mund ta përpunoni dhe përshtatni.</string>
-    <string name="hpp_title">Zgjidhni një skemë</string>
     <string name="mlp_network_error_subtitle">Prekni &lt;code&gt;Retry&lt;/code&gt;, kur të jeni prapë të lidhur, ose krijoni një faqe të zbrazët duke përdorur butonin më poshtë.</string>
     <string name="mlp_network_error_title">S’mund të kihen skema, teksa jeni jashtë linje</string>
     <string name="mlp_error_subtitle">Prekni &lt;code&gt;Retry&lt;/code&gt;, ose krijoni një faqe të zbrazët duke përdorur butonin më poshtë.</string>
@@ -1774,6 +1859,7 @@ Language: sq_AL
     <string name="quick_start_focus_point_description">prekeni këtu</string>
     <string name="quick_start_list_create_site_title">Krijoni sajtin tuaj</string>
     <string name="quick_start_list_create_site_subtitle">Krijojeni dhe vëreni në punë sajtin tuaj.</string>
+    <string name="quick_start_completed_tour_subtitle">A s’ju kënaq t’u hiqni vizë gjërave në një listë?</string>
     <string name="quick_start_dialog_view_site_title">Shihni sajtin tuaj</string>
     <string name="quick_start_dialog_view_site_message">Bëni një paraparje të sajtit tuaj që të shihni ç’do të shohin vizitorët tuaj.</string>
     <string name="quick_start_dialog_share_site_title">Ndajeni sajtin tuaj me të tjerë</string>

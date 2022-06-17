@@ -1,11 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-04-24 13:48:34+0000
+Translation-Revision-Date: 2022-06-16 00:24:00+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.1
 Language: vi_VN
 -->
 <resources>
+    <string name="blogging_prompts_onboarding_prompts_loading">Đang tải Nhắc Nhở Viết. Xin chờ và thử lại sau.</string>
+    <string name="hpp_bottom_helper_text">Không biết chọn cái nào? Bạn có thể đổi lại chủ đề sau.</string>
+    <string name="hpp_recommended_default_vertical">Viết blog</string>
+    <string name="hpp_recommended_subtitle">Dành cho bạn</string>
+    <string name="hpp_recommended_title">Phù hợp %s</string>
+    <string name="hpp_preview_tapped_theme">Xem trước chủ đề %s</string>
+    <string name="hpp_title">Chọn một chủ đề</string>
+    <string name="my_site_blogging_prompt_card_skipped_snackbar">Bỏ qua nhắc nhở hôm nay</string>
+    <string name="my_site_blogging_prompt_card_menu_learn_more">Tìm hiểu thêm</string>
+    <string name="my_site_blogging_prompt_card_attribution_dayone">Từ</string>
+    <string name="stats_follower_types_pie_chart_total_label">Tổng cộng</string>
+    <string name="stats_referrers_pie_chart_others">Khác</string>
+    <string name="stats_referrers_pie_chart_search">Tìm kiếm</string>
+    <string name="stats_referrers_pie_chart_wordpress">WordPress</string>
+    <string name="stats_referrers_pie_chart_total_label">Lượt xem</string>
+    <string name="stats_action_card_schedule_post_button_label">Lên lịch</string>
+    <string name="stats_action_card_schedule_post_message">✍️ Lên lịch đăng bản nháp vào thời gian thích hợp nhất.</string>
+    <string name="stats_action_card_schedule_post_title">Lên lịch bài viết</string>
+    <string name="stats_action_card_blogging_reminders_button_label">Cài nhắc nhở</string>
+    <string name="stats_action_card_blogging_reminders_message">💡Cài nhắc nhở để giúp thu hút độc giả và tăng lượt truy cập.</string>
+    <string name="stats_action_card_blogging_reminders_title">Nhắc đăng bài</string>
+    <string name="stats_action_card_grow_audience_button_label">Chọn khóa học</string>
+    <string name="stats_action_card_grow_audience_message">💡Chúng tôi có những bài học dễ hiểu do các blogger giỏi nhất dạy để phát triển blog của bạn.</string>
+    <string name="stats_action_card_grow_audience_title">Thu hút độc giả</string>
+    <string name="gutenberg_native_you_can_also_rearrange_blocks_by_tapping_a_block_and_then_tapping">Bạn cũng có thể sắp xếp lại các khối bằng cách chạm vào một khối rồi nhấn vào mũi tên lên và xuống xuất hiện ở phía dưới bên trái của khối để di chuyển khối lên hoặc xuống.</string>
+    <string name="gutenberg_native_image_file_not_found">Không tìm thấy hình.</string>
+    <string name="stats_insights_followers_guide_card">💡Bạn có thể thử để lại nhận xét như một hành động khuyến khích nhằm thu hút nhiều người theo dõi hơn.</string>
+    <string name="stats_insights_comments_guide_card">💡Xem ai bình luận nhiều nhất bằng cách nhấn XEM THÊM.</string>
+    <string name="stats_insights_likes_guide_card">⭐️ Bài đăng gần nhất %1$s đã nhận %2$s lượt thích.</string>
+    <string name="stats_insights_popular_title">🔥 Ưa Chuộng</string>
+    <string name="stats_insights_views_and_visitors_tooltip_count">%1$s %2$s</string>
+    <string name="stats_timeframe_previous_week">Tuần Trước</string>
+    <string name="stats_timeframe_this_week">Tuần Này</string>
+    <string name="scan_vault_press_active_on_site_button_text">Xem tổng quan</string>
+    <string name="scan_vault_press_active_on_site_title">Trang của bạn có VaultPress</string>
+    <string name="locale_picker_current_language">Ngôn ngữ hiện tại:</string>
     <string name="hpp_choose_and_create_site">Tạo blog</string>
     <string name="gutenberg_native_add_blocks_11d0841f">Thêm khối</string>
     <string name="initial_screen">Màn hình chào mừng</string>
@@ -213,6 +249,7 @@ Language: vi_VN
     <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;Miễn phí năm đầu tiên &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s /năm&lt;/s&gt;&lt;/span&gt;</string>
     <string name="domains_redirected_domains_blurb">Tên miền của bạn sẽ chỉ hướng tới %s</string>
     <string name="gutenberg_native_create_link">Chèn liên kết</string>
+    <string name="domain_registration_result_description">Đang đăng ký tên miền &lt;b&gt;%s&lt;/b&gt; mới. Quá trình này có thể mất đến 30 phút.</string>
     <string name="domain_registration_result_title">Bạn đã mua xong tên miền!</string>
     <string name="domains_suggestions_select_domain">Chọn tên miền</string>
     <string name="domains_title">Tên miền</string>
@@ -420,6 +457,7 @@ Language: vi_VN
     <string name="gutenberg_native_three">Ba</string>
     <string name="gutenberg_native_s_social_icon">%s biểu tượng mạng xã hội</string>
     <string name="gutenberg_native_mention">Nhắc đến</string>
+    <string name="gutenberg_native_new">MỚI</string>
     <string name="gutenberg_native_preview_post">Xem trước bài viết</string>
     <string name="gutenberg_native_preview_page">Xem trước trang</string>
     <string name="gutenberg_native_retry">Thử lại</string>
@@ -433,6 +471,7 @@ Language: vi_VN
     <string name="gutenberg_native_create_embed">Chèn mã nhúng</string>
     <string name="gutenberg_native_column_d">Cột %d</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Mô tả ngắn gọn các liên kết để độc giả hiểu.</string>
+    <string name="gutenberg_native_add_blocks">Thêm khối</string>
     <string name="login_no_jetpack_sites">Không tìm thấy blog có Jetpack</string>
     <string name="gutenberg_native_what_is_alt_text">Alt text là gì?</string>
     <string name="gutenberg_native_transform_s_to">Chuyển %s thành</string>
@@ -513,10 +552,12 @@ Language: vi_VN
     <string name="disable">Tắt</string>
     <string name="quick_start_card_menu_unpin">Bỏ ghim</string>
     <string name="quick_start_list_review_pages_subtitle">Kiểm tra và cập nhật các trang, thêm hoặc xóa chúng.</string>
+    <string name="quick_start_list_view_site_title">Ghé thăm blog</string>
     <string name="quick_start_list_follow_site_subtitle">Khám phá và theo dõi những blog mà bạn thích.</string>
     <string name="quick_start_list_enable_sharing_title">Chia sẻ mạng xã hội</string>
     <string name="quick_start_list_enable_sharing_subtitle">Tự động chia sẻ bài viết mới với mạng xã hội của bạn.</string>
     <string name="quick_start_list_update_site_title_subtitle">Chọn tên blog thể hiện tính cách và chủ đề của trang.</string>
+    <string name="quick_start_list_check_stats_title">Xem thống kê</string>
     <string name="backup_download_status_failure_bullet2">Chúng tôi đang cố gắng tạo tập tin sao lưu có thể tải xuống của bạn.</string>
     <string name="backup_download_status_failure_bullet1">Chúng tôi không thể biết sẽ mất bao lâu để bản sao lưu của bạn có thể tải xuống.</string>
     <string name="backup_download_status_failure_heading">Hmm, chúng tôi không tìm thấy bản sao lưu có thể tải xuống của bạn</string>
@@ -805,8 +846,6 @@ Language: vi_VN
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">Đã mở menu khối có thể cuộn. Chọn một khối.</string>
     <string name="gutenberg_native_scrollable_block_menu_closed">Đã đóng menu khối có thể cuộn.</string>
     <string name="hpp_choose_button">Chọn</string>
-    <string name="hpp_subtitle">Chọn bố cục trang chủ yêu thích. Bạn có thể sửa và tùy biến nó sau này.</string>
-    <string name="hpp_title">Chọn một thiết kế</string>
     <string name="mlp_network_error_subtitle">Nhấn thử lại khi có mạng trở lại hoặc tạo một trang trống bằng nút phía dưới.</string>
     <string name="mlp_network_error_title">Bố cục không khả dụng khi ngoại tuyến</string>
     <string name="mlp_error_subtitle">Nhấn thử lại hoặc tạo một trang trống bằng nút phía dưới.</string>
@@ -1615,11 +1654,13 @@ Language: vi_VN
     <string name="quick_start_sites">Kế tiếp</string>
     <string name="quick_start_dialog_upload_icon_title">Chọn biểu tượng blog</string>
     <string name="quick_start_dialog_upload_icon_message">Khách truy cập trang sẽ thấy biểu tượng của bạn trên trình duyệt. Thêm một biểu tượng xinh đẹp hoặc chuyên nghiệp.</string>
+    <string name="quick_start_dialog_check_stats_message_short">Nhấn %1$s Thống Kê %2$s để xem hiệu suất blog.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Nhấn %1$s Biểu Tượng Blog %2$s để tải lên ngay.</string>
     <string name="quick_start_dialog_publish_post_message">Tạo nháp và đăng một bài viết.</string>
     <string name="quick_start_dialog_enable_sharing_title">Bật chia sẻ bài viết</string>
     <string name="quick_start_dialog_enable_sharing_message">Tự động chia sẻ bài mới tới những mạng xã hội của bạn.</string>
     <string name="quick_start_dialog_check_stats_title">Kiểm tra thống kê blog</string>
+    <string name="quick_start_dialog_check_stats_message">Tối ưu hóa hiệu suất blog.</string>
     <string name="quick_start_dialog_remove_next_steps_message">Bỏ bước Kế Tiếp sẽ ẩn hướng dẫn nhanh trên blog này. Nó sẽ không xuất hiện lại.</string>
     <string name="quick_start_dialog_remove_next_steps_title">Bỏ bước Kế Tiếp</string>
     <string name="quick_start_remove_next_steps_menu_title">Bỏ qua</string>
@@ -1783,7 +1824,9 @@ Language: vi_VN
     <string name="quick_start_focus_point_description">nhấn vào đây</string>
     <string name="quick_start_list_create_site_title">Tạo blog của bạn</string>
     <string name="quick_start_list_create_site_subtitle">Đưa blog của bạn lên và chạy.</string>
+    <string name="quick_start_completed_tour_subtitle">Thật là tốt khi hoàn thành mọi thứ, đúng không?</string>
     <string name="quick_start_dialog_view_site_title">Blog của tôi</string>
+    <string name="quick_start_dialog_view_site_message">Xem trước trang của bạn hiển thị như thế nào.</string>
     <string name="quick_start_dialog_share_site_title">Chia sẻ blog của bạn</string>
     <string name="quick_start_dialog_enable_sharing_message_short_sharing">Nhấn %1$s Chia sẻ %2$s để tiếp tục</string>
     <string name="quick_start_dialog_enable_sharing_message_short_connections">Nhấn %1$s Kết nối %2$s để thêm các tài khoản mạng xã hội của bạn</string>
@@ -1791,6 +1834,7 @@ Language: vi_VN
     <string name="quick_start_dialog_publish_post_title">Viết bài</string>
     <string name="quick_start_dialog_publish_post_message_short">Nhấn %1$s Viết bài %2$s để tạo 1 bài viết mới</string>
     <string name="quick_start_dialog_need_help_button_negative">Để sau</string>
+    <string name="quick_start_dialog_follow_sites_title">Theo dõi các blog khác</string>
     <string name="quick_start_button_positive">Bắt đầu</string>
     <string name="quick_start_button_negative_short">Hủy bỏ</string>
     <string name="quick_start_button_negative">Để sau</string>
