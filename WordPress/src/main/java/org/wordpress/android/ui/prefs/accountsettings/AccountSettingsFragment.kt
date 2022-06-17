@@ -46,6 +46,9 @@ import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel.U
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.SETTINGS
+import org.wordpress.android.util.SnackbarItem
+import org.wordpress.android.util.SnackbarItem.Info
+import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration.LONG
 import org.wordpress.android.widgets.WPSnackbar
@@ -69,6 +72,7 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
         OnPreferenceChangeListener, OnPreferenceClickListener, OnConfirmListener, OnShownListener, OnDismissListener {
     @set:Inject lateinit var uiHelpers: UiHelpers
     @set:Inject lateinit var viewModel: AccountSettingsViewModel
+    @Inject lateinit var snackbarSequencer: SnackbarSequencer
     private lateinit var usernamePreference: Preference
     private lateinit var emailPreference: EditTextPreferenceWithValidation
     private lateinit var primarySitePreference: DetailListPreference
@@ -222,8 +226,11 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
     }
 
     private fun showUserNameSnackBar(userName: SnackbarMessageHolder) {
-        WPSnackbar.make(view!!, uiHelpers.getTextOfUiString(context, userName.message),
-                userName.duration).show()
+        view?.let {
+            snackbarSequencer.enqueue(
+                    SnackbarItem(Info(view = it, textRes = userName.message, duration = userName.duration))
+            )
+        }
     }
 
     private fun showSnackBar(snackBarMessage: SnackbarMessageHolder) {
