@@ -20,10 +20,6 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.collect
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
-import org.wordpress.android.analytics.AnalyticsTracker
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.CHANGE_USERNAME_DISMISSED
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.CHANGE_USERNAME_DISPLAYED
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.SETTINGS_DID_CHANGE
 import org.wordpress.android.ui.FullScreenDialogFragment
 import org.wordpress.android.ui.FullScreenDialogFragment.OnConfirmListener
 import org.wordpress.android.ui.FullScreenDialogFragment.OnDismissListener
@@ -38,6 +34,13 @@ import org.wordpress.android.ui.prefs.EditTextPreferenceWithValidation.Validatio
 import org.wordpress.android.ui.prefs.EditTextPreferenceWithValidation.ValidationType.PASSWORD
 import org.wordpress.android.ui.prefs.EditTextPreferenceWithValidation.ValidationType.URL
 import org.wordpress.android.ui.prefs.PreferenceFragmentLifeCycleOwner
+import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsAction.EMAIL_CHANGE
+import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsAction.PASSWORD_CHANGE
+import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsAction.PRIMARY_SITE_CHANGE
+import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsAction.USERNAME_CHANGE
+import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsAction.USERNAME_CHANGE_SCREEN_DISMISSED
+import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsAction.USERNAME_CHANGE_SCREEN_DISPLAYED
+import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsAction.WEB_ADDRESS_CHANGE
 import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel.AccountSettingsUiState
 import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel.ChangePasswordSettingsUiState
 import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel.EmailSettingsUiState
@@ -55,16 +58,6 @@ import org.wordpress.android.widgets.WPSnackbar
 import javax.inject.Inject
 
 private const val SNACKBAR_NO_OF_LINES_FOUR = 4
-private const val SOURCE = "source"
-private const val SOURCE_ACCOUNT_SETTINGS = "account_settings"
-private const val TRACK_PROPERTY_FIELD_NAME = "field_name"
-private const val TRACK_PROPERTY_EMAIL = "email"
-private const val TRACK_PROPERTY_PRIMARY_SITE = "primary_site"
-private const val TRACK_PROPERTY_WEB_ADDRESS = "web_address"
-private const val TRACK_PROPERTY_PASSWORD = "password"
-private const val TRACK_PROPERTY_USERNAME = "username"
-private const val TRACK_PROPERTY_PAGE = "page"
-private const val TRACK_PROPERTY_PAGE_ACCOUNT_SETTINGS = "account_settings"
 private const val EMPTY_STRING = ""
 
 @Suppress("DEPRECATION")
@@ -72,7 +65,8 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
         OnPreferenceChangeListener, OnPreferenceClickListener, OnConfirmListener, OnShownListener, OnDismissListener {
     @set:Inject lateinit var uiHelpers: UiHelpers
     @set:Inject lateinit var viewModel: AccountSettingsViewModel
-    @Inject lateinit var snackbarSequencer: SnackbarSequencer
+    @set:Inject lateinit var snackbarSequencer: SnackbarSequencer
+    @set:Inject lateinit var analyticsTracker: AccountSettingsAnalyticsTracker
     private lateinit var usernamePreference: Preference
     private lateinit var emailPreference: EditTextPreferenceWithValidation
     private lateinit var primarySitePreference: DetailListPreference
@@ -275,36 +269,29 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
 
     @Deprecated("Deprecated")
     override fun onPreferenceChange(preference: Preference, newValue: Any): Boolean {
-        var trackProperty: String? = null
+        var action: AccountSettingsAction? = null
         when (preference) {
             emailPreference -> {
                 viewModel.onEmailChanged(newValue.toString())
-                trackProperty = TRACK_PROPERTY_EMAIL
+                action = EMAIL_CHANGE
             }
             primarySitePreference -> {
                 viewModel.onPrimarySiteChanged(newValue.toString().toLong())
-                trackProperty = TRACK_PROPERTY_PRIMARY_SITE
+                action = PRIMARY_SITE_CHANGE
             }
             webAddressPreference -> {
                 viewModel.onWebAddressChanged(newValue.toString())
-                trackProperty = TRACK_PROPERTY_WEB_ADDRESS
+                action = WEB_ADDRESS_CHANGE
             }
             changePasswordPreference -> {
                 viewModel.onPasswordChanged(newValue.toString())
-                trackProperty = TRACK_PROPERTY_PASSWORD
+                action = PASSWORD_CHANGE
             }
         }
         if (!preference.summary.toString().equals(newValue.toString(), ignoreCase = true)) {
-            trackProperty?.let { trackSettingsDidChange(it) }
+            action?.let { analyticsTracker.track(it) }
         }
         return true
-    }
-
-    private fun trackSettingsDidChange(fieldName: String) {
-        val props = mutableMapOf<String, String?>()
-        props[TRACK_PROPERTY_FIELD_NAME] = fieldName
-        props[TRACK_PROPERTY_PAGE] = TRACK_PROPERTY_PAGE_ACCOUNT_SETTINGS
-        AnalyticsTracker.track(SETTINGS_DID_CHANGE, props)
     }
 
     @Deprecated("Deprecated")
@@ -353,21 +340,17 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
     }
 
     override fun onShown() {
-        val props = mutableMapOf<String, String?>()
-        props[SOURCE] = SOURCE_ACCOUNT_SETTINGS
-        AnalyticsTracker.track(CHANGE_USERNAME_DISPLAYED, props)
+        analyticsTracker.track(USERNAME_CHANGE_SCREEN_DISPLAYED)
     }
 
     override fun onDismiss() {
-        val props = mutableMapOf<String, String?>()
-        props[SOURCE] = SOURCE_ACCOUNT_SETTINGS
-        AnalyticsTracker.track(CHANGE_USERNAME_DISMISSED, props)
+        analyticsTracker.track(USERNAME_CHANGE_SCREEN_DISMISSED)
     }
 
     override fun onConfirm(result: Bundle?) {
         result?.getString(BaseUsernameChangerFullScreenDialogFragment.RESULT_USERNAME)?.let {
             viewModel.onUsernameChangeConfirmedFromServer(it)
-            trackSettingsDidChange(TRACK_PROPERTY_USERNAME)
+            analyticsTracker.track(USERNAME_CHANGE)
         }
     }
 }
