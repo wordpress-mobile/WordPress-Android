@@ -319,7 +319,7 @@ dependencies {
     implementation "$gradle.ext.storiesAndroidPath:$storiesVersion"
     implementation "$gradle.ext.storiesAndroidMp4ComposePath:$storiesVersion"
     testImplementation "$gradle.ext.storiesAndroidPhotoEditorPath:$storiesVersion"
-    implementation project(path:':libs:image-editor::ImageEditor')
+    implementation project(path:':libs:image-editor')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$gradle.ext.kotlinVersion"
 
     // Provided by maven central
