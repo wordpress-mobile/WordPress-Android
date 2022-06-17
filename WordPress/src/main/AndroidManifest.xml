@@ -468,7 +468,7 @@
                 <data
                     android:host="apps.wordpress.com"
                     android:pathPattern="/get/.*"
-                    android:scheme="http" />
+                    android:scheme="https" />
 
             </intent-filter>
 
