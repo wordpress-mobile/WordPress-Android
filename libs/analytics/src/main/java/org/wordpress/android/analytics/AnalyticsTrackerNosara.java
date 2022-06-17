@@ -1438,8 +1438,6 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "enhanced_site_creation_intent_question_search_focused";
             case ENHANCED_SITE_CREATION_INTENT_QUESTION_EXPERIMENT:
                 return "enhanced_site_creation_intent_question_experiment";
-            case ENHANCED_SITE_CREATION_SITE_NAME_EXPERIMENT:
-                return "enhanced_site_creation_site_name_experiment";
             case ENHANCED_SITE_CREATION_SITE_NAME_VIEWED:
                 return "enhanced_site_creation_site_name_viewed";
             case ENHANCED_SITE_CREATION_SITE_NAME_CANCELED:
