@@ -183,7 +183,7 @@ class AccountSettingsViewModel @Inject constructor(
             updateAccountSettingsUiState()
             if (onAccountChangedEvent.isError) {
                 handleError(onAccountChangedEvent.error)
-            }else{
+            } else {
                 onSuccess?.invoke()
             }
         }

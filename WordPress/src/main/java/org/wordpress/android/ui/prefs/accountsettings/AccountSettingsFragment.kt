@@ -19,9 +19,6 @@ import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.collect
 import org.wordpress.android.R
-import org.wordpress.android.R.layout
-import org.wordpress.android.R.string
-import org.wordpress.android.R.xml
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.CHANGE_USERNAME_DISMISSED
@@ -80,11 +77,12 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
     private var changePasswordProgressDialog: ProgressDialog? = null
     private var emailSnackbar: Snackbar? = null
 
+    @Deprecated("Deprecated")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (activity.application as WordPress).component().inject(this)
         retainInstance = true
-        addPreferencesFromResource(xml.account_settings)
+        addPreferencesFromResource(R.xml.account_settings)
         bindPreferences()
         setUpListeners()
         emailPreference.configure(
@@ -104,12 +102,12 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
     }
 
     private fun bindPreferences() {
-        usernamePreference = findPreference(getString(string.pref_key_username))
-        emailPreference = findPreference(getString(string.pref_key_email)) as EditTextPreferenceWithValidation
-        primarySitePreference = findPreference(getString(string.pref_key_primary_site)) as DetailListPreference
-        webAddressPreference = findPreference(getString(string.pref_key_web_address))
+        usernamePreference = findPreference(getString(R.string.pref_key_username))
+        emailPreference = findPreference(getString(R.string.pref_key_email)) as EditTextPreferenceWithValidation
+        primarySitePreference = findPreference(getString(R.string.pref_key_primary_site)) as DetailListPreference
+        webAddressPreference = findPreference(getString(R.string.pref_key_web_address))
                 as EditTextPreferenceWithValidation
-        changePasswordPreference = findPreference(getString(string.pref_key_change_password))
+        changePasswordPreference = findPreference(getString(R.string.pref_key_change_password))
                 as EditTextPreferenceWithValidation
         changePasswordPreference.summary = EMPTY_STRING
     }
@@ -133,12 +131,13 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
         dialogMessage?.let { setDialogMessage(it) }
     }
 
+    @Deprecated("Deprecated")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        val coordinatorView = inflater.inflate(layout.preference_coordinator, container, false)
+    ): View {
+        val coordinatorView = inflater.inflate(R.layout.preference_coordinator, container, false)
         val coordinator: CoordinatorLayout = coordinatorView.findViewById(R.id.coordinator)
         val preferenceView = super.onCreateView(inflater, coordinator, savedInstanceState)
         val listOfPreferences = preferenceView?.findViewById<ListView>(android.R.id.list)
@@ -149,6 +148,7 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
         return coordinatorView
     }
 
+    @Deprecated("Deprecated")
     override fun onStart() {
         super.onStart()
         observeAccountSettingsViewState()
@@ -164,14 +164,14 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
         updateUserNamePreferenceUi(accountSettingsUiState.userNameSettingsUiState)
         updateEmailPreferenceUi(accountSettingsUiState.emailSettingsUiState)
         webAddressPreference.summary = accountSettingsUiState.webAddressSettingsUiState.webAddress
-        updatePrimarySitePreference(accountSettingsUiState.primarySiteSettingsUiState)
-        updateChangePasswordPreference(accountSettingsUiState.changePasswordSettingsUiState)
+        updatePrimarySitePreferenceUi(accountSettingsUiState.primarySiteSettingsUiState)
+        updateChangePasswordPreferenceUi(accountSettingsUiState.changePasswordSettingsUiState)
         accountSettingsUiState.toastMessage?.let {
             showToastMessage(it)
         }
     }
 
-    private fun updateChangePasswordPreference(changePasswordSettingsUiState: ChangePasswordSettingsUiState) {
+    private fun updateChangePasswordPreferenceUi(changePasswordSettingsUiState: ChangePasswordSettingsUiState) {
         showChangePasswordProgressDialog(changePasswordSettingsUiState.showChangePasswordProgressDialog)
     }
 
@@ -198,7 +198,7 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
         }
     }
 
-    private fun updatePrimarySitePreference(primarySiteSettingsUiState: PrimarySiteSettingsUiState?) {
+    private fun updatePrimarySitePreferenceUi(primarySiteSettingsUiState: PrimarySiteSettingsUiState?) {
         primarySiteSettingsUiState?.let { state ->
             primarySitePreference.apply {
                 value = (state.primarySite?.siteId ?: "").toString()
@@ -255,6 +255,7 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
         emailSnackbar?.dismiss()
     }
 
+    @Deprecated("Deprecated")
     override fun onPreferenceClick(preference: Preference?): Boolean {
         if (preference == usernamePreference) {
             showUsernameChangerFragment(
@@ -265,6 +266,7 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
         return true
     }
 
+    @Deprecated("Deprecated")
     override fun onPreferenceChange(preference: Preference, newValue: Any): Boolean {
         var trackProperty: String? = null
         when (preference) {
@@ -298,6 +300,7 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
         AnalyticsTracker.track(SETTINGS_DID_CHANGE, props)
     }
 
+    @Deprecated("Deprecated")
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> activity.finish()
@@ -320,7 +323,7 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
             changePasswordProgressDialog = ProgressDialog(activity).apply {
                 setCancelable(false)
                 isIndeterminate = true
-                setMessage(getString(string.change_password_dialog_message))
+                setMessage(getString(R.string.change_password_dialog_message))
             }
         }
     }
@@ -328,8 +331,8 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
     private fun showUsernameChangerFragment(userName: String, displayName: String) {
         val bundle: Bundle = BaseUsernameChangerFullScreenDialogFragment.newBundle(displayName, userName)
         FullScreenDialogFragment.Builder(activity)
-                .setTitle(string.username_changer_title)
-                .setAction(string.username_changer_action)
+                .setTitle(R.string.username_changer_title)
+                .setAction(R.string.username_changer_action)
                 .setOnConfirmListener(this)
                 .setHideActivityBar(true)
                 .setIsLifOnScroll(false)
