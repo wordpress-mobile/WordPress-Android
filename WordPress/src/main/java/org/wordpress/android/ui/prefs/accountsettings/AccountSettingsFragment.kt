@@ -12,7 +12,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ListView
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.ViewCompat
 import com.google.android.material.snackbar.BaseTransientBottomBar
@@ -20,12 +19,7 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.collect
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
-import org.wordpress.android.ui.FullScreenDialogFragment
-import org.wordpress.android.ui.FullScreenDialogFragment.OnConfirmListener
-import org.wordpress.android.ui.FullScreenDialogFragment.OnDismissListener
-import org.wordpress.android.ui.FullScreenDialogFragment.OnShownListener
 import org.wordpress.android.ui.accounts.signup.BaseUsernameChangerFullScreenDialogFragment
-import org.wordpress.android.ui.accounts.signup.SettingsUsernameChangerFragment
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.prefs.DetailListPreference
 import org.wordpress.android.ui.prefs.EditTextPreferenceWithValidation
@@ -62,11 +56,12 @@ private const val EMPTY_STRING = ""
 
 @Suppress("DEPRECATION")
 class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
-        OnPreferenceChangeListener, OnPreferenceClickListener, OnConfirmListener, OnShownListener, OnDismissListener {
+        OnPreferenceChangeListener, OnPreferenceClickListener {
     @set:Inject lateinit var uiHelpers: UiHelpers
     @set:Inject lateinit var viewModel: AccountSettingsViewModel
     @set:Inject lateinit var snackbarSequencer: SnackbarSequencer
     @set:Inject lateinit var analyticsTracker: AccountSettingsAnalyticsTracker
+    @set:Inject lateinit var navigationHandler: AccountSettingsNavigationHandler
     private lateinit var usernamePreference: Preference
     private lateinit var emailPreference: EditTextPreferenceWithValidation
     private lateinit var primarySitePreference: DetailListPreference
@@ -228,26 +223,25 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
     }
 
     private fun showSnackBar(snackBarMessage: SnackbarMessageHolder) {
-        if (emailSnackbar == null) {
-            emailSnackbar = WPSnackbar.make(
-                    view!!,
-                    uiHelpers.getTextOfUiString(context, snackBarMessage.message),
-                    BaseTransientBottomBar.LENGTH_INDEFINITE
-            )
-            snackBarMessage.buttonTitle?.let {
-                emailSnackbar?.setAction(
-                        uiHelpers.getTextOfUiString(
-                                context,
-                                snackBarMessage.buttonTitle
-                        )
-                ) { snackBarMessage.buttonAction }
-            }
-            val textView = emailSnackbar?.view?.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
-            textView?.maxLines = SNACKBAR_NO_OF_LINES_FOUR
-        }
         emailSnackbar?.let {
             if (!it.isShown) {
                 emailSnackbar?.show()
+            }
+        } ?: run {
+            view?.let {
+                emailSnackbar = WPSnackbar.make(
+                        it,
+                        uiHelpers.getTextOfUiString(context, snackBarMessage.message),
+                        BaseTransientBottomBar.LENGTH_INDEFINITE
+                )
+                snackBarMessage.buttonTitle?.let {
+                    emailSnackbar?.setAction(
+                            uiHelpers.getTextOfUiString(context, snackBarMessage.buttonTitle)
+                    ) { snackBarMessage.buttonAction }
+                }
+                val textView = emailSnackbar?.view
+                        ?.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
+                textView?.maxLines = SNACKBAR_NO_OF_LINES_FOUR
             }
         }
     }
@@ -259,9 +253,21 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
     @Deprecated("Deprecated")
     override fun onPreferenceClick(preference: Preference?): Boolean {
         if (preference == usernamePreference) {
-            showUsernameChangerFragment(
-                    viewModel.accountSettingsUiState.value.userNameSettingsUiState.userName,
-                    viewModel.accountSettingsUiState.value.userNameSettingsUiState.displayName
+            val onUserNameConfirmed = { result: Bundle? ->
+                result?.getString(BaseUsernameChangerFullScreenDialogFragment.RESULT_USERNAME)?.let {
+                    viewModel.onUsernameChangeConfirmedFromServer(it)
+                    analyticsTracker.track(USERNAME_CHANGE)
+                }
+            }
+            navigationHandler.showUsernameChangerScreen(
+                    activity,
+                    UserNameChangeScreenRequest(
+                            userName = viewModel.accountSettingsUiState.value.userNameSettingsUiState.userName,
+                            displayName = viewModel.accountSettingsUiState.value.userNameSettingsUiState.displayName,
+                            onConfirm = onUserNameConfirmed,
+                            onShown = { analyticsTracker.track(USERNAME_CHANGE_SCREEN_DISPLAYED) },
+                            onDismiss = { analyticsTracker.track(USERNAME_CHANGE_SCREEN_DISMISSED) }
+                    )
             )
         }
         return true
@@ -319,38 +325,6 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
                 isIndeterminate = true
                 setMessage(getString(R.string.change_password_dialog_message))
             }
-        }
-    }
-
-    private fun showUsernameChangerFragment(userName: String, displayName: String) {
-        val bundle: Bundle = BaseUsernameChangerFullScreenDialogFragment.newBundle(displayName, userName)
-        FullScreenDialogFragment.Builder(activity)
-                .setTitle(R.string.username_changer_title)
-                .setAction(R.string.username_changer_action)
-                .setOnConfirmListener(this)
-                .setHideActivityBar(true)
-                .setIsLifOnScroll(false)
-                .setOnDismissListener(this)
-                .setOnShownListener(this)
-                .setContent(SettingsUsernameChangerFragment::class.java, bundle)
-                .build()
-                .show((activity as AppCompatActivity).supportFragmentManager,
-                        FullScreenDialogFragment.TAG
-                )
-    }
-
-    override fun onShown() {
-        analyticsTracker.track(USERNAME_CHANGE_SCREEN_DISPLAYED)
-    }
-
-    override fun onDismiss() {
-        analyticsTracker.track(USERNAME_CHANGE_SCREEN_DISMISSED)
-    }
-
-    override fun onConfirm(result: Bundle?) {
-        result?.getString(BaseUsernameChangerFullScreenDialogFragment.RESULT_USERNAME)?.let {
-            viewModel.onUsernameChangeConfirmedFromServer(it)
-            analyticsTracker.track(USERNAME_CHANGE)
         }
     }
 }
