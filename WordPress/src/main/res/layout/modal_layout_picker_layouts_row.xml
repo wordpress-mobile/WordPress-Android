@@ -13,11 +13,13 @@
         android:id="@+id/subtitle"
         style="@style/ModalLayoutPickerLayoutsSubtitle"
         android:layout_marginStart="@dimen/mlp_layout_card_margin_start"
+        android:layout_marginEnd="@dimen/mlp_layout_card_margin_end"
         android:layout_marginBottom="@dimen/hpp_recommended_subtitle_margin"
         android:text="@string/hpp_recommended_subtitle" />
     <TextView
         android:id="@+id/title"
         style="@style/ModalLayoutPickerLayoutsTitle"
+        android:layout_marginEnd="@dimen/mlp_layout_card_margin_end"
         android:layout_marginStart="@dimen/mlp_layout_card_margin_start"
         tools:text="Some layout title" />
 
@@ -27,8 +29,8 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:clipToPadding="false"
-        android:paddingStart="@dimen/mlp_layout_card_margin_start"
-        android:paddingEnd="@dimen/mlp_layout_card_margin_end"
+        android:paddingStart="@dimen/mlp_layout_card_padding_start"
+        android:paddingEnd="@dimen/mlp_layout_card_padding_end"
         android:descendantFocusability="beforeDescendants"
         android:orientation="horizontal"
         android:scrollbars="none" />
