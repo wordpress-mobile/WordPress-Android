@@ -1127,7 +1127,7 @@ public class AnalyticsTrackerNosara extends Tracker {
             case STATS_TOTAL_LIKES_ERROR:
                 return "stats_total_likes_error";
             case STATS_TOTAL_COMMENTS_ERROR:
-                return "stats_total_followers_view_more_tapped";
+                return "stats_total_comments_error";
             case STATS_TAGS_AND_CATEGORIES_VIEW_MORE_TAPPED:
                 return "stats_tags_and_categories_view_more_tapped";
             case STATS_VIEWS_AND_VISITORS_ERROR:
