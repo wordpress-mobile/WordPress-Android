@@ -158,6 +158,7 @@ android {
             buildConfigField "boolean", "IS_JETPACK_APP", "false"
             buildConfigField "String", "TRACKS_EVENT_PREFIX", '"wpandroid_"'
             buildConfigField "String", "PUSH_NOTIFICATIONS_APP_KEY", '"org.wordpress.android"'
+            buildConfigField "boolean", "ENABLE_QRCODE_AUTH_FLOW", "false"
 
             manifestPlaceholders = [magicLinkScheme:"wordpress"]
         }
@@ -179,6 +180,7 @@ android {
             buildConfigField "boolean", "ENABLE_QRCODE_AUTH_FLOW", "true"
             buildConfigField "String", "TRACKS_EVENT_PREFIX", '"jpandroid_"'
             buildConfigField "String", "PUSH_NOTIFICATIONS_APP_KEY", '"com.jetpack.android"'
+            buildConfigField "boolean", "ENABLE_QRCODE_AUTH_FLOW", "true"
 
             manifestPlaceholders = [magicLinkScheme:"jetpack"]
         }
