@@ -33,6 +33,7 @@ import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.toStatsSection
 import org.wordpress.android.ui.stats.refresh.utils.trackGranular
+import org.wordpress.android.ui.stats.refresh.utils.trackViewsVisitorsChips
 import org.wordpress.android.ui.stats.refresh.utils.trackWithType
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.util.AppLog
@@ -260,10 +261,7 @@ class ViewsAndVisitorsUseCase
     }
 
     private fun onChipSelected(position: Int) {
-        analyticsTracker.trackGranular(
-                AnalyticsTracker.Stat.STATS_VIEWS_AND_VISITORS_TYPE_TAPPED,
-                statsGranularity
-        )
+        analyticsTracker.trackViewsVisitorsChips(position)
         updateUiState { it.copy(selectedPosition = position) }
     }
 

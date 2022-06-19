@@ -1134,8 +1134,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "stats_views_and_visitors_error";
             case STATS_VIEWS_AND_VISITORS_LINE_CHART_TAPPED:
                 return "stats_views_and_visitors_line_chart_tapped";
-            case STATS_VIEWS_AND_VISITORS_TYPE_TAPPED:
-                return "stats_views_and_visitors_type_tapped";
+            case STATS_INSIGHTS_VIEWS_VISITORS_TOGGLED:
+                return "stats_insights_views_visitors_toggled";
             case STATS_PUBLICIZE_VIEW_MORE_TAPPED:
                 return "stats_publicize_view_more_tapped";
             case STATS_POSTS_AND_PAGES_VIEW_MORE_TAPPED:
