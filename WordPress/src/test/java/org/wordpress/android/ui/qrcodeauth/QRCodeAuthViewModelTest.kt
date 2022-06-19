@@ -15,6 +15,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
+import org.mockito.Mockito.times
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.network.rest.wpcom.qrcodeauth.QRCodeAuthError
 import org.wordpress.android.fluxc.network.rest.wpcom.qrcodeauth.QRCodeAuthErrorType
@@ -42,7 +43,10 @@ import org.wordpress.android.ui.qrcodeauth.QRCodeAuthViewModel.Companion.BROWSER
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthViewModel.Companion.DATA_KEY
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthViewModel.Companion.LAST_STATE_KEY
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthViewModel.Companion.LOCATION_KEY
+import org.wordpress.android.ui.qrcodeauth.QRCodeAuthViewModel.Companion.ORIGIN_DEEPLINK
+import org.wordpress.android.ui.qrcodeauth.QRCodeAuthViewModel.Companion.ORIGIN_MENU
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthViewModel.Companion.TOKEN_KEY
+import org.wordpress.android.ui.qrcodeauth.QRCodeAuthViewModel.Companion.TRACKING_ORIGIN_KEY
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 
@@ -111,7 +115,7 @@ class QRCodeAuthViewModelTest : BaseUnitTest() {
 
         viewModel.writeToBundle(savedInstanceState)
 
-        verify(savedInstanceState).putString(any(), argThat { true })
+        verify(savedInstanceState, times(2)).putString(any(), argThat { true })
     }
 
     @Test
@@ -415,20 +419,25 @@ class QRCodeAuthViewModelTest : BaseUnitTest() {
     private val authenticateSuccess = QRCodeAuthResult(model = QRCodeAuthAuthenticateResult(authenticated = true))
 
     private fun startViewModel(saveInstanceState: Bundle? = null) {
-        viewModel.start(saveInstanceState)
+        viewModel.start(savedInstanceState = saveInstanceState)
     }
 
     private fun initAndStartVMForState(stateType: QRCodeAuthUiStateType) {
         initSavedInstanceState(stateType)
-        viewModel.start(savedInstanceState)
+        viewModel.start(savedInstanceState = savedInstanceState)
     }
 
-    private fun initSavedInstanceState(stateType: QRCodeAuthUiStateType) {
+    private fun initSavedInstanceState(stateType: QRCodeAuthUiStateType, isDeepLink: Boolean = false) {
         whenever(savedInstanceState.getString(DATA_KEY, null)).thenReturn(DATA)
         whenever(savedInstanceState.getString(TOKEN_KEY, null)).thenReturn(TOKEN)
         whenever(savedInstanceState.getString(LOCATION_KEY, null)).thenReturn(LOCATION)
         whenever(savedInstanceState.getString(BROWSER_KEY, null)).thenReturn(BROWSER)
         whenever(savedInstanceState.getString(LAST_STATE_KEY, null)).thenReturn(stateType.label)
+        if (isDeepLink) {
+            whenever(savedInstanceState.getString(TRACKING_ORIGIN_KEY, ORIGIN_DEEPLINK)).thenReturn(ORIGIN_DEEPLINK)
+        } else {
+            whenever(savedInstanceState.getString(TRACKING_ORIGIN_KEY, ORIGIN_MENU)).thenReturn(ORIGIN_MENU)
+        }
     }
 
     private suspend fun initValidate(
