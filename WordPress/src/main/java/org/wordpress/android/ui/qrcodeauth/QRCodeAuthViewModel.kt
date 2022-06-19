@@ -60,6 +60,7 @@ class QRCodeAuthViewModel @Inject constructor(
     private val _uiState = MutableStateFlow<QRCodeAuthUiState>(Loading)
     val uiState: StateFlow<QRCodeAuthUiState> = _uiState
 
+    private var trackingOrigin: String? = null
     private var data: String? = null
     private var token: String? = null
     private var location: String? = null
@@ -67,13 +68,19 @@ class QRCodeAuthViewModel @Inject constructor(
     private var lastState: QRCodeAuthUiStateType? = null
     private var isStarted = false
 
-    fun start(savedInstanceState: Bundle? = null) {
+    fun start(uri: String? = null, isDeepLink: Boolean = false, savedInstanceState: Bundle? = null) {
         if (isStarted) return
         isStarted = true
 
-        // track shown here
         extractSavedInstanceStateIfNeeded(savedInstanceState)
-        startOrRestoreUiState()
+
+        if (isDeepLink && savedInstanceState == null) {
+            trackingOrigin = ORIGIN_DEEPLINK
+            process(uri)
+        } else {
+            trackingOrigin = ORIGIN_MENU
+            startOrRestoreUiState()
+        }
     }
 
     private fun extractSavedInstanceStateIfNeeded(savedInstanceState: Bundle?) {
@@ -82,6 +89,7 @@ class QRCodeAuthViewModel @Inject constructor(
             token = savedInstanceState.getString(TOKEN_KEY, null)
             browser = savedInstanceState.getString(BROWSER_KEY, null)
             location = savedInstanceState.getString(LOCATION_KEY, null)
+            trackingOrigin = savedInstanceState.getString(TRACKING_ORIGIN_KEY, ORIGIN_MENU)
             lastState = QRCodeAuthUiStateType.fromString(savedInstanceState.getString(LAST_STATE_KEY, null))
         }
     }
@@ -113,7 +121,7 @@ class QRCodeAuthViewModel @Inject constructor(
     //  https://apps.wordpress.com/get/?campaign=login-qr-code#qr-code-login?token=asdfadsfa&data=asdfasdf
     fun onScanSuccess(scannedValue: String?) {
         track(Stat.QRLOGIN_SCANNER_SCANNED_CODE)
-        handleScan(scannedValue)
+        process(scannedValue)
     }
 
     fun onScanFailure() {
@@ -155,9 +163,9 @@ class QRCodeAuthViewModel @Inject constructor(
         postActionEvent(FinishActivity)
     }
 
-    private fun handleScan(scannedValue: String?) {
+    private fun process(input: String?) {
         clearProperties()
-        extractQueryParamsIfValid(scannedValue)
+        extractQueryParamsIfValid(input)
 
         if (data.isNullOrEmpty() || token.isNullOrEmpty()) {
             postUiState(uiStateMapper.mapToInvalidData(this::onScanAgainClicked, this::onCancelClicked))
@@ -222,7 +230,6 @@ class QRCodeAuthViewModel @Inject constructor(
         }
     }
 
-    @Suppress("MagicNumber")
     private fun authenticate(data: String, token: String) {
         if (!networkUtilsWrapper.isNetworkAvailable()) {
             postUiState(uiStateMapper.mapToNoInternet(this::onScanAgainClicked, this::onCancelClicked))
@@ -280,15 +287,16 @@ class QRCodeAuthViewModel @Inject constructor(
     }
 
     fun writeToBundle(outState: Bundle) {
+        outState.putString(TRACKING_ORIGIN_KEY, trackingOrigin)
         outState.putString(DATA_KEY, data)
-        outState.putString(TOKEN_KEY, data)
+        outState.putString(TOKEN_KEY, token)
         outState.putString(BROWSER_KEY, browser)
         outState.putString(LOCATION_KEY, location)
         outState.putString(LAST_STATE_KEY, uiState.value.type?.label)
     }
 
     fun track(stat: Stat) {
-        analyticsTrackerWrapper.track(stat, mapOf(ORIGIN to ORIGIN_MENU))
+        analyticsTrackerWrapper.track(stat, mapOf(ORIGIN to trackingOrigin))
     }
 
     companion object {
@@ -298,8 +306,10 @@ class QRCodeAuthViewModel @Inject constructor(
         const val BROWSER_KEY = "browser"
         const val LOCATION_KEY = "location"
         const val LAST_STATE_KEY = "last_state"
+        const val TRACKING_ORIGIN_KEY = "tracking_origin"
         const val ORIGIN = "origin"
         const val ORIGIN_MENU = "menu"
+        const val ORIGIN_DEEPLINK = "deep_link"
         const val EXPIRED_MESSAGE = "qr code data expired"
     }
 }
