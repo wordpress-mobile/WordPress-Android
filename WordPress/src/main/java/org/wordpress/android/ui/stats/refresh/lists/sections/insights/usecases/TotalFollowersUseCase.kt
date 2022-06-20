@@ -4,9 +4,9 @@ import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
-import org.wordpress.android.fluxc.store.StatsStore.InsightType
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.WEEKS
+import org.wordpress.android.fluxc.store.StatsStore.InsightType
 import org.wordpress.android.fluxc.store.StatsStore.StatsType
 import org.wordpress.android.fluxc.store.StatsStore.TimeStatsType
 import org.wordpress.android.fluxc.store.stats.insights.SummaryStore
@@ -24,10 +24,11 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Value
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.InsightUseCaseFactory
-import org.wordpress.android.ui.stats.refresh.utils.ActionCardHandler
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.ViewsAndVisitorsUseCase.UiState
+import org.wordpress.android.ui.stats.refresh.utils.ActionCardHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.toStatsSection
+import org.wordpress.android.ui.stats.refresh.utils.trackWithType
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -37,7 +38,7 @@ import javax.inject.Named
 class TotalFollowersUseCase @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
-    private val statsType: StatsType,
+    statsType: StatsType,
     private val statsGranularity: StatsGranularity,
     private val selectedDateProvider: SelectedDateProvider,
     private val summaryStore: SummaryStore,
@@ -93,10 +94,7 @@ class TotalFollowersUseCase @Inject constructor(
     )
 
     private fun onViewMoreClick() {
-        analyticsTracker.track(
-                AnalyticsTracker.Stat.STATS_TOTAL_FOLLOWERS_VIEW_MORE_TAPPED,
-                statsSiteProvider.siteModel
-        )
+        analyticsTracker.trackWithType(AnalyticsTracker.Stat.STATS_INSIGHTS_VIEW_MORE, InsightType.TOTAL_FOLLOWERS)
         navigateTo(
                 ViewInsightDetails(
                         StatsSection.TOTAL_FOLLOWERS_DETAIL,

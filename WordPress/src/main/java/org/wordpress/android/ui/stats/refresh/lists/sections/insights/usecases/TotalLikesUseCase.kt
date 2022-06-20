@@ -3,7 +3,7 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_LATEST_POST_SUMMARY_POST_ITEM_TAPPED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_INSIGHTS_TOTAL_LIKES_GUIDE_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_TOTAL_LIKES_ERROR
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.LimitMode
@@ -36,6 +36,7 @@ import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetUpdater.StatsWi
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.toStatsSection
+import org.wordpress.android.ui.stats.refresh.utils.trackWithType
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
@@ -50,7 +51,7 @@ import kotlin.math.ceil
 class TotalLikesUseCase @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
-    private val statsType: StatsType,
+    statsType: StatsType,
     private val statsGranularity: StatsGranularity,
     private val selectedDateProvider: SelectedDateProvider,
     private val visitsAndViewsStore: VisitsAndViewsStore,
@@ -188,15 +189,12 @@ class TotalLikesUseCase @Inject constructor(
     }
 
     private fun onLinkClicked(params: LinkClickParams) {
-        analyticsTracker.track(STATS_LATEST_POST_SUMMARY_POST_ITEM_TAPPED)
+        analyticsTracker.track(STATS_INSIGHTS_TOTAL_LIKES_GUIDE_TAPPED)
         navigateTo(ViewPost(params.postId, params.postUrl))
     }
 
     private fun onViewMoreClick() {
-        analyticsTracker.track(
-                AnalyticsTracker.Stat.STATS_TOTAL_LIKES_VIEW_MORE_TAPPED,
-                statsSiteProvider.siteModel
-        )
+        analyticsTracker.trackWithType(AnalyticsTracker.Stat.STATS_INSIGHTS_VIEW_MORE, InsightType.TOTAL_LIKES)
         navigateTo(
                 ViewInsightDetails(
                         StatsSection.TOTAL_LIKES_DETAIL,

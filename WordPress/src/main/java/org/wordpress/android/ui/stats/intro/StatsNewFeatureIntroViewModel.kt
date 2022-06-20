@@ -23,13 +23,17 @@ class StatsNewFeatureIntroViewModel @Inject constructor(
     private val _action = MutableLiveData<StatsNewFeaturesIntroAction>()
     val action: LiveData<StatsNewFeaturesIntroAction> = _action
 
+    fun start() {
+        analyticsTracker.track(Stat.STATS_REVAMP_V2_ANNOUNCEMENT_SHOWN)
+    }
+
     fun onPrimaryButtonClick() = launch {
-        analyticsTracker.track(Stat.STATS_REVAMP_V2_INTRO_TRY_IT_NOW_CLICKED)
+        analyticsTracker.track(Stat.STATS_REVAMP_V2_ANNOUNCEMENT_CONFIRMED)
         _action.postValue(OpenStats(statsSiteProvider.siteModel))
     }
 
     fun onSecondaryButtonClick() {
-        analyticsTracker.track(Stat.STATS_REVAMP_V2_INTRO_REMIND_ME_CLICKED)
+        analyticsTracker.track(Stat.STATS_REVAMP_V2_ANNOUNCEMENT_DISMISSED)
         _action.value = DismissDialog
     }
 }
