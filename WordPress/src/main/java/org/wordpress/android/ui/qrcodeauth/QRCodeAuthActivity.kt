@@ -20,8 +20,19 @@ class QRCodeAuthActivity : AppCompatActivity() {
     companion object {
         @JvmStatic
         fun start(context: Context) {
-            val intent = Intent(context, QRCodeAuthActivity::class.java)
-            context.startActivity(intent)
+            context.startActivity(newIntent(context))
         }
+
+        @JvmStatic
+        fun newIntent(context: Context, uri: String? = null, fromDeeplink: Boolean = false): Intent {
+            val intent = Intent(context, QRCodeAuthActivity::class.java).apply {
+                putExtra(DEEP_LINK_URI_KEY, uri)
+                putExtra(IS_DEEP_LINK_KEY, fromDeeplink)
+            }
+            return intent
+        }
+
+        const val IS_DEEP_LINK_KEY = "is_deep_link_key"
+        const val DEEP_LINK_URI_KEY = "deep_link_uri_key"
     }
 }

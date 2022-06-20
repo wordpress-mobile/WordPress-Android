@@ -19,6 +19,8 @@ import org.wordpress.android.ui.posts.BasicDialogViewModel.BasicDialogModel
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthActionEvent.FinishActivity
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthActionEvent.LaunchDismissDialog
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthActionEvent.LaunchScanner
+import org.wordpress.android.ui.qrcodeauth.QRCodeAuthActivity.Companion.DEEP_LINK_URI_KEY
+import org.wordpress.android.ui.qrcodeauth.QRCodeAuthActivity.Companion.IS_DEEP_LINK_KEY
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.Content
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.Error
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.Loading
@@ -40,7 +42,7 @@ class QRCodeAuthFragment : Fragment(R.layout.qrcodeauth_fragment) {
         with(QrcodeauthFragmentBinding.bind(view)) {
             initBackPressHandler()
             observeViewModel()
-            startViewModel(savedInstanceState)
+            initViewModel(savedInstanceState)
         }
     }
 
@@ -50,8 +52,14 @@ class QRCodeAuthFragment : Fragment(R.layout.qrcodeauth_fragment) {
         viewModel.uiState.onEach { renderUi(it) }.launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
-    private fun startViewModel(savedInstanceState: Bundle?) {
-        viewModel.start(savedInstanceState)
+    private fun initViewModel(savedInstanceState: Bundle?) {
+        val(uri, isDeepLink) = requireActivity().intent?.extras?.let {
+            val uri = it.getString(DEEP_LINK_URI_KEY, null)
+            val isDeepLink = it.getBoolean(IS_DEEP_LINK_KEY, false)
+            uri to isDeepLink
+        } ?: (null to false)
+
+        viewModel.start(uri, isDeepLink, savedInstanceState)
     }
 
     private fun handleActionEvents(actionEvent: QRCodeAuthActionEvent) {
