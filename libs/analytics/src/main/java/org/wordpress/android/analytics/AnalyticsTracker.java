@@ -941,7 +941,9 @@ public final class AnalyticsTracker {
         QRLOGIN_VERIFY_CANCELLED,
         QRLOGIN_VERIFY_APPROVED,
         QRLOGIN_AUTHENTICATED,
-        QRLOGIN_VERIFY_DISMISS
+        QRLOGIN_VERIFY_DISMISS,
+        QRLOGIN_VERIFY_FAILED,
+        QRLOGIN_VERIFY_SCAN_AGAIN
     }
 
     private static final List<Tracker> TRACKERS = new ArrayList<>();

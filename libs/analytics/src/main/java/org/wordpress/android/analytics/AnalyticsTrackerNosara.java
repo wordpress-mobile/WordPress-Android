@@ -2381,6 +2381,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "qrlogin_authenticated";
             case QRLOGIN_VERIFY_DISMISS:
                 return "qrlogin_verify_dismiss";
+            case QRLOGIN_VERIFY_FAILED:
+                return "qrlogin_verify_failed";
+            case QRLOGIN_VERIFY_SCAN_AGAIN:
+                return "qrlogin_verify_scan_again";
         }
         return null;
     }
