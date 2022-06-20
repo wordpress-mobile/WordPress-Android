@@ -1122,6 +1122,18 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "stats_next_date_tapped";
             case STATS_INSIGHTS_TOTAL_LIKES_GUIDE_TAPPED:
                 return "stats_insights_total_likes_guide_tapped";
+            case STATS_INSIGHTS_ACTION_BLOGGING_REMINDERS_CONFIRMED:
+                return "stats_insights_action_blogging_reminders_confirmed";
+            case STATS_INSIGHTS_ACTION_BLOGGING_REMINDERS_DISMISSED:
+                return "stats_insights_action_blogging_reminders_dismissed";
+            case STATS_INSIGHTS_ACTION_GROW_AUDIENCE_CONFIRMED:
+                return "stats_insights_action_grow_audience_confirmed";
+            case STATS_INSIGHTS_ACTION_GROW_AUDIENCE_DISMISSED:
+                return "stats_insights_action_grow_audience_dismissed";
+            case STATS_INSIGHTS_ACTION_SCHEDULE_POST_CONFIRMED:
+                return "stats_insights_action_schedule_post_confirmed";
+            case STATS_INSIGHTS_ACTION_SCHEDULE_POST_DISMISSED:
+                return "stats_insights_action_schedule_post_dismissed";
             case STATS_INSIGHTS_VIEW_MORE:
                 return "stats_insights_view_more";
             case STATS_FOLLOWERS_VIEW_MORE_TAPPED:

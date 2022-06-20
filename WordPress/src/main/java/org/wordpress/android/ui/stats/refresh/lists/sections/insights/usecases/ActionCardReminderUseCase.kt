@@ -2,6 +2,7 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R.string
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.store.StatsStore.InsightType
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
@@ -41,13 +42,13 @@ class ActionCardReminderUseCase @Inject constructor(
     }
 
     private fun onSetReminders() {
-//        analyticsTrackerWrapper.track(Stat.STATS_INSIGHTS_MANAGEMENT_HINT_CLICKED)
+        analyticsTrackerWrapper.track(Stat.STATS_INSIGHTS_ACTION_BLOGGING_REMINDERS_CONFIRMED)
         navigateTo(SetBloggingReminders)
         actionCardHandler.dismiss(InsightType.ACTION_REMINDER)
     }
 
     private fun onDismiss() {
-//         analyticsTrackerWrapper.track(Stat.STATS_INSIGHTS_MANAGEMENT_HINT_DISMISSED)
+        analyticsTrackerWrapper.track(Stat.STATS_INSIGHTS_ACTION_BLOGGING_REMINDERS_DISMISSED)
         actionCardHandler.dismiss(InsightType.ACTION_REMINDER)
     }
 }
