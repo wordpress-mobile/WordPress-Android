@@ -9,8 +9,8 @@ enum class QRCodeAuthUiStateType(val label: String) {
     AUTHENTICATING("authenticating"),
     DONE("done"),
     INVALID_DATA("invalid_data"),
-    AUTH_FAILED("auth_failed"),
-    EXPIRED("expired"),
+    AUTHENTICATION_FAILED("authentication_failed"),
+    EXPIRED_TOKEN("expired_token"),
     NO_INTERNET("no_internet");
 
     override fun toString() = label
