@@ -12,7 +12,6 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.WEEKS
 import org.wordpress.android.fluxc.store.StatsStore.InsightType
 import org.wordpress.android.fluxc.store.StatsStore.StatsType
-import org.wordpress.android.fluxc.store.StatsStore.TimeStatsType
 import org.wordpress.android.fluxc.store.stats.time.VisitsAndViewsStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
@@ -20,7 +19,7 @@ import org.wordpress.android.ui.stats.StatsViewType
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewInsightDetails
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
-import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.VIEW_ALL
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemGuideCard
@@ -152,7 +151,7 @@ class TotalCommentsUseCase @Inject constructor(
 
     private fun buildTitle() = TitleWithMore(
             string.stats_view_total_comments,
-            navigationAction = if (useCaseMode == VIEW_ALL) null else ListItemInteraction.create(this::onViewMoreClick)
+            navigationAction = if (useCaseMode == BLOCK) ListItemInteraction.create(this::onViewMoreClick) else null
     )
 
     private fun onViewMoreClick() {
@@ -225,7 +224,7 @@ class TotalCommentsUseCase @Inject constructor(
                 TotalCommentsUseCase(
                         mainDispatcher,
                         backgroundDispatcher,
-                        TimeStatsType.OVERVIEW,
+                        InsightType.TOTAL_COMMENTS,
                         granularity,
                         selectedDateProvider,
                         visitsAndViewsStore,

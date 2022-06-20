@@ -21,7 +21,7 @@ import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewInsightDetail
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewPost
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
-import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.VIEW_ALL
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemGuideCard
@@ -156,7 +156,7 @@ class TotalLikesUseCase @Inject constructor(
 
     private fun buildTitle() = TitleWithMore(
             string.stats_view_total_likes,
-            navigationAction = if (useCaseMode == VIEW_ALL) null else ListItemInteraction.create(this::onViewMoreClick)
+            navigationAction = if (useCaseMode == BLOCK) ListItemInteraction.create(this::onViewMoreClick) else null
     )
 
     private fun buildLatestPostGuideCard(
