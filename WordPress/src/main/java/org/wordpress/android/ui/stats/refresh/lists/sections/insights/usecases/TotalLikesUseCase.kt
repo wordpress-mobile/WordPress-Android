@@ -3,7 +3,7 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_LATEST_POST_SUMMARY_POST_ITEM_TAPPED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_INSIGHTS_TOTAL_LIKES_GUIDE_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_TOTAL_LIKES_ERROR
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.LimitMode
@@ -189,7 +189,7 @@ class TotalLikesUseCase @Inject constructor(
     }
 
     private fun onLinkClicked(params: LinkClickParams) {
-        analyticsTracker.track(STATS_LATEST_POST_SUMMARY_POST_ITEM_TAPPED)
+        analyticsTracker.track(STATS_INSIGHTS_TOTAL_LIKES_GUIDE_TAPPED)
         navigateTo(ViewPost(params.postId, params.postUrl))
     }
 
