@@ -68,12 +68,16 @@ class MimeTypes {
      * .png - "image/png"
      * .gif - "image/gif"
      * .webp - "image/webp"
+     * .heic - "image/heic"
+     * .heif - "image/heif"
      */
     private val imageTypes = listOf(
             MimeType(IMAGE, Subtype.JPEG, listOf("jpg", "jpeg")),
             MimeType(IMAGE, Subtype.PNG, listOf("png")),
             MimeType(IMAGE, Subtype.GIF, listOf("gif")),
-            MimeType(IMAGE, Subtype.WEBP, listOf("webp"))
+            MimeType(IMAGE, Subtype.WEBP, listOf("webp")),
+            MimeType(IMAGE, Subtype.HEIC, listOf("heic")),
+            MimeType(IMAGE, Subtype.HEIF, listOf("heif"))
     )
 
     /*

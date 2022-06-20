@@ -52,6 +52,8 @@ class MimeTypesTest {
                         "image/png",
                         "image/gif",
                         "image/webp",
+                        "image/heic",
+                        "image/heif",
                         "application/pdf",
                         "application/msword",
                         "application/doc",
@@ -91,7 +93,9 @@ class MimeTypesTest {
                         "image/jpeg",
                         "image/png",
                         "image/gif",
-                        "image/webp"
+                        "image/webp",
+                        "image/heic",
+                        "image/heif"
                 )
         )
     }
@@ -105,7 +109,9 @@ class MimeTypesTest {
                         "image/jpeg",
                         "image/png",
                         "image/gif",
-                        "image/webp"
+                        "image/webp",
+                        "image/heic",
+                        "image/heif"
                 )
         )
     }
@@ -184,6 +190,8 @@ class MimeTypesTest {
             "image/png",
             "image/gif",
             "image/webp",
+            "image/heic",
+            "image/heif",
             "application/pdf",
             "application/msword",
             "application/doc",
