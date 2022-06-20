@@ -30,7 +30,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 176
+        return 177
     }
 
     override fun getDbName(): String {
@@ -1868,6 +1868,9 @@ open class WellSqlConfig : DefaultWellConfig {
                 }
                 175 -> migrate(version) {
                     db.execSQL("ALTER TABLE PostModel ADD ANSWERED_PROMPT_ID INTEGER")
+                }
+                176 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
+                    db.execSQL("ALTER TABLE WCSettingsModel ADD IS_COUPONS_ENABLED TEXT")
                 }
             }
         }
