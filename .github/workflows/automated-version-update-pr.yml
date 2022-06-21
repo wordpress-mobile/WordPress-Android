@@ -10,8 +10,14 @@ on:
       body:
         required: false
 
+permissions:
+  contents: read
+
 jobs:
   create-pull-request:
+    permissions:
+      contents: write  # for peter-evans/create-pull-request to create branch
+      pull-requests: write  # for peter-evans/create-pull-request to create a PR
     runs-on: ubuntu-latest
     env:
       GUTENBERG_MOBILE_VERSION: ${{ github.event.inputs.gutenbergMobileVersion }}
