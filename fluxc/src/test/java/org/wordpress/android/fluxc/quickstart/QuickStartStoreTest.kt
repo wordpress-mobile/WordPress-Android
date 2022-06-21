@@ -14,7 +14,6 @@ import org.wordpress.android.fluxc.persistence.QuickStartSqlUtils
 import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.CHECK_STATS
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.CREATE_SITE
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.EDIT_HOMEPAGE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.ENABLE_POST_SHARING
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.FOLLOW_SITE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.PUBLISH_POST
@@ -66,7 +65,6 @@ class QuickStartStoreTest {
         assertEquals(4, uncompletedCustomizeTasks.size)
         assertEquals(UPDATE_SITE_TITLE, uncompletedCustomizeTasks[0])
         assertEquals(UPLOAD_SITE_ICON, uncompletedCustomizeTasks[1])
-        assertEquals(EDIT_HOMEPAGE, uncompletedCustomizeTasks[2])
         assertEquals(REVIEW_PAGES, uncompletedCustomizeTasks[3])
 
         val uncompletedGrowTasks = quickStartStore.getUncompletedTasksByType(testLocalSiteId, GROW)

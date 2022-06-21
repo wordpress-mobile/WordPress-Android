@@ -49,7 +49,6 @@ class QuickStartStore @Inject constructor(
         CREATE_SITE(QUICK_START_CREATE_SITE_LABEL, CUSTOMIZE, 0),
         UPDATE_SITE_TITLE(QUICK_START_UPDATE_SITE_TITLE_LABEL, CUSTOMIZE, 1),
         UPLOAD_SITE_ICON(QUICK_START_UPLOAD_SITE_ICON_LABEL, CUSTOMIZE, 2),
-        EDIT_HOMEPAGE(QUICK_START_EDIT_HOMEPAGE_LABEL, CUSTOMIZE, 3),
         REVIEW_PAGES(QUICK_START_REVIEW_PAGES_LABEL, CUSTOMIZE, 4),
         VIEW_SITE(QUICK_START_VIEW_SITE_LABEL, CUSTOMIZE, 5),
         ENABLE_POST_SHARING(QUICK_START_ENABLE_POST_SHARING_LABEL, GROW, 7),
@@ -170,7 +169,6 @@ class QuickStartStore @Inject constructor(
         const val QUICK_START_CREATE_SITE_LABEL = "create_site"
         const val QUICK_START_UPDATE_SITE_TITLE_LABEL = "update_site_title"
         const val QUICK_START_UPLOAD_SITE_ICON_LABEL = "upload_site_icon"
-        const val QUICK_START_EDIT_HOMEPAGE_LABEL = "edit_homepage"
         const val QUICK_START_REVIEW_PAGES_LABEL = "review_pages"
         const val QUICK_START_VIEW_SITE_LABEL = "view_site"
         const val QUICK_START_ENABLE_POST_SHARING_LABEL = "enable_post_sharing"
