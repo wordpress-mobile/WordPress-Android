@@ -78,7 +78,7 @@ class QRCodeAuthViewModel @Inject constructor(
             trackingOrigin = ORIGIN_DEEPLINK
             process(uri)
         } else {
-            trackingOrigin = ORIGIN_MENU
+            if (trackingOrigin.isNullOrEmpty()) trackingOrigin = ORIGIN_MENU
             startOrRestoreUiState()
         }
     }

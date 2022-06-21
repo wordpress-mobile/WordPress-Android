@@ -1120,28 +1120,36 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "stats_previous_date_tapped";
             case STATS_NEXT_DATE_TAPPED:
                 return "stats_next_date_tapped";
+            case STATS_INSIGHTS_TOTAL_LIKES_GUIDE_TAPPED:
+                return "stats_insights_total_likes_guide_tapped";
+            case STATS_INSIGHTS_ACTION_BLOGGING_REMINDERS_CONFIRMED:
+                return "stats_insights_action_blogging_reminders_confirmed";
+            case STATS_INSIGHTS_ACTION_BLOGGING_REMINDERS_DISMISSED:
+                return "stats_insights_action_blogging_reminders_dismissed";
+            case STATS_INSIGHTS_ACTION_GROW_AUDIENCE_CONFIRMED:
+                return "stats_insights_action_grow_audience_confirmed";
+            case STATS_INSIGHTS_ACTION_GROW_AUDIENCE_DISMISSED:
+                return "stats_insights_action_grow_audience_dismissed";
+            case STATS_INSIGHTS_ACTION_SCHEDULE_POST_CONFIRMED:
+                return "stats_insights_action_schedule_post_confirmed";
+            case STATS_INSIGHTS_ACTION_SCHEDULE_POST_DISMISSED:
+                return "stats_insights_action_schedule_post_dismissed";
+            case STATS_INSIGHTS_VIEW_MORE:
+                return "stats_insights_view_more";
             case STATS_FOLLOWERS_VIEW_MORE_TAPPED:
                 return "stats_followers_view_more_tapped";
-            case STATS_TOTAL_LIKES_VIEW_MORE_TAPPED:
-                return "stats_total_likes_view_more_tapped";
             case STATS_TOTAL_LIKES_ERROR:
                 return "stats_total_likes_error";
-            case STATS_TOTAL_COMMENTS_VIEW_MORE_TAPPED:
-                return "stats_total_comments_view_more_tapped";
             case STATS_TOTAL_COMMENTS_ERROR:
                 return "stats_total_comments_error";
-            case STATS_TOTAL_FOLLOWERS_VIEW_MORE_TAPPED:
-                return "stats_total_followers_view_more_tapped";
             case STATS_TAGS_AND_CATEGORIES_VIEW_MORE_TAPPED:
                 return "stats_tags_and_categories_view_more_tapped";
-            case STATS_VIEWS_AND_VISITORS_VIEW_MORE_TAPPED:
-                return "stats_views_and_visitors_view_more_tapped";
             case STATS_VIEWS_AND_VISITORS_ERROR:
                 return "stats_views_and_visitors_error";
             case STATS_VIEWS_AND_VISITORS_LINE_CHART_TAPPED:
                 return "stats_views_and_visitors_line_chart_tapped";
-            case STATS_VIEWS_AND_VISITORS_TYPE_TAPPED:
-                return "stats_views_and_visitors_type_tapped";
+            case STATS_INSIGHTS_VIEWS_VISITORS_TOGGLED:
+                return "stats_insights_views_visitors_toggled";
             case STATS_PUBLICIZE_VIEW_MORE_TAPPED:
                 return "stats_publicize_view_more_tapped";
             case STATS_POSTS_AND_PAGES_VIEW_MORE_TAPPED:
@@ -1206,10 +1214,12 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "stats_widget_removed";
             case STATS_WIDGET_TAPPED:
                 return "stats_widget_tapped";
-            case STATS_REVAMP_V2_INTRO_TRY_IT_NOW_CLICKED:
-                return "stats_revamp_v2_intro_try_it_now_tapped";
-            case STATS_REVAMP_V2_INTRO_REMIND_ME_CLICKED:
-                return "stats_revamp_v2_intro_remind_me_tapped";
+            case STATS_REVAMP_V2_ANNOUNCEMENT_SHOWN:
+                return "stats_revamp_v2_announcement_shown";
+            case STATS_REVAMP_V2_ANNOUNCEMENT_CONFIRMED:
+                return "stats_revamp_v2_announcement_confirmed";
+            case STATS_REVAMP_V2_ANNOUNCEMENT_DISMISSED:
+                return "stats_revamp_v2_announcement_dismissed";
             case PUSH_NOTIFICATION_RECEIVED:
                 return "push_notification_received";
             case PUSH_NOTIFICATION_TAPPED:

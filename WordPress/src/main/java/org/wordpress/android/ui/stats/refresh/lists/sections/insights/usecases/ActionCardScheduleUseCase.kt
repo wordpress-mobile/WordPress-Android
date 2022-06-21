@@ -2,6 +2,7 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R.string
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.store.StatsStore.InsightType
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
@@ -41,13 +42,13 @@ class ActionCardScheduleUseCase @Inject constructor(
     }
 
     private fun onSchedule() {
-        // analyticsTrackerWrapper.track(Stat.STATS_INSIGHTS_MANAGEMENT_HINT_CLICKED)
+        analyticsTrackerWrapper.track(Stat.STATS_INSIGHTS_ACTION_SCHEDULE_POST_CONFIRMED)
         navigateTo(SchedulePost)
         actionCardHandler.dismiss(InsightType.ACTION_SCHEDULE)
     }
 
     private fun onDismiss() {
-        // analyticsTrackerWrapper.track(Stat.STATS_INSIGHTS_MANAGEMENT_HINT_DISMISSED)
+        analyticsTrackerWrapper.track(Stat.STATS_INSIGHTS_ACTION_SCHEDULE_POST_DISMISSED)
         actionCardHandler.dismiss(InsightType.ACTION_SCHEDULE)
     }
 }
