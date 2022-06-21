@@ -19,6 +19,7 @@ import org.wordpress.android.fluxc.store.NotificationStore.UnregisterDeviceRespo
 public enum NotificationAction implements IAction {
     // Remote actions
     @Action(payloadType = RegisterDevicePayload.class)
+    @Deprecated
     REGISTER_DEVICE, // Register device for push notifications with WordPress.com
     @Action
     UNREGISTER_DEVICE, // Unregister device for push notifications with WordPress.com
@@ -31,6 +32,7 @@ public enum NotificationAction implements IAction {
 
     // Remote responses
     @Action(payloadType = RegisterDeviceResponsePayload.class)
+    @Deprecated
     REGISTERED_DEVICE, // Response to device registration received
     @Action(payloadType = UnregisterDeviceResponsePayload.class)
     UNREGISTERED_DEVICE, // Response to device unregistration
