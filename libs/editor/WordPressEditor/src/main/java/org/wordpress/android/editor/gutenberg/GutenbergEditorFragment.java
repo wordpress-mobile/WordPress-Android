@@ -1249,7 +1249,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             int mediaId = isNetworkUrl ? Integer.valueOf(mediaEntry.getValue().getMediaId())
                     : mediaEntry.getValue().getId();
             String url = isNetworkUrl ? mediaEntry.getKey() : "file://" + mediaEntry.getKey();
-            String test = mediaEntry.getValue().getAlt();
             rnMediaList.add(createRNMediaUsingMimeType(mediaId,
                     url,
                     mediaEntry.getValue().getMimeType(),
