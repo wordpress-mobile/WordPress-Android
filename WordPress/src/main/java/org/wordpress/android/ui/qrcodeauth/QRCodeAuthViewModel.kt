@@ -159,7 +159,7 @@ class QRCodeAuthViewModel @Inject constructor(
         track(Stat.QRLOGIN_VERIFY_APPROVED)
         postUiState(uiStateMapper.mapToAuthenticating(_uiState.value as Validated))
         if (data.isNullOrEmpty() || token.isNullOrEmpty()) {
-            trackFailure(QRLOGIN_VERIFY_FAILED, TRACK_INVALID_DATA)
+            track(QRLOGIN_VERIFY_FAILED, TRACK_INVALID_DATA)
             postUiState(uiStateMapper.mapToInvalidData(this::onScanAgainClicked, this::onCancelClicked))
         } else {
             authenticate(data = data.toString(), token = token.toString())
@@ -178,7 +178,7 @@ class QRCodeAuthViewModel @Inject constructor(
         track(Stat.QRLOGIN_VERIFY_DISPLAYED)
 
         if (data.isNullOrEmpty() || token.isNullOrEmpty()) {
-            trackFailure(QRLOGIN_VERIFY_FAILED, TRACK_INVALID_DATA)
+            track(QRLOGIN_VERIFY_FAILED, TRACK_INVALID_DATA)
             postUiState(uiStateMapper.mapToInvalidData(this::onScanAgainClicked, this::onCancelClicked))
         } else {
             postUiState(uiStateMapper.mapToLoading())
@@ -188,7 +188,7 @@ class QRCodeAuthViewModel @Inject constructor(
 
     private fun validateScan(data: String, token: String) {
         if (!networkUtilsWrapper.isNetworkAvailable()) {
-            trackFailure(QRLOGIN_VERIFY_FAILED, TRACK_NO_INTERNET)
+            track(QRLOGIN_VERIFY_FAILED, TRACK_NO_INTERNET)
             postUiState(uiStateMapper.mapToNoInternet(this::onScanAgainClicked, this::onCancelClicked))
             return
         }
@@ -197,7 +197,7 @@ class QRCodeAuthViewModel @Inject constructor(
             val result = authStore.validate(data = data, token = token)
             if (result.isError) {
                 val error = mapScanErrorToErrorState(result.error)
-                trackFailure(QRLOGIN_VERIFY_FAILED, error.type.label)
+                track(QRLOGIN_VERIFY_FAILED, error.type.label)
                 postUiState(error)
             } else {
                 browser = result.model?.browser
@@ -245,7 +245,7 @@ class QRCodeAuthViewModel @Inject constructor(
 
     private fun authenticate(data: String, token: String) {
         if (!networkUtilsWrapper.isNetworkAvailable()) {
-            trackFailure(QRLOGIN_VERIFY_FAILED, TRACK_NO_INTERNET)
+            track(QRLOGIN_VERIFY_FAILED, TRACK_NO_INTERNET)
             postUiState(uiStateMapper.mapToNoInternet(this::onScanAgainClicked, this::onCancelClicked))
             return
         }
@@ -254,7 +254,7 @@ class QRCodeAuthViewModel @Inject constructor(
             val result = authStore.authenticate(data = data, token = token)
             if (result.isError) {
                 val error = mapScanErrorToErrorState(result.error)
-                trackFailure(QRLOGIN_VERIFY_FAILED, error.type.label)
+                track(QRLOGIN_VERIFY_FAILED, error.type.label)
                 postUiState(error)
             } else {
                 clearProperties()
@@ -262,7 +262,7 @@ class QRCodeAuthViewModel @Inject constructor(
                     track(Stat.QRLOGIN_AUTHENTICATED)
                     postUiState(mapAuthenticateSuccessToDoneState())
                 } else {
-                    trackFailure(QRLOGIN_VERIFY_FAILED, TRACK_AUTHENTICATION_FAILED)
+                    track(QRLOGIN_VERIFY_FAILED, TRACK_AUTHENTICATION_FAILED)
                     postUiState(uiStateMapper.mapToAuthFailed(::onScanAgainClicked, ::onCancelClicked))
                 }
             }
@@ -313,12 +313,13 @@ class QRCodeAuthViewModel @Inject constructor(
         outState.putString(LAST_STATE_KEY, uiState.value.type?.label)
     }
 
-    fun track(stat: Stat) {
-        analyticsTrackerWrapper.track(stat, mapOf(ORIGIN to trackingOrigin))
-    }
-
-    fun trackFailure(stat: Stat, errorMessage: String) {
-        analyticsTrackerWrapper.track(stat, mapOf(ORIGIN to trackingOrigin, ERROR to errorMessage))
+    fun track(stat: Stat, error: String? = null) {
+        val props = if (error.isNullOrEmpty()) {
+            mapOf(ORIGIN to trackingOrigin)
+        } else {
+            mapOf(ORIGIN to trackingOrigin, ERROR to error)
+        }
+        analyticsTrackerWrapper.track(stat, props)
     }
 
     companion object {
