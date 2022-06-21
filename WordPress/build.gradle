@@ -429,7 +429,7 @@ dependencies {
     }
     androidTestImplementation 'org.apache.httpcomponents:httpclient-android:4.3.5.1'
 
-    androidTestImplementation project(path:':WordPressMocks')
+    androidTestImplementation project(path:':libs:mocks')
 
     androidTestImplementation "androidx.test:runner:$androidxTestCoreVersion"
     androidTestImplementation "androidx.test:rules:$androidxTestCoreVersion"
