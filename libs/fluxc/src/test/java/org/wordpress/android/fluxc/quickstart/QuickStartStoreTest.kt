@@ -62,10 +62,10 @@ class QuickStartStoreTest {
 
         // making sure undone tasks are retrieved in a correct order
         val uncompletedCustomizeTasks = quickStartStore.getUncompletedTasksByType(testLocalSiteId, CUSTOMIZE)
-        assertEquals(4, uncompletedCustomizeTasks.size)
+        assertEquals(3, uncompletedCustomizeTasks.size)
         assertEquals(UPDATE_SITE_TITLE, uncompletedCustomizeTasks[0])
         assertEquals(UPLOAD_SITE_ICON, uncompletedCustomizeTasks[1])
-        assertEquals(REVIEW_PAGES, uncompletedCustomizeTasks[3])
+        assertEquals(REVIEW_PAGES, uncompletedCustomizeTasks[2])
 
         val uncompletedGrowTasks = quickStartStore.getUncompletedTasksByType(testLocalSiteId, GROW)
         assertEquals(3, uncompletedGrowTasks.size)
