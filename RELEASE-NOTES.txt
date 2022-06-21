@@ -2,7 +2,7 @@
 
 20.2
 -----
-
+* [*] Added heic/heif image format support [https://github.com/wordpress-mobile/WordPress-Android/pull/16773]
 
 20.1
 -----
