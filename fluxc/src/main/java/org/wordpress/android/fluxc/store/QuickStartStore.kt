@@ -148,6 +148,10 @@ class QuickStartStore @Inject constructor(
                 .sortedBy { it.order }
     }
 
+    fun isQuickStartStatusSet(siteId: Long): Boolean {
+        return quickStartSqlUtils.getQuickStartStatus(siteId) != null
+    }
+
     fun setQuickStartCompleted(siteId: Long, isCompleted: Boolean) {
         quickStartSqlUtils.setQuickStartCompleted(siteId, isCompleted)
     }

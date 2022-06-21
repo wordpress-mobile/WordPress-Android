@@ -3,6 +3,7 @@ package org.wordpress.android.fluxc.network.rest.wpcom.site;
 import org.wordpress.android.fluxc.network.Response;
 
 import java.util.List;
+import java.util.Map;
 
 public class SiteWPComRestResponse implements Response {
     public static class SitesResponse {
@@ -33,6 +34,7 @@ public class SiteWPComRestResponse implements Response {
         public boolean publicize_permanently_disabled;
         public List<String> active_modules;
         public List<String> jetpack_connection_active_plugins;
+        public BloggingPromptsSettings blogging_prompts_settings;
     }
 
     public static class Plan {
@@ -85,6 +87,14 @@ public class SiteWPComRestResponse implements Response {
     public class ZendeskSiteMeta {
         public String plan;
         public List<String> addon;
+    }
+
+    public class BloggingPromptsSettings {
+        public boolean prompts_card_opted_in;
+        public boolean prompts_reminders_opted_in;
+        public boolean is_potential_blogging_site;
+        public Map<String, Boolean> reminders_days;
+        public String reminders_time;
     }
 
     public long ID;
