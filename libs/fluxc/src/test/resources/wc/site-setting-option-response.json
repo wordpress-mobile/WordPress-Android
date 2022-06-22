@@ -1,0 +1,21 @@
+{
+  "id": "woocommerce_enable_coupons",
+  "label": "Enable coupons",
+  "description": "Enable the use of coupon codes",
+  "type": "checkbox",
+  "default": "yes",
+  "tip": "Coupons can be applied from the cart and checkout pages.",
+  "value": "yes",
+  "_links": {
+    "self": [
+      {
+        "href": "https://awootestshop.mystagingwebsite.com/wp-json/wc/v3/settings/general/woocommerce_enable_coupons"
+      }
+    ],
+    "collection": [
+      {
+        "href": "https://awootestshop.mystagingwebsite.com/wp-json/wc/v3/settings/general"
+      }
+    ]
+  }
+}
