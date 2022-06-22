@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-06-15 14:44:55+0000
+Translation-Revision-Date: 2022-06-18 21:22:47+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.1
 Language: ro
@@ -1641,7 +1641,7 @@ Language: ro
     <string name="stats_item_settings">Setări elemente de statistici</string>
     <string name="post_moving_to_draft">Articolul este mutat acum în ciorne</string>
     <string name="post_restoring">Articolul este restaurat acum</string>
-    <string name="post_restored">Articol restaurat</string>
+    <string name="post_restored">Am restaurat articolul</string>
     <string name="post_trashing">Articolul este aruncat la gunoi</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_message">Aruncarea acestui articol la gunoi va anula și modificările nesalvate, sigur vrei să continui?</string>
     <string name="dialog_confirm_trash_losing_local_changes_title">Modificări locale</string>
@@ -2098,7 +2098,7 @@ Language: ro
     <string name="comment_unspam_talkback">Comentariu marcat ca nefiind spam</string>
     <string name="comment_spam_talkback">Comentariul a fost marcat ca spam</string>
     <string name="comment_delete_talkback">Am șters comentariul</string>
-    <string name="comment_untrash_talkback">Comentariu restaurat</string>
+    <string name="comment_untrash_talkback">Am restaurat comentariul</string>
     <string name="comment_trash_talkback">Comentariu trimis la gunoi</string>
     <string name="comment_unliked_talkback">Comentariu neapreciat</string>
     <string name="comment_liked_talkback">Comentariu apreciat</string>
