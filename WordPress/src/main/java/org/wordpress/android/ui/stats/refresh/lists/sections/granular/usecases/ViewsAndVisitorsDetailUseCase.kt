@@ -14,6 +14,7 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewUrl
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TitleWithMore
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularStatefulUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularUseCaseFactory
@@ -29,7 +30,6 @@ import org.wordpress.android.ui.stats.refresh.utils.trackGranular
 import org.wordpress.android.ui.stats.refresh.utils.trackViewsVisitorsChips
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
-import org.wordpress.android.util.AppLog.T.STATS
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Date
@@ -120,7 +120,13 @@ constructor(
     ): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
         if (domainModel.dates.isNotEmpty()) {
-            AppLog.d(STATS, domainModel.dates.toString())
+            items.add(buildTitle())
+
+            if (uiState.selectedPosition == 1) {
+                items.add(viewsAndVisitorsMapper.buildChartLegendsPurple())
+            } else {
+                items.add(viewsAndVisitorsMapper.buildChartLegendsBlue())
+            }
 
             val dateFromProvider = selectedDateProvider.getSelectedDate(statsGranularity)
             val visibleLineCount = uiState.visibleLineCount ?: domainModel.dates.size
@@ -139,7 +145,6 @@ constructor(
                     DAYS
             )
             val selectedItem = domainModel.dates.getOrNull(index) ?: domainModel.dates.last()
-//            val previousItem = domainModel.dates.getOrNull(domainModel.dates.indexOf(selectedItem) - 1)
 
             items.add(
                     viewsAndVisitorsMapper.buildTitle(
@@ -178,6 +183,10 @@ constructor(
         }
         return items
     }
+
+    private fun buildTitle() = TitleWithMore(
+            string.stats_insights_views_and_visitors
+    )
 
     private fun onLineSelected(period: String?) {
         analyticsTracker.trackGranular(
