@@ -23,7 +23,6 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.Us
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TitleWithMore
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem
-import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.InsightUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.ViewsAndVisitorsUseCase.UiState
@@ -288,39 +287,6 @@ class ViewsAndVisitorsUseCase
                 ViewsAndVisitorsUseCase(
                         InsightType.VIEWS_AND_VISITORS,
                         DAYS,
-                        visitsAndViewsStore,
-                        selectedDateProvider,
-                        statsSiteProvider,
-                        statsDateFormatter,
-                        viewsAndVisitorsMapper,
-                        mainDispatcher,
-                        backgroundDispatcher,
-                        analyticsTracker,
-                        statsWidgetUpdaters,
-                        localeManagerWrapper,
-                        resourceProvider,
-                        useCaseMode
-                )
-    }
-
-    class ViewsAndVisitorsGranularUseCaseFactory
-    @Inject constructor(
-        @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
-        @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher,
-        private val statsSiteProvider: StatsSiteProvider,
-        private val selectedDateProvider: SelectedDateProvider,
-        private val statsDateFormatter: StatsDateFormatter,
-        private val viewsAndVisitorsMapper: ViewsAndVisitorsMapper,
-        private val visitsAndViewsStore: VisitsAndViewsStore,
-        private val analyticsTracker: AnalyticsTrackerWrapper,
-        private val statsWidgetUpdaters: StatsWidgetUpdaters,
-        private val localeManagerWrapper: LocaleManagerWrapper,
-        private val resourceProvider: ResourceProvider
-    ) : GranularUseCaseFactory {
-        override fun build(granularity: StatsGranularity, useCaseMode: UseCaseMode) =
-                ViewsAndVisitorsUseCase(
-                        InsightType.VIEWS_AND_VISITORS,
-                        granularity,
                         visitsAndViewsStore,
                         selectedDateProvider,
                         statsSiteProvider,
