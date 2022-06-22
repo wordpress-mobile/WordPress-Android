@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.viewholders
 
-import android.content.Context
 import android.graphics.DashPathEffect
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
@@ -55,6 +54,7 @@ class LineChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
                         entry: Entry,
                         index: Int
                     ) {
+                        drawChartMarker(Highlight(entry.x, entry.y, 0), item.selectedType)
                         val value = entry.data as? String
                         value?.let {
                             item.onLineSelected?.invoke(it)
@@ -230,8 +230,8 @@ class LineChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             val markerView = LineChartMarkerView(chart.context, selectedType)
             markerView.chartView = chart
             chart.marker = markerView
-            chart.highlightValue(h)
         }
+        chart.highlightValue(h)
     }
 
     private fun configureDataSets(dataSets: MutableList<ILineDataSet>, selectedType: Int) {
