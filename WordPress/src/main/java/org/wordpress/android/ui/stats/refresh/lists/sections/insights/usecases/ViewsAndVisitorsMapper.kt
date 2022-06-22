@@ -132,7 +132,7 @@ class ViewsAndVisitorsMapper
 
         val contentDescriptions = statsUtils.getLineChartEntryContentDescriptions(
                 entryType,
-                chartItems.subList(7, chartItems.size)
+                chartItems
         )
 
         result.add(
