@@ -103,7 +103,7 @@ class LineChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             val mappedEntries = prevWeekData.mapIndexed { index, pair -> toLineEntry(pair, index) }
             LineDataSet(mappedEntries, "Previous week data")
         } else {
-            buildEmptyDataSet(chart.context, item.entries.size)
+            buildEmptyDataSet(item.entries.size)
         }
 
         val thisWeekData = if (hasData && item.entries.size > 7) {
@@ -117,7 +117,7 @@ class LineChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             val mappedEntries = thisWeekData.mapIndexed { index, pair -> toLineEntry(pair, index) }
             LineDataSet(mappedEntries, "Current week data")
         } else {
-            buildEmptyDataSet(chart.context, item.entries.size)
+            buildEmptyDataSet(item.entries.size)
         }
         item.onLineChartDrawn?.invoke(thisWeekDataSet.entryCount)
 
@@ -152,7 +152,7 @@ class LineChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
                     }
 
                     override fun onValueSelected(e: Entry, h: Highlight) {
-                        drawChartMarker(e, h, item.selectedType)
+                        drawChartMarker(h, item.selectedType)
                         item.onLineSelected?.invoke(e.data as? String)
                     }
                 })
@@ -225,7 +225,7 @@ class LineChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         }
     }
 
-    private fun drawChartMarker(e: Entry, h: Highlight, selectedType: Int) {
+    private fun drawChartMarker(h: Highlight, selectedType: Int) {
         if (chart.marker == null) {
             val markerView = LineChartMarkerView(chart.context, selectedType)
             markerView.chartView = chart
@@ -277,7 +277,7 @@ class LineChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         }
     }
 
-    private fun buildEmptyDataSet(context: Context, count: Int): LineDataSet {
+    private fun buildEmptyDataSet(count: Int): LineDataSet {
         val emptyValues = (0 until count).map { index -> Entry(index.toFloat(), 0f, "empty") }
         val dataSet = LineDataSet(emptyValues, "Empty")
 
