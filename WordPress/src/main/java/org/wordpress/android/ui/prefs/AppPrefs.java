@@ -274,9 +274,7 @@ public class AppPrefs {
         GUTENBERG_BLOCK_TYPE_IMPRESSIONS,
 
         // Used to identify the App Settings for initial screen that is updated when the variant is assigned
-        wp_pref_initial_screen,
-
-        BLOGGING_PROMPT_ONBOARDING_WAS_DISPLAYED
+        wp_pref_initial_screen
     }
 
     private static SharedPreferences prefs() {
@@ -1322,15 +1320,6 @@ public class AppPrefs {
 
     @NonNull private static String getShouldShowWeeklyRoundupNotification(long siteId) {
         return DeletablePrefKey.SHOULD_SHOW_WEEKLY_ROUNDUP_NOTIFICATION.name() + siteId;
-    }
-
-    public static boolean shouldDisplayBloggingPromptOnboarding() {
-        return prefs().getBoolean(UndeletablePrefKey.BLOGGING_PROMPT_ONBOARDING_WAS_DISPLAYED.name(), true);
-    }
-
-    public static void setShouldDisplayBloggingPromptOnboarding(boolean isDisplayed) {
-        prefs().edit().putBoolean(UndeletablePrefKey.BLOGGING_PROMPT_ONBOARDING_WAS_DISPLAYED.name(), isDisplayed)
-               .apply();
     }
 
     /*

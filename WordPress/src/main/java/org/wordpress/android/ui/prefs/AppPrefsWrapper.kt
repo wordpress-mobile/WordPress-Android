@@ -233,8 +233,6 @@ class AppPrefsWrapper @Inject constructor() {
 
     fun getSkippedPromptDay(): Date? = AppPrefs.getSkippedPromptDay()
 
-    fun markBloggingPromptOnboardingDialogAsDisplayed() = AppPrefs.setShouldDisplayBloggingPromptOnboarding(false)
-
     companion object {
         private const val LIGHT_MODE_ID = 0
         private const val DARK_MODE_ID = 1
