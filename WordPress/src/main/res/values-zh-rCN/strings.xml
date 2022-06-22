@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-06-16 13:54:08+0000
+Translation-Revision-Date: 2022-06-21 13:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.1
 Language: zh_CN
@@ -19,6 +19,7 @@ Language: zh_CN
     <string name="stats_follower_types_pie_chart_total_label">共计</string>
     <string name="stats_referrers_pie_chart_others">其他</string>
     <string name="stats_referrers_pie_chart_search">搜索</string>
+    <string name="stats_referrers_pie_chart_wordpress">WordPress</string>
     <string name="stats_referrers_pie_chart_total_label">查看</string>
     <string name="stats_action_card_schedule_post_button_label">预发布</string>
     <string name="stats_action_card_schedule_post_message">✍️计划在最佳时间发表您草稿中的内容。</string>
