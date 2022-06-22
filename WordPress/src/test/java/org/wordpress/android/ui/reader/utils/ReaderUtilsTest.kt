@@ -108,4 +108,25 @@ class ReaderUtilsTest {
         var result = ReaderUtils.isExternalFeed(blogId, feedId)
         assertThat(result).isEqualTo(false)
     }
+
+    @Test
+    fun `given valid url encoded string, when sanitize string is invoked, then string is not sanitized`() {
+        val urlEncodedString = "%e7%be%8e%e9%a3%9f"
+        val result = ReaderUtils.sanitizeWithDashes(urlEncodedString)
+        assertThat(result).isEqualTo(urlEncodedString)
+    }
+
+    @Test
+    fun `given string with spaces, when sanitize string is invoked, then string is sanitized`() {
+        val stringWithSpaces = "string with spaces"
+        val result = ReaderUtils.sanitizeWithDashes(stringWithSpaces)
+        assertThat(result).isEqualTo("string-with-spaces")
+    }
+
+    @Test
+    fun `given non-alphanum string without url encoding, when sanitize string is invoked, then string is sanitized `() {
+        val nonUrlEncodedString = "non%url*encoded<?string"
+        val result = ReaderUtils.sanitizeWithDashes(nonUrlEncodedString)
+        assertThat(result).isEqualTo("nonurlencodedstring")
+    }
 }
