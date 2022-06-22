@@ -3122,8 +3122,6 @@
     <string name="quick_start_dialog_view_your_site_message_short" tools:ignore="UnusedResources">Tap &lt;b&gt;%1$s&lt;/b&gt; to view your site</string>
     <string name="quick_start_dialog_view_site_title">View your site</string>
     <string name="quick_start_dialog_update_site_title_message_short">Tap &lt;b&gt;%1$s&lt;/b&gt; to set a new title</string>
-    <string name="quick_start_dialog_edit_homepage_title">Edit your homepage</string>
-    <string name="quick_start_dialog_edit_homepage_message">Change, add, or remove content from your site\'s homepage.</string>
     <string name="quick_start_dialog_edit_homepage_message_short" tools:ignore="UnusedResources">Select %1$s Pages %2$s to see your page list.</string>
     <string name="quick_start_dialog_check_notifications_message_short">Select the %1$s Notifications tab %2$s to get updates on the go.</string>
     <string name="quick_start_dialog_edit_homepage_message_pages_short" tools:ignore="UnusedResources">Select %1$s Homepage %2$s to edit your Homepage.</string>
