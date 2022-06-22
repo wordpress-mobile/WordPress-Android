@@ -256,7 +256,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
     @Inject MySiteDashboardTodaysStatsCardFeatureConfig mTodaysStatsCardFeatureConfig;
     @Inject QuickStartTracker mQuickStartTracker;
     @Inject StatsRevampV2FeatureConfig mStatsRevampV2FeatureConfig;
-    @Inject BloggingPromptsFeatureConfig mBloggingPromptsFeatureConfig;
 
     @Inject BuildConfigWrapper mBuildConfigWrapper;
 
@@ -428,14 +427,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
                    && savedInstanceState == null) {
             canShowAppRatingPrompt = false;
             showBloggingPromptsOnboarding();
-        } else if (mBloggingPromptsFeatureConfig.isEnabled() && AppPrefs.shouldDisplayBloggingPromptOnboarding()
-                   && mAccountStore.hasAccessToken()
-                   && savedInstanceState == null) {
-            // TODO temporary promo - remove after version 20.1
-            BloggingPromptsOnboardingDialogFragment.newInstance(DialogType.ONBOARDING).show(
-                    getSupportFragmentManager(), BloggingPromptsOnboardingDialogFragment.TAG
-            );
-            canShowAppRatingPrompt = false;
         }
 
         if (isGooglePlayServicesAvailable(this)) {
