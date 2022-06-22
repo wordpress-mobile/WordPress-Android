@@ -46,7 +46,7 @@ class WeeklyRoundupRepositoryTest : BaseUnitTest() {
 
     @Test
     fun `fetch returns only last week model`() = test {
-        whenever(visitsAndViewsStore.fetchVisits(any(), any(), any(), any())).thenReturn(
+        whenever(visitsAndViewsStore.fetchVisits(site = any(), granularity = any(), limitMode = any(), forced = any())).thenReturn(
                 OnStatsFetched(VisitsAndViewsModel(period = "2021-08-04", dates = listOf(first, second, third)))
         )
 
@@ -58,7 +58,7 @@ class WeeklyRoundupRepositoryTest : BaseUnitTest() {
 
     @Test
     fun `fetch returns null when period is invalid`() = test {
-        whenever(visitsAndViewsStore.fetchVisits(any(), any(), any(), any())).thenReturn(
+        whenever(visitsAndViewsStore.fetchVisits(site = any(), granularity = any(), limitMode = any(), forced = any())).thenReturn(
                 OnStatsFetched(VisitsAndViewsModel(period = "invalid", dates = listOf(first, second, third)))
         )
 
@@ -69,7 +69,7 @@ class WeeklyRoundupRepositoryTest : BaseUnitTest() {
 
     @Test
     fun `fetch returns null on error`() = test {
-        whenever(visitsAndViewsStore.fetchVisits(any(), any(), any(), any())).thenReturn(
+        whenever(visitsAndViewsStore.fetchVisits(site = any(), granularity = any(), limitMode = any(), forced = any())).thenReturn(
                 OnStatsFetched(StatsError(GENERIC_ERROR, "Generic error!"))
         )
 
