@@ -3,6 +3,7 @@ package org.wordpress.android.ui.qrcodeauth
 import android.os.Bundle
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.argThat
+import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -17,6 +18,8 @@ import org.junit.Test
 import org.mockito.Mock
 import org.mockito.Mockito.times
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.QRLOGIN_VERIFY_FAILED
 import org.wordpress.android.fluxc.network.rest.wpcom.qrcodeauth.QRCodeAuthError
 import org.wordpress.android.fluxc.network.rest.wpcom.qrcodeauth.QRCodeAuthErrorType
 import org.wordpress.android.fluxc.network.rest.wpcom.qrcodeauth.QRCodeAuthErrorType.AUTHORIZATION_REQUIRED
@@ -33,9 +36,9 @@ import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.Content.Validated
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.Error.InvalidData
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.Error.NoInternet
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiStateType.AUTHENTICATING
-import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiStateType.AUTH_FAILED
+import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiStateType.AUTHENTICATION_FAILED
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiStateType.DONE
-import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiStateType.EXPIRED
+import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiStateType.EXPIRED_TOKEN
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiStateType.INVALID_DATA
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiStateType.NO_INTERNET
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiStateType.VALIDATED
@@ -58,6 +61,7 @@ const val SCANNED_VALUE =
         "https://apps.wordpress.com/get/?campaign=login-qr-code#qr-code-login?token=scannedtoken&data=scanneddata"
 const val VALID_EXPIRED_MESSAGE = "qr code data expired"
 const val INVALID_EXPIRED_MESSAGE = "invalid qr code data expired"
+
 @InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 @Suppress("LargeClass")
@@ -72,6 +76,11 @@ class QRCodeAuthViewModelTest : BaseUnitTest() {
 
     private val validQueryParams = mapOf(DATA_KEY to DATA, TOKEN_KEY to TOKEN)
     private val invalidQueryParams = mapOf("invalid_key" to DATA, TOKEN_KEY to TOKEN)
+
+    private val errorTrackingMapInvalidData = mutableMapOf("error" to "invalid_data", "origin" to "menu")
+    private val errorTrackingMapAuthFailed = mutableMapOf("error" to "authentication_failed", "origin" to "menu")
+    private val errorTrackingMapExpiredToken = mutableMapOf("error" to "expired_token", "origin" to "menu")
+
     @Before
     fun setUp() {
         viewModel = QRCodeAuthViewModel(
@@ -170,6 +179,19 @@ class QRCodeAuthViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `given invalid host, when scanned qrcode, then invalid data error is tracked`() {
+        whenever(validator.isValidUri(SCANNED_VALUE)).thenReturn(false)
+
+        val uiStates = mutableListOf<QRCodeAuthUiState>()
+        runBlockingTestWithData(uiStates) {
+            viewModel.start()
+            viewModel.onScanSuccess(SCANNED_VALUE)
+
+            verify(analyticsTrackerWrapper).track(eq(QRLOGIN_VERIFY_FAILED), eq(errorTrackingMapInvalidData))
+        }
+    }
+
+    @Test
     fun `given invalid query params, when scanned qrcode, then error is shown`() {
         whenever(validator.isValidUri(SCANNED_VALUE)).thenReturn(true)
         whenever(validator.extractQueryParams(SCANNED_VALUE)).thenReturn(invalidQueryParams)
@@ -184,6 +206,20 @@ class QRCodeAuthViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `given invalid query params, when scanned qrcode, then invalid data error is tracked`() {
+        whenever(validator.isValidUri(SCANNED_VALUE)).thenReturn(true)
+        whenever(validator.extractQueryParams(SCANNED_VALUE)).thenReturn(invalidQueryParams)
+
+        val uiStates = mutableListOf<QRCodeAuthUiState>()
+        runBlockingTestWithData(uiStates) {
+            viewModel.start()
+            viewModel.onScanSuccess(SCANNED_VALUE)
+
+            verify(analyticsTrackerWrapper).track(eq(QRLOGIN_VERIFY_FAILED), eq(errorTrackingMapInvalidData))
+        }
+    }
+
+    @Test
     fun `given not authorized error, when validate failure, then auth failed is shown`() {
         val uiStates = mutableListOf<QRCodeAuthUiState>()
         runBlockingTestWithData(uiStates) {
@@ -192,7 +228,20 @@ class QRCodeAuthViewModelTest : BaseUnitTest() {
             viewModel.start()
             viewModel.onScanSuccess(SCANNED_VALUE)
 
-            assertThat(uiStates.last().type).isEqualTo(AUTH_FAILED)
+            assertThat(uiStates.last().type).isEqualTo(AUTHENTICATION_FAILED)
+        }
+    }
+
+    @Test
+    fun `given not authorized error, when validate failure, then auth failed error is tracked`() {
+        val uiStates = mutableListOf<QRCodeAuthUiState>()
+        runBlockingTestWithData(uiStates) {
+            initValidate(false, NOT_AUTHORIZED)
+
+            viewModel.start()
+            viewModel.onScanSuccess(SCANNED_VALUE)
+
+            verify(analyticsTrackerWrapper).track(eq(QRLOGIN_VERIFY_FAILED), eq(errorTrackingMapAuthFailed))
         }
     }
 
@@ -210,6 +259,19 @@ class QRCodeAuthViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `given error, when validate failure, then invalid data is tracked`() {
+        val uiStates = mutableListOf<QRCodeAuthUiState>()
+        runBlockingTestWithData(uiStates) {
+            initValidate(false, GENERIC_ERROR)
+
+            viewModel.start()
+            viewModel.onScanSuccess(SCANNED_VALUE)
+
+            verify(analyticsTrackerWrapper).track(eq(QRLOGIN_VERIFY_FAILED), eq(errorTrackingMapInvalidData))
+        }
+    }
+
+    @Test
     fun `given authorization required with valid error message, when validate failure, then expired is shown`() {
         val uiStates = mutableListOf<QRCodeAuthUiState>()
         runBlockingTestWithData(uiStates) {
@@ -218,7 +280,20 @@ class QRCodeAuthViewModelTest : BaseUnitTest() {
             viewModel.start()
             viewModel.onScanSuccess(SCANNED_VALUE)
 
-            assertThat(uiStates.last().type).isEqualTo(EXPIRED)
+            assertThat(uiStates.last().type).isEqualTo(EXPIRED_TOKEN)
+        }
+    }
+
+    @Test
+    fun `given authorization required with valid error message, when validate failure, then expired is tracked`() {
+        val uiStates = mutableListOf<QRCodeAuthUiState>()
+        runBlockingTestWithData(uiStates) {
+            initValidate(false, AUTHORIZATION_REQUIRED, VALID_EXPIRED_MESSAGE)
+
+            viewModel.start()
+            viewModel.onScanSuccess(SCANNED_VALUE)
+
+            verify(analyticsTrackerWrapper).track(eq(QRLOGIN_VERIFY_FAILED), eq(errorTrackingMapExpiredToken))
         }
     }
 
@@ -231,7 +306,20 @@ class QRCodeAuthViewModelTest : BaseUnitTest() {
             viewModel.start()
             viewModel.onScanSuccess(SCANNED_VALUE)
 
-            assertThat(uiStates.last().type).isEqualTo(AUTH_FAILED)
+            assertThat(uiStates.last().type).isEqualTo(AUTHENTICATION_FAILED)
+        }
+    }
+
+    @Test
+    fun `given authorization required with invalid error message, when validate failure, then authfailed is tracked`() {
+        val uiStates = mutableListOf<QRCodeAuthUiState>()
+        runBlockingTestWithData(uiStates) {
+            initValidate(false, AUTHORIZATION_REQUIRED, INVALID_EXPIRED_MESSAGE)
+
+            viewModel.start()
+            viewModel.onScanSuccess(SCANNED_VALUE)
+
+            verify(analyticsTrackerWrapper).track(eq(QRLOGIN_VERIFY_FAILED), eq(errorTrackingMapAuthFailed))
         }
     }
 
@@ -260,7 +348,20 @@ class QRCodeAuthViewModelTest : BaseUnitTest() {
 
             (uiStates.last() as Validated).primaryActionButton.clickAction()
 
-            assertThat(uiStates.last().type).isEqualTo(AUTH_FAILED)
+            assertThat(uiStates.last().type).isEqualTo(AUTHENTICATION_FAILED)
+        }
+    }
+
+    @Test
+    fun `given not authorized error, when authenticate failure, then auth failed is tracked`() {
+        val uiStates = mutableListOf<QRCodeAuthUiState>()
+        runBlockingTestWithData(uiStates) {
+            initAuthenticate(false, NOT_AUTHORIZED)
+            initAndStartVMForState(VALIDATED)
+
+            (uiStates.last() as Validated).primaryActionButton.clickAction()
+
+            verify(analyticsTrackerWrapper).track(eq(QRLOGIN_VERIFY_FAILED), eq(errorTrackingMapAuthFailed))
         }
     }
 
@@ -278,6 +379,20 @@ class QRCodeAuthViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `given error, when authenticate failure, then invalid data is tracked`() {
+        val uiStates = mutableListOf<QRCodeAuthUiState>()
+        runBlockingTestWithData(uiStates) {
+            initAuthenticate(false, GENERIC_ERROR)
+            initAndStartVMForState(VALIDATED)
+
+            (uiStates.last() as Validated).primaryActionButton.clickAction()
+
+            verify(analyticsTrackerWrapper).track(eq(Stat.QRLOGIN_VERIFY_APPROVED), any<MutableMap<String, Any>>())
+            verify(analyticsTrackerWrapper).track(eq(QRLOGIN_VERIFY_FAILED), eq(errorTrackingMapInvalidData))
+        }
+    }
+
+    @Test
     fun `given authorization required with valid message, when authenticate failure, then expired is shown`() {
         val uiStates = mutableListOf<QRCodeAuthUiState>()
         runBlockingTestWithData(uiStates) {
@@ -286,7 +401,21 @@ class QRCodeAuthViewModelTest : BaseUnitTest() {
 
             (uiStates.last() as Validated).primaryActionButton.clickAction()
 
-            assertThat(uiStates.last().type).isEqualTo(EXPIRED)
+            assertThat(uiStates.last().type).isEqualTo(EXPIRED_TOKEN)
+        }
+    }
+
+    @Test
+    fun `given authorization required with valid message, when authenticate failure, then expired is tracked`() {
+        val uiStates = mutableListOf<QRCodeAuthUiState>()
+        runBlockingTestWithData(uiStates) {
+            initAuthenticate(false, AUTHORIZATION_REQUIRED, VALID_EXPIRED_MESSAGE)
+            initAndStartVMForState(VALIDATED)
+
+            (uiStates.last() as Validated).primaryActionButton.clickAction()
+
+            verify(analyticsTrackerWrapper).track(eq(Stat.QRLOGIN_VERIFY_APPROVED), any<MutableMap<String, Any>>())
+            verify(analyticsTrackerWrapper).track(eq(QRLOGIN_VERIFY_FAILED), eq(errorTrackingMapExpiredToken))
         }
     }
 
@@ -299,7 +428,21 @@ class QRCodeAuthViewModelTest : BaseUnitTest() {
 
             (uiStates.last() as Validated).primaryActionButton.clickAction()
 
-            assertThat(uiStates.last().type).isEqualTo(AUTH_FAILED)
+            assertThat(uiStates.last().type).isEqualTo(AUTHENTICATION_FAILED)
+        }
+    }
+
+    @Test
+    fun `given authorization required with invalid message, when authenticate failure, then auth failed is tracked`() {
+        val uiStates = mutableListOf<QRCodeAuthUiState>()
+        runBlockingTestWithData(uiStates) {
+            initAuthenticate(false, AUTHORIZATION_REQUIRED, INVALID_EXPIRED_MESSAGE)
+            initAndStartVMForState(VALIDATED)
+
+            (uiStates.last() as Validated).primaryActionButton.clickAction()
+
+            verify(analyticsTrackerWrapper).track(eq(Stat.QRLOGIN_VERIFY_APPROVED), any<MutableMap<String, Any>>())
+            verify(analyticsTrackerWrapper).track(eq(QRLOGIN_VERIFY_FAILED), eq(errorTrackingMapAuthFailed))
         }
     }
 

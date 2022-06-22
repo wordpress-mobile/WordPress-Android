@@ -11,11 +11,11 @@ import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.ActionButton.ErrorS
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.ActionButton.ValidatedPrimaryActionButton
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.ActionButton.ValidatedSecondaryActionButton
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiStateType.AUTHENTICATING
-import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiStateType.AUTH_FAILED
+import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiStateType.AUTHENTICATION_FAILED
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiStateType.CONTENT
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiStateType.DONE
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiStateType.ERROR
-import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiStateType.EXPIRED
+import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiStateType.EXPIRED_TOKEN
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiStateType.INVALID_DATA
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiStateType.LOADING
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiStateType.NO_INTERNET
@@ -60,7 +60,7 @@ sealed class QRCodeAuthUiState {
             override val primaryActionButton: ErrorPrimaryActionButton,
             override val secondaryActionButton: ErrorSecondaryActionButton
         ) : Error() {
-            override val type = AUTH_FAILED
+            override val type = AUTHENTICATION_FAILED
             override val title: UiString = UiStringRes(R.string.qrcode_auth_flow_error_auth_failed_title)
             override val subtitle: UiString = UiStringRes(R.string.qrcode_auth_flow_error_auth_failed_subtitle)
             @DrawableRes override val image = R.drawable.img_illustration_empty_results_216dp
@@ -70,7 +70,7 @@ sealed class QRCodeAuthUiState {
             override val primaryActionButton: ErrorPrimaryActionButton,
             override val secondaryActionButton: ErrorSecondaryActionButton
         ) : Error() {
-            override val type = EXPIRED
+            override val type = EXPIRED_TOKEN
             override val title: UiString = UiStringRes(R.string.qrcode_auth_flow_error_expired_title)
             override val subtitle: UiString = UiStringRes(R.string.qrcode_auth_flow_error_expired_subtitle)
             @DrawableRes override val image = R.drawable.img_illustration_empty_results_216dp
