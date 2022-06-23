@@ -1,9 +1,0 @@
-<resources>
-
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
-        <item name="colorControlActivated">@color/color_control_activated</item>
-    </style>
-
-</resources>
