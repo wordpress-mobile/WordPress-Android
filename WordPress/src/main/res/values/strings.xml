@@ -1321,7 +1321,7 @@
     <string name="stats_insights_views_and_visitors_views_negative">Your views this week are %1$s lower than the previous week.</string>
     <string name="stats_insights_views_and_visitors_visitors_positive">Your visitors this week are %1$s higher than the previous week.</string>
     <string name="stats_insights_views_and_visitors_visitors_negative">Your visitors this week are %1$s lower than the previous week.</string>
-    <string name="stats_insights_views_and_visitors_visitors_empty_state">If you want to try to get more views and traffic, check out our top tips %1$s</string>
+    <string name="stats_insights_views_and_visitors_visitors_empty_state">Check out our top tips to increase your views and traffic %1$s</string>
     <string name="stats_insights_views_and_visitors_tooltip_count">%1$s %2$s</string>
     <string name="stats_insights_latest_post_summary">Latest Post Summary</string>
     <string name="stats_insights_popular">Most Popular Time</string>
