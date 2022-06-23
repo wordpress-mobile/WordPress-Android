@@ -1346,7 +1346,7 @@
     <!-- Stats refreshed insights -->
     <string name="stats_insights_all_time_stats">All-time</string>
     <string name="stats_insights_tags_and_categories">Tags and Categories</string>
-    <string name="stats_insights_latest_post_empty">You haven\'t published any posts yet. Check back later once you\'ve published your first post!</string>
+    <string name="stats_insights_latest_post_empty">Check back when you\'ve published your first post!</string>
     <string name="stats_insights_latest_post_with_no_engagement">It\'s been %1$s since %2$s was published. Get the ball rolling and increase your post views by sharing your post:</string>
     <string name="stats_insights_latest_post_message">It’s been %1$s since %2$s was published. Here’s how the post performed so far:</string>
     <string name="stats_insights_create_post">Create post</string>
