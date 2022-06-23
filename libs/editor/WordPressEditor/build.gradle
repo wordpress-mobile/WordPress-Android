@@ -4,7 +4,7 @@ plugins {
     id "org.jetbrains.kotlin.plugin.parcelize"
 }
 
-ext.aztecVersion = 'v1.5.8'
+ext.aztecVersion = 'v1.5.9'
 
 repositories {
     maven {
