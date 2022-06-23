@@ -11,6 +11,7 @@
 
     <TextView
         android:id="@+id/subtitle"
+        android:layout_width="match_parent"
         style="@style/ModalLayoutPickerLayoutsSubtitle"
         android:layout_marginStart="@dimen/mlp_layout_card_margin_start"
         android:layout_marginEnd="@dimen/mlp_layout_card_margin_end"
