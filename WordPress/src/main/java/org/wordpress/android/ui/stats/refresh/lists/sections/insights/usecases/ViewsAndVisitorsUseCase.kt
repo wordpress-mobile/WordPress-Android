@@ -45,7 +45,7 @@ import javax.inject.Inject
 import javax.inject.Named
 import kotlin.math.ceil
 
-const val VIEWS_AND_VISITORS_ITEMS_TO_LOAD = 15
+const val VIEWS_AND_VISITORS_ITEMS_TO_LOAD = 14
 const val TOP_TIPS_URL = "https://wordpress.com/support/getting-more-views-and-traffic/"
 
 @Suppress("TooManyFunctions")
@@ -184,7 +184,6 @@ class ViewsAndVisitorsUseCase
             selectedDateProvider.selectDate(selectedDate, availableDates.takeLast(visibleLineCount), statsGranularity)
 
             val selectedItem = domainModel.dates.getOrNull(index) ?: domainModel.dates.last()
-            val previousItem = domainModel.dates.getOrNull(domainModel.dates.indexOf(selectedItem) - 1)
 
             items.add(
                     viewsAndVisitorsMapper.buildTitle(

@@ -231,7 +231,7 @@ class ViewsAndVisitorsMapper
             value.toInt()
         }
 
-        val hasData = values.isNotEmpty() && values.size > 7
+        val hasData = values.isNotEmpty() && values.size >= 7
 
         val prevWeekData = if (hasData) values.subList(0, 7) else values.subList(0, values.size)
         val thisWeekData = if (hasData) values.subList(7, values.size) else emptyList()
