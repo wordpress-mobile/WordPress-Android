@@ -456,8 +456,9 @@ public class WPMainActivity extends LocaleAwareActivity implements
             onSetPromptReminderClick(getIntent().getIntExtra(ARG_OPEN_BLOGGING_REMINDERS, 0));
         }
 
-        // TODO: Confirm what would invoke this and what should happen when remind me later
-        if (mStatsRevampV2FeatureConfig.isEnabled()) {
+        if (BuildConfig.IS_JETPACK_APP
+            && mStatsRevampV2FeatureConfig.isEnabled()
+            && AppPrefs.shouldDisplayStatsRevampFeatureAnnouncement()) {
             StatsNewFeaturesIntroDialogFragment.newInstance().show(
                     getSupportFragmentManager(), StatsNewFeaturesIntroDialogFragment.TAG
             );
