@@ -25,9 +25,9 @@ class ViewsAndVisitorsMapperTest : BaseUnitTest() {
     @Mock lateinit var statsUtils: StatsUtils
     @Mock lateinit var contentDescriptionHelper: ContentDescriptionHelper
     private lateinit var mapper: ViewsAndVisitorsMapper
-    private val thisWeekViews: Long = 564
+    private val thisWeekViews: Long = 472
     private val prevWeekViews: Long = 323
-    private val thisWeekVisitors: Long = 183
+    private val thisWeekVisitors: Long = 145
     private val prevWeekVisitors: Long = 133
     private val selectedItem = PeriodData("2022-04-19", 21, 9, 3, 0, 2, 0)
     private val viewsTitle = "Views"

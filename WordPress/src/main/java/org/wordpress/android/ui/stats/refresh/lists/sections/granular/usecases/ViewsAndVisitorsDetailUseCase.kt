@@ -114,6 +114,7 @@ constructor(
         }
     }
 
+    @Suppress("LongMethod")
     override fun buildUiModel(
         domainModel: VisitsAndViewsModel,
         uiState: UiState
