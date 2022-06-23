@@ -76,8 +76,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
 
     private val dashboardTasks = listOf(
             QuickStartNewSiteTask.CHECK_STATS,
-            QuickStartNewSiteTask.REVIEW_PAGES,
-            QuickStartNewSiteTask.EDIT_HOMEPAGE
+            QuickStartNewSiteTask.REVIEW_PAGES
     )
 
     private val nonSiteMenuTasks = QuickStartTask.getAllTasks().subtract(siteMenuTasks)

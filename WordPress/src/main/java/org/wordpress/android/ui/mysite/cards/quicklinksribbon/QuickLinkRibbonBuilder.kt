@@ -60,8 +60,7 @@ class QuickLinkRibbonBuilder @Inject constructor(
     }
 
     private fun shouldShowPagesFocusPoint(params: QuickLinkRibbonBuilderParams): Boolean {
-        return params.enableFocusPoints && (params.activeTask == QuickStartNewSiteTask.EDIT_HOMEPAGE ||
-                params.activeTask == QuickStartNewSiteTask.REVIEW_PAGES)
+        return params.enableFocusPoints && params.activeTask == QuickStartNewSiteTask.REVIEW_PAGES
     }
 
     private fun shouldShowStatsFocusPoint(params: QuickLinkRibbonBuilderParams): Boolean {
