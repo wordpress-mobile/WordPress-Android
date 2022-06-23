@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.viewholders
 
 import android.view.ViewGroup
+import androidx.core.text.HtmlCompat
 import org.wordpress.android.databinding.StatsBlockListActionCardBinding
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemActionCard
 import org.wordpress.android.util.extensions.viewBinding
@@ -13,7 +14,7 @@ class ActionCardViewHolder(
         item: ListItemActionCard
     ) = with(binding) {
         actionTitle.text = parent.context.getString(item.titleResource)
-        actionMessage.text = parent.context.getString(item.text)
+        actionMessage.text = HtmlCompat.fromHtml(parent.context.getString(item.text), HtmlCompat.FROM_HTML_MODE_LEGACY)
         buttonPositive.setText(item.positiveButtonText)
         buttonPositive.setOnClickListener { item.positiveAction.click() }
         buttonNegative.setText(item.negativeButtonText)
