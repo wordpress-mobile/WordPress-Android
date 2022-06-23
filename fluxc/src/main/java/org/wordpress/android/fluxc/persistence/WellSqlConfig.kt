@@ -30,7 +30,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 176
+        return 177
     }
 
     override fun getDbName(): String {
@@ -1868,6 +1868,10 @@ open class WellSqlConfig : DefaultWellConfig {
                 }
                 175 -> migrate(version) {
                     db.execSQL("ALTER TABLE PostModel ADD ANSWERED_PROMPT_ID INTEGER")
+                }
+                176 -> migrate(version) {
+                    db.execSQL("DELETE FROM QuickStartTaskModel WHERE TASK_NAME='edit_homepage' " +
+                        "AND TASK_TYPE='customize';")
                 }
             }
         }
