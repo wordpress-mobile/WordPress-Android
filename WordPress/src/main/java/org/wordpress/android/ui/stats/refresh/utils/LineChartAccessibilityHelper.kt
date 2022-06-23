@@ -7,6 +7,7 @@ import androidx.core.view.accessibility.AccessibilityNodeInfoCompat
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat.AccessibilityActionCompat
 import androidx.customview.widget.ExploreByTouchHelper
 import com.github.mikephil.charting.charts.LineChart
+import com.github.mikephil.charting.components.YAxis.AxisDependency
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 
@@ -76,10 +77,20 @@ class LineChartAccessibilityHelper(
 
         node.addAction(AccessibilityActionCompat.ACTION_CLICK)
         val entry = dataSet.getEntryForIndex(virtualViewId)
-        val entryRectF = RectF(entry.x, entry.y, entry.y, entry.x)
+        val position = lineChart.getPosition(entry, AxisDependency.LEFT)
+        val entryRectF = RectF(
+                position.x - CIRCLE_RADIUS,
+                position.y - CIRCLE_RADIUS,
+                position.x + CIRCLE_RADIUS,
+                position.y + CIRCLE_RADIUS
+        )
         val entryRect = Rect()
         entryRectF.round(entryRect)
 
         node.setBoundsInParent(entryRect)
+    }
+
+    companion object {
+        private const val CIRCLE_RADIUS = 10
     }
 }
