@@ -659,7 +659,6 @@ class MySiteViewModel @Inject constructor(
                 }
                 ListItemAction.POSTS -> SiteNavigationAction.OpenPosts(selectedSite)
                 ListItemAction.PAGES -> {
-                    quickStartRepository.requestNextStepOfTask(QuickStartNewSiteTask.EDIT_HOMEPAGE)
                     quickStartRepository.completeTask(QuickStartNewSiteTask.REVIEW_PAGES)
                     SiteNavigationAction.OpenPages(selectedSite)
                 }
@@ -797,7 +796,6 @@ class MySiteViewModel @Inject constructor(
     private fun quickActionPagesClick() {
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
         trackWithTabSourceIfNeeded(Stat.QUICK_ACTION_PAGES_TAPPED)
-        quickStartRepository.requestNextStepOfTask(QuickStartNewSiteTask.EDIT_HOMEPAGE)
         quickStartRepository.completeTask(QuickStartNewSiteTask.REVIEW_PAGES)
         _onNavigation.value = Event(SiteNavigationAction.OpenPages(selectedSite))
     }
@@ -829,7 +827,6 @@ class MySiteViewModel @Inject constructor(
     private fun onQuickLinkRibbonPagesClick() {
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
         trackWithTabSourceIfNeeded(Stat.QUICK_LINK_RIBBON_PAGES_TAPPED)
-        quickStartRepository.requestNextStepOfTask(QuickStartNewSiteTask.EDIT_HOMEPAGE)
         quickStartRepository.completeTask(QuickStartNewSiteTask.REVIEW_PAGES)
         _onNavigation.value = Event(SiteNavigationAction.OpenPages(selectedSite))
     }

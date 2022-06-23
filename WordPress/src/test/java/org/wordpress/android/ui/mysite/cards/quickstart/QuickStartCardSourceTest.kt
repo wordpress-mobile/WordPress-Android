@@ -22,7 +22,6 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.DynamicCardStore
 import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.CREATE_SITE
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.EDIT_HOMEPAGE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.ENABLE_POST_SHARING
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.PUBLISH_POST
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.UPDATE_SITE_TITLE
@@ -297,35 +296,6 @@ class QuickStartCardSourceTest : BaseUnitTest() {
     }
 
     @Test
-    fun `marks EDIT_HOMEPAGE task as done when site showing Posts instead of Homepage`() = test {
-        initStore()
-
-        val updatedSiteId = 2
-        site.id = updatedSiteId
-        site.showOnFront = ShowOnFront.POSTS.value
-        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
-        whenever(quickStartStore.hasDoneTask(updatedSiteId.toLong(), EDIT_HOMEPAGE)).thenReturn(false)
-
-        quickStartCardSource.build(testScope(), site.id)
-        quickStartCardSource.refresh()
-
-        verify(quickStartStore).setDoneTask(updatedSiteId.toLong(), EDIT_HOMEPAGE, true)
-    }
-
-    @Test
-    fun `does not mark EDIT_HOMEPAGE task as done when site showing Homepage`() = test {
-        val updatedSiteLocalId = 2
-        site.id = updatedSiteLocalId
-        site.showOnFront = ShowOnFront.PAGE.value
-        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
-
-        quickStartCardSource.build(testScope(), site.id)
-        quickStartCardSource.refresh()
-
-        verify(quickStartStore, never()).setDoneTask(updatedSiteLocalId.toLong(), EDIT_HOMEPAGE, true)
-    }
-
-    @Test
     fun `given uncompleted task, when quick start notice button action is clicked, then the task is marked active`() =
             test {
                 initStore(nextUncompletedTask = PUBLISH_POST)
@@ -358,7 +328,6 @@ class QuickStartCardSourceTest : BaseUnitTest() {
         site.id = updatedSiteId
         site.showOnFront = ShowOnFront.POSTS.value
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
-        whenever(quickStartStore.hasDoneTask(updatedSiteId.toLong(), EDIT_HOMEPAGE)).thenReturn(false)
         quickStartCardSource.refresh.observeForever { isRefreshing.add(it) }
 
         quickStartCardSource.build(testScope(), site.id)

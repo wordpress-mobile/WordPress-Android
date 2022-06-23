@@ -4,7 +4,7 @@
 -----
 * [*] Added heic/heif image format support [https://github.com/wordpress-mobile/WordPress-Android/pull/16773]
 * [***] Jetpack App: Allow WP.com users to sign in to their browsers by scanning a QR Code in the Jetpack Android App. [https://github.com/wordpress-mobile/WordPress-Android/issues/16481]
-
+* [*] Fix reader tags cannot be followed in some languages bug [https://github.com/wordpress-mobile/WordPress-Android/pull/16789]
 
 20.1
 -----
