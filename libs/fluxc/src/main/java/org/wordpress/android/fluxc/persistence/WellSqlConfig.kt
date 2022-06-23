@@ -1871,7 +1871,7 @@ open class WellSqlConfig : DefaultWellConfig {
                 }
                 176 -> migrate(version) {
                     db.execSQL("DELETE FROM QuickStartTaskModel WHERE TASK_NAME='edit_homepage' " +
-                        "AND TASK_TYPE='grow';")
+                        "AND TASK_TYPE='customize';")
                 }
             }
         }
