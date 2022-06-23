@@ -219,6 +219,7 @@ class LineChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             setAvoidFirstLastClipping(true)
             position = BOTTOM
             valueFormatter = LineChartLabelFormatter(thisWeekData)
+            textColor = ContextCompat.getColor(chart.context, R.color.neutral_30)
 
             removeAllLimitLines()
         }
@@ -256,7 +257,9 @@ class LineChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             color = ContextCompat.getColor(chart.context, SelectedType.getColor(selectedType))
 
             setDrawFilled(true)
-            fillDrawable = ContextCompat.getDrawable(chart.context, SelectedType.getFillDrawable(selectedType))
+            fillDrawable = ContextCompat.getDrawable(chart.context, SelectedType.getFillDrawable(selectedType))?.apply {
+                alpha = 26
+            }
         }
 
         val lastWeekDataSet = dataSets.last() as? LineDataSet
