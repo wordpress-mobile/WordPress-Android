@@ -42,16 +42,24 @@
                 android:textAlignment="viewStart"
                 android:textAppearance="?attr/textAppearanceSubtitle1" />
 
-            <ImageView
-                android:id="@+id/prompt_help_button"
-                android:layout_width="@dimen/blogging_prompt_card_compact_help_button_size"
-                android:layout_height="@dimen/blogging_prompt_card_compact_help_button_size"
-                android:layout_gravity="center_vertical"
+            <LinearLayout
+                android:id="@+id/prompt_help_button_container"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:layout_marginStart="@dimen/margin_small_medium"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="@string/blogging_reminders_prompt_help_button_desc"
-                android:src="@drawable/ic_help_outline_white_24dp"
-                android:tint="?attr/wpColorOnSurfaceMedium" />
+                android:padding="@dimen/margin_small">
+
+                <ImageView
+                    android:layout_width="@dimen/blogging_prompt_card_compact_help_button_size"
+                    android:layout_height="@dimen/blogging_prompt_card_compact_help_button_size"
+                    android:layout_gravity="center_vertical"
+                    android:contentDescription="@string/blogging_reminders_prompt_help_button_desc"
+                    android:src="@drawable/ic_help_outline_white_24dp"
+                    android:tint="?attr/wpColorOnSurfaceMedium" />
+
+            </LinearLayout>
 
         </LinearLayout>
 
