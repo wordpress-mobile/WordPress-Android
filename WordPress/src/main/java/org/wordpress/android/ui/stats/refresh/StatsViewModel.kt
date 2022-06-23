@@ -133,6 +133,7 @@ class StatsViewModel
         }
     }
 
+    @Suppress("ComplexMethod")
     fun start(
         localSiteId: Int,
         launchedFrom: Serializable?,

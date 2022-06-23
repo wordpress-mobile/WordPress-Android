@@ -63,7 +63,9 @@ class InsightsManagementMapper
             withContext(bgDispatcher) {
                 val insightListItems = mutableListOf<InsightListItem>()
                 insightListItems += Header(string.stats_insights_management_general)
-                if (BuildConfig.IS_JETPACK_APP && statsRevampV2FeatureConfig.isEnabled() && !GENERAL_INSIGHTS.contains(VIEWS_AND_VISITORS)) {
+                if (BuildConfig.IS_JETPACK_APP &&
+                        statsRevampV2FeatureConfig.isEnabled() &&
+                        !GENERAL_INSIGHTS.contains(VIEWS_AND_VISITORS)) {
                     GENERAL_INSIGHTS.add(0, VIEWS_AND_VISITORS)
                 }
                 insightListItems += GENERAL_INSIGHTS.map { type ->
@@ -75,7 +77,9 @@ class InsightsManagementMapper
                 }
                 insightListItems += Header(string.stats_insights_management_activity)
 
-                if (BuildConfig.IS_JETPACK_APP && statsRevampV2FeatureConfig.isEnabled() && ACTIVITY_INSIGHTS.contains(FOLLOWER_TOTALS)) {
+                if (BuildConfig.IS_JETPACK_APP &&
+                        statsRevampV2FeatureConfig.isEnabled() &&
+                        ACTIVITY_INSIGHTS.contains(FOLLOWER_TOTALS)) {
                     // Replace FOLLOWER_TOTALS with Stats revamp v2 total insights
                     val followerTotalsIndex = ACTIVITY_INSIGHTS.indexOf(FOLLOWER_TOTALS)
                     ACTIVITY_INSIGHTS.remove(FOLLOWER_TOTALS)

@@ -68,9 +68,9 @@ class MostPopularInsightsUseCase
 
         items.add(buildTitle())
 
-        if (BuildConfig.IS_JETPACK_APP && statsRevampV2FeatureConfig.isEnabled() &&
-                domainModel.highestDayPercent == 0.0 &&
-                domainModel.highestHourPercent == 0.0) {
+        val noActivity = domainModel.highestDayPercent == 0.0 && domainModel.highestHourPercent == 0.0
+
+        if (BuildConfig.IS_JETPACK_APP && statsRevampV2FeatureConfig.isEnabled() && noActivity) {
             items.add(Empty(R.string.stats_most_popular_percent_views_empty))
         } else {
             val highestDayPercent = resourceProvider.getString(
@@ -86,13 +86,21 @@ class MostPopularInsightsUseCase
                             Column(
                                     R.string.stats_insights_best_day,
                                     dateUtils.getWeekDay(domainModel.highestDayOfWeek),
-                                    if (BuildConfig.IS_JETPACK_APP && statsRevampV2FeatureConfig.isEnabled()) highestDayPercent else null,
+                                    if (BuildConfig.IS_JETPACK_APP && statsRevampV2FeatureConfig.isEnabled()) {
+                                        highestDayPercent
+                                    } else {
+                                        null
+                                    },
                                     highestDayPercent
                             ),
                             Column(
                                     R.string.stats_insights_best_hour,
                                     dateUtils.getHour(domainModel.highestHour),
-                                    if (BuildConfig.IS_JETPACK_APP && statsRevampV2FeatureConfig.isEnabled()) highestHourPercent else null,
+                                    if (BuildConfig.IS_JETPACK_APP && statsRevampV2FeatureConfig.isEnabled()) {
+                                        highestHourPercent
+                                    } else {
+                                        null
+                                    },
                                     highestHourPercent
                             )
                     )
@@ -121,7 +129,11 @@ class MostPopularInsightsUseCase
             } else {
                 R.string.stats_insights_popular
             },
-            menuAction = if (BuildConfig.IS_JETPACK_APP && statsRevampV2FeatureConfig.isEnabled()) null else this::onMenuClick)
+            menuAction = if (BuildConfig.IS_JETPACK_APP && statsRevampV2FeatureConfig.isEnabled()) {
+                null
+            } else {
+                this::onMenuClick
+            })
 
     private fun onMenuClick(view: View) {
         popupMenuHandler.onMenuClick(view, type)
