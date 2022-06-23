@@ -3,6 +3,7 @@
 20.2
 -----
 * [*] Added heic/heif image format support [https://github.com/wordpress-mobile/WordPress-Android/pull/16773]
+* [*] Block Editor: Image block copies the alt text from the media library when selecting an item [https://github.com/wordpress-mobile/WordPress-Android/pull/16787]
 
 20.1
 -----
