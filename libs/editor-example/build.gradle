@@ -4,13 +4,30 @@ plugins {
 
 repositories {
     maven {
+        url "https://a8c-libs.s3.amazonaws.com/android"
+        content {
+            includeGroup "org.wordpress"
+            includeGroup "org.wordpress.aztec"
+            includeGroup "org.wordpress-mobile"
+            includeGroup "org.wordpress-mobile.gutenberg-mobile"
+        }
+    }
+    maven {
         url "https://a8c-libs.s3.amazonaws.com/android/react-native-mirror"
         content {
             includeGroup "com.facebook.react"
         }
     }
+    maven {
+        url "https://a8c-libs.s3.amazonaws.com/android/hermes-mirror"
+        content {
+            includeGroup "org.wordpress-mobile"
+        }
+    }
     google()
+    mavenCentral()
     maven { url "https://www.jitpack.io" }
+    maven { url "https://a8c-libs.s3.amazonaws.com/android/hermes-mirror" }
 }
 
 android {
@@ -21,12 +38,6 @@ android {
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
     }
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-    }
     compileOptions {
         sourceCompatibility 1.8
         targetCompatibility 1.8
@@ -35,7 +46,7 @@ android {
 
 dependencies {
     implementation 'androidx.appcompat:appcompat:1.0.2'
-    implementation project(":WordPressEditor")
+    implementation project(path:':libs:editor')
     implementation 'com.android.volley:volley:1.1.1'
 
     // Test libraries

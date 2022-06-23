@@ -18,6 +18,7 @@ import static org.junit.Assert.assertEquals;
 
 @Config(sdk = 18)
 @RunWith(RobolectricTestRunner.class)
+@SuppressWarnings({"checkstyle:RegexpMultiline", "checkstyle:LineLength"})
 public class HtmlStyleUtilsTest {
 
     @Test

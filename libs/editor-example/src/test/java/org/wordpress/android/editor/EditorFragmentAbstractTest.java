@@ -18,6 +18,7 @@ import org.wordpress.android.util.helpers.MediaGallery;
 
 @Config(sdk = 18)
 @RunWith(RobolectricTestRunner.class)
+@SuppressWarnings("checkstyle:RegexpMultiline")
 public class EditorFragmentAbstractTest {
     @Test
     public void testActivityMustImplementEditorFragmentListener() {
