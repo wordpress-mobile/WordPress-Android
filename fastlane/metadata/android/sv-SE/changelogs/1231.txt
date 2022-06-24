@@ -1,4 +1,0 @@
-20.0:
-- Snabbstartskortet och Nästa steg-rundturerna matchar de nya designerna för befintliga webbplatser.
-- Infoga bilder från andra webbplatser med alternativet "Infoga från URL" i appen.
-- Få mer kontext via din skärmläsare med tillgänglighetsförbättringar i blockredigeraren.
