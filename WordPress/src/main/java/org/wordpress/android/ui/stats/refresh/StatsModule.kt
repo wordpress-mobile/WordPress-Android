@@ -41,6 +41,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.P
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.ReferrersUseCase.ReferrersUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.SearchTermsUseCase.SearchTermsUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.VideoPlaysUseCase.VideoPlaysUseCaseFactory
+import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.ViewsAndVisitorsDetailUseCase.ViewsAndVisitorsGranularUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.ActionCardGrowUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.ActionCardReminderUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.ActionCardScheduleUseCase
@@ -65,7 +66,6 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.T
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TotalFollowersUseCase.TotalFollowersUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TotalLikesUseCase.TotalLikesGranularUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TotalLikesUseCase.TotalLikesUseCaseFactory
-import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.ViewsAndVisitorsUseCase.ViewsAndVisitorsGranularUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.ViewsAndVisitorsUseCase.ViewsAndVisitorsUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.config.StatsRevampV2FeatureConfig
