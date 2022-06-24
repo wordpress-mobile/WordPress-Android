@@ -1,6 +1,6 @@
 @file:Suppress("MaxLineLength")
 
-package org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompt
+package org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -15,8 +15,6 @@ import org.wordpress.android.ui.avatars.TrainOfAvatarsItem.AvatarItem
 import org.wordpress.android.ui.avatars.TrainOfAvatarsItem.TrailingLabelTextItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BloggingPromptCard.BloggingPromptCardWithData
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BloggingPromptCardBuilderParams
-import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptAttribution
-import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptCardBuilder
 import org.wordpress.android.ui.utils.UiString.UiStringPluralRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import java.util.Date
@@ -32,7 +30,7 @@ private val RESPONDENTS_IN_CARD = listOf(
                 UiStringPluralRes(
                         plurals.my_site_blogging_prompt_card_number_of_answers,
                         NUMBER_OF_RESPONDENTS
-                ), attr.colorPrimary
+                ), attr.colorOnSurface
         )
 )
 

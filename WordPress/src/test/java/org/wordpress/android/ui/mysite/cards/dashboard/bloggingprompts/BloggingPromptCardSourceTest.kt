@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompt
+package org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts
 
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.eq
@@ -25,7 +25,6 @@ import org.wordpress.android.test
 import org.wordpress.android.testScope
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.BloggingPromptUpdate
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
-import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptCardSource
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.config.BloggingPromptsFeatureConfig
 import java.util.Date
@@ -97,7 +96,7 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
     private fun setUpMocks(isBloggingPromptFeatureEnabled: Boolean) {
         whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(isBloggingPromptFeatureEnabled)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(siteModel)
-        whenever(appPrefsWrapper.getSkippedPromptDay()).thenReturn(null)
+        whenever(appPrefsWrapper.getSkippedPromptDay(any())).thenReturn(null)
         whenever(bloggingRemindersStore.bloggingRemindersModel(any())).thenReturn(flowOf(bloggingReminderSettings))
     }
 
@@ -181,7 +180,7 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
     @Test
     fun `given build is invoked, when prompt is skipped, then empty state is loaded`() = test {
         val result = mutableListOf<BloggingPromptUpdate>()
-        whenever(appPrefsWrapper.getSkippedPromptDay()).thenReturn(Date())
+        whenever(appPrefsWrapper.getSkippedPromptDay(any())).thenReturn(Date())
         bloggingPromptCardSource.refresh.observeForever { }
 
         bloggingPromptCardSource.build(testScope(), SITE_LOCAL_ID).observeForever { it?.let { result.add(it) } }

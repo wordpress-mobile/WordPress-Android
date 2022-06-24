@@ -229,11 +229,9 @@ class AppPrefsWrapper @Inject constructor() {
 
     fun getMySiteInitialScreen(): String = AppPrefs.getMySiteInitialScreen()
 
-    fun setSkippedPromptDay(date: Date?) = AppPrefs.setSkippedPromptDay(date)
+    fun setSkippedPromptDay(date: Date?, siteId: Int) = AppPrefs.setSkippedPromptDay(date, siteId)
 
-    fun getSkippedPromptDay(): Date? = AppPrefs.getSkippedPromptDay()
-
-    fun markBloggingPromptOnboardingDialogAsDisplayed() = AppPrefs.setShouldDisplayBloggingPromptOnboarding(false)
+    fun getSkippedPromptDay(siteId: Int): Date? = AppPrefs.getSkippedPromptDay(siteId)
 
     fun markStatsRevampFeatureAnnouncementAsDisplayed() = AppPrefs.setShouldDisplayStatsRevampFeatureAnnouncement(false)
 

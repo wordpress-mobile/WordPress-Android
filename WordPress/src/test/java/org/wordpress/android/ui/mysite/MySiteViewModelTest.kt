@@ -1655,7 +1655,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
                 requireNotNull(onBloggingPromptSkipClicked).invoke()
 
-                verify(appPrefsWrapper).setSkippedPromptDay(any())
+                verify(appPrefsWrapper).setSkippedPromptDay(any(), any())
                 verify(mySiteSourceManager).refreshBloggingPrompts(eq(true))
 
                 assertThat(snackbars.size).isEqualTo(1)
