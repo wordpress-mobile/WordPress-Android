@@ -36,13 +36,58 @@ class VisitsAndViewsStore
         site: SiteModel,
         granularity: StatsGranularity,
         limitMode: LimitMode.Top,
-        date: Date = currentTimeProvider.currentDate(),
         forced: Boolean = false
     ) = coroutineEngine.withDefaultContext(STATS, this, "fetchVisits") {
         val dateWithTimeZone = statsUtils.getFormattedDate(
                 currentTimeProvider.currentDate(),
                 SiteUtils.getNormalizedTimezone(site.timezone)
         )
+        logProgress(granularity, "Site timezone: ${site.timezone}")
+        try {
+            logProgress(granularity, "Current date: ${currentTimeProvider.currentDate()}")
+        } catch (e: AssertionError) {
+            // Workaround for a bug in Android that can cause crashes on Android 8.0 and 8.1
+            logProgress(granularity, "Cannot print current date because of AssertionError: $e")
+        }
+        logProgress(granularity, "Fetching for date with applied timezone: $dateWithTimeZone")
+        if (!forced && sqlUtils.hasFreshRequest(site, granularity, dateWithTimeZone, limitMode.limit)) {
+            logProgress(granularity, "Loading cached data")
+            return@withDefaultContext OnStatsFetched(
+                    getVisits(site, granularity, limitMode, dateWithTimeZone),
+                    cached = true
+            )
+        }
+        val payload = restClient.fetchVisits(site, granularity, dateWithTimeZone, limitMode.limit, forced)
+        return@withDefaultContext when {
+            payload.isError -> {
+                logProgress(granularity, "Error fetching data: ${payload.error}")
+                OnStatsFetched(payload.error)
+            }
+            payload.response != null -> {
+                logProgress(granularity, "Data fetched correctly")
+                sqlUtils.insert(site, payload.response, granularity, dateWithTimeZone, limitMode.limit)
+                val overviewResponse = timeStatsMapper.map(payload.response, limitMode)
+                if (overviewResponse.period.isBlank() || overviewResponse.dates.isEmpty()) {
+                    logProgress(granularity, "Invalid response")
+                    OnStatsFetched(StatsError(INVALID_RESPONSE, "Overview: Required data 'period' or 'dates' missing"))
+                } else {
+                    logProgress(granularity, "Valid response returned for period: ${overviewResponse.period}")
+                    logProgress(granularity, "Last data item for: ${overviewResponse.dates.lastOrNull()?.period}")
+                    OnStatsFetched(overviewResponse)
+                }
+            }
+            else -> OnStatsFetched(StatsError(INVALID_RESPONSE))
+        }
+    }
+
+    suspend fun fetchVisits(
+        site: SiteModel,
+        granularity: StatsGranularity,
+        limitMode: LimitMode.Top,
+        date: Date,
+        forced: Boolean = false
+    ) = coroutineEngine.withDefaultContext(STATS, this, "fetchVisits") {
+        val dateWithTimeZone = statsUtils.getFormattedDate(date, SiteUtils.getNormalizedTimezone(site.timezone))
         logProgress(granularity, "Site timezone: ${site.timezone}")
         try {
             logProgress(granularity, "Current date: ${currentTimeProvider.currentDate()}")
