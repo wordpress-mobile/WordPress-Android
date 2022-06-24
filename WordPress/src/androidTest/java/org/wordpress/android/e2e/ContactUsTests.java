@@ -23,7 +23,7 @@ public class ContactUsTests extends BaseTest {
 
     @After
     public void tearDown() {
-        pressBackUntilElementIsDisplayed(R.id.continue_with_wpcom_button);
+        //pressBackUntilElementIsDisplayed(R.id.continue_with_wpcom_button);
     }
 
     @Test
