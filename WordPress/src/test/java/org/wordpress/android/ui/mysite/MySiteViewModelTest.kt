@@ -1258,6 +1258,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         verify(mySiteSourceManager).refreshQuickStart()
     }
 
+    @Test
     fun `given no selected site, when check and start QS is triggered, then QSP is not shown`() {
         whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(false)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(null)
@@ -2675,6 +2676,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         clickAction!!.invoke(action)
     }
 
+    @Suppress("LongParameterList")
     private fun initSelectedSite(
         isMySiteTabsBuildConfigEnabled: Boolean = true,
         isQuickStartDynamicCardEnabled: Boolean = false,
@@ -2720,8 +2722,9 @@ class MySiteViewModelTest : BaseUnitTest() {
             )
 
             listOfCards.add(dashboardCards)
-            if (mySiteDashboardTabsFeatureConfig.isEnabled())
+            if (mySiteDashboardTabsFeatureConfig.isEnabled()) {
                 listOfCards.add(quickLinkRibbon)
+            }
             listOfCards
         }.whenever(cardsBuilder).build(
                 quickActionsCardBuilderParams = any(),
