@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-06-16 09:54:26+0000
+Translation-Revision-Date: 2022-06-19 00:06:30+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: id
@@ -19,6 +19,7 @@ Language: id
     <string name="stats_follower_types_pie_chart_total_label">Total</string>
     <string name="stats_referrers_pie_chart_others">Lainnya</string>
     <string name="stats_referrers_pie_chart_search">Cari</string>
+    <string name="stats_referrers_pie_chart_wordpress">WordPress</string>
     <string name="stats_referrers_pie_chart_total_label">Tayangan</string>
     <string name="stats_action_card_schedule_post_button_label">Jadwal</string>
     <string name="stats_action_card_schedule_post_message">✍️ Jadwalkan pos untuk dipublikasikan di waktu yang terbaik dari layar konsep Anda.</string>

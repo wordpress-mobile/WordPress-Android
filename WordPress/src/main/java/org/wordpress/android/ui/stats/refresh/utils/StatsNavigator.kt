@@ -244,7 +244,7 @@ class StatsNavigator @Inject constructor(
             is CheckCourse -> {
                 ActivityLauncher.openStatsUrl(
                         activity,
-                        "https://wordpress.com/support/followers/"
+                        "https://wpcourses.com/course/intro-to-blogging/"
                 )
             }
             is SchedulePost -> {

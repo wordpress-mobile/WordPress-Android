@@ -61,7 +61,7 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
     private lateinit var bloggingPromptCardSource: BloggingPromptCardSource
 
     private val data = BloggingPromptsResult(
-            model = PROMPT
+            model = listOf(PROMPT)
     )
     private val success = BloggingPromptsResult<List<BloggingPromptModel>>()
     private val apiError = BloggingPromptsResult<List<BloggingPromptModel>>(
@@ -109,7 +109,7 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
 
         bloggingPromptCardSource.build(testScope(), SITE_LOCAL_ID).observeForever { }
 
-        verify(bloggingPromptsStore).getPromptForDate(eq(siteModel), any())
+        verify(bloggingPromptsStore).getPrompts(eq(siteModel))
     }
 
     @Test
@@ -121,27 +121,27 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
 
         bloggingPromptCardSource.refresh()
 
-        verify(bloggingPromptsStore, never()).getPromptForDate(any(), any())
+        verify(bloggingPromptsStore, never()).getPrompts(eq(siteModel))
         verify(bloggingPromptsStore, never()).fetchPrompts(any(), any(), any())
     }
 
     @Test
     fun `given build is invoked, when prompts are collected, then data is loaded (database)`() = test {
         val result = mutableListOf<BloggingPromptUpdate>()
-        whenever(bloggingPromptsStore.getPromptForDate(eq(siteModel), any())).thenReturn(flowOf(data))
+        whenever(bloggingPromptsStore.getPrompts(eq(siteModel))).thenReturn(flowOf(data))
         bloggingPromptCardSource.refresh.observeForever { }
 
         bloggingPromptCardSource.build(testScope(), SITE_LOCAL_ID).observeForever { it?.let { result.add(it) } }
 
         assertThat(result.size).isEqualTo(1)
-        assertThat(result.first()).isEqualTo(BloggingPromptUpdate(data.model))
+        assertThat(result.first()).isEqualTo(BloggingPromptUpdate(PROMPT))
     }
 
     /* REFRESH DATA */
 
     @Test
     fun `when build is invoked, then prompts are fetched from store (network)`() = test {
-        whenever(bloggingPromptsStore.getPromptForDate(eq(siteModel), any())).thenReturn(flowOf(data))
+        whenever(bloggingPromptsStore.getPrompts(eq(siteModel))).thenReturn(flowOf(data))
         bloggingPromptCardSource.refresh.observeForever { }
 
         bloggingPromptCardSource.build(testScope(), SITE_LOCAL_ID).observeForever { }
@@ -152,20 +152,20 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
     @Test
     fun `given no error, when build is invoked, then data is only loaded from get prompts (database)`() = test {
         val result = mutableListOf<BloggingPromptUpdate>()
-        whenever(bloggingPromptsStore.getPromptForDate(eq(siteModel), any())).thenReturn(flowOf(data))
+        whenever(bloggingPromptsStore.getPrompts(eq(siteModel))).thenReturn(flowOf(data))
         whenever(bloggingPromptsStore.fetchPrompts(any(), any(), any())).thenReturn(BloggingPromptsResult())
         bloggingPromptCardSource.refresh.observeForever { }
 
         bloggingPromptCardSource.build(testScope(), SITE_LOCAL_ID).observeForever { it?.let { result.add(it) } }
 
         assertThat(result.size).isEqualTo(1)
-        assertThat(result.first()).isEqualTo(BloggingPromptUpdate(data.model))
+        assertThat(result.first()).isEqualTo(BloggingPromptUpdate(PROMPT))
     }
 
     @Test
     fun `given no error, when refresh is invoked, then data is only loaded from get prompts (database)`() = test {
         val result = mutableListOf<BloggingPromptUpdate>()
-        whenever(bloggingPromptsStore.getPromptForDate(eq(siteModel), any())).thenReturn(flowOf(data))
+        whenever(bloggingPromptsStore.getPrompts(eq(siteModel))).thenReturn(flowOf(data))
         whenever(bloggingPromptsStore.fetchPrompts(any(), any(), any())).thenReturn(success).thenReturn(success)
         bloggingPromptCardSource.refresh.observeForever { }
         bloggingPromptCardSource.build(testScope(), SITE_LOCAL_ID).observeForever { it?.let { result.add(it) } }
@@ -173,7 +173,7 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
         bloggingPromptCardSource.refresh()
 
         assertThat(result.size).isEqualTo(1)
-        assertThat(result.first()).isEqualTo(BloggingPromptUpdate(data.model))
+        assertThat(result.first()).isEqualTo(BloggingPromptUpdate(PROMPT))
     }
 
     /* SKIPPED PROMPT */
@@ -196,7 +196,7 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
     fun `on build, if prompt not skipped, prompt reminder opted-in then prompt is loaded`() =
             test {
                 val result = mutableListOf<BloggingPromptUpdate>()
-                whenever(bloggingPromptsStore.getPromptForDate(eq(siteModel), any())).thenReturn(flowOf(data))
+                whenever(bloggingPromptsStore.getPrompts(eq(siteModel))).thenReturn(flowOf(data))
                 whenever(bloggingRemindersStore.bloggingRemindersModel(any())).thenReturn(
                         flowOf(
                                 BloggingRemindersModel(
@@ -210,7 +210,7 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
                 bloggingPromptCardSource.build(testScope(), SITE_LOCAL_ID).observeForever { it?.let { result.add(it) } }
 
                 assertThat(result.size).isEqualTo(1)
-                assertThat(result.first()).isEqualTo(BloggingPromptUpdate(data.model))
+                assertThat(result.first()).isEqualTo(BloggingPromptUpdate(PROMPT))
             }
 
     @Test
@@ -222,7 +222,7 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
                     setIsPotentialBloggingSite(true)
                 }
                 whenever(selectedSiteRepository.getSelectedSite()).thenReturn(bloggingSite)
-                whenever(bloggingPromptsStore.getPromptForDate(eq(bloggingSite), any())).thenReturn(flowOf(data))
+                whenever(bloggingPromptsStore.getPrompts(eq(bloggingSite))).thenReturn(flowOf(data))
                 whenever(bloggingRemindersStore.bloggingRemindersModel(any())).thenReturn(
                         flowOf(
                                 BloggingRemindersModel(
@@ -236,7 +236,7 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
                 bloggingPromptCardSource.build(testScope(), SITE_LOCAL_ID).observeForever { it?.let { result.add(it) } }
 
                 assertThat(result.size).isEqualTo(1)
-                assertThat(result.first()).isEqualTo(BloggingPromptUpdate(data.model))
+                assertThat(result.first()).isEqualTo(BloggingPromptUpdate(PROMPT))
             }
 
     @Test
@@ -273,7 +273,7 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
                     setIsPotentialBloggingSite(false)
                 }
                 whenever(selectedSiteRepository.getSelectedSite()).thenReturn(bloggingSite)
-                whenever(bloggingPromptsStore.getPromptForDate(eq(bloggingSite), any())).thenReturn(flowOf(data))
+                whenever(bloggingPromptsStore.getPrompts(eq(bloggingSite))).thenReturn(flowOf(data))
                 whenever(bloggingRemindersStore.bloggingRemindersModel(any())).thenReturn(
                         flowOf(
                                 BloggingRemindersModel(
@@ -287,7 +287,7 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
                 bloggingPromptCardSource.build(testScope(), SITE_LOCAL_ID).observeForever { it?.let { result.add(it) } }
 
                 assertThat(result.size).isEqualTo(1)
-                assertThat(result.first()).isEqualTo(BloggingPromptUpdate(data.model))
+                assertThat(result.first()).isEqualTo(BloggingPromptUpdate(PROMPT))
             }
 
     /* IS REFRESHING */
@@ -307,7 +307,7 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
     @Test
     fun `when refresh is invoked, then refresh is set to false`() = test {
         val result = mutableListOf<Boolean>()
-        whenever(bloggingPromptsStore.getPromptForDate(eq(siteModel), any())).thenReturn(flowOf(data))
+        whenever(bloggingPromptsStore.getPrompts(eq(siteModel))).thenReturn(flowOf(data))
         whenever(bloggingPromptsStore.fetchPrompts(any(), any(), any())).thenReturn(success).thenReturn(success)
         bloggingPromptCardSource.refresh.observeForever { result.add(it) }
         bloggingPromptCardSource.build(testScope(), SITE_LOCAL_ID).observeForever { }
@@ -326,7 +326,7 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
     fun `when refreshTodayPrompt is invoked, single prompt refresh is called`() = test {
         val regularRefreshResult = mutableListOf<Boolean>()
         val singlePromptRefreshResult = mutableListOf<Boolean>()
-        whenever(bloggingPromptsStore.getPromptForDate(eq(siteModel), any())).thenReturn(flowOf(data))
+        whenever(bloggingPromptsStore.getPrompts(eq(siteModel))).thenReturn(flowOf(data))
         whenever(bloggingPromptsStore.fetchPrompts(any(), any(), any())).thenReturn(success).thenReturn(success)
         bloggingPromptCardSource.singleRefresh.observeForever { singlePromptRefreshResult.add(it) }
         bloggingPromptCardSource.refresh.observeForever { regularRefreshResult.add(it) }
@@ -343,7 +343,7 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
     fun `when refreshTodayPrompt is invoked, nothing happens if refresh is already in progress`() = test {
         val regularRefreshResult = mutableListOf<Boolean>()
         val singlePromptRefreshResult = mutableListOf<Boolean>()
-        whenever(bloggingPromptsStore.getPromptForDate(eq(siteModel), any())).thenReturn(flowOf(data))
+        whenever(bloggingPromptsStore.getPrompts(eq(siteModel))).thenReturn(flowOf(data))
         // we do not return success from bloggingPromptsStore.fetchPrompts() which locks live data in refreshing state
         bloggingPromptCardSource.singleRefresh.observeForever { singlePromptRefreshResult.add(it) }
         bloggingPromptCardSource.refresh.observeForever { regularRefreshResult.add(it) }
@@ -358,7 +358,7 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
     @Test
     fun `given no error, when data has been refreshed, then refresh is set to true`() = test {
         val result = mutableListOf<Boolean>()
-        whenever(bloggingPromptsStore.getPromptForDate(eq(siteModel), any())).thenReturn(flowOf(data))
+        whenever(bloggingPromptsStore.getPrompts(eq(siteModel))).thenReturn(flowOf(data))
         whenever(bloggingPromptsStore.fetchPrompts(any(), any(), any())).thenReturn(success)
         bloggingPromptCardSource.refresh.observeForever { result.add(it) }
         bloggingPromptCardSource.build(testScope(), SITE_LOCAL_ID).observeForever { }
@@ -376,7 +376,7 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
     @Test
     fun `given error, when data has been refreshed, then refresh is set to false`() = test {
         val result = mutableListOf<Boolean>()
-        whenever(bloggingPromptsStore.getPromptForDate(eq(siteModel), any())).thenReturn(flowOf(data))
+        whenever(bloggingPromptsStore.getPrompts(eq(siteModel))).thenReturn(flowOf(data))
         whenever(bloggingPromptsStore.fetchPrompts(any(), any(), any())).thenReturn(apiError)
         bloggingPromptCardSource.refresh.observeForever {
             result.add(it)

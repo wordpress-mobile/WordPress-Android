@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-06-16 09:54:24+0000
+Translation-Revision-Date: 2022-06-22 09:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.1
 Language: ja_JP
@@ -22,6 +22,7 @@ Language: ja_JP
     <string name="stats_referrers_pie_chart_total_label">表示件数</string>
     <string name="stats_action_card_schedule_post_button_label">予約</string>
     <string name="stats_action_card_schedule_post_message">✍️ 下書きから最適なタイミングでコンテンツを投稿するように予約します。</string>
+    <string name="stats_referrers_pie_chart_wordpress">WordPress</string>
     <string name="stats_action_card_schedule_post_title">投稿を予約</string>
     <string name="stats_action_card_blogging_reminders_button_label">リマインダーを設定</string>
     <string name="stats_action_card_blogging_reminders_message">💡定期的に投稿するようにリマインダーを設定して読者の関心を維持したまま、新しい訪問者を引きつけます。</string>

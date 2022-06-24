@@ -42,7 +42,7 @@ class StatsNewFeaturesIntroDialogFragment : FeatureIntroductionDialogFragment() 
             when (action) {
                 is OpenStats -> {
                     activity?.let {
-                        ActivityLauncher.viewBlogStats(it, action.site)
+                        ActivityLauncher.openBlogStats(it, action.site)
                     }
                 }
                 is DismissDialog -> {
