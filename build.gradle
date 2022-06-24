@@ -117,10 +117,6 @@ allprojects {
     }
 }
 
-dependencies {
-    detektPlugins "io.gitlab.arturbosch.detekt:detekt-formatting:$gradle.ext.detektVersion"
-}
-
 subprojects {
 }
 
