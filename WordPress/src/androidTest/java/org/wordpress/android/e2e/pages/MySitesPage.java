@@ -22,6 +22,7 @@ import static org.hamcrest.Matchers.allOf;
 import static org.wordpress.android.support.WPSupportUtils.clickOn;
 import static org.wordpress.android.support.WPSupportUtils.isElementDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.longClickOn;
+import static org.wordpress.android.support.WPSupportUtils.sleep;
 import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDisplayedWithoutFailure;
 
 public class MySitesPage {
@@ -86,6 +87,11 @@ public class MySitesPage {
         waitForElementToBeDisplayedWithoutFailure(
                 onView(withId(R.id.tabLayout))
         );
+
+        // Stats are opened with the last selected tab active (or `Insights` by default)
+        // Since we don't know what was the last used tab, we're using a "dumb" wait
+        // instead of the conditional wait (e.g. waiting for a certain tab element to appear).
+        sleep(2);
 
         return new StatsPage();
     }
