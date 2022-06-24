@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompt
+package org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts
 
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.eq

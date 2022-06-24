@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompt
+package org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
