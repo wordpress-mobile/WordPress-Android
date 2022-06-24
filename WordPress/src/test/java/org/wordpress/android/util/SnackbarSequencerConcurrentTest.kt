@@ -1,3 +1,5 @@
+@file:Suppress("MayBeConstant")
+
 package org.wordpress.android.util
 
 import android.app.Activity
