@@ -235,6 +235,8 @@ class AppPrefsWrapper @Inject constructor() {
 
     fun markBloggingPromptOnboardingDialogAsDisplayed() = AppPrefs.setShouldDisplayBloggingPromptOnboarding(false)
 
+    fun markStatsRevampFeatureAnnouncementAsDisplayed() = AppPrefs.setShouldDisplayStatsRevampFeatureAnnouncement(false)
+
     companion object {
         private const val LIGHT_MODE_ID = 0
         private const val DARK_MODE_ID = 1

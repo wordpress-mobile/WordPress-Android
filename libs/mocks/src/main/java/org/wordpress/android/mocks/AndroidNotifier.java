@@ -5,7 +5,7 @@ import android.util.Log;
 import com.github.tomakehurst.wiremock.common.Notifier;
 
 public class AndroidNotifier implements Notifier {
-    private static final String TAG = "WordPressMocks";
+    private static final String TAG = "Mocks";
 
     @Override public void info(String message) {
         Log.i(TAG, message);

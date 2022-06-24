@@ -2,6 +2,7 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 
 import android.view.View
 import kotlinx.coroutines.CoroutineDispatcher
+import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.model.stats.InsightsMostPopularModel
@@ -67,9 +68,9 @@ class MostPopularInsightsUseCase
 
         items.add(buildTitle())
 
-        if (statsRevampV2FeatureConfig.isEnabled() &&
-                domainModel.highestDayPercent == 0.0 &&
-                domainModel.highestHourPercent == 0.0) {
+        val noActivity = domainModel.highestDayPercent == 0.0 && domainModel.highestHourPercent == 0.0
+
+        if (BuildConfig.IS_JETPACK_APP && statsRevampV2FeatureConfig.isEnabled() && noActivity) {
             items.add(Empty(R.string.stats_most_popular_percent_views_empty))
         } else {
             val highestDayPercent = resourceProvider.getString(
@@ -85,20 +86,28 @@ class MostPopularInsightsUseCase
                             Column(
                                     R.string.stats_insights_best_day,
                                     dateUtils.getWeekDay(domainModel.highestDayOfWeek),
-                                    if (statsRevampV2FeatureConfig.isEnabled()) highestDayPercent else null,
+                                    if (BuildConfig.IS_JETPACK_APP && statsRevampV2FeatureConfig.isEnabled()) {
+                                        highestDayPercent
+                                    } else {
+                                        null
+                                    },
                                     highestDayPercent
                             ),
                             Column(
                                     R.string.stats_insights_best_hour,
                                     dateUtils.getHour(domainModel.highestHour),
-                                    if (statsRevampV2FeatureConfig.isEnabled()) highestHourPercent else null,
+                                    if (BuildConfig.IS_JETPACK_APP && statsRevampV2FeatureConfig.isEnabled()) {
+                                        highestHourPercent
+                                    } else {
+                                        null
+                                    },
                                     highestHourPercent
                             )
                     )
             )
         }
 
-        if (statsRevampV2FeatureConfig.isEnabled()) {
+        if (BuildConfig.IS_JETPACK_APP && statsRevampV2FeatureConfig.isEnabled()) {
             addActionCards(domainModel)
         }
         return items
@@ -115,12 +124,16 @@ class MostPopularInsightsUseCase
     }
 
     private fun buildTitle() = Title(
-            textResource = if (statsRevampV2FeatureConfig.isEnabled()) {
+            textResource = if (BuildConfig.IS_JETPACK_APP && statsRevampV2FeatureConfig.isEnabled()) {
                 R.string.stats_insights_popular_title
             } else {
                 R.string.stats_insights_popular
             },
-            menuAction = if (statsRevampV2FeatureConfig.isEnabled()) null else this::onMenuClick)
+            menuAction = if (BuildConfig.IS_JETPACK_APP && statsRevampV2FeatureConfig.isEnabled()) {
+                null
+            } else {
+                this::onMenuClick
+            })
 
     private fun onMenuClick(view: View) {
         popupMenuHandler.onMenuClick(view, type)

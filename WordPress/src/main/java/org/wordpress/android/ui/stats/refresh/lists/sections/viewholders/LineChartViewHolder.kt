@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.viewholders
 
-import android.content.Context
 import android.graphics.DashPathEffect
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
@@ -32,8 +31,6 @@ import org.wordpress.android.ui.stats.refresh.utils.LineChartAccessibilityHelper
 import org.wordpress.android.ui.stats.refresh.utils.LineChartLabelFormatter
 import java.lang.Integer.max
 
-private typealias LineCount = Int
-
 @Suppress("MagicNumber", "TooManyFunctions")
 class LineChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         parent,
@@ -48,35 +45,36 @@ class LineChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
 
         coroutineScope.launch {
             delay(50)
-            val lineCount = chart.draw(item)
-            chart.post {
-                val accessibilityEvent = object : LineChartAccessibilityEvent {
-                    override fun onHighlight(
-                        entry: Entry,
-                        index: Int
-                    ) {
-                        val value = entry.data as? String
-                        value?.let {
-                            item.onLineSelected?.invoke(it)
+            chart.draw(item)
+            if (hasData(item.entries)) {
+                chart.post {
+                    val accessibilityEvent = object : LineChartAccessibilityEvent {
+                        override fun onHighlight(
+                            entry: Entry,
+                            index: Int
+                        ) {
+                            drawChartMarker(Highlight(entry.x, entry.y, 0), item.selectedType)
+                            val value = entry.data as? String
+                            value?.let {
+                                item.onLineSelected?.invoke(it)
+                            }
                         }
                     }
+
+                    val cutContentDescriptions = takeEntriesWithinGraphWidth(item.entryContentDescriptions)
+                    accessibilityHelper = LineChartAccessibilityHelper(
+                            chart,
+                            contentDescriptions = cutContentDescriptions,
+                            accessibilityEvent = accessibilityEvent
+                    )
+
+                    ViewCompat.setAccessibilityDelegate(chart, accessibilityHelper)
                 }
-
-                val cutContentDescriptions = takeEntriesWithinGraphWidth(lineCount, item.entryContentDescriptions)
-                accessibilityHelper = LineChartAccessibilityHelper(
-                        chart,
-                        contentDescriptions = cutContentDescriptions,
-                        accessibilityEvent = accessibilityEvent
-                )
-
-                ViewCompat.setAccessibilityDelegate(chart, accessibilityHelper)
             }
         }
     }
 
-    private fun LineChart.draw(
-        item: LineChartItem
-    ): LineCount {
+    private fun LineChart.draw(item: LineChartItem) {
         resetChart()
 
         data = LineData(getData(item))
@@ -87,11 +85,10 @@ class LineChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         configureDataSets(data.dataSets, item.selectedType)
 
         invalidate()
-        return item.entries.size
     }
 
     private fun getData(item: LineChartItem): List<ILineDataSet> {
-        val hasData = item.entries.isNotEmpty() && item.entries.any { it.value > 0 }
+        val hasData = hasData(item.entries)
 
         val prevWeekData = if (hasData && item.entries.size > 7) {
             item.entries.subList(0, 7)
@@ -103,7 +100,7 @@ class LineChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             val mappedEntries = prevWeekData.mapIndexed { index, pair -> toLineEntry(pair, index) }
             LineDataSet(mappedEntries, "Previous week data")
         } else {
-            buildEmptyDataSet(chart.context, item.entries.size)
+            buildEmptyDataSet(prevWeekData.size)
         }
 
         val thisWeekData = if (hasData && item.entries.size > 7) {
@@ -117,7 +114,7 @@ class LineChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             val mappedEntries = thisWeekData.mapIndexed { index, pair -> toLineEntry(pair, index) }
             LineDataSet(mappedEntries, "Current week data")
         } else {
-            buildEmptyDataSet(chart.context, item.entries.size)
+            buildEmptyDataSet(thisWeekData.size)
         }
         item.onLineChartDrawn?.invoke(thisWeekDataSet.entryCount)
 
@@ -127,6 +124,8 @@ class LineChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
 
         return dataSets
     }
+
+    private fun hasData(entries: List<Line>) = entries.isNotEmpty() && entries.any { it.value > 0 }
 
     private fun configureChartView(item: LineChartItem) {
         chart.apply {
@@ -152,7 +151,7 @@ class LineChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
                     }
 
                     override fun onValueSelected(e: Entry, h: Highlight) {
-                        drawChartMarker(e, h, item.selectedType)
+                        drawChartMarker(h, item.selectedType)
                         item.onLineSelected?.invoke(e.data as? String)
                     }
                 })
@@ -220,18 +219,19 @@ class LineChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             setAvoidFirstLastClipping(true)
             position = BOTTOM
             valueFormatter = LineChartLabelFormatter(thisWeekData)
+            textColor = ContextCompat.getColor(chart.context, R.color.neutral_30)
 
             removeAllLimitLines()
         }
     }
 
-    private fun drawChartMarker(e: Entry, h: Highlight, selectedType: Int) {
+    private fun drawChartMarker(h: Highlight, selectedType: Int) {
         if (chart.marker == null) {
             val markerView = LineChartMarkerView(chart.context, selectedType)
             markerView.chartView = chart
             chart.marker = markerView
-            chart.highlightValue(h)
         }
+        chart.highlightValue(h)
     }
 
     private fun configureDataSets(dataSets: MutableList<ILineDataSet>, selectedType: Int) {
@@ -257,7 +257,9 @@ class LineChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             color = ContextCompat.getColor(chart.context, SelectedType.getColor(selectedType))
 
             setDrawFilled(true)
-            fillDrawable = ContextCompat.getDrawable(chart.context, SelectedType.getFillDrawable(selectedType))
+            fillDrawable = ContextCompat.getDrawable(chart.context, SelectedType.getFillDrawable(selectedType))?.apply {
+                alpha = 26
+            }
         }
 
         val lastWeekDataSet = dataSets.last() as? LineDataSet
@@ -277,7 +279,7 @@ class LineChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         }
     }
 
-    private fun buildEmptyDataSet(context: Context, count: Int): LineDataSet {
+    private fun buildEmptyDataSet(count: Int): LineDataSet {
         val emptyValues = (0 until count).map { index -> Entry(index.toFloat(), 0f, "empty") }
         val dataSet = LineDataSet(emptyValues, "Empty")
 
@@ -290,12 +292,9 @@ class LineChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         return dataSet
     }
 
-    private fun <T> takeEntriesWithinGraphWidth(
-        count: Int,
-        entries: List<T>
-    ): List<T> {
-        return if (count < entries.size) entries.subList(
-                entries.size - count,
+    private fun <T> takeEntriesWithinGraphWidth(entries: List<T>): List<T> {
+        return if (8 < entries.size) entries.subList(
+                entries.size - 8,
                 entries.size
         ) else {
             entries

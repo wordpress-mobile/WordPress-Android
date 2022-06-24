@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-06-16 09:54:25+0000
+Translation-Revision-Date: 2022-06-21 09:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.1
 Language: zh_TW
@@ -22,6 +22,7 @@ Language: zh_TW
     <string name="stats_referrers_pie_chart_total_label">檢視</string>
     <string name="stats_action_card_schedule_post_button_label">排程</string>
     <string name="stats_action_card_schedule_post_message">✍️ 排程即可在最合適的時間從你的草稿發表內容。</string>
+    <string name="stats_referrers_pie_chart_wordpress">WordPress</string>
     <string name="stats_action_card_schedule_post_title">排程你的文章</string>
     <string name="stats_action_card_blogging_reminders_button_label">設定提醒</string>
     <string name="stats_action_card_blogging_reminders_message">💡 設定提醒以定期發表內容，持續吸引讀者並招來新的訪客。</string>

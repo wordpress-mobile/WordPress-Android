@@ -1,11 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-06-15 05:47:45+0000
+Translation-Revision-Date: 2022-06-20 11:28:12+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: gl_ES
 -->
 <resources>
+    <string name="blogging_prompts_onboarding_prompts_loading">Estanse cargando os estímulos para bloguear. Espera un momento e inténtao de novo.</string>
+    <string name="hpp_bottom_helper_text">Non podes decidirte? Podes cambiar o tema en calquera momento.</string>
+    <string name="hpp_recommended_default_vertical">Bloguear</string>
+    <string name="hpp_recommended_subtitle">Elixido para ti</string>
+    <string name="hpp_recommended_title">Ideal para %s</string>
+    <string name="hpp_preview_tapped_theme">Vista previa do tema %s</string>
+    <string name="hpp_title">Elixe un tema</string>
+    <string name="my_site_blogging_prompt_card_skipped_snackbar">Salteime o estímulo para bloguear de hoxe</string>
+    <string name="my_site_blogging_prompt_card_menu_learn_more">Máis información</string>
+    <string name="my_site_blogging_prompt_card_attribution_dayone">Desde </string>
+    <string name="stats_follower_types_pie_chart_total_label">Totais</string>
+    <string name="stats_referrers_pie_chart_others">Outros</string>
+    <string name="stats_referrers_pie_chart_search">Buscar</string>
+    <string name="stats_referrers_pie_chart_wordpress">WordPress</string>
+    <string name="stats_referrers_pie_chart_total_label">Vistas</string>
+    <string name="stats_action_card_schedule_post_button_label">Programar</string>
+    <string name="stats_action_card_schedule_post_message">✍️ Programa para publicar o teu contido no mellor momento desde os borradores.</string>
+    <string name="stats_action_card_schedule_post_title">Programa a túa entrada</string>
+    <string name="stats_action_card_blogging_reminders_button_label">Configurar recordatorios</string>
+    <string name="stats_action_card_blogging_reminders_message">💡Configura o recordatorio de publicar regularmente para manter aos lectores enganchados e atraer a novos visitantes.</string>
+    <string name="stats_action_card_blogging_reminders_title">Configura os teus recordatorios de blogueo</string>
+    <string name="stats_action_card_grow_audience_button_label">Consulta o curso</string>
+    <string name="stats_action_card_grow_audience_message">💡Temos leccións fáciles impartidas polos mellores blogueiros para facer crecer o teu blog.</string>
+    <string name="stats_action_card_grow_audience_title">Fai crecer a túa audiencia</string>
     <string name="gutenberg_native_you_can_also_rearrange_blocks_by_tapping_a_block_and_then_tapping">Tamén podes reorganizar os bloques tocando un bloque e logo tocando as frechas arriba e abaixo que aparecen na parte inferior esquerda do bloque para movelo encima ou debaixo doutros bloques.</string>
     <string name="gutenberg_native_image_file_not_found">Arquivo de imaxe non encontrado.</string>
     <string name="gutenberg_native_drag_drop_makes_rearranging_blocks_a_breeze_press_and_hold_on_a_b">Arrastrar e soltar fai que reordear bloques sexa algo trivial. Presiona e suxeita un bloque, logo arrástrao á súa nova ubicación e sóltao.</string>
