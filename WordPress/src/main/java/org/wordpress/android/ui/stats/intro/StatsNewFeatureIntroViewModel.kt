@@ -39,4 +39,9 @@ class StatsNewFeatureIntroViewModel @Inject constructor(
         analyticsTracker.track(Stat.STATS_REVAMP_V2_ANNOUNCEMENT_DISMISSED)
         _action.value = DismissDialog
     }
+
+    fun onCloseButtonClick() {
+        appPrefsWrapper.markStatsRevampFeatureAnnouncementAsDisplayed()
+        _action.value = DismissDialog
+    }
 }

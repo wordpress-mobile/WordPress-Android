@@ -446,9 +446,16 @@ public class WPMainActivity extends LocaleAwareActivity implements
             onSetPromptReminderClick(getIntent().getIntExtra(ARG_OPEN_BLOGGING_REMINDERS, 0));
         }
 
+        int selectedSiteLocalId = mSelectedSiteRepository.getSelectedSiteLocalId(true);
+        SiteModel site = selectedSiteLocalId == SelectedSiteRepository.UNAVAILABLE ? null
+                : mSiteStore.getSiteByLocalId(selectedSiteLocalId);
+
         if (BuildConfig.IS_JETPACK_APP
             && mStatsRevampV2FeatureConfig.isEnabled()
-            && AppPrefs.shouldDisplayStatsRevampFeatureAnnouncement()) {
+            && AppPrefs.shouldDisplayStatsRevampFeatureAnnouncement()
+            && site != null
+            && site.isUsingWpComRestApi()
+        ) {
             StatsNewFeaturesIntroDialogFragment.newInstance().show(
                     getSupportFragmentManager(), StatsNewFeaturesIntroDialogFragment.TAG
             );
