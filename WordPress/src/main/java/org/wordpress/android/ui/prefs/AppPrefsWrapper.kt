@@ -233,8 +233,6 @@ class AppPrefsWrapper @Inject constructor() {
 
     fun getSkippedPromptDay(): Date? = AppPrefs.getSkippedPromptDay()
 
-    fun markBloggingPromptOnboardingDialogAsDisplayed() = AppPrefs.setShouldDisplayBloggingPromptOnboarding(false)
-
     fun markStatsRevampFeatureAnnouncementAsDisplayed() = AppPrefs.setShouldDisplayStatsRevampFeatureAnnouncement(false)
 
     companion object {
