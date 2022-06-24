@@ -1,3 +1,5 @@
+import io.gitlab.arturbosch.detekt.Detekt
+
 plugins {
     id "com.automattic.android.fetchstyle"
     id "io.gitlab.arturbosch.detekt"
@@ -97,6 +99,9 @@ allprojects {
         ignoreFailures = false
         parallel = false
         debug = false
+    }
+
+    tasks.withType(Detekt).configureEach {
         reports {
             html.enabled = true
             xml.enabled = true
