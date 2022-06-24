@@ -21,11 +21,6 @@ public class ContactUsTests extends BaseTest {
         logoutIfNecessary();
     }
 
-    @After
-    public void tearDown() {
-        //pressBackUntilElementIsDisplayed(R.id.continue_with_wpcom_button);
-    }
-
     @Test
     public void sendButtonEnabledWhenTextIsEntered() {
         try {
