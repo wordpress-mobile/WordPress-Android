@@ -4097,7 +4097,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="blogging_prompts_answer_prompt_notification_answer_action">Answer</string>
     <string name="blogging_prompts_notification_dismiss">Dismiss</string>
 
-    <!-- WordPressEditor module -->
+    <!-- Editor module -->
     <string name="post_content" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Content</string>
     <string name="uploading" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Uploading…</string>
     <string name="uploading_gallery_placeholder" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Uploading gallery…</string>

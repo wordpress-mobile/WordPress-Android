@@ -21,12 +21,12 @@ ext {
     coroutinesVersion = '1.5.2'
     androidxWorkVersion = "2.7.0"
 
-    fluxCVersion = 'trunk-be807d3717b0b0b9b4c812a65026504096d5615e'
+    fluxCVersion = 'trunk-a1b267dce0e93cddd8d1cc03ec5569bfa3096c3d'
 
     appCompatVersion = '1.0.2'
     androidxCoreVersion = '1.3.2'
     androidxArchCoreVersion = '2.0.0'
-    fragmentVersion = '1.2.4'
+    fragmentVersion = '1.4.1'
     constraintLayoutVersion = '1.1.3'
     materialVersion = '1.2.1'
     preferenceVersion = '1.1.0'

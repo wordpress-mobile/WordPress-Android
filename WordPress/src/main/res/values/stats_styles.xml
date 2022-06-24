@@ -357,6 +357,7 @@
         <item name="android:drawablePadding">4dp</item>
         <item name="android:textColor">@color/blue_50</item>
         <item name="android:drawableStart">@drawable/bg_stats_legend_start</item>
+        <item name="android:drawableTint">@color/blue_50</item>
     </style>
     <style name="StatsLegendsPurple" parent="TextAppearance.MaterialComponents.Caption">
         <item name="android:layout_marginTop">24dp</item>

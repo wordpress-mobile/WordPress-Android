@@ -3,6 +3,7 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases
 import android.view.View
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.CoroutineDispatcher
+import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
@@ -122,7 +123,7 @@ class ReferrersUseCase(
             items.add(Empty(R.string.stats_no_data_for_period))
         } else {
             val header = Header(R.string.stats_referrer_label, R.string.stats_referrer_views_label)
-            if (statsRevampV2FeatureConfig.isEnabled() && useCaseMode == BLOCK_DETAIL) {
+            if (BuildConfig.IS_JETPACK_APP && statsRevampV2FeatureConfig.isEnabled() && useCaseMode == BLOCK_DETAIL) {
                 items.add(buildPieChartItem(domainModel))
             }
             items.add(header)

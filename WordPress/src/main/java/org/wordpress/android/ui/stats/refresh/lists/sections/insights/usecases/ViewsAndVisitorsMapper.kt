@@ -35,8 +35,8 @@ class ViewsAndVisitorsMapper
     private val contentDescriptionHelper: ContentDescriptionHelper
 ) {
     private val units = listOf(
-            R.string.stats_views,
-            R.string.stats_visitors
+            string.stats_views,
+            string.stats_visitors
     )
 
     enum class SelectedType(val value: Int) {
@@ -98,14 +98,10 @@ class ViewsAndVisitorsMapper
         )
     }
 
-    private fun PeriodData.getValue(
-        selectedPosition: Int
-    ): Long? {
-        return when (SelectedType.valueOf(selectedPosition)) {
-            Views -> this.views
-            Visitors -> this.visitors
-            else -> null
-        }
+    private fun PeriodData.getValue(selectedPosition: Int) = when (SelectedType.valueOf(selectedPosition)) {
+        Views -> this.views
+        Visitors -> this.visitors
+        else -> 0L
     }
 
     @Suppress("LongParameterList")
@@ -118,11 +114,7 @@ class ViewsAndVisitorsMapper
         selectedItemPeriod: String
     ): List<BlockListItem> {
         val chartItems = dates.map {
-            val value = when (SelectedType.valueOf(selectedType)) {
-                Views -> it.views
-                Visitors -> it.visitors
-                else -> 0L
-            }
+            val value = it.getValue(selectedType)
             val date = statsDateFormatter.parseStatsDate(statsGranularity, it.period)
             Line(
                     statsDateFormatter.printDayWithoutYear(date),
@@ -134,8 +126,8 @@ class ViewsAndVisitorsMapper
         val result = mutableListOf<BlockListItem>()
 
         val entryType = when (SelectedType.valueOf(selectedType)) {
-            Visitors -> R.string.stats_visitors
-            else -> R.string.stats_views
+            Visitors -> string.stats_visitors
+            else -> string.stats_views
         }
 
         val contentDescriptions = statsUtils.getLineChartEntryContentDescriptions(
@@ -180,29 +172,29 @@ class ViewsAndVisitorsMapper
             )
         }
 
-        val positive = thisWeekCount >= (prevWeekCount ?: 0)
+        val positive = thisWeekCount >= prevWeekCount
         val change = statsUtils.buildChange(prevWeekCount, thisWeekCount, positive, true).toString()
         val stringRes = when (SelectedType.valueOf(selectedPosition)) {
             Views -> {
                 when {
-                    positive -> R.string.stats_insights_views_and_visitors_views_positive
-                    else -> R.string.stats_insights_views_and_visitors_views_negative
+                    positive -> string.stats_insights_views_and_visitors_views_positive
+                    else -> string.stats_insights_views_and_visitors_views_negative
                 }
             }
             Visitors -> {
                 when {
-                    positive -> R.string.stats_insights_views_and_visitors_visitors_positive
-                    else -> R.string.stats_insights_views_and_visitors_visitors_negative
+                    positive -> string.stats_insights_views_and_visitors_visitors_positive
+                    else -> string.stats_insights_views_and_visitors_visitors_negative
                 }
             }
-            else -> R.string.stats_insights_views_and_visitors_views_positive
+            else -> string.stats_insights_views_and_visitors_views_positive
         }
 
         return Text(
                 text = resourceProvider.getString(stringRes, change),
                 color = when {
-                    positive -> mapOf(R.color.stats_color_positive to change)
-                    else -> mapOf(R.color.stats_color_negative to change)
+                    positive -> mapOf(color.stats_color_positive to change)
+                    else -> mapOf(color.stats_color_negative to change)
                 }
         )
     }
@@ -235,18 +227,14 @@ class ViewsAndVisitorsMapper
 
     private fun mapDatesToWeeks(dates: List<PeriodData>, selectedPosition: Int): Pair<Long, Long> {
         val values = dates.map {
-            val value = when (SelectedType.valueOf(selectedPosition)) {
-                Views -> it.views
-                Visitors -> it.visitors
-                else -> 0L
-            }
+            val value = it.getValue(selectedPosition)
             value.toInt()
         }
 
-        val hasData = values.isNotEmpty() && values.size > 7
+        val hasData = values.isNotEmpty() && values.size >= 7
 
         val prevWeekData = if (hasData) values.subList(0, 7) else values.subList(0, values.size)
-        val thisWeekData = if (hasData) values.subList(7, values.size) else emptyList()
+        val thisWeekData = if (hasData) values.subList(8, values.size) else emptyList()
 
         val prevWeekCount = prevWeekData.fold(0L) { acc, next -> acc + next }
         val thisWeekCount = thisWeekData.fold(0L) { acc, next -> acc + next }

@@ -43,10 +43,10 @@ steps:
       ./gradlew testWordpressVanillaRelease
     plugins: *common_plugins
 
-  - label: "Test WordPressProcessors"
+  - label: "Test Processors"
     command: |
       cp gradle.properties-example gradle.properties
-      ./gradlew :libs:WordPressProcessors:test
+      ./gradlew :libs:processors:test
     plugins: *common_plugins
 
   - label: "Test Image Editor"

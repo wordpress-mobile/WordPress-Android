@@ -387,7 +387,7 @@
 
         <!-- Deep Linking Activity -->
         <activity
-            android:name=".ui.deeplinks.DeepLinkingIntentReceiverActivity"
+            android:name="org.wordpress.android.ui.deeplinks.DeepLinkingIntentReceiverActivity"
             android:theme="@style/WordPress.NoActionBar"
             android:excludeFromRecents="true"
             android:exported="true">
@@ -465,13 +465,7 @@
                     android:pathPattern="/notifications/.*"
                     android:scheme="http" />
 
-                <data
-                    android:host="apps.wordpress.com"
-                    android:pathPattern="/get/.*"
-                    android:scheme="https" />
-
             </intent-filter>
-
         </activity>
 
         <!-- Reader Activities -->

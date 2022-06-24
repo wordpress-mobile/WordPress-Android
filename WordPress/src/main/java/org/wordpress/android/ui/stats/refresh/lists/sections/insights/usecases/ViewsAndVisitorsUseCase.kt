@@ -23,7 +23,6 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.Us
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TitleWithMore
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem
-import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.InsightUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.ViewsAndVisitorsUseCase.UiState
@@ -45,7 +44,7 @@ import javax.inject.Inject
 import javax.inject.Named
 import kotlin.math.ceil
 
-const val VIEWS_AND_VISITORS_ITEMS_TO_LOAD = 15
+const val VIEWS_AND_VISITORS_ITEMS_TO_LOAD = 14
 const val TOP_TIPS_URL = "https://wordpress.com/support/getting-more-views-and-traffic/"
 
 @Suppress("TooManyFunctions")
@@ -184,7 +183,6 @@ class ViewsAndVisitorsUseCase
             selectedDateProvider.selectDate(selectedDate, availableDates.takeLast(visibleLineCount), statsGranularity)
 
             val selectedItem = domainModel.dates.getOrNull(index) ?: domainModel.dates.last()
-            val previousItem = domainModel.dates.getOrNull(domainModel.dates.indexOf(selectedItem) - 1)
 
             items.add(
                     viewsAndVisitorsMapper.buildTitle(
@@ -288,39 +286,6 @@ class ViewsAndVisitorsUseCase
                 ViewsAndVisitorsUseCase(
                         InsightType.VIEWS_AND_VISITORS,
                         DAYS,
-                        visitsAndViewsStore,
-                        selectedDateProvider,
-                        statsSiteProvider,
-                        statsDateFormatter,
-                        viewsAndVisitorsMapper,
-                        mainDispatcher,
-                        backgroundDispatcher,
-                        analyticsTracker,
-                        statsWidgetUpdaters,
-                        localeManagerWrapper,
-                        resourceProvider,
-                        useCaseMode
-                )
-    }
-
-    class ViewsAndVisitorsGranularUseCaseFactory
-    @Inject constructor(
-        @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
-        @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher,
-        private val statsSiteProvider: StatsSiteProvider,
-        private val selectedDateProvider: SelectedDateProvider,
-        private val statsDateFormatter: StatsDateFormatter,
-        private val viewsAndVisitorsMapper: ViewsAndVisitorsMapper,
-        private val visitsAndViewsStore: VisitsAndViewsStore,
-        private val analyticsTracker: AnalyticsTrackerWrapper,
-        private val statsWidgetUpdaters: StatsWidgetUpdaters,
-        private val localeManagerWrapper: LocaleManagerWrapper,
-        private val resourceProvider: ResourceProvider
-    ) : GranularUseCaseFactory {
-        override fun build(granularity: StatsGranularity, useCaseMode: UseCaseMode) =
-                ViewsAndVisitorsUseCase(
-                        InsightType.VIEWS_AND_VISITORS,
-                        granularity,
                         visitsAndViewsStore,
                         selectedDateProvider,
                         statsSiteProvider,
