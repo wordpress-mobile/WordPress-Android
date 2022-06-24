@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompt
+package org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts
 
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.eq
@@ -25,7 +25,6 @@ import org.wordpress.android.test
 import org.wordpress.android.testScope
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.BloggingPromptUpdate
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
-import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptCardSource
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.config.BloggingPromptsFeatureConfig
 import java.util.Date

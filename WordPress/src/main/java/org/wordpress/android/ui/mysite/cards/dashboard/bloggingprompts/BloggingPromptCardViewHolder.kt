@@ -8,7 +8,7 @@ import com.google.android.flexbox.FlexWrap
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.flexbox.JustifyContent
 import org.wordpress.android.R
-import org.wordpress.android.databinding.MySiteBloggingPrompCardBinding
+import org.wordpress.android.databinding.MySiteBloggingPromptCardBinding
 import org.wordpress.android.ui.avatars.AVATAR_LEFT_OFFSET_DIMEN
 import org.wordpress.android.ui.avatars.AvatarItemDecorator
 import org.wordpress.android.ui.avatars.TrainOfAvatarsAdapter
@@ -28,8 +28,8 @@ class BloggingPromptCardViewHolder(
     private val bloggingPromptsCardAnalyticsTracker: BloggingPromptsCardAnalyticsTracker,
     private val htmlCompatWrapper: HtmlCompatWrapper,
     private val learnMoreClicked: () -> Unit
-) : CardViewHolder<MySiteBloggingPrompCardBinding>(
-        parent.viewBinding(MySiteBloggingPrompCardBinding::inflate)
+) : CardViewHolder<MySiteBloggingPromptCardBinding>(
+        parent.viewBinding(MySiteBloggingPromptCardBinding::inflate)
 ) {
     fun bind(card: BloggingPromptCardWithData) = with(binding) {
         val cardPrompt = htmlCompatWrapper.fromHtml(
@@ -88,7 +88,7 @@ class BloggingPromptCardViewHolder(
         }
     }
 
-    private fun MySiteBloggingPrompCardBinding.showCardMenu(card: BloggingPromptCardWithData) {
+    private fun MySiteBloggingPromptCardBinding.showCardMenu(card: BloggingPromptCardWithData) {
         val quickStartPopupMenu = PopupMenu(bloggingPromptCardMenu.context, bloggingPromptCardMenu)
         quickStartPopupMenu.setOnMenuItemClickListener {
             when (it.itemId) {
