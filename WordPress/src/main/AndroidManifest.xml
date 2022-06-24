@@ -387,7 +387,7 @@
 
         <!-- Deep Linking Activity -->
         <activity
-            android:name=".ui.deeplinks.DeepLinkingIntentReceiverActivity"
+            android:name="org.wordpress.android.ui.deeplinks.DeepLinkingIntentReceiverActivity"
             android:theme="@style/WordPress.NoActionBar"
             android:excludeFromRecents="true"
             android:exported="true">
