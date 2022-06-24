@@ -1394,20 +1394,24 @@ public class AppPrefs {
         setBoolean(DeletablePrefKey.MY_SITE_DEFAULT_TAB_EXPERIMENT_VARIANT_ASSIGNED, true);
     }
 
-    public static Date getSkippedPromptDay() {
-        long promptSkippedMillis = getLong(DeletablePrefKey.SKIPPED_BLOGGING_PROMPT_DAY);
+    public static Date getSkippedPromptDay(int siteId) {
+        long promptSkippedMillis = prefs().getLong(getSkippedBloggingPromptDayConfigKey(siteId), 0);
         if (promptSkippedMillis == 0) {
             return null;
         }
         return new Date(promptSkippedMillis);
     }
 
-    public static void setSkippedPromptDay(@Nullable Date date) {
+    public static void setSkippedPromptDay(@Nullable Date date, int siteId) {
         if (date == null) {
-            remove(DeletablePrefKey.SKIPPED_BLOGGING_PROMPT_DAY);
+            prefs().edit().remove(getSkippedBloggingPromptDayConfigKey(siteId)).apply();
             return;
         }
-        setLong(DeletablePrefKey.SKIPPED_BLOGGING_PROMPT_DAY, date.getTime());
+        prefs().edit().putLong(getSkippedBloggingPromptDayConfigKey(siteId), date.getTime()).apply();
+    }
+
+    @NonNull private static String getSkippedBloggingPromptDayConfigKey(int siteId) {
+        return DeletablePrefKey.SKIPPED_BLOGGING_PROMPT_DAY.name() + siteId;
     }
 
     public static void setInitialScreenFromMySiteDefaultTabExperimentVariant(String variant) {
