@@ -1,3 +1,5 @@
+@file:Suppress("MaxLineLength")
+
 package org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompt
 
 import org.assertj.core.api.Assertions.assertThat
@@ -40,7 +42,6 @@ private val RESPONDENTS = listOf(
         "http://avatar3.url"
 )
 
-/* ktlint-disable max-line-length */
 @RunWith(MockitoJUnitRunner::class)
 class BloggingPromptCardBuilderTest : BaseUnitTest() {
     private lateinit var builder: BloggingPromptCardBuilder

@@ -1,3 +1,5 @@
+@file:Suppress("MaximumLineLength", "ParameterListWrapping")
+
 package org.wordpress.android.ui.posts
 
 import com.nhaarman.mockitokotlin2.any
@@ -14,6 +16,7 @@ import org.wordpress.android.util.helpers.MediaFile
 
 /* ktlint-disable max-line-length */
 /* ktlint-disable parameter-list-wrapping */
+@Suppress("MaxLineLength")
 @RunWith(MockitoJUnitRunner::class)
 class PostUtilsUploadProcessingTest {
     private val mediaFile: MediaFile = mock()
