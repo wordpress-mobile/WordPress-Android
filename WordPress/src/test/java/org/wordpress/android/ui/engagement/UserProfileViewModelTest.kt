@@ -97,7 +97,7 @@ class UserProfileViewModelTest : BaseUnitTest() {
         )
     }
 
-    private fun onClickDummy(siteId: Long, siteUrl: String, source: String) {}
+    private fun onClickDummy(siteId: Long, siteUrl: String, source: String) = Unit
 
     private fun setupObservers() {
         sheetUiState = null

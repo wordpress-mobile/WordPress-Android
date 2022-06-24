@@ -62,9 +62,7 @@ class ListItemInteractionTest {
         assertThat(interaction1).isEqualTo(interaction2)
     }
 
-    private fun emptyFunction() {
-    }
+    private fun emptyFunction() = Unit
 
-    private fun parametrizedEmptyFunction(param: String) {
-    }
+    private fun parametrizedEmptyFunction(param: String) = Unit
 }

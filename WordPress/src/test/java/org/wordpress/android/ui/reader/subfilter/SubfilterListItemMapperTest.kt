@@ -230,6 +230,6 @@ class SubfilterListItemMapperTest {
         private const val TAG_JSON_EMPTY_SLUG = "{\"blogId\":0,\"feedId\":0,\"tagSlug\":\"\",\"tagType\":1,\"type\":4}"
         private const val WRONG_TYPE_JSON = "{\"blogId\":0,\"feedId\":0,\"tagSlug\":\"news\",\"tagType\":1,\"type\":10}"
 
-        private fun onClickActionDummy(filter: SubfilterListItem) {}
+        private fun onClickActionDummy(filter: SubfilterListItem) = Unit
     }
 }

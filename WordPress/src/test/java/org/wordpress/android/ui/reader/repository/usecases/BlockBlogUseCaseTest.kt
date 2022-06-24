@@ -31,6 +31,5 @@ class BlockBlogUseCaseTest {
     }
 
     @Test
-    fun foo() {
-    }
+    fun foo() = Unit
 }

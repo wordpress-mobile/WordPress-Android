@@ -544,7 +544,6 @@ class MySiteViewModel @Inject constructor(
         MySiteTabType.ALL -> true
     }
 
-    @Suppress("EmptyFunctionBlock")
     private fun onGetMoreViewsClick() {
         cardsTracker.trackTodaysStatsCardGetMoreViewsNudgeClicked()
         _onNavigation.value = Event(

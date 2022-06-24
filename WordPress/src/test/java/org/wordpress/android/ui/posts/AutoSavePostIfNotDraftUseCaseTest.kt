@@ -53,8 +53,7 @@ class AutoSavePostIfNotDraftUseCaseTest {
         useCase.autoSavePostOrUpdateDraft(
                 RemotePostPayload(post, SiteModel()),
                 object : OnAutoSavePostIfNotDraftCallback {
-                    override fun handleAutoSavePostIfNotDraftResult(result: AutoSavePostIfNotDraftResult) {
-                    }
+                    override fun handleAutoSavePostIfNotDraftResult(result: AutoSavePostIfNotDraftResult) = Unit
                 })
     }
 

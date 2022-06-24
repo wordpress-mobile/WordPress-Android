@@ -58,5 +58,5 @@ class EngagementUtilsTest {
         assertThat(engageItems.all { it as Liker != null && it.source == source }).isTrue
     }
 
-    private fun onClickDummy(userProfile: UserProfile, source: EngagementNavigationSource?) { }
+    private fun onClickDummy(userProfile: UserProfile, source: EngagementNavigationSource?) = Unit
 }

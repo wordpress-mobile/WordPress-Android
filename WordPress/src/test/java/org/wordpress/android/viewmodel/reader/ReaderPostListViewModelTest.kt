@@ -42,6 +42,5 @@ class ReaderPostListViewModelTest {
     }
 
     @Test
-    fun foo() {
-    }
+    fun foo() = Unit
 }
