@@ -54,6 +54,7 @@ import org.wordpress.android.util.mapNullable
 import org.wordpress.android.util.mergeNotNull
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
+import java.io.Serializable
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -100,11 +101,12 @@ class StatsViewModel
         val localSiteId = intent.getIntExtra(WordPress.LOCAL_SITE_ID, 0)
 
         val launchedFrom = intent.getSerializableExtra(StatsActivity.ARG_LAUNCHED_FROM)
+//        val launchedFromFeatureAnnouncement = launchedFrom == StatsLaunchedFrom.FEATURE_ANNOUNCEMENT
         val launchedFromWidget = launchedFrom == StatsLaunchedFrom.STATS_WIDGET
         val initialTimeFrame = getInitialTimeFrame(intent)
         val initialSelectedPeriod = intent.getStringExtra(StatsActivity.INITIAL_SELECTED_PERIOD_KEY)
         val notificationType = intent.getSerializableExtra(ARG_NOTIFICATION_TYPE) as? NotificationType
-        start(localSiteId, launchedFromWidget, initialTimeFrame, initialSelectedPeriod, restart, notificationType)
+        start(localSiteId, launchedFrom, initialTimeFrame, initialSelectedPeriod, restart, notificationType)
     }
 
     fun onSaveInstanceState(outState: Bundle) {
@@ -131,9 +133,10 @@ class StatsViewModel
         }
     }
 
+    @Suppress("ComplexMethod")
     fun start(
         localSiteId: Int,
-        launchedFromWidget: Boolean,
+        launchedFrom: Serializable?,
         initialSection: StatsSection?,
         initialSelectedPeriod: String?,
         restart: Boolean,
@@ -161,7 +164,7 @@ class StatsViewModel
                 selectedDateProvider.setInitialSelectedPeriod(initialGranularity, initialSelectedPeriod)
             }
 
-            if (launchedFromWidget) {
+            if (launchedFrom == StatsLaunchedFrom.STATS_WIDGET) {
                 analyticsTracker.track(AnalyticsTracker.Stat.STATS_WIDGET_TAPPED, statsSiteProvider.siteModel)
             }
 
@@ -185,6 +188,14 @@ class StatsViewModel
                 }
             }
         }
+
+        if (launchedFrom == StatsLaunchedFrom.FEATURE_ANNOUNCEMENT) {
+            updateRevampedInsights()
+        }
+    }
+
+    private fun updateRevampedInsights() {
+        // TODO - Needs separate PRs with some FluxC changes
     }
 
     private fun isStatsModuleEnabled() =

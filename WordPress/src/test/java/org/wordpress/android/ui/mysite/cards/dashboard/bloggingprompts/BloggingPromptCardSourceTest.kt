@@ -96,7 +96,7 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
     private fun setUpMocks(isBloggingPromptFeatureEnabled: Boolean) {
         whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(isBloggingPromptFeatureEnabled)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(siteModel)
-        whenever(appPrefsWrapper.getSkippedPromptDay()).thenReturn(null)
+        whenever(appPrefsWrapper.getSkippedPromptDay(any())).thenReturn(null)
         whenever(bloggingRemindersStore.bloggingRemindersModel(any())).thenReturn(flowOf(bloggingReminderSettings))
     }
 
@@ -180,7 +180,7 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
     @Test
     fun `given build is invoked, when prompt is skipped, then empty state is loaded`() = test {
         val result = mutableListOf<BloggingPromptUpdate>()
-        whenever(appPrefsWrapper.getSkippedPromptDay()).thenReturn(Date())
+        whenever(appPrefsWrapper.getSkippedPromptDay(any())).thenReturn(Date())
         bloggingPromptCardSource.refresh.observeForever { }
 
         bloggingPromptCardSource.build(testScope(), SITE_LOCAL_ID).observeForever { it?.let { result.add(it) } }

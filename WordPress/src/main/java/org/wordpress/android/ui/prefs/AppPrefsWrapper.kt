@@ -229,11 +229,11 @@ class AppPrefsWrapper @Inject constructor() {
 
     fun getMySiteInitialScreen(): String = AppPrefs.getMySiteInitialScreen()
 
-    fun setSkippedPromptDay(date: Date?) = AppPrefs.setSkippedPromptDay(date)
+    fun setSkippedPromptDay(date: Date?, siteId: Int) = AppPrefs.setSkippedPromptDay(date, siteId)
 
-    fun getSkippedPromptDay(): Date? = AppPrefs.getSkippedPromptDay()
+    fun getSkippedPromptDay(siteId: Int): Date? = AppPrefs.getSkippedPromptDay(siteId)
 
-    fun markBloggingPromptOnboardingDialogAsDisplayed() = AppPrefs.setShouldDisplayBloggingPromptOnboarding(false)
+    fun markStatsRevampFeatureAnnouncementAsDisplayed() = AppPrefs.setShouldDisplayStatsRevampFeatureAnnouncement(false)
 
     companion object {
         private const val LIGHT_MODE_ID = 0

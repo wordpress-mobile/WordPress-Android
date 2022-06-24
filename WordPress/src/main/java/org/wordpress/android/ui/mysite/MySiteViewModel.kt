@@ -1194,20 +1194,24 @@ class MySiteViewModel @Inject constructor(
     }
 
     private fun onBloggingPromptSkipClicked() {
-        appPrefsWrapper.setSkippedPromptDay(Date())
-        mySiteSourceManager.refreshBloggingPrompts(true)
+        selectedSiteRepository.getSelectedSite()?.let { site ->
+            val siteId = site.localId().value
 
-        val snackbar = SnackbarMessageHolder(
-                message = UiStringRes(R.string.my_site_blogging_prompt_card_skipped_snackbar),
-                buttonTitle = UiStringRes(R.string.undo),
-                buttonAction = {
-                    appPrefsWrapper.setSkippedPromptDay(null)
-                    mySiteSourceManager.refreshBloggingPrompts(true)
-                },
-                isImportant = true
-        )
+            appPrefsWrapper.setSkippedPromptDay(Date(), siteId)
+            mySiteSourceManager.refreshBloggingPrompts(true)
 
-        _onSnackbarMessage.postValue(Event(snackbar))
+            val snackbar = SnackbarMessageHolder(
+                    message = UiStringRes(R.string.my_site_blogging_prompt_card_skipped_snackbar),
+                    buttonTitle = UiStringRes(R.string.undo),
+                    buttonAction = {
+                        appPrefsWrapper.setSkippedPromptDay(null, siteId)
+                        mySiteSourceManager.refreshBloggingPrompts(true)
+                    },
+                    isImportant = true
+            )
+
+            _onSnackbarMessage.postValue(Event(snackbar))
+        }
     }
 
     fun isRefreshing() = mySiteSourceManager.isRefreshing()

@@ -142,7 +142,6 @@ import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.service.InstallationReferrerServiceStarter;
-import org.wordpress.android.util.config.BloggingPromptsFeatureConfig;
 import org.wordpress.android.util.config.MySiteDashboardTodaysStatsCardFeatureConfig;
 import org.wordpress.android.util.config.StatsRevampV2FeatureConfig;
 import org.wordpress.android.util.extensions.ViewExtensionsKt;
@@ -256,7 +255,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
     @Inject MySiteDashboardTodaysStatsCardFeatureConfig mTodaysStatsCardFeatureConfig;
     @Inject QuickStartTracker mQuickStartTracker;
     @Inject StatsRevampV2FeatureConfig mStatsRevampV2FeatureConfig;
-    @Inject BloggingPromptsFeatureConfig mBloggingPromptsFeatureConfig;
 
     @Inject BuildConfigWrapper mBuildConfigWrapper;
 
@@ -428,14 +426,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
                    && savedInstanceState == null) {
             canShowAppRatingPrompt = false;
             showBloggingPromptsOnboarding();
-        } else if (mBloggingPromptsFeatureConfig.isEnabled() && AppPrefs.shouldDisplayBloggingPromptOnboarding()
-                   && mAccountStore.hasAccessToken()
-                   && savedInstanceState == null) {
-            // TODO temporary promo - remove after version 20.1
-            BloggingPromptsOnboardingDialogFragment.newInstance(DialogType.ONBOARDING).show(
-                    getSupportFragmentManager(), BloggingPromptsOnboardingDialogFragment.TAG
-            );
-            canShowAppRatingPrompt = false;
         }
 
         if (isGooglePlayServicesAvailable(this)) {
@@ -456,8 +446,9 @@ public class WPMainActivity extends LocaleAwareActivity implements
             onSetPromptReminderClick(getIntent().getIntExtra(ARG_OPEN_BLOGGING_REMINDERS, 0));
         }
 
-        // TODO: Confirm what would invoke this and what should happen when remind me later
-        if (mStatsRevampV2FeatureConfig.isEnabled()) {
+        if (BuildConfig.IS_JETPACK_APP
+            && mStatsRevampV2FeatureConfig.isEnabled()
+            && AppPrefs.shouldDisplayStatsRevampFeatureAnnouncement()) {
             StatsNewFeaturesIntroDialogFragment.newInstance().show(
                     getSupportFragmentManager(), StatsNewFeaturesIntroDialogFragment.TAG
             );

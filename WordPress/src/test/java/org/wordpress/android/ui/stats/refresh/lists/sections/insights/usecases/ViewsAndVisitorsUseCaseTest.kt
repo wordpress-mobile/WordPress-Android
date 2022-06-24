@@ -66,7 +66,7 @@ class ViewsAndVisitorsUseCaseTest : BaseUnitTest() {
     private val siteId = 1L
     private val periodData = PeriodData("2018-10-08", 10, 15, 20, 25, 30, 35)
     private val modelPeriod = "2018-10-10"
-    private val limitMode = Top(15)
+    private val limitMode = Top(14)
     private val statsGranularity = DAYS
     private val model = VisitsAndViewsModel(modelPeriod, listOf(periodData))
 
