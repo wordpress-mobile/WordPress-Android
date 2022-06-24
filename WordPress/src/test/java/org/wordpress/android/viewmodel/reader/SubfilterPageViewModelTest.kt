@@ -1,3 +1,5 @@
+@file:Suppress("MultiLineIfElse")
+
 package org.wordpress.android.viewmodel.reader
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
