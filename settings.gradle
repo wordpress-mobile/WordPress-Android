@@ -82,8 +82,8 @@ include ':libs:image-editor'
 include ':libs:networking'
 include ':libs:analytics'
 include ':libs:editor'
-include ':libs:WordPressProcessors'
-include ':libs:WordPressAnnotations'
+include ':libs:processors'
+include ':libs:annotations'
 
 include ':libs:mocks'
 
