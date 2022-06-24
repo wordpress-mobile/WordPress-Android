@@ -491,7 +491,7 @@ potential-bugs:
     active: false
   MissingWhenCase:
     active: true
-    allowElseExpression: true
+    allowElseExpression: false
   NullableToStringCall:
     active: false
   RedundantElseInWhen:
@@ -626,7 +626,7 @@ style:
   SerialVersionUIDInSerializableClass:
     active: false
   SpacingBetweenPackageAndImports:
-    active: false
+    active: true
   ThrowsCount:
     active: true
     max: 2
@@ -651,7 +651,7 @@ style:
   UntilInsteadOfRangeTo:
     active: false
   UnusedImports:
-    active: false
+    active: true
   UnusedPrivateClass:
     active: true
   UnusedPrivateMember:
