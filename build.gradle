@@ -93,6 +93,7 @@ allprojects {
     detekt {
         toolVersion = gradle.ext.detektVersion
         config = files("${project.rootDir}/config/detekt/detekt.yml")
+        baseline = file("${project.rootDir}/config/detekt/baseline.xml")
         autoCorrect = false
         buildUponDefaultConfig = false
         disableDefaultRuleSets = false
