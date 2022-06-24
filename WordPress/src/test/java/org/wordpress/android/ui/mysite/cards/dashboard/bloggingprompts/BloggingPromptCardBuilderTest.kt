@@ -28,7 +28,7 @@ private val RESPONDENTS_IN_CARD = listOf(
                 UiStringPluralRes(
                         plurals.my_site_blogging_prompt_card_number_of_answers,
                         NUMBER_OF_RESPONDENTS
-                ), attr.colorPrimary
+                ), attr.colorOnSurface
         )
 )
 
