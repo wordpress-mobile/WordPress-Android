@@ -44,9 +44,6 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 val DEFAULT_INSIGHTS = listOf(
-        VIEWS_AND_VISITORS,
-        TOTAL_LIKES,
-        TOTAL_COMMENTS,
         TOTAL_FOLLOWERS,
         MOST_POPULAR_DAY_AND_HOUR,
         LATEST_POST_SUMMARY,
@@ -55,6 +52,14 @@ val DEFAULT_INSIGHTS = listOf(
         FOLLOWERS,
         COMMENTS
 )
+
+val JETPACK_DEFAULT_INSIGHTS = listOf(
+        VIEWS_AND_VISITORS,
+        TOTAL_LIKES,
+        TOTAL_COMMENTS,
+        TOTAL_FOLLOWERS
+)
+
 val STATS_UNAVAILABLE_WITH_JETPACK = listOf(FILE_DOWNLOADS)
 const val INSIGHTS_MANAGEMENT_NEWS_CARD_SHOWN = "INSIGHTS_MANAGEMENT_NEWS_CARD_SHOWN"
 
@@ -225,12 +230,12 @@ class StatsStore
 
     enum class InsightType : StatsType {
         VIEWS_AND_VISITORS,
-        LATEST_POST_SUMMARY,
-        MOST_POPULAR_DAY_AND_HOUR,
-        ALL_TIME_STATS,
         TOTAL_LIKES,
         TOTAL_COMMENTS,
         TOTAL_FOLLOWERS,
+        LATEST_POST_SUMMARY,
+        MOST_POPULAR_DAY_AND_HOUR,
+        ALL_TIME_STATS,
         FOLLOWER_TYPES,
         FOLLOWER_TOTALS,
         TAGS_AND_CATEGORIES,
