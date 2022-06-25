@@ -8,6 +8,7 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
@@ -17,6 +18,10 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PERIOD_MONTHS
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PERIOD_WEEKS_ACCESSED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PERIOD_YEARS_ACCESSED
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
+import org.wordpress.android.fluxc.store.DEFAULT_INSIGHTS
+import org.wordpress.android.fluxc.store.JETPACK_DEFAULT_INSIGHTS
+import org.wordpress.android.fluxc.store.StatsStore
+import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.push.NotificationType
 import org.wordpress.android.push.NotificationsProcessingService.ARG_NOTIFICATION_TYPE
@@ -64,11 +69,13 @@ class StatsViewModel
 @Inject constructor(
     @Named(LIST_STATS_USE_CASES) private val listUseCases: Map<StatsSection, BaseListUseCase>,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
+    @Named(BG_THREAD) private val defaultDispatcher: CoroutineDispatcher,
     private val selectedDateProvider: SelectedDateProvider,
     private val statsSectionManager: SelectedSectionManager,
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val statsSiteProvider: StatsSiteProvider,
+    private val statsStore: StatsStore,
     newsCardHandler: NewsCardHandler,
     private val statsModuleActivateUseCase: StatsModuleActivateUseCase,
     private val notificationsTracker: SystemNotificationsTracker,
@@ -101,8 +108,6 @@ class StatsViewModel
         val localSiteId = intent.getIntExtra(WordPress.LOCAL_SITE_ID, 0)
 
         val launchedFrom = intent.getSerializableExtra(StatsActivity.ARG_LAUNCHED_FROM)
-//        val launchedFromFeatureAnnouncement = launchedFrom == StatsLaunchedFrom.FEATURE_ANNOUNCEMENT
-        val launchedFromWidget = launchedFrom == StatsLaunchedFrom.STATS_WIDGET
         val initialTimeFrame = getInitialTimeFrame(intent)
         val initialSelectedPeriod = intent.getStringExtra(StatsActivity.INITIAL_SELECTED_PERIOD_KEY)
         val notificationType = intent.getSerializableExtra(ARG_NOTIFICATION_TYPE) as? NotificationType
@@ -190,12 +195,33 @@ class StatsViewModel
         }
 
         if (launchedFrom == StatsLaunchedFrom.FEATURE_ANNOUNCEMENT) {
+            if (statsSectionManager.getSelectedSection() != INSIGHTS) statsSectionManager.setSelectedSection(INSIGHTS)
             updateRevampedInsights()
         }
     }
 
     private fun updateRevampedInsights() {
-        // TODO - Needs separate PRs with some FluxC changes
+        val insightsUseCase = listUseCases[INSIGHTS]
+        insightsUseCase?.launch(defaultDispatcher) {
+            when (val insightTypes = statsStore.getAddedInsights(statsSiteProvider.siteModel)) {
+                JETPACK_DEFAULT_INSIGHTS -> {
+                    return@launch
+                }
+                DEFAULT_INSIGHTS -> {
+                    // Insights cards match the previous default set of cards,
+                    // switch it to show the new set of default cards
+                    statsStore.updateTypes(statsSiteProvider.siteModel, JETPACK_DEFAULT_INSIGHTS)
+                }
+                else -> {
+                    // Insights cards does not match the existing defaults,
+                    // the new set of default cards is added at the top of their list and preserve their additions
+                    val addedInsightTypes = insightTypes.toMutableList()
+                    addedInsightTypes.addAll(0, JETPACK_DEFAULT_INSIGHTS)
+                    statsStore.updateTypes(statsSiteProvider.siteModel, addedInsightTypes.toList())
+                }
+            }
+            insightsUseCase.loadData()
+        }
     }
 
     private fun isStatsModuleEnabled() =
