@@ -44,9 +44,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 val DEFAULT_INSIGHTS = listOf(
-        TOTAL_FOLLOWERS,
         MOST_POPULAR_DAY_AND_HOUR,
-        LATEST_POST_SUMMARY,
         ALL_TIME_STATS,
         TODAY_STATS,
         FOLLOWERS,
@@ -57,7 +55,9 @@ val JETPACK_DEFAULT_INSIGHTS = listOf(
         VIEWS_AND_VISITORS,
         TOTAL_LIKES,
         TOTAL_COMMENTS,
-        TOTAL_FOLLOWERS
+        TOTAL_FOLLOWERS,
+        MOST_POPULAR_DAY_AND_HOUR,
+        LATEST_POST_SUMMARY
 )
 
 val STATS_UNAVAILABLE_WITH_JETPACK = listOf(FILE_DOWNLOADS)
