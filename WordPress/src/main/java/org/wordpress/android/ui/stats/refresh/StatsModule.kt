@@ -40,6 +40,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.O
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.PostsAndPagesUseCase.PostsAndPagesUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.ReferrersUseCase.ReferrersUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.SearchTermsUseCase.SearchTermsUseCaseFactory
+import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.TotalLikesDetailUseCase.TotalLikesGranularUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.VideoPlaysUseCase.VideoPlaysUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.ViewsAndVisitorsDetailUseCase.ViewsAndVisitorsGranularUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.ActionCardGrowUseCase
@@ -61,10 +62,8 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.P
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.PublicizeUseCase.PublicizeUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TagsAndCategoriesUseCase.TagsAndCategoriesUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TodayStatsUseCase
-import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TotalCommentsUseCase.TotalCommentsGranularUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TotalCommentsUseCase.TotalCommentsUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TotalFollowersUseCase.TotalFollowersUseCaseFactory
-import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TotalLikesUseCase.TotalLikesGranularUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TotalLikesUseCase.TotalLikesUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.ViewsAndVisitorsUseCase.ViewsAndVisitorsUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
@@ -511,12 +510,12 @@ class StatsModule {
     @Singleton
     @Named(TOTAL_COMMENTS_DETAIL_USE_CASES)
     fun provideCommentsDetailUseCases(
-        totalCommentsGranularUseCaseFactory: TotalCommentsGranularUseCaseFactory,
+        totalCommentsUseCaseFactory: TotalCommentsUseCaseFactory,
         authorsCommentsUseCase: AuthorsCommentsUseCase,
         postsCommentsUseCase: PostsCommentsUseCase
     ): List<@JvmSuppressWildcards BaseStatsUseCase<*, *>> {
         return listOf(
-                totalCommentsGranularUseCaseFactory.build(WEEKS, BLOCK_DETAIL),
+                totalCommentsUseCaseFactory.build(BLOCK_DETAIL),
                 authorsCommentsUseCase,
                 postsCommentsUseCase
         )

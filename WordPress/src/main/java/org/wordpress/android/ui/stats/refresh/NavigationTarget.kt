@@ -47,7 +47,7 @@ sealed class NavigationTarget {
     data class ViewInsightDetails(
         val statsSection: StatsSection,
         val statsViewType: StatsViewType,
-        val statsGranularity: StatsGranularity,
+        val statsGranularity: StatsGranularity?,
         val selectedDate: Date?
     ) : NavigationTarget()
 
