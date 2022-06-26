@@ -47,8 +47,7 @@ val DEFAULT_INSIGHTS = listOf(
         MOST_POPULAR_DAY_AND_HOUR,
         ALL_TIME_STATS,
         TODAY_STATS,
-        FOLLOWERS,
-        COMMENTS
+        FOLLOWERS
 )
 
 val JETPACK_DEFAULT_INSIGHTS = listOf(
