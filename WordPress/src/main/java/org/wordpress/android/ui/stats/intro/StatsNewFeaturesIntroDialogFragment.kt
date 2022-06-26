@@ -41,6 +41,7 @@ class StatsNewFeaturesIntroDialogFragment : FeatureIntroductionDialogFragment() 
         viewModel.action.observe(viewLifecycleOwner) { action ->
             when (action) {
                 is OpenStats -> {
+                    dismiss()
                     activity?.let {
                         ActivityLauncher.openBlogStats(it, action.site)
                     }
