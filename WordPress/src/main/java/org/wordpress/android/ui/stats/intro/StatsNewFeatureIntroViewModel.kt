@@ -36,7 +36,13 @@ class StatsNewFeatureIntroViewModel @Inject constructor(
     }
 
     fun onSecondaryButtonClick() {
+        analyticsTracker.track(Stat.STATS_REVAMP_V2_ANNOUNCEMENT_REMIND_ME_TAPPED)
+        _action.value = DismissDialog
+    }
+
+    fun onCloseButtonClick() {
         analyticsTracker.track(Stat.STATS_REVAMP_V2_ANNOUNCEMENT_DISMISSED)
+        appPrefsWrapper.markStatsRevampFeatureAnnouncementAsDisplayed()
         _action.value = DismissDialog
     }
 }

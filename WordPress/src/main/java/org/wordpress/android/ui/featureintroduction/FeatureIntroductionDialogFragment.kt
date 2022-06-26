@@ -76,6 +76,10 @@ abstract class FeatureIntroductionDialogFragment : DialogFragment() {
         binding.secondaryButton.text = getString(textRes)
     }
 
+    fun setCloseButtonListener(listener: () -> Unit) {
+        binding.closeButton.setOnClickListener { listener() }
+    }
+
     fun toggleSecondaryButtonVisibility(isVisible: Boolean) {
         uiHelpers.updateVisibility(binding.secondaryButton, isVisible)
     }
