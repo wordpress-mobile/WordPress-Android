@@ -22,7 +22,6 @@ import org.wordpress.android.fluxc.store.StatsStore.InsightType.ACTION_GROW
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.ACTION_REMINDER
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.ACTION_SCHEDULE
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.ALL_TIME_STATS
-import org.wordpress.android.fluxc.store.StatsStore.InsightType.COMMENTS
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.FOLLOWERS
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.LATEST_POST_SUMMARY
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.MOST_POPULAR_DAY_AND_HOUR
