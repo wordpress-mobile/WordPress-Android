@@ -1277,7 +1277,7 @@
     <string name="stats_view_videos">Videos</string>
     <string name="stats_view_comments" translatable="false">@string/comments</string>
     <string name="stats_view_search_terms">Search Terms</string>
-    <string name="stats_view_publicize">Publicize</string>
+    <string name="stats_view_publicize">Social Media Connections</string>
     <string name="stats_view_followers">Followers</string>
     <string name="stats_view_follower_totals">Follower Totals</string>
     <string name="stats_view_total_likes">Total Likes</string>
