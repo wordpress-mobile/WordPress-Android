@@ -21,6 +21,7 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.store.DEFAULT_INSIGHTS
 import org.wordpress.android.fluxc.store.JETPACK_DEFAULT_INSIGHTS
 import org.wordpress.android.fluxc.store.StatsStore
+import org.wordpress.android.fluxc.store.StatsStore.InsightType
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.push.NotificationType
@@ -215,9 +216,11 @@ class StatsViewModel
                 else -> {
                     // Insights cards does not match the existing defaults,
                     // the new set of default cards is added at the top of their list and preserve their additions
-                    val addedInsightTypes = insightTypes.toMutableList()
-                    addedInsightTypes.addAll(0, JETPACK_DEFAULT_INSIGHTS)
-                    statsStore.updateTypes(statsSiteProvider.siteModel, addedInsightTypes.toList())
+                    val addedInsightTypes = insightTypes - DEFAULT_INSIGHTS.toSet()
+                    val updateInsightTypes: MutableSet<InsightType> = mutableSetOf()
+                    updateInsightTypes.addAll(JETPACK_DEFAULT_INSIGHTS)
+                    updateInsightTypes.addAll(addedInsightTypes)
+                    statsStore.updateTypes(statsSiteProvider.siteModel, updateInsightTypes.toList())
                 }
             }
             insightsUseCase.loadData()
