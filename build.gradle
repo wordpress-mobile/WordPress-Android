@@ -70,8 +70,6 @@ allprojects {
                 includeVersion "org.jetbrains.kotlinx", "kotlinx-html-jvm", "0.7.2"
                 // Required for lintWordpressVanillaRelease
                 includeVersion "com.jraska", "falcon", "2.1.1"
-                // Required for ktlint
-                includeVersion "com.andreapivetta.kolor", "kolor", "0.0.2"
             }
         }
         flatDir {
@@ -110,35 +108,6 @@ allprojects {
         kotlinOptions {
             jvmTarget = "1.8"
         }
-    }
-}
-
-subprojects {
-
-    configurations {
-        ktlint
-    }
-
-    dependencies {
-        ktlint 'com.github.shyiko:ktlint:0.29.0'
-    }
-
-    tasks.register("ktlint", JavaExec) {
-        main = "com.github.shyiko.ktlint.Main"
-        classpath = configurations.ktlint
-        args "src/**/*.kt"
-    }
-
-    tasks.register("ktlintFormat", JavaExec) {
-        main = "com.github.shyiko.ktlint.Main"
-        classpath = configurations.ktlint
-        args "-F", "src/**/*.kt"
-    }
-
-    tasks.register("ciktlint", JavaExec) {
-        main = "com.github.shyiko.ktlint.Main"
-        classpath = configurations.ktlint
-        args "src/**/*.kt", "--reporter=checkstyle,output=${buildDir}/ktlint.xml"
     }
 }
 
