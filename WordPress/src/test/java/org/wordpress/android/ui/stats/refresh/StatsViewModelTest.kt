@@ -21,6 +21,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PERIOD_WEEKS_
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PERIOD_YEARS_ACCESSED
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
+import org.wordpress.android.fluxc.store.StatsStore
 import org.wordpress.android.test
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
@@ -54,6 +55,7 @@ class StatsViewModelTest : BaseUnitTest() {
     @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
     @Mock lateinit var statsSiteProvider: StatsSiteProvider
+    @Mock lateinit var statsStore: StatsStore
     @Mock lateinit var newsCardHandler: NewsCardHandler
     @Mock lateinit var site: SiteModel
     @Mock lateinit var statsModuleActivateUseCase: StatsModuleActivateUseCase
@@ -71,12 +73,14 @@ class StatsViewModelTest : BaseUnitTest() {
         viewModel = StatsViewModel(
                 mapOf(DAYS to baseListUseCase),
                 Dispatchers.Unconfined,
+                Dispatchers.Default,
                 selectedDateProvider,
                 statsSectionManager,
                 appPrefsWrapper,
                 analyticsTracker,
                 networkUtilsWrapper,
                 statsSiteProvider,
+                statsStore,
                 newsCardHandler,
                 statsModuleActivateUseCase,
                 notificationsTracker,
