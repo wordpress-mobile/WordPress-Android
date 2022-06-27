@@ -38,6 +38,7 @@ class InsightsDetailViewModel
 
     fun init(localSiteId: Int) {
         statsSiteProvider.start(localSiteId)
+        refresh()
     }
 
     fun refresh() {
