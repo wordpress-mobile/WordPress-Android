@@ -233,7 +233,9 @@ class StatsNavigator @Inject constructor(
                         target.statsSection,
                         target.statsViewType,
                         target.statsGranularity,
-                        selectedDateProvider.getSelectedDateState(target.statsGranularity),
+                        target.statsGranularity?.let {
+                            selectedDateProvider.getSelectedDateState(target.statsGranularity)
+                        },
                         siteProvider.siteModel.id
                 )
             }

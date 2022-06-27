@@ -234,7 +234,7 @@ class ViewsAndVisitorsMapper
         val hasData = values.isNotEmpty() && values.size >= 7
 
         val prevWeekData = if (hasData) values.subList(0, 7) else values.subList(0, values.size)
-        val thisWeekData = if (hasData) values.subList(8, values.size) else emptyList()
+        val thisWeekData = if (hasData) values.subList(7, values.size) else emptyList()
 
         val prevWeekCount = prevWeekData.fold(0L) { acc, next -> acc + next }
         val thisWeekCount = thisWeekData.fold(0L) { acc, next -> acc + next }
