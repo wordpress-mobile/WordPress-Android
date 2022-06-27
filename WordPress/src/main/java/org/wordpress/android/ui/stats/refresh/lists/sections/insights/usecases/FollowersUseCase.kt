@@ -161,7 +161,7 @@ class FollowersUseCase(
             }
 
             if (wpComModel.hasMore && uiState.selectedTab == 0 || emailModel.hasMore && uiState.selectedTab == 1) {
-                if (useCaseMode == BLOCK) {
+                if (useCaseMode != VIEW_ALL) {
                     val buttonText = R.string.stats_insights_view_more
                     items.add(
                             Link(

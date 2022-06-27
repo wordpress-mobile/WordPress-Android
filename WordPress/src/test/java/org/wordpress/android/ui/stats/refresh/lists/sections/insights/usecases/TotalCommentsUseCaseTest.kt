@@ -21,9 +21,7 @@ import org.wordpress.android.fluxc.model.stats.LimitMode.Top
 import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel
 import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel.PeriodData
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
-import org.wordpress.android.fluxc.network.utils.StatsGranularity.WEEKS
 import org.wordpress.android.fluxc.store.StatsStore.InsightType
-import org.wordpress.android.fluxc.store.StatsStore.InsightType.TOTAL_COMMENTS
 import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
@@ -72,9 +70,6 @@ class TotalCommentsUseCaseTest : BaseUnitTest() {
         useCase = TotalCommentsUseCase(
                 Dispatchers.Unconfined,
                 TEST_DISPATCHER,
-                TOTAL_COMMENTS,
-                WEEKS,
-                selectedDateProvider,
                 store,
                 statsSiteProvider,
                 resourceProvider,

@@ -9,7 +9,6 @@ import androidx.fragment.app.commit
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
-import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.databinding.StatsDetailActivityBinding
 import org.wordpress.android.fluxc.model.SiteModel
@@ -77,7 +76,7 @@ class StatsDetailActivity : LocaleAwareActivity() {
                 statsPostViewIntent.putExtra(POST_URL, postUrl)
             }
             AnalyticsUtils.trackWithSiteId(
-                    AnalyticsTracker.Stat.STATS_SINGLE_POST_ACCESSED,
+                    Stat.STATS_SINGLE_POST_ACCESSED,
                     site.siteId
             )
             context.startActivity(statsPostViewIntent)
@@ -104,8 +103,6 @@ class StatsDetailActivity : LocaleAwareActivity() {
                     putExtra(StatsViewAllFragment.ARGS_SELECTED_DATE, selectedDate)
                 }
             }
-            // TODO: Update tracking here
-            AnalyticsTracker.track(Stat.STATS_VIEW_ALL_ACCESSED)
             context.startActivity(intent)
         }
     }

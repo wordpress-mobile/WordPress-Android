@@ -21,8 +21,6 @@ import org.wordpress.android.fluxc.model.stats.LimitMode.Top
 import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel
 import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel.PeriodData
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
-import org.wordpress.android.fluxc.network.utils.StatsGranularity.WEEKS
-import org.wordpress.android.fluxc.store.StatsStore.InsightType
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.TOTAL_LIKES
 import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
@@ -74,9 +72,6 @@ class TotalLikesUseCaseTest : BaseUnitTest() {
         useCase = TotalLikesUseCase(
                 Dispatchers.Unconfined,
                 TEST_DISPATCHER,
-                TOTAL_LIKES,
-                WEEKS,
-                selectedDateProvider,
                 store,
                 latestPostStore,
                 statsSiteProvider,
@@ -85,8 +80,7 @@ class TotalLikesUseCaseTest : BaseUnitTest() {
                 totalStatsMapper,
                 analyticsTrackerWrapper,
                 statsWidgetUpdaters,
-                localeManagerWrapper,
-                useCaseMode
+                localeManagerWrapper
         )
         whenever(statsSiteProvider.siteModel).thenReturn(site)
         whenever(totalStatsMapper.buildTotalLikesValue(any())).thenReturn(valueWithChart)
@@ -102,7 +96,7 @@ class TotalLikesUseCaseTest : BaseUnitTest() {
 
         val result = loadData(true, forced)
 
-        assertThat(result.type).isEqualTo(InsightType.TOTAL_LIKES)
+        assertThat(result.type).isEqualTo(TOTAL_LIKES)
 
         assertThat(result.state).isEqualTo(UseCaseState.SUCCESS)
         result.data!!.apply {
