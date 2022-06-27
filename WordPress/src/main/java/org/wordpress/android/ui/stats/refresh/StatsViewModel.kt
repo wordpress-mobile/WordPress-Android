@@ -9,6 +9,7 @@ import androidx.lifecycle.MutableLiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
+import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
@@ -199,9 +200,12 @@ class StatsViewModel
             }
         }
 
+        if (BuildConfig.IS_JETPACK_APP && statsRevampV2FeatureConfig.isEnabled()) {
+            updateRevampedInsights()
+        }
+
         if (launchedFrom == StatsLaunchedFrom.FEATURE_ANNOUNCEMENT) {
             if (statsSectionManager.getSelectedSection() != INSIGHTS) statsSectionManager.setSelectedSection(INSIGHTS)
-            updateRevampedInsights()
         }
     }
 
