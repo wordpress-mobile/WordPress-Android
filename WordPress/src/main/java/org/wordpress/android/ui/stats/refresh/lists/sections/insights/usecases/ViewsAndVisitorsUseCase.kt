@@ -86,7 +86,7 @@ class ViewsAndVisitorsUseCase
         val cachedData = visitsAndViewsStore.getVisits(
                 statsSiteProvider.siteModel,
                 statsGranularity,
-                LimitMode.All
+                LimitMode.Top(VIEWS_AND_VISITORS_ITEMS_TO_LOAD)
         )
         if (cachedData != null) {
             logIfIncorrectData(cachedData, statsGranularity, statsSiteProvider.siteModel, false)
