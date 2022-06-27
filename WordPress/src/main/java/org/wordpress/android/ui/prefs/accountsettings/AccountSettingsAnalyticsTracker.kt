@@ -2,13 +2,13 @@ package org.wordpress.android.ui.prefs.accountsettings
 
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.SETTINGS_DID_CHANGE
-import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsAction.EMAIL_CHANGE
-import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsAction.PASSWORD_CHANGE
-import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsAction.PRIMARY_SITE_CHANGE
-import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsAction.USERNAME_CHANGE
-import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsAction.USERNAME_CHANGE_SCREEN_DISMISSED
-import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsAction.USERNAME_CHANGE_SCREEN_DISPLAYED
-import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsAction.WEB_ADDRESS_CHANGE
+import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsEvent.EMAIL_CHANGED
+import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsEvent.PASSWORD_CHANGED
+import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsEvent.PRIMARY_SITE_CHANGED
+import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsEvent.USERNAME_CHANGED
+import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsEvent.USERNAME_CHANGE_SCREEN_DISMISSED
+import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsEvent.USERNAME_CHANGE_SCREEN_DISPLAYED
+import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsEvent.WEB_ADDRESS_CHANGED
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
 
@@ -18,20 +18,20 @@ private const val TRACK_PROPERTY_FIELD_NAME = "field_name"
 private const val TRACK_PROPERTY_PAGE = "page"
 private const val TRACK_PROPERTY_PAGE_ACCOUNT_SETTINGS = "account_settings"
 
-enum class AccountSettingsAction(val trackProperty: String? = null) {
-    EMAIL_CHANGE("email"),
-    PRIMARY_SITE_CHANGE("primary_site"),
-    WEB_ADDRESS_CHANGE("web_address"),
-    PASSWORD_CHANGE("password"),
-    USERNAME_CHANGE("username"),
+enum class AccountSettingsEvent(val trackProperty: String? = null) {
+    EMAIL_CHANGED("email"),
+    PRIMARY_SITE_CHANGED("primary_site"),
+    WEB_ADDRESS_CHANGED("web_address"),
+    PASSWORD_CHANGED("password"),
+    USERNAME_CHANGED("username"),
     USERNAME_CHANGE_SCREEN_DISPLAYED,
     USERNAME_CHANGE_SCREEN_DISMISSED
 }
 
 class AccountSettingsAnalyticsTracker @Inject constructor(private val analyticsTracker: AnalyticsTrackerWrapper) {
-    fun track(action: AccountSettingsAction) {
+    fun track(action: AccountSettingsEvent) {
         when (action) {
-            EMAIL_CHANGE, PRIMARY_SITE_CHANGE, WEB_ADDRESS_CHANGE, PASSWORD_CHANGE, USERNAME_CHANGE
+            EMAIL_CHANGED, PRIMARY_SITE_CHANGED, WEB_ADDRESS_CHANGED, PASSWORD_CHANGED, USERNAME_CHANGED
             -> action.trackProperty?.let { trackSettingsDidChange(it) }
             USERNAME_CHANGE_SCREEN_DISMISSED -> trackUserNameChangeScreen(Stat.CHANGE_USERNAME_DISMISSED)
             USERNAME_CHANGE_SCREEN_DISPLAYED -> trackUserNameChangeScreen(Stat.CHANGE_USERNAME_DISPLAYED)

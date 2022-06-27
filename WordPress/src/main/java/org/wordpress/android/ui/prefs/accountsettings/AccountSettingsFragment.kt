@@ -28,13 +28,13 @@ import org.wordpress.android.ui.prefs.EditTextPreferenceWithValidation.Validatio
 import org.wordpress.android.ui.prefs.EditTextPreferenceWithValidation.ValidationType.PASSWORD
 import org.wordpress.android.ui.prefs.EditTextPreferenceWithValidation.ValidationType.URL
 import org.wordpress.android.ui.prefs.PreferenceFragmentLifeCycleOwner
-import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsAction.EMAIL_CHANGE
-import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsAction.PASSWORD_CHANGE
-import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsAction.PRIMARY_SITE_CHANGE
-import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsAction.USERNAME_CHANGE
-import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsAction.USERNAME_CHANGE_SCREEN_DISMISSED
-import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsAction.USERNAME_CHANGE_SCREEN_DISPLAYED
-import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsAction.WEB_ADDRESS_CHANGE
+import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsEvent.EMAIL_CHANGED
+import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsEvent.PASSWORD_CHANGED
+import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsEvent.PRIMARY_SITE_CHANGED
+import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsEvent.USERNAME_CHANGED
+import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsEvent.USERNAME_CHANGE_SCREEN_DISMISSED
+import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsEvent.USERNAME_CHANGE_SCREEN_DISPLAYED
+import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsEvent.WEB_ADDRESS_CHANGED
 import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel.AccountSettingsUiState
 import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel.ChangePasswordSettingsUiState
 import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel.EmailSettingsUiState
@@ -256,7 +256,7 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
             val onUserNameConfirmed = { result: Bundle? ->
                 result?.getString(BaseUsernameChangerFullScreenDialogFragment.RESULT_USERNAME)?.let {
                     viewModel.onUsernameChangeConfirmedFromServer(it)
-                    analyticsTracker.track(USERNAME_CHANGE)
+                    analyticsTracker.track(USERNAME_CHANGED)
                 }
             }
             navigationHandler.showUsernameChangerScreen(
@@ -275,23 +275,23 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
 
     @Deprecated("Deprecated")
     override fun onPreferenceChange(preference: Preference, newValue: Any): Boolean {
-        var action: AccountSettingsAction? = null
+        var action: AccountSettingsEvent? = null
         when (preference) {
             emailPreference -> {
                 viewModel.onEmailChanged(newValue.toString())
-                action = EMAIL_CHANGE
+                action = EMAIL_CHANGED
             }
             primarySitePreference -> {
                 viewModel.onPrimarySiteChanged(newValue.toString().toLong())
-                action = PRIMARY_SITE_CHANGE
+                action = PRIMARY_SITE_CHANGED
             }
             webAddressPreference -> {
                 viewModel.onWebAddressChanged(newValue.toString())
-                action = WEB_ADDRESS_CHANGE
+                action = WEB_ADDRESS_CHANGED
             }
             changePasswordPreference -> {
                 viewModel.onPasswordChanged(newValue.toString())
-                action = PASSWORD_CHANGE
+                action = PASSWORD_CHANGED
             }
         }
         if (!preference.summary.toString().equals(newValue.toString(), ignoreCase = true)) {
