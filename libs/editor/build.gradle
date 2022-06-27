@@ -65,7 +65,6 @@ dependencies {
     implementation 'org.apache.commons:commons-lang3:3.5'
     implementation 'com.android.volley:volley:1.1.1'
     implementation "org.wordpress:utils:$wordPressUtilsVersion"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$gradle.ext.kotlinVersion"
     api ("$gradle.ext.aztecAndroidAztecPath") {
         exclude group: "com.android.volley"
         exclude group: 'org.wordpress', module: 'utils'
@@ -95,7 +94,6 @@ dependencies {
     implementation "$rootProject.gradle.ext.gutenbergMobileBinaryPath:$rootProject.ext.gutenbergMobileVersion"
 
     // Required Aztec dependencies (they should be included but Jitpack seems to be stripping these out)
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$gradle.ext.kotlinVersion"
     implementation "org.jsoup:jsoup:1.10.3"
 
     implementation 'com.google.code.gson:gson:2.6.2'
