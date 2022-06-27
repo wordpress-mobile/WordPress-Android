@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-06-16 13:54:08+0000
+Translation-Revision-Date: 2022-06-24 12:30:40+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: fr
@@ -19,6 +19,7 @@ Language: fr
     <string name="stats_follower_types_pie_chart_total_label">Totaux</string>
     <string name="stats_referrers_pie_chart_others">Autres</string>
     <string name="stats_referrers_pie_chart_search">Rechercher</string>
+    <string name="stats_referrers_pie_chart_wordpress">WordPress</string>
     <string name="stats_referrers_pie_chart_total_label">Vues</string>
     <string name="stats_action_card_schedule_post_button_label">Planifier</string>
     <string name="stats_action_card_schedule_post_message">✍️Planifiez la publication de vos contenus au meilleur moment à partir de vos brouillons.</string>

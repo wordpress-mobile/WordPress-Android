@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-06-16 11:54:09+0000
+Translation-Revision-Date: 2022-06-24 12:31:52+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.1
 Language: ru
@@ -19,6 +19,7 @@ Language: ru
     <string name="stats_follower_types_pie_chart_total_label">Всего</string>
     <string name="stats_referrers_pie_chart_others">Другие</string>
     <string name="stats_referrers_pie_chart_search">Поиск</string>
+    <string name="stats_referrers_pie_chart_wordpress">WordPress</string>
     <string name="stats_referrers_pie_chart_total_label">Просмотры</string>
     <string name="stats_action_card_schedule_post_button_label">Запланировать</string>
     <string name="stats_action_card_schedule_post_message">✍️ Запланируйте публикацию записи на самое подходящее время.</string>

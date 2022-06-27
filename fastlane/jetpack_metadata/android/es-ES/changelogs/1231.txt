@@ -1,4 +1,0 @@
-20,0:
-- La tarjeta de inicio rápido y los recorridos con los próximos pasos se adaptan a los nuevos diseños de los sitios web ya existentes.
-- Inserta imágenes de otros sitios web mediante la opción “Insertar desde una URL” de la aplicación.
-- Obtén más contexto mediante tu lector de pantalla gracias a las mejoras de accesibilidad que hemos aplicado en el editor de bloques.

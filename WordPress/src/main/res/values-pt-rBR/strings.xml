@@ -1,11 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-06-10 14:52:22+0000
+Translation-Revision-Date: 2022-06-24 12:33:08+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: pt_BR
 -->
 <resources>
+    <string name="blogging_prompts_onboarding_prompts_loading">As sugestões de publicação estão sendo carregadas. Aguarde um momento e tente novamente.</string>
+    <string name="hpp_bottom_helper_text">Não consegue decidir? Você pode mudar o tema a qualquer momento.</string>
+    <string name="hpp_recommended_default_vertical">Blogs</string>
+    <string name="hpp_recommended_subtitle">Escolhido para você</string>
+    <string name="hpp_recommended_title">Melhor para %s</string>
+    <string name="hpp_preview_tapped_theme">Visualizar tema %s</string>
+    <string name="hpp_title">Escolha um tema</string>
+    <string name="my_site_blogging_prompt_card_skipped_snackbar">Sugestão de publicação do dia ignorada</string>
+    <string name="my_site_blogging_prompt_card_menu_learn_more">Saiba mais</string>
+    <string name="my_site_blogging_prompt_card_attribution_dayone">De </string>
+    <string name="stats_follower_types_pie_chart_total_label">Totais</string>
+    <string name="stats_referrers_pie_chart_others">Outros</string>
+    <string name="stats_referrers_pie_chart_search">Pesquisa</string>
+    <string name="stats_referrers_pie_chart_wordpress">WordPress</string>
+    <string name="stats_referrers_pie_chart_total_label">Visualizações</string>
+    <string name="stats_action_card_schedule_post_button_label">Agendar</string>
+    <string name="stats_action_card_schedule_post_message">✍️ Agende a publicação do seu conteúdo em rascunho para o melhor momento.</string>
+    <string name="stats_action_card_schedule_post_title">Agende seu post</string>
+    <string name="stats_action_card_blogging_reminders_button_label">Definir lembretes</string>
+    <string name="stats_action_card_blogging_reminders_message">💡 Configure o lembrete de publicar com frequência para manter seus leitores engajados e atrair novos visitantes.</string>
+    <string name="stats_action_card_blogging_reminders_title">Configure seus lembretes de publicação</string>
+    <string name="stats_action_card_grow_audience_button_label">Confira o curso</string>
+    <string name="stats_action_card_grow_audience_message">💡 Temos aulas fáceis de entender sobre como expandir seu blog, ensinadas pelos melhores blogueiros.</string>
+    <string name="stats_action_card_grow_audience_title">Amplie seu público</string>
     <string name="gutenberg_native_you_can_also_rearrange_blocks_by_tapping_a_block_and_then_tapping">Você pode reorganizar os blocos tocando em um deles e, em seguida, nas setas para cima e para baixo que aparecem no canto inferior esquerdo do bloco para movê-lo na direção indicada.</string>
     <string name="gutenberg_native_image_file_not_found">Arquivo de imagem não encontrado.</string>
     <string name="gutenberg_native_drag_drop_makes_rearranging_blocks_a_breeze_press_and_hold_on_a_b">Arraste e solte um bloco para reorganizá-lo com facilidade. Mantenha pressionado e o arraste para outro lugar. Então solte.</string>
@@ -863,6 +887,7 @@ Language: pt_BR
     <string name="label_done_button">Concluído</string>
     <string name="label_next_button">Seguinte</string>
     <string name="delete_button_alt">Excluir</string>
+    <string name="hpp_choose_error">Ocorreu um erro durante a seleção do tema.</string>
     <string name="hpp_retry_error">Verifique sua conexão com a internet e tente novamente.</string>
     <string name="hpp_error_subtitle">Toque em tentar novamente quando estiver online.</string>
     <string name="hpp_error_title">Modelos não estão disponíveis off-line</string>

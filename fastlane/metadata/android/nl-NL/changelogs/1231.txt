@@ -1,4 +1,0 @@
-20.0:
-- De snelstartkaart en Volgende stappen-rondleidingen komen overeen met de nieuwe ontwerpen van bestaande sites.
-- Voeg afbeeldingen in van andere sites door middel van de optie “Invoegen via URL” in de app.
-- Krijg meer context via je schermreader met verbeteringen aan de toegankelijkheid van de blokeditor.

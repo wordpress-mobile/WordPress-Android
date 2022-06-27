@@ -1,4 +1,0 @@
-20.0
-- O cartão Início rápido e os tours de próximas etapas combinam com os novos designs para sites existentes.
-- Inserção de imagens de outros sites usando a opção "Inserir a partir da URL" no aplicativo.
-- Mais contexto lido pelo leitor de tela graças às melhorias na acessibilidade do editor de blocos.
