@@ -38,7 +38,6 @@ private val RESPONDENTS = listOf(
         "http://avatar3.url"
 )
 
-/* ktlint-disable max-line-length */
 @RunWith(MockitoJUnitRunner::class)
 class BloggingPromptCardBuilderTest : BaseUnitTest() {
     private lateinit var builder: BloggingPromptCardBuilder
