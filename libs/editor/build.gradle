@@ -94,7 +94,7 @@ dependencies {
     implementation "$rootProject.gradle.ext.gutenbergMobileBinaryPath:$rootProject.ext.gutenbergMobileVersion"
 
     // Required Aztec dependencies (they should be included but Jitpack seems to be stripping these out)
-    implementation "org.jsoup:jsoup:1.10.3"
+    implementation "org.jsoup:jsoup:1.15.1"
 
     implementation 'com.google.code.gson:gson:2.6.2'
 
