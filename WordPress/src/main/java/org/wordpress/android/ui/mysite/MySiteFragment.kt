@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.mysite
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -34,6 +35,7 @@ import org.wordpress.android.ui.mysite.tabs.MySiteTabFragment
 import org.wordpress.android.ui.mysite.tabs.MySiteTabsAdapter
 import org.wordpress.android.ui.posts.QuickStartPromptDialogFragment.QuickStartPromptClickInterface
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.util.experiments.ABNTestExperiment
 import org.wordpress.android.util.extensions.setVisible
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.BLAVATAR
@@ -49,6 +51,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     @Inject lateinit var uiHelpers: UiHelpers
     @Inject lateinit var meGravatarLoader: MeGravatarLoader
     @Inject lateinit var imageManager: ImageManager
+    @Inject lateinit var abnTestExperiment: ABNTestExperiment
     private lateinit var viewModel: MySiteViewModel
 
     private var binding: MySiteFragmentBinding? = null
@@ -75,6 +78,16 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             setupContentViews()
             setupObservers()
         }
+
+        view.setBackgroundColor(
+                when {
+                    abnTestExperiment.isRedVariant -> Color.RED
+                    abnTestExperiment.isGreenVariant -> Color.GREEN
+                    abnTestExperiment.isBlueVariant -> Color.BLUE
+                    abnTestExperiment.isControl -> Color.YELLOW
+                    else -> Color.BLACK // should never be the case
+                }
+        )
     }
 
     private fun initSoftKeyboard() {
