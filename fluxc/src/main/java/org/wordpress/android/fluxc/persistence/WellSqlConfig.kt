@@ -30,7 +30,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 177
+        return 178
     }
 
     override fun getDbName(): String {
@@ -1872,6 +1872,9 @@ open class WellSqlConfig : DefaultWellConfig {
                 176 -> migrate(version) {
                     db.execSQL("DELETE FROM QuickStartTaskModel WHERE TASK_NAME='edit_homepage' " +
                         "AND TASK_TYPE='customize';")
+                }
+                177 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
+                    db.execSQL("ALTER TABLE WCSettingsModel ADD COUPONS_ENABLED BOOLEAN NOT NULL")
                 }
             }
         }
