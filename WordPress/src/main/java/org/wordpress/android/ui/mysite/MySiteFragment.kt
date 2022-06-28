@@ -53,9 +53,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
     private var binding: MySiteFragmentBinding? = null
     private var siteTitle: String? = null
-    private var tabLayoutMediator: TabLayoutMediator? = null
-    private val isTabMediatorAttached: Boolean
-        get() = tabLayoutMediator?.isAttached == true
 
     private val viewPagerCallback = object : ViewPager2.OnPageChangeCallback() {
         override fun onPageSelected(position: Int) {
@@ -146,8 +143,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     }
 
     private fun MySiteFragmentBinding.setupViewPager() {
-        val adapter = MySiteTabsAdapter(this@MySiteFragment, viewModel.orderedTabTypes)
-        viewPager.adapter = adapter
         viewPager.registerOnPageChangeCallback(viewPagerCallback)
     }
 
@@ -170,9 +165,8 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             if (quickStartScrollPosition == -1) {
                 appbarMain.setExpanded(true, true)
                 quickStartScrollPosition = 0
-            } else {
-                appbarMain.setExpanded(false, true)
             }
+            if (quickStartScrollPosition > 0) appbarMain.setExpanded(false, true)
             binding?.viewPager?.getCurrentFragment()?.handleScrollTo(quickStartScrollPosition)
         }
         viewModel.onTrackWithTabSource.observeEvent(viewLifecycleOwner) {
@@ -228,6 +222,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         }
         siteInfoContainer.title.text = siteInfoHeader.title
         quickStartTitleFocusPoint.setVisibleOrGone(siteInfoHeader.showTitleFocusPoint)
+        quickStartSubTitleFocusPoint.setVisibleOrGone(siteInfoHeader.showSubtitleFocusPoint)
         siteInfoContainer.subtitle.text = siteInfoHeader.url
         siteInfoContainer.subtitle.setOnClickListener { siteInfoHeader.onUrlClick.click() }
         switchSite.setOnClickListener { siteInfoHeader.onSwitchSiteClick.click() }
@@ -266,13 +261,15 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         header.visibility = if (visibility) View.VISIBLE else View.INVISIBLE
     }
 
-    private fun MySiteFragmentBinding.attachTabLayoutMediator(state: TabsUiState) {
-        tabLayoutMediator = TabLayoutMediator(tabLayout, viewPager, MySiteTabConfigurationStrategy(state.tabUiStates))
-        tabLayoutMediator?.attach()
+    private fun MySiteFragmentBinding.updateViewPagerAdapterAndMediatorIfNeeded(state: TabsUiState) {
+        if (viewPager.adapter == null || state.shouldUpdateViewPager) {
+            viewPager.adapter = MySiteTabsAdapter(this@MySiteFragment, state.tabUiStates)
+            TabLayoutMediator(tabLayout, viewPager, MySiteTabConfigurationStrategy(state.tabUiStates)).attach()
+        }
     }
 
     private fun MySiteFragmentBinding.updateTabs(state: TabsUiState) {
-        if (!isTabMediatorAttached) attachTabLayoutMediator(state)
+        updateViewPagerAdapterAndMediatorIfNeeded(state)
         state.tabUiStates.forEachIndexed { index, tabUiState ->
             val tab = tabLayout.getTabAt(index) as TabLayout.Tab
             updateTab(tab, tabUiState)
@@ -283,7 +280,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         val customView = tab.customView ?: createTabCustomView(tab)
         with(customView) {
             val title = findViewById<TextView>(R.id.tab_label)
-            val quickStartFocusPoint = findViewById<QuickStartFocusPoint>(R.id.my_site_tab_quick_start_focus_point)
+            val quickStartFocusPoint = findViewById<QuickStartFocusPoint>(R.id.tab_quick_start_focus_point)
             title.text = uiHelpers.getTextOfUiString(requireContext(), tabUiState.label)
             quickStartFocusPoint?.setVisible(tabUiState.showQuickStartFocusPoint)
         }
@@ -291,10 +288,15 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
     private fun handleNavigationAction(action: SiteNavigationAction) = when (action) {
         is SiteNavigationAction.OpenMeScreen -> ActivityLauncher.viewMeActivityForResult(activity)
-        is SiteNavigationAction.AddNewSite -> SitePickerActivity.addSite(activity, action.hasAccessToken)
+        is SiteNavigationAction.AddNewSite -> SitePickerActivity.addSite(activity, action.hasAccessToken, action.source)
         else -> {
-            // Pass all other navigationAction on to the child fragment, so they can be handled properly
-            binding?.viewPager?.getCurrentFragment()?.handleNavigationAction(action)
+            /* Pass all other navigationAction on to the child fragment, so they can be handled properly.
+               Added brief delay before passing action to nested (view pager) tab fragments to give them time to get
+               created. */
+            view?.postDelayed({
+                binding?.viewPager?.getCurrentFragment()?.handleNavigationAction(action)
+            }, PASS_TO_TAB_FRAGMENT_DELAY)
+            Unit
         }
     }
 
@@ -314,7 +316,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
            real issue as we could only test it on an emulator, we added it to be safe in such cases. */
         view?.postDelayed({
             binding?.viewPager?.getCurrentFragment()?.onActivityResult(requestCode, resultCode, data)
-        }, PASS_ACTIVITY_RESULT_TO_TAB_FRAGMENT_DELAY)
+        }, PASS_TO_TAB_FRAGMENT_DELAY)
     }
 
     private fun ViewPager2.getCurrentFragment() =
@@ -322,7 +324,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
     private fun MySiteFragmentBinding.createTabCustomView(tab: TabLayout.Tab): View {
         val customView = LayoutInflater.from(context)
-                .inflate(R.layout.my_site_tab_custom_view, tabLayout, false)
+                .inflate(R.layout.tab_custom_view, tabLayout, false)
         tab.customView = customView
         return customView
     }
@@ -347,12 +349,10 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     override fun onDestroyView() {
         super.onDestroyView()
         binding = null
-        tabLayoutMediator?.detach()
-        tabLayoutMediator = null
     }
 
     companion object {
-        private const val PASS_ACTIVITY_RESULT_TO_TAB_FRAGMENT_DELAY = 300L
+        private const val PASS_TO_TAB_FRAGMENT_DELAY = 300L
         fun newInstance(): MySiteFragment {
             return MySiteFragment()
         }

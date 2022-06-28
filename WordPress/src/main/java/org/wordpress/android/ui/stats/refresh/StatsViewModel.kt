@@ -1,11 +1,15 @@
 package org.wordpress.android.ui.stats.refresh
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.launch
+import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
@@ -15,11 +19,17 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PERIOD_MONTHS
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PERIOD_WEEKS_ACCESSED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PERIOD_YEARS_ACCESSED
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
+import org.wordpress.android.fluxc.store.DEFAULT_INSIGHTS
+import org.wordpress.android.fluxc.store.JETPACK_DEFAULT_INSIGHTS
+import org.wordpress.android.fluxc.store.StatsStore
+import org.wordpress.android.fluxc.store.StatsStore.InsightType
+import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.push.NotificationType
 import org.wordpress.android.push.NotificationsProcessingService.ARG_NOTIFICATION_TYPE
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.stats.StatsTimeframe
 import org.wordpress.android.ui.stats.StatsTimeframe.DAY
 import org.wordpress.android.ui.stats.StatsTimeframe.MONTH
@@ -48,27 +58,34 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.MySiteDashboardTodaysStatsCardFeatureConfig
+import org.wordpress.android.util.config.StatsRevampV2FeatureConfig
 import org.wordpress.android.util.mapNullable
 import org.wordpress.android.util.mergeNotNull
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
+import java.io.Serializable
 import javax.inject.Inject
 import javax.inject.Named
 
 @Suppress("TooManyFunctions", "LongParameterList")
+@HiltViewModel
 class StatsViewModel
 @Inject constructor(
     @Named(LIST_STATS_USE_CASES) private val listUseCases: Map<StatsSection, BaseListUseCase>,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
+    @Named(BG_THREAD) private val defaultDispatcher: CoroutineDispatcher,
     private val selectedDateProvider: SelectedDateProvider,
     private val statsSectionManager: SelectedSectionManager,
+    private val appPrefsWrapper: AppPrefsWrapper,
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val statsSiteProvider: StatsSiteProvider,
+    private val statsStore: StatsStore,
     newsCardHandler: NewsCardHandler,
     private val statsModuleActivateUseCase: StatsModuleActivateUseCase,
     private val notificationsTracker: SystemNotificationsTracker,
-    private val todaysStatsCardFeatureConfig: MySiteDashboardTodaysStatsCardFeatureConfig
+    private val todaysStatsCardFeatureConfig: MySiteDashboardTodaysStatsCardFeatureConfig,
+    private val statsRevampV2FeatureConfig: StatsRevampV2FeatureConfig
 ) : ScopedViewModel(mainDispatcher) {
     private val _isRefreshing = MutableLiveData<Boolean>()
     val isRefreshing: LiveData<Boolean> = _isRefreshing
@@ -97,11 +114,10 @@ class StatsViewModel
         val localSiteId = intent.getIntExtra(WordPress.LOCAL_SITE_ID, 0)
 
         val launchedFrom = intent.getSerializableExtra(StatsActivity.ARG_LAUNCHED_FROM)
-        val launchedFromWidget = launchedFrom == StatsLaunchedFrom.STATS_WIDGET
         val initialTimeFrame = getInitialTimeFrame(intent)
         val initialSelectedPeriod = intent.getStringExtra(StatsActivity.INITIAL_SELECTED_PERIOD_KEY)
         val notificationType = intent.getSerializableExtra(ARG_NOTIFICATION_TYPE) as? NotificationType
-        start(localSiteId, launchedFromWidget, initialTimeFrame, initialSelectedPeriod, restart, notificationType)
+        start(localSiteId, launchedFrom, initialTimeFrame, initialSelectedPeriod, restart, notificationType)
     }
 
     fun onSaveInstanceState(outState: Bundle) {
@@ -128,9 +144,10 @@ class StatsViewModel
         }
     }
 
+    @Suppress("ComplexMethod")
     fun start(
         localSiteId: Int,
-        launchedFromWidget: Boolean,
+        launchedFrom: Serializable?,
         initialSection: StatsSection?,
         initialSelectedPeriod: String?,
         restart: Boolean,
@@ -158,7 +175,7 @@ class StatsViewModel
                 selectedDateProvider.setInitialSelectedPeriod(initialGranularity, initialSelectedPeriod)
             }
 
-            if (launchedFromWidget) {
+            if (launchedFrom == StatsLaunchedFrom.STATS_WIDGET) {
                 analyticsTracker.track(AnalyticsTracker.Stat.STATS_WIDGET_TAPPED, statsSiteProvider.siteModel)
             }
 
@@ -182,6 +199,40 @@ class StatsViewModel
                 }
             }
         }
+
+        if (BuildConfig.IS_JETPACK_APP && statsRevampV2FeatureConfig.isEnabled()) {
+            updateRevampedInsights()
+        }
+
+        if (launchedFrom == StatsLaunchedFrom.FEATURE_ANNOUNCEMENT) {
+            if (statsSectionManager.getSelectedSection() != INSIGHTS) statsSectionManager.setSelectedSection(INSIGHTS)
+        }
+    }
+
+    private fun updateRevampedInsights() {
+        val insightsUseCase = listUseCases[INSIGHTS]
+        insightsUseCase?.launch(defaultDispatcher) {
+            when (val insightTypes = statsStore.getAddedInsights(statsSiteProvider.siteModel)) {
+                JETPACK_DEFAULT_INSIGHTS -> {
+                    return@launch
+                }
+                DEFAULT_INSIGHTS -> {
+                    // Insights cards match the previous default set of cards,
+                    // switch it to show the new set of default cards
+                    statsStore.updateTypes(statsSiteProvider.siteModel, JETPACK_DEFAULT_INSIGHTS)
+                }
+                else -> {
+                    // Insights cards does not match the existing defaults,
+                    // the new set of default cards is added at the top of their list and preserve their additions
+                    val addedInsightTypes = insightTypes - DEFAULT_INSIGHTS.toSet()
+                    val updateInsightTypes: MutableSet<InsightType> = mutableSetOf()
+                    updateInsightTypes.addAll(JETPACK_DEFAULT_INSIGHTS)
+                    updateInsightTypes.addAll(addedInsightTypes)
+                    statsStore.updateTypes(statsSiteProvider.siteModel, updateInsightTypes.toList())
+                }
+            }
+            insightsUseCase.loadData()
+        }
     }
 
     private fun isStatsModuleEnabled() =
@@ -195,6 +246,7 @@ class StatsViewModel
         _isRefreshing.value = false
     }
 
+    @SuppressLint("NullSafeMutableLiveData")
     fun onPullToRefresh() {
         _showSnackbarMessage.value = null
         statsSiteProvider.clear()
@@ -243,6 +295,7 @@ class StatsViewModel
         }
     }
 
+    @SuppressLint("NullSafeMutableLiveData")
     override fun onCleared() {
         super.onCleared()
         _showSnackbarMessage.value = null

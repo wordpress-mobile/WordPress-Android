@@ -1,5 +1,8 @@
 package org.wordpress.android.viewmodel.pages
 
+import android.annotation.SuppressLint
+import android.content.ClipData
+import android.content.Context
 import android.content.Intent
 import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
@@ -35,6 +38,7 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.pages.PageItem.Action
 import org.wordpress.android.ui.pages.PageItem.Action.CANCEL_AUTO_UPLOAD
 import org.wordpress.android.ui.pages.PageItem.Action.COPY
+import org.wordpress.android.ui.pages.PageItem.Action.COPY_LINK
 import org.wordpress.android.ui.pages.PageItem.Action.DELETE_PERMANENTLY
 import org.wordpress.android.ui.pages.PageItem.Action.MOVE_TO_DRAFT
 import org.wordpress.android.ui.pages.PageItem.Action.MOVE_TO_TRASH
@@ -64,6 +68,7 @@ import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtils
+import org.wordpress.android.util.extensions.clipboardManager
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.helpers.DialogHolder
@@ -99,7 +104,7 @@ class PagesViewModel
     private val pageStore: PageStore,
     private val postStore: PostStore,
     private val dispatcher: Dispatcher,
-    private val actionPerfomer: ActionPerformer,
+    private val actionPerformer: ActionPerformer,
     private val networkUtils: NetworkUtilsWrapper,
     private val eventBusWrapper: EventBusWrapper,
     private val siteStore: SiteStore,
@@ -128,8 +133,8 @@ class PagesViewModel
     private val _pages = MutableLiveData<List<PageModel>>()
     val pages: LiveData<List<PageModel>> = _pages
 
-    private val _searchPages: MutableLiveData<SortedMap<PageListType, List<PageModel>>> = MutableLiveData()
-    val searchPages: LiveData<SortedMap<PageListType, List<PageModel>>> = _searchPages
+    private val _searchPages: MutableLiveData<SortedMap<PageListType, List<PageModel>>?> = MutableLiveData()
+    val searchPages: LiveData<SortedMap<PageListType, List<PageModel>>?> = _searchPages
 
     private val _createNewPage = SingleLiveEvent<Unit>()
     val createNewPage: LiveData<Unit> = _createNewPage
@@ -217,6 +222,7 @@ class PagesViewModel
         val post: PostModel,
         val previewType: RemotePreviewType
     )
+
     fun start(site: SiteModel) {
         // Check if VM is not already initialized
         if (_site == null) {
@@ -254,7 +260,7 @@ class PagesViewModel
     }
 
     override fun onCleared() {
-        actionPerfomer.onCleanup()
+        actionPerformer.onCleanup()
         pageListEventListener.onDestroy()
     }
 
@@ -279,7 +285,7 @@ class PagesViewModel
                     if (result.isError) {
                         _listState.setOnUi(ERROR)
                         showSnackbar(SnackbarMessageHolder(UiStringRes(R.string.error_refresh_pages)))
-                        AppLog.e(AppLog.T.PAGES, "An error occurred while fetching the Pages")
+                        AppLog.e(PAGES, "An error occurred while fetching the Pages")
                     } else {
                         _listState.setOnUi(DONE)
                     }
@@ -355,6 +361,7 @@ class PagesViewModel
         }
     }
 
+    @SuppressLint("NullSafeMutableLiveData")
     fun onSpecificPageRequested(remotePageId: Long) {
         if (isInitialized) {
             val page = pageMap[remotePageId]
@@ -392,19 +399,18 @@ class PagesViewModel
         val list = pageStore.search(site, searchQuery)
                 .groupBy { PageListType.fromPageStatus(it.status) }
 
-        return@withContext list.toSortedMap(
-                Comparator { previous, next ->
-                    when {
-                        previous == next -> 0
-                        previous == PUBLISHED -> -1
-                        next == PUBLISHED -> 1
-                        previous == DRAFTS -> -1
-                        next == DRAFTS -> 1
-                        previous == SCHEDULED -> -1
-                        next == SCHEDULED -> 1
-                        else -> throw IllegalArgumentException("Unexpected page type")
-                    }
-                })
+        return@withContext list.toSortedMap { previous, next ->
+            when {
+                previous == next -> 0
+                previous == PUBLISHED -> -1
+                next == PUBLISHED -> 1
+                previous == DRAFTS -> -1
+                next == DRAFTS -> 1
+                previous == SCHEDULED -> -1
+                next == SCHEDULED -> 1
+                else -> throw IllegalArgumentException("Unexpected page type")
+            }
+        }
     }
 
     fun onSearchExpanded(restorePreviousSearch: Boolean) {
@@ -430,7 +436,7 @@ class PagesViewModel
         }
     }
 
-    fun onMenuAction(action: Action, page: Page): Boolean {
+    fun onMenuAction(action: Action, page: Page, context: Context? = null): Boolean {
         when (action) {
             VIEW_PAGE -> previewPage(page)
             SET_PARENT -> setParent(page)
@@ -442,6 +448,7 @@ class PagesViewModel
             SET_AS_HOMEPAGE -> setHomepage(page.remoteId)
             SET_AS_POSTS_PAGE -> setPostsPage(page.remoteId)
             COPY -> onCopyPage(page)
+            COPY_LINK -> context?.let { copyPageLink(page, it) }
         }
         return true
     }
@@ -453,6 +460,7 @@ class PagesViewModel
     }
 
     private fun cancelPendingAutoUpload(pageId: LocalId) {
+        trackMenuSelectionEvent(CANCEL_AUTO_UPLOAD)
         val page = postStore.getPostByLocalPostId(pageId.value)
         val msgRes = UploadUtils.cancelPendingAutoUpload(page, dispatcher)
         _showSnackbarMessage.postValue(SnackbarMessageHolder(UiStringRes(msgRes)))
@@ -468,6 +476,8 @@ class PagesViewModel
 
     private fun setHomepage(homepageId: Long) {
         performIfNetworkAvailable {
+            trackMenuSelectionEvent(SET_AS_HOMEPAGE)
+
             if (site.showOnFront == PAGE.value) {
                 launch {
                     val result = siteOptionsStore.updatePageOnFront(
@@ -497,6 +507,8 @@ class PagesViewModel
 
     private fun setPostsPage(remoteId: Long) {
         performIfNetworkAvailable {
+            trackMenuSelectionEvent(SET_AS_POSTS_PAGE)
+
             if (site.showOnFront == PAGE.value) {
                 launch {
                     val result = siteOptionsStore.updatePageForPosts(
@@ -521,6 +533,29 @@ class PagesViewModel
                         )
                 )
             }
+        }
+    }
+
+    @Suppress("TooGenericExceptionCaught")
+    private fun copyPageLink(page: Page, context: Context) {
+        try {
+            // Get the link to the page
+            val pageLink = postStore.getPostByLocalPostId(page.localId).link
+            // Copy the link to the clipboard
+            context.clipboardManager?.setPrimaryClip(
+                    ClipData.newPlainText("${page.localId}", pageLink)
+            ) ?: throw NullPointerException("ClipboardManager is not supported on this device")
+
+            _showSnackbarMessage.postValue(
+                    SnackbarMessageHolder(UiStringRes(R.string.media_edit_copy_url_toast))
+            )
+        } catch (e: Throwable) {
+            /**
+             * Ignore any exceptions here as certain devices have bugs and will fail.
+             * See https://crrev.com/542cb9cfcc927295615809b0c99917b09a219d9f for more info.
+             */
+            AppLog.e(PAGES, e)
+            _showSnackbarMessage.postValue(SnackbarMessageHolder(UiStringRes(R.string.error)))
         }
     }
 
@@ -593,17 +628,23 @@ class PagesViewModel
     private fun trackMenuSelectionEvent(action: Action) {
         val menu = when (action) {
             VIEW_PAGE -> "view"
+            CANCEL_AUTO_UPLOAD -> "cancel_auto_upload"
             SET_PARENT -> "set_parent"
-            MOVE_TO_DRAFT -> "move_to_draft"
-            MOVE_TO_TRASH -> "move_to_bin"
+            SET_AS_HOMEPAGE -> "set_homepage"
+            SET_AS_POSTS_PAGE -> "set_posts_page"
             COPY -> "copy"
-            else -> return
+            PUBLISH_NOW -> "publish_now"
+            MOVE_TO_DRAFT -> "move_to_draft"
+            DELETE_PERMANENTLY -> "delete_permanently"
+            MOVE_TO_TRASH -> "move_to_bin"
+            COPY_LINK -> "copy_link"
         }
         val properties = mutableMapOf("option_name" to menu as Any)
         AnalyticsUtils.trackWithSiteDetails(PAGES_OPTIONS_PRESSED, site, properties)
     }
 
     private fun publishPageNow(remoteId: Long) {
+        trackMenuSelectionEvent(PUBLISH_NOW)
         _publishAction.value = pageMap[remoteId]
         launch(uiDispatcher) {
             delay(SCROLL_DELAY)
@@ -699,7 +740,7 @@ class PagesViewModel
 
         launch {
             _arePageActionsEnabled = false
-            actionPerfomer.performAction(action)
+            actionPerformer.performAction(action)
             _arePageActionsEnabled = true
         }
     }
@@ -718,6 +759,7 @@ class PagesViewModel
     }
 
     private fun deletePage(page: PageModel) {
+        trackMenuSelectionEvent(DELETE_PERMANENTLY)
         val action = PageAction(page.remoteId, DELETE) {
             pageMap = pageMap.filter { it.key != page.remoteId }
 
@@ -746,7 +788,7 @@ class PagesViewModel
         }
 
         launch {
-            actionPerfomer.performAction(action)
+            actionPerformer.performAction(action)
         }
     }
 
@@ -807,7 +849,7 @@ class PagesViewModel
 
                 launch {
                     _arePageActionsEnabled = false
-                    actionPerfomer.performAction(action)
+                    actionPerformer.performAction(action)
                     _arePageActionsEnabled = true
                 }
             }
@@ -890,6 +932,7 @@ class PagesViewModel
         site.isWPCom && site.hasCapabilityEditOthersPages
     }
 
+    @SuppressLint("NullSafeMutableLiveData")
     private fun updateViewStateTriggerPagerChange(
         isAuthorFilterVisible: Boolean? = null,
         authorFilterSelection: AuthorFilterSelection? = null,
@@ -989,6 +1032,7 @@ class PagesViewModel
         setValue(value)
     }
 
+    @SuppressLint("NullSafeMutableLiveData")
     private fun <T> MutableLiveData<T>.postOnUi(value: T) {
         val liveData = this
         launch {

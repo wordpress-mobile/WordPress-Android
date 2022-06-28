@@ -13,6 +13,7 @@ import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenI
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenNotifications
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenPages
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenPagesForSite
+import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenQRCodeAuthFlow
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenReader
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenStats
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenStatsForSite
@@ -21,6 +22,7 @@ import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenS
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.ShowSignInFlow
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.StartCreateSiteFlow
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.ViewPostInReader
+import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource.DEEP_LINK
 import org.wordpress.android.ui.stats.StatsTimeframe
 import org.wordpress.android.util.UriWrapper
 import javax.inject.Inject
@@ -31,7 +33,9 @@ class DeepLinkNavigator
     fun handleNavigationAction(navigateAction: NavigateAction, activity: AppCompatActivity) {
         when (navigateAction) {
             LoginForResult -> ActivityLauncher.loginForDeeplink(activity)
-            StartCreateSiteFlow -> ActivityLauncher.showMainActivityAndSiteCreationActivity(activity)
+            StartCreateSiteFlow -> {
+                ActivityLauncher.showMainActivityAndSiteCreationActivity(activity, DEEP_LINK)
+            }
             ShowSignInFlow -> ActivityLauncher.showSignInForResultWpComOnly(activity)
             OpenEditor -> ActivityLauncher.openEditorInNewStack(activity)
             is OpenEditorForSite -> ActivityLauncher.openEditorForSiteInNewStack(
@@ -69,6 +73,7 @@ class DeepLinkNavigator
             OpenNotifications -> ActivityLauncher.viewNotificationsInNewStack(activity)
             is OpenPagesForSite -> ActivityLauncher.viewPagesInNewStack(activity, navigateAction.site)
             OpenPages -> ActivityLauncher.viewPagesInNewStack(activity)
+            is OpenQRCodeAuthFlow -> ActivityLauncher.startQRCodeAuthFlowInNewStack(activity, navigateAction.uri)
         }
         if (navigateAction != LoginForResult) {
             activity.finish()
@@ -95,5 +100,6 @@ class DeepLinkNavigator
         object OpenNotifications : NavigateAction()
         data class OpenPagesForSite(val site: SiteModel) : NavigateAction()
         object OpenPages : NavigateAction()
+        data class OpenQRCodeAuthFlow(val uri: String) : NavigateAction()
     }
 }

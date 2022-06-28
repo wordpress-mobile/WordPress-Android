@@ -30,7 +30,7 @@ import org.wordpress.android.fluxc.store.SiteStore.SiteError
 import org.wordpress.android.fluxc.store.SiteStore.SiteErrorType.GENERIC_ERROR
 import org.wordpress.android.ui.layoutpicker.LayoutPickerUiState.Content
 import org.wordpress.android.ui.layoutpicker.LayoutPickerUiState.Error
-import org.wordpress.android.ui.layoutpicker.ThumbDimensionProvider
+import org.wordpress.android.ui.mlp.ModalLayoutPickerDimensionProvider
 import org.wordpress.android.ui.mlp.ModalLayoutPickerTracker
 import org.wordpress.android.ui.mlp.SupportedBlocks
 import org.wordpress.android.ui.mlp.SupportedBlocksProvider
@@ -58,7 +58,7 @@ class ModalLayoutPickerViewModelTest {
     @Mock lateinit var siteStore: SiteStore
     @Mock lateinit var selectedSiteRepository: SelectedSiteRepository
     @Mock lateinit var supportedBlocksProvider: SupportedBlocksProvider
-    @Mock lateinit var thumbDimensionProvider: ThumbDimensionProvider
+    @Mock lateinit var thumbDimensionProvider: ModalLayoutPickerDimensionProvider
     @Mock lateinit var displayUtilsWrapper: DisplayUtilsWrapper
     @Mock lateinit var networkUtils: NetworkUtilsWrapper
     @Mock lateinit var analyticsTracker: ModalLayoutPickerTracker

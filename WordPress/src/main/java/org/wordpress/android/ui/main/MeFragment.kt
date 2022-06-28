@@ -48,6 +48,7 @@ import org.wordpress.android.ui.accounts.HelpActivity.Origin.ME_SCREEN_HELP
 import org.wordpress.android.ui.main.MeViewModel.RecommendAppUiState
 import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
+import org.wordpress.android.ui.notifications.utils.NotificationsUtils
 import org.wordpress.android.ui.photopicker.MediaPickerConstants
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource
@@ -64,6 +65,7 @@ import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration.SHORT
 import org.wordpress.android.util.WPMediaUtils
+import org.wordpress.android.util.config.QRCodeAuthFlowFeatureConfig
 import org.wordpress.android.util.config.RecommendTheAppFeatureConfig
 import org.wordpress.android.util.config.UnifiedAboutFeatureConfig
 import org.wordpress.android.util.extensions.getColorFromAttribute
@@ -88,6 +90,7 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
     @Inject lateinit var recommendTheAppFeatureConfig: RecommendTheAppFeatureConfig
     @Inject lateinit var sequencer: SnackbarSequencer
     @Inject lateinit var unifiedAboutFeatureConfig: UnifiedAboutFeatureConfig
+    @Inject lateinit var qrCodeAuthFlowFeatureConfig: QRCodeAuthFlowFeatureConfig
     private lateinit var viewModel: MeViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -169,6 +172,16 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
             }
         }
 
+        if (qrCodeAuthFlowFeatureConfig.isEnabled() &&
+                BuildConfig.ENABLE_QRCODE_AUTH_FLOW &&
+                accountStore.hasAccessToken()) {
+            rowScanLoginCode.isVisible = true
+
+            rowScanLoginCode.setOnClickListener {
+                viewModel.showScanLoginCode()
+            }
+        }
+
         initRecommendUiState()
 
         viewModel.showUnifiedAbout.observeEvent(viewLifecycleOwner, {
@@ -187,6 +200,10 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
 
             manageRecommendUiState(it)
         })
+
+        viewModel.showScanLoginCode.observeEvent(viewLifecycleOwner) {
+            ActivityLauncher.startQRCodeAuthFlow(requireContext())
+        }
     }
 
     private fun MeFragmentBinding.setRecommendLoadingState(startShimmer: Boolean) {
@@ -379,7 +396,10 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
                 .setMessage(message)
                 .setPositiveButton(
                         R.string.signout
-                ) { _, _ -> signOutWordPressCom() }
+                ) { _, _ ->
+                    clearNotifications()
+                    signOutWordPressCom()
+                }
                 .setNegativeButton(R.string.cancel, null)
                 .setCancelable(true)
                 .create().show()
@@ -387,6 +407,10 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
 
     private fun signOutWordPressCom() {
         viewModel.signOutWordPress(requireActivity().application as WordPress)
+    }
+
+    private fun clearNotifications() {
+        NotificationsUtils.cancelAllNotifications(requireActivity())
     }
 
     private fun showDisconnectDialog() {

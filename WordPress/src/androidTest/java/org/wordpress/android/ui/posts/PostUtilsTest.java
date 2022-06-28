@@ -1,8 +1,16 @@
 package org.wordpress.android.ui.posts;
 
-import android.test.AndroidTestCase;
+import org.junit.Test;
 
-public class PostUtilsTest extends AndroidTestCase {
+import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertFalse;
+import static junit.framework.TestCase.assertTrue;
+
+import dagger.hilt.android.testing.HiltAndroidTest;
+
+@HiltAndroidTest
+public class PostUtilsTest {
+    @Test
     public void testCollapseShortcodes() {
         String postContent = "Text before first gallery [gallery number=\"one\"]"
                              + " text between galleries"
@@ -19,12 +27,14 @@ public class PostUtilsTest extends AndroidTestCase {
         assertTrue(collapsedContent.contains("[unknown shortcode]"));
     }
 
+    @Test
     public void testShortcodeSpaces() {
         String postContent = "[   gallery number=\"arst\"     /]";
         String collapsedContent = PostUtils.collapseShortcodes(postContent);
         assertEquals("[gallery]", collapsedContent);
     }
 
+    @Test
     public void testOpeningClosingShortcode() {
         String postContent = "[recipe difficulty=\"easy\"]Put your recipe here.[/recipe]";
         String collapsedContent = PostUtils.collapseShortcodes(postContent);

@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.posts
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import androidx.lifecycle.Lifecycle
@@ -144,8 +145,8 @@ class PostListMainViewModel @Inject constructor(
     private val _isSearchExpanded = MutableLiveData<Boolean>()
     val isSearchExpanded: LiveData<Boolean> = _isSearchExpanded
 
-    private val _searchQuery = MutableLiveData<String>()
-    val searchQuery: LiveData<String> = _searchQuery
+    private val _searchQuery = MutableLiveData<String?>()
+    val searchQuery: LiveData<String?> = _searchQuery
 
     private val _onFabClicked = MutableLiveData<Event<Unit>>()
     val onFabClicked: LiveData<Event<Unit>> = _onFabClicked
@@ -507,6 +508,7 @@ class PostListMainViewModel @Inject constructor(
     /**
      * Only the non-null variables will be changed in the current state
      */
+    @SuppressLint("NullSafeMutableLiveData")
     private fun updateViewStateTriggerPagerChange(
         isFabVisible: Boolean? = null,
         isAuthorFilterVisible: Boolean? = null,

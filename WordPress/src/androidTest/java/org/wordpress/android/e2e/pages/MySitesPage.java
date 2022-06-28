@@ -8,6 +8,7 @@ import androidx.test.espresso.ViewInteraction;
 
 import org.hamcrest.Matcher;
 import org.wordpress.android.R;
+import org.wordpress.android.support.WPSupportUtils;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -86,6 +87,11 @@ public class MySitesPage {
         waitForElementToBeDisplayedWithoutFailure(
                 onView(withId(R.id.tabLayout))
         );
+
+        // Stats are opened with the last selected tab active (or `Insights` by default)
+        // Since we don't know what was the last used tab, we're using a "dumb" wait
+        // instead of the conditional wait (e.g. waiting for a certain tab element to appear).
+        WPSupportUtils.sleep();
 
         return new StatsPage();
     }

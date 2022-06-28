@@ -14,7 +14,7 @@ platform :android do
   #####################################################################################
   desc 'Creates a new release branch from the current trunk'
   lane :code_freeze do |options|
-    old_version = android_codefreeze_prechecks(skip_confirm: options[:skip_confirm])
+    android_codefreeze_prechecks(skip_confirm: options[:skip_confirm])
 
     android_bump_version_release()
     new_version = android_get_app_version()
@@ -88,6 +88,8 @@ platform :android do
     update_frozen_strings_for_translation
     download_translations()
     android_bump_version_beta()
+    return unless UI.confirm('Ready for CI build')
+
     new_version = android_get_app_version()
     trigger_release_build(branch_to_build: "release/#{new_version}")
   end

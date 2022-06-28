@@ -3,6 +3,7 @@ package org.wordpress.android.ui.stats.refresh.utils
 import androidx.annotation.StringRes
 import org.wordpress.android.R
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem.Bar
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.LineChartItem.Line
 import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.text.DecimalFormat
@@ -163,6 +164,52 @@ class StatsUtils
             contentDescriptions.add(contentDescription)
         }
         return contentDescriptions
+    }
+
+    fun getLineChartEntryContentDescriptions(
+        @StringRes entryType: Int,
+        entries: List<Line>
+    ): List<String> {
+        val contentDescriptions = mutableListOf<String>()
+        entries.forEachIndexed { index, bar ->
+            val contentDescription = resourceProvider.getString(
+                    R.string.stats_bar_chart_accessibility_entry,
+                    bar.label,
+                    bar.value,
+                    resourceProvider.getString(entryType)
+            )
+            contentDescriptions.add(contentDescription)
+        }
+        return contentDescriptions
+    }
+
+    fun buildChange(
+        previousValue: Long?,
+        value: Long,
+        positive: Boolean,
+        isFormattedNumber: Boolean
+    ): String? {
+        return previousValue?.let {
+            val difference = value - previousValue
+            val percentage = when (previousValue) {
+                value -> "0"
+                0L -> "∞"
+                else -> mapLongToString((difference * 100 / previousValue), isFormattedNumber)
+            }
+            val formattedDifference = mapLongToString(difference, isFormattedNumber)
+            if (positive) {
+                resourceProvider.getString(R.string.stats_traffic_increase, formattedDifference, percentage)
+            } else {
+                resourceProvider.getString(R.string.stats_traffic_change, formattedDifference, percentage)
+            }
+        }
+    }
+
+    private fun mapLongToString(value: Long, isFormattedNumber: Boolean): String {
+        return when (isFormattedNumber) {
+            true -> toFormattedString(value)
+            false -> value.toString()
+        }
     }
 }
 

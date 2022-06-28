@@ -9,7 +9,6 @@ import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickActionsCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickActionsCardBuilderParams
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -50,30 +49,21 @@ class QuickActionsCardBuilderTest : BaseUnitTest() {
     }
 
     private fun buildQuickActionsCard(
-        showPages: Boolean = true,
-        showStatsFocusPoint: Boolean = false,
-        showPagesFocusPoint: Boolean = false
+        showPages: Boolean = true
     ): QuickActionsCard {
         setShowPages(showPages)
         return builder.build(
-                QuickActionsCardBuilderParams(
+            QuickActionsCardBuilderParams(
                 siteModel,
-                setActiveTask(showStatsFocusPoint, showPagesFocusPoint),
                 onStatsClick,
                 onPagesClick,
                 onPostsClick,
                 onMediaClick
-        ))
-    }
-    private fun setShowPages(showPages: Boolean) {
-        whenever(siteModel.isSelfHostedAdmin).thenReturn(showPages)
+            )
+        )
     }
 
-    private fun setActiveTask(showStats: Boolean, showPages: Boolean): QuickStartTask? {
-        return when {
-            showStats -> QuickStartTask.CHECK_STATS
-            showPages -> QuickStartTask.EDIT_HOMEPAGE
-            else -> null
-        }
+    private fun setShowPages(showPages: Boolean) {
+        whenever(siteModel.isSelfHostedAdmin).thenReturn(showPages)
     }
 }

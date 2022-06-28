@@ -1,5 +1,0 @@
-19.5:
-- Kami menyesuaikan teks error saat mengunggah di blok unggah media.
-- Animasi GIF kini dilengkapi lencana GIF.
-- Perubahan pengaturan blok pada daftar berurutan kini ditampilkan di editor.
-- Anda dapat menonaktifkan pemberitahuan Ringkasan Mingguan untuk semua situs di Info Aplikasi.

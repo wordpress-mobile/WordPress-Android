@@ -6,7 +6,9 @@ import androidx.lifecycle.Observer
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.argThat
+import com.nhaarman.mockitokotlin2.atLeastOnce
 import com.nhaarman.mockitokotlin2.clearInvocations
+import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
@@ -19,12 +21,17 @@ import org.mockito.ArgumentCaptor
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleEmpty
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleGeneral
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleStepCount
+import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.CreateSiteState
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.CreateSiteState.SiteCreationCompleted
+import org.wordpress.android.ui.sitecreation.usecases.FetchHomePageLayoutsUseCase
+import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.wizard.WizardManager
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.helpers.DialogHolder
@@ -51,6 +58,10 @@ class SiteCreationMainVMTest {
     @Mock lateinit var savedInstanceState: Bundle
     @Mock lateinit var wizardManager: WizardManager<SiteCreationStep>
     @Mock lateinit var siteCreationStep: SiteCreationStep
+    @Mock lateinit var networkUtils: NetworkUtilsWrapper
+    @Mock lateinit var dispatcher: Dispatcher
+    @Mock lateinit var fetchHomePageLayoutsUseCase: FetchHomePageLayoutsUseCase
+    @Mock lateinit var imageManager: ImageManager
     private val wizardManagerNavigatorLiveData = SingleLiveEvent<SiteCreationStep>()
 
     private lateinit var viewModel: SiteCreationMainVM
@@ -62,8 +73,8 @@ class SiteCreationMainVMTest {
             wizardManagerNavigatorLiveData.value = siteCreationStep
             Unit
         }
-        viewModel = SiteCreationMainVM(tracker, wizardManager)
-        viewModel.start(null)
+        viewModel = getNewViewModel()
+        viewModel.start(null, SiteCreationSource.UNSPECIFIED)
         viewModel.navigationTargetObservable.observeForever(navigationTargetObserver)
         viewModel.wizardFinishedObservable.observeForever(wizardFinishedObserver)
         viewModel.dialogActionObservable.observeForever(dialogActionsObserver)
@@ -88,7 +99,7 @@ class SiteCreationMainVMTest {
 
     @Test
     fun wizardFinishedInvokedOnSitePreviewCompleted() {
-        val state = SiteCreationCompleted(LOCAL_SITE_ID)
+        val state = SiteCreationCompleted(LOCAL_SITE_ID, false)
         viewModel.onSitePreviewScreenFinished(state)
 
         val captor = ArgumentCaptor.forClass(CreateSiteState::class.java)
@@ -197,8 +208,8 @@ class SiteCreationMainVMTest {
                 .thenReturn(expectedState)
 
         // we need to create a new instance of the VM as the `viewModel` has already been started in setUp()
-        val newViewModel = SiteCreationMainVM(tracker, wizardManager)
-        newViewModel.start(savedInstanceState)
+        val newViewModel = getNewViewModel()
+        newViewModel.start(savedInstanceState, SiteCreationSource.UNSPECIFIED)
 
         /* we need to simulate navigation to the next step (Domain selection, see comment above) as
         wizardManager.showNextStep() isn't invoked when the VM is restored from a savedInstanceState. */
@@ -218,12 +229,45 @@ class SiteCreationMainVMTest {
                 .thenReturn(SiteCreationState())
 
         // we need to create a new instance of the VM as the `viewModel` has already been started in setUp()
-        val newViewModel = SiteCreationMainVM(tracker, wizardManager)
-        newViewModel.start(savedInstanceState)
+        val newViewModel = getNewViewModel()
+        newViewModel.start(savedInstanceState, SiteCreationSource.UNSPECIFIED)
 
         verify(wizardManager).setCurrentStepIndex(index)
     }
 
+    @Test
+    fun `given null instance state, when start, then site creation accessed including source is tracked`() {
+        val newViewModel = getNewViewModel()
+        newViewModel.start(null, SiteCreationSource.UNSPECIFIED)
+
+        // Because setup is run before every test, we expect this to be tracked twice
+        // Once on the first instantiation
+        // Once on the new start
+        verify(tracker, atLeastOnce()).trackSiteCreationAccessed(SiteCreationSource.UNSPECIFIED)
+    }
+
+    @Test
+    fun `given instance state is not null, when start, then site creation accessed is not tracked`() {
+        val expectedState = SiteCreationState(segmentId = SEGMENT_ID)
+        whenever(savedInstanceState.getParcelable<SiteCreationState>(KEY_SITE_CREATION_STATE))
+                .thenReturn(expectedState)
+
+        val newViewModel = getNewViewModel()
+        newViewModel.start(savedInstanceState, SiteCreationSource.UNSPECIFIED)
+
+        // Because setup is run before every test, we expect this to be tracked on that first instance only
+        verify(tracker, times(1)).trackSiteCreationAccessed(SiteCreationSource.UNSPECIFIED)
+    }
+
     private fun currentWizardState(vm: SiteCreationMainVM) =
             vm.navigationTargetObservable.lastEvent!!.wizardState
+
+    private fun getNewViewModel() = SiteCreationMainVM(
+            tracker,
+            wizardManager,
+            networkUtils,
+            dispatcher,
+            fetchHomePageLayoutsUseCase,
+            imageManager
+    )
 }

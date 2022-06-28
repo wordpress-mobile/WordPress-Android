@@ -1,9 +1,18 @@
+plugins {
+    id "com.automattic.android.fetchstyle"
+    id "io.gitlab.arturbosch.detekt"
+    id "androidx.navigation.safeargs.kotlin" apply false
+    id "com.android.library" apply false
+    id 'com.google.gms.google-services' apply false
+    id "org.jetbrains.kotlin.plugin.parcelize" apply false
+}
+
 ext {
-    wordPressUtilsVersion = 'trunk-39557b2153d1b0c0e7e3fd3a4fa32e6099bf50a2'
-    wordPressLoginVersion = 'trunk-d4f9830a9e2d2cbf7e1edec2886af687363b0980'
-    gutenbergMobileVersion = 'v1.73.0'
-    storiesVersion = 'trunk-0b727f84440048e39d5e4835e2a84c67d043d225'
-    aboutAutomatticVersion = 'trunk-99c45a25f4493f1ff19f1b88f718438dc7b3297a'
+    wordPressUtilsVersion = '2.5.0'
+    wordPressLoginVersion = '0.14.0'
+    gutenbergMobileVersion = 'v1.78.1'
+    storiesVersion = '1.3.0'
+    aboutAutomatticVersion = '0.0.5'
 
     minSdkVersion = 24
     compileSdkVersion = 31
@@ -12,87 +21,48 @@ ext {
     coroutinesVersion = '1.5.2'
     androidxWorkVersion = "2.7.0"
 
-    daggerVersion = '2.41'
-    fluxCVersion = 'trunk-cbf724da3c1a6a63247a7eae7fe0a5f07249ad9c'
+    fluxCVersion = '1.46.0'
 
     appCompatVersion = '1.0.2'
-    coreVersion = '1.3.2'
-    lifecycleVersion = '2.2.0'
+    androidxCoreVersion = '1.3.2'
+    androidxArchCoreVersion = '2.0.0'
+    fragmentVersion = '1.4.1'
     constraintLayoutVersion = '1.1.3'
     materialVersion = '1.2.1'
     preferenceVersion = '1.1.0'
     swipeToRefresh = '1.1.0'
     uCropVersion = '2.2.4'
-    lifecycleVersion = '2.2.0'
+    lifecycleVersion = '2.4.1'
     tracksVersion = '2.2.0'
     roomVersion = '2.3.0'
 
     coreLibraryDesugaringVersion = '1.1.5'
 
-    exoPlayerVersion = '2.9.3'
+    exoPlayerVersion = '2.13.3'
 
     composeVersion = '1.1.1'
 
     // testing
     jUnitVersion = '4.13'
-    androidxTestVersion = '1.4.0'
     jUnitExtVersion = '1.1.3'
-    androidxArchCoreVersion = '2.0.0'
+    androidxTestCoreVersion = '1.4.0'
     assertJVersion = '3.11.1'
     espressoVersion = '3.4.0'
     mockitoCoreVersion = "3.3.3"
     nhaarmanMockitoVersion = "2.2.0"
 }
 
-buildscript {
-    ext.kotlinVersion = '1.6.10'
-    ext.navComponentVersion = '2.3.5'
-    ext.detektVersion = '1.15.0'
-
-    repositories {
-        maven {
-            url 'https://a8c-libs.s3.amazonaws.com/android'
-            content {
-                includeGroup "com.automattic.android"
-            }
-        }
-        maven { url "https://plugins.gradle.org/m2/" }
-        google()
-    }
-
-    dependencies {
-        classpath 'com.android.tools.build:gradle:7.1.1'
-        classpath 'com.automattic.android:fetchstyle:1.1'
-        classpath "org.jetbrains.kotlin:kotlin-allopen:$kotlinVersion"
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
-        classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlinVersion"
-        classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$navComponentVersion"
-        classpath "io.gitlab.arturbosch.detekt:detekt-gradle-plugin:$detektVersion"
-    }
-}
-
-apply plugin: 'com.automattic.android.fetchstyle'
-
 allprojects {
     apply plugin: 'checkstyle'
-    apply plugin: 'io.gitlab.arturbosch.detekt'
 
     repositories {
         google()
         mavenCentral()
-        maven { url "https://jitpack.io" }
         maven {
             url "https://a8c-libs.s3.amazonaws.com/android/jcenter-mirror"
             content {
                 includeVersion "com.android.volley", "volley", "1.1.1"
                 includeVersion "com.automattic", "rest", "1.0.8"
-                includeVersion "com.google.android.exoplayer", "exoplayer-core", "2.9.3"
-                includeVersion "com.google.android.exoplayer", "exoplayer-dash", "2.9.3"
-                includeVersion "com.google.android.exoplayer", "exoplayer-hls", "2.9.3"
-                includeVersion "com.google.android.exoplayer", "exoplayer-smoothstreaming", "2.9.3"
-                includeVersion "com.google.android.exoplayer", "exoplayer-ui", "2.9.3"
-                includeVersion "com.google.android.exoplayer", "exoplayer", "2.9.3"
-                includeVersion "com.google.android.exoplayer", "extension-okhttp", "2.9.3"
                 includeVersion "com.google.android", "flexbox", "2.0.1"
                 includeVersion "org.wordpress", "emailchecker2", "1.1.0"
                 includeVersion "org.wordpress", "persistentedittext", "1.0.2"
@@ -102,11 +72,8 @@ allprojects {
                 includeVersion "org.jetbrains.kotlinx", "kotlinx-html-jvm", "0.7.2"
                 // Required for lintWordpressVanillaRelease
                 includeVersion "com.jraska", "falcon", "2.1.1"
-                // Required for ktlint
-                includeVersion "com.andreapivetta.kolor", "kolor", "0.0.2"
             }
         }
-
         flatDir {
             dirs '../aars'
         }
@@ -124,6 +91,7 @@ allprojects {
     }
 
     detekt {
+        toolVersion = gradle.ext.detektVersion
         config = files("${project.rootDir}/config/detekt/detekt.yml")
         autoCorrect = false
         buildUponDefaultConfig = false
@@ -142,47 +110,6 @@ allprojects {
         kotlinOptions {
             jvmTarget = "1.8"
         }
-    }
-}
-
-subprojects {
-
-    configurations {
-        ktlint
-    }
-
-    dependencies {
-        ktlint 'com.github.shyiko:ktlint:0.29.0'
-    }
-
-    tasks.register("ktlint", JavaExec) {
-        main = "com.github.shyiko.ktlint.Main"
-        classpath = configurations.ktlint
-        args "src/**/*.kt"
-    }
-
-    tasks.register("ktlintFormat", JavaExec) {
-        main = "com.github.shyiko.ktlint.Main"
-        classpath = configurations.ktlint
-        args "-F", "src/**/*.kt"
-    }
-
-    tasks.register("ciktlint", JavaExec) {
-        main = "com.github.shyiko.ktlint.Main"
-        classpath = configurations.ktlint
-        args "src/**/*.kt", "--reporter=checkstyle,output=${buildDir}/ktlint.xml"
-    }
-}
-
-buildScan {
-    // Always run Gradle scan on CI builds
-    if (System.getenv('CI')) {
-        termsOfServiceUrl = 'https://gradle.com/terms-of-service'
-        termsOfServiceAgree = 'yes'
-        tag 'CI'
-        publishAlways()
-        // Otherwise CI might shut down before it's uploaded
-        uploadInBackground = false
     }
 }
 

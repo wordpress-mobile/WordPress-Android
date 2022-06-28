@@ -16,7 +16,7 @@ class ThreadedCommentsUtils @Inject constructor(
         val context = contextProvider.getContext()
 
         // calculate the max width of comment content
-        val displayWidth = DisplayUtils.getDisplayPixelWidth(context)
+        val displayWidth = DisplayUtils.getWindowPixelWidth(context)
         val cardMargin: Int = context.resources.getDimensionPixelSize(R.dimen.reader_card_margin)
         val contentPadding: Int = context.resources.getDimensionPixelSize(R.dimen.reader_card_content_padding)
         val mediumMargin: Int = context.resources.getDimensionPixelSize(R.dimen.margin_medium)

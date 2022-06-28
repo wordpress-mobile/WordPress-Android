@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/WordPress.CardView.Unelevated"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/my_site_card_row_padding"
+        android:paddingTop="@dimen/my_site_card_row_top_padding"
+        android:paddingEnd="@dimen/my_site_card_row_padding"
+        android:paddingBottom="@dimen/margin_small">
+
+        <ImageView
+            android:id="@+id/title_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:importantForAccessibility="no"
+            android:src="@drawable/ic_outline_lightbulb_white_24dp"
+            android:tint="?attr/colorOnSurface"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/card_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_small_medium"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="@string/my_site_blogging_prompt_card_title"
+            android:textAlignment="viewStart"
+            android:textAppearance="?attr/textAppearanceSubtitle1"
+            app:layout_constraintEnd_toStartOf="@+id/blogging_prompt_card_menu"
+            app:layout_constraintStart_toEndOf="@+id/title_icon"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/blogging_prompt_card_menu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:contentDescription="@string/content_description_more"
+            android:focusable="true"
+            android:src="@drawable/ic_more_vert_white_24dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="?attr/wpColorOnSurfaceMedium" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/prompt_content"
+            style="@style/MySiteCardBloggingPromptTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_extra_large"
+            android:textAlignment="center"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/card_title"
+            tools:text="Cast the movie of your life." />
+
+        <LinearLayout
+            android:id="@+id/attribution_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal|center_vertical"
+            android:orientation="horizontal"
+            android:paddingTop="@dimen/margin_medium"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@+id/prompt_content"
+            tools:visibility="visible">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="16dp"
+                android:importantForAccessibility="no"
+                android:src="@drawable/ic_dayone_24dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_small"
+                android:text="@string/my_site_blogging_prompt_card_attribution_dayone"
+                android:textAppearance="?attr/textAppearanceCaption" />
+
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/answered_users_recycler"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_large"
+            android:orientation="horizontal"
+            app:layoutManager="com.google.android.flexbox.FlexboxLayoutManager"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/attribution_container"
+            tools:itemCount="3"
+            tools:listitem="@layout/avatar_item" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/answer_button"
+            style="@style/MySiteCardAnswerButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/my_site_blogging_prompt_card_answer_prompt"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/answered_users_recycler" />
+
+        <LinearLayout
+            android:id="@+id/answered_prompt_controls"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/answered_users_recycler">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/answered_button"
+                style="@style/MySiteCardAnsweredButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/my_site_blogging_prompt_card_answered_prompt"
+                android:textColor="@color/success_emphasis_medium_selector" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/share_button"
+                style="@style/MySiteCardAnsweredButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/my_site_blogging_prompt_card_share"
+                android:visibility="gone" />
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>

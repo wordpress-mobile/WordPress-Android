@@ -9,19 +9,22 @@ import org.wordpress.android.util.config.MySiteDefaultTabExperimentVariationDash
 import javax.inject.Inject
 
 class MySiteDefaultTabExperiment @Inject constructor(
-    private val mySiteDefaultTabExperimentFeatureConfig: MySiteDefaultTabExperimentFeatureConfig,
+    mySiteDefaultTabExperimentFeatureConfig: MySiteDefaultTabExperimentFeatureConfig,
     private val mySiteDefaultTabExperimentVariationDashboardFeatureConfig:
     MySiteDefaultTabExperimentVariationDashboardFeatureConfig,
-    private val mySiteDashboardTabsFeatureConfig: MySiteDashboardTabsFeatureConfig,
+    mySiteDashboardTabsFeatureConfig: MySiteDashboardTabsFeatureConfig,
     private val appPrefsWrapper: AppPrefsWrapper,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
 ) {
+    private val isMySiteDashboardTabsFeatureConfigEnabled = mySiteDashboardTabsFeatureConfig.isEnabled()
+    private val isMySiteDefaultTabExperimentFeatureConfigEnabled = mySiteDefaultTabExperimentFeatureConfig.isEnabled()
     fun checkAndSetVariantIfNeeded() {
         if (isExperimentRunning()) {
-            if (isVariantNotAssigned()) {
+            if (!isVariantAssigned()) {
+                setVariantAssigned()
                 when (mySiteDefaultTabExperimentVariationDashboardFeatureConfig.isDashboardVariant()) {
-                    true -> setExperimentVariant(MySiteTabExperimentVariant.DASHBOARD)
-                    false -> setExperimentVariant(MySiteTabExperimentVariant.SITE_MENU)
+                    true -> setExperimentVariant(MySiteTabType.DASHBOARD.trackingLabel)
+                    false -> setExperimentVariant(MySiteTabType.SITE_MENU.trackingLabel)
                 }
                 analyticsTrackerWrapper.setInjectExperimentProperties(getVariantMapForTracking())
                 analyticsTrackerWrapper.track(Stat.MY_SITE_DEFAULT_TAB_EXPERIMENT_VARIANT_ASSIGNED)
@@ -35,41 +38,37 @@ class MySiteDefaultTabExperiment @Inject constructor(
         }
     }
 
-    private fun isExperimentRunning() =
-            mySiteDashboardTabsFeatureConfig.isEnabled() && mySiteDefaultTabExperimentFeatureConfig.isEnabled()
-
-    private fun isVariantNotAssigned() =
-            appPrefsWrapper.getMySiteDefaultTabExperimentVariant() == MySiteTabExperimentVariant.NONEXISTENT.label
-
-    private fun setExperimentVariant(variant: MySiteTabExperimentVariant) {
-        appPrefsWrapper.setMySiteDefaultTabExperimentVariant(variant.label)
+    fun changeExperimentVariantAssignmentIfNeeded(toVariant: String) {
+        if (isExperimentRunning() && isVariantAssigned()) {
+            setExperimentVariant(toVariant)
+            analyticsTrackerWrapper.setInjectExperimentProperties(getVariantMapForTracking())
+            analyticsTrackerWrapper.track(Stat.MY_SITE_DEFAULT_TAB_EXPERIMENT_VARIANT_ASSIGNED)
+        }
     }
 
-    private fun getVariantMapForTracking() =
-            mapOf(DEFAULT_TAB_EXPERIMENT to appPrefsWrapper.getMySiteDefaultTabExperimentVariant())
+    fun isExperimentRunning() =
+            isMySiteDashboardTabsFeatureConfigEnabled && isMySiteDefaultTabExperimentFeatureConfigEnabled
+
+    fun isVariantAssigned() = appPrefsWrapper.isMySiteDefaultTabExperimentVariantAssigned()
+
+    private fun setVariantAssigned() = appPrefsWrapper.setMySiteDefaultTabExperimentVariantAssigned()
+
+    private fun setExperimentVariant(variant: String) =
+            appPrefsWrapper.setInitialScreenFromMySiteDefaultTabExperimentVariant(variant)
+
+    private fun getVariantMapForTracking() = mapOf(DEFAULT_TAB_EXPERIMENT to getVariantTrackingLabel())
+
+    private fun getVariantTrackingLabel(): String {
+        if (!isVariantAssigned()) return NONEXISTENT
+        return if (appPrefsWrapper.getMySiteInitialScreen() == MySiteTabType.DASHBOARD.label) {
+            MySiteTabType.DASHBOARD.trackingLabel
+        } else {
+            MySiteTabType.SITE_MENU.trackingLabel
+        }
+    }
 
     companion object {
         private const val DEFAULT_TAB_EXPERIMENT = "default_tab_experiment"
-    }
-}
-enum class MySiteTabExperimentVariant(val label: String) {
-    NONEXISTENT(MySiteTabExperimentVariant.VARIANT_NONEXISTENT),
-    DASHBOARD(MySiteTabExperimentVariant.VARIANT_DASHBOARD),
-    SITE_MENU(MySiteTabExperimentVariant.VARIANT_SITE_MENU);
-
-    override fun toString() = label
-
-    companion object {
-        private const val VARIANT_NONEXISTENT = "nonexistent"
-        private const val VARIANT_DASHBOARD = "dashboard"
-        private const val VARIANT_SITE_MENU = "site_menu"
-
-        @JvmStatic
-        fun fromString(label: String) = when {
-            NONEXISTENT.label == label -> NONEXISTENT
-            DASHBOARD.label == label -> DASHBOARD
-            SITE_MENU.label == label -> SITE_MENU
-            else -> NONEXISTENT
-        }
+        private const val NONEXISTENT = "nonexistent"
     }
 }

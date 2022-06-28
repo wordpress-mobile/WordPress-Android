@@ -4,24 +4,16 @@ import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.DynamicCardType
+import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CHECK_STATS
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CREATE_SITE
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EDIT_HOMEPAGE
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.ENABLE_POST_SHARING
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EXPLORE_PLANS
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.FOLLOW_SITE
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.PUBLISH_POST
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.REVIEW_PAGES
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPDATE_SITE_TITLE
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPLOAD_SITE_ICON
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.VIEW_SITE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.CUSTOMIZE
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GET_TO_KNOW_APP
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GROW
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.UNKNOWN
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.DynamicCard.QuickStartDynamicCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.DynamicCard.QuickStartDynamicCard.QuickStartTaskCard
+import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuFragment.DynamicCardMenuModel
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
@@ -31,7 +23,9 @@ import javax.inject.Inject
 import kotlin.math.roundToInt
 
 class QuickStartItemBuilder
-@Inject constructor() {
+@Inject constructor(
+    val quickStartRepository: QuickStartRepository
+) {
     fun build(
         quickStartCategory: QuickStartCategory,
         pinnedDynamicCardType: DynamicCardType?,
@@ -65,6 +59,7 @@ class QuickStartItemBuilder
         return when (this) {
             CUSTOMIZE -> DynamicCardType.CUSTOMIZE_QUICK_START
             GROW -> DynamicCardType.GROW_QUICK_START
+            GET_TO_KNOW_APP -> DynamicCardType.GET_TO_KNOW_APP_QUICK_START
             UNKNOWN -> throw IllegalArgumentException("Unexpected quick start type")
         }
     }
@@ -78,6 +73,7 @@ class QuickStartItemBuilder
         return when (taskType) {
             CUSTOMIZE -> R.color.green_20
             GROW -> R.color.orange_40
+            GET_TO_KNOW_APP -> R.color.green_20
             UNKNOWN -> throw IllegalArgumentException("Unexpected quick start type")
         }
     }
@@ -86,6 +82,7 @@ class QuickStartItemBuilder
         return when (taskType) {
             CUSTOMIZE -> R.string.quick_start_sites_type_customize
             GROW -> R.string.quick_start_sites_type_grow
+            GET_TO_KNOW_APP -> R.string.quick_start_sites_type_get_to_know_app
             UNKNOWN -> throw IllegalArgumentException("Unexpected quick start type")
         }
     }
@@ -95,32 +92,39 @@ class QuickStartItemBuilder
         accentColor: Int,
         onQuickStartTaskClick: (QuickStartTask) -> Unit
     ): QuickStartTaskCard {
+        val task = quickStartRepository.quickStartType.getTaskFromString(this.taskString)
         return QuickStartTaskCard(
-                this.task,
+                task,
                 UiStringRes(this.titleResId),
                 UiStringRes(this.subtitleResId),
-                getIllustration(this.task),
+                getIllustration(task),
                 accentColor,
                 done,
-                ListItemInteraction.create(this.task, onQuickStartTaskClick)
+                ListItemInteraction.create(task, onQuickStartTaskClick)
         )
     }
 
     @DrawableRes
     private fun getIllustration(task: QuickStartTask): Int {
-        return when (task) {
-            UPDATE_SITE_TITLE -> R.drawable.img_illustration_quick_start_task_set_site_title
-            UPLOAD_SITE_ICON -> R.drawable.img_illustration_quick_start_task_edit_site_icon
-            VIEW_SITE -> R.drawable.img_illustration_quick_start_task_visit_your_site
-            ENABLE_POST_SHARING -> R.drawable.img_illustration_quick_start_task_enable_post_sharing
-            PUBLISH_POST -> R.drawable.img_illustration_quick_start_task_publish_post
-            FOLLOW_SITE -> R.drawable.img_illustration_quick_start_task_follow_other_sites
-            CHECK_STATS -> R.drawable.img_illustration_quick_start_task_check_site_stats
-            EDIT_HOMEPAGE -> R.drawable.img_illustration_quick_start_task_edit_your_homepage
-            REVIEW_PAGES -> R.drawable.img_illustration_quick_start_task_review_site_pages
-            EXPLORE_PLANS -> R.drawable.img_illustration_quick_start_task_explore_plans
-            CREATE_SITE -> R.drawable.img_illustration_quick_start_task_create_site
-            QuickStartTask.UNKNOWN -> R.drawable.img_illustration_quick_start_task_placeholder
+        return when (task.string) {
+            QuickStartStore.QUICK_START_UPDATE_SITE_TITLE_LABEL ->
+                R.drawable.img_illustration_quick_start_task_set_site_title
+            QuickStartStore.QUICK_START_UPLOAD_SITE_ICON_LABEL ->
+                R.drawable.img_illustration_quick_start_task_edit_site_icon
+            QuickStartStore.QUICK_START_VIEW_SITE_LABEL -> R.drawable.img_illustration_quick_start_task_visit_your_site
+            QuickStartStore.QUICK_START_ENABLE_POST_SHARING_LABEL ->
+                R.drawable.img_illustration_quick_start_task_enable_post_sharing
+            QuickStartStore.QUICK_START_PUBLISH_POST_LABEL -> R.drawable.img_illustration_quick_start_task_publish_post
+            QuickStartStore.QUICK_START_FOLLOW_SITE_LABEL ->
+                R.drawable.img_illustration_quick_start_task_follow_other_sites
+            QuickStartStore.QUICK_START_CHECK_STATS_LABEL ->
+                R.drawable.img_illustration_quick_start_task_check_site_stats
+            QuickStartStore.QUICK_START_REVIEW_PAGES_LABEL ->
+                R.drawable.img_illustration_quick_start_task_review_site_pages
+            QuickStartStore.QUICK_START_CREATE_SITE_LABEL -> R.drawable.img_illustration_quick_start_task_create_site
+            QuickStartStore.QUICK_START_CHECK_NOTIFIATIONS_LABEL ->
+                R.drawable.img_illustration_quick_start_task_placeholder
+            else -> R.drawable.img_illustration_quick_start_task_placeholder
         }
     }
 }

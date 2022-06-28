@@ -179,6 +179,7 @@ sealed class BloggingRemindersViewHolder<T : ViewBinding>(protected val binding:
         fun onBind(item: PromptSwitch) = with(binding) {
             includePromptSwitch.isChecked = item.isToggled
             includePromptSwitch.setOnCheckedChangeListener { _, _ -> item.onClick.click() }
+            promptHelpButtonContainer.setOnClickListener { item.onHelpClick.click() }
         }
     }
 }

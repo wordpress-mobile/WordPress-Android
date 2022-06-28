@@ -208,7 +208,7 @@ public class ReaderVideoUtils {
         String url = "https://vimeo.com/api/v2/video/" + id + ".json";
         JsonArrayRequest request = new JsonArrayRequest(url, listener, errorListener);
 
-        WordPress.sRequestQueue.add(request);
+        WordPress.requestQueue.add(request);
     }
 
     public interface FetchVideoThumbnailListener {

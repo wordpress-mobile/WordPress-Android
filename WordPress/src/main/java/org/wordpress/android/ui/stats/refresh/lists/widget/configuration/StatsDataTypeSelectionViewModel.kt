@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.lists.widget.configuration
 
+import android.annotation.SuppressLint
 import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -31,6 +32,7 @@ class StatsDataTypeSelectionViewModel
 
     private var appWidgetId: Int = -1
 
+    @SuppressLint("NullSafeMutableLiveData")
     fun start(
         appWidgetId: Int
     ) {

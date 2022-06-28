@@ -1,5 +1,12 @@
-# NOTE: When updating the `promo_config` keys of those locale, ensure it matches the list
-# of locales enabled in `.circleci/config.yml` for the `raw-screenshots` job
+# NOTE: When updating this list, ensure the locales having `promo_config: {…}` matches the list of locales
+# used in the `raw-screenshots` job (see `.circleci/config.yml`) by Firebase Test Lab
+#
+# NOTE: The `promo_config` hash is used by `fastlane/helpers/android_promo_screenshot_helper.rb` and accepts keys `:text_size` and `:font`.
+# When set to `false`, the locale will just not be included during the screenshot generation (see `lanes/screenshots.rb`).
+# This setup is likely to disappear soon (we currently don't provide any custom text size and font for any local anyway) when we will:
+#  1. Get rid of the local `fastlane/helpers/*` from this repo, to ultimately switch to use the `release-toolkit`'s action instead
+#  2. Switch to use the [future `LocaleHelper` once it lands](https://github.com/wordpress-mobile/release-toolkit/pull/296)
+#
 ALL_LOCALES = [
   # First are the locales which are used for *both* downloading the `strings.xml` files from GlotPress *and* for generating the release notes XML files.
   { glotpress: 'ar', android: 'ar',    google_play: 'ar',     promo_config: {} },
@@ -26,37 +33,33 @@ ALL_LOCALES = [
   { glotpress: 'zh-tw', android: 'zh-rTW', google_play: 'zh-TW',  promo_config: {} },
   # From this point are locales that are still used for downloading `strings.xml`… but not for release notes – and thus don't need a `google_play` key. See `RELEASE_NOTES_LOCALES` below.
   { glotpress: 'az', android: 'az', promo_config: false },
-  { glotpress: 'el', android: 'el', promo_config: false },
-  { glotpress: 'es-mx', android: 'es-rMX', promo_config: false },
-  { glotpress: 'es-cl', android: 'es-rCL', promo_config: false },
-  { glotpress: 'gd', android: 'gd', promo_config: false },
-  { glotpress: 'hi', android: 'hi', promo_config: false },
-  { glotpress: 'hu', android: 'hu', promo_config: false },
-  { glotpress: 'nb', android: 'nb', promo_config: false },
-  { glotpress: 'pl', android: 'pl', promo_config: false },
-  { glotpress: 'th', android: 'th', promo_config: false },
-  { glotpress: 'uz', android: 'uz', promo_config: false },
-  { glotpress: 'zh-tw', android: 'zh-rHK', promo_config: false },
-  { glotpress: 'eu', android: 'eu', promo_config: false },
-  { glotpress: 'ro', android: 'ro', promo_config: false },
-  { glotpress: 'mk', android: 'mk', promo_config: false },
-  { glotpress: 'en-au', android: 'en-rAU', promo_config: false },
-  { glotpress: 'sr', android: 'sr', promo_config: false },
-  { glotpress: 'sk', android: 'sk', promo_config: false },
+  { glotpress: 'bg', android: 'bg', promo_config: false },
+  { glotpress: 'cs', android: 'cs', promo_config: false },
   { glotpress: 'cy', android: 'cy', promo_config: false },
   { glotpress: 'da', android: 'da', promo_config: false },
-  { glotpress: 'bg', android: 'bg', promo_config: false },
-  { glotpress: 'sq', android: 'sq', promo_config: false },
-  { glotpress: 'hr', android: 'hr', promo_config: false },
-  { glotpress: 'cs', android: 'cs', promo_config: false },
-  { glotpress: 'pt-br', android: 'pt-rBR', promo_config: false },
+  { glotpress: 'el', android: 'el', promo_config: false },
+  { glotpress: 'en-au', android: 'en-rAU', promo_config: false },
   { glotpress: 'en-ca', android: 'en-rCA', promo_config: false },
-  { glotpress: 'ms', android: 'ms', promo_config: false },
-  { glotpress: 'es-ve', android: 'es-rVE', promo_config: false },
-  { glotpress: 'gl', android: 'gl', promo_config: false },
-  { glotpress: 'is', android: 'is' },
+  { glotpress: 'es-cl', android: 'es-rCL', promo_config: false },
   { glotpress: 'es-co', android: 'es-rCO', promo_config: false },
+  { glotpress: 'es-mx', android: 'es-rMX', promo_config: false },
+  { glotpress: 'es-ve', android: 'es-rVE', promo_config: false },
+  { glotpress: 'eu', android: 'eu', promo_config: false },
+  { glotpress: 'gd', android: 'gd', promo_config: false },
+  { glotpress: 'gl', android: 'gl', promo_config: false },
+  { glotpress: 'hi', android: 'hi', promo_config: false },
+  { glotpress: 'hr', android: 'hr', promo_config: false },
+  { glotpress: 'hu', android: 'hu', promo_config: false },
+  { glotpress: 'is', android: 'is' },
   { glotpress: 'kmr', android: 'kmr', promo_config: false },
+  { glotpress: 'mk', android: 'mk', promo_config: false },
+  { glotpress: 'ms', android: 'ms', promo_config: false },
+  { glotpress: 'nb', android: 'nb', promo_config: false },
+  { glotpress: 'ro', android: 'ro', promo_config: false },
+  { glotpress: 'sk', android: 'sk', promo_config: false },
+  { glotpress: 'sq', android: 'sq', promo_config: false },
+  { glotpress: 'uz', android: 'uz', promo_config: false },
+  { glotpress: 'zh-tw', android: 'zh-rHK', promo_config: false },
 ].freeze
 
 RELEASE_NOTES_LOCALES = ALL_LOCALES
@@ -120,10 +123,11 @@ platform :android do
       [:"play_store_screenshot_#{n}", File.join(metadata_folder, "screenshot_#{n}.txt")]
     end.to_h)
 
-    android_update_metadata_source(
-      po_file_path: File.join(metadata_folder, 'PlayStoreStrings.po'),
-      source_files: files,
-      release_version: options[:version]
+    update_po_file_for_metadata_localization(
+      po_path: File.join(metadata_folder, 'PlayStoreStrings.po'),
+      sources: files,
+      release_version: options[:version],
+      commit_message: "Update WordPress `PlayStoreStrings.po` for version #{options[:version]}"
     )
   end
 
@@ -151,14 +155,15 @@ platform :android do
       'app-store-name': File.join(metadata_folder, 'title.txt'),
     }
 
-    android_update_metadata_source(
-      po_file_path: metadata_folder = File.join(metadata_folder, 'PlayStoreStrings.po'),
-      source_files: files,
-      release_version: options[:version]
+    update_po_file_for_metadata_localization(
+      po_path: metadata_folder = File.join(metadata_folder, 'PlayStoreStrings.po'),
+      sources: files,
+      release_version: options[:version],
+      commit_message: "Update Jetpack `PlayStoreStrings.po` for version #{options[:version]}"
     )
   end
 
-  # Updates the metadata (from `fastlane/{metadata|jetpack_metadata}/android/*/*.txt`) in the PlayStore (Main store listing).
+  # Updates the metadata in the Play Store (Main store listing) from the content of `fastlane/{metadata|jetpack_metadata}/android/*/*.txt` files
   #
   # @option [String] app The app to update the metadata for. Mandatory. Must be one of `wordpress` or `jetpack`.
   #
@@ -169,9 +174,6 @@ platform :android do
     metadata_dir = File.join('fastlane', APP_SPECIFIC_VALUES[app.to_sym][:metadata_dir], 'android')
     version_code = android_get_release_version['code']
 
-    # TODO: This is currently a separate lane so we can invoke it separately, but if after a couple of sprints we see that it works well,
-    #       it we would make sense to remove the lane and instead directly use `skip_upload_metadata: (options[:track] != 'production')`
-    #       in the `upload_build_to_play_store` lane? (especially if we do the same for `skip_upload_changelogs` and get rid of `android_create_xml_release_notes`)
     upload_to_play_store(
       package_name: package_name,
       track: 'production',
@@ -180,7 +182,6 @@ platform :android do
       skip_upload_apk: true,
       skip_upload_aab: true,
       skip_upload_metadata: false,
-      # TODO: enable changelogs upload once we drop the `android_create_xml_release_notes` action call (and drop the step in release scenario)
       skip_upload_changelogs: true,
       skip_upload_images: true,
       skip_upload_screenshots: true,
@@ -229,9 +230,9 @@ platform :android do
       download_path: download_path
     )
 
-    # TODO: Remove this call after a few sprints of validating that that the `skip_upload_metadata: options[:track] != 'production'` recently added to `upload_build_to_play_store` lane works well
-    android_create_xml_release_notes(download_path: download_path, build_number: "#{options[:build_number]}", locales: RELEASE_NOTES_LOCALES)
-    sh("git add #{download_path} && git commit -m \"Update WordPress metadata translations for #{options[:version]}\" && git push origin HEAD")
+    git_add(path: download_path)
+    git_commit(path: download_path, message: "Update WordPress metadata translations for #{options[:version]}", allow_nothing_to_commit: true)
+    push_to_git_remote
   end
 
   desc "Downloads Jetpack's translated metadata from GlotPress"
@@ -264,10 +265,9 @@ platform :android do
       File.join(download_path, 'en-US')
     )
 
-    # TODO: Remove this call after a few sprints of validating that that the `skip_upload_metadata: options[:track] != 'production'` recently added to `upload_build_to_play_store` lane works well
-    locales_including_enUS = [['en-gb', 'en-US']] + JP_RELEASE_NOTES_LOCALES # first item (GlotPress locale) unused for this action; second param = google_play locale
-    android_create_xml_release_notes(download_path: download_path, build_number: "#{options[:build_number]}", locales: locales_including_enUS)
-    sh("git add #{download_path} && git commit -m \"Update Jetpack metadata translations for #{options[:version]}\" && git push origin HEAD")
+    git_add(path: download_path)
+    git_commit(path: download_path, message: "Update Jetpack metadata translations for #{options[:version]}", allow_nothing_to_commit: true)
+    push_to_git_remote
   end
 
   ########################################################################
@@ -279,8 +279,10 @@ platform :android do
   MAIN_STRINGS_PATH = './WordPress/src/main/res/values/strings.xml'.freeze
   FROZEN_STRINGS_DIR_PATH = './fastlane/resources/values/'.freeze
   LOCAL_LIBRARIES_STRINGS_PATHS = [
-    { library: "Image Editor", strings_path: "./libs/image-editor/ImageEditor/src/main/res/values/strings.xml", exclusions: [] },
-    { library: "WordPress Editor", strings_path: "./libs/editor/WordPressEditor/src/main/res/values/strings.xml", exclusions: [] }
+    # Note: for those we don't set `add_ignore_attr` to true because we currently use `checkDependencies true` in `WordPress/build.gradle`
+    # Which will correctly detect strings from the app's `strings.xml` being used by one of the module.
+    { library: "Image Editor", strings_path: "./libs/image-editor/src/main/res/values/strings.xml", source_id: 'module:image-editor' },
+    { library: "Editor", strings_path: "./libs/editor/src/main/res/values/strings.xml", source_id: 'module:editor' }
   ].freeze
   REMOTE_LIBRARIES_STRINGS_PATHS = [
     {
@@ -288,33 +290,29 @@ platform :android do
       import_key: 'gutenbergMobileVersion',
       repository: 'wordpress-mobile/gutenberg-mobile',
       strings_file_path: 'bundle/android/strings.xml',
-      github_release_prefix: '',
-      exclusions: [],
-      merge_tool: File.join(ENV['PROJECT_ROOT_FOLDER'], 'tools', 'merge_strings_xml.py')
+      source_id: 'gutenberg'
     },
     {
       name: 'Login Library',
       import_key: 'wordPressLoginVersion',
       repository: 'wordpress-mobile/WordPress-Login-Flow-Android',
       strings_file_path: 'WordPressLoginFlow/src/main/res/values/strings.xml',
-      github_release_prefix: '',
-      exclusions: ['default_web_client_id']
+      exclusions: ['default_web_client_id'],
+      source_id: 'login'
     },
     {
       name: "Stories Library",
       import_key: "storiesVersion",
       repository: "Automattic/stories-android",
       strings_file_path: "stories/src/main/res/values/strings.xml",
-      github_release_prefix: "",
-      exclusions: []
+      source_id: 'stories'
     },
     {
       name: "About Library",
       import_key: "aboutAutomatticVersion",
       repository: "Automattic/about-automattic-android",
       strings_file_path: "library/src/main/res/values/strings.xml",
-      github_release_prefix: "",
-      exclusions: []
+      source_id: 'about'
     },
   ].freeze
 
@@ -340,8 +338,7 @@ platform :android do
         library_name: lib[:name],
         import_key: lib[:import_key],
         repository: lib[:repository],
-        file_path: lib[:strings_file_path],
-        github_release_prefix: lib[:github_release_prefix]
+        file_path: lib[:strings_file_path]
       )
 
       if download_path.nil?
@@ -353,16 +350,14 @@ platform :android do
         UI.user_error! 'Abort.' unless UI.confirm(error_message)
       else
         UI.message("`strings.xml` file for #{lib[:name]} downloaded to #{download_path}.")
-        if lib.key?(:merge_tool)
-          sh(lib[:merge_tool], lib[:name], download_path)
-        else
-          lib_to_merge = [{
-            library: lib[:name],
-            strings_path: download_path,
-            exclusions: lib[:exclusions]
-          }]
-          an_localize_libs(app_strings_path: MAIN_STRINGS_PATH, libs_strings_path: lib_to_merge)
-        end
+        lib_to_merge = [{
+          library: lib[:name],
+          strings_path: download_path,
+          exclusions: lib[:exclusions],
+          source_id: lib[:source_id],
+          add_ignore_attr: true # The linter is not be able to detect if a merged string is actually used by a binary dependency
+        }]
+        an_localize_libs(app_strings_path: MAIN_STRINGS_PATH, libs_strings_path: lib_to_merge)
         File.delete(download_path) if File.exist?(download_path)
       end
     end
@@ -388,5 +383,21 @@ platform :android do
       locales: ALL_LOCALES,
       lint_task: 'lintWordpressVanillaRelease' # TODO: Should we adapt this?
     )
+  end
+
+  # Updates the `.po` file at the given `po_path` using the content of the `sources` files, interpolating `release_version` where appropriate.
+  # Internally, this calls the `an_update_metadata_source` release toolkit action and adds Git management to it.
+  #
+  def update_po_file_for_metadata_localization(po_path:, sources:, release_version:, commit_message:)
+    ensure_git_status_clean
+
+    an_update_metadata_source(
+      po_file_path: po_path,
+      source_files: sources,
+      release_version: release_version
+    )
+
+    git_add(path: po_path)
+    git_commit(path: po_path, message: commit_message, allow_nothing_to_commit: true)
   end
 end

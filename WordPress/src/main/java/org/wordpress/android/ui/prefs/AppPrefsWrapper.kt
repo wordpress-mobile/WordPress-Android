@@ -5,6 +5,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.posts.PostListViewLayoutType
+import org.wordpress.android.ui.quickstart.QuickStartType
 import org.wordpress.android.ui.reader.tracker.ReaderTab
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel.Color
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel.Color.DARK
@@ -14,6 +15,7 @@ import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsDa
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsDataTypeSelectionViewModel.DataType.LIKES
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsDataTypeSelectionViewModel.DataType.VIEWS
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsDataTypeSelectionViewModel.DataType.VISITORS
+import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -212,9 +214,26 @@ class AppPrefsWrapper @Inject constructor() {
 
     fun setLastSkippedQuickStartTask(task: QuickStartTask) = AppPrefs.setLastSkippedQuickStartTask(task)
 
-    fun setMySiteDefaultTabExperimentVariant(variant: String) = AppPrefs.setMySiteDefaultTabExperimentVariant(variant)
+    fun getLastSelectedQuickStartTypeForSite(siteLocalId: Long): QuickStartType =
+            AppPrefs.getLastSelectedQuickStartTypeForSite(siteLocalId)
 
-    fun getMySiteDefaultTabExperimentVariant() = AppPrefs.getMySiteDefaultTabExperimentVariant()
+    fun setLastSelectedQuickStartTypeForSite(quickStartType: QuickStartType, siteLocalId: Long) =
+            AppPrefs.setLastSelectedQuickStartTypeForSite(quickStartType, siteLocalId)
+
+    fun isMySiteDefaultTabExperimentVariantAssigned() = AppPrefs.isMySiteDefaultTabExperimentVariantAssigned()
+
+    fun setMySiteDefaultTabExperimentVariantAssigned() = AppPrefs.setMySiteDefaultTabExperimentVariantAssigned()
+
+    fun setInitialScreenFromMySiteDefaultTabExperimentVariant(variant: String) =
+            AppPrefs.setInitialScreenFromMySiteDefaultTabExperimentVariant(variant)
+
+    fun getMySiteInitialScreen(): String = AppPrefs.getMySiteInitialScreen()
+
+    fun setSkippedPromptDay(date: Date?, siteId: Int) = AppPrefs.setSkippedPromptDay(date, siteId)
+
+    fun getSkippedPromptDay(siteId: Int): Date? = AppPrefs.getSkippedPromptDay(siteId)
+
+    fun markStatsRevampFeatureAnnouncementAsDisplayed() = AppPrefs.setShouldDisplayStatsRevampFeatureAnnouncement(false)
 
     companion object {
         private const val LIGHT_MODE_ID = 0
