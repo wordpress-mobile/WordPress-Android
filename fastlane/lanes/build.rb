@@ -329,6 +329,11 @@ platform :android do
       reuse_identifier: "#{product.downcase}-installable-build-link",
       body: comment_body
     )
+
+    if ENV['BUILDKITE']
+      message = "#{product} Installable Build: [#{filename}](#{install_url})"
+      sh('buildkite-agent', 'annotate', message, '--style', 'info', '--context', "installable-build-#{product}")
+    end
   end
 
   # This function is Buildkite-specific
