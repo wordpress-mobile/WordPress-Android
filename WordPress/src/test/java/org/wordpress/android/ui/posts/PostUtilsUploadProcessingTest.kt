@@ -12,8 +12,6 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.ui.posts.mediauploadcompletionprocessors.TestContent
 import org.wordpress.android.util.helpers.MediaFile
 
-/* ktlint-disable max-line-length */
-/* ktlint-disable parameter-list-wrapping */
 @RunWith(MockitoJUnitRunner::class)
 class PostUtilsUploadProcessingTest {
     private val mediaFile: MediaFile = mock()

@@ -13,14 +13,6 @@ steps:
     artifact_paths:
       - "**/build/reports/checkstyle/checkstyle.*"
 
-  - label: "ktlint"
-    command: |
-      cp gradle.properties-example gradle.properties
-      ./gradlew ciktlint
-    plugins: *common_plugins
-    artifact_paths:
-      - "**/build/ktlint.xml"
-
   - label: "detekt"
     command: |
       cp gradle.properties-example gradle.properties
