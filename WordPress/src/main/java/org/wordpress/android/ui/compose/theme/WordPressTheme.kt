@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.compose
+package org.wordpress.android.ui.compose.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme
