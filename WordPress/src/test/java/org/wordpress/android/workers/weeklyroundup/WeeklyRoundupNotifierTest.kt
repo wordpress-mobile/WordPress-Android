@@ -20,6 +20,7 @@ import org.wordpress.android.push.NotificationType.WEEKLY_ROUNDUP
 import org.wordpress.android.test
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.util.SiteUtilsWrapper
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -45,6 +46,7 @@ class WeeklyRoundupNotifierTest {
     private val appPrefs: AppPrefsWrapper = mock {
         on { shouldShowWeeklyRoundupNotification(any()) }.thenReturn(true)
     }
+    private val statsUtils: StatsUtils = mock()
 
     @Before
     fun setUp() {
@@ -57,7 +59,8 @@ class WeeklyRoundupNotifierTest {
                 notificationsTracker,
                 siteUtils,
                 weeklyRoundupRepository,
-                appPrefs
+                appPrefs,
+                statsUtils
         )
     }
 
