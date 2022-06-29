@@ -308,6 +308,11 @@ public class WPSupportUtils {
         waitOneFrame();
     }
 
+    /**
+     * TODO is this really needed? It takes over 30 seconds of each run.
+     *   Maybe we can replace it with RecyclerViewActions.scrollToPosition().
+     *   See https://developer.android.com/training/testing/espresso/lists#recycler-view-list-items).
+     */
     public static void scrollToAndClickOnTextInRecyclerView(String text, final RecyclerView recyclerView) {
         ViewInteraction view = onView(withText(text));
 
