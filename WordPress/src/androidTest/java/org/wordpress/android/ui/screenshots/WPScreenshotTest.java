@@ -178,7 +178,7 @@ public class WPScreenshotTest extends BaseTest {
     private void moveToStats() {
         // Click on the "Sites" tab in the nav, then choose "Stats"
         clickOn(R.id.nav_sites);
-        clickOn(R.id.quick_action_stats_button);
+        clickOn(onView(withText(R.string.stats)));
 
         waitForElementToBeDisplayedWithoutFailure(R.id.image_thumbnail);
 
