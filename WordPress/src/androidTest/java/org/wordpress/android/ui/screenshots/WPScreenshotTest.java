@@ -20,6 +20,8 @@ import org.wordpress.android.ui.WPLaunchActivity;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.util.image.ImageType;
 
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.wordpress.android.support.WPSupportUtils.clickOn;
 import static org.wordpress.android.support.WPSupportUtils.clickOnViewWithTag;
 import static org.wordpress.android.support.WPSupportUtils.getCurrentActivity;
@@ -85,8 +87,8 @@ public class WPScreenshotTest extends BaseTest {
 
         (new SitePickerPage()).chooseSiteWithURL("fourpawsdoggrooming.wordpress.com");
 
-        // Choose "Blog Posts"
-        clickOn(R.id.quick_action_posts_button);
+        // Choose "Posts"
+        clickOn(onView(withText(R.string.posts)));
 
         // Choose "Drafts"
         selectItemWithTitleInTabLayout(getTranslatedString(R.string.post_list_tab_drafts), R.id.tabLayout);
