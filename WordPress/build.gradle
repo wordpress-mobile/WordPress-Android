@@ -290,6 +290,11 @@ android {
 
     buildFeatures {
         viewBinding true
+        compose true
+
+        composeOptions {
+            kotlinCompilerExtensionVersion = composeVersion
+        }
     }
 }
 
@@ -392,6 +397,11 @@ dependencies {
     kapt 'com.github.bumptech.glide:compiler:4.10.0'
     implementation 'com.github.bumptech.glide:volley-integration:4.6.1@aar'
     implementation 'com.google.android.gms:play-services-code-scanner:16.0.0-beta1'
+
+    // Compose
+    implementation "androidx.compose.ui:ui:$composeVersion"
+    implementation "androidx.compose.foundation:foundation:$composeVersion"
+    implementation "androidx.compose.material:material:$composeVersion"
 
     testImplementation "junit:junit:$jUnitVersion"
 

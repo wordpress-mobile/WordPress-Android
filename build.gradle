@@ -40,6 +40,8 @@ ext {
 
     exoPlayerVersion = '2.13.3'
 
+    composeVersion = '1.1.1'
+
     // testing
     jUnitVersion = '4.13'
     jUnitExtVersion = '1.1.3'
