@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.compose.components
+package org.wordpress.android.ui.qrcodeauth.components
 
 import androidx.compose.runtime.Composable
 
