@@ -21,7 +21,9 @@ public class SignUpTests extends BaseTest {
     }
 
     @After
-    public void tearDown() { logoutIfNecessary(); }
+    public void tearDown() {
+        logoutIfNecessary();
+    }
 
     @Test
     public void signUpWithMagicLink() {
