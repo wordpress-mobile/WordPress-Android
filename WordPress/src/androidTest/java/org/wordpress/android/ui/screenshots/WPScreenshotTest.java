@@ -21,6 +21,11 @@ import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.util.image.ImageType;
 
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.contrib.RecyclerViewActions.actionOnItem;
+import static androidx.test.espresso.contrib.RecyclerViewActions.scrollTo;
+import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.wordpress.android.support.WPSupportUtils.clickOn;
 import static org.wordpress.android.support.WPSupportUtils.clickOnViewWithTag;
@@ -245,7 +250,10 @@ public class WPScreenshotTest extends BaseTest {
     private void manageMedia() {
         // Click on the "Sites" tab in the nav, then choose "Media"
         clickOn(R.id.nav_sites);
-        clickOn(R.id.quick_action_media_button);
+        onView(withId(R.id.quick_link_ribbon_item_list))
+                .perform(scrollTo(hasDescendant(withText(R.string.media))))
+                .perform(actionOnItem(hasDescendant(withText(R.string.media)), click()));
+        // clickOn(R.string.media);
 
         waitForElementToBeDisplayedWithoutFailure(R.id.media_grid_item_image);
 
@@ -254,7 +262,7 @@ public class WPScreenshotTest extends BaseTest {
 
         takeScreenshot("6-upload-on-the-go");
 
-        pressBackUntilElementIsDisplayed(R.id.quick_action_media_button);
+        pressBackUntilElementIsDisplayed(R.id.quick_link_ribbon_item_list);
     }
 
     private void takeScreenshot(String screenshotName) {
