@@ -84,44 +84,24 @@ class WeeklyRoundupNotifier @Inject constructor(
         )
     }
 
-    @Suppress("ComplexMethod")
     private fun buildContentText(data: WeeklyRoundupData) = when {
-        data.views > 0 && data.likes <= 0 && data.comments <= 0 -> {
+        data.likes <= 0 && data.comments <= 0 -> {
             resourceProvider.getString(
                     R.string.weekly_roundup_notification_text_views_only,
                     statsUtils.toFormattedString(data.views)
             )
         }
-        data.views <= 0 && data.likes > 0 && data.comments <= 0 -> {
-            resourceProvider.getString(
-                    R.string.weekly_roundup_notification_text_likes_only,
-                    statsUtils.toFormattedString(data.likes)
-            )
-        }
-        data.views <= 0 && data.likes <= 0 && data.comments > 0 -> {
-            resourceProvider.getString(
-                    R.string.weekly_roundup_notification_text_comments_only,
-                    statsUtils.toFormattedString(data.comments)
-            )
-        }
-        data.views > 0 && data.likes > 0 && data.comments <= 0 -> {
+        data.likes > 0 && data.comments <= 0 -> {
             resourceProvider.getString(
                     R.string.weekly_roundup_notification_text_views_and_likes,
                     statsUtils.toFormattedString(data.views),
                     statsUtils.toFormattedString(data.likes)
             )
         }
-        data.views > 0 && data.likes <= 0 && data.comments > 0 -> {
+        data.likes <= 0 && data.comments > 0 -> {
             resourceProvider.getString(
                     R.string.weekly_roundup_notification_text_views_and_comments,
                     statsUtils.toFormattedString(data.views),
-                    statsUtils.toFormattedString(data.comments)
-            )
-        }
-        data.views <= 0 && data.likes > 0 && data.comments > 0 -> {
-            resourceProvider.getString(
-                    R.string.weekly_roundup_notification_text_likes_and_comments,
-                    statsUtils.toFormattedString(data.likes),
                     statsUtils.toFormattedString(data.comments)
             )
         }
