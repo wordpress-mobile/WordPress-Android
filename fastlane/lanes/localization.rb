@@ -383,13 +383,19 @@ platform :android do
   # bundle exec fastlane download_translations
   #####################################################################################
   lane :download_translations do
-    # For now WordPress and Jetpack use the same GlotPress project and share the same `strings.xml`
-    # (the Jetpack-dedicated one, https://translate.wordpress.com/projects/jetpack/apps/android/, is empty anyway for now).
+    # WordPress strings
     android_download_translations(
       res_dir: File.join('WordPress', 'src', 'main', 'res'),
       glotpress_url: 'https://translate.wordpress.org/projects/apps/android/dev/',
       locales: ALL_LOCALES,
-      lint_task: 'lintWordpressVanillaRelease' # TODO: Should we adapt this?
+      lint_task: 'lintWordpressVanillaRelease'
+    )
+    # Jetpack strings
+    android_download_translations(
+      res_dir: File.join('WordPress', 'src', 'jetpack', 'res'),
+      glotpress_url: 'https://translate.wordpress.com/projects/jetpack/apps/android/',
+      locales: ALL_LOCALES,
+      lint_task: 'lintJetpackVanillaRelease'
     )
   end
 
