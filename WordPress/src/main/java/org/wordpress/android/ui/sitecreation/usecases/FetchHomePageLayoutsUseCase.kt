@@ -8,6 +8,7 @@ import org.wordpress.android.fluxc.store.ThemeStore
 import org.wordpress.android.fluxc.store.ThemeStore.FetchStarterDesignsPayload
 import org.wordpress.android.fluxc.store.ThemeStore.OnStarterDesignsFetched
 import org.wordpress.android.ui.sitecreation.theme.SiteDesignPickerDimensionProvider
+import org.wordpress.android.ui.sitecreation.theme.SiteDesignRecommendedDimensionProvider
 import org.wordpress.android.util.config.BetaSiteDesignsFeatureConfig
 import javax.inject.Inject
 import kotlin.coroutines.Continuation
@@ -17,7 +18,7 @@ import kotlin.coroutines.suspendCoroutine
 class FetchHomePageLayoutsUseCase @Inject constructor(
     val dispatcher: Dispatcher,
     @Suppress("unused") val themeStore: ThemeStore,
-    private val thumbDimensionProvider: SiteDesignPickerDimensionProvider,
+    private val thumbDimensionProvider: SiteDesignRecommendedDimensionProvider,
     private val betaSiteDesigns: BetaSiteDesignsFeatureConfig
 ) {
     enum class GROUP(val key: String) {
