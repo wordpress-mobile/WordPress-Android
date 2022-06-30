@@ -8,6 +8,7 @@ data class UiState(
     val categories: ArrayList<CategoryNode>,
     val selectedParentCategoryPosition: Int,
     val categoryName: String,
+    val categoryId: Long? = null,
     val submitButtonUiState: SubmitButtonUiState = SubmitButtonDisabledUiState
 )
 
