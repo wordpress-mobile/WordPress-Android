@@ -12,6 +12,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.stubbing.Answer
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
@@ -152,6 +153,74 @@ class WeeklyRoundupNotifierTest {
         val list = weeklyRoundupNotifier.buildNotifications().map { it.id }
 
         assertThat(list).isEqualTo(sortedData.map { WEEKLY_ROUNDUP_NOTIFICATION_ID + (it?.site?.id ?: 0) })
+    }
+
+    @Test
+    fun `buildNotifications should not include likes and comments with 0 count`() = test {
+        val mockSites = buildMockSites()
+        val data = buildMockData(mockSites[0], views = 10, comments = 0, likes = 0)
+
+        whenever(siteStore.sitesAccessedViaWPComRest).thenReturn(mockSites)
+        whenever(weeklyRoundupRepository.fetchWeeklyRoundupData(any())).then { data }
+
+        val list = weeklyRoundupNotifier.buildNotifications()
+
+        assertThat(list.first().contentTitle).isEqualTo(resourceProvider.getString(
+                R.string.weekly_roundup_notification_text_views_only,
+                statsUtils.toFormattedString(data!!.views)
+        ))
+    }
+
+    @Test
+    fun `buildNotifications should not include likes with 0 count`() = test {
+        val mockSites = buildMockSites()
+        val data = buildMockData(mockSites[2], views = 10, comments = 1, likes = 0)
+
+        whenever(siteStore.sitesAccessedViaWPComRest).thenReturn(mockSites)
+        whenever(weeklyRoundupRepository.fetchWeeklyRoundupData(any())).then { data }
+
+        val list = weeklyRoundupNotifier.buildNotifications()
+
+        assertThat(list.first().contentTitle).isEqualTo(resourceProvider.getString(
+                R.string.weekly_roundup_notification_text_views_and_comments,
+                statsUtils.toFormattedString(data!!.views),
+                statsUtils.toFormattedString(data.comments)
+        ))
+    }
+
+    @Test
+    fun `buildNotifications should not include comments with 0 count`() = test {
+        val mockSites = buildMockSites()
+        val data = buildMockData(mockSites[1], views = 9, comments = 0, likes = 8)
+
+        whenever(siteStore.sitesAccessedViaWPComRest).thenReturn(mockSites)
+        whenever(weeklyRoundupRepository.fetchWeeklyRoundupData(any())).then { data }
+
+        val list = weeklyRoundupNotifier.buildNotifications()
+
+        assertThat(list.first().contentTitle).isEqualTo(resourceProvider.getString(
+                R.string.weekly_roundup_notification_text_views_and_likes,
+                statsUtils.toFormattedString(data!!.views),
+                statsUtils.toFormattedString(data.likes)
+        ))
+    }
+
+    @Test
+    fun `buildNotifications should include views, likes, and comments greater than zero`() = test {
+        val mockSites = buildMockSites()
+        val data = buildMockData(mockSites[1], views = 9, comments = 8, likes = 8)
+
+        whenever(siteStore.sitesAccessedViaWPComRest).thenReturn(mockSites)
+        whenever(weeklyRoundupRepository.fetchWeeklyRoundupData(any())).then { data }
+
+        val list = weeklyRoundupNotifier.buildNotifications()
+
+        assertThat(list.first().contentTitle).isEqualTo(resourceProvider.getString(
+                R.string.weekly_roundup_notification_text_all,
+                statsUtils.toFormattedString(data!!.views),
+                statsUtils.toFormattedString(data.likes),
+                statsUtils.toFormattedString(data.comments)
+        ))
     }
 
     private companion object {
