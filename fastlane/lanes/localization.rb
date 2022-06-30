@@ -31,7 +31,7 @@ ALL_LOCALES = [
   { glotpress: 'vi', android: 'vi',    google_play: 'vi',     promo_config: {} },
   { glotpress: 'zh-cn', android: 'zh-rCN', google_play: 'zh-CN',  promo_config: {} },
   { glotpress: 'zh-tw', android: 'zh-rTW', google_play: 'zh-TW',  promo_config: {} },
-  # From this point are locales that are still used for downloading `strings.xml`… but not for release notes – and thus don't need a `google_play` key. See `RELEASE_NOTES_LOCALES` below.
+  # From this point are locales that are still used for downloading `strings.xml`… but not for release notes – and thus don't need a `google_play` key. See `WP_RELEASE_NOTES_LOCALES` below.
   { glotpress: 'az', android: 'az', promo_config: false },
   { glotpress: 'bg', android: 'bg', promo_config: false },
   { glotpress: 'cs', android: 'cs', promo_config: false },
@@ -62,7 +62,11 @@ ALL_LOCALES = [
   { glotpress: 'zh-tw', android: 'zh-rHK', promo_config: false },
 ].freeze
 
-RELEASE_NOTES_LOCALES = ALL_LOCALES
+WP_APP_LOCALES = ALL_LOCALES
+JP_APP_LOCALES = ALL_LOCALES
+  .select { |h| %w[ar de-DE es-ES fr-FR iw-IL id it-IT ja-JP ko-KR nl-NL pt-BR ru-RU sv-SE tr-TR zh-CN zh-TW].include?(h[:google_play]) }
+
+WP_RELEASE_NOTES_LOCALES = ALL_LOCALES
   .reject { |h| h[:google_play].nil? }
   .map { |h| [h[:glotpress], h[:google_play]] }
 
@@ -220,12 +224,12 @@ platform :android do
 
     delete_old_changelogs(app: 'wordpress', build: options[:build_number])
     download_path = File.join(Dir.pwd, app_values[:metadata_dir], 'android')
-    # The case for the source locale (en-US) is pulled in a hacky way, by having an {en-gb => en-US} mapping as part of the RELEASE_NOTES_LOCALES,
+    # The case for the source locale (en-US) is pulled in a hacky way, by having an {en-gb => en-US} mapping as part of the WP_RELEASE_NOTES_LOCALES,
     # which is then treated in a special way by gp_downloadmetadata by specifying a `source_locale: 'en-US'` to process it differently from the rest.
     gp_downloadmetadata(
       project_url: app_values[:glotpress_metadata_project],
       target_files: files,
-      locales: RELEASE_NOTES_LOCALES,
+      locales: WP_RELEASE_NOTES_LOCALES,
       source_locale: 'en-US',
       download_path: download_path
     )
@@ -387,14 +391,14 @@ platform :android do
     android_download_translations(
       res_dir: File.join('WordPress', 'src', 'main', 'res'),
       glotpress_url: APP_SPECIFIC_VALUES[:wordpress][:glotpress_appstrings_project],
-      locales: ALL_LOCALES,
+      locales: WP_APP_LOCALES,
       lint_task: 'lintWordpressVanillaRelease'
     )
     # Jetpack strings
     android_download_translations(
       res_dir: File.join('WordPress', 'src', 'jetpack', 'res'),
       glotpress_url: APP_SPECIFIC_VALUES[:jetpack][:glotpress_appstrings_project],
-      locales: ALL_LOCALES,
+      locales: JP_APP_LOCALES,
       lint_task: 'lintJetpackVanillaRelease'
     )
   end
