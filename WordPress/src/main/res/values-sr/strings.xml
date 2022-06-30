@@ -87,7 +87,6 @@ Language: sr_RS
     <string name="web_preview_tablet">Таблет</string>
     <string name="web_preview_mobile">Мобилни</string>
     <string name="quick_start_card_menu_remove">Не приказуј поново</string>
-    <string name="quick_start_dialog_edit_homepage_title">Уреди своју почетну страницу</string>
     <string name="reader_menu_mark_as_unseen">Означи као непрегледано</string>
     <string name="reader_menu_mark_as_seen">Означи као прегледано</string>
     <string name="scan_history_all_threats_tab">Све</string>
@@ -1769,7 +1768,6 @@ Language: sr_RS
     <string name="stats_views">Прегледа</string>
     <string name="stats_visitors">Посетиоци</string>
     <string name="stats_view_top_posts_and_pages">Чланци и стране</string>
-    <string name="stats_view_publicize">Објави</string>
     <string name="stats_timeframe_years">Годишња</string>
     <string name="ssl_certificate_details">Детаљи</string>
     <string name="cab_selected">%d изабрано</string>

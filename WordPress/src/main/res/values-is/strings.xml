@@ -458,7 +458,6 @@ Language: is
     <string name="stats_followers_a_minute_ago">fyrir mínútu síðan</string>
     <string name="stats_view_countries">Lönd</string>
     <string name="stats_view_videos">Myndbönd</string>
-    <string name="stats_view_publicize">Birta</string>
     <string name="stats_timeframe_years">Ár</string>
     <string name="stats_views">Flettingar</string>
     <string name="stats_likes">Líkar við</string>

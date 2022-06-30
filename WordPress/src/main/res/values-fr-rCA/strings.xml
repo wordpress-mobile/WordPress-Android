@@ -22,13 +22,10 @@ Language: fr
     <string name="stats_referrers_pie_chart_wordpress">WordPress</string>
     <string name="stats_referrers_pie_chart_total_label">Vues</string>
     <string name="stats_action_card_schedule_post_button_label">Planifier</string>
-    <string name="stats_action_card_schedule_post_message">✍️Planifiez la publication de vos contenus au meilleur moment à partir de vos brouillons.</string>
     <string name="stats_action_card_schedule_post_title">Planifier la publication</string>
     <string name="stats_action_card_blogging_reminders_button_label">Définir des rappels</string>
-    <string name="stats_action_card_blogging_reminders_message">💡Définissez des rappels de publication régulière pour que vos lecteurs restent fidèles et pour attirer de nouveaux visiteurs.</string>
     <string name="stats_action_card_blogging_reminders_title">Définir vos rappels de blog</string>
     <string name="stats_action_card_grow_audience_button_label">Découvrir la formation</string>
-    <string name="stats_action_card_grow_audience_message">💡Nous proposons des cours facilement assimilables donnés par les meilleurs blogueurs pour développer votre blog.</string>
     <string name="stats_action_card_grow_audience_title">Élargir votre public</string>
     <string name="gutenberg_native_you_can_also_rearrange_blocks_by_tapping_a_block_and_then_tapping">Vous pouvez également réorganiser les blocs en appuyant sur un bloc, puis sur les flèches Haut et Bas qui apparaissent dans le coin inférieur gauche du bloc afin de le déplacer vers le haut ou vers le bas.</string>
     <string name="gutenberg_native_image_file_not_found">Fichier image introuvable.</string>
@@ -39,12 +36,8 @@ Language: fr
     <string name="quick_start_sites_type_all_tasks_completed">Toutes les tâches terminées</string>
     <string name="quick_start_list_task_complete">Tâche terminée</string>
     <string name="me_btn_scan_login_code">Scanner le code de connexion</string>
-    <string name="stats_insights_followers_guide_card">💡Vous pouvez essayer de laisser un commentaire en guise de geste pour encourager l’engagement sur le blog en retour afin de gagner des abonnés.</string>
-    <string name="stats_insights_comments_guide_card">💡Appuyez sur VOIR PLUS pour voir vos meilleurs contributeurs.</string>
     <string name="stats_insights_likes_guide_card">⭐️ Votre dernier article %1$s a recueilli%2$s mentions « J’aime ».</string>
     <string name="stats_most_popular_percent_views_empty">Pas assez d’activité. Revenez lorsque votre site aura plus de visiteurs !</string>
-    <string name="stats_insights_latest_post_empty">Vous n’avez pas encore publié d’articles. Revenez lorsque vous aurez publié votre premier article !</string>
-    <string name="stats_insights_views_and_visitors_visitors_empty_state">Consultez nos meilleurs conseils pour générer plus de vues et de trafic %1$s</string>
     <string name="stats_total_followers_content_description">%1s, %2s du nombre total d’abonnés</string>
     <string name="stats_value_percent"> %1$s (%2$s%%)</string>
     <string name="pages_copy_link">Copier le lien</string>
@@ -711,9 +704,6 @@ Language: fr
     <string name="quick_start_dialog_review_pages_message">Modifiez, ajoutez ou supprimez les pages de votre site.</string>
     <string name="quick_start_dialog_review_pages_title">Passer en revue les pages du site</string>
     <string name="quick_start_dialog_edit_homepage_message_pages_short">Sélectionnez %1$s Page d’accueil %2$s pour modifier votre page d’accueil.</string>
-    <string name="quick_start_dialog_edit_homepage_message_short">Sélectionnez %1$s Pages %2$s pour afficher votre liste de pages.</string>
-    <string name="quick_start_dialog_edit_homepage_message">Modifiez, ajoutez ou supprimez du contenu depuis la page d\'accueil de votre site.</string>
-    <string name="quick_start_dialog_edit_homepage_title">Modifier la page d\'accueil</string>
     <string name="reader_menu_mark_as_unseen">Marquer comme non lu</string>
     <string name="reader_menu_mark_as_seen">Marquer comme lu</string>
     <string name="error_media_upload_failed_for_reason">Échec de chargement du média.\n%1$s</string>
@@ -3040,7 +3030,6 @@ Language: fr
     <string name="stats_followers_a_minute_ago">il y a une minute</string>
     <string name="stats_followers_seconds_ago">il y a quelques secondes</string>
     <string name="stats_view_followers">Abonnés</string>
-    <string name="stats_view_publicize">Publicize</string>
     <string name="stats_view_videos">Vidéos</string>
     <string name="stats_view_top_posts_and_pages">Articles et pages</string>
     <string name="stats_view_countries">Pays</string>

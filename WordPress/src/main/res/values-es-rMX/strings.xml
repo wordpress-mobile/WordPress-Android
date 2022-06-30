@@ -2226,7 +2226,6 @@ Language: es_MX
     <string name="stats_view_countries">Países</string>
     <string name="stats_view_followers">Seguidores</string>
     <string name="stats_likes">Me gusta</string>
-    <string name="stats_view_publicize">Difundir</string>
     <string name="stats_followers_seconds_ago">hace unos segundos</string>
     <string name="stats_views">Vistas</string>
     <string name="stats_visitors">Visitantes</string>

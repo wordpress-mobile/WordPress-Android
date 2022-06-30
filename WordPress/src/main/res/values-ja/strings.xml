@@ -21,14 +21,11 @@ Language: ja_JP
     <string name="stats_referrers_pie_chart_search">検索</string>
     <string name="stats_referrers_pie_chart_total_label">表示件数</string>
     <string name="stats_action_card_schedule_post_button_label">予約</string>
-    <string name="stats_action_card_schedule_post_message">✍️ 下書きから最適なタイミングでコンテンツを投稿するように予約します。</string>
     <string name="stats_referrers_pie_chart_wordpress">WordPress</string>
     <string name="stats_action_card_schedule_post_title">投稿を予約</string>
     <string name="stats_action_card_blogging_reminders_button_label">リマインダーを設定</string>
-    <string name="stats_action_card_blogging_reminders_message">💡定期的に投稿するようにリマインダーを設定して読者の関心を維持したまま、新しい訪問者を引きつけます。</string>
     <string name="stats_action_card_blogging_reminders_title">ブログ投稿のリマインダーを設定</string>
     <string name="stats_action_card_grow_audience_button_label">コースを確認</string>
-    <string name="stats_action_card_grow_audience_message">💡皆さんのブログを成長させるため、優れたブロガーによるわかりやすいレッスンをご用意しています。</string>
     <string name="stats_action_card_grow_audience_title">訪問者を増やす</string>
     <string name="gutenberg_native_you_can_also_rearrange_blocks_by_tapping_a_block_and_then_tapping">ブロックをタップし、ブロックの左下に表示される上下矢印をタップして上下に移動させることで、ブロックの配置を変更することもできます。</string>
     <string name="gutenberg_native_image_file_not_found">画像ファイルが見つかりませんでした。</string>
@@ -39,12 +36,8 @@ Language: ja_JP
     <string name="quick_start_sites_type_all_tasks_completed">すべてのタスクが完了しました</string>
     <string name="quick_start_list_task_complete">タスクが完了しました</string>
     <string name="me_btn_scan_login_code">ログインコードをスキャン</string>
-    <string name="stats_insights_followers_guide_card">💡コメントを投稿して積極的にブログに取り組む姿勢を見せることで、より多くのフォロワーを獲得できます。</string>
-    <string name="stats_insights_comments_guide_card">💡「さらに表示」をタップすると、人気の寄稿者を表示できます。</string>
     <string name="stats_insights_likes_guide_card">⭐️最新の投稿 %1$s が%2$s回「いいね」されました。</string>
     <string name="stats_most_popular_percent_views_empty">アクティビティが足りません。 サイトの訪問者数が増えたら後でもう一度確認してください。</string>
-    <string name="stats_insights_latest_post_empty">まだ公開した投稿がありません。 最初の投稿を公開したら後でもう一度確認してください。</string>
-    <string name="stats_insights_views_and_visitors_visitors_empty_state">閲覧数とトラフィックを増やしたい場合は、トップのヒントをご覧ください %1$s</string>
     <string name="stats_total_followers_content_description">%1s人、フォロワー総数の%2s</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
     <string name="pages_copy_link">リンクをコピー</string>
@@ -710,10 +703,7 @@ Language: ja_JP
     <string name="quick_start_dialog_review_pages_message">サイトのページを変更、追加、削除します。</string>
     <string name="quick_start_dialog_review_pages_title">サイトページをレビュー</string>
     <string name="quick_start_dialog_edit_homepage_message_pages_short">%1$s ホームページ %2$s を選択してホームページを編集します。</string>
-    <string name="quick_start_dialog_edit_homepage_message_short">%1$s ページ %2$s を選択してページリストを表示します。</string>
     <string name="quick_start_card_menu_pin">上部固定</string>
-    <string name="quick_start_dialog_edit_homepage_title">ホームページを編集する</string>
-    <string name="quick_start_dialog_edit_homepage_message">サイトのホームページからコンテンツを変更、追加、削除します。</string>
     <string name="reader_menu_mark_as_unseen">未読にする</string>
     <string name="reader_menu_mark_as_seen">既読にする</string>
     <string name="error_media_upload_failed_for_reason">メディアのアップロードに失敗しました。\n%1$s</string>
@@ -3048,7 +3038,6 @@ Language: ja_JP
     <string name="stats_views">表示数</string>
     <string name="stats_visitors">サイト訪問者</string>
     <string name="stats_view_top_posts_and_pages">投稿とページ</string>
-    <string name="stats_view_publicize">パブリサイズ共有</string>
     <string name="ssl_certificate_details">詳細</string>
     <string name="cab_selected">%d件選択</string>
     <string name="browse_our_faq_button">よく聞かれる質問を表示</string>

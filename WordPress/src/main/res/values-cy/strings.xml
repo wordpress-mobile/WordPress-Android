@@ -425,7 +425,6 @@ Language: cy_GB
     <string name="stats_followers_seconds_ago">eiliad yn ôl</string>
     <string name="stats_view_top_posts_and_pages">Cofnod a Thudalen</string>
     <string name="stats_view_videos">Fideos</string>
-    <string name="stats_view_publicize">Publicize</string>
     <string name="stats_view_followers">Dilynwyr</string>
     <string name="stats_view_countries">Gwledydd</string>
     <string name="stats_likes">Hoffi</string>

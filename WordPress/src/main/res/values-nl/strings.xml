@@ -22,13 +22,10 @@ Language: nl
     <string name="stats_referrers_pie_chart_wordpress">WordPress</string>
     <string name="stats_referrers_pie_chart_total_label">Weergaven</string>
     <string name="stats_action_card_schedule_post_button_label">planning</string>
-    <string name="stats_action_card_schedule_post_message">✍️ Plan om je content op het beste moment te delen vanuit je concepten.</string>
     <string name="stats_action_card_schedule_post_title">Je berichten inplannen</string>
     <string name="stats_action_card_blogging_reminders_button_label">Herinneringen instellen</string>
-    <string name="stats_action_card_blogging_reminders_message">Stel een herinnering in om regelmatig te posten om zo je lezers betrokken te houden en nieuwe bezoekers aan te trekken.</string>
     <string name="stats_action_card_blogging_reminders_title">Stel je blogging herinneringen in</string>
     <string name="stats_action_card_grow_audience_button_label">Check de cursus</string>
-    <string name="stats_action_card_grow_audience_message">We hebben eenvoudig te volgen lessen gegeven door de beste bloggers om je blog te laten groeien.</string>
     <string name="stats_action_card_grow_audience_title">Breid je publiek uit</string>
     <string name="gutenberg_native_you_can_also_rearrange_blocks_by_tapping_a_block_and_then_tapping">Je kunt ook blokken herschikken door op een blok te tikken en dan op de omhoog en omlaag pijlen te tikken die links onderaan het blok verschijnen om het naar boven of onder te bewegen.</string>
     <string name="gutenberg_native_image_file_not_found">Afbeeldingsbestand niet gevonden.</string>
@@ -39,12 +36,8 @@ Language: nl
     <string name="quick_start_sites_type_all_tasks_completed">Alle taken afgerond</string>
     <string name="quick_start_list_task_complete">Taak voltooid</string>
     <string name="me_btn_scan_login_code">Inlogcode scannen</string>
-    <string name="stats_insights_followers_guide_card">💡Je kunt een opmerking achterlaten als gebaar, om activiteit van de blog te stimuleren en meer volgers te krijgen.</string>
-    <string name="stats_insights_comments_guide_card">💡Zie wie je grootste bijdragers zijn door te tikken op MEER INFO.</string>
     <string name="stats_insights_likes_guide_card">⭐️ Je nieuwste bericht %1$s heeft %2$s likes gekregen.</string>
     <string name="stats_most_popular_percent_views_empty">Niet genoeg activiteit. Keer nog eens terug wanneer je site meer bezoekers heeft gehad!</string>
-    <string name="stats_insights_latest_post_empty">Je hebt nog geen berichten gepubliceerd. Keer nog eens terug wanneer je je eerste bericht hebt gepubliceerd!</string>
-    <string name="stats_insights_views_and_visitors_visitors_empty_state">Bekijk onze top tips %1$s voor meer weergaven en bezoekers</string>
     <string name="stats_total_followers_content_description">%1s, %2s van het totale aantal volgers</string>
     <string name="stats_value_percent">%1$s %2$s%%()</string>
     <string name="pages_copy_link">Link kopiëren</string>
@@ -711,9 +704,6 @@ Language: nl
     <string name="quick_start_dialog_review_pages_message">Verander, voeg toe, of verwijder pagina\'s van je site.</string>
     <string name="quick_start_dialog_review_pages_title">Beoordeel site pagina\'s</string>
     <string name="quick_start_dialog_edit_homepage_message_pages_short">Selecteer %1$s Homepage %2$s om je homepage te bewerken.</string>
-    <string name="quick_start_dialog_edit_homepage_message_short">Selecteer %1$s Pagina\'s %2$s om je paginalijst te zien.</string>
-    <string name="quick_start_dialog_edit_homepage_message">Verander, voeg toe, of verwijder inhoud van de homepage van je site.</string>
-    <string name="quick_start_dialog_edit_homepage_title">Bewerk je homepage</string>
     <string name="reader_menu_mark_as_unseen">Markeer als ongezien</string>
     <string name="reader_menu_mark_as_seen">Markeer als gezien</string>
     <string name="error_media_upload_failed_for_reason">Media upload mislukt.\n%1$s</string>
@@ -3040,7 +3030,6 @@ Language: nl
     <string name="stats_followers_a_minute_ago">een minuut geleden</string>
     <string name="stats_followers_seconds_ago">seconden geleden</string>
     <string name="stats_view_followers">Volgers</string>
-    <string name="stats_view_publicize">Publiceren</string>
     <string name="stats_view_videos">Video\'s</string>
     <string name="stats_view_top_posts_and_pages">Berichten &amp; pagina\'s</string>
     <string name="stats_view_countries">Landen</string>

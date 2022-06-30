@@ -1,11 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-06-18 21:22:47+0000
+Translation-Revision-Date: 2022-06-29 09:53:21+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.1
 Language: ro
 -->
 <resources>
+    <string name="qrcode_auth_flow_content_description">Imagine care indică scanarea în desfășurare a codului de autentificare</string>
+    <string name="qrcode_auth_flow_error_content_description">Imagine care indică o eroare</string>
+    <string name="qrcode_auth_flow_dismiss_dialog_message">Sigur vrei să continui?</string>
+    <string name="qrcode_auth_flow_dismiss_dialog_title">Ieși din fluxul de scanare a codului de autentificare</string>
+    <string name="qrcode_auth_flow_error_auth_failed_subtitle">Nu am putut să te autentific folosind acest cod de autentificare. Te rog atinge butonul Scanează din nou pentru a scana din nou codul.</string>
+    <string name="qrcode_auth_flow_error_auth_failed_title">Autentificarea a eșuat</string>
+    <string name="qrcode_auth_flow_error_expired_subtitle">Acest cod de autentificare a expirat. Te rog atinge butonul Scanează din nou pentru a scana din nou codul.</string>
+    <string name="qrcode_auth_flow_error_expired_title">Codul de autentificare a expirat</string>
+    <string name="qrcode_auth_flow_error_invalid_data_subtitle">Codul de autentificare pe care l-ai scanat nu a putut fi validat. Te rog atinge butonul Scanează din nou pentru a scana din nou codul.</string>
+    <string name="qrcode_auth_flow_error_invalid_data_title">Nu am putut să validez codul de autentificare</string>
+    <string name="qrcode_auth_flow_error_no_connection_subtitle">Pentru a scana codurile de autentificare, ai nevoie de o conexiune activă la internet</string>
+    <string name="qrcode_auth_flow_error_no_connection_title">Nu ai conexiune</string>
+    <string name="qrcode_auth_flow_scan_again">Scanează încă o dată</string>
+    <string name="qrcode_auth_flow_dismiss">Refuză</string>
+    <string name="qrcode_auth_flow_done_subtitle">Atinge Refuză și mergi înapoi la navigatorul tău web pentru a continua.</string>
+    <string name="qrcode_auth_flow_done_title">Ești autentificat!</string>
+    <string name="qrcode_auth_flow_validated_primary_action">Da, autentifică-mă</string>
+    <string name="qrcode_auth_flow_validated_subtitle">Scanează numai coduri QR preluate direct din navigatorul tău web. Nu scana niciodată coduri trimise de altcineva.</string>
+    <string name="qrcode_auth_flow_validated_default_title">Încerci să te autentifici în navigatorul tău web lângă %1$s?</string>
+    <string name="qrcode_auth_flow_validated_title">Încerci să te autentifici în %1$s lângă %2$s?</string>
+    <string name="stats_revamp_v2_intro_secondary_button_text">Amintește-mi mai târziu</string>
+    <string name="stats_revamp_v2_intro_primary_button_text">Încearcă acum</string>
+    <string name="stats_revamp_v2_intro_content_note">Află mai multe în Site-ul meu &gt; Statistici &gt; Privire generală</string>
+    <string name="stats_revamp_v2_intro_content">În Privire generală vei înțelege cum evoluează conținutul tău și cum este privit de public.</string>
+    <string name="stats_revamp_v2_intro_header_title">Actualizare privire generală statistici</string>
+    <string name="stats_insights_followers_guide_card">💡 Publicarea de comentarii pe alte bloguri este o modalitate foarte bună de a stârni interesul și de a atrage urmăritori pe noul tău site.</string>
+    <string name="stats_insights_comments_guide_card">💡 Atinge „Vezi mai multe” pentru a vedea comentatorii cei mai activi.</string>
+    <string name="stats_insights_latest_post_empty">Mergi înapoi după ce ai publicat primul articol!</string>
+    <string name="stats_insights_views_and_visitors_visitors_empty_state">Vezi sfaturile noastre importante pentru a mări numărul de vizualizări și a-ți crește traficul %1$s</string>
+    <string name="stats_view_publicize">Conexiuni la media socială</string>
+    <string name="stats_action_card_schedule_post_message">✍️ Programează-ți ciornele ca să fie publicate la orele dorite, astfel atragi un public mai numeros.</string>
+    <string name="stats_action_card_blogging_reminders_message">💡 Publicarea constantă este o modalitate excelentă de a-ți construi o audiență. Adaugă reamintiri ca să rămâi consecvent.</string>
+    <string name="stats_action_card_grow_audience_message">💡 Îți dezvolți mai repede blogul cu ajutorul cursului &lt;i&gt;Introducere în blogging&lt;/i&gt; condus de experții noștri.</string>
     <string name="blogging_prompts_onboarding_prompts_loading">Încarc îndemnurile pentru publicare. Te rog așteaptă puțin și încearcă din nou.</string>
     <string name="hpp_bottom_helper_text">Nu te poți decide? Poți să schimbi tema oricând.</string>
     <string name="hpp_recommended_default_vertical">Blogging</string>
@@ -22,13 +55,10 @@ Language: ro
     <string name="stats_referrers_pie_chart_wordpress">WordPress</string>
     <string name="stats_referrers_pie_chart_total_label">Vizualizări</string>
     <string name="stats_action_card_schedule_post_button_label">Programează</string>
-    <string name="stats_action_card_schedule_post_message">✍️ Programează ca să publici conținutul, din ciornele tale, la momentul pe care îl alegi.</string>
     <string name="stats_action_card_schedule_post_title">Îți programezi articolele</string>
     <string name="stats_action_card_blogging_reminders_button_label">Setează reamintirile</string>
-    <string name="stats_action_card_blogging_reminders_message">💡 Setează reamintirile pentru a publica periodic pe site ca să-ți angrenezi cititorii și să atragi vizitatori noi.</string>
     <string name="stats_action_card_blogging_reminders_title">Setează reamintirile pentru publicare</string>
     <string name="stats_action_card_grow_audience_button_label">Vezi cursul</string>
-    <string name="stats_action_card_grow_audience_message">💡 Avem lecții ușor de înțeles, predate de cei mai buni bloggeri, care să te ajute să-ți dezvolți blogul.</string>
     <string name="stats_action_card_grow_audience_title">Crește-ți audiența</string>
     <string name="gutenberg_native_you_can_also_rearrange_blocks_by_tapping_a_block_and_then_tapping">Poți să rearanjezi blocurile și prin atingerea unui bloc și apoi a săgeților sus și jos care apar în partea de jos (stânga) a blocului pentru a-l muta mai sus sau mai jos.</string>
     <string name="gutenberg_native_image_file_not_found">Nu am găsit fișierul imagine.</string>
@@ -39,12 +69,8 @@ Language: ro
     <string name="quick_start_sites_type_all_tasks_completed">Ai finalizat toate sarcinile</string>
     <string name="quick_start_list_task_complete">Ai finalizat sarcina</string>
     <string name="me_btn_scan_login_code">Scanează codul de autentificare</string>
-    <string name="stats_insights_followers_guide_card">💡 Poți să lași un comentariu ca un gest pentru a încuraja implicarea pe blog și pentru a câștiga mai mulți urmăritori.</string>
-    <string name="stats_insights_comments_guide_card">💡 Dacă apeși pe Vezi mai multe, vezi cine a contribuit cel mai mult.</string>
     <string name="stats_insights_likes_guide_card">⭐️ Ultimul tău articol %1$s a avut %2$s aprecieri.</string>
     <string name="stats_most_popular_percent_views_empty">Activitate insuficientă. Revino mai târziu când site-ul va avea mai mulți vizitatori!</string>
-    <string name="stats_insights_latest_post_empty">Nu ai publicat încă niciun articol. Revino mai târziu după ce publici primul articol!</string>
-    <string name="stats_insights_views_and_visitors_visitors_empty_state">Dacă vrei să ai mai multe vizualizări și mai mult trafic, vezi sfaturile noastre la %1$s</string>
     <string name="stats_total_followers_content_description">%1s, %2s din numărul total de urmăritori</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
     <string name="pages_copy_link">Copiază legătura</string>
@@ -78,7 +104,7 @@ Language: ro
     <string name="stats_view_total_followers">Total urmăritori</string>
     <string name="stats_view_total_comments">Total comentarii</string>
     <string name="stats_view_total_likes">Total aprecieri</string>
-    <string name="blogging_prompts_notification_dismiss">Închide</string>
+    <string name="blogging_prompts_notification_dismiss">Refuză</string>
     <string name="blogging_prompts_answer_prompt_notification_answer_action">Răspunde</string>
     <string name="blogging_prompts_answer_prompt_notification_title">Îndemn zilnic</string>
     <string name="blogging_prompts_onboarding_got_it">Am înțeles</string>
@@ -711,9 +737,6 @@ Language: ro
     <string name="quick_start_dialog_review_pages_message">Modifică paginile, adaugă sau înlătură pagini pe site.</string>
     <string name="quick_start_dialog_review_pages_title">Revizuiește paginile site-ului</string>
     <string name="quick_start_dialog_edit_homepage_message_pages_short">Selectează %1$s Prima pagină %2$s pentru a edita prima pagină.</string>
-    <string name="quick_start_dialog_edit_homepage_message_short">Selectează %1$s Pagini %2$s pentru a vedea lista cu pagini.</string>
-    <string name="quick_start_dialog_edit_homepage_message">Modifică conținutul, adaugă sau înlătură conținut, pe prima pagină a site-ului tău.</string>
-    <string name="quick_start_dialog_edit_homepage_title">Editează prima pagină</string>
     <string name="reader_menu_mark_as_unseen">Marchează ca nevăzut</string>
     <string name="reader_menu_mark_as_seen">Marchează ca văzut</string>
     <string name="error_media_upload_failed_for_reason">Încărcarea elementului media a eșuat.\n%1$s</string>
@@ -823,7 +846,7 @@ Language: ro
     <string name="activity_log_activity_type_empty_subtitle">Nicio activitate înregistrată în intervalul de timp selectat.</string>
     <string name="activity_log_activity_type_empty_title">Nu sunt disponibile activități</string>
     <string name="activity_log_activity_type_error_subtitle">Te rog verifică-ți conexiunea la internet și încearcă din nou.</string>
-    <string name="activity_log_activity_type_error_title">Fără conexiune</string>
+    <string name="activity_log_activity_type_error_title">Nu ai conexiune</string>
     <string name="activity_log_activity_type_filter_active_label">Tip de activitate (%s)</string>
     <string name="activity_log_date_range_filter_label_content_description">Filtru pentru intervalul de timp</string>
     <string name="activity_log_active_filter_empty_subtitle">Încearcă ajustarea filtrelor pentru intervalul de timp sau tipul de activitate</string>
@@ -1129,7 +1152,7 @@ Language: ro
     <string name="menu_content_info">Structură conținut</string>
     <string name="everyone">Oricine</string>
     <string name="me">Eu</string>
-    <string name="gutenberg_native_dismiss">Respinge</string>
+    <string name="gutenberg_native_dismiss">Refuză</string>
     <string name="prepublishing_nudges_home_tags_not_set">Nesetat</string>
     <string name="prepublishing_tags_description">Etichetele le spun cititorilor la ce se referă articolul.</string>
     <string name="prepublishing_nudges_toolbar_title_publish">Data publicării</string>
@@ -1150,7 +1173,7 @@ Language: ro
     <string name="reader_btn_done">Gata</string>
     <string name="reader_btn_select_few_interests">Selectează câteva pentru a continua</string>
     <string name="post_status_post_published">Publicat</string>
-    <string name="post_status_post_trashed">Aruncat la gunoi</string>
+    <string name="post_status_post_trashed">Aruncate la gunoi</string>
     <string name="post_status_post_scheduled">Programat</string>
     <string name="publish_date">Data publicării</string>
     <string name="ccpa_privacy_notice_read">Citește notificarea de confidențialitate CCPA</string>
@@ -1614,7 +1637,7 @@ Language: ro
     <string name="domain_registration_privacy_protection_title">Protecție de confidențialitate</string>
     <string name="domain_registration_contact_form_input_error">Te rog introdu un %s valid</string>
     <string name="stats_management_new">Nou</string>
-    <string name="stats_management_dismiss_insights_news_card">Renunță</string>
+    <string name="stats_management_dismiss_insights_news_card">Refuză</string>
     <string name="stats_management_try_it_now">Încearcă acum</string>
     <string name="stats_management_news_card_message">Alegi ce statistici să vezi și te axezi asupra datelor care te interesează cel mai mult. Atinge %1$s în partea de jos a ecranului Privire generală pentru a-ți personaliza statisticile.</string>
     <string name="stats_manage_your_stats">Administrează-ți statisticile</string>
@@ -1700,7 +1723,7 @@ Language: ro
     <string name="plans_loading_error_no_cache_subtitle">Pentru a vedea planurile, este necesară o conexiune la internet.</string>
     <string name="plans_loading_error_no_plans_subtitle">Nu putem încărca planuri în acest moment. Te rog reîncearcă mai târziu.</string>
     <string name="plans_loading_error_no_plans_title">Nu putem încărca planuri</string>
-    <string name="plans_loading_error_network_title">Fără conexiune</string>
+    <string name="plans_loading_error_network_title">Nu ai conexiune</string>
     <string name="menu_switch_to_gutenberg_editor">Comută la editorul de blocuri</string>
     <string name="stats_loading_block_error">A fost o problemă la încărcarea datelor, reîncarcă pagina pentru a încerca din nou.</string>
     <string name="stats_loading_error">Datele nu au fost încărcate</string>
@@ -2969,7 +2992,7 @@ Language: ro
     <string name="notifications_tab">Filă notificări</string>
     <string name="notification_settings_item_other_account_emails_summary">Vom trimite întotdeauna emailuri importante cu privire la contul tău, dar poți primi și altele utile, în plus.</string>
     <string name="stats_insights_latest_post_summary">Rezumat pentru ultimul articol</string>
-    <string name="connectionbar_no_connection">Nicio conexiune</string>
+    <string name="connectionbar_no_connection">Nu ai conexiune</string>
     <string name="post_trashed">Articol trimis la gunoi</string>
     <string name="button_trash">Aruncă la gunoi</string>
     <string name="button_stats">Statistici</string>
@@ -3040,7 +3063,6 @@ Language: ro
     <string name="stats_followers_a_minute_ago">acum un minut</string>
     <string name="stats_followers_seconds_ago">acum o secundă</string>
     <string name="stats_view_followers">Urmăritori</string>
-    <string name="stats_view_publicize">Publicitate</string>
     <string name="stats_view_videos">Videouri</string>
     <string name="stats_view_top_posts_and_pages">Articole și pagini</string>
     <string name="stats_view_countries">Țări</string>
@@ -3145,7 +3167,7 @@ Language: ro
     <string name="mnu_comment_unapprove">Dezaprobă</string>
     <string name="mnu_comment_approve">Aprobă</string>
     <string name="edit_comment">Editează comentariul</string>
-    <string name="comment_status_trash">Aruncat la gunoi</string>
+    <string name="comment_status_trash">Aruncate la gunoi</string>
     <string name="comment_status_spam">Spam</string>
     <string name="comment_status_unapproved">În așteptare</string>
     <string name="comment_status_approved">Aprobat</string>
