@@ -15,6 +15,7 @@ import org.wordpress.android.models.CategoryNode
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.posts.GetCategoriesUseCase
 import org.wordpress.android.ui.prefs.categories.list.CategoryDetailNavigation.CreateCategory
+import org.wordpress.android.ui.prefs.categories.list.CategoryDetailNavigation.EditCategory
 import org.wordpress.android.ui.prefs.categories.list.UiState.Content
 import org.wordpress.android.ui.prefs.categories.list.UiState.Error.GenericError
 import org.wordpress.android.ui.prefs.categories.list.UiState.Error.NoConnection
@@ -109,7 +110,7 @@ class CategoriesListViewModel @Inject constructor(
 
     @SuppressWarnings("unused")
     fun onCategoryClicked(categoryNode: CategoryNode) {
-        // todo implement the logic of navigation to category detail page
+        _navigation.postValue(EditCategory(categoryNode.categoryId))
     }
 
     private fun processFetchCategoriesCallback(event: OnTaxonomyChanged) {
