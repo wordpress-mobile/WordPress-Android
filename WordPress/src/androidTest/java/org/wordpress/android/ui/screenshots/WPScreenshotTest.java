@@ -68,13 +68,13 @@ public class WPScreenshotTest extends BaseTest {
             // Enable Demo Mode
             mDemoModeEnabler.enable();
 
-            wpLogin();
+            wpLogin(); // TODO commented for quicker debugging
 
-            editBlogPost();
-            navigateDiscover();
-            navigateMySite();
-            navigateStats();
-            navigateNotifications();
+            // editBlogPost();
+            // navigateDiscover();
+            // navigateMySite();
+            // navigateStats();
+            // navigateNotifications();
             manageMedia();
 
             // Turn Demo Mode off on the emulator when we're done
@@ -253,7 +253,6 @@ public class WPScreenshotTest extends BaseTest {
         onView(withId(R.id.quick_link_ribbon_item_list))
                 .perform(scrollTo(hasDescendant(withText(R.string.media))))
                 .perform(actionOnItem(hasDescendant(withText(R.string.media)), click()));
-        // clickOn(R.string.media);
 
         waitForElementToBeDisplayedWithoutFailure(R.id.media_grid_item_image);
 
@@ -262,7 +261,7 @@ public class WPScreenshotTest extends BaseTest {
 
         takeScreenshot("6-upload-on-the-go");
 
-        pressBackUntilElementIsDisplayed(R.id.quick_link_ribbon_item_list);
+        pressBackUntilElementIsDisplayed(R.id.site_info);
     }
 
     private void takeScreenshot(String screenshotName) {
