@@ -21,8 +21,10 @@ import static androidx.test.espresso.matcher.ViewMatchers.withParent;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 import static org.wordpress.android.support.WPSupportUtils.clickOn;
+import static org.wordpress.android.support.WPSupportUtils.getTranslatedString;
 import static org.wordpress.android.support.WPSupportUtils.isElementDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.longClickOn;
+import static org.wordpress.android.support.WPSupportUtils.selectItemWithTitleInTabLayout;
 import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDisplayedWithoutFailure;
 
 public class MySitesPage {
@@ -106,5 +108,29 @@ public class MySitesPage {
             onView(withId(R.id.recycler_view))
                     .perform(actionOnItem(hasDescendant(itemViewMatcher), click()));
         }
+    }
+
+    public static void goToPosts() {
+        goToMenuTab();
+        clickOn(onView(withText(R.string.posts)));
+    }
+
+    public static void goToMedia() {
+        goToMenuTab();
+        clickOn(onView(withText(R.string.media)));
+    }
+
+    public static void goToStats() {
+        goToMenuTab();
+        clickOn(onView(withText(R.string.stats)));
+    }
+
+    @SuppressWarnings("unused")
+    public static void goToHomeTab() {
+        selectItemWithTitleInTabLayout(getTranslatedString(R.string.my_site_dashboard_tab_title), R.id.tab_layout);
+    }
+
+    public static void goToMenuTab() {
+        selectItemWithTitleInTabLayout(getTranslatedString(R.string.my_site_menu_tab_title), R.id.tab_layout);
     }
 }

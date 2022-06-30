@@ -12,6 +12,7 @@ import org.junit.ClassRule;
 import org.junit.Test;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
+import org.wordpress.android.e2e.pages.MySitesPage;
 import org.wordpress.android.e2e.pages.PostsListPage;
 import org.wordpress.android.e2e.pages.SitePickerPage;
 import org.wordpress.android.support.BaseTest;
@@ -20,13 +21,6 @@ import org.wordpress.android.ui.WPLaunchActivity;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.util.image.ImageType;
 
-import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.action.ViewActions.click;
-import static androidx.test.espresso.contrib.RecyclerViewActions.actionOnItem;
-import static androidx.test.espresso.contrib.RecyclerViewActions.scrollTo;
-import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
-import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.wordpress.android.support.WPSupportUtils.clickOn;
 import static org.wordpress.android.support.WPSupportUtils.clickOnViewWithTag;
 import static org.wordpress.android.support.WPSupportUtils.getCurrentActivity;
@@ -70,11 +64,11 @@ public class WPScreenshotTest extends BaseTest {
 
             wpLogin(); // TODO commented for quicker debugging
 
-            // editBlogPost();
-            // navigateDiscover();
-            // navigateMySite();
-            // navigateStats();
-            // navigateNotifications();
+            editBlogPost();
+            navigateDiscover();
+            navigateMySite();
+            navigateStats();
+            navigateNotifications();
             manageMedia();
 
             // Turn Demo Mode off on the emulator when we're done
@@ -93,7 +87,7 @@ public class WPScreenshotTest extends BaseTest {
         (new SitePickerPage()).chooseSiteWithURL("fourpawsdoggrooming.wordpress.com");
 
         // Choose "Posts"
-        clickOn(onView(withText(R.string.posts)));
+        MySitesPage.goToPosts();
 
         // Choose "Drafts"
         selectItemWithTitleInTabLayout(getTranslatedString(R.string.post_list_tab_drafts), R.id.tabLayout);
@@ -183,7 +177,7 @@ public class WPScreenshotTest extends BaseTest {
     private void moveToStats() {
         // Click on the "Sites" tab in the nav, then choose "Stats"
         clickOn(R.id.nav_sites);
-        clickOn(onView(withText(R.string.stats)));
+        MySitesPage.goToStats();
 
         waitForElementToBeDisplayedWithoutFailure(R.id.image_thumbnail);
 
@@ -250,11 +244,9 @@ public class WPScreenshotTest extends BaseTest {
     private void manageMedia() {
         // Click on the "Sites" tab in the nav, then choose "Media"
         clickOn(R.id.nav_sites);
-        onView(withId(R.id.quick_link_ribbon_item_list))
-                .perform(scrollTo(hasDescendant(withText(R.string.media))))
-                .perform(actionOnItem(hasDescendant(withText(R.string.media)), click()));
+        MySitesPage.goToMedia();
 
-        waitForElementToBeDisplayedWithoutFailure(R.id.media_grid_item_image);
+        waitForElementToBeDisplayedWithoutFailure(R.id.media_browser_container);
 
         idleFor(2000);
         setNightModeAndWait(true);
