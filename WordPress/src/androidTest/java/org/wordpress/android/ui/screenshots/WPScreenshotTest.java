@@ -169,19 +169,13 @@ public class WPScreenshotTest extends BaseTest {
         pressBackUntilElementIsDisplayed(R.id.nav_sites);
     }
 
-    private void moveToStats() {
+    private void navigateStats() {
         // Click on the "Sites" tab in the nav, then choose "Stats"
         clickOn(R.id.nav_sites);
         MySitesPage.goToStats();
 
-        waitForElementToBeDisplayedWithoutFailure(R.id.image_thumbnail);
-
         // Wait for the stats to load
         idleFor(8000);
-    }
-
-    private void navigateStats() {
-        moveToStats();
 
         swipeToAvoidGrayOverlay(R.id.statsPager);
 
