@@ -1342,7 +1342,16 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     @Override
     public void onMediaUploadSucceeded(final String localMediaId, final MediaFile mediaFile) {
         mUploadingMediaProgressMax.remove(localMediaId);
-        getGutenbergContainerFragment().mediaFileUploadSucceeded(Integer.valueOf(localMediaId), mediaFile.getFileURL(),
+        String mediaURL;
+        if (!TextUtils.isEmpty(mediaFile.getLargeURL())) {
+            mediaURL = mediaFile.getLargeURL();
+        } else if (!TextUtils.isEmpty(mediaFile.getMediumURL())) {
+            mediaURL = mediaFile.getMediumURL();
+        } else {
+            mediaURL = mediaFile.getFileURL();
+        }
+
+        getGutenbergContainerFragment().mediaFileUploadSucceeded(Integer.valueOf(localMediaId), mediaURL,
                 Integer.valueOf(mediaFile.getMediaId()));
     }
 
