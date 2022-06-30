@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.prefs.categories.detail
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
@@ -13,6 +14,7 @@ import org.wordpress.android.models.CategoryNode
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.posts.AddCategoryUseCase
+import org.wordpress.android.ui.posts.EditCategoryUseCase
 import org.wordpress.android.ui.posts.GetCategoriesUseCase
 import org.wordpress.android.ui.prefs.categories.detail.CategoryUpdateUiState.Failure
 import org.wordpress.android.ui.prefs.categories.detail.CategoryUpdateUiState.InProgress
@@ -26,6 +28,7 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.ScopedViewModel
+import java.util.ArrayList
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -34,6 +37,7 @@ class CategoryDetailViewModel @Inject constructor(
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val getCategoriesUseCase: GetCategoriesUseCase,
     private val addCategoryUseCase: AddCategoryUseCase,
+    private val editCategoryUseCase: EditCategoryUseCase,
     resourceProvider: ResourceProvider,
     private val dispatcher: Dispatcher,
     selectedSiteRepository: SelectedSiteRepository
@@ -58,30 +62,55 @@ class CategoryDetailViewModel @Inject constructor(
         dispatcher.unregister(this)
     }
 
-    fun start() {
+    fun start(categoryId: Long? = null) {
+        Log.e( "start: categoryId", categoryId.toString())
         if (isStarted) return
         isStarted = true
 
-        initCategories()
+        initCategories(categoryId)
     }
 
-    private fun initCategories() {
+    private fun initCategories(categoryId: Long?) {
         launch {
             val siteCategories = getCategoriesUseCase.getSiteCategories(siteModel)
             siteCategories.add(0, topLevelCategory)
-            _uiState.postValue(
-                    UiState(
-                            categories = siteCategories,
-                            selectedParentCategoryPosition = 0,
-                            categoryName = ""
-                    )
-            )
+            categoryId?.let { initializeEditCategoryState(siteCategories, categoryId) }
+                    ?: initializeAddCategoryState(siteCategories)
         }
+    }
+
+    private fun initializeAddCategoryState(siteCategories: ArrayList<CategoryNode>) {
+        _uiState.postValue(
+                UiState(
+                        categories = siteCategories,
+                        selectedParentCategoryPosition = 0,
+                        categoryName = ""
+                )
+        )
+    }
+
+    private fun initializeEditCategoryState(siteCategories: ArrayList<CategoryNode>, categoryId: Long) {
+        Log.e( "initializeEditCategoryState: ", categoryId.toString())
+        val existingCategory = siteCategories.filter { it.categoryId == categoryId }[0]
+        var parentCategoryPosition = siteCategories.indexOfFirst { it.categoryId == existingCategory.parentId }
+        if(parentCategoryPosition == -1) parentCategoryPosition = 0
+        Log.e( "initializeEditCategoryState: parentCategoryPosition ", parentCategoryPosition.toString())
+        Log.e( "initializeEditCategoryState: existing category", existingCategory.toString())
+        _uiState.postValue(
+                UiState(
+                        categories = siteCategories,
+                        selectedParentCategoryPosition = parentCategoryPosition,
+                        categoryName = existingCategory.name,
+                        categoryId = categoryId
+                )
+        )
     }
 
     fun onSubmitButtonClick() {
         _uiState.value?.let { state ->
-            addCategory(state.categoryName, state.categories[state.selectedParentCategoryPosition])
+            state.categoryId?.let {
+                editCategory(it, state.categoryName, state.categories[state.selectedParentCategoryPosition])
+            } ?: addCategory(state.categoryName, state.categories[state.selectedParentCategoryPosition])
         }
     }
 
@@ -95,6 +124,19 @@ class CategoryDetailViewModel @Inject constructor(
         launch {
             _onCategoryPush.postValue(Event(InProgress))
             addCategoryUseCase.addCategory(categoryText, parentCategory.categoryId, siteModel)
+        }
+    }
+
+    private fun editCategory(categoryId: Long, categoryText: String, parentCategory: CategoryNode) {
+        if (!networkUtilsWrapper.isNetworkAvailable()) {
+            _onCategoryPush.postValue(
+                    Event(Failure(UiStringRes(R.string.no_network_message)))
+            )
+            return
+        }
+        launch {
+            _onCategoryPush.postValue(Event(InProgress))
+            editCategoryUseCase.editCategory(categoryId, categoryText, parentCategory.categoryId, siteModel)
         }
     }
 
