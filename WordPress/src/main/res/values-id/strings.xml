@@ -22,13 +22,10 @@ Language: id
     <string name="stats_referrers_pie_chart_wordpress">WordPress</string>
     <string name="stats_referrers_pie_chart_total_label">Tayangan</string>
     <string name="stats_action_card_schedule_post_button_label">Jadwal</string>
-    <string name="stats_action_card_schedule_post_message">✍️ Jadwalkan pos untuk dipublikasikan di waktu yang terbaik dari layar konsep Anda.</string>
     <string name="stats_action_card_schedule_post_title">Jadwalkan pos Anda</string>
     <string name="stats_action_card_blogging_reminders_button_label">Setel pengingat</string>
-    <string name="stats_action_card_blogging_reminders_message">💡Setel pengingat untuk memublikasikan secara rutin guna mempertahankan pembaca Anda dan menarik perhatian pengunjung baru.</string>
     <string name="stats_action_card_blogging_reminders_title">Setel pengingat blogging Anda</string>
     <string name="stats_action_card_grow_audience_button_label">Periksa kursus</string>
-    <string name="stats_action_card_grow_audience_message">💡Kami menyediakan pelajaran yang mudah dipahami, yang dibawakan oleh blogger terbaik, untuk mengembangkan blog Anda.</string>
     <string name="stats_action_card_grow_audience_title">Perbanyak audiens Anda</string>
     <string name="gutenberg_native_you_can_also_rearrange_blocks_by_tapping_a_block_and_then_tapping">Anda juga dapat mengatur ulang blok dengan mengetuk blok lalu mengetuk anak panah atas dan bawah yang muncul di sisi kiri bawah blok untuk memindahkannya ke atas atau ke bawah.</string>
     <string name="gutenberg_native_image_file_not_found">Berkas gambar tidak ditemukan.</string>
@@ -39,12 +36,8 @@ Language: id
     <string name="quick_start_sites_type_all_tasks_completed">Semua tugas selesai</string>
     <string name="quick_start_list_task_complete">Tugas selesai</string>
     <string name="me_btn_scan_login_code">Pindai Kode Login</string>
-    <string name="stats_insights_followers_guide_card">💡Anda bisa coba meninggalkan komentar sebagai pemicu keterlibatan di blog untuk mendapatkan lebih banyak pengikut.</string>
-    <string name="stats_insights_comments_guide_card">💡Lihat kontributor teratas Anda dengan mengetuk LIHAT SELENGKAPNYA.</string>
     <string name="stats_insights_likes_guide_card">⭐️ Artikel terbaru Anda %1$s telah menerima %2$s suka.</string>
     <string name="stats_most_popular_percent_views_empty">Aktivitas tidak cukup. Periksa lagi nanti saat situs Anda lebih ramai pengunjung!</string>
-    <string name="stats_insights_latest_post_empty">Anda belum menerbitkan satu pos pun. Periksa lagi nanti setelah Anda memposkan pos pertama!</string>
-    <string name="stats_insights_views_and_visitors_visitors_empty_state">Jika ingin mendapatkan lebih banyak tayangan dan lalu lintas, simak tips jitu %1$s kami</string>
     <string name="stats_total_followers_content_description">%1s, %2s total pengikut</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
     <string name="pages_copy_link">Salin tautan</string>
@@ -711,9 +704,6 @@ Language: id
     <string name="quick_start_dialog_review_pages_message">Ubah, tambahkan, atau hapus halaman situs.</string>
     <string name="quick_start_dialog_review_pages_title">Tinjau laman situs</string>
     <string name="quick_start_dialog_edit_homepage_message_pages_short">Pilih %1$s Beranda %2$s untuk menyunting Beranda Anda.</string>
-    <string name="quick_start_dialog_edit_homepage_message_short">Pilih %1$s Halaman %2$s untuk melihat daftar halaman Anda.</string>
-    <string name="quick_start_dialog_edit_homepage_message">Ubah, tambahkan, atau hapus konten dari halaman beranda situs.</string>
-    <string name="quick_start_dialog_edit_homepage_title">Sunting halaman beranda</string>
     <string name="reader_menu_mark_as_unseen">Tandai sebagai belum dilihat</string>
     <string name="reader_menu_mark_as_seen">Tandai sebagai telah dilihat</string>
     <string name="error_media_upload_failed_for_reason">Unggahan media gagal.\n%1$s</string>
@@ -3040,7 +3030,6 @@ Language: id
     <string name="stats_followers_a_minute_ago">satu menit yang lalu</string>
     <string name="stats_followers_seconds_ago">detik yang lalu</string>
     <string name="stats_view_followers">Pengikut</string>
-    <string name="stats_view_publicize">Publikasikan</string>
     <string name="stats_view_videos">Video</string>
     <string name="stats_view_top_posts_and_pages">Pos &amp; Halaman</string>
     <string name="stats_view_countries">Negara</string>

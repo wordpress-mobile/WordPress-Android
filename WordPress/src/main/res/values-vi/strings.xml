@@ -22,13 +22,10 @@ Language: vi_VN
     <string name="stats_referrers_pie_chart_wordpress">WordPress</string>
     <string name="stats_referrers_pie_chart_total_label">Lượt xem</string>
     <string name="stats_action_card_schedule_post_button_label">Lên lịch</string>
-    <string name="stats_action_card_schedule_post_message">✍️ Lên lịch đăng bản nháp vào thời gian thích hợp nhất.</string>
     <string name="stats_action_card_schedule_post_title">Lên lịch bài viết</string>
     <string name="stats_action_card_blogging_reminders_button_label">Cài nhắc nhở</string>
-    <string name="stats_action_card_blogging_reminders_message">💡Cài nhắc nhở để giúp thu hút độc giả và tăng lượt truy cập.</string>
     <string name="stats_action_card_blogging_reminders_title">Nhắc đăng bài</string>
     <string name="stats_action_card_grow_audience_button_label">Chọn khóa học</string>
-    <string name="stats_action_card_grow_audience_message">💡Chúng tôi có những bài học dễ hiểu do các blogger giỏi nhất dạy để phát triển blog của bạn.</string>
     <string name="stats_action_card_grow_audience_title">Thu hút độc giả</string>
     <string name="gutenberg_native_you_can_also_rearrange_blocks_by_tapping_a_block_and_then_tapping">Bạn cũng có thể sắp xếp lại các khối bằng cách chạm vào một khối rồi nhấn vào mũi tên lên và xuống xuất hiện ở phía dưới bên trái của khối để di chuyển khối lên hoặc xuống.</string>
     <string name="gutenberg_native_image_file_not_found">Không tìm thấy hình.</string>
@@ -39,12 +36,8 @@ Language: vi_VN
     <string name="quick_start_sites_type_all_tasks_completed">Đã hoàn thành xong!</string>
     <string name="quick_start_list_task_complete">Hoàn thành mục tiêu</string>
     <string name="me_btn_scan_login_code">Quét mã đăng nhập</string>
-    <string name="stats_insights_followers_guide_card">💡Bạn có thể thử để lại nhận xét như một hành động khuyến khích nhằm thu hút nhiều người theo dõi hơn.</string>
-    <string name="stats_insights_comments_guide_card">💡Xem ai bình luận nhiều nhất bằng cách nhấn XEM THÊM.</string>
     <string name="stats_insights_likes_guide_card">⭐️ Bài đăng gần nhất %1$s đã nhận %2$s lượt thích.</string>
     <string name="stats_most_popular_percent_views_empty">Chưa có hoạt động. Kiểm tra lại sau khi trang của bạn có khách truy cập!</string>
-    <string name="stats_insights_latest_post_empty">Bạn chưa đăng bài viết nào. Kiểm tra lại sau khi bạn đã đăng bài đầu tiên!</string>
-    <string name="stats_insights_views_and_visitors_visitors_empty_state">Nếu bạn muốn nhận được lượt xem và lượng truy cập nhiều hơn, hãy xem các mẹo hàng đầu của chúng tôi %1$s</string>
     <string name="stats_total_followers_content_description">%1s, %2s trong tổng số người theo dõi</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
     <string name="pages_copy_link">Chép liên kết</string>
@@ -711,9 +704,6 @@ Language: vi_VN
     <string name="quick_start_dialog_review_pages_message">Cập nhật, tạo hoặc xóa trang.</string>
     <string name="quick_start_dialog_review_pages_title">Xem lại trang</string>
     <string name="quick_start_dialog_edit_homepage_message_pages_short">Chọn %1$s Trang chủ %2$s để sửa Trang chủ.</string>
-    <string name="quick_start_dialog_edit_homepage_message_short">Chọn %1$s Trang %2$s để xem danh sách trang.</string>
-    <string name="quick_start_dialog_edit_homepage_message">Cập nhật, tạo hoặc xóa nội dung ở trang chủ.</string>
-    <string name="quick_start_dialog_edit_homepage_title">Sửa trang chủ</string>
     <string name="reader_menu_mark_as_unseen">Đánh dấu chưa đọc</string>
     <string name="reader_menu_mark_as_seen">Đánh dấu đã đọc</string>
     <string name="error_media_upload_failed_for_reason">Tải lên media thất bại.\n%1$s</string>
@@ -3040,7 +3030,6 @@ Language: vi_VN
     <string name="stats_followers_a_minute_ago">1 phút trước</string>
     <string name="stats_followers_seconds_ago">giây trước</string>
     <string name="stats_view_followers">Người theo dõi</string>
-    <string name="stats_view_publicize">Publicize</string>
     <string name="stats_view_videos">Video</string>
     <string name="stats_view_top_posts_and_pages">Bài viết &amp; Trang</string>
     <string name="stats_view_countries">Quốc gia</string>

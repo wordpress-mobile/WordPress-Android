@@ -204,7 +204,6 @@ Language: th
     <string name="stats_followers_a_minute_ago">นาทีที่แล้ว</string>
     <string name="stats_followers_seconds_ago">วินาทีที่แล้ว</string>
     <string name="themes_fetching">กำลังดึงข้อมูลธีม</string>
-    <string name="stats_view_publicize">การเผยแพร่</string>
     <string name="ssl_certificate_details">รายละเอียด</string>
     <string name="cab_selected">%d ถูกเลือก</string>
     <string name="comment_reply_to_user">ตอบกลับไปที่ %s</string>

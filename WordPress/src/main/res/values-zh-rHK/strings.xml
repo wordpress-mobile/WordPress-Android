@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-06-21 09:54:08+0000
+Translation-Revision-Date: 2022-06-30 04:53:15+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.1
 Language: zh_TW
@@ -21,14 +21,11 @@ Language: zh_TW
     <string name="stats_referrers_pie_chart_search">搜尋</string>
     <string name="stats_referrers_pie_chart_total_label">檢視</string>
     <string name="stats_action_card_schedule_post_button_label">排程</string>
-    <string name="stats_action_card_schedule_post_message">✍️ 排程即可在最合適的時間從你的草稿發表內容。</string>
     <string name="stats_referrers_pie_chart_wordpress">WordPress</string>
     <string name="stats_action_card_schedule_post_title">排程你的文章</string>
     <string name="stats_action_card_blogging_reminders_button_label">設定提醒</string>
-    <string name="stats_action_card_blogging_reminders_message">💡 設定提醒以定期發表內容，持續吸引讀者並招來新的訪客。</string>
     <string name="stats_action_card_blogging_reminders_title">設定你的網誌提醒</string>
     <string name="stats_action_card_grow_audience_button_label">查看課程</string>
-    <string name="stats_action_card_grow_audience_message">💡 我們提供簡單易懂的課程，由最優秀的部落客教你如何經營網誌。</string>
     <string name="stats_action_card_grow_audience_title">讀者持續成長</string>
     <string name="gutenberg_native_you_can_also_rearrange_blocks_by_tapping_a_block_and_then_tapping">若要重新排列區塊，你也可依序點選區塊和區塊左下角顯示的上下鍵，將其向上或向下移動。</string>
     <string name="gutenberg_native_image_file_not_found">找不到圖片檔案。</string>
@@ -39,12 +36,8 @@ Language: zh_TW
     <string name="quick_start_sites_type_all_tasks_completed">所有工作都已完成</string>
     <string name="quick_start_list_task_complete">工作完成</string>
     <string name="me_btn_scan_login_code">掃描登入碼</string>
-    <string name="stats_insights_followers_guide_card">💡你可以嘗試留言鼓勵網誌互動，藉此吸引更多追蹤者。</string>
-    <string name="stats_insights_comments_guide_card">💡點選「檢視更多」即可查看最常參與的人員。</string>
     <string name="stats_insights_likes_guide_card">⭐️ 你的最新文章 %1$s 已獲得 %2$s 次按讚。</string>
     <string name="stats_most_popular_percent_views_empty">沒有足夠的活動。 有更多訪客造訪網站的時候，請再回來查看！</string>
-    <string name="stats_insights_latest_post_empty">你尚未發表任何文章。 發表第一篇文章之後，請再回來查看！</string>
-    <string name="stats_insights_views_and_visitors_visitors_empty_state">如果你想獲得更多瀏覽次數和流量，請參閱我們的重要秘訣 %1$s</string>
     <string name="stats_total_followers_content_description">%1s，追蹤者總數的 %2s</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
     <string name="pages_copy_link">複製連結</string>
@@ -710,10 +703,7 @@ Language: zh_TW
     <string name="quick_start_dialog_review_pages_message">變更、新增或移除網站的頁面。</string>
     <string name="quick_start_dialog_review_pages_title">檢閱網站頁面</string>
     <string name="quick_start_dialog_edit_homepage_message_pages_short">選取%1$s「首頁」%2$s以編輯首頁。</string>
-    <string name="quick_start_dialog_edit_homepage_message_short">選取%1$s「頁面」%2$s以檢視頁面清單。</string>
     <string name="quick_start_card_menu_pin">釘選此項目</string>
-    <string name="quick_start_dialog_edit_homepage_message">變更、新增或移除網站首頁的內容。</string>
-    <string name="quick_start_dialog_edit_homepage_title">編輯首頁</string>
     <string name="reader_menu_mark_as_unseen">標示為未讀。</string>
     <string name="reader_menu_mark_as_seen">標示為已讀。</string>
     <string name="error_media_upload_failed_for_reason">上傳媒體失敗。\n%1$s</string>
@@ -2220,7 +2210,7 @@ Language: zh_TW
     <string name="plugin_num_downloads">%s 次下載</string>
     <string name="plugin_num_ratings">%s 則評分</string>
     <string name="plugin_read_reviews">閱讀評論</string>
-    <string name="plugin_faq">常見問題</string>
+    <string name="plugin_faq">常見問題集</string>
     <string name="plugin_whatsnew">最新內容</string>
     <string name="plugin_installation">安裝</string>
     <string name="plugin_description">說明</string>
@@ -3042,7 +3032,6 @@ Language: zh_TW
     <string name="stats_followers_seconds_ago">幾秒鐘前</string>
     <string name="stats_view_top_posts_and_pages">文章與頁面</string>
     <string name="stats_view_videos">影片</string>
-    <string name="stats_view_publicize">宣傳</string>
     <string name="stats_view_followers">關注者</string>
     <string name="stats_view_countries">國家</string>
     <string name="stats_likes">按讚數</string>

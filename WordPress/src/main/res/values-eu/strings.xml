@@ -57,7 +57,6 @@ Language: eu_ES
     <string name="gutenberg_native_what_is_a_block">Zer da blokea?</string>
     <string name="stats_disabled_title">Estatistiken bila?</string>
     <string name="login_epilogue_create_new_site_button">Sortu gune berria</string>
-    <string name="quick_start_dialog_edit_homepage_title">Editatu zure hasierako orrialdea</string>
     <string name="gutenberg_native_choose_images">Aukeratu irudiak</string>
     <string name="gutenberg_native_customize_gradient">Pertsonalizatu gradientea</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_negative">Utzi</string>
@@ -457,7 +456,6 @@ Language: eu_ES
     <string name="stats_view_videos">Bideoak</string>
     <string name="stats_view_followers">Jarraitzaileak</string>
     <string name="stats_visitors">Bisitariak</string>
-    <string name="stats_view_publicize">Publizitatea egin</string>
     <string name="stats_followers_months">%1$d hilabete</string>
     <string name="stats_followers_a_minute_ago">duela minutu bat</string>
     <string name="stats_followers_seconds_ago">duela segundo batzuk</string>
