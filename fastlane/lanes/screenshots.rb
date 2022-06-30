@@ -146,7 +146,7 @@ platform :android do
       .select { |hsh| hsh[:promo_config] != false }
       .map {| hsh | [ hsh[:glotpress], hsh[:google_play] ]}
 
-    gp_downloadmetadata(project_url: "https://translate.wordpress.org/projects/apps/android/release-notes/",
+    gp_downloadmetadata(project_url: APP_SPECIFIC_VALUES[:wordpress][:glotpress_metadata_project],
       target_files: files,
       locales: locales,
       source_locale: "en-US",
