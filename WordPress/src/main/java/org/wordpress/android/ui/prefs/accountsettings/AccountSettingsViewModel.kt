@@ -88,14 +88,14 @@ class AccountSettingsViewModel @Inject constructor(
                 ),
                 webAddressSettingsUiState = WebAddressSettingsUiState(account.webAddress),
                 changePasswordSettingsUiState = ChangePasswordSettingsUiState(showChangePasswordProgressDialog),
-                error = null
+                toastMessage = null
         )
         return optimisticUpdateHandler.applyOptimisticallyChangedPreferences(uistate)
     }
 
     private suspend fun updatePrimarySiteSettingsUiState() {
         val siteViewModels = getSitesUseCase.get().map {
-            SiteViewModel(SiteUtils.getSiteNameOrHomeURL(it), it.siteId, SiteUtils.getHomeURLOrHostName(it))
+            SiteUiModel(SiteUtils.getSiteNameOrHomeURL(it), it.siteId, SiteUtils.getHomeURLOrHostName(it))
         }
         _accountSettingsUiState.update { state ->
             state.copy(
@@ -108,7 +108,7 @@ class AccountSettingsViewModel @Inject constructor(
     }
 
     private fun cancelPendingEmailChange() {
-        onAccountSettingsChange { pushAccountSettingsUseCase.cancelPendingEmailChange() }
+        onAccountSettingsChanged { pushAccountSettingsUseCase.cancelPendingEmailChange() }
     }
 
     fun onUsernameChangeConfirmedFromServer(userName: String) {
@@ -126,7 +126,7 @@ class AccountSettingsViewModel @Inject constructor(
     fun onPrimarySiteChanged(siteRemoteId: Long) {
         val addOptimisticUpdate = optimisticUpdateHandler.update(PRIMARYSITE_PREFERENCE_KEY, siteRemoteId.toString())
         val removeOptimisticUpdate = optimisticUpdateHandler.removeFirstChange(PRIMARYSITE_PREFERENCE_KEY)
-        onAccountSettingsChange(addOptimisticUpdate, removeOptimisticUpdate) {
+        onAccountSettingsChanged(addOptimisticUpdate, removeOptimisticUpdate) {
             pushAccountSettingsUseCase.updatePrimaryBlog(siteRemoteId.toString())
         }
     }
@@ -134,7 +134,7 @@ class AccountSettingsViewModel @Inject constructor(
     fun onEmailChanged(newEmail: String) {
         val addOptimisticUpdate = optimisticUpdateHandler.update(EMAIL_PREFERENCE_KEY, newEmail)
         val removeOptimisticUpdate = optimisticUpdateHandler.removeFirstChange(EMAIL_PREFERENCE_KEY)
-        onAccountSettingsChange(addOptimisticUpdate, removeOptimisticUpdate) {
+        onAccountSettingsChanged(addOptimisticUpdate, removeOptimisticUpdate) {
             pushAccountSettingsUseCase.updateEmail(newEmail)
         }
     }
@@ -142,14 +142,17 @@ class AccountSettingsViewModel @Inject constructor(
     fun onWebAddressChanged(newWebAddress: String) {
         val addOptimisticUpdate = optimisticUpdateHandler.update(WEBADDRESS_PREFERENCE_KEY, newWebAddress)
         val removeOptimisticUpdate = optimisticUpdateHandler.removeFirstChange(WEBADDRESS_PREFERENCE_KEY)
-        onAccountSettingsChange(addOptimisticUpdate, removeOptimisticUpdate) {
+        onAccountSettingsChanged(addOptimisticUpdate, removeOptimisticUpdate) {
             pushAccountSettingsUseCase.updateWebAddress(newWebAddress)
         }
     }
 
     fun onPasswordChanged(newPassword: String) {
         showChangePasswordDialog(true)
-        onAccountSettingsChange { pushAccountSettingsUseCase.updatePassword(newPassword) }
+        val onSuccess = {
+            updateToastMessageUiState(resourceProvider.getString(R.string.change_password_confirmation))
+        }
+        onAccountSettingsChanged(onSuccess = onSuccess) { pushAccountSettingsUseCase.updatePassword(newPassword) }
         showChangePasswordDialog(false)
     }
 
@@ -163,9 +166,10 @@ class AccountSettingsViewModel @Inject constructor(
         }
     }
 
-    private fun onAccountSettingsChange(
+    private fun onAccountSettingsChanged(
         addOptimisticUpdate: (() -> Unit)? = null,
         removeOptimisticUpdate: (() -> Unit)? = null,
+        onSuccess: (() -> Unit)? = null,
         updateAccountSettings: suspend () -> OnAccountChanged
     ) {
         addOptimisticUpdate?.let {
@@ -179,6 +183,8 @@ class AccountSettingsViewModel @Inject constructor(
             updateAccountSettingsUiState()
             if (onAccountChangedEvent.isError) {
                 handleError(onAccountChangedEvent.error)
+            } else {
+                onSuccess?.invoke()
             }
         }
     }
@@ -198,18 +204,24 @@ class AccountSettingsViewModel @Inject constructor(
             }
             else -> resourceProvider.getString(R.string.error_post_account_settings)
         }
-        updateErrorUiState(errorMessage)
+        updateToastMessageUiState(errorMessage)
     }
 
-    private fun updateErrorUiState(errorMessage: String?) {
+    private fun updateToastMessageUiState(errorMessage: String?) {
         _accountSettingsUiState.update {
-            it.copy(error = errorMessage)
+            it.copy(toastMessage = errorMessage)
         }
     }
 
     fun onToastShown(toastMessage: String) {
-        if (_accountSettingsUiState.value.error.equals(toastMessage)) {
-            updateErrorUiState(null)
+        if (_accountSettingsUiState.value.toastMessage.equals(toastMessage)) {
+            updateToastMessageUiState(null)
+        }
+    }
+
+    fun onUserConfirmedSnackBarShown() {
+        _accountSettingsUiState.update {
+            it.copy(userNameSettingsUiState = it.userNameSettingsUiState.copy(showUserNameConfirmedSnackBar = false))
         }
     }
 
@@ -247,9 +259,9 @@ class AccountSettingsViewModel @Inject constructor(
             )
     }
 
-    data class SiteViewModel(val siteName: String, val siteId: Long, val homeURLOrHostName: String)
+    data class SiteUiModel(val siteName: String, val siteId: Long, val homeURLOrHostName: String)
 
-    data class PrimarySiteSettingsUiState(val primarySite: SiteViewModel? = null, val sites: List<SiteViewModel>?) {
+    data class PrimarySiteSettingsUiState(val primarySite: SiteUiModel? = null, val sites: List<SiteUiModel>?) {
         val siteNames
             get() = sites?.map { it.siteName }?.toTypedArray()
 
@@ -270,7 +282,7 @@ class AccountSettingsViewModel @Inject constructor(
         val primarySiteSettingsUiState: PrimarySiteSettingsUiState,
         val webAddressSettingsUiState: WebAddressSettingsUiState,
         val changePasswordSettingsUiState: ChangePasswordSettingsUiState,
-        val error: String?
+        val toastMessage: String?
     )
 
     override fun onCleared() {
