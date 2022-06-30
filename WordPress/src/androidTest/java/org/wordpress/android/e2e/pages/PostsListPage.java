@@ -8,8 +8,10 @@ import androidx.viewpager.widget.ViewPager;
 import org.wordpress.android.R;
 
 import static org.wordpress.android.support.WPSupportUtils.getCurrentActivity;
+import static org.wordpress.android.support.WPSupportUtils.getTranslatedString;
 import static org.wordpress.android.support.WPSupportUtils.scrollToAndClickOnTextInRecyclerView;
 import static org.wordpress.android.support.WPSupportUtils.scrollToTopOfRecyclerView;
+import static org.wordpress.android.support.WPSupportUtils.selectItemWithTitleInTabLayout;
 
 public class PostsListPage {
     public PostsListPage() {}
@@ -32,5 +34,9 @@ public class PostsListPage {
                     .findViewById(R.id.ptr_layout)).getChildAt(0)).getChildAt(0);
         }
         return recyclerView;
+    }
+
+    public static void goToDrafts() {
+        selectItemWithTitleInTabLayout(getTranslatedString(R.string.post_list_tab_drafts), R.id.tabLayout);
     }
 }

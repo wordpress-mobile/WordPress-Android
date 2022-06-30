@@ -24,12 +24,10 @@ import org.wordpress.android.util.image.ImageType;
 import static org.wordpress.android.support.WPSupportUtils.clickOn;
 import static org.wordpress.android.support.WPSupportUtils.clickOnViewWithTag;
 import static org.wordpress.android.support.WPSupportUtils.getCurrentActivity;
-import static org.wordpress.android.support.WPSupportUtils.getTranslatedString;
 import static org.wordpress.android.support.WPSupportUtils.idleFor;
 import static org.wordpress.android.support.WPSupportUtils.isElementDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.isTabletScreen;
 import static org.wordpress.android.support.WPSupportUtils.pressBackUntilElementIsDisplayed;
-import static org.wordpress.android.support.WPSupportUtils.selectItemWithTitleInTabLayout;
 import static org.wordpress.android.support.WPSupportUtils.setNightMode;
 import static org.wordpress.android.support.WPSupportUtils.swipeDownOnView;
 import static org.wordpress.android.support.WPSupportUtils.swipeLeftOnViewPager;
@@ -86,11 +84,8 @@ public class WPScreenshotTest extends BaseTest {
 
         (new SitePickerPage()).chooseSiteWithURL("fourpawsdoggrooming.wordpress.com");
 
-        // Choose "Posts"
         MySitesPage.goToPosts();
-
-        // Choose "Drafts"
-        selectItemWithTitleInTabLayout(getTranslatedString(R.string.post_list_tab_drafts), R.id.tabLayout);
+        PostsListPage.goToDrafts();
 
         // Get a screenshot of the editor with the block library expanded
         String name = "1-create-a-site-or-start-a-blog";
