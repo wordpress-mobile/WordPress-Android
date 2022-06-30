@@ -276,8 +276,10 @@ platform :android do
 
   ### Libraries Translation Merging ###
 
-  MAIN_STRINGS_PATH = './WordPress/src/main/res/values/strings.xml'.freeze
-  FROZEN_STRINGS_DIR_PATH = './fastlane/resources/values/'.freeze
+  WORDPRESS_MAIN_STRINGS_PATH = './WordPress/src/main/res/values/strings.xml'.freeze
+  WORDPRESS_FROZEN_STRINGS_DIR_PATH = './fastlane/resources/values/'.freeze
+  JETPACK_MAIN_STRINGS_PATH = './WordPress/src/jetpack/res/values/strings.xml'.freeze
+  JETPACK_FROZEN_STRINGS_DIR_PATH = './fastlane/jetpack_resources/values/'.freeze
   LOCAL_LIBRARIES_STRINGS_PATHS = [
     # Note: for those we don't set `add_ignore_attr` to true because we currently use `checkDependencies true` in `WordPress/build.gradle`
     # Which will correctly detect strings from the app's `strings.xml` being used by one of the module.
@@ -321,16 +323,22 @@ platform :android do
     # (like `FileUtils` calls here) run relative to the `./fastlane` folder, but the `*_DIR_PATH` we use are relative to the repo root.
     # See: https://docs.fastlane.tools/advanced/fastlane/#directory-behavior
     Dir.chdir('..') do
-      FileUtils.mkdir_p(FROZEN_STRINGS_DIR_PATH)
-      FileUtils.cp(MAIN_STRINGS_PATH, FROZEN_STRINGS_DIR_PATH)
+      FileUtils.mkdir_p(WORDPRESS_FROZEN_STRINGS_DIR_PATH)
+      FileUtils.cp(WORDPRESS_MAIN_STRINGS_PATH, WORDPRESS_FROZEN_STRINGS_DIR_PATH)
+      FileUtils.mkdir_p(JETPACK_FROZEN_STRINGS_DIR_PATH)
+      FileUtils.cp(JETPACK_MAIN_STRINGS_PATH, JETPACK_FROZEN_STRINGS_DIR_PATH)
     end
-    git_commit(path: File.join(FROZEN_STRINGS_DIR_PATH, 'strings.xml'), message: 'Freeze strings for translation', allow_nothing_to_commit: true)
+    git_commit(
+      path: [File.join(WORDPRESS_FROZEN_STRINGS_DIR_PATH, 'strings.xml'), File.join(JETPACK_FROZEN_STRINGS_DIR_PATH, 'strings.xml')],
+      message: 'Freeze strings for translation',
+      allow_nothing_to_commit: true
+    )
   end
 
   desc 'Merge libraries strings files into the main app one'
   lane :localize_libraries do
     # Merge `strings.xml` files of libraries that are hosted locally in the repository (in `./libs` folder)
-    an_localize_libs(app_strings_path: MAIN_STRINGS_PATH, libs_strings_path: LOCAL_LIBRARIES_STRINGS_PATHS)
+    an_localize_libs(app_strings_path: WORDPRESS_MAIN_STRINGS_PATH, libs_strings_path: LOCAL_LIBRARIES_STRINGS_PATHS)
 
     # Merge `strings.xml` files of libraries that are hosted in separate repositories (and linked as binary dependencies with the project)
     REMOTE_LIBRARIES_STRINGS_PATHS.each do |lib|
@@ -357,13 +365,13 @@ platform :android do
           source_id: lib[:source_id],
           add_ignore_attr: true # The linter is not be able to detect if a merged string is actually used by a binary dependency
         }]
-        an_localize_libs(app_strings_path: MAIN_STRINGS_PATH, libs_strings_path: lib_to_merge)
+        an_localize_libs(app_strings_path: WORDPRESS_MAIN_STRINGS_PATH, libs_strings_path: lib_to_merge)
         File.delete(download_path) if File.exist?(download_path)
       end
     end
 
     # Commit changes
-    git_commit(path: MAIN_STRINGS_PATH, message: 'Merge strings from libraries for translation', allow_nothing_to_commit: true)
+    git_commit(path: WORDPRESS_MAIN_STRINGS_PATH, message: 'Merge strings from libraries for translation', allow_nothing_to_commit: true)
   end
 
   #####################################################################################
