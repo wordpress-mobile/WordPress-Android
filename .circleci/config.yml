@@ -23,7 +23,7 @@ commands:
       parameters:
         jvmargs:
           type: string
-          default: "Xmx4096m"
+          default: "Xmx2048m"
       steps:
         - run:
             name: Update memory setting
