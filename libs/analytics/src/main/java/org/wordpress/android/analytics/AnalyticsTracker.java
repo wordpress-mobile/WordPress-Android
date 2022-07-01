@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -986,6 +988,19 @@ public final class AnalyticsTracker {
 
         for (Tracker tracker : TRACKERS) {
             tracker.track(stat);
+        }
+    }
+
+    public static @Nullable String getAnonID() {
+        if (TRACKERS.isEmpty()) {
+            return null;
+        }
+        Tracker tracker = TRACKERS.get(0);
+        String anonId = tracker.getAnonID();
+        if (anonId == null) {
+            return tracker.generateNewAnonID();
+        } else {
+            return anonId;
         }
     }
 
