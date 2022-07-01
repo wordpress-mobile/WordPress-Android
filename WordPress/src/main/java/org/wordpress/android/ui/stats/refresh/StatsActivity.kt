@@ -5,7 +5,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.activity.viewModels
+import androidx.core.view.isVisible
 import dagger.hilt.android.AndroidEntryPoint
+import org.wordpress.android.BuildConfig
+import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.StatsListActivityBinding
 import org.wordpress.android.fluxc.model.SiteModel
@@ -22,7 +25,21 @@ class StatsActivity : LocaleAwareActivity() {
     private val viewModel: StatsViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(StatsListActivityBinding.inflate(layoutInflater).root)
+
+        with(StatsListActivityBinding.inflate(layoutInflater)) {
+            setContentView(root)
+            if (!BuildConfig.IS_JETPACK_APP) {
+                jetpackBanner.root.isVisible = true
+                setNavigationBarColorForBanner()
+            }
+        }
+    }
+
+    /**
+     * Sets the navigation bar color as same as jetpack banner background color.
+     */
+    private fun setNavigationBarColorForBanner() {
+        window.navigationBarColor = getColor(R.color.jetpack_banner_background)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
