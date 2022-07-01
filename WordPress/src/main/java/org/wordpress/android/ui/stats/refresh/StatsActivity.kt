@@ -2,6 +2,8 @@ package org.wordpress.android.ui.stats.refresh
 
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
+import android.content.res.Configuration.ORIENTATION_PORTRAIT
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.activity.viewModels
@@ -23,23 +25,35 @@ import javax.inject.Inject
 class StatsActivity : LocaleAwareActivity() {
     @Inject lateinit var statsSiteProvider: StatsSiteProvider
     private val viewModel: StatsViewModel by viewModels()
+    private var initialNavigationBarColor = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         with(StatsListActivityBinding.inflate(layoutInflater)) {
             setContentView(root)
             if (!BuildConfig.IS_JETPACK_APP) {
+                initialNavigationBarColor = window.navigationBarColor
                 jetpackBanner.root.isVisible = true
                 setNavigationBarColorForBanner()
             }
         }
     }
 
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        setNavigationBarColorForBanner()
+    }
+
     /**
-     * Sets the navigation bar color as same as jetpack banner background color.
+     * Sets the navigation bar color as same as Jetpack banner background color in portrait orientation, initial color
+     * in horizontal orientation.
      */
     private fun setNavigationBarColorForBanner() {
-        window.navigationBarColor = getColor(R.color.jetpack_banner_background)
+        window.navigationBarColor = when (resources.configuration.orientation) {
+            ORIENTATION_PORTRAIT -> getColor(R.color.jetpack_banner_background)
+            else -> initialNavigationBarColor
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

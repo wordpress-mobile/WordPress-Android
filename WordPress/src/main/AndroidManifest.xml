@@ -312,6 +312,7 @@
         <activity
             android:name=".ui.stats.refresh.StatsActivity"
             android:launchMode="singleTop"
+            android:configChanges="orientation|screenSize"
             android:theme="@style/WordPress.NoActionBar" />
         <activity
             android:name=".ui.stats.refresh.StatsViewAllActivity"
