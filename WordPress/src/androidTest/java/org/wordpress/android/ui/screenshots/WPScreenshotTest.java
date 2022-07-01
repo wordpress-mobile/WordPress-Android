@@ -60,7 +60,7 @@ public class WPScreenshotTest extends BaseTest {
             // Enable Demo Mode
             mDemoModeEnabler.enable();
 
-            wpLogin(); // TODO commented for quicker debugging
+            wpLogin();
 
             // Disabled because it keeps failing with the `AppNotIdleException` caused by an infinite auto-save loop
             // In the Draft posts list. On the UI, progress indicator at the bottom keeps flashing.
