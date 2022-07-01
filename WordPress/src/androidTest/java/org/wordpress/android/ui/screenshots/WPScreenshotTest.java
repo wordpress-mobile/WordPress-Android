@@ -62,8 +62,9 @@ public class WPScreenshotTest extends BaseTest {
 
             wpLogin();
 
-            // Disabled because it keeps failing with the `AppNotIdleException` caused by an infinite auto-save loop
-            // In the Draft posts list. On the UI, progress indicator at the bottom keeps flashing.
+            // Disabled because it keeps failing with the `AppNotIdleException`
+            // caused by an infinite auto-save loop in the Draft posts list.
+            // On the UI it's shown by the flashing progress indicator at the bottom.
             // editBlogPost();
             navigateDiscover();
             navigateMySite();
