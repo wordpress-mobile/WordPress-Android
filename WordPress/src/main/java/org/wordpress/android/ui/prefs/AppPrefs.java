@@ -276,7 +276,7 @@ public class AppPrefs {
         // Used to identify the App Settings for initial screen that is updated when the variant is assigned
         wp_pref_initial_screen,
 
-        BLOGGING_PROMPT_ONBOARDING_WAS_DISPLAYED
+        STATS_REVAMP2_FEATURE_ANNOUNCEMENT_DISPLAYED
     }
 
     private static SharedPreferences prefs() {
@@ -1324,12 +1324,12 @@ public class AppPrefs {
         return DeletablePrefKey.SHOULD_SHOW_WEEKLY_ROUNDUP_NOTIFICATION.name() + siteId;
     }
 
-    public static boolean shouldDisplayBloggingPromptOnboarding() {
-        return prefs().getBoolean(UndeletablePrefKey.BLOGGING_PROMPT_ONBOARDING_WAS_DISPLAYED.name(), true);
+    public static boolean shouldDisplayStatsRevampFeatureAnnouncement() {
+        return prefs().getBoolean(UndeletablePrefKey.STATS_REVAMP2_FEATURE_ANNOUNCEMENT_DISPLAYED.name(), true);
     }
 
-    public static void setShouldDisplayBloggingPromptOnboarding(boolean isDisplayed) {
-        prefs().edit().putBoolean(UndeletablePrefKey.BLOGGING_PROMPT_ONBOARDING_WAS_DISPLAYED.name(), isDisplayed)
+    public static void setShouldDisplayStatsRevampFeatureAnnouncement(boolean isDisplayed) {
+        prefs().edit().putBoolean(UndeletablePrefKey.STATS_REVAMP2_FEATURE_ANNOUNCEMENT_DISPLAYED.name(), isDisplayed)
                .apply();
     }
 
@@ -1394,20 +1394,24 @@ public class AppPrefs {
         setBoolean(DeletablePrefKey.MY_SITE_DEFAULT_TAB_EXPERIMENT_VARIANT_ASSIGNED, true);
     }
 
-    public static Date getSkippedPromptDay() {
-        long promptSkippedMillis = getLong(DeletablePrefKey.SKIPPED_BLOGGING_PROMPT_DAY);
+    public static Date getSkippedPromptDay(int siteId) {
+        long promptSkippedMillis = prefs().getLong(getSkippedBloggingPromptDayConfigKey(siteId), 0);
         if (promptSkippedMillis == 0) {
             return null;
         }
         return new Date(promptSkippedMillis);
     }
 
-    public static void setSkippedPromptDay(@Nullable Date date) {
+    public static void setSkippedPromptDay(@Nullable Date date, int siteId) {
         if (date == null) {
-            remove(DeletablePrefKey.SKIPPED_BLOGGING_PROMPT_DAY);
+            prefs().edit().remove(getSkippedBloggingPromptDayConfigKey(siteId)).apply();
             return;
         }
-        setLong(DeletablePrefKey.SKIPPED_BLOGGING_PROMPT_DAY, date.getTime());
+        prefs().edit().putLong(getSkippedBloggingPromptDayConfigKey(siteId), date.getTime()).apply();
+    }
+
+    @NonNull private static String getSkippedBloggingPromptDayConfigKey(int siteId) {
+        return DeletablePrefKey.SKIPPED_BLOGGING_PROMPT_DAY.name() + siteId;
     }
 
     public static void setInitialScreenFromMySiteDefaultTabExperimentVariant(String variant) {

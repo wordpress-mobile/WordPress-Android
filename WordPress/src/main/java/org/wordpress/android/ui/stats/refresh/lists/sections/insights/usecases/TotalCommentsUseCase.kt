@@ -7,32 +7,25 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_TOTAL_COMMENT
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel
-import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
-import org.wordpress.android.fluxc.network.utils.StatsGranularity.WEEKS
-import org.wordpress.android.fluxc.store.StatsStore.InsightType
-import org.wordpress.android.fluxc.store.StatsStore.StatsType
-import org.wordpress.android.fluxc.store.StatsStore.TimeStatsType
+import org.wordpress.android.fluxc.store.StatsStore.InsightType.TOTAL_COMMENTS
 import org.wordpress.android.fluxc.store.stats.time.VisitsAndViewsStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.StatsViewType
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewInsightDetails
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
-import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
-import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.VIEW_ALL
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatelessUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemGuideCard
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TitleWithMore
-import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularUseCaseFactory
-import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.InsightUseCaseFactory
-import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.ViewsAndVisitorsUseCase.UiState
 import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetUpdater.StatsWidgetUpdaters
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
-import org.wordpress.android.ui.stats.refresh.utils.toStatsSection
+import org.wordpress.android.ui.stats.refresh.utils.trackWithType
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
@@ -47,9 +40,6 @@ import kotlin.math.ceil
 class TotalCommentsUseCase @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
-    private val statsType: StatsType,
-    private val statsGranularity: StatsGranularity,
-    private val selectedDateProvider: SelectedDateProvider,
     private val visitsAndViewsStore: VisitsAndViewsStore,
     private val statsSiteProvider: StatsSiteProvider,
     private val resourceProvider: ResourceProvider,
@@ -59,13 +49,7 @@ class TotalCommentsUseCase @Inject constructor(
     private val statsWidgetUpdaters: StatsWidgetUpdaters,
     private val localeManagerWrapper: LocaleManagerWrapper,
     private val useCaseMode: UseCaseMode
-) : BaseStatsUseCase<VisitsAndViewsModel, UiState>(
-        statsType,
-        mainDispatcher,
-        bgDispatcher,
-        UiState(),
-        uiUpdateParams = listOf(UseCaseParam.SelectedDateParam(statsGranularity.toStatsSection()))
-) {
+) : StatelessUseCase<VisitsAndViewsModel>(TOTAL_COMMENTS, mainDispatcher, bgDispatcher) {
     override fun buildLoadingItem() = listOf(TitleWithMore(string.stats_view_total_comments))
 
     override fun buildEmptyItem() = listOf(buildTitle(), Empty())
@@ -135,13 +119,13 @@ class TotalCommentsUseCase @Inject constructor(
         }
     }
 
-    override fun buildUiModel(domainModel: VisitsAndViewsModel, uiState: UiState): List<BlockListItem> {
+    override fun buildUiModel(domainModel: VisitsAndViewsModel): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
         if (domainModel.dates.isNotEmpty()) {
             items.add(buildTitle())
             items.add(totalStatsMapper.buildTotalCommentsValue(domainModel.dates))
             totalStatsMapper.buildTotalCommentsInformation(domainModel.dates)?.let { items.add(it) }
-            if (totalStatsMapper.shouldShowCommentsGuideCard(domainModel.dates)) {
+            if (useCaseMode == BLOCK && totalStatsMapper.shouldShowCommentsGuideCard(domainModel.dates)) {
                 items.add(ListItemGuideCard(resourceProvider.getString(string.stats_insights_comments_guide_card)))
             }
         } else {
@@ -152,20 +136,17 @@ class TotalCommentsUseCase @Inject constructor(
 
     private fun buildTitle() = TitleWithMore(
             string.stats_view_total_comments,
-            navigationAction = if (useCaseMode == VIEW_ALL) null else ListItemInteraction.create(this::onViewMoreClick)
+            navigationAction = if (useCaseMode == BLOCK) ListItemInteraction.create(this::onViewMoreClick) else null
     )
 
     private fun onViewMoreClick() {
-        analyticsTracker.track(
-                AnalyticsTracker.Stat.STATS_TOTAL_COMMENTS_VIEW_MORE_TAPPED,
-                statsSiteProvider.siteModel
-        )
+        analyticsTracker.trackWithType(AnalyticsTracker.Stat.STATS_INSIGHTS_VIEW_MORE, TOTAL_COMMENTS)
         navigateTo(
                 ViewInsightDetails(
                         StatsSection.TOTAL_COMMENTS_DETAIL,
                         StatsViewType.TOTAL_COMMENTS,
-                        statsGranularity,
-                        selectedDateProvider.getSelectedDate(statsGranularity)
+                        null,
+                        null
                 )
         )
     }
@@ -178,7 +159,6 @@ class TotalCommentsUseCase @Inject constructor(
     @Inject constructor(
         @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
         @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher,
-        private val selectedDateProvider: SelectedDateProvider,
         private val visitsAndViewsStore: VisitsAndViewsStore,
         private val statsSiteProvider: StatsSiteProvider,
         private val resourceProvider: ResourceProvider,
@@ -192,42 +172,6 @@ class TotalCommentsUseCase @Inject constructor(
                 TotalCommentsUseCase(
                         mainDispatcher,
                         backgroundDispatcher,
-                        InsightType.TOTAL_COMMENTS,
-                        WEEKS,
-                        selectedDateProvider,
-                        visitsAndViewsStore,
-                        statsSiteProvider,
-                        resourceProvider,
-                        statsDateFormatter,
-                        totalStatsMapper,
-                        analyticsTracker,
-                        statsWidgetUpdaters,
-                        localeManagerWrapper,
-                        useCaseMode
-                )
-    }
-
-    class TotalCommentsGranularUseCaseFactory
-    @Inject constructor(
-        @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
-        @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher,
-        private val selectedDateProvider: SelectedDateProvider,
-        private val visitsAndViewsStore: VisitsAndViewsStore,
-        private val statsSiteProvider: StatsSiteProvider,
-        private val resourceProvider: ResourceProvider,
-        private val statsDateFormatter: StatsDateFormatter,
-        private val totalStatsMapper: TotalStatsMapper,
-        private val analyticsTracker: AnalyticsTrackerWrapper,
-        private val statsWidgetUpdaters: StatsWidgetUpdaters,
-        private val localeManagerWrapper: LocaleManagerWrapper
-    ) : GranularUseCaseFactory {
-        override fun build(granularity: StatsGranularity, useCaseMode: UseCaseMode) =
-                TotalCommentsUseCase(
-                        mainDispatcher,
-                        backgroundDispatcher,
-                        TimeStatsType.OVERVIEW,
-                        granularity,
-                        selectedDateProvider,
                         visitsAndViewsStore,
                         statsSiteProvider,
                         resourceProvider,

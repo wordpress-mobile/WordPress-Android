@@ -16,7 +16,7 @@ class TotalStatsMapperTest : BaseUnitTest() {
     @Mock lateinit var statsUtils: StatsUtils
     private lateinit var mapper: TotalStatsMapper
     private val previousWeekData = listOf(5L, 10, 15, 20, 25, 30, 35)
-    private val currentWeekData = listOf(40L, 45, 50, 55, 60, 65, 70, 75)
+    private val currentWeekData = listOf(40L, 45, 50, 55, 60, 65, 70)
     private val dates = (previousWeekData + currentWeekData).map {
         PeriodData("", 0, 0, it, 0, it, 0)
     }

@@ -9,7 +9,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import org.wordpress.android.R
-import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.DAY_STATS_USE_CASE
@@ -53,7 +52,7 @@ abstract class StatsListViewModel(
     protected val dateSelector: StatsDateSelector,
     popupMenuHandler: ItemPopupMenuHandler? = null,
     private val newsCardHandler: NewsCardHandler? = null,
-    private val actionCardHandler: ActionCardHandler? = null
+    actionCardHandler: ActionCardHandler? = null
 ) : ScopedViewModel(defaultDispatcher) {
     private var trackJob: Job? = null
     private var isInitialized = false
@@ -107,7 +106,7 @@ abstract class StatsListViewModel(
     fun onScrolledToBottom() {
         if (trackJob?.isCompleted != false) {
             trackJob = launch {
-                analyticsTracker.track(AnalyticsTracker.Stat.STATS_SCROLLED_TO_BOTTOM)
+                analyticsTracker.track(Stat.STATS_SCROLLED_TO_BOTTOM)
                 delay(SCROLL_EVENT_DELAY)
             }
         }

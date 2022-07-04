@@ -638,6 +638,7 @@
     <dimen name="mlp_layout_card_height">240dp</dimen>
     <dimen name="mlp_layout_card_width">160dp</dimen>
     <dimen name="mlp_layout_card_margin_start">20dp</dimen>
+    <dimen name="mlp_layout_card_margin_end">20dp</dimen>
     <dimen name="mlp_layouts_category_radius">40dp</dimen>
     <dimen name="mlp_layouts_category_height">36dp</dimen>
     <dimen name="mlp_category_horizontal_margin">@dimen/margin_large</dimen>
@@ -646,7 +647,8 @@
     <dimen name="mlp_categories_emoji_size">18dp</dimen>
     <dimen name="mlp_titles_top_margin">14dp</dimen>
     <dimen name="mlp_titles_bottom_margin">28dp</dimen>
-    <dimen name="mlp_layout_card_margin_end">@dimen/margin_medium</dimen>
+    <dimen name="mlp_layout_card_padding_start">20dp</dimen>
+    <dimen name="mlp_layout_card_padding_end">@dimen/margin_medium</dimen>
     <dimen name="mlp_layout_card_margin_top">@dimen/margin_extra_large</dimen>
     <dimen name="mlp_layout_card_elevation">@dimen/margin_small</dimen>
     <dimen name="mlp_layout_card_radius">@dimen/margin_small</dimen>

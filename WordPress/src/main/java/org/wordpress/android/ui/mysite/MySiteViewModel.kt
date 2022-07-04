@@ -659,7 +659,6 @@ class MySiteViewModel @Inject constructor(
                 }
                 ListItemAction.POSTS -> SiteNavigationAction.OpenPosts(selectedSite)
                 ListItemAction.PAGES -> {
-                    quickStartRepository.requestNextStepOfTask(QuickStartNewSiteTask.EDIT_HOMEPAGE)
                     quickStartRepository.completeTask(QuickStartNewSiteTask.REVIEW_PAGES)
                     SiteNavigationAction.OpenPages(selectedSite)
                 }
@@ -797,7 +796,6 @@ class MySiteViewModel @Inject constructor(
     private fun quickActionPagesClick() {
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
         trackWithTabSourceIfNeeded(Stat.QUICK_ACTION_PAGES_TAPPED)
-        quickStartRepository.requestNextStepOfTask(QuickStartNewSiteTask.EDIT_HOMEPAGE)
         quickStartRepository.completeTask(QuickStartNewSiteTask.REVIEW_PAGES)
         _onNavigation.value = Event(SiteNavigationAction.OpenPages(selectedSite))
     }
@@ -829,7 +827,6 @@ class MySiteViewModel @Inject constructor(
     private fun onQuickLinkRibbonPagesClick() {
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
         trackWithTabSourceIfNeeded(Stat.QUICK_LINK_RIBBON_PAGES_TAPPED)
-        quickStartRepository.requestNextStepOfTask(QuickStartNewSiteTask.EDIT_HOMEPAGE)
         quickStartRepository.completeTask(QuickStartNewSiteTask.REVIEW_PAGES)
         _onNavigation.value = Event(SiteNavigationAction.OpenPages(selectedSite))
     }
@@ -1197,20 +1194,24 @@ class MySiteViewModel @Inject constructor(
     }
 
     private fun onBloggingPromptSkipClicked() {
-        appPrefsWrapper.setSkippedPromptDay(Date())
-        mySiteSourceManager.refreshBloggingPrompts(true)
+        selectedSiteRepository.getSelectedSite()?.let { site ->
+            val siteId = site.localId().value
 
-        val snackbar = SnackbarMessageHolder(
-                message = UiStringRes(R.string.my_site_blogging_prompt_card_skipped_snackbar),
-                buttonTitle = UiStringRes(R.string.undo),
-                buttonAction = {
-                    appPrefsWrapper.setSkippedPromptDay(null)
-                    mySiteSourceManager.refreshBloggingPrompts(true)
-                },
-                isImportant = true
-        )
+            appPrefsWrapper.setSkippedPromptDay(Date(), siteId)
+            mySiteSourceManager.refreshBloggingPrompts(true)
 
-        _onSnackbarMessage.postValue(Event(snackbar))
+            val snackbar = SnackbarMessageHolder(
+                    message = UiStringRes(R.string.my_site_blogging_prompt_card_skipped_snackbar),
+                    buttonTitle = UiStringRes(R.string.undo),
+                    buttonAction = {
+                        appPrefsWrapper.setSkippedPromptDay(null, siteId)
+                        mySiteSourceManager.refreshBloggingPrompts(true)
+                    },
+                    isImportant = true
+            )
+
+            _onSnackbarMessage.postValue(Event(snackbar))
+        }
     }
 
     fun isRefreshing() = mySiteSourceManager.isRefreshing()

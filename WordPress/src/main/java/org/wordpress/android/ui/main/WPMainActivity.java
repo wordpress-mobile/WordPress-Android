@@ -118,6 +118,7 @@ import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarte
 import org.wordpress.android.ui.reader.tracker.ReaderTracker;
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource;
 import org.wordpress.android.ui.stats.StatsTimeframe;
+import org.wordpress.android.ui.stats.intro.StatsNewFeaturesIntroDialogFragment;
 import org.wordpress.android.ui.stories.intro.StoriesIntroDialogFragment;
 import org.wordpress.android.ui.uploads.UploadActionUseCase;
 import org.wordpress.android.ui.uploads.UploadUtils;
@@ -141,8 +142,8 @@ import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.service.InstallationReferrerServiceStarter;
-import org.wordpress.android.util.config.BloggingPromptsFeatureConfig;
 import org.wordpress.android.util.config.MySiteDashboardTodaysStatsCardFeatureConfig;
+import org.wordpress.android.util.config.StatsRevampV2FeatureConfig;
 import org.wordpress.android.util.extensions.ViewExtensionsKt;
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel;
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel.FocusPointInfo;
@@ -164,9 +165,12 @@ import static org.wordpress.android.login.LoginAnalyticsListener.CreatedAccountS
 import static org.wordpress.android.push.NotificationsProcessingService.ARG_NOTIFICATION_TYPE;
 import static org.wordpress.android.ui.JetpackConnectionSource.NOTIFICATIONS;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
 /**
  * Main activity which hosts sites, reader, me and notifications pages
  */
+@AndroidEntryPoint
 public class WPMainActivity extends LocaleAwareActivity implements
         OnPageListener,
         BottomNavController,
@@ -250,7 +254,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     @Inject WeeklyRoundupScheduler mWeeklyRoundupScheduler;
     @Inject MySiteDashboardTodaysStatsCardFeatureConfig mTodaysStatsCardFeatureConfig;
     @Inject QuickStartTracker mQuickStartTracker;
-    @Inject BloggingPromptsFeatureConfig mBloggingPromptsFeatureConfig;
+    @Inject StatsRevampV2FeatureConfig mStatsRevampV2FeatureConfig;
 
     @Inject BuildConfigWrapper mBuildConfigWrapper;
 
@@ -422,14 +426,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
                    && savedInstanceState == null) {
             canShowAppRatingPrompt = false;
             showBloggingPromptsOnboarding();
-        } else if (mBloggingPromptsFeatureConfig.isEnabled() && AppPrefs.shouldDisplayBloggingPromptOnboarding()
-                   && mAccountStore.hasAccessToken()
-                   && savedInstanceState == null) {
-            // TODO temporary promo - remove after version 20.1
-            BloggingPromptsOnboardingDialogFragment.newInstance(DialogType.ONBOARDING).show(
-                    getSupportFragmentManager(), BloggingPromptsOnboardingDialogFragment.TAG
-            );
-            canShowAppRatingPrompt = false;
         }
 
         if (isGooglePlayServicesAvailable(this)) {
@@ -448,6 +444,20 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
         if (getIntent().getBooleanExtra(ARG_OPEN_BLOGGING_REMINDERS, false)) {
             onSetPromptReminderClick(getIntent().getIntExtra(ARG_OPEN_BLOGGING_REMINDERS, 0));
+        }
+
+        if (!mSelectedSiteRepository.hasSelectedSite()) {
+            initSelectedSite();
+        }
+
+        if (BuildConfig.IS_JETPACK_APP
+            && mStatsRevampV2FeatureConfig.isEnabled()
+            && AppPrefs.shouldDisplayStatsRevampFeatureAnnouncement()
+            && getSelectedSite() != null
+        ) {
+            StatsNewFeaturesIntroDialogFragment.newInstance().show(
+                    getSupportFragmentManager(), StatsNewFeaturesIntroDialogFragment.TAG
+            );
         }
     }
 

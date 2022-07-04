@@ -21,7 +21,6 @@ Language: mk
     <string name="stats_followers_a_minute_ago">пред една минута</string>
     <string name="stats_view_videos">Видеа</string>
     <string name="stats_likes">Допаѓања</string>
-    <string name="stats_view_publicize">Објавување</string>
     <string name="stats_view_top_posts_and_pages">Написи и страници</string>
     <string name="stats_followers_months">%1$d месеци</string>
     <string name="stats_visitors">Посетители</string>

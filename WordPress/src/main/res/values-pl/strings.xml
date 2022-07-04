@@ -498,9 +498,6 @@ Language: pl
     <string name="quick_start_dialog_review_pages_message_short">Wybierz %1$s Strony %2$s aby zobaczyć listę swoich stron.</string>
     <string name="quick_start_dialog_review_pages_message">Zmień, dodaj, lub usuń strony swojej witryny.</string>
     <string name="quick_start_dialog_edit_homepage_message_pages_short">Wybierz %1$s Strona główna %2$s aby edytować swoją stronę główną.</string>
-    <string name="quick_start_dialog_edit_homepage_message_short">Wybierz %1$s Strony %2$s aby zobaczyć listę swoich stron.</string>
-    <string name="quick_start_dialog_edit_homepage_title">Edytuj stronę domową</string>
-    <string name="quick_start_dialog_edit_homepage_message">Zmień, dodaj lub usuń zawartość ze strony głównej swojej witryny.</string>
     <string name="reader_menu_mark_as_unseen">Oznacz jako nie przeczytaną</string>
     <string name="reader_menu_mark_as_seen">Oznacz jako przeczytane</string>
     <string name="error_media_upload_failed_for_reason">Nie udało się przesłać plików mediów.\n%1$s</string>
@@ -2815,7 +2812,6 @@ Language: pl
     <string name="stats_followers_months">%1$d miesięcy</string>
     <string name="stats_view_top_posts_and_pages">Wpisy i Strony</string>
     <string name="stats_view_videos">Filmy</string>
-    <string name="stats_view_publicize">Publicize</string>
     <string name="stats_view_countries">Kraje</string>
     <string name="stats_likes">Polubienia</string>
     <string name="stats_timeframe_years">Lata</string>

@@ -383,7 +383,7 @@
 
         <!-- Deep Linking Activity -->
         <activity
-            android:name=".ui.deeplinks.DeepLinkingIntentReceiverActivity"
+            android:name="org.wordpress.android.ui.deeplinks.DeepLinkingIntentReceiverActivity"
             android:theme="@style/WordPress.NoActionBar"
             android:excludeFromRecents="true"
             android:exported="true">
@@ -462,7 +462,6 @@
                     android:scheme="http" />
 
             </intent-filter>
-
         </activity>
 
         <!-- Reader Activities -->
@@ -1036,6 +1035,10 @@
             android:authorities="${applicationId}.androidx-startup"
             tools:node="remove" />
 
+        <!-- Scanner -->
+        <meta-data
+            android:name="com.google.mlkit.vision.DEPENDENCIES"
+            android:value="barcode_ui"/>
     </application>
     <queries>
         <intent>

@@ -22,13 +22,10 @@ Language: pt_BR
     <string name="stats_referrers_pie_chart_wordpress">WordPress</string>
     <string name="stats_referrers_pie_chart_total_label">Visualizações</string>
     <string name="stats_action_card_schedule_post_button_label">Agendar</string>
-    <string name="stats_action_card_schedule_post_message">✍️ Agende a publicação do seu conteúdo em rascunho para o melhor momento.</string>
     <string name="stats_action_card_schedule_post_title">Agende seu post</string>
     <string name="stats_action_card_blogging_reminders_button_label">Definir lembretes</string>
-    <string name="stats_action_card_blogging_reminders_message">💡 Configure o lembrete de publicar com frequência para manter seus leitores engajados e atrair novos visitantes.</string>
     <string name="stats_action_card_blogging_reminders_title">Configure seus lembretes de publicação</string>
     <string name="stats_action_card_grow_audience_button_label">Confira o curso</string>
-    <string name="stats_action_card_grow_audience_message">💡 Temos aulas fáceis de entender sobre como expandir seu blog, ensinadas pelos melhores blogueiros.</string>
     <string name="stats_action_card_grow_audience_title">Amplie seu público</string>
     <string name="gutenberg_native_you_can_also_rearrange_blocks_by_tapping_a_block_and_then_tapping">Você pode reorganizar os blocos tocando em um deles e, em seguida, nas setas para cima e para baixo que aparecem no canto inferior esquerdo do bloco para movê-lo na direção indicada.</string>
     <string name="gutenberg_native_image_file_not_found">Arquivo de imagem não encontrado.</string>
@@ -39,12 +36,8 @@ Language: pt_BR
     <string name="quick_start_sites_type_all_tasks_completed">Todas as tarefas concluídas</string>
     <string name="quick_start_list_task_complete">Tarefa concluída</string>
     <string name="me_btn_scan_login_code">Examinar código de acesso</string>
-    <string name="stats_insights_followers_guide_card">💡 Deixe um comentário para incentivar o engajamento no blog para ganhar mais seguidores.</string>
-    <string name="stats_insights_comments_guide_card">💡 Toque em VER MAIS para visualizar os principais colaboradores.</string>
     <string name="stats_insights_likes_guide_card">⭐️ Seu post mais recente, %1$s, recebeu %2$s curtidas.</string>
     <string name="stats_most_popular_percent_views_empty">Atividade insuficiente. Confira mais tarde quando o seu site tiver mais visitantes!</string>
-    <string name="stats_insights_latest_post_empty">Você ainda não publicou nenhum post. Confira mais tarde quando você tiver feito sua primeira publicação.</string>
-    <string name="stats_insights_views_and_visitors_visitors_empty_state">Se você quiser tentar obter mais visualizações e tráfego, confira nossas principais dicas %1$s</string>
     <string name="stats_total_followers_content_description">%1s, %2s do total de seguidores</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
     <string name="pages_copy_link">Copiar link</string>
@@ -711,9 +704,6 @@ Language: pt_BR
     <string name="quick_start_dialog_review_pages_message">Altere, adicione ou remova as páginas do seu site.</string>
     <string name="quick_start_dialog_review_pages_title">Revise as páginas do site</string>
     <string name="quick_start_dialog_edit_homepage_message_pages_short">Selecione %1$s Página inicial %2$s para editar sua página inicial.</string>
-    <string name="quick_start_dialog_edit_homepage_message_short">Selecione %1$s Páginas %2$s para exibir sua lista de páginas.</string>
-    <string name="quick_start_dialog_edit_homepage_message">Altere, adicione ou remova conteúdo em sua página inicial.</string>
-    <string name="quick_start_dialog_edit_homepage_title">Edite sua página inicial</string>
     <string name="reader_menu_mark_as_unseen">Marcar como não lido</string>
     <string name="reader_menu_mark_as_seen">Marcar como lido</string>
     <string name="error_media_upload_failed_for_reason">Envio da mídia falhou.\n%1$s</string>
@@ -3040,7 +3030,6 @@ Language: pt_BR
     <string name="stats_followers_a_minute_ago">um minuto atrás</string>
     <string name="stats_followers_seconds_ago">segundos atrás</string>
     <string name="stats_view_followers">Seguidores</string>
-    <string name="stats_view_publicize">Publicize</string>
     <string name="stats_view_videos">Vídeos</string>
     <string name="stats_view_top_posts_and_pages">Posts &amp; Páginas</string>
     <string name="stats_view_countries">Países</string>

@@ -17,7 +17,6 @@ import org.wordpress.android.R.string
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_VIEWS_AND_VISITORS_ERROR
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.stats.LimitMode.All
 import org.wordpress.android.fluxc.model.stats.LimitMode.Top
 import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel
 import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel.PeriodData
@@ -66,7 +65,7 @@ class ViewsAndVisitorsUseCaseTest : BaseUnitTest() {
     private val siteId = 1L
     private val periodData = PeriodData("2018-10-08", 10, 15, 20, 25, 30, 35)
     private val modelPeriod = "2018-10-10"
-    private val limitMode = Top(15)
+    private val limitMode = Top(14)
     private val statsGranularity = DAYS
     private val model = VisitsAndViewsModel(modelPeriod, listOf(periodData))
 
@@ -104,7 +103,7 @@ class ViewsAndVisitorsUseCaseTest : BaseUnitTest() {
     fun `maps domain model to UI model`() = test {
         val forced = false
         setupCalendar()
-        whenever(store.getVisits(site, statsGranularity, All)).thenReturn(model)
+        whenever(store.getVisits(site, statsGranularity, limitMode)).thenReturn(model)
         whenever(store.fetchVisits(site, statsGranularity, limitMode, forced)).thenReturn(
                 OnStatsFetched(
                         model

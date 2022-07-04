@@ -1,4 +1,4 @@
-- Get new daily blogging prompts to inspire your posts.
-- We improved the site design selection screen in the Site Creation process.
-- WordPress links open in the app, not your default browser.
-- Quick Start focus points are in the correct spots for right-to-left language users.
+- We updated the Insights view in your site’s Stats.
+- Sign in with your browser using a QR code in the app’s Me menu.
+- Upload HEIC/HEIF images through the media picker.
+- We squashed a bug that affected reader topics in other languages.

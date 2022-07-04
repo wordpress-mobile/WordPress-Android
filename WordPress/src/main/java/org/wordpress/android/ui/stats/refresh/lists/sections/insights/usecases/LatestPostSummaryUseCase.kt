@@ -2,6 +2,7 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 
 import android.view.View
 import kotlinx.coroutines.CoroutineDispatcher
+import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_LATEST_POST_SUMMARY_ADD_NEW_POST_TAPPED
@@ -81,7 +82,7 @@ class LatestPostSummaryUseCase
     private fun buildNullableUiModel(domainModel: InsightsLatestPostModel?): MutableList<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
 
-        if (statsRevampV2Feature.isEnabled()) {
+        if (BuildConfig.IS_JETPACK_APP && statsRevampV2Feature.isEnabled()) {
             items.add(buildTitleViewMore(domainModel))
             items.add(latestPostSummaryMapper.buildLatestPostItem(domainModel))
             if (domainModel != null && domainModel.hasData()) items.add(buildQuickScanItems(domainModel))

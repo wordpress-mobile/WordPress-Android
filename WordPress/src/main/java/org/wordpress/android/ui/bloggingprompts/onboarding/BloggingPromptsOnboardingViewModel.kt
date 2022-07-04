@@ -18,7 +18,6 @@ import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboar
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingDialogFragment.DialogType.ONBOARDING
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
-import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -32,7 +31,6 @@ class BloggingPromptsOnboardingViewModel @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
     private val bloggingPromptsStore: BloggingPromptsStore,
     private val analyticsTracker: BloggingPromptsOnboardingAnalyticsTracker,
-    private val appPrefsWrapper: AppPrefsWrapper,
     @Named(BG_THREAD) val bgDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(bgDispatcher) {
     private val _uiState = MutableLiveData<BloggingPromptsOnboardingUiState>()
@@ -53,8 +51,6 @@ class BloggingPromptsOnboardingViewModel @Inject constructor(
             analyticsTracker.trackScreenShown()
         }
         dialogType = type
-
-        appPrefsWrapper.markBloggingPromptOnboardingDialogAsDisplayed()
 
         _uiState.value = uiStateMapper.mapReady(dialogType, ::onPrimaryButtonClick, ::onSecondaryButtonClick)
     }

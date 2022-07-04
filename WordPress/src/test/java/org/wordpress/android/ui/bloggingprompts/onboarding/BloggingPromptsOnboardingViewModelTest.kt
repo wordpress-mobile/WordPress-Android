@@ -34,7 +34,6 @@ import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboar
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingUiState.Ready
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
-import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.viewmodel.Event
 import java.util.Date
@@ -46,7 +45,6 @@ class BloggingPromptsOnboardingViewModelTest : BaseUnitTest() {
     private val selectedSiteRepository: SelectedSiteRepository = mock()
     private val bloggingPromptsStore: BloggingPromptsStore = mock()
     private val analyticsTracker: BloggingPromptsOnboardingAnalyticsTracker = mock()
-    private val appPrefsWrapper: AppPrefsWrapper = mock()
 
     private val bloggingPrompt = BloggingPromptsResult(
             model = BloggingPromptModel(
@@ -68,7 +66,6 @@ class BloggingPromptsOnboardingViewModelTest : BaseUnitTest() {
             selectedSiteRepository,
             bloggingPromptsStore,
             analyticsTracker,
-            appPrefsWrapper,
             TEST_DISPATCHER
     )
     private val actionObserver: Observer<BloggingPromptsOnboardingAction> = mock()
@@ -90,12 +87,6 @@ class BloggingPromptsOnboardingViewModelTest : BaseUnitTest() {
         val startState = viewStates[0]
         assertNotNull(startState)
         assertTrue(startState is Ready)
-    }
-
-    @Test
-    fun `Should mark dialog as displayed when start is called`() = runBlocking {
-        classToTest.start(ONBOARDING)
-        verify(appPrefsWrapper).markBloggingPromptOnboardingDialogAsDisplayed()
     }
 
     // ONBOARDING dialog type actions

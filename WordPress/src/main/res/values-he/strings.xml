@@ -21,13 +21,10 @@ Language: he_IL
     <string name="stats_referrers_pie_chart_search">לחפש</string>
     <string name="stats_referrers_pie_chart_total_label">צפיות</string>
     <string name="stats_action_card_schedule_post_button_label">תזמון</string>
-    <string name="stats_action_card_schedule_post_message">✍️ לתזמן את פרסום התוכן שלך בזמן המתאים ביותר מתוך הטיוטות שלך.</string>
     <string name="stats_action_card_schedule_post_title">לתזמן את הפרסום שלך</string>
     <string name="stats_action_card_blogging_reminders_button_label">הגדרת תזכורות</string>
-    <string name="stats_action_card_blogging_reminders_message">💡אפשר להגדיר תזכורת לפרסום באופן שגרתי כדי לשלב את הקוראים שלך ולמשוך מבקרים חדשים.</string>
     <string name="stats_action_card_blogging_reminders_title">להגדיר את התזכורות שלך לכתוב בלוג</string>
     <string name="stats_action_card_grow_audience_button_label">לעיין בקורס</string>
-    <string name="stats_action_card_grow_audience_message">💡יש לנו שיעורים פשוטים להבנה שמועברים על ידי הבלוגרים הטובים ביותר שיעזרו לך להגדיל את הבלוג שלך.</string>
     <string name="stats_action_card_grow_audience_title">להגדיל את הקהל שלך</string>
     <string name="gutenberg_native_you_can_also_rearrange_blocks_by_tapping_a_block_and_then_tapping">כדי לשנות את סדר הבלוקים, יש להקיש על הבלוק ולאחר מכן להקיש על החצים למעלה ולמטה שמופיעים בפינה השמאלית התחתונה כדי להזיז את הבלוק מעל הבלוקים האחרים או מתחתיהם.</string>
     <string name="gutenberg_native_image_file_not_found">לא נמצא קובץ תמונה.</string>
@@ -38,12 +35,8 @@ Language: he_IL
     <string name="quick_start_sites_type_all_tasks_completed">כל המשימות הושלמו</string>
     <string name="quick_start_list_task_complete">המשימה הושלמה</string>
     <string name="me_btn_scan_login_code">סריקת קוד כניסה למערכת</string>
-    <string name="stats_insights_followers_guide_card">💡ניתן לנסות להשאיר תגובה כמחווה כדי לעודד מעורבות בבלוג ולצבור עוקבים נוספים.</string>
-    <string name="stats_insights_comments_guide_card">💡צפו במגיבים הפעילים ביותר בלחיצה על ״הצגת פריטים נוספים״.</string>
     <string name="stats_insights_likes_guide_card">הפוסט האחרון שלך %1$s קיבל %2$s לייקים.</string>
     <string name="stats_most_popular_percent_views_empty">אין מספיק פעילות. כדאי לחזור לכאן מאוחד יותר לאחר שעוד מבקרים נכנסו לאתר!</string>
-    <string name="stats_insights_latest_post_empty">עדיין לא פרסמת אף פוסט. כדאי לחזור לכאן מאוחר יותר לאר שפרסמת את הפוסט הראשון!</string>
-    <string name="stats_insights_views_and_visitors_visitors_empty_state">אם ברצונך להגדיל את הצפיות והתעבורה, כדאי לעיין בעצות המובילות שלנו %1$s</string>
     <string name="stats_total_followers_content_description">%1s, %2s מסך העוקבים</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
     <string name="pages_copy_link">להעתיק את הקישור</string>
@@ -710,9 +703,6 @@ Language: he_IL
     <string name="quick_start_dialog_review_pages_message">לשנות, להוסיף או להסיר עמודים באתר.</string>
     <string name="quick_start_dialog_review_pages_title">לבדוק עמודים באתר</string>
     <string name="quick_start_dialog_edit_homepage_message_pages_short">יש לבחור באפשרות ⁦%1$s⁩ עמוד הבית ⁦%2$s⁩ כדי לערוך את עמוד הבית.</string>
-    <string name="quick_start_dialog_edit_homepage_message_short">יש לבחור באפשרות ⁦%1$s⁩ עמודים ⁦%2$s⁩ כדי להציג את רשימת העמודים שלך.</string>
-    <string name="quick_start_dialog_edit_homepage_message">לשנות, להוסיף או להסיר תוכן בעמוד הבית של האתר.</string>
-    <string name="quick_start_dialog_edit_homepage_title">לערוך את עמוד הבית</string>
     <string name="reader_menu_mark_as_unseen">לסמן כ\'לא נקרא\'</string>
     <string name="reader_menu_mark_as_seen">לסמן כ\'נקרא\'</string>
     <string name="error_media_upload_failed_for_reason">העלאת המדיה נכשלה.\n%1$s</string>
@@ -3039,7 +3029,6 @@ Language: he_IL
     <string name="stats_followers_a_minute_ago">לפני דקה</string>
     <string name="stats_followers_seconds_ago">לפני כמה שניות</string>
     <string name="stats_view_followers">עוקבים</string>
-    <string name="stats_view_publicize">שיתוף אוטומטי</string>
     <string name="stats_view_videos">וידאו</string>
     <string name="stats_view_top_posts_and_pages">פוסטים ועמודים</string>
     <string name="stats_view_countries">מדינות</string>

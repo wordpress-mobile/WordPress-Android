@@ -5,6 +5,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.stats.FollowersModel
@@ -160,7 +161,7 @@ class FollowersUseCase(
             }
 
             if (wpComModel.hasMore && uiState.selectedTab == 0 || emailModel.hasMore && uiState.selectedTab == 1) {
-                if (useCaseMode == BLOCK) {
+                if (useCaseMode != VIEW_ALL) {
                     val buttonText = R.string.stats_insights_view_more
                     items.add(
                             Link(
@@ -179,7 +180,7 @@ class FollowersUseCase(
         return items
     }
 
-    private fun buildTitle() = if (statsRevampV2FeatureConfig.isEnabled()) {
+    private fun buildTitle() = if (BuildConfig.IS_JETPACK_APP && statsRevampV2FeatureConfig.isEnabled()) {
         Title(R.string.stats_view_followers)
     } else {
         Title(R.string.stats_view_followers, menuAction = this::onMenuClick)

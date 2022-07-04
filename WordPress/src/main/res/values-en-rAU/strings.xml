@@ -1554,7 +1554,6 @@ Language: en_AU
     <string name="stats_followers_seconds_ago">seconds ago</string>
     <string name="stats_view_top_posts_and_pages">Posts &amp; Pages</string>
     <string name="stats_view_videos">Videos</string>
-    <string name="stats_view_publicize">Publicize</string>
     <string name="stats_view_followers">Followers</string>
     <string name="stats_view_countries">Countries</string>
     <string name="stats_likes">Likes</string>

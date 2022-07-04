@@ -665,9 +665,6 @@ Language: es_CO
     <string name="quick_start_dialog_review_pages_message">Cambia, añade o elimina páginas en tu sitio.</string>
     <string name="quick_start_dialog_review_pages_title">Revisar las páginas del sitio</string>
     <string name="quick_start_dialog_edit_homepage_message_pages_short">Selecciona %1$s Página de inicio %2$s para editar tu página de inicio.</string>
-    <string name="quick_start_dialog_edit_homepage_message_short">Selecciona %1$s Páginas %2$s para ver tu lista de páginas.</string>
-    <string name="quick_start_dialog_edit_homepage_message">Cambia, añade o elimina contenido en la página de inicio de tu sitio.</string>
-    <string name="quick_start_dialog_edit_homepage_title">Editar la página de inicio</string>
     <string name="reader_menu_mark_as_unseen">Marcar como no leída</string>
     <string name="reader_menu_mark_as_seen">Marcar como leída</string>
     <string name="error_media_upload_failed_for_reason">No se han podido subir los elementos multimedia.\n%1$s</string>
@@ -2993,7 +2990,6 @@ Language: es_CO
     <string name="stats_followers_a_minute_ago">hace un minuto</string>
     <string name="stats_followers_seconds_ago">hace unos segundos</string>
     <string name="stats_view_followers">Seguidores</string>
-    <string name="stats_view_publicize">Difundir</string>
     <string name="stats_view_videos">Videos</string>
     <string name="stats_view_top_posts_and_pages">Entradas y páginas</string>
     <string name="stats_view_countries">Países</string>

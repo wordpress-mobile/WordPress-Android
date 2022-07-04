@@ -140,7 +140,6 @@ Language: da_DK
     <string name="stats_views">Visninger</string>
     <string name="stats_visitors">Besøgende</string>
     <string name="stats_view_top_posts_and_pages">Indlæg &amp; sider</string>
-    <string name="stats_view_publicize">publicize</string>
     <string name="ssl_certificate_details">Detaljer</string>
     <string name="cab_selected">%d markeret</string>
     <string name="browse_our_faq_button">Gennemse vores FAQ</string>

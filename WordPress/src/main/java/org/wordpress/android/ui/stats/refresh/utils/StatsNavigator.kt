@@ -233,7 +233,9 @@ class StatsNavigator @Inject constructor(
                         target.statsSection,
                         target.statsViewType,
                         target.statsGranularity,
-                        selectedDateProvider.getSelectedDateState(target.statsGranularity),
+                        target.statsGranularity?.let {
+                            selectedDateProvider.getSelectedDateState(target.statsGranularity)
+                        },
                         siteProvider.siteModel.id
                 )
             }
@@ -244,7 +246,7 @@ class StatsNavigator @Inject constructor(
             is CheckCourse -> {
                 ActivityLauncher.openStatsUrl(
                         activity,
-                        "https://wordpress.com/support/followers/"
+                        "https://wpcourses.com/course/intro-to-blogging/"
                 )
             }
             is SchedulePost -> {

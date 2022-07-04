@@ -22,13 +22,10 @@ Language: zh_CN
     <string name="stats_referrers_pie_chart_wordpress">WordPress</string>
     <string name="stats_referrers_pie_chart_total_label">查看</string>
     <string name="stats_action_card_schedule_post_button_label">预发布</string>
-    <string name="stats_action_card_schedule_post_message">✍️计划在最佳时间发表您草稿中的内容。</string>
     <string name="stats_action_card_schedule_post_title">预发布您的文章</string>
     <string name="stats_action_card_blogging_reminders_button_label">设置提醒</string>
-    <string name="stats_action_card_blogging_reminders_message">💡设置提醒以定期发表，留住读者并吸引新访客。</string>
     <string name="stats_action_card_blogging_reminders_title">设置您的博客提醒</string>
     <string name="stats_action_card_grow_audience_button_label">查看课程</string>
-    <string name="stats_action_card_grow_audience_message">💡我们有易于理解的课程，由优秀博主教授，更好发展您的博客。</string>
     <string name="stats_action_card_grow_audience_title">增加您的受众</string>
     <string name="gutenberg_native_you_can_also_rearrange_blocks_by_tapping_a_block_and_then_tapping">您现在也可以重新排列区块，方法是点击一个区块，然后点击该区块左下角出现的向上和向下箭头，从而上下移动该区块。</string>
     <string name="gutenberg_native_image_file_not_found">找不到图像文件。</string>
@@ -39,12 +36,8 @@ Language: zh_CN
     <string name="quick_start_sites_type_all_tasks_completed">已完成所有任务</string>
     <string name="quick_start_list_task_complete">完成任务</string>
     <string name="me_btn_scan_login_code">扫描登录码</string>
-    <string name="stats_insights_followers_guide_card">💡您可以尝试发表评论来鼓励博客互动，从而吸引更多粉丝。</string>
-    <string name="stats_insights_comments_guide_card">💡点击“查看更多”可查看您的主要贡献者。</string>
     <string name="stats_insights_likes_guide_card">⭐️您的最新文章 %1$s 收到了 %2$s 个赞。</string>
     <string name="stats_most_popular_percent_views_empty">动态数量不足。 请在您的站点拥有更多访客时回来查看！</string>
-    <string name="stats_insights_latest_post_empty">您尚未发布任何文章。 请先发表第一篇文章，然后再回来查看！</string>
-    <string name="stats_insights_views_and_visitors_visitors_empty_state">如果您想获得更多的查看数量和流量，请查看我们的热门贴士 %1$s</string>
     <string name="stats_total_followers_content_description">粉丝总数的 %1s、%2s</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
     <string name="pages_copy_link">复制链接</string>
@@ -711,9 +704,6 @@ Language: zh_CN
     <string name="quick_start_dialog_review_pages_message">更改、添加或删除您站点的页面。</string>
     <string name="quick_start_dialog_review_pages_title">评论站点页面</string>
     <string name="quick_start_dialog_edit_homepage_message_pages_short">选择%1$s主页%2$s以编辑您的主页。</string>
-    <string name="quick_start_dialog_edit_homepage_message_short">选择%1$s页面%2$s以查看您的页面列表。</string>
-    <string name="quick_start_dialog_edit_homepage_message">在您站点的主页上更改、添加或删除内容。</string>
-    <string name="quick_start_dialog_edit_homepage_title">编辑您的主页</string>
     <string name="reader_menu_mark_as_unseen">标记为未读</string>
     <string name="reader_menu_mark_as_seen">标记为已读</string>
     <string name="error_media_upload_failed_for_reason">媒体上传失败。\n%1$s</string>
@@ -3040,7 +3030,6 @@ Language: zh_CN
     <string name="stats_followers_a_minute_ago">一分钟以前</string>
     <string name="stats_followers_seconds_ago">秒以前</string>
     <string name="stats_view_followers">关注者</string>
-    <string name="stats_view_publicize">Publicize</string>
     <string name="stats_view_videos">视频</string>
     <string name="stats_view_top_posts_and_pages">文章和页面</string>
     <string name="stats_view_countries">国家/地区</string>

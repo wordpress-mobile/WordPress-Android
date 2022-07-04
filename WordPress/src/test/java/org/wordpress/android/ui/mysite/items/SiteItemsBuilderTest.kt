@@ -11,7 +11,6 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartExistingSiteTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.EDIT_HOMEPAGE
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.InfoItemBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteItemsBuilderParams
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
@@ -114,24 +113,6 @@ class SiteItemsBuilderTest {
                 VIEW_SITE_ITEM,
                 ADMIN_ITEM
         )
-    }
-
-    /* QUICK START - FOCUS POINT */
-    @Test
-    fun `given pages focus point enabled, when card built, showFocusPoint should be true`() {
-        val showPagesFocusPoint = true
-        setupHeaders(addPagesItem = true, showPagesFocusPoint = showPagesFocusPoint)
-
-        val buildSiteItems = siteItemsBuilder.build(
-                SiteItemsBuilderParams(
-                        site = siteModel,
-                        onClick = SITE_ITEM_ACTION,
-                        activeTask = EDIT_HOMEPAGE,
-                        enablePagesFocusPoint = showPagesFocusPoint
-                )
-        )
-
-        assertThat(buildSiteItems).contains(PAGES_ITEM.copy(showFocusPoint = showPagesFocusPoint))
     }
 
     @Test

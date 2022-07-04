@@ -1334,7 +1334,6 @@ Language: es_CL
     <string name="stats_followers_a_minute_ago">hace un minuto</string>
     <string name="stats_followers_seconds_ago">hace unos segundos</string>
     <string name="stats_view_videos">Vídeos</string>
-    <string name="stats_view_publicize">Difundir</string>
     <string name="stats_view_followers">Seguidores</string>
     <string name="stats_view_countries">Países</string>
     <string name="stats_likes">Me gusta</string>

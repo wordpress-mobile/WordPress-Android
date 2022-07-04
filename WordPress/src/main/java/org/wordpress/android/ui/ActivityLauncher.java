@@ -104,6 +104,7 @@ import org.wordpress.android.ui.stats.StatsConstants;
 import org.wordpress.android.ui.stats.StatsTimeframe;
 import org.wordpress.android.ui.stats.StatsViewType;
 import org.wordpress.android.ui.stats.refresh.StatsActivity;
+import org.wordpress.android.ui.stats.refresh.StatsActivity.StatsLaunchedFrom;
 import org.wordpress.android.ui.stats.refresh.StatsViewAllActivity;
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection;
 import org.wordpress.android.ui.stats.refresh.lists.detail.StatsDetailActivity;
@@ -559,6 +560,24 @@ public class ActivityLauncher {
             ToastUtils.showToast(context, R.string.stats_cannot_be_started, ToastUtils.Duration.SHORT);
         } else {
             StatsActivity.start(context, site);
+        }
+    }
+
+    public static void openBlogStats(Context context, SiteModel site) {
+        if (site == null) {
+            AppLog.e(T.STATS, "SiteModel is null when opening the stats.");
+            AnalyticsTracker.track(
+                    STATS_ACCESS_ERROR,
+                    ActivityLauncher.class.getName(),
+                    "NullPointerException",
+                    "Failed to open Stats because of the null SiteModel"
+            );
+            ToastUtils.showToast(context, R.string.stats_cannot_be_started, ToastUtils.Duration.SHORT);
+        } else {
+            Intent intent = new Intent(context, StatsActivity.class);
+            intent.putExtra(StatsActivity.ARG_LAUNCHED_FROM, StatsLaunchedFrom.FEATURE_ANNOUNCEMENT);
+            intent.putExtra(WordPress.SITE, site);
+            context.startActivity(intent);
         }
     }
 
@@ -1736,8 +1755,25 @@ public class ActivityLauncher {
         context.startActivity(new Intent(context, DebugCookiesActivity.class));
     }
 
-    public static void viewQRCodeAuthFlow(@NonNull Context context) {
-        Intent intent = new Intent(context, QRCodeAuthActivity.class);
-        context.startActivity(intent);
+    public static void startQRCodeAuthFlow(@NonNull Context context) {
+        QRCodeAuthActivity.start(context);
+    }
+
+    public static void startQRCodeAuthFlowInNewStack(@NonNull Context context, @NonNull String uri) {
+        TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(context);
+
+        Intent mainActivityIntent = getMainActivityInNewStack(context);
+        mainActivityIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+
+        Intent meIntent = new Intent(context, MeActivity.class);
+        meIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+
+        Intent qrcodeAuthFlowIntent = QRCodeAuthActivity.newIntent(context, uri, true);
+
+        taskStackBuilder.addNextIntent(mainActivityIntent);
+        taskStackBuilder.addNextIntent(meIntent);
+        taskStackBuilder.addNextIntent(qrcodeAuthFlowIntent);
+
+        taskStackBuilder.startActivities();
     }
 }
