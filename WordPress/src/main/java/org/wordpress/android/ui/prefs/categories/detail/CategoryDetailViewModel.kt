@@ -8,6 +8,7 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.MAIN
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.action.TaxonomyAction
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.TaxonomyStore.OnTermUploaded
 import org.wordpress.android.models.CategoryNode
@@ -44,6 +45,7 @@ class CategoryDetailViewModel @Inject constructor(
 ) : ScopedViewModel(bgDispatcher) {
     private var isStarted = false
     private val siteModel: SiteModel = requireNotNull(selectedSiteRepository.getSelectedSite())
+    private var existingCategoryname: String = ""
 
     private val topLevelCategory = CategoryNode(0, 0, resourceProvider.getString(R.string.top_level_category_name))
 
@@ -63,7 +65,7 @@ class CategoryDetailViewModel @Inject constructor(
     }
 
     fun start(categoryId: Long? = null) {
-        Log.e( "start: categoryId", categoryId.toString())
+        Log.e("start: categoryId", categoryId.toString())
         if (isStarted) return
         isStarted = true
 
@@ -90,12 +92,13 @@ class CategoryDetailViewModel @Inject constructor(
     }
 
     private fun initializeEditCategoryState(siteCategories: ArrayList<CategoryNode>, categoryId: Long) {
-        Log.e( "initializeEditCategoryState: ", categoryId.toString())
+        Log.e("initializeEditCategoryState: ", categoryId.toString())
         val existingCategory = siteCategories.filter { it.categoryId == categoryId }[0]
         var parentCategoryPosition = siteCategories.indexOfFirst { it.categoryId == existingCategory.parentId }
-        if(parentCategoryPosition == -1) parentCategoryPosition = 0
-        Log.e( "initializeEditCategoryState: parentCategoryPosition ", parentCategoryPosition.toString())
-        Log.e( "initializeEditCategoryState: existing category", existingCategory.toString())
+        if (parentCategoryPosition == -1) parentCategoryPosition = 0
+        Log.e("initializeEditCategoryState: parentCategoryPosition ", parentCategoryPosition.toString())
+        Log.e("initializeEditCategoryState: existing category", existingCategory.toString())
+        existingCategoryname = existingCategory.name
         _uiState.postValue(
                 UiState(
                         categories = siteCategories,
@@ -136,7 +139,13 @@ class CategoryDetailViewModel @Inject constructor(
         }
         launch {
             _onCategoryPush.postValue(Event(InProgress))
-            editCategoryUseCase.editCategory(categoryId, categoryText, parentCategory.categoryId, siteModel)
+            editCategoryUseCase.editCategory(
+                    categoryId,
+                    existingCategoryname,
+                    categoryText,
+                    parentCategory.categoryId,
+                    siteModel
+            )
         }
     }
 

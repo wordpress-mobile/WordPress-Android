@@ -13,11 +13,18 @@ import javax.inject.Inject
 class EditCategoryUseCase @Inject constructor(
     private val dispatcher: Dispatcher
 ) {
-    fun editCategory(categoryId: Long, categoryName: String, parentCategoryId: Long, siteModel: SiteModel) {
+    fun editCategory(
+        categoryId: Long,
+        existingCategoryName: String,
+        categoryName: String,
+        parentCategoryId: Long,
+        siteModel: SiteModel
+    ) {
         val existingCategory = TermModel()
         existingCategory.remoteTermId = categoryId
         existingCategory.taxonomy = TaxonomyStore.DEFAULT_TAXONOMY_CATEGORY
         existingCategory.name = categoryName
+        existingCategory.slug = existingCategoryName
         existingCategory.parentRemoteId = parentCategoryId
         val payload = RemoteTermPayload(existingCategory, siteModel)
         dispatcher.dispatch(TaxonomyActionBuilder.newPushTermAction(payload))

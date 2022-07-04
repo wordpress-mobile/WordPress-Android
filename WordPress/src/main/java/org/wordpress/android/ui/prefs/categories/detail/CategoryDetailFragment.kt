@@ -4,6 +4,7 @@ import android.app.ProgressDialog
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import androidx.annotation.StringRes
@@ -13,6 +14,7 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.CategoryDetailFragmentBinding
 import org.wordpress.android.models.CategoryNode
+import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.posts.ParentCategorySpinnerAdapter
 import org.wordpress.android.ui.prefs.categories.detail.CategoryUpdateUiState.Failure
 import org.wordpress.android.ui.prefs.categories.detail.CategoryUpdateUiState.InProgress
@@ -39,13 +41,23 @@ class CategoryDetailFragment : Fragment(R.layout.category_detail_fragment) {
         super.onViewCreated(view, savedInstanceState)
         initDagger()
 
+        val categoryId = getCategoryId(savedInstanceState)
+
         with(CategoryDetailFragmentBinding.bind(view)) {
             initAdapter()
             initSubmitButton()
             initSpinner()
+            initViewModel(categoryId)
             initInputText()
-            initViewModel()
         }
+    }
+
+    private fun getCategoryId(savedInstanceState: Bundle?): Long? {
+        val categoryId =  savedInstanceState?.getLong(ActivityLauncher.CATEGORY_DETAIL_ID)
+                ?: requireActivity().intent.getLongExtra(ActivityLauncher.CATEGORY_DETAIL_ID, 0L)
+        if(categoryId == 0L)
+            return null
+        return categoryId
     }
 
     private fun initDagger() {
@@ -111,11 +123,11 @@ class CategoryDetailFragment : Fragment(R.layout.category_detail_fragment) {
         ActivityUtils.showKeyboard(categoryName)
     }
 
-    private fun CategoryDetailFragmentBinding.initViewModel() {
+    private fun CategoryDetailFragmentBinding.initViewModel(categoryId:Long?) {
         viewModel = ViewModelProvider(this@CategoryDetailFragment, viewModelFactory)
                 .get(CategoryDetailViewModel::class.java)
         startObserving()
-        viewModel.start()
+        viewModel.start(categoryId)
     }
 
     private fun CategoryDetailFragmentBinding.startObserving() {
