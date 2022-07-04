@@ -1,11 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-06-16 10:27:31+0000
+Translation-Revision-Date: 2022-06-30 09:54:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: es
 -->
 <resources>
+    <string name="qrcode_auth_flow_content_description">Imagen que señala que el escaneo de código de acceso está en proceso</string>
+    <string name="qrcode_auth_flow_error_content_description">Imagen que señala un error</string>
+    <string name="qrcode_auth_flow_dismiss_dialog_message">¿Seguro que quieres continuar?</string>
+    <string name="qrcode_auth_flow_dismiss_dialog_title">Salir del flujo de escaneo de código de acceso</string>
+    <string name="qrcode_auth_flow_error_auth_failed_subtitle">No se ha podido acceder con este código de acceso. Toca el botón Analizar de nuevo para volver a escanear el código.</string>
+    <string name="qrcode_auth_flow_error_auth_failed_title">Ha fallado la autentificación</string>
+    <string name="qrcode_auth_flow_error_expired_subtitle">Este código de acceso ha caducado. Toca el botón Analizar de nuevo para volver a escanear el código.</string>
+    <string name="qrcode_auth_flow_error_expired_title">El código de acceso ha caducado</string>
+    <string name="qrcode_auth_flow_error_invalid_data_subtitle">No se ha podido validar el código de acceso escaneado. Toca el botón Analizar de nuevo para volver a escanear el código.</string>
+    <string name="qrcode_auth_flow_error_invalid_data_title">No se ha podido validar el código de acceso</string>
+    <string name="qrcode_auth_flow_error_no_connection_subtitle">Se requiere una conexión activa a Internet para escanear códigos de acceso</string>
+    <string name="qrcode_auth_flow_error_no_connection_title">No hay conexión</string>
+    <string name="qrcode_auth_flow_scan_again">Analizar de nuevo</string>
+    <string name="qrcode_auth_flow_dismiss">Descartar</string>
+    <string name="qrcode_auth_flow_done_subtitle">Toca Descartar y vuelve a tu navegador web para continuar.</string>
+    <string name="qrcode_auth_flow_done_title">¡Has accedido!</string>
+    <string name="qrcode_auth_flow_validated_primary_action">Sí, quiero acceder</string>
+    <string name="qrcode_auth_flow_validated_subtitle">Escanea solo los códigos QR que has cogido directamente del navegador web. No escanees nunca un código que te haya enviado alguien.</string>
+    <string name="qrcode_auth_flow_validated_default_title">¿Estás intentando acceder a tu navegador web cerca de %1$s?</string>
+    <string name="qrcode_auth_flow_validated_title">¿Estás intentando acceder a %1$s cerca de %2$s?</string>
+    <string name="stats_revamp_v2_intro_secondary_button_text">Recuérdamelo más tarde</string>
+    <string name="stats_revamp_v2_intro_primary_button_text">Pruébalo ahora</string>
+    <string name="stats_revamp_v2_intro_content_note">Más información en Mi sitio &gt; Estadísticas &gt; Detalles</string>
+    <string name="stats_revamp_v2_intro_content">Detalles te ayuda a entender cómo es el rendimiento de tu contenido y qué tiene impacto en tu público.</string>
+    <string name="stats_revamp_v2_intro_header_title">Actualización de Detalles</string>
+    <string name="stats_insights_followers_guide_card">💡Comentar en otros blogs es una buena forma de llamar la atención y tener más seguidores en tu nuevo sitio.</string>
+    <string name="stats_insights_comments_guide_card">💡Toca \"VER MÁS\" para ver los principales comentaristas.</string>
+    <string name="stats_insights_latest_post_empty">¡Vuelve a comprobarlo cuando hayas publicado tu primera entrada!</string>
+    <string name="stats_insights_views_and_visitors_visitors_empty_state">Comprueba nuestros consejos destacados para aumentar tus visitas y tu tráfico %1$s</string>
+    <string name="stats_view_publicize">Conexiones de redes sociales</string>
+    <string name="stats_action_card_schedule_post_message">✍️ Programa tus borradores para publicar en el mejor momento y llegar a tu público.</string>
+    <string name="stats_action_card_blogging_reminders_message">💡Publicar con constancia es una buena forma de crear tu público. Añade un recordatorio para mantenerte al día.</string>
+    <string name="stats_action_card_grow_audience_message">💡Bloguea más rápidamente con nuestro curso &lt;i&gt;Introducción a los blogs&lt;/i&gt; ofrecido por expertos.</string>
     <string name="blogging_prompts_onboarding_prompts_loading">Se están cargando los estímulos para bloguear. Espera un momento e inténtalo de nuevo.</string>
     <string name="hpp_bottom_helper_text">¿No puedes decidirte? Puedes cambiar el tema en cualquier momento.</string>
     <string name="hpp_recommended_default_vertical">Bloguear</string>

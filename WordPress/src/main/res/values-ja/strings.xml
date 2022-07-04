@@ -1,11 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-06-22 09:54:08+0000
+Translation-Revision-Date: 2022-06-30 09:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.1
 Language: ja_JP
 -->
 <resources>
+    <string name="qrcode_auth_flow_content_description">ログインコードをスキャンしていることを示す画像</string>
+    <string name="qrcode_auth_flow_error_content_description">エラーが発生していることを示す画像</string>
+    <string name="qrcode_auth_flow_dismiss_dialog_message">本当に実行してもよいですか ?</string>
+    <string name="qrcode_auth_flow_dismiss_dialog_title">ログインコードのスキャンフローを終了</string>
+    <string name="qrcode_auth_flow_error_auth_failed_subtitle">このログインコードではログインできませんでした。 「再スキャン」ボタンをタップしてコードをもう一度スキャンしてください。</string>
+    <string name="qrcode_auth_flow_error_auth_failed_title">認証できませんでした</string>
+    <string name="qrcode_auth_flow_error_expired_subtitle">このログインコードの有効期限は切れています。 「再スキャン」ボタンをタップしてコードをもう一度スキャンしてください。</string>
+    <string name="qrcode_auth_flow_error_expired_title">期限切れのログインコード</string>
+    <string name="qrcode_auth_flow_error_invalid_data_subtitle">スキャンされたログインコードを検証できませんでした。 「再スキャン」ボタンをタップしてコードをもう一度スキャンしてください。</string>
+    <string name="qrcode_auth_flow_error_invalid_data_title">ログインコードを検証できませんでした</string>
+    <string name="qrcode_auth_flow_error_no_connection_subtitle">ログインコードをスキャンするにはアクティブなインターネット接続が必要です</string>
+    <string name="qrcode_auth_flow_error_no_connection_title">接続できません</string>
+    <string name="qrcode_auth_flow_scan_again">再スキャン</string>
+    <string name="qrcode_auth_flow_dismiss">閉じる</string>
+    <string name="qrcode_auth_flow_done_subtitle">「閉じる」をタップして続行する Web ブラウザーに戻ります。</string>
+    <string name="qrcode_auth_flow_done_title">ログインしました !</string>
+    <string name="qrcode_auth_flow_validated_primary_action">はい、ログインします</string>
+    <string name="qrcode_auth_flow_validated_subtitle">Web ブラウザーから直接撮影された QR コードをスキャンするだけです。 他の人から送信されたコードはスキャンしないでください。</string>
+    <string name="qrcode_auth_flow_validated_default_title">%1$s 近くの Web ブラウザーにログインしてみますか ?</string>
+    <string name="qrcode_auth_flow_validated_title">%2$s 近くの %1$s にログインしてみますか ?</string>
+    <string name="stats_revamp_v2_intro_secondary_button_text">後で再通知</string>
+    <string name="stats_revamp_v2_intro_primary_button_text">今すぐ試す</string>
+    <string name="stats_revamp_v2_intro_content_note">詳細は、「参加サイト」&gt;「統計」&gt;「統計概要」をご覧ください。</string>
+    <string name="stats_revamp_v2_intro_content">統計概要により、コンテンツのパフォーマンスと、読者からどういった反響があるか理解を深めることができます。</string>
+    <string name="stats_revamp_v2_intro_header_title">最新の統計概要</string>
+    <string name="stats_insights_followers_guide_card">💡他のブログへのコメントは、自分の新しいサイトへの注目を集め、フォロワーを増やすのに最適です。</string>
+    <string name="stats_insights_comments_guide_card">💡「さらに表示」をタップすると上位のコメント投稿者が表示されます。</string>
+    <string name="stats_insights_latest_post_empty">最初の投稿を公開したらもう一度確認してください。</string>
+    <string name="stats_insights_views_and_visitors_visitors_empty_state">よく読まれているヒントを確認して表示数とトラフィックを増やす %1$s</string>
+    <string name="stats_view_publicize">ソーシャルメディアとの連携</string>
+    <string name="stats_action_card_schedule_post_message">✍️ 読者にリーチするのに最良のタイミングに下書きの投稿予定を設定しましょう。</string>
+    <string name="stats_action_card_blogging_reminders_message">💡読者を増やすには定期的に投稿することが重要です。 リマインダーを追加して忘れないようにしましょう。</string>
+    <string name="stats_action_card_grow_audience_message">💡さっとブログ記事を書けるようにするには、エキスパートが指導する「&lt;i&gt;ブログ執筆の概要&lt;/i&gt;」コースを受講しましょう。</string>
     <string name="blogging_prompts_onboarding_prompts_loading">ブログ作成のプロンプトを読み込んでいます。 少し待ってから、もう一度お試しください。</string>
     <string name="hpp_bottom_helper_text">決められませんか ? テーマはいつでも変更できます。</string>
     <string name="hpp_recommended_default_vertical">ブログ</string>
