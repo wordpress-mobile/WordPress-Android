@@ -26,7 +26,7 @@ class SiteSettingsCategoriesAdapter(
     }
 
     override fun onBindViewHolder(holder: SiteSettingsCategoriesViewHolder, position: Int, payloads: MutableList<Any>) {
-        if (payloads.isNotEmpty() && (payloads[0] as? Bundle)?.size() ?: 0 > 0) {
+        if (payloads.isNotEmpty() && ((payloads[0] as? Bundle)?.size() ?: 0) > 0) {
             val bundle = payloads[0] as Bundle
             holder.updateChanges(bundle)
         } else onBindViewHolder(holder, position)
