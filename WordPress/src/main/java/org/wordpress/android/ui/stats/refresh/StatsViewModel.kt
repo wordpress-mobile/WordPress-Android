@@ -110,6 +110,9 @@ class StatsViewModel
     private val _statsModuleUiModel = MediatorLiveData<Event<StatsModuleUiModel>>()
     val statsModuleUiModel: LiveData<Event<StatsModuleUiModel>> = _statsModuleUiModel
 
+    private val _showUpgradeAlert = MutableLiveData<Event<Boolean>>()
+    val showUpgradeAlert: LiveData<Event<Boolean>> = _showUpgradeAlert
+
     fun start(intent: Intent, restart: Boolean = false) {
         val localSiteId = intent.getIntExtra(WordPress.LOCAL_SITE_ID, 0)
 
@@ -200,12 +203,24 @@ class StatsViewModel
             }
         }
 
-        if (BuildConfig.IS_JETPACK_APP && statsRevampV2FeatureConfig.isEnabled()) {
-            updateRevampedInsights()
-        }
-
         if (launchedFrom == StatsLaunchedFrom.FEATURE_ANNOUNCEMENT) {
             if (statsSectionManager.getSelectedSection() != INSIGHTS) statsSectionManager.setSelectedSection(INSIGHTS)
+            updateRevampedInsights()
+        } else {
+            if (BuildConfig.IS_JETPACK_APP && statsRevampV2FeatureConfig.isEnabled()) {
+                showInsightsUpdateAlert()
+            }
+        }
+    }
+
+    private fun showInsightsUpdateAlert() {
+        launch {
+            val insightTypes = statsStore.getAddedInsights(statsSiteProvider.siteModel)
+            if (!insightTypes.containsAll(JETPACK_DEFAULT_INSIGHTS)) {
+                _showUpgradeAlert.value = Event(true)
+                updateRevampedInsights()
+                appPrefsWrapper.markStatsRevampFeatureAnnouncementAsDisplayed()
+            }
         }
     }
 
