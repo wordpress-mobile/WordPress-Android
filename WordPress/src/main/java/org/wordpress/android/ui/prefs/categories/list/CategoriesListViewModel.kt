@@ -95,7 +95,10 @@ class CategoriesListViewModel @Inject constructor(
                 "An error occurred while updating taxonomy with type: " + event.error.type
         )
 
-        if (event.causeOfChange == TaxonomyAction.FETCH_CATEGORIES) processFetchCategoriesCallback(event)
+        if (event.causeOfChange == TaxonomyAction.FETCH_CATEGORIES)
+            processFetchCategoriesCallback(event)
+        if (event.causeOfChange == TaxonomyAction.UPDATE_TERM)
+            launch { fetchCategoriesFromNetwork() }
     }
 
     @SuppressWarnings("unused")
