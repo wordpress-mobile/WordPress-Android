@@ -180,103 +180,8 @@ public class AppPrefs {
         SKIPPED_BLOGGING_PROMPT_DAY,
     }
 
-    /**
-     * These preferences won't be deleted when the user disconnects. They should be used for device specifics or user
-     * independent prefs.
-     */
-    public enum UndeletablePrefKey implements PrefKey {
-        // Theme image size retrieval
-        THEME_IMAGE_SIZE_WIDTH,
-
-        // index of the last app-version
-        LAST_APP_VERSION_INDEX,
-
-        // aztec editor enabled
-        AZTEC_EDITOR_ENABLED,
-
-        // aztec editor toolbar expanded state
-        AZTEC_EDITOR_TOOLBAR_EXPANDED,
-
-        BOOKMARKS_SAVED_LOCALLY_DIALOG_SHOWN,
-
-        // When we need to show the new image optimize promo dialog
-        IMAGE_OPTIMIZE_PROMO_REQUIRED,
-
-        // Global plans features
-        GLOBAL_PLANS_PLANS_FEATURES,
-
-        // When we need to sync IAP data with the wpcom backend
-        IAP_SYNC_REQUIRED,
-
-        // When we need to show the snackbar indicating how notifications can be navigated through
-        SWIPE_TO_NAVIGATE_NOTIFICATIONS,
-
-        // Same as above but for the reader
-        SWIPE_TO_NAVIGATE_READER,
-
-        // smart toast counters
-        SMART_TOAST_COMMENTS_LONG_PRESS_USAGE_COUNTER,
-        SMART_TOAST_COMMENTS_LONG_PRESS_TOAST_COUNTER,
-
-        // permission keys - set once a specific permission has been asked, regardless of response
-        ASKED_PERMISSION_STORAGE_WRITE,
-        ASKED_PERMISSION_STORAGE_READ,
-        ASKED_PERMISSION_CAMERA,
-
-        // Updated after WP.com themes have been fetched
-        LAST_WP_COM_THEMES_SYNC,
-
-        // user id last used to login with
-        LAST_USED_USER_ID,
-
-        // last user access status in reader
-        LAST_READER_KNOWN_ACCESS_TOKEN_STATUS,
-        LAST_READER_KNOWN_USER_ID,
-
-        // used to indicate that we already obtained and tracked the installation referrer
-        IS_INSTALLATION_REFERRER_OBTAINED,
-
-        // used to indicate that user dont want to see the Gutenberg warning dialog anymore
-        IS_GUTENBERG_WARNING_DIALOG_DISABLED,
-
-        // used to indicate that user dont want to see the Gutenberg informative dialog anymore
-        IS_GUTENBERG_INFORMATIVE_DIALOG_DISABLED,
-
-        // indicates whether the system notifications are enabled for the app
-        SYSTEM_NOTIFICATIONS_ENABLED,
-
-        // Used to indicate whether or not the the post-signup interstitial must be shown
-        SHOULD_SHOW_POST_SIGNUP_INTERSTITIAL,
-
-        // used to indicate that we do not need to show the main FAB tooltip
-        IS_MAIN_FAB_TOOLTIP_DISABLED,
-
-        // version of the last shown feature announcement
-        FEATURE_ANNOUNCEMENT_SHOWN_VERSION,
-
-        // last app version code feature announcement was shown for
-        LAST_FEATURE_ANNOUNCEMENT_APP_VERSION_CODE,
-
-        // used to indicate that we do not need to show the Post List FAB tooltip
-        IS_POST_LIST_FAB_TOOLTIP_DISABLED,
-
-        // Used to indicate whether or not the stories intro screen must be shown
-        SHOULD_SHOW_STORIES_INTRO,
-
-        // Used to indicate whether or not the device running out of storage warning should be shown
-        SHOULD_SHOW_STORAGE_WARNING,
-
-        // Used to indicate whether or not bookmarked posts pseudo id should be updated after invalid pseudo id fix
-        // (Internal Ref:p3hLNG-18u)
-        SHOULD_UPDATE_BOOKMARKED_POSTS_PSEUDO_ID,
-
-        // Tracks which block types are considered "new" via impression counts
-        GUTENBERG_BLOCK_TYPE_IMPRESSIONS,
-
-        // Used to identify the App Settings for initial screen that is updated when the variant is assigned
-        wp_pref_initial_screen,
-
-        STATS_REVAMP2_FEATURE_ANNOUNCEMENT_DISPLAYED
+    public static boolean isStatsRevamp2DefaultCardsUpdated() {
+        return prefs().getBoolean(UndeletablePrefKey.STATS_REVAMP2_DEFAULT_CARDS_UPDATED.name(), false);
     }
 
     private static SharedPreferences prefs() {
@@ -1331,6 +1236,111 @@ public class AppPrefs {
     public static void setShouldDisplayStatsRevampFeatureAnnouncement(boolean isDisplayed) {
         prefs().edit().putBoolean(UndeletablePrefKey.STATS_REVAMP2_FEATURE_ANNOUNCEMENT_DISPLAYED.name(), isDisplayed)
                .apply();
+    }
+
+    public static void setStatsRevamp2DefaultCardsUpdated() {
+        prefs().edit().putBoolean(UndeletablePrefKey.STATS_REVAMP2_DEFAULT_CARDS_UPDATED.name(), true).apply();
+    }
+
+    /**
+     * These preferences won't be deleted when the user disconnects. They should be used for device specifics or user
+     * independent prefs.
+     */
+    public enum UndeletablePrefKey implements PrefKey {
+        // Theme image size retrieval
+        THEME_IMAGE_SIZE_WIDTH,
+
+        // index of the last app-version
+        LAST_APP_VERSION_INDEX,
+
+        // aztec editor enabled
+        AZTEC_EDITOR_ENABLED,
+
+        // aztec editor toolbar expanded state
+        AZTEC_EDITOR_TOOLBAR_EXPANDED,
+
+        BOOKMARKS_SAVED_LOCALLY_DIALOG_SHOWN,
+
+        // When we need to show the new image optimize promo dialog
+        IMAGE_OPTIMIZE_PROMO_REQUIRED,
+
+        // Global plans features
+        GLOBAL_PLANS_PLANS_FEATURES,
+
+        // When we need to sync IAP data with the wpcom backend
+        IAP_SYNC_REQUIRED,
+
+        // When we need to show the snackbar indicating how notifications can be navigated through
+        SWIPE_TO_NAVIGATE_NOTIFICATIONS,
+
+        // Same as above but for the reader
+        SWIPE_TO_NAVIGATE_READER,
+
+        // smart toast counters
+        SMART_TOAST_COMMENTS_LONG_PRESS_USAGE_COUNTER,
+        SMART_TOAST_COMMENTS_LONG_PRESS_TOAST_COUNTER,
+
+        // permission keys - set once a specific permission has been asked, regardless of response
+        ASKED_PERMISSION_STORAGE_WRITE,
+        ASKED_PERMISSION_STORAGE_READ,
+        ASKED_PERMISSION_CAMERA,
+
+        // Updated after WP.com themes have been fetched
+        LAST_WP_COM_THEMES_SYNC,
+
+        // user id last used to login with
+        LAST_USED_USER_ID,
+
+        // last user access status in reader
+        LAST_READER_KNOWN_ACCESS_TOKEN_STATUS,
+        LAST_READER_KNOWN_USER_ID,
+
+        // used to indicate that we already obtained and tracked the installation referrer
+        IS_INSTALLATION_REFERRER_OBTAINED,
+
+        // used to indicate that user dont want to see the Gutenberg warning dialog anymore
+        IS_GUTENBERG_WARNING_DIALOG_DISABLED,
+
+        // used to indicate that user dont want to see the Gutenberg informative dialog anymore
+        IS_GUTENBERG_INFORMATIVE_DIALOG_DISABLED,
+
+        // indicates whether the system notifications are enabled for the app
+        SYSTEM_NOTIFICATIONS_ENABLED,
+
+        // Used to indicate whether or not the the post-signup interstitial must be shown
+        SHOULD_SHOW_POST_SIGNUP_INTERSTITIAL,
+
+        // used to indicate that we do not need to show the main FAB tooltip
+        IS_MAIN_FAB_TOOLTIP_DISABLED,
+
+        // version of the last shown feature announcement
+        FEATURE_ANNOUNCEMENT_SHOWN_VERSION,
+
+        // last app version code feature announcement was shown for
+        LAST_FEATURE_ANNOUNCEMENT_APP_VERSION_CODE,
+
+        // used to indicate that we do not need to show the Post List FAB tooltip
+        IS_POST_LIST_FAB_TOOLTIP_DISABLED,
+
+        // Used to indicate whether or not the stories intro screen must be shown
+        SHOULD_SHOW_STORIES_INTRO,
+
+        // Used to indicate whether or not the device running out of storage warning should be shown
+        SHOULD_SHOW_STORAGE_WARNING,
+
+        // Used to indicate whether or not bookmarked posts pseudo id should be updated after invalid pseudo id fix
+        // (Internal Ref:p3hLNG-18u)
+        SHOULD_UPDATE_BOOKMARKED_POSTS_PSEUDO_ID,
+
+        // Tracks which block types are considered "new" via impression counts
+        GUTENBERG_BLOCK_TYPE_IMPRESSIONS,
+
+        // Used to identify the App Settings for initial screen that is updated when the variant is assigned
+        wp_pref_initial_screen,
+
+        STATS_REVAMP2_FEATURE_ANNOUNCEMENT_DISPLAYED,
+
+        STATS_REVAMP2_DEFAULT_CARDS_UPDATED
     }
 
     /*
