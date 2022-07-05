@@ -229,15 +229,15 @@ class BloggingPromptsOnboardingViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `Should get is first blogging prompts onboarding when start is called with INFORMATION`() {
+    fun `Should NOT get is first blogging prompts onboarding when start is called with INFORMATION`() {
         classToTest.start(INFORMATION)
-        verify(getIsFirstBloggingPromptsOnboardingUseCase).execute()
+        verify(getIsFirstBloggingPromptsOnboardingUseCase, times(0)).execute()
     }
 
     @Test
-    fun `Should save first blogging prompts onboarding when start is called with INFORMATION`() {
+    fun `Should NOT save first blogging prompts onboarding when start is called with INFORMATION`() {
         classToTest.start(INFORMATION)
-        verify(saveFirstBloggingPromptsOnboardingUseCase).execute(false)
+        verify(saveFirstBloggingPromptsOnboardingUseCase, times(0)).execute(any())
     }
 
     @Test

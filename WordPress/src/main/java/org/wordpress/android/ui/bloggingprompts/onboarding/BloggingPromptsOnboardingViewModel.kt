@@ -56,9 +56,11 @@ class BloggingPromptsOnboardingViewModel @Inject constructor(
             hasTrackedScreenShown = true
             analyticsTracker.trackScreenShown()
         }
+        if (type == ONBOARDING) {
+            isFirstBloggingPromptsOnboarding = getIsFirstBloggingPromptsOnboardingUseCase.execute()
+            saveFirstBloggingPromptsOnboardingUseCase.execute(isFirstTime = false)
+        }
         dialogType = type
-        isFirstBloggingPromptsOnboarding = getIsFirstBloggingPromptsOnboardingUseCase.execute()
-        saveFirstBloggingPromptsOnboardingUseCase.execute(isFirstTime = false)
         _uiState.value = uiStateMapper.mapReady(dialogType, ::onPrimaryButtonClick, ::onSecondaryButtonClick)
     }
 
