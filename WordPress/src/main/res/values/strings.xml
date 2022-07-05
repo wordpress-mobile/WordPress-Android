@@ -18,7 +18,7 @@
     <string name="sign_out_wpcom_confirm_with_no_changes">Log out of WordPress?</string>
 
     <!-- form labels -->
-    <string name="select_categories">Select categories</string>
+    <string name="select_categories">Select test</string>
     <string name="tags_separate_with_commas">Separate tags with commas</string>
     <string name="max_thumbnail_px_size">Maximum Image Size</string>
     <string name="image_quality">Image Quality</string>
