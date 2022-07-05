@@ -85,7 +85,7 @@ public class MySitesPage {
     }
 
     public StatsPage clickStats() {
-        clickOn(R.id.quick_action_stats_button);
+        clickItemWithText(R.string.stats);
         waitForElementToBeDisplayedWithoutFailure(
                 onView(withId(R.id.tabLayout))
         );
