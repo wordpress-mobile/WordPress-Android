@@ -25,5 +25,7 @@
     <string name="sign_out_wpcom_confirm_with_no_changes">Log out of Jetpack?</string>
 
     <!-- About button in Me -->
-    <string name="me_btn_about">About Jetpack</string>
+    <string name="me_btn_about">About Test</string>
+
+    <string name="gio_test">Test</string>
 </resources>
