@@ -392,14 +392,14 @@ platform :android do
       res_dir: File.join('WordPress', 'src', 'main', 'res'),
       glotpress_url: APP_SPECIFIC_VALUES[:wordpress][:glotpress_appstrings_project],
       locales: WP_APP_LOCALES,
-      lint_task: 'lintWordpressVanillaRelease'
+      lint_task: ''
     )
     # Jetpack strings
     android_download_translations(
       res_dir: File.join('WordPress', 'src', 'jetpack', 'res'),
       glotpress_url: APP_SPECIFIC_VALUES[:jetpack][:glotpress_appstrings_project],
       locales: JP_APP_LOCALES,
-      lint_task: 'lintJetpackVanillaRelease'
+      lint_task: ''
     )
   end
 
