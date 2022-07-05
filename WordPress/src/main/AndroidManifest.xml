@@ -261,17 +261,6 @@
             android:theme="@style/WordPress.Stories.Immersive">
         </activity>
 
-        <!-- Workaround for old launcher icon pointing to .ui.posts.PostsActivity -->
-        <activity-alias
-            android:name=".ui.posts.PostsActivity"
-            android:enabled="true"
-            android:targetActivity=".ui.WPLaunchActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>
-        </activity-alias>
-
         <activity
             android:name=".ui.posts.PostsListActivity"
             android:launchMode="singleTop"
