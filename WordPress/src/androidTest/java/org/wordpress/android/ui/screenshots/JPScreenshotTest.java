@@ -162,8 +162,9 @@ public class JPScreenshotTest extends BaseTest {
     }
 
     private void moveToActivityLog() {
-        // Click on the "Sites" tab in the nav, then choose "Activity Log"
+        // Click on the "Sites" tab in the nav, then click the "Menu" tab, then choose "Activity Log"
         clickOn(R.id.nav_sites);
+        MySitesPage.goToMenuTab();
         (new MySitesPage()).clickActivityLog();
 
         waitForElementToBeDisplayedWithoutFailure(R.id.swipe_refresh_layout);
