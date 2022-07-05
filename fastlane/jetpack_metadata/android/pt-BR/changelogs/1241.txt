@@ -1,0 +1,5 @@
+20,2:
+- Atualizamos a visualização de informações de estatísticas do seu site.
+- Faça login com seu navegador usando um código QR no menu do aplicativo Me.
+- Faça upload de imagens HEIC e HEIF com o seletor de mídia.
+- Eliminamos um bug que afetava temas de leitores de outros idiomas.
