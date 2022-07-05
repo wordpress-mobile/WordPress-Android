@@ -93,7 +93,7 @@ class LineChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         val prevWeekData = if (hasData && item.entries.size > 7) {
             item.entries.subList(0, 7)
         } else {
-            emptyList()
+            item.entries
         }
         val hasPrevWeekData = prevWeekData.isNotEmpty() && prevWeekData.any { it.value > 0 }
         val prevWeekDataSet = if (hasPrevWeekData) {
