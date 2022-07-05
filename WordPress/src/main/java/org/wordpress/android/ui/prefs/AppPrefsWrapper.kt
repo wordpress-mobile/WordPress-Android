@@ -235,6 +235,12 @@ class AppPrefsWrapper @Inject constructor() {
 
     fun markStatsRevampFeatureAnnouncementAsDisplayed() = AppPrefs.setShouldDisplayStatsRevampFeatureAnnouncement(false)
 
+    fun getIsFirstBloggingPromptsOnboarding(): Boolean = AppPrefs.getIsFirstBloggingPromptsOnboarding()
+
+    fun saveFirstBloggingPromptsOnboarding(isFirstTime: Boolean) {
+        AppPrefs.saveFirstBloggingPromptsOnboarding(isFirstTime)
+    }
+
     companion object {
         private const val LIGHT_MODE_ID = 0
         private const val DARK_MODE_ID = 1
