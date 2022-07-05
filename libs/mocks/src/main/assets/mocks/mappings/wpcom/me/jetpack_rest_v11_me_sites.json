@@ -4,8 +4,8 @@
     "method": "GET",
     "urlPattern": "/rest/v1.(1|2)/me/sites(\\?|/|$).*",
     "queryParameters": {
-      "filters": {
-        "matches": "jetpack(.*)"
+      "fields": {
+        "matches": "(.*)jetpack(.*)"
       },
       "locale": {
         "matches": "(.*)"
