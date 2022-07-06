@@ -102,7 +102,6 @@ public class PeopleListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         setHasOptionsMenu(true);
 
-        Context context = getContext();
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.people_list_fragment, container, false);
 
         Toolbar toolbar = rootView.findViewById(R.id.toolbar_main);
@@ -121,9 +120,9 @@ public class PeopleListFragment extends Fragment {
         mFilteredRecyclerView = rootView.findViewById(R.id.filtered_recycler_view);
         mFilteredRecyclerView.setLogT(AppLog.T.PEOPLE);
         mFilteredRecyclerView.setSwipeToRefreshEnabled(false);
-        if (context != null) {
-            mFilteredRecyclerView.addItemDecoration(new DividerItemDecoration(context, DividerItemDecoration.VERTICAL));
-        }
+        mFilteredRecyclerView.addItemDecoration(
+                new DividerItemDecoration(mFilteredRecyclerView.getContext(), DividerItemDecoration.VERTICAL)
+        );
 
         // the following will change the look and feel of the toolbar to match the current design
         mFilteredRecyclerView.setToolbarLeftAndRightPadding(
