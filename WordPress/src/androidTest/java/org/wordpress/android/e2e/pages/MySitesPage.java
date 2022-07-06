@@ -68,7 +68,8 @@ public class MySitesPage {
         clickItemWithText(R.string.my_site_btn_site_settings);
     }
 
-    public void clickBlogPostsItem() {
+    public void goToPosts() {
+        goToMenuTab();
         clickItemWithText(R.string.my_site_btn_blog_posts);
     }
 
@@ -94,7 +95,7 @@ public class MySitesPage {
         clickItemWithText(R.string.media);
     }
 
-    public void switchToSite(String siteUrl) {
+    public MySitesPage switchToSite(String siteUrl) {
         // Choose the "sites" tab in the nav
         clickOn(R.id.nav_sites);
 
@@ -102,6 +103,8 @@ public class MySitesPage {
         clickOn(R.id.switch_site);
 
         (new SitePickerPage()).chooseSiteWithURL(siteUrl);
+
+        return this;
     }
 
     public StatsPage clickStats() {
@@ -128,11 +131,6 @@ public class MySitesPage {
             onView(withId(R.id.recycler_view))
                     .perform(actionOnItem(hasDescendant(itemViewMatcher), click()));
         }
-    }
-
-    public static void goToPosts() {
-        goToMenuTab();
-        clickOn(onView(withText(R.string.posts)));
     }
 
     @SuppressWarnings("unused")

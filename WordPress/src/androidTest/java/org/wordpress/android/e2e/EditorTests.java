@@ -48,7 +48,7 @@ public class EditorTests extends BaseTest {
         // exit the Settings page
         pressBack();
 
-        mySitesPage.clickBlogPostsItem();
+        mySitesPage.goToPosts();
 
         mySitesPage.startNewPost();
     }

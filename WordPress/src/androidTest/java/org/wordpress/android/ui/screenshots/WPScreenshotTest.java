@@ -79,9 +79,8 @@ public class WPScreenshotTest extends BaseTest {
     }
 
     private void editBlogPost() {
-        (new MySitesPage()).switchToSite("fourpawsdoggrooming.wordpress.com");
-
-        MySitesPage.goToPosts();
+        (new MySitesPage()).switchToSite("fourpawsdoggrooming.wordpress.com")
+                           .goToPosts();
         PostsListPage.goToDrafts();
 
         // Get a screenshot of the editor with the block library expanded
