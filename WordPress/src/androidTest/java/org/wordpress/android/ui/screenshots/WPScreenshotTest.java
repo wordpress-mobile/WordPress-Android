@@ -126,6 +126,8 @@ public class WPScreenshotTest extends BaseTest {
     }
 
     private void navigateDiscover() {
+        (new MySitesPage()).switchToSite("fourpawsdoggrooming.wordpress.com");
+
         // Click on the "Reader" tab and take a screenshot
         clickOn(R.id.nav_reader);
 
