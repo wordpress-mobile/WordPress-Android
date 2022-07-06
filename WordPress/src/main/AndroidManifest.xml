@@ -203,7 +203,7 @@
             android:configChanges="orientation|screenSize"
             android:theme="@style/WordPress.NoActionBar"
             android:label="@string/notif_settings_screen_title"
-            android:exported="false">
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.NOTIFICATION_PREFERENCES" />
