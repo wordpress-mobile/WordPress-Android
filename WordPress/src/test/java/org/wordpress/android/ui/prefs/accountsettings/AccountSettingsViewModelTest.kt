@@ -20,7 +20,7 @@ import org.wordpress.android.fluxc.store.AccountStore.AccountErrorType.GENERIC_E
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged
 import org.wordpress.android.test
 import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel.AccountSettingsUiState
-import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel.SiteViewModel
+import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel.SiteUiModel
 import org.wordpress.android.ui.prefs.accountsettings.usecase.FetchAccountSettingsUseCase
 import org.wordpress.android.ui.prefs.accountsettings.usecase.GetAccountUseCase
 import org.wordpress.android.ui.prefs.accountsettings.usecase.GetSitesUseCase
@@ -42,10 +42,10 @@ class AccountSettingsViewModelTest : BaseUnitTest() {
     private val optimisticUpdateHandler = AccountSettingsOptimisticUpdateHandler()
     @Mock private lateinit var account: AccountModel
 
-    private val siteViewModels = mutableListOf<SiteViewModel>().apply {
-        add(SiteViewModel("HappyDay", 1L, "http://happyday.wordpress.com"))
-        add(SiteViewModel("WonderLand", 2L, "http://wonderland.wordpress.com"))
-        add(SiteViewModel("FantasyBooks", 3L, "http://fantasybooks.wordpress.com"))
+    private val siteViewModels = mutableListOf<SiteUiModel>().apply {
+        add(SiteUiModel("HappyDay", 1L, "http://happyday.wordpress.com"))
+        add(SiteUiModel("WonderLand", 2L, "http://wonderland.wordpress.com"))
+        add(SiteUiModel("FantasyBooks", 3L, "http://fantasybooks.wordpress.com"))
     }
     private val uiStateChanges = mutableListOf<AccountSettingsUiState>()
     private val uiState
