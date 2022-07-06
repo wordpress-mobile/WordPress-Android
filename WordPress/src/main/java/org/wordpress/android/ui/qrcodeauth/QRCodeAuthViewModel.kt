@@ -71,19 +71,18 @@ class QRCodeAuthViewModel @Inject constructor(
     private var isStarted = false
 
     fun start(uri: String? = null, isDeepLink: Boolean = false, savedInstanceState: Bundle? = null) {
-        postUiState(uiStateMapper.mapToInvalidData({}, {}))
-//        if (isStarted) return
-//        isStarted = true
-//
-//        extractSavedInstanceStateIfNeeded(savedInstanceState)
-//
-//        if (isDeepLink && savedInstanceState == null) {
-//            trackingOrigin = ORIGIN_DEEPLINK
-//            process(uri)
-//        } else {
-//            if (trackingOrigin.isNullOrEmpty()) trackingOrigin = ORIGIN_MENU
-//            startOrRestoreUiState()
-//        }
+        if (isStarted) return
+        isStarted = true
+
+        extractSavedInstanceStateIfNeeded(savedInstanceState)
+
+        if (isDeepLink && savedInstanceState == null) {
+            trackingOrigin = ORIGIN_DEEPLINK
+            process(uri)
+        } else {
+            if (trackingOrigin.isNullOrEmpty()) trackingOrigin = ORIGIN_MENU
+            startOrRestoreUiState()
+        }
     }
 
     private fun extractSavedInstanceStateIfNeeded(savedInstanceState: Bundle?) {
