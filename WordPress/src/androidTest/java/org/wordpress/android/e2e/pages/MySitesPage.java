@@ -64,7 +64,8 @@ public class MySitesPage {
         }
     }
 
-    public void clickSettingsItem() {
+    public void goToSettings() {
+        goToMenuTab();
         clickItemWithText(R.string.my_site_btn_site_settings);
     }
 
@@ -73,15 +74,18 @@ public class MySitesPage {
         clickItemWithText(R.string.my_site_btn_blog_posts);
     }
 
-    public void clickActivityLog() {
+    public void goToActivityLog() {
+        goToMenuTab();
         clickItemWithText(R.string.activity_log);
     }
 
-    public void clickScan() {
+    public void goToScan() {
+        goToMenuTab();
         clickItemWithText(R.string.scan);
     }
 
-    public void clickBackup() {
+    public void goToBackup() {
+        goToMenuTab();
         clickItemWithText(R.string.backup);
     }
 

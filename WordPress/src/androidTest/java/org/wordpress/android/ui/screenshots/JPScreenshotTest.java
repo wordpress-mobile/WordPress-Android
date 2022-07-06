@@ -164,7 +164,7 @@ public class JPScreenshotTest extends BaseTest {
     private void moveToActivityLog() {
         // Click on the "Sites" tab in the nav, then click the "Menu" tab, then choose "Activity Log"
         clickOn(R.id.nav_sites);
-        (new MySitesPage()).clickActivityLog();
+        (new MySitesPage()).goToActivityLog();
 
         waitForElementToBeDisplayedWithoutFailure(R.id.swipe_refresh_layout);
 
@@ -175,7 +175,7 @@ public class JPScreenshotTest extends BaseTest {
     private void moveToScan() {
         // Click on the "Sites" tab in the nav, then click the "Menu" tab, then choose "Scan"
         clickOn(R.id.nav_sites);
-        (new MySitesPage()).clickScan();
+        (new MySitesPage()).goToScan();
 
         waitForElementToBeDisplayedWithoutFailure(R.id.recycler_view);
 
@@ -185,7 +185,7 @@ public class JPScreenshotTest extends BaseTest {
 
     private void moveToBackup() {
         clickOn(R.id.nav_sites);
-        (new MySitesPage()).clickBackup();
+        (new MySitesPage()).goToBackup();
 
         waitForElementToBeDisplayedWithoutFailure(R.id.log_list_view);
 
