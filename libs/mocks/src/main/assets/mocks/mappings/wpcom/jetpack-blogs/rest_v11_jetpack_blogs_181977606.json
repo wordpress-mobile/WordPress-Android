@@ -1,7 +1,7 @@
 {
   "request": {
     "method": "GET",
-    "urlPattern": "/rest/v1.1/jetpack-blogs/185124945(/)?($|\\?.*)",
+    "urlPattern": "/rest/v1.1/jetpack-blogs/181977606(/)?($|\\?.*)",
     "queryParameters": {
       "locale": {
         "matches": "(.*)"
