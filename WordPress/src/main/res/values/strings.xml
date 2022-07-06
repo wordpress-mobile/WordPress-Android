@@ -1369,6 +1369,7 @@
     <string name="stats_insights_management_posts_and_pages">Posts and Pages</string>
     <string name="stats_insights_management_activity">Activity</string>
 
+    <string name="stats_insights_like_guide_card">⭐️ Your latest post %1$s has received %2$s like.</string>
     <string name="stats_insights_likes_guide_card">⭐️ Your latest post %1$s has received %2$s likes.</string>
     <string name="stats_insights_comments_guide_card">💡Tap \'VIEW MORE\' to see your top commenters.</string>
     <string name="stats_insights_followers_guide_card">💡Commenting on other blogs is a great way to build attention and followers for your new site.</string>
