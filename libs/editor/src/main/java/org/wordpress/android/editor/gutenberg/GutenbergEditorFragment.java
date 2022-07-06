@@ -1343,10 +1343,10 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     public void onMediaUploadSucceeded(final String localMediaId, final MediaFile mediaFile) {
         mUploadingMediaProgressMax.remove(localMediaId);
         String mediaURL;
-        if (!TextUtils.isEmpty(mediaFile.getLargeURL())) {
-            mediaURL = mediaFile.getLargeURL();
-        } else if (!TextUtils.isEmpty(mediaFile.getMediumURL())) {
-            mediaURL = mediaFile.getMediumURL();
+        if (!TextUtils.isEmpty(mediaFile.getFileUrlLargeSize())) {
+            mediaURL = mediaFile.getFileUrlLargeSize();
+        } else if (!TextUtils.isEmpty(mediaFile.getFileUrlMediumSize())) {
+            mediaURL = mediaFile.getFileUrlMediumSize();
         } else {
             mediaURL = mediaFile.getFileURL();
         }
