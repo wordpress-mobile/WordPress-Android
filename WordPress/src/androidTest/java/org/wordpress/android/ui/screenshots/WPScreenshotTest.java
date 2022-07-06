@@ -236,7 +236,7 @@ public class WPScreenshotTest extends BaseTest {
 
         takeScreenshot("6-upload-on-the-go");
 
-        pressBackUntilElementIsDisplayed(R.id.site_info);
+        pressBackUntilElementIsDisplayed(R.id.nav_sites);
     }
 
     private void takeScreenshot(String screenshotName) {
