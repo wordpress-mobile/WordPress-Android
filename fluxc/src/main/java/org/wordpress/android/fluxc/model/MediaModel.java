@@ -76,10 +76,10 @@ public class MediaModel extends Payload<BaseNetworkError> implements Identifiabl
     @Column private String mUploadState;
     @Column private boolean mMarkedLocallyAsFeatured;
 
-    // Other Sizes. Only available for images on self-hosted (xmlrpc layer) sites
-    @Column private String mFileUrlMediumSize;
-    @Column private String mFileUrlMediumLargeSize;
-    @Column private String mFileUrlLargeSize;
+    // Other Sizes. Only available for images on self-hosted (xmlrpc layer) and Rest WPCOM sites
+    @Column private String mFileUrlMediumSize; // Self-hosted and wpcom
+    @Column private String mFileUrlMediumLargeSize; // Self-hosted only
+    @Column private String mFileUrlLargeSize; // Self-hosted and wpcom
 
     //
     // Legacy
