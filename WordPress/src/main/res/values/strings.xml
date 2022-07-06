@@ -4201,4 +4201,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="gutenberg_native_new" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">NEW</string>
     <string name="gutenberg_native_you_can_also_rearrange_blocks_by_tapping_a_block_and_then_tapping" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">You can also rearrange blocks by tapping a block and then tapping the up and down arrows that appear on the bottom left side of the block to move it up or down.</string>
 
+    <!-- Jetpack awareness in WordPress App -->
+    <string name="wp_jetpack_powered">Jetpack powered</string>
+
 </resources>
