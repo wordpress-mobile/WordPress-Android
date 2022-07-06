@@ -278,6 +278,8 @@ public class AppPrefs {
 
         STATS_REVAMP2_FEATURE_ANNOUNCEMENT_DISPLAYED,
 
+        STATS_REVAMP2_DEFAULT_CARDS_UPDATED,
+
         // Indicates if this is the first time the user sees the blogging prompts onboarding dialog
         IS_FIRST_TIME_BLOGGING_PROMPTS_ONBOARDING
     }
@@ -1334,6 +1336,14 @@ public class AppPrefs {
     public static void setShouldDisplayStatsRevampFeatureAnnouncement(boolean isDisplayed) {
         prefs().edit().putBoolean(UndeletablePrefKey.STATS_REVAMP2_FEATURE_ANNOUNCEMENT_DISPLAYED.name(), isDisplayed)
                .apply();
+    }
+
+    public static boolean isStatsRevamp2DefaultCardsUpdated() {
+        return prefs().getBoolean(UndeletablePrefKey.STATS_REVAMP2_DEFAULT_CARDS_UPDATED.name(), false);
+    }
+
+    public static void setStatsRevamp2DefaultCardsUpdated() {
+        prefs().edit().putBoolean(UndeletablePrefKey.STATS_REVAMP2_DEFAULT_CARDS_UPDATED.name(), true).apply();
     }
 
     /*

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-06-30 13:54:09+0000
+Translation-Revision-Date: 2022-07-05 18:52:54+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: de
@@ -11,6 +11,9 @@ Language: de
     <string name="qrcode_auth_flow_dismiss_dialog_message">Bist du sicher, dass du fortfahren möchtest?</string>
     <string name="qrcode_auth_flow_dismiss_dialog_title">Scan des Anmeldecode beenden</string>
     <string name="qrcode_auth_flow_error_auth_failed_subtitle">Du konntest mit diesem Anmeldecode nicht angemeldet werden. Bitte tippe auf den Button „Erneut scannen“, um den Code erneut zu scannen.</string>
+    <string name="qrcode_auth_flow_error_no_connection_title">Keine Verbindung</string>
+    <string name="qrcode_auth_flow_scan_again">Erneut scannen</string>
+    <string name="qrcode_auth_flow_done_title">Du bist angemeldet!</string>
     <string name="qrcode_auth_flow_error_auth_failed_title">Authentifizierung fehlgeschlagen</string>
     <string name="qrcode_auth_flow_error_expired_subtitle">Dieser Anmeldecode ist abgelaufen. Bitte tippe auf den Button „Erneut scannen“, um den Code erneut zu scannen.</string>
     <string name="qrcode_auth_flow_error_expired_title">Abgelaufener Anmeldecode</string>
@@ -2965,7 +2968,7 @@ Language: de
     <string name="notifications_empty_comments">Bisher keine Kommentare</string>
     <string name="notifications_empty_unread">Du bist auf dem neuesten Stand!</string>
     <string name="reader_short_comment_count_multi">%s Kommentare</string>
-    <string name="reader_short_comment_count_one">1 Kommentar</string>
+    <string name="reader_short_comment_count_one">Ein Kommentar</string>
     <string name="reader_hint_comment_on_post">Antwort auf Beitrag…</string>
     <string name="reader_discover_visit_blog">%s besuchen</string>
     <string name="reader_discover_attribution_blog">Ursprünglich veröffentlicht auf %s</string>

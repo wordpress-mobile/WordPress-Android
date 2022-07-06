@@ -29,6 +29,7 @@ import org.wordpress.android.push.NotificationType
 import org.wordpress.android.push.NotificationsProcessingService.ARG_NOTIFICATION_TYPE
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.stats.StatsTimeframe
 import org.wordpress.android.ui.stats.StatsTimeframe.DAY
@@ -200,8 +201,11 @@ class StatsViewModel
             }
         }
 
-        if (BuildConfig.IS_JETPACK_APP && statsRevampV2FeatureConfig.isEnabled()) {
+        if (BuildConfig.IS_JETPACK_APP &&
+                statsRevampV2FeatureConfig.isEnabled() &&
+                !AppPrefs.isStatsRevamp2DefaultCardsUpdated()) {
             updateRevampedInsights()
+            AppPrefs.setStatsRevamp2DefaultCardsUpdated()
         }
 
         if (launchedFrom == StatsLaunchedFrom.FEATURE_ANNOUNCEMENT) {
@@ -212,25 +216,14 @@ class StatsViewModel
     private fun updateRevampedInsights() {
         val insightsUseCase = listUseCases[INSIGHTS]
         insightsUseCase?.launch(defaultDispatcher) {
-            when (val insightTypes = statsStore.getAddedInsights(statsSiteProvider.siteModel)) {
-                JETPACK_DEFAULT_INSIGHTS -> {
-                    return@launch
-                }
-                DEFAULT_INSIGHTS -> {
-                    // Insights cards match the previous default set of cards,
-                    // switch it to show the new set of default cards
-                    statsStore.updateTypes(statsSiteProvider.siteModel, JETPACK_DEFAULT_INSIGHTS)
-                }
-                else -> {
-                    // Insights cards does not match the existing defaults,
-                    // the new set of default cards is added at the top of their list and preserve their additions
-                    val addedInsightTypes = insightTypes - DEFAULT_INSIGHTS.toSet()
-                    val updateInsightTypes: MutableSet<InsightType> = mutableSetOf()
-                    updateInsightTypes.addAll(JETPACK_DEFAULT_INSIGHTS)
-                    updateInsightTypes.addAll(addedInsightTypes)
-                    statsStore.updateTypes(statsSiteProvider.siteModel, updateInsightTypes.toList())
-                }
-            }
+            val insightTypes = statsStore.getAddedInsights(statsSiteProvider.siteModel)
+
+            // The new set of default cards is added at the top of their list and preserve their additions
+            val addedInsightTypes = insightTypes - DEFAULT_INSIGHTS.toSet()
+            val updateInsightTypes: MutableSet<InsightType> = mutableSetOf()
+            updateInsightTypes.addAll(JETPACK_DEFAULT_INSIGHTS)
+            updateInsightTypes.addAll(addedInsightTypes)
+            statsStore.updateTypes(statsSiteProvider.siteModel, updateInsightTypes.toList())
             insightsUseCase.loadData()
         }
     }
