@@ -197,7 +197,7 @@ public class JPScreenshotTest extends BaseTest {
         // Click on the "Sites" tab in the nav, then choose "Stats"
         clickOn(R.id.nav_sites);
         MySitesPage.goToMenuTab();
-        (new MySitesPage()).clickStats();
+        (new MySitesPage()).goToStats();
 
         waitForElementToBeDisplayedWithoutFailure(R.id.image_thumbnail);
 

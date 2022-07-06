@@ -111,6 +111,7 @@ public class MySitesPage {
         return this;
     }
 
+    // Either this or goToStats should be removed after making the implementation uniform.
     public StatsPage clickStats() {
         clickItemWithText(R.string.stats);
         waitForElementToBeDisplayedWithoutFailure(
