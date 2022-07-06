@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -56,7 +57,7 @@ class QRCodeAuthViewModel @Inject constructor(
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
 ) : ViewModel() {
     private val _actionEvents = Channel<QRCodeAuthActionEvent>(Channel.BUFFERED)
-    val actionEvents = _actionEvents.receiveAsFlow()
+    val actionEvents: Flow<QRCodeAuthActionEvent> = _actionEvents.receiveAsFlow()
 
     private val _uiState = MutableStateFlow<QRCodeAuthUiState>(Loading)
     val uiState: StateFlow<QRCodeAuthUiState> = _uiState
@@ -70,18 +71,19 @@ class QRCodeAuthViewModel @Inject constructor(
     private var isStarted = false
 
     fun start(uri: String? = null, isDeepLink: Boolean = false, savedInstanceState: Bundle? = null) {
-        if (isStarted) return
-        isStarted = true
-
-        extractSavedInstanceStateIfNeeded(savedInstanceState)
-
-        if (isDeepLink && savedInstanceState == null) {
-            trackingOrigin = ORIGIN_DEEPLINK
-            process(uri)
-        } else {
-            if (trackingOrigin.isNullOrEmpty()) trackingOrigin = ORIGIN_MENU
-            startOrRestoreUiState()
-        }
+        postUiState(uiStateMapper.mapToInvalidData({}, {}))
+//        if (isStarted) return
+//        isStarted = true
+//
+//        extractSavedInstanceStateIfNeeded(savedInstanceState)
+//
+//        if (isDeepLink && savedInstanceState == null) {
+//            trackingOrigin = ORIGIN_DEEPLINK
+//            process(uri)
+//        } else {
+//            if (trackingOrigin.isNullOrEmpty()) trackingOrigin = ORIGIN_MENU
+//            startOrRestoreUiState()
+//        }
     }
 
     private fun extractSavedInstanceStateIfNeeded(savedInstanceState: Bundle?) {
