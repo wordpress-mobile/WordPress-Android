@@ -14,7 +14,6 @@ import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.e2e.pages.MySitesPage;
 import org.wordpress.android.e2e.pages.PostsListPage;
-import org.wordpress.android.e2e.pages.SitePickerPage;
 import org.wordpress.android.support.BaseTest;
 import org.wordpress.android.support.DemoModeEnabler;
 import org.wordpress.android.ui.WPLaunchActivity;
