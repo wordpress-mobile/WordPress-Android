@@ -173,9 +173,11 @@ public class WPScreenshotTest extends BaseTest {
     }
 
     private void navigateStats() {
-        // Click on the "Sites" tab in the nav, then choose "Stats"
+        // Click on the "Sites" tab in the nav, then click the "Menu" tab, then choose "Stats"
         clickOn(R.id.nav_sites);
-        MySitesPage.goToStats();
+        (new MySitesPage()).goToStats();
+
+        waitForElementToBeDisplayedWithoutFailure(R.id.image_thumbnail);
 
         // Wait for the stats to load
         idleFor(8000);
@@ -234,9 +236,9 @@ public class WPScreenshotTest extends BaseTest {
     }
 
     private void manageMedia() {
-        // Click on the "Sites" tab in the nav, then choose "Media"
+        // Click on the "Sites" tab in the nav, then click the "Menu" tab, then choose "Media"
         clickOn(R.id.nav_sites);
-        MySitesPage.goToMedia();
+        (new MySitesPage()).goToMedia();
 
         waitForElementToBeDisplayedWithoutFailure(R.id.media_browser_container);
 

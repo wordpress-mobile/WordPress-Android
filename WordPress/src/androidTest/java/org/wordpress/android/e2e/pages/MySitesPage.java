@@ -84,6 +84,16 @@ public class MySitesPage {
         clickItemWithText(R.string.backup);
     }
 
+    public void goToStats() {
+        goToMenuTab();
+        clickItemWithText(R.string.stats);
+    }
+
+    public void goToMedia() {
+        goToMenuTab();
+        clickItemWithText(R.string.media);
+    }
+
     public StatsPage clickStats() {
         clickItemWithText(R.string.stats);
         waitForElementToBeDisplayedWithoutFailure(
@@ -113,17 +123,6 @@ public class MySitesPage {
     public static void goToPosts() {
         goToMenuTab();
         clickOn(onView(withText(R.string.posts)));
-    }
-
-    public static void goToMedia() {
-        goToMenuTab();
-        clickOn(onView(withText(R.string.media)));
-    }
-
-    public static void goToStats() {
-        goToMenuTab();
-        clickOn(onView(withText(R.string.stats)));
-        waitForElementToBeDisplayedWithoutFailure(R.id.image_thumbnail);
     }
 
     @SuppressWarnings("unused")
