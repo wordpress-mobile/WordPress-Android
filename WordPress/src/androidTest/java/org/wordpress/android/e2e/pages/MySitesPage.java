@@ -94,6 +94,16 @@ public class MySitesPage {
         clickItemWithText(R.string.media);
     }
 
+    public void switchToSite(String siteUrl) {
+        // Choose the "sites" tab in the nav
+        clickOn(R.id.nav_sites);
+
+        // Choose "Switch Site"
+        clickOn(R.id.switch_site);
+
+        (new SitePickerPage()).chooseSiteWithURL(siteUrl);
+    }
+
     public StatsPage clickStats() {
         clickItemWithText(R.string.stats);
         waitForElementToBeDisplayedWithoutFailure(

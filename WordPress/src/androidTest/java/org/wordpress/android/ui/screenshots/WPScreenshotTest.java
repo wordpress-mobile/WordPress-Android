@@ -79,13 +79,7 @@ public class WPScreenshotTest extends BaseTest {
     }
 
     private void editBlogPost() {
-        // Choose the "sites" tab in the nav
-        clickOn(R.id.nav_sites);
-
-        // Choose "Switch Site"
-        clickOn(R.id.switch_site);
-
-        (new SitePickerPage()).chooseSiteWithURL("fourpawsdoggrooming.wordpress.com");
+        (new MySitesPage()).switchToSite("fourpawsdoggrooming.wordpress.com");
 
         MySitesPage.goToPosts();
         PostsListPage.goToDrafts();
@@ -197,13 +191,7 @@ public class WPScreenshotTest extends BaseTest {
     }
 
     private void navigateMySite() {
-        // Click on the "Sites" tab and take a screenshot
-        clickOn(R.id.nav_sites);
-
-        // Choose "Switch Site"
-        clickOn(R.id.switch_site);
-
-        (new SitePickerPage()).chooseSiteWithURL("tricountyrealestate.wordpress.com");
+        (new MySitesPage()).switchToSite("tricountyrealestate.wordpress.com");
 
         waitForElementToBeDisplayedWithoutFailure(R.id.recycler_view);
 
