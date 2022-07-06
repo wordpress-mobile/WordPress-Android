@@ -8,9 +8,9 @@ plugins {
 }
 
 ext {
-    wordPressUtilsVersion = '108-c21fa5db468c5a4c69b71978e38b13b35e1eba13'
+    wordPressUtilsVersion = '108-4df023ab85d136f7d0b8bf8474cfd265f76d0cd9'
     wordPressLoginVersion = '0.14.0'
-    gutenbergMobileVersion = '5007-a0d65eca7892ded5345b099ed91d09465cb97f17'
+    gutenbergMobileVersion = '5007-d32e570aafffda37864ce53fa5a40fc4e51c33b1'
     storiesVersion = '1.3.0'
     aboutAutomatticVersion = '0.0.5'
 
@@ -21,7 +21,7 @@ ext {
     coroutinesVersion = '1.5.2'
     androidxWorkVersion = "2.7.0"
 
-    fluxCVersion = '2456-2889319b90853f0aee979e65cf96961f9441fb5a'
+    fluxCVersion = '2456-87bc71fb8ab62c39d3840487634bfb1cfdf23fa8'
 
     appCompatVersion = '1.0.2'
     androidxCoreVersion = '1.3.2'
