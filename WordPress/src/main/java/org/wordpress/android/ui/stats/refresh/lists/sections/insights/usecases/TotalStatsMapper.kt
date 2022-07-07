@@ -112,7 +112,7 @@ class TotalStatsMapper @Inject constructor(
         }
         val previousWeekDays = dates.subList(
                 dates.lastIndex - DAY_COUNT_TOTAL + 1,
-                dates.lastIndex - DAY_COUNT_FOR_PREVIOUS_WEEK
+                dates.lastIndex - DAY_COUNT_FOR_PREVIOUS_WEEK + 1
         )
         return mapToStatsType(previousWeekDays, type)
     }

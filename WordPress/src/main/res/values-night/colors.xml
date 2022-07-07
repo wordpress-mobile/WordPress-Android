@@ -21,6 +21,10 @@
 
     <color name="post_history_underlying_background">@color/gray_100</color>
 
+    <!-- Jetpack awareness in WordPress App -->
+    <color name="jetpack_banner_background">@color/jetpack_green_90</color>
+    <color name="jetpack_banner_divider">@color/gray_80</color>
+
     <!-- Reader -->
 
     <!-- Reader Following empty view -->

@@ -276,7 +276,12 @@ public class AppPrefs {
         // Used to identify the App Settings for initial screen that is updated when the variant is assigned
         wp_pref_initial_screen,
 
-        STATS_REVAMP2_FEATURE_ANNOUNCEMENT_DISPLAYED
+        STATS_REVAMP2_FEATURE_ANNOUNCEMENT_DISPLAYED,
+
+        STATS_REVAMP2_DEFAULT_CARDS_UPDATED,
+
+        // Indicates if this is the first time the user sees the blogging prompts onboarding dialog
+        IS_FIRST_TIME_BLOGGING_PROMPTS_ONBOARDING
     }
 
     private static SharedPreferences prefs() {
@@ -1333,6 +1338,14 @@ public class AppPrefs {
                .apply();
     }
 
+    public static boolean isStatsRevamp2DefaultCardsUpdated() {
+        return prefs().getBoolean(UndeletablePrefKey.STATS_REVAMP2_DEFAULT_CARDS_UPDATED.name(), false);
+    }
+
+    public static void setStatsRevamp2DefaultCardsUpdated() {
+        prefs().edit().putBoolean(UndeletablePrefKey.STATS_REVAMP2_DEFAULT_CARDS_UPDATED.name(), true).apply();
+    }
+
     /*
      * adds a local site ID to the top of list of recently chosen sites
      */
@@ -1429,5 +1442,13 @@ public class AppPrefs {
                 UndeletablePrefKey.wp_pref_initial_screen,
                 MySiteTabType.SITE_MENU.getLabel()
         );
+    }
+
+    public static Boolean getIsFirstBloggingPromptsOnboarding() {
+        return getBoolean(UndeletablePrefKey.IS_FIRST_TIME_BLOGGING_PROMPTS_ONBOARDING, true);
+    }
+
+    public static void saveFirstBloggingPromptsOnboarding(final boolean isFirstTime) {
+        setBoolean(UndeletablePrefKey.IS_FIRST_TIME_BLOGGING_PROMPTS_ONBOARDING, isFirstTime);
     }
 }
