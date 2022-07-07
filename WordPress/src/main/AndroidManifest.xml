@@ -1028,13 +1028,25 @@
                 android:resource="@xml/provider_paths"/>
         </provider>
 
-        <!-- Remove the default WorkManagerInitializer so we can use our own
-        Since WorkManager 2.6, App Startup is used internally within WorkManager.
-        To provide a custom initializer we need to remove the androidx.startup node.-->
+        <!-- Remove only the default initializer to provide a custom configuration.
+             For more info visit: https://developer.android.com/topic/libraries/architecture/
+             workmanager/advanced/custom-configuration
+
+             This change was necessary because of the 'androidx.lifecycle' update to '2.4.1' and
+             the fact that with it the 'lifecycle-process' now uses 'androidx.startup' to
+             initialize the 'ProcessLifecycleOwner'.
+             For more info visit: https://developer.android.com/jetpack/androidx/releases/
+             lifecycle#2.4.1 -->
         <provider
             android:name="androidx.startup.InitializationProvider"
             android:authorities="${applicationId}.androidx-startup"
-            tools:node="remove" />
+            android:exported="false"
+            tools:node="merge">
+            <meta-data
+                android:name="androidx.work.WorkManagerInitializer"
+                android:value="androidx.startup"
+                tools:node="remove" />
+        </provider>
 
         <!-- Scanner -->
         <meta-data
