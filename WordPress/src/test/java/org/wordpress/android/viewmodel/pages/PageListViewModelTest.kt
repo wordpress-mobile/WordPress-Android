@@ -4,7 +4,6 @@ import androidx.lifecycle.MutableLiveData
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import junit.framework.Assert.assertNull
 import kotlinx.coroutines.Dispatchers
@@ -22,8 +21,6 @@ import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.MediaStore
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.EDIT_HOMEPAGE
-import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.pages.PageItem
 import org.wordpress.android.ui.pages.PageItem.Divider
 import org.wordpress.android.ui.pages.PageItem.Page
@@ -52,7 +49,6 @@ class PageListViewModelTest : BaseUnitTest() {
     @Mock lateinit var createUploadStateUseCase: PostModelUploadUiStateUseCase
     @Mock lateinit var createLabelsUseCase: CreatePageListItemLabelsUseCase
     @Mock lateinit var accountStore: AccountStore
-    @Mock lateinit var quickStartRepository: QuickStartRepository
 
     private lateinit var viewModel: PageListViewModel
     private val site = SiteModel()
@@ -69,8 +65,7 @@ class PageListViewModelTest : BaseUnitTest() {
                 dispatcher,
                 localeManagerWrapper,
                 accountStore,
-                Dispatchers.Unconfined,
-                quickStartRepository
+                Dispatchers.Unconfined
         )
 
         whenever(pageItemProgressUiStateUseCase.getProgressStateForPage(any())).thenReturn(
@@ -449,43 +444,6 @@ class PageListViewModelTest : BaseUnitTest() {
         val pageItems = pagesResult[1].first
         val pageItem = pageItems[0] as PublishedPage
         assertNull(pageItem.author)
-    }
-
-    @Test
-    fun `completes EDIT_HOMEPAGE task on homepage click`() {
-        initEmptyPagesViewModel()
-
-        whenever(pagesViewModel.site).thenReturn(site)
-        val pageRemoteId = 1L
-        site.pageOnFront = pageRemoteId
-
-        viewModel.onItemTapped(
-                pageItem = PublishedPage(
-                        pageRemoteId,
-                        2,
-                        "title",
-                        date = Date(),
-                        labels = listOf(),
-                        labelsColor = null,
-                        indent = 0,
-                        imageUrl = null,
-                        actions = setOf(),
-                        actionsEnabled = false,
-                        progressBarUiState = ProgressBarUiState.Hidden,
-                        author = null,
-                        showOverlay = false,
-                        showQuickStartFocusPoint = false
-                ), context = mock()
-        )
-
-        verify(quickStartRepository).completeTask(EDIT_HOMEPAGE)
-    }
-
-    private fun initEmptyPagesViewModel() {
-        val pages = MutableLiveData<List<PageModel>>()
-        whenever(pagesViewModel.pages).thenReturn(pages)
-
-        viewModel.start(PUBLISHED, pagesViewModel)
     }
 
     private fun buildPageModel(

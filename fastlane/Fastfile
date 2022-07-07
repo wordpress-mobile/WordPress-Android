@@ -3,13 +3,15 @@ UI.user_error!('Please run fastlane via `bundle exec`') unless FastlaneCore::Hel
 APP_SPECIFIC_VALUES = {
   wordpress: {
     metadata_dir: 'metadata',
-    gp_url: 'https://translate.wordpress.org/projects/apps/android/release-notes/',
+    glotpress_appstrings_project: 'https://translate.wordpress.org/projects/apps/android/dev/',
+    glotpress_metadata_project: 'https://translate.wordpress.org/projects/apps/android/release-notes/',
     package_name: 'org.wordpress.android',
     bundle_name_prefix: 'wpandroid'
   },
   jetpack: {
     metadata_dir: 'jetpack_metadata',
-    gp_url: 'https://translate.wordpress.com/projects/jetpack/apps/android/release-notes/',
+    glotpress_appstrings_project: 'https://translate.wordpress.com/projects/jetpack/apps/android/',
+    glotpress_metadata_project: 'https://translate.wordpress.com/projects/jetpack/apps/android/release-notes/',
     package_name: 'com.jetpack.android',
     bundle_name_prefix: 'jpandroid'
   }

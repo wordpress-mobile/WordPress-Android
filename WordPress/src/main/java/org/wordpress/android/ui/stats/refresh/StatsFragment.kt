@@ -87,6 +87,7 @@ class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializ
         statsPager.setPageTransformer(
                 MarginPageTransformer(resources.getDimensionPixelSize(R.dimen.margin_extra_large))
         )
+        statsPager.offscreenPageLimit = 2
         selectedTabListener = SelectedTabListener(viewModel)
         TabLayoutMediator(tabLayout, statsPager) { tab, position ->
             tab.text = adapter.getTabTitle(position)

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-06-16 00:24:00+0000
+Translation-Revision-Date: 2022-06-17 15:28:46+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.1
 Language: vi_VN
@@ -22,24 +22,75 @@ Language: vi_VN
     <string name="stats_referrers_pie_chart_wordpress">WordPress</string>
     <string name="stats_referrers_pie_chart_total_label">Lượt xem</string>
     <string name="stats_action_card_schedule_post_button_label">Lên lịch</string>
-    <string name="stats_action_card_schedule_post_message">✍️ Lên lịch đăng bản nháp vào thời gian thích hợp nhất.</string>
     <string name="stats_action_card_schedule_post_title">Lên lịch bài viết</string>
     <string name="stats_action_card_blogging_reminders_button_label">Cài nhắc nhở</string>
-    <string name="stats_action_card_blogging_reminders_message">💡Cài nhắc nhở để giúp thu hút độc giả và tăng lượt truy cập.</string>
     <string name="stats_action_card_blogging_reminders_title">Nhắc đăng bài</string>
     <string name="stats_action_card_grow_audience_button_label">Chọn khóa học</string>
-    <string name="stats_action_card_grow_audience_message">💡Chúng tôi có những bài học dễ hiểu do các blogger giỏi nhất dạy để phát triển blog của bạn.</string>
     <string name="stats_action_card_grow_audience_title">Thu hút độc giả</string>
     <string name="gutenberg_native_you_can_also_rearrange_blocks_by_tapping_a_block_and_then_tapping">Bạn cũng có thể sắp xếp lại các khối bằng cách chạm vào một khối rồi nhấn vào mũi tên lên và xuống xuất hiện ở phía dưới bên trái của khối để di chuyển khối lên hoặc xuống.</string>
     <string name="gutenberg_native_image_file_not_found">Không tìm thấy hình.</string>
-    <string name="stats_insights_followers_guide_card">💡Bạn có thể thử để lại nhận xét như một hành động khuyến khích nhằm thu hút nhiều người theo dõi hơn.</string>
-    <string name="stats_insights_comments_guide_card">💡Xem ai bình luận nhiều nhất bằng cách nhấn XEM THÊM.</string>
+    <string name="gutenberg_native_drag_drop_makes_rearranging_blocks_a_breeze_press_and_hold_on_a_b">Kéo và thả giúp việc sắp xếp lại các khối trở nên dễ dàng. Nhấn và giữ một khối, sau đó kéo khối đó đến vị trí mới và thả ra.</string>
+    <string name="gutenberg_native_drag_drop">Kéo &amp; thả</string>
+    <string name="gutenberg_native_arrow_buttons">Nút mũi tên</string>
+    <string name="gutenberg_native_1_s_currently_selected_2_s">%1$s. Đã chọn: %2$s</string>
+    <string name="quick_start_sites_type_all_tasks_completed">Đã hoàn thành xong!</string>
+    <string name="quick_start_list_task_complete">Hoàn thành mục tiêu</string>
+    <string name="me_btn_scan_login_code">Quét mã đăng nhập</string>
     <string name="stats_insights_likes_guide_card">⭐️ Bài đăng gần nhất %1$s đã nhận %2$s lượt thích.</string>
+    <string name="stats_most_popular_percent_views_empty">Chưa có hoạt động. Kiểm tra lại sau khi trang của bạn có khách truy cập!</string>
+    <string name="stats_total_followers_content_description">%1s, %2s trong tổng số người theo dõi</string>
+    <string name="stats_value_percent">%1$s (%2$s%%)</string>
+    <string name="pages_copy_link">Chép liên kết</string>
+    <string name="quick_start_completed_tour_title">Chúc mừng! Bạn đã rành rồi đó&lt;br/&gt;</string>
+    <string name="quick_start_sites_type_get_to_know_app">Hiểu cách dùng app</string>
+    <string name="quick_start_list_upload_media_subtitle">Tải media từ thiết bị lên trang của bạn</string>
+    <string name="quick_start_list_upload_media_title">Tải lên ảnh hoặc video</string>
+    <string name="quick_start_list_check_notification_subtitle">Cập nhật thời gian thực trong bàn tay</string>
+    <string name="quick_start_dialog_upload_media_message">Chọn %1$s Media %2$s để xem thư viện media của bạn.</string>
+    <string name="quick_start_dialog_check_notifications_message">Cập nhật thời gian thực trong bàn tay.</string>
+    <string name="quick_start_dialog_check_notifications_title">Xem thông báo của bạn</string>
+    <string name="quick_start_dialog_check_notifications_message_short">Chọn tab %1$s Thông báo %2$s để nhận cập nhật mới.</string>
+    <string name="quick_start_dialog_upload_media_message_short_plus">Chọn %1$s thêm %2$s để tải lên media. Bạn có thể thêm nó vào bài viết/trang từ bất kỳ thiết bị nào.</string>
+    <string name="quick_start_dialog_follow_sites_message_short_discover">Dùng &lt;b&gt; Khám phá &lt;/b&gt; để tìm blog và thẻ.</string>
+    <string name="quick_start_dialog_follow_sites_message_short_discover_and_settings">Dùng &lt;b&gt; Khám phá &lt;/b&gt; để tìm blog và thẻ. Thử chọn %1$s Cài đặt %2$s để thêm những đề tài bạn thích.</string>
+    <string name="photo_picker_video_thumbnail_content_description">Ảnh đại diện video</string>
+    <string name="stats_details_top_commentators">Top người bình luận</string>
+    <string name="stats_insights_total_stats_negative">%1$s thấp hơn tuần trước</string>
+    <string name="stats_insights_total_stats_positive">%1$s cao hơn tuần trước</string>
+    <string name="stats_published_years_ago">Đăng %1$d năm trước</string>
+    <string name="stats_published_a_year_ago">Đăng một năm trước</string>
+    <string name="stats_published_months_ago">Đăng %1$d tháng trước</string>
+    <string name="stats_published_a_month_ago">Đăng một tháng trước</string>
+    <string name="stats_published_days_ago">Đăng %1$d ngày trước</string>
+    <string name="stats_published_a_day_ago">Đăng hôm qua</string>
+    <string name="stats_published_hours_ago">Đăng %1$d giờ trước</string>
+    <string name="stats_published_an_hour_ago">Đăng một giờ trước</string>
+    <string name="stats_published_minutes_ago">Đăng %1$d phút trước</string>
+    <string name="stats_published_a_minute_ago">Vừa xong</string>
+    <string name="stats_published_seconds_ago">Vừa xong</string>
+    <string name="stats_view_total_followers">Tổng người theo dõi</string>
+    <string name="stats_view_total_comments">Tổng bình luận</string>
+    <string name="stats_view_total_likes">Tổng lượt thích</string>
+    <string name="blogging_prompts_notification_dismiss">Bỏ qua</string>
+    <string name="blogging_prompts_answer_prompt_notification_answer_action">Câu hỏi</string>
+    <string name="blogging_prompts_answer_prompt_notification_title">Nhắc Mỗi Ngày</string>
+    <string name="blogging_prompts_onboarding_got_it">Đã hiểu</string>
+    <string name="quick_start_dialog_view_your_site_message_short">Nhấn &lt;b&gt;%1$s&lt;/b&gt; để xem blog của bạn</string>
+    <string name="quick_start_dialog_follow_sites_message_short_reader">Chọn %1$s Đọc %2$s để tìm những blog khác.</string>
+    <string name="blogging_reminders_prompt_help_button_desc">Tìm hiểu thêm về nhắc nhở</string>
+    <string name="photo_picker_video_thumbnail_unselected">Bỏ chọn video</string>
+    <string name="photo_picker_video_thumbnail_selected">Đã chọn video</string>
+    <string name="photo_picker_media_thumbnail_content_description">Ảnh đại diện media</string>
     <string name="stats_insights_popular_title">🔥 Ưa Chuộng</string>
     <string name="stats_insights_views_and_visitors_tooltip_count">%1$s %2$s</string>
+    <string name="stats_insights_views_and_visitors_visitors_negative">Khách truy cập tuần này ít hơn %1$s tuần trước.</string>
+    <string name="stats_insights_views_and_visitors_visitors_positive">Khách truy cập tuần này cao hơn %1$s tuần trước.</string>
+    <string name="stats_insights_views_and_visitors_views_negative">Lượt xem tuần này ít hơn %1$s tuần trước.</string>
+    <string name="stats_insights_views_and_visitors_views_positive">Lượt xem tuần này cao hơn %1$s tuần trước.</string>
     <string name="stats_timeframe_previous_week">Tuần Trước</string>
     <string name="stats_timeframe_this_week">Tuần Này</string>
     <string name="scan_vault_press_active_on_site_button_text">Xem tổng quan</string>
+    <string name="scan_vault_press_active_on_site_subtitle">Blog của bạn được bảo vệ với VaultPress. Xem trang tổng quan VaultPress bên dưới.</string>
     <string name="scan_vault_press_active_on_site_title">Trang của bạn có VaultPress</string>
     <string name="locale_picker_current_language">Ngôn ngữ hiện tại:</string>
     <string name="hpp_choose_and_create_site">Tạo blog</string>
@@ -653,9 +704,6 @@ Language: vi_VN
     <string name="quick_start_dialog_review_pages_message">Cập nhật, tạo hoặc xóa trang.</string>
     <string name="quick_start_dialog_review_pages_title">Xem lại trang</string>
     <string name="quick_start_dialog_edit_homepage_message_pages_short">Chọn %1$s Trang chủ %2$s để sửa Trang chủ.</string>
-    <string name="quick_start_dialog_edit_homepage_message_short">Chọn %1$s Trang %2$s để xem danh sách trang.</string>
-    <string name="quick_start_dialog_edit_homepage_message">Cập nhật, tạo hoặc xóa nội dung ở trang chủ.</string>
-    <string name="quick_start_dialog_edit_homepage_title">Sửa trang chủ</string>
     <string name="reader_menu_mark_as_unseen">Đánh dấu chưa đọc</string>
     <string name="reader_menu_mark_as_seen">Đánh dấu đã đọc</string>
     <string name="error_media_upload_failed_for_reason">Tải lên media thất bại.\n%1$s</string>
@@ -2982,7 +3030,6 @@ Language: vi_VN
     <string name="stats_followers_a_minute_ago">1 phút trước</string>
     <string name="stats_followers_seconds_ago">giây trước</string>
     <string name="stats_view_followers">Người theo dõi</string>
-    <string name="stats_view_publicize">Publicize</string>
     <string name="stats_view_videos">Video</string>
     <string name="stats_view_top_posts_and_pages">Bài viết &amp; Trang</string>
     <string name="stats_view_countries">Quốc gia</string>

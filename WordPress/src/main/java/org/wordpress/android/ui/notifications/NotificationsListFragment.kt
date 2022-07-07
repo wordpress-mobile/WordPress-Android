@@ -10,7 +10,10 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup.MarginLayoutParams
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
+import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
@@ -18,6 +21,7 @@ import com.google.android.material.appbar.AppBarLayout.LayoutParams
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.android.material.tabs.TabLayout.Tab
 import org.greenrobot.eventbus.EventBus
+import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
@@ -47,7 +51,6 @@ import org.wordpress.android.util.AppLog.T.NOTIFS
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.WPUrlUtils
 import org.wordpress.android.util.extensions.setLiftOnScrollTargetViewIdAndRequestLayout
-import java.util.HashMap
 import javax.inject.Inject
 
 class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment), ScrollableViewInitializedListener {
@@ -77,6 +80,15 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
         binding = NotificationsListFragmentBinding.bind(view).apply {
             toolbarMain.setTitle(R.string.notifications_screen_title)
             (requireActivity() as AppCompatActivity).setSupportActionBar(toolbarMain)
+
+            if (!BuildConfig.IS_JETPACK_APP) {
+                jetpackBanner.root.isVisible = true
+
+                // Add bottom margin to viewPager and connectJetpack view for jetpack banner.
+                val margin = resources.getDimensionPixelSize(R.dimen.jetpack_banner_height)
+                viewPager.updateLayoutParams<MarginLayoutParams> { bottomMargin = margin }
+                connectJetpack.updateLayoutParams<MarginLayoutParams> { bottomMargin = margin }
+            }
 
             tabLayout.addOnTabSelectedListener(object : OnTabSelectedListener {
                 override fun onTabSelected(tab: Tab) {

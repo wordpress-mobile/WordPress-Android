@@ -1029,12 +1029,11 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `quick action pages click opens pages screen and requests next step of EDIT_HOMEPAGE task`() {
+    fun `quick action pages click opens pages screen`() {
         initSelectedSite()
 
         requireNotNull(quickActionsPagesClickAction).invoke()
 
-        verify(quickStartRepository).requestNextStepOfTask(QuickStartNewSiteTask.EDIT_HOMEPAGE)
         assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenPages(site))
     }
 
@@ -1655,7 +1654,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
                 requireNotNull(onBloggingPromptSkipClicked).invoke()
 
-                verify(appPrefsWrapper).setSkippedPromptDay(any())
+                verify(appPrefsWrapper).setSkippedPromptDay(any(), any())
                 verify(mySiteSourceManager).refreshBloggingPrompts(eq(true))
 
                 assertThat(snackbars.size).isEqualTo(1)
@@ -2587,12 +2586,11 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when quick link ribbon pages click, then pages screen is shown + requests next step of EDIT_HOMEPAGE task`() {
+    fun `when quick link ribbon pages click, then pages screen is shown`() {
         initSelectedSite()
 
         requireNotNull(quickActionsPagesClickAction).invoke()
 
-        verify(quickStartRepository).requestNextStepOfTask(QuickStartNewSiteTask.EDIT_HOMEPAGE)
         assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenPages(site))
     }
 

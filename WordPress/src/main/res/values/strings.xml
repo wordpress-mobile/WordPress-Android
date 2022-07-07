@@ -1034,15 +1034,15 @@
     <string name="stats_management_new">New</string>
 
     <string name="stats_action_card_grow_audience_title">Grow your audience</string>
-    <string name="stats_action_card_grow_audience_message">💡We have easily digestible lessons taught by the best bloggers to grow your blog.</string>
+    <string name="stats_action_card_grow_audience_message">💡Level up your blogging faster with our expert-led &lt;i&gt;Intro to Blogging&lt;/i&gt; course.</string>
     <string name="stats_action_card_grow_audience_button_label">Check the course</string>
 
     <string name="stats_action_card_blogging_reminders_title">Set your blogging reminders</string>
-    <string name="stats_action_card_blogging_reminders_message">💡Set the reminder to post regularly to keep your readers engaged and attract new visitors.</string>
+    <string name="stats_action_card_blogging_reminders_message">💡Posting consistently is a great way to build your audience. Add a reminder to keep you on track.</string>
     <string name="stats_action_card_blogging_reminders_button_label">Set reminders</string>
 
     <string name="stats_action_card_schedule_post_title">Schedule your post</string>
-    <string name="stats_action_card_schedule_post_message">✍️ Schedule to post your content at its best time from your drafts.</string>
+    <string name="stats_action_card_schedule_post_message">✍️ Schedule your drafts to publish at the best time to reach your audience.</string>
     <string name="stats_action_card_schedule_post_button_label">Schedule</string>
 
     <!-- Stats refreshed widgets -->
@@ -1277,7 +1277,7 @@
     <string name="stats_view_videos">Videos</string>
     <string name="stats_view_comments" translatable="false">@string/comments</string>
     <string name="stats_view_search_terms">Search Terms</string>
-    <string name="stats_view_publicize">Publicize</string>
+    <string name="stats_view_publicize">Social Media Connections</string>
     <string name="stats_view_followers">Followers</string>
     <string name="stats_view_follower_totals">Follower Totals</string>
     <string name="stats_view_total_likes">Total Likes</string>
@@ -1321,7 +1321,7 @@
     <string name="stats_insights_views_and_visitors_views_negative">Your views this week are %1$s lower than the previous week.</string>
     <string name="stats_insights_views_and_visitors_visitors_positive">Your visitors this week are %1$s higher than the previous week.</string>
     <string name="stats_insights_views_and_visitors_visitors_negative">Your visitors this week are %1$s lower than the previous week.</string>
-    <string name="stats_insights_views_and_visitors_visitors_empty_state">If you want to try to get more views and traffic, check out our top tips %1$s</string>
+    <string name="stats_insights_views_and_visitors_visitors_empty_state">Check out our top tips to increase your views and traffic %1$s</string>
     <string name="stats_insights_views_and_visitors_tooltip_count">%1$s %2$s</string>
     <string name="stats_insights_latest_post_summary">Latest Post Summary</string>
     <string name="stats_insights_popular">Most Popular Time</string>
@@ -1346,7 +1346,7 @@
     <!-- Stats refreshed insights -->
     <string name="stats_insights_all_time_stats">All-time</string>
     <string name="stats_insights_tags_and_categories">Tags and Categories</string>
-    <string name="stats_insights_latest_post_empty">You haven\'t published any posts yet. Check back later once you\'ve published your first post!</string>
+    <string name="stats_insights_latest_post_empty">Check back when you\'ve published your first post!</string>
     <string name="stats_insights_latest_post_with_no_engagement">It\'s been %1$s since %2$s was published. Get the ball rolling and increase your post views by sharing your post:</string>
     <string name="stats_insights_latest_post_message">It’s been %1$s since %2$s was published. Here’s how the post performed so far:</string>
     <string name="stats_insights_create_post">Create post</string>
@@ -1369,14 +1369,15 @@
     <string name="stats_insights_management_posts_and_pages">Posts and Pages</string>
     <string name="stats_insights_management_activity">Activity</string>
 
+    <string name="stats_insights_like_guide_card">⭐️ Your latest post %1$s has received %2$s like.</string>
     <string name="stats_insights_likes_guide_card">⭐️ Your latest post %1$s has received %2$s likes.</string>
-    <string name="stats_insights_comments_guide_card">💡See your top contributors by tapping VIEW MORE.</string>
-    <string name="stats_insights_followers_guide_card">💡You can try leaving a comment as a gesture to encourage blog engagement in return to gain more followers.</string>
+    <string name="stats_insights_comments_guide_card">💡Tap \'VIEW MORE\' to see your top commenters.</string>
+    <string name="stats_insights_followers_guide_card">💡Commenting on other blogs is a great way to build attention and followers for your new site.</string>
 
     <!-- Stats Revamp v2 Feature Introduction -->
     <string name="stats_revamp_v2_intro_header_title">Insights update</string>
-    <string name="stats_revamp_v2_intro_content">Insights help you understand how your content resonates with your audience with an overview of how it is performing and guidance to your next steps.</string>
-    <string name="stats_revamp_v2_intro_content_note">Note: You can learn more about Insights at any time in My Site > Stats > Insights</string>
+    <string name="stats_revamp_v2_intro_content">Insights help you understand how your content is performing and what\'s resonating with your audience.</string>
+    <string name="stats_revamp_v2_intro_content_note">Learn more in My Site &gt; Stats &gt; Insights</string>
     <string name="stats_revamp_v2_intro_primary_button_text">Try it now</string>
     <string name="stats_revamp_v2_intro_secondary_button_text">Remind me later</string>
 
@@ -3122,9 +3123,6 @@
     <string name="quick_start_dialog_view_your_site_message_short" tools:ignore="UnusedResources">Tap &lt;b&gt;%1$s&lt;/b&gt; to view your site</string>
     <string name="quick_start_dialog_view_site_title">View your site</string>
     <string name="quick_start_dialog_update_site_title_message_short">Tap &lt;b&gt;%1$s&lt;/b&gt; to set a new title</string>
-    <string name="quick_start_dialog_edit_homepage_title">Edit your homepage</string>
-    <string name="quick_start_dialog_edit_homepage_message">Change, add, or remove content from your site\'s homepage.</string>
-    <string name="quick_start_dialog_edit_homepage_message_short" tools:ignore="UnusedResources">Select %1$s Pages %2$s to see your page list.</string>
     <string name="quick_start_dialog_check_notifications_message_short">Select the %1$s Notifications tab %2$s to get updates on the go.</string>
     <string name="quick_start_dialog_edit_homepage_message_pages_short" tools:ignore="UnusedResources">Select %1$s Homepage %2$s to edit your Homepage.</string>
     <string name="quick_start_dialog_review_pages_title">Review site pages</string>
@@ -3150,8 +3148,6 @@
     <string name="quick_start_list_upload_icon_title" translatable="false">@string/quick_start_dialog_upload_icon_title</string>
     <string name="quick_start_list_view_site_subtitle" translatable="false">@string/quick_start_dialog_view_site_message</string>
     <string name="quick_start_list_view_site_title">View your site</string>
-    <string name="quick_start_list_edit_homepage_subtitle" translatable="false">@string/quick_start_dialog_edit_homepage_message</string>
-    <string name="quick_start_list_edit_homepage_title" translatable="false">@string/quick_start_dialog_edit_homepage_title</string>
     <string name="quick_start_list_review_pages_subtitle">Check your pages and make changes, or add or remove pages.</string>
     <string name="quick_start_list_review_pages_title" translatable="false">@string/quick_start_dialog_review_pages_title</string>
     <string name="quick_start_list_check_notification_subtitle">Get real time updates from your pocket</string>
@@ -4055,7 +4051,10 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <!-- Weekly Roundup Notification -->
     <string name="weekly_roundup">Weekly Roundup</string>
     <string name="weekly_roundup_notification_title">Weekly Roundup: %s</string>
-    <string name="weekly_roundup_notification_text">Your site got %1$d views, %2$d likes, %3$d comments.</string>
+    <string name="weekly_roundup_notification_text_all">Last week you had %1$s views, %2$s likes, and %3$s comments.</string>
+    <string name="weekly_roundup_notification_text_views_only">Last week you had %1$s views.</string>
+    <string name="weekly_roundup_notification_text_views_and_likes">Last week you had %1$s views and %2$s likes</string>
+    <string name="weekly_roundup_notification_text_views_and_comments">Last week you had %1$s views and %2$s comments</string>
 
     <!-- About -->
     <string name="about_blog">Blog</string>
@@ -4105,7 +4104,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="blogging_prompts_answer_prompt_notification_answer_action">Answer</string>
     <string name="blogging_prompts_notification_dismiss">Dismiss</string>
 
-    <!-- WordPressEditor module -->
+    <!-- Editor module -->
     <string name="post_content" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Content</string>
     <string name="uploading" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Uploading…</string>
     <string name="uploading_gallery_placeholder" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Uploading gallery…</string>
@@ -4205,5 +4204,8 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="gutenberg_native_image_file_not_found" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Image file not found.</string>
     <string name="gutenberg_native_new" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">NEW</string>
     <string name="gutenberg_native_you_can_also_rearrange_blocks_by_tapping_a_block_and_then_tapping" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">You can also rearrange blocks by tapping a block and then tapping the up and down arrows that appear on the bottom left side of the block to move it up or down.</string>
+
+    <!-- Jetpack awareness in WordPress App -->
+    <string name="wp_jetpack_powered">Jetpack powered</string>
 
 </resources>

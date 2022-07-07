@@ -148,7 +148,7 @@ class BloggingPromptCardSource @Inject constructor(
         val isPotentialBloggingSite = selectedSite.isPotentialBloggingSite
         val isPromptReminderOptedIn = bloggingRemindersStore.bloggingRemindersModel(selectedSite.localId().value)
                 .firstOrNull()?.isPromptIncluded == true
-        val promptSkippedDate = appPrefsWrapper.getSkippedPromptDay()
+        val promptSkippedDate = appPrefsWrapper.getSkippedPromptDay(selectedSite.localId().value)
 
         val isPromptSkippedForToday = promptSkippedDate != null && isSameDay(promptSkippedDate, Date())
 

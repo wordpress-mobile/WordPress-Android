@@ -1,4 +1,0 @@
-20.0:
-- Kartu Mulai Cepat dan tur Langkah Selanjutnya sesuai dengan desain situs-situs yang aktif.
-- Sisipkan gambar dari situs eksternal menggunakan opsi “Sisipkan dari URL” di aplikasi.
-- Dengan peningkatan aksesibilitas editor blok, Anda memperoleh informasi yang lebih kontekstual di pembaca layar Anda.

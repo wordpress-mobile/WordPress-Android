@@ -21,8 +21,6 @@ import org.wordpress.android.fluxc.model.stats.LimitMode.Top
 import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel
 import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel.PeriodData
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
-import org.wordpress.android.fluxc.network.utils.StatsGranularity.WEEKS
-import org.wordpress.android.fluxc.store.StatsStore.InsightType
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.TOTAL_LIKES
 import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
@@ -65,7 +63,7 @@ class TotalLikesUseCaseTest : BaseUnitTest() {
     private lateinit var useCase: TotalLikesUseCase
     private val periodData = PeriodData("2018-10-08", 10, 15, 20, 25, 30, 35)
     private val modelPeriod = "2018-10-10"
-    private val limitMode = Top(15)
+    private val limitMode = Top(14)
     private val model = VisitsAndViewsModel(modelPeriod, listOf(periodData))
 
     @InternalCoroutinesApi
@@ -74,19 +72,13 @@ class TotalLikesUseCaseTest : BaseUnitTest() {
         useCase = TotalLikesUseCase(
                 Dispatchers.Unconfined,
                 TEST_DISPATCHER,
-                TOTAL_LIKES,
-                WEEKS,
-                selectedDateProvider,
                 store,
                 latestPostStore,
                 statsSiteProvider,
                 resourceProvider,
-                statsDateFormatter,
                 totalStatsMapper,
                 analyticsTrackerWrapper,
-                statsWidgetUpdaters,
-                localeManagerWrapper,
-                useCaseMode
+                statsWidgetUpdaters
         )
         whenever(statsSiteProvider.siteModel).thenReturn(site)
         whenever(totalStatsMapper.buildTotalLikesValue(any())).thenReturn(valueWithChart)
@@ -102,7 +94,7 @@ class TotalLikesUseCaseTest : BaseUnitTest() {
 
         val result = loadData(true, forced)
 
-        assertThat(result.type).isEqualTo(InsightType.TOTAL_LIKES)
+        assertThat(result.type).isEqualTo(TOTAL_LIKES)
 
         assertThat(result.state).isEqualTo(UseCaseState.SUCCESS)
         result.data!!.apply {
@@ -137,27 +129,6 @@ class TotalLikesUseCaseTest : BaseUnitTest() {
         verify(analyticsTrackerWrapper, never()).track(eq(STATS_TOTAL_LIKES_ERROR), any<Map<String, *>>())
     }
 
-    @Test
-    fun `tracks incorrect data when the last stats item is at least 2 days old`() = test {
-        val forced = false
-        setupCalendar(2)
-        whenever(store.fetchVisits(site, DAYS, limitMode, forced)).thenReturn(OnStatsFetched(model))
-
-        loadData(true, forced)
-
-        verify(analyticsTrackerWrapper).track(
-                STATS_TOTAL_LIKES_ERROR,
-                mapOf(
-                        "stats_last_date" to "2020-12-13",
-                        "stats_current_date" to "2020-12-15",
-                        "stats_age_in_days" to 2,
-                        "is_jetpack_connected" to false,
-                        "is_atomic" to false,
-                        "action_source" to "remote"
-                )
-        )
-    }
-
     private fun assertTitle(item: BlockListItem) {
         assertThat(item.type).isEqualTo(TITLE_WITH_MORE)
         assertThat((item as TitleWithMore).textResource).isEqualTo(R.string.stats_view_total_likes)
@@ -182,11 +153,5 @@ class TotalLikesUseCaseTest : BaseUnitTest() {
         val lastItemDay = todayDay - ageOfLastStatsItemInDays
         lastItemAge.set(Calendar.DAY_OF_MONTH, lastItemDay)
         lastItemAge.set(Calendar.HOUR_OF_DAY, 22)
-        whenever(localeManagerWrapper.getCurrentCalendar()).then {
-            Calendar.getInstance().apply { this.time = today.time }
-        }
-        whenever(statsDateFormatter.parseStatsDate(any(), any())).thenReturn(lastItemAge.time)
-        whenever(statsDateFormatter.printStatsDate(lastItemAge.time)).thenReturn("2020-12-$lastItemDay")
-        whenever(statsDateFormatter.printStatsDate(today.time)).thenReturn("2020-12-$todayDay")
     }
 }

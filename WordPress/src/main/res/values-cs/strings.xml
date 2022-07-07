@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-05-27 08:19:45+0000
+Translation-Revision-Date: 2022-07-05 20:18:47+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.1
 Language: cs_CZ
 -->
 <resources>
+    <string name="qrcode_auth_flow_content_description">Obrázek označující probíhající skenování přihlašovacího kódu</string>
+    <string name="qrcode_auth_flow_error_content_description">Obrázek označující chybu</string>
+    <string name="qrcode_auth_flow_dismiss_dialog_message">Jste si jistý, že chcete pokračovat?</string>
+    <string name="qrcode_auth_flow_dismiss_dialog_title">Ukončit tok přihlašovacích kódů skenování</string>
+    <string name="qrcode_auth_flow_error_auth_failed_subtitle">Nepodařilo se vás přihlásit pomocí tohoto přihlašovacího kódu. Klepnutím na tlačítko Skenovat znovu kód znovu naskenujte.</string>
     <string name="blogging_prompts_notification_dismiss">Odmítnout</string>
     <string name="blogging_prompts_answer_prompt_notification_answer_action">Odpověď</string>
     <string name="blogging_prompts_answer_prompt_notification_title">Denní výzva</string>
@@ -18,6 +23,10 @@ Language: cs_CZ
     <string name="photo_picker_media_thumbnail_content_description">Náhled mediálních souborů</string>
     <string name="stats_insights_popular_title">🔥 Nejoblíbenější čas</string>
     <string name="stats_insights_views_and_visitors_tooltip_count">%1$s %2$s</string>
+    <string name="stats_insights_views_and_visitors_visitors_negative">Návštěvníci za tento týden jsou o %1$s nižší než v předchozím týdnu.</string>
+    <string name="stats_insights_views_and_visitors_visitors_positive">Vaši návštěvníci za tento týden jsou o %1$s vyšší než v předchozím týdnu.</string>
+    <string name="stats_insights_views_and_visitors_views_negative">Vaše zhlédnutí za tento týden jsou o %1$s nižší než v předchozím týdnu.</string>
+    <string name="stats_insights_views_and_visitors_views_positive">Vaše zhlédnutí za tento týden jsou o %1$s vyšší než v předchozím týdnu.</string>
     <string name="stats_timeframe_previous_week">Minulý týden</string>
     <string name="stats_timeframe_this_week">Tento týden</string>
     <string name="scan_vault_press_active_on_site_button_text">Přejít na nástěnku</string>
@@ -625,7 +634,6 @@ Language: cs_CZ
     <string name="restore_details_description_with_two_parameters">%1$s %2$s je vybraný bod pro obnovení.</string>
     <string name="restore_details_action_button">Obnovit web</string>
     <string name="restore_details_icon_content_description">Ikona obnovení</string>
-    <string name="quick_start_dialog_edit_homepage_message_short">Chcete-li zobrazit seznam stránek, vyberte %1$s stránky %2$s.</string>
     <string name="quick_start_dialog_edit_homepage_message_pages_short">Vyberte domovskou stránku %1$s a upravte svou domovskou stránku %2$s.</string>
     <string name="quick_start_dialog_review_pages_title">Zkontrolujte stránky webu</string>
     <string name="quick_start_dialog_review_pages_message">Změňte, přidejte nebo odeberte stránky svého webu.</string>
@@ -635,8 +643,6 @@ Language: cs_CZ
     <string name="web_preview_mobile">Mobil</string>
     <string name="web_preview_tablet">Tablet</string>
     <string name="backup_download_complete_failed_title">Stažení se nezdařilo</string>
-    <string name="quick_start_dialog_edit_homepage_title">Upravte svou domovskou stránku</string>
-    <string name="quick_start_dialog_edit_homepage_message">Změňte, přidejte nebo odeberte obsah z domovské stránky svého webu.</string>
     <string name="reader_marked_post_as_seen">Označený příspěvek jako viděný</string>
     <string name="reader_marked_post_as_unseen">Příspěvek byl označen jako neviditelný</string>
     <string name="reader_error_changing_seen_status_of_unsupported_post">Stav viditelnosti tohoto příspěvku nelze přepnout</string>
@@ -708,8 +714,8 @@ Language: cs_CZ
     <string name="suggestion_none">Nejsou k dispozici žádné návrhy %s.</string>
     <string name="suggestion_problem">Při načítání návrhů došlo k problému.</string>
     <string name="suggestion_no_matching">Bez shody %s.</string>
-    <string name="threat_fix_fixable_replace">Jetpack Scan nahradí ovlivněný soubor nebo adresář.</string>
     <string name="threat_fix_current_not_fixable_description">Jetpack Scan nemůže tuto hrozbu automaticky opravit.\n         Doporučujeme hrozbu vyřešit ručně: ujistěte se, že WordPress, vaše téma a všechny vaše doplňky jsou aktuální, a odstraňte z webu nevhodný kód, téma nebo plugin.\n \n\n         Pokud potřebujete další pomoc při řešení této hrozby, doporučujeme &lt;b&gt;Codeable+&lt;/b&gt;, důvěryhodné tržiště nezávislých odborníků s vysoce prověřenými odborníky na WordPress.\n         Identifikovali vybranou skupinu bezpečnostních odborníků, kteří s těmito projekty pomohli. Ceny se pohybují od 70–120 USD / hodinu a můžete získat bezplatný odhad bez povinnosti najmout.</string>
+    <string name="threat_fix_fixable_replace">Jetpack Scan nahradí ovlivněný soubor nebo adresář.</string>
     <string name="threat_problem_header">Jaký byl problém?</string>
     <string name="threat_technical_details_header">Technické podrobnosti</string>
     <string name="threat_file_description">V souboru nalezena hrozba:</string>
@@ -808,6 +814,7 @@ Language: cs_CZ
     <string name="hpp_error_title">Rozložení nejsou k dispozici v režimu offline</string>
     <string name="hpp_error_subtitle">Až budete znovu online, klepněte na opakovat.</string>
     <string name="hpp_retry_error">Zkontrolujte prosím připojení k internetu a zkuste to znovu.</string>
+    <string name="hpp_choose_error">Při výběru designu došlo k chybě.</string>
     <string name="dialog_discard_story_title_edit">Zrušit změny?</string>
     <string name="dialog_discard_story_message_edit">Jakékoli provedené změny nebudou uloženy.</string>
     <string name="dialog_discard_story_ok_button_edit">Zahodit</string>
@@ -2950,7 +2957,6 @@ Language: cs_CZ
     <string name="logs_copied_to_clipboard">Aplikační protokoly byly zkopírovány do schránky</string>
     <string name="error_copy_to_clipboard">Při kopírování textu do schránky nastala chyba</string>
     <string name="post_uploading">Nahrávám příspěvek</string>
-    <string name="stats_view_publicize">Publikovaná</string>
     <string name="stats_view_followers">Sledující</string>
     <string name="stats_followers_months">%1$d měsíc</string>
     <string name="stats_followers_a_year">Za rok</string>

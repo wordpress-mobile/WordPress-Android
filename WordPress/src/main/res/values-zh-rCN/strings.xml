@@ -1,11 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-06-16 13:54:08+0000
+Translation-Revision-Date: 2022-06-30 09:54:09+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.1
 Language: zh_CN
 -->
 <resources>
+    <string name="qrcode_auth_flow_content_description">图片显示正在扫描登录代码</string>
+    <string name="qrcode_auth_flow_error_content_description">图片指示错误</string>
+    <string name="qrcode_auth_flow_dismiss_dialog_message">是否确定要继续？</string>
+    <string name="qrcode_auth_flow_dismiss_dialog_title">退出扫描登录代码流程</string>
+    <string name="qrcode_auth_flow_error_auth_failed_subtitle">无法使用此登录代码登录。 请点击“再次扫描”按钮，重新扫描代码。</string>
+    <string name="qrcode_auth_flow_error_auth_failed_title">验证失败</string>
+    <string name="qrcode_auth_flow_error_expired_subtitle">此登录代码已过期。 请点击“再次扫描”按钮，重新扫描代码。</string>
+    <string name="qrcode_auth_flow_error_expired_title">登录代码已过期</string>
+    <string name="qrcode_auth_flow_error_invalid_data_subtitle">无法验证扫描的登录代码。 请点击“再次扫描”按钮，重新扫描代码。</string>
+    <string name="qrcode_auth_flow_error_invalid_data_title">无法验证登录代码</string>
+    <string name="qrcode_auth_flow_error_no_connection_subtitle">需要有效的互联网连接才能扫描登录代码</string>
+    <string name="qrcode_auth_flow_error_no_connection_title">没有连接</string>
+    <string name="qrcode_auth_flow_scan_again">再次扫描 </string>
+    <string name="qrcode_auth_flow_dismiss">关闭</string>
+    <string name="qrcode_auth_flow_done_subtitle">点击关闭，然后返回您的网页浏览器继续下一步。</string>
+    <string name="qrcode_auth_flow_done_title">您已登录！</string>
+    <string name="qrcode_auth_flow_validated_primary_action">是的，登录</string>
+    <string name="qrcode_auth_flow_validated_subtitle">仅扫描直接从网页浏览器获取的二维码。 切勿扫描其他人发送给您的代码。</string>
+    <string name="qrcode_auth_flow_validated_default_title">您是否正在尝试登录到%1$s附近的网页浏览器？</string>
+    <string name="qrcode_auth_flow_validated_title">您是否正在尝试登录到%2$s附近的 %1$s？</string>
+    <string name="stats_revamp_v2_intro_secondary_button_text">稍后提醒我</string>
+    <string name="stats_revamp_v2_intro_primary_button_text">立即试用</string>
+    <string name="stats_revamp_v2_intro_content_note">在“我的站点”&gt;“统计信息”&gt;“数据分析”中了解更多信息</string>
+    <string name="stats_revamp_v2_intro_content">“数据分析”可帮助您了解自己内容的表现情况以及与受众产生共鸣的内容。</string>
+    <string name="stats_revamp_v2_intro_header_title">数据分析更新</string>
+    <string name="stats_insights_followers_guide_card">💡 评论其他博客是为您的新站点吸引关注和粉丝的好方法。</string>
+    <string name="stats_insights_comments_guide_card">💡 点击“查看更多”可查看热门评论者。</string>
+    <string name="stats_insights_latest_post_empty">发表第一篇文章后，请回来查看！</string>
+    <string name="stats_insights_views_and_visitors_visitors_empty_state">查看我们的重要贴士，增加您的阅读量和流量 %1$s</string>
+    <string name="stats_view_publicize">社交媒体连接</string>
+    <string name="stats_action_card_schedule_post_message">✍️ 将您的草稿计划在最佳时间发布，以此来吸引您的受众。</string>
+    <string name="stats_action_card_blogging_reminders_message">💡 持续发表文章是建立受众群体的好方法。 添加一个提醒，督促自己坚持下去。</string>
+    <string name="stats_action_card_grow_audience_message">💡 通过我们专家指导的&lt;i&gt;博客介绍&lt;/i&gt;课程更快地提升您的博客。</string>
     <string name="blogging_prompts_onboarding_prompts_loading">正在加载博客提示。 请稍后重试。</string>
     <string name="hpp_bottom_helper_text">决定不了？ 您可以随时更改主题。</string>
     <string name="hpp_recommended_default_vertical">撰写博客</string>
@@ -19,15 +52,13 @@ Language: zh_CN
     <string name="stats_follower_types_pie_chart_total_label">共计</string>
     <string name="stats_referrers_pie_chart_others">其他</string>
     <string name="stats_referrers_pie_chart_search">搜索</string>
+    <string name="stats_referrers_pie_chart_wordpress">WordPress</string>
     <string name="stats_referrers_pie_chart_total_label">查看</string>
     <string name="stats_action_card_schedule_post_button_label">预发布</string>
-    <string name="stats_action_card_schedule_post_message">✍️计划在最佳时间发表您草稿中的内容。</string>
     <string name="stats_action_card_schedule_post_title">预发布您的文章</string>
     <string name="stats_action_card_blogging_reminders_button_label">设置提醒</string>
-    <string name="stats_action_card_blogging_reminders_message">💡设置提醒以定期发表，留住读者并吸引新访客。</string>
     <string name="stats_action_card_blogging_reminders_title">设置您的博客提醒</string>
     <string name="stats_action_card_grow_audience_button_label">查看课程</string>
-    <string name="stats_action_card_grow_audience_message">💡我们有易于理解的课程，由优秀博主教授，更好发展您的博客。</string>
     <string name="stats_action_card_grow_audience_title">增加您的受众</string>
     <string name="gutenberg_native_you_can_also_rearrange_blocks_by_tapping_a_block_and_then_tapping">您现在也可以重新排列区块，方法是点击一个区块，然后点击该区块左下角出现的向上和向下箭头，从而上下移动该区块。</string>
     <string name="gutenberg_native_image_file_not_found">找不到图像文件。</string>
@@ -38,12 +69,8 @@ Language: zh_CN
     <string name="quick_start_sites_type_all_tasks_completed">已完成所有任务</string>
     <string name="quick_start_list_task_complete">完成任务</string>
     <string name="me_btn_scan_login_code">扫描登录码</string>
-    <string name="stats_insights_followers_guide_card">💡您可以尝试发表评论来鼓励博客互动，从而吸引更多粉丝。</string>
-    <string name="stats_insights_comments_guide_card">💡点击“查看更多”可查看您的主要贡献者。</string>
     <string name="stats_insights_likes_guide_card">⭐️您的最新文章 %1$s 收到了 %2$s 个赞。</string>
     <string name="stats_most_popular_percent_views_empty">动态数量不足。 请在您的站点拥有更多访客时回来查看！</string>
-    <string name="stats_insights_latest_post_empty">您尚未发布任何文章。 请先发表第一篇文章，然后再回来查看！</string>
-    <string name="stats_insights_views_and_visitors_visitors_empty_state">如果您想获得更多的查看数量和流量，请查看我们的热门贴士 %1$s</string>
     <string name="stats_total_followers_content_description">粉丝总数的 %1s、%2s</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
     <string name="pages_copy_link">复制链接</string>
@@ -710,9 +737,6 @@ Language: zh_CN
     <string name="quick_start_dialog_review_pages_message">更改、添加或删除您站点的页面。</string>
     <string name="quick_start_dialog_review_pages_title">评论站点页面</string>
     <string name="quick_start_dialog_edit_homepage_message_pages_short">选择%1$s主页%2$s以编辑您的主页。</string>
-    <string name="quick_start_dialog_edit_homepage_message_short">选择%1$s页面%2$s以查看您的页面列表。</string>
-    <string name="quick_start_dialog_edit_homepage_message">在您站点的主页上更改、添加或删除内容。</string>
-    <string name="quick_start_dialog_edit_homepage_title">编辑您的主页</string>
     <string name="reader_menu_mark_as_unseen">标记为未读</string>
     <string name="reader_menu_mark_as_seen">标记为已读</string>
     <string name="error_media_upload_failed_for_reason">媒体上传失败。\n%1$s</string>
@@ -3039,7 +3063,6 @@ Language: zh_CN
     <string name="stats_followers_a_minute_ago">一分钟以前</string>
     <string name="stats_followers_seconds_ago">秒以前</string>
     <string name="stats_view_followers">关注者</string>
-    <string name="stats_view_publicize">Publicize</string>
     <string name="stats_view_videos">视频</string>
     <string name="stats_view_top_posts_and_pages">文章和页面</string>
     <string name="stats_view_countries">国家/地区</string>

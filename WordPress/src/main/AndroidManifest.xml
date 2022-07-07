@@ -243,14 +243,10 @@
             android:name=".ui.posts.EditPostActivity"
             android:theme="@style/WordPress.NoActionBar"
             android:windowSoftInputMode="stateHidden|adjustResize"
-            android:exported="true">
+            android:exported="false">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.posts.PostsListActivity" />
-
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>
         </activity>
 
         <!-- Story composer activity -->
@@ -312,6 +308,7 @@
         <activity
             android:name=".ui.stats.refresh.StatsActivity"
             android:launchMode="singleTop"
+            android:configChanges="orientation|screenSize"
             android:theme="@style/WordPress.NoActionBar" />
         <activity
             android:name=".ui.stats.refresh.StatsViewAllActivity"
@@ -387,7 +384,7 @@
 
         <!-- Deep Linking Activity -->
         <activity
-            android:name=".ui.deeplinks.DeepLinkingIntentReceiverActivity"
+            android:name="org.wordpress.android.ui.deeplinks.DeepLinkingIntentReceiverActivity"
             android:theme="@style/WordPress.NoActionBar"
             android:excludeFromRecents="true"
             android:exported="true">
@@ -465,13 +462,7 @@
                     android:pathPattern="/notifications/.*"
                     android:scheme="http" />
 
-                <data
-                    android:host="apps.wordpress.com"
-                    android:pathPattern="/get/.*"
-                    android:scheme="https" />
-
             </intent-filter>
-
         </activity>
 
         <!-- Reader Activities -->

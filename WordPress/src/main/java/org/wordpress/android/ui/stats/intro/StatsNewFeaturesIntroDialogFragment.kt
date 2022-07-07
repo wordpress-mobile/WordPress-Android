@@ -24,7 +24,7 @@ class StatsNewFeaturesIntroDialogFragment : FeatureIntroductionDialogFragment() 
     }
 
     private fun initializeViews() {
-        setHeaderIcon(R.drawable.ic_outline_lightbulb_orange_gradient_40dp)
+        setHeaderIcon(R.drawable.ic_stats_alt_blue_gradient_wordpress_48dp)
         setHeaderTitle(R.string.stats_revamp_v2_intro_header_title)
 
         val contentBinding = StatsRevampV2FeaturesIntroContentViewBinding.inflate(layoutInflater)
@@ -35,14 +35,17 @@ class StatsNewFeaturesIntroDialogFragment : FeatureIntroductionDialogFragment() 
 
         setSecondaryButtonText(R.string.stats_revamp_v2_intro_secondary_button_text)
         setSecondaryButtonListener { viewModel.onSecondaryButtonClick() }
+
+        setCloseButtonListener { viewModel.onCloseButtonClick() }
     }
 
     private fun setupObservers() {
         viewModel.action.observe(viewLifecycleOwner) { action ->
             when (action) {
                 is OpenStats -> {
+                    dismiss()
                     activity?.let {
-                        ActivityLauncher.viewBlogStats(it, action.site)
+                        ActivityLauncher.openBlogStats(it, action.site)
                     }
                 }
                 is DismissDialog -> {

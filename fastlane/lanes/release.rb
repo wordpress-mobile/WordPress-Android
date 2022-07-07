@@ -166,23 +166,30 @@ platform :android do
   end
 
   lane :check_translations_coverage do |options|
-    UI.message('Checking app strings translation status...')
+    UI.message('Checking WordPress app strings translation status...')
     check_translation_progress(
-      glotpress_url: 'https://translate.wordpress.org/projects/apps/android/dev/',
+      glotpress_url: APP_SPECIFIC_VALUES[:wordpress][:glotpress_appstrings_project],
+      abort_on_violations: false,
+      skip_confirm: options[:skip_confirm] || false
+    )
+
+    UI.message('Checking Jetpack app strings translation status...')
+    check_translation_progress(
+      glotpress_url: APP_SPECIFIC_VALUES[:jetpack][:glotpress_appstrings_project],
       abort_on_violations: false,
       skip_confirm: options[:skip_confirm] || false
     )
 
     UI.message('Checking WordPress release notes strings translation status...')
     check_translation_progress(
-      glotpress_url: APP_SPECIFIC_VALUES[:wordpress][:gp_url],
+      glotpress_url: APP_SPECIFIC_VALUES[:wordpress][:glotpress_metadata_project],
       abort_on_violations: false,
       skip_confirm: options[:skip_confirm] || false
     )
 
     UI.message('Checking Jetpack release notes strings translation status...')
     check_translation_progress(
-      glotpress_url: APP_SPECIFIC_VALUES[:jetpack][:gp_url],
+      glotpress_url: APP_SPECIFIC_VALUES[:jetpack][:glotpress_metadata_project],
       abort_on_violations: false,
       skip_confirm: options[:skip_confirm] || false
     )

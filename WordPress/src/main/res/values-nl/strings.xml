@@ -1,29 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-06-16 13:54:08+0000
+Translation-Revision-Date: 2022-07-04 09:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: nl
 -->
 <resources>
+    <string name="qrcode_auth_flow_content_description">Afbeelding waarop een lopende inlogcodescan staat weergegeven</string>
+    <string name="qrcode_auth_flow_error_content_description">Afbeelding waarop een fout staat weergegeven</string>
+    <string name="qrcode_auth_flow_dismiss_dialog_message">Weet je zeker dat je wilt doorgaan?</string>
+    <string name="qrcode_auth_flow_dismiss_dialog_title">Scannen van inlogcode sluiten</string>
+    <string name="qrcode_auth_flow_error_auth_failed_subtitle">We konden je niet met deze inlogcode inloggen. Tik op \'Opnieuw scannen\' om de code opnieuw te scannen.</string>
+    <string name="qrcode_auth_flow_error_expired_subtitle">Deze inlogcode is verlopen. Tik op \'Opnieuw scannen\' om de code opnieuw te scannen.</string>
+    <string name="qrcode_auth_flow_error_expired_title">Verlopen inlogcode</string>
+    <string name="qrcode_auth_flow_error_invalid_data_subtitle">De gescande inlogcode kon niet worden gevalideerd. Tik op \'Opnieuw scannen\' om de code opnieuw te scannen.</string>
+    <string name="qrcode_auth_flow_error_invalid_data_title">Kon de inlogcode niet valideren</string>
+    <string name="qrcode_auth_flow_error_no_connection_subtitle">Om inlogcodes te scannen heb je een actieve internetverbinding nodig</string>
+    <string name="qrcode_auth_flow_scan_again">Opnieuw scannen</string>
+    <string name="qrcode_auth_flow_dismiss">Sluiten</string>
+    <string name="qrcode_auth_flow_done_subtitle">Tik op sluiten en ga terug naar je webbrowser om door te gaan.</string>
+    <string name="qrcode_auth_flow_validated_primary_action">Ja, ik wil inloggen</string>
+    <string name="qrcode_auth_flow_validated_subtitle">Scan alleen QR-codes die rechtstreeks uit je webbrowser komen. Scan nooit een code die je door iemand anders is toegestuurd.</string>
+    <string name="qrcode_auth_flow_validated_default_title">Probeer je in te loggen bij je webbrowser in de buurt van %1$s?</string>
+    <string name="qrcode_auth_flow_validated_title">Probeer je in te loggen bij %1$s in de buurt van %2$s?</string>
+    <string name="stats_revamp_v2_intro_secondary_button_text">Herinner mij hier later aan</string>
+    <string name="stats_revamp_v2_intro_content_note">Ga voor meer informatie naar Mijn site &gt; Statistieken &gt; Inzichten</string>
+    <string name="stats_revamp_v2_intro_content">Inzichten geven je meer zicht op hoe je content presteert en wat je publiek leuk vindt.</string>
+    <string name="stats_revamp_v2_intro_header_title">Update aan inzichten</string>
+    <string name="stats_insights_followers_guide_card">💡Door reacties op andere blogs achter te laten, val je op en trek je volgers naar je nieuwe site.</string>
+    <string name="stats_insights_comments_guide_card">💡Tik op \'MEER INFORMATIE\' om je topreageerders te bekijken.</string>
+    <string name="stats_insights_latest_post_empty">Publiceer een eerste bericht en kijk dan nog eens hier.</string>
+    <string name="stats_insights_views_and_visitors_visitors_empty_state">Bekijk onze beste tips voor meer weergaven en bezoekers %1$s</string>
+    <string name="stats_view_publicize">Social-mediakoppelingen</string>
+    <string name="stats_action_card_schedule_post_message">✍️ Plan wanneer je conceptversies worden gepubliceerd om op het beste moment je publiek te bereiken.</string>
+    <string name="stats_action_card_blogging_reminders_message">💡Door regelmatig en consistent berichten te plaatsen, bouw je een publiek op. Stel een herinnering in om op schema te blijven.</string>
+    <string name="stats_action_card_grow_audience_message">💡Til je blogervaring sneller naar een hoger niveau met onze door deskundigen geleide cursus &lt;i&gt;Een inleiding tot bloggen&lt;/i&gt;.</string>
     <string name="blogging_prompts_onboarding_prompts_loading">Blogmeldingen worden geladen. Wacht even en probeer het opnieuw.</string>
     <string name="hpp_bottom_helper_text">kun je niet kiezen? Je kunt op elk moment het thema veranderen.</string>
+    <string name="hpp_recommended_default_vertical">Bloggen</string>
     <string name="hpp_recommended_subtitle">Uitgekozen voor jou</string>
     <string name="hpp_recommended_title">Beste voor %s</string>
     <string name="hpp_preview_tapped_theme">Themavoorbeeld bekijken %s</string>
+    <string name="hpp_title">Kies een thema</string>
     <string name="my_site_blogging_prompt_card_skipped_snackbar">Heeft de blogmelding van vandaag overgeslagen</string>
     <string name="my_site_blogging_prompt_card_menu_learn_more">Meer informatie.</string>
     <string name="my_site_blogging_prompt_card_attribution_dayone">Van </string>
+    <string name="stats_follower_types_pie_chart_total_label">Totalen</string>
     <string name="stats_referrers_pie_chart_others">Anderen</string>
     <string name="stats_referrers_pie_chart_search">zoek</string>
+    <string name="stats_referrers_pie_chart_wordpress">WordPress</string>
+    <string name="stats_referrers_pie_chart_total_label">Weergaven</string>
     <string name="stats_action_card_schedule_post_button_label">planning</string>
-    <string name="stats_action_card_schedule_post_message">✍️ Plan om je content op het beste moment te delen vanuit je concepten.</string>
     <string name="stats_action_card_schedule_post_title">Je berichten inplannen</string>
     <string name="stats_action_card_blogging_reminders_button_label">Herinneringen instellen</string>
-    <string name="stats_action_card_blogging_reminders_message">Stel een herinnering in om regelmatig te posten om zo je lezers betrokken te houden en nieuwe bezoekers aan te trekken.</string>
     <string name="stats_action_card_blogging_reminders_title">Stel je blogging herinneringen in</string>
     <string name="stats_action_card_grow_audience_button_label">Check de cursus</string>
-    <string name="stats_action_card_grow_audience_message">We hebben eenvoudig te volgen lessen gegeven door de beste bloggers om je blog te laten groeien.</string>
+    <string name="stats_action_card_grow_audience_title">Breid je publiek uit</string>
     <string name="gutenberg_native_you_can_also_rearrange_blocks_by_tapping_a_block_and_then_tapping">Je kunt ook blokken herschikken door op een blok te tikken en dan op de omhoog en omlaag pijlen te tikken die links onderaan het blok verschijnen om het naar boven of onder te bewegen.</string>
     <string name="gutenberg_native_image_file_not_found">Afbeeldingsbestand niet gevonden.</string>
     <string name="gutenberg_native_drag_drop_makes_rearranging_blocks_a_breeze_press_and_hold_on_a_b">Met verslepen wordt blokken herschikken een fluitje van een cent. Houd een blok ingedrukt en sleep deze vervolgens naar de nieuwe locatie. Laat dan los.</string>
@@ -33,12 +65,8 @@ Language: nl
     <string name="quick_start_sites_type_all_tasks_completed">Alle taken afgerond</string>
     <string name="quick_start_list_task_complete">Taak voltooid</string>
     <string name="me_btn_scan_login_code">Inlogcode scannen</string>
-    <string name="stats_insights_followers_guide_card">💡Je kunt een opmerking achterlaten als gebaar, om activiteit van de blog te stimuleren en meer volgers te krijgen.</string>
-    <string name="stats_insights_comments_guide_card">💡Zie wie je grootste bijdragers zijn door te tikken op MEER INFO.</string>
     <string name="stats_insights_likes_guide_card">⭐️ Je nieuwste bericht %1$s heeft %2$s likes gekregen.</string>
     <string name="stats_most_popular_percent_views_empty">Niet genoeg activiteit. Keer nog eens terug wanneer je site meer bezoekers heeft gehad!</string>
-    <string name="stats_insights_latest_post_empty">Je hebt nog geen berichten gepubliceerd. Keer nog eens terug wanneer je je eerste bericht hebt gepubliceerd!</string>
-    <string name="stats_insights_views_and_visitors_visitors_empty_state">Bekijk onze top tips %1$s voor meer weergaven en bezoekers</string>
     <string name="stats_total_followers_content_description">%1s, %2s van het totale aantal volgers</string>
     <string name="stats_value_percent">%1$s %2$s%%()</string>
     <string name="pages_copy_link">Link kopiëren</string>
@@ -705,9 +733,6 @@ Language: nl
     <string name="quick_start_dialog_review_pages_message">Verander, voeg toe, of verwijder pagina\'s van je site.</string>
     <string name="quick_start_dialog_review_pages_title">Beoordeel site pagina\'s</string>
     <string name="quick_start_dialog_edit_homepage_message_pages_short">Selecteer %1$s Homepage %2$s om je homepage te bewerken.</string>
-    <string name="quick_start_dialog_edit_homepage_message_short">Selecteer %1$s Pagina\'s %2$s om je paginalijst te zien.</string>
-    <string name="quick_start_dialog_edit_homepage_message">Verander, voeg toe, of verwijder inhoud van de homepage van je site.</string>
-    <string name="quick_start_dialog_edit_homepage_title">Bewerk je homepage</string>
     <string name="reader_menu_mark_as_unseen">Markeer als ongezien</string>
     <string name="reader_menu_mark_as_seen">Markeer als gezien</string>
     <string name="error_media_upload_failed_for_reason">Media upload mislukt.\n%1$s</string>
@@ -3034,7 +3059,6 @@ Language: nl
     <string name="stats_followers_a_minute_ago">een minuut geleden</string>
     <string name="stats_followers_seconds_ago">seconden geleden</string>
     <string name="stats_view_followers">Volgers</string>
-    <string name="stats_view_publicize">Publiceren</string>
     <string name="stats_view_videos">Video\'s</string>
     <string name="stats_view_top_posts_and_pages">Berichten &amp; pagina\'s</string>
     <string name="stats_view_countries">Landen</string>

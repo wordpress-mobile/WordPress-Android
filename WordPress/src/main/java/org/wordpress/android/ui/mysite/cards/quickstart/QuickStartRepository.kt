@@ -373,7 +373,6 @@ class QuickStartRepository
                         quickStartType.getTaskFromString(QuickStartStore.QUICK_START_CHECK_STATS_LABEL),
                         quickStartType.getTaskFromString(QuickStartStore.QUICK_START_UPLOAD_MEDIA_LABEL),
                         QuickStartNewSiteTask.REVIEW_PAGES,
-                        QuickStartNewSiteTask.EDIT_HOMEPAGE,
                         QuickStartNewSiteTask.ENABLE_POST_SHARING -> true
                         else -> false
                     }
@@ -383,8 +382,7 @@ class QuickStartRepository
     private fun QuickStartTask.isShownInHomeTab() = when (this) {
         quickStartType.getTaskFromString(QuickStartStore.QUICK_START_CHECK_STATS_LABEL),
         quickStartType.getTaskFromString(QuickStartStore.QUICK_START_UPLOAD_MEDIA_LABEL),
-        QuickStartNewSiteTask.REVIEW_PAGES,
-        QuickStartNewSiteTask.EDIT_HOMEPAGE -> true
+        QuickStartNewSiteTask.REVIEW_PAGES -> true
         else -> false
     }
 

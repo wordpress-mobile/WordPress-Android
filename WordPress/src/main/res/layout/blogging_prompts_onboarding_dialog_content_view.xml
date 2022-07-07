@@ -29,7 +29,7 @@
 
         <include
             android:id="@+id/prompt_card"
-            layout="@layout/my_site_blogging_promp_card"
+            layout="@layout/my_site_blogging_prompt_card"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"

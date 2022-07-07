@@ -1,11 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-06-16 09:54:25+0000
+Translation-Revision-Date: 2022-07-05 18:52:54+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: de
 -->
 <resources>
+    <string name="qrcode_auth_flow_content_description">Bild, das anzeigt, dass der Scan des Anmeldecodes läuft</string>
+    <string name="qrcode_auth_flow_error_content_description">Bild, das einen Fehler anzeigt</string>
+    <string name="qrcode_auth_flow_dismiss_dialog_message">Bist du sicher, dass du fortfahren möchtest?</string>
+    <string name="qrcode_auth_flow_dismiss_dialog_title">Scan des Anmeldecode beenden</string>
+    <string name="qrcode_auth_flow_error_auth_failed_subtitle">Du konntest mit diesem Anmeldecode nicht angemeldet werden. Bitte tippe auf den Button „Erneut scannen“, um den Code erneut zu scannen.</string>
+    <string name="qrcode_auth_flow_error_no_connection_title">Keine Verbindung</string>
+    <string name="qrcode_auth_flow_scan_again">Erneut scannen</string>
+    <string name="qrcode_auth_flow_done_title">Du bist angemeldet!</string>
+    <string name="qrcode_auth_flow_error_auth_failed_title">Authentifizierung fehlgeschlagen</string>
+    <string name="qrcode_auth_flow_error_expired_subtitle">Dieser Anmeldecode ist abgelaufen. Bitte tippe auf den Button „Erneut scannen“, um den Code erneut zu scannen.</string>
+    <string name="qrcode_auth_flow_error_expired_title">Abgelaufener Anmeldecode</string>
+    <string name="qrcode_auth_flow_error_invalid_data_subtitle">Der gescannte Anmeldecode konnte nicht validiert werden. Bitte tippe auf den Button „Erneut scannen“, um den Code erneut zu scannen.</string>
+    <string name="qrcode_auth_flow_error_invalid_data_title">Anmeldecode konnte nicht validiert werden</string>
+    <string name="qrcode_auth_flow_error_no_connection_subtitle">Für das Scannen von Anmeldecodes ist eine aktive Internetverbindung erforderlich</string>
+    <string name="qrcode_auth_flow_validated_subtitle">Scanne nur QR-Codes, die direkt von deinem Webbrowser kommen. Scanne niemals einen Code, der dir von jemand anderem geschickt wurde.</string>
+    <string name="qrcode_auth_flow_validated_default_title">Versuchst du dich in der Nähe von %1$s in deinem Webbrowser anzumelden?</string>
+    <string name="qrcode_auth_flow_validated_primary_action">Ja, melde mich an</string>
+    <string name="qrcode_auth_flow_done_subtitle">Tippe auf „Verwerfen“ und navigiere zu deinem Webbrowser zurück, um fortzufahren.</string>
+    <string name="qrcode_auth_flow_dismiss">Verwerfen</string>
+    <string name="qrcode_auth_flow_validated_title">Versuchst du dich in der Nähe von %2$s in %1$s anzumelden?</string>
+    <string name="stats_revamp_v2_intro_secondary_button_text">Später daran erinnern</string>
+    <string name="stats_revamp_v2_intro_content_note">Weitere Informationen unter „Meine Website &gt; Statistiken &gt; Einsichten“</string>
+    <string name="stats_revamp_v2_intro_content">Anhand von Einsichten kannst du nachvollziehen, wie deine Inhalte ankommen und was deinem Publikum gefällt.</string>
+    <string name="stats_revamp_v2_intro_header_title">Einsichten-Update</string>
+    <string name="stats_revamp_v2_intro_primary_button_text">Jetzt versuchen</string>
+    <string name="stats_insights_followers_guide_card">💡Andere Blogs zu kommentieren ist ein guter Weg, Aufmerksamkeit zu erregen und Follower für deine neue Website zu gewinnen.</string>
+    <string name="stats_insights_comments_guide_card">💡Tippe auf „MEHR ANZEIGEN“, um dir deine Top-Kommentatoren anzeigen zu lassen.</string>
+    <string name="stats_insights_latest_post_empty">Schau nochmal vorbei, wenn du deinen ersten Beitrag veröffentlicht hast!</string>
+    <string name="stats_insights_views_and_visitors_visitors_empty_state">Schau dir unsere Top-Tipps für mehr Aufrufe und höheren Traffic an %1$s</string>
+    <string name="stats_view_publicize">Verbindungen mit den sozialen Medien</string>
+    <string name="stats_action_card_schedule_post_message">✍️ Plane deine Entwürfe, damit du sie zu dem Zeitpunkt veröffentlichst, an dem du dein Publikum am besten erreichst.</string>
+    <string name="stats_action_card_blogging_reminders_message">💡Regelmäßig Beiträge zu veröffentlichen ist ein guter Weg, ein Publikum aufzubauen. Füge eine Erinnerung hinzu, damit du auf Kurs bleibst.</string>
+    <string name="stats_action_card_grow_audience_message">💡Verbessere dein Blog schneller mit dem Kurs &lt;i&gt;Einführung in das Bloggen&lt;/i&gt;, der von Experten geleitet wird.</string>
     <string name="blogging_prompts_onboarding_prompts_loading">Blog-Vorschläge werden geladen. Bitte warte einen Moment und versuche es dann erneut.</string>
     <string name="hpp_bottom_helper_text">Du kannst dich nicht entscheiden? Du kannst das Theme jederzeit ändern.</string>
     <string name="my_site_blogging_prompt_card_menu_learn_more">Mehr erfahren</string>
@@ -22,11 +55,8 @@ Language: de
     <string name="my_site_blogging_prompt_card_attribution_dayone">Von </string>
     <string name="stats_follower_types_pie_chart_total_label">Gesamt</string>
     <string name="stats_referrers_pie_chart_others">Sonstiges</string>
-    <string name="stats_action_card_schedule_post_message">✍️ Plane die Veröffentlichung deines Beitragsinhalts aus deinen Entwürfen zum besten Zeitpunkt.</string>
     <string name="stats_action_card_schedule_post_title">Deinen Beitrag planen</string>
     <string name="stats_action_card_blogging_reminders_button_label">Erinnerungen festlegen</string>
-    <string name="stats_action_card_blogging_reminders_message">💡 Lege eine Erinnerung fest, damit du regelmäßig Beiträge veröffentlichst und so das Interesse deiner Leser aufrechterhältst und neue Besucher gewinnst.</string>
-    <string name="stats_action_card_grow_audience_message">💡Wir haben leicht verdauliche Lektionen, die von den besten Bloggern gelehrt werden, um deinen Blog zu vergrößern.</string>
     <string name="stats_action_card_blogging_reminders_title">Deine Blog-Erinnerungen einrichten</string>
     <string name="stats_action_card_grow_audience_button_label">Verlauf überprüfen</string>
     <string name="stats_action_card_grow_audience_title">Vergrößere deine Reichweite</string>
@@ -35,18 +65,14 @@ Language: de
     <string name="gutenberg_native_1_s_currently_selected_2_s">%1$s. Aktuell ausgewählt: %2$s</string>
     <string name="quick_start_sites_type_all_tasks_completed">Alle Aufgaben erledigt</string>
     <string name="quick_start_list_task_complete">Aufgabe abgeschlossen</string>
-    <string name="stats_insights_followers_guide_card">💡Du kannst einen Kommentar hinterlassen, um mit Besuchern deines Blogs zu interagieren und mehr Follower zu gewinnen.</string>
     <string name="gutenberg_native_arrow_buttons">Pfeil-Buttons</string>
     <string name="gutenberg_native_drag_drop_makes_rearranging_blocks_a_breeze_press_and_hold_on_a_b">Mit Drag-and-drop ist das Neuanordnen von Blöcken ganz einfach. Halte einfach einen Block gedrückt, zieh ihn an seine neue Position und lass ihn dann los.</string>
     <string name="gutenberg_native_drag_drop">Drag-and-drop</string>
     <string name="gutenberg_native_you_can_also_rearrange_blocks_by_tapping_a_block_and_then_tapping">Du kannst Blöcke auch neu anordnen, indem du auf einen Block tippst und ihn dann mit den Aufwärts- und Abwärtspfeilen, die unten links auf dem Block erscheinen, nach oben oder unten verschiebst.</string>
     <string name="stats_insights_likes_guide_card">⭐️Dein neuster Beitrag %1$s hat %2$s Likes.</string>
-    <string name="stats_insights_comments_guide_card">💡Tippe auf MEHR ANZEIGEN, um deine Top-Mitwirkenden anzuzeigen.</string>
     <string name="stats_most_popular_percent_views_empty">Nicht genug Aktivität. Schau später nochmal vorbei, wenn mehr Besucher auf deiner Website waren!</string>
-    <string name="stats_insights_latest_post_empty">Du hast noch keine Beiträge veröffentlicht. Schau später nochmal vorbei, wenn du deinen ersten Beitrag veröffentlicht hast!</string>
     <string name="stats_total_followers_content_description">%1s, %2s aller Follower</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
-    <string name="stats_insights_views_and_visitors_visitors_empty_state">Wenn du mehr Aufrufe und Traffic erhalten möchtest, sieh dir unsere Top-Tipps an: %1$s</string>
     <string name="quick_start_sites_type_get_to_know_app">Die App kennenlernen</string>
     <string name="quick_start_list_upload_media_title">Lade Fotos oder Videos hoch</string>
     <string name="quick_start_completed_tour_title">Gratulation! Du kennst dich aus&lt;br/&gt;</string>
@@ -711,9 +737,6 @@ Language: de
     <string name="quick_start_dialog_review_pages_message">Du kannst die Seiten deiner Website ändern, hinzufügen oder entfernen.</string>
     <string name="quick_start_dialog_review_pages_title">Website-Seiten prüfen</string>
     <string name="quick_start_dialog_edit_homepage_message_pages_short">Wähle %1$s Startseite %2$s aus, um deine Homepage zu bearbeiten.</string>
-    <string name="quick_start_dialog_edit_homepage_message_short">Wähle %1$s Seiten %2$s aus, um deine Seitenliste anzuzeigen.</string>
-    <string name="quick_start_dialog_edit_homepage_message">Du kannst Inhalte auf der Startseite deiner Website ändern, hinzufügen oder entfernen.</string>
-    <string name="quick_start_dialog_edit_homepage_title">Startseite bearbeiten</string>
     <string name="reader_menu_mark_as_seen">Als gesehen markieren</string>
     <string name="reader_menu_mark_as_unseen">Als nicht gesehen markieren</string>
     <string name="error_media_upload_failed_for_reason">Medien-Upload fehlgeschlagen.\n%1$s</string>
@@ -2945,7 +2968,7 @@ Language: de
     <string name="notifications_empty_comments">Bisher keine Kommentare</string>
     <string name="notifications_empty_unread">Du bist auf dem neuesten Stand!</string>
     <string name="reader_short_comment_count_multi">%s Kommentare</string>
-    <string name="reader_short_comment_count_one">1 Kommentar</string>
+    <string name="reader_short_comment_count_one">Ein Kommentar</string>
     <string name="reader_hint_comment_on_post">Antwort auf Beitrag…</string>
     <string name="reader_discover_visit_blog">%s besuchen</string>
     <string name="reader_discover_attribution_blog">Ursprünglich veröffentlicht auf %s</string>
@@ -3042,7 +3065,6 @@ Language: de
     <string name="stats_followers_seconds_ago">Vor Sekunden</string>
     <string name="stats_view_top_posts_and_pages">Beiträge &amp; Seiten</string>
     <string name="stats_view_videos">Videos</string>
-    <string name="stats_view_publicize">Publizieren</string>
     <string name="stats_view_followers">Follower</string>
     <string name="stats_view_countries">Länder</string>
     <string name="stats_likes">Gefällt mir</string>

@@ -1,11 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-06-16 15:54:09+0000
+Translation-Revision-Date: 2022-06-30 13:54:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: it
 -->
 <resources>
+    <string name="qrcode_auth_flow_content_description">Immagine indicante la scansione del codice di accesso in elaborazione</string>
+    <string name="qrcode_auth_flow_error_content_description">Immagine indiante un errore</string>
+    <string name="qrcode_auth_flow_dismiss_dialog_message">Desideri continuare?</string>
+    <string name="qrcode_auth_flow_dismiss_dialog_title">Esci dalla scansione del flusso di codici di accesso</string>
+    <string name="qrcode_auth_flow_error_auth_failed_subtitle">Impossibile accedere usando questo codice di accesso. Tocca il pulsante Scansiona di nuovo per scansionare nuovamente il codice.</string>
+    <string name="qrcode_auth_flow_error_auth_failed_title">Autenticazione non riuscita</string>
+    <string name="qrcode_auth_flow_error_expired_subtitle">Il codice di accesso è scaduto. Tocca il pulsante Scansiona di nuovo per scansionare nuovamente il codice.</string>
+    <string name="qrcode_auth_flow_error_expired_title">Codice di accesso scaduto</string>
+    <string name="qrcode_auth_flow_error_invalid_data_subtitle">Il codice di accesso scansionato non può essere convalidato. Tocca il pulsante Scansiona di nuovo per scansionare nuovamente il codice.</string>
+    <string name="qrcode_auth_flow_error_invalid_data_title">Impossibile convalidare il codice di accesso</string>
+    <string name="qrcode_auth_flow_error_no_connection_subtitle">È necessaria una connessione Internet funzionante per la scansione dei codici di accesso</string>
+    <string name="qrcode_auth_flow_error_no_connection_title">Nessuna connessione</string>
+    <string name="qrcode_auth_flow_scan_again">Esegui di nuovo la scansione</string>
+    <string name="qrcode_auth_flow_dismiss">Ignora</string>
+    <string name="qrcode_auth_flow_done_subtitle">Tocca Ignora e torna al tuo browser web per continuare.</string>
+    <string name="qrcode_auth_flow_done_title">Sei connesso!</string>
+    <string name="qrcode_auth_flow_validated_primary_action">Sì, connettimi</string>
+    <string name="qrcode_auth_flow_validated_subtitle">Scansiona solo i codici QR presi direttamente dal tuo browser web. Non scansionare mai un codice inviato a te da qualcun altro.</string>
+    <string name="qrcode_auth_flow_validated_default_title">Stai tentando di accedere al browser web nei pressi di %1$s?</string>
+    <string name="qrcode_auth_flow_validated_title">Stai tentando di accedere a %1$s neipressi di %2$s?</string>
+    <string name="stats_revamp_v2_intro_secondary_button_text">Ricordamelo più tardi</string>
+    <string name="stats_revamp_v2_intro_primary_button_text">Prova ora</string>
+    <string name="stats_revamp_v2_intro_content_note">Scopri di più in Il mio sito &gt; Statistiche &gt; Panoramica</string>
+    <string name="stats_revamp_v2_intro_content">La panoramica ti aiuta a capire come stanno andando i tuoi contenuti e cosa sta riscuotendo il favore del pubblico.</string>
+    <string name="stats_revamp_v2_intro_header_title">Aggiornamento panoramica</string>
+    <string name="stats_insights_followers_guide_card">💡Commentare su altri blog è un ottimo modo per attirare l\'attenzione e i follower sul tuo nuovo sito.</string>
+    <string name="stats_insights_comments_guide_card">💡Tocca \"VISUALIZZA ALTRO\" per vedere i tuoi migliori commentatori.</string>
+    <string name="stats_insights_latest_post_empty">Ricontrolla quando avrai pubblicato il tuo primo articolo!</string>
+    <string name="stats_insights_views_and_visitors_visitors_empty_state">Dai un\'occhiata ai nostri migliori suggerimenti per aumentare le visualizzazioni e il traffico %1$s</string>
+    <string name="stats_view_publicize">Collegamenti ai social media</string>
+    <string name="stats_action_card_schedule_post_message">✍️ Pianifica le tue bozze da pubblicare nel momento migliore per raggiungere il tuo pubblico.</string>
+    <string name="stats_action_card_blogging_reminders_message">💡Pubblicare in modo coerente è un ottimo modo per costruire il tuo pubblico. Aggiungi un promemoria per restare al passo.</string>
+    <string name="stats_action_card_grow_audience_message">💡Fai salire di livello il tuo blog più velocemente con il nostro corso &lt;i&gt;Introduzione al blogging&lt;/i&gt; tenuto da esperti del settore.</string>
     <string name="blogging_prompts_onboarding_prompts_loading">Le richieste di blogging si stanno caricando. Attendi un momento e riprova.</string>
     <string name="hpp_bottom_helper_text">Non riesci a decidere? Puoi cambiare tema in qualsiasi momento.</string>
     <string name="hpp_recommended_default_vertical">Blog</string>
@@ -19,15 +52,13 @@ Language: it
     <string name="stats_follower_types_pie_chart_total_label">Totale</string>
     <string name="stats_referrers_pie_chart_others">Altro</string>
     <string name="stats_referrers_pie_chart_search">Cerca</string>
+    <string name="stats_referrers_pie_chart_wordpress">WordPress</string>
     <string name="stats_referrers_pie_chart_total_label"> Visualizzazioni</string>
     <string name="stats_action_card_schedule_post_button_label">Programmazione</string>
-    <string name="stats_action_card_schedule_post_message">✍️ Pianifica di pubblicare i tuoi contenuti dalle bozze nel momento migliore.</string>
     <string name="stats_action_card_schedule_post_title">Programma il tuo articolo</string>
     <string name="stats_action_card_blogging_reminders_button_label">Imposta promemoria</string>
-    <string name="stats_action_card_blogging_reminders_message">💡Per coinvolgere i tuoi lettori e attirare nuovi visitatori, imposta un promemoria per pubblicazioni regolari .</string>
     <string name="stats_action_card_blogging_reminders_title">Imposta i promemoria relativi al blog</string>
     <string name="stats_action_card_grow_audience_button_label">Controlla il corso</string>
-    <string name="stats_action_card_grow_audience_message">💡Per aiutarti a far crescere il tuo blog, abbiamo creato lezioni adatte a tutti tenute dai migliori blogger.</string>
     <string name="stats_action_card_grow_audience_title">Aumenta il tuo pubblico</string>
     <string name="gutenberg_native_you_can_also_rearrange_blocks_by_tapping_a_block_and_then_tapping">Puoi anche riorganizzare i blocchi toccando un blocco, quindi le frecce su e giù che compaiono nella parte inferiore sinistra del blocco per spostarlo verso l\'alto o verso il basso.</string>
     <string name="gutenberg_native_image_file_not_found">File immagine non trovato.</string>
@@ -38,12 +69,8 @@ Language: it
     <string name="quick_start_sites_type_all_tasks_completed">Tutte le attività completate</string>
     <string name="quick_start_list_task_complete">Attività completata</string>
     <string name="me_btn_scan_login_code">Scansiona codice di accesso</string>
-    <string name="stats_insights_followers_guide_card">💡Puoi provare a lasciare un commento per promuovere il coinvolgimento del blog e ottenere più follower.</string>
-    <string name="stats_insights_comments_guide_card">💡Vedi i tuoi principali collaboratori toccando VEDI DI PIÙ.</string>
     <string name="stats_insights_likes_guide_card">⭐️ Il tuo ultimo articolo %1$s ha ricevuto %2$s Mi piace.</string>
     <string name="stats_most_popular_percent_views_empty">Attività insufficiente. Controlla nuovamente più tardi quando più utenti hanno visitato il tuo sito.</string>
-    <string name="stats_insights_latest_post_empty">Non hai ancora pubblicato alcun articolo. Controlla nuovamente più tardi dopo aver pubblicato il tuo primo articolo.</string>
-    <string name="stats_insights_views_and_visitors_visitors_empty_state">Se vuoi provare a ottenere più visualizzazioni e traffico, dai un\'occhiata ai nostri suggerimenti principali %1$s</string>
     <string name="stats_total_followers_content_description">%1s, %2s dei follower totali</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
     <string name="pages_copy_link">Copia link</string>
@@ -710,9 +737,6 @@ Language: it
     <string name="quick_start_dialog_review_pages_message">Modifica, aggiungi o rimuovi le pagine del tuo sito.</string>
     <string name="quick_start_dialog_review_pages_title">Verifica le pagine del sito</string>
     <string name="quick_start_dialog_edit_homepage_message_pages_short">Seleziona %1$s Homepage %2$s per modificare la tua homepage.</string>
-    <string name="quick_start_dialog_edit_homepage_message_short">Seleziona %1$s Pagine %2$s per visualizzare l\'elenco delle tue pagine.</string>
-    <string name="quick_start_dialog_edit_homepage_message">Modifica, aggiungi o rimuovi contenuti dalla homepage del tuo sito.</string>
-    <string name="quick_start_dialog_edit_homepage_title">Modifica la tua homepage</string>
     <string name="reader_menu_mark_as_unseen">Contrassegna come non letto</string>
     <string name="reader_menu_mark_as_seen">Contrassegna come letto</string>
     <string name="error_media_upload_failed_for_reason">Caricamento media non riuscito.\n%1$s</string>
@@ -3039,7 +3063,6 @@ Language: it
     <string name="stats_followers_a_minute_ago">un minuto fa</string>
     <string name="stats_followers_seconds_ago">pochi secondi fa</string>
     <string name="stats_view_followers">Follower</string>
-    <string name="stats_view_publicize">Pubblicizza</string>
     <string name="stats_view_videos">Video</string>
     <string name="stats_view_top_posts_and_pages">Articoli e pagine</string>
     <string name="stats_view_countries">Paesi</string>

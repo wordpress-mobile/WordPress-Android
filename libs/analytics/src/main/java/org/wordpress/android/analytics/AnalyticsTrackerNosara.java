@@ -386,11 +386,6 @@ public class AnalyticsTrackerNosara extends Tracker {
             case QUICK_START_CHECK_STATS_COMPLETED:
                 predefinedEventProperties.put("task_name", "check_stats");
                 break;
-            case QUICK_START_LIST_EDIT_HOMEPAGE_SKIPPED:
-            case QUICK_START_LIST_EDIT_HOMEPAGE_TAPPED:
-            case QUICK_START_EDIT_HOMEPAGE_TASK_COMPLETED:
-                predefinedEventProperties.put("task_name", "edit_homepage");
-                break;
             case QUICK_START_LIST_REVIEW_PAGES_SKIPPED:
             case QUICK_START_LIST_REVIEW_PAGES_TAPPED:
             case QUICK_START_REVIEW_PAGES_TASK_COMPLETED:
@@ -515,7 +510,7 @@ public class AnalyticsTrackerNosara extends Tracker {
                                     + "the same property pre-defined at event level. This may generate unexpected "
                                     + "behavior!!");
                             AppLog.w(AppLog.T.STATS,
-                                    "User value: " + propertiesToJSON.get(key).toString()
+                                    "User value: " + propertiesToJSON.get(key)
                                     + " - pre-defined value: "
                                     + predefinedEventProperties.get(key).toString());
                         } else {
@@ -1220,6 +1215,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "stats_revamp_v2_announcement_confirmed";
             case STATS_REVAMP_V2_ANNOUNCEMENT_DISMISSED:
                 return "stats_revamp_v2_announcement_dismissed";
+                case STATS_REVAMP_V2_ANNOUNCEMENT_REMIND_ME_TAPPED:
+                return "stats_revamp_v2_announcement_remind_me_tapped";
             case PUSH_NOTIFICATION_RECEIVED:
                 return "push_notification_received";
             case PUSH_NOTIFICATION_TAPPED:
@@ -1832,7 +1829,6 @@ public class AnalyticsTrackerNosara extends Tracker {
             case QUICK_START_LIST_FOLLOW_SITE_SKIPPED:
             case QUICK_START_LIST_UPLOAD_ICON_SKIPPED:
             case QUICK_START_LIST_CHECK_STATS_SKIPPED:
-            case QUICK_START_LIST_EDIT_HOMEPAGE_SKIPPED:
             case QUICK_START_LIST_REVIEW_PAGES_SKIPPED:
             case QUICK_START_LIST_CHECK_NOTIFICATIONS_SKIPPED:
             case QUICK_START_LIST_UPLOAD_MEDIA_SKIPPED:
@@ -1845,7 +1841,6 @@ public class AnalyticsTrackerNosara extends Tracker {
             case QUICK_START_LIST_FOLLOW_SITE_TAPPED:
             case QUICK_START_LIST_UPLOAD_ICON_TAPPED:
             case QUICK_START_LIST_CHECK_STATS_TAPPED:
-            case QUICK_START_LIST_EDIT_HOMEPAGE_TAPPED:
             case QUICK_START_LIST_REVIEW_PAGES_TAPPED:
             case QUICK_START_LIST_CHECK_NOTIFICATIONS_TAPPED:
             case QUICK_START_LIST_UPLOAD_MEDIA_TAPPED:
@@ -1858,7 +1853,6 @@ public class AnalyticsTrackerNosara extends Tracker {
             case QUICK_START_FOLLOW_SITE_TASK_COMPLETED:
             case QUICK_START_UPLOAD_ICON_COMPLETED:
             case QUICK_START_CHECK_STATS_COMPLETED:
-            case QUICK_START_EDIT_HOMEPAGE_TASK_COMPLETED:
             case QUICK_START_REVIEW_PAGES_TASK_COMPLETED:
             case QUICK_START_CHECK_NOTIFICATIONS_TASK_COMPLETED:
             case QUICK_START_UPLOAD_MEDIA_TASK_COMPLETED:
@@ -2391,6 +2385,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "qrlogin_authenticated";
             case QRLOGIN_VERIFY_DISMISS:
                 return "qrlogin_verify_dismiss";
+            case QRLOGIN_VERIFY_FAILED:
+                return "qrlogin_verify_failed";
+            case QRLOGIN_VERIFY_SCAN_AGAIN:
+                return "qrlogin_verify_scan_again";
         }
         return null;
     }

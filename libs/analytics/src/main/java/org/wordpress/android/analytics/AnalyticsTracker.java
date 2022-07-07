@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -154,6 +156,7 @@ public final class AnalyticsTracker {
         STATS_REVAMP_V2_ANNOUNCEMENT_SHOWN,
         STATS_REVAMP_V2_ANNOUNCEMENT_CONFIRMED,
         STATS_REVAMP_V2_ANNOUNCEMENT_DISMISSED,
+        STATS_REVAMP_V2_ANNOUNCEMENT_REMIND_ME_TAPPED,
         EDITOR_CREATED_POST,
         EDITOR_ADDED_PHOTO_VIA_DEVICE_LIBRARY,
         EDITOR_ADDED_VIDEO_VIA_DEVICE_LIBRARY,
@@ -650,7 +653,6 @@ public final class AnalyticsTracker {
         QUICK_START_LIST_FOLLOW_SITE_SKIPPED,
         QUICK_START_LIST_UPLOAD_ICON_SKIPPED,
         QUICK_START_LIST_CHECK_STATS_SKIPPED,
-        QUICK_START_LIST_EDIT_HOMEPAGE_SKIPPED,
         QUICK_START_LIST_REVIEW_PAGES_SKIPPED,
         QUICK_START_LIST_CHECK_NOTIFICATIONS_SKIPPED,
         QUICK_START_LIST_UPLOAD_MEDIA_SKIPPED,
@@ -662,7 +664,6 @@ public final class AnalyticsTracker {
         QUICK_START_LIST_FOLLOW_SITE_TAPPED,
         QUICK_START_LIST_UPLOAD_ICON_TAPPED,
         QUICK_START_LIST_CHECK_STATS_TAPPED,
-        QUICK_START_LIST_EDIT_HOMEPAGE_TAPPED,
         QUICK_START_LIST_REVIEW_PAGES_TAPPED,
         QUICK_START_LIST_CHECK_NOTIFICATIONS_TAPPED,
         QUICK_START_LIST_UPLOAD_MEDIA_TAPPED,
@@ -674,7 +675,6 @@ public final class AnalyticsTracker {
         QUICK_START_FOLLOW_SITE_TASK_COMPLETED,
         QUICK_START_UPLOAD_ICON_COMPLETED,
         QUICK_START_CHECK_STATS_COMPLETED,
-        QUICK_START_EDIT_HOMEPAGE_TASK_COMPLETED,
         QUICK_START_REVIEW_PAGES_TASK_COMPLETED,
         QUICK_START_CHECK_NOTIFICATIONS_TASK_COMPLETED,
         QUICK_START_UPLOAD_MEDIA_TASK_COMPLETED,
@@ -946,7 +946,9 @@ public final class AnalyticsTracker {
         QRLOGIN_VERIFY_CANCELLED,
         QRLOGIN_VERIFY_APPROVED,
         QRLOGIN_AUTHENTICATED,
-        QRLOGIN_VERIFY_DISMISS
+        QRLOGIN_VERIFY_DISMISS,
+        QRLOGIN_VERIFY_FAILED,
+        QRLOGIN_VERIFY_SCAN_AGAIN
     }
 
     private static final List<Tracker> TRACKERS = new ArrayList<>();
@@ -986,6 +988,19 @@ public final class AnalyticsTracker {
 
         for (Tracker tracker : TRACKERS) {
             tracker.track(stat);
+        }
+    }
+
+    public static @Nullable String getAnonID() {
+        if (TRACKERS.isEmpty()) {
+            return null;
+        }
+        Tracker tracker = TRACKERS.get(0);
+        String anonId = tracker.getAnonID();
+        if (anonId == null) {
+            return tracker.generateNewAnonID();
+        } else {
+            return anonId;
         }
     }
 

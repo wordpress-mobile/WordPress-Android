@@ -8,7 +8,6 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel.PeriodData
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
@@ -25,14 +24,14 @@ class ViewsAndVisitorsMapperTest : BaseUnitTest() {
     @Mock lateinit var statsUtils: StatsUtils
     @Mock lateinit var contentDescriptionHelper: ContentDescriptionHelper
     private lateinit var mapper: ViewsAndVisitorsMapper
-    private val thisWeekViews: Long = 564
+    private val thisWeekViews: Long = 543
     private val prevWeekViews: Long = 323
-    private val thisWeekVisitors: Long = 183
+    private val thisWeekVisitors: Long = 174
     private val prevWeekVisitors: Long = 133
-    private val selectedItem = PeriodData("2022-04-19", 21, 9, 3, 0, 2, 0)
+    private val selectedItem = PeriodData("2022-04-18", 78, 28, 3, 0, 13, 2)
     private val viewsTitle = "Views"
     private val visitorsTitle = "Visitors"
-    private val printedDate = "19. 04. 2022"
+    private val printedDate = "18. 04. 2022"
     @Before
     fun setUp() {
         mapper = ViewsAndVisitorsMapper(statsDateFormatter, resourceProvider, statsUtils, contentDescriptionHelper)
@@ -54,9 +53,9 @@ class ViewsAndVisitorsMapperTest : BaseUnitTest() {
         )
 
         Assertions.assertThat(title.value1).isEqualTo(thisWeekViews.toString())
-        Assertions.assertThat(title.unit1).isEqualTo(R.string.stats_views)
+        Assertions.assertThat(title.unit1).isEqualTo(string.stats_views)
         Assertions.assertThat(title.value2).isEqualTo(prevWeekViews.toString())
-        Assertions.assertThat(title.unit2).isEqualTo(R.string.stats_views)
+        Assertions.assertThat(title.unit2).isEqualTo(string.stats_views)
     }
 
     @Test
@@ -71,9 +70,9 @@ class ViewsAndVisitorsMapperTest : BaseUnitTest() {
         )
 
         Assertions.assertThat(title.value1).isEqualTo(thisWeekVisitors.toString())
-        Assertions.assertThat(title.unit1).isEqualTo(R.string.stats_visitors)
+        Assertions.assertThat(title.unit1).isEqualTo(string.stats_visitors)
         Assertions.assertThat(title.value2).isEqualTo(prevWeekVisitors.toString())
-        Assertions.assertThat(title.unit2).isEqualTo(R.string.stats_visitors)
+        Assertions.assertThat(title.unit2).isEqualTo(string.stats_visitors)
     }
 
     @Test
@@ -87,18 +86,21 @@ class ViewsAndVisitorsMapperTest : BaseUnitTest() {
         whenever(contentDescriptionHelper.buildContentDescription(
                 eq(string.stats_views),
                 eq(0)
-        )).thenReturn(viewsContentDescription)
+        )
+        ).thenReturn(viewsContentDescription)
 
         val visitorsContentDescription = "visitors description"
-        whenever(contentDescriptionHelper.buildContentDescription(
-                eq(string.stats_visitors),
-                eq(1)
-        )).thenReturn(visitorsContentDescription)
+        whenever(
+                contentDescriptionHelper.buildContentDescription(
+                        eq(string.stats_visitors),
+                        eq(1)
+                )
+        ).thenReturn(visitorsContentDescription)
 
         val result = mapper.buildChips(onChipSelected, uiState.selectedPosition)
 
-        result.chips[0].assertChip(R.string.stats_views, viewsContentDescription)
-        result.chips[1].assertChip(R.string.stats_visitors, visitorsContentDescription)
+        result.chips[0].assertChip(string.stats_views, viewsContentDescription)
+        result.chips[1].assertChip(string.stats_visitors, visitorsContentDescription)
 
         Assertions.assertThat(result.selectedColumn).isEqualTo(selectedPosition)
         Assertions.assertThat(result.onColumnSelected).isEqualTo(onChipSelected)
@@ -124,8 +126,7 @@ class ViewsAndVisitorsMapperTest : BaseUnitTest() {
                 PeriodData("2022-04-15", 99, 35, 21, 0, 23, 1),
                 PeriodData("2022-04-16", 8, 5, 1, 0, 0, 0),
                 PeriodData("2022-04-17", 7, 4, 0, 0, 0, 0),
-                PeriodData("2022-04-18", 78, 28, 3, 0, 13, 2),
-                PeriodData("2022-04-19", 21, 9, 3, 0, 2, 0)
+                PeriodData("2022-04-18", 78, 28, 3, 0, 13, 2)
         )
     }
 }

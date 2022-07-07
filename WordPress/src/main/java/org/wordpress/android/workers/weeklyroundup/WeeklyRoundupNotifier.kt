@@ -15,6 +15,7 @@ import org.wordpress.android.ui.Organization
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.stats.StatsTimeframe.WEEK
+import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.util.SiteUtilsWrapper
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -29,7 +30,8 @@ class WeeklyRoundupNotifier @Inject constructor(
     private val notificationsTracker: SystemNotificationsTracker,
     private val siteUtils: SiteUtilsWrapper,
     private val weeklyRoundupRepository: WeeklyRoundupRepository,
-    private val appPrefs: AppPrefsWrapper
+    private val appPrefs: AppPrefsWrapper,
+    private val statsUtils: StatsUtils
 ) {
     fun shouldShowNotifications() = accountStore.hasAccessToken() && siteStore.hasSitesAccessedViaWPComRest()
 
@@ -78,13 +80,39 @@ class WeeklyRoundupNotifier @Inject constructor(
                         R.string.weekly_roundup_notification_title,
                         siteUtils.getSiteNameOrHomeURL(site)
                 ),
-                contentText = resourceProvider.getString(
-                        R.string.weekly_roundup_notification_text,
-                        data.views,
-                        data.likes,
-                        data.comments
-                )
+                contentText = buildContentText(data)
         )
+    }
+
+    private fun buildContentText(data: WeeklyRoundupData) = when {
+        data.likes <= 0 && data.comments <= 0 -> {
+            resourceProvider.getString(
+                    R.string.weekly_roundup_notification_text_views_only,
+                    statsUtils.toFormattedString(data.views)
+            )
+        }
+        data.likes > 0 && data.comments <= 0 -> {
+            resourceProvider.getString(
+                    R.string.weekly_roundup_notification_text_views_and_likes,
+                    statsUtils.toFormattedString(data.views),
+                    statsUtils.toFormattedString(data.likes)
+            )
+        }
+        data.likes <= 0 && data.comments > 0 -> {
+            resourceProvider.getString(
+                    R.string.weekly_roundup_notification_text_views_and_comments,
+                    statsUtils.toFormattedString(data.views),
+                    statsUtils.toFormattedString(data.comments)
+            )
+        }
+        else -> {
+            resourceProvider.getString(
+                    R.string.weekly_roundup_notification_text_all,
+                    statsUtils.toFormattedString(data.views),
+                    statsUtils.toFormattedString(data.likes),
+                    statsUtils.toFormattedString(data.comments)
+            )
+        }
     }
 
     companion object {

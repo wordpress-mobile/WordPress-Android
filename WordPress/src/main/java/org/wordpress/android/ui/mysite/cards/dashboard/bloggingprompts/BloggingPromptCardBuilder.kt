@@ -19,7 +19,7 @@ class BloggingPromptCardBuilder @Inject constructor() {
 
         val avatarsTrain = params.bloggingPrompt.respondentsAvatarUrls.map { respondent -> AvatarItem(respondent) }
                 .toMutableList<TrainOfAvatarsItem>()
-                .also { list -> list.add(TrailingLabelTextItem(trailingLabel, R.attr.colorPrimary)) }
+                .also { list -> list.add(TrailingLabelTextItem(trailingLabel, R.attr.colorOnSurface)) }
 
         BloggingPromptCardWithData(
                 prompt = UiStringText(it.text),
