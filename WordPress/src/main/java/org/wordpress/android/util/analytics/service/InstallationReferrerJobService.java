@@ -1,6 +1,5 @@
 package org.wordpress.android.util.analytics.service;
 
-import android.annotation.TargetApi;
 import android.app.job.JobParameters;
 import android.app.job.JobService;
 import android.os.Bundle;
@@ -19,7 +18,6 @@ import org.wordpress.android.util.AppLog.T;
  * https://developer.android.com/guide/components/broadcasts.html#receiving_broadcasts
  * https://developer.android.com/guide/components/broadcasts#effects-on-process-state
  */
-@TargetApi(21)
 public class InstallationReferrerJobService extends JobService implements
         InstallationReferrerServiceLogic.ServiceCompletionListener {
     @Override

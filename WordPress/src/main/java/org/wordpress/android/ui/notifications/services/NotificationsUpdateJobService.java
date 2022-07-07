@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.notifications.services;
 
-import android.annotation.TargetApi;
 import android.app.job.JobParameters;
 import android.app.job.JobService;
 import android.content.Context;
@@ -20,7 +19,6 @@ public class NotificationsUpdateJobService extends JobService
         super.attachBaseContext(LocaleManager.setLocale(newBase));
     }
 
-    @TargetApi(22)
     @Override
     public boolean onStartJob(JobParameters params) {
         String noteId = null;
