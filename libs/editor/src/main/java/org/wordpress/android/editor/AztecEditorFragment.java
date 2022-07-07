@@ -1298,10 +1298,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     }
 
     @Override
-    public void beforeMediaDeleted(AztecAttributes aztecAttributes) {
-    }
-
-    @Override
     public void onMediaDeleted(AztecAttributes aztecAttributes) {
         String localMediaId = aztecAttributes.getValue(ATTR_ID_WP);
         mUploadingMediaProgressMax.remove(localMediaId);
