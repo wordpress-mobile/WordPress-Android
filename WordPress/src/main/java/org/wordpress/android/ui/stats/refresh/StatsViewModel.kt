@@ -207,6 +207,7 @@ class StatsViewModel
             if (statsSectionManager.getSelectedSection() != INSIGHTS) statsSectionManager.setSelectedSection(INSIGHTS)
             updateRevampedInsights()
         }
+        if (statsSectionManager.getSelectedSection() == INSIGHTS) showInsightsUpdateAlert()
     }
 
     private fun showInsightsUpdateAlert() {
@@ -282,7 +283,7 @@ class StatsViewModel
 
         listUseCases[statsSection]?.onListSelected()
 
-        showInsightsUpdateAlert()
+        if (statsSection == INSIGHTS) showInsightsUpdateAlert()
 
         trackSectionSelected(statsSection)
     }
