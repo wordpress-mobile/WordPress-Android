@@ -9,7 +9,6 @@
 20.2
 -----
 * [*] Added heic/heif image format support [https://github.com/wordpress-mobile/WordPress-Android/pull/16773]
-* [*] Block Editor: Image block copies the alt text from the media library when selecting an item [https://github.com/wordpress-mobile/WordPress-Android/pull/16787]
 * [***] Jetpack App: Allow WP.com users to sign in to their browsers by scanning a QR Code in the Jetpack Android App. [https://github.com/wordpress-mobile/WordPress-Android/issues/16481]
 * [*] Fix reader tags cannot be followed in some languages bug [https://github.com/wordpress-mobile/WordPress-Android/pull/16789]
 * [***] Jetpack App: Stats Insights Update. Helps you understand how your content is performing and what’s resonating with your audience. [https://github.com/wordpress-mobile/WordPress-Android/pull/16703]
