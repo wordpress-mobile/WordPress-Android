@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-06-27 14:31:41+0000
+Translation-Revision-Date: 2022-07-07 16:01:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: en_GB
 -->
 <resources>
+    <string name="wp_jetpack_powered">Jetpack powered</string>
     <string name="qrcode_auth_flow_content_description">Image indicating scan log-in code in process</string>
     <string name="qrcode_auth_flow_error_content_description">Image indicating an error</string>
     <string name="qrcode_auth_flow_dismiss_dialog_message">Are you sure you want to continue?</string>

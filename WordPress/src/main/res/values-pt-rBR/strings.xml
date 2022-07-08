@@ -1,11 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-06-24 12:33:08+0000
+Translation-Revision-Date: 2022-07-08 14:35:29+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: pt_BR
 -->
 <resources>
+    <string name="wp_jetpack_powered">Recurso do Jetpack</string>
+    <string name="qrcode_auth_flow_content_description">Imagem indicando que a verificação do código de acesso está em andamento</string>
+    <string name="qrcode_auth_flow_error_content_description">Imagem indicando um erro</string>
+    <string name="qrcode_auth_flow_dismiss_dialog_message">Tem certeza de que deseja continuar?</string>
+    <string name="qrcode_auth_flow_dismiss_dialog_title">Sair do fluxo de verificação do código de acesso</string>
+    <string name="qrcode_auth_flow_error_auth_failed_subtitle">Não foi possível acessar usando esse código. Toque no botão de verificação novamente para reanalisar o código.</string>
+    <string name="qrcode_auth_flow_error_auth_failed_title">Falha na autenticação</string>
+    <string name="qrcode_auth_flow_error_expired_subtitle">Esse código de acesso expirou. Toque no botão de verificação novamente para reanalisar o código.</string>
+    <string name="qrcode_auth_flow_error_expired_title">Código de acesso expirado</string>
+    <string name="qrcode_auth_flow_error_invalid_data_subtitle">O código de acesso que foi verificado não pôde ser validado. Toque no botão de verificação novamente para reanalisar o código.</string>
+    <string name="qrcode_auth_flow_error_invalid_data_title">Não foi possível validar o código de acesso</string>
+    <string name="qrcode_auth_flow_error_no_connection_subtitle">É necessário uma conexão à Internet para verificar os códigos de acesso</string>
+    <string name="qrcode_auth_flow_error_no_connection_title">Sem conexão</string>
+    <string name="qrcode_auth_flow_scan_again">Verificar novamente</string>
+    <string name="qrcode_auth_flow_dismiss">Ignorar</string>
+    <string name="qrcode_auth_flow_done_subtitle">Toque em ignorar e volte para o seu navegador da web para continuar.</string>
+    <string name="qrcode_auth_flow_done_title">Você efetuou login.</string>
+    <string name="qrcode_auth_flow_validated_primary_action">Sim, fazer login</string>
+    <string name="qrcode_auth_flow_validated_subtitle">Leia apenas códigos QR retirados diretamente do seu navegador da web. Nunca leia um código enviado a você por outra pessoa.</string>
+    <string name="qrcode_auth_flow_validated_default_title">Você está tentando acessar no seu navegador da web perto de %1$s?</string>
+    <string name="qrcode_auth_flow_validated_title">Você está tentando acessar em %1$s perto de %2$s?</string>
+    <string name="stats_revamp_v2_intro_secondary_button_text">Lembre-me depois</string>
+    <string name="stats_revamp_v2_intro_primary_button_text">Tente agora</string>
+    <string name="stats_revamp_v2_intro_content_note">Saiba mais em Meu site &gt; Estatísticas &gt; Informações</string>
+    <string name="stats_revamp_v2_intro_content">As informações ajudam você a entender o desempenho do seu conteúdo e o que está atraindo o seu público.</string>
+    <string name="stats_revamp_v2_intro_header_title">Atualização de informações</string>
+    <string name="stats_insights_followers_guide_card">💡Comentar em outros blogs é uma ótima maneira de conquistar seguidores para o seu novo site.</string>
+    <string name="stats_insights_comments_guide_card">💡Toque em \'VISUALIZAR MAIS\' para ver seus principais comentaristas.</string>
+    <string name="stats_insights_latest_post_empty">Confira novamente quando você tiver feito seu primeiro post!</string>
+    <string name="stats_insights_views_and_visitors_visitors_empty_state">Confira nossas principais dicas para aumentar suas visualizações e tráfego %1$s</string>
+    <string name="stats_view_publicize">Conexões nas redes sociais</string>
+    <string name="stats_action_card_schedule_post_message">✍️ Agende para publicar seus rascunhos no melhor momento para alcançar seu público.</string>
+    <string name="stats_action_card_blogging_reminders_message">💡Publicar de forma consistente é uma ótima maneira de atrair seu público. Adicione um lembrete para você manter o ritmo.</string>
+    <string name="stats_action_card_grow_audience_message">💡Aumente o nível de seu conteúdo com nosso curso de &lt;i&gt;Introdução à arte de publicar&lt;/i&gt; conduzido por especialistas.</string>
     <string name="blogging_prompts_onboarding_prompts_loading">As sugestões de publicação estão sendo carregadas. Aguarde um momento e tente novamente.</string>
     <string name="hpp_bottom_helper_text">Não consegue decidir? Você pode mudar o tema a qualquer momento.</string>
     <string name="hpp_recommended_default_vertical">Blogs</string>

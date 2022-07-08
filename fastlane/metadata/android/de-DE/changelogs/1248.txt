@@ -1,0 +1,3 @@
+20.2:
+- Ab sofort kannst du HEIC- und HEIF-Bilder über die Medienauswahl auf deine Website hochladen. 
+- Wir haben einen Fehler behoben, durch den Sonderzeichen bei Themen im Reader in anderen Sprachen entfernt wurden.

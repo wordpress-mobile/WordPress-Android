@@ -1,29 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-07-04 09:54:08+0000
+Translation-Revision-Date: 2022-07-08 12:35:38+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: nl
 -->
 <resources>
+    <string name="wp_jetpack_powered">Door Jetpack aangedreven</string>
     <string name="qrcode_auth_flow_content_description">Afbeelding waarop een lopende inlogcodescan staat weergegeven</string>
     <string name="qrcode_auth_flow_error_content_description">Afbeelding waarop een fout staat weergegeven</string>
     <string name="qrcode_auth_flow_dismiss_dialog_message">Weet je zeker dat je wilt doorgaan?</string>
     <string name="qrcode_auth_flow_dismiss_dialog_title">Scannen van inlogcode sluiten</string>
     <string name="qrcode_auth_flow_error_auth_failed_subtitle">We konden je niet met deze inlogcode inloggen. Tik op \'Opnieuw scannen\' om de code opnieuw te scannen.</string>
+    <string name="qrcode_auth_flow_error_auth_failed_title">Authenticatie mislukt</string>
     <string name="qrcode_auth_flow_error_expired_subtitle">Deze inlogcode is verlopen. Tik op \'Opnieuw scannen\' om de code opnieuw te scannen.</string>
     <string name="qrcode_auth_flow_error_expired_title">Verlopen inlogcode</string>
     <string name="qrcode_auth_flow_error_invalid_data_subtitle">De gescande inlogcode kon niet worden gevalideerd. Tik op \'Opnieuw scannen\' om de code opnieuw te scannen.</string>
     <string name="qrcode_auth_flow_error_invalid_data_title">Kon de inlogcode niet valideren</string>
     <string name="qrcode_auth_flow_error_no_connection_subtitle">Om inlogcodes te scannen heb je een actieve internetverbinding nodig</string>
+    <string name="qrcode_auth_flow_error_no_connection_title">Geen verbinding</string>
     <string name="qrcode_auth_flow_scan_again">Opnieuw scannen</string>
     <string name="qrcode_auth_flow_dismiss">Sluiten</string>
     <string name="qrcode_auth_flow_done_subtitle">Tik op sluiten en ga terug naar je webbrowser om door te gaan.</string>
+    <string name="qrcode_auth_flow_done_title">Je bent ingelogd!</string>
     <string name="qrcode_auth_flow_validated_primary_action">Ja, ik wil inloggen</string>
     <string name="qrcode_auth_flow_validated_subtitle">Scan alleen QR-codes die rechtstreeks uit je webbrowser komen. Scan nooit een code die je door iemand anders is toegestuurd.</string>
     <string name="qrcode_auth_flow_validated_default_title">Probeer je in te loggen bij je webbrowser in de buurt van %1$s?</string>
     <string name="qrcode_auth_flow_validated_title">Probeer je in te loggen bij %1$s in de buurt van %2$s?</string>
     <string name="stats_revamp_v2_intro_secondary_button_text">Herinner mij hier later aan</string>
+    <string name="stats_revamp_v2_intro_primary_button_text">Probeer het nu</string>
     <string name="stats_revamp_v2_intro_content_note">Ga voor meer informatie naar Mijn site &gt; Statistieken &gt; Inzichten</string>
     <string name="stats_revamp_v2_intro_content">Inzichten geven je meer zicht op hoe je content presteert en wat je publiek leuk vindt.</string>
     <string name="stats_revamp_v2_intro_header_title">Update aan inzichten</string>
