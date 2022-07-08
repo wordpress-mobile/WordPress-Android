@@ -1,5 +1,0 @@
-20.1:
-- Receba sugestões de publicação todos os dias para inspirar seus posts.
-- Melhoramos a tela de seleção de design do site no processo de criação.
-- Os links do WordPress abrem no aplicativo e não no navegador padrão.
-- Os pontos de foco do Início rápido estão nos locais corretos para os usuários de idiomas em que se escreve da direita para a esquerda.
