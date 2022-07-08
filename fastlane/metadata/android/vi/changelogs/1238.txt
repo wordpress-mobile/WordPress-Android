@@ -1,4 +1,0 @@
-20.1:
-- Cải thiện màn hình lựa chọn thiết kế trang web trong quá trình Tạo trang web.
-- Khi bạn nhấp vào một liên kết WordPress, nó sẽ mở ra trong ứng dụng thay vì trình duyệt mặc định của bạn.
-- Di chuyển các điểm lấy nét của Quick Start đến các điểm chính xác cho người dùng ngôn ngữ từ phải sang trái.
