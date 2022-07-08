@@ -1298,16 +1298,17 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     }
 
     @Override
-    public void beforeMediaDeleted(AztecAttributes aztecAttributes) {
-    }
-
-    @Override
     public void onMediaDeleted(AztecAttributes aztecAttributes) {
         String localMediaId = aztecAttributes.getValue(ATTR_ID_WP);
         mUploadingMediaProgressMax.remove(localMediaId);
         if (!TextUtils.isEmpty(localMediaId)) {
             mEditorFragmentListener.onMediaDeleted(localMediaId);
         }
+    }
+
+    @Override
+    public void beforeMediaDeleted(@NonNull AztecAttributes aztecAttributes) {
+        // noop implementation for shared interface with block editor
     }
 
     private static class MediaPredicate implements AztecText.AttributePredicate, Parcelable {
