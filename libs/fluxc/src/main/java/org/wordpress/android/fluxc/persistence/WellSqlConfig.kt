@@ -1874,7 +1874,7 @@ open class WellSqlConfig : DefaultWellConfig {
                         "AND TASK_TYPE='customize';")
                 }
                 177 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
-                    db.execSQL("ALTER TABLE WCSettingsModel ADD COUPONS_ENABLED BOOLEAN")
+                    db.execSQL("ALTER TABLE WCSettingsModel ADD COUPONS_ENABLED INTEGER")
                 }
             }
         }
