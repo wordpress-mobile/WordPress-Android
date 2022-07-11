@@ -22,6 +22,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 import static org.wordpress.android.support.WPSupportUtils.clickOn;
 import static org.wordpress.android.support.WPSupportUtils.getTranslatedString;
+import static org.wordpress.android.support.WPSupportUtils.idleFor;
 import static org.wordpress.android.support.WPSupportUtils.isElementDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.longClickOn;
 import static org.wordpress.android.support.WPSupportUtils.selectItemWithTitleInTabLayout;
@@ -89,9 +90,16 @@ public class MySitesPage {
         clickItemWithText(R.string.backup);
     }
 
-    public void goToStats() {
+    public StatsPage goToStats() {
         goToMenuTab();
         clickItemWithText(R.string.stats);
+
+        waitForElementToBeDisplayedWithoutFailure(R.id.tabLayout);
+
+        // Wait for the stats to load
+        idleFor(8000);
+
+        return new StatsPage();
     }
 
     public void goToMedia() {
@@ -109,21 +117,6 @@ public class MySitesPage {
         (new SitePickerPage()).chooseSiteWithURL(siteUrl);
 
         return this;
-    }
-
-    // Either this or goToStats should be removed after making the implementation uniform.
-    public StatsPage clickStats() {
-        clickItemWithText(R.string.stats);
-        waitForElementToBeDisplayedWithoutFailure(
-                onView(withId(R.id.tabLayout))
-        );
-
-        // Stats are opened with the last selected tab active (or `Insights` by default)
-        // Since we don't know what was the last used tab, we're using a "dumb" wait
-        // instead of the conditional wait (e.g. waiting for a certain tab element to appear).
-        WPSupportUtils.sleep();
-
-        return new StatsPage();
     }
 
     private void clickItemWithText(int stringResId) {

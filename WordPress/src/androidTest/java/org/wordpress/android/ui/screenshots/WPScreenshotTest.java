@@ -171,11 +171,6 @@ public class WPScreenshotTest extends BaseTest {
         clickOn(R.id.nav_sites);
         (new MySitesPage()).goToStats();
 
-        waitForElementToBeDisplayedWithoutFailure(R.id.image_thumbnail);
-
-        // Wait for the stats to load
-        idleFor(8000);
-
         swipeToAvoidGrayOverlay(R.id.statsPager);
 
         if (isElementDisplayed(R.id.button_negative)) {
@@ -210,7 +205,6 @@ public class WPScreenshotTest extends BaseTest {
 
         waitForAtLeastOneElementWithIdToBeDisplayed(R.id.note_content_container);
         waitForImagesOfTypeWithPlaceholder(R.id.note_avatar, ImageType.AVATAR);
-
 
         // Wait for the images to load
         idleFor(6000);

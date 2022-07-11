@@ -141,7 +141,10 @@ public class JPScreenshotTest extends BaseTest {
     }
 
     private void navigateStats() {
-        moveToStats();
+        // Click on the "Sites" tab in the nav, then click the "Menu" tab, then choose "Stats"
+        clickOn(R.id.nav_sites);
+        (new MySitesPage()).goToStats();
+
         swipeToAvoidGrayOverlay(R.id.statsPager);
 
         if (isElementDisplayed(R.id.button_negative)) {
@@ -190,18 +193,6 @@ public class JPScreenshotTest extends BaseTest {
         waitForElementToBeDisplayedWithoutFailure(R.id.log_list_view);
 
         // Wait for backup to load
-        idleFor(8000);
-    }
-
-    private void moveToStats() {
-        // Click on the "Sites" tab in the nav, then choose "Stats"
-        clickOn(R.id.nav_sites);
-        MySitesPage.goToMenuTab();
-        (new MySitesPage()).goToStats();
-
-        waitForElementToBeDisplayedWithoutFailure(R.id.image_thumbnail);
-
-        // Wait for the stats to load
         idleFor(8000);
     }
 
