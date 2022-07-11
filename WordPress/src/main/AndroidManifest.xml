@@ -257,17 +257,6 @@
             android:theme="@style/WordPress.Stories.Immersive">
         </activity>
 
-        <!-- Workaround for old launcher icon pointing to .ui.posts.PostsActivity -->
-        <activity-alias
-            android:name=".ui.posts.PostsActivity"
-            android:enabled="true"
-            android:targetActivity=".ui.WPLaunchActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>
-        </activity-alias>
-
         <activity
             android:name=".ui.posts.PostsListActivity"
             android:launchMode="singleTop"
@@ -1001,16 +990,6 @@
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
-            </intent-filter>
-        </service>
-        <!-- FirebaseInstanceIdService performs security checks at runtime,
-        no need for explicit permissions despite exported="true" -->
-        <service
-            android:name=".push.InstanceIDService"
-            android:exported="true"
-            tools:ignore="ExportedService">
-            <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
 
