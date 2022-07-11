@@ -14,7 +14,6 @@ import org.junit.Test;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.e2e.pages.MySitesPage;
-import org.wordpress.android.e2e.pages.SitePickerPage;
 import org.wordpress.android.support.BaseTest;
 import org.wordpress.android.support.DemoModeEnabler;
 import org.wordpress.android.ui.WPLaunchActivity;
@@ -77,13 +76,7 @@ public class JPScreenshotTest extends BaseTest {
     }
 
     public void navigateMySite() {
-        // Click on the "Sites" tab and take a screenshot
-        clickOn(R.id.nav_sites);
-
-        // Choose "Switch Site"
-        clickOn(R.id.switch_site);
-
-        (new SitePickerPage()).chooseSiteWithURL("yourjetpack.blog");
+        (new MySitesPage()).switchToSite("yourjetpack.blog");
 
         waitForElementToBeDisplayedWithoutFailure(R.id.recycler_view);
 
