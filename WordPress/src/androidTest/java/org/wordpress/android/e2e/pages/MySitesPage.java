@@ -10,7 +10,6 @@ import androidx.test.espresso.ViewInteraction;
 
 import org.hamcrest.Matcher;
 import org.wordpress.android.R;
-import org.wordpress.android.support.WPSupportUtils;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
