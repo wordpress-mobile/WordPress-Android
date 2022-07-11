@@ -1,11 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-06-21 18:54:09+0000
+Translation-Revision-Date: 2022-06-30 13:54:10+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.1
 Language: ko_KR
 -->
 <resources>
+    <string name="qrcode_auth_flow_content_description">진행 중인 로그인 코드 스캔을 나타내는 이미지</string>
+    <string name="qrcode_auth_flow_error_content_description">오류를 나타내는 이미지</string>
+    <string name="qrcode_auth_flow_dismiss_dialog_message">계속하시겠나요?</string>
+    <string name="qrcode_auth_flow_dismiss_dialog_title">로그인 코드 스캔 흐름 종료</string>
+    <string name="qrcode_auth_flow_error_auth_failed_subtitle">이 로그인 코드를 사용하여 로그인할 수 없습니다. 다시 스캔 버튼을 눌러 코드를 다시 스캔하세요.</string>
+    <string name="qrcode_auth_flow_error_auth_failed_title">인증 실패</string>
+    <string name="qrcode_auth_flow_error_expired_subtitle">이 로그인 코드는 만료되었습니다. 다시 스캔 버튼을 눌러 코드를 다시 스캔하세요.</string>
+    <string name="qrcode_auth_flow_error_expired_title">만료된 로그인 코드</string>
+    <string name="qrcode_auth_flow_error_invalid_data_subtitle">스캔한 로그인 코드의 유효성을 검사할 수 없습니다. 다시 스캔 버튼을 눌러 코드를 다시 스캔하세요.</string>
+    <string name="qrcode_auth_flow_error_invalid_data_title">로그인 코드 유효성을 검사할 수 없습니다.</string>
+    <string name="qrcode_auth_flow_error_no_connection_subtitle">로그인 코드를 스캔하려면 활성 인터넷 연결이 필요합니다.</string>
+    <string name="qrcode_auth_flow_error_no_connection_title">연결 없음</string>
+    <string name="qrcode_auth_flow_scan_again">다시 스캔</string>
+    <string name="qrcode_auth_flow_dismiss">해제</string>
+    <string name="qrcode_auth_flow_done_subtitle">계속하려면 해제를 눌러 웹 브라우저로 다시 이동하세요.</string>
+    <string name="qrcode_auth_flow_done_title">로그인되었습니다!</string>
+    <string name="qrcode_auth_flow_validated_primary_action">예. 로그인하겠습니다.</string>
+    <string name="qrcode_auth_flow_validated_subtitle">웹 브라우저에서 직접 가져온 QR 코드만 스캔하세요. 다른 사람이 보낸 코드는 스캔하지 마세요.</string>
+    <string name="qrcode_auth_flow_validated_default_title">%1$s 근처에서 웹 브라우저 로그인을 시도하는 중이신가요?</string>
+    <string name="qrcode_auth_flow_validated_title">%2$s 근처에서 %1$s 로그인을 시도하는 중이신가요?</string>
+    <string name="stats_revamp_v2_intro_secondary_button_text">나중에 다시 알림</string>
+    <string name="stats_revamp_v2_intro_primary_button_text">지금 시도</string>
+    <string name="stats_revamp_v2_intro_content_note">내 사이트 &gt; 통계 &gt; 인사이트에서 더 알아보기</string>
+    <string name="stats_revamp_v2_intro_content">인사이트는 콘텐츠의 성과와 잠재 고객이 공감하는 내용을 이해하는 데 도움이 됩니다.</string>
+    <string name="stats_revamp_v2_intro_header_title">인사이트 업데이트</string>
+    <string name="stats_insights_followers_guide_card">💡다른 블로그에서 댓글을 다는 것은 새 사이트에 대한 관심과 팔로워를 형성하는 훌륭한 방법입니다.</string>
+    <string name="stats_insights_comments_guide_card">💡\"더 보기\"를 눌러 상위 댓글 작성자를 참조하세요.</string>
+    <string name="stats_insights_latest_post_empty">언제 첫 번째 글을 발행했는지 다시 확인하세요!</string>
+    <string name="stats_insights_views_and_visitors_visitors_empty_state">조회수와 트래픽 %1$s을(를) 늘리는 상위 팁을 확인하세요.</string>
+    <string name="stats_view_publicize">소셜 미디어 연결</string>
+    <string name="stats_action_card_schedule_post_message">✍️ 잠재 고객에게 도달하기에 가장 적합한 시간에 임시글이 발행되도록 예약하세요.</string>
+    <string name="stats_action_card_blogging_reminders_message">💡일관되게 글을 작성하는 것은 잠재 고객을 형성하는 훌륭한 방법입니다. 순조롭게 진행되도록 알림을 추가하세요.</string>
+    <string name="stats_action_card_grow_audience_message">💡전문가가 강의하는 &lt;i&gt;블로깅 소개&lt;/i&gt; 과정을 통해 블로깅 수준을 더 빠르게 높이세요.</string>
     <string name="blogging_prompts_onboarding_prompts_loading">블로깅 프롬프트를 로드하고 있습니다. 잠시 후에 다시 시도하세요.</string>
     <string name="hpp_bottom_helper_text">결정할 수 없나요? 언제든지 테마를 변경할 수 있습니다.</string>
     <string name="hpp_recommended_default_vertical">블로깅</string>

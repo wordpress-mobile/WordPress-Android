@@ -1,11 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-06-24 12:30:40+0000
+Translation-Revision-Date: 2022-06-30 15:54:08+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: fr
 -->
 <resources>
+    <string name="qrcode_auth_flow_content_description">Image indiquant que le scan du code de connexion est en cours</string>
+    <string name="qrcode_auth_flow_error_content_description">Image indiquant une erreur</string>
+    <string name="qrcode_auth_flow_dismiss_dialog_message">Voulez-vous vraiment continuer ?</string>
+    <string name="qrcode_auth_flow_dismiss_dialog_title">Quitter le flux Scanner le code de connexion</string>
+    <string name="qrcode_auth_flow_error_auth_failed_subtitle">Nous n’avons pas réussi à vous connecter avec ce code de connexion. Appuyez sur Scanner à nouveau pour rescanner le code.</string>
+    <string name="qrcode_auth_flow_error_auth_failed_title">Échec de l’authentification</string>
+    <string name="qrcode_auth_flow_error_expired_subtitle">Ce code de connexion a expiré. Appuyez sur Scanner à nouveau pour rescanner le code.</string>
+    <string name="qrcode_auth_flow_error_expired_title">Code de connexion expiré</string>
+    <string name="qrcode_auth_flow_error_invalid_data_subtitle">Le code de connexion scanné n’a pas pu être validé. Appuyez sur Scanner à nouveau pour rescanner le code.</string>
+    <string name="qrcode_auth_flow_error_invalid_data_title">Impossible de valider le code de connexion</string>
+    <string name="qrcode_auth_flow_error_no_connection_subtitle">Une connexion Internet active est obligatoire pour scanner les codes de connexion</string>
+    <string name="qrcode_auth_flow_error_no_connection_title">Pas de connexion</string>
+    <string name="qrcode_auth_flow_scan_again">Scanner à nouveau</string>
+    <string name="qrcode_auth_flow_dismiss">Ignorer</string>
+    <string name="qrcode_auth_flow_done_subtitle">Appuyez sur Ignorer et revenez à votre navigateur Web pour continuer.</string>
+    <string name="qrcode_auth_flow_done_title">Connexion établie.</string>
+    <string name="qrcode_auth_flow_validated_primary_action">Oui, se connecter</string>
+    <string name="qrcode_auth_flow_validated_subtitle">Scannez uniquement les codes QR provenant directement de votre navigateur Web. Ne scannez jamais un code envoyé par une tierce personne.</string>
+    <string name="qrcode_auth_flow_validated_default_title">Essayez-vous de vous connecter à votre navigateur Web près de %1$s ?</string>
+    <string name="qrcode_auth_flow_validated_title">Essayez-vous de vous connecter à %1$s près de %2$s ?</string>
+    <string name="stats_revamp_v2_intro_secondary_button_text">Me rappeler ultérieurement</string>
+    <string name="stats_revamp_v2_intro_primary_button_text">Essayer maintenant</string>
+    <string name="stats_revamp_v2_intro_content_note">Lire la suite dans Mon site &gt; Stats &gt; Tendances.</string>
+    <string name="stats_revamp_v2_intro_content">L’option Tendances vous aident à identifier les performances de votre contenu et ce qui touche votre audience.</string>
+    <string name="stats_revamp_v2_intro_header_title">Mise à jour de Tendances</string>
+    <string name="stats_insights_followers_guide_card">💡 L’ajout de commentaires sur d’autres blogs est un bon moyen d’attirer l’attention et d’obtenir des abonnés pour votre nouveau site.</string>
+    <string name="stats_insights_comments_guide_card">💡 Appuyez sur « VOIR PLUS » pour voir les utilisateurs qui ont le plus commenté.</string>
+    <string name="stats_insights_latest_post_empty">Revenez lorsque vous aurez publié votre premier article !</string>
+    <string name="stats_insights_views_and_visitors_visitors_empty_state">Consultez nos conseils pratiques pour augmenter vos vues et votre trafic %1$s</string>
+    <string name="stats_view_publicize">Connexions aux réseaux sociaux</string>
+    <string name="stats_action_card_schedule_post_message">✍️ Programmez la publication de vos brouillons au meilleur moment pour atteindre votre audience.</string>
+    <string name="stats_action_card_blogging_reminders_message">💡 Publier régulièrement est un bon moyen de consolider votre audience. Ajoutez un rappel pour vous tenir à jour.</string>
+    <string name="stats_action_card_grow_audience_message">💡 Améliorez rapidement votre blogging en suivant notre cours &lt;i&gt;Introduction au blogging&lt;/i&gt; animé par des experts.</string>
     <string name="blogging_prompts_onboarding_prompts_loading">Chargement des invites pour bloguer. Veuillez patienter un instant, puis réessayer.</string>
     <string name="hpp_bottom_helper_text">Vous n’arrivez pas à choisir ? Vous pouvez modifier le thème à tout moment.</string>
     <string name="hpp_recommended_default_vertical">Blogging</string>

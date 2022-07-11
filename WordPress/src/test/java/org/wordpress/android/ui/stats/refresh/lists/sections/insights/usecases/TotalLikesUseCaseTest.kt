@@ -76,11 +76,9 @@ class TotalLikesUseCaseTest : BaseUnitTest() {
                 latestPostStore,
                 statsSiteProvider,
                 resourceProvider,
-                statsDateFormatter,
                 totalStatsMapper,
                 analyticsTrackerWrapper,
-                statsWidgetUpdaters,
-                localeManagerWrapper
+                statsWidgetUpdaters
         )
         whenever(statsSiteProvider.siteModel).thenReturn(site)
         whenever(totalStatsMapper.buildTotalLikesValue(any())).thenReturn(valueWithChart)
@@ -131,27 +129,6 @@ class TotalLikesUseCaseTest : BaseUnitTest() {
         verify(analyticsTrackerWrapper, never()).track(eq(STATS_TOTAL_LIKES_ERROR), any<Map<String, *>>())
     }
 
-    @Test
-    fun `tracks incorrect data when the last stats item is at least 2 days old`() = test {
-        val forced = false
-        setupCalendar(2)
-        whenever(store.fetchVisits(site, DAYS, limitMode, forced)).thenReturn(OnStatsFetched(model))
-
-        loadData(true, forced)
-
-        verify(analyticsTrackerWrapper).track(
-                STATS_TOTAL_LIKES_ERROR,
-                mapOf(
-                        "stats_last_date" to "2020-12-13",
-                        "stats_current_date" to "2020-12-15",
-                        "stats_age_in_days" to 2,
-                        "is_jetpack_connected" to false,
-                        "is_atomic" to false,
-                        "action_source" to "remote"
-                )
-        )
-    }
-
     private fun assertTitle(item: BlockListItem) {
         assertThat(item.type).isEqualTo(TITLE_WITH_MORE)
         assertThat((item as TitleWithMore).textResource).isEqualTo(R.string.stats_view_total_likes)
@@ -176,11 +153,5 @@ class TotalLikesUseCaseTest : BaseUnitTest() {
         val lastItemDay = todayDay - ageOfLastStatsItemInDays
         lastItemAge.set(Calendar.DAY_OF_MONTH, lastItemDay)
         lastItemAge.set(Calendar.HOUR_OF_DAY, 22)
-        whenever(localeManagerWrapper.getCurrentCalendar()).then {
-            Calendar.getInstance().apply { this.time = today.time }
-        }
-        whenever(statsDateFormatter.parseStatsDate(any(), any())).thenReturn(lastItemAge.time)
-        whenever(statsDateFormatter.printStatsDate(lastItemAge.time)).thenReturn("2020-12-$lastItemDay")
-        whenever(statsDateFormatter.printStatsDate(today.time)).thenReturn("2020-12-$todayDay")
     }
 }

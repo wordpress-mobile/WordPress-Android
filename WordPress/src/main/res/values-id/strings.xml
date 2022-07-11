@@ -1,11 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-06-19 00:06:30+0000
+Translation-Revision-Date: 2022-06-30 09:54:08+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: id
 -->
 <resources>
+    <string name="qrcode_auth_flow_content_description">Gambar menunjukkan pemindaian kode login sedang berlangsung</string>
+    <string name="qrcode_auth_flow_error_content_description">Gambar menunjukkan terjadinya error</string>
+    <string name="qrcode_auth_flow_dismiss_dialog_message">Anda yakin ingin melanjutkan?</string>
+    <string name="qrcode_auth_flow_dismiss_dialog_title">Alur Keluar Pindai Kode Login</string>
+    <string name="qrcode_auth_flow_error_auth_failed_subtitle">Tidak dapat login menggunakan kode ini. Ketuk tombol Pindai Lagi untuk memindai ulang kode.</string>
+    <string name="qrcode_auth_flow_error_auth_failed_title">Autentikasi Gagal</string>
+    <string name="qrcode_auth_flow_error_expired_subtitle">Kode login telah kedaluwarsa. Ketuk tombol Pindai Lagi untuk memindai ulang kode.</string>
+    <string name="qrcode_auth_flow_error_expired_title">Kode login kedaluwarsa</string>
+    <string name="qrcode_auth_flow_error_invalid_data_subtitle">Kode login yang dipindai tidak dapat divalidasi. Ketuk tombol Pindai Lagi untuk memindai ulang kode.</string>
+    <string name="qrcode_auth_flow_error_invalid_data_title">Tidak dapat memvalidasi kode login</string>
+    <string name="qrcode_auth_flow_error_no_connection_subtitle">Diperlukan koneksi internet yang aktif untuk memindai kode login</string>
+    <string name="qrcode_auth_flow_error_no_connection_title">Tidak ada koneksi.</string>
+    <string name="qrcode_auth_flow_scan_again">Pindai Lagi</string>
+    <string name="qrcode_auth_flow_dismiss">Tutup</string>
+    <string name="qrcode_auth_flow_done_subtitle">Ketuk tutup dan kembali ke browser web Anda untuk melanjutkan.</string>
+    <string name="qrcode_auth_flow_done_title">Anda sudah login!</string>
+    <string name="qrcode_auth_flow_validated_primary_action">Ya, saya ingin login</string>
+    <string name="qrcode_auth_flow_validated_subtitle">Hanya pindai kode QR yang diambil langsung dari browser web Anda. Jangan pindai kode yang dikirimkan oleh orang lain.</string>
+    <string name="qrcode_auth_flow_validated_default_title">Apakah Anda mencoba login melalui browser web di sekitar %1$s?</string>
+    <string name="qrcode_auth_flow_validated_title">Apakah Anda mencoba login ke %1$s di sekitar %2$s</string>
+    <string name="stats_revamp_v2_intro_secondary_button_text">Ingatkan saya nanti</string>
+    <string name="stats_revamp_v2_intro_primary_button_text">Coba sekarang</string>
+    <string name="stats_revamp_v2_intro_content_note">Pelajari lebih lanjut di Situs Saya &gt; Statistik &gt; Wawasan.</string>
+    <string name="stats_revamp_v2_intro_content">Wawasan membantu memahami seberapa laris konten Anda dan apa yang disukai pengunjung situs Anda.</string>
+    <string name="stats_revamp_v2_intro_header_title">Wawasan terbaru</string>
+    <string name="stats_insights_followers_guide_card">💡Cobalah memberikan komentar di blog lain untuk menarik perhatian dan pengikut ke situs baru Anda.</string>
+    <string name="stats_insights_comments_guide_card">💡Ketuk \'LIHAT LEBIH BANYAK\' untuk melihat komentator teratas Anda.</string>
+    <string name="stats_insights_latest_post_empty">Periksa lagi setelah Anda memposkan pos pertama Anda!</string>
+    <string name="stats_insights_views_and_visitors_visitors_empty_state">Cek tips terbaik kami untuk meningkatkan pratinjau dan kunjungan Anda %1$s</string>
+    <string name="stats_view_publicize">Koneksi Sosial Media</string>
+    <string name="stats_action_card_schedule_post_message">✍️ Jadwalkan draf Anda untuk diposkan di waktu ramai untuk mendapatkan lebih banyak pengunjung.</string>
+    <string name="stats_action_card_blogging_reminders_message">💡Memposkan secara konsisten membantu Anda menarik lebih banyak pengunjung. Tambahkan pengingat untuk menjaga konsistensi.</string>
+    <string name="stats_action_card_grow_audience_message">💡Tingkatkan kemampuan blog Anda lebih cepat dengan pelatihan&lt;i&gt; Pengenalan Blogging&lt;/i&gt; dari para ahli.</string>
     <string name="blogging_prompts_onboarding_prompts_loading">Prompt Blogging sedang dimuat. Harap tunggu beberapa saat lalu coba lagi.</string>
     <string name="hpp_bottom_helper_text">Bingung memilih? Anda dapat mengganti tema kapan saja.</string>
     <string name="hpp_recommended_default_vertical">Penulisan Blog</string>

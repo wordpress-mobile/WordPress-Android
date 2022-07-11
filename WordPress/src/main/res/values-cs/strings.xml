@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-05-27 08:19:45+0000
+Translation-Revision-Date: 2022-07-05 20:18:47+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.1
 Language: cs_CZ
 -->
 <resources>
+    <string name="qrcode_auth_flow_content_description">Obrázek označující probíhající skenování přihlašovacího kódu</string>
+    <string name="qrcode_auth_flow_error_content_description">Obrázek označující chybu</string>
+    <string name="qrcode_auth_flow_dismiss_dialog_message">Jste si jistý, že chcete pokračovat?</string>
+    <string name="qrcode_auth_flow_dismiss_dialog_title">Ukončit tok přihlašovacích kódů skenování</string>
+    <string name="qrcode_auth_flow_error_auth_failed_subtitle">Nepodařilo se vás přihlásit pomocí tohoto přihlašovacího kódu. Klepnutím na tlačítko Skenovat znovu kód znovu naskenujte.</string>
     <string name="blogging_prompts_notification_dismiss">Odmítnout</string>
     <string name="blogging_prompts_answer_prompt_notification_answer_action">Odpověď</string>
     <string name="blogging_prompts_answer_prompt_notification_title">Denní výzva</string>
@@ -18,6 +23,10 @@ Language: cs_CZ
     <string name="photo_picker_media_thumbnail_content_description">Náhled mediálních souborů</string>
     <string name="stats_insights_popular_title">🔥 Nejoblíbenější čas</string>
     <string name="stats_insights_views_and_visitors_tooltip_count">%1$s %2$s</string>
+    <string name="stats_insights_views_and_visitors_visitors_negative">Návštěvníci za tento týden jsou o %1$s nižší než v předchozím týdnu.</string>
+    <string name="stats_insights_views_and_visitors_visitors_positive">Vaši návštěvníci za tento týden jsou o %1$s vyšší než v předchozím týdnu.</string>
+    <string name="stats_insights_views_and_visitors_views_negative">Vaše zhlédnutí za tento týden jsou o %1$s nižší než v předchozím týdnu.</string>
+    <string name="stats_insights_views_and_visitors_views_positive">Vaše zhlédnutí za tento týden jsou o %1$s vyšší než v předchozím týdnu.</string>
     <string name="stats_timeframe_previous_week">Minulý týden</string>
     <string name="stats_timeframe_this_week">Tento týden</string>
     <string name="scan_vault_press_active_on_site_button_text">Přejít na nástěnku</string>
@@ -805,6 +814,7 @@ Language: cs_CZ
     <string name="hpp_error_title">Rozložení nejsou k dispozici v režimu offline</string>
     <string name="hpp_error_subtitle">Až budete znovu online, klepněte na opakovat.</string>
     <string name="hpp_retry_error">Zkontrolujte prosím připojení k internetu a zkuste to znovu.</string>
+    <string name="hpp_choose_error">Při výběru designu došlo k chybě.</string>
     <string name="dialog_discard_story_title_edit">Zrušit změny?</string>
     <string name="dialog_discard_story_message_edit">Jakékoli provedené změny nebudou uloženy.</string>
     <string name="dialog_discard_story_ok_button_edit">Zahodit</string>
