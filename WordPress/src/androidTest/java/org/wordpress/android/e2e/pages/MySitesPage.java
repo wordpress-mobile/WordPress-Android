@@ -3,6 +3,8 @@ package org.wordpress.android.e2e.pages;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.annotation.IdRes;
+import androidx.annotation.StringRes;
 import androidx.appcompat.widget.Toolbar;
 import androidx.test.espresso.ViewInteraction;
 
@@ -72,7 +74,7 @@ public class MySitesPage {
 
     public void goToPosts() {
         goToMenuTab();
-        clickItemWithText(R.string.my_site_btn_blog_posts);
+        clickQuickActionOrSiteMenuItem(R.id.quick_action_posts_button, R.string.my_site_btn_blog_posts);
     }
 
     public void goToActivityLog() {
@@ -92,7 +94,7 @@ public class MySitesPage {
 
     public StatsPage goToStats() {
         goToMenuTab();
-        clickItemWithText(R.string.stats);
+        clickQuickActionOrSiteMenuItem(R.id.quick_action_stats_button, R.string.stats);
 
         waitForElementToBeDisplayedWithoutFailure(R.id.tabLayout);
 
@@ -104,7 +106,7 @@ public class MySitesPage {
 
     public void goToMedia() {
         goToMenuTab();
-        clickItemWithText(R.string.media);
+        clickQuickActionOrSiteMenuItem(R.id.quick_action_media_button, R.string.media);
     }
 
     public MySitesPage switchToSite(String siteUrl) {
@@ -138,5 +140,19 @@ public class MySitesPage {
 
     public static void goToMenuTab() {
         selectItemWithTitleInTabLayout(getTranslatedString(R.string.my_site_menu_tab_title), R.id.tab_layout);
+    }
+
+    /**
+     * Clicks on the "Quick Action" item or the Site menu item if the quick actions card is hidden.
+     * Needed because locating site menu items by text fails if the quick actions are available.
+     * @param quicActionItemId Id of the quick actions menu item.
+     * @param siteMenuItemString String resource id of the site menu item.
+     */
+    private void clickQuickActionOrSiteMenuItem(@IdRes int quicActionItemId, @StringRes int siteMenuItemString) {
+        if (isElementDisplayed(quicActionItemId)) {
+            clickOn(quicActionItemId);
+        } else {
+            clickItemWithText(siteMenuItemString);
+        }
     }
 }
