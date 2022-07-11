@@ -14,13 +14,13 @@
     <style name="FormatBarButtonTablet" parent="FormatBarButton">
         <item name="android:layout_marginRight">@dimen/format_bar_button_margin_tablet</item>
         <item name="android:layout_marginLeft">@dimen/format_bar_button_margin_tablet</item>
-        <item name="android:layout_marginStart" tools:targetApi="jelly_bean_mr1">@dimen/format_bar_button_margin_tablet</item>
-        <item name="android:layout_marginEnd" tools:targetApi="jelly_bean_mr1">@dimen/format_bar_button_margin_tablet</item>
+        <item name="android:layout_marginStart">@dimen/format_bar_button_margin_tablet</item>
+        <item name="android:layout_marginEnd">@dimen/format_bar_button_margin_tablet</item>
     </style>
 
     <style name="FormatBarHtmlButton" parent="FormatBarButton">
         <item name="android:layout_marginLeft">@dimen/format_bar_html_button_left_margin</item>
-        <item name="android:layout_marginStart" tools:targetApi="jelly_bean_mr1">@dimen/format_bar_html_button_left_margin</item>
+        <item name="android:layout_marginStart">@dimen/format_bar_html_button_left_margin</item>
     </style>
 
     <style name="Divider">
@@ -34,15 +34,15 @@
     <style name="FormatBarTabletGroup">
         <item name="android:layout_marginLeft">@dimen/format_bar_button_group_tablet</item>
         <item name="android:layout_marginRight">@dimen/format_bar_button_group_tablet</item>
-        <item name="android:layout_marginStart" tools:targetApi="jelly_bean_mr1">@dimen/format_bar_button_group_tablet</item>
-        <item name="android:layout_marginEnd" tools:targetApi="jelly_bean_mr1">@dimen/format_bar_button_group_tablet</item>
+        <item name="android:layout_marginStart">@dimen/format_bar_button_group_tablet</item>
+        <item name="android:layout_marginEnd">@dimen/format_bar_button_group_tablet</item>
     </style>
 
     <style name="ImageOptionsDialogLabel">
         <item name="android:textColor">@color/image_options_label</item>
         <item name="android:textStyle">bold</item>
         <item name="android:paddingLeft">@dimen/image_settings_dialog_label_indent</item>
-        <item name="android:paddingStart" tools:targetApi="jelly_bean_mr1">@dimen/image_settings_dialog_label_indent</item>
+        <item name="android:paddingStart">@dimen/image_settings_dialog_label_indent</item>
         <item name="android:layout_marginBottom">@dimen/image_settings_dialog_label_margin_bottom</item>
     </style>
 

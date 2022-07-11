@@ -1,4 +1,0 @@
-20.1:
-- We hebben het selectiescherm voor site-ontwerp verbeterd tijdens het aanmaken van je site.
-- Wanneer je op een WordPress-link klikt, wordt deze in de app weergegeven in plaats van in je standaardbrowser.
-- We hebben snelstart-focuspunten op de juiste plekken gezet voor talen die van links naar rechts worden gelezen.

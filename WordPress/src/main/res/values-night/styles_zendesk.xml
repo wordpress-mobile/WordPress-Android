@@ -7,7 +7,7 @@
         <item name="toolbarNavigationButtonStyle">
             @style/Widget.AppCompat.Toolbar.Button.Navigation
         </item>
-        <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
+        <item name="android:windowLightStatusBar">false</item>
         <item name="android:navigationBarColor">@android:color/black</item>
     </style>
 </resources>
