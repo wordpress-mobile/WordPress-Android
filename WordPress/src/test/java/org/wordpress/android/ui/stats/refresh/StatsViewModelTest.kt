@@ -21,9 +21,11 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PERIOD_WEEKS_
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PERIOD_YEARS_ACCESSED
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
+import org.wordpress.android.fluxc.store.StatsStore
 import org.wordpress.android.test
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.stats.refresh.StatsViewModel.StatsModuleUiModel
 import org.wordpress.android.ui.stats.refresh.lists.BaseListUseCase
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
@@ -41,21 +43,25 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.MySiteDashboardTodaysStatsCardFeatureConfig
+import org.wordpress.android.util.config.StatsRevampV2FeatureConfig
 import org.wordpress.android.viewmodel.ResourceProvider
 
 class StatsViewModelTest : BaseUnitTest() {
     @Mock lateinit var baseListUseCase: BaseListUseCase
     @Mock lateinit var selectedDateProvider: SelectedDateProvider
     @Mock lateinit var statsSectionManager: SelectedSectionManager
+    @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
     @Mock lateinit var analyticsTracker: AnalyticsTrackerWrapper
     @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
     @Mock lateinit var statsSiteProvider: StatsSiteProvider
+    @Mock lateinit var statsStore: StatsStore
     @Mock lateinit var newsCardHandler: NewsCardHandler
     @Mock lateinit var site: SiteModel
     @Mock lateinit var statsModuleActivateUseCase: StatsModuleActivateUseCase
     @Mock lateinit var notificationsTracker: SystemNotificationsTracker
     @Mock lateinit var todaysStatsCardFeatureConfig: MySiteDashboardTodaysStatsCardFeatureConfig
+    @Mock lateinit var statsRevampV2FeatureConfig: StatsRevampV2FeatureConfig
     private lateinit var viewModel: StatsViewModel
     private val _liveSelectedSection = MutableLiveData<StatsSection>()
     private val liveSelectedSection: LiveData<StatsSection> = _liveSelectedSection
@@ -67,15 +73,19 @@ class StatsViewModelTest : BaseUnitTest() {
         viewModel = StatsViewModel(
                 mapOf(DAYS to baseListUseCase),
                 Dispatchers.Unconfined,
+                Dispatchers.Default,
                 selectedDateProvider,
                 statsSectionManager,
+                appPrefsWrapper,
                 analyticsTracker,
                 networkUtilsWrapper,
                 statsSiteProvider,
+                statsStore,
                 newsCardHandler,
                 statsModuleActivateUseCase,
                 notificationsTracker,
-                todaysStatsCardFeatureConfig
+                todaysStatsCardFeatureConfig,
+                statsRevampV2FeatureConfig
         )
 
         viewModel.start(1, false, null, null, false, null)

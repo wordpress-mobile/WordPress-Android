@@ -53,8 +53,8 @@ class TotalFollowersUseCaseTest : BaseUnitTest() {
                 resourceProvider,
                 totalStatsMapper,
                 analyticsTrackerWrapper,
-                useCaseMode,
-                actionCardHandler
+                actionCardHandler,
+                useCaseMode
         )
         whenever(statsSiteProvider.siteModel).thenReturn(site)
     }

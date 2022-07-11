@@ -19,10 +19,6 @@ import org.wordpress.android.databinding.StatsListFragmentBinding
 import org.wordpress.android.ui.ViewPagerFragment
 import org.wordpress.android.ui.stats.refresh.StatsViewModel.DateSelectorUiModel
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
-import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.INSIGHT_DETAIL
-import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.TOTAL_COMMENTS_DETAIL
-import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.TOTAL_FOLLOWERS_DETAIL
-import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.TOTAL_LIKES_DETAIL
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.UiModel
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.UiModel.Empty
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.UiModel.Error
@@ -183,52 +179,51 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
             StatsSection.YEARS -> YearsListViewModel::class.java
         }
 
-        viewModel = ViewModelProvider(this@StatsListFragment, viewModelFactory)
-                .get(statsSection.name, viewModelClass)
+        viewModel = ViewModelProvider(this@StatsListFragment, viewModelFactory)[statsSection.name, viewModelClass]
 
         setupObservers(activity)
         viewModel.start()
     }
 
     private fun StatsListFragmentBinding.setupObservers(activity: FragmentActivity) {
-        viewModel.uiModel.observe(viewLifecycleOwner, {
+        viewModel.uiModel.observe(viewLifecycleOwner) {
             showUiModel(it)
-        })
+        }
 
-        viewModel.dateSelectorData.observe(viewLifecycleOwner, { dateSelectorUiModel ->
+        viewModel.dateSelectorData.observe(viewLifecycleOwner) { dateSelectorUiModel ->
             when (statsSection) {
-                INSIGHT_DETAIL, TOTAL_LIKES_DETAIL, TOTAL_COMMENTS_DETAIL, TOTAL_FOLLOWERS_DETAIL -> {
+                StatsSection.TOTAL_COMMENTS_DETAIL, StatsSection.TOTAL_FOLLOWERS_DETAIL -> {
                     drawDateSelector(DateSelectorUiModel(false))
                 }
                 else -> drawDateSelector(dateSelectorUiModel)
             }
-        })
+        }
 
-        viewModel.navigationTarget.observeEvent(viewLifecycleOwner, { target ->
+        viewModel.navigationTarget.observeEvent(viewLifecycleOwner) { target ->
             navigator.navigate(activity, target)
-        })
+        }
 
-        viewModel.selectedDate.observe(viewLifecycleOwner, { event ->
+        viewModel.selectedDate.observe(viewLifecycleOwner) { event ->
             if (event != null) {
                 viewModel.onDateChanged(event.selectedSection)
             }
-        })
+        }
 
-        viewModel.listSelected.observe(viewLifecycleOwner, {
+        viewModel.listSelected.observe(viewLifecycleOwner) {
             viewModel.onListSelected()
-        })
+        }
 
-        viewModel.typesChanged.observeEvent(viewLifecycleOwner, {
+        viewModel.typesChanged.observeEvent(viewLifecycleOwner) {
             viewModel.onTypesChanged()
-        })
+        }
 
-        viewModel.scrollTo?.observeEvent(viewLifecycleOwner, { statsType ->
+        viewModel.scrollTo?.observeEvent(viewLifecycleOwner) { statsType ->
             (recyclerView.adapter as? StatsBlockAdapter)?.let { adapter ->
                 recyclerView.smoothScrollToPosition(adapter.positionOf(statsType))
             }
-        })
+        }
 
-        viewModel.scrollToNewCard.observeEvent(viewLifecycleOwner, {
+        viewModel.scrollToNewCard.observeEvent(viewLifecycleOwner) {
             (recyclerView.adapter as? StatsBlockAdapter)?.let { adapter ->
                 adapter.registerAdapterDataObserver(object : AdapterDataObserver() {
                     override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
@@ -236,7 +231,7 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
                     }
                 })
             }
-        })
+        }
     }
 
     private fun StatsListFragmentBinding.showUiModel(

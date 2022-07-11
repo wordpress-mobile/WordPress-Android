@@ -37,7 +37,6 @@ Language: sk
     <string name="stats_fewer_posts">Menej príspevkov</string>
     <string name="plans_loading_error_network_title">Žiadne pripojenie</string>
     <string name="quick_start_sites">Ďalšie kroky</string>
-    <string name="quick_start_complete_tasks_header">Kompletné (%d)</string>
     <string name="quick_start_remove_next_steps_menu_title">Odstrániť toto</string>
     <string name="stats_traffic_change">%1$s (%2$s%%)</string>
     <string name="stats_traffic_increase">+%1$s (%2$s%%)</string>
@@ -1291,7 +1290,6 @@ Language: sk
     <string name="stats_followers_months">počet mesiacov: %1$d</string>
     <string name="stats_followers_years">počet rokov: %1$d</string>
     <string name="stats_view_followers">Odberatelia</string>
-    <string name="stats_view_publicize">Propagovať</string>
     <string name="stats_likes">Počet lajkov</string>
     <string name="stats_followers_hours">hodín: %1$d</string>
     <string name="stats_followers_minutes">minút: %1$d</string>

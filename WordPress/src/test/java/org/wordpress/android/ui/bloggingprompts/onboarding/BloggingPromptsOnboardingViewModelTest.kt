@@ -2,6 +2,7 @@ package org.wordpress.android.ui.bloggingprompts.onboarding
 
 import androidx.lifecycle.Observer
 import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.times
@@ -10,11 +11,13 @@ import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.runBlocking
+import org.assertj.core.api.Assertions
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.bloggingprompts.BloggingPromptModel
@@ -22,13 +25,19 @@ import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore
 import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore.BloggingPromptsResult
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingAction.DismissDialog
+import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingAction.DoNothing
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingAction.OpenEditor
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingAction.OpenRemindersIntro
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingAction.OpenSitePicker
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingDialogFragment.DialogType.INFORMATION
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingDialogFragment.DialogType.ONBOARDING
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingUiState.Ready
+import org.wordpress.android.ui.bloggingprompts.onboarding.usecase.GetIsFirstBloggingPromptsOnboardingUseCase
+import org.wordpress.android.ui.bloggingprompts.onboarding.usecase.SaveFirstBloggingPromptsOnboardingUseCase
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.viewmodel.Event
 import java.util.Date
 
 @InternalCoroutinesApi
@@ -38,6 +47,8 @@ class BloggingPromptsOnboardingViewModelTest : BaseUnitTest() {
     private val selectedSiteRepository: SelectedSiteRepository = mock()
     private val bloggingPromptsStore: BloggingPromptsStore = mock()
     private val analyticsTracker: BloggingPromptsOnboardingAnalyticsTracker = mock()
+    private val getIsFirstBloggingPromptsOnboardingUseCase: GetIsFirstBloggingPromptsOnboardingUseCase = mock()
+    private val saveFirstBloggingPromptsOnboardingUseCase: SaveFirstBloggingPromptsOnboardingUseCase = mock()
 
     private val bloggingPrompt = BloggingPromptsResult(
             model = BloggingPromptModel(
@@ -59,9 +70,12 @@ class BloggingPromptsOnboardingViewModelTest : BaseUnitTest() {
             selectedSiteRepository,
             bloggingPromptsStore,
             analyticsTracker,
-            TEST_DISPATCHER
+            TEST_DISPATCHER,
+            getIsFirstBloggingPromptsOnboardingUseCase,
+            saveFirstBloggingPromptsOnboardingUseCase
     )
     private val actionObserver: Observer<BloggingPromptsOnboardingAction> = mock()
+    private val snackbarObserver: Observer<Event<SnackbarMessageHolder>> = mock()
 
     private val viewStates = mutableListOf<BloggingPromptsOnboardingUiState>()
 
@@ -69,6 +83,7 @@ class BloggingPromptsOnboardingViewModelTest : BaseUnitTest() {
     fun setup() {
         classToTest.action.observeForever(actionObserver)
         classToTest.uiState.observeForever { if (it != null) viewStates.add(it) }
+        classToTest.snackBarMessage.observeForever(snackbarObserver)
         whenever(bloggingPromptsStore.getPromptForDate(any(), any())).thenReturn(flowOf(bloggingPrompt))
     }
 
@@ -96,16 +111,18 @@ class BloggingPromptsOnboardingViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `Should trigger OpenSitePicker if Remind Me is clicked and user has more than 1 site`() = runBlocking {
-        classToTest.start(ONBOARDING)
-        val selectedSiteModel = SiteModel()
-        whenever(siteStore.sitesCount).thenReturn(2)
-        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(selectedSiteModel)
-
-        val startState = viewStates[0]
-        (startState as Ready).onPrimaryButtonClick()
-        startState.onSecondaryButtonClick()
-        verify(actionObserver).onChanged(OpenSitePicker(selectedSiteModel))
+    fun `Should trigger OpenSitePicker if Remind Me is clicked, user has more than 1 site and is first onboarding`() {
+        runBlocking {
+            val selectedSiteModel = SiteModel()
+            whenever(selectedSiteRepository.getSelectedSite()).thenReturn(selectedSiteModel)
+            whenever(siteStore.sitesCount).thenReturn(2)
+            whenever(getIsFirstBloggingPromptsOnboardingUseCase.execute()).thenReturn(true)
+            classToTest.start(ONBOARDING)
+            val startState = viewStates[0]
+            (startState as Ready).onPrimaryButtonClick()
+            startState.onSecondaryButtonClick()
+            verify(actionObserver).onChanged(OpenSitePicker(selectedSiteModel))
+        }
     }
 
     @Test
@@ -122,10 +139,43 @@ class BloggingPromptsOnboardingViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `Should trigger OpenRemindersIntro if Remind Me is clicked and is NOT first onboarding`() = runBlocking {
+        val siteModel = SiteModel().apply { id = 123 }
+        whenever(siteStore.sitesCount).thenReturn(1)
+        whenever(siteStore.sites).thenReturn(listOf(siteModel))
+        whenever(getIsFirstBloggingPromptsOnboardingUseCase.execute()).thenReturn(false)
+        classToTest.start(ONBOARDING)
+        val startState = viewStates[0]
+        (startState as Ready).onPrimaryButtonClick()
+        startState.onSecondaryButtonClick()
+        verify(actionObserver).onChanged(OpenRemindersIntro(123))
+    }
+
+    @Test
     fun `Should trigger OpenRemindersIntro after site is selected on site picker and onSiteSelected is called`() {
         val selectedSiteLocalId = 123
         classToTest.onSiteSelected(selectedSiteLocalId)
         verify(actionObserver).onChanged(OpenRemindersIntro(selectedSiteLocalId))
+    }
+
+    @Test
+    fun `Should show snackbar if blogging prompt is not available`() {
+        whenever(bloggingPromptsStore.getPromptForDate(any(), any())).thenReturn(flowOf(BloggingPromptsResult(null)))
+
+        val selectedSiteModel = SiteModel()
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(selectedSiteModel)
+        classToTest.start(ONBOARDING)
+
+        val startState = viewStates[0]
+        (startState as Ready).onPrimaryButtonClick()
+
+        verify(bloggingPromptsStore, times(1)).getPromptForDate(eq(selectedSiteModel), any())
+        verify(actionObserver).onChanged(DoNothing)
+
+        val captor = argumentCaptor<Event<SnackbarMessageHolder>>()
+        verify(snackbarObserver).onChanged(captor.capture())
+        val message = captor.firstValue.getContentIfNotHandled()?.message as? UiStringRes
+        Assertions.assertThat(message?.stringRes).isEqualTo(R.string.blogging_prompts_onboarding_prompts_loading)
     }
 
     // INFORMATION dialog type actions
@@ -176,5 +226,29 @@ class BloggingPromptsOnboardingViewModelTest : BaseUnitTest() {
         val startState = viewStates[0]
         (startState as Ready).onSecondaryButtonClick()
         verify(analyticsTracker).trackRemindMeClicked()
+    }
+
+    @Test
+    fun `Should NOT get is first blogging prompts onboarding when start is called with INFORMATION`() {
+        classToTest.start(INFORMATION)
+        verify(getIsFirstBloggingPromptsOnboardingUseCase, times(0)).execute()
+    }
+
+    @Test
+    fun `Should NOT save first blogging prompts onboarding when start is called with INFORMATION`() {
+        classToTest.start(INFORMATION)
+        verify(saveFirstBloggingPromptsOnboardingUseCase, times(0)).execute(any())
+    }
+
+    @Test
+    fun `Should get is first blogging prompts onboarding when start is called with ONBOARDING`() {
+        classToTest.start(ONBOARDING)
+        verify(getIsFirstBloggingPromptsOnboardingUseCase).execute()
+    }
+
+    @Test
+    fun `Should save first blogging prompts onboarding when start is called with ONBOARDING`() {
+        classToTest.start(ONBOARDING)
+        verify(saveFirstBloggingPromptsOnboardingUseCase).execute(false)
     }
 }

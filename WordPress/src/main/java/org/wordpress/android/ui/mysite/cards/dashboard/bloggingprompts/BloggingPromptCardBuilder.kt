@@ -19,7 +19,7 @@ class BloggingPromptCardBuilder @Inject constructor() {
 
         val avatarsTrain = params.bloggingPrompt.respondentsAvatarUrls.map { respondent -> AvatarItem(respondent) }
                 .toMutableList<TrainOfAvatarsItem>()
-                .also { list -> list.add(TrailingLabelTextItem(trailingLabel, R.attr.colorPrimary)) }
+                .also { list -> list.add(TrailingLabelTextItem(trailingLabel, R.attr.colorOnSurface)) }
 
         BloggingPromptCardWithData(
                 prompt = UiStringText(it.text),
@@ -27,8 +27,10 @@ class BloggingPromptCardBuilder @Inject constructor() {
                 numberOfAnswers = params.bloggingPrompt.respondentsCount,
                 isAnswered = params.bloggingPrompt.isAnswered,
                 promptId = params.bloggingPrompt.id,
+                attribution = BloggingPromptAttribution.fromString(params.bloggingPrompt.attribution),
                 onShareClick = params.onShareClick,
-                onAnswerClick = params.onAnswerClick
+                onAnswerClick = params.onAnswerClick,
+                onSkipClick = params.onSkipClick
         )
     }
 }

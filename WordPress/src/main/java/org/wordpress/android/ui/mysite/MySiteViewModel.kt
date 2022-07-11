@@ -118,6 +118,7 @@ import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import java.io.File
+import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -171,6 +172,7 @@ class MySiteViewModel @Inject constructor(
     private val _onTrackWithTabSource = MutableLiveData<Event<MySiteTrackWithTabSource>>()
     private val _selectTab = MutableLiveData<Event<TabNavigation>>()
     private val _onAnswerBloggingPrompt = SingleLiveEvent<Event<Pair<SiteModel, PromptID>>>()
+    private val _onBloggingPromptsLearnMore = SingleLiveEvent<Event<Unit>>()
 
     private val tabsUiState: LiveData<TabsUiState> = quickStartRepository.onQuickStartTabStep
             .switchMap { quickStartSiteMenuStep ->
@@ -234,6 +236,7 @@ class MySiteViewModel @Inject constructor(
     val onUploadedItem = siteIconUploadHandler.onUploadedItem
     val onShare = _onShare
     val onAnswerBloggingPrompt = _onAnswerBloggingPrompt as LiveData<Event<Pair<SiteModel, Int>>>
+    val onBloggingPromptsLearnMore = _onBloggingPromptsLearnMore as LiveData<Event<Unit>>
     val onTrackWithTabSource = _onTrackWithTabSource as LiveData<Event<MySiteTrackWithTabSource>>
     val selectTab: LiveData<Event<TabNavigation>> = _selectTab
     private var shouldMarkUpdateSiteTitleTaskComplete = false
@@ -451,7 +454,8 @@ class MySiteViewModel @Inject constructor(
                                     bloggingPromptUpdate?.promptModel
                                 } else null,
                                 onShareClick = this::onBloggingPromptShareClick,
-                                onAnswerClick = this::onBloggingPromptAnswerClick
+                                onAnswerClick = this::onBloggingPromptAnswerClick,
+                                onSkipClick = this::onBloggingPromptSkipClicked
                         )
                 ),
                 QuickLinkRibbonBuilderParams(
@@ -655,7 +659,6 @@ class MySiteViewModel @Inject constructor(
                 }
                 ListItemAction.POSTS -> SiteNavigationAction.OpenPosts(selectedSite)
                 ListItemAction.PAGES -> {
-                    quickStartRepository.requestNextStepOfTask(QuickStartNewSiteTask.EDIT_HOMEPAGE)
                     quickStartRepository.completeTask(QuickStartNewSiteTask.REVIEW_PAGES)
                     SiteNavigationAction.OpenPages(selectedSite)
                 }
@@ -793,7 +796,6 @@ class MySiteViewModel @Inject constructor(
     private fun quickActionPagesClick() {
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
         trackWithTabSourceIfNeeded(Stat.QUICK_ACTION_PAGES_TAPPED)
-        quickStartRepository.requestNextStepOfTask(QuickStartNewSiteTask.EDIT_HOMEPAGE)
         quickStartRepository.completeTask(QuickStartNewSiteTask.REVIEW_PAGES)
         _onNavigation.value = Event(SiteNavigationAction.OpenPages(selectedSite))
     }
@@ -825,7 +827,6 @@ class MySiteViewModel @Inject constructor(
     private fun onQuickLinkRibbonPagesClick() {
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
         trackWithTabSourceIfNeeded(Stat.QUICK_LINK_RIBBON_PAGES_TAPPED)
-        quickStartRepository.requestNextStepOfTask(QuickStartNewSiteTask.EDIT_HOMEPAGE)
         quickStartRepository.completeTask(QuickStartNewSiteTask.REVIEW_PAGES)
         _onNavigation.value = Event(SiteNavigationAction.OpenPages(selectedSite))
     }
@@ -1192,6 +1193,27 @@ class MySiteViewModel @Inject constructor(
         _onAnswerBloggingPrompt.postValue(Event(Pair(selectedSite, promptId)))
     }
 
+    private fun onBloggingPromptSkipClicked() {
+        selectedSiteRepository.getSelectedSite()?.let { site ->
+            val siteId = site.localId().value
+
+            appPrefsWrapper.setSkippedPromptDay(Date(), siteId)
+            mySiteSourceManager.refreshBloggingPrompts(true)
+
+            val snackbar = SnackbarMessageHolder(
+                    message = UiStringRes(R.string.my_site_blogging_prompt_card_skipped_snackbar),
+                    buttonTitle = UiStringRes(R.string.undo),
+                    buttonAction = {
+                        appPrefsWrapper.setSkippedPromptDay(null, siteId)
+                        mySiteSourceManager.refreshBloggingPrompts(true)
+                    },
+                    isImportant = true
+            )
+
+            _onSnackbarMessage.postValue(Event(snackbar))
+        }
+    }
+
     fun isRefreshing() = mySiteSourceManager.isRefreshing()
 
     fun setActionableEmptyViewGone(isVisible: Boolean, setGone: () -> Unit) {
@@ -1214,6 +1236,10 @@ class MySiteViewModel @Inject constructor(
             }
             analyticsTrackerWrapper.track(event.stat, props)
         }
+    }
+
+    fun onBloggingPromptsLearnMoreClicked() {
+        _onBloggingPromptsLearnMore.postValue(Event(Unit))
     }
 
     private fun trackWithTabSourceIfNeeded(stat: Stat, properties: HashMap<String, *>? = null) {

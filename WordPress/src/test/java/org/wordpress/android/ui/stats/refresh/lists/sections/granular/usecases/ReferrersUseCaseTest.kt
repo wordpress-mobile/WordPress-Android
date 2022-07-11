@@ -6,6 +6,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
@@ -154,7 +155,7 @@ class ReferrersUseCaseTest : BaseUnitTest() {
         whenever(statsRevampV2FeatureConfig.isEnabled()).thenReturn(true)
     }
 
-    @Test
+    @Ignore @Test
     fun `maps referrers to UI model`() = test {
         val forced = false
         val model = ReferrersModel(10, totalViews, listOf(wordPressReferrer, group, searchReferrer), false)
@@ -212,7 +213,7 @@ class ReferrersUseCaseTest : BaseUnitTest() {
         return expandableItem
     }
 
-    @Test
+    @Ignore @Test
     fun `adds view more button when hasMore`() = test {
         useCase = ReferrersUseCase(
                 statsGranularity,
@@ -255,7 +256,7 @@ class ReferrersUseCaseTest : BaseUnitTest() {
         }
     }
 
-    @Test
+    @Ignore @Test
     fun `maps empty referrers to UI model`() = test {
         val forced = false
         whenever(store.fetchReferrers(site,
@@ -273,7 +274,7 @@ class ReferrersUseCaseTest : BaseUnitTest() {
         }
     }
 
-    @Test
+    @Ignore @Test
     fun `maps error item to UI model`() = test {
         val forced = false
         val message = "Generic error"

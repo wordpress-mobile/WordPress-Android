@@ -106,7 +106,6 @@ Language: es_MX
     <string name="hpp_error_title">Los diseños no están disponibles sin conexión</string>
     <string name="hpp_error_subtitle">Toca en reintentar cuando vuelvas a estar conectado.</string>
     <string name="hpp_retry_error">Por favor, revisa tu conexión a Internet e inténtalo de nuevo.</string>
-    <string name="hpp_choose_error">Ha habido un error al seleccionar el diseño.</string>
     <string name="delete_button_alt">Borrar</string>
     <string name="label_next_button">Siguiente</string>
     <string name="label_done_button">Hecho</string>
@@ -128,8 +127,6 @@ Language: es_MX
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">Se ha abierto el menú de bloques desplazable. Selecciona un bloque.</string>
     <string name="gutenberg_native_scrollable_block_menu_closed">Se ha cerrado el menú de bloques desplazable.</string>
     <string name="hpp_choose_button">Elegir</string>
-    <string name="hpp_subtitle">Elige tu layout favorito de página de inicio. Puedes editarlo y personalizarlo más tarde.</string>
-    <string name="hpp_title">Elige un diseño</string>
     <string name="mlp_error_title">Los layouts no están disponibles debido a un error</string>
     <string name="prepublishing_nudges_add_category_button">Añadir categoría</string>
     <string name="prepublishing_nudges_toolbar_title_add_categories">Añadir una nueva categoría</string>
@@ -918,7 +915,6 @@ Language: es_MX
     <string name="plans_loading_error_no_plans_title">No se pueden cargar los Planes</string>
     <string name="exit">salir</string>
     <string name="quick_start_sites">Siguientes Pasos</string>
-    <string name="quick_start_complete_tasks_header">Completo (%d)</string>
     <string name="quick_start_dialog_upload_icon_message">Tus visitantes verán tu icono en su navegador. Agrega un icono personalizado para conseguir un aspecto profesional y refinado.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Toca en %1$s Icono de Tu Sitio %2$s para subir uno nuevo</string>
     <string name="quick_start_dialog_enable_sharing_title">Activar compartir entradas</string>
@@ -927,11 +923,7 @@ Language: es_MX
     <string name="quick_start_dialog_remove_next_steps_title">Eliminar Siguientes Pasos</string>
     <string name="quick_start_dialog_remove_next_steps_message">Eliminar los Siguientes Pasos ocultará todas las visitas guiadas de este sitio. Esta acción es irreversible.</string>
     <string name="quick_start_remove_next_steps_menu_title">Quitar esto</string>
-    <string name="quick_start_complete_view_subtitle">Felicidades por completar tu lista. Un trabajo bien hecho.</string>
-    <string name="quick_start_complete_view_title">¡Todas las tareas están completas!</string>
     <string name="quick_start_task_skip_menu_title">Saltar tarea</string>
-    <string name="quick_start_completed_tasks_header_chevron_collapse_desc">cerrar</string>
-    <string name="quick_start_completed_tasks_header_chevron_expand_desc">expandir</string>
     <string name="notification_channel_reminder_title">Recordatorio</string>
     <string name="stats_select_next_period_description">Elige el siguiente periodo</string>
     <string name="stats_select_previous_period_description">Elige el periodo anterior</string>
@@ -1003,7 +995,6 @@ Language: es_MX
     <string name="gif_picker_empty_search_list">Ningún medio coincide con tu búsqueda</string>
     <string name="gif_picker_initial_empty_text">¡Busca para encontrar GIF para añadir a tu biblioteca de medios!</string>
     <string name="stats_insights_latest_post_with_no_engagement">Ha sido %1$s desde que %2$s fue publicado. Empieza la avalancha y aumenta las vistas de publicaciones compartiendo la publicación.</string>
-    <string name="stats_insights_latest_post_empty">Aún no has hecho ninguna publicacion. Una vez que comiences a publicar, el resumen de tu última publicación aparecerá aquí.</string>
     <string name="stats_insights_tags_and_categories">Tags y Catégorias</string>
     <string name="stats_insights_all_time_stats">Histórico</string>
     <string name="stats_comments_authors">Autores</string>
@@ -2235,7 +2226,6 @@ Language: es_MX
     <string name="stats_view_countries">Países</string>
     <string name="stats_view_followers">Seguidores</string>
     <string name="stats_likes">Me gusta</string>
-    <string name="stats_view_publicize">Difundir</string>
     <string name="stats_followers_seconds_ago">hace unos segundos</string>
     <string name="stats_views">Vistas</string>
     <string name="stats_visitors">Visitantes</string>

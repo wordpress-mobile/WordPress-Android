@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-05-27 08:19:45+0000
+Translation-Revision-Date: 2022-07-05 20:18:47+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.1
 Language: cs_CZ
 -->
 <resources>
+    <string name="qrcode_auth_flow_content_description">Obrázek označující probíhající skenování přihlašovacího kódu</string>
+    <string name="qrcode_auth_flow_error_content_description">Obrázek označující chybu</string>
+    <string name="qrcode_auth_flow_dismiss_dialog_message">Jste si jistý, že chcete pokračovat?</string>
+    <string name="qrcode_auth_flow_dismiss_dialog_title">Ukončit tok přihlašovacích kódů skenování</string>
+    <string name="qrcode_auth_flow_error_auth_failed_subtitle">Nepodařilo se vás přihlásit pomocí tohoto přihlašovacího kódu. Klepnutím na tlačítko Skenovat znovu kód znovu naskenujte.</string>
     <string name="blogging_prompts_notification_dismiss">Odmítnout</string>
     <string name="blogging_prompts_answer_prompt_notification_answer_action">Odpověď</string>
     <string name="blogging_prompts_answer_prompt_notification_title">Denní výzva</string>
@@ -629,7 +634,6 @@ Language: cs_CZ
     <string name="restore_details_description_with_two_parameters">%1$s %2$s je vybraný bod pro obnovení.</string>
     <string name="restore_details_action_button">Obnovit web</string>
     <string name="restore_details_icon_content_description">Ikona obnovení</string>
-    <string name="quick_start_dialog_edit_homepage_message_short">Chcete-li zobrazit seznam stránek, vyberte %1$s stránky %2$s.</string>
     <string name="quick_start_dialog_edit_homepage_message_pages_short">Vyberte domovskou stránku %1$s a upravte svou domovskou stránku %2$s.</string>
     <string name="quick_start_dialog_review_pages_title">Zkontrolujte stránky webu</string>
     <string name="quick_start_dialog_review_pages_message">Změňte, přidejte nebo odeberte stránky svého webu.</string>
@@ -639,8 +643,6 @@ Language: cs_CZ
     <string name="web_preview_mobile">Mobil</string>
     <string name="web_preview_tablet">Tablet</string>
     <string name="backup_download_complete_failed_title">Stažení se nezdařilo</string>
-    <string name="quick_start_dialog_edit_homepage_title">Upravte svou domovskou stránku</string>
-    <string name="quick_start_dialog_edit_homepage_message">Změňte, přidejte nebo odeberte obsah z domovské stránky svého webu.</string>
     <string name="reader_marked_post_as_seen">Označený příspěvek jako viděný</string>
     <string name="reader_marked_post_as_unseen">Příspěvek byl označen jako neviditelný</string>
     <string name="reader_error_changing_seen_status_of_unsupported_post">Stav viditelnosti tohoto příspěvku nelze přepnout</string>
@@ -712,8 +714,8 @@ Language: cs_CZ
     <string name="suggestion_none">Nejsou k dispozici žádné návrhy %s.</string>
     <string name="suggestion_problem">Při načítání návrhů došlo k problému.</string>
     <string name="suggestion_no_matching">Bez shody %s.</string>
-    <string name="threat_fix_fixable_replace">Jetpack Scan nahradí ovlivněný soubor nebo adresář.</string>
     <string name="threat_fix_current_not_fixable_description">Jetpack Scan nemůže tuto hrozbu automaticky opravit.\n         Doporučujeme hrozbu vyřešit ručně: ujistěte se, že WordPress, vaše téma a všechny vaše doplňky jsou aktuální, a odstraňte z webu nevhodný kód, téma nebo plugin.\n \n\n         Pokud potřebujete další pomoc při řešení této hrozby, doporučujeme &lt;b&gt;Codeable+&lt;/b&gt;, důvěryhodné tržiště nezávislých odborníků s vysoce prověřenými odborníky na WordPress.\n         Identifikovali vybranou skupinu bezpečnostních odborníků, kteří s těmito projekty pomohli. Ceny se pohybují od 70–120 USD / hodinu a můžete získat bezplatný odhad bez povinnosti najmout.</string>
+    <string name="threat_fix_fixable_replace">Jetpack Scan nahradí ovlivněný soubor nebo adresář.</string>
     <string name="threat_problem_header">Jaký byl problém?</string>
     <string name="threat_technical_details_header">Technické podrobnosti</string>
     <string name="threat_file_description">V souboru nalezena hrozba:</string>
@@ -829,10 +831,8 @@ Language: cs_CZ
     <string name="login_prologue_third_subtitle_two">Dnes jste na svém webu obdrželi &lt;b&gt;50 lajků&lt;/b&gt;</string>
     <string name="login_prologue_third_subtitle_three">&lt;b&gt;Johan Brandt&lt;/b&gt; odpověděl na váš příspěvek</string>
     <string name="hpp_choose_button">Vybrat</string>
-    <string name="hpp_subtitle">Vyberte si své oblíbené rozvržení domovské stránky. Později jej můžete upravit a přizpůsobit.</string>
     <string name="gutenberg_native_scrollable_block_menu_closed">Nabídka rolovatelného bloku uzavřena.</string>
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">Bylo otevřeno rolovací blok menu. Vyberte blok.</string>
-    <string name="hpp_title">Vyberte si design</string>
     <string name="prepublishing_nudges_toolbar_title_categories">Kategorie</string>
     <string name="mlp_error_title">Rozložení nejsou k dispozici kvůli chybě</string>
     <string name="prepublishing_nudges_categories_action">Kategorie</string>
@@ -1639,7 +1639,6 @@ Language: cs_CZ
     <string name="quick_start_sites">Další kroky</string>
     <string name="quick_start_dialog_upload_icon_message">Návštěvníci uvidí vaši ikonu ve svém prohlížeči. Přidejte vlastní ikonu pro vyleštěný profesionální vzhled.</string>
     <string name="quick_start_dialog_upload_icon_title">Nahrát ikonu webu</string>
-    <string name="quick_start_complete_tasks_header">Kompletní (%d)</string>
     <string name="quick_start_sites_type_customize">Přizpůsobte si svůj web</string>
     <string name="quick_start_sites_type_grow">Rozšiřte své publikum</string>
     <string name="quick_start_dialog_publish_post_message">Navrhněte a publikujte svůj první příspěvek.</string>
@@ -1647,16 +1646,12 @@ Language: cs_CZ
     <string name="quick_start_dialog_check_stats_message_short">Klepnutím na %1$s Statistiky %2$s zobrazíte výkon svého webu.</string>
     <string name="quick_start_dialog_enable_sharing_title">Povolit sdílení příspěvků</string>
     <string name="quick_start_dialog_enable_sharing_message">Automaticky sdílejte nové příspěvky se svými účty sociálních médií.</string>
-    <string name="quick_start_complete_view_subtitle">Gratulujeme k dokončení vašeho seznamu. Dobře odvedená práce.</string>
     <string name="quick_start_remove_next_steps_menu_title">Odebrat toto</string>
     <string name="quick_start_dialog_remove_next_steps_title">Odebrat další kroky</string>
     <string name="quick_start_dialog_remove_next_steps_message">Odebráním dalších kroků skryjete všechny prohlídky na tomto webu. Tuto akci nelze vrátit zpět.</string>
     <string name="quick_start_dialog_check_stats_message">Mějte aktuální informace o výkonu svého webu.</string>
     <string name="quick_start_dialog_check_stats_title">Zkontrolujte statistiky svého webu</string>
-    <string name="quick_start_completed_tasks_header_chevron_collapse_desc">sbalit</string>
-    <string name="quick_start_completed_tasks_header_chevron_expand_desc">rozbalit</string>
     <string name="quick_start_task_skip_menu_title">Přeskočit úkol</string>
-    <string name="quick_start_complete_view_title">Všechny úkoly jsou dokončeny!</string>
     <string name="notification_channel_reminder_title">Připomenutí</string>
     <string name="stats_traffic_change">%1$s (%2$s%%)</string>
     <string name="stats_traffic_increase">+%1$s (%2$s%%)</string>
@@ -1730,7 +1725,6 @@ Language: cs_CZ
     <string name="gif_picker_empty_search_list">Vašemu vyhledávání neodpovídají žádná média</string>
     <string name="stats_insights_tags_and_categories">Štítky a Rubriky</string>
     <string name="stats_insights_all_time_stats">Pořád</string>
-    <string name="stats_insights_latest_post_empty">Dosud jste nezveřejnili žádné příspěvky. Jakmile začnete publikovat, zobrazí se zde souhrn nejnovějších příspěvků.</string>
     <string name="stats_insights_latest_post_with_no_engagement">Od zveřejnění %2$s s uplynulo %1$s. Zvyšte počet zobrazení příspěvku tím, že ho budete sdílet:</string>
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
     <string name="stats_category_folded_name">%1$s | %2$s</string>
@@ -2963,7 +2957,6 @@ Language: cs_CZ
     <string name="logs_copied_to_clipboard">Aplikační protokoly byly zkopírovány do schránky</string>
     <string name="error_copy_to_clipboard">Při kopírování textu do schránky nastala chyba</string>
     <string name="post_uploading">Nahrávám příspěvek</string>
-    <string name="stats_view_publicize">Publikovaná</string>
     <string name="stats_view_followers">Sledující</string>
     <string name="stats_followers_months">%1$d měsíc</string>
     <string name="stats_followers_a_year">Za rok</string>

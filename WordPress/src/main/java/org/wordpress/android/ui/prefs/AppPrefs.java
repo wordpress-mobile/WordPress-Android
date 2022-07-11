@@ -33,6 +33,7 @@ import org.wordpress.android.util.WPMediaUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -175,6 +176,8 @@ public class AppPrefs {
 
         // Used to indicate if the variant has been assigned for the My Site Tab experiment
         MY_SITE_DEFAULT_TAB_EXPERIMENT_VARIANT_ASSIGNED,
+
+        SKIPPED_BLOGGING_PROMPT_DAY,
     }
 
     /**
@@ -272,6 +275,11 @@ public class AppPrefs {
 
         // Used to identify the App Settings for initial screen that is updated when the variant is assigned
         wp_pref_initial_screen,
+
+        STATS_REVAMP2_FEATURE_ANNOUNCEMENT_DISPLAYED,
+
+        // Indicates if this is the first time the user sees the blogging prompts onboarding dialog
+        IS_FIRST_TIME_BLOGGING_PROMPTS_ONBOARDING
     }
 
     private static SharedPreferences prefs() {
@@ -1319,6 +1327,15 @@ public class AppPrefs {
         return DeletablePrefKey.SHOULD_SHOW_WEEKLY_ROUNDUP_NOTIFICATION.name() + siteId;
     }
 
+    public static boolean shouldDisplayStatsRevampFeatureAnnouncement() {
+        return prefs().getBoolean(UndeletablePrefKey.STATS_REVAMP2_FEATURE_ANNOUNCEMENT_DISPLAYED.name(), true);
+    }
+
+    public static void setShouldDisplayStatsRevampFeatureAnnouncement(boolean isDisplayed) {
+        prefs().edit().putBoolean(UndeletablePrefKey.STATS_REVAMP2_FEATURE_ANNOUNCEMENT_DISPLAYED.name(), isDisplayed)
+               .apply();
+    }
+
     /*
      * adds a local site ID to the top of list of recently chosen sites
      */
@@ -1380,6 +1397,26 @@ public class AppPrefs {
         setBoolean(DeletablePrefKey.MY_SITE_DEFAULT_TAB_EXPERIMENT_VARIANT_ASSIGNED, true);
     }
 
+    public static Date getSkippedPromptDay(int siteId) {
+        long promptSkippedMillis = prefs().getLong(getSkippedBloggingPromptDayConfigKey(siteId), 0);
+        if (promptSkippedMillis == 0) {
+            return null;
+        }
+        return new Date(promptSkippedMillis);
+    }
+
+    public static void setSkippedPromptDay(@Nullable Date date, int siteId) {
+        if (date == null) {
+            prefs().edit().remove(getSkippedBloggingPromptDayConfigKey(siteId)).apply();
+            return;
+        }
+        prefs().edit().putLong(getSkippedBloggingPromptDayConfigKey(siteId), date.getTime()).apply();
+    }
+
+    @NonNull private static String getSkippedBloggingPromptDayConfigKey(int siteId) {
+        return DeletablePrefKey.SKIPPED_BLOGGING_PROMPT_DAY.name() + siteId;
+    }
+
     public static void setInitialScreenFromMySiteDefaultTabExperimentVariant(String variant) {
         // This supports the MySiteDefaultTab AB Experiment.
         // AppSettings are undeletable across logouts and keys are all lower case.
@@ -1395,5 +1432,13 @@ public class AppPrefs {
                 UndeletablePrefKey.wp_pref_initial_screen,
                 MySiteTabType.SITE_MENU.getLabel()
         );
+    }
+
+    public static Boolean getIsFirstBloggingPromptsOnboarding() {
+        return getBoolean(UndeletablePrefKey.IS_FIRST_TIME_BLOGGING_PROMPTS_ONBOARDING, true);
+    }
+
+    public static void saveFirstBloggingPromptsOnboarding(final boolean isFirstTime) {
+        setBoolean(UndeletablePrefKey.IS_FIRST_TIME_BLOGGING_PROMPTS_ONBOARDING, isFirstTime);
     }
 }

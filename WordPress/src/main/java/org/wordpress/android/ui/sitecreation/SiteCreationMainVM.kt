@@ -29,7 +29,6 @@ import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.Creat
 import org.wordpress.android.ui.sitecreation.usecases.FetchHomePageLayoutsUseCase
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.NetworkUtilsWrapper
-import org.wordpress.android.util.experiments.SiteNameABExperiment
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.wizard.WizardManager
 import org.wordpress.android.util.wizard.WizardNavigationTarget
@@ -60,7 +59,6 @@ typealias NavigationTarget = WizardNavigationTarget<SiteCreationStep, SiteCreati
 class SiteCreationMainVM @Inject constructor(
     private val tracker: SiteCreationTracker,
     private val wizardManager: WizardManager<SiteCreationStep>,
-    private val siteNameABExperiment: SiteNameABExperiment,
     private val networkUtils: NetworkUtilsWrapper,
     private val dispatcher: Dispatcher,
     private val fetchHomePageLayoutsUseCase: FetchHomePageLayoutsUseCase,
@@ -107,7 +105,6 @@ class SiteCreationMainVM @Inject constructor(
         if (isStarted) return
         if (savedInstanceState == null) {
             tracker.trackSiteCreationAccessed(siteCreationSource)
-            tracker.trackSiteNameExperimentVariation(siteNameABExperiment.getVariation())
             siteCreationState = SiteCreationState()
         } else {
             siteCreationCompleted = savedInstanceState.getBoolean(KEY_SITE_CREATION_COMPLETED, false)

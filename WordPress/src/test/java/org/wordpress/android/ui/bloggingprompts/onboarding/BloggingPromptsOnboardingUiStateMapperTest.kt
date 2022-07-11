@@ -15,21 +15,12 @@ class BloggingPromptsOnboardingUiStateMapperTest {
     private val classToTest = BloggingPromptsOnboardingUiStateMapper()
 
     private val expectedRespondents = listOf(
-            AvatarItem(
-                    "https://0.gravatar.com/avatar/cec64efa352617" +
-                            "c35743d8ed233ab410?s=96&d=identicon&r=G"
-            ),
-            AvatarItem(
-                    "https://0.gravatar.com/avatar/cec64efa352617" +
-                            "c35743d8ed233ab410?s=96&d=identicon&r=G"
-            ),
-            AvatarItem(
-                    "https://0.gravatar.com/avatar/cec64efa352617" +
-                            "c35743d8ed233ab410?s=96&d=identicon&r=G"
-            ),
+            AvatarItem(""),
+            AvatarItem(""),
+            AvatarItem(""),
             TrailingLabelTextItem(
-                    UiStringPluralRes(R.plurals.my_site_blogging_prompt_card_number_of_answers, 5),
-                    R.attr.colorPrimary
+                    UiStringPluralRes(R.plurals.my_site_blogging_prompt_card_number_of_answers, 3),
+                    R.attr.colorOnSurface
             )
     )
 

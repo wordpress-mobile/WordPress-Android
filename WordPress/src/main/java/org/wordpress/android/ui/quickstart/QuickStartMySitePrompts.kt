@@ -73,13 +73,6 @@ enum class QuickStartMySitePrompts constructor(
             R.string.quick_start_dialog_review_pages_message_short,
             R.drawable.ic_pages_white_24dp
     ),
-    EDIT_HOMEPAGE(
-            QuickStartStore.QUICK_START_EDIT_HOMEPAGE_LABEL,
-            -1,
-            R.id.quick_action_pages_button,
-            R.string.quick_start_dialog_edit_homepage_message_short,
-            R.drawable.ic_pages_white_24dp
-    ),
     CHECK_NOTIFICATIONS(
             QuickStartStore.QUICK_START_CHECK_NOTIFIATIONS_LABEL,
             R.id.root_view_main,

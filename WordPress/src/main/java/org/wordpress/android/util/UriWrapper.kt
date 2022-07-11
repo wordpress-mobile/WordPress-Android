@@ -11,6 +11,7 @@ data class UriWrapper(val uri: Uri) {
     val lastPathSegment: String? = uri.lastPathSegment
     val pathSegments: List<String> = uri.pathSegments
     val host: String? = uri.host
+    val fragment: String? = uri.fragment
 
     override fun toString() = uri.toString()
     fun getQueryParameter(key: String): String? = uri.getQueryParameter(key)

@@ -1,11 +1,78 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-05-27 14:42:45+0000
+Translation-Revision-Date: 2022-06-30 11:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.1
 Language: zh_TW
 -->
 <resources>
+    <string name="qrcode_auth_flow_content_description">圖片表示正在掃描登入碼</string>
+    <string name="qrcode_auth_flow_error_content_description">圖片表示錯誤</string>
+    <string name="qrcode_auth_flow_dismiss_dialog_message">確定要繼續？</string>
+    <string name="qrcode_auth_flow_dismiss_dialog_title">退出掃描登入碼流程</string>
+    <string name="qrcode_auth_flow_error_auth_failed_subtitle">無法使用此登入碼登入。 請點選「重新掃描」按鈕以重新掃描代碼。</string>
+    <string name="qrcode_auth_flow_error_auth_failed_title">驗證失敗</string>
+    <string name="qrcode_auth_flow_error_expired_subtitle">此登入碼已過期。 請點選「重新掃描」按鈕以重新掃描代碼。</string>
+    <string name="qrcode_auth_flow_error_expired_title">過期登入碼</string>
+    <string name="qrcode_auth_flow_error_invalid_data_subtitle">無法驗證掃描的登入碼。 請點選「重新掃描」按鈕以重新掃描代碼。</string>
+    <string name="qrcode_auth_flow_error_invalid_data_title">無法驗證登入碼</string>
+    <string name="qrcode_auth_flow_error_no_connection_subtitle">需要有效的網際網路連線才能掃描登入碼</string>
+    <string name="qrcode_auth_flow_error_no_connection_title">沒有連線</string>
+    <string name="qrcode_auth_flow_scan_again">重新掃瞄</string>
+    <string name="qrcode_auth_flow_dismiss">關閉</string>
+    <string name="qrcode_auth_flow_done_subtitle">點選關閉並返回網頁瀏覽器以繼續操作。</string>
+    <string name="qrcode_auth_flow_done_title">你已登入！</string>
+    <string name="qrcode_auth_flow_validated_primary_action">是，讓我登入</string>
+    <string name="qrcode_auth_flow_validated_subtitle">請只掃描直接由網頁瀏覽器顯示的 QR 碼。 永遠不要掃描其他任何人傳送給你的代碼。</string>
+    <string name="qrcode_auth_flow_validated_default_title">你是否在 %1$s 附近嘗試登入網頁瀏覽器？</string>
+    <string name="qrcode_auth_flow_validated_title">你是否在 %2$s 附近嘗試登入 %1$s？</string>
+    <string name="stats_revamp_v2_intro_secondary_button_text">稍後提醒我</string>
+    <string name="stats_revamp_v2_intro_primary_button_text">立即試試</string>
+    <string name="stats_revamp_v2_intro_content_note">在「我的網站」&gt;「統計資料」&gt;「洞察報告」瞭解詳情</string>
+    <string name="stats_revamp_v2_intro_content">洞察報告可協助你瞭解自己的內容成效如何，以及哪些內容能讓讀者產生共鳴。</string>
+    <string name="stats_revamp_v2_intro_header_title">洞察報告更新</string>
+    <string name="stats_insights_followers_guide_card">💡 在其他網誌留言是為自己的新網站吸引注意和關注者的絕佳方式。</string>
+    <string name="stats_insights_comments_guide_card">💡 點選「檢視更多」即可查看哪些人踴躍留言。</string>
+    <string name="stats_insights_latest_post_empty">發表第一篇文章之後，請再回來查看！</string>
+    <string name="stats_insights_views_and_visitors_visitors_empty_state">查看我們的頂尖秘訣，瞭解如何增加瀏覽次數和流量 %1$s</string>
+    <string name="stats_view_publicize">社群媒體連結</string>
+    <string name="stats_action_card_schedule_post_message">✍️ 排程草稿在最能觸及讀者的時間發表。</string>
+    <string name="stats_action_card_blogging_reminders_message">💡 穩定發表文章是培養讀者的絕佳方式。 新增提醒來讓自己按進度撰寫網誌。</string>
+    <string name="stats_action_card_grow_audience_message">💡 透過我們專家主導的&lt;i&gt;經營網誌簡介&lt;/i&gt;課程，加速升級你的網誌。</string>
+    <string name="blogging_prompts_onboarding_prompts_loading">正在載入網誌提示。 請稍後再試。</string>
+    <string name="hpp_bottom_helper_text">下不了決定嗎？ 你可以隨時變更佈景主題。</string>
+    <string name="hpp_recommended_default_vertical">撰寫網誌</string>
+    <string name="hpp_recommended_subtitle">為你精選</string>
+    <string name="hpp_recommended_title">適合 %s</string>
+    <string name="hpp_preview_tapped_theme">預覽佈景主題 %s</string>
+    <string name="hpp_title">選擇佈景主題</string>
+    <string name="my_site_blogging_prompt_card_skipped_snackbar">已略過今天的網誌提示</string>
+    <string name="my_site_blogging_prompt_card_menu_learn_more">瞭解更多</string>
+    <string name="my_site_blogging_prompt_card_attribution_dayone">來自 </string>
+    <string name="stats_follower_types_pie_chart_total_label">總計</string>
+    <string name="stats_referrers_pie_chart_others">其他</string>
+    <string name="stats_referrers_pie_chart_search">搜尋</string>
+    <string name="stats_referrers_pie_chart_total_label">檢視</string>
+    <string name="stats_action_card_schedule_post_button_label">排程</string>
+    <string name="stats_referrers_pie_chart_wordpress">WordPress</string>
+    <string name="stats_action_card_schedule_post_title">排程你的文章</string>
+    <string name="stats_action_card_blogging_reminders_button_label">設定提醒</string>
+    <string name="stats_action_card_blogging_reminders_title">設定你的網誌提醒</string>
+    <string name="stats_action_card_grow_audience_button_label">查看課程</string>
+    <string name="stats_action_card_grow_audience_title">讀者持續成長</string>
+    <string name="gutenberg_native_you_can_also_rearrange_blocks_by_tapping_a_block_and_then_tapping">若要重新排列區塊，你也可依序點選區塊和區塊左下角顯示的上下鍵，將其向上或向下移動。</string>
+    <string name="gutenberg_native_image_file_not_found">找不到圖片檔案。</string>
+    <string name="gutenberg_native_drag_drop_makes_rearranging_blocks_a_breeze_press_and_hold_on_a_b">拖放功能可讓你迅速重新排列區塊。 按住一個區塊，然後將其拖曳到新的位置再放開即可。</string>
+    <string name="gutenberg_native_drag_drop">拖曳，然後放開</string>
+    <string name="gutenberg_native_arrow_buttons">箭頭按鈕</string>
+    <string name="gutenberg_native_1_s_currently_selected_2_s">%1$s。 目前選取：%2$s</string>
+    <string name="quick_start_sites_type_all_tasks_completed">所有工作都已完成</string>
+    <string name="quick_start_list_task_complete">工作完成</string>
+    <string name="me_btn_scan_login_code">掃描登入碼</string>
+    <string name="stats_insights_likes_guide_card">⭐️ 你的最新文章 %1$s 已獲得 %2$s 次按讚。</string>
+    <string name="stats_most_popular_percent_views_empty">沒有足夠的活動。 有更多訪客造訪網站的時候，請再回來查看！</string>
+    <string name="stats_total_followers_content_description">%1s，追蹤者總數的 %2s</string>
+    <string name="stats_value_percent">%1$s (%2$s%%)</string>
     <string name="pages_copy_link">複製連結</string>
     <string name="quick_start_completed_tour_title">恭喜！ 你熟知&lt;br/&gt;</string>
     <string name="quick_start_sites_type_get_to_know_app">開始瞭解應用程式</string>
@@ -474,6 +541,7 @@ Language: zh_TW
     <string name="gutenberg_native_three">參</string>
     <string name="gutenberg_native_s_social_icon">%s 社交圖示</string>
     <string name="gutenberg_native_mention">標記</string>
+    <string name="gutenberg_native_new">新功能</string>
     <string name="gutenberg_native_preview_page">閱覽頁面</string>
     <string name="gutenberg_native_preview_post">預覽文章</string>
     <string name="gutenberg_native_retry">重試</string>
@@ -668,10 +736,7 @@ Language: zh_TW
     <string name="quick_start_dialog_review_pages_message">變更、新增或移除網站的頁面。</string>
     <string name="quick_start_dialog_review_pages_title">檢閱網站頁面</string>
     <string name="quick_start_dialog_edit_homepage_message_pages_short">選取%1$s「首頁」%2$s以編輯首頁。</string>
-    <string name="quick_start_dialog_edit_homepage_message_short">選取%1$s「頁面」%2$s以檢視頁面清單。</string>
     <string name="quick_start_card_menu_pin">釘選此項目</string>
-    <string name="quick_start_dialog_edit_homepage_message">變更、新增或移除網站首頁的內容。</string>
-    <string name="quick_start_dialog_edit_homepage_title">編輯首頁</string>
     <string name="reader_menu_mark_as_unseen">標示為未讀。</string>
     <string name="reader_menu_mark_as_seen">標示為已讀。</string>
     <string name="error_media_upload_failed_for_reason">上傳媒體失敗。\n%1$s</string>
@@ -845,10 +910,10 @@ Language: zh_TW
     <string name="label_done_button">完成</string>
     <string name="label_next_button">下一步</string>
     <string name="delete_button_alt">刪除</string>
-    <string name="hpp_choose_error">選取設計時發生錯誤。</string>
     <string name="hpp_retry_error">請檢查你的網際網路連線，然後再試一次。</string>
     <string name="hpp_error_subtitle">請在重新上線時點選重試。</string>
     <string name="hpp_error_title">版面配置在離線時無法使用</string>
+    <string name="hpp_choose_error">選取佈景主題時發生錯誤。</string>
     <string name="continue_site_credentials">使用商店憑證繼續</string>
     <string name="login_find_your_connected_email">尋找你連結的電子郵件</string>
     <string name="reader_discover_no_posts_button_text">追蹤主題</string>
@@ -862,8 +927,6 @@ Language: zh_TW
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">已開啟可捲動的區塊選單。 請選取一個區塊。</string>
     <string name="gutenberg_native_scrollable_block_menu_closed">已關閉可捲動的區塊選單。</string>
     <string name="hpp_choose_button">選擇</string>
-    <string name="hpp_subtitle">選擇你喜愛的首頁版面配置。 你可於稍後加以編輯及自訂。</string>
-    <string name="hpp_title">選擇一款設計</string>
     <string name="mlp_network_error_subtitle">請在重新上線時點選重試，或是使用下方按鈕建立空白頁面。</string>
     <string name="mlp_network_error_title">版面配置在離線時無法使用</string>
     <string name="mlp_error_subtitle">請點選重試或使用下方按鈕建立空白頁面。</string>
@@ -1668,7 +1731,6 @@ Language: zh_TW
     <string name="menu_switch_to_gutenberg_editor">切換至區塊編輯器</string>
     <string name="exit">結束</string>
     <string name="quick_start_sites">後續步驟</string>
-    <string name="quick_start_complete_tasks_header">完成 (%d)</string>
     <string name="quick_start_dialog_upload_icon_message">你的訪客會在他們的瀏覽器上看到你的圖示。新增自訂圖示會讓網站看起來更專業幹練。</string>
     <string name="quick_start_sites_type_grow">讀者持續成長</string>
     <string name="quick_start_sites_type_customize">自訂你的網站</string>
@@ -1683,11 +1745,7 @@ Language: zh_TW
     <string name="quick_start_dialog_remove_next_steps_message">移除後續步驟會隱藏此網站上的所有導覽。此動作無法復原。</string>
     <string name="quick_start_dialog_remove_next_steps_title">移除後續步驟</string>
     <string name="quick_start_remove_next_steps_menu_title">移除此項</string>
-    <string name="quick_start_complete_view_subtitle">恭喜你完成清單。做得好。</string>
-    <string name="quick_start_complete_view_title">所有任務都已完成！</string>
     <string name="quick_start_task_skip_menu_title">略過任務</string>
-    <string name="quick_start_completed_tasks_header_chevron_collapse_desc">折疊</string>
-    <string name="quick_start_completed_tasks_header_chevron_expand_desc">擴大</string>
     <string name="notification_channel_reminder_title">提醒</string>
     <string name="stats_select_next_period_description">選取下個期間</string>
     <string name="stats_select_previous_period_description">選取上個期間</string>
@@ -1761,7 +1819,6 @@ Language: zh_TW
     <string name="gif_picker_initial_empty_text">搜尋 GIF 以新增至你的媒體庫！</string>
     <string name="stats_insights_tags_and_categories">標籤和類別</string>
     <string name="stats_insights_latest_post_with_no_engagement">自從 %2$s 發表後已經過了 %1$s。分享你的文章，讓這些文章廣為人知，並增加文章瀏覽次數︰</string>
-    <string name="stats_insights_latest_post_empty">你尚未發表任何文章。開始發表文章後，這裡便會顯示最新文章的摘要︰</string>
     <string name="stats_insights_all_time_stats">有史以來</string>
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
     <string name="stats_publicize_followers_label">關注者</string>
@@ -2186,7 +2243,7 @@ Language: zh_TW
     <string name="plugin_num_downloads">%s 次下載</string>
     <string name="plugin_num_ratings">%s 則評分</string>
     <string name="plugin_read_reviews">閱讀評論</string>
-    <string name="plugin_faq">常見問題</string>
+    <string name="plugin_faq">常見問題集</string>
     <string name="plugin_whatsnew">最新內容</string>
     <string name="plugin_installation">安裝</string>
     <string name="plugin_description">說明</string>
@@ -3008,7 +3065,6 @@ Language: zh_TW
     <string name="stats_followers_seconds_ago">幾秒鐘前</string>
     <string name="stats_view_top_posts_and_pages">文章與頁面</string>
     <string name="stats_view_videos">影片</string>
-    <string name="stats_view_publicize">宣傳</string>
     <string name="stats_view_followers">關注者</string>
     <string name="stats_view_countries">國家</string>
     <string name="stats_likes">按讚數</string>

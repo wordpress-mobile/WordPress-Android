@@ -22,8 +22,6 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.model.experiments.Variation
-import org.wordpress.android.fluxc.model.experiments.Variation.Control
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleEmpty
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleGeneral
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleStepCount
@@ -33,7 +31,6 @@ import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.Creat
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.CreateSiteState.SiteCreationCompleted
 import org.wordpress.android.ui.sitecreation.usecases.FetchHomePageLayoutsUseCase
 import org.wordpress.android.util.NetworkUtilsWrapper
-import org.wordpress.android.util.experiments.SiteNameABExperiment
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.wizard.WizardManager
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -61,7 +58,6 @@ class SiteCreationMainVMTest {
     @Mock lateinit var savedInstanceState: Bundle
     @Mock lateinit var wizardManager: WizardManager<SiteCreationStep>
     @Mock lateinit var siteCreationStep: SiteCreationStep
-    @Mock lateinit var siteNameABExperiment: SiteNameABExperiment
     @Mock lateinit var networkUtils: NetworkUtilsWrapper
     @Mock lateinit var dispatcher: Dispatcher
     @Mock lateinit var fetchHomePageLayoutsUseCase: FetchHomePageLayoutsUseCase
@@ -87,22 +83,6 @@ class SiteCreationMainVMTest {
         whenever(wizardManager.stepsCount).thenReturn(STEP_COUNT)
         // clear invocations since viewModel.start() calls wizardManager.showNextStep
         clearInvocations(wizardManager)
-    }
-
-    @Test
-    fun siteCreationSiteNameExperimentControlTracked() {
-        whenever(siteNameABExperiment.getVariation()).thenReturn(Control)
-        val newViewModel = getNewViewModel()
-        newViewModel.start(null, SiteCreationSource.UNSPECIFIED)
-        verify(tracker).trackSiteNameExperimentVariation(Control)
-    }
-
-    @Test
-    fun siteCreationSiteNameExperimentTreatmentTracked() {
-        whenever(siteNameABExperiment.getVariation()).thenReturn(Variation.fromName("wpandroid_site_name_v1"))
-        val newViewModel = getNewViewModel()
-        newViewModel.start(null, SiteCreationSource.UNSPECIFIED)
-        verify(tracker).trackSiteNameExperimentVariation(Variation.fromName("wpandroid_site_name_v1"))
     }
 
     @Test
@@ -285,7 +265,6 @@ class SiteCreationMainVMTest {
     private fun getNewViewModel() = SiteCreationMainVM(
             tracker,
             wizardManager,
-            siteNameABExperiment,
             networkUtils,
             dispatcher,
             fetchHomePageLayoutsUseCase,

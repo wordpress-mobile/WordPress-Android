@@ -9,12 +9,15 @@ import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
-import org.wordpress.android.fluxc.store.StatsStore.InsightType.VIEWS_AND_VISITORS
+import org.wordpress.android.fluxc.store.StatsStore.InsightType
+import org.wordpress.android.fluxc.store.StatsStore.StatsType
 import org.wordpress.android.fluxc.store.stats.time.VisitsAndViewsStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.stats.StatsViewType.INSIGHTS_VIEWS_AND_VISITORS
+import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewInsightDetails
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewUrl
-import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewViewsAndVisitorsDetail
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.INSIGHT_DETAIL
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
@@ -28,6 +31,8 @@ import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.toStatsSection
 import org.wordpress.android.ui.stats.refresh.utils.trackGranular
+import org.wordpress.android.ui.stats.refresh.utils.trackViewsVisitorsChips
+import org.wordpress.android.ui.stats.refresh.utils.trackWithType
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
@@ -45,6 +50,7 @@ const val TOP_TIPS_URL = "https://wordpress.com/support/getting-more-views-and-t
 @Suppress("TooManyFunctions")
 class ViewsAndVisitorsUseCase
 @Inject constructor(
+    statsType: StatsType,
     private val statsGranularity: StatsGranularity,
     private val visitsAndViewsStore: VisitsAndViewsStore,
     private val selectedDateProvider: SelectedDateProvider,
@@ -59,7 +65,7 @@ class ViewsAndVisitorsUseCase
     private val resourceProvider: ResourceProvider,
     private val useCaseMode: UseCaseMode
 ) : BaseStatsUseCase<VisitsAndViewsModel, UiState>(
-        VIEWS_AND_VISITORS,
+        statsType,
         mainDispatcher,
         backgroundDispatcher,
         UiState(),
@@ -80,11 +86,10 @@ class ViewsAndVisitorsUseCase
         val cachedData = visitsAndViewsStore.getVisits(
                 statsSiteProvider.siteModel,
                 statsGranularity,
-                LimitMode.All
+                LimitMode.Top(VIEWS_AND_VISITORS_ITEMS_TO_LOAD)
         )
         if (cachedData != null) {
             logIfIncorrectData(cachedData, statsGranularity, statsSiteProvider.siteModel, false)
-            selectedDateProvider.onDateLoadingSucceeded(statsGranularity)
         }
         return cachedData
     }
@@ -101,16 +106,13 @@ class ViewsAndVisitorsUseCase
 
         return when {
             error != null -> {
-                selectedDateProvider.onDateLoadingFailed(statsGranularity)
                 State.Error(error.message ?: error.type.name)
             }
             model != null && model.dates.isNotEmpty() -> {
                 logIfIncorrectData(model, statsGranularity, statsSiteProvider.siteModel, true)
-                selectedDateProvider.onDateLoadingSucceeded(statsGranularity)
                 State.Data(model)
             }
             else -> {
-                selectedDateProvider.onDateLoadingSucceeded(statsGranularity)
                 State.Empty()
             }
         }
@@ -164,6 +166,7 @@ class ViewsAndVisitorsUseCase
             }
 
             val dateFromProvider = selectedDateProvider.getSelectedDate(statsGranularity)
+            val visibleLineCount = uiState.visibleLineCount ?: domainModel.dates.size
             val availableDates = domainModel.dates.map {
                 statsDateFormatter.parseStatsDate(
                         statsGranularity,
@@ -172,6 +175,8 @@ class ViewsAndVisitorsUseCase
             }
             val selectedDate = dateFromProvider ?: availableDates.last()
             val index = availableDates.indexOf(selectedDate)
+
+            selectedDateProvider.selectDate(selectedDate, availableDates.takeLast(visibleLineCount), statsGranularity)
 
             val selectedItem = domainModel.dates.getOrNull(index) ?: domainModel.dates.last()
 
@@ -219,9 +224,11 @@ class ViewsAndVisitorsUseCase
     )
 
     private fun onViewMoreClick() {
-        analyticsTracker.track(AnalyticsTracker.Stat.STATS_VIEWS_AND_VISITORS_VIEW_MORE_TAPPED)
+        analyticsTracker.trackWithType(AnalyticsTracker.Stat.STATS_INSIGHTS_VIEW_MORE, InsightType.VIEWS_AND_VISITORS)
         navigateTo(
-                ViewViewsAndVisitorsDetail(
+                ViewInsightDetails(
+                        INSIGHT_DETAIL,
+                        INSIGHTS_VIEWS_AND_VISITORS,
                         statsGranularity,
                         selectedDateProvider.getSelectedDate(statsGranularity)
                 )
@@ -247,10 +254,7 @@ class ViewsAndVisitorsUseCase
     }
 
     private fun onChipSelected(position: Int) {
-        analyticsTracker.trackGranular(
-                AnalyticsTracker.Stat.STATS_VIEWS_AND_VISITORS_TYPE_TAPPED,
-                statsGranularity
-        )
+        analyticsTracker.trackViewsVisitorsChips(position)
         updateUiState { it.copy(selectedPosition = position) }
     }
 
@@ -276,6 +280,7 @@ class ViewsAndVisitorsUseCase
     ) : InsightUseCaseFactory {
         override fun build(useCaseMode: UseCaseMode) =
                 ViewsAndVisitorsUseCase(
+                        InsightType.VIEWS_AND_VISITORS,
                         DAYS,
                         visitsAndViewsStore,
                         selectedDateProvider,

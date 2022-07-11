@@ -1,0 +1,103 @@
+plugins {
+    id "com.android.library"
+    id "org.jetbrains.kotlin.android"
+    id "org.jetbrains.kotlin.plugin.parcelize"
+}
+
+ext.aztecVersion = 'v1.6.0'
+
+repositories {
+    maven {
+        url "https://a8c-libs.s3.amazonaws.com/android"
+        content {
+            includeGroup "org.wordpress"
+            includeGroup "org.wordpress.aztec"
+            includeGroup "org.wordpress-mobile"
+            includeGroup "org.wordpress-mobile.gutenberg-mobile"
+        }
+    }
+    maven {
+        url "https://a8c-libs.s3.amazonaws.com/android/react-native-mirror"
+        content {
+            includeGroup "com.facebook.react"
+        }
+    }
+    maven {
+        url "https://a8c-libs.s3.amazonaws.com/android/hermes-mirror"
+        content {
+            includeGroup "org.wordpress-mobile"
+        }
+    }
+    google()
+    mavenCentral()
+    maven { url "https://www.jitpack.io" }
+    maven { url "https://a8c-libs.s3.amazonaws.com/android/hermes-mirror" }
+}
+
+android {
+    compileSdkVersion 29
+
+    defaultConfig {
+        minSdkVersion rootProject.minSdkVersion
+        targetSdkVersion rootProject.targetSdkVersion
+    }
+    compileOptions {
+        sourceCompatibility 1.8
+        targetCompatibility 1.8
+    }
+
+    // Avoid 'duplicate files during packaging of APK' errors
+    packagingOptions {
+        exclude 'LICENSE.txt'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/NOTICE.txt'
+    }
+}
+
+dependencies {
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.vectordrawable:vectordrawable-animated:1.0.0'
+    implementation 'androidx.gridlayout:gridlayout:1.0.0'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'com.google.android.material:material:1.2.1'
+    implementation 'org.apache.commons:commons-lang3:3.5'
+    implementation 'com.android.volley:volley:1.1.1'
+    implementation "org.wordpress:utils:$wordPressUtilsVersion"
+    api ("$gradle.ext.aztecAndroidAztecPath") {
+        exclude group: "com.android.volley"
+        exclude group: 'org.wordpress', module: 'utils'
+        version {
+            strictly aztecVersion
+        }
+    }
+    api ("$gradle.ext.aztecAndroidWordPressShortcodesPath:$aztecVersion") {
+        version {
+            strictly aztecVersion
+        }
+    }
+    api ("$gradle.ext.aztecAndroidWordPressCommentsPath:$aztecVersion") {
+        version {
+            strictly aztecVersion
+        }
+    }
+
+    implementation ("$gradle.ext.wputilsBinaryPath") {
+        version {
+            strictly wordPressUtilsVersion
+        }
+    }
+
+    // This dependency will be substituted if the `local-builds.gradle` file contains
+    // `localGutenbergMobilePath`. Details for this can be found in the `settings.gradle` file.
+    implementation "$rootProject.gradle.ext.gutenbergMobileBinaryPath:$rootProject.ext.gutenbergMobileVersion"
+
+    // Required Aztec dependencies (they should be included but Jitpack seems to be stripping these out)
+    implementation "org.jsoup:jsoup:1.10.3"
+
+    implementation 'com.google.code.gson:gson:2.6.2'
+
+    lintChecks 'org.wordpress:lint:1.1.0'
+}
+

@@ -1,11 +1,78 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-05-27 14:35:49+0000
+Translation-Revision-Date: 2022-06-30 09:54:08+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: id
 -->
 <resources>
+    <string name="qrcode_auth_flow_content_description">Gambar menunjukkan pemindaian kode login sedang berlangsung</string>
+    <string name="qrcode_auth_flow_error_content_description">Gambar menunjukkan terjadinya error</string>
+    <string name="qrcode_auth_flow_dismiss_dialog_message">Anda yakin ingin melanjutkan?</string>
+    <string name="qrcode_auth_flow_dismiss_dialog_title">Alur Keluar Pindai Kode Login</string>
+    <string name="qrcode_auth_flow_error_auth_failed_subtitle">Tidak dapat login menggunakan kode ini. Ketuk tombol Pindai Lagi untuk memindai ulang kode.</string>
+    <string name="qrcode_auth_flow_error_auth_failed_title">Autentikasi Gagal</string>
+    <string name="qrcode_auth_flow_error_expired_subtitle">Kode login telah kedaluwarsa. Ketuk tombol Pindai Lagi untuk memindai ulang kode.</string>
+    <string name="qrcode_auth_flow_error_expired_title">Kode login kedaluwarsa</string>
+    <string name="qrcode_auth_flow_error_invalid_data_subtitle">Kode login yang dipindai tidak dapat divalidasi. Ketuk tombol Pindai Lagi untuk memindai ulang kode.</string>
+    <string name="qrcode_auth_flow_error_invalid_data_title">Tidak dapat memvalidasi kode login</string>
+    <string name="qrcode_auth_flow_error_no_connection_subtitle">Diperlukan koneksi internet yang aktif untuk memindai kode login</string>
+    <string name="qrcode_auth_flow_error_no_connection_title">Tidak ada koneksi.</string>
+    <string name="qrcode_auth_flow_scan_again">Pindai Lagi</string>
+    <string name="qrcode_auth_flow_dismiss">Tutup</string>
+    <string name="qrcode_auth_flow_done_subtitle">Ketuk tutup dan kembali ke browser web Anda untuk melanjutkan.</string>
+    <string name="qrcode_auth_flow_done_title">Anda sudah login!</string>
+    <string name="qrcode_auth_flow_validated_primary_action">Ya, saya ingin login</string>
+    <string name="qrcode_auth_flow_validated_subtitle">Hanya pindai kode QR yang diambil langsung dari browser web Anda. Jangan pindai kode yang dikirimkan oleh orang lain.</string>
+    <string name="qrcode_auth_flow_validated_default_title">Apakah Anda mencoba login melalui browser web di sekitar %1$s?</string>
+    <string name="qrcode_auth_flow_validated_title">Apakah Anda mencoba login ke %1$s di sekitar %2$s</string>
+    <string name="stats_revamp_v2_intro_secondary_button_text">Ingatkan saya nanti</string>
+    <string name="stats_revamp_v2_intro_primary_button_text">Coba sekarang</string>
+    <string name="stats_revamp_v2_intro_content_note">Pelajari lebih lanjut di Situs Saya &gt; Statistik &gt; Wawasan.</string>
+    <string name="stats_revamp_v2_intro_content">Wawasan membantu memahami seberapa laris konten Anda dan apa yang disukai pengunjung situs Anda.</string>
+    <string name="stats_revamp_v2_intro_header_title">Wawasan terbaru</string>
+    <string name="stats_insights_followers_guide_card">💡Cobalah memberikan komentar di blog lain untuk menarik perhatian dan pengikut ke situs baru Anda.</string>
+    <string name="stats_insights_comments_guide_card">💡Ketuk \'LIHAT LEBIH BANYAK\' untuk melihat komentator teratas Anda.</string>
+    <string name="stats_insights_latest_post_empty">Periksa lagi setelah Anda memposkan pos pertama Anda!</string>
+    <string name="stats_insights_views_and_visitors_visitors_empty_state">Cek tips terbaik kami untuk meningkatkan pratinjau dan kunjungan Anda %1$s</string>
+    <string name="stats_view_publicize">Koneksi Sosial Media</string>
+    <string name="stats_action_card_schedule_post_message">✍️ Jadwalkan draf Anda untuk diposkan di waktu ramai untuk mendapatkan lebih banyak pengunjung.</string>
+    <string name="stats_action_card_blogging_reminders_message">💡Memposkan secara konsisten membantu Anda menarik lebih banyak pengunjung. Tambahkan pengingat untuk menjaga konsistensi.</string>
+    <string name="stats_action_card_grow_audience_message">💡Tingkatkan kemampuan blog Anda lebih cepat dengan pelatihan&lt;i&gt; Pengenalan Blogging&lt;/i&gt; dari para ahli.</string>
+    <string name="blogging_prompts_onboarding_prompts_loading">Prompt Blogging sedang dimuat. Harap tunggu beberapa saat lalu coba lagi.</string>
+    <string name="hpp_bottom_helper_text">Bingung memilih? Anda dapat mengganti tema kapan saja.</string>
+    <string name="hpp_recommended_default_vertical">Penulisan Blog</string>
+    <string name="hpp_recommended_subtitle">Pilihan untuk Anda</string>
+    <string name="hpp_recommended_title">Terbaik untuk %s</string>
+    <string name="hpp_preview_tapped_theme">Pratinjau tema %s</string>
+    <string name="hpp_title">Pilih tema</string>
+    <string name="my_site_blogging_prompt_card_skipped_snackbar">Prompt blogging hari ini yang dilewati</string>
+    <string name="my_site_blogging_prompt_card_menu_learn_more">Pelajari selengkapnya</string>
+    <string name="my_site_blogging_prompt_card_attribution_dayone">Dari </string>
+    <string name="stats_follower_types_pie_chart_total_label">Total</string>
+    <string name="stats_referrers_pie_chart_others">Lainnya</string>
+    <string name="stats_referrers_pie_chart_search">Cari</string>
+    <string name="stats_referrers_pie_chart_wordpress">WordPress</string>
+    <string name="stats_referrers_pie_chart_total_label">Tayangan</string>
+    <string name="stats_action_card_schedule_post_button_label">Jadwal</string>
+    <string name="stats_action_card_schedule_post_title">Jadwalkan pos Anda</string>
+    <string name="stats_action_card_blogging_reminders_button_label">Setel pengingat</string>
+    <string name="stats_action_card_blogging_reminders_title">Setel pengingat blogging Anda</string>
+    <string name="stats_action_card_grow_audience_button_label">Periksa kursus</string>
+    <string name="stats_action_card_grow_audience_title">Perbanyak audiens Anda</string>
+    <string name="gutenberg_native_you_can_also_rearrange_blocks_by_tapping_a_block_and_then_tapping">Anda juga dapat mengatur ulang blok dengan mengetuk blok lalu mengetuk anak panah atas dan bawah yang muncul di sisi kiri bawah blok untuk memindahkannya ke atas atau ke bawah.</string>
+    <string name="gutenberg_native_image_file_not_found">Berkas gambar tidak ditemukan.</string>
+    <string name="gutenberg_native_drag_drop_makes_rearranging_blocks_a_breeze_press_and_hold_on_a_b">Seret &amp; lepaskan memudahkan pengaturan ulang blok. Klik dan tahan blok, kemudian seret blok tersebut ke lokasi baru lalu lepaskan.</string>
+    <string name="gutenberg_native_drag_drop">Seret &amp; lepas</string>
+    <string name="gutenberg_native_arrow_buttons">Tombol panah</string>
+    <string name="gutenberg_native_1_s_currently_selected_2_s">%1$s. Pilihan saat ini: %2$s</string>
+    <string name="quick_start_sites_type_all_tasks_completed">Semua tugas selesai</string>
+    <string name="quick_start_list_task_complete">Tugas selesai</string>
+    <string name="me_btn_scan_login_code">Pindai Kode Login</string>
+    <string name="stats_insights_likes_guide_card">⭐️ Artikel terbaru Anda %1$s telah menerima %2$s suka.</string>
+    <string name="stats_most_popular_percent_views_empty">Aktivitas tidak cukup. Periksa lagi nanti saat situs Anda lebih ramai pengunjung!</string>
+    <string name="stats_total_followers_content_description">%1s, %2s total pengikut</string>
+    <string name="stats_value_percent">%1$s (%2$s%%)</string>
     <string name="pages_copy_link">Salin tautan</string>
     <string name="quick_start_completed_tour_title">Selamat! Anda telah berhasil&lt;br/&gt;</string>
     <string name="quick_start_sites_type_get_to_know_app">Kenali aplikasinya</string>
@@ -474,6 +541,7 @@ Language: id
     <string name="gutenberg_native_three">Tiga.</string>
     <string name="gutenberg_native_s_social_icon">Ikon media sosial %s</string>
     <string name="gutenberg_native_mention">Sebutan</string>
+    <string name="gutenberg_native_new">Baru</string>
     <string name="gutenberg_native_preview_post">Pratinjau pos</string>
     <string name="gutenberg_native_preview_page">Pratinjau halaman</string>
     <string name="gutenberg_native_retry">Coba lagi</string>
@@ -669,9 +737,6 @@ Language: id
     <string name="quick_start_dialog_review_pages_message">Ubah, tambahkan, atau hapus halaman situs.</string>
     <string name="quick_start_dialog_review_pages_title">Tinjau laman situs</string>
     <string name="quick_start_dialog_edit_homepage_message_pages_short">Pilih %1$s Beranda %2$s untuk menyunting Beranda Anda.</string>
-    <string name="quick_start_dialog_edit_homepage_message_short">Pilih %1$s Halaman %2$s untuk melihat daftar halaman Anda.</string>
-    <string name="quick_start_dialog_edit_homepage_message">Ubah, tambahkan, atau hapus konten dari halaman beranda situs.</string>
-    <string name="quick_start_dialog_edit_homepage_title">Sunting halaman beranda</string>
     <string name="reader_menu_mark_as_unseen">Tandai sebagai belum dilihat</string>
     <string name="reader_menu_mark_as_seen">Tandai sebagai telah dilihat</string>
     <string name="error_media_upload_failed_for_reason">Unggahan media gagal.\n%1$s</string>
@@ -845,7 +910,7 @@ Language: id
     <string name="label_done_button">Selesai</string>
     <string name="label_next_button">Selanjutnya</string>
     <string name="delete_button_alt">Hapus</string>
-    <string name="hpp_choose_error">Terjadi error saat memilih desain.</string>
+    <string name="hpp_choose_error">Terjadi error saat memilih tema.</string>
     <string name="hpp_retry_error">Harap periksa koneksi internet Anda lalu coba lagi.</string>
     <string name="hpp_error_subtitle">Ketuk coba lagi saat  Anda kembali online.</string>
     <string name="hpp_error_title">Tata letak tidak tersedia saat offline</string>
@@ -862,8 +927,6 @@ Language: id
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">Menu blok yang dapat digulir terbuka. Pilih blok.</string>
     <string name="gutenberg_native_scrollable_block_menu_closed">Menu blok yang dapat digulir tertutup.</string>
     <string name="hpp_choose_button">Pilih</string>
-    <string name="hpp_subtitle">Pilih tata letak halaman beranda favorit Anda. Anda dapat menyunting dan menyesuaikannya nanti.</string>
-    <string name="hpp_title">Pilih desain</string>
     <string name="mlp_network_error_subtitle">Ketuk coba lagi setelah Anda kembali online atau buat halaman kosong dengan tombol di bawah ini.</string>
     <string name="mlp_network_error_title">Tata letak tidak tersedia saat offline</string>
     <string name="mlp_error_subtitle">Ketuk coba lagi atau buat halaman kosong dengan tombol di bawah ini.</string>
@@ -1670,7 +1733,6 @@ Language: id
     <string name="quick_start_sites_type_grow">Perbanyak audiens Anda</string>
     <string name="quick_start_sites_type_customize">Sesuaikan situs Anda</string>
     <string name="quick_start_sites">Langkah Berikutnya</string>
-    <string name="quick_start_complete_tasks_header">Selesai (%d)</string>
     <string name="quick_start_dialog_upload_icon_title">Pilih ikon situs yang unik</string>
     <string name="quick_start_dialog_upload_icon_message">Pengunjung Anda akan melihat ikon Anda di browser. Tambahkan ikon khusus untuk tampilan yang lebih profesional dan elegan.</string>
     <string name="quick_start_dialog_check_stats_message_short">Pilih %1$s Statistik %2$s untuk melihat performa situs Anda.</string>
@@ -1683,11 +1745,7 @@ Language: id
     <string name="quick_start_dialog_remove_next_steps_message">Menghapus Langkah Berikutnya akan menyembunyikan semua tur di situs ini. Tindakan ini tidak dapat diurungkan.</string>
     <string name="quick_start_dialog_remove_next_steps_title">Hapus Langkah Berikutnya</string>
     <string name="quick_start_remove_next_steps_menu_title">Hapus langkah ini</string>
-    <string name="quick_start_complete_view_subtitle">Selamat, Anda telah melengkapi daftar. Kerja bagus.</string>
-    <string name="quick_start_complete_view_title">Semua tugas selesai!</string>
     <string name="quick_start_task_skip_menu_title">Abaikan tugas</string>
-    <string name="quick_start_completed_tasks_header_chevron_collapse_desc">ciutkan</string>
-    <string name="quick_start_completed_tasks_header_chevron_expand_desc">luaskan</string>
     <string name="notification_channel_reminder_title">Pengingat</string>
     <string name="stats_select_next_period_description">Pilih periode selanjutnya</string>
     <string name="stats_select_previous_period_description">Pilih periode sebelumnya</string>
@@ -1760,7 +1818,6 @@ Language: id
     <string name="stats_insights_create_post">Buat pos</string>
     <string name="stats_insights_latest_post_message">Sudah %1$s sejak %2$s dipublikasikan. Berikut performa pos tersebut sejauh ini:</string>
     <string name="stats_insights_latest_post_with_no_engagement">Sudah %1$s sejak %2$s dipublikasikan. Bersiaplah dan tingkatkan penayangan pos dengan membagikan pos Anda:</string>
-    <string name="stats_insights_latest_post_empty">Anda belum memublikasikan pos apa pun. Setelah Anda mulai memublikasikan pos, ringkasan pos terbaru akan muncul di sini:</string>
     <string name="stats_insights_tags_and_categories">Tag dan Kategori</string>
     <string name="stats_insights_all_time_stats">Sepanjang waktu</string>
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
@@ -3006,7 +3063,6 @@ Language: id
     <string name="stats_followers_a_minute_ago">satu menit yang lalu</string>
     <string name="stats_followers_seconds_ago">detik yang lalu</string>
     <string name="stats_view_followers">Pengikut</string>
-    <string name="stats_view_publicize">Publikasikan</string>
     <string name="stats_view_videos">Video</string>
     <string name="stats_view_top_posts_and_pages">Pos &amp; Halaman</string>
     <string name="stats_view_countries">Negara</string>

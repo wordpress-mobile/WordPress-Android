@@ -9,13 +9,13 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineDispatcher
+import org.wordpress.android.BuildConfig
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.MONTHS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.WEEKS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.YEARS
 import org.wordpress.android.fluxc.store.StatsStore
 import org.wordpress.android.fluxc.store.StatsStore.InsightType
-import org.wordpress.android.fluxc.store.StatsStore.InsightType.VIEWS_AND_VISITORS
 import org.wordpress.android.fluxc.store.StatsStore.TimeStatsType
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
@@ -40,7 +40,9 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.O
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.PostsAndPagesUseCase.PostsAndPagesUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.ReferrersUseCase.ReferrersUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.SearchTermsUseCase.SearchTermsUseCaseFactory
+import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.TotalLikesDetailUseCase.TotalLikesGranularUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.VideoPlaysUseCase.VideoPlaysUseCaseFactory
+import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.ViewsAndVisitorsDetailUseCase.ViewsAndVisitorsGranularUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.ActionCardGrowUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.ActionCardReminderUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.ActionCardScheduleUseCase
@@ -130,7 +132,7 @@ class StatsModule {
         actionCardScheduleUseCase: ActionCardScheduleUseCase
     ): List<@JvmSuppressWildcards BaseStatsUseCase<*, *>> {
         val useCases = mutableListOf<BaseStatsUseCase<*, *>>()
-        if (statsRevampV2FeatureConfig.isEnabled()) {
+        if (BuildConfig.IS_JETPACK_APP && statsRevampV2FeatureConfig.isEnabled()) {
             useCases.add(viewsAndVisitorsUseCaseFactory.build(BLOCK))
             useCases.add(totalLikesUseCaseFactory.build(BLOCK))
             useCases.add(totalCommentsUseCaseFactory.build(BLOCK))
@@ -421,14 +423,14 @@ class StatsModule {
     @Singleton
     @Named(BLOCK_VIEWS_AND_VISITORS_USE_CASES)
     fun provideViewsAndVisitorsDetailUseCases(
-        viewsAndVisitorsUseCaseFactory: ViewsAndVisitorsUseCaseFactory,
+        viewsAndVisitorsGranularUseCaseFactory: ViewsAndVisitorsGranularUseCaseFactory,
         referrersUseCaseFactory: ReferrersUseCaseFactory,
         countryViewsUseCaseFactory: CountryViewsUseCaseFactory
-    ): List<@JvmSuppressWildcards BaseStatsUseCase<*, *>> {
+    ): List<@JvmSuppressWildcards GranularUseCaseFactory> {
         return listOf(
-                viewsAndVisitorsUseCaseFactory.build(VIEW_ALL),
-                referrersUseCaseFactory.build(DAYS, BLOCK_DETAIL),
-                countryViewsUseCaseFactory.build(DAYS, BLOCK)
+                viewsAndVisitorsGranularUseCaseFactory,
+                referrersUseCaseFactory,
+                countryViewsUseCaseFactory
         )
     }
 
@@ -443,19 +445,19 @@ class StatsModule {
         @Named(BG_THREAD) bgDispatcher: CoroutineDispatcher,
         @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
         statsSiteProvider: StatsSiteProvider,
-        @Named(BLOCK_VIEWS_AND_VISITORS_USE_CASES) useCases: List<@JvmSuppressWildcards BaseStatsUseCase<*, *>>,
+        @Named(BLOCK_VIEWS_AND_VISITORS_USE_CASES)
+        useCasesFactories: List<@JvmSuppressWildcards GranularUseCaseFactory>,
         uiModelMapper: UiModelMapper
     ): BaseListUseCase {
         return BaseListUseCase(
                 bgDispatcher,
                 mainDispatcher,
                 statsSiteProvider,
-                useCases,
-
+                useCasesFactories.map { it.build(WEEKS, BLOCK_DETAIL) },
                 {
-                    listOf(VIEWS_AND_VISITORS, TimeStatsType.REFERRERS, TimeStatsType.COUNTRIES)
+                    listOf(InsightType.VIEWS_AND_VISITORS, TimeStatsType.REFERRERS, TimeStatsType.COUNTRIES)
                 },
-                uiModelMapper::mapViewsVisitorsDetailStats
+                uiModelMapper::mapTimeStats
         )
     }
 
@@ -467,12 +469,12 @@ class StatsModule {
     @Singleton
     @Named(TOTAL_LIKES_DETAIL_USE_CASES)
     fun provideLikesDetailUseCases(
-        totalLikesUseCaseFactory: TotalLikesUseCaseFactory,
+        totalLikesUseCaseFactory: TotalLikesGranularUseCaseFactory,
         postsAndPagesUseCaseFactory: PostsAndPagesUseCaseFactory
-    ): List<@JvmSuppressWildcards BaseStatsUseCase<*, *>> {
+    ): List<@JvmSuppressWildcards GranularUseCaseFactory> {
         return listOf(
-                totalLikesUseCaseFactory.build(VIEW_ALL),
-                postsAndPagesUseCaseFactory.build(DAYS, BLOCK)
+                totalLikesUseCaseFactory,
+                postsAndPagesUseCaseFactory
         )
     }
 
@@ -487,14 +489,14 @@ class StatsModule {
         @Named(BG_THREAD) bgDispatcher: CoroutineDispatcher,
         @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
         statsSiteProvider: StatsSiteProvider,
-        @Named(TOTAL_LIKES_DETAIL_USE_CASES) useCases: List<@JvmSuppressWildcards BaseStatsUseCase<*, *>>,
+        @Named(TOTAL_LIKES_DETAIL_USE_CASES) useCasesFactories: List<@JvmSuppressWildcards GranularUseCaseFactory>,
         uiModelMapper: UiModelMapper
     ): BaseListUseCase {
         return BaseListUseCase(
                 bgDispatcher,
                 mainDispatcher,
                 statsSiteProvider,
-                useCases,
+                useCasesFactories.map { it.build(WEEKS, BLOCK_DETAIL) },
                 { listOf(InsightType.TOTAL_LIKES, TimeStatsType.POSTS_AND_PAGES) },
                 uiModelMapper::mapTimeStats
         )
@@ -513,7 +515,7 @@ class StatsModule {
         postsCommentsUseCase: PostsCommentsUseCase
     ): List<@JvmSuppressWildcards BaseStatsUseCase<*, *>> {
         return listOf(
-                totalCommentsUseCaseFactory.build(VIEW_ALL),
+                totalCommentsUseCaseFactory.build(BLOCK_DETAIL),
                 authorsCommentsUseCase,
                 postsCommentsUseCase
         )
@@ -557,7 +559,7 @@ class StatsModule {
     ): List<@JvmSuppressWildcards BaseStatsUseCase<*, *>> = listOf(
             totalFollowersUseCaseFactory.build(VIEW_ALL),
             followerTypesUseCase,
-            followersUseCaseFactory.build(BLOCK)
+            followersUseCaseFactory.build(BLOCK_DETAIL)
     )
 
     /**

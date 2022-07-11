@@ -131,7 +131,7 @@ class QuickLinkRibbonBuilderTest : BaseUnitTest() {
         checkStatsTask: QuickStartTask
     ): QuickStartTask? {
         return when {
-            showPages -> QuickStartNewSiteTask.EDIT_HOMEPAGE
+            showPages -> QuickStartNewSiteTask.REVIEW_PAGES
             showStats -> checkStatsTask
             else -> null
         }

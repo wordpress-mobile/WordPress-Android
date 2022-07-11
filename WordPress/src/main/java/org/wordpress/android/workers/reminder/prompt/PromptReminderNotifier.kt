@@ -6,8 +6,10 @@ import android.content.Intent
 import androidx.core.app.NotificationCompat.Action.Builder
 import androidx.core.app.NotificationCompat.CATEGORY_REMINDER
 import androidx.core.app.NotificationCompat.PRIORITY_DEFAULT
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
-import org.wordpress.android.R.color
+import org.wordpress.android.BuildConfig
+import org.wordpress.android.R
 import org.wordpress.android.R.drawable
 import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
@@ -15,12 +17,14 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.BLOGGING_REMINDERS_
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.BLOGGING_REMINDERS_NOTIFICATION_PROMPT_TAPPED
 import org.wordpress.android.fluxc.model.bloggingprompts.BloggingPromptModel
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.fluxc.store.BloggingRemindersStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore
 import org.wordpress.android.push.NotificationPushIds.REMINDER_NOTIFICATION_ID
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersAnalyticsTracker
 import org.wordpress.android.ui.notifications.DismissNotificationReceiver
+import org.wordpress.android.ui.posts.PostUtils.EntryPoint
 import org.wordpress.android.util.HtmlCompatWrapper
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.config.BloggingPromptsFeatureConfig
@@ -40,11 +44,9 @@ class PromptReminderNotifier @Inject constructor(
     val bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig,
     val bloggingPromptsStore: BloggingPromptsStore,
     val bloggingRemindersAnalyticsTracker: BloggingRemindersAnalyticsTracker,
-    val htmlCompatWrapper: HtmlCompatWrapper
+    val htmlCompatWrapper: HtmlCompatWrapper,
+    private val bloggingRemindersStore: BloggingRemindersStore
 ) {
-    // TODO @RenanLukas replace with remote field in SiteModel after endpoint integration
-    var hasOptedInBloggingPromptsReminders = true
-
     @Suppress("MagicNumber")
     suspend fun notify(siteId: Int) {
         val notificationId = REMINDER_NOTIFICATION_ID + siteId
@@ -82,7 +84,11 @@ class PromptReminderNotifier @Inject constructor(
             category = CATEGORY_REMINDER,
             autoCancel = true,
             colorized = true,
-            color = resourceProvider.getColor(color.blue_50),
+            color = if (BuildConfig.IS_JETPACK_APP) {
+                resourceProvider.getColor(R.color.jetpack_green)
+            } else {
+                resourceProvider.getColor(R.color.blue_50)
+            },
             smallIcon = drawable.ic_app_white_24dp,
             firstAction = Builder(
                 0,
@@ -130,7 +136,11 @@ class PromptReminderNotifier @Inject constructor(
         context,
         openEditorRequestCode,
         ActivityLauncher.openEditorWithPromptAndDismissNotificationIntent(
-                context, notificationId, bloggingPrompt, BLOGGING_REMINDERS_NOTIFICATION_PROMPT_ANSWER_TAPPED
+            context,
+            notificationId,
+            bloggingPrompt,
+            BLOGGING_REMINDERS_NOTIFICATION_PROMPT_ANSWER_TAPPED,
+            EntryPoint.BLOGGING_REMINDERS_NOTIFICATION_ANSWER_PROMPT
         ),
         PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE
     )
@@ -144,16 +154,21 @@ class PromptReminderNotifier @Inject constructor(
         context,
         openEditorRequestCode,
         ActivityLauncher.openEditorWithPromptAndDismissNotificationIntent(
-                context, notificationId, bloggingPrompt, BLOGGING_REMINDERS_NOTIFICATION_PROMPT_TAPPED
+            context,
+            notificationId,
+            bloggingPrompt,
+            BLOGGING_REMINDERS_NOTIFICATION_PROMPT_TAPPED,
+            EntryPoint.BLOGGING_REMINDERS_NOTIFICATION_ANSWER_PROMPT
         ),
         PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE
     )
 
-    fun shouldNotify(siteId: Int): Boolean {
+    suspend fun shouldNotify(siteId: Int): Boolean {
         val hasAccessToken = accountStore.hasAccessToken()
         val isBloggingPromptsEnabled = bloggingPromptsFeatureConfig.isEnabled()
         val siteModel = siteStore.getSiteByLocalId(siteId)
-        val hasOptedInBloggingPromptsReminders = siteModel != null && hasOptedInBloggingPromptsReminders
+        val bloggingRemindersModel = bloggingRemindersStore.bloggingRemindersModel(siteId).first()
+        val hasOptedInBloggingPromptsReminders = siteModel != null && bloggingRemindersModel.isPromptIncluded
         return hasAccessToken && isBloggingPromptsEnabled && hasOptedInBloggingPromptsReminders
     }
 

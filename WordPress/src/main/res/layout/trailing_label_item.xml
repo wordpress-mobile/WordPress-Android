@@ -13,7 +13,6 @@
         android:gravity="center_vertical"
         android:importantForAccessibility="no"
         android:maxLines="4"
-        android:minLines="2"
         android:paddingBottom="@dimen/margin_medium"
         android:paddingTop="@dimen/margin_medium"
         android:textAppearance="?attr/textAppearanceCaption"

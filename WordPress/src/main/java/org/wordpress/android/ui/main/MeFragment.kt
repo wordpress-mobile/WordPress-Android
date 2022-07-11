@@ -48,6 +48,7 @@ import org.wordpress.android.ui.accounts.HelpActivity.Origin.ME_SCREEN_HELP
 import org.wordpress.android.ui.main.MeViewModel.RecommendAppUiState
 import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
+import org.wordpress.android.ui.notifications.utils.NotificationsUtils
 import org.wordpress.android.ui.photopicker.MediaPickerConstants
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource
@@ -171,7 +172,9 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
             }
         }
 
-        if (qrCodeAuthFlowFeatureConfig.isEnabled() && BuildConfig.ENABLE_QRCODE_AUTH_FLOW) {
+        if (qrCodeAuthFlowFeatureConfig.isEnabled() &&
+                BuildConfig.ENABLE_QRCODE_AUTH_FLOW &&
+                accountStore.hasAccessToken()) {
             rowScanLoginCode.isVisible = true
 
             rowScanLoginCode.setOnClickListener {
@@ -199,7 +202,7 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
         })
 
         viewModel.showScanLoginCode.observeEvent(viewLifecycleOwner) {
-            ActivityLauncher.viewQRCodeAuthFlow(requireContext())
+            ActivityLauncher.startQRCodeAuthFlow(requireContext())
         }
     }
 
@@ -393,7 +396,10 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
                 .setMessage(message)
                 .setPositiveButton(
                         R.string.signout
-                ) { _, _ -> signOutWordPressCom() }
+                ) { _, _ ->
+                    clearNotifications()
+                    signOutWordPressCom()
+                }
                 .setNegativeButton(R.string.cancel, null)
                 .setCancelable(true)
                 .create().show()
@@ -401,6 +407,10 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
 
     private fun signOutWordPressCom() {
         viewModel.signOutWordPress(requireActivity().application as WordPress)
+    }
+
+    private fun clearNotifications() {
+        NotificationsUtils.cancelAllNotifications(requireActivity())
     }
 
     private fun showDisconnectDialog() {

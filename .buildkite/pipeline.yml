@@ -12,18 +12,6 @@ steps:
     plugins: *common_plugins
     artifact_paths:
       - "**/build/reports/checkstyle/checkstyle.*"
-    agents:
-      queue: "android"
-
-  - label: "ktlint"
-    command: |
-      cp gradle.properties-example gradle.properties
-      ./gradlew ciktlint
-    plugins: *common_plugins
-    artifact_paths:
-      - "**/build/ktlint.xml"
-    agents:
-      queue: "android"
 
   - label: "detekt"
     command: |
@@ -32,8 +20,6 @@ steps:
     plugins: *common_plugins
     artifact_paths:
       - "**/build/reports/detekt/detekt.html"
-    agents:
-      queue: "android"
 
   - label: "lint"
     command: |
@@ -42,29 +28,31 @@ steps:
     plugins: *common_plugins
     artifact_paths:
       - "**/build/reports/lint-results*.*"
-    agents:
-      queue: "android"
 
   - label: "Test WordPress"
     command: |
       cp gradle.properties-example gradle.properties
       ./gradlew testWordpressVanillaRelease
     plugins: *common_plugins
-    agents:
-      queue: "android"
 
-  - label: "Test WordPressProcessors"
+  - label: "Test Processors"
     command: |
       cp gradle.properties-example gradle.properties
-      ./gradlew :libs:WordPressProcessors:test
+      ./gradlew :libs:processors:test
     plugins: *common_plugins
-    agents:
-      queue: "android"
 
-  - label: "Test ImageEditor"
+  - label: "Test Image Editor"
     command: |
       cp gradle.properties-example gradle.properties
-      ./gradlew :libs:image-editor:ImageEditor:test
+      ./gradlew :libs:image-editor:test
     plugins: *common_plugins
-    agents:
-      queue: "android"
+
+  - label: "🛠 WordPress Installable Build"
+    command: ".buildkite/commands/wordpress-installable-build.sh"
+    if: build.pull_request.id != null
+    plugins: *common_plugins
+
+  - label: "🛠 Jetpack Installable Build"
+    command: ".buildkite/commands/jetpack-installable-build.sh"
+    if: build.pull_request.id != null
+    plugins: *common_plugins

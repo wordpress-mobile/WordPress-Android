@@ -10,6 +10,7 @@ import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.argWhere
 import com.nhaarman.mockitokotlin2.atLeastOnce
 import com.nhaarman.mockitokotlin2.doAnswer
+import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.times
@@ -99,6 +100,7 @@ import org.wordpress.android.ui.mysite.SiteDialogModel.ShowRemoveNextStepsDialog
 import org.wordpress.android.ui.mysite.cards.CardsBuilder
 import org.wordpress.android.ui.mysite.cards.DomainRegistrationCardShownTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker
+import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptAttribution
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptsCardAnalyticsTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardBuilder.Companion.NOT_SET
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
@@ -192,6 +194,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     private lateinit var navigationActions: MutableList<SiteNavigationAction>
     private lateinit var showSwipeRefreshLayout: MutableList<Boolean>
     private lateinit var shareRequests: MutableList<String>
+    private lateinit var bloggingPromptsLearnMore: MutableList<Unit>
     private var answerRequests: Int = 0
     private lateinit var trackWithTabSource: MutableList<MySiteTrackWithTabSource>
     private lateinit var tabNavigation: MutableList<TabNavigation>
@@ -243,6 +246,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     private var onDashboardErrorRetryClick: (() -> Unit)? = null
     private var onBloggingPromptShareClicked: ((message: String) -> Unit)? = null
     private var onBloggingPromptAnswerClicked: ((promptId: Int) -> Unit)? = null
+    private var onBloggingPromptSkipClicked: (() -> Unit)? = null
     private val quickStartCategory: QuickStartCategory
         get() = QuickStartCategory(
                 taskType = QuickStartTaskType.CUSTOMIZE,
@@ -287,7 +291,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                             content = "content",
                             date = Date(),
                             isAnswered = false,
-                            attribution = "",
+                            attribution = "dayone",
                             respondentsCount = 5,
                             respondentsAvatarUrls = listOf()
                     )
@@ -391,6 +395,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         shareRequests = mutableListOf()
         trackWithTabSource = mutableListOf()
         tabNavigation = mutableListOf()
+        bloggingPromptsLearnMore = mutableListOf()
         launch(Dispatchers.Default) {
             viewModel.uiModel.observeForever {
                 uiModels.add(it)
@@ -440,6 +445,9 @@ class MySiteViewModelTest : BaseUnitTest() {
             event?.getContentIfNotHandled()?.let {
                 tabNavigation.add(it)
             }
+        }
+        viewModel.onBloggingPromptsLearnMore.observeForever {
+            bloggingPromptsLearnMore.add(Unit)
         }
         site = SiteModel()
         site.id = siteLocalId
@@ -1021,12 +1029,11 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `quick action pages click opens pages screen and requests next step of EDIT_HOMEPAGE task`() {
+    fun `quick action pages click opens pages screen`() {
         initSelectedSite()
 
         requireNotNull(quickActionsPagesClickAction).invoke()
 
-        verify(quickStartRepository).requestNextStepOfTask(QuickStartNewSiteTask.EDIT_HOMEPAGE)
         assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenPages(site))
     }
 
@@ -1639,6 +1646,26 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         assertTrue(answerRequests == 1)
     }
+
+    @Test
+    fun `given blogging prompt card, when skip button is clicked, prompt is skipped and undo snackbar displayed`() =
+            test {
+                initSelectedSite()
+
+                requireNotNull(onBloggingPromptSkipClicked).invoke()
+
+                verify(appPrefsWrapper).setSkippedPromptDay(any(), any())
+                verify(mySiteSourceManager).refreshBloggingPrompts(eq(true))
+
+                assertThat(snackbars.size).isEqualTo(1)
+
+                val expectedSnackbar = snackbars[0]
+                assertThat(expectedSnackbar.buttonTitle).isEqualTo(UiStringRes(R.string.undo))
+                assertThat(expectedSnackbar.message).isEqualTo(
+                        UiStringRes(R.string.my_site_blogging_prompt_card_skipped_snackbar)
+                )
+                assertThat(expectedSnackbar.isImportant).isEqualTo(true)
+            }
 
     @Test
     fun `when blogging prompt answer is uploaded, refresh prompt card`() = test {
@@ -2559,12 +2586,11 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when quick link ribbon pages click, then pages screen is shown + requests next step of EDIT_HOMEPAGE task`() {
+    fun `when quick link ribbon pages click, then pages screen is shown`() {
         initSelectedSite()
 
         requireNotNull(quickActionsPagesClickAction).invoke()
 
-        verify(quickStartRepository).requestNextStepOfTask(QuickStartNewSiteTask.EDIT_HOMEPAGE)
         assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenPages(site))
     }
 
@@ -2584,6 +2610,12 @@ class MySiteViewModelTest : BaseUnitTest() {
         requireNotNull(quickActionsMediaClickAction).invoke()
 
         assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenMedia(site))
+    }
+
+    @Test
+    fun `when onBloggingPromptsLearnMoreClicked should post value on onBloggingPromptsLearnMore`() {
+        viewModel.onBloggingPromptsLearnMoreClicked()
+        assertThat(bloggingPromptsLearnMore).containsOnly(Unit)
     }
 
     private fun findQuickActionsCard() = getLastItems().find { it is QuickActionsCard } as QuickActionsCard?
@@ -2889,14 +2921,17 @@ class MySiteViewModelTest : BaseUnitTest() {
         val params = (mockInvocation.arguments.filterIsInstance<DashboardCardsBuilderParams>()).first()
         onBloggingPromptShareClicked = params.bloggingPromptCardBuilderParams.onShareClick
         onBloggingPromptAnswerClicked = params.bloggingPromptCardBuilderParams.onAnswerClick
+        onBloggingPromptSkipClicked = params.bloggingPromptCardBuilderParams.onSkipClick
         return BloggingPromptCardWithData(
                 prompt = UiStringText("Test prompt"),
                 respondents = emptyList(),
                 numberOfAnswers = 5,
                 isAnswered = false,
                 promptId = bloggingPromptId,
+                attribution = BloggingPromptAttribution.DAY_ONE,
                 onShareClick = onBloggingPromptShareClicked as ((message: String) -> Unit),
-                onAnswerClick = onBloggingPromptAnswerClicked as ((promptId: Int) -> Unit)
+                onAnswerClick = onBloggingPromptAnswerClicked as ((promptId: Int) -> Unit),
+                onSkipClick = onBloggingPromptSkipClicked as (() -> Unit)
         )
     }
 

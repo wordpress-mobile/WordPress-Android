@@ -1,11 +1,78 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-05-27 14:35:23+0000
+Translation-Revision-Date: 2022-06-30 09:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.1
 Language: ja_JP
 -->
 <resources>
+    <string name="qrcode_auth_flow_content_description">ログインコードをスキャンしていることを示す画像</string>
+    <string name="qrcode_auth_flow_error_content_description">エラーが発生していることを示す画像</string>
+    <string name="qrcode_auth_flow_dismiss_dialog_message">本当に実行してもよいですか ?</string>
+    <string name="qrcode_auth_flow_dismiss_dialog_title">ログインコードのスキャンフローを終了</string>
+    <string name="qrcode_auth_flow_error_auth_failed_subtitle">このログインコードではログインできませんでした。 「再スキャン」ボタンをタップしてコードをもう一度スキャンしてください。</string>
+    <string name="qrcode_auth_flow_error_auth_failed_title">認証できませんでした</string>
+    <string name="qrcode_auth_flow_error_expired_subtitle">このログインコードの有効期限は切れています。 「再スキャン」ボタンをタップしてコードをもう一度スキャンしてください。</string>
+    <string name="qrcode_auth_flow_error_expired_title">期限切れのログインコード</string>
+    <string name="qrcode_auth_flow_error_invalid_data_subtitle">スキャンされたログインコードを検証できませんでした。 「再スキャン」ボタンをタップしてコードをもう一度スキャンしてください。</string>
+    <string name="qrcode_auth_flow_error_invalid_data_title">ログインコードを検証できませんでした</string>
+    <string name="qrcode_auth_flow_error_no_connection_subtitle">ログインコードをスキャンするにはアクティブなインターネット接続が必要です</string>
+    <string name="qrcode_auth_flow_error_no_connection_title">接続できません</string>
+    <string name="qrcode_auth_flow_scan_again">再スキャン</string>
+    <string name="qrcode_auth_flow_dismiss">閉じる</string>
+    <string name="qrcode_auth_flow_done_subtitle">「閉じる」をタップして続行する Web ブラウザーに戻ります。</string>
+    <string name="qrcode_auth_flow_done_title">ログインしました !</string>
+    <string name="qrcode_auth_flow_validated_primary_action">はい、ログインします</string>
+    <string name="qrcode_auth_flow_validated_subtitle">Web ブラウザーから直接撮影された QR コードをスキャンするだけです。 他の人から送信されたコードはスキャンしないでください。</string>
+    <string name="qrcode_auth_flow_validated_default_title">%1$s 近くの Web ブラウザーにログインしてみますか ?</string>
+    <string name="qrcode_auth_flow_validated_title">%2$s 近くの %1$s にログインしてみますか ?</string>
+    <string name="stats_revamp_v2_intro_secondary_button_text">後で再通知</string>
+    <string name="stats_revamp_v2_intro_primary_button_text">今すぐ試す</string>
+    <string name="stats_revamp_v2_intro_content_note">詳細は、「参加サイト」&gt;「統計」&gt;「統計概要」をご覧ください。</string>
+    <string name="stats_revamp_v2_intro_content">統計概要により、コンテンツのパフォーマンスと、読者からどういった反響があるか理解を深めることができます。</string>
+    <string name="stats_revamp_v2_intro_header_title">最新の統計概要</string>
+    <string name="stats_insights_followers_guide_card">💡他のブログへのコメントは、自分の新しいサイトへの注目を集め、フォロワーを増やすのに最適です。</string>
+    <string name="stats_insights_comments_guide_card">💡「さらに表示」をタップすると上位のコメント投稿者が表示されます。</string>
+    <string name="stats_insights_latest_post_empty">最初の投稿を公開したらもう一度確認してください。</string>
+    <string name="stats_insights_views_and_visitors_visitors_empty_state">よく読まれているヒントを確認して表示数とトラフィックを増やす %1$s</string>
+    <string name="stats_view_publicize">ソーシャルメディアとの連携</string>
+    <string name="stats_action_card_schedule_post_message">✍️ 読者にリーチするのに最良のタイミングに下書きの投稿予定を設定しましょう。</string>
+    <string name="stats_action_card_blogging_reminders_message">💡読者を増やすには定期的に投稿することが重要です。 リマインダーを追加して忘れないようにしましょう。</string>
+    <string name="stats_action_card_grow_audience_message">💡さっとブログ記事を書けるようにするには、エキスパートが指導する「&lt;i&gt;ブログ執筆の概要&lt;/i&gt;」コースを受講しましょう。</string>
+    <string name="blogging_prompts_onboarding_prompts_loading">ブログ作成のプロンプトを読み込んでいます。 少し待ってから、もう一度お試しください。</string>
+    <string name="hpp_bottom_helper_text">決められませんか ? テーマはいつでも変更できます。</string>
+    <string name="hpp_recommended_default_vertical">ブログ</string>
+    <string name="hpp_recommended_subtitle">あなたへのおすすめ</string>
+    <string name="hpp_recommended_title">%s に最適</string>
+    <string name="hpp_preview_tapped_theme">テーマ %s をプレビュー</string>
+    <string name="hpp_title">テーマを選択</string>
+    <string name="my_site_blogging_prompt_card_skipped_snackbar">今日のブログ作成のプロンプトをスキップしました</string>
+    <string name="my_site_blogging_prompt_card_menu_learn_more">さらに詳しく</string>
+    <string name="my_site_blogging_prompt_card_attribution_dayone">から </string>
+    <string name="stats_follower_types_pie_chart_total_label">合計</string>
+    <string name="stats_referrers_pie_chart_others">その他</string>
+    <string name="stats_referrers_pie_chart_search">検索</string>
+    <string name="stats_referrers_pie_chart_total_label">表示件数</string>
+    <string name="stats_action_card_schedule_post_button_label">予約</string>
+    <string name="stats_referrers_pie_chart_wordpress">WordPress</string>
+    <string name="stats_action_card_schedule_post_title">投稿を予約</string>
+    <string name="stats_action_card_blogging_reminders_button_label">リマインダーを設定</string>
+    <string name="stats_action_card_blogging_reminders_title">ブログ投稿のリマインダーを設定</string>
+    <string name="stats_action_card_grow_audience_button_label">コースを確認</string>
+    <string name="stats_action_card_grow_audience_title">訪問者を増やす</string>
+    <string name="gutenberg_native_you_can_also_rearrange_blocks_by_tapping_a_block_and_then_tapping">ブロックをタップし、ブロックの左下に表示される上下矢印をタップして上下に移動させることで、ブロックの配置を変更することもできます。</string>
+    <string name="gutenberg_native_image_file_not_found">画像ファイルが見つかりませんでした。</string>
+    <string name="gutenberg_native_drag_drop_makes_rearranging_blocks_a_breeze_press_and_hold_on_a_b">ドラッグ &amp; ドロップで簡単にブロックの位置を編集できます。 長押ししながら新しい場所にブロックをドラッグします。</string>
+    <string name="gutenberg_native_drag_drop">ドラッグ &amp; ドロップ</string>
+    <string name="gutenberg_native_arrow_buttons">矢印ボタン</string>
+    <string name="gutenberg_native_1_s_currently_selected_2_s">%1$s 選択中: %2$s</string>
+    <string name="quick_start_sites_type_all_tasks_completed">すべてのタスクが完了しました</string>
+    <string name="quick_start_list_task_complete">タスクが完了しました</string>
+    <string name="me_btn_scan_login_code">ログインコードをスキャン</string>
+    <string name="stats_insights_likes_guide_card">⭐️最新の投稿 %1$s が%2$s回「いいね」されました。</string>
+    <string name="stats_most_popular_percent_views_empty">アクティビティが足りません。 サイトの訪問者数が増えたら後でもう一度確認してください。</string>
+    <string name="stats_total_followers_content_description">%1s人、フォロワー総数の%2s</string>
+    <string name="stats_value_percent">%1$s (%2$s%%)</string>
     <string name="pages_copy_link">リンクをコピー</string>
     <string name="quick_start_completed_tour_title">おめでとうございます ! 詳しくなりました&lt;br/&gt;</string>
     <string name="quick_start_sites_type_get_to_know_app">アプリについて知る</string>
@@ -51,12 +118,12 @@ Language: ja_JP
     <string name="stats_insights_views_and_visitors_tooltip_count">%1$s %2$s</string>
     <string name="stats_insights_views_and_visitors_visitors_negative">今週の訪問者数は先週と比べて%1$s人減りました。</string>
     <string name="stats_insights_views_and_visitors_visitors_positive">今週の訪問者数は先週と比べて%1$s人増えました。</string>
-    <string name="stats_insights_views_and_visitors_views_negative">今週の訪問者数は先週と比べて%1$s人減りました。</string>
-    <string name="stats_insights_views_and_visitors_views_positive">今週の訪問者数は先週と比べて%1$s人増えました。</string>
+    <string name="stats_insights_views_and_visitors_views_negative">今週の表示数は先週と比べて%1$s回減りました。</string>
     <string name="stats_timeframe_previous_week">先週</string>
     <string name="stats_timeframe_this_week">今週</string>
     <string name="scan_vault_press_active_on_site_button_text">ダッシュボードを表示</string>
     <string name="scan_vault_press_active_on_site_subtitle">サイトはすでに VaultPress で保護されています。 VaultPress ダッシュボードへのリンクは以下にあります。</string>
+    <string name="stats_insights_views_and_visitors_views_positive">今週の表示数は先週と比べて%1$s回増えました。</string>
     <string name="scan_vault_press_active_on_site_title">サイトに VaultPress を搭載済み</string>
     <string name="locale_picker_current_language">現在の言語: </string>
     <string name="hpp_choose_and_create_site">サイトを作成</string>
@@ -474,6 +541,7 @@ Language: ja_JP
     <string name="gutenberg_native_three">3</string>
     <string name="gutenberg_native_s_social_icon">%sソーシャルアイコン</string>
     <string name="gutenberg_native_mention">\@ 返信</string>
+    <string name="gutenberg_native_new">新規</string>
     <string name="gutenberg_native_preview_post">投稿をプレビュー</string>
     <string name="gutenberg_native_preview_page">ページをプレビュー</string>
     <string name="gutenberg_native_retry">リトライ</string>
@@ -668,10 +736,7 @@ Language: ja_JP
     <string name="quick_start_dialog_review_pages_message">サイトのページを変更、追加、削除します。</string>
     <string name="quick_start_dialog_review_pages_title">サイトページをレビュー</string>
     <string name="quick_start_dialog_edit_homepage_message_pages_short">%1$s ホームページ %2$s を選択してホームページを編集します。</string>
-    <string name="quick_start_dialog_edit_homepage_message_short">%1$s ページ %2$s を選択してページリストを表示します。</string>
     <string name="quick_start_card_menu_pin">上部固定</string>
-    <string name="quick_start_dialog_edit_homepage_title">ホームページを編集する</string>
-    <string name="quick_start_dialog_edit_homepage_message">サイトのホームページからコンテンツを変更、追加、削除します。</string>
     <string name="reader_menu_mark_as_unseen">未読にする</string>
     <string name="reader_menu_mark_as_seen">既読にする</string>
     <string name="error_media_upload_failed_for_reason">メディアのアップロードに失敗しました。\n%1$s</string>
@@ -845,10 +910,10 @@ Language: ja_JP
     <string name="label_done_button">終了</string>
     <string name="label_next_button">次へ</string>
     <string name="delete_button_alt">削除</string>
-    <string name="hpp_choose_error">デザインの選択中にエラーが発生しました。</string>
     <string name="hpp_retry_error">ネットワーク接続を確認して、もう一度お試しください。</string>
     <string name="hpp_error_subtitle">オンラインに戻ったら、「再試行」をタップします。</string>
     <string name="hpp_error_title">レイアウトはオフラインでは利用できません</string>
+    <string name="hpp_choose_error">テーマの選択中にエラーが発生しました。</string>
     <string name="continue_site_credentials">ストアのログイン情報で続ける</string>
     <string name="login_find_your_connected_email">連携済みのメールアドレスを検索</string>
     <string name="reader_discover_no_posts_button_text">トピックをフォロー</string>
@@ -862,8 +927,6 @@ Language: ja_JP
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">スクロール可能なブロックメニューが開きました。 ブロックを選択します。</string>
     <string name="gutenberg_native_scrollable_block_menu_closed">スクロール可能なブロックメニューが閉じられました。</string>
     <string name="hpp_choose_button">選択</string>
-    <string name="hpp_subtitle">お気に入りのホームページのレイアウトを選択します。 後で編集およびカスタマイズできます。</string>
-    <string name="hpp_title">デザインを選択</string>
     <string name="mlp_network_error_subtitle">オンラインに戻ったら「再試行」をタップするか、以下のボタンを使用して白紙のページを作成します。</string>
     <string name="mlp_network_error_title">レイアウトはオフラインでは利用できません</string>
     <string name="mlp_error_subtitle">「再試行」をタップするか、以下のボタンを使用して白紙のページを作成します。</string>
@@ -1669,7 +1732,6 @@ Language: ja_JP
     <string name="exit">終了</string>
     <string name="quick_start_sites_type_customize">サイトをカスタマイズ</string>
     <string name="quick_start_sites">次のステップ</string>
-    <string name="quick_start_complete_tasks_header">完了 (%d)</string>
     <string name="quick_start_sites_type_grow">訪問者を増やす</string>
     <string name="quick_start_dialog_upload_icon_message">訪問者のブラウザーにアイコンが表示されます。センスのよいカスタムアイコンを追加しましょう。</string>
     <string name="quick_start_dialog_upload_icon_title">独自のサイトアイコンを選択</string>
@@ -1683,11 +1745,7 @@ Language: ja_JP
     <string name="quick_start_dialog_check_stats_message">サイトのパフォーマンスを把握しましょう。</string>
     <string name="quick_start_dialog_remove_next_steps_message">「次のステップ」を削除すると、このサイトのすべてのツアーが非表示になります。この操作を元に戻すことはできません。</string>
     <string name="quick_start_dialog_remove_next_steps_title">次のステップを削除</string>
-    <string name="quick_start_complete_view_subtitle">リストが完了しました。おめでとうございます。</string>
     <string name="quick_start_task_skip_menu_title">タスクをスキップ</string>
-    <string name="quick_start_complete_view_title">すべてのタスクが完了しました。</string>
-    <string name="quick_start_completed_tasks_header_chevron_collapse_desc">折りたたむ</string>
-    <string name="quick_start_completed_tasks_header_chevron_expand_desc">展開</string>
     <string name="notification_channel_reminder_title">リマインダー</string>
     <string name="stats_insights_popular">最も人気の時間</string>
     <string name="stats_select_next_period_description">次の期間を選択</string>
@@ -1762,7 +1820,6 @@ Language: ja_JP
     <string name="stats_insights_tags_and_categories">タグとカテゴリー</string>
     <string name="stats_insights_latest_post_with_no_engagement">「%2$s」を公開してから%1$sが経過しました。投稿をシェアして閲覧数を増やしましょう。</string>
     <string name="stats_insights_all_time_stats">全期間</string>
-    <string name="stats_insights_latest_post_empty">公開済み投稿はまだありません。公開すると、最新の投稿の概要がここに表示されます:</string>
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
     <string name="stats_publicize_followers_label">フォロワー</string>
     <string name="stats_publicize_service_label">サービス</string>
@@ -3014,7 +3071,6 @@ Language: ja_JP
     <string name="stats_views">表示数</string>
     <string name="stats_visitors">サイト訪問者</string>
     <string name="stats_view_top_posts_and_pages">投稿とページ</string>
-    <string name="stats_view_publicize">パブリサイズ共有</string>
     <string name="ssl_certificate_details">詳細</string>
     <string name="cab_selected">%d件選択</string>
     <string name="browse_our_faq_button">よく聞かれる質問を表示</string>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-04-11 09:31:52+0000
+Translation-Revision-Date: 2022-06-17 08:07:41+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: el_GR
@@ -58,7 +58,6 @@ Language: el_GR
     <string name="quick_start_sites">Επόμενα βήματα</string>
     <string name="quick_start_sites_type_customize">Προσαρμόστε τον ιστότοπο σας</string>
     <string name="notification_channel_reminder_title">Υπενθύμιση</string>
-    <string name="quick_start_completed_tasks_header_chevron_collapse_desc">σύμπτηξη</string>
     <string name="stats_traffic_change">%1$s (%2$s%%)</string>
     <string name="stats_traffic_increase">+%1$s (%2$s%%)</string>
     <string name="new_site_creation_clear_all_content_description">Καθαρισμός</string>
@@ -168,6 +167,7 @@ Language: el_GR
     <string name="quick_start_list_create_site_title">Δημιουργήστε τον ιστότοπο σας</string>
     <string name="quick_start_dialog_view_site_title">Προβολή ιστοτόπου</string>
     <string name="quick_start_dialog_publish_post_title">Δημοσίευστε ένα άρθρο</string>
+    <string name="quick_start_dialog_follow_sites_title">Συνδεθείτε με άλλους ιστότοπους</string>
     <string name="quick_start_button_negative_short">Άκυρο</string>
     <string name="quick_start_button_positive">Μετάβαση</string>
     <string name="quick_start_button_negative">Οχι τώρα</string>
@@ -242,6 +242,7 @@ Language: el_GR
     <string name="notification_settings_followed_dialog_email_posts_instantly">Άμεσα</string>
     <string name="plugin_install_first_plugin_confirmation_dialog_title">Εγκατάσταση πρόσθετου</string>
     <string name="notification_settings_category_followed_sites">Ακολουθούμενοι ιστότοποι</string>
+    <string name="comment_title">%1$s στη %2$s</string>
     <string name="notification_channel_general_title">Γενικά</string>
     <string name="notification_channel_important_title">Σημαντικό</string>
     <string name="photo_picker_use_photo">Χρήση της φωτογραφίας</string>
@@ -1023,7 +1024,6 @@ Language: el_GR
     <string name="stats_followers_a_month">Ένας μήνας</string>
     <string name="stats_followers_a_day">Μια ημέρα</string>
     <string name="stats_view_videos">Βίντεο</string>
-    <string name="stats_view_publicize">Δημοσιοποίηση</string>
     <string name="stats_likes">Likes</string>
     <string name="stats_timeframe_years">Χρόνια</string>
     <string name="stats_views">Προβολές</string>

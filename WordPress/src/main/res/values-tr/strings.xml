@@ -1,11 +1,78 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-05-27 14:32:13+0000
+Translation-Revision-Date: 2022-06-28 10:25:29+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: tr
 -->
 <resources>
+    <string name="qrcode_auth_flow_content_description">İşlem sırasında tarama giriş kodunu gösteren görsel</string>
+    <string name="qrcode_auth_flow_error_content_description">Hata gösteren görsel</string>
+    <string name="qrcode_auth_flow_dismiss_dialog_message">Devam etmek istediğinize emin misiniz?</string>
+    <string name="qrcode_auth_flow_dismiss_dialog_title">Oturum açma kodu taraması akışından çık</string>
+    <string name="qrcode_auth_flow_error_auth_failed_subtitle">Bu oturum açma kodunu kullanarak oturum açılamadı. Lütfen Yeniden tara düğmesine tıklayarak kodu tekrar taratın.</string>
+    <string name="qrcode_auth_flow_error_auth_failed_title">Doğrulama başarısız</string>
+    <string name="qrcode_auth_flow_error_expired_subtitle">Bu oturum açma kodunun süresi doldu. Lütfen Yeniden tara düğmesine tıklayarak kodu tekrar taratın.</string>
+    <string name="qrcode_auth_flow_error_expired_title">Süresi dolmuş oturum açma kodu</string>
+    <string name="qrcode_auth_flow_error_invalid_data_subtitle">Taranan oturum açma kodu doğrulanamadı. Lütfen Yeniden tara düğmesine tıklayarak kodu tekrar taratın.</string>
+    <string name="qrcode_auth_flow_error_invalid_data_title">Oturum açma kodu doğrulanamadı</string>
+    <string name="qrcode_auth_flow_error_no_connection_subtitle">Oturum açma kodlarını taramak için etkin bir internet bağlantısı gereklidir</string>
+    <string name="qrcode_auth_flow_error_no_connection_title">Bağlantı yok</string>
+    <string name="qrcode_auth_flow_scan_again">Yeniden tara</string>
+    <string name="qrcode_auth_flow_dismiss">Kapat</string>
+    <string name="qrcode_auth_flow_done_subtitle">Kapat\'a dokunun ve devam etmek için web tarayıcınıza geri dönün.</string>
+    <string name="qrcode_auth_flow_done_title">Giriş yaptınız!</string>
+    <string name="qrcode_auth_flow_validated_primary_action">Evet, oturum aç</string>
+    <string name="qrcode_auth_flow_validated_subtitle">Yalnızca doğrudan web tarayıcınızdan alınan QR kodlarını tarayın. Size başkaları tarafından gönderilen bir kodu asla taramayın.</string>
+    <string name="qrcode_auth_flow_validated_default_title">%1$s yakınından web tarayıcınız ile giriş yapmaya mı çalışıyorsunuz?</string>
+    <string name="qrcode_auth_flow_validated_title">%1$s için %2$s yakınından giriş yapmaya mı çalışıyorsunuz?</string>
+    <string name="stats_revamp_v2_intro_secondary_button_text">Daha sonra hatırlat</string>
+    <string name="stats_revamp_v2_intro_primary_button_text">Şimdi deneyin</string>
+    <string name="stats_revamp_v2_intro_content_note">Sitem &gt; İstatistikler &gt; İçgörüler bölümünde daha fazla bilgi edinin</string>
+    <string name="stats_revamp_v2_intro_content">İçgörüler, içeriğinizin nasıl performans gösterdiğini ve hedef kitlenizde nelerin yankı uyandırdığını anlamanıza yardımcı olur.</string>
+    <string name="stats_revamp_v2_intro_header_title">İçgörüler güncellemesi</string>
+    <string name="stats_insights_followers_guide_card">💡Diğer bloglara yorum yapmak, yeni siteniz için dikkat çekmenin ve takipçi oluşturmanın harika bir yoludur.</string>
+    <string name="stats_insights_comments_guide_card">💡En iyi yorumcularınızı görmek için \'DAHA FAZLASI\' düğmesine dokunun.</string>
+    <string name="stats_insights_latest_post_empty">İlk yazınızı yayınladıktan sonra tekrar kontrol edin!</string>
+    <string name="stats_insights_views_and_visitors_visitors_empty_state">Görüntülemelerinizi ve trafiğinizi artırmak için en iyi ipuçlarımıza göz atın %1$s</string>
+    <string name="stats_view_publicize">Sosyal medya bağlantıları</string>
+    <string name="stats_action_card_schedule_post_message">✍️ Hedef kitlenize ulaşmak için taslaklarınızı en iyi zamanda yayınlanacak şekilde planlayın.</string>
+    <string name="stats_action_card_blogging_reminders_message">💡Sürekli olarak paylaşım yapmak, hedef kitlenizi oluşturmanın harika bir yoludur. Yolunuza devam etmeniz için bir anımsatıcı ekleyin.</string>
+    <string name="stats_action_card_grow_audience_message">💡Uzman liderliğindeki Bloglamaya Giriş kursumuzla &lt;i&gt;blogunuzu&lt;/i&gt; daha hızlı bir şekilde yükseltin.</string>
+    <string name="blogging_prompts_onboarding_prompts_loading">Blog İstemleri yükleniyor. Lütfen bekleyin ve tekrar deneyin.</string>
+    <string name="hpp_bottom_helper_text">Karar veremiyor musunuz? Temayı istediğiniz zaman değiştirebilirsiniz.</string>
+    <string name="hpp_recommended_default_vertical">Blog Yazma</string>
+    <string name="hpp_recommended_subtitle">Sizin için seçildi</string>
+    <string name="hpp_recommended_title">%s için en iyisi</string>
+    <string name="hpp_preview_tapped_theme">Önizleme teması %s</string>
+    <string name="hpp_title">Bir tema seçin</string>
+    <string name="my_site_blogging_prompt_card_skipped_snackbar">Bugünün blog istemi atlandı</string>
+    <string name="my_site_blogging_prompt_card_menu_learn_more">Daha fazlasını öğrenin</string>
+    <string name="my_site_blogging_prompt_card_attribution_dayone">Kimden </string>
+    <string name="stats_follower_types_pie_chart_total_label">Toplam</string>
+    <string name="stats_referrers_pie_chart_others">Diğerleri</string>
+    <string name="stats_referrers_pie_chart_search">Ara</string>
+    <string name="stats_referrers_pie_chart_wordpress">WordPress</string>
+    <string name="stats_referrers_pie_chart_total_label"> Görünümler</string>
+    <string name="stats_action_card_schedule_post_button_label">Zamanla</string>
+    <string name="stats_action_card_schedule_post_title">Gönderilerinizi zamanlayın</string>
+    <string name="stats_action_card_blogging_reminders_button_label">Hatırlatıcı ayarla</string>
+    <string name="stats_action_card_blogging_reminders_title">Blog hatırlatıcılarınızı ayarlayın</string>
+    <string name="stats_action_card_grow_audience_button_label">Kursa göz at</string>
+    <string name="stats_action_card_grow_audience_title">Kitlenizi genişletin</string>
+    <string name="gutenberg_native_you_can_also_rearrange_blocks_by_tapping_a_block_and_then_tapping">Ayrıca bir bloka dokunup, ardından yukarı veya aşağı taşımak için blokun sol alt tarafında görünen yukarı ve aşağı oklara dokunarak blokları yeniden düzenleyebilirsiniz.</string>
+    <string name="gutenberg_native_image_file_not_found">Görsel dosyası bulunamadı.</string>
+    <string name="gutenberg_native_drag_drop_makes_rearranging_blocks_a_breeze_press_and_hold_on_a_b">Sürükle ve bırak yöntemi blokları yeniden düzenlemeyi çok kolay hale getirir. Bir bloku basılı tutun, ardından yeni konumuna sürükleyin ve bırakın.</string>
+    <string name="gutenberg_native_drag_drop">Sürükle bırak</string>
+    <string name="gutenberg_native_arrow_buttons">Ok düğmeleri</string>
+    <string name="gutenberg_native_1_s_currently_selected_2_s">%1$s. Şu an seçili: %2$s</string>
+    <string name="quick_start_sites_type_all_tasks_completed">Tüm görevler tamamlandı</string>
+    <string name="quick_start_list_task_complete">Görev tamamlandı</string>
+    <string name="me_btn_scan_login_code">Oturum Açma Kodunu Tara</string>
+    <string name="stats_insights_likes_guide_card">⭐️ En son gönderiniz (%1$s) %2$s beğeni aldı.</string>
+    <string name="stats_most_popular_percent_views_empty">Yeterli etkinlik yok. Sitenizin daha fazla ziyaretçisi olduğunda tekrar kontrol edin!</string>
+    <string name="stats_total_followers_content_description">%1s, %2s/toplam takipçi sayısı</string>
+    <string name="stats_value_percent">%1$s (%2$s%%)</string>
     <string name="pages_copy_link">Bağlantıyı kopyala</string>
     <string name="quick_start_completed_tour_title">Tebrikler! Yolunuzu biliyorsunuz&lt;br/&gt;</string>
     <string name="quick_start_sites_type_get_to_know_app">Uygulamayı tanıyın</string>
@@ -474,6 +541,7 @@ Language: tr
     <string name="gutenberg_native_three">Üç</string>
     <string name="gutenberg_native_s_social_icon">%s sosyal simge</string>
     <string name="gutenberg_native_mention">Bahsetme</string>
+    <string name="gutenberg_native_new">YENİ</string>
     <string name="gutenberg_native_preview_post">Yazıyı önizle</string>
     <string name="gutenberg_native_preview_page">Sayfayı önizle</string>
     <string name="gutenberg_native_retry">Tekrar dene</string>
@@ -669,9 +737,6 @@ Language: tr
     <string name="quick_start_dialog_review_pages_message">Sitenizde sayfaları değiştirin, ekleyin veya kaldırın.</string>
     <string name="quick_start_dialog_review_pages_title">Site sayfalarını inceleyin</string>
     <string name="quick_start_dialog_edit_homepage_message_pages_short">Ana Sayfanızı düzenlemek için %1$s Ana Sayfa %2$s öğesini seçin.</string>
-    <string name="quick_start_dialog_edit_homepage_message_short">Sayfa listenizi görmek için %1$s Sayfalar %2$s öğesini seçin.</string>
-    <string name="quick_start_dialog_edit_homepage_message">Sitenizin ana sayfasında içeriği değiştirin, ekleyin veya kaldırın.</string>
-    <string name="quick_start_dialog_edit_homepage_title">Ana sayfanızı düzenleyin</string>
     <string name="reader_menu_mark_as_unseen">Görülmedi olarak işaretle</string>
     <string name="reader_menu_mark_as_seen">Görüldü olarak işaretle</string>
     <string name="error_media_upload_failed_for_reason">Medya yüklenemedi.\n%1$s</string>
@@ -845,7 +910,7 @@ Language: tr
     <string name="label_done_button">Tamamlandı</string>
     <string name="label_next_button">Sonraki</string>
     <string name="delete_button_alt">Sil</string>
-    <string name="hpp_choose_error">Tasarım seçilirken bir hata oluştu.</string>
+    <string name="hpp_choose_error">Tema seçilirken bir hata oluştu.</string>
     <string name="hpp_retry_error">Lütfen internet bağlantınızı kontrol edip tekrar deneyin.</string>
     <string name="hpp_error_subtitle">Tekrar çevrimiçi olduğunuzda yeniden dene\'ye dokunun.</string>
     <string name="hpp_error_title">Çevrimdışıyken düzenler kullanılamaz</string>
@@ -862,8 +927,6 @@ Language: tr
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">Kaydırılabilir blok menüsü açıldı. Bir blok seçin.</string>
     <string name="gutenberg_native_scrollable_block_menu_closed">Kaydırılabilir blok menüsü kapandı.</string>
     <string name="hpp_choose_button">Seç</string>
-    <string name="hpp_subtitle">En sevdiğiniz ana sayfa düzenini seçin. Daha sonra özelleştirebilir ve değiştirebilirsiniz.</string>
-    <string name="hpp_title">Bir tasarım seçin</string>
     <string name="mlp_network_error_subtitle">Tekrar çevrimiçi olduğunuzda yeniden dene seçeneğine dokunun veya aşağıdaki düğmeyi kullanarak boş bir sayfa oluşturun.</string>
     <string name="mlp_network_error_title">Çevrimdışıyken düzenler kullanılamaz</string>
     <string name="mlp_error_subtitle">Yeniden dene seçeneğine dokunun veya aşağıdaki düğmeyi kullanarak boş bir sayfa oluşturun.</string>
@@ -1670,7 +1733,6 @@ Language: tr
     <string name="quick_start_sites_type_grow">Kitlenizi genişletin</string>
     <string name="quick_start_sites_type_customize">Sitenizi özelleştirin</string>
     <string name="quick_start_sites">Sonraki Adımlar</string>
-    <string name="quick_start_complete_tasks_header">Tamamlandı (%d)</string>
     <string name="quick_start_dialog_upload_icon_title">Benzersiz bir site simgesi seçin</string>
     <string name="quick_start_dialog_upload_icon_message">Ziyaretçileriniz tarayıcılarında sizin simgenizi görecektir. Gösterişli ve profesyonel bir görünüm için özel bir simge ekleyin.</string>
     <string name="quick_start_dialog_check_stats_message_short">Sitenizin nasıl performans gösterdiğini görmek için %1$sİstatistik%2$s öğesini seçin.</string>
@@ -1683,11 +1745,7 @@ Language: tr
     <string name="quick_start_dialog_remove_next_steps_message">Sonraki Adımları kaldırma seçeneği, bu sitedeki diğer tüm turları gizler. Bu eylem geri alınamaz.</string>
     <string name="quick_start_dialog_remove_next_steps_title">Sonraki Adımları Kaldır</string>
     <string name="quick_start_remove_next_steps_menu_title">Kaldır</string>
-    <string name="quick_start_complete_view_subtitle">Tebrikler, listenizi başarıyla tamamladınız. Başarılı bir iş çıkardınız..</string>
-    <string name="quick_start_complete_view_title">Tüm görevler tamamlandı!</string>
     <string name="quick_start_task_skip_menu_title">Görevi geç</string>
-    <string name="quick_start_completed_tasks_header_chevron_collapse_desc">daralt</string>
-    <string name="quick_start_completed_tasks_header_chevron_expand_desc">genişlet</string>
     <string name="notification_channel_reminder_title">Hatırlatıcı</string>
     <string name="stats_select_next_period_description">Gelecek dönemi seç</string>
     <string name="stats_select_previous_period_description">Önceki dönemi seç</string>
@@ -1760,7 +1818,6 @@ Language: tr
     <string name="stats_insights_create_post">Yeni yazı oluştur</string>
     <string name="stats_insights_latest_post_message">%2$s yayınlandığından beri %1$s geçti. Yazının şimdiye kadar ki performansı şöyle:</string>
     <string name="stats_insights_latest_post_with_no_engagement">%2$s yayımlandığından beri %1$s geçti. Şimdi işe başlayın ve yazılarınızı paylaşarak yazı görüntülemenizi arttırın:</string>
-    <string name="stats_insights_latest_post_empty">Henüz hiç yazı yayımnlamadınız. Yayımlamaya başladığınızda en son yazınızın özeti burada görünecektir:</string>
     <string name="stats_insights_tags_and_categories">Etiketler ve kategoriler</string>
     <string name="stats_insights_all_time_stats">Tüm zamanlar</string>
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
@@ -3006,7 +3063,6 @@ Language: tr
     <string name="stats_followers_a_minute_ago">bir dakika önce</string>
     <string name="stats_followers_seconds_ago">saniye önce</string>
     <string name="stats_view_followers">Takipçiler</string>
-    <string name="stats_view_publicize">Duyuru</string>
     <string name="stats_view_videos">Videolar</string>
     <string name="stats_view_top_posts_and_pages">Yazılar ve Sayfalar</string>
     <string name="stats_view_countries">Ülkeler</string>

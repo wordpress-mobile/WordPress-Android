@@ -1,11 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-05-25 20:28:46+0000
+Translation-Revision-Date: 2022-06-20 11:28:12+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: gl_ES
 -->
 <resources>
+    <string name="blogging_prompts_onboarding_prompts_loading">Estanse cargando os estímulos para bloguear. Espera un momento e inténtao de novo.</string>
+    <string name="hpp_bottom_helper_text">Non podes decidirte? Podes cambiar o tema en calquera momento.</string>
+    <string name="hpp_recommended_default_vertical">Bloguear</string>
+    <string name="hpp_recommended_subtitle">Elixido para ti</string>
+    <string name="hpp_recommended_title">Ideal para %s</string>
+    <string name="hpp_preview_tapped_theme">Vista previa do tema %s</string>
+    <string name="hpp_title">Elixe un tema</string>
+    <string name="my_site_blogging_prompt_card_skipped_snackbar">Salteime o estímulo para bloguear de hoxe</string>
+    <string name="my_site_blogging_prompt_card_menu_learn_more">Máis información</string>
+    <string name="my_site_blogging_prompt_card_attribution_dayone">Desde </string>
+    <string name="stats_follower_types_pie_chart_total_label">Totais</string>
+    <string name="stats_referrers_pie_chart_others">Outros</string>
+    <string name="stats_referrers_pie_chart_search">Buscar</string>
+    <string name="stats_referrers_pie_chart_wordpress">WordPress</string>
+    <string name="stats_referrers_pie_chart_total_label">Vistas</string>
+    <string name="stats_action_card_schedule_post_button_label">Programar</string>
+    <string name="stats_action_card_schedule_post_title">Programa a túa entrada</string>
+    <string name="stats_action_card_blogging_reminders_button_label">Configurar recordatorios</string>
+    <string name="stats_action_card_blogging_reminders_title">Configura os teus recordatorios de blogueo</string>
+    <string name="stats_action_card_grow_audience_button_label">Consulta o curso</string>
+    <string name="stats_action_card_grow_audience_title">Fai crecer a túa audiencia</string>
+    <string name="gutenberg_native_you_can_also_rearrange_blocks_by_tapping_a_block_and_then_tapping">Tamén podes reorganizar os bloques tocando un bloque e logo tocando as frechas arriba e abaixo que aparecen na parte inferior esquerda do bloque para movelo encima ou debaixo doutros bloques.</string>
+    <string name="gutenberg_native_image_file_not_found">Arquivo de imaxe non encontrado.</string>
+    <string name="gutenberg_native_drag_drop_makes_rearranging_blocks_a_breeze_press_and_hold_on_a_b">Arrastrar e soltar fai que reordear bloques sexa algo trivial. Presiona e suxeita un bloque, logo arrástrao á súa nova ubicación e sóltao.</string>
+    <string name="gutenberg_native_drag_drop">Arrastrar e soltar</string>
+    <string name="gutenberg_native_arrow_buttons">Botóns de frechas</string>
+    <string name="gutenberg_native_1_s_currently_selected_2_s">%1$s. Seleccionado actualmente: %2$s</string>
+    <string name="quick_start_sites_type_all_tasks_completed">Todas as tarefas están completas</string>
+    <string name="quick_start_list_task_complete">Tarefa completada</string>
+    <string name="me_btn_scan_login_code">Explorar código de acceso</string>
+    <string name="stats_insights_likes_guide_card">⭐️  A túa última entrada %1$s recibiu %2$s gústame.</string>
+    <string name="stats_most_popular_percent_views_empty">Non hai suficiente actividade. Volve a comprobalo máis tarde, cando o teu sitio teña máis visitas!</string>
+    <string name="stats_total_followers_content_description">%1s, %2s do total de seguidores</string>
+    <string name="stats_value_percent">%1$s (%2$s%%)</string>
     <string name="pages_copy_link">Copiar ligazón</string>
     <string name="quick_start_completed_tour_title">Noraboa! Xa sabes manexarte&lt;br/&gt;</string>
     <string name="quick_start_sites_type_get_to_know_app">Coñece a aplicación</string>
@@ -69,7 +103,7 @@ Language: gl_ES
     <string name="new_site_creation_site_name_header_title">Dálle á túa web %s un nome</string>
     <string name="new_site_creation_site_name_title">Nome do sitio</string>
     <string name="my_site_todays_stats_get_more_views_message">Estás interesado en crear unha audiencia? Revisa os nosos &lt;a href=\"%1$s\"&gt;mellores consellos&lt;/a&gt;.</string>
-    <string name="stats_insights_views_and_visitors">Visitas e visitantes</string>
+    <string name="stats_insights_views_and_visitors">Vistas e visitantes</string>
     <string name="featured_image_removed_notice">Eliminada como imaxe destacada</string>
     <string name="featured_image_confirmation_notice">Establecer como imaxe destacada</string>
     <string name="featured_image_replace_dialog_cancel">Manter actual</string>
@@ -474,6 +508,7 @@ Language: gl_ES
     <string name="gutenberg_native_three">Tres</string>
     <string name="gutenberg_native_s_social_icon">Icona social %s</string>
     <string name="gutenberg_native_mention">Mención</string>
+    <string name="gutenberg_native_new">NOVO</string>
     <string name="gutenberg_native_preview_post">Previsualizar a entrada</string>
     <string name="gutenberg_native_preview_page">Previsualizar a páxina</string>
     <string name="gutenberg_native_retry">Reintentar</string>
@@ -669,9 +704,6 @@ Language: gl_ES
     <string name="quick_start_dialog_review_pages_message">Cambia, engade ou elimina páxinas no teu sitio.</string>
     <string name="quick_start_dialog_review_pages_title">Revisar as páxinas do sitio</string>
     <string name="quick_start_dialog_edit_homepage_message_pages_short">Selecciona %1$s Páxina de inicio %2$s para editar a túa páxina de inicio.</string>
-    <string name="quick_start_dialog_edit_homepage_message_short">Selecciona %1$s Páxinas %2$s para ver a túa lista de páxinas.</string>
-    <string name="quick_start_dialog_edit_homepage_message">Cambia, engade ou elimina contido na páxina de inicio do teu sitio.</string>
-    <string name="quick_start_dialog_edit_homepage_title">Editar a páxina de inicio</string>
     <string name="reader_menu_mark_as_unseen">Marcar como non lida</string>
     <string name="reader_menu_mark_as_seen">Marcar como lida</string>
     <string name="error_media_upload_failed_for_reason">Non se puideron subir los elementos multimedia.\n%1$s</string>
@@ -845,7 +877,7 @@ Language: gl_ES
     <string name="label_done_button">Feito</string>
     <string name="label_next_button">Seguinte</string>
     <string name="delete_button_alt">Borrar</string>
-    <string name="hpp_choose_error">Ocorreu un erro ao seleccionar o deseño.</string>
+    <string name="hpp_choose_error">Ocorreu un erro ao seleccionar o tema.</string>
     <string name="hpp_retry_error">Por favor, revisa a túa conexión a Internet e inténtao de novo.</string>
     <string name="hpp_error_subtitle">Toca en reintentar cando volvas a estar conectado.</string>
     <string name="hpp_error_title">Os deseños non están dispoñibles sen conexión</string>
@@ -862,8 +894,6 @@ Language: gl_ES
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">Abriuse o menú de bloques desprazable. Selecciona un bloque.</string>
     <string name="gutenberg_native_scrollable_block_menu_closed">Pechouse o menú de bloques desprazable.</string>
     <string name="hpp_choose_button">Elixir</string>
-    <string name="hpp_subtitle">Elixe o deseño de páxina de inicio que prefiras. Podes personalizalo ou cambialo máis tarde.</string>
-    <string name="hpp_title">Elixe un deseño</string>
     <string name="mlp_network_error_subtitle">Toca «Reintentar» cando volvas a estar en liña ou crea unha páxina en branco usando o seguinte botón.</string>
     <string name="mlp_network_error_title">Os deseños non están dispoñibles sen conexión</string>
     <string name="mlp_error_subtitle">Toca «Reintentar» ou crea unha páxina en branco usando o seguinte botón.</string>
@@ -1670,7 +1700,6 @@ Language: gl_ES
     <string name="quick_start_sites_type_grow">Fai crecer a túa audiencia</string>
     <string name="quick_start_sites_type_customize">Personaliza o teu sitio</string>
     <string name="quick_start_sites">Seguintes pasos</string>
-    <string name="quick_start_complete_tasks_header">Completo (%d)</string>
     <string name="quick_start_dialog_upload_icon_title">Elixe unha icona do sitio único</string>
     <string name="quick_start_dialog_upload_icon_message">Os teus visitantes verán a túa icona no seu navegador. Engade unha icona personalizada para conseguir un aspecto profesional e refinado.</string>
     <string name="quick_start_dialog_check_stats_message_short">Toca en %1$s Estatísticas %2$s para ver como está rendendo o teu sitio.</string>
@@ -1683,11 +1712,7 @@ Language: gl_ES
     <string name="quick_start_dialog_remove_next_steps_message">Eliminar os seguintes pasos ocultará todas as visitas guiadas deste sitio. Esta acción é irreversible.</string>
     <string name="quick_start_dialog_remove_next_steps_title">Quitar os seguintes pasos</string>
     <string name="quick_start_remove_next_steps_menu_title">Quitar isto</string>
-    <string name="quick_start_complete_view_subtitle">Noraboa por completar a túa lista. Un traballo ben feito.</string>
-    <string name="quick_start_complete_view_title">Todas as tarefas están completas!</string>
     <string name="quick_start_task_skip_menu_title">Saltar tarefa</string>
-    <string name="quick_start_completed_tasks_header_chevron_collapse_desc">contraer</string>
-    <string name="quick_start_completed_tasks_header_chevron_expand_desc">ampliar</string>
     <string name="notification_channel_reminder_title">Recordatorio</string>
     <string name="stats_select_next_period_description">Elixe o seguinte período</string>
     <string name="stats_select_previous_period_description">Elixe o período anterior</string>
@@ -1760,7 +1785,6 @@ Language: gl_ES
     <string name="stats_insights_create_post">Crear entrada</string>
     <string name="stats_insights_latest_post_message">Pasaron %1$s desde que se publicou %2$s. Así é como funcionou a entrada ata agora:</string>
     <string name="stats_insights_latest_post_with_no_engagement">Pasaron %1$s desde que se publicou %2$s. Pon a bola a rodar e aumenta as vistas das entradas compartindo a túa entrada:</string>
-    <string name="stats_insights_latest_post_empty">Aínda non publicaches ningunha entrada. Unha vez que empeces a publicar, o resumo da túa última entrada aparecerá aquí:</string>
     <string name="stats_insights_tags_and_categories">Etiquetas e categorías</string>
     <string name="stats_insights_all_time_stats">Histórico</string>
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
@@ -3006,7 +3030,6 @@ Language: gl_ES
     <string name="stats_followers_a_minute_ago">hai un minuto</string>
     <string name="stats_followers_seconds_ago">hai uns segundos</string>
     <string name="stats_view_followers">Seguidores</string>
-    <string name="stats_view_publicize">Publicize</string>
     <string name="stats_view_videos">Vídeos</string>
     <string name="stats_view_top_posts_and_pages">Artigos e páxinas</string>
     <string name="stats_view_countries">Países</string>

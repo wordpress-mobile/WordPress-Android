@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 
 import kotlinx.coroutines.CoroutineDispatcher
-import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.store.StatsStore.InsightType
@@ -9,7 +8,9 @@ import org.wordpress.android.fluxc.store.StatsStore.InsightType.TOTAL_FOLLOWERS
 import org.wordpress.android.fluxc.store.stats.insights.SummaryStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewTotalFollowersStats
+import org.wordpress.android.ui.stats.StatsViewType
+import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewInsightDetails
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatelessUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.VIEW_ALL
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
@@ -19,6 +20,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Value
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.InsightUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.utils.ActionCardHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
+import org.wordpress.android.ui.stats.refresh.utils.trackWithType
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -33,10 +35,10 @@ class TotalFollowersUseCase @Inject constructor(
     private val resourceProvider: ResourceProvider,
     private val totalStatsMapper: TotalStatsMapper,
     private val analyticsTracker: AnalyticsTrackerWrapper,
-    private val useCaseMode: UseCaseMode,
-    private val actionCardHandler: ActionCardHandler
+    private val actionCardHandler: ActionCardHandler,
+    private val useCaseMode: UseCaseMode
 ) : StatelessUseCase<Int>(TOTAL_FOLLOWERS, mainDispatcher, bgDispatcher) {
-    override fun buildLoadingItem(): List<BlockListItem> = listOf(TitleWithMore(R.string.stats_view_total_followers))
+    override fun buildLoadingItem(): List<BlockListItem> = listOf(TitleWithMore(string.stats_view_total_followers))
 
     override fun buildEmptyItem() = buildUiModel(0)
 
@@ -70,16 +72,20 @@ class TotalFollowersUseCase @Inject constructor(
     }
 
     private fun buildTitle() = TitleWithMore(
-            R.string.stats_view_total_followers,
+            string.stats_view_total_followers,
             navigationAction = if (useCaseMode == VIEW_ALL) null else ListItemInteraction.create(this::onViewMoreClick)
     )
 
     private fun onViewMoreClick() {
-        analyticsTracker.track(
-                AnalyticsTracker.Stat.STATS_TOTAL_FOLLOWERS_VIEW_MORE_TAPPED,
-                statsSiteProvider.siteModel
+        analyticsTracker.trackWithType(AnalyticsTracker.Stat.STATS_INSIGHTS_VIEW_MORE, TOTAL_FOLLOWERS)
+        navigateTo(
+                ViewInsightDetails(
+                        StatsSection.TOTAL_FOLLOWERS_DETAIL,
+                        StatsViewType.TOTAL_FOLLOWERS,
+                        null,
+                        null
+                )
         )
-        navigateTo(ViewTotalFollowersStats)
     }
 
     class TotalFollowersUseCaseFactory @Inject constructor(
@@ -100,8 +106,8 @@ class TotalFollowersUseCase @Inject constructor(
                 resourceProvider,
                 totalStatsMapper,
                 analyticsTracker,
-                useCaseMode,
-                actionCardHandler
+                actionCardHandler,
+                useCaseMode
         )
     }
 }

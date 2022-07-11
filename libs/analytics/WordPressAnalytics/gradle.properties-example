@@ -1,6 +1,0 @@
-ossrhUsername=hello
-ossrhPassword=world
-
-signing.keyId=byebye
-signing.password=secret
-signing.secretKeyRingFile=/home/user/secret.gpg

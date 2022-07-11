@@ -142,6 +142,7 @@ import org.wordpress.android.ui.posts.FeaturedImageHelper.EnqueueFeaturedImageRe
 import org.wordpress.android.ui.posts.InsertMediaDialog.InsertMediaCallback;
 import org.wordpress.android.ui.posts.PostEditorAnalyticsSession.Editor;
 import org.wordpress.android.ui.posts.PostEditorAnalyticsSession.Outcome;
+import org.wordpress.android.ui.posts.PostUtils.EntryPoint;
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.PreviewLogicOperationResult;
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewType;
 import org.wordpress.android.ui.posts.editor.EditorActionsProvider;
@@ -288,6 +289,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     public static final String EXTRA_PAGE_CONTENT = "pageContent";
     public static final String EXTRA_PAGE_TEMPLATE = "pageTemplate";
     public static final String EXTRA_PROMPT_ID = "extraPromptId";
+    public static final String EXTRA_ENTRY_POINT = "extraEntryPoint";
     private static final String STATE_KEY_EDITOR_FRAGMENT = "editorFragment";
     private static final String STATE_KEY_DROPPED_MEDIA_URIS = "stateKeyDroppedMediaUri";
     private static final String STATE_KEY_POST_LOCAL_ID = "stateKeyPostModelLocalId";
@@ -918,6 +920,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     mEditPostRepository.updateAsync(postModel -> {
                         postModel.setContent(loadedPrompt.getContent());
                         postModel.setAnsweredPromptId(loadedPrompt.getPromptId());
+                        postModel.setTagNames(loadedPrompt.getTag());
                         return true;
                     }, (postModel, result) -> {
                         refreshEditorContent();
@@ -3275,7 +3278,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 ((GutenbergEditorFragment) mEditorFragment).resetUploadingMediaToFailed(mediaIds);
             }
         } else if (mShowAztecEditor && mEditorFragment instanceof AztecEditorFragment) {
-            mPostEditorAnalyticsSession.start(null, themeSupportsGalleryWithImageBlocks());
+            final EntryPoint entryPoint = (EntryPoint) getIntent().getSerializableExtra(EXTRA_ENTRY_POINT);
+            mPostEditorAnalyticsSession.start(null, themeSupportsGalleryWithImageBlocks(), entryPoint);
         }
     }
 
@@ -3284,12 +3288,13 @@ public class EditPostActivity extends LocaleAwareActivity implements
             ArrayList<Object> unsupportedBlocksList,
             boolean replaceBlockActionWaiting
     ) {
+        final EntryPoint entryPoint = (EntryPoint) getIntent().getSerializableExtra(EXTRA_ENTRY_POINT);
+
         // Note that this method is also used to track startup performance
         // It assumes this is being called when the editor has finished loading
         // If you need to refactor this, please ensure that the startup_time_ms property
         // is still reflecting the actual startup time of the editor
-        mPostEditorAnalyticsSession
-                .start(unsupportedBlocksList, themeSupportsGalleryWithImageBlocks());
+        mPostEditorAnalyticsSession.start(unsupportedBlocksList, themeSupportsGalleryWithImageBlocks(), entryPoint);
         presentNewPageNoticeIfNeeded();
 
         // don't start listening for Story events just now if we're waiting for a block to be replaced,
@@ -3300,9 +3305,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
         // Start VM, load prompt and populate Editor with content after edit IS ready.
         final int promptId = getIntent().getIntExtra(EXTRA_PROMPT_ID, -1);
-        if (promptId >= 0) {
-            mEditorBloggingPromptsViewModel.start(mSite, promptId);
-        }
+        mEditorBloggingPromptsViewModel.start(mSite, promptId);
     }
 
     @Override

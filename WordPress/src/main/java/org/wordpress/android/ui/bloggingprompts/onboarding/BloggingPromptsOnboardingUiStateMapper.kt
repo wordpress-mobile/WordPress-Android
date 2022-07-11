@@ -18,13 +18,9 @@ class BloggingPromptsOnboardingUiStateMapper @Inject constructor() {
         onPrimaryButtonClick: () -> Unit,
         onSecondaryButtonClick: () -> Unit
     ): Ready {
-        val dummyRespondent =
-                "https://0.gravatar.com/avatar/cec64efa352617" +
-                        "c35743d8ed233ab410?s=96&d=identicon&r=G"
+        val dummyRespondent = ""
 
         val dummyRespondents = listOf(
-                dummyRespondent,
-                dummyRespondent,
                 dummyRespondent,
                 dummyRespondent,
                 dummyRespondent
@@ -37,7 +33,7 @@ class BloggingPromptsOnboardingUiStateMapper @Inject constructor() {
 
         val avatarsTrain = dummyRespondents.take(3).map { respondent -> AvatarItem(respondent) }
                 .toMutableList<TrainOfAvatarsItem>()
-                .also { list -> list.add(TrailingLabelTextItem(trailingLabel, R.attr.colorPrimary)) }
+                .also { list -> list.add(TrailingLabelTextItem(trailingLabel, R.attr.colorOnSurface)) }
 
         val primaryButtonLabel = when (dialogType) {
             ONBOARDING -> R.string.blogging_prompts_onboarding_try_it_now

@@ -17,7 +17,6 @@ Language: hr
     <string name="scan">Skeniraj</string>
     <string name="reader_discover_empty_title">Dobro došli!</string>
     <string name="hpp_choose_button">Odaberi</string>
-    <string name="hpp_title">Odaberite dizajn</string>
     <string name="prepublishing_nudges_add_category_button">Dodaj Kategoriju</string>
     <string name="prepublishing_nudges_toolbar_title_add_categories">Dodaj novu kategoriju</string>
     <string name="prepublishing_nudges_toolbar_title_categories">Kategorije</string>
@@ -418,7 +417,6 @@ Language: hr
     <string name="stats_followers_years">%1$d godina</string>
     <string name="stats_followers_a_month">Mjesec</string>
     <string name="stats_followers_minutes">%1$d minuta</string>
-    <string name="stats_view_publicize">Publicirajte</string>
     <string name="ssl_certificate_details">Detalji</string>
     <string name="cab_selected">%d odabrano</string>
     <string name="reader_label_like">Lajk</string>

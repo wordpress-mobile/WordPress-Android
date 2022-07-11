@@ -1,5 +1,12 @@
-# NOTE: When updating the `promo_config` keys of those locale, ensure it matches the list
-# of locales enabled in `.circleci/config.yml` for the `raw-screenshots` job
+# NOTE: When updating this list, ensure the locales having `promo_config: {…}` matches the list of locales
+# used in the `raw-screenshots` job (see `.circleci/config.yml`) by Firebase Test Lab
+#
+# NOTE: The `promo_config` hash is used by `fastlane/helpers/android_promo_screenshot_helper.rb` and accepts keys `:text_size` and `:font`.
+# When set to `false`, the locale will just not be included during the screenshot generation (see `lanes/screenshots.rb`).
+# This setup is likely to disappear soon (we currently don't provide any custom text size and font for any local anyway) when we will:
+#  1. Get rid of the local `fastlane/helpers/*` from this repo, to ultimately switch to use the `release-toolkit`'s action instead
+#  2. Switch to use the [future `LocaleHelper` once it lands](https://github.com/wordpress-mobile/release-toolkit/pull/296)
+#
 ALL_LOCALES = [
   # First are the locales which are used for *both* downloading the `strings.xml` files from GlotPress *and* for generating the release notes XML files.
   { glotpress: 'ar', android: 'ar',    google_play: 'ar',     promo_config: {} },
@@ -24,42 +31,42 @@ ALL_LOCALES = [
   { glotpress: 'vi', android: 'vi',    google_play: 'vi',     promo_config: {} },
   { glotpress: 'zh-cn', android: 'zh-rCN', google_play: 'zh-CN',  promo_config: {} },
   { glotpress: 'zh-tw', android: 'zh-rTW', google_play: 'zh-TW',  promo_config: {} },
-  # From this point are locales that are still used for downloading `strings.xml`… but not for release notes – and thus don't need a `google_play` key. See `RELEASE_NOTES_LOCALES` below.
+  # From this point are locales that are still used for downloading `strings.xml`… but not for release notes – and thus don't need a `google_play` key. See `WP_RELEASE_NOTES_LOCALES` below.
   { glotpress: 'az', android: 'az', promo_config: false },
-  { glotpress: 'el', android: 'el', promo_config: false },
-  { glotpress: 'es-mx', android: 'es-rMX', promo_config: false },
-  { glotpress: 'es-cl', android: 'es-rCL', promo_config: false },
-  { glotpress: 'gd', android: 'gd', promo_config: false },
-  { glotpress: 'hi', android: 'hi', promo_config: false },
-  { glotpress: 'hu', android: 'hu', promo_config: false },
-  { glotpress: 'nb', android: 'nb', promo_config: false },
-  { glotpress: 'pl', android: 'pl', promo_config: false },
-  { glotpress: 'th', android: 'th', promo_config: false },
-  { glotpress: 'uz', android: 'uz', promo_config: false },
-  { glotpress: 'zh-tw', android: 'zh-rHK', promo_config: false },
-  { glotpress: 'eu', android: 'eu', promo_config: false },
-  { glotpress: 'ro', android: 'ro', promo_config: false },
-  { glotpress: 'mk', android: 'mk', promo_config: false },
-  { glotpress: 'en-au', android: 'en-rAU', promo_config: false },
-  { glotpress: 'sr', android: 'sr', promo_config: false },
-  { glotpress: 'sk', android: 'sk', promo_config: false },
+  { glotpress: 'bg', android: 'bg', promo_config: false },
+  { glotpress: 'cs', android: 'cs', promo_config: false },
   { glotpress: 'cy', android: 'cy', promo_config: false },
   { glotpress: 'da', android: 'da', promo_config: false },
-  { glotpress: 'bg', android: 'bg', promo_config: false },
-  { glotpress: 'sq', android: 'sq', promo_config: false },
-  { glotpress: 'hr', android: 'hr', promo_config: false },
-  { glotpress: 'cs', android: 'cs', promo_config: false },
-  { glotpress: 'pt-br', android: 'pt-rBR', promo_config: false },
+  { glotpress: 'el', android: 'el', promo_config: false },
+  { glotpress: 'en-au', android: 'en-rAU', promo_config: false },
   { glotpress: 'en-ca', android: 'en-rCA', promo_config: false },
-  { glotpress: 'ms', android: 'ms', promo_config: false },
-  { glotpress: 'es-ve', android: 'es-rVE', promo_config: false },
-  { glotpress: 'gl', android: 'gl', promo_config: false },
-  { glotpress: 'is', android: 'is' },
+  { glotpress: 'es-cl', android: 'es-rCL', promo_config: false },
   { glotpress: 'es-co', android: 'es-rCO', promo_config: false },
+  { glotpress: 'es-mx', android: 'es-rMX', promo_config: false },
+  { glotpress: 'es-ve', android: 'es-rVE', promo_config: false },
+  { glotpress: 'eu', android: 'eu', promo_config: false },
+  { glotpress: 'gd', android: 'gd', promo_config: false },
+  { glotpress: 'gl', android: 'gl', promo_config: false },
+  { glotpress: 'hi', android: 'hi', promo_config: false },
+  { glotpress: 'hr', android: 'hr', promo_config: false },
+  { glotpress: 'hu', android: 'hu', promo_config: false },
+  { glotpress: 'is', android: 'is' },
   { glotpress: 'kmr', android: 'kmr', promo_config: false },
+  { glotpress: 'mk', android: 'mk', promo_config: false },
+  { glotpress: 'ms', android: 'ms', promo_config: false },
+  { glotpress: 'nb', android: 'nb', promo_config: false },
+  { glotpress: 'ro', android: 'ro', promo_config: false },
+  { glotpress: 'sk', android: 'sk', promo_config: false },
+  { glotpress: 'sq', android: 'sq', promo_config: false },
+  { glotpress: 'uz', android: 'uz', promo_config: false },
+  { glotpress: 'zh-tw', android: 'zh-rHK', promo_config: false },
 ].freeze
 
-RELEASE_NOTES_LOCALES = ALL_LOCALES
+WP_APP_LOCALES = ALL_LOCALES
+JP_APP_LOCALES = ALL_LOCALES
+  .select { |h| %w[ar de-DE es-ES fr-FR iw-IL id it-IT ja-JP ko-KR nl-NL pt-BR ru-RU sv-SE tr-TR zh-CN zh-TW].include?(h[:google_play]) }
+
+WP_RELEASE_NOTES_LOCALES = ALL_LOCALES
   .reject { |h| h[:google_play].nil? }
   .map { |h| [h[:glotpress], h[:google_play]] }
 
@@ -217,12 +224,12 @@ platform :android do
 
     delete_old_changelogs(app: 'wordpress', build: options[:build_number])
     download_path = File.join(Dir.pwd, app_values[:metadata_dir], 'android')
-    # The case for the source locale (en-US) is pulled in a hacky way, by having an {en-gb => en-US} mapping as part of the RELEASE_NOTES_LOCALES,
+    # The case for the source locale (en-US) is pulled in a hacky way, by having an {en-gb => en-US} mapping as part of the WP_RELEASE_NOTES_LOCALES,
     # which is then treated in a special way by gp_downloadmetadata by specifying a `source_locale: 'en-US'` to process it differently from the rest.
     gp_downloadmetadata(
-      project_url: app_values[:gp_url],
+      project_url: app_values[:glotpress_metadata_project],
       target_files: files,
-      locales: RELEASE_NOTES_LOCALES,
+      locales: WP_RELEASE_NOTES_LOCALES,
       source_locale: 'en-US',
       download_path: download_path
     )
@@ -247,7 +254,7 @@ platform :android do
     delete_old_changelogs(app: 'jetpack', build: options[:build_number])
     download_path = File.join(Dir.pwd, app_values[:metadata_dir], 'android')
     gp_downloadmetadata(
-      project_url: app_values[:gp_url],
+      project_url: app_values[:glotpress_metadata_project],
       target_files: files,
       locales: JP_RELEASE_NOTES_LOCALES,
       download_path: download_path
@@ -273,13 +280,15 @@ platform :android do
 
   ### Libraries Translation Merging ###
 
-  MAIN_STRINGS_PATH = './WordPress/src/main/res/values/strings.xml'.freeze
-  FROZEN_STRINGS_DIR_PATH = './fastlane/resources/values/'.freeze
+  WORDPRESS_MAIN_STRINGS_PATH = './WordPress/src/main/res/values/strings.xml'.freeze
+  WORDPRESS_FROZEN_STRINGS_DIR_PATH = './fastlane/resources/values/'.freeze
+  JETPACK_MAIN_STRINGS_PATH = './WordPress/src/jetpack/res/values/strings.xml'.freeze
+  JETPACK_FROZEN_STRINGS_DIR_PATH = './fastlane/jetpack_resources/values/'.freeze
   LOCAL_LIBRARIES_STRINGS_PATHS = [
     # Note: for those we don't set `add_ignore_attr` to true because we currently use `checkDependencies true` in `WordPress/build.gradle`
     # Which will correctly detect strings from the app's `strings.xml` being used by one of the module.
-    { library: "Image Editor", strings_path: "./libs/image-editor/ImageEditor/src/main/res/values/strings.xml", source_id: 'module:image-editor' },
-    { library: "WordPress Editor", strings_path: "./libs/editor/WordPressEditor/src/main/res/values/strings.xml", source_id: 'module:editor' }
+    { library: "Image Editor", strings_path: "./libs/image-editor/src/main/res/values/strings.xml", source_id: 'module:image-editor' },
+    { library: "Editor", strings_path: "./libs/editor/src/main/res/values/strings.xml", source_id: 'module:editor' }
   ].freeze
   REMOTE_LIBRARIES_STRINGS_PATHS = [
     {
@@ -318,16 +327,22 @@ platform :android do
     # (like `FileUtils` calls here) run relative to the `./fastlane` folder, but the `*_DIR_PATH` we use are relative to the repo root.
     # See: https://docs.fastlane.tools/advanced/fastlane/#directory-behavior
     Dir.chdir('..') do
-      FileUtils.mkdir_p(FROZEN_STRINGS_DIR_PATH)
-      FileUtils.cp(MAIN_STRINGS_PATH, FROZEN_STRINGS_DIR_PATH)
+      FileUtils.mkdir_p(WORDPRESS_FROZEN_STRINGS_DIR_PATH)
+      FileUtils.cp(WORDPRESS_MAIN_STRINGS_PATH, WORDPRESS_FROZEN_STRINGS_DIR_PATH)
+      FileUtils.mkdir_p(JETPACK_FROZEN_STRINGS_DIR_PATH)
+      FileUtils.cp(JETPACK_MAIN_STRINGS_PATH, JETPACK_FROZEN_STRINGS_DIR_PATH)
     end
-    git_commit(path: File.join(FROZEN_STRINGS_DIR_PATH, 'strings.xml'), message: 'Freeze strings for translation', allow_nothing_to_commit: true)
+    git_commit(
+      path: [File.join(WORDPRESS_FROZEN_STRINGS_DIR_PATH, 'strings.xml'), File.join(JETPACK_FROZEN_STRINGS_DIR_PATH, 'strings.xml')],
+      message: 'Freeze strings for translation',
+      allow_nothing_to_commit: true
+    )
   end
 
   desc 'Merge libraries strings files into the main app one'
   lane :localize_libraries do
     # Merge `strings.xml` files of libraries that are hosted locally in the repository (in `./libs` folder)
-    an_localize_libs(app_strings_path: MAIN_STRINGS_PATH, libs_strings_path: LOCAL_LIBRARIES_STRINGS_PATHS)
+    an_localize_libs(app_strings_path: WORDPRESS_MAIN_STRINGS_PATH, libs_strings_path: LOCAL_LIBRARIES_STRINGS_PATHS)
 
     # Merge `strings.xml` files of libraries that are hosted in separate repositories (and linked as binary dependencies with the project)
     REMOTE_LIBRARIES_STRINGS_PATHS.each do |lib|
@@ -354,13 +369,13 @@ platform :android do
           source_id: lib[:source_id],
           add_ignore_attr: true # The linter is not be able to detect if a merged string is actually used by a binary dependency
         }]
-        an_localize_libs(app_strings_path: MAIN_STRINGS_PATH, libs_strings_path: lib_to_merge)
+        an_localize_libs(app_strings_path: WORDPRESS_MAIN_STRINGS_PATH, libs_strings_path: lib_to_merge)
         File.delete(download_path) if File.exist?(download_path)
       end
     end
 
     # Commit changes
-    git_commit(path: MAIN_STRINGS_PATH, message: 'Merge strings from libraries for translation', allow_nothing_to_commit: true)
+    git_commit(path: WORDPRESS_MAIN_STRINGS_PATH, message: 'Merge strings from libraries for translation', allow_nothing_to_commit: true)
   end
 
   #####################################################################################
@@ -372,13 +387,19 @@ platform :android do
   # bundle exec fastlane download_translations
   #####################################################################################
   lane :download_translations do
-    # For now WordPress and Jetpack use the same GlotPress project and share the same `strings.xml`
-    # (the Jetpack-dedicated one, https://translate.wordpress.com/projects/jetpack/apps/android/, is empty anyway for now).
+    # WordPress strings
     android_download_translations(
       res_dir: File.join('WordPress', 'src', 'main', 'res'),
-      glotpress_url: 'https://translate.wordpress.org/projects/apps/android/dev/',
-      locales: ALL_LOCALES,
-      lint_task: 'lintWordpressVanillaRelease' # TODO: Should we adapt this?
+      glotpress_url: APP_SPECIFIC_VALUES[:wordpress][:glotpress_appstrings_project],
+      locales: WP_APP_LOCALES,
+      lint_task: 'lintWordpressVanillaRelease'
+    )
+    # Jetpack strings
+    android_download_translations(
+      res_dir: File.join('WordPress', 'src', 'jetpack', 'res'),
+      glotpress_url: APP_SPECIFIC_VALUES[:jetpack][:glotpress_appstrings_project],
+      locales: JP_APP_LOCALES,
+      lint_task: 'lintJetpackVanillaRelease'
     )
   end
 

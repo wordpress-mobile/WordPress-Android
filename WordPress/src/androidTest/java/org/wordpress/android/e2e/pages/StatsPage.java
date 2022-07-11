@@ -23,10 +23,13 @@ import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDis
 
 public class StatsPage {
     public StatsPage openDayStats() {
-        onView(allOf(
+        ViewInteraction daysStatsTab = onView(allOf(
                 withText("Days"),
                 isDescendantOfA(withId(R.id.tabLayout))
-        )).perform(ViewActions.click());
+        ));
+
+        waitForElementToBeDisplayedWithoutFailure(daysStatsTab);
+        daysStatsTab.perform(ViewActions.click());
 
         waitForElementToBeDisplayedWithoutFailure(
                 onView(withText("Posts and Pages"))

@@ -1,11 +1,78 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-05-27 14:34:37+0000
+Translation-Revision-Date: 2022-06-30 13:54:10+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.1
 Language: ko_KR
 -->
 <resources>
+    <string name="qrcode_auth_flow_content_description">진행 중인 로그인 코드 스캔을 나타내는 이미지</string>
+    <string name="qrcode_auth_flow_error_content_description">오류를 나타내는 이미지</string>
+    <string name="qrcode_auth_flow_dismiss_dialog_message">계속하시겠나요?</string>
+    <string name="qrcode_auth_flow_dismiss_dialog_title">로그인 코드 스캔 흐름 종료</string>
+    <string name="qrcode_auth_flow_error_auth_failed_subtitle">이 로그인 코드를 사용하여 로그인할 수 없습니다. 다시 스캔 버튼을 눌러 코드를 다시 스캔하세요.</string>
+    <string name="qrcode_auth_flow_error_auth_failed_title">인증 실패</string>
+    <string name="qrcode_auth_flow_error_expired_subtitle">이 로그인 코드는 만료되었습니다. 다시 스캔 버튼을 눌러 코드를 다시 스캔하세요.</string>
+    <string name="qrcode_auth_flow_error_expired_title">만료된 로그인 코드</string>
+    <string name="qrcode_auth_flow_error_invalid_data_subtitle">스캔한 로그인 코드의 유효성을 검사할 수 없습니다. 다시 스캔 버튼을 눌러 코드를 다시 스캔하세요.</string>
+    <string name="qrcode_auth_flow_error_invalid_data_title">로그인 코드 유효성을 검사할 수 없습니다.</string>
+    <string name="qrcode_auth_flow_error_no_connection_subtitle">로그인 코드를 스캔하려면 활성 인터넷 연결이 필요합니다.</string>
+    <string name="qrcode_auth_flow_error_no_connection_title">연결 없음</string>
+    <string name="qrcode_auth_flow_scan_again">다시 스캔</string>
+    <string name="qrcode_auth_flow_dismiss">해제</string>
+    <string name="qrcode_auth_flow_done_subtitle">계속하려면 해제를 눌러 웹 브라우저로 다시 이동하세요.</string>
+    <string name="qrcode_auth_flow_done_title">로그인되었습니다!</string>
+    <string name="qrcode_auth_flow_validated_primary_action">예. 로그인하겠습니다.</string>
+    <string name="qrcode_auth_flow_validated_subtitle">웹 브라우저에서 직접 가져온 QR 코드만 스캔하세요. 다른 사람이 보낸 코드는 스캔하지 마세요.</string>
+    <string name="qrcode_auth_flow_validated_default_title">%1$s 근처에서 웹 브라우저 로그인을 시도하는 중이신가요?</string>
+    <string name="qrcode_auth_flow_validated_title">%2$s 근처에서 %1$s 로그인을 시도하는 중이신가요?</string>
+    <string name="stats_revamp_v2_intro_secondary_button_text">나중에 다시 알림</string>
+    <string name="stats_revamp_v2_intro_primary_button_text">지금 시도</string>
+    <string name="stats_revamp_v2_intro_content_note">내 사이트 &gt; 통계 &gt; 인사이트에서 더 알아보기</string>
+    <string name="stats_revamp_v2_intro_content">인사이트는 콘텐츠의 성과와 잠재 고객이 공감하는 내용을 이해하는 데 도움이 됩니다.</string>
+    <string name="stats_revamp_v2_intro_header_title">인사이트 업데이트</string>
+    <string name="stats_insights_followers_guide_card">💡다른 블로그에서 댓글을 다는 것은 새 사이트에 대한 관심과 팔로워를 형성하는 훌륭한 방법입니다.</string>
+    <string name="stats_insights_comments_guide_card">💡\"더 보기\"를 눌러 상위 댓글 작성자를 참조하세요.</string>
+    <string name="stats_insights_latest_post_empty">언제 첫 번째 글을 발행했는지 다시 확인하세요!</string>
+    <string name="stats_insights_views_and_visitors_visitors_empty_state">조회수와 트래픽 %1$s을(를) 늘리는 상위 팁을 확인하세요.</string>
+    <string name="stats_view_publicize">소셜 미디어 연결</string>
+    <string name="stats_action_card_schedule_post_message">✍️ 잠재 고객에게 도달하기에 가장 적합한 시간에 임시글이 발행되도록 예약하세요.</string>
+    <string name="stats_action_card_blogging_reminders_message">💡일관되게 글을 작성하는 것은 잠재 고객을 형성하는 훌륭한 방법입니다. 순조롭게 진행되도록 알림을 추가하세요.</string>
+    <string name="stats_action_card_grow_audience_message">💡전문가가 강의하는 &lt;i&gt;블로깅 소개&lt;/i&gt; 과정을 통해 블로깅 수준을 더 빠르게 높이세요.</string>
+    <string name="blogging_prompts_onboarding_prompts_loading">블로깅 프롬프트를 로드하고 있습니다. 잠시 후에 다시 시도하세요.</string>
+    <string name="hpp_bottom_helper_text">결정할 수 없나요? 언제든지 테마를 변경할 수 있습니다.</string>
+    <string name="hpp_recommended_default_vertical">블로깅</string>
+    <string name="hpp_recommended_subtitle">추천</string>
+    <string name="hpp_recommended_title">%s에 가장 적합</string>
+    <string name="hpp_preview_tapped_theme">%s 테마 미리 보기</string>
+    <string name="hpp_title">테마 선택</string>
+    <string name="my_site_blogging_prompt_card_skipped_snackbar">건너뛴 오늘의 블로깅 프롬프트</string>
+    <string name="my_site_blogging_prompt_card_menu_learn_more">더 알아보기</string>
+    <string name="my_site_blogging_prompt_card_attribution_dayone">시작 </string>
+    <string name="stats_follower_types_pie_chart_total_label">합계</string>
+    <string name="stats_referrers_pie_chart_others">기타</string>
+    <string name="stats_referrers_pie_chart_search">검색</string>
+    <string name="stats_referrers_pie_chart_total_label">조회수</string>
+    <string name="stats_action_card_schedule_post_button_label">예약</string>
+    <string name="stats_referrers_pie_chart_wordpress">워드프레스</string>
+    <string name="stats_action_card_schedule_post_title">글 예약</string>
+    <string name="stats_action_card_blogging_reminders_button_label">알림 설정</string>
+    <string name="stats_action_card_blogging_reminders_title">블로깅 알림 설정</string>
+    <string name="stats_action_card_grow_audience_button_label">과정 확인</string>
+    <string name="stats_action_card_grow_audience_title">잠재 고객 성장</string>
+    <string name="gutenberg_native_you_can_also_rearrange_blocks_by_tapping_a_block_and_then_tapping">블록을 누른 다음에 블록의 왼쪽 하단에 표시되는 위쪽 및 아래쪽 화살표를 눌러 위쪽 또는 아래쪽으로 이동하면서 블록을 다시 정렬할 수도 있습니다.</string>
+    <string name="gutenberg_native_image_file_not_found">이미지 파일을 찾을 수 없습니다.</string>
+    <string name="gutenberg_native_drag_drop_makes_rearranging_blocks_a_breeze_press_and_hold_on_a_b">끌어서 놓기를 사용하면 블록 재정렬이 쉬워집니다. 블록을 길게 누른 다음 새로운 위치로 끌어서 놓으세요.</string>
+    <string name="gutenberg_native_drag_drop">끌어서 놓기</string>
+    <string name="gutenberg_native_arrow_buttons">화살표 버튼</string>
+    <string name="gutenberg_native_1_s_currently_selected_2_s">%1$s. 현재 선택됨: %2$s</string>
+    <string name="quick_start_sites_type_all_tasks_completed">모든 작업이 완료됨</string>
+    <string name="quick_start_list_task_complete">작업 완료</string>
+    <string name="me_btn_scan_login_code">로그인 코드 검사</string>
+    <string name="stats_insights_likes_guide_card">⭐️ 최신 글 %1$s에 %2$s 좋아요가 있습니다.</string>
+    <string name="stats_most_popular_percent_views_empty">활동이 충분하지 않습니다. 나중에 사이트의 방문자가 증가하면 다시 확인하세요!</string>
+    <string name="stats_total_followers_content_description">전체 팔로워의 %1s, %2s</string>
+    <string name="stats_value_percent">%1$s(%2$s%%)</string>
     <string name="pages_copy_link">링크 복사</string>
     <string name="quick_start_completed_tour_title">축하합니다! 척척박사&lt;br/&gt;</string>
     <string name="quick_start_sites_type_get_to_know_app">앱 알아보기</string>
@@ -474,6 +541,7 @@ Language: ko_KR
     <string name="gutenberg_native_three">3</string>
     <string name="gutenberg_native_s_social_icon">%s 소셜 아이콘</string>
     <string name="gutenberg_native_mention">멘션</string>
+    <string name="gutenberg_native_new">신규</string>
     <string name="gutenberg_native_preview_page">페이지 미리 보기</string>
     <string name="gutenberg_native_preview_post">글 미리 보기</string>
     <string name="gutenberg_native_retry">재시도</string>
@@ -668,10 +736,7 @@ Language: ko_KR
     <string name="quick_start_dialog_review_pages_message">사이트의 페이지를 변경, 추가 또는 제거합니다.</string>
     <string name="quick_start_dialog_review_pages_title">사이트 페이지 검토</string>
     <string name="quick_start_dialog_edit_homepage_message_pages_short">홈페이지를 편집하려면 %1$s 홈페이지 %2$s을(를) 선택하세요.</string>
-    <string name="quick_start_dialog_edit_homepage_message_short">페이지 목록을 참조하려면 %1$s 페이지 %2$s을(를) 선택하세요.</string>
     <string name="quick_start_card_menu_pin">이 항목 고정</string>
-    <string name="quick_start_dialog_edit_homepage_message">사이트의 홈페이지에서 콘텐츠를 변경, 추가 또는 제거합니다.</string>
-    <string name="quick_start_dialog_edit_homepage_title">홈페이지 편집</string>
     <string name="reader_menu_mark_as_unseen">안 읽음으로 표시</string>
     <string name="reader_menu_mark_as_seen">읽음으로 표시</string>
     <string name="error_media_upload_failed_for_reason">미디어 업로드에 실패했습니다.\n%1$s</string>
@@ -840,7 +905,6 @@ Language: ko_KR
     <string name="hpp_error_title">레이아웃은 오프라인에서 사용할 수 없습니다</string>
     <string name="hpp_error_subtitle">온라인으로 돌아오면 재시도를 누르세요.</string>
     <string name="hpp_retry_error">인터넷 연결을 확인하고 재시도하시기 바랍니다.</string>
-    <string name="hpp_choose_error">디자인을 선택하는 중에 오류가 있습니다.</string>
     <string name="delete_button_alt">삭제하기</string>
     <string name="label_next_button">다음</string>
     <string name="label_done_button">완료</string>
@@ -849,6 +913,7 @@ Language: ko_KR
     <string name="dialog_discard_story_ok_button_edit">폐기하기</string>
     <string name="color_picker_label_text">본문</string>
     <string name="color_picker_label_background">배경</string>
+    <string name="hpp_choose_error">테마를 선택하는 동안 오류가 발생했습니다.</string>
     <string name="scan">검색하기</string>
     <string name="reader_discover_empty_title">환영합니다!</string>
     <string name="reader_discover_no_posts_title">최근 글이 없습니다</string>
@@ -859,7 +924,6 @@ Language: ko_KR
     <string name="login_prologue_third_subtitle_one">&lt;b&gt;메디슨 루이즈&lt;/b&gt;가 글을 좋아합니다</string>
     <string name="login_prologue_third_subtitle_two">오늘 사이트에서 &lt;b&gt;50개의 좋아요&lt;/b&gt;를 받았습니다</string>
     <string name="login_prologue_third_subtitle_three">&lt;b&gt;요한 브란트&lt;/b&gt;가 글에 답했습니다</string>
-    <string name="hpp_subtitle">좋아하는 홈페이지 레이아웃을 고르세요. 사용자 정의하거나 나중에 바꿀 수 있습니다.</string>
     <string name="hpp_choose_button">선택하기</string>
     <string name="gutenberg_native_scrollable_block_menu_closed">스크롤 할 수 있는 블록 메뉴를 닫았습니다.</string>
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">스크롤 할 수 있는 블록 메뉴가 열렸습니다. 블록을 선택하세요.</string>
@@ -872,7 +936,6 @@ Language: ko_KR
     <string name="mlp_error_subtitle">재시도를 누르거나 아래의 버튼을 이용하여 빈 페이지를 만드세요.</string>
     <string name="mlp_network_error_title">레이아웃은 오프라인 중에 사용할 수 없습니다</string>
     <string name="mlp_network_error_subtitle">온라인으로 돌아가면 재시도를 누르거나 아래의 단추를 이용하여 빈 페이지를 만드세요.</string>
-    <string name="hpp_title">디자인 선택하기</string>
     <string name="login_prologue_second_subtitle_two">사진가 카메론 카르스텐의 작업에서 깊은 영감을 받았습니다. 다음 번에 이 기법을 시도할 것입니다</string>
     <string name="login_prologue_fifth_subtitle_one">파멜라 응우옌</string>
     <string name="login_prologue_fifth_subtitle_two">웹 뉴스</string>
@@ -1668,7 +1731,6 @@ Language: ko_KR
     <string name="site_settings_gutenberg_default_for_new_posts">블록 편집기 사용</string>
     <string name="exit">종료</string>
     <string name="quick_start_sites">다음 단계</string>
-    <string name="quick_start_complete_tasks_header">완료(%d)</string>
     <string name="quick_start_dialog_upload_icon_message">방문자의 브라우저에 아이콘이 표시됩니다. 깔끔하고 전문적인 모양을 만들려면 사용자 정의 아이콘을 추가하세요.</string>
     <string name="quick_start_sites_type_grow">방문자 늘리기</string>
     <string name="quick_start_sites_type_customize">사이트를 사용자 정의 하기</string>
@@ -1682,12 +1744,8 @@ Language: ko_KR
     <string name="quick_start_dialog_remove_next_steps_message">다음 단계를 제거하면 이 사이트의 모든 둘러보기가 숨겨집니다. 이 작업은 되돌릴 수 없습니다.</string>
     <string name="quick_start_dialog_remove_next_steps_title">다음 단계 제거</string>
     <string name="quick_start_remove_next_steps_menu_title">제거</string>
-    <string name="quick_start_complete_view_subtitle">목록이 완성되었습니다. 잘하셨습니다.</string>
     <string name="quick_start_dialog_check_stats_message">사이트의 성과를 최신 상태로 유지하세요.</string>
-    <string name="quick_start_complete_view_title">모든 작업 완료!</string>
     <string name="quick_start_task_skip_menu_title">작업 건너뛰기</string>
-    <string name="quick_start_completed_tasks_header_chevron_collapse_desc">축소</string>
-    <string name="quick_start_completed_tasks_header_chevron_expand_desc">확장</string>
     <string name="notification_channel_reminder_title">알림</string>
     <string name="stats_select_next_period_description">다음 기간 선택</string>
     <string name="stats_select_previous_period_description">이전 기간 선택</string>
@@ -1760,7 +1818,6 @@ Language: ko_KR
     <string name="gif_picker_empty_search_list">검색과 일치하는 미디어 없음</string>
     <string name="gif_picker_initial_empty_text">GIF를 검색하여 미디어 라이브러리에 추가하세요!</string>
     <string name="stats_insights_latest_post_with_no_engagement">%2$s이(가) 발행된 후 %1$s일이 지났습니다. 발행한 후에는 글을 공유하여 조회수를 높이세요</string>
-    <string name="stats_insights_latest_post_empty">아직 글을 발행하지 않았습니다. 발행을 시작하면 최근 글의 요약이 여기에 표시됩니다</string>
     <string name="stats_insights_tags_and_categories">태그 및 카테고리</string>
     <string name="stats_insights_all_time_stats">모든-기간</string>
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
@@ -3008,7 +3065,6 @@ Language: ko_KR
     <string name="stats_followers_seconds_ago">몇 초 전</string>
     <string name="stats_view_top_posts_and_pages">게시물 또는 페이지</string>
     <string name="stats_view_videos">비디오</string>
-    <string name="stats_view_publicize">배포 기능</string>
     <string name="stats_view_followers">팔로워</string>
     <string name="stats_view_countries">국가</string>
     <string name="stats_likes">좋아요</string>

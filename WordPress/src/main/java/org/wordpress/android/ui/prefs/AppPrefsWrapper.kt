@@ -15,6 +15,7 @@ import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsDa
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsDataTypeSelectionViewModel.DataType.LIKES
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsDataTypeSelectionViewModel.DataType.VIEWS
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsDataTypeSelectionViewModel.DataType.VISITORS
+import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -227,6 +228,18 @@ class AppPrefsWrapper @Inject constructor() {
             AppPrefs.setInitialScreenFromMySiteDefaultTabExperimentVariant(variant)
 
     fun getMySiteInitialScreen(): String = AppPrefs.getMySiteInitialScreen()
+
+    fun setSkippedPromptDay(date: Date?, siteId: Int) = AppPrefs.setSkippedPromptDay(date, siteId)
+
+    fun getSkippedPromptDay(siteId: Int): Date? = AppPrefs.getSkippedPromptDay(siteId)
+
+    fun markStatsRevampFeatureAnnouncementAsDisplayed() = AppPrefs.setShouldDisplayStatsRevampFeatureAnnouncement(false)
+
+    fun getIsFirstBloggingPromptsOnboarding(): Boolean = AppPrefs.getIsFirstBloggingPromptsOnboarding()
+
+    fun saveFirstBloggingPromptsOnboarding(isFirstTime: Boolean) {
+        AppPrefs.saveFirstBloggingPromptsOnboarding(isFirstTime)
+    }
 
     companion object {
         private const val LIGHT_MODE_ID = 0

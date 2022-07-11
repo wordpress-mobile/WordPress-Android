@@ -1,3 +1,2 @@
-- The Quick Start card and Next Steps tours match the new designs for existing sites.
-- Insert images from other sites using the “Insert from URL” option in the app.
-- Get more context through your screen reader with block editor accessibility improvements.
+- You can now upload HEIC and HEIF images to your site through the media picker.
+- We squashed a bug that removed special characters from reader topics in other languages.

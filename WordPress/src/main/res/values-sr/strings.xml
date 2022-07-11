@@ -87,7 +87,6 @@ Language: sr_RS
     <string name="web_preview_tablet">Таблет</string>
     <string name="web_preview_mobile">Мобилни</string>
     <string name="quick_start_card_menu_remove">Не приказуј поново</string>
-    <string name="quick_start_dialog_edit_homepage_title">Уреди своју почетну страницу</string>
     <string name="reader_menu_mark_as_unseen">Означи као непрегледано</string>
     <string name="reader_menu_mark_as_seen">Означи као прегледано</string>
     <string name="scan_history_all_threats_tab">Све</string>
@@ -122,7 +121,6 @@ Language: sr_RS
     <string name="label_done_button">Готово</string>
     <string name="label_next_button">Следеће</string>
     <string name="delete_button_alt">Обриши</string>
-    <string name="hpp_choose_error">Дошло је до грешке при одабиру дизајна.</string>
     <string name="hpp_error_subtitle">Додирните на покушај поново када се поново повежете на мрежу.</string>
     <string name="dialog_discard_story_message_edit">Било које измене неће бити сачуване.</string>
     <string name="hpp_retry_error">Молимо проверите своју интернет везу и покушајте поново.</string>
@@ -131,7 +129,6 @@ Language: sr_RS
     <string name="scan">Скенирај</string>
     <string name="login_prologue_third_subtitle_three">&lt;b&gt;Јохан Брант&lt;/b&gt; је одговорио на ваш чланак</string>
     <string name="hpp_choose_button">Одабери</string>
-    <string name="hpp_title">Одаберите дизајн</string>
     <string name="prepublishing_nudges_add_category_button">Додај категорију</string>
     <string name="prepublishing_nudges_toolbar_title_add_categories">Додај нову категорију</string>
     <string name="prepublishing_nudges_toolbar_title_categories">Категорије</string>
@@ -654,7 +651,6 @@ Language: sr_RS
     <string name="quick_start_sites_type_grow">Увећајте свој аудиторијум</string>
     <string name="quick_start_sites_type_customize">Прилагодите свој сајт</string>
     <string name="quick_start_sites">Наредни кораци</string>
-    <string name="quick_start_complete_tasks_header">Завршено (%d)</string>
     <string name="quick_start_dialog_upload_icon_title">Одаберите јединствену иконицу сајта</string>
     <string name="quick_start_dialog_publish_post_message">Направи нацрт и објави чланак</string>
     <string name="quick_start_dialog_enable_sharing_title">Омогући дељење чланака</string>
@@ -662,9 +658,6 @@ Language: sr_RS
     <string name="quick_start_remove_next_steps_menu_title">Уклони ово</string>
     <string name="quick_start_dialog_check_stats_title">Провери статистику свог сајта</string>
     <string name="quick_start_task_skip_menu_title">Прескочи задатак</string>
-    <string name="quick_start_complete_view_title">Сви задаци су завршени!</string>
-    <string name="quick_start_completed_tasks_header_chevron_collapse_desc">скупи</string>
-    <string name="quick_start_completed_tasks_header_chevron_expand_desc">прошири</string>
     <string name="notification_channel_reminder_title">Подсетник</string>
     <string name="stats_insights_popular">Најпопуларније време</string>
     <string name="stats_select_next_period_description">Одабери наредни период</string>
@@ -727,7 +720,6 @@ Language: sr_RS
     <string name="stats_insights_all_time_stats">Све време</string>
     <string name="stats_insights_latest_post_with_no_engagement">Прошло је %1$s од када је %2$s објављен. Покрени причу и увећај прегледе свог чланка дељећи га:</string>
     <string name="stats_insights_tags_and_categories">Ознаке и категорије</string>
-    <string name="stats_insights_latest_post_empty">Нисте до сада објавили ни један чланак. Кад почнете да објављујете, резиме Вашег најновијег чланка ће се појавити овде: </string>
     <string name="stats_comments_label">Коментари</string>
     <string name="stats_comments_title_label">Наслов</string>
     <string name="stats_comments_author_label">Аутор</string>
@@ -1776,7 +1768,6 @@ Language: sr_RS
     <string name="stats_views">Прегледа</string>
     <string name="stats_visitors">Посетиоци</string>
     <string name="stats_view_top_posts_and_pages">Чланци и стране</string>
-    <string name="stats_view_publicize">Објави</string>
     <string name="stats_timeframe_years">Годишња</string>
     <string name="ssl_certificate_details">Детаљи</string>
     <string name="cab_selected">%d изабрано</string>

@@ -11,12 +11,14 @@ import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
 import android.text.style.ImageSpan
+import android.util.LayoutDirection
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.MarginLayoutParams
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.text.HtmlCompat
+import androidx.core.text.layoutDirection
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.SiteModel
@@ -31,6 +33,7 @@ import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
 import org.wordpress.android.ui.quickstart.QuickStartType
 import org.wordpress.android.ui.themes.ThemeBrowserUtils
 import org.wordpress.android.util.extensions.getColorFromAttribute
+import java.util.Locale
 
 @Suppress("TooManyFunctions")
 object QuickStartUtils {
@@ -148,7 +151,12 @@ object QuickStartUtils {
             val focusPointTargetViewLocation = IntArray(2)
             targetedView.getLocationOnScreen(focusPointTargetViewLocation)
 
-            val realFocusPointContainerX = focusPointTargetViewLocation[0] - topLevelParentsHorizontalOffset
+            val realFocusPointContainerX = if (Locale.getDefault().layoutDirection == LayoutDirection.RTL) {
+                (topLevelParentsHorizontalOffset + topLevelParent.width) -
+                        (focusPointTargetViewLocation[0] + targetedView.width)
+            } else {
+                focusPointTargetViewLocation[0] - topLevelParentsHorizontalOffset
+            }
             val realFocusPointOffsetFromTheLeft = targetedView.width - focusPointSize - rightOffset
 
             val focusPointContainerY = focusPointTargetViewLocation[1] - topLevelParentsVerticalOffset
@@ -157,7 +165,7 @@ object QuickStartUtils {
             val y = focusPointContainerY + topOffset
 
             val params = quickStartFocusPointView.layoutParams as MarginLayoutParams
-            params.leftMargin = x
+            params.marginStart = x
             params.topMargin = y
             topLevelParent.addView(quickStartFocusPointView)
 
@@ -198,7 +206,6 @@ object QuickStartUtils {
             QuickStartStore.QUICK_START_UPLOAD_SITE_ICON_LABEL -> Stat.QUICK_START_LIST_UPLOAD_ICON_TAPPED
             QuickStartStore.QUICK_START_CHECK_STATS_LABEL ->
                 Stat.QUICK_START_LIST_CHECK_STATS_TAPPED
-            QuickStartStore.QUICK_START_EDIT_HOMEPAGE_LABEL -> Stat.QUICK_START_LIST_EDIT_HOMEPAGE_TAPPED
             QuickStartStore.QUICK_START_REVIEW_PAGES_LABEL -> Stat.QUICK_START_LIST_REVIEW_PAGES_TAPPED
             QuickStartStore.QUICK_START_CHECK_NOTIFIATIONS_LABEL -> Stat.QUICK_START_LIST_CHECK_NOTIFICATIONS_TAPPED
             QuickStartStore.QUICK_START_UPLOAD_MEDIA_LABEL -> Stat.QUICK_START_LIST_UPLOAD_MEDIA_TAPPED
@@ -221,7 +228,6 @@ object QuickStartUtils {
             QuickStartStore.QUICK_START_FOLLOW_SITE_LABEL -> Stat.QUICK_START_LIST_FOLLOW_SITE_SKIPPED
             QuickStartStore.QUICK_START_UPLOAD_SITE_ICON_LABEL -> Stat.QUICK_START_LIST_UPLOAD_ICON_SKIPPED
             QuickStartStore.QUICK_START_CHECK_STATS_LABEL -> Stat.QUICK_START_LIST_CHECK_STATS_SKIPPED
-            QuickStartStore.QUICK_START_EDIT_HOMEPAGE_LABEL -> Stat.QUICK_START_LIST_EDIT_HOMEPAGE_SKIPPED
             QuickStartStore.QUICK_START_REVIEW_PAGES_LABEL -> Stat.QUICK_START_LIST_REVIEW_PAGES_SKIPPED
             QuickStartStore.QUICK_START_CHECK_NOTIFIATIONS_LABEL -> Stat.QUICK_START_LIST_CHECK_NOTIFICATIONS_SKIPPED
             QuickStartStore.QUICK_START_UPLOAD_MEDIA_LABEL -> Stat.QUICK_START_LIST_UPLOAD_MEDIA_SKIPPED
@@ -240,7 +246,6 @@ object QuickStartUtils {
             QuickStartStore.QUICK_START_FOLLOW_SITE_LABEL -> Stat.QUICK_START_FOLLOW_SITE_TASK_COMPLETED
             QuickStartStore.QUICK_START_UPLOAD_SITE_ICON_LABEL -> Stat.QUICK_START_UPLOAD_ICON_COMPLETED
             QuickStartStore.QUICK_START_CHECK_STATS_LABEL -> Stat.QUICK_START_CHECK_STATS_COMPLETED
-            QuickStartStore.QUICK_START_EDIT_HOMEPAGE_LABEL -> Stat.QUICK_START_EDIT_HOMEPAGE_TASK_COMPLETED
             QuickStartStore.QUICK_START_REVIEW_PAGES_LABEL -> Stat.QUICK_START_REVIEW_PAGES_TASK_COMPLETED
             QuickStartStore.QUICK_START_CHECK_NOTIFIATIONS_LABEL ->
                 Stat.QUICK_START_CHECK_NOTIFICATIONS_TASK_COMPLETED

@@ -75,13 +75,6 @@ enum class QuickStartTaskDetails(
             R.drawable.ic_stats_alt_white_24dp,
             R.color.orange_30
     ),
-    EDIT_HOMEPAGE(
-            QuickStartStore.QUICK_START_EDIT_HOMEPAGE_LABEL,
-            R.string.quick_start_list_edit_homepage_title,
-            R.string.quick_start_list_edit_homepage_subtitle,
-            R.drawable.ic_homepage_16dp,
-            R.color.blue_40
-    ),
     REVIEW_PAGES(
             QuickStartStore.QUICK_START_REVIEW_PAGES_LABEL,
             R.string.quick_start_list_review_pages_title,

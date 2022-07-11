@@ -74,6 +74,7 @@ class PieChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(parent, R.
     }
 
     private fun addLegends(item: PieChartItem) {
+        legends.removeAllViews()
         item.entries.forEachIndexed { index, pie ->
             ItemPieChartLegendBinding.inflate(LayoutInflater.from(legends.context), legends, true).apply {
                 val textView = root.findViewById<TextView>(R.id.text)

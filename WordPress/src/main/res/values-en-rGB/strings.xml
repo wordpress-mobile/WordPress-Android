@@ -1,11 +1,79 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-05-25 21:35:44+0000
+Translation-Revision-Date: 2022-07-07 16:01:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: en_GB
 -->
 <resources>
+    <string name="wp_jetpack_powered">Jetpack powered</string>
+    <string name="qrcode_auth_flow_content_description">Image indicating scan log-in code in process</string>
+    <string name="qrcode_auth_flow_error_content_description">Image indicating an error</string>
+    <string name="qrcode_auth_flow_dismiss_dialog_message">Are you sure you want to continue?</string>
+    <string name="qrcode_auth_flow_dismiss_dialog_title">Exit Scan Log-in Code Flow</string>
+    <string name="qrcode_auth_flow_error_auth_failed_subtitle">Could not log you in using this log-in code. Please tap the Scan Again button to rescan the code.</string>
+    <string name="qrcode_auth_flow_error_auth_failed_title">Authentication Failed</string>
+    <string name="qrcode_auth_flow_error_expired_subtitle">This log-in code has expired. Please tap the Scan Again button to rescan the code.</string>
+    <string name="qrcode_auth_flow_error_expired_title">Expired log-in code</string>
+    <string name="qrcode_auth_flow_error_invalid_data_subtitle">The log-in code that was scanned could not be validated. Please tap the Scan Again button to rescan the code.</string>
+    <string name="qrcode_auth_flow_error_invalid_data_title">Could not validate the log-in code</string>
+    <string name="qrcode_auth_flow_error_no_connection_subtitle">An active internet connection is required to scan log-in codes</string>
+    <string name="qrcode_auth_flow_error_no_connection_title">No connection</string>
+    <string name="qrcode_auth_flow_scan_again">Scan Again</string>
+    <string name="qrcode_auth_flow_dismiss">Dismiss</string>
+    <string name="qrcode_auth_flow_done_subtitle">Tap dismiss and head back to your web browser to continue.</string>
+    <string name="qrcode_auth_flow_done_title">You\'re logged in!</string>
+    <string name="qrcode_auth_flow_validated_primary_action">Yes, log me in</string>
+    <string name="qrcode_auth_flow_validated_subtitle">Only scan QR codes taken directly from your web browser. Never scan a code sent to you by anyone else.</string>
+    <string name="qrcode_auth_flow_validated_default_title">Are you trying to log in to your web browser near %1$s?</string>
+    <string name="qrcode_auth_flow_validated_title">Are you trying to log in to %1$s near %2$s?</string>
+    <string name="stats_revamp_v2_intro_secondary_button_text">Remind me later</string>
+    <string name="stats_revamp_v2_intro_primary_button_text">Try it now</string>
+    <string name="stats_revamp_v2_intro_content_note">Learn more in My Site &gt; Stats &gt; Insights</string>
+    <string name="stats_revamp_v2_intro_content">Insights help you understand how your content is performing and what\'s resonating with your audience.</string>
+    <string name="stats_revamp_v2_intro_header_title">Insights update</string>
+    <string name="stats_insights_followers_guide_card">💡Commenting on other blogs is a great way to build attention and followers for your new site.</string>
+    <string name="stats_insights_comments_guide_card">💡Tap \'VIEW MORE\' to see your top commenters.</string>
+    <string name="stats_insights_latest_post_empty">Check back when you\'ve published your first post!</string>
+    <string name="stats_insights_views_and_visitors_visitors_empty_state">Check out our top tips to increase your views and traffic %1$s</string>
+    <string name="stats_view_publicize">Social Media Connections</string>
+    <string name="stats_action_card_schedule_post_message">✍️ Schedule your drafts to publish at the best time to reach your audience.</string>
+    <string name="stats_action_card_blogging_reminders_message">💡Posting consistently is a great way to build your audience. Add a reminder to keep you on track.</string>
+    <string name="stats_action_card_grow_audience_message">💡Level up your blogging faster with our expert-led &lt;i&gt;Intro to Blogging&lt;/i&gt; course.</string>
+    <string name="blogging_prompts_onboarding_prompts_loading">Blogging Prompts are loading. Please wait a moment and try again.</string>
+    <string name="hpp_bottom_helper_text">Can\'t decide? You can change the theme at any time.</string>
+    <string name="hpp_recommended_default_vertical">Blogging</string>
+    <string name="hpp_recommended_subtitle">Picked for you</string>
+    <string name="hpp_recommended_title">Best for %s</string>
+    <string name="hpp_preview_tapped_theme">Preview theme %s</string>
+    <string name="hpp_title">Choose a theme</string>
+    <string name="my_site_blogging_prompt_card_skipped_snackbar">Skipped today\'s blogging prompt</string>
+    <string name="my_site_blogging_prompt_card_menu_learn_more">Learn more</string>
+    <string name="my_site_blogging_prompt_card_attribution_dayone">From </string>
+    <string name="stats_follower_types_pie_chart_total_label">Totals</string>
+    <string name="stats_referrers_pie_chart_others">Others</string>
+    <string name="stats_referrers_pie_chart_search">Search</string>
+    <string name="stats_referrers_pie_chart_wordpress">WordPress</string>
+    <string name="stats_referrers_pie_chart_total_label">Views</string>
+    <string name="stats_action_card_schedule_post_button_label">Schedule</string>
+    <string name="stats_action_card_schedule_post_title">Schedule your post</string>
+    <string name="stats_action_card_blogging_reminders_button_label">Set reminders</string>
+    <string name="stats_action_card_blogging_reminders_title">Set your blogging reminders</string>
+    <string name="stats_action_card_grow_audience_button_label">Check the course</string>
+    <string name="stats_action_card_grow_audience_title">Grow your audience</string>
+    <string name="gutenberg_native_you_can_also_rearrange_blocks_by_tapping_a_block_and_then_tapping">You can also rearrange blocks by tapping a block and then tapping the up and down arrows that appear on the bottom left side of the block to move it up or down.</string>
+    <string name="gutenberg_native_image_file_not_found">Image file not found.</string>
+    <string name="gutenberg_native_drag_drop_makes_rearranging_blocks_a_breeze_press_and_hold_on_a_b">Drag &amp; drop makes rearranging blocks a breeze. Press and hold on a block, then drag it to its new location and release.</string>
+    <string name="gutenberg_native_drag_drop">Drag &amp; drop</string>
+    <string name="gutenberg_native_arrow_buttons">Arrow buttons</string>
+    <string name="gutenberg_native_1_s_currently_selected_2_s">%1$s. Currently selected: %2$s</string>
+    <string name="quick_start_sites_type_all_tasks_completed">All tasks completed</string>
+    <string name="quick_start_list_task_complete">Task complete</string>
+    <string name="me_btn_scan_login_code">Scan Log-in Code</string>
+    <string name="stats_insights_likes_guide_card">⭐️ Your latest post %1$s has received %2$s likes.</string>
+    <string name="stats_most_popular_percent_views_empty">Not enough activity. Check back later when your site\'s had more visitors!</string>
+    <string name="stats_total_followers_content_description">%1s, %2s of total followers</string>
+    <string name="stats_value_percent">%1$s (%2$s%%)</string>
     <string name="pages_copy_link">Copy link</string>
     <string name="quick_start_completed_tour_title">Congrats! You know your way around&lt;br/&gt;</string>
     <string name="quick_start_sites_type_get_to_know_app">Get to know the app</string>
@@ -49,14 +117,14 @@ Language: en_GB
     <string name="photo_picker_media_thumbnail_content_description">Media Thumbnail</string>
     <string name="stats_insights_popular_title">🔥 Most Popular Time</string>
     <string name="stats_insights_views_and_visitors_tooltip_count">%1$s %2$s</string>
-    <string name="stats_insights_views_and_visitors_visitors_negative">Your this week\'s visitors are %1$s lower than the previous week.</string>
-    <string name="stats_insights_views_and_visitors_visitors_positive">Your this week\'s visitors are %1$s higher than the previous week.</string>
-    <string name="stats_insights_views_and_visitors_views_negative">Your this week\'s views are %1$s lower than the previous week.</string>
-    <string name="stats_insights_views_and_visitors_views_positive">Your this week\'s views are %1$s higher than the previous week.</string>
+    <string name="stats_insights_views_and_visitors_visitors_negative">Your visitors this week are %1$s lower than the previous week.</string>
+    <string name="stats_insights_views_and_visitors_visitors_positive">Your visitors this week are %1$s higher than the previous week.</string>
+    <string name="stats_insights_views_and_visitors_views_negative">Your views this week are %1$s lower than the previous week.</string>
     <string name="stats_timeframe_previous_week">Previous Week</string>
     <string name="stats_timeframe_this_week">This Week</string>
     <string name="scan_vault_press_active_on_site_button_text">Visit Dashboard</string>
     <string name="scan_vault_press_active_on_site_subtitle">Your site already is protected by VaultPress. You can find a link to your VaultPress dashboard below.</string>
+    <string name="stats_insights_views_and_visitors_views_positive">Your views this week are %1$s higher than the previous week.</string>
     <string name="scan_vault_press_active_on_site_title">Your site has VaultPress</string>
     <string name="locale_picker_current_language">Current language:</string>
     <string name="hpp_choose_and_create_site">Create site</string>
@@ -474,6 +542,7 @@ Language: en_GB
     <string name="gutenberg_native_three">Three</string>
     <string name="gutenberg_native_s_social_icon">%s social icon</string>
     <string name="gutenberg_native_mention">Mention</string>
+    <string name="gutenberg_native_new">NEW</string>
     <string name="gutenberg_native_preview_page">Preview page</string>
     <string name="gutenberg_native_preview_post">Preview post</string>
     <string name="gutenberg_native_retry">Retry</string>
@@ -660,7 +729,6 @@ Language: en_GB
     <string name="restore_details_description_with_two_parameters">%1$s %2$s is the selected point for your restore.</string>
     <string name="restore_details_action_button">Restore site</string>
     <string name="restore_details_icon_content_description">Restore icon</string>
-    <string name="quick_start_dialog_edit_homepage_message_short">Select %1$s Pages %2$s to see your page list.</string>
     <string name="quick_start_dialog_edit_homepage_message_pages_short">Select %1$s Homepage %2$s to edit your Homepage.</string>
     <string name="quick_start_dialog_review_pages_title">Review site pages</string>
     <string name="quick_start_dialog_review_pages_message">Change, add, or remove your site\'s pages.</string>
@@ -670,8 +738,6 @@ Language: en_GB
     <string name="web_preview_tablet">Tablet</string>
     <string name="backup_download_complete_failed_title">Download failed</string>
     <string name="quick_start_card_menu_pin">Pin this</string>
-    <string name="quick_start_dialog_edit_homepage_title">Edit your homepage</string>
-    <string name="quick_start_dialog_edit_homepage_message">Change, add, or remove content from your site\'s homepage.</string>
     <string name="reader_marked_post_as_seen">Marked post as seen</string>
     <string name="reader_marked_post_as_unseen">Marked post as unseen</string>
     <string name="reader_error_changing_seen_status_of_unsupported_post">Can\'t toggle seen status of this post</string>
@@ -743,8 +809,8 @@ Language: en_GB
     <string name="suggestion_none">No %s suggestions available.</string>
     <string name="suggestion_problem">There was a problem loading suggestions.</string>
     <string name="suggestion_no_matching">No matching %s.</string>
-    <string name="threat_fix_fixable_replace">Jetpack Scan will replace the affected file or directory.</string>
     <string name="threat_fix_current_not_fixable_description">Jetpack Scan cannot automatically fix this threat.\n        We suggest that you resolve the threat manually: ensure that WordPress, your theme, and all of your plugins are up to date, and remove the offending code, theme, or plugin from your site. \n \n\n        If you need more help to resolve this threat, we recommend &lt;b&gt;Codeable&lt;/b&gt;, a trusted freelancer marketplace of highly vetted WordPress experts.\n        They have identified a select group of security experts to help with these projects. Pricing ranges from $70–120/hour, and you can get a free estimate with no obligation to hire.\n    </string>
+    <string name="threat_fix_fixable_replace">Jetpack Scan will replace the affected file or directory.</string>
     <string name="threat_problem_header">What was the problem?</string>
     <string name="threat_technical_details_header">The technical details</string>
     <string name="threat_file_description">Threat found in file:</string>
@@ -840,7 +906,6 @@ Language: en_GB
     <string name="hpp_error_title">Layouts not available while offline</string>
     <string name="hpp_error_subtitle">Tap retry when you\'re back online.</string>
     <string name="hpp_retry_error">Please check your internet connection and retry.</string>
-    <string name="hpp_choose_error">There was an error while selecting the design.</string>
     <string name="delete_button_alt">Delete</string>
     <string name="label_next_button">Next</string>
     <string name="label_done_button">Done</string>
@@ -849,6 +914,7 @@ Language: en_GB
     <string name="dialog_discard_story_ok_button_edit">Discard</string>
     <string name="color_picker_label_text">Text</string>
     <string name="color_picker_label_background">Background</string>
+    <string name="hpp_choose_error">There was an error while selecting the theme.</string>
     <string name="scan">Scan</string>
     <string name="reader_discover_empty_title">Welcome!</string>
     <string name="reader_discover_no_posts_title">No recent posts</string>
@@ -862,7 +928,6 @@ Language: en_GB
     <string name="hpp_choose_button">Choose</string>
     <string name="gutenberg_native_scrollable_block_menu_closed">Scrollable block menu closed.</string>
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">Scrollable block menu opened. Select a block.</string>
-    <string name="hpp_subtitle">Pick your favourite homepage layout. You can edit and customise it later.</string>
     <string name="prepublishing_nudges_categories_action">Categories</string>
     <string name="prepublishing_nudges_home_categories_not_set">Not set</string>
     <string name="prepublishing_nudges_toolbar_title_categories">Categories</string>
@@ -872,7 +937,6 @@ Language: en_GB
     <string name="mlp_error_subtitle">Tap retry or create a blank page using the button below.</string>
     <string name="mlp_network_error_title">Layouts not available while offline</string>
     <string name="mlp_network_error_subtitle">Tap retry when you\'re back online, or create a blank page using the button below.</string>
-    <string name="hpp_title">Choose a design</string>
     <string name="login_prologue_second_subtitle_two">I am so inspired by photographer Cameron Karsten’s work. I will be trying these techniques on my next</string>
     <string name="login_prologue_fifth_subtitle_one">Pamela Nguyen</string>
     <string name="login_prologue_fifth_subtitle_two">Web News</string>
@@ -1668,7 +1732,6 @@ Language: en_GB
     <string name="menu_switch_to_gutenberg_editor">Switch to block editor</string>
     <string name="exit">exit</string>
     <string name="quick_start_sites">Next Steps</string>
-    <string name="quick_start_complete_tasks_header">Complete (%d)</string>
     <string name="quick_start_dialog_upload_icon_message">Your visitors will see your icon in their browser. Add a custom icon for a polished, pro look.</string>
     <string name="quick_start_sites_type_customize">Customise your site</string>
     <string name="quick_start_sites_type_grow">Grow your audience</string>
@@ -1682,12 +1745,8 @@ Language: en_GB
     <string name="quick_start_dialog_remove_next_steps_message">Removing Next Steps will hide all tours on this site. This action cannot be undone.</string>
     <string name="quick_start_dialog_remove_next_steps_title">Remove Next Steps</string>
     <string name="quick_start_remove_next_steps_menu_title">Remove this</string>
-    <string name="quick_start_complete_view_subtitle">Congratulations on completing your list. A job well done.</string>
     <string name="quick_start_dialog_check_stats_message">Keep up to date with your site\'s performance.</string>
-    <string name="quick_start_complete_view_title">All tasks complete!</string>
     <string name="quick_start_task_skip_menu_title">Skip task</string>
-    <string name="quick_start_completed_tasks_header_chevron_collapse_desc">collapse</string>
-    <string name="quick_start_completed_tasks_header_chevron_expand_desc">expand</string>
     <string name="notification_channel_reminder_title">Reminder</string>
     <string name="stats_select_next_period_description">Select next period</string>
     <string name="stats_select_previous_period_description">Select previous period</string>
@@ -1761,7 +1820,6 @@ Language: en_GB
     <string name="stats_insights_latest_post_message">It’s been %1$s since %2$s was published. Here’s how the post performed so far:</string>
     <string name="stats_insights_tags_and_categories">Tags and Categories</string>
     <string name="stats_insights_latest_post_with_no_engagement">It\'s been %1$s since %2$s was published. Get the ball rolling and increase your post views by sharing your post:</string>
-    <string name="stats_insights_latest_post_empty">You haven\'t published any posts yet. Once you start publishing, your latest post\'s summary will appear here:</string>
     <string name="stats_insights_all_time_stats">All-time</string>
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
     <string name="stats_publicize_followers_label">Followers</string>
@@ -3014,7 +3072,6 @@ Language: en_GB
     <string name="stats_timeframe_years">Years</string>
     <string name="stats_views">Views</string>
     <string name="stats_visitors">Visitors</string>
-    <string name="stats_view_publicize">Publicise</string>
     <string name="ssl_certificate_details">Details</string>
     <string name="cab_selected">%d selected</string>
     <string name="browse_our_faq_button">Browse our FAQ</string>

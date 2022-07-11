@@ -1,11 +1,78 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-05-27 14:31:25+0000
+Translation-Revision-Date: 2022-06-30 15:54:08+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: fr
 -->
 <resources>
+    <string name="qrcode_auth_flow_content_description">Image indiquant que le scan du code de connexion est en cours</string>
+    <string name="qrcode_auth_flow_error_content_description">Image indiquant une erreur</string>
+    <string name="qrcode_auth_flow_dismiss_dialog_message">Voulez-vous vraiment continuer ?</string>
+    <string name="qrcode_auth_flow_dismiss_dialog_title">Quitter le flux Scanner le code de connexion</string>
+    <string name="qrcode_auth_flow_error_auth_failed_subtitle">Nous n’avons pas réussi à vous connecter avec ce code de connexion. Appuyez sur Scanner à nouveau pour rescanner le code.</string>
+    <string name="qrcode_auth_flow_error_auth_failed_title">Échec de l’authentification</string>
+    <string name="qrcode_auth_flow_error_expired_subtitle">Ce code de connexion a expiré. Appuyez sur Scanner à nouveau pour rescanner le code.</string>
+    <string name="qrcode_auth_flow_error_expired_title">Code de connexion expiré</string>
+    <string name="qrcode_auth_flow_error_invalid_data_subtitle">Le code de connexion scanné n’a pas pu être validé. Appuyez sur Scanner à nouveau pour rescanner le code.</string>
+    <string name="qrcode_auth_flow_error_invalid_data_title">Impossible de valider le code de connexion</string>
+    <string name="qrcode_auth_flow_error_no_connection_subtitle">Une connexion Internet active est obligatoire pour scanner les codes de connexion</string>
+    <string name="qrcode_auth_flow_error_no_connection_title">Pas de connexion</string>
+    <string name="qrcode_auth_flow_scan_again">Scanner à nouveau</string>
+    <string name="qrcode_auth_flow_dismiss">Ignorer</string>
+    <string name="qrcode_auth_flow_done_subtitle">Appuyez sur Ignorer et revenez à votre navigateur Web pour continuer.</string>
+    <string name="qrcode_auth_flow_done_title">Connexion établie.</string>
+    <string name="qrcode_auth_flow_validated_primary_action">Oui, se connecter</string>
+    <string name="qrcode_auth_flow_validated_subtitle">Scannez uniquement les codes QR provenant directement de votre navigateur Web. Ne scannez jamais un code envoyé par une tierce personne.</string>
+    <string name="qrcode_auth_flow_validated_default_title">Essayez-vous de vous connecter à votre navigateur Web près de %1$s ?</string>
+    <string name="qrcode_auth_flow_validated_title">Essayez-vous de vous connecter à %1$s près de %2$s ?</string>
+    <string name="stats_revamp_v2_intro_secondary_button_text">Me rappeler ultérieurement</string>
+    <string name="stats_revamp_v2_intro_primary_button_text">Essayer maintenant</string>
+    <string name="stats_revamp_v2_intro_content_note">Lire la suite dans Mon site &gt; Stats &gt; Tendances.</string>
+    <string name="stats_revamp_v2_intro_content">L’option Tendances vous aident à identifier les performances de votre contenu et ce qui touche votre audience.</string>
+    <string name="stats_revamp_v2_intro_header_title">Mise à jour de Tendances</string>
+    <string name="stats_insights_followers_guide_card">💡 L’ajout de commentaires sur d’autres blogs est un bon moyen d’attirer l’attention et d’obtenir des abonnés pour votre nouveau site.</string>
+    <string name="stats_insights_comments_guide_card">💡 Appuyez sur « VOIR PLUS » pour voir les utilisateurs qui ont le plus commenté.</string>
+    <string name="stats_insights_latest_post_empty">Revenez lorsque vous aurez publié votre premier article !</string>
+    <string name="stats_insights_views_and_visitors_visitors_empty_state">Consultez nos conseils pratiques pour augmenter vos vues et votre trafic %1$s</string>
+    <string name="stats_view_publicize">Connexions aux réseaux sociaux</string>
+    <string name="stats_action_card_schedule_post_message">✍️ Programmez la publication de vos brouillons au meilleur moment pour atteindre votre audience.</string>
+    <string name="stats_action_card_blogging_reminders_message">💡 Publier régulièrement est un bon moyen de consolider votre audience. Ajoutez un rappel pour vous tenir à jour.</string>
+    <string name="stats_action_card_grow_audience_message">💡 Améliorez rapidement votre blogging en suivant notre cours &lt;i&gt;Introduction au blogging&lt;/i&gt; animé par des experts.</string>
+    <string name="blogging_prompts_onboarding_prompts_loading">Chargement des invites pour bloguer. Veuillez patienter un instant, puis réessayer.</string>
+    <string name="hpp_bottom_helper_text">Vous n’arrivez pas à choisir ? Vous pouvez modifier le thème à tout moment.</string>
+    <string name="hpp_recommended_default_vertical">Blogging</string>
+    <string name="hpp_recommended_subtitle">Choisi pour vous</string>
+    <string name="hpp_recommended_title">Idéal pour %s</string>
+    <string name="hpp_preview_tapped_theme">Prévisualiser le thème %s</string>
+    <string name="hpp_title">Choisir un thème</string>
+    <string name="my_site_blogging_prompt_card_skipped_snackbar">Invite pour bloguer du jour ignorée</string>
+    <string name="my_site_blogging_prompt_card_menu_learn_more">En savoir plus</string>
+    <string name="my_site_blogging_prompt_card_attribution_dayone">De </string>
+    <string name="stats_follower_types_pie_chart_total_label">Totaux</string>
+    <string name="stats_referrers_pie_chart_others">Autres</string>
+    <string name="stats_referrers_pie_chart_search">Rechercher</string>
+    <string name="stats_referrers_pie_chart_wordpress">WordPress</string>
+    <string name="stats_referrers_pie_chart_total_label">Vues</string>
+    <string name="stats_action_card_schedule_post_button_label">Planifier</string>
+    <string name="stats_action_card_schedule_post_title">Planifier la publication</string>
+    <string name="stats_action_card_blogging_reminders_button_label">Définir des rappels</string>
+    <string name="stats_action_card_blogging_reminders_title">Définir vos rappels de blog</string>
+    <string name="stats_action_card_grow_audience_button_label">Découvrir la formation</string>
+    <string name="stats_action_card_grow_audience_title">Élargir votre public</string>
+    <string name="gutenberg_native_you_can_also_rearrange_blocks_by_tapping_a_block_and_then_tapping">Vous pouvez également réorganiser les blocs en appuyant sur un bloc, puis sur les flèches Haut et Bas qui apparaissent dans le coin inférieur gauche du bloc afin de le déplacer vers le haut ou vers le bas.</string>
+    <string name="gutenberg_native_image_file_not_found">Fichier image introuvable.</string>
+    <string name="gutenberg_native_drag_drop_makes_rearranging_blocks_a_breeze_press_and_hold_on_a_b">La fonction Glisser-déposer permet de réorganiser les blocs en un temps record. Appuyez longuement sur un bloc, faites-le glisser vers son nouvel emplacement et relâchez-le.</string>
+    <string name="gutenberg_native_drag_drop">Glisser-déposer</string>
+    <string name="gutenberg_native_arrow_buttons">Boutons fléchés</string>
+    <string name="gutenberg_native_1_s_currently_selected_2_s">%1$s. Sélection actuelle : %2$s</string>
+    <string name="quick_start_sites_type_all_tasks_completed">Toutes les tâches terminées</string>
+    <string name="quick_start_list_task_complete">Tâche terminée</string>
+    <string name="me_btn_scan_login_code">Scanner le code de connexion</string>
+    <string name="stats_insights_likes_guide_card">⭐️ Votre dernier article %1$s a recueilli%2$s mentions « J’aime ».</string>
+    <string name="stats_most_popular_percent_views_empty">Pas assez d’activité. Revenez lorsque votre site aura plus de visiteurs !</string>
+    <string name="stats_total_followers_content_description">%1s, %2s du nombre total d’abonnés</string>
+    <string name="stats_value_percent"> %1$s (%2$s%%)</string>
     <string name="pages_copy_link">Copier le lien</string>
     <string name="quick_start_completed_tour_title">Félicitations ! Vous connaissez le chemin&lt;br/&gt;</string>
     <string name="quick_start_sites_type_get_to_know_app">Découvrir l’application</string>
@@ -474,6 +541,7 @@ Language: fr
     <string name="gutenberg_native_three">Trois</string>
     <string name="gutenberg_native_s_social_icon">Icône de réseau social %s</string>
     <string name="gutenberg_native_mention">Mention</string>
+    <string name="gutenberg_native_new">NOUVEAU</string>
     <string name="gutenberg_native_preview_post">Prévisualiser l&amp;rsquo;article</string>
     <string name="gutenberg_native_preview_page">Prévisualiser la page</string>
     <string name="gutenberg_native_retry">Recommencez</string>
@@ -669,9 +737,6 @@ Language: fr
     <string name="quick_start_dialog_review_pages_message">Modifiez, ajoutez ou supprimez les pages de votre site.</string>
     <string name="quick_start_dialog_review_pages_title">Passer en revue les pages du site</string>
     <string name="quick_start_dialog_edit_homepage_message_pages_short">Sélectionnez %1$s Page d’accueil %2$s pour modifier votre page d’accueil.</string>
-    <string name="quick_start_dialog_edit_homepage_message_short">Sélectionnez %1$s Pages %2$s pour afficher votre liste de pages.</string>
-    <string name="quick_start_dialog_edit_homepage_message">Modifiez, ajoutez ou supprimez du contenu depuis la page d\'accueil de votre site.</string>
-    <string name="quick_start_dialog_edit_homepage_title">Modifier la page d\'accueil</string>
     <string name="reader_menu_mark_as_unseen">Marquer comme non lu</string>
     <string name="reader_menu_mark_as_seen">Marquer comme lu</string>
     <string name="error_media_upload_failed_for_reason">Échec de chargement du média.\n%1$s</string>
@@ -845,7 +910,7 @@ Language: fr
     <string name="label_done_button">Terminé</string>
     <string name="label_next_button">Suivant</string>
     <string name="delete_button_alt">Supprimer</string>
-    <string name="hpp_choose_error">Une erreur s’est produite lors de la sélection du design.</string>
+    <string name="hpp_choose_error">Une erreur est survenue lors de la sélection du thème.</string>
     <string name="hpp_retry_error">Veuillez vérifier votre connexion internet, puis réessayez.</string>
     <string name="hpp_error_subtitle">Appuyez sur Réessayer lorsque vous êtes de nouveau en ligne.</string>
     <string name="hpp_error_title">Mises en page non disponibles hors connexion</string>
@@ -862,8 +927,6 @@ Language: fr
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">Menu de bloc déroulant ouvert. Sélectionner un bloc.</string>
     <string name="gutenberg_native_scrollable_block_menu_closed">Menu de bloc déroulant fermé.</string>
     <string name="hpp_choose_button">Choisir</string>
-    <string name="hpp_subtitle">Sélectionnez votre mise en page préférée pour la page d’accueil. Vous pourrez la personnaliser ou la modifier ultérieurement.</string>
-    <string name="hpp_title">Choisir un design</string>
     <string name="mlp_network_error_subtitle">Touchez réessayer quand vous serez de nouveau en ligne ou créer un page blanche en utilisant le bouton ci-dessous.</string>
     <string name="mlp_network_error_title">Les mises en page ne sont pas disponibles hors connexion</string>
     <string name="mlp_error_subtitle">Touchez réessayer ou créez une page blanche en utilisant le bouton ci-dessous.</string>
@@ -1670,7 +1733,6 @@ Language: fr
     <string name="quick_start_sites_type_grow">Élargir votre public</string>
     <string name="quick_start_sites_type_customize">Personnaliser votre site</string>
     <string name="quick_start_sites">Prochaines étapes</string>
-    <string name="quick_start_complete_tasks_header">Terminé (%d)</string>
     <string name="quick_start_dialog_upload_icon_title">Choisir une favicône unique </string>
     <string name="quick_start_dialog_upload_icon_message">Vos visiteurs verront votre icône dans leur navigateur. Ajoutez une icône personnalisée pour un aspect brillant et pro.</string>
     <string name="quick_start_dialog_check_stats_message_short">Sélectionnez %1$s Statistiques %2$s pour voir comment votre site se comporte.</string>
@@ -1683,11 +1745,7 @@ Language: fr
     <string name="quick_start_dialog_remove_next_steps_message">« Retirer les étapes suivantes » cachera tous les accompagnements sur ce site. Cette action ne peut pas être annulée.</string>
     <string name="quick_start_dialog_remove_next_steps_title">Retirer les étapes suivantes</string>
     <string name="quick_start_remove_next_steps_menu_title">Retirer ceci</string>
-    <string name="quick_start_complete_view_subtitle">Vous avez terminé votre liste, félicitations ! Du beau travail !</string>
-    <string name="quick_start_complete_view_title">Toutes les tâches ont été accomplies !</string>
     <string name="quick_start_task_skip_menu_title">Sauter la tâche</string>
-    <string name="quick_start_completed_tasks_header_chevron_collapse_desc">réduire</string>
-    <string name="quick_start_completed_tasks_header_chevron_expand_desc">développer</string>
     <string name="notification_channel_reminder_title">Rappel</string>
     <string name="stats_select_next_period_description">Sélectionner la période suivante</string>
     <string name="stats_select_previous_period_description">Sélectionner la période précédante</string>
@@ -1760,7 +1818,6 @@ Language: fr
     <string name="stats_insights_create_post">Créer une publication</string>
     <string name="stats_insights_latest_post_message">%2$s est publié depuis %1$s. Voilà les performances de l’article :</string>
     <string name="stats_insights_latest_post_with_no_engagement">%2$s est publié depuis %1$s. Lancez-vous et augmentez le nombre de vues de votre article en le partageant :</string>
-    <string name="stats_insights_latest_post_empty">Vous n’avez pas encore publié d’articles. Lorsque vous commencez à publier, le résumé de votre dernier article apparaît ici :</string>
     <string name="stats_insights_tags_and_categories">Étiquettes et catégories</string>
     <string name="stats_insights_all_time_stats">Depuis le début</string>
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
@@ -3006,7 +3063,6 @@ Language: fr
     <string name="stats_followers_a_minute_ago">il y a une minute</string>
     <string name="stats_followers_seconds_ago">il y a quelques secondes</string>
     <string name="stats_view_followers">Abonnés</string>
-    <string name="stats_view_publicize">Publicize</string>
     <string name="stats_view_videos">Vidéos</string>
     <string name="stats_view_top_posts_and_pages">Articles et pages</string>
     <string name="stats_view_countries">Pays</string>

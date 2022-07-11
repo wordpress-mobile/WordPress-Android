@@ -159,7 +159,6 @@ platform :android do
   #####################################################################################
   desc 'Upload Build to Play Store'
   lane :upload_build_to_play_store do |options|
-
     app = get_app_name_option!(options)
     package_name = APP_SPECIFIC_VALUES[app.to_sym][:package_name]
     metadata_dir = File.join('fastlane', APP_SPECIFIC_VALUES[app.to_sym][:metadata_dir], 'android')
@@ -173,7 +172,7 @@ platform :android do
 
     aab_file_path = bundle_file_path(app, version)
 
-    if File.exist? aab_file_path then
+    if File.exist? aab_file_path
       retry_count = 2
       begin
         upload_to_play_store(
@@ -188,11 +187,11 @@ platform :android do
           skip_upload_screenshots: true,
           json_key: UPLOAD_TO_PLAY_STORE_JSON_KEY
         )
-      rescue FastlaneCore::Interface::FastlaneError => ex
+      rescue FastlaneCore::Interface::FastlaneError => e
         # Sometimes the upload fails randomly with a "Google Api Error: Invalid request - This Edit has been deleted.".
         # It seems one reason might be a race condition when we do multiple edits at the exact same time (WP alpha, WP beta, JP beta). Retrying usually fixes it
-        if ex.message.start_with?('Google Api Error') && (retry_count -= 1) > 0
-          UI.error "Upload failed with Google API error. Retrying in 2mn..."
+        if e.message.start_with?('Google Api Error') && (retry_count -= 1) > 0
+          UI.error 'Upload failed with Google API error. Retrying in 2mn...'
           sleep(120)
           retry
         end
@@ -201,6 +200,48 @@ platform :android do
     else
       UI.error("Unable to find a build artifact at #{aab_file_path}")
     end
+  end
+
+  #####################################################################################
+  # build_and_upload_installable_build
+  # -----------------------------------------------------------------------------------
+  # Build a WordPress Installable Build and make it available for download
+  # -----------------------------------------------------------------------------------
+  # Usage:
+  # bundle exec fastlane build_and_upload_installable_build
+  #####################################################################################
+  desc 'Build an Installable Build and make it available for download'
+  lane :build_and_upload_wordpress_installable_build do
+    UI.user_error!("'BUILDKITE_ARTIFACTS_S3_BUCKET' must be defined as an environment variable.") unless ENV['BUILDKITE_ARTIFACTS_S3_BUCKET']
+
+    gradle(
+      task: 'assemble',
+      flavor: 'WordPressJalapeno',
+      build_type: 'Debug'
+    )
+
+    upload_installable_build(product: 'WordPress')
+  end
+
+  #####################################################################################
+  # build_and_upload_jetpack_installable_build
+  # -----------------------------------------------------------------------------------
+  # Build a Jetpack Installable Build and make it available for download
+  # -----------------------------------------------------------------------------------
+  # Usage:
+  # bundle exec fastlane build_and_upload_installable_build
+  #####################################################################################
+  desc 'Build an Installable Build and make it available for download'
+  lane :build_and_upload_jetpack_installable_build do
+    UI.user_error!("'BUILDKITE_ARTIFACTS_S3_BUCKET' must be defined as an environment variable.") unless ENV['BUILDKITE_ARTIFACTS_S3_BUCKET']
+
+    gradle(
+      task: 'assemble',
+      flavor: 'JetpackJalapeno',
+      build_type: 'Debug'
+    )
+
+    upload_installable_build(product: 'Jetpack')
   end
 
   #####################################################################################
@@ -261,5 +302,54 @@ platform :android do
       sh("echo \"Bundle ready: #{name}\" >> #{logfile_path}")
     end
     "#{build_dir}#{name}"
+  end
+
+  # Uploads the apk built by the `gradle` (i.e. `SharedValues::GRADLE_APK_OUTPUT_PATH`) to S3 then comment on the PR to provide the download link
+  #
+  # @param [String] product the display name of the app to upload to S3. 'WordPress' or 'Jetpack'
+  #
+  def upload_installable_build(product:)
+    filename = "#{product.downcase}-installable-build-#{generate_installable_build_number}.apk"
+
+    upload_path = upload_to_s3(
+      bucket: 'a8c-apps-public-artifacts',
+      key: filename,
+      file: lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH]
+    )
+
+    return if ENV['BUILDKITE_PULL_REQUEST'].nil?
+
+    install_url = "#{INSTALLABLE_BUILD_DOMAIN}/#{upload_path}"
+    qr_code_url = "https://chart.googleapis.com/chart?chs=500x500&cht=qr&chl=#{CGI.escape(install_url)}&choe=UTF-8"
+    comment_body = "You can test the #{product} changes on this Pull Request by <a href='#{install_url}'>downloading an installable build (#{filename})</a>, or scanning this QR code:<br><a href='#{install_url}'><img src='#{qr_code_url}' width='250' height='250' /></a>"
+
+    comment_on_pr(
+      project: GHHELPER_REPO,
+      pr_number: Integer(ENV['BUILDKITE_PULL_REQUEST']),
+      reuse_identifier: "#{product.downcase}-installable-build-link",
+      body: comment_body
+    )
+
+    if ENV['BUILDKITE']
+      message = "#{product} Installable Build: [#{filename}](#{install_url})"
+      sh('buildkite-agent', 'annotate', message, '--style', 'info', '--context', "installable-build-#{product}")
+    end
+  end
+
+  # This function is Buildkite-specific
+  def generate_installable_build_number
+    if ENV['BUILDKITE']
+      commit = ENV['BUILDKITE_COMMIT'][0, 7]
+      branch = ENV['BUILDKITE_BRANCH'].parameterize
+      pr_num = ENV['BUILDKITE_PULL_REQUEST']
+
+      pr_num == 'false' ? "#{branch}-#{commit}" : "pr#{pr_num}-#{commit}"
+    else
+      repo = Git.open(PROJECT_ROOT_FOLDER)
+      commit = repo.current_branch.parameterize
+      branch = repo.revparse('HEAD')[0, 7]
+
+      "#{branch}-#{commit}"
+    end
   end
 end

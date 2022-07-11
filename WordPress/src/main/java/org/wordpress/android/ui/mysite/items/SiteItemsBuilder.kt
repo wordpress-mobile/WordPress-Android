@@ -31,8 +31,8 @@ class SiteItemsBuilder @Inject constructor(
         val checkStatsTask = quickStartRepository.quickStartType
                 .getTaskFromString(QuickStartStore.QUICK_START_CHECK_STATS_LABEL)
         val showStatsFocusPoint = params.activeTask == checkStatsTask && params.enableStatsFocusPoint
-        val showPagesFocusPoint = (params.activeTask == QuickStartNewSiteTask.EDIT_HOMEPAGE ||
-                params.activeTask == QuickStartNewSiteTask.REVIEW_PAGES) && params.enablePagesFocusPoint
+        val showPagesFocusPoint = params.activeTask == QuickStartNewSiteTask.REVIEW_PAGES &&
+                params.enablePagesFocusPoint
         val uploadMediaTask = quickStartRepository.quickStartType
                 .getTaskFromString(QuickStartStore.QUICK_START_UPLOAD_MEDIA_LABEL)
         val showMediaFocusPoint = params.activeTask == uploadMediaTask && params.enableMediaFocusPoint
