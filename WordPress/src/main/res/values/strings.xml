@@ -4207,5 +4207,6 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
 
     <!-- Jetpack awareness in WordPress App -->
     <string name="wp_jetpack_powered">Jetpack powered</string>
+    <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Problem displaying block. \nTap to attempt block recovery.</string>
 
 </resources>
