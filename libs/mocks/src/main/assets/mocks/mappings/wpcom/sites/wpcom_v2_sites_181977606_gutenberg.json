@@ -8,7 +8,7 @@
     "jsonBody": {
       "editor_mobile": "gutenberg",
       "editor_web": "gutenberg",
-      "opt_out": "{{request.requestLine.baseUrl}}/wpcom/v2/sites/185124945/gutenberg?editor=classic&platform=web"
+      "opt_out": "{{request.requestLine.baseUrl}}/wpcom/v2/sites/181977606/gutenberg?editor=classic&platform=web"
     }
   }
 }
