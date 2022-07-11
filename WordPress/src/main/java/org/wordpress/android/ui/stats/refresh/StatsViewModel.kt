@@ -29,7 +29,6 @@ import org.wordpress.android.push.NotificationType
 import org.wordpress.android.push.NotificationsProcessingService.ARG_NOTIFICATION_TYPE
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
-import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.stats.StatsTimeframe
 import org.wordpress.android.ui.stats.StatsTimeframe.DAY
@@ -110,6 +109,9 @@ class StatsViewModel
 
     private val _statsModuleUiModel = MediatorLiveData<Event<StatsModuleUiModel>>()
     val statsModuleUiModel: LiveData<Event<StatsModuleUiModel>> = _statsModuleUiModel
+
+    private val _showUpgradeAlert = MutableLiveData<Event<Boolean>>()
+    val showUpgradeAlert: LiveData<Event<Boolean>> = _showUpgradeAlert
 
     fun start(intent: Intent, restart: Boolean = false) {
         val localSiteId = intent.getIntExtra(WordPress.LOCAL_SITE_ID, 0)
@@ -201,15 +203,23 @@ class StatsViewModel
             }
         }
 
-        if (BuildConfig.IS_JETPACK_APP &&
-                statsRevampV2FeatureConfig.isEnabled() &&
-                !AppPrefs.isStatsRevamp2DefaultCardsUpdated()) {
-            updateRevampedInsights()
-            AppPrefs.setStatsRevamp2DefaultCardsUpdated()
-        }
-
         if (launchedFrom == StatsLaunchedFrom.FEATURE_ANNOUNCEMENT) {
             if (statsSectionManager.getSelectedSection() != INSIGHTS) statsSectionManager.setSelectedSection(INSIGHTS)
+            updateRevampedInsights()
+        }
+        if (statsSectionManager.getSelectedSection() == INSIGHTS) showInsightsUpdateAlert()
+    }
+
+    private fun showInsightsUpdateAlert() {
+        if (BuildConfig.IS_JETPACK_APP && statsRevampV2FeatureConfig.isEnabled()) {
+            launch {
+                val insightTypes = statsStore.getAddedInsights(statsSiteProvider.siteModel)
+                if (insightTypes.containsAll(DEFAULT_INSIGHTS)) { // means not upgraded to new insights
+                    _showUpgradeAlert.value = Event(true)
+                    updateRevampedInsights()
+                    appPrefsWrapper.markStatsRevampFeatureAnnouncementAsDisplayed()
+                }
+            }
         }
     }
 
@@ -272,6 +282,8 @@ class StatsViewModel
         statsSectionManager.setSelectedSection(statsSection)
 
         listUseCases[statsSection]?.onListSelected()
+
+        if (statsSection == INSIGHTS) showInsightsUpdateAlert()
 
         trackSectionSelected(statsSection)
     }
