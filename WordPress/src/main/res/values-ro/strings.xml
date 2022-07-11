@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-07-03 14:33:27+0000
+Translation-Revision-Date: 2022-07-06 17:05:14+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.1
 Language: ro
 -->
 <resources>
+    <string name="wp_jetpack_powered">Propulsat de Jetpack</string>
     <string name="qrcode_auth_flow_error_auth_failed_subtitle">Nu am putut să te autentific folosind acest cod de autentificare. Te rog atinge butonul Scanează din nou pentru a scana din nou codul.</string>
     <string name="qrcode_auth_flow_dismiss_dialog_message">Sigur vrei să continui?</string>
     <string name="qrcode_auth_flow_error_content_description">Imagine care indică o eroare</string>

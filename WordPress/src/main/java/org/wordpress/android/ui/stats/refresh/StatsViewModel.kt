@@ -110,6 +110,9 @@ class StatsViewModel
     private val _statsModuleUiModel = MediatorLiveData<Event<StatsModuleUiModel>>()
     val statsModuleUiModel: LiveData<Event<StatsModuleUiModel>> = _statsModuleUiModel
 
+    private val _showUpgradeAlert = MutableLiveData<Event<Boolean>>()
+    val showUpgradeAlert: LiveData<Event<Boolean>> = _showUpgradeAlert
+
     fun start(intent: Intent, restart: Boolean = false) {
         val localSiteId = intent.getIntExtra(WordPress.LOCAL_SITE_ID, 0)
 
@@ -200,37 +203,37 @@ class StatsViewModel
             }
         }
 
-        if (BuildConfig.IS_JETPACK_APP && statsRevampV2FeatureConfig.isEnabled()) {
-            updateRevampedInsights()
-        }
-
         if (launchedFrom == StatsLaunchedFrom.FEATURE_ANNOUNCEMENT) {
             if (statsSectionManager.getSelectedSection() != INSIGHTS) statsSectionManager.setSelectedSection(INSIGHTS)
+            updateRevampedInsights()
+        }
+        if (statsSectionManager.getSelectedSection() == INSIGHTS) showInsightsUpdateAlert()
+    }
+
+    private fun showInsightsUpdateAlert() {
+        if (BuildConfig.IS_JETPACK_APP && statsRevampV2FeatureConfig.isEnabled()) {
+            launch {
+                val insightTypes = statsStore.getAddedInsights(statsSiteProvider.siteModel)
+                if (insightTypes.containsAll(DEFAULT_INSIGHTS)) { // means not upgraded to new insights
+                    _showUpgradeAlert.value = Event(true)
+                    updateRevampedInsights()
+                    appPrefsWrapper.markStatsRevampFeatureAnnouncementAsDisplayed()
+                }
+            }
         }
     }
 
     private fun updateRevampedInsights() {
         val insightsUseCase = listUseCases[INSIGHTS]
         insightsUseCase?.launch(defaultDispatcher) {
-            when (val insightTypes = statsStore.getAddedInsights(statsSiteProvider.siteModel)) {
-                JETPACK_DEFAULT_INSIGHTS -> {
-                    return@launch
-                }
-                DEFAULT_INSIGHTS -> {
-                    // Insights cards match the previous default set of cards,
-                    // switch it to show the new set of default cards
-                    statsStore.updateTypes(statsSiteProvider.siteModel, JETPACK_DEFAULT_INSIGHTS)
-                }
-                else -> {
-                    // Insights cards does not match the existing defaults,
-                    // the new set of default cards is added at the top of their list and preserve their additions
-                    val addedInsightTypes = insightTypes - DEFAULT_INSIGHTS.toSet()
-                    val updateInsightTypes: MutableSet<InsightType> = mutableSetOf()
-                    updateInsightTypes.addAll(JETPACK_DEFAULT_INSIGHTS)
-                    updateInsightTypes.addAll(addedInsightTypes)
-                    statsStore.updateTypes(statsSiteProvider.siteModel, updateInsightTypes.toList())
-                }
-            }
+            val insightTypes = statsStore.getAddedInsights(statsSiteProvider.siteModel)
+
+            // The new set of default cards is added at the top of their list and preserve their additions
+            val addedInsightTypes = insightTypes - DEFAULT_INSIGHTS.toSet()
+            val updateInsightTypes: MutableSet<InsightType> = mutableSetOf()
+            updateInsightTypes.addAll(JETPACK_DEFAULT_INSIGHTS)
+            updateInsightTypes.addAll(addedInsightTypes)
+            statsStore.updateTypes(statsSiteProvider.siteModel, updateInsightTypes.toList())
             insightsUseCase.loadData()
         }
     }
@@ -279,6 +282,8 @@ class StatsViewModel
         statsSectionManager.setSelectedSection(statsSection)
 
         listUseCases[statsSection]?.onListSelected()
+
+        if (statsSection == INSIGHTS) showInsightsUpdateAlert()
 
         trackSectionSelected(statsSection)
     }

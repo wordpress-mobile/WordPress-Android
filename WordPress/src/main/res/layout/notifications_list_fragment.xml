@@ -112,4 +112,7 @@
 
     </LinearLayout>
 
+    <include
+        android:id="@+id/jetpack_banner"
+        layout="@layout/jetpack_banner" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

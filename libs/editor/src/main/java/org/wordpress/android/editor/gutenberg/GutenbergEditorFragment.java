@@ -1253,7 +1253,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                     url,
                     mediaEntry.getValue().getMimeType(),
                     mediaEntry.getValue().getCaption(),
-                    mediaEntry.getValue().getTitle()));
+                    mediaEntry.getValue().getTitle(),
+                    mediaEntry.getValue().getAlt()));
         }
 
         getGutenbergContainerFragment().appendMediaFiles(rnMediaList);

@@ -1,4 +1,0 @@
-20.1:
-- Hemos mejorado la pantalla de selección de diseño del sitio en el proceso de creación del sitio.
-- Cuando haces clic en un enlace de WordPress se abre en la aplicación en vez de en tu navegador por defecto.
-- Hemos movido los puntos de enfoque del inicio rápido a los puntos correctos para los usuarios de idiomas de derecha a izquierda.

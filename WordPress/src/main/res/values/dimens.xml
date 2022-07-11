@@ -383,7 +383,6 @@
     <dimen name="people_avatar_sz">40dp</dimen>
     <dimen name="people_list_row_height">72dp</dimen>
     <dimen name="people_list_row_role_margin_top">20dp</dimen>
-    <dimen name="people_list_divider_left_margin">72dp</dimen>
     <dimen name="people_chips_min_target">40dp</dimen>
     <dimen name="people_default_margin_top">5dp</dimen>
 
@@ -464,6 +463,7 @@
     <dimen name="jetpack_icon_size">32dp</dimen>
     <dimen name="jetpack_icon_margin">0dp</dimen>
     <dimen name="jetpack_button_icon_size">16dp</dimen>
+    <dimen name="jetpack_banner_height">40dp</dimen>
 
     <!-- jetpack backup restore last bullet bottom margin-->
     <dimen name="jetpack_backup_restore_last_bullet_bottom_margin">20dp</dimen>

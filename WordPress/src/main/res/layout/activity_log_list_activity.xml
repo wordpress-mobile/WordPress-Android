@@ -30,8 +30,7 @@
             android:scrollIndicators="none"
             android:visibility="gone"
             app:layout_scrollFlags="noScroll"
-            android:scrollbars="none"
-            tools:targetApi="m">
+            android:scrollbars="none">
 
             <LinearLayout
                 android:layout_width="wrap_content"

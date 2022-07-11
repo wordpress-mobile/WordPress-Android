@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-06-28 18:39:53+0000
+Translation-Revision-Date: 2022-07-06 11:12:22+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: sv_SE
 -->
 <resources>
+    <string name="wp_jetpack_powered">Drivs med Jetpack</string>
     <string name="qrcode_auth_flow_content_description">Bild som indikerar att avläsning av inloggningskod pågår</string>
     <string name="qrcode_auth_flow_error_content_description">Bild som indikerar ett fel</string>
     <string name="qrcode_auth_flow_dismiss_dialog_message">Är du säker på att du vill fortsätta?</string>
