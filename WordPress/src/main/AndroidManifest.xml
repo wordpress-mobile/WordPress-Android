@@ -243,14 +243,10 @@
             android:name=".ui.posts.EditPostActivity"
             android:theme="@style/WordPress.NoActionBar"
             android:windowSoftInputMode="stateHidden|adjustResize"
-            android:exported="true">
+            android:exported="false">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.posts.PostsListActivity" />
-
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>
         </activity>
 
         <!-- Story composer activity -->
@@ -260,17 +256,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/WordPress.Stories.Immersive">
         </activity>
-
-        <!-- Workaround for old launcher icon pointing to .ui.posts.PostsActivity -->
-        <activity-alias
-            android:name=".ui.posts.PostsActivity"
-            android:enabled="true"
-            android:targetActivity=".ui.WPLaunchActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>
-        </activity-alias>
 
         <activity
             android:name=".ui.posts.PostsListActivity"
@@ -312,6 +297,7 @@
         <activity
             android:name=".ui.stats.refresh.StatsActivity"
             android:launchMode="singleTop"
+            android:configChanges="orientation|screenSize"
             android:theme="@style/WordPress.NoActionBar" />
         <activity
             android:name=".ui.stats.refresh.StatsViewAllActivity"
@@ -1006,16 +992,6 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-        <!-- FirebaseInstanceIdService performs security checks at runtime,
-        no need for explicit permissions despite exported="true" -->
-        <service
-            android:name=".push.InstanceIDService"
-            android:exported="true"
-            tools:ignore="ExportedService">
-            <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
-            </intent-filter>
-        </service>
 
         <!-- Smart Lock for Passwords -->
         <meta-data android:name="asset_statements" android:resource="@string/asset_statements" />
@@ -1031,13 +1007,25 @@
                 android:resource="@xml/provider_paths"/>
         </provider>
 
-        <!-- Remove the default WorkManagerInitializer so we can use our own
-        Since WorkManager 2.6, App Startup is used internally within WorkManager.
-        To provide a custom initializer we need to remove the androidx.startup node.-->
+        <!-- Remove only the default initializer to provide a custom configuration.
+             For more info visit: https://developer.android.com/topic/libraries/architecture/
+             workmanager/advanced/custom-configuration
+
+             This change was necessary because of the 'androidx.lifecycle' update to '2.4.1' and
+             the fact that with it the 'lifecycle-process' now uses 'androidx.startup' to
+             initialize the 'ProcessLifecycleOwner'.
+             For more info visit: https://developer.android.com/jetpack/androidx/releases/
+             lifecycle#2.4.1 -->
         <provider
             android:name="androidx.startup.InitializationProvider"
             android:authorities="${applicationId}.androidx-startup"
-            tools:node="remove" />
+            android:exported="false"
+            tools:node="merge">
+            <meta-data
+                android:name="androidx.work.WorkManagerInitializer"
+                android:value="androidx.startup"
+                tools:node="remove" />
+        </provider>
 
         <!-- Scanner -->
         <meta-data

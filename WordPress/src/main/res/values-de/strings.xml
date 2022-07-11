@@ -1,11 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-06-16 09:54:25+0000
+Translation-Revision-Date: 2022-07-05 18:52:54+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: de
 -->
 <resources>
+    <string name="qrcode_auth_flow_content_description">Bild, das anzeigt, dass der Scan des Anmeldecodes läuft</string>
+    <string name="qrcode_auth_flow_error_content_description">Bild, das einen Fehler anzeigt</string>
+    <string name="qrcode_auth_flow_dismiss_dialog_message">Bist du sicher, dass du fortfahren möchtest?</string>
+    <string name="qrcode_auth_flow_dismiss_dialog_title">Scan des Anmeldecode beenden</string>
+    <string name="qrcode_auth_flow_error_auth_failed_subtitle">Du konntest mit diesem Anmeldecode nicht angemeldet werden. Bitte tippe auf den Button „Erneut scannen“, um den Code erneut zu scannen.</string>
+    <string name="qrcode_auth_flow_error_no_connection_title">Keine Verbindung</string>
+    <string name="qrcode_auth_flow_scan_again">Erneut scannen</string>
+    <string name="qrcode_auth_flow_done_title">Du bist angemeldet!</string>
+    <string name="qrcode_auth_flow_error_auth_failed_title">Authentifizierung fehlgeschlagen</string>
+    <string name="qrcode_auth_flow_error_expired_subtitle">Dieser Anmeldecode ist abgelaufen. Bitte tippe auf den Button „Erneut scannen“, um den Code erneut zu scannen.</string>
+    <string name="qrcode_auth_flow_error_expired_title">Abgelaufener Anmeldecode</string>
+    <string name="qrcode_auth_flow_error_invalid_data_subtitle">Der gescannte Anmeldecode konnte nicht validiert werden. Bitte tippe auf den Button „Erneut scannen“, um den Code erneut zu scannen.</string>
+    <string name="qrcode_auth_flow_error_invalid_data_title">Anmeldecode konnte nicht validiert werden</string>
+    <string name="qrcode_auth_flow_error_no_connection_subtitle">Für das Scannen von Anmeldecodes ist eine aktive Internetverbindung erforderlich</string>
+    <string name="qrcode_auth_flow_validated_subtitle">Scanne nur QR-Codes, die direkt von deinem Webbrowser kommen. Scanne niemals einen Code, der dir von jemand anderem geschickt wurde.</string>
+    <string name="qrcode_auth_flow_validated_default_title">Versuchst du dich in der Nähe von %1$s in deinem Webbrowser anzumelden?</string>
+    <string name="qrcode_auth_flow_validated_primary_action">Ja, melde mich an</string>
+    <string name="qrcode_auth_flow_done_subtitle">Tippe auf „Verwerfen“ und navigiere zu deinem Webbrowser zurück, um fortzufahren.</string>
+    <string name="qrcode_auth_flow_dismiss">Verwerfen</string>
+    <string name="qrcode_auth_flow_validated_title">Versuchst du dich in der Nähe von %2$s in %1$s anzumelden?</string>
+    <string name="stats_revamp_v2_intro_secondary_button_text">Später daran erinnern</string>
+    <string name="stats_revamp_v2_intro_content_note">Weitere Informationen unter „Meine Website &gt; Statistiken &gt; Einsichten“</string>
+    <string name="stats_revamp_v2_intro_content">Anhand von Einsichten kannst du nachvollziehen, wie deine Inhalte ankommen und was deinem Publikum gefällt.</string>
+    <string name="stats_revamp_v2_intro_header_title">Einsichten-Update</string>
+    <string name="stats_revamp_v2_intro_primary_button_text">Jetzt versuchen</string>
+    <string name="stats_insights_followers_guide_card">💡Andere Blogs zu kommentieren ist ein guter Weg, Aufmerksamkeit zu erregen und Follower für deine neue Website zu gewinnen.</string>
+    <string name="stats_insights_comments_guide_card">💡Tippe auf „MEHR ANZEIGEN“, um dir deine Top-Kommentatoren anzeigen zu lassen.</string>
+    <string name="stats_insights_latest_post_empty">Schau nochmal vorbei, wenn du deinen ersten Beitrag veröffentlicht hast!</string>
+    <string name="stats_insights_views_and_visitors_visitors_empty_state">Schau dir unsere Top-Tipps für mehr Aufrufe und höheren Traffic an %1$s</string>
+    <string name="stats_view_publicize">Verbindungen mit den sozialen Medien</string>
+    <string name="stats_action_card_schedule_post_message">✍️ Plane deine Entwürfe, damit du sie zu dem Zeitpunkt veröffentlichst, an dem du dein Publikum am besten erreichst.</string>
+    <string name="stats_action_card_blogging_reminders_message">💡Regelmäßig Beiträge zu veröffentlichen ist ein guter Weg, ein Publikum aufzubauen. Füge eine Erinnerung hinzu, damit du auf Kurs bleibst.</string>
+    <string name="stats_action_card_grow_audience_message">💡Verbessere dein Blog schneller mit dem Kurs &lt;i&gt;Einführung in das Bloggen&lt;/i&gt;, der von Experten geleitet wird.</string>
     <string name="blogging_prompts_onboarding_prompts_loading">Blog-Vorschläge werden geladen. Bitte warte einen Moment und versuche es dann erneut.</string>
     <string name="hpp_bottom_helper_text">Du kannst dich nicht entscheiden? Du kannst das Theme jederzeit ändern.</string>
     <string name="my_site_blogging_prompt_card_menu_learn_more">Mehr erfahren</string>
@@ -2935,7 +2968,7 @@ Language: de
     <string name="notifications_empty_comments">Bisher keine Kommentare</string>
     <string name="notifications_empty_unread">Du bist auf dem neuesten Stand!</string>
     <string name="reader_short_comment_count_multi">%s Kommentare</string>
-    <string name="reader_short_comment_count_one">1 Kommentar</string>
+    <string name="reader_short_comment_count_one">Ein Kommentar</string>
     <string name="reader_hint_comment_on_post">Antwort auf Beitrag…</string>
     <string name="reader_discover_visit_blog">%s besuchen</string>
     <string name="reader_discover_attribution_blog">Ursprünglich veröffentlicht auf %s</string>
