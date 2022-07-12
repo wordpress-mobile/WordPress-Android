@@ -14,7 +14,6 @@ import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.e2e.pages.MySitesPage;
 import org.wordpress.android.e2e.pages.PostsListPage;
-import org.wordpress.android.e2e.pages.SitePickerPage;
 import org.wordpress.android.support.BaseTest;
 import org.wordpress.android.support.DemoModeEnabler;
 import org.wordpress.android.ui.WPLaunchActivity;
@@ -79,15 +78,8 @@ public class WPScreenshotTest extends BaseTest {
     }
 
     private void editBlogPost() {
-        // Choose the "sites" tab in the nav
-        clickOn(R.id.nav_sites);
-
-        // Choose "Switch Site"
-        clickOn(R.id.switch_site);
-
-        (new SitePickerPage()).chooseSiteWithURL("fourpawsdoggrooming.wordpress.com");
-
-        MySitesPage.goToPosts();
+        (new MySitesPage()).switchToSite("fourpawsdoggrooming.wordpress.com")
+                           .goToPosts();
         PostsListPage.goToDrafts();
 
         // Get a screenshot of the editor with the block library expanded
@@ -132,6 +124,8 @@ public class WPScreenshotTest extends BaseTest {
     }
 
     private void navigateDiscover() {
+        (new MySitesPage()).switchToSite("fourpawsdoggrooming.wordpress.com");
+
         // Click on the "Reader" tab and take a screenshot
         clickOn(R.id.nav_reader);
 
@@ -173,12 +167,9 @@ public class WPScreenshotTest extends BaseTest {
     }
 
     private void navigateStats() {
-        // Click on the "Sites" tab in the nav, then choose "Stats"
+        // Click on the "Sites" tab in the nav, then click the "Menu" tab, then choose "Stats"
         clickOn(R.id.nav_sites);
-        MySitesPage.goToStats();
-
-        // Wait for the stats to load
-        idleFor(8000);
+        (new MySitesPage()).goToStats();
 
         swipeToAvoidGrayOverlay(R.id.statsPager);
 
@@ -195,13 +186,7 @@ public class WPScreenshotTest extends BaseTest {
     }
 
     private void navigateMySite() {
-        // Click on the "Sites" tab and take a screenshot
-        clickOn(R.id.nav_sites);
-
-        // Choose "Switch Site"
-        clickOn(R.id.switch_site);
-
-        (new SitePickerPage()).chooseSiteWithURL("tricountyrealestate.wordpress.com");
+        (new MySitesPage()).switchToSite("tricountyrealestate.wordpress.com");
 
         waitForElementToBeDisplayedWithoutFailure(R.id.recycler_view);
 
@@ -221,7 +206,6 @@ public class WPScreenshotTest extends BaseTest {
         waitForAtLeastOneElementWithIdToBeDisplayed(R.id.note_content_container);
         waitForImagesOfTypeWithPlaceholder(R.id.note_avatar, ImageType.AVATAR);
 
-
         // Wait for the images to load
         idleFor(6000);
 
@@ -234,9 +218,9 @@ public class WPScreenshotTest extends BaseTest {
     }
 
     private void manageMedia() {
-        // Click on the "Sites" tab in the nav, then choose "Media"
+        // Click on the "Sites" tab in the nav, then click the "Menu" tab, then choose "Media"
         clickOn(R.id.nav_sites);
-        MySitesPage.goToMedia();
+        (new MySitesPage()).goToMedia();
 
         waitForElementToBeDisplayedWithoutFailure(R.id.media_browser_container);
 
@@ -245,7 +229,7 @@ public class WPScreenshotTest extends BaseTest {
 
         takeScreenshot("6-upload-on-the-go");
 
-        pressBackUntilElementIsDisplayed(R.id.site_info);
+        pressBackUntilElementIsDisplayed(R.id.nav_sites);
     }
 
     private void takeScreenshot(String screenshotName) {
