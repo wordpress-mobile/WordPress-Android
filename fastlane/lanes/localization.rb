@@ -392,8 +392,7 @@ platform :android do
     android_download_translations(
       res_dir: wordpress_res_dir,
       glotpress_url: APP_SPECIFIC_VALUES[:wordpress][:glotpress_appstrings_project],
-      locales: WP_APP_LOCALES,
-      lint_task: 'lintWordpressVanillaRelease'
+      locales: WP_APP_LOCALES
     )
 
     # Jetpack strings
@@ -401,8 +400,7 @@ platform :android do
     android_download_translations(
       res_dir: jetpack_res_dir,
       glotpress_url: APP_SPECIFIC_VALUES[:jetpack][:glotpress_appstrings_project],
-      locales: JP_APP_LOCALES,
-      lint_task: 'lintJetpackVanillaRelease'
+      locales: JP_APP_LOCALES
     )
 
     # [pxLjZ-7b9-p2] For any locale in which Jetpack is not translated in (but WordPress is),
