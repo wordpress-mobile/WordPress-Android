@@ -24,5 +24,6 @@
         app:chipMinHeight="34dp"
         app:chipStartPadding="5dp"
         app:textEndPadding="15dp"
-        app:textStartPadding="10dp" />
+        app:textStartPadding="10dp"
+        tools:ignore="TextContrastCheck" />
 </LinearLayout>
