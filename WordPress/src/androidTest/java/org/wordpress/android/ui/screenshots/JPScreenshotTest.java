@@ -71,8 +71,8 @@ public class JPScreenshotTest extends BaseTest {
 
             navigateMySite();
             navigateActivityLog();
-            navigateScan();
-            navigateBackupDownload();
+//            navigateScan();
+//            navigateBackupDownload();
             navigateStats();
 
             // Turn Demo Mode off on the emulator when we're done
