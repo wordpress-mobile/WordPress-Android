@@ -53,6 +53,12 @@ public class JPScreenshotTest extends BaseTest {
 
     private DemoModeEnabler mDemoModeEnabler = new DemoModeEnabler();
 
+    private static final String MY_SITE_SCREENSHOT_NAME = "1-bring-your-jetpack-with-you";
+    private static final String ACTIVITY_LOG_SCREENSHOT_NAME = "2-keep-tabs-on-your-site-activity";
+    private static final String SCAN_SCREENSHOT_NAME = "3-scan-for-issues-on-the-go";
+    private static final String BACKUP_SCREENSHOT_NAME = "4-back-up-your-site-at-any-moment";
+    private static final String STATS_SCREENSHOT_NAME = "5-site-stats-in-your-pocket";
+
     @Test
     public void jPScreenshotTest() {
         if (BuildConfig.IS_JETPACK_APP) {
@@ -81,14 +87,14 @@ public class JPScreenshotTest extends BaseTest {
         waitForElementToBeDisplayedWithoutFailure(R.id.recycler_view);
 
         setNightModeAndWait(false);
-        takeScreenshot("1-bring-your-jetpack-with-you");
+        takeScreenshot(MY_SITE_SCREENSHOT_NAME);
     }
 
     private void navigateActivityLog() {
         moveToActivityLog();
 
         setNightModeAndWait(false);
-        takeScreenshot("2-keep-tabs-on-your-site-activity");
+        takeScreenshot(ACTIVITY_LOG_SCREENSHOT_NAME);
 
         // Exit the Activity Log Activity
         pressBackUntilElementIsDisplayed(R.id.nav_sites);
@@ -98,7 +104,7 @@ public class JPScreenshotTest extends BaseTest {
         moveToScan();
 
         setNightModeAndWait(false);
-        takeScreenshot("3-scan-for-issues-on-the-go");
+        takeScreenshot(SCAN_SCREENSHOT_NAME);
 
         // Exit the Activity scan activity
         pressBackUntilElementIsDisplayed(R.id.nav_sites);
@@ -127,7 +133,7 @@ public class JPScreenshotTest extends BaseTest {
 
 
         setNightModeAndWait(false);
-        takeScreenshot("4-back-up-your-site-at-any-moment");
+        takeScreenshot(BACKUP_SCREENSHOT_NAME);
 
         // Exit the backup download activity
         pressBackUntilElementIsDisplayed(R.id.nav_sites);
@@ -151,7 +157,7 @@ public class JPScreenshotTest extends BaseTest {
         idleFor(8000);
 
         setNightModeAndWait(false);
-        takeScreenshot("5-site-stats-in-your-pocket");
+        takeScreenshot(STATS_SCREENSHOT_NAME);
 
         // Exit the Stats Activity
         pressBackUntilElementIsDisplayed(R.id.nav_sites);
