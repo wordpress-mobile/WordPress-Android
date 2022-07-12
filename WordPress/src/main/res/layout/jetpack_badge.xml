@@ -16,12 +16,11 @@
         android:textSize="@dimen/text_sz_large"
         app:chipBackgroundColor="@color/jetpack_badge_background"
         app:chipCornerRadius="20dp"
-        app:chipEndPadding="15dp"
-        app:chipIcon="@drawable/ic_jetpack_logo_white_24dp"
-        app:chipIconSize="24dp"
+        app:chipEndPadding="0dp"
+        app:chipIcon="@drawable/ic_jetpack_logo_24dp"
+        app:chipIconSize="23.99dp"
         app:chipMinHeight="34dp"
         app:chipStartPadding="5dp"
-        app:iconEndPadding="10dp"
-        app:textEndPadding="0dp"
-        app:textStartPadding="0dp" />
+        app:textEndPadding="15dp"
+        app:textStartPadding="10dp" />
 </LinearLayout>
