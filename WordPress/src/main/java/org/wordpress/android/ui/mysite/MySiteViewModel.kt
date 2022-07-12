@@ -40,6 +40,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.InfoItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.JetpackBadge
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoHeaderCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BloggingPromptCardBuilderParams
@@ -490,12 +491,15 @@ class MySiteViewModel @Inject constructor(
                 )
         )
 
+        val jetpackBadge = JetpackBadge.takeUnless { buildConfigWrapper.isJetpackApp }
+
         return mapOf(
                 MySiteTabType.ALL to orderForDisplay(
                         infoItem,
                         cardsResult,
                         dynamicCards,
-                        siteItems
+                        siteItems,
+                        jetpackBadge
                 ),
                 MySiteTabType.SITE_MENU to orderForDisplay(
                         infoItem,
@@ -503,7 +507,8 @@ class MySiteViewModel @Inject constructor(
                             getCardTypeExclusionFiltersForTab(MySiteTabType.SITE_MENU).contains(it.type)
                         },
                         if (shouldIncludeDynamicCards(MySiteTabType.SITE_MENU)) dynamicCards else listOf(),
-                        siteItems
+                        siteItems,
+                        jetpackBadge
                 ),
                 MySiteTabType.DASHBOARD to orderForDisplay(
                         infoItem,
@@ -511,7 +516,8 @@ class MySiteViewModel @Inject constructor(
                             getCardTypeExclusionFiltersForTab(MySiteTabType.DASHBOARD).contains(it.type)
                         },
                         if (shouldIncludeDynamicCards(MySiteTabType.DASHBOARD)) dynamicCards else listOf(),
-                        listOf()
+                        listOf(),
+                        jetpackBadge
                 )
         )
     }
@@ -588,7 +594,8 @@ class MySiteViewModel @Inject constructor(
         infoItem: InfoItem?,
         cards: List<MySiteCardAndItem>,
         dynamicCards: List<MySiteCardAndItem>,
-        siteItems: List<MySiteCardAndItem>
+        siteItems: List<MySiteCardAndItem>,
+        jetpackBadge: JetpackBadge?
     ): List<MySiteCardAndItem> {
         val indexOfDashboardCards = cards.indexOfFirst { it is DashboardCards }
         return mutableListOf<MySiteCardAndItem>().apply {
@@ -600,6 +607,7 @@ class MySiteViewModel @Inject constructor(
                 addAll(indexOfDashboardCards, dynamicCards)
             }
             addAll(siteItems)
+            jetpackBadge?.let { add(jetpackBadge) }
         }.toList()
     }
 
