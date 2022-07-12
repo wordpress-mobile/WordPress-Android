@@ -88,7 +88,13 @@ public class MySitesPage {
 
     public void goToBackup() {
         goToMenuTab();
-        clickItemWithText(R.string.backup);
+
+        // Using RecyclerViewActions.click doesn't work for some reason when quick actions are displayed.
+        if (isElementDisplayed(R.id.quick_actions_card)) {
+            clickOn(onView(withText(R.string.backup)));
+        } else {
+            clickItemWithText(R.string.backup);
+        }
     }
 
     public StatsPage goToStats() {
