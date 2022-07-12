@@ -3,18 +3,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:gravity="center"
     android:orientation="vertical">
 
     <com.google.android.material.chip.Chip
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:letterSpacing="-0.02"
         android:text="@string/wp_jetpack_powered"
-        android:textAppearance="?attr/textAppearanceCaption"
+        android:textAppearance="?attr/textAppearanceBody1"
         android:textColor="@color/white"
         android:textSize="@dimen/text_sz_large"
-        app:chipBackgroundColor="@color/jetpack_green"
+        app:chipBackgroundColor="@color/jetpack_badge_background"
         app:chipCornerRadius="20dp"
         app:chipEndPadding="15dp"
         app:chipIcon="@drawable/ic_jetpack_logo_white_24dp"

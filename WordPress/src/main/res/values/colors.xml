@@ -41,6 +41,7 @@
     <!-- Jetpack awareness in WordPress App -->
     <color name="jetpack_banner_background">@color/jetpack_green_0</color>
     <color name="jetpack_banner_divider">@color/gray_5</color>
+    <color name="jetpack_badge_background">@color/jetpack_green</color>
 
     <!-- Reader -->
 
