@@ -1,15 +1,7 @@
 {
     "request": {
         "method": "GET",
-        "urlPath": "/wpcom/v2/sites/185119032/xposts/",
-        "queryParameters": {
-            "decode_html": {
-                "equalTo": "true"
-            },
-            "_locale": {
-                "matches": "(.*)"
-            }
-        }
+        "urlPath": "/wpcom/v2/sites/181977606/xposts/"
     },
     "response": {
         "status": 200,

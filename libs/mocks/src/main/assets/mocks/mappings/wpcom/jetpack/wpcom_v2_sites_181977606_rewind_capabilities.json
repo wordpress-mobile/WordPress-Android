@@ -1,13 +1,17 @@
 {
   "request": {
     "method": "GET",
-    "urlPattern": "/wpcom/v2/sites/185119569/rewind/capabilities(/)?($|\\?.*)"
+    "urlPattern": "/wpcom/v2/sites/181977606/rewind/capabilities(/)?($|\\?.*)"
   },
   "response": {
     "status": 200,
     "jsonBody": {
       "capabilities": [
-        "scan"
+        "backup",
+        "restore",
+        "backup-realtime",
+        "scan",
+        "antispam"
       ]
     },
     "headers": {
