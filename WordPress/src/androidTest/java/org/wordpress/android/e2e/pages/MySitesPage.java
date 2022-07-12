@@ -150,12 +150,12 @@ public class MySitesPage {
     /**
      * Clicks on the "Quick Action" item or the Site menu item if the quick actions card is hidden.
      * Needed because locating site menu items by text fails if the quick actions are available.
-     * @param quicActionItemId Id of the quick actions menu item.
+     * @param quickActionItemId Id of the quick actions menu item.
      * @param siteMenuItemString String resource id of the site menu item.
      */
-    private void clickQuickActionOrSiteMenuItem(@IdRes int quicActionItemId, @StringRes int siteMenuItemString) {
-        if (isElementDisplayed(quicActionItemId)) {
-            clickOn(quicActionItemId);
+    private void clickQuickActionOrSiteMenuItem(@IdRes int quickActionItemId, @StringRes int siteMenuItemString) {
+        if (isElementDisplayed(quickActionItemId)) {
+            clickOn(quickActionItemId);
         } else {
             clickItemWithText(siteMenuItemString);
         }
