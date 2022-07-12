@@ -17,6 +17,7 @@ import org.wordpress.android.e2e.pages.MySitesPage;
 import org.wordpress.android.support.BaseTest;
 import org.wordpress.android.support.DemoModeEnabler;
 import org.wordpress.android.ui.WPLaunchActivity;
+import org.wordpress.android.util.image.ImageType;
 
 import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
@@ -39,7 +40,9 @@ import static org.wordpress.android.support.WPSupportUtils.pressBackUntilElement
 import static org.wordpress.android.support.WPSupportUtils.setNightMode;
 import static org.wordpress.android.support.WPSupportUtils.swipeLeftOnViewPager;
 import static org.wordpress.android.support.WPSupportUtils.swipeRightOnViewPager;
+import static org.wordpress.android.support.WPSupportUtils.waitForAtLeastOneElementWithIdToBeDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDisplayedWithoutFailure;
+import static org.wordpress.android.support.WPSupportUtils.waitForImagesOfTypeWithPlaceholder;
 
 import dagger.hilt.android.testing.HiltAndroidTest;
 import tools.fastlane.screengrab.Screengrab;
@@ -58,6 +61,7 @@ public class JPScreenshotTest extends BaseTest {
     private static final String SCAN_SCREENSHOT_NAME = "3-scan-for-issues-on-the-go";
     private static final String BACKUP_SCREENSHOT_NAME = "4-back-up-your-site-at-any-moment";
     private static final String STATS_SCREENSHOT_NAME = "5-site-stats-in-your-pocket";
+    private static final String NOTIFICATIONS_SCREENSHOT_NAME = "6-reply-in-real-time";
 
     @Test
     public void jPScreenshotTest() {
@@ -74,6 +78,7 @@ public class JPScreenshotTest extends BaseTest {
 //            navigateScan();
 //            navigateBackupDownload();
             navigateStats();
+            navigateNotifications();
 
             // Turn Demo Mode off on the emulator when we're done
             mDemoModeEnabler.disable();
@@ -163,6 +168,23 @@ public class JPScreenshotTest extends BaseTest {
         pressBackUntilElementIsDisplayed(R.id.nav_sites);
     }
 
+    private void navigateNotifications() {
+        // Click on the "Notifications" tab in the nav
+        clickOn(R.id.nav_notifications);
+
+        waitForAtLeastOneElementWithIdToBeDisplayed(R.id.note_content_container);
+        waitForImagesOfTypeWithPlaceholder(R.id.note_avatar, ImageType.AVATAR);
+
+        // Wait for the images to load
+        idleFor(6000);
+
+        setNightModeAndWait(false);
+
+        takeScreenshot(NOTIFICATIONS_SCREENSHOT_NAME);
+
+        // Exit the notifications activity
+        pressBackUntilElementIsDisplayed(R.id.nav_sites);
+    }
     private void moveToActivityLog() {
         // Click on the "Sites" tab in the nav, then click the "Menu" tab, then choose "Activity Log"
         clickOn(R.id.nav_sites);
