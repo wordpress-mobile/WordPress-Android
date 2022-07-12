@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <com.google.android.material.chip.Chip
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:letterSpacing="-0.02"
+        android:text="@string/wp_jetpack_powered"
+        android:textAppearance="?attr/textAppearanceCaption"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_sz_large"
+        app:chipBackgroundColor="@color/jetpack_green"
+        app:chipCornerRadius="20dp"
+        app:chipEndPadding="15dp"
+        app:chipIcon="@drawable/ic_jetpack_logo_white_24dp"
+        app:chipIconEnabled="true"
+        app:chipIconSize="24dp"
+        app:chipMinHeight="34dp"
+        app:chipStartPadding="5dp"
+        app:iconEndPadding="10dp"
+        app:textEndPadding="0dp"
+        app:textStartPadding="0dp" />
+</LinearLayout>
