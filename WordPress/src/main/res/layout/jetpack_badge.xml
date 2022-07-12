@@ -9,7 +9,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:letterSpacing="-0.02"
         android:text="@string/wp_jetpack_powered"
         android:textAppearance="?attr/textAppearanceBody1"
         android:textColor="@color/white"
