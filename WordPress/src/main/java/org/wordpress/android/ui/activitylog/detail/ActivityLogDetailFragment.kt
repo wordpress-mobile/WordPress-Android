@@ -5,9 +5,11 @@ import android.os.Bundle
 import android.text.SpannableString
 import android.text.method.LinkMovementMethod
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
+import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.ActivityLogItemDetailBinding
@@ -64,6 +66,8 @@ class ActivityLogDetailFragment : Fragment(R.layout.activity_log_item_detail) {
                 val (site, activityLogId) = sideAndActivityId(savedInstanceState, activity.intent)
                 val areButtonsVisible = areButtonsVisible(savedInstanceState, activity.intent)
                 val isRestoreHidden = isRestoreHidden(savedInstanceState, activity.intent)
+
+                jetpackBadge.root.isVisible = !BuildConfig.IS_JETPACK_APP
 
                 viewModel.activityLogItem.observe(viewLifecycleOwner, { activityLogModel ->
                     loadLogItem(activityLogModel, activity)
