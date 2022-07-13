@@ -114,6 +114,7 @@ platform :android do
   desc 'Updates the PlayStoreStrings.po file for WordPress'
   lane :update_wordpress_appstore_strings do |options|
     metadata_folder = File.join(Dir.pwd, '..', 'WordPress', 'metadata')
+    version = options.fetch(:version, android_get_app_version)
 
     # <key in po file> => <path to txt file to read the content from>
     files = {
@@ -130,8 +131,8 @@ platform :android do
     update_po_file_for_metadata_localization(
       po_path: File.join(metadata_folder, 'PlayStoreStrings.po'),
       sources: files,
-      release_version: options[:version],
-      commit_message: "Update WordPress `PlayStoreStrings.po` for version #{options[:version]}"
+      release_version: version,
+      commit_message: "Update WordPress `PlayStoreStrings.po` for version #{version}"
     )
   end
 
@@ -150,6 +151,7 @@ platform :android do
   desc 'Updates the PlayStoreStrings.po file for Jetpack'
   lane :update_jetpack_appstore_strings do |options|
     metadata_folder = File.join(Dir.pwd, '..', 'WordPress', 'jetpack_metadata')
+    version = options.fetch(:version, android_get_app_version)
 
     files = {
       release_note: File.join(metadata_folder, 'release_notes.txt'),
@@ -162,8 +164,8 @@ platform :android do
     update_po_file_for_metadata_localization(
       po_path: metadata_folder = File.join(metadata_folder, 'PlayStoreStrings.po'),
       sources: files,
-      release_version: options[:version],
-      commit_message: "Update Jetpack `PlayStoreStrings.po` for version #{options[:version]}"
+      release_version: version,
+      commit_message: "Update Jetpack `PlayStoreStrings.po` for version #{version}"
     )
   end
 
