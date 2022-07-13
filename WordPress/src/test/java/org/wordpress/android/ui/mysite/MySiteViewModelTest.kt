@@ -50,6 +50,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.test
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BloggingPromptCard.BloggingPromptCardWithData
@@ -68,6 +69,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.DynamicCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.DynamicCard.QuickStartDynamicCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.InfoItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.ListItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.JetpackBadge
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoHeaderCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoHeaderCard.IconState
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardsBuilderParams
@@ -2122,7 +2124,33 @@ class MySiteViewModelTest : BaseUnitTest() {
                 initialScreen = MySiteTabType.SITE_MENU.label
         )
 
-        assertThat(getSiteMenuTabLastItems().last()).isInstanceOf(DynamicCard::class.java)
+        val siteMenuCardsAndItems = getSiteMenuTabLastItems()
+        val indexOfLastCard = siteMenuCardsAndItems.indexOfLast { it is Card }
+        assertThat(siteMenuCardsAndItems[indexOfLastCard + 1]).isInstanceOf(DynamicCard::class.java)
+    }
+
+    @InternalCoroutinesApi
+    @Test
+    fun `given wp app, when any my site list is shown except site menu, then the Jetpack badge is visible last`() {
+        whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
+
+        initSelectedSite()
+
+        assertThat(getSiteMenuTabLastItems().last()).isNotInstanceOf(JetpackBadge::class.java)
+        assertThat(getLastItems().last()).isInstanceOf(JetpackBadge::class.java)
+        assertThat(getDashboardTabLastItems().last()).isInstanceOf(JetpackBadge::class.java)
+    }
+
+    @InternalCoroutinesApi
+    @Test
+    fun `given jp app, when any my site list is shown, then no Jetpack badge is visible`() {
+        whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
+
+        initSelectedSite()
+
+        assertThat(getSiteMenuTabLastItems().last()).isNotInstanceOf(JetpackBadge::class.java)
+        assertThat(getLastItems().last()).isNotInstanceOf(JetpackBadge::class.java)
+        assertThat(getDashboardTabLastItems().last()).isNotInstanceOf(JetpackBadge::class.java)
     }
 
     @InternalCoroutinesApi
@@ -2153,8 +2181,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         initSelectedSite()
 
-        val items = (uiModels.last().state as SiteSelected).cardAndItems
-        assertThat(items.filterIsInstance(QuickStartCard::class.java)).isNotEmpty
+        assertThat(getLastItems().filterIsInstance(QuickStartCard::class.java)).isNotEmpty
     }
 
     @Test
