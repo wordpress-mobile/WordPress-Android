@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-07-06 17:05:14+0000
+Translation-Revision-Date: 2022-07-11 17:43:33+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.1
 Language: ro
 -->
 <resources>
+    <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery">Este o problemă la afișarea blocului. \nAtinge pentru a încerca recuperarea blocului.</string>
+    <string name="weekly_roundup_notification_text_views_and_comments">Săptămâna trecută ai avut %1$s de vizualizări și %2$s comentarii</string>
+    <string name="weekly_roundup_notification_text_views_and_likes">Săptămâna trecută ai avut %1$s de vizualizări și %2$s aprecieri</string>
+    <string name="weekly_roundup_notification_text_views_only">Săptămâna trecută ai avut %1$s de vizualizări.</string>
+    <string name="weekly_roundup_notification_text_all">Săptămâna trecută ai avut %1$s de vizualizări, %2$s aprecieri și %3$s comentarii.</string>
+    <string name="stats_insights_like_guide_card">⭐️ Ultimul tău articol %1$s a avut %2$s aprecieri.</string>
     <string name="wp_jetpack_powered">Propulsat de Jetpack</string>
     <string name="qrcode_auth_flow_error_auth_failed_subtitle">Nu am putut să te autentific folosind acest cod de autentificare. Te rog atinge butonul Scanează din nou pentru a scana din nou codul.</string>
     <string name="qrcode_auth_flow_dismiss_dialog_message">Sigur vrei să continui?</string>
@@ -73,7 +79,7 @@ Language: ro
     <string name="stats_insights_likes_guide_card">⭐️ Ultimul tău articol %1$s a avut %2$s aprecieri.</string>
     <string name="stats_most_popular_percent_views_empty">Activitate insuficientă. Revino mai târziu când site-ul va avea mai mulți vizitatori!</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
-    <string name="stats_total_followers_content_description">%1s, %2s din numărul total de urmăritori</string>
+    <string name="stats_total_followers_content_description">%1$s, %2$s%% din numărul total de urmăritori</string>
     <string name="quick_start_list_upload_media_title">Încarcă fotografii sau videoclipuri</string>
     <string name="quick_start_list_upload_media_subtitle">Aduci elemente media pe site direct din dispozitiv sau cameră</string>
     <string name="quick_start_sites_type_get_to_know_app">Fă cunoștință cu aplicația</string>
@@ -396,7 +402,6 @@ Language: ro
     <string name="my_site_quick_actions_title">Legături rapide</string>
     <string name="my_site_btn_domains">Domenii</string>
     <string name="recommend_app_subject">Aplicații Automattic - aplicații pentru orice tip de ecran</string>
-    <string name="weekly_roundup_notification_text">Site-ul tău a avut %1$d vizualizări și ai primit %2$d aprecieri și %3$d comentarii.</string>
     <string name="blogging_reminders_epilogue_body_everyday_with_time">Vei primi reamintiri pentru publicare &lt;b&gt;în fiecare zi&lt;/b&gt; la &lt;b&gt;%s&lt;/b&gt;.</string>
     <string name="weekly_roundup_notification_title">Rezumat săptămânal: %s</string>
     <string name="blogging_reminders_notification_time">Ora notificării</string>

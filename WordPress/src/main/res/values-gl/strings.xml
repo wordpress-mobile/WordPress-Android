@@ -38,7 +38,6 @@ Language: gl_ES
     <string name="me_btn_scan_login_code">Explorar código de acceso</string>
     <string name="stats_insights_likes_guide_card">⭐️  A túa última entrada %1$s recibiu %2$s gústame.</string>
     <string name="stats_most_popular_percent_views_empty">Non hai suficiente actividade. Volve a comprobalo máis tarde, cando o teu sitio teña máis visitas!</string>
-    <string name="stats_total_followers_content_description">%1s, %2s do total de seguidores</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
     <string name="pages_copy_link">Copiar ligazón</string>
     <string name="quick_start_completed_tour_title">Noraboa! Xa sabes manexarte&lt;br/&gt;</string>
@@ -362,7 +361,6 @@ Language: gl_ES
     <string name="me_btn_share">Comparte WordPress cun amigo</string>
     <string name="my_site_quick_actions_title">Enlaces rápidos</string>
     <string name="my_site_btn_domains">Dominios</string>
-    <string name="weekly_roundup_notification_text">O teu sitio recibiu %1$d visualizacións, %2$d gústame, %3$d comentarios.</string>
     <string name="weekly_roundup_notification_title">Repaso semanal: %s</string>
     <string name="blogging_reminders_notification_time">Hora do aviso</string>
     <string name="blogging_reminders_epilogue_body_everyday_with_time">Recibirás recordatorios para bloguear &lt;b&gt;todos os días&lt;/b&gt; ás &lt;b&gt;%s&lt;/b&gt;.</string>

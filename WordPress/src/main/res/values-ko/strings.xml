@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-06-30 13:54:10+0000
+Translation-Revision-Date: 2022-07-11 15:54:07+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.1
 Language: ko_KR
 -->
 <resources>
+    <string name="wp_jetpack_powered">Jetpack powered</string>
     <string name="qrcode_auth_flow_content_description">진행 중인 로그인 코드 스캔을 나타내는 이미지</string>
     <string name="qrcode_auth_flow_error_content_description">오류를 나타내는 이미지</string>
     <string name="qrcode_auth_flow_dismiss_dialog_message">계속하시겠나요?</string>
@@ -71,7 +72,6 @@ Language: ko_KR
     <string name="me_btn_scan_login_code">로그인 코드 검사</string>
     <string name="stats_insights_likes_guide_card">⭐️ 최신 글 %1$s에 %2$s 좋아요가 있습니다.</string>
     <string name="stats_most_popular_percent_views_empty">활동이 충분하지 않습니다. 나중에 사이트의 방문자가 증가하면 다시 확인하세요!</string>
-    <string name="stats_total_followers_content_description">전체 팔로워의 %1s, %2s</string>
     <string name="stats_value_percent">%1$s(%2$s%%)</string>
     <string name="pages_copy_link">링크 복사</string>
     <string name="quick_start_completed_tour_title">축하합니다! 척척박사&lt;br/&gt;</string>
@@ -395,7 +395,6 @@ Language: ko_KR
     <string name="my_site_quick_actions_title">퀵 링크</string>
     <string name="my_site_btn_domains">도메인</string>
     <string name="recommend_app_subject">Automattic 앱 - 어느 화면에서나 사용할 수 있는 앱</string>
-    <string name="weekly_roundup_notification_text">사이트에서 조회수 %1$d개, 좋아요 %2$d개 댓글 %3$d개를 받았습니다.</string>
     <string name="weekly_roundup_notification_title">주간 총정리: %s</string>
     <string name="blogging_reminders_notification_time">알림 시간</string>
     <string name="blogging_reminders_epilogue_body_everyday_with_time">블로깅에 대한 알림을 &lt;b&gt;매일&lt;/b&gt; &lt;b&gt;%s&lt;/b&gt;에 받게 됩니다.</string>

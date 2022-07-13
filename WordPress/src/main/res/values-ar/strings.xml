@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-06-29 12:54:08+0000
+Translation-Revision-Date: 2022-07-11 15:54:07+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/4.0.0-alpha.1
 Language: ar
 -->
 <resources>
+    <string name="wp_jetpack_powered">مدعوم بواسطة Jetpack</string>
     <string name="qrcode_auth_flow_dismiss_dialog_title">الخروج المسح الضوئي تسجيل الدخول الرمز التدفق</string>
     <string name="qrcode_auth_flow_content_description">صورة تشير إلى مسح رمز تسجيل الدخول قيد التقدم</string>
     <string name="qrcode_auth_flow_dismiss_dialog_message">هل تريد بالتأكيد المتابعة؟</string>
@@ -64,7 +65,6 @@ Language: ar
     <string name="me_btn_scan_login_code">مسح رمز تسجيل الدخول ضوئيًا</string>
     <string name="stats_insights_likes_guide_card">⭐️ لقد تلقت آخر تدويناتك ⁦%1$s⁩ ⁦%2$s⁩ من الإعجابات.</string>
     <string name="stats_most_popular_percent_views_empty">لا يوجد نشاط كافٍ. تحقَّق من هذا مرة أخرى لاحقًا عندما يكون لدى موقعك مزيد من الزائرين!</string>
-    <string name="stats_total_followers_content_description">%1s، و%2s من إجمالي المتابعين</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
     <string name="pages_copy_link">نسخ الرابط</string>
     <string name="quick_start_completed_tour_title">تهانينا! أنت تعلم كيفية التعامل مع هذا الأمر&lt;br/&gt;</string>
@@ -388,7 +388,6 @@ Language: ar
     <string name="my_site_quick_actions_title">روابط سريعة</string>
     <string name="my_site_btn_domains">النطاقات</string>
     <string name="recommend_app_subject">تطبيقات Automattic - تطبيقات لأي شاشة</string>
-    <string name="weekly_roundup_notification_text">حصل موقعك على ⁦%1$d⁩ من المشاهدات، و⁦%2$d⁩ من الإعجابات، و⁦%3$d⁩ من التعليقات.</string>
     <string name="weekly_roundup_notification_title">موجز أسبوعي: %s</string>
     <string name="blogging_reminders_notification_time">وقت التنبيه</string>
     <string name="blogging_reminders_epilogue_body_everyday_with_time">ستحصل على تذكيرات للتدوين &lt;b&gt;يوميًا&lt;/b&gt; في &lt;b&gt;%s&lt;/b&gt;.</string>

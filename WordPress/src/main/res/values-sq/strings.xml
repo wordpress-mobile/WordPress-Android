@@ -38,7 +38,6 @@ Language: sq_AL
     <string name="me_btn_scan_login_code">Skanoni Kod Hyrje</string>
     <string name="stats_insights_likes_guide_card">⭐️ Postimi juaj më i ri %1$s ka marrë %2$s pëlqime.</string>
     <string name="stats_most_popular_percent_views_empty">Pa veprimtari të mjaftueshme. Kontrolloni më vonë, kur sajti juaj të ketë më tepër vizitorë!</string>
-    <string name="stats_total_followers_content_description">%1s, %2s e ndjekësve gjithsej</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
     <string name="pages_copy_link">Kopjoji lidhjen</string>
     <string name="quick_start_completed_tour_title">Përgëzime! Dini nga shkoni&lt;br/&gt;</string>
@@ -359,7 +358,6 @@ Language: sq_AL
     <string name="me_btn_share">Jepjani WordPress-in një shoku</string>
     <string name="my_site_quick_actions_title">Lidhje të Shpejta</string>
     <string name="my_site_btn_domains">Përkatësi</string>
-    <string name="weekly_roundup_notification_text">Sajti juaj pati %1$d parje, %2$d pëlqime, %3$d komente.</string>
     <string name="weekly_roundup_notification_title">Përmbledhje Javore: %s</string>
     <string name="blogging_reminders_notification_time">Kohë njoftimi</string>
     <string name="blogging_reminders_epilogue_body_everyday_with_time">Do të merrni kujtues për të bloguar &lt;b&gt;çdo ditë&lt;/b&gt; më &lt;b&gt;%s&lt;/b&gt;.</string>

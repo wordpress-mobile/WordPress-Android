@@ -38,7 +38,6 @@ Language: vi_VN
     <string name="me_btn_scan_login_code">Quét mã đăng nhập</string>
     <string name="stats_insights_likes_guide_card">⭐️ Bài đăng gần nhất %1$s đã nhận %2$s lượt thích.</string>
     <string name="stats_most_popular_percent_views_empty">Chưa có hoạt động. Kiểm tra lại sau khi trang của bạn có khách truy cập!</string>
-    <string name="stats_total_followers_content_description">%1s, %2s trong tổng số người theo dõi</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
     <string name="pages_copy_link">Chép liên kết</string>
     <string name="quick_start_completed_tour_title">Chúc mừng! Bạn đã rành rồi đó&lt;br/&gt;</string>
@@ -362,7 +361,6 @@ Language: vi_VN
     <string name="me_btn_share">Giới thiệu WordPress cho bạn bè</string>
     <string name="my_site_quick_actions_title">Lối Tắt</string>
     <string name="my_site_btn_domains">Tên miền</string>
-    <string name="weekly_roundup_notification_text">%1$d lượt xem, %2$d lượt thích, %3$d bình luận.</string>
     <string name="weekly_roundup_notification_title">Tóm Tắt Tuần: %s</string>
     <string name="blogging_reminders_notification_time">Thời gian thông báo</string>
     <string name="blogging_reminders_epilogue_body_everyday_with_time">Bạn sẽ nhận thông báo &lt;b&gt;mỗi ngày&lt;/b&gt; vào lúc &lt;b&gt;%s&lt;/b&gt;.</string>

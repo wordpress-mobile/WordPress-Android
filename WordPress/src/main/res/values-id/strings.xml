@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-06-30 09:54:08+0000
+Translation-Revision-Date: 2022-07-12 09:54:08+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: id
 -->
 <resources>
+    <string name="wp_jetpack_powered">Didukung Jetpack</string>
     <string name="qrcode_auth_flow_content_description">Gambar menunjukkan pemindaian kode login sedang berlangsung</string>
     <string name="qrcode_auth_flow_error_content_description">Gambar menunjukkan terjadinya error</string>
     <string name="qrcode_auth_flow_dismiss_dialog_message">Anda yakin ingin melanjutkan?</string>
@@ -71,7 +72,6 @@ Language: id
     <string name="me_btn_scan_login_code">Pindai Kode Login</string>
     <string name="stats_insights_likes_guide_card">⭐️ Artikel terbaru Anda %1$s telah menerima %2$s suka.</string>
     <string name="stats_most_popular_percent_views_empty">Aktivitas tidak cukup. Periksa lagi nanti saat situs Anda lebih ramai pengunjung!</string>
-    <string name="stats_total_followers_content_description">%1s, %2s total pengikut</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
     <string name="pages_copy_link">Salin tautan</string>
     <string name="quick_start_completed_tour_title">Selamat! Anda telah berhasil&lt;br/&gt;</string>
@@ -395,7 +395,6 @@ Language: id
     <string name="me_btn_share">Bagikan WordPress dengan teman</string>
     <string name="my_site_quick_actions_title">Tautan Cepat</string>
     <string name="my_site_btn_domains">Domain</string>
-    <string name="weekly_roundup_notification_text">Situs Anda memiliki %1$d tayangan, %2$d suka, %3$d komentar.</string>
     <string name="weekly_roundup_notification_title">Ringkasan Mingguan: %s</string>
     <string name="blogging_reminders_notification_time">Waktu pemberitahuan</string>
     <string name="blogging_reminders_epilogue_body_everyday_with_time">Anda akan mendapat pengingat blogging &lt;b&gt;setiap hari&lt;/b&gt; pada &lt;b&gt;%s&lt;/b&gt;.</string>

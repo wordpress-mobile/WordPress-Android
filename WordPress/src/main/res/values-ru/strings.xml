@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-07-06 11:13:20+0000
+Translation-Revision-Date: 2022-07-11 17:28:32+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.1
 Language: ru
 -->
 <resources>
+    <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery">Возникла проблема отображения блока. \nНажмите для попытки его восстановления.</string>
     <string name="wp_jetpack_powered">Работает с Jetpack</string>
     <string name="qrcode_auth_flow_content_description">Изображение процедуры сканирования кода для входа</string>
     <string name="qrcode_auth_flow_error_content_description">Изображение ошибки</string>
@@ -72,7 +73,7 @@ Language: ru
     <string name="me_btn_scan_login_code">Отсканировать код для входа</string>
     <string name="stats_insights_likes_guide_card">⭐️%2$s ― столько отметок \"Нравится\" получала ваша последняя публикация %1$s.</string>
     <string name="stats_most_popular_percent_views_empty">Недостаточно активности. Вернитесь позже, когда на сайте будет больше посетителей!</string>
-    <string name="stats_total_followers_content_description">%1s, %2s от общего количества подписчиков</string>
+    <string name="stats_total_followers_content_description">%1$s, %2$s%% от общего количества подписчиков</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
     <string name="pages_copy_link">Копировать ссылку</string>
     <string name="quick_start_completed_tour_title">Поздравляем! Теперь вы знаете, как тут всё устроено&lt;br/&gt;</string>
@@ -396,7 +397,6 @@ Language: ru
     <string name="me_btn_share">Поделитесь WordPress с друзьями</string>
     <string name="my_site_quick_actions_title">Быстрые ссылки</string>
     <string name="my_site_btn_domains">Домены</string>
-    <string name="weekly_roundup_notification_text">Ваш сайт просмотрен %1$d раз, %2$d отметок \"понравилось\" и %3$d комментариев.</string>
     <string name="weekly_roundup_notification_title">За неделю: %s</string>
     <string name="blogging_reminders_notification_time">Время уведомления</string>
     <string name="blogging_reminders_epilogue_body_everyday_with_time">Вы получите напоминания о необходимости писать в блог &lt;b&gt;ежедневно&lt;/b&gt; в &lt;b&gt;%s&lt;/b&gt;.</string>

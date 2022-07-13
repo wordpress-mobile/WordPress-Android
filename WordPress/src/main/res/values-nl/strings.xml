@@ -72,7 +72,6 @@ Language: nl
     <string name="me_btn_scan_login_code">Inlogcode scannen</string>
     <string name="stats_insights_likes_guide_card">⭐️ Je nieuwste bericht %1$s heeft %2$s likes gekregen.</string>
     <string name="stats_most_popular_percent_views_empty">Niet genoeg activiteit. Keer nog eens terug wanneer je site meer bezoekers heeft gehad!</string>
-    <string name="stats_total_followers_content_description">%1s, %2s van het totale aantal volgers</string>
     <string name="stats_value_percent">%1$s %2$s%%()</string>
     <string name="pages_copy_link">Link kopiëren</string>
     <string name="quick_start_completed_tour_title">Gefeliciteerd! Je weet hoe alles werkt&lt;br/&gt;</string>
@@ -396,7 +395,6 @@ Language: nl
     <string name="me_btn_share">Deel WordPress met een vriend</string>
     <string name="my_site_quick_actions_title">Snelle links</string>
     <string name="my_site_btn_domains">Domeinen</string>
-    <string name="weekly_roundup_notification_text">Je site heeft %1$d weergaven, %2$d vind-ik-leuks, %3$d reacties gekregen.</string>
     <string name="weekly_roundup_notification_title">Wekelijkse roundup: %s</string>
     <string name="blogging_reminders_notification_time">Meldingtijd</string>
     <string name="blogging_reminders_epilogue_body_everyday_with_time">Je krijgt herinneringen om te bloggen &lt;b&gt;elke dag&lt;/b&gt; om &lt;b&gt;%s&lt;/b&gt;.</string>

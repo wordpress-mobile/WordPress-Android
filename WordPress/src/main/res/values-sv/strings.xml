@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-07-06 11:12:22+0000
+Translation-Revision-Date: 2022-07-08 16:59:24+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: sv_SE
@@ -72,7 +72,6 @@ Language: sv_SE
     <string name="me_btn_scan_login_code">Skanna inloggningskoden</string>
     <string name="stats_insights_likes_guide_card">⭐️ Ditt senaste inlägg %1$s har fått %2$s gillamarkeringar.</string>
     <string name="stats_most_popular_percent_views_empty">Inte tillräckligt med aktivitet. Kom tillbaka när din webbplats har haft fler besökare.</string>
-    <string name="stats_total_followers_content_description">%1s, %2s av alla följare</string>
     <string name="stats_value_percent">%1$s (%2$s %%)</string>
     <string name="pages_copy_link">Kopiera länk</string>
     <string name="quick_start_completed_tour_title">Grattis! Du kan det här&lt;br/&gt;</string>
@@ -396,7 +395,6 @@ Language: sv_SE
     <string name="me_btn_share">Dela WordPress med en vän</string>
     <string name="my_site_quick_actions_title">Snabblänkar</string>
     <string name="my_site_btn_domains">Domäner</string>
-    <string name="weekly_roundup_notification_text">Din webbplats har fått %1$d visningar, %2$d gillamarkeringar, %3$d kommentarer.</string>
     <string name="weekly_roundup_notification_title">Veckosammanfattning: %s</string>
     <string name="blogging_reminders_notification_time">Aviseringstid</string>
     <string name="blogging_reminders_epilogue_body_everyday_with_time">Du får påminnelser om att blogga &lt;b&gt;varje dag&lt;/b&gt; kl. &lt;b&gt;%s&lt;/b&gt;.</string>
@@ -2151,7 +2149,7 @@ Language: sv_SE
     <string name="sharing_disabled_description">Du kan inte komma åt dina delningsinställningar eftersom modulen Sharing Jetpack är inaktiverad.</string>
     <string name="sharing_disabled">Delningsmodulen är inaktiverad</string>
     <string name="version_with_name_param">Version %s</string>
-    <string name="copyright_with_year_and_company_params">© %d %s</string>
+    <string name="copyright_with_year_and_company_params">© %1$d %2$s</string>
     <string name="publisher_with_company_param">Utgivare: %s</string>
     <string name="notification_sound_has_invalid_path">Ogiltig sökväg för det valda ljudet Välj en annan.</string>
     <string name="quickpress_shortcut_with_account_param">QP %s</string>

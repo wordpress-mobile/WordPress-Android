@@ -71,7 +71,6 @@ Language: tr
     <string name="me_btn_scan_login_code">Oturum Açma Kodunu Tara</string>
     <string name="stats_insights_likes_guide_card">⭐️ En son gönderiniz (%1$s) %2$s beğeni aldı.</string>
     <string name="stats_most_popular_percent_views_empty">Yeterli etkinlik yok. Sitenizin daha fazla ziyaretçisi olduğunda tekrar kontrol edin!</string>
-    <string name="stats_total_followers_content_description">%1s, %2s/toplam takipçi sayısı</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
     <string name="pages_copy_link">Bağlantıyı kopyala</string>
     <string name="quick_start_completed_tour_title">Tebrikler! Yolunuzu biliyorsunuz&lt;br/&gt;</string>
@@ -395,7 +394,6 @@ Language: tr
     <string name="me_btn_share">WordPress\'i bir arkadaşınızla paylaşın</string>
     <string name="my_site_quick_actions_title">Hızlı Bağlantılar</string>
     <string name="my_site_btn_domains">Alan adları</string>
-    <string name="weekly_roundup_notification_text">Siteniz %1$d görüntüleme, %2$d beğeni, %3$d yorum aldı.</string>
     <string name="weekly_roundup_notification_title">Haftalık Özet: %s</string>
     <string name="blogging_reminders_notification_time">Bildirim zamanı</string>
     <string name="blogging_reminders_epilogue_body_everyday_with_time">&lt;b&gt;Her gün&lt;/b&gt; (&lt;b&gt;%s&lt;/b&gt;) blog yazmanız gerektiğini hatırlatan bildirimler alacaksınız.</string>
