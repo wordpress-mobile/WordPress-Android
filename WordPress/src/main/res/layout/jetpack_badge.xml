@@ -7,23 +7,21 @@
     android:orientation="vertical"
     android:paddingTop="@dimen/margin_large">
 
-    <com.google.android.material.chip.Chip
+    <com.google.android.material.button.MaterialButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:includeFontPadding="false"
+        android:paddingEnd="15dp"
+        android:paddingStart="5dp"
+        android:paddingVertical="5dp"
         android:text="@string/wp_jetpack_powered"
         android:textAppearance="?attr/textAppearanceBody1"
         android:textColor="@color/white"
         android:textSize="@dimen/text_sz_large"
-        app:chipBackgroundColor="@color/jetpack_badge_background"
-        app:chipCornerRadius="20dp"
-        app:chipEndPadding="0dp"
-        app:chipIcon="@drawable/ic_jetpack_logo_24dp"
-        app:chipIconSize="23.99dp"
-        app:chipMinHeight="34dp"
-        app:chipStartPadding="5dp"
-        app:textEndPadding="15dp"
-        app:textStartPadding="10dp"
+        app:backgroundTint="@color/jetpack_badge_background"
+        app:cornerRadius="20dp"
+        app:icon="@drawable/ic_jetpack_logo_24dp"
+        app:iconPadding="10dp"
+        app:iconTint="@null"
         tools:ignore="TextContrastCheck" />
 </LinearLayout>
