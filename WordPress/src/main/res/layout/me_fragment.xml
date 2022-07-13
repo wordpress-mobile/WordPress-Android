@@ -302,6 +302,15 @@
 
             <View style="@style/MeListSectionDividerView" />
 
+            <include
+                android:id="@+id/jetpack_badge"
+                layout="@layout/jetpack_badge"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_extra_large"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

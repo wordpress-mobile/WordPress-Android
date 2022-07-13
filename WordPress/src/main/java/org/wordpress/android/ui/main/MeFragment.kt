@@ -120,6 +120,8 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
             }
         }
 
+        jetpackBadge.root.isVisible = !BuildConfig.IS_JETPACK_APP
+
         val showPickerListener = OnClickListener {
             AnalyticsTracker.track(ME_GRAVATAR_TAPPED)
             showPhotoPickerForGravatar()
