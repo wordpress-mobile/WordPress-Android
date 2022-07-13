@@ -2181,8 +2181,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         initSelectedSite()
 
-        val items = (uiModels.last().state as SiteSelected).cardAndItems
-        assertThat(items.filterIsInstance(QuickStartCard::class.java)).isNotEmpty
+        assertThat(getLastItems().filterIsInstance(QuickStartCard::class.java)).isNotEmpty
     }
 
     @Test
