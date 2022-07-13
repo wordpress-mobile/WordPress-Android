@@ -507,8 +507,7 @@ class MySiteViewModel @Inject constructor(
                             getCardTypeExclusionFiltersForTab(MySiteTabType.SITE_MENU).contains(it.type)
                         },
                         if (shouldIncludeDynamicCards(MySiteTabType.SITE_MENU)) dynamicCards else listOf(),
-                        siteItems,
-                        jetpackBadge
+                        siteItems
                 ),
                 MySiteTabType.DASHBOARD to orderForDisplay(
                         infoItem,
@@ -595,7 +594,7 @@ class MySiteViewModel @Inject constructor(
         cards: List<MySiteCardAndItem>,
         dynamicCards: List<MySiteCardAndItem>,
         siteItems: List<MySiteCardAndItem>,
-        jetpackBadge: JetpackBadge?
+        jetpackBadge: JetpackBadge? = null
     ): List<MySiteCardAndItem> {
         val indexOfDashboardCards = cards.indexOfFirst { it is DashboardCards }
         return mutableListOf<MySiteCardAndItem>().apply {

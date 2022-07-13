@@ -2131,12 +2131,12 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @InternalCoroutinesApi
     @Test
-    fun `given wp app, when any my site list is shown, then a Jetpack badge is visible as last item`() {
+    fun `given wp app, when any my site list is shown except site menu, then the Jetpack badge is visible last`() {
         whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
 
         initSelectedSite()
 
-        assertThat(getSiteMenuTabLastItems().last()).isInstanceOf(JetpackBadge::class.java)
+        assertThat(getSiteMenuTabLastItems().last()).isNotInstanceOf(JetpackBadge::class.java)
         assertThat(getLastItems().last()).isInstanceOf(JetpackBadge::class.java)
         assertThat(getDashboardTabLastItems().last()).isInstanceOf(JetpackBadge::class.java)
     }
