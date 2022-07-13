@@ -50,6 +50,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.test
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BloggingPromptCard.BloggingPromptCardWithData
@@ -2122,7 +2123,9 @@ class MySiteViewModelTest : BaseUnitTest() {
                 initialScreen = MySiteTabType.SITE_MENU.label
         )
 
-        assertThat(getSiteMenuTabLastItems().last()).isInstanceOf(DynamicCard::class.java)
+        val siteMenuCardsAndItems = getSiteMenuTabLastItems()
+        val indexOfLastCard = siteMenuCardsAndItems.indexOfLast { it is Card }
+        assertThat(siteMenuCardsAndItems[indexOfLastCard + 1]).isInstanceOf(DynamicCard::class.java)
     }
 
     @InternalCoroutinesApi
