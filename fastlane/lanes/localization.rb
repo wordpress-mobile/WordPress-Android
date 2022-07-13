@@ -88,7 +88,7 @@ platform :android do
   # picked by GlotPress for translations.
   # -----------------------------------------------------------------------------------
   # Usage:
-  # fastlane update_appstore_strings version:<version>
+  # fastlane update_appstore_strings [version:<version>]
   #
   # Example:
   # fastlane update_appstore_strings version:10.3
@@ -106,7 +106,7 @@ platform :android do
   # and updates the `.po` file that is then picked by GlotPress for translations.
   # -----------------------------------------------------------------------------------
   # Usage:
-  # fastlane update_wordpress_appstore_strings version:<version>
+  # fastlane update_wordpress_appstore_strings [version:<version>]
   #
   # Example:
   # fastlane update_wordpress_appstore_strings version:10.3
@@ -143,7 +143,7 @@ platform :android do
   # and updates the `.po` file that is then picked by GlotPress for translations.
   # -----------------------------------------------------------------------------------
   # Usage:
-  # fastlane update_jetpack_appstore_strings version:<version>
+  # fastlane update_jetpack_appstore_strings [version:<version>]
   #
   # Example:
   # fastlane update_jetpack_appstore_strings version:10.3
