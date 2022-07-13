@@ -36,6 +36,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.STORY_FROM_MY_SITE
+import org.wordpress.android.ui.main.WPMainNavigationView.PageType.MY_SITE
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
@@ -93,6 +94,7 @@ import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.quickstart.QuickStartTracker
 import org.wordpress.android.ui.quickstart.QuickStartType.NewSiteQuickStartType
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
+import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.BuildConfigWrapper
@@ -491,7 +493,11 @@ class MySiteViewModel @Inject constructor(
                 )
         )
 
-        val jetpackBadge = JetpackBadge.takeUnless { buildConfigWrapper.isJetpackApp }
+        val jetpackBadge = JetpackBadge(
+                ListItemInteraction.create(this::onJetpackBadgeClick)
+        ).takeUnless {
+            buildConfigWrapper.isJetpackApp
+        }
 
         return mapOf(
                 MySiteTabType.ALL to orderForDisplay(
@@ -519,6 +525,10 @@ class MySiteViewModel @Inject constructor(
                         jetpackBadge
                 )
         )
+    }
+
+    private fun onJetpackBadgeClick() {
+        _onNavigation.value = Event(SiteNavigationAction.OpenJetpackPoweredBottomSheet(MY_SITE))
     }
 
     private fun shouldEnableQuickLinkRibbonFocusPoints() = defaultABExperimentTab == MySiteTabType.DASHBOARD

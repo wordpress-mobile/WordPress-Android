@@ -276,5 +276,7 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
         ) : Item(LIST_ITEM, activeQuickStartItem = showFocusPoint)
     }
 
-    object JetpackBadge : MySiteCardAndItem(JETPACK_BADGE)
+    data class JetpackBadge(
+        val onClick: ListItemInteraction
+    ) : MySiteCardAndItem(JETPACK_BADGE)
 }
