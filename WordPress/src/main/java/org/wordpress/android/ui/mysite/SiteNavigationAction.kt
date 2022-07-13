@@ -5,10 +5,8 @@ import com.wordpress.stories.compose.frame.StorySaveEvents.StorySaveResult
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.ui.PagePostCreationSourcesDetail
-import org.wordpress.android.ui.main.WPMainNavigationView.PageType
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
 import org.wordpress.android.util.UriWrapper
-import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType
 
 sealed class SiteNavigationAction {
     object OpenMeScreen : SiteNavigationAction()
@@ -80,5 +78,5 @@ sealed class SiteNavigationAction {
     data class EditScheduledPost(val site: SiteModel, val postId: Int) : SiteNavigationAction()
     data class OpenStatsInsights(val site: SiteModel) : SiteNavigationAction()
     data class OpenTodaysStatsGetMoreViewsExternalUrl(val url: String) : SiteNavigationAction()
-    data class OpenJetpackPoweredBottomSheet(val pageType: PageType) : SiteNavigationAction()
+    object OpenJetpackPoweredBottomSheet : SiteNavigationAction()
 }
