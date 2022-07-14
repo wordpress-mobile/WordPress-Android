@@ -304,7 +304,7 @@
 
             <include
                 android:id="@+id/jetpack_badge"
-                layout="@layout/jetpack_badge"
+                layout="@layout/jetpack_badge_footer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_extra_large"
