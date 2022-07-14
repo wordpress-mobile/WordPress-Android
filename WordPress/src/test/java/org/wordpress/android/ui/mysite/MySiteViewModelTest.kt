@@ -2136,7 +2136,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @InternalCoroutinesApi
     @Test
-    fun `given wp app, when the jetpack powered feature flag is true, then the Jetpack badge is visible`() {
+    fun `given wp app, when the jetpack powered feature flag is true, then the Jetpack badge is visible last`() {
         init(isJetpackPoweredFeatureConfigEnabled = true)
         whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
 
