@@ -493,9 +493,8 @@ class MySiteViewModel @Inject constructor(
                 )
         )
 
-        val jetpackBadge = JetpackBadge.takeUnless {
-            buildConfigWrapper.isJetpackApp
-            !jetpackPoweredFeatureConfig.isEnabled()
+        val jetpackBadge = JetpackBadge.takeIf {
+            jetpackPoweredFeatureConfig.isEnabled() && !buildConfigWrapper.isJetpackApp
         }
 
         return mapOf(
