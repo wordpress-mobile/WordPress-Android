@@ -6,10 +6,12 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup.MarginLayoutParams
 import android.widget.TextView
 import androidx.annotation.NonNull
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
+import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.adapter.FragmentStateAdapter
@@ -19,6 +21,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.MAIN
+import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.WordPress
@@ -83,6 +86,7 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
         binding = ReaderFragmentLayoutBinding.bind(view).apply {
             initToolbar()
             initViewPager()
+            initJetpackBanner()
             initViewModel()
         }
     }
@@ -144,6 +148,17 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
 
     private fun ReaderFragmentLayoutBinding.initViewPager() {
         viewPager.registerOnPageChangeCallback(viewPagerCallback)
+    }
+
+    private fun ReaderFragmentLayoutBinding.initJetpackBanner() {
+        if (!BuildConfig.IS_JETPACK_APP) {
+            jetpackBanner.root.isVisible = true
+
+            // Add bottom margin to viewPager and interests fragment for the jetpack banner.
+            val margin = resources.getDimensionPixelSize(R.dimen.jetpack_banner_height)
+            viewPager.updateLayoutParams<MarginLayoutParams> { bottomMargin = margin }
+            interestsFragmentContainer.updateLayoutParams<MarginLayoutParams> { bottomMargin = margin }
+        }
     }
 
     private fun ReaderFragmentLayoutBinding.initViewModel() {
