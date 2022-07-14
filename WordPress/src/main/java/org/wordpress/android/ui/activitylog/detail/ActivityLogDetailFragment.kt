@@ -25,6 +25,7 @@ import org.wordpress.android.ui.notifications.utils.FormattableContentClickHandl
 import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.util.config.JetpackPoweredFeatureConfig
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.AVATAR_WITH_BACKGROUND
 import org.wordpress.android.viewmodel.activitylog.ACTIVITY_LOG_ARE_BUTTONS_VISIBLE_KEY
@@ -43,6 +44,7 @@ class ActivityLogDetailFragment : Fragment(R.layout.activity_log_item_detail) {
     @Inject lateinit var notificationsUtilsWrapper: NotificationsUtilsWrapper
     @Inject lateinit var formattableContentClickHandler: FormattableContentClickHandler
     @Inject lateinit var uiHelpers: UiHelpers
+    @Inject lateinit var jetpackPoweredFeatureConfig: JetpackPoweredFeatureConfig
 
     private lateinit var viewModel: ActivityLogDetailViewModel
 
@@ -67,7 +69,7 @@ class ActivityLogDetailFragment : Fragment(R.layout.activity_log_item_detail) {
                 val areButtonsVisible = areButtonsVisible(savedInstanceState, activity.intent)
                 val isRestoreHidden = isRestoreHidden(savedInstanceState, activity.intent)
 
-                jetpackBadge.root.isVisible = !BuildConfig.IS_JETPACK_APP
+                jetpackBadge.root.isVisible = jetpackPoweredFeatureConfig.isEnabled() && !BuildConfig.IS_JETPACK_APP
 
                 viewModel.activityLogItem.observe(viewLifecycleOwner, { activityLogModel ->
                     loadLogItem(activityLogModel, activity)
