@@ -18,11 +18,17 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.ActionMode;
+import androidx.core.util.Pair;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.datepicker.CalendarConstraints;
+import com.google.android.material.datepicker.DateValidatorPointBackward;
+import com.google.android.material.datepicker.MaterialDatePicker;
+import com.google.android.material.datepicker.MaterialDatePicker.Builder;
+import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.android.material.snackbar.Snackbar;
 
 import org.greenrobot.eventbus.EventBus;
@@ -72,6 +78,8 @@ import java.util.TimeZone;
 import javax.inject.Inject;
 
 import static android.app.Activity.RESULT_OK;
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
 import static org.greenrobot.eventbus.ThreadMode.MAIN;
 import static org.wordpress.android.fluxc.utils.MimeType.Type.APPLICATION;
 import static org.wordpress.android.fluxc.utils.MimeType.Type.AUDIO;
@@ -83,7 +91,8 @@ import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefr
  * The grid displaying the media items.
  */
 @SuppressWarnings("ALL")
-public class MediaGridFragment extends Fragment implements MediaGridAdapterCallback {
+public class MediaGridFragment extends Fragment
+        implements MediaGridAdapterCallback, MaterialPickerOnPositiveButtonClickListener<Pair<Long, Long>> {
     private static final String BUNDLE_SELECTED_STATES = "BUNDLE_SELECTED_STATES";
     private static final String BUNDLE_IN_MULTI_SELECT_MODE = "BUNDLE_IN_MULTI_SELECT_MODE";
     private static final String BUNDLE_SCROLL_POSITION = "BUNDLE_SCROLL_POSITION";
@@ -181,6 +190,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
     private View mDateRangeLayout;
     private TextView mDateRangeTextView;
+    private View mRemoveDateRangeFilterButton;
     private Long mBefore, mAfter;
 
     public interface MediaGridListener {
@@ -346,13 +356,26 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         );
 
         mDateRangeLayout = view.findViewById(R.id.date_range_layout);
+        mDateRangeLayout.setOnClickListener((v) -> {
+            CalendarConstraints calendarConstraints = new CalendarConstraints.Builder()
+                    .setValidator(DateValidatorPointBackward.now()).build();
+            MaterialDatePicker<Pair<Long, Long>> datePicker = Builder.dateRangePicker()
+                                                                     .setTitleText(R.string.date_range)
+                                                                     .setCalendarConstraints(calendarConstraints)
+                                                                     .setSelection(new Pair<>(mAfter, mBefore))
+                                                                     .build();
+            datePicker.addOnPositiveButtonClickListener(this);
+            datePicker.show(getChildFragmentManager(), "date_picker");
+        });
         mDateRangeTextView = view.findViewById(R.id.selected_filter_name);
         if (savedInstanceState != null) {
             restoreState(savedInstanceState);
         }
 
+        mRemoveDateRangeFilterButton = view.findViewById(R.id.remove_filter_button);
+        mRemoveDateRangeFilterButton.setOnClickListener((v) -> fetchUnfilteredMediaList());
         updateDateRangeLayout();
-        view.findViewById(R.id.remove_filter_button).setOnClickListener((v) -> fetchUnfilteredMediaList());
+
         setFilter(mFilter);
 
         return view;
@@ -569,6 +592,11 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         mListener.onMediaRequestDelete(localMediaId);
     }
 
+    @Override
+    public void onPositiveButtonClick(Pair<Long, Long> selection) {
+        onDateRangeChange(selection.first, selection.second);
+    }
+
     @SuppressWarnings("unused")
     @Subscribe(threadMode = MAIN)
     public void onMediaListFetched(OnMediaListFetched event) {
@@ -581,7 +609,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     }
 
     public void showActionableEmptyViewButton(boolean show) {
-        mActionableEmptyView.button.setVisibility(show ? View.VISIBLE : View.GONE);
+        mActionableEmptyView.button.setVisibility(show ? VISIBLE : GONE);
     }
 
     /*
@@ -671,7 +699,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
                         stringId = R.string.media_empty_search_list;
                     } else {
                         mActionableEmptyView.updateLayoutForSearch(false, 0);
-                        mActionableEmptyView.image.setVisibility(View.VISIBLE);
+                        mActionableEmptyView.image.setVisibility(VISIBLE);
 
                         switch (mFilter) {
                             case FILTER_IMAGES:
@@ -705,15 +733,15 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
             }
 
             mActionableEmptyView.title.setText(stringId);
-            mActionableEmptyView.setVisibility(View.VISIBLE);
+            mActionableEmptyView.setVisibility(VISIBLE);
         } else {
-            mActionableEmptyView.setVisibility(View.GONE);
+            mActionableEmptyView.setVisibility(GONE);
         }
     }
 
     private void hideEmptyView() {
         if (isAdded() && mActionableEmptyView != null) {
-            mActionableEmptyView.setVisibility(View.GONE);
+            mActionableEmptyView.setVisibility(GONE);
         }
     }
 
@@ -765,12 +793,12 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         }
     }
 
-    public void onDateRangeChange(Long after, Long before) {
+    private void onDateRangeChange(Long after, Long before) {
         NetworkUtils.checkConnection(getActivity());
         fetchMediaList(false, after, before);
     }
 
-    public void fetchMediaList(boolean loadMore, Long after, Long before) {
+    private void fetchMediaList(boolean loadMore, Long after, Long before) {
         mAfter = after;
         mBefore = before;
         updateDateRangeLayout();
@@ -806,9 +834,18 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     }
 
     private void updateDateRangeLayout() {
-        mDateRangeLayout.setVisibility(mAfter !=  null || mBefore != null ? View.VISIBLE : View.GONE);
-        if (mAfter != null && mBefore != null) {
-            mDateRangeTextView.setText(mDateUtils.formatDateRange(mAfter, mBefore, TimeZone.getDefault().getID()));
+        if (mSite.isUsingWpComRestApi()) {
+            mDateRangeLayout.setVisibility(VISIBLE);
+            if (mAfter != null && mBefore != null) {
+                mDateRangeTextView.setText(mDateUtils.formatDateRange(mAfter, mBefore, TimeZone.getDefault().getID()));
+                mRemoveDateRangeFilterButton.setVisibility(VISIBLE);
+            } else {
+                mDateRangeTextView.setText(R.string.media_gallery_date_range_filter_label);
+                mRemoveDateRangeFilterButton.setVisibility(GONE);
+            }
+        }
+        else {
+            mDateRangeLayout.setVisibility(GONE);
         }
     }
 

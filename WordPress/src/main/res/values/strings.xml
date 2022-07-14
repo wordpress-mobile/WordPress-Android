@@ -140,6 +140,7 @@
     <string name="media_gallery_type_tiled">Tiled</string>
     <string name="media_gallery_type_circles">Circles</string>
     <string name="media_gallery_type_slideshow">Slideshow</string>
+    <string name="media_gallery_date_range_filter_label">Filter by date range</string>
     <string name="media_insert_title">Add multiple photos</string>
     <string name="media_insert_individually">Add individually</string>
     <string name="media_insert_as_gallery">Add as gallery</string>

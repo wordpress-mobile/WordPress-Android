@@ -10,12 +10,6 @@
         android:title="@string/search" />
 
     <item
-        android:id="@+id/menu_date_range"
-        android:icon="@drawable/img_illustration_calendar"
-        app:showAsAction="ifRoom"
-        android:title="@string/date_range" />
-
-    <item
         android:id="@+id/menu_new_media"
         app:actionLayout="@layout/media_browser_new_media_menu_action_layout"
         app:showAsAction="always"
