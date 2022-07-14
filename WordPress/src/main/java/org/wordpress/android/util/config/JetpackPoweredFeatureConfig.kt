@@ -9,7 +9,7 @@ import javax.inject.Inject
  *
  * TODO: When it is ready to be rolled out uncomment the lines 12 and 19, remove line 13 and this to-do
  */
-//@Feature(JetpackPoweredFeatureConfig.JETPACK_POWERED_REMOTE_FIELD, true)
+// @Feature(JetpackPoweredFeatureConfig.JETPACK_POWERED_REMOTE_FIELD, true)
 @FeatureInDevelopment
 class JetpackPoweredFeatureConfig @Inject constructor(
     appConfig: AppConfig
