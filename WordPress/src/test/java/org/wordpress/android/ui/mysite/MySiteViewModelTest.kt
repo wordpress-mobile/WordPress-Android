@@ -2136,7 +2136,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @InternalCoroutinesApi
     @Test
-    fun `given wp app, when any my site list is shown except site menu, then the Jetpack badge is visible last`() {
+    fun `given wp app, when the jetpack powered feature flag is true, then the Jetpack badge is visible`() {
         init(isJetpackPoweredFeatureConfigEnabled = true)
         whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
 
@@ -2149,8 +2149,8 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @InternalCoroutinesApi
     @Test
-    fun `given jp app, when any my site list is shown, then no Jetpack badge is visible`() {
-        init(isJetpackPoweredFeatureConfigEnabled = false)
+    fun `given jp app, when the jetpack powered feature flag is true, then no Jetpack badge is visible`() {
+        init(isJetpackPoweredFeatureConfigEnabled = true)
         whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
 
         initSelectedSite()
