@@ -2149,8 +2149,34 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @InternalCoroutinesApi
     @Test
+    fun `given wp app, when the jetpack powered feature flag is false, then no Jetpack badge is visible`() {
+        init(isJetpackPoweredFeatureConfigEnabled = false)
+        whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
+
+        initSelectedSite()
+
+        assertThat(getSiteMenuTabLastItems().last()).isNotInstanceOf(JetpackBadge::class.java)
+        assertThat(getLastItems().last()).isNotInstanceOf(JetpackBadge::class.java)
+        assertThat(getDashboardTabLastItems().last()).isNotInstanceOf(JetpackBadge::class.java)
+    }
+
+    @InternalCoroutinesApi
+    @Test
     fun `given jp app, when the jetpack powered feature flag is true, then no Jetpack badge is visible`() {
         init(isJetpackPoweredFeatureConfigEnabled = true)
+        whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
+
+        initSelectedSite()
+
+        assertThat(getSiteMenuTabLastItems().last()).isNotInstanceOf(JetpackBadge::class.java)
+        assertThat(getLastItems().last()).isNotInstanceOf(JetpackBadge::class.java)
+        assertThat(getDashboardTabLastItems().last()).isNotInstanceOf(JetpackBadge::class.java)
+    }
+
+    @InternalCoroutinesApi
+    @Test
+    fun `given jp app, when the jetpack powered feature flag is false, then no Jetpack badge is visible`() {
+        init(isJetpackPoweredFeatureConfigEnabled = false)
         whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
 
         initSelectedSite()
