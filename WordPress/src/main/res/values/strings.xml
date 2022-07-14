@@ -61,6 +61,7 @@
     <string name="remove">Remove</string>
     <string name="removed">Removed</string>
     <string name="search">Search</string>
+    <string name="date_range">Date range</string>
     <string name="suggestion">Suggestion:</string>
     <string name="show">Show</string>
     <string name="hide">Hide</string>

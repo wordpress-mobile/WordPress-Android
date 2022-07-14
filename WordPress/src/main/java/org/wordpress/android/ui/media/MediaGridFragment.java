@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -48,6 +49,7 @@ import org.wordpress.android.ui.mysite.SelectedSiteRepository;
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository;
 import org.wordpress.android.ui.prefs.EmptyViewRecyclerView;
 import org.wordpress.android.ui.quickstart.QuickStartEvent;
+import org.wordpress.android.ui.stats.refresh.utils.DateUtils;
 import org.wordpress.android.ui.utils.UiString.UiStringText;
 import org.wordpress.android.util.AccessibilityUtils;
 import org.wordpress.android.util.AppLog;
@@ -65,6 +67,7 @@ import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TimeZone;
 
 import javax.inject.Inject;
 
@@ -153,6 +156,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     @Inject QuickStartUtilsWrapper mQuickStartUtilsWrapper;
     @Inject SnackbarSequencer mSnackbarSequencer;
     @Inject SelectedSiteRepository mSelectedSiteRepository;
+    @Inject DateUtils mDateUtils;
 
     private MediaBrowserType mBrowserType;
 
@@ -174,6 +178,10 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
     private SiteModel mSite;
     private QuickStartEvent mQuickStartEvent;
+
+    private View mDateRangeLayout;
+    private TextView mDateRangeTextView;
+    private Long mBefore, mAfter;
 
     public interface MediaGridListener {
         void onMediaItemSelected(int localMediaId, boolean isLongClick);
@@ -332,18 +340,26 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
                             setRefreshing(false);
                             return;
                         }
-                        fetchMediaList(false);
+                        fetchMediaList(false, mAfter, mBefore);
                     }
                 }
         );
 
+        mDateRangeLayout = view.findViewById(R.id.date_range_layout);
+        mDateRangeTextView = view.findViewById(R.id.selected_filter_name);
         if (savedInstanceState != null) {
             restoreState(savedInstanceState);
         }
 
+        updateDateRangeLayout();
+        view.findViewById(R.id.remove_filter_button).setOnClickListener((v) -> fetchUnfilteredMediaList());
         setFilter(mFilter);
 
         return view;
+    }
+
+    private void fetchUnfilteredMediaList() {
+        fetchMediaList(false, null, null);
     }
 
     private boolean hasAdapter() {
@@ -508,7 +524,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
             if (isEmpty()) {
                 mSwipeToRefreshHelper.setRefreshing(true);
             }
-            fetchMediaList(false);
+            fetchMediaList(false, mAfter, mBefore);
         }
     }
 
@@ -516,7 +532,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     public void onAdapterFetchMoreData() {
         boolean hasFetchedAll = mFetchedAllFilters[mFilter.getValue()];
         if (!hasFetchedAll) {
-            fetchMediaList(true);
+            fetchMediaList(true, mAfter, mBefore);
         }
     }
 
@@ -708,6 +724,12 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         outState.putString(BUNDLE_EMPTY_VIEW_MESSAGE, mEmptyViewMessageType.name());
         outState.putBooleanArray(BUNDLE_FETCHED_FILTERS, mFetchedFilters);
         outState.putBooleanArray(BUNDLE_RETRIEVED_ALL_FILTERS, mFetchedAllFilters);
+        if (mBefore != null) {
+            outState.putLong("before", mBefore);
+        }
+        if (mAfter != null) {
+            outState.putLong("after", mAfter);
+        }
     }
 
     private void updateActionModeTitle(int selectCount) {
@@ -734,9 +756,24 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         EmptyViewMessageType emptyType = EmptyViewMessageType.getEnumFromString(
                 savedInstanceState.getString(BUNDLE_EMPTY_VIEW_MESSAGE));
         updateEmptyView(emptyType);
+
+        if (savedInstanceState.containsKey("before")) {
+            mBefore = savedInstanceState.getLong("before");
+        }
+        if (savedInstanceState.containsKey("after")) {
+            mAfter = savedInstanceState.getLong("after");
+        }
     }
 
-    private void fetchMediaList(boolean loadMore) {
+    public void onDateRangeChange(Long after, Long before) {
+        NetworkUtils.checkConnection(getActivity());
+        fetchMediaList(false, after, before);
+    }
+
+    public void fetchMediaList(boolean loadMore, Long after, Long before) {
+        mAfter = after;
+        mBefore = before;
+        updateDateRangeLayout();
         // do not refresh if there is no network
         if (!NetworkUtils.isNetworkAvailable(getActivity())) {
             updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
@@ -758,13 +795,20 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
             }
 
             FetchMediaListPayload payload =
-                    new FetchMediaListPayload(mSite, NUM_MEDIA_PER_FETCH, loadMore, mFilter.toMimeType());
+                    new FetchMediaListPayload(mSite, NUM_MEDIA_PER_FETCH, loadMore, mFilter.toMimeType(), before, after);
             mDispatcher.dispatch(MediaActionBuilder.newFetchMediaListAction(payload));
 
             if (!loadMore) {
                 // Fetch site to refresh space quota in activity.
                 mDispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(mSite));
             }
+        }
+    }
+
+    private void updateDateRangeLayout() {
+        mDateRangeLayout.setVisibility(mAfter !=  null || mBefore != null ? View.VISIBLE : View.GONE);
+        if (mAfter != null && mBefore != null) {
+            mDateRangeTextView.setText(mDateUtils.formatDateRange(mAfter, mBefore, TimeZone.getDefault().getID()));
         }
     }
 

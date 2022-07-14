@@ -30,12 +30,18 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.view.ActionMode;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.SearchView.OnQueryTextListener;
+import androidx.core.util.Pair;
 import androidx.core.view.MenuItemCompat;
 import androidx.core.view.ViewCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentManager.OnBackStackChangedListener;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.google.android.material.datepicker.CalendarConstraints;
+import com.google.android.material.datepicker.DateValidatorPointBackward;
+import com.google.android.material.datepicker.MaterialDatePicker;
+import com.google.android.material.datepicker.MaterialDatePicker.Builder;
+import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.android.material.tabs.TabLayout;
 
 import org.greenrobot.eventbus.EventBus;
@@ -87,6 +93,7 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPMediaUtils;
+import org.wordpress.android.util.WPMediaUtils.LaunchCameraCallback;
 import org.wordpress.android.util.WPPermissionUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.widgets.AppRatingDialog;
@@ -108,7 +115,7 @@ import static org.wordpress.android.util.ToastUtils.Duration.LONG;
  */
 public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGridListener,
         OnQueryTextListener, OnActionExpandListener,
-        WPMediaUtils.LaunchCameraCallback {
+        LaunchCameraCallback, MaterialPickerOnPositiveButtonClickListener<Pair<Long, Long>> {
     public static final String ARG_BROWSER_TYPE = "media_browser_type";
     public static final String ARG_FILTER = "filter";
     public static final String RESULT_IDS = "result_ids";
@@ -148,6 +155,8 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
     private QuickStartFocusPoint mMenuNewMediaQuickStartFocusPoint;
 
     private boolean mShowAudioTab;
+
+    private MenuItem mMenuDateRangeItem;
 
     private enum AddMenuItem {
         ITEM_CAPTURE_PHOTO,
@@ -450,6 +459,7 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
         outState.putSerializable(WordPress.SITE, mSite);
         outState.putSerializable(ARG_BROWSER_TYPE, mBrowserType);
         outState.putBoolean(SHOW_AUDIO_TAB, mShowAudioTab);
+
         if (mMediaGridFragment != null) {
             outState.putSerializable(ARG_FILTER, mMediaGridFragment.getFilter());
         }
@@ -630,6 +640,9 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
             mMediaGridFragment.showActionableEmptyViewButton(false);
         }
 
+        mMenuDateRangeItem = menu.findItem(R.id.menu_date_range);
+        mMenuDateRangeItem.setVisible(mSite.isUsingWpComRestApi());
+
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -655,6 +668,16 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
                     onQueryTextSubmit(mQuery);
                     mSearchView.setQuery(mQuery, true);
                 }
+                return true;
+            case R.id.menu_date_range:
+                CalendarConstraints calendarConstraints = new CalendarConstraints.Builder()
+                        .setValidator(DateValidatorPointBackward.now()).build();
+                MaterialDatePicker<Pair<Long, Long>> datePicker = Builder.dateRangePicker()
+                                                                         .setTitleText(R.string.date_range)
+                                                                         .setCalendarConstraints(calendarConstraints)
+                                                                         .build();
+                datePicker.addOnPositiveButtonClickListener(this);
+                datePicker.show(getSupportFragmentManager(), "date_picker");
                 return true;
         }
 
@@ -710,6 +733,11 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
         mQuery = newText;
 
         return true;
+    }
+
+    @Override
+    public void onPositiveButtonClick(Pair<Long, Long> selection) {
+        mMediaGridFragment.onDateRangeChange(selection.first, selection.second);
     }
 
     @Override
