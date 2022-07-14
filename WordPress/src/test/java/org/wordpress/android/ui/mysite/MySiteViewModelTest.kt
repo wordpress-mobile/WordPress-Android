@@ -141,6 +141,7 @@ import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.WPMediaUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.BloggingPromptsFeatureConfig
+import org.wordpress.android.util.config.JetpackPoweredFeatureConfig
 import org.wordpress.android.util.config.LandOnTheEditorFeatureConfig
 import org.wordpress.android.util.config.MySiteDashboardTabsFeatureConfig
 import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
@@ -182,6 +183,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var buildConfigWrapper: BuildConfigWrapper
     @Mock lateinit var mySiteDashboardTabsFeatureConfig: MySiteDashboardTabsFeatureConfig
     @Mock lateinit var bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig
+    @Mock lateinit var jetpackPoweredFeatureConfig: JetpackPoweredFeatureConfig
     @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
     @Mock lateinit var bloggingPromptsCardAnalyticsTracker: BloggingPromptsCardAnalyticsTracker
     @Mock lateinit var quickStartType: QuickStartType
@@ -333,7 +335,8 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Suppress("LongMethod")
     fun init(
         isMySiteDashboardTabsFeatureFlagEnabled: Boolean = true,
-        isBloggingPromptsFeatureConfigEnabled: Boolean = true
+        isBloggingPromptsFeatureConfigEnabled: Boolean = true,
+        isJetpackPoweredFeatureConfigEnabled: Boolean = true
     ) = test {
         onSiteChange.value = null
         onShowSiteIconProgressBar.value = null
@@ -341,6 +344,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         selectedSite.value = null
         whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(isBloggingPromptsFeatureConfigEnabled)
         whenever(mySiteDashboardTabsFeatureConfig.isEnabled()).thenReturn(isMySiteDashboardTabsFeatureFlagEnabled)
+        whenever(jetpackPoweredFeatureConfig.isEnabled()).thenReturn(isJetpackPoweredFeatureConfigEnabled)
         whenever(mySiteSourceManager.build(any(), anyOrNull())).thenReturn(partialStates)
         whenever(selectedSiteRepository.siteSelected).thenReturn(onSiteSelected)
         whenever(quickStartRepository.activeTask).thenReturn(activeTask)
@@ -382,6 +386,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 buildConfigWrapper,
                 mySiteDashboardTabsFeatureConfig,
                 bloggingPromptsFeatureConfig,
+                jetpackPoweredFeatureConfig,
                 appPrefsWrapper,
                 bloggingPromptsCardAnalyticsTracker,
                 quickStartTracker,
@@ -2132,6 +2137,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     @InternalCoroutinesApi
     @Test
     fun `given wp app, when any my site list is shown except site menu, then the Jetpack badge is visible last`() {
+        init(isJetpackPoweredFeatureConfigEnabled = true)
         whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
 
         initSelectedSite()
@@ -2144,6 +2150,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     @InternalCoroutinesApi
     @Test
     fun `given jp app, when any my site list is shown, then no Jetpack badge is visible`() {
+        init(isJetpackPoweredFeatureConfigEnabled = false)
         whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
 
         initSelectedSite()
