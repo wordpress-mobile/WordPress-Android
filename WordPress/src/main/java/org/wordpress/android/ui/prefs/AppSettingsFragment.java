@@ -62,6 +62,7 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPPrefUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
+import org.wordpress.android.util.config.JetpackPoweredFeatureConfig;
 import org.wordpress.android.util.config.MySiteDashboardTabsFeatureConfig;
 import org.wordpress.android.util.config.UnifiedAboutFeatureConfig;
 import org.wordpress.android.viewmodel.ContextProvider;
@@ -104,6 +105,7 @@ public class AppSettingsFragment extends PreferenceFragment
     @Inject UnifiedAboutFeatureConfig mUnifiedAboutFeatureConfig;
     @Inject MySiteDashboardTabsFeatureConfig mMySiteDashboardTabsFeatureConfig;
     @Inject MySiteDefaultTabExperiment mMySiteDefaultTabExperiment;
+    @Inject JetpackPoweredFeatureConfig mJetpackPoweredFeatureConfig;
 
     private static final String TRACK_STYLE = "style";
     private static final String TRACK_ENABLED = "enabled";
@@ -236,16 +238,16 @@ public class AppSettingsFragment extends PreferenceFragment
         final ListView listOfPreferences = view.findViewById(android.R.id.list);
         if (listOfPreferences != null) {
             ViewCompat.setNestedScrollingEnabled(listOfPreferences, true);
-            if (!BuildConfig.IS_JETPACK_APP) {
-                addJetpackBadgeAsFooter(inflater, listOfPreferences);
-            }
+            addJetpackBadgeAsFooterIfEnabled(inflater, listOfPreferences);
         }
         return view;
     }
 
-    private void addJetpackBadgeAsFooter(LayoutInflater inflater, ListView listOfPreferences) {
-        final JetpackBadgeFooterBinding binding = JetpackBadgeFooterBinding.inflate(inflater);
-        listOfPreferences.addFooterView(binding.getRoot(), null, false);
+    private void addJetpackBadgeAsFooterIfEnabled(LayoutInflater inflater, ListView listView) {
+        if (mJetpackPoweredFeatureConfig.isEnabled() && !mBuildConfigWrapper.isJetpackApp()) {
+            final JetpackBadgeFooterBinding binding = JetpackBadgeFooterBinding.inflate(inflater);
+            listView.addFooterView(binding.getRoot(), null, false);
+        }
     }
 
     private void removeExperimentalCategory() {
