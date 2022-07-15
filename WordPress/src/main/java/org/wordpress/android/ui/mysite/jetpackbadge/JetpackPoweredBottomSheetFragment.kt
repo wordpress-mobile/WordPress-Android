@@ -18,7 +18,6 @@ import org.wordpress.android.ui.ActivityLauncherWrapper
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredDialogAction.DismissDialog
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredDialogAction.OpenPlayStore
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredDialogViewModel.Companion.JETPACK_PACKAGE_NAME
-import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.extensions.disableAnimation
 import org.wordpress.android.util.extensions.exhaustive
 import javax.inject.Inject
@@ -26,7 +25,6 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class JetpackPoweredBottomSheetFragment : BottomSheetDialogFragment() {
     @Inject lateinit var adapter: JetpackPoweredAdapter
-    @Inject lateinit var uiHelpers: UiHelpers
     @Inject lateinit var activityLauncherWrapper: ActivityLauncherWrapper
     private val viewModel: JetpackPoweredDialogViewModel by viewModels()
 
@@ -58,7 +56,7 @@ class JetpackPoweredBottomSheetFragment : BottomSheetDialogFragment() {
 
         if (fullScreen) {
             secondaryButton.visibility = View.VISIBLE
-            uiHelpers.setTextOrHide(secondaryButton, "Continue to Reader")
+            secondaryButton.text = getString(R.string.wp_jetpack_continue_to_reader)
             secondaryButton.setOnClickListener { viewModel.dismissBottomSheet() }
         }
 
