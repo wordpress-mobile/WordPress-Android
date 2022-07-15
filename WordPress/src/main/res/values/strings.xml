@@ -4210,8 +4210,8 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="wp_jetpack_powered_features">Stats, Reader, Notifications, and other features are powered by Jetpack.</string>
     <string name="wp_jetpack_get_new_jetpack_app">Get the new Jetpack app</string>
     <string name="wp_jetpack_continue_to_reader">Continue to Reader</string>
-    <string name="wp_jetpack_continue_to_stats">Continue to Stats</string>
-    <string name="wp_jetpack_continue_to_notifications">Continue to Notifications</string>
+    <string name="wp_jetpack_continue_to_stats" tools:ignore="UnusedResources">Continue to Stats</string>
+    <string name="wp_jetpack_continue_to_notifications" tools:ignore="UnusedResources">Continue to Notifications</string>
     <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Problem displaying block. \nTap to attempt block recovery.</string>
 
 </resources>
