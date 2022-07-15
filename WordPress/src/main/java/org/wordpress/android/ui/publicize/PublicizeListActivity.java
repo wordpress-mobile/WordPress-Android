@@ -48,6 +48,9 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class PublicizeListActivity extends LocaleAwareActivity
         implements
         PublicizeActions.OnPublicizeActionListener,
@@ -65,7 +68,6 @@ public class PublicizeListActivity extends LocaleAwareActivity
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((WordPress) getApplication()).component().inject(this);
 
         setContentView(R.layout.publicize_list_activity);
 
