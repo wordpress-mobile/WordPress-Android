@@ -75,6 +75,7 @@ public class JPScreenshotTest extends BaseTest {
 
             navigateMySite();
             navigateActivityLog();
+            navigateToMedia();
 //            navigateScan();
 //            navigateBackupDownload();
             navigateStats();
@@ -215,6 +216,23 @@ public class JPScreenshotTest extends BaseTest {
 
         // Wait for backup to load
         idleFor(8000);
+    }
+
+    private void navigateToMedia() {
+        // Click on the "Sites" tab in the nav, then click the "Menu" tab, then choose "Media"
+        clickOn(R.id.nav_sites);
+        (new MySitesPage()).goToMedia();
+
+        waitForElementToBeDisplayedWithoutFailure(R.id.media_browser_container);
+
+        idleFor(2000);
+        setNightModeAndWait(true);
+
+        // To do should add the logic for gallery of images
+        // Right now on navigating to the media no images will be present in gallery
+        takeScreenshot("6-upload-on-the-go");
+
+        pressBackUntilElementIsDisplayed(R.id.nav_sites);
     }
 
     private void takeScreenshot(String screenshotName) {
