@@ -16,12 +16,14 @@ import org.wordpress.android.push.NotificationsProcessingService.ARG_NOTIFICATIO
 import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.stats.StatsTimeframe
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
+import org.wordpress.android.util.config.JetpackPoweredFeatureConfig
 import org.wordpress.android.util.extensions.setNavigationBarColorForBanner
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class StatsActivity : LocaleAwareActivity() {
     @Inject lateinit var statsSiteProvider: StatsSiteProvider
+    @Inject lateinit var jetpackPoweredFeatureConfig: JetpackPoweredFeatureConfig
     private val viewModel: StatsViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,7 +31,7 @@ class StatsActivity : LocaleAwareActivity() {
 
         with(StatsListActivityBinding.inflate(layoutInflater)) {
             setContentView(root)
-            if (!BuildConfig.IS_JETPACK_APP) {
+            if (jetpackPoweredFeatureConfig.isEnabled() && !BuildConfig.IS_JETPACK_APP) {
                 jetpackBanner.root.isVisible = true
                 window.setNavigationBarColorForBanner()
             }

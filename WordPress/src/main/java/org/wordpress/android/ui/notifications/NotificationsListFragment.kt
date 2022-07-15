@@ -50,6 +50,7 @@ import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.NOTIFS
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.WPUrlUtils
+import org.wordpress.android.util.config.JetpackPoweredFeatureConfig
 import org.wordpress.android.util.extensions.setLiftOnScrollTargetViewIdAndRequestLayout
 import javax.inject.Inject
 
@@ -58,6 +59,7 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
     private var lastTabPosition = 0
 
     @Inject lateinit var accountStore: AccountStore
+    @Inject lateinit var jetpackPoweredFeatureConfig: JetpackPoweredFeatureConfig
 
     private var binding: NotificationsListFragmentBinding? = null
 
@@ -81,7 +83,7 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
             toolbarMain.setTitle(R.string.notifications_screen_title)
             (requireActivity() as AppCompatActivity).setSupportActionBar(toolbarMain)
 
-            if (!BuildConfig.IS_JETPACK_APP) {
+            if (jetpackPoweredFeatureConfig.isEnabled() && !BuildConfig.IS_JETPACK_APP) {
                 jetpackBanner.root.isVisible = true
 
                 // Add bottom margin to viewPager and connectJetpack view for jetpack banner.

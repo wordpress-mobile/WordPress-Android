@@ -46,6 +46,7 @@ import org.wordpress.android.util.SnackbarItem
 import org.wordpress.android.util.SnackbarItem.Action
 import org.wordpress.android.util.SnackbarItem.Info
 import org.wordpress.android.util.SnackbarSequencer
+import org.wordpress.android.util.config.JetpackPoweredFeatureConfig
 import org.wordpress.android.viewmodel.observeEvent
 import org.wordpress.android.widgets.QuickStartFocusPoint
 import java.util.EnumSet
@@ -55,6 +56,7 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var uiHelpers: UiHelpers
     @Inject lateinit var quickStartUtilsWrapper: QuickStartUtilsWrapper
+    @Inject lateinit var jetpackPoweredFeatureConfig: JetpackPoweredFeatureConfig
     @Inject lateinit var snackbarSequencer: SnackbarSequencer
     private lateinit var viewModel: ReaderViewModel
 
@@ -151,7 +153,7 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
     }
 
     private fun ReaderFragmentLayoutBinding.initJetpackBanner() {
-        if (!BuildConfig.IS_JETPACK_APP) {
+        if (jetpackPoweredFeatureConfig.isEnabled() && !BuildConfig.IS_JETPACK_APP) {
             jetpackBanner.root.isVisible = true
 
             // Add bottom margin to viewPager and interests fragment for the jetpack banner.

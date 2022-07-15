@@ -39,6 +39,7 @@ import org.wordpress.android.ui.publicize.services.PublicizeUpdateService;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
+import org.wordpress.android.util.config.JetpackPoweredFeatureConfig;
 import org.wordpress.android.util.extensions.AppBarLayoutExtensionsKt;
 import org.wordpress.android.util.extensions.WindowExtensionsKt;
 
@@ -59,6 +60,7 @@ public class PublicizeListActivity extends LocaleAwareActivity
     private AppBarLayout mAppBarLayout;
 
     @Inject SiteStore mSiteStore;
+    @Inject JetpackPoweredFeatureConfig mJetpackPoweredFeatureConfig;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -78,7 +80,7 @@ public class PublicizeListActivity extends LocaleAwareActivity
 
         mAppBarLayout = findViewById(R.id.appbar_main);
 
-        if (!BuildConfig.IS_JETPACK_APP) {
+        if (mJetpackPoweredFeatureConfig.isEnabled() && !BuildConfig.IS_JETPACK_APP) {
             findViewById(R.id.jetpack_banner).setVisibility(View.VISIBLE);
             WindowExtensionsKt.setNavigationBarColorForBanner(getWindow());
 
