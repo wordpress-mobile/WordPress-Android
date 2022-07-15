@@ -108,6 +108,7 @@ import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.WPMediaUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.BloggingPromptsFeatureConfig
+import org.wordpress.android.util.config.JetpackPoweredFeatureConfig
 import org.wordpress.android.util.config.LandOnTheEditorFeatureConfig
 import org.wordpress.android.util.config.MySiteDashboardTabsFeatureConfig
 import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
@@ -157,6 +158,7 @@ class MySiteViewModel @Inject constructor(
     private val buildConfigWrapper: BuildConfigWrapper,
     mySiteDashboardTabsFeatureConfig: MySiteDashboardTabsFeatureConfig,
     bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig,
+    private val jetpackPoweredFeatureConfig: JetpackPoweredFeatureConfig,
     private val appPrefsWrapper: AppPrefsWrapper,
     private val bloggingPromptsCardAnalyticsTracker: BloggingPromptsCardAnalyticsTracker,
     private val quickStartTracker: QuickStartTracker,
@@ -494,8 +496,8 @@ class MySiteViewModel @Inject constructor(
 
         val jetpackBadge = JetpackBadge(
                 ListItemInteraction.create(this::onJetpackBadgeClick)
-        ).takeUnless {
-            buildConfigWrapper.isJetpackApp
+        ).takeIf {
+            jetpackPoweredFeatureConfig.isEnabled() && !buildConfigWrapper.isJetpackApp
         }
 
         return mapOf(
