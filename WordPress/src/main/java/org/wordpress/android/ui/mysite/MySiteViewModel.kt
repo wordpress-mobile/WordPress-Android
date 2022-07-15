@@ -93,6 +93,7 @@ import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.quickstart.QuickStartTracker
 import org.wordpress.android.ui.quickstart.QuickStartType.NewSiteQuickStartType
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
+import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.BuildConfigWrapper
@@ -493,7 +494,9 @@ class MySiteViewModel @Inject constructor(
                 )
         )
 
-        val jetpackBadge = JetpackBadge.takeIf {
+        val jetpackBadge = JetpackBadge(
+                ListItemInteraction.create(this::onJetpackBadgeClick)
+        ).takeIf {
             jetpackPoweredFeatureConfig.isEnabled() && !buildConfigWrapper.isJetpackApp
         }
 
@@ -523,6 +526,10 @@ class MySiteViewModel @Inject constructor(
                         jetpackBadge
                 )
         )
+    }
+
+    private fun onJetpackBadgeClick() {
+        _onNavigation.value = Event(SiteNavigationAction.OpenJetpackPoweredBottomSheet)
     }
 
     private fun shouldEnableQuickLinkRibbonFocusPoints() = defaultABExperimentTab == MySiteTabType.DASHBOARD
