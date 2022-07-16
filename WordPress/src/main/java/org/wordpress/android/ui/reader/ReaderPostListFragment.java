@@ -1472,10 +1472,6 @@ public class ReaderPostListFragment extends ViewPagerFragment
         mSearchSuggestionAdapter.setFilter(query);
     }
 
-    private void resetSearchSuggestionAdapter() {
-        mSearchView.setSuggestionsAdapter(null);
-        mSearchSuggestionAdapter = null;
-    }
 
     private void createSearchSuggestionRecyclerAdapter() {
         mSearchSuggestionRecyclerAdapter = new ReaderSearchSuggestionRecyclerAdapter();
@@ -1491,11 +1487,6 @@ public class ReaderPostListFragment extends ViewPagerFragment
             createSearchSuggestionRecyclerAdapter();
         }
         mSearchSuggestionRecyclerAdapter.setQuery(query);
-    }
-
-    private void resetSearchSuggestionRecyclerAdapter() {
-        mRecyclerView.setSearchSuggestionAdapter(null);
-        mSearchSuggestionRecyclerAdapter = null;
     }
 
     private void onSearchSuggestionClicked(String query) {
