@@ -42,6 +42,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
+import org.wordpress.android.util.config.JetpackPoweredFeatureConfig;
 import org.wordpress.android.util.extensions.WindowExtensionsKt;
 
 import java.util.HashMap;
@@ -49,6 +50,9 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class ThemeBrowserActivity extends LocaleAwareActivity implements ThemeBrowserFragmentCallback {
     public static final int ACTIVATE_THEME = 1;
     public static final String THEME_ID = "theme_id";
@@ -63,11 +67,11 @@ public class ThemeBrowserActivity extends LocaleAwareActivity implements ThemeBr
 
     @Inject ThemeStore mThemeStore;
     @Inject Dispatcher mDispatcher;
+    @Inject JetpackPoweredFeatureConfig mJetpackPoweredFeatureConfig;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((WordPress) getApplication()).component().inject(this);
         mDispatcher.register(this);
 
         if (savedInstanceState == null) {
@@ -101,7 +105,7 @@ public class ThemeBrowserActivity extends LocaleAwareActivity implements ThemeBr
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        if (!BuildConfig.IS_JETPACK_APP) {
+        if (mJetpackPoweredFeatureConfig.isEnabled() && !BuildConfig.IS_JETPACK_APP) {
             findViewById(R.id.jetpack_banner).setVisibility(View.VISIBLE);
             WindowExtensionsKt.setNavigationBarColorForBanner(getWindow());
 

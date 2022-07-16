@@ -20,10 +20,10 @@ import androidx.fragment.app.FragmentPagerAdapter
 import com.google.android.material.appbar.AppBarLayout.LayoutParams
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.android.material.tabs.TabLayout.Tab
+import dagger.hilt.android.AndroidEntryPoint
 import org.greenrobot.eventbus.EventBus
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
-import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.NOTIFICATIONS_SELECTED_FILTER
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.NOTIFICATION_TAPPED_SEGMENTED_CONTROL
@@ -50,14 +50,17 @@ import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.NOTIFS
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.WPUrlUtils
+import org.wordpress.android.util.config.JetpackPoweredFeatureConfig
 import org.wordpress.android.util.extensions.setLiftOnScrollTargetViewIdAndRequestLayout
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment), ScrollableViewInitializedListener {
     private var shouldRefreshNotifications = false
     private var lastTabPosition = 0
 
     @Inject lateinit var accountStore: AccountStore
+    @Inject lateinit var jetpackPoweredFeatureConfig: JetpackPoweredFeatureConfig
 
     private var binding: NotificationsListFragmentBinding? = null
 
@@ -70,7 +73,6 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (requireActivity().application as WordPress).component().inject(this)
         shouldRefreshNotifications = true
     }
 
@@ -81,7 +83,7 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
             toolbarMain.setTitle(R.string.notifications_screen_title)
             (requireActivity() as AppCompatActivity).setSupportActionBar(toolbarMain)
 
-            if (!BuildConfig.IS_JETPACK_APP) {
+            if (jetpackPoweredFeatureConfig.isEnabled() && !BuildConfig.IS_JETPACK_APP) {
                 jetpackBanner.root.isVisible = true
 
                 // Add bottom margin to viewPager and connectJetpack view for jetpack banner.
