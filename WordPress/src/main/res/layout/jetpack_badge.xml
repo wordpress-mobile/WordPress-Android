@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
+    android:importantForAccessibility="no"
     android:paddingTop="@dimen/margin_large">
 
     <com.google.android.material.button.MaterialButton
