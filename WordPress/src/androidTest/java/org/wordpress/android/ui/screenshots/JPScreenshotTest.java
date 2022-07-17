@@ -56,12 +56,14 @@ public class JPScreenshotTest extends BaseTest {
 
     private DemoModeEnabler mDemoModeEnabler = new DemoModeEnabler();
 
+    // todo: rename the screenshot names - keeping the index in the first character
     private static final String MY_SITE_SCREENSHOT_NAME = "1-bring-your-jetpack-with-you";
     private static final String ACTIVITY_LOG_SCREENSHOT_NAME = "2-keep-tabs-on-your-site-activity";
     private static final String SCAN_SCREENSHOT_NAME = "3-scan-for-issues-on-the-go";
     private static final String BACKUP_SCREENSHOT_NAME = "4-back-up-your-site-at-any-moment";
     private static final String STATS_SCREENSHOT_NAME = "5-site-stats-in-your-pocket";
     private static final String NOTIFICATIONS_SCREENSHOT_NAME = "6-reply-in-real-time";
+    private static final String MEDIA_SCREENSHOT_NAME = "7-upload-on-the-go";
 
     @Test
     public void jPScreenshotTest() {
@@ -186,6 +188,7 @@ public class JPScreenshotTest extends BaseTest {
         // Exit the notifications activity
         pressBackUntilElementIsDisplayed(R.id.nav_sites);
     }
+
     private void moveToActivityLog() {
         // Click on the "Sites" tab in the nav, then click the "Menu" tab, then choose "Activity Log"
         clickOn(R.id.nav_sites);
@@ -230,7 +233,7 @@ public class JPScreenshotTest extends BaseTest {
 
         // To do should add the logic for gallery of images
         // Right now on navigating to the media no images will be present in gallery
-        takeScreenshot("6-upload-on-the-go");
+        takeScreenshot(MEDIA_SCREENSHOT_NAME);
 
         pressBackUntilElementIsDisplayed(R.id.nav_sites);
     }
