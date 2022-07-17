@@ -29,7 +29,7 @@ sealed class JetpackPoweredViewHolder<T : ViewBinding>(
                     )
             ) {
         fun onBind(item: Illustration) = with(binding) {
-//            illustrationView.setImageResource(item.illustration)
+            illustrationView.setAnimation(item.illustration)
         }
     }
 

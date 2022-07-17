@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools"
     android:animateLayoutChanges="true"
-    android:background="@color/jetpack_green_0"
+    android:background="@color/jetpack_powered_bottom_sheet_background"
     android:orientation="vertical">
 
     <androidx.constraintlayout.widget.Guideline
@@ -40,7 +40,7 @@
         android:layout_marginEnd="@dimen/margin_extra_extra_medium_large"
         android:layout_marginStart="@dimen/margin_extra_extra_medium_large"
         android:layout_marginTop="@dimen/margin_extra_extra_medium_large"
-        android:backgroundTint="@color/jetpack_badge_background"
+        android:backgroundTint="@color/jetpack_green_40"
         android:gravity="center"
         android:minHeight="@dimen/margin_extra_extra_large"
         android:text="@string/wp_jetpack_get_new_jetpack_app"
