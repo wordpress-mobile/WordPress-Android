@@ -35,6 +35,8 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
@@ -357,15 +359,7 @@ public class MediaGridFragment extends Fragment
 
         mDateRangeLayout = view.findViewById(R.id.date_range_layout);
         mDateRangeLayout.setOnClickListener((v) -> {
-            CalendarConstraints calendarConstraints = new CalendarConstraints.Builder()
-                    .setValidator(DateValidatorPointBackward.now()).build();
-            MaterialDatePicker<Pair<Long, Long>> datePicker = Builder.dateRangePicker()
-                                                                     .setTitleText(R.string.date_range)
-                                                                     .setCalendarConstraints(calendarConstraints)
-                                                                     .setSelection(new Pair<>(mAfter, mBefore))
-                                                                     .build();
-            datePicker.addOnPositiveButtonClickListener(this);
-            datePicker.show(getChildFragmentManager(), "date_picker");
+            openDateRangePicker();
         });
         mDateRangeTextView = view.findViewById(R.id.selected_filter_name);
         if (savedInstanceState != null) {
@@ -373,7 +367,7 @@ public class MediaGridFragment extends Fragment
         }
 
         mRemoveDateRangeFilterButton = view.findViewById(R.id.remove_filter_button);
-        mRemoveDateRangeFilterButton.setOnClickListener((v) -> fetchUnfilteredMediaList());
+        mRemoveDateRangeFilterButton.setOnClickListener((v) -> onDateRangeRemoved());
         updateDateRangeLayout();
 
         setFilter(mFilter);
@@ -381,7 +375,21 @@ public class MediaGridFragment extends Fragment
         return view;
     }
 
-    private void fetchUnfilteredMediaList() {
+    private void openDateRangePicker() {
+        AnalyticsTracker.track(Stat.MEDIA_PICKER_DATE_RANGE_PICKER_OPENED);
+        CalendarConstraints calendarConstraints = new CalendarConstraints.Builder()
+                .setValidator(DateValidatorPointBackward.now()).build();
+        MaterialDatePicker<Pair<Long, Long>> datePicker = Builder.dateRangePicker()
+                                                                 .setTitleText(R.string.date_range)
+                                                                 .setCalendarConstraints(calendarConstraints)
+                                                                 .setSelection(new Pair<>(mAfter, mBefore))
+                                                                 .build();
+        datePicker.addOnPositiveButtonClickListener(this);
+        datePicker.show(getChildFragmentManager(), "date_picker");
+    }
+
+    private void onDateRangeRemoved() {
+        AnalyticsTracker.track(Stat.MEDIA_PICKER_DATE_RANGE_CLEARED);
         fetchMediaList(false, null, null);
     }
 
@@ -594,7 +602,9 @@ public class MediaGridFragment extends Fragment
 
     @Override
     public void onPositiveButtonClick(Pair<Long, Long> selection) {
-        onDateRangeChange(selection.first, selection.second);
+        AnalyticsTracker.track(Stat.MEDIA_PICKER_DATE_RANGE_PICKER_SAVED);
+        NetworkUtils.checkConnection(getActivity());
+        fetchMediaList(false, selection.first, selection.second);
     }
 
     @SuppressWarnings("unused")
@@ -791,11 +801,6 @@ public class MediaGridFragment extends Fragment
         if (savedInstanceState.containsKey("after")) {
             mAfter = savedInstanceState.getLong("after");
         }
-    }
-
-    private void onDateRangeChange(Long after, Long before) {
-        NetworkUtils.checkConnection(getActivity());
-        fetchMediaList(false, after, before);
     }
 
     private void fetchMediaList(boolean loadMore, Long after, Long before) {

@@ -1665,6 +1665,12 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "media_picker_selection_cleared";
             case MEDIA_PICKER_OPENED:
                 return "media_picker_opened";
+            case MEDIA_PICKER_DATE_RANGE_PICKER_OPENED:
+                return "media_picker_date_range_picker_opened";
+            case MEDIA_PICKER_DATE_RANGE_PICKER_SAVED:
+                return "media_picker_date_range_picker_saved";
+            case MEDIA_PICKER_DATE_RANGE_CLEARED:
+                return "media_picker_date_range_cleared";
             case APP_PERMISSION_GRANTED:
                 return "app_permission_granted";
             case APP_PERMISSION_DENIED:
