@@ -83,12 +83,12 @@ public class JPScreenshotTest extends BaseTest {
 
             // todo: Determine WHICH site should be used.
             navigateMySite();
-//            navigateActivityLog();
+            navigateActivityLog();
             navigateToMedia();
 //            navigateScan();
 //            navigateBackupDownload();
-//            navigateStats();
-//            navigateNotifications();
+            navigateStats();
+            navigateNotifications();
 
             navigateBlogPost();
             // Turn Demo Mode off on the emulator when we're done
