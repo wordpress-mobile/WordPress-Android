@@ -4,6 +4,7 @@ import android.provider.Settings;
 
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.DataInteraction;
+import androidx.test.espresso.Espresso;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.filters.LargeTest;
 
@@ -14,6 +15,7 @@ import org.junit.Test;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.e2e.pages.MySitesPage;
+import org.wordpress.android.e2e.pages.PostsListPage;
 import org.wordpress.android.support.BaseTest;
 import org.wordpress.android.support.DemoModeEnabler;
 import org.wordpress.android.ui.WPLaunchActivity;
@@ -33,14 +35,17 @@ import static org.hamcrest.Matchers.anything;
 import static org.hamcrest.Matchers.is;
 import static org.wordpress.android.support.WPSupportUtils.childAtPosition;
 import static org.wordpress.android.support.WPSupportUtils.clickOn;
+import static org.wordpress.android.support.WPSupportUtils.clickOnViewWithTag;
 import static org.wordpress.android.support.WPSupportUtils.getCurrentActivity;
 import static org.wordpress.android.support.WPSupportUtils.idleFor;
 import static org.wordpress.android.support.WPSupportUtils.isElementDisplayed;
+import static org.wordpress.android.support.WPSupportUtils.isTabletScreen;
 import static org.wordpress.android.support.WPSupportUtils.pressBackUntilElementIsDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.setNightMode;
 import static org.wordpress.android.support.WPSupportUtils.swipeLeftOnViewPager;
 import static org.wordpress.android.support.WPSupportUtils.swipeRightOnViewPager;
 import static org.wordpress.android.support.WPSupportUtils.waitForAtLeastOneElementWithIdToBeDisplayed;
+import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDisplayedWithoutFailure;
 import static org.wordpress.android.support.WPSupportUtils.waitForImagesOfTypeWithPlaceholder;
 
@@ -64,6 +69,7 @@ public class JPScreenshotTest extends BaseTest {
     private static final String STATS_SCREENSHOT_NAME = "5-site-stats-in-your-pocket";
     private static final String NOTIFICATIONS_SCREENSHOT_NAME = "6-reply-in-real-time";
     private static final String MEDIA_SCREENSHOT_NAME = "7-upload-on-the-go";
+    private static final String EDIT_POST_SCREENSHOT_NAME = "8-create-a-site-or-start-a-blog";
 
     @Test
     public void jPScreenshotTest() {
@@ -75,14 +81,16 @@ public class JPScreenshotTest extends BaseTest {
             mDemoModeEnabler.enable();
             wpLogin();
 
+            // todo: Determine WHICH site should be used.
             navigateMySite();
-            navigateActivityLog();
+//            navigateActivityLog();
             navigateToMedia();
 //            navigateScan();
 //            navigateBackupDownload();
-            navigateStats();
-            navigateNotifications();
+//            navigateStats();
+//            navigateNotifications();
 
+            navigateBlogPost();
             // Turn Demo Mode off on the emulator when we're done
             mDemoModeEnabler.disable();
             logoutIfNecessary();
@@ -97,6 +105,53 @@ public class JPScreenshotTest extends BaseTest {
         setNightModeAndWait(false);
         takeScreenshot(MY_SITE_SCREENSHOT_NAME);
     }
+
+    private void navigateBlogPost() {
+        (new MySitesPage()).switchToSite("fourpawsdoggrooming.wordpress.com")
+                           .goToPosts();
+        idleFor(3000);
+
+        PostsListPage.goToDrafts();
+
+        // Get a screenshot of the editor with the block library expanded
+        // Wait for the editor to load all images
+        idleFor(5000);
+
+        screenshotPostWithName("Our Services", EDIT_POST_SCREENSHOT_NAME, false, !isTabletScreen());
+
+        // Exit back to the main activity
+        pressBackUntilElementIsDisplayed(R.id.nav_sites);
+    }
+
+    private void screenshotPostWithName(String name,
+                                        String screenshotName,
+                                        boolean hideKeyboard,
+                                        boolean openBlockList) {
+        idleFor(2000);
+
+        PostsListPage.scrollToTop();
+        PostsListPage.tapPostWithName(name);
+
+        waitForElementToBeDisplayed(R.id.editor_activity);
+
+        // Wait for the editor to load all images
+        idleFor(7000);
+
+        if (hideKeyboard) {
+            Espresso.closeSoftKeyboard();
+        }
+
+        setNightModeAndWait(false);
+
+        if (openBlockList) {
+            clickOnViewWithTag("add-block-button");
+            idleFor(2000);
+        }
+
+        takeScreenshot(screenshotName);
+        pressBackUntilElementIsDisplayed(R.id.tabLayout);
+    }
+
 
     private void navigateActivityLog() {
         moveToActivityLog();
