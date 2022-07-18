@@ -33,6 +33,7 @@ import androidx.core.graphics.BlendModeColorFilterCompat
 import androidx.core.graphics.BlendModeCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.Factory
@@ -48,6 +49,7 @@ import com.google.android.material.snackbar.Snackbar
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
@@ -124,6 +126,7 @@ import org.wordpress.android.util.UrlUtils
 import org.wordpress.android.util.WPPermissionUtils.READER_FILE_DOWNLOAD_PERMISSION_REQUEST_CODE
 import org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper
 import org.wordpress.android.util.config.CommentsSnippetFeatureConfig
+import org.wordpress.android.util.config.JetpackPoweredFeatureConfig
 import org.wordpress.android.util.config.LikesEnhancementsFeatureConfig
 import org.wordpress.android.util.extensions.getColorFromAttribute
 import org.wordpress.android.util.extensions.isDarkTheme
@@ -219,6 +222,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     @Inject lateinit var likesEnhancementsFeatureConfig: LikesEnhancementsFeatureConfig
     @Inject lateinit var contextProvider: ContextProvider
     @Inject lateinit var commentsSnippetFeatureConfig: CommentsSnippetFeatureConfig
+    @Inject lateinit var jetpackPoweredFeatureConfig: JetpackPoweredFeatureConfig
 
     private val mSignInClickListener = View.OnClickListener {
         EventBus.getDefault()
@@ -698,6 +702,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
     private fun renderUiState(state: ReaderPostDetailsUiState, binding: ReaderFragmentPostDetailBinding) {
         onPostExecuteShowPost()
+        binding.jetpackBadge.root.isVisible = jetpackPoweredFeatureConfig.isEnabled() && !BuildConfig.IS_JETPACK_APP
         binding.headerView.updatePost(state.headerUiState)
         showOrHideMoreMenu(state)
 

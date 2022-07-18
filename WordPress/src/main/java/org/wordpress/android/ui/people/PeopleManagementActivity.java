@@ -3,6 +3,7 @@ package org.wordpress.android.ui.people;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
@@ -15,6 +16,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -32,11 +34,16 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
+import org.wordpress.android.util.config.JetpackPoweredFeatureConfig;
+import org.wordpress.android.util.extensions.WindowExtensionsKt;
 
 import java.util.List;
 
 import javax.inject.Inject;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class PeopleManagementActivity extends LocaleAwareActivity
         implements PeopleListFragment.OnPersonSelectedListener, PeopleListFragment.OnFetchPeopleListener {
     private static final String KEY_PEOPLE_LIST_FRAGMENT = "people-list-fragment";
@@ -87,16 +94,22 @@ public class PeopleManagementActivity extends LocaleAwareActivity
 
     @Inject Dispatcher mDispatcher;
     @Inject AccountStore mAccountStore;
+    @Inject JetpackPoweredFeatureConfig mJetpackPoweredFeatureConfig;
 
     private SiteModel mSite;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((WordPress) getApplication()).component().inject(this);
         mDispatcher.register(this);
 
         setContentView(R.layout.people_management_activity);
+
+        if (mJetpackPoweredFeatureConfig.isEnabled() && !BuildConfig.IS_JETPACK_APP) {
+            findViewById(R.id.jetpack_banner).setVisibility(View.VISIBLE);
+            WindowExtensionsKt.setNavigationBarColorForBanner(getWindow());
+        }
+
         if (savedInstanceState == null) {
             mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
         } else {

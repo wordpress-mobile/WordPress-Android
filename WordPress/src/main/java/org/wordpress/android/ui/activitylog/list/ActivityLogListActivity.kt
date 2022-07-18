@@ -4,8 +4,12 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup.MarginLayoutParams
+import androidx.core.view.isVisible
+import androidx.core.view.updateLayoutParams
+import dagger.hilt.android.AndroidEntryPoint
+import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
-import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.ActivityLogListActivityBinding
 import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.RequestCodes
@@ -16,17 +20,34 @@ import org.wordpress.android.ui.jetpack.backup.download.KEY_BACKUP_DOWNLOAD_REWI
 import org.wordpress.android.ui.jetpack.common.JetpackBackupDownloadActionState
 import org.wordpress.android.ui.jetpack.restore.KEY_RESTORE_RESTORE_ID
 import org.wordpress.android.ui.jetpack.restore.KEY_RESTORE_REWIND_ID
+import org.wordpress.android.util.config.JetpackPoweredFeatureConfig
+import org.wordpress.android.util.extensions.setNavigationBarColorForBanner
 import org.wordpress.android.viewmodel.activitylog.ACTIVITY_LOG_REWINDABLE_ONLY_KEY
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class ActivityLogListActivity : LocaleAwareActivity() {
+    @Inject lateinit var jetpackPoweredFeatureConfig: JetpackPoweredFeatureConfig
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (application as WordPress).component().inject(this)
-        val binding = ActivityLogListActivityBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-        binding.checkAndUpdateUiToBackupScreen()
+        with(ActivityLogListActivityBinding.inflate(layoutInflater)) {
+            setContentView(root)
+            checkAndUpdateUiToBackupScreen()
 
-        setSupportActionBar(binding.toolbarMain)
+            setSupportActionBar(toolbarMain)
+
+            if (jetpackPoweredFeatureConfig.isEnabled() && !BuildConfig.IS_JETPACK_APP) {
+                jetpackBanner.root.isVisible = true
+                window.setNavigationBarColorForBanner()
+
+                // Add bottom margin to content.
+                val fragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
+                fragment?.view?.updateLayoutParams<MarginLayoutParams> {
+                    bottomMargin = resources.getDimensionPixelSize(R.dimen.jetpack_banner_height)
+                }
+            }
+        }
         supportActionBar?.let {
             it.setHomeButtonEnabled(true)
             it.setDisplayHomeAsUpEnabled(true)

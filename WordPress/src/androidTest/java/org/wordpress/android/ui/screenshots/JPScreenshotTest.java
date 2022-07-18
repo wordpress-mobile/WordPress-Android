@@ -14,7 +14,6 @@ import org.junit.Test;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.e2e.pages.MySitesPage;
-import org.wordpress.android.e2e.pages.SitePickerPage;
 import org.wordpress.android.support.BaseTest;
 import org.wordpress.android.support.DemoModeEnabler;
 import org.wordpress.android.ui.WPLaunchActivity;
@@ -77,13 +76,7 @@ public class JPScreenshotTest extends BaseTest {
     }
 
     public void navigateMySite() {
-        // Click on the "Sites" tab and take a screenshot
-        clickOn(R.id.nav_sites);
-
-        // Choose "Switch Site"
-        clickOn(R.id.switch_site);
-
-        (new SitePickerPage()).chooseSiteWithURL("yourjetpack.blog");
+        (new MySitesPage()).switchToSite("yourjetpack.blog");
 
         waitForElementToBeDisplayedWithoutFailure(R.id.recycler_view);
 
@@ -141,7 +134,10 @@ public class JPScreenshotTest extends BaseTest {
     }
 
     private void navigateStats() {
-        moveToStats();
+        // Click on the "Sites" tab in the nav, then click the "Menu" tab, then choose "Stats"
+        clickOn(R.id.nav_sites);
+        (new MySitesPage()).goToStats().dismissUpdateAlertDialogFragmentIfDisplayed();
+
         swipeToAvoidGrayOverlay(R.id.statsPager);
 
         if (isElementDisplayed(R.id.button_negative)) {
@@ -162,9 +158,9 @@ public class JPScreenshotTest extends BaseTest {
     }
 
     private void moveToActivityLog() {
-        // Click on the "Sites" tab in the nav, then choose "Activity Log"
+        // Click on the "Sites" tab in the nav, then click the "Menu" tab, then choose "Activity Log"
         clickOn(R.id.nav_sites);
-        (new MySitesPage()).clickActivityLog();
+        (new MySitesPage()).goToActivityLog();
 
         waitForElementToBeDisplayedWithoutFailure(R.id.swipe_refresh_layout);
 
@@ -173,9 +169,9 @@ public class JPScreenshotTest extends BaseTest {
     }
 
     private void moveToScan() {
-        // Click on the "Sites" tab in the nav, then choose "Scan"
+        // Click on the "Sites" tab in the nav, then click the "Menu" tab, then choose "Scan"
         clickOn(R.id.nav_sites);
-        (new MySitesPage()).clickScan();
+        (new MySitesPage()).goToScan();
 
         waitForElementToBeDisplayedWithoutFailure(R.id.recycler_view);
 
@@ -185,22 +181,11 @@ public class JPScreenshotTest extends BaseTest {
 
     private void moveToBackup() {
         clickOn(R.id.nav_sites);
-        (new MySitesPage()).clickBackup();
+        (new MySitesPage()).goToBackup();
 
         waitForElementToBeDisplayedWithoutFailure(R.id.log_list_view);
 
         // Wait for backup to load
-        idleFor(8000);
-    }
-
-    private void moveToStats() {
-        // Click on the "Sites" tab in the nav, then choose "Stats"
-        clickOn(R.id.nav_sites);
-        (new MySitesPage()).clickStats();
-
-        waitForElementToBeDisplayedWithoutFailure(R.id.image_thumbnail);
-
-        // Wait for the stats to load
         idleFor(8000);
     }
 

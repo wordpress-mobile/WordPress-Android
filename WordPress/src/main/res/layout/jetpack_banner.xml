@@ -8,6 +8,8 @@
     android:background="@color/jetpack_banner_background"
     android:orientation="vertical"
     android:visibility="gone"
+    android:clickable="true"
+    android:focusable="true"
     tools:visibility="visible">
 
     <View

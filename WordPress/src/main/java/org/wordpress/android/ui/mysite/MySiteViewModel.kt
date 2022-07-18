@@ -40,6 +40,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.InfoItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.JetpackBadge
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoHeaderCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BloggingPromptCardBuilderParams
@@ -92,6 +93,7 @@ import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.quickstart.QuickStartTracker
 import org.wordpress.android.ui.quickstart.QuickStartType.NewSiteQuickStartType
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
+import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.BuildConfigWrapper
@@ -106,6 +108,7 @@ import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.WPMediaUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.BloggingPromptsFeatureConfig
+import org.wordpress.android.util.config.JetpackPoweredFeatureConfig
 import org.wordpress.android.util.config.LandOnTheEditorFeatureConfig
 import org.wordpress.android.util.config.MySiteDashboardTabsFeatureConfig
 import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
@@ -155,6 +158,7 @@ class MySiteViewModel @Inject constructor(
     private val buildConfigWrapper: BuildConfigWrapper,
     mySiteDashboardTabsFeatureConfig: MySiteDashboardTabsFeatureConfig,
     bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig,
+    private val jetpackPoweredFeatureConfig: JetpackPoweredFeatureConfig,
     private val appPrefsWrapper: AppPrefsWrapper,
     private val bloggingPromptsCardAnalyticsTracker: BloggingPromptsCardAnalyticsTracker,
     private val quickStartTracker: QuickStartTracker,
@@ -490,12 +494,19 @@ class MySiteViewModel @Inject constructor(
                 )
         )
 
+        val jetpackBadge = JetpackBadge(
+                ListItemInteraction.create(this::onJetpackBadgeClick)
+        ).takeIf {
+            jetpackPoweredFeatureConfig.isEnabled() && !buildConfigWrapper.isJetpackApp
+        }
+
         return mapOf(
                 MySiteTabType.ALL to orderForDisplay(
                         infoItem,
                         cardsResult,
                         dynamicCards,
-                        siteItems
+                        siteItems,
+                        jetpackBadge
                 ),
                 MySiteTabType.SITE_MENU to orderForDisplay(
                         infoItem,
@@ -511,9 +522,14 @@ class MySiteViewModel @Inject constructor(
                             getCardTypeExclusionFiltersForTab(MySiteTabType.DASHBOARD).contains(it.type)
                         },
                         if (shouldIncludeDynamicCards(MySiteTabType.DASHBOARD)) dynamicCards else listOf(),
-                        listOf()
+                        listOf(),
+                        jetpackBadge
                 )
         )
+    }
+
+    private fun onJetpackBadgeClick() {
+        _onNavigation.value = Event(SiteNavigationAction.OpenJetpackPoweredBottomSheet)
     }
 
     private fun shouldEnableQuickLinkRibbonFocusPoints() = defaultABExperimentTab == MySiteTabType.DASHBOARD
@@ -588,7 +604,8 @@ class MySiteViewModel @Inject constructor(
         infoItem: InfoItem?,
         cards: List<MySiteCardAndItem>,
         dynamicCards: List<MySiteCardAndItem>,
-        siteItems: List<MySiteCardAndItem>
+        siteItems: List<MySiteCardAndItem>,
+        jetpackBadge: JetpackBadge? = null
     ): List<MySiteCardAndItem> {
         val indexOfDashboardCards = cards.indexOfFirst { it is DashboardCards }
         return mutableListOf<MySiteCardAndItem>().apply {
@@ -600,6 +617,7 @@ class MySiteViewModel @Inject constructor(
                 addAll(indexOfDashboardCards, dynamicCards)
             }
             addAll(siteItems)
+            jetpackBadge?.let { add(jetpackBadge) }
         }.toList()
     }
 
