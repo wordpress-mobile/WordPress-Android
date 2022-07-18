@@ -10,22 +10,28 @@ import androidx.test.espresso.ViewInteraction;
 
 import org.hamcrest.Matcher;
 import org.wordpress.android.R;
+import org.wordpress.android.ui.prefs.WPPreference;
 
+import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.contrib.RecyclerViewActions.actionOnItem;
+import static androidx.test.espresso.matcher.PreferenceMatchers.withKey;
+import static androidx.test.espresso.matcher.PreferenceMatchers.withTitleText;
 import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withParent;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.instanceOf;
 import static org.wordpress.android.support.WPSupportUtils.clickOn;
 import static org.wordpress.android.support.WPSupportUtils.getTranslatedString;
 import static org.wordpress.android.support.WPSupportUtils.idleFor;
 import static org.wordpress.android.support.WPSupportUtils.isElementDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.longClickOn;
+import static org.wordpress.android.support.WPSupportUtils.scrollToThenClickOn;
 import static org.wordpress.android.support.WPSupportUtils.selectItemWithTitleInTabLayout;
 import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDisplayedWithoutFailure;
 
@@ -84,6 +90,32 @@ public class MySitesPage {
     public void goToScan() {
         goToMenuTab();
         clickItemWithText(R.string.scan);
+    }
+
+    public void goToBloggingReminders() {
+        goToSettings();
+
+        idleFor(8000);
+
+        onData(allOf(
+                instanceOf(WPPreference.class),
+                withKey(getTranslatedString(R.string.pref_key_blogging_reminders)),
+                withTitleText(getTranslatedString(R.string.site_settings_blogging_reminders_and_prompts_title))))
+                .onChildView(withText(getTranslatedString(R.string.site_settings_blogging_reminders_and_prompts_title)))
+                .perform(click());
+
+        idleFor(4000);
+
+        clickOn(onView(withText(getTranslatedString(R.string.set_your_blogging_reminders_button))));
+
+        onView(withId(R.id.day_one))
+                .perform(click());
+
+        onView(withId(R.id.day_three))
+                .perform(click());
+
+        onView(withId(R.id.day_five))
+                .perform(click());
     }
 
     public void goToBackup() {

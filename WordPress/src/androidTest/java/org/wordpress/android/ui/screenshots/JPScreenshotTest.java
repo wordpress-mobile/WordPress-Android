@@ -70,6 +70,7 @@ public class JPScreenshotTest extends BaseTest {
     private static final String NOTIFICATIONS_SCREENSHOT_NAME = "6-reply-in-real-time";
     private static final String MEDIA_SCREENSHOT_NAME = "7-upload-on-the-go";
     private static final String EDIT_POST_SCREENSHOT_NAME = "8-create-a-site-or-start-a-blog";
+    private static final String BLOGGING_REMINDER_SCREENSHOT_NAME = "9-create-blogging-reminders";
 
     @Test
     public void jPScreenshotTest() {
@@ -89,6 +90,7 @@ public class JPScreenshotTest extends BaseTest {
 //            navigateBackupDownload();
             navigateStats();
             navigateNotifications();
+            navigateBloggingReminders();
 
             navigateBlogPost();
             // Turn Demo Mode off on the emulator when we're done
@@ -168,6 +170,16 @@ public class JPScreenshotTest extends BaseTest {
 
         setNightModeAndWait(false);
         takeScreenshot(SCAN_SCREENSHOT_NAME);
+
+        // Exit the Activity scan activity
+        pressBackUntilElementIsDisplayed(R.id.nav_sites);
+    }
+
+    private void navigateBloggingReminders() {
+        moveToBloggingReminder();
+
+        setNightModeAndWait(false);
+        takeScreenshot(BLOGGING_REMINDER_SCREENSHOT_NAME);
 
         // Exit the Activity scan activity
         pressBackUntilElementIsDisplayed(R.id.nav_sites);
@@ -261,6 +273,17 @@ public class JPScreenshotTest extends BaseTest {
         (new MySitesPage()).goToScan();
 
         waitForElementToBeDisplayedWithoutFailure(R.id.recycler_view);
+
+        // Wait for scan to load
+        idleFor(8000);
+    }
+
+    private void moveToBloggingReminder() {
+        // Click on the "Sites" tab in the nav, then click the "Menu" tab, then choose "Scan"
+        clickOn(R.id.nav_sites);
+        (new MySitesPage()).goToBloggingReminders();
+
+        waitForElementToBeDisplayedWithoutFailure(R.id.content_recycler_view);
 
         // Wait for scan to load
         idleFor(8000);
