@@ -19,6 +19,8 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.StatsFragmentBinding
 import org.wordpress.android.ui.ScrollableViewInitializedListener
+import org.wordpress.android.ui.main.WPMainNavigationView.PageType.MY_SITE
+import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.stats.refresh.StatsViewModel.StatsModuleUiModel
 import org.wordpress.android.ui.stats.refresh.lists.StatsListFragment
@@ -167,6 +169,12 @@ class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializ
 
         viewModel.showUpgradeAlert.observeEvent(viewLifecycleOwner) {
             UpdateAlertDialogFragment.newInstance().show(childFragmentManager, UPDATE_ALERT_DIALOG_TAG)
+        }
+
+        viewModel.showJetpackPoweredBottomSheet.observeEvent(viewLifecycleOwner) {
+            JetpackPoweredBottomSheetFragment
+                    .newInstance(it, MY_SITE)
+                    .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
         }
     }
 

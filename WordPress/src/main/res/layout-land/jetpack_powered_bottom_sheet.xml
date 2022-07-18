@@ -8,6 +8,13 @@
     android:background="@color/jetpack_powered_bottom_sheet_background"
     android:orientation="vertical">
 
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_end="130dp" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/content_recycler_view"
         android:layout_width="match_parent"

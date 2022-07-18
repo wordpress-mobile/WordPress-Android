@@ -40,10 +40,13 @@ import org.wordpress.android.ui.stats.refresh.utils.SelectedSectionManager
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.trackGranular
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.config.JetpackPoweredFeatureConfig
 import org.wordpress.android.util.config.MySiteDashboardTodaysStatsCardFeatureConfig
 import org.wordpress.android.util.config.StatsRevampV2FeatureConfig
+import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
 
 class StatsViewModelTest : BaseUnitTest() {
@@ -62,6 +65,8 @@ class StatsViewModelTest : BaseUnitTest() {
     @Mock lateinit var notificationsTracker: SystemNotificationsTracker
     @Mock lateinit var todaysStatsCardFeatureConfig: MySiteDashboardTodaysStatsCardFeatureConfig
     @Mock lateinit var statsRevampV2FeatureConfig: StatsRevampV2FeatureConfig
+    @Mock lateinit var jetpackPoweredFeatureConfig: JetpackPoweredFeatureConfig
+    @Mock lateinit var buildConfigWrapper: BuildConfigWrapper
     private lateinit var viewModel: StatsViewModel
     private val _liveSelectedSection = MutableLiveData<StatsSection>()
     private val liveSelectedSection: LiveData<StatsSection> = _liveSelectedSection
@@ -85,7 +90,9 @@ class StatsViewModelTest : BaseUnitTest() {
                 statsModuleActivateUseCase,
                 notificationsTracker,
                 todaysStatsCardFeatureConfig,
-                statsRevampV2FeatureConfig
+                statsRevampV2FeatureConfig,
+                jetpackPoweredFeatureConfig,
+                buildConfigWrapper,
         )
 
         viewModel.start(1, false, null, null, false, null)
@@ -231,6 +238,33 @@ class StatsViewModelTest : BaseUnitTest() {
         viewModel.onEnableStatsModuleClick()
 
         assertThat(uiModel.last().disabledStatsViewVisible).isFalse
+    }
+
+    @Test
+    fun `given wp app, when jetpack powered feature is true, then jp powered bottom sheet is shown`() {
+        val showJetpackPoweredBottomSheetEvent = mutableListOf<Event<Boolean>>()
+        viewModel.showJetpackPoweredBottomSheet.observeForever {
+            showJetpackPoweredBottomSheetEvent.add(it)
+        }
+        whenever(jetpackPoweredFeatureConfig.isEnabled()).thenReturn(true)
+        whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
+
+        startViewModel()
+
+        assertThat(showJetpackPoweredBottomSheetEvent.last().peekContent()).isTrue
+    }
+
+    @Test
+    fun `given wp app, when jetpack powered feature is false, then jp powered bottom sheet is not shown`() {
+        val showJetpackPoweredBottomSheetEvent = mutableListOf<Event<Boolean>>()
+        viewModel.showJetpackPoweredBottomSheet.observeForever {
+            showJetpackPoweredBottomSheetEvent.add(it)
+        }
+        whenever(jetpackPoweredFeatureConfig.isEnabled()).thenReturn(false)
+
+        startViewModel()
+
+        assertThat(showJetpackPoweredBottomSheetEvent.last().peekContent()).isFalse
     }
 
     private fun initObservers(): Observers {

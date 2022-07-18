@@ -61,7 +61,7 @@ class JetpackPoweredBottomSheetFragment : BottomSheetDialogFragment() {
         if (fullScreen) {
             secondaryButton.visibility = View.VISIBLE
             val pageType = arguments?.getSerializable(KEY_SITE_SCREEN) as? PageType ?: MY_SITE
-            secondaryButton.text = when(pageType) {
+            secondaryButton.text = when (pageType) {
                 MY_SITE -> getString(R.string.wp_jetpack_continue_to_stats)
                 READER -> getString(R.string.wp_jetpack_continue_to_reader)
                 NOTIFS -> getString(R.string.wp_jetpack_continue_to_notifications)
@@ -122,7 +122,10 @@ class JetpackPoweredBottomSheetFragment : BottomSheetDialogFragment() {
         private const val KEY_SITE_SCREEN = "KEY_SITE_SCREEN"
 
         @JvmStatic
-        fun newInstance(fullScreen: Boolean = false, pageType: PageType = MY_SITE) = JetpackPoweredBottomSheetFragment().apply {
+        fun newInstance(
+            fullScreen: Boolean = false,
+            pageType: PageType = MY_SITE
+        ) = JetpackPoweredBottomSheetFragment().apply {
             arguments = Bundle().apply {
                 putBoolean(KEY_FULL_SCREEN, fullScreen)
                 putSerializable(KEY_SITE_SCREEN, pageType)
