@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:animateLayoutChanges="true"
+    android:background="@color/jetpack_powered_bottom_sheet_background"
+    android:orientation="vertical">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/content_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_extra_extra_medium_large"
+        android:layout_marginStart="@dimen/margin_extra_extra_medium_large"
+        android:layout_marginTop="@dimen/margin_medium"
+        android:clipToPadding="false"
+        android:descendantFocusability="beforeDescendants"
+        android:scrollbars="vertical"
+        app:layout_constrainedHeight="true"
+        app:layout_constraintBottom_toTopOf="@+id/primary_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/handle"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/primary_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginEnd="@dimen/margin_extra_extra_medium_large"
+        android:layout_marginStart="@dimen/margin_extra_extra_medium_large"
+        android:backgroundTint="@color/jetpack_green_40"
+        android:gravity="center"
+        android:minHeight="@dimen/margin_extra_extra_large"
+        android:text="@string/wp_jetpack_get_new_jetpack_app"
+        android:textAppearance="?attr/textAppearanceSubtitle2"
+        android:textColor="?attr/colorOnSecondary"
+        app:layout_constraintTop_toBottomOf="@id/content_recycler_view"
+        app:layout_constraintBottom_toTopOf="@id/secondary_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_goneMarginBottom="@dimen/margin_extra_large" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/secondary_button"
+        android:visibility="gone"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="@dimen/margin_extra_extra_medium_large"
+        android:layout_marginEnd="@dimen/margin_extra_extra_medium_large"
+        android:layout_marginStart="@dimen/margin_extra_extra_medium_large"
+        android:gravity="center"
+        android:minHeight="@dimen/margin_extra_extra_large"
+        android:textAppearance="?attr/textAppearanceSubtitle2"
+        android:textAllCaps="false"
+        android:textColor="@color/jetpack_green"
+        app:layout_constraintTop_toBottomOf="@id/primary_button"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:text="Continue to Reader"
+        tools:visibility="visible"/>
+
+    <include
+        android:id="@+id/handle"
+        layout="@layout/bottom_sheet_handle_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_small"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>
