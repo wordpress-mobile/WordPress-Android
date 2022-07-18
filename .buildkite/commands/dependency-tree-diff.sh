@@ -13,20 +13,15 @@ COMMIT_HASH=$BUILDKITE_COMMIT
 PR_NUMBER=$BUILDKITE_PULL_REQUEST
 PR_URL="https://api.github.com/repos/$REPO_HANDLE/pulls/$PR_NUMBER"
 CURRENT_BRANCH=$BUILDKITE_BRANCH
+TARGET_BRANCH=$BUILDKITE_PULL_REQUEST_BASE_BRANCH
 
 echo "--> Starting the check"
 
-git config --global user.email '$( git log --format='%ae' $COMMIT_HASH^! )'
-git config --global user.name '$( git log --format='%an' $COMMIT_HASH^! )'
+echo "--> Target branch is $TARGET_BRANCH"
 
-echo "--> Fetching the target branch from $PR_URL"
-githubResponse="$(curl "$PR_URL" -H "Authorization: token $GITHUB_TOKEN")"
-targetBranch=$(echo "$githubResponse" | tr '\r\n' ' ' | jq '.base.ref' | tr -d '"')
-echo "--> Target branch is $targetBranch"
+git merge "origin/$TARGET_BRANCH" --no-edit
 
-git merge "origin/$targetBranch" --no-edit
-
-if [[ $(git diff --name-status "origin/$targetBranch" | grep ".gradle") ]]; then
+if [[ $(git diff --name-status "origin/$TARGET_BRANCH" | grep ".gradle") ]]; then
     echo ".gradle files have been changed. Looking for caused dependency changes"
   else
     echo ".gradle files haven't been changed. There is no need to run the diff"
@@ -40,7 +35,7 @@ echo "--> Generating dependencies to the file $CURRENT_TARGET_BRANCH_DEPENDENCIE
 ./gradlew :WordPress:dependencies --configuration $CONFIGURATION > $CURRENT_TARGET_BRANCH_DEPENDENCIES_FILE
 
 echo "--> Generating dependencies to the file $TARGET_BRANCH_DEPENDENCIES_FILE"
-git checkout "$targetBranch"
+git checkout "$TARGET_BRANCH"
 ./gradlew :WordPress:dependencies --configuration $CONFIGURATION > $TARGET_BRANCH_DEPENDENCIES_FILE
 
 echo "--> Downloading dependency-tree-diff.jar"
@@ -66,4 +61,4 @@ else
 fi
 
 echo "--> Commenting result to GitHub"
-./gradlew dependencyTreeDiffCommentToGitHub -DGITHUB_PULLREQUESTID="${CIRCLE_PULL_REQUEST##*/}" -DGITHUB_OAUTH2TOKEN="$GITHUB_API_TOKEN" --info
+./gradlew dependencyTreeDiffCommentToGitHub -DGITHUB_PULLREQUESTID="${PR_NUMBER##*/}" -DGITHUB_OAUTH2TOKEN="$GITHUB_API_TOKEN" --info
