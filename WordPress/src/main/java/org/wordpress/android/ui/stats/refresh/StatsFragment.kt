@@ -172,9 +172,12 @@ class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializ
         }
 
         viewModel.showJetpackPoweredBottomSheet.observeEvent(viewLifecycleOwner) {
-            JetpackPoweredBottomSheetFragment
-                    .newInstance(it, MY_SITE)
-                    .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
+            val bottomSheet = childFragmentManager.findFragmentByTag(JetpackPoweredBottomSheetFragment.TAG)
+            if (bottomSheet == null) {
+                JetpackPoweredBottomSheetFragment
+                        .newInstance(it, MY_SITE)
+                        .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
+            }
         }
     }
 
