@@ -21,10 +21,13 @@ steps:
     artifact_paths:
       - "**/build/reports/detekt/detekt.html"
 
-  - label: "lint"
-    command: |
-      cp gradle.properties-example gradle.properties
-      ./gradlew lintWordpressVanillaRelease
+  - label: "Lint WordPress"
+    command: ".buildkite/commands/lint.sh wordpress"
+    artifact_paths:
+      - "**/build/reports/lint-results*.*"
+
+  - label: "Lint Jetpack"
+    command: ".buildkite/commands/lint.sh jetpack"
     plugins: *common_plugins
     artifact_paths:
       - "**/build/reports/lint-results*.*"
