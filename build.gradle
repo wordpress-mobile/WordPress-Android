@@ -32,7 +32,7 @@ ext {
     preferenceVersion = '1.1.0'
     swipeToRefresh = '1.1.0'
     uCropVersion = '2.2.4'
-    lifecycleVersion = '2.4.1'
+    lifecycleVersion = '2.4.0'
     tracksVersion = '2.2.0'
     roomVersion = '2.3.0'
 
