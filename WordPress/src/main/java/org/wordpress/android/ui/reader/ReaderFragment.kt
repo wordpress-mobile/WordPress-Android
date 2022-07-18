@@ -225,9 +225,9 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
         }
 
         viewModel.showJetpackPoweredBottomSheet.observeEvent(viewLifecycleOwner) {
-            JetpackPoweredBottomSheetFragment.newInstance(it).show(
-                    requireActivity().supportFragmentManager,
-                    JetpackPoweredBottomSheetFragment.TAG
+            JetpackPoweredBottomSheetFragment
+                    .newInstance(it)
+                    .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG
             )
         }
 

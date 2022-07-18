@@ -17,6 +17,7 @@ import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
+import androidx.fragment.app.viewModels
 import com.google.android.material.appbar.AppBarLayout.LayoutParams
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.android.material.tabs.TabLayout.Tab
@@ -36,6 +37,7 @@ import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.main.WPMainActivity
+import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment
 import org.wordpress.android.ui.notifications.NotificationEvents.NotificationsUnseenStatus
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter.FILTERS
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter.FILTERS.FILTER_ALL
@@ -52,6 +54,7 @@ import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.WPUrlUtils
 import org.wordpress.android.util.config.JetpackPoweredFeatureConfig
 import org.wordpress.android.util.extensions.setLiftOnScrollTargetViewIdAndRequestLayout
+import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -61,6 +64,7 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
 
     @Inject lateinit var accountStore: AccountStore
     @Inject lateinit var jetpackPoweredFeatureConfig: JetpackPoweredFeatureConfig
+    private val viewModel: NotificationsListViewModel by viewModels()
 
     private var binding: NotificationsListFragmentBinding? = null
 
@@ -123,6 +127,13 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
             jetpackFaq.setOnClickListener {
                 WPWebViewActivity.openURL(requireContext(), StatsConnectJetpackActivity.FAQ_URL)
             }
+        }
+
+        viewModel.showJetpackPoweredBottomSheet.observeEvent(viewLifecycleOwner) {
+            JetpackPoweredBottomSheetFragment
+                    .newInstance(it)
+                    .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG
+            )
         }
     }
 
