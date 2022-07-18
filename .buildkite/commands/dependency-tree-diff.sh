@@ -61,4 +61,4 @@ else
 fi
 
 echo "--> Commenting result to GitHub"
-./gradlew dependencyTreeDiffCommentToGitHub -DGITHUB_PULLREQUESTID="${PR_NUMBER##*/}" -DGITHUB_OAUTH2TOKEN="$GITHUB_API_TOKEN" --info
+./gradlew dependencyTreeDiffCommentToGitHub -DGITHUB_PULLREQUESTID="${PR_NUMBER##*/}" -DGITHUB_OAUTH2TOKEN="$GITHUB_TOKEN" --info
