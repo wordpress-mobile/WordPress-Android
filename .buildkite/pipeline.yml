@@ -26,11 +26,11 @@ steps:
     artifact_paths:
       - "**/build/reports/lint-results*.*"
 
-  - label: "Lint Jetpack"
-    command: ".buildkite/commands/lint.sh jetpack"
-    plugins: *common_plugins
-    artifact_paths:
-      - "**/build/reports/lint-results*.*"
+  # - label: "Lint Jetpack"
+  #   command: ".buildkite/commands/lint.sh jetpack"
+  #   plugins: *common_plugins
+  #   artifact_paths:
+  #     - "**/build/reports/lint-results*.*"
 
   - label: "Dependency Tree Diff"
     command: |

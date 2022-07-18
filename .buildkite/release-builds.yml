@@ -15,11 +15,11 @@ steps:
     artifact_paths:
       - "**/build/reports/lint-results*.*"
 
-  - label: "🔬 Lint Jetpack"
-    command: ".buildkite/commands/lint.sh jetpack"
-    key: jplint
-    artifact_paths:
-      - "**/build/reports/lint-results*.*"
+  # - label: "🔬 Lint Jetpack"
+  #   command: ".buildkite/commands/lint.sh jetpack"
+  #   key: jplint
+  #   artifact_paths:
+  #     - "**/build/reports/lint-results*.*"
 
   - label: "🛠 WordPress Release Build"
     command: ".buildkite/commands/release-build.sh wordpress"
@@ -30,7 +30,7 @@ steps:
 
   - label: "🛠 Jetpack Release Build"
     command: ".buildkite/commands/release-build.sh jetpack"
-    depends_on: jplint
+    # depends_on: jplint
     plugins: *common_plugins
     notify:
       - slack: "#build-and-ship"
