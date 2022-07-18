@@ -61,11 +61,11 @@ steps:
       - "**/build/instrumented-tests/**/*"
 
   - label: "🛠 WordPress Installable Build"
-    command: ".buildkite/commands/wordpress-installable-build.sh"
+    command: ".buildkite/commands/installable-build.sh wordpress"
     if: build.pull_request.id != null
     plugins: *common_plugins
 
   - label: "🛠 Jetpack Installable Build"
-    command: ".buildkite/commands/jetpack-installable-build.sh"
+    command: ".buildkite/commands/installable-build.sh jetpack"
     if: build.pull_request.id != null
     plugins: *common_plugins
