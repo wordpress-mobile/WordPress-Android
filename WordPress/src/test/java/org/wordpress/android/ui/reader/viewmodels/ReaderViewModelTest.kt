@@ -38,7 +38,9 @@ import org.wordpress.android.ui.reader.utils.DateProvider
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.QuickStartReaderPrompt
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.ContentUiState
+import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.SnackbarSequencer
+import org.wordpress.android.util.config.JetpackPoweredFeatureConfig
 import org.wordpress.android.viewmodel.Event
 import java.util.Date
 
@@ -63,6 +65,8 @@ class ReaderViewModelTest {
     @Mock lateinit var selectedSiteRepository: SelectedSiteRepository
     @Mock lateinit var quickStartType: QuickStartType
     @Mock lateinit var snackbarSequencer: SnackbarSequencer
+    @Mock lateinit var jetpackPoweredFeatureConfig: JetpackPoweredFeatureConfig
+    @Mock lateinit var buildConfigWrapper: BuildConfigWrapper
 
     private val emptyReaderTagList = ReaderTagList()
     private val nonEmptyReaderTagList = createNonMockedNonEmptyReaderTagList()
@@ -79,7 +83,9 @@ class ReaderViewModelTest {
                 accountStore,
                 quickStartRepository,
                 selectedSiteRepository,
-                snackbarSequencer
+                jetpackPoweredFeatureConfig,
+                buildConfigWrapper,
+                snackbarSequencer,
         )
 
         whenever(dateProvider.getCurrentDate()).thenReturn(Date(DUMMY_CURRENT_TIME))
@@ -455,6 +461,33 @@ class ReaderViewModelTest {
 
             assertQsFollowSiteTaskCompleted(observers)
         }
+    }
+
+    @Test
+    fun `given wp app, when jetpack powered feature is true, then jp powered bottom sheet is shown`() {
+        val showJetpackPoweredBottomSheetEvent = mutableListOf<Event<Boolean>>()
+        viewModel.showJetpackPoweredBottomSheet.observeForever {
+            showJetpackPoweredBottomSheetEvent.add(it)
+        }
+        whenever(jetpackPoweredFeatureConfig.isEnabled()).thenReturn(true)
+        whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
+
+        viewModel.start()
+
+        assertThat(showJetpackPoweredBottomSheetEvent.last().peekContent()).isEqualTo(true)
+    }
+
+    @Test
+    fun `given wp app, when jetpack powered feature is false, then jp powered bottom sheet is not shown`() {
+        val showJetpackPoweredBottomSheetEvent = mutableListOf<Event<Boolean>>()
+        viewModel.showJetpackPoweredBottomSheet.observeForever {
+            showJetpackPoweredBottomSheetEvent.add(it)
+        }
+        whenever(jetpackPoweredFeatureConfig.isEnabled()).thenReturn(false)
+
+        viewModel.start()
+
+        assertThat(showJetpackPoweredBottomSheetEvent.last().peekContent()).isEqualTo(false)
     }
 
     private fun assertQsFollowSiteDiscoverTabStepStarted(
