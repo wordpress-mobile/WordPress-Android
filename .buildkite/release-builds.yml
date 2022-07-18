@@ -8,14 +8,29 @@ common_params:
     - automattic/bash-cache#2.1.0
 
 steps:
+
+  - label: "Lint WordPress"
+    command: ".buildkite/commands/lint.sh wordpress"
+    key: wplint
+    artifact_paths:
+      - "**/build/reports/lint-results*.*"
+
+  - label: "🔬 Lint Jetpack"
+    command: ".buildkite/commands/lint.sh jetpack"
+    key: jplint
+    artifact_paths:
+      - "**/build/reports/lint-results*.*"
+
   - label: "🛠 WordPress Release Build"
     command: ".buildkite/commands/release-build.sh wordpress"
+    depends_on: wplint
     plugins: *common_plugins
     notify:
       - slack: "#build-and-ship"
 
   - label: "🛠 Jetpack Release Build"
     command: ".buildkite/commands/release-build.sh jetpack"
+    depends_on: jplint
     plugins: *common_plugins
     notify:
       - slack: "#build-and-ship"
