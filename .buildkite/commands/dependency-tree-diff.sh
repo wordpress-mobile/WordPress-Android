@@ -9,9 +9,7 @@ DEPENDENCY_TREE_VERSION="1.2.0"
 
 REPO_HANDLE="wordpress-mobile/wordpress-android"
 
-COMMIT_HASH=$BUILDKITE_COMMIT
 PR_NUMBER=$BUILDKITE_PULL_REQUEST
-PR_URL="https://api.github.com/repos/$REPO_HANDLE/pulls/$PR_NUMBER"
 CURRENT_BRANCH=$BUILDKITE_BRANCH
 TARGET_BRANCH=$BUILDKITE_PULL_REQUEST_BASE_BRANCH
 
@@ -61,4 +59,4 @@ else
 fi
 
 echo "--> Commenting result to GitHub"
-./gradlew dependencyTreeDiffCommentToGitHub -DGITHUB_PULLREQUESTID="${PR_NUMBER##*/}" -DGITHUB_OAUTH2TOKEN="$GITHUB_API_TOKEN" --info
+./gradlew dependencyTreeDiffCommentToGitHub -DGITHUB_PULLREQUESTID="${PR_NUMBER##*/}" -DGITHUB_OAUTH2TOKEN="$GITHUB_TOKEN" --info
