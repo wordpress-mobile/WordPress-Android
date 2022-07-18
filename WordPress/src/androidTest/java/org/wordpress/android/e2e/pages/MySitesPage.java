@@ -31,7 +31,6 @@ import static org.wordpress.android.support.WPSupportUtils.getTranslatedString;
 import static org.wordpress.android.support.WPSupportUtils.idleFor;
 import static org.wordpress.android.support.WPSupportUtils.isElementDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.longClickOn;
-import static org.wordpress.android.support.WPSupportUtils.scrollToThenClickOn;
 import static org.wordpress.android.support.WPSupportUtils.selectItemWithTitleInTabLayout;
 import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDisplayedWithoutFailure;
 
@@ -70,6 +69,11 @@ public class MySitesPage {
             // If Stories are enabled, FAB opens a bottom sheet with options - select the 'Blog post' option
             clickOn(onView(withText(R.string.my_site_bottom_sheet_add_post)));
         }
+    }
+
+    public void startNewSite() {
+        switchSite();
+        clickOn(R.id.menu_add);
     }
 
     public void goToSettings() {

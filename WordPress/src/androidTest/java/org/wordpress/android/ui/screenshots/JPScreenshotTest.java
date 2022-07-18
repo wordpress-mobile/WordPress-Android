@@ -71,6 +71,8 @@ public class JPScreenshotTest extends BaseTest {
     private static final String MEDIA_SCREENSHOT_NAME = "7-upload-on-the-go";
     private static final String EDIT_POST_SCREENSHOT_NAME = "8-create-a-site-or-start-a-blog";
     private static final String BLOGGING_REMINDER_SCREENSHOT_NAME = "9-create-blogging-reminders";
+    private static final String SITE_TOPIC_SCREENSHOT_NAME = "10-site-topic";
+    private static final String CHOOSE_DOMAIN_NAME = "11-choose-domain";
 
     @Test
     public void jPScreenshotTest() {
@@ -82,17 +84,19 @@ public class JPScreenshotTest extends BaseTest {
             mDemoModeEnabler.enable();
             wpLogin();
 
-            // todo: Determine WHICH site should be used.
             navigateMySite();
-            navigateActivityLog();
-            navigateToMedia();
-//            navigateScan();
-//            navigateBackupDownload();
+            navigateSiteTopic();
+            navigateChooseDomain();
             navigateStats();
             navigateNotifications();
             navigateBloggingReminders();
 
-            navigateBlogPost();
+//          navigateActivityLog();
+//          navigateToMedia();
+//          navigateScan();
+//          navigateBackupDownload();
+//          navigateBlogPost();
+
             // Turn Demo Mode off on the emulator when we're done
             mDemoModeEnabler.disable();
             logoutIfNecessary();
@@ -313,6 +317,50 @@ public class JPScreenshotTest extends BaseTest {
         // Right now on navigating to the media no images will be present in gallery
         takeScreenshot(MEDIA_SCREENSHOT_NAME);
 
+        pressBackUntilElementIsDisplayed(R.id.nav_sites);
+    }
+
+    private void navigateSiteTopic() {
+        // Click on the "Sites" tab in the nav, then click the SiteInfo dropdown
+        clickOn(R.id.nav_sites);
+        (new MySitesPage()).startNewSite();
+
+        waitForElementToBeDisplayedWithoutFailure(R.id.recycler_view);
+
+        // Wait for page to load
+        idleFor(2000);
+
+        setNightModeAndWait(false);
+        takeScreenshot(SITE_TOPIC_SCREENSHOT_NAME);
+
+        // Exit the view and return
+        pressBackUntilElementIsDisplayed(R.id.nav_sites);
+    }
+
+    private void navigateChooseDomain() {
+        // Click on the "Sites" tab in the nav, then click the SiteInfo dropdown
+        clickOn(R.id.nav_sites);
+        (new MySitesPage()).startNewSite();
+
+        waitForElementToBeDisplayedWithoutFailure(R.id.recycler_view);
+
+        // todo: improvement opportunity: implement a loop for this until the text appears
+        // Wait for page to load
+        idleFor(2000);
+
+        // Click on skip
+        clickOn(R.id.skipButton);
+
+        // Wait for page to load
+        idleFor(2000);
+
+        // Click on skip
+        clickOn(R.id.skipButton);
+        // R.string.new_site_creation_domain_header_title
+        setNightModeAndWait(false);
+        takeScreenshot(CHOOSE_DOMAIN_NAME);
+
+        // Exit the view and return
         pressBackUntilElementIsDisplayed(R.id.nav_sites);
     }
 
