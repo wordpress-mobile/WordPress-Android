@@ -37,6 +37,7 @@ import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.main.WPMainActivity
+import org.wordpress.android.ui.main.WPMainNavigationView.PageType
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment
 import org.wordpress.android.ui.notifications.NotificationEvents.NotificationsUnseenStatus
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter.FILTERS
@@ -131,7 +132,7 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
 
         viewModel.showJetpackPoweredBottomSheet.observeEvent(viewLifecycleOwner) {
             JetpackPoweredBottomSheetFragment
-                    .newInstance(it)
+                    .newInstance(it, PageType.NOTIFS)
                     .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG
             )
         }
