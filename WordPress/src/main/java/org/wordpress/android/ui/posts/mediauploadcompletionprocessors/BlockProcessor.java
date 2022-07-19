@@ -1,7 +1,5 @@
 package org.wordpress.android.ui.posts.mediauploadcompletionprocessors;
 
-import android.text.TextUtils;
-
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -46,16 +44,8 @@ public abstract class BlockProcessor {
     BlockProcessor(String localId, MediaFile mediaFile) {
         mLocalId = localId;
         mRemoteId = mediaFile.getMediaId();
-
-        String mediaURL;
-        if (!TextUtils.isEmpty(mediaFile.getFileUrlLargeSize())) {
-            mediaURL = mediaFile.getFileUrlLargeSize();
-        } else if (!TextUtils.isEmpty(mediaFile.getFileUrlMediumSize())) {
-            mediaURL = mediaFile.getFileUrlMediumSize();
-        } else {
-            mediaURL = mediaFile.getFileURL();
-        }
-        mRemoteUrl = org.wordpress.android.util.StringUtils.notNullStr(Utils.escapeQuotes(mediaURL));
+        mRemoteUrl = org.wordpress.android.util.StringUtils.notNullStr(Utils
+                .escapeQuotes(mediaFile.getOptimalFileURL()));
     }
 
     private JsonObject parseJson(String blockJson) {
