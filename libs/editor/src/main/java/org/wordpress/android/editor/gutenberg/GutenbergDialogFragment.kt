@@ -30,6 +30,7 @@ class GutenbergDialogFragment : AppCompatDialogFragment() {
         fun onDismissByOutsideTouch(instanceTag: String)
     }
 
+    @Suppress("LongParameterList")
     fun initialize(
         tag: String,
         title: CharSequence?,
