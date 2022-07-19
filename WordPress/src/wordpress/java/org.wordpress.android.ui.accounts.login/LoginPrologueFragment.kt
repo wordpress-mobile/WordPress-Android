@@ -28,6 +28,7 @@ class LoginPrologueFragment : Fragment(R.layout.login_signup_screen) {
         const val TAG = "login_prologue_fragment_tag"
     }
 
+    @Suppress("TooGenericExceptionThrown")
     override fun onAttach(context: Context) {
         super.onAttach(context)
         if (context !is LoginPrologueListener) {
