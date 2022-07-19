@@ -130,7 +130,7 @@ class PhotoPickerViewModel @Inject constructor(
             val uiItems = data.map {
                 val showOrderCounter = browserType.canMultiselect()
                 val toggleAction = ToggleAction(it.id, showOrderCounter, this::toggleItem)
-                val clickAction = ClickAction(it.id, it.uri, it.isVideo, this::clickItem)
+                val clickAction = ClickAction(it.uri, it.isVideo, this::clickItem)
                 val (selectedOrder, isSelected) = if (selectedIds != null && selectedIds.contains(it.id)) {
                     isVideoSelected = isVideoSelected || it.isVideo
                     val selectedOrder = if (showOrderCounter) selectedIds.indexOf(it.id) + 1 else null
@@ -281,14 +281,14 @@ class PhotoPickerViewModel @Inject constructor(
         _selectedIds.postValue(updatedIds)
     }
 
-    private fun clickItem(id: Long, uri: UriWrapper?, isVideo: Boolean) {
-        trackOpenPreviewScreenEvent(id, uri, isVideo)
+    private fun clickItem(uri: UriWrapper?, isVideo: Boolean) {
+        trackOpenPreviewScreenEvent(uri, isVideo)
         uri?.let {
             _navigateToPreview.postValue(Event(it))
         }
     }
 
-    private fun trackOpenPreviewScreenEvent(id: Long, uri: UriWrapper?, isVideo: Boolean) {
+    private fun trackOpenPreviewScreenEvent(uri: UriWrapper?, isVideo: Boolean) {
         launch(bgDispatcher) {
             val properties = analyticsUtilsWrapper.getMediaProperties(
                     isVideo,
