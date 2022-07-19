@@ -3,7 +3,6 @@ package org.wordpress.android.ui.reader;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Html;
@@ -134,7 +133,6 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.config.JetpackPoweredFeatureConfig;
 import org.wordpress.android.util.config.SeenUnseenWithCounterFeatureConfig;
-import org.wordpress.android.util.extensions.WindowExtensionsKt;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel;
 import org.wordpress.android.widgets.AppRatingDialog;
@@ -506,7 +504,6 @@ public class ReaderPostListFragment extends ViewPagerFragment
         final boolean shouldShow = forceShow && mJetpackPoweredFeatureConfig.isEnabled() && !BuildConfig.IS_JETPACK_APP;
         if (shouldShow) {
             getView().findViewById(R.id.jetpack_banner).setVisibility(View.VISIBLE);
-            WindowExtensionsKt.setNavigationBarColorForBanner(requireActivity().getWindow());
             // Add bottom margin to post list and empty view.
             int jetpackBannerHeight = getResources().getDimensionPixelSize(R.dimen.jetpack_banner_height);
             ((MarginLayoutParams) getView().findViewById(R.id.reader_recycler_view).getLayoutParams())
@@ -515,11 +512,6 @@ public class ReaderPostListFragment extends ViewPagerFragment
                     .bottomMargin = jetpackBannerHeight;
         } else {
             getView().findViewById(R.id.jetpack_banner).setVisibility(View.GONE);
-            // Reset navigation bar color.
-            if (requireContext().getResources().getConfiguration().orientation
-                == Configuration.ORIENTATION_PORTRAIT) {
-                requireActivity().getWindow().setNavigationBarColor(0);
-            }
             // Remove bottom margin from post list and empty view.
             ((MarginLayoutParams) getView().findViewById(R.id.reader_recycler_view).getLayoutParams())
                     .bottomMargin = 0;
