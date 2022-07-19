@@ -12,10 +12,10 @@ object JetpackBannerUtils {
         banner.isVisible = true
 
         val layoutManager = scrollableView.layoutManager as LinearLayoutManager
-        val firstVisibleItemPosition = layoutManager.findFirstCompletelyVisibleItemPosition()
         val isEmpty = layoutManager.itemCount == 0
+        val scrollOffset = scrollableView.computeVerticalScrollOffset()
 
-        banner.translationY = if (firstVisibleItemPosition == 0 || isEmpty) {
+        banner.translationY = if (scrollOffset == 0 || isEmpty) {
             // Show
             0f
         } else {
@@ -29,14 +29,13 @@ object JetpackBannerUtils {
             private var isScrollAtTop = true
 
             override fun onScrollChange(v: View?, scrollX: Int, scrollY: Int, oldScrollX: Int, oldScrollY: Int) {
-                val layoutManager = scrollableView.layoutManager as LinearLayoutManager
-                val firstVisibleItemPosition = layoutManager.findFirstCompletelyVisibleItemPosition()
+                val scrollOffset = scrollableView.computeVerticalScrollOffset()
 
-                if (firstVisibleItemPosition == 0 && !isScrollAtTop) {
+                if (scrollOffset == 0 && !isScrollAtTop) {
                     // Show the banner by moving up
                     isScrollAtTop = true
                     banner.animate().translationY(0f).start()
-                } else if (firstVisibleItemPosition != 0 && isScrollAtTop) {
+                } else if (scrollOffset != 0 && isScrollAtTop) {
                     // Hide the banner by moving down
                     isScrollAtTop = false
                     val jetpackBannerHeight = banner.resources.getDimension(R.dimen.jetpack_banner_height)
