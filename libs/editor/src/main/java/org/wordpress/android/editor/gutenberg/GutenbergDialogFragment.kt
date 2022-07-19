@@ -102,6 +102,7 @@ class GutenbergDialogFragment : AppCompatDialogFragment() {
         return builder.create()
     }
 
+    @Suppress("TooGenericExceptionThrown")
     override fun onAttach(context: Context) {
         super.onAttach(context)
         val parentFragment: Fragment? = parentFragment
