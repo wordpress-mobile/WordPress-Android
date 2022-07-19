@@ -488,7 +488,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
             mSubFilterViewModel.onUserComesToReader();
         }
 
-        if (getPostListType() == ReaderPostListType.SEARCH_RESULTS) {
+        if (isSearching()) {
             mRecyclerView.showAppBarLayout();
             mSearchMenuItem.expandActionView();
             mRecyclerView.setToolbarScrollFlags(0);
@@ -686,8 +686,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
         }
         mWasPaused = true;
 
-        mViewModel.onFragmentPause(mIsTopLevel, getPostListType() == ReaderPostListType.SEARCH_RESULTS,
-                isFilterableScreen());
+        mViewModel.onFragmentPause(mIsTopLevel, isSearching(), isFilterableScreen());
     }
 
     @Override
@@ -719,12 +718,12 @@ public class ReaderPostListFragment extends ViewPagerFragment
 
             // if the user tapped a site to show site preview, it's possible they also changed the follow
             // status so tell the search adapter to check whether it has the correct follow status
-            if (getPostListType() == ReaderPostListType.SEARCH_RESULTS && mLastTappedSiteSearchResult != null) {
+            if (isSearching() && mLastTappedSiteSearchResult != null) {
                 getSiteSearchAdapter().checkFollowStatusForSite(mLastTappedSiteSearchResult);
                 mLastTappedSiteSearchResult = null;
             }
 
-            if (getPostListType() == ReaderPostListType.SEARCH_RESULTS) {
+            if (isSearching()) {
                 return;
             }
         }
@@ -734,8 +733,8 @@ public class ReaderPostListFragment extends ViewPagerFragment
             showEmptyView();
         }
 
-        mViewModel.onFragmentResume(mIsTopLevel, getPostListType() == ReaderPostListType.SEARCH_RESULTS,
-                isFilterableScreen(), isFilterableScreen() ? mSubFilterViewModel.getCurrentSubfilterValue() : null);
+        mViewModel.onFragmentResume(mIsTopLevel, isSearching(), isFilterableScreen(),
+                isFilterableScreen() ? mSubFilterViewModel.getCurrentSubfilterValue() : null);
     }
 
     /*
@@ -903,9 +902,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
 
         if (getPostListType() == ReaderPostListType.TAG_PREVIEW) {
             mTagPreviewHistory.saveInstance(outState);
-        } else if (getPostListType() == ReaderPostListType.SEARCH_RESULTS
-                   && mSearchView != null
-                   && mSearchView.getQuery() != null) {
+        } else if (isSearching() && mSearchView != null && mSearchView.getQuery() != null) {
             String query = mSearchView.getQuery().toString();
             outState.putString(ReaderConstants.ARG_SEARCH_QUERY, query);
         }
@@ -1083,7 +1080,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
         }
 
         // add a menu to the filtered recycler's toolbar
-        if (mAccountStore.hasAccessToken() && getPostListType() == ReaderPostListType.SEARCH_RESULTS) {
+        if (mAccountStore.hasAccessToken() && isSearching()) {
             setupRecyclerToolbar();
         }
 
@@ -1190,7 +1187,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
         boolean isSearching = getPostListType() == ReaderPostListType.SEARCH_RESULTS;
 
         // prevents suggestions from being shown after the search view has been collapsed
-        if (!isSearching) {
+        if (!isSearching()) {
             return;
         }
 
@@ -1220,6 +1217,10 @@ public class ReaderPostListFragment extends ViewPagerFragment
                 hideSearchSuggestions();
             }
         }
+    }
+
+    private boolean isSearching() {
+        return getPostListType() == ReaderPostListType.SEARCH_RESULTS;
     }
 
     /*
@@ -1564,9 +1565,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
         // load the results if the search succeeded and it's the current search - note that success
         // means the search didn't fail, not necessarily that is has results - which is fine because
         // if there aren't results then refreshing will show the empty message
-        if (event.didSucceed()
-            && getPostListType() == ReaderPostListType.SEARCH_RESULTS
-            && event.getQuery().equals(mCurrentSearchQuery)) {
+        if (event.didSucceed() && isSearching() && event.getQuery().equals(mCurrentSearchQuery)) {
             refreshPosts();
             showSearchTabs();
         } else {
@@ -1612,7 +1611,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
         } else if (!NetworkUtils.isNetworkAvailable(getActivity())) {
             title = getString(R.string.reader_empty_posts_no_connection);
         } else if (requestFailed) {
-            if (getPostListType() == ReaderPostListType.SEARCH_RESULTS) {
+            if (isSearching()) {
                 title = getString(R.string.reader_empty_search_request_failed);
             } else {
                 title = getString(R.string.reader_empty_posts_request_failed);
@@ -1818,7 +1817,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
                     AppLog.d(T.READER, "reader post list > restoring position");
                     mRecyclerView.scrollRecycleViewToPosition(mRestorePosition);
                 }
-                if (getPostListType() == ReaderPostListType.SEARCH_RESULTS && !isSearchTabsShowing()) {
+                if (isSearching() && !isSearchTabsShowing()) {
                     showSearchTabs();
                 }
             }
@@ -1921,7 +1920,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
                 mPostAdapter.setCurrentTag(getCurrentTag());
             } else if (getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
                 mPostAdapter.setCurrentBlogAndFeed(mCurrentBlogId, mCurrentFeedId);
-            } else if (getPostListType() == ReaderPostListType.SEARCH_RESULTS) {
+            } else if (isSearching()) {
                 ReaderTag searchTag = ReaderUtils.getTagForSearchQuery(mCurrentSearchQuery);
                 mPostAdapter.setCurrentTag(searchTag);
             }
@@ -2168,8 +2167,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
 
         // don't show new posts if user is searching - posts will automatically
         // appear when search is exited
-        if (isSearchViewExpanded()
-            || getPostListType() == ReaderPostListType.SEARCH_RESULTS) {
+        if (isSearchViewExpanded() || isSearching()) {
             return;
         }
 
