@@ -16,7 +16,7 @@ steps:
   - label: "detekt"
     command: |
       cp gradle.properties-example gradle.properties
-      ./gradlew WordPress:detekt
+      ./gradlew detekt
     plugins: *common_plugins
     artifact_paths:
       - "**/build/reports/detekt/detekt.html"
