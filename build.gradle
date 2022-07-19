@@ -99,7 +99,7 @@ allprojects {
         buildUponDefaultConfig = true
         disableDefaultRuleSets = false
         ignoreFailures = false
-        parallel = false
+        parallel = true
         debug = false
         reports {
             html.enabled = true
