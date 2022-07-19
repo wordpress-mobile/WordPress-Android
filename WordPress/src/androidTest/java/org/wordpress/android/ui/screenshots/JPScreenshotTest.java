@@ -37,6 +37,7 @@ import static org.wordpress.android.support.WPSupportUtils.childAtPosition;
 import static org.wordpress.android.support.WPSupportUtils.clickOn;
 import static org.wordpress.android.support.WPSupportUtils.clickOnViewWithTag;
 import static org.wordpress.android.support.WPSupportUtils.getCurrentActivity;
+import static org.wordpress.android.support.WPSupportUtils.getTranslatedString;
 import static org.wordpress.android.support.WPSupportUtils.idleFor;
 import static org.wordpress.android.support.WPSupportUtils.isElementDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.isTabletScreen;
@@ -72,6 +73,7 @@ public class JPScreenshotTest extends BaseTest {
     private static final String EDIT_POST_SCREENSHOT_NAME = "8-create-a-site-or-start-a-blog";
     private static final String BLOGGING_REMINDER_SCREENSHOT_NAME = "9-create-blogging-reminders";
     private static final String SITE_TOPIC_SCREENSHOT_NAME = "10-site-topic";
+    private static final String CHOOSE_A_LAYOUT_SCREENSHOT_NAME = "11-choose-a-layout";
 
     @Test
     public void jPScreenshotTest() {
@@ -86,6 +88,7 @@ public class JPScreenshotTest extends BaseTest {
             navigateMySite();
             navigateSiteTopic();
 
+            navigateChooseALayout();
             navigateStats();
             navigateNotifications();
             navigateBloggingReminders();
@@ -331,6 +334,25 @@ public class JPScreenshotTest extends BaseTest {
 
         setNightModeAndWait(false);
         takeScreenshot(SITE_TOPIC_SCREENSHOT_NAME);
+
+        // Exit the view and return
+        pressBackUntilElementIsDisplayed(R.id.nav_sites);
+    }
+
+    private void navigateChooseALayout() {
+        // Click on the "Sites" tab in the nav, then click the SiteInfo dropdown
+        clickOn(R.id.nav_sites);
+        clickOn(R.id.fab_button);
+
+        // Wait for bottom sheet to load
+        idleFor(2000);
+
+        // Select Site Page
+        clickOn(onView(withText(getTranslatedString(R.string.my_site_bottom_sheet_add_page))));
+        idleFor(2000);
+
+        setNightModeAndWait(false);
+        takeScreenshot(CHOOSE_A_LAYOUT_SCREENSHOT_NAME);
 
         // Exit the view and return
         pressBackUntilElementIsDisplayed(R.id.nav_sites);
