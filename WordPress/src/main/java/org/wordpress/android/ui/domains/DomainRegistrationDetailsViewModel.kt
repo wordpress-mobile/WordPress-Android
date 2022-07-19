@@ -45,7 +45,7 @@ const val MAX_SITE_CHECK_TRIES = 10
 
 class DomainRegistrationDetailsViewModel @Inject constructor(
     private val dispatcher: Dispatcher,
-    private val transactionsStore: TransactionsStore, // needed for events to work
+    @Suppress("unused") private val transactionsStore: TransactionsStore, // needed for events to work
     private val siteStore: SiteStore,
     private val analyticsTracker: AnalyticsTrackerWrapper,
     @param:Named(UI_THREAD) private val uiDispatcher: CoroutineDispatcher
