@@ -89,6 +89,7 @@ class StoriesEventListener @Inject constructor(
      * Handles the [Lifecycle.Event.ON_DESTROY] event to cleanup the registration for dispatcher and removing the
      * observer for lifecycle   .
      */
+    @Suppress("unused")
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     private fun onDestroy() {
         lifecycle.removeObserver(this)
