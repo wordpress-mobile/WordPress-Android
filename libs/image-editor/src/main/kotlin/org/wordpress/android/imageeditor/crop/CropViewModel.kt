@@ -173,6 +173,7 @@ class CropViewModel : ViewModel() {
         }
     }
 
+    @Suppress("SerialVersionUIDInSerializableClass")
     data class CropResult(val resultCode: Int, val data: Intent) : Serializable
 
     sealed class UiState(
