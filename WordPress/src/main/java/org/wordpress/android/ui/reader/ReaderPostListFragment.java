@@ -3,6 +3,7 @@ package org.wordpress.android.ui.reader;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Html;
@@ -15,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.MarginLayoutParams;
 import android.view.animation.Animation;
 import android.widget.AutoCompleteTextView;
 import android.widget.ProgressBar;
@@ -39,6 +41,7 @@ import com.google.android.material.tabs.TabLayout.Tab;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -129,7 +132,9 @@ import org.wordpress.android.util.SnackbarSequencer;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
+import org.wordpress.android.util.config.JetpackPoweredFeatureConfig;
 import org.wordpress.android.util.config.SeenUnseenWithCounterFeatureConfig;
+import org.wordpress.android.util.extensions.WindowExtensionsKt;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel;
 import org.wordpress.android.widgets.AppRatingDialog;
@@ -223,6 +228,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
     @Inject TagUpdateClientUtilsProvider mTagUpdateClientUtilsProvider;
     @Inject QuickStartUtilsWrapper mQuickStartUtilsWrapper;
     @Inject SeenUnseenWithCounterFeatureConfig mSeenUnseenWithCounterFeatureConfig;
+    @Inject JetpackPoweredFeatureConfig mJetpackPoweredFeatureConfig;
     @Inject QuickStartRepository mQuickStartRepository;
     @Inject ReaderTracker mReaderTracker;
     @Inject SnackbarSequencer mSnackbarSequencer;
@@ -492,6 +498,33 @@ public class ReaderPostListFragment extends ViewPagerFragment
             mRecyclerView.showAppBarLayout();
             mSearchMenuItem.expandActionView();
             mRecyclerView.setToolbarScrollFlags(0);
+        }
+    }
+
+    private void toggleJetpackBannerIfEnabled(boolean forceShow) {
+        if (!isAdded() || !isSearching() || getView() == null) return;
+        final boolean shouldShow = forceShow && mJetpackPoweredFeatureConfig.isEnabled() && !BuildConfig.IS_JETPACK_APP;
+        if (shouldShow) {
+            getView().findViewById(R.id.jetpack_banner).setVisibility(View.VISIBLE);
+            WindowExtensionsKt.setNavigationBarColorForBanner(requireActivity().getWindow());
+            // Add bottom margin to post list and empty view.
+            int jetpackBannerHeight = getResources().getDimensionPixelSize(R.dimen.jetpack_banner_height);
+            ((MarginLayoutParams) getView().findViewById(R.id.reader_recycler_view).getLayoutParams())
+                    .bottomMargin = jetpackBannerHeight;
+            ((MarginLayoutParams) getView().findViewById(R.id.empty_custom_view).getLayoutParams())
+                    .bottomMargin = jetpackBannerHeight;
+        } else {
+            getView().findViewById(R.id.jetpack_banner).setVisibility(View.GONE);
+            // Reset navigation bar color.
+            if (requireContext().getResources().getConfiguration().orientation
+                == Configuration.ORIENTATION_PORTRAIT) {
+                requireActivity().getWindow().setNavigationBarColor(0);
+            }
+            // Remove bottom margin from post list and empty view.
+            ((MarginLayoutParams) getView().findViewById(R.id.reader_recycler_view).getLayoutParams())
+                    .bottomMargin = 0;
+            ((MarginLayoutParams) getView().findViewById(R.id.empty_custom_view).getLayoutParams())
+                    .bottomMargin = 0;
         }
     }
 
@@ -1184,7 +1217,8 @@ public class ReaderPostListFragment extends ViewPagerFragment
     private void showSearchMessageOrSuggestions() {
         boolean hasQuery = !isSearchViewEmpty();
         boolean hasPerformedSearch = !TextUtils.isEmpty(mCurrentSearchQuery);
-        boolean isSearching = getPostListType() == ReaderPostListType.SEARCH_RESULTS;
+
+        toggleJetpackBannerIfEnabled(true);
 
         // prevents suggestions from being shown after the search view has been collapsed
         if (!isSearching()) {
@@ -1272,6 +1306,8 @@ public class ReaderPostListFragment extends ViewPagerFragment
         mCurrentSearchQuery = trimQuery;
         updatePostsInCurrentSearch(0);
         updateSitesInCurrentSearch(0);
+
+        toggleJetpackBannerIfEnabled(false);
 
         // track that the user performed a search
         if (!trimQuery.equals("")) {

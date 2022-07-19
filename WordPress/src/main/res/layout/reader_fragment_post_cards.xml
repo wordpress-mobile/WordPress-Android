@@ -76,4 +76,12 @@
         android:visibility="gone"
         tools:visibility="visible" />
 
+    <include
+        android:id="@+id/jetpack_banner"
+        layout="@layout/jetpack_banner"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/jetpack_banner_height"
+        android:layout_alignParentBottom="true"
+        android:visibility="gone"
+        tools:visibility="visible" />
 </RelativeLayout>
