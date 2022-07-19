@@ -664,7 +664,7 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
     @Override
     public boolean onMenuItemActionExpand(MenuItem item) {
         mMenu.findItem(R.id.menu_new_media).setVisible(false);
-        mMediaGridFragment.showActionableEmptyViewButton(false);
+        mMediaGridFragment.onSearchItemStateChanged(true);
 
         enableTabs(false);
         showQuota(false);
@@ -680,7 +680,7 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
     @Override
     public boolean onMenuItemActionCollapse(MenuItem item) {
         mMenu.findItem(R.id.menu_new_media).setVisible(true);
-        mMediaGridFragment.showActionableEmptyViewButton(true);
+        mMediaGridFragment.onSearchItemStateChanged(false);
         invalidateOptionsMenu();
 
         enableTabs(true);

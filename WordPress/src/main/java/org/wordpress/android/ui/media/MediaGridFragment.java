@@ -622,6 +622,16 @@ public class MediaGridFragment extends Fragment
         mActionableEmptyView.button.setVisibility(show ? VISIBLE : GONE);
     }
 
+    public void onSearchItemStateChanged(boolean expanded) {
+        showActionableEmptyViewButton(!expanded);
+        // TODO: enhance FluxC search to use currently non-existent backend call and integrate with date filtering
+        showDateRangeLayout(!expanded);
+        // clear date filter when search bar is shown
+        if (expanded && (mAfter != null || mBefore != null)) {
+            fetchMediaList(false, null, null);
+        }
+    }
+
     /*
      * load the adapter from the local store
      */
@@ -840,7 +850,7 @@ public class MediaGridFragment extends Fragment
 
     private void updateDateRangeLayout() {
         if (mSite.isUsingWpComRestApi()) {
-            mDateRangeLayout.setVisibility(VISIBLE);
+            showDateRangeLayout(true);
             if (mAfter != null && mBefore != null) {
                 mDateRangeTextView.setText(mDateUtils.formatDateRange(mAfter, mBefore, TimeZone.getDefault().getID()));
                 mRemoveDateRangeFilterButton.setVisibility(VISIBLE);
@@ -850,8 +860,12 @@ public class MediaGridFragment extends Fragment
             }
         }
         else {
-            mDateRangeLayout.setVisibility(GONE);
+            showDateRangeLayout(false);
         }
+    }
+
+    private void showDateRangeLayout(boolean visible) {
+        mDateRangeLayout.setVisibility(visible ? VISIBLE : GONE);
     }
 
     private void handleFetchAllMediaSuccess(OnMediaListFetched event) {
