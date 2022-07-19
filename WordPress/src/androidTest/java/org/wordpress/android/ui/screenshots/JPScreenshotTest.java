@@ -72,7 +72,6 @@ public class JPScreenshotTest extends BaseTest {
     private static final String EDIT_POST_SCREENSHOT_NAME = "8-create-a-site-or-start-a-blog";
     private static final String BLOGGING_REMINDER_SCREENSHOT_NAME = "9-create-blogging-reminders";
     private static final String SITE_TOPIC_SCREENSHOT_NAME = "10-site-topic";
-    private static final String CHOOSE_DOMAIN_NAME = "11-choose-domain";
 
     @Test
     public void jPScreenshotTest() {
@@ -86,7 +85,7 @@ public class JPScreenshotTest extends BaseTest {
 
             navigateMySite();
             navigateSiteTopic();
-            navigateChooseDomain();
+
             navigateStats();
             navigateNotifications();
             navigateBloggingReminders();
@@ -332,33 +331,6 @@ public class JPScreenshotTest extends BaseTest {
 
         setNightModeAndWait(false);
         takeScreenshot(SITE_TOPIC_SCREENSHOT_NAME);
-
-        // Exit the view and return
-        pressBackUntilElementIsDisplayed(R.id.nav_sites);
-    }
-
-    private void navigateChooseDomain() {
-        // Click on the "Sites" tab in the nav, then click the SiteInfo dropdown
-        clickOn(R.id.nav_sites);
-        (new MySitesPage()).startNewSite();
-
-        waitForElementToBeDisplayedWithoutFailure(R.id.recycler_view);
-
-        // todo: improvement opportunity: implement a loop for this until the text appears
-        // Wait for page to load
-        idleFor(2000);
-
-        // Click on skip
-        clickOn(R.id.skipButton);
-
-        // Wait for page to load
-        idleFor(2000);
-
-        // Click on skip
-        clickOn(R.id.skipButton);
-        // R.string.new_site_creation_domain_header_title
-        setNightModeAndWait(false);
-        takeScreenshot(CHOOSE_DOMAIN_NAME);
 
         // Exit the view and return
         pressBackUntilElementIsDisplayed(R.id.nav_sites);
