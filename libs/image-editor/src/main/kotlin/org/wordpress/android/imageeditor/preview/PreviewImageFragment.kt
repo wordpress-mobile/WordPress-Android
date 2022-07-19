@@ -42,6 +42,7 @@ import org.wordpress.android.imageeditor.utils.ToastUtils.Duration
 import org.wordpress.android.imageeditor.utils.UiHelpers
 import java.io.File
 
+@Suppress("TooManyFunctions")
 class PreviewImageFragment : Fragment(R.layout.preview_image_fragment) {
     private var binding: PreviewImageFragmentBinding? = null
     private lateinit var viewModel: PreviewImageViewModel
