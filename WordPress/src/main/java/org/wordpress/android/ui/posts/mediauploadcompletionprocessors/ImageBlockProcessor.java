@@ -19,7 +19,7 @@ public class ImageBlockProcessor extends BlockProcessor {
         // if a match is found, proceed with replacement
         if (targetImg != null) {
             // replace attributes
-            targetImg.attr("src", mRemoteUrl);
+            targetImg.attr("src", mRemoteImageUrl);
 
             // replace class
             targetImg.removeClass("wp-image-" + mLocalId);

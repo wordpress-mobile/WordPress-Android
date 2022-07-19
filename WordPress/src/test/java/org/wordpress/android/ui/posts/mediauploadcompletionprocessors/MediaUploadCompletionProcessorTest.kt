@@ -20,6 +20,7 @@ class MediaUploadCompletionProcessorTest {
     fun before() {
         whenever(mediaFile.mediaId).thenReturn(TestContent.remoteMediaId)
         whenever(mediaFile.fileURL).thenReturn(TestContent.remoteImageUrl)
+        whenever(mediaFile.optimalFileURL).thenReturn(TestContent.remoteImageUrl)
         whenever(mediaFile.getAttachmentPageURL(any())).thenReturn(TestContent.attachmentPageUrl)
         processor = MediaUploadCompletionProcessor(TestContent.localMediaId, mediaFile, TestContent.siteUrl)
     }
