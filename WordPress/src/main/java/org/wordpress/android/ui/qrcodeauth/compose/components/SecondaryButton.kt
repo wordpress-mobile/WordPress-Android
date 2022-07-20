@@ -6,6 +6,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 
 @Composable
 fun SecondaryButton(
@@ -18,21 +19,9 @@ fun SecondaryButton(
             modifier = modifier,
             onClick = onClick,
             enabled = enabled,
-            colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.surface)
+            elevation = ButtonDefaults.elevation(0.dp),
+            colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.background)
     ) {
         Text(text = text)
     }
-    //TODO
-    //    <com.google.android.material.button.MaterialButton
-//    android:id="@+id/error_secondary_action"
-//    style="@style/QRCodeAuth.SecondaryButton"
-//    android:text="@string/cancel"
-//    <com.google.android.material.button.MaterialButton
-//    android:id="@+id/error_secondary_action"
-//    style="@style/QRCodeAuth.SecondaryButton"
-//    android:text="@string/cancel"
-//    app:layout_constraintBottom_toBottomOf="parent"
-//    app:layout_constraintEnd_toEndOf="parent"
-//    app:layout_constraintStart_toStartOf="parent"
-//    app:layout_constraintTop_toBottomOf="@id/error_primary_action" />
 }
