@@ -643,6 +643,7 @@ class AppInitializer @Inject constructor(
      * enable caching for HttpUrlConnection
      * http://developer.android.com/training/efficient-downloads/redundant_redundant.html
      */
+    @Suppress("SwallowedException")
     private fun enableHttpResponseCache(context: Context) {
         try {
             val httpCacheDir = File(context.cacheDir, "http")
@@ -973,7 +974,7 @@ class AppInitializer @Inject constructor(
          * AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/44.0.2403.119 Mobile
          * Safari/537.36"
          */
-        val defaultUserAgent: String by lazy {
+        @Suppress("SwallowedException") val defaultUserAgent: String by lazy {
             try {
                 WebSettings.getDefaultUserAgent(context)
             } catch (e: AndroidRuntimeException) {
