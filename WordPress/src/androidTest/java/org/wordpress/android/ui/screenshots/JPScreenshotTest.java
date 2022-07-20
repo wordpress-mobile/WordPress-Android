@@ -62,6 +62,8 @@ public class JPScreenshotTest extends BaseTest {
     @ClassRule
     public static final WPLocaleTestRule LOCALE_TEST_RULE = new WPLocaleTestRule();
 
+    private static final String JETPACK_SCREENSHOT_SITE_URL = "yourjetpack.blog";
+
     private DemoModeEnabler mDemoModeEnabler = new DemoModeEnabler();
 
     public enum Screenshots {
@@ -95,7 +97,6 @@ public class JPScreenshotTest extends BaseTest {
 
     @Test
     public void jPScreenshotTest() {
-        // todo: each screenshot should be self sufficient - do not make any assumptions
         if (BuildConfig.IS_JETPACK_APP) {
             ActivityScenario.launch(WPLaunchActivity.class);
             Screengrab.setDefaultScreenshotStrategy(new UiAutomatorScreenshotStrategy());
@@ -104,14 +105,18 @@ public class JPScreenshotTest extends BaseTest {
             mDemoModeEnabler.enable();
             wpLogin();
 
-            navigateMySite();
-            navigateCreatePost();
-            navigateSiteTopic();
+            // After log the home-dashboard should be visible
+            // Navigate to the correct site for the Jetpack Screenshots
+            (new MySitesPage()).switchToSite(JETPACK_SCREENSHOT_SITE_URL);
 
-            navigateChooseALayout();
-            navigateStats();
-            navigateNotifications();
-            navigateBloggingReminders();
+            generateMySite();
+            generateCreatePost();
+            generateSiteTopic();
+
+            generateChooseALayout();
+            generateStats();
+            generateNotifications();
+            generateBloggingReminders();
 
             // Turn Demo Mode off on the emulator when we're done
             mDemoModeEnabler.disable();
@@ -119,8 +124,8 @@ public class JPScreenshotTest extends BaseTest {
         }
     }
 
-    public void navigateMySite() {
-        (new MySitesPage()).switchToSite("yourjetpack.blog");
+    public void generateMySite() {
+        (new MySitesPage()).switchToSite(JETPACK_SCREENSHOT_SITE_URL);
 
         waitForElementToBeDisplayedWithoutFailure(R.id.recycler_view);
 
@@ -128,7 +133,7 @@ public class JPScreenshotTest extends BaseTest {
         takeScreenshot(Screenshots.buildScreenshotName(Screenshots.MY_SITE));
     }
 
-    private void navigateCreatePost() {
+    private void generateCreatePost() {
         (new MySitesPage()).goToBloggingReminders();
         (new MySitesPage()).addBloggingPrompts();
 
@@ -215,7 +220,7 @@ public class JPScreenshotTest extends BaseTest {
         pressBackUntilElementIsDisplayed(R.id.nav_sites);
     }
 
-    private void navigateBloggingReminders() {
+    private void generateBloggingReminders() {
         moveToBloggingReminder();
 
         setNightModeAndWait(false);
@@ -254,7 +259,7 @@ public class JPScreenshotTest extends BaseTest {
         pressBackUntilElementIsDisplayed(R.id.nav_sites);
     }
 
-    private void navigateStats() {
+    private void generateStats() {
         // Click on the "Sites" tab in the nav, then click the "Menu" tab, then choose "Stats"
         clickOn(R.id.nav_sites);
         (new MySitesPage()).goToStats().dismissUpdateAlertDialogFragmentIfDisplayed();
@@ -278,7 +283,7 @@ public class JPScreenshotTest extends BaseTest {
         pressBackUntilElementIsDisplayed(R.id.nav_sites);
     }
 
-    private void navigateNotifications() {
+    private void generateNotifications() {
         // Click on the "Notifications" tab in the nav
         clickOn(R.id.nav_notifications);
 
@@ -356,7 +361,7 @@ public class JPScreenshotTest extends BaseTest {
         pressBackUntilElementIsDisplayed(R.id.nav_sites);
     }
 
-    private void navigateSiteTopic() {
+    private void generateSiteTopic() {
         // Click on the "Sites" tab in the nav, then click the SiteInfo dropdown
         clickOn(R.id.nav_sites);
         (new MySitesPage()).startNewSite();
@@ -373,7 +378,7 @@ public class JPScreenshotTest extends BaseTest {
         pressBackUntilElementIsDisplayed(R.id.nav_sites);
     }
 
-    private void navigateChooseALayout() {
+    private void generateChooseALayout() {
         // Click on the "Sites" tab in the nav, then click the SiteInfo dropdown
         clickOn(R.id.nav_sites);
         clickOn(R.id.fab_button);
