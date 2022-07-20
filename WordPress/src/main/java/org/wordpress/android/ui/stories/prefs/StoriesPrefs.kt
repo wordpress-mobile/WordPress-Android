@@ -103,7 +103,7 @@ class StoriesPrefs @Inject constructor(
         return false
     }
 
-    @Suppress("PrintStackTrace")
+    @Suppress("ReturnCount", "PrintStackTrace")
     private fun isUriAccessible(uri: Uri): Boolean {
         if (uri.toString().startsWith("http")) {
             // TODO: assume it'll be accessible - we'll figure out later
