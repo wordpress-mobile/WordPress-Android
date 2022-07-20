@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.qrcodeauth.compose.state
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -87,14 +86,7 @@ fun ContentState(uiState: QRCodeAuthUiState.Content) = with(uiState) {
             }
         }
         if (isProgressShowing) {
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .wrapContentHeight()
-            ) {
-                IndeterminateCircularProgress()
-            }
+            IndeterminateCircularProgress()
         }
     }
 }
