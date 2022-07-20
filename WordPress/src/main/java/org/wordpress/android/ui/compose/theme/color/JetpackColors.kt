@@ -21,12 +21,12 @@ class JetpackColors : ThemeColors {
                     secondary = green50,
                     secondaryVariant = green40,
                     background = white,
-                    surface = white,
+                    surface = black,
                     error = red50,
                     onPrimary = white,
                     onSecondary = white,
                     onBackground = black,
-                    onSurface = black,
+                    onSurface = white,
                     onError = white
             )
 
@@ -37,12 +37,12 @@ class JetpackColors : ThemeColors {
                     secondary = green40,
                     secondaryVariant = green50,
                     background = darkGray,
-                    surface = darkGray,
+                    surface = white,
                     error = red30,
                     onPrimary = black,
                     onSecondary = white,
                     onBackground = white,
-                    onSurface = white,
+                    onSurface = darkGray,
                     onError = black
             )
 }

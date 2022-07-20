@@ -18,7 +18,7 @@ fun SecondaryButton(
             modifier = modifier,
             onClick = onClick,
             enabled = enabled,
-            colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.onSurface)
+            colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.surface)
     ) {
         Text(text = text)
     }
