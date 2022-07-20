@@ -382,6 +382,7 @@ class StoriesEventListener @Inject constructor(
         AnalyticsTracker.track(EDITOR_UPLOAD_MEDIA_RETRIED)
     }
 
+    @Suppress("unused")
     fun onCancelSaveForMediaCollection(mediaFiles: ArrayList<Any>) {
         // TODO implement cancelling save process for media collection
     }
