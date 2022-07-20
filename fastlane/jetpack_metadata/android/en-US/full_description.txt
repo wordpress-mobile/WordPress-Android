@@ -36,6 +36,6 @@ SHARE
 Set up automated sharing to tell your followers on social media when you publish a new post. Automatically cross-post to Facebook, Twitter, and more.
 Add social sharing buttons to your posts so your visitors can share them with their network, and let your fans become your ambassadors.
 
-Learn more at https://jetpack.com/features/mobile
+Learn more at https://jetpack.com/mobile
 
 California users privacy notice: https://automattic.com/privacy/#california-consumer-privacy-act-ccpa
