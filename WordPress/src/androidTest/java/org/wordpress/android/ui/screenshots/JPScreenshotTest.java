@@ -68,18 +68,18 @@ public class JPScreenshotTest extends BaseTest {
     private DemoModeEnabler mDemoModeEnabler = new DemoModeEnabler();
 
     public enum Screenshots {
-        ACTIVITY_LOG(false, null, 0),
-        BACKUP_DOWNLOAD(false, null, 0),
-        BLOGGING_REMINDERS(false, null, 0),
-        CHOOSE_A_LAYOUT(true, "1", 3),
-        CREATE_NEW_OPTIONS(true, "1", 2),
-        EDIT_POST(false, null, 0),
-        MEDIA(false, null, 0),
-        MY_SITE(false, null, 0),
-        NOTIFICATIONS(true, "1", 5),
-        SITE_TOPIC(true, "1", 1),
-        SCAN(false, null, 0),
-        STATS(true, "1", 4);
+        ACTIVITY_LOG(false, "activity-log", 0),
+        BACKUP_DOWNLOAD(false, "backup-download", 0),
+        BLOGGING_REMINDERS(false, "blogging-reminders", 0),
+        CHOOSE_A_LAYOUT(true, "choose-a-layout", 3),
+        CREATE_NEW_OPTIONS(true, "create-new-options", 2),
+        EDIT_POST(false, "edit-blog-post", 0),
+        MEDIA(false, "media", 0),
+        MY_SITE(false, "my-site", 0),
+        NOTIFICATIONS(true, "notifications", 5),
+        SITE_TOPIC(true, "whats-your-website-about", 1),
+        SCAN(false, "scan", 0),
+        STATS(true, "stats", 4);
 
         public final boolean enabled;
         public final String screenshotName;
