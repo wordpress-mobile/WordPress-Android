@@ -118,6 +118,7 @@ class ReaderDiscoverViewModelTest {
     private lateinit var viewModel: ReaderDiscoverViewModel
 
     @Before
+    @Suppress("LongMethod")
     fun setUp() = test {
         viewModel = ReaderDiscoverViewModel(
                 uiStateBuilder,

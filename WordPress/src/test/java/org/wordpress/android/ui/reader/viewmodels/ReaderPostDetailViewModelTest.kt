@@ -168,6 +168,7 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
     private lateinit var relatedPosts: ReaderSimplePostList
 
     @Before
+    @Suppress("LongMethod")
     fun setUp() = test {
         viewModel = ReaderPostDetailViewModel(
                 readerPostCardActionsHandler,
