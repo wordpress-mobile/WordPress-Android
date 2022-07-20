@@ -9,7 +9,8 @@ import org.wordpress.android.util.extensions.viewBinding
 class MySiteJetpackBadgeViewHolder(
     parent: ViewGroup,
 ) : MySiteCardAndItemViewHolder<JetpackBadgeBinding>(parent.viewBinding(JetpackBadgeBinding::inflate)) {
-    fun bind(item: JetpackBadge) {
-        binding.root.setOnClickListener { item.onClick.click() }
+    fun bind(item: JetpackBadge) = with(binding) {
+        jetpackBadge.isEnabled = true
+        jetpackBadge.setOnClickListener { item.onClick.click() }
     }
 }
