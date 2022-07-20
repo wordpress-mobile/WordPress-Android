@@ -30,23 +30,23 @@ import org.wordpress.android.ui.qrcodeauth.compose.components.Title
 @Composable
 fun ContentState(uiState: QRCodeAuthUiState.Content) = with(uiState) {
     Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
-                    .fillMaxWidth()
-                    .wrapContentHeight()
-                    .alpha(alpha),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentHeight()
+            .alpha(alpha),
     ) {
         image?.let { imageRes ->
             ResourceImage(
-                    modifier = Modifier
-                            .padding(
-                                    top = Margin.ExtraLarge.value,
-                                    bottom = Margin.ExtraLarge.value
-                            )
-                            .wrapContentHeight()
-                            .wrapContentWidth(),
-                    imageRes = imageRes,
-                    contentDescription = stringResource(R.string.qrcode_auth_flow_content_description)
+                modifier = Modifier
+                    .padding(
+                        top = Margin.ExtraLarge.value,
+                        bottom = Margin.ExtraLarge.value
+                    )
+                    .wrapContentHeight()
+                    .wrapContentWidth(),
+                imageRes = imageRes,
+                contentDescription = stringResource(R.string.qrcode_auth_flow_content_description)
             )
         }
         title?.let {
@@ -59,15 +59,15 @@ fun ContentState(uiState: QRCodeAuthUiState.Content) = with(uiState) {
             if (actionButton.isVisible) {
                 actionButton.label?.let { label ->
                     PrimaryButton(
-                            modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(
-                                            vertical = Margin.Small.value,
-                                            horizontal = Margin.ExtraExtraMediumLarge.value,
-                                    ),
-                            text = uiStringText(label),
-                            enabled = actionButton.isEnabled,
-                            onClick = { actionButton.clickAction?.invoke() }
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(
+                                vertical = Margin.Small.value,
+                                horizontal = Margin.ExtraExtraMediumLarge.value,
+                            ),
+                        text = uiStringText(label),
+                        enabled = actionButton.isEnabled,
+                        onClick = { actionButton.clickAction?.invoke() }
                     )
                 }
             }
@@ -76,25 +76,25 @@ fun ContentState(uiState: QRCodeAuthUiState.Content) = with(uiState) {
             if (actionButton.isVisible) {
                 actionButton.label?.let { label ->
                     SecondaryButton(
-                            modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(
-                                            vertical = Margin.Small.value,
-                                            horizontal = Margin.ExtraExtraMediumLarge.value,
-                                    ),
-                            text = uiStringText(label),
-                            enabled = actionButton.isEnabled,
-                            onClick = { actionButton.clickAction?.invoke() }
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(
+                                vertical = Margin.Small.value,
+                                horizontal = Margin.ExtraExtraMediumLarge.value,
+                            ),
+                        text = uiStringText(label),
+                        enabled = actionButton.isEnabled,
+                        onClick = { actionButton.clickAction?.invoke() }
                     )
                 }
             }
         }
         if (isProgressShowing) {
             Box(
-                    contentAlignment = Alignment.Center,
-                    modifier = Modifier
-                            .fillMaxWidth()
-                            .wrapContentHeight()
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentHeight()
             ) {
                 IndeterminateCircularProgress()
             }
@@ -107,10 +107,10 @@ fun ContentState(uiState: QRCodeAuthUiState.Content) = with(uiState) {
 fun ContentStatePreview() {
     AppTheme {
         val state = QRCodeAuthUiState.Content.Validated(
-                browser = "{browser}",
-                location = "{location}",
-                primaryActionButton = ValidatedPrimaryActionButton {},
-                secondaryActionButton = ValidatedSecondaryActionButton {},
+            browser = "{browser}",
+            location = "{location}",
+            primaryActionButton = ValidatedPrimaryActionButton {},
+            secondaryActionButton = ValidatedSecondaryActionButton {},
         )
         ContentState(state)
     }
