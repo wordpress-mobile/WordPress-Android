@@ -80,7 +80,7 @@ fun ErrorState(
 
 @Preview(showBackground = true)
 @Composable
-fun ErrorStatePreview() {
+private fun ErrorStatePreview() {
     AppTheme {
         ErrorState(
             imageRes = R.drawable.img_illustration_empty_results_216dp,

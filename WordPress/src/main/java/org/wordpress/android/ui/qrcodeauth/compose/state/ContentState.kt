@@ -104,7 +104,7 @@ fun ContentState(uiState: QRCodeAuthUiState.Content) = with(uiState) {
 
 @Preview(showBackground = true)
 @Composable
-fun ContentStatePreview() {
+private fun ContentStatePreview() {
     AppTheme {
         val state = QRCodeAuthUiState.Content.Validated(
             browser = "{browser}",
