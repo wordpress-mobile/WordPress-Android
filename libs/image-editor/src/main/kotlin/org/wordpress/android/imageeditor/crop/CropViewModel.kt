@@ -27,6 +27,7 @@ import org.wordpress.android.imageeditor.viewmodel.Event
 import java.io.File
 import java.io.Serializable
 
+@Suppress("TooManyFunctions")
 class CropViewModel : ViewModel() {
     private val _uiState = MutableLiveData<UiState>()
     val uiState: LiveData<UiState> = _uiState
