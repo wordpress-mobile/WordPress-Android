@@ -35,8 +35,6 @@ fun ErrorState(
                     .wrapContentHeight(),
             horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        //TODO
-//    android:adjustViewBounds="true"
         ResourceImage(
                 modifier = Modifier
                         .padding(
@@ -46,7 +44,8 @@ fun ErrorState(
                         .wrapContentHeight()
                         .wrapContentWidth(),
                 imageRes = imageRes,
-                contentDescription = stringResource(contentDescriptionRes)
+                contentDescription = stringResource(contentDescriptionRes),
+                adjustViewBounds = true
         )
         Title(text = titleText)
         Subtitle(text = subtitleText)
