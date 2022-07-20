@@ -998,7 +998,7 @@ class ReaderPostUiStateBuilderTest {
     }
 
     private fun createReaderTagList(numOfTags: Int) = ReaderTagList().apply {
-        for (x in 0 until numOfTags) {
+        for (it in 0 until numOfTags) {
             add(createReaderTag())
         }
     }

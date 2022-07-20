@@ -745,7 +745,7 @@ class ReaderDiscoverViewModelTest {
     }
 
     private fun createReaderTagList(numOfTags: Int = 1) = ReaderTagList().apply {
-        for (x in 0 until numOfTags) {
+        for (it in 0 until numOfTags) {
             add(createReaderTag())
         }
     }

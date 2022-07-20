@@ -43,7 +43,7 @@ class EngagementUtilsTest {
                 onClickFunction
         )
 
-        assertThat(engageItems.all { it as Liker != null && it.onClick == onClickFunction }).isTrue
+        assertThat(engageItems.all { (it as Liker).onClick == onClickFunction }).isTrue
     }
 
     @Test
@@ -58,8 +58,9 @@ class EngagementUtilsTest {
                 source
         )
 
-        assertThat(engageItems.all { it as Liker != null && it.source == source }).isTrue
+        assertThat(engageItems.all { (it as Liker).source == source }).isTrue
     }
 
+    @Suppress("unused")
     private fun onClickDummy(userProfile: UserProfile, source: EngagementNavigationSource?) = Unit
 }

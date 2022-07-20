@@ -191,7 +191,7 @@ class ReferrersUseCaseTest : BaseUnitTest() {
                 wordPressReferrer.icon,
                 wordPressReferrer.markedAsSpam
         )
-        return assertExpandableItem(this[4], group.name!!, group.total!!, group.icon, group.markedAsSpam)
+        return assertExpandableItem(this[4], group.name!!, group.icon, group.markedAsSpam)
     }
 
     private fun List<BlockListItem>.assertExpandedList(): ExpandableItem {
@@ -206,7 +206,7 @@ class ReferrersUseCaseTest : BaseUnitTest() {
                 wordPressReferrer.icon,
                 wordPressReferrer.markedAsSpam
         )
-        val expandableItem = assertExpandableItem(this[4], group.name!!, group.total!!, group.icon, group.markedAsSpam)
+        val expandableItem = assertExpandableItem(this[4], group.name!!, group.icon, group.markedAsSpam)
         assertSingleItem(this[5], referrer1.name, referrer1.views, referrer1.icon, referrer1.markedAsSpam)
         assertSingleItem(this[6], referrer2.name, referrer2.views, referrer2.icon, referrer2.markedAsSpam)
         assertThat(this[7]).isEqualTo(Divider)
@@ -345,7 +345,6 @@ class ReferrersUseCaseTest : BaseUnitTest() {
     private fun assertExpandableItem(
         item: BlockListItem,
         label: String,
-        views: Int,
         icon: String?,
         spam: Boolean?
     ): ExpandableItem {

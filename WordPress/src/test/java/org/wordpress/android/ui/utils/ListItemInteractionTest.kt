@@ -65,5 +65,6 @@ class ListItemInteractionTest {
 
     private fun emptyFunction() = Unit
 
+    @Suppress("unused")
     private fun parametrizedEmptyFunction(param: String) = Unit
 }

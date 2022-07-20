@@ -131,7 +131,7 @@ class SitePreviewViewModelTest {
     fun `ProgressUiState's animate field is false only for first emitted event`() = test {
         initViewModel()
         assertThat((viewModel.uiState.value as SitePreviewFullscreenProgressUiState).animate).isFalse()
-        for (i in 1..100) {
+        (1..100).forEach {
             coroutineDispatcher.advanceTimeBy(LOADING_STATE_TEXT_ANIMATION_DELAY)
             assertThat((viewModel.uiState.value as SitePreviewFullscreenProgressUiState).animate).isTrue()
         }
@@ -140,7 +140,7 @@ class SitePreviewViewModelTest {
     @Test
     fun `ProgressUiState's text changes every LOADING_STATE_TEXT_ANIMATION_DELAY seconds`() {
         initViewModel()
-        for (i in 1..100) {
+        (1..100).forEach {
             val lastTextId = (viewModel.uiState.value as SitePreviewFullscreenProgressUiState).loadingTextResId
             coroutineDispatcher.advanceTimeBy(LOADING_STATE_TEXT_ANIMATION_DELAY)
             assertThat((viewModel.uiState.value as SitePreviewFullscreenProgressUiState).loadingTextResId)
@@ -173,7 +173,7 @@ class SitePreviewViewModelTest {
     fun `displaying error screen cancels the progress animation job`() {
         initViewModel()
         viewModel.onSiteCreationServiceStateUpdated(createServiceFailureState())
-        for (i in 1..100) {
+        (1..100).forEach {
             coroutineDispatcher.advanceTimeBy(LOADING_STATE_TEXT_ANIMATION_DELAY)
             assertThat(viewModel.uiState.value).isInstanceOf(SitePreviewGenericErrorUiState::class.java)
         }
@@ -216,7 +216,7 @@ class SitePreviewViewModelTest {
     fun `displaying content cancels the progress animation job`() {
         initViewModel()
         viewModel.onUrlLoaded()
-        for (i in 1..100) {
+        (1..100).forEach {
             coroutineDispatcher.advanceTimeBy(LOADING_STATE_TEXT_ANIMATION_DELAY)
             assertThat(viewModel.uiState.value).isInstanceOf(SitePreviewContentUiState::class.java)
         }

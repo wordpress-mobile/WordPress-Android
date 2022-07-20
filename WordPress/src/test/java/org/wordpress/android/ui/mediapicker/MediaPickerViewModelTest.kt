@@ -902,12 +902,6 @@ class MediaPickerViewModelTest : BaseUnitTest() {
         }
     }
 
-    private fun assertSearchHidden() {
-        uiStates.last().searchUiModel.let { model ->
-            assertThat(model is SearchUiModel.Hidden).isTrue()
-        }
-    }
-
     private fun buildMediaPickerSetup(
         canMultiselect: Boolean,
         allowedTypes: Set<MediaType>,
