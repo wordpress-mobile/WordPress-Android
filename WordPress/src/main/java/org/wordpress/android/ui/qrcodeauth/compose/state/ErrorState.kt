@@ -21,7 +21,6 @@ import org.wordpress.android.ui.qrcodeauth.compose.components.SecondaryButton
 import org.wordpress.android.ui.qrcodeauth.compose.components.Subtitle
 import org.wordpress.android.ui.qrcodeauth.compose.components.Title
 
-@Suppress("LongParameterList")
 @Composable
 fun ErrorState(
     @DrawableRes imageRes: Int,
@@ -34,47 +33,47 @@ fun ErrorState(
     secondaryButtonClick: () -> Unit
 ) {
     Column(
-            modifier = Modifier
-                    .fillMaxWidth()
-                    .wrapContentHeight(),
-            horizontalAlignment = Alignment.CenterHorizontally
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentHeight(),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         ResourceImage(
-                modifier = Modifier
-                        .padding(
-                                top = Margin.ExtraLarge.value,
-                                bottom = Margin.ExtraLarge.value
-                        )
-                        .wrapContentHeight()
-                        .wrapContentWidth(),
-                imageRes = imageRes,
-                contentDescription = stringResource(contentDescriptionRes),
+            modifier = Modifier
+                .padding(
+                    top = Margin.ExtraLarge.value,
+                    bottom = Margin.ExtraLarge.value
+                )
+                .wrapContentHeight()
+                .wrapContentWidth(),
+            imageRes = imageRes,
+            contentDescription = stringResource(contentDescriptionRes),
         )
         Title(text = titleText)
         Subtitle(text = subtitleText)
         PrimaryButton(
-                modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(
-                                top = Margin.Small.value,
-                                bottom = Margin.Small.value,
-                                start = Margin.ExtraExtraMediumLarge.value,
-                                end = Margin.ExtraExtraMediumLarge.value
-                        ),
-                text = primaryButtonText,
-                onClick = { primaryButtonClick() }
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(
+                    top = Margin.Small.value,
+                    bottom = Margin.Small.value,
+                    start = Margin.ExtraExtraMediumLarge.value,
+                    end = Margin.ExtraExtraMediumLarge.value
+                ),
+            text = primaryButtonText,
+            onClick = { primaryButtonClick() }
         )
         SecondaryButton(
-                modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(
-                                top = Margin.Small.value,
-                                bottom = Margin.Small.value,
-                                start = Margin.ExtraExtraMediumLarge.value,
-                                end = Margin.ExtraExtraMediumLarge.value
-                        ),
-                text = secondaryButtonText,
-                onClick = { secondaryButtonClick() }
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(
+                    top = Margin.Small.value,
+                    bottom = Margin.Small.value,
+                    start = Margin.ExtraExtraMediumLarge.value,
+                    end = Margin.ExtraExtraMediumLarge.value
+                ),
+            text = secondaryButtonText,
+            onClick = { secondaryButtonClick() }
         )
     }
 }
@@ -84,14 +83,14 @@ fun ErrorState(
 fun ErrorStatePreview() {
     AppTheme {
         ErrorState(
-                imageRes = R.drawable.img_illustration_empty_results_216dp,
-                contentDescriptionRes = R.string.qrcode_auth_flow_error_content_description,
-                titleText = stringResource(R.string.qrcode_auth_flow_error_no_connection_title),
-                subtitleText = stringResource(R.string.qrcode_auth_flow_error_no_connection_subtitle),
-                primaryButtonText = stringResource(R.string.qrcode_auth_flow_scan_again),
-                primaryButtonClick = {},
-                secondaryButtonText = stringResource(R.string.cancel),
-                secondaryButtonClick = {}
+            imageRes = R.drawable.img_illustration_empty_results_216dp,
+            contentDescriptionRes = R.string.qrcode_auth_flow_error_content_description,
+            titleText = stringResource(R.string.qrcode_auth_flow_error_no_connection_title),
+            subtitleText = stringResource(R.string.qrcode_auth_flow_error_no_connection_subtitle),
+            primaryButtonText = stringResource(R.string.qrcode_auth_flow_scan_again),
+            primaryButtonClick = {},
+            secondaryButtonText = stringResource(R.string.cancel),
+            secondaryButtonClick = {}
         )
     }
 }
