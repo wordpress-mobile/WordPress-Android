@@ -183,6 +183,7 @@ class ExPlatTest : BaseUnitTest() {
     }
 
     @Test
+    @Suppress("SwallowedException")
     fun `getVariation does not interact with store if experiments is empty`() = test {
         setupExperiments(emptySet())
 
