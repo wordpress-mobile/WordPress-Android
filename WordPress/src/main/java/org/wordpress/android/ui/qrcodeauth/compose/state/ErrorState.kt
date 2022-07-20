@@ -87,8 +87,8 @@ fun ErrorStatePreview() {
         ErrorState(
                 imageRes = R.drawable.img_illustration_empty_results_216dp,
                 contentDescriptionRes = R.string.qrcode_auth_flow_error_content_description,
-                titleText = stringResource(R.string.qrcode_auth_flow_error_auth_failed_title),
-                subtitleText = stringResource(R.string.qrcode_auth_flow_error_auth_failed_subtitle),
+                titleText = stringResource(R.string.qrcode_auth_flow_error_no_connection_title),
+                subtitleText = stringResource(R.string.qrcode_auth_flow_error_no_connection_subtitle),
                 primaryButtonText = stringResource(R.string.qrcode_auth_flow_scan_again),
                 primaryButtonClick = {},
                 secondaryButtonText = stringResource(R.string.cancel),
