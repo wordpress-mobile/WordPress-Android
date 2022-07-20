@@ -25,5 +25,3 @@ style:
       - 'STOPSHIP:'
   MagicNumber:
     ignoreEnums: true
-  UnusedPrivateMember:
-    ignoreAnnotated: ['Preview']
