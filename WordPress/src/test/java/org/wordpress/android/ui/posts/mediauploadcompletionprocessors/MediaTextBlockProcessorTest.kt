@@ -15,7 +15,7 @@ class MediaTextBlockProcessorTest {
     @Before
     fun before() {
         whenever(mediaFile.mediaId).thenReturn(TestContent.remoteMediaId)
-        whenever(mediaFile.fileURL).thenReturn(TestContent.remoteImageUrl)
+        whenever(mediaFile.optimalFileURL).thenReturn(TestContent.remoteImageUrl)
         processor = MediaTextBlockProcessor(TestContent.localMediaId, mediaFile)
     }
 
@@ -33,7 +33,7 @@ class MediaTextBlockProcessorTest {
 
     @Test
     fun `processBlock also works for video`() {
-        whenever(mediaFile.fileURL).thenReturn(TestContent.remoteVideoUrl)
+        whenever(mediaFile.optimalFileURL).thenReturn(TestContent.remoteVideoUrl)
         processor = MediaTextBlockProcessor(TestContent.localMediaId, mediaFile)
         val processedBlock = processor.processBlock(TestContent.oldMediaTextBlockWithVideo)
         Assertions.assertThat(processedBlock).isEqualTo(TestContent.newMediaTextBlockWithVideo)
