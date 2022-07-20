@@ -1,109 +1,117 @@
 package org.wordpress.android.ui.qrcodeauth.compose.state
 
-import androidx.annotation.DrawableRes
-import androidx.annotation.StringRes
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
+import org.wordpress.android.R
+import org.wordpress.android.ui.compose.components.IndeterminateCircularProgress
 import org.wordpress.android.ui.compose.components.ResourceImage
+import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.unit.Margin
+import org.wordpress.android.ui.compose.utils.uiStringText
+import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState
+import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.ActionButton.ValidatedPrimaryActionButton
+import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.ActionButton.ValidatedSecondaryActionButton
+import org.wordpress.android.ui.qrcodeauth.compose.components.PrimaryButton
+import org.wordpress.android.ui.qrcodeauth.compose.components.SecondaryButton
+import org.wordpress.android.ui.qrcodeauth.compose.components.Subtitle
+import org.wordpress.android.ui.qrcodeauth.compose.components.Title
 
+@Suppress("LongParameterList", "LongMethod")
 @Composable
-fun ContentState(
-    @DrawableRes imageRes: Int,
-    @StringRes contentDescriptionRes: Int
-) {
-    //    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-//    xmlns:tools="http://schemas.android.com/tools"
-//    xmlns:app="http://schemas.android.com/apk/res-auto"
-//    android:layout_width="match_parent"
-//    android:layout_height="match_parent">
-//
-//    <androidx.constraintlayout.widget.ConstraintLayout
-//    android:id="@+id/content_container"
-//    android:layout_width="match_parent"
-//    android:layout_height="wrap_content">
+fun ContentState(uiState: QRCodeAuthUiState.Content) = with(uiState) {
     Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                     .fillMaxWidth()
-                    .fillMaxHeight()
+                    .wrapContentHeight()
+                    .alpha(alpha),
     ) {
-//    <ImageView
-//    android:id="@+id/content_image"
-//    android:contentDescription="@string/qrcode_auth_flow_content_description"
-//    app:layout_constraintBottom_toTopOf="@+id/content_title"
-//    app:layout_constraintEnd_toEndOf="parent"
-//    app:layout_constraintStart_toStartOf="parent"
-//    app:layout_constraintTop_toTopOf="parent"
-//    tools:src="@drawable/img_illustration_qrcode_auth_validated_152dp" />
-        //TODO
-//    android:adjustViewBounds="true"
-        ResourceImage(
-                modifier = Modifier
-                        .padding(
-                                top = Margin.ExtraLarge.value,
-                                bottom = Margin.ExtraLarge.value
-                        )
-                        .wrapContentHeight()
-                        .wrapContentWidth(),
-                imageRes = imageRes,
-                contentDescription = stringResource(contentDescriptionRes)
+        image?.let { imageRes ->
+            ResourceImage(
+                    modifier = Modifier
+                            .padding(
+                                    top = Margin.ExtraLarge.value,
+                                    bottom = Margin.ExtraLarge.value
+                            )
+                            .wrapContentHeight()
+                            .wrapContentWidth(),
+                    imageRes = imageRes,
+                    contentDescription = stringResource(R.string.qrcode_auth_flow_content_description)
+            )
+        }
+        title?.let {
+            Title(text = uiStringText(it))
+        }
+        subtitle?.let {
+            Subtitle(text = uiStringText(it))
+        }
+        primaryActionButton?.let { actionButton ->
+            if (actionButton.isVisible) {
+                actionButton.label?.let { label ->
+                    PrimaryButton(
+                            modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(
+                                            vertical = Margin.Small.value,
+                                            horizontal = Margin.ExtraExtraMediumLarge.value,
+                                    ),
+                            text = uiStringText(label),
+                            enabled = actionButton.isEnabled,
+                            onClick = { actionButton.clickAction?.invoke() }
+                    )
+                }
+            }
+        }
+        secondaryActionButton?.let { actionButton ->
+            if (actionButton.isVisible) {
+                actionButton.label?.let { label ->
+                    SecondaryButton(
+                            modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(
+                                            vertical = Margin.Small.value,
+                                            horizontal = Margin.ExtraExtraMediumLarge.value,
+                                    ),
+                            text = uiStringText(label),
+                            enabled = actionButton.isEnabled,
+                            onClick = { actionButton.clickAction?.invoke() }
+                    )
+                }
+            }
+        }
+        if (isProgressShowing) {
+            Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier
+                            .fillMaxWidth()
+                            .wrapContentHeight()
+            ) {
+                IndeterminateCircularProgress()
+            }
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ContentStatePreview() {
+    AppTheme {
+        val state = QRCodeAuthUiState.Content.Validated(
+                browser = "{browser}",
+                location = "{location}",
+                primaryActionButton = ValidatedPrimaryActionButton {},
+                secondaryActionButton = ValidatedSecondaryActionButton {},
         )
-
-//    <com.google.android.material.textview.MaterialTextView
-//    android:id="@+id/content_title"
-//    style="@style/QRCodeAuth.Title"
-//    app:layout_constraintBottom_toTopOf="@+id/content_subtitle"
-//    app:layout_constraintEnd_toEndOf="parent"
-//    app:layout_constraintStart_toStartOf="parent"
-//    app:layout_constraintTop_toBottomOf="@+id/content_image"
-//    tools:text="@string/qrcode_auth_flow_validated_title" />
-//
-//    <com.google.android.material.textview.MaterialTextView
-//    android:id="@+id/content_subtitle"
-//    style="@style/QRCodeAuth.Subtitle"
-//    app:layout_constraintBottom_toTopOf="@+id/content_primary_action"
-//    app:layout_constraintEnd_toEndOf="parent"
-//    app:layout_constraintStart_toStartOf="parent"
-//    app:layout_constraintTop_toBottomOf="@+id/content_title"
-//    tools:text="@string/qrcode_auth_flow_validated_subtitle" />
-//
-//    <com.google.android.material.button.MaterialButton
-//    android:id="@+id/content_primary_action"
-//    style="@style/QRCodeAuth.PrimaryButton"
-//    android:text="@string/qrcode_auth_flow_validated_primary_action"
-//    app:layout_constraintBottom_toTopOf="@+id/content_secondary_action"
-//    app:layout_constraintEnd_toEndOf="parent"
-//    app:layout_constraintStart_toStartOf="parent"
-//    app:layout_constraintTop_toBottomOf="@id/content_subtitle" />
-//
-//    <com.google.android.material.button.MaterialButton
-//    android:id="@+id/content_secondary_action"
-//    style="@style/QRCodeAuth.SecondaryButton"
-//    android:text="@string/cancel"
-//    app:layout_constraintBottom_toBottomOf="parent"
-//    app:layout_constraintEnd_toEndOf="parent"
-//    app:layout_constraintStart_toStartOf="parent"
-//    app:layout_constraintTop_toBottomOf="@id/content_primary_action" />
-//
-//    </androidx.constraintlayout.widget.ConstraintLayout>
-//
-//    <ProgressBar
-//    android:id="@+id/progress"
-//    style="?android:attr/progressBarStyle"
-//    android:layout_width="wrap_content"
-//    android:layout_height="wrap_content"
-//    android:layout_gravity="center"
-//    android:indeterminate="true"
-//    android:visibility="gone"
-//    tools:visibility="visible" />
-//    </FrameLayout>
-
+        ContentState(state)
     }
 }

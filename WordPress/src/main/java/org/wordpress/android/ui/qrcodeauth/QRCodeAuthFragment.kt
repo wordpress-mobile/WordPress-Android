@@ -101,17 +101,10 @@ class QRCodeAuthFragment : Fragment() {
                 uiState.run {
                     when (this) {
                         is Content -> {
-                            //TODO
-//                            applyContentState(uiState)
-                            ContentState(
-                                    //TODO @RenanLukas fix non-null assertion before submitting PR
-                                    imageRes = image!!,
-                                    contentDescriptionRes = R.string.qrcode_auth_flow_content_description
-                            )
+                            ContentState(uiState = this)
                         }
                         is Error -> {
-                            //TODO
-//                            applyErrorState(uiState)
+                            // TODO applyErrorState(uiState)
                             ErrorState(
                                     imageRes = image,
                                     contentDescriptionRes = R.string.qrcode_auth_flow_error_content_description,
