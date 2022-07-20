@@ -21,15 +21,15 @@ fun ResourceImage(
     contentDescription: String? = null,
     contentScale: ContentScale = ContentScale.Fit,
     alignment: Alignment = Alignment.Center,
-    adjustViewBounds: Boolean = false
+    adjustViewBounds: Boolean = true
 ) {
     val painter = painterResource(imageRes)
     val enrichedModifier = when {
         adjustViewBounds -> {
             val aspectRatio = painter.intrinsicSize.width / painter.intrinsicSize.height
-            modifier
-                    .fillMaxWidth()
+            Modifier.fillMaxWidth()
                     .aspectRatio(aspectRatio)
+                    .then(modifier)
         }
         else -> modifier
     }

@@ -50,7 +50,6 @@ fun ErrorState(
                         .wrapContentWidth(),
                 imageRes = imageRes,
                 contentDescription = stringResource(contentDescriptionRes),
-                adjustViewBounds = true
         )
         Title(text = titleText)
         Subtitle(text = subtitleText)
