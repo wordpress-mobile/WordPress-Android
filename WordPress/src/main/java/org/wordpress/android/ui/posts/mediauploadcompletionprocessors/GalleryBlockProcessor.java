@@ -49,7 +49,7 @@ public class GalleryBlockProcessor extends BlockProcessor {
         // if a match is found, proceed with replacement
         if (targetImg != null) {
             // replace attributes
-            targetImg.attr("src", mRemoteImageUrl);
+            targetImg.attr("src", mRemoteUrl);
             targetImg.attr("data-id", mRemoteId);
             targetImg.attr("data-full-url", mRemoteUrl);
             targetImg.attr("data-link", mAttachmentPageUrl);
@@ -63,7 +63,7 @@ public class GalleryBlockProcessor extends BlockProcessor {
             if (parent != null && parent.is("a") && mLinkTo != null) {
                 switch (mLinkTo) {
                     case "file":
-                        parent.attr("href", mRemoteImageUrl);
+                        parent.attr("href", mRemoteUrl);
                         break;
                     case "post":
                         parent.attr("href", mAttachmentPageUrl);

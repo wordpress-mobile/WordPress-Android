@@ -30,7 +30,6 @@ public abstract class BlockProcessor {
     String mLocalId;
     String mRemoteId;
     String mRemoteUrl;
-    String mRemoteImageUrl;
 
     private String mBlockName;
     private JsonObject mJsonAttributes;
@@ -45,9 +44,8 @@ public abstract class BlockProcessor {
     BlockProcessor(String localId, MediaFile mediaFile) {
         mLocalId = localId;
         mRemoteId = mediaFile.getMediaId();
-        mRemoteUrl = org.wordpress.android.util.StringUtils.notNullStr(Utils.escapeQuotes(mediaFile.getFileURL()));
-        mRemoteImageUrl = org.wordpress.android.util.StringUtils.notNullStr(Utils
-                .escapeQuotes(mediaFile.getOptimalFileURL()));
+        mRemoteUrl = org.wordpress.android.util.StringUtils.notNullStr(Utils.escapeQuotes(mediaFile
+                .getOptimalFileURL()));
     }
 
     private JsonObject parseJson(String blockJson) {
