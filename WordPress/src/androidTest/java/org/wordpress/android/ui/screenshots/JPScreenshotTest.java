@@ -117,6 +117,7 @@ public class JPScreenshotTest extends BaseTest {
             generateStats();
             generateNotifications();
             generateBloggingReminders();
+            generateBlogPost();
 
             // Turn Demo Mode off on the emulator when we're done
             mDemoModeEnabler.disable();
@@ -150,7 +151,7 @@ public class JPScreenshotTest extends BaseTest {
         pressBackUntilElementIsDisplayed(R.id.nav_sites);
     }
 
-    private void navigateBlogPost() {
+    private void generateBlogPost() {
         (new MySitesPage()).switchToSite("fourpawsdoggrooming.wordpress.com")
                            .goToPosts();
         idleFor(3000);
@@ -200,7 +201,7 @@ public class JPScreenshotTest extends BaseTest {
     }
 
 
-    private void navigateActivityLog() {
+    private void generateActivityLog() {
         moveToActivityLog();
 
         setNightModeAndWait(false);
@@ -210,7 +211,7 @@ public class JPScreenshotTest extends BaseTest {
         pressBackUntilElementIsDisplayed(R.id.nav_sites);
     }
 
-    private void navigateScan() {
+    private void generateScan() {
         moveToScan();
 
         setNightModeAndWait(false);
@@ -230,7 +231,7 @@ public class JPScreenshotTest extends BaseTest {
         pressBackUntilElementIsDisplayed(R.id.nav_sites);
     }
 
-    private void navigateBackupDownload() {
+    private void generateBackupDownload() {
         moveToBackup();
 
         ViewInteraction appCompatImageButton = onView(
@@ -344,7 +345,7 @@ public class JPScreenshotTest extends BaseTest {
         idleFor(8000);
     }
 
-    private void navigateToMedia() {
+    private void generateMedia() {
         // Click on the "Sites" tab in the nav, then click the "Menu" tab, then choose "Media"
         clickOn(R.id.nav_sites);
         (new MySitesPage()).goToMedia();
