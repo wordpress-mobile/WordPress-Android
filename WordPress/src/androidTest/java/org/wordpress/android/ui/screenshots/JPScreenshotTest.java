@@ -118,12 +118,18 @@ public class JPScreenshotTest extends BaseTest {
     private void navigateCreatePost() {
         (new MySitesPage()).goToBloggingReminders();
         (new MySitesPage()).addBloggingPrompts();
+
+        // Navigate back to dashboard
+        pressBackUntilElementIsDisplayed(R.id.nav_sites);
         (new MySitesPage()).createPost();
 
         waitForElementToBeDisplayedWithoutFailure(R.id.recycler_view);
 
         setNightModeAndWait(false);
         takeScreenshot(MY_SITE_SCREENSHOT_NAME);
+
+        // Exit back to the main activity
+        pressBackUntilElementIsDisplayed(R.id.nav_sites);
     }
 
     private void navigateBlogPost() {
