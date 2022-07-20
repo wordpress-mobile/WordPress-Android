@@ -21,6 +21,8 @@ import org.wordpress.android.support.DemoModeEnabler;
 import org.wordpress.android.ui.WPLaunchActivity;
 import org.wordpress.android.util.image.ImageType;
 
+import java.util.Locale;
+
 import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -62,21 +64,38 @@ public class JPScreenshotTest extends BaseTest {
 
     private DemoModeEnabler mDemoModeEnabler = new DemoModeEnabler();
 
-    // todo: rename the screenshot names - keeping the index in the first character
-    private static final String MY_SITE_SCREENSHOT_NAME = "1-bring-your-jetpack-with-you";
-    private static final String ACTIVITY_LOG_SCREENSHOT_NAME = "2-keep-tabs-on-your-site-activity";
-    private static final String SCAN_SCREENSHOT_NAME = "3-scan-for-issues-on-the-go";
-    private static final String BACKUP_SCREENSHOT_NAME = "4-back-up-your-site-at-any-moment";
-    private static final String STATS_SCREENSHOT_NAME = "5-site-stats-in-your-pocket";
-    private static final String NOTIFICATIONS_SCREENSHOT_NAME = "6-reply-in-real-time";
-    private static final String MEDIA_SCREENSHOT_NAME = "7-upload-on-the-go";
-    private static final String EDIT_POST_SCREENSHOT_NAME = "8-create-a-site-or-start-a-blog";
-    private static final String BLOGGING_REMINDER_SCREENSHOT_NAME = "9-create-blogging-reminders";
-    private static final String SITE_TOPIC_SCREENSHOT_NAME = "10-site-topic";
-    private static final String CHOOSE_A_LAYOUT_SCREENSHOT_NAME = "11-choose-a-layout";
+    public enum Screenshots {
+        SITE_TOPIC(true, "1", 1),
+        CREATE_OPTIONS(true, "1", 2),
+        CHOOSE_A_LAYOUT(true, "1", 3),
+        STATS(true, "1", 4),
+        NOTIFICATIONS(true, "1", 5),
+        MY_SITE(false, null, 0),
+        ACTIVITY_LOG(false, null, 0),
+        SCAN(false, null, 0),
+        BACKUP_DOWNLOAD(false, null, 0),
+        MEDIA(false, null, 0),
+        EDIT_POST(false, null, 0),
+        BLOGGING_REMINDERS(false, null, 0);
+
+        public final boolean enabled;
+        public final String screenshotName;
+        public final int sequence;
+
+        Screenshots(boolean enabled, String screenshotName, int sequence) {
+            this.enabled = enabled;
+            this.screenshotName = screenshotName;
+            this.sequence = sequence;
+        }
+
+        public static String buildScreenshotName(Screenshots screen) {
+            return String.format(Locale.US, "%d-%s", screen.sequence, screen.screenshotName);
+        }
+    }
 
     @Test
     public void jPScreenshotTest() {
+        // todo: each screenshot should be self sufficient - do not make any assumptions
         if (BuildConfig.IS_JETPACK_APP) {
             ActivityScenario.launch(WPLaunchActivity.class);
             Screengrab.setDefaultScreenshotStrategy(new UiAutomatorScreenshotStrategy());
@@ -94,12 +113,6 @@ public class JPScreenshotTest extends BaseTest {
             navigateNotifications();
             navigateBloggingReminders();
 
-//          navigateActivityLog();
-//          navigateToMedia();
-//          navigateScan();
-//          navigateBackupDownload();
-//          navigateBlogPost();
-
             // Turn Demo Mode off on the emulator when we're done
             mDemoModeEnabler.disable();
             logoutIfNecessary();
@@ -112,7 +125,7 @@ public class JPScreenshotTest extends BaseTest {
         waitForElementToBeDisplayedWithoutFailure(R.id.recycler_view);
 
         setNightModeAndWait(false);
-        takeScreenshot(MY_SITE_SCREENSHOT_NAME);
+        takeScreenshot(Screenshots.buildScreenshotName(Screenshots.MY_SITE));
     }
 
     private void navigateCreatePost() {
@@ -126,7 +139,7 @@ public class JPScreenshotTest extends BaseTest {
         waitForElementToBeDisplayedWithoutFailure(R.id.recycler_view);
 
         setNightModeAndWait(false);
-        takeScreenshot(MY_SITE_SCREENSHOT_NAME);
+        takeScreenshot(Screenshots.buildScreenshotName(Screenshots.CREATE_OPTIONS));
 
         // Exit back to the main activity
         pressBackUntilElementIsDisplayed(R.id.nav_sites);
@@ -143,7 +156,10 @@ public class JPScreenshotTest extends BaseTest {
         // Wait for the editor to load all images
         idleFor(5000);
 
-        screenshotPostWithName("Our Services", EDIT_POST_SCREENSHOT_NAME, false, !isTabletScreen());
+        screenshotPostWithName("Our Services",
+                Screenshots.buildScreenshotName(Screenshots.EDIT_POST),
+                false,
+                !isTabletScreen());
 
         // Exit back to the main activity
         pressBackUntilElementIsDisplayed(R.id.nav_sites);
@@ -183,7 +199,7 @@ public class JPScreenshotTest extends BaseTest {
         moveToActivityLog();
 
         setNightModeAndWait(false);
-        takeScreenshot(ACTIVITY_LOG_SCREENSHOT_NAME);
+        takeScreenshot(Screenshots.buildScreenshotName(Screenshots.ACTIVITY_LOG));
 
         // Exit the Activity Log Activity
         pressBackUntilElementIsDisplayed(R.id.nav_sites);
@@ -193,7 +209,7 @@ public class JPScreenshotTest extends BaseTest {
         moveToScan();
 
         setNightModeAndWait(false);
-        takeScreenshot(SCAN_SCREENSHOT_NAME);
+        takeScreenshot(Screenshots.buildScreenshotName(Screenshots.SCAN));
 
         // Exit the Activity scan activity
         pressBackUntilElementIsDisplayed(R.id.nav_sites);
@@ -203,7 +219,7 @@ public class JPScreenshotTest extends BaseTest {
         moveToBloggingReminder();
 
         setNightModeAndWait(false);
-        takeScreenshot(BLOGGING_REMINDER_SCREENSHOT_NAME);
+        takeScreenshot(Screenshots.buildScreenshotName(Screenshots.BLOGGING_REMINDERS));
 
         // Exit the Activity scan activity
         pressBackUntilElementIsDisplayed(R.id.nav_sites);
@@ -232,7 +248,7 @@ public class JPScreenshotTest extends BaseTest {
 
 
         setNightModeAndWait(false);
-        takeScreenshot(BACKUP_SCREENSHOT_NAME);
+        takeScreenshot(Screenshots.buildScreenshotName(Screenshots.BACKUP_DOWNLOAD));
 
         // Exit the backup download activity
         pressBackUntilElementIsDisplayed(R.id.nav_sites);
@@ -256,7 +272,7 @@ public class JPScreenshotTest extends BaseTest {
         idleFor(8000);
 
         setNightModeAndWait(false);
-        takeScreenshot(STATS_SCREENSHOT_NAME);
+        takeScreenshot(Screenshots.buildScreenshotName(Screenshots.STATS));
 
         // Exit the Stats Activity
         pressBackUntilElementIsDisplayed(R.id.nav_sites);
@@ -274,7 +290,7 @@ public class JPScreenshotTest extends BaseTest {
 
         setNightModeAndWait(false);
 
-        takeScreenshot(NOTIFICATIONS_SCREENSHOT_NAME);
+        takeScreenshot(Screenshots.buildScreenshotName(Screenshots.NOTIFICATIONS));
 
         // Exit the notifications activity
         pressBackUntilElementIsDisplayed(R.id.nav_sites);
@@ -335,7 +351,7 @@ public class JPScreenshotTest extends BaseTest {
 
         // To do should add the logic for gallery of images
         // Right now on navigating to the media no images will be present in gallery
-        takeScreenshot(MEDIA_SCREENSHOT_NAME);
+        takeScreenshot(Screenshots.buildScreenshotName(Screenshots.MEDIA));
 
         pressBackUntilElementIsDisplayed(R.id.nav_sites);
     }
@@ -351,7 +367,7 @@ public class JPScreenshotTest extends BaseTest {
         idleFor(2000);
 
         setNightModeAndWait(false);
-        takeScreenshot(SITE_TOPIC_SCREENSHOT_NAME);
+        takeScreenshot(Screenshots.buildScreenshotName(Screenshots.SITE_TOPIC));
 
         // Exit the view and return
         pressBackUntilElementIsDisplayed(R.id.nav_sites);
@@ -370,7 +386,7 @@ public class JPScreenshotTest extends BaseTest {
         idleFor(2000);
 
         setNightModeAndWait(false);
-        takeScreenshot(CHOOSE_A_LAYOUT_SCREENSHOT_NAME);
+        takeScreenshot(Screenshots.buildScreenshotName(Screenshots.CHOOSE_A_LAYOUT));
 
         // Exit the view and return
         pressBackUntilElementIsDisplayed(R.id.nav_sites);
