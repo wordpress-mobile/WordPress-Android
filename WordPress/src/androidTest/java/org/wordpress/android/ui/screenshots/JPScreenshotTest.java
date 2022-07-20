@@ -86,6 +86,7 @@ public class JPScreenshotTest extends BaseTest {
             wpLogin();
 
             navigateMySite();
+            navigateCreatePost();
             navigateSiteTopic();
 
             navigateChooseALayout();
@@ -107,6 +108,17 @@ public class JPScreenshotTest extends BaseTest {
 
     public void navigateMySite() {
         (new MySitesPage()).switchToSite("yourjetpack.blog");
+
+        waitForElementToBeDisplayedWithoutFailure(R.id.recycler_view);
+
+        setNightModeAndWait(false);
+        takeScreenshot(MY_SITE_SCREENSHOT_NAME);
+    }
+
+    private void navigateCreatePost() {
+        (new MySitesPage()).goToBloggingReminders();
+        (new MySitesPage()).addBloggingPrompts();
+        (new MySitesPage()).createPost();
 
         waitForElementToBeDisplayedWithoutFailure(R.id.recycler_view);
 
