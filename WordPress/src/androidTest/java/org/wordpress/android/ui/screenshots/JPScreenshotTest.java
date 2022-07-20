@@ -130,6 +130,8 @@ public class JPScreenshotTest extends BaseTest {
 
     // Enabled screenshots
     private void generateCreatePost() {
+        if (!Screenshots.CREATE_NEW_OPTIONS.enabled) return;
+
         (new MySitesPage()).goToBloggingReminders();
         (new MySitesPage()).addBloggingPrompts();
 
@@ -147,6 +149,8 @@ public class JPScreenshotTest extends BaseTest {
     }
 
     private void generateChooseALayout() {
+        if (!Screenshots.CHOOSE_A_LAYOUT.enabled) return;
+
         // Click on the "Sites" tab in the nav, then click the SiteInfo dropdown
         clickOn(R.id.nav_sites);
         clickOn(R.id.fab_button);
@@ -166,6 +170,8 @@ public class JPScreenshotTest extends BaseTest {
     }
 
     private void generateNotifications() {
+        if (!Screenshots.NOTIFICATIONS.enabled) return;
+
         // Click on the "Notifications" tab in the nav
         clickOn(R.id.nav_notifications);
 
@@ -184,6 +190,8 @@ public class JPScreenshotTest extends BaseTest {
     }
 
     private void generateSiteTopic() {
+        if (!Screenshots.SITE_TOPIC.enabled) return;
+
         // Click on the "Sites" tab in the nav, then click the SiteInfo dropdown
         clickOn(R.id.nav_sites);
         (new MySitesPage()).startNewSite();
@@ -201,6 +209,7 @@ public class JPScreenshotTest extends BaseTest {
     }
 
     private void generateStats() {
+        if (!Screenshots.STATS.enabled) return;
         // Click on the "Sites" tab in the nav, then click the "Menu" tab, then choose "Stats"
         clickOn(R.id.nav_sites);
         (new MySitesPage()).goToStats().dismissUpdateAlertDialogFragmentIfDisplayed();
@@ -226,6 +235,7 @@ public class JPScreenshotTest extends BaseTest {
 
     // Disabled screenshots
     private void generateActivityLog() {
+        if (!Screenshots.ACTIVITY_LOG.enabled) return;
         moveToActivityLog();
 
         setNightModeAndWait(false);
@@ -236,6 +246,7 @@ public class JPScreenshotTest extends BaseTest {
     }
 
     private void generateMySite() {
+        if (!Screenshots.MY_SITE.enabled) return;
         (new MySitesPage()).switchToSite(JETPACK_SCREENSHOT_SITE_URL);
 
         waitForElementToBeDisplayedWithoutFailure(R.id.recycler_view);
@@ -245,6 +256,7 @@ public class JPScreenshotTest extends BaseTest {
     }
 
     private void generateBackupDownload() {
+        if (!Screenshots.BACKUP_DOWNLOAD.enabled) return;
         moveToBackup();
 
         ViewInteraction appCompatImageButton = onView(
@@ -274,6 +286,7 @@ public class JPScreenshotTest extends BaseTest {
     }
 
     private void generateBlogPost() {
+        if (!Screenshots.EDIT_POST.enabled) return;
         (new MySitesPage()).switchToSite("fourpawsdoggrooming.wordpress.com")
                            .goToPosts();
         idleFor(3000);
@@ -294,6 +307,7 @@ public class JPScreenshotTest extends BaseTest {
     }
 
     private void generateBloggingReminders() {
+        if (!Screenshots.BLOGGING_REMINDERS.enabled) return;
         moveToBloggingReminder();
 
         setNightModeAndWait(false);
@@ -304,6 +318,7 @@ public class JPScreenshotTest extends BaseTest {
     }
 
     private void generateMedia() {
+        if (!Screenshots.MEDIA.enabled) return;
         // Click on the "Sites" tab in the nav, then click the "Menu" tab, then choose "Media"
         clickOn(R.id.nav_sites);
         (new MySitesPage()).goToMedia();
@@ -321,6 +336,7 @@ public class JPScreenshotTest extends BaseTest {
     }
 
     private void generateScan() {
+        if (!Screenshots.SCAN.enabled) return;
         moveToScan();
 
         setNightModeAndWait(false);
