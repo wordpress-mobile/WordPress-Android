@@ -11,13 +11,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Devices
+import androidx.compose.ui.tooling.preview.Preview
+import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.ResourceImage
+import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.unit.Margin
 import org.wordpress.android.ui.qrcodeauth.compose.components.PrimaryButton
 import org.wordpress.android.ui.qrcodeauth.compose.components.SecondaryButton
 import org.wordpress.android.ui.qrcodeauth.compose.components.Subtitle
 import org.wordpress.android.ui.qrcodeauth.compose.components.Title
 
+@Suppress("LongParameterList")
 @Composable
 fun ErrorState(
     @DrawableRes imageRes: Int,
@@ -72,6 +77,23 @@ fun ErrorState(
                         ),
                 text = secondaryButtonText,
                 onClick = { secondaryButtonClick() }
+        )
+    }
+}
+
+@Preview(device = Devices.PIXEL_2_XL, showSystemUi = true)
+@Composable
+fun ErrorStatePreview() {
+    AppTheme {
+        ErrorState(
+                imageRes = R.drawable.img_illustration_empty_results_216dp,
+                contentDescriptionRes = R.string.qrcode_auth_flow_error_content_description,
+                titleText = stringResource(R.string.qrcode_auth_flow_error_auth_failed_title),
+                subtitleText = stringResource(R.string.qrcode_auth_flow_error_auth_failed_subtitle),
+                primaryButtonText = stringResource(R.string.qrcode_auth_flow_scan_again),
+                primaryButtonClick = {},
+                secondaryButtonText = stringResource(R.string.cancel),
+                secondaryButtonClick = {}
         )
     }
 }
