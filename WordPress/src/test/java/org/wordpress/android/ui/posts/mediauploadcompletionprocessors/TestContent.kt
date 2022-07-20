@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.posts.mediauploadcompletionprocessors
 
+@Suppress("LargeClass")
 object TestContent {
     const val siteUrl = "https://wordpress.org"
     const val localImageUrl = "file://Screenshot-1-1.png"

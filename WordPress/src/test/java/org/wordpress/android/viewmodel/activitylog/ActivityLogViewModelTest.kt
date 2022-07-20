@@ -98,6 +98,7 @@ private const val DOWNLOAD_ID = 987654321L
 private val DOWNLOAD_PUBLISHED = Date()
 private val DOWNLOAD_VALID_UNTIL = Date()
 
+@Suppress("LargeClass")
 @RunWith(MockitoJUnitRunner::class)
 class ActivityLogViewModelTest {
     @Rule @JvmField val rule = InstantTaskExecutorRule()

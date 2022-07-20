@@ -72,6 +72,7 @@ import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Locale
 
+@Suppress("LargeClass")
 class MediaPickerViewModelTest : BaseUnitTest() {
     @Mock lateinit var mediaLoaderFactory: MediaLoaderFactory
     @Mock lateinit var mediaLoader: MediaLoader

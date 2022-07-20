@@ -62,6 +62,7 @@ import org.wordpress.android.util.image.ImageType
 import java.util.Date
 
 @InternalCoroutinesApi
+@Suppress("LargeClass")
 @RunWith(MockitoJUnitRunner::class)
 class ReaderPostUiStateBuilderTest {
     // region Set-up
