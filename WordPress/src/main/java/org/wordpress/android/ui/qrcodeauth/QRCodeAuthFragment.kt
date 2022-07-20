@@ -15,7 +15,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.platform.LocalContext
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -25,7 +24,6 @@ import com.google.mlkit.vision.codescanner.GmsBarcodeScanning
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.databinding.QrcodeauthFragmentBinding
 import org.wordpress.android.ui.compose.components.VerticalScrollBox
@@ -101,31 +99,10 @@ class QRCodeAuthFragment : Fragment() {
                 uiState.run {
                     when (this) {
                         is Content -> {
-                            ContentState(uiState = this)
+                            ContentState(this)
                         }
                         is Error -> {
-                            // TODO applyErrorState(uiState)
-                            ErrorState(
-                                    imageRes = image,
-                                    contentDescriptionRes = R.string.qrcode_auth_flow_error_content_description,
-                                    titleText = uiHelpers.getTextOfUiString(LocalContext.current, title).toString(),
-                                    subtitleText = uiHelpers.getTextOfUiString(LocalContext.current, subtitle)
-                                            .toString(),
-                                    primaryButtonText = uiHelpers.getTextOfUiString(
-                                            LocalContext.current,
-                                            //TODO @RenanLukas fix non-null assertion before submitting PR
-                                            primaryActionButton!!.label
-                                    ).toString(),
-                                    //TODO @RenanLukas fix non-null assertion before submitting PR
-                                    primaryButtonClick = primaryActionButton!!.clickAction,
-                                    secondaryButtonText = uiHelpers.getTextOfUiString(
-                                            LocalContext.current,
-                                            //TODO @RenanLukas fix non-null assertion before submitting PR
-                                            secondaryActionButton!!.label
-                                    ).toString(),
-                                    //TODO @RenanLukas fix non-null assertion before submitting PR
-                                    secondaryButtonClick = secondaryActionButton!!.clickAction
-                            )
+                            ErrorState(this)
                         }
                         is Loading -> {
                             LoadingState()

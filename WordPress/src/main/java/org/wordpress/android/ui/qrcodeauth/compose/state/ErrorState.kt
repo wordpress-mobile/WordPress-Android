@@ -1,7 +1,5 @@
 package org.wordpress.android.ui.qrcodeauth.compose.state
 
-import androidx.annotation.DrawableRes
-import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -16,22 +14,17 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.ResourceImage
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.unit.Margin
+import org.wordpress.android.ui.compose.utils.uiStringText
+import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState
+import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.ActionButton.ErrorPrimaryActionButton
+import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.ActionButton.ErrorSecondaryActionButton
 import org.wordpress.android.ui.qrcodeauth.compose.components.PrimaryButton
 import org.wordpress.android.ui.qrcodeauth.compose.components.SecondaryButton
 import org.wordpress.android.ui.qrcodeauth.compose.components.Subtitle
 import org.wordpress.android.ui.qrcodeauth.compose.components.Title
 
 @Composable
-fun ErrorState(
-    @DrawableRes imageRes: Int,
-    @StringRes contentDescriptionRes: Int,
-    titleText: String,
-    subtitleText: String,
-    primaryButtonText: String,
-    primaryButtonClick: () -> Unit,
-    secondaryButtonText: String,
-    secondaryButtonClick: () -> Unit
-) {
+fun ErrorState(uiState: QRCodeAuthUiState.Error) = with(uiState) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -40,41 +33,40 @@ fun ErrorState(
     ) {
         ResourceImage(
             modifier = Modifier
-                .padding(
-                    top = Margin.ExtraLarge.value,
-                    bottom = Margin.ExtraLarge.value
-                )
+                .padding(vertical = Margin.ExtraLarge.value)
                 .wrapContentHeight()
                 .wrapContentWidth(),
-            imageRes = imageRes,
-            contentDescription = stringResource(contentDescriptionRes),
+            imageRes = image,
+            contentDescription = stringResource(R.string.qrcode_auth_flow_error_content_description),
         )
-        Title(text = titleText)
-        Subtitle(text = subtitleText)
-        PrimaryButton(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(
-                    top = Margin.Small.value,
-                    bottom = Margin.Small.value,
-                    start = Margin.ExtraExtraMediumLarge.value,
-                    end = Margin.ExtraExtraMediumLarge.value
-                ),
-            text = primaryButtonText,
-            onClick = { primaryButtonClick() }
-        )
-        SecondaryButton(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(
-                    top = Margin.Small.value,
-                    bottom = Margin.Small.value,
-                    start = Margin.ExtraExtraMediumLarge.value,
-                    end = Margin.ExtraExtraMediumLarge.value
-                ),
-            text = secondaryButtonText,
-            onClick = { secondaryButtonClick() }
-        )
+        Title(text = uiStringText(title))
+        Subtitle(text = uiStringText(subtitle))
+        primaryActionButton?.let { actionButton ->
+            if (actionButton.isVisible) {
+                PrimaryButton(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(
+                            vertical = Margin.Small.value,
+                            horizontal = Margin.ExtraExtraMediumLarge.value,
+                        ),
+                    text = uiStringText(actionButton.label),
+                    onClick = { actionButton.clickAction.invoke() }
+                )
+            }
+        }
+        secondaryActionButton?.let { actionButton ->
+            SecondaryButton(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        vertical = Margin.Small.value,
+                        horizontal = Margin.ExtraExtraMediumLarge.value,
+                    ),
+                text = uiStringText(actionButton.label),
+                onClick = { actionButton.clickAction.invoke() }
+            )
+        }
     }
 }
 
@@ -82,15 +74,10 @@ fun ErrorState(
 @Composable
 private fun ErrorStatePreview() {
     AppTheme {
-        ErrorState(
-            imageRes = R.drawable.img_illustration_empty_results_216dp,
-            contentDescriptionRes = R.string.qrcode_auth_flow_error_content_description,
-            titleText = stringResource(R.string.qrcode_auth_flow_error_no_connection_title),
-            subtitleText = stringResource(R.string.qrcode_auth_flow_error_no_connection_subtitle),
-            primaryButtonText = stringResource(R.string.qrcode_auth_flow_scan_again),
-            primaryButtonClick = {},
-            secondaryButtonText = stringResource(R.string.cancel),
-            secondaryButtonClick = {}
+        val state = QRCodeAuthUiState.Error.InvalidData(
+            primaryActionButton = ErrorPrimaryActionButton {},
+            secondaryActionButton = ErrorSecondaryActionButton {},
         )
+        ErrorState(state)
     }
 }
