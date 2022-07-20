@@ -39,10 +39,7 @@ fun ContentState(uiState: QRCodeAuthUiState.Content) = with(uiState) {
         image?.let { imageRes ->
             ResourceImage(
                 modifier = Modifier
-                    .padding(
-                        top = Margin.ExtraLarge.value,
-                        bottom = Margin.ExtraLarge.value
-                    )
+                    .padding(vertical = Margin.ExtraLarge.value)
                     .wrapContentHeight()
                     .wrapContentWidth(),
                 imageRes = imageRes,
