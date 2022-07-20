@@ -236,7 +236,15 @@ public class JPScreenshotTest extends BaseTest {
     // Disabled screenshots
     private void generateActivityLog() {
         if (!Screenshots.ACTIVITY_LOG.enabled) return;
-        moveToActivityLog();
+
+        // Click on the "Sites" tab in the nav, then click the "Menu" tab, then choose "Activity Log"
+        clickOn(R.id.nav_sites);
+        (new MySitesPage()).goToActivityLog();
+
+        waitForElementToBeDisplayedWithoutFailure(R.id.swipe_refresh_layout);
+
+        // Wait for the activity log to load
+        idleFor(8000);
 
         setNightModeAndWait(false);
         takeScreenshot(Screenshots.buildScreenshotName(Screenshots.ACTIVITY_LOG));
@@ -257,7 +265,14 @@ public class JPScreenshotTest extends BaseTest {
 
     private void generateBackupDownload() {
         if (!Screenshots.BACKUP_DOWNLOAD.enabled) return;
-        moveToBackup();
+
+        clickOn(R.id.nav_sites);
+        (new MySitesPage()).goToBackup();
+
+        waitForElementToBeDisplayedWithoutFailure(R.id.log_list_view);
+
+        // Wait for backup to load
+        idleFor(8000);
 
         ViewInteraction appCompatImageButton = onView(
                 allOf(withId(R.id.action_button), withContentDescription("Activity Log action button"),
@@ -308,7 +323,15 @@ public class JPScreenshotTest extends BaseTest {
 
     private void generateBloggingReminders() {
         if (!Screenshots.BLOGGING_REMINDERS.enabled) return;
-        moveToBloggingReminder();
+
+        // Click on the "Sites" tab in the nav, then click the "Menu" tab, then choose "Scan"
+        clickOn(R.id.nav_sites);
+        (new MySitesPage()).goToBloggingReminders();
+
+        waitForElementToBeDisplayedWithoutFailure(R.id.content_recycler_view);
+
+        // Wait for scan to load
+        idleFor(8000);
 
         setNightModeAndWait(false);
         takeScreenshot(Screenshots.buildScreenshotName(Screenshots.BLOGGING_REMINDERS));
@@ -337,7 +360,15 @@ public class JPScreenshotTest extends BaseTest {
 
     private void generateScan() {
         if (!Screenshots.SCAN.enabled) return;
-        moveToScan();
+
+        // Click on the "Sites" tab in the nav, then click the "Menu" tab, then choose "Scan"
+        clickOn(R.id.nav_sites);
+        (new MySitesPage()).goToScan();
+
+        waitForElementToBeDisplayedWithoutFailure(R.id.recycler_view);
+
+        // Wait for scan to load
+        idleFor(8000);
 
         setNightModeAndWait(false);
         takeScreenshot(Screenshots.buildScreenshotName(Screenshots.SCAN));
@@ -347,49 +378,6 @@ public class JPScreenshotTest extends BaseTest {
     }
 
     // Helper methods
-    private void moveToActivityLog() {
-        // Click on the "Sites" tab in the nav, then click the "Menu" tab, then choose "Activity Log"
-        clickOn(R.id.nav_sites);
-        (new MySitesPage()).goToActivityLog();
-
-        waitForElementToBeDisplayedWithoutFailure(R.id.swipe_refresh_layout);
-
-        // Wait for the activity log to load
-        idleFor(8000);
-    }
-
-    private void moveToBackup() {
-        clickOn(R.id.nav_sites);
-        (new MySitesPage()).goToBackup();
-
-        waitForElementToBeDisplayedWithoutFailure(R.id.log_list_view);
-
-        // Wait for backup to load
-        idleFor(8000);
-    }
-
-    private void moveToBloggingReminder() {
-        // Click on the "Sites" tab in the nav, then click the "Menu" tab, then choose "Scan"
-        clickOn(R.id.nav_sites);
-        (new MySitesPage()).goToBloggingReminders();
-
-        waitForElementToBeDisplayedWithoutFailure(R.id.content_recycler_view);
-
-        // Wait for scan to load
-        idleFor(8000);
-    }
-
-    private void moveToScan() {
-        // Click on the "Sites" tab in the nav, then click the "Menu" tab, then choose "Scan"
-        clickOn(R.id.nav_sites);
-        (new MySitesPage()).goToScan();
-
-        waitForElementToBeDisplayedWithoutFailure(R.id.recycler_view);
-
-        // Wait for scan to load
-        idleFor(8000);
-    }
-
     private void screenshotPostWithName(String name,
                                         String screenshotName,
                                         boolean hideKeyboard,
