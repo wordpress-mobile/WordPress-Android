@@ -106,8 +106,6 @@ public class JPScreenshotTest extends BaseTest {
             mDemoModeEnabler.enable();
             wpLogin();
 
-            checkAndNavigateToSiteIfNotShowing();
-
             generateActivityLog();
             generateBackupDownload();
             generateBloggingReminders();
@@ -151,6 +149,8 @@ public class JPScreenshotTest extends BaseTest {
     private void generateChooseALayout() {
         if (!Screenshots.CHOOSE_A_LAYOUT.enabled) return;
 
+        checkAndNavigateToSiteIfNotShowing();
+
         // Click on the "Sites" tab in the nav, then click the SiteInfo dropdown
         clickOn(R.id.nav_sites);
         clickOn(R.id.fab_button);
@@ -172,6 +172,8 @@ public class JPScreenshotTest extends BaseTest {
     private void generateNotifications() {
         if (!Screenshots.NOTIFICATIONS.enabled) return;
 
+        checkAndNavigateToSiteIfNotShowing();
+
         // Click on the "Notifications" tab in the nav
         clickOn(R.id.nav_notifications);
 
@@ -192,6 +194,8 @@ public class JPScreenshotTest extends BaseTest {
     private void generateSiteTopic() {
         if (!Screenshots.SITE_TOPIC.enabled) return;
 
+        checkAndNavigateToSiteIfNotShowing();
+
         // Click on the "Sites" tab in the nav, then click the SiteInfo dropdown
         clickOn(R.id.nav_sites);
         (new MySitesPage()).startNewSite();
@@ -210,6 +214,9 @@ public class JPScreenshotTest extends BaseTest {
 
     private void generateStats() {
         if (!Screenshots.STATS.enabled) return;
+
+        checkAndNavigateToSiteIfNotShowing();
+
         // Click on the "Sites" tab in the nav, then click the "Menu" tab, then choose "Stats"
         clickOn(R.id.nav_sites);
         (new MySitesPage()).goToStats().dismissUpdateAlertDialogFragmentIfDisplayed();
@@ -237,6 +244,8 @@ public class JPScreenshotTest extends BaseTest {
     private void generateActivityLog() {
         if (!Screenshots.ACTIVITY_LOG.enabled) return;
 
+        checkAndNavigateToSiteIfNotShowing();
+
         // Click on the "Sites" tab in the nav, then click the "Menu" tab, then choose "Activity Log"
         clickOn(R.id.nav_sites);
         (new MySitesPage()).goToActivityLog();
@@ -255,7 +264,8 @@ public class JPScreenshotTest extends BaseTest {
 
     private void generateMySite() {
         if (!Screenshots.MY_SITE.enabled) return;
-        (new MySitesPage()).switchToSite(JETPACK_SCREENSHOT_SITE_URL);
+
+        checkAndNavigateToSiteIfNotShowing();
 
         waitForElementToBeDisplayedWithoutFailure(R.id.recycler_view);
 
@@ -265,6 +275,8 @@ public class JPScreenshotTest extends BaseTest {
 
     private void generateBackupDownload() {
         if (!Screenshots.BACKUP_DOWNLOAD.enabled) return;
+
+        checkAndNavigateToSiteIfNotShowing();
 
         clickOn(R.id.nav_sites);
         (new MySitesPage()).goToBackup();
@@ -302,8 +314,10 @@ public class JPScreenshotTest extends BaseTest {
 
     private void generateBlogPost() {
         if (!Screenshots.EDIT_POST.enabled) return;
-        (new MySitesPage()).switchToSite("fourpawsdoggrooming.wordpress.com")
-                           .goToPosts();
+
+        checkAndNavigateToSiteIfNotShowing("fourpawsdoggrooming.wordpress.com");
+        (new MySitesPage()).goToPosts();
+
         idleFor(3000);
 
         PostsListPage.goToDrafts();
@@ -324,6 +338,8 @@ public class JPScreenshotTest extends BaseTest {
     private void generateBloggingReminders() {
         if (!Screenshots.BLOGGING_REMINDERS.enabled) return;
 
+        checkAndNavigateToSiteIfNotShowing();
+
         // Click on the "Sites" tab in the nav, then click the "Menu" tab, then choose "Scan"
         clickOn(R.id.nav_sites);
         (new MySitesPage()).goToBloggingReminders();
@@ -342,6 +358,9 @@ public class JPScreenshotTest extends BaseTest {
 
     private void generateMedia() {
         if (!Screenshots.MEDIA.enabled) return;
+
+        checkAndNavigateToSiteIfNotShowing();
+
         // Click on the "Sites" tab in the nav, then click the "Menu" tab, then choose "Media"
         clickOn(R.id.nav_sites);
         (new MySitesPage()).goToMedia();
@@ -360,6 +379,8 @@ public class JPScreenshotTest extends BaseTest {
 
     private void generateScan() {
         if (!Screenshots.SCAN.enabled) return;
+
+        checkAndNavigateToSiteIfNotShowing();
 
         // Click on the "Sites" tab in the nav, then click the "Menu" tab, then choose "Scan"
         clickOn(R.id.nav_sites);
