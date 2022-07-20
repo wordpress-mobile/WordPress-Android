@@ -82,15 +82,15 @@ class QRCodeAuthFragment : Fragment() {
     @Composable
     private fun QRCodeAuthScreen(viewModel: QRCodeAuthViewModel = viewModel()) {
         VerticalScrollBox(
-                modifier = Modifier
-                        .fillMaxWidth()
-                        .fillMaxHeight(),
-                alignment = Alignment.CenterStart
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight(),
+            alignment = Alignment.CenterStart
         ) {
             Box(
-                    modifier = Modifier
-                            .fillMaxWidth()
-                            .wrapContentHeight()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentHeight()
             ) {
                 // TODO fix initial action event
                 val actionEvent by viewModel.actionEvents.collectAsState(initial = Idle)
@@ -98,15 +98,9 @@ class QRCodeAuthFragment : Fragment() {
                 val uiState by viewModel.uiState.collectAsState()
                 uiState.run {
                     when (this) {
-                        is Content -> {
-                            ContentState(this)
-                        }
-                        is Error -> {
-                            ErrorState(this)
-                        }
-                        is Loading -> {
-                            LoadingState()
-                        }
+                        is Content -> ContentState(this)
+                        is Error -> ErrorState(this)
+                        is Loading -> LoadingState()
                         is Scanning -> {} // NO OP
                     }
                 }
@@ -121,7 +115,7 @@ class QRCodeAuthFragment : Fragment() {
     }
 
     private fun initViewModel(savedInstanceState: Bundle?) {
-        val(uri, isDeepLink) = requireActivity().intent?.extras?.let {
+        val (uri, isDeepLink) = requireActivity().intent?.extras?.let {
             val uri = it.getString(DEEP_LINK_URI_KEY, null)
             val isDeepLink = it.getBoolean(IS_DEEP_LINK_KEY, false)
             uri to isDeepLink
