@@ -129,6 +129,14 @@ class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializ
             }
             return@setOnTouchListener false
         }
+
+        viewModel.showJetpackPoweredBottomSheet.observeEvent(viewLifecycleOwner) {
+            if (isFirstStart) {
+                JetpackPoweredBottomSheetFragment
+                        .newInstance(it, MY_SITE)
+                        .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
+            }
+        }
     }
 
     private fun StatsFragmentBinding.setupObservers(activity: FragmentActivity) {
@@ -169,15 +177,6 @@ class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializ
 
         viewModel.showUpgradeAlert.observeEvent(viewLifecycleOwner) {
             UpdateAlertDialogFragment.newInstance().show(childFragmentManager, UPDATE_ALERT_DIALOG_TAG)
-        }
-
-        viewModel.showJetpackPoweredBottomSheet.observeEvent(viewLifecycleOwner) {
-            val bottomSheet = childFragmentManager.findFragmentByTag(JetpackPoweredBottomSheetFragment.TAG)
-            if (bottomSheet == null) {
-                JetpackPoweredBottomSheetFragment
-                        .newInstance(it, MY_SITE)
-                        .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
-            }
         }
     }
 
