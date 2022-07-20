@@ -21,7 +21,7 @@ fun ResourceImage(
     contentDescription: String? = null,
     contentScale: ContentScale = ContentScale.Fit,
     alignment: Alignment = Alignment.Center,
-    adjustViewBounds: Boolean = true
+        adjustViewBounds: Boolean = false
 ) {
     val painter = painterResource(imageRes)
     val enrichedModifier = when {
