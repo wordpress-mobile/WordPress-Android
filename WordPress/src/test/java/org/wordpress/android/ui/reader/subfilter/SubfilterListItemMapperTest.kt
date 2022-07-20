@@ -2,6 +2,7 @@ package org.wordpress.android.ui.reader.subfilter
 
 import com.google.gson.JsonParser
 import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.hamcrest.core.StringContains
@@ -21,7 +22,6 @@ import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Site
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.SiteAll
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Tag
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
-import java.lang.IllegalArgumentException
 
 @RunWith(MockitoJUnitRunner::class)
 class SubfilterListItemMapperTest {
@@ -61,7 +61,7 @@ class SubfilterListItemMapperTest {
         // When
         val item = listItemMapper.fromJson(
                 json = json,
-                onClickAction = ::onClickActionDummy,
+                onClickAction = mock(),
                 isSelected = false
         )
 
@@ -79,7 +79,7 @@ class SubfilterListItemMapperTest {
         // When
         listItemMapper.fromJson(
                 json = json,
-                onClickAction = ::onClickActionDummy,
+                onClickAction = mock(),
                 isSelected = false
         )
 
@@ -95,7 +95,7 @@ class SubfilterListItemMapperTest {
         // When
         val item = listItemMapper.fromJson(
                 json = json,
-                onClickAction = ::onClickActionDummy,
+                onClickAction = mock(),
                 isSelected = false
         )
 
@@ -111,7 +111,7 @@ class SubfilterListItemMapperTest {
         // When
         val item = listItemMapper.fromJson(
                 json = json,
-                onClickAction = ::onClickActionDummy,
+                onClickAction = mock(),
                 isSelected = false
         )
 
@@ -127,7 +127,7 @@ class SubfilterListItemMapperTest {
         // When
         val item = listItemMapper.fromJson(
                 json = json,
-                onClickAction = ::onClickActionDummy,
+                onClickAction = mock(),
                 isSelected = false
         )
 
@@ -143,7 +143,7 @@ class SubfilterListItemMapperTest {
         // When
         val item = listItemMapper.fromJson(
                 json = json,
-                onClickAction = ::onClickActionDummy,
+                onClickAction = mock(),
                 isSelected = false
         )
 
@@ -159,7 +159,7 @@ class SubfilterListItemMapperTest {
         // When
         val item = listItemMapper.fromJson(
                 json = json,
-                onClickAction = ::onClickActionDummy,
+                onClickAction = mock(),
                 isSelected = false
         )
 
@@ -170,7 +170,7 @@ class SubfilterListItemMapperTest {
     @Test
     fun `toJson returns correct SiteAll JSON`() {
         // Given
-        val item = SiteAll(onClickAction = ::onClickActionDummy)
+        val item = SiteAll(onClickAction = mock())
 
         // When
         val json = listItemMapper.toJson(item)
@@ -187,7 +187,7 @@ class SubfilterListItemMapperTest {
         // Given
         val blog = ReaderBlog.fromJson(JSONObject(SITE_JSON))
         val item = Site(
-                onClickAction = ::onClickActionDummy,
+                onClickAction = mock(),
                 blog = blog
         )
 
@@ -205,7 +205,7 @@ class SubfilterListItemMapperTest {
     fun `toJson returns correct Tag JSON`() {
         // Given
         val item = Tag(
-                onClickAction = ::onClickActionDummy,
+                onClickAction = mock(),
                 tag = tag
         )
 
@@ -229,7 +229,5 @@ class SubfilterListItemMapperTest {
         private const val TAG_JSON = "{\"blogId\":0,\"feedId\":0,\"tagSlug\":\"news\",\"tagType\":1,\"type\":4}"
         private const val TAG_JSON_EMPTY_SLUG = "{\"blogId\":0,\"feedId\":0,\"tagSlug\":\"\",\"tagType\":1,\"type\":4}"
         private const val WRONG_TYPE_JSON = "{\"blogId\":0,\"feedId\":0,\"tagSlug\":\"news\",\"tagType\":1,\"type\":10}"
-
-        private fun onClickActionDummy(filter: SubfilterListItem) {}
     }
 }

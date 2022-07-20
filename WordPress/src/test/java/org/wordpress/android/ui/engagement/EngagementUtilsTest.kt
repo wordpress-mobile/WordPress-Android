@@ -38,7 +38,10 @@ class EngagementUtilsTest {
         val likersList = getDefaultLikers(numLikers, POST_LIKE, siteId, postId)
         val onClickFunction = ::onClickDummy
 
-        val engageItems = engagementUtils.likesToEngagedPeople(likersList, onClickFunction)
+        val engageItems = engagementUtils.likesToEngagedPeople(
+                likersList,
+                onClickFunction
+        )
 
         assertThat(engageItems.all { it as Liker != null && it.onClick == onClickFunction }).isTrue
     }
@@ -58,5 +61,5 @@ class EngagementUtilsTest {
         assertThat(engageItems.all { it as Liker != null && it.source == source }).isTrue
     }
 
-    private fun onClickDummy(userProfile: UserProfile, source: EngagementNavigationSource?) { }
+    private fun onClickDummy(userProfile: UserProfile, source: EngagementNavigationSource?) = Unit
 }
