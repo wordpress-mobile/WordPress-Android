@@ -33,6 +33,7 @@ import org.wordpress.android.imageeditor.utils.ToastUtils.Duration
 /**
  * Container fragment for displaying third party crop fragment and done menu item.
  */
+@Suppress("TooManyFunctions")
 class CropFragment : Fragment(), UCropFragmentCallback {
     private lateinit var viewModel: CropViewModel
     private var doneMenu: MenuItem? = null
