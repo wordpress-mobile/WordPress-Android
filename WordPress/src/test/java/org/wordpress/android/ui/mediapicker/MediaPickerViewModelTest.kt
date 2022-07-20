@@ -804,6 +804,7 @@ class MediaPickerViewModelTest : BaseUnitTest() {
         }
     }
 
+    @Suppress("LongParameterList")
     private suspend fun setupViewModel(
         domainModel: List<MediaItem>?,
         mediaPickerSetup: MediaPickerSetup,

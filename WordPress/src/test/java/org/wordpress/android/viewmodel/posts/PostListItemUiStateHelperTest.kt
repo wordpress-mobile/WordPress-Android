@@ -1068,6 +1068,7 @@ class PostListItemUiStateHelperTest {
         return post
     }
 
+    @Suppress("LongParameterList")
     private fun createPostListItemUiState(
         authorFilterSelection: AuthorFilterSelection = EVERYONE,
         post: PostModel = PostModel(),

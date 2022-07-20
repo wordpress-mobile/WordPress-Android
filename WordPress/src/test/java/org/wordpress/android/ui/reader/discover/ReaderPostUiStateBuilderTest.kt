@@ -935,6 +935,7 @@ class ReaderPostUiStateBuilderTest {
         )
     }
 
+    @Suppress("LongParameterList")
     private fun createPost(
         hasTitle: Boolean = true,
         hasExcerpt: Boolean = true,

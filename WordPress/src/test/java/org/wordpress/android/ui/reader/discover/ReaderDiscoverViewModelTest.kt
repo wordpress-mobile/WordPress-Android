@@ -661,6 +661,7 @@ class ReaderDiscoverViewModelTest {
         this.featuredVideo = id.toString()
     }
 
+    @Suppress("LongParameterList")
     private fun createDummyReaderPostUiState(
         post: ReaderPost,
         onItemRendered: (ReaderCardUiState) -> Unit = mock(),

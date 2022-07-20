@@ -1462,6 +1462,7 @@ class ActivityLogViewModelTest {
         return calendar.time
     }
 
+    @Suppress("LongParameterList")
     private fun expectedActivityList(
         displayRestoreProgress: Boolean = false,
         restoreProgressWithDate: Boolean = false,
