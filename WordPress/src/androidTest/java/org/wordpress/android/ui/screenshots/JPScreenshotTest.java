@@ -43,6 +43,7 @@ import static org.wordpress.android.support.WPSupportUtils.getTranslatedString;
 import static org.wordpress.android.support.WPSupportUtils.idleFor;
 import static org.wordpress.android.support.WPSupportUtils.isElementDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.isTabletScreen;
+import static org.wordpress.android.support.WPSupportUtils.isTextDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.pressBackUntilElementIsDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.setNightMode;
 import static org.wordpress.android.support.WPSupportUtils.swipeLeftOnViewPager;
@@ -105,16 +106,14 @@ public class JPScreenshotTest extends BaseTest {
             mDemoModeEnabler.enable();
             wpLogin();
 
-            // After log the home-dashboard should be visible
-            // Navigate to the correct site for the Jetpack Screenshots
-            (new MySitesPage()).switchToSite(JETPACK_SCREENSHOT_SITE_URL);
+            checkAndNavigateToSiteIfNotShowing();
 
             generateActivityLog();
             generateBackupDownload();
             generateBloggingReminders();
             generateBlogPost();
             generateChooseALayout();
-            generateCreatePost();
+            generateCreateNewOptions();
             generateMedia();
             generateMySite();
             generateNotifications();
@@ -129,10 +128,11 @@ public class JPScreenshotTest extends BaseTest {
     }
 
     // Enabled screenshots
-    private void generateCreatePost() {
+    private void generateCreateNewOptions() {
         if (!Screenshots.CREATE_NEW_OPTIONS.enabled) return;
 
-        (new MySitesPage()).goToBloggingReminders();
+        checkAndNavigateToSiteIfNotShowing();
+
         (new MySitesPage()).addBloggingPrompts();
 
         // Navigate back to dashboard
@@ -443,5 +443,17 @@ public class JPScreenshotTest extends BaseTest {
                 "firebase.test.lab"
         );
         return "true".equals(testLabSetting);
+    }
+
+    private void checkAndNavigateToSiteIfNotShowing() {
+        checkAndNavigateToSiteIfNotShowing(JETPACK_SCREENSHOT_SITE_URL);
+    }
+
+    private void checkAndNavigateToSiteIfNotShowing(String url) {
+        pressBackUntilElementIsDisplayed(R.id.nav_sites);
+
+        if (isTextDisplayed(url)) return;
+
+        (new MySitesPage()).switchToSite(url);
     }
 }

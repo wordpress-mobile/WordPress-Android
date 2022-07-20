@@ -132,14 +132,17 @@ public class MySitesPage {
     }
 
     public void addBloggingPrompts() {
+        goToBloggingReminders();
+
+        idleFor(4000);
+
         if (isElementDisplayed(R.id.content_recycler_view)) {
-            // If My Site Improvements are enabled, we reach the item in a different way
             onView(withId(R.id.content_recycler_view))
                     .perform(actionOnItem(hasDescendant(withId(R.id.include_prompt_switch)),
                             setChecked(true, R.id.include_prompt_switch)));
         }
 
-        idleFor(1000);
+        idleFor(4000);
 
         onView(withId(R.id.primary_button))
                 .perform(click());
