@@ -7,28 +7,27 @@ DIFF_DEPENDENCIES_FILE="$DIFF_DEPENDENCIES_FOLDER/diff_dependencies.txt"
 CONFIGURATION="wordpressVanillaReleaseRuntimeClasspath"
 DEPENDENCY_TREE_VERSION="1.2.0"
 
+REPO_HANDLE="wordpress-mobile/wordpress-android"
+
+PR_NUMBER=$BUILDKITE_PULL_REQUEST
+CURRENT_BRANCH=$BUILDKITE_BRANCH
+TARGET_BRANCH=$BUILDKITE_PULL_REQUEST_BASE_BRANCH
+
 echo "--> Starting the check"
 
-git config --global user.email '$( git log --format='%ae' $CIRCLE_SHA1^! )'
-git config --global user.name '$( git log --format='%an' $CIRCLE_SHA1^! )'
+echo "--> Target branch is $TARGET_BRANCH"
 
-currentBranch=$(git rev-parse --abbrev-ref HEAD)
+# Set the git identity to avoid issues with `git merge`
+git config --global user.email '$( git log --format='%ae' $COMMIT_HASH^! )'
+git config --global user.name '$( git log --format='%an' $COMMIT_HASH^! )'
 
-prNumber="${CIRCLE_PULL_REQUEST##*/}"
-githubUrl="https://api.github.com/repos/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME/pulls/$prNumber"
+git merge "origin/$TARGET_BRANCH" --no-edit
 
-echo "--> Fetching the target branch from $githubUrl"
-githubResponse="$(curl "$githubUrl" -H "Authorization: token $GITHUB_API_TOKEN")"
-targetBranch=$(echo "$githubResponse" | tr '\r\n' ' ' | jq '.base.ref' | tr -d '"')
-echo "--> Target branch is $targetBranch"
-
-git merge "origin/$targetBranch" --no-edit
-
-if [[ $(git diff --name-status "origin/$targetBranch" | grep ".gradle") ]]; then
+if [[ $(git diff --name-status "origin/$TARGET_BRANCH" | grep ".gradle") ]]; then
     echo ".gradle files have been changed. Looking for caused dependency changes"
   else
     echo ".gradle files haven't been changed. There is no need to run the diff"
-    ./gradlew dependencyTreeDiffCommentToGitHub -DGITHUB_PULLREQUESTID="${CIRCLE_PULL_REQUEST##*/}" -DGITHUB_OAUTH2TOKEN="$GITHUB_API_TOKEN"
+    ./gradlew dependencyTreeDiffCommentToGitHub -DGITHUB_PULLREQUESTID="${PR_NUMBER}" -DGITHUB_OAUTH2TOKEN="$GITHUB_TOKEN"
     exit 0
 fi
 
@@ -38,7 +37,7 @@ echo "--> Generating dependencies to the file $CURRENT_TARGET_BRANCH_DEPENDENCIE
 ./gradlew :WordPress:dependencies --configuration $CONFIGURATION > $CURRENT_TARGET_BRANCH_DEPENDENCIES_FILE
 
 echo "--> Generating dependencies to the file $TARGET_BRANCH_DEPENDENCIES_FILE"
-git checkout "$targetBranch"
+git checkout "$TARGET_BRANCH"
 ./gradlew :WordPress:dependencies --configuration $CONFIGURATION > $TARGET_BRANCH_DEPENDENCIES_FILE
 
 echo "--> Downloading dependency-tree-diff.jar"
@@ -54,7 +53,7 @@ chmod +x dependency-tree-diff.jar
 echo "--> Running dependency-tree-diff.jar"
 ./dependency-tree-diff.jar $TARGET_BRANCH_DEPENDENCIES_FILE $CURRENT_TARGET_BRANCH_DEPENDENCIES_FILE > $DIFF_DEPENDENCIES_FILE
 
-git checkout "$currentBranch"
+git checkout "$CURRENT_BRANCH"
 if [ -s $DIFF_DEPENDENCIES_FILE ]; then
   echo "There are changes in dependencies of the project"
   cat "$DIFF_DEPENDENCIES_FILE"
@@ -64,4 +63,4 @@ else
 fi
 
 echo "--> Commenting result to GitHub"
-./gradlew dependencyTreeDiffCommentToGitHub -DGITHUB_PULLREQUESTID="${CIRCLE_PULL_REQUEST##*/}" -DGITHUB_OAUTH2TOKEN="$GITHUB_API_TOKEN" --info
+./gradlew dependencyTreeDiffCommentToGitHub -DGITHUB_PULLREQUESTID="${PR_NUMBER##*/}" -DGITHUB_OAUTH2TOKEN="$GITHUB_TOKEN" --info

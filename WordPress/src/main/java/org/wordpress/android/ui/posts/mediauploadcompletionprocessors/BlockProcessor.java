@@ -44,7 +44,8 @@ public abstract class BlockProcessor {
     BlockProcessor(String localId, MediaFile mediaFile) {
         mLocalId = localId;
         mRemoteId = mediaFile.getMediaId();
-        mRemoteUrl = org.wordpress.android.util.StringUtils.notNullStr(Utils.escapeQuotes(mediaFile.getFileURL()));
+        mRemoteUrl = org.wordpress.android.util.StringUtils.notNullStr(Utils.escapeQuotes(mediaFile
+                .getOptimalFileURL()));
     }
 
     private JsonObject parseJson(String blockJson) {

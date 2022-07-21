@@ -19,7 +19,7 @@ class MediaUploadCompletionProcessorTest {
     @Before
     fun before() {
         whenever(mediaFile.mediaId).thenReturn(TestContent.remoteMediaId)
-        whenever(mediaFile.fileURL).thenReturn(TestContent.remoteImageUrl)
+        whenever(mediaFile.optimalFileURL).thenReturn(TestContent.remoteImageUrl)
         whenever(mediaFile.getAttachmentPageURL(any())).thenReturn(TestContent.attachmentPageUrl)
         processor = MediaUploadCompletionProcessor(TestContent.localMediaId, mediaFile, TestContent.siteUrl)
     }
@@ -32,7 +32,7 @@ class MediaUploadCompletionProcessorTest {
 
     @Test
     fun `processPost splices id and url for a video block`() {
-        whenever(mediaFile.fileURL).thenReturn(TestContent.remoteVideoUrl)
+        whenever(mediaFile.optimalFileURL).thenReturn(TestContent.remoteVideoUrl)
         processor = MediaUploadCompletionProcessor(TestContent.localMediaId, mediaFile, TestContent.siteUrl)
         val blocks = processor.processContent(TestContent.oldPostVideo)
         Assertions.assertThat(blocks).isEqualTo(TestContent.newPostVideo)
@@ -65,7 +65,7 @@ class MediaUploadCompletionProcessorTest {
     @Test
     fun `processPost works for nested outer cover blocks`() {
         whenever(mediaFile.mediaId).thenReturn(TestContent.remoteMediaId2)
-        whenever(mediaFile.fileURL).thenReturn(TestContent.remoteImageUrl2)
+        whenever(mediaFile.optimalFileURL).thenReturn(TestContent.remoteImageUrl2)
         processor = MediaUploadCompletionProcessor(TestContent.localMediaId2, mediaFile, TestContent.siteUrl)
         val blocks = processor.processContent(TestContent.oldCoverBlockWithNestedCoverBlockOuter)
         Assertions.assertThat(blocks).isEqualTo(TestContent.newCoverBlockWithNestedCoverBlockOuter)
