@@ -20,10 +20,8 @@ fun Title(text: String) {
                     .fillMaxWidth()
                     .wrapContentHeight()
                     .padding(
-                            start = Margin.ExtraExtraMediumLarge.value,
-                            end = Margin.ExtraExtraMediumLarge.value,
-                            top = Margin.Medium.value,
-                            bottom = Margin.Medium.value
+                            horizontal = Margin.ExtraExtraMediumLarge.value,
+                            vertical = Margin.Medium.value
                     )
     )
 }
