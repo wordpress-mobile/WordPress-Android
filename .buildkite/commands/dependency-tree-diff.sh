@@ -17,6 +17,10 @@ echo "--> Starting the check"
 
 echo "--> Target branch is $TARGET_BRANCH"
 
+# Set the git identity to avoid issues with `git merge`
+git config --global user.email '$( git log --format='%ae' $COMMIT_HASH^! )'
+git config --global user.name '$( git log --format='%an' $COMMIT_HASH^! )'
+
 git merge "origin/$TARGET_BRANCH" --no-edit
 
 if [[ $(git diff --name-status "origin/$TARGET_BRANCH" | grep ".gradle") ]]; then

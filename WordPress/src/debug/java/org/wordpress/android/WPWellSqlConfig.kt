@@ -43,5 +43,6 @@ class WPWellSqlConfig(context: Context) : WellSqlConfig(context) {
      * number of SQLiteBlobTooBigExceptions. Note that this is only called on API 28 and
      * above since earlier versions don't allow adjusting the cursor window size.
      */
+    @Suppress("MagicNumber")
     override fun getCursorWindowSize() = (1024L * 1024L * 20L)
 }
