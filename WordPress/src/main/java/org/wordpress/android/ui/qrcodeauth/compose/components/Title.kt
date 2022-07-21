@@ -13,26 +13,17 @@ import org.wordpress.android.ui.compose.unit.Margin
 @Composable
 fun Title(text: String) {
     Text(
-        modifier = Modifier
-            .fillMaxWidth()
-            .wrapContentHeight()
-            .padding(
-                start = Margin.ExtraExtraMediumLarge.value,
-                end = Margin.ExtraExtraMediumLarge.value,
-                top = Margin.Medium.value,
-                bottom = Margin.Medium.value
-            ),
-        text = text,
-        textAlign = TextAlign.Center,
-        fontSize = FontSize.DoubleExtraLarge.value
+            modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentHeight()
+                    .padding(
+                            start = Margin.ExtraExtraMediumLarge.value,
+                            end = Margin.ExtraExtraMediumLarge.value,
+                            top = Margin.Medium.value,
+                            bottom = Margin.Medium.value
+                    ),
+            text = text,
+            textAlign = TextAlign.Center,
+            fontSize = FontSize.DoubleExtraLarge.value
     )
-    //    <com.google.android.material.textview.MaterialTextView
-//    android:id="@+id/error_title"
-//    style="@style/QRCodeAuth.Title"
-//    <style name="QRCodeAuth.Title" parent="QRCodeAuth.TextView">
-//    <item name="android:gravity">start</item>
-//    <item name="android:textAlignment">center</item>
-//    <item name="android:textColor">?attr/colorOnSurface</item>
-//    <item name="android:includeFontPadding">false</item>
-//    </style>
 }
