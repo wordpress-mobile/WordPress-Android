@@ -48,6 +48,7 @@ import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.NOTIFS
 import org.wordpress.android.util.JetpackBannerUtils
 import org.wordpress.android.util.NetworkUtils
+import org.wordpress.android.util.SiteUtilsWrapper
 import org.wordpress.android.util.WPUrlUtils
 import org.wordpress.android.util.config.JetpackPoweredFeatureConfig
 import org.wordpress.android.util.extensions.setLiftOnScrollTargetViewIdAndRequestLayout
@@ -60,6 +61,7 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
 
     @Inject lateinit var accountStore: AccountStore
     @Inject lateinit var jetpackPoweredFeatureConfig: JetpackPoweredFeatureConfig
+    @Inject lateinit var siteUtilsWrapper: SiteUtilsWrapper
 
     private var binding: NotificationsListFragmentBinding? = null
 
@@ -291,7 +293,7 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
 
     override fun onScrollableViewInitialized(containerId: Int) {
         binding?.appBar?.setLiftOnScrollTargetViewIdAndRequestLayout(containerId)
-        if (jetpackPoweredFeatureConfig.isEnabled() && !BuildConfig.IS_JETPACK_APP) {
+        if (showJetpackPoweredBanner()) {
             binding?.root?.post {
                 // post is used to create a minimal delay here. containerId changes just before
                 // onScrollableViewInitialized is called, and findViewById can't find the new id before the delay.
@@ -301,5 +303,12 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
                 JetpackBannerUtils.initJetpackBannerAnimation(jetpackBannerView, scrollableView)
             }
         }
+    }
+
+    private fun showJetpackPoweredBanner(): Boolean {
+        val selectedSite = (requireActivity() as? WPMainActivity)?.selectedSite
+        val wpComSite = (selectedSite != null) && siteUtilsWrapper.isAccessedViaWPComRest(selectedSite)
+
+        return wpComSite && jetpackPoweredFeatureConfig.isEnabled() && !BuildConfig.IS_JETPACK_APP
     }
 }
