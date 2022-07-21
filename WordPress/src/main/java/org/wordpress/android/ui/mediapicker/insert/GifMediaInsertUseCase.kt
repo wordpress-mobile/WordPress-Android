@@ -38,6 +38,7 @@ class GifMediaInsertUseCase(
     override val actionTitle: Int
         get() = R.string.media_uploading_gif_library_photo
 
+    @Suppress("SwallowedException")
     override suspend fun insert(identifiers: List<Identifier>) = flow {
         emit(InsertModel.Progress(actionTitle))
         emit(coroutineScope {

@@ -208,6 +208,7 @@ class ReaderDiscoverDataProvider @Inject constructor(
         }
     }
 
+    @SuppressWarnings("unused")
     @Subscribe(threadMode = BACKGROUND)
     fun onFollowedTagsChanged(event: FollowedTagsChanged) {
         launch {

@@ -49,7 +49,7 @@ class RemoteConfigProcessor : AbstractProcessor() {
         }
     }
 
-    @Suppress("TooGenericExceptionCaught")
+    @Suppress("TooGenericExceptionCaught", "SwallowedException")
     private fun generateRemoteConfigDefaults(
         remoteConfigDefaults: Map<String, String>
     ) {

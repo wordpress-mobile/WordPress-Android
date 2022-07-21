@@ -43,6 +43,7 @@ import org.wordpress.android.ui.media.VideoLoader
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.image.ImageType.VIDEO
 import java.io.File
+import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -498,7 +499,10 @@ class ImageManager @Inject constructor(
             FIT_START,
             FIT_XY,
             MATRIX -> {
-                AppLog.e(AppLog.T.UTILS, String.format("ScaleType %s is not supported.", scaleType.toString()))
+                AppLog.e(
+                        AppLog.T.UTILS,
+                        String.format(Locale.ENGLISH, "ScaleType %s is not supported.", scaleType.toString())
+                )
                 this
             }
         }
