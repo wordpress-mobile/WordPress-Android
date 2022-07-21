@@ -18,16 +18,18 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.mlkit.vision.codescanner.GmsBarcodeScanning
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.ui.compose.components.VerticalScrollBox
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.posts.BasicDialogViewModel
 import org.wordpress.android.ui.posts.BasicDialogViewModel.BasicDialogModel
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthActionEvent.FinishActivity
-import org.wordpress.android.ui.qrcodeauth.QRCodeAuthActionEvent.Idle
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthActionEvent.LaunchDismissDialog
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthActionEvent.LaunchScanner
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthActivity.Companion.DEEP_LINK_URI_KEY
@@ -67,7 +69,7 @@ class QRCodeAuthFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initBackPressHandler()
         initViewModel(savedInstanceState)
-        observeDialogViewModel()
+        observeViewModel()
     }
 
     @Composable
@@ -83,9 +85,6 @@ class QRCodeAuthFragment : Fragment() {
                     .fillMaxWidth()
                     .wrapContentHeight()
             ) {
-                // TODO fix initial action event
-                val actionEvent by viewModel.actionEvents.collectAsState(initial = Idle)
-                handleActionEvents(actionEvent)
                 val uiState by viewModel.uiState.collectAsState()
                 uiState.run {
                     when (this) {
@@ -99,7 +98,8 @@ class QRCodeAuthFragment : Fragment() {
         }
     }
 
-    private fun observeDialogViewModel() {
+    private fun observeViewModel() {
+        qrCodeAuthViewModel.actionEvents.onEach(this::handleActionEvents).launchIn(viewLifecycleOwner.lifecycleScope)
         dialogViewModel.onInteraction.observeEvent(viewLifecycleOwner, qrCodeAuthViewModel::onDialogInteraction)
     }
 
@@ -118,7 +118,6 @@ class QRCodeAuthFragment : Fragment() {
             is LaunchDismissDialog -> launchDismissDialog(actionEvent.dialogModel)
             is LaunchScanner -> launchScanner()
             is FinishActivity -> requireActivity().finish()
-            else -> Unit
         }
     }
 
