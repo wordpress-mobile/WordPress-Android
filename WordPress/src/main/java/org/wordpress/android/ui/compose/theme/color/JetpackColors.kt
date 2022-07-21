@@ -44,9 +44,3 @@ class JetpackColors : ThemeColors {
             onError = black
     )
 }
-
-// TODO
-// DARK
-// <color name="nav_bar">@color/white</color>
-// LIGHT
-// <color name="nav_bar">@color/black</color>
