@@ -72,6 +72,8 @@ public class FluxCUtils {
         mediaFile.setFilePath(media.getFilePath());
         mediaFile.setMimeType(media.getMimeType());
         mediaFile.setThumbnailURL(media.getThumbnailUrl());
+        mediaFile.setFileUrlLargeSize(media.getFileUrlLargeSize());
+        mediaFile.setFileUrlMediumSize(media.getFileUrlMediumSize());
         mediaFile.setFileURL(media.getUrl());
         mediaFile.setTitle(media.getTitle());
         mediaFile.setDescription(media.getDescription());

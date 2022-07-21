@@ -154,7 +154,6 @@ class CropFragment : Fragment(), UCropFragmentCallback {
     }
 
     private fun showCropError(errorResId: Int) {
-        // TODO: track exact error errorMsg
         ToastUtils.showToast(context, getString(errorResId), Duration.LONG)
     }
 

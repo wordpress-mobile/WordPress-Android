@@ -6,14 +6,13 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import android.view.ViewGroup.MarginLayoutParams
 import android.widget.TextView
 import androidx.annotation.NonNull
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
-import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
@@ -41,6 +40,7 @@ import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.ContentUiState.TabUiState
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.util.JetpackBannerUtils
 import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.SnackbarItem
 import org.wordpress.android.util.SnackbarItem.Action
@@ -84,7 +84,6 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
         binding = ReaderFragmentLayoutBinding.bind(view).apply {
             initToolbar()
             initViewPager()
-            initJetpackBanner()
             initViewModel()
         }
     }
@@ -146,17 +145,6 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
 
     private fun ReaderFragmentLayoutBinding.initViewPager() {
         viewPager.registerOnPageChangeCallback(viewPagerCallback)
-    }
-
-    private fun ReaderFragmentLayoutBinding.initJetpackBanner() {
-        if (jetpackPoweredFeatureConfig.isEnabled() && !BuildConfig.IS_JETPACK_APP) {
-            jetpackBanner.root.isVisible = true
-
-            // Add bottom margin to viewPager and interests fragment for the jetpack banner.
-            val margin = resources.getDimensionPixelSize(R.dimen.jetpack_banner_height)
-            viewPager.updateLayoutParams<MarginLayoutParams> { bottomMargin = margin }
-            interestsFragmentContainer.updateLayoutParams<MarginLayoutParams> { bottomMargin = margin }
-        }
     }
 
     private fun ReaderFragmentLayoutBinding.initViewModel() {
@@ -328,6 +316,16 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
 
     override fun onScrollableViewInitialized(containerId: Int) {
         binding?.appBar?.liftOnScrollTargetViewId = containerId
+        if (jetpackPoweredFeatureConfig.isEnabled() && !BuildConfig.IS_JETPACK_APP) {
+            binding?.root?.post {
+                // post is used to create a minimal delay here. containerId changes just before
+                // onScrollableViewInitialized is called, and findViewById can't find the new id before the delay.
+                val jetpackBannerView = binding?.jetpackBanner?.root ?: return@post
+                val scrollableView = binding?.root?.findViewById<View>(containerId) as? RecyclerView ?: return@post
+                JetpackBannerUtils.showJetpackBannerIfScrolledToTop(jetpackBannerView, scrollableView)
+                JetpackBannerUtils.initJetpackBannerAnimation(jetpackBannerView, scrollableView)
+            }
+        }
     }
 
     override fun onStart() {
