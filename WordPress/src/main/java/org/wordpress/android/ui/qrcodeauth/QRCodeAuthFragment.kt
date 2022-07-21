@@ -5,10 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -76,23 +73,15 @@ class QRCodeAuthFragment : Fragment() {
     private fun QRCodeAuthScreen(viewModel: QRCodeAuthViewModel = viewModel()) {
         VerticalScrollBox(
                 alignment = Alignment.CenterStart,
-                modifier = Modifier
-                        .fillMaxWidth()
-                        .fillMaxHeight()
+                modifier = Modifier.fillMaxSize()
         ) {
-            Box(
-                    modifier = Modifier
-                            .fillMaxWidth()
-                            .wrapContentHeight()
-            ) {
-                val uiState by viewModel.uiState.collectAsState()
-                uiState.run {
-                    when (this) {
-                        is Content -> ContentState(this)
-                        is Error -> ErrorState(this)
-                        is Loading -> LoadingState()
-                        is Scanning -> Unit
-                    }
+            val uiState by viewModel.uiState.collectAsState()
+            uiState.run {
+                when (this) {
+                    is Content -> ContentState(this)
+                    is Error -> ErrorState(this)
+                    is Loading -> LoadingState()
+                    is Scanning -> Unit
                 }
             }
         }
