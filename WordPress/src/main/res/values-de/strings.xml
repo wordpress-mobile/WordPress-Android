@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-07-05 18:52:54+0000
+Translation-Revision-Date: 2022-07-12 04:17:22+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: de
 -->
 <resources>
+    <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery">Bei der Anzeige des Blocks ist ein Problem aufgetreten. \nTippe, um die Wiederherstellung des Blocks zu versuchen.</string>
+    <string name="weekly_roundup_notification_text_views_and_comments">Letzte Woche hattest du %1$s Aufrufe und %2$s Kommentare</string>
+    <string name="weekly_roundup_notification_text_views_and_likes">Letzte Woche hattest du %1$s Aufrufe und %2$s Likes</string>
+    <string name="weekly_roundup_notification_text_views_only">Letzte Woche hattest du %1$s Aufrufe.</string>
+    <string name="stats_revamp_v2_update_alert_message">Anhand von aktualisierten Einsichten kannst du nachvollziehen, wie deine Inhalte ankommen und was deinem Publikum gefällt.</string>
+    <string name="stats_insights_like_guide_card">⭐️Dein neuster Beitrag %1$s hat %2$s Like erhalten.</string>
+    <string name="weekly_roundup_notification_text_all">Letzte Woche hattest du %1$s Aufrufe, %2$s Likes und %3$s Kommentare.</string>
+    <string name="wp_jetpack_powered">Angetrieben von Jetpack</string>
     <string name="qrcode_auth_flow_content_description">Bild, das anzeigt, dass der Scan des Anmeldecodes läuft</string>
     <string name="qrcode_auth_flow_error_content_description">Bild, das einen Fehler anzeigt</string>
     <string name="qrcode_auth_flow_dismiss_dialog_message">Bist du sicher, dass du fortfahren möchtest?</string>
@@ -71,8 +79,8 @@ Language: de
     <string name="gutenberg_native_you_can_also_rearrange_blocks_by_tapping_a_block_and_then_tapping">Du kannst Blöcke auch neu anordnen, indem du auf einen Block tippst und ihn dann mit den Aufwärts- und Abwärtspfeilen, die unten links auf dem Block erscheinen, nach oben oder unten verschiebst.</string>
     <string name="stats_insights_likes_guide_card">⭐️Dein neuster Beitrag %1$s hat %2$s Likes.</string>
     <string name="stats_most_popular_percent_views_empty">Nicht genug Aktivität. Schau später nochmal vorbei, wenn mehr Besucher auf deiner Website waren!</string>
-    <string name="stats_total_followers_content_description">%1s, %2s aller Follower</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
+    <string name="stats_total_followers_content_description">%1$s, %2$s%% aller Follower</string>
     <string name="quick_start_sites_type_get_to_know_app">Die App kennenlernen</string>
     <string name="quick_start_list_upload_media_title">Lade Fotos oder Videos hoch</string>
     <string name="quick_start_completed_tour_title">Gratulation! Du kennst dich aus&lt;br/&gt;</string>
@@ -395,7 +403,6 @@ Language: de
     <string name="recommend_app_bad_format_response">Ungültige Antwort erhalten</string>
     <string name="my_site_quick_actions_title">Direkte Links</string>
     <string name="recommend_app_subject">Automattic-Apps – Apps für jeden Bildschirm</string>
-    <string name="weekly_roundup_notification_text">Deine Website hat %1$d Aufrufe, %2$d Likes und %3$d Kommentare erhalten.</string>
     <string name="weekly_roundup_notification_title">Wöchentliche Zusammenfassung: %s</string>
     <string name="blogging_reminders_notification_time">Zeit für Benachrichtigungen</string>
     <string name="blogging_reminders_epilogue_body_everyday_with_time">Du erhältst &lt;b&gt;jeden Tag&lt;/b&gt; um &lt;b&gt;%s&lt;/b&gt; Uhr eine Erinnerung zum Bloggen.</string>

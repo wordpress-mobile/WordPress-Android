@@ -72,7 +72,6 @@ Language: pt_BR
     <string name="me_btn_scan_login_code">Examinar código de acesso</string>
     <string name="stats_insights_likes_guide_card">⭐️ Seu post mais recente, %1$s, recebeu %2$s curtidas.</string>
     <string name="stats_most_popular_percent_views_empty">Atividade insuficiente. Confira mais tarde quando o seu site tiver mais visitantes!</string>
-    <string name="stats_total_followers_content_description">%1s, %2s do total de seguidores</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
     <string name="pages_copy_link">Copiar link</string>
     <string name="quick_start_completed_tour_title">Parabéns! Você conhece o caminho&lt;br/&gt;</string>
@@ -396,7 +395,6 @@ Language: pt_BR
     <string name="me_btn_share">Compartilhe o WordPress com um amigo</string>
     <string name="my_site_quick_actions_title">Links rápidos</string>
     <string name="my_site_btn_domains">Domínios</string>
-    <string name="weekly_roundup_notification_text">Seu site teve %1$d visualizações, %2$d curtidas e %3$d comentários.</string>
     <string name="weekly_roundup_notification_title">Resumo semanal: %s</string>
     <string name="blogging_reminders_notification_time">Horário da notificação</string>
     <string name="blogging_reminders_epilogue_body_everyday_with_time">Você receberá lembretes para publicar &lt;b&gt;diariamente&lt;/b&gt; às &lt;b&gt;%s&lt;/b&gt;.</string>

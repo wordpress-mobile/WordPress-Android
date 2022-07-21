@@ -15,7 +15,6 @@ Language: nb_NO
     <string name="me_btn_scan_login_code">Skann innloggingskode</string>
     <string name="stats_insights_likes_guide_card">⭐️ Ditt siste innlegg %1$s har fått %2$s likerklikk.</string>
     <string name="stats_most_popular_percent_views_empty">Ikke nok aktivitet. Kom tilbake senere når ditt nettsted har hatt flere besøkende!</string>
-    <string name="stats_total_followers_content_description">%1s, %2s av følgere totalt</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
     <string name="pages_copy_link">Kopier lenke</string>
     <string name="quick_start_sites_type_get_to_know_app">Bli kjent med appen</string>
