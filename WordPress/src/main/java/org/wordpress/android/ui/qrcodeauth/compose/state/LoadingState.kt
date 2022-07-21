@@ -10,8 +10,8 @@ import org.wordpress.android.ui.compose.components.IndeterminateCircularProgress
 @Composable
 fun LoadingState() {
     Box(
-        contentAlignment = Alignment.Center,
-        modifier = Modifier.fillMaxSize()
+            contentAlignment = Alignment.Center,
+            modifier = Modifier.fillMaxSize()
     ) {
         IndeterminateCircularProgress()
     }

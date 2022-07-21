@@ -26,45 +26,45 @@ import org.wordpress.android.ui.qrcodeauth.compose.components.Title
 @Composable
 fun ErrorState(uiState: QRCodeAuthUiState.Error) = with(uiState) {
     Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .wrapContentHeight(),
-        horizontalAlignment = Alignment.CenterHorizontally
+            modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentHeight(),
+            horizontalAlignment = Alignment.CenterHorizontally
     ) {
         ResourceImage(
-            modifier = Modifier
-                .padding(vertical = Margin.ExtraLarge.value)
-                .wrapContentHeight()
-                .wrapContentWidth(),
-            imageRes = image,
-            contentDescription = stringResource(R.string.qrcode_auth_flow_error_content_description),
+                modifier = Modifier
+                        .padding(vertical = Margin.ExtraLarge.value)
+                        .wrapContentHeight()
+                        .wrapContentWidth(),
+                imageRes = image,
+                contentDescription = stringResource(R.string.qrcode_auth_flow_error_content_description),
         )
         Title(text = uiStringText(title))
         Subtitle(text = uiStringText(subtitle))
         primaryActionButton?.let { actionButton ->
             if (actionButton.isVisible) {
                 PrimaryButton(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(
-                            vertical = Margin.Small.value,
-                            horizontal = Margin.ExtraExtraMediumLarge.value,
-                        ),
-                    text = uiStringText(actionButton.label),
-                    onClick = { actionButton.clickAction.invoke() }
+                        modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(
+                                        vertical = Margin.Small.value,
+                                        horizontal = Margin.ExtraExtraMediumLarge.value,
+                                ),
+                        text = uiStringText(actionButton.label),
+                        onClick = { actionButton.clickAction.invoke() }
                 )
             }
         }
         secondaryActionButton?.let { actionButton ->
             SecondaryButton(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(
-                        vertical = Margin.Small.value,
-                        horizontal = Margin.ExtraExtraMediumLarge.value,
-                    ),
-                text = uiStringText(actionButton.label),
-                onClick = { actionButton.clickAction.invoke() }
+                    modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(
+                                    vertical = Margin.Small.value,
+                                    horizontal = Margin.ExtraExtraMediumLarge.value,
+                            ),
+                    text = uiStringText(actionButton.label),
+                    onClick = { actionButton.clickAction.invoke() }
             )
         }
     }
@@ -75,8 +75,8 @@ fun ErrorState(uiState: QRCodeAuthUiState.Error) = with(uiState) {
 private fun ErrorStatePreview() {
     AppTheme {
         val state = QRCodeAuthUiState.Error.InvalidData(
-            primaryActionButton = ErrorPrimaryActionButton {},
-            secondaryActionButton = ErrorSecondaryActionButton {},
+                primaryActionButton = ErrorPrimaryActionButton {},
+                secondaryActionButton = ErrorSecondaryActionButton {},
         )
         ErrorState(state)
     }

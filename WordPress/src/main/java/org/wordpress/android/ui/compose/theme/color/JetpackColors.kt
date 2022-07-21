@@ -15,33 +15,33 @@ class JetpackColors : ThemeColors {
     private val darkGray = Color(color = 0xff121212)
 
     override fun light(): Colors = lightColors(
-        primary = green50,
-        primaryVariant = green40,
-        secondary = green50,
-        secondaryVariant = green40,
-        background = white,
-        surface = black,
-        error = red50,
-        onPrimary = white,
-        onSecondary = white,
-        onBackground = black,
-        onSurface = white,
-        onError = white
+            primary = green50,
+            primaryVariant = green40,
+            secondary = green50,
+            secondaryVariant = green40,
+            background = white,
+            surface = black,
+            error = red50,
+            onPrimary = white,
+            onSecondary = white,
+            onBackground = black,
+            onSurface = white,
+            onError = white
     )
 
     override fun dark(): Colors = darkColors(
-        primary = green40,
-        primaryVariant = green50,
-        secondary = green40,
-        secondaryVariant = green50,
-        background = darkGray,
-        surface = white,
-        error = red30,
-        onPrimary = black,
-        onSecondary = white,
-        onBackground = white,
-        onSurface = darkGray,
-        onError = black
+            primary = green40,
+            primaryVariant = green50,
+            secondary = green40,
+            secondaryVariant = green50,
+            background = darkGray,
+            surface = white,
+            error = red30,
+            onPrimary = black,
+            onSecondary = white,
+            onBackground = white,
+            onSurface = darkGray,
+            onError = black
     )
 }
 

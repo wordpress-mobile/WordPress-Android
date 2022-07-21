@@ -75,15 +75,15 @@ class QRCodeAuthFragment : Fragment() {
     @Composable
     private fun QRCodeAuthScreen(viewModel: QRCodeAuthViewModel = viewModel()) {
         VerticalScrollBox(
-            modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight(),
-            alignment = Alignment.CenterStart
+                modifier = Modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight(),
+                alignment = Alignment.CenterStart
         ) {
             Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .wrapContentHeight()
+                    modifier = Modifier
+                            .fillMaxWidth()
+                            .wrapContentHeight()
             ) {
                 val uiState by viewModel.uiState.collectAsState()
                 uiState.run {
@@ -123,15 +123,15 @@ class QRCodeAuthFragment : Fragment() {
 
     private fun launchDismissDialog(model: QRCodeAuthDialogModel) {
         dialogViewModel.showDialog(
-            requireActivity().supportFragmentManager,
-            BasicDialogModel(
-                model.tag,
-                getString(model.title),
-                getString(model.message),
-                getString(model.positiveButtonLabel),
-                model.negativeButtonLabel?.let { label -> getString(label) },
-                model.cancelButtonLabel?.let { label -> getString(label) }
-            )
+                requireActivity().supportFragmentManager,
+                BasicDialogModel(
+                        model.tag,
+                        getString(model.title),
+                        getString(model.message),
+                        getString(model.positiveButtonLabel),
+                        model.negativeButtonLabel?.let { label -> getString(label) },
+                        model.cancelButtonLabel?.let { label -> getString(label) }
+                )
         )
     }
 
@@ -139,18 +139,18 @@ class QRCodeAuthFragment : Fragment() {
         qrCodeAuthViewModel.track(Stat.QRLOGIN_SCANNER_DISPLAYED)
         val scanner = GmsBarcodeScanning.getClient(requireContext())
         scanner.startScan()
-            .addOnSuccessListener { barcode -> qrCodeAuthViewModel.onScanSuccess(barcode.rawValue) }
-            .addOnFailureListener { qrCodeAuthViewModel.onScanFailure() }
+                .addOnSuccessListener { barcode -> qrCodeAuthViewModel.onScanSuccess(barcode.rawValue) }
+                .addOnFailureListener { qrCodeAuthViewModel.onScanFailure() }
     }
 
     private fun initBackPressHandler() {
         requireActivity().onBackPressedDispatcher.addCallback(
-            viewLifecycleOwner,
-            object : OnBackPressedCallback(true) {
-                override fun handleOnBackPressed() {
-                    qrCodeAuthViewModel.onBackPressed()
+                viewLifecycleOwner,
+                object : OnBackPressedCallback(true) {
+                    override fun handleOnBackPressed() {
+                        qrCodeAuthViewModel.onBackPressed()
+                    }
                 }
-            }
         )
     }
 

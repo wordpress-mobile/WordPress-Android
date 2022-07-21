@@ -18,32 +18,32 @@ class WordPressColors : ThemeColors {
     private val darkGray = Color(color = 0xff121212)
 
     override fun light(): Colors = lightColors(
-        primary = blue50,
-        primaryVariant = blue70,
-        secondary = blue50,
-        secondaryVariant = blue70,
-        background = white,
-        surface = white,
-        error = red50,
-        onPrimary = white,
-        onSecondary = white,
-        onBackground = black,
-        onSurface = black,
-        onError = white
+            primary = blue50,
+            primaryVariant = blue70,
+            secondary = blue50,
+            secondaryVariant = blue70,
+            background = white,
+            surface = white,
+            error = red50,
+            onPrimary = white,
+            onSecondary = white,
+            onBackground = black,
+            onSurface = black,
+            onError = white
     )
 
     override fun dark(): Colors = darkColors(
-        primary = blue30,
-        primaryVariant = blue50,
-        secondary = blue30,
-        secondaryVariant = blue50,
-        background = darkGray,
-        surface = darkGray,
-        error = red30,
-        onPrimary = black,
-        onSecondary = white,
-        onBackground = white,
-        onSurface = white,
-        onError = black
+            primary = blue30,
+            primaryVariant = blue50,
+            secondary = blue30,
+            secondaryVariant = blue50,
+            background = darkGray,
+            surface = darkGray,
+            error = red30,
+            onPrimary = black,
+            onSecondary = white,
+            onBackground = white,
+            onSurface = white,
+            onError = black
     )
 }
