@@ -1765,13 +1765,9 @@ public class ActivityLauncher {
         Intent mainActivityIntent = getMainActivityInNewStack(context);
         mainActivityIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
 
-        Intent meIntent = new Intent(context, MeActivity.class);
-        meIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-
         Intent qrcodeAuthFlowIntent = QRCodeAuthActivity.newIntent(context, uri, true);
 
         taskStackBuilder.addNextIntent(mainActivityIntent);
-        taskStackBuilder.addNextIntent(meIntent);
         taskStackBuilder.addNextIntent(qrcodeAuthFlowIntent);
 
         taskStackBuilder.startActivities();
