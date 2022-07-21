@@ -2339,6 +2339,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
         boolean isFreeWPCom = mSite.isWPCom() && SiteUtils.onFreePlan(mSite);
         boolean isWPComSite = mSite.isWPCom() || mSite.isWPComAtomic();
+        boolean shouldUseFastImage = !mSite.isPrivate() && !mSite.isPrivateWPComAtomic();
 
         return new GutenbergPropsBuilder(
                 SiteUtils.supportsContactInfoFeature(mSite),
@@ -2354,6 +2355,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 isUnsupportedBlockEditorEnabled,
                 unsupportedBlockEditorSwitch,
                 !isFreeWPCom,
+                shouldUseFastImage,
                 isWPComSite,
                 wpcomLocaleSlug,
                 postType,

@@ -28,6 +28,7 @@ class LoginPrologueFragment : Fragment(R.layout.login_signup_screen) {
         const val TAG = "login_prologue_fragment_tag"
     }
 
+    @Suppress("TooGenericExceptionThrown")
     override fun onAttach(context: Context) {
         super.onAttach(context)
         if (context !is LoginPrologueListener) {
@@ -73,6 +74,7 @@ class LoginPrologueFragment : Fragment(R.layout.login_signup_screen) {
             }
         })
         binding.introsPager.setPageTransformer(object : ViewPager2.PageTransformer {
+            @Suppress("MagicNumber")
             override fun transformPage(page: View, position: Float) {
                 // Since we want to achieve the illusion of having a single continuous background, we apply a
                 // parallax effect to the foreground views of each page, making them enter and exit the screen

@@ -16,6 +16,7 @@ import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
 import android.provider.Settings;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -43,6 +44,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
+import org.wordpress.android.databinding.JetpackBadgeFooterBinding;
 import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
@@ -72,12 +74,13 @@ import org.wordpress.android.ui.utils.UiString;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.BuildConfigWrapper;
-import org.wordpress.android.util.extensions.ContextExtensionsKt;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.config.BloggingRemindersFeatureConfig;
+import org.wordpress.android.util.config.JetpackPoweredFeatureConfig;
+import org.wordpress.android.util.extensions.ContextExtensionsKt;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -133,6 +136,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment
     @Inject BuildConfigWrapper mBuildConfigWrapper;
     @Inject ViewModelProvider.Factory mViewModelFactory;
     @Inject BloggingRemindersFeatureConfig mBloggingRemindersFeatureConfig;
+    @Inject JetpackPoweredFeatureConfig mJetpackPoweredFeatureConfig;
     @Inject UiHelpers mUiHelpers;
 
     private BloggingRemindersViewModel mBloggingRemindersViewModel;
@@ -214,10 +218,18 @@ public class NotificationsSettingsFragment extends PreferenceFragment
         final ListView lv = (ListView) view.findViewById(android.R.id.list);
         if (lv != null) {
             ViewCompat.setNestedScrollingEnabled(lv, true);
+            addJetpackBadgeAsFooterIfEnabled(lv);
         }
         initBloggingReminders();
     }
 
+    private void addJetpackBadgeAsFooterIfEnabled(ListView listView) {
+        if (mJetpackPoweredFeatureConfig.isEnabled() && !mBuildConfigWrapper.isJetpackApp()) {
+            LayoutInflater inflater = LayoutInflater.from(getContext());
+            final JetpackBadgeFooterBinding binding = JetpackBadgeFooterBinding.inflate(inflater);
+            listView.addFooterView(binding.getRoot(), null, false);
+        }
+    }
 
     @Override
     public void onStart() {

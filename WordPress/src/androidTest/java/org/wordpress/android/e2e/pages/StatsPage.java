@@ -18,7 +18,9 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static org.hamcrest.Matchers.allOf;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.wordpress.android.support.WPSupportUtils.dialogExistsWithTitle;
 import static org.wordpress.android.support.WPSupportUtils.scrollIntoView;
+import static org.wordpress.android.support.WPSupportUtils.tapButtonInDialogWithTitle;
 import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDisplayedWithoutFailure;
 
 public class StatsPage {
@@ -169,5 +171,13 @@ public class StatsPage {
         );
 
         scrollIntoView(R.id.statsPager, card, (float) 0.5);
+    }
+
+    public StatsPage dismissUpdateAlertDialogFragmentIfDisplayed() {
+        if (dialogExistsWithTitle(R.string.stats_revamp_v2_intro_header_title)) {
+            tapButtonInDialogWithTitle(R.string.ok);
+        }
+
+        return this;
     }
 }

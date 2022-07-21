@@ -3,6 +3,7 @@ package org.wordpress.android.widgets
 import android.app.Dialog
 import android.app.DialogFragment
 import android.app.FragmentManager
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
@@ -117,6 +118,7 @@ object AppRatingDialog {
             internal const val TAG_APP_RATING_PROMPT_DIALOG = "TAG_APP_RATING_PROMPT_DIALOG"
         }
 
+        @Suppress("SwallowedException")
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
             val builder = MaterialAlertDialogBuilder(activity)
             builder.setTitle(R.string.app_rating_title)
@@ -127,7 +129,7 @@ object AppRatingDialog {
                         val url: String? = "market://details?id=$appPackage"
                         try {
                             activity.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
-                        } catch (e: android.content.ActivityNotFoundException) {
+                        } catch (e: ActivityNotFoundException) {
                             // play store app isn't on this device so open app's page in browser instead
                             activity.startActivity(
                                     Intent(

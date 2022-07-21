@@ -126,7 +126,7 @@ class PageListFragment : ViewPagerFragment(R.layout.pages_list_fragment) {
         if (recyclerView.adapter == null) {
             adapter = PageListAdapter(
                     { action, page -> viewModel.onMenuAction(action, page, requireContext()) },
-                    { page -> viewModel.onItemTapped(page, requireContext()) },
+                    { page -> viewModel.onItemTapped(page) },
                     { viewModel.onEmptyListNewPageButtonTapped() },
                     isSitePhotonCapable,
                     isSitePrivateAt,

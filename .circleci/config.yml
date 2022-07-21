@@ -123,64 +123,7 @@ jobs:
           name: Create GitHub Release
           command: |
             bundle exec fastlane create_gh_release
-  Dependency Tree Diff:
-    executor:
-      name: android/default
-      api-version: "28"
-    steps:
-      - checkout
-      - copy-gradle-properties
-      - run:
-          name: Build dependency diff report
-          command: |
-            if [ -n "$CIRCLE_PULL_REQUEST" ]; then
-              ./tools/dependency-tree-diff/dependency-tree-diff.sh
-            fi
 
-  Connected Tests:
-    parameters:
-      post-to-slack:
-        description: Post to Slack when tests fail. SLACK_WEBHOOK ENV variable must be set.
-        type: boolean
-        default: false
-    executor:
-      name: android/default
-      api-version: "29"
-    steps:
-      - git/shallow-checkout
-      - android/restore-gradle-cache
-      - copy-gradle-properties
-      - update-gradle-memory:
-          jvmargs: "Xmx1536m"
-      - run:
-          name: Build
-          command: ./gradlew WordPress:assembleWordPressVanillaDebug --stacktrace
-      - run:
-          name: Build Tests
-          command: ./gradlew WordPress:assembleWordPressVanillaDebugAndroidTest --stacktrace
-      - run:
-          name: Decrypt credentials
-          command: openssl aes-256-cbc -md sha256 -d -in .circleci/.firebase.secrets.json.enc -out .circleci/.firebase.secrets.json -k "${FIREBASE_SECRETS_ENCRYPTION_KEY}"
-      - android/firebase-test:
-          key-file: .circleci/.firebase.secrets.json
-          type: instrumentation
-          apk-path: WordPress/build/outputs/apk/wordpressVanilla/debug/org.wordpress.android-wordpress-vanilla-debug.apk
-          test-apk-path: WordPress/build/outputs/apk/androidTest/wordpressVanilla/debug/org.wordpress.android-wordpress-vanilla-debug-androidTest.apk
-          test-targets: notPackage org.wordpress.android.ui.screenshots
-          device: model=Pixel2,version=28,locale=en,orientation=portrait
-          project: api-project-108380595987
-          timeout: 20m
-          num-flaky-test-attempts: 2
-          results-history-name: CircleCI WordPress Connected Tests
-      - android/save-gradle-cache
-      - when:
-          condition: << parameters.post-to-slack >>
-          steps:
-            - slack/status:
-                fail_only: true
-                include_job_number_field: false
-                include_project_field: false
-                failure_message: ':red_circle: WordPress Android connected tests failed on \`${CIRCLE_BRANCH}\` branch after merge by ${CIRCLE_USERNAME}. See <https://console.firebase.google.com/u/0/project/api-project-108380595987/testlab/histories/bh.e0c3a59bd9ed670|Firebase console test results> for details.\n\nPlease reach out in #platform9 if you think this failure is not caused by your changes, so we can investigate.'
   raw-screenshots:
     executor:
       name: android/default
@@ -286,67 +229,8 @@ jobs:
                 # [Trial] Validate URLs (and IDs used within those) in both those messages and adapt to the ones for a8c instances once we integrate the PR from fork to main repo
                 failure_message: ':red_circle: WordPress Android Screenshots failed on \`${CIRCLE_BRANCH}\` branch. See <https://console.firebase.google.com/u/0/project/api-project-108380595987/testlab/histories/bh.e0c3a59bd9ed670|Firebase console test results> for details.\n\nPlease reach out in #platform9 if you think this failure is not caused by your changes, so we can investigate.'
                 success_message: ':tada: WordPress Android Promo Screenshots have been generated and are ready to be reviewed. Download them <https://${CIRCLE_BUILD_NUM}-9306568-gh.circle-artifacts.com/0/fastlane/metadata/Android-Promo-Screenshots.zip|here>'
-  WordPressUtils Connected Tests:
-    executor:
-      name: android/default
-      api-version: "29"
-    steps:
-      - git/shallow-checkout
-      - android/restore-gradle-cache
-      - copy-gradle-properties
-      - update-gradle-memory
-      - run:
-          name: Build
-          command: ./gradlew WordPress:assembleWordPressVanillaDebug && cd libs/utils && ./gradlew assembleAndroidTest --stacktrace
-      - run:
-          name: Decrypt credentials
-          command: openssl aes-256-cbc -md sha256 -d -in .circleci/.firebase.secrets.json.enc -out .circleci/.firebase.secrets.json -k "${FIREBASE_SECRETS_ENCRYPTION_KEY}"
-      - android/firebase-test:
-          key-file: .circleci/.firebase.secrets.json
-          type: instrumentation
-          apk-path: WordPress/build/outputs/apk/wordpressVanilla/debug/org.wordpress.android-wordpress-vanilla-debug.apk
-          test-apk-path: libs/utils/WordPressUtils/build/outputs/apk/androidTest/debug/WordPressUtils-debug-androidTest.apk
-          device: model=Pixel2,version=28,locale=en,orientation=portrait
-          project: api-project-108380595987
-          timeout: 10m
-          results-history-name: CircleCI WPUtils Connected Tests
-      - android/save-gradle-cache
 
 workflows:
-  wordpress_android:
-    unless:
-      or:
-        - << pipeline.parameters.generate_screenshots >>
-        - << pipeline.parameters.release_build >>
-    jobs:
-      - Dependency Tree Diff
-      - Connected Tests:
-          post-to-slack: true
-          # Always run connected tests on trunk and release branches
-          filters:
-            branches:
-              only:
-                - trunk
-                - /^release.*/
-                - /^gutenberg\/integrate_release_.*/
-  Optional Tests:
-    unless:
-      or:
-        - << pipeline.parameters.generate_screenshots >>
-        - << pipeline.parameters.release_build >>
-    #Optionally run connected tests on PRs
-    jobs:
-      - Hold:
-          type: approval
-          filters:
-            branches:
-              ignore:
-                - trunk
-                - /^release.*/
-                - /^gutenberg\/integrate_release_.*/
-                - /pull\/[0-9]+/
-      - Connected Tests:
-          requires: [Hold]
   Screenshots:
     when: << pipeline.parameters.generate_screenshots >>
     jobs:

@@ -1,0 +1,22 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPattern": "/wpcom/v2/sites/181977606/dashboard/cards-data(/)?($|\\?.*)"
+  },
+  "response": {
+    "status": 200,
+    "jsonBody": {
+      "todays_stats": {
+        "views": 37,
+        "visitors": 24,
+        "likes": 18,
+        "comments": 64
+      },
+      "posts": {
+        "has_published": false,
+        "draft": [],
+        "scheduled": []
+      }
+    }
+  }
+}

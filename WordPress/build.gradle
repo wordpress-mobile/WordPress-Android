@@ -8,7 +8,6 @@ plugins {
     id "org.jetbrains.kotlin.plugin.parcelize"
     id "org.jetbrains.kotlin.plugin.allopen"
     id "io.sentry.android.gradle"
-    id "io.gitlab.arturbosch.detekt"
     id "se.bjurr.violations.violation-comments-to-github-gradle-plugin"
     id "com.google.gms.google-services"
     id 'dagger.hilt.android.plugin'
@@ -51,10 +50,6 @@ repositories {
     google()
     mavenCentral()
     maven { url "https://www.jitpack.io" }
-}
-
-detekt {
-    baseline = file("${project.rootDir}/config/detekt/baseline.xml")
 }
 
 allOpen {
@@ -120,6 +115,7 @@ android {
         buildConfigField "boolean", "QUICK_START_EXISTING_USERS_V2", "false"
         buildConfigField "boolean", "QRCODE_AUTH_FLOW", "false"
         buildConfigField "boolean", "BETA_SITE_DESIGNS", "false"
+        buildConfigField "boolean", "JETPACK_POWERED", "false"
 
         // Override these constants in jetpack product flavor to enable/ disable features
         buildConfigField "boolean", "ENABLE_SITE_CREATION", "true"
@@ -524,8 +520,6 @@ dependencies {
 
     // Enables accessibility checks in Espresso
     androidTestImplementation 'androidx.test.espresso:espresso-accessibility:3.3.0-alpha05'
-
-    detektPlugins "io.gitlab.arturbosch.detekt:detekt-formatting:$gradle.ext.detektVersion"
 
     // Enables Java 8+ API desugaring support
     coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:$coreLibraryDesugaringVersion"

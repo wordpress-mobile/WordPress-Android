@@ -464,6 +464,8 @@
     <dimen name="jetpack_icon_margin">0dp</dimen>
     <dimen name="jetpack_button_icon_size">16dp</dimen>
     <dimen name="jetpack_banner_height">40dp</dimen>
+    <dimen name="jetpack_badge_footer_bottom_spacing">36dp</dimen>
+    <dimen name="jetpack_badge_bottom_spacing">28dp</dimen>
 
     <!-- jetpack backup restore last bullet bottom margin-->
     <dimen name="jetpack_backup_restore_last_bullet_bottom_margin">20dp</dimen>

@@ -89,6 +89,7 @@ class StoriesEventListener @Inject constructor(
      * Handles the [Lifecycle.Event.ON_DESTROY] event to cleanup the registration for dispatcher and removing the
      * observer for lifecycle   .
      */
+    @Suppress("unused")
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     private fun onDestroy() {
         lifecycle.removeObserver(this)
@@ -381,6 +382,7 @@ class StoriesEventListener @Inject constructor(
         AnalyticsTracker.track(EDITOR_UPLOAD_MEDIA_RETRIED)
     }
 
+    @Suppress("unused")
     fun onCancelSaveForMediaCollection(mediaFiles: ArrayList<Any>) {
         // TODO implement cancelling save process for media collection
     }

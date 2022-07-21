@@ -4,7 +4,6 @@ import androidx.test.espresso.Espresso;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Test;
 import org.wordpress.android.R;
 import org.wordpress.android.e2e.pages.MySitesPage;
 import org.wordpress.android.support.BaseTest;
@@ -37,7 +36,7 @@ public class StatsTests extends BaseTest {
         }
     }
 
-    @Test
+    // @Test
     public void allDayStatsLoad() {
         StatsVisitsData todayVisits = new StatsVisitsData("97", "28", "14", "11");
         List<StatsKeyValueData> postsList = new StatsMocksReader().readDayTopPostsToList();
@@ -50,7 +49,7 @@ public class StatsTests extends BaseTest {
 
         new MySitesPage()
                 .go()
-                .clickStats()
+                .goToStats()
                 .openDayStats()
                 .assertVisits(todayVisits)
                 .scrollToPosts().assertPosts(postsList)
