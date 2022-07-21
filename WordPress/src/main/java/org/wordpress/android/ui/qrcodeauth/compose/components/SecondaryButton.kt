@@ -21,7 +21,10 @@ fun SecondaryButton(
             onClick = onClick,
             enabled = enabled,
             elevation = ButtonDefaults.elevation(0.dp),
-            colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.background),
+            colors = ButtonDefaults.buttonColors(
+                    backgroundColor = MaterialTheme.colors.background,
+                    disabledBackgroundColor = MaterialTheme.colors.background,
+            ),
             modifier = Modifier
                     .fillMaxWidth()
                     .padding(
