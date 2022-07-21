@@ -129,6 +129,7 @@ public class StatsPage {
     public void assertKeyValuePairs(String cardHeader, List<StatsKeyValueData> list) {
         for (StatsKeyValueData item : list) {
             // Element with ID = stats_block_list
+            // |--Is a descendant of `coordinator_layout` which `isDisplayed()`
             // |--Has child with text: e.g. "Posts and Pages"
             // |--Has descendant that both:
             //    |- Has text: post.title
@@ -184,9 +185,6 @@ public class StatsPage {
     }
 
     private void scrollToCard(String cardHeader) {
-        // A card that has "stats_block_list"
-        // and additionally contains a descendant
-        // with needed text:
         ViewInteraction card = onView(allOf(
                 isDescendantOfA(visibleCoordinatorLayout),
                 withId(R.id.stats_block_list),
