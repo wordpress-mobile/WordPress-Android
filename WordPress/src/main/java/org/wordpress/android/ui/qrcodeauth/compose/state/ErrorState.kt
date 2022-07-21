@@ -26,45 +26,45 @@ import org.wordpress.android.ui.qrcodeauth.compose.components.Title
 @Composable
 fun ErrorState(uiState: QRCodeAuthUiState.Error) = with(uiState) {
     Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                     .fillMaxWidth()
-                    .wrapContentHeight(),
-            horizontalAlignment = Alignment.CenterHorizontally
+                    .wrapContentHeight()
     ) {
         ResourceImage(
+                imageRes = image,
+                contentDescription = stringResource(R.string.qrcode_auth_flow_error_content_description),
                 modifier = Modifier
                         .padding(vertical = Margin.ExtraLarge.value)
                         .wrapContentHeight()
                         .wrapContentWidth(),
-                imageRes = image,
-                contentDescription = stringResource(R.string.qrcode_auth_flow_error_content_description),
         )
         Title(text = uiStringText(title))
         Subtitle(text = uiStringText(subtitle))
         primaryActionButton?.let { actionButton ->
             if (actionButton.isVisible) {
                 PrimaryButton(
+                        text = uiStringText(actionButton.label),
+                        onClick = { actionButton.clickAction.invoke() },
                         modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(
                                         vertical = Margin.Small.value,
                                         horizontal = Margin.ExtraExtraMediumLarge.value,
                                 ),
-                        text = uiStringText(actionButton.label),
-                        onClick = { actionButton.clickAction.invoke() }
                 )
             }
         }
         secondaryActionButton?.let { actionButton ->
             SecondaryButton(
+                    text = uiStringText(actionButton.label),
+                    onClick = { actionButton.clickAction.invoke() },
                     modifier = Modifier
                             .fillMaxWidth()
                             .padding(
                                     vertical = Margin.Small.value,
                                     horizontal = Margin.ExtraExtraMediumLarge.value,
                             ),
-                    text = uiStringText(actionButton.label),
-                    onClick = { actionButton.clickAction.invoke() }
             )
         }
     }

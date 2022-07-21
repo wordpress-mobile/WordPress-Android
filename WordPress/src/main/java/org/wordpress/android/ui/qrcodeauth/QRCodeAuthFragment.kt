@@ -75,10 +75,10 @@ class QRCodeAuthFragment : Fragment() {
     @Composable
     private fun QRCodeAuthScreen(viewModel: QRCodeAuthViewModel = viewModel()) {
         VerticalScrollBox(
+                alignment = Alignment.CenterStart,
                 modifier = Modifier
                         .fillMaxWidth()
-                        .fillMaxHeight(),
-                alignment = Alignment.CenterStart
+                        .fillMaxHeight()
         ) {
             Box(
                     modifier = Modifier
