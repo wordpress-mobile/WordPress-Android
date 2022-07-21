@@ -13,6 +13,9 @@ import org.wordpress.android.ui.compose.unit.Margin
 @Composable
 fun Title(text: String) {
     Text(
+            text = text,
+            textAlign = TextAlign.Center,
+            fontSize = FontSize.DoubleExtraLarge.value,
             modifier = Modifier
                     .fillMaxWidth()
                     .wrapContentHeight()
@@ -21,9 +24,6 @@ fun Title(text: String) {
                             end = Margin.ExtraExtraMediumLarge.value,
                             top = Margin.Medium.value,
                             bottom = Margin.Medium.value
-                    ),
-            text = text,
-            textAlign = TextAlign.Center,
-            fontSize = FontSize.DoubleExtraLarge.value
+                    )
     )
 }

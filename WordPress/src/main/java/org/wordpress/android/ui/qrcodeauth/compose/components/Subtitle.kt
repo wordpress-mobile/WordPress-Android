@@ -14,6 +14,10 @@ import org.wordpress.android.ui.compose.unit.Margin
 @Composable
 fun Subtitle(text: String) {
     Text(
+            text = text,
+            textAlign = TextAlign.Center,
+            fontSize = FontSize.Large.value,
+            color = MaterialTheme.colors.error,
             modifier = Modifier
                     .fillMaxWidth()
                     .wrapContentHeight()
@@ -22,10 +26,6 @@ fun Subtitle(text: String) {
                             end = Margin.ExtraExtraMediumLarge.value,
                             top = Margin.ExtraLarge.value + Margin.Small.value,
                             bottom = Margin.Medium.value
-                    ),
-            text = text,
-            textAlign = TextAlign.Center,
-            fontSize = FontSize.Large.value,
-            color = MaterialTheme.colors.error
+                    )
     )
 }
