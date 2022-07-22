@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-06-30 09:54:08+0000
+Translation-Revision-Date: 2022-07-16 08:54:08+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: id
 -->
 <resources>
+    <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery">Terjadi masalah saat menampilkan blok. \nKetuk untuk mencoba pemulihan blok.</string>
+    <string name="weekly_roundup_notification_text_views_and_comments">Minggu lalu Anda mendapatkan %1$s tayangan dan %2$s komentar</string>
+    <string name="weekly_roundup_notification_text_views_and_likes">Minggu lalu Anda mendapatkan %1$s tayangan dan %2$s suka</string>
+    <string name="weekly_roundup_notification_text_views_only">Minggu lalu Anda mendapatkan %1$s tayangan.</string>
+    <string name="weekly_roundup_notification_text_all">Minggu lalu Anda mendapatkan %1$s tayangan, %2$s suka, dan %3$s komentar.</string>
+    <string name="stats_revamp_v2_update_alert_message">Diperbarui di Wawasan Baru untuk membantu Anda memahami performa konten dan minat audiens Anda.</string>
+    <string name="stats_insights_like_guide_card">⭐️ Artikel terbaru Anda %1$s telah menerima %2$s suka.</string>
+    <string name="wp_jetpack_powered">Didukung Jetpack</string>
     <string name="qrcode_auth_flow_content_description">Gambar menunjukkan pemindaian kode login sedang berlangsung</string>
     <string name="qrcode_auth_flow_error_content_description">Gambar menunjukkan terjadinya error</string>
     <string name="qrcode_auth_flow_dismiss_dialog_message">Anda yakin ingin melanjutkan?</string>
@@ -71,7 +79,7 @@ Language: id
     <string name="me_btn_scan_login_code">Pindai Kode Login</string>
     <string name="stats_insights_likes_guide_card">⭐️ Artikel terbaru Anda %1$s telah menerima %2$s suka.</string>
     <string name="stats_most_popular_percent_views_empty">Aktivitas tidak cukup. Periksa lagi nanti saat situs Anda lebih ramai pengunjung!</string>
-    <string name="stats_total_followers_content_description">%1s, %2s total pengikut</string>
+    <string name="stats_total_followers_content_description">%1$s, %2$s%% total pengikut</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
     <string name="pages_copy_link">Salin tautan</string>
     <string name="quick_start_completed_tour_title">Selamat! Anda telah berhasil&lt;br/&gt;</string>
@@ -395,7 +403,6 @@ Language: id
     <string name="me_btn_share">Bagikan WordPress dengan teman</string>
     <string name="my_site_quick_actions_title">Tautan Cepat</string>
     <string name="my_site_btn_domains">Domain</string>
-    <string name="weekly_roundup_notification_text">Situs Anda memiliki %1$d tayangan, %2$d suka, %3$d komentar.</string>
     <string name="weekly_roundup_notification_title">Ringkasan Mingguan: %s</string>
     <string name="blogging_reminders_notification_time">Waktu pemberitahuan</string>
     <string name="blogging_reminders_epilogue_body_everyday_with_time">Anda akan mendapat pengingat blogging &lt;b&gt;setiap hari&lt;/b&gt; pada &lt;b&gt;%s&lt;/b&gt;.</string>
@@ -1174,7 +1181,7 @@ Language: id
     <string name="reader_btn_select_few_interests">Pilih beberapa untuk melanjutkan</string>
     <string name="post_status_post_published">Dipublikasikan</string>
     <string name="post_status_post_trashed">Dibuang</string>
-    <string name="post_status_post_scheduled">Dijadwalkan</string>
+    <string name="post_status_post_scheduled">Terjadwal</string>
     <string name="publish_date">Tanggal Publikasi</string>
     <string name="ccpa_privacy_notice_read">Baca pemberitahuan privasi CCPA</string>
     <string name="ccpa_privacy_notice_caption">Undang-Undang Privasi Konsumen California (CCPA) meminta kami untuk menyediakan kepada warga negara California informasi tambahan tentang kategori informasi pribadi yang kami kumpulkan dan bagikan, di mana kami mendapatkan informasi tersebut, dan bagaimana dan mengapa kami menggunakannya.</string>
@@ -1310,7 +1317,7 @@ Language: id
     <string name="gutenberg_native_add_paragraph_block">Tambahkan blok paragraf</string>
     <string name="create_post_page_fab_tooltip_contributors">Buat pos</string>
     <string name="post_list_tab_trashed_posts">Dibuang</string>
-    <string name="post_list_tab_scheduled_posts">Dijadwalkan</string>
+    <string name="post_list_tab_scheduled_posts">Terjadwal</string>
     <string name="post_list_tab_published_posts">Dipublikasikan</string>
     <string name="sharing_facebook_account_must_have_pages">Koneksi Facebook tidak dapat menemukan Halaman apa pun. Publikasikan tidak dapat terhubung ke Profil Facebook, hanya Halaman yang dipublikasikan.</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">Tidak Terhubung</string>
@@ -1883,7 +1890,7 @@ Language: id
     <string name="pages_set_parent">Atur induk</string>
     <string name="pages_view">Lihat</string>
     <string name="pages_trashed">Dibuang</string>
-    <string name="pages_scheduled">Dijadwalkan</string>
+    <string name="pages_scheduled">Terjadwal</string>
     <string name="pages_drafts">Konsep</string>
     <string name="pages_published">Dipublikasikan</string>
     <string name="login_error_sms_throttled">Kami terlalu banyak melakukan upaya pengiriman kode verifikasi SMS. Tunggu sebentar, dan minta kode yang baru beberapa saat lagi.</string>

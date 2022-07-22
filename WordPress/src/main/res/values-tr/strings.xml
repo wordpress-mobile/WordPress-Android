@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-06-28 10:25:29+0000
+Translation-Revision-Date: 2022-07-14 09:54:08+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: tr
 -->
 <resources>
+    <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery">Blok görüntülenirken bir sorun oluştu. \nBlok kurtarmayı denemek için dokunun. </string>
+    <string name="weekly_roundup_notification_text_views_and_comments">Geçen hafta %1$s görüntüleme ve %2$s yorum aldınız.</string>
+    <string name="weekly_roundup_notification_text_views_and_likes">Geçen hafta %1$s görüntüleme ve %2$s beğeni aldınız.</string>
+    <string name="weekly_roundup_notification_text_views_only">Geçen hafta %1$s görüntüleme aldınız.</string>
+    <string name="weekly_roundup_notification_text_all">Geçen hafta %1$s görüntüleme, %2$s beğeni ve %3$s yorum aldınız.</string>
+    <string name="stats_revamp_v2_update_alert_message">İçeriğinizin nasıl performans gösterdiğini ve kitlenizde nelerin ilgi çektiğini anlamanıza yardımcı olacak Yeni Tek Bakışta sürümüne güncellendi.</string>
+    <string name="stats_insights_like_guide_card">⭐️ En son yazınız (%1$s) %2$s beğeni aldı.</string>
+    <string name="wp_jetpack_powered">Jetpack destekli</string>
     <string name="qrcode_auth_flow_content_description">İşlem sırasında tarama giriş kodunu gösteren görsel</string>
     <string name="qrcode_auth_flow_error_content_description">Hata gösteren görsel</string>
     <string name="qrcode_auth_flow_dismiss_dialog_message">Devam etmek istediğinize emin misiniz?</string>
@@ -71,7 +79,7 @@ Language: tr
     <string name="me_btn_scan_login_code">Oturum Açma Kodunu Tara</string>
     <string name="stats_insights_likes_guide_card">⭐️ En son gönderiniz (%1$s) %2$s beğeni aldı.</string>
     <string name="stats_most_popular_percent_views_empty">Yeterli etkinlik yok. Sitenizin daha fazla ziyaretçisi olduğunda tekrar kontrol edin!</string>
-    <string name="stats_total_followers_content_description">%1s, %2s/toplam takipçi sayısı</string>
+    <string name="stats_total_followers_content_description">%1$s, %2$s%% toplam takipçi sayısı</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
     <string name="pages_copy_link">Bağlantıyı kopyala</string>
     <string name="quick_start_completed_tour_title">Tebrikler! Yolunuzu biliyorsunuz&lt;br/&gt;</string>
@@ -395,7 +403,6 @@ Language: tr
     <string name="me_btn_share">WordPress\'i bir arkadaşınızla paylaşın</string>
     <string name="my_site_quick_actions_title">Hızlı Bağlantılar</string>
     <string name="my_site_btn_domains">Alan adları</string>
-    <string name="weekly_roundup_notification_text">Siteniz %1$d görüntüleme, %2$d beğeni, %3$d yorum aldı.</string>
     <string name="weekly_roundup_notification_title">Haftalık Özet: %s</string>
     <string name="blogging_reminders_notification_time">Bildirim zamanı</string>
     <string name="blogging_reminders_epilogue_body_everyday_with_time">&lt;b&gt;Her gün&lt;/b&gt; (&lt;b&gt;%s&lt;/b&gt;) blog yazmanız gerektiğini hatırlatan bildirimler alacaksınız.</string>

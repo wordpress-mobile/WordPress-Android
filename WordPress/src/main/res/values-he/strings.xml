@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-06-30 13:54:09+0000
+Translation-Revision-Date: 2022-07-16 08:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: he_IL
 -->
 <resources>
+    <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery">בעיה בהצגת הבלוק. \nיש להקיש כדי לנסות לשחזר את הבלוק.</string>
+    <string name="weekly_roundup_notification_text_views_and_comments">בשבוע הקודם היו לך ⁦%1$s⁩ צפיות ו-⁦%2$s⁩ תגובות</string>
+    <string name="weekly_roundup_notification_text_views_and_likes">בשבוע הקודם היו לך ⁦%1$s⁩ צפיות ו-⁦%2$s⁩ לייקים</string>
+    <string name="weekly_roundup_notification_text_views_only">בשבוע הקודם היו לך ⁦%1$s⁩ צפיות.</string>
+    <string name="weekly_roundup_notification_text_all">בשבוע הקודם היו לך ⁦%1$s⁩ צפיות, ⁦%2$s⁩ לייקים ו-⁦%3$s⁩ תגובות.</string>
+    <string name="stats_revamp_v2_update_alert_message">השירות עודכן כדי להציג תובנות חדשות שיעזרו לך להבין את הביצועים של התוכן ולאילו תכנים הקהל הגיב בצורה חיובית.</string>
+    <string name="stats_insights_like_guide_card">⭐️ הפוסט האחרון שלך ⁦%1$s⁩ קיבל לייק ⁦%2$s⁩.</string>
+    <string name="wp_jetpack_powered">מופעל באמצעות Jetpack</string>
     <string name="qrcode_auth_flow_content_description">תמונה להמחשה שתהליך הסריקה של קוד ההתחברות החל</string>
     <string name="qrcode_auth_flow_error_content_description">תמונה להמחשה שאירעה שגיאה</string>
     <string name="qrcode_auth_flow_dismiss_dialog_message">האם ברצונך להמשיך?</string>
@@ -70,7 +78,7 @@ Language: he_IL
     <string name="me_btn_scan_login_code">סריקת קוד כניסה למערכת</string>
     <string name="stats_insights_likes_guide_card">הפוסט האחרון שלך %1$s קיבל %2$s לייקים.</string>
     <string name="stats_most_popular_percent_views_empty">אין מספיק פעילות. כדאי לחזור לכאן מאוחד יותר לאחר שעוד מבקרים נכנסו לאתר!</string>
-    <string name="stats_total_followers_content_description">%1s, %2s מסך העוקבים</string>
+    <string name="stats_total_followers_content_description">⁦%1$s⁩, סך הכול ⁦%2$s⁩%% עוקבים</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
     <string name="pages_copy_link">להעתיק את הקישור</string>
     <string name="quick_start_completed_tour_title">ברכותינו! כבר יש לך ניסיון בעבודה עם האפליקציה&lt;br/&gt;</string>
@@ -394,7 +402,6 @@ Language: he_IL
     <string name="me_btn_share">לשתף את WordPress עם חברים</string>
     <string name="my_site_quick_actions_title">קישורים מהירים</string>
     <string name="my_site_btn_domains">דומיינים</string>
-    <string name="weekly_roundup_notification_text">האתר שלך קיבל ⁦%1$d⁩ צפיות, ⁦%2$d⁩ לייקים, ⁦%3$d⁩ תגובות.</string>
     <string name="weekly_roundup_notification_title">סיכום שבועי: %s</string>
     <string name="blogging_reminders_notification_time">מועד ההודעות</string>
     <string name="blogging_reminders_epilogue_body_everyday_with_time">אנחנו נשלח לך תזכורות לכתוב בלוג &lt;b&gt;בכל יום&lt;/b&gt; בשעה &lt;b&gt;%s&lt;/b&gt;.</string>
