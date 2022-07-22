@@ -2,6 +2,7 @@ package org.wordpress.android.util.text
 
 import android.icu.text.NumberFormat
 import org.wordpress.android.util.LocaleManagerWrapper
+import java.math.RoundingMode
 import javax.inject.Inject
 
 /**
@@ -16,9 +17,14 @@ class PercentFormatter @Inject constructor(
      * Returns a formatted string with a percent sign (%) based on the locale.
      * @param value the value to be returned formatted
      */
-    fun format(value: Float): String {
+    fun format(
+        value: Float,
+        maxFractionDigits: Int = MAXIMUM_FRACTION_DIGITS,
+        rounding: RoundingMode = RoundingMode.DOWN
+    ): String {
         val percentFormatter = NumberFormat.getPercentInstance(localeManagerWrapper.getLocale()).apply {
-            maximumFractionDigits = MAXIMUM_FRACTION_DIGITS
+            maximumFractionDigits = maxFractionDigits
+            roundingMode = rounding.ordinal
         }
         return percentFormatter.format(value)
     }
