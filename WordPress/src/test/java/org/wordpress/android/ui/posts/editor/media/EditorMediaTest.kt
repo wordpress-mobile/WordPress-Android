@@ -378,6 +378,7 @@ class EditorMediaTest : BaseUnitTest() {
         private const val MEDIA_MODEL_REMOTE_ID = 123L
         private const val MEDIA_MODEL_LOCAL_ID = 1
 
+        @Suppress("LongParameterList")
         fun createEditorMedia(
             updateMediaModelUseCase: UpdateMediaModelUseCase = mock(),
             getMediaModelUseCase: GetMediaModelUseCase = createGetMediaModelUseCase(),

@@ -302,7 +302,6 @@ Language: cs_CZ
     <string name="me_btn_share">Sdílejte WordPress s přítelem</string>
     <string name="my_site_quick_actions_title">Rychlé odkazy</string>
     <string name="my_site_btn_domains">Domény</string>
-    <string name="weekly_roundup_notification_text">Vaše stránky zaznamenaly %1$d zobrazení, %2$d lajků, %3$d komentářů.</string>
     <string name="weekly_roundup_notification_title">Týdenní shrnutí: %s</string>
     <string name="blogging_reminders_notification_time">Doba oznámení</string>
     <string name="blogging_reminders_epilogue_body_everyday_with_time">Připomenutí blogu budete dostávat &lt;b&gt;každý&lt;/b&gt; na &lt;b&gt;%s&lt;/b&gt;.</string>

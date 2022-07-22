@@ -93,11 +93,11 @@ private const val REWIND_ID = "rewindId"
 private const val RESTORE_ID = 123456789L
 private const val DOWNLOAD_URL = "downloadUrl"
 private const val DOWNLOAD_IS_VALID = true
-private const val DOWNLOAD_IS_NOT_VALID = false
 private const val DOWNLOAD_ID = 987654321L
 private val DOWNLOAD_PUBLISHED = Date()
 private val DOWNLOAD_VALID_UNTIL = Date()
 
+@Suppress("LargeClass")
 @RunWith(MockitoJUnitRunner::class)
 class ActivityLogViewModelTest {
     @Rule @JvmField val rule = InstantTaskExecutorRule()
@@ -1462,6 +1462,7 @@ class ActivityLogViewModelTest {
         return calendar.time
     }
 
+    @Suppress("LongParameterList")
     private fun expectedActivityList(
         displayRestoreProgress: Boolean = false,
         restoreProgressWithDate: Boolean = false,

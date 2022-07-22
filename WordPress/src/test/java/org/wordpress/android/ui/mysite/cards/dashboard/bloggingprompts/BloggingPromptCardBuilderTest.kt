@@ -41,7 +41,7 @@ private val RESPONDENTS = listOf(
 @RunWith(MockitoJUnitRunner::class)
 class BloggingPromptCardBuilderTest : BaseUnitTest() {
     private lateinit var builder: BloggingPromptCardBuilder
-    private val bloggingPrompt = BloggingPromptModel(
+    @Suppress("MaxLineLength") private val bloggingPrompt = BloggingPromptModel(
             id = 123,
             text = PROMPT_TITLE,
             title = "",

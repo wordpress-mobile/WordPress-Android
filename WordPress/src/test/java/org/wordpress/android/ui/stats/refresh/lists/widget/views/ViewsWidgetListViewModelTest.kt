@@ -56,6 +56,7 @@ class ViewsWidgetListViewModelTest {
     }
 
     @Test
+    @Suppress("LongMethod")
     fun `builds light ui model and shows change`() {
         whenever(siteStore.getSiteByLocalId(siteId)).thenReturn(site)
         val firstViews: Long = 5
