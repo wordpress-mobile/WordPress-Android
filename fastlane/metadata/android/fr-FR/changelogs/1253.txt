@@ -1,0 +1,4 @@
+20.3:
+- Lorsque vous ajoutez un élément de la médiathèque à un bloc Image, le texte alternatif de l'élément l'accompagne.
+- Vous pouvez insérer un média depuis une URL dans le bloc vidéo.
+- Utilisez l’option de récupération du bloc pour afficher le contenu inattendu ou non valide dans un bloc.

@@ -1,3 +1,0 @@
-20.2:
-- You can now upload HEIC and HEIF images to your site through the media picker.
-- We squashed a bug that removed special characters from reader topics in other languages.
