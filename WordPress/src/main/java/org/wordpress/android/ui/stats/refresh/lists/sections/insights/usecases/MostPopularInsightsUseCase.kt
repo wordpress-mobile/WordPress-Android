@@ -23,6 +23,7 @@ import org.wordpress.android.ui.stats.refresh.utils.DateUtils
 import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.config.StatsRevampV2FeatureConfig
+import org.wordpress.android.util.text.PercentFormatter
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 import javax.inject.Named
@@ -39,7 +40,8 @@ class MostPopularInsightsUseCase
     private val resourceProvider: ResourceProvider,
     private val statsRevampV2FeatureConfig: StatsRevampV2FeatureConfig,
     private val popupMenuHandler: ItemPopupMenuHandler,
-    private val actionCardHandler: ActionCardHandler
+    private val actionCardHandler: ActionCardHandler,
+    private val percentFormatter: PercentFormatter
 ) : StatelessUseCase<InsightsMostPopularModel>(MOST_POPULAR_DAY_AND_HOUR, mainDispatcher, backgroundDispatcher) {
     override suspend fun loadCachedData(): InsightsMostPopularModel? {
         return mostPopularStore.getMostPopularInsights(statsSiteProvider.siteModel)
@@ -75,11 +77,11 @@ class MostPopularInsightsUseCase
         } else {
             val highestDayPercent = resourceProvider.getString(
                     R.string.stats_most_popular_percent_views,
-                    domainModel.highestDayPercent.roundToInt()
+                    percentFormatter.format(domainModel.highestDayPercent.roundToInt())
             )
             val highestHourPercent = resourceProvider.getString(
                     R.string.stats_most_popular_percent_views,
-                    domainModel.highestHourPercent.roundToInt()
+                    percentFormatter.format(domainModel.highestHourPercent.roundToInt())
             )
             items.add(
                     QuickScanItem(
