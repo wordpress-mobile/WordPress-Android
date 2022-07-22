@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-07-13 13:54:07+0000
+Translation-Revision-Date: 2022-07-22 12:17:00+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/4.0.0-alpha.1
 Language: ar
@@ -14,10 +14,13 @@ Language: ar
     <string name="stats_revamp_v2_update_alert_message">تم التحديث إلى رؤى جديدة لتساعدك على فهم مدى أداء محتواك وما يفلح مع جمهورك.</string>
     <string name="stats_insights_like_guide_card">⭐️ لقد تلقت تدوينتك الأخيرة ⁦%1$s⁩ ⁦%2$s⁩ إعجاب.</string>
     <string name="wp_jetpack_powered">مدعوم بواسطة Jetpack</string>
+    <string name="qrcode_auth_flow_error_content_description">صورة تشير إلى وجود خطأ</string>
     <string name="qrcode_auth_flow_dismiss_dialog_title">الخروج المسح الضوئي تسجيل الدخول الرمز التدفق</string>
     <string name="qrcode_auth_flow_content_description">صورة تشير إلى مسح رمز تسجيل الدخول قيد التقدم</string>
     <string name="qrcode_auth_flow_dismiss_dialog_message">هل تريد بالتأكيد المتابعة؟</string>
     <string name="qrcode_auth_flow_error_auth_failed_subtitle">تعذر عليك تسجيل الدخول باستخدام رمز تسجيل الدخول هذا. يرجى الضغط على زر المسح الضوئي مرة أخرى لإعادة مسح الرمز ضوئيًا.</string>
+    <string name="qrcode_auth_flow_error_no_connection_title">لا يوجد اتصال</string>
+    <string name="qrcode_auth_flow_done_title">لقد قمت بتسجيل الدخول!</string>
     <string name="qrcode_auth_flow_validated_default_title">هل تحاول تسجيل الدخول إلى متصفح الويب الخاص بك بالقرب من ⁦%1$s⁩؟</string>
     <string name="qrcode_auth_flow_error_auth_failed_title">فشلت المصادقة</string>
     <string name="qrcode_auth_flow_error_expired_subtitle">لقد انتهت صلاحية رمز تسجيل الدخول هذا. يرجى الضغط على زر المسح الضوئي مرة أخرى لإعادة مسح الرمز ضوئيًا.</string>
@@ -29,6 +32,9 @@ Language: ar
     <string name="qrcode_auth_flow_done_subtitle">اضغط على تجاهُل وارجع إلى متصفح الويب الخاص بك للمتابعة.</string>
     <string name="qrcode_auth_flow_validated_primary_action">نعم، قم بتسجيل الدخول لي</string>
     <string name="qrcode_auth_flow_validated_subtitle">لا تقم سوى بمسح رموز الاستجابة السريعة ضوئيًا التي تم الحصول عليها مباشرةً من متصفح الويب الخاص بك. لا تقم أبدًا بمسح رمز ضوئيًا تم إرساله إليك بواسطة أي شخص آخر.</string>
+    <string name="qrcode_auth_flow_scan_again">إعادة المسح</string>
+    <string name="stats_revamp_v2_intro_secondary_button_text">ذكرني لاحقًا</string>
+    <string name="stats_revamp_v2_intro_header_title">تحديث الرؤى</string>
     <string name="qrcode_auth_flow_validated_title">هل تحاول تسجيل الدخول إلى ⁦%1$s⁩ بالقرب من ⁦%2$s⁩؟</string>
     <string name="stats_revamp_v2_intro_primary_button_text">تجربته الآن</string>
     <string name="stats_revamp_v2_intro_content">تساعدك الرؤى على فهم مدى أداء محتواك وما يفلح مع جمهورك.</string>
@@ -56,6 +62,7 @@ Language: ar
     <string name="stats_referrers_pie_chart_total_label"> المشاهدات</string>
     <string name="stats_action_card_schedule_post_button_label">جدولة</string>
     <string name="hpp_recommended_subtitle">اختارناه لك</string>
+    <string name="stats_referrers_pie_chart_wordpress">ووردبريس</string>
     <string name="stats_action_card_schedule_post_title">جدولة تدوينتك</string>
     <string name="stats_action_card_blogging_reminders_button_label">تعيين التذكيرات</string>
     <string name="stats_action_card_blogging_reminders_title">تعيين تذكيرات التدوين الخاصة بك</string>

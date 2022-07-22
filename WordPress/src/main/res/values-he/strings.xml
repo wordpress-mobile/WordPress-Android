@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-07-16 08:54:08+0000
+Translation-Revision-Date: 2022-07-22 11:32:52+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: he_IL
@@ -60,6 +60,7 @@ Language: he_IL
     <string name="stats_follower_types_pie_chart_total_label">סך הכול</string>
     <string name="stats_referrers_pie_chart_others">אחרים</string>
     <string name="stats_referrers_pie_chart_search">לחפש</string>
+    <string name="stats_referrers_pie_chart_wordpress">וורדפרס</string>
     <string name="stats_referrers_pie_chart_total_label">צפיות</string>
     <string name="stats_action_card_schedule_post_button_label">תזמון</string>
     <string name="stats_action_card_schedule_post_title">לתזמן את הפרסום שלך</string>
