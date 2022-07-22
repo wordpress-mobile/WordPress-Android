@@ -1,0 +1,4 @@
+20.3:
+- Ketika Anda menambahkan item di media pustaka ke blok Gambar, teks alt item tersebut sudah disertakan.
+- Anda dapat memasukkan media dari URL di blok Video.
+- Gunakan pilihan pemulihan blok untuk mengembalikan konten yang tidak valid atau tidak terduga di dalam blok.

@@ -1,0 +1,4 @@
+20.3:
+– Wenn du ein Element in der Mediathek zu einem Bildblock hinzufügst, wird auch der Alt-Text des Elements hinzugefügt.
+– Du kannst Medien von einer URL in Videoblöcke einfügen.
+– Verwende die Wiederherstellungsoption für Blöcke, um unerwartete oder ungültige Inhalte in einem Block zurückzubringen.

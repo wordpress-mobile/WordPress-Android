@@ -1,0 +1,4 @@
+20.3:
+- Als je een item in de mediabibliotheek toevoegt aan een afbeeldingblok, wordt de alt. tekst meegenomen.
+- Je kunt media per URL invoegen in videoblokken.
+- Maak gebruik van de optie voor blokherstel om onverwachte of ongeldige inhoud terug in een blok te zetten.

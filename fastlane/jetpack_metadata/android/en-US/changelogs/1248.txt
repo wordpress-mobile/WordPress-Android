@@ -1,4 +1,0 @@
-- We updated the Insights view in your site’s Stats.
-- Sign in with your browser using a QR code in the app’s Me menu.
-- Upload HEIC/HEIF images through the media picker.
-- We squashed a bug that affected reader topics in other languages.

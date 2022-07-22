@@ -1,0 +1,3 @@
+- When you add an item in the media library to an Image block, the item’s alt text comes with it.
+- You can insert media from a URL in Video blocks.
+- Use the block recovery option to bring back unexpected or invalid content in a block.

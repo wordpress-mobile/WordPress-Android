@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-07-08 14:35:29+0000
+Translation-Revision-Date: 2022-07-22 12:27:52+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: pt_BR
 -->
 <resources>
+    <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery">Problema ao exibir o bloco. \nToque para tentar restaurá-lo.</string>
+    <string name="weekly_roundup_notification_text_views_and_comments">Na semana passada, você recebeu %1$s visualizações e %2$s comentários</string>
+    <string name="weekly_roundup_notification_text_views_and_likes">Na semana passada, você recebeu %1$s visualizações e %2$s curtidas</string>
+    <string name="weekly_roundup_notification_text_views_only">Na semana passada, você recebeu %1$s visualizações.</string>
+    <string name="weekly_roundup_notification_text_all">Na semana passada, você recebeu %1$s visualizações, %2$s curtidas e %3$s comentários.</string>
+    <string name="stats_revamp_v2_update_alert_message">Atualização para Novas Informações para ajudar você a entender o desempenho do seu conteúdo e o que está atraindo o seu público.</string>
+    <string name="stats_insights_like_guide_card">⭐️ Seu post mais recente, %1$s, recebeu %2$s curtida.</string>
     <string name="wp_jetpack_powered">Recurso do Jetpack</string>
     <string name="qrcode_auth_flow_content_description">Imagem indicando que a verificação do código de acesso está em andamento</string>
     <string name="qrcode_auth_flow_error_content_description">Imagem indicando um erro</string>
@@ -72,6 +79,7 @@ Language: pt_BR
     <string name="me_btn_scan_login_code">Examinar código de acesso</string>
     <string name="stats_insights_likes_guide_card">⭐️ Seu post mais recente, %1$s, recebeu %2$s curtidas.</string>
     <string name="stats_most_popular_percent_views_empty">Atividade insuficiente. Confira mais tarde quando o seu site tiver mais visitantes!</string>
+    <string name="stats_total_followers_content_description">%1$s, %2$s%% do total de seguidores</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
     <string name="pages_copy_link">Copiar link</string>
     <string name="quick_start_completed_tour_title">Parabéns! Você conhece o caminho&lt;br/&gt;</string>
