@@ -56,6 +56,7 @@ class AppConfigParametrizedTest(
     companion object {
         @JvmStatic
         @Parameterized.Parameters
+        @Suppress("LongMethod")
         fun parameters() = listOf(
                 // Manual override shows the flag as enabled
                 arrayOf(

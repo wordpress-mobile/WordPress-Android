@@ -196,6 +196,7 @@ class PeopleInviteViewModelTest : BaseUnitTest() {
     }
 
     companion object {
+        @Suppress("LongParameterList")
         fun getInviteLinksUiState(
             type: InviteLinksUiStateType = LOADING,
             isLinksSectionVisible: Boolean = true,

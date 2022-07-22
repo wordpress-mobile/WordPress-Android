@@ -231,6 +231,7 @@ class WeeklyRoundupNotifierTest {
             }
         }
 
+        @Suppress("LongParameterList")
         fun buildMockData(
             site: SiteModel,
             period: String = "2021W09W01",

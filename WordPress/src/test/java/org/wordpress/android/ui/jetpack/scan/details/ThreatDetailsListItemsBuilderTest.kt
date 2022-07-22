@@ -623,6 +623,7 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
                 .isEqualTo(UiStringText(TEST_FOUND_ON_DATE))
     }
 
+    @Suppress("LongParameterList")
     private fun buildThreatDetailsListItems(
         model: ThreatModel,
         scanStateHasValidCredentials: Boolean = true,

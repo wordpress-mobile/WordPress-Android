@@ -50,12 +50,7 @@ class AutoSavePostIfNotDraftUseCaseTest {
         val useCase = AutoSavePostIfNotDraftUseCase(mock(), postStore, TEST_DISPATCHER)
         val post = PostModel()
         post.setIsLocalDraft(true)
-        useCase.autoSavePostOrUpdateDraft(
-                RemotePostPayload(post, SiteModel()),
-                object : OnAutoSavePostIfNotDraftCallback {
-                    override fun handleAutoSavePostIfNotDraftResult(result: AutoSavePostIfNotDraftResult) {
-                    }
-                })
+        useCase.autoSavePostOrUpdateDraft(RemotePostPayload(post, SiteModel()), mock())
     }
 
     @Test
