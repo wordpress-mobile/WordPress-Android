@@ -9,7 +9,8 @@ import org.wordpress.android.util.extensions.viewBinding
 class MySiteJetpackBadgeViewHolder(
     parent: ViewGroup,
 ) : MySiteCardAndItemViewHolder<JetpackBadgeBinding>(parent.viewBinding(JetpackBadgeBinding::inflate)) {
+    @Suppress("UnusedPrivateMember")
     fun bind(item: JetpackBadge) {
-        itemView.setOnClickListener { item.onClick.click() }
+//        itemView.setOnClickListener { item.onClick.click() }
     }
 }
