@@ -63,6 +63,7 @@ class StatsNavigator @Inject constructor(
     private val selectedDateProvider: SelectedDateProvider,
     private val readerTracker: ReaderTracker
 ) {
+    @Suppress("LongMethod", "ComplexMethod", "SwallowedException")
     fun navigate(activity: FragmentActivity, target: NavigationTarget) {
         when (target) {
             is AddNewPost -> {

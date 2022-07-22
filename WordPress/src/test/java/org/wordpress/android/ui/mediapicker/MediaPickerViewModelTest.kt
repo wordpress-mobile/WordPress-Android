@@ -72,6 +72,7 @@ import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Locale
 
+@Suppress("LargeClass")
 class MediaPickerViewModelTest : BaseUnitTest() {
     @Mock lateinit var mediaLoaderFactory: MediaLoaderFactory
     @Mock lateinit var mediaLoader: MediaLoader
@@ -804,6 +805,7 @@ class MediaPickerViewModelTest : BaseUnitTest() {
         }
     }
 
+    @Suppress("LongParameterList")
     private suspend fun setupViewModel(
         domainModel: List<MediaItem>?,
         mediaPickerSetup: MediaPickerSetup,
@@ -897,12 +899,6 @@ class MediaPickerViewModelTest : BaseUnitTest() {
         uiStates.last().searchUiModel.let { model ->
             assertThat(model is SearchUiModel.Expanded).isTrue()
             assertThat((model as SearchUiModel.Expanded).filter).isEqualTo(filter)
-        }
-    }
-
-    private fun assertSearchHidden() {
-        uiStates.last().searchUiModel.let { model ->
-            assertThat(model is SearchUiModel.Hidden).isTrue()
         }
     }
 

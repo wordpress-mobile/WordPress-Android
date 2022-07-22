@@ -16,7 +16,7 @@ steps:
   - label: "detekt"
     command: |
       cp gradle.properties-example gradle.properties
-      ./gradlew WordPress:detekt
+      ./gradlew detekt
     plugins: *common_plugins
     artifact_paths:
       - "**/build/reports/detekt/detekt.html"
@@ -53,6 +53,12 @@ steps:
       cp gradle.properties-example gradle.properties
       ./gradlew :libs:image-editor:test
     plugins: *common_plugins
+
+  - label: "Instrumented tests"
+    command: ".buildkite/commands/instrumented-tests.sh"
+    plugins: *common_plugins
+    artifact_paths:
+      - "**/build/instrumented-tests/**/*"
 
   - label: "🛠 WordPress Installable Build"
     command: ".buildkite/commands/wordpress-installable-build.sh"

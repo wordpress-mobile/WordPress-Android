@@ -1,11 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-06-20 11:28:12+0000
+Translation-Revision-Date: 2022-07-14 18:11:05+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: gl_ES
 -->
 <resources>
+    <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery">Problema ao mostrar o bloque. \nToca para intentar a recuperación do bloque.</string>
+    <string name="weekly_roundup_notification_text_views_and_comments">A semana pasada tiveches %1$s visitas e %2$s comentarios</string>
+    <string name="weekly_roundup_notification_text_views_and_likes">A semana pasada tiveches %1$s visitas e %2$s Gústame</string>
+    <string name="weekly_roundup_notification_text_views_only">A semana pasada tiveches %1$s visitas.</string>
+    <string name="weekly_roundup_notification_text_all">A semana pasada tiveches %1$s visitas, %2$s Gústame e %3$s comentarios.</string>
+    <string name="stats_revamp_v2_update_alert_message">Actualizouse ao novo Detalles para axudarche a entender como é o rendemento do teu contido e que ten impacto no teu público.</string>
+    <string name="stats_insights_like_guide_card">⭐️ A túa última entrada %1$s recibiu %2$s Gústame.</string>
+    <string name="wp_jetpack_powered">Funciona grazas a Jetpack</string>
+    <string name="qrcode_auth_flow_content_description">Imaxe que sinala que o escaneo do código de acceso está en proceso</string>
+    <string name="qrcode_auth_flow_error_content_description">Imaxe que sinala un erro</string>
+    <string name="qrcode_auth_flow_dismiss_dialog_message">Seguro que queres continuar?</string>
+    <string name="qrcode_auth_flow_dismiss_dialog_title">Saír do fluxo de escaneo de código de acceso</string>
+    <string name="qrcode_auth_flow_error_auth_failed_subtitle">Non se puido acceder con este código de acceso. Toca o botón Analizar de novo para volver a escanear o código.</string>
+    <string name="qrcode_auth_flow_error_auth_failed_title">Fallou a autentificación</string>
+    <string name="qrcode_auth_flow_error_expired_subtitle">Este código de acceso caducou. Toca o botón Analizar de novo para volver a escanear o código.</string>
+    <string name="qrcode_auth_flow_error_expired_title">O código de acceso caducou</string>
+    <string name="qrcode_auth_flow_error_invalid_data_subtitle">Non se puido validar o código de acceso escaneado. Toca o botón Analizar de novo para volver a escanear o código.</string>
+    <string name="qrcode_auth_flow_error_invalid_data_title">Non se puido validar o código de acceso</string>
+    <string name="qrcode_auth_flow_error_no_connection_subtitle">Requírese unha conexión activa a Internet para escanear códigos de acceso</string>
+    <string name="qrcode_auth_flow_error_no_connection_title">Non hai conexión</string>
+    <string name="qrcode_auth_flow_scan_again">Analizar de novo</string>
+    <string name="qrcode_auth_flow_dismiss">Descartar</string>
+    <string name="qrcode_auth_flow_done_subtitle">Toca descartar e volve ao teu navegador web para continuar.</string>
+    <string name="qrcode_auth_flow_done_title">Accediches!</string>
+    <string name="qrcode_auth_flow_validated_primary_action">Si, quero acceder</string>
+    <string name="qrcode_auth_flow_validated_subtitle">Escanea só os códigos QR que colliches directamente do navegador web. Non escanees nunca un código que che enviara alguén.</string>
+    <string name="qrcode_auth_flow_validated_default_title">Estás intentando acceder ao teu navegador web cerca de %1$s?</string>
+    <string name="qrcode_auth_flow_validated_title">Estás intentando acceder a %1$s cerca de %2$s?</string>
+    <string name="stats_revamp_v2_intro_secondary_button_text">Recórdamo máis tarde</string>
+    <string name="stats_revamp_v2_intro_primary_button_text">Próbao agora</string>
+    <string name="stats_revamp_v2_intro_content_note">Máis información en O meu sitio &gt; Estatísticas &gt; Detalles</string>
+    <string name="stats_revamp_v2_intro_content">Detalles axúdache a entender como é o rendemento do teu contido e que ten impacto no teu público.</string>
+    <string name="stats_revamp_v2_intro_header_title">Actualización de Detalles</string>
+    <string name="stats_insights_followers_guide_card">💡Comentar noutros blogs é unha boa forma de chamar a atención e ter máis seguidores no teu novo sitio.</string>
+    <string name="stats_insights_comments_guide_card">💡Toca «VER MÁIS» para ver os principais comentaristas.</string>
+    <string name="stats_insights_latest_post_empty">Volve a comprobalo cando teñas publicado a túa primeira entrada!</string>
+    <string name="stats_insights_views_and_visitors_visitors_empty_state">Comproba os nosos consellos destacados para aumentar as túas visitas e o teu tráfico %1$s</string>
+    <string name="stats_view_publicize">Conexións de redes sociais</string>
+    <string name="stats_action_card_schedule_post_message">✍️ Programa os teus borradores para publicar no mellor momento e chegar ao teu público.</string>
+    <string name="stats_action_card_blogging_reminders_message">💡Publicar con constancia é unha boa forma de crear o teu público. Engade un recordatorio para manterte ao día.</string>
+    <string name="stats_action_card_grow_audience_message">💡Bloguea máis rapidamente co noso curso &lt;i&gt;Introdución aos blogs&lt;/i&gt; ofrecido por expertos.</string>
     <string name="blogging_prompts_onboarding_prompts_loading">Estanse cargando os estímulos para bloguear. Espera un momento e inténtao de novo.</string>
     <string name="hpp_bottom_helper_text">Non podes decidirte? Podes cambiar o tema en calquera momento.</string>
     <string name="hpp_recommended_default_vertical">Bloguear</string>
@@ -38,7 +79,7 @@ Language: gl_ES
     <string name="me_btn_scan_login_code">Explorar código de acceso</string>
     <string name="stats_insights_likes_guide_card">⭐️  A túa última entrada %1$s recibiu %2$s gústame.</string>
     <string name="stats_most_popular_percent_views_empty">Non hai suficiente actividade. Volve a comprobalo máis tarde, cando o teu sitio teña máis visitas!</string>
-    <string name="stats_total_followers_content_description">%1s, %2s do total de seguidores</string>
+    <string name="stats_total_followers_content_description">%1$s, %2$s%% do total de seguidores</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
     <string name="pages_copy_link">Copiar ligazón</string>
     <string name="quick_start_completed_tour_title">Noraboa! Xa sabes manexarte&lt;br/&gt;</string>
@@ -362,7 +403,6 @@ Language: gl_ES
     <string name="me_btn_share">Comparte WordPress cun amigo</string>
     <string name="my_site_quick_actions_title">Enlaces rápidos</string>
     <string name="my_site_btn_domains">Dominios</string>
-    <string name="weekly_roundup_notification_text">O teu sitio recibiu %1$d visualizacións, %2$d gústame, %3$d comentarios.</string>
     <string name="weekly_roundup_notification_title">Repaso semanal: %s</string>
     <string name="blogging_reminders_notification_time">Hora do aviso</string>
     <string name="blogging_reminders_epilogue_body_everyday_with_time">Recibirás recordatorios para bloguear &lt;b&gt;todos os días&lt;/b&gt; ás &lt;b&gt;%s&lt;/b&gt;.</string>

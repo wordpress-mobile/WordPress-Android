@@ -214,6 +214,7 @@ class FollowedBlogsProviderTest {
         )
     }
 
+    @Suppress("LongParameterList")
     private fun setupSubscriptionModel(
         readerBlogId: String = "false",
         shouldNotifyPosts: Boolean = false,

@@ -17,6 +17,7 @@ class AuthenticationUtils
     private val userAgent: UserAgent,
     private val privateAtomicCookie: PrivateAtomicCookie
 ) {
+    @Suppress("ImplicitDefaultLocale")
     fun getAuthHeaders(url: String): Map<String, String> {
         val headers = mutableMapOf<String, String>()
         headers["User-Agent"] = userAgent.userAgent

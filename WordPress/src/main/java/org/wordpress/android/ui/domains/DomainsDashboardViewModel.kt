@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.async
-import org.wordpress.android.Constants
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAINS_DASHBOARD_ADD_DOMAIN_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAINS_DASHBOARD_GET_DOMAIN_TAPPED
@@ -25,7 +24,6 @@ import org.wordpress.android.ui.domains.DomainsDashboardItem.SiteDomains
 import org.wordpress.android.ui.domains.DomainsDashboardItem.SiteDomainsHeader
 import org.wordpress.android.ui.domains.DomainsDashboardNavigationAction.ClaimDomain
 import org.wordpress.android.ui.domains.DomainsDashboardNavigationAction.GetDomain
-import org.wordpress.android.ui.domains.DomainsDashboardNavigationAction.OpenManageDomains
 import org.wordpress.android.ui.domains.usecases.FetchPlansUseCase
 import org.wordpress.android.ui.plans.isDomainCreditAvailable
 import org.wordpress.android.ui.utils.HtmlMessageUtils
@@ -218,10 +216,6 @@ class DomainsDashboardViewModel @Inject constructor(
     private fun onAddDomainClick(hasDomainCredit: Boolean) {
         analyticsTrackerWrapper.track(DOMAINS_DASHBOARD_ADD_DOMAIN_TAPPED, site)
         if (hasDomainCredit) onClaimDomainClick() else onGetDomainClick()
-    }
-
-    private fun onManageDomainClick() {
-        _onNavigation.postValue(Event(OpenManageDomains("${Constants.URL_MANAGE_DOMAINS}/${site.siteId}")))
     }
 
     //  NOTE: Change site option is de-scoped for v1 release

@@ -61,9 +61,10 @@ public class WPScreenshotTest extends BaseTest {
 
             wpLogin();
 
-            // Disabled because it keeps failing with the `AppNotIdleException`
-            // caused by an infinite auto-save loop in the Draft posts list.
-            // On the UI it's shown by the flashing progress indicator at the bottom.
+            // Even though the screenshot for edit post is captured without error,
+            // wiremock sometimes still throws a VerificationException which
+            // in turn causes our ci process to fail instrumentation tests.
+            // For the time being, editBlogPost is going to be commented out
             // editBlogPost();
             navigateDiscover();
             navigateMySite();
@@ -80,6 +81,12 @@ public class WPScreenshotTest extends BaseTest {
     private void editBlogPost() {
         (new MySitesPage()).switchToSite("fourpawsdoggrooming.wordpress.com")
                            .goToPosts();
+
+        // There is a possibility of the edit post getting stuck with an `AppNotIdleException`
+        // On the UI it's shown by the flashing progress indicator at the bottom. This idle
+        // appears to wait long enough for the edit screen to show properly
+        idleFor(3000);
+
         PostsListPage.goToDrafts();
 
         // Get a screenshot of the editor with the block library expanded

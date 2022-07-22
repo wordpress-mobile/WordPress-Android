@@ -10,13 +10,11 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import android.view.ViewGroup.MarginLayoutParams
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.isVisible
-import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.AppBarLayout.LayoutParams
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.android.material.tabs.TabLayout.Tab
@@ -48,7 +46,9 @@ import org.wordpress.android.ui.notifications.services.NotificationsUpdateServic
 import org.wordpress.android.ui.stats.StatsConnectJetpackActivity
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.NOTIFS
+import org.wordpress.android.util.JetpackBannerUtils
 import org.wordpress.android.util.NetworkUtils
+import org.wordpress.android.util.SiteUtilsWrapper
 import org.wordpress.android.util.WPUrlUtils
 import org.wordpress.android.util.config.JetpackPoweredFeatureConfig
 import org.wordpress.android.util.extensions.setLiftOnScrollTargetViewIdAndRequestLayout
@@ -61,6 +61,7 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
 
     @Inject lateinit var accountStore: AccountStore
     @Inject lateinit var jetpackPoweredFeatureConfig: JetpackPoweredFeatureConfig
+    @Inject lateinit var siteUtilsWrapper: SiteUtilsWrapper
 
     private var binding: NotificationsListFragmentBinding? = null
 
@@ -82,15 +83,6 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
         binding = NotificationsListFragmentBinding.bind(view).apply {
             toolbarMain.setTitle(R.string.notifications_screen_title)
             (requireActivity() as AppCompatActivity).setSupportActionBar(toolbarMain)
-
-            if (jetpackPoweredFeatureConfig.isEnabled() && !BuildConfig.IS_JETPACK_APP) {
-                jetpackBanner.root.isVisible = true
-
-                // Add bottom margin to viewPager and connectJetpack view for jetpack banner.
-                val margin = resources.getDimensionPixelSize(R.dimen.jetpack_banner_height)
-                viewPager.updateLayoutParams<MarginLayoutParams> { bottomMargin = margin }
-                connectJetpack.updateLayoutParams<MarginLayoutParams> { bottomMargin = margin }
-            }
 
             tabLayout.addOnTabSelectedListener(object : OnTabSelectedListener {
                 override fun onTabSelected(tab: Tab) {
@@ -301,5 +293,22 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
 
     override fun onScrollableViewInitialized(containerId: Int) {
         binding?.appBar?.setLiftOnScrollTargetViewIdAndRequestLayout(containerId)
+        if (showJetpackPoweredBanner()) {
+            binding?.root?.post {
+                // post is used to create a minimal delay here. containerId changes just before
+                // onScrollableViewInitialized is called, and findViewById can't find the new id before the delay.
+                val jetpackBannerView = binding?.jetpackBanner?.root ?: return@post
+                val scrollableView = binding?.root?.findViewById<View>(containerId) as? RecyclerView ?: return@post
+                JetpackBannerUtils.showJetpackBannerIfScrolledToTop(jetpackBannerView, scrollableView)
+                JetpackBannerUtils.initJetpackBannerAnimation(jetpackBannerView, scrollableView)
+            }
+        }
+    }
+
+    private fun showJetpackPoweredBanner(): Boolean {
+        val selectedSite = (requireActivity() as? WPMainActivity)?.selectedSite
+        val wpComSite = (selectedSite != null) && siteUtilsWrapper.isAccessedViaWPComRest(selectedSite)
+
+        return wpComSite && jetpackPoweredFeatureConfig.isEnabled() && !BuildConfig.IS_JETPACK_APP
     }
 }

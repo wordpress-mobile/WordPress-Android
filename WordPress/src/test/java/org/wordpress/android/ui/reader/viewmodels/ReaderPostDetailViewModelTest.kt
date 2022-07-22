@@ -122,6 +122,7 @@ private const val ON_RELATED_POST_ITEM_CLICKED_PARAM_POSITION = 3
 private const val INTERCEPTED_URI = "intercepted uri"
 
 @InternalCoroutinesApi
+@Suppress("LargeClass")
 class ReaderPostDetailViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: ReaderPostDetailViewModel
 
@@ -167,6 +168,7 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
     private lateinit var relatedPosts: ReaderSimplePostList
 
     @Before
+    @Suppress("LongMethod")
     fun setUp() = test {
         viewModel = ReaderPostDetailViewModel(
                 readerPostCardActionsHandler,

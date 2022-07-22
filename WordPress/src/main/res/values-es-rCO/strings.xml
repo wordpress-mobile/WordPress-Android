@@ -324,7 +324,6 @@ Language: es_CO
     <string name="me_btn_share">Comparte WordPress con un amigo</string>
     <string name="my_site_quick_actions_title">Enlaces rápidos</string>
     <string name="my_site_btn_domains">Dominios</string>
-    <string name="weekly_roundup_notification_text">Tu sitio recibió %1$d visualizaciones, %2$d me gusta, %3$d comentarios.</string>
     <string name="weekly_roundup_notification_title">Repaso semanal: %s</string>
     <string name="blogging_reminders_notification_time">Hora del aviso</string>
     <string name="blogging_reminders_epilogue_body_everyday_with_time">Recibirás recordatorios para bloquear &lt;b&gt;todos los días&lt;/b&gt; a las &lt;b&gt;%s&lt;/b&gt;.</string>

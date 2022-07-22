@@ -90,7 +90,7 @@ abstract class WordPress : MultiDexApplication() {
          * @param fieldName The name of the field-to-access
          * @return The value of the field, or `null` if the field is not found.
          */
-        @Suppress("TooGenericExceptionCaught")
+        @Suppress("TooGenericExceptionCaught", "SwallowedException")
         fun getBuildConfigValue(application: Application, fieldName: String?): Any? {
             return try {
                 val packageName = application.javaClass.getPackage().name

@@ -226,6 +226,7 @@ class ReaderViewModel @Inject constructor(
 
     private fun ReaderTag.isDefaultSelectedTab(): Boolean = this.isDiscover
 
+    @SuppressWarnings("unused")
     @Subscribe(threadMode = MAIN)
     fun onTagsUpdated(event: ReaderEvents.FollowedTagsChanged) {
         loadTabs()
