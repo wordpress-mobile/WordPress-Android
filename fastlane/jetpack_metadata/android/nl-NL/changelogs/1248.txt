@@ -1,5 +1,0 @@
-20.2:
-- We hebben de weergave van Inzichten bij de Statistieken van je site bijgewerkt.
-- Meld je aan met behulp van een QR-code in het menu Ik in de app.
-- Upload HEIC-/HEIF-afbeeldingen via de mediakiezer.
-- We hebben een fout verholpen die gevolgen had voor de lezersonderwerpen in andere talen.

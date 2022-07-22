@@ -1,5 +1,0 @@
-20.2:
-- Hemos actualizado la vista Detalles en las Estadísticas del sitio.
-- Accede desde tu navegador con un código QR que encontrarás en el menú "Yo" de la aplicación.
-- Sube imágenes HEIC/HEIF con el selector de medios.
-- Hemos corregido un error que afectaba a los temas de los lectores en otros idiomas.

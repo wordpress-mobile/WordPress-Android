@@ -1,5 +1,0 @@
-20.2:
-- Abbiamo aggiornato la vista Panoramica nelle Statistiche del sito.
-- Accedi con il browser utilizzando un codice QR nel menu Io dell'app.
-- Carica immagini HEIC/HEIF tramite il selezionatore di contenuti multimediali.
-- Abbiamo risolto un bug che interessava i temi del reader in altre lingue.
