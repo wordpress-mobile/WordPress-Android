@@ -14,8 +14,10 @@ class PercentFormatter @Inject constructor(
 ) {
 
     /**
-     * Returns a formatted string with a percent sign (%) based on the locale.
+     * Returns a String with a percent sign (%) using the given Float parameter. The returned String uses the
+     * default Locale.
      * @param value the value to be returned formatted
+     * @return the formatted string
      */
     fun format(
         value: Float,
@@ -28,6 +30,23 @@ class PercentFormatter @Inject constructor(
         }
         return percentFormatter.format(value)
     }
+
+    /**
+     * Returns a String with a percent sign (%) using the given Int parameter. The Int value will be returned as the
+     * percentage (e.g. if the Int value is 10, the returned String for Locale.US will be "10%"). The returned String
+     * uses the default Locale.
+     * @param value the value to be returned formatted
+     * @return the formatted string
+     */
+    fun format(
+        value: Int,
+        maxFractionDigits: Int = MAXIMUM_FRACTION_DIGITS,
+        rounding: RoundingMode = RoundingMode.DOWN
+    ) = format(
+            value = value.toFloat() / 100,
+            maxFractionDigits,
+            rounding
+    )
 }
 
 private const val MAXIMUM_FRACTION_DIGITS = 0
