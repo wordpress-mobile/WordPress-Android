@@ -3,7 +3,6 @@ package org.wordpress.android.ui.people;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
@@ -30,7 +29,6 @@ import org.wordpress.android.models.Person;
 import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.people.utils.PeopleUtils;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.JetpackBrandingUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
@@ -92,7 +90,6 @@ public class PeopleManagementActivity extends LocaleAwareActivity
 
     @Inject Dispatcher mDispatcher;
     @Inject AccountStore mAccountStore;
-    @Inject JetpackBrandingUtils mJetpackBrandingUtils;
 
     private SiteModel mSite;
 
@@ -102,11 +99,6 @@ public class PeopleManagementActivity extends LocaleAwareActivity
         mDispatcher.register(this);
 
         setContentView(R.layout.people_management_activity);
-
-        if (mJetpackBrandingUtils.shouldShowJetpackBranding()) {
-            findViewById(R.id.jetpack_banner).setVisibility(View.VISIBLE);
-            mJetpackBrandingUtils.setNavigationBarColorForBanner(getWindow());
-        }
 
         if (savedInstanceState == null) {
             mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);

@@ -4,8 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup.MarginLayoutParams;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -39,7 +37,6 @@ import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.themes.ThemeBrowserFragment.ThemeBrowserFragmentCallback;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.JetpackBrandingUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 
@@ -65,7 +62,6 @@ public class ThemeBrowserActivity extends LocaleAwareActivity implements ThemeBr
 
     @Inject ThemeStore mThemeStore;
     @Inject Dispatcher mDispatcher;
-    @Inject JetpackBrandingUtils mJetpackBrandingUtils;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -101,16 +97,6 @@ public class ThemeBrowserActivity extends LocaleAwareActivity implements ThemeBr
         if (actionBar != null) {
             actionBar.setDisplayShowTitleEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
-        }
-
-        if (mJetpackBrandingUtils.shouldShowJetpackBranding()) {
-            findViewById(R.id.jetpack_banner).setVisibility(View.VISIBLE);
-            mJetpackBrandingUtils.setNavigationBarColorForBanner(getWindow());
-
-            // Add bottom margin to content.
-            MarginLayoutParams layoutParams =
-                    (MarginLayoutParams) findViewById(R.id.fragment_container).getLayoutParams();
-            layoutParams.bottomMargin = getResources().getDimensionPixelSize(R.dimen.jetpack_banner_height);
         }
     }
 
