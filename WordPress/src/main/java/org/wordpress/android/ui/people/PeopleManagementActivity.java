@@ -16,7 +16,6 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -31,11 +30,10 @@ import org.wordpress.android.models.Person;
 import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.people.utils.PeopleUtils;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.JetpackBrandingUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
-import org.wordpress.android.util.config.JetpackPoweredFeatureConfig;
-import org.wordpress.android.util.extensions.WindowExtensionsKt;
 
 import java.util.List;
 
@@ -94,7 +92,7 @@ public class PeopleManagementActivity extends LocaleAwareActivity
 
     @Inject Dispatcher mDispatcher;
     @Inject AccountStore mAccountStore;
-    @Inject JetpackPoweredFeatureConfig mJetpackPoweredFeatureConfig;
+    @Inject JetpackBrandingUtils mJetpackBrandingUtils;
 
     private SiteModel mSite;
 
@@ -105,9 +103,9 @@ public class PeopleManagementActivity extends LocaleAwareActivity
 
         setContentView(R.layout.people_management_activity);
 
-        if (mJetpackPoweredFeatureConfig.isEnabled() && !BuildConfig.IS_JETPACK_APP) {
+        if (mJetpackBrandingUtils.shouldShowJetpackBranding()) {
             findViewById(R.id.jetpack_banner).setVisibility(View.VISIBLE);
-            WindowExtensionsKt.setNavigationBarColorForBanner(getWindow());
+            mJetpackBrandingUtils.setNavigationBarColorForBanner(getWindow());
         }
 
         if (savedInstanceState == null) {
