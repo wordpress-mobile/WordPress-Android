@@ -40,7 +40,6 @@ import com.google.android.material.tabs.TabLayout.Tab;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -122,6 +121,7 @@ import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.util.JetpackBrandingUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.QuickStartUtilsWrapper;
 import org.wordpress.android.util.SnackbarItem;
@@ -131,7 +131,6 @@ import org.wordpress.android.util.SnackbarSequencer;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
-import org.wordpress.android.util.config.JetpackPoweredFeatureConfig;
 import org.wordpress.android.util.config.SeenUnseenWithCounterFeatureConfig;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel;
@@ -226,7 +225,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
     @Inject TagUpdateClientUtilsProvider mTagUpdateClientUtilsProvider;
     @Inject QuickStartUtilsWrapper mQuickStartUtilsWrapper;
     @Inject SeenUnseenWithCounterFeatureConfig mSeenUnseenWithCounterFeatureConfig;
-    @Inject JetpackPoweredFeatureConfig mJetpackPoweredFeatureConfig;
+    @Inject JetpackBrandingUtils mJetpackBrandingUtils;
     @Inject QuickStartRepository mQuickStartRepository;
     @Inject ReaderTracker mReaderTracker;
     @Inject SnackbarSequencer mSnackbarSequencer;
@@ -501,7 +500,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
 
     private void toggleJetpackBannerIfEnabled(boolean forceShow) {
         if (!isAdded() || !isSearching() || getView() == null) return;
-        final boolean shouldShow = forceShow && mJetpackPoweredFeatureConfig.isEnabled() && !BuildConfig.IS_JETPACK_APP;
+        final boolean shouldShow = forceShow && mJetpackBrandingUtils.shouldShowJetpackBranding();
         if (shouldShow) {
             getView().findViewById(R.id.jetpack_banner).setVisibility(View.VISIBLE);
             // Add bottom margin to post list and empty view.
