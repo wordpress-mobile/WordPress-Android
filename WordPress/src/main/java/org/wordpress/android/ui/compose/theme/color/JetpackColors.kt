@@ -1,10 +1,12 @@
 package org.wordpress.android.ui.compose.theme.color
 
+import android.annotation.SuppressLint
 import androidx.compose.material.Colors
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.ui.graphics.Color
 
+@SuppressLint("ConflictingOnColor")
 class JetpackColors : ThemeColors {
     private val green40 = Color(color = 0xff069e08)
     private val green50 = Color(color = 0xff008710)
