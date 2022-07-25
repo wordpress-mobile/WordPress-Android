@@ -9,6 +9,7 @@ import androidx.test.filters.LargeTest;
 import com.google.android.libraries.cloudtesting.screenshots.ScreenShotter;
 
 import org.junit.ClassRule;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
@@ -50,6 +51,7 @@ public class WPScreenshotTest extends BaseTest {
 
     private DemoModeEnabler mDemoModeEnabler = new DemoModeEnabler();
 
+    @Ignore
     @Test
     public void wPScreenshotTest() {
         if (!BuildConfig.IS_JETPACK_APP) {
