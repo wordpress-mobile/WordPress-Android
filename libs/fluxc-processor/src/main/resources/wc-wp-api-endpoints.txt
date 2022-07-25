@@ -38,6 +38,7 @@
 
 /settings/general/
 /settings/products/
+/settings/<group_id>#String/<id>#String
 
 /orders/<id>/refunds
 /orders/<id>/refunds/<refund_id>

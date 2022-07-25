@@ -14,9 +14,7 @@ import org.wordpress.android.fluxc.persistence.QuickStartSqlUtils
 import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.CHECK_STATS
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.CREATE_SITE
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.EDIT_HOMEPAGE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.ENABLE_POST_SHARING
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.EXPLORE_PLANS
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.FOLLOW_SITE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.PUBLISH_POST
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.REVIEW_PAGES
@@ -48,7 +46,6 @@ class QuickStartStoreTest {
     @Test
     fun orderOfDoneTasks() = test {
         // marking tasks as done in random order
-        quickStartStore.setDoneTask(testLocalSiteId, EXPLORE_PLANS, true)
         quickStartStore.setDoneTask(testLocalSiteId, VIEW_SITE, true)
         quickStartStore.setDoneTask(testLocalSiteId, FOLLOW_SITE, true)
         quickStartStore.setDoneTask(testLocalSiteId, CREATE_SITE, true)
@@ -60,17 +57,15 @@ class QuickStartStoreTest {
         assertEquals(VIEW_SITE, completedCustomizeTasks[1])
 
         val completedGrowTasks = quickStartStore.getCompletedTasksByType(testLocalSiteId, GROW)
-        assertEquals(2, completedGrowTasks.size)
+        assertEquals(1, completedGrowTasks.size)
         assertEquals(FOLLOW_SITE, completedGrowTasks[0])
-        assertEquals(EXPLORE_PLANS, completedGrowTasks[1])
 
         // making sure undone tasks are retrieved in a correct order
         val uncompletedCustomizeTasks = quickStartStore.getUncompletedTasksByType(testLocalSiteId, CUSTOMIZE)
-        assertEquals(4, uncompletedCustomizeTasks.size)
+        assertEquals(3, uncompletedCustomizeTasks.size)
         assertEquals(UPDATE_SITE_TITLE, uncompletedCustomizeTasks[0])
         assertEquals(UPLOAD_SITE_ICON, uncompletedCustomizeTasks[1])
-        assertEquals(EDIT_HOMEPAGE, uncompletedCustomizeTasks[2])
-        assertEquals(REVIEW_PAGES, uncompletedCustomizeTasks[3])
+        assertEquals(REVIEW_PAGES, uncompletedCustomizeTasks[2])
 
         val uncompletedGrowTasks = quickStartStore.getUncompletedTasksByType(testLocalSiteId, GROW)
         assertEquals(3, uncompletedGrowTasks.size)

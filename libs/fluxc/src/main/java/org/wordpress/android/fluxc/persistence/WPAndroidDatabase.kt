@@ -20,7 +20,7 @@ import org.wordpress.android.fluxc.persistence.dashboard.CardsDao
 import org.wordpress.android.fluxc.persistence.dashboard.CardsDao.CardEntity
 
 @Database(
-    version = 7,
+    version = 8,
     entities = [
         BloggingReminders::class,
         PlanOffer::class,
@@ -61,6 +61,7 @@ abstract class WPAndroidDatabase : RoomDatabase() {
             .addMigrations(MIGRATION_2_3)
             .addMigrations(MIGRATION_3_4)
             .addMigrations(MIGRATION_5_6)
+            .addMigrations(MIGRATION_7_8)
             .build()
 
         val MIGRATION_1_2 = object : Migration(1, 2) {
@@ -168,6 +169,17 @@ abstract class WPAndroidDatabase : RoomDatabase() {
                             "`hasParent` INTEGER NOT NULL, " +
                             "`parentId` INTEGER NOT NULL, " +
                             "`iLike` INTEGER NOT NULL)"
+                    )
+                }
+            }
+        }
+
+        val MIGRATION_7_8 = object : Migration(7, 8) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.apply {
+                    execSQL(
+                        "ALTER TABLE BloggingReminders ADD COLUMN isPromptRemindersOptedIn" +
+                            " INTEGER DEFAULT 0 NOT NULL"
                     )
                 }
             }
