@@ -1,5 +1,9 @@
 *** PLEASE FOLLOW THIS FORMAT: [<priority indicator, more stars = higher priority>] <description> [<PR URL>]
 
+20.5
+-----
+
+
 20.4
 -----
 * [*] [internal] Block Editor: Add React Native FastImage [https://github.com/WordPress/gutenberg/pull/42009]

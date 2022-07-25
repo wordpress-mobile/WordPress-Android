@@ -21,13 +21,15 @@ steps:
     artifact_paths:
       - "**/build/reports/detekt/detekt.html"
 
-  - label: "lint"
-    command: |
-      cp gradle.properties-example gradle.properties
-      ./gradlew lintWordpressVanillaRelease
-    plugins: *common_plugins
+  - label: "Lint WordPress"
+    command: ".buildkite/commands/lint.sh wordpress"
     artifact_paths:
       - "**/build/reports/lint-results*.*"
+
+  # - label: "Lint Jetpack"
+  #   command: ".buildkite/commands/lint.sh jetpack"
+  #   artifact_paths:
+  #     - "**/build/reports/lint-results*.*"
 
   - label: "Dependency Tree Diff"
     command: |
@@ -61,11 +63,11 @@ steps:
       - "**/build/instrumented-tests/**/*"
 
   - label: "🛠 WordPress Installable Build"
-    command: ".buildkite/commands/wordpress-installable-build.sh"
+    command: ".buildkite/commands/installable-build.sh wordpress"
     if: build.pull_request.id != null
     plugins: *common_plugins
 
   - label: "🛠 Jetpack Installable Build"
-    command: ".buildkite/commands/jetpack-installable-build.sh"
+    command: ".buildkite/commands/installable-build.sh jetpack"
     if: build.pull_request.id != null
     plugins: *common_plugins

@@ -4213,5 +4213,11 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="wp_jetpack_continue_to_stats">Continue to Stats</string>
     <string name="wp_jetpack_continue_to_notifications">Continue to Notifications</string>
     <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Problem displaying block. \nTap to attempt block recovery.</string>
+    <string name="gutenberg_native_gradient" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Gradient</string>
+    <string name="gutenberg_native_invalid_url" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Invalid URL.</string>
+    <string name="gutenberg_native_jetpack_powered" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Jetpack powered</string>
+    <string name="gutenberg_native_opacity" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Opacity</string>
+    <string name="gutenberg_native_upgrade_your_plan_to_upload_audio" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Upgrade your plan to upload audio</string>
+    <string name="gutenberg_native_upgrade_your_plan_to_use_video_covers" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Upgrade your plan to use video covers</string>
 
 </resources>

@@ -19,6 +19,7 @@ import org.wordpress.android.e2e.pages.PostsListPage;
 import org.wordpress.android.support.BaseTest;
 import org.wordpress.android.support.DemoModeEnabler;
 import org.wordpress.android.ui.WPLaunchActivity;
+import org.wordpress.android.util.UiTestingUtils;
 import org.wordpress.android.util.image.ImageType;
 
 import java.util.Locale;
@@ -46,8 +47,6 @@ import static org.wordpress.android.support.WPSupportUtils.isTabletScreen;
 import static org.wordpress.android.support.WPSupportUtils.isTextDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.pressBackUntilElementIsDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.setNightMode;
-import static org.wordpress.android.support.WPSupportUtils.swipeLeftOnViewPager;
-import static org.wordpress.android.support.WPSupportUtils.swipeRightOnViewPager;
 import static org.wordpress.android.support.WPSupportUtils.waitForAtLeastOneElementWithIdToBeDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDisplayedWithoutFailure;
@@ -221,7 +220,7 @@ public class JPScreenshotTest extends BaseTest {
         clickOn(R.id.nav_sites);
         (new MySitesPage()).goToStats().dismissUpdateAlertDialogFragmentIfDisplayed();
 
-        swipeToAvoidGrayOverlay(R.id.statsPager);
+        UiTestingUtils.swipeToAvoidGrayOverlayIgnoringFailures(R.id.statsPager);
 
         if (isElementDisplayed(R.id.button_negative)) {
             clickOn(R.id.button_negative);
@@ -426,17 +425,6 @@ public class JPScreenshotTest extends BaseTest {
 
         takeScreenshot(screenshotName);
         pressBackUntilElementIsDisplayed(R.id.tabLayout);
-    }
-
-    // In some cases there's a gray overlay on view pager screens when taking screenshots
-    // this function swipes left and then right as a workaround to clear it
-    // resourceID should be the ID of the viewPager
-    private void swipeToAvoidGrayOverlay(int resourceID) {
-        // Workaround to avoid gray overlay
-        swipeLeftOnViewPager(resourceID);
-        idleFor(1000);
-        swipeRightOnViewPager(resourceID);
-        idleFor(1000);
     }
 
     private void setNightModeAndWait(boolean isNightMode) {
