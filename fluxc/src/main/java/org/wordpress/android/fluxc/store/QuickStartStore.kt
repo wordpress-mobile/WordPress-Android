@@ -49,14 +49,12 @@ class QuickStartStore @Inject constructor(
         CREATE_SITE(QUICK_START_CREATE_SITE_LABEL, CUSTOMIZE, 0),
         UPDATE_SITE_TITLE(QUICK_START_UPDATE_SITE_TITLE_LABEL, CUSTOMIZE, 1),
         UPLOAD_SITE_ICON(QUICK_START_UPLOAD_SITE_ICON_LABEL, CUSTOMIZE, 2),
-        EDIT_HOMEPAGE(QUICK_START_EDIT_HOMEPAGE_LABEL, CUSTOMIZE, 3),
-        REVIEW_PAGES(QUICK_START_REVIEW_PAGES_LABEL, CUSTOMIZE, 4),
-        VIEW_SITE(QUICK_START_VIEW_SITE_LABEL, CUSTOMIZE, 5),
-        ENABLE_POST_SHARING(QUICK_START_ENABLE_POST_SHARING_LABEL, GROW, 7),
-        PUBLISH_POST(QUICK_START_PUBLISH_POST_LABEL, GROW, 8),
-        FOLLOW_SITE(QUICK_START_FOLLOW_SITE_LABEL, GROW, 9),
-        CHECK_STATS(QUICK_START_CHECK_STATS_LABEL, GROW, 10),
-        EXPLORE_PLANS(QUICK_START_EXPLORE_PLANS_LABEL, GROW, 11);
+        REVIEW_PAGES(QUICK_START_REVIEW_PAGES_LABEL, CUSTOMIZE, 3),
+        VIEW_SITE(QUICK_START_VIEW_SITE_LABEL, CUSTOMIZE, 4),
+        ENABLE_POST_SHARING(QUICK_START_ENABLE_POST_SHARING_LABEL, GROW, 6),
+        PUBLISH_POST(QUICK_START_PUBLISH_POST_LABEL, GROW, 7),
+        FOLLOW_SITE(QUICK_START_FOLLOW_SITE_LABEL, GROW, 8),
+        CHECK_STATS(QUICK_START_CHECK_STATS_LABEL, GROW, 9);
 
         override fun toString(): String {
             return string
@@ -150,6 +148,10 @@ class QuickStartStore @Inject constructor(
                 .sortedBy { it.order }
     }
 
+    fun isQuickStartStatusSet(siteId: Long): Boolean {
+        return quickStartSqlUtils.getQuickStartStatus(siteId) != null
+    }
+
     fun setQuickStartCompleted(siteId: Long, isCompleted: Boolean) {
         quickStartSqlUtils.setQuickStartCompleted(siteId, isCompleted)
     }
@@ -171,14 +173,12 @@ class QuickStartStore @Inject constructor(
         const val QUICK_START_CREATE_SITE_LABEL = "create_site"
         const val QUICK_START_UPDATE_SITE_TITLE_LABEL = "update_site_title"
         const val QUICK_START_UPLOAD_SITE_ICON_LABEL = "upload_site_icon"
-        const val QUICK_START_EDIT_HOMEPAGE_LABEL = "edit_homepage"
         const val QUICK_START_REVIEW_PAGES_LABEL = "review_pages"
         const val QUICK_START_VIEW_SITE_LABEL = "view_site"
         const val QUICK_START_ENABLE_POST_SHARING_LABEL = "enable_post_sharing"
         const val QUICK_START_PUBLISH_POST_LABEL = "publish_post"
         const val QUICK_START_FOLLOW_SITE_LABEL = "follow_site"
         const val QUICK_START_CHECK_STATS_LABEL = "check_stats"
-        const val QUICK_START_EXPLORE_PLANS_LABEL = "explore_plans"
         const val QUICK_START_CHECK_NOTIFIATIONS_LABEL = "check_notifications"
         const val QUICK_START_UPLOAD_MEDIA_LABEL = "upload_media"
     }

@@ -141,6 +141,20 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
     @Column private String mZendeskPlan;
     @Column private String mZendeskAddOns;
 
+    // Blogging Reminder options
+    @Column private boolean mIsBloggingPromptsOptedIn;
+    @Column private boolean mIsBloggingPromptsCardOptedIn;
+    @Column private boolean mIsPotentialBloggingSite;
+    @Column private boolean mIsBloggingReminderOnMonday;
+    @Column private boolean mIsBloggingReminderOnTuesday;
+    @Column private boolean mIsBloggingReminderOnWednesday;
+    @Column private boolean mIsBloggingReminderOnThursday;
+    @Column private boolean mIsBloggingReminderOnFriday;
+    @Column private boolean mIsBloggingReminderOnSaturday;
+    @Column private boolean mIsBloggingReminderOnSunday;
+    @Column private int mBloggingReminderHour;
+    @Column private int mBloggingReminderMinute;
+
     @Override
     public int getId() {
         return mId;
@@ -836,5 +850,101 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
 
     public void setOrganizationId(int organizationId) {
         mOrganizationId = organizationId;
+    }
+
+    public boolean isBloggingPromptsOptedIn() {
+        return mIsBloggingPromptsOptedIn;
+    }
+
+    public void setIsBloggingPromptsOptedIn(boolean bloggingPromptsOptedIn) {
+        mIsBloggingPromptsOptedIn = bloggingPromptsOptedIn;
+    }
+
+    public boolean isBloggingPromptsCardOptedIn() {
+        return mIsBloggingPromptsCardOptedIn;
+    }
+
+    public void setIsBloggingPromptsCardOptedIn(boolean bloggingPromptsCardOptedIn) {
+        mIsBloggingPromptsCardOptedIn = bloggingPromptsCardOptedIn;
+    }
+
+    public boolean isPotentialBloggingSite() {
+        return mIsPotentialBloggingSite;
+    }
+
+    public void setIsPotentialBloggingSite(boolean potentialBloggingSite) {
+        mIsPotentialBloggingSite = potentialBloggingSite;
+    }
+
+    public boolean isBloggingReminderOnMonday() {
+        return mIsBloggingReminderOnMonday;
+    }
+
+    public void setIsBloggingReminderOnMonday(boolean bloggingReminderOnMonday) {
+        mIsBloggingReminderOnMonday = bloggingReminderOnMonday;
+    }
+
+    public boolean isBloggingReminderOnTuesday() {
+        return mIsBloggingReminderOnTuesday;
+    }
+
+    public void setIsBloggingReminderOnTuesday(boolean bloggingReminderOnTuesday) {
+        mIsBloggingReminderOnTuesday = bloggingReminderOnTuesday;
+    }
+
+    public boolean isBloggingReminderOnWednesday() {
+        return mIsBloggingReminderOnWednesday;
+    }
+
+    public void setIsBloggingReminderOnWednesday(boolean bloggingReminderOnWednesday) {
+        mIsBloggingReminderOnWednesday = bloggingReminderOnWednesday;
+    }
+
+    public boolean isBloggingReminderOnThursday() {
+        return mIsBloggingReminderOnThursday;
+    }
+
+    public void setIsBloggingReminderOnThursday(boolean bloggingReminderOnThursday) {
+        mIsBloggingReminderOnThursday = bloggingReminderOnThursday;
+    }
+
+    public boolean isBloggingReminderOnFriday() {
+        return mIsBloggingReminderOnFriday;
+    }
+
+    public void setIsBloggingReminderOnFriday(boolean bloggingReminderOnFriday) {
+        mIsBloggingReminderOnFriday = bloggingReminderOnFriday;
+    }
+
+    public boolean isBloggingReminderOnSaturday() {
+        return mIsBloggingReminderOnSaturday;
+    }
+
+    public void setIsBloggingReminderOnSaturday(boolean bloggingReminderOnSaturday) {
+        mIsBloggingReminderOnSaturday = bloggingReminderOnSaturday;
+    }
+
+    public boolean isBloggingReminderOnSunday() {
+        return mIsBloggingReminderOnSunday;
+    }
+
+    public void setIsBloggingReminderOnSunday(boolean bloggingReminderOnSunday) {
+        mIsBloggingReminderOnSunday = bloggingReminderOnSunday;
+    }
+
+    public int getBloggingReminderHour() {
+        return mBloggingReminderHour;
+    }
+
+    public void setBloggingReminderHour(int bloggingReminderHour) {
+        mBloggingReminderHour = bloggingReminderHour;
+    }
+
+    public int getBloggingReminderMinute() {
+        return mBloggingReminderMinute;
+    }
+
+    public void setBloggingReminderMinute(int bloggingReminderMinute) {
+        mBloggingReminderMinute = bloggingReminderMinute;
     }
 }

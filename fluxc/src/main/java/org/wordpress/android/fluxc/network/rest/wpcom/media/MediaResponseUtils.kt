@@ -42,6 +42,12 @@ class MediaResponseUtils
             } else {
                 media.thumbnailUrl = from.thumbnails.thumbnail
             }
+            if (!TextUtils.isEmpty(from.thumbnails.large)) {
+                media.fileUrlLargeSize = from.thumbnails.large
+            }
+            if (!TextUtils.isEmpty(from.thumbnails.medium)) {
+                media.fileUrlMediumSize = from.thumbnails.medium
+            }
         }
         media.height = from.height
         media.width = from.width
