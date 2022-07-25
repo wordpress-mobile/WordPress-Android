@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.ActionMode;
 import androidx.core.util.Pair;
@@ -390,7 +391,12 @@ public class MediaGridFragment extends Fragment
 
     private void onDateRangeRemoved() {
         AnalyticsTracker.track(Stat.MEDIA_PICKER_DATE_RANGE_CLEARED);
-        fetchMediaList(false, null, null);
+        updateMediaListWithDateRange(null, null);
+    }
+
+    private void resetRetrievedAll() {
+        setHasFetchedMediaForAllFilters(false);
+        getAdapter().setHasRetrievedAll(false);
     }
 
     private boolean hasAdapter() {
@@ -427,10 +433,10 @@ public class MediaGridFragment extends Fragment
     /*
      * called when we know we've retrieved and fetched all media for all filters
      */
-    private void setHasFetchedMediaForAllFilters() {
+    private void setHasFetchedMediaForAllFilters(boolean fetchedAll) {
         for (int i = 0; i < mFetchedAllFilters.length; i++) {
-            mFetchedFilters[i] = true;
-            mFetchedAllFilters[i] = true;
+            mFetchedFilters[i] = fetchedAll;
+            mFetchedAllFilters[i] = fetchedAll;
         }
     }
 
@@ -490,13 +496,13 @@ public class MediaGridFragment extends Fragment
                     break;
             }
         } else if (mBrowserType.isSingleImagePicker()) {
-            mediaList = mMediaStore.getSiteImages(mSite);
+            mediaList = mMediaStore.getSiteImages(mSite, mAfter, mBefore);
         } else if (mBrowserType.canFilter() || mBrowserType.canOnlyDoInitialFilter() || mBrowserType
                 .isSingleFilePicker() || mBrowserType
                            .isSingleAudioFilePicker()) {
             mediaList = getMediaList();
         } else {
-            List<MediaModel> allMedia = mMediaStore.getAllSiteMedia(mSite);
+            List<MediaModel> allMedia = mMediaStore.getAllSiteMedia(mSite, mAfter, mBefore);
             mediaList = new ArrayList<>();
             for (MediaModel media : allMedia) {
                 String mime = media.getMimeType();
@@ -521,7 +527,7 @@ public class MediaGridFragment extends Fragment
             case FILTER_AUDIO:
                 return mMediaStore.getSiteAudio(mSite);
             default:
-                return mMediaStore.getAllSiteMedia(mSite);
+                return mMediaStore.getAllSiteMedia(mSite, mAfter, mBefore);
         }
     }
 
@@ -604,7 +610,15 @@ public class MediaGridFragment extends Fragment
     public void onPositiveButtonClick(Pair<Long, Long> selection) {
         AnalyticsTracker.track(Stat.MEDIA_PICKER_DATE_RANGE_PICKER_SAVED);
         NetworkUtils.checkConnection(getActivity());
-        fetchMediaList(false, selection.first, selection.second);
+        updateMediaListWithDateRange(selection.first, selection.second);
+    }
+
+    private void updateMediaListWithDateRange(@Nullable Long after, @Nullable Long before) {
+        mAfter = after;
+        mBefore = before;
+        resetRetrievedAll();
+        reload();
+        fetchMediaList(false, mAfter, mBefore);
     }
 
     @SuppressWarnings("unused")
@@ -890,7 +904,7 @@ public class MediaGridFragment extends Fragment
 
         if (hasRetrievedAll) {
             if (mFilter == MediaFilter.FILTER_ALL) {
-                setHasFetchedMediaForAllFilters();
+                setHasFetchedMediaForAllFilters(true);
             } else {
                 mFetchedAllFilters[position] = true;
             }
@@ -926,8 +940,7 @@ public class MediaGridFragment extends Fragment
         }
 
         setRefreshing(false);
-        setHasFetchedMediaForAllFilters();
-        getAdapter().setHasRetrievedAll(true);
+        resetRetrievedAll();
     }
 
     private void setResultIdsAndFinish() {
