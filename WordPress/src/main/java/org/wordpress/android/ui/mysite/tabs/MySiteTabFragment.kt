@@ -364,10 +364,9 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
     }
 
     private fun showJetpackPoweredBottomSheet() {
-        JetpackPoweredBottomSheetFragment.newInstance().show(
-                requireActivity().supportFragmentManager,
-                JetpackPoweredBottomSheetFragment.TAG
-        )
+        JetpackPoweredBottomSheetFragment
+                .newInstance()
+                .show(requireActivity().supportFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
     }
 
     private fun openQuickStartFullScreenDialog(action: SiteNavigationAction.OpenQuickStartFullScreenDialog) {

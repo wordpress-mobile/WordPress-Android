@@ -121,8 +121,7 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
         viewModel.showJetpackPoweredBottomSheet.observeEvent(viewLifecycleOwner) {
             JetpackPoweredBottomSheetFragment
                     .newInstance(it, PageType.NOTIFS)
-                    .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG
-            )
+                    .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
         }
     }
 

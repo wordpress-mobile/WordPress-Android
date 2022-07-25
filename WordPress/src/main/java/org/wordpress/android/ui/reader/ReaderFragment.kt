@@ -214,8 +214,7 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
         viewModel.showJetpackPoweredBottomSheet.observeEvent(viewLifecycleOwner) {
             JetpackPoweredBottomSheetFragment
                     .newInstance(it, READER)
-                    .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG
-            )
+                    .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
         }
 
         viewModel.start()
