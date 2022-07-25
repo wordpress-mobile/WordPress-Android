@@ -1,5 +1,5 @@
 # This pipeline is meant to be run via the Buildkite API, and is
-# only used for release builds
+# only used for beta builds
 
 # Nodes with values to reuse in the pipeline.
 common_params:
