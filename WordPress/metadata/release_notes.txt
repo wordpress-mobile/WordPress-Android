@@ -1,3 +1,7 @@
-- When you add an item in the media library to an Image block, the item’s alt text comes with it.
-- You can insert media from a URL in Video blocks.
-- Use the block recovery option to bring back unexpected or invalid content in a block.
+* [*] [internal] Block Editor: Add React Native FastImage [https://github.com/WordPress/gutenberg/pull/42009]
+* [*] Block Editor: Inserter displays block collections [https://github.com/WordPress/gutenberg/pull/42405]
+* [*] Block Editor: Fix incorrect spacing within Image alt text footnote [https://github.com/WordPress/gutenberg/pull/42504]
+* [***] Block Editor: Gallery and Image block - Performance improvements [https://github.com/WordPress/gutenberg/pull/42178]
+* [**] [WP.com and Jetpack sites with VideoPress] Prevent validation error when viewing VideoPress markup within app [https://github.com/Automattic/jetpack/pull/24548]
+* [*] [internal] Adds the "Jetpack powered" badge to non-core features [https://github.com/wordpress-mobile/WordPress-Android/pull/16940]
+
