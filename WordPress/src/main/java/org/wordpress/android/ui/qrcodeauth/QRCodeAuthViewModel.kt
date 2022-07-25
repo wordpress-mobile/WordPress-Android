@@ -291,8 +291,8 @@ class QRCodeAuthViewModel @Inject constructor(
     fun onDialogInteraction(interaction: DialogInteraction) {
         when (interaction) {
             is Positive -> postActionEvent(FinishActivity)
-            is Negative -> {} // NO OP
-            is Dismissed -> {} // NO OP
+            is Negative -> Unit
+            is Dismissed -> Unit
         }
     }
 
