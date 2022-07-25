@@ -1,13 +1,30 @@
 package org.wordpress.android.util
 
+import android.content.res.Configuration
 import android.view.View
 import android.view.View.OnScrollChangeListener
+import android.view.Window
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.R
+import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.util.config.JetpackPoweredFeatureConfig
+import javax.inject.Inject
 
-object JetpackBannerUtils {
+class JetpackBrandingUtils @Inject constructor(
+    private val jetpackPoweredFeatureConfig: JetpackPoweredFeatureConfig,
+    private val selectedSiteRepository: SelectedSiteRepository,
+    private val siteUtilsWrapper: SiteUtilsWrapper,
+    private val buildConfigWrapper: BuildConfigWrapper
+) {
+    fun shouldShowJetpackBranding(): Boolean {
+        val selectedSite = selectedSiteRepository.getSelectedSite()
+        val isWpComSite = selectedSite != null && siteUtilsWrapper.isAccessedViaWPComRest(selectedSite)
+
+        return isWpComSite && jetpackPoweredFeatureConfig.isEnabled() && !buildConfigWrapper.isJetpackApp
+    }
+
     fun showJetpackBannerIfScrolledToTop(banner: View, scrollableView: RecyclerView) {
         banner.isVisible = true
 
@@ -43,5 +60,14 @@ object JetpackBannerUtils {
                 }
             }
         })
+    }
+
+    /**
+     * Sets the navigation bar color as same as Jetpack banner background color in portrait orientation.
+     */
+    fun setNavigationBarColorForBanner(window: Window) {
+        if (window.context.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            window.navigationBarColor = window.context.getColor(R.color.jetpack_banner_background)
+        }
     }
 }

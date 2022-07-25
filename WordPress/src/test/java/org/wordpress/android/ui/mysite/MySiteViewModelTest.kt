@@ -134,6 +134,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.FluxCUtilsWrapper
+import org.wordpress.android.util.JetpackBrandingUtils
 import org.wordpress.android.util.MediaUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.QuickStartUtilsWrapper
@@ -141,7 +142,6 @@ import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.WPMediaUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.BloggingPromptsFeatureConfig
-import org.wordpress.android.util.config.JetpackPoweredFeatureConfig
 import org.wordpress.android.util.config.LandOnTheEditorFeatureConfig
 import org.wordpress.android.util.config.MySiteDashboardTabsFeatureConfig
 import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
@@ -183,7 +183,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var buildConfigWrapper: BuildConfigWrapper
     @Mock lateinit var mySiteDashboardTabsFeatureConfig: MySiteDashboardTabsFeatureConfig
     @Mock lateinit var bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig
-    @Mock lateinit var jetpackPoweredFeatureConfig: JetpackPoweredFeatureConfig
+    @Mock lateinit var jetpackBrandingUtils: JetpackBrandingUtils
     @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
     @Mock lateinit var bloggingPromptsCardAnalyticsTracker: BloggingPromptsCardAnalyticsTracker
     @Mock lateinit var quickStartType: QuickStartType
@@ -336,7 +336,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun init(
         isMySiteDashboardTabsFeatureFlagEnabled: Boolean = true,
         isBloggingPromptsFeatureConfigEnabled: Boolean = true,
-        isJetpackPoweredFeatureConfigEnabled: Boolean = true
+        shouldShowJetpackBranding: Boolean = true
     ) = test {
         onSiteChange.value = null
         onShowSiteIconProgressBar.value = null
@@ -344,7 +344,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         selectedSite.value = null
         whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(isBloggingPromptsFeatureConfigEnabled)
         whenever(mySiteDashboardTabsFeatureConfig.isEnabled()).thenReturn(isMySiteDashboardTabsFeatureFlagEnabled)
-        whenever(jetpackPoweredFeatureConfig.isEnabled()).thenReturn(isJetpackPoweredFeatureConfigEnabled)
+        whenever(jetpackBrandingUtils.shouldShowJetpackBranding()).thenReturn(shouldShowJetpackBranding)
         whenever(mySiteSourceManager.build(any(), anyOrNull())).thenReturn(partialStates)
         whenever(selectedSiteRepository.siteSelected).thenReturn(onSiteSelected)
         whenever(quickStartRepository.activeTask).thenReturn(activeTask)
@@ -386,7 +386,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 buildConfigWrapper,
                 mySiteDashboardTabsFeatureConfig,
                 bloggingPromptsFeatureConfig,
-                jetpackPoweredFeatureConfig,
+                jetpackBrandingUtils,
                 appPrefsWrapper,
                 bloggingPromptsCardAnalyticsTracker,
                 quickStartTracker,
@@ -2136,8 +2136,8 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @InternalCoroutinesApi
     @Test
-    fun `given wp app, when the jetpack powered feature flag is true, then the Jetpack badge is visible last`() {
-        init(isJetpackPoweredFeatureConfigEnabled = true)
+    fun `given shouldShowJetpackBranding is true, then the Jetpack badge is visible last`() {
+        init(shouldShowJetpackBranding = true)
         whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
 
         initSelectedSite()
@@ -2149,35 +2149,9 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @InternalCoroutinesApi
     @Test
-    fun `given wp app, when the jetpack powered feature flag is false, then no Jetpack badge is visible`() {
-        init(isJetpackPoweredFeatureConfigEnabled = false)
+    fun `given shouldShowJetpackBranding is false, then no Jetpack badge is visible`() {
+        init(shouldShowJetpackBranding = false)
         whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
-
-        initSelectedSite()
-
-        assertThat(getSiteMenuTabLastItems().last()).isNotInstanceOf(JetpackBadge::class.java)
-        assertThat(getLastItems().last()).isNotInstanceOf(JetpackBadge::class.java)
-        assertThat(getDashboardTabLastItems().last()).isNotInstanceOf(JetpackBadge::class.java)
-    }
-
-    @InternalCoroutinesApi
-    @Test
-    fun `given jp app, when the jetpack powered feature flag is true, then no Jetpack badge is visible`() {
-        init(isJetpackPoweredFeatureConfigEnabled = true)
-        whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
-
-        initSelectedSite()
-
-        assertThat(getSiteMenuTabLastItems().last()).isNotInstanceOf(JetpackBadge::class.java)
-        assertThat(getLastItems().last()).isNotInstanceOf(JetpackBadge::class.java)
-        assertThat(getDashboardTabLastItems().last()).isNotInstanceOf(JetpackBadge::class.java)
-    }
-
-    @InternalCoroutinesApi
-    @Test
-    fun `given jp app, when the jetpack powered feature flag is false, then no Jetpack badge is visible`() {
-        init(isJetpackPoweredFeatureConfigEnabled = false)
-        whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
 
         initSelectedSite()
 

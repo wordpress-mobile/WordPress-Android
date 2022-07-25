@@ -74,12 +74,12 @@ import org.wordpress.android.ui.utils.UiString;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.BuildConfigWrapper;
+import org.wordpress.android.util.JetpackBrandingUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.config.BloggingRemindersFeatureConfig;
-import org.wordpress.android.util.config.JetpackPoweredFeatureConfig;
 import org.wordpress.android.util.extensions.ContextExtensionsKt;
 
 import java.util.ArrayList;
@@ -136,7 +136,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment
     @Inject BuildConfigWrapper mBuildConfigWrapper;
     @Inject ViewModelProvider.Factory mViewModelFactory;
     @Inject BloggingRemindersFeatureConfig mBloggingRemindersFeatureConfig;
-    @Inject JetpackPoweredFeatureConfig mJetpackPoweredFeatureConfig;
+    @Inject JetpackBrandingUtils mJetpackBrandingUtils;
     @Inject UiHelpers mUiHelpers;
 
     private BloggingRemindersViewModel mBloggingRemindersViewModel;
@@ -224,7 +224,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment
     }
 
     private void addJetpackBadgeAsFooterIfEnabled(ListView listView) {
-        if (mJetpackPoweredFeatureConfig.isEnabled() && !mBuildConfigWrapper.isJetpackApp()) {
+        if (mJetpackBrandingUtils.shouldShowJetpackBranding()) {
             LayoutInflater inflater = LayoutInflater.from(getContext());
             final JetpackBadgeFooterBinding binding = JetpackBadgeFooterBinding.inflate(inflater);
             listView.addFooterView(binding.getRoot(), null, false);

@@ -58,6 +58,7 @@ import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.MAIN
 import org.wordpress.android.util.AppLog.T.UTILS
 import org.wordpress.android.util.FluxCUtils
+import org.wordpress.android.util.JetpackBrandingUtils
 import org.wordpress.android.util.MediaUtils
 import org.wordpress.android.util.SnackbarItem
 import org.wordpress.android.util.SnackbarItem.Info
@@ -65,7 +66,6 @@ import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration.SHORT
 import org.wordpress.android.util.WPMediaUtils
-import org.wordpress.android.util.config.JetpackPoweredFeatureConfig
 import org.wordpress.android.util.config.QRCodeAuthFlowFeatureConfig
 import org.wordpress.android.util.config.RecommendTheAppFeatureConfig
 import org.wordpress.android.util.config.UnifiedAboutFeatureConfig
@@ -92,7 +92,7 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
     @Inject lateinit var sequencer: SnackbarSequencer
     @Inject lateinit var unifiedAboutFeatureConfig: UnifiedAboutFeatureConfig
     @Inject lateinit var qrCodeAuthFlowFeatureConfig: QRCodeAuthFlowFeatureConfig
-    @Inject lateinit var jetpackPoweredFeatureConfig: JetpackPoweredFeatureConfig
+    @Inject lateinit var jetpackBrandingUtils: JetpackBrandingUtils
     private lateinit var viewModel: MeViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -122,7 +122,7 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
             }
         }
 
-        jetpackBadge.root.isVisible = jetpackPoweredFeatureConfig.isEnabled() && !BuildConfig.IS_JETPACK_APP
+        jetpackBadge.root.isVisible = jetpackBrandingUtils.shouldShowJetpackBranding()
 
         val showPickerListener = OnClickListener {
             AnalyticsTracker.track(ME_GRAVATAR_TAPPED)

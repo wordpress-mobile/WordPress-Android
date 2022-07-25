@@ -8,7 +8,6 @@ import android.view.ViewGroup.MarginLayoutParams
 import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
 import dagger.hilt.android.AndroidEntryPoint
-import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.databinding.ActivityLogListActivityBinding
 import org.wordpress.android.ui.LocaleAwareActivity
@@ -20,14 +19,13 @@ import org.wordpress.android.ui.jetpack.backup.download.KEY_BACKUP_DOWNLOAD_REWI
 import org.wordpress.android.ui.jetpack.common.JetpackBackupDownloadActionState
 import org.wordpress.android.ui.jetpack.restore.KEY_RESTORE_RESTORE_ID
 import org.wordpress.android.ui.jetpack.restore.KEY_RESTORE_REWIND_ID
-import org.wordpress.android.util.config.JetpackPoweredFeatureConfig
-import org.wordpress.android.util.extensions.setNavigationBarColorForBanner
+import org.wordpress.android.util.JetpackBrandingUtils
 import org.wordpress.android.viewmodel.activitylog.ACTIVITY_LOG_REWINDABLE_ONLY_KEY
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class ActivityLogListActivity : LocaleAwareActivity() {
-    @Inject lateinit var jetpackPoweredFeatureConfig: JetpackPoweredFeatureConfig
+    @Inject lateinit var jetpackBrandingUtils: JetpackBrandingUtils
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,9 +35,9 @@ class ActivityLogListActivity : LocaleAwareActivity() {
 
             setSupportActionBar(toolbarMain)
 
-            if (jetpackPoweredFeatureConfig.isEnabled() && !BuildConfig.IS_JETPACK_APP) {
+            if (jetpackBrandingUtils.shouldShowJetpackBranding()) {
                 jetpackBanner.root.isVisible = true
-                window.setNavigationBarColorForBanner()
+                jetpackBrandingUtils.setNavigationBarColorForBanner(window)
 
                 // Add bottom margin to content.
                 val fragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
