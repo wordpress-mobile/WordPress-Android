@@ -10,6 +10,7 @@ import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.model.post.PostStatus.DRAFT
 import org.wordpress.android.fluxc.model.post.PostStatus.PRIVATE
 
+@Suppress("MaxLineLength")
 @RunWith(MockitoJUnitRunner::class)
 class PostUtilsUnitTest {
     @Test

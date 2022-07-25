@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-06-30 09:54:08+0000
+Translation-Revision-Date: 2022-07-15 09:54:20+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.1
 Language: ja_JP
 -->
 <resources>
+    <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery">ブロックの表示中に問題が発生しました。 \nタップしてブロックの回復を試みます。</string>
+    <string name="weekly_roundup_notification_text_views_and_comments">先週、%1$s件の表示と%2$s件のコメントがありました。</string>
+    <string name="weekly_roundup_notification_text_views_and_likes">先週、%1$s件の表示と%2$s件の「いいね」を受け取りました。</string>
+    <string name="weekly_roundup_notification_text_views_only">先週、%1$s件の表示がありました。</string>
+    <string name="weekly_roundup_notification_text_all">先週、%1$s件の表示、%2$s件の「いいね」、%3$s件のコメントを受け取りました。</string>
+    <string name="stats_revamp_v2_update_alert_message">アップデートされた新しい統計概要により、コンテンツのパフォーマンスと、読者からどういった反響があるか理解を深めることができます。</string>
+    <string name="stats_insights_like_guide_card">⭐️最新の投稿 %1$s が%2$s回「いいね」されました。</string>
+    <string name="wp_jetpack_powered">Jetpack 提供</string>
     <string name="qrcode_auth_flow_content_description">ログインコードをスキャンしていることを示す画像</string>
     <string name="qrcode_auth_flow_error_content_description">エラーが発生していることを示す画像</string>
     <string name="qrcode_auth_flow_dismiss_dialog_message">本当に実行してもよいですか ?</string>
@@ -71,8 +79,8 @@ Language: ja_JP
     <string name="me_btn_scan_login_code">ログインコードをスキャン</string>
     <string name="stats_insights_likes_guide_card">⭐️最新の投稿 %1$s が%2$s回「いいね」されました。</string>
     <string name="stats_most_popular_percent_views_empty">アクティビティが足りません。 サイトの訪問者数が増えたら後でもう一度確認してください。</string>
-    <string name="stats_total_followers_content_description">%1s人、フォロワー総数の%2s</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
+    <string name="stats_total_followers_content_description">%1$s人、フォロワー総数のうちの%2$s%%</string>
     <string name="pages_copy_link">リンクをコピー</string>
     <string name="quick_start_completed_tour_title">おめでとうございます ! 詳しくなりました&lt;br/&gt;</string>
     <string name="quick_start_sites_type_get_to_know_app">アプリについて知る</string>
@@ -395,7 +403,6 @@ Language: ja_JP
     <string name="my_site_quick_actions_title">クイックリンク</string>
     <string name="my_site_btn_domains">ドメイン</string>
     <string name="recommend_app_subject">Automattic アプリ - 各種端末に対応したアプリ</string>
-    <string name="weekly_roundup_notification_text">サイトは%1$d回表示され、%2$d件の「いいね」と%3$d件のコメントを獲得しました。</string>
     <string name="weekly_roundup_notification_title">1週間のまとめ: %s</string>
     <string name="blogging_reminders_notification_time">通知時間</string>
     <string name="blogging_reminders_epilogue_body_everyday_with_time">&lt;b&gt;毎日&lt;/b&gt;&lt;b&gt;%s&lt;/b&gt;時にブログ投稿のリマインダーを受け取ります。</string>

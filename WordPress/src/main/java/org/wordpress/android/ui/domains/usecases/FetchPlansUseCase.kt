@@ -16,7 +16,7 @@ import kotlin.coroutines.suspendCoroutine
  */
 class FetchPlansUseCase @Inject constructor(
     private val dispatcher: Dispatcher,
-    private val siteStore: SiteStore // needed for events to work
+    @Suppress("unused") private val siteStore: SiteStore // needed for events to work
 ) {
     private var continuation: Continuation<OnPlansFetched>? = null
 

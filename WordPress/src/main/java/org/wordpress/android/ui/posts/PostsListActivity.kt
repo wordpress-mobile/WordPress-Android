@@ -276,7 +276,7 @@ class PostsListActivity : LocaleAwareActivity(),
         currentBottomSheetPostId: LocalId
     ) {
         viewModel = ViewModelProvider(this@PostsListActivity, viewModelFactory).get(PostListMainViewModel::class.java)
-        viewModel.start(site, initPreviewState, currentBottomSheetPostId, editPostRepository, this@PostsListActivity)
+        viewModel.start(site, initPreviewState, currentBottomSheetPostId, editPostRepository)
 
         viewModel.viewState.observe(this@PostsListActivity, { state ->
             state?.let {

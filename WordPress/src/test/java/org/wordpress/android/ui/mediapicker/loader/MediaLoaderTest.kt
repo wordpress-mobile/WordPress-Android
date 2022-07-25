@@ -21,23 +21,18 @@ import org.wordpress.android.ui.mediapicker.loader.MediaLoader.DomainModel
 import org.wordpress.android.ui.mediapicker.loader.MediaLoader.LoadAction
 import org.wordpress.android.ui.mediapicker.loader.MediaSource.MediaLoadingResult
 import org.wordpress.android.ui.utils.UiString.UiStringText
-import org.wordpress.android.util.LocaleManagerWrapper
-import org.wordpress.android.util.NetworkUtilsWrapper
 
 class MediaLoaderTest : BaseUnitTest() {
     @Mock lateinit var mediaSource: MediaSource
-    @Mock lateinit var localeManagerWrapper: LocaleManagerWrapper
-    @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
     @Mock lateinit var identifier1: Identifier
     @Mock lateinit var identifier2: Identifier
     private lateinit var mediaLoader: MediaLoader
-    private val mediaTypes = setOf(IMAGE, VIDEO)
     private lateinit var firstMediaItem: MediaItem
     private lateinit var secondMediaItem: MediaItem
 
     @Before
     fun setUp() {
-        mediaLoader = MediaLoader(mediaSource, localeManagerWrapper, networkUtilsWrapper)
+        mediaLoader = MediaLoader(mediaSource)
         firstMediaItem = MediaItem(identifier1, "url://first_item", "first item", IMAGE, "image/jpeg", 1)
         secondMediaItem = MediaItem(identifier2, "url://second_item", "second item", VIDEO, "video/mpeg", 2)
     }

@@ -247,8 +247,7 @@ class PostListMainViewModel @Inject constructor(
         site: SiteModel,
         initPreviewState: PostListRemotePreviewState,
         currentBottomSheetPostId: LocalId,
-        editPostRepository: EditPostRepository,
-        context: Context
+        editPostRepository: EditPostRepository
     ) {
         this.site = site
         this.editPostRepository = editPostRepository

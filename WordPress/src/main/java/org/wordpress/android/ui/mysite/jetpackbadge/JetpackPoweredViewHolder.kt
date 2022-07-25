@@ -28,6 +28,7 @@ sealed class JetpackPoweredViewHolder<T : ViewBinding>(
                             JetpackPoweredAnimatedImageBinding::inflate
                     )
             ) {
+        @Suppress("unused")
         fun onBind(item: Illustration) = with(binding) {
             illustrationView.setAnimation(item.illustration)
         }

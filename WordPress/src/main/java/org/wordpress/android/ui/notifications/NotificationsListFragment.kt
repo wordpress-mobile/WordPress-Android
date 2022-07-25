@@ -21,7 +21,6 @@ import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.android.material.tabs.TabLayout.Tab
 import dagger.hilt.android.AndroidEntryPoint
 import org.greenrobot.eventbus.EventBus
-import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.NOTIFICATIONS_SELECTED_FILTER
@@ -49,23 +48,23 @@ import org.wordpress.android.ui.notifications.services.NotificationsUpdateServic
 import org.wordpress.android.ui.stats.StatsConnectJetpackActivity
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.NOTIFS
-import org.wordpress.android.util.JetpackBannerUtils
+import org.wordpress.android.util.JetpackBrandingUtils
 import org.wordpress.android.util.NetworkUtils
+import org.wordpress.android.util.SiteUtilsWrapper
 import org.wordpress.android.util.WPUrlUtils
-import org.wordpress.android.util.config.JetpackPoweredFeatureConfig
 import org.wordpress.android.util.extensions.setLiftOnScrollTargetViewIdAndRequestLayout
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment), ScrollableViewInitializedListener {
-    private var shouldRefreshNotifications = false
-    private var lastTabPosition = 0
-
     @Inject lateinit var accountStore: AccountStore
-    @Inject lateinit var jetpackPoweredFeatureConfig: JetpackPoweredFeatureConfig
+    @Inject lateinit var jetpackBrandingUtils: JetpackBrandingUtils
+
     private val viewModel: NotificationsListViewModel by viewModels()
 
+    private var shouldRefreshNotifications = false
+    private var lastTabPosition = 0
     private var binding: NotificationsListFragmentBinding? = null
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -303,14 +302,14 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
 
     override fun onScrollableViewInitialized(containerId: Int) {
         binding?.appBar?.setLiftOnScrollTargetViewIdAndRequestLayout(containerId)
-        if (jetpackPoweredFeatureConfig.isEnabled() && !BuildConfig.IS_JETPACK_APP) {
+        if (jetpackBrandingUtils.shouldShowJetpackBranding()) {
             binding?.root?.post {
                 // post is used to create a minimal delay here. containerId changes just before
                 // onScrollableViewInitialized is called, and findViewById can't find the new id before the delay.
                 val jetpackBannerView = binding?.jetpackBanner?.root ?: return@post
                 val scrollableView = binding?.root?.findViewById<View>(containerId) as? RecyclerView ?: return@post
-                JetpackBannerUtils.showJetpackBannerIfScrolledToTop(jetpackBannerView, scrollableView)
-                JetpackBannerUtils.initJetpackBannerAnimation(jetpackBannerView, scrollableView)
+                jetpackBrandingUtils.showJetpackBannerIfScrolledToTop(jetpackBannerView, scrollableView)
+                jetpackBrandingUtils.initJetpackBannerAnimation(jetpackBannerView, scrollableView)
             }
         }
     }

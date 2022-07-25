@@ -1,3 +1,0 @@
-20.2:
-- Ahora puedes subir imágenes HEIC y HEIF a tu sitio con el selector de medios.
-- Hemos corregido un error que eliminaba los caracteres especiales de los temas de los lectores en otros idiomas.

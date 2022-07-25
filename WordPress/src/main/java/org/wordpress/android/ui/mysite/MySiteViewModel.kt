@@ -99,6 +99,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.FluxCUtilsWrapper
+import org.wordpress.android.util.JetpackBrandingUtils
 import org.wordpress.android.util.MediaUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.QuickStartUtilsWrapper
@@ -108,7 +109,6 @@ import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.WPMediaUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.BloggingPromptsFeatureConfig
-import org.wordpress.android.util.config.JetpackPoweredFeatureConfig
 import org.wordpress.android.util.config.LandOnTheEditorFeatureConfig
 import org.wordpress.android.util.config.MySiteDashboardTabsFeatureConfig
 import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
@@ -158,7 +158,7 @@ class MySiteViewModel @Inject constructor(
     private val buildConfigWrapper: BuildConfigWrapper,
     mySiteDashboardTabsFeatureConfig: MySiteDashboardTabsFeatureConfig,
     bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig,
-    private val jetpackPoweredFeatureConfig: JetpackPoweredFeatureConfig,
+    private val jetpackBrandingUtils: JetpackBrandingUtils,
     private val appPrefsWrapper: AppPrefsWrapper,
     private val bloggingPromptsCardAnalyticsTracker: BloggingPromptsCardAnalyticsTracker,
     private val quickStartTracker: QuickStartTracker,
@@ -496,9 +496,7 @@ class MySiteViewModel @Inject constructor(
 
         val jetpackBadge = JetpackBadge(
                 ListItemInteraction.create(this::onJetpackBadgeClick)
-        ).takeIf {
-            jetpackPoweredFeatureConfig.isEnabled() && !buildConfigWrapper.isJetpackApp
-        }
+        ).takeIf { jetpackBrandingUtils.shouldShowJetpackBranding() }
 
         return mapOf(
                 MySiteTabType.ALL to orderForDisplay(

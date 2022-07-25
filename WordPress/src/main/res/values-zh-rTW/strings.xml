@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-06-30 11:54:08+0000
+Translation-Revision-Date: 2022-07-16 08:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.1
 Language: zh_TW
 -->
 <resources>
+    <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery">顯示區塊時發生問題。 \n點選以嘗試還原區塊。</string>
+    <string name="weekly_roundup_notification_text_views_and_comments">上週你有 %1$s 個瀏覽次數和 %2$s 個留言</string>
+    <string name="weekly_roundup_notification_text_views_and_likes">上週你有 %1$s 個瀏覽次數和 %2$s 個讚</string>
+    <string name="weekly_roundup_notification_text_views_only">上週你有 %1$s 個瀏覽次數。</string>
+    <string name="weekly_roundup_notification_text_all">上週你有 %1$s 個瀏覽次數、%2$s 個讚和 %3$s 個留言。</string>
+    <string name="stats_revamp_v2_update_alert_message">全新洞察報告的更新內容有助於瞭解你的內容成效如何，以及哪些內容能讓讀者產生共鳴。</string>
+    <string name="stats_insights_like_guide_card">⭐️ 你的最新文章 %1$s 已獲得 %2$s 個讚。</string>
+    <string name="wp_jetpack_powered">採用 Jetpack 技術</string>
     <string name="qrcode_auth_flow_content_description">圖片表示正在掃描登入碼</string>
     <string name="qrcode_auth_flow_error_content_description">圖片表示錯誤</string>
     <string name="qrcode_auth_flow_dismiss_dialog_message">確定要繼續？</string>
@@ -71,7 +79,7 @@ Language: zh_TW
     <string name="me_btn_scan_login_code">掃描登入碼</string>
     <string name="stats_insights_likes_guide_card">⭐️ 你的最新文章 %1$s 已獲得 %2$s 次按讚。</string>
     <string name="stats_most_popular_percent_views_empty">沒有足夠的活動。 有更多訪客造訪網站的時候，請再回來查看！</string>
-    <string name="stats_total_followers_content_description">%1s，追蹤者總數的 %2s</string>
+    <string name="stats_total_followers_content_description">%1$s 個追蹤者，共 %2$s%% 個</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
     <string name="pages_copy_link">複製連結</string>
     <string name="quick_start_completed_tour_title">恭喜！ 你熟知&lt;br/&gt;</string>
@@ -395,7 +403,6 @@ Language: zh_TW
     <string name="me_btn_share">向朋友推薦 WordPress</string>
     <string name="my_site_quick_actions_title">快速連結</string>
     <string name="my_site_btn_domains">網域</string>
-    <string name="weekly_roundup_notification_text">你的網站獲得 %1$d 次瀏覽、%2$d 個讚和 %3$d 個留言。</string>
     <string name="weekly_roundup_notification_title">每週綜合整理：%s</string>
     <string name="blogging_reminders_notification_time">通知時間</string>
     <string name="blogging_reminders_epilogue_body_everyday_with_time">你會&lt;b&gt;每天&lt;/b&gt;在 &lt;b&gt;%s&lt;/b&gt; 收到寫網誌通知。</string>

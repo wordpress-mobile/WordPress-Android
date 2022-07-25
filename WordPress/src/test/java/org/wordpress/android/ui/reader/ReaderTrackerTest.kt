@@ -87,7 +87,7 @@ class ReaderTrackerTest {
 
         val numRep = 10
 
-        for (i in 0 until numRep) {
+        (0 until numRep).forEach {
             val startPoint = Date()
 
             whenever(dateProvider.getCurrentDate()).thenReturn(startPoint)
@@ -125,7 +125,7 @@ class ReaderTrackerTest {
 
         val numRep = 10
 
-        for (i in 0 until numRep) {
+        (0 until numRep).forEach {
             val startPoint = Date()
 
             whenever(dateProvider.getCurrentDate()).thenReturn(startPoint)

@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-06-30 09:54:09+0000
+Translation-Revision-Date: 2022-07-14 12:54:07+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.1
 Language: zh_CN
 -->
 <resources>
+    <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery">显示区块时出现问题。 \n点击尝试恢复区块。</string>
+    <string name="weekly_roundup_notification_text_views_and_comments">上周共计 %1$s 次查看和 %2$s 条评论</string>
+    <string name="weekly_roundup_notification_text_views_and_likes">上周共计 %1$s 次查看和 %2$s 个赞</string>
+    <string name="weekly_roundup_notification_text_views_only">上周共计 %1$s 次查看。</string>
+    <string name="weekly_roundup_notification_text_all">上周共计 %1$s 次查看、%2$s 个赞和 %3$s 条评论。</string>
+    <string name="stats_revamp_v2_update_alert_message">更新至新数据分析可帮助您了解内容的表现情况，以及是什么引起了受众的共鸣。</string>
+    <string name="stats_insights_like_guide_card">⭐️ 您的最新文章 %1$s 收到了 %2$s 个赞。</string>
+    <string name="wp_jetpack_powered">由 Jetpack 提供支持</string>
     <string name="qrcode_auth_flow_content_description">图片显示正在扫描登录代码</string>
     <string name="qrcode_auth_flow_error_content_description">图片指示错误</string>
     <string name="qrcode_auth_flow_dismiss_dialog_message">是否确定要继续？</string>
@@ -71,7 +79,7 @@ Language: zh_CN
     <string name="me_btn_scan_login_code">扫描登录码</string>
     <string name="stats_insights_likes_guide_card">⭐️您的最新文章 %1$s 收到了 %2$s 个赞。</string>
     <string name="stats_most_popular_percent_views_empty">动态数量不足。 请在您的站点拥有更多访客时回来查看！</string>
-    <string name="stats_total_followers_content_description">粉丝总数的 %1s、%2s</string>
+    <string name="stats_total_followers_content_description">粉丝总数的 %1$s、%2$s%%</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
     <string name="pages_copy_link">复制链接</string>
     <string name="quick_start_completed_tour_title">恭喜！ 您搞明白了&lt;br/&gt;</string>
@@ -395,7 +403,6 @@ Language: zh_CN
     <string name="me_btn_share">将 WordPress 与您的朋友分享</string>
     <string name="my_site_quick_actions_title">快速链接</string>
     <string name="my_site_btn_domains">域名</string>
-    <string name="weekly_roundup_notification_text">您的站点获得了%1$d次浏览、%2$d次喜欢、%3$d次评论。</string>
     <string name="weekly_roundup_notification_title">每周综述：%s</string>
     <string name="blogging_reminders_notification_time">通知间隔</string>
     <string name="blogging_reminders_epilogue_body_everyday_with_time">您会收到提醒，要在&lt;b&gt;每天&lt;/b&gt;&lt;b&gt;%s&lt;/b&gt;写博客。</string>

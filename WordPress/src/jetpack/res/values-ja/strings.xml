@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Translation-Revision-Date: 2022-07-11 11:54:18+0000
+Plural-Forms: nplurals=1; plural=0;
+Generator: GlotPress/2.4.0-alpha
+Language: ja_JP
+-->
+<resources>
+    <string name="me_btn_about">Jetpack について</string>
+    <string name="sign_out_wpcom_confirm_with_no_changes">Jetpack からログアウトしますか ?</string>
+    <string name="me_disconnect_from_wordpress_com">Jetpack からログアウト</string>
+    <string name="support_ticket_subject">Android サポート版 Jetpack</string>
+    <string name="login_magic_links_sent_label">この端末でメールを確認して、Jetpack.com から届いたメールに記載されているリンクをタップしてください。</string>
+    <string name="continue_with_wpcom_no_signup">WordPress.com アカウントでログイン</string>
+    <string name="app_tagline">サイトのセキュリティとパフォーマンスをポケットの中に</string>
+    <string name="post_signup_interstitial_title">Jetpack へようこそ</string>
+    <string name="app_title">Android 版 Jetpack</string>
+</resources>

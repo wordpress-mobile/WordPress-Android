@@ -52,6 +52,7 @@ object QuickStartUtils {
      */
     @JvmStatic
     @JvmOverloads
+    @Suppress("SwallowedException")
     fun stylizeQuickStartPrompt(
         activityContext: Context,
         messageId: Int,

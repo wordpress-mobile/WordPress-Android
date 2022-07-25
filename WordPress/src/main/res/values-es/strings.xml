@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-06-30 09:54:09+0000
+Translation-Revision-Date: 2022-07-14 12:54:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: es
 -->
 <resources>
+    <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery">Problema al mostrar el bloque. \nToca para intentar la recuperación del bloque.</string>
+    <string name="weekly_roundup_notification_text_views_and_comments">La semana pasada tuviste %1$s visitas y %2$s comentarios</string>
+    <string name="weekly_roundup_notification_text_views_only">La semana pasada tuviste %1$s visitas.</string>
+    <string name="stats_revamp_v2_update_alert_message">Se ha actualizado al nuevo Detalles para ayudarte a entender cómo es el rendimiento de tu contenido y qué tiene impacto en tu público.</string>
+    <string name="weekly_roundup_notification_text_views_and_likes">La semana pasada tuviste %1$s visitas y %2$s Me gusta</string>
+    <string name="weekly_roundup_notification_text_all">La semana pasada tuviste %1$s visitas, %2$s Me gusta y %3$s comentarios.</string>
+    <string name="stats_insights_like_guide_card">⭐️ Tu última entrada %1$s ha recibido %2$s Me gusta.</string>
+    <string name="wp_jetpack_powered">Funciona gracias a Jetpack</string>
     <string name="qrcode_auth_flow_content_description">Imagen que señala que el escaneo de código de acceso está en proceso</string>
     <string name="qrcode_auth_flow_error_content_description">Imagen que señala un error</string>
     <string name="qrcode_auth_flow_dismiss_dialog_message">¿Seguro que quieres continuar?</string>
@@ -72,7 +80,7 @@ Language: es
     <string name="stats_insights_likes_guide_card">⭐️  Tu última entrada %1$s ha recibido %2$s me gusta.</string>
     <string name="stats_most_popular_percent_views_empty">No hay suficiente actividad. ¡Vuelve a comprobarlo más tarde, cuando tu sitio haya tenido más visitas!</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
-    <string name="stats_total_followers_content_description">%1s, %2s del total de seguidores</string>
+    <string name="stats_total_followers_content_description">%1$s, %2$s%% del total de seguidores</string>
     <string name="pages_copy_link">Copiar enlace</string>
     <string name="quick_start_list_upload_media_title">Sube fotos o vídeos</string>
     <string name="quick_start_sites_type_get_to_know_app">Conoce la aplicación</string>
@@ -395,7 +403,6 @@ Language: es
     <string name="recommend_app_null_response">No se ha recibido ninguna respuesta</string>
     <string name="recommend_app_bad_format_response">Respuesta recibida no válida</string>
     <string name="recommend_app_subject">Aplicaciones Automattic - Aplicaciones para cualquier pantalla</string>
-    <string name="weekly_roundup_notification_text">Tu sitio recibió %1$d visualizaciones, %2$d me gusta, %3$d comentarios.</string>
     <string name="weekly_roundup_notification_title">Repaso semanal: %s</string>
     <string name="blogging_reminders_notification_time">Hora del aviso</string>
     <string name="blogging_reminders_epilogue_body_everyday_with_time">Recibirás recordatorios para bloquear &lt;b&gt;todos los días&lt;/b&gt; a las &lt;b&gt;%s&lt;/b&gt;.</string>

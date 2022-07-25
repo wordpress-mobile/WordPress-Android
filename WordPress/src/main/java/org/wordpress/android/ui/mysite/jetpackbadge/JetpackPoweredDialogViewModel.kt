@@ -19,7 +19,7 @@ import javax.inject.Named
 @HiltViewModel
 class JetpackPoweredDialogViewModel @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
-    private val analyticsTracker: AnalyticsTrackerWrapper
+    @Suppress("unused") private val analyticsTracker: AnalyticsTrackerWrapper
 ) : ScopedViewModel(mainDispatcher) {
     private val _uiState = MutableLiveData<UiState>()
     val uiState: LiveData<UiState> = _uiState

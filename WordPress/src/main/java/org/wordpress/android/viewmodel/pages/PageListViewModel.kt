@@ -150,7 +150,7 @@ class PageListViewModel @Inject constructor(
         return pagesViewModel.onMenuAction(action, pageItem, context)
     }
 
-    fun onItemTapped(pageItem: Page, context: Context) {
+    fun onItemTapped(pageItem: Page) {
         if (pageItem.tapActionEnabled) {
             pagesViewModel.onItemTapped(pageItem)
         }

@@ -46,7 +46,6 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.wizard.WizardManager
 import org.wordpress.android.util.wizard.WizardNavigationTarget
-import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import java.util.Date
 
@@ -59,7 +58,6 @@ class BackupDownloadViewModelTest : BaseUnitTest() {
     @Mock private lateinit var getActivityLogItemUseCase: GetActivityLogItemUseCase
     @Mock private lateinit var backupDownloadStatusUseCase: GetBackupDownloadStatusUseCase
     @Mock private lateinit var postBackupDownloadUseCase: PostBackupDownloadUseCase
-    @Mock private lateinit var resourceProvider: ResourceProvider
     @Mock private lateinit var checkboxSpannableLabel: CheckboxSpannableLabel
     private lateinit var availableItemsProvider: JetpackAvailableItemsProvider
     private lateinit var stateListItemBuilder: BackupDownloadStateListItemBuilder

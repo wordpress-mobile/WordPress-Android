@@ -603,7 +603,8 @@
             android:label="@string/quickpress_shortcut_activity_label"
             android:theme="@style/WordPress.NoActionBar"
             android:enabled="@string/widgets_enabled"
-            android:exported="true">
+            android:exported="true"
+            tools:ignore="ManifestResource">
             <intent-filter>
                 <action android:name="android.intent.action.CREATE_SHORTCUT" />
 
@@ -870,7 +871,8 @@
             android:name=".ui.stats.refresh.lists.widget.views.StatsViewsWidget"
             android:label="@string/stats_widget_weekly_views_name"
             android:enabled="@string/widgets_enabled"
-            android:exported="false">
+            android:exported="false"
+            tools:ignore="ManifestResource">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
             </intent-filter>
@@ -883,7 +885,8 @@
             android:name=".ui.stats.refresh.lists.widget.alltime.StatsAllTimeWidget"
             android:label="@string/stats_widget_all_time_insights_name"
             android:enabled="@string/widgets_enabled"
-            android:exported="false">
+            android:exported="false"
+            tools:ignore="ManifestResource">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
             </intent-filter>
@@ -896,7 +899,8 @@
             android:name=".ui.stats.refresh.lists.widget.today.StatsTodayWidget"
             android:label="@string/stats_widget_today_insights_name"
             android:enabled="@string/widgets_enabled"
-            android:exported="false">
+            android:exported="false"
+            tools:ignore="ManifestResource">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
             </intent-filter>
@@ -909,7 +913,8 @@
             android:name=".ui.stats.refresh.lists.widget.minified.StatsMinifiedWidget"
             android:label="@string/stats_widget_minified_name"
             android:enabled="@string/widgets_enabled"
-            android:exported="false">
+            android:exported="false"
+            tools:ignore="ManifestResource">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
             </intent-filter>

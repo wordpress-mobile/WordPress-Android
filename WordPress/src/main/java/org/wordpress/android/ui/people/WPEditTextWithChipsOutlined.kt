@@ -688,6 +688,7 @@ class WPEditTextWithChipsOutlined @JvmOverloads constructor(
         var chipsData = mutableListOf<ChipData>()
 
         constructor(superState: Parcelable?) : super(superState) {}
+        @Suppress("unused")
         private constructor(`in`: Parcel) : super(`in`) {
             this.labelState = HelperTextState.values()[`in`.readInt()]
             this.isFocused = `in`.readInt() == 1
