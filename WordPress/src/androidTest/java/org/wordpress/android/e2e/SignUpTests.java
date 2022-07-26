@@ -1,5 +1,6 @@
 package org.wordpress.android.e2e;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.wordpress.android.e2e.flows.SignupFlow;
@@ -16,6 +17,11 @@ import dagger.hilt.android.testing.HiltAndroidTest;
 public class SignUpTests extends BaseTest {
     @Before
     public void setUp() {
+        logoutIfNecessary();
+    }
+
+    @After
+    public void tearDown() {
         logoutIfNecessary();
     }
 

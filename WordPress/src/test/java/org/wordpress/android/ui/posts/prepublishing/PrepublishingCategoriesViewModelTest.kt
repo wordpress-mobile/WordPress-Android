@@ -21,7 +21,6 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
-import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.TermModel
 import org.wordpress.android.fluxc.store.TaxonomyStore
@@ -52,7 +51,6 @@ class PrepublishingCategoriesViewModelTest : BaseUnitTest() {
     @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
     @Mock lateinit var editPostRepository: EditPostRepository
     @Mock lateinit var siteModel: SiteModel
-    private lateinit var post: PostModel
 
     @Before
     fun setup() = test {

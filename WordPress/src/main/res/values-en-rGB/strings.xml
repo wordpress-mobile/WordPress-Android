@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-07-07 16:01:09+0000
+Translation-Revision-Date: 2022-07-11 18:30:22+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: en_GB
 -->
 <resources>
+    <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery">Problem displaying block. \nTap to attempt block recovery.</string>
+    <string name="stats_revamp_v2_update_alert_message">Updated to New Insights to help you understand how your content is performing and what\'s resonating with your audience.</string>
+    <string name="stats_insights_like_guide_card">⭐️ Your latest post %1$s has received %2$s like.</string>
+    <string name="weekly_roundup_notification_text_views_and_comments">Last week, you had %1$s views and %2$s comments</string>
+    <string name="weekly_roundup_notification_text_views_and_likes">Last week, you had %1$s views and %2$s likes</string>
+    <string name="weekly_roundup_notification_text_views_only">Last week, you had %1$s views.</string>
+    <string name="weekly_roundup_notification_text_all">Last week, you had %1$s views, %2$s likes, and %3$s comments.</string>
     <string name="wp_jetpack_powered">Jetpack powered</string>
     <string name="qrcode_auth_flow_content_description">Image indicating scan log-in code in process</string>
     <string name="qrcode_auth_flow_error_content_description">Image indicating an error</string>
@@ -72,8 +79,8 @@ Language: en_GB
     <string name="me_btn_scan_login_code">Scan Log-in Code</string>
     <string name="stats_insights_likes_guide_card">⭐️ Your latest post %1$s has received %2$s likes.</string>
     <string name="stats_most_popular_percent_views_empty">Not enough activity. Check back later when your site\'s had more visitors!</string>
-    <string name="stats_total_followers_content_description">%1s, %2s of total followers</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
+    <string name="stats_total_followers_content_description">%1$s, %2$s%% of total followers</string>
     <string name="pages_copy_link">Copy link</string>
     <string name="quick_start_completed_tour_title">Congrats! You know your way around&lt;br/&gt;</string>
     <string name="quick_start_sites_type_get_to_know_app">Get to know the app</string>
@@ -396,7 +403,6 @@ Language: en_GB
     <string name="recommend_app_null_response">No response received</string>
     <string name="recommend_app_bad_format_response">Invalid response received</string>
     <string name="recommend_app_subject">Automattic Apps – Apps for any screen</string>
-    <string name="weekly_roundup_notification_text">Your site got %1$d views, %2$d likes, %3$d comments.</string>
     <string name="blogging_reminders_epilogue_body_everyday_with_time">You\'ll get reminders to blog &lt;b&gt;every day&lt;/b&gt; at &lt;b&gt;%s&lt;/b&gt;.</string>
     <string name="blogging_reminders_notification_time">Notification time</string>
     <string name="weekly_roundup_notification_title">Weekly Roundup: %s</string>

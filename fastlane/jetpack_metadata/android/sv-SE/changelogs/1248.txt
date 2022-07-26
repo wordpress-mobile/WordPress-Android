@@ -1,5 +1,0 @@
-20.2:
-- Vi har uppdaterat vyn Insikter i din webbplatsstatistik.
-- Logga in i din webbläsare genom att använda en QR-kod i appmenyn Jag.
-- Ladda upp HEIC-/HEIF-bilder via mediaväljaren.
-- Vi har åtgärdat ett fel som påverkade läsarämnen på andra språk.

@@ -1,5 +1,9 @@
 *** PLEASE FOLLOW THIS FORMAT: [<priority indicator, more stars = higher priority>] <description> [<PR URL>]
 
+20.5
+-----
+
+
 20.4
 -----
 * [*] [internal] Block Editor: Add React Native FastImage [https://github.com/WordPress/gutenberg/pull/42009]
@@ -7,12 +11,14 @@
 * [*] Block Editor: Fix incorrect spacing within Image alt text footnote [https://github.com/WordPress/gutenberg/pull/42504]
 * [***] Block Editor: Gallery and Image block - Performance improvements [https://github.com/WordPress/gutenberg/pull/42178]
 * [**] [WP.com and Jetpack sites with VideoPress] Prevent validation error when viewing VideoPress markup within app [https://github.com/Automattic/jetpack/pull/24548]
+* [*] [internal] Adds the "Jetpack powered" badge to non-core features [https://github.com/wordpress-mobile/WordPress-Android/pull/16940]
 
 20.3
 -----
 * [*] Block Editor: Add 'Insert from URL' option to Video block [https://github.com/WordPress/gutenberg/pull/41493]
 * [*] Block Editor: Image block copies the alt text from the media library when selecting an item [https://github.com/WordPress/gutenberg/pull/41839]
 * [*] Block Editor: Introduce "block recovery" option for invalid blocks [https://github.com/WordPress/gutenberg/pull/41988]
+* [**] Block Editor: Fix a crash when scrolling posts containing Embed blocks [https://github.com/wordpress-mobile/gutenberg-mobile/pull/5033]
 
 20.2
 -----

@@ -116,7 +116,7 @@ class StatsSiteProviderTest : BaseUnitTest() {
             event = it.getContentIfNotHandled()
         }
 
-        for (i in 0..2) {
+        (0..2).forEach {
             statsSiteProvider.onSiteChanged(OnSiteChanged(1))
         }
 
@@ -134,7 +134,7 @@ class StatsSiteProviderTest : BaseUnitTest() {
             event = it.getContentIfNotHandled()
         }
 
-        for (i in 0..3) {
+        (0..3).forEach {
             statsSiteProvider.onSiteChanged(OnSiteChanged(1))
         }
 

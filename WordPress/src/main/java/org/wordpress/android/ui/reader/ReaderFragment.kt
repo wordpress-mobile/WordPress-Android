@@ -21,12 +21,13 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.MAIN
-import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.databinding.ReaderFragmentLayoutBinding
 import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.ui.ScrollableViewInitializedListener
+import org.wordpress.android.ui.main.WPMainNavigationView.PageType.READER
+import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.quickstart.QuickStartEvent
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
@@ -40,13 +41,12 @@ import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.ContentUiState.TabUiState
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString.UiStringText
-import org.wordpress.android.util.JetpackBannerUtils
+import org.wordpress.android.util.JetpackBrandingUtils
 import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.SnackbarItem
 import org.wordpress.android.util.SnackbarItem.Action
 import org.wordpress.android.util.SnackbarItem.Info
 import org.wordpress.android.util.SnackbarSequencer
-import org.wordpress.android.util.config.JetpackPoweredFeatureConfig
 import org.wordpress.android.viewmodel.observeEvent
 import org.wordpress.android.widgets.QuickStartFocusPoint
 import java.util.EnumSet
@@ -57,7 +57,7 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var uiHelpers: UiHelpers
     @Inject lateinit var quickStartUtilsWrapper: QuickStartUtilsWrapper
-    @Inject lateinit var jetpackPoweredFeatureConfig: JetpackPoweredFeatureConfig
+    @Inject lateinit var jetpackBrandingUtils: JetpackBrandingUtils
     @Inject lateinit var snackbarSequencer: SnackbarSequencer
     private lateinit var viewModel: ReaderViewModel
 
@@ -211,6 +211,12 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
             )
         }
 
+        viewModel.showJetpackPoweredBottomSheet.observeEvent(viewLifecycleOwner) {
+            JetpackPoweredBottomSheetFragment
+                    .newInstance(it, READER)
+                    .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
+        }
+
         viewModel.start()
     }
 
@@ -316,14 +322,14 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
 
     override fun onScrollableViewInitialized(containerId: Int) {
         binding?.appBar?.liftOnScrollTargetViewId = containerId
-        if (jetpackPoweredFeatureConfig.isEnabled() && !BuildConfig.IS_JETPACK_APP) {
+        if (jetpackBrandingUtils.shouldShowJetpackBranding()) {
             binding?.root?.post {
                 // post is used to create a minimal delay here. containerId changes just before
                 // onScrollableViewInitialized is called, and findViewById can't find the new id before the delay.
                 val jetpackBannerView = binding?.jetpackBanner?.root ?: return@post
                 val scrollableView = binding?.root?.findViewById<View>(containerId) as? RecyclerView ?: return@post
-                JetpackBannerUtils.showJetpackBannerIfScrolledToTop(jetpackBannerView, scrollableView)
-                JetpackBannerUtils.initJetpackBannerAnimation(jetpackBannerView, scrollableView)
+                jetpackBrandingUtils.showJetpackBannerIfScrolledToTop(jetpackBannerView, scrollableView)
+                jetpackBrandingUtils.initJetpackBannerAnimation(jetpackBannerView, scrollableView)
             }
         }
     }

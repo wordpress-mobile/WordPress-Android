@@ -19,6 +19,8 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.StatsFragmentBinding
 import org.wordpress.android.ui.ScrollableViewInitializedListener
+import org.wordpress.android.ui.main.WPMainNavigationView.PageType.MY_SITE
+import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.stats.refresh.StatsViewModel.StatsModuleUiModel
 import org.wordpress.android.ui.stats.refresh.lists.StatsListFragment
@@ -126,6 +128,14 @@ class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializ
                 swipeToRefreshHelper.setEnabled(true)
             }
             return@setOnTouchListener false
+        }
+
+        viewModel.showJetpackPoweredBottomSheet.observeEvent(viewLifecycleOwner) {
+            if (isFirstStart) {
+                JetpackPoweredBottomSheetFragment
+                        .newInstance(it, MY_SITE)
+                        .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
+            }
         }
     }
 

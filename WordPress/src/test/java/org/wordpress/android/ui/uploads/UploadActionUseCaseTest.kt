@@ -542,6 +542,7 @@ class UploadActionUseCaseTest {
             return uploadServiceFacade
         }
 
+        @Suppress("LongParameterList")
         private fun createPostModel(
             status: String = POST_STATE_DRAFT,
             isLocalDraft: Boolean = false,

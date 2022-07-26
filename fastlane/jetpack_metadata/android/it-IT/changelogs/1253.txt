@@ -1,0 +1,4 @@
+20.3:
+- Quando aggiungi un elemento nella libreria multimediale a un blocco Immagine, il testo alternativo dell'elemento viene fornito con esso.
+- Puoi inserire elementi multimediali da un URL nei blocchi Video.
+- Usa l'opzione di ripristino del blocco per riportare il contenuto non previsto o non valido in un blocco.

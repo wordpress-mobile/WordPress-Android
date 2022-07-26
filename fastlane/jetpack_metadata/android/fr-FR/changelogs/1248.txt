@@ -1,5 +1,0 @@
-20.2 :
-- Nous avons mis à jour la section Tendances des statistiques de votre site.
-- Vous pouvez vous connecter depuis votre navigateur grâce au QR code du menu Moi dans l’application.
-- Vous pouvez charger des images HEIC/HEIF via le sélecteur de médias.
-- Nous avons corrigé un bug qui affectait les thèmes du Lecteur dans d’autres langues.

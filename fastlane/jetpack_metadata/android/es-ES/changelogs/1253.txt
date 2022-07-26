@@ -1,0 +1,4 @@
+20.3:
+- Cuando añades un elemento en la biblioteca de medios a un bloque de imagen el texto alt está incluido.
+- Puedes insertar medios desde una URL en los bloques de vídeo.
+- Usa la opción de recuperación de bloques para recuperar contenido inesperado o no válido de un bloque.
