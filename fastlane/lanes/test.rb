@@ -28,7 +28,8 @@ platform :android do
      version: 28,
      test_apk_path: File.join(apk_dir, 'androidTest', 'wordpressVanilla', 'debug', 'org.wordpress.android-wordpress-vanilla-debug-androidTest.apk'),
      apk_path: File.join(apk_dir, 'wordpressVanilla', 'debug', 'org.wordpress.android-wordpress-vanilla-debug.apk'),
-     results_output_dir: File.join(PROJECT_ROOT_FOLDER, 'build', 'instrumented-tests')
+     results_output_dir: File.join(PROJECT_ROOT_FOLDER, 'build', 'instrumented-tests'),
+     test-targets: notPackage org.wordpress.android.ui.screenshots
    )
   end
 end
