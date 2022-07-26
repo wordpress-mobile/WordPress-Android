@@ -1,9 +1,9 @@
 plugins {
-    id "com.android.library"
-    id "org.jetbrains.kotlin.android"
-    id "org.jetbrains.kotlin.android.extensions"
-    id "org.jetbrains.kotlin.kapt"
-    id "com.automattic.android.publish-to-s3"
+    alias(sharedLibs.plugins.android.library)
+    alias(sharedLibs.plugins.kotlin.android)
+    alias(sharedLibs.plugins.kotlin.android.extensions)
+    alias(sharedLibs.plugins.kotlin.kapt)
+    alias(sharedLibs.plugins.automattic.publishToS3)
 }
 
 android {
@@ -58,46 +58,46 @@ android.buildTypes.all { buildType ->
 }
 
 dependencies {
-    implementation "androidx.appcompat:appcompat:$appcompat_version"
-    implementation "androidx.recyclerview:recyclerview:1.0.0"
+    implementation sharedLibs.androidx.appcompat
+    implementation sharedLibs.androidx.recyclerview
 
-    implementation "androidx.exifinterface:exifinterface:1.0.0"
+    implementation sharedLibs.androidx.exifinterface
 
-    // WordPress libs
-    implementation("org.wordpress:utils:$wordPressUtilsVersion") {
+    implementation(sharedLibs.wordpress.utils) {
         // Using official volley package
         exclude group: "com.mcxiaoke.volley"
         exclude group: "com.android.support"
     }
 
     // Custom WellSql version
-    api "org.wordpress:wellsql:$wellSqlVersion"
-    kapt "org.wordpress.wellsql:wellsql-processor:$wellSqlVersion"
+    api sharedLibs.wellsql
+    kapt sharedLibs.wellsql.processor
 
     // FluxC annotations
     api fluxcAnnotationsProjectDependency
     kapt fluxcProcessorProjectDependency
 
     // External libs
-    api 'org.greenrobot:eventbus:3.3.1'
-    api 'com.squareup.okhttp3:okhttp:4.9.0'
-    implementation 'com.squareup.okhttp3:okhttp-urlconnection:4.9.0'
-    api 'com.android.volley:volley:1.1.1'
-    implementation 'com.google.code.gson:gson:2.8.5'
-    implementation 'org.apache.commons:commons-text:1.1'
-    api "androidx.paging:paging-runtime:2.1.2"
-    implementation "androidx.room:room-runtime:$roomVersion"
-    kapt "androidx.room:room-compiler:$roomVersion"
-    implementation "androidx.room:room-ktx:$roomVersion"
+    api sharedLibs.eventbus
+    api sharedLibs.squareup.okhttp3
+    implementation sharedLibs.squareup.okhttp3.urlconnection
+    api sharedLibs.volley
+    implementation sharedLibs.google.gson
+
+    implementation sharedLibs.apache.commons.text
+    api sharedLibs.androidx.paging.runtime
+    implementation sharedLibs.androidx.room.runtime
+    kapt sharedLibs.androidx.room.compiler
+    implementation sharedLibs.androidx.room.ktx
 
     // Dagger
-    implementation "com.google.dagger:dagger:$daggerVersion"
-    kapt "com.google.dagger:dagger-compiler:$daggerVersion"
-    compileOnly 'org.glassfish:javax.annotation:10.0-b28'
+    implementation sharedLibs.google.dagger
+    kapt sharedLibs.google.dagger.compiler
+    compileOnly sharedLibs.glassfish.javax.annotation
 
     // Coroutines
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinCoroutinesVersion"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinCoroutinesVersion"
+    implementation sharedLibs.kotlinx.coroutines.core
+    implementation sharedLibs.kotlinx.coroutines.android
 
     // Encrypted Logging
     api "com.goterl:lazysodium-android:5.0.2@aar"
