@@ -30,11 +30,10 @@ public class SignUpTests extends BaseTest {
         new SignupFlow().chooseContinueWithWpCom()
                         .enterEmail(E2E_SIGNUP_EMAIL)
                         .openMagicLink()
-                        .checkEpilogue(
-                                E2E_SIGNUP_DISPLAY_NAME,
-                                E2E_SIGNUP_USERNAME)
+                        .checkEpilogue(E2E_SIGNUP_DISPLAY_NAME, E2E_SIGNUP_USERNAME)
                         .enterPassword(E2E_SIGNUP_PASSWORD)
                         .dismissInterstitial()
+                        .dismissJetpackAd()
                         .confirmSignup();
     }
 }

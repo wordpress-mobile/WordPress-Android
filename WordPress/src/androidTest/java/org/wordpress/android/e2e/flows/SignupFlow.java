@@ -83,6 +83,12 @@ public class SignupFlow {
         return this;
     }
 
+    public SignupFlow dismissJetpackAd() {
+        // Dismiss post-signup JP ad
+        clickOn(onView(withId(R.id.secondary_button)));
+
+        return this;
+    }
     public void confirmSignup() {
         // Confirm signup
         waitForElementToBeDisplayed(R.id.nav_sites);

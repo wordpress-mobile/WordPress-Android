@@ -2,7 +2,6 @@ package org.wordpress.android.e2e;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.wordpress.android.e2e.flows.LoginFlow;
 import org.wordpress.android.support.BaseTest;
