@@ -51,8 +51,8 @@ public class LoginTests extends BaseTest {
                        .confirmLogin(false);
     }
 
-    @Test
     @Ignore("Ignored temporarily. This sometimes fail on CI while running with whole test suite.")
+    @Test
     public void loginWithMagicLink() {
         new LoginFlow().chooseContinueWithWpCom()
                        .enterEmailAddress(E2E_WP_COM_USER_EMAIL)
