@@ -382,11 +382,6 @@ abstract class ViewModelModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(MeViewModel.class)
-    abstract ViewModel meViewModel(MeViewModel viewModel);
-
-    @Binds
-    @IntoMap
     @ViewModelKey(PostListCreateMenuViewModel.class)
     abstract ViewModel postListCreateMenuViewModel(PostListCreateMenuViewModel postListCreateMenuViewModel);
 
