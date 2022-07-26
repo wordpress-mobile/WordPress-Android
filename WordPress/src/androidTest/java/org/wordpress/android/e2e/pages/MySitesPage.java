@@ -34,6 +34,7 @@ import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.isA;
 import static org.wordpress.android.support.WPSupportUtils.clickOn;
+import static org.wordpress.android.support.WPSupportUtils.dismissJetpackAdIfPresent;
 import static org.wordpress.android.support.WPSupportUtils.getTranslatedString;
 import static org.wordpress.android.support.WPSupportUtils.idleFor;
 import static org.wordpress.android.support.WPSupportUtils.isElementDisplayed;
@@ -160,16 +161,6 @@ public class MySitesPage {
         } else {
             clickItemWithText(R.string.backup);
         }
-    }
-
-    public MySitesPage dismissJetpackAdIfPresent() {
-        // Dismiss Jetpack ad that might be shown after sign-up
-        // or after opening Stats
-        if (isElementDisplayed(onView(withText("Jetpack powered")))) {
-            clickOn(onView(withId(R.id.secondary_button)));
-        }
-
-        return this;
     }
 
     public StatsPage goToStats() {

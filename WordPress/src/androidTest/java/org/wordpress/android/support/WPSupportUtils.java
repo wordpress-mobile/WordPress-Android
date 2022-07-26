@@ -818,4 +818,12 @@ public class WPSupportUtils {
             swipeCount += 1;
         }
     }
+
+    public static void dismissJetpackAdIfPresent() {
+        // Dismiss Jetpack ad that might be shown after sign-up
+        // or after opening Stats
+        if (isElementDisplayed(onView(withText("Jetpack powered")))) {
+            clickOn(onView(withId(R.id.secondary_button)));
+        }
+    }
 }
