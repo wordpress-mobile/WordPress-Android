@@ -64,6 +64,7 @@ import org.wordpress.android.models.NotificationsSettings.Type;
 import org.wordpress.android.ui.WPLaunchActivity;
 import org.wordpress.android.ui.bloggingreminders.BloggingReminderUtils;
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel;
+import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment;
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.prefs.notifications.FollowedBlogsProvider.PreferenceModel;
@@ -227,6 +228,11 @@ public class NotificationsSettingsFragment extends PreferenceFragment
         if (mJetpackBrandingUtils.shouldShowJetpackBranding()) {
             LayoutInflater inflater = LayoutInflater.from(getContext());
             final JetpackBadgeFooterBinding binding = JetpackBadgeFooterBinding.inflate(inflater);
+            binding.jetpackBadge.getRoot().setOnClickListener(v ->
+                    new JetpackPoweredBottomSheetFragment().show(
+                            ((AppCompatActivity) getActivity()).getSupportFragmentManager(),
+                            JetpackPoweredBottomSheetFragment.TAG)
+            );
             listView.addFooterView(binding.getRoot(), null, false);
         }
     }

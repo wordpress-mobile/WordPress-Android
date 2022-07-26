@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.prefs.notifications;
 
+import dagger.hilt.android.AndroidEntryPoint;
 import android.app.FragmentManager;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -24,7 +25,7 @@ import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.prefs.notifications.PrefMainSwitchToolbarView.MainSwitchToolbarListener;
 
-// Simple wrapper activity for NotificationsSettingsFragment
+@AndroidEntryPoint
 public class NotificationsSettingsActivity extends LocaleAwareActivity
         implements MainSwitchToolbarListener {
     private TextView mMessageTextView;
