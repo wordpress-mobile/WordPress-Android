@@ -1,4 +1,5 @@
 # Default Config: https://github.com/detekt/detekt/blob/main/detekt-core/src/main/resources/default-detekt-config.yml
+# Formatting Config: https://github.com/detekt/detekt/blob/main/detekt-formatting/src/main/resources/config/config.yml
 
 config:
   warningsAsErrors: true
@@ -6,10 +7,6 @@ config:
 complexity:
   LongParameterList:
     ignoreAnnotated: ['Inject']
-
-formatting:
-  android: true
-  autoCorrect: false
 
 naming:
   FunctionNaming:
