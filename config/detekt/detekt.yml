@@ -5,7 +5,7 @@ config:
 
 complexity:
   LongParameterList:
-    ignoreAnnotated: ['javax.inject.Inject', 'javax.annotation.Generated']
+    ignoreAnnotated: ['Inject']
 
 formatting:
   android: true
