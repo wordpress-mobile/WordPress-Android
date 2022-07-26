@@ -33,7 +33,7 @@ public class SignUpTests extends BaseTest {
                         .checkEpilogue(E2E_SIGNUP_DISPLAY_NAME, E2E_SIGNUP_USERNAME)
                         .enterPassword(E2E_SIGNUP_PASSWORD)
                         .dismissInterstitial()
-                        .dismissJetpackAd()
+                        .dismissJetpackAdIfPresent()
                         .confirmSignup();
     }
 }

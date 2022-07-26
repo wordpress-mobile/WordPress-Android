@@ -15,6 +15,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 import static org.wordpress.android.support.WPSupportUtils.clickOn;
+import static org.wordpress.android.support.WPSupportUtils.isElementDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.populateTextField;
 import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDisplayed;
 
@@ -83,12 +84,16 @@ public class SignupFlow {
         return this;
     }
 
-    public SignupFlow dismissJetpackAd() {
-        // Dismiss post-signup JP ad
-        clickOn(onView(withId(R.id.secondary_button)));
-
+    public SignupFlow dismissJetpackAdIfPresent() {
+        // Dismiss Jetpack ad that might be shown after sign-up
+        // or after opening Stats
+        if (isElementDisplayed(onView(withText("Jetpack powered")))) {
+            clickOn(onView(withId(R.id.secondary_button)));
+        }
+        
         return this;
     }
+
     public void confirmSignup() {
         // Confirm signup
         waitForElementToBeDisplayed(R.id.nav_sites);

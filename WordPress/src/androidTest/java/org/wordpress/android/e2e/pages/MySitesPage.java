@@ -16,6 +16,7 @@ import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.wordpress.android.R;
+import org.wordpress.android.e2e.flows.SignupFlow;
 import org.wordpress.android.ui.prefs.WPPreference;
 
 import static androidx.test.espresso.Espresso.onData;
@@ -162,10 +163,20 @@ public class MySitesPage {
         }
     }
 
+    public MySitesPage dismissJetpackAdIfPresent() {
+        // Dismiss Jetpack ad that might be shown after sign-up
+        // or after opening Stats
+        if (isElementDisplayed(onView(withText("Jetpack powered")))) {
+            clickOn(onView(withId(R.id.secondary_button)));
+        }
+
+        return this;
+    }
+
     public StatsPage goToStats() {
         goToMenuTab();
         clickQuickActionOrSiteMenuItem(R.id.quick_action_stats_button, R.string.stats);
-
+        dismissJetpackAdIfPresent();
         waitForElementToBeDisplayedWithoutFailure(R.id.tabLayout);
 
         // Wait for the stats to load
