@@ -519,13 +519,13 @@ public class MediaGridFragment extends Fragment
     private List<MediaModel> getMediaList() {
         switch (mFilter) {
             case FILTER_IMAGES:
-                return mMediaStore.getSiteImages(mSite);
+                return mMediaStore.getSiteImages(mSite, mAfter, mBefore);
             case FILTER_DOCUMENTS:
-                return mMediaStore.getSiteDocuments(mSite);
+                return mMediaStore.getSiteDocuments(mSite, mAfter, mBefore);
             case FILTER_VIDEOS:
-                return mMediaStore.getSiteVideos(mSite);
+                return mMediaStore.getSiteVideos(mSite, mAfter, mBefore);
             case FILTER_AUDIO:
-                return mMediaStore.getSiteAudio(mSite);
+                return mMediaStore.getSiteAudio(mSite, mAfter, mBefore);
             default:
                 return mMediaStore.getAllSiteMedia(mSite, mAfter, mBefore);
         }
