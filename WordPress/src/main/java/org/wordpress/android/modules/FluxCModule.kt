@@ -17,4 +17,4 @@ import org.wordpress.android.fluxc.module.ReleaseToolsModule
             DatabaseModule::class
         ]
 )
-abstract class FluxCModule
+interface FluxCModule
