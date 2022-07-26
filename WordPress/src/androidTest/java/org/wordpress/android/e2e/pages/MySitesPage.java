@@ -16,7 +16,6 @@ import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.wordpress.android.R;
-import org.wordpress.android.e2e.flows.SignupFlow;
 import org.wordpress.android.ui.prefs.WPPreference;
 
 import static androidx.test.espresso.Espresso.onData;
