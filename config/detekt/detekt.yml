@@ -11,6 +11,10 @@ formatting:
   android: true
   autoCorrect: false
 
+naming:
+  FunctionNaming:
+    ignoreAnnotated: ['Composable']
+
 style:
   ForbiddenComment:
     values:
