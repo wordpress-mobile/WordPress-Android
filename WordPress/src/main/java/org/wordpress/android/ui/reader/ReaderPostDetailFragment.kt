@@ -35,6 +35,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.Factory
 import androidx.recyclerview.widget.DefaultItemAnimator
@@ -46,6 +47,7 @@ import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.elevation.ElevationOverlayProvider
 import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -77,6 +79,7 @@ import org.wordpress.android.ui.main.SitePickerActivity
 import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.media.MediaPreviewActivity
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.OpenUrlType
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.PhotoViewerOption
@@ -144,6 +147,7 @@ import java.net.HttpURLConnection
 import java.util.EnumSet
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class ReaderPostDetailFragment : ViewPagerFragment(),
         WPMainActivity.OnActivityBackPressedListener,
         ScrollDirectionListener,
@@ -203,7 +207,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
     private var fileForDownload: String? = null
 
-    private lateinit var viewModel: ReaderPostDetailViewModel
+    private val viewModel: ReaderPostDetailViewModel by viewModels()
     private lateinit var conversationViewModel: ConversationNotificationsViewModel
 
     @Inject internal lateinit var accountStore: AccountStore
@@ -485,7 +489,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     }
 
     private fun initViewModel(binding: ReaderFragmentPostDetailBinding, savedInstanceState: Bundle?) {
-        viewModel = ViewModelProvider(this, viewModelFactory).get(ReaderPostDetailViewModel::class.java)
         conversationViewModel = ViewModelProvider(this, viewModelFactory).get(
                 ConversationNotificationsViewModel::class.java
         )
@@ -502,6 +505,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         viewModel.start(isRelatedPost = isRelatedPost, isFeed = isFeed, interceptedUri = interceptedUri)
     }
 
+    @Suppress("LongMethod")
     private fun initObservers(binding: ReaderFragmentPostDetailBinding) {
         viewModel.uiState.observe(viewLifecycleOwner, {
             uiHelpers.updateVisibility(binding.textError, it.errorVisible)
@@ -566,6 +570,12 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             viewModel.commentSnippetState.observe(viewLifecycleOwner, { state ->
                 manageCommentSnippetUiState(state)
             })
+        }
+
+        viewModel.showJetpackPoweredBottomSheet.observeEvent(viewLifecycleOwner) {
+            JetpackPoweredBottomSheetFragment
+                    .newInstance()
+                    .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
         }
     }
 
@@ -701,7 +711,14 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
     private fun renderUiState(state: ReaderPostDetailsUiState, binding: ReaderFragmentPostDetailBinding) {
         onPostExecuteShowPost()
-        binding.jetpackBadge.root.isVisible = jetpackBrandingUtils.shouldShowJetpackBranding()
+
+        if (jetpackBrandingUtils.shouldShowJetpackBranding()) {
+            binding.jetpackBadge.root.isVisible = true
+            binding.jetpackBadge.root.setOnClickListener {
+                viewModel.showJetpackPoweredBottomSheet()
+            }
+        }
+
         binding.headerView.updatePost(state.headerUiState)
         showOrHideMoreMenu(state)
 

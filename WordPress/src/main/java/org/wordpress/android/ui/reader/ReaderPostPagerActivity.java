@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.reader;
 
+import dagger.hilt.android.AndroidEntryPoint;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
@@ -92,6 +93,7 @@ import javax.inject.Inject;
  *
  * Will also handle jumping to the comments section, liking a commend and liking a post directly
  */
+@AndroidEntryPoint
 public class ReaderPostPagerActivity extends LocaleAwareActivity {
     /**
      * Type of URL intercepted
