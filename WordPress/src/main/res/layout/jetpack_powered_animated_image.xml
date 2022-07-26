@@ -6,7 +6,6 @@
 
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/illustration_view"
-        android:background="@color/jetpack_green_0"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="top"
@@ -19,7 +18,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:lottie_autoPlay="true"
-        app:lottie_loop="false"
-        app:lottie_rawRes="@raw/wp2jp" />
+        app:lottie_loop="false" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

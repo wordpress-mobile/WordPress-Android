@@ -13,7 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_end="160dp" />
+        app:layout_constraintGuide_end="130dp" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/content_recycler_view"
@@ -21,12 +21,12 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/margin_extra_extra_medium_large"
         android:layout_marginStart="@dimen/margin_extra_extra_medium_large"
-        android:layout_marginTop="@dimen/my_site_bottom_spacing"
+        android:layout_marginTop="@dimen/margin_medium"
         android:clipToPadding="false"
         android:descendantFocusability="beforeDescendants"
         android:scrollbars="vertical"
         app:layout_constrainedHeight="true"
-        app:layout_constraintBottom_toTopOf="@+id/guideline3"
+        app:layout_constraintBottom_toTopOf="@+id/primary_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/handle"
@@ -39,18 +39,17 @@
         android:layout_gravity="center"
         android:layout_marginEnd="@dimen/margin_extra_extra_medium_large"
         android:layout_marginStart="@dimen/margin_extra_extra_medium_large"
-        android:layout_marginTop="@dimen/margin_extra_extra_medium_large"
         android:backgroundTint="@color/jetpack_green_40"
         android:gravity="center"
         android:minHeight="@dimen/margin_extra_extra_large"
         android:text="@string/wp_jetpack_get_new_jetpack_app"
         android:textAppearance="?attr/textAppearanceSubtitle2"
         android:textColor="?attr/colorOnSecondary"
-        app:layout_constraintTop_toBottomOf="@id/guideline3"
+        app:layout_constraintTop_toBottomOf="@id/content_recycler_view"
         app:layout_constraintBottom_toTopOf="@id/secondary_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_goneMarginBottom="@dimen/margin_extra_extra_medium_large" />
+        app:layout_goneMarginBottom="@dimen/margin_extra_large" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/secondary_button"
@@ -67,6 +66,7 @@
         android:textAppearance="?attr/textAppearanceSubtitle2"
         android:textAllCaps="false"
         android:textColor="@color/jetpack_green"
+        app:layout_constraintTop_toBottomOf="@id/primary_button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

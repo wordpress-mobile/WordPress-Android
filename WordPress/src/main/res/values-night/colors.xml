@@ -25,6 +25,7 @@
     <color name="jetpack_banner_background">@color/jetpack_green_90</color>
     <color name="jetpack_banner_divider">@color/gray_80</color>
     <color name="jetpack_badge_background">@color/jetpack_green_90</color>
+    <color name="jetpack_powered_bottom_sheet_background">@color/jetpack_green_100</color>
 
     <!-- Reader -->
 
