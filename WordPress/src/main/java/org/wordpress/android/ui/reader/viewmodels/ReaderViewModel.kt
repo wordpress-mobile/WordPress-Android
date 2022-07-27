@@ -36,6 +36,7 @@ import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.BuildConfigWrapper
+import org.wordpress.android.util.JetpackBrandingUtils
 import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.config.JetpackPoweredBottomSheetFeatureConfig
 import org.wordpress.android.util.distinct
@@ -57,8 +58,7 @@ class ReaderViewModel @Inject constructor(
     private val accountStore: AccountStore,
     private val quickStartRepository: QuickStartRepository,
     private val selectedSiteRepository: SelectedSiteRepository,
-    private val jetpackPoweredBottomSheetFeatureConfig: JetpackPoweredBottomSheetFeatureConfig,
-    private val buildConfigWrapper: BuildConfigWrapper,
+    private val jetpackBrandingUtils: JetpackBrandingUtils,
     private val snackbarSequencer: SnackbarSequencer
         // todo: annnmarie removed this private val getFollowedTagsUseCase: GetFollowedTagsUseCase
 ) : ScopedViewModel(mainDispatcher) {
@@ -102,13 +102,11 @@ class ReaderViewModel @Inject constructor(
         if (tagsRequireUpdate()) _updateTags.value = Event(Unit)
         if (initialized) return
         loadTabs()
-        showJetpackPoweredBottomSheet()
+        if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) showJetpackPoweredBottomSheet()
     }
 
     private fun showJetpackPoweredBottomSheet() {
-        _showJetpackPoweredBottomSheet.value = Event(
-                jetpackPoweredBottomSheetFeatureConfig.isEnabled() && !buildConfigWrapper.isJetpackApp
-        )
+        _showJetpackPoweredBottomSheet.value = Event(true)
     }
 
     private fun loadTabs() {

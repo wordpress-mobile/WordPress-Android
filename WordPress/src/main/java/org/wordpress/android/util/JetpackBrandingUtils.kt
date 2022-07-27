@@ -9,11 +9,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.R
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.util.config.JetpackPoweredBottomSheetFeatureConfig
 import org.wordpress.android.util.config.JetpackPoweredFeatureConfig
 import javax.inject.Inject
 
 class JetpackBrandingUtils @Inject constructor(
     private val jetpackPoweredFeatureConfig: JetpackPoweredFeatureConfig,
+    private val jetpackPoweredBottomSheetFeatureConfig: JetpackPoweredBottomSheetFeatureConfig,
     private val selectedSiteRepository: SelectedSiteRepository,
     private val siteUtilsWrapper: SiteUtilsWrapper,
     private val buildConfigWrapper: BuildConfigWrapper
@@ -23,6 +25,10 @@ class JetpackBrandingUtils @Inject constructor(
         val isWpComSite = selectedSite != null && siteUtilsWrapper.isAccessedViaWPComRest(selectedSite)
 
         return isWpComSite && jetpackPoweredFeatureConfig.isEnabled() && !buildConfigWrapper.isJetpackApp
+    }
+
+    fun shouldShowJetpackPoweredBottomSheet(): Boolean {
+        return jetpackPoweredBottomSheetFeatureConfig.isEnabled() && !buildConfigWrapper.isJetpackApp
     }
 
     fun showJetpackBannerIfScrolledToTop(banner: View, scrollableView: RecyclerView) {

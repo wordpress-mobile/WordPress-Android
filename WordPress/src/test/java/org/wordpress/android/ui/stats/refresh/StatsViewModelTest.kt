@@ -40,10 +40,9 @@ import org.wordpress.android.ui.stats.refresh.utils.SelectedSectionManager
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.trackGranular
 import org.wordpress.android.ui.utils.UiString.UiStringRes
-import org.wordpress.android.util.BuildConfigWrapper
+import org.wordpress.android.util.JetpackBrandingUtils
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.util.config.JetpackPoweredBottomSheetFeatureConfig
 import org.wordpress.android.util.config.MySiteDashboardTodaysStatsCardFeatureConfig
 import org.wordpress.android.util.config.StatsRevampV2FeatureConfig
 import org.wordpress.android.viewmodel.Event
@@ -65,8 +64,7 @@ class StatsViewModelTest : BaseUnitTest() {
     @Mock lateinit var notificationsTracker: SystemNotificationsTracker
     @Mock lateinit var todaysStatsCardFeatureConfig: MySiteDashboardTodaysStatsCardFeatureConfig
     @Mock lateinit var statsRevampV2FeatureConfig: StatsRevampV2FeatureConfig
-    @Mock lateinit var jetpackPoweredBottomSheetFeatureConfig: JetpackPoweredBottomSheetFeatureConfig
-    @Mock lateinit var buildConfigWrapper: BuildConfigWrapper
+    @Mock lateinit var jetpackBrandingUtils: JetpackBrandingUtils
     private lateinit var viewModel: StatsViewModel
     private val _liveSelectedSection = MutableLiveData<StatsSection>()
     private val liveSelectedSection: LiveData<StatsSection> = _liveSelectedSection
@@ -91,8 +89,7 @@ class StatsViewModelTest : BaseUnitTest() {
                 notificationsTracker,
                 todaysStatsCardFeatureConfig,
                 statsRevampV2FeatureConfig,
-                jetpackPoweredBottomSheetFeatureConfig,
-                buildConfigWrapper,
+                jetpackBrandingUtils
         )
 
         viewModel.start(1, false, null, null, false, null)
@@ -246,8 +243,7 @@ class StatsViewModelTest : BaseUnitTest() {
         viewModel.showJetpackPoweredBottomSheet.observeForever {
             showJetpackPoweredBottomSheetEvent.add(it)
         }
-        whenever(jetpackPoweredBottomSheetFeatureConfig.isEnabled()).thenReturn(true)
-        whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
+        whenever(jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()).thenReturn(true)
 
         startViewModel()
 
@@ -256,11 +252,11 @@ class StatsViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given wp app, when jetpack powered bottom sheet feature is off, then jp powered bottom sheet is not shown`() {
-        val showJetpackPoweredBottomSheetEvent = mutableListOf<Event<Boolean>>()
+        val showJetpackPoweredBottomSheetEvent = mutableListOf<Event<Boolean>>(Event(false))
         viewModel.showJetpackPoweredBottomSheet.observeForever {
             showJetpackPoweredBottomSheetEvent.add(it)
         }
-        whenever(jetpackPoweredBottomSheetFeatureConfig.isEnabled()).thenReturn(false)
+        whenever(jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()).thenReturn(false)
 
         startViewModel()
 
