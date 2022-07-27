@@ -14,12 +14,14 @@ import android.view.View.OnClickListener
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCrop.Options
 import com.yalantis.ucrop.UCropActivity
+import dagger.hilt.android.AndroidEntryPoint
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -48,6 +50,7 @@ import org.wordpress.android.ui.accounts.HelpActivity.Origin.ME_SCREEN_HELP
 import org.wordpress.android.ui.main.MeViewModel.RecommendAppUiState
 import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
+import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils
 import org.wordpress.android.ui.photopicker.MediaPickerConstants
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher
@@ -76,6 +79,7 @@ import org.wordpress.android.viewmodel.observeEvent
 import java.io.File
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
     private var disconnectProgressDialog: ProgressDialog? = null
     private var isUpdatingGravatar = false
@@ -93,7 +97,7 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
     @Inject lateinit var unifiedAboutFeatureConfig: UnifiedAboutFeatureConfig
     @Inject lateinit var qrCodeAuthFlowFeatureConfig: QRCodeAuthFlowFeatureConfig
     @Inject lateinit var jetpackBrandingUtils: JetpackBrandingUtils
-    private lateinit var viewModel: MeViewModel
+    private val viewModel: MeViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -122,7 +126,12 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
             }
         }
 
-        jetpackBadge.root.isVisible = jetpackBrandingUtils.shouldShowJetpackBranding()
+        if (jetpackBrandingUtils.shouldShowJetpackBranding()) {
+            jetpackBadge.root.isVisible = true
+            jetpackBadge.jetpackBadge.root.setOnClickListener {
+                viewModel.showJetpackPoweredBottomSheet()
+            }
+        }
 
         val showPickerListener = OnClickListener {
             AnalyticsTracker.track(ME_GRAVATAR_TAPPED)
@@ -157,8 +166,6 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
     }
 
     private fun MeFragmentBinding.setupObservers(savedInstanceState: Bundle?) {
-        viewModel = ViewModelProvider(this@MeFragment, viewModelFactory).get(MeViewModel::class.java)
-
         if (savedInstanceState != null) {
             if (savedInstanceState.getBoolean(IS_DISCONNECTING, false)) {
                 viewModel.openDisconnectDialog()
@@ -207,6 +214,12 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
 
         viewModel.showScanLoginCode.observeEvent(viewLifecycleOwner) {
             ActivityLauncher.startQRCodeAuthFlow(requireContext())
+        }
+
+        viewModel.showJetpackPoweredBottomSheet.observeEvent(viewLifecycleOwner) {
+            JetpackPoweredBottomSheetFragment
+                    .newInstance()
+                    .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
         }
     }
 
