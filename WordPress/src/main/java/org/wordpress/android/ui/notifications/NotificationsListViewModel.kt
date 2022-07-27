@@ -6,7 +6,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.util.BuildConfigWrapper
-import org.wordpress.android.util.config.JetpackPoweredFeatureConfig
+import org.wordpress.android.util.config.JetpackPoweredBottomSheetFeatureConfig
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
@@ -15,7 +15,7 @@ import javax.inject.Named
 @HiltViewModel
 class NotificationsListViewModel@Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
-    private val jetpackPoweredFeatureConfig: JetpackPoweredFeatureConfig,
+    private val jetpackPoweredBottomSheetFeatureConfig: JetpackPoweredBottomSheetFeatureConfig,
     private val buildConfigWrapper: BuildConfigWrapper
 ) : ScopedViewModel(mainDispatcher) {
     private val _showJetpackPoweredBottomSheet = MutableLiveData<Event<Boolean>>()
@@ -27,7 +27,7 @@ class NotificationsListViewModel@Inject constructor(
 
     private fun showJetpackPoweredBottomSheet() {
         _showJetpackPoweredBottomSheet.value = Event(
-                jetpackPoweredFeatureConfig.isEnabled() && !buildConfigWrapper.isJetpackApp
+                jetpackPoweredBottomSheetFeatureConfig.isEnabled() && !buildConfigWrapper.isJetpackApp
         )
     }
 }
