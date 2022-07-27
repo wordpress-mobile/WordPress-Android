@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.reader;
 
-import dagger.hilt.android.AndroidEntryPoint;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
@@ -79,6 +78,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
 
 /*
  * shows reader post detail fragments in a ViewPager - primarily used for easy swiping between

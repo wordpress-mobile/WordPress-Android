@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.prefs;
 
-import dagger.hilt.android.AndroidEntryPoint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -11,6 +10,8 @@ import androidx.appcompat.widget.Toolbar;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.LocaleAwareActivity;
+
+import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
 public class AppSettingsActivity extends LocaleAwareActivity {
