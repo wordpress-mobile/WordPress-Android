@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.compose.components
 
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.rememberScrollState
@@ -13,12 +14,13 @@ import androidx.compose.ui.Modifier
  */
 @Composable
 fun VerticalScrollBox(
+    scrollState: ScrollState = rememberScrollState(),
     modifier: Modifier = Modifier,
     alignment: Alignment = Alignment.TopStart,
     content: @Composable BoxScope.() -> Unit
 ) {
     Box(
-        modifier = modifier.then(Modifier.verticalScroll(rememberScrollState())),
+        modifier = modifier.then(Modifier.verticalScroll(scrollState)),
         contentAlignment = alignment,
         content = content
     )
