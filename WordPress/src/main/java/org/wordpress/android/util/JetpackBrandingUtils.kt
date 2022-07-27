@@ -21,14 +21,11 @@ class JetpackBrandingUtils @Inject constructor(
     private val buildConfigWrapper: BuildConfigWrapper
 ) {
     fun shouldShowJetpackBranding(): Boolean {
-        val selectedSite = selectedSiteRepository.getSelectedSite()
-        val isWpComSite = selectedSite != null && siteUtilsWrapper.isAccessedViaWPComRest(selectedSite)
-
-        return isWpComSite && jetpackPoweredFeatureConfig.isEnabled() && !buildConfigWrapper.isJetpackApp
+        return isWpComSite() && jetpackPoweredFeatureConfig.isEnabled() && !buildConfigWrapper.isJetpackApp
     }
 
     fun shouldShowJetpackPoweredBottomSheet(): Boolean {
-        return jetpackPoweredBottomSheetFeatureConfig.isEnabled() && !buildConfigWrapper.isJetpackApp
+        return isWpComSite() && jetpackPoweredBottomSheetFeatureConfig.isEnabled() && !buildConfigWrapper.isJetpackApp
     }
 
     fun showJetpackBannerIfScrolledToTop(banner: View, scrollableView: RecyclerView) {
@@ -75,5 +72,10 @@ class JetpackBrandingUtils @Inject constructor(
         if (window.context.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
             window.navigationBarColor = window.context.getColor(R.color.jetpack_banner_background)
         }
+    }
+
+    private fun isWpComSite(): Boolean {
+        val selectedSite = selectedSiteRepository.getSelectedSite()
+        return selectedSite != null && siteUtilsWrapper.isAccessedViaWPComRest(selectedSite)
     }
 }
