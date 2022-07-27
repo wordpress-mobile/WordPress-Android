@@ -31,7 +31,7 @@ public class BlockEditorTests extends BaseTest {
 
     @Parameterized.Parameters
     public static Object[][] data() {
-        return new Object[10][0];
+        return new Object[6][0];
     }
 
     String mTitle = "Hello Espresso!";
