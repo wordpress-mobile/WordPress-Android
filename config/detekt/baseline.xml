@@ -26,7 +26,6 @@
     <ID>ComplexMethod:PostListActionTracker.kt$fun trackPostListAction(site: SiteModel, buttonType: PostListButtonType, postData: PostModel, statsEvent: Stat)</ID>
     <ID>ComplexMethod:PostListDialogHelper.kt$PostListDialogHelper$fun onPositiveClickedForBasicDialog( instanceTag: String, trashPostWithLocalChanges: (Int) -> Unit, trashPostWithUnsavedChanges: (Int) -> Unit, deletePost: (Int) -> Unit, publishPost: (Int) -> Unit, updateConflictedPostWithRemoteVersion: (Int) -> Unit, editRestoredAutoSavePost: (Int) -> Unit, moveTrashedPostToDraft: (Int) -> Unit, resolveConflictsAndEditPost: (Int) -> Unit )</ID>
     <ID>ComplexMethod:PostListItemUiStateHelper.kt$PostListItemUiStateHelper$private fun createButtonTypes( postStatus: PostStatus, isLocalDraft: Boolean, isLocallyChanged: Boolean, uploadUiState: PostUploadUiState, siteHasCapabilitiesToPublish: Boolean, statsSupported: Boolean ): List&lt;PostListButtonType></ID>
-    <ID>ComplexMethod:ReaderPostBookmarkUseCase.kt$ReaderPostBookmarkUseCase$private fun trackEvent( bookmarked: Boolean, isBookmarkList: Boolean, post: ReaderPost, source: String )</ID>
     <ID>ComplexMethod:ReaderPostDetailFragment.kt$ReaderPostDetailFragment$private fun ReaderNavigationEvents.handleNavigationEvent()</ID>
     <ID>ComplexMethod:ReferrersUseCase.kt$ReferrersUseCase$override fun buildUiModel(domainModel: ReferrersModel, uiState: SelectedGroup): List&lt;BlockListItem></ID>
     <ID>ComplexMethod:SystemNotificationsTracker.kt$SystemNotificationsTracker$private fun NotificationType.toTypeValue(): String</ID>

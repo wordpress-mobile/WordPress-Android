@@ -60,7 +60,7 @@ class ReaderPostBookmarkUseCase @Inject constructor(
         return setToBookmarked
     }
 
-    @Suppress("UseCheckOrError")
+    @Suppress("ComplexMethod", "UseCheckOrError")
     private fun trackEvent(
         bookmarked: Boolean,
         isBookmarkList: Boolean,
