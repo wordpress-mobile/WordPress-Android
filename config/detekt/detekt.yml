@@ -1,4 +1,5 @@
 # Default Config: https://github.com/detekt/detekt/blob/main/detekt-core/src/main/resources/default-detekt-config.yml
+# Compose Config: https://detekt.dev/docs/introduction/compose/
 
 config:
   warningsAsErrors: true
@@ -6,12 +7,13 @@ config:
 complexity:
   LongParameterList:
     ignoreAnnotated: ['Inject', 'Composable']
+  LongMethod:
+    ignoreAnnotated: ['Composable']
 
 formatting:
   android: true
   autoCorrect: false
 
-# See: https://detekt.dev/docs/introduction/compose/
 naming:
   FunctionNaming:
     ignoreAnnotated: ['Composable']
@@ -23,5 +25,6 @@ style:
       - 'STOPSHIP:'
   MagicNumber:
     ignoreEnums: true
+    ignoreAnnotated: ['Composable']
   UnusedPrivateMember:
-    allowedNames: '(_|ignored|expected|serialVersionUID)|([A-Za-z0-9]*Preview)'
+    ignoreAnnotated: ['Composable']
