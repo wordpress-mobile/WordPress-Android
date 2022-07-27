@@ -820,8 +820,7 @@ public class WPSupportUtils {
     }
 
     public static void dismissJetpackAdIfPresent() {
-        // Dismiss Jetpack ad that might be shown after sign-up
-        // or after opening Stats
+        // Dismiss Jetpack ad that might be shown after Sign-Up or after opening Stats
         if (isElementDisplayed(onView(withText("Jetpack powered")))) {
             clickOn(onView(withId(R.id.secondary_button)));
         }
