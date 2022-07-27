@@ -8,6 +8,8 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 import org.wordpress.android.e2e.pages.BlockEditorPage;
 import org.wordpress.android.e2e.pages.MySitesPage;
 import org.wordpress.android.support.BaseTest;
@@ -16,6 +18,7 @@ import java.time.Instant;
 
 import dagger.hilt.android.testing.HiltAndroidTest;
 
+@RunWith(Parameterized.class)
 @HiltAndroidTest
 public class BlockEditorTests extends BaseTest {
     @Rule
@@ -25,6 +28,11 @@ public class BlockEditorTests extends BaseTest {
     public void setUp() {
         logoutIfNecessary();
         wpLogin();
+    }
+
+    @Parameterized.Parameters
+    public static Object[][] data() {
+        return new Object[10][0];
     }
 
     String mTitle = "Hello Espresso!";
