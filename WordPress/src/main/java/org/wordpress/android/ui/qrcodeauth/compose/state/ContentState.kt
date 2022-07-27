@@ -58,8 +58,8 @@ fun ContentState(uiState: QRCodeAuthUiState.Content) = with(uiState) {
                 actionButton.label?.let { label ->
                     PrimaryButton(
                             text = uiStringText(label),
-                            enabled = actionButton.isEnabled,
                             onClick = { actionButton.clickAction?.invoke() },
+                            enabled = actionButton.isEnabled
                     )
                 }
             }
@@ -69,8 +69,8 @@ fun ContentState(uiState: QRCodeAuthUiState.Content) = with(uiState) {
                 actionButton.label?.let { label ->
                     SecondaryButton(
                             text = uiStringText(label),
-                            enabled = actionButton.isEnabled,
                             onClick = { actionButton.clickAction?.invoke() },
+                            enabled = actionButton.isEnabled
                     )
                 }
             }

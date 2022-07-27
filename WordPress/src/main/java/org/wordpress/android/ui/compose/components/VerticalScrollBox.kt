@@ -14,8 +14,8 @@ import androidx.compose.ui.Modifier
  */
 @Composable
 fun VerticalScrollBox(
-    scrollState: ScrollState = rememberScrollState(),
     modifier: Modifier = Modifier,
+    scrollState: ScrollState = rememberScrollState(),
     alignment: Alignment = Alignment.TopStart,
     content: @Composable BoxScope.() -> Unit
 ) {
