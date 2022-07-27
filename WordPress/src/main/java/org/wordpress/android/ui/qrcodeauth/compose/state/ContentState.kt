@@ -59,7 +59,9 @@ fun ContentState(uiState: QRCodeAuthUiState.Content) = with(uiState) {
                     PrimaryButton(
                             text = uiStringText(label),
                             onClick = { actionButton.clickAction?.invoke() },
-                            enabled = actionButton.isEnabled
+                            enabled = actionButton.isEnabled,
+                            modifier = Modifier
+                                    .fillMaxWidth()
                     )
                 }
             }
@@ -70,7 +72,9 @@ fun ContentState(uiState: QRCodeAuthUiState.Content) = with(uiState) {
                     SecondaryButton(
                             text = uiStringText(label),
                             onClick = { actionButton.clickAction?.invoke() },
-                            enabled = actionButton.isEnabled
+                            enabled = actionButton.isEnabled,
+                            modifier = Modifier
+                                    .fillMaxWidth()
                     )
                 }
             }

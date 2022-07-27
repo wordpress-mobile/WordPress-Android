@@ -48,14 +48,18 @@ fun ErrorState(uiState: QRCodeAuthUiState.Error) = with(uiState) {
             if (actionButton.isVisible) {
                 PrimaryButton(
                         text = uiStringText(actionButton.label),
-                        onClick = { actionButton.clickAction.invoke() }
+                        onClick = { actionButton.clickAction.invoke() },
+                        modifier = Modifier
+                                .fillMaxWidth()
                 )
             }
         }
         secondaryActionButton?.let { actionButton ->
             SecondaryButton(
                     text = uiStringText(actionButton.label),
-                    onClick = { actionButton.clickAction.invoke() }
+                    onClick = { actionButton.clickAction.invoke() },
+                    modifier = Modifier
+                            .fillMaxWidth()
             )
         }
     }

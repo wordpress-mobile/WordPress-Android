@@ -20,15 +20,13 @@ fun Subtitle(
             textAlign = TextAlign.Center,
             fontSize = FontSize.Large.value,
             color = MaterialTheme.colors.error,
-            modifier = modifier.then(
-                    Modifier
-                            .wrapContentSize()
-                            .padding(
-                                    start = Margin.ExtraExtraMediumLarge.value,
-                                    end = Margin.ExtraExtraMediumLarge.value,
-                                    top = Margin.ExtraLarge.value + Margin.Small.value,
-                                    bottom = Margin.Medium.value
-                            )
-            )
+            modifier = modifier
+                    .wrapContentSize()
+                    .padding(
+                            start = Margin.ExtraExtraMediumLarge.value,
+                            end = Margin.ExtraExtraMediumLarge.value,
+                            top = Margin.ExtraLarge.value + Margin.Small.value,
+                            bottom = Margin.Medium.value
+                    )
     )
 }

@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.qrcodeauth.compose.components
 
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Button
 import androidx.compose.material.Text
@@ -18,13 +17,9 @@ fun PrimaryButton(
     Button(
             onClick = onClick,
             enabled = enabled,
-            modifier = modifier.then(
-                    Modifier
-                            .fillMaxWidth()
-                            .padding(
-                                    vertical = Margin.Small.value,
-                                    horizontal = Margin.ExtraExtraMediumLarge.value,
-                            )
+            modifier = modifier.padding(
+                    vertical = Margin.Small.value,
+                    horizontal = Margin.ExtraExtraMediumLarge.value,
             )
     ) {
         Text(text = text)

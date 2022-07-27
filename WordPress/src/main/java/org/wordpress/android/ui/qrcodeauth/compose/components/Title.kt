@@ -18,13 +18,11 @@ fun Title(
             text = text,
             textAlign = TextAlign.Center,
             fontSize = FontSize.DoubleExtraLarge.value,
-            modifier = modifier.then(
-                    Modifier
-                            .wrapContentSize()
-                            .padding(
-                                    horizontal = Margin.ExtraExtraMediumLarge.value,
-                                    vertical = Margin.Medium.value
-                            )
-            )
+            modifier = modifier
+                    .wrapContentSize()
+                    .padding(
+                            horizontal = Margin.ExtraExtraMediumLarge.value,
+                            vertical = Margin.Medium.value
+                    )
     )
 }
