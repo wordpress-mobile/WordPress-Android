@@ -58,7 +58,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.util.config.JetpackPoweredFeatureConfig
+import org.wordpress.android.util.config.JetpackPoweredBottomSheetFeatureConfig
 import org.wordpress.android.util.config.MySiteDashboardTodaysStatsCardFeatureConfig
 import org.wordpress.android.util.config.StatsRevampV2FeatureConfig
 import org.wordpress.android.util.mapNullable
@@ -88,7 +88,7 @@ class StatsViewModel
     private val notificationsTracker: SystemNotificationsTracker,
     private val todaysStatsCardFeatureConfig: MySiteDashboardTodaysStatsCardFeatureConfig,
     private val statsRevampV2FeatureConfig: StatsRevampV2FeatureConfig,
-    private val jetpackPoweredFeatureConfig: JetpackPoweredFeatureConfig,
+    private val jetpackPoweredBottomSheetFeatureConfig: JetpackPoweredBottomSheetFeatureConfig,
     private val buildConfigWrapper: BuildConfigWrapper
 ) : ScopedViewModel(mainDispatcher) {
     private val _isRefreshing = MutableLiveData<Boolean>()
@@ -221,7 +221,7 @@ class StatsViewModel
 
     private fun showJetpackPoweredBottomSheet() {
         _showJetpackPoweredBottomSheet.value = Event(
-                jetpackPoweredFeatureConfig.isEnabled() && !buildConfigWrapper.isJetpackApp
+                jetpackPoweredBottomSheetFeatureConfig.isEnabled() && !buildConfigWrapper.isJetpackApp
         )
     }
 
