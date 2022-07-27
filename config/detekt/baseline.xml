@@ -69,8 +69,6 @@
     <ID>EmptyFunctionBlock:WidgetBlockListProvider.kt$WidgetBlockListProvider${ }</ID>
     <ID>EmptyFunctionBlock:WordPressGlideModule.kt$WordPressGlideModule${}</ID>
     <ID>EmptySecondaryConstructor:WPEditTextWithChipsOutlined.kt$WPEditTextWithChipsOutlined.SavedState${}</ID>
-    <ID>FunctionNaming:WPMainActivityViewModel.kt$WPMainActivityViewModel$// create_post_page_fab_tooltip_stories_feature_flag_on private fun getCreateContentMessageId_StoriesFlagOn(hasFullAccessToContent: Boolean): Int</ID>
-    <ID>FunctionNaming:WPMainActivityViewModel.kt$WPMainActivityViewModel$private fun getCreateContentMessageId_StoriesFlagOff(hasFullAccessToContent: Boolean): Int</ID>
     <ID>FunctionParameterNaming:WizardManager.kt$WizardManager$T: WizardStep</ID>
     <ID>LargeClass:PagesViewModel.kt$PagesViewModel : ScopedViewModel</ID>
     <ID>LargeClass:ReaderPostDetailFragment.kt$ReaderPostDetailFragment : ViewPagerFragmentOnActivityBackPressedListenerScrollDirectionListenerReaderCustomViewListenerReaderWebViewPageFinishedListenerReaderWebViewUrlClickListenerPrivateAtCookieProgressDialogOnDismissListenerAutoHideToolbarListener</ID>

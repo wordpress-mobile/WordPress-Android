@@ -340,14 +340,14 @@ class WPMainActivityViewModel @Inject constructor(
 
     fun getCreateContentMessageId(site: SiteModel?): Int {
         return if (SiteUtils.supportsStoriesFeature(site)) {
-            getCreateContentMessageId_StoriesFlagOn(hasFullAccessToContent(site))
+            getCreateContentMessageIdStoriesFlagOn(hasFullAccessToContent(site))
         } else {
-            getCreateContentMessageId_StoriesFlagOff(hasFullAccessToContent(site))
+            getCreateContentMessageIdStoriesFlagOff(hasFullAccessToContent(site))
         }
     }
 
     // create_post_page_fab_tooltip_stories_feature_flag_on
-    private fun getCreateContentMessageId_StoriesFlagOn(hasFullAccessToContent: Boolean): Int {
+    private fun getCreateContentMessageIdStoriesFlagOn(hasFullAccessToContent: Boolean): Int {
         return if (hasFullAccessToContent) {
             R.string.create_post_page_fab_tooltip_stories_enabled
         } else {
@@ -355,7 +355,7 @@ class WPMainActivityViewModel @Inject constructor(
         }
     }
 
-    private fun getCreateContentMessageId_StoriesFlagOff(hasFullAccessToContent: Boolean): Int {
+    private fun getCreateContentMessageIdStoriesFlagOff(hasFullAccessToContent: Boolean): Int {
         return if (hasFullAccessToContent) {
             R.string.create_post_page_fab_tooltip
         } else {
