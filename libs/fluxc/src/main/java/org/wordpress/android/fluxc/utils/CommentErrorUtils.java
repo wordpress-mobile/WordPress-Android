@@ -74,7 +74,8 @@ public class CommentErrorUtils {
         if (error instanceof WPComGsonNetworkError) {
             WPComGsonNetworkError wpComGsonNetworkError = (WPComGsonNetworkError) error;
             // Duplicate comment on WPCom REST
-            if ("comment_duplicate".equals(wpComGsonNetworkError.apiError)) {
+            if ("comment_duplicate".equals(wpComGsonNetworkError.apiError)
+                || "duplicate_comment".equals(wpComGsonNetworkError.apiError)) {
                 errorType = CommentErrorType.DUPLICATE_COMMENT;
             }
             if ("unauthorized".equals(wpComGsonNetworkError.apiError)) {
