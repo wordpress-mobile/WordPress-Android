@@ -49,8 +49,4 @@ class JetpackPoweredDialogViewModel @Inject constructor(
     }
 
     data class UiState(val uiItems: List<JetpackPoweredItem>)
-
-    companion object {
-        const val JETPACK_PACKAGE_NAME = "com.jetpack.android"
-    }
 }

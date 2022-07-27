@@ -1040,5 +1040,7 @@
         <intent>
             <action android:name="android.intent.action.MAIN" />
         </intent>
+        <!-- required for Android 11 (API level 30) or higher -->
+        <package android:name="com.jetpack.android" />
     </queries>
 </manifest>

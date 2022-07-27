@@ -15,13 +15,13 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.databinding.JetpackPoweredBottomSheetBinding
 import org.wordpress.android.ui.ActivityLauncherWrapper
+import org.wordpress.android.ui.ActivityLauncherWrapper.Companion.JETPACK_PACKAGE_NAME
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType.MY_SITE
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType.NOTIFS
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType.READER
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredDialogAction.DismissDialog
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredDialogAction.OpenPlayStore
-import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredDialogViewModel.Companion.JETPACK_PACKAGE_NAME
 import org.wordpress.android.util.extensions.disableAnimation
 import org.wordpress.android.util.extensions.exhaustive
 import javax.inject.Inject
