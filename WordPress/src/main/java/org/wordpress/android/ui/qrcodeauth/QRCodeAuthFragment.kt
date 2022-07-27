@@ -69,24 +69,6 @@ class QRCodeAuthFragment : Fragment() {
         observeViewModel()
     }
 
-    @Composable
-    private fun QRCodeAuthScreen(viewModel: QRCodeAuthViewModel = viewModel()) {
-        VerticalScrollBox(
-                alignment = Alignment.CenterStart,
-                modifier = Modifier.fillMaxSize()
-        ) {
-            val uiState by viewModel.uiState.collectAsState()
-            uiState.run {
-                when (this) {
-                    is Content -> ContentState(this)
-                    is Error -> ErrorState(this)
-                    is Loading -> LoadingState()
-                    is Scanning -> Unit
-                }
-            }
-        }
-    }
-
     private fun observeViewModel() {
         qrCodeAuthViewModel.actionEvents.onEach(this::handleActionEvents).launchIn(viewLifecycleOwner.lifecycleScope)
         dialogViewModel.onInteraction.observeEvent(viewLifecycleOwner, qrCodeAuthViewModel::onDialogInteraction)
@@ -146,5 +128,23 @@ class QRCodeAuthFragment : Fragment() {
     override fun onSaveInstanceState(outState: Bundle) {
         qrCodeAuthViewModel.writeToBundle(outState)
         super.onSaveInstanceState(outState)
+    }
+}
+
+@Composable
+private fun QRCodeAuthScreen(viewModel: QRCodeAuthViewModel = viewModel()) {
+    VerticalScrollBox(
+            alignment = Alignment.CenterStart,
+            modifier = Modifier.fillMaxSize()
+    ) {
+        val uiState by viewModel.uiState.collectAsState()
+        uiState.run {
+            when (this) {
+                is Content -> ContentState(this)
+                is Error -> ErrorState(this)
+                is Loading -> LoadingState()
+                is Scanning -> Unit
+            }
+        }
     }
 }
