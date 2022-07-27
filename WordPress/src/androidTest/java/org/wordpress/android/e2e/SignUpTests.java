@@ -2,6 +2,7 @@ package org.wordpress.android.e2e;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.wordpress.android.e2e.flows.SignupFlow;
 import org.wordpress.android.support.BaseTest;
@@ -25,6 +26,7 @@ public class SignUpTests extends BaseTest {
         logoutIfNecessary();
     }
 
+    @Ignore("Ignored temporarily. This sometimes fail on CI while running with whole test suite.")
     @Test
     public void signUpWithMagicLink() {
         new SignupFlow().chooseContinueWithWpCom()

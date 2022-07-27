@@ -4,6 +4,7 @@ import androidx.test.espresso.Espresso;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.wordpress.android.R;
 import org.wordpress.android.e2e.pages.MySitesPage;
@@ -37,6 +38,7 @@ public class StatsTests extends BaseTest {
         }
     }
 
+    @Ignore("Ignored temporarily. This sometimes fail on CI while running with whole test suite.")
     @Test
     public void allDayStatsLoad() {
         StatsVisitsData todayVisits = new StatsVisitsData("97", "28", "14", "11");
