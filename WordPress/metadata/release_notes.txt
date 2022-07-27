@@ -1,7 +1,4 @@
-* [*] [internal] Block Editor: Add React Native FastImage [https://github.com/WordPress/gutenberg/pull/42009]
-* [*] Block Editor: Inserter displays block collections [https://github.com/WordPress/gutenberg/pull/42405]
-* [*] Block Editor: Fix incorrect spacing within Image alt text footnote [https://github.com/WordPress/gutenberg/pull/42504]
-* [***] Block Editor: Gallery and Image block - Performance improvements [https://github.com/WordPress/gutenberg/pull/42178]
-* [**] [WP.com and Jetpack sites with VideoPress] Prevent validation error when viewing VideoPress markup within app [https://github.com/Automattic/jetpack/pull/24548]
-* [*] [internal] Adds the "Jetpack powered" badge to non-core features [https://github.com/wordpress-mobile/WordPress-Android/pull/16940]
-
+- Gallery/Image block performance improvements in the Block Editor.
+- Properly displayed Video blocks (both web and app) for VideoPress-enabled sites.
+- Block inserter allows block types to be better organized in collections.
+- Alt text footnote spacing adjustment in Image blocks.
