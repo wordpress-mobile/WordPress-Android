@@ -37,7 +37,7 @@ import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.SnackbarSequencer
-import org.wordpress.android.util.config.JetpackPoweredFeatureConfig
+import org.wordpress.android.util.config.JetpackPoweredBottomSheetFeatureConfig
 import org.wordpress.android.util.distinct
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -57,7 +57,7 @@ class ReaderViewModel @Inject constructor(
     private val accountStore: AccountStore,
     private val quickStartRepository: QuickStartRepository,
     private val selectedSiteRepository: SelectedSiteRepository,
-    private val jetpackPoweredFeatureConfig: JetpackPoweredFeatureConfig,
+    private val jetpackPoweredBottomSheetFeatureConfig: JetpackPoweredBottomSheetFeatureConfig,
     private val buildConfigWrapper: BuildConfigWrapper,
     private val snackbarSequencer: SnackbarSequencer
         // todo: annnmarie removed this private val getFollowedTagsUseCase: GetFollowedTagsUseCase
@@ -107,7 +107,7 @@ class ReaderViewModel @Inject constructor(
 
     private fun showJetpackPoweredBottomSheet() {
         _showJetpackPoweredBottomSheet.value = Event(
-                jetpackPoweredFeatureConfig.isEnabled() && !buildConfigWrapper.isJetpackApp
+                jetpackPoweredBottomSheetFeatureConfig.isEnabled() && !buildConfigWrapper.isJetpackApp
         )
     }
 
