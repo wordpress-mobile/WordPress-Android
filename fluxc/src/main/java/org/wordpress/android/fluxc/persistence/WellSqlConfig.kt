@@ -30,7 +30,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 178
+        return 179
     }
 
     override fun getDbName(): String {
@@ -1875,6 +1875,9 @@ open class WellSqlConfig : DefaultWellConfig {
                 }
                 177 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
                     db.execSQL("ALTER TABLE WCSettingsModel ADD COUPONS_ENABLED BOOLEAN NOT NULL DEFAULT 0")
+                }
+                178 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
+                    db.execSQL("ALTER TABLE EditorTheme ADD LIST_BLOCK_V2 BOOLEAN")
                 }
             }
         }
