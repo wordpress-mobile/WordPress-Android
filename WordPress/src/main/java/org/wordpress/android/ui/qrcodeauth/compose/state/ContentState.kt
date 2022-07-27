@@ -48,18 +48,19 @@ fun ContentState(uiState: QRCodeAuthUiState.Content) = with(uiState) {
             )
         }
         title?.let {
-            Title(text = uiStringText(it))
+            Title(text = uiStringText(it), modifier = Modifier)
         }
         subtitle?.let {
-            Subtitle(text = uiStringText(it))
+            Subtitle(text = uiStringText(it), modifier = Modifier)
         }
         primaryActionButton?.let { actionButton ->
             if (actionButton.isVisible) {
                 actionButton.label?.let { label ->
                     PrimaryButton(
                             text = uiStringText(label),
-                            enabled = actionButton.isEnabled,
                             onClick = { actionButton.clickAction?.invoke() },
+                            modifier = Modifier,
+                            enabled = actionButton.isEnabled,
                     )
                 }
             }
@@ -69,8 +70,9 @@ fun ContentState(uiState: QRCodeAuthUiState.Content) = with(uiState) {
                 actionButton.label?.let { label ->
                     SecondaryButton(
                             text = uiStringText(label),
-                            enabled = actionButton.isEnabled,
                             onClick = { actionButton.clickAction?.invoke() },
+                            modifier = Modifier,
+                            enabled = actionButton.isEnabled,
                     )
                 }
             }

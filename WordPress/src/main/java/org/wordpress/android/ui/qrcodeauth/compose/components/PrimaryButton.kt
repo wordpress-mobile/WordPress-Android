@@ -10,19 +10,22 @@ import org.wordpress.android.ui.compose.unit.Margin
 
 @Composable
 fun PrimaryButton(
+    text: String,
     onClick: () -> Unit,
-    enabled: Boolean = true,
-    text: String
+    modifier: Modifier,
+    enabled: Boolean = true
 ) {
     Button(
             onClick = onClick,
             enabled = enabled,
-            modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(
-                            vertical = Margin.Small.value,
-                            horizontal = Margin.ExtraExtraMediumLarge.value,
-                    )
+            modifier = modifier.then(
+                    Modifier
+                            .fillMaxWidth()
+                            .padding(
+                                    vertical = Margin.Small.value,
+                                    horizontal = Margin.ExtraExtraMediumLarge.value,
+                            )
+            )
     ) {
         Text(text = text)
     }
