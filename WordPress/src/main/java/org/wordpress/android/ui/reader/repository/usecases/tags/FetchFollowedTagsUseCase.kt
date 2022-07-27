@@ -26,6 +26,7 @@ class FetchFollowedTagsUseCase @Inject constructor(
 ) {
     private var continuation: Continuation<ReaderRepositoryCommunication>? = null
 
+    @Suppress("UseCheckOrError")
     suspend fun fetch(): ReaderRepositoryCommunication {
         if (continuation != null) {
             throw IllegalStateException("Follow tags already in progress.")

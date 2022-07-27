@@ -29,6 +29,7 @@ class CreateCartUseCase @Inject constructor(
         dispatcher.unregister(this)
     }
 
+    @Suppress("UseCheckOrError")
     suspend fun execute(
         site: SiteModel,
         productId: Int,

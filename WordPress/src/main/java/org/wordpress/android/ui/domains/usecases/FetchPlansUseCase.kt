@@ -28,6 +28,7 @@ class FetchPlansUseCase @Inject constructor(
         dispatcher.unregister(this)
     }
 
+    @Suppress("UseCheckOrError")
     suspend fun execute(
         site: SiteModel
     ): OnPlansFetched {

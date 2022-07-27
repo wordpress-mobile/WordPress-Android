@@ -194,7 +194,7 @@ object QuickStartUtils {
                 SiteUtils.isAccessedViaWPComRest(siteModel))
     }
 
-    @Suppress("ComplexMethod")
+    @Suppress("ComplexMethod", "UseCheckOrError")
     @JvmStatic
     fun getQuickStartListTappedTracker(task: QuickStartTask): Stat {
         return when (task.string) {
@@ -214,7 +214,7 @@ object QuickStartUtils {
         }
     }
 
-    @Suppress("ComplexMethod")
+    @Suppress("ComplexMethod", "UseCheckOrError")
     @JvmStatic
     fun getQuickStartListSkippedTracker(task: QuickStartTask): Stat {
         return when (task.string) {
@@ -236,7 +236,7 @@ object QuickStartUtils {
         }
     }
 
-    @Suppress("ComplexMethod")
+    @Suppress("ComplexMethod", "UseCheckOrError")
     fun getTaskCompletedTracker(task: QuickStartTask): Stat {
         return when (task.string) {
             QuickStartStore.QUICK_START_CREATE_SITE_LABEL -> Stat.QUICK_START_CREATE_SITE_TASK_COMPLETED

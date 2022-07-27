@@ -221,6 +221,7 @@ class ReaderViewModel @Inject constructor(
         }
     }
 
+    @Suppress("UseCheckOrError")
     fun onSearchActionClicked() {
         if (isSearchSupported()) {
             _showSearch.value = Event(Unit)
@@ -229,6 +230,7 @@ class ReaderViewModel @Inject constructor(
         }
     }
 
+    @Suppress("UseCheckOrError")
     fun onSettingsActionClicked() {
         if (isSettingsSupported()) {
             completeQuickStartFollowSiteTaskIfNeeded()

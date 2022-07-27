@@ -19,6 +19,7 @@ class SingleEventObservable<T>(private val sourceLiveData: LiveData<T>) {
     var lastEvent: T? = null
         private set
 
+    @Suppress("UseCheckOrError")
     fun observe(owner: LifecycleOwner, observer: Observer<T>) {
         if (sourceLiveData.hasObservers()) {
             throw IllegalStateException("SingleEventObservable can be observed only by a single observer.")
@@ -31,6 +32,7 @@ class SingleEventObservable<T>(private val sourceLiveData: LiveData<T>) {
         })
     }
 
+    @Suppress("UseCheckOrError")
     fun observeForever(observer: Observer<T>) {
         if (sourceLiveData.hasObservers()) {
             throw IllegalStateException("SingleEventObservable can be observed only by a single observer.")
