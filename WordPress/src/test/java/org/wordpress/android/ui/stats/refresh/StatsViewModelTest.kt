@@ -238,12 +238,12 @@ class StatsViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given wp app, when jetpack powered feature is true, then jp powered bottom sheet is shown`() {
+    fun `given wp app, when jetpack powered bottom sheet feature is on, then jp powered bottom sheet is shown`() {
         val showJetpackPoweredBottomSheetEvent = mutableListOf<Event<Boolean>>()
         viewModel.showJetpackPoweredBottomSheet.observeForever {
             showJetpackPoweredBottomSheetEvent.add(it)
         }
-        whenever(jetpackBrandingUtils.shouldShowJetpackBranding()).thenReturn(true)
+        whenever(jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()).thenReturn(true)
 
         startViewModel()
 
@@ -251,12 +251,12 @@ class StatsViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given wp app, when jetpack powered feature is false, then jp powered bottom sheet is not shown`() {
-        val showJetpackPoweredBottomSheetEvent = mutableListOf<Event<Boolean>>()
+    fun `given wp app, when jetpack powered bottom sheet feature is off, then jp powered bottom sheet is not shown`() {
+        val showJetpackPoweredBottomSheetEvent = mutableListOf<Event<Boolean>>(Event(false))
         viewModel.showJetpackPoweredBottomSheet.observeForever {
             showJetpackPoweredBottomSheetEvent.add(it)
         }
-        whenever(jetpackBrandingUtils.shouldShowJetpackBranding()).thenReturn(false)
+        whenever(jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()).thenReturn(false)
 
         startViewModel()
 
