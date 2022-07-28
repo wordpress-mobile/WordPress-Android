@@ -20,6 +20,7 @@ class FetchSegmentsUseCase @Inject constructor(
 ) {
     private var continuation: Continuation<OnSegmentsFetched>? = null
 
+    @Suppress("UseCheckOrError")
     suspend fun fetchCategories(): OnSegmentsFetched {
         if (continuation != null) {
             throw IllegalStateException("Fetch already in progress.")

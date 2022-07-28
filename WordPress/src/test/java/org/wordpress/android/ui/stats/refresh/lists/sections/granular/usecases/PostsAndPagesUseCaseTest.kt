@@ -45,7 +45,7 @@ import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import java.util.Date
 
-private const val itemsToLoad = 6
+private const val ITEMS_TO_LOAD = 6
 private val statsGranularity = DAYS
 private val selectedDate = Date(0)
 
@@ -99,7 +99,7 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
                 store.fetchPostAndPageViews(
                         site,
                         statsGranularity,
-                        LimitMode.Top(itemsToLoad),
+                        LimitMode.Top(ITEMS_TO_LOAD),
                         selectedDate,
                         forced
                 )
@@ -120,7 +120,7 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
                 store.fetchPostAndPageViews(
                         site,
                         statsGranularity,
-                        LimitMode.Top(itemsToLoad),
+                        LimitMode.Top(ITEMS_TO_LOAD),
                         selectedDate,
                         forced
                 )
@@ -147,7 +147,7 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
                 store.getPostAndPageViews(
                         site,
                         statsGranularity,
-                        LimitMode.Top(itemsToLoad),
+                        LimitMode.Top(ITEMS_TO_LOAD),
                         selectedDate
                 )
         ).thenReturn(model)
@@ -155,7 +155,7 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
                 store.fetchPostAndPageViews(
                         site,
                         statsGranularity,
-                        LimitMode.Top(itemsToLoad),
+                        LimitMode.Top(ITEMS_TO_LOAD),
                         selectedDate,
                         forced
                 )
@@ -191,7 +191,7 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
                 store.getPostAndPageViews(
                         site,
                         statsGranularity,
-                        LimitMode.Top(itemsToLoad),
+                        LimitMode.Top(ITEMS_TO_LOAD),
                         selectedDate
                 )
         ).thenReturn(model)
@@ -199,7 +199,7 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
                 store.fetchPostAndPageViews(
                         site,
                         statsGranularity,
-                        LimitMode.Top(itemsToLoad),
+                        LimitMode.Top(ITEMS_TO_LOAD),
                         selectedDate,
                         forced
                 )
@@ -235,7 +235,7 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
                 store.getPostAndPageViews(
                         site,
                         statsGranularity,
-                        LimitMode.Top(itemsToLoad),
+                        LimitMode.Top(ITEMS_TO_LOAD),
                         selectedDate
                 )
         ).thenReturn(model)
@@ -243,7 +243,7 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
                 store.fetchPostAndPageViews(
                         site,
                         statsGranularity,
-                        LimitMode.Top(itemsToLoad),
+                        LimitMode.Top(ITEMS_TO_LOAD),
                         selectedDate,
                         forced
                 )
@@ -277,7 +277,7 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
                 store.getPostAndPageViews(
                         site,
                         statsGranularity,
-                        LimitMode.Top(itemsToLoad),
+                        LimitMode.Top(ITEMS_TO_LOAD),
                         selectedDate
                 )
         ).thenReturn(model)
@@ -285,7 +285,7 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
                 store.fetchPostAndPageViews(
                         site,
                         statsGranularity,
-                        LimitMode.Top(itemsToLoad),
+                        LimitMode.Top(ITEMS_TO_LOAD),
                         selectedDate,
                         forced
                 )
@@ -315,7 +315,7 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
                 store.getPostAndPageViews(
                         site,
                         statsGranularity,
-                        LimitMode.Top(itemsToLoad),
+                        LimitMode.Top(ITEMS_TO_LOAD),
                         selectedDate
                 )
         ).thenReturn(model)
@@ -323,7 +323,7 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
                 store.fetchPostAndPageViews(
                         site,
                         statsGranularity,
-                        LimitMode.Top(itemsToLoad),
+                        LimitMode.Top(ITEMS_TO_LOAD),
                         selectedDate,
                         forced
                 )
@@ -359,7 +359,7 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
                 store.getPostAndPageViews(
                         site,
                         statsGranularity,
-                        LimitMode.Top(itemsToLoad),
+                        LimitMode.Top(ITEMS_TO_LOAD),
                         selectedDate
                 )
         ).thenReturn(model)
@@ -367,7 +367,7 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
                 store.fetchPostAndPageViews(
                         site,
                         statsGranularity,
-                        LimitMode.Top(itemsToLoad),
+                        LimitMode.Top(ITEMS_TO_LOAD),
                         selectedDate,
                         forced
                 )

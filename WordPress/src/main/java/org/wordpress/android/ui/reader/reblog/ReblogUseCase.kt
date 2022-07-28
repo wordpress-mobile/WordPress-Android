@@ -48,6 +48,7 @@ class ReblogUseCase @Inject constructor(
         }
     }
 
+    @Suppress("UseCheckOrError")
     suspend fun onReblogSiteSelected(siteLocalId: Int, post: ReaderPost?): ReblogState {
         return withContext(bgDispatcher) {
             when {

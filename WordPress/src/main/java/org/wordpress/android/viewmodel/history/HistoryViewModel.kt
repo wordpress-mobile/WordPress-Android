@@ -137,8 +137,8 @@ class HistoryViewModel @Inject constructor(
                 val updatedRevisions = mutableListOf<HistoryListItem>()
                 revisionsList.clear()
 
-                existingRevisions.forEach { it ->
-                    var mutableRevision = it
+                existingRevisions.forEach { existingRevision ->
+                    var mutableRevision = existingRevision
 
                     if (mutableRevision is Revision) {
                         // we shouldn't directly update items in MutableLiveData, as they will be updated downstream
