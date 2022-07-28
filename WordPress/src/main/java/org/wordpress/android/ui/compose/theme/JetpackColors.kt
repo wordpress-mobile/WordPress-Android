@@ -3,6 +3,7 @@ package org.wordpress.android.ui.compose.theme
 import android.annotation.SuppressLint
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.darkColors
+import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
@@ -15,7 +16,7 @@ private val black = Color(0xff000000)
 private val darkGray = Color(0xff121212)
 
 @SuppressLint("ConflictingOnColor")
-val JpLightColorPalette = darkColors(
+val JpLightColorPalette = lightColors(
         primary = green50,
         primaryVariant = green40,
         secondary = green50,
