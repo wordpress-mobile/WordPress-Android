@@ -79,6 +79,8 @@ import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
 /*
  * shows reader post detail fragments in a ViewPager - primarily used for easy swiping between
  * posts with a specific tag or in a specific blog, but can also be used to show a single
@@ -92,6 +94,7 @@ import javax.inject.Inject;
  *
  * Will also handle jumping to the comments section, liking a commend and liking a post directly
  */
+@AndroidEntryPoint
 public class ReaderPostPagerActivity extends LocaleAwareActivity {
     /**
      * Type of URL intercepted

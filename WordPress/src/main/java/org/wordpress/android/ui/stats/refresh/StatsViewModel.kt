@@ -55,11 +55,9 @@ import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.toStatsGranularity
 import org.wordpress.android.ui.stats.refresh.utils.trackGranular
 import org.wordpress.android.ui.utils.UiString.UiStringRes
-import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.JetpackBrandingUtils
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.util.config.JetpackPoweredBottomSheetFeatureConfig
 import org.wordpress.android.util.config.MySiteDashboardTodaysStatsCardFeatureConfig
 import org.wordpress.android.util.config.StatsRevampV2FeatureConfig
 import org.wordpress.android.util.mapNullable
