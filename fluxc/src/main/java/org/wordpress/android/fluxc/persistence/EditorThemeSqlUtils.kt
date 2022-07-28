@@ -122,7 +122,7 @@ class EditorThemeSqlUtils {
                     rawFeatures,
                     isFSETheme,
                     galleryWithImageBlocks,
-                    quoteBlockV2
+                    quoteBlockV2,
                     listBlockV2
             )
 
