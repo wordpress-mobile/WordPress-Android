@@ -61,7 +61,6 @@ public class ContactUsTests extends BaseTest {
         }
     }
 
-    @Ignore("Ignored temporarily. This sometimes fail on CI while running with whole test suite.")
     @Test
     public void helpCanBeOpenedWhileEnteringEmail() {
         new LoginFlow()
@@ -70,7 +69,6 @@ public class ContactUsTests extends BaseTest {
                 .assertHelpAndSupportScreenLoaded();
     }
 
-    @Ignore("Ignored temporarily. This sometimes fail on CI while running with whole test suite.")
     @Test
     public void helpCanBeOpenedWhileEnteringPassword() {
         new LoginFlow()

@@ -42,7 +42,6 @@ public class LoginTests extends BaseTest {
                        .confirmLogin(false);
     }
 
-    @Ignore("Ignored temporarily. This sometimes fail on CI while running with whole test suite.")
     @Test
     public void loginWithSiteAddress() {
         new LoginFlow().chooseEnterYourSiteAddress()
@@ -62,7 +61,6 @@ public class LoginTests extends BaseTest {
                        .confirmLogin(false);
     }
 
-    @Ignore("Ignored temporarily. This sometimes fail on CI while running with whole test suite.")
     @Test
     public void loginWithSelfHostedAccount() {
         new LoginFlow().chooseEnterYourSiteAddress()
