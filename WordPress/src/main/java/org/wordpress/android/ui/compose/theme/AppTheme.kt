@@ -4,8 +4,6 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import org.wordpress.android.BuildConfig
-import org.wordpress.android.ui.compose.theme.color.JetpackColors
-import org.wordpress.android.ui.compose.theme.color.WordPressColors
 
 /**
  * Project's base theme.
@@ -15,9 +13,13 @@ fun AppTheme(
     isDarkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {
-    val themeColors = if (BuildConfig.IS_JETPACK_APP) JetpackColors() else WordPressColors()
+    val colorPalette = when (BuildConfig.IS_JETPACK_APP) {
+        true -> JpColorPalette(isDarkTheme)
+        else -> WpColorPalette(isDarkTheme)
+    }
+
     MaterialTheme(
-            colors = if (isDarkTheme) themeColors.dark() else themeColors.light(),
+            colors = colorPalette,
             content = content
     )
 }
