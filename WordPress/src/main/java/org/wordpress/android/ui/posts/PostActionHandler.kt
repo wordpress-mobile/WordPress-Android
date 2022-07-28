@@ -323,6 +323,7 @@ class PostActionHandler(
         dispatcher.dispatch(PostActionBuilder.newDeletePostAction(RemotePostPayload(post, site)))
     }
 
+    @Suppress("UseCheckOrError")
     fun handlePostTrashed(localPostId: LocalId, isError: Boolean) {
         val criticalAction = criticalPostActionTracker.get(localPostId)
         if (criticalAction != TRASHING_POST && criticalAction != TRASHING_POST_WITH_LOCAL_CHANGES) {

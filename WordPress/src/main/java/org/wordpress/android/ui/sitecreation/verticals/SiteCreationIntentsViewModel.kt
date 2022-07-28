@@ -71,6 +71,7 @@ class SiteCreationIntentsViewModel @Inject constructor(
         _uiState.value = uiState
     }
 
+    @Suppress("UseCheckOrError")
     fun initializeFromResources(resources: Resources) {
         if (isInitialized) return
         val slugsArray = resources.getStringArray(R.array.site_creation_intents_slugs)
