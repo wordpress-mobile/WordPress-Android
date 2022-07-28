@@ -90,7 +90,7 @@ data class EditorThemeSupport(
     val rawFeatures: String?,
     val isFSETheme: Boolean,
     val galleryWithImageBlocks: Boolean,
-    val quoteBlockV2: Boolean
+    val quoteBlockV2: Boolean,
     val listBlockV2: Boolean
 ) {
     fun toBundle(): Bundle {
