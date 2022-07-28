@@ -19,6 +19,7 @@ import org.wordpress.android.ui.jetpack.backup.download.KEY_BACKUP_DOWNLOAD_REWI
 import org.wordpress.android.ui.jetpack.common.JetpackBackupDownloadActionState
 import org.wordpress.android.ui.jetpack.restore.KEY_RESTORE_RESTORE_ID
 import org.wordpress.android.ui.jetpack.restore.KEY_RESTORE_REWIND_ID
+import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment
 import org.wordpress.android.util.JetpackBrandingUtils
 import org.wordpress.android.viewmodel.activitylog.ACTIVITY_LOG_REWINDABLE_ONLY_KEY
 import javax.inject.Inject
@@ -43,6 +44,14 @@ class ActivityLogListActivity : LocaleAwareActivity() {
                 val fragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
                 fragment?.view?.updateLayoutParams<MarginLayoutParams> {
                     bottomMargin = resources.getDimensionPixelSize(R.dimen.jetpack_banner_height)
+                }
+
+                if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
+                    jetpackBanner.root.setOnClickListener {
+                        JetpackPoweredBottomSheetFragment
+                                .newInstance()
+                                .show(supportFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
+                    }
                 }
             }
         }
