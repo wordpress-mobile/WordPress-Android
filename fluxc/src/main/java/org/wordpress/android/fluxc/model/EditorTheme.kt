@@ -37,7 +37,7 @@ data class EditorTheme(
                     blockEditorSettings.features?.toString(),
                     blockEditorSettings.isFSETheme,
                     blockEditorSettings.galleryWithImageBlocks,
-                    blockEditorSettings.quoteBlockV2
+                    blockEditorSettings.quoteBlockV2,
                     blockEditorSettings.listBlockV2
             ),
             stylesheet = null,
