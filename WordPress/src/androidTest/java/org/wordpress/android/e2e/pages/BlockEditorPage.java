@@ -10,6 +10,7 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static androidx.test.espresso.Espresso.pressBack;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.action.ViewActions.swipeDown;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
@@ -48,7 +49,7 @@ public class BlockEditorPage {
 
     public BlockEditorPage enterParagraphText(String paragraphText) {
         onView(withHint(R.string.gutenberg_native_start_writing))
-                .perform(click(), typeText(paragraphText), ViewActions.closeSoftKeyboard());
+                .perform(click(), replaceText(paragraphText), ViewActions.closeSoftKeyboard());
         return this;
     }
 
