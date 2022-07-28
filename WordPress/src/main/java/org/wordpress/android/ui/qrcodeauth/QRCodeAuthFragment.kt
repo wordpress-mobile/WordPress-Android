@@ -138,13 +138,11 @@ private fun QRCodeAuthScreen(viewModel: QRCodeAuthViewModel = viewModel()) {
             modifier = Modifier.fillMaxSize()
     ) {
         val uiState by viewModel.uiState.collectAsState()
-        uiState.run {
-            when (this) {
-                is Content -> ContentState(this)
-                is Error -> ErrorState(this)
-                is Loading -> LoadingState()
-                is Scanning -> Unit
-            }
+        when (uiState) {
+            is Content -> ContentState(uiState as Content)
+            is Error -> ErrorState(uiState as Error)
+            is Loading -> LoadingState()
+            is Scanning -> Unit
         }
     }
 }
