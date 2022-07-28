@@ -308,6 +308,14 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
                 val scrollableView = binding?.root?.findViewById<View>(containerId) as? RecyclerView ?: return@post
                 jetpackBrandingUtils.showJetpackBannerIfScrolledToTop(jetpackBannerView, scrollableView)
                 jetpackBrandingUtils.initJetpackBannerAnimation(jetpackBannerView, scrollableView)
+
+                if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
+                    jetpackBannerView.setOnClickListener {
+                        JetpackPoweredBottomSheetFragment
+                                .newInstance()
+                                .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
+                    }
+                }
             }
         }
     }

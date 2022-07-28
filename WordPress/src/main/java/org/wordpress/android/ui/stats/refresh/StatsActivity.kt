@@ -13,6 +13,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.push.NotificationType
 import org.wordpress.android.push.NotificationsProcessingService.ARG_NOTIFICATION_TYPE
 import org.wordpress.android.ui.LocaleAwareActivity
+import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment
 import org.wordpress.android.ui.stats.StatsTimeframe
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.JetpackBrandingUtils
@@ -32,6 +33,14 @@ class StatsActivity : LocaleAwareActivity() {
             if (jetpackBrandingUtils.shouldShowJetpackBranding()) {
                 jetpackBanner.root.isVisible = true
                 jetpackBrandingUtils.setNavigationBarColorForBanner(window)
+
+                if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
+                    jetpackBanner.root.setOnClickListener {
+                        JetpackPoweredBottomSheetFragment
+                                .newInstance()
+                                .show(supportFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
+                    }
+                }
             }
         }
     }
