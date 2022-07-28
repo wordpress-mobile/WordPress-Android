@@ -5,6 +5,7 @@ import android.Manifest.permission;
 import androidx.test.rule.GrantPermissionRule;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -62,6 +63,7 @@ public class BlockEditorTests extends BaseTest {
                 .verifyPostPublished();
     }
 
+    @Ignore("Ignored temporarily. This sometimes fail on CI while running with whole test suite.")
     @Test
     public void publishFullPost() {
         String mTitle = new Throwable().getStackTrace()[0].getMethodName();
@@ -82,6 +84,7 @@ public class BlockEditorTests extends BaseTest {
                 .verifyPostPublished();
     }
 
+    @Ignore("Ignored temporarily. This sometimes fail on CI while running with whole test suite.")
     @Test
     public void blockEditorCanDisplayElementAddedInHtmlMode() {
         String mTitle = new Throwable().getStackTrace()[0].getMethodName();
