@@ -55,6 +55,7 @@ class PostListAdapter(
         }
     }
 
+    @Suppress("UseCheckOrError")
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return when (viewType) {
             VIEW_TYPE_ENDLIST_INDICATOR -> {

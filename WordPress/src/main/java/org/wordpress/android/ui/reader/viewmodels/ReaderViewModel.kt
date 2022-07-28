@@ -137,8 +137,8 @@ class ReaderViewModel @Inject constructor(
 
     private suspend fun initializeTabSelection(tagList: ReaderTagList) {
         withContext(bgDispatcher) {
-            val selectTab = { it: ReaderTag ->
-                val index = tagList.indexOf(it)
+            val selectTab = { readerTag: ReaderTag ->
+                val index = tagList.indexOf(readerTag)
                 if (index != -1) {
                     _selectTab.postValue(Event(TabNavigation(index, smoothAnimation = false)))
                 }
@@ -221,6 +221,7 @@ class ReaderViewModel @Inject constructor(
         }
     }
 
+    @Suppress("UseCheckOrError")
     fun onSearchActionClicked() {
         if (isSearchSupported()) {
             _showSearch.value = Event(Unit)
@@ -229,6 +230,7 @@ class ReaderViewModel @Inject constructor(
         }
     }
 
+    @Suppress("UseCheckOrError")
     fun onSettingsActionClicked() {
         if (isSettingsSupported()) {
             completeQuickStartFollowSiteTaskIfNeeded()

@@ -26,6 +26,7 @@ class FetchInterestTagsUseCase @Inject constructor(
 ) {
     private var continuation: Continuation<ReaderRepositoryCommunication>? = null
 
+    @Suppress("UseCheckOrError")
     suspend fun fetch(): ReaderRepositoryCommunication {
         if (continuation != null) {
             throw IllegalStateException("Fetch already in progress.")

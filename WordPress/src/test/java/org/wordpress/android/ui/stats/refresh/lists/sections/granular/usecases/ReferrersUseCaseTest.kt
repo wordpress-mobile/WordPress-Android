@@ -54,12 +54,12 @@ import org.wordpress.android.util.config.StatsRevampV2FeatureConfig
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Date
 
-private const val itemsToLoad = 300
-private const val groupIdWordPress = "WordPress.com Reader"
-private const val groupIdSearch = "Search Engines"
+private const val ITEMS_TO_LOAD = 300
+private const val GROUP_ID_WORDPRESS = "WordPress.com Reader"
+private const val GROUP_ID_SEARCH = "Search Engines"
 private val statsGranularity = DAYS
 private val selectedDate = Date(0)
-private val limitMode = Top(itemsToLoad)
+private val limitMode = Top(ITEMS_TO_LOAD)
 
 @InternalCoroutinesApi
 class ReferrersUseCaseTest : BaseUnitTest() {
@@ -79,7 +79,7 @@ class ReferrersUseCaseTest : BaseUnitTest() {
     private val thirdGroupViews = 40
     private val totalViews = firstGroupViews + secondGroupViews + thirdGroupViews
     private val wordPressReferrer = Group(
-            groupIdWordPress,
+            GROUP_ID_WORDPRESS,
             "Group 1",
             "group1.jpg",
             "group1.com",
@@ -88,7 +88,7 @@ class ReferrersUseCaseTest : BaseUnitTest() {
             false
     )
     private val searchReferrer = Group(
-            groupIdSearch,
+            GROUP_ID_SEARCH,
             "Group 2",
             "group2.jpg",
             "group2.com",

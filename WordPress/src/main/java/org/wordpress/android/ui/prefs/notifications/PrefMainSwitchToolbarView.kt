@@ -212,7 +212,7 @@ class PrefMainSwitchToolbarView @JvmOverloads constructor(
         this.hintOff = hintOff
     }
 
-    @Suppress("MemberVisibilityCanBePrivate")
+    @Suppress("MemberVisibilityCanBePrivate", "UseCheckOrError")
     fun setViewStyle(viewStyleInt: Int) {
         if (viewStyleInt == this.viewStyle?.value) {
             return

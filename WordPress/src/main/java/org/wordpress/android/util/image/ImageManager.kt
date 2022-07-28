@@ -80,6 +80,7 @@ class ImageManager @Inject constructor(
      * + [Context] is not null
      * + [Context] is not destroyed (tested with [FragmentActivity.isDestroyed] or [Activity.isDestroyed])
      */
+    @Suppress("ReturnCount")
     private fun Context?.isAvailable(): Boolean {
         if (this == null) {
             return false
