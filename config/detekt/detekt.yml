@@ -23,5 +23,6 @@ style:
   MagicNumber:
     ignoreEnums: true
     ignoreAnnotated: ['Composable']
+    ignorePropertyDeclaration: true
   UnusedPrivateMember:
     ignoreAnnotated: ['Composable']
