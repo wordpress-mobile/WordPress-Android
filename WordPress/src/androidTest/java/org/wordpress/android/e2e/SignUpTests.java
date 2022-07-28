@@ -1,5 +1,6 @@
 package org.wordpress.android.e2e;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.wordpress.android.e2e.flows.SignupFlow;
@@ -19,6 +20,11 @@ public class SignUpTests extends BaseTest {
         logoutIfNecessary();
     }
 
+    @After
+    public void tearDown() {
+        logoutIfNecessary();
+    }
+
     @Test
     public void signUpWithMagicLink() {
         new SignupFlow().chooseContinueWithWpCom()
@@ -29,6 +35,7 @@ public class SignUpTests extends BaseTest {
                                 E2E_SIGNUP_USERNAME)
                         .enterPassword(E2E_SIGNUP_PASSWORD)
                         .dismissInterstitial()
+                        .dismissJetpackAd()
                         .confirmSignup();
     }
 }

@@ -14,12 +14,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
+import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.AppBarLayout.LayoutParams
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.android.material.tabs.TabLayout.Tab
+import dagger.hilt.android.AndroidEntryPoint
 import org.greenrobot.eventbus.EventBus
 import org.wordpress.android.R
-import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.NOTIFICATIONS_SELECTED_FILTER
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.NOTIFICATION_TAPPED_SEGMENTED_CONTROL
@@ -32,6 +34,8 @@ import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.main.WPMainActivity
+import org.wordpress.android.ui.main.WPMainNavigationView.PageType
+import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment
 import org.wordpress.android.ui.notifications.NotificationEvents.NotificationsUnseenStatus
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter.FILTERS
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter.FILTERS.FILTER_ALL
@@ -44,18 +48,22 @@ import org.wordpress.android.ui.notifications.services.NotificationsUpdateServic
 import org.wordpress.android.ui.stats.StatsConnectJetpackActivity
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.NOTIFS
+import org.wordpress.android.util.JetpackBrandingUtils
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.WPUrlUtils
 import org.wordpress.android.util.extensions.setLiftOnScrollTargetViewIdAndRequestLayout
-import java.util.HashMap
+import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment), ScrollableViewInitializedListener {
+    @Inject lateinit var accountStore: AccountStore
+    @Inject lateinit var jetpackBrandingUtils: JetpackBrandingUtils
+
+    private val viewModel: NotificationsListViewModel by viewModels()
+
     private var shouldRefreshNotifications = false
     private var lastTabPosition = 0
-
-    @Inject lateinit var accountStore: AccountStore
-
     private var binding: NotificationsListFragmentBinding? = null
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -67,7 +75,6 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (requireActivity().application as WordPress).component().inject(this)
         shouldRefreshNotifications = true
     }
 
@@ -109,6 +116,12 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
             jetpackFaq.setOnClickListener {
                 WPWebViewActivity.openURL(requireContext(), StatsConnectJetpackActivity.FAQ_URL)
             }
+        }
+
+        viewModel.showJetpackPoweredBottomSheet.observeEvent(viewLifecycleOwner) {
+            JetpackPoweredBottomSheetFragment
+                    .newInstance(it, PageType.NOTIFS)
+                    .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
         }
     }
 
@@ -287,5 +300,15 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
 
     override fun onScrollableViewInitialized(containerId: Int) {
         binding?.appBar?.setLiftOnScrollTargetViewIdAndRequestLayout(containerId)
+        if (jetpackBrandingUtils.shouldShowJetpackBranding()) {
+            binding?.root?.post {
+                // post is used to create a minimal delay here. containerId changes just before
+                // onScrollableViewInitialized is called, and findViewById can't find the new id before the delay.
+                val jetpackBannerView = binding?.jetpackBanner?.root ?: return@post
+                val scrollableView = binding?.root?.findViewById<View>(containerId) as? RecyclerView ?: return@post
+                jetpackBrandingUtils.showJetpackBannerIfScrolledToTop(jetpackBannerView, scrollableView)
+                jetpackBrandingUtils.initJetpackBannerAnimation(jetpackBannerView, scrollableView)
+            }
+        }
     }
 }

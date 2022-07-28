@@ -3,6 +3,8 @@ package org.wordpress.android.ui.publicize;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup.MarginLayoutParams;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
@@ -33,16 +35,20 @@ import org.wordpress.android.ui.ScrollableViewInitializedListener;
 import org.wordpress.android.ui.publicize.PublicizeConstants.ConnectAction;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter;
 import org.wordpress.android.ui.publicize.services.PublicizeUpdateService;
-import org.wordpress.android.util.extensions.AppBarLayoutExtensionsKt;
+import org.wordpress.android.util.JetpackBrandingUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
+import org.wordpress.android.util.extensions.AppBarLayoutExtensionsKt;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.inject.Inject;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class PublicizeListActivity extends LocaleAwareActivity
         implements
         PublicizeActions.OnPublicizeActionListener,
@@ -55,11 +61,11 @@ public class PublicizeListActivity extends LocaleAwareActivity
     private AppBarLayout mAppBarLayout;
 
     @Inject SiteStore mSiteStore;
+    @Inject JetpackBrandingUtils mJetpackBrandingUtils;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((WordPress) getApplication()).component().inject(this);
 
         setContentView(R.layout.publicize_list_activity);
 
@@ -73,6 +79,16 @@ public class PublicizeListActivity extends LocaleAwareActivity
         }
 
         mAppBarLayout = findViewById(R.id.appbar_main);
+
+        if (mJetpackBrandingUtils.shouldShowJetpackBranding()) {
+            findViewById(R.id.jetpack_banner).setVisibility(View.VISIBLE);
+            mJetpackBrandingUtils.setNavigationBarColorForBanner(getWindow());
+
+            // Add bottom margin to content.
+            MarginLayoutParams layoutParams =
+                    (MarginLayoutParams) findViewById(R.id.fragment_container).getLayoutParams();
+            layoutParams.bottomMargin = getResources().getDimensionPixelSize(R.dimen.jetpack_banner_height);
+        }
 
         if (savedInstanceState == null) {
             mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);

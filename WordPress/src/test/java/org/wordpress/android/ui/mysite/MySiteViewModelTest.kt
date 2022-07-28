@@ -50,6 +50,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.test
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BloggingPromptCard.BloggingPromptCardWithData
@@ -68,6 +69,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.DynamicCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.DynamicCard.QuickStartDynamicCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.InfoItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.ListItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.JetpackBadge
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoHeaderCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoHeaderCard.IconState
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardsBuilderParams
@@ -132,6 +134,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.FluxCUtilsWrapper
+import org.wordpress.android.util.JetpackBrandingUtils
 import org.wordpress.android.util.MediaUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.QuickStartUtilsWrapper
@@ -180,6 +183,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var buildConfigWrapper: BuildConfigWrapper
     @Mock lateinit var mySiteDashboardTabsFeatureConfig: MySiteDashboardTabsFeatureConfig
     @Mock lateinit var bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig
+    @Mock lateinit var jetpackBrandingUtils: JetpackBrandingUtils
     @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
     @Mock lateinit var bloggingPromptsCardAnalyticsTracker: BloggingPromptsCardAnalyticsTracker
     @Mock lateinit var quickStartType: QuickStartType
@@ -331,7 +335,8 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Suppress("LongMethod")
     fun init(
         isMySiteDashboardTabsFeatureFlagEnabled: Boolean = true,
-        isBloggingPromptsFeatureConfigEnabled: Boolean = true
+        isBloggingPromptsFeatureConfigEnabled: Boolean = true,
+        shouldShowJetpackBranding: Boolean = true
     ) = test {
         onSiteChange.value = null
         onShowSiteIconProgressBar.value = null
@@ -339,6 +344,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         selectedSite.value = null
         whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(isBloggingPromptsFeatureConfigEnabled)
         whenever(mySiteDashboardTabsFeatureConfig.isEnabled()).thenReturn(isMySiteDashboardTabsFeatureFlagEnabled)
+        whenever(jetpackBrandingUtils.shouldShowJetpackBranding()).thenReturn(shouldShowJetpackBranding)
         whenever(mySiteSourceManager.build(any(), anyOrNull())).thenReturn(partialStates)
         whenever(selectedSiteRepository.siteSelected).thenReturn(onSiteSelected)
         whenever(quickStartRepository.activeTask).thenReturn(activeTask)
@@ -380,6 +386,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 buildConfigWrapper,
                 mySiteDashboardTabsFeatureConfig,
                 bloggingPromptsFeatureConfig,
+                jetpackBrandingUtils,
                 appPrefsWrapper,
                 bloggingPromptsCardAnalyticsTracker,
                 quickStartTracker,
@@ -2122,7 +2129,35 @@ class MySiteViewModelTest : BaseUnitTest() {
                 initialScreen = MySiteTabType.SITE_MENU.label
         )
 
-        assertThat(getSiteMenuTabLastItems().last()).isInstanceOf(DynamicCard::class.java)
+        val siteMenuCardsAndItems = getSiteMenuTabLastItems()
+        val indexOfLastCard = siteMenuCardsAndItems.indexOfLast { it is Card }
+        assertThat(siteMenuCardsAndItems[indexOfLastCard + 1]).isInstanceOf(DynamicCard::class.java)
+    }
+
+    @InternalCoroutinesApi
+    @Test
+    fun `given shouldShowJetpackBranding is true, then the Jetpack badge is visible last`() {
+        init(shouldShowJetpackBranding = true)
+        whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
+
+        initSelectedSite()
+
+        assertThat(getSiteMenuTabLastItems().last()).isNotInstanceOf(JetpackBadge::class.java)
+        assertThat(getLastItems().last()).isInstanceOf(JetpackBadge::class.java)
+        assertThat(getDashboardTabLastItems().last()).isInstanceOf(JetpackBadge::class.java)
+    }
+
+    @InternalCoroutinesApi
+    @Test
+    fun `given shouldShowJetpackBranding is false, then no Jetpack badge is visible`() {
+        init(shouldShowJetpackBranding = false)
+        whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
+
+        initSelectedSite()
+
+        assertThat(getSiteMenuTabLastItems().last()).isNotInstanceOf(JetpackBadge::class.java)
+        assertThat(getLastItems().last()).isNotInstanceOf(JetpackBadge::class.java)
+        assertThat(getDashboardTabLastItems().last()).isNotInstanceOf(JetpackBadge::class.java)
     }
 
     @InternalCoroutinesApi
@@ -2153,8 +2188,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         initSelectedSite()
 
-        val items = (uiModels.last().state as SiteSelected).cardAndItems
-        assertThat(items.filterIsInstance(QuickStartCard::class.java)).isNotEmpty
+        assertThat(getLastItems().filterIsInstance(QuickStartCard::class.java)).isNotEmpty
     }
 
     @Test
@@ -2675,6 +2709,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         clickAction!!.invoke(action)
     }
 
+    @Suppress("LongParameterList")
     private fun initSelectedSite(
         isMySiteTabsBuildConfigEnabled: Boolean = true,
         isQuickStartDynamicCardEnabled: Boolean = false,

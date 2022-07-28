@@ -100,7 +100,6 @@ abstract class StatsListViewModel(
 
     override fun onCleared() {
         statsUseCase.onCleared()
-        dateSelector.clear()
         super.onCleared()
     }
 

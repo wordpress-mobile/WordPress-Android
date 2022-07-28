@@ -25,7 +25,6 @@ import org.wordpress.android.ui.accounts.login.jetpack.LoginNoSitesFragment;
 import org.wordpress.android.ui.accounts.login.jetpack.LoginSiteCheckErrorFragment;
 import org.wordpress.android.ui.accounts.signup.SignupEpilogueFragment;
 import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailFragment;
-import org.wordpress.android.ui.activitylog.list.ActivityLogListActivity;
 import org.wordpress.android.ui.activitylog.list.ActivityLogListFragment;
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterFragment;
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingDialogFragment;
@@ -85,7 +84,6 @@ import org.wordpress.android.ui.mysite.tabs.MySiteTabFragment;
 import org.wordpress.android.ui.notifications.DismissNotificationReceiver;
 import org.wordpress.android.ui.notifications.NotificationsDetailActivity;
 import org.wordpress.android.ui.notifications.NotificationsDetailListFragment;
-import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.notifications.NotificationsListFragmentPage;
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter;
 import org.wordpress.android.ui.notifications.receivers.NotificationsPendingDraftsReceiver;
@@ -98,7 +96,6 @@ import org.wordpress.android.ui.pages.SearchListFragment;
 import org.wordpress.android.ui.people.PeopleInviteDialogFragment;
 import org.wordpress.android.ui.people.PeopleInviteFragment;
 import org.wordpress.android.ui.people.PeopleListFragment;
-import org.wordpress.android.ui.people.PeopleManagementActivity;
 import org.wordpress.android.ui.people.PersonDetailFragment;
 import org.wordpress.android.ui.people.RoleChangeDialogFragment;
 import org.wordpress.android.ui.people.RoleSelectDialogFragment;
@@ -135,7 +132,6 @@ import org.wordpress.android.ui.posts.SelectCategoriesActivity;
 import org.wordpress.android.ui.posts.adapters.AuthorSelectionAdapter;
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingPublishSettingsFragment;
 import org.wordpress.android.ui.posts.services.AztecVideoLoader;
-import org.wordpress.android.ui.prefs.AccountSettingsFragment;
 import org.wordpress.android.ui.prefs.AppSettingsActivity;
 import org.wordpress.android.ui.prefs.AppSettingsFragment;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
@@ -146,6 +142,7 @@ import org.wordpress.android.ui.prefs.SiteSettingsFragment;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.prefs.SiteSettingsTagDetailFragment;
 import org.wordpress.android.ui.prefs.SiteSettingsTagListActivity;
+import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsFragment;
 import org.wordpress.android.ui.prefs.categories.detail.CategoryDetailFragment;
 import org.wordpress.android.ui.prefs.categories.list.CategoriesListFragment;
 import org.wordpress.android.ui.prefs.homepage.HomepageSettingsDialog;
@@ -155,7 +152,6 @@ import org.wordpress.android.ui.prefs.timezone.SiteSettingsTimezoneBottomSheet;
 import org.wordpress.android.ui.publicize.PublicizeAccountChooserListAdapter;
 import org.wordpress.android.ui.publicize.PublicizeButtonPrefsFragment;
 import org.wordpress.android.ui.publicize.PublicizeDetailFragment;
-import org.wordpress.android.ui.publicize.PublicizeListActivity;
 import org.wordpress.android.ui.publicize.PublicizeListFragment;
 import org.wordpress.android.ui.publicize.PublicizeWebViewFragment;
 import org.wordpress.android.ui.publicize.adapters.PublicizeConnectionAdapter;
@@ -165,7 +161,6 @@ import org.wordpress.android.ui.quickstart.QuickStartReminderReceiver;
 import org.wordpress.android.ui.reader.CommentNotificationsBottomSheetFragment;
 import org.wordpress.android.ui.reader.ReaderBlogFragment;
 import org.wordpress.android.ui.reader.ReaderCommentListActivity;
-import org.wordpress.android.ui.reader.ReaderFragment;
 import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
 import org.wordpress.android.ui.reader.ReaderPostListActivity;
 import org.wordpress.android.ui.reader.ReaderPostListFragment;
@@ -212,7 +207,6 @@ import org.wordpress.android.ui.stories.StoryComposerActivity;
 import org.wordpress.android.ui.stories.intro.StoriesIntroDialogFragment;
 import org.wordpress.android.ui.suggestion.SuggestionActivity;
 import org.wordpress.android.ui.suggestion.adapters.SuggestionAdapter;
-import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.ui.themes.ThemeBrowserFragment;
 import org.wordpress.android.ui.uploads.MediaUploadHandler;
 import org.wordpress.android.ui.uploads.MediaUploadReadyProcessor;
@@ -300,8 +294,6 @@ public interface AppComponent {
 
     void inject(AppSettingsFragment object);
 
-    void inject(PeopleManagementActivity object);
-
     void inject(PeopleListFragment object);
 
     void inject(PersonDetailFragment object);
@@ -334,8 +326,6 @@ public interface AppComponent {
 
     void inject(SiteSettingsTagDetailFragment object);
 
-    void inject(PublicizeListActivity object);
-
     void inject(PublicizeWebViewFragment object);
 
     void inject(PublicizeDetailFragment object);
@@ -361,8 +351,6 @@ public interface AppComponent {
     void inject(HistoryAdapter object);
 
     void inject(HistoryDetailContainerFragment object);
-
-    void inject(NotificationsListFragment object);
 
     void inject(NotificationsListFragmentPage object);
 
@@ -426,8 +414,6 @@ public interface AppComponent {
 
     void inject(WPWebViewClient object);
 
-    void inject(ThemeBrowserActivity object);
-
     void inject(NotesAdapter object);
 
     void inject(ThemeBrowserFragment object);
@@ -441,8 +427,6 @@ public interface AppComponent {
     void inject(AddCategoryFragment object);
 
     void inject(PluginBrowserActivity object);
-
-    void inject(ActivityLogListActivity object);
 
     void inject(ActivityLogListFragment object);
 
@@ -563,8 +547,6 @@ public interface AppComponent {
     void inject(StoryComposerActivity object);
 
     void inject(StoriesIntroDialogFragment object);
-
-    void inject(ReaderFragment object);
 
     void inject(ReaderDiscoverFragment object);
 

@@ -63,7 +63,7 @@ platform :android do
     push_to_git_remote
 
     new_version = android_get_app_version()
-    trigger_release_build(branch_to_build: "release/#{new_version}")
+    trigger_beta_build(branch_to_build: "release/#{new_version}")
   end
 
   #####################################################################################
@@ -91,7 +91,7 @@ platform :android do
     return unless UI.confirm('Ready for CI build')
 
     new_version = android_get_app_version()
-    trigger_release_build(branch_to_build: "release/#{new_version}")
+    trigger_beta_build(branch_to_build: "release/#{new_version}")
   end
 
   #####################################################################################
@@ -166,43 +166,69 @@ platform :android do
   end
 
   lane :check_translations_coverage do |options|
-    UI.message('Checking app strings translation status...')
+    UI.message('Checking WordPress app strings translation status...')
     check_translation_progress(
-      glotpress_url: 'https://translate.wordpress.org/projects/apps/android/dev/',
+      glotpress_url: APP_SPECIFIC_VALUES[:wordpress][:glotpress_appstrings_project],
+      abort_on_violations: false,
+      skip_confirm: options[:skip_confirm] || false
+    )
+
+    UI.message('Checking Jetpack app strings translation status...')
+    check_translation_progress(
+      glotpress_url: APP_SPECIFIC_VALUES[:jetpack][:glotpress_appstrings_project],
       abort_on_violations: false,
       skip_confirm: options[:skip_confirm] || false
     )
 
     UI.message('Checking WordPress release notes strings translation status...')
     check_translation_progress(
-      glotpress_url: APP_SPECIFIC_VALUES[:wordpress][:gp_url],
+      glotpress_url: APP_SPECIFIC_VALUES[:wordpress][:glotpress_metadata_project],
       abort_on_violations: false,
       skip_confirm: options[:skip_confirm] || false
     )
 
     UI.message('Checking Jetpack release notes strings translation status...')
     check_translation_progress(
-      glotpress_url: APP_SPECIFIC_VALUES[:jetpack][:gp_url],
+      glotpress_url: APP_SPECIFIC_VALUES[:jetpack][:glotpress_metadata_project],
       abort_on_violations: false,
       skip_confirm: options[:skip_confirm] || false
     )
   end
 
   #####################################################################################
+  # trigger_beta_build
+  # -----------------------------------------------------------------------------------
+  # This lane triggers a beta build using the `.buildkite/beta-builds.yml` pipeline.
+  # -----------------------------------------------------------------------------------
+  # Usage:
+  # bundle exec fastlane trigger_beta_build branch_to_build:<branch_name>
+  #
+  #####################################################################################
+  lane :trigger_beta_build do |options|
+    buildkite_trigger_build(
+      buildkite_organization: 'automattic',
+      buildkite_pipeline: 'wordpress-android',
+      branch: options[:branch_to_build] || git_branch,
+      pipeline_file: 'beta-builds.yml'
+    )
+  end
+
+  #####################################################################################
   # trigger_release_build
   # -----------------------------------------------------------------------------------
-  # This lane triggers a stable release build on CI
+  # This lane triggers a release build using the `.buildkite/release-builds.yml`
+  # pipeline.
   # -----------------------------------------------------------------------------------
   # Usage:
   # bundle exec fastlane trigger_release_build branch_to_build:<branch_name>
   #
   #####################################################################################
   lane :trigger_release_build do |options|
-    circleci_trigger_job(
-      circle_ci_token: ENV['CIRCLE_CI_AUTH_TOKEN'],
-      repository: REPOSITORY_NAME,
-      branch: options[:branch_to_build],
-      job_params: { 'release_build' => true }
+    buildkite_trigger_build(
+      buildkite_organization: 'automattic',
+      buildkite_pipeline: 'wordpress-android',
+      branch: options[:branch_to_build] || git_branch,
+      pipeline_file: 'release-builds.yml'
     )
   end
 

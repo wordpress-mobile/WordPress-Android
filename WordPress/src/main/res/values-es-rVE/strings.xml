@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-06-16 20:19:32+0000
+Translation-Revision-Date: 2022-07-13 00:08:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: es_VE
@@ -22,13 +22,10 @@ Language: es_VE
     <string name="stats_referrers_pie_chart_wordpress">WordPress</string>
     <string name="stats_referrers_pie_chart_total_label">Vistas</string>
     <string name="stats_action_card_schedule_post_button_label">Programar</string>
-    <string name="stats_action_card_schedule_post_message">✍️ Programa para publicar tu contenido en el mejor momento desde los borradores.</string>
     <string name="stats_action_card_schedule_post_title">Programa tu entrada</string>
     <string name="stats_action_card_blogging_reminders_button_label">Configurar recordatorios</string>
-    <string name="stats_action_card_blogging_reminders_message">💡Configura el recordatorio de publicar regularmente para mantener a los lectores enganchados y atraer a nuevos visitantes.</string>
     <string name="stats_action_card_blogging_reminders_title">Configura tus recordatorios de blogueo</string>
     <string name="stats_action_card_grow_audience_button_label">Consulta el curso</string>
-    <string name="stats_action_card_grow_audience_message">💡Tenemos lecciones fáciles impartidas por los mejores blogueros para hacer crecer tu blog.</string>
     <string name="stats_action_card_grow_audience_title">Haz crecer tu audiencia</string>
     <string name="gutenberg_native_you_can_also_rearrange_blocks_by_tapping_a_block_and_then_tapping">También puedes reorganizar los bloques tocando un bloque y luego tocando las flechas arriba y abajo que aparecen en la parte inferior izquierda del bloque para moverlo encima o debajo de otros bloques.</string>
     <string name="gutenberg_native_image_file_not_found">Archivo de imagen no encontrado.</string>
@@ -39,13 +36,9 @@ Language: es_VE
     <string name="quick_start_sites_type_all_tasks_completed">Todas las tareas están completas</string>
     <string name="quick_start_list_task_complete">Tarea completada</string>
     <string name="me_btn_scan_login_code">Explorar código de acceso</string>
-    <string name="stats_insights_followers_guide_card">💡 Puedes probar a dejar un comentario como un gesto para animar a la participación en el blog y luego ganar más seguidores.</string>
-    <string name="stats_insights_comments_guide_card">💡 Ve tus principales contribuidores tocando en VER MÁS.</string>
     <string name="stats_insights_likes_guide_card">⭐️  Tu última entrada %1$s ha recibido %2$s me gusta.</string>
     <string name="stats_most_popular_percent_views_empty">No hay suficiente actividad. ¡Vuelve a comprobarlo más tarde, cuando tu sitio haya tenido más visitas!</string>
-    <string name="stats_insights_latest_post_empty">Todavía no has publicado ninguna entrada. ¡Vuelve más tarde cuando hayas publicado tu primera entrada!</string>
-    <string name="stats_insights_views_and_visitors_visitors_empty_state">Si quieres probar a conseguir más visualizaciones y tráfico echa un vistazo a nuestros consejos destacados %1$s</string>
-    <string name="stats_total_followers_content_description">%1s, %2s del total de seguidores</string>
+    <string name="stats_total_followers_content_description">%1$s, %2$s%% del total de seguidores</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
     <string name="pages_copy_link">Copiar enlace</string>
     <string name="quick_start_completed_tour_title">¡Enhorabuena! Ya sabes manejarte&lt;br/&gt;</string>
@@ -369,7 +362,6 @@ Language: es_VE
     <string name="me_btn_share">Comparte WordPress con un amigo</string>
     <string name="my_site_quick_actions_title">Enlaces rápidos</string>
     <string name="my_site_btn_domains">Dominios</string>
-    <string name="weekly_roundup_notification_text">Tu sitio recibió %1$d visualizaciones, %2$d me gusta, %3$d comentarios.</string>
     <string name="weekly_roundup_notification_title">Repaso semanal: %s</string>
     <string name="blogging_reminders_notification_time">Hora del aviso</string>
     <string name="blogging_reminders_epilogue_body_everyday_with_time">Recibirás recordatorios para bloquear &lt;b&gt;todos los días&lt;/b&gt; a las &lt;b&gt;%s&lt;/b&gt;.</string>
@@ -711,9 +703,6 @@ Language: es_VE
     <string name="quick_start_dialog_review_pages_message">Cambia, añade o elimina páginas en tu sitio.</string>
     <string name="quick_start_dialog_review_pages_title">Revisar las páginas del sitio</string>
     <string name="quick_start_dialog_edit_homepage_message_pages_short">Selecciona %1$s Página de inicio %2$s para editar tu página de inicio.</string>
-    <string name="quick_start_dialog_edit_homepage_message_short">Selecciona %1$s Páginas %2$s para ver tu lista de páginas.</string>
-    <string name="quick_start_dialog_edit_homepage_message">Cambia, añade o elimina contenido en la página de inicio de tu sitio.</string>
-    <string name="quick_start_dialog_edit_homepage_title">Editar la página de inicio</string>
     <string name="reader_menu_mark_as_unseen">Marcar como no leída</string>
     <string name="reader_menu_mark_as_seen">Marcar como leída</string>
     <string name="error_media_upload_failed_for_reason">No se han podido subir los elementos multimedia.\n%1$s</string>
@@ -3040,7 +3029,6 @@ Language: es_VE
     <string name="stats_followers_a_minute_ago">hace un minuto</string>
     <string name="stats_followers_seconds_ago">hace unos segundos</string>
     <string name="stats_view_followers">Seguidores</string>
-    <string name="stats_view_publicize">Difundir</string>
     <string name="stats_view_videos">Videos</string>
     <string name="stats_view_top_posts_and_pages">Entradas y páginas</string>
     <string name="stats_view_countries">Países</string>

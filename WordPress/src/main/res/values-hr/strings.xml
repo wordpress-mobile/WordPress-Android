@@ -417,7 +417,6 @@ Language: hr
     <string name="stats_followers_years">%1$d godina</string>
     <string name="stats_followers_a_month">Mjesec</string>
     <string name="stats_followers_minutes">%1$d minuta</string>
-    <string name="stats_view_publicize">Publicirajte</string>
     <string name="ssl_certificate_details">Detalji</string>
     <string name="cab_selected">%d odabrano</string>
     <string name="reader_label_like">Lajk</string>

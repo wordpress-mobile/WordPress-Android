@@ -2101,7 +2101,6 @@ Language: ku_TR
     <string name="stats_followers_months">%1$d meh</string>
     <string name="stats_views">Dîtin</string>
     <string name="stats_followers_seconds_ago">saniye berê</string>
-    <string name="stats_view_publicize">Belavok</string>
     <string name="stats_view_top_posts_and_pages">Şandî &amp; Rûpel</string>
     <string name="themes_fetching">Rûkar tên stendin…</string>
     <string name="ssl_certificate_details">Hûrgilî</string>

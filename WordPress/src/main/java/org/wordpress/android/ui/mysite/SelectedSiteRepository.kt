@@ -89,7 +89,7 @@ class SelectedSiteRepository @Inject constructor(
             siteSettings = null
         }
         if (siteSettings == null) {
-            fun onError(error: Exception?) {
+            fun onError() {
                 showSiteIconProgressBar(false)
             }
             siteSettings = siteSettingsInterfaceFactory.build(

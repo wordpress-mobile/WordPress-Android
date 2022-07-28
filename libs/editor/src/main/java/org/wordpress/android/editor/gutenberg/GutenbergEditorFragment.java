@@ -1253,7 +1253,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                     url,
                     mediaEntry.getValue().getMimeType(),
                     mediaEntry.getValue().getCaption(),
-                    mediaEntry.getValue().getTitle()));
+                    mediaEntry.getValue().getTitle(),
+                    mediaEntry.getValue().getAlt()));
         }
 
         getGutenbergContainerFragment().appendMediaFiles(rnMediaList);
@@ -1342,8 +1343,9 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     @Override
     public void onMediaUploadSucceeded(final String localMediaId, final MediaFile mediaFile) {
         mUploadingMediaProgressMax.remove(localMediaId);
-        getGutenbergContainerFragment().mediaFileUploadSucceeded(Integer.valueOf(localMediaId), mediaFile.getFileURL(),
-                Integer.valueOf(mediaFile.getMediaId()));
+        getGutenbergContainerFragment()
+                .mediaFileUploadSucceeded(Integer.parseInt(localMediaId), mediaFile.getOptimalFileURL(),
+                Integer.parseInt(mediaFile.getMediaId()));
     }
 
     @Override

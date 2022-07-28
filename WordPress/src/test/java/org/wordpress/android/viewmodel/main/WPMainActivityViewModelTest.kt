@@ -61,6 +61,7 @@ import org.wordpress.android.util.config.BloggingPromptsFeatureConfig
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel.FocusPointInfo
 import java.util.Date
 
+@Suppress("LargeClass")
 @RunWith(MockitoJUnitRunner::class)
 @InternalCoroutinesApi
 class WPMainActivityViewModelTest : BaseUnitTest() {

@@ -187,6 +187,7 @@ class CardsBuilderTest {
     private fun List<MySiteCardAndItem>.findQuickLinkRibbon() =
             this.find { it is QuickLinkRibbon } as QuickLinkRibbon?
 
+    @Suppress("LongParameterList")
     private fun buildCards(
         isQuickActionEnabled: Boolean = true,
         activeTask: QuickStartTask? = null,

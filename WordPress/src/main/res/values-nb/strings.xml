@@ -15,8 +15,6 @@ Language: nb_NO
     <string name="me_btn_scan_login_code">Skann innloggingskode</string>
     <string name="stats_insights_likes_guide_card">⭐️ Ditt siste innlegg %1$s har fått %2$s likerklikk.</string>
     <string name="stats_most_popular_percent_views_empty">Ikke nok aktivitet. Kom tilbake senere når ditt nettsted har hatt flere besøkende!</string>
-    <string name="stats_insights_latest_post_empty">Du  har ikke publisert noen innlegg ennå. Kom tilbake når du har publisert ditt førte innlegg!</string>
-    <string name="stats_total_followers_content_description">%1s, %2s av følgere totalt</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
     <string name="pages_copy_link">Kopier lenke</string>
     <string name="quick_start_sites_type_get_to_know_app">Bli kjent med appen</string>
@@ -281,7 +279,6 @@ Language: nb_NO
     <string name="web_preview_mobile">Mobil</string>
     <string name="quick_start_card_menu_remove">Ikke vis igjen</string>
     <string name="quick_start_card_menu_pin">Fest dette</string>
-    <string name="quick_start_dialog_edit_homepage_title">Rediger din forside</string>
     <string name="reader_menu_mark_as_unseen">Merk som usett</string>
     <string name="reader_menu_mark_as_seen">Merk som sett</string>
     <string name="threat_fix_all_warning_title">Fjern alle trusler</string>
@@ -2369,7 +2366,6 @@ Language: nb_NO
     <string name="stats_followers_a_minute_ago">ett minutt siden</string>
     <string name="stats_followers_seconds_ago">sekunder siden</string>
     <string name="stats_view_followers">Følgere</string>
-    <string name="stats_view_publicize">Publiser</string>
     <string name="stats_view_videos">Videoer</string>
     <string name="stats_view_top_posts_and_pages">Innlegg og sider</string>
     <string name="stats_view_countries">Land</string>

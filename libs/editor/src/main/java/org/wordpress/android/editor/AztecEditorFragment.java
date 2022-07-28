@@ -1306,6 +1306,11 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         }
     }
 
+    @Override
+    public void beforeMediaDeleted(@NonNull AztecAttributes aztecAttributes) {
+        // noop implementation for shared interface with block editor
+    }
+
     private static class MediaPredicate implements AztecText.AttributePredicate, Parcelable {
         private final String mId;
         private final String mAttributeName;

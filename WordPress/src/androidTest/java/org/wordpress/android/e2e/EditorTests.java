@@ -40,7 +40,7 @@ public class EditorTests extends BaseTest {
         MySitesPage mySitesPage = new MySitesPage().go();
         sleep();
 
-        mySitesPage.clickSettingsItem();
+        mySitesPage.goToSettings();
 
         // Set to Classic.
         new SiteSettingsPage().setEditorToClassic();
@@ -48,7 +48,7 @@ public class EditorTests extends BaseTest {
         // exit the Settings page
         pressBack();
 
-        mySitesPage.clickBlogPostsItem();
+        mySitesPage.goToPosts();
 
         mySitesPage.startNewPost();
     }

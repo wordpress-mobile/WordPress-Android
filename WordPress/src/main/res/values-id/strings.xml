@@ -1,11 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-06-19 00:06:30+0000
+Translation-Revision-Date: 2022-07-16 08:54:08+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: id
 -->
 <resources>
+    <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery">Terjadi masalah saat menampilkan blok. \nKetuk untuk mencoba pemulihan blok.</string>
+    <string name="weekly_roundup_notification_text_views_and_comments">Minggu lalu Anda mendapatkan %1$s tayangan dan %2$s komentar</string>
+    <string name="weekly_roundup_notification_text_views_and_likes">Minggu lalu Anda mendapatkan %1$s tayangan dan %2$s suka</string>
+    <string name="weekly_roundup_notification_text_views_only">Minggu lalu Anda mendapatkan %1$s tayangan.</string>
+    <string name="weekly_roundup_notification_text_all">Minggu lalu Anda mendapatkan %1$s tayangan, %2$s suka, dan %3$s komentar.</string>
+    <string name="stats_revamp_v2_update_alert_message">Diperbarui di Wawasan Baru untuk membantu Anda memahami performa konten dan minat audiens Anda.</string>
+    <string name="stats_insights_like_guide_card">⭐️ Artikel terbaru Anda %1$s telah menerima %2$s suka.</string>
+    <string name="wp_jetpack_powered">Didukung Jetpack</string>
+    <string name="qrcode_auth_flow_content_description">Gambar menunjukkan pemindaian kode login sedang berlangsung</string>
+    <string name="qrcode_auth_flow_error_content_description">Gambar menunjukkan terjadinya error</string>
+    <string name="qrcode_auth_flow_dismiss_dialog_message">Anda yakin ingin melanjutkan?</string>
+    <string name="qrcode_auth_flow_dismiss_dialog_title">Alur Keluar Pindai Kode Login</string>
+    <string name="qrcode_auth_flow_error_auth_failed_subtitle">Tidak dapat login menggunakan kode ini. Ketuk tombol Pindai Lagi untuk memindai ulang kode.</string>
+    <string name="qrcode_auth_flow_error_auth_failed_title">Autentikasi Gagal</string>
+    <string name="qrcode_auth_flow_error_expired_subtitle">Kode login telah kedaluwarsa. Ketuk tombol Pindai Lagi untuk memindai ulang kode.</string>
+    <string name="qrcode_auth_flow_error_expired_title">Kode login kedaluwarsa</string>
+    <string name="qrcode_auth_flow_error_invalid_data_subtitle">Kode login yang dipindai tidak dapat divalidasi. Ketuk tombol Pindai Lagi untuk memindai ulang kode.</string>
+    <string name="qrcode_auth_flow_error_invalid_data_title">Tidak dapat memvalidasi kode login</string>
+    <string name="qrcode_auth_flow_error_no_connection_subtitle">Diperlukan koneksi internet yang aktif untuk memindai kode login</string>
+    <string name="qrcode_auth_flow_error_no_connection_title">Tidak ada koneksi.</string>
+    <string name="qrcode_auth_flow_scan_again">Pindai Lagi</string>
+    <string name="qrcode_auth_flow_dismiss">Tutup</string>
+    <string name="qrcode_auth_flow_done_subtitle">Ketuk tutup dan kembali ke browser web Anda untuk melanjutkan.</string>
+    <string name="qrcode_auth_flow_done_title">Anda sudah login!</string>
+    <string name="qrcode_auth_flow_validated_primary_action">Ya, saya ingin login</string>
+    <string name="qrcode_auth_flow_validated_subtitle">Hanya pindai kode QR yang diambil langsung dari browser web Anda. Jangan pindai kode yang dikirimkan oleh orang lain.</string>
+    <string name="qrcode_auth_flow_validated_default_title">Apakah Anda mencoba login melalui browser web di sekitar %1$s?</string>
+    <string name="qrcode_auth_flow_validated_title">Apakah Anda mencoba login ke %1$s di sekitar %2$s</string>
+    <string name="stats_revamp_v2_intro_secondary_button_text">Ingatkan saya nanti</string>
+    <string name="stats_revamp_v2_intro_primary_button_text">Coba sekarang</string>
+    <string name="stats_revamp_v2_intro_content_note">Pelajari lebih lanjut di Situs Saya &gt; Statistik &gt; Wawasan.</string>
+    <string name="stats_revamp_v2_intro_content">Wawasan membantu memahami seberapa laris konten Anda dan apa yang disukai pengunjung situs Anda.</string>
+    <string name="stats_revamp_v2_intro_header_title">Wawasan terbaru</string>
+    <string name="stats_insights_followers_guide_card">💡Cobalah memberikan komentar di blog lain untuk menarik perhatian dan pengikut ke situs baru Anda.</string>
+    <string name="stats_insights_comments_guide_card">💡Ketuk \'LIHAT LEBIH BANYAK\' untuk melihat komentator teratas Anda.</string>
+    <string name="stats_insights_latest_post_empty">Periksa lagi setelah Anda memposkan pos pertama Anda!</string>
+    <string name="stats_insights_views_and_visitors_visitors_empty_state">Cek tips terbaik kami untuk meningkatkan pratinjau dan kunjungan Anda %1$s</string>
+    <string name="stats_view_publicize">Koneksi Sosial Media</string>
+    <string name="stats_action_card_schedule_post_message">✍️ Jadwalkan draf Anda untuk diposkan di waktu ramai untuk mendapatkan lebih banyak pengunjung.</string>
+    <string name="stats_action_card_blogging_reminders_message">💡Memposkan secara konsisten membantu Anda menarik lebih banyak pengunjung. Tambahkan pengingat untuk menjaga konsistensi.</string>
+    <string name="stats_action_card_grow_audience_message">💡Tingkatkan kemampuan blog Anda lebih cepat dengan pelatihan&lt;i&gt; Pengenalan Blogging&lt;/i&gt; dari para ahli.</string>
     <string name="blogging_prompts_onboarding_prompts_loading">Prompt Blogging sedang dimuat. Harap tunggu beberapa saat lalu coba lagi.</string>
     <string name="hpp_bottom_helper_text">Bingung memilih? Anda dapat mengganti tema kapan saja.</string>
     <string name="hpp_recommended_default_vertical">Penulisan Blog</string>
@@ -22,13 +63,10 @@ Language: id
     <string name="stats_referrers_pie_chart_wordpress">WordPress</string>
     <string name="stats_referrers_pie_chart_total_label">Tayangan</string>
     <string name="stats_action_card_schedule_post_button_label">Jadwal</string>
-    <string name="stats_action_card_schedule_post_message">✍️ Jadwalkan pos untuk dipublikasikan di waktu yang terbaik dari layar konsep Anda.</string>
     <string name="stats_action_card_schedule_post_title">Jadwalkan pos Anda</string>
     <string name="stats_action_card_blogging_reminders_button_label">Setel pengingat</string>
-    <string name="stats_action_card_blogging_reminders_message">💡Setel pengingat untuk memublikasikan secara rutin guna mempertahankan pembaca Anda dan menarik perhatian pengunjung baru.</string>
     <string name="stats_action_card_blogging_reminders_title">Setel pengingat blogging Anda</string>
     <string name="stats_action_card_grow_audience_button_label">Periksa kursus</string>
-    <string name="stats_action_card_grow_audience_message">💡Kami menyediakan pelajaran yang mudah dipahami, yang dibawakan oleh blogger terbaik, untuk mengembangkan blog Anda.</string>
     <string name="stats_action_card_grow_audience_title">Perbanyak audiens Anda</string>
     <string name="gutenberg_native_you_can_also_rearrange_blocks_by_tapping_a_block_and_then_tapping">Anda juga dapat mengatur ulang blok dengan mengetuk blok lalu mengetuk anak panah atas dan bawah yang muncul di sisi kiri bawah blok untuk memindahkannya ke atas atau ke bawah.</string>
     <string name="gutenberg_native_image_file_not_found">Berkas gambar tidak ditemukan.</string>
@@ -39,13 +77,9 @@ Language: id
     <string name="quick_start_sites_type_all_tasks_completed">Semua tugas selesai</string>
     <string name="quick_start_list_task_complete">Tugas selesai</string>
     <string name="me_btn_scan_login_code">Pindai Kode Login</string>
-    <string name="stats_insights_followers_guide_card">💡Anda bisa coba meninggalkan komentar sebagai pemicu keterlibatan di blog untuk mendapatkan lebih banyak pengikut.</string>
-    <string name="stats_insights_comments_guide_card">💡Lihat kontributor teratas Anda dengan mengetuk LIHAT SELENGKAPNYA.</string>
     <string name="stats_insights_likes_guide_card">⭐️ Artikel terbaru Anda %1$s telah menerima %2$s suka.</string>
     <string name="stats_most_popular_percent_views_empty">Aktivitas tidak cukup. Periksa lagi nanti saat situs Anda lebih ramai pengunjung!</string>
-    <string name="stats_insights_latest_post_empty">Anda belum menerbitkan satu pos pun. Periksa lagi nanti setelah Anda memposkan pos pertama!</string>
-    <string name="stats_insights_views_and_visitors_visitors_empty_state">Jika ingin mendapatkan lebih banyak tayangan dan lalu lintas, simak tips jitu %1$s kami</string>
-    <string name="stats_total_followers_content_description">%1s, %2s total pengikut</string>
+    <string name="stats_total_followers_content_description">%1$s, %2$s%% total pengikut</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
     <string name="pages_copy_link">Salin tautan</string>
     <string name="quick_start_completed_tour_title">Selamat! Anda telah berhasil&lt;br/&gt;</string>
@@ -369,7 +403,6 @@ Language: id
     <string name="me_btn_share">Bagikan WordPress dengan teman</string>
     <string name="my_site_quick_actions_title">Tautan Cepat</string>
     <string name="my_site_btn_domains">Domain</string>
-    <string name="weekly_roundup_notification_text">Situs Anda memiliki %1$d tayangan, %2$d suka, %3$d komentar.</string>
     <string name="weekly_roundup_notification_title">Ringkasan Mingguan: %s</string>
     <string name="blogging_reminders_notification_time">Waktu pemberitahuan</string>
     <string name="blogging_reminders_epilogue_body_everyday_with_time">Anda akan mendapat pengingat blogging &lt;b&gt;setiap hari&lt;/b&gt; pada &lt;b&gt;%s&lt;/b&gt;.</string>
@@ -711,9 +744,6 @@ Language: id
     <string name="quick_start_dialog_review_pages_message">Ubah, tambahkan, atau hapus halaman situs.</string>
     <string name="quick_start_dialog_review_pages_title">Tinjau laman situs</string>
     <string name="quick_start_dialog_edit_homepage_message_pages_short">Pilih %1$s Beranda %2$s untuk menyunting Beranda Anda.</string>
-    <string name="quick_start_dialog_edit_homepage_message_short">Pilih %1$s Halaman %2$s untuk melihat daftar halaman Anda.</string>
-    <string name="quick_start_dialog_edit_homepage_message">Ubah, tambahkan, atau hapus konten dari halaman beranda situs.</string>
-    <string name="quick_start_dialog_edit_homepage_title">Sunting halaman beranda</string>
     <string name="reader_menu_mark_as_unseen">Tandai sebagai belum dilihat</string>
     <string name="reader_menu_mark_as_seen">Tandai sebagai telah dilihat</string>
     <string name="error_media_upload_failed_for_reason">Unggahan media gagal.\n%1$s</string>
@@ -1151,7 +1181,7 @@ Language: id
     <string name="reader_btn_select_few_interests">Pilih beberapa untuk melanjutkan</string>
     <string name="post_status_post_published">Dipublikasikan</string>
     <string name="post_status_post_trashed">Dibuang</string>
-    <string name="post_status_post_scheduled">Dijadwalkan</string>
+    <string name="post_status_post_scheduled">Terjadwal</string>
     <string name="publish_date">Tanggal Publikasi</string>
     <string name="ccpa_privacy_notice_read">Baca pemberitahuan privasi CCPA</string>
     <string name="ccpa_privacy_notice_caption">Undang-Undang Privasi Konsumen California (CCPA) meminta kami untuk menyediakan kepada warga negara California informasi tambahan tentang kategori informasi pribadi yang kami kumpulkan dan bagikan, di mana kami mendapatkan informasi tersebut, dan bagaimana dan mengapa kami menggunakannya.</string>
@@ -1287,7 +1317,7 @@ Language: id
     <string name="gutenberg_native_add_paragraph_block">Tambahkan blok paragraf</string>
     <string name="create_post_page_fab_tooltip_contributors">Buat pos</string>
     <string name="post_list_tab_trashed_posts">Dibuang</string>
-    <string name="post_list_tab_scheduled_posts">Dijadwalkan</string>
+    <string name="post_list_tab_scheduled_posts">Terjadwal</string>
     <string name="post_list_tab_published_posts">Dipublikasikan</string>
     <string name="sharing_facebook_account_must_have_pages">Koneksi Facebook tidak dapat menemukan Halaman apa pun. Publikasikan tidak dapat terhubung ke Profil Facebook, hanya Halaman yang dipublikasikan.</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">Tidak Terhubung</string>
@@ -1860,7 +1890,7 @@ Language: id
     <string name="pages_set_parent">Atur induk</string>
     <string name="pages_view">Lihat</string>
     <string name="pages_trashed">Dibuang</string>
-    <string name="pages_scheduled">Dijadwalkan</string>
+    <string name="pages_scheduled">Terjadwal</string>
     <string name="pages_drafts">Konsep</string>
     <string name="pages_published">Dipublikasikan</string>
     <string name="login_error_sms_throttled">Kami terlalu banyak melakukan upaya pengiriman kode verifikasi SMS. Tunggu sebentar, dan minta kode yang baru beberapa saat lagi.</string>
@@ -3040,7 +3070,6 @@ Language: id
     <string name="stats_followers_a_minute_ago">satu menit yang lalu</string>
     <string name="stats_followers_seconds_ago">detik yang lalu</string>
     <string name="stats_view_followers">Pengikut</string>
-    <string name="stats_view_publicize">Publikasikan</string>
     <string name="stats_view_videos">Video</string>
     <string name="stats_view_top_posts_and_pages">Pos &amp; Halaman</string>
     <string name="stats_view_countries">Negara</string>

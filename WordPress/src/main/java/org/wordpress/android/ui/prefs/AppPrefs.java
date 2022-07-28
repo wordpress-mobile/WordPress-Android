@@ -276,7 +276,10 @@ public class AppPrefs {
         // Used to identify the App Settings for initial screen that is updated when the variant is assigned
         wp_pref_initial_screen,
 
-        STATS_REVAMP2_FEATURE_ANNOUNCEMENT_DISPLAYED
+        STATS_REVAMP2_FEATURE_ANNOUNCEMENT_DISPLAYED,
+
+        // Indicates if this is the first time the user sees the blogging prompts onboarding dialog
+        IS_FIRST_TIME_BLOGGING_PROMPTS_ONBOARDING
     }
 
     private static SharedPreferences prefs() {
@@ -1429,5 +1432,13 @@ public class AppPrefs {
                 UndeletablePrefKey.wp_pref_initial_screen,
                 MySiteTabType.SITE_MENU.getLabel()
         );
+    }
+
+    public static Boolean getIsFirstBloggingPromptsOnboarding() {
+        return getBoolean(UndeletablePrefKey.IS_FIRST_TIME_BLOGGING_PROMPTS_ONBOARDING, true);
+    }
+
+    public static void saveFirstBloggingPromptsOnboarding(final boolean isFirstTime) {
+        setBoolean(UndeletablePrefKey.IS_FIRST_TIME_BLOGGING_PROMPTS_ONBOARDING, isFirstTime);
     }
 }

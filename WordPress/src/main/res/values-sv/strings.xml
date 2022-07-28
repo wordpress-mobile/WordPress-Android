@@ -1,11 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-06-16 10:35:09+0000
+Translation-Revision-Date: 2022-07-14 14:54:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: sv_SE
 -->
 <resources>
+    <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery">Problem med att visa block. \nTryck för att försöka med blockåterställning.</string>
+    <string name="weekly_roundup_notification_text_views_and_comments">Förra veckan hade du %1$s visningar och %2$s kommentarer</string>
+    <string name="weekly_roundup_notification_text_views_and_likes">Förra veckan hade du %1$s visningar och %2$s gillamarkeringar</string>
+    <string name="weekly_roundup_notification_text_views_only">Förra veckan hade du %1$s visningar.</string>
+    <string name="weekly_roundup_notification_text_all">Förra veckan hade du %1$s visningar, %2$s gillamarkeringar och %3$s kommentarer.</string>
+    <string name="stats_revamp_v2_update_alert_message">Uppdaterade till nya insikter för att hjälpa dig att se hur ditt innehåll presterar och vad som ger respons bland din målgrupp.</string>
+    <string name="stats_insights_like_guide_card">⭐️ Ditt senaste inlägg %1$s har fått %2$s gillamarkering.</string>
+    <string name="wp_jetpack_powered">Drivs med Jetpack</string>
+    <string name="qrcode_auth_flow_content_description">Bild som indikerar att avläsning av inloggningskod pågår</string>
+    <string name="qrcode_auth_flow_error_content_description">Bild som indikerar ett fel</string>
+    <string name="qrcode_auth_flow_dismiss_dialog_message">Är du säker på att du vill fortsätta?</string>
+    <string name="qrcode_auth_flow_dismiss_dialog_title">Lämna flödet för avläsning av inloggningskod</string>
+    <string name="qrcode_auth_flow_error_auth_failed_subtitle">Det gick inte att logga in dig med denna kod. Tryck på knappen ”skanna igen” för att läsa av koden på nytt.</string>
+    <string name="qrcode_auth_flow_error_auth_failed_title">Autentiseringen misslyckades</string>
+    <string name="qrcode_auth_flow_error_expired_subtitle">Denna inloggningskod gäller inte längre. Tryck på knappen ”skanna igen” för att skanna på nytt.</string>
+    <string name="qrcode_auth_flow_error_expired_title">Utgången inloggningskod</string>
+    <string name="qrcode_auth_flow_error_invalid_data_subtitle">Den avlästa inloggningskoden kunde inte bekräftas. Tryck på knappen ”skanna igen” för att avläsa koden en gång till.</string>
+    <string name="qrcode_auth_flow_error_invalid_data_title">Det gick inte att bekräfta inloggningskoden</string>
+    <string name="qrcode_auth_flow_error_no_connection_subtitle">För att logga in med avläsning av kod krävs en fungerande internetanslutning</string>
+    <string name="qrcode_auth_flow_error_no_connection_title">Anslutning saknas</string>
+    <string name="qrcode_auth_flow_scan_again">Skanna igen</string>
+    <string name="qrcode_auth_flow_dismiss">Avfärda</string>
+    <string name="qrcode_auth_flow_done_subtitle">Tryck på avfärda och återgå till webbläsaren för att fortsätta.</string>
+    <string name="qrcode_auth_flow_done_title">Du är inloggad!</string>
+    <string name="qrcode_auth_flow_validated_primary_action">Ja, logga in mig</string>
+    <string name="qrcode_auth_flow_validated_subtitle">Skanna endast QR-koder som visas direkt i din egen webbläsare. Avläs aldrig en kod som någon annan skickat till dig.</string>
+    <string name="qrcode_auth_flow_validated_default_title">Försöker du logga in i din webbläsare i närheten av %1$s?</string>
+    <string name="qrcode_auth_flow_validated_title">Försöker du att logga in till %1$s i närheten av %2$s?</string>
+    <string name="stats_revamp_v2_intro_secondary_button_text">Påminn mig senare</string>
+    <string name="stats_revamp_v2_intro_primary_button_text">Prova nu</string>
+    <string name="stats_revamp_v2_intro_content_note">Läs mer under Min webbplats &gt; Statistik &gt; Insikter</string>
+    <string name="stats_revamp_v2_intro_content">Insikter hjälper dig att förstå hur det går för ditt innehåll och vad din publik tycker om.</string>
+    <string name="stats_revamp_v2_intro_header_title">Uppdatering av insikter</string>
+    <string name="stats_insights_followers_guide_card">💡Att kommentera på andras bloggar är ett bra sätt att bli uppmärksammad och få fler följare på den egna webbplatsen.</string>
+    <string name="stats_insights_comments_guide_card">💡Tryck på ”Visa mer” för att se vilka som kommenterar dig mest.</string>
+    <string name="stats_insights_latest_post_empty">Kom tillbaka när du har publicerat ditt första inlägg!</string>
+    <string name="stats_insights_views_and_visitors_visitors_empty_state">Kolla in våra bästa tips för fler sidvisningar och mer trafik %1$s</string>
+    <string name="stats_view_publicize">Kopplingar till sociala media</string>
+    <string name="stats_action_card_schedule_post_message">✍️ Schemalägg dina utkast för publicering vid den tid du når flest läsare.</string>
+    <string name="stats_action_card_blogging_reminders_message">💡Att publicera regelbundet är ett bra sätt att bygga upp en större läsarkrets. Lägg till påminnelser som hjälper dig att hålla takten.</string>
+    <string name="stats_action_card_grow_audience_message">💡Lyft snabbare ditt bloggande till en ny nivå med hjälp av vår expertledda kurs &lt;i&gt;Introduktion till bloggning&lt;/i&gt;.</string>
     <string name="blogging_prompts_onboarding_prompts_loading">Bloggningsförslag laddas. Vänta ett tag och försök sedan igen.</string>
     <string name="hpp_bottom_helper_text">Kan du inte bestämma dig? Du kan byta tema när som helst.</string>
     <string name="hpp_recommended_default_vertical">Bloggande</string>
@@ -22,13 +63,10 @@ Language: sv_SE
     <string name="stats_referrers_pie_chart_wordpress">WordPress</string>
     <string name="stats_referrers_pie_chart_total_label">Visningar</string>
     <string name="stats_action_card_schedule_post_button_label">Schemalägg</string>
-    <string name="stats_action_card_schedule_post_message">✍️ Schemalägg ditt innehåll för publicering vid bästa möjliga tidpunkt från dina utkast.</string>
     <string name="stats_action_card_schedule_post_title">Schemalägg ditt inlägg</string>
     <string name="stats_action_card_blogging_reminders_button_label">Ställ in påminnelser</string>
-    <string name="stats_action_card_blogging_reminders_message">💡 Ställ in påminnelsen om att publicera regelbundet för att hålla dina läsare engagerade och locka nya besökare.</string>
     <string name="stats_action_card_blogging_reminders_title">Ställ in dina bloggningspåminnelser</string>
     <string name="stats_action_card_grow_audience_button_label">Kolla in kursen</string>
-    <string name="stats_action_card_grow_audience_message">💡 Vi har enkla lektioner om hur du får din blogg att växa, med de bästa bloggarna som lärare.</string>
     <string name="stats_action_card_grow_audience_title">Nå en större publik</string>
     <string name="gutenberg_native_you_can_also_rearrange_blocks_by_tapping_a_block_and_then_tapping">Du kan även ändra blockens ordning genom att trycka på ett block och sedan trycka på pilarna upp/ned som visas till vänster i blocket för att flytta blocket uppåt eller nedåt.</string>
     <string name="gutenberg_native_image_file_not_found">Bildfilen hittades inte.</string>
@@ -39,13 +77,9 @@ Language: sv_SE
     <string name="quick_start_sites_type_all_tasks_completed">Alla uppgifter är slutförda</string>
     <string name="quick_start_list_task_complete">Uppgiften slutförd</string>
     <string name="me_btn_scan_login_code">Skanna inloggningskoden</string>
-    <string name="stats_insights_followers_guide_card">💡 Du kan prova att kommentera på besökarens webbplats som en vänlig gest. Detta kan leda till fler följare.</string>
-    <string name="stats_insights_comments_guide_card">💡 Se dina flitigaste bidragsgivare genom att trycka på VISA MER.</string>
     <string name="stats_insights_likes_guide_card">⭐️ Ditt senaste inlägg %1$s har fått %2$s gillamarkeringar.</string>
     <string name="stats_most_popular_percent_views_empty">Inte tillräckligt med aktivitet. Kom tillbaka när din webbplats har haft fler besökare.</string>
-    <string name="stats_insights_latest_post_empty">Du har inte publicerat några inlägg än. Kom tillbaka när du har publicerat ditt första inlägg.</string>
-    <string name="stats_insights_views_and_visitors_visitors_empty_state">Om du vill få fler visningar och besökare kan du kolla in våra tips %1$s</string>
-    <string name="stats_total_followers_content_description">%1s, %2s av alla följare</string>
+    <string name="stats_total_followers_content_description">%1$s, %2$s%% av totalt antal följare</string>
     <string name="stats_value_percent">%1$s (%2$s %%)</string>
     <string name="pages_copy_link">Kopiera länk</string>
     <string name="quick_start_completed_tour_title">Grattis! Du kan det här&lt;br/&gt;</string>
@@ -369,7 +403,6 @@ Language: sv_SE
     <string name="me_btn_share">Dela WordPress med en vän</string>
     <string name="my_site_quick_actions_title">Snabblänkar</string>
     <string name="my_site_btn_domains">Domäner</string>
-    <string name="weekly_roundup_notification_text">Din webbplats har fått %1$d visningar, %2$d gillamarkeringar, %3$d kommentarer.</string>
     <string name="weekly_roundup_notification_title">Veckosammanfattning: %s</string>
     <string name="blogging_reminders_notification_time">Aviseringstid</string>
     <string name="blogging_reminders_epilogue_body_everyday_with_time">Du får påminnelser om att blogga &lt;b&gt;varje dag&lt;/b&gt; kl. &lt;b&gt;%s&lt;/b&gt;.</string>
@@ -711,9 +744,6 @@ Language: sv_SE
     <string name="quick_start_dialog_review_pages_message">Ändra, lägg till eller ta bort sidor på webbplatsen.</string>
     <string name="quick_start_dialog_review_pages_title">Granska webbplatsens sidor</string>
     <string name="quick_start_dialog_edit_homepage_message_pages_short">Välj %1$s Startsida %2$s för att redigera startsidan.</string>
-    <string name="quick_start_dialog_edit_homepage_message_short">Välj %1$s Sidor %2$s för att visa listan med dina sidor.</string>
-    <string name="quick_start_dialog_edit_homepage_message">Ändra, lägg till eller ta bort innehåll på startsidan för din webbplats.</string>
-    <string name="quick_start_dialog_edit_homepage_title">Redigera din startsida</string>
     <string name="reader_menu_mark_as_unseen">Markera som ej visat</string>
     <string name="reader_menu_mark_as_seen">Markera som visat</string>
     <string name="error_media_upload_failed_for_reason">Uppladdningen av media misslyckades.\n%1$s</string>
@@ -2127,7 +2157,7 @@ Language: sv_SE
     <string name="sharing_disabled_description">Du kan inte komma åt dina delningsinställningar eftersom modulen Sharing Jetpack är inaktiverad.</string>
     <string name="sharing_disabled">Delningsmodulen är inaktiverad</string>
     <string name="version_with_name_param">Version %s</string>
-    <string name="copyright_with_year_and_company_params">© %d %s</string>
+    <string name="copyright_with_year_and_company_params">© %1$d %2$s</string>
     <string name="publisher_with_company_param">Utgivare: %s</string>
     <string name="notification_sound_has_invalid_path">Ogiltig sökväg för det valda ljudet Välj en annan.</string>
     <string name="quickpress_shortcut_with_account_param">QP %s</string>
@@ -3040,7 +3070,6 @@ Language: sv_SE
     <string name="stats_followers_a_minute_ago">en minut sedan</string>
     <string name="stats_followers_seconds_ago">sekunder sedan</string>
     <string name="stats_view_followers">Följare</string>
-    <string name="stats_view_publicize">Publicize</string>
     <string name="stats_view_videos">Videoklipp</string>
     <string name="stats_view_top_posts_and_pages">Inlägg &amp; sidor</string>
     <string name="stats_view_countries">Länder</string>

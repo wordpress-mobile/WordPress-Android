@@ -1024,7 +1024,6 @@ Language: el_GR
     <string name="stats_followers_a_month">Ένας μήνας</string>
     <string name="stats_followers_a_day">Μια ημέρα</string>
     <string name="stats_view_videos">Βίντεο</string>
-    <string name="stats_view_publicize">Δημοσιοποίηση</string>
     <string name="stats_likes">Likes</string>
     <string name="stats_timeframe_years">Χρόνια</string>
     <string name="stats_views">Προβολές</string>

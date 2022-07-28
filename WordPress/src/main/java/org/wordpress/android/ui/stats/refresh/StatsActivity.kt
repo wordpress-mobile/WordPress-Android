@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.activity.viewModels
+import androidx.core.view.isVisible
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.StatsListActivityBinding
@@ -14,15 +15,25 @@ import org.wordpress.android.push.NotificationsProcessingService.ARG_NOTIFICATIO
 import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.stats.StatsTimeframe
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
+import org.wordpress.android.util.JetpackBrandingUtils
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class StatsActivity : LocaleAwareActivity() {
     @Inject lateinit var statsSiteProvider: StatsSiteProvider
+    @Inject lateinit var jetpackBrandingUtils: JetpackBrandingUtils
     private val viewModel: StatsViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(StatsListActivityBinding.inflate(layoutInflater).root)
+
+        with(StatsListActivityBinding.inflate(layoutInflater)) {
+            setContentView(root)
+            if (jetpackBrandingUtils.shouldShowJetpackBranding()) {
+                jetpackBanner.root.isVisible = true
+                jetpackBrandingUtils.setNavigationBarColorForBanner(window)
+            }
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

@@ -1,11 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-06-24 12:33:08+0000
+Translation-Revision-Date: 2022-07-22 12:27:52+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: pt_BR
 -->
 <resources>
+    <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery">Problema ao exibir o bloco. \nToque para tentar restaurá-lo.</string>
+    <string name="weekly_roundup_notification_text_views_and_comments">Na semana passada, você recebeu %1$s visualizações e %2$s comentários</string>
+    <string name="weekly_roundup_notification_text_views_and_likes">Na semana passada, você recebeu %1$s visualizações e %2$s curtidas</string>
+    <string name="weekly_roundup_notification_text_views_only">Na semana passada, você recebeu %1$s visualizações.</string>
+    <string name="weekly_roundup_notification_text_all">Na semana passada, você recebeu %1$s visualizações, %2$s curtidas e %3$s comentários.</string>
+    <string name="stats_revamp_v2_update_alert_message">Atualização para Novas Informações para ajudar você a entender o desempenho do seu conteúdo e o que está atraindo o seu público.</string>
+    <string name="stats_insights_like_guide_card">⭐️ Seu post mais recente, %1$s, recebeu %2$s curtida.</string>
+    <string name="wp_jetpack_powered">Recurso do Jetpack</string>
+    <string name="qrcode_auth_flow_content_description">Imagem indicando que a verificação do código de acesso está em andamento</string>
+    <string name="qrcode_auth_flow_error_content_description">Imagem indicando um erro</string>
+    <string name="qrcode_auth_flow_dismiss_dialog_message">Tem certeza de que deseja continuar?</string>
+    <string name="qrcode_auth_flow_dismiss_dialog_title">Sair do fluxo de verificação do código de acesso</string>
+    <string name="qrcode_auth_flow_error_auth_failed_subtitle">Não foi possível acessar usando esse código. Toque no botão de verificação novamente para reanalisar o código.</string>
+    <string name="qrcode_auth_flow_error_auth_failed_title">Falha na autenticação</string>
+    <string name="qrcode_auth_flow_error_expired_subtitle">Esse código de acesso expirou. Toque no botão de verificação novamente para reanalisar o código.</string>
+    <string name="qrcode_auth_flow_error_expired_title">Código de acesso expirado</string>
+    <string name="qrcode_auth_flow_error_invalid_data_subtitle">O código de acesso que foi verificado não pôde ser validado. Toque no botão de verificação novamente para reanalisar o código.</string>
+    <string name="qrcode_auth_flow_error_invalid_data_title">Não foi possível validar o código de acesso</string>
+    <string name="qrcode_auth_flow_error_no_connection_subtitle">É necessário uma conexão à Internet para verificar os códigos de acesso</string>
+    <string name="qrcode_auth_flow_error_no_connection_title">Sem conexão</string>
+    <string name="qrcode_auth_flow_scan_again">Verificar novamente</string>
+    <string name="qrcode_auth_flow_dismiss">Ignorar</string>
+    <string name="qrcode_auth_flow_done_subtitle">Toque em ignorar e volte para o seu navegador da web para continuar.</string>
+    <string name="qrcode_auth_flow_done_title">Você efetuou login.</string>
+    <string name="qrcode_auth_flow_validated_primary_action">Sim, fazer login</string>
+    <string name="qrcode_auth_flow_validated_subtitle">Leia apenas códigos QR retirados diretamente do seu navegador da web. Nunca leia um código enviado a você por outra pessoa.</string>
+    <string name="qrcode_auth_flow_validated_default_title">Você está tentando acessar no seu navegador da web perto de %1$s?</string>
+    <string name="qrcode_auth_flow_validated_title">Você está tentando acessar em %1$s perto de %2$s?</string>
+    <string name="stats_revamp_v2_intro_secondary_button_text">Lembre-me depois</string>
+    <string name="stats_revamp_v2_intro_primary_button_text">Tente agora</string>
+    <string name="stats_revamp_v2_intro_content_note">Saiba mais em Meu site &gt; Estatísticas &gt; Informações</string>
+    <string name="stats_revamp_v2_intro_content">As informações ajudam você a entender o desempenho do seu conteúdo e o que está atraindo o seu público.</string>
+    <string name="stats_revamp_v2_intro_header_title">Atualização de informações</string>
+    <string name="stats_insights_followers_guide_card">💡Comentar em outros blogs é uma ótima maneira de conquistar seguidores para o seu novo site.</string>
+    <string name="stats_insights_comments_guide_card">💡Toque em \'VISUALIZAR MAIS\' para ver seus principais comentaristas.</string>
+    <string name="stats_insights_latest_post_empty">Confira novamente quando você tiver feito seu primeiro post!</string>
+    <string name="stats_insights_views_and_visitors_visitors_empty_state">Confira nossas principais dicas para aumentar suas visualizações e tráfego %1$s</string>
+    <string name="stats_view_publicize">Conexões nas redes sociais</string>
+    <string name="stats_action_card_schedule_post_message">✍️ Agende para publicar seus rascunhos no melhor momento para alcançar seu público.</string>
+    <string name="stats_action_card_blogging_reminders_message">💡Publicar de forma consistente é uma ótima maneira de atrair seu público. Adicione um lembrete para você manter o ritmo.</string>
+    <string name="stats_action_card_grow_audience_message">💡Aumente o nível de seu conteúdo com nosso curso de &lt;i&gt;Introdução à arte de publicar&lt;/i&gt; conduzido por especialistas.</string>
     <string name="blogging_prompts_onboarding_prompts_loading">As sugestões de publicação estão sendo carregadas. Aguarde um momento e tente novamente.</string>
     <string name="hpp_bottom_helper_text">Não consegue decidir? Você pode mudar o tema a qualquer momento.</string>
     <string name="hpp_recommended_default_vertical">Blogs</string>
@@ -22,13 +63,10 @@ Language: pt_BR
     <string name="stats_referrers_pie_chart_wordpress">WordPress</string>
     <string name="stats_referrers_pie_chart_total_label">Visualizações</string>
     <string name="stats_action_card_schedule_post_button_label">Agendar</string>
-    <string name="stats_action_card_schedule_post_message">✍️ Agende a publicação do seu conteúdo em rascunho para o melhor momento.</string>
     <string name="stats_action_card_schedule_post_title">Agende seu post</string>
     <string name="stats_action_card_blogging_reminders_button_label">Definir lembretes</string>
-    <string name="stats_action_card_blogging_reminders_message">💡 Configure o lembrete de publicar com frequência para manter seus leitores engajados e atrair novos visitantes.</string>
     <string name="stats_action_card_blogging_reminders_title">Configure seus lembretes de publicação</string>
     <string name="stats_action_card_grow_audience_button_label">Confira o curso</string>
-    <string name="stats_action_card_grow_audience_message">💡 Temos aulas fáceis de entender sobre como expandir seu blog, ensinadas pelos melhores blogueiros.</string>
     <string name="stats_action_card_grow_audience_title">Amplie seu público</string>
     <string name="gutenberg_native_you_can_also_rearrange_blocks_by_tapping_a_block_and_then_tapping">Você pode reorganizar os blocos tocando em um deles e, em seguida, nas setas para cima e para baixo que aparecem no canto inferior esquerdo do bloco para movê-lo na direção indicada.</string>
     <string name="gutenberg_native_image_file_not_found">Arquivo de imagem não encontrado.</string>
@@ -39,13 +77,9 @@ Language: pt_BR
     <string name="quick_start_sites_type_all_tasks_completed">Todas as tarefas concluídas</string>
     <string name="quick_start_list_task_complete">Tarefa concluída</string>
     <string name="me_btn_scan_login_code">Examinar código de acesso</string>
-    <string name="stats_insights_followers_guide_card">💡 Deixe um comentário para incentivar o engajamento no blog para ganhar mais seguidores.</string>
-    <string name="stats_insights_comments_guide_card">💡 Toque em VER MAIS para visualizar os principais colaboradores.</string>
     <string name="stats_insights_likes_guide_card">⭐️ Seu post mais recente, %1$s, recebeu %2$s curtidas.</string>
     <string name="stats_most_popular_percent_views_empty">Atividade insuficiente. Confira mais tarde quando o seu site tiver mais visitantes!</string>
-    <string name="stats_insights_latest_post_empty">Você ainda não publicou nenhum post. Confira mais tarde quando você tiver feito sua primeira publicação.</string>
-    <string name="stats_insights_views_and_visitors_visitors_empty_state">Se você quiser tentar obter mais visualizações e tráfego, confira nossas principais dicas %1$s</string>
-    <string name="stats_total_followers_content_description">%1s, %2s do total de seguidores</string>
+    <string name="stats_total_followers_content_description">%1$s, %2$s%% do total de seguidores</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
     <string name="pages_copy_link">Copiar link</string>
     <string name="quick_start_completed_tour_title">Parabéns! Você conhece o caminho&lt;br/&gt;</string>
@@ -369,7 +403,6 @@ Language: pt_BR
     <string name="me_btn_share">Compartilhe o WordPress com um amigo</string>
     <string name="my_site_quick_actions_title">Links rápidos</string>
     <string name="my_site_btn_domains">Domínios</string>
-    <string name="weekly_roundup_notification_text">Seu site teve %1$d visualizações, %2$d curtidas e %3$d comentários.</string>
     <string name="weekly_roundup_notification_title">Resumo semanal: %s</string>
     <string name="blogging_reminders_notification_time">Horário da notificação</string>
     <string name="blogging_reminders_epilogue_body_everyday_with_time">Você receberá lembretes para publicar &lt;b&gt;diariamente&lt;/b&gt; às &lt;b&gt;%s&lt;/b&gt;.</string>
@@ -711,9 +744,6 @@ Language: pt_BR
     <string name="quick_start_dialog_review_pages_message">Altere, adicione ou remova as páginas do seu site.</string>
     <string name="quick_start_dialog_review_pages_title">Revise as páginas do site</string>
     <string name="quick_start_dialog_edit_homepage_message_pages_short">Selecione %1$s Página inicial %2$s para editar sua página inicial.</string>
-    <string name="quick_start_dialog_edit_homepage_message_short">Selecione %1$s Páginas %2$s para exibir sua lista de páginas.</string>
-    <string name="quick_start_dialog_edit_homepage_message">Altere, adicione ou remova conteúdo em sua página inicial.</string>
-    <string name="quick_start_dialog_edit_homepage_title">Edite sua página inicial</string>
     <string name="reader_menu_mark_as_unseen">Marcar como não lido</string>
     <string name="reader_menu_mark_as_seen">Marcar como lido</string>
     <string name="error_media_upload_failed_for_reason">Envio da mídia falhou.\n%1$s</string>
@@ -3040,7 +3070,6 @@ Language: pt_BR
     <string name="stats_followers_a_minute_ago">um minuto atrás</string>
     <string name="stats_followers_seconds_ago">segundos atrás</string>
     <string name="stats_view_followers">Seguidores</string>
-    <string name="stats_view_publicize">Publicize</string>
     <string name="stats_view_videos">Vídeos</string>
     <string name="stats_view_top_posts_and_pages">Posts &amp; Páginas</string>
     <string name="stats_view_countries">Países</string>

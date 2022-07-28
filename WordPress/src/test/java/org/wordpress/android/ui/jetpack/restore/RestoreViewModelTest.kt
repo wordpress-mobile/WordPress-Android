@@ -20,7 +20,6 @@ import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
-import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Rewind.Status.FINISHED
 import org.wordpress.android.test
 import org.wordpress.android.ui.jetpack.common.CheckboxSpannableLabel
 import org.wordpress.android.ui.jetpack.common.JetpackBackupRestoreListItemState.FootnoteState
@@ -475,5 +474,4 @@ class RestoreViewModelTest : BaseUnitTest() {
     private val postRestoreRemoteRequestError = RestoreRequestState.Failure.RemoteRequestFailure
     private val otherRequestRunningError = RestoreRequestState.Failure.OtherRequestRunning
     private val postSuccess = Success(rewindId = "rewindId", requestRewindId = "rewindId", restoreId = 1L)
-    private val getFinished = FINISHED
 }

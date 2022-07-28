@@ -35,7 +35,9 @@ import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.ContentUiState.TabUiState
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.SnackbarSequencer
+import org.wordpress.android.util.config.JetpackPoweredFeatureConfig
 import org.wordpress.android.util.distinct
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -55,6 +57,8 @@ class ReaderViewModel @Inject constructor(
     private val accountStore: AccountStore,
     private val quickStartRepository: QuickStartRepository,
     private val selectedSiteRepository: SelectedSiteRepository,
+    private val jetpackPoweredFeatureConfig: JetpackPoweredFeatureConfig,
+    private val buildConfigWrapper: BuildConfigWrapper,
     private val snackbarSequencer: SnackbarSequencer
         // todo: annnmarie removed this private val getFollowedTagsUseCase: GetFollowedTagsUseCase
 ) : ScopedViewModel(mainDispatcher) {
@@ -87,6 +91,9 @@ class ReaderViewModel @Inject constructor(
     private val _quickStartPromptEvent = MutableLiveData<Event<QuickStartReaderPrompt>>()
     val quickStartPromptEvent = _quickStartPromptEvent as LiveData<Event<QuickStartReaderPrompt>>
 
+    private val _showJetpackPoweredBottomSheet = MutableLiveData<Event<Boolean>>()
+    val showJetpackPoweredBottomSheet: LiveData<Event<Boolean>> = _showJetpackPoweredBottomSheet
+
     init {
         EventBus.getDefault().register(this)
     }
@@ -95,6 +102,13 @@ class ReaderViewModel @Inject constructor(
         if (tagsRequireUpdate()) _updateTags.value = Event(Unit)
         if (initialized) return
         loadTabs()
+        showJetpackPoweredBottomSheet()
+    }
+
+    private fun showJetpackPoweredBottomSheet() {
+        _showJetpackPoweredBottomSheet.value = Event(
+                jetpackPoweredFeatureConfig.isEnabled() && !buildConfigWrapper.isJetpackApp
+        )
     }
 
     private fun loadTabs() {
@@ -226,6 +240,7 @@ class ReaderViewModel @Inject constructor(
 
     private fun ReaderTag.isDefaultSelectedTab(): Boolean = this.isDiscover
 
+    @SuppressWarnings("unused")
     @Subscribe(threadMode = MAIN)
     fun onTagsUpdated(event: ReaderEvents.FollowedTagsChanged) {
         loadTabs()

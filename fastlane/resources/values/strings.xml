@@ -1003,7 +1003,7 @@
     <!-- Stats accessibility strings -->
     <string name="stats_loading_card">Loading selected card data</string>
     <string name="stats_overview_content_description">%1$s %2$s for period: %3$s, change from previous period - %4$s</string>
-    <string name="stats_total_followers_content_description">%1s, %2s of total followers</string>
+    <string name="stats_total_followers_content_description">%1$s, %2$s%% of total followers</string>
     <string name="stats_graph_updated">Graph updated.</string>
     <string name="stats_expand_content_description">Expand</string>
     <string name="stats_collapse_content_description">Collapse</string>
@@ -1369,6 +1369,7 @@
     <string name="stats_insights_management_posts_and_pages">Posts and Pages</string>
     <string name="stats_insights_management_activity">Activity</string>
 
+    <string name="stats_insights_like_guide_card">⭐️ Your latest post %1$s has received %2$s like.</string>
     <string name="stats_insights_likes_guide_card">⭐️ Your latest post %1$s has received %2$s likes.</string>
     <string name="stats_insights_comments_guide_card">💡Tap \'VIEW MORE\' to see your top commenters.</string>
     <string name="stats_insights_followers_guide_card">💡Commenting on other blogs is a great way to build attention and followers for your new site.</string>
@@ -1379,7 +1380,7 @@
     <string name="stats_revamp_v2_intro_content_note">Learn more in My Site &gt; Stats &gt; Insights</string>
     <string name="stats_revamp_v2_intro_primary_button_text">Try it now</string>
     <string name="stats_revamp_v2_intro_secondary_button_text">Remind me later</string>
-
+    <string name="stats_revamp_v2_update_alert_message">Updated to New Insights to help you understand how your content is performing and what\'s resonating with your audience.</string>
 
     <!-- Stats refreshed widgets -->
     <string name="stats_widget_log_in_message">Please log in to the WordPress app to add a widget.</string>
@@ -4050,7 +4051,10 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <!-- Weekly Roundup Notification -->
     <string name="weekly_roundup">Weekly Roundup</string>
     <string name="weekly_roundup_notification_title">Weekly Roundup: %s</string>
-    <string name="weekly_roundup_notification_text">Your site got %1$d views, %2$d likes, %3$d comments.</string>
+    <string name="weekly_roundup_notification_text_all">Last week you had %1$s views, %2$s likes, and %3$s comments.</string>
+    <string name="weekly_roundup_notification_text_views_only">Last week you had %1$s views.</string>
+    <string name="weekly_roundup_notification_text_views_and_likes">Last week you had %1$s views and %2$s likes</string>
+    <string name="weekly_roundup_notification_text_views_and_comments">Last week you had %1$s views and %2$s comments</string>
 
     <!-- About -->
     <string name="about_blog">Blog</string>
@@ -4200,5 +4204,20 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="gutenberg_native_image_file_not_found" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Image file not found.</string>
     <string name="gutenberg_native_new" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">NEW</string>
     <string name="gutenberg_native_you_can_also_rearrange_blocks_by_tapping_a_block_and_then_tapping" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">You can also rearrange blocks by tapping a block and then tapping the up and down arrows that appear on the bottom left side of the block to move it up or down.</string>
+
+    <!-- Jetpack awareness in WordPress App -->
+    <string name="wp_jetpack_powered">Jetpack powered</string>
+    <string name="wp_jetpack_powered_features">Stats, Reader, Notifications, and other features are powered by Jetpack.</string>
+    <string name="wp_jetpack_get_new_jetpack_app">Get the new Jetpack app</string>
+    <string name="wp_jetpack_continue_to_reader">Continue to Reader</string>
+    <string name="wp_jetpack_continue_to_stats" tools:ignore="UnusedResources">Continue to Stats</string>
+    <string name="wp_jetpack_continue_to_notifications" tools:ignore="UnusedResources">Continue to Notifications</string>
+    <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Problem displaying block. \nTap to attempt block recovery.</string>
+    <string name="gutenberg_native_gradient" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Gradient</string>
+    <string name="gutenberg_native_invalid_url" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Invalid URL.</string>
+    <string name="gutenberg_native_jetpack_powered" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Jetpack powered</string>
+    <string name="gutenberg_native_opacity" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Opacity</string>
+    <string name="gutenberg_native_upgrade_your_plan_to_upload_audio" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Upgrade your plan to upload audio</string>
+    <string name="gutenberg_native_upgrade_your_plan_to_use_video_covers" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Upgrade your plan to use video covers</string>
 
 </resources>

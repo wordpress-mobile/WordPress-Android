@@ -1,17 +1,59 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-06-17 10:23:07+0000
+Translation-Revision-Date: 2022-07-19 09:01:27+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: sq_AL
 -->
 <resources>
+    <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery">Problem me shfaqje blloku. \nPrekeni që të provohet rikthim blloku.</string>
+    <string name="weekly_roundup_notification_text_views_and_comments">Javën e kaluar patët %1$s parje dhe %2$s komente</string>
+    <string name="weekly_roundup_notification_text_views_and_likes">Javën e kaluar patët %1$s parje dhe %2$s pëlqime</string>
+    <string name="weekly_roundup_notification_text_views_only">Javën e kaluar patët %1$s parje.</string>
+    <string name="weekly_roundup_notification_text_all">Javën e kaluar patët %1$s parje, %2$s pëlqime dhe %3$s komente.</string>
+    <string name="stats_revamp_v2_update_alert_message">U përditësua me Tendenca të Reja për t’ju ndihmuar të kuptoni se si ecën lënda juaj dhe se çfarë ka rezonancë me publikun.</string>
+    <string name="stats_insights_like_guide_card">⭐️ Postimi juaj më i ri %1$s ka marrë %2$s pëlqime.</string>
+    <string name="wp_jetpack_powered">Bazuar në Jetpack</string>
+    <string name="qrcode_auth_flow_content_description">Figurë që tregon skanim kodi hyrjeje në punë e sipër</string>
+    <string name="qrcode_auth_flow_error_content_description">Figurë që tregon një gabim</string>
+    <string name="qrcode_auth_flow_dismiss_dialog_message">Jeni i sigurt se doni të vazhdohet?</string>
+    <string name="qrcode_auth_flow_error_auth_failed_subtitle">S’u bë dot futja juaj duke përdorur këtë kod hyrjeje. Ju lutemi, prekni butonin “Riskanoje” që të riskanohet kodi.</string>
+    <string name="qrcode_auth_flow_error_auth_failed_title">Mirëfilltësimi Dështoi</string>
+    <string name="qrcode_auth_flow_error_expired_subtitle">Ky kod hyrjeje ka skaduar. Ju lutemi, prekni butonin “Riskanoje” që të riskanohet kodi.</string>
+    <string name="qrcode_auth_flow_error_expired_title">Kod hyrjeje i skaduar</string>
+    <string name="qrcode_auth_flow_error_invalid_data_subtitle">Kodi i hyrjes që u skanua, s’u vlerësua dot. Ju lutemi, prekni butonin “Riskanoje” që të riskanohet kodi.</string>
+    <string name="qrcode_auth_flow_error_invalid_data_title">S’u bë dot vleftësimi i kodit të hyrjes</string>
+    <string name="qrcode_auth_flow_error_no_connection_subtitle">Për të skanuar kode hyrjesh, lypset një lidhje internet aktive</string>
+    <string name="qrcode_auth_flow_error_no_connection_title">S’ka lidhje</string>
+    <string name="qrcode_auth_flow_scan_again">Riskanoje</string>
+    <string name="qrcode_auth_flow_dismiss">Mos e merr parasysh</string>
+    <string name="qrcode_auth_flow_done_subtitle">Prekni mbi “mos e merr parasysh” dhe kthehuni te shfletuesi juaj që të vazhdoni.</string>
+    <string name="qrcode_auth_flow_done_title">Jeni i futur!</string>
+    <string name="qrcode_auth_flow_validated_primary_action">Po, futmë</string>
+    <string name="qrcode_auth_flow_validated_subtitle">Skanoni vetëm kode QR të marrë drejt e nga shfletuesi juaj. Mos skanoni kurrë një kod të dërguar për ju nga dikush tjetër.</string>
+    <string name="qrcode_auth_flow_validated_default_title">Po provoni të hyni në shfletuesin tuaj pranë %1$s?</string>
+    <string name="qrcode_auth_flow_validated_title">A po provoni të hyni te %1$s pranë %2$s?</string>
+    <string name="stats_revamp_v2_intro_secondary_button_text">Kujtoma më vonë</string>
+    <string name="stats_revamp_v2_intro_primary_button_text">Provojeni tani</string>
+    <string name="stats_revamp_v2_intro_content_note">Mësoni më tepër te Sajti Im &gt; Statistika &gt; Tendenca</string>
+    <string name="stats_revamp_v2_intro_content">Tendencat ju ndihmojnë të kuptoni se si ecën lënda juaj dhe se ç’ka rezonancë me publikun tuaj.</string>
+    <string name="stats_revamp_v2_intro_header_title">Përditësim Tendencash</string>
+    <string name="stats_insights_followers_guide_card">💡Komentimi në blogje të tjerë është një mënyrë e goditur për të shtuar vëmendjen dhe ndjekësit për sajtin tuaj të ri.</string>
+    <string name="stats_insights_comments_guide_card">💡Prekni “SHIHNI MË TEPËR”, që të shihni komentuesit tuaj kryesues.</string>
+    <string name="stats_insights_latest_post_empty">Shihni prapë, kur të keni botuar postimin tuaj të parë!</string>
+    <string name="stats_insights_views_and_visitors_visitors_empty_state">Shihni ndihmëzat tona kryesuese për shtim të parjeve dhe trafikut %1$s</string>
+    <string name="stats_view_publicize">Lidhje Mediash Shoqërore</string>
+    <string name="stats_action_card_schedule_post_message">✍️ Planifikoni botimin e skicave tuaja sipas kohës më të përshtatshme për mbërritjen te publiku juaj.</string>
+    <string name="stats_action_card_blogging_reminders_message">💡Postimi në mënyrë të rregullt është një mënyrë e goditur për të krijuar publikun tuaj. Shtoni një kujtues për t’ju mbajtur në këtë pistë.</string>
+    <string name="stats_action_card_grow_audience_message">💡Ngrijeni më shpejt një shkallë më lart blogimin tuaj, me kursin tonë &lt;i&gt;Hyrje në Blogim&lt;/i&gt; të drejtuar nga ekspertë.</string>
+    <string name="blogging_prompts_onboarding_prompts_loading">Po ngarkohen Cytje për Blogim. Ju lutemi, pritni një çast dhe riprovoni.</string>
     <string name="hpp_bottom_helper_text">S’e ndani dot mendjen? Temën mund ta ndryshoni kurdo.</string>
     <string name="hpp_recommended_default_vertical">Blogim</string>
     <string name="hpp_recommended_subtitle">Zgjedhur për ju</string>
     <string name="hpp_recommended_title">Më e mira për %s</string>
     <string name="hpp_preview_tapped_theme">Parashihni temën %s</string>
     <string name="hpp_title">Zgjidhni një temë</string>
+    <string name="my_site_blogging_prompt_card_skipped_snackbar">U anashkalua cytja e sotme për blogim</string>
     <string name="my_site_blogging_prompt_card_menu_learn_more">Mësoni më tepër</string>
     <string name="my_site_blogging_prompt_card_attribution_dayone">Nga</string>
     <string name="stats_follower_types_pie_chart_total_label">Gjithsej</string>
@@ -20,13 +62,10 @@ Language: sq_AL
     <string name="stats_referrers_pie_chart_wordpress">WordPress</string>
     <string name="stats_referrers_pie_chart_total_label">Parje</string>
     <string name="stats_action_card_schedule_post_button_label">Planifikojeni</string>
-    <string name="stats_action_card_schedule_post_message">✍️ Vini në plan postim në kohën më të përshtatshme të lëndës tuaj që nga skicat tuaja.</string>
     <string name="stats_action_card_schedule_post_title">Vini në plan postimin tuaj</string>
     <string name="stats_action_card_blogging_reminders_button_label">Ujdisni kujtues</string>
-    <string name="stats_action_card_blogging_reminders_message">💡Ujdisni kujtues për të postuar rregullisht dhe për t’i mbajtur lexuesit tuaj të angazhuar dhe për të tërhequr vizitorë të rinj.</string>
     <string name="stats_action_card_blogging_reminders_title">Ujdisni kujtuesit tuaj për blogim</string>
     <string name="stats_action_card_grow_audience_button_label">Hidhini një sy kursit</string>
-    <string name="stats_action_card_grow_audience_message">💡Kemi mësime që kapen kollaj, dhënë nga bloguesit më të mirë, për të fuqizuar blogun tuaj.</string>
     <string name="stats_action_card_grow_audience_title">Shtoni publikun tuaj</string>
     <string name="gutenberg_native_you_can_also_rearrange_blocks_by_tapping_a_block_and_then_tapping">Blloqet mund t’i risistemoni edhe duke prekur mbi një bllok dhe mandej duke prekur shigjetat për sipër dhe poshtë që shfaqen në anën e poshtme majtas bllokut, për t’i kaluar sipër ose poshtë blloqesh të tjerë.</string>
     <string name="gutenberg_native_image_file_not_found">S’u gjet kartelë figure.</string>
@@ -37,13 +76,9 @@ Language: sq_AL
     <string name="quick_start_sites_type_all_tasks_completed">Krejt punët të mbaruara</string>
     <string name="quick_start_list_task_complete">Punë e plotësuar</string>
     <string name="me_btn_scan_login_code">Skanoni Kod Hyrje</string>
-    <string name="stats_insights_followers_guide_card">💡Mund të provoni të lini një koment, si një gjest për të nxitur angazhimin me blogun, kundrejt pasjes së më tepër ndjekësve.</string>
-    <string name="stats_insights_comments_guide_card">💡Shihni kontribuesit tuaj kryesues, duke prekur mbi SHIHNI MË TEPËR.</string>
     <string name="stats_insights_likes_guide_card">⭐️ Postimi juaj më i ri %1$s ka marrë %2$s pëlqime.</string>
     <string name="stats_most_popular_percent_views_empty">Pa veprimtari të mjaftueshme. Kontrolloni më vonë, kur sajti juaj të ketë më tepër vizitorë!</string>
-    <string name="stats_insights_latest_post_empty">S’keni botuar ende ndonjë postim. Kontrolloni më vonë, sapo të keni botuar postimin tuaj të parë!</string>
-    <string name="stats_insights_views_and_visitors_visitors_empty_state">Nëse doni të provoni të merrni më tepër parje dhe trafik, shihni ndihmëzat tona kryesuese për %1$s</string>
-    <string name="stats_total_followers_content_description">%1s, %2s e ndjekësve gjithsej</string>
+    <string name="stats_total_followers_content_description">%1$s, %2$s%% e ndjekësve gjithsej</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
     <string name="pages_copy_link">Kopjoji lidhjen</string>
     <string name="quick_start_completed_tour_title">Përgëzime! Dini nga shkoni&lt;br/&gt;</string>
@@ -78,9 +113,11 @@ Language: sq_AL
     <string name="stats_view_total_likes">Pëlqime Gjithsej</string>
     <string name="blogging_prompts_notification_dismiss">Hidhe tej</string>
     <string name="blogging_prompts_answer_prompt_notification_answer_action">Përgjigje</string>
+    <string name="blogging_prompts_answer_prompt_notification_title">Cytje e Përditshme</string>
     <string name="blogging_prompts_onboarding_got_it">E mora vesh</string>
     <string name="quick_start_dialog_view_your_site_message_short">Prekni &lt;b&gt;%1$s&lt;/b&gt; që të shihni sajtin tuaj</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">Përzgjidhni %1$s Lexues %2$s që të gjeni sajte të tjerë.</string>
+    <string name="blogging_reminders_prompt_help_button_desc">Mësoni më tepër rreth cytjesh</string>
     <string name="photo_picker_video_thumbnail_unselected">Videoja u shpërzgjodh</string>
     <string name="photo_picker_video_thumbnail_selected">Videoja u përzgjodh</string>
     <string name="photo_picker_media_thumbnail_content_description">Miniaturë Media</string>
@@ -101,6 +138,7 @@ Language: sq_AL
     <string name="initial_screen">Skena Fillestare</string>
     <string name="blogging_prompts_onboarding_notification_action">Mësoni më tepër</string>
     <string name="blogging_prompts_onboarding_notification_text">Bëhuni një shkrues më i mirë, duke krijuar një zakon shkrimi. Prekeni që të mësoni më tepër.</string>
+    <string name="blogging_prompts_onboarding_notification_title">E re në aplikacionin celular për WordPress: Cytje</string>
     <string name="new_site_creation_site_name_header_subtitle">Një emër i mirë do të ishte i shkurtër dhe që mbahet mend.\nMund ta ndryshoni më vonë.</string>
     <string name="new_site_creation_site_name_header_title">Jepini sajtit tuaj %s një emër</string>
     <string name="new_site_creation_site_name_title">Emër sajti</string>
@@ -140,11 +178,17 @@ Language: sq_AL
     <string name="stop_save_dialog_message">Ju lutemi, pritni deri sa të jenë ruajtur krejt kartelat</string>
     <string name="stop_save_dialog_title">Ruajtje kartelash</string>
     <string name="post_content">Lëndë</string>
+    <string name="blogging_prompts_onboarding_card_prompt">Hidheni në film jetën tuaj.</string>
     <string name="blogging_prompts_onboarding_remind_me">Kujtoma</string>
     <string name="blogging_prompts_onboarding_try_it_now">Provojeni tani</string>
     <string name="blogging_prompts_onboarding_content_note_content">Mund të mësoni më tepër dhe të ujdisni kujtues në çfarëdo kohe, që nga Sajti Im &gt; Rregullime &gt; Kujtues Blogimi</string>
     <string name="blogging_prompts_onboarding_content_note_title">Shënim:</string>
+    <string name="blogging_prompts_onboarding_content_bottom">Do t’ju shfaqim përditë në pultin tuaj një cytje të re, për të ndihmuar të vini në udhë rrjedhat krijuese!</string>
+    <string name="blogging_prompts_onboarding_content_top">Rruga më e mirë për t’u bërë një shkrues më i mirë është të krijohet një zakon shkrimi dhe dhënia e shkrimeve të tjerëve — këtu hyjnë në lojë Cytjet!</string>
+    <string name="blogging_prompts_onboarding_header_title">Ju prezantojmë Cytjet</string>
     <string name="blogging_prompt_set_reminders">Ujdisni kujtues</string>
+    <string name="blogging_reminders_prompt_subtitle">Kujtuesi do të përfshijë një cytje të përditshme</string>
+    <string name="blogging_reminders_prompt_title">Përfshi cytje të përditshme</string>
     <string name="post_publishing_set_up_blogging_prompts_message">Postimi rregullisht tërheq lexues të rinj.Tregonani kur doni të shkruani dhe do t’ju dërgojmë një kujtues!</string>
     <string name="set_your_blogging_prompts_title">Bëhuni një shkrimtar më i mirë duke formuar zakonin e të shkruarit</string>
     <string name="site_creation_intent_writing_poetry">Shkrim &amp; Poezi</string>
@@ -179,8 +223,14 @@ Language: sq_AL
     <string name="new_site_creation_intents_title">Temë sajti</string>
     <string name="quick_start_site_menu_tab_message_short">Prekni &lt;b&gt;%1$s&lt;/b&gt; që të vazhdohet.</string>
     <string name="my_site_blogging_prompt_card_menu_remove">Hiqe nga pulti</string>
+    <string name="my_site_blogging_prompt_card_menu_skip">Anashkaloje këtë cytje</string>
+    <string name="my_site_blogging_prompt_card_menu_view_more">Shihni më tepër cytje</string>
+    <string name="my_site_blogging_prompt_card_share_chooser_title">Ndani me të tjerë cytje blogimi</string>
     <string name="my_site_blogging_prompt_card_answered_prompt">✓ Me Përgjigje</string>
+    <string name="my_site_blogging_prompt_card_answer_prompt">Përgjigjuni cytjes</string>
+    <string name="my_site_blogging_prompt_card_title">Cytje</string>
     <string name="my_site_all_tab_title">Krejt</string>
+    <string name="site_settings_blogging_reminders_and_prompts_title">Kujtues dhe cytje</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3">Kjo ndërthurje ngjyrash mund të vështirësojë leximin nga njerëzit. Provoni të përdorni një ngjyrë sfondi më të ndritshme dhe/ose një ngjyrë të errët teksti.</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a">Kjo ndërthurje ngjyrash mund të vështirësojë leximin nga njerëzit. Provoni të përdorni një ngjyrë sfondi më të errët dhe/ose një ngjyrë të ndritshme teksti.</string>
     <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info">S’u arrit të futej media.\nPrekeni për më tepër hollësi.</string>
@@ -349,7 +399,6 @@ Language: sq_AL
     <string name="me_btn_share">Jepjani WordPress-in një shoku</string>
     <string name="my_site_quick_actions_title">Lidhje të Shpejta</string>
     <string name="my_site_btn_domains">Përkatësi</string>
-    <string name="weekly_roundup_notification_text">Sajti juaj pati %1$d parje, %2$d pëlqime, %3$d komente.</string>
     <string name="weekly_roundup_notification_title">Përmbledhje Javore: %s</string>
     <string name="blogging_reminders_notification_time">Kohë njoftimi</string>
     <string name="blogging_reminders_epilogue_body_everyday_with_time">Do të merrni kujtues për të bloguar &lt;b&gt;çdo ditë&lt;/b&gt; më &lt;b&gt;%s&lt;/b&gt;.</string>
@@ -689,9 +738,6 @@ Language: sq_AL
     <string name="quick_start_dialog_review_pages_message">Ndryshoni, shtoni ose hiqni faqe të sajtit tuaj.</string>
     <string name="quick_start_dialog_review_pages_title">Shqyrtoni faqe sajti</string>
     <string name="quick_start_dialog_edit_homepage_message_pages_short">Që të përpunoni Faqen tuaj hyrëse, përzgjidhni %1$s Faqe hyrëse %2$s.</string>
-    <string name="quick_start_dialog_edit_homepage_message_short">Që të shihni listën e faqeve tuaja, përzgjidhni %1$s Faqe %2$s.</string>
-    <string name="quick_start_dialog_edit_homepage_message">Ndryshoni, shtoni ose hiqni lëndë nga faqja hyrëse e sajtit tuaj.</string>
-    <string name="quick_start_dialog_edit_homepage_title">Përpunoni faqen tuaj hyrëse</string>
     <string name="reader_menu_mark_as_unseen">Hiqi shenjë si i parë</string>
     <string name="reader_menu_mark_as_seen">Vëri shenjë si i parë</string>
     <string name="error_media_upload_failed_for_reason">Ngarkimi i medias dështoi.\n%1$s</string>
@@ -3017,7 +3063,6 @@ Language: sq_AL
     <string name="stats_followers_a_minute_ago">një minutë më parë</string>
     <string name="stats_followers_seconds_ago">sekonda më parë</string>
     <string name="stats_view_followers">Ndjekës</string>
-    <string name="stats_view_publicize">Publicizoje</string>
     <string name="stats_view_videos">Video</string>
     <string name="stats_view_top_posts_and_pages">Postime &amp;amp; Faqe</string>
     <string name="stats_view_countries">Vende</string>

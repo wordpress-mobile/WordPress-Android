@@ -27,6 +27,7 @@ import java.net.URI
 import java.util.Locale
 import java.util.UUID
 
+@Suppress("TooManyFunctions")
 class PreviewImageViewModel : ViewModel() {
     private val _uiState: MutableLiveData<UiState> = MutableLiveData()
     val uiState: LiveData<UiState> = _uiState

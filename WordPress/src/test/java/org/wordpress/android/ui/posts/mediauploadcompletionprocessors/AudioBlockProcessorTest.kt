@@ -14,7 +14,7 @@ class AudioBlockProcessorTest {
     @Before
     fun before() {
         whenever(mediaFile.mediaId).thenReturn(TestContent.remoteMediaId)
-        whenever(mediaFile.fileURL).thenReturn(TestContent.remoteAudioUrl)
+        whenever(mediaFile.optimalFileURL).thenReturn(TestContent.remoteAudioUrl)
         processor = AudioBlockProcessor(TestContent.localMediaId, mediaFile)
     }
 

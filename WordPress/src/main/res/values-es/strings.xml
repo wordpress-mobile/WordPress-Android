@@ -1,11 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-06-16 10:27:31+0000
+Translation-Revision-Date: 2022-07-14 12:54:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: es
 -->
 <resources>
+    <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery">Problema al mostrar el bloque. \nToca para intentar la recuperación del bloque.</string>
+    <string name="weekly_roundup_notification_text_views_and_comments">La semana pasada tuviste %1$s visitas y %2$s comentarios</string>
+    <string name="weekly_roundup_notification_text_views_only">La semana pasada tuviste %1$s visitas.</string>
+    <string name="stats_revamp_v2_update_alert_message">Se ha actualizado al nuevo Detalles para ayudarte a entender cómo es el rendimiento de tu contenido y qué tiene impacto en tu público.</string>
+    <string name="weekly_roundup_notification_text_views_and_likes">La semana pasada tuviste %1$s visitas y %2$s Me gusta</string>
+    <string name="weekly_roundup_notification_text_all">La semana pasada tuviste %1$s visitas, %2$s Me gusta y %3$s comentarios.</string>
+    <string name="stats_insights_like_guide_card">⭐️ Tu última entrada %1$s ha recibido %2$s Me gusta.</string>
+    <string name="wp_jetpack_powered">Funciona gracias a Jetpack</string>
+    <string name="qrcode_auth_flow_content_description">Imagen que señala que el escaneo de código de acceso está en proceso</string>
+    <string name="qrcode_auth_flow_error_content_description">Imagen que señala un error</string>
+    <string name="qrcode_auth_flow_dismiss_dialog_message">¿Seguro que quieres continuar?</string>
+    <string name="qrcode_auth_flow_dismiss_dialog_title">Salir del flujo de escaneo de código de acceso</string>
+    <string name="qrcode_auth_flow_error_auth_failed_subtitle">No se ha podido acceder con este código de acceso. Toca el botón Analizar de nuevo para volver a escanear el código.</string>
+    <string name="qrcode_auth_flow_error_auth_failed_title">Ha fallado la autentificación</string>
+    <string name="qrcode_auth_flow_error_expired_subtitle">Este código de acceso ha caducado. Toca el botón Analizar de nuevo para volver a escanear el código.</string>
+    <string name="qrcode_auth_flow_error_expired_title">El código de acceso ha caducado</string>
+    <string name="qrcode_auth_flow_error_invalid_data_subtitle">No se ha podido validar el código de acceso escaneado. Toca el botón Analizar de nuevo para volver a escanear el código.</string>
+    <string name="qrcode_auth_flow_error_invalid_data_title">No se ha podido validar el código de acceso</string>
+    <string name="qrcode_auth_flow_error_no_connection_subtitle">Se requiere una conexión activa a Internet para escanear códigos de acceso</string>
+    <string name="qrcode_auth_flow_error_no_connection_title">No hay conexión</string>
+    <string name="qrcode_auth_flow_scan_again">Analizar de nuevo</string>
+    <string name="qrcode_auth_flow_dismiss">Descartar</string>
+    <string name="qrcode_auth_flow_done_subtitle">Toca Descartar y vuelve a tu navegador web para continuar.</string>
+    <string name="qrcode_auth_flow_done_title">¡Has accedido!</string>
+    <string name="qrcode_auth_flow_validated_primary_action">Sí, quiero acceder</string>
+    <string name="qrcode_auth_flow_validated_subtitle">Escanea solo los códigos QR que has cogido directamente del navegador web. No escanees nunca un código que te haya enviado alguien.</string>
+    <string name="qrcode_auth_flow_validated_default_title">¿Estás intentando acceder a tu navegador web cerca de %1$s?</string>
+    <string name="qrcode_auth_flow_validated_title">¿Estás intentando acceder a %1$s cerca de %2$s?</string>
+    <string name="stats_revamp_v2_intro_secondary_button_text">Recuérdamelo más tarde</string>
+    <string name="stats_revamp_v2_intro_primary_button_text">Pruébalo ahora</string>
+    <string name="stats_revamp_v2_intro_content_note">Más información en Mi sitio &gt; Estadísticas &gt; Detalles</string>
+    <string name="stats_revamp_v2_intro_content">Detalles te ayuda a entender cómo es el rendimiento de tu contenido y qué tiene impacto en tu público.</string>
+    <string name="stats_revamp_v2_intro_header_title">Actualización de Detalles</string>
+    <string name="stats_insights_followers_guide_card">💡Comentar en otros blogs es una buena forma de llamar la atención y tener más seguidores en tu nuevo sitio.</string>
+    <string name="stats_insights_comments_guide_card">💡Toca \"VER MÁS\" para ver los principales comentaristas.</string>
+    <string name="stats_insights_latest_post_empty">¡Vuelve a comprobarlo cuando hayas publicado tu primera entrada!</string>
+    <string name="stats_insights_views_and_visitors_visitors_empty_state">Comprueba nuestros consejos destacados para aumentar tus visitas y tu tráfico %1$s</string>
+    <string name="stats_view_publicize">Conexiones de redes sociales</string>
+    <string name="stats_action_card_schedule_post_message">✍️ Programa tus borradores para publicar en el mejor momento y llegar a tu público.</string>
+    <string name="stats_action_card_blogging_reminders_message">💡Publicar con constancia es una buena forma de crear tu público. Añade un recordatorio para mantenerte al día.</string>
+    <string name="stats_action_card_grow_audience_message">💡Bloguea más rápidamente con nuestro curso &lt;i&gt;Introducción a los blogs&lt;/i&gt; ofrecido por expertos.</string>
     <string name="blogging_prompts_onboarding_prompts_loading">Se están cargando los estímulos para bloguear. Espera un momento e inténtalo de nuevo.</string>
     <string name="hpp_bottom_helper_text">¿No puedes decidirte? Puedes cambiar el tema en cualquier momento.</string>
     <string name="hpp_recommended_default_vertical">Bloguear</string>
@@ -22,13 +63,10 @@ Language: es
     <string name="my_site_blogging_prompt_card_attribution_dayone">Desde </string>
     <string name="stats_referrers_pie_chart_total_label">Vistas</string>
     <string name="stats_action_card_schedule_post_button_label">Programar</string>
-    <string name="stats_action_card_schedule_post_message">✍️ Programa para publicar tu contenido en el mejor momento desde los borradores.</string>
     <string name="stats_action_card_schedule_post_title">Programa tu entrada</string>
     <string name="stats_action_card_blogging_reminders_button_label">Configurar recordatorios</string>
-    <string name="stats_action_card_blogging_reminders_message">💡Configura el recordatorio de publicar regularmente para mantener a los lectores enganchados y atraer a nuevos visitantes.</string>
     <string name="stats_action_card_blogging_reminders_title">Configura tus recordatorios de blogueo</string>
     <string name="stats_action_card_grow_audience_button_label">Consulta el curso</string>
-    <string name="stats_action_card_grow_audience_message">💡Tenemos lecciones fáciles impartidas por los mejores blogueros para hacer crecer tu blog.</string>
     <string name="stats_action_card_grow_audience_title">Haz crecer tu audiencia</string>
     <string name="gutenberg_native_image_file_not_found">Archivo de imagen no encontrado.</string>
     <string name="gutenberg_native_drag_drop_makes_rearranging_blocks_a_breeze_press_and_hold_on_a_b">Arrastrar y soltar hace que reordenar bloques sea algo trivial. Presiona y sujeta un bloque, luego arrástralo a su nueva ubicación y suéltalo.</string>
@@ -39,14 +77,10 @@ Language: es
     <string name="quick_start_sites_type_all_tasks_completed">Todas las tareas están completas</string>
     <string name="quick_start_list_task_complete">Tarea completada</string>
     <string name="me_btn_scan_login_code">Explorar código de acceso</string>
-    <string name="stats_insights_followers_guide_card">💡 Puedes probar a dejar un comentario como un gesto para animar a la participación en el blog y luego ganar más seguidores.</string>
-    <string name="stats_insights_comments_guide_card">💡 Ve tus principales contribuidores tocando en VER MÁS.</string>
     <string name="stats_insights_likes_guide_card">⭐️  Tu última entrada %1$s ha recibido %2$s me gusta.</string>
     <string name="stats_most_popular_percent_views_empty">No hay suficiente actividad. ¡Vuelve a comprobarlo más tarde, cuando tu sitio haya tenido más visitas!</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
-    <string name="stats_total_followers_content_description">%1s, %2s del total de seguidores</string>
-    <string name="stats_insights_latest_post_empty">Todavía no has publicado ninguna entrada. ¡Vuelve más tarde cuando hayas publicado tu primera entrada!</string>
-    <string name="stats_insights_views_and_visitors_visitors_empty_state">Si quieres probar a conseguir más visualizaciones y tráfico echa un vistazo a nuestros consejos destacados %1$s</string>
+    <string name="stats_total_followers_content_description">%1$s, %2$s%% del total de seguidores</string>
     <string name="pages_copy_link">Copiar enlace</string>
     <string name="quick_start_list_upload_media_title">Sube fotos o vídeos</string>
     <string name="quick_start_sites_type_get_to_know_app">Conoce la aplicación</string>
@@ -369,7 +403,6 @@ Language: es
     <string name="recommend_app_null_response">No se ha recibido ninguna respuesta</string>
     <string name="recommend_app_bad_format_response">Respuesta recibida no válida</string>
     <string name="recommend_app_subject">Aplicaciones Automattic - Aplicaciones para cualquier pantalla</string>
-    <string name="weekly_roundup_notification_text">Tu sitio recibió %1$d visualizaciones, %2$d me gusta, %3$d comentarios.</string>
     <string name="weekly_roundup_notification_title">Repaso semanal: %s</string>
     <string name="blogging_reminders_notification_time">Hora del aviso</string>
     <string name="blogging_reminders_epilogue_body_everyday_with_time">Recibirás recordatorios para bloquear &lt;b&gt;todos los días&lt;/b&gt; a las &lt;b&gt;%s&lt;/b&gt;.</string>
@@ -710,10 +743,7 @@ Language: es
     <string name="quick_start_dialog_review_pages_message">Cambia, añade o elimina páginas en tu sitio.</string>
     <string name="quick_start_dialog_review_pages_title">Revisar las páginas del sitio</string>
     <string name="quick_start_dialog_edit_homepage_message_pages_short">Selecciona %1$s Página de inicio %2$s para editar tu página de inicio.</string>
-    <string name="quick_start_dialog_edit_homepage_message_short">Selecciona %1$s Páginas %2$s para ver tu lista de páginas.</string>
     <string name="quick_start_card_menu_pin">Anclar</string>
-    <string name="quick_start_dialog_edit_homepage_message">Cambia, añade o elimina contenido en la página de inicio de tu sitio.</string>
-    <string name="quick_start_dialog_edit_homepage_title">Editar la página de inicio</string>
     <string name="reader_menu_mark_as_unseen">Marcar como no leída</string>
     <string name="reader_menu_mark_as_seen">Marcar como leída</string>
     <string name="error_media_upload_failed_for_reason">No se han podido subir los elementos multimedia.\n%1$s</string>
@@ -3042,7 +3072,6 @@ Language: es
     <string name="stats_followers_seconds_ago">hace unos segundos</string>
     <string name="stats_view_top_posts_and_pages">Entradas y páginas</string>
     <string name="stats_view_videos">Vídeos</string>
-    <string name="stats_view_publicize">Difundir</string>
     <string name="stats_view_followers">Seguidores</string>
     <string name="stats_view_countries">Países</string>
     <string name="stats_likes">Me gusta</string>

@@ -1,5 +1,0 @@
-20.1 :
-- Recevez chaque jour des incitations de blogging qui vous encouragent à écrire vos articles.
-- Nous avons amélioré l’écran de sélection du design du site dans le processus de création du site.
-- Les liens WordPress s’ouvrent dans l’application et non dans votre navigateur par défaut.
-- Les points de focalisation de Quick Start se trouvent aux bons endroits pour les utilisateurs dont la langue se lit de droite à gauche.

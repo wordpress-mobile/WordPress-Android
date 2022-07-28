@@ -49,6 +49,7 @@ class RemoteConfigProcessor : AbstractProcessor() {
         }
     }
 
+    @Suppress("TooGenericExceptionCaught", "SwallowedException")
     private fun generateRemoteConfigDefaults(
         remoteConfigDefaults: Map<String, String>
     ) {
@@ -62,6 +63,7 @@ class RemoteConfigProcessor : AbstractProcessor() {
         }
     }
 
+    @Suppress("TooGenericExceptionCaught")
     private fun generateRemoteConfigCheck(
         remoteFeatureNames: List<TypeName>
     ) {
@@ -78,6 +80,7 @@ class RemoteConfigProcessor : AbstractProcessor() {
         }
     }
 
+    @Suppress("TooGenericExceptionCaught")
     private fun generateFeaturesInDevelopment(
         remoteFeatureNames: List<String>
     ) {

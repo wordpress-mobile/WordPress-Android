@@ -172,7 +172,6 @@ Language: pl
     <string name="my_site_quick_actions_title">Szybkie odnośniki</string>
     <string name="my_site_btn_domains">Domeny</string>
     <string name="recommend_app_subject">Aplikacje Automattic - Aplikacje na wszystkie urządzenia</string>
-    <string name="weekly_roundup_notification_text">Twoja witryna ma %1$d wyświetleń, %2$d polubień, %3$d komentarzy.</string>
     <string name="blogging_reminders_notification_time">Czas powiadomienia</string>
     <string name="weekly_roundup_notification_title">W każdym tygodniu: %s</string>
     <string name="blogging_reminders_epilogue_body_everyday_with_time">Otrzymasz powiadomienia o blogowaniu &lt;b&gt;każdego dnia&lt;/b&gt; o &lt;b&gt;%s&lt;/b&gt;.</string>
@@ -498,9 +497,6 @@ Language: pl
     <string name="quick_start_dialog_review_pages_message_short">Wybierz %1$s Strony %2$s aby zobaczyć listę swoich stron.</string>
     <string name="quick_start_dialog_review_pages_message">Zmień, dodaj, lub usuń strony swojej witryny.</string>
     <string name="quick_start_dialog_edit_homepage_message_pages_short">Wybierz %1$s Strona główna %2$s aby edytować swoją stronę główną.</string>
-    <string name="quick_start_dialog_edit_homepage_message_short">Wybierz %1$s Strony %2$s aby zobaczyć listę swoich stron.</string>
-    <string name="quick_start_dialog_edit_homepage_title">Edytuj stronę domową</string>
-    <string name="quick_start_dialog_edit_homepage_message">Zmień, dodaj lub usuń zawartość ze strony głównej swojej witryny.</string>
     <string name="reader_menu_mark_as_unseen">Oznacz jako nie przeczytaną</string>
     <string name="reader_menu_mark_as_seen">Oznacz jako przeczytane</string>
     <string name="error_media_upload_failed_for_reason">Nie udało się przesłać plików mediów.\n%1$s</string>
@@ -2815,7 +2811,6 @@ Language: pl
     <string name="stats_followers_months">%1$d miesięcy</string>
     <string name="stats_view_top_posts_and_pages">Wpisy i Strony</string>
     <string name="stats_view_videos">Filmy</string>
-    <string name="stats_view_publicize">Publicize</string>
     <string name="stats_view_countries">Kraje</string>
     <string name="stats_likes">Polubienia</string>
     <string name="stats_timeframe_years">Lata</string>

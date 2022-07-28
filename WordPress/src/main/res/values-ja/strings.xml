@@ -1,11 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-06-22 09:54:08+0000
+Translation-Revision-Date: 2022-07-15 09:54:20+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.1
 Language: ja_JP
 -->
 <resources>
+    <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery">ブロックの表示中に問題が発生しました。 \nタップしてブロックの回復を試みます。</string>
+    <string name="weekly_roundup_notification_text_views_and_comments">先週、%1$s件の表示と%2$s件のコメントがありました。</string>
+    <string name="weekly_roundup_notification_text_views_and_likes">先週、%1$s件の表示と%2$s件の「いいね」を受け取りました。</string>
+    <string name="weekly_roundup_notification_text_views_only">先週、%1$s件の表示がありました。</string>
+    <string name="weekly_roundup_notification_text_all">先週、%1$s件の表示、%2$s件の「いいね」、%3$s件のコメントを受け取りました。</string>
+    <string name="stats_revamp_v2_update_alert_message">アップデートされた新しい統計概要により、コンテンツのパフォーマンスと、読者からどういった反響があるか理解を深めることができます。</string>
+    <string name="stats_insights_like_guide_card">⭐️最新の投稿 %1$s が%2$s回「いいね」されました。</string>
+    <string name="wp_jetpack_powered">Jetpack 提供</string>
+    <string name="qrcode_auth_flow_content_description">ログインコードをスキャンしていることを示す画像</string>
+    <string name="qrcode_auth_flow_error_content_description">エラーが発生していることを示す画像</string>
+    <string name="qrcode_auth_flow_dismiss_dialog_message">本当に実行してもよいですか ?</string>
+    <string name="qrcode_auth_flow_dismiss_dialog_title">ログインコードのスキャンフローを終了</string>
+    <string name="qrcode_auth_flow_error_auth_failed_subtitle">このログインコードではログインできませんでした。 「再スキャン」ボタンをタップしてコードをもう一度スキャンしてください。</string>
+    <string name="qrcode_auth_flow_error_auth_failed_title">認証できませんでした</string>
+    <string name="qrcode_auth_flow_error_expired_subtitle">このログインコードの有効期限は切れています。 「再スキャン」ボタンをタップしてコードをもう一度スキャンしてください。</string>
+    <string name="qrcode_auth_flow_error_expired_title">期限切れのログインコード</string>
+    <string name="qrcode_auth_flow_error_invalid_data_subtitle">スキャンされたログインコードを検証できませんでした。 「再スキャン」ボタンをタップしてコードをもう一度スキャンしてください。</string>
+    <string name="qrcode_auth_flow_error_invalid_data_title">ログインコードを検証できませんでした</string>
+    <string name="qrcode_auth_flow_error_no_connection_subtitle">ログインコードをスキャンするにはアクティブなインターネット接続が必要です</string>
+    <string name="qrcode_auth_flow_error_no_connection_title">接続できません</string>
+    <string name="qrcode_auth_flow_scan_again">再スキャン</string>
+    <string name="qrcode_auth_flow_dismiss">閉じる</string>
+    <string name="qrcode_auth_flow_done_subtitle">「閉じる」をタップして続行する Web ブラウザーに戻ります。</string>
+    <string name="qrcode_auth_flow_done_title">ログインしました !</string>
+    <string name="qrcode_auth_flow_validated_primary_action">はい、ログインします</string>
+    <string name="qrcode_auth_flow_validated_subtitle">Web ブラウザーから直接撮影された QR コードをスキャンするだけです。 他の人から送信されたコードはスキャンしないでください。</string>
+    <string name="qrcode_auth_flow_validated_default_title">%1$s 近くの Web ブラウザーにログインしてみますか ?</string>
+    <string name="qrcode_auth_flow_validated_title">%2$s 近くの %1$s にログインしてみますか ?</string>
+    <string name="stats_revamp_v2_intro_secondary_button_text">後で再通知</string>
+    <string name="stats_revamp_v2_intro_primary_button_text">今すぐ試す</string>
+    <string name="stats_revamp_v2_intro_content_note">詳細は、「参加サイト」&gt;「統計」&gt;「統計概要」をご覧ください。</string>
+    <string name="stats_revamp_v2_intro_content">統計概要により、コンテンツのパフォーマンスと、読者からどういった反響があるか理解を深めることができます。</string>
+    <string name="stats_revamp_v2_intro_header_title">最新の統計概要</string>
+    <string name="stats_insights_followers_guide_card">💡他のブログへのコメントは、自分の新しいサイトへの注目を集め、フォロワーを増やすのに最適です。</string>
+    <string name="stats_insights_comments_guide_card">💡「さらに表示」をタップすると上位のコメント投稿者が表示されます。</string>
+    <string name="stats_insights_latest_post_empty">最初の投稿を公開したらもう一度確認してください。</string>
+    <string name="stats_insights_views_and_visitors_visitors_empty_state">よく読まれているヒントを確認して表示数とトラフィックを増やす %1$s</string>
+    <string name="stats_view_publicize">ソーシャルメディアとの連携</string>
+    <string name="stats_action_card_schedule_post_message">✍️ 読者にリーチするのに最良のタイミングに下書きの投稿予定を設定しましょう。</string>
+    <string name="stats_action_card_blogging_reminders_message">💡読者を増やすには定期的に投稿することが重要です。 リマインダーを追加して忘れないようにしましょう。</string>
+    <string name="stats_action_card_grow_audience_message">💡さっとブログ記事を書けるようにするには、エキスパートが指導する「&lt;i&gt;ブログ執筆の概要&lt;/i&gt;」コースを受講しましょう。</string>
     <string name="blogging_prompts_onboarding_prompts_loading">ブログ作成のプロンプトを読み込んでいます。 少し待ってから、もう一度お試しください。</string>
     <string name="hpp_bottom_helper_text">決められませんか ? テーマはいつでも変更できます。</string>
     <string name="hpp_recommended_default_vertical">ブログ</string>
@@ -21,14 +62,11 @@ Language: ja_JP
     <string name="stats_referrers_pie_chart_search">検索</string>
     <string name="stats_referrers_pie_chart_total_label">表示件数</string>
     <string name="stats_action_card_schedule_post_button_label">予約</string>
-    <string name="stats_action_card_schedule_post_message">✍️ 下書きから最適なタイミングでコンテンツを投稿するように予約します。</string>
     <string name="stats_referrers_pie_chart_wordpress">WordPress</string>
     <string name="stats_action_card_schedule_post_title">投稿を予約</string>
     <string name="stats_action_card_blogging_reminders_button_label">リマインダーを設定</string>
-    <string name="stats_action_card_blogging_reminders_message">💡定期的に投稿するようにリマインダーを設定して読者の関心を維持したまま、新しい訪問者を引きつけます。</string>
     <string name="stats_action_card_blogging_reminders_title">ブログ投稿のリマインダーを設定</string>
     <string name="stats_action_card_grow_audience_button_label">コースを確認</string>
-    <string name="stats_action_card_grow_audience_message">💡皆さんのブログを成長させるため、優れたブロガーによるわかりやすいレッスンをご用意しています。</string>
     <string name="stats_action_card_grow_audience_title">訪問者を増やす</string>
     <string name="gutenberg_native_you_can_also_rearrange_blocks_by_tapping_a_block_and_then_tapping">ブロックをタップし、ブロックの左下に表示される上下矢印をタップして上下に移動させることで、ブロックの配置を変更することもできます。</string>
     <string name="gutenberg_native_image_file_not_found">画像ファイルが見つかりませんでした。</string>
@@ -39,14 +77,10 @@ Language: ja_JP
     <string name="quick_start_sites_type_all_tasks_completed">すべてのタスクが完了しました</string>
     <string name="quick_start_list_task_complete">タスクが完了しました</string>
     <string name="me_btn_scan_login_code">ログインコードをスキャン</string>
-    <string name="stats_insights_followers_guide_card">💡コメントを投稿して積極的にブログに取り組む姿勢を見せることで、より多くのフォロワーを獲得できます。</string>
-    <string name="stats_insights_comments_guide_card">💡「さらに表示」をタップすると、人気の寄稿者を表示できます。</string>
     <string name="stats_insights_likes_guide_card">⭐️最新の投稿 %1$s が%2$s回「いいね」されました。</string>
     <string name="stats_most_popular_percent_views_empty">アクティビティが足りません。 サイトの訪問者数が増えたら後でもう一度確認してください。</string>
-    <string name="stats_insights_latest_post_empty">まだ公開した投稿がありません。 最初の投稿を公開したら後でもう一度確認してください。</string>
-    <string name="stats_insights_views_and_visitors_visitors_empty_state">閲覧数とトラフィックを増やしたい場合は、トップのヒントをご覧ください %1$s</string>
-    <string name="stats_total_followers_content_description">%1s人、フォロワー総数の%2s</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
+    <string name="stats_total_followers_content_description">%1$s人、フォロワー総数のうちの%2$s%%</string>
     <string name="pages_copy_link">リンクをコピー</string>
     <string name="quick_start_completed_tour_title">おめでとうございます ! 詳しくなりました&lt;br/&gt;</string>
     <string name="quick_start_sites_type_get_to_know_app">アプリについて知る</string>
@@ -369,7 +403,6 @@ Language: ja_JP
     <string name="my_site_quick_actions_title">クイックリンク</string>
     <string name="my_site_btn_domains">ドメイン</string>
     <string name="recommend_app_subject">Automattic アプリ - 各種端末に対応したアプリ</string>
-    <string name="weekly_roundup_notification_text">サイトは%1$d回表示され、%2$d件の「いいね」と%3$d件のコメントを獲得しました。</string>
     <string name="weekly_roundup_notification_title">1週間のまとめ: %s</string>
     <string name="blogging_reminders_notification_time">通知時間</string>
     <string name="blogging_reminders_epilogue_body_everyday_with_time">&lt;b&gt;毎日&lt;/b&gt;&lt;b&gt;%s&lt;/b&gt;時にブログ投稿のリマインダーを受け取ります。</string>
@@ -710,10 +743,7 @@ Language: ja_JP
     <string name="quick_start_dialog_review_pages_message">サイトのページを変更、追加、削除します。</string>
     <string name="quick_start_dialog_review_pages_title">サイトページをレビュー</string>
     <string name="quick_start_dialog_edit_homepage_message_pages_short">%1$s ホームページ %2$s を選択してホームページを編集します。</string>
-    <string name="quick_start_dialog_edit_homepage_message_short">%1$s ページ %2$s を選択してページリストを表示します。</string>
     <string name="quick_start_card_menu_pin">上部固定</string>
-    <string name="quick_start_dialog_edit_homepage_title">ホームページを編集する</string>
-    <string name="quick_start_dialog_edit_homepage_message">サイトのホームページからコンテンツを変更、追加、削除します。</string>
     <string name="reader_menu_mark_as_unseen">未読にする</string>
     <string name="reader_menu_mark_as_seen">既読にする</string>
     <string name="error_media_upload_failed_for_reason">メディアのアップロードに失敗しました。\n%1$s</string>
@@ -3048,7 +3078,6 @@ Language: ja_JP
     <string name="stats_views">表示数</string>
     <string name="stats_visitors">サイト訪問者</string>
     <string name="stats_view_top_posts_and_pages">投稿とページ</string>
-    <string name="stats_view_publicize">パブリサイズ共有</string>
     <string name="ssl_certificate_details">詳細</string>
     <string name="cab_selected">%d件選択</string>
     <string name="browse_our_faq_button">よく聞かれる質問を表示</string>

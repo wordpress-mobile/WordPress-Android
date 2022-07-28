@@ -10,6 +10,7 @@ import org.wordpress.android.util.config.ExperimentConfig
 import org.wordpress.android.util.config.FeatureConfig
 import javax.inject.Inject
 
+@Suppress("TooManyFunctions")
 @Reusable
 class AnalyticsTrackerWrapper
 @Inject constructor() {
@@ -47,6 +48,8 @@ class AnalyticsTrackerWrapper
     fun track(stat: Stat, site: SiteModel?, feature: FeatureConfig) {
         AnalyticsUtils.trackWithSiteDetails(this, stat, site, feature.toParams().toMutableMap<String, Any>())
     }
+
+    fun getAnonID(): String? = AnalyticsTracker.getAnonID()
 
     /**
      * A convenience method for logging an error event with some additional meta data.

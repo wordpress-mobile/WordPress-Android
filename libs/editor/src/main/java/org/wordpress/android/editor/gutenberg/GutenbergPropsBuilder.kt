@@ -23,9 +23,11 @@ data class GutenbergPropsBuilder(
     private val enableUnsupportedBlockEditor: Boolean,
     private val unsupportedBlockEditorSwitch: Boolean,
     private val isAudioBlockMediaUploadEnabled: Boolean,
+    private val shouldUseFastImage: Boolean,
     private val enableReusableBlock: Boolean,
     private val localeSlug: String,
     private val postType: String,
+    private val hostAppNamespace: String,
     private val featuredImageId: Int,
     private val editorTheme: Bundle?
 ) : Parcelable {
@@ -43,9 +45,11 @@ data class GutenbergPropsBuilder(
             enableUnsupportedBlockEditor = enableUnsupportedBlockEditor,
             canEnableUnsupportedBlockEditor = unsupportedBlockEditorSwitch,
             isAudioBlockMediaUploadEnabled = isAudioBlockMediaUploadEnabled,
+            shouldUseFastImage = shouldUseFastImage,
             enableReusableBlock = enableReusableBlock,
             localeSlug = localeSlug,
             postType = postType,
+            hostAppNamespace = hostAppNamespace,
             featuredImageId = featuredImageId,
             editorTheme = editorTheme,
             translations = GutenbergUtils.getTranslations(activity),

@@ -4,7 +4,7 @@ plugins {
     id "org.jetbrains.kotlin.plugin.parcelize"
 }
 
-ext.aztecVersion = 'v1.5.8'
+ext.aztecVersion = 'v1.6.0'
 
 repositories {
     maven {
@@ -35,7 +35,7 @@ repositories {
 }
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion rootProject.compileSdkVersion
 
     defaultConfig {
         minSdkVersion rootProject.minSdkVersion
@@ -100,4 +100,3 @@ dependencies {
 
     lintChecks 'org.wordpress:lint:1.1.0'
 }
-

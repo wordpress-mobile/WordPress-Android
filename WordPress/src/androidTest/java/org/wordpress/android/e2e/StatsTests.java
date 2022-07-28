@@ -50,7 +50,7 @@ public class StatsTests extends BaseTest {
 
         new MySitesPage()
                 .go()
-                .clickStats()
+                .goToStats()
                 .openDayStats()
                 .assertVisits(todayVisits)
                 .scrollToPosts().assertPosts(postsList)

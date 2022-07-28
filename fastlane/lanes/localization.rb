@@ -31,7 +31,7 @@ ALL_LOCALES = [
   { glotpress: 'vi', android: 'vi',    google_play: 'vi',     promo_config: {} },
   { glotpress: 'zh-cn', android: 'zh-rCN', google_play: 'zh-CN',  promo_config: {} },
   { glotpress: 'zh-tw', android: 'zh-rTW', google_play: 'zh-TW',  promo_config: {} },
-  # From this point are locales that are still used for downloading `strings.xml`… but not for release notes – and thus don't need a `google_play` key. See `RELEASE_NOTES_LOCALES` below.
+  # From this point are locales that are still used for downloading `strings.xml`… but not for release notes – and thus don't need a `google_play` key. See `WP_RELEASE_NOTES_LOCALES` below.
   { glotpress: 'az', android: 'az', promo_config: false },
   { glotpress: 'bg', android: 'bg', promo_config: false },
   { glotpress: 'cs', android: 'cs', promo_config: false },
@@ -62,7 +62,11 @@ ALL_LOCALES = [
   { glotpress: 'zh-tw', android: 'zh-rHK', promo_config: false },
 ].freeze
 
-RELEASE_NOTES_LOCALES = ALL_LOCALES
+WP_APP_LOCALES = ALL_LOCALES
+JP_APP_LOCALES = ALL_LOCALES
+  .select { |h| %w[ar de-DE es-ES fr-FR iw-IL id it-IT ja-JP ko-KR nl-NL pt-BR ru-RU sv-SE tr-TR zh-CN zh-TW].include?(h[:google_play]) }
+
+WP_RELEASE_NOTES_LOCALES = ALL_LOCALES
   .reject { |h| h[:google_play].nil? }
   .map { |h| [h[:glotpress], h[:google_play]] }
 
@@ -84,7 +88,7 @@ platform :android do
   # picked by GlotPress for translations.
   # -----------------------------------------------------------------------------------
   # Usage:
-  # fastlane update_appstore_strings version:<version>
+  # fastlane update_appstore_strings [version:<version>]
   #
   # Example:
   # fastlane update_appstore_strings version:10.3
@@ -102,7 +106,7 @@ platform :android do
   # and updates the `.po` file that is then picked by GlotPress for translations.
   # -----------------------------------------------------------------------------------
   # Usage:
-  # fastlane update_wordpress_appstore_strings version:<version>
+  # fastlane update_wordpress_appstore_strings [version:<version>]
   #
   # Example:
   # fastlane update_wordpress_appstore_strings version:10.3
@@ -110,6 +114,7 @@ platform :android do
   desc 'Updates the PlayStoreStrings.po file for WordPress'
   lane :update_wordpress_appstore_strings do |options|
     metadata_folder = File.join(Dir.pwd, '..', 'WordPress', 'metadata')
+    version = options.fetch(:version, android_get_app_version)
 
     # <key in po file> => <path to txt file to read the content from>
     files = {
@@ -126,8 +131,8 @@ platform :android do
     update_po_file_for_metadata_localization(
       po_path: File.join(metadata_folder, 'PlayStoreStrings.po'),
       sources: files,
-      release_version: options[:version],
-      commit_message: "Update WordPress `PlayStoreStrings.po` for version #{options[:version]}"
+      release_version: version,
+      commit_message: "Update WordPress `PlayStoreStrings.po` for version #{version}"
     )
   end
 
@@ -138,7 +143,7 @@ platform :android do
   # and updates the `.po` file that is then picked by GlotPress for translations.
   # -----------------------------------------------------------------------------------
   # Usage:
-  # fastlane update_jetpack_appstore_strings version:<version>
+  # fastlane update_jetpack_appstore_strings [version:<version>]
   #
   # Example:
   # fastlane update_jetpack_appstore_strings version:10.3
@@ -146,6 +151,7 @@ platform :android do
   desc 'Updates the PlayStoreStrings.po file for Jetpack'
   lane :update_jetpack_appstore_strings do |options|
     metadata_folder = File.join(Dir.pwd, '..', 'WordPress', 'jetpack_metadata')
+    version = options.fetch(:version, android_get_app_version)
 
     files = {
       release_note: File.join(metadata_folder, 'release_notes.txt'),
@@ -158,8 +164,8 @@ platform :android do
     update_po_file_for_metadata_localization(
       po_path: metadata_folder = File.join(metadata_folder, 'PlayStoreStrings.po'),
       sources: files,
-      release_version: options[:version],
-      commit_message: "Update Jetpack `PlayStoreStrings.po` for version #{options[:version]}"
+      release_version: version,
+      commit_message: "Update Jetpack `PlayStoreStrings.po` for version #{version}"
     )
   end
 
@@ -220,12 +226,12 @@ platform :android do
 
     delete_old_changelogs(app: 'wordpress', build: options[:build_number])
     download_path = File.join(Dir.pwd, app_values[:metadata_dir], 'android')
-    # The case for the source locale (en-US) is pulled in a hacky way, by having an {en-gb => en-US} mapping as part of the RELEASE_NOTES_LOCALES,
+    # The case for the source locale (en-US) is pulled in a hacky way, by having an {en-gb => en-US} mapping as part of the WP_RELEASE_NOTES_LOCALES,
     # which is then treated in a special way by gp_downloadmetadata by specifying a `source_locale: 'en-US'` to process it differently from the rest.
     gp_downloadmetadata(
-      project_url: app_values[:gp_url],
+      project_url: app_values[:glotpress_metadata_project],
       target_files: files,
-      locales: RELEASE_NOTES_LOCALES,
+      locales: WP_RELEASE_NOTES_LOCALES,
       source_locale: 'en-US',
       download_path: download_path
     )
@@ -250,7 +256,7 @@ platform :android do
     delete_old_changelogs(app: 'jetpack', build: options[:build_number])
     download_path = File.join(Dir.pwd, app_values[:metadata_dir], 'android')
     gp_downloadmetadata(
-      project_url: app_values[:gp_url],
+      project_url: app_values[:glotpress_metadata_project],
       target_files: files,
       locales: JP_RELEASE_NOTES_LOCALES,
       download_path: download_path
@@ -276,8 +282,10 @@ platform :android do
 
   ### Libraries Translation Merging ###
 
-  MAIN_STRINGS_PATH = './WordPress/src/main/res/values/strings.xml'.freeze
-  FROZEN_STRINGS_DIR_PATH = './fastlane/resources/values/'.freeze
+  WORDPRESS_MAIN_STRINGS_PATH = './WordPress/src/main/res/values/strings.xml'.freeze
+  WORDPRESS_FROZEN_STRINGS_DIR_PATH = './fastlane/resources/values/'.freeze
+  JETPACK_MAIN_STRINGS_PATH = './WordPress/src/jetpack/res/values/strings.xml'.freeze
+  JETPACK_FROZEN_STRINGS_DIR_PATH = './fastlane/jetpack_resources/values/'.freeze
   LOCAL_LIBRARIES_STRINGS_PATHS = [
     # Note: for those we don't set `add_ignore_attr` to true because we currently use `checkDependencies true` in `WordPress/build.gradle`
     # Which will correctly detect strings from the app's `strings.xml` being used by one of the module.
@@ -321,16 +329,22 @@ platform :android do
     # (like `FileUtils` calls here) run relative to the `./fastlane` folder, but the `*_DIR_PATH` we use are relative to the repo root.
     # See: https://docs.fastlane.tools/advanced/fastlane/#directory-behavior
     Dir.chdir('..') do
-      FileUtils.mkdir_p(FROZEN_STRINGS_DIR_PATH)
-      FileUtils.cp(MAIN_STRINGS_PATH, FROZEN_STRINGS_DIR_PATH)
+      FileUtils.mkdir_p(WORDPRESS_FROZEN_STRINGS_DIR_PATH)
+      FileUtils.cp(WORDPRESS_MAIN_STRINGS_PATH, WORDPRESS_FROZEN_STRINGS_DIR_PATH)
+      FileUtils.mkdir_p(JETPACK_FROZEN_STRINGS_DIR_PATH)
+      FileUtils.cp(JETPACK_MAIN_STRINGS_PATH, JETPACK_FROZEN_STRINGS_DIR_PATH)
     end
-    git_commit(path: File.join(FROZEN_STRINGS_DIR_PATH, 'strings.xml'), message: 'Freeze strings for translation', allow_nothing_to_commit: true)
+    git_commit(
+      path: [File.join(WORDPRESS_FROZEN_STRINGS_DIR_PATH, 'strings.xml'), File.join(JETPACK_FROZEN_STRINGS_DIR_PATH, 'strings.xml')],
+      message: 'Freeze strings for translation',
+      allow_nothing_to_commit: true
+    )
   end
 
   desc 'Merge libraries strings files into the main app one'
   lane :localize_libraries do
     # Merge `strings.xml` files of libraries that are hosted locally in the repository (in `./libs` folder)
-    an_localize_libs(app_strings_path: MAIN_STRINGS_PATH, libs_strings_path: LOCAL_LIBRARIES_STRINGS_PATHS)
+    an_localize_libs(app_strings_path: WORDPRESS_MAIN_STRINGS_PATH, libs_strings_path: LOCAL_LIBRARIES_STRINGS_PATHS)
 
     # Merge `strings.xml` files of libraries that are hosted in separate repositories (and linked as binary dependencies with the project)
     REMOTE_LIBRARIES_STRINGS_PATHS.each do |lib|
@@ -357,13 +371,13 @@ platform :android do
           source_id: lib[:source_id],
           add_ignore_attr: true # The linter is not be able to detect if a merged string is actually used by a binary dependency
         }]
-        an_localize_libs(app_strings_path: MAIN_STRINGS_PATH, libs_strings_path: lib_to_merge)
+        an_localize_libs(app_strings_path: WORDPRESS_MAIN_STRINGS_PATH, libs_strings_path: lib_to_merge)
         File.delete(download_path) if File.exist?(download_path)
       end
     end
 
     # Commit changes
-    git_commit(path: MAIN_STRINGS_PATH, message: 'Merge strings from libraries for translation', allow_nothing_to_commit: true)
+    git_commit(path: WORDPRESS_MAIN_STRINGS_PATH, message: 'Merge strings from libraries for translation', allow_nothing_to_commit: true)
   end
 
   #####################################################################################
@@ -375,14 +389,39 @@ platform :android do
   # bundle exec fastlane download_translations
   #####################################################################################
   lane :download_translations do
-    # For now WordPress and Jetpack use the same GlotPress project and share the same `strings.xml`
-    # (the Jetpack-dedicated one, https://translate.wordpress.com/projects/jetpack/apps/android/, is empty anyway for now).
+    # WordPress strings
+    wordpress_res_dir = File.join('WordPress', 'src', 'main', 'res')
     android_download_translations(
-      res_dir: File.join('WordPress', 'src', 'main', 'res'),
-      glotpress_url: 'https://translate.wordpress.org/projects/apps/android/dev/',
-      locales: ALL_LOCALES,
-      lint_task: 'lintWordpressVanillaRelease' # TODO: Should we adapt this?
+      res_dir: wordpress_res_dir,
+      glotpress_url: APP_SPECIFIC_VALUES[:wordpress][:glotpress_appstrings_project],
+      locales: WP_APP_LOCALES
     )
+
+    # Jetpack strings
+    jetpack_res_dir = File.join('WordPress', 'src', 'jetpack', 'res')
+    android_download_translations(
+      res_dir: jetpack_res_dir,
+      glotpress_url: APP_SPECIFIC_VALUES[:jetpack][:glotpress_appstrings_project],
+      locales: JP_APP_LOCALES
+    )
+
+    # [pxLjZ-7b9-p2] For any locale in which Jetpack is not translated in (but WordPress is),
+    # ensure we fallback to an existing locale *in Jetpack* — instead of having the runtime
+    # erroneously fall back to the *WordPress-specific* translation in that missing locale.
+    wp_locales_not_in_jp = WP_APP_LOCALES.map { |l| l[:android] } - JP_APP_LOCALES.map { |l| l[:android] }
+    new_strings_files = wp_locales_not_in_jp.map do |locale|
+      language = locale.split('-').first
+      fallback = JP_APP_LOCALES.any? { |l| l[:android] == language } ? "values-#{language}" : 'values'
+      UI.message "Using `#{fallback}` as a fallback for `values-#{locale}` for the Jetpack app."
+      destination = File.join(jetpack_res_dir, "values-#{locale}", 'strings.xml')
+      Dir.chdir('..') do # To get out of `fastlane/` — which is the `pwd` when running code from Fastfile
+        FileUtils.mkdir_p(File.dirname(destination))
+        FileUtils.cp(File.join(jetpack_res_dir, fallback, 'strings.xml'), destination)
+      end
+      destination
+    end
+    git_add(path: new_strings_files)
+    git_commit(path: new_strings_files, message: 'Update translation fallbacks for Jetpack', allow_nothing_to_commit: true)
   end
 
   # Updates the `.po` file at the given `po_path` using the content of the `sources` files, interpolating `release_version` where appropriate.

@@ -1,11 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-06-16 16:54:20+0000
+Translation-Revision-Date: 2022-07-22 11:32:52+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: he_IL
 -->
 <resources>
+    <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery">בעיה בהצגת הבלוק. \nיש להקיש כדי לנסות לשחזר את הבלוק.</string>
+    <string name="weekly_roundup_notification_text_views_and_comments">בשבוע הקודם היו לך ⁦%1$s⁩ צפיות ו-⁦%2$s⁩ תגובות</string>
+    <string name="weekly_roundup_notification_text_views_and_likes">בשבוע הקודם היו לך ⁦%1$s⁩ צפיות ו-⁦%2$s⁩ לייקים</string>
+    <string name="weekly_roundup_notification_text_views_only">בשבוע הקודם היו לך ⁦%1$s⁩ צפיות.</string>
+    <string name="weekly_roundup_notification_text_all">בשבוע הקודם היו לך ⁦%1$s⁩ צפיות, ⁦%2$s⁩ לייקים ו-⁦%3$s⁩ תגובות.</string>
+    <string name="stats_revamp_v2_update_alert_message">השירות עודכן כדי להציג תובנות חדשות שיעזרו לך להבין את הביצועים של התוכן ולאילו תכנים הקהל הגיב בצורה חיובית.</string>
+    <string name="stats_insights_like_guide_card">⭐️ הפוסט האחרון שלך ⁦%1$s⁩ קיבל לייק ⁦%2$s⁩.</string>
+    <string name="wp_jetpack_powered">מופעל באמצעות Jetpack</string>
+    <string name="qrcode_auth_flow_content_description">תמונה להמחשה שתהליך הסריקה של קוד ההתחברות החל</string>
+    <string name="qrcode_auth_flow_error_content_description">תמונה להמחשה שאירעה שגיאה</string>
+    <string name="qrcode_auth_flow_dismiss_dialog_message">האם ברצונך להמשיך?</string>
+    <string name="qrcode_auth_flow_dismiss_dialog_title">לצאת מתהליך הסריקה של קוד ההתחברות</string>
+    <string name="qrcode_auth_flow_error_auth_failed_subtitle">לא ניתן היה להתחבר באמצעות קוד ההתחברות. יש ללחוץ על הכפתור \'לסרוק שוב\' כדי לסרוק שוב את הקוד.</string>
+    <string name="qrcode_auth_flow_error_auth_failed_title">האימות נכשל</string>
+    <string name="qrcode_auth_flow_error_expired_subtitle">פג תוקפו של קוד ההתחברות. יש ללחוץ על הכפתור \'לסרוק שוב\' כדי לסרוק שוב את הקוד.</string>
+    <string name="qrcode_auth_flow_error_expired_title">קוד התחברות פג תוקף</string>
+    <string name="qrcode_auth_flow_error_invalid_data_subtitle">לא ניתן היה לאמת את קוד ההתחברות שנסרק. יש ללחוץ על הכפתור \'לסרוק שוב\' כדי לסרוק שוב את הקוד.</string>
+    <string name="qrcode_auth_flow_error_invalid_data_title">לא ניתן היה לאמת את קוד ההתחברות</string>
+    <string name="qrcode_auth_flow_error_no_connection_subtitle">נדרש חיבור פעיל לאינטרנט כדי לסרוק קודים של התחברות</string>
+    <string name="qrcode_auth_flow_error_no_connection_title">אין חיבור</string>
+    <string name="qrcode_auth_flow_scan_again">לסרוק שוב</string>
+    <string name="qrcode_auth_flow_dismiss">ביטול</string>
+    <string name="qrcode_auth_flow_done_subtitle">יש להקיש על \'ביטול\' ולחזור לדפדפן האינטרנט כדי להמשיך.</string>
+    <string name="qrcode_auth_flow_done_title">התחברת בהצלחה לחשבון!</string>
+    <string name="qrcode_auth_flow_validated_primary_action">כן, אני רוצה להתחבר לחשבון</string>
+    <string name="qrcode_auth_flow_validated_subtitle">יש לסרוק רק קוד QR שנלקח ישירות מדפדפן האינטרנט שלך. אין לסרוק קוד QR שנשלח אליך ממישהו אחר.</string>
+    <string name="qrcode_auth_flow_validated_default_title">האם ניסית להתחבר לדפדפן האינטרנט שלך ליד ⁦%1$s⁩?</string>
+    <string name="qrcode_auth_flow_validated_title">האם ניסית להתחבר אל ⁦%1$s⁩ ליד ⁦%2$s⁩?</string>
+    <string name="stats_revamp_v2_intro_secondary_button_text">הזכירו לי מאוחר יותר</string>
+    <string name="stats_revamp_v2_intro_primary_button_text">כדאי לנסות עכשיו</string>
+    <string name="stats_revamp_v2_intro_content_note">מידע נוסף זמין במקטע \'האתר שלי\' &gt; \'נתונים סטטיסטיים\' &gt; \'תובנות\'</string>
+    <string name="stats_revamp_v2_intro_content">התובנות יעזרו לך להבין את הביצועים של התוכן ולאילו תכנים הקהל הגיב בצורה חיובית.</string>
+    <string name="stats_revamp_v2_intro_header_title">עדכון לתובנות</string>
+    <string name="stats_insights_followers_guide_card">💡הוספת תגובה בבלוגים אחרים היא דרך נהדרת להראות נוכחות ולצבור עוקבים לאתר החדש שלך.</string>
+    <string name="stats_insights_comments_guide_card">💡אפשר להקיש על \'להציג עוד\' כדי לראות את המגיבים המובילים שלך.</string>
+    <string name="stats_insights_latest_post_empty">כדאי לחזור לכאן אחרי שפרסמת את הפוסט הראשון שלך!</string>
+    <string name="stats_insights_views_and_visitors_visitors_empty_state">מומלץ לעיין בעצות המובילות שלנו כדי להגדיל את כמות הצפיות והתעבורה ⁦%1$s⁩</string>
+    <string name="stats_view_publicize">חיבורים לרשתות חברתיות</string>
+    <string name="stats_action_card_schedule_post_message">✍️ כדאי לתזמן את פרסום הטיוטות לפי המועד המתאים ביותר לחשיפה מול הקהל שלך.</string>
+    <string name="stats_action_card_blogging_reminders_message">💡מומלץ לפרסם פוסטים דרך קבע כדי לבנות את הקהל שלך. להוסיף תזכורת כדי להישאר בעניינים.</string>
+    <string name="stats_action_card_grow_audience_message">💡אפשר לשפר את כישורי הכתיבה בבלוג מהר יותר עם הקורס &lt;i&gt;הקדמה לכתיבה בבלוג&lt;/i&gt; בהנחיית המומחים שלנו.</string>
     <string name="blogging_prompts_onboarding_prompts_loading">ההצעות לפרסום בבלוג נטענות. כדאי להמתין קצת ולנסות שוב.</string>
     <string name="hpp_bottom_helper_text">לא הצלחת להחליט? תהיה לך אפשרות לשנות את ערכת העיצוב בכל עת.</string>
     <string name="hpp_recommended_default_vertical">פרסום בבלוג</string>
@@ -19,15 +60,13 @@ Language: he_IL
     <string name="stats_follower_types_pie_chart_total_label">סך הכול</string>
     <string name="stats_referrers_pie_chart_others">אחרים</string>
     <string name="stats_referrers_pie_chart_search">לחפש</string>
+    <string name="stats_referrers_pie_chart_wordpress">וורדפרס</string>
     <string name="stats_referrers_pie_chart_total_label">צפיות</string>
     <string name="stats_action_card_schedule_post_button_label">תזמון</string>
-    <string name="stats_action_card_schedule_post_message">✍️ לתזמן את פרסום התוכן שלך בזמן המתאים ביותר מתוך הטיוטות שלך.</string>
     <string name="stats_action_card_schedule_post_title">לתזמן את הפרסום שלך</string>
     <string name="stats_action_card_blogging_reminders_button_label">הגדרת תזכורות</string>
-    <string name="stats_action_card_blogging_reminders_message">💡אפשר להגדיר תזכורת לפרסום באופן שגרתי כדי לשלב את הקוראים שלך ולמשוך מבקרים חדשים.</string>
     <string name="stats_action_card_blogging_reminders_title">להגדיר את התזכורות שלך לכתוב בלוג</string>
     <string name="stats_action_card_grow_audience_button_label">לעיין בקורס</string>
-    <string name="stats_action_card_grow_audience_message">💡יש לנו שיעורים פשוטים להבנה שמועברים על ידי הבלוגרים הטובים ביותר שיעזרו לך להגדיל את הבלוג שלך.</string>
     <string name="stats_action_card_grow_audience_title">להגדיל את הקהל שלך</string>
     <string name="gutenberg_native_you_can_also_rearrange_blocks_by_tapping_a_block_and_then_tapping">כדי לשנות את סדר הבלוקים, יש להקיש על הבלוק ולאחר מכן להקיש על החצים למעלה ולמטה שמופיעים בפינה השמאלית התחתונה כדי להזיז את הבלוק מעל הבלוקים האחרים או מתחתיהם.</string>
     <string name="gutenberg_native_image_file_not_found">לא נמצא קובץ תמונה.</string>
@@ -38,13 +77,9 @@ Language: he_IL
     <string name="quick_start_sites_type_all_tasks_completed">כל המשימות הושלמו</string>
     <string name="quick_start_list_task_complete">המשימה הושלמה</string>
     <string name="me_btn_scan_login_code">סריקת קוד כניסה למערכת</string>
-    <string name="stats_insights_followers_guide_card">💡ניתן לנסות להשאיר תגובה כמחווה כדי לעודד מעורבות בבלוג ולצבור עוקבים נוספים.</string>
-    <string name="stats_insights_comments_guide_card">💡צפו במגיבים הפעילים ביותר בלחיצה על ״הצגת פריטים נוספים״.</string>
     <string name="stats_insights_likes_guide_card">הפוסט האחרון שלך %1$s קיבל %2$s לייקים.</string>
     <string name="stats_most_popular_percent_views_empty">אין מספיק פעילות. כדאי לחזור לכאן מאוחד יותר לאחר שעוד מבקרים נכנסו לאתר!</string>
-    <string name="stats_insights_latest_post_empty">עדיין לא פרסמת אף פוסט. כדאי לחזור לכאן מאוחר יותר לאר שפרסמת את הפוסט הראשון!</string>
-    <string name="stats_insights_views_and_visitors_visitors_empty_state">אם ברצונך להגדיל את הצפיות והתעבורה, כדאי לעיין בעצות המובילות שלנו %1$s</string>
-    <string name="stats_total_followers_content_description">%1s, %2s מסך העוקבים</string>
+    <string name="stats_total_followers_content_description">⁦%1$s⁩, סך הכול ⁦%2$s⁩%% עוקבים</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
     <string name="pages_copy_link">להעתיק את הקישור</string>
     <string name="quick_start_completed_tour_title">ברכותינו! כבר יש לך ניסיון בעבודה עם האפליקציה&lt;br/&gt;</string>
@@ -368,7 +403,6 @@ Language: he_IL
     <string name="me_btn_share">לשתף את WordPress עם חברים</string>
     <string name="my_site_quick_actions_title">קישורים מהירים</string>
     <string name="my_site_btn_domains">דומיינים</string>
-    <string name="weekly_roundup_notification_text">האתר שלך קיבל ⁦%1$d⁩ צפיות, ⁦%2$d⁩ לייקים, ⁦%3$d⁩ תגובות.</string>
     <string name="weekly_roundup_notification_title">סיכום שבועי: %s</string>
     <string name="blogging_reminders_notification_time">מועד ההודעות</string>
     <string name="blogging_reminders_epilogue_body_everyday_with_time">אנחנו נשלח לך תזכורות לכתוב בלוג &lt;b&gt;בכל יום&lt;/b&gt; בשעה &lt;b&gt;%s&lt;/b&gt;.</string>
@@ -710,9 +744,6 @@ Language: he_IL
     <string name="quick_start_dialog_review_pages_message">לשנות, להוסיף או להסיר עמודים באתר.</string>
     <string name="quick_start_dialog_review_pages_title">לבדוק עמודים באתר</string>
     <string name="quick_start_dialog_edit_homepage_message_pages_short">יש לבחור באפשרות ⁦%1$s⁩ עמוד הבית ⁦%2$s⁩ כדי לערוך את עמוד הבית.</string>
-    <string name="quick_start_dialog_edit_homepage_message_short">יש לבחור באפשרות ⁦%1$s⁩ עמודים ⁦%2$s⁩ כדי להציג את רשימת העמודים שלך.</string>
-    <string name="quick_start_dialog_edit_homepage_message">לשנות, להוסיף או להסיר תוכן בעמוד הבית של האתר.</string>
-    <string name="quick_start_dialog_edit_homepage_title">לערוך את עמוד הבית</string>
     <string name="reader_menu_mark_as_unseen">לסמן כ\'לא נקרא\'</string>
     <string name="reader_menu_mark_as_seen">לסמן כ\'נקרא\'</string>
     <string name="error_media_upload_failed_for_reason">העלאת המדיה נכשלה.\n%1$s</string>
@@ -3039,7 +3070,6 @@ Language: he_IL
     <string name="stats_followers_a_minute_ago">לפני דקה</string>
     <string name="stats_followers_seconds_ago">לפני כמה שניות</string>
     <string name="stats_view_followers">עוקבים</string>
-    <string name="stats_view_publicize">שיתוף אוטומטי</string>
     <string name="stats_view_videos">וידאו</string>
     <string name="stats_view_top_posts_and_pages">פוסטים ועמודים</string>
     <string name="stats_view_countries">מדינות</string>

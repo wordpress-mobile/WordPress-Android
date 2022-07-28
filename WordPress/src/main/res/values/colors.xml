@@ -38,6 +38,12 @@
     <color name="prepublishing_action_type_disabled_color">@color/gray_10</color>
     <color name="prepublishing_action_result_disabled_color">@color/gray_10</color>
 
+    <!-- Jetpack awareness in WordPress App -->
+    <color name="jetpack_banner_background">@color/jetpack_green_0</color>
+    <color name="jetpack_banner_divider">@color/gray_5</color>
+    <color name="jetpack_badge_background">@color/jetpack_green</color>
+    <color name="jetpack_powered_bottom_sheet_background">@color/jetpack_green_0</color>
+
     <!-- Reader -->
 
     <!--Reader Following empty view -->
