@@ -330,6 +330,14 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
                 val scrollableView = binding?.root?.findViewById<View>(containerId) as? RecyclerView ?: return@post
                 jetpackBrandingUtils.showJetpackBannerIfScrolledToTop(jetpackBannerView, scrollableView)
                 jetpackBrandingUtils.initJetpackBannerAnimation(jetpackBannerView, scrollableView)
+
+                if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
+                    jetpackBannerView.setOnClickListener {
+                        JetpackPoweredBottomSheetFragment
+                                .newInstance()
+                                .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
+                    }
+                }
             }
         }
     }

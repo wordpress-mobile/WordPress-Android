@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.map
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
@@ -27,6 +28,7 @@ import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
 
+@HiltViewModel
 class MeViewModel
 @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
@@ -46,6 +48,9 @@ class MeViewModel
 
     private val _showScanLoginCode = MutableLiveData<Event<Boolean>>()
     val showScanLoginCode: LiveData<Event<Boolean>> = _showScanLoginCode
+
+    private val _showJetpackPoweredBottomSheet = MutableLiveData<Event<Boolean>>()
+    val showJetpackPoweredBottomSheet: LiveData<Event<Boolean>> = _showJetpackPoweredBottomSheet
 
     data class RecommendAppUiState(
         val showLoading: Boolean = false,
@@ -88,6 +93,10 @@ class MeViewModel
 
     fun showScanLoginCode() {
         _showScanLoginCode.value = Event(true)
+    }
+
+    fun showJetpackPoweredBottomSheet() {
+        _showJetpackPoweredBottomSheet.value = Event(true)
     }
 
     @SuppressLint("NullSafeMutableLiveData")

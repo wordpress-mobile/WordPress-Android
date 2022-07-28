@@ -26,7 +26,6 @@
     <ID>ComplexMethod:PostListActionTracker.kt$fun trackPostListAction(site: SiteModel, buttonType: PostListButtonType, postData: PostModel, statsEvent: Stat)</ID>
     <ID>ComplexMethod:PostListDialogHelper.kt$PostListDialogHelper$fun onPositiveClickedForBasicDialog( instanceTag: String, trashPostWithLocalChanges: (Int) -> Unit, trashPostWithUnsavedChanges: (Int) -> Unit, deletePost: (Int) -> Unit, publishPost: (Int) -> Unit, updateConflictedPostWithRemoteVersion: (Int) -> Unit, editRestoredAutoSavePost: (Int) -> Unit, moveTrashedPostToDraft: (Int) -> Unit, resolveConflictsAndEditPost: (Int) -> Unit )</ID>
     <ID>ComplexMethod:PostListItemUiStateHelper.kt$PostListItemUiStateHelper$private fun createButtonTypes( postStatus: PostStatus, isLocalDraft: Boolean, isLocallyChanged: Boolean, uploadUiState: PostUploadUiState, siteHasCapabilitiesToPublish: Boolean, statsSupported: Boolean ): List&lt;PostListButtonType></ID>
-    <ID>ComplexMethod:ReaderPostBookmarkUseCase.kt$ReaderPostBookmarkUseCase$private fun trackEvent( bookmarked: Boolean, isBookmarkList: Boolean, post: ReaderPost, source: String )</ID>
     <ID>ComplexMethod:ReaderPostDetailFragment.kt$ReaderPostDetailFragment$private fun ReaderNavigationEvents.handleNavigationEvent()</ID>
     <ID>ComplexMethod:ReferrersUseCase.kt$ReferrersUseCase$override fun buildUiModel(domainModel: ReferrersModel, uiState: SelectedGroup): List&lt;BlockListItem></ID>
     <ID>ComplexMethod:SystemNotificationsTracker.kt$SystemNotificationsTracker$private fun NotificationType.toTypeValue(): String</ID>
@@ -69,8 +68,6 @@
     <ID>EmptyFunctionBlock:WidgetBlockListProvider.kt$WidgetBlockListProvider${ }</ID>
     <ID>EmptyFunctionBlock:WordPressGlideModule.kt$WordPressGlideModule${}</ID>
     <ID>EmptySecondaryConstructor:WPEditTextWithChipsOutlined.kt$WPEditTextWithChipsOutlined.SavedState${}</ID>
-    <ID>FunctionNaming:WPMainActivityViewModel.kt$WPMainActivityViewModel$// create_post_page_fab_tooltip_stories_feature_flag_on private fun getCreateContentMessageId_StoriesFlagOn(hasFullAccessToContent: Boolean): Int</ID>
-    <ID>FunctionNaming:WPMainActivityViewModel.kt$WPMainActivityViewModel$private fun getCreateContentMessageId_StoriesFlagOff(hasFullAccessToContent: Boolean): Int</ID>
     <ID>FunctionParameterNaming:WizardManager.kt$WizardManager$T: WizardStep</ID>
     <ID>LargeClass:PagesViewModel.kt$PagesViewModel : ScopedViewModel</ID>
     <ID>LargeClass:ReaderPostDetailFragment.kt$ReaderPostDetailFragment : ViewPagerFragmentOnActivityBackPressedListenerScrollDirectionListenerReaderCustomViewListenerReaderWebViewPageFinishedListenerReaderWebViewUrlClickListenerPrivateAtCookieProgressDialogOnDismissListenerAutoHideToolbarListener</ID>

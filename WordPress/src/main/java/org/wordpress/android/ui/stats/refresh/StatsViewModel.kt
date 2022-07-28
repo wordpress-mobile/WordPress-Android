@@ -55,10 +55,9 @@ import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.toStatsGranularity
 import org.wordpress.android.ui.stats.refresh.utils.trackGranular
 import org.wordpress.android.ui.utils.UiString.UiStringRes
-import org.wordpress.android.util.BuildConfigWrapper
+import org.wordpress.android.util.JetpackBrandingUtils
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.util.config.JetpackPoweredFeatureConfig
 import org.wordpress.android.util.config.MySiteDashboardTodaysStatsCardFeatureConfig
 import org.wordpress.android.util.config.StatsRevampV2FeatureConfig
 import org.wordpress.android.util.mapNullable
@@ -88,8 +87,7 @@ class StatsViewModel
     private val notificationsTracker: SystemNotificationsTracker,
     private val todaysStatsCardFeatureConfig: MySiteDashboardTodaysStatsCardFeatureConfig,
     private val statsRevampV2FeatureConfig: StatsRevampV2FeatureConfig,
-    private val jetpackPoweredFeatureConfig: JetpackPoweredFeatureConfig,
-    private val buildConfigWrapper: BuildConfigWrapper
+    private val jetpackBrandingUtils: JetpackBrandingUtils
 ) : ScopedViewModel(mainDispatcher) {
     private val _isRefreshing = MutableLiveData<Boolean>()
     val isRefreshing: LiveData<Boolean> = _isRefreshing
@@ -216,13 +214,11 @@ class StatsViewModel
         }
         if (statsSectionManager.getSelectedSection() == INSIGHTS) showInsightsUpdateAlert()
 
-        showJetpackPoweredBottomSheet()
+        if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) showJetpackPoweredBottomSheet()
     }
 
     private fun showJetpackPoweredBottomSheet() {
-        _showJetpackPoweredBottomSheet.value = Event(
-                jetpackPoweredFeatureConfig.isEnabled() && !buildConfigWrapper.isJetpackApp
-        )
+        _showJetpackPoweredBottomSheet.value = Event(true)
     }
 
     private fun showInsightsUpdateAlert() {

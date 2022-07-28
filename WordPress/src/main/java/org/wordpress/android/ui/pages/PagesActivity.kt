@@ -59,6 +59,7 @@ class PagesActivity : LocaleAwareActivity(),
         return super.onOptionsItemSelected(item)
     }
 
+    @Suppress("UseCheckOrError")
     override fun onPositiveClicked(instanceTag: String) {
         val fragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
         if (fragment is PagesFragment) {
@@ -68,6 +69,7 @@ class PagesActivity : LocaleAwareActivity(),
         }
     }
 
+    @Suppress("UseCheckOrError")
     override fun onNegativeClicked(instanceTag: String) {
         val fragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
         if (fragment is PagesFragment) {

@@ -59,7 +59,7 @@ class PostListButton : LinearLayout {
         }
     }
 
-    @Suppress("MemberVisibilityCanBePrivate")
+    @Suppress("MemberVisibilityCanBePrivate", "UseCheckOrError")
     fun setButtonType(buttonTypeInt: Int) {
         if (buttonTypeInt == this.buttonType?.value) {
             return
