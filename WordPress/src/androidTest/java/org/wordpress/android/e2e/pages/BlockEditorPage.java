@@ -42,13 +42,12 @@ public class BlockEditorPage {
     }
 
     public BlockEditorPage enterTitle(String postTitle) {
-        titleField.perform(click(), typeText(postTitle), ViewActions.closeSoftKeyboard());
+        populateTextField(titleField, postTitle);
         return this;
     }
 
     public BlockEditorPage enterParagraphText(String paragraphText) {
-        onView(withHint(R.string.gutenberg_native_start_writing))
-                .perform(click(), typeText(paragraphText), ViewActions.closeSoftKeyboard());
+        populateTextField(onView(withHint(R.string.gutenberg_native_start_writing)), paragraphText);
         return this;
     }
 
