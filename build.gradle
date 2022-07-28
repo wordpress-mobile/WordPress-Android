@@ -10,7 +10,7 @@ plugins {
 ext {
     wordPressUtilsVersion = 'trunk-68e2995962a5134770e6f9e5b9f258a339e123b2'
     wordPressLoginVersion = '0.15.0'
-    gutenbergMobileVersion = 'v1.81.0-alpha1'
+    gutenbergMobileVersion = '5054-f903a00b85b677ec843139712ca20397b4d8b1b1'
     storiesVersion = '1.4.0'
     aboutAutomatticVersion = '0.0.6'
 
@@ -21,7 +21,7 @@ ext {
     coroutinesVersion = '1.5.2'
     androidxWorkVersion = "2.7.0"
 
-    fluxCVersion = '1.48.0'
+    fluxCVersion = '2474-b486ad7a20b09a93b90d25da94282212cdec402f'
 
     appCompatVersion = '1.0.2'
     androidxCoreVersion = '1.3.2'
