@@ -7,14 +7,12 @@ import android.preference.PreferenceManager;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public final class AnalyticsTracker {
     private static boolean mHasUserOptedOut;
-    private static AnalyticsInjectExperimentProperties mInjectExperimentProperties;
 
     public static final String READER_DETAIL_TYPE_KEY = "post_detail_type";
     public static final String READER_DETAIL_TYPE_NORMAL = "normal";
@@ -981,11 +979,6 @@ public final class AnalyticsTracker {
             return;
         }
 
-        if (shouldInjectExperimentProperties()) {
-            trackWithExperimentProperties(stat, Collections.emptyMap());
-            return;
-        }
-
         for (Tracker tracker : TRACKERS) {
             tracker.track(stat);
         }
@@ -1009,25 +1002,8 @@ public final class AnalyticsTracker {
             return;
         }
 
-        if (shouldInjectExperimentProperties()) {
-            trackWithExperimentProperties(stat, properties);
-            return;
-        }
-
         for (Tracker tracker : TRACKERS) {
             tracker.track(stat, properties);
-        }
-    }
-
-    private static void trackWithExperimentProperties(Stat stat, Map<String, ?> properties) {
-        Map<String, ?> props = mInjectExperimentProperties.injectProperties(properties);
-
-        for (Tracker tracker : TRACKERS) {
-            if (props.isEmpty()) {
-                tracker.track(stat);
-            } else {
-                tracker.track(stat, props);
-            }
         }
     }
 
@@ -1074,16 +1050,5 @@ public final class AnalyticsTracker {
         for (Tracker tracker : TRACKERS) {
             tracker.refreshMetadata(metadata);
         }
-    }
-
-    public static void setInjectExperimentProperties(AnalyticsInjectExperimentProperties injectExperimentProperties) {
-        mInjectExperimentProperties = (injectExperimentProperties != null)
-                ? injectExperimentProperties
-                : AnalyticsInjectExperimentProperties.emptyInstance();
-    }
-
-    private static boolean shouldInjectExperimentProperties() {
-        return mInjectExperimentProperties != null
-               && !mInjectExperimentProperties.getProperties().isEmpty();
     }
 }
