@@ -26,7 +26,6 @@ public class BlockEditorTests extends BaseTest {
         wpLogin();
     }
 
-    String mTitle = "Hello Espresso!";
     String mPostText = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
     String mCategory = "Wedding";
     String mTag = "Tag " + Instant.now().toEpochMilli();
@@ -41,6 +40,8 @@ public class BlockEditorTests extends BaseTest {
 
     @Test
     public void publishSimplePost() {
+        String mTitle = new Throwable().getStackTrace()[0].getMethodName();
+
         new MySitesPage()
                 .go()
                 .startNewPost();
@@ -55,6 +56,8 @@ public class BlockEditorTests extends BaseTest {
 
     @Test
     public void publishFullPost() {
+        String mTitle = new Throwable().getStackTrace()[0].getMethodName();
+
         new MySitesPage()
                 .go()
                 .startNewPost();
@@ -73,6 +76,8 @@ public class BlockEditorTests extends BaseTest {
 
     @Test
     public void blockEditorCanDisplayElementAddedInHtmlMode() {
+        String mTitle = new Throwable().getStackTrace()[0].getMethodName();
+
         new MySitesPage()
                 .go()
                 .startNewPost();
