@@ -9,7 +9,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -17,9 +16,6 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
-
-import org.wordpress.android.login.util.AvatarHelper;
-import org.wordpress.android.login.util.AvatarHelper.AvatarRequestListener;
 
 import javax.inject.Inject;
 
@@ -36,8 +32,7 @@ public class LoginMagicLinkSentImprovedFragment extends Fragment {
     private String mEmail;
     private boolean mAllowPassword;
 
-    @Inject
-    protected LoginAnalyticsListener mAnalyticsListener;
+    @Inject protected LoginAnalyticsListener mAnalyticsListener;
 
     public static LoginMagicLinkSentImprovedFragment newInstance(String email) {
         return newInstance(email, true);
