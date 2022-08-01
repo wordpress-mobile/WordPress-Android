@@ -30,5 +30,7 @@ style:
     ignoreEnums: true
     ignoreAnnotated: ['Composable']
     ignorePropertyDeclaration: true
+  SpacingBetweenPackageAndImports:
+    active: true
   UnusedPrivateMember:
     ignoreAnnotated: ['Composable']
