@@ -40,12 +40,15 @@ public class BlockEditorPage {
     }
 
     public BlockEditorPage enterTitle(String postTitle) {
+        clickOn(titleField);
         populateTextField(titleField, postTitle);
         return this;
     }
 
     public BlockEditorPage enterParagraphText(String paragraphText) {
-        populateTextField(onView(withHint(R.string.gutenberg_native_start_writing)), paragraphText);
+        ViewInteraction startWritingPrompt = onView(withHint(R.string.gutenberg_native_start_writing));
+        clickOn(startWritingPrompt);
+        populateTextField(startWritingPrompt, paragraphText);
         return this;
     }
 

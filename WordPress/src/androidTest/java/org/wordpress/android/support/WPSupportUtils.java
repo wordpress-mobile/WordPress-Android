@@ -264,7 +264,7 @@ public class WPSupportUtils {
     }
 
     public static void populateTextField(ViewInteraction element, String text) {
-        clickOn(element);
+        waitForElementToBeDisplayed(element);
         element.perform(replaceText(text))
                .perform(closeSoftKeyboard());
     }
