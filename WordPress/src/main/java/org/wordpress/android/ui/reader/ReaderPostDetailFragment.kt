@@ -1607,6 +1607,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     /*
      * returns True if the passed URL should be opened in the external browser app
      */
+    @Suppress("ReturnCount")
     private fun shouldOpenExternal(url: String): Boolean {
         // open YouTube videos in external app so they launch the YouTube player
         if (ReaderVideoUtils.isYouTubeVideoLink(url)) {

@@ -26,6 +26,7 @@ class FetchHomePageLayoutsUseCase @Inject constructor(
     }
     private var continuation: Continuation<OnStarterDesignsFetched>? = null
 
+    @Suppress("UseCheckOrError")
     suspend fun fetchStarterDesigns(): OnStarterDesignsFetched {
         if (continuation != null) {
             throw IllegalStateException("Fetch already in progress.")

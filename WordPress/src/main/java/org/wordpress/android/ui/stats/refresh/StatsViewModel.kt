@@ -87,7 +87,7 @@ class StatsViewModel
     private val notificationsTracker: SystemNotificationsTracker,
     private val todaysStatsCardFeatureConfig: MySiteDashboardTodaysStatsCardFeatureConfig,
     private val statsRevampV2FeatureConfig: StatsRevampV2FeatureConfig,
-    private val jetpackpoweredBrandingUtils: JetpackBrandingUtils
+    private val jetpackBrandingUtils: JetpackBrandingUtils
 ) : ScopedViewModel(mainDispatcher) {
     private val _isRefreshing = MutableLiveData<Boolean>()
     val isRefreshing: LiveData<Boolean> = _isRefreshing
@@ -214,11 +214,11 @@ class StatsViewModel
         }
         if (statsSectionManager.getSelectedSection() == INSIGHTS) showInsightsUpdateAlert()
 
-        showJetpackPoweredBottomSheet()
+        if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) showJetpackPoweredBottomSheet()
     }
 
     private fun showJetpackPoweredBottomSheet() {
-        _showJetpackPoweredBottomSheet.value = Event(jetpackpoweredBrandingUtils.shouldShowJetpackBranding())
+        _showJetpackPoweredBottomSheet.value = Event(true)
     }
 
     private fun showInsightsUpdateAlert() {

@@ -50,6 +50,7 @@ class PrepublishingHomeAdapter(context: Context) : RecyclerView.Adapter<Prepubli
         diffResult.dispatchUpdatesTo(this)
     }
 
+    @Suppress("UseCheckOrError")
     override fun getItemViewType(position: Int): Int {
         return when (items[position]) {
             is HeaderUiState -> headerViewType
