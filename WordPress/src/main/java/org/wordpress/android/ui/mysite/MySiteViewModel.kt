@@ -211,7 +211,8 @@ class MySiteViewModel @Inject constructor(
 
     private val defaultTab: MySiteTabType
         get() = if (isMySiteTabsEnabled) {
-            if (appPrefsWrapper.getMySiteInitialScreen(buildConfigWrapper.isJetpackApp) == MySiteTabType.SITE_MENU.label) {
+            if (appPrefsWrapper.getMySiteInitialScreen(buildConfigWrapper.isJetpackApp) ==
+                    MySiteTabType.SITE_MENU.label) {
                 MySiteTabType.SITE_MENU
             } else {
                 MySiteTabType.DASHBOARD
