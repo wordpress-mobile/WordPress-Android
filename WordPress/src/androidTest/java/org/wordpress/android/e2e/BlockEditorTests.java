@@ -40,7 +40,7 @@ public class BlockEditorTests extends BaseTest {
 
     @Test
     public void publishSimplePost() {
-        String mTitle = new Throwable().getStackTrace()[0].getMethodName();
+        String title = "publishSimplePost";
 
         new MySitesPage()
                 .go()
@@ -48,7 +48,7 @@ public class BlockEditorTests extends BaseTest {
 
         new BlockEditorPage()
                 .waitForTitleDisplayed()
-                .enterTitle(mTitle)
+                .enterTitle(title)
                 .enterParagraphText(mPostText)
                 .publish()
                 .verifyPostPublished();
@@ -56,7 +56,7 @@ public class BlockEditorTests extends BaseTest {
 
     @Test
     public void publishFullPost() {
-        String mTitle = new Throwable().getStackTrace()[0].getMethodName();
+        String title = "publishFullPost";
 
         new MySitesPage()
                 .go()
@@ -64,7 +64,7 @@ public class BlockEditorTests extends BaseTest {
 
         new BlockEditorPage()
                 .waitForTitleDisplayed()
-                .enterTitle(mTitle)
+                .enterTitle(title)
                 .enterParagraphText(mPostText)
                 .addImage()
                 .addPostSettings(mCategory, mTag)
@@ -76,7 +76,7 @@ public class BlockEditorTests extends BaseTest {
 
     @Test
     public void blockEditorCanDisplayElementAddedInHtmlMode() {
-        String mTitle = new Throwable().getStackTrace()[0].getMethodName();
+        String title = "blockEditorCanDisplayElementAddedInHtmlMode";
 
         new MySitesPage()
                 .go()
@@ -84,7 +84,7 @@ public class BlockEditorTests extends BaseTest {
 
         new BlockEditorPage()
                 .waitForTitleDisplayed()
-                .enterTitle(mTitle)
+                .enterTitle(title)
                 .switchToHtmlMode()
                 .enterParagraphText(mHtmlPost)
                 .switchToVisualMode()
