@@ -72,7 +72,7 @@ class PostListItemUiStateHelper @Inject constructor(
     private val uploadUiStateUseCase: PostModelUploadUiStateUseCase,
     private val labelColorUseCase: PostPageListLabelColorUseCase
 ) {
-    @Suppress("LongParameterList")
+    @Suppress("LongParameterList", "LongMethod")
     fun createPostListItemUiState(
         authorFilterSelection: AuthorFilterSelection,
         post: PostModel,

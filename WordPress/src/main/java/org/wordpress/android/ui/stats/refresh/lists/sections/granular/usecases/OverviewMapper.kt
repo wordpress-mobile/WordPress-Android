@@ -142,7 +142,7 @@ class OverviewMapper @Inject constructor(
         )
     }
 
-    @Suppress("LongParameterList")
+    @Suppress("LongParameterList", "LongMethod")
     fun buildChart(
         dates: List<PeriodData>,
         statsGranularity: StatsGranularity,
