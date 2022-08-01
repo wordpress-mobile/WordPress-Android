@@ -37,6 +37,7 @@ import org.wordpress.android.ui.publicize.PublicizeConstants.ConnectAction;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter;
 import org.wordpress.android.ui.publicize.services.PublicizeUpdateService;
 import org.wordpress.android.util.JetpackBrandingUtils;
+import org.wordpress.android.util.JetpackBrandingUtils.Screen;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
@@ -92,9 +93,11 @@ public class PublicizeListActivity extends LocaleAwareActivity
             layoutParams.bottomMargin = getResources().getDimensionPixelSize(R.dimen.jetpack_banner_height);
 
             if (mJetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
-                jetpackBanner.setOnClickListener(v ->
-                        new JetpackPoweredBottomSheetFragment()
-                                .show(getSupportFragmentManager(), JetpackPoweredBottomSheetFragment.TAG));
+                jetpackBanner.setOnClickListener(v -> {
+                    mJetpackBrandingUtils.trackBannerTapped(Screen.SHARE);
+                    new JetpackPoweredBottomSheetFragment()
+                            .show(getSupportFragmentManager(), JetpackPoweredBottomSheetFragment.TAG);
+                });
             }
         }
 

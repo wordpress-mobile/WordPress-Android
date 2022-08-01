@@ -123,6 +123,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.JetpackBrandingUtils;
+import org.wordpress.android.util.JetpackBrandingUtils.Screen;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.QuickStartUtilsWrapper;
 import org.wordpress.android.util.SnackbarItem;
@@ -507,9 +508,11 @@ public class ReaderPostListFragment extends ViewPagerFragment
             jetpackBanner.setVisibility(View.VISIBLE);
 
             if (mJetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
-                jetpackBanner.setOnClickListener(v ->
-                        new JetpackPoweredBottomSheetFragment()
-                                .show(getChildFragmentManager(), JetpackPoweredBottomSheetFragment.TAG));
+                jetpackBanner.setOnClickListener(v -> {
+                    mJetpackBrandingUtils.trackBannerTapped(Screen.READER_POST_LIST);
+                    new JetpackPoweredBottomSheetFragment()
+                            .show(getChildFragmentManager(), JetpackPoweredBottomSheetFragment.TAG);
+                });
             }
             // Add bottom margin to post list and empty view.
             int jetpackBannerHeight = getResources().getDimensionPixelSize(R.dimen.jetpack_banner_height);
