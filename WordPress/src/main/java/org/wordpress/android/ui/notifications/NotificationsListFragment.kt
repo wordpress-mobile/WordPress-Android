@@ -49,6 +49,7 @@ import org.wordpress.android.ui.stats.StatsConnectJetpackActivity
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.NOTIFS
 import org.wordpress.android.util.JetpackBrandingUtils
+import org.wordpress.android.util.JetpackBrandingUtils.Screen
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.WPUrlUtils
 import org.wordpress.android.util.extensions.setLiftOnScrollTargetViewIdAndRequestLayout
@@ -310,6 +311,7 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
                 jetpackBrandingUtils.initJetpackBannerAnimation(jetpackBannerView, scrollableView)
 
                 if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
+                    jetpackBrandingUtils.trackBannerTapped(Screen.NOTIFICATIONS)
                     jetpackBannerView.setOnClickListener {
                         JetpackPoweredBottomSheetFragment
                                 .newInstance()

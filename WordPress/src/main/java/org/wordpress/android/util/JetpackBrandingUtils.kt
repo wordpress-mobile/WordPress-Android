@@ -110,6 +110,7 @@ class JetpackBrandingUtils @Inject constructor(
         ME("me"),
         NOTIFICATIONS("notifications"),
         NOTIFICATIONS_SETTINGS("notifications_settings"),
+        READER("reader"),
         READER_POST_LIST("reader_post_list"),
         READER_POST_DETAIL("reader_post_detail"),
         SHARE("share"),
