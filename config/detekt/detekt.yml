@@ -36,3 +36,6 @@ style:
     active: true
   UnusedPrivateMember:
     ignoreAnnotated: ['Composable']
+  WildcardImport:
+    active: true
+    excludeImports: []
