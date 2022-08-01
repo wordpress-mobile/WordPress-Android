@@ -509,7 +509,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
 
             if (mJetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
                 jetpackBanner.setOnClickListener(v -> {
-                    mJetpackBrandingUtils.trackBannerTapped(Screen.READER_POST_LIST);
+                    mJetpackBrandingUtils.trackBannerTapped(Screen.READER_SEARCH);
                     new JetpackPoweredBottomSheetFragment()
                             .show(getChildFragmentManager(), JetpackPoweredBottomSheetFragment.TAG);
                 });

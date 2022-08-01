@@ -104,6 +104,7 @@ class JetpackBrandingUtils @Inject constructor(
     )
 
     enum class Screen(val trackingName: String) {
+        APP_SETTINGS("app_settings"),
         ACTIVITY_LOG("activity_log"),
         ACTIVITY_LOG_DETAIL("activity_log_detail"),
         HOME("home"),
@@ -111,8 +112,8 @@ class JetpackBrandingUtils @Inject constructor(
         NOTIFICATIONS("notifications"),
         NOTIFICATIONS_SETTINGS("notifications_settings"),
         READER("reader"),
-        READER_POST_LIST("reader_post_list"),
         READER_POST_DETAIL("reader_post_detail"),
+        READER_SEARCH("reader_search"),
         SHARE("share"),
         STATS("stats")
     }
