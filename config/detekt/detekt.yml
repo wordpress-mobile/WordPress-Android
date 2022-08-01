@@ -11,6 +11,10 @@ complexity:
   LongMethod:
     ignoreAnnotated: ['Composable']
 
+coroutines:
+  GlobalCoroutineUsage:
+    active: true
+
 naming:
   FunctionNaming:
     ignoreAnnotated: ['Composable']
