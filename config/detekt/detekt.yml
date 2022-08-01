@@ -19,6 +19,10 @@ naming:
   FunctionNaming:
     ignoreAnnotated: ['Composable']
 
+potential-bugs:
+  MissingWhenCase:
+    allowElseExpression: false
+
 style:
   DataClassShouldBeImmutable:
     active: true
