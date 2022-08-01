@@ -2389,6 +2389,14 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "qrlogin_verify_failed";
             case QRLOGIN_VERIFY_SCAN_AGAIN:
                 return "qrlogin_verify_scan_again";
+            case JETPACK_POWERED_BANNER_TAPPED:
+                return "jetpack_powered_banner_tapped";
+            case JETPACK_POWERED_BADGE_TAPPED:
+                return "jetpack_powered_badge_tapped";
+            case JETPACK_POWERED_BOTTOM_SHEET_GET_JETPACK_APP_TAPPED:
+                return "jetpack_powered_bottom_sheet_get_jetpack_app_tapped";
+            case JETPACK_POWERED_BOTTOM_SHEET_CONTINUE_TAPPED:
+                return "jetpack_powered_bottom_sheet_continue_tapped";
         }
         return null;
     }
