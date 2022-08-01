@@ -68,7 +68,6 @@ import java.io.Serializable
 import javax.inject.Inject
 import javax.inject.Named
 
-@Suppress("TooManyFunctions")
 @HiltViewModel
 class StatsViewModel
 @Inject constructor(

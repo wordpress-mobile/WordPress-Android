@@ -11,6 +11,8 @@ complexity:
     ignoreAnnotated: ['Inject', 'Composable']
   LongMethod:
     ignoreAnnotated: ['Composable']
+  TooManyFunctions:
+    active: false
 
 coroutines:
   GlobalCoroutineUsage:

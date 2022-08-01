@@ -59,7 +59,6 @@ import javax.inject.Named
 import javax.inject.Singleton
 import kotlin.coroutines.CoroutineContext
 
-@Suppress("TooManyFunctions")
 @Singleton
 class QuickStartRepository
 @Inject constructor(

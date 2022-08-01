@@ -16,7 +16,6 @@ import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.extensions.setStatusBarAsSurfaceColor
 import javax.inject.Inject
 
-@Suppress("TooManyFunctions")
 abstract class FeatureIntroductionDialogFragment : DialogFragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var uiHelpers: UiHelpers

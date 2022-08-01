@@ -39,7 +39,6 @@ import javax.inject.Inject
 private const val DETAIL_TRACKING_SOURCE = "detail"
 private const val FORWARD_SLASH = "/"
 
-@Suppress("TooManyFunctions")
 @AndroidEntryPoint
 class ActivityLogDetailFragment : Fragment(R.layout.activity_log_item_detail) {
     @Inject lateinit var imageManager: ImageManager
