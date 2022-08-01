@@ -261,6 +261,7 @@ class QuickStartRepository
         }
     }
 
+    @Suppress("ForbiddenComment")
     private fun getCategoryCompletionMessage(taskType: QuickStartTaskType) = when (taskType) {
         CUSTOMIZE -> R.string.quick_start_completed_type_customize_message
         GROW -> R.string.quick_start_completed_type_grow_message

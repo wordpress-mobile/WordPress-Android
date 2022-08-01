@@ -197,6 +197,7 @@ class ThreatDetailsViewModel @Inject constructor(
             )
     )
 
+    @Suppress("ForbiddenComment")
     sealed class UiState { // TODO: ashiagr add states for loading, error as needed
         data class Content(val items: List<JetpackListItemState>) : UiState()
     }

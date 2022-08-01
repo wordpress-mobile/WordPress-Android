@@ -737,6 +737,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     }
 
     // TODO: Update using UiState/ NavigationEvent
+    @Suppress("ForbiddenComment")
     private fun onPostExecuteShowPost() {
         // make sure options menu reflects whether we now have a post
         activity?.invalidateOptionsMenu()

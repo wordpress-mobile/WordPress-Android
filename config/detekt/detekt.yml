@@ -26,10 +26,6 @@ potential-bugs:
 style:
   DataClassShouldBeImmutable:
     active: true
-  ForbiddenComment:
-    values:
-      - 'FIXME:'
-      - 'STOPSHIP:'
   MagicNumber:
     ignoreEnums: true
     ignoreAnnotated: ['Composable']
