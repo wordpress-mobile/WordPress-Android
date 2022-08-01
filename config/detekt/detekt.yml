@@ -20,6 +20,8 @@ naming:
     ignoreAnnotated: ['Composable']
 
 style:
+  DataClassShouldBeImmutable:
+    active: true
   ForbiddenComment:
     values:
       - 'FIXME:'
