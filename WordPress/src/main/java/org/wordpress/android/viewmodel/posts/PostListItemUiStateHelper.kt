@@ -362,7 +362,7 @@ class PostListItemUiStateHelper @Inject constructor(
                         (!appPrefsWrapper.isAztecEditorEnabled && uploadUiState is UploadingMedia))
     }
 
-    @Suppress("LongParameterList")
+    @Suppress("LongParameterList", "ComplexMethod")
     private fun createButtonTypes(
         postStatus: PostStatus,
         isLocalDraft: Boolean,
