@@ -174,9 +174,6 @@ public class AppPrefs {
         SHOULD_SCHEDULE_CREATE_SITE_NOTIFICATION,
         SHOULD_SHOW_WEEKLY_ROUNDUP_NOTIFICATION,
 
-        // Used to indicate if the variant has been assigned for the My Site Tab experiment
-        MY_SITE_DEFAULT_TAB_EXPERIMENT_VARIANT_ASSIGNED,
-
         SKIPPED_BLOGGING_PROMPT_DAY,
     }
 
@@ -1406,10 +1403,10 @@ public class AppPrefs {
         return DeletablePrefKey.SKIPPED_BLOGGING_PROMPT_DAY.name() + siteId;
     }
 
-    public static String getMySiteInitialScreen() {
+    public static String getMySiteInitialScreen(boolean isJetpackApp) {
         return getString(
                 UndeletablePrefKey.wp_pref_initial_screen,
-                MySiteTabType.SITE_MENU.getLabel()
+                isJetpackApp ? MySiteTabType.DASHBOARD.getLabel() : MySiteTabType.SITE_MENU.getLabel()
         );
     }
 

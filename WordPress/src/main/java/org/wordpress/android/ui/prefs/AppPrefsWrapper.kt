@@ -220,7 +220,7 @@ class AppPrefsWrapper @Inject constructor() {
     fun setLastSelectedQuickStartTypeForSite(quickStartType: QuickStartType, siteLocalId: Long) =
             AppPrefs.setLastSelectedQuickStartTypeForSite(quickStartType, siteLocalId)
 
-    fun getMySiteInitialScreen(): String = AppPrefs.getMySiteInitialScreen()
+    fun getMySiteInitialScreen(isJetpackApp: Boolean): String = AppPrefs.getMySiteInitialScreen(isJetpackApp)
 
     fun setSkippedPromptDay(date: Date?, siteId: Int) = AppPrefs.setSkippedPromptDay(date, siteId)
 
