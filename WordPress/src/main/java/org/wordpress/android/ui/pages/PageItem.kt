@@ -12,6 +12,7 @@ import org.wordpress.android.viewmodel.uistate.ProgressBarUiState
 import java.util.Date
 
 sealed class PageItem(open val type: Type) {
+    @Suppress("LongParameterList")
     abstract class Page(
         open val remoteId: Long,
         open val localId: Int,

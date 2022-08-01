@@ -53,6 +53,7 @@ class CreatePageListItemLabelsUseCase @Inject constructor(
         return Pair(labels, labelColor)
     }
 
+    @Suppress("LongParameterList")
     private fun getLabels(
         postStatus: PostStatus,
         isLocalDraft: Boolean,

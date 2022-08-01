@@ -1719,6 +1719,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             return newInstance(false, blogId, postId, null, 0, false, null, null, false)
         }
 
+        @Suppress("LongParameterList")
         fun newInstance(
             isFeed: Boolean,
             blogId: Long,

@@ -52,7 +52,6 @@ class QuickStartPromptDialogFragment : AppCompatDialogFragment() {
         fun onPositiveClicked(instanceTag: String)
     }
 
-    @Suppress("LongParameterList")
     @JvmOverloads
     fun initialize(
         tag: String,

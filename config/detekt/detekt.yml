@@ -7,6 +7,7 @@ config:
 
 complexity:
   LongParameterList:
+    ignoreDefaultParameters: true
     ignoreAnnotated: ['Inject', 'Composable']
   LongMethod:
     ignoreAnnotated: ['Composable']

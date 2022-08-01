@@ -71,6 +71,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
     private val readerPostTagsUiStateBuilder: ReaderPostTagsUiStateBuilder,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) {
+    @Suppress("LongParameterList")
     suspend fun mapPostToUiState(
         source: String,
         post: ReaderPost,

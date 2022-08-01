@@ -72,6 +72,7 @@ class PostListItemUiStateHelper @Inject constructor(
     private val uploadUiStateUseCase: PostModelUploadUiStateUseCase,
     private val labelColorUseCase: PostPageListLabelColorUseCase
 ) {
+    @Suppress("LongParameterList")
     fun createPostListItemUiState(
         authorFilterSelection: AuthorFilterSelection,
         post: PostModel,
@@ -361,6 +362,7 @@ class PostListItemUiStateHelper @Inject constructor(
                         (!appPrefsWrapper.isAztecEditorEnabled && uploadUiState is UploadingMedia))
     }
 
+    @Suppress("LongParameterList")
     private fun createButtonTypes(
         postStatus: PostStatus,
         isLocalDraft: Boolean,

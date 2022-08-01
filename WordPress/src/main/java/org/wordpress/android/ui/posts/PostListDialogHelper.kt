@@ -151,6 +151,7 @@ class PostListDialogHelper(
         showDialog.invoke(dialogHolder)
     }
 
+    @Suppress("LongParameterList")
     fun onPositiveClickedForBasicDialog(
         instanceTag: String,
         trashPostWithLocalChanges: (Int) -> Unit,

@@ -10,6 +10,7 @@ import org.wordpress.android.ui.pages.PageItemViewHolder.PageViewHolder
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
 
+@Suppress("LongParameterList")
 class PageListAdapter(
     private val onMenuAction: (PageItem.Action, Page) -> Boolean,
     private val onItemTapped: (Page) -> Unit,
