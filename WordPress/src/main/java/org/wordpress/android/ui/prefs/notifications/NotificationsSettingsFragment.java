@@ -76,6 +76,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.BuildConfigWrapper;
 import org.wordpress.android.util.JetpackBrandingUtils;
+import org.wordpress.android.util.JetpackBrandingUtils.Screen;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
@@ -228,11 +229,12 @@ public class NotificationsSettingsFragment extends PreferenceFragment
         if (mJetpackBrandingUtils.shouldShowJetpackBranding()) {
             LayoutInflater inflater = LayoutInflater.from(getContext());
             final JetpackBadgeFooterBinding binding = JetpackBadgeFooterBinding.inflate(inflater);
-            binding.jetpackBadge.getRoot().setOnClickListener(v ->
-                    new JetpackPoweredBottomSheetFragment().show(
-                            ((AppCompatActivity) getActivity()).getSupportFragmentManager(),
-                            JetpackPoweredBottomSheetFragment.TAG)
-            );
+            binding.jetpackBadge.getRoot().setOnClickListener(v -> {
+                mJetpackBrandingUtils.trackBadgeTapped(Screen.NOTIFICATIONS_SETTINGS);
+                new JetpackPoweredBottomSheetFragment().show(
+                        ((AppCompatActivity) getActivity()).getSupportFragmentManager(),
+                        JetpackPoweredBottomSheetFragment.TAG);
+            });
             listView.addFooterView(binding.getRoot(), null, false);
         }
     }

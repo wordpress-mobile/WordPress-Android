@@ -120,6 +120,7 @@ import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.JetpackBrandingUtils
+import org.wordpress.android.util.JetpackBrandingUtils.Screen.READER_POST_DETAIL
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.PermissionUtils
 import org.wordpress.android.util.RtlUtils
@@ -715,6 +716,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         if (jetpackBrandingUtils.shouldShowJetpackBranding()) {
             binding.jetpackBadge.root.isVisible = true
             binding.jetpackBadge.root.setOnClickListener {
+                jetpackBrandingUtils.trackBadgeTapped(READER_POST_DETAIL)
                 viewModel.showJetpackPoweredBottomSheet()
             }
         }
