@@ -27,7 +27,7 @@ import org.wordpress.android.fluxc.store.AccountStore.AuthEmailErrorType;
 import org.wordpress.android.fluxc.store.AccountStore.AuthEmailPayload;
 import org.wordpress.android.fluxc.store.AccountStore.AuthEmailPayloadScheme;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticationErrorType;
-import org.wordpress.android.fluxc.utils.WPUrlUtils;
+import org.wordpress.android.fluxc.utils.extensions.StringExtensionsKt;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.LanguageUtils;
@@ -216,7 +216,7 @@ public class Authenticator {
                 : WPCOMREST.auth.send_login_email.getUrlV1_3();
 
         Map<String, Object> params = new HashMap<>();
-        params.put("email", WPUrlUtils.escapeUrlPathWithRFC3986(payload.emailOrUsername));
+        params.put("email", StringExtensionsKt.encodeRfc3986Delimiters(payload.emailOrUsername));
         params.put("client_id", mAppSecrets.getAppId());
         params.put("client_secret", mAppSecrets.getAppSecret());
 
