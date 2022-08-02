@@ -117,6 +117,7 @@ class SignupConfirmationFragment : Fragment() {
         }
     }
 
+    @Suppress("OVERRIDE_DEPRECATION")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         // important for accessibility - talkback
