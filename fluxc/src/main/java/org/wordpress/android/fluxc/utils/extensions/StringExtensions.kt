@@ -9,9 +9,9 @@ import java.net.URLEncoder
  * See [Similar fix in iOS](https://github.com/wordpress-mobile/WordPressKit-iOS/pull/457)
  */
 fun String.encodeRfc3986Delimiters(): String {
-    val delimitersRegex = "[!'()*]".toRegex()
+    val rfc3986Delimiters = "!'()*"
 
-    return replace(delimitersRegex) {
+    return replace("[$rfc3986Delimiters]".toRegex()) {
         URLEncoder.encode(it.value, "UTF-8")
     }
 }
