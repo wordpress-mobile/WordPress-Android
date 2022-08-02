@@ -311,8 +311,8 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
                 jetpackBrandingUtils.initJetpackBannerAnimation(jetpackBannerView, scrollableView)
 
                 if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
-                    jetpackBrandingUtils.trackBannerTapped(Screen.NOTIFICATIONS)
                     jetpackBannerView.setOnClickListener {
+                        jetpackBrandingUtils.trackBannerTapped(Screen.NOTIFICATIONS)
                         JetpackPoweredBottomSheetFragment
                                 .newInstance()
                                 .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
