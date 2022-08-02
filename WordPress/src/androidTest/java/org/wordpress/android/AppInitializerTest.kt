@@ -2,6 +2,7 @@ package org.wordpress.android
 
 import androidx.lifecycle.ProcessLifecycleOwner
 import dagger.hilt.android.testing.HiltAndroidTest
+import org.junit.Assert.assertFalse
 import org.junit.Test
 import org.wordpress.android.AppInitializer.ApplicationLifecycleMonitor
 import org.wordpress.android.support.BaseTest
@@ -16,6 +17,6 @@ import org.wordpress.android.support.BaseTest
 class AppInitializerTest : BaseTest() {
     @Test
     fun verifyOnAppComesFromBackgroundCalled() {
-        assert(!WordPress.appIsInTheBackground)
+        assertFalse(WordPress.appIsInTheBackground)
     }
 }
