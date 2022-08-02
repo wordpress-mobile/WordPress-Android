@@ -201,8 +201,6 @@ public class JPScreenshotTest extends BaseTest {
         clickOn(R.id.nav_sites);
         (new MySitesPage()).startNewSite();
 
-        waitForElementToBeDisplayedWithoutFailure(R.id.recycler_view);
-
         // Wait for page to load
         idleFor(2000);
 
