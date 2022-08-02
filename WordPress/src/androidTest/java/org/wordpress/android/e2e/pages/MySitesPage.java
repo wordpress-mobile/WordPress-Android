@@ -8,6 +8,7 @@ import androidx.annotation.IdRes;
 import androidx.annotation.StringRes;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
+import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.UiController;
 import androidx.test.espresso.ViewAction;
 import androidx.test.espresso.ViewInteraction;
@@ -20,6 +21,7 @@ import org.wordpress.android.ui.prefs.WPPreference;
 
 import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.contrib.RecyclerViewActions.actionOnItem;
@@ -81,7 +83,14 @@ public class MySitesPage {
 
     public void startNewSite() {
         switchSite();
-        clickOn(R.id.menu_add);
+        // If the device has a narrower display, the menu_add is hidden in the overflow
+        if (isElementDisplayed(R.id.menu_add)) {
+            clickOn(R.id.menu_add);
+        } else {
+            // open the overflow and then click on the item with text
+            openActionBarOverflowOrOptionsMenu(ApplicationProvider.getApplicationContext());
+            onView(withText(getTranslatedString(R.string.site_picker_add_site))).perform(click());
+        }
     }
 
     public void goToSettings() {
