@@ -76,15 +76,4 @@ public class WPUrlUtils {
             return null;
         }
     }
-
-    /**
-     * Disallows delim characters as per RFC 3986
-     * https://datatracker.ietf.org/doc/html/rfc3986#section-2.2
-     *
-     * Similar fix in iOS:
-     * https://github.com/wordpress-mobile/WordPressKit-iOS/pull/457
-     */
-    public static String escapeUrlPathWithRFC3986(String urlPath) {
-        return urlPath.replaceAll("[!'()*]", "");
-    }
 }

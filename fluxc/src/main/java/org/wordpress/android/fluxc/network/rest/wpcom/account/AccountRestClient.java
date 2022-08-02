@@ -52,7 +52,7 @@ import org.wordpress.android.fluxc.store.AccountStore.SubscriptionError;
 import org.wordpress.android.fluxc.store.AccountStore.SubscriptionResponsePayload;
 import org.wordpress.android.fluxc.store.AccountStore.SubscriptionType;
 import org.wordpress.android.fluxc.store.AccountStore.UpdateSubscriptionPayload.SubscriptionFrequency;
-import org.wordpress.android.fluxc.utils.WPUrlUtils;
+import org.wordpress.android.fluxc.utils.extensions.StringExtensionsKt;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.LanguageUtils;
@@ -928,9 +928,11 @@ public class AccountRestClient extends BaseWPComRestClient {
      * {@link FetchAuthOptionsResponsePayload#isError()} can be used to check the request result.
      */
     public void fetchAuthOptions(@NonNull String emailOrUsername) {
-        final String url =
-                WPCOMREST.users.emailOrUsername(WPUrlUtils.escapeUrlPathWithRFC3986(emailOrUsername)).auth_options
-                        .getUrlV1_1();
+        final String url = WPCOMREST
+                .users
+                .emailOrUsername(StringExtensionsKt.encodeRfc3986Delimiters(emailOrUsername))
+                .auth_options
+                .getUrlV1_1();
         addUnauthedRequest(WPComGsonRequest.buildGetRequest(url, null, AuthOptionsResponse.class,
                 new Listener<AuthOptionsResponse>() {
                     @Override
