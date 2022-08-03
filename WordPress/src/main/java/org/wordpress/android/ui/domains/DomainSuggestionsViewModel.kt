@@ -214,6 +214,7 @@ class DomainSuggestionsViewModel @Inject constructor(
         }
     }
 
+    @Suppress("UseCheckOrError")
     fun onSelectDomainButtonClicked() {
         val selectedSuggestion = _selectedSuggestion.value ?: throw IllegalStateException("Selected suggestion is null")
         when (domainRegistrationPurpose) {

@@ -1,18 +1,28 @@
 # Default Config: https://github.com/detekt/detekt/blob/main/detekt-core/src/main/resources/default-detekt-config.yml
+# Formatting Config: https://github.com/detekt/detekt/blob/main/detekt-formatting/src/main/resources/config/config.yml
+# Compose Config: https://detekt.dev/docs/introduction/compose/
 
 config:
   warningsAsErrors: true
 
 complexity:
   LongParameterList:
-    ignoreAnnotated: ['javax.inject.Inject', 'javax.annotation.Generated']
+    ignoreAnnotated: ['Inject', 'Composable']
+  LongMethod:
+    ignoreAnnotated: ['Composable']
 
-formatting:
-  android: true
-  autoCorrect: false
+naming:
+  FunctionNaming:
+    ignoreAnnotated: ['Composable']
 
 style:
   ForbiddenComment:
-    values: ['FIXME:', 'STOPSHIP:']
+    values:
+      - 'FIXME:'
+      - 'STOPSHIP:'
   MagicNumber:
     ignoreEnums: true
+    ignoreAnnotated: ['Composable']
+    ignorePropertyDeclaration: true
+  UnusedPrivateMember:
+    ignoreAnnotated: ['Composable']

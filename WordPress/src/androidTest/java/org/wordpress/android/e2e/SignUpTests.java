@@ -35,6 +35,7 @@ public class SignUpTests extends BaseTest {
                                 E2E_SIGNUP_USERNAME)
                         .enterPassword(E2E_SIGNUP_PASSWORD)
                         .dismissInterstitial()
+                        .dismissJetpackAd()
                         .confirmSignup();
     }
 }

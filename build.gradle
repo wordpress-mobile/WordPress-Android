@@ -101,11 +101,6 @@ allprojects {
         ignoreFailures = false
         parallel = true
         debug = false
-        reports {
-            html.enabled = true
-            xml.enabled = true
-            txt.enabled = true
-        }
     }
 
     tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {

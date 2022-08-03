@@ -3,11 +3,13 @@ package org.wordpress.android.ui.main
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
+import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.prefs.AppSettingsFragment.LANGUAGE_CHANGED
 
+@AndroidEntryPoint
 class MeActivity : LocaleAwareActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

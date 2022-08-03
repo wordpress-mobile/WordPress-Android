@@ -65,6 +65,7 @@ class SiteDesignRecommendationProvider @Inject constructor(private val resourceP
         }
     }
 
+    @Suppress("UseCheckOrError")
     private fun getVerticalSlug(vertical: String): String? {
         val slugsArray = resourceProvider.getStringArray(R.array.site_creation_intents_slugs)
         val verticalArray = resourceProvider.getStringArray(R.array.site_creation_intents_strings)

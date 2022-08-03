@@ -7,6 +7,7 @@ import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
@@ -30,6 +31,7 @@ const val ACTIVITY_LOG_ID_KEY: String = "activity_log_id_key"
 const val ACTIVITY_LOG_ARE_BUTTONS_VISIBLE_KEY: String = "activity_log_are_buttons_visible_key"
 const val ACTIVITY_LOG_IS_RESTORE_HIDDEN_KEY: String = "activity_log_is_restore_hidden_key"
 
+@HiltViewModel
 class ActivityLogDetailViewModel @Inject constructor(
     val dispatcher: Dispatcher,
     private val activityLogStore: ActivityLogStore,
@@ -64,6 +66,9 @@ class ActivityLogDetailViewModel @Inject constructor(
     private val _multisiteVisible = MutableLiveData<Pair<Boolean, SpannableString?>>()
     val multisiteVisible: LiveData<Pair<Boolean, SpannableString?>>
         get() = _multisiteVisible
+
+    private val _showJetpackPoweredBottomSheet = MutableLiveData<Event<Boolean>>()
+    val showJetpackPoweredBottomSheet: LiveData<Event<Boolean>> = _showJetpackPoweredBottomSheet
 
     fun start(
         site: SiteModel,
@@ -125,6 +130,10 @@ class ActivityLogDetailViewModel @Inject constructor(
         val multisiteSpan = SpannableString(multisiteMessage)
         multisiteSpan.setSpan(clickableSpan, clickableStartIndex, clickableEndIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         return multisiteSpan
+    }
+
+    fun showJetpackPoweredBottomSheet() {
+        _showJetpackPoweredBottomSheet.value = Event(true)
     }
 
     fun onRangeClicked(range: FormattableRange) {

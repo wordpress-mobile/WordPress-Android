@@ -35,9 +35,8 @@ import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.ContentUiState.TabUiState
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringText
-import org.wordpress.android.util.BuildConfigWrapper
+import org.wordpress.android.util.JetpackBrandingUtils
 import org.wordpress.android.util.SnackbarSequencer
-import org.wordpress.android.util.config.JetpackPoweredFeatureConfig
 import org.wordpress.android.util.distinct
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -57,8 +56,7 @@ class ReaderViewModel @Inject constructor(
     private val accountStore: AccountStore,
     private val quickStartRepository: QuickStartRepository,
     private val selectedSiteRepository: SelectedSiteRepository,
-    private val jetpackPoweredFeatureConfig: JetpackPoweredFeatureConfig,
-    private val buildConfigWrapper: BuildConfigWrapper,
+    private val jetpackBrandingUtils: JetpackBrandingUtils,
     private val snackbarSequencer: SnackbarSequencer
         // todo: annnmarie removed this private val getFollowedTagsUseCase: GetFollowedTagsUseCase
 ) : ScopedViewModel(mainDispatcher) {
@@ -102,13 +100,11 @@ class ReaderViewModel @Inject constructor(
         if (tagsRequireUpdate()) _updateTags.value = Event(Unit)
         if (initialized) return
         loadTabs()
-        showJetpackPoweredBottomSheet()
+        if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) showJetpackPoweredBottomSheet()
     }
 
     private fun showJetpackPoweredBottomSheet() {
-        _showJetpackPoweredBottomSheet.value = Event(
-                jetpackPoweredFeatureConfig.isEnabled() && !buildConfigWrapper.isJetpackApp
-        )
+        _showJetpackPoweredBottomSheet.value = Event(true)
     }
 
     private fun loadTabs() {
@@ -137,8 +133,8 @@ class ReaderViewModel @Inject constructor(
 
     private suspend fun initializeTabSelection(tagList: ReaderTagList) {
         withContext(bgDispatcher) {
-            val selectTab = { it: ReaderTag ->
-                val index = tagList.indexOf(it)
+            val selectTab = { readerTag: ReaderTag ->
+                val index = tagList.indexOf(readerTag)
                 if (index != -1) {
                     _selectTab.postValue(Event(TabNavigation(index, smoothAnimation = false)))
                 }
@@ -221,6 +217,7 @@ class ReaderViewModel @Inject constructor(
         }
     }
 
+    @Suppress("UseCheckOrError")
     fun onSearchActionClicked() {
         if (isSearchSupported()) {
             _showSearch.value = Event(Unit)
@@ -229,6 +226,7 @@ class ReaderViewModel @Inject constructor(
         }
     }
 
+    @Suppress("UseCheckOrError")
     fun onSettingsActionClicked() {
         if (isSettingsSupported()) {
             completeQuickStartFollowSiteTaskIfNeeded()

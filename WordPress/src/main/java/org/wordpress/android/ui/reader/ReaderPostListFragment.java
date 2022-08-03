@@ -80,6 +80,7 @@ import org.wordpress.android.ui.main.WPMainNavigationView;
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType;
 import org.wordpress.android.ui.mysite.SelectedSiteRepository;
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository;
+import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment;
 import org.wordpress.android.ui.pages.SnackbarMessageHolder;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderEvents.TagAdded;
@@ -502,7 +503,14 @@ public class ReaderPostListFragment extends ViewPagerFragment
         if (!isAdded() || !isSearching() || getView() == null) return;
         final boolean shouldShow = forceShow && mJetpackBrandingUtils.shouldShowJetpackBranding();
         if (shouldShow) {
-            getView().findViewById(R.id.jetpack_banner).setVisibility(View.VISIBLE);
+            View jetpackBanner = getView().findViewById(R.id.jetpack_banner);
+            jetpackBanner.setVisibility(View.VISIBLE);
+
+            if (mJetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
+                jetpackBanner.setOnClickListener(v ->
+                        new JetpackPoweredBottomSheetFragment()
+                                .show(getChildFragmentManager(), JetpackPoweredBottomSheetFragment.TAG));
+            }
             // Add bottom margin to post list and empty view.
             int jetpackBannerHeight = getResources().getDimensionPixelSize(R.dimen.jetpack_banner_height);
             ((MarginLayoutParams) getView().findViewById(R.id.reader_recycler_view).getLayoutParams())
