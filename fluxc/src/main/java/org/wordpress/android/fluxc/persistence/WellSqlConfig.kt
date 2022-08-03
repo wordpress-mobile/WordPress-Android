@@ -1876,7 +1876,7 @@ open class WellSqlConfig : DefaultWellConfig {
                 177 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
                     db.execSQL("ALTER TABLE WCSettingsModel ADD COUPONS_ENABLED BOOLEAN NOT NULL DEFAULT 0")
                 }
-                178 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
+                178 -> migrate(version) {
                     db.execSQL("ALTER TABLE EditorTheme ADD LIST_BLOCK_V2 BOOLEAN")
                 }
             }
