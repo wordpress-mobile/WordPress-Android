@@ -276,8 +276,6 @@ public class AppPrefs {
         // Used to identify the App Settings for initial screen that is updated when the variant is assigned
         wp_pref_initial_screen,
 
-        STATS_REVAMP2_FEATURE_ANNOUNCEMENT_DISPLAYED,
-
         // Indicates if this is the first time the user sees the blogging prompts onboarding dialog
         IS_FIRST_TIME_BLOGGING_PROMPTS_ONBOARDING
     }
@@ -1325,15 +1323,6 @@ public class AppPrefs {
 
     @NonNull private static String getShouldShowWeeklyRoundupNotification(long siteId) {
         return DeletablePrefKey.SHOULD_SHOW_WEEKLY_ROUNDUP_NOTIFICATION.name() + siteId;
-    }
-
-    public static boolean shouldDisplayStatsRevampFeatureAnnouncement() {
-        return prefs().getBoolean(UndeletablePrefKey.STATS_REVAMP2_FEATURE_ANNOUNCEMENT_DISPLAYED.name(), true);
-    }
-
-    public static void setShouldDisplayStatsRevampFeatureAnnouncement(boolean isDisplayed) {
-        prefs().edit().putBoolean(UndeletablePrefKey.STATS_REVAMP2_FEATURE_ANNOUNCEMENT_DISPLAYED.name(), isDisplayed)
-               .apply();
     }
 
     /*
