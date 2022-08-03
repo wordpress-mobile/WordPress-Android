@@ -67,7 +67,6 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.T
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TotalLikesUseCase.TotalLikesUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.ViewsAndVisitorsUseCase.ViewsAndVisitorsUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
-import org.wordpress.android.util.config.StatsRevampV2FeatureConfig
 import javax.inject.Named
 import javax.inject.Singleton
 
@@ -109,7 +108,7 @@ class StatsModule {
     @Named(BLOCK_INSIGHTS_USE_CASES)
     @Suppress("LongParameterList")
     fun provideBlockInsightsUseCases(
-        statsRevampV2FeatureConfig: StatsRevampV2FeatureConfig,
+//        statsRevampV2FeatureConfig: StatsRevampV2FeatureConfig,
         viewsAndVisitorsUseCaseFactory: ViewsAndVisitorsUseCaseFactory,
         allTimeStatsUseCase: AllTimeStatsUseCase,
         latestPostSummaryUseCase: LatestPostSummaryUseCase,
@@ -132,7 +131,7 @@ class StatsModule {
         actionCardScheduleUseCase: ActionCardScheduleUseCase
     ): List<@JvmSuppressWildcards BaseStatsUseCase<*, *>> {
         val useCases = mutableListOf<BaseStatsUseCase<*, *>>()
-        if (BuildConfig.IS_JETPACK_APP && statsRevampV2FeatureConfig.isEnabled()) {
+        if (BuildConfig.IS_JETPACK_APP) {
             useCases.add(viewsAndVisitorsUseCaseFactory.build(BLOCK))
             useCases.add(totalLikesUseCaseFactory.build(BLOCK))
             useCases.add(totalCommentsUseCaseFactory.build(BLOCK))
