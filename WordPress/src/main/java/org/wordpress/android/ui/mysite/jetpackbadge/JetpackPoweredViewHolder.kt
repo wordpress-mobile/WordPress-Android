@@ -30,7 +30,7 @@ sealed class JetpackPoweredViewHolder<T : ViewBinding>(
             ) {
         @Suppress("unused")
         fun onBind(item: Illustration) = with(binding) {
-//            illustrationView.setImageResource(item.illustration)
+            illustrationView.setAnimation(item.illustration)
         }
     }
 

@@ -348,6 +348,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
     private fun buildDateLine(post: ReaderPost) =
             dateTimeUtilsWrapper.javaDateToTimeSpan(post.getDisplayDate(dateTimeUtilsWrapper))
 
+    @Suppress("UseCheckOrError")
     private fun buildDiscoverSectionUiState(
         discoverData: ReaderPostDiscoverData,
         onDiscoverSectionClicked: (Long, Long) -> Unit

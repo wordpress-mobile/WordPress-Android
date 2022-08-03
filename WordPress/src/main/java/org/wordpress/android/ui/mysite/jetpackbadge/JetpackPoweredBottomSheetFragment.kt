@@ -15,9 +15,13 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.databinding.JetpackPoweredBottomSheetBinding
 import org.wordpress.android.ui.ActivityLauncherWrapper
+import org.wordpress.android.ui.ActivityLauncherWrapper.Companion.JETPACK_PACKAGE_NAME
+import org.wordpress.android.ui.main.WPMainNavigationView.PageType
+import org.wordpress.android.ui.main.WPMainNavigationView.PageType.MY_SITE
+import org.wordpress.android.ui.main.WPMainNavigationView.PageType.NOTIFS
+import org.wordpress.android.ui.main.WPMainNavigationView.PageType.READER
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredDialogAction.DismissDialog
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredDialogAction.OpenPlayStore
-import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredDialogViewModel.Companion.JETPACK_PACKAGE_NAME
 import org.wordpress.android.util.extensions.disableAnimation
 import org.wordpress.android.util.extensions.exhaustive
 import javax.inject.Inject
@@ -56,7 +60,12 @@ class JetpackPoweredBottomSheetFragment : BottomSheetDialogFragment() {
 
         if (fullScreen) {
             secondaryButton.visibility = View.VISIBLE
-            secondaryButton.text = getString(R.string.wp_jetpack_continue_to_reader)
+            val pageType = arguments?.getSerializable(KEY_SITE_SCREEN) as? PageType ?: MY_SITE
+            secondaryButton.text = when (pageType) {
+                MY_SITE -> getString(R.string.wp_jetpack_continue_to_stats)
+                READER -> getString(R.string.wp_jetpack_continue_to_reader)
+                NOTIFS -> getString(R.string.wp_jetpack_continue_to_notifications)
+            }
             secondaryButton.setOnClickListener { viewModel.dismissBottomSheet() }
         }
 
@@ -110,11 +119,16 @@ class JetpackPoweredBottomSheetFragment : BottomSheetDialogFragment() {
     companion object {
         const val TAG = "JETPACK_POWERED_BOTTOM_SHEET_FRAGMENT"
         private const val KEY_FULL_SCREEN = "KEY_FULL_SCREEN"
+        private const val KEY_SITE_SCREEN = "KEY_SITE_SCREEN"
 
         @JvmStatic
-        fun newInstance(fullScreen: Boolean = false) = JetpackPoweredBottomSheetFragment().apply {
+        fun newInstance(
+            fullScreen: Boolean = false,
+            pageType: PageType = MY_SITE
+        ) = JetpackPoweredBottomSheetFragment().apply {
             arguments = Bundle().apply {
                 putBoolean(KEY_FULL_SCREEN, fullScreen)
+                putSerializable(KEY_SITE_SCREEN, pageType)
             }
         }
     }

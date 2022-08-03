@@ -421,9 +421,7 @@ class WPEditTextWithChipsOutlined @JvmOverloads constructor(
     }
 
     private fun throwExceptionIfChipifyNotEnabled() {
-        if (!chipifyEnabled) throw IllegalArgumentException(
-                "Please set chipifyEnabled to true in order to use chips feature"
-        )
+        require(chipifyEnabled) { "Please set chipifyEnabled to true in order to use chips feature" }
     }
 
     // This should be fast enough for our use case, so we get fresh data always

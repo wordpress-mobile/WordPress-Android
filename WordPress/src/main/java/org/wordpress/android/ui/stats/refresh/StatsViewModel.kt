@@ -55,6 +55,7 @@ import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.toStatsGranularity
 import org.wordpress.android.ui.stats.refresh.utils.trackGranular
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.util.JetpackBrandingUtils
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.MySiteDashboardTodaysStatsCardFeatureConfig
@@ -85,7 +86,8 @@ class StatsViewModel
     private val statsModuleActivateUseCase: StatsModuleActivateUseCase,
     private val notificationsTracker: SystemNotificationsTracker,
     private val todaysStatsCardFeatureConfig: MySiteDashboardTodaysStatsCardFeatureConfig,
-    private val statsRevampV2FeatureConfig: StatsRevampV2FeatureConfig
+    private val statsRevampV2FeatureConfig: StatsRevampV2FeatureConfig,
+    private val jetpackBrandingUtils: JetpackBrandingUtils
 ) : ScopedViewModel(mainDispatcher) {
     private val _isRefreshing = MutableLiveData<Boolean>()
     val isRefreshing: LiveData<Boolean> = _isRefreshing
@@ -112,6 +114,9 @@ class StatsViewModel
 
     private val _showUpgradeAlert = MutableLiveData<Event<Boolean>>()
     val showUpgradeAlert: LiveData<Event<Boolean>> = _showUpgradeAlert
+
+    private val _showJetpackPoweredBottomSheet = MutableLiveData<Event<Boolean>>()
+    val showJetpackPoweredBottomSheet: LiveData<Event<Boolean>> = _showJetpackPoweredBottomSheet
 
     fun start(intent: Intent, restart: Boolean = false) {
         val localSiteId = intent.getIntExtra(WordPress.LOCAL_SITE_ID, 0)
@@ -208,6 +213,12 @@ class StatsViewModel
             updateRevampedInsights()
         }
         if (statsSectionManager.getSelectedSection() == INSIGHTS) showInsightsUpdateAlert()
+
+        if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) showJetpackPoweredBottomSheet()
+    }
+
+    private fun showJetpackPoweredBottomSheet() {
+        _showJetpackPoweredBottomSheet.value = Event(true)
     }
 
     private fun showInsightsUpdateAlert() {

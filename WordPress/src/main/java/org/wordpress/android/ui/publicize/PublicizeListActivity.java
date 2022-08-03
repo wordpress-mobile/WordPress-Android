@@ -32,6 +32,7 @@ import org.wordpress.android.models.PublicizeService;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.ScrollableViewInitializedListener;
+import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment;
 import org.wordpress.android.ui.publicize.PublicizeConstants.ConnectAction;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter;
 import org.wordpress.android.ui.publicize.services.PublicizeUpdateService;
@@ -81,13 +82,20 @@ public class PublicizeListActivity extends LocaleAwareActivity
         mAppBarLayout = findViewById(R.id.appbar_main);
 
         if (mJetpackBrandingUtils.shouldShowJetpackBranding()) {
-            findViewById(R.id.jetpack_banner).setVisibility(View.VISIBLE);
+            View jetpackBanner = findViewById(R.id.jetpack_banner);
+            jetpackBanner.setVisibility(View.VISIBLE);
             mJetpackBrandingUtils.setNavigationBarColorForBanner(getWindow());
 
             // Add bottom margin to content.
             MarginLayoutParams layoutParams =
                     (MarginLayoutParams) findViewById(R.id.fragment_container).getLayoutParams();
             layoutParams.bottomMargin = getResources().getDimensionPixelSize(R.dimen.jetpack_banner_height);
+
+            if (mJetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
+                jetpackBanner.setOnClickListener(v ->
+                        new JetpackPoweredBottomSheetFragment()
+                                .show(getSupportFragmentManager(), JetpackPoweredBottomSheetFragment.TAG));
+            }
         }
 
         if (savedInstanceState == null) {

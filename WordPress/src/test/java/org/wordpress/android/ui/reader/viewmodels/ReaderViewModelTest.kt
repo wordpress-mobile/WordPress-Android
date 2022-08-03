@@ -38,6 +38,7 @@ import org.wordpress.android.ui.reader.utils.DateProvider
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.QuickStartReaderPrompt
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.ContentUiState
+import org.wordpress.android.util.JetpackBrandingUtils
 import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.viewmodel.Event
 import java.util.Date
@@ -63,6 +64,7 @@ class ReaderViewModelTest {
     @Mock lateinit var selectedSiteRepository: SelectedSiteRepository
     @Mock lateinit var quickStartType: QuickStartType
     @Mock lateinit var snackbarSequencer: SnackbarSequencer
+    @Mock lateinit var jetpackBrandingUtils: JetpackBrandingUtils
 
     private val emptyReaderTagList = ReaderTagList()
     private val nonEmptyReaderTagList = createNonMockedNonEmptyReaderTagList()
@@ -79,7 +81,8 @@ class ReaderViewModelTest {
                 accountStore,
                 quickStartRepository,
                 selectedSiteRepository,
-                snackbarSequencer
+                jetpackBrandingUtils,
+                snackbarSequencer,
         )
 
         whenever(dateProvider.getCurrentDate()).thenReturn(Date(DUMMY_CURRENT_TIME))
@@ -455,6 +458,32 @@ class ReaderViewModelTest {
 
             assertQsFollowSiteTaskCompleted(observers)
         }
+    }
+
+    @Test
+    fun `given wp app, when jp powered bottom sheet feature is true, then jp powered bottom sheet is shown`() {
+        val showJetpackPoweredBottomSheetEvent = mutableListOf<Event<Boolean>>()
+        viewModel.showJetpackPoweredBottomSheet.observeForever {
+            showJetpackPoweredBottomSheetEvent.add(it)
+        }
+        whenever(jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()).thenReturn(true)
+
+        viewModel.start()
+
+        assertThat(showJetpackPoweredBottomSheetEvent.last().peekContent()).isEqualTo(true)
+    }
+
+    @Test
+    fun `given wp app, when jp powered bottom sheet feature is false, then jp powered bottom sheet is not shown`() {
+        val showJetpackPoweredBottomSheetEvent = mutableListOf<Event<Boolean>>(Event(false))
+        viewModel.showJetpackPoweredBottomSheet.observeForever {
+            showJetpackPoweredBottomSheetEvent.add(it)
+        }
+        whenever(jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()).thenReturn(false)
+
+        viewModel.start()
+
+        assertThat(showJetpackPoweredBottomSheetEvent.last().peekContent()).isEqualTo(false)
     }
 
     private fun assertQsFollowSiteDiscoverTabStepStarted(

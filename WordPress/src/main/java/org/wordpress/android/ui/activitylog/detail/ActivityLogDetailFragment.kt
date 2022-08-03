@@ -8,7 +8,8 @@ import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
+import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.ActivityLogItemDetailBinding
@@ -19,6 +20,7 @@ import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailNavigationEvents.ShowBackupDownload
 import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailNavigationEvents.ShowDocumentationPage
 import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailNavigationEvents.ShowRestore
+import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment
 import org.wordpress.android.ui.notifications.blocks.NoteBlockClickableSpan
 import org.wordpress.android.ui.notifications.utils.FormattableContentClickHandler
 import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper
@@ -37,15 +39,16 @@ import javax.inject.Inject
 private const val DETAIL_TRACKING_SOURCE = "detail"
 private const val FORWARD_SLASH = "/"
 
+@Suppress("TooManyFunctions")
+@AndroidEntryPoint
 class ActivityLogDetailFragment : Fragment(R.layout.activity_log_item_detail) {
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var imageManager: ImageManager
     @Inject lateinit var notificationsUtilsWrapper: NotificationsUtilsWrapper
     @Inject lateinit var formattableContentClickHandler: FormattableContentClickHandler
     @Inject lateinit var uiHelpers: UiHelpers
     @Inject lateinit var jetpackBrandingUtils: JetpackBrandingUtils
 
-    private lateinit var viewModel: ActivityLogDetailViewModel
+    private val viewModel: ActivityLogDetailViewModel by viewModels()
 
     companion object {
         fun newInstance(): ActivityLogDetailFragment {
@@ -53,69 +56,80 @@ class ActivityLogDetailFragment : Fragment(R.layout.activity_log_item_detail) {
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        (activity?.application as WordPress).component()?.inject(this)
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        with(ActivityLogItemDetailBinding.bind(view)) {
+            setupViews(savedInstanceState)
+            setupObservers()
+        }
+    }
+
+    private fun ActivityLogItemDetailBinding.setupViews(savedInstanceState: Bundle?) {
         activity?.let { activity ->
-            viewModel = ViewModelProvider(activity, viewModelFactory)
-                    .get(ActivityLogDetailViewModel::class.java)
-            with(ActivityLogItemDetailBinding.bind(view)) {
-                val (site, activityLogId) = sideAndActivityId(savedInstanceState, activity.intent)
-                val areButtonsVisible = areButtonsVisible(savedInstanceState, activity.intent)
-                val isRestoreHidden = isRestoreHidden(savedInstanceState, activity.intent)
+            val (site, activityLogId) = sideAndActivityId(savedInstanceState, activity.intent)
+            val areButtonsVisible = areButtonsVisible(savedInstanceState, activity.intent)
+            val isRestoreHidden = isRestoreHidden(savedInstanceState, activity.intent)
 
-                jetpackBadge.root.isVisible = jetpackBrandingUtils.shouldShowJetpackBranding()
+            viewModel.start(site, activityLogId, areButtonsVisible, isRestoreHidden)
+        }
 
-                viewModel.activityLogItem.observe(viewLifecycleOwner, { activityLogModel ->
-                    loadLogItem(activityLogModel, activity)
-                })
-
-                viewModel.restoreVisible.observe(viewLifecycleOwner, { available ->
-                    activityRestoreButton.visibility = if (available == true) View.VISIBLE else View.GONE
-                })
-                viewModel.downloadBackupVisible.observe(viewLifecycleOwner, { available ->
-                    activityDownloadBackupButton.visibility = if (available == true) View.VISIBLE else View.GONE
-                })
-                viewModel.multisiteVisible.observe(viewLifecycleOwner, { available ->
-                    checkAndShowMultisiteMessage(available)
-                })
-
-                viewModel.navigationEvents.observeEvent(viewLifecycleOwner, {
-                    when (it) {
-                        is ShowBackupDownload -> ActivityLauncher.showBackupDownloadForResult(
-                                requireActivity(),
-                                viewModel.site,
-                                it.model.activityID,
-                                RequestCodes.BACKUP_DOWNLOAD,
-                                buildTrackingSource()
-                        )
-                        is ShowRestore -> ActivityLauncher.showRestoreForResult(
-                                requireActivity(),
-                                viewModel.site,
-                                it.model.activityID,
-                                RequestCodes.RESTORE,
-                                buildTrackingSource()
-                        )
-                        is ShowDocumentationPage -> ActivityLauncher.openUrlExternal(requireContext(), it.url)
-                }
-            })
-
-                viewModel.handleFormattableRangeClick.observe(viewLifecycleOwner, { range ->
-                    if (range != null) {
-                        formattableContentClickHandler.onClick(
-                                activity,
-                                range,
-                                ReaderTracker.SOURCE_ACTIVITY_LOG_DETAIL
-                        )
-                    }
-                })
-
-                viewModel.start(site, activityLogId, areButtonsVisible, isRestoreHidden)
+        if (jetpackBrandingUtils.shouldShowJetpackBranding()) {
+            jetpackBadge.root.isVisible = true
+            jetpackBadge.root.setOnClickListener {
+                viewModel.showJetpackPoweredBottomSheet()
             }
+        }
+    }
+
+    private fun ActivityLogItemDetailBinding.setupObservers() {
+        viewModel.activityLogItem.observe(viewLifecycleOwner, { activityLogModel ->
+            loadLogItem(activityLogModel, requireActivity())
+        })
+
+        viewModel.restoreVisible.observe(viewLifecycleOwner, { available ->
+            activityRestoreButton.visibility = if (available == true) View.VISIBLE else View.GONE
+        })
+        viewModel.downloadBackupVisible.observe(viewLifecycleOwner, { available ->
+            activityDownloadBackupButton.visibility = if (available == true) View.VISIBLE else View.GONE
+        })
+        viewModel.multisiteVisible.observe(viewLifecycleOwner, { available ->
+            checkAndShowMultisiteMessage(available)
+        })
+
+        viewModel.navigationEvents.observeEvent(viewLifecycleOwner, {
+            when (it) {
+                is ShowBackupDownload -> ActivityLauncher.showBackupDownloadForResult(
+                        requireActivity(),
+                        viewModel.site,
+                        it.model.activityID,
+                        RequestCodes.BACKUP_DOWNLOAD,
+                        buildTrackingSource()
+                )
+                is ShowRestore -> ActivityLauncher.showRestoreForResult(
+                        requireActivity(),
+                        viewModel.site,
+                        it.model.activityID,
+                        RequestCodes.RESTORE,
+                        buildTrackingSource()
+                )
+                is ShowDocumentationPage -> ActivityLauncher.openUrlExternal(requireContext(), it.url)
+            }
+        })
+
+        viewModel.handleFormattableRangeClick.observe(viewLifecycleOwner, { range ->
+            if (range != null) {
+                formattableContentClickHandler.onClick(
+                        requireActivity(),
+                        range,
+                        ReaderTracker.SOURCE_ACTIVITY_LOG_DETAIL
+                )
+            }
+        })
+
+        viewModel.showJetpackPoweredBottomSheet.observeEvent(viewLifecycleOwner) {
+            JetpackPoweredBottomSheetFragment
+                    .newInstance()
+                    .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
         }
     }
 

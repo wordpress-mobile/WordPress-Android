@@ -15,6 +15,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 import static org.wordpress.android.support.WPSupportUtils.clickOn;
+import static org.wordpress.android.support.WPSupportUtils.dismissJetpackAdIfPresent;
 import static org.wordpress.android.support.WPSupportUtils.populateTextField;
 import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDisplayed;
 
@@ -80,6 +81,11 @@ public class SignupFlow {
         // Dismiss post-signup interstitial
         clickOn(onView(withId(R.id.dismiss_button)));
 
+        return this;
+    }
+
+    public SignupFlow dismissJetpackAd() {
+        dismissJetpackAdIfPresent();
         return this;
     }
 

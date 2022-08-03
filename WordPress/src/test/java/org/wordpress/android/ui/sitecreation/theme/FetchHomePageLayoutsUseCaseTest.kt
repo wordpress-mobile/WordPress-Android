@@ -32,7 +32,7 @@ class FetchHomePageLayoutsUseCaseTest {
 
     @Mock lateinit var dispatcher: Dispatcher
     @Mock lateinit var store: ThemeStore
-    @Mock lateinit var thumbDimensionProvider: SiteDesignPickerDimensionProvider
+    @Mock lateinit var thumbDimensionProvider: SiteDesignRecommendedDimensionProvider
     @Mock lateinit var betaSiteDesigns: BetaSiteDesignsFeatureConfig
 
     private lateinit var useCase: FetchHomePageLayoutsUseCase

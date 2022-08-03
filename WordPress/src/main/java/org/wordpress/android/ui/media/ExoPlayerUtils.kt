@@ -40,6 +40,7 @@ class ExoPlayerUtils
     private fun buildDefaultDataSourceFactory(httpDataSourceFactory: DefaultHttpDataSourceFactory) =
             DefaultDataSourceFactory(appContext, httpDataSourceFactory)
 
+    @Suppress("UseCheckOrError")
     fun buildMediaSource(uri: Uri): MediaSource? {
         val httpDataSourceFactory = buildHttpDataSourceFactory(uri.toString())
         val defaultDataSourceFactory = buildDefaultDataSourceFactory(httpDataSourceFactory)

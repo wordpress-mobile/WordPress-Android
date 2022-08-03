@@ -45,7 +45,7 @@ import org.wordpress.android.fluxc.store.WhatsNewStore.WhatsNewAppId;
 import org.wordpress.android.fluxc.store.WhatsNewStore.WhatsNewFetchPayload;
 import org.wordpress.android.ui.about.UnifiedAboutActivity;
 import org.wordpress.android.ui.debug.DebugSettingsActivity;
-import org.wordpress.android.ui.mysite.tabs.MySiteDefaultTabExperiment;
+import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment;
 import org.wordpress.android.ui.mysite.tabs.MySiteTabType;
 import org.wordpress.android.ui.prefs.language.LocalePickerBottomSheet;
 import org.wordpress.android.ui.prefs.language.LocalePickerBottomSheet.LocalePickerCallback;
@@ -104,7 +104,6 @@ public class AppSettingsFragment extends PreferenceFragment
     @Inject BuildConfigWrapper mBuildConfigWrapper;
     @Inject UnifiedAboutFeatureConfig mUnifiedAboutFeatureConfig;
     @Inject MySiteDashboardTabsFeatureConfig mMySiteDashboardTabsFeatureConfig;
-    @Inject MySiteDefaultTabExperiment mMySiteDefaultTabExperiment;
     @Inject JetpackBrandingUtils mJetpackBrandingUtils;
 
     private static final String TRACK_STYLE = "style";
@@ -246,6 +245,11 @@ public class AppSettingsFragment extends PreferenceFragment
     private void addJetpackBadgeAsFooterIfEnabled(LayoutInflater inflater, ListView listView) {
         if (mJetpackBrandingUtils.shouldShowJetpackBranding()) {
             final JetpackBadgeFooterBinding binding = JetpackBadgeFooterBinding.inflate(inflater);
+            binding.jetpackBadge.getRoot().setOnClickListener(v ->
+                    new JetpackPoweredBottomSheetFragment().show(
+                            ((AppCompatActivity) getActivity()).getSupportFragmentManager(),
+                            JetpackPoweredBottomSheetFragment.TAG)
+            );
             listView.addFooterView(binding.getRoot(), null, false);
         }
     }
@@ -468,7 +472,6 @@ public class AppSettingsFragment extends PreferenceFragment
             Map<String, Object> properties = new HashMap<>();
             properties.put("selected", trackValue);
             AnalyticsTracker.track(Stat.APP_SETTINGS_INITIAL_SCREEN_CHANGED, properties);
-            mMySiteDefaultTabExperiment.changeExperimentVariantAssignmentIfNeeded(trackValue);
         } else if (preference == mReportCrashPref) {
             AnalyticsTracker.track(Stat.PRIVACY_SETTINGS_REPORT_CRASHES_TOGGLED, Collections
                     .singletonMap(TRACK_ENABLED, newValue));

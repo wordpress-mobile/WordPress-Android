@@ -47,8 +47,8 @@ import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import java.util.Date
 
-private const val itemsToLoad = 6
-private val limitMode = LimitMode.Top(itemsToLoad)
+private const val ITEMS_TO_LOAD = 6
+private val limitMode = LimitMode.Top(ITEMS_TO_LOAD)
 private val statsGranularity = DAYS
 private val selectedDate = Date(0)
 
