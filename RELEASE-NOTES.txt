@@ -3,6 +3,7 @@
 20.5
 -----
 * [*] Use larger thumbnail previews for recommended themes during site creation [https://github.com/wordpress-mobile/WordPress-Android/pull/16848]
+* [*] Login: Fix an issue when logging in with email addresses containing a single quote [https://github.com/wordpress-mobile/WordPress-Android/pull/15526]
 
 
 20.4
