@@ -32,6 +32,7 @@ class PostDatePickerDialogFragment : DialogFragment() {
 
         val datePickerDialog = DatePickerDialog(
                 requireContext(),
+                R.style.PostSettingsCalendar,
                 null,
                 viewModel.year ?: 0,
                 viewModel.month ?: 0,

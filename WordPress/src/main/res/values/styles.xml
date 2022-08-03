@@ -902,6 +902,11 @@
         <item name="colorControlActivated">@color/colorPrimaryEditor</item>
     </style>
 
+    <style name="PostSettingsCalendar" parent="Theme.AppCompat.DayNight.Dialog.Alert">
+        <item name="colorAccent">@color/colorPrimaryEditor</item>
+        <item name="colorControlActivated">@color/colorPrimaryEditor</item>
+    </style>
+
     <style name="PostSettingsCardViewInnerLayout">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
