@@ -826,5 +826,7 @@ public class WPSupportUtils {
         if (isElementDisplayed(onView(withText(jpAdText)))) {
             clickOn(onView(withId(R.id.secondary_button)));
         }
+
+        idleFor(3000);
     }
 }
