@@ -34,7 +34,6 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementViewModel.InsightListItem.InsightModel.Status.ADDED
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementViewModel.InsightListItem.InsightModel.Status.REMOVED
 import org.wordpress.android.ui.utils.ListItemInteraction
-import org.wordpress.android.util.config.StatsRevampV2FeatureConfig
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -53,18 +52,14 @@ private val GENERAL_INSIGHTS = mutableListOf(
         TODAY_STATS
 )
 
-class InsightsManagementMapper
-@Inject constructor(
-    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
-    private val statsRevampV2FeatureConfig: StatsRevampV2FeatureConfig
+class InsightsManagementMapper @Inject constructor(
+    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) {
     suspend fun buildUIModel(addedTypes: Set<InsightType>, onClick: (InsightType) -> Unit) =
             withContext(bgDispatcher) {
                 val insightListItems = mutableListOf<InsightListItem>()
                 insightListItems += Header(string.stats_insights_management_general)
-                if (BuildConfig.IS_JETPACK_APP &&
-                        statsRevampV2FeatureConfig.isEnabled() &&
-                        !GENERAL_INSIGHTS.contains(VIEWS_AND_VISITORS)) {
+                if (BuildConfig.IS_JETPACK_APP && !GENERAL_INSIGHTS.contains(VIEWS_AND_VISITORS)) {
                     GENERAL_INSIGHTS.add(0, VIEWS_AND_VISITORS)
                 }
                 insightListItems += GENERAL_INSIGHTS.map { type ->
@@ -76,9 +71,7 @@ class InsightsManagementMapper
                 }
                 insightListItems += Header(string.stats_insights_management_activity)
 
-                if (BuildConfig.IS_JETPACK_APP &&
-                        statsRevampV2FeatureConfig.isEnabled() &&
-                        ACTIVITY_INSIGHTS.contains(FOLLOWER_TOTALS)) {
+                if (BuildConfig.IS_JETPACK_APP && ACTIVITY_INSIGHTS.contains(FOLLOWER_TOTALS)) {
                     // Replace FOLLOWER_TOTALS with Stats revamp v2 total insights
                     val followerTotalsIndex = ACTIVITY_INSIGHTS.indexOf(FOLLOWER_TOTALS)
                     ACTIVITY_INSIGHTS.remove(FOLLOWER_TOTALS)
