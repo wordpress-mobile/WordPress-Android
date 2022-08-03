@@ -95,7 +95,6 @@ class StatsActivity : LocaleAwareActivity() {
 
     enum class StatsLaunchedFrom {
         STATS_WIDGET,
-        NOTIFICATIONS,
-        FEATURE_ANNOUNCEMENT
+        NOTIFICATIONS
     }
 }
