@@ -175,6 +175,7 @@ public class MySitesPage {
     public StatsPage goToStats() {
         goToMenuTab();
         clickQuickActionOrSiteMenuItem(R.id.quick_action_stats_button, R.string.stats);
+        idleFor(4000);
         dismissJetpackAdIfPresent();
         waitForElementToBeDisplayedWithoutFailure(R.id.tabLayout);
 
