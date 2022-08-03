@@ -572,7 +572,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given tabs enabled + initial screen is home, when site is selected, then default tab is dashboard`() {
-        whenever(appPrefsWrapper.getMySiteInitialScreen()).thenReturn(MySiteTabType.DASHBOARD.label)
+        whenever(appPrefsWrapper.getMySiteInitialScreen(any())).thenReturn(MySiteTabType.DASHBOARD.label)
 
         initSelectedSite(
                 isMySiteTabsBuildConfigEnabled = true,
@@ -585,7 +585,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given tabs enabled + initial screen is site_menu, when site is selected, then default tab is site menu`() {
-        whenever(appPrefsWrapper.getMySiteInitialScreen()).thenReturn(MySiteTabType.SITE_MENU.label)
+        whenever(appPrefsWrapper.getMySiteInitialScreen(any())).thenReturn(MySiteTabType.SITE_MENU.label)
         initSelectedSite(
                 isMySiteTabsBuildConfigEnabled = true,
                 initialScreen = MySiteTabType.SITE_MENU.label
@@ -2726,7 +2726,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 categories = if (isQuickStartInProgress) listOf(quickStartCategory) else emptyList()
         )
         whenever(buildConfigWrapper.isMySiteTabsEnabled).thenReturn(isMySiteTabsBuildConfigEnabled)
-        whenever(appPrefsWrapper.getMySiteInitialScreen()).thenReturn(initialScreen)
+        whenever(appPrefsWrapper.getMySiteInitialScreen(any())).thenReturn(initialScreen)
         if (isSiteUsingWpComRestApi) {
             site.setIsWPCom(true)
             site.setIsJetpackConnected(true)

@@ -174,9 +174,6 @@ public class AppPrefs {
         SHOULD_SCHEDULE_CREATE_SITE_NOTIFICATION,
         SHOULD_SHOW_WEEKLY_ROUNDUP_NOTIFICATION,
 
-        // Used to indicate if the variant has been assigned for the My Site Tab experiment
-        MY_SITE_DEFAULT_TAB_EXPERIMENT_VARIANT_ASSIGNED,
-
         SKIPPED_BLOGGING_PROMPT_DAY,
     }
 
@@ -1375,17 +1372,6 @@ public class AppPrefs {
         return capabilities;
     }
 
-    public static boolean isMySiteDefaultTabExperimentVariantAssigned() {
-        return getBoolean(
-                DeletablePrefKey.MY_SITE_DEFAULT_TAB_EXPERIMENT_VARIANT_ASSIGNED,
-                false
-        );
-    }
-
-    public static void setMySiteDefaultTabExperimentVariantAssigned() {
-        setBoolean(DeletablePrefKey.MY_SITE_DEFAULT_TAB_EXPERIMENT_VARIANT_ASSIGNED, true);
-    }
-
     public static Date getSkippedPromptDay(int siteId) {
         long promptSkippedMillis = prefs().getLong(getSkippedBloggingPromptDayConfigKey(siteId), 0);
         if (promptSkippedMillis == 0) {
@@ -1406,20 +1392,10 @@ public class AppPrefs {
         return DeletablePrefKey.SKIPPED_BLOGGING_PROMPT_DAY.name() + siteId;
     }
 
-    public static void setInitialScreenFromMySiteDefaultTabExperimentVariant(String variant) {
-        // This supports the MySiteDefaultTab AB Experiment.
-        // AppSettings are undeletable across logouts and keys are all lower case.
-        // This method will be removed when the experiment has completed and thus
-        // the settings will be maintained only from the AppSettings view{
-        String initialScreen = variant.equals(MySiteTabType.SITE_MENU.getTrackingLabel())
-                ? MySiteTabType.SITE_MENU.getLabel() : MySiteTabType.DASHBOARD.getLabel();
-        setString(UndeletablePrefKey.wp_pref_initial_screen, initialScreen);
-    }
-
-    public static String getMySiteInitialScreen() {
+    public static String getMySiteInitialScreen(boolean isJetpackApp) {
         return getString(
                 UndeletablePrefKey.wp_pref_initial_screen,
-                MySiteTabType.SITE_MENU.getLabel()
+                isJetpackApp ? MySiteTabType.DASHBOARD.getLabel() : MySiteTabType.SITE_MENU.getLabel()
         );
     }
 
