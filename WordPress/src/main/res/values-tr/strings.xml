@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-07-14 09:54:08+0000
+Translation-Revision-Date: 2022-07-29 10:54:11+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: tr
 -->
 <resources>
+    <string name="gutenberg_native_upgrade_your_plan_to_use_video_covers">Video başlıkları kullanmak için paketinizi yükseltin</string>
+    <string name="gutenberg_native_upgrade_your_plan_to_upload_audio">Ses yüklemek için paketinizi yükseltin</string>
+    <string name="gutenberg_native_jetpack_powered">Jetpack destekli</string>
+    <string name="gutenberg_native_invalid_url">Geçersiz URL.</string>
+    <string name="gutenberg_native_gradient">Degrade</string>
+    <string name="wp_jetpack_continue_to_notifications">Bildirimlerle Devam Et</string>
+    <string name="wp_jetpack_continue_to_stats">İstatistiklerle Devam Et</string>
+    <string name="wp_jetpack_continue_to_reader">Okuyucuyla Devam Et</string>
+    <string name="wp_jetpack_get_new_jetpack_app">Jetpack uygulamasını edinin</string>
+    <string name="wp_jetpack_powered_features">İstatistikler, Okuyucu, Bildirimler ve diğer özellikler Jetpack tarafından desteklenmektedir.</string>
     <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery">Blok görüntülenirken bir sorun oluştu. \nBlok kurtarmayı denemek için dokunun. </string>
     <string name="weekly_roundup_notification_text_views_and_comments">Geçen hafta %1$s görüntüleme ve %2$s yorum aldınız.</string>
     <string name="weekly_roundup_notification_text_views_and_likes">Geçen hafta %1$s görüntüleme ve %2$s beğeni aldınız.</string>
@@ -511,6 +521,7 @@ Language: tr
     <string name="gutenberg_native_s_has_no_url_set">%s için ayarlanmış bir URL yok</string>
     <string name="gutenberg_native_s_converted_to_regular_blocks">%s normal bloklara dönüştürüldü</string>
     <string name="gutenberg_native_s_block">%s blok</string>
+    <string name="gutenberg_native_opacity">Opaklık</string>
     <string name="gutenberg_native_media_options">Medya seçenekleri</string>
     <string name="gutenberg_native_invalid_url_audio_file_not_found">Geçersiz URL. Ses dosyası bulunamadı.</string>
     <string name="gutenberg_native_insert_crosspost">Çapraz gönderi ekle</string>
