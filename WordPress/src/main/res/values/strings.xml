@@ -1376,10 +1376,6 @@
 
     <!-- Stats Revamp v2 Feature Introduction -->
     <string name="stats_revamp_v2_intro_header_title">Insights update</string>
-    <string name="stats_revamp_v2_intro_content">Insights help you understand how your content is performing and what\'s resonating with your audience.</string>
-    <string name="stats_revamp_v2_intro_content_note">Learn more in My Site &gt; Stats &gt; Insights</string>
-    <string name="stats_revamp_v2_intro_primary_button_text">Try it now</string>
-    <string name="stats_revamp_v2_intro_secondary_button_text">Remind me later</string>
     <string name="stats_revamp_v2_update_alert_message">Updated to New Insights to help you understand how your content is performing and what\'s resonating with your audience.</string>
 
     <!-- Stats refreshed widgets -->
