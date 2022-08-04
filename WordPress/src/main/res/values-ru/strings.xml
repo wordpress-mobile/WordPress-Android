@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-07-14 10:54:07+0000
+Translation-Revision-Date: 2022-07-28 09:54:10+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.1
 Language: ru
 -->
 <resources>
+    <string name="gutenberg_native_upgrade_your_plan_to_use_video_covers">Улучшите тарифный план, чтобы использовать видеообложки</string>
+    <string name="gutenberg_native_upgrade_your_plan_to_upload_audio">Улучшите тарифный план, чтобы загружать аудио</string>
+    <string name="gutenberg_native_jetpack_powered">На базе Jetpack</string>
+    <string name="gutenberg_native_invalid_url">Неверный URL.</string>
+    <string name="gutenberg_native_gradient">Градиент</string>
+    <string name="wp_jetpack_continue_to_notifications">Перейти к уведомлениям</string>
+    <string name="wp_jetpack_continue_to_stats">Перейти к статистике</string>
+    <string name="wp_jetpack_continue_to_reader">Перейти в Чтиво</string>
+    <string name="wp_jetpack_get_new_jetpack_app">Загрузить новое приложение Jetpack</string>
+    <string name="wp_jetpack_powered_features">Статистика, Чтиво, уведомления и другие функции работают на базе Jetpack.</string>
     <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery">Возникла проблема отображения блока. \nНажмите для попытки его восстановления.</string>
     <string name="weekly_roundup_notification_text_views_and_comments">За последнюю неделю: просмотров сайта — %1$s, комментариев — %2$s</string>
     <string name="weekly_roundup_notification_text_views_and_likes">За последнюю неделю: просмотров сайта — %1$s, отметок «Нравится» —%2$s</string>
@@ -511,6 +521,7 @@ Language: ru
     <string name="gutenberg_native_s_has_no_url_set">URL для %s не установлен</string>
     <string name="gutenberg_native_s_converted_to_regular_blocks">%s сконвертирован в обычные блоки</string>
     <string name="gutenberg_native_s_block">Блок %s</string>
+    <string name="gutenberg_native_opacity">Прозрачность</string>
     <string name="gutenberg_native_media_options">Параметры медиафайлов</string>
     <string name="gutenberg_native_invalid_url_audio_file_not_found">Неверный URL. Аудиофайл не найден.</string>
     <string name="gutenberg_native_insert_crosspost">Вставить кросспост</string>

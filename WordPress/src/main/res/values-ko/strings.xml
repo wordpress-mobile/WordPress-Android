@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-07-14 16:54:07+0000
+Translation-Revision-Date: 2022-07-28 15:54:26+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.1
 Language: ko_KR
 -->
 <resources>
+    <string name="gutenberg_native_upgrade_your_plan_to_use_video_covers">비디오 커버를 사용하려면 요금제를 업그레이드하세요.</string>
+    <string name="gutenberg_native_upgrade_your_plan_to_upload_audio">오디오를 업로드하려면 요금제를 업그레이드하세요.</string>
+    <string name="gutenberg_native_jetpack_powered">젯팩 제공</string>
+    <string name="gutenberg_native_invalid_url">유효하지 않은 URL.</string>
+    <string name="gutenberg_native_gradient">기울기</string>
+    <string name="wp_jetpack_continue_to_notifications">알림으로 계속</string>
+    <string name="wp_jetpack_continue_to_stats">통계로 계속</string>
+    <string name="wp_jetpack_continue_to_reader">리더로 계속</string>
+    <string name="wp_jetpack_get_new_jetpack_app">새 젯팩 앱 가져오기</string>
+    <string name="wp_jetpack_powered_features">통계, 리더, 알림 및 기타 기능이 젯팩에서 제공됩니다.</string>
     <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery">블록 표시 중 문제가 발생했습니다. \n눌러서 블록 복구를 시도하세요.</string>
     <string name="weekly_roundup_notification_text_views_and_comments">지난주에는 조회수 %1$s개와 댓글 %2$s개가 있습니다.</string>
     <string name="weekly_roundup_notification_text_views_and_likes">지난주에는 조회수 %1$s개와 좋아요 %2$s개가 있습니다.</string>
@@ -511,6 +521,7 @@ Language: ko_KR
     <string name="gutenberg_native_s_has_no_url_set">%s에 설정된 URL 없음</string>
     <string name="gutenberg_native_s_converted_to_regular_blocks">일반 블록으로 %s 변환됨</string>
     <string name="gutenberg_native_s_block">%s 블록</string>
+    <string name="gutenberg_native_opacity">불투명도</string>
     <string name="gutenberg_native_media_options">미디어 옵션</string>
     <string name="gutenberg_native_invalid_url_audio_file_not_found">유효하지 않은 URL입니다. 오디오 파일을 찾을 수 없습니다.</string>
     <string name="gutenberg_native_insert_crosspost">교차 글 삽입</string>
