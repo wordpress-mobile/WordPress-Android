@@ -820,10 +820,10 @@ public class WPSupportUtils {
     }
 
     public static void dismissJetpackAdIfPresent() {
-        String jpAdText = "Stats, Reader, Notifications, and other features are powered by Jetpack.";
+        String jetpackAdText = "Stats, Reader, Notifications, and other features are powered by Jetpack.";
 
         // Dismiss Jetpack ad that might be shown after Sign-Up or after opening Stats
-        if (isElementDisplayed(onView(withText(jpAdText)))) {
+        if (isElementDisplayed(onView(withText(jetpackAdText)))) {
             clickOn(onView(withId(R.id.secondary_button)));
         }
 
