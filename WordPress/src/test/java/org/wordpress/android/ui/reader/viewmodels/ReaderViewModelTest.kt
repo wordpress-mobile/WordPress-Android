@@ -8,6 +8,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -460,7 +461,7 @@ class ReaderViewModelTest {
         }
     }
 
-    @Test
+    @Ignore("Disabled until next sprint") @Test
     fun `given wp app, when jp powered bottom sheet feature is true, then jp powered bottom sheet is shown`() {
         val showJetpackPoweredBottomSheetEvent = mutableListOf<Event<Boolean>>()
         viewModel.showJetpackPoweredBottomSheet.observeForever {

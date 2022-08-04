@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-07-16 08:54:08+0000
+Translation-Revision-Date: 2022-08-02 09:54:09+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: id
 -->
 <resources>
+    <string name="gutenberg_native_upgrade_your_plan_to_use_video_covers">Upgrade paket Anda untuk menggunakan sampul video</string>
+    <string name="gutenberg_native_upgrade_your_plan_to_upload_audio">Upgrade paket Anda untuk mengunggah audio</string>
+    <string name="gutenberg_native_jetpack_powered">Didukung Jetpack</string>
+    <string name="gutenberg_native_invalid_url">URL tidak valid.</string>
+    <string name="gutenberg_native_gradient">Gradien</string>
+    <string name="wp_jetpack_continue_to_notifications">Lanjutkan ke Pemberitahuan</string>
+    <string name="wp_jetpack_continue_to_stats">Lanjutkan ke Statistik</string>
+    <string name="wp_jetpack_continue_to_reader">Lanjutkan ke Pembaca</string>
+    <string name="wp_jetpack_get_new_jetpack_app">Dapatkan aplikasi Jetpack baru</string>
+    <string name="wp_jetpack_powered_features">Statistik, Pembaca, Pemberitahuan, dan fitur-fitur lainnya didukung oleh Jetpack.</string>
     <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery">Terjadi masalah saat menampilkan blok. \nKetuk untuk mencoba pemulihan blok.</string>
     <string name="weekly_roundup_notification_text_views_and_comments">Minggu lalu Anda mendapatkan %1$s tayangan dan %2$s komentar</string>
     <string name="weekly_roundup_notification_text_views_and_likes">Minggu lalu Anda mendapatkan %1$s tayangan dan %2$s suka</string>
@@ -511,6 +521,7 @@ Language: id
     <string name="gutenberg_native_s_has_no_url_set">URL %s belum ditetapkan</string>
     <string name="gutenberg_native_s_converted_to_regular_blocks">%s diubah ke blok reguler</string>
     <string name="gutenberg_native_s_block">%s blok</string>
+    <string name="gutenberg_native_opacity">Keburaman</string>
     <string name="gutenberg_native_media_options">Opsi media</string>
     <string name="gutenberg_native_invalid_url_audio_file_not_found">URL tidak valid. File audio tidak ditemukan.</string>
     <string name="gutenberg_native_insert_crosspost">Sisipkan lintas pos</string>

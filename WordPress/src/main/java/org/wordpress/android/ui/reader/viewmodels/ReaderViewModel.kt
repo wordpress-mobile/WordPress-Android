@@ -104,7 +104,7 @@ class ReaderViewModel @Inject constructor(
     }
 
     private fun showJetpackPoweredBottomSheet() {
-        _showJetpackPoweredBottomSheet.value = Event(true)
+//        _showJetpackPoweredBottomSheet.value = Event(true)
     }
 
     private fun loadTabs() {
