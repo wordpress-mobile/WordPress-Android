@@ -78,14 +78,6 @@
             @style/WordPress.ActionBar.Navigation
         </item>
 
-        <!--Post Settings Styles-->
-        <style name="PostSettingsTheme" parent="Base.Wordpress">
-            <item name="colorPrimary">@color/colorPrimaryEditor</item>
-            <item name="colorSecondary">@color/colorPrimaryEditor</item>
-            <item name="colorAccent">@color/colorPrimaryEditor</item>
-            <item name="colorControlActivated">@color/colorPrimaryEditor</item>
-        </style>
-
         <!-- Modal Layout Picker -->
         <item name="categoriesButtonBackground">@color/mlp_categories_button_background_dark</item>
         <item name="categoriesButtonBackgroundSelected">@color/mlp_categories_button_background_selected_dark</item>
@@ -132,6 +124,14 @@
 
     <style name="WordPress.SnackbarButton" parent="Widget.MaterialComponents.Button.TextButton.Snackbar">
         <item name="android:textColor">?attr/colorSecondaryVariant</item>
+    </style>
+
+    <!--Post Settings Styles-->
+    <style name="PostSettingsTheme" parent="Base.Wordpress">
+        <item name="colorPrimary">@color/colorPrimaryEditor</item>
+        <item name="colorSecondary">@color/colorPrimaryEditor</item>
+        <item name="colorAccent">@color/colorPrimaryEditor</item>
+        <item name="colorControlActivated">@color/colorPrimaryEditor</item>
     </style>
 
     <!-- Domains -->
