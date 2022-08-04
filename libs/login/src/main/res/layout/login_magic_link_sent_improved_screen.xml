@@ -25,7 +25,7 @@
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/open_mail"
                 android:layout_marginTop="@dimen/margin_extra_medium_large"
-                android:src="@drawable/img_success_tablet" />
+                android:src="@drawable/img_envelope" />
 
             <com.google.android.material.textview.MaterialTextView
                 style="@style/Widget.LoginFlow.TextView.List.Line1"
