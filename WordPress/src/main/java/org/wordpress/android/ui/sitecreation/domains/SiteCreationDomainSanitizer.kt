@@ -49,7 +49,7 @@ class SiteCreationDomainSanitizer
      */
     private val String.removeDisallowedCharacters: String
         get() {
-            val disallowedPattern = """[\s.-]""".toRegex()
+            val disallowedPattern = """[^\w\s.-]""".toRegex()
 
             return replace(disallowedPattern) { "" }
         }
