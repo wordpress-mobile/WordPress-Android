@@ -1,3 +1,1 @@
-# Adding `mobile-ui-testing-squad` as codeowners for UI tests related folders
-
 /WordPress/src/androidTest/ @wordpress-mobile/mobile-ui-testing-squad
