@@ -60,7 +60,7 @@ class SiteCreationDomainSanitizer
         get() {
             val blacklistedStrings = arrayOf(
                     "automattic",
-                    "wordpress",
+                    // "wordpress", // We won't mimic the API behavior here since it's producing a bad UX.
                     "wpcomstaging",
                     "paypal",
                     "bankofamerica",
