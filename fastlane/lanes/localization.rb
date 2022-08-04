@@ -162,7 +162,7 @@ platform :android do
     }
 
     update_po_file_for_metadata_localization(
-      po_path: metadata_folder = File.join(metadata_folder, 'PlayStoreStrings.po'),
+      po_path: File.join(metadata_folder, 'PlayStoreStrings.po'),
       sources: files,
       release_version: version,
       commit_message: "Update Jetpack `PlayStoreStrings.po` for version #{version}"
