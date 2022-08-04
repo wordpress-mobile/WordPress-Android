@@ -902,7 +902,7 @@
         <item name="colorControlActivated">@color/colorPrimaryEditor</item>
     </style>
 
-    <style name="PostSettingsCalendar" parent="Theme.AppCompat.DayNight.Dialog.Alert">
+    <style name="PostSettingsCalendar" parent="ThemeOverlay.Material3.MaterialCalendar">
         <item name="colorAccent">@color/colorPrimaryEditor</item>
         <item name="colorControlActivated">@color/colorPrimaryEditor</item>
     </style>
