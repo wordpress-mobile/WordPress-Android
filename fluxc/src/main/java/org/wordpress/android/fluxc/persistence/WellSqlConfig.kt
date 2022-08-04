@@ -41,7 +41,7 @@ open class WellSqlConfig : DefaultWellConfig {
         mTables.forEach { table -> helper.createTable(table) }
     }
 
-    @Suppress("CheckStyle")
+    @Suppress("CheckStyle", "MagicNumber")
     override fun onUpgrade(db: SQLiteDatabase, helper: WellTableManager, oldVersion: Int, newVersion: Int) {
         AppLog.d(T.DB, "Upgrading database from version $oldVersion to $newVersion")
 
@@ -1923,6 +1923,7 @@ open class WellSqlConfig : DefaultWellConfig {
      * reduce the number of SQLiteBlobTooBigExceptions. Note that this is only called on API 28 and
      * above since earlier versions don't allow adjusting the cursor window size.
      */
+    @Suppress("MagicNumber")
     override fun getCursorWindowSize() = if (BuildConfig.DEBUG) (1024L * 1024L * 5L) else 0L
 
     /**
