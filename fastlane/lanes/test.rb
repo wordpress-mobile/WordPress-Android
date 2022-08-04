@@ -2,16 +2,16 @@ GOOGLE_FIREBASE_SECRETS_PATH = File.join(Dir.home, '.configure', 'wordpress-andr
 
 platform :android do
   #####################################################################################
-  # build_and_instrumented_test
+  # build_and_run_instrumented_test
   # -----------------------------------------------------------------------------------
   # Run instrumented tests in Google Firebase Test Lab
   # -----------------------------------------------------------------------------------
   # Usage:
-  # bundle exec fastlane build_and_instrumented_test
+  # bundle exec fastlane build_and_run_instrumented_test
   #
   #####################################################################################
   desc "Build the application and instrumented tests, then run the tests in Firebase Test Lab"
-  lane :build_and_instrumented_test do | options |
+  lane :build_and_run_instrumented_test do | options |
    gradle(tasks: ['WordPress:assembleWordPressVanillaDebug', 'WordPress:assembleWordPressVanillaDebugAndroidTest'])
 
    # Run the instrumented tests in Firebase Test Lab
