@@ -32,7 +32,6 @@ import org.wordpress.android.ui.mysite.cards.quickactions.QuickActionsCardBuilde
 import org.wordpress.android.ui.mysite.cards.quicklinksribbon.QuickLinkRibbonBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
-import org.wordpress.android.ui.mysite.tabs.MySiteDefaultTabExperiment
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.BuildConfigWrapper
@@ -48,7 +47,6 @@ class CardsBuilderTest {
     @Mock lateinit var dashboardCardsBuilder: DashboardCardsBuilder
     @Mock lateinit var quickLinkRibbonBuilder: QuickLinkRibbonBuilder
     @Mock lateinit var site: SiteModel
-    @Mock lateinit var mySiteDefaultTabExperiment: MySiteDefaultTabExperiment
 
     private lateinit var cardsBuilder: CardsBuilder
     private val quickStartCategory: QuickStartCategory
@@ -94,35 +92,6 @@ class CardsBuilderTest {
     @Test
     fun `given quick action disabled, when cards built, then quick actions card is not built`() {
         val cards = buildCards(isQuickActionEnabled = false)
-
-        assertThat(cards.findQuickActionsCard()).isNull()
-    }
-
-    @Test
-    fun `given tabs enabled + experiment not running, when cards built, then quick actions card is built`() {
-        val cards = buildCards(isMySiteTabsEnabled = true, isDefaultTabExperimentRunning = false)
-
-        assertThat(cards.findQuickActionsCard()).isNotNull
-    }
-
-    @Test
-    fun `given tabs enabled + experiment running + variant not assigned, when cards built, then quick actions built`() {
-        val cards = buildCards(
-                isMySiteTabsEnabled = true,
-                isDefaultTabExperimentRunning = true,
-                isDefaultTabVariantAssigned = false
-        )
-
-        assertThat(cards.findQuickActionsCard()).isNotNull
-    }
-
-    @Test
-    fun `given tabs enabled + experiment running + variant assigned, when cards built, then quick actions not built`() {
-        val cards = buildCards(
-                isMySiteTabsEnabled = true,
-                isDefaultTabExperimentRunning = true,
-                isDefaultTabVariantAssigned = true
-        )
 
         assertThat(cards.findQuickActionsCard()).isNull()
     }
@@ -193,14 +162,10 @@ class CardsBuilderTest {
         isDomainCreditAvailable: Boolean = false,
         isQuickStartInProgress: Boolean = false,
         isQuickStartDynamicCardEnabled: Boolean = false,
-        isMySiteTabsEnabled: Boolean = false,
-        isDefaultTabExperimentRunning: Boolean = false,
-        isDefaultTabVariantAssigned: Boolean = false
+        isMySiteTabsEnabled: Boolean = false
     ): List<MySiteCardAndItem> {
         whenever(buildConfigWrapper.isQuickActionEnabled).thenReturn(isQuickActionEnabled)
         whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(isQuickStartDynamicCardEnabled)
-        whenever(mySiteDefaultTabExperiment.isExperimentRunning()).thenReturn(isDefaultTabExperimentRunning)
-        whenever(mySiteDefaultTabExperiment.isVariantAssigned()).thenReturn(isDefaultTabVariantAssigned)
         return cardsBuilder.build(
                 quickActionsCardBuilderParams = QuickActionsCardBuilderParams(
                         siteModel = site,
@@ -269,8 +234,7 @@ class CardsBuilderTest {
                 quickActionsCardBuilder,
                 quickStartCardBuilder,
                 quickLinkRibbonBuilder,
-                dashboardCardsBuilder,
-                mySiteDefaultTabExperiment
+                dashboardCardsBuilder
         )
     }
 

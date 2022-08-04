@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-07-15 09:54:20+0000
+Translation-Revision-Date: 2022-07-29 09:54:09+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.1
 Language: ja_JP
 -->
 <resources>
+    <string name="gutenberg_native_upgrade_your_plan_to_use_video_covers">プランをアップグレードして動画のカバーを使う</string>
+    <string name="gutenberg_native_upgrade_your_plan_to_upload_audio">プランをアップグレードして音声をアップロードする</string>
+    <string name="gutenberg_native_jetpack_powered">Jetpack 提供</string>
+    <string name="gutenberg_native_invalid_url">無効な URL。</string>
+    <string name="gutenberg_native_gradient">グラデーション</string>
+    <string name="wp_jetpack_continue_to_notifications">通知に進む</string>
+    <string name="wp_jetpack_continue_to_stats">統計に進む</string>
+    <string name="wp_jetpack_continue_to_reader">Reader に進む</string>
+    <string name="wp_jetpack_get_new_jetpack_app">新しい Jetpack アプリを入手</string>
+    <string name="wp_jetpack_powered_features">統計、Reader、通知などの機能は Jetpack から提供されています。</string>
     <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery">ブロックの表示中に問題が発生しました。 \nタップしてブロックの回復を試みます。</string>
     <string name="weekly_roundup_notification_text_views_and_comments">先週、%1$s件の表示と%2$s件のコメントがありました。</string>
     <string name="weekly_roundup_notification_text_views_and_likes">先週、%1$s件の表示と%2$s件の「いいね」を受け取りました。</string>
@@ -511,6 +521,7 @@ Language: ja_JP
     <string name="gutenberg_native_s_has_no_url_set">%s には URL 設定がありません</string>
     <string name="gutenberg_native_s_converted_to_regular_blocks">%s が通常のブロックに変換されました</string>
     <string name="gutenberg_native_s_block">%s ブロック</string>
+    <string name="gutenberg_native_opacity">透過率</string>
     <string name="gutenberg_native_media_options">メディア設定</string>
     <string name="gutenberg_native_invalid_url_audio_file_not_found">無効な URL。 音声ファイルが見つかりません。</string>
     <string name="gutenberg_native_insert_crosspost">クロスポストを挿入</string>

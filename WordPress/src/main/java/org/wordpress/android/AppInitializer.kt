@@ -81,7 +81,6 @@ import org.wordpress.android.support.ZendeskHelper
 import org.wordpress.android.ui.ActivityId
 import org.wordpress.android.ui.debug.cookies.DebugCookieManager
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
-import org.wordpress.android.ui.mysite.tabs.MySiteDefaultTabExperiment
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils
@@ -153,7 +152,6 @@ class AppInitializer @Inject constructor(
     @Inject lateinit var debugCookieManager: DebugCookieManager
     @Inject @Named(APPLICATION_SCOPE) lateinit var appScope: CoroutineScope
     @Inject lateinit var selectedSiteRepository: SelectedSiteRepository
-    @Inject lateinit var mySiteDefaultTabExperiment: MySiteDefaultTabExperiment
 
     // For development and production `AnalyticsTrackerNosara`, for testing a mocked `Tracker` will be injected.
     @Inject lateinit var tracker: Tracker
@@ -306,8 +304,6 @@ class AppInitializer @Inject constructor(
         exPlat.forceRefresh()
 
         debugCookieManager.sync()
-
-        initAnalyticsExperimentPropertiesIfNeeded()
 
         initialized = true
     }
@@ -680,11 +676,6 @@ class AppInitializer @Inject constructor(
             }
         })
         EmojiCompat.init(config)
-    }
-
-    /* If default tab experiment is running, pass along to tracker */
-    private fun initAnalyticsExperimentPropertiesIfNeeded() {
-        mySiteDefaultTabExperiment.checkAndSetTrackingPropertiesIfNeeded()
     }
 
     @Suppress("unused")

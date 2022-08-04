@@ -85,7 +85,7 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
                 searchInputWithHeader?.updateSearchInput(requireActivity(), uiState.searchInputUiState)
                 updateContentUiState(uiState.contentState)
                 uiHelpers.updateVisibility(createSiteButtonContainer, uiState.createSiteButtonContainerVisibility)
-                uiHelpers.updateVisibility(createSiteButtonShaddow, uiState.createSiteButtonContainerVisibility)
+                uiHelpers.updateVisibility(createSiteButtonShadow, uiState.createSiteButtonContainerVisibility)
                 updateTitleVisibility(uiState.headerUiState == null)
             }
         })

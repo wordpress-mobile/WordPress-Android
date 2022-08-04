@@ -10,6 +10,7 @@ import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
@@ -237,7 +238,7 @@ class StatsViewModelTest : BaseUnitTest() {
         assertThat(uiModel.last().disabledStatsViewVisible).isFalse
     }
 
-    @Test
+    @Ignore("Disabled until next sprint") @Test
     fun `given wp app, when jetpack powered bottom sheet feature is on, then jp powered bottom sheet is shown`() {
         val showJetpackPoweredBottomSheetEvent = mutableListOf<Event<Boolean>>()
         viewModel.showJetpackPoweredBottomSheet.observeForever {

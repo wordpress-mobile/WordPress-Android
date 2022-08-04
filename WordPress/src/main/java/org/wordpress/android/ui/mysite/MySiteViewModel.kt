@@ -100,6 +100,7 @@ import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.FluxCUtilsWrapper
 import org.wordpress.android.util.JetpackBrandingUtils
+import org.wordpress.android.util.JetpackBrandingUtils.Screen.HOME
 import org.wordpress.android.util.MediaUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.QuickStartUtilsWrapper
@@ -164,7 +165,7 @@ class MySiteViewModel @Inject constructor(
     private val quickStartTracker: QuickStartTracker,
     private val dispatcher: Dispatcher
 ) : ScopedViewModel(mainDispatcher) {
-    private var isDefaultABExperimentTabSet: Boolean = false
+    private var isDefaultTabSet: Boolean = false
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     private val _onTechInputDialogShown = MutableLiveData<Event<TextInputDialogModel>>()
     private val _onBasicDialogShown = MutableLiveData<Event<SiteDialogModel>>()
@@ -209,9 +210,10 @@ class MySiteViewModel @Inject constructor(
             listOf(MySiteTabType.ALL)
         }
 
-    private val defaultABExperimentTab: MySiteTabType
+    private val defaultTab: MySiteTabType
         get() = if (isMySiteTabsEnabled) {
-            if (appPrefsWrapper.getMySiteInitialScreen() == MySiteTabType.SITE_MENU.label) {
+            if (appPrefsWrapper.getMySiteInitialScreen(buildConfigWrapper.isJetpackApp) ==
+                    MySiteTabType.SITE_MENU.label) {
                 MySiteTabType.SITE_MENU
             } else {
                 MySiteTabType.DASHBOARD
@@ -527,23 +529,24 @@ class MySiteViewModel @Inject constructor(
     }
 
     private fun onJetpackBadgeClick() {
+        jetpackBrandingUtils.trackBadgeTapped(HOME)
         _onNavigation.value = Event(SiteNavigationAction.OpenJetpackPoweredBottomSheet)
     }
 
-    private fun shouldEnableQuickLinkRibbonFocusPoints() = defaultABExperimentTab == MySiteTabType.DASHBOARD
+    private fun shouldEnableQuickLinkRibbonFocusPoints() = defaultTab == MySiteTabType.DASHBOARD
 
-    private fun shouldEnableSiteItemsFocusPoints() = defaultABExperimentTab != MySiteTabType.DASHBOARD
+    private fun shouldEnableSiteItemsFocusPoints() = defaultTab != MySiteTabType.DASHBOARD
 
     private fun getCardTypeExclusionFiltersForTab(tabType: MySiteTabType) = when (tabType) {
         MySiteTabType.SITE_MENU -> mutableListOf<Type>().apply {
             add(Type.DASHBOARD_CARDS)
-            if (defaultABExperimentTab == MySiteTabType.DASHBOARD) {
+            if (defaultTab == MySiteTabType.DASHBOARD) {
                 add(Type.QUICK_START_CARD)
             }
             add(Type.QUICK_LINK_RIBBON)
         }
         MySiteTabType.DASHBOARD -> mutableListOf<Type>().apply {
-            if (defaultABExperimentTab == MySiteTabType.SITE_MENU) {
+            if (defaultTab == MySiteTabType.SITE_MENU) {
                 add(Type.QUICK_START_CARD)
             }
             add(Type.DOMAIN_REGISTRATION_CARD)
@@ -553,8 +556,8 @@ class MySiteViewModel @Inject constructor(
     }
 
     private fun shouldIncludeDynamicCards(tabType: MySiteTabType) = when (tabType) {
-        MySiteTabType.SITE_MENU -> defaultABExperimentTab != MySiteTabType.DASHBOARD
-        MySiteTabType.DASHBOARD -> defaultABExperimentTab != MySiteTabType.SITE_MENU
+        MySiteTabType.SITE_MENU -> defaultTab != MySiteTabType.DASHBOARD
+        MySiteTabType.DASHBOARD -> defaultTab != MySiteTabType.SITE_MENU
         MySiteTabType.ALL -> true
     }
 
@@ -720,7 +723,7 @@ class MySiteViewModel @Inject constructor(
 
     private fun onQuickStartTaskTypeItemClick(type: QuickStartTaskType) {
         clearActiveQuickStartTask()
-        if (defaultABExperimentTab == MySiteTabType.DASHBOARD) {
+        if (defaultTab == MySiteTabType.DASHBOARD) {
             cardsTracker.trackQuickStartCardItemClicked(type)
         } else {
             quickStartTracker.track(Stat.QUICK_START_TAPPED, mapOf(TYPE to type.toString()))
@@ -1074,7 +1077,7 @@ class MySiteViewModel @Inject constructor(
     }
 
     fun onCreateSiteResult() {
-        isDefaultABExperimentTabSet = false
+        isDefaultTabSet = false
         selectDefaultTabIfNeeded()
     }
 
@@ -1269,9 +1272,9 @@ class MySiteViewModel @Inject constructor(
     @Suppress("NestedBlockDepth")
     private fun selectDefaultTabIfNeeded() {
         if (!isMySiteTabsEnabled) return
-        val index = orderedTabTypes.indexOf(defaultABExperimentTab)
+        val index = orderedTabTypes.indexOf(defaultTab)
         if (index != -1) {
-            if (isDefaultABExperimentTabSet) {
+            if (isDefaultTabSet) {
                 // This logic checks if the current default tab is the same as the tab
                 // set as initial screen, if yes then return
                 _selectTab.value?.let { tab ->
@@ -1281,7 +1284,7 @@ class MySiteViewModel @Inject constructor(
             }
             quickStartRepository.quickStartTaskOriginTab = orderedTabTypes[index]
             _selectTab.postValue(Event(TabNavigation(index, smoothAnimation = false)))
-            isDefaultABExperimentTabSet = true
+            isDefaultTabSet = true
         }
     }
 
@@ -1290,7 +1293,7 @@ class MySiteViewModel @Inject constructor(
                 .forEach { domainRegistrationCardShownTracker.trackShown(it.type) }
         siteSelected.cardAndItems.filterIsInstance<DashboardCards>().forEach { cardsTracker.trackShown(it) }
         siteSelected.cardAndItems.filterIsInstance<QuickStartCard>()
-                .firstOrNull()?.let { quickStartTracker.trackShown(it.type, defaultABExperimentTab) }
+                .firstOrNull()?.let { quickStartTracker.trackShown(it.type, defaultTab) }
         siteSelected.dashboardCardsAndItems.filterIsInstance<QuickStartCard>()
                 .firstOrNull()?.let { cardsTracker.trackQuickStartCardShown(quickStartRepository.quickStartType) }
     }

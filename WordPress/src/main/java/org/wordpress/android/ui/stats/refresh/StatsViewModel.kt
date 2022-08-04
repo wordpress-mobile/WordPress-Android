@@ -217,7 +217,7 @@ class StatsViewModel
     }
 
     private fun showJetpackPoweredBottomSheet() {
-        _showJetpackPoweredBottomSheet.value = Event(true)
+//        _showJetpackPoweredBottomSheet.value = Event(true)
     }
 
     private fun showInsightsUpdateAlert() {
