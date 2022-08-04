@@ -4,6 +4,7 @@
 -----
 * [*] Use larger thumbnail previews for recommended themes during site creation [https://github.com/wordpress-mobile/WordPress-Android/pull/16848]
 * [*] Jetpack App: Use the Jetpack green color for the skip buttons text in site creation [https://github.com/wordpress-mobile/WordPress-Android/pull/16994]
+* [**] App Settings: Show a label with the current language of the app under "Interface Language". [https://github.com/wordpress-mobile/WordPress-Android/pull/17004]
 
 20.4
 -----
