@@ -46,7 +46,6 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
 
-@Suppress("TooManyFunctions")
 @HiltViewModel
 class QRCodeAuthViewModel @Inject constructor(
     private val authStore: QRCodeAuthStore,
@@ -291,8 +290,8 @@ class QRCodeAuthViewModel @Inject constructor(
     fun onDialogInteraction(interaction: DialogInteraction) {
         when (interaction) {
             is Positive -> postActionEvent(FinishActivity)
-            is Negative -> { } // NO OP
-            is Dismissed -> { } // NO OP
+            is Negative -> Unit
+            is Dismissed -> Unit
         }
     }
 

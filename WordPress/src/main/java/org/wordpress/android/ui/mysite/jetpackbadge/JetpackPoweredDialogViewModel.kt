@@ -11,7 +11,7 @@ import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredItem.Caption
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredItem.Illustration
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredItem.Title
 import org.wordpress.android.ui.utils.UiString.UiStringRes
-import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.JetpackBrandingUtils
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
@@ -19,7 +19,7 @@ import javax.inject.Named
 @HiltViewModel
 class JetpackPoweredDialogViewModel @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
-    @Suppress("unused") private val analyticsTracker: AnalyticsTrackerWrapper
+    private val jetpackBrandingUtils: JetpackBrandingUtils
 ) : ScopedViewModel(mainDispatcher) {
     private val _uiState = MutableLiveData<UiState>()
     val uiState: LiveData<UiState> = _uiState
@@ -27,8 +27,8 @@ class JetpackPoweredDialogViewModel @Inject constructor(
     private val _action = MutableLiveData<JetpackPoweredDialogAction>()
     val action: LiveData<JetpackPoweredDialogAction> = _action
 
+    @Suppress("ForbiddenComment")
     fun start() {
-        // TODO: Tracks
         _uiState.value = UiState(
                 listOf(
                         Illustration(R.raw.wp2jp),
@@ -38,13 +38,15 @@ class JetpackPoweredDialogViewModel @Inject constructor(
         )
     }
 
+    @Suppress("ForbiddenComment")
     fun openJetpackAppDownloadLink() {
-        // TODO: Tracks
+        jetpackBrandingUtils.trackGetJetpackAppTapped()
         _action.value = JetpackPoweredDialogAction.OpenPlayStore
     }
 
+    @Suppress("ForbiddenComment")
     fun dismissBottomSheet() {
-        // TODO: Tracks
+        jetpackBrandingUtils.trackDismissTapped()
         _action.value = JetpackPoweredDialogAction.DismissDialog
     }
 

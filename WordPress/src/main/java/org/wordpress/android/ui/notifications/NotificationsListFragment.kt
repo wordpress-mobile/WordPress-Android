@@ -49,6 +49,7 @@ import org.wordpress.android.ui.stats.StatsConnectJetpackActivity
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.NOTIFS
 import org.wordpress.android.util.JetpackBrandingUtils
+import org.wordpress.android.util.JetpackBrandingUtils.Screen
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.WPUrlUtils
 import org.wordpress.android.util.extensions.setLiftOnScrollTargetViewIdAndRequestLayout
@@ -269,7 +270,9 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
             return detailIntent
         }
 
-        @JvmStatic fun openNoteForReply(
+        @JvmStatic
+        @Suppress("LongParameterList")
+        fun openNoteForReply(
             activity: Activity?,
             noteId: String?,
             shouldShowKeyboard: Boolean,
@@ -311,6 +314,7 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
 
                 if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
                     jetpackBannerView.setOnClickListener {
+                        jetpackBrandingUtils.trackBannerTapped(Screen.NOTIFICATIONS)
                         JetpackPoweredBottomSheetFragment
                                 .newInstance()
                                 .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG)

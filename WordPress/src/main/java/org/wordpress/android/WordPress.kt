@@ -28,7 +28,6 @@ abstract class WordPress : MultiDexApplication() {
         initializer().wordPressComSignOut()
     }
 
-    @Suppress("TooManyFunctions")
     companion object {
         const val SITE = "SITE"
         const val LOCAL_SITE_ID = "LOCAL_SITE_ID"

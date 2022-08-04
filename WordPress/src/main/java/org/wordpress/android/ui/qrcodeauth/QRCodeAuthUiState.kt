@@ -29,7 +29,6 @@ import org.wordpress.android.ui.utils.UiString.UiStringText
 const val BASE_ALPHA = 1.0f
 const val BLURRED_ALPHA = 0.75f
 
-@Suppress("LongParameterList")
 sealed class QRCodeAuthUiState {
     open val type: QRCodeAuthUiStateType? = null
     open val scanningVisibility = false
@@ -141,8 +140,9 @@ sealed class QRCodeAuthUiState {
             override val type = AUTHENTICATING
             override val title: UiString = if (browser == null) {
                 UiStringResWithParams(
-                        R.string.qrcode_auth_flow_validated_title,
-                        listOf(UiStringText(location ?: " ")))
+                        R.string.qrcode_auth_flow_validated_default_title,
+                        listOf(UiStringText(location ?: " "))
+                )
             } else {
                 UiStringResWithParams(
                         R.string.qrcode_auth_flow_validated_title,

@@ -1,21 +1,44 @@
 # Default Config: https://github.com/detekt/detekt/blob/main/detekt-core/src/main/resources/default-detekt-config.yml
 # Formatting Config: https://github.com/detekt/detekt/blob/main/detekt-formatting/src/main/resources/config/config.yml
+# Compose Config: https://detekt.dev/docs/introduction/compose/
 
 config:
   warningsAsErrors: true
 
 complexity:
   LongParameterList:
-    ignoreAnnotated: ['Inject']
+    ignoreDefaultParameters: true
+    ignoreAnnotated: ['Inject', 'Composable']
+  LongMethod:
+    ignoreAnnotated: ['Composable']
+  TooManyFunctions:
+    active: false
+
+coroutines:
+  GlobalCoroutineUsage:
+    active: true
 
 naming:
   FunctionNaming:
     ignoreAnnotated: ['Composable']
 
+potential-bugs:
+  MissingWhenCase:
+    allowElseExpression: false
+
 style:
-  ForbiddenComment:
-    values:
-      - 'FIXME:'
-      - 'STOPSHIP:'
+  DataClassShouldBeImmutable:
+    active: true
   MagicNumber:
     ignoreEnums: true
+    ignoreAnnotated: ['Composable']
+    ignorePropertyDeclaration: true
+  SpacingBetweenPackageAndImports:
+    active: true
+  UnusedImports:
+    active: true
+  UnusedPrivateMember:
+    ignoreAnnotated: ['Composable']
+  WildcardImport:
+    active: true
+    excludeImports: []

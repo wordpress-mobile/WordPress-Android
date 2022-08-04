@@ -33,7 +33,6 @@ import java.util.GregorianCalendar
 import java.util.TimeZone
 import javax.inject.Inject
 
-@Suppress("TooManyFunctions")
 class SiteListItemBuilder @Inject constructor(
     private val accountStore: AccountStore,
     private val pluginUtilsWrapper: PluginUtilsWrapper,

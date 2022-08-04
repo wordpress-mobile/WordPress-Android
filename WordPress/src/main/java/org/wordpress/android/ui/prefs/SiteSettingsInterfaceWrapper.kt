@@ -26,7 +26,6 @@ class SiteSettingsInterfaceWrapper(private val siteSettingsInterface: SiteSettin
     }
 
     class Factory @Inject constructor(private val contextProvider: ContextProvider) {
-        @Suppress("LongParameterList")
         fun build(
             site: SiteModel,
             onSaveError: (() -> Unit)? = null,

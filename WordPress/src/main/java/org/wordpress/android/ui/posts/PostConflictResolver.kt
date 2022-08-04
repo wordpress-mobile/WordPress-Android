@@ -15,6 +15,7 @@ import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
  * This is a temporary class to make the PostListViewModel more manageable. Please feel free to refactor it any way
  * you see fit.
  */
+@Suppress("LongParameterList")
 class PostConflictResolver(
     private val dispatcher: Dispatcher,
     private val site: SiteModel,

@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-07-22 11:32:52+0000
+Translation-Revision-Date: 2022-07-28 15:54:27+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: he_IL
 -->
 <resources>
+    <string name="gutenberg_native_upgrade_your_plan_to_use_video_covers">יש לשדרג את התוכנית שלך כדי להשתמש בשער של וידאו</string>
+    <string name="gutenberg_native_upgrade_your_plan_to_upload_audio">יש לשדרג את התוכנית שלך כדי להעלות אודיו</string>
+    <string name="gutenberg_native_jetpack_powered">מופעל באמצעות Jetpack</string>
+    <string name="gutenberg_native_invalid_url">כתובת URL לא תקינה.</string>
+    <string name="gutenberg_native_gradient">מעבר צבע</string>
+    <string name="wp_jetpack_continue_to_notifications">להמשיך להודעות</string>
+    <string name="wp_jetpack_continue_to_stats">להמשיך לנתונים הסטטיסטיים</string>
+    <string name="wp_jetpack_continue_to_reader">להמשיך ל-Reader</string>
+    <string name="wp_jetpack_get_new_jetpack_app">להוריד את האפליקציה החדשה של Jetpack</string>
+    <string name="wp_jetpack_powered_features">התכונות של נתונים סטטיסטיים, Reader, הודעות ותכונות אחרות מופעלות באמצעות Jetpack.</string>
     <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery">בעיה בהצגת הבלוק. \nיש להקיש כדי לנסות לשחזר את הבלוק.</string>
     <string name="weekly_roundup_notification_text_views_and_comments">בשבוע הקודם היו לך ⁦%1$s⁩ צפיות ו-⁦%2$s⁩ תגובות</string>
     <string name="weekly_roundup_notification_text_views_and_likes">בשבוע הקודם היו לך ⁦%1$s⁩ צפיות ו-⁦%2$s⁩ לייקים</string>
@@ -511,6 +521,7 @@ Language: he_IL
     <string name="gutenberg_native_s_has_no_url_set">ב-%s לא הוגדרה כתובת URL</string>
     <string name="gutenberg_native_s_converted_to_regular_blocks">התוכן של %s הומר לבלוקים רגילים</string>
     <string name="gutenberg_native_s_block">בלוק %s</string>
+    <string name="gutenberg_native_opacity">שקיפות</string>
     <string name="gutenberg_native_media_options">אפשרויות מדיה</string>
     <string name="gutenberg_native_invalid_url_audio_file_not_found">כתובת URL לא תקינה. לא נמצא קובץ אודיו.</string>
     <string name="gutenberg_native_insert_crosspost">להוסיף למספר פוסטים</string>

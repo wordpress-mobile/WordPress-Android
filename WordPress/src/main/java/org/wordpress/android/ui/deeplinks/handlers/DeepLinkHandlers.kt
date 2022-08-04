@@ -7,7 +7,6 @@ import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
 
-@Suppress("LongParameterList")
 class DeepLinkHandlers
 @Inject constructor(
     editorLinkHandler: EditorLinkHandler,

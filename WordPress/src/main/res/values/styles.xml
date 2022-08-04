@@ -1524,7 +1524,11 @@
         <item name="android:paddingBottom">@dimen/margin_small_medium</item>
     </style>
 
-    <!-- Site Creation Header Styles -->
+    <!-- Site Creation Styles -->
+    <style name="SiteCreationSkipButton" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="android:textColor">@color/site_creation_skip_button_text</item>
+        <item name="android:textSize">@dimen/text_sz_medium</item>
+    </style>
 
     <style name="SiteCreationHeaderV2Text">
         <item name="android:layout_width">match_parent</item>
@@ -1657,12 +1661,6 @@
 
     <style name="WordPress.PrepubPrimaryButton" parent="WordPress.Button.Primary">
         <item name="android:textAllCaps">true</item>
-    </style>
-
-    <!-- Home Page Picker Styles -->
-    <style name="HomePagePickerSkipButton" parent="Widget.MaterialComponents.Button.TextButton">
-        <item name="android:textColor">@color/blue_50</item>
-        <item name="android:textSize">@dimen/text_sz_medium</item>
     </style>
 
     <!-- Invite Links -->

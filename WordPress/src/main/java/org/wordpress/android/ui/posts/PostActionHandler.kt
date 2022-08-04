@@ -55,6 +55,7 @@ import org.wordpress.android.widgets.PostListButtonType.BUTTON_VIEW
  * This is a temporary class to make the PostListViewModel more manageable. Please feel free to refactor it any way
  * you see fit.
  */
+@Suppress("LongParameterList")
 class PostActionHandler(
     private val dispatcher: Dispatcher,
     private val site: SiteModel,

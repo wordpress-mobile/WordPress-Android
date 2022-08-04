@@ -502,6 +502,7 @@ Language: en_CA
     <string name="gutenberg_native_s_has_no_url_set">%s has no URL set</string>
     <string name="gutenberg_native_s_converted_to_regular_blocks">%s converted to regular blocks</string>
     <string name="gutenberg_native_s_block">%s block</string>
+    <string name="gutenberg_native_opacity">Opacity</string>
     <string name="gutenberg_native_media_options">Media options</string>
     <string name="gutenberg_native_invalid_url_audio_file_not_found">Invalid URL. Audio file not found.</string>
     <string name="gutenberg_native_insert_crosspost">Insert crosspost</string>

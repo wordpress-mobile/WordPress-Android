@@ -46,6 +46,7 @@ import javax.inject.Named
 const val UPDATE_TAGS_THRESHOLD = 1000 * 60 * 60 // 1 hr
 const val TRACK_TAB_CHANGED_THROTTLE = 100L
 
+@Suppress("ForbiddenComment")
 class ReaderViewModel @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
@@ -104,7 +105,7 @@ class ReaderViewModel @Inject constructor(
     }
 
     private fun showJetpackPoweredBottomSheet() {
-        _showJetpackPoweredBottomSheet.value = Event(true)
+//        _showJetpackPoweredBottomSheet.value = Event(true)
     }
 
     private fun loadTabs() {
