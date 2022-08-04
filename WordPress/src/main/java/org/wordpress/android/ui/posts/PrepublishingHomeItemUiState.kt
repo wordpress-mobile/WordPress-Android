@@ -12,7 +12,7 @@ sealed class PrepublishingHomeItemUiState {
     data class HomeUiState(
         val actionType: ActionType,
         @ColorRes val actionTypeColor: Int = R.color.prepublishing_action_type_enabled_color,
-        var actionResult: UiString? = null,
+        val actionResult: UiString? = null,
         @ColorRes val actionResultColor: Int = R.color.prepublishing_action_result_enabled_color,
         val actionClickable: Boolean,
         val onActionClicked: ((actionType: ActionType) -> Unit)?

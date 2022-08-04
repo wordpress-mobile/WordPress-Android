@@ -38,6 +38,7 @@ sealed class PostListItemIdentifier {
  * // TODO: We can add a link to the wiki for ListStore when that's available.
  * For more information, please see the documentation for `ListStore` components.
  */
+@Suppress("ForbiddenComment")
 class PostListItemDataSource(
     private val dispatcher: Dispatcher,
     private val postStore: PostStore,

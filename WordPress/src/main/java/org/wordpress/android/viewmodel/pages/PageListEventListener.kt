@@ -33,6 +33,7 @@ import kotlin.coroutines.CoroutineContext
 /**
  * This is a temporary class to make the PagesViewModel more manageable. It was inspired by the PostListEventListener
  */
+@Suppress("LongParameterList")
 class PageListEventListener(
     private val dispatcher: Dispatcher,
     private val bgDispatcher: CoroutineDispatcher,
@@ -189,6 +190,7 @@ class PageListEventListener(
     }
 
     class Factory @Inject constructor() {
+        @Suppress("LongParameterList")
         fun createAndStartListening(
             dispatcher: Dispatcher,
             bgDispatcher: CoroutineDispatcher,

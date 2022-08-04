@@ -169,6 +169,7 @@ class StatsModule {
     @Provides
     @Singleton
     @Named(VIEW_ALL_INSIGHTS_USE_CASES)
+    @Suppress("LongParameterList")
     fun provideViewAllInsightsUseCases(
         followersUseCaseFactory: FollowersUseCaseFactory,
         tagsAndCategoriesUseCaseFactory: TagsAndCategoriesUseCaseFactory,
@@ -196,6 +197,7 @@ class StatsModule {
     @Provides
     @Singleton
     @Named(GRANULAR_USE_CASE_FACTORIES)
+    @Suppress("LongParameterList")
     fun provideGranularUseCaseFactories(
         postsAndPagesUseCaseFactory: PostsAndPagesUseCaseFactory,
         referrersUseCaseFactory: ReferrersUseCaseFactory,
@@ -250,6 +252,7 @@ class StatsModule {
     @Provides
     @Singleton
     @Named(INSIGHTS_USE_CASE)
+    @Suppress("LongParameterList")
     fun provideInsightsUseCase(
         statsStore: StatsStore,
         @Named(BG_THREAD) bgDispatcher: CoroutineDispatcher,
@@ -275,6 +278,7 @@ class StatsModule {
     @Provides
     @Singleton
     @Named(DAY_STATS_USE_CASE)
+    @Suppress("LongParameterList")
     fun provideDayStatsUseCase(
         statsStore: StatsStore,
         @Named(BG_THREAD) bgDispatcher: CoroutineDispatcher,
@@ -300,6 +304,7 @@ class StatsModule {
     @Provides
     @Singleton
     @Named(WEEK_STATS_USE_CASE)
+    @Suppress("LongParameterList")
     fun provideWeekStatsUseCase(
         statsStore: StatsStore,
         @Named(BG_THREAD) bgDispatcher: CoroutineDispatcher,
@@ -325,6 +330,7 @@ class StatsModule {
     @Provides
     @Singleton
     @Named(MONTH_STATS_USE_CASE)
+    @Suppress("LongParameterList")
     fun provideMonthStatsUseCase(
         statsStore: StatsStore,
         @Named(BG_THREAD) bgDispatcher: CoroutineDispatcher,
@@ -349,6 +355,7 @@ class StatsModule {
     @Provides
     @Singleton
     @Named(YEAR_STATS_USE_CASE)
+    @Suppress("LongParameterList")
     fun provideYearStatsUseCase(
         statsStore: StatsStore,
         @Named(BG_THREAD) bgDispatcher: CoroutineDispatcher,
@@ -396,6 +403,7 @@ class StatsModule {
     @Provides
     @Singleton
     @Named(BLOCK_DETAIL_USE_CASE)
+    @Suppress("LongParameterList")
     fun provideDetailStatsUseCase(
         statsStore: StatsStore,
         @Named(BG_THREAD) bgDispatcher: CoroutineDispatcher,

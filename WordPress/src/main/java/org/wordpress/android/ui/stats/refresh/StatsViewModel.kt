@@ -68,7 +68,6 @@ import java.io.Serializable
 import javax.inject.Inject
 import javax.inject.Named
 
-@Suppress("TooManyFunctions", "LongParameterList")
 @HiltViewModel
 class StatsViewModel
 @Inject constructor(
@@ -152,7 +151,7 @@ class StatsViewModel
         }
     }
 
-    @Suppress("ComplexMethod")
+    @Suppress("ComplexMethod", "LongParameterList")
     fun start(
         localSiteId: Int,
         launchedFrom: Serializable?,

@@ -21,7 +21,6 @@ import org.wordpress.android.ui.main.utils.MeGravatarLoader
 import org.wordpress.android.ui.utils.UiHelpers
 import javax.inject.Inject
 
-@Suppress("TooManyFunctions")
 class LoginNoSitesFragment : Fragment(R.layout.jetpack_login_empty_view) {
     companion object {
         const val TAG = "LoginNoSitesFragment"

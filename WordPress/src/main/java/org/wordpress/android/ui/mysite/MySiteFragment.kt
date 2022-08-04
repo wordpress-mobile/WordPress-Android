@@ -42,7 +42,6 @@ import org.wordpress.android.viewmodel.observeEvent
 import org.wordpress.android.widgets.QuickStartFocusPoint
 import javax.inject.Inject
 
-@Suppress("TooManyFunctions")
 class MySiteFragment : Fragment(R.layout.my_site_fragment),
         QuickStartPromptClickInterface {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory

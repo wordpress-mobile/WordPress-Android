@@ -46,7 +46,6 @@ import javax.inject.Inject
 private const val ARG_DATA = "arg_site_creation_data"
 private const val SLIDE_IN_ANIMATION_DURATION = 450L
 
-@Suppress("TooManyFunctions")
 @AndroidEntryPoint
 class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
         ErrorManagedWebViewClientListener {

@@ -42,7 +42,6 @@ import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
 
-@Suppress("TooManyFunctions")
 class DomainsDashboardViewModel @Inject constructor(
     private val siteStore: SiteStore,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,

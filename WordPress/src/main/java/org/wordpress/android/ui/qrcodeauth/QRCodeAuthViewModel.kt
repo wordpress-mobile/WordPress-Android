@@ -46,7 +46,6 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
 
-@Suppress("TooManyFunctions")
 @HiltViewModel
 class QRCodeAuthViewModel @Inject constructor(
     private val authStore: QRCodeAuthStore,
