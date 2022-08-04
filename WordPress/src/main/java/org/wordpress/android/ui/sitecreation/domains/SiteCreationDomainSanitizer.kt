@@ -8,9 +8,6 @@ class SiteCreationDomainSanitizer
     private val String.removeProtocol: String
         get() = this.replace("http://", "").replace("https://", "")
 
-    private val String.removeNonAlphanumeric: String
-        get() = this.replace("[^a-zA-Z0-9]".toRegex(), "")
-
     private val String.firstPeriodIndex: Int?
         get() = this.indexOf(".").let { return if (it > 0) it else null }
 
