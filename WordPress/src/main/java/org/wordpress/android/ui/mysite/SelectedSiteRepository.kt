@@ -14,7 +14,6 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-@Suppress("TooManyFunctions")
 class SelectedSiteRepository @Inject constructor(
     private val dispatcher: Dispatcher,
     private val siteSettingsInterfaceFactory: SiteSettingsInterfaceWrapper.Factory,

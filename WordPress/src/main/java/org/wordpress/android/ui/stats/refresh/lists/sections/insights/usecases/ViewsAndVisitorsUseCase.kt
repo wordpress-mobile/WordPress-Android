@@ -47,7 +47,6 @@ import kotlin.math.ceil
 const val VIEWS_AND_VISITORS_ITEMS_TO_LOAD = 15
 const val TOP_TIPS_URL = "https://wordpress.com/support/getting-more-views-and-traffic/"
 
-@Suppress("TooManyFunctions")
 class ViewsAndVisitorsUseCase
 @Inject constructor(
     statsType: StatsType,

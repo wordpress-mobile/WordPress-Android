@@ -27,6 +27,7 @@ class JetpackPoweredDialogViewModel @Inject constructor(
     private val _action = MutableLiveData<JetpackPoweredDialogAction>()
     val action: LiveData<JetpackPoweredDialogAction> = _action
 
+    @Suppress("ForbiddenComment")
     fun start() {
         _uiState.value = UiState(
                 listOf(
@@ -37,11 +38,13 @@ class JetpackPoweredDialogViewModel @Inject constructor(
         )
     }
 
+    @Suppress("ForbiddenComment")
     fun openJetpackAppDownloadLink() {
         jetpackBrandingUtils.trackGetJetpackAppTapped()
         _action.value = JetpackPoweredDialogAction.OpenPlayStore
     }
 
+    @Suppress("ForbiddenComment")
     fun dismissBottomSheet() {
         jetpackBrandingUtils.trackDismissTapped()
         _action.value = JetpackPoweredDialogAction.DismissDialog

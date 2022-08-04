@@ -81,6 +81,7 @@ class WidgetUtils
         }
     }
 
+    @Suppress("LongParameterList")
     fun showError(
         appWidgetManager: AppWidgetManager,
         views: RemoteViews,
@@ -136,6 +137,7 @@ class WidgetUtils
         )
     }
 
+    @Suppress("LongParameterList")
     fun showList(
         appWidgetManager: AppWidgetManager,
         views: RemoteViews,

@@ -60,7 +60,7 @@ typealias DateRange = Pair<Long, Long>
  * necessity to split those features in separate screens in order not to increase further the complexity of this
  * screen's architecture.
  */
-@Suppress("LargeClass", "LongParameterList")
+@Suppress("LargeClass")
 class ActivityLogViewModel @Inject constructor(
     private val activityLogStore: ActivityLogStore,
     private val getRestoreStatusUseCase: GetRestoreStatusUseCase,

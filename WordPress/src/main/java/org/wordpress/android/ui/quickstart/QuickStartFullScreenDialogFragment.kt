@@ -32,7 +32,6 @@ import org.wordpress.android.widgets.WPSnackbar.Companion.make
 import java.io.Serializable
 import javax.inject.Inject
 
-@Suppress("TooManyFunctions")
 class QuickStartFullScreenDialogFragment : Fragment(R.layout.quick_start_dialog_fragment),
         FullScreenDialogContent {
     private var dialogController: FullScreenDialogController? = null

@@ -38,6 +38,7 @@ public class LoginFlow {
     public LoginFlow enterEmailAddress(String emailAddress) {
         // Email Address Screen – Fill it in and click "Continue"
         // See LoginEmailFragment
+        clickOn(R.id.input);
         populateTextField(R.id.input, emailAddress);
         clickOn(R.id.login_continue_button);
         return this;
@@ -46,6 +47,7 @@ public class LoginFlow {
     public LoginFlow enterPassword(String password) {
         // Password Screen – Fill it in and click "Continue"
         // See LoginEmailPasswordFragment
+        clickOn(R.id.input);
         populateTextField(R.id.input, password);
         clickOn(R.id.bottom_button);
         return this;
@@ -104,7 +106,9 @@ public class LoginFlow {
                 Matchers.instanceOf(EditText.class)));
         ViewInteraction passwordElement = onView(allOf(isDescendantOfA(withId(R.id.login_password_row)),
                 Matchers.instanceOf(EditText.class)));
+        clickOn(usernameElement);
         populateTextField(usernameElement, username + "\n");
+        clickOn(passwordElement);
         populateTextField(passwordElement, password + "\n");
         clickOn(R.id.bottom_button);
         return this;
@@ -120,6 +124,7 @@ public class LoginFlow {
     public LoginFlow enterSiteAddress(String siteAddress) {
         // Site Address Screen – Fill it in and click "Continue"
         // See LoginSiteAddressFragment
+        clickOn(R.id.input);
         populateTextField(R.id.input, siteAddress);
         clickOn(R.id.bottom_button);
         return this;

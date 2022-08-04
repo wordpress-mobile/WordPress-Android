@@ -96,6 +96,7 @@ class ReaderTagRepository @Inject constructor(
     }
 
     // todo: remove method post implementation
+    @Suppress("ForbiddenComment")
     private fun getMockInterests() =
             ReaderTagList().apply {
                 for (c in 'A'..'Z')

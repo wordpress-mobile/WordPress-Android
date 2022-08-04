@@ -739,6 +739,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     }
 
     // TODO: Update using UiState/ NavigationEvent
+    @Suppress("ForbiddenComment")
     private fun onPostExecuteShowPost() {
         // make sure options menu reflects whether we now have a post
         activity?.invalidateOptionsMenu()
@@ -1720,6 +1721,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             return newInstance(false, blogId, postId, null, 0, false, null, null, false)
         }
 
+        @Suppress("LongParameterList")
         fun newInstance(
             isFeed: Boolean,
             blogId: Long,

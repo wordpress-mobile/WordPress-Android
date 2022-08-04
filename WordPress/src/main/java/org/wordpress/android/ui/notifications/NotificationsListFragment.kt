@@ -270,7 +270,9 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
             return detailIntent
         }
 
-        @JvmStatic fun openNoteForReply(
+        @JvmStatic
+        @Suppress("LongParameterList")
+        fun openNoteForReply(
             activity: Activity?,
             noteId: String?,
             shouldShowKeyboard: Boolean,

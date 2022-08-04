@@ -38,7 +38,6 @@ import org.wordpress.android.viewmodel.helpers.ConnectionStatus.AVAILABLE
 import javax.inject.Inject
 import javax.inject.Named
 
-@Suppress("TooManyFunctions")
 class HistoryViewModel @Inject constructor(
     private val dispatcher: Dispatcher,
     private val resourceProvider: ResourceProvider,

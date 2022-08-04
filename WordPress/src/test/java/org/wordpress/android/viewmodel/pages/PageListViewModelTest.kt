@@ -446,7 +446,6 @@ class PageListViewModelTest : BaseUnitTest() {
         assertNull(pageItem.author)
     }
 
-    @Suppress("LongParameterList")
     private fun buildPageModel(
         id: Int,
         date: Date = Date(0),

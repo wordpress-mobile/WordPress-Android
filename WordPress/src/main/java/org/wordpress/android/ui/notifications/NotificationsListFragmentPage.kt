@@ -479,6 +479,7 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
             return detailIntent
         }
 
+        @Suppress("LongParameterList")
         fun openNoteForReply(
             activity: Activity?,
             noteId: String?,

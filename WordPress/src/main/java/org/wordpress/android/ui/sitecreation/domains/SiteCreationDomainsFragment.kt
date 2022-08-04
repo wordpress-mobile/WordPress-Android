@@ -20,7 +20,6 @@ import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.DisplayUtilsWrapper
 import javax.inject.Inject
 
-@Suppress("TooManyFunctions")
 @AndroidEntryPoint
 class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
     private var searchInputWithHeader: SearchInputWithHeader? = null

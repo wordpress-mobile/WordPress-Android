@@ -126,7 +126,7 @@ import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
 
-@Suppress("LargeClass", "LongMethod", "LongParameterList", "TooManyFunctions")
+@Suppress("LargeClass", "LongMethod")
 class MySiteViewModel @Inject constructor(
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     @param:Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,

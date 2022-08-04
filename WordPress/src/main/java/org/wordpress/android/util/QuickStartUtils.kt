@@ -35,7 +35,6 @@ import org.wordpress.android.ui.themes.ThemeBrowserUtils
 import org.wordpress.android.util.extensions.getColorFromAttribute
 import java.util.Locale
 
-@Suppress("TooManyFunctions")
 object QuickStartUtils {
     private val themeBrowserUtils = ThemeBrowserUtils()
     private const val QUICK_START_REMINDER_INTERVAL = (24 * 60 * 60 * 1000 * 2).toLong() // two days
