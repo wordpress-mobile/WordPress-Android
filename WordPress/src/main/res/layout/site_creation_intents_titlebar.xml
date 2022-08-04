@@ -24,7 +24,6 @@
     <Button
         android:id="@+id/skipButton"
         style="@style/SiteCreationSkipButton"
-        android:textSize="@dimen/text_sz_medium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end"
