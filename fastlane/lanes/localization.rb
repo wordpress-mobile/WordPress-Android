@@ -156,9 +156,9 @@ platform :android do
     files = {
       release_note: File.join(metadata_folder, 'release_notes.txt'),
       release_note_short: File.join(metadata_folder, 'release_notes_short.txt'),
-      'short-description': File.join(metadata_folder, 'short_description.txt'),
-      'app-store-description': File.join(metadata_folder, 'full_description.txt'),
-      'app-store-name': File.join(metadata_folder, 'title.txt'),
+      play_store_promo: File.join(metadata_folder, 'short_description.txt'),
+      play_store_desc: File.join(metadata_folder, 'full_description.txt'),
+      play_store_app_title: File.join(metadata_folder, 'title.txt'),
     }
 
     update_po_file_for_metadata_localization(
@@ -248,9 +248,9 @@ platform :android do
     values = options[:version].split('.')
     files = {
       "release_note_#{values[0]}#{values[1]}" => { desc: "changelogs/#{options[:build_number]}.txt", max_size: 500, alternate_key: "release_note_short_#{values[0]}#{values[1]}" },
-      'app-store-name': { desc: 'title.txt', max_size: 30 },
-      'short-description': { desc: 'short_description.txt', max_size: 80 },
-      'app-store-description': { desc: 'full_description.txt', max_size: 4000 }
+      play_store_app_title: { desc: 'title.txt', max_size: 30 },
+      play_store_promo: { desc: 'short_description.txt', max_size: 80 },
+      play_store_desc: { desc: 'full_description.txt', max_size: 4000 }
     }
 
     delete_old_changelogs(app: 'jetpack', build: options[:build_number])
