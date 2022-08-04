@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.sitecreation.domains
 
-import junit.framework.Assert.assertEquals
-import junit.framework.Assert.assertFalse
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Test
 
 class SiteCreationDomainSanitizerTest {
@@ -32,9 +32,11 @@ class SiteCreationDomainSanitizerTest {
     }
 
     @Test
-    fun `Remove all characters that are not alphanumeric`() {
-        val result = domainSanitizer.sanitizeDomainQuery("test_this-site.wordpress.com")
-        assertEquals(result, "testthissite")
+    fun `Verify blacklisted terms are removed`() {
+        domainSanitizer.blacklistedTerms.forEach { term ->
+            val result = domainSanitizer.sanitizeDomainQuery("testsubdomain.$term.com")
+            assertEquals(result, "testsubdomain..com")
+        }
     }
 
     @Test

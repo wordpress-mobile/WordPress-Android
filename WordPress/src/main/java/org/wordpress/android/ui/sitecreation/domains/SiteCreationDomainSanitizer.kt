@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.sitecreation.domains
 
+import androidx.annotation.VisibleForTesting
 import java.util.Locale
 import javax.inject.Inject
 
@@ -58,35 +59,37 @@ class SiteCreationDomainSanitizer
      */
     private val String.removeDisallowedTerms: String
         get() {
-            val blacklistedStrings = arrayOf(
-                    "automattic",
-                    // "wordpress", // We won't mimic the API behavior here since it's producing a bad UX.
-                    "wpcomstaging",
-                    "paypal",
-                    "bankofamerica",
-                    "wellsfargo",
-                    "westernunion",
-                    "woocommerce",
-                    "woothemes",
-                    "facebook",
-                    ".blogspot.",
-                    "timboydaustralian.com",
-                    "dssvermoegensverwaltung",
-                    "alertwebmail",
-                    "updaterenewbilling",
-                    "securebilling",
-                    "webmail-postmaster",
-                    "webmail-receipt",
-                    "inboxmail-dataplugs",
-                    "mailerdaemon",
-            )
-
             var sanitizedQuery = replace(".wordpress.com", "")
 
-            blacklistedStrings.forEach {
+            blacklistedTerms.forEach {
                 sanitizedQuery = sanitizedQuery.replace(it, "")
             }
 
             return sanitizedQuery
         }
+
+    @Suppress("SpellCheckingInspection")
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    val blacklistedTerms = arrayOf(
+            "automattic",
+            // "wordpress", // We won't mimic the API behavior here since it's producing a bad UX.
+            "wpcomstaging",
+            "paypal",
+            "bankofamerica",
+            "wellsfargo",
+            "westernunion",
+            "woocommerce",
+            "woothemes",
+            "facebook",
+            ".blogspot.",
+            "timboydaustralian.com",
+            "dssvermoegensverwaltung",
+            "alertwebmail",
+            "updaterenewbilling",
+            "securebilling",
+            "webmail-postmaster",
+            "webmail-receipt",
+            "inboxmail-dataplugs",
+            "mailerdaemon",
+    )
 }
