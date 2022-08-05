@@ -8,13 +8,6 @@
     android:background="@color/jetpack_powered_bottom_sheet_background"
     android:orientation="vertical">
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_end="130dp" />
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/content_recycler_view"
         android:layout_width="match_parent"
@@ -49,7 +42,7 @@
         app:layout_constraintBottom_toTopOf="@id/secondary_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_goneMarginBottom="@dimen/margin_extra_large" />
+        app:layout_goneMarginBottom="@dimen/margin_extra_extra_medium_large" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/secondary_button"
