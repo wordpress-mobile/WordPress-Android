@@ -104,7 +104,6 @@ import org.wordpress.android.ui.stats.StatsConstants;
 import org.wordpress.android.ui.stats.StatsTimeframe;
 import org.wordpress.android.ui.stats.StatsViewType;
 import org.wordpress.android.ui.stats.refresh.StatsActivity;
-import org.wordpress.android.ui.stats.refresh.StatsActivity.StatsLaunchedFrom;
 import org.wordpress.android.ui.stats.refresh.StatsViewAllActivity;
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection;
 import org.wordpress.android.ui.stats.refresh.lists.detail.StatsDetailActivity;
@@ -560,24 +559,6 @@ public class ActivityLauncher {
             ToastUtils.showToast(context, R.string.stats_cannot_be_started, ToastUtils.Duration.SHORT);
         } else {
             StatsActivity.start(context, site);
-        }
-    }
-
-    public static void openBlogStats(Context context, SiteModel site) {
-        if (site == null) {
-            AppLog.e(T.STATS, "SiteModel is null when opening the stats.");
-            AnalyticsTracker.track(
-                    STATS_ACCESS_ERROR,
-                    ActivityLauncher.class.getName(),
-                    "NullPointerException",
-                    "Failed to open Stats because of the null SiteModel"
-            );
-            ToastUtils.showToast(context, R.string.stats_cannot_be_started, ToastUtils.Duration.SHORT);
-        } else {
-            Intent intent = new Intent(context, StatsActivity.class);
-            intent.putExtra(StatsActivity.ARG_LAUNCHED_FROM, StatsLaunchedFrom.FEATURE_ANNOUNCEMENT);
-            intent.putExtra(WordPress.SITE, site);
-            context.startActivity(intent);
         }
     }
 

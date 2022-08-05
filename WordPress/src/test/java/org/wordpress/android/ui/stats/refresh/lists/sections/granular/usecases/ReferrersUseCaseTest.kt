@@ -50,7 +50,6 @@ import org.wordpress.android.ui.stats.refresh.utils.ReferrerPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.util.config.StatsRevampV2FeatureConfig
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Date
 
@@ -72,7 +71,6 @@ class ReferrersUseCaseTest : BaseUnitTest() {
     @Mock lateinit var statsUtils: StatsUtils
     @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var popupMenuHandler: ReferrerPopupMenuHandler
-    @Mock lateinit var statsRevampV2FeatureConfig: StatsRevampV2FeatureConfig
     private lateinit var useCase: ReferrersUseCase
     private val firstGroupViews = 50
     private val secondGroupViews = 50
@@ -128,8 +126,7 @@ class ReferrersUseCaseTest : BaseUnitTest() {
                 statsUtils,
                 resourceProvider,
                 BLOCK_DETAIL,
-                popupMenuHandler,
-                statsRevampV2FeatureConfig
+                popupMenuHandler
         )
         whenever(statsSiteProvider.siteModel).thenReturn(site)
         whenever((selectedDateProvider.getSelectedDate(statsGranularity))).thenReturn(selectedDate)
@@ -152,7 +149,6 @@ class ReferrersUseCaseTest : BaseUnitTest() {
                 )
         ).thenReturn(contentDescription)
         whenever(statsUtils.toFormattedString(any<Int>(), any())).then { (it.arguments[0] as Int).toString() }
-        whenever(statsRevampV2FeatureConfig.isEnabled()).thenReturn(true)
     }
 
     @Ignore @Test
@@ -227,8 +223,7 @@ class ReferrersUseCaseTest : BaseUnitTest() {
                 statsUtils,
                 resourceProvider,
                 BLOCK,
-                popupMenuHandler,
-                statsRevampV2FeatureConfig
+                popupMenuHandler
         )
 
         val forced = false

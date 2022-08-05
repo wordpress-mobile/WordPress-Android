@@ -34,7 +34,6 @@ import org.wordpress.android.ui.stats.refresh.utils.MILLION
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.util.config.StatsRevampV2FeatureConfig
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -46,7 +45,6 @@ class LatestPostSummaryUseCase
     private val statsSiteProvider: StatsSiteProvider,
     private val latestPostSummaryMapper: LatestPostSummaryMapper,
     private val analyticsTracker: AnalyticsTrackerWrapper,
-    private val statsRevampV2Feature: StatsRevampV2FeatureConfig,
     private val popupMenuHandler: ItemPopupMenuHandler,
     private val statsUtils: StatsUtils,
     private val contentDescriptionHelper: ContentDescriptionHelper
@@ -82,7 +80,7 @@ class LatestPostSummaryUseCase
     private fun buildNullableUiModel(domainModel: InsightsLatestPostModel?): MutableList<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
 
-        if (BuildConfig.IS_JETPACK_APP && statsRevampV2Feature.isEnabled()) {
+        if (BuildConfig.IS_JETPACK_APP) {
             items.add(buildTitleViewMore(domainModel))
             items.add(latestPostSummaryMapper.buildLatestPostItem(domainModel))
             if (domainModel != null && domainModel.hasData()) items.add(buildQuickScanItems(domainModel))
@@ -188,7 +186,7 @@ class LatestPostSummaryUseCase
                     navigateAction = ListItemInteraction.create(this::onAddNewPostClick)
             )
             model.hasData() -> {
-                if (!statsRevampV2Feature.isEnabled()) {
+                if (!BuildConfig.IS_JETPACK_APP) {
                     Link(
                             text = R.string.stats_insights_view_more,
                             navigateAction = ListItemInteraction.create(
