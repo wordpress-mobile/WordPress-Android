@@ -1,0 +1,5 @@
+20.4:
+- Performance-Verbesserungen der Galerie/des Bild-Blocks im Block-Editor.
+- Korrekt angezeigte Video-Blöcke (sowohl im Web als auch in der App) für Websites, für die VideoPress aktiviert ist.
+- Block-Inserter ermöglicht das bessere Organisieren von Block-Typen in Sammlungen.
+- Anpassung des Abstands in der Fußnote des Alt-Texts in Bild-Blöcken.
