@@ -42,6 +42,7 @@ import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.JetpackBrandingUtils
+import org.wordpress.android.util.JetpackBrandingUtils.Screen
 import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.SnackbarItem
 import org.wordpress.android.util.SnackbarItem.Action
@@ -333,6 +334,7 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
 
                 if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
                     jetpackBannerView.setOnClickListener {
+                        jetpackBrandingUtils.trackBannerTapped(Screen.READER)
                         JetpackPoweredBottomSheetFragment
                                 .newInstance()
                                 .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG)

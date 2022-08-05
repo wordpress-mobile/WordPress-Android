@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.posts
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.Intent
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner

@@ -33,7 +33,6 @@ import java.time.DayOfWeek
 import javax.inject.Inject
 import javax.inject.Named
 
-@Suppress("TooManyFunctions")
 class BloggingRemindersViewModel @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val bloggingRemindersManager: BloggingRemindersManager,

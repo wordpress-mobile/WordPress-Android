@@ -7,22 +7,38 @@ config:
 
 complexity:
   LongParameterList:
+    ignoreDefaultParameters: true
     ignoreAnnotated: ['Inject', 'Composable']
   LongMethod:
     ignoreAnnotated: ['Composable']
+  TooManyFunctions:
+    active: false
+
+coroutines:
+  GlobalCoroutineUsage:
+    active: true
 
 naming:
   FunctionNaming:
     ignoreAnnotated: ['Composable']
 
+potential-bugs:
+  MissingWhenCase:
+    allowElseExpression: false
+
 style:
-  ForbiddenComment:
-    values:
-      - 'FIXME:'
-      - 'STOPSHIP:'
+  DataClassShouldBeImmutable:
+    active: true
   MagicNumber:
     ignoreEnums: true
     ignoreAnnotated: ['Composable']
     ignorePropertyDeclaration: true
+  SpacingBetweenPackageAndImports:
+    active: true
+  UnusedImports:
+    active: true
   UnusedPrivateMember:
     ignoreAnnotated: ['Composable']
+  WildcardImport:
+    active: true
+    excludeImports: []

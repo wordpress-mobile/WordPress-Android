@@ -410,6 +410,7 @@ Language: cs_CZ
     <string name="gutenberg_native_slash_inserter_results">Výsledky lomítka</string>
     <string name="gutenberg_native_s_converted_to_regular_blocks">%s převeden na běžné bloky</string>
     <string name="gutenberg_native_s_block">%s blok</string>
+    <string name="gutenberg_native_opacity">Průhlednost</string>
     <string name="gutenberg_native_media_options">Nastavení médií</string>
     <string name="gutenberg_native_invalid_url_audio_file_not_found">Neplatná URL. Audio soubor se nepodařilo nalézt.</string>
     <string name="gutenberg_native_insert_crosspost">Vložit crosspost</string>

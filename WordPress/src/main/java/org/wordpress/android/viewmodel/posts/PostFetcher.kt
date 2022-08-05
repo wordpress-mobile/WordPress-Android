@@ -40,6 +40,7 @@ class PostFetcher constructor(
     }
 
     // TODO: We should implement batch fetching when it's available in the API
+    @Suppress("ForbiddenComment")
     fun fetchPosts(site: SiteModel, remoteItemIds: List<RemoteId>) {
         remoteItemIds
                 .filter {

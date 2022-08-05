@@ -17,6 +17,7 @@ import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFra
 import org.wordpress.android.ui.stats.StatsTimeframe
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.JetpackBrandingUtils
+import org.wordpress.android.util.JetpackBrandingUtils.Screen.STATS
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -36,6 +37,7 @@ class StatsActivity : LocaleAwareActivity() {
 
                 if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
                     jetpackBanner.root.setOnClickListener {
+                        jetpackBrandingUtils.trackBannerTapped(STATS)
                         JetpackPoweredBottomSheetFragment
                                 .newInstance()
                                 .show(supportFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
@@ -95,7 +97,6 @@ class StatsActivity : LocaleAwareActivity() {
 
     enum class StatsLaunchedFrom {
         STATS_WIDGET,
-        NOTIFICATIONS,
-        FEATURE_ANNOUNCEMENT
+        NOTIFICATIONS
     }
 }

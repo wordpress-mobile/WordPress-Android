@@ -180,6 +180,7 @@ class ScanStateListItemsBuilder @Inject constructor(
         return items
     }
 
+    @Suppress("ForbiddenComment")
     private fun buildScanningStateItems(
         mostRecentStatus: ScanProgressStatus?,
         currentProgress: ScanProgressStatus?

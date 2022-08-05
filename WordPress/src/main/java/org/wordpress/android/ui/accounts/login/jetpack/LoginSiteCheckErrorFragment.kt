@@ -19,7 +19,6 @@ import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.util.ActivityUtils
 import javax.inject.Inject
 
-@Suppress("TooManyFunctions")
 class LoginSiteCheckErrorFragment : Fragment(R.layout.jetpack_login_empty_view) {
     companion object {
         const val TAG = "LoginSiteCheckErrorFragment"

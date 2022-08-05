@@ -12,6 +12,7 @@ import javax.inject.Inject
 class XPostsCapabilityChecker @Inject constructor(
     private val xPostsStore: XPostsStore
 ) {
+    @Suppress("GlobalCoroutineUsage")
     fun retrieveCapability(site: SiteModel, callback: Consumer<Boolean>) {
         GlobalScope.launch(Dispatchers.IO) {
             val capability = isCapable(site)

@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-07-11 18:30:22+0000
+Translation-Revision-Date: 2022-07-26 11:10:59+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: en_GB
 -->
 <resources>
+    <string name="wp_jetpack_continue_to_notifications">Continue to Notifications</string>
+    <string name="wp_jetpack_continue_to_reader">Continue to Reader</string>
+    <string name="wp_jetpack_continue_to_stats">Continue to Stats</string>
+    <string name="wp_jetpack_get_new_jetpack_app">Get the new Jetpack app</string>
+    <string name="gutenberg_native_gradient">Gradient</string>
+    <string name="gutenberg_native_invalid_url">Invalid URL.</string>
+    <string name="gutenberg_native_jetpack_powered">Jetpack powered</string>
+    <string name="wp_jetpack_powered_features">Stats, Reader, Notifications, and other features are powered by Jetpack.</string>
+    <string name="gutenberg_native_upgrade_your_plan_to_upload_audio">Upgrade your plan to upload audio</string>
+    <string name="gutenberg_native_upgrade_your_plan_to_use_video_covers">Upgrade your plan to use video covers</string>
     <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery">Problem displaying block. \nTap to attempt block recovery.</string>
     <string name="stats_revamp_v2_update_alert_message">Updated to New Insights to help you understand how your content is performing and what\'s resonating with your audience.</string>
     <string name="stats_insights_like_guide_card">⭐️ Your latest post %1$s has received %2$s like.</string>
@@ -513,6 +523,7 @@ Language: en_GB
     <string name="gutenberg_native_s_converted_to_regular_blocks">%s converted to normal blocks</string>
     <string name="gutenberg_native_invalid_url_audio_file_not_found">Invalid URL. Audio file not found.</string>
     <string name="gutenberg_native_media_options">Media options</string>
+    <string name="gutenberg_native_opacity">Opacity</string>
     <string name="gutenberg_native_double_tap_to_open_action_sheet_to_add_image_or_video">Double tap to open action sheet to add image or video</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_add_image_or_video">Double tap to open bottom sheet to add image or video</string>
     <string name="gutenberg_native_drag_to_adjust_focal_point">Drag to adjust focal point</string>

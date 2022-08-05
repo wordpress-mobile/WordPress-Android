@@ -226,8 +226,6 @@ class AppPrefsWrapper @Inject constructor() {
 
     fun getSkippedPromptDay(siteId: Int): Date? = AppPrefs.getSkippedPromptDay(siteId)
 
-    fun markStatsRevampFeatureAnnouncementAsDisplayed() = AppPrefs.setShouldDisplayStatsRevampFeatureAnnouncement(false)
-
     fun getIsFirstBloggingPromptsOnboarding(): Boolean = AppPrefs.getIsFirstBloggingPromptsOnboarding()
 
     fun saveFirstBloggingPromptsOnboarding(isFirstTime: Boolean) {

@@ -30,7 +30,6 @@ import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
 
-@Suppress("TooManyFunctions")
 class ConversationNotificationsViewModel @Inject constructor(
     private val followCommentsHandler: ReaderFollowCommentsHandler,
     private val readerPostTableWrapper: ReaderPostTableWrapper,
