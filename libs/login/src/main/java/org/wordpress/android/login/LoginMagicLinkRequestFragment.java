@@ -362,7 +362,7 @@ public class LoginMagicLinkRequestFragment extends Fragment {
             if (mForceRequestAtStart) {
                 FragmentManager fragmentManager = getFragmentManager();
                 if (fragmentManager != null) {
-                    fragmentManager.popBackStackImmediate();
+                    fragmentManager.popBackStack();
                 }
             }
             mLoginListener.showMagicLinkSentScreen(mEmail, mAllowPassword);
