@@ -75,7 +75,7 @@ class ActivityLogDetailFragment : Fragment(R.layout.activity_log_item_detail) {
 
         if (jetpackBrandingUtils.shouldShowJetpackBranding()) {
             jetpackBadge.root.isVisible = true
-            jetpackBadge.root.setOnClickListener {
+            jetpackBadge.jetpackPoweredBadge.setOnClickListener {
                 jetpackBrandingUtils.trackBadgeTapped(ACTIVITY_LOG_DETAIL)
                 viewModel.showJetpackPoweredBottomSheet()
             }

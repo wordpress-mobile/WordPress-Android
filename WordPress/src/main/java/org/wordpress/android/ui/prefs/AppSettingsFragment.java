@@ -246,7 +246,7 @@ public class AppSettingsFragment extends PreferenceFragment
     private void addJetpackBadgeAsFooterIfEnabled(LayoutInflater inflater, ListView listView) {
         if (mJetpackBrandingUtils.shouldShowJetpackBranding()) {
             final JetpackBadgeFooterBinding binding = JetpackBadgeFooterBinding.inflate(inflater);
-            binding.jetpackBadge.getRoot().setOnClickListener(v -> {
+            binding.footerJetpackBadge.jetpackPoweredBadge.setOnClickListener(v -> {
                     mJetpackBrandingUtils.trackBadgeTapped(Screen.APP_SETTINGS);
                     new JetpackPoweredBottomSheetFragment().show(
                             ((AppCompatActivity) getActivity()).getSupportFragmentManager(),
