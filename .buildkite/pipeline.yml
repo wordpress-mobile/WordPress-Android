@@ -46,7 +46,7 @@ steps:
   #################
   # Unit Tests
   #################
-  - group: "🛠 Unit Tests"
+  - group: "🔬 Unit Tests"
     steps:
       - label: "Test WordPress"
         command: |
@@ -69,7 +69,7 @@ steps:
   #################
   # Instrumented (aka UI) Tests
   #################
-  - label: "Instrumented tests"
+  - label: "🔬 Instrumented tests"
     command: ".buildkite/commands/instrumented-tests.sh"
     plugins: *common_plugins
     artifact_paths:
