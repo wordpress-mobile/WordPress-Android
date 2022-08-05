@@ -1,0 +1,5 @@
+20.4:
+- Förbättringar av galleri-/bildblocksprestanda i blockredigeraren.
+- Korrekt visade videoblock (både vad gäller webben och appen) för VideoPress-aktiverade webbplatser.
+- Möjlighet att organisera blocktyper i samlingar med blockinfogaren.
+- Avståndsjustering i bildblockets fotnot för alternativ text.

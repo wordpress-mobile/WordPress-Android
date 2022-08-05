@@ -1,0 +1,5 @@
+20,4:
+- Miglioramenti delle prestazioni del blocco galleria/immagine nell'editor a blocchi.
+- Blocchi video correttamente visualizzati (sia web che app) per i siti abilitati per VideoPress.
+- L'inseritore di blocchi consente di organizzare meglio i tipi di blocchi nelle raccolte.
+- Regolazione della spaziatura delle note a piè di pagina del testo alternativo nei blocchi immagine.
