@@ -120,9 +120,9 @@ platform :android do
     files = {
       release_note: File.join(metadata_folder, 'release_notes.txt'),
       release_note_short: File.join(metadata_folder, 'release_notes_short.txt'),
-      play_store_promo: File.join(metadata_folder, 'short_description.txt'),
-      play_store_desc: File.join(metadata_folder, 'full_description.txt'),
       play_store_app_title: File.join(metadata_folder, 'title.txt'),
+      play_store_promo: File.join(metadata_folder, 'short_description.txt'),
+      play_store_desc: File.join(metadata_folder, 'full_description.txt')
     }
     files.merge!((1..9).map do |n|
       [:"play_store_screenshot_#{n}", File.join(metadata_folder, "screenshot_#{n}.txt")]
@@ -156,9 +156,9 @@ platform :android do
     files = {
       release_note: File.join(metadata_folder, 'release_notes.txt'),
       release_note_short: File.join(metadata_folder, 'release_notes_short.txt'),
-      play_store_promo: File.join(metadata_folder, 'short_description.txt'),
-      play_store_desc: File.join(metadata_folder, 'full_description.txt'),
       play_store_app_title: File.join(metadata_folder, 'title.txt'),
+      play_store_promo: File.join(metadata_folder, 'short_description.txt'),
+      play_store_desc: File.join(metadata_folder, 'full_description.txt')
     }
 
     update_po_file_for_metadata_localization(
