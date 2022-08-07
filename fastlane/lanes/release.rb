@@ -209,7 +209,8 @@ platform :android do
       buildkite_organization: 'automattic',
       buildkite_pipeline: 'wordpress-android',
       branch: options[:branch_to_build] || git_branch,
-      pipeline_file: 'beta-builds.yml'
+      pipeline_file: 'beta-builds.yml',
+      message: 'Beta Builds'
     )
   end
 
@@ -228,7 +229,8 @@ platform :android do
       buildkite_organization: 'automattic',
       buildkite_pipeline: 'wordpress-android',
       branch: options[:branch_to_build] || git_branch,
-      pipeline_file: 'release-builds.yml'
+      pipeline_file: 'release-builds.yml',
+      message: 'Release Builds'
     )
   end
 
