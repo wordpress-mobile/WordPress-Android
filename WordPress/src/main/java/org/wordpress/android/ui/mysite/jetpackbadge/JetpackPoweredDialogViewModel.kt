@@ -32,7 +32,7 @@ class JetpackPoweredDialogViewModel @Inject constructor(
         _uiState.value = UiState(
                 listOf(
                         Illustration(R.raw.wp2jp),
-                        Title(UiStringRes(string.wp_jetpack_powered)),
+                        Title(UiStringRes(string.wp_jetpack_powered_better_with_jetpack)),
                         Caption(UiStringRes(string.wp_jetpack_powered_features))
                 )
         )

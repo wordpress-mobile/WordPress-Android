@@ -13,7 +13,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_end="160dp" />
+        app:layout_constraintGuide_end="160dp"
+        tools:ignore="InconsistentLayout"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/content_recycler_view"

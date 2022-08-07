@@ -229,7 +229,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment
         if (mJetpackBrandingUtils.shouldShowJetpackBranding()) {
             LayoutInflater inflater = LayoutInflater.from(getContext());
             final JetpackBadgeFooterBinding binding = JetpackBadgeFooterBinding.inflate(inflater);
-            binding.jetpackBadge.getRoot().setOnClickListener(v -> {
+            binding.footerJetpackBadge.jetpackPoweredBadge.setOnClickListener(v -> {
                 mJetpackBrandingUtils.trackBadgeTapped(Screen.NOTIFICATIONS_SETTINGS);
                 new JetpackPoweredBottomSheetFragment().show(
                         ((AppCompatActivity) getActivity()).getSupportFragmentManager(),
