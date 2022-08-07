@@ -128,6 +128,6 @@ class TotalStatsMapper @Inject constructor(
     companion object {
         private const val DAY_COUNT_FOR_CURRENT_WEEK = 7 // Last 7 days
         private const val DAY_COUNT_FOR_PREVIOUS_WEEK = 7 // Last 7 days before the current week
-        const val DAY_COUNT_TOTAL = DAY_COUNT_FOR_PREVIOUS_WEEK + DAY_COUNT_FOR_CURRENT_WEEK
+        private const val DAY_COUNT_TOTAL = DAY_COUNT_FOR_PREVIOUS_WEEK + DAY_COUNT_FOR_CURRENT_WEEK
     }
 }
