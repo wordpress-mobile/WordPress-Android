@@ -293,7 +293,7 @@ abstract class CommentsDao {
         val iLike: Boolean
     ) {
         @Ignore
-        var level: Int = 0
+        val level: Int = 0
     }
 
     companion object {

@@ -138,9 +138,9 @@ open class SiteStore
     ) : Payload<BaseNetworkError>()
 
     data class RefreshSitesXMLRPCPayload(
-        @JvmField var username: String = "",
-        @JvmField var password: String = "",
-        @JvmField var url: String = ""
+        @JvmField val username: String = "",
+        @JvmField val password: String = "",
+        @JvmField val url: String = ""
     ) : Payload<BaseNetworkError>()
 
     data class FetchSitesPayload @JvmOverloads constructor(
@@ -592,7 +592,7 @@ open class SiteStore
     data class OnURLChecked(
         @JvmField val url: String,
         @JvmField val isWPCom: Boolean = false,
-        var siteError: SiteError? = null
+        val siteError: SiteError? = null
     ) : OnChanged<SiteError>() {
         init {
             this.error = siteError

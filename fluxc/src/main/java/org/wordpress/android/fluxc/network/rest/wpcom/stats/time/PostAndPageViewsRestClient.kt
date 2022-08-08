@@ -63,7 +63,7 @@ class PostAndPageViewsRestClient
     }
 
     data class PostAndPageViewsResponse(
-        @SerializedName("date") var date: Date? = null,
+        @SerializedName("date") val date: Date? = null,
         @SerializedName("days") val days: Map<String, ViewsResponse>,
         @SerializedName("period") val statsGranularity: String?
     ) {
