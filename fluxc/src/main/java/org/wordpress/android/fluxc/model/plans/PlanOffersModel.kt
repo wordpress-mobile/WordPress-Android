@@ -7,20 +7,20 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 @SuppressLint("ParcelCreator")
 data class PlanOffersModel(
-    var planIds: List<Int>?,
-    var features: List<Feature>?,
-    var name: String?,
-    var shortName: String?,
-    var tagline: String?,
-    var description: String?,
-    var iconUrl: String?
+    val planIds: List<Int>?,
+    val features: List<Feature>?,
+    val name: String?,
+    val shortName: String?,
+    val tagline: String?,
+    val description: String?,
+    val iconUrl: String?
 ) : Parcelable {
     @Parcelize
     @SuppressLint("ParcelCreator")
     data class Feature(
-        var id: String?,
-        var name: String?,
-        var description: String?
+        val id: String?,
+        val name: String?,
+        val description: String?
     ) : Parcelable {
         override fun equals(other: Any?): Boolean {
             if (this === other) {

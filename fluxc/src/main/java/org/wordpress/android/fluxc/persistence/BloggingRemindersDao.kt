@@ -25,16 +25,16 @@ abstract class BloggingRemindersDao {
     @Entity(tableName = "BloggingReminders")
     data class BloggingReminders(
         @PrimaryKey
-        var localSiteId: Int,
-        var monday: Boolean = false,
-        var tuesday: Boolean = false,
-        var wednesday: Boolean = false,
-        var thursday: Boolean = false,
-        var friday: Boolean = false,
-        var saturday: Boolean = false,
-        var sunday: Boolean = false,
-        var hour: Int = 10,
-        var minute: Int = 0,
-        var isPromptRemindersOptedIn: Boolean = false
+        val localSiteId: Int,
+        val monday: Boolean = false,
+        val tuesday: Boolean = false,
+        val wednesday: Boolean = false,
+        val thursday: Boolean = false,
+        val friday: Boolean = false,
+        val saturday: Boolean = false,
+        val sunday: Boolean = false,
+        val hour: Int = 10,
+        val minute: Int = 0,
+        val isPromptRemindersOptedIn: Boolean = false
     )
 }

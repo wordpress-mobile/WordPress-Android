@@ -502,8 +502,9 @@ class NotificationStore @Inject constructor(
             var rowsAffected = 0
             if (result.success) {
                 result.notifications?.forEach {
-                    it.read = true // Just in case it wasn't set by the calling client
-                    rowsAffected += notificationSqlUtils.insertOrUpdateNotification(it)
+                    // Just in case it wasn't set by the calling client
+                    val note = it.copy(read = true)
+                    rowsAffected += notificationSqlUtils.insertOrUpdateNotification(note)
                 }
             }
 
