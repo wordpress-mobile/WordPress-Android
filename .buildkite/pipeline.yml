@@ -10,7 +10,7 @@ steps:
   #################
   - group: "🕵️‍♂️ Linters"
     steps:
-      - label: "checkstyle"
+      - label: "🕵️ checkstyle"
         command: |
           cp gradle.properties-example gradle.properties
           ./gradlew checkstyle
@@ -18,7 +18,7 @@ steps:
         artifact_paths:
           - "**/build/reports/checkstyle/checkstyle.*"
 
-      - label: "detekt"
+      - label: "🕵️ detekt"
         command: |
           cp gradle.properties-example gradle.properties
           ./gradlew detekt
@@ -26,12 +26,12 @@ steps:
         artifact_paths:
           - "**/build/reports/detekt/detekt.html"
 
-      - label: "Lint WordPress"
+      - label: "🕵️ Lint WordPress"
         command: ".buildkite/commands/lint.sh wordpress"
         artifact_paths:
           - "**/build/reports/lint-results*.*"
 
-      - label: "Lint Jetpack"
+      - label: "🕵️ Lint Jetpack"
         command: ".buildkite/commands/lint.sh jetpack"
         artifact_paths:
           - "**/build/reports/lint-results*.*"
@@ -48,19 +48,19 @@ steps:
   #################
   - group: "🔬 Unit Tests"
     steps:
-      - label: "Test WordPress"
+      - label: "🔬 Test WordPress"
         command: |
           cp gradle.properties-example gradle.properties
           ./gradlew testWordpressVanillaRelease
         plugins: *common_plugins
 
-      - label: "Test Processors"
+      - label: "🔬 Test Processors"
         command: |
           cp gradle.properties-example gradle.properties
           ./gradlew :libs:processors:test
         plugins: *common_plugins
 
-      - label: "Test Image Editor"
+      - label: "🔬 Test Image Editor"
         command: |
           cp gradle.properties-example gradle.properties
           ./gradlew :libs:image-editor:test

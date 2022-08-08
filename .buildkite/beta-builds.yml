@@ -9,13 +9,13 @@ common_params:
 
 steps:
 
-  - label: "Lint WordPress"
+  - label: "🕵️ Lint WordPress"
     command: ".buildkite/commands/lint.sh wordpress"
     key: wplint
     artifact_paths:
       - "**/build/reports/lint-results*.*"
 
-  - label: "🔬 Lint Jetpack"
+  - label: "🕵️ Lint Jetpack"
     command: ".buildkite/commands/lint.sh jetpack"
     key: jplint
     artifact_paths:
