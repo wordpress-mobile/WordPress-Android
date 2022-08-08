@@ -110,7 +110,7 @@ class JetpackStore
 
     data class OnJetpackInstalled(
         val success: Boolean,
-        var causeOfChange: JetpackAction
+        val causeOfChange: JetpackAction
     ) : Store.OnChanged<JetpackInstallError>() {
         constructor(error: JetpackInstallError, causeOfChange: JetpackAction) :
                 this(success = false, causeOfChange = causeOfChange) {
@@ -190,7 +190,9 @@ class JetpackStore
     ) : OnChangedError
 
     // Actions
-    data class OnActivateStatsModule(var causeOfChange: JetpackAction) : Store.OnChanged<ActivateStatsModuleError>() {
+    data class OnActivateStatsModule(
+        val causeOfChange: JetpackAction
+    ) : Store.OnChanged<ActivateStatsModuleError>() {
         constructor(
             error: ActivateStatsModuleError,
             causeOfChange: JetpackAction
