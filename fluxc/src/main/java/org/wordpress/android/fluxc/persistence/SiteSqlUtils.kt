@@ -107,6 +107,7 @@ class SiteSqlUtils
      * 5. Exists in the DB, originally an XML-RPC site, and matches by XMLRPC_URL -> UPDATE
      * 6. Not matching any previous cases -> INSERT
      */
+    @Suppress("LongMethod", "ReturnCount")
     @Throws(DuplicateSiteException::class)
     fun insertOrUpdateSite(site: SiteModel?): Int {
         if (site == null) {

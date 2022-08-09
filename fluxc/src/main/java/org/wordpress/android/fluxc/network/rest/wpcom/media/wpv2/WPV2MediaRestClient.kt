@@ -216,6 +216,7 @@ class WPV2MediaRestClient @Inject constructor(
         }
     }
 
+    @Suppress("ReturnCount")
     private fun Response.parseUploadError(): MediaError {
         val mediaError = MediaError(MediaErrorType.fromHttpStatusCode(code))
         mediaError.statusCode = code

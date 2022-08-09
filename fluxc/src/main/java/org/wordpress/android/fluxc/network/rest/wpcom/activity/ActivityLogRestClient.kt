@@ -66,8 +66,7 @@ class ActivityLogRestClient @Inject constructor(
     @Named("regular") requestQueue: RequestQueue,
     accessToken: AccessToken,
     userAgent: UserAgent
-) :
-        BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {
+) : BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {
     suspend fun fetchActivity(payload: FetchActivityLogPayload, number: Int, offset: Int): FetchedActivityLogPayload {
         val url = WPCOMV2.sites.site(payload.site.siteId).activity.url
         val params = buildParams(offset, number, payload)
@@ -354,6 +353,7 @@ class ActivityLogRestClient @Inject constructor(
         return FetchedActivityLogPayload(activities, site, totalItems, number, offset)
     }
 
+    @Suppress("ReturnCount")
     private fun buildRewindStatusPayload(response: RewindStatusResponse, site: SiteModel):
             FetchedRewindStatePayload {
         val state = RewindStatusModel.State.fromValue(response.state)
