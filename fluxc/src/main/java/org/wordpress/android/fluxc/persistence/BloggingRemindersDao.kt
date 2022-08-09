@@ -9,18 +9,18 @@ import androidx.room.Query
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-abstract class BloggingRemindersDao {
+interface BloggingRemindersDao {
     @Query("SELECT * FROM BloggingReminders")
-    abstract fun getAll(): Flow<List<BloggingReminders>>
+    fun getAll(): Flow<List<BloggingReminders>>
 
     @Query("SELECT * FROM BloggingReminders WHERE localSiteId = :siteId")
-    abstract fun liveGetBySiteId(siteId: Int): Flow<BloggingReminders?>
+    fun liveGetBySiteId(siteId: Int): Flow<BloggingReminders?>
 
     @Query("SELECT * FROM BloggingReminders WHERE localSiteId = :siteId")
-    abstract suspend fun getBySiteId(siteId: Int): List<BloggingReminders>
+    suspend fun getBySiteId(siteId: Int): List<BloggingReminders>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract suspend fun insert(type: BloggingReminders): Long
+    suspend fun insert(type: BloggingReminders): Long
 
     @Entity(tableName = "BloggingReminders")
     data class BloggingReminders(
