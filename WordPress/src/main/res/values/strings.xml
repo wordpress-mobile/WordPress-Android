@@ -1376,10 +1376,6 @@
 
     <!-- Stats Revamp v2 Feature Introduction -->
     <string name="stats_revamp_v2_intro_header_title">Insights update</string>
-    <string name="stats_revamp_v2_intro_content">Insights help you understand how your content is performing and what\'s resonating with your audience.</string>
-    <string name="stats_revamp_v2_intro_content_note">Learn more in My Site &gt; Stats &gt; Insights</string>
-    <string name="stats_revamp_v2_intro_primary_button_text">Try it now</string>
-    <string name="stats_revamp_v2_intro_secondary_button_text">Remind me later</string>
     <string name="stats_revamp_v2_update_alert_message">Updated to New Insights to help you understand how your content is performing and what\'s resonating with your audience.</string>
 
     <!-- Stats refreshed widgets -->
@@ -4207,7 +4203,8 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
 
     <!-- Jetpack awareness in WordPress App -->
     <string name="wp_jetpack_powered">Jetpack powered</string>
-    <string name="wp_jetpack_powered_features">Stats, Reader, Notifications, and other features are powered by Jetpack.</string>
+    <string name="wp_jetpack_powered_better_with_jetpack">WordPress is better with Jetpack</string>
+    <string name="wp_jetpack_powered_features">The new Jetpack app has Stats, Reader, Notifications, and more that make your WordPress better.</string>
     <string name="wp_jetpack_get_new_jetpack_app">Get the new Jetpack app</string>
     <string name="wp_jetpack_continue_to_reader">Continue to Reader</string>
     <string name="wp_jetpack_continue_to_stats">Continue to Stats</string>

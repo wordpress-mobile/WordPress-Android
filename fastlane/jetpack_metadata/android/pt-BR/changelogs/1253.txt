@@ -1,4 +1,0 @@
-20.3:
-- Ao adicionar um item a um bloco de imagem na biblioteca de mídia, este item vem com um texto alternativo.
-- É possível inserir mídia de uma URL nos blocos de vídeo.
-- Use a opção de recuperação de bloco para recuperar um conteúdo inesperado ou inválido em um bloco.

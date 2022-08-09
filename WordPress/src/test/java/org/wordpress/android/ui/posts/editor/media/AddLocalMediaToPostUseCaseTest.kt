@@ -265,7 +265,6 @@ class AddLocalMediaToPostUseCaseTest : BaseUnitTest() {
         private const val LOCAL_SITE_ID = 1
         private const val FRESHLY_TAKEN = false
         private val SITE_MODEL = SiteModel().apply { id = LOCAL_SITE_ID }
-        @Suppress("LongParameterList")
         fun createAddLocalMediaToPostUseCase(
             copyMediaToAppStorageUseCase: CopyMediaToAppStorageUseCase = createCopyMediaToAppStorageUseCase(),
             optimizeMediaUseCase: OptimizeMediaUseCase = createOptimizeMediaUseCase(),

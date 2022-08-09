@@ -11,6 +11,7 @@ import javax.inject.Inject
  */
 // @Feature(JetpackPoweredBottomSheetFeatureConfig.JETPACK_POWERED_BOTTOM_SHEET_REMOTE_FIELD, true)
 @FeatureInDevelopment
+@Suppress("ForbiddenComment")
 class JetpackPoweredBottomSheetFeatureConfig @Inject constructor(
     appConfig: AppConfig
 ) : FeatureConfig(

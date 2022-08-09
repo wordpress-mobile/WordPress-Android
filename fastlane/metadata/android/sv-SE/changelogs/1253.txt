@@ -1,4 +1,0 @@
-20.3:
-– När du lägger till ett objekt i mediabiblioteket till ett bildblock så följer objektets alt-text med.
-– Du kan infoga media från en URL i videoblock.
-– Använd alternativet blockåterställning och få tillbaka oväntat eller ogiltigt innehåll i ett block.

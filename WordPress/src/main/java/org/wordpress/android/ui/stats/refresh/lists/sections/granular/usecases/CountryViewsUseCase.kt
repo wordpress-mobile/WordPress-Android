@@ -37,8 +37,8 @@ import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
 
-class CountryViewsUseCase
-constructor(
+@Suppress("LongParameterList")
+class CountryViewsUseCase constructor(
     statsGranularity: StatsGranularity,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher,

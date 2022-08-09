@@ -26,6 +26,7 @@ import org.wordpress.android.util.WPMediaUtilsWrapper
 import javax.inject.Inject
 import javax.inject.Named
 
+@Suppress("LongParameterList")
 class GifMediaInsertUseCase(
     private val context: Context,
     private val site: SiteModel,

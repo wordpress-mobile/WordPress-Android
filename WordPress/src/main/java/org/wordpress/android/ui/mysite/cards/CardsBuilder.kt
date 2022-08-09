@@ -16,7 +16,6 @@ import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
 import javax.inject.Inject
 
-@Suppress("LongParameterList")
 class CardsBuilder @Inject constructor(
     private val buildConfigWrapper: BuildConfigWrapper,
     private val quickStartDynamicCardsFeatureConfig: QuickStartDynamicCardsFeatureConfig,
@@ -25,6 +24,7 @@ class CardsBuilder @Inject constructor(
     private val quickLinkRibbonBuilder: QuickLinkRibbonBuilder,
     private val dashboardCardsBuilder: CardsBuilder
 ) {
+    @Suppress("LongParameterList")
     fun build(
         quickActionsCardBuilderParams: QuickActionsCardBuilderParams,
         domainRegistrationCardBuilderParams: DomainRegistrationCardBuilderParams,

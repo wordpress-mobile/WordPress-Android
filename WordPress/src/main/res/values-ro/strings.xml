@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-07-19 14:13:06+0000
+Translation-Revision-Date: 2022-07-26 14:46:28+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.1
 Language: ro
 -->
 <resources>
+    <string name="gutenberg_native_upgrade_your_plan_to_use_video_covers">Pentru a folosi coperte video, actualizează-ți planul</string>
+    <string name="gutenberg_native_upgrade_your_plan_to_upload_audio">Pentru a încărca fișiere audio, actualizează-ți planul</string>
+    <string name="gutenberg_native_jetpack_powered">Propulsat de Jetpack</string>
+    <string name="gutenberg_native_invalid_url">URL-ul nu este valid.</string>
+    <string name="gutenberg_native_gradient">Gradient</string>
+    <string name="wp_jetpack_continue_to_notifications">Continuă cu Notificări</string>
+    <string name="wp_jetpack_continue_to_stats">Continuă cu Statistici</string>
+    <string name="wp_jetpack_continue_to_reader">Continuă cu Cititor</string>
+    <string name="wp_jetpack_get_new_jetpack_app">Ia noua aplicație Jetpack</string>
+    <string name="wp_jetpack_powered_features">Statistici, Cititor, Notificări și alte funcționalități sunt propulsate de Jetpack.</string>
     <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery">Este o problemă la afișarea blocului. \nAtinge pentru a încerca recuperarea blocului.</string>
     <string name="weekly_roundup_notification_text_views_and_comments">Săptămâna trecută ai avut %1$s de vizualizări și %2$s comentarii</string>
     <string name="weekly_roundup_notification_text_views_and_likes">Săptămâna trecută ai avut %1$s de vizualizări și %2$s aprecieri</string>
@@ -512,6 +522,7 @@ Language: ro
     <string name="gutenberg_native_s_block">Bloc %s</string>
     <string name="gutenberg_native_s_converted_to_regular_blocks">%s a fost convertit în blocuri normale</string>
     <string name="gutenberg_native_media_options">Opțiuni media</string>
+    <string name="gutenberg_native_opacity">Opacitate</string>
     <string name="gutenberg_native_invalid_url_audio_file_not_found">URL invalid. Nu am găsit fișierul audio.</string>
     <string name="gutenberg_native_double_tap_to_open_action_sheet_to_add_image_or_video">Atinge de două ori pentru a deschide foaia Acțiuni ca să adaugi o imagine sau un video</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_add_image_or_video">Atinge de două ori pentru a deschide foaia de jos ca să adaugi o imagine sau un video</string>

@@ -29,7 +29,6 @@ import org.wordpress.android.ui.utils.UiString.UiStringText
 const val BASE_ALPHA = 1.0f
 const val BLURRED_ALPHA = 0.75f
 
-@Suppress("LongParameterList")
 sealed class QRCodeAuthUiState {
     open val type: QRCodeAuthUiStateType? = null
     open val scanningVisibility = false

@@ -29,6 +29,7 @@ import javax.inject.Named
 
 private const val VISIBLE_ITEMS = 1
 
+@Suppress("LongParameterList")
 class AnnualSiteStatsUseCase(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher,

@@ -24,7 +24,6 @@ import org.wordpress.android.viewmodel.pages.PagesViewModel
 import org.wordpress.android.widgets.RecyclerItemDecoration
 import javax.inject.Inject
 
-@Suppress("TooManyFunctions")
 class PageListFragment : ViewPagerFragment(R.layout.pages_list_fragment) {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject internal lateinit var imageManager: ImageManager

@@ -120,6 +120,7 @@ import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.JetpackBrandingUtils
+import org.wordpress.android.util.JetpackBrandingUtils.Screen.READER_POST_DETAIL
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.PermissionUtils
 import org.wordpress.android.util.RtlUtils
@@ -714,7 +715,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
         if (jetpackBrandingUtils.shouldShowJetpackBranding()) {
             binding.jetpackBadge.root.isVisible = true
-            binding.jetpackBadge.root.setOnClickListener {
+            binding.jetpackBadge.jetpackPoweredBadge.setOnClickListener {
+                jetpackBrandingUtils.trackBadgeTapped(READER_POST_DETAIL)
                 viewModel.showJetpackPoweredBottomSheet()
             }
         }
@@ -737,6 +739,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     }
 
     // TODO: Update using UiState/ NavigationEvent
+    @Suppress("ForbiddenComment")
     private fun onPostExecuteShowPost() {
         // make sure options menu reflects whether we now have a post
         activity?.invalidateOptionsMenu()
@@ -1718,6 +1721,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             return newInstance(false, blogId, postId, null, 0, false, null, null, false)
         }
 
+        @Suppress("LongParameterList")
         fun newInstance(
             isFeed: Boolean,
             blogId: Long,

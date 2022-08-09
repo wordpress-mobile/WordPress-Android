@@ -68,12 +68,6 @@ import org.wordpress.android.util.image.ImageType.BLAVATAR
 import java.util.ArrayList
 import javax.inject.Inject
 
-// This file was ported from java and there were many complains from linter,
-// fixed all of them but for the "TooManyFunctions" the total number of functions was reduced
-// but seemed not easily fully avoidable.
-// Skipping it for now since there will be probably more work around this area
-// and so further opportunity to iterate for review/refactor
-@Suppress("TooManyFunctions")
 class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
     private var restoredListPosition = 0
     private var notification: Note? = null

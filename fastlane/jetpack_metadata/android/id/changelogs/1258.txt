@@ -1,0 +1,5 @@
+20.4:
+- Peningkatan performa blok Galeri/Gambar di Editor Blok.
+- Menampilkan blok Video dengan benar (di web dan aplikasi) untuk situs yang menggunakan VideoPress.
+- Penyisip Blok membuat koleksi jenis-jenis blok tertata lebih rapi.
+- Penyesuaian spasi catatan kaki teks alt di blok Gambar.

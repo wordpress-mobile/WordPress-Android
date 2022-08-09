@@ -100,6 +100,7 @@ import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.FluxCUtilsWrapper
 import org.wordpress.android.util.JetpackBrandingUtils
+import org.wordpress.android.util.JetpackBrandingUtils.Screen.HOME
 import org.wordpress.android.util.MediaUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.QuickStartUtilsWrapper
@@ -125,7 +126,7 @@ import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
 
-@Suppress("LargeClass", "LongMethod", "LongParameterList", "TooManyFunctions")
+@Suppress("LargeClass", "LongMethod")
 class MySiteViewModel @Inject constructor(
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     @param:Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
@@ -528,6 +529,7 @@ class MySiteViewModel @Inject constructor(
     }
 
     private fun onJetpackBadgeClick() {
+        jetpackBrandingUtils.trackBadgeTapped(HOME)
         _onNavigation.value = Event(SiteNavigationAction.OpenJetpackPoweredBottomSheet)
     }
 

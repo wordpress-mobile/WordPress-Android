@@ -9,7 +9,6 @@ import org.wordpress.android.util.config.ExperimentConfig
 import org.wordpress.android.util.config.FeatureConfig
 import javax.inject.Inject
 
-@Suppress("TooManyFunctions")
 @Reusable
 class AnalyticsTrackerWrapper
 @Inject constructor() {

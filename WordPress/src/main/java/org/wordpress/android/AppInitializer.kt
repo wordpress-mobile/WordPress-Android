@@ -124,7 +124,6 @@ import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
 
-@Suppress("TooManyFunctions")
 @Singleton
 class AppInitializer @Inject constructor(
     wellSqlInitializer: WellSqlInitializer,

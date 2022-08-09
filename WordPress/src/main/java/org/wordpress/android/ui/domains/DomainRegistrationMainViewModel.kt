@@ -64,6 +64,7 @@ class DomainRegistrationMainViewModel @Inject constructor(
         }
     }
 
+    @Suppress("ForbiddenComment")
     fun finishDomainRegistration(event: DomainRegistrationCompletedEvent) {
         analyticsTracker.track(Stat.DOMAINS_PURCHASE_DOMAIN_SUCCESS) // TODO: is it a success or just a back press
         _onNavigation.value = Event(FinishDomainRegistration(event))

@@ -48,7 +48,6 @@ import org.wordpress.android.util.config.SiteNameFeatureConfig
 import org.wordpress.android.util.wizard.WizardNavigationTarget
 import javax.inject.Inject
 
-@Suppress("TooManyFunctions")
 @AndroidEntryPoint
 class SiteCreationActivity : LocaleAwareActivity(),
         IntentsScreenListener,

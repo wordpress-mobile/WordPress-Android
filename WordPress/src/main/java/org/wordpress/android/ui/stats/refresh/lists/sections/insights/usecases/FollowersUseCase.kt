@@ -38,7 +38,6 @@ import org.wordpress.android.ui.stats.refresh.utils.StatsSinceLabelFormatter
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.util.config.StatsRevampV2FeatureConfig
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 import javax.inject.Named
@@ -57,8 +56,7 @@ class FollowersUseCase(
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val popupMenuHandler: ItemPopupMenuHandler,
     private val contentDescriptionHelper: ContentDescriptionHelper,
-    private val useCaseMode: UseCaseMode,
-    private val statsRevampV2FeatureConfig: StatsRevampV2FeatureConfig
+    private val useCaseMode: UseCaseMode
 ) : BaseStatsUseCase<Pair<FollowersModel, FollowersModel>, FollowersUiState>(
         FOLLOWERS,
         mainDispatcher,
@@ -180,7 +178,7 @@ class FollowersUseCase(
         return items
     }
 
-    private fun buildTitle() = if (BuildConfig.IS_JETPACK_APP && statsRevampV2FeatureConfig.isEnabled()) {
+    private fun buildTitle() = if (BuildConfig.IS_JETPACK_APP) {
         Title(R.string.stats_view_followers)
     } else {
         Title(R.string.stats_view_followers, menuAction = this::onMenuClick)
@@ -254,8 +252,7 @@ class FollowersUseCase(
         private val resourceProvider: ResourceProvider,
         private val popupMenuHandler: ItemPopupMenuHandler,
         private val analyticsTracker: AnalyticsTrackerWrapper,
-        private val contentDescriptionHelper: ContentDescriptionHelper,
-        private val statsRevampV2FeatureConfig: StatsRevampV2FeatureConfig
+        private val contentDescriptionHelper: ContentDescriptionHelper
     ) : InsightUseCaseFactory {
         override fun build(useCaseMode: UseCaseMode) =
                 FollowersUseCase(
@@ -268,8 +265,7 @@ class FollowersUseCase(
                         analyticsTracker,
                         popupMenuHandler,
                         contentDescriptionHelper,
-                        useCaseMode,
-                        statsRevampV2FeatureConfig
+                        useCaseMode
                 )
     }
 }

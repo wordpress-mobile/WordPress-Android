@@ -37,8 +37,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 @Suppress("LongParameterList")
-class ViewsAndVisitorsDetailUseCase
-constructor(
+class ViewsAndVisitorsDetailUseCase constructor(
     statsGranularity: StatsGranularity,
     private val visitsAndViewsStore: VisitsAndViewsStore,
     selectedDateProvider: SelectedDateProvider,

@@ -13,7 +13,6 @@ import org.wordpress.android.ui.quickstart.QuickStartType
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
 
-@Suppress("TooManyFunctions")
 class CardsTracker @Inject constructor(
     private val cardsShownTracker: CardsShownTracker,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
