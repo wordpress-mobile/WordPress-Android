@@ -4,6 +4,7 @@
 -----
 * [*] Login: Fix an issue preventing some users to log-in in with email addresses containing a single quote [https://github.com/wordpress-mobile/WordPress-Android/pull/15526]
 * [*] Fix a possible crash with themes preloading that could be encountered at the start of Site Creation [https://github.com/wordpress-mobile/WordPress-Android/pull/17022]
+
 20.5
 -----
 * [*] Use larger thumbnail previews for recommended themes during site creation [https://github.com/wordpress-mobile/WordPress-Android/pull/16848]
