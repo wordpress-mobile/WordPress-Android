@@ -7,6 +7,9 @@ import com.goterl.lazysodium.utils.Key
 import dagger.Reusable
 import javax.inject.Inject
 
+private const val ENCODED_ENCRYPTED_KEY_LENGTH = 108
+private const val ENCODED_HEADER_LENGTH = 32
+
 data class EncryptedLoggingKey(val publicKey: Key)
 
 /**
@@ -64,13 +67,13 @@ class LogEncrypter @Inject constructor(private val encryptedLoggingKey: Encrypte
         }
 
         val encodedEncryptedKey = base64Encode(key.bytes)
-        check(encodedEncryptedKey.length == 108) {
-            "The encoded, encrypted key must always be 108 bytes long"
+        check(encodedEncryptedKey.length == ENCODED_ENCRYPTED_KEY_LENGTH) {
+            "The encoded, encrypted key must always be $ENCODED_ENCRYPTED_KEY_LENGTH bytes long"
         }
 
         val encodedHeader = base64Encode(header)
-        check(encodedHeader.length == 32) {
-            "The encoded header must always be 32 bytes long"
+        check(encodedHeader.length == ENCODED_HEADER_LENGTH) {
+            "The encoded header must always be $ENCODED_HEADER_LENGTH bytes long"
         }
 
         return buildString {
