@@ -121,8 +121,8 @@ import javax.inject.Singleton
  *       TODO: consider adding https://kotlinlang.org/docs/all-open-plugin.html
  */
 @Singleton
-open class SiteStore
-@Inject constructor(
+@Suppress("ForbiddenComment")
+open class SiteStore @Inject constructor(
     dispatcher: Dispatcher?,
     private val postSqlUtils: PostSqlUtils,
     private val siteRestClient: SiteRestClient,
@@ -1009,6 +1009,7 @@ open class SiteStore
      * NOTE: This method needs to be open because it's mocked in android tests in the WPAndroid project.
      *       TODO: consider adding https://kotlinlang.org/docs/all-open-plugin.html
      */
+    @Suppress("ForbiddenComment")
     open fun getSiteByLocalId(id: Int): SiteModel? {
         val result = siteSqlUtils.getSitesWithLocalId(id)
         return if (result.isNotEmpty()) {
@@ -1329,6 +1330,7 @@ open class SiteStore
         return updateSites(siteXMLRPCClient.fetchSites(payload.url, payload.username, payload.password))
     }
 
+    @Suppress("ForbiddenComment")
     private fun updateSiteProfile(siteModel: SiteModel) {
         val event = OnProfileFetched(siteModel)
         if (siteModel.isError) {
@@ -1344,6 +1346,7 @@ open class SiteStore
         emitChange(event)
     }
 
+    @Suppress("ForbiddenComment")
     private fun updateSite(siteModel: SiteModel): OnSiteChanged {
         return if (siteModel.isError) {
             // TODO: what kind of error could we get here?
@@ -1365,6 +1368,7 @@ open class SiteStore
         }
     }
 
+    @Suppress("ForbiddenComment")
     private fun updateSites(sitesModel: SitesModel): OnSiteChanged {
         val event = if (sitesModel.isError) {
             // TODO: what kind of error could we get here?
@@ -1380,6 +1384,7 @@ open class SiteStore
         return event
     }
 
+    @Suppress("ForbiddenComment")
     private fun handleFetchedSitesWPComRest(fetchedSites: SitesModel): OnSiteChanged {
         return if (fetchedSites.isError) {
             // TODO: what kind of error could we get here?
@@ -1449,6 +1454,7 @@ open class SiteStore
         siteRestClient.exportSite(site)
     }
 
+    @Suppress("ForbiddenComment")
     private fun handleExportedSite(payload: ExportSiteResponsePayload) {
         val event = if (payload.isError) {
             // TODO: what kind of error could we get here?

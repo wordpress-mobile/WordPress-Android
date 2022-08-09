@@ -372,6 +372,7 @@ class SiteRestClient @Inject constructor(
         }
     }
 
+    @Suppress("ForbiddenComment")
     fun fetchUserRoles(site: SiteModel) {
         val url = WPCOMREST.sites.site(site.siteId).roles.urlV1_1
         val request = WPComGsonRequest.buildGetRequest(url, null,
