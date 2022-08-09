@@ -52,8 +52,11 @@ class EditorThemeSqlUtils {
         return editorTheme.toEditorTheme(colors, gradients)
     }
 
+    /**
+     * Deleting the row for the [EditorThemeTable] table row here will cascade to delete the
+     * associated rows in the [EditorThemeElementTable] as well.
+     */
     fun deleteEditorThemeForSite(site: SiteModel) {
-        // Deleting the row for the EditorThemeTable table row here will cascade to delete the associated rows in the EditorThemeElementTable as well.
         WellSql.delete(EditorThemeBuilder::class.java)
                 .where()
                 .equals(EditorThemeTable.LOCAL_SITE_ID, site.id)

@@ -1,3 +1,5 @@
+@file:Suppress("UnusedImports")
+
 package org.wordpress.android.fluxc.persistence
 
 import android.content.Context
@@ -11,6 +13,8 @@ import com.yarolegovich.wellsql.DefaultWellConfig
 import com.yarolegovich.wellsql.WellSql
 import com.yarolegovich.wellsql.WellTableManager
 import org.wordpress.android.fluxc.BuildConfig
+import org.wordpress.android.fluxc.model.plugin.SitePluginModel
+import org.wordpress.android.fluxc.model.plugin.WPOrgPluginModel
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import kotlin.annotation.AnnotationRetention.SOURCE
@@ -319,11 +323,14 @@ open class WellSqlConfig : DefaultWellConfig {
                     )
                 }
                 24 -> migrate(version) {
-                    // Start with a clean slate for Plugins. This migration adds unique constraints for SitePluginModel
-                    // and WPOrgPluginModel tables. Adds `authorName` column and renames `name` column to `displayName` in
-                    // WPOrgPluginModel table. Since these records are only used as cache and would & should be refreshed
-                    // often, there is no real harm to do this other than a slightly longer loading time for the first usage
-                    // after the migration. This migration would be much more complicated otherwise.
+                    /**
+                     * Start with a clean slate for Plugins. This migration adds unique constraints for
+                     * [SitePluginModel] and [WPOrgPluginModel] tables. Adds `authorName` column and renames `name`
+                     * column to `displayName` in [WPOrgPluginModel] table. Since these records are only used as cache
+                     * and would & should be refreshed often, there is no real harm to do this other than a slightly
+                     * longer loading time for the first usage after the migration. This migration would be much more
+                     * complicated otherwise.
+                     */
                     db.execSQL("DELETE FROM PluginDirectoryModel")
                     db.execSQL("DROP TABLE IF EXISTS SitePluginModel")
                     db.execSQL("DROP TABLE IF EXISTS WPOrgPluginModel")
