@@ -47,37 +47,37 @@ class ScanSqlUtils @Inject constructor() {
     }
 
     private fun ScanStateModel.toBuilder(site: SiteModel): ScanStateBuilder {
-        val startDate = when (state) {
-            IDLE -> mostRecentStatus?.startDate?.time
-            SCANNING -> currentStatus?.startDate?.time
-            PROVISIONING, UNAVAILABLE, UNKNOWN -> null
-        }
-
-        val progress = when (state) {
-            IDLE -> mostRecentStatus?.progress ?: 0
-            SCANNING -> currentStatus?.progress ?: 0
-            PROVISIONING, UNAVAILABLE, UNKNOWN -> 0
-        }
-
-        val isInitial = when (state) {
-            IDLE -> mostRecentStatus?.isInitial ?: false
-            SCANNING -> currentStatus?.isInitial ?: false
-            PROVISIONING, UNAVAILABLE, UNKNOWN -> false
-        }
-
         return ScanStateBuilder(
             localSiteId = site.id,
             remoteSiteId = site.siteId,
             state = state.value,
-            startDate = startDate,
+            startDate = startDate(),
             duration = mostRecentStatus?.duration ?: 0,
-            progress = progress,
+            progress = progress(),
             reason = reason.value,
             error = mostRecentStatus?.error ?: false,
-            initial = isInitial,
+            initial = isInitial(),
             hasCloud = hasCloud,
             hasValidCredentials = hasValidCredentials
         )
+    }
+
+    private fun ScanStateModel.startDate() = when (state) {
+        IDLE -> mostRecentStatus?.startDate?.time
+        SCANNING -> currentStatus?.startDate?.time
+        PROVISIONING, UNAVAILABLE, UNKNOWN -> null
+    }
+
+    private fun ScanStateModel.progress() = when (state) {
+        IDLE -> mostRecentStatus?.progress ?: 0
+        SCANNING -> currentStatus?.progress ?: 0
+        PROVISIONING, UNAVAILABLE, UNKNOWN -> 0
+    }
+
+    private fun ScanStateModel.isInitial() = when (state) {
+        IDLE -> mostRecentStatus?.isInitial ?: false
+        SCANNING -> currentStatus?.isInitial ?: false
+        PROVISIONING, UNAVAILABLE, UNKNOWN -> false
     }
 
     @Table(name = "ScanState")
