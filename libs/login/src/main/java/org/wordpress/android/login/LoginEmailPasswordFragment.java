@@ -45,13 +45,13 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
     private static final String KEY_REQUESTED_PASSWORD = "KEY_REQUESTED_PASSWORD";
     private static final String KEY_OLD_SITES_IDS = "KEY_OLD_SITES_IDS";
 
-    private static final String ARG_EMAIL_ADDRESS = "ARG_EMAIL_ADDRESS";
-    private static final String ARG_PASSWORD = "ARG_PASSWORD";
-    private static final String ARG_SOCIAL_ID_TOKEN = "ARG_SOCIAL_ID_TOKEN";
-    private static final String ARG_SOCIAL_LOGIN = "ARG_SOCIAL_LOGIN";
-    private static final String ARG_SOCIAL_SERVICE = "ARG_SOCIAL_SERVICE";
-    private static final String ARG_ALLOW_MAGIC_LINK = "ARG_ALLOW_MAGIC_LINK";
-    private static final String ARG_VERIFY_MAGIC_LINK_EMAIL = "ARG_VERIFY_MAGIC_LINK_EMAIL";
+    protected static final String ARG_EMAIL_ADDRESS = "ARG_EMAIL_ADDRESS";
+    protected static final String ARG_PASSWORD = "ARG_PASSWORD";
+    protected static final String ARG_SOCIAL_ID_TOKEN = "ARG_SOCIAL_ID_TOKEN";
+    protected static final String ARG_SOCIAL_LOGIN = "ARG_SOCIAL_LOGIN";
+    protected static final String ARG_SOCIAL_SERVICE = "ARG_SOCIAL_SERVICE";
+    protected static final String ARG_ALLOW_MAGIC_LINK = "ARG_ALLOW_MAGIC_LINK";
+    protected static final String ARG_VERIFY_MAGIC_LINK_EMAIL = "ARG_VERIFY_MAGIC_LINK_EMAIL";
 
     private static final String FORGOT_PASSWORD_URL_WPCOM = "https://wordpress.com/";
 

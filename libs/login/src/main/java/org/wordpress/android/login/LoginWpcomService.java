@@ -82,7 +82,7 @@ public class LoginWpcomService extends AutoForeground<LoginState> {
             this.mStep = step;
         }
 
-        LoginStep getStep() {
+        public LoginStep getStep() {
             return mStep;
         }
 
