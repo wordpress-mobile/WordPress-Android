@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.fragment.app.viewModels
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -22,13 +21,11 @@ import org.wordpress.android.ui.main.WPMainNavigationView.PageType.NOTIFS
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType.READER
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredDialogAction.DismissDialog
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredDialogAction.OpenPlayStore
-import org.wordpress.android.util.extensions.disableAnimation
 import org.wordpress.android.util.extensions.exhaustive
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class JetpackPoweredBottomSheetFragment : BottomSheetDialogFragment() {
-    @Inject lateinit var adapter: JetpackPoweredAdapter
     @Inject lateinit var activityLauncherWrapper: ActivityLauncherWrapper
     private val viewModel: JetpackPoweredDialogViewModel by viewModels()
 
@@ -50,23 +47,19 @@ class JetpackPoweredBottomSheetFragment : BottomSheetDialogFragment() {
     }
 
     private fun JetpackPoweredBottomSheetBinding.initializeViews() {
-        contentRecyclerView.layoutManager = LinearLayoutManager(requireActivity())
-        contentRecyclerView.adapter = adapter
-        contentRecyclerView.disableAnimation()
-
         primaryButton.setOnClickListener { viewModel.openJetpackAppDownloadLink() }
 
         val fullScreen = arguments?.getBoolean(KEY_FULL_SCREEN, false) ?: false
 
         if (fullScreen) {
-            secondaryButton.visibility = View.VISIBLE
+//            secondaryButton.visibility = View.VISIBLE
             val pageType = arguments?.getSerializable(KEY_SITE_SCREEN) as? PageType ?: MY_SITE
-            secondaryButton.text = when (pageType) {
-                MY_SITE -> getString(R.string.wp_jetpack_continue_to_stats)
-                READER -> getString(R.string.wp_jetpack_continue_to_reader)
-                NOTIFS -> getString(R.string.wp_jetpack_continue_to_notifications)
-            }
-            secondaryButton.setOnClickListener { viewModel.dismissBottomSheet() }
+//            secondaryButton.text = when (pageType) {
+//                MY_SITE -> getString(R.string.wp_jetpack_continue_to_stats)
+//                READER -> getString(R.string.wp_jetpack_continue_to_reader)
+//                NOTIFS -> getString(R.string.wp_jetpack_continue_to_notifications)
+//            }
+//            secondaryButton.setOnClickListener { viewModel.dismissBottomSheet() }
         }
 
         (dialog as? BottomSheetDialog)?.apply {
@@ -85,10 +78,10 @@ class JetpackPoweredBottomSheetFragment : BottomSheetDialogFragment() {
 
     private fun JetpackPoweredBottomSheetBinding.setupObservers() {
         viewModel.start()
-
-        viewModel.uiState.observe(this@JetpackPoweredBottomSheetFragment) { uiState ->
-            adapter.submitList(uiState?.uiItems ?: listOf())
-        }
+//
+//        viewModel.uiState.observe(this@JetpackPoweredBottomSheetFragment) { uiState ->
+//            adapter.submitList(uiState?.uiItems ?: listOf())
+//        }
 
         viewModel.action.observe(viewLifecycleOwner) { action ->
             when (action) {
