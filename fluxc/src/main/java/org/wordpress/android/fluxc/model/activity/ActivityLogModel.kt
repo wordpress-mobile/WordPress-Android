@@ -16,17 +16,11 @@ data class ActivityLogModel(
     val published: Date,
     val actor: ActivityActor? = null
 ) {
-    enum class Status(value: String) {
-        ERROR("error"), SUCCESS("success"), WARNING("warning");
-    }
-
     data class ActivityActor(
         val displayName: String?,
         val type: String?,
         val wpcomUserID: Long?,
         val avatarURL: String?,
         val role: String?
-    ) {
-        val isJetpack = { type == "Application" && displayName == "Jetpack" }
-    }
+    )
 }
