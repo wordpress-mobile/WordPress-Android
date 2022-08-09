@@ -851,6 +851,7 @@ open class SiteStore @Inject constructor(
         GENERIC_ERROR;
 
         companion object {
+            @Suppress("ReturnCount")
             fun fromString(string: String): DeleteSiteErrorType {
                 if (!TextUtils.isEmpty(string)) {
                     if (string == "unauthorized") {
