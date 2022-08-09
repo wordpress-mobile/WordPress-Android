@@ -594,8 +594,7 @@ tasks.register("printVersionName") {
 tasks.register("printAllVersions") {
     doLast {
         android.applicationVariants.all { variant ->
-            def apkData = variant.outputs*.apkData
-            println "${variant.name}: ${apkData*.versionName} (${apkData*.versionCode})"
+            println "${variant.name}: ${variant.versionName} (${variant.versionCode})"
         }
     }
 }
