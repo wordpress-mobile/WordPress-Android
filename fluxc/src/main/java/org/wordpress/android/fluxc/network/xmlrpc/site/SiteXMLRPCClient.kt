@@ -40,7 +40,7 @@ class SiteXMLRPCClient @Inject constructor(
     private val xmlrpcRequestBuilder: XMLRPCRequestBuilder
 ) : BaseXMLRPCClient(dispatcher, requestQueue, userAgent, httpAuthManager) {
     fun fetchProfile(site: SiteModel) {
-        val params: MutableList<Any> = ArrayList(3)
+        val params: MutableList<Any> = ArrayList()
         params.add(site.selfHostedSiteId)
         params.add(site.username)
         params.add(site.password)
