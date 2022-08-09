@@ -13,6 +13,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.databinding.JetpackPoweredBottomSheetBinding
+import org.wordpress.android.databinding.JetpackPoweredExpandedBottomSheetBinding
 import org.wordpress.android.ui.ActivityLauncherWrapper
 import org.wordpress.android.ui.ActivityLauncherWrapper.Companion.JETPACK_PACKAGE_NAME
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType
@@ -28,38 +29,56 @@ import javax.inject.Inject
 class JetpackPoweredBottomSheetFragment : BottomSheetDialogFragment() {
     @Inject lateinit var activityLauncherWrapper: ActivityLauncherWrapper
     private val viewModel: JetpackPoweredDialogViewModel by viewModels()
+    private var fullScreen: Boolean = false
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        fullScreen = arguments?.getBoolean(KEY_FULL_SCREEN, false) ?: false
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.jetpack_powered_bottom_sheet, container)
+        val layout = if (fullScreen) {
+            R.layout.jetpack_powered_expanded_bottom_sheet
+        } else {
+            R.layout.jetpack_powered_bottom_sheet
+        }
+
+        return inflater.inflate(layout, container)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        with(JetpackPoweredBottomSheetBinding.bind(view)) {
-            initializeViews()
-            setupObservers()
-        }
-    }
-
-    private fun JetpackPoweredBottomSheetBinding.initializeViews() {
-        primaryButton.setOnClickListener { viewModel.openJetpackAppDownloadLink() }
-
-        val fullScreen = arguments?.getBoolean(KEY_FULL_SCREEN, false) ?: false
-
         if (fullScreen) {
-//            secondaryButton.visibility = View.VISIBLE
-            val pageType = arguments?.getSerializable(KEY_SITE_SCREEN) as? PageType ?: MY_SITE
-//            secondaryButton.text = when (pageType) {
-//                MY_SITE -> getString(R.string.wp_jetpack_continue_to_stats)
-//                READER -> getString(R.string.wp_jetpack_continue_to_reader)
-//                NOTIFS -> getString(R.string.wp_jetpack_continue_to_notifications)
-//            }
-//            secondaryButton.setOnClickListener { viewModel.dismissBottomSheet() }
+            with(JetpackPoweredExpandedBottomSheetBinding.bind(view)) {
+                when (arguments?.getSerializable(KEY_SITE_SCREEN) as? PageType ?: MY_SITE) {
+                    MY_SITE -> {
+                        title.text = getString(R.string.wp_jetpack_powered_stats_powered_by_jetpack)
+                        caption.text = getString(R.string.wp_jetpack_powered_stats_powered_by_jetpack_caption)
+                        secondaryButton.text = getString(R.string.wp_jetpack_continue_to_stats)
+                    }
+                    READER -> {
+                        title.text = getString(R.string.wp_jetpack_powered_reader_powered_by_jetpack)
+                        caption.text = getString(R.string.wp_jetpack_powered_reader_powered_by_jetpack_caption)
+                        secondaryButton.text = getString(R.string.wp_jetpack_continue_to_reader)
+                    }
+                    NOTIFS -> {
+                        title.text = getString(R.string.wp_jetpack_powered_notifications_powered_by_jetpack)
+                        caption.text = getString(R.string.wp_jetpack_powered_notifications_powered_by_jetpack_caption)
+                        secondaryButton.text = getString(R.string.wp_jetpack_continue_to_notifications)
+                    }
+                }
+                primaryButton.setOnClickListener { viewModel.openJetpackAppDownloadLink() }
+                secondaryButton.setOnClickListener { viewModel.dismissBottomSheet() }
+            }
+        } else {
+            with(JetpackPoweredBottomSheetBinding.bind(view)) {
+                primaryButton.setOnClickListener { viewModel.openJetpackAppDownloadLink() }
+            }
         }
 
         (dialog as? BottomSheetDialog)?.apply {
@@ -74,15 +93,11 @@ class JetpackPoweredBottomSheetFragment : BottomSheetDialogFragment() {
                 expandBottomSheet(bottomSheetBehavior)
             }
         }
+
+        setupObservers()
     }
 
-    private fun JetpackPoweredBottomSheetBinding.setupObservers() {
-        viewModel.start()
-//
-//        viewModel.uiState.observe(this@JetpackPoweredBottomSheetFragment) { uiState ->
-//            adapter.submitList(uiState?.uiItems ?: listOf())
-//        }
-
+    private fun setupObservers() {
         viewModel.action.observe(viewLifecycleOwner) { action ->
             when (action) {
                 is OpenPlayStore -> {
