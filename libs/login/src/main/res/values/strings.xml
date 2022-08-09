@@ -6,6 +6,7 @@
     <string name="send_link_by_email">Send link by email</string>
     <string name="create_account">Create account</string>
     <string name="or_type_your_password">Or type your password</string>
+    <string name="or_use_password">Use password to sign in</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="help">Help</string>
@@ -18,6 +19,7 @@
     <string name="get_started">Get Started</string>
     <string name="next">Next</string>
     <string name="check_email">Check email</string>
+    <string name="open_mail">Open Mail</string>
     <string name="enter_verification_code">Almost there! Please enter the verification code from your Authenticator app.</string>
     <string name="enter_verification_code_sms">We sent a text message to the phone number ending in %s. Please enter the verification code in the SMS.</string>
     <string name="login_text_otp">Text me a code instead</string>
@@ -28,6 +30,8 @@
     <string name="login_magic_links_label">We\'ll email you a link that\'ll log you in instantly, no password needed.</string>
     <string name="login_site_credentials_magic_link_label">Almost there! We just need to verify your Jetpack connected email address &lt;b>%1$s&lt;/b></string>
     <string name="login_magic_links_sent_label">Check your email on this device and tap the link in the email you received from WordPress.com.</string>
+    <string name="login_magic_links_sent_label_short">Check your email on this device!</string>
+    <string name="login_magic_links_email_sent">We just sent a magic link to</string>
     <string name="login_magic_link_email_requesting">Requesting log-in email</string>
     <string name="magic_link_not_seeing_email_message">Not seeing the email? Check your Spam or Junk Mail folder.</string>
     <string name="magic_link_not_meaning_to_create_account">Didn\'t mean to create a new account? Go back to re-enter your email address.</string>
