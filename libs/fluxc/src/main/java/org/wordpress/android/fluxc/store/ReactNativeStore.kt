@@ -19,6 +19,7 @@ import org.wordpress.android.fluxc.store.ReactNativeFetchResponse.Error
 import org.wordpress.android.fluxc.store.ReactNativeFetchResponse.Success
 import org.wordpress.android.fluxc.tools.CoroutineEngine
 import org.wordpress.android.util.AppLog
+import java.net.HttpURLConnection
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -140,7 +141,7 @@ class ReactNativeStore
             is Success -> response
 
             is Error -> when (response.statusCode()) {
-                401 -> {
+                HttpURLConnection.HTTP_UNAUTHORIZED -> {
                     if (usingSavedNonce) {
                         // Call with saved nonce failed, so try getting a new one
                         val previousNonce = nonce?.value
@@ -155,7 +156,7 @@ class ReactNativeStore
                     response
                 }
 
-                404 -> {
+                HttpURLConnection.HTTP_NOT_FOUND -> {
                     // call failed with 'not found' so clear the (failing) rest url
                     site.wpApiRestUrl = null
                     persistSiteSafely(site)
