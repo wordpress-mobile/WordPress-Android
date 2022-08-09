@@ -27,6 +27,7 @@ class MimeTypes {
      * .ogg - "audio/ogg", "application/ogg"
      * .wav - "audio/x-wav"
      */
+    @Suppress("MaxLineLength")
     private val audioTypes = listOf(
             MimeType(AUDIO, Subtype.MPEG, listOf("mp3")),
             MimeType(AUDIO, Subtype.MP4, listOf("m4a")),
@@ -48,6 +49,7 @@ class MimeTypes {
      * .3gp (3GPP) - "video/3gpp"
      * .3g2 (3GPP2) - "video/3gpp2"
      */
+    @Suppress("MaxLineLength")
     private val videoTypes = listOf(
             MimeType(VIDEO, Subtype.MP4, listOf("mp4", "m4v")),
             MimeType(VIDEO, Subtype.QUICKTIME, listOf("mov")),
@@ -71,6 +73,7 @@ class MimeTypes {
      * .heic - "image/heic"
      * .heif - "image/heif"
      */
+    @Suppress("MaxLineLength")
     private val imageTypes = listOf(
             MimeType(IMAGE, Subtype.JPEG, listOf("jpg", "jpeg")),
             MimeType(IMAGE, Subtype.PNG, listOf("png")),
@@ -110,7 +113,7 @@ class MimeTypes {
      *
      * documentTypes - all MIME types that are available.
      */
-
+    @Suppress("MaxLineLength")
     private val wpComFreeDocumentTypes = listOf(
             MimeType(APPLICATION, Subtype.PDF, listOf("pdf")),
             MimeType(APPLICATION, listOf(Subtype.MSWORD, Subtype.DOC, Subtype.MSDOC), listOf("doc")),
