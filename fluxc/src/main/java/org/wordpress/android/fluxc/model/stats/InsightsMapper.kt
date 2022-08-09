@@ -274,6 +274,7 @@ class InsightsMapper @Inject constructor(val statsUtils: StatsUtils) {
         )
     }
 
+    @Suppress("LongMethod")
     fun map(response: PostingActivityResponse, startDay: Day, endDay: Day): PostingActivityModel {
         if (response.streak == null) {
             AppLog.e(STATS, "PostingActivityResponse: Mandatory field streak is null")
