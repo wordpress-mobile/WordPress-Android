@@ -32,8 +32,7 @@ import javax.inject.Inject
 
 private const val PLUGIN_CONFIGURATION_DELAY = 1000L
 
-class PluginCoroutineStore
-@Inject constructor(
+class PluginCoroutineStore @Inject constructor(
     private val coroutineEngine: CoroutineEngine,
     private val dispatcher: Dispatcher,
     private val pluginWPAPIRestClient: PluginWPAPIRestClient,
@@ -147,6 +146,7 @@ class PluginCoroutineStore
         return event
     }
 
+    @Suppress("ComplexMethod", "NestedBlockDepth")
     private suspend fun <T : Payload<BaseNetworkError?>> executeWPAPIRequest(
         site: SiteModel,
         enableCaching: Boolean,

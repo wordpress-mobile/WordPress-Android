@@ -1212,7 +1212,9 @@ open class SiteStore @Inject constructor(
         return siteSqlUtils.getUserRoles(site!!)
     }
 
-    @Subscribe(threadMode = ASYNC) override fun onAction(action: Action<*>) {
+    @Subscribe(threadMode = ASYNC)
+    @Suppress("LongMethod", "ComplexMethod")
+    override fun onAction(action: Action<*>) {
         val actionType = action.type as? SiteAction ?: return
         when (actionType) {
             FETCH_PROFILE_XML_RPC -> fetchProfileXmlRpc(action.payload as SiteModel)

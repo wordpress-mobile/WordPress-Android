@@ -115,6 +115,7 @@ enum class FormattableRangeType {
     UNKNOWN;
 
     companion object {
+        @Suppress("ComplexMethod")
         fun fromString(value: String?): FormattableRangeType {
             return when (value) {
                 "post" -> POST

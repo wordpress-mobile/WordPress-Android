@@ -203,6 +203,7 @@ class SiteRestClient @Inject constructor(
      *
      * @return the response of the API call  as [NewSiteResponsePayload]
      */
+    @Suppress("ComplexMethod")
     suspend fun newSite(
         siteName: String?,
         siteTitle: String?,
@@ -942,7 +943,7 @@ class SiteRestClient @Inject constructor(
         add(request)
     }
 
-    // Utils
+    @Suppress("LongMethod", "ComplexMethod")
     private fun siteResponseToSiteModel(from: SiteWPComRestResponse): SiteModel {
         val site = SiteModel()
         site.siteId = from.ID

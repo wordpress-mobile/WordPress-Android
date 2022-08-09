@@ -45,7 +45,7 @@ open class WellSqlConfig : DefaultWellConfig {
         mTables.forEach { table -> helper.createTable(table) }
     }
 
-    @Suppress("CheckStyle", "MagicNumber")
+    @Suppress("CheckStyle", "LongMethod", "ComplexMethod", "MagicNumber")
     override fun onUpgrade(db: SQLiteDatabase, helper: WellTableManager, oldVersion: Int, newVersion: Int) {
         AppLog.d(T.DB, "Upgrading database from version $oldVersion to $newVersion")
 
