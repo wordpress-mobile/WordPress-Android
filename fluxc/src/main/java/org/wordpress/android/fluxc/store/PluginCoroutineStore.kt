@@ -29,9 +29,11 @@ import org.wordpress.android.fluxc.utils.CurrentTimeProvider
 import org.wordpress.android.util.AppLog.T
 import java.net.HttpURLConnection
 import javax.inject.Inject
+import javax.inject.Singleton
 
 private const val PLUGIN_CONFIGURATION_DELAY = 1000L
 
+@Singleton
 class PluginCoroutineStore @Inject constructor(
     private val coroutineEngine: CoroutineEngine,
     private val dispatcher: Dispatcher,
