@@ -418,8 +418,8 @@ class ActivityLogRestClient @Inject constructor(
                 ?.map { ActivityTypeModel(requireNotNull(it.key), requireNotNull(it.name), it.count ?: 0) }
                 ?: listOf()
 
-        if (BuildConfig.DEBUG && (response.groups?.activityTypes?.size ?: 0) != activityTypes.size) {
-            throw IllegalStateException("ActivityTypes parsing failed - one or more items were ignored.")
+        check(!BuildConfig.DEBUG || (response.groups?.activityTypes?.size ?: 0) == activityTypes.size) {
+            "ActivityTypes parsing failed - one or more items were ignored."
         }
 
         return FetchedActivityTypesResultPayload(
