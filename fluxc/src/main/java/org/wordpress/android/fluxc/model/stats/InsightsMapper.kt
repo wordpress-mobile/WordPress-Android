@@ -41,8 +41,7 @@ private const val POSTS = "posts"
 
 private const val MILLIS = 1000
 
-class InsightsMapper
-@Inject constructor(val statsUtils: StatsUtils) {
+class InsightsMapper @Inject constructor(val statsUtils: StatsUtils) {
     fun map(response: AllTimeResponse, site: SiteModel): InsightsAllTimeModel {
         val stats = response.stats
         return InsightsAllTimeModel(
@@ -82,16 +81,19 @@ class InsightsMapper
         return yearInsightsResponse?.let { YearsInsightsModel(it) }
     }
 
+    @Suppress("ComplexCondition")
     fun map(
         postResponse: PostResponse,
         postStatsResponse: PostStatsResponse,
         site: SiteModel
     ): InsightsLatestPostModel {
-        val daysViews = if (postStatsResponse.fields != null &&
-                postStatsResponse.data != null &&
-                postStatsResponse.fields.size > 1 &&
-                postStatsResponse.fields[0] == "period" &&
-                postStatsResponse.fields[1] == "views") {
+        val daysViews = if (
+            postStatsResponse.fields != null &&
+            postStatsResponse.data != null &&
+            postStatsResponse.fields.size > 1 &&
+            postStatsResponse.fields[0] == "period" &&
+            postStatsResponse.fields[1] == "views"
+        ) {
             postStatsResponse.data.map { list -> list[0] to list[1].toInt() }
         } else {
             listOf()
@@ -99,15 +101,15 @@ class InsightsMapper
         val viewsCount = postStatsResponse.views
         val commentCount = postResponse.discussion?.commentCount ?: 0
         return InsightsLatestPostModel(
-                site.siteId,
-                postResponse.title ?: "",
-                postResponse.url ?: "",
-                postResponse.date ?: Date(0),
-                postResponse.id,
-                viewsCount ?: 0,
-                commentCount,
-                postResponse.likeCount ?: 0,
-                daysViews,
+            site.siteId,
+            postResponse.title ?: "",
+            postResponse.url ?: "",
+            postResponse.date ?: Date(0),
+            postResponse.id,
+            viewsCount ?: 0,
+            commentCount,
+            postResponse.likeCount ?: 0,
+            daysViews,
             postResponse.featuredImage ?: ""
         )
     }
@@ -179,6 +181,7 @@ class InsightsMapper
             }
     }
 
+    @Suppress("ComplexMethod", "ComplexCondition")
     fun map(response: CommentsResponse, cacheMode: LimitMode): CommentsModel {
         val authors = response.authors?.let {
             if (cacheMode is LimitMode.Top) {
@@ -188,7 +191,12 @@ class InsightsMapper
             }
         }
         ?.mapNotNull {
-            if (it.name != null && it.comments != null && it.link != null && it.gravatar != null) {
+            if (
+                it.name != null &&
+                it.comments != null &&
+                it.link != null &&
+                it.gravatar != null
+            ) {
                 CommentsModel.Author(it.name, it.comments, it.link, it.gravatar)
             } else {
                 AppLog.e(STATS, "CommentsResponse.authors: Non-null field is coming as null from API")
@@ -203,7 +211,12 @@ class InsightsMapper
             }
         }
         ?.mapNotNull {
-            if (it.id != null && it.name != null && it.comments != null && it.link != null) {
+            if (
+                it.id != null &&
+                it.name != null &&
+                it.comments != null &&
+                it.link != null
+            ) {
                 CommentsModel.Post(it.id, it.name, it.comments, it.link)
             } else {
                 AppLog.e(STATS, "CommentsResponse.posts: Non-null field is coming as null from API")
