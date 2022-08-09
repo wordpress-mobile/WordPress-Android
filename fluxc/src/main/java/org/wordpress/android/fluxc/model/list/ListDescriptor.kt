@@ -38,6 +38,7 @@ data class ListDescriptorUniqueIdentifier(val value: Int)
  * lists belonging to the same site, would have the same [typeIdentifier]. Whereas, comments for that site, or posts
  * of another site would have a different identifier.
  */
+@Suppress("ForbiddenComment")
 interface ListDescriptor {
     val uniqueIdentifier: ListDescriptorUniqueIdentifier
     val typeIdentifier: ListDescriptorTypeIdentifier

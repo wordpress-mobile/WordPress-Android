@@ -241,6 +241,7 @@ class SiteXMLRPCClient @Inject constructor(
         )
     }
 
+    @Suppress("ForbiddenComment")
     private fun updateSiteFromOptions(response: Map<*, *>, oldModel: SiteModel): SiteModel {
         val siteTitle = XMLRPCUtils.safeGetNestedMapValue(response, "blog_title", "")
         if (!siteTitle.isEmpty()) {

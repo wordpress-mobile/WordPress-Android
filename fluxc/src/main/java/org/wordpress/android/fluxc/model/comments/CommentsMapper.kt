@@ -99,6 +99,7 @@ class CommentsMapper @Inject constructor(
         )
     }
 
+    @Suppress("ForbiddenComment")
     fun commentXmlRpcDTOToEntity(commentObject: Any?, site: SiteModel): CommentEntity? {
         if (commentObject !is HashMap<*, *>) {
             return null
