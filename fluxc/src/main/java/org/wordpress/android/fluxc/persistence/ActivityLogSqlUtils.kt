@@ -21,8 +21,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class ActivityLogSqlUtils
-@Inject constructor(private val formattableContentMapper: FormattableContentMapper) {
+class ActivityLogSqlUtils @Inject constructor(private val formattableContentMapper: FormattableContentMapper) {
     fun insertOrUpdateActivities(siteModel: SiteModel, activityModels: List<ActivityLogModel>): Int {
         val activityIds = activityModels.map { it.activityID }
         val activitiesToUpdate = WellSql.select(ActivityLogBuilder::class.java).where()
@@ -278,25 +277,32 @@ class ActivityLogSqlUtils
 
         override fun getId() = mId
 
+        @Suppress("ComplexCondition")
         fun build(formattableContentMapper: FormattableContentMapper): ActivityLogModel {
-            val actor = if (actorType != null ||
-                    displayName != null ||
-                    wpcomUserID != null ||
-                    avatarURL != null ||
-                    role != null) {
+            val actor = if (
+                actorType != null ||
+                displayName != null ||
+                wpcomUserID != null ||
+                avatarURL != null ||
+                role != null
+            ) {
                 ActivityLogModel.ActivityActor(displayName, actorType, wpcomUserID, avatarURL, role)
-            } else null
-            return ActivityLogModel(activityID,
-                    summary,
-                    formattableContentMapper.mapToFormattableContent(formattableContent),
-                    name,
-                    type,
-                    gridicon,
-                    status,
-                    rewindable,
-                    rewindID,
-                    Date(published),
-                    actor)
+            } else {
+                null
+            }
+            return ActivityLogModel(
+                activityID,
+                summary,
+                formattableContentMapper.mapToFormattableContent(formattableContent),
+                name,
+                type,
+                gridicon,
+                status,
+                rewindable,
+                rewindID,
+                Date(published),
+                actor
+            )
         }
     }
 
