@@ -41,7 +41,7 @@ steps:
           - slack: "#build-and-ship"
 
       - label: "🛠 Jetpack Release Build"
-        key: j pbuild
+        key: jpbuild
         command: ".buildkite/commands/release-build.sh jetpack"
         depends_on: jplint
         plugins: *common_plugins
