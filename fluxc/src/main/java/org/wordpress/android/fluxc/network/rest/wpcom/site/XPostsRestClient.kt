@@ -14,6 +14,8 @@ import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
 
+private const val CACHE_TIME_TO_LIVE = 60 * 1000 // 1 minute
+
 @Singleton
 class XPostsRestClient @Inject constructor(
     private val wpComGsonRequestBuilder: WPComGsonRequestBuilder,
@@ -31,7 +33,7 @@ class XPostsRestClient @Inject constructor(
                 mapOf("decode_html" to "true"),
                 Array<XPostSiteModel>::class.java,
                 true,
-                60 * 1000
+                CACHE_TIME_TO_LIVE
         )
     }
 }

@@ -39,6 +39,8 @@ private const val REBLOGS = "reblogs"
 private const val COMMENTS = "comments"
 private const val POSTS = "posts"
 
+private const val MILLIS = 1000
+
 class InsightsMapper
 @Inject constructor(val statsUtils: StatsUtils) {
     fun map(response: AllTimeResponse, site: SiteModel): InsightsAllTimeModel {
@@ -325,7 +327,7 @@ class InsightsMapper
 
     private fun toDay(timeStamp: Long): Day {
         val calendar = Calendar.getInstance()
-        calendar.timeInMillis = timeStamp * 1000
+        calendar.timeInMillis = timeStamp * MILLIS
         return Day(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH))
     }
 }
