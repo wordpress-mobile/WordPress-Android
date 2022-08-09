@@ -120,8 +120,8 @@ import javax.inject.Singleton
  * NOTE: This class needs to be open because it's mocked in android tests in the WPAndroid project.
  *       TODO: consider adding https://kotlinlang.org/docs/all-open-plugin.html
  */
-@Singleton
 @Suppress("ForbiddenComment")
+@Singleton
 open class SiteStore @Inject constructor(
     dispatcher: Dispatcher?,
     private val postSqlUtils: PostSqlUtils,
