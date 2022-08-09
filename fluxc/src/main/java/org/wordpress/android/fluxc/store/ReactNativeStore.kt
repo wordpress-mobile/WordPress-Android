@@ -29,8 +29,7 @@ import javax.inject.Singleton
  * around React Native. Calls originating from native code should not use this class.
  */
 @Singleton
-class ReactNativeStore
-@VisibleForTesting constructor(
+class ReactNativeStore @VisibleForTesting constructor(
     private val wpComRestClient: ReactNativeWPComRestClient,
     private val wpAPIRestClient: ReactNativeWPAPIRestClient,
     private val nonceRestClient: NonceRestClient,
@@ -108,6 +107,7 @@ class ReactNativeStore
         return Error(error)
     }
 
+    @Suppress("ComplexMethod", "NestedBlockDepth")
     private suspend fun executeWPAPIRequest(
         site: SiteModel,
         path: String,
