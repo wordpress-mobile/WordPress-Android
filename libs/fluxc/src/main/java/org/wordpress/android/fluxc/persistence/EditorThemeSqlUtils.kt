@@ -147,16 +147,14 @@ class EditorThemeSqlUtils {
 
         override fun getId() = mId
 
-        fun toEditorThemeElement(): EditorThemeElement? {
-            when (type) {
-                EditorThemeElementType.COLOR.value -> return EditorThemeElement(name, slug, value, null)
-                EditorThemeElementType.GRADIENT.value -> return EditorThemeElement(name, slug, null, value)
-                else -> {
-                    // This shouldn't really happen as the "type" is defined in this library and isn't really driven
-                    // off of the network call. However adding it for completeness.
-                    return null
-                }
-            }
+        /**
+         * Returning "null" shouldn't really happen as the "type" is defined in this library and isn't really driven
+         * off of the network call. However adding it for completeness.
+         */
+        fun toEditorThemeElement() = when (type) {
+            EditorThemeElementType.COLOR.value -> EditorThemeElement(name, slug, value, null)
+            EditorThemeElementType.GRADIENT.value -> EditorThemeElement(name, slug, null, value)
+            else -> null
         }
     }
 }
