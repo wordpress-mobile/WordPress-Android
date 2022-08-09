@@ -6,7 +6,6 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.rest.wpapi.BaseWPAPIRestClient
-import org.wordpress.android.fluxc.network.rest.wpapi.NonceRestClient
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIGsonRequestBuilder
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIResponse.Error
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIResponse.Success
@@ -18,7 +17,6 @@ import javax.inject.Singleton
 @Singleton
 class ReactNativeWPAPIRestClient @Inject constructor(
     private val wpApiGsonRequestBuilder: WPAPIGsonRequestBuilder,
-    private val nonceRestClient: NonceRestClient,
     dispatcher: Dispatcher,
     @Named("custom-ssl") requestQueue: RequestQueue,
     userAgent: UserAgent

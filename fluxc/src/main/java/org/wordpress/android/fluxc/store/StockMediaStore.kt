@@ -62,10 +62,8 @@ class StockMediaStore
         GENERIC_ERROR;
 
         companion object {
-            fun fromBaseNetworkError(baseError: BaseNetworkError?): StockMediaErrorType {
-                // endpoint returns an empty media list for any type of error, including timeouts, server error, etc.
-                return GENERIC_ERROR
-            }
+            // endpoint returns an empty media list for any type of error, including timeouts, server error, etc.
+            fun fromBaseNetworkError() = GENERIC_ERROR
         }
     }
 
