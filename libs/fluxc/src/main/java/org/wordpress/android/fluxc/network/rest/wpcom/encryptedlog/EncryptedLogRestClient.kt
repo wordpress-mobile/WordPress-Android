@@ -46,6 +46,7 @@ class EncryptedLogRestClient @Inject constructor(
      *   "message":"Invalid UUID: uuids must only contain letters, numbers, dashes, and curly brackets"
      * }
      */
+    @Suppress("ReturnCount")
     private fun mapError(error: VolleyError): UploadEncryptedLogError {
         if (error is NoConnectionError) {
             return UploadEncryptedLogError.NoConnection
