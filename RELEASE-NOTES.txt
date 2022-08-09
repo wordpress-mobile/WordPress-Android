@@ -2,7 +2,7 @@
 
 20.6
 -----
-
+* [*] Login: Fix an issue preventing some users to log-in in with email addresses containing a single quote [https://github.com/wordpress-mobile/WordPress-Android/pull/15526]
 
 20.5
 -----
