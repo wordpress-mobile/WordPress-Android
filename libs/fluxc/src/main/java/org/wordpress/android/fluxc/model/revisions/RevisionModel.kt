@@ -56,6 +56,7 @@ class RevisionModel(
         }
     }
 
+    @Suppress("ComplexMethod")
     override fun equals(other: Any?): Boolean {
         if (this === other) {
             return true
