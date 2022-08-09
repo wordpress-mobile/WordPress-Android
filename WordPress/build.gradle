@@ -587,11 +587,7 @@ tasks.register("dependencyTreeDiffCommentToGitHub", ViolationCommentsToGitHubTas
 
 tasks.register("printVersionName") {
     doLast {
-        if (project.hasProperty('alpha')) {
-          println android.productFlavors.zalpha.versionName
-        } else {
-          println android.productFlavors.vanilla.versionName
-        }
+        println android.defaultConfig.versionName
     }
 }
 
