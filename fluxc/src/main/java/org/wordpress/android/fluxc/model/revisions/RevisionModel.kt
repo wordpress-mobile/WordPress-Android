@@ -3,6 +3,7 @@ package org.wordpress.android.fluxc.model.revisions
 import java.util.ArrayList
 import java.util.Arrays
 
+@Suppress("LongParameterList")
 class RevisionModel(
     var revisionId: Long,
 

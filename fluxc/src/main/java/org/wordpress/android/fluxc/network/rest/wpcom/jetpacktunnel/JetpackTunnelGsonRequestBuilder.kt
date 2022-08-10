@@ -23,6 +23,7 @@ class JetpackTunnelGsonRequestBuilder @Inject constructor() {
      * @param listener the success listener
      * @param errorListener the error listener
      */
+    @Suppress("LongParameterList")
     fun <T : Any> buildGetRequest(
         site: SiteModel,
         url: String,
@@ -87,6 +88,7 @@ class JetpackTunnelGsonRequestBuilder @Inject constructor() {
      * @param listener the success listener
      * @param errorListener the error listener
      */
+    @Suppress("LongParameterList")
     fun <T : Any> buildPostRequest(
         site: SiteModel,
         url: String,
