@@ -8,29 +8,52 @@ common_params:
     - automattic/bash-cache#2.1.0
 
 steps:
+  #################
+  # Lint
+  #################
+  - group: "🕵️ Lint"
+    steps:
 
-  - label: "Lint WordPress"
-    command: ".buildkite/commands/lint.sh wordpress"
-    key: wplint
-    artifact_paths:
-      - "**/build/reports/lint-results*.*"
+      - label: "🕵️ Lint WordPress"
+        key: wplint
+        command: ".buildkite/commands/lint.sh wordpress"
+        artifact_paths:
+          - "**/build/reports/lint-results*.*"
 
-  # - label: "🔬 Lint Jetpack"
-  #   command: ".buildkite/commands/lint.sh jetpack"
-  #   key: jplint
-  #   artifact_paths:
-  #     - "**/build/reports/lint-results*.*"
+      - label: "🕵️ Lint Jetpack"
+        key: jplint
+        command: ".buildkite/commands/lint.sh jetpack"
+        artifact_paths:
+          - "**/build/reports/lint-results*.*"
 
-  - label: "🛠 WordPress Beta Build"
-    command: ".buildkite/commands/beta-build.sh wordpress"
-    depends_on: wplint
+  #################
+  # Beta Builds
+  #################
+  - group: "🚀 Beta Builds"
+    steps:
+
+      - label: "🛠 WordPress Beta Build"
+        key: wpbuild
+        command: ".buildkite/commands/beta-build.sh wordpress"
+        depends_on: wplint
+        plugins: *common_plugins
+        notify:
+          - slack: "#build-and-ship"
+
+      - label: "🛠 Jetpack Beta Build"
+        key: jpbuild
+        command: ".buildkite/commands/beta-build.sh jetpack"
+        depends_on: jplint
+        plugins: *common_plugins
+        notify:
+          - slack: "#build-and-ship"
+
+  #################
+  # GitHub Release
+  #################
+  - label: ":github: Release"
+    depends_on:
+      - wpbuild
+      - jpbuild
+    command: ".buildkite/commands/create-github-release.sh"
     plugins: *common_plugins
-    notify:
-      - slack: "#build-and-ship"
-
-  - label: "🛠 Jetpack Beta Build"
-    command: ".buildkite/commands/beta-build.sh jetpack"
-    # depends_on: jplint
-    plugins: *common_plugins
-    notify:
-      - slack: "#build-and-ship"

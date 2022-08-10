@@ -50,42 +50,13 @@ platform :android do
   lane :build_and_upload_pre_releases do |options|
     android_build_prechecks(
       skip_confirm: options[:skip_confirm],
-      alpha: true,
+      alpha: false,
       beta: true,
       final: false
     )
     android_build_preflight() unless options[:skip_prechecks]
     app = get_app_name_option!(options)
-    build_alpha(app: app, skip_prechecks: true, skip_confirm: options[:skip_confirm], upload_to_play_store: true, create_release: options[:create_release])
     build_beta(app: app, skip_prechecks: true, skip_confirm: options[:skip_confirm], upload_to_play_store: true, create_release: options[:create_release])
-  end
-
-  #####################################################################################
-  # build_alpha
-  # -----------------------------------------------------------------------------------
-  # This lane builds the app for internal testing and optionally uploads it
-  # -----------------------------------------------------------------------------------
-  # Usage:
-  # bundle exec fastlane build_alpha app:<wordpress|jetpack> [skip_confirm:<true|false>] [upload_to_play_store:<true|false>] [create_release:<true|false>]
-  #
-  # Example:
-  # bundle exec fastlane build_alpha app:wordpress create_release:true
-  # bundle exec fastlane build_alpha app:wordpress skip_confirm:true upload_to_play_store:true
-  # bundle exec fastlane build_alpha app:jetpack
-  #####################################################################################
-  desc 'Builds and updates for distribution'
-  lane :build_alpha do |options|
-    android_build_prechecks(skip_confirm: options[:skip_confirm], alpha: true) unless options[:skip_prechecks]
-    android_build_preflight() unless options[:skip_prechecks]
-
-    # Create the file names
-    app = get_app_name_option!(options)
-    version = android_get_alpha_version()
-    build_bundle(app: app, version: version, flavor: 'Zalpha', buildType: 'Release')
-
-    upload_build_to_play_store(app: app, version: version, track: 'alpha') if options[:upload_to_play_store]
-
-    create_gh_release(app: app, version: version, prerelease: true) if options[:create_release]
   end
 
   #####################################################################################
@@ -112,34 +83,6 @@ platform :android do
     build_bundle(app: app, version: version, flavor: 'Vanilla', buildType: 'Release')
 
     upload_build_to_play_store(app: app, version: version, track: 'beta') if options[:upload_to_play_store]
-
-    create_gh_release(app: app, version: version, prerelease: true) if options[:create_release]
-  end
-
-  #####################################################################################
-  # build_internal
-  # -----------------------------------------------------------------------------------
-  # This lane builds the app for restricted internal testing, and optionally uploads it to PlayStore's Internal track
-  # -----------------------------------------------------------------------------------
-  # Usage:
-  # bundle exec fastlane build_internal app:<wordpress|jetpack> [skip_confirm:<true|false>] [upload_to_play_store:<true|false>] [create_release:<true|false>]
-  #
-  # Example:
-  # bundle exec fastlane build_internal app:wordpress
-  # bundle exec fastlane build_internal app:wordpress skip_confirm:true upload_to_play_store:true
-  # bundle exec fastlane build_internal app:jetpack create_release:true
-  #####################################################################################
-  desc 'Builds and updates for internal testing'
-  lane :build_internal do |options|
-    android_build_prechecks(skip_confirm: options[:skip_confirm]) unless options[:skip_prechecks]
-    android_build_preflight() unless options[:skip_prechecks]
-
-    # Create the file names
-    app = get_app_name_option!(options)
-    version = android_get_release_version()
-    build_bundle(app: app, version: version, flavor: 'Zalpha', buildType: 'Debug')
-
-    upload_build_to_play_store(app: app, version: version, track: 'internal') if options[:upload_to_play_store]
 
     create_gh_release(app: app, version: version, prerelease: true) if options[:create_release]
   end
