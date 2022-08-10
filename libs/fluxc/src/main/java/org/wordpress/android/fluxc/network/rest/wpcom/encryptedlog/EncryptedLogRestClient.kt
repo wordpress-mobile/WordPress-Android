@@ -36,8 +36,17 @@ class EncryptedLogRestClient @Inject constructor(
         }
     }
 
-    // {"error":"too_many_requests","message":"You're sending too many messages. Please slow down."}
-    // {"error":"invalid-request","message":"Invalid UUID: uuids must only contain letters, numbers, dashes, and curly brackets"}
+    /**
+     * {
+     *   "error":"too_many_requests",
+     *   "message":"You're sending too many messages. Please slow down."
+     * }
+     * {
+     *   "error":"invalid-request",
+     *   "message":"Invalid UUID: uuids must only contain letters, numbers, dashes, and curly brackets"
+     * }
+     */
+    @Suppress("ReturnCount")
     private fun mapError(error: VolleyError): UploadEncryptedLogError {
         if (error is NoConnectionError) {
             return UploadEncryptedLogError.NoConnection

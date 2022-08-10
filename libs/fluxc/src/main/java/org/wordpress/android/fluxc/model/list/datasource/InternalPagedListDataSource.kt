@@ -1,23 +1,24 @@
 package org.wordpress.android.fluxc.model.list.datasource
 
+import androidx.paging.PositionalDataSource
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.fluxc.model.list.ListDescriptor
 
 /**
- * This component plays the middle man between the `PositionalDataSource` and [ListItemDataSourceInterface]
+ * This component plays the middle man between the [PositionalDataSource] and [ListItemDataSourceInterface]
  * implementation. Whenever a list is invalidated, meaning it needs to be refreshed, a new instance will be created
- * just like `PositionalDataSource`.
+ * just like [PositionalDataSource].
  *
  * We first ask the [ListItemDataSourceInterface] for the identifiers of each row and cache them in memory as soon as
- * a new instance is created. This is necessary because `PositionalDataSource` works with immutable values and does the
+ * a new instance is created. This is necessary because [PositionalDataSource] works with immutable values and does the
  * heavy lifting by caching the items in memory as they are loaded, however it still needs a consistent list of
  * identifiers for each index to represent.
  *
- * After the identifiers are cached, whenever `PositionalDataSource` asks for a range of items, they'll be converted
+ * After the identifiers are cached, whenever [PositionalDataSource] asks for a range of items, they'll be converted
  * to identifiers and propagated to [ListItemDataSourceInterface].
  *
- * Most importantly, by separating this component, we are able to keep a single instance of [ListItemDataSourceInterface]
- * and hide the requirement for identifiers needing to be cached from it.
+ * Most importantly, by separating this component, we are able to keep a single instance of
+ * [ListItemDataSourceInterface] and hide the requirement for identifiers needing to be cached from it.
  */
 class InternalPagedListDataSource<LIST_DESCRIPTOR : ListDescriptor, ITEM_IDENTIFIER, LIST_ITEM>(
     private val listDescriptor: LIST_DESCRIPTOR,

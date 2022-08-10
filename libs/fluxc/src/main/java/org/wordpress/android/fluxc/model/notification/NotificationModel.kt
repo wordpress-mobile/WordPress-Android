@@ -9,12 +9,12 @@ data class NotificationModel(
     val remoteNoteId: Long = 0L,
 
     // Note: this could be 0 in the db if the notification is not for one of the users sites
-    var remoteSiteId: Long = 0L,
+    val remoteSiteId: Long = 0L,
 
-    var noteHash: Long = 0L,
+    val noteHash: Long = 0L,
     val type: Kind = Kind.UNKNOWN,
     val subtype: Subkind? = Subkind.NONE,
-    var read: Boolean = false,
+    val read: Boolean = false,
     val icon: String? = null,
     val noticon: String? = null,
     val timestamp: String? = null,

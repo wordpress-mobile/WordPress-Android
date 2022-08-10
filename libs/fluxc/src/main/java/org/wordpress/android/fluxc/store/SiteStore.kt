@@ -120,9 +120,9 @@ import javax.inject.Singleton
  * NOTE: This class needs to be open because it's mocked in android tests in the WPAndroid project.
  *       TODO: consider adding https://kotlinlang.org/docs/all-open-plugin.html
  */
+@Suppress("ForbiddenComment")
 @Singleton
-open class SiteStore
-@Inject constructor(
+open class SiteStore @Inject constructor(
     dispatcher: Dispatcher?,
     private val postSqlUtils: PostSqlUtils,
     private val siteRestClient: SiteRestClient,
@@ -138,9 +138,9 @@ open class SiteStore
     ) : Payload<BaseNetworkError>()
 
     data class RefreshSitesXMLRPCPayload(
-        @JvmField var username: String = "",
-        @JvmField var password: String = "",
-        @JvmField var url: String = ""
+        @JvmField val username: String = "",
+        @JvmField val password: String = "",
+        @JvmField val url: String = ""
     ) : Payload<BaseNetworkError>()
 
     data class FetchSitesPayload @JvmOverloads constructor(
@@ -592,7 +592,7 @@ open class SiteStore
     data class OnURLChecked(
         @JvmField val url: String,
         @JvmField val isWPCom: Boolean = false,
-        var siteError: SiteError? = null
+        val siteError: SiteError? = null
     ) : OnChanged<SiteError>() {
         init {
             this.error = siteError
@@ -851,6 +851,7 @@ open class SiteStore
         GENERIC_ERROR;
 
         companion object {
+            @Suppress("ReturnCount")
             fun fromString(string: String): DeleteSiteErrorType {
                 if (!TextUtils.isEmpty(string)) {
                     if (string == "unauthorized") {
@@ -1009,6 +1010,7 @@ open class SiteStore
      * NOTE: This method needs to be open because it's mocked in android tests in the WPAndroid project.
      *       TODO: consider adding https://kotlinlang.org/docs/all-open-plugin.html
      */
+    @Suppress("ForbiddenComment")
     open fun getSiteByLocalId(id: Int): SiteModel? {
         val result = siteSqlUtils.getSitesWithLocalId(id)
         return if (result.isNotEmpty()) {
@@ -1329,6 +1331,7 @@ open class SiteStore
         return updateSites(siteXMLRPCClient.fetchSites(payload.url, payload.username, payload.password))
     }
 
+    @Suppress("ForbiddenComment")
     private fun updateSiteProfile(siteModel: SiteModel) {
         val event = OnProfileFetched(siteModel)
         if (siteModel.isError) {
@@ -1344,6 +1347,7 @@ open class SiteStore
         emitChange(event)
     }
 
+    @Suppress("ForbiddenComment")
     private fun updateSite(siteModel: SiteModel): OnSiteChanged {
         return if (siteModel.isError) {
             // TODO: what kind of error could we get here?
@@ -1365,6 +1369,7 @@ open class SiteStore
         }
     }
 
+    @Suppress("ForbiddenComment")
     private fun updateSites(sitesModel: SitesModel): OnSiteChanged {
         val event = if (sitesModel.isError) {
             // TODO: what kind of error could we get here?
@@ -1380,6 +1385,7 @@ open class SiteStore
         return event
     }
 
+    @Suppress("ForbiddenComment")
     private fun handleFetchedSitesWPComRest(fetchedSites: SitesModel): OnSiteChanged {
         return if (fetchedSites.isError) {
             // TODO: what kind of error could we get here?
@@ -1449,6 +1455,7 @@ open class SiteStore
         siteRestClient.exportSite(site)
     }
 
+    @Suppress("ForbiddenComment")
     private fun handleExportedSite(payload: ExportSiteResponsePayload) {
         val event = if (payload.isError) {
             // TODO: what kind of error could we get here?

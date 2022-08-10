@@ -12,7 +12,6 @@ import org.junit.Test
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.network.UserAgent
-import org.wordpress.android.fluxc.network.rest.wpapi.NonceRestClient
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIGsonRequestBuilder
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIResponse
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIResponse.Error
@@ -22,7 +21,6 @@ import org.wordpress.android.fluxc.test
 
 class ReactNativeWPAPIRestClientTest {
     private val wpApiGsonRequestBuilder = mock<WPAPIGsonRequestBuilder>()
-    private val nonceRestClient = mock<NonceRestClient>()
     private val dispatcher = mock<Dispatcher>()
     private val requestQueue = mock<RequestQueue>()
     private val userAgent = mock<UserAgent>()
@@ -36,7 +34,6 @@ class ReactNativeWPAPIRestClientTest {
     fun setUp() {
         subject = ReactNativeWPAPIRestClient(
                 wpApiGsonRequestBuilder,
-                nonceRestClient,
                 dispatcher,
                 requestQueue,
                 userAgent

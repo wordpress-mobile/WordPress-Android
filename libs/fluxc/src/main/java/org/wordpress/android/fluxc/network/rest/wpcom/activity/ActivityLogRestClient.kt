@@ -66,8 +66,7 @@ class ActivityLogRestClient @Inject constructor(
     @Named("regular") requestQueue: RequestQueue,
     accessToken: AccessToken,
     userAgent: UserAgent
-) :
-        BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {
+) : BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {
     suspend fun fetchActivity(payload: FetchActivityLogPayload, number: Int, offset: Int): FetchedActivityLogPayload {
         val url = WPCOMV2.sites.site(payload.site.siteId).activity.url
         val params = buildParams(offset, number, payload)
@@ -354,6 +353,7 @@ class ActivityLogRestClient @Inject constructor(
         return FetchedActivityLogPayload(activities, site, totalItems, number, offset)
     }
 
+    @Suppress("ReturnCount")
     private fun buildRewindStatusPayload(response: RewindStatusResponse, site: SiteModel):
             FetchedRewindStatePayload {
         val state = RewindStatusModel.State.fromValue(response.state)
@@ -418,8 +418,8 @@ class ActivityLogRestClient @Inject constructor(
                 ?.map { ActivityTypeModel(requireNotNull(it.key), requireNotNull(it.name), it.count ?: 0) }
                 ?: listOf()
 
-        if (BuildConfig.DEBUG && (response.groups?.activityTypes?.size ?: 0) != activityTypes.size) {
-            throw IllegalStateException("ActivityTypes parsing failed - one or more items were ignored.")
+        check(!BuildConfig.DEBUG || (response.groups?.activityTypes?.size ?: 0) == activityTypes.size) {
+            "ActivityTypes parsing failed - one or more items were ignored."
         }
 
         return FetchedActivityTypesResultPayload(

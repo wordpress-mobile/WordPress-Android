@@ -139,9 +139,9 @@ class PageStore @Inject constructor(
                         // and make it negative (to easily tell it's a temporary value)
                         if (it.remotePostId == 0L) {
                             /**
-                             * This hack is breaking the approach which we use for making sure we upload only changes which
-                             * were explicitly confirmed by the user. We are modifying the PostModel and we need to make
-                             * sure to retain the confirmation.
+                             * This hack is breaking the approach which we use for making sure we upload only changes
+                             * which were explicitly confirmed by the user. We are modifying the PostModel and we need
+                             * to make sure to retain the confirmation.
                              */
                             val changesConfirmed = it.contentHashcode() == it.changesConfirmedContentHashcode
                             it.setRemotePostId(-it.id.toLong())

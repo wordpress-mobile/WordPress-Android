@@ -72,9 +72,7 @@ class StockMediaRestClient @Inject constructor(
             is Error -> {
                 val error = response.error
                 AppLog.e(MEDIA, "VolleyError Fetching stock media: $error")
-                val mediaError = StockMediaError(
-                        StockMediaErrorType.fromBaseNetworkError(error), error.message
-                )
+                val mediaError = StockMediaError(StockMediaErrorType.fromBaseNetworkError(), error.message)
                 FetchedStockMediaListPayload(mediaError, searchTerm)
             }
         }

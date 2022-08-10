@@ -1,8 +1,8 @@
 package org.wordpress.android.fluxc.model.stats
 
 data class CommentsModel(
-    var posts: List<Post>,
-    var authors: List<Author>,
+    val posts: List<Post>,
+    val authors: List<Author>,
     val hasMorePosts: Boolean,
     val hasMoreAuthors: Boolean
 ) {
