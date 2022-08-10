@@ -1,5 +1,6 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.site
 
+@Suppress("ConstructorParameterNaming")
 class DomainAvailabilityResponse(
     val product_id: Int?,
     val product_slug: String?,

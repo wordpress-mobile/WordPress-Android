@@ -1,5 +1,6 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.revisions
 
+@Suppress("ConstructorParameterNaming")
 class RevisionsResponse(
     val diffs: List<DiffResponse>,
     val revisions: Map<String, RevisionResponse>
