@@ -16,6 +16,7 @@ import androidx.room.Transaction
 @Dao
 abstract class PlanOffersDao {
     @Transaction
+    @Suppress("SpreadOperator")
     open fun insertPlanOfferWithDetails(vararg planOfferWithDetails: PlanOfferWithDetails) {
         planOfferWithDetails.forEach {
             this.insertPlanOffer(it.planOffer)
