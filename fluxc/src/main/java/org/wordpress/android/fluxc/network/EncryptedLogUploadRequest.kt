@@ -36,6 +36,7 @@ class EncryptedLogUploadRequest(
         return contents.toByteArray()
     }
 
+    @Suppress("SwallowedException")
     override fun parseNetworkResponse(response: NetworkResponse?): Response<NetworkResponse> {
         return try {
             Response.success(response, HttpHeaderParser.parseCacheHeaders(response))
