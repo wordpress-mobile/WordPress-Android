@@ -1,5 +1,6 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.common
 
+@Suppress("VariableNaming")
 class LikeWPComRestResponse {
     inner class LikesWPComRestResponse {
         var likes: List<LikeWPComRestResponse>? = null
