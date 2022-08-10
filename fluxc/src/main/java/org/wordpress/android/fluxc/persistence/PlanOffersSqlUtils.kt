@@ -10,6 +10,7 @@ class PlanOffersSqlUtils @Inject constructor(
     private val planOffersDao: PlanOffersDao,
     private val planOffersMapper: PlanOffersMapper
 ) {
+    @Suppress("SpreadOperator")
     fun storePlanOffers(planOffers: List<PlanOffersModel>) {
         planOffersDao.clearPlanOffers()
 
