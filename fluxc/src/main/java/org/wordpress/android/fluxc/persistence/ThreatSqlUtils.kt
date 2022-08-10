@@ -86,8 +86,7 @@ class ThreatSqlUtils @Inject constructor(private val gson: Gson, private val thr
                 fileName = this.fileName
                 context = gson.toJson(this.context)
             }
-            else -> { // Do Nothing
-            }
+            else -> Unit // Do Nothing (ignore)
         }
         return ThreatBuilder(
             threatId = baseThreatModel.id,
