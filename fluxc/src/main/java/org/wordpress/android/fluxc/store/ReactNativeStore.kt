@@ -23,6 +23,8 @@ import java.net.HttpURLConnection
 import javax.inject.Inject
 import javax.inject.Singleton
 
+private const val WPCOM_ENDPOINT = "https://public-api.wordpress.com"
+
 /**
  * This store is for use making calls that originate from React Native. It does not use
  * a higher-level api for the requests and responses because of the unique requirements
@@ -58,8 +60,6 @@ class ReactNativeStore @VisibleForTesting constructor(
             siteSqlUtils::insertOrUpdateSite,
             Uri::parse
     )
-
-    private val WPCOM_ENDPOINT = "https://public-api.wordpress.com"
 
     suspend fun executeRequest(
         site: SiteModel,
