@@ -109,7 +109,6 @@ import org.wordpress.android.fluxc.utils.SiteErrorUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.AppLog.T.API
-import java.util.ArrayList
 import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -355,8 +354,9 @@ open class SiteStore @Inject constructor(
 
         fun description(): String {
             return String.format(
-                    "url: %s, e: %b, wp: %b, jp: %b, wpcom: %b, urlAfterRedirects: %s",
-                    url, exists, isWordPress, hasJetpack, isWPCom, urlAfterRedirects
+                Locale.US,
+                "url: %s, e: %b, wp: %b, jp: %b, wpcom: %b, urlAfterRedirects: %s",
+                url, exists, isWordPress, hasJetpack, isWPCom, urlAfterRedirects
             )
         }
     }
