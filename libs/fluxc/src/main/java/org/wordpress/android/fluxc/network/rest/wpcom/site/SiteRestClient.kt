@@ -98,6 +98,7 @@ import javax.inject.Named
 import javax.inject.Singleton
 import kotlin.math.max
 
+@Suppress("LargeClass")
 @Singleton
 class SiteRestClient @Inject constructor(
     appContext: Context?,
