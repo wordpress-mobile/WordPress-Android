@@ -79,7 +79,7 @@ class BloggingPromptsStore @Inject constructor(
         }
     }
 
-    @Suppress("SwallowedException")
+    @Suppress("TooGenericExceptionCaught", "SwallowedException")
     private suspend fun handlePayloadResponse(
         site: SiteModel,
         response: BloggingPromptsListResponse

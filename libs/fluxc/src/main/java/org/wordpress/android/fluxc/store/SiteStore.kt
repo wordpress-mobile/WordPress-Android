@@ -1554,7 +1554,7 @@ open class SiteStore @Inject constructor(
         }
     }
 
-    @Suppress("SwallowedException")
+    @Suppress("TooGenericExceptionCaught", "SwallowedException")
     private fun designateMobileEditor(payload: DesignateMobileEditorPayload) {
         // wpcom sites sync the new value with the backend
         if (payload.site.isUsingWpComRestApi) {
@@ -1572,7 +1572,7 @@ open class SiteStore @Inject constructor(
         emitChange(event)
     }
 
-    @Suppress("SwallowedException")
+    @Suppress("TooGenericExceptionCaught", "SwallowedException")
     private fun designateMobileEditorForAllSites(payload: DesignateMobileEditorForAllSitesPayload) {
         var rowsAffected = 0
         var wpcomPostRequestRequired = false
@@ -1598,7 +1598,7 @@ open class SiteStore @Inject constructor(
         emitChange(OnAllSitesMobileEditorChanged(rowsAffected, isNetworkResponse, error))
     }
 
-    @Suppress("SwallowedException")
+    @Suppress("TooGenericExceptionCaught", "SwallowedException")
     private fun updateSiteEditors(payload: FetchedEditorsPayload) {
         val site = payload.site
         val event = if (payload.isError) {
@@ -1624,7 +1624,7 @@ open class SiteStore @Inject constructor(
         emitChange(event)
     }
 
-    @Suppress("SwallowedException")
+    @Suppress("TooGenericExceptionCaught", "SwallowedException")
     private fun onAllSitesMobileEditorChanged(
         payload: DesignateMobileEditorForAllSitesResponsePayload
     ): OnAllSitesMobileEditorChanged {
