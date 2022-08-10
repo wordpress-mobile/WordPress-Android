@@ -66,6 +66,7 @@ data class RewindStatusModel(
         }
 
         companion object {
+            @Suppress("LongParameterList")
             fun build(
                 rewindId: String?,
                 restoreId: Long?,
