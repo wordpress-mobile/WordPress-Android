@@ -53,9 +53,9 @@ import org.wordpress.android.util.AppLog.T.COMMENTS
 import javax.inject.Inject
 import javax.inject.Singleton
 
+@Suppress("LargeClass")
 @Singleton
-class CommentsStore
-@Inject constructor(
+class CommentsStore @Inject constructor(
     private val commentsRestClient: CommentsRestClient,
     private val commentsXMLRPCClient: CommentsXMLRPCClient,
     private val commentsDao: CommentsDao,
