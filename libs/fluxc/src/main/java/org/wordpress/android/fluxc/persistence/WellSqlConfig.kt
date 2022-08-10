@@ -27,6 +27,8 @@ open class WellSqlConfig : DefaultWellConfig {
     }
 
     constructor(context: Context) : super(context)
+
+    @Suppress("SpreadOperator")
     constructor(context: Context, @AddOn vararg addOns: String) : super(context, mutableSetOf(*addOns))
 
     @Retention(SOURCE)
