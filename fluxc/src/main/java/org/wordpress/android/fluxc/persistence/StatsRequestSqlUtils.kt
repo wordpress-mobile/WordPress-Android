@@ -15,8 +15,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class StatsRequestSqlUtils
-@Inject constructor() {
+class StatsRequestSqlUtils @Inject constructor() {
     fun insert(
         site: SiteModel,
         blockType: BlockType,
@@ -68,6 +67,7 @@ class StatsRequestSqlUtils
         ).asModel.firstOrNull<StatsRequestBuilder?>() != null
     }
 
+    @Suppress("LongParameterList")
     private fun createSelectStatement(
         site: SiteModel,
         blockType: BlockType,

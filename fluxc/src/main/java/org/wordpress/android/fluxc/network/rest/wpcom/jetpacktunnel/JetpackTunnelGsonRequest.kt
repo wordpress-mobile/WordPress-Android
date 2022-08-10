@@ -103,6 +103,7 @@ object JetpackTunnelGsonRequest {
      *
      * @param T the expected response object from the WP-API endpoint
      */
+    @Suppress("LongParameterList")
     fun <T : Any> buildGetRequest(
         wpApiEndpoint: String,
         siteId: Long,
@@ -137,6 +138,7 @@ object JetpackTunnelGsonRequest {
      *
      * @param T the expected response object from the WP-API endpoint
      */
+    @Suppress("LongParameterList")
     fun <T : Any> buildPostRequest(
         wpApiEndpoint: String,
         siteId: Long,
@@ -161,6 +163,7 @@ object JetpackTunnelGsonRequest {
      *
      * @param T the expected response object from the WP-API endpoint
      */
+    @Suppress("LongParameterList")
     fun <T : Any> buildPatchRequest(
         wpApiEndpoint: String,
         siteId: Long,
@@ -185,6 +188,7 @@ object JetpackTunnelGsonRequest {
      *
      * @param T the expected response object from the WP-API endpoint
      */
+    @Suppress("LongParameterList")
     fun <T : Any> buildPutRequest(
         wpApiEndpoint: String,
         siteId: Long,
@@ -209,6 +213,7 @@ object JetpackTunnelGsonRequest {
      *
      * @param T the expected response object from the WP-API endpoint
      */
+    @Suppress("LongParameterList")
     fun <T : Any> buildDeleteRequest(
         wpApiEndpoint: String,
         siteId: Long,

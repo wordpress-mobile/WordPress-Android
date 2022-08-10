@@ -204,7 +204,7 @@ class SiteRestClient @Inject constructor(
      *
      * @return the response of the API call  as [NewSiteResponsePayload]
      */
-    @Suppress("ComplexMethod")
+    @Suppress("ComplexMethod", "LongParameterList")
     suspend fun newSite(
         siteName: String?,
         siteTitle: String?,
@@ -454,6 +454,7 @@ class SiteRestClient @Inject constructor(
         add(request)
     }
 
+    @Suppress("LongParameterList")
     fun suggestDomains(
         query: String,
         onlyWordpressCom: Boolean?,
@@ -510,6 +511,7 @@ class SiteRestClient @Inject constructor(
         add(request)
     }
 
+    @Suppress("LongParameterList")
     fun fetchWpComBlockLayouts(
         site: SiteModel,
         supportedBlocks: List<String?>?,
@@ -522,6 +524,7 @@ class SiteRestClient @Inject constructor(
         fetchBlockLayouts(site, url, supportedBlocks, previewWidth, previewHeight, scale, isBeta)
     }
 
+    @Suppress("LongParameterList")
     fun fetchSelfHostedBlockLayouts(
         site: SiteModel,
         supportedBlocks: List<String?>?,
@@ -534,6 +537,7 @@ class SiteRestClient @Inject constructor(
         fetchBlockLayouts(site, url, supportedBlocks, previewWidth, previewHeight, scale, isBeta)
     }
 
+    @Suppress("LongParameterList")
     private fun fetchBlockLayouts(
         site: SiteModel,
         url: String,

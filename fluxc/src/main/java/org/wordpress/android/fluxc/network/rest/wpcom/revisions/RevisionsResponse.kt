@@ -26,6 +26,7 @@ class RevisionsResponse(
         val add: Int
     )
 
+    @Suppress("LongParameterList")
     inner class RevisionResponse(
         val post_date_gmt: String,
         val post_modified_gmt: String,

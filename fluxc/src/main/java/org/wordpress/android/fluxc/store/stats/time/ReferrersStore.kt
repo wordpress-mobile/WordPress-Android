@@ -19,8 +19,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class ReferrersStore
-@Inject constructor(
+class ReferrersStore @Inject constructor(
     private val restClient: ReferrersRestClient,
     private val sqlUtils: ReferrersSqlUtils,
     private val timeStatsMapper: TimeStatsMapper,
@@ -90,6 +89,7 @@ class ReferrersStore
         }
     }
 
+    @Suppress("LongParameterList")
     private fun updateCacheWithMarkedSpam(
         site: SiteModel,
         granularity: StatsGranularity,

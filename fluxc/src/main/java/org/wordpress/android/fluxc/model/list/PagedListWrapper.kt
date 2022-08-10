@@ -31,6 +31,7 @@ import kotlin.coroutines.CoroutineContext
  * @property listError A [LiveData] instance that tells whether the last fetch resulted in an error. It can be used
  * to either let the user know of each error or present the error in the empty view when it's visible.
  */
+@Suppress("LongParameterList")
 class PagedListWrapper<T>(
     val data: LiveData<PagedList<T>>,
     private val dispatcher: Dispatcher,
