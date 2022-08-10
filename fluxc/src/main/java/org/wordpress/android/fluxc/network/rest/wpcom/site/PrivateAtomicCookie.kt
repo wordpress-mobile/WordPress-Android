@@ -6,6 +6,8 @@ import org.wordpress.android.fluxc.utils.PreferenceUtils.PreferenceUtilsWrapper
 import javax.inject.Inject
 import javax.inject.Singleton
 
+private const val MILLIS = 1000
+
 @Singleton
 class PrivateAtomicCookie
 @Inject constructor(private val preferenceUtils: PreferenceUtilsWrapper) {
@@ -35,7 +37,7 @@ class PrivateAtomicCookie
             return true
         }
         val cookieExpiration: Long = cookie!!.expires.toLong()
-        val currentTime = (System.currentTimeMillis() / 1000)
+        val currentTime = (System.currentTimeMillis() / MILLIS)
 
         return currentTime + COOKIE_EXPIRATION_THRESHOLD >= cookieExpiration
     }
@@ -49,7 +51,7 @@ class PrivateAtomicCookie
             return true
         }
         val cookieExpiration: Long = cookie!!.expires.toLong()
-        val currentTime = (System.currentTimeMillis() / 1000)
+        val currentTime = (System.currentTimeMillis() / MILLIS)
 
         return currentTime >= cookieExpiration
     }

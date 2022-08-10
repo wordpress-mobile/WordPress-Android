@@ -56,7 +56,10 @@ class ProductsStore @Inject constructor(
         }
     }
 
-    data class FetchProductsError(var type: FetchProductsErrorType, val message: String = "") : OnChangedError
+    data class FetchProductsError(
+        val type: FetchProductsErrorType,
+        val message: String = ""
+    ) : OnChangedError
 
     enum class FetchProductsErrorType {
         GENERIC_ERROR

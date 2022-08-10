@@ -45,9 +45,13 @@ import javax.inject.Singleton
  * an hour.
  */
 private const val ENCRYPTED_LOG_UPLOAD_UNAVAILABLE_UNTIL_DATE = "ENCRYPTED_LOG_UPLOAD_UNAVAILABLE_UNTIL_DATE_PREF_KEY"
+private const val UPLOAD_NEXT_DELAY = 3000L // 3 seconds
 private const val TOO_MANY_REQUESTS_ERROR_DELAY = 60 * 60 * 1000L // 1 hour
 private const val REGULAR_UPLOAD_FAILURE_DELAY = 60 * 1000L // 1 minute
 private const val MAX_RETRY_COUNT = 3
+
+private const val HTTP_STATUS_CODE_500 = 500
+private const val HTTP_STATUS_CODE_599 = 599
 
 @Singleton
 class EncryptedLogStore @Inject constructor(
@@ -121,7 +125,8 @@ class EncryptedLogStore @Inject constructor(
 
     private suspend fun uploadNextWithDelay(delay: Long) {
         addUploadDelay(delay)
-        delay(delay + 3000) // Add a 3 second buffer to avoid possible millisecond comparison issues
+        // Add a few seconds buffer to avoid possible millisecond comparison issues
+        delay(delay + UPLOAD_NEXT_DELAY)
         uploadNext()
     }
 
@@ -232,7 +237,7 @@ class EncryptedLogStore @Inject constructor(
             }
             is Unknown -> {
                 when {
-                    (500..599).contains(error.statusCode) -> {
+                    (HTTP_STATUS_CODE_500..HTTP_STATUS_CODE_599).contains(error.statusCode) -> {
                         CONNECTION_FAILURE
                     }
                     else -> {

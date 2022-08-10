@@ -18,6 +18,7 @@ sealed class PostListDescriptor(
 ) : ListDescriptor {
     override val config: ListConfig = listConfig
 
+    @Suppress("ForbiddenComment")
     override val uniqueIdentifier: ListDescriptorUniqueIdentifier by lazy {
         // TODO: need a better hashing algorithm, preferably a perfect hash
         val statusStr = statusList.asSequence().map { it.name }.joinToString(separator = ",")
@@ -68,6 +69,7 @@ sealed class PostListDescriptor(
 
     companion object {
         @JvmStatic
+        @Suppress("ForbiddenComment")
         fun calculateTypeIdentifier(localSiteId: Int): ListDescriptorTypeIdentifier {
             // TODO: need a better hashing algorithm, preferably a perfect hash
             return ListDescriptorTypeIdentifier("site-post-list-$localSiteId".hashCode())

@@ -135,7 +135,10 @@ class SiteOptionsStore
         }
     }
 
-    data class SiteOptionsError(var type: SiteOptionsErrorType, var message: String? = null) : OnChangedError
+    data class SiteOptionsError(
+        val type: SiteOptionsErrorType,
+        val message: String? = null
+    ) : OnChangedError
 
     enum class SiteOptionsErrorType {
         INVALID_PARAMETERS,

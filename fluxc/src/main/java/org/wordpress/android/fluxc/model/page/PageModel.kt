@@ -10,11 +10,11 @@ data class PageModel(
     val site: SiteModel,
     val pageId: Int,
     val title: String,
-    var status: PageStatus,
-    var date: Date,
-    var hasLocalChanges: Boolean,
+    val status: PageStatus,
+    val date: Date,
+    val hasLocalChanges: Boolean,
     val remoteId: Long,
-    var parent: PageModel?,
+    val parent: PageModel?,
     val featuredImageId: Long
 ) {
     constructor(post: PostModel, site: SiteModel, parent: PageModel? = null) : this(post, site, post.id, post.title,

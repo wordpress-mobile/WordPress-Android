@@ -24,6 +24,8 @@ import javax.inject.Singleton
 import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
 
+private const val RELOAD_SITE_DELAY = 5000L
+
 @Singleton
 class JetpackStore
 @Inject constructor(
@@ -84,7 +86,7 @@ class JetpackStore
         siteStore.onAction(SiteActionBuilder.newFetchSiteAction(site))
         siteContinuation = cont
         val job = coroutineEngine.launch(T.SETTINGS, this, "reloadSite") {
-            delay(5000)
+            delay(RELOAD_SITE_DELAY)
             if (siteContinuation != null && siteContinuation == cont) {
                 siteContinuation?.resume(Unit)
                 siteContinuation = null
@@ -110,7 +112,7 @@ class JetpackStore
 
     data class OnJetpackInstalled(
         val success: Boolean,
-        var causeOfChange: JetpackAction
+        val causeOfChange: JetpackAction
     ) : Store.OnChanged<JetpackInstallError>() {
         constructor(error: JetpackInstallError, causeOfChange: JetpackAction) :
                 this(success = false, causeOfChange = causeOfChange) {
@@ -190,7 +192,9 @@ class JetpackStore
     ) : OnChangedError
 
     // Actions
-    data class OnActivateStatsModule(var causeOfChange: JetpackAction) : Store.OnChanged<ActivateStatsModuleError>() {
+    data class OnActivateStatsModule(
+        val causeOfChange: JetpackAction
+    ) : Store.OnChanged<ActivateStatsModuleError>() {
         constructor(
             error: ActivateStatsModuleError,
             causeOfChange: JetpackAction
