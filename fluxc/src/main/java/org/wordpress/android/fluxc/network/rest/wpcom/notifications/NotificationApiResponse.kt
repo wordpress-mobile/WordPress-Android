@@ -5,6 +5,7 @@ import org.wordpress.android.fluxc.network.Response
 import org.wordpress.android.fluxc.tools.FormattableContent
 import org.wordpress.android.fluxc.tools.FormattableMeta
 
+@Suppress("VariableNaming")
 class NotificationApiResponse : Response {
     val id: Long? = null
     val type: String? = null
