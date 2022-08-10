@@ -103,7 +103,7 @@ data class PostWPComRestResponse(
 
     class MetaDataAdapter(private val gson: Gson) : TypeAdapter<List<PostMetaData>>() {
         @Throws(IOException::class)
-        @Suppress("NestedBlockDepth")
+        @Suppress("NestedBlockDepth", "TooGenericExceptionCaught")
         override fun read(jsonReader: JsonReader): List<PostMetaData> {
             val metaDataList = arrayListOf<PostMetaData>()
 
@@ -128,6 +128,7 @@ data class PostWPComRestResponse(
                                         AppLog.w(POSTS, "Error in post metadata json conversion: " + ex.message)
                                         jsonReader.skipValue()
                                     }
+                                    else -> Unit // Do nothing (ignore)
                                 }
                             }
                         } else {

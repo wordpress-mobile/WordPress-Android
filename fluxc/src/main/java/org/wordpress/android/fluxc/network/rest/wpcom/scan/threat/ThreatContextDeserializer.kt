@@ -118,7 +118,7 @@ class ThreatContextDeserializer : JsonDeserializer<ThreatContext?> {
         return highlights
     }
 
-    @Suppress("SwallowedException")
+    @Suppress("TooGenericExceptionCaught", "SwallowedException")
     private fun getSelectionRange(rangeArrayJsonElement: JsonElement): Pair<Int, Int>? {
         return try {
             val startIndex = rangeArrayJsonElement.asJsonArray.get(0).asInt

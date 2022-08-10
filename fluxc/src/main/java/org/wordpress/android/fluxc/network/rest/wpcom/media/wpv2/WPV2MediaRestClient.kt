@@ -96,7 +96,7 @@ class WPV2MediaRestClient @Inject constructor(
         }
     }
 
-    @Suppress("SwallowedException")
+    @Suppress("TooGenericExceptionCaught", "SwallowedException")
     private fun syncUploadMedia(site: SiteModel, media: MediaModel): Flow<ProgressPayload> {
         fun ProducerScope<ProgressPayload>.handleFailure(media: MediaModel, error: MediaError) {
             media.setUploadState(FAILED)
