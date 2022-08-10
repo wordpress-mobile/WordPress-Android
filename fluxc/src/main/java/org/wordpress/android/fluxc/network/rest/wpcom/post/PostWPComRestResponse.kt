@@ -143,7 +143,6 @@ data class PostWPComRestResponse(
             return metaDataList
         }
 
-        override fun write(out: JsonWriter?, value: List<PostMetaData>) { // Do Nothing
-        }
+        override fun write(out: JsonWriter?, value: List<PostMetaData>) = Unit // Do Nothing (ignore)
     }
 }
