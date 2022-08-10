@@ -75,6 +75,7 @@ class PlanOffersRestClient @Inject constructor(
         })
     }
 
+    @Suppress("ConstructorParameterNaming")
     data class PlanOffersResponse(
         val groups: List<Group>?,
         val plans: List<Plan>?,
@@ -85,7 +86,9 @@ class PlanOffersRestClient @Inject constructor(
             val name: String
         )
 
-        data class PlanId(val plan_id: Int)
+        data class PlanId(
+            val plan_id: Int
+        )
 
         data class Feature(
             val id: String?,
