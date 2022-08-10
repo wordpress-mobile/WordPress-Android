@@ -29,6 +29,7 @@ class FixThreatsStatusDeserializer : JsonDeserializer<List<FixThreatStatus>?> {
         }
     }.toList()
 
+    @Suppress("SwallowedException")
     private fun getFixThreatStatus(key: String, inputJsonObject: JsonObject) =
         inputJsonObject.get(key)?.takeIf { it.isJsonObject }?.asJsonObject?.let { threat ->
             try {

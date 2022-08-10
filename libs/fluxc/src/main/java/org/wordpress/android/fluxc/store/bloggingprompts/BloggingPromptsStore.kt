@@ -79,6 +79,7 @@ class BloggingPromptsStore @Inject constructor(
         }
     }
 
+    @Suppress("SwallowedException")
     private suspend fun handlePayloadResponse(
         site: SiteModel,
         response: BloggingPromptsListResponse

@@ -586,9 +586,8 @@ class SiteRestClient @Inject constructor(
         add(request)
     }
 
-    //
     // Unauthenticated network calls
-    //
+    @Suppress("SwallowedException")
     fun fetchConnectSiteInfo(siteUrl: String) {
         // Get a proper URI to reliably retrieve the scheme.
         val uri: URI = try {
@@ -618,6 +617,7 @@ class SiteRestClient @Inject constructor(
         addUnauthedRequest(request)
     }
 
+    @Suppress("SwallowedException")
     fun fetchWPComSiteByUrl(siteUrl: String) {
         val sanitizedUrl: String
         try {
@@ -1087,6 +1087,7 @@ class SiteRestClient @Inject constructor(
         return site
     }
 
+    @Suppress("SwallowedException")
     private fun volleyErrorToAccountResponsePayload(
         error: VolleyError,
         dryRun: Boolean = false
