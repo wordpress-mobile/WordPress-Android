@@ -48,6 +48,7 @@ class WPAPIEncodedBodyRequest(
      * @param params parameters that are converted
      * @return an application/x-www-form-urlencoded encoded string
      */
+    @Suppress("TooGenericExceptionThrown")
     private fun encodeParameters(params: Map<String, String>): ByteArray {
         val encodedParams = StringBuilder()
         return try {

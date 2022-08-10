@@ -198,6 +198,7 @@ class ScanStore @Inject constructor(
         return emitFetchScanHistoryResult(resultPayload)
     }
 
+    @Suppress("TooGenericExceptionThrown")
     private fun storeThreatsWithStatuses(
         action: ScanAction,
         site: SiteModel,
@@ -210,9 +211,7 @@ class ScanStore @Inject constructor(
                     if (it.size != threats.size) {
                         val msg = "$action action returned a Threat with ThreatState not in ${statuses.joinToString()}"
                         appLogWrapper.e(AppLog.T.API, msg)
-                        if (buildConfigWrapper.isDebug()) {
-                            throw RuntimeException(msg)
-                        }
+                        if (buildConfigWrapper.isDebug()) throw RuntimeException(msg)
                     }
                 }
                 ?.run { threatSqlUtils.insertThreats(site, this) }
