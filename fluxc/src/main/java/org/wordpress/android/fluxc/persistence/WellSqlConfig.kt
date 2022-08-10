@@ -20,6 +20,7 @@ import org.wordpress.android.util.AppLog.T
 import kotlin.annotation.AnnotationRetention.SOURCE
 import kotlin.annotation.AnnotationTarget.VALUE_PARAMETER
 
+@Suppress("LargeClass")
 open class WellSqlConfig : DefaultWellConfig {
     companion object {
         const val ADDON_WOOCOMMERCE = "WC"
