@@ -103,8 +103,8 @@ data class PostWPComRestResponse(
 
     class MetaDataAdapter(private val gson: Gson) : TypeAdapter<List<PostMetaData>>() {
         @Throws(IOException::class)
-        override
-        fun read(jsonReader: JsonReader): List<PostMetaData> {
+        @Suppress("NestedBlockDepth")
+        override fun read(jsonReader: JsonReader): List<PostMetaData> {
             val metaDataList = arrayListOf<PostMetaData>()
 
             // Noticed several metadata formats in the json response like
@@ -135,8 +135,7 @@ data class PostWPComRestResponse(
                         }
                     }
                     jsonReader.endArray()
-                }
-                else -> {
+                } else -> {
                     jsonReader.skipValue()
                 }
             }
