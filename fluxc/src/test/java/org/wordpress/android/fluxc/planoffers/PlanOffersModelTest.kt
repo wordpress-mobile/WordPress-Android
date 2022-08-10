@@ -14,8 +14,10 @@ class PlanOffersModelTest {
         assertEquals(samplePlanOffersModel1, samplePlanOffersModel2)
         assertEquals(samplePlanOffersModel1.hashCode(), samplePlanOffersModel2.hashCode())
 
-        samplePlanOffersModel2.description = "mismatched description"
-        assertNotEquals(samplePlanOffersModel1, samplePlanOffersModel2)
-        assertNotEquals(samplePlanOffersModel1.hashCode(), samplePlanOffersModel2.hashCode())
+        val samplePlanOffersModel3 = PLAN_OFFER_MODELS[0].copy(
+            description = "mismatched description"
+        )
+        assertNotEquals(samplePlanOffersModel1, samplePlanOffersModel3)
+        assertNotEquals(samplePlanOffersModel1.hashCode(), samplePlanOffersModel3.hashCode())
     }
 }

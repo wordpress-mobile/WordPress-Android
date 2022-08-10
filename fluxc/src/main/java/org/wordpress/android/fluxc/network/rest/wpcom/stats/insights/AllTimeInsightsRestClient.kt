@@ -53,7 +53,7 @@ class AllTimeInsightsRestClient @Inject constructor(
     }
 
     data class AllTimeResponse(
-        @SerializedName("date") var date: Date? = null,
+        @SerializedName("date") val date: Date? = null,
         @SerializedName("stats") val stats: StatsResponse?
     ) {
         data class StatsResponse(

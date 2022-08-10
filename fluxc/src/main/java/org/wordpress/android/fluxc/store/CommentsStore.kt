@@ -238,6 +238,7 @@ class CommentsStore
         }
     }
 
+    @Suppress("ComplexMethod", "ReturnCount")
     suspend fun deleteComment(
         site: SiteModel,
         remoteCommentId: Long,
@@ -739,6 +740,7 @@ class CommentsStore
         return this ?: 0
     }
 
+    @Suppress("LongMethod", "ReturnCount")
     private suspend fun removeCommentGaps(
         site: SiteModel?,
         commentsList: CommentEntityList?,

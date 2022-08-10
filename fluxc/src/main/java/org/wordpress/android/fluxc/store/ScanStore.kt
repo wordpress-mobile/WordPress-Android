@@ -222,25 +222,33 @@ class ScanStore @Inject constructor(
             OnScanHistoryFetched(payload.remoteSiteId, payload.error, FETCH_SCAN_HISTORY)
 
     // Actions
-    data class OnScanStateFetched(var causeOfChange: ScanAction) : Store.OnChanged<ScanStateError>() {
+    data class OnScanStateFetched(
+        val causeOfChange: ScanAction
+    ) : Store.OnChanged<ScanStateError>() {
         constructor(error: ScanStateError, causeOfChange: ScanAction) : this(causeOfChange = causeOfChange) {
             this.error = error
         }
     }
 
-    data class OnScanStarted(var causeOfChange: ScanAction) : Store.OnChanged<ScanStartError>() {
+    data class OnScanStarted(
+        val causeOfChange: ScanAction
+    ) : Store.OnChanged<ScanStartError>() {
         constructor(error: ScanStartError, causeOfChange: ScanAction) : this(causeOfChange = causeOfChange) {
             this.error = error
         }
     }
 
-    data class OnFixThreatsStarted(var causeOfChange: ScanAction) : Store.OnChanged<FixThreatsError>() {
+    data class OnFixThreatsStarted(
+        val causeOfChange: ScanAction
+    ) : Store.OnChanged<FixThreatsError>() {
         constructor(error: FixThreatsError, causeOfChange: ScanAction) : this(causeOfChange = causeOfChange) {
             this.error = error
         }
     }
 
-    data class OnIgnoreThreatStarted(var causeOfChange: ScanAction) : Store.OnChanged<IgnoreThreatError>() {
+    data class OnIgnoreThreatStarted(
+        val causeOfChange: ScanAction
+    ) : Store.OnChanged<IgnoreThreatError>() {
         constructor(error: IgnoreThreatError, causeOfChange: ScanAction) : this(causeOfChange = causeOfChange) {
             this.error = error
         }
@@ -249,7 +257,7 @@ class ScanStore @Inject constructor(
     data class OnFixThreatsStatusFetched(
         val remoteSiteId: Long,
         val fixThreatStatusModels: List<FixThreatStatusModel>,
-        var causeOfChange: ScanAction
+        val causeOfChange: ScanAction
     ) : Store.OnChanged<FixThreatsStatusError>() {
         constructor(
             remoteSiteId: Long,

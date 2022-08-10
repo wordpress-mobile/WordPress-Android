@@ -78,6 +78,7 @@ class AuthorsRestClient
             @SerializedName("authors") val authors: List<Author>
         )
 
+        @Suppress("DataClassShouldBeImmutable")
         data class Author(
             @SerializedName("name") val name: String?,
             @SerializedName("views") var views: Int?,

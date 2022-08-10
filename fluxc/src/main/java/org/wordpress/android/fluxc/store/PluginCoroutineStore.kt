@@ -27,7 +27,10 @@ import org.wordpress.android.fluxc.store.PluginStore.PluginDirectoryError
 import org.wordpress.android.fluxc.tools.CoroutineEngine
 import org.wordpress.android.fluxc.utils.CurrentTimeProvider
 import org.wordpress.android.util.AppLog.T
+import java.net.HttpURLConnection
 import javax.inject.Inject
+
+private const val PLUGIN_CONFIGURATION_DELAY = 1000L
 
 class PluginCoroutineStore
 @Inject constructor(
@@ -137,7 +140,7 @@ class PluginCoroutineStore
         // Once the plugin is installed activate it and enable auto-updates
         if (!payload.isError && payload.data != null) {
             // Give a second to the server as otherwise the following configure call may fail
-            delay(1000)
+            delay(PLUGIN_CONFIGURATION_DELAY)
             val configureEvent = syncConfigureSitePlugin(site, payload.data.name, payload.data.slug, true)
             dispatcher.emitChange(configureEvent)
         }
@@ -171,7 +174,7 @@ class PluginCoroutineStore
         return when (response.isError) {
             false -> response
             else -> when (response.error?.volleyError?.networkResponse?.statusCode) {
-                401 -> {
+                HttpURLConnection.HTTP_UNAUTHORIZED -> {
                     if (usingSavedNonce) {
                         // Call with saved nonce failed, so try getting a new one
                         val previousNonce = nonce
@@ -186,7 +189,7 @@ class PluginCoroutineStore
                     response
                 }
 
-                404 -> {
+                HttpURLConnection.HTTP_NOT_FOUND -> {
                     // call failed with 'not found' so clear the (failing) rest url
                     site.wpApiRestUrl = null
                     (siteSqlUtils::insertOrUpdateSite)(site)

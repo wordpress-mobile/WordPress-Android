@@ -42,7 +42,7 @@ class CommentsXMLRPCClient @Inject constructor(
         offset: Int,
         status: CommentStatus
     ): CommentsApiPayload<CommentEntityList> {
-        val params: MutableList<Any> = ArrayList(4)
+        val params: MutableList<Any> = ArrayList()
 
         val commentParams = mutableMapOf<String, Any>(
                 "number" to number,
@@ -102,7 +102,7 @@ class CommentsXMLRPCClient @Inject constructor(
         comment: CommentEntity,
         commentParams: Map<String, Any?>
     ): CommentsApiPayload<CommentEntity> {
-        val params: MutableList<Any> = ArrayList(5)
+        val params: MutableList<Any> = ArrayList()
 
         params.add(site.selfHostedSiteId)
         params.add(site.username)
@@ -129,7 +129,7 @@ class CommentsXMLRPCClient @Inject constructor(
     }
 
     suspend fun fetchComment(site: SiteModel, remoteCommentId: Long): CommentsApiPayload<CommentEntity> {
-        val params: MutableList<Any> = ArrayList(4)
+        val params: MutableList<Any> = ArrayList()
 
         params.add(site.selfHostedSiteId)
         params.add(site.username)
@@ -155,7 +155,7 @@ class CommentsXMLRPCClient @Inject constructor(
     }
 
     suspend fun deleteComment(site: SiteModel, remoteCommentId: Long): CommentsApiPayload<CommentEntity?> {
-        val params: MutableList<Any> = ArrayList(4)
+        val params: MutableList<Any> = ArrayList()
 
         params.add(site.selfHostedSiteId)
         params.add(site.username)
@@ -238,7 +238,7 @@ class CommentsXMLRPCClient @Inject constructor(
         parentId: Long,
         commentParams: Map<String, Any?>
     ): CommentsApiPayload<CommentEntity> {
-        val params: MutableList<Any> = ArrayList(5)
+        val params: MutableList<Any> = ArrayList()
 
         params.add(site.selfHostedSiteId)
         params.add(site.username)

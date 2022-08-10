@@ -81,6 +81,7 @@ class ClicksRestClient
             @SerializedName("clicks") val clicks: List<ClickGroup>
         )
 
+        @Suppress("DataClassShouldBeImmutable")
         data class ClickGroup(
             @SerializedName("group") val groupId: String?,
             @SerializedName("name") val name: String?,

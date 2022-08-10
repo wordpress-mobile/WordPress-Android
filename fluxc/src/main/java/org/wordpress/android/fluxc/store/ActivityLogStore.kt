@@ -277,7 +277,7 @@ class ActivityLogStore
     data class OnActivityLogFetched(
         val rowsAffected: Int,
         val canLoadMore: Boolean,
-        var causeOfChange: ActivityLogAction
+        val causeOfChange: ActivityLogAction
     ) : Store.OnChanged<ActivityError>() {
         constructor(error: ActivityError, causeOfChange: ActivityLogAction) :
                 this(rowsAffected = 0, canLoadMore = true, causeOfChange = causeOfChange) {
@@ -285,7 +285,9 @@ class ActivityLogStore
         }
     }
 
-    data class OnRewindStatusFetched(var causeOfChange: ActivityLogAction) : Store.OnChanged<RewindStatusError>() {
+    data class OnRewindStatusFetched(
+        val causeOfChange: ActivityLogAction
+    ) : Store.OnChanged<RewindStatusError>() {
         constructor(error: RewindStatusError, causeOfChange: ActivityLogAction) :
                 this(causeOfChange = causeOfChange) {
             this.error = error
@@ -295,7 +297,7 @@ class ActivityLogStore
     data class OnRewind(
         val rewindId: String,
         val restoreId: Long? = null,
-        var causeOfChange: ActivityLogAction
+        val causeOfChange: ActivityLogAction
     ) : Store.OnChanged<RewindError>() {
         constructor(rewindId: String, error: RewindError, causeOfChange: ActivityLogAction) :
                 this(rewindId = rewindId, restoreId = null, causeOfChange = causeOfChange) {
@@ -309,7 +311,7 @@ class ActivityLogStore
         val backupPoint: String? = null,
         val startedAt: String? = null,
         val progress: Int = 0,
-        var causeOfChange: ActivityLogAction
+        val causeOfChange: ActivityLogAction
     ) : Store.OnChanged<BackupDownloadError>() {
         constructor(rewindId: String, error: BackupDownloadError, causeOfChange: ActivityLogAction) :
                 this(rewindId = rewindId, downloadId = null, causeOfChange = causeOfChange) {
@@ -317,8 +319,9 @@ class ActivityLogStore
         }
     }
 
-    data class OnBackupDownloadStatusFetched(var causeOfChange: ActivityLogAction) :
-            Store.OnChanged<BackupDownloadStatusError>() {
+    data class OnBackupDownloadStatusFetched(
+        val causeOfChange: ActivityLogAction
+    ) : Store.OnChanged<BackupDownloadStatusError>() {
         constructor(error: BackupDownloadStatusError, causeOfChange: ActivityLogAction) :
                 this(causeOfChange = causeOfChange) {
             this.error = error
@@ -343,7 +346,7 @@ class ActivityLogStore
     data class OnDismissBackupDownload(
         val downloadId: Long,
         val isDismissed: Boolean = false,
-        var causeOfChange: ActivityLogAction
+        val causeOfChange: ActivityLogAction
     ) : Store.OnChanged<DismissBackupDownloadError>() {
         constructor(downloadId: Long, error: DismissBackupDownloadError, causeOfChange: ActivityLogAction) :
                 this(downloadId = downloadId, causeOfChange = causeOfChange) {

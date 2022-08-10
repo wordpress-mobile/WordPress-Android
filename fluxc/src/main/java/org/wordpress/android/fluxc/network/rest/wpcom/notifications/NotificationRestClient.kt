@@ -222,7 +222,7 @@ class NotificationRestClient @Inject constructor(
                     val lastSeenTime = response?.last_seen_time?.let {
                         Date(it)
                     }
-                    val notifications = response?.notes?.map { it ->
+                    val notifications = response?.notes?.map {
                         NotificationApiResponse.notificationResponseToNotificationModel(it)
                     } ?: listOf()
                     val payload = FetchNotificationsResponsePayload(notifications, lastSeenTime)

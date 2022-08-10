@@ -160,9 +160,15 @@ class TransactionsStore @Inject constructor(
     data class FetchSupportedCountriesError(val type: FetchSupportedCountriesErrorType, val message: String = "") :
             OnChangedError
 
-    data class CreateShoppingCartError(var type: CreateCartErrorType, val message: String = "") : OnChangedError
+    data class CreateShoppingCartError(
+        val type: CreateCartErrorType,
+        val message: String = ""
+    ) : OnChangedError
 
-    data class RedeemShoppingCartError(var type: TransactionErrorType, val message: String = "") : OnChangedError
+    data class RedeemShoppingCartError(
+        val type: TransactionErrorType,
+        val message: String = ""
+    ) : OnChangedError
 
     enum class FetchSupportedCountriesErrorType {
         GENERIC_ERROR
