@@ -1128,12 +1128,9 @@ public class ReaderPostListFragment extends ViewPagerFragment
         // bar that appears at top after new posts are loaded
         mNewPostsBar = rootView.findViewById(R.id.layout_new_posts);
         mNewPostsBar.setVisibility(View.GONE);
-        mNewPostsBar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mRecyclerView.scrollRecycleViewToPosition(0);
-                refreshPosts();
-            }
+        mNewPostsBar.setOnClickListener(view -> {
+            mRecyclerView.scrollRecycleViewToPosition(0);
+            refreshPosts();
         });
 
         // progress bar that appears when loading more posts
