@@ -512,6 +512,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
     }
 
     private void showJetpackBanner() {
+        mJetpackBrandingUtils.setNavigationBarColorForBanner(requireActivity().getWindow());
         mJetpackBanner.setVisibility(View.VISIBLE);
 
         if (mJetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
