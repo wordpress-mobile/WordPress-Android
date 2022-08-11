@@ -1867,6 +1867,8 @@ public class ReaderPostListFragment extends ViewPagerFragment
                 }
                 if (isSearching() && !isSearchTabsShowing()) {
                     showSearchTabs();
+                } else if (isSearching()) {
+                    toggleJetpackBannerIfEnabled(true);
                 }
             }
             mRestorePosition = 0;
