@@ -182,6 +182,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
     private View mSubFiltersListButton;
     private TextView mSubFilterTitle;
     private View mRemoveFilterButton;
+    private View mJetpackBanner;
 
     private boolean mIsTopLevel = false;
     private static final String SUBFILTER_BOTTOM_SHEET_TAG = "SUBFILTER_BOTTOM_SHEET_TAG";
@@ -500,34 +501,41 @@ public class ReaderPostListFragment extends ViewPagerFragment
         }
     }
 
-    private void toggleJetpackBannerIfEnabled() {
+    private void toggleJetpackBannerIfEnabled(final boolean forceShow) {
         if (!isAdded() || getView() == null) return;
         final boolean shouldShow = mJetpackBrandingUtils.shouldShowJetpackBranding();
         if (shouldShow) {
             View jetpackBanner = getView().findViewById(R.id.jetpack_banner);
             jetpackBanner.setVisibility(View.VISIBLE);
 
-            if (mJetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
-                jetpackBanner.setOnClickListener(v -> {
-                    mJetpackBrandingUtils.trackBannerTapped(Screen.READER_SEARCH);
-                    new JetpackPoweredBottomSheetFragment()
-                            .show(getChildFragmentManager(), JetpackPoweredBottomSheetFragment.TAG);
-                });
-            }
-            // Add bottom margin to post list and empty view.
-            int jetpackBannerHeight = getResources().getDimensionPixelSize(R.dimen.jetpack_banner_height);
-            ((MarginLayoutParams) getView().findViewById(R.id.reader_recycler_view).getLayoutParams())
-                    .bottomMargin = jetpackBannerHeight;
-            ((MarginLayoutParams) getView().findViewById(R.id.empty_custom_view).getLayoutParams())
-                    .bottomMargin = jetpackBannerHeight;
+        if (forceShow && mJetpackBrandingUtils.shouldShowJetpackBranding()) {
+            showJetpackBanner();
         } else {
-            getView().findViewById(R.id.jetpack_banner).setVisibility(View.GONE);
-            // Remove bottom margin from post list and empty view.
-            ((MarginLayoutParams) getView().findViewById(R.id.reader_recycler_view).getLayoutParams())
-                    .bottomMargin = 0;
-            ((MarginLayoutParams) getView().findViewById(R.id.empty_custom_view).getLayoutParams())
-                    .bottomMargin = 0;
+            hideJetpackBanner();
         }
+    }
+
+    private void showJetpackBanner() {
+        mJetpackBanner.setVisibility(View.VISIBLE);
+
+        if (mJetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
+            mJetpackBanner.setOnClickListener(v -> {
+                mJetpackBrandingUtils.trackBannerTapped(Screen.READER_SEARCH);
+                new JetpackPoweredBottomSheetFragment()
+                        .show(getChildFragmentManager(), JetpackPoweredBottomSheetFragment.TAG);
+            });
+        }
+        // Add bottom margin to post list and empty view.
+        int jetpackBannerHeight = getResources().getDimensionPixelSize(R.dimen.jetpack_banner_height);
+        ((MarginLayoutParams) mRecyclerView.getLayoutParams()).bottomMargin = jetpackBannerHeight;
+        ((MarginLayoutParams) mActionableEmptyView.getLayoutParams()).bottomMargin = jetpackBannerHeight;
+    }
+
+    private void hideJetpackBanner() {
+        mJetpackBanner.setVisibility(View.GONE);
+        // Remove bottom margin from post list and empty view.
+        ((MarginLayoutParams) mRecyclerView.getLayoutParams()).bottomMargin = 0;
+        ((MarginLayoutParams) mActionableEmptyView.getLayoutParams()).bottomMargin = 0;
     }
 
     private void setFollowStatusForBlog(FollowStatusChanged readerData) {
@@ -1136,6 +1144,8 @@ public class ReaderPostListFragment extends ViewPagerFragment
         mProgress = rootView.findViewById(R.id.progress_footer);
         mProgress.setVisibility(View.GONE);
 
+        mJetpackBanner = rootView.findViewById(R.id.jetpack_banner);
+
         if (savedInstanceState != null && savedInstanceState.getBoolean(ReaderConstants.KEY_IS_REFRESHING)) {
             mIsUpdating = true;
             mRecyclerView.setRefreshing(true);
@@ -1220,7 +1230,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
         boolean hasQuery = !isSearchViewEmpty();
         boolean hasPerformedSearch = !TextUtils.isEmpty(mCurrentSearchQuery);
 
-        toggleJetpackBannerIfEnabled();
+        toggleJetpackBannerIfEnabled(true);
 
         // prevents suggestions from being shown after the search view has been collapsed
         if (!isSearching()) {
@@ -1309,7 +1319,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
         updatePostsInCurrentSearch(0);
         updateSitesInCurrentSearch(0);
 
-        toggleJetpackBannerIfEnabled();
+        toggleJetpackBannerIfEnabled(false);
 
         // track that the user performed a search
         if (!trimQuery.equals("")) {
