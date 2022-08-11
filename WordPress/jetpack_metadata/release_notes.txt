@@ -1,5 +1,3 @@
-* [*] Use larger thumbnail previews for recommended themes during site creation [https://github.com/wordpress-mobile/WordPress-Android/pull/16848]
-* [***] [internal] Block Editor: List block: Adds support for V2 behind a feature flag [https://github.com/WordPress/gutenberg/pull/42702]
-* [*] Use the Jetpack green color for the skip buttons text in site creation [https://github.com/wordpress-mobile/WordPress-Android/pull/16994]
-* [**] App Settings: Show a label with the current language of the app under "Interface Language". [https://github.com/wordpress-mobile/WordPress-Android/pull/17004]
-
+- We added a label in App Settings to show the app’s current interface language.
+- We bumped up the screenshot size in the site theme picker to go with high-resolution image previews.
+- In the site creation process, we changed the Skip button text from blue to Jetpack green.
