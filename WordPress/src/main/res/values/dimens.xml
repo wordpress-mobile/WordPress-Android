@@ -116,7 +116,6 @@
     <dimen name="margin_extra_extra_large">48dp</dimen>
     <dimen name="margin_64dp">64dp</dimen>
     <dimen name="margin_68dp">68dp</dimen>
-    <dimen name="margin_200dp">200dp</dimen>
     <dimen name="margin_filter_spinner">16dp</dimen>
     <dimen name="margin_theme_browser_top">160dp</dimen>
     <dimen name="negative_margin_medium">-8dp</dimen>
