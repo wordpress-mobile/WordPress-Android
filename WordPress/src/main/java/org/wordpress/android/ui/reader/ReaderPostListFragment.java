@@ -503,10 +503,6 @@ public class ReaderPostListFragment extends ViewPagerFragment
 
     private void toggleJetpackBannerIfEnabled(final boolean forceShow) {
         if (!isAdded() || getView() == null) return;
-        final boolean shouldShow = mJetpackBrandingUtils.shouldShowJetpackBranding();
-        if (shouldShow) {
-            View jetpackBanner = getView().findViewById(R.id.jetpack_banner);
-            jetpackBanner.setVisibility(View.VISIBLE);
 
         if (forceShow && mJetpackBrandingUtils.shouldShowJetpackBranding()) {
             showJetpackBanner();
