@@ -72,6 +72,7 @@ import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.FilteredRecyclerView;
 import org.wordpress.android.ui.RequestCodes;
+import org.wordpress.android.ui.ScrollableViewInitializedListener;
 import org.wordpress.android.ui.ViewPagerFragment;
 import org.wordpress.android.ui.main.BottomNavController;
 import org.wordpress.android.ui.main.SitePickerActivity;
@@ -771,6 +772,11 @@ public class ReaderPostListFragment extends ViewPagerFragment
         if (shouldShowEmptyViewForSelfHostedCta()) {
             setEmptyTitleDescriptionAndButton(false);
             showEmptyView();
+        }
+
+        if (getActivity() instanceof ScrollableViewInitializedListener) {
+            ((ScrollableViewInitializedListener) getActivity())
+                    .onScrollableViewInitialized(mRecyclerView.getInternalRecyclerView().getId());
         }
 
         mViewModel.onFragmentResume(mIsTopLevel, isSearching(), isFilterableScreen(),
@@ -2651,7 +2657,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
 
         if (blogId > 0) {
             WPSnackbar.make(getSnackbarParent(), Html.fromHtml(getString(R.string.reader_followed_blog_notifications,
-                    "<b>", blog, "</b>")), Snackbar.LENGTH_LONG)
+                              "<b>", blog, "</b>")), Snackbar.LENGTH_LONG)
                       .setAction(getString(R.string.reader_followed_blog_notifications_action),
                               new View.OnClickListener() {
                                   @Override public void onClick(View view) {
