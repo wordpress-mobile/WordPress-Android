@@ -500,9 +500,9 @@ public class ReaderPostListFragment extends ViewPagerFragment
         }
     }
 
-    private void toggleJetpackBannerIfEnabled(boolean forceShow) {
-        if (!isAdded() || !isSearching() || getView() == null) return;
-        final boolean shouldShow = forceShow && mJetpackBrandingUtils.shouldShowJetpackBranding();
+    private void toggleJetpackBannerIfEnabled() {
+        if (!isAdded() || getView() == null) return;
+        final boolean shouldShow = mJetpackBrandingUtils.shouldShowJetpackBranding();
         if (shouldShow) {
             View jetpackBanner = getView().findViewById(R.id.jetpack_banner);
             jetpackBanner.setVisibility(View.VISIBLE);
@@ -1220,7 +1220,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
         boolean hasQuery = !isSearchViewEmpty();
         boolean hasPerformedSearch = !TextUtils.isEmpty(mCurrentSearchQuery);
 
-        toggleJetpackBannerIfEnabled(true);
+        toggleJetpackBannerIfEnabled();
 
         // prevents suggestions from being shown after the search view has been collapsed
         if (!isSearching()) {
@@ -1309,7 +1309,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
         updatePostsInCurrentSearch(0);
         updateSitesInCurrentSearch(0);
 
-        toggleJetpackBannerIfEnabled(false);
+        toggleJetpackBannerIfEnabled();
 
         // track that the user performed a search
         if (!trimQuery.equals("")) {
