@@ -503,7 +503,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
     }
 
     private void toggleJetpackBannerIfEnabled(final boolean forceShow) {
-        if (!isAdded() || getView() == null) return;
+        if (!isAdded() || getView() == null || !isSearching()) return;
 
         if (forceShow && mJetpackBrandingUtils.shouldShowJetpackBranding()) {
             showJetpackBanner();
@@ -523,15 +523,19 @@ public class ReaderPostListFragment extends ViewPagerFragment
                         .show(getChildFragmentManager(), JetpackPoweredBottomSheetFragment.TAG);
             });
         }
-        // Add bottom margin to post list and empty view.
-        int jetpackBannerHeight = getResources().getDimensionPixelSize(R.dimen.jetpack_banner_height);
-        ((MarginLayoutParams) mRecyclerView.getLayoutParams()).bottomMargin = jetpackBannerHeight;
-        ((MarginLayoutParams) mActionableEmptyView.getLayoutParams()).bottomMargin = jetpackBannerHeight;
+
+        if (!isSearching()) {
+            // Add bottom margin to search suggestions post list and empty view.
+            int jetpackBannerHeight = getResources().getDimensionPixelSize(R.dimen.jetpack_banner_height);
+            ((MarginLayoutParams) mRecyclerView.getSearchSuggestionsRecyclerView().getLayoutParams()).bottomMargin
+                    = jetpackBannerHeight;
+            ((MarginLayoutParams) mActionableEmptyView.getLayoutParams()).bottomMargin = jetpackBannerHeight;
+        }
     }
 
     private void hideJetpackBanner() {
         mJetpackBanner.setVisibility(View.GONE);
-        // Remove bottom margin from post list and empty view.
+        // Remove bottom margin from search suggestions post list and empty view
         ((MarginLayoutParams) mRecyclerView.getLayoutParams()).bottomMargin = 0;
         ((MarginLayoutParams) mActionableEmptyView.getLayoutParams()).bottomMargin = 0;
     }
