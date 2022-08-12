@@ -429,12 +429,14 @@ class ActivityLogRestClient @Inject constructor(
         )
     }
 
+    @Suppress("ConstructorParameterNaming")
     class ActivitiesResponse(
         val totalItems: Int?,
         val summary: String?,
         val current: Page?
     ) {
         class Page(val orderedItems: List<ActivityResponse>)
+
         data class ActivityResponse(
             val summary: String?,
             val content: FormattableContent?,
@@ -460,9 +462,11 @@ class ActivityLogRestClient @Inject constructor(
         )
 
         class Icon(val type: String?, val url: String?, val width: Int?, val height: Int?)
+
         class Generator(val jetpack_version: Float?, val blog_id: Long?)
     }
 
+    @Suppress("ConstructorParameterNaming")
     data class RewindStatusResponse(
         val state: String,
         val reason: String?,
@@ -493,7 +497,12 @@ class ActivityLogRestClient @Inject constructor(
         )
     }
 
-    class RewindResponse(val restore_id: Long, val ok: Boolean?, val error: String?)
+    @Suppress("ConstructorParameterNaming")
+    class RewindResponse(
+        val restore_id: Long,
+        val ok: Boolean?,
+        val error: String?
+    )
 
     class BackupDownloadResponse(
         val downloadId: Long,

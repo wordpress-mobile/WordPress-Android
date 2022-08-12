@@ -28,10 +28,10 @@ class LatestPostInsightsStore @Inject constructor(
                 val postsFound = latestPostPayload.response?.postsFound
 
                 val posts = latestPostPayload.response?.posts
-                return@withDefaultContext if (postsFound != null &&
-                        postsFound > 0 &&
-                        posts != null &&
-                        posts.isNotEmpty()) {
+                return@withDefaultContext if (
+                    (postsFound != null && postsFound > 0) &&
+                    !posts.isNullOrEmpty()
+                ) {
                     val latestPost = posts[0]
                     val postStats = restClient.fetchPostStats(site, latestPost.id, forced)
                     when {

@@ -21,6 +21,7 @@ class GutenbergLayoutCategoriesModel(
     }
 }
 
+@Suppress("NestedBlockDepth")
 fun List<GutenbergLayout>.connections(site: SiteModel): List<GutenbergLayoutCategoriesModel> {
     val connections = arrayListOf<GutenbergLayoutCategoriesModel>()
     forEach { layout ->

@@ -147,6 +147,7 @@ class PluginCoroutineStore
         return event
     }
 
+    @Suppress("ComplexMethod", "NestedBlockDepth")
     private suspend fun <T : Payload<BaseNetworkError?>> executeWPAPIRequest(
         site: SiteModel,
         enableCaching: Boolean,

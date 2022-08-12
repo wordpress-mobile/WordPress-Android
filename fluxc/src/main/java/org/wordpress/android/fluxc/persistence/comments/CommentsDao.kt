@@ -190,6 +190,7 @@ abstract class CommentsDao {
         AND CASE WHEN (:filterByIds = 1) THEN (remoteCommentId NOT IN (:remoteIds)) ELSE 1 END
         AND publishedTimestamp >= :startOfRange
     """)
+    @Suppress("LongParameterList")
     protected abstract fun removeGapsFromTheTopInternal(
         localSiteId: Int,
         filterByStatuses: Boolean,
@@ -206,6 +207,7 @@ abstract class CommentsDao {
         AND CASE WHEN (:filterByIds = 1) THEN (remoteCommentId NOT IN (:remoteIds)) ELSE 1 END
         AND publishedTimestamp <= :endOfRange
     """)
+    @Suppress("LongParameterList")
     protected abstract fun removeGapsFromTheBottomInternal(
         localSiteId: Int,
         filterByStatuses: Boolean,
@@ -223,6 +225,7 @@ abstract class CommentsDao {
         AND publishedTimestamp <= :startOfRange
         AND publishedTimestamp >= :endOfRange
     """)
+    @Suppress("LongParameterList")
     protected abstract fun removeGapsFromTheMiddleInternal(
         localSiteId: Int,
         filterByStatuses: Boolean,

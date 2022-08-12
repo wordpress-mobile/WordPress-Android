@@ -131,6 +131,7 @@ class TransactionsRestClient @Inject constructor(
 
     private data class PrivacyExtra(val privacy: Boolean)
 
+    @Suppress("ConstructorParameterNaming")
     data class CreateShoppingCartResponse(
         val blog_id: Int,
         val cart_key: String?,

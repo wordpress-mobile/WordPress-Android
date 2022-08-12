@@ -1,5 +1,6 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.scan.threat
 
+import com.google.gson.JsonArray
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
@@ -98,22 +99,23 @@ class ThreatContextDeserializer : JsonDeserializer<ThreatContext?> {
 
     private fun getHighlightsFromMarks(marksForKey: JsonElement?): List<Pair<Int, Int>>? {
         val marksJsonArrayForKey = if (marksForKey?.isJsonArray == true) marksForKey.asJsonArray else null
+        return marksJsonArrayForKey?.let { getHighlightsFromMarksArray(it) }
+    }
 
-        return marksJsonArrayForKey?.let {
-            var highlights: ArrayList<Pair<Int, Int>>? = null
+    private fun getHighlightsFromMarksArray(marksForKeyArray: JsonArray): ArrayList<Pair<Int, Int>>? {
+        var highlights: ArrayList<Pair<Int, Int>>? = null
 
-            for (rangeArrayJsonElement in it) {
-                val selectionRange = getSelectionRange(rangeArrayJsonElement)
-                selectionRange?.let { range ->
-                    if (highlights == null) {
-                        highlights = arrayListOf()
-                    }
-                    highlights?.add(range)
+        for (rangeArrayJsonElement in marksForKeyArray) {
+            val selectionRange = getSelectionRange(rangeArrayJsonElement)
+            selectionRange?.let { range ->
+                if (highlights == null) {
+                    highlights = arrayListOf()
                 }
+                highlights?.add(range)
             }
-
-            return highlights
         }
+
+        return highlights
     }
 
     private fun getSelectionRange(rangeArrayJsonElement: JsonElement): Pair<Int, Int>? {

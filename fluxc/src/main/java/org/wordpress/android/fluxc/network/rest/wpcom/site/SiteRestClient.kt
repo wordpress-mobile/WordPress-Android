@@ -98,6 +98,7 @@ import javax.inject.Named
 import javax.inject.Singleton
 import kotlin.math.max
 
+@Suppress("LargeClass")
 @Singleton
 class SiteRestClient @Inject constructor(
     appContext: Context?,
@@ -203,6 +204,7 @@ class SiteRestClient @Inject constructor(
      *
      * @return the response of the API call  as [NewSiteResponsePayload]
      */
+    @Suppress("ComplexMethod", "LongParameterList")
     suspend fun newSite(
         siteName: String?,
         siteTitle: String?,
@@ -452,6 +454,7 @@ class SiteRestClient @Inject constructor(
         add(request)
     }
 
+    @Suppress("LongParameterList")
     fun suggestDomains(
         query: String,
         onlyWordpressCom: Boolean?,
@@ -508,6 +511,7 @@ class SiteRestClient @Inject constructor(
         add(request)
     }
 
+    @Suppress("LongParameterList")
     fun fetchWpComBlockLayouts(
         site: SiteModel,
         supportedBlocks: List<String?>?,
@@ -520,6 +524,7 @@ class SiteRestClient @Inject constructor(
         fetchBlockLayouts(site, url, supportedBlocks, previewWidth, previewHeight, scale, isBeta)
     }
 
+    @Suppress("LongParameterList")
     fun fetchSelfHostedBlockLayouts(
         site: SiteModel,
         supportedBlocks: List<String?>?,
@@ -532,6 +537,7 @@ class SiteRestClient @Inject constructor(
         fetchBlockLayouts(site, url, supportedBlocks, previewWidth, previewHeight, scale, isBeta)
     }
 
+    @Suppress("LongParameterList")
     private fun fetchBlockLayouts(
         site: SiteModel,
         url: String,
@@ -942,7 +948,7 @@ class SiteRestClient @Inject constructor(
         add(request)
     }
 
-    // Utils
+    @Suppress("LongMethod", "ComplexMethod")
     private fun siteResponseToSiteModel(from: SiteWPComRestResponse): SiteModel {
         val site = SiteModel()
         site.siteId = from.ID
