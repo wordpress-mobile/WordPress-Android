@@ -38,6 +38,7 @@
             android:layout_toEndOf="@+id/icon"
             android:background="@android:color/transparent"
             android:digits="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+            android:importantForAutofill="noExcludeDescendants"
             android:hint="@string/username_changer_hint"
             android:paddingTop="@dimen/margin_extra_large"
             android:paddingBottom="@dimen/margin_extra_large" />
