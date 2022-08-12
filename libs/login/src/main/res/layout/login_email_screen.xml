@@ -35,7 +35,7 @@
             android:autofillHints="emailAddress,username"
             android:hint="@string/email_address"
             android:imeOptions="actionNext"
-            android:importantForAutofill="yes"
+            android:importantForAutofill="noExcludeDescendants"
             android:inputType="textEmailAddress"
             app:layout_constraintTop_toBottomOf="@+id/label"
             app:layout_constraintStart_toStartOf="parent"
