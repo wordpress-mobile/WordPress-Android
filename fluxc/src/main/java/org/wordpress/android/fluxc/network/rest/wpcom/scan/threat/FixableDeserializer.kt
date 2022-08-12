@@ -9,6 +9,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.scan.threat.Threat.Fixable
 import java.lang.reflect.Type
 
 class FixableDeserializer : JsonDeserializer<Fixable?> {
+    @Suppress("SwallowedException")
     override fun deserialize(
         json: JsonElement?,
         typeOfT: Type?,
