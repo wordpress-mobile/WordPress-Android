@@ -75,7 +75,7 @@ class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializ
                 }
             }
             initializeViewModels(nonNullActivity, savedInstanceState == null, savedInstanceState)
-            initializeViews(nonNullActivity)
+            initializeViews()
         }
     }
 
@@ -85,8 +85,8 @@ class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializ
         super.onSaveInstanceState(outState)
     }
 
-    private fun StatsFragmentBinding.initializeViews(activity: FragmentActivity) {
-        val adapter = StatsPagerAdapter(activity)
+    private fun StatsFragmentBinding.initializeViews() {
+        val adapter = StatsPagerAdapter(this@StatsFragment)
         statsPager.adapter = adapter
         statsPager.setPageTransformer(
                 MarginPageTransformer(resources.getDimensionPixelSize(R.dimen.margin_extra_large))
@@ -256,7 +256,7 @@ class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializ
     }
 }
 
-class StatsPagerAdapter(val activity: FragmentActivity) : FragmentStateAdapter(activity) {
+class StatsPagerAdapter(private val parent: Fragment) : FragmentStateAdapter(parent) {
     override fun getItemCount(): Int = statsSections.size
 
     override fun createFragment(position: Int): Fragment {
@@ -264,7 +264,7 @@ class StatsPagerAdapter(val activity: FragmentActivity) : FragmentStateAdapter(a
     }
 
     fun getTabTitle(position: Int): CharSequence {
-        return activity.getString(statsSections[position].titleRes)
+        return parent.context?.getString(statsSections[position].titleRes).orEmpty()
     }
 }
 
