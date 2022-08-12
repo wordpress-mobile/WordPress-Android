@@ -156,7 +156,7 @@ data class TitanMailSubscription(
 )
 
 internal class BooleanTypeAdapter : JsonDeserializer<Boolean?> {
-    private val TRUE_STRINGS: Set<String> = HashSet(listOf("true", "1", "yes"))
+    @Suppress("VariableNaming") private val TRUE_STRINGS: Set<String> = HashSet(listOf("true", "1", "yes"))
 
     @Throws(JsonParseException::class)
     override fun deserialize(json: JsonElement, typeOfT: Type, context: JsonDeserializationContext): Boolean {

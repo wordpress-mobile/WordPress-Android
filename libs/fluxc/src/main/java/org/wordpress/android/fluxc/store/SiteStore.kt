@@ -120,7 +120,7 @@ import javax.inject.Singleton
  * NOTE: This class needs to be open because it's mocked in android tests in the WPAndroid project.
  *       TODO: consider adding https://kotlinlang.org/docs/all-open-plugin.html
  */
-@Suppress("ForbiddenComment")
+@Suppress("LargeClass", "ForbiddenComment")
 @Singleton
 open class SiteStore @Inject constructor(
     dispatcher: Dispatcher?,
@@ -1212,7 +1212,9 @@ open class SiteStore @Inject constructor(
         return siteSqlUtils.getUserRoles(site!!)
     }
 
-    @Subscribe(threadMode = ASYNC) override fun onAction(action: Action<*>) {
+    @Subscribe(threadMode = ASYNC)
+    @Suppress("LongMethod", "ComplexMethod")
+    override fun onAction(action: Action<*>) {
         val actionType = action.type as? SiteAction ?: return
         when (actionType) {
             FETCH_PROFILE_XML_RPC -> fetchProfileXmlRpc(action.payload as SiteModel)
@@ -1613,33 +1615,39 @@ open class SiteStore @Inject constructor(
         val event = if (payload.isError) {
             OnAllSitesMobileEditorChanged(siteEditorsError = payload.error)
         } else {
-            var rowsAffected = 0
-            var error: SiteEditorsError? = null
-            // Loop over the returned sites and make sure we've the fresh values for editor prop stored locally
-            for ((key, value) in payload.editors ?: mapOf()) {
-                val currentModel = getSiteBySiteId(key.toLong())
-                if (currentModel == null) {
-                    // this could happen when a site was added to the current account with another app, or on the web
-                    AppLog.e(
-                            API,
-                            "handleDesignatedMobileEditorForAllSites - The backend returned info for the " +
-                                    "following siteID $key but there is no site with that remote ID in SiteStore."
-                    )
-                    continue
-                }
-                if (currentModel.mobileEditor == null || currentModel.mobileEditor != value) {
-                    // the current editor is either null or != from the value on the server. Update it
-                    currentModel.mobileEditor = value
-                    try {
-                        rowsAffected += siteSqlUtils.insertOrUpdateSite(currentModel)
-                    } catch (e: Exception) {
-                        error = SiteEditorsError(SiteEditorsErrorType.GENERIC_ERROR)
-                    }
-                }
-            }
-            OnAllSitesMobileEditorChanged(rowsAffected, true, error)
+            onAllSitesMobileEditorChanged(payload)
         }
         emitChange(event)
+    }
+
+    private fun onAllSitesMobileEditorChanged(
+        payload: DesignateMobileEditorForAllSitesResponsePayload
+    ): OnAllSitesMobileEditorChanged {
+        var rowsAffected = 0
+        var error: SiteEditorsError? = null
+        // Loop over the returned sites and make sure we've the fresh values for editor prop stored locally
+        for ((key, value) in payload.editors ?: mapOf()) {
+            val currentModel = getSiteBySiteId(key.toLong())
+            if (currentModel == null) {
+                // this could happen when a site was added to the current account with another app, or on the web
+                AppLog.e(
+                    API,
+                    "handleDesignatedMobileEditorForAllSites - The backend returned info for the " +
+                        "following siteID $key but there is no site with that remote ID in SiteStore."
+                )
+                continue
+            }
+            if (currentModel.mobileEditor == null || currentModel.mobileEditor != value) {
+                // the current editor is either null or != from the value on the server. Update it
+                currentModel.mobileEditor = value
+                try {
+                    rowsAffected += siteSqlUtils.insertOrUpdateSite(currentModel)
+                } catch (e: Exception) {
+                    error = SiteEditorsError(SiteEditorsErrorType.GENERIC_ERROR)
+                }
+            }
+        }
+        return OnAllSitesMobileEditorChanged(rowsAffected, true, error)
     }
 
     private fun fetchUserRoles(site: SiteModel) {

@@ -1,5 +1,6 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.revisions
 
+@Suppress("ConstructorParameterNaming")
 class RevisionsResponse(
     val diffs: List<DiffResponse>,
     val revisions: Map<String, RevisionResponse>
@@ -26,6 +27,7 @@ class RevisionsResponse(
         val add: Int
     )
 
+    @Suppress("LongParameterList")
     inner class RevisionResponse(
         val post_date_gmt: String,
         val post_modified_gmt: String,

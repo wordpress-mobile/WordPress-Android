@@ -3,6 +3,7 @@ package org.wordpress.android.fluxc.model.revisions
 import java.util.ArrayList
 import java.util.Arrays
 
+@Suppress("LongParameterList")
 class RevisionModel(
     var revisionId: Long,
 
@@ -56,6 +57,7 @@ class RevisionModel(
         }
     }
 
+    @Suppress("ComplexMethod")
     override fun equals(other: Any?): Boolean {
         if (this === other) {
             return true

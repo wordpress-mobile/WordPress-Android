@@ -66,6 +66,7 @@ class WPAPIGsonRequestBuilder @Inject constructor() {
         callMethod(Method.DELETE, url, null, body, clazz, cont, false, 0, nonce, restClient)
     }
 
+    @Suppress("LongParameterList")
     private fun <T> callMethod(
         method: Int,
         url: String,
@@ -99,6 +100,7 @@ class WPAPIGsonRequestBuilder @Inject constructor() {
         restClient.add(request)
     }
 
+    @Suppress("LongParameterList")
     private fun <T> callMethod(
         method: Int,
         url: String,
