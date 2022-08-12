@@ -123,6 +123,7 @@ import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.util.DisplayUtilsWrapper;
 import org.wordpress.android.util.JetpackBrandingUtils;
 import org.wordpress.android.util.JetpackBrandingUtils.Screen;
 import org.wordpress.android.util.NetworkUtils;
@@ -233,6 +234,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
     @Inject QuickStartRepository mQuickStartRepository;
     @Inject ReaderTracker mReaderTracker;
     @Inject SnackbarSequencer mSnackbarSequencer;
+    @Inject DisplayUtilsWrapper mDisplayUtilsWrapper;
 
     private enum ActionableEmptyViewButtonType {
         DISCOVER,
@@ -502,13 +504,24 @@ public class ReaderPostListFragment extends ViewPagerFragment
         }
     }
 
-    private void toggleJetpackBannerIfEnabled(final boolean forceShow) {
+    private void toggleJetpackBannerIfEnabled(final boolean showIfEnabled, boolean animateOnScroll) {
         if (!isAdded() || getView() == null || !isSearching()) return;
 
-        if (forceShow && mJetpackBrandingUtils.shouldShowJetpackBranding()) {
-            showJetpackBanner();
-        } else {
-            hideJetpackBanner();
+        if (mJetpackBrandingUtils.shouldShowJetpackBranding()) {
+            if (animateOnScroll) {
+                mJetpackBrandingUtils.showJetpackBannerIfScrolledToTop(
+                        mJetpackBanner,
+                        mRecyclerView.getInternalRecyclerView()
+                );
+                // Return early since the visibility was handled by showJetpackBannerIfScrolledToTop
+                return;
+            }
+
+            if (showIfEnabled && !mDisplayUtilsWrapper.isPhoneLandscape()) {
+                showJetpackBanner();
+            } else {
+                hideJetpackBanner();
+            }
         }
     }
 
@@ -1234,7 +1247,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
         boolean hasQuery = !isSearchViewEmpty();
         boolean hasPerformedSearch = !TextUtils.isEmpty(mCurrentSearchQuery);
 
-        toggleJetpackBannerIfEnabled(true);
+        toggleJetpackBannerIfEnabled(true, false);
 
         // prevents suggestions from being shown after the search view has been collapsed
         if (!isSearching()) {
@@ -1323,7 +1336,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
         updatePostsInCurrentSearch(0);
         updateSitesInCurrentSearch(0);
 
-        toggleJetpackBannerIfEnabled(false);
+        toggleJetpackBannerIfEnabled(false, false);
 
         // track that the user performed a search
         if (!trimQuery.equals("")) {
@@ -1872,7 +1885,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
                 if (isSearching() && !isSearchTabsShowing()) {
                     showSearchTabs();
                 } else if (isSearching()) {
-                    toggleJetpackBannerIfEnabled(true);
+                    toggleJetpackBannerIfEnabled(true, true);
                 }
             }
             mRestorePosition = 0;

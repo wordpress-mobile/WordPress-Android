@@ -61,7 +61,6 @@ class ReaderSearchActivity : LocaleAwareActivity(),
                 val scrollableView = fragmentView.findViewById<View>(containerId) as RecyclerView
 
                 if (jetpackBrandingUtils.shouldShowJetpackBranding()) {
-                    jetpackBrandingUtils.showJetpackBannerIfScrolledToTop(jetpackBannerView, scrollableView)
                     jetpackBrandingUtils.initJetpackBannerAnimation(jetpackBannerView, scrollableView)
                 }
             }
