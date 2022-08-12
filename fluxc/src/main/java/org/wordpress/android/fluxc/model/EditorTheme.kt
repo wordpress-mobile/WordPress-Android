@@ -154,6 +154,7 @@ data class EditorThemeElement(
 }
 
 class EditorThemeElementListSerializer : JsonDeserializer<List<EditorThemeElement>> {
+    @Suppress("SwallowedException")
     override fun deserialize(
         json: JsonElement?,
         typeOfT: Type?,

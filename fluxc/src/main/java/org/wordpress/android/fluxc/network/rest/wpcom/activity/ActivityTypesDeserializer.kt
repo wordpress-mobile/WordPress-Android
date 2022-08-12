@@ -46,6 +46,7 @@ class ActivityTypesDeserializer : JsonDeserializer<Groups?> {
         }
     }
 
+    @Suppress("SwallowedException")
     private fun getActivityType(
         key: String,
         groups: JsonObject

@@ -114,8 +114,7 @@ class QuickStartStore @Inject constructor(
     }
 
     @Subscribe(threadMode = ThreadMode.ASYNC)
-    override fun onAction(action: Action<*>) {
-    }
+    override fun onAction(action: Action<*>) = Unit // Do nothing (ignore)
 
     override fun onRegister() {
         AppLog.d(AppLog.T.API, QuickStartStore::class.java.simpleName + " onRegister")

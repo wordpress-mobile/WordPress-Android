@@ -127,8 +127,7 @@ class ScanSqlUtils @Inject constructor() {
                         isInitial = initial
                     )
                 }
-                else -> { // Do nothing
-                }
+                else -> Unit // Do nothing (ignore)
             }
 
             return ScanStateModel(

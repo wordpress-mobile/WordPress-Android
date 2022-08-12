@@ -23,7 +23,7 @@ class XMLRPCRequestBuilder @Inject constructor() {
      * @param listener the success listener
      * @param errorListener the error listener
      */
-    @Suppress("LongParameterList")
+    @Suppress("LongParameterList", "SwallowedException")
     fun <T> buildGetRequest(
         url: String,
         method: XMLRPC,
