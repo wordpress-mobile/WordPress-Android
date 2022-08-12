@@ -47,6 +47,7 @@ class CardsStore @Inject constructor(
         else -> CardsResult(error)
     }
 
+    @Suppress("TooGenericExceptionCaught", "SwallowedException")
     private suspend fun handlePayloadResponse(
         site: SiteModel,
         response: CardsResponse

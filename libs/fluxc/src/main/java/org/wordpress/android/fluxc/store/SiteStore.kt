@@ -109,7 +109,6 @@ import org.wordpress.android.fluxc.utils.SiteErrorUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.AppLog.T.API
-import java.util.ArrayList
 import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -355,8 +354,9 @@ open class SiteStore @Inject constructor(
 
         fun description(): String {
             return String.format(
-                    "url: %s, e: %b, wp: %b, jp: %b, wpcom: %b, urlAfterRedirects: %s",
-                    url, exists, isWordPress, hasJetpack, isWPCom, urlAfterRedirects
+                Locale.US,
+                "url: %s, e: %b, wp: %b, jp: %b, wpcom: %b, urlAfterRedirects: %s",
+                url, exists, isWordPress, hasJetpack, isWPCom, urlAfterRedirects
             )
         }
     }
@@ -1333,7 +1333,7 @@ open class SiteStore @Inject constructor(
         return updateSites(siteXMLRPCClient.fetchSites(payload.url, payload.username, payload.password))
     }
 
-    @Suppress("ForbiddenComment")
+    @Suppress("ForbiddenComment", "SwallowedException")
     private fun updateSiteProfile(siteModel: SiteModel) {
         val event = OnProfileFetched(siteModel)
         if (siteModel.isError) {
@@ -1349,7 +1349,7 @@ open class SiteStore @Inject constructor(
         emitChange(event)
     }
 
-    @Suppress("ForbiddenComment")
+    @Suppress("ForbiddenComment", "SwallowedException")
     private fun updateSite(siteModel: SiteModel): OnSiteChanged {
         return if (siteModel.isError) {
             // TODO: what kind of error could we get here?
@@ -1404,6 +1404,7 @@ open class SiteStore @Inject constructor(
         }
     }
 
+    @Suppress("SwallowedException")
     private fun createOrUpdateSites(sites: SitesModel): UpdateSitesResult {
         var rowsAffected = 0
         var duplicateSiteFound = false
@@ -1553,6 +1554,7 @@ open class SiteStore @Inject constructor(
         }
     }
 
+    @Suppress("TooGenericExceptionCaught", "SwallowedException")
     private fun designateMobileEditor(payload: DesignateMobileEditorPayload) {
         // wpcom sites sync the new value with the backend
         if (payload.site.isUsingWpComRestApi) {
@@ -1570,6 +1572,7 @@ open class SiteStore @Inject constructor(
         emitChange(event)
     }
 
+    @Suppress("TooGenericExceptionCaught", "SwallowedException")
     private fun designateMobileEditorForAllSites(payload: DesignateMobileEditorForAllSitesPayload) {
         var rowsAffected = 0
         var wpcomPostRequestRequired = false
@@ -1595,6 +1598,7 @@ open class SiteStore @Inject constructor(
         emitChange(OnAllSitesMobileEditorChanged(rowsAffected, isNetworkResponse, error))
     }
 
+    @Suppress("TooGenericExceptionCaught", "SwallowedException")
     private fun updateSiteEditors(payload: FetchedEditorsPayload) {
         val site = payload.site
         val event = if (payload.isError) {
@@ -1620,6 +1624,7 @@ open class SiteStore @Inject constructor(
         emitChange(event)
     }
 
+    @Suppress("TooGenericExceptionCaught", "SwallowedException")
     private fun onAllSitesMobileEditorChanged(
         payload: DesignateMobileEditorForAllSitesResponsePayload
     ): OnAllSitesMobileEditorChanged {

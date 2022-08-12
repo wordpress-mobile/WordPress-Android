@@ -96,6 +96,7 @@ class WPV2MediaRestClient @Inject constructor(
         }
     }
 
+    @Suppress("TooGenericExceptionCaught", "SwallowedException")
     private fun syncUploadMedia(site: SiteModel, media: MediaModel): Flow<ProgressPayload> {
         fun ProducerScope<ProgressPayload>.handleFailure(media: MediaModel, error: MediaError) {
             media.setUploadState(FAILED)
@@ -104,7 +105,7 @@ class WPV2MediaRestClient @Inject constructor(
                 sendBlocking(payload)
                 close()
             } catch (e: CancellationException) {
-                // the flow has been cancelled
+                // Do nothing (the flow has been cancelled)
             }
         }
 
@@ -116,7 +117,7 @@ class WPV2MediaRestClient @Inject constructor(
                     try {
                         offer(payload)
                     } catch (e: CancellationException) {
-                        // the flow has been cancelled
+                        // Do nothing (the flow has been cancelled)
                     }
                 }
             }
@@ -152,7 +153,7 @@ class WPV2MediaRestClient @Inject constructor(
                                 sendBlocking(payload)
                                 close()
                             } catch (e: CancellationException) {
-                                // the flow has been cancelled
+                                // Do nothing (the flow has been cancelled)
                             }
                         } catch (e: JsonSyntaxException) {
                             AppLog.e(MEDIA, e)

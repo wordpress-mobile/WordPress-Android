@@ -140,6 +140,7 @@ class EncryptedLogStore @Inject constructor(
         }
     }
 
+    @Suppress("SwallowedException")
     private suspend fun uploadEncryptedLog(encryptedLog: EncryptedLog) {
         // If the log file doesn't exist, fail immediately and try the next log file
         if (!isValidFile(encryptedLog.file)) {

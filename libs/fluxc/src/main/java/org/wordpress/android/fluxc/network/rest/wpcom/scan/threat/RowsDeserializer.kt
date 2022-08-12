@@ -47,6 +47,7 @@ class RowsDeserializer : JsonDeserializer<List<Row>?> {
         }
     }
 
+    @Suppress("SwallowedException")
     private fun getRow(
         key: String,
         rowJsonObject: JsonObject
