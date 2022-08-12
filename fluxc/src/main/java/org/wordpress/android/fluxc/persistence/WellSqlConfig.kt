@@ -20,6 +20,7 @@ import org.wordpress.android.util.AppLog.T
 import kotlin.annotation.AnnotationRetention.SOURCE
 import kotlin.annotation.AnnotationTarget.VALUE_PARAMETER
 
+@Suppress("LargeClass")
 open class WellSqlConfig : DefaultWellConfig {
     companion object {
         const val ADDON_WOOCOMMERCE = "WC"
@@ -45,7 +46,7 @@ open class WellSqlConfig : DefaultWellConfig {
         mTables.forEach { table -> helper.createTable(table) }
     }
 
-    @Suppress("CheckStyle", "MagicNumber")
+    @Suppress("CheckStyle", "LongMethod", "ComplexMethod", "MagicNumber")
     override fun onUpgrade(db: SQLiteDatabase, helper: WellTableManager, oldVersion: Int, newVersion: Int) {
         AppLog.d(T.DB, "Upgrading database from version $oldVersion to $newVersion")
 

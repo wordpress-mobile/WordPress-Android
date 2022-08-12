@@ -23,14 +23,15 @@ import java.net.HttpURLConnection
 import javax.inject.Inject
 import javax.inject.Singleton
 
+private const val WPCOM_ENDPOINT = "https://public-api.wordpress.com"
+
 /**
  * This store is for use making calls that originate from React Native. It does not use
  * a higher-level api for the requests and responses because of the unique requirements
  * around React Native. Calls originating from native code should not use this class.
  */
 @Singleton
-class ReactNativeStore
-@VisibleForTesting constructor(
+class ReactNativeStore @VisibleForTesting constructor(
     private val wpComRestClient: ReactNativeWPComRestClient,
     private val wpAPIRestClient: ReactNativeWPAPIRestClient,
     private val nonceRestClient: NonceRestClient,
@@ -59,8 +60,6 @@ class ReactNativeStore
             siteSqlUtils::insertOrUpdateSite,
             Uri::parse
     )
-
-    private val WPCOM_ENDPOINT = "https://public-api.wordpress.com"
 
     suspend fun executeRequest(
         site: SiteModel,
@@ -108,6 +107,7 @@ class ReactNativeStore
         return Error(error)
     }
 
+    @Suppress("ComplexMethod", "NestedBlockDepth")
     private suspend fun executeWPAPIRequest(
         site: SiteModel,
         path: String,

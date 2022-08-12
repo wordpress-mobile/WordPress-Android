@@ -14,8 +14,7 @@ import javax.inject.Singleton
 import kotlin.coroutines.resume
 
 @Singleton
-class XMLRPCRequestBuilder
-@Inject constructor() {
+class XMLRPCRequestBuilder @Inject constructor() {
     /**
      * Creates a new GET request.
      * @param url the request URL
@@ -24,6 +23,7 @@ class XMLRPCRequestBuilder
      * @param listener the success listener
      * @param errorListener the error listener
      */
+    @Suppress("LongParameterList")
     fun <T> buildGetRequest(
         url: String,
         method: XMLRPC,

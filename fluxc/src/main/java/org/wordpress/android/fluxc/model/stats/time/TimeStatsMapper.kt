@@ -23,8 +23,8 @@ import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.STATS
 import javax.inject.Inject
 
-class TimeStatsMapper
-@Inject constructor(val gson: Gson) {
+class TimeStatsMapper @Inject constructor(val gson: Gson) {
+    @Suppress("ComplexMethod")
     fun map(response: PostAndPageViewsResponse, cacheMode: LimitMode): PostAndPageViewsModel {
         val postViews = response.days.entries.firstOrNull()?.value?.postViews ?: listOf()
         val stats = postViews.let {
@@ -39,9 +39,7 @@ class TimeStatsMapper
                 "page" -> ViewsType.PAGE
                 "homepage" -> ViewsType.HOMEPAGE
                 "attachment" -> ViewsType.ATTACHMENT
-                else -> {
-                    ViewsType.OTHER
-                }
+                else -> ViewsType.OTHER
             }
             type.let {
                 if (item.id == null || item.title == null || item.href == null) {
@@ -201,6 +199,7 @@ class TimeStatsMapper
         )
     }
 
+    @Suppress("ComplexMethod")
     fun map(response: AuthorsResponse, cacheMode: LimitMode): AuthorsModel {
         val first = response.groups.values.firstOrNull()
         val authors = first?.let {
