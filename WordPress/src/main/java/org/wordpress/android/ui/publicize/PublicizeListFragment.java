@@ -136,11 +136,11 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
         }
 
         if (mJetpackBrandingUtils.shouldShowJetpackBranding()) {
-            View jetpackBadgeFooter = rootView.findViewById(R.id.jetpack_badge_footer);
-            jetpackBadgeFooter.setVisibility(View.VISIBLE);
+            View jetpackBadge = rootView.findViewById(R.id.jetpack_badge_sharing);
+            jetpackBadge.setVisibility(View.VISIBLE);
 
             if (mJetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
-                jetpackBadgeFooter.setOnClickListener(v -> {
+                jetpackBadge.setOnClickListener(v -> {
                     mJetpackBrandingUtils.trackBannerTapped(Screen.SHARE);
                     new JetpackPoweredBottomSheetFragment()
                             .show(requireActivity().getSupportFragmentManager(), JetpackPoweredBottomSheetFragment.TAG);

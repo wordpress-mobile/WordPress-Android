@@ -114,9 +114,11 @@
             </RelativeLayout>
 
             <include
-                android:id="@+id/jetpack_badge_footer"
-                layout="@layout/jetpack_badge_footer"
+                android:id="@+id/jetpack_badge_sharing"
+                layout="@layout/jetpack_badge"
                 android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 tools:visibility="visible" />
 
         </LinearLayout>
