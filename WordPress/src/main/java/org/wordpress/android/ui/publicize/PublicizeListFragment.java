@@ -141,7 +141,7 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
 
             if (mJetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
                 jetpackBadge.setOnClickListener(v -> {
-                    mJetpackBrandingUtils.trackBannerTapped(Screen.SHARE);
+                    mJetpackBrandingUtils.trackBadgeTapped(Screen.SHARE);
                     new JetpackPoweredBottomSheetFragment()
                             .show(requireActivity().getSupportFragmentManager(), JetpackPoweredBottomSheetFragment.TAG);
                 });
