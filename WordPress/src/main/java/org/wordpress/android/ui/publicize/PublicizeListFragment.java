@@ -136,7 +136,7 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
         }
 
         if (mJetpackBrandingUtils.shouldShowJetpackBranding()) {
-            View jetpackBadge = rootView.findViewById(R.id.jetpack_badge_sharing);
+            View jetpackBadge = rootView.findViewById(R.id.jetpack_powered_badge);
             jetpackBadge.setVisibility(View.VISIBLE);
 
             if (mJetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
