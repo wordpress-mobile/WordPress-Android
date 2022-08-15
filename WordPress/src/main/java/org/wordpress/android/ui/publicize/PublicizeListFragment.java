@@ -6,6 +6,7 @@ import android.text.Spannable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.MarginLayoutParams;
 import android.view.ViewTreeObserver;
 import android.widget.TextView;
 
@@ -24,11 +25,14 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.ui.ScrollableViewInitializedListener;
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository;
+import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter.OnAdapterLoadedListener;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter.OnServiceClickListener;
 import org.wordpress.android.ui.quickstart.QuickStartEvent;
 import org.wordpress.android.ui.utils.UiString.UiStringText;
+import org.wordpress.android.util.JetpackBrandingUtils;
+import org.wordpress.android.util.JetpackBrandingUtils.Screen;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.QuickStartUtils;
 import org.wordpress.android.util.QuickStartUtilsWrapper;
@@ -60,6 +64,7 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
     @Inject QuickStartUtilsWrapper mQuickStartUtilsWrapper;
     @Inject QuickStartRepository mQuickStartRepository;
     @Inject SnackbarSequencer mSnackbarSequencer;
+    @Inject JetpackBrandingUtils mJetpackBrandingUtils;
 
     public static PublicizeListFragment newInstance(@NonNull SiteModel site) {
         Bundle args = new Bundle();
@@ -128,6 +133,19 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
 
         if (mQuickStartEvent != null) {
             showQuickStartFocusPoint();
+        }
+
+        if (mJetpackBrandingUtils.shouldShowJetpackBranding()) {
+            View jetpackBadgeFooter = rootView.findViewById(R.id.jetpack_badge_footer);
+            jetpackBadgeFooter.setVisibility(View.VISIBLE);
+
+            if (mJetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
+                jetpackBadgeFooter.setOnClickListener(v -> {
+                    mJetpackBrandingUtils.trackBannerTapped(Screen.SHARE);
+                    new JetpackPoweredBottomSheetFragment()
+                            .show(requireActivity().getSupportFragmentManager(), JetpackPoweredBottomSheetFragment.TAG);
+                });
+            }
         }
 
         return rootView;

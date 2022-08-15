@@ -113,6 +113,12 @@
 
             </RelativeLayout>
 
+            <include
+                android:id="@+id/jetpack_badge_footer"
+                layout="@layout/jetpack_badge_footer"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
         </LinearLayout>
     </RelativeLayout>
 </androidx.core.widget.NestedScrollView>
