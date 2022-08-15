@@ -199,6 +199,8 @@
         <!-- We need to keep this here so we can override it in values-vXY -->
     </style>
 
+    <style name="Wordpress.BottomBar" parent="WordPress.NoActionBar"/>
+
     <style name="WordPress.NoActionBar" parent="WordPress">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
