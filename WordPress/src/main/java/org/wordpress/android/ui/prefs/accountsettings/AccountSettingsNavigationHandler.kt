@@ -20,7 +20,7 @@ class AccountSettingsNavigationHandler @Inject constructor() {
                     .setTitle(R.string.username_changer_title)
                     .setAction(R.string.username_changer_action)
                     .setOnConfirmListener { result -> onConfirm.invoke(result) }
-                    .setHideActivityBar(true)
+                    .setHideActivityBar(false)
                     .setIsLifOnScroll(false)
                     .setOnDismissListener { onDismiss.invoke() }
                     .setOnShownListener { onShown.invoke() }
