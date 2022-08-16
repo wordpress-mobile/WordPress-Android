@@ -206,6 +206,7 @@ class CommentsXMLRPCClientTest {
     }
 
     @Test
+    @Suppress("MaxLineLength")
     fun `fetchComment returns fetched comment`() = test {
         mockedResponse = """
             <?xml version="1.0" encoding="UTF-8"?>
