@@ -19,8 +19,6 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.comments.CommentsMapper
 import org.wordpress.android.fluxc.network.HTTPAuthManager
 import org.wordpress.android.fluxc.network.UserAgent
-import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder
-import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequest
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequestBuilder
 import org.wordpress.android.fluxc.network.xmlrpc.comment.CommentsXMLRPCClient
@@ -36,11 +34,9 @@ import java.util.concurrent.CountDownLatch
 class CommentsXMLRPCClientTest {
     private lateinit var dispatcher: Dispatcher
     private lateinit var requestQueue: RequestQueue
-    private lateinit var accessToken: AccessToken
     private lateinit var userAgent: UserAgent
     private lateinit var httpAuthManager: HTTPAuthManager
     private lateinit var commentsMapper: CommentsMapper
-    private lateinit var wpComGsonRequestBuilder: WPComGsonRequestBuilder
     private lateinit var commentErrorUtilsWrapper: CommentErrorUtilsWrapper
     private lateinit var site: SiteModel
 
