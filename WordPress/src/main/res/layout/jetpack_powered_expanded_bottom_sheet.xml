@@ -39,7 +39,7 @@
         app:lottie_autoPlay="true"
         app:lottie_enableMergePathsForKitKatAndAbove="true"
         app:lottie_loop="false"
-        app:lottie_rawRes="@raw/wp2jp" />
+        app:lottie_rawRes="@raw/wp2jp_left" />
 
     <TextView
         android:id="@+id/title"

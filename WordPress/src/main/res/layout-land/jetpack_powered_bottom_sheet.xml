@@ -26,7 +26,7 @@
         android:scaleType="centerCrop"
         app:layout_constraintTop_toBottomOf="@id/handle"
         app:layout_constraintStart_toStartOf="parent"
-        app:lottie_rawRes="@raw/wp2jp"
+        app:lottie_rawRes="@raw/wp2jp_left"
         app:lottie_enableMergePathsForKitKatAndAbove="true"
         app:lottie_autoPlay="true"
         app:lottie_loop="false" />
