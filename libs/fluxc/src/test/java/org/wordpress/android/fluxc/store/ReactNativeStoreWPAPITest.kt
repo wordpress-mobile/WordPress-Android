@@ -460,11 +460,9 @@ class ReactNativeStoreWPAPITest {
         error.volleyError = VolleyError(NetworkResponse(statusCode, null, false, 0L, null))
     }
 
-    private class StatusCode {
-        companion object {
-            const val UNAUTHORIZED_401 = 401
-            const val NOT_FOUND_404 = 404
-            const val UNKNOWN = 99999
-        }
+    private object StatusCode {
+        const val UNAUTHORIZED_401 = 401
+        const val NOT_FOUND_404 = 404
+        const val UNKNOWN = 99999
     }
 }
