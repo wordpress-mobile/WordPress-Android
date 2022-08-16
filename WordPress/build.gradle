@@ -180,6 +180,10 @@ android {
             buildConfigField "boolean", "ENABLE_QRCODE_AUTH_FLOW", "true"
 
             manifestPlaceholders = [magicLinkScheme:"jetpack"]
+
+            // Limit string resources to Mag16 only for Jetpack
+            // Note: this only affects included _locales_; variants for `values-night`, `values-land` and other configs are _still_ preserved in Jetpack and not filtered by this.
+            resourceConfigurations = ["ar", "de", "es", "fr", "he", "id", "it", "ja", "ko", "nl", "pt-rBR", "ru", "sv", "tr", "zh-rCN", "zh-rTW"]
         }
 
         // Used for release/beta testing builds. Usually shouldn't be build locally.
