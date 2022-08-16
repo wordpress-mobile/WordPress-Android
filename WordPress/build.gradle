@@ -603,6 +603,16 @@ tasks.register("printAllVersions") {
     }
 }
 
+tasks.register("printResourceConfigurations") {
+    doLast {
+        android.productFlavors.each { flavor ->
+            if (flavor.dimension == "app") {
+                println "${flavor.name}: ${flavor.resourceConfigurations}"
+            }
+        }
+    }
+}
+
 def checkGradlePropertiesFile() {
     def inputFile = file("${rootDir}/gradle.properties")
     if (!inputFile.exists()) {
