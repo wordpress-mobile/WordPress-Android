@@ -162,7 +162,8 @@ class CommentSqlUtilsTest {
                 APPROVED,
                 UNAPPROVED
         )
-        // from 65 comments in DB we expect to have only 22 remote comments (remove first 3, 3 from the middle and all the comments that go after last comment in remoteComments
+        // from 65 comments in DB we expect to have only 22 remote comments (remove first 3, 3 from the middle and all
+        // the comments that go after last comment in remoteComments
         Assertions.assertThat(numCommentsDeleted).isEqualTo(43)
         Assertions.assertThat(cleanedComments.size).isEqualTo(22)
         remoteComments.forEach {
