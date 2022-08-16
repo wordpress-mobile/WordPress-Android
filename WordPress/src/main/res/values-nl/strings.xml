@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-07-22 12:17:11+0000
+Translation-Revision-Date: 2022-08-05 15:18:25+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: nl
 -->
 <resources>
+    <string name="gutenberg_native_upgrade_your_plan_to_use_video_covers">Upgrade je abonnement om video-omslagafbeeldingen te gebruiken</string>
+    <string name="gutenberg_native_upgrade_your_plan_to_upload_audio">Upgrade je abonnement om audio te uploaden</string>
+    <string name="gutenberg_native_jetpack_powered">Aangedreven door Jetpack</string>
+    <string name="gutenberg_native_invalid_url">Ongeldige URL.</string>
+    <string name="gutenberg_native_gradient">Verloop</string>
+    <string name="wp_jetpack_continue_to_notifications">Doorgaan naar Meldingen</string>
+    <string name="wp_jetpack_continue_to_stats">Doorgaan naar Statistieken</string>
+    <string name="wp_jetpack_continue_to_reader">Doorgaan naar Lezer</string>
+    <string name="wp_jetpack_get_new_jetpack_app">Krijg de Jetpack-app</string>
+    <string name="wp_jetpack_powered_features">Statistieken, Lezer, Meldingen en andere functies worden aangedreven door Jetpack.</string>
     <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery">Probleem bij het weergeven van het blok. \nTik om blokherstel te proberen.</string>
     <string name="weekly_roundup_notification_text_views_and_comments">Vorige week had je %1$s weergaven en %2$s opmerkingen.</string>
     <string name="weekly_roundup_notification_text_views_and_likes">Vorige week had je %1$s weergaven en %2$s likes.</string>
@@ -511,6 +521,7 @@ Language: nl
     <string name="gutenberg_native_s_has_no_url_set">%s heeft geen URL ingesteld</string>
     <string name="gutenberg_native_s_converted_to_regular_blocks">%s geconverteerd naar gewone blokken</string>
     <string name="gutenberg_native_s_block">%s blok</string>
+    <string name="gutenberg_native_opacity">Doorzichtigheid</string>
     <string name="gutenberg_native_media_options">Media opties</string>
     <string name="gutenberg_native_invalid_url_audio_file_not_found">Ongeldige URL. Audiobestand niet gevonden.</string>
     <string name="gutenberg_native_insert_crosspost">Kruisbericht invoegen</string>
@@ -1874,7 +1885,7 @@ Language: nl
     <string name="image_size_full_label">Volledige grootte</string>
     <string name="image_size_large_label">Groot</string>
     <string name="image_size_medium_label">Gemiddeld</string>
-    <string name="image_size_thumbnail_label">Miniatuur</string>
+    <string name="image_size_thumbnail_label">Thumbnail</string>
     <string name="menu_history">Geschiedenis</string>
     <string name="pages_open_page_error">De geselecteerde pagina is niet beschikbaar</string>
     <string name="pages_pending">Beoordeling in behandeling</string>

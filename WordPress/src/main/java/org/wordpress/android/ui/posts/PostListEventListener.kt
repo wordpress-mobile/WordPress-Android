@@ -43,6 +43,7 @@ import kotlin.coroutines.CoroutineContext
  * This is a temporary class to make the PostListViewModel more manageable. Please feel free to refactor it any way
  * you see fit.
  */
+@Suppress("LongParameterList")
 class PostListEventListener(
     private val lifecycle: Lifecycle,
     private val dispatcher: Dispatcher,
@@ -306,6 +307,7 @@ class PostListEventListener(
     }
 
     class Factory @Inject constructor() {
+        @Suppress("LongParameterList")
         fun createAndStartListening(
             lifecycle: Lifecycle,
             dispatcher: Dispatcher,

@@ -29,7 +29,6 @@ import org.wordpress.android.push.NotificationType
 import org.wordpress.android.push.NotificationsProcessingService.ARG_NOTIFICATION_TYPE
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
-import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.stats.StatsTimeframe
 import org.wordpress.android.ui.stats.StatsTimeframe.DAY
 import org.wordpress.android.ui.stats.StatsTimeframe.MONTH
@@ -59,7 +58,6 @@ import org.wordpress.android.util.JetpackBrandingUtils
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.MySiteDashboardTodaysStatsCardFeatureConfig
-import org.wordpress.android.util.config.StatsRevampV2FeatureConfig
 import org.wordpress.android.util.mapNullable
 import org.wordpress.android.util.mergeNotNull
 import org.wordpress.android.viewmodel.Event
@@ -68,7 +66,6 @@ import java.io.Serializable
 import javax.inject.Inject
 import javax.inject.Named
 
-@Suppress("TooManyFunctions", "LongParameterList")
 @HiltViewModel
 class StatsViewModel
 @Inject constructor(
@@ -77,7 +74,6 @@ class StatsViewModel
     @Named(BG_THREAD) private val defaultDispatcher: CoroutineDispatcher,
     private val selectedDateProvider: SelectedDateProvider,
     private val statsSectionManager: SelectedSectionManager,
-    private val appPrefsWrapper: AppPrefsWrapper,
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val statsSiteProvider: StatsSiteProvider,
@@ -86,7 +82,6 @@ class StatsViewModel
     private val statsModuleActivateUseCase: StatsModuleActivateUseCase,
     private val notificationsTracker: SystemNotificationsTracker,
     private val todaysStatsCardFeatureConfig: MySiteDashboardTodaysStatsCardFeatureConfig,
-    private val statsRevampV2FeatureConfig: StatsRevampV2FeatureConfig,
     private val jetpackBrandingUtils: JetpackBrandingUtils
 ) : ScopedViewModel(mainDispatcher) {
     private val _isRefreshing = MutableLiveData<Boolean>()
@@ -152,7 +147,7 @@ class StatsViewModel
         }
     }
 
-    @Suppress("ComplexMethod")
+    @Suppress("ComplexMethod", "LongParameterList")
     fun start(
         localSiteId: Int,
         launchedFrom: Serializable?,
@@ -208,27 +203,22 @@ class StatsViewModel
             }
         }
 
-        if (launchedFrom == StatsLaunchedFrom.FEATURE_ANNOUNCEMENT) {
-            if (statsSectionManager.getSelectedSection() != INSIGHTS) statsSectionManager.setSelectedSection(INSIGHTS)
-            updateRevampedInsights()
-        }
         if (statsSectionManager.getSelectedSection() == INSIGHTS) showInsightsUpdateAlert()
 
         if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) showJetpackPoweredBottomSheet()
     }
 
     private fun showJetpackPoweredBottomSheet() {
-        _showJetpackPoweredBottomSheet.value = Event(true)
+//        _showJetpackPoweredBottomSheet.value = Event(true)
     }
 
     private fun showInsightsUpdateAlert() {
-        if (BuildConfig.IS_JETPACK_APP && statsRevampV2FeatureConfig.isEnabled()) {
+        if (BuildConfig.IS_JETPACK_APP) {
             launch {
                 val insightTypes = statsStore.getAddedInsights(statsSiteProvider.siteModel)
                 if (insightTypes.containsAll(DEFAULT_INSIGHTS)) { // means not upgraded to new insights
                     _showUpgradeAlert.value = Event(true)
                     updateRevampedInsights()
-                    appPrefsWrapper.markStatsRevampFeatureAnnouncementAsDisplayed()
                 }
             }
         }

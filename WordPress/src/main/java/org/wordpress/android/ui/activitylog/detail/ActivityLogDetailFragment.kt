@@ -27,6 +27,7 @@ import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.JetpackBrandingUtils
+import org.wordpress.android.util.JetpackBrandingUtils.Screen.ACTIVITY_LOG_DETAIL
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.AVATAR_WITH_BACKGROUND
 import org.wordpress.android.viewmodel.activitylog.ACTIVITY_LOG_ARE_BUTTONS_VISIBLE_KEY
@@ -39,7 +40,6 @@ import javax.inject.Inject
 private const val DETAIL_TRACKING_SOURCE = "detail"
 private const val FORWARD_SLASH = "/"
 
-@Suppress("TooManyFunctions")
 @AndroidEntryPoint
 class ActivityLogDetailFragment : Fragment(R.layout.activity_log_item_detail) {
     @Inject lateinit var imageManager: ImageManager
@@ -75,7 +75,8 @@ class ActivityLogDetailFragment : Fragment(R.layout.activity_log_item_detail) {
 
         if (jetpackBrandingUtils.shouldShowJetpackBranding()) {
             jetpackBadge.root.isVisible = true
-            jetpackBadge.root.setOnClickListener {
+            jetpackBadge.jetpackPoweredBadge.setOnClickListener {
+                jetpackBrandingUtils.trackBadgeTapped(ACTIVITY_LOG_DETAIL)
                 viewModel.showJetpackPoweredBottomSheet()
             }
         }

@@ -206,6 +206,7 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
         ) : ListItemUiState()
     }
 
+    @Suppress("DataClassShouldBeImmutable")
     data class Action(val label: UiString) {
         lateinit var action: (() -> Unit)
     }

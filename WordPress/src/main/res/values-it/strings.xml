@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-07-14 08:54:22+0000
+Translation-Revision-Date: 2022-07-28 09:54:10+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: it
 -->
 <resources>
+    <string name="gutenberg_native_upgrade_your_plan_to_use_video_covers">Aggiorna il piano per utilizzare cover video</string>
+    <string name="gutenberg_native_upgrade_your_plan_to_upload_audio">Aggiorna il piano per caricare audio</string>
+    <string name="gutenberg_native_jetpack_powered">Con tecnologia Jetpack</string>
+    <string name="gutenberg_native_invalid_url">URL non valida.</string>
+    <string name="gutenberg_native_gradient">Gradiente</string>
+    <string name="wp_jetpack_continue_to_notifications">Continua in Notifiche</string>
+    <string name="wp_jetpack_continue_to_stats">Continua in Statistiche</string>
+    <string name="wp_jetpack_continue_to_reader">Continua in Reader</string>
+    <string name="wp_jetpack_get_new_jetpack_app">Ottieni la nuova app di Jetpack</string>
+    <string name="wp_jetpack_powered_features">Statistiche, Reader, Notifiche e altre funzionalità sono fornite da Jetpack.</string>
     <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery">Problema durante la visualizzazione del blocco. \nTocca per tentare il ripristino del blocco.</string>
     <string name="weekly_roundup_notification_text_views_and_comments">L\'ultima settimana hai avuto %1$s visualizzazioni e %2$s commenti</string>
     <string name="weekly_roundup_notification_text_views_and_likes">L\'ultima settimana hai avuto %1$s visualizzazioni e %2$s Mi piace</string>
@@ -511,6 +521,7 @@ Language: it
     <string name="gutenberg_native_s_has_no_url_set">%s non ha un URL impostato</string>
     <string name="gutenberg_native_s_converted_to_regular_blocks">Conversione di %s in blocchi regolari</string>
     <string name="gutenberg_native_s_block">%s blocco</string>
+    <string name="gutenberg_native_opacity">Opacità</string>
     <string name="gutenberg_native_media_options">Opzioni Media</string>
     <string name="gutenberg_native_invalid_url_audio_file_not_found">URL non valido. File audio non trovato.</string>
     <string name="gutenberg_native_insert_crosspost">Inserisci pubblicazione incrociata</string>

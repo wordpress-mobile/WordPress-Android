@@ -40,8 +40,8 @@ import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
 
-class ClicksUseCase
-constructor(
+@Suppress("LongParameterList")
+class ClicksUseCase constructor(
     statsGranularity: StatsGranularity,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher,

@@ -511,6 +511,7 @@ Language: zh_TW
     <string name="gutenberg_native_s_has_no_url_set">%s 沒有 URL 集</string>
     <string name="gutenberg_native_s_converted_to_regular_blocks">%s 已轉換為一般區塊</string>
     <string name="gutenberg_native_s_block">%s 區塊</string>
+    <string name="gutenberg_native_opacity">不透明度  </string>
     <string name="gutenberg_native_media_options">媒體選項</string>
     <string name="gutenberg_native_invalid_url_audio_file_not_found">無效網址。 找不到音訊檔案。</string>
     <string name="gutenberg_native_insert_crosspost">插入多重發佈</string>

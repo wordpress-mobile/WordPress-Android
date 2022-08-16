@@ -27,7 +27,6 @@ import java.net.URI
 import java.util.Locale
 import java.util.UUID
 
-@Suppress("TooManyFunctions")
 class PreviewImageViewModel : ViewModel() {
     private val _uiState: MutableLiveData<UiState> = MutableLiveData()
     val uiState: LiveData<UiState> = _uiState
@@ -288,6 +287,7 @@ class PreviewImageViewModel : ViewModel() {
         imageState is ImageInHighResLoadSuccessUiState
 
     // TODO: revisit
+    @Suppress("ForbiddenComment")
     private fun canLoadToFile(imageState: ImageUiState) = imageState is ImageInHighResLoadSuccessUiState
 
     private fun List<ImageUiState>.hasSingleElement() = this.size == 1

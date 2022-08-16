@@ -1,4 +1,2 @@
-- Gallery/Image block performance improvements in the Block Editor.
-- Properly displayed Video blocks (both web and app) for VideoPress-enabled sites.
-- Block inserter allows block types to be better organized in collections.
-- Alt text footnote spacing adjustment in Image blocks.
+- We added a new label in App Settings to show the app’s current interface language. Shiny.
+- Now that the app supports higher-resolution image previews, we bumped up the size of theme screenshots in the site theme picker. No more pixellation, only pixel perfection.

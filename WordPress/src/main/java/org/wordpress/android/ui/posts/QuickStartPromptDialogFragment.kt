@@ -21,7 +21,6 @@ import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.widgets.WPTextView
 import javax.inject.Inject
 
-@Suppress("TooManyFunctions")
 class QuickStartPromptDialogFragment : AppCompatDialogFragment() {
     companion object {
         private const val STATE_KEY_DRAWABLE_RES_ID = "state_key_drawable"
@@ -52,7 +51,6 @@ class QuickStartPromptDialogFragment : AppCompatDialogFragment() {
         fun onPositiveClicked(instanceTag: String)
     }
 
-    @Suppress("LongParameterList")
     @JvmOverloads
     fun initialize(
         tag: String,

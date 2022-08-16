@@ -43,7 +43,6 @@ import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
 @AndroidEntryPoint
-@Suppress("TooManyFunctions")
 class QRCodeAuthFragment : Fragment() {
     @Inject lateinit var uiHelpers: UiHelpers
 

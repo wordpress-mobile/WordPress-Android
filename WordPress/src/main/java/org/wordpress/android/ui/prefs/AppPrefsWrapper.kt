@@ -220,20 +220,11 @@ class AppPrefsWrapper @Inject constructor() {
     fun setLastSelectedQuickStartTypeForSite(quickStartType: QuickStartType, siteLocalId: Long) =
             AppPrefs.setLastSelectedQuickStartTypeForSite(quickStartType, siteLocalId)
 
-    fun isMySiteDefaultTabExperimentVariantAssigned() = AppPrefs.isMySiteDefaultTabExperimentVariantAssigned()
-
-    fun setMySiteDefaultTabExperimentVariantAssigned() = AppPrefs.setMySiteDefaultTabExperimentVariantAssigned()
-
-    fun setInitialScreenFromMySiteDefaultTabExperimentVariant(variant: String) =
-            AppPrefs.setInitialScreenFromMySiteDefaultTabExperimentVariant(variant)
-
-    fun getMySiteInitialScreen(): String = AppPrefs.getMySiteInitialScreen()
+    fun getMySiteInitialScreen(isJetpackApp: Boolean): String = AppPrefs.getMySiteInitialScreen(isJetpackApp)
 
     fun setSkippedPromptDay(date: Date?, siteId: Int) = AppPrefs.setSkippedPromptDay(date, siteId)
 
     fun getSkippedPromptDay(siteId: Int): Date? = AppPrefs.getSkippedPromptDay(siteId)
-
-    fun markStatsRevampFeatureAnnouncementAsDisplayed() = AppPrefs.setShouldDisplayStatsRevampFeatureAnnouncement(false)
 
     fun getIsFirstBloggingPromptsOnboarding(): Boolean = AppPrefs.getIsFirstBloggingPromptsOnboarding()
 

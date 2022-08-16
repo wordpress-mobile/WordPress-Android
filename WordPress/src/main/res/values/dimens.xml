@@ -114,6 +114,7 @@
     <dimen name="margin_extra_medium_large">24dp</dimen>
     <dimen name="margin_extra_extra_medium_large">32dp</dimen>
     <dimen name="margin_extra_extra_large">48dp</dimen>
+    <dimen name="margin_64dp">64dp</dimen>
     <dimen name="margin_68dp">68dp</dimen>
     <dimen name="margin_filter_spinner">16dp</dimen>
     <dimen name="margin_theme_browser_top">160dp</dimen>
@@ -663,9 +664,9 @@
     <dimen name="hpp_layout_card_height">260dp</dimen>
     <dimen name="hpp_layout_card_width">200dp</dimen>
     <dimen name="hpp_layouts_row_height">330dp</dimen>
-    <dimen name="hpp_recommended_card_height">260dp</dimen>
-    <dimen name="hpp_recommended_card_width">200dp</dimen>
-    <dimen name="hpp_recommended_row_height">350dp</dimen>
+    <dimen name="hpp_recommended_card_height">416dp</dimen>
+    <dimen name="hpp_recommended_card_width">320dp</dimen>
+    <dimen name="hpp_recommended_row_height">500dp</dimen>
     <dimen name="hpp_recommended_subtitle_margin">5dp</dimen>
 
     <!-- Site Intent Question -->

@@ -42,7 +42,6 @@ import org.wordpress.android.imageeditor.utils.ToastUtils.Duration
 import org.wordpress.android.imageeditor.utils.UiHelpers
 import java.io.File
 
-@Suppress("TooManyFunctions")
 class PreviewImageFragment : Fragment(R.layout.preview_image_fragment) {
     private var binding: PreviewImageFragmentBinding? = null
     private lateinit var viewModel: PreviewImageViewModel
@@ -258,6 +257,7 @@ class PreviewImageFragment : Fragment(R.layout.preview_image_fragment) {
         ToastUtils.showToast(context, getString(errorResId), Duration.LONG)
     }
 
+    @Suppress("ForbiddenComment")
     private fun navigateToCropScreenWithFileInfo(fileInfo: Triple<String, String?, Boolean>) {
         val (inputFilePath, outputFileExtension, shouldReturnToPreviewScreen) = fileInfo
 

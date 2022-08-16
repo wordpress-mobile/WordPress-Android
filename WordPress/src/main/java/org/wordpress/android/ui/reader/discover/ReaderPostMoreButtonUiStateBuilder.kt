@@ -23,7 +23,6 @@ import org.wordpress.android.util.config.SeenUnseenWithCounterFeatureConfig
 import javax.inject.Inject
 import javax.inject.Named
 
-@Suppress("TooManyFunctions")
 @Reusable
 class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
     private val readerPostTableWrapper: ReaderPostTableWrapper,

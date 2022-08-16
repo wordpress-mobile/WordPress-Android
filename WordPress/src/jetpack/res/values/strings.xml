@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name" translatable="false">Jetpack</string>
-    <string name="widgets_enabled" translatable="false">false</string>
+    <string name="widgets_enabled" translatable="false">true</string>
 
     <!-- About View -->
     <string name="app_title">Jetpack for Android</string>
@@ -26,4 +26,7 @@
 
     <!-- About button in Me -->
     <string name="me_btn_about">About Jetpack</string>
+
+    <!-- My Site Initial Tab Default value -->
+    <string name="initial_screen_entry_value_default_key" translatable="false">@string/initial_screen_entry_value_home</string>
 </resources>

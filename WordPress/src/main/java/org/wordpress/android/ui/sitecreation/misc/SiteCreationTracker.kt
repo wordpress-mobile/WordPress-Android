@@ -31,7 +31,6 @@ private const val SITE_CREATION_LOCATION = "site_creation"
 private const val SITE_CREATION_SOURCE = "source"
 
 @Singleton
-@Suppress("TooManyFunctions")
 class SiteCreationTracker @Inject constructor(val tracker: AnalyticsTrackerWrapper) : LayoutPickerTracker {
     private enum class PROPERTY(val key: String) {
         TEMPLATE("template"),

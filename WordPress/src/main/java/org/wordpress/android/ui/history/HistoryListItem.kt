@@ -26,6 +26,7 @@ sealed class HistoryListItem(val type: ViewType) {
 
     @Parcelize
     @SuppressLint("ParcelCreator")
+    @Suppress("DataClassShouldBeImmutable")
     data class Revision(
         val revisionId: Long,
         val diffFromVersion: Long,

@@ -11,22 +11,20 @@ import org.wordpress.android.ui.mysite.cards.dashboard.CardsBuilder
 import org.wordpress.android.ui.mysite.cards.quickactions.QuickActionsCardBuilder
 import org.wordpress.android.ui.mysite.cards.quicklinksribbon.QuickLinkRibbonBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
-import org.wordpress.android.ui.mysite.tabs.MySiteDefaultTabExperiment
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
 import javax.inject.Inject
 
-@Suppress("LongParameterList")
 class CardsBuilder @Inject constructor(
     private val buildConfigWrapper: BuildConfigWrapper,
     private val quickStartDynamicCardsFeatureConfig: QuickStartDynamicCardsFeatureConfig,
     private val quickActionsCardBuilder: QuickActionsCardBuilder,
     private val quickStartCardBuilder: QuickStartCardBuilder,
     private val quickLinkRibbonBuilder: QuickLinkRibbonBuilder,
-    private val dashboardCardsBuilder: CardsBuilder,
-    private val mySiteDefaultTabExperiment: MySiteDefaultTabExperiment
+    private val dashboardCardsBuilder: CardsBuilder
 ) {
+    @Suppress("LongParameterList")
     fun build(
         quickActionsCardBuilderParams: QuickActionsCardBuilderParams,
         domainRegistrationCardBuilderParams: DomainRegistrationCardBuilderParams,
@@ -55,10 +53,7 @@ class CardsBuilder @Inject constructor(
     }
 
     private fun shouldShowQuickActionsCard(isMySiteTabsEnabled: Boolean): Boolean {
-        val isDefaultTabVariantAssignedInExperiment =
-                mySiteDefaultTabExperiment.isExperimentRunning() && mySiteDefaultTabExperiment.isVariantAssigned()
-        return buildConfigWrapper.isQuickActionEnabled &&
-                (!isMySiteTabsEnabled || !isDefaultTabVariantAssignedInExperiment)
+        return buildConfigWrapper.isQuickActionEnabled && !isMySiteTabsEnabled
     }
 
     private fun trackAndBuildDomainRegistrationCard(

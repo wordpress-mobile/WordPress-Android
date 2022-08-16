@@ -62,6 +62,7 @@ import org.wordpress.android.util.AppLog.T.MAIN
 import org.wordpress.android.util.AppLog.T.UTILS
 import org.wordpress.android.util.FluxCUtils
 import org.wordpress.android.util.JetpackBrandingUtils
+import org.wordpress.android.util.JetpackBrandingUtils.Screen.ME
 import org.wordpress.android.util.MediaUtils
 import org.wordpress.android.util.SnackbarItem
 import org.wordpress.android.util.SnackbarItem.Info
@@ -128,7 +129,8 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
 
         if (jetpackBrandingUtils.shouldShowJetpackBranding()) {
             jetpackBadge.root.isVisible = true
-            jetpackBadge.jetpackBadge.root.setOnClickListener {
+            jetpackBadge.footerJetpackBadge.jetpackPoweredBadge.setOnClickListener {
+                jetpackBrandingUtils.trackBadgeTapped(ME)
                 viewModel.showJetpackPoweredBottomSheet()
             }
         }

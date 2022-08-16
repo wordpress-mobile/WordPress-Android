@@ -4,6 +4,7 @@ import org.wordpress.android.ui.reader.tracker.ReaderTracker.Companion.SOURCE_DI
 import org.wordpress.android.ui.reader.tracker.ReaderTracker.Companion.SOURCE_POST_DETAIL
 import org.wordpress.android.ui.reader.tracker.ReaderTracker.Companion.SOURCE_POST_DETAIL_COMMENT_SNIPPET
 
+@Suppress("ForbiddenComment")
 enum class ThreadedCommentsActionSource(val sourceDescription: String) {
     READER_POST_CARD("reader_post_card"),
     READER_POST_DETAILS("reader_post_details"),

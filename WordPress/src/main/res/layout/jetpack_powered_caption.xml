@@ -5,8 +5,5 @@
     style="?attr/textAppearanceBody1"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:textAlignment="center"
     android:paddingBottom="@dimen/margin_extra_large"
-    android:paddingEnd="@dimen/margin_extra_large"
-    android:paddingStart="@dimen/margin_extra_large"
     tools:text="@string/wp_jetpack_powered_features" />

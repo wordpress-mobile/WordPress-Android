@@ -2,6 +2,7 @@ package org.wordpress.android.e2e.pages;
 
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.ViewInteraction;
+import androidx.test.espresso.action.ViewActions;
 
 import org.wordpress.android.R;
 
@@ -10,6 +11,7 @@ import static androidx.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu
 import static androidx.test.espresso.Espresso.pressBack;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.swipeDown;
+import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withHint;
@@ -40,12 +42,15 @@ public class BlockEditorPage {
     }
 
     public BlockEditorPage enterTitle(String postTitle) {
-        populateTextField(titleField, postTitle);
+        clickOn(titleField);
+        titleField.perform(typeText(postTitle), ViewActions.closeSoftKeyboard());
         return this;
     }
 
     public BlockEditorPage enterParagraphText(String paragraphText) {
-        populateTextField(onView(withHint(R.string.gutenberg_native_start_writing)), paragraphText);
+        ViewInteraction startWritingPrompt = onView(withHint(R.string.gutenberg_native_start_writing));
+        clickOn(startWritingPrompt);
+        populateTextField(startWritingPrompt, paragraphText);
         return this;
     }
 
