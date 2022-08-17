@@ -99,12 +99,6 @@ class PageStoreTest {
         assertThat(result[0].title).isEqualTo(pageWithQuery.title)
     }
 
-    private fun assertPage(map: Map<PageStatus, List<PageModel>>, position: Int, status: PageStatus) {
-        val page = map[status]?.get(position)
-        assertThat(page).isNotNull()
-        assertThat(page!!.status).isEqualTo(status)
-    }
-
     @Test
     fun emptySearchResultWhenNothingContainsQuery() {
         val result = runBlocking { store.search(site, "foo") }
