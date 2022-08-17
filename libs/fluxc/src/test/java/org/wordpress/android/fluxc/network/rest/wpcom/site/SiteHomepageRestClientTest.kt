@@ -19,7 +19,6 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteHomepageSettings
 import org.wordpress.android.fluxc.model.SiteHomepageSettings.Posts
 import org.wordpress.android.fluxc.model.SiteHomepageSettings.StaticPage
-import org.wordpress.android.fluxc.model.SiteHomepageSettingsMapper
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.NETWORK_ERROR
@@ -37,7 +36,6 @@ import org.wordpress.android.fluxc.test
 class SiteHomepageRestClientTest {
     @Mock private lateinit var dispatcher: Dispatcher
     @Mock private lateinit var wpComGsonRequestBuilder: WPComGsonRequestBuilder
-    @Mock private lateinit var siteHomepageSettingsMapper: SiteHomepageSettingsMapper
     @Mock private lateinit var site: SiteModel
     @Mock private lateinit var requestQueue: RequestQueue
     @Mock private lateinit var accessToken: AccessToken
