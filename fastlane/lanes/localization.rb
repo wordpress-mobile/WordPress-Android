@@ -390,38 +390,20 @@ platform :android do
   #####################################################################################
   lane :download_translations do
     # WordPress strings
-    wordpress_res_dir = File.join('WordPress', 'src', 'main', 'res')
+    check_declared_locales_consistency(app_flavor: 'wordpress', locales_list: WP_APP_LOCALES)
     android_download_translations(
-      res_dir: wordpress_res_dir,
+      res_dir: File.join('WordPress', 'src', 'main', 'res'),
       glotpress_url: APP_SPECIFIC_VALUES[:wordpress][:glotpress_appstrings_project],
       locales: WP_APP_LOCALES
     )
 
     # Jetpack strings
-    jetpack_res_dir = File.join('WordPress', 'src', 'jetpack', 'res')
+    check_declared_locales_consistency(app_flavor: 'jetpack', locales_list: JP_APP_LOCALES)
     android_download_translations(
-      res_dir: jetpack_res_dir,
+      res_dir: File.join('WordPress', 'src', 'jetpack', 'res'),
       glotpress_url: APP_SPECIFIC_VALUES[:jetpack][:glotpress_appstrings_project],
       locales: JP_APP_LOCALES
     )
-
-    # [pxLjZ-7b9-p2] For any locale in which Jetpack is not translated in (but WordPress is),
-    # ensure we fallback to an existing locale *in Jetpack* — instead of having the runtime
-    # erroneously fall back to the *WordPress-specific* translation in that missing locale.
-    wp_locales_not_in_jp = WP_APP_LOCALES.map { |l| l[:android] } - JP_APP_LOCALES.map { |l| l[:android] }
-    new_strings_files = wp_locales_not_in_jp.map do |locale|
-      language = locale.split('-').first
-      fallback = JP_APP_LOCALES.any? { |l| l[:android] == language } ? "values-#{language}" : 'values'
-      UI.message "Using `#{fallback}` as a fallback for `values-#{locale}` for the Jetpack app."
-      destination = File.join(jetpack_res_dir, "values-#{locale}", 'strings.xml')
-      Dir.chdir('..') do # To get out of `fastlane/` — which is the `pwd` when running code from Fastfile
-        FileUtils.mkdir_p(File.dirname(destination))
-        FileUtils.cp(File.join(jetpack_res_dir, fallback, 'strings.xml'), destination)
-      end
-      destination
-    end
-    git_add(path: new_strings_files)
-    git_commit(path: new_strings_files, message: 'Update translation fallbacks for Jetpack', allow_nothing_to_commit: true)
   end
 
   # Updates the `.po` file at the given `po_path` using the content of the `sources` files, interpolating `release_version` where appropriate.
@@ -438,5 +420,33 @@ platform :android do
 
     git_add(path: po_path)
     git_commit(path: po_path, message: commit_message, allow_nothing_to_commit: true)
+  end
+
+  # Compares the list of locales declared in the `resourceConfigurations` field of `build.gradle` for a given flavor
+  # with the hardcoded list of locales we use in our Fastlane lanes, to ensure they match and we are consistent.
+  #
+  # @param [String] app_flavor `"wordpress"` or `"jetpack"` — The `productFlavor` to read from in the build.gradle
+  # @param [Array<Hash>] locales_list The list of Hash defining the locales to compare that list to.
+  #        Typically one of the `WP_APP_LOCALES` or `JP_APP_LOCALES` constants
+  def check_declared_locales_consistency(app_flavor:, locales_list:)
+    output = gradle(task: 'printResourceConfigurations')
+    resource_configs = output.match(/^#{app_flavor}: \[(.*)\]$/)&.captures&.first&.gsub(' ','')&.split(',')&.sort
+    if resource_configs.nil? || resource_configs.empty?
+      UI.message("No `resourceConfigurations` field set in `build.gradle` for the `#{app_flavor}` flavor. Nothing to check.")
+      return
+    end
+
+    expected_locales = locales_list.map { |l| l[:android] }.sort
+    if resource_configs == expected_locales
+      UI.message("The `resourceConfigurations` field set in `build.gradle` for the `#{app_flavor}` flavor matches what is set in our Fastfile. All is good!")
+    else
+      UI.user_error! <<~ERROR
+        The list of `resourceConfigurations` declared in your `build.gradle` for the `#{app_flavor}` flavor
+        does not match the list of locales we hardcoded in the `fastlane/lanes/localization.rb` for this app.
+
+        If you recently updated the hardcoded list of locales to include for this app, be sure to apply those
+        changes in both places, to keep the Fastlane scripts consistent with the gradle configuration of your app.
+      ERROR
+    end
   end
 end

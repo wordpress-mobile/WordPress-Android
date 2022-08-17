@@ -37,7 +37,7 @@
         app:layout_constraintTop_toBottomOf="@id/topBarrier"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toTopOf="@id/title"
-        app:lottie_rawRes="@raw/wp2jp"
+        app:lottie_rawRes="@raw/wp2jp_left"
         app:lottie_enableMergePathsForKitKatAndAbove="true"
         app:lottie_autoPlay="true"
         app:lottie_loop="false" />

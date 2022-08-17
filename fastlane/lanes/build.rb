@@ -193,7 +193,7 @@ platform :android do
   # This lane builds an app bundle
   # -----------------------------------------------------------------------------------
   # Usage:
-  # bundle exec fastlane build_bundle app:<wordpress|jetpack> version:<version> flavor:<flavor> buildType:<debug|release> [skip_lint:<true|false>]
+  # bundle exec fastlane build_bundle app:<wordpress|jetpack> version:<versionName,versionCode> flavor:<flavor> buildType:<debug|release> [skip_lint:<true|false>]
   #####################################################################################
   desc 'Builds an app bundle'
   lane :build_bundle do |options|
@@ -207,6 +207,10 @@ platform :android do
     end
 
     prefix = APP_SPECIFIC_VALUES[app.to_sym][:bundle_name_prefix]
+    if version.is_a?(String) # for when calling from command line
+      (version_name, version_code) = version.split(',')
+      version = { 'name' => version_name, 'code' => version_code || '1' }
+    end
     name = "#{prefix}-#{version['name']}.aab"
 
     aab_file = "org.wordpress.android-#{app}-#{options[:flavor]}-#{options[:buildType]}.aab".downcase
