@@ -5,7 +5,6 @@ import android.view.View
 import android.view.View.OnScrollChangeListener
 import android.view.Window
 import androidx.core.view.isVisible
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
@@ -34,8 +33,7 @@ class JetpackBrandingUtils @Inject constructor(
     fun showJetpackBannerIfScrolledToTop(banner: View, scrollableView: RecyclerView) {
         banner.isVisible = true
 
-        val layoutManager = scrollableView.layoutManager as LinearLayoutManager
-        val isEmpty = layoutManager.itemCount == 0
+        val isEmpty = scrollableView.layoutManager?.itemCount == 0
         val scrollOffset = scrollableView.computeVerticalScrollOffset()
 
         banner.translationY = if (scrollOffset == 0 || isEmpty) {
