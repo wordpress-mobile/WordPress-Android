@@ -473,7 +473,8 @@ public class GCMMessageHandler {
                 // if the comment is lacking approval, offer moderation actions
                 if (note.getCommentStatus() == CommentStatus.UNAPPROVED) {
                     if (note.canModerate()) {
-                        addCommentApproveActionForCommentNotification(context, builder, noteId);
+                        // TODO enable comment approve action after fixing content lost after approval
+                        // addCommentApproveActionForCommentNotification(context, builder, noteId);
                     }
                 } else {
                     // else offer REPLY / LIKE actions
