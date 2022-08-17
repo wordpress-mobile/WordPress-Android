@@ -1,17 +1,21 @@
 package org.wordpress.android.ui.mysite.jetpackbadge
 
+import android.content.res.Configuration
 import android.content.res.Resources
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import androidx.core.view.ViewCompat.LAYOUT_DIRECTION_RTL
 import androidx.fragment.app.viewModels
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
+import org.wordpress.android.R.raw
+import org.wordpress.android.R.string
 import org.wordpress.android.databinding.JetpackPoweredBottomSheetBinding
 import org.wordpress.android.databinding.JetpackPoweredExpandedBottomSheetBinding
 import org.wordpress.android.ui.ActivityLauncherWrapper
@@ -54,29 +58,10 @@ class JetpackPoweredBottomSheetFragment : BottomSheetDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         if (fullScreen) {
-            with(JetpackPoweredExpandedBottomSheetBinding.bind(view)) {
-                when (arguments?.getSerializable(KEY_SITE_SCREEN) as? PageType ?: MY_SITE) {
-                    MY_SITE -> {
-                        title.text = getString(R.string.wp_jetpack_powered_stats_powered_by_jetpack)
-                        caption.text = getString(R.string.wp_jetpack_powered_stats_powered_by_jetpack_caption)
-                        secondaryButton.text = getString(R.string.wp_jetpack_continue_to_stats)
-                    }
-                    READER -> {
-                        title.text = getString(R.string.wp_jetpack_powered_reader_powered_by_jetpack)
-                        caption.text = getString(R.string.wp_jetpack_powered_reader_powered_by_jetpack_caption)
-                        secondaryButton.text = getString(R.string.wp_jetpack_continue_to_reader)
-                    }
-                    NOTIFS -> {
-                        title.text = getString(R.string.wp_jetpack_powered_notifications_powered_by_jetpack)
-                        caption.text = getString(R.string.wp_jetpack_powered_notifications_powered_by_jetpack_caption)
-                        secondaryButton.text = getString(R.string.wp_jetpack_continue_to_notifications)
-                    }
-                }
-                primaryButton.setOnClickListener { viewModel.openJetpackAppDownloadLink() }
-                secondaryButton.setOnClickListener { viewModel.dismissBottomSheet() }
-            }
+            setupFullScreenViews(view)
         } else {
             with(JetpackPoweredBottomSheetBinding.bind(view)) {
+                if (rtlLayout(view)) illustrationView.setAnimation(R.raw.wp2jp_rtl)
                 primaryButton.setOnClickListener { viewModel.openJetpackAppDownloadLink() }
             }
         }
@@ -95,6 +80,43 @@ class JetpackPoweredBottomSheetFragment : BottomSheetDialogFragment() {
         }
 
         setupObservers()
+    }
+
+    private fun setupFullScreenViews(view: View) {
+        with(JetpackPoweredExpandedBottomSheetBinding.bind(view)) {
+            when (arguments?.getSerializable(KEY_SITE_SCREEN) as? PageType ?: MY_SITE) {
+                MY_SITE -> {
+                    val animRes = if (rtlLayout(view)) raw.jp_stats_rtl else raw.jp_stats_left
+                    illustrationView.setAnimation(animRes)
+                    title.text = getString(string.wp_jetpack_powered_stats_powered_by_jetpack)
+                    caption.text = getString(string.wp_jetpack_powered_stats_powered_by_jetpack_caption)
+                    secondaryButton.text = getString(string.wp_jetpack_continue_to_stats)
+                }
+                READER -> {
+                    val animRes = if (rtlLayout(view)) raw.jp_reader_rtl else raw.jp_reader_left
+                    illustrationView.setAnimation(animRes)
+                    title.text = getString(string.wp_jetpack_powered_reader_powered_by_jetpack)
+                    caption.text = getString(string.wp_jetpack_powered_reader_powered_by_jetpack_caption)
+                    secondaryButton.text = getString(string.wp_jetpack_continue_to_reader)
+                }
+                NOTIFS -> {
+                    val animRes = if (rtlLayout(view)) raw.jp_notifications_rtl else raw.jp_notifications_left
+                    illustrationView.setAnimation(animRes)
+                    title.text = getString(string.wp_jetpack_powered_notifications_powered_by_jetpack)
+                    caption.text = getString(string.wp_jetpack_powered_notifications_powered_by_jetpack_caption)
+                    secondaryButton.text = getString(string.wp_jetpack_continue_to_notifications)
+                }
+            }
+            primaryButton.setOnClickListener { viewModel.openJetpackAppDownloadLink() }
+            secondaryButton.setOnClickListener { viewModel.dismissBottomSheet() }
+        }
+    }
+
+    private fun rtlLayout(view: View): Boolean {
+        val config: Configuration = resources.configuration
+        view.layoutDirection = config.layoutDirection
+
+        return view.layoutDirection == LAYOUT_DIRECTION_RTL
     }
 
     private fun setupObservers() {
