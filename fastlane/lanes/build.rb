@@ -123,7 +123,7 @@ platform :android do
           track: options[:track],
           release_status: 'draft',
           metadata_path: metadata_dir,
-          skip_upload_metadata: (options[:track] != 'production'), # Only update app title/description/etc. if uploading for Production, skip for alpha/beta tracks
+          skip_upload_metadata: (options[:track] != 'production'), # Only update app title/description/etc. if uploading for Production, skip for beta tracks
           skip_upload_changelogs: false,
           skip_upload_images: true,
           skip_upload_screenshots: true,
@@ -131,7 +131,7 @@ platform :android do
         )
       rescue FastlaneCore::Interface::FastlaneError => e
         # Sometimes the upload fails randomly with a "Google Api Error: Invalid request - This Edit has been deleted.".
-        # It seems one reason might be a race condition when we do multiple edits at the exact same time (WP alpha, WP beta, JP beta). Retrying usually fixes it
+        # It seems one reason might be a race condition when we do multiple edits at the exact same time (WP beta, JP beta). Retrying usually fixes it
         if e.message.start_with?('Google Api Error') && (retry_count -= 1) > 0
           UI.error 'Upload failed with Google API error. Retrying in 2mn...'
           sleep(120)
