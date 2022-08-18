@@ -15,12 +15,7 @@ platform :android do
   #####################################################################################
   desc 'Builds and updates for distribution'
   lane :build_and_upload_release do |options|
-    android_build_prechecks(
-      skip_confirm: options[:skip_confirm],
-      alpha: false,
-      beta: false,
-      final: true
-    )
+    android_build_prechecks(skip_confirm: options[:skip_confirm], final: true) unless options[:skip_prechecks]
     android_build_preflight() unless options[:skip_prechecks]
 
     # Create the file names
@@ -48,12 +43,7 @@ platform :android do
   #####################################################################################
   desc 'Builds and updates for distribution'
   lane :build_and_upload_pre_releases do |options|
-    android_build_prechecks(
-      skip_confirm: options[:skip_confirm],
-      alpha: false,
-      beta: true,
-      final: false
-    )
+    android_build_prechecks(skip_confirm: options[:skip_confirm], beta: true) unless options[:skip_prechecks]
     android_build_preflight() unless options[:skip_prechecks]
     app = get_app_name_option!(options)
     build_beta(app: app, skip_prechecks: true, skip_confirm: options[:skip_confirm], upload_to_play_store: true, create_release: options[:create_release])
