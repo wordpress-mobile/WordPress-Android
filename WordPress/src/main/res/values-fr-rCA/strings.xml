@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-07-28 11:54:08+0000
+Translation-Revision-Date: 2022-08-10 16:54:09+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: fr
 -->
 <resources>
+    <string name="wp_jetpack_powered_features">La nouvelle application Jetpack contient des statistiques, un lecteur, des notifications et bien plus qui améliorent votre WordPress.</string>
+    <string name="wp_jetpack_powered_better_with_jetpack">WordPress est mieux avec Jetpack</string>
     <string name="gutenberg_native_upgrade_your_plan_to_use_video_covers">Mettez votre plan à jour pour utiliser des couvertures vidéo</string>
     <string name="gutenberg_native_upgrade_your_plan_to_upload_audio">Mettez votre plan à jour pour importer des fichiers audio</string>
     <string name="gutenberg_native_jetpack_powered">Optimisé par Jetpack</string>
@@ -15,7 +17,6 @@ Language: fr
     <string name="wp_jetpack_continue_to_stats">Poursuivre vers la section Statistiques</string>
     <string name="wp_jetpack_continue_to_reader">Poursuivre vers la section Lecteur</string>
     <string name="wp_jetpack_get_new_jetpack_app">Obtenez la nouvelle application Jetpack</string>
-    <string name="wp_jetpack_powered_features">Les sections Statistiques, Lecteur, Notifications et d’autres fonctionnalités sont optimisées par Jetpack.</string>
     <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery">Problème d’affichage du bloc. \nAppuyez pour tenter de restaurer le bloc.</string>
     <string name="weekly_roundup_notification_text_views_and_comments">La semaine dernière, vous avez eu %1$s vues et %2$s commentaires</string>
     <string name="weekly_roundup_notification_text_views_and_likes">La semaine dernière, vous avez eu %1$s vues et %2$s mentions J’aime</string>
@@ -44,10 +45,6 @@ Language: fr
     <string name="qrcode_auth_flow_validated_subtitle">Scannez uniquement les codes QR provenant directement de votre navigateur Web. Ne scannez jamais un code envoyé par une tierce personne.</string>
     <string name="qrcode_auth_flow_validated_default_title">Essayez-vous de vous connecter à votre navigateur Web près de %1$s ?</string>
     <string name="qrcode_auth_flow_validated_title">Essayez-vous de vous connecter à %1$s près de %2$s ?</string>
-    <string name="stats_revamp_v2_intro_secondary_button_text">Me rappeler ultérieurement</string>
-    <string name="stats_revamp_v2_intro_primary_button_text">Essayer maintenant</string>
-    <string name="stats_revamp_v2_intro_content_note">Lire la suite dans Mon site &gt; Stats &gt; Tendances.</string>
-    <string name="stats_revamp_v2_intro_content">L’option Tendances vous aident à identifier les performances de votre contenu et ce qui touche votre audience.</string>
     <string name="stats_revamp_v2_intro_header_title">Mise à jour de Tendances</string>
     <string name="stats_insights_followers_guide_card">💡 L’ajout de commentaires sur d’autres blogs est un bon moyen d’attirer l’attention et d’obtenir des abonnés pour votre nouveau site.</string>
     <string name="stats_insights_comments_guide_card">💡 Appuyez sur « VOIR PLUS » pour voir les utilisateurs qui ont le plus commenté.</string>

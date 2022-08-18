@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-07-26 14:46:28+0000
+Translation-Revision-Date: 2022-08-14 07:12:04+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.1
 Language: ro
 -->
 <resources>
+    <string name="wp_jetpack_powered_features">Noua aplicație Jetpack are Statistici, Cititor, Notificări și altele funcționalități care îmbunătățesc WordPress.</string>
+    <string name="wp_jetpack_powered_better_with_jetpack">WordPress este mai bun cu Jetpack</string>
     <string name="gutenberg_native_upgrade_your_plan_to_use_video_covers">Pentru a folosi coperte video, actualizează-ți planul</string>
     <string name="gutenberg_native_upgrade_your_plan_to_upload_audio">Pentru a încărca fișiere audio, actualizează-ți planul</string>
     <string name="gutenberg_native_jetpack_powered">Propulsat de Jetpack</string>
@@ -15,7 +17,6 @@ Language: ro
     <string name="wp_jetpack_continue_to_stats">Continuă cu Statistici</string>
     <string name="wp_jetpack_continue_to_reader">Continuă cu Cititor</string>
     <string name="wp_jetpack_get_new_jetpack_app">Ia noua aplicație Jetpack</string>
-    <string name="wp_jetpack_powered_features">Statistici, Cititor, Notificări și alte funcționalități sunt propulsate de Jetpack.</string>
     <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery">Este o problemă la afișarea blocului. \nAtinge pentru a încerca recuperarea blocului.</string>
     <string name="weekly_roundup_notification_text_views_and_comments">Săptămâna trecută ai avut %1$s de vizualizări și %2$s comentarii</string>
     <string name="weekly_roundup_notification_text_views_and_likes">Săptămâna trecută ai avut %1$s de vizualizări și %2$s aprecieri</string>
@@ -44,10 +45,6 @@ Language: ro
     <string name="qrcode_auth_flow_validated_subtitle">Scanează numai coduri QR preluate direct din navigatorul tău web. Nu scana niciodată coduri trimise de altcineva.</string>
     <string name="qrcode_auth_flow_validated_default_title">Încerci să te autentifici în navigatorul tău web lângă %1$s?</string>
     <string name="qrcode_auth_flow_validated_title">Încerci să te autentifici în %1$s lângă %2$s?</string>
-    <string name="stats_revamp_v2_intro_secondary_button_text">Amintește-mi mai târziu</string>
-    <string name="stats_revamp_v2_intro_primary_button_text">Încearcă acum</string>
-    <string name="stats_revamp_v2_intro_content_note">Află mai multe în Site-ul meu &gt; Statistici &gt; Privire generală</string>
-    <string name="stats_revamp_v2_intro_content">În Privire generală vei înțelege cum evoluează conținutul tău și cum este privit de public.</string>
     <string name="stats_revamp_v2_intro_header_title">Actualizare privire generală statistici</string>
     <string name="stats_insights_followers_guide_card">💡 Publicarea de comentarii pe alte bloguri este o modalitate foarte bună de a stârni interesul și de a atrage urmăritori pe noul tău site.</string>
     <string name="stats_insights_comments_guide_card">💡 Atinge „Vezi mai multe” pentru a vedea comentatorii cei mai activi.</string>
@@ -1794,9 +1791,9 @@ Language: ro
     <string name="toast_conflict_updating_post">Actualizez articolul</string>
     <string name="snackbar_conflict_web_version_discarded">Versiunea de pe web a fost eliminată</string>
     <string name="snackbar_conflict_local_version_discarded">Versiunea locală a fost eliminată</string>
-    <string name="snackbar_conflict_undo">Revenire</string>
     <string name="preference_crash_reports">Rapoarte erori fatale</string>
     <string name="preference_crash_reports_summary">Permite rapoarte automate pentru erori fatale pentru a ne ajuta să îmbunătățim performanța aplicației.</string>
+    <string name="snackbar_conflict_undo">Anulează</string>
     <string name="dialog_confirm_load_remote_post_title">Rezolvă conflictul de sincronizare</string>
     <string name="dialog_confirm_load_remote_post_body">Acest articol are două versiuni care sunt în conflict. Selectează versiunea pe care vrei s-o elimini.\n\n</string>
     <string name="dialog_confirm_load_remote_post_discard_local">Elimină versiunea locală</string>
@@ -2328,7 +2325,7 @@ Language: ro
     <string name="notification_logged_in">Atinge pentru a continua.</string>
     <string name="notification_login_title_success">Ești autentificat!</string>
     <string name="login_error_generic_start">Autentificarea Google nu poate fi pornită.</string>
-    <string name="login_empty_password">Te rog introdu o parolă</string>
+    <string name="login_empty_password">Te rog să introduci o parolă</string>
     <string name="login_text_otp_another">În schimb, trimite-mi un mesaj text cu un alt cod</string>
     <string name="enter_verification_code_sms">Am trimis un mesaj text către numărul de telefon care se termină cu %s. Te rog introdu codul de verificare în SMS.</string>
     <string name="uploading_subtitle_media_only_one">1 fișier rămas</string>
@@ -2440,8 +2437,8 @@ Language: ro
     <string name="login_epilogue_mysites_other">Site-urile mele</string>
     <string name="login_epilogue_mysites_one">Site-ul meu</string>
     <string name="login_email_client_not_found">Nu pot detecta aplicația ta client de email</string>
-    <string name="login_empty_2fa">Te rog introdu un cod de verificare</string>
-    <string name="login_empty_username">Te rog introdu un nume de utilizator</string>
+    <string name="login_empty_2fa">Te rog să introduci un cod de verificare</string>
+    <string name="login_empty_username">Te rog să introduci un nume de utilizator</string>
     <string name="login_log_in_for_deeplink">Autentifică-te în WordPress.com pentru a accesa articolul.</string>
     <string name="login_error_while_adding_site">Eroare în timpul adăugării site-ului. Cod eroare: %s</string>
     <string name="login_checking_site_address">Verific adresa site-ului</string>
@@ -2469,9 +2466,9 @@ Language: ro
     <string name="turn_on">Pornește</string>
     <string name="upload_finished_toast">Nu pot opri încărcarea deoarece este deja terminată</string>
     <string name="post_title">Titlu</string>
-    <string name="menu_redo">Refacere</string>
-    <string name="menu_undo">Revenire</string>
     <string name="media_insert_unimplemented">Scuze! Funcționalitatea n-a fost încă implementată :(</string>
+    <string name="menu_undo">Anulează</string>
+    <string name="menu_redo">Refă</string>
     <string name="error_media_small">Fișier media prea mic pentru a-l arăta</string>
     <string name="editor_dropped_unsupported_files">Avertizare: nu sunt suportate toate elementele plasate!</string>
     <string name="editor_dropped_title_images_not_allowed">Plasarea imaginilor în titlu nu este permisă</string>
@@ -3020,7 +3017,7 @@ Language: ro
     <string name="button_trash">Aruncă la gunoi</string>
     <string name="reader_toast_err_follow_blog_not_authorized">Nu ești autorizat să accesezi acest site</string>
     <string name="reader_toast_err_follow_blog_not_found">Acest site nu a putut fi găsit</string>
-    <string name="undo">Revenire</string>
+    <string name="undo">Anulează</string>
     <string name="push_auth_expired">Cererea a expirat. Autentifică-te pe WordPress.com pentru a încerca din nou.</string>
     <string name="stats_insights_best_ever">Cele mai multe vizualizări dintotdeauna</string>
     <string name="ignore">Ignoră</string>

@@ -15,7 +15,6 @@ Language: id
     <string name="wp_jetpack_continue_to_stats">Lanjutkan ke Statistik</string>
     <string name="wp_jetpack_continue_to_reader">Lanjutkan ke Pembaca</string>
     <string name="wp_jetpack_get_new_jetpack_app">Dapatkan aplikasi Jetpack baru</string>
-    <string name="wp_jetpack_powered_features">Statistik, Pembaca, Pemberitahuan, dan fitur-fitur lainnya didukung oleh Jetpack.</string>
     <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery">Terjadi masalah saat menampilkan blok. \nKetuk untuk mencoba pemulihan blok.</string>
     <string name="weekly_roundup_notification_text_views_and_comments">Minggu lalu Anda mendapatkan %1$s tayangan dan %2$s komentar</string>
     <string name="weekly_roundup_notification_text_views_and_likes">Minggu lalu Anda mendapatkan %1$s tayangan dan %2$s suka</string>
@@ -44,10 +43,6 @@ Language: id
     <string name="qrcode_auth_flow_validated_subtitle">Hanya pindai kode QR yang diambil langsung dari browser web Anda. Jangan pindai kode yang dikirimkan oleh orang lain.</string>
     <string name="qrcode_auth_flow_validated_default_title">Apakah Anda mencoba login melalui browser web di sekitar %1$s?</string>
     <string name="qrcode_auth_flow_validated_title">Apakah Anda mencoba login ke %1$s di sekitar %2$s</string>
-    <string name="stats_revamp_v2_intro_secondary_button_text">Ingatkan saya nanti</string>
-    <string name="stats_revamp_v2_intro_primary_button_text">Coba sekarang</string>
-    <string name="stats_revamp_v2_intro_content_note">Pelajari lebih lanjut di Situs Saya &gt; Statistik &gt; Wawasan.</string>
-    <string name="stats_revamp_v2_intro_content">Wawasan membantu memahami seberapa laris konten Anda dan apa yang disukai pengunjung situs Anda.</string>
     <string name="stats_revamp_v2_intro_header_title">Wawasan terbaru</string>
     <string name="stats_insights_followers_guide_card">💡Cobalah memberikan komentar di blog lain untuk menarik perhatian dan pengikut ke situs baru Anda.</string>
     <string name="stats_insights_comments_guide_card">💡Ketuk \'LIHAT LEBIH BANYAK\' untuk melihat komentator teratas Anda.</string>

@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-07-16 08:54:08+0000
+Translation-Revision-Date: 2022-08-11 09:54:10+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.1
 Language: zh_TW
 -->
 <resources>
+    <string name="wp_jetpack_powered_features">全新 Jetpack 應用程式提供統計資料、閱讀器、通知等其他功能，可讓 WordPress 功能更加完善。</string>
+    <string name="wp_jetpack_powered_better_with_jetpack">WordPress 搭配 Jetpack 效果更加</string>
+    <string name="gutenberg_native_upgrade_your_plan_to_use_video_covers">升級方案即可使用影片封面</string>
+    <string name="gutenberg_native_upgrade_your_plan_to_upload_audio">升級方案即可上傳音訊</string>
+    <string name="gutenberg_native_jetpack_powered">採用 Jetpack 技術</string>
+    <string name="gutenberg_native_invalid_url">URL 無效。</string>
+    <string name="gutenberg_native_gradient">漸層色彩</string>
+    <string name="wp_jetpack_continue_to_notifications">繼續前往「通知」功能</string>
+    <string name="wp_jetpack_continue_to_stats">繼續前往「統計資料」功能</string>
+    <string name="wp_jetpack_continue_to_reader">繼續前往「閱讀器」功能</string>
+    <string name="wp_jetpack_get_new_jetpack_app">取得全新 Jetpack 應用程式</string>
     <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery">顯示區塊時發生問題。 \n點選以嘗試還原區塊。</string>
     <string name="weekly_roundup_notification_text_views_and_comments">上週你有 %1$s 個瀏覽次數和 %2$s 個留言</string>
     <string name="weekly_roundup_notification_text_views_and_likes">上週你有 %1$s 個瀏覽次數和 %2$s 個讚</string>
@@ -34,10 +45,6 @@ Language: zh_TW
     <string name="qrcode_auth_flow_validated_subtitle">請只掃描直接由網頁瀏覽器顯示的 QR 碼。 永遠不要掃描其他任何人傳送給你的代碼。</string>
     <string name="qrcode_auth_flow_validated_default_title">你是否在 %1$s 附近嘗試登入網頁瀏覽器？</string>
     <string name="qrcode_auth_flow_validated_title">你是否在 %2$s 附近嘗試登入 %1$s？</string>
-    <string name="stats_revamp_v2_intro_secondary_button_text">稍後提醒我</string>
-    <string name="stats_revamp_v2_intro_primary_button_text">立即試試</string>
-    <string name="stats_revamp_v2_intro_content_note">在「我的網站」&gt;「統計資料」&gt;「洞察報告」瞭解詳情</string>
-    <string name="stats_revamp_v2_intro_content">洞察報告可協助你瞭解自己的內容成效如何，以及哪些內容能讓讀者產生共鳴。</string>
     <string name="stats_revamp_v2_intro_header_title">洞察報告更新</string>
     <string name="stats_insights_followers_guide_card">💡 在其他網誌留言是為自己的新網站吸引注意和關注者的絕佳方式。</string>
     <string name="stats_insights_comments_guide_card">💡 點選「檢視更多」即可查看哪些人踴躍留言。</string>

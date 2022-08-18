@@ -15,7 +15,6 @@ Language: sq_AL
     <string name="wp_jetpack_continue_to_stats">Vazhdoni te Statistika</string>
     <string name="wp_jetpack_continue_to_reader">Vazhdoni te Lexuesi</string>
     <string name="wp_jetpack_get_new_jetpack_app">Merrni aplikacionin e ri Jetpack</string>
-    <string name="wp_jetpack_powered_features">Statistika, Lexues, Njoftime dhe veçori të tjera bazohet në Jetpack.</string>
     <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery">Problem me shfaqje blloku. \nPrekeni që të provohet rikthim blloku.</string>
     <string name="weekly_roundup_notification_text_views_and_comments">Javën e kaluar patët %1$s parje dhe %2$s komente</string>
     <string name="weekly_roundup_notification_text_views_and_likes">Javën e kaluar patët %1$s parje dhe %2$s pëlqime</string>
@@ -43,10 +42,6 @@ Language: sq_AL
     <string name="qrcode_auth_flow_validated_subtitle">Skanoni vetëm kode QR të marrë drejt e nga shfletuesi juaj. Mos skanoni kurrë një kod të dërguar për ju nga dikush tjetër.</string>
     <string name="qrcode_auth_flow_validated_default_title">Po provoni të hyni në shfletuesin tuaj pranë %1$s?</string>
     <string name="qrcode_auth_flow_validated_title">A po provoni të hyni te %1$s pranë %2$s?</string>
-    <string name="stats_revamp_v2_intro_secondary_button_text">Kujtoma më vonë</string>
-    <string name="stats_revamp_v2_intro_primary_button_text">Provojeni tani</string>
-    <string name="stats_revamp_v2_intro_content_note">Mësoni më tepër te Sajti Im &gt; Statistika &gt; Tendenca</string>
-    <string name="stats_revamp_v2_intro_content">Tendencat ju ndihmojnë të kuptoni se si ecën lënda juaj dhe se ç’ka rezonancë me publikun tuaj.</string>
     <string name="stats_revamp_v2_intro_header_title">Përditësim Tendencash</string>
     <string name="stats_insights_followers_guide_card">💡Komentimi në blogje të tjerë është një mënyrë e goditur për të shtuar vëmendjen dhe ndjekësit për sajtin tuaj të ri.</string>
     <string name="stats_insights_comments_guide_card">💡Prekni “SHIHNI MË TEPËR”, që të shihni komentuesit tuaj kryesues.</string>
