@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-08-02 15:54:09+0000
+Translation-Revision-Date: 2022-08-11 09:54:10+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.1
 Language: zh_CN
 -->
 <resources>
+    <string name="wp_jetpack_powered_features">新的 Jetpack 应用程序具有“统计信息”、“阅读器”、“通知”等功能，让您的 WordPress 变得更好。</string>
+    <string name="wp_jetpack_powered_better_with_jetpack">安装 Jetpack 的 WordPress 性能更优</string>
     <string name="gutenberg_native_upgrade_your_plan_to_use_video_covers">升级您的套餐即可使用视频封面</string>
     <string name="gutenberg_native_upgrade_your_plan_to_upload_audio">升级您的套餐即可上传音频</string>
     <string name="gutenberg_native_jetpack_powered">由 Jetpack 提供支持</string>
@@ -15,7 +17,6 @@ Language: zh_CN
     <string name="wp_jetpack_continue_to_stats">继续以使用统计信息功能</string>
     <string name="wp_jetpack_continue_to_reader">继续以使用阅读器功能</string>
     <string name="wp_jetpack_get_new_jetpack_app">获取新版 Jetpack 应用程序</string>
-    <string name="wp_jetpack_powered_features">“统计信息”、“阅读器”、“通知”及其他功能由 Jetpack 提供支持。</string>
     <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery">显示区块时出现问题。 \n点击尝试恢复区块。</string>
     <string name="weekly_roundup_notification_text_views_and_comments">上周共计 %1$s 次查看和 %2$s 条评论</string>
     <string name="weekly_roundup_notification_text_views_and_likes">上周共计 %1$s 次查看和 %2$s 个赞</string>
@@ -44,10 +45,6 @@ Language: zh_CN
     <string name="qrcode_auth_flow_validated_subtitle">仅扫描直接从网页浏览器获取的二维码。 切勿扫描其他人发送给您的代码。</string>
     <string name="qrcode_auth_flow_validated_default_title">您是否正在尝试登录到%1$s附近的网页浏览器？</string>
     <string name="qrcode_auth_flow_validated_title">您是否正在尝试登录到%2$s附近的 %1$s？</string>
-    <string name="stats_revamp_v2_intro_secondary_button_text">稍后提醒我</string>
-    <string name="stats_revamp_v2_intro_primary_button_text">立即试用</string>
-    <string name="stats_revamp_v2_intro_content_note">在“我的站点”&gt;“统计信息”&gt;“数据分析”中了解更多信息</string>
-    <string name="stats_revamp_v2_intro_content">“数据分析”可帮助您了解自己内容的表现情况以及与受众产生共鸣的内容。</string>
     <string name="stats_revamp_v2_intro_header_title">数据分析更新</string>
     <string name="stats_insights_followers_guide_card">💡 评论其他博客是为您的新站点吸引关注和粉丝的好方法。</string>
     <string name="stats_insights_comments_guide_card">💡 点击“查看更多”可查看热门评论者。</string>

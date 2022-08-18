@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-08-05 15:18:25+0000
+Translation-Revision-Date: 2022-08-11 12:54:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: nl
 -->
 <resources>
+    <string name="wp_jetpack_powered_features">De nieuwe Jetpack-app heeft Statistieken, Lezer, Meldingen en nog meer dat je WordPress verbetert.</string>
     <string name="gutenberg_native_upgrade_your_plan_to_use_video_covers">Upgrade je abonnement om video-omslagafbeeldingen te gebruiken</string>
     <string name="gutenberg_native_upgrade_your_plan_to_upload_audio">Upgrade je abonnement om audio te uploaden</string>
     <string name="gutenberg_native_jetpack_powered">Aangedreven door Jetpack</string>
@@ -15,7 +16,6 @@ Language: nl
     <string name="wp_jetpack_continue_to_stats">Doorgaan naar Statistieken</string>
     <string name="wp_jetpack_continue_to_reader">Doorgaan naar Lezer</string>
     <string name="wp_jetpack_get_new_jetpack_app">Krijg de Jetpack-app</string>
-    <string name="wp_jetpack_powered_features">Statistieken, Lezer, Meldingen en andere functies worden aangedreven door Jetpack.</string>
     <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery">Probleem bij het weergeven van het blok. \nTik om blokherstel te proberen.</string>
     <string name="weekly_roundup_notification_text_views_and_comments">Vorige week had je %1$s weergaven en %2$s opmerkingen.</string>
     <string name="weekly_roundup_notification_text_views_and_likes">Vorige week had je %1$s weergaven en %2$s likes.</string>
@@ -44,10 +44,6 @@ Language: nl
     <string name="qrcode_auth_flow_validated_subtitle">Scan alleen QR-codes die rechtstreeks uit je webbrowser komen. Scan nooit een code die je door iemand anders is toegestuurd.</string>
     <string name="qrcode_auth_flow_validated_default_title">Probeer je in te loggen bij je webbrowser in de buurt van %1$s?</string>
     <string name="qrcode_auth_flow_validated_title">Probeer je in te loggen bij %1$s in de buurt van %2$s?</string>
-    <string name="stats_revamp_v2_intro_secondary_button_text">Herinner mij hier later aan</string>
-    <string name="stats_revamp_v2_intro_primary_button_text">Probeer het nu</string>
-    <string name="stats_revamp_v2_intro_content_note">Ga voor meer informatie naar Mijn site &gt; Statistieken &gt; Inzichten</string>
-    <string name="stats_revamp_v2_intro_content">Inzichten geven je meer zicht op hoe je content presteert en wat je publiek leuk vindt.</string>
     <string name="stats_revamp_v2_intro_header_title">Update aan inzichten</string>
     <string name="stats_insights_followers_guide_card">💡Door reacties op andere blogs achter te laten, val je op en trek je volgers naar je nieuwe site.</string>
     <string name="stats_insights_comments_guide_card">💡Tik op \'MEER INFORMATIE\' om je topreageerders te bekijken.</string>

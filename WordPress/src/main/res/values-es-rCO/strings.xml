@@ -34,10 +34,6 @@ Language: es_CO
     <string name="qrcode_auth_flow_validated_subtitle">Escanea solo los códigos QR que has cogido directamente del navegador web. No escanees nunca un código que te haya enviado alguien.</string>
     <string name="qrcode_auth_flow_validated_default_title">¿Estás intentando acceder a tu navegador web cerca de %1$s?</string>
     <string name="qrcode_auth_flow_validated_title">¿Estás intentando acceder a %1$s cerca de %2$s?</string>
-    <string name="stats_revamp_v2_intro_secondary_button_text">Recuérdamelo más tarde</string>
-    <string name="stats_revamp_v2_intro_primary_button_text">Pruébalo ahora</string>
-    <string name="stats_revamp_v2_intro_content_note">Más información en Mi sitio &gt; Estadísticas &gt; Detalles</string>
-    <string name="stats_revamp_v2_intro_content">Detalles te ayuda a entender cómo es el rendimiento de tu contenido y qué tiene impacto en tu público.</string>
     <string name="stats_revamp_v2_intro_header_title">Actualización de Detalles</string>
     <string name="stats_insights_followers_guide_card">💡Comentar en otros blogs es una buena forma de llamar la atención y tener más seguidores en tu nuevo sitio.</string>
     <string name="stats_insights_comments_guide_card">💡Toca \"VER MÁS\" para ver los principales comentaristas.</string>

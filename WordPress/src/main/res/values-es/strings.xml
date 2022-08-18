@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-07-26 17:49:42+0000
+Translation-Revision-Date: 2022-08-10 11:08:39+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: es
 -->
 <resources>
+    <string name="wp_jetpack_powered_better_with_jetpack">WordPress es mejor con Jetpack</string>
+    <string name="wp_jetpack_powered_features">La nueva app de Jetpack tiene estadísticas, lector, avisos, y más para mejorar tu WordPress.</string>
     <string name="gutenberg_native_upgrade_your_plan_to_use_video_covers">Actualiza tu plan para usar fondos de vídeo </string>
     <string name="gutenberg_native_upgrade_your_plan_to_upload_audio">Actualiza tu plan para subir audio</string>
     <string name="gutenberg_native_jetpack_powered">Funciona gracias a Jetpack</string>
@@ -15,7 +17,6 @@ Language: es
     <string name="wp_jetpack_continue_to_stats">Continuar a las estadísticas</string>
     <string name="wp_jetpack_continue_to_reader">Continuar al lector</string>
     <string name="wp_jetpack_get_new_jetpack_app">Consigue la nueva aplicación Jetpack</string>
-    <string name="wp_jetpack_powered_features">Estadísticas, lector, avisos y otras características que funcionan gracias a Jetpack.</string>
     <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery">Problema al mostrar el bloque. \nToca para intentar la recuperación del bloque.</string>
     <string name="weekly_roundup_notification_text_views_and_comments">La semana pasada tuviste %1$s visitas y %2$s comentarios</string>
     <string name="weekly_roundup_notification_text_views_only">La semana pasada tuviste %1$s visitas.</string>
@@ -44,10 +45,6 @@ Language: es
     <string name="qrcode_auth_flow_validated_subtitle">Escanea solo los códigos QR que has cogido directamente del navegador web. No escanees nunca un código que te haya enviado alguien.</string>
     <string name="qrcode_auth_flow_validated_default_title">¿Estás intentando acceder a tu navegador web cerca de %1$s?</string>
     <string name="qrcode_auth_flow_validated_title">¿Estás intentando acceder a %1$s cerca de %2$s?</string>
-    <string name="stats_revamp_v2_intro_secondary_button_text">Recuérdamelo más tarde</string>
-    <string name="stats_revamp_v2_intro_primary_button_text">Pruébalo ahora</string>
-    <string name="stats_revamp_v2_intro_content_note">Más información en Mi sitio &gt; Estadísticas &gt; Detalles</string>
-    <string name="stats_revamp_v2_intro_content">Detalles te ayuda a entender cómo es el rendimiento de tu contenido y qué tiene impacto en tu público.</string>
     <string name="stats_revamp_v2_intro_header_title">Actualización de Detalles</string>
     <string name="stats_insights_followers_guide_card">💡Comentar en otros blogs es una buena forma de llamar la atención y tener más seguidores en tu nuevo sitio.</string>
     <string name="stats_insights_comments_guide_card">💡Toca \"VER MÁS\" para ver los principales comentaristas.</string>

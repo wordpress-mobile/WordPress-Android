@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-07-26 05:58:28+0000
+Translation-Revision-Date: 2022-08-08 12:35:44+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: sv_SE
 -->
 <resources>
+    <string name="wp_jetpack_powered_features">Den nya Jetpack-appen innehåller statistik, läsaren, aviseringar och annat som förbättrar din WordPress-installation.</string>
+    <string name="wp_jetpack_powered_better_with_jetpack">WordPress är bättre med Jetpack</string>
     <string name="gutenberg_native_upgrade_your_plan_to_use_video_covers">Uppgradera ditt paket för att använda videocovers</string>
     <string name="gutenberg_native_upgrade_your_plan_to_upload_audio">Uppgradera ditt paket för att ladda upp ljud</string>
     <string name="gutenberg_native_jetpack_powered">Drivs med Jetpack</string>
@@ -15,7 +17,6 @@ Language: sv_SE
     <string name="wp_jetpack_continue_to_stats">Fortsätt till statistik</string>
     <string name="wp_jetpack_continue_to_reader">Fortsätt till läsare</string>
     <string name="wp_jetpack_get_new_jetpack_app">Skaffa den nya Jetpack-appen</string>
-    <string name="wp_jetpack_powered_features">Statistik, läsare, aviseringar och andra funktioner drivs med Jetpack.</string>
     <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery">Problem med att visa block. \nTryck för att försöka med blockåterställning.</string>
     <string name="weekly_roundup_notification_text_views_and_comments">Förra veckan hade du %1$s visningar och %2$s kommentarer</string>
     <string name="weekly_roundup_notification_text_views_and_likes">Förra veckan hade du %1$s visningar och %2$s gillamarkeringar</string>
@@ -44,10 +45,6 @@ Language: sv_SE
     <string name="qrcode_auth_flow_validated_subtitle">Skanna endast QR-koder som visas direkt i din egen webbläsare. Avläs aldrig en kod som någon annan skickat till dig.</string>
     <string name="qrcode_auth_flow_validated_default_title">Försöker du logga in i din webbläsare i närheten av %1$s?</string>
     <string name="qrcode_auth_flow_validated_title">Försöker du att logga in till %1$s i närheten av %2$s?</string>
-    <string name="stats_revamp_v2_intro_secondary_button_text">Påminn mig senare</string>
-    <string name="stats_revamp_v2_intro_primary_button_text">Prova nu</string>
-    <string name="stats_revamp_v2_intro_content_note">Läs mer under Min webbplats &gt; Statistik &gt; Insikter</string>
-    <string name="stats_revamp_v2_intro_content">Insikter hjälper dig att förstå hur det går för ditt innehåll och vad din publik tycker om.</string>
     <string name="stats_revamp_v2_intro_header_title">Uppdatering av insikter</string>
     <string name="stats_insights_followers_guide_card">💡Att kommentera på andras bloggar är ett bra sätt att bli uppmärksammad och få fler följare på den egna webbplatsen.</string>
     <string name="stats_insights_comments_guide_card">💡Tryck på ”Visa mer” för att se vilka som kommenterar dig mest.</string>
