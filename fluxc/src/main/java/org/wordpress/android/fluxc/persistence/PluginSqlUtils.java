@@ -1,5 +1,7 @@
 package org.wordpress.android.fluxc.persistence;
 
+import static com.yarolegovich.wellsql.SelectQuery.ORDER_ASCENDING;
+
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
@@ -22,10 +24,9 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
-import static com.yarolegovich.wellsql.SelectQuery.ORDER_ASCENDING;
-
 public class PluginSqlUtils {
-    public static @NonNull List<SitePluginModel> getSitePlugins(@NonNull SiteModel site) {
+    public static @NonNull
+    List<SitePluginModel> getSitePlugins(@NonNull SiteModel site) {
         return WellSql.select(SitePluginModel.class)
                 .where()
                 .equals(SitePluginModelTable.LOCAL_SITE_ID, site.getId())
@@ -106,14 +107,25 @@ public class PluginSqlUtils {
         return result.isEmpty() ? null : result.get(0);
     }
 
-    public static @Nullable WPOrgPluginModel getWPOrgPluginBySlug(String slug) {
+    public static List<SitePluginModel> getSitePluginByNames(@NonNull SiteModel site, List<String> pluginNames) {
+        return WellSql.select(SitePluginModel.class)
+                .where()
+                .isIn(SitePluginModelTable.NAME, pluginNames)
+                .equals(SitePluginModelTable.LOCAL_SITE_ID, site.getId())
+                .endWhere()
+                .getAsModel();
+    }
+
+    public static @Nullable
+    WPOrgPluginModel getWPOrgPluginBySlug(String slug) {
         List<WPOrgPluginModel> result = WellSql.select(WPOrgPluginModel.class)
                 .where().equals(WPOrgPluginModelTable.SLUG, slug)
                 .endWhere().getAsModel();
         return result.isEmpty() ? null : result.get(0);
     }
 
-    public static @NonNull List<WPOrgPluginModel> getWPOrgPluginsForDirectory(PluginDirectoryType directoryType) {
+    public static @NonNull
+    List<WPOrgPluginModel> getWPOrgPluginsForDirectory(PluginDirectoryType directoryType) {
         List<PluginDirectoryModel> directoryModels = getPluginDirectoriesForType(directoryType);
         if (directoryModels.size() == 0) {
             // No directories found, return an empty list
@@ -195,7 +207,8 @@ public class PluginSqlUtils {
         return page;
     }
 
-    private static @NonNull List<PluginDirectoryModel> getPluginDirectoriesForType(PluginDirectoryType directoryType) {
+    private static @NonNull
+    List<PluginDirectoryModel> getPluginDirectoriesForType(PluginDirectoryType directoryType) {
         return WellSql.select(PluginDirectoryModel.class)
                 .where()
                 .equals(PluginDirectoryModelTable.DIRECTORY_TYPE, directoryType)
