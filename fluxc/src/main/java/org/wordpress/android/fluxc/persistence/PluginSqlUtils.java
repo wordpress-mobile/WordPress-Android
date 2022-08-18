@@ -1,7 +1,5 @@
 package org.wordpress.android.fluxc.persistence;
 
-import static com.yarolegovich.wellsql.SelectQuery.ORDER_ASCENDING;
-
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
@@ -24,15 +22,17 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
+import static com.yarolegovich.wellsql.SelectQuery.ORDER_ASCENDING;
+
 public class PluginSqlUtils {
     public static @NonNull
     List<SitePluginModel> getSitePlugins(@NonNull SiteModel site) {
         return WellSql.select(SitePluginModel.class)
-                .where()
-                .equals(SitePluginModelTable.LOCAL_SITE_ID, site.getId())
-                .endWhere()
-                .orderBy(SitePluginModelTable.DISPLAY_NAME, ORDER_ASCENDING)
-                .getAsModel();
+                      .where()
+                      .equals(SitePluginModelTable.LOCAL_SITE_ID, site.getId())
+                      .endWhere()
+                      .orderBy(SitePluginModelTable.DISPLAY_NAME, ORDER_ASCENDING)
+                      .getAsModel();
     }
 
     public static void insertOrReplaceSitePlugins(@NonNull SiteModel site, @NonNull List<SitePluginModel> plugins) {
@@ -47,9 +47,9 @@ public class PluginSqlUtils {
 
     private static void removeSitePlugins(@NonNull SiteModel site) {
         WellSql.delete(SitePluginModel.class)
-                .where()
-                .equals(SitePluginModelTable.LOCAL_SITE_ID, site.getId())
-                .endWhere().execute();
+               .where()
+               .equals(SitePluginModelTable.LOCAL_SITE_ID, site.getId())
+               .endWhere().execute();
     }
 
     public static int insertOrUpdateSitePlugin(SiteModel site, SitePluginModel plugin) {
@@ -65,15 +65,15 @@ public class PluginSqlUtils {
         } else {
             int oldId = oldPlugin.getId();
             return WellSql.update(SitePluginModel.class).whereId(oldId)
-                    .put(plugin, new UpdateAllExceptId<>(SitePluginModel.class)).execute();
+                          .put(plugin, new UpdateAllExceptId<>(SitePluginModel.class)).execute();
         }
     }
 
     public static int deleteSitePlugins(@NonNull SiteModel site) {
         return WellSql.delete(SitePluginModel.class)
-                .where()
-                .equals(SitePluginModelTable.LOCAL_SITE_ID, site.getId())
-                .endWhere().execute();
+                      .where()
+                      .equals(SitePluginModelTable.LOCAL_SITE_ID, site.getId())
+                      .endWhere().execute();
     }
 
     public static int deleteSitePlugin(SiteModel site, String slug) {
@@ -83,44 +83,44 @@ public class PluginSqlUtils {
         // The local id of the plugin might not be set if it's coming from a network request,
         // using site id and slug is a safer approach here
         return WellSql.delete(SitePluginModel.class)
-                .where()
-                .equals(SitePluginModelTable.SLUG, slug)
-                .equals(SitePluginModelTable.LOCAL_SITE_ID, site.getId())
-                .endWhere().execute();
+                      .where()
+                      .equals(SitePluginModelTable.SLUG, slug)
+                      .equals(SitePluginModelTable.LOCAL_SITE_ID, site.getId())
+                      .endWhere().execute();
     }
 
     public static SitePluginModel getSitePluginBySlug(@NonNull SiteModel site, String slug) {
         List<SitePluginModel> result = WellSql.select(SitePluginModel.class)
-                .where().equals(SitePluginModelTable.SLUG, slug)
-                .equals(SitePluginModelTable.LOCAL_SITE_ID, site.getId())
-                .endWhere().getAsModel();
+                                              .where().equals(SitePluginModelTable.SLUG, slug)
+                                              .equals(SitePluginModelTable.LOCAL_SITE_ID, site.getId())
+                                              .endWhere().getAsModel();
         return result.isEmpty() ? null : result.get(0);
     }
 
     public static SitePluginModel getSitePluginByName(@NonNull SiteModel site, String pluginName) {
         List<SitePluginModel> result = WellSql.select(SitePluginModel.class)
-                .where()
-                .equals(SitePluginModelTable.NAME, pluginName)
-                .equals(SitePluginModelTable.LOCAL_SITE_ID, site.getId())
-                .endWhere()
-                .getAsModel();
+                                              .where()
+                                              .equals(SitePluginModelTable.NAME, pluginName)
+                                              .equals(SitePluginModelTable.LOCAL_SITE_ID, site.getId())
+                                              .endWhere()
+                                              .getAsModel();
         return result.isEmpty() ? null : result.get(0);
     }
 
     public static List<SitePluginModel> getSitePluginByNames(@NonNull SiteModel site, List<String> pluginNames) {
         return WellSql.select(SitePluginModel.class)
-                .where()
-                .isIn(SitePluginModelTable.NAME, pluginNames)
-                .equals(SitePluginModelTable.LOCAL_SITE_ID, site.getId())
-                .endWhere()
-                .getAsModel();
+                      .where()
+                      .isIn(SitePluginModelTable.NAME, pluginNames)
+                      .equals(SitePluginModelTable.LOCAL_SITE_ID, site.getId())
+                      .endWhere()
+                      .getAsModel();
     }
 
     public static @Nullable
     WPOrgPluginModel getWPOrgPluginBySlug(String slug) {
         List<WPOrgPluginModel> result = WellSql.select(WPOrgPluginModel.class)
-                .where().equals(WPOrgPluginModelTable.SLUG, slug)
-                .endWhere().getAsModel();
+                                               .where().equals(WPOrgPluginModelTable.SLUG, slug)
+                                               .endWhere().getAsModel();
         return result.isEmpty() ? null : result.get(0);
     }
 
@@ -139,8 +139,8 @@ public class PluginSqlUtils {
             orderMap.put(slug, i);
         }
         List<WPOrgPluginModel> wpOrgPlugins = WellSql.select(WPOrgPluginModel.class)
-                .where().isIn(WPOrgPluginModelTable.SLUG, slugList)
-                .endWhere().getAsModel();
+                                                     .where().isIn(WPOrgPluginModelTable.SLUG, slugList)
+                                                     .endWhere().getAsModel();
         // We need to manually order the list according to the directory models since SQLite will return mixed results
         Collections.sort(wpOrgPlugins, new Comparator<WPOrgPluginModel>() {
             @Override
@@ -165,7 +165,7 @@ public class PluginSqlUtils {
         } else {
             int oldId = oldPlugin.getId();
             return WellSql.update(WPOrgPluginModel.class).whereId(oldId)
-                    .put(wpOrgPluginModel, new UpdateAllExceptId<>(WPOrgPluginModel.class)).execute();
+                          .put(wpOrgPluginModel, new UpdateAllExceptId<>(WPOrgPluginModel.class)).execute();
         }
     }
 
@@ -185,9 +185,9 @@ public class PluginSqlUtils {
 
     public static void deletePluginDirectoryForType(PluginDirectoryType directoryType) {
         WellSql.delete(PluginDirectoryModel.class)
-                .where()
-                .equals(PluginDirectoryModelTable.DIRECTORY_TYPE, directoryType.toString())
-                .endWhere().execute();
+               .where()
+               .equals(PluginDirectoryModelTable.DIRECTORY_TYPE, directoryType.toString())
+               .endWhere().execute();
     }
 
     public static void insertPluginDirectoryList(@Nullable List<PluginDirectoryModel> pluginDirectories) {
@@ -210,9 +210,9 @@ public class PluginSqlUtils {
     private static @NonNull
     List<PluginDirectoryModel> getPluginDirectoriesForType(PluginDirectoryType directoryType) {
         return WellSql.select(PluginDirectoryModel.class)
-                .where()
-                .equals(PluginDirectoryModelTable.DIRECTORY_TYPE, directoryType)
-                .endWhere()
-                .getAsModel();
+                      .where()
+                      .equals(PluginDirectoryModelTable.DIRECTORY_TYPE, directoryType)
+                      .endWhere()
+                      .getAsModel();
     }
 }
