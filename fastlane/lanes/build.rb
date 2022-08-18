@@ -97,7 +97,6 @@ platform :android do
   #
   # Example:
   # bundle exec fastlane upload_build_to_play_store app:wordpress version:15.0 track:production
-  # bundle exec fastlane upload_build_to_play_store app:wordpress version:alpha-228 track:alpha
   # bundle exec fastlane upload_build_to_play_store app:jetpack version:15.0-rc-1 track:beta
   #####################################################################################
   desc 'Upload Build to Play Store'
