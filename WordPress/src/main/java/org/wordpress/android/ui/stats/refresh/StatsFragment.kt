@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.activityViewModels
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.MarginPageTransformer
 import com.google.android.material.snackbar.Snackbar
@@ -40,6 +41,8 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.insights.UpdateAler
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.UpdateAlertDialogFragment.Companion.UPDATE_ALERT_DIALOG_TAG
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider.SiteUpdateResult
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.util.JetpackBrandingUtils
+import org.wordpress.android.util.JetpackBrandingUtils.Screen.STATS
 import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.viewmodel.observeEvent
@@ -51,11 +54,14 @@ private val statsSections = listOf(INSIGHTS, DAYS, WEEKS, MONTHS, YEARS)
 @AndroidEntryPoint
 class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializedListener {
     @Inject lateinit var uiHelpers: UiHelpers
+    @Inject lateinit var jetpackBrandingUtils: JetpackBrandingUtils
     private val viewModel: StatsViewModel by activityViewModels()
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
     private lateinit var selectedTabListener: SelectedTabListener
 
     private var restorePreviousSearch = false
+
+    private var binding: StatsFragmentBinding? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,6 +73,7 @@ class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializ
 
         val nonNullActivity = requireActivity()
         with(StatsFragmentBinding.bind(view)) {
+            binding = this
             with(nonNullActivity as AppCompatActivity) {
                 setSupportActionBar(toolbar)
                 supportActionBar?.let {
@@ -75,7 +82,7 @@ class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializ
                 }
             }
             initializeViewModels(nonNullActivity, savedInstanceState == null, savedInstanceState)
-            initializeViews(nonNullActivity)
+            initializeViews()
         }
     }
 
@@ -85,8 +92,8 @@ class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializ
         super.onSaveInstanceState(outState)
     }
 
-    private fun StatsFragmentBinding.initializeViews(activity: FragmentActivity) {
-        val adapter = StatsPagerAdapter(activity)
+    private fun StatsFragmentBinding.initializeViews() {
+        val adapter = StatsPagerAdapter(this@StatsFragment)
         statsPager.adapter = adapter
         statsPager.setPageTransformer(
                 MarginPageTransformer(resources.getDimensionPixelSize(R.dimen.margin_extra_large))
@@ -253,10 +260,34 @@ class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializ
 
     override fun onScrollableViewInitialized(containerId: Int) {
         StatsFragmentBinding.bind(requireView()).appBarLayout.liftOnScrollTargetViewId = containerId
+        initJetpackBanner(containerId)
+    }
+
+    private fun initJetpackBanner(scrollableContainerId: Int) {
+        if (jetpackBrandingUtils.shouldShowJetpackBranding()) {
+            binding?.root?.post {
+                val jetpackBannerView = binding?.jetpackBanner?.root ?: return@post
+                val scrollableView = binding?.root?.findViewById<View>(scrollableContainerId) as? RecyclerView
+                        ?: return@post
+
+                jetpackBrandingUtils.showJetpackBannerIfScrolledToTop(jetpackBannerView, scrollableView)
+                activity?.window?.let { jetpackBrandingUtils.setNavigationBarColorForBanner(it) }
+                jetpackBrandingUtils.initJetpackBannerAnimation(jetpackBannerView, scrollableView)
+
+                if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
+                    binding?.jetpackBanner?.root?.setOnClickListener {
+                        jetpackBrandingUtils.trackBannerTapped(STATS)
+                        JetpackPoweredBottomSheetFragment
+                                .newInstance()
+                                .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
+                    }
+                }
+            }
+        }
     }
 }
 
-class StatsPagerAdapter(val activity: FragmentActivity) : FragmentStateAdapter(activity) {
+class StatsPagerAdapter(private val parent: Fragment) : FragmentStateAdapter(parent) {
     override fun getItemCount(): Int = statsSections.size
 
     override fun createFragment(position: Int): Fragment {
@@ -264,7 +295,7 @@ class StatsPagerAdapter(val activity: FragmentActivity) : FragmentStateAdapter(a
     }
 
     fun getTabTitle(position: Int): CharSequence {
-        return activity.getString(statsSections[position].titleRes)
+        return parent.context?.getString(statsSections[position].titleRes).orEmpty()
     }
 }
 

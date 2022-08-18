@@ -3,6 +3,7 @@ package org.wordpress.android.ui.reader;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Html;
@@ -122,6 +123,7 @@ import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.util.DisplayUtilsWrapper;
 import org.wordpress.android.util.JetpackBrandingUtils;
 import org.wordpress.android.util.JetpackBrandingUtils.Screen;
 import org.wordpress.android.util.NetworkUtils;
@@ -182,6 +184,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
     private View mSubFiltersListButton;
     private TextView mSubFilterTitle;
     private View mRemoveFilterButton;
+    private View mJetpackBanner;
 
     private boolean mIsTopLevel = false;
     private static final String SUBFILTER_BOTTOM_SHEET_TAG = "SUBFILTER_BOTTOM_SHEET_TAG";
@@ -231,6 +234,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
     @Inject QuickStartRepository mQuickStartRepository;
     @Inject ReaderTracker mReaderTracker;
     @Inject SnackbarSequencer mSnackbarSequencer;
+    @Inject DisplayUtilsWrapper mDisplayUtilsWrapper;
 
     private enum ActionableEmptyViewButtonType {
         DISCOVER,
@@ -500,34 +504,47 @@ public class ReaderPostListFragment extends ViewPagerFragment
         }
     }
 
-    private void toggleJetpackBannerIfEnabled(boolean forceShow) {
-        if (!isAdded() || !isSearching() || getView() == null) return;
-        final boolean shouldShow = forceShow && mJetpackBrandingUtils.shouldShowJetpackBranding();
-        if (shouldShow) {
-            View jetpackBanner = getView().findViewById(R.id.jetpack_banner);
-            jetpackBanner.setVisibility(View.VISIBLE);
+    private void toggleJetpackBannerIfEnabled(final boolean showIfEnabled, boolean animateOnScroll) {
+        if (!isAdded() || getView() == null || !isSearching()) return;
 
-            if (mJetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
-                jetpackBanner.setOnClickListener(v -> {
-                    mJetpackBrandingUtils.trackBannerTapped(Screen.READER_SEARCH);
-                    new JetpackPoweredBottomSheetFragment()
-                            .show(getChildFragmentManager(), JetpackPoweredBottomSheetFragment.TAG);
-                });
-            }
-            // Add bottom margin to post list and empty view.
-            int jetpackBannerHeight = getResources().getDimensionPixelSize(R.dimen.jetpack_banner_height);
-            ((MarginLayoutParams) getView().findViewById(R.id.reader_recycler_view).getLayoutParams())
-                    .bottomMargin = jetpackBannerHeight;
-            ((MarginLayoutParams) getView().findViewById(R.id.empty_custom_view).getLayoutParams())
-                    .bottomMargin = jetpackBannerHeight;
-        } else {
-            getView().findViewById(R.id.jetpack_banner).setVisibility(View.GONE);
-            // Remove bottom margin from post list and empty view.
-            ((MarginLayoutParams) getView().findViewById(R.id.reader_recycler_view).getLayoutParams())
-                    .bottomMargin = 0;
-            ((MarginLayoutParams) getView().findViewById(R.id.empty_custom_view).getLayoutParams())
-                    .bottomMargin = 0;
+        if (animateOnScroll) {
+            RecyclerView scrollView = mRecyclerView.getInternalRecyclerView();
+            mJetpackBrandingUtils.showJetpackBannerIfScrolledToTop(mJetpackBanner, scrollView);
+            mJetpackBrandingUtils.setNavigationBarColorForBanner(requireActivity().getWindow());
+            // Return early since the banner visibility was handled by showJetpackBannerIfScrolledToTop
+            return;
         }
+
+        if (mJetpackBrandingUtils.shouldShowJetpackBranding()) {
+            if (showIfEnabled && !mDisplayUtilsWrapper.isPhoneLandscape()) {
+                showJetpackBanner();
+            } else {
+                hideJetpackBanner();
+            }
+        }
+    }
+
+    private void showJetpackBanner() {
+        mJetpackBanner.setVisibility(View.VISIBLE);
+        mJetpackBrandingUtils.setNavigationBarColorForBanner(requireActivity().getWindow());
+
+        // Add bottom margin to search suggestions list and empty view.
+        int jetpackBannerHeight = getResources().getDimensionPixelSize(R.dimen.jetpack_banner_height);
+        ((MarginLayoutParams) mRecyclerView.getSearchSuggestionsRecyclerView().getLayoutParams()).bottomMargin
+                = jetpackBannerHeight;
+        ((MarginLayoutParams) mActionableEmptyView.getLayoutParams()).bottomMargin = jetpackBannerHeight;
+    }
+
+    private void hideJetpackBanner() {
+        mJetpackBanner.setVisibility(View.GONE);
+
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            requireActivity().getWindow().setNavigationBarColor(0);
+        }
+
+        // Remove bottom margin from search suggestions list and empty view.
+        ((MarginLayoutParams) mRecyclerView.getSearchSuggestionsRecyclerView().getLayoutParams()).bottomMargin = 0;
+        ((MarginLayoutParams) mActionableEmptyView.getLayoutParams()).bottomMargin = 0;
     }
 
     private void setFollowStatusForBlog(FollowStatusChanged readerData) {
@@ -1124,17 +1141,27 @@ public class ReaderPostListFragment extends ViewPagerFragment
         // bar that appears at top after new posts are loaded
         mNewPostsBar = rootView.findViewById(R.id.layout_new_posts);
         mNewPostsBar.setVisibility(View.GONE);
-        mNewPostsBar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mRecyclerView.scrollRecycleViewToPosition(0);
-                refreshPosts();
-            }
+        mNewPostsBar.setOnClickListener(view -> {
+            mRecyclerView.scrollRecycleViewToPosition(0);
+            refreshPosts();
         });
 
         // progress bar that appears when loading more posts
         mProgress = rootView.findViewById(R.id.progress_footer);
         mProgress.setVisibility(View.GONE);
+
+        mJetpackBanner = rootView.findViewById(R.id.jetpack_banner);
+        if (mJetpackBrandingUtils.shouldShowJetpackBranding()) {
+            mJetpackBrandingUtils.initJetpackBannerAnimation(mJetpackBanner, mRecyclerView.getInternalRecyclerView());
+
+            if (mJetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
+                mJetpackBanner.setOnClickListener(v -> {
+                    mJetpackBrandingUtils.trackBannerTapped(Screen.READER_SEARCH);
+                    new JetpackPoweredBottomSheetFragment()
+                            .show(getChildFragmentManager(), JetpackPoweredBottomSheetFragment.TAG);
+                });
+            }
+        }
 
         if (savedInstanceState != null && savedInstanceState.getBoolean(ReaderConstants.KEY_IS_REFRESHING)) {
             mIsUpdating = true;
@@ -1220,7 +1247,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
         boolean hasQuery = !isSearchViewEmpty();
         boolean hasPerformedSearch = !TextUtils.isEmpty(mCurrentSearchQuery);
 
-        toggleJetpackBannerIfEnabled(true);
+        toggleJetpackBannerIfEnabled(true, false);
 
         // prevents suggestions from being shown after the search view has been collapsed
         if (!isSearching()) {
@@ -1309,7 +1336,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
         updatePostsInCurrentSearch(0);
         updateSitesInCurrentSearch(0);
 
-        toggleJetpackBannerIfEnabled(false);
+        toggleJetpackBannerIfEnabled(false, false);
 
         // track that the user performed a search
         if (!trimQuery.equals("")) {
@@ -1857,6 +1884,8 @@ public class ReaderPostListFragment extends ViewPagerFragment
                 }
                 if (isSearching() && !isSearchTabsShowing()) {
                     showSearchTabs();
+                } else if (isSearching()) {
+                    toggleJetpackBannerIfEnabled(true, true);
                 }
             }
             mRestorePosition = 0;
@@ -2645,7 +2674,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
 
         if (blogId > 0) {
             WPSnackbar.make(getSnackbarParent(), Html.fromHtml(getString(R.string.reader_followed_blog_notifications,
-                    "<b>", blog, "</b>")), Snackbar.LENGTH_LONG)
+                              "<b>", blog, "</b>")), Snackbar.LENGTH_LONG)
                       .setAction(getString(R.string.reader_followed_blog_notifications_action),
                               new View.OnClickListener() {
                                   @Override public void onClick(View view) {

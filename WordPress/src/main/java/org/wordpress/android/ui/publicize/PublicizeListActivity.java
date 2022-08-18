@@ -3,8 +3,6 @@ package org.wordpress.android.ui.publicize;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup.MarginLayoutParams;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
@@ -32,12 +30,10 @@ import org.wordpress.android.models.PublicizeService;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.ScrollableViewInitializedListener;
-import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment;
 import org.wordpress.android.ui.publicize.PublicizeConstants.ConnectAction;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter;
 import org.wordpress.android.ui.publicize.services.PublicizeUpdateService;
 import org.wordpress.android.util.JetpackBrandingUtils;
-import org.wordpress.android.util.JetpackBrandingUtils.Screen;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
@@ -81,25 +77,6 @@ public class PublicizeListActivity extends LocaleAwareActivity
         }
 
         mAppBarLayout = findViewById(R.id.appbar_main);
-
-        if (mJetpackBrandingUtils.shouldShowJetpackBranding()) {
-            View jetpackBanner = findViewById(R.id.jetpack_banner);
-            jetpackBanner.setVisibility(View.VISIBLE);
-            mJetpackBrandingUtils.setNavigationBarColorForBanner(getWindow());
-
-            // Add bottom margin to content.
-            MarginLayoutParams layoutParams =
-                    (MarginLayoutParams) findViewById(R.id.fragment_container).getLayoutParams();
-            layoutParams.bottomMargin = getResources().getDimensionPixelSize(R.dimen.jetpack_banner_height);
-
-            if (mJetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
-                jetpackBanner.setOnClickListener(v -> {
-                    mJetpackBrandingUtils.trackBannerTapped(Screen.SHARE);
-                    new JetpackPoweredBottomSheetFragment()
-                            .show(getSupportFragmentManager(), JetpackPoweredBottomSheetFragment.TAG);
-                });
-            }
-        }
 
         if (savedInstanceState == null) {
             mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
