@@ -7,6 +7,7 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.tracker.ReaderTrackerType.MAIN_READER
+import org.wordpress.android.util.JetpackBrandingUtils
 import javax.inject.Inject
 
 /**
@@ -17,6 +18,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class ReaderSearchActivity : LocaleAwareActivity() {
     @Inject lateinit var readerTracker: ReaderTracker
+    @Inject lateinit var jetpackBrandingUtils: JetpackBrandingUtils
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
