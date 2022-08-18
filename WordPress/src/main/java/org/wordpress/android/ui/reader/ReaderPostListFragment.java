@@ -72,7 +72,6 @@ import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.FilteredRecyclerView;
 import org.wordpress.android.ui.RequestCodes;
-import org.wordpress.android.ui.ScrollableViewInitializedListener;
 import org.wordpress.android.ui.ViewPagerFragment;
 import org.wordpress.android.ui.main.BottomNavController;
 import org.wordpress.android.ui.main.SitePickerActivity;
@@ -529,21 +528,11 @@ public class ReaderPostListFragment extends ViewPagerFragment
         mJetpackBrandingUtils.setNavigationBarColorForBanner(requireActivity().getWindow());
         mJetpackBanner.setVisibility(View.VISIBLE);
 
-        if (mJetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
-            mJetpackBanner.setOnClickListener(v -> {
-                mJetpackBrandingUtils.trackBannerTapped(Screen.READER_SEARCH);
-                new JetpackPoweredBottomSheetFragment()
-                        .show(getChildFragmentManager(), JetpackPoweredBottomSheetFragment.TAG);
-            });
-        }
-
-        if (!isSearching()) {
-            // Add bottom margin to search suggestions post list and empty view.
-            int jetpackBannerHeight = getResources().getDimensionPixelSize(R.dimen.jetpack_banner_height);
-            ((MarginLayoutParams) mRecyclerView.getSearchSuggestionsRecyclerView().getLayoutParams()).bottomMargin
-                    = jetpackBannerHeight;
-            ((MarginLayoutParams) mActionableEmptyView.getLayoutParams()).bottomMargin = jetpackBannerHeight;
-        }
+        // Add bottom margin to search suggestions list and empty view.
+        int jetpackBannerHeight = getResources().getDimensionPixelSize(R.dimen.jetpack_banner_height);
+        ((MarginLayoutParams) mRecyclerView.getSearchSuggestionsRecyclerView().getLayoutParams()).bottomMargin
+                = jetpackBannerHeight;
+        ((MarginLayoutParams) mActionableEmptyView.getLayoutParams()).bottomMargin = jetpackBannerHeight;
     }
 
     private void hideJetpackBanner() {
@@ -789,11 +778,6 @@ public class ReaderPostListFragment extends ViewPagerFragment
         if (shouldShowEmptyViewForSelfHostedCta()) {
             setEmptyTitleDescriptionAndButton(false);
             showEmptyView();
-        }
-
-        if (getActivity() instanceof ScrollableViewInitializedListener) {
-            ((ScrollableViewInitializedListener) getActivity())
-                    .onScrollableViewInitialized(mRecyclerView.getInternalRecyclerView().getId());
         }
 
         mViewModel.onFragmentResume(mIsTopLevel, isSearching(), isFilterableScreen(),
@@ -1162,6 +1146,17 @@ public class ReaderPostListFragment extends ViewPagerFragment
         mProgress.setVisibility(View.GONE);
 
         mJetpackBanner = rootView.findViewById(R.id.jetpack_banner);
+        if (mJetpackBrandingUtils.shouldShowJetpackBranding()) {
+            mJetpackBrandingUtils.initJetpackBannerAnimation(mJetpackBanner, mRecyclerView.getInternalRecyclerView());
+
+            if (mJetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
+                mJetpackBanner.setOnClickListener(v -> {
+                    mJetpackBrandingUtils.trackBannerTapped(Screen.READER_SEARCH);
+                    new JetpackPoweredBottomSheetFragment()
+                            .show(getChildFragmentManager(), JetpackPoweredBottomSheetFragment.TAG);
+                });
+            }
+        }
 
         if (savedInstanceState != null && savedInstanceState.getBoolean(ReaderConstants.KEY_IS_REFRESHING)) {
             mIsUpdating = true;
