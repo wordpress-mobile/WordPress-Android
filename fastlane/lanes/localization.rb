@@ -1,5 +1,5 @@
 # NOTE: When updating this list, ensure the locales having `promo_config: {…}` matches the list of locales
-# used in the `raw-screenshots` job (see `.circleci/config.yml`) by Firebase Test Lab
+# used in the `raw-screenshots` CI job for Firebase Test Lab
 #
 # NOTE: The `promo_config` hash is used by `fastlane/helpers/android_promo_screenshot_helper.rb` and accepts keys `:text_size` and `:font`.
 # When set to `false`, the locale will just not be included during the screenshot generation (see `lanes/screenshots.rb`).
