@@ -27,6 +27,7 @@ internal class PostListDescriptorTest(
     companion object {
         @JvmStatic
         @Parameters
+        @Suppress("LongMethod")
         fun testCases(): List<PostListDescriptorTestCase> {
             val mockSite = mock<SiteModel>()
             val mockSite2 = mock<SiteModel>()
