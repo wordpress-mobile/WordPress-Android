@@ -65,7 +65,7 @@ class TotalLikesUseCase @Inject constructor(
         val response = visitsAndViewsStore.fetchVisits(
                 statsSiteProvider.siteModel,
                 DAYS,
-                LimitMode.Top(TotalStatsMapper.DAY_COUNT_TOTAL),
+                LimitMode.Top(TOTAL_LIKES_ITEMS_TO_LOAD),
                 forced
         )
         val model = response.model
@@ -148,6 +148,10 @@ class TotalLikesUseCase @Inject constructor(
                         null
                 )
         )
+    }
+
+    companion object {
+        private const val TOTAL_LIKES_ITEMS_TO_LOAD = 15
     }
 
     class TotalLikesUseCaseFactory

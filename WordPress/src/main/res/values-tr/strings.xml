@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-07-29 10:54:11+0000
+Translation-Revision-Date: 2022-08-10 15:54:10+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: tr
 -->
 <resources>
+    <string name="wp_jetpack_powered_features">Yeni Jetpack uygulaması, WordPress\'inizi daha iyi hale getiren İstatistikler, Okuyucu, Bildirimler gibi özellikleri ve daha fazlasını içerir.</string>
+    <string name="wp_jetpack_powered_better_with_jetpack">WordPress, Jetpack ile daha iyi</string>
     <string name="gutenberg_native_upgrade_your_plan_to_use_video_covers">Video başlıkları kullanmak için paketinizi yükseltin</string>
     <string name="gutenberg_native_upgrade_your_plan_to_upload_audio">Ses yüklemek için paketinizi yükseltin</string>
     <string name="gutenberg_native_jetpack_powered">Jetpack destekli</string>
@@ -15,7 +17,6 @@ Language: tr
     <string name="wp_jetpack_continue_to_stats">İstatistiklerle Devam Et</string>
     <string name="wp_jetpack_continue_to_reader">Okuyucuyla Devam Et</string>
     <string name="wp_jetpack_get_new_jetpack_app">Jetpack uygulamasını edinin</string>
-    <string name="wp_jetpack_powered_features">İstatistikler, Okuyucu, Bildirimler ve diğer özellikler Jetpack tarafından desteklenmektedir.</string>
     <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery">Blok görüntülenirken bir sorun oluştu. \nBlok kurtarmayı denemek için dokunun. </string>
     <string name="weekly_roundup_notification_text_views_and_comments">Geçen hafta %1$s görüntüleme ve %2$s yorum aldınız.</string>
     <string name="weekly_roundup_notification_text_views_and_likes">Geçen hafta %1$s görüntüleme ve %2$s beğeni aldınız.</string>
@@ -44,10 +45,6 @@ Language: tr
     <string name="qrcode_auth_flow_validated_subtitle">Yalnızca doğrudan web tarayıcınızdan alınan QR kodlarını tarayın. Size başkaları tarafından gönderilen bir kodu asla taramayın.</string>
     <string name="qrcode_auth_flow_validated_default_title">%1$s yakınından web tarayıcınız ile giriş yapmaya mı çalışıyorsunuz?</string>
     <string name="qrcode_auth_flow_validated_title">%1$s için %2$s yakınından giriş yapmaya mı çalışıyorsunuz?</string>
-    <string name="stats_revamp_v2_intro_secondary_button_text">Daha sonra hatırlat</string>
-    <string name="stats_revamp_v2_intro_primary_button_text">Şimdi deneyin</string>
-    <string name="stats_revamp_v2_intro_content_note">Sitem &gt; İstatistikler &gt; İçgörüler bölümünde daha fazla bilgi edinin</string>
-    <string name="stats_revamp_v2_intro_content">İçgörüler, içeriğinizin nasıl performans gösterdiğini ve hedef kitlenizde nelerin yankı uyandırdığını anlamanıza yardımcı olur.</string>
     <string name="stats_revamp_v2_intro_header_title">İçgörüler güncellemesi</string>
     <string name="stats_insights_followers_guide_card">💡Diğer bloglara yorum yapmak, yeni siteniz için dikkat çekmenin ve takipçi oluşturmanın harika bir yoludur.</string>
     <string name="stats_insights_comments_guide_card">💡En iyi yorumcularınızı görmek için \'DAHA FAZLASI\' düğmesine dokunun.</string>

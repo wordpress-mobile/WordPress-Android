@@ -209,7 +209,8 @@ platform :android do
       buildkite_organization: 'automattic',
       buildkite_pipeline: 'wordpress-android',
       branch: options[:branch_to_build] || git_branch,
-      pipeline_file: 'beta-builds.yml'
+      pipeline_file: 'beta-builds.yml',
+      message: 'Beta Builds'
     )
   end
 
@@ -228,7 +229,8 @@ platform :android do
       buildkite_organization: 'automattic',
       buildkite_pipeline: 'wordpress-android',
       branch: options[:branch_to_build] || git_branch,
-      pipeline_file: 'release-builds.yml'
+      pipeline_file: 'release-builds.yml',
+      message: 'Release Builds'
     )
   end
 
@@ -244,14 +246,14 @@ platform :android do
   # bundle exec fastlane create_gh_release [app:<wordpress|jetpack>] [version:<Hash{name,code}>] [prerelease:<true|false>]
   #
   # Examples:
-  # bundle exec fastlane create_gh_release     # Guesses prerelease status based on version name. Includes existing assets for WPAlpha+WPBeta+JPBeta
-  # bundle exec fastlane create_gh_release app:wordpress prerelease:true                        # Includes existing assets for WPAlpha+WPBeta
+  # bundle exec fastlane create_gh_release     # Guesses prerelease status based on version name. Includes existing assets for WPBeta+JPBeta
+  # bundle exec fastlane create_gh_release app:wordpress prerelease:true                        # Includes existing assets for WPBeta
   # bundle exec fastlane create_gh_release version:{name:12.3-rc-4} prerelease:true             # Includes existing assets for WPBeta+JPBeta 12.3-rc-4
   # bundle exec fastlane create_gh_release app:jetpack version:{name:12.3-rc-4} prerelease:true # Includes only existing asset for JPBeta 12.3-rc-4
   #####################################################################################
   lane :create_gh_release do |options|
     apps = options[:app].nil? ? ['wordpress', 'jetpack'] : [get_app_name_option!(options)]
-    versions = options[:version].nil? ? [android_get_alpha_version(), android_get_release_version()] : [options[:version]]
+    versions = options[:version].nil? ? [android_get_release_version()] : [options[:version]]
 
     release_assets = apps.flat_map do |app|
       versions.flat_map { |vers| bundle_file_path(app, vers) }

@@ -137,4 +137,8 @@
 
     <!-- Domains -->
     <style name="Domains.Button.Primary.Unelevated.OnPrimarySurface" parent="WordPress.Button.Primary.Unelevated" />
+
+    <style name="Wordpress.BottomBar" parent="WordPress.NoActionBar">
+        <item name="android:navigationBarColor">@color/background_dark_elevated</item>
+    </style>
 </resources>

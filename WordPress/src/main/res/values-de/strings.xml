@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-07-28 13:54:21+0000
+Translation-Revision-Date: 2022-08-08 18:24:39+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: de
 -->
 <resources>
+    <string name="wp_jetpack_powered_features">Die neue Jetpack-App hat Statistiken, Reader, Benachrichtigungen und mehr, das dein WordPress verbessert.</string>
+    <string name="wp_jetpack_powered_better_with_jetpack">WordPress ist besser mit Jetpack</string>
     <string name="gutenberg_native_upgrade_your_plan_to_upload_audio">Führe ein Tarif-Upgrade durch, um Audiodateien hochzuladen</string>
     <string name="gutenberg_native_jetpack_powered">Von Jetpack unterstützt</string>
     <string name="gutenberg_native_invalid_url">Ungültige URL.</string>
@@ -14,7 +16,6 @@ Language: de
     <string name="wp_jetpack_continue_to_stats">Weiter zu Statistiken</string>
     <string name="wp_jetpack_continue_to_reader">Weiter zum Reader</string>
     <string name="wp_jetpack_get_new_jetpack_app">Hol dir die neue Jetpack-App</string>
-    <string name="wp_jetpack_powered_features">Statistiken, Reader, Benachrichtigungen und andere Funktionen werden von Jetpack unterstützt.</string>
     <string name="gutenberg_native_upgrade_your_plan_to_use_video_covers">Führe ein Tarif-Upgrade durch, um Video-Cover zu verwenden</string>
     <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery">Bei der Anzeige des Blocks ist ein Problem aufgetreten. \nTippe, um die Wiederherstellung des Blocks zu versuchen.</string>
     <string name="weekly_roundup_notification_text_views_and_comments">Letzte Woche hattest du %1$s Aufrufe und %2$s Kommentare</string>
@@ -44,11 +45,7 @@ Language: de
     <string name="qrcode_auth_flow_done_subtitle">Tippe auf „Verwerfen“ und navigiere zu deinem Webbrowser zurück, um fortzufahren.</string>
     <string name="qrcode_auth_flow_dismiss">Verwerfen</string>
     <string name="qrcode_auth_flow_validated_title">Versuchst du dich in der Nähe von %2$s in %1$s anzumelden?</string>
-    <string name="stats_revamp_v2_intro_secondary_button_text">Später daran erinnern</string>
-    <string name="stats_revamp_v2_intro_content_note">Weitere Informationen unter „Meine Website &gt; Statistiken &gt; Einsichten“</string>
-    <string name="stats_revamp_v2_intro_content">Anhand von Einsichten kannst du nachvollziehen, wie deine Inhalte ankommen und was deinem Publikum gefällt.</string>
     <string name="stats_revamp_v2_intro_header_title">Einsichten-Update</string>
-    <string name="stats_revamp_v2_intro_primary_button_text">Jetzt versuchen</string>
     <string name="stats_insights_followers_guide_card">💡Andere Blogs zu kommentieren ist ein guter Weg, Aufmerksamkeit zu erregen und Follower für deine neue Website zu gewinnen.</string>
     <string name="stats_insights_comments_guide_card">💡Tippe auf „MEHR ANZEIGEN“, um dir deine Top-Kommentatoren anzeigen zu lassen.</string>
     <string name="stats_insights_latest_post_empty">Schau nochmal vorbei, wenn du deinen ersten Beitrag veröffentlicht hast!</string>

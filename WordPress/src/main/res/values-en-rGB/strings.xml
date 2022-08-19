@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-07-26 11:10:59+0000
+Translation-Revision-Date: 2022-08-10 09:05:34+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: en_GB
 -->
 <resources>
+    <string name="wp_jetpack_powered_features">The new Jetpack app has Stats, Reader, Notifications, and more that make your WordPress better.</string>
+    <string name="wp_jetpack_powered_better_with_jetpack">WordPress is better with Jetpack</string>
     <string name="wp_jetpack_continue_to_notifications">Continue to Notifications</string>
     <string name="wp_jetpack_continue_to_reader">Continue to Reader</string>
     <string name="wp_jetpack_continue_to_stats">Continue to Stats</string>
@@ -13,7 +15,6 @@ Language: en_GB
     <string name="gutenberg_native_gradient">Gradient</string>
     <string name="gutenberg_native_invalid_url">Invalid URL.</string>
     <string name="gutenberg_native_jetpack_powered">Jetpack powered</string>
-    <string name="wp_jetpack_powered_features">Stats, Reader, Notifications, and other features are powered by Jetpack.</string>
     <string name="gutenberg_native_upgrade_your_plan_to_upload_audio">Upgrade your plan to upload audio</string>
     <string name="gutenberg_native_upgrade_your_plan_to_use_video_covers">Upgrade your plan to use video covers</string>
     <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery">Problem displaying block. \nTap to attempt block recovery.</string>
@@ -44,10 +45,6 @@ Language: en_GB
     <string name="qrcode_auth_flow_validated_subtitle">Only scan QR codes taken directly from your web browser. Never scan a code sent to you by anyone else.</string>
     <string name="qrcode_auth_flow_validated_default_title">Are you trying to log in to your web browser near %1$s?</string>
     <string name="qrcode_auth_flow_validated_title">Are you trying to log in to %1$s near %2$s?</string>
-    <string name="stats_revamp_v2_intro_secondary_button_text">Remind me later</string>
-    <string name="stats_revamp_v2_intro_primary_button_text">Try it now</string>
-    <string name="stats_revamp_v2_intro_content_note">Learn more in My Site &gt; Stats &gt; Insights</string>
-    <string name="stats_revamp_v2_intro_content">Insights help you understand how your content is performing and what\'s resonating with your audience.</string>
     <string name="stats_revamp_v2_intro_header_title">Insights update</string>
     <string name="stats_insights_followers_guide_card">💡Commenting on other blogs is a great way to build attention and followers for your new site.</string>
     <string name="stats_insights_comments_guide_card">💡Tap \'VIEW MORE\' to see your top commenters.</string>

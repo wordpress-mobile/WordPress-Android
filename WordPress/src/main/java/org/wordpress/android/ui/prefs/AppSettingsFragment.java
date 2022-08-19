@@ -59,6 +59,7 @@ import org.wordpress.android.util.BuildConfigWrapper;
 import org.wordpress.android.util.JetpackBrandingUtils;
 import org.wordpress.android.util.JetpackBrandingUtils.Screen;
 import org.wordpress.android.util.LocaleManager;
+import org.wordpress.android.util.LocaleProvider;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
@@ -106,6 +107,7 @@ public class AppSettingsFragment extends PreferenceFragment
     @Inject UnifiedAboutFeatureConfig mUnifiedAboutFeatureConfig;
     @Inject MySiteDashboardTabsFeatureConfig mMySiteDashboardTabsFeatureConfig;
     @Inject JetpackBrandingUtils mJetpackBrandingUtils;
+    @Inject LocaleProvider mLocaleProvider;
 
     private static final String TRACK_STYLE = "style";
     private static final String TRACK_ENABLED = "enabled";
@@ -144,6 +146,7 @@ public class AppSettingsFragment extends PreferenceFragment
         mLanguagePreference = (WPPreference) findPreference(getString(R.string.pref_key_language));
         mLanguagePreference.setOnPreferenceChangeListener(this);
         mLanguagePreference.setOnPreferenceClickListener(this);
+        mLanguagePreference.setSummary(mLocaleProvider.getAppLanguageDisplayString());
 
         mAppThemePreference = (ListPreference) findPreference(getString(R.string.pref_key_app_theme));
         mAppThemePreference.setOnPreferenceChangeListener(this);
@@ -246,7 +249,7 @@ public class AppSettingsFragment extends PreferenceFragment
     private void addJetpackBadgeAsFooterIfEnabled(LayoutInflater inflater, ListView listView) {
         if (mJetpackBrandingUtils.shouldShowJetpackBranding()) {
             final JetpackBadgeFooterBinding binding = JetpackBadgeFooterBinding.inflate(inflater);
-            binding.jetpackBadge.getRoot().setOnClickListener(v -> {
+            binding.footerJetpackBadge.jetpackPoweredBadge.setOnClickListener(v -> {
                     mJetpackBrandingUtils.trackBadgeTapped(Screen.APP_SETTINGS);
                     new JetpackPoweredBottomSheetFragment().show(
                             ((AppCompatActivity) getActivity()).getSupportFragmentManager(),

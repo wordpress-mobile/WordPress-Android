@@ -8,8 +8,8 @@ class LocaleProvider @Inject constructor() {
         return LanguageUtils.getCurrentDeviceLanguage()
     }
 
-    fun getLanguageDisplayString(languageCode: String, displayLocale: Locale): String {
-        return LocaleManager.getLanguageString(languageCode, displayLocale)
+    fun getAppLanguageDisplayString(): String {
+        return LocaleManager.getLanguageString(getAppLocale().toString(), getAppLocale())
     }
 
     fun createSortedLocalizedLanguageDisplayStrings(

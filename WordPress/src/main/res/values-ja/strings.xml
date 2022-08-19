@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-07-29 09:54:09+0000
+Translation-Revision-Date: 2022-08-10 00:55:02+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.1
 Language: ja_JP
 -->
 <resources>
+    <string name="wp_jetpack_powered_better_with_jetpack">Jetpack で WordPress をパワーアップ</string>
+    <string name="wp_jetpack_powered_features">新しい Jetpack アプリには、WordPress をパワーアップできる統計情報、ブログ購読ツール、通知などがあります。</string>
     <string name="gutenberg_native_upgrade_your_plan_to_use_video_covers">プランをアップグレードして動画のカバーを使う</string>
     <string name="gutenberg_native_upgrade_your_plan_to_upload_audio">プランをアップグレードして音声をアップロードする</string>
     <string name="gutenberg_native_jetpack_powered">Jetpack 提供</string>
@@ -15,7 +17,6 @@ Language: ja_JP
     <string name="wp_jetpack_continue_to_stats">統計に進む</string>
     <string name="wp_jetpack_continue_to_reader">Reader に進む</string>
     <string name="wp_jetpack_get_new_jetpack_app">新しい Jetpack アプリを入手</string>
-    <string name="wp_jetpack_powered_features">統計、Reader、通知などの機能は Jetpack から提供されています。</string>
     <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery">ブロックの表示中に問題が発生しました。 \nタップしてブロックの回復を試みます。</string>
     <string name="weekly_roundup_notification_text_views_and_comments">先週、%1$s件の表示と%2$s件のコメントがありました。</string>
     <string name="weekly_roundup_notification_text_views_and_likes">先週、%1$s件の表示と%2$s件の「いいね」を受け取りました。</string>
@@ -44,10 +45,6 @@ Language: ja_JP
     <string name="qrcode_auth_flow_validated_subtitle">Web ブラウザーから直接撮影された QR コードをスキャンするだけです。 他の人から送信されたコードはスキャンしないでください。</string>
     <string name="qrcode_auth_flow_validated_default_title">%1$s 近くの Web ブラウザーにログインしてみますか ?</string>
     <string name="qrcode_auth_flow_validated_title">%2$s 近くの %1$s にログインしてみますか ?</string>
-    <string name="stats_revamp_v2_intro_secondary_button_text">後で再通知</string>
-    <string name="stats_revamp_v2_intro_primary_button_text">今すぐ試す</string>
-    <string name="stats_revamp_v2_intro_content_note">詳細は、「参加サイト」&gt;「統計」&gt;「統計概要」をご覧ください。</string>
-    <string name="stats_revamp_v2_intro_content">統計概要により、コンテンツのパフォーマンスと、読者からどういった反響があるか理解を深めることができます。</string>
     <string name="stats_revamp_v2_intro_header_title">最新の統計概要</string>
     <string name="stats_insights_followers_guide_card">💡他のブログへのコメントは、自分の新しいサイトへの注目を集め、フォロワーを増やすのに最適です。</string>
     <string name="stats_insights_comments_guide_card">💡「さらに表示」をタップすると上位のコメント投稿者が表示されます。</string>

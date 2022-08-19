@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.activity.viewModels
-import androidx.core.view.isVisible
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.StatsListActivityBinding
@@ -13,11 +12,9 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.push.NotificationType
 import org.wordpress.android.push.NotificationsProcessingService.ARG_NOTIFICATION_TYPE
 import org.wordpress.android.ui.LocaleAwareActivity
-import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment
 import org.wordpress.android.ui.stats.StatsTimeframe
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.JetpackBrandingUtils
-import org.wordpress.android.util.JetpackBrandingUtils.Screen.STATS
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -29,22 +26,7 @@ class StatsActivity : LocaleAwareActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        with(StatsListActivityBinding.inflate(layoutInflater)) {
-            setContentView(root)
-            if (jetpackBrandingUtils.shouldShowJetpackBranding()) {
-                jetpackBanner.root.isVisible = true
-                jetpackBrandingUtils.setNavigationBarColorForBanner(window)
-
-                if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
-                    jetpackBanner.root.setOnClickListener {
-                        jetpackBrandingUtils.trackBannerTapped(STATS)
-                        JetpackPoweredBottomSheetFragment
-                                .newInstance()
-                                .show(supportFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
-                    }
-                }
-            }
-        }
+        setContentView(StatsListActivityBinding.inflate(layoutInflater).root)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -97,7 +79,6 @@ class StatsActivity : LocaleAwareActivity() {
 
     enum class StatsLaunchedFrom {
         STATS_WIDGET,
-        NOTIFICATIONS,
-        FEATURE_ANNOUNCEMENT
+        NOTIFICATIONS
     }
 }

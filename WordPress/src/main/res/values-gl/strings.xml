@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-07-27 19:10:43+0000
+Translation-Revision-Date: 2022-08-16 07:56:18+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: gl_ES
 -->
 <resources>
+    <string name="wp_jetpack_powered_features">A nova aplicación Jetpack ten estatísticas, lector, notificacións e máis que melloran o teu WordPress.</string>
+    <string name="wp_jetpack_powered_better_with_jetpack">WordPress é mellor con Jetpack</string>
     <string name="gutenberg_native_upgrade_your_plan_to_use_video_covers">Actualiza o teu plan para usar fondos de vídeo</string>
     <string name="gutenberg_native_upgrade_your_plan_to_upload_audio">Actualiza o teu plan para subir audio</string>
     <string name="gutenberg_native_jetpack_powered">Funciona grazas a Jetpack</string>
@@ -15,7 +17,6 @@ Language: gl_ES
     <string name="wp_jetpack_continue_to_stats">Continuar ás estatísticas</string>
     <string name="wp_jetpack_continue_to_reader">Continuar ao lector</string>
     <string name="wp_jetpack_get_new_jetpack_app">Consigue a nova aplicación Jetpack</string>
-    <string name="wp_jetpack_powered_features">Estatísticas, lector, avisos e outras características que funcionan grazas a Jetpack.</string>
     <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery">Problema ao mostrar o bloque. \nToca para intentar a recuperación do bloque.</string>
     <string name="weekly_roundup_notification_text_views_and_comments">A semana pasada tiveches %1$s visitas e %2$s comentarios</string>
     <string name="weekly_roundup_notification_text_views_and_likes">A semana pasada tiveches %1$s visitas e %2$s Gústame</string>
@@ -44,10 +45,6 @@ Language: gl_ES
     <string name="qrcode_auth_flow_validated_subtitle">Escanea só os códigos QR que colliches directamente do navegador web. Non escanees nunca un código que che enviara alguén.</string>
     <string name="qrcode_auth_flow_validated_default_title">Estás intentando acceder ao teu navegador web cerca de %1$s?</string>
     <string name="qrcode_auth_flow_validated_title">Estás intentando acceder a %1$s cerca de %2$s?</string>
-    <string name="stats_revamp_v2_intro_secondary_button_text">Recórdamo máis tarde</string>
-    <string name="stats_revamp_v2_intro_primary_button_text">Próbao agora</string>
-    <string name="stats_revamp_v2_intro_content_note">Máis información en O meu sitio &gt; Estatísticas &gt; Detalles</string>
-    <string name="stats_revamp_v2_intro_content">Detalles axúdache a entender como é o rendemento do teu contido e que ten impacto no teu público.</string>
     <string name="stats_revamp_v2_intro_header_title">Actualización de Detalles</string>
     <string name="stats_insights_followers_guide_card">💡Comentar noutros blogs é unha boa forma de chamar a atención e ter máis seguidores no teu novo sitio.</string>
     <string name="stats_insights_comments_guide_card">💡Toca «VER MÁIS» para ver os principais comentaristas.</string>
@@ -1314,7 +1311,7 @@ Language: gl_ES
     <string name="app_theme_default">Establecido polo aforrador de batería</string>
     <string name="app_theme_dark">Escuro</string>
     <string name="app_theme_light">Claro</string>
-    <string name="app_theme">Apariencia</string>
+    <string name="app_theme">Aparencia</string>
     <string name="dialog_confirm_autosave_body_first_part_for_page">Recentemente fixeches cambios nesta páxina, pero non os gardaches. Elixe unha versión para cargar:\n\n</string>
     <string name="gutenberg_native_show_post_content">Amosar o contido da entrada</string>
     <string name="gutenberg_native_only_show_excerpt">Amosar só o extracto</string>

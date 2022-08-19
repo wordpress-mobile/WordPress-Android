@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-07-28 15:54:27+0000
+Translation-Revision-Date: 2022-08-11 14:54:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: he_IL
 -->
 <resources>
+    <string name="wp_jetpack_powered_features">האפליקציה החדשה של Jetpack כוללת נתונים סטטיסטיים, את Reader, הודעות ועוד כדי לשפר את חוויית השימוש שלך ב-WordPress.</string>
+    <string name="wp_jetpack_powered_better_with_jetpack">השירות של WordPress טוב יותר עם Jetpack</string>
     <string name="gutenberg_native_upgrade_your_plan_to_use_video_covers">יש לשדרג את התוכנית שלך כדי להשתמש בשער של וידאו</string>
     <string name="gutenberg_native_upgrade_your_plan_to_upload_audio">יש לשדרג את התוכנית שלך כדי להעלות אודיו</string>
     <string name="gutenberg_native_jetpack_powered">מופעל באמצעות Jetpack</string>
@@ -15,7 +17,6 @@ Language: he_IL
     <string name="wp_jetpack_continue_to_stats">להמשיך לנתונים הסטטיסטיים</string>
     <string name="wp_jetpack_continue_to_reader">להמשיך ל-Reader</string>
     <string name="wp_jetpack_get_new_jetpack_app">להוריד את האפליקציה החדשה של Jetpack</string>
-    <string name="wp_jetpack_powered_features">התכונות של נתונים סטטיסטיים, Reader, הודעות ותכונות אחרות מופעלות באמצעות Jetpack.</string>
     <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery">בעיה בהצגת הבלוק. \nיש להקיש כדי לנסות לשחזר את הבלוק.</string>
     <string name="weekly_roundup_notification_text_views_and_comments">בשבוע הקודם היו לך ⁦%1$s⁩ צפיות ו-⁦%2$s⁩ תגובות</string>
     <string name="weekly_roundup_notification_text_views_and_likes">בשבוע הקודם היו לך ⁦%1$s⁩ צפיות ו-⁦%2$s⁩ לייקים</string>
@@ -44,10 +45,6 @@ Language: he_IL
     <string name="qrcode_auth_flow_validated_subtitle">יש לסרוק רק קוד QR שנלקח ישירות מדפדפן האינטרנט שלך. אין לסרוק קוד QR שנשלח אליך ממישהו אחר.</string>
     <string name="qrcode_auth_flow_validated_default_title">האם ניסית להתחבר לדפדפן האינטרנט שלך ליד ⁦%1$s⁩?</string>
     <string name="qrcode_auth_flow_validated_title">האם ניסית להתחבר אל ⁦%1$s⁩ ליד ⁦%2$s⁩?</string>
-    <string name="stats_revamp_v2_intro_secondary_button_text">הזכירו לי מאוחר יותר</string>
-    <string name="stats_revamp_v2_intro_primary_button_text">כדאי לנסות עכשיו</string>
-    <string name="stats_revamp_v2_intro_content_note">מידע נוסף זמין במקטע \'האתר שלי\' &gt; \'נתונים סטטיסטיים\' &gt; \'תובנות\'</string>
-    <string name="stats_revamp_v2_intro_content">התובנות יעזרו לך להבין את הביצועים של התוכן ולאילו תכנים הקהל הגיב בצורה חיובית.</string>
     <string name="stats_revamp_v2_intro_header_title">עדכון לתובנות</string>
     <string name="stats_insights_followers_guide_card">💡הוספת תגובה בבלוגים אחרים היא דרך נהדרת להראות נוכחות ולצבור עוקבים לאתר החדש שלך.</string>
     <string name="stats_insights_comments_guide_card">💡אפשר להקיש על \'להציג עוד\' כדי לראות את המגיבים המובילים שלך.</string>

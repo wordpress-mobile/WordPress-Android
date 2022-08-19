@@ -36,7 +36,6 @@ import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.util.config.StatsRevampV2FeatureConfig
 import java.util.Date
 
 class LatestPostSummaryUseCaseTest : BaseUnitTest() {
@@ -48,7 +47,6 @@ class LatestPostSummaryUseCaseTest : BaseUnitTest() {
     @Mock lateinit var popupMenuHandler: ItemPopupMenuHandler
     @Mock lateinit var contentDescriptionHelper: ContentDescriptionHelper
     @Mock lateinit var statsUtils: StatsUtils
-    @Mock lateinit var statsRevampV2FeatureConfig: StatsRevampV2FeatureConfig
     private lateinit var useCase: LatestPostSummaryUseCase
     @InternalCoroutinesApi
     @Before
@@ -60,7 +58,6 @@ class LatestPostSummaryUseCaseTest : BaseUnitTest() {
                 statsSiteProvider,
                 latestPostSummaryMapper,
                 tracker,
-                statsRevampV2FeatureConfig,
                 popupMenuHandler,
                 statsUtils,
                 contentDescriptionHelper

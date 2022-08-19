@@ -90,7 +90,7 @@
         <!-- Main tab activity -->
         <activity
             android:name=".ui.main.WPMainActivity"
-            android:theme="@style/WordPress.NoActionBar"
+            android:theme="@style/Wordpress.BottomBar"
             android:label="" />
 
         <!-- Account activities -->

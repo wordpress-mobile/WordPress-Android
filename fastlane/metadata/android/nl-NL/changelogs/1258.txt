@@ -1,0 +1,5 @@
+20.4:
+- Gallery/Image block performance improvements in the Block Editor.
+- Properly displayed Video blocks (both web and app) for VideoPress-enabled sites.
+- Block inserter allows block types to be better organized in collections.
+- Alt text footnote spacing adjustment in Image blocks.

@@ -15,7 +15,6 @@ Language: pt_BR
     <string name="wp_jetpack_continue_to_stats">Continue para Estatísticas</string>
     <string name="wp_jetpack_continue_to_reader">Continue para Leitor</string>
     <string name="wp_jetpack_get_new_jetpack_app">Obtenha o novo aplicativo do Jetpack</string>
-    <string name="wp_jetpack_powered_features">Estatísticas, Leitor, Notificações e outras funcionalidades que são oferecidas pelo Jetpack.</string>
     <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery">Problema ao exibir o bloco. \nToque para tentar restaurá-lo.</string>
     <string name="weekly_roundup_notification_text_views_and_comments">Na semana passada, você recebeu %1$s visualizações e %2$s comentários</string>
     <string name="weekly_roundup_notification_text_views_and_likes">Na semana passada, você recebeu %1$s visualizações e %2$s curtidas</string>
@@ -44,10 +43,6 @@ Language: pt_BR
     <string name="qrcode_auth_flow_validated_subtitle">Leia apenas códigos QR retirados diretamente do seu navegador da web. Nunca leia um código enviado a você por outra pessoa.</string>
     <string name="qrcode_auth_flow_validated_default_title">Você está tentando acessar no seu navegador da web perto de %1$s?</string>
     <string name="qrcode_auth_flow_validated_title">Você está tentando acessar em %1$s perto de %2$s?</string>
-    <string name="stats_revamp_v2_intro_secondary_button_text">Lembre-me depois</string>
-    <string name="stats_revamp_v2_intro_primary_button_text">Tente agora</string>
-    <string name="stats_revamp_v2_intro_content_note">Saiba mais em Meu site &gt; Estatísticas &gt; Informações</string>
-    <string name="stats_revamp_v2_intro_content">As informações ajudam você a entender o desempenho do seu conteúdo e o que está atraindo o seu público.</string>
     <string name="stats_revamp_v2_intro_header_title">Atualização de informações</string>
     <string name="stats_insights_followers_guide_card">💡Comentar em outros blogs é uma ótima maneira de conquistar seguidores para o seu novo site.</string>
     <string name="stats_insights_comments_guide_card">💡Toque em \'VISUALIZAR MAIS\' para ver seus principais comentaristas.</string>

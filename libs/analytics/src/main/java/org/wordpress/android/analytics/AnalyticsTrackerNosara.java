@@ -1209,14 +1209,6 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "stats_widget_removed";
             case STATS_WIDGET_TAPPED:
                 return "stats_widget_tapped";
-            case STATS_REVAMP_V2_ANNOUNCEMENT_SHOWN:
-                return "stats_revamp_v2_announcement_shown";
-            case STATS_REVAMP_V2_ANNOUNCEMENT_CONFIRMED:
-                return "stats_revamp_v2_announcement_confirmed";
-            case STATS_REVAMP_V2_ANNOUNCEMENT_DISMISSED:
-                return "stats_revamp_v2_announcement_dismissed";
-                case STATS_REVAMP_V2_ANNOUNCEMENT_REMIND_ME_TAPPED:
-                return "stats_revamp_v2_announcement_remind_me_tapped";
             case PUSH_NOTIFICATION_RECEIVED:
                 return "push_notification_received";
             case PUSH_NOTIFICATION_TAPPED:
