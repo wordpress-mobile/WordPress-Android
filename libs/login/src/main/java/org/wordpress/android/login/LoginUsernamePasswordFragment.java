@@ -328,10 +328,11 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
     }
 
     private void refreshXmlRpcSites() {
-        RefreshSitesXMLRPCPayload selfHostedPayload = new RefreshSitesXMLRPCPayload();
-        selfHostedPayload.username = mRequestedUsername;
-        selfHostedPayload.password = mRequestedPassword;
-        selfHostedPayload.url = mEndpointAddress;
+        RefreshSitesXMLRPCPayload selfHostedPayload = new RefreshSitesXMLRPCPayload(
+            mRequestedUsername,
+            mRequestedPassword,
+            mEndpointAddress
+        );
         mDispatcher.dispatch(SiteActionBuilder.newFetchSitesXmlRpcAction(selfHostedPayload));
     }
 
