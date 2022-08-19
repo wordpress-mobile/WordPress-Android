@@ -66,9 +66,9 @@ class RetryOnRedirectBasicNetworkTest {
 
         override fun getParams(): Map<String, String> = mapOf()
 
-        override fun deliverResponse(response: String?) {}
+        override fun deliverResponse(response: String?) = Unit // Do nothing (ignore)
 
         override fun parseNetworkResponse(response: NetworkResponse?): Response<String> =
-                Response.success("foo", Cache.Entry())
+            Response.success("foo", Cache.Entry())
     }
 }
