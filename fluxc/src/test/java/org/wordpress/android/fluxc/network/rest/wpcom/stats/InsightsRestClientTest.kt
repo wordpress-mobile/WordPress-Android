@@ -77,6 +77,7 @@ class InsightsRestClientTest {
     private val pageSize = 5
 
     @Before
+    @Suppress("LongMethod")
     fun setUp() {
         urlCaptor = argumentCaptor()
         paramsCaptor = argumentCaptor()

@@ -296,7 +296,8 @@ abstract class CommentsDao {
         val iLike: Boolean
     ) {
         @Ignore
-        val level: Int = 0
+        @Suppress("DataClassShouldBeImmutable")
+        var level: Int = 0
     }
 
     companion object {

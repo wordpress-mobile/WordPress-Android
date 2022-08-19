@@ -91,6 +91,7 @@ class CommentsMapperTest {
         assertThat(mappedEntity).isEqualTo(comment)
     }
 
+    @Suppress("ComplexMethod")
     private fun assertModelsEqual(mappedModel: CommentModel, commentModel: CommentModel): Boolean {
         return mappedModel.id == commentModel.id &&
         mappedModel.remoteCommentId == commentModel.remoteCommentId &&
