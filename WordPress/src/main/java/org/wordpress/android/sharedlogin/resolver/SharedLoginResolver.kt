@@ -25,7 +25,6 @@ class SharedLoginResolver @Inject constructor(
     private val contentResolverWrapper: ContentResolverWrapper,
     private val accountActionBuilderWrapper: AccountActionBuilderWrapper,
     private val appPrefsWrapper: AppPrefsWrapper
-
 ) {
     fun tryJetpackLogin() {
         val isAlreadyLoggedIn = accountStore.accessToken.isNotEmpty()
