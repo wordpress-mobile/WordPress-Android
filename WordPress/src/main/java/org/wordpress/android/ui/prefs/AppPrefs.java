@@ -276,8 +276,8 @@ public class AppPrefs {
         // Indicates if this is the first time the user sees the blogging prompts onboarding dialog
         IS_FIRST_TIME_BLOGGING_PROMPTS_ONBOARDING,
 
-        // Indicates if we should try to login to Jetpack automatically
-        SHOULD_TRY_LOGIN_JETPACK
+        // Indicates if this is the first time we try to login to Jetpack automatically
+        IS_FIRST_TRY_LOGIN_JETPACK
     }
 
     private static SharedPreferences prefs() {
@@ -1411,10 +1411,10 @@ public class AppPrefs {
     }
 
     public static Boolean getIsFirstTrySharedLoginJetpack() {
-        return getBoolean(UndeletablePrefKey.SHOULD_TRY_LOGIN_JETPACK, true);
+        return getBoolean(UndeletablePrefKey.IS_FIRST_TRY_LOGIN_JETPACK, true);
     }
 
     public static void saveIsFirstTrySharedLoginJetpack(final boolean isFirstTry) {
-        setBoolean(UndeletablePrefKey.SHOULD_TRY_LOGIN_JETPACK, isFirstTry);
+        setBoolean(UndeletablePrefKey.IS_FIRST_TRY_LOGIN_JETPACK, isFirstTry);
     }
 }
