@@ -1,5 +1,0 @@
-20.4:
-- Mejoras de rendimiento en el bloque de imagen/galería en el editor de bloques.
-- Los bloques de vídeo se muestran correctamente (en la web y en app) en los sitios con VideoPress activo.
-- El insertador de bloques permite organizar mejor los tipos de bloques en colecciones.
-- Ajuste de espaciado de la nota al pie del texto alt en los bloques de imagen.

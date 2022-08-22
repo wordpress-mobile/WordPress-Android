@@ -1,5 +1,0 @@
-20.4 :
-- Améliorations des performances de la galerie/bloc image dans l’éditeur de blocs.
-- Affichage correct des blocs vidéo (web et application) pour les sites compatibles avec VideoPress.
-- Meilleure organisation des types de blocs dans les collections grâce à l’outil d’insertion de bloc.
-- Ajustement de l’espacement des notes de bas de page du texte alternatif dans les blocs d'images.
