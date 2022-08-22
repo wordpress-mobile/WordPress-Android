@@ -510,7 +510,11 @@ public class ReaderPostListFragment extends ViewPagerFragment
         if (animateOnScroll) {
             RecyclerView scrollView = mRecyclerView.getInternalRecyclerView();
             mJetpackBrandingUtils.showJetpackBannerIfScrolledToTop(mJetpackBanner, scrollView);
-            mJetpackBrandingUtils.setNavigationBarColorForBanner(requireActivity().getWindow());
+            mJetpackBrandingUtils.initJetpackBannerAnimation(
+                    mJetpackBanner,
+                    scrollView,
+                    requireActivity().getWindow()
+            );
             // Return early since the banner visibility was handled by showJetpackBannerIfScrolledToTop
             return;
         }
@@ -1152,7 +1156,11 @@ public class ReaderPostListFragment extends ViewPagerFragment
 
         mJetpackBanner = rootView.findViewById(R.id.jetpack_banner);
         if (mJetpackBrandingUtils.shouldShowJetpackBranding()) {
-            mJetpackBrandingUtils.initJetpackBannerAnimation(mJetpackBanner, mRecyclerView.getInternalRecyclerView());
+            mJetpackBrandingUtils.initJetpackBannerAnimation(
+                    mJetpackBanner,
+                    mRecyclerView.getInternalRecyclerView(),
+                    requireActivity().getWindow()
+            );
 
             if (mJetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
                 mJetpackBanner.setOnClickListener(v -> {
