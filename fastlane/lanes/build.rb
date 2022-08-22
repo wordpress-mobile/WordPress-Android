@@ -149,7 +149,8 @@ platform :android do
     gradle(
       task: 'assemble',
       flavor: 'WordPressJalapeno',
-      build_type: 'Debug'
+      build_type: 'Debug',
+      properties: { installableBuildVersionName: generate_installable_build_number }
     )
 
     upload_installable_build(product: 'WordPress')
@@ -170,7 +171,8 @@ platform :android do
     gradle(
       task: 'assemble',
       flavor: 'JetpackJalapeno',
-      build_type: 'Debug'
+      build_type: 'Debug',
+      properties: { installableBuildVersionName: generate_installable_build_number }
     )
 
     upload_installable_build(product: 'Jetpack')
