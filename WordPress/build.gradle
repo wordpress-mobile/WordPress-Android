@@ -29,12 +29,6 @@ repositories {
         }
     }
     maven {
-        url "https://a8c-libs.s3.amazonaws.com/android/hermes-mirror"
-        content {
-            includeGroup "org.wordpress-mobile"
-        }
-    }
-    maven {
         url "https://a8c-libs.s3.amazonaws.com/android/react-native-mirror"
         content {
             includeGroup "com.facebook.react"
@@ -259,8 +253,9 @@ android {
 
         // Exclude React Native's JSC and Hermes debug binaries
         exclude '**/libjscexecutor.so'
-        exclude '**/libhermes-inspector.so'
-        exclude '**/libhermes-executor-debug.so'
+        // TO-DO How to exclude this for release builds
+        // exclude '**/libhermes-inspector.so'
+        // exclude '**/libhermes-executor-debug.so'
 
         pickFirst 'META-INF/-no-jdk.kotlin_module'
 
