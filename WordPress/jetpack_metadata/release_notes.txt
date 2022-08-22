@@ -1,3 +1,2 @@
-- We added a label in App Settings to show the app’s current interface language.
-- We bumped up the screenshot size in the site theme picker to go with high-resolution image previews.
-- In the site creation process, we changed the Skip button text from blue to Jetpack green.
+* [*] Login: Fix an issue preventing some users to log-in in with email addresses containing a single quote [https://github.com/wordpress-mobile/WordPress-Android/pull/15526]
+* [*] Fix a possible crash with themes preloading at the start of Site Creation [https://github.com/wordpress-mobile/WordPress-Android/pull/17022]
