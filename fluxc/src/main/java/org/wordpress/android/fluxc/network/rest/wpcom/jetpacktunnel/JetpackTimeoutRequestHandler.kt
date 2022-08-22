@@ -32,7 +32,7 @@ class JetpackTimeoutRequestHandler<T>(
     }
 
     companion object {
-        const val DEFAULT_MAX_RETRIES = 2
+        const val DEFAULT_MAX_RETRIES = 1
         const val ADDITIONAL_RETRY_DELAY_MS = 5000L
 
         @JvmStatic
