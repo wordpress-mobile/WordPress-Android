@@ -4222,5 +4222,9 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="gutenberg_native_opacity" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Opacity</string>
     <string name="gutenberg_native_upgrade_your_plan_to_upload_audio" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Upgrade your plan to upload audio</string>
     <string name="gutenberg_native_upgrade_your_plan_to_use_video_covers" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Upgrade your plan to use video covers</string>
+    <string name="or_use_password" tools:ignore="UnusedResources" a8c-src-lib="login">Use password to sign in</string>
+    <string name="open_mail" tools:ignore="UnusedResources" a8c-src-lib="login">Open Mail</string>
+    <string name="login_magic_links_sent_label_short" tools:ignore="UnusedResources" a8c-src-lib="login">Check your email on this device!</string>
+    <string name="login_magic_links_email_sent" tools:ignore="UnusedResources" a8c-src-lib="login">We just sent a magic link to</string>
 
 </resources>
