@@ -45,7 +45,7 @@ class JetpackBrandingUtils @Inject constructor(
         }
     }
 
-    fun initJetpackBannerAnimation(banner: View, scrollableView: RecyclerView) {
+    fun initJetpackBannerAnimation(banner: View, scrollableView: RecyclerView, window: Window?) {
         scrollableView.setOnScrollChangeListener(object : OnScrollChangeListener {
             private var isScrollAtTop = true
 
@@ -56,11 +56,13 @@ class JetpackBrandingUtils @Inject constructor(
                     // Show the banner by moving up
                     isScrollAtTop = true
                     banner.animate().translationY(0f).start()
+                    window?.let { setNavigationBarColorForBanner(it) }
                 } else if (scrollOffset != 0 && isScrollAtTop) {
                     // Hide the banner by moving down
                     isScrollAtTop = false
                     val jetpackBannerHeight = banner.resources.getDimension(R.dimen.jetpack_banner_height)
                     banner.animate().translationY(jetpackBannerHeight).start()
+                    window?.let { resetNavigationBarColorForBanner(it) }
                 }
             }
         })
@@ -72,6 +74,12 @@ class JetpackBrandingUtils @Inject constructor(
     fun setNavigationBarColorForBanner(window: Window) {
         if (window.context.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
             window.navigationBarColor = window.context.getColor(R.color.jetpack_banner_background)
+        }
+    }
+
+    private fun resetNavigationBarColorForBanner(window: Window) {
+        if (window.context.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            window.navigationBarColor = 0
         }
     }
 
