@@ -49,8 +49,7 @@ public class WPScreenshotTest extends BaseTest {
 
 
     private DemoModeEnabler mDemoModeEnabler = new DemoModeEnabler();
-
-    @Ignore
+    
     @Test
     public void wPScreenshotTest() {
         if (!BuildConfig.IS_JETPACK_APP) {
