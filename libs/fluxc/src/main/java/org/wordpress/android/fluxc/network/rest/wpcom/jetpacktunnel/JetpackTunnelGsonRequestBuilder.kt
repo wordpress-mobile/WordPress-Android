@@ -1,5 +1,7 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.jetpacktunnel
 
+import com.android.volley.DefaultRetryPolicy
+import com.android.volley.RetryPolicy
 import kotlinx.coroutines.suspendCancellableCoroutine
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.BaseRequest
@@ -7,14 +9,27 @@ import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComErrorListener
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError
-import org.wordpress.android.fluxc.network.rest.wpcom.jetpacktunnel.JetpackTunnelGsonRequestBuilder.JetpackResponse.JetpackError
-import org.wordpress.android.fluxc.network.rest.wpcom.jetpacktunnel.JetpackTunnelGsonRequestBuilder.JetpackResponse.JetpackSuccess
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.coroutines.resume
 
 @Singleton
 class JetpackTunnelGsonRequestBuilder @Inject constructor() {
+    companion object {
+        const val DEFAULT_JETPACK_TUNNEL_TIMEOUT_MS = 15000
+        const val DEFAULT_JETPACK_TUNNEL_MAX_RETRIES = 1
+    }
+
+    fun buildDefaultTimeoutRetryPolicy(
+        timeout: Int = DEFAULT_JETPACK_TUNNEL_TIMEOUT_MS,
+        retries: Int = DEFAULT_JETPACK_TUNNEL_MAX_RETRIES
+    ): DefaultRetryPolicy =
+        DefaultRetryPolicy(
+            timeout,
+            retries,
+            DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
+        )
+
     /**
      * Creates a new GET request.
      * @param url the request URL
@@ -34,13 +49,13 @@ class JetpackTunnelGsonRequestBuilder @Inject constructor() {
         jpTimeoutListener: ((WPComGsonRequest<*>) -> Unit)?
     ): WPComGsonRequest<JetpackTunnelResponse<T>>? {
         return JetpackTunnelGsonRequest.buildGetRequest(
-                url,
-                site.siteId,
-                params,
-                clazz,
-                listener,
-                errorListener,
-                jpTimeoutListener
+            url,
+            site.siteId,
+            params,
+            clazz,
+            listener,
+            errorListener,
+            jpTimeoutListener
         )
     }
 
@@ -59,14 +74,15 @@ class JetpackTunnelGsonRequestBuilder @Inject constructor() {
         clazz: Class<T>,
         enableCaching: Boolean = false,
         cacheTimeToLive: Int = BaseRequest.DEFAULT_CACHE_LIFETIME,
-        forced: Boolean = false
+        forced: Boolean = false,
+        retryPolicy: RetryPolicy? = null
     ) = suspendCancellableCoroutine<JetpackResponse<T>> { cont ->
         val request = JetpackTunnelGsonRequest.buildGetRequest<T>(url, site.siteId, params, clazz, {
-            cont.resume(JetpackSuccess(it))
-        }, WPComErrorListener {
-            cont.resume(JetpackError(it))
+            cont.resume(JetpackResponse.JetpackSuccess(it))
         }, {
-            request: WPComGsonRequest<*> -> restClient.add(request)
+            cont.resume(JetpackResponse.JetpackError(it))
+        }, { request: WPComGsonRequest<*> ->
+            restClient.add(request)
         })
         cont.invokeOnCancellation {
             request?.cancel()
@@ -76,6 +92,9 @@ class JetpackTunnelGsonRequestBuilder @Inject constructor() {
         }
         if (forced) {
             request?.setShouldForceUpdate()
+        }
+        retryPolicy.let {
+            request?.setRetryPolicy(it)
         }
         restClient.add(request)
     }
@@ -115,9 +134,9 @@ class JetpackTunnelGsonRequestBuilder @Inject constructor() {
         clazz: Class<T>
     ) = suspendCancellableCoroutine<JetpackResponse<T>> { cont ->
         val request = JetpackTunnelGsonRequest.buildPostRequest<T>(url, site.siteId, body, clazz, {
-            cont.resume(JetpackSuccess(it))
-        }, WPComErrorListener {
-            cont.resume(JetpackError(it))
+            cont.resume(JetpackResponse.JetpackSuccess(it))
+        }, {
+            cont.resume(JetpackResponse.JetpackError(it))
         })
         cont.invokeOnCancellation {
             request?.cancel()
@@ -142,9 +161,9 @@ class JetpackTunnelGsonRequestBuilder @Inject constructor() {
         clazz: Class<T>
     ) = suspendCancellableCoroutine<JetpackResponse<T>> { cont ->
         val request = JetpackTunnelGsonRequest.buildPutRequest<T>(url, site.siteId, body, clazz, {
-            cont.resume(JetpackSuccess(it))
+            cont.resume(JetpackResponse.JetpackSuccess(it))
         }, {
-            cont.resume(JetpackError(it))
+            cont.resume(JetpackResponse.JetpackError(it))
         })
         cont.invokeOnCancellation {
             request?.cancel()
@@ -168,9 +187,9 @@ class JetpackTunnelGsonRequestBuilder @Inject constructor() {
         params: Map<String, String> = emptyMap()
     ) = suspendCancellableCoroutine<JetpackResponse<T>> { cont ->
         val request = JetpackTunnelGsonRequest.buildDeleteRequest<T>(url, site.siteId, params, clazz, {
-            cont.resume(JetpackSuccess(it))
+            cont.resume(JetpackResponse.JetpackSuccess(it))
         }, {
-            cont.resume(JetpackError(it))
+            cont.resume(JetpackResponse.JetpackError(it))
         })
         cont.invokeOnCancellation {
             request?.cancel()
