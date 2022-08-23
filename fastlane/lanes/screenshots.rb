@@ -3,6 +3,19 @@ RAW_SCREENSHOTS_PROCESSING_DIR = File.join(Dir.pwd, "screenshots", "raw_tmp")
 PROMO_SCREENSHOTS_PROCESSING_DIR = File.join(Dir.pwd, "screenshots", "promo_tmp")
 FINAL_METADATA_DIR = File.join(Dir.pwd, "metadata/android")
 
+# Possible values for `device` parameter can be found using `avdmanager list devices`
+SCREENSHOT_DEVICES = [
+  {
+    screenshot_type: 'phone',
+    device: 'pixel_3',
+    api: 28
+  },
+  {
+    screenshot_type: 'tenInch',
+    device: 'Nexus 9',
+    api: 28
+  }
+].freeze
 
 platform :android do
   #####################################################################################
@@ -37,76 +50,32 @@ platform :android do
     )
   end
 
-  #####################################################################################
-  # screenshots
-  # -----------------------------------------------------------------------------------
-  # This lane takes screenshots for the WordPress app across the three device types:
-  # phone, sevenInch and tenInch. If device serials are not provided these avds will be
-  # used: fastlane_screenshots_phone, fastlane_screenshots_seven_inch,
-  # fastlane_screenshots_ten_inch
-  # -----------------------------------------------------------------------------------
-  # Usage:
-  # fastlane screenshots phone_serial:<serial> sevenInch_serial:<serial> tenInch_serial:<serial>
+  # Takes screenshots for the WordPress or Jetpack app across multiple device and locales.
+  # 
+  # @option [String|Symbol] app The app to take screenshots for. Must be `wordpress` or `jetpack`
+  # @option [String] device The device to build the screenshots for. Default to the ones set in `SCREENSHOT_DEVICES`
+  # @option [String] locale The locale to build the screenshots for. Default to `WP_RELEASE_NOTES_LOCALES`/`JP_RELEASE_NOTES_LOCALES`
   #
-  # Example:
-  # fastlane screenshots
-  # fastlane screenshots phone_serial:emulator-5444 sevenInch_serial:emulator-5446 tenInch_serial:emulator-5448
-  #####################################################################################
-  desc "Build and capture screenshots"
+  desc "Build and capture raw screenshots"
   lane :screenshots do |options|
-    gradle(task: "assembleWordPressVanillaDebug assembleWordPressVanillaDebugAndroidTest")
-    take_screenshots(options)
-  end
+    app = get_app_name_option!(options)
 
-  desc "Capture screenshots"
-  lane :take_screenshots do |options|
-
-  	rebuild_screenshot_devices
-
-    # If you update this, be sure to also update the `rebuild_screenshot_devices` lane down below as well as the corresponding `fastlane/emulators/*.ini` config files.
-    # You might also want to mirror the changes of emulators used here with the ones used on Firebase Test Lab (when running screenshots on CI)
-    screenshot_devices = [
-      {
-        screenshot_type: 'phone',
-        device_name: 'Pixel_3_API_28',
-        device_serial: options[:phone_serial],
-      },
-      {
-        screenshot_type: 'tenInch',
-        device_name: 'Nexus_9_API_28',
-        device_serial: options[:tenInch_serial],
-      }
-    ]
+    gradle(tasks: ["assemble#{app}VanillaDebug", "assemble#{app}VanillaDebugAndroidTest"])
 
     # By default, clear previous screenshots
-    should_clear_previous_screenshots = true
+    should_clear_previous_screenshots = options[:device].nil? && options[:locale].nil? # Clear if we build for all devices, don't clear if we only do a subset
 
+    screenshot_devices = SCREENSHOT_DEVICES
     # Allow creating screenshots for just one device type
-    if options[:device] != nil
-      screenshot_devices.keep_if { |device|
-        device[:screenshot_type].casecmp(options[:device]) == 0
-      }
-
-      # Don't clear, because we might just be fixing one device type
-      should_clear_previous_screenshots = false
-    end
+    screenshot_devices.select! { |device| device[:screenshot_type].casecmp(options[:device]) == 0 } unless options[:device].nil?
 
     locales = ALL_LOCALES
       .select { |hsh| hsh[:promo_config] != false }
-      .map { |hsh| hsh[:google_play] }
-      .compact
-
+      .map { |h| h[:google_play] }
     # Allow creating screenshots for just one locale
-    if options[:locale] != nil
-      locales.keep_if { |locale|
-        locale.casecmp(options[:locale]) == 0
-      }
+    locales.select! { |locale| locale.casecmp(options[:locale]) == 0 } unless options[:locale].nil?
 
-      # Don't clear, because we might just be fixing one locale
-      should_clear_previous_screenshots = false
-    end
-
-    puts locales
+    create_emulators(devices: screenshot_devices)
 
     screenshot_options = {
       output_directory: RAW_SCREENSHOTS_DIR,
@@ -143,7 +112,7 @@ platform :android do
 
     locales = ALL_LOCALES
       .select { |hsh| hsh[:promo_config] != false }
-      .map {| hsh | [ hsh[:glotpress], hsh[:google_play] ]}
+      .map { |h| h[:google_play] }
 
     gp_downloadmetadata(project_url: APP_SPECIFIC_VALUES[:wordpress][:glotpress_metadata_project],
       target_files: files,
@@ -251,8 +220,8 @@ platform :android do
     end
 
     locales = ALL_LOCALES
-      .select { |hsh| hsh[:promo_config] != false }
-      .map { |hsh| hsh[:google_play] }
+      .reject { |h| h[:google_play].nil? }
+      .map { |h| h[:google_play] }
 
     # Allow creating promo screenshots for just one locale
     if options[:locale] != nil
@@ -301,31 +270,40 @@ platform :android do
   end
 
 
-  #####################################################################################
-  # rebuild_screenshot_devices
-  # -----------------------------------------------------------------------------------
-  # This lane rebuilds all of the emulators used for generating screenshots. Beware – running
-  # this action will overwrite the following emulators:
-  #     - Nexus 9 API 28
-  #     - Pixel 2 XL API 28
-  # It will not overwrite any other devices.
-  # -----------------------------------------------------------------------------------
-  # Usage:
-  # fastlane rebuild_screenshot_devices
+  # Rebuilds all of the emulators used for generating screenshots.
   #
-  # Example:
-  # fastlane rebuild_screenshot_devices
-  #####################################################################################
-  desc "Rebuild screenshot devices"
-  lane :rebuild_screenshot_devices do |options|
-    emulators = [
-        Dir.pwd + "/emulators/Nexus_9_API_28.ini",
-        Dir.pwd + "/emulators/Pixel_2_XL_API_28.ini",
-        Dir.pwd + "/emulators/Pixel_3_API_28.ini",
-    ]
-
-    emulators.each do |emulator_configuration|
-        sh("helpers/copy-device.sh '#{emulator_configuration}'")
+  # @option [Array<Hash>] devices List of device description to create emulators for.
+  #         Typically either `SCREENSHOT_DEVICES` or a subset thereof.
+  #
+  desc "Rebuild emulators used for screenshots"
+  lane :create_emulators do |options|
+    list = options[:devices] || SCREENSHOT_DEVICES
+    list.each do |device|
+      create_avd(api: device[:api], device: device[:device])
     end
+  end
+
+  def create_avd(api:, device:, name: nil, sdcard: '512M')
+    package = system_image_package(api: api)
+    sh('sdkmanager', '--install', package, step_name: "Installing System Image for Android #{api} (#{package})")
+
+    device_name = name || "#{device.gsub(' ','_').capitalize}_API_#{api}"
+    sh(
+      'avdmanager', 'create', 'avd',
+      '--force',
+      '--package', package,
+      '--device', device,
+      '--sdcard', sdcard,
+      '--name', device_name,
+      step_name: "Creating AVD `#{device_name}` (#{device}, API #{api})"
+    )
+  end
+
+  def system_image_package(api:)
+    # Find the system-images package for the provided API, with Google APIs, and matching the current platform/architecture this lane is called from
+    platform = `uname -m`.chomp
+    package = `sdkmanager --list`.match(/^ *(system-images;android-#{api};google_apis;#{platform}(-[^ ]*)?)/)&.captures&.first
+    UI.user_error!("Could not find system-image for API `#{api}` and your platform `#{platform}` in `sdkmanager --list`. Maybe Google removed it for download and it's time to update to a newer API?") if package.nil?
+    package
   end
 end
