@@ -271,7 +271,6 @@ class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializ
                         ?: return@post
 
                 jetpackBrandingUtils.showJetpackBannerIfScrolledToTop(jetpackBannerView, scrollableView)
-                activity?.window?.let { jetpackBrandingUtils.setNavigationBarColorForBanner(it) }
                 jetpackBrandingUtils.initJetpackBannerAnimation(jetpackBannerView, scrollableView)
 
                 if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
