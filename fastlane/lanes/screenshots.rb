@@ -22,39 +22,9 @@ SCREENSHOT_LOCALES = ALL_LOCALES
   .map { |h| h[:google_play] }
   .freeze
 
+require_relative '../helpers/android_emulator_helper'
+
 platform :android do
-  #####################################################################################
-  # upload_and_replace_screenshots_in_play_store
-  # -----------------------------------------------------------------------------------
-  # This lane uploads the screenshots in /metadata/android/{locale}/images to Play
-  # Store and replaces the existing ones.
-  # If a locale doesn't have any screenshots, it'll be skipped.
-  # -----------------------------------------------------------------------------------
-  # Usage:
-  # bundle exec fastlane upload_and_replace_screenshots_in_play_store app:<wordpress|jetpack>
-  #
-  # Example:
-  # bundle exec fastlane upload_and_replace_screenshots_in_play_store app:wordpress
-  #####################################################################################
-  desc 'Upload Screenshots to Play Store and Replaces the existing ones'
-  lane :upload_and_replace_screenshots_in_play_store do |options|
-    app = get_app_name_option!(options)
-    package_name = APP_SPECIFIC_VALUES[app.to_sym][:package_name]
-    metadata_dir = File.join('fastlane', APP_SPECIFIC_VALUES[app.to_sym][:metadata_dir], 'android')
-
-    upload_to_play_store(
-      package_name: package_name,
-      metadata_path: metadata_dir,
-      skip_upload_apk: true,
-      skip_upload_aab: true,
-      skip_upload_metadata: true,
-      skip_upload_changelogs: true,
-      skip_upload_images: true,
-      skip_upload_screenshots: false,
-      json_key: UPLOAD_TO_PLAY_STORE_JSON_KEY
-    )
-  end
-
   # Takes screenshots for the WordPress or Jetpack app across multiple device and locales.
   # 
   # @option [String|Symbol] app The app to take screenshots for. Must be `wordpress` or `jetpack`
@@ -82,25 +52,32 @@ platform :android do
     test_class = APP_SPECIFIC_VALUES[app.to_sym][:screenshots_test_class]
 
     screenshot_devices.each do |device|
-      name = create_avd(api: device[:api], device: device[:device])
-      serial = launch_avd(name: name)
+      helper = Fastlane::Helpers::AndroidEmulator.new
+      name = helper.create_avd(api: device[:api], device: device[:device])
+      serial = helper.launch_avd(name: name)
 
-      capture_android_screenshots(
-        app_apk_path: File.join(apk_dir, "#{app}Vanilla", 'debug', "org.wordpress.android-#{app}-vanilla-debug.apk"),
-        tests_apk_path: File.join(apk_dir, 'androidTest', "#{app}Vanilla", 'debug', "org.wordpress.android-#{app}-vanilla-debug-androidTest.apk"),
-        reinstall_app: false,
-        clear_previous_screenshots: should_clear_previous_screenshots,
-        # app_package_name:,
-        # tests_package_name:,
-        locales: locales,
-        output_directory: RAW_SCREENSHOTS_DIR,
-        skip_open_summary: is_ci,
-        use_tests_in_classes: test_class,
-        test_instrumentation_runner: 'org.wordpress.android.WordPressTestRunner',
-        specific_device:,
-        device_type: device[:device_type],
-        use_timestamp_suffix: false
-      )
+      # DEBUG: Skip actual call to `capture_android_screenshots` for now to debug the rest
+      UI.message("DEBUG: Would capture_android_screenshot here for #{serial}. Faking it by waiting 10s instead.")
+      sleep(10)
+      
+      # capture_android_screenshots(
+      #   app_apk_path: File.join(apk_dir, "#{app}Vanilla", 'debug', "org.wordpress.android-#{app}-vanilla-debug.apk"),
+      #   tests_apk_path: File.join(apk_dir, 'androidTest', "#{app}Vanilla", 'debug', "org.wordpress.android-#{app}-vanilla-debug-androidTest.apk"),
+      #   reinstall_app: false,
+      #   clear_previous_screenshots: should_clear_previous_screenshots,
+      #   # app_package_name:,
+      #   # tests_package_name:,
+      #   locales: locales,
+      #   output_directory: RAW_SCREENSHOTS_DIR,
+      #   skip_open_summary: is_ci,
+      #   use_tests_in_classes: test_class,
+      #   test_instrumentation_runner: 'org.wordpress.android.WordPressTestRunner',
+      #   specific_device: serial,
+      #   device_type: device[:device_type],
+      #   use_timestamp_suffix: false
+      # )
+
+      helper.shut_down_emulators!(serials: [serial]) # Clean up after ourselves
     end
   end
 
@@ -133,7 +110,6 @@ platform :android do
       download_path: File.join(Dir.pwd, "/playstoreres/metadata")
     )
   end
-
 
 
   #####################################################################################
@@ -282,6 +258,39 @@ platform :android do
   end
 
 
+  #####################################################################################
+  # upload_and_replace_screenshots_in_play_store
+  # -----------------------------------------------------------------------------------
+  # This lane uploads the screenshots in /metadata/android/{locale}/images to Play
+  # Store and replaces the existing ones.
+  # If a locale doesn't have any screenshots, it'll be skipped.
+  # -----------------------------------------------------------------------------------
+  # Usage:
+  # bundle exec fastlane upload_and_replace_screenshots_in_play_store app:<wordpress|jetpack>
+  #
+  # Example:
+  # bundle exec fastlane upload_and_replace_screenshots_in_play_store app:wordpress
+  #####################################################################################
+  desc 'Upload Screenshots to Play Store and Replaces the existing ones'
+  lane :upload_and_replace_screenshots_in_play_store do |options|
+    app = get_app_name_option!(options)
+    package_name = APP_SPECIFIC_VALUES[app.to_sym][:package_name]
+    metadata_dir = File.join('fastlane', APP_SPECIFIC_VALUES[app.to_sym][:metadata_dir], 'android')
+
+    upload_to_play_store(
+      package_name: package_name,
+      metadata_path: metadata_dir,
+      skip_upload_apk: true,
+      skip_upload_aab: true,
+      skip_upload_metadata: true,
+      skip_upload_changelogs: true,
+      skip_upload_images: true,
+      skip_upload_screenshots: false,
+      json_key: UPLOAD_TO_PLAY_STORE_JSON_KEY
+    )
+  end
+
+
   # Rebuilds all of the emulators used for generating screenshots.
   #
   desc "Rebuild emulators used for screenshots"
@@ -289,47 +298,5 @@ platform :android do
     SCREENSHOT_DEVICES.each do |device|
       create_avd(api: device[:api], device: device[:device])
     end
-  end
-
-  # Create an emulator (AVD) for a given `api` number and `device` model
-  #
-  # @param [Integer] api The Android API version to use for this AVD
-  # @param [String] device The Device Model to use for this AVD. Valid values can be found using `avdmanager list devices`
-  # @param [String] name The name to give for the created AVD. Defaults to `<device>_API_<api>`.
-  # @param [String] sdcard The size of the SD card for this device. Defaults to `512M`.
-  #
-  # TODO: Move this to the release-toolkit
-  #
-  def create_avd(api:, device:, name: nil, sdcard: '512M')
-    package = system_image_package(api: api)
-    sh('sdkmanager', '--install', package, step_name: "Installing System Image for Android #{api} (#{package})")
-
-    device_name = name || "#{device.gsub(' ','_').capitalize}_API_#{api}"
-    sh(
-      'avdmanager', 'create', 'avd',
-      '--force',
-      '--package', package,
-      '--device', device,
-      '--sdcard', sdcard,
-      '--name', device_name,
-      step_name: "Creating AVD `#{device_name}` (#{device}, API #{api})"
-    )
-  end
-
-  # Launch the emulator for the given AVD, then return the emulator serial
-  #
-  # @param [String] name name of the AVD to launch
-  # @return [String] emulator serial number corresponding to the launched AVD
-  def launch_avd(name:)
-    # TODO: Implement this
-  end
-
-  # TODO: Move this to the release-toolkit
-  def system_image_package(api:)
-    # Find the system-images package for the provided API, with Google APIs, and matching the current platform/architecture this lane is called from
-    platform = `uname -m`.chomp
-    package = `sdkmanager --list`.match(/^ *(system-images;android-#{api};google_apis;#{platform}(-[^ ]*)?)/)&.captures&.first
-    UI.user_error!("Could not find system-image for API `#{api}` and your platform `#{platform}` in `sdkmanager --list`. Maybe Google removed it for download and it's time to update to a newer API?") if package.nil?
-    package
   end
 end
