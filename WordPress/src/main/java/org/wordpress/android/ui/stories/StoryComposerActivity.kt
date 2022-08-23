@@ -619,8 +619,8 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
                     frame.id = storyMediaFileData.id
                     storyMediaFileDataList.add(storyMediaFileData)
                 }
-                // if the frame.id is populated and is not a temporary id, this should be an actual MediaModel mediaId so,
-                // let's use that to obtain the mediaFile and then replace it with the temporary frame.id
+                // if the frame.id is populated and is not a temporary id, this should be an actual MediaModel mediaId
+                // so, let's use that to obtain the mediaFile and then replace it with the temporary frame.id
                 else -> {
                     frame.id?.let {
                         if (it.startsWith(TEMPORARY_ID_PREFIX)) {

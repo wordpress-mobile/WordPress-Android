@@ -266,7 +266,8 @@ class ReaderPostListViewModel @Inject constructor(
         readerViewModel?.selectedTabChange(tag)
     }
 
-    // TODO this is related to tracking time spent in reader - we should move it to the parent but also keep it here for !isTopLevel :(
+    // TODO this is related to tracking time spent in reader -
+    //  we should move it to the parent but also keep it here for !isTopLevel :(
     fun onFragmentResume(
         isTopLevelFragment: Boolean,
         isSearch: Boolean,
