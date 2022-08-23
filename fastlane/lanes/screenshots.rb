@@ -6,16 +6,21 @@ FINAL_METADATA_DIR = File.join(Dir.pwd, "metadata/android")
 # Possible values for `device` parameter can be found using `avdmanager list devices`
 SCREENSHOT_DEVICES = [
   {
-    screenshot_type: 'phone',
+    device_type: 'phone',
     device: 'pixel_3',
     api: 28
   },
   {
-    screenshot_type: 'tenInch',
+    device_type: 'tenInch',
     device: 'Nexus 9',
     api: 28
   }
 ].freeze
+
+SCREENSHOT_LOCALES = ALL_LOCALES
+  .select { |hsh| hsh[:promo_config] != false }
+  .map { |h| h[:google_play] }
+  .freeze
 
 platform :android do
   #####################################################################################
@@ -53,43 +58,50 @@ platform :android do
   # Takes screenshots for the WordPress or Jetpack app across multiple device and locales.
   # 
   # @option [String|Symbol] app The app to take screenshots for. Must be `wordpress` or `jetpack`
-  # @option [String] device The device to build the screenshots for. Default to the ones set in `SCREENSHOT_DEVICES`
-  # @option [String] locale The locale to build the screenshots for. Default to `WP_RELEASE_NOTES_LOCALES`/`JP_RELEASE_NOTES_LOCALES`
+  # @option [String] device The device type to limit the build of screenshots for (e.g. `phone` or `tenInch`). Defaults to building all device types defined in `SCREENSHOT_DEVICES`.
+  # @option [String] locale The Google Play locale code to build the screenshots for. Default to all the ones in `SCREENSHOT_LOCALES`.
   #
   desc "Build and capture raw screenshots"
   lane :screenshots do |options|
     app = get_app_name_option!(options)
 
-    gradle(tasks: ["assemble#{app}VanillaDebug", "assemble#{app}VanillaDebugAndroidTest"])
+    gradle(tasks: ["assemble#{app.to_s.capitalize}VanillaDebug", "assemble#{app.to_s.capitalize}VanillaDebugAndroidTest"])
 
-    # By default, clear previous screenshots
-    should_clear_previous_screenshots = options[:device].nil? && options[:locale].nil? # Clear if we build for all devices, don't clear if we only do a subset
+    # Clear previous screenshots if we build for all devices. Don't clear if we only do a subset
+    should_clear_previous_screenshots = options[:device].nil? && options[:locale].nil? # Clear 
 
-    screenshot_devices = SCREENSHOT_DEVICES
     # Allow creating screenshots for just one device type
-    screenshot_devices.select! { |device| device[:screenshot_type].casecmp(options[:device]) == 0 } unless options[:device].nil?
-
-    locales = ALL_LOCALES
-      .select { |hsh| hsh[:promo_config] != false }
-      .map { |h| h[:google_play] }
+    screenshot_devices = SCREENSHOT_DEVICES
+    screenshot_devices.select! { |device| device[:device_type].casecmp(options[:device]) == 0 } unless options[:device].nil?
+    
     # Allow creating screenshots for just one locale
+    locales = SCREENSHOT_LOCALES
     locales.select! { |locale| locale.casecmp(options[:locale]) == 0 } unless options[:locale].nil?
 
-    create_emulators(devices: screenshot_devices)
+    apk_dir = File.join('WordPress', 'build', 'outputs', 'apk')
+    test_class = APP_SPECIFIC_VALUES[app.to_sym][:screenshots_test_class]
 
-    screenshot_options = {
-      output_directory: RAW_SCREENSHOTS_DIR,
-      app_apk_path: "WordPress/build/outputs/apk/wordpressVanilla/debug/org.wordpress.android-wordpress-vanilla-debug.apk",
-      tests_apk_path: "WordPress/build/outputs/apk/androidTest/wordpressVanilla/debug/org.wordpress.android-wordpress-vanilla-debug-androidTest.apk",
-      use_tests_in_classes: "org.wordpress.android.ui.screenshots.WPScreenshotTest",
-      reinstall_app: false,
-      clear_previous_screenshots: should_clear_previous_screenshots,
-      locales: locales,
-      test_instrumentation_runner: "org.wordpress.android.WordPressTestRunner",
-      use_adb_root: true
-    }
+    screenshot_devices.each do |device|
+      name = create_avd(api: device[:api], device: device[:device])
+      serial = launch_avd(name: name)
 
-    take_android_emulator_screenshots(devices: screenshot_devices, screenshot_options: screenshot_options)
+      capture_android_screenshots(
+        app_apk_path: File.join(apk_dir, "#{app}Vanilla", 'debug', "org.wordpress.android-#{app}-vanilla-debug.apk"),
+        tests_apk_path: File.join(apk_dir, 'androidTest', "#{app}Vanilla", 'debug', "org.wordpress.android-#{app}-vanilla-debug-androidTest.apk"),
+        reinstall_app: false,
+        clear_previous_screenshots: should_clear_previous_screenshots,
+        # app_package_name:,
+        # tests_package_name:,
+        locales: locales,
+        output_directory: RAW_SCREENSHOTS_DIR,
+        skip_open_summary: is_ci,
+        use_tests_in_classes: test_class,
+        test_instrumentation_runner: 'org.wordpress.android.WordPressTestRunner',
+        specific_device:,
+        device_type: device[:device_type],
+        use_timestamp_suffix: false
+      )
+    end
   end
 
   #####################################################################################
@@ -272,17 +284,22 @@ platform :android do
 
   # Rebuilds all of the emulators used for generating screenshots.
   #
-  # @option [Array<Hash>] devices List of device description to create emulators for.
-  #         Typically either `SCREENSHOT_DEVICES` or a subset thereof.
-  #
   desc "Rebuild emulators used for screenshots"
   lane :create_emulators do |options|
-    list = options[:devices] || SCREENSHOT_DEVICES
-    list.each do |device|
+    SCREENSHOT_DEVICES.each do |device|
       create_avd(api: device[:api], device: device[:device])
     end
   end
 
+  # Create an emulator (AVD) for a given `api` number and `device` model
+  #
+  # @param [Integer] api The Android API version to use for this AVD
+  # @param [String] device The Device Model to use for this AVD. Valid values can be found using `avdmanager list devices`
+  # @param [String] name The name to give for the created AVD. Defaults to `<device>_API_<api>`.
+  # @param [String] sdcard The size of the SD card for this device. Defaults to `512M`.
+  #
+  # TODO: Move this to the release-toolkit
+  #
   def create_avd(api:, device:, name: nil, sdcard: '512M')
     package = system_image_package(api: api)
     sh('sdkmanager', '--install', package, step_name: "Installing System Image for Android #{api} (#{package})")
@@ -299,6 +316,15 @@ platform :android do
     )
   end
 
+  # Launch the emulator for the given AVD, then return the emulator serial
+  #
+  # @param [String] name name of the AVD to launch
+  # @return [String] emulator serial number corresponding to the launched AVD
+  def launch_avd(name:)
+    # TODO: Implement this
+  end
+
+  # TODO: Move this to the release-toolkit
   def system_image_package(api:)
     # Find the system-images package for the provided API, with Google APIs, and matching the current platform/architecture this lane is called from
     platform = `uname -m`.chomp
