@@ -9,6 +9,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComErrorListener
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError
+import org.wordpress.android.util.AppLog
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.coroutines.resume
@@ -93,7 +94,8 @@ class JetpackTunnelGsonRequestBuilder @Inject constructor() {
         if (forced) {
             request?.setShouldForceUpdate()
         }
-        retryPolicy.let {
+        retryPolicy?.let {
+            AppLog.i(AppLog.T.API, "Timeout set to: ${it.currentTimeout}")
             request?.setRetryPolicy(it)
         }
         restClient.add(request)
