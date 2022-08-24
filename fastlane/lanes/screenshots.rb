@@ -57,26 +57,22 @@ platform :android do
       name = helper.create_avd(api: device[:api], device: device[:device], system_image: sys_img) # Create the AVD for device+API+system image we need
       serial = helper.launch_avd(name: name) # Launch an emulator using this AVD and get its serial number, to know which emulator to run the tests on
 
-      # DEBUG: Skip actual call to `capture_android_screenshots` for now to debug the rest
-      UI.message("DEBUG: Would capture_android_screenshot here for #{serial}. Faking it by waiting 10s instead.")
-      sleep(10)
-      
-      # capture_android_screenshots(
-      #   app_apk_path: File.join(apk_dir, "#{app}Vanilla", 'debug', "org.wordpress.android-#{app}-vanilla-debug.apk"),
-      #   tests_apk_path: File.join(apk_dir, 'androidTest', "#{app}Vanilla", 'debug', "org.wordpress.android-#{app}-vanilla-debug-androidTest.apk"),
-      #   reinstall_app: false,
-      #   clear_previous_screenshots: should_clear_previous_screenshots,
-      #   # app_package_name:,
-      #   # tests_package_name:,
-      #   locales: locales,
-      #   output_directory: RAW_SCREENSHOTS_DIR,
-      #   skip_open_summary: is_ci,
-      #   use_tests_in_classes: test_class,
-      #   test_instrumentation_runner: 'org.wordpress.android.WordPressTestRunner',
-      #   specific_device: serial,
-      #   device_type: device[:device_type],
-      #   use_timestamp_suffix: false
-      # )
+      capture_android_screenshots(
+        app_apk_path: File.join(apk_dir, "#{app}Vanilla", 'debug', "org.wordpress.android-#{app}-vanilla-debug.apk"),
+        tests_apk_path: File.join(apk_dir, 'androidTest', "#{app}Vanilla", 'debug', "org.wordpress.android-#{app}-vanilla-debug-androidTest.apk"),
+        reinstall_app: false,
+        clear_previous_screenshots: should_clear_previous_screenshots,
+        # app_package_name:,
+        # tests_package_name:,
+        locales: locales,
+        output_directory: RAW_SCREENSHOTS_DIR,
+        skip_open_summary: is_ci,
+        use_tests_in_classes: test_class,
+        test_instrumentation_runner: 'org.wordpress.android.WordPressTestRunner',
+        specific_device: serial,
+        device_type: device[:device_type],
+        use_timestamp_suffix: false
+      )
 
       helper.shut_down_emulators!(serials: [serial]) # Clean up after ourselves
     end
