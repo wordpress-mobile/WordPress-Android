@@ -42,11 +42,11 @@ platform :android do
 
     # Allow creating screenshots for just one device type
     screenshot_devices = SCREENSHOT_DEVICES
-    screenshot_devices.select! { |device| device[:device_type].casecmp(options[:device]) == 0 } unless options[:device].nil?
+    screenshot_devices = screenshot_devices.select { |device| device[:device_type].casecmp(options[:device]) == 0 } unless options[:device].nil?
     
     # Allow creating screenshots for just one locale
     locales = SCREENSHOT_LOCALES
-    locales.select! { |locale| locale.casecmp(options[:locale]) == 0 } unless options[:locale].nil?
+    locales = locales.select { |locale| locale.casecmp(options[:locale]) == 0 } unless options[:locale].nil?
 
     apk_dir = File.join('WordPress', 'build', 'outputs', 'apk')
     test_class = APP_SPECIFIC_VALUES[app.to_sym][:screenshots_test_class]
