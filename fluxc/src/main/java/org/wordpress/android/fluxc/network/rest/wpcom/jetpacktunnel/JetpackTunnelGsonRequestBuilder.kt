@@ -147,11 +147,13 @@ class JetpackTunnelGsonRequestBuilder @Inject constructor() {
         body: Map<String, Any>,
         clazz: Class<T>
     ) = suspendCancellableCoroutine<JetpackResponse<T>> { cont ->
-        val request = JetpackTunnelGsonRequest.buildPostRequest<T>(url, site.siteId, body, clazz, {
-            cont.resume(JetpackSuccess(it))
-        }, {
-            cont.resume(JetpackError(it))
-        })
+        val request = JetpackTunnelGsonRequest.buildPostRequest<T>(
+            url,
+            site.siteId, body,
+            clazz,
+            listener = { cont.resume(JetpackSuccess(it)) },
+            errorListener = { cont.resume(JetpackError(it)) }
+        )
         cont.invokeOnCancellation {
             request?.cancel()
         }
