@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.qrcodeauth.compose.state
 
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -85,10 +86,11 @@ fun ContentState(uiState: QRCodeAuthUiState.Content) = with(uiState) {
     }
 }
 
-@Preview()
+@Preview
+@Preview(uiMode = UI_MODE_NIGHT_YES)
 @Composable
 private fun ContentStatePreview() {
-    AppTheme() {
+    AppTheme {
         val state = QRCodeAuthUiState.Content.Validated(
                 browser = "{browser}",
                 location = "{location}",

@@ -68,7 +68,7 @@ fun ErrorState(uiState: QRCodeAuthUiState.Error) = with(uiState) {
 @Preview(showBackground = true)
 @Composable
 private fun ErrorStatePreview() {
-    AppTheme() {
+    AppTheme {
         val state = QRCodeAuthUiState.Error.InvalidData(
                 primaryActionButton = ErrorPrimaryActionButton {},
                 secondaryActionButton = ErrorSecondaryActionButton {},
