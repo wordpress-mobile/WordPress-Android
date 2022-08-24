@@ -14,7 +14,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import org.wordpress.android.R
-import org.wordpress.android.ui.compose.theme.AppThemeWithBackground
+import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.unit.Margin
 import org.wordpress.android.ui.compose.utils.uiStringText
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState
@@ -68,7 +68,7 @@ fun ErrorState(uiState: QRCodeAuthUiState.Error) = with(uiState) {
 @Preview(showBackground = true)
 @Composable
 private fun ErrorStatePreview() {
-    AppThemeWithBackground() {
+    AppTheme() {
         val state = QRCodeAuthUiState.Error.InvalidData(
                 primaryActionButton = ErrorPrimaryActionButton {},
                 secondaryActionButton = ErrorSecondaryActionButton {},
