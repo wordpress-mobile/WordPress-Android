@@ -431,9 +431,10 @@ public class PostUtils {
 
     public static String replaceMediaFileWithUrlInGutenbergPost(@NonNull String postContent,
                                                  String localMediaId, MediaFile mediaFile, String siteUrl) {
-        if (mediaFile != null && contentContainsGutenbergBlocks(postContent)) {
-            String remoteUrl = org.wordpress.android.util.StringUtils
-                    .notNullStr(Utils.escapeQuotes(mediaFile.getFileURL()));
+        // If for any reason we couldn't obtain a remote mediaId, it's not worth spending time looking to replace
+        // anything in the Post. Skip processing for later in error handling.
+        if (mediaFile != null && !TextUtils.isEmpty(mediaFile.getMediaId())
+            && contentContainsGutenbergBlocks(postContent)) {
             MediaUploadCompletionProcessor processor = new MediaUploadCompletionProcessor(localMediaId, mediaFile,
                     siteUrl);
             postContent = processor.processContent(postContent);
