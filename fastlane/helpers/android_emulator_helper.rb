@@ -134,6 +134,15 @@ module Fastlane
           emulators_list &= serials unless serials.nil? # intersection of the set of running emulators with the ones we want to shut down
           emulators_list.each do |e|
             Actions.sh(@tools.adb, '-s', e, 'emu', 'kill') { |_| } # ignore error if no emulator with specified serial is running
+            # Note: Alternative way of shutting down emulator would be to call the following command instead, which shuts down the emulator more gracefully:
+            # `adb -s #{e} shell reboot -p` # In case you're wondering, `-p` is for "power-off"
+            # But this alternate command:
+            #  - Requires that `-no-snapshot` was used on boot (to avoid being prompted to save current state on shutdown)
+            #  - Disconnects the emulator from `adb` (and thus disappear from `adb devices -l`) for a short amount of time,
+            #    before reconnecting to it but in an `offline` state, until `emulator` finally completely quits and it disappears
+            #    again (for good) from `adb devices --list`.
+            # This means that so if we used alternative, we couldn't really retry_loop until emulator disappears from `running_emulators` to detect
+            # that the shutdown was really complete, as we might as well accidentally detect the intermediate disconnect instead.
           end
 
           # Wait until all emulators are killed
