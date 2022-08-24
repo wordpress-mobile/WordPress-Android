@@ -88,7 +88,7 @@ class FeatureFlagsRestClientTest {
                 eq(Map::class.java),
                 eq(false),
                 any(),
-                eq(true)
+                eq(false)
             )
         ).thenReturn(response)
     }
