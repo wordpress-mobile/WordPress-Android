@@ -33,6 +33,7 @@
     <color name="login_prologue_background_circle_pink">@color/pink_10</color>
 
     <!-- Login Prologue Revamped -->
+    <color name="login_prologue_revamped_background">@color/white</color>
     <color name="login_prologue_revamped_icon">@color/gray_80</color>
 
     <!-- Prepublishing Nudges -->
