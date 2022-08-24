@@ -59,6 +59,7 @@ import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Flow;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Source;
 import org.wordpress.android.ui.accounts.login.LoginPrologueFragment;
 import org.wordpress.android.ui.accounts.login.LoginPrologueListener;
+import org.wordpress.android.ui.accounts.login.LoginPrologueRevampedFragment;
 import org.wordpress.android.ui.accounts.login.jetpack.LoginNoSitesFragment;
 import org.wordpress.android.ui.accounts.login.jetpack.LoginSiteCheckErrorFragment;
 import org.wordpress.android.ui.main.SitePickerActivity;
@@ -76,6 +77,7 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPUrlUtils;
+import org.wordpress.android.util.config.LandingScreenRevampFeatureConfig;
 import org.wordpress.android.widgets.WPSnackbar;
 
 import java.util.ArrayList;
@@ -134,6 +136,8 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
     @Inject protected SiteStore mSiteStore;
     @Inject protected ViewModelProvider.Factory mViewModelFactory;
     @Inject BuildConfigWrapper mBuildConfigWrapper;
+
+    @Inject LandingScreenRevampFeatureConfig mLandingScreenRevampFeatureConfig;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -223,7 +227,11 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
     }
 
     private void loginFromPrologue() {
-        showFragment(new LoginPrologueFragment(), LoginPrologueFragment.TAG);
+        if (mLandingScreenRevampFeatureConfig.isEnabled()) {
+            showFragment(new LoginPrologueRevampedFragment(), LoginPrologueRevampedFragment.TAG);
+        } else {
+            showFragment(new LoginPrologueFragment(), LoginPrologueFragment.TAG);
+        }
         mIsSmartLockTriggeredFromPrologue = true;
         mIsSiteLoginAvailableFromPrologue = true;
         initSmartLockIfNotFinished(true);
@@ -269,6 +277,11 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
     private LoginPrologueFragment getLoginPrologueFragment() {
         Fragment fragment = getSupportFragmentManager().findFragmentByTag(LoginPrologueFragment.TAG);
         return fragment == null ? null : (LoginPrologueFragment) fragment;
+    }
+
+    private LoginPrologueRevampedFragment getLoginPrologueRevampedFragment() {
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(LoginPrologueRevampedFragment.TAG);
+        return fragment == null ? null : (LoginPrologueRevampedFragment) fragment;
     }
 
     private LoginEmailFragment getLoginEmailFragment() {
@@ -426,7 +439,7 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
             return;
         }
 
-        if (getLoginPrologueFragment() == null) {
+        if (getLoginPrologueFragment() == null || getLoginPrologueRevampedFragment() == null) {
             // prologue fragment is not shown so, the email screen will be the initial screen on the fragment container
             showFragment(LoginEmailFragment.newInstance(mIsSignupFromLoginEnabled), LoginEmailFragment.TAG);
 
