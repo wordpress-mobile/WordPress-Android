@@ -11,7 +11,6 @@ import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView.AdapterDataObserver
 import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCrop.Options
 import com.yalantis.ucrop.UCropActivity
@@ -172,13 +171,6 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
                 bloggingPromptsCardAnalyticsTracker,
                 htmlCompatWrapper
         ) { viewModel.onBloggingPromptsLearnMoreClicked() }
-
-        adapter.registerAdapterDataObserver(object : AdapterDataObserver() {
-            override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
-                super.onItemRangeInserted(positionStart, itemCount)
-                recyclerView.smoothScrollToPosition(0)
-            }
-        })
 
         savedInstanceState?.getBundle(KEY_NESTED_LISTS_STATES)?.let {
             adapter.onRestoreInstanceState(it)
