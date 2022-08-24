@@ -67,6 +67,7 @@ class JetpackTunnelGsonRequestBuilder @Inject constructor() {
      * @param params the parameters to append to the request URL
      * @param clazz the class defining the expected response
      */
+    @Suppress("LongParameterList")
     suspend fun <T : Any> syncGetRequest(
         restClient: BaseWPComRestClient,
         site: SiteModel,
