@@ -43,4 +43,6 @@
     <!--Site Creation-->
     <integer name="site_creation_snackbar_duration">5000</integer>
 
+    <!-- My Site fragment -->
+    <integer name="one_hundred">100</integer>
 </resources>

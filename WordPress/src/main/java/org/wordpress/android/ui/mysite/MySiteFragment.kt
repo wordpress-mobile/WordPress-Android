@@ -105,9 +105,14 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             val maxOffset = appBarLayout.totalScrollRange
             val currentOffset = maxOffset + verticalOffset
 
-            updateCollapsibleToolbar(currentOffset)
+            val percentage = if (maxOffset == 0) {
+                updateCollapsibleToolbar(1)
+                resources.getInteger(R.integer.one_hundred)
+            } else {
+                updateCollapsibleToolbar(currentOffset)
+                ((currentOffset.toFloat() / maxOffset.toFloat()) * 100).toInt()
+            }
 
-            val percentage = ((currentOffset.toFloat() / maxOffset.toFloat()) * 100).toInt()
             fadeSiteInfoHeader(percentage)
             avatar?.let { avatar ->
                 val minSize = avatar.minimumHeight
