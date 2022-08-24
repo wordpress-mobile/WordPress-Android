@@ -2,7 +2,7 @@
 
 20.7
 -----
-
+* [*] Fixes Media control toggles difficult to see [https://github.com/wordpress-mobile/WordPress-Android/pull/17068]
 
 20.6
 -----
