@@ -51,21 +51,31 @@ module Fastlane
         @tools = AndroidTools.new
       end
 
+      # Installs the system-image suitable for a given Android `api`, with `google_apis`, and for the current machine's architecture
+      #
+      # @param [Integer] api The Android API level to use
+      #
+      # @return [String] The `sdkmanager` package specifier that has been installed
+      #
+      def install_system_image(api:)
+        package = system_image_package(api: api)
+        Actions.execute_action("Installing System Image for Android #{api} (#{package})") do
+          Actions.sh(@tools.sdkmanager, '--install', package)
+        end
+        package
+      end
+
       # Create an emulator (AVD) for a given `api` number and `device` model
       #
-      # @param [Integer] api The Android API version to use for this AVD
+      # @param [Integer] api The Android API level to use for this AVD
       # @param [String] device The Device Model to use for this AVD. Valid values can be found using `avdmanager list devices`
       # @param [String] name The name to give for the created AVD. Defaults to `<device>_API_<api>`.
       # @param [String] sdcard The size of the SD card for this device. Defaults to `512M`.
       #
       # @return [String] The device name (i.e. either `name` if provided, or the derived `<device>_API_<api>` if provided `name` was `nil``)
       #
-      def create_avd(api:, device:, name: nil, sdcard: '512M')
-        package = system_image_package(api: api)
-        Actions.execute_action("Installing System Image for Android #{api} (#{package})") do
-          Actions.sh(@tools.sdkmanager, '--install', package)
-        end
-
+      def create_avd(api:, device:, system_image: nil, name: nil, sdcard: '512M')
+        package = system_image || system_image_package(api: api)
         device_name = name || "#{device.gsub(' ','_').capitalize}_API_#{api}"
         Actions.execute_action("Creating AVD `#{device_name}` (#{device}, API #{api})") do
           Actions.sh(
@@ -134,15 +144,21 @@ module Fastlane
         end
       end
 
-      # Find the system-images package for the provided API, with Google APIs, and matching the current platform/architecture this lane is called from
+      # Find the system-images package for the provided API, with Google APIs, and matching the current platform/architecture this lane is called from.
       #
+      # @param [Integer] api The Android API level to use for this AVD
       # @return [String] The `system-images;android-<N>;google_apis;<platform>` package specifier for `sdkmanager` to use in its install command
       #
+      # @note Results from this method are memoized, to avoid repeating calls to `sdkmanager` when querying for the same api level multiple times.
+      #
       def system_image_package(api:)
-        platform = `uname -m`.chomp
-        package = `#{@tools.sdkmanager} --list`.match(/^ *(system-images;android-#{api};google_apis;#{platform}(-[^ ]*)?)/)&.captures&.first
-        UI.user_error!("Could not find system-image for API `#{api}` and your platform `#{platform}` in `sdkmanager --list`. Maybe Google removed it for download and it's time to update to a newer API?") if package.nil?
-        package
+        @system_image_packages ||= {}
+        @system_image_packages[api] ||= begin
+          platform = `uname -m`.chomp
+          package = `#{@tools.sdkmanager} --list`.match(/^ *(system-images;android-#{api};google_apis;#{platform}(-[^ ]*)?)/)&.captures&.first
+          UI.user_error!("Could not find system-image for API `#{api}` and your platform `#{platform}` in `sdkmanager --list`. Maybe Google removed it for download and it's time to update to a newer API?") if package.nil?
+          package
+        end
       end
 
       def retry_loop(time_between_retries:, timeout:, description:)

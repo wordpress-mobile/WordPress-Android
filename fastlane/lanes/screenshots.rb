@@ -53,8 +53,9 @@ platform :android do
 
     screenshot_devices.each do |device|
       helper = Fastlane::Helpers::AndroidEmulator.new
-      name = helper.create_avd(api: device[:api], device: device[:device])
-      serial = helper.launch_avd(name: name)
+      sys_img = helper.install_system_image(api: device[:api]) # Ensure we have the system image needed for creating the AVD with this API level
+      name = helper.create_avd(api: device[:api], device: device[:device], system_image: sys_img) # Create the AVD for device+API+system image we need
+      serial = helper.launch_avd(name: name) # Launch an emulator using this AVD and get its serial number, to know which emulator to run the tests on
 
       # DEBUG: Skip actual call to `capture_android_screenshots` for now to debug the rest
       UI.message("DEBUG: Would capture_android_screenshot here for #{serial}. Faking it by waiting 10s instead.")
