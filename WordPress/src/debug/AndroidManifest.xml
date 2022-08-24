@@ -19,12 +19,17 @@
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
 
     <!-- Allows for storing and retrieving screenshots -->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="18" /><!-- Now obsolete since we use more recent SDK? -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /><!-- Now obsolete? -->
 
     <!-- Allows changing locales for screenshot automation -->
     <uses-permission
         tools:ignore="ProtectedPermissions"
         android:name="android.permission.CHANGE_CONFIGURATION"
         />
+
+    <!-- Allows changing SystemUI demo mode for screenshot automation -->
+    <uses-permission
+            android:name="android.permission.DUMP"
+            tools:ignore="ProtectedPermissions" />
 </manifest>
