@@ -50,6 +50,7 @@ platform :android do
     locales = locales.select { |locale| locale.casecmp(options[:locale]) == 0 } unless options[:locale].nil?
 
     apk_dir = File.join('WordPress', 'build', 'outputs', 'apk')
+    package_name = APP_SPECIFIC_VALUES[app.to_sym][:package_name]
     test_class = APP_SPECIFIC_VALUES[app.to_sym][:screenshots_test_class]
 
     screenshot_devices.each do |device|
@@ -63,8 +64,8 @@ platform :android do
         tests_apk_path: File.join(apk_dir, 'androidTest', "#{app}Vanilla", 'debug', "org.wordpress.android-#{app}-vanilla-debug-androidTest.apk"),
         reinstall_app: false,
         clear_previous_screenshots: should_clear_previous_screenshots,
-        # app_package_name:,
-        # tests_package_name:,
+        app_package_name: package_name,
+        tests_package_name: "#{package_name}.test",
         locales: locales,
         output_directory: RAW_SCREENSHOTS_DIR,
         skip_open_summary: is_ci,
