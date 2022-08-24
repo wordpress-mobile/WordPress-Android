@@ -9,6 +9,7 @@ import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
+import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -16,6 +17,12 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.UnitTestUtils
+import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
+import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.INVALID_RESPONSE
+import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.NETWORK_ERROR
+import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.NOT_AUTHENTICATED
+import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.TIMEOUT
+import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.UNKNOWN
 import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder
@@ -36,6 +43,7 @@ class FeatureFlagsRestClientTest {
     private lateinit var paramsCaptor: KArgumentCaptor<Map<String, String>>
     private lateinit var restClient: FeatureFlagsRestClient
     
+    private val successResponse = mapOf("flag-1" to true, "flag-2" to false)
 
     @Before
     fun setUp() {
@@ -55,7 +63,7 @@ class FeatureFlagsRestClientTest {
     fun `when feature flags are requested, then the correct url is built`() = test {
         val json = UnitTestUtils.getStringFromResourceFile(javaClass, SUCCESS_JSON)
         val response = getResponseFromJsonString(json)
-        initSuccess(data = response)
+        initFetchFeatureFlags(data = response)
 
         restClient.fetchFeatureFlags(
                 buildNumber = BUILD_NUMBER_PARAM,
@@ -69,7 +77,93 @@ class FeatureFlagsRestClientTest {
             "${API_BASE_PATH}/${API_AUTH_MOBILE_FEATURE_FLAG_PATH}")
     }
 
-    private suspend fun initSuccess(
+    @Test
+    fun `given success call, when f-flags are requested, then correct response is returned`() = test {
+        val json = UnitTestUtils.getStringFromResourceFile(javaClass, SUCCESS_JSON)
+        initFetchFeatureFlags(data = getResponseFromJsonString(json))
+
+        val result = restClient.fetchFeatureFlags(
+            buildNumber = BUILD_NUMBER_PARAM,
+            deviceId = DEVICE_ID_PARAM,
+            identifier = IDENTIFIER_PARAM,
+            marketingVersion = MARKETING_VERSION_PARAM,
+            platform = PLATFORM_PARAM)
+
+        assertSuccess(successResponse, result)
+    }
+
+    @Test
+    fun `given timeout, when f-flags are requested, then return timeout error`() = test {
+        initFetchFeatureFlags(error = WPComGsonNetworkError(BaseNetworkError(TIMEOUT)))
+
+        val result = restClient.fetchFeatureFlags(
+            buildNumber = BUILD_NUMBER_PARAM,
+            deviceId = DEVICE_ID_PARAM,
+            identifier = IDENTIFIER_PARAM,
+            marketingVersion = MARKETING_VERSION_PARAM,
+            platform = PLATFORM_PARAM)
+
+        assertError(FeatureFlagsErrorType.TIMEOUT, result)
+    }
+
+    @Test
+    fun `given network error, when f-flags are requested, then return api error`() = test {
+        initFetchFeatureFlags(error = WPComGsonNetworkError(BaseNetworkError(NETWORK_ERROR)))
+
+        val result = restClient.fetchFeatureFlags(
+            buildNumber = BUILD_NUMBER_PARAM,
+            deviceId = DEVICE_ID_PARAM,
+            identifier = IDENTIFIER_PARAM,
+            marketingVersion = MARKETING_VERSION_PARAM,
+            platform = PLATFORM_PARAM)
+
+        assertError(FeatureFlagsErrorType.API_ERROR, result)
+    }
+
+    @Test
+    fun `given invalid response, when f-flags are requested, then return invalid response error`() = test {
+        initFetchFeatureFlags(error = WPComGsonNetworkError(BaseNetworkError(INVALID_RESPONSE)))
+
+        val result = restClient.fetchFeatureFlags(
+            buildNumber = BUILD_NUMBER_PARAM,
+            deviceId = DEVICE_ID_PARAM,
+            identifier = IDENTIFIER_PARAM,
+            marketingVersion = MARKETING_VERSION_PARAM,
+            platform = PLATFORM_PARAM)
+
+        assertError(FeatureFlagsErrorType.INVALID_RESPONSE, result)
+    }
+
+    @Test
+    fun `given not authenticated, when f-flags are requested, then return auth required error`() = test {
+        initFetchFeatureFlags(error = WPComGsonNetworkError(BaseNetworkError(NOT_AUTHENTICATED)))
+
+        val result = restClient.fetchFeatureFlags(
+            buildNumber = BUILD_NUMBER_PARAM,
+            deviceId = DEVICE_ID_PARAM,
+            identifier = IDENTIFIER_PARAM,
+            marketingVersion = MARKETING_VERSION_PARAM,
+            platform = PLATFORM_PARAM)
+
+        assertError(FeatureFlagsErrorType.AUTH_ERROR, result)
+    }
+
+    @Test
+    fun `given unknown error, when f-flags are requested, then return generic error`() = test {
+        initFetchFeatureFlags(error = WPComGsonNetworkError(BaseNetworkError(UNKNOWN)))
+
+        val result = restClient.fetchFeatureFlags(
+            buildNumber = BUILD_NUMBER_PARAM,
+            deviceId = DEVICE_ID_PARAM,
+            identifier = IDENTIFIER_PARAM,
+            marketingVersion = MARKETING_VERSION_PARAM,
+            platform = PLATFORM_PARAM)
+
+        assertError(FeatureFlagsErrorType.GENERIC_ERROR, result)
+    }
+
+
+    private suspend fun initFetchFeatureFlags(
         data: Map<*, *>? = null,
         error: WPComGsonNetworkError? = null
     ) {
@@ -91,6 +185,28 @@ class FeatureFlagsRestClientTest {
                 eq(false)
             )
         ).thenReturn(response)
+    }
+
+    @Suppress("SameParameterValue")
+    private fun assertSuccess(
+        expected: Map<String, Boolean>,
+        actual: FeatureFlagsFetchedPayload
+    ) {
+        with(actual) {
+            Assert.assertFalse(isError)
+            Assert.assertEquals(FeatureFlagsFetchedPayload(expected), this)
+        }
+    }
+
+    private fun assertError(
+        expected: FeatureFlagsErrorType,
+        actual: FeatureFlagsFetchedPayload
+    ) {
+        with(actual) {
+            Assert.assertTrue(isError)
+            Assert.assertEquals(expected, error.type)
+            Assert.assertEquals(null, error.message)
+        }
     }
 
     private fun getResponseFromJsonString(json: String): Map<String, Boolean> {
