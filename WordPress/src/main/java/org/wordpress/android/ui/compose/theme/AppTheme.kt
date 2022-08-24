@@ -2,11 +2,28 @@ package org.wordpress.android.ui.compose.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import org.wordpress.android.BuildConfig
 
 /**
- * Project's base theme.
+ * This theme should be used to support light/dark colors if the composable root does not support contentColor.
+ * See [Compose Docs](https://developer.android.com/jetpack/compose/themes/material#content-color) for more details.
+ */
+@Composable
+fun AppThemeWithBackground(
+    isDarkTheme: Boolean = isSystemInDarkTheme(),
+    content: @Composable () -> Unit
+) {
+    AppTheme(isDarkTheme) {
+        ContentInSurface(content)
+    }
+}
+
+/**
+ * Use this theme only when the composable root supports
+ * [contentColor](https://developer.android.com/jetpack/compose/themes/material#content-color).
+ * Otherwise use [AppThemeWithBackground].
  */
 @Composable
 fun AppTheme(
@@ -22,4 +39,13 @@ fun AppTheme(
             colors = colorPalette,
             content = content
     )
+}
+
+@Composable
+private fun ContentInSurface(
+    content: @Composable () -> Unit
+) {
+    Surface(color = MaterialTheme.colors.background) {
+        content()
+    }
 }
