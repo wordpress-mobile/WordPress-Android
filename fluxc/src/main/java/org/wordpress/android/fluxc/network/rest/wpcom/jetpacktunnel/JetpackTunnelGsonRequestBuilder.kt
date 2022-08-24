@@ -79,13 +79,15 @@ class JetpackTunnelGsonRequestBuilder @Inject constructor() {
         forced: Boolean = false,
         retryPolicy: RetryPolicy? = null
     ) = suspendCancellableCoroutine<JetpackResponse<T>> { cont ->
-        val request = JetpackTunnelGsonRequest.buildGetRequest<T>(url, site.siteId, params, clazz, {
-            cont.resume(JetpackResponse.JetpackSuccess(it))
-        }, {
-            cont.resume(JetpackResponse.JetpackError(it))
-        }, { request: WPComGsonRequest<*> ->
-            restClient.add(request)
-        })
+        val request = JetpackTunnelGsonRequest.buildGetRequest<T>(
+            url,
+            site.siteId,
+            params,
+            clazz,
+            listener = { cont.resume(JetpackResponse.JetpackSuccess(it)) },
+            errorListener = { cont.resume(JetpackResponse.JetpackError(it)) },
+            jpTimeoutListener = { request: WPComGsonRequest<*> -> restClient.add(request) }
+        )
         cont.invokeOnCancellation {
             request?.cancel()
         }
