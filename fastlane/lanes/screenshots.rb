@@ -20,6 +20,7 @@ SCREENSHOT_DEVICES = [
 SCREENSHOT_LOCALES = ALL_LOCALES
   .select { |hsh| hsh[:promo_config] != false }
   .map { |h| h[:google_play] }
+  .compact
   .freeze
 
 require_relative '../helpers/android_emulator_helper'
