@@ -104,9 +104,9 @@ module Fastlane
         shut_down_emulators!(serials: [serial]) # To ensure we can launch one on the port 5554 (as it's hardcoded for simplicity)
 
         Actions.execute_action("Launching emulator for #{name}") do
-          command = [@tools.emulator, '-avd', name, '-port', port].shelljoin + ' >/dev/null 2>/dev/null &'
+          command = [@tools.emulator, '-avd', name, '-port', port, '-no-snapshot'].shelljoin + ' >/dev/null 2>/dev/null &'
           UI.command(command)
-          system(command)
+          system(command) # We can't use Actions.sh here because it doesn't handle `&` to run the process in the background :/
 
           UI.message('Waiting for device to finish booting...')
           Actions.sh(@tools.adb, '-s', serial, 'wait-for-device')
