@@ -7,8 +7,8 @@ import androidx.compose.runtime.Composable
 import org.wordpress.android.BuildConfig
 
 /**
- * This theme should be used to support light/dark colors if the composable root does not support contentColor.
- * See [Compose Docs](https://developer.android.com/jetpack/compose/themes/material#content-color) for more details.
+ * This theme should be used to support light/dark colors if the root composable does not support
+ * [contentColor](https://developer.android.com/jetpack/compose/themes/material#content-color).
  */
 @Composable
 fun AppTheme(
@@ -21,7 +21,7 @@ fun AppTheme(
 }
 
 /**
- * Use this theme only when the composable root supports
+ * Use this theme only when the root composable supports
  * [contentColor](https://developer.android.com/jetpack/compose/themes/material#content-color).
  * Otherwise use [AppTheme].
  */
