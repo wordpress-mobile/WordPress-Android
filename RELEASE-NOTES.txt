@@ -2,7 +2,7 @@
 
 20.7
 -----
-
+* [*] Fixed the night mode text colors on the screens shown after scanning a Login Code [https://github.com/wordpress-mobile/WordPress-Android/pull/17086]
 
 20.6
 -----
