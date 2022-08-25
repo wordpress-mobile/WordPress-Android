@@ -51,7 +51,8 @@ abstract class WordPress : MultiDexApplication() {
         @JvmStatic
         fun getContext() = AppInitializer.context!!
 
-        @JvmStatic @JvmOverloads
+        @JvmStatic
+        @JvmOverloads
         fun updateContextLocale(appContext: Context? = null) {
             AppInitializer.updateContextLocale(appContext)
         }
