@@ -107,10 +107,10 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
             val percentage = if (maxOffset == 0) {
                 updateCollapsibleToolbar(1)
-                resources.getInteger(R.integer.one_hundred)
+                MAX_PERCENT
             } else {
                 updateCollapsibleToolbar(currentOffset)
-                ((currentOffset.toFloat() / maxOffset.toFloat()) * 100).toInt()
+                ((currentOffset.toFloat() / maxOffset.toFloat()) * MAX_PERCENT).toInt()
             }
 
             fadeSiteInfoHeader(percentage)
@@ -357,6 +357,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
     companion object {
         private const val PASS_TO_TAB_FRAGMENT_DELAY = 300L
+        private const val MAX_PERCENT = 100
         fun newInstance(): MySiteFragment {
             return MySiteFragment()
         }
