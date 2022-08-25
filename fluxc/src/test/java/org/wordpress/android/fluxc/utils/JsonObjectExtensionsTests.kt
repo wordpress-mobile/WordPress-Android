@@ -10,7 +10,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 
-private const val sampleJson =
+private const val SAMPLE_JSON =
 """
 {
     "string": "Some string",
@@ -25,7 +25,7 @@ private const val sampleJson =
 
 class JsonObjectExtensionsTests {
     private val jsonObject by lazy {
-        JsonParser().parse(sampleJson).asJsonObject
+        JsonParser().parse(SAMPLE_JSON).asJsonObject
     }
 
     @Test

@@ -95,6 +95,7 @@ class NotificationSqlUtilsTest {
     }
 
     @Test
+    @Suppress("LongMethod")
     fun testGetNotificationsForSite_storeOrder() {
         // Insert notification
         val notificationSqlUtils = NotificationSqlUtils(FormattableContentMapper(Gson()))
