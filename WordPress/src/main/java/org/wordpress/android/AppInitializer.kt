@@ -1021,7 +1021,7 @@ class AppInitializer @Inject constructor(
          * Update locale of the static context when language is changed.
          */
         fun updateContextLocale(appContext: Context? = null) {
-            val context = appContext ?: WordPress.getContext()
+            val context = appContext ?: context!!
             this.context = LocaleManager.setLocale(context)
         }
     }
