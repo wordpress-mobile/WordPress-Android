@@ -48,7 +48,7 @@ public class WPLocaleTestRule implements TestRule {
 
     private static void changeLocale(String localeCode) {
         LocaleManager.setNewLocale(ApplicationProvider.getApplicationContext(), localeCode);
-        WordPress.updateContextLocale();
+        WordPress.updateContextLocale(ApplicationProvider.getApplicationContext());
     }
 
     private static String localeCodeFromInstrumentation(String key) {
