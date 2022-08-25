@@ -6,19 +6,24 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale.Companion
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
-import org.wordpress.android.R
+import org.wordpress.android.R.color
+import org.wordpress.android.R.drawable
 import org.wordpress.android.R.string
 import org.wordpress.android.ui.accounts.login.compose.components.Tagline
 import org.wordpress.android.ui.accounts.login.compose.components.PrimaryButton
@@ -57,21 +62,28 @@ class LoginPrologueRevampedFragment: Fragment() {
 
 @Composable
 fun LoginScreenRevamped(onLoginClicked: () -> Unit) {
-    Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
-                    .background(color = colorResource(id = R.color.login_prologue_revamped_background))
-                    .padding(vertical = 45.dp)
+    Box(modifier = Modifier.background(color = colorResource(id = color.login_prologue_revamped_background))
     ) {
-        Tagline(text = stringResource(string.login_prologue_revamped_tagline))
-        PrimaryButton(
-                text = stringResource(string.login_prologue_revamped_connect),
-                onClick = onLoginClicked,
+        Image(
+                painter = painterResource(drawable.brush_stroke),
+                contentDescription = stringResource(string.login_prologue_revamped_content_description_wordpress_icon),
+                modifier = Modifier.align(Alignment.CenterEnd),
+                contentScale = Companion.Crop
         )
-        SecondaryButton(
-                text = stringResource(string.login_prologue_revamped_create),
-                onClick = { /*TODO*/ },
-        )
+        Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.padding(vertical = 45.dp)
+        ) {
+            Tagline(text = stringResource(string.login_prologue_revamped_tagline))
+            PrimaryButton(
+                    text = stringResource(string.login_prologue_revamped_connect),
+                    onClick = onLoginClicked,
+            )
+            SecondaryButton(
+                    text = stringResource(string.login_prologue_revamped_create),
+                    onClick = { /*TODO*/ },
+            )
+        }
     }
 }
 
