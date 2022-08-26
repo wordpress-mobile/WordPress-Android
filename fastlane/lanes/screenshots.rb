@@ -1,7 +1,8 @@
+# FIXME: Make this app dependent instead (WordPress vs Jetpack)
 RAW_SCREENSHOTS_DIR = File.join(Dir.pwd, "screenshots", "raw")
 RAW_SCREENSHOTS_PROCESSING_DIR = File.join(Dir.pwd, "screenshots", "raw_tmp")
 PROMO_SCREENSHOTS_PROCESSING_DIR = File.join(Dir.pwd, "screenshots", "promo_tmp")
-FINAL_METADATA_DIR = File.join(Dir.pwd, "metadata/android")
+FINAL_METADATA_DIR = File.join(Dir.pwd, "metadata", "android")
 
 # Possible values for `device` parameter can be found using `avdmanager list devices`
 SCREENSHOT_DEVICES = [
@@ -69,7 +70,7 @@ platform :android do
         app_package_name: package_name,
         tests_package_name: "#{package_name}.test",
         locales: locales,
-        output_directory: RAW_SCREENSHOTS_DIR,
+        output_directory: RAW_SCREENSHOTS_DIR, #FIXME: Make this dependent on the :app (wordpress vs jetpack)
         skip_open_summary: is_ci,
         use_tests_in_classes: test_class,
         test_instrumentation_runner: 'org.wordpress.android.WordPressTestRunner',
