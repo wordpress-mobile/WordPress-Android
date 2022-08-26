@@ -30,7 +30,7 @@ platform :android do
   # 
   # @option [String|Symbol] app The app to take screenshots for. Must be `wordpress` or `jetpack`
   # @option [String] device The device type to limit the build of screenshots for (e.g. `phone` or `tenInch`). Defaults to building all device types defined in `SCREENSHOT_DEVICES`.
-  # @option [String] locale The Google Play locale code to build the screenshots for. Default to all the ones in `SCREENSHOT_LOCALES`.
+  # @option [Array<String>] locale The Google Play locale code(s) to build the screenshots. Default to all the ones in `SCREENSHOT_LOCALES`.
   #
   desc "Build and capture raw screenshots"
   lane :screenshots do |options|
@@ -39,7 +39,7 @@ platform :android do
     gradle(tasks: ["assemble#{app.to_s.capitalize}VanillaDebug", "assemble#{app.to_s.capitalize}VanillaDebugAndroidTest"])
 
     # Clear previous screenshots if we build for all devices. Don't clear if we only do a subset
-    should_clear_previous_screenshots = options[:device].nil? && options[:locale].nil? # Clear 
+    should_clear_previous_screenshots = options[:device].nil? && options[:locale].nil?
 
     # Allow creating screenshots for just one device type
     screenshot_devices = SCREENSHOT_DEVICES
@@ -47,7 +47,9 @@ platform :android do
     
     # Allow creating screenshots for just one locale
     locales = SCREENSHOT_LOCALES
-    locales = locales.select { |locale| locale.casecmp(options[:locale]) == 0 } unless options[:locale].nil?
+    locales = locales & options[:locale].split(',') unless options[:locale].nil?
+    
+    UI.message("Will run screenshot for devices: #{screenshot_devices.map { |d| "#{d[:device]} API #{d[:api]}" }.inspect } and locales: #{locales.inspect}")
 
     apk_dir = File.join('WordPress', 'build', 'outputs', 'apk')
     package_name = APP_SPECIFIC_VALUES[app.to_sym][:package_name]
