@@ -206,6 +206,10 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="WordPress.Media.Preview" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="android:statusBarColor">@color/black</item>
+    </style>
+
     <style name="WordPress.Stories.Immersive" parent="WordPress.NoActionBar">
         <item name="android:navigationBarColor">@android:color/black</item>
         <item name="android:immersive">true</item>
