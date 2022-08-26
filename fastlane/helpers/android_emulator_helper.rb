@@ -94,17 +94,23 @@ module Fastlane
       # Launch the emulator for the given AVD, then return the emulator serial
       #
       # @param [String] name name of the AVD to launch
+      # @param [Boolean] cold_boot if true, will do a cold boot, if false will try to use a previous snapshot of the device
+      # @param [Boolean] wipe_data if true, will wipe the emulator (i.e. reset the user data image)
       #
       # @return [String] emulator serial number corresponding to the launched AVD
       #
-      def launch_avd(name:)
+      def launch_avd(name:, cold_boot: true, wipe_data: true)
         port = '5554'.freeze
         serial = "emulator-#{port}"
 
         shut_down_emulators!(serials: [serial]) # To ensure we can launch one on the port 5554 (as it's hardcoded for simplicity)
 
         Actions.execute_action("Launching emulator for #{name}") do
-          command = [@tools.emulator, '-avd', name, '-port', port, '-no-snapshot'].shelljoin + ' >/dev/null 2>/dev/null &'
+          params = ['-avd', name, '-port', port]
+          params << '-no-snapshot' if cold_boot
+          params << '-wipe-data' if wipe_data
+
+          command = [@tools.emulator, *params].shelljoin + ' >/dev/null 2>/dev/null &'
           UI.command(command)
           system(command) # We can't use Actions.sh here because it doesn't handle `&` to run the process in the background :/
 
