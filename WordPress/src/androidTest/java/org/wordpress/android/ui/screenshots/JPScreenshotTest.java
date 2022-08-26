@@ -12,6 +12,7 @@ import com.google.android.libraries.cloudtesting.screenshots.ScreenShotter;
 
 import org.junit.ClassRule;
 import org.junit.Test;
+import org.junit.rules.RuleChain;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.e2e.pages.MySitesPage;
@@ -55,12 +56,15 @@ import static org.wordpress.android.support.WPSupportUtils.waitForImagesOfTypeWi
 import dagger.hilt.android.testing.HiltAndroidTest;
 import tools.fastlane.screengrab.Screengrab;
 import tools.fastlane.screengrab.UiAutomatorScreenshotStrategy;
+import tools.fastlane.screengrab.locale.LocaleTestRule;
 
 @LargeTest
 @HiltAndroidTest
 public class JPScreenshotTest extends BaseTest {
     @ClassRule
-    public static final WPLocaleTestRule LOCALE_TEST_RULE = new WPLocaleTestRule();
+    public static final RuleChain LOCALE_TEST_RULES = RuleChain
+            .outerRule(new LocaleTestRule()) // Run fastlane Screengrab's official LocaleTestRule first (and clean it up last)
+            .around(new WPLocaleTestRule()); // Run our own rule (which handles our in-app locale switching logic) second (and clean it up first)
 
     private static final String JETPACK_SCREENSHOT_SITE_URL = "yourjetpack.blog";
 

@@ -1,8 +1,8 @@
 package org.wordpress.android.ui.screenshots;
 
+import android.content.Context;
 
 import androidx.test.core.app.ApplicationProvider;
-import androidx.test.platform.app.InstrumentationRegistry;
 
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
@@ -10,21 +10,17 @@ import org.junit.runners.model.Statement;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.util.LocaleManager;
 
-public class WPLocaleTestRule implements TestRule {
-    private static final String FASTLANE_TEST_LOCALE_KEY = "testLocale";
-    private static final String FASTLANE_ENDING_LOCALE_KEY = "endingLocale";
+import tools.fastlane.screengrab.locale.LocaleUtil;
 
+public class WPLocaleTestRule implements TestRule {
     private String mTestLocaleCode;
-    private String mEndLocaleCode;
 
     public WPLocaleTestRule() {
-        this(localeCodeFromInstrumentation(FASTLANE_TEST_LOCALE_KEY),
-                localeCodeFromInstrumentation(FASTLANE_ENDING_LOCALE_KEY));
+        this(LocaleUtil.getTestLocale());
     }
 
-    public WPLocaleTestRule(String testLocaleCode, String endLocaleCode) {
+    public WPLocaleTestRule(String testLocaleCode) {
         mTestLocaleCode = testLocaleCode;
-        mEndLocaleCode = endLocaleCode;
     }
 
     @Override
@@ -32,26 +28,26 @@ public class WPLocaleTestRule implements TestRule {
         return new Statement() {
             @Override
             public void evaluate() throws Throwable {
+                String original = null;
                 try {
                     if (mTestLocaleCode != null) {
-                        changeLocale(mTestLocaleCode);
+                        original = changeLocale(mTestLocaleCode);
                     }
                     base.evaluate();
                 } finally {
-                    if (mEndLocaleCode != null) {
-                        changeLocale(mEndLocaleCode);
+                    if (original != null) {
+                        changeLocale(original);
                     }
                 }
             }
         };
     }
 
-    private static void changeLocale(String localeCode) {
-        LocaleManager.setNewLocale(ApplicationProvider.getApplicationContext(), localeCode);
+    private static String changeLocale(String localeCode) {
+        Context context = ApplicationProvider.getApplicationContext();
+        String original = LocaleManager.getLanguage(context);
+        LocaleManager.setNewLocale(context, localeCode);
         WordPress.updateContextLocale(ApplicationProvider.getApplicationContext());
-    }
-
-    private static String localeCodeFromInstrumentation(String key) {
-        return InstrumentationRegistry.getArguments().getString(key);
+        return original;
     }
 }
