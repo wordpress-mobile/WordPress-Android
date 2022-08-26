@@ -15,7 +15,7 @@ module Fastlane
         return bin_path unless bin_path.nil? || bin_path.empty? || !File.executable?(bin_path)
 
         bin_path = paths
-          .map { |path| File.join(android_sdk_root, path) }
+          .map { |path| File.join(android_sdk_root, path, binary) }
           .first { |path| File.executable?(path) }
           
         UI.user_error!("Unable to find path for #{binary} in #{paths.inspect}. Verify you installed the proper Android tools.") if bin_path.nil?
