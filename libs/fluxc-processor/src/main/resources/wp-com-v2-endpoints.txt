@@ -41,6 +41,7 @@
 /plans/mobile
 
 /mobile/feature-announcements/
+/mobile/feature-flags/
 
 /me/gutenberg/
 
