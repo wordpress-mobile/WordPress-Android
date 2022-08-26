@@ -5,6 +5,8 @@
     <color name="colorSecondary">@color/primary</color>
     <color name="colorSecondaryVariant">@color/primary_70</color>
 
+    <color name="colorPrimaryEditor">@color/blue_50</color>
+
     <color name="primary">@color/blue_50</color>
     <color name="primary_0">@color/blue_0</color>
     <color name="primary_5">@color/blue_5</color>
