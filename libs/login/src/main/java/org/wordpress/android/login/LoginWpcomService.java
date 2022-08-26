@@ -159,7 +159,6 @@ public class LoginWpcomService extends AutoForeground<LoginState> {
     private String mIdToken;
     private String mService;
     private boolean mIsSocialLogin;
-    private boolean mIsJetpackAppLogin;
     private boolean mIsWooAppLogin;
 
     public static void loginWithEmailAndPassword(
@@ -266,7 +265,6 @@ public class LoginWpcomService extends AutoForeground<LoginState> {
         mIdToken = intent.getStringExtra(ARG_SOCIAL_ID_TOKEN);
         mService = intent.getStringExtra(ARG_SOCIAL_SERVICE);
         mIsSocialLogin = intent.getBooleanExtra(ARG_SOCIAL_LOGIN, false);
-        mIsJetpackAppLogin = intent.getBooleanExtra(ARG_JETPACK_APP_LOGIN, false);
         mIsWooAppLogin = intent.getBooleanExtra(ARG_WOO_APP_LOGIN, false);
 
         AuthenticatePayload payload = new AuthenticatePayload(email, password);
@@ -387,7 +385,7 @@ public class LoginWpcomService extends AutoForeground<LoginState> {
         } else if (event.causeOfChange == AccountAction.FETCH_SETTINGS) {
             setState(LoginStep.FETCHING_SITES);
             // The user's account settings have also been fetched and stored - now we can fetch the user's sites
-            FetchSitesPayload payload = SiteUtils.getFetchSitesPayload(mIsJetpackAppLogin, mIsWooAppLogin);
+            FetchSitesPayload payload = SiteUtils.getFetchSitesPayload(mIsWooAppLogin);
             mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction(payload));
         }
     }
