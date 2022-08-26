@@ -47,8 +47,10 @@ import tools.fastlane.screengrab.locale.LocaleTestRule;
 public class WPScreenshotTest extends BaseTest {
     @ClassRule
     public static final RuleChain LOCALE_TEST_RULES = RuleChain
-            .outerRule(new LocaleTestRule()) // Run fastlane Screengrab's official LocaleTestRule first (and clean it up last)
-            .around(new WPLocaleTestRule()); // Run our own rule (which handles our in-app locale switching logic) second (and clean it up first)
+            // Run fastlane Screengrab's official LocaleTestRule first (and clean it up last)
+            .outerRule(new LocaleTestRule())
+            // Run our own rule (which handles our in-app locale switching logic) second (and clean it up first)
+            .around(new WPLocaleTestRule());
 
     private DemoModeEnabler mDemoModeEnabler = new DemoModeEnabler();
 
