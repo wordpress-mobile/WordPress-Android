@@ -349,7 +349,7 @@
             android:name=".ui.media.MediaPreviewActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/media_settings_image_preview_desc"
-            android:theme="@style/WordPress.NoActionBar" />
+            android:theme="@style/WordPress.Media.Preview" />
         <activity
             android:name=".ui.media.MediaSettingsActivity"
             android:windowSoftInputMode="stateHidden|adjustPan"

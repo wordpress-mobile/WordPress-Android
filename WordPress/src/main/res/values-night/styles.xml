@@ -126,6 +126,15 @@
         <item name="android:textColor">?attr/colorSecondaryVariant</item>
     </style>
 
+    <!--Post Settings Styles-->
+    <style name="PostSettingsTheme" parent="Base.Wordpress">
+        <item name="colorPrimary">@color/colorPrimaryEditor</item>
+        <item name="colorSecondary">@color/colorPrimaryEditor</item>
+        <item name="colorSecondaryVariant">@color/colorPrimaryEditor</item>
+        <item name="colorAccent">@color/colorPrimaryEditor</item>
+        <item name="colorControlActivated">@color/colorPrimaryEditor</item>
+    </style>
+
     <!-- Domains -->
     <style name="Domains.Button.Primary.Unelevated.OnPrimarySurface" parent="WordPress.Button.Primary.Unelevated" />
 

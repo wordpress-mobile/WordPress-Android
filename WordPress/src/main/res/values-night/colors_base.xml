@@ -5,5 +5,7 @@
     <color name="colorSecondary">@color/primary_30</color>
     <color name="colorSecondaryVariant">@color/primary_50</color>
 
+    <color name="colorPrimaryEditor">@color/primary_30</color>
+
     <color name="nav_bar">@color/colorPrimary</color>
 </resources>
