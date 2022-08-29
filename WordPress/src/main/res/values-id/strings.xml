@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-08-02 09:54:09+0000
+Translation-Revision-Date: 2022-08-25 08:54:08+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: id
 -->
 <resources>
+    <string name="login_magic_links_email_sent">Kami baru saja mengirimkan tautan ajaib ke </string>
+    <string name="login_magic_links_sent_label_short">Periksa email Anda di perangkat ini!</string>
+    <string name="or_use_password">Gunakan kata sandi untuk login</string>
+    <string name="wp_jetpack_powered_notifications_powered_by_jetpack_caption">Ketahui kabar terbaru dengan pembaruan real-time untuk komentar baru, lalu lintas situs, laporan keamanan, dan lain sebagainya.</string>
+    <string name="wp_jetpack_powered_notifications_powered_by_jetpack">Pemberitahuan didukung oleh Jetpack</string>
+    <string name="wp_jetpack_powered_stats_powered_by_jetpack_caption">Perhatikan pertumbuhan lalu lintas dan pelajari audiens Anda dengan Statistik dan Wawasan yang didesain ulang. Hanya tersedia di aplikasi Jetpack baru. </string>
+    <string name="wp_jetpack_powered_stats_powered_by_jetpack">Statistik didukung oleh Jetpack</string>
+    <string name="wp_jetpack_powered_reader_powered_by_jetpack_caption">Temukan, ikuti, dan sukai semua situs dan pos favorit Anda dengan Pembaca. Hanya tersedia di aplikasi Jetpack baru.</string>
+    <string name="wp_jetpack_powered_reader_powered_by_jetpack">Pembaca didukung oleh Jetpack</string>
+    <string name="wp_jetpack_powered_features">Aplikasi Jetpack yang baru memiliki Statistik, Reader, Notifikasi, dan fitur-fitur lainnya yang membuat WordPress Anda lebih andal.</string>
+    <string name="wp_jetpack_powered_better_with_jetpack">WordPress lebih andal dengan Jetpack</string>
     <string name="gutenberg_native_upgrade_your_plan_to_use_video_covers">Upgrade paket Anda untuk menggunakan sampul video</string>
     <string name="gutenberg_native_upgrade_your_plan_to_upload_audio">Upgrade paket Anda untuk mengunggah audio</string>
     <string name="gutenberg_native_jetpack_powered">Didukung Jetpack</string>
@@ -2454,6 +2465,7 @@ Language: id
     <string name="requesting_otp">Meminta kode verifikasi melalui SMS.</string>
     <string name="login_text_otp">Kirimi saya kode saja</string>
     <string name="enter_verification_code">Hampir selesai! Masukkan kode verifikasi dari aplikasi Pengautentikasi.</string>
+    <string name="open_mail">Buka Email</string>
     <string name="next">Selanjutnya</string>
     <string name="enter_email_wordpress_com">Login ke WordPress.com dengan alamat email untuk mengelola semua situs WordPress Anda.</string>
     <string name="image_optimization_promo_desc">Pengoptimalan gambar mengecilkan gambar agar pengunggahan lebih cepat.\n\nAnda dapat mengubahnya kapan saja di pengaturan situs.</string>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-08-10 15:54:10+0000
+Translation-Revision-Date: 2022-08-24 14:54:08+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: tr
@@ -2456,6 +2456,7 @@ Language: tr
     <string name="requesting_otp">SMS ile bir doğrulama kodu istemek.</string>
     <string name="login_text_otp">Bunun yerine bana SMS ile bir kod gönder</string>
     <string name="enter_verification_code">Neredeyse tamam. Lütfen kimlik doğrulayıcı uygulamanızdan doğrulama kodunu girin.</string>
+    <string name="open_mail">E-postayı Aç</string>
     <string name="next">Sonraki</string>
     <string name="enter_email_wordpress_com">Tüm WordPress sitelerinizi yönetmek için bir e-posta adresi kullanarak WordPress.com\'a oturum açın.</string>
     <string name="image_optimization_promo_desc">Görsel optimizasyonu daha hızlı yükleme için görselleri küçültür\n\nSite ayarlarından bu ayarı istediğiniz zaman değiştirebilirsiniz.</string>

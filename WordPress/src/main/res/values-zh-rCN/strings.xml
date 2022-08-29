@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-08-11 09:54:10+0000
+Translation-Revision-Date: 2022-08-24 09:54:07+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.1
 Language: zh_CN
 -->
 <resources>
+    <string name="login_magic_links_email_sent">我们刚刚发送了一个免密链接至</string>
+    <string name="login_magic_links_sent_label_short">检查此设备上的电子邮件地址！</string>
+    <string name="or_use_password">使用密码登录</string>
+    <string name="wp_jetpack_powered_notifications_powered_by_jetpack_caption">通过实时更新，随时了解新评论、站点流量、安全报告等。</string>
+    <string name="wp_jetpack_powered_notifications_powered_by_jetpack">通知功能由 Jetpack 提供支持</string>
+    <string name="wp_jetpack_powered_stats_powered_by_jetpack_caption">在新版 Jetpack 应用程序中，您可以通过全新设计的“统计信息”和“数据分析”，观察流量增长情况并了解受众。</string>
+    <string name="wp_jetpack_powered_stats_powered_by_jetpack">统计信息功能由 Jetpack 提供支持</string>
+    <string name="wp_jetpack_powered_reader_powered_by_jetpack_caption">在新版 Jetpack 应用程序中，您可以使用“阅读器”来查找、关注和点赞所有您喜欢的网站和帖子。</string>
+    <string name="wp_jetpack_powered_reader_powered_by_jetpack">阅读器由 Jetpack 提供支持</string>
     <string name="wp_jetpack_powered_features">新的 Jetpack 应用程序具有“统计信息”、“阅读器”、“通知”等功能，让您的 WordPress 变得更好。</string>
     <string name="wp_jetpack_powered_better_with_jetpack">安装 Jetpack 的 WordPress 性能更优</string>
     <string name="gutenberg_native_upgrade_your_plan_to_use_video_covers">升级您的套餐即可使用视频封面</string>
