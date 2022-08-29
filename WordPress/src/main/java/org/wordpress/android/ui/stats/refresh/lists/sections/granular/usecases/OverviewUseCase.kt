@@ -68,6 +68,7 @@ class OverviewUseCase constructor(
 
     override suspend fun loadCachedData(): VisitsAndViewsModel? {
         statsWidgetUpdaters.updateViewsWidget(statsSiteProvider.siteModel.siteId)
+        statsWidgetUpdaters.updateWeekViewsWidget(statsSiteProvider.siteModel.siteId)
         val cachedData = visitsAndViewsStore.getVisits(
                 statsSiteProvider.siteModel,
                 statsGranularity,

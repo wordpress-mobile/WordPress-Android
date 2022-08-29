@@ -217,6 +217,7 @@
             <enum name="views" value="0"/>
             <enum name="allTime" value="1"/>
             <enum name="today" value="2"/>
+            <enum name="week" value="3"/>
         </attr>
     </declare-styleable>
 

@@ -8,6 +8,7 @@ import org.wordpress.android.ui.stats.refresh.lists.widget.alltime.AllTimeWidget
 import org.wordpress.android.ui.stats.refresh.lists.widget.minified.MinifiedWidgetUpdater
 import org.wordpress.android.ui.stats.refresh.lists.widget.today.TodayWidgetUpdater
 import org.wordpress.android.ui.stats.refresh.lists.widget.views.ViewsWidgetUpdater
+import org.wordpress.android.ui.stats.refresh.lists.widget.weeks.WeekViewsWidgetUpdater
 import javax.inject.Inject
 
 interface WidgetUpdater {
@@ -27,6 +28,7 @@ interface WidgetUpdater {
         private val allTimeWidgetUpdater: AllTimeWidgetUpdater,
         private val todayWidgetUpdater: TodayWidgetUpdater,
         private val minifiedWidgetUpdater: MinifiedWidgetUpdater,
+        private val weekViewsWidgetUpdater: WeekViewsWidgetUpdater,
         private val appPrefsWrapper: AppPrefsWrapper,
         private val context: Context
     ) {
@@ -34,7 +36,8 @@ interface WidgetUpdater {
                 viewsWidgetUpdater,
                 allTimeWidgetUpdater,
                 todayWidgetUpdater,
-                minifiedWidgetUpdater
+                minifiedWidgetUpdater,
+                weekViewsWidgetUpdater
         )
 
         fun update(context: Context) {
@@ -58,6 +61,10 @@ interface WidgetUpdater {
 
         fun updateAllTimeWidget(siteId: Long) {
             allTimeWidgetUpdater.update(siteId)
+        }
+
+        fun updateWeekViewsWidget(siteId: Long) {
+            weekViewsWidgetUpdater.update(siteId)
         }
 
         private fun WidgetUpdater.update(
