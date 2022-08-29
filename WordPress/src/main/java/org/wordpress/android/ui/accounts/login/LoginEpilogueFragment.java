@@ -318,11 +318,6 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
         mParentViewModel.onLoginEpilogueResume(mDoLoginUpdate);
     }
 
-    @Override
-    protected boolean isJetpackAppLogin() {
-        return mDoLoginUpdate && mBuildConfigWrapper.isJetpackApp();
-    }
-
     private void bindHeaderViewHolder(LoginHeaderViewHolder holder, SiteList sites) {
         if (!isAdded()) {
             return;
