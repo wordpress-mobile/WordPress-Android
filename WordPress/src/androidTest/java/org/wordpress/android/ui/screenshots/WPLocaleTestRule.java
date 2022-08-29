@@ -47,7 +47,7 @@ public class WPLocaleTestRule implements TestRule {
         Context context = ApplicationProvider.getApplicationContext();
         String original = LocaleManager.getLanguage(context);
         LocaleManager.setNewLocale(context, localeCode);
-        WordPress.updateContextLocale(ApplicationProvider.getApplicationContext());
+        WordPress.updateContextLocale(context);
         return original;
     }
 }
