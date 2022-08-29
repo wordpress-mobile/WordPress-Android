@@ -274,7 +274,7 @@ PLATFORMS
 
 DEPENDENCIES
   fastlane (~> 2)
-  fastlane-plugin-wpmreleasetoolkit (~> 5.2)
+  fastlane-plugin-wpmreleasetoolkit (~> 5.4)
   nokogiri
   rmagick (~> 4.1)
 
