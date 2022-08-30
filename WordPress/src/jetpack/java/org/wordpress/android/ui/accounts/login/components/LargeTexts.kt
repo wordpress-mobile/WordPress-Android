@@ -5,7 +5,9 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
+import org.wordpress.android.R
 
 val texts = listOf(
         "Update a plugin",
@@ -23,12 +25,17 @@ val texts = listOf(
 )
 
 @Composable
-fun LargeText(text: String) {
+fun LargeText(
+    text: String,
+    color: Color,
+    modifier: Modifier = Modifier,
+) {
     Text(
             text = text,
             style = MaterialTheme.typography.h3,
             fontWeight = FontWeight.SemiBold,
-            color = Color(color = 0xFF64CA43)
+            color = color,
+            modifier = modifier
     )
 }
 
@@ -41,6 +48,12 @@ fun LargeTexts(
             items = items,
             modifier = modifier,
     ) {
-        LargeText(it)
+        LargeText(
+                text = it,
+                color = when (items.indexOf(it) % 2 != 0) {
+                    true -> colorResource(R.color.text_color_jetpack_login_feature_odd)
+                    false -> colorResource(R.color.text_color_jetpack_login_feature_even)
+                }
+        )
     }
 }

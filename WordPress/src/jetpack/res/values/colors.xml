@@ -6,6 +6,9 @@
     <color name="site_creation_skip_button_text">@color/jetpack_green_40</color>
 
     <!-- Login Prologue Revamped  -->
+    <color name="text_color_jetpack_login_feature_even">@color/jetpack_green_30</color>
+    <color name="text_color_jetpack_login_feature_odd">@color/jetpack_green_60</color>
+
     <color name="bg_jetpack_login_splash_top_gradient_1">#FFD0E6B8</color>
     <color name="bg_jetpack_login_splash_top_gradient_2">#F9D0E6B8</color>
     <color name="bg_jetpack_login_splash_top_gradient_3">#8ED0E6B8</color>
