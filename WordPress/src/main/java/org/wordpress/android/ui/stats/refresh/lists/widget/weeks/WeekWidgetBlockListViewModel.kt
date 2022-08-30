@@ -13,7 +13,6 @@ import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetBlockListProvider.BlockItemUiModel
 import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetBlockListProvider.WidgetBlockListViewModel
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel.Color
-import org.wordpress.android.ui.stats.refresh.lists.widget.utils.WidgetUtils
 import org.wordpress.android.ui.stats.refresh.utils.MILLION
 import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -26,7 +25,6 @@ class WeekWidgetBlockListViewModel
     private val resourceProvider: ResourceProvider,
     private val weekViewsWidgetUpdater: WeekViewsWidgetUpdater,
     private val appPrefsWrapper: AppPrefsWrapper,
-    private val widgetUtils: WidgetUtils,
     private val statsUtils: StatsUtils
 ) : WidgetBlockListViewModel {
     private var siteId: Int? = null
@@ -50,7 +48,7 @@ class WeekWidgetBlockListViewModel
             val site = siteStore.getSiteByLocalId(nonNullSiteId)
             if (site != null) {
                 runBlocking {
-                    visitsAndViewsStore.fetchVisits(site, WEEKS, LimitMode.Top(2))
+                    visitsAndViewsStore.fetchVisits(site, WEEKS, LimitMode.Top(1))
                 }
                 visitsAndViewsStore.getVisits(site, WEEKS, LimitMode.All)?.let { visitsAndViewsModel ->
                     val uiModels = buildListItemUiModel(visitsAndViewsModel, nonNullSiteId)
@@ -78,25 +76,22 @@ class WeekWidgetBlockListViewModel
             Color.DARK -> R.layout.stats_widget_block_item_dark
             Color.LIGHT -> R.layout.stats_widget_block_item_light
         }
-
-        val periodData = widgetUtils.getLastWeekPeriodData(domainModel)
-
         return listOf(
                 BlockItemUiModel(
                         layout,
                         localSiteId,
                         resourceProvider.getString(string.stats_views),
-                        statsUtils.toFormattedString(periodData?.views ?: 0, MILLION),
+                        statsUtils.toFormattedString(domainModel.dates.last().views, MILLION),
                         resourceProvider.getString(string.stats_visitors),
-                        statsUtils.toFormattedString(periodData?.visitors ?: 0, MILLION)
+                        statsUtils.toFormattedString(domainModel.dates.last().visitors, MILLION)
                 ),
                 BlockItemUiModel(
                         layout,
                         localSiteId,
                         resourceProvider.getString(string.likes),
-                        statsUtils.toFormattedString(periodData?.likes ?: 0, MILLION),
+                        statsUtils.toFormattedString(domainModel.dates.last().likes, MILLION),
                         resourceProvider.getString(string.stats_comments),
-                        statsUtils.toFormattedString(periodData?.comments ?: 0, MILLION)
+                        statsUtils.toFormattedString(domainModel.dates.last().comments, MILLION)
                 )
         )
     }

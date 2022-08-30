@@ -10,7 +10,6 @@ import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.stats.time.VisitsAndViewsStore
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel.Color
-import org.wordpress.android.ui.stats.refresh.lists.widget.utils.WidgetUtils
 import org.wordpress.android.ui.stats.refresh.utils.ONE_THOUSAND
 import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -21,7 +20,6 @@ class WeekViewsWidgetListViewModel @Inject constructor(
     private val visitsAndViewsStore: VisitsAndViewsStore,
     private val resourceProvider: ResourceProvider,
     private val appPrefsWrapper: AppPrefsWrapper,
-    private val widgetUtils: WidgetUtils,
     private val statsUtils: StatsUtils
 ) {
     private var siteId: Int? = null
@@ -41,7 +39,7 @@ class WeekViewsWidgetListViewModel @Inject constructor(
             val site = siteStore.getSiteByLocalId(nonNullSiteId)
             if (site != null) {
                 runBlocking {
-                    visitsAndViewsStore.fetchVisits(site, WEEKS, LimitMode.Top(2))
+                    visitsAndViewsStore.fetchVisits(site, WEEKS, LimitMode.Top(1))
                 }
                 visitsAndViewsStore.getVisits(site, WEEKS, LimitMode.All)?.let { visitsAndViewsModel ->
                     val uiModels = buildListItemUiModel(visitsAndViewsModel, nonNullSiteId)
@@ -69,33 +67,30 @@ class WeekViewsWidgetListViewModel @Inject constructor(
             Color.DARK -> R.layout.stats_views_widget_item_dark
             Color.LIGHT -> R.layout.stats_views_widget_item_light
         }
-
-        val periodData = widgetUtils.getLastWeekPeriodData(domainModel)
-
         return listOf(
                 WeekItemUiModel(
                         layout,
                         localSiteId,
                         resourceProvider.getString(R.string.stats_views),
-                        statsUtils.toFormattedString(periodData?.views ?: 0, ONE_THOUSAND)
+                        statsUtils.toFormattedString(domainModel.dates.last().views, ONE_THOUSAND)
                 ),
                 WeekItemUiModel(
                         layout,
                         localSiteId,
                         resourceProvider.getString(R.string.stats_visitors),
-                        statsUtils.toFormattedString(periodData?.visitors ?: 0, ONE_THOUSAND)
+                        statsUtils.toFormattedString(domainModel.dates.last().visitors, ONE_THOUSAND)
                 ),
                 WeekItemUiModel(
                         layout,
                         localSiteId,
                         resourceProvider.getString(R.string.likes),
-                        statsUtils.toFormattedString(periodData?.likes ?: 0, ONE_THOUSAND)
+                        statsUtils.toFormattedString(domainModel.dates.last().likes, ONE_THOUSAND)
                 ),
                 WeekItemUiModel(
                         layout,
                         localSiteId,
                         resourceProvider.getString(R.string.stats_comments),
-                        statsUtils.toFormattedString(periodData?.comments ?: 0, ONE_THOUSAND)
+                        statsUtils.toFormattedString(domainModel.dates.last().comments, ONE_THOUSAND)
                 )
         )
     }
