@@ -2,7 +2,6 @@ package org.wordpress.android.ui.media;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
@@ -19,7 +18,6 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.ActivityOptionsCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
@@ -196,9 +194,6 @@ public class MediaPreviewActivity extends LocaleAwareActivity implements MediaPr
         }
 
         mToolbar = findViewById(R.id.toolbar);
-        int toolbarColor = ContextCompat.getColor(this, R.color.black_translucent_40);
-        //noinspection deprecation
-        mToolbar.setBackgroundDrawable(new ColorDrawable(toolbarColor));
         setSupportActionBar(mToolbar);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {

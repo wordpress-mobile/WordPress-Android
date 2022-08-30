@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-08-10 11:08:39+0000
+Translation-Revision-Date: 2022-08-23 07:06:43+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: es
 -->
 <resources>
+    <string name="login_magic_links_email_sent">Acabamos de enviar un enlace mágico a</string>
+    <string name="login_magic_links_sent_label_short">¡Revisa tu correo electrónico en este dispositivo!</string>
+    <string name="or_use_password">Usar una contraseña para acceder</string>
+    <string name="wp_jetpack_powered_notifications_powered_by_jetpack_caption">Mantente informado con actualizaciones en tiempo real para nuevos comentarios, tráfico del sitio, informes de seguridad y más.</string>
+    <string name="wp_jetpack_powered_notifications_powered_by_jetpack">Los avisos funcionan con Jetpack</string>
+    <string name="wp_jetpack_powered_stats_powered_by_jetpack_caption">Observa cómo crece tu tráfico y obtén información sobre tu audiencia con estadísticas e información rediseñadas, ahora disponibles en la nueva aplicación Jetpack.</string>
+    <string name="wp_jetpack_powered_stats_powered_by_jetpack">Las estadísticas funcionan con Jetpack</string>
+    <string name="wp_jetpack_powered_reader_powered_by_jetpack_caption">Encuentra, sigue y dale «Me gusta» a todos tus sitios y publicaciones favoritos con Reader, ahora disponible en la nueva aplicación Jetpack.</string>
+    <string name="wp_jetpack_powered_reader_powered_by_jetpack">Reader funciona con Jetpack</string>
     <string name="wp_jetpack_powered_better_with_jetpack">WordPress es mejor con Jetpack</string>
     <string name="wp_jetpack_powered_features">La nueva app de Jetpack tiene estadísticas, lector, avisos, y más para mejorar tu WordPress.</string>
     <string name="gutenberg_native_upgrade_your_plan_to_use_video_covers">Actualiza tu plan para usar fondos de vídeo </string>
@@ -2458,6 +2467,7 @@ Language: es
     <string name="enter_verification_code">¡Casi lo tenemos! Por favor, introduce un código de verificación desde tu aplicación Authenticator.</string>
     <string name="next">Siguiente</string>
     <string name="enter_email_wordpress_com">Accede a WordPress.com usando una dirección de correo electrónico para gestionar todos tus sitios WordPress.</string>
+    <string name="open_mail">Abrir correo electrónico</string>
     <string name="image_optimization_promo_desc">La optimización de imagen reduce las imágenes para que suban más rápido.\n\nPuedes cambiar esto en cualquier momento en los ajustes del sitio.</string>
     <string name="image_optimization_promo_title">¿Activar optimización de la imagen?</string>
     <string name="me_profile_photo">Foto de perfil</string>

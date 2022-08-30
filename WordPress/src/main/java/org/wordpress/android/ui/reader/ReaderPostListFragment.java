@@ -3,7 +3,6 @@ package org.wordpress.android.ui.reader;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Html;
@@ -507,15 +506,14 @@ public class ReaderPostListFragment extends ViewPagerFragment
     private void toggleJetpackBannerIfEnabled(final boolean showIfEnabled, boolean animateOnScroll) {
         if (!isAdded() || getView() == null || !isSearching()) return;
 
-        if (animateOnScroll) {
-            RecyclerView scrollView = mRecyclerView.getInternalRecyclerView();
-            mJetpackBrandingUtils.showJetpackBannerIfScrolledToTop(mJetpackBanner, scrollView);
-            mJetpackBrandingUtils.setNavigationBarColorForBanner(requireActivity().getWindow());
-            // Return early since the banner visibility was handled by showJetpackBannerIfScrolledToTop
-            return;
-        }
-
         if (mJetpackBrandingUtils.shouldShowJetpackBranding()) {
+            if (animateOnScroll) {
+                RecyclerView scrollView = mRecyclerView.getInternalRecyclerView();
+                mJetpackBrandingUtils.showJetpackBannerIfScrolledToTop(mJetpackBanner, scrollView);
+                // Return early since the banner visibility was handled by showJetpackBannerIfScrolledToTop
+                return;
+            }
+
             if (showIfEnabled && !mDisplayUtilsWrapper.isPhoneLandscape()) {
                 showJetpackBanner();
             } else {
@@ -526,7 +524,6 @@ public class ReaderPostListFragment extends ViewPagerFragment
 
     private void showJetpackBanner() {
         mJetpackBanner.setVisibility(View.VISIBLE);
-        mJetpackBrandingUtils.setNavigationBarColorForBanner(requireActivity().getWindow());
 
         // Add bottom margin to search suggestions list and empty view.
         int jetpackBannerHeight = getResources().getDimensionPixelSize(R.dimen.jetpack_banner_height);
@@ -537,10 +534,6 @@ public class ReaderPostListFragment extends ViewPagerFragment
 
     private void hideJetpackBanner() {
         mJetpackBanner.setVisibility(View.GONE);
-
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            requireActivity().getWindow().setNavigationBarColor(0);
-        }
 
         // Remove bottom margin from search suggestions list and empty view.
         ((MarginLayoutParams) mRecyclerView.getSearchSuggestionsRecyclerView().getLayoutParams()).bottomMargin = 0;

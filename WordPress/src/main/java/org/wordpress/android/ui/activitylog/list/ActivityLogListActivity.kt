@@ -56,7 +56,6 @@ class ActivityLogListActivity : LocaleAwareActivity(), ScrollableViewInitialized
                         ?: return@post
 
                 jetpackBrandingUtils.showJetpackBannerIfScrolledToTop(jetpackBannerView, scrollableView)
-                window?.let { jetpackBrandingUtils.setNavigationBarColorForBanner(it) }
                 jetpackBrandingUtils.initJetpackBannerAnimation(jetpackBannerView, scrollableView)
 
                 if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {

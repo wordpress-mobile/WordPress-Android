@@ -1,5 +1,0 @@
-20.4:
-- Blok Düzenleyici'de Galeri/Görsel blokuyla ilgili performansı iyileştirmeleri.
-- VideoPress özellikli siteler için düzgün görüntülenen Video blokları (hem web, hem uygulama).
-- Blok ekleyici, blok türlerinin koleksiyonlarda daha iyi organize edilmesini sağlar.
-- Görsel bloklarında alternatif metin dipnot aralığı ayarı.

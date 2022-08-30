@@ -128,8 +128,8 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
         }
 
         if (jetpackBrandingUtils.shouldShowJetpackBranding()) {
-            jetpackBadge.root.isVisible = true
-            jetpackBadge.footerJetpackBadge.jetpackPoweredBadge.setOnClickListener {
+            jetpackBadge.isVisible = true
+            jetpackBadge.setOnClickListener {
                 jetpackBrandingUtils.trackBadgeTapped(ME)
                 viewModel.showJetpackPoweredBottomSheet()
             }

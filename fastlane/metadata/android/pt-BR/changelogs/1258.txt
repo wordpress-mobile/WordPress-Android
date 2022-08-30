@@ -1,5 +1,0 @@
-20.4:
-- Melhorias no desempenho do bloco de galeria/imagem no editor de bloco.
-- Blocos de vídeo exibidos corretamente (tanto na web quanto no aplicativo) para sites compatíveis com o VideoPress.
-- O adicionador de bloco permite que os tipos de bloco sejam melhor organizados em coleções.
-- Ajuste de espaçamento da nota de rodapé do texto alternativo em blocos de imagem.

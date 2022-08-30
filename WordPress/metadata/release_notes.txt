@@ -1,2 +1,3 @@
-- We added a new label in App Settings to show the app’s current interface language. Shiny.
-- Now that the app supports higher-resolution image previews, we bumped up the size of theme screenshots in the site theme picker. No more pixellation, only pixel perfection.
+- You can now log in to the app using an email address that contains a special character.
+- Preloading themes no longer crash the app during Site Creation. Whew.
+- Power up—the Jetpack Powered banner is shown in lists of search results.

@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-08-11 14:54:10+0000
+Translation-Revision-Date: 2022-08-24 17:54:08+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/4.0.0-alpha.1
 Language: ar
 -->
 <resources>
+    <string name="login_magic_links_email_sent">أرسلنا رابطًا سحريًا للتو إلى</string>
+    <string name="login_magic_links_sent_label_short">تحقَّق من بريدك الإلكتروني على هذا الجهاز!</string>
+    <string name="or_use_password">استخدام كلمة المرور لتسجيل الدخول</string>
+    <string name="wp_jetpack_powered_notifications_powered_by_jetpack_caption">أبق على اطلاع بالتحديثات الفورية الخاصة بالتعليقات الجديدة وحركة مرور الموقع والتقارير الأمنية، والمزيد.</string>
+    <string name="wp_jetpack_powered_notifications_powered_by_jetpack">يدعم Jetpack التنبيهات</string>
+    <string name="wp_jetpack_powered_stats_powered_by_jetpack_caption">راقب زيادة حركة مرورك وتعرَّف على جمهورك باستخدام إحصاءات ورؤى مُعاد تصميمها متاحة الآن في تطبيق Jetpack الجديد.</string>
+    <string name="wp_jetpack_powered_stats_powered_by_jetpack">يدعم Jetpack الإحصاءات</string>
+    <string name="wp_jetpack_powered_reader_powered_by_jetpack_caption">اعثر على جميع مواقعك وتدويناتك المفضلة وقم بمتابعتها والإعجاب بها باستخدام القارئ المتاح الآن في تطبيق Jetpack الجديد.</string>
+    <string name="wp_jetpack_powered_reader_powered_by_jetpack">يدعم Jetpack القارئ</string>
     <string name="wp_jetpack_powered_features">يحتوي تطبيق Jetpack الجديد على إحصاءات وقارئ وتنبيهات والمزيد الذي يجعل ووردبريس الخاص بك أفضل.</string>
     <string name="wp_jetpack_powered_better_with_jetpack">ووردبريس أفضل مع Jetpack</string>
     <string name="gutenberg_native_upgrade_your_plan_to_use_video_covers">ترقية خطتك لاستخدام أغطية مقاطع الفيديو</string>
