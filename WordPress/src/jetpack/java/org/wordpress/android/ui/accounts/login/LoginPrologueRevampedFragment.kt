@@ -13,7 +13,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -85,8 +84,8 @@ private fun LoginScreenRevamped(
     onWpComLoginClicked: () -> Unit,
     onSiteAddressLoginClicked: () -> Unit,
 ) {
-    Column(modifier = Modifier.fillMaxSize()) {
-        Box(modifier = Modifier.fillMaxSize()) {
+    Column {
+        Box {
             Image(
                     painter = painterResource(R.drawable.bg_jetpack_login_splash),
                     contentDescription = stringResource(R.string.login_prologue_revamped_content_description_bg),
@@ -98,13 +97,10 @@ private fun LoginScreenRevamped(
                     contentDescription = stringResource(R.string.login_prologue_revamped_content_description_top_bg),
                     contentScale = ContentScale.FillBounds,
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .height(height = 292.dp),
+                            .fillMaxWidth()
+                            .height(height = 292.dp),
             )
-            Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.fillMaxSize()
-            ) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Image(
                         painter = painterResource(R.drawable.ic_jetpack_logo_green_24dp),
                         contentDescription = stringResource(
