@@ -3366,7 +3366,7 @@
     <string name="insert_label_with_count">Insert %d</string>
 
     <!-- Feature Announcement -->
-    <string name="feature_announcement_dialog_label">What\'s New In WordPress</string>
+    <string name="feature_announcement_dialog_label">What\'s New In %s</string>
     <string name="feature_announcement_find_out_mode">Find out more</string>
 
     <!-- Prepublishing Nudges -->

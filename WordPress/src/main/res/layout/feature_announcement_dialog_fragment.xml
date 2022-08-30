@@ -25,7 +25,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/feature_announcement_top_margin"
                 android:fontFamily="serif"
-                android:text="@string/feature_announcement_dialog_label"
                 android:textAppearance="?attr/textAppearanceHeadline4"
                 android:textColor="?attr/colorOnSurface"
                 app:layout_constraintTop_toTopOf="parent" />
