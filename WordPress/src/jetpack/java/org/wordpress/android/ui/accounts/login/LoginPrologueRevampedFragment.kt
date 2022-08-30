@@ -80,7 +80,6 @@ private fun Window.showFullScreen() {
     setFlags(FLAG_LAYOUT_NO_LIMITS, FLAG_LAYOUT_NO_LIMITS)
 }
 
-
 @Composable
 private fun LoginScreenRevamped(
     onWpComLoginClicked: () -> Unit,
