@@ -93,6 +93,9 @@ private fun LoginScreenRevamped(
 @Composable
 fun PreviewLoginScreenRevamped() {
     AppTheme {
-        LoginScreenRevamped(onWpComLoginClicked = {}, onSiteAddressLoginClicked = {})
+        LoginScreenRevamped(
+                onWpComLoginClicked = {},
+                onSiteAddressLoginClicked = {}
+        )
     }
 }
