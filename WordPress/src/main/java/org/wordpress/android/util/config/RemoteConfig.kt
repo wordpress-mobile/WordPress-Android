@@ -1,75 +1,77 @@
 package org.wordpress.android.util.config
 
-import com.google.android.gms.tasks.Task
+import android.util.Log
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig.VALUE_SOURCE_DEFAULT
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig.VALUE_SOURCE_REMOTE
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig.VALUE_SOURCE_STATIC
-import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings.Builder
-import org.wordpress.android.BuildConfig
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.fluxc.persistence.RemoteConfigDao
+import org.wordpress.android.fluxc.store.mobile.FeatureFlagsStore
+import org.wordpress.android.modules.APPLICATION_SCOPE
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.UTILS
 import org.wordpress.android.util.config.AppConfig.FeatureState
 import javax.inject.Inject
+import javax.inject.Named
 
 /**
  * Do not use this class outside of this package. Use [AppConfig] instead
  */
 class RemoteConfig
-@Inject constructor() {
-    fun init() {
-        val firebaseRemoteConfig = FirebaseRemoteConfig.getInstance()
-        val configSettings = Builder()
-                .setMinimumFetchIntervalInSeconds(BuildConfig.REMOTE_CONFIG_FETCH_INTERVAL)
-                .build()
-        firebaseRemoteConfig.setConfigSettingsAsync(configSettings)
-        firebaseRemoteConfig.setDefaultsAsync(RemoteConfigDefaults.remoteConfigDefaults)
-        firebaseRemoteConfig.activate().addOnCompleteListener { task ->
-            onComplete(task, "activate")
-        }
-        firebaseRemoteConfig.fetchAndActivate().addOnCompleteListener { task ->
-            onComplete(task, "fetchAndActivate")
+@Inject constructor(
+    private val featureFlagStore: FeatureFlagsStore,
+    @Named(APPLICATION_SCOPE) private val appScope: CoroutineScope
+) {
+    lateinit var flags: List<RemoteConfigDao.RemoteConfig>
+
+    fun init(appScope: CoroutineScope) {
+        appScope.launch {
+            flags = featureFlagStore.getFeatureFlags()
         }
     }
 
-    fun refresh() {
-        val firebaseRemoteConfig = FirebaseRemoteConfig.getInstance()
-        firebaseRemoteConfig.fetch()
-                .addOnCompleteListener { task ->
-                    onComplete(task, "fetch")
-                }
-    }
-
-    private fun onComplete(task: Task<*>, functionName: String) {
-        if (task.isSuccessful) {
-            val configValues = FirebaseRemoteConfig.getInstance().all.mapValues { it.value.asString() }
+    private suspend fun fetchRemoteFlags() {
+        val response = featureFlagStore.fetchFeatureFlags(
+                deviceId = "12345",
+                platform = "android",
+                buildNumber = "570",
+                marketingVersion = "15.1.1",
+                identifier = "com.jetpack.android"
+        )
+        Log.e("response", response.toString())
+        response.featureFlags?.let { configValues ->
+            Log.e("Remote config values",configValues.toString())
             AnalyticsTracker.track(
                     Stat.FEATURE_FLAGS_SYNCED_STATE,
-                    configValues + mapOf("function_name" to functionName)
+                    configValues
             )
-            AppLog.d(
-                    UTILS,
-                    "Remote config $functionName: ${task.result}"
-            )
-        } else {
+        }
+        if (response.isError) {
             AppLog.e(
                     UTILS,
-                    "Remote config $functionName failed"
+                    "Remote config sync failed"
             )
+        }
+    }
+
+    fun refresh(appScope: CoroutineScope) {
+        appScope.launch {
+            fetchRemoteFlags()
+            flags = featureFlagStore.getFeatureFlags()
         }
     }
 
     fun isEnabled(field: String): Boolean = FirebaseRemoteConfig.getInstance().getBoolean(field)
     fun getString(field: String): String = FirebaseRemoteConfig.getInstance().getString(field)
-    fun getFeatureState(remoteField: String): FeatureState {
-        val value = FirebaseRemoteConfig.getInstance().getValue(remoteField)
-        return when (value.source) {
-            VALUE_SOURCE_DEFAULT -> FeatureState.DefaultValue(value.asBoolean())
-            VALUE_SOURCE_REMOTE -> FeatureState.RemoteValue(value.asBoolean())
-            VALUE_SOURCE_STATIC -> FeatureState.StaticValue(value.asBoolean())
-            else -> FeatureState.StaticValue(value.asBoolean())
+    fun getFeatureState(remoteField: String, buildConfigValue: Boolean): FeatureState {
+        val remoteConfig = flags.find { it.key == remoteField }
+        return if (remoteConfig == null) {
+            appScope.launch { featureFlagStore.insertRemoteConfigValue(remoteField, buildConfigValue) }
+            FeatureState.DefaultValue(buildConfigValue)
+        } else {
+            FeatureState.RemoteValue(remoteConfig.value)
         }
     }
 }
+

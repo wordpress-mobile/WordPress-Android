@@ -50,7 +50,7 @@ class AppConfigParametrizedTest(
         whenever(featureConfig.buildConfigValue).thenReturn(params.buildConfigValue)
         whenever(featureConfig.remoteField).thenReturn(params.remoteField)
         whenever(remoteConfig.isEnabled(REMOTE_FIELD)).thenReturn(params.remoteConfigValue)
-        whenever(remoteConfig.getFeatureState(REMOTE_FIELD)).thenReturn(params.remoteFeatureState)
+        whenever(remoteConfig.getFeatureState(REMOTE_FIELD, feature.buildConfigValue)).thenReturn(params.remoteFeatureState)
     }
 
     companion object {

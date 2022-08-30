@@ -214,7 +214,7 @@ class AppInitializer @Inject constructor(
 
     fun init() {
         dispatcher.register(this)
-        appConfig.init()
+        appConfig.init(appScope)
 
         // Upload any encrypted logs that were queued but not yet uploaded
         encryptedLogging.start()
@@ -682,7 +682,7 @@ class AppInitializer @Inject constructor(
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
     fun onAppComesFromBackground() {
         applicationLifecycleMonitor.onAppComesFromBackground()
-        appConfig.refresh()
+        appConfig.refresh(appScope)
     }
 
     @Suppress("unused")
