@@ -49,8 +49,7 @@ fun <T : Any> AutoScrollingLazyColumn(
 
                     coroutineScope.launch {
                         lazyListState.scrollToItem(
-                                0,
-                                maxOf(0, lazyListState.firstVisibleItemScrollOffset - SCROLL_DY)
+                                0, maxOf(0, lazyListState.firstVisibleItemScrollOffset - SCROLL_DY)
                         )
                     }
 
