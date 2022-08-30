@@ -18,6 +18,9 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.wordpress.android.ui.compose.unit.Margin
 
+private const val DELAY_BETWEEN_SCROLL_MS = 8L
+private const val SCROLL_DY = 1
+
 val DefaultAutoScrollingListDivider = @Composable {
     Spacer(modifier = Modifier.height(Margin.Small.value))
 }
@@ -71,6 +74,3 @@ private tailrec suspend fun LazyListState.autoScroll() {
 
     autoScroll()
 }
-
-private const val DELAY_BETWEEN_SCROLL_MS = 8L
-private const val SCROLL_DY = 1
