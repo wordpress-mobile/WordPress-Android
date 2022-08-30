@@ -3347,7 +3347,7 @@
     <string name="site_creation_intent_writing_poetry">Writing &amp; Poetry</string>
 
     <!-- App rating dialog -->
-    <string name="app_rating_title">Enjoying WordPress?</string>
+    <string name="app_rating_title">Enjoying %s?</string>
     <string name="app_rating_message">Nice to see you again! If you’re digging the app, we\’d love a rating on the Google Play Store.</string>
     <string name="app_rating_rate_now">Rate now</string>
     <string name="app_rating_rate_later">Later</string>
