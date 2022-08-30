@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <appwidget-provider
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:configure="org.wordpress.android.ui.stats.refresh.lists.widget.weeks.StatsWeekWidgetConfigureActivity"
     android:initialKeyguardLayout="@layout/stats_widget_list_light"
     android:initialLayout="@layout/stats_widget_list_light"
@@ -10,5 +11,6 @@
     android:previewImage="@drawable/stats_weeks_widget_preview"
     android:resizeMode="horizontal"
     android:updatePeriodMillis="600000"
-    android:widgetCategory="home_screen">
+    android:widgetCategory="home_screen"
+    tools:ignore="UnusedResources">
 </appwidget-provider>
