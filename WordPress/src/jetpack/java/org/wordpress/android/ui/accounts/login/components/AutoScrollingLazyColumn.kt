@@ -14,6 +14,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.input.nestedscroll.NestedScrollSource
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.wordpress.android.ui.compose.unit.Margin
@@ -37,13 +41,15 @@ fun <T : Any> AutoScrollingLazyColumn(
 
     LazyColumn(
             state = lazyListState,
-            modifier = modifier,
+            modifier = modifier.scrollable(false),
     ) {
         itemsListState.forEach {
             item(key = it) {
                 val coroutineScope = rememberCoroutineScope()
+
                 itemContent(it)
                 divider()
+
                 if (it == items.last()) {
                     val currentList = itemsListState
 
@@ -74,3 +80,11 @@ private tailrec suspend fun LazyListState.autoScroll() {
 
     autoScroll()
 }
+
+private fun Modifier.scrollable(value: Boolean) = nestedScroll(
+        connection = object : NestedScrollConnection {
+            override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
+                return if (value) Offset.Zero else available
+            }
+        }
+)
