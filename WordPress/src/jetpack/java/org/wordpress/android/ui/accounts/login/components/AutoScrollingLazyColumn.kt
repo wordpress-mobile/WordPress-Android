@@ -36,12 +36,12 @@ fun <T : Any> AutoScrollingLazyColumn(
             state = lazyListState,
             modifier = modifier,
     ) {
-        items.forEach {
+        itemsListState.forEach {
             item(key = it) {
                 val coroutineScope = rememberCoroutineScope()
                 itemContent(it)
                 divider()
-                if (it == itemsListState.last()) {
+                if (it == items.last()) {
                     val currentList = itemsListState
 
                     val secondPart = currentList.subList(0, lazyListState.firstVisibleItemIndex)
