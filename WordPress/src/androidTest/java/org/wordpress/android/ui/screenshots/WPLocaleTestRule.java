@@ -10,6 +10,8 @@ import org.junit.runners.model.Statement;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.util.LocaleManager;
 
+import java.util.Locale;
+
 import tools.fastlane.screengrab.locale.LocaleUtil;
 
 public class WPLocaleTestRule implements TestRule {
@@ -20,7 +22,11 @@ public class WPLocaleTestRule implements TestRule {
     }
 
     public WPLocaleTestRule(String testLocaleCode) {
-        mTestLocaleCode = testLocaleCode;
+        // Parse as `Locale` then back to `String`, to ensure that when we get `fr-FR` as input
+        // (which is what is expected to be passed via fastlane's Screengrab and `LocaleUtil.getTestLocale()`),
+        // we get `fr_FR` (the locale code format expected by `java.util.Locale` and our `LocaleManager`) back.
+        Locale locale = LocaleUtil.localeFromString(testLocaleCode);
+        mTestLocaleCode = locale.toString();
     }
 
     @Override
