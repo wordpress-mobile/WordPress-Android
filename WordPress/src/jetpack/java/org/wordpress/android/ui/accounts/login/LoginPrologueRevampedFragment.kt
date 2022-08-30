@@ -88,8 +88,8 @@ private fun LoginScreenRevamped(
                                 R.string.login_prologue_revamped_content_description_jetpack_logo
                         ),
                         modifier = Modifier
-                                .padding(top = 76.dp)
-                                .size(100.dp)
+                                .padding(top = 60.dp)
+                                .size(60.dp)
                 )
                 Spacer(modifier = Modifier.weight(1.0f))
                 Column(
@@ -102,7 +102,6 @@ private fun LoginScreenRevamped(
                                     backgroundColor = MaterialTheme.colors.primary,
                                     contentColor = Color.White,
                             ),
-                            shape = RoundedCornerShape(5.dp),
                             modifier = Modifier.fillMaxWidth(),
                     ) {
                         Text(stringResource(R.string.continue_with_wpcom_no_signup))
@@ -113,7 +112,6 @@ private fun LoginScreenRevamped(
                                     backgroundColor = Color.White,
                                     contentColor = Color.Black,
                             ),
-                            shape = RoundedCornerShape(5.dp),
                             modifier = Modifier
                                     .padding(bottom = 60.dp)
                                     .fillMaxWidth(),
