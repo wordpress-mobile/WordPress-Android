@@ -4,7 +4,11 @@ import android.content.Context
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+import android.view.View.SYSTEM_UI_FLAG_LAYOUT_STABLE
 import android.view.ViewGroup
+import android.view.Window
+import android.view.WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -49,6 +53,8 @@ class LoginPrologueRevampedFragment : Fragment() {
                 )
             }
         }
+
+        requireActivity().window.showFullScreen()
     }
 
     override fun onAttach(context: Context) {
@@ -63,6 +69,17 @@ class LoginPrologueRevampedFragment : Fragment() {
         const val TAG = "login_prologue_revamped_fragment_tag"
     }
 }
+
+private fun Window.showFullScreen() {
+    // Set Translucent Status Bar
+    @Suppress("DEPRECATION")
+    decorView.systemUiVisibility = decorView.systemUiVisibility.let {
+        it or SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or SYSTEM_UI_FLAG_LAYOUT_STABLE
+    }
+    // Set Translucent Navigation Bar
+    setFlags(FLAG_LAYOUT_NO_LIMITS, FLAG_LAYOUT_NO_LIMITS)
+}
+
 
 @Composable
 private fun LoginScreenRevamped(
