@@ -60,17 +60,17 @@ fun <T : Any> AutoScrollingLazyColumn(
         }
     }
     LaunchedEffect(Unit) {
-        autoScroll(lazyListState)
+        lazyListState.autoScroll()
     }
 }
 
-private tailrec suspend fun autoScroll(lazyListState: LazyListState) {
-    lazyListState.scroll(MutatePriority.PreventUserInput) {
+private tailrec suspend fun LazyListState.autoScroll() {
+    scroll(MutatePriority.PreventUserInput) {
         scrollBy(SCROLL_DY.toFloat())
     }
     delay(DELAY_BETWEEN_SCROLL_MS)
 
-    autoScroll(lazyListState)
+    autoScroll()
 }
 
 private const val DELAY_BETWEEN_SCROLL_MS = 8L
