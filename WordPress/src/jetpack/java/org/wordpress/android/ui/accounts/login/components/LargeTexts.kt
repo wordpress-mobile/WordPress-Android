@@ -20,18 +20,6 @@ val texts = listOf(
         "Fix a security issue",
         "Post a photo",
         "Add an author",
-        "Update a plugin",
-        "Build a site",
-        "Write a blog",
-        "Watch your stats",
-        "Check notifications",
-        "Respond to comments",
-        "Restore a backup",
-        "Search for plugins",
-        "Share on Facebook",
-        "Fix a security issue",
-        "Post a photo",
-        "Add an author",
 )
 
 @Composable
