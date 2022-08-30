@@ -6,15 +6,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.MaterialTheme
@@ -73,10 +72,18 @@ private fun LoginScreenRevamped(
     Column(modifier = Modifier.fillMaxSize()) {
         Box(modifier = Modifier.fillMaxSize()) {
             Image(
-                    painter = painterResource(id = R.drawable.bg_jetpack_login_splash),
+                    painter = painterResource(R.drawable.bg_jetpack_login_splash),
                     contentDescription = stringResource(R.string.login_prologue_revamped_content_description_bg),
                     contentScale = ContentScale.FillBounds,
-                    modifier = Modifier.matchParentSize()
+                    modifier = Modifier.matchParentSize(),
+            )
+            Image(
+                    painter = painterResource(R.drawable.bg_jetpack_login_splash_top_gradient),
+                    contentDescription = stringResource(R.string.login_prologue_revamped_content_description_top_bg),
+                    contentScale = ContentScale.FillBounds,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(height = 292.dp),
             )
             Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
