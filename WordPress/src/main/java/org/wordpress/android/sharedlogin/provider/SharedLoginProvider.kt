@@ -47,7 +47,7 @@ class SharedLoginProvider : QueryContentProvider() {
 
     private fun inject() {
         if (!this::accountStore.isInitialized) {
-            (requireContext().applicationContext as WordPress).component().inject(this)
+            (context?.applicationContext as WordPress).component().inject(this)
         }
     }
 }
