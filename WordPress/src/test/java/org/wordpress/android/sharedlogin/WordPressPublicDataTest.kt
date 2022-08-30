@@ -9,7 +9,7 @@ class WordPressPublicDataTest {
     @Test
     fun `Should return correct current package ID`() {
         val actual = classToTest.currentPackageId()
-        val expected = "org.wordpress.android.prealpha"
+        val expected = "org.wordpress.android"
         Assertions.assertThat(actual).isEqualTo(expected)
     }
 }

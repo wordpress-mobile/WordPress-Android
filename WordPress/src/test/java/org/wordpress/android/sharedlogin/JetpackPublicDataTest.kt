@@ -16,7 +16,7 @@ class JetpackPublicDataTest {
     @Test
     fun `Should return correct current package ID`() {
         val actual = classToTest.currentPackageId()
-        val expected = "com.jetpack.android.prealpha"
+        val expected = "com.jetpack.android"
         assertThat(actual).isEqualTo(expected)
     }
 }
