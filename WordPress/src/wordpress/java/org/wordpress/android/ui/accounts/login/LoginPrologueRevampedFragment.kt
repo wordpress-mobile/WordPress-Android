@@ -50,12 +50,9 @@ class LoginPrologueRevampedFragment: Fragment() {
         const val TAG = "login_prologue_revamped_fragment_tag"
     }
 
-    @Suppress("TooGenericExceptionThrown")
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if (context !is LoginPrologueListener) {
-            throw RuntimeException("$context must implement LoginPrologueListener")
-        }
+        check(context is LoginPrologueListener) { "$context must implement LoginPrologueListener" }
         loginPrologueListener = context
     }
 }
