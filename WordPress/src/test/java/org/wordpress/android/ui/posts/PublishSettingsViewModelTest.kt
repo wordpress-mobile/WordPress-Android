@@ -361,6 +361,9 @@ class PublishSettingsViewModelTest : BaseUnitTest() {
             calendarEvent = it?.getContentIfNotHandled()
         }
 
+        val appName = "App name"
+        whenever(resourceProvider.getString(R.string.app_name)).thenReturn(appName)
+
         val eventTitle = "Event title"
         val eventDescription = "Event description"
         whenever(resourceProvider.getString(
@@ -371,6 +374,7 @@ class PublishSettingsViewModelTest : BaseUnitTest() {
                 R.string.calendar_scheduled_post_description,
                 postTitle,
                 siteTitle,
+                appName,
                 postLink
         )).thenReturn(eventDescription)
 

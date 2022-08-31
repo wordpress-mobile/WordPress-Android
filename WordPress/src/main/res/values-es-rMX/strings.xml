@@ -405,7 +405,6 @@ Language: es_MX
     <string name="reader_empty_followed_blogs_description">Cuando sigas sitios, verás aquí su contenido</string>
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">Toca dos veces para ir a los ajustes del color</string>
     <string name="feature_announcement_find_out_mode">Saber más</string>
-    <string name="feature_announcement_dialog_label">Qué hay de nuevo en WordPress</string>
     <string name="insert_label_with_count">Insertar %d</string>
     <string name="crop">recortar</string>
     <string name="error_failed_to_load_into_file">Fallo al cargar en el archivo, por favor, inténtalo de nuevo.</string>
@@ -895,7 +894,6 @@ Language: es_MX
     <string name="app_rating_rate_later">Más tarde</string>
     <string name="app_rating_rate_now">Valorar ahora</string>
     <string name="app_rating_message">¡Qué gusto verte de nuevo! Si te está gustando la aplicación, nos encantaría que nos puntuases en la Google Play Store.</string>
-    <string name="app_rating_title">¿Estás disfrutando de WordPress?</string>
     <string name="stats_site_not_loaded_yet">Sitio aún no cargado</string>
     <string name="editor_post_converted_back_to_draft">Entrada convertida de nuevo a borrador</string>
     <string name="stats_fewer_posts">Menos entradas</string>

@@ -1237,7 +1237,6 @@ Language: ru
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">Нажмите дважды для перехода в настройки цветов</string>
     <string name="reader_empty_followed_blogs_description">При подписке на сайты вы увидите их содержимое здесь</string>
     <string name="feature_announcement_find_out_mode">Подробнее</string>
-    <string name="feature_announcement_dialog_label">Что нового в WordPress</string>
     <string name="insert_label_with_count">Вставить %d</string>
     <string name="crop">обрезать</string>
     <string name="error_failed_to_load_into_file">Ошибка загрузки в файл, повторите попытку.</string>
@@ -1563,7 +1562,6 @@ Language: ru
     <string name="share_desc">Поделиться</string>
     <string name="navigate_back_desc">Назад</string>
     <string name="navigate_forward_desc">Вперед</string>
-    <string name="calendar_scheduled_post_description">Публикация \"%1$s\" запланирована на \"%2$s\" в приложении WordPress \n %3$s</string>
     <string name="calendar_scheduled_post_title">Запланирована запись: \"%s\"</string>
     <string name="notification_post_will_be_published_in_ten_minutes">\"%s\" будет опубликована через 10 минут</string>
     <string name="notification_post_will_be_published_in_one_hour">\"%s\" будет опубликована через 1 час</string>
@@ -1735,7 +1733,6 @@ Language: ru
     <string name="app_rating_rate_later">Позже</string>
     <string name="app_rating_rate_now">Оценить сейчас</string>
     <string name="app_rating_message">Рады видеть вас снова! Если вы пользуетесь приложением, то будет отлично если вы оцените его в магазине Google Play.</string>
-    <string name="app_rating_title">Нравится WordPress?</string>
     <string name="editor_post_converted_back_to_draft">Запись переведена назад в черновики</string>
     <string name="stats_insights_posting_activity">Активность публикации</string>
     <string name="stats_site_not_loaded_yet">Сайт еще не загружен</string>

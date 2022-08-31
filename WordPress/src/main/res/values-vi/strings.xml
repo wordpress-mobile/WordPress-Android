@@ -1178,7 +1178,6 @@ Language: vi_VN
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">Nhấn hai lần để thiết lập màu</string>
     <string name="reader_empty_followed_blogs_description">Khi bạn theo dõi blog nào đó, bạn sẽ thấy nội dung của họ ở đây</string>
     <string name="feature_announcement_find_out_mode">Tìm hiểu thêm</string>
-    <string name="feature_announcement_dialog_label">WordPress có gì mới?</string>
     <string name="insert_label_with_count">Chèn %d</string>
     <string name="crop">cắt</string>
     <string name="error_failed_to_load_into_file">Tải thông tin tập tin thất bại, xin thử lại.</string>
@@ -1504,7 +1503,6 @@ Language: vi_VN
     <string name="share_desc">Chia sẻ</string>
     <string name="navigate_back_desc">Trở lại</string>
     <string name="navigate_forward_desc">Quay lại</string>
-    <string name="calendar_scheduled_post_description">\"%1$s\" đã lên lịch đăng cho \"%2$s\" bằng WordPress app \n %3$s</string>
     <string name="calendar_scheduled_post_title">Bài viết WordPress đã lên lịch: \"%s\"</string>
     <string name="notification_post_will_be_published_in_ten_minutes">Sẽ đăng \"%s\" trong 10 phút nữa</string>
     <string name="notification_post_will_be_published_in_one_hour">Sẽ đăng \"%s\" trong 1 giờ nữa</string>
@@ -1676,7 +1674,6 @@ Language: vi_VN
     <string name="app_rating_rate_later">Để sau</string>
     <string name="app_rating_rate_now">Đánh giá</string>
     <string name="app_rating_message">Rất vui gặp lại bạn! Nếu bạn thích ứng dụng, hãy đánh giá trên Google Play Store.</string>
-    <string name="app_rating_title">Yêu thích WordPress?</string>
     <string name="editor_post_converted_back_to_draft">Đã chuyển bài viết về nháp</string>
     <string name="stats_insights_posting_activity">Hoạt động</string>
     <string name="stats_site_not_loaded_yet">Chưa tải blog xong</string>

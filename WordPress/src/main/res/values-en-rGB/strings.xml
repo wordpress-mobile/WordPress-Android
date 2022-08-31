@@ -1237,7 +1237,6 @@ Language: en_GB
     <string name="reader_empty_followed_blogs_description">When you follow sites, you\'ll see their content here</string>
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">Double tap to go to colour settings</string>
     <string name="feature_announcement_find_out_mode">Find out more</string>
-    <string name="feature_announcement_dialog_label">What\'s New In WordPress</string>
     <string name="insert_label_with_count">Insert %d</string>
     <string name="crop">crop</string>
     <string name="error_failed_to_load_into_file">Failed to load into file, please try again.</string>
@@ -1565,7 +1564,6 @@ Language: en_GB
     <string name="navigate_forward_desc">Go forward</string>
     <string name="calendar_scheduled_post_title">WordPress Scheduled Post: \"%s\"</string>
     <string name="notification_post_will_be_published_in_ten_minutes">\"%s\" will be published in 10 minutes</string>
-    <string name="calendar_scheduled_post_description">\"%1$s\" scheduled for publishing on \"%2$s\" in your WordPress app \n %3$s</string>
     <string name="notification_post_will_be_published_in_one_hour">\"%s\" will be published in 1 hour</string>
     <string name="notification_post_has_been_published">\"%s\" has been published</string>
     <string name="notification_scheduled_post_ten_minute_reminder">Scheduled post: 10 minute reminder</string>
@@ -1735,7 +1733,6 @@ Language: en_GB
     <string name="app_rating_rate_later">Later</string>
     <string name="app_rating_rate_now">Rate now</string>
     <string name="app_rating_message">Nice to see you again! If you’re digging the app, we’d love a rating on the Google Play Store.</string>
-    <string name="app_rating_title">Enjoying WordPress?</string>
     <string name="editor_post_converted_back_to_draft">Post converted back to draft</string>
     <string name="stats_insights_posting_activity">Posting Activity</string>
     <string name="stats_site_not_loaded_yet">Site not loaded yet</string>

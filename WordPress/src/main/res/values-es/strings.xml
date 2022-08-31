@@ -1237,7 +1237,6 @@ Language: es
     <string name="reader_empty_followed_blogs_description">Cuando sigas sitios, verás aquí su contenido</string>
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">Toca dos veces para ir a los ajustes del color</string>
     <string name="feature_announcement_find_out_mode">Saber más</string>
-    <string name="feature_announcement_dialog_label">Qué hay de nuevo en WordPress</string>
     <string name="insert_label_with_count">Insertar %d</string>
     <string name="crop">recortar</string>
     <string name="error_failed_to_load_into_file">Fallo al cargar en el archivo, por favor, inténtalo de nuevo.</string>
@@ -1565,7 +1564,6 @@ Language: es
     <string name="navigate_forward_desc">Avanzar</string>
     <string name="calendar_scheduled_post_title">Entrada programada de WordPress: «%s»</string>
     <string name="notification_post_will_be_published_in_ten_minutes">«%s» se publicará en 10 minutos</string>
-    <string name="calendar_scheduled_post_description">«%1$s» programado para publicar el «%2$s» en tu aplicación de WordPress\n%3$s</string>
     <string name="notification_post_will_be_published_in_one_hour">«%s» se publicará en 1 hora</string>
     <string name="notification_post_has_been_published">«%s» ha sido publicado</string>
     <string name="notification_scheduled_post_ten_minute_reminder">Entrada programada: recordatorio de 10 minutos</string>
@@ -1740,7 +1738,6 @@ Language: es
     <string name="stats_more_posts">Más entradas</string>
     <string name="stats_insights_posting_activity">Actividad de publicación</string>
     <string name="stats_fewer_posts">Menos entradas</string>
-    <string name="app_rating_title">¿Disfrutas de WordPress?</string>
     <string name="new_site_creation_preview_back_pressed_warning">Puedes perder lo que llevas hecho. ¿Estás seguro de que quieres salir?</string>
     <string name="plans_loading_error_with_cache_button">Ver los planes</string>
     <string name="plans_loading_error_with_cache_subtitle">Se requiere una conexión a Internet para ver los planes, así que los detalles podrían estar desactualizados.</string>
