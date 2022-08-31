@@ -17,7 +17,6 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -25,9 +24,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.wordpress.android.R.color
 import org.wordpress.android.R.drawable
-import org.wordpress.android.R.font
 import org.wordpress.android.R.string
 import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.theme.EBGaramond
 
 private val fontSize = 22.sp
 private val lineHeight = fontSize * 1.3
@@ -48,7 +47,7 @@ fun ColumnScope.Tagline(text: String, modifier: Modifier = Modifier) {
         )
         Text(
                 text,
-                fontFamily = FontFamily(Font(font.eb_garamond)),
+                fontFamily = FontFamily.EBGaramond,
                 fontSize = fontSize,
                 lineHeight = lineHeight,
                 textAlign = TextAlign.Center,
