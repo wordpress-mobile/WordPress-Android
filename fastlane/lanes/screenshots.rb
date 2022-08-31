@@ -61,6 +61,10 @@ platform :android do
       sys_img = helper.install_system_image(api: device[:api]) # Ensure we have the system image needed for creating the AVD with this API level
       name = helper.create_avd(api: device[:api], device: device[:device], system_image: sys_img) # Create the AVD for device+API+system image we need
       serial = helper.launch_avd(name: name) # Launch an emulator using this AVD and get its serial number, to know which emulator to run the tests on
+      
+      # FIXME: Seems this is too early in the process, as the Pinyin IME is enabled when the `LocaleTestRule` switches the device to `zh-CN`,
+      # which happens only at the time the test is triggered, so way after the step below (where the emulator is launched but the APKs not even installed yet)
+      helper.disable_alternate_input_methods(serial: serial) # Ensure the system won't suggest using Pinyin IME when we test with the zh-CN locale, for example
 
       capture_android_screenshots(
         app_apk_path: File.join(apk_dir, "#{app}Vanilla", 'debug', "org.wordpress.android-#{app}-vanilla-debug.apk"),
