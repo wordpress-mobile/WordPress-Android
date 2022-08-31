@@ -1237,7 +1237,6 @@ Language: id
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">Ketuk dua kali untuk membuka pengaturan warna</string>
     <string name="reader_empty_followed_blogs_description">Saat Anda mengikuti situs, Anda akan melihat kontennya di sini</string>
     <string name="feature_announcement_find_out_mode">Cari tahu selengkapnya</string>
-    <string name="feature_announcement_dialog_label">Apa yang Baru di WordPress</string>
     <string name="insert_label_with_count">Sisipkan %d</string>
     <string name="crop">pangkas</string>
     <string name="error_failed_to_load_into_file">Gagal memuat ke file, harap coba lagi.</string>
@@ -1563,7 +1562,6 @@ Language: id
     <string name="share_desc">Bagikan</string>
     <string name="navigate_back_desc">Kembali</string>
     <string name="navigate_forward_desc">Selanjutnya</string>
-    <string name="calendar_scheduled_post_description">\"%1$s\" dijadwalkan untuk diterbitkan di \"%2$s\" di aplikasi WordPress Anda \n %3$s</string>
     <string name="calendar_scheduled_post_title">Pos Terjadwal WordPress: \"%s\"</string>
     <string name="notification_post_will_be_published_in_ten_minutes">\"%s\" akan dipublikasikan dalam 10 menit</string>
     <string name="notification_post_will_be_published_in_one_hour">\"%s\" akan dipublikasikan dalam 1 jam</string>
@@ -1735,7 +1733,6 @@ Language: id
     <string name="app_rating_rate_later">Nanti</string>
     <string name="app_rating_rate_now">Beri penilaian sekarang</string>
     <string name="app_rating_message">Senang bertemu Anda lagi! Jika Anda suka aplikasi ini, kami menantikan penilaian Anda di Google Play Store.</string>
-    <string name="app_rating_title">Suka WordPress?</string>
     <string name="editor_post_converted_back_to_draft">Pos dikembalikan ke format konsep</string>
     <string name="stats_insights_posting_activity">Aktivitas Posting</string>
     <string name="stats_site_not_loaded_yet">Situs belum dimuat</string>

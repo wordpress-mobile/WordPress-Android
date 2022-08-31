@@ -1236,7 +1236,6 @@ Language: fr
     <string name="gutenberg_native_select_a_color">Sélectionnez une couleur</string>
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">Toucher deux fois pour aller aux réglages de couleur</string>
     <string name="reader_empty_followed_blogs_description">Lorsque vous suivez des sites, vous verrez leur contenu ici</string>
-    <string name="feature_announcement_dialog_label">Quoi de neuf dans WordPress</string>
     <string name="insert_label_with_count">Insérer %d</string>
     <string name="crop">rogner</string>
     <string name="error_failed_to_load_into_file">Erreur de chargement dans le fichier, veuillez réessayer.</string>
@@ -1565,7 +1564,6 @@ Language: fr
     <string name="navigate_forward_desc">Continuer</string>
     <string name="calendar_scheduled_post_title">Articles WordPress planifiés « %s »</string>
     <string name="notification_post_will_be_published_in_ten_minutes">« %s » sera publié dans 10 minutes</string>
-    <string name="calendar_scheduled_post_description">L’article « %1$s » sera publié le « %2$s » sur l’application WordPress \n %3$s</string>
     <string name="notification_post_will_be_published_in_one_hour">« %s » sera publié dans 1 heure</string>
     <string name="notification_post_has_been_published">« %s » a été publié</string>
     <string name="notification_scheduled_post_ten_minute_reminder">Article planifié : rappel 10 minutes avant</string>
@@ -1735,7 +1733,6 @@ Language: fr
     <string name="app_rating_rate_later">Plus tard</string>
     <string name="app_rating_rate_now">Évaluer maintenant</string>
     <string name="app_rating_message">Ravi de vous revoir! Si vous creusez l\'application, nous aimerions une évaluation sur le Google Play Store.</string>
-    <string name="app_rating_title">Vous aimez WordPress ?</string>
     <string name="editor_post_converted_back_to_draft">Article reconverti en brouillon</string>
     <string name="stats_insights_posting_activity">Activité de publication</string>
     <string name="stats_site_not_loaded_yet">Site non encore chargé</string>
