@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -46,14 +47,25 @@ class LoginPrologueRevampedFragment: Fragment() {
             }
         }
     }
-    companion object {
-        const val TAG = "login_prologue_revamped_fragment_tag"
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        requireActivity().window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
     }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
         check(context is LoginPrologueListener) { "$context must implement LoginPrologueListener" }
         loginPrologueListener = context
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
+    }
+
+    companion object {
+        const val TAG = "login_prologue_revamped_fragment_tag"
     }
 }
 
