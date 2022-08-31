@@ -8,6 +8,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import org.wordpress.android.R
+import org.wordpress.android.util.extensions.isOdd
 
 val texts = listOf(
         "Update a plugin",
@@ -50,7 +51,7 @@ fun LargeTexts(
     ) {
         LargeText(
                 text = it,
-                color = when (items.indexOf(it) % 2 != 0) {
+                color = when (items.indexOf(it).isOdd) {
                     true -> colorResource(R.color.text_color_jetpack_login_feature_odd)
                     false -> colorResource(R.color.text_color_jetpack_login_feature_even)
                 }
