@@ -57,9 +57,8 @@ fun <T : Any> AutoScrollingLazyColumn(
                     val firstPart = currentList.subList(lazyListState.firstVisibleItemIndex, currentList.size)
 
                     coroutineScope.launch {
-                        lazyListState.scrollToItem(
-                                0, maxOf(0, lazyListState.firstVisibleItemScrollOffset - SCROLL_DY)
-                        )
+                        val offset = maxOf(0, lazyListState.firstVisibleItemScrollOffset - SCROLL_DY)
+                        lazyListState.scrollToItem(0, offset)
                     }
 
                     itemsListState = firstPart + secondPart
