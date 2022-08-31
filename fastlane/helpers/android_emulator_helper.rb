@@ -123,23 +123,6 @@ module Fastlane
         serial
       end
 
-      # Disable all Input Method Editors (aka IMEs) except one. This is useful to ensure that the OS won't show an alert
-      # in the middle of running your Instrumentation Test to suggest you to switch to a different IME.
-      # A typical case when this happens is when testing in e.g. `zh-CN` and the system asking you if you want to switch to the `Pinyin` IME
-      #
-      # @param [String] serial The emulator/device serial to send the adb command to
-      # @param [String] only_keep The ID of the only IME to keep enabled. Default to the ID of the built-in Latin IME.
-      #
-      def disable_alternate_input_methods(serial:, only_keep: 'com.google.android.inputmethod.latin/com.android.inputmethod.latin.LatinIME')
-        UI.header("Limiting the list of enabled Input Method Editors to only `#{only_keep}`")
-        enabled_imes = Actions.sh(@tools.adb, '-s', serial, 'shell', 'ime', 'list', '-s').chomp.split("\n")
-        Actions.sh(@tools.adb, '-s', serial, 'shell', 'ime', 'enable', only_keep) unless enabled_imes.include?(only_keep)
-        
-        enabled_imes.each do |ime|
-          Actions.sh(@tools.adb, '-s', serial, 'shell', 'ime', 'disable', ime) unless ime == only_keep
-        end
-      end
-
       # @return [Array<Fastlane::Helper::AdbDevice>] List of currently booted emulators
       #
       def running_emulators
