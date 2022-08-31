@@ -76,6 +76,7 @@
 /connect/account/settings
 
 /leaderboards
+/leaderboards/products
 
 /data/countries
 /system_status
