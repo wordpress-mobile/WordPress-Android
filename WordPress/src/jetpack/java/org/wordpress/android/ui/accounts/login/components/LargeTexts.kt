@@ -7,7 +7,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.unit.Margin
 import org.wordpress.android.util.extensions.isOdd
@@ -49,4 +51,23 @@ fun LargeTexts(
                 }
         )
     }
+}
+
+@Composable
+fun LargeText(
+    text: String,
+    color: Color,
+    modifier: Modifier = Modifier,
+) {
+    Text(
+            text = text,
+            style = TextStyle(
+                    fontSize = 42.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    letterSpacing = (-0.3).sp,
+                    lineHeight = 36.sp, // 38 * 0,95
+            ),
+            color = color,
+            modifier = modifier
+    )
 }
