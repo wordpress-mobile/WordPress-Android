@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-08-24 09:54:07+0000
+Translation-Revision-Date: 2022-08-30 09:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.1
 Language: zh_CN
@@ -2465,6 +2465,7 @@ Language: zh_CN
     <string name="requesting_otp">正在请求短信验证码。</string>
     <string name="login_text_otp">通过短信向我发送代码</string>
     <string name="enter_verification_code">马上就好！请输入验证器应用中的验证码。</string>
+    <string name="open_mail">打开邮件</string>
     <string name="next">下一步</string>
     <string name="enter_email_wordpress_com">使用电子邮件地址登录 WordPress.com 以便管理您的所有 WordPress 站点。</string>
     <string name="image_optimization_promo_desc">图片优化可缩小图片以便更快地上传。\n\n您可以随时在站点设置中更改此选项。</string>

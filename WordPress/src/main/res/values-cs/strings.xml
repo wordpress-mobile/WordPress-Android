@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-07-05 20:18:47+0000
+Translation-Revision-Date: 2022-08-31 08:15:33+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.1
 Language: cs_CZ
@@ -2348,6 +2348,7 @@ Language: cs_CZ
     <string name="login_text_otp">Pošlete mi raději kód.</string>
     <string name="enter_verification_code">Téměř hotovo! Zadejte ověřovací kód z aplikace Authenticator.</string>
     <string name="next">Další</string>
+    <string name="open_mail">Otevřít e-mail</string>
     <string name="enter_email_wordpress_com">Přihlaste se na stránku WordPress.com pomocí e-mailové adresy pro správu všech vašich stránek na WordPress.</string>
     <string name="image_optimization_promo_desc">Optimalizace obrazu mírně sníží kvalitu obrázků pro rychlejší nahrávání\n\nToto nastavení můžete kdykoli změnit v nastavení webu.</string>
     <string name="image_optimization_promo_title">Zapnout optimalizaci obrázků?</string>
