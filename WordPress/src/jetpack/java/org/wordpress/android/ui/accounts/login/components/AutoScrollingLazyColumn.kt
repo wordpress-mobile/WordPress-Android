@@ -25,14 +25,14 @@ import org.wordpress.android.ui.compose.unit.Margin
 private const val DELAY_BETWEEN_SCROLL_MS = 8L
 private const val SCROLL_DY = 1
 
-val DefaultAutoScrollingListDivider = @Composable {
-    Spacer(modifier = Modifier.height(Margin.Small.value))
+private val DefaultDivider = @Composable {
+    Spacer(modifier = Modifier.height(Margin.MediumLarge.value))
 }
 
 @Composable
 fun <T : Any> AutoScrollingLazyColumn(
     items: List<T>,
-    divider: @Composable () -> Unit = DefaultAutoScrollingListDivider,
+    divider: @Composable () -> Unit = DefaultDivider,
     modifier: Modifier = Modifier,
     itemContent: @Composable (item: T) -> Unit,
 ) {
