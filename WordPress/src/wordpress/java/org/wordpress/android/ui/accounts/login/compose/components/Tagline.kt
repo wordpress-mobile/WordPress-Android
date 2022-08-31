@@ -35,9 +35,9 @@ private val lineHeight = fontSize * 1.3
 @Composable
 fun ColumnScope.Tagline(text: String, modifier: Modifier = Modifier) {
     Column(
-            modifier = modifier.weight(1f),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
+            modifier = modifier.weight(1f),
     ) {
         Image(
                 painter = painterResource(drawable.ic_wordpress_gridicon),
@@ -48,14 +48,14 @@ fun ColumnScope.Tagline(text: String, modifier: Modifier = Modifier) {
         )
         Text(
                 text,
-                Modifier
-                        .width(234.dp)
-                        .padding(top = 25.dp),
                 fontFamily = FontFamily(Font(font.eb_garamond)),
                 fontSize = fontSize,
                 lineHeight = lineHeight,
                 textAlign = TextAlign.Center,
                 color = MaterialTheme.colors.onSurface,
+                modifier = Modifier
+                        .width(234.dp)
+                        .padding(top = 25.dp),
         )
     }
 }

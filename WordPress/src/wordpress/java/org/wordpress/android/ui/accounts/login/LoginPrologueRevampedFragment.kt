@@ -67,8 +67,8 @@ fun LoginScreenRevamped(onLoginClicked: () -> Unit) {
         Image(
                 painter = painterResource(drawable.brush_stroke),
                 contentDescription = stringResource(string.login_prologue_revamped_content_description_wordpress_icon),
+                contentScale = Companion.Crop,
                 modifier = Modifier.align(Alignment.CenterEnd),
-                contentScale = Companion.Crop
         )
         Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
