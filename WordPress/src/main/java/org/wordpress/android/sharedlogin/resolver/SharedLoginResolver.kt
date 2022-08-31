@@ -29,7 +29,8 @@ class SharedLoginResolver @Inject constructor(
     fun tryJetpackLogin() {
         val isAlreadyLoggedIn = accountStore.accessToken.isNotEmpty()
         val isFirstTry = appPrefsWrapper.getIsFirstTrySharedLoginJetpack()
-        if (isAlreadyLoggedIn || !jetpackSharedLoginFlag.isEnabled() || !isFirstTry) {
+        val isFeatureFlagEnabled = jetpackSharedLoginFlag.isEnabled()
+        if (isAlreadyLoggedIn || !isFirstTry || !isFeatureFlagEnabled) {
             return
         }
         appPrefsWrapper.saveIsFirstTrySharedLoginJetpack(false)
