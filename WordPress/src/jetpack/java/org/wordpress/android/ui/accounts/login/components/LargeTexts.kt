@@ -10,6 +10,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -17,47 +18,31 @@ import androidx.compose.ui.unit.sp
 import org.wordpress.android.R
 import org.wordpress.android.util.extensions.isOdd
 
-val texts = listOf(
-        "Update a plugin",
-        "Build a site",
-        "Write a blog",
-        "Watch your stats",
-        "Check notifications",
-        "Respond to comments",
-        "Restore a backup",
-        "Search for plugins",
-        "Share on Facebook",
-        "Fix a security issue",
-        "Post a photo",
-        "Add an author",
-).reversed()
-
-data class LargeTextUiState(
+private data class LargeTextItem(
     override val id: Int,
     val text: String,
 ) : AutoScrollingListItem
 
-// Duplicating the list fixes a strange issue where the autoscroll stops for smaller font sizes,
-// when almost the entire list is visible initially on the screen.
-val largeTextsUiState = (texts + texts).mapIndexed { index, value ->  LargeTextUiState(index, value) }
-
-private val Divider = @Composable {
-    Spacer(modifier = Modifier.height(2.dp))
-}
-
 @Composable
 fun LargeTexts(
-    items: List<LargeTextUiState> = largeTextsUiState,
     modifier: Modifier = Modifier,
 ) {
+    val featureTexts = stringArrayResource(R.array.login_prologue_revamped_jetpack_feature_texts).reversed()
+
+    /**
+     * Duplicating the list fixes a strange issue where the autoscroll stops for smaller font sizes,
+     * when almost the entire list is visible initially on the screen.
+     */
+    val listItems = (featureTexts + featureTexts).mapIndexed(::LargeTextItem)
+
     AutoScrollingLazyColumn(
-            items = items,
-            itemDivider = Divider,
+            items = listItems,
+            itemDivider = { Spacer(modifier = Modifier.height(2.dp)) },
             modifier = modifier,
     ) {
         LargeText(
                 text = it.text,
-                color = when (items.indexOf(it).isOdd) {
+                color = when (listItems.indexOf(it).isOdd) {
                     true -> colorResource(R.color.text_color_jetpack_login_feature_odd)
                     false -> colorResource(R.color.text_color_jetpack_login_feature_even)
                 }
