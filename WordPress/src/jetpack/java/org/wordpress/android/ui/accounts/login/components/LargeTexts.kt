@@ -15,7 +15,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.wordpress.android.R
-import org.wordpress.android.ui.compose.unit.Margin
 import org.wordpress.android.util.extensions.isOdd
 
 val texts = listOf(
@@ -31,7 +30,7 @@ val texts = listOf(
         "Fix a security issue",
         "Post a photo",
         "Add an author",
-)
+).reversed()
 
 data class LargeTextUiState(
     override val id: Int,

@@ -45,7 +45,8 @@ fun <T : AutoScrollingListItem> AutoScrollingLazyColumn(
 
     LazyColumn(
             state = lazyListState,
-            modifier = modifier.scrollable(false),
+            reverseLayout = true,
+            modifier = modifier.scrollable(false)
     ) {
         itemsListState.forEach {
             item(key = it.id) {
