@@ -7,12 +7,10 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.tooling.preview.Devices
@@ -23,7 +21,7 @@ import org.wordpress.android.ui.accounts.login.components.ButtonsColumn
 import org.wordpress.android.ui.accounts.login.components.JetpackLogo
 import org.wordpress.android.ui.accounts.login.components.PrimaryButton
 import org.wordpress.android.ui.accounts.login.components.SecondaryButton
-import org.wordpress.android.ui.accounts.login.components.SplashBackgroundBox
+import org.wordpress.android.ui.accounts.login.components.SplashBackground
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.util.extensions.showFullScreen
 
@@ -71,18 +69,16 @@ private fun LoginScreenRevamped(
     onWpComLoginClicked: () -> Unit,
     onSiteAddressLoginClicked: () -> Unit,
 ) {
-    SplashBackgroundBox {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            JetpackLogo(
-                    modifier = Modifier
-                            .padding(top = 60.dp)
-                            .size(60.dp)
-            )
-            Spacer(modifier = Modifier.weight(1.0f))
-            ButtonsColumn {
-                PrimaryButton(onClick = onWpComLoginClicked)
-                SecondaryButton(onClick = onSiteAddressLoginClicked)
-            }
+    SplashBackground {
+        JetpackLogo(
+                modifier = Modifier
+                        .padding(top = 60.dp)
+                        .size(60.dp)
+        )
+        Spacer(modifier = Modifier.weight(1.0f))
+        ButtonsColumn {
+            PrimaryButton(onClick = onWpComLoginClicked)
+            SecondaryButton(onClick = onSiteAddressLoginClicked)
         }
     }
 }
