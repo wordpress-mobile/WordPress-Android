@@ -32,8 +32,8 @@ private val DefaultDivider = @Composable {
 @Composable
 fun <T : Any> AutoScrollingLazyColumn(
     items: List<T>,
-    itemDivider: @Composable () -> Unit = DefaultDivider,
     modifier: Modifier = Modifier,
+    itemDivider: @Composable () -> Unit = DefaultDivider,
     itemContent: @Composable (item: T) -> Unit,
 ) {
     var itemsListState by remember { mutableStateOf(items) }
