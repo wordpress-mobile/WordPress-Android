@@ -24,6 +24,7 @@ fun SecondaryButton(
                     contentColor = Color.Black,
             ),
             modifier = modifier
+                    .padding(horizontal = 20.dp)
                     .padding(bottom = 60.dp)
                     .fillMaxWidth(),
     ) {

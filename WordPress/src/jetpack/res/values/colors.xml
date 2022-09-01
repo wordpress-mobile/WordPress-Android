@@ -6,12 +6,16 @@
     <color name="site_creation_skip_button_text">@color/jetpack_green_40</color>
 
     <!-- Login Prologue Revamped  -->
-    <color name="text_color_jetpack_login_feature_even">@color/jetpack_green_30</color>
-    <color name="text_color_jetpack_login_feature_odd">@color/jetpack_green_60</color>
+    <color name="bg_jetpack_login_splash_bottom_panel">@color/jetpack_green_5</color>
 
-    <color name="bg_jetpack_login_splash_top_gradient_1">#FFD0E6B8</color>
+    <color name="border_shadow_jetpack_login_splash_bottom_panel">#0D000000</color>
+    <color name="border_highlight_jetpack_login_splash_bottom_panel">#4DFFFFFF</color>
+
+    <color name="bg_jetpack_login_splash_top_gradient_1">@color/jetpack_green_5</color>
     <color name="bg_jetpack_login_splash_top_gradient_2">#F9D0E6B8</color>
     <color name="bg_jetpack_login_splash_top_gradient_3">#8ED0E6B8</color>
     <color name="bg_jetpack_login_splash_top_gradient_4">#00D0E6B8</color>
 
+    <color name="text_color_jetpack_login_feature_even">@color/jetpack_green_30</color>
+    <color name="text_color_jetpack_login_feature_odd">@color/jetpack_green_60</color>
 </resources>
