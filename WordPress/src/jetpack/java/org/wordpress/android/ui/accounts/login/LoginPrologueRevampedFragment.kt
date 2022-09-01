@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
@@ -15,15 +14,12 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
-import org.wordpress.android.R
-import org.wordpress.android.ui.accounts.login.components.BorderDivider
+import org.wordpress.android.ui.accounts.login.components.ButtonsColumn
 import org.wordpress.android.ui.accounts.login.components.JetpackLogo
 import org.wordpress.android.ui.accounts.login.components.PrimaryButton
 import org.wordpress.android.ui.accounts.login.components.SecondaryButton
@@ -83,14 +79,7 @@ private fun LoginScreenRevamped(
                             .size(60.dp)
             )
             Spacer(modifier = Modifier.weight(1.0f))
-            BorderDivider()
-            Column(
-                    modifier = Modifier
-                            .background(
-                                    brush = SolidColor(colorResource(R.color.bg_jetpack_login_splash_bottom_panel)),
-                                    alpha = 0.6f
-                            )
-            ) {
+            ButtonsColumn {
                 PrimaryButton(onClick = onWpComLoginClicked)
                 SecondaryButton(onClick = onSiteAddressLoginClicked)
             }
