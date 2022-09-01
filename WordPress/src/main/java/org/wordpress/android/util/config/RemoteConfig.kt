@@ -26,12 +26,14 @@ class RemoteConfig
     lateinit var flags: List<RemoteConfigDao.RemoteConfig>
 
     fun init(appScope: CoroutineScope) {
+        Log.e("Fetching remote flags", "initiated")
         appScope.launch {
             flags = featureFlagStore.getFeatureFlags()
         }
     }
 
     private suspend fun fetchRemoteFlags() {
+        Log.e("Refreshing remote flags", " ")
         val response = featureFlagStore.fetchFeatureFlags(
                 deviceId = "12345",
                 platform = "android",
@@ -41,7 +43,7 @@ class RemoteConfig
         )
         Log.e("response", response.toString())
         response.featureFlags?.let { configValues ->
-            Log.e("Remote config values",configValues.toString())
+            Log.e("Remote config values", configValues.toString())
             AnalyticsTracker.track(
                     Stat.FEATURE_FLAGS_SYNCED_STATE,
                     configValues
@@ -68,7 +70,7 @@ class RemoteConfig
         val remoteConfig = flags.find { it.key == remoteField }
         return if (remoteConfig == null) {
             appScope.launch { featureFlagStore.insertRemoteConfigValue(remoteField, buildConfigValue) }
-            FeatureState.DefaultValue(buildConfigValue)
+            FeatureState.BuildConfigValue(buildConfigValue)
         } else {
             FeatureState.RemoteValue(remoteConfig.value)
         }
