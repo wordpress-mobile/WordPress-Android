@@ -26,7 +26,9 @@ public class WPLocaleTestRule implements TestRule {
         // (which is what is expected to be passed via fastlane's Screengrab and `LocaleUtil.getTestLocale()`),
         // we get `fr_FR` (the locale code format expected by `java.util.Locale` and our `LocaleManager`) back.
         Locale locale = LocaleUtil.localeFromString(testLocaleCode);
-        mTestLocaleCode = locale.toString();
+        if (locale != null) {
+            mTestLocaleCode = locale.toString();
+        }
     }
 
     @Override
