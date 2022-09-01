@@ -62,7 +62,7 @@ fun LargeText(
     Text(
             text = text,
             style = TextStyle(
-                    fontSize = 42.sp,
+                    fontSize = 44.sp,
                     fontWeight = FontWeight.SemiBold,
                     letterSpacing = (-0.3).sp,
                     lineHeight = 36.sp, // 38 * 0,95
