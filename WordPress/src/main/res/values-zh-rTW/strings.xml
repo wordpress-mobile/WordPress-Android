@@ -1564,7 +1564,6 @@ Language: zh_TW
     <string name="navigate_forward_desc">下一個</string>
     <string name="calendar_scheduled_post_title">WordPress 已排程的文章：「%s」</string>
     <string name="notification_post_will_be_published_in_ten_minutes">「%s」將會在 10 分鐘後發表</string>
-    <string name="calendar_scheduled_post_description">排程於「%2$s」在你的 WordPress 應用程式發表「%1$s」\n %3$s</string>
     <string name="notification_post_will_be_published_in_one_hour">「%s」將會在 1 小時後發表</string>
     <string name="notification_post_has_been_published">「%s」已發表</string>
     <string name="notification_scheduled_post_ten_minute_reminder">已排程的文章：10 分鐘提醒</string>
