@@ -33,13 +33,22 @@ val texts = listOf(
         "Add an author",
 )
 
+data class LargeTextUiState(
+    override val id: Int,
+    val text: String,
+) : AutoScrollingListItem
+
+// Duplicating the list fixes a strange issue where the autoscroll stops for smaller font sizes,
+// when almost the entire list is visible initially on the screen.
+val largeTextsUiState = (texts + texts).mapIndexed { index, value ->  LargeTextUiState(index, value) }
+
 private val Divider = @Composable {
     Spacer(modifier = Modifier.height(2.dp))
 }
 
 @Composable
 fun LargeTexts(
-    items: List<String> = texts,
+    items: List<LargeTextUiState> = largeTextsUiState,
     modifier: Modifier = Modifier,
 ) {
     AutoScrollingLazyColumn(
@@ -48,7 +57,7 @@ fun LargeTexts(
             modifier = modifier,
     ) {
         LargeText(
-                text = it,
+                text = it.text,
                 color = when (items.indexOf(it).isOdd) {
                     true -> colorResource(R.color.text_color_jetpack_login_feature_odd)
                     false -> colorResource(R.color.text_color_jetpack_login_feature_even)

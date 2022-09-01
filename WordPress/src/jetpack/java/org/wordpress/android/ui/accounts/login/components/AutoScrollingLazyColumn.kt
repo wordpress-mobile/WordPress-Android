@@ -29,8 +29,12 @@ private val DefaultDivider = @Composable {
     Spacer(modifier = Modifier.height(Margin.MediumLarge.value))
 }
 
+interface AutoScrollingListItem {
+    val id: Int
+}
+
 @Composable
-fun <T : Any> AutoScrollingLazyColumn(
+fun <T : AutoScrollingListItem> AutoScrollingLazyColumn(
     items: List<T>,
     modifier: Modifier = Modifier,
     itemDivider: @Composable () -> Unit = DefaultDivider,
@@ -44,13 +48,11 @@ fun <T : Any> AutoScrollingLazyColumn(
             modifier = modifier.scrollable(false),
     ) {
         itemsListState.forEach {
-            item(key = it) {
-                val coroutineScope = rememberCoroutineScope()
-
+            item(key = it.id) {
                 itemContent(it)
                 itemDivider()
 
-                if (it == items.last()) {
+                if (it.id == items.last().id) {
                     val currentList = itemsListState
 
                     val secondPart = currentList.subList(0, lazyListState.firstVisibleItemIndex)
@@ -66,6 +68,7 @@ fun <T : Any> AutoScrollingLazyColumn(
             }
         }
     }
+
     LaunchedEffect(Unit) {
         lazyListState.autoScroll()
     }
