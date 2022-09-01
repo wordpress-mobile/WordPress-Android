@@ -28,6 +28,12 @@
         android:name="android.permission.CHANGE_CONFIGURATION"
         />
 
+    <!-- Allows forcing IME for screenshot automation -->
+    <uses-permission
+        tools:ignore="ProtectedPermissions"
+        android:name="android.permission.WRITE_SECURE_SETTINGS"
+        />
+
     <!-- Allows changing SystemUI demo mode for screenshot automation -->
     <uses-permission
             android:name="android.permission.DUMP"
