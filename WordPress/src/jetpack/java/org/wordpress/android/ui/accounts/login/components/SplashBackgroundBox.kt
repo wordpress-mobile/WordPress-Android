@@ -11,10 +11,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.BlurredEdgeTreatment
@@ -25,7 +24,6 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Outline.Rectangle
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices
@@ -67,49 +65,51 @@ private fun SplashBox(
  */
 @Composable
 fun SplashBackgroundBox(
-    columnContent: @Composable ColumnScope.() -> Unit
-) = Box {
-    var buttonsColumnHeight by remember { mutableStateOf(0) }
-
-    val blurClipShape = remember {
-        object : Shape {
-            override fun createOutline(size: Size, layoutDirection: LayoutDirection, density: Density): Rectangle {
-                return Rectangle(
-                        Rect(
-                                bottom = size.height,
-                                left = 0.0f,
-                                right = size.width,
-                                top = size.height - buttonsColumnHeight,
-                        )
-                )
+    blurredAreaHeight: MutableState<Int>,
+    columnContent: @Composable ColumnScope.() -> Unit,
+) {
+    Box {
+        val blurClipShape = remember {
+            object : Shape {
+                override fun createOutline(size: Size, layoutDirection: LayoutDirection, density: Density): Rectangle {
+                    return Rectangle(
+                            Rect(
+                                    bottom = size.height,
+                                    left = 0f,
+                                    right = size.width,
+                                    top = size.height - blurredAreaHeight.value,
+                            )
+                    )
+                }
             }
         }
-    }
 
-    SplashBox()
-    SplashBox(
-            modifier = Modifier.clip(blurClipShape),
-            textModifier = Modifier.blur(15.dp, BlurredEdgeTreatment.Unbounded)
-    )
-    Image(
-            painter = painterResource(drawable.bg_jetpack_login_splash_top_gradient),
-            contentDescription = stringResource(string.login_prologue_revamped_content_description_top_bg),
-            contentScale = ContentScale.FillBounds,
-            modifier = Modifier
-                    .fillMaxWidth()
-                    .height(height = 292.dp)
-    )
-    Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            content = columnContent,
-            modifier = Modifier.onSizeChanged { buttonsColumnHeight = it.height }
-    )
+        SplashBox()
+        SplashBox(
+                modifier = Modifier.clip(blurClipShape),
+                textModifier = Modifier.blur(15.dp, BlurredEdgeTreatment.Unbounded)
+        )
+        Image(
+                painter = painterResource(drawable.bg_jetpack_login_splash_top_gradient),
+                contentDescription = stringResource(string.login_prologue_revamped_content_description_top_bg),
+                contentScale = ContentScale.FillBounds,
+                modifier = Modifier
+                        .fillMaxWidth()
+                        .height(height = 292.dp)
+        )
+        Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                content = columnContent,
+        )
+    }
 }
 
-@Preview(showBackground = true, device = Devices.PIXEL_4, backgroundColor = 0x00000000)
+@Preview(showBackground = true, device = Devices.PIXEL_4_XL)
 @Composable
 fun PreviewSplashBackgroundBox() {
     AppTheme {
-        SplashBackgroundBox {}
+        SplashBackgroundBox(
+                blurredAreaHeight = mutableStateOf(600)
+        ) {}
     }
 }
