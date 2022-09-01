@@ -25,10 +25,11 @@ fun ButtonsColumn(
             color = colorResource(color.border_highlight_jetpack_login_splash_bottom_panel),
     )
     Column(
-            modifier = modifier.background(
-                    brush = SolidColor(colorResource(color.bg_jetpack_login_splash_bottom_panel)),
-                    alpha = 0.6f
-            ),
+            modifier = modifier
+                    .background(
+                            brush = SolidColor(colorResource(color.bg_jetpack_login_splash_bottom_panel)),
+                            alpha = 0.6f
+                    ),
             content = content
     )
 }
