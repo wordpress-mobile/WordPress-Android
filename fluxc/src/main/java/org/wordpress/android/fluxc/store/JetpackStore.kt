@@ -13,6 +13,8 @@ import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
+import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIAuthenticator
+import org.wordpress.android.fluxc.network.rest.wpapi.jetpack.JetpackWPAPIRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.jetpacktunnel.JetpackRestClient
 import org.wordpress.android.fluxc.store.JetpackStore.ActivateStatsModuleErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged
@@ -30,8 +32,10 @@ private const val RELOAD_SITE_DELAY = 5000L
 class JetpackStore
 @Inject constructor(
     private val jetpackRestClient: JetpackRestClient,
+    private val jetpackWPAPIRestClient: JetpackWPAPIRestClient,
     private val siteStore: SiteStore,
     private val coroutineEngine: CoroutineEngine,
+    private val wpapiAuthenticator: WPAPIAuthenticator,
     dispatcher: Dispatcher
 ) : Store(dispatcher) {
     private var siteContinuation: Continuation<Unit>? = null
@@ -132,7 +136,7 @@ class JetpackStore
         val type: JetpackInstallErrorType,
         val apiError: String? = null,
         val message: String? = null
-    ) : Store.OnChangedError
+    ) : OnChangedError
 
     @Subscribe(threadMode = ThreadMode.ASYNC)
     fun onSiteChanged(event: OnSiteChanged) {
@@ -188,6 +192,38 @@ class JetpackStore
 
     class ActivateStatsModuleError(
         val type: ActivateStatsModuleErrorType,
+        val message: String? = null
+    ) : OnChangedError
+
+    suspend fun fetchJetpackConnectionUrl(site: SiteModel): JetpackConnectionUrlResult {
+        if (site.isUsingWpComRestApi) error("This function supports only self-hosted site using WPAPI")
+        return coroutineEngine.withDefaultContext(T.API, this, "fetchJetpackConnectionUrl") {
+            val result = wpapiAuthenticator.makeAuthenticatedWPAPIRequest(site) { nonce ->
+                jetpackWPAPIRestClient.fetchJetpackConnectionUrl(site, nonce)
+            }
+
+            when {
+                result.isError -> JetpackConnectionUrlResult(JetpackConnectionUrlError(result.error?.message))
+                result.response.isNullOrEmpty() -> JetpackConnectionUrlResult(
+                    JetpackConnectionUrlError("Response Empty")
+                )
+                else -> {
+                    val url = result.response.trim('"').replace("\\", "")
+                    JetpackConnectionUrlResult(url)
+                }
+            }
+        }
+    }
+
+    data class JetpackConnectionUrlResult(
+        val url: String
+    ) : Payload<JetpackConnectionUrlError>() {
+        constructor(error: JetpackConnectionUrlError) : this("") {
+            this.error = error
+        }
+    }
+
+    class JetpackConnectionUrlError(
         val message: String? = null
     ) : OnChangedError
 
