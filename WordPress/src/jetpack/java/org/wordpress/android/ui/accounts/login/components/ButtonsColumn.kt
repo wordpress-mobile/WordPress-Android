@@ -29,7 +29,8 @@ fun ButtonsColumn(
                     .background(
                             brush = SolidColor(colorResource(color.bg_jetpack_login_splash_bottom_panel)),
                             alpha = 0.6f
-                    ),
-            content = content
-    )
+                    )
+    ) {
+        content()
+    }
 }
