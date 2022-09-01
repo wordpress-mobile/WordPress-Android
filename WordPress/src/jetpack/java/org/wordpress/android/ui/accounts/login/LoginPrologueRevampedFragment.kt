@@ -67,6 +67,13 @@ class LoginPrologueRevampedFragment : Fragment() {
     }
 }
 
+/**
+ * The approach used here to set the height of blurred area is not recommended in the Compose guidelines.
+ * See [Recomposition loop (cyclic phase dependency)](https://developer.android.com/jetpack/compose/phases#recomp-loop)
+ * A better approach would be to make use of
+ * [Custom layouts](https://developer.android.com/jetpack/compose/layouts/custom),
+ * but that requires further investigation.
+ */
 @Composable
 private fun LoginScreenRevamped(
     onWpComLoginClicked: () -> Unit,
