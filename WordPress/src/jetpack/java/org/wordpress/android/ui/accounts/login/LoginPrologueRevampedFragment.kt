@@ -48,9 +48,7 @@ class LoginPrologueRevampedFragment : Fragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if (context !is LoginPrologueListener) {
-            error("$context must implement LoginPrologueListener")
-        }
+        check(context is LoginPrologueListener) { "$context must implement LoginPrologueListener" }
         loginPrologueListener = context
     }
 
