@@ -604,7 +604,6 @@
             android:name=".ui.AddQuickPressShortcutActivity"
             android:label="@string/quickpress_shortcut_activity_label"
             android:theme="@style/WordPress.NoActionBar"
-            android:enabled="@string/widgets_enabled"
             android:exported="true"
             tools:ignore="ManifestResource">
             <intent-filter>

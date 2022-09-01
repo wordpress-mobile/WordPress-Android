@@ -18,21 +18,6 @@
         </activity>
 
         <activity
-            android:name="org.wordpress.android.ui.AddQuickPressShortcutActivity"
-            android:label="@string/quickpress_shortcut_activity_label"
-            android:theme="@style/WordPress.NoActionBar"
-            android:enabled="true"
-            android:exported="true"
-            tools:replace="android:enabled"
-            tools:ignore="ManifestResource">
-            <intent-filter>
-                <action android:name="android.intent.action.CREATE_SHORTCUT" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-
-        <activity
             android:name=".ui.stats.refresh.lists.widget.weeks.StatsWeekWidgetConfigureActivity"
             android:label="@string/stats_widget_views_title"
             android:theme="@style/WordPress.NoActionBar"
