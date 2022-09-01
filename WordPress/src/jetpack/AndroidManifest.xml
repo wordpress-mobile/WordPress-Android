@@ -15,6 +15,29 @@
                     android:pathPattern="/get/.*"
                     android:scheme="https" />
             </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="viewpost"
+                    android:scheme="jetpack" />
+                <data
+                    android:host="stats"
+                    android:scheme="jetpack" />
+                <data
+                    android:host="read"
+                    android:scheme="jetpack" />
+                <data
+                    android:host="post"
+                    android:scheme="jetpack" />
+                <data
+                    android:host="notifications"
+                    android:scheme="jetpack" />
+            </intent-filter>
         </activity>
 
         <activity

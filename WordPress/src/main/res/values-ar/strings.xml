@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-08-11 14:54:10+0000
+Translation-Revision-Date: 2022-08-24 17:54:08+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/4.0.0-alpha.1
 Language: ar
 -->
 <resources>
+    <string name="login_magic_links_email_sent">أرسلنا رابطًا سحريًا للتو إلى</string>
+    <string name="login_magic_links_sent_label_short">تحقَّق من بريدك الإلكتروني على هذا الجهاز!</string>
+    <string name="or_use_password">استخدام كلمة المرور لتسجيل الدخول</string>
+    <string name="wp_jetpack_powered_notifications_powered_by_jetpack_caption">أبق على اطلاع بالتحديثات الفورية الخاصة بالتعليقات الجديدة وحركة مرور الموقع والتقارير الأمنية، والمزيد.</string>
+    <string name="wp_jetpack_powered_notifications_powered_by_jetpack">يدعم Jetpack التنبيهات</string>
+    <string name="wp_jetpack_powered_stats_powered_by_jetpack_caption">راقب زيادة حركة مرورك وتعرَّف على جمهورك باستخدام إحصاءات ورؤى مُعاد تصميمها متاحة الآن في تطبيق Jetpack الجديد.</string>
+    <string name="wp_jetpack_powered_stats_powered_by_jetpack">يدعم Jetpack الإحصاءات</string>
+    <string name="wp_jetpack_powered_reader_powered_by_jetpack_caption">اعثر على جميع مواقعك وتدويناتك المفضلة وقم بمتابعتها والإعجاب بها باستخدام القارئ المتاح الآن في تطبيق Jetpack الجديد.</string>
+    <string name="wp_jetpack_powered_reader_powered_by_jetpack">يدعم Jetpack القارئ</string>
     <string name="wp_jetpack_powered_features">يحتوي تطبيق Jetpack الجديد على إحصاءات وقارئ وتنبيهات والمزيد الذي يجعل ووردبريس الخاص بك أفضل.</string>
     <string name="wp_jetpack_powered_better_with_jetpack">ووردبريس أفضل مع Jetpack</string>
     <string name="gutenberg_native_upgrade_your_plan_to_use_video_covers">ترقية خطتك لاستخدام أغطية مقاطع الفيديو</string>
@@ -1228,7 +1237,6 @@ Language: ar
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">الضغط ضغطًا مزدوجًا للانتقال إلى إعدادات الألوان</string>
     <string name="reader_empty_followed_blogs_description">عندما تتابع المواقع، سترى محتواها هنا</string>
     <string name="feature_announcement_find_out_mode">اكتشاف المزيد</string>
-    <string name="feature_announcement_dialog_label">ما الجديد في ووردبريس</string>
     <string name="crop">قص</string>
     <string name="error_failed_to_load_into_file">فشل التحميل إلى الملف، يرجى المحاولة مرة أخرى.</string>
     <string name="preview_image_thumbnail_description">معاينة الصورة المصغَّرة</string>
@@ -1556,7 +1564,6 @@ Language: ar
     <string name="navigate_forward_desc">التقدم للأمام</string>
     <string name="notification_post_will_be_published_in_ten_minutes">سيتم نشر \"%s\" خلال 10 دقائق</string>
     <string name="calendar_scheduled_post_title">مقالة ووردبريس مجدولة: \"%s\"</string>
-    <string name="calendar_scheduled_post_description">تمت جدولة \"⁦%1$s⁩\" للنشر في \"⁦%2$s⁩\" في تطبيق ووردبريس الخاص بك\n %3$s</string>
     <string name="notification_scheduled_post">مقالة مجدولة</string>
     <string name="notification_scheduled_post_one_hour_reminder">مقالة مجدولة: تذكير ساعة واحدة</string>
     <string name="notification_scheduled_post_ten_minute_reminder">مقالة مجدولة: تذكير 10 دقائق</string>
@@ -1726,7 +1733,6 @@ Language: ar
     <string name="app_rating_rate_later">لاحقًا</string>
     <string name="app_rating_rate_now">التقييم الآن</string>
     <string name="app_rating_message">جميل أن نراك مرة أخرى! إذا راجعت التطبيق، فيسعدنا تقييمك لنا على متجر Google Play.</string>
-    <string name="app_rating_title">مستمتع بـ ووردبريس؟</string>
     <string name="editor_post_converted_back_to_draft">تم تحويل المقالة مرة أخرى إلى مسودّة</string>
     <string name="stats_insights_posting_activity">نشاط النشر</string>
     <string name="stats_site_not_loaded_yet">الموقع لم يتم تحميله بعد</string>

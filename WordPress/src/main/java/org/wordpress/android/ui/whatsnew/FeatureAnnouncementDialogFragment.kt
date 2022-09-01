@@ -52,6 +52,11 @@ class FeatureAnnouncementDialogFragment : DialogFragment() {
         val featureAdapter = FeatureAnnouncementListAdapter(this)
         recyclerView.adapter = featureAdapter
 
+        val titleTextView = view.findViewById<TextView>(R.id.feature_announcement_dialog_label)
+        val appName = getString(R.string.app_name)
+        val title = getString(R.string.feature_announcement_dialog_label, appName)
+        titleTextView.text = title
+
         viewModel.uiModel.observe(this, Observer {
             it?.let { uiModel ->
                 progressIndicator.visibility = if (uiModel.isProgressVisible) View.VISIBLE else View.GONE

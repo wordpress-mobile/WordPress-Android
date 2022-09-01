@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-08-16 07:56:18+0000
+Translation-Revision-Date: 2022-08-23 20:31:28+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: gl_ES
 -->
 <resources>
+    <string name="login_magic_links_email_sent">Acabamos de enviar unha ligazón máxica a</string>
+    <string name="login_magic_links_sent_label_short">Revisa o teu correo electrónico neste dispositivo!</string>
+    <string name="or_use_password">Usar un contrasinal para acceder</string>
+    <string name="wp_jetpack_powered_notifications_powered_by_jetpack_caption">Mantente informado con actualizacións en tempo real para novos comentarios, tráfico do sitio, informes de seguridade e máis.</string>
+    <string name="wp_jetpack_powered_notifications_powered_by_jetpack">Os avisos funcionan con Jetpack</string>
+    <string name="wp_jetpack_powered_stats_powered_by_jetpack_caption">Observa como crece o teu tráfico e obtén información sobre a túa audiencia con estatísticas e información redeseñadas, agora dispoñibles na nova aplicación Jetpack.</string>
+    <string name="wp_jetpack_powered_stats_powered_by_jetpack">As estatísticas funcionan con Jetpack</string>
+    <string name="wp_jetpack_powered_reader_powered_by_jetpack_caption">Encontra, segue e dálle «Gústame» a todos os teus sitios e publicacións favoritos con Reader, agora dispoñible na nova aplicación Jetpack.</string>
+    <string name="wp_jetpack_powered_reader_powered_by_jetpack">Reader funciona con Jetpack</string>
     <string name="wp_jetpack_powered_features">A nova aplicación Jetpack ten estatísticas, lector, notificacións e máis que melloran o teu WordPress.</string>
     <string name="wp_jetpack_powered_better_with_jetpack">WordPress é mellor con Jetpack</string>
     <string name="gutenberg_native_upgrade_your_plan_to_use_video_covers">Actualiza o teu plan para usar fondos de vídeo</string>
@@ -1228,7 +1237,6 @@ Language: gl_ES
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">Toca dúas veces para ir aos axustes da cor</string>
     <string name="reader_empty_followed_blogs_description">Cando sigas sitios, verás aquí o seu contido</string>
     <string name="feature_announcement_find_out_mode">Saber máis</string>
-    <string name="feature_announcement_dialog_label">Que hai de novo en WordPress</string>
     <string name="insert_label_with_count">Insertar %d</string>
     <string name="crop">recortar</string>
     <string name="error_failed_to_load_into_file">Erro ao cargar no arquivo, por favor, inténtao de novo.</string>
@@ -1554,7 +1562,6 @@ Language: gl_ES
     <string name="share_desc">Compartir</string>
     <string name="navigate_back_desc">Volver</string>
     <string name="navigate_forward_desc">Avanzar</string>
-    <string name="calendar_scheduled_post_description">«%1$s» programado para publicar o «%2$s» na túa aplicación de WordPress\n%3$s</string>
     <string name="calendar_scheduled_post_title">Entrada programada de WordPress: «%s»</string>
     <string name="notification_post_will_be_published_in_ten_minutes">«%s» publicarase en 10 minutos</string>
     <string name="notification_post_will_be_published_in_one_hour">«%s» publicarase en 1 hora</string>
@@ -1726,7 +1733,6 @@ Language: gl_ES
     <string name="app_rating_rate_later">Máis tarde</string>
     <string name="app_rating_rate_now">Valorar agora</string>
     <string name="app_rating_message">Que gusto verte de novo! Se estás traballando coa aplicación encantaríanos que nos puntuases na Google Play Store.</string>
-    <string name="app_rating_title">Estás gozando de WordPress?</string>
     <string name="editor_post_converted_back_to_draft">Entrada devolta a borrador</string>
     <string name="stats_insights_posting_activity">Actividade de publicación</string>
     <string name="stats_site_not_loaded_yet">O sitio aínda non se cargou</string>
@@ -2456,6 +2462,7 @@ Language: gl_ES
     <string name="requesting_otp">Solicitando un código de verificación por SMS.</string>
     <string name="login_text_otp">Envíame un código en texto no seu lugar</string>
     <string name="enter_verification_code">Case o temos! Por favor, introduce un código de verificación desde a túa aplicación Authenticator.</string>
+    <string name="open_mail">Abrir correo electrónico</string>
     <string name="next">Seguinte</string>
     <string name="enter_email_wordpress_com">Accede a WordPress.com usando un enderezo de correo electrónico para xestionar todos os teus sitios WordPress.</string>
     <string name="image_optimization_promo_desc">A optimización da imaxe reduce as imaxes para que suban máis rápido.\n\nPodes cambiar isto en calquera momento nos axustes do sitio.</string>

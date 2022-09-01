@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-08-10 00:55:02+0000
+Translation-Revision-Date: 2022-08-25 08:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.1
 Language: ja_JP
 -->
 <resources>
+    <string name="login_magic_links_email_sent">マジックリンクを次のアドレスに送信しました: </string>
+    <string name="login_magic_links_sent_label_short">この端末でメールアドレスを確認してください。</string>
+    <string name="or_use_password">パスワードを使用してログイン</string>
+    <string name="wp_jetpack_powered_notifications_powered_by_jetpack_caption">新しいコメント、サイトトラフィック、セキュリティレポートなど、リアルタイムの更新を入手できます。</string>
+    <string name="wp_jetpack_powered_notifications_powered_by_jetpack">通知は、Jetpack が提供しています。</string>
+    <string name="wp_jetpack_powered_stats_powered_by_jetpack_caption">新しい Jetpack アプリで利用できる新しい統計情報と統計概要を使用して、トラフィックの増加を監視し、オーディエンスについて学びましょう。</string>
+    <string name="wp_jetpack_powered_stats_powered_by_jetpack">統計情報は、Jetpack が提供しています。</string>
+    <string name="wp_jetpack_powered_reader_powered_by_jetpack_caption">新しい Jetpack アプリで利用できる Reader を使用して、お気に入りのサイトや投稿をすべて検索、フォロー、「いいね」できます。</string>
+    <string name="wp_jetpack_powered_reader_powered_by_jetpack">Reader は Jetpack が提供しています。</string>
     <string name="wp_jetpack_powered_better_with_jetpack">Jetpack で WordPress をパワーアップ</string>
     <string name="wp_jetpack_powered_features">新しい Jetpack アプリには、WordPress をパワーアップできる統計情報、ブログ購読ツール、通知などがあります。</string>
     <string name="gutenberg_native_upgrade_your_plan_to_use_video_covers">プランをアップグレードして動画のカバーを使う</string>
@@ -1227,7 +1236,6 @@ Language: ja_JP
     <string name="gutenberg_native_select_a_color">色を選択</string>
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">ダブルタップして色設定に移動</string>
     <string name="reader_empty_followed_blogs_description">サイトをフォローすると、こちらにコンテンツが表示されます</string>
-    <string name="feature_announcement_dialog_label">WordPress の新機能</string>
     <string name="insert_label_with_count">%d を挿入</string>
     <string name="crop">切り取り</string>
     <string name="error_failed_to_load_into_file">ファイルに読み込めませんでした。もう一度お試しください。</string>
@@ -1556,7 +1564,6 @@ Language: ja_JP
     <string name="navigate_forward_desc">進む</string>
     <string name="calendar_scheduled_post_title">WordPress の予約済み投稿 :「%s」</string>
     <string name="notification_post_will_be_published_in_ten_minutes">「%s」は10分後に公開されます</string>
-    <string name="calendar_scheduled_post_description">「%1$s」は WordPress アプリの「%2$s」での公開が予定されています\n %3$s</string>
     <string name="notification_post_will_be_published_in_one_hour">「%s」は1時間後に公開されます</string>
     <string name="notification_post_has_been_published">「%s」が公開されました</string>
     <string name="notification_scheduled_post_ten_minute_reminder">予約済みの投稿 :10分前のリマインダー</string>
@@ -1726,7 +1733,6 @@ Language: ja_JP
     <string name="app_rating_rate_later">後で評価する</string>
     <string name="app_rating_rate_now">今すぐ評価する</string>
     <string name="app_rating_message">ご利用ありがとうございます。アプリをご利用いただきありがとうございます。Google Play ストアでの評価をお願いいたします。</string>
-    <string name="app_rating_title">WordPress の感想をお聞かせください</string>
     <string name="editor_post_converted_back_to_draft">下書きに戻した投稿</string>
     <string name="stats_insights_posting_activity">投稿アクティビティ</string>
     <string name="stats_site_not_loaded_yet">まだ読み込まれていないサイト</string>
@@ -2456,6 +2462,7 @@ Language: ja_JP
     <string name="requesting_otp">SMS 経由で認証コードをリクエスト。</string>
     <string name="login_text_otp">代わりに SMS でコードを送信する</string>
     <string name="enter_verification_code">もう少しで完了です。認証アプリから認証コードを入力してください。</string>
+    <string name="open_mail">メールを開く</string>
     <string name="next">次へ</string>
     <string name="enter_email_wordpress_com">メールアドレスを使用して WordPress.com にログインすると、自分のすべての WordPress サイトを管理できます。</string>
     <string name="image_optimization_promo_desc">画像の最適化により、画像サイズを縮小して迅速に読み込めます。\n\nこれはサイト設定でいつでも変更できます。</string>

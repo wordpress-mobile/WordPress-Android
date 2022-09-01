@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-08-14 07:12:04+0000
+Translation-Revision-Date: 2022-08-24 11:00:20+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.1
 Language: ro
 -->
 <resources>
+    <string name="login_magic_links_sent_label_short">Verifică-ți emailul primit pe acest dispozitiv!</string>
+    <string name="login_magic_links_email_sent">Tocmai am trimis o legătură magică la</string>
+    <string name="wp_jetpack_powered_reader_powered_by_jetpack">Cititor propulsat de Jetpack</string>
+    <string name="wp_jetpack_powered_stats_powered_by_jetpack">Statistici propulsate de Jetpack</string>
+    <string name="wp_jetpack_powered_notifications_powered_by_jetpack">Notificări propulsate de Jetpack</string>
+    <string name="or_use_password">Folosește parola pentru autentificare</string>
+    <string name="wp_jetpack_powered_reader_powered_by_jetpack_caption">Găsește, urmărește și apreciază toate site-urile și articolele tale preferate în Cititor, disponibil acum în noua aplicație Jetpack.</string>
+    <string name="wp_jetpack_powered_stats_powered_by_jetpack_caption">Urmărește creșterea traficului și află despre publicul tău din Statistici și Perspective - reproiectate acum și disponibile în noua aplicație Jetpack.</string>
+    <string name="wp_jetpack_powered_notifications_powered_by_jetpack_caption">Rămâi informat cu actualizări în timp real pentru comentarii noi, trafic pe site, rapoarte de securitate și multe altele.</string>
     <string name="wp_jetpack_powered_features">Noua aplicație Jetpack are Statistici, Cititor, Notificări și altele funcționalități care îmbunătățesc WordPress.</string>
     <string name="wp_jetpack_powered_better_with_jetpack">WordPress este mai bun cu Jetpack</string>
     <string name="gutenberg_native_upgrade_your_plan_to_use_video_covers">Pentru a folosi coperte video, actualizează-ți planul</string>
@@ -1235,7 +1244,6 @@ Language: ro
     <string name="photo_picker_use_media">Folosește acest element media</string>
     <string name="photo_picker_use_video">Folosește acest video</string>
     <string name="photo_picker_photo_or_video_title">Alege un element media</string>
-    <string name="feature_announcement_dialog_label">Care sunt noutățile în WordPress</string>
     <string name="site_picker_ask_site_select">Nu am putut selecta site-ul. Te rog reîncearcă.</string>
     <string name="photo_picker_video_title">Alege videoul</string>
     <string name="sitepicker_continue_flow">Continuă</string>
@@ -1556,7 +1564,6 @@ Language: ro
     <string name="navigate_forward_desc">Du-te înainte</string>
     <string name="calendar_scheduled_post_title">Articol programat în WordPress: „%s”</string>
     <string name="notification_post_will_be_published_in_ten_minutes">„%s” va fi publicat în 10 minute</string>
-    <string name="calendar_scheduled_post_description">„%1$s” este programat pentru publicare pe „%2$s” în aplicația ta WordPress \n %3$s</string>
     <string name="notification_post_will_be_published_in_one_hour">„%s” va fi publicat după o oră</string>
     <string name="notification_post_has_been_published">„%s” a fost publicat</string>
     <string name="notification_scheduled_post_ten_minute_reminder">Articol programat: reamintire în 10 minute</string>
@@ -1726,7 +1733,6 @@ Language: ro
     <string name="app_rating_rate_later">Mai târziu</string>
     <string name="app_rating_rate_now">Evaluează acum</string>
     <string name="app_rating_message">Ne bucurăm să te revedem! Dacă apreciezi aplicația, ne-ar plăcea s-o evaluezi în Magazinul Google Play.</string>
-    <string name="app_rating_title">Îți place WordPress?</string>
     <string name="editor_post_converted_back_to_draft">Articolul a fost convertit înapoi la ciornă</string>
     <string name="stats_insights_posting_activity">Activitate de publicare</string>
     <string name="stats_more_posts">Mai multe articole</string>
@@ -2456,6 +2462,7 @@ Language: ro
     <string name="requesting_otp">Cer un cod de verificare prin SMS.</string>
     <string name="login_text_otp">În schimb, trimite-mi un mesaj text cu un cod</string>
     <string name="enter_verification_code">Aproape gata! Te rog codul de verificare din aplicația ta Authenticator.</string>
+    <string name="open_mail">Deschide corespondența</string>
     <string name="next">Următor</string>
     <string name="enter_email_wordpress_com">Autentifică-te în WordPress.com folosind o adresă de email pentru a-ți administra toate site-urile WordPress.</string>
     <string name="image_optimization_promo_desc">Optimizarea imaginilor micșorează imaginile pentru a le încărca mai rapid.\n\nPoți modifica asta oricând în setările site-ului.</string>

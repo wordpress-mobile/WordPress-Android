@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-08-08 12:35:44+0000
+Translation-Revision-Date: 2022-08-24 10:05:49+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: sv_SE
 -->
 <resources>
+    <string name="login_magic_links_email_sent">Vi har precis skickat en magisk länk till</string>
+    <string name="login_magic_links_sent_label_short">Kontrollera din e-post på denna enhet!</string>
+    <string name="or_use_password">Använd lösenord för att logga in</string>
+    <string name="wp_jetpack_powered_notifications_powered_by_jetpack_caption">Håll dig informerad med uppdateringar i realtid för nya kommentarer, webbplatstrafik, säkerhetsrapporter och mer.</string>
+    <string name="wp_jetpack_powered_notifications_powered_by_jetpack">Aviseringar drivs med Jetpack</string>
+    <string name="wp_jetpack_powered_stats_powered_by_jetpack_caption">Följ upp hur trafiken växer och hitta mer information om dina läsare i den nydesignade sektionen statistik och insikter som nu finns i den nya Jetpack-appen.</string>
+    <string name="wp_jetpack_powered_stats_powered_by_jetpack">Statistik drivs med Jetpack</string>
+    <string name="wp_jetpack_powered_reader_powered_by_jetpack_caption">Funktionerna för att hitta, följa och gilla dina webbplatser och inlägg i ”läsaren” finns ny i den nya Jetpack-appen.</string>
+    <string name="wp_jetpack_powered_reader_powered_by_jetpack">Läsare drivs med Jetpack</string>
     <string name="wp_jetpack_powered_features">Den nya Jetpack-appen innehåller statistik, läsaren, aviseringar och annat som förbättrar din WordPress-installation.</string>
     <string name="wp_jetpack_powered_better_with_jetpack">WordPress är bättre med Jetpack</string>
     <string name="gutenberg_native_upgrade_your_plan_to_use_video_covers">Uppgradera ditt paket för att använda videocovers</string>
@@ -1228,7 +1237,6 @@ Language: sv_SE
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">Dubbeltryck för att gå till färginställningarna</string>
     <string name="reader_empty_followed_blogs_description">Om du följer några webbplatser kan du se deras innehåll här</string>
     <string name="feature_announcement_find_out_mode">Ta reda på mer</string>
-    <string name="feature_announcement_dialog_label">Nyheter i WordPress</string>
     <string name="insert_label_with_count">Infoga %d</string>
     <string name="crop">beskär</string>
     <string name="error_failed_to_load_into_file">Lyckades inte ladda in i filen, försök igen.</string>
@@ -1554,7 +1562,6 @@ Language: sv_SE
     <string name="share_desc">Dela</string>
     <string name="navigate_back_desc">Gå tillbaka</string>
     <string name="navigate_forward_desc">Gå framåt</string>
-    <string name="calendar_scheduled_post_description">”%1$s” har schemalagts för publicering den ”%2$s” i din WordPress-app \n%3$s</string>
     <string name="calendar_scheduled_post_title">Schemalagt WordPress-inlägg: ”%s”</string>
     <string name="notification_post_will_be_published_in_ten_minutes">”%s” kommer att publiceras om 10 minuter</string>
     <string name="notification_post_will_be_published_in_one_hour">”%s” kommer att publiceras om en timme</string>
@@ -1726,7 +1733,6 @@ Language: sv_SE
     <string name="app_rating_rate_later">Senare</string>
     <string name="app_rating_rate_now">Betygsätt nu</string>
     <string name="app_rating_message">Kul att se dig igen! Om du gillar appen vore det härligt om du kunde betygsätta den i Google Play-butiken.</string>
-    <string name="app_rating_title">Gillar du WordPress?</string>
     <string name="editor_post_converted_back_to_draft">Inlägget har konverterats tillbaka till ett utkast</string>
     <string name="stats_insights_posting_activity">Publiceringsaktivitet</string>
     <string name="stats_site_not_loaded_yet">Webbplatsen har inte laddats klart</string>
@@ -2456,6 +2462,7 @@ Language: sv_SE
     <string name="requesting_otp">Begär en verifieringskod via SMS.</string>
     <string name="login_text_otp">Skicka mig en kod via SMS istället</string>
     <string name="enter_verification_code">Nästan klart! Skriv in verifieringskoden från din Authenticator-app.</string>
+    <string name="open_mail">Öppna e-posten</string>
     <string name="next">Nästa</string>
     <string name="enter_email_wordpress_com">Logga in på WordPress.com med hjälp av en e-postadress för att hantera alla dina WordPress-webbplatser.</string>
     <string name="image_optimization_promo_desc">Bildoptimering minskar storleken på blder för snabbare uppladdning.\n\nDu kan när som helst ändra detta i webbplatsinställningarna.</string>

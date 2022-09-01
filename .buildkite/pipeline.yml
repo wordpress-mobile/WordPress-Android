@@ -78,14 +78,14 @@ steps:
   #################
   # Create Installable Builds for WP and JP
   #################
-  - group: "🛠 Installable Builds"
+  - group: "📲 Installable Builds"
     steps:
-      - label: "🛠 WordPress Installable Build"
+      - label: ":wordpress: :android: Installable Build"
         command: ".buildkite/commands/installable-build.sh wordpress"
         if: build.pull_request.id != null
         plugins: *common_plugins
 
-      - label: "🛠 Jetpack Installable Build"
+      - label: ":jetpack: :android: Installable Build"
         command: ".buildkite/commands/installable-build.sh jetpack"
         if: build.pull_request.id != null
         plugins: *common_plugins

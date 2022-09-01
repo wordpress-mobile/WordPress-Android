@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-08-10 15:54:10+0000
+Translation-Revision-Date: 2022-08-24 14:54:08+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: tr
@@ -1228,7 +1228,6 @@ Language: tr
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">Renk ayarlarına gitmek için çift dokunun</string>
     <string name="reader_empty_followed_blogs_description">Siteleri takip ettiğinizde, içeriklerini burada görürsünüz</string>
     <string name="feature_announcement_find_out_mode">Daha fazlasını bul</string>
-    <string name="feature_announcement_dialog_label">WordPress\'de neler yeni</string>
     <string name="insert_label_with_count">%d ekle</string>
     <string name="crop">kırp</string>
     <string name="error_failed_to_load_into_file">Dosyaya yüklenemedi, lütfen tekrar deneyin.</string>
@@ -1554,7 +1553,6 @@ Language: tr
     <string name="share_desc">Paylaş</string>
     <string name="navigate_back_desc">Geri dön</string>
     <string name="navigate_forward_desc">İleri git</string>
-    <string name="calendar_scheduled_post_description">\"%1$s\", \n WordPress uygulamanızda \"%2$s\" tarihinde yayınlanmak üzere zamanlandı %3$s</string>
     <string name="calendar_scheduled_post_title">WordPress Zamanlanmış Gönderi: \"%s\"</string>
     <string name="notification_post_will_be_published_in_ten_minutes">\"%s\" 10 dakika içinde yayımlanacak</string>
     <string name="notification_post_will_be_published_in_one_hour">\"%s\" 1 saat içinde yayımlanacak</string>
@@ -1726,7 +1724,6 @@ Language: tr
     <string name="app_rating_rate_later">Sonra</string>
     <string name="app_rating_rate_now">Şimdi puanla</string>
     <string name="app_rating_message">Seni tekrar görmek güzel! Eğer uygulamayı sonuna kadar kullandıysan, Google Play mağazasında bir derecelendirmeye bayılırız.</string>
-    <string name="app_rating_title">WordPress hoşunuza gitti mi?</string>
     <string name="editor_post_converted_back_to_draft">Yazı taslağa geri dönderildi</string>
     <string name="stats_insights_posting_activity">Yazma etkinliği</string>
     <string name="stats_site_not_loaded_yet">Site henüz yüklenmedi</string>
@@ -2456,6 +2453,7 @@ Language: tr
     <string name="requesting_otp">SMS ile bir doğrulama kodu istemek.</string>
     <string name="login_text_otp">Bunun yerine bana SMS ile bir kod gönder</string>
     <string name="enter_verification_code">Neredeyse tamam. Lütfen kimlik doğrulayıcı uygulamanızdan doğrulama kodunu girin.</string>
+    <string name="open_mail">E-postayı Aç</string>
     <string name="next">Sonraki</string>
     <string name="enter_email_wordpress_com">Tüm WordPress sitelerinizi yönetmek için bir e-posta adresi kullanarak WordPress.com\'a oturum açın.</string>
     <string name="image_optimization_promo_desc">Görsel optimizasyonu daha hızlı yükleme için görselleri küçültür\n\nSite ayarlarından bu ayarı istediğiniz zaman değiştirebilirsiniz.</string>

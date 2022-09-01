@@ -167,7 +167,7 @@ android {
             applicationId "com.jetpack.android"
             buildConfigField "boolean", "IS_JETPACK_APP", "true"
             buildConfigField "boolean", "ENABLE_SITE_CREATION", "true"
-            buildConfigField "boolean", "ENABLE_ADD_SELF_HOSTED_SITE", "false"
+            buildConfigField "boolean", "ENABLE_ADD_SELF_HOSTED_SITE", "true"
             buildConfigField "boolean", "ENABLE_SIGNUP", "true"
             buildConfigField "boolean", "ENABLE_READER", "true"
             buildConfigField "boolean", "ENABLE_CREATE_FAB", "true"
