@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.screenshots;
 
 import android.content.Context;
+import android.provider.Settings;
 import android.view.inputmethod.InputMethodManager;
 
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -40,7 +41,7 @@ public class ImeTestRule implements TestRule {
             public void evaluate() throws Throwable {
                 String original = null;
                 try {
-                    forceIme(mAllowedIme);
+                    original = forceIme(mAllowedIme);
                     base.evaluate();
                 } finally {
                     if (original != null) {
@@ -51,9 +52,11 @@ public class ImeTestRule implements TestRule {
         };
     }
 
-    private void forceIme(String ime) {
-        Context context = InstrumentationRegistry.getInstrumentation().getContext();
+    private String forceIme(String ime) {
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        String original = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.DEFAULT_INPUT_METHOD);
         InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.setInputMethod(null, ime);
+        return original;
     }
 }
