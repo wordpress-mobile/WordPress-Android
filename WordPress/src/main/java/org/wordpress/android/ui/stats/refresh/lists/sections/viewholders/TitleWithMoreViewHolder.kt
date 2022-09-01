@@ -17,12 +17,21 @@ class TitleWithMoreViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
     private val viewMore = itemView.findViewById<MaterialButton>(id.view_more_button)
 
     fun bind(item: TitleWithMore) {
-        title.setTextOrHide(item)
+        title.multiLineText(item)
         if (item.navigationAction != null) {
             viewMore.isVisible = true
             viewMore.setOnClickListener { item.navigationAction.click() }
         } else {
             viewMore.visibility = View.GONE
         }
+    }
+
+    private fun TextView.multiLineText(item: TitleWithMore) {
+        this.visibility = View.VISIBLE
+        if (item.navigationAction == null) {
+            this.ellipsize = null
+            this.maxLines = Int.MAX_VALUE
+        }
+        this.setTextOrHide(item.textResource, item.text)
     }
 }

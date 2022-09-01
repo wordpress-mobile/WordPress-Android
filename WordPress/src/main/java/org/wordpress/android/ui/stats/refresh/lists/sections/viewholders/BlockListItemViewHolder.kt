@@ -10,7 +10,6 @@ import androidx.annotation.LayoutRes
 import androidx.annotation.StringRes
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import org.wordpress.android.R
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.IconStyle.AVATAR
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.IconStyle.EMPTY_SPACE
@@ -41,15 +40,6 @@ open class BlockListItemViewHolder(
             }
             else -> this.visibility = View.GONE
         }
-    }
-
-    protected fun TextView.setTextOrHide(item: BlockListItem.TitleWithMore) {
-        this.visibility = View.VISIBLE
-        if(item.navigationAction == null){
-            this.ellipsize = null
-            this.maxLines = Int.MAX_VALUE
-        }
-        this.setTextOrHide(item.textResource,item.text)
     }
 
     private fun ImageView.setImageOrLoad(
