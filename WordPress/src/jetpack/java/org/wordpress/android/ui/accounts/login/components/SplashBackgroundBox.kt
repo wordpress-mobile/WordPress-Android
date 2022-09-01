@@ -55,9 +55,9 @@ private fun SplashBox(
 }
 
 @Composable
-fun SplashBackground(
+fun SplashBackgroundBox(
     columnContent: @Composable ColumnScope.() -> Unit
-) {
+) = Box {
     val blurClipShape = remember {
         object : Shape {
             override fun createOutline(size: Size, layoutDirection: LayoutDirection, density: Density): Rectangle {
@@ -96,6 +96,6 @@ fun SplashBackground(
 @Composable
 fun PreviewSplashBackgroundBox() {
     AppTheme {
-        SplashBackground {}
+        SplashBackgroundBox {}
     }
 }

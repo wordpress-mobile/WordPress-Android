@@ -21,7 +21,7 @@ import org.wordpress.android.ui.accounts.login.components.ButtonsColumn
 import org.wordpress.android.ui.accounts.login.components.JetpackLogo
 import org.wordpress.android.ui.accounts.login.components.PrimaryButton
 import org.wordpress.android.ui.accounts.login.components.SecondaryButton
-import org.wordpress.android.ui.accounts.login.components.SplashBackground
+import org.wordpress.android.ui.accounts.login.components.SplashBackgroundBox
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.util.extensions.showFullScreen
 
@@ -69,7 +69,7 @@ private fun LoginScreenRevamped(
     onWpComLoginClicked: () -> Unit,
     onSiteAddressLoginClicked: () -> Unit,
 ) {
-    SplashBackground {
+    SplashBackgroundBox {
         JetpackLogo(
                 modifier = Modifier
                         .padding(top = 60.dp)
@@ -83,8 +83,8 @@ private fun LoginScreenRevamped(
     }
 }
 
-@Preview(showBackground = true, device = Devices.PIXEL_4)
-@Preview(showBackground = true, device = Devices.PIXEL_4, uiMode = UI_MODE_NIGHT_YES)
+@Preview(showBackground = true, device = Devices.PIXEL_4_XL)
+@Preview(showBackground = true, device = Devices.PIXEL_4_XL, uiMode = UI_MODE_NIGHT_YES)
 @Composable
 fun PreviewLoginScreenRevamped() {
     AppTheme {
