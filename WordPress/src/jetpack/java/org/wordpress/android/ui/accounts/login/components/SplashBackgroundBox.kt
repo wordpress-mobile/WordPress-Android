@@ -17,6 +17,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.BlurredEdgeTreatment
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Rect
@@ -56,13 +57,6 @@ private fun SplashBox(
     }
 }
 
-/**
- * The approach used here to set the height of blurred area is not recommended in the compose guidelines.
- * See [Recomposition loop (cyclic phase dependency)](https://developer.android.com/jetpack/compose/phases#recomp-loop)
- * A better approach would be to make use of
- * [Custom layouts](https://developer.android.com/jetpack/compose/layouts/custom),
- * but that requires further investigation.
- */
 @Composable
 fun SplashBackgroundBox(
     blurredAreaHeight: MutableState<Int>,
@@ -87,7 +81,9 @@ fun SplashBackgroundBox(
         SplashBox()
         SplashBox(
                 modifier = Modifier.clip(blurClipShape),
-                textModifier = Modifier.blur(15.dp, BlurredEdgeTreatment.Unbounded)
+                textModifier = Modifier
+                        .blur(15.dp, BlurredEdgeTreatment.Unbounded)
+                        .alpha(0.75f) // Fallback for Android versions older than 12 where blur is not supported
         )
         Image(
                 painter = painterResource(drawable.bg_jetpack_login_splash_top_gradient),
