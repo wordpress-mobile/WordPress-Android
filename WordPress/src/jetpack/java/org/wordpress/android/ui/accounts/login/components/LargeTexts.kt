@@ -34,7 +34,7 @@ val texts = listOf(
 )
 
 private val Divider = @Composable {
-    Spacer(modifier = Modifier.height(Margin.Small.value))
+    Spacer(modifier = Modifier.height(2.dp))
 }
 
 @Composable
