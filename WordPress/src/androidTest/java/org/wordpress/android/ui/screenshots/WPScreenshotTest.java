@@ -1,12 +1,10 @@
 package org.wordpress.android.ui.screenshots;
 
-import android.Manifest;
 import android.provider.Settings;
 
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.Espresso;
 import androidx.test.filters.LargeTest;
-import androidx.test.rule.GrantPermissionRule;
 
 import com.google.android.libraries.cloudtesting.screenshots.ScreenShotter;
 
@@ -50,18 +48,17 @@ import tools.fastlane.screengrab.locale.LocaleTestRule;
 public class WPScreenshotTest extends BaseTest {
     @ClassRule
     public static final RuleChain LOCALE_TEST_RULES = RuleChain
-            // Run fastlane Screengrab's official LocaleTestRule (which switches device language) first
+            // Run fastlane's official LocaleTestRule (which switches device language + sets up screengrab) first
             .outerRule(new LocaleTestRule())
             // Run our own rule (which handles our in-app locale switching logic) second
             .around(new WPLocaleTestRule());
 
-    // Note: running those as static @ClassRule doesn't seem to work (apparently that would make those run too early?)
-    // But running them as @Rule does fix the issue. Since we only have one test case in that test class
-    // (and that the code to change the IME is fast), that shouldn't really be problem in practice.
+    // Note: running this as a static @ClassRule as part of the above RuleChain doesn't seem to work
+    // (apparently that would make those run too early?), but running it as @Rule does fix the issue.
+    // Since we only have one test case in that test class (and that the code to change the IME is fast),
+    // that shouldn't really be problem in practice.
     @Rule
-    public RuleChain IME_TEST_RULES = RuleChain
-            .outerRule(GrantPermissionRule.grant(Manifest.permission.WRITE_SECURE_SETTINGS))
-            .around(new ImeTestRule());
+    public ImeTestRule IME_TEST_RULE = new ImeTestRule();
 
     private DemoModeEnabler mDemoModeEnabler = new DemoModeEnabler();
 
