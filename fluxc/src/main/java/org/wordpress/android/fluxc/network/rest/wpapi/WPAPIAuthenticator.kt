@@ -12,8 +12,6 @@ import org.wordpress.android.fluxc.store.ReactNativeStore
 import org.wordpress.android.fluxc.utils.CurrentTimeProvider
 import javax.inject.Inject
 
-private const val FIVE_MIN_MILLIS: Long = 5 * 60 * 1000
-
 class WPAPIAuthenticator @Inject constructor(
     private val nonceRestClient: NonceRestClient,
     private val discoveryWPAPIRestClient: DiscoveryWPAPIRestClient,
@@ -35,53 +33,60 @@ class WPAPIAuthenticator @Inject constructor(
         }
         var nonce = nonceRestClient.getNonce(site)
         val usingSavedNonce = nonce is Available
-        val failedRecently = true == (nonce as? FailedRequest)?.timeOfResponse?.let {
-            it + FIVE_MIN_MILLIS > currentTimeProvider.currentDate().time
-        }
+        val failedRecently = nonce.failedRecently()
         if (nonce is Unknown || !(usingSavedNonce || failedRecently)) {
             nonce = nonceRestClient.requestNonce(site)
         }
 
         val response = fetchMethod(nonce)
-        return when (response.isError) {
-            false -> response
-            else -> when (response.error?.volleyError?.networkResponse?.statusCode) {
-                401 -> {
-                    if (usingSavedNonce) {
-                        // Call with saved nonce failed, so try getting a new one
-                        val previousNonce = nonce
-                        val newNonce = nonceRestClient.requestNonce(site)
 
-                        // Try original call again if we have a new nonce
-                        val nonceIsUpdated = newNonce != null && newNonce != previousNonce
-                        if (nonceIsUpdated) {
-                            return fetchMethod(newNonce)
-                        }
-                    }
-                    response
-                }
+        if (!response.isError) return response
+        return when (response.error?.volleyError?.networkResponse?.statusCode) {
+            STATUS_CODE_UNAUTHORIZED -> {
+                if (usingSavedNonce) {
+                    // Call with saved nonce failed, so try getting a new one
+                    val previousNonce = nonce
+                    val newNonce = nonceRestClient.requestNonce(site)
 
-                404 -> {
-                    // call failed with 'not found' so clear the (failing) rest url
-                    site.wpApiRestUrl = null
-                    (siteSqlUtils::insertOrUpdateSite)(site)
-
-                    if (usingSavedRestUrl) {
-                        // If we did the previous call with a saved rest url, try again by making
-                        // recursive call. This time there is no saved rest url to use
-                        // so the rest url will be retrieved using discovery
-                        makeAuthenticatedWPAPIRequest(site, fetchMethod)
+                    // Try original call again if we have a new nonce
+                    val nonceIsUpdated = newNonce != null && newNonce != previousNonce
+                    if (nonceIsUpdated) {
+                        fetchMethod(newNonce)
                     } else {
-                        // Already used discovery to fetch the rest base url and still got 'not found', so
-                        // just return the error response
                         response
                     }
-
-                    // For all other failures just return the error response
+                } else {
+                    response
                 }
-
-                else -> response
             }
+            STATUS_CODE_NOT_FOUND -> {
+                // call failed with 'not found' so clear the (failing) rest url
+                site.wpApiRestUrl = null
+                (siteSqlUtils::insertOrUpdateSite)(site)
+
+                if (usingSavedRestUrl) {
+                    // If we did the previous call with a saved rest url, try again by making
+                    // recursive call. This time there is no saved rest url to use
+                    // so the rest url will be retrieved using discovery
+                    makeAuthenticatedWPAPIRequest(site, fetchMethod)
+                } else {
+                    // Already used discovery to fetch the rest base url and still got 'not found', so
+                    // just return the error response
+                    response
+                }
+            }
+            // For all other failures just return the error response
+            else -> response
         }
+    }
+
+    private fun Nonce?.failedRecently() = (this as? FailedRequest)?.timeOfResponse?.let {
+        it + FIVE_MIN_MILLIS > currentTimeProvider.currentDate().time
+    } == true
+
+    companion object {
+        private const val FIVE_MIN_MILLIS: Long = 5 * 60 * 1000
+        private const val STATUS_CODE_NOT_FOUND = 404
+        private const val STATUS_CODE_UNAUTHORIZED = 401
     }
 }
