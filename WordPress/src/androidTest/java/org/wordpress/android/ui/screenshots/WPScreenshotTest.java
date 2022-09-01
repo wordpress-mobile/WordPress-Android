@@ -50,9 +50,9 @@ import tools.fastlane.screengrab.locale.LocaleTestRule;
 public class WPScreenshotTest extends BaseTest {
     @ClassRule
     public static final RuleChain LOCALE_TEST_RULES = RuleChain
-            // Run fastlane Screengrab's official LocaleTestRule first (and clean it up last)
+            // Run fastlane Screengrab's official LocaleTestRule (which switches device language) first
             .outerRule(new LocaleTestRule())
-            // Run our own rule (which handles our in-app locale switching logic) second (and clean it up first)
+            // Run our own rule (which handles our in-app locale switching logic) second
             .around(new WPLocaleTestRule());
 
     // Note: running those as static @ClassRule doesn't seem to work (apparently that would make those run too early?)
@@ -61,7 +61,7 @@ public class WPScreenshotTest extends BaseTest {
     @Rule
     public RuleChain IME_TEST_RULES = RuleChain
             .outerRule(GrantPermissionRule.grant(Manifest.permission.WRITE_SECURE_SETTINGS))
-            .around(new ImeTestRule("com.google.android.inputmethod.latin/com.android.inputmethod.latin.LatinIME"));
+            .around(new ImeTestRule());
 
     private DemoModeEnabler mDemoModeEnabler = new DemoModeEnabler();
 
