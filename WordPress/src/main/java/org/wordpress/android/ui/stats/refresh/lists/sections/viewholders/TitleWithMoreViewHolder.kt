@@ -7,6 +7,7 @@ import androidx.core.view.isVisible
 import com.google.android.material.button.MaterialButton
 import org.wordpress.android.R
 import org.wordpress.android.R.id
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TitleWithMore
 
 class TitleWithMoreViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
