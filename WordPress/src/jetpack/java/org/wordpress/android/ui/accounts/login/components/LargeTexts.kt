@@ -41,7 +41,7 @@ fun LargeTexts(
     AutoScrollingLazyColumn(
             items = items,
             modifier = modifier,
-            divider = Divider,
+            itemDivider = Divider,
     ) {
         LargeText(
                 text = it,

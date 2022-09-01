@@ -32,7 +32,7 @@ private val DefaultDivider = @Composable {
 @Composable
 fun <T : Any> AutoScrollingLazyColumn(
     items: List<T>,
-    divider: @Composable () -> Unit = DefaultDivider,
+    itemDivider: @Composable () -> Unit = DefaultDivider,
     modifier: Modifier = Modifier,
     itemContent: @Composable (item: T) -> Unit,
 ) {
@@ -48,7 +48,7 @@ fun <T : Any> AutoScrollingLazyColumn(
                 val coroutineScope = rememberCoroutineScope()
 
                 itemContent(it)
-                divider()
+                itemDivider()
 
                 if (it == items.last()) {
                     val currentList = itemsListState
