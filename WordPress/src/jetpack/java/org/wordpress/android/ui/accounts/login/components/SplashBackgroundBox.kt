@@ -83,7 +83,7 @@ fun SplashBackgroundBox(
                 modifier = Modifier.clip(blurClipShape),
                 textModifier = Modifier
                         .blur(15.dp, BlurredEdgeTreatment.Unbounded)
-                        .alpha(0.75f) // Fallback for Android versions older than 12 where blur is not supported
+                        .alpha(0.5f) // Fallback for Android versions older than 12 where blur is not supported
         )
         Image(
                 painter = painterResource(drawable.bg_jetpack_login_splash_top_gradient),
