@@ -40,8 +40,8 @@ fun LargeTexts(
 ) {
     AutoScrollingLazyColumn(
             items = items,
-            modifier = modifier,
             itemDivider = Divider,
+            modifier = modifier,
     ) {
         LargeText(
                 text = it,
