@@ -22,8 +22,8 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.wordpress.android.ui.compose.unit.Margin
 
-private const val DELAY_BETWEEN_SCROLL_MS = 8L
-private const val SCROLL_DY = 1
+private const val DELAY_BETWEEN_SCROLL_MS = 5L
+private const val SCROLL_BY_PX = 1f
 
 private val DefaultDivider = @Composable {
     Spacer(modifier = Modifier.height(Margin.MediumLarge.value))
@@ -36,6 +36,8 @@ interface AutoScrollingListItem {
 @Composable
 fun <T : AutoScrollingListItem> AutoScrollingLazyColumn(
     items: List<T>,
+    scrollBy: Float = SCROLL_BY_PX,
+    scrollDelay: Long = DELAY_BETWEEN_SCROLL_MS,
     modifier: Modifier = Modifier,
     itemDivider: @Composable () -> Unit = DefaultDivider,
     itemContent: @Composable (item: T) -> Unit,
@@ -59,9 +61,9 @@ fun <T : AutoScrollingListItem> AutoScrollingLazyColumn(
                     val secondPart = currentList.subList(0, lazyListState.firstVisibleItemIndex)
                     val firstPart = currentList.subList(lazyListState.firstVisibleItemIndex, currentList.size)
 
-                    coroutineScope.launch {
-                        val offset = maxOf(0, lazyListState.firstVisibleItemScrollOffset - SCROLL_DY)
-                        lazyListState.scrollToItem(0, offset)
+                    rememberCoroutineScope().launch {
+                        val offset = lazyListState.firstVisibleItemScrollOffset + scrollBy
+                        lazyListState.scrollToItem(0, offset.toInt())
                     }
 
                     itemsListState = firstPart + secondPart
@@ -71,17 +73,21 @@ fun <T : AutoScrollingListItem> AutoScrollingLazyColumn(
     }
 
     LaunchedEffect(Unit) {
-        lazyListState.autoScroll()
+        autoScroll(lazyListState, scrollBy, scrollDelay)
     }
 }
 
-private tailrec suspend fun LazyListState.autoScroll() {
-    scroll(MutatePriority.PreventUserInput) {
-        scrollBy(SCROLL_DY.toFloat())
+private tailrec suspend fun autoScroll(
+    lazyListState: LazyListState,
+    scrollBy: Float,
+    scrollDelay: Long,
+) {
+    lazyListState.scroll(MutatePriority.PreventUserInput) {
+        scrollBy(scrollBy)
     }
-    delay(DELAY_BETWEEN_SCROLL_MS)
+    delay(scrollDelay)
 
-    autoScroll()
+    autoScroll(lazyListState, scrollBy, scrollDelay)
 }
 
 private fun Modifier.scrollable(value: Boolean) = nestedScroll(
