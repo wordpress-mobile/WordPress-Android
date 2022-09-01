@@ -41,16 +41,23 @@ class FeatureFlagsStore @Inject constructor(
         }
     }
 
-    suspend fun getFeatureFlags(): List<RemoteConfig> {
+    fun getFeatureFlags(): List<RemoteConfig> {
         return remoteConfigDao.getRemoteConfigs()
     }
 
-    suspend fun getFeature(key: String): List<RemoteConfig> {
+    fun getFeature(key: String): List<RemoteConfig> {
         return remoteConfigDao.getRemoteConfig(key)
     }
 
-    suspend fun insertRemoteConfigValue(key: String, value: Boolean) {
-        remoteConfigDao.insertRemoteConfig(RemoteConfig(key, value))
+    fun insertRemoteConfigValue(key: String, value: Boolean) {
+        remoteConfigDao.insertRemoteConfig(
+                RemoteConfig(
+                        key = key,
+                        value = value,
+                        createdAt = System.currentTimeMillis(),
+                        modifiedAt = System.currentTimeMillis()
+                )
+        )
     }
 
     data class FeatureFlagsResult(
