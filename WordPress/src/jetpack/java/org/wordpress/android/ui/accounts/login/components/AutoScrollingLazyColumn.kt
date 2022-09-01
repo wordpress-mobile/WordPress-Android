@@ -58,15 +58,15 @@ fun <T : AutoScrollingListItem> AutoScrollingLazyColumn(
                 if (it.id == items.last().id) {
                     val currentList = itemsListState
 
-                    val secondPart = currentList.subList(0, lazyListState.firstVisibleItemIndex)
-                    val firstPart = currentList.subList(lazyListState.firstVisibleItemIndex, currentList.size)
+                    val itemsAboveFirst = currentList.subList(0, lazyListState.firstVisibleItemIndex)
+                    val itemsBelowFirst = currentList.subList(lazyListState.firstVisibleItemIndex, currentList.size)
 
                     rememberCoroutineScope().launch {
                         val offset = lazyListState.firstVisibleItemScrollOffset + scrollBy
                         lazyListState.scrollToItem(0, offset.toInt())
                     }
 
-                    itemsListState = firstPart + secondPart
+                    itemsListState = itemsBelowFirst + itemsAboveFirst
                 }
             }
         }
