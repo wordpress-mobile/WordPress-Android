@@ -49,6 +49,7 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.OnPostFormatsChanged;
 import org.wordpress.android.fluxc.store.TaxonomyStore;
 import org.wordpress.android.fluxc.store.TaxonomyStore.OnTaxonomyChanged;
+import org.wordpress.android.models.Person;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher;
 import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult;
@@ -364,6 +365,15 @@ public class EditPostSettingsFragment extends Fragment {
             }
         });
 
+        mPublishedViewModel.getAuthors().observe(getViewLifecycleOwner(), authors -> {
+            if (authors.size() > 1) {
+                // Authors are fetched and there are multiple authors. Show the Author button.
+                final LinearLayout authorContainer = rootView.findViewById(R.id.post_author_container);
+                authorContainer.setVisibility(View.VISIBLE);
+                authorContainer.setOnClickListener(view -> showAuthorDialog());
+            }
+        });
+
         mStickySwitch.setOnCheckedChangeListener(mOnStickySwitchChangeListener);
 
 
@@ -604,6 +614,15 @@ public class EditPostSettingsFragment extends Fragment {
                 index = fragment.getCheckedIndex();
                 status = getPostStatusAtIndex(index);
                 break;
+            case AUTHOR:
+                index = fragment.getCheckedIndex();
+                List<Person> authors = mPublishedViewModel.getAuthors().getValue();
+                if (authors == null) {
+                    return;
+                }
+                Person author = authors.get(index);
+                updateAuthor(author);
+                break;
             case POST_FORMAT:
                 String formatName = fragment.getSelectedItem();
                 updatePostFormat(getPostFormatKeyFromName(formatName));
@@ -629,6 +648,28 @@ public class EditPostSettingsFragment extends Fragment {
         DialogType statusType = isSiteHomepage ? DialogType.HOMEPAGE_STATUS : DialogType.POST_STATUS;
         PostSettingsListDialogFragment fragment =
                 PostSettingsListDialogFragment.newInstance(statusType, index);
+        fragment.show(fm, PostSettingsListDialogFragment.TAG);
+    }
+
+    private void showAuthorDialog() {
+        if (!isAdded()) {
+            return;
+        }
+
+        List<Person> siteUsers = mPublishedViewModel.getAuthors().getValue();
+        if (siteUsers == null) {
+            return;
+        }
+        String[] authorNames = siteUsers.stream().map(Person::getDisplayName).toArray(String[]::new);
+        int index = getAuthorIndex(siteUsers);
+        if (index < 0) {
+            // index is never negative. But if it is, don't show the dialog.
+            return;
+        }
+        FragmentManager fm = getActivity().getSupportFragmentManager();
+
+        PostSettingsListDialogFragment fragment =
+                PostSettingsListDialogFragment.newInstance(DialogType.AUTHOR, index, authorNames);
         fragment.show(fm, PostSettingsListDialogFragment.TAG);
     }
 
@@ -802,6 +843,22 @@ public class EditPostSettingsFragment extends Fragment {
                         updateSaveButton();
                         return null;
                     });
+        }
+    }
+
+    void updateAuthor(Person author) {
+        EditPostRepository editPostRepository = getEditPostRepository();
+        if (editPostRepository != null) {
+            editPostRepository.updateAsync(postModel -> {
+                postModel.setAuthorId(author.getPersonID());
+                postModel.setAuthorDisplayName(author.getDisplayName());
+                return true;
+            }, (postModel, result) -> {
+                if (result == UpdatePostResult.Updated.INSTANCE) {
+                    updateAuthorTextView(postModel);
+                }
+                return null;
+            });
         }
     }
 
@@ -986,6 +1043,19 @@ public class EditPostSettingsFragment extends Fragment {
                 return 0;
         }
         return 0;
+    }
+
+    private int getAuthorIndex(List<Person> siteUsers) {
+        PostImmutableModel postModel = getEditPostRepository().getPost();
+        if (postModel == null) {
+            return -1;
+        }
+        for (int i = 0; i < siteUsers.size(); i++) {
+            if (siteUsers.get(i).getPersonID() == postModel.getAuthorId()) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     // Post Format Helpers

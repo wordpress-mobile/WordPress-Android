@@ -1947,6 +1947,7 @@
     <string name="error_fetch_remote_site_settings">Couldn\'t retrieve site info</string>
     <string name="error_post_remote_site_settings">Couldn\'t save site info</string>
     <string name="error_fetch_users_list">Couldn\'t retrieve site users</string>
+    <string name="error_fetch_authors_list">Couldn\'t retrieve authors</string>
     <string name="error_fetch_followers_list">Couldn\'t retrieve site followers</string>
     <string name="error_fetch_email_followers_list">Couldn\'t retrieve site email followers</string>
     <string name="error_fetch_viewers_list">Couldn\'t retrieve site viewers</string>

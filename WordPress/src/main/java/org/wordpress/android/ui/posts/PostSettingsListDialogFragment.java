@@ -20,12 +20,14 @@ import org.wordpress.android.util.AppLog;
 public class PostSettingsListDialogFragment extends DialogFragment {
     private static final String ARG_DIALOG_TYPE = "dialog_type";
     private static final String ARG_CHECKED_INDEX = "checked_index";
+    private static final String ARG_ITEMS = "items";
 
     public static final String TAG = "post_list_settings_dialog_fragment";
 
     enum DialogType {
         HOMEPAGE_STATUS,
         POST_STATUS,
+        AUTHOR,
         POST_FORMAT
     }
 
@@ -34,14 +36,24 @@ public class PostSettingsListDialogFragment extends DialogFragment {
     }
 
     private DialogType mDialogType;
+    private String[] mItems;
     private int mCheckedIndex;
     private OnPostSettingsDialogFragmentListener mListener;
 
     public static PostSettingsListDialogFragment newInstance(@NonNull DialogType dialogType, int index) {
+        return newInstance(dialogType, index, null);
+    }
+
+    public static PostSettingsListDialogFragment newInstance(
+            @NonNull DialogType dialogType,
+            int index,
+            String[] items
+    ) {
         PostSettingsListDialogFragment fragment = new PostSettingsListDialogFragment();
         Bundle args = new Bundle();
         args.putSerializable(ARG_DIALOG_TYPE, dialogType);
         args.putInt(ARG_CHECKED_INDEX, index);
+        args.putStringArray(ARG_ITEMS, items);
         fragment.setArguments(args);
         return fragment;
     }
@@ -57,6 +69,7 @@ public class PostSettingsListDialogFragment extends DialogFragment {
         super.setArguments(args);
         mDialogType = (DialogType) args.getSerializable(ARG_DIALOG_TYPE);
         mCheckedIndex = args.getInt(ARG_CHECKED_INDEX);
+        mItems = args.getStringArray(ARG_ITEMS);
     }
 
     @SuppressWarnings("deprecation")
@@ -98,6 +111,10 @@ public class PostSettingsListDialogFragment extends DialogFragment {
                         R.array.post_settings_statuses,
                         mCheckedIndex,
                         clickListener);
+                break;
+            case AUTHOR:
+                builder.setTitle(R.string.post_settings_author);
+                builder.setSingleChoiceItems(mItems, mCheckedIndex, clickListener);
                 break;
             case POST_FORMAT:
                 builder.setTitle(R.string.post_settings_post_format);
