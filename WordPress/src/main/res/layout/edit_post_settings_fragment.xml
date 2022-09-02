@@ -64,6 +64,22 @@
                     style="@style/PostSettingsSubtitle"
                     android:hint="@string/post_settings_not_set" />
             </LinearLayout>
+
+            <View style="@style/PostSettingsDivider" />
+
+            <LinearLayout
+                android:id="@+id/post_author_container"
+                style="@style/PostSettingsContainer"
+                android:visibility="gone">
+
+                <com.google.android.material.textview.MaterialTextView
+                    style="@style/PostSettingsTitle"
+                    android:text="@string/post_settings_author" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/post_author"
+                    style="@style/PostSettingsSubtitle" />
+            </LinearLayout>
         </LinearLayout>
 
         <!--Categories & Tags-->

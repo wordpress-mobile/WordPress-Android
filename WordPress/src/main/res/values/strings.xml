@@ -1663,6 +1663,7 @@
     <!-- Post Settings -->
     <string name="post_settings">Post settings</string>
     <string name="post_settings_status" translatable="false">@string/status_and_visibility</string>
+    <string name="post_settings_author">Author</string>
     <string name="post_settings_categories_and_tags">Categories &amp; Tags</string>
     <string name="post_settings_publish">Publish</string>
     <string name="post_settings_mark_as_sticky_options_header">Mark as sticky</string>

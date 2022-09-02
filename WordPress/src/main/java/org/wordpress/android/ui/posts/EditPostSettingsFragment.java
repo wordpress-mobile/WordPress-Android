@@ -109,6 +109,7 @@ public class EditPostSettingsFragment extends Fragment {
     private TextView mStatusTextView;
     private TextView mPostFormatTextView;
     private TextView mPasswordTextView;
+    private TextView mAuthorTextView;
     private TextView mPublishDateTextView;
     private TextView mPublishDateTitleTextView;
     private TextView mCategoriesTagsHeaderTextView;
@@ -257,6 +258,7 @@ public class EditPostSettingsFragment extends Fragment {
         mStatusTextView = rootView.findViewById(R.id.post_status);
         mPostFormatTextView = rootView.findViewById(R.id.post_format);
         mPasswordTextView = rootView.findViewById(R.id.post_password);
+        mAuthorTextView = rootView.findViewById(R.id.post_author);
         mPublishDateTextView = rootView.findViewById(R.id.publish_date);
         mPublishDateTitleTextView = rootView.findViewById(R.id.publish_date_title);
         mCategoriesTagsHeaderTextView = rootView.findViewById(R.id.post_settings_categories_and_tags_header);
@@ -478,6 +480,7 @@ public class EditPostSettingsFragment extends Fragment {
         updateTagsTextView(postModel);
         updateStatusTextView();
         updatePublishDateTextView(postModel);
+        updateAuthorTextView(postModel);
         mPublishedViewModel.start(getEditPostRepository());
         updateCategoriesTextView(postModel);
         updateFeaturedImageView(postModel);
@@ -900,6 +903,10 @@ public class EditPostSettingsFragment extends Fragment {
         mPublishDateTextView.setEnabled(!isPrivatePost);
         mPublishDateTitleTextView.setEnabled(!isPrivatePost);
         mPublishDateContainer.setEnabled(!isPrivatePost);
+    }
+
+    private void updateAuthorTextView(PostImmutableModel postImmutableModel) {
+        mAuthorTextView.setText(postImmutableModel.getAuthorDisplayName());
     }
 
     private void updateCategoriesTextView(PostImmutableModel post) {
