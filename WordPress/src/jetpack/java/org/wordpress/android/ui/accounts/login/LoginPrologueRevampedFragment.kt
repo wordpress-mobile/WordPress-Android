@@ -66,13 +66,6 @@ class LoginPrologueRevampedFragment : Fragment() {
     }
 }
 
-/**
- * These slots are utilized below in a subcompose layout in order to measure the size of the buttons composable. The
- * measured height is then used to create a clip shape for the blurred background layer. This allows the background
- * composable to be aware of its sibling's dimensions within a single frame (i.e. it does not trigger a recomposition).
- */
-enum class SlotsEnum { Buttons, ClippedBackground }
-
 @Composable
 private fun LoginScreenRevamped(
     onWpComLoginClicked: () -> Unit,

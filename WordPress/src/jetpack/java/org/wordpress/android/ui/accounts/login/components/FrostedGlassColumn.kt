@@ -25,8 +25,15 @@ import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
-import org.wordpress.android.ui.accounts.login.SlotsEnum.Buttons
-import org.wordpress.android.ui.accounts.login.SlotsEnum.ClippedBackground
+import org.wordpress.android.ui.accounts.login.components.SlotsEnum.Buttons
+import org.wordpress.android.ui.accounts.login.components.SlotsEnum.ClippedBackground
+
+/**
+ * These slots are utilized below in a subcompose layout in order to measure the size of the buttons composable. The
+ * measured height is then used to create a clip shape for the blurred background layer. This allows the background
+ * composable to be aware of its sibling's dimensions within a single frame (i.e. it does not trigger a recomposition).
+ */
+private enum class SlotsEnum { Buttons, ClippedBackground }
 
 @Composable
 private fun ColumnWithTopGlassBorder(
