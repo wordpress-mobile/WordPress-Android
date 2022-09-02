@@ -43,8 +43,7 @@ class LoginPrologueRevampedFragment : Fragment() {
                 )
             }
         }
-
-        requireActivity().window.showInFullScreen()
+        requireActivity().window.enableFullScreen()
     }
 
     override fun onAttach(context: Context) {
@@ -53,12 +52,21 @@ class LoginPrologueRevampedFragment : Fragment() {
         loginPrologueListener = context
     }
 
-    private fun Window.showInFullScreen() {
+    override fun onDestroyView() {
+        super.onDestroyView()
+        requireActivity().window.disableFullScreen()
+    }
+
+    private fun Window.enableFullScreen() {
         // Set Translucent Status Bar
         this.showFullScreen()
 
         // Set Translucent Navigation Bar
         setFlags(FLAG_LAYOUT_NO_LIMITS, FLAG_LAYOUT_NO_LIMITS)
+    }
+
+    private fun Window.disableFullScreen() {
+        clearFlags(FLAG_LAYOUT_NO_LIMITS)
     }
 
     companion object {
