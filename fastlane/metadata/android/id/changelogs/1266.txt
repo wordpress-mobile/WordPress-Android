@@ -1,0 +1,4 @@
+20.6:
+- Saat ini Anda dapat login menggunakan alamat e-mail yang mengandung karakter khusus.
+- Tema yang dimuat sebelumnya tidak lagi membuat aplikasi rusak selama Pembuatan Situs. Wah.
+- Persiapan—spanduk Jetpack Powered ditampilkan dalam daftar hasil pencarian.
