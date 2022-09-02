@@ -66,7 +66,7 @@ fun ColumnWithFrostedGlassBackground(
     val topBorderHeight = with(LocalDensity.current) { 2.dp.toPx() }
 
     SubcomposeLayout { constraints ->
-        val buttonsPlaceables = subcompose(Buttons) @Composable {
+        val buttonsPlaceables = subcompose(Buttons) {
             ColumnWithTopGlassBorder {
                 content()
             }
@@ -86,7 +86,7 @@ fun ColumnWithFrostedGlassBackground(
             }
         }
 
-        val clippedBackgroundPlaceables = subcompose(ClippedBackground) @Composable {
+        val clippedBackgroundPlaceables = subcompose(ClippedBackground) {
             LoopingTextWithBackground(
                     modifier = Modifier.clip(buttonsClipShape),
                     textModifier = Modifier.composed {
