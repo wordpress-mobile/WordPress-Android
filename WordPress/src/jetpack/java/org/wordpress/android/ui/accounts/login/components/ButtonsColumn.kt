@@ -16,14 +16,6 @@ fun ButtonsColumn(
     modifier: Modifier = Modifier,
     content: @Composable ColumnScope.() -> Unit
 ) {
-    Divider(
-            thickness = 1.dp,
-            color = colorResource(color.border_shadow_jetpack_login_splash_bottom_panel),
-    )
-    Divider(
-            thickness = 1.dp,
-            color = colorResource(color.border_highlight_jetpack_login_splash_bottom_panel),
-    )
     Column(
             modifier = modifier
                     .background(
@@ -31,6 +23,14 @@ fun ButtonsColumn(
                             alpha = 0.6f
                     )
     ) {
+        Divider(
+                thickness = 1.dp,
+                color = colorResource(color.border_shadow_jetpack_login_splash_bottom_panel),
+        )
+        Divider(
+                thickness = 1.dp,
+                color = colorResource(color.border_highlight_jetpack_login_splash_bottom_panel),
+        )
         content()
     }
 }

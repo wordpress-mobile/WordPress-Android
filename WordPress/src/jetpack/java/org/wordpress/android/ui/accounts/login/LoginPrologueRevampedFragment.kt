@@ -9,17 +9,12 @@ import android.view.Window
 import android.view.WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Alignment.Companion
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.BlurredEdgeTreatment
 import androidx.compose.ui.draw.alpha
@@ -30,7 +25,7 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Outline.Rectangle
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.layout.SubcomposeLayout
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -42,6 +37,8 @@ import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import org.wordpress.android.R.drawable
 import org.wordpress.android.R.string
+import org.wordpress.android.ui.accounts.login.SlotsEnum.Buttons
+import org.wordpress.android.ui.accounts.login.SlotsEnum.ClippedBackground
 import org.wordpress.android.ui.accounts.login.components.ButtonsColumn
 import org.wordpress.android.ui.accounts.login.components.JetpackLogo
 import org.wordpress.android.ui.accounts.login.components.PrimaryButton
@@ -90,42 +87,19 @@ class LoginPrologueRevampedFragment : Fragment() {
 }
 
 /**
- * The approach used here to set the height of blurred area is not recommended in the Compose guidelines.
- * See [Recomposition loop (cyclic phase dependency)](https://developer.android.com/jetpack/compose/phases#recomp-loop)
- * A better approach would be to make use of
- * [Custom layouts](https://developer.android.com/jetpack/compose/layouts/custom),
- * but that requires further investigation.
+ * These slots are utilized below in a subcompose layout in order to measure the size of the buttons composable. The
+ * measured height is then used to create a clip shape for the blurred background layer. This allows the background
+ * composable to be aware of its sibling's dimensions within a single frame (i.e. it does not trigger a recomposition).
  */
+enum class SlotsEnum { Buttons, ClippedBackground }
+
 @Composable
 private fun LoginScreenRevamped(
     onWpComLoginClicked: () -> Unit,
     onSiteAddressLoginClicked: () -> Unit,
 ) {
-    val blurredAreaHeight = remember { mutableStateOf(0) }
-
     Box {
-        val blurClipShape = remember {
-            object : Shape {
-                override fun createOutline(size: Size, layoutDirection: LayoutDirection, density: Density): Rectangle {
-                    return Rectangle(
-                            Rect(
-                                    bottom = size.height,
-                                    left = 0f,
-                                    right = size.width,
-                                    top = size.height - blurredAreaHeight.value,
-                            )
-                    )
-                }
-            }
-        }
-
         SplashBox()
-        SplashBox(
-                modifier = Modifier.clip(blurClipShape),
-                textModifier = Modifier
-                        .blur(15.dp, BlurredEdgeTreatment.Unbounded)
-                        .alpha(0.5f) // Fallback for Android versions older than 12 where blur is not supported
-        )
         Image(
                 painter = painterResource(drawable.bg_jetpack_login_splash_top_gradient),
                 contentDescription = stringResource(string.login_prologue_revamped_content_description_top_bg),
@@ -140,13 +114,41 @@ private fun LoginScreenRevamped(
                         .size(60.dp)
                         .align(Alignment.TopCenter)
         )
-        ButtonsColumn(
-                modifier = Modifier
-                        .onSizeChanged { blurredAreaHeight.value = it.height }
-                        .align(Alignment.BottomCenter)
-        ) {
-            PrimaryButton(onClick = onWpComLoginClicked)
-            SecondaryButton(onClick = onSiteAddressLoginClicked)
+        SubcomposeLayout {constraints ->
+            val buttonsPlaceables = subcompose(Buttons) @Composable {
+                ButtonsColumn {
+                    PrimaryButton(onClick = onWpComLoginClicked)
+                    SecondaryButton(onClick = onSiteAddressLoginClicked)
+                }
+            }.map { it.measure(constraints) }
+
+            val buttonsHeight = buttonsPlaceables[0].height
+            val buttonsClipShape = object : Shape {
+                override fun createOutline(size: Size, layoutDirection: LayoutDirection, density: Density): Rectangle {
+                    return Rectangle(
+                            Rect(
+                                    bottom = size.height,
+                                    left = 0f,
+                                    right = size.width,
+                                    top = size.height - buttonsHeight,
+                            )
+                    )
+                }
+            }
+
+            val clippedBackgroundPlaceables = subcompose(ClippedBackground) @Composable {
+                SplashBox(
+                        modifier = Modifier.clip(buttonsClipShape),
+                        textModifier = Modifier
+                                .blur(15.dp, BlurredEdgeTreatment.Unbounded)
+                                .alpha(0.5f) // Fallback for Android versions older than 12 where blur is not supported
+                )
+            }.map { it.measure(constraints) }
+
+            layout(constraints.maxWidth, constraints.maxHeight) {
+                clippedBackgroundPlaceables.forEach { it.placeRelative(0, 0) }
+                buttonsPlaceables.forEach { it.placeRelative(0, constraints.maxHeight - buttonsHeight) }
+            }
         }
     }
 }
