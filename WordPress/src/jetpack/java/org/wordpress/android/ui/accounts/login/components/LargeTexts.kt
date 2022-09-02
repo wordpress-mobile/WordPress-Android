@@ -16,6 +16,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.wordpress.android.R
+import org.wordpress.android.ui.compose.components.AutoScrollingLazyColumn
+import org.wordpress.android.ui.compose.components.AutoScrollingListItem
 import org.wordpress.android.util.extensions.isOdd
 
 private data class LargeTextItem(
