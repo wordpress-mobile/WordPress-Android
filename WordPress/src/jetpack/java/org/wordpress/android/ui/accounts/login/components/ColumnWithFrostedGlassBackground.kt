@@ -60,7 +60,7 @@ private fun ColumnWithTopGlassBorder(
 }
 
 @Composable
-fun FrostedGlassColumn(
+fun ColumnWithFrostedGlassBackground(
     content: @Composable () -> Unit,
 ) {
     val topBorderHeight = with(LocalDensity.current) { 2.dp.toPx() }
