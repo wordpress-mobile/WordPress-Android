@@ -1,3 +1,0 @@
-- We added a label in App Settings to show the app’s current interface language.
-- We bumped up the screenshot size in the site theme picker to go with high-resolution image previews.
-- In the site creation process, we changed the Skip button text from blue to Jetpack green.
