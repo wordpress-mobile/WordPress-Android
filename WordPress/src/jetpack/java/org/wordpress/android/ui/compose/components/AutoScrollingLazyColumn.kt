@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.accounts.login.components
+package org.wordpress.android.ui.compose.components
 
 import androidx.compose.foundation.MutatePriority
 import androidx.compose.foundation.layout.Spacer
@@ -25,7 +25,7 @@ import org.wordpress.android.ui.compose.unit.Margin
 private const val DELAY_BETWEEN_SCROLL_MS = 5L
 private const val SCROLL_BY_PX = 1f
 
-private val DefaultDivider = @Composable {
+private val DefaultItemDivider = @Composable {
     Spacer(modifier = Modifier.height(Margin.MediumLarge.value))
 }
 
@@ -39,7 +39,7 @@ fun <T : AutoScrollingListItem> AutoScrollingLazyColumn(
     scrollBy: Float = SCROLL_BY_PX,
     scrollDelay: Long = DELAY_BETWEEN_SCROLL_MS,
     modifier: Modifier = Modifier,
-    itemDivider: @Composable () -> Unit = DefaultDivider,
+    itemDivider: @Composable () -> Unit = DefaultItemDivider,
     itemContent: @Composable (item: T) -> Unit,
 ) {
     var itemsListState by remember { mutableStateOf(items) }
@@ -58,15 +58,15 @@ fun <T : AutoScrollingListItem> AutoScrollingLazyColumn(
                 if (it.id == items.last().id) {
                     val currentList = itemsListState
 
-                    val itemsAboveFirst = currentList.subList(0, lazyListState.firstVisibleItemIndex)
-                    val itemsBelowFirst = currentList.subList(lazyListState.firstVisibleItemIndex, currentList.size)
+                    val itemsAboveFirstVisible = currentList.subList(0, lazyListState.firstVisibleItemIndex)
+                    val itemsBelow = currentList.subList(lazyListState.firstVisibleItemIndex, currentList.size)
 
                     rememberCoroutineScope().launch {
                         val offset = lazyListState.firstVisibleItemScrollOffset + scrollBy
                         lazyListState.scrollToItem(0, offset.toInt())
                     }
 
-                    itemsListState = itemsBelowFirst + itemsAboveFirst
+                    itemsListState = itemsBelow + itemsAboveFirstVisible
                 }
             }
         }
