@@ -1237,7 +1237,6 @@ Language: gl_ES
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">Toca dúas veces para ir aos axustes da cor</string>
     <string name="reader_empty_followed_blogs_description">Cando sigas sitios, verás aquí o seu contido</string>
     <string name="feature_announcement_find_out_mode">Saber máis</string>
-    <string name="feature_announcement_dialog_label">Que hai de novo en WordPress</string>
     <string name="insert_label_with_count">Insertar %d</string>
     <string name="crop">recortar</string>
     <string name="error_failed_to_load_into_file">Erro ao cargar no arquivo, por favor, inténtao de novo.</string>
@@ -1563,7 +1562,6 @@ Language: gl_ES
     <string name="share_desc">Compartir</string>
     <string name="navigate_back_desc">Volver</string>
     <string name="navigate_forward_desc">Avanzar</string>
-    <string name="calendar_scheduled_post_description">«%1$s» programado para publicar o «%2$s» na túa aplicación de WordPress\n%3$s</string>
     <string name="calendar_scheduled_post_title">Entrada programada de WordPress: «%s»</string>
     <string name="notification_post_will_be_published_in_ten_minutes">«%s» publicarase en 10 minutos</string>
     <string name="notification_post_will_be_published_in_one_hour">«%s» publicarase en 1 hora</string>
@@ -1735,7 +1733,6 @@ Language: gl_ES
     <string name="app_rating_rate_later">Máis tarde</string>
     <string name="app_rating_rate_now">Valorar agora</string>
     <string name="app_rating_message">Que gusto verte de novo! Se estás traballando coa aplicación encantaríanos que nos puntuases na Google Play Store.</string>
-    <string name="app_rating_title">Estás gozando de WordPress?</string>
     <string name="editor_post_converted_back_to_draft">Entrada devolta a borrador</string>
     <string name="stats_insights_posting_activity">Actividade de publicación</string>
     <string name="stats_site_not_loaded_yet">O sitio aínda non se cargou</string>

@@ -201,8 +201,11 @@ import org.wordpress.android.ui.stats.refresh.lists.widget.minified.StatsMinifie
 import org.wordpress.android.ui.stats.refresh.lists.widget.today.StatsTodayWidget;
 import org.wordpress.android.ui.stats.refresh.lists.widget.today.TodayWidgetBlockListProviderFactory;
 import org.wordpress.android.ui.stats.refresh.lists.widget.today.TodayWidgetListProvider;
+import org.wordpress.android.ui.stats.refresh.lists.widget.weeks.StatsWeekWidget;
+import org.wordpress.android.ui.stats.refresh.lists.widget.weeks.WeekViewsWidgetListProvider;
 import org.wordpress.android.ui.stats.refresh.lists.widget.views.StatsViewsWidget;
 import org.wordpress.android.ui.stats.refresh.lists.widget.views.ViewsWidgetListProvider;
+import org.wordpress.android.ui.stats.refresh.lists.widget.weeks.WeekWidgetBlockListProviderFactory;
 import org.wordpress.android.ui.stockmedia.StockMediaPickerActivity;
 import org.wordpress.android.ui.stories.StoryComposerActivity;
 import org.wordpress.android.ui.stories.intro.StoriesIntroDialogFragment;
@@ -658,4 +661,10 @@ public interface AppComponent {
     void inject(DismissNotificationReceiver object);
 
     void inject(SharedLoginProvider object);
+
+    void inject(StatsWeekWidget object);
+
+    void inject(WeekViewsWidgetListProvider object);
+
+    void inject(WeekWidgetBlockListProviderFactory object);
 }

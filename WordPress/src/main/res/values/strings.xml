@@ -1380,6 +1380,7 @@
 
     <!-- Stats refreshed widgets -->
     <string name="stats_widget_log_in_message">Please log in to the WordPress app to add a widget.</string>
+    <string name="stats_widget_log_in_to_add_message">Please log in to the Jetpack app to add a widget.</string>
     <string name="stats_widget_weekly_views_name">Views this week</string>
     <string name="stats_widget_all_time_insights_name">All-time</string>
     <string name="stats_widget_today_insights_name">Today</string>
@@ -1709,7 +1710,7 @@
     <string name="notification_post_will_be_published_in_one_hour">\"%s\" will be published in 1 hour</string>
     <string name="notification_post_will_be_published_in_ten_minutes">\"%s\" will be published in 10 minutes</string>
     <string name="calendar_scheduled_post_title">WordPress Scheduled Post: \"%s\"</string>
-    <string name="calendar_scheduled_post_description">\"%1$s\" scheduled for publishing on \"%2$s\" in your WordPress app \n %3$s</string>
+    <string name="calendar_scheduled_post_description">\"%1$s\" scheduled for publishing on \"%2$s\" in your %3$s app \n %4$s</string>
 
     <!-- Post Status -->
     <string name="post_status_publish_post">Publish</string>
@@ -3347,7 +3348,7 @@
     <string name="site_creation_intent_writing_poetry">Writing &amp; Poetry</string>
 
     <!-- App rating dialog -->
-    <string name="app_rating_title">Enjoying WordPress?</string>
+    <string name="app_rating_title">Enjoying %s?</string>
     <string name="app_rating_message">Nice to see you again! If you’re digging the app, we\’d love a rating on the Google Play Store.</string>
     <string name="app_rating_rate_now">Rate now</string>
     <string name="app_rating_rate_later">Later</string>
@@ -3366,7 +3367,7 @@
     <string name="insert_label_with_count">Insert %d</string>
 
     <!-- Feature Announcement -->
-    <string name="feature_announcement_dialog_label">What\'s New In WordPress</string>
+    <string name="feature_announcement_dialog_label">What\'s New In %s</string>
     <string name="feature_announcement_find_out_mode">Find out more</string>
 
     <!-- Prepublishing Nudges -->

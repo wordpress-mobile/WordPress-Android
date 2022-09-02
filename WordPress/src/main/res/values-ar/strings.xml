@@ -1237,7 +1237,6 @@ Language: ar
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">الضغط ضغطًا مزدوجًا للانتقال إلى إعدادات الألوان</string>
     <string name="reader_empty_followed_blogs_description">عندما تتابع المواقع، سترى محتواها هنا</string>
     <string name="feature_announcement_find_out_mode">اكتشاف المزيد</string>
-    <string name="feature_announcement_dialog_label">ما الجديد في ووردبريس</string>
     <string name="crop">قص</string>
     <string name="error_failed_to_load_into_file">فشل التحميل إلى الملف، يرجى المحاولة مرة أخرى.</string>
     <string name="preview_image_thumbnail_description">معاينة الصورة المصغَّرة</string>
@@ -1565,7 +1564,6 @@ Language: ar
     <string name="navigate_forward_desc">التقدم للأمام</string>
     <string name="notification_post_will_be_published_in_ten_minutes">سيتم نشر \"%s\" خلال 10 دقائق</string>
     <string name="calendar_scheduled_post_title">مقالة ووردبريس مجدولة: \"%s\"</string>
-    <string name="calendar_scheduled_post_description">تمت جدولة \"⁦%1$s⁩\" للنشر في \"⁦%2$s⁩\" في تطبيق ووردبريس الخاص بك\n %3$s</string>
     <string name="notification_scheduled_post">مقالة مجدولة</string>
     <string name="notification_scheduled_post_one_hour_reminder">مقالة مجدولة: تذكير ساعة واحدة</string>
     <string name="notification_scheduled_post_ten_minute_reminder">مقالة مجدولة: تذكير 10 دقائق</string>
@@ -1735,7 +1733,6 @@ Language: ar
     <string name="app_rating_rate_later">لاحقًا</string>
     <string name="app_rating_rate_now">التقييم الآن</string>
     <string name="app_rating_message">جميل أن نراك مرة أخرى! إذا راجعت التطبيق، فيسعدنا تقييمك لنا على متجر Google Play.</string>
-    <string name="app_rating_title">مستمتع بـ ووردبريس؟</string>
     <string name="editor_post_converted_back_to_draft">تم تحويل المقالة مرة أخرى إلى مسودّة</string>
     <string name="stats_insights_posting_activity">نشاط النشر</string>
     <string name="stats_site_not_loaded_yet">الموقع لم يتم تحميله بعد</string>

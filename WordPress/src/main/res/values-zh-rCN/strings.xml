@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-08-24 09:54:07+0000
+Translation-Revision-Date: 2022-08-30 09:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.1
 Language: zh_CN
@@ -1237,7 +1237,6 @@ Language: zh_CN
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">点击两下以进入颜色设置</string>
     <string name="reader_empty_followed_blogs_description">在您关注站点时，您会在这里看到其内容</string>
     <string name="feature_announcement_find_out_mode">了解更多</string>
-    <string name="feature_announcement_dialog_label">WordPress 的新变化</string>
     <string name="insert_label_with_count">插入 %d</string>
     <string name="crop">裁剪</string>
     <string name="error_failed_to_load_into_file">无法加载进文件，请再试一次。</string>
@@ -1563,7 +1562,6 @@ Language: zh_CN
     <string name="share_desc">共享</string>
     <string name="navigate_back_desc">返回</string>
     <string name="navigate_forward_desc">前进</string>
-    <string name="calendar_scheduled_post_description">“%1$s”计划于“%2$s”在您的 WordPress 应用程序中发布\n %3$s</string>
     <string name="calendar_scheduled_post_title">WordPress 定时文章：“%s”</string>
     <string name="notification_post_will_be_published_in_ten_minutes">“%s”将于 10 分钟后发布</string>
     <string name="notification_post_will_be_published_in_one_hour">“%s”将于 1 小时后发布</string>
@@ -1735,7 +1733,6 @@ Language: zh_CN
     <string name="app_rating_rate_later">以后再说</string>
     <string name="app_rating_rate_now">立即评分</string>
     <string name="app_rating_message">欢迎您再次到来！如果您喜欢此应用，我们希望您能在Google Play Store上给我们一个评价。</string>
-    <string name="app_rating_title">喜欢 WordPress 吗?</string>
     <string name="editor_post_converted_back_to_draft">文章已转换回草稿</string>
     <string name="stats_insights_posting_activity">文章发布活动</string>
     <string name="stats_site_not_loaded_yet">站点尚未加载</string>
@@ -2465,6 +2462,7 @@ Language: zh_CN
     <string name="requesting_otp">正在请求短信验证码。</string>
     <string name="login_text_otp">通过短信向我发送代码</string>
     <string name="enter_verification_code">马上就好！请输入验证器应用中的验证码。</string>
+    <string name="open_mail">打开邮件</string>
     <string name="next">下一步</string>
     <string name="enter_email_wordpress_com">使用电子邮件地址登录 WordPress.com 以便管理您的所有 WordPress 站点。</string>
     <string name="image_optimization_promo_desc">图片优化可缩小图片以便更快地上传。\n\n您可以随时在站点设置中更改此选项。</string>

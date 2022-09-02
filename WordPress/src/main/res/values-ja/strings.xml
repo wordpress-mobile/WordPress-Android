@@ -1236,7 +1236,6 @@ Language: ja_JP
     <string name="gutenberg_native_select_a_color">色を選択</string>
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">ダブルタップして色設定に移動</string>
     <string name="reader_empty_followed_blogs_description">サイトをフォローすると、こちらにコンテンツが表示されます</string>
-    <string name="feature_announcement_dialog_label">WordPress の新機能</string>
     <string name="insert_label_with_count">%d を挿入</string>
     <string name="crop">切り取り</string>
     <string name="error_failed_to_load_into_file">ファイルに読み込めませんでした。もう一度お試しください。</string>
@@ -1565,7 +1564,6 @@ Language: ja_JP
     <string name="navigate_forward_desc">進む</string>
     <string name="calendar_scheduled_post_title">WordPress の予約済み投稿 :「%s」</string>
     <string name="notification_post_will_be_published_in_ten_minutes">「%s」は10分後に公開されます</string>
-    <string name="calendar_scheduled_post_description">「%1$s」は WordPress アプリの「%2$s」での公開が予定されています\n %3$s</string>
     <string name="notification_post_will_be_published_in_one_hour">「%s」は1時間後に公開されます</string>
     <string name="notification_post_has_been_published">「%s」が公開されました</string>
     <string name="notification_scheduled_post_ten_minute_reminder">予約済みの投稿 :10分前のリマインダー</string>
@@ -1735,7 +1733,6 @@ Language: ja_JP
     <string name="app_rating_rate_later">後で評価する</string>
     <string name="app_rating_rate_now">今すぐ評価する</string>
     <string name="app_rating_message">ご利用ありがとうございます。アプリをご利用いただきありがとうございます。Google Play ストアでの評価をお願いいたします。</string>
-    <string name="app_rating_title">WordPress の感想をお聞かせください</string>
     <string name="editor_post_converted_back_to_draft">下書きに戻した投稿</string>
     <string name="stats_insights_posting_activity">投稿アクティビティ</string>
     <string name="stats_site_not_loaded_yet">まだ読み込まれていないサイト</string>
