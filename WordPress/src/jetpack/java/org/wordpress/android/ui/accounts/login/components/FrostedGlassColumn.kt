@@ -19,11 +19,12 @@ import androidx.compose.ui.graphics.Outline.Rectangle
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.layout.SubcomposeLayout
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
-import org.wordpress.android.R.color
+import org.wordpress.android.R
 import org.wordpress.android.ui.accounts.login.SlotsEnum.Buttons
 import org.wordpress.android.ui.accounts.login.SlotsEnum.ClippedBackground
 
@@ -35,17 +36,17 @@ private fun ColumnWithTopGlassBorder(
     Column(
             modifier = modifier
                     .background(
-                            brush = SolidColor(colorResource(color.bg_jetpack_login_splash_bottom_panel)),
+                            brush = SolidColor(colorResource(R.color.bg_jetpack_login_splash_bottom_panel)),
                             alpha = 0.6f
                     )
     ) {
         Divider(
                 thickness = 1.dp,
-                color = colorResource(color.border_shadow_jetpack_login_splash_bottom_panel),
+                color = colorResource(R.color.border_shadow_jetpack_login_splash_bottom_panel),
         )
         Divider(
                 thickness = 1.dp,
-                color = colorResource(color.border_highlight_jetpack_login_splash_bottom_panel),
+                color = colorResource(R.color.border_highlight_jetpack_login_splash_bottom_panel),
         )
         content()
     }
@@ -55,6 +56,8 @@ private fun ColumnWithTopGlassBorder(
 fun FrostedGlassColumn(
     content: @Composable () -> Unit,
 ) {
+    val topBorderHeight = with(LocalDensity.current) { 2.dp.toPx() }
+
     SubcomposeLayout { constraints ->
         val buttonsPlaceables = subcompose(Buttons) @Composable {
             ColumnWithTopGlassBorder {
@@ -70,7 +73,7 @@ fun FrostedGlassColumn(
                                 bottom = size.height,
                                 left = 0f,
                                 right = size.width,
-                                top = size.height - buttonsHeight,
+                                top = size.height - buttonsHeight + topBorderHeight,
                         )
                 )
             }
