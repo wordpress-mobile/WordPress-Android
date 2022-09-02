@@ -1380,6 +1380,7 @@
 
     <!-- Stats refreshed widgets -->
     <string name="stats_widget_log_in_message">Please log in to the WordPress app to add a widget.</string>
+    <string name="stats_widget_log_in_to_add_message">Please log in to the Jetpack app to add a widget.</string>
     <string name="stats_widget_weekly_views_name">Views this week</string>
     <string name="stats_widget_all_time_insights_name">All-time</string>
     <string name="stats_widget_today_insights_name">Today</string>

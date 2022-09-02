@@ -9,6 +9,7 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSect
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureFragment.WidgetType
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureFragment.WidgetType.ALL_TIME_VIEWS
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureFragment.WidgetType.TODAY_VIEWS
+import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureFragment.WidgetType.WEEK_TOTAL
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureFragment.WidgetType.WEEK_VIEWS
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 
@@ -25,6 +26,7 @@ private const val TYPES = "types"
 private const val WIDGET_TYPE = "widget_type"
 private const val TODAY_WIDGET_PROPERTY = "today"
 private const val WEEKLY_VIEWS_WIDGET_PROPERTY = "weekly_views"
+private const val WEEK_TOTALS_WIDGET_PROPERTY = "week_totals"
 private const val ALL_TIME_WIDGET_PROPERTY = "all_time"
 private const val MINIFIED_WIDGET_PROPERTY = "minified"
 private const val TOTAL_LIKES_PROPERTY = "total_likes_detail"
@@ -80,6 +82,7 @@ fun AnalyticsTrackerWrapper.trackWithWidgetType(stat: Stat, widgetType: WidgetTy
         WEEK_VIEWS -> WEEKLY_VIEWS_WIDGET_PROPERTY
         ALL_TIME_VIEWS -> ALL_TIME_WIDGET_PROPERTY
         TODAY_VIEWS -> TODAY_WIDGET_PROPERTY
+        WEEK_TOTAL -> WEEK_TOTALS_WIDGET_PROPERTY
     }
     this.track(stat, mapOf(WIDGET_TYPE to property))
 }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
     <application>
         <!-- Deep Linking Activity -->
         <activity android:name="org.wordpress.android.ui.deeplinks.DeepLinkingIntentReceiverActivity">
@@ -38,6 +39,31 @@
                     android:scheme="jetpack" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".ui.stats.refresh.lists.widget.weeks.StatsWeekWidgetConfigureActivity"
+            android:label="@string/stats_widget_views_title"
+            android:theme="@style/WordPress.NoActionBar"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
+
+        <receiver
+            android:name="org.wordpress.android.ui.stats.refresh.lists.widget.weeks.StatsWeekWidget"
+            android:label="@string/stats_widget_weekly_views_name"
+            android:enabled="true"
+            android:exported="false"
+            tools:ignore="ManifestResource">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/stats_week_views_widget_info"/>
+        </receiver>
     </application>
 
 </manifest>
