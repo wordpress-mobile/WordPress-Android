@@ -280,6 +280,11 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
         return fragment == null ? null : (LoginPrologueFragment) fragment;
     }
 
+    private LoginPrologueRevampedFragment getLoginPrologueRevampedFragment() {
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(LoginPrologueRevampedFragment.TAG);
+        return fragment == null ? null : (LoginPrologueRevampedFragment) fragment;
+    }
+
     private LoginEmailFragment getLoginEmailFragment() {
         Fragment fragment = getSupportFragmentManager().findFragmentByTag(LoginEmailFragment.TAG);
         return fragment == null ? null : (LoginEmailFragment) fragment;
@@ -435,7 +440,7 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
             return;
         }
 
-        if (getLoginPrologueFragment() == null) {
+        if (getLoginPrologueFragment() == null || getLoginPrologueRevampedFragment() == null) {
             // prologue fragment is not shown so, the email screen will be the initial screen on the fragment container
             showFragment(LoginEmailFragment.newInstance(mIsSignupFromLoginEnabled), LoginEmailFragment.TAG);
 
