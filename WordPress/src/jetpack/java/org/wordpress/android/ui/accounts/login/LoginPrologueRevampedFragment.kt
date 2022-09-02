@@ -2,6 +2,7 @@ package org.wordpress.android.ui.accounts.login
 
 import android.content.Context
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -16,6 +17,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
 import androidx.compose.ui.draw.BlurredEdgeTreatment
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.blur
@@ -139,9 +141,15 @@ private fun LoginScreenRevamped(
             val clippedBackgroundPlaceables = subcompose(ClippedBackground) @Composable {
                 SplashBox(
                         modifier = Modifier.clip(buttonsClipShape),
-                        textModifier = Modifier
-                                .blur(15.dp, BlurredEdgeTreatment.Unbounded)
-                                .alpha(0.5f) // Fallback for Android versions older than 12 where blur is not supported
+                        textModifier = Modifier.composed {
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                                blur(15.dp, BlurredEdgeTreatment.Unbounded)
+                            } else {
+                                // On versions older than Android 12 the blur modifier is not supported,
+                                // so we make the text transparent to have the buttons stand out.
+                                alpha(0.5f)
+                            }
+                        }
                 )
             }.map { it.measure(constraints) }
 
