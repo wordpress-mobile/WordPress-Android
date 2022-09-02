@@ -37,7 +37,7 @@ import org.wordpress.android.R.string
 import org.wordpress.android.ui.compose.theme.AppTheme
 
 @Composable
-private fun SplashBox(
+fun SplashBox(
     modifier: Modifier = Modifier,
     textModifier: Modifier = Modifier,
 ) {
@@ -54,58 +54,5 @@ private fun SplashBox(
                         .padding(horizontal = 20.dp)
                         .then(textModifier)
         )
-    }
-}
-
-@Composable
-fun SplashBackgroundBox(
-    blurredAreaHeight: MutableState<Int>,
-    columnContent: @Composable ColumnScope.() -> Unit,
-) {
-    Box {
-        val blurClipShape = remember {
-            object : Shape {
-                override fun createOutline(size: Size, layoutDirection: LayoutDirection, density: Density): Rectangle {
-                    return Rectangle(
-                            Rect(
-                                    bottom = size.height,
-                                    left = 0f,
-                                    right = size.width,
-                                    top = size.height - blurredAreaHeight.value,
-                            )
-                    )
-                }
-            }
-        }
-
-        SplashBox()
-        SplashBox(
-                modifier = Modifier.clip(blurClipShape),
-                textModifier = Modifier
-                        .blur(15.dp, BlurredEdgeTreatment.Unbounded)
-                        .alpha(0.5f) // Fallback for Android versions older than 12 where blur is not supported
-        )
-        Image(
-                painter = painterResource(drawable.bg_jetpack_login_splash_top_gradient),
-                contentDescription = stringResource(string.login_prologue_revamped_content_description_top_bg),
-                contentScale = ContentScale.FillBounds,
-                modifier = Modifier
-                        .fillMaxWidth()
-                        .height(height = 292.dp)
-        )
-        Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                content = columnContent,
-        )
-    }
-}
-
-@Preview(showBackground = true, device = Devices.PIXEL_4_XL)
-@Composable
-fun PreviewSplashBackgroundBox() {
-    AppTheme {
-        SplashBackgroundBox(
-                blurredAreaHeight = mutableStateOf(600)
-        ) {}
     }
 }
