@@ -114,7 +114,7 @@ private fun LoginScreenRevamped(
                         .size(60.dp)
                         .align(Alignment.TopCenter)
         )
-        SubcomposeLayout {constraints ->
+        SubcomposeLayout { constraints ->
             val buttonsPlaceables = subcompose(Buttons) @Composable {
                 ButtonsColumn {
                     PrimaryButton(onClick = onWpComLoginClicked)
