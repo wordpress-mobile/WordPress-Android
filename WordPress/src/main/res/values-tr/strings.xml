@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-08-24 14:54:08+0000
+Translation-Revision-Date: 2022-09-02 09:54:08+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: tr
 -->
 <resources>
+    <string name="login_magic_links_email_sent">Az önce size sihirli bir bağlantı gönderdik</string>
+    <string name="login_magic_links_sent_label_short">Bu cihazda e-postanızı kontrol edin!</string>
+    <string name="or_use_password">Oturum açmak için şifreyi kullanın</string>
+    <string name="wp_jetpack_powered_notifications_powered_by_jetpack_caption">Yeni yorumlar, site trafiği, güvenlik raporları ve daha fazlası için gerçek zamanlı güncellemelerden haberdar olun.</string>
+    <string name="wp_jetpack_powered_notifications_powered_by_jetpack">Bildirimler, Jetpack tarafından desteklenmektedir</string>
+    <string name="wp_jetpack_powered_stats_powered_by_jetpack_caption">Artık yeni Jetpack uygulamasında bulunan yeniden tasarlanmış İstatistikler ve Öngörüler ile trafiğinizin büyümesini izleyin ve hedef kitleniz hakkında bilgi edinin.</string>
+    <string name="wp_jetpack_powered_stats_powered_by_jetpack">İstatistikler, Jetpack tarafından desteklenmektedir.</string>
+    <string name="wp_jetpack_powered_reader_powered_by_jetpack_caption">Artık yeni Jetpack uygulamasında bulunan Okuyucu ile tüm favori sitelerinizi ve gönderilerinizi bulun, takip edin ve beğenin.</string>
+    <string name="wp_jetpack_powered_reader_powered_by_jetpack">Okuyucu, Jetpack tarafından desteklenmektedir.</string>
     <string name="wp_jetpack_powered_features">Yeni Jetpack uygulaması, WordPress\'inizi daha iyi hale getiren İstatistikler, Okuyucu, Bildirimler gibi özellikleri ve daha fazlasını içerir.</string>
     <string name="wp_jetpack_powered_better_with_jetpack">WordPress, Jetpack ile daha iyi</string>
     <string name="gutenberg_native_upgrade_your_plan_to_use_video_covers">Video başlıkları kullanmak için paketinizi yükseltin</string>

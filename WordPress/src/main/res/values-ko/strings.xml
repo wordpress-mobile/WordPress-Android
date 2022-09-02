@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-08-26 14:54:27+0000
+Translation-Revision-Date: 2022-09-02 08:08:27+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.1
 Language: ko_KR
@@ -2465,6 +2465,7 @@ Language: ko_KR
     <string name="requesting_otp">SMS를 통해 확인 코드를 요청 중입니다.</string>
     <string name="login_text_otp">대신 코드를 문자로 받기</string>
     <string name="enter_verification_code">마지막 부분입니다! 인증 앱의 확인 코드를 입력하세요.</string>
+    <string name="open_mail">메일 열기</string>
     <string name="next">다음</string>
     <string name="enter_email_wordpress_com">이메일 주소를 입력하여 워드프레스닷컴에 로그인하고 회원님의 모든 WordPress 사이트를 관리하세요.</string>
     <string name="image_optimization_promo_desc">이미지 최적화는 빠른 업로드를 위해 이미지를 줄입니다.\n\n사이트 설정에서 언제든지 변경할 수 있습니다.</string>
