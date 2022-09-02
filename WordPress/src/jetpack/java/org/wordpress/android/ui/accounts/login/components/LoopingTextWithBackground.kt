@@ -16,7 +16,7 @@ import org.wordpress.android.R.drawable
 import org.wordpress.android.R.string
 
 @Composable
-fun SplashBox(
+fun LoopingTextWithBackground(
     modifier: Modifier = Modifier,
     textModifier: Modifier = Modifier,
 ) {
