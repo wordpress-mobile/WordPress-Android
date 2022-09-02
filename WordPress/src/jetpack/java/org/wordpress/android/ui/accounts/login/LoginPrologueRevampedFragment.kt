@@ -19,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.BlurredEdgeTreatment
 import androidx.compose.ui.draw.alpha
@@ -133,17 +134,19 @@ private fun LoginScreenRevamped(
                         .fillMaxWidth()
                         .height(height = 292.dp)
         )
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            JetpackLogo(
-                    modifier = Modifier
-                            .padding(top = 60.dp)
-                            .size(60.dp)
-            )
-            Spacer(Modifier.weight(1.0f))
-            ButtonsColumn(Modifier.onSizeChanged { blurredAreaHeight.value = it.height }) {
-                PrimaryButton(onClick = onWpComLoginClicked)
-                SecondaryButton(onClick = onSiteAddressLoginClicked)
-            }
+        JetpackLogo(
+                modifier = Modifier
+                        .padding(top = 60.dp)
+                        .size(60.dp)
+                        .align(Alignment.TopCenter)
+        )
+        ButtonsColumn(
+                modifier = Modifier
+                        .onSizeChanged { blurredAreaHeight.value = it.height }
+                        .align(Alignment.BottomCenter)
+        ) {
+            PrimaryButton(onClick = onWpComLoginClicked)
+            SecondaryButton(onClick = onSiteAddressLoginClicked)
         }
     }
 }
