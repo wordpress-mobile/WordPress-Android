@@ -17,9 +17,6 @@ import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore.Schedul
 import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore.SchedulingReminderModel.Period.TEN_MINUTES
 import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore.SchedulingReminderModel.Period.WHEN_PUBLISHED
 import org.wordpress.android.fluxc.store.SiteStore
-import org.wordpress.android.models.Person
-import org.wordpress.android.ui.people.utils.PeopleUtils
-import org.wordpress.android.ui.people.utils.PeopleUtils.FetchUsersCallback
 import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.LocaleManagerWrapper
@@ -54,11 +51,11 @@ constructor(
     val onPublishedDateChanged: LiveData<Event<Calendar>> = _onPublishedDateChanged
     private val _onPostStatusChanged = MutableLiveData<PostStatus>()
     val onPostStatusChanged: LiveData<PostStatus> = _onPostStatusChanged
-    private val _authors = MutableLiveData<List<Person>>()
-    val authors: LiveData<List<Person>> = _authors
     private val _onUiModel = MutableLiveData<PublishUiModel>()
     val onUiModel: LiveData<PublishUiModel> = _onUiModel
-    private val _onToast = MutableLiveData<Event<String>>()
+
+    @Suppress("VariableNaming")
+    protected val _onToast = MutableLiveData<Event<String>>()
     val onToast: LiveData<Event<String>> = _onToast
     private val _onShowNotificationDialog = MutableLiveData<Event<Period?>>()
     val onShowNotificationDialog: LiveData<Event<Period?>> = _onShowNotificationDialog
@@ -74,7 +71,6 @@ constructor(
                 ?: localeManagerWrapper.getCurrentCalendar()
         updateDateAndTimeFromCalendar(startCalendar)
         onPostStatusChanged(postRepository?.getPost())
-        postRepository?.let { fetchAuthors(it) }
     }
 
     fun onPostStatusChanged(postModel: PostImmutableModel?) {
@@ -84,20 +80,6 @@ constructor(
             )
         } ?: false
         updateUiModel(postModel = postModel)
-    }
-
-    private fun fetchAuthors(postRepository: EditPostRepository) {
-        val site = siteStore.getSiteByLocalId(postRepository.localSiteId)
-
-        PeopleUtils.fetchAuthors(site, object : FetchUsersCallback {
-            override fun onSuccess(peopleList: List<Person>, isEndOfList: Boolean) {
-                _authors.value = peopleList
-            }
-
-            override fun onError() {
-                _onToast.postValue(Event(resourceProvider.getString(R.string.error_fetch_authors_list)))
-            }
-        })
     }
 
     fun publishNow() {
