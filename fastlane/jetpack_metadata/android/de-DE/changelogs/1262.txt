@@ -1,4 +1,0 @@
-20.5:
-- Wir haben in den App-Einstellungen ein Label hinzugefügt, das dir die aktuell verwendete Sprache deiner Benutzeroberfläche anzeigt.
-- Weil die App nun eine hochauflösende Bildvorschau ermöglicht, haben wir die Größe von Theme-Screenshots in der Website-Theme-Auswahl angepasst.
-- Der „Überspringen“-Button bei der Website-Erstellung ist jetzt nicht mehr blau, sondern grün wie das Jetpack-Logo.

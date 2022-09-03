@@ -1,4 +1,0 @@
-20.5:
-- Vi har lagt till en etikett i Appinställningar för visning av appens aktuella gränssnittsspråk.
-- Vi har gjort skärmbilderna större i din webbplats temaväljare, eftersom det nu finns stöd för högupplösta förhandsgranskningar av bilder.
-- Vi har ändrat Hoppa över-knappens textfärg från blått till Jetpack-grönt i processen för webbplatsskapande.

@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-08-19 14:46:51+0000
+Translation-Revision-Date: 2022-09-02 15:09:55+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: pt_BR
 -->
 <resources>
+    <string name="login_magic_links_email_sent">Acabamos de enviar um link mágico para</string>
+    <string name="login_magic_links_sent_label_short">Verifique seu e-mail neste dispositivo.</string>
+    <string name="or_use_password">Usar senha para fazer login</string>
+    <string name="wp_jetpack_powered_notifications_powered_by_jetpack_caption">Receba atualizações em tempo real de novos comentários, tráfego no site, relatórios de segurança e muito mais.</string>
+    <string name="wp_jetpack_powered_notifications_powered_by_jetpack">As Notificações são uma tecnologia Jetpack</string>
+    <string name="wp_jetpack_powered_stats_powered_by_jetpack_caption">Observe o tráfego do seu site crescer e conheça seu público com o novo design das estatísticas e informações, já disponível no novo aplicativo do Jetpack.</string>
+    <string name="wp_jetpack_powered_stats_powered_by_jetpack">As Estatísticas são uma tecnologia Jetpack</string>
+    <string name="wp_jetpack_powered_reader_powered_by_jetpack_caption">Encontre, siga e curta todos seus sites e posts favoritos com o Leitor, já disponível no novo aplicativo do Jetpack.</string>
+    <string name="wp_jetpack_powered_reader_powered_by_jetpack">O Leitor é uma tecnologia Jetpack</string>
     <string name="wp_jetpack_powered_features">O novo aplicativo Jetpack tem estatísticas, leitor, notificações e muito mais que tornam seu WordPress melhor.</string>
     <string name="wp_jetpack_powered_better_with_jetpack">WordPress é melhor com Jetpack</string>
     <string name="gutenberg_native_upgrade_your_plan_to_use_video_covers">Faça upgrade do seu plano para usar capas de vídeo</string>
@@ -2453,6 +2462,7 @@ Language: pt_BR
     <string name="requesting_otp">Solicitando um código de verificação via SMS.</string>
     <string name="login_text_otp">Envie-me uma mensagem de texto com o código em vez disso.</string>
     <string name="enter_verification_code">Quase lá! Digite o código de verificação do seu aplicativo de autenticação.</string>
+    <string name="open_mail">Abrir o Mail</string>
     <string name="next">Próximo</string>
     <string name="enter_email_wordpress_com">Fazer login no WordPress.com usando um endereço de e-mail para gerenciar todos os seus sites WordPress.</string>
     <string name="image_optimization_promo_desc">A otimização de imagens as deixa mais leves, tornando seu upload mais rápido.\n\nVocê pode alterar essa funcionalidade a qualquer momento nas configurações do site.</string>

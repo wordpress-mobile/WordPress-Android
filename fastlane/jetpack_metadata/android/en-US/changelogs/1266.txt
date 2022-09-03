@@ -1,0 +1,2 @@
+- You can now log in to the app using an email address that contains a special character.
+- Preloading themes no longer crash the app during Site Creation. Whew.

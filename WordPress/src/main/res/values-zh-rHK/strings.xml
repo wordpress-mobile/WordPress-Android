@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-08-24 12:54:08+0000
+Translation-Revision-Date: 2022-09-02 08:08:13+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.1
 Language: zh_TW
@@ -2462,6 +2462,7 @@ Language: zh_TW
     <string name="requesting_otp">透過 SMS 要求驗證碼。</string>
     <string name="login_text_otp">請改用簡訊傳送驗證碼給我</string>
     <string name="enter_verification_code">快完成了！請輸入驗證器應用程式上的驗證碼。</string>
+    <string name="open_mail">開啟郵件</string>
     <string name="next">下一篇</string>
     <string name="enter_email_wordpress_com">使用電子郵件地址登入 WordPress.com，即可管理你的所有 WordPress 網站。</string>
     <string name="image_optimization_promo_desc">圖片最佳化會壓縮圖片，以加快上傳速度。\n\n你可以隨時在網站設定變更此設定。</string>

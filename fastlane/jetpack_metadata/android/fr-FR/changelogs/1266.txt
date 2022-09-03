@@ -1,0 +1,3 @@
+20.6 :
+- Vous pouvez désormais vous connecter à l’application en utilisant une adresse e-mail contenant un caractère spécial.
+- Le préchargement des thèmes ne fait plus planter l’application pendant la création du site. Ouf !

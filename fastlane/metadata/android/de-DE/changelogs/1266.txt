@@ -1,0 +1,4 @@
+20.6:
+- Du kannst dich jetzt bei der App auch mit einer E-Mail-Adresse anmelden, die Sonderzeichen enthält.
+- Bei der Website-Erstellung stürzt die App durch das Vorladen von Themes nicht mehr ab. Puh, Problem gelöst.
+- Das Banner „Bereitgestellt von Jetpack“ wird jetzt in der Liste der Suchergebnisse angezeigt.
