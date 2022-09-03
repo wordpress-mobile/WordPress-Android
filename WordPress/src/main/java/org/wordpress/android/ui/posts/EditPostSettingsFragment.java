@@ -44,6 +44,7 @@ import org.wordpress.android.fluxc.model.PostImmutableModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.TermModel;
 import org.wordpress.android.fluxc.model.post.PostStatus;
+import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.OnPostFormatsChanged;
@@ -130,6 +131,7 @@ public class EditPostSettingsFragment extends Fragment {
     private ArrayList<String> mPostFormatNames;
 
     @Inject SiteStore mSiteStore;
+    @Inject AccountStore mAccountStore;
     @Inject TaxonomyStore mTaxonomyStore;
     @Inject Dispatcher mDispatcher;
     @Inject ImageManager mImageManager;
@@ -371,6 +373,17 @@ public class EditPostSettingsFragment extends Fragment {
                 final LinearLayout authorContainer = rootView.findViewById(R.id.post_author_container);
                 authorContainer.setVisibility(View.VISIBLE);
                 authorContainer.setOnClickListener(view -> showAuthorDialog());
+
+                EditPostRepository editPostRepository = getEditPostRepository();
+                if (editPostRepository == null) {
+                    return;
+                }
+                PostImmutableModel postModel = editPostRepository.getPost();
+                if (postModel != null && postModel.getAuthorDisplayName() == null) {
+                    // There is no current author. That means this is a new unpublished post.
+                    // Set author to current user name.
+                    updateAuthorTextView(mAccountStore.getAccount().getDisplayName());
+                }
             }
         });
 
@@ -490,7 +503,7 @@ public class EditPostSettingsFragment extends Fragment {
         updateTagsTextView(postModel);
         updateStatusTextView();
         updatePublishDateTextView(postModel);
-        updateAuthorTextView(postModel);
+        updateAuthorTextView(postModel.getAuthorDisplayName());
         mPublishedViewModel.start(getEditPostRepository());
         updateCategoriesTextView(postModel);
         updateFeaturedImageView(postModel);
@@ -855,7 +868,7 @@ public class EditPostSettingsFragment extends Fragment {
                 return true;
             }, (postModel, result) -> {
                 if (result == UpdatePostResult.Updated.INSTANCE) {
-                    updateAuthorTextView(postModel);
+                    updateAuthorTextView(postModel.getAuthorDisplayName());
                 }
                 return null;
             });
@@ -962,8 +975,8 @@ public class EditPostSettingsFragment extends Fragment {
         mPublishDateContainer.setEnabled(!isPrivatePost);
     }
 
-    private void updateAuthorTextView(PostImmutableModel postImmutableModel) {
-        mAuthorTextView.setText(postImmutableModel.getAuthorDisplayName());
+    private void updateAuthorTextView(String authorDisplayName) {
+        mAuthorTextView.setText(authorDisplayName);
     }
 
     private void updateCategoriesTextView(PostImmutableModel post) {
@@ -1050,8 +1063,14 @@ public class EditPostSettingsFragment extends Fragment {
         if (postModel == null) {
             return -1;
         }
+        long selectedAuthorId = postModel.getAuthorId();
+        if (postModel.getAuthorId() == 0) {
+            // If the author id is 0, that means this is the post creating screen.
+            // Selected author should be the current user.
+            selectedAuthorId = mAccountStore.getAccount().getUserId();
+        }
         for (int i = 0; i < siteUsers.size(); i++) {
-            if (siteUsers.get(i).getPersonID() == postModel.getAuthorId()) {
+            if (siteUsers.get(i).getPersonID() == selectedAuthorId) {
                 return i;
             }
         }
