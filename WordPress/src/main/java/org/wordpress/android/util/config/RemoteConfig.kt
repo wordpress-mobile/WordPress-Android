@@ -15,6 +15,8 @@ import org.wordpress.android.util.config.AppConfig.FeatureState
 import javax.inject.Inject
 import javax.inject.Named
 
+const val REMOTE_REFRESH_INTERVAL_IN_HOURS = 12
+
 /**
  * Do not use this class outside of this package. Use [AppConfig] instead
  */
@@ -59,8 +61,10 @@ class RemoteConfig
 
     fun refresh(appScope: CoroutineScope) {
         appScope.launch {
-            fetchRemoteFlags()
-            flags = featureFlagStore.getFeatureFlags()
+            if (isRefreshNeeded()) {
+                fetchRemoteFlags()
+                flags = featureFlagStore.getFeatureFlags()
+            }
         }
     }
 
@@ -74,6 +78,14 @@ class RemoteConfig
         } else {
             FeatureState.RemoteValue(remoteConfig.value)
         }
+    }
+
+    private fun isRefreshNeeded(): Boolean {
+        val lastModifiedFlag = featureFlagStore.getTheLastSyncedRemoteConfig()
+        val timeDifferenceInMilliSeconds = System.currentTimeMillis() - lastModifiedFlag
+        val differenceInHours = (timeDifferenceInMilliSeconds / (60 * 60 * 1000) % 24)
+        if (differenceInHours >= REMOTE_REFRESH_INTERVAL_IN_HOURS) return true
+        return false
     }
 }
 
