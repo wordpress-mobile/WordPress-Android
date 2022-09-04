@@ -35,6 +35,7 @@ class FeatureFlagsStore @Inject constructor(
         return@withDefaultContext when {
             payload.isError -> FeatureFlagsResult(payload.error)
             payload.featureFlags != null -> {
+                remoteConfigDao.clearRemoteConfig()
                 remoteConfigDao.insertRemoteConfig(payload.featureFlags)
                 FeatureFlagsResult(payload.featureFlags)
             }
