@@ -21,6 +21,10 @@ abstract class RemoteConfigDao {
     abstract fun getRemoteConfig(key: String): List<RemoteConfig>
 
     @Transaction
+    @Query("SELECT modified_at from RemoteConfigurations WHERE `source` = :ordinal order by modified_at DESC LIMIT 1")
+    abstract fun getTheLastSyncedRemoteConfig(ordinal: RemoteConfigValueSource): Long
+
+    @Transaction
     @Suppress("SpreadOperator")
     open fun insertRemoteConfig(remoteConfigs: Map<String, Boolean>) {
         remoteConfigs.forEach {
