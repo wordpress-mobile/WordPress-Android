@@ -7,6 +7,8 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
+import androidx.room.TypeConverter
+import org.wordpress.android.fluxc.persistence.RemoteConfigDao.RemoteConfigValueSource.REMOTE
 
 @Dao
 abstract class RemoteConfigDao {
@@ -27,7 +29,8 @@ abstract class RemoteConfigDao {
                             key = it.key,
                             value = it.value,
                             createdAt = System.currentTimeMillis(),
-                            modifiedAt = System.currentTimeMillis()
+                            modifiedAt = System.currentTimeMillis(),
+                            source = REMOTE
                     )
             )
         }
@@ -48,6 +51,21 @@ abstract class RemoteConfigDao {
         val key: String,
         val value: Boolean,
         @ColumnInfo(name = "created_at") val createdAt: Long,
-        @ColumnInfo(name = "modified_at") val modifiedAt: Long
+        @ColumnInfo(name = "modified_at") val modifiedAt: Long,
+        @ColumnInfo(name = "source") val source: RemoteConfigValueSource
     )
+
+    enum class RemoteConfigValueSource(value: Int) {
+        BUILD_CONFIG(0),
+        REMOTE(1),
+    }
+
+    class RemoteConfigValueSourceConverter {
+        @TypeConverter
+        fun toRemoteConfigValueSource(value: Int): RemoteConfigValueSource =
+                enumValues<RemoteConfigValueSource>()[value]
+
+        @TypeConverter
+        fun fromRemoteConfigValueSource(value: RemoteConfigValueSource): Int = value.ordinal
+    }
 }
