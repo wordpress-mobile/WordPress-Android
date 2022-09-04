@@ -5,6 +5,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.mobile.FeatureFlagsErrorTy
 import org.wordpress.android.fluxc.network.rest.wpcom.mobile.FeatureFlagsRestClient
 import org.wordpress.android.fluxc.persistence.RemoteConfigDao
 import org.wordpress.android.fluxc.persistence.RemoteConfigDao.RemoteConfig
+import org.wordpress.android.fluxc.persistence.RemoteConfigDao.RemoteConfigValueSource
 import org.wordpress.android.fluxc.store.Store
 import org.wordpress.android.fluxc.tools.CoroutineEngine
 import org.wordpress.android.util.AppLog
@@ -55,7 +56,8 @@ class FeatureFlagsStore @Inject constructor(
                         key = key,
                         value = value,
                         createdAt = System.currentTimeMillis(),
-                        modifiedAt = System.currentTimeMillis()
+                        modifiedAt = System.currentTimeMillis(),
+                        source = RemoteConfigValueSource.BUILD_CONFIG
                 )
         )
     }
