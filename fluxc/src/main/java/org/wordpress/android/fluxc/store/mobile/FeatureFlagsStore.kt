@@ -62,6 +62,9 @@ class FeatureFlagsStore @Inject constructor(
         )
     }
 
+    fun getTheLastSyncedRemoteConfig() =
+            remoteConfigDao.getTheLastSyncedRemoteConfig(RemoteConfigValueSource.REMOTE)
+
     data class FeatureFlagsResult(
         val featureFlags: Map<String, Boolean>? = null
     ) : Store.OnChanged<FeatureFlagsError>() {
