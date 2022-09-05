@@ -63,7 +63,7 @@ private fun ColumnWithTopGlassBorder(
 fun ColumnWithFrostedGlassBackground(
     content: @Composable () -> Unit,
 ) {
-    val topBorderHeight = with(LocalDensity.current) { 2.dp.toPx() }
+    val topBorderHeight = with(LocalDensity.current) { 1.dp.toPx() }
 
     SubcomposeLayout { constraints ->
         val buttonsPlaceables = subcompose(Buttons) {
