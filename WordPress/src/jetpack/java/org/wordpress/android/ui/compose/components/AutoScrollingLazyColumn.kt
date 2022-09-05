@@ -22,6 +22,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.wordpress.android.ui.compose.unit.Margin
+import kotlin.math.abs
 
 private const val DELAY_BETWEEN_SCROLL_MS = 5L
 private const val SCROLL_BY_PX = 1f
@@ -43,12 +44,12 @@ fun <T : AutoScrollingListItem> AutoScrollingLazyColumn(
     itemDivider: @Composable () -> Unit = DefaultItemDivider,
     itemContent: @Composable (item: T) -> Unit,
 ) {
-    var itemsListState by remember { mutableStateOf(items) }
+    var itemsListState by remember { mutableStateOf(items.run { if (scrollBy >= 0) reversed() else this }) }
     val lazyListState = rememberLazyListState()
 
     LazyColumn(
             state = lazyListState,
-            reverseLayout = true,
+            reverseLayout = scrollBy >= 0,
             modifier = modifier.scrollable(false)
     ) {
         items(
@@ -65,8 +66,8 @@ fun <T : AutoScrollingListItem> AutoScrollingLazyColumn(
                 val itemsBelow = currentList.subList(lazyListState.firstVisibleItemIndex, currentList.size)
 
                 rememberCoroutineScope().launch {
-                    val offset = lazyListState.firstVisibleItemScrollOffset + scrollBy
-                    lazyListState.scrollToItem(0, offset.toInt())
+                    val offset = maxOf(0, lazyListState.firstVisibleItemScrollOffset - scrollBy.toInt())
+                    lazyListState.scrollToItem(0, offset)
                 }
 
                 itemsListState = itemsBelow + itemsAboveFirstVisible
@@ -75,7 +76,7 @@ fun <T : AutoScrollingListItem> AutoScrollingLazyColumn(
     }
 
     LaunchedEffect(Unit) {
-        autoScroll(lazyListState, scrollBy, scrollDelay)
+        autoScroll(lazyListState, abs(scrollBy), scrollDelay)
     }
 }
 
