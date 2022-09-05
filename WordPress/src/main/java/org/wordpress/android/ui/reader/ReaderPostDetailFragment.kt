@@ -470,10 +470,9 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
         likeFacesRecycler.addItemDecoration(
                 AvatarItemDecorator(
-                        RtlUtils.isRtl(activity),
-                        contextProvider.getContext(),
-                        AVATAR_LEFT_OFFSET_DIMEN
-                )
+                RtlUtils.isRtl(activity),
+                contextProvider.getContext(),
+                AVATAR_LEFT_OFFSET_DIMEN)
         )
 
         likeFacesRecycler.layoutManager = layoutManager
