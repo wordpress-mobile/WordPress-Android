@@ -10,7 +10,7 @@ plugins {
 ext {
     wordPressUtilsVersion = '2.7.0'
     wordPressLoginVersion = '0.18.0'
-    gutenbergMobileVersion = 'v1.81.1'
+    gutenbergMobileVersion = '5136-98dd1353211791a4a92cbec9ba2ca71717291e46'
     storiesVersion = '1.4.0'
     aboutAutomatticVersion = '0.0.6'
 
