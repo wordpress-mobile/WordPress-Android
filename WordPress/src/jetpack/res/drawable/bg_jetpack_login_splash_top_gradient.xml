@@ -7,14 +7,11 @@
     <path android:pathData="M0,0h200v200h-200z">
         <aapt:attr name="android:fillColor">
             <gradient
-                android:endX="0"
+                android:endX="100"
                 android:endY="200"
-                android:startX="0"
+                android:startX="100"
                 android:startY="0"
                 android:type="linear">
-                <item
-                    android:color="@color/bg_jetpack_login_splash_top_gradient_1"
-                    android:offset="0" />
                 <item
                     android:color="@color/bg_jetpack_login_splash_top_gradient_2"
                     android:offset="0.38" />
