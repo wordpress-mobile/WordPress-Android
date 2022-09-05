@@ -1562,7 +1562,6 @@ Language: es
     <string name="share_desc">Compartir</string>
     <string name="navigate_back_desc">Volver</string>
     <string name="navigate_forward_desc">Avanzar</string>
-    <string name="calendar_scheduled_post_description">«%1$s» programado para publicar el «%2$s» en tu aplicación de WordPress\n%3$s</string>
     <string name="calendar_scheduled_post_title">Entrada programada de WordPress: «%s»</string>
     <string name="notification_post_will_be_published_in_ten_minutes">«%s» se publicará en 10 minutos</string>
     <string name="notification_post_will_be_published_in_one_hour">«%s» se publicará en 1 hora</string>
@@ -1734,7 +1733,6 @@ Language: es
     <string name="app_rating_rate_later">Más tarde</string>
     <string name="app_rating_rate_now">Valorar ahora</string>
     <string name="app_rating_message">¡Qué gusto verte de nuevo! Si estás trabajando con la aplicación nos encantaría que nos puntuases en la Google Play Store.</string>
-    <string name="app_rating_title">¿Disfrutas de WordPress?</string>
     <string name="editor_post_converted_back_to_draft">Entrada devuelta a borrador</string>
     <string name="stats_insights_posting_activity">Actividad de publicación</string>
     <string name="stats_site_not_loaded_yet">El sitio no se ha cargado todavía</string>
