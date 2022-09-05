@@ -27,7 +27,7 @@ private data class LargeTextItem(
 
 @Composable
 private fun rememberLargeTextItems(): List<LargeTextItem> {
-    val texts = stringArrayResource(R.array.login_prologue_revamped_jetpack_feature_texts).reversed()
+    val texts = stringArrayResource(R.array.login_prologue_revamped_jetpack_feature_texts)
 
     /**
      * Duplicating the list fixes a strange issue where the autoscroll doesn't work with smaller font sizes,
