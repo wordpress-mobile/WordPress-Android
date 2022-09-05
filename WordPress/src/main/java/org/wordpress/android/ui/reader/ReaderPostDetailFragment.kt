@@ -470,9 +470,10 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
         likeFacesRecycler.addItemDecoration(
                 AvatarItemDecorator(
-                RtlUtils.isRtl(activity),
-                contextProvider.getContext(),
-                AVATAR_LEFT_OFFSET_DIMEN)
+                        RtlUtils.isRtl(activity),
+                        contextProvider.getContext(),
+                        AVATAR_LEFT_OFFSET_DIMEN
+                )
         )
 
         likeFacesRecycler.layoutManager = layoutManager
@@ -715,9 +716,11 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
         if (jetpackBrandingUtils.shouldShowJetpackBranding()) {
             binding.jetpackBadge.root.isVisible = true
-            binding.jetpackBadge.jetpackPoweredBadge.setOnClickListener {
-                jetpackBrandingUtils.trackBadgeTapped(READER_POST_DETAIL)
-                viewModel.showJetpackPoweredBottomSheet()
+            if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
+                binding.jetpackBadge.jetpackPoweredBadge.setOnClickListener {
+                    jetpackBrandingUtils.trackBadgeTapped(READER_POST_DETAIL)
+                    viewModel.showJetpackPoweredBottomSheet()
+                }
             }
         }
 
