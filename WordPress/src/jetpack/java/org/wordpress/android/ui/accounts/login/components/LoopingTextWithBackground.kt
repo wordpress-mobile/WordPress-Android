@@ -20,7 +20,7 @@ fun LoopingTextWithBackground(
     modifier: Modifier = Modifier,
     textModifier: Modifier = Modifier,
 ) {
-    Box(modifier = modifier.background(MaterialTheme.colors.background)) {
+    Box(modifier.background(MaterialTheme.colors.background)) {
         Image(
                 painter = painterResource(drawable.bg_jetpack_login_splash),
                 contentDescription = stringResource(string.login_prologue_revamped_content_description_bg),
