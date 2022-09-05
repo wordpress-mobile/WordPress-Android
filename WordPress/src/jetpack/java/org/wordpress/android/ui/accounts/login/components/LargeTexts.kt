@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.accounts.login.components
 
+import android.util.Log
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.material.Text
@@ -26,16 +27,22 @@ private data class LargeTextItem(
 ) : AutoScrollingListItem
 
 @Composable
+private fun rememberLargeTextItems(): List<LargeTextItem> {
+    val texts = stringArrayResource(R.array.login_prologue_revamped_jetpack_feature_texts).reversed()
+
+    /**
+     * Duplicating the list fixes a strange issue where the autoscroll doesn't work with smaller font sizes,
+     * if the entire list is visible initially on the screen.
+     */
+    return remember { (texts + texts).mapIndexed(::LargeTextItem) }
+}
+
+@Composable
 fun LargeTexts(
     modifier: Modifier = Modifier,
 ) {
-    val featureTexts = stringArrayResource(R.array.login_prologue_revamped_jetpack_feature_texts).reversed()
-
-    /**
-     * Duplicating the list fixes a strange issue where the autoscroll stops for smaller font sizes,
-     * when almost the entire list is visible initially on the screen.
-     */
-    val listItems = (featureTexts + featureTexts).mapIndexed(::LargeTextItem)
+    val listItems = rememberLargeTextItems()
+    Log.d("AutoScrollingLazyColumn", "items: $listItems")
 
     AutoScrollingLazyColumn(
             items = listItems,
