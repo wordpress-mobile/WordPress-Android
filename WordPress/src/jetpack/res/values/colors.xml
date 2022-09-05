@@ -11,7 +11,6 @@
     <color name="border_shadow_jetpack_login_splash_bottom_panel">#0D000000</color>
     <color name="border_highlight_jetpack_login_splash_bottom_panel">#4DFFFFFF</color>
 
-    <color name="bg_jetpack_login_splash_top_gradient_1">@color/jetpack_green_5</color>
     <color name="bg_jetpack_login_splash_top_gradient_2">#F9D0E6B8</color>
     <color name="bg_jetpack_login_splash_top_gradient_3">#8ED0E6B8</color>
     <color name="bg_jetpack_login_splash_top_gradient_4">#00D0E6B8</color>
