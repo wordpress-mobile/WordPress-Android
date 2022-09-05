@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -50,24 +51,25 @@ fun <T : AutoScrollingListItem> AutoScrollingLazyColumn(
             reverseLayout = true,
             modifier = modifier.scrollable(false)
     ) {
-        itemsListState.forEach {
-            item(key = it.id) {
-                itemContent(it)
-                itemDivider()
+        items(
+                items = itemsListState,
+                key = { it.id }
+        ) {
+            itemContent(it)
+            itemDivider()
 
-                if (it.id == items.last().id) {
-                    val currentList = itemsListState
+            if (it.id == itemsListState.last().id) {
+                val currentList = itemsListState
 
-                    val itemsAboveFirstVisible = currentList.subList(0, lazyListState.firstVisibleItemIndex)
-                    val itemsBelow = currentList.subList(lazyListState.firstVisibleItemIndex, currentList.size)
+                val itemsAboveFirstVisible = currentList.subList(0, lazyListState.firstVisibleItemIndex)
+                val itemsBelow = currentList.subList(lazyListState.firstVisibleItemIndex, currentList.size)
 
-                    rememberCoroutineScope().launch {
-                        val offset = lazyListState.firstVisibleItemScrollOffset + scrollBy
-                        lazyListState.scrollToItem(0, offset.toInt())
-                    }
-
-                    itemsListState = itemsBelow + itemsAboveFirstVisible
+                rememberCoroutineScope().launch {
+                    val offset = lazyListState.firstVisibleItemScrollOffset + scrollBy
+                    lazyListState.scrollToItem(0, offset.toInt())
                 }
+
+                itemsListState = itemsBelow + itemsAboveFirstVisible
             }
         }
     }
