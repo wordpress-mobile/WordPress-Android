@@ -4,7 +4,7 @@ import org.wordpress.android.BuildConfig
 import org.wordpress.android.annotation.Feature
 import javax.inject.Inject
 
-@Feature(JetpackPoweredBottomSheetFeatureConfig.JETPACK_POWERED_BOTTOM_SHEET_REMOTE_FIELD, true)
+@Feature(JetpackPoweredBottomSheetFeatureConfig.JETPACK_POWERED_BOTTOM_SHEET_REMOTE_FIELD, false)
 class JetpackPoweredBottomSheetFeatureConfig @Inject constructor(
     appConfig: AppConfig
 ) : FeatureConfig(
