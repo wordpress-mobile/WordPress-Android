@@ -1,3 +1,6 @@
-- You can now log in to the app using an email address that contains a special character.
-- Preloading themes no longer crash the app during Site Creation. Whew.
-- Power up—the Jetpack Powered banner is shown in lists of search results.
+* [*] Fixes Media control toggles difficult to see [https://github.com/wordpress-mobile/WordPress-Android/pull/17068]
+* [*] Fix night mode text colors on the screens shown after scanning a Login Code [https://github.com/wordpress-mobile/WordPress-Android/pull/17086]
+* [***] Jetpack App: Widgets are now on Jetpack. Long press on app icon to find and add widgets to home screen. [https://github.com/wordpress-mobile/WordPress-Android/pull/17100]
+* [*] [Jetpack-only] Block Editor: Makes some small changes to the editor's accent colours for consistency. [#16968]
+* [*] [Jetpack-only] Block Editor: Makes some small changes to the editor's accent colours for consistency. [https://github.com/wordpress-mobile/WordPress-Android/pull/16968]
+
