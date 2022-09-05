@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.accounts.login.components
 
-import android.util.Log
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.material.Text
@@ -42,7 +41,6 @@ fun LargeTexts(
     modifier: Modifier = Modifier,
 ) {
     val listItems = rememberLargeTextItems()
-    Log.d("AutoScrollingLazyColumn", "items: $listItems")
 
     AutoScrollingLazyColumn(
             items = listItems,
