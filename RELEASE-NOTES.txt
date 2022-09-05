@@ -1,5 +1,9 @@
 *** PLEASE FOLLOW THIS FORMAT: [<priority indicator, more stars = higher priority>] <description> [<PR URL>]
 
+20.8
+-----
+
+
 20.7
 -----
 * [*] Fixes Media control toggles difficult to see [https://github.com/wordpress-mobile/WordPress-Android/pull/17068]
