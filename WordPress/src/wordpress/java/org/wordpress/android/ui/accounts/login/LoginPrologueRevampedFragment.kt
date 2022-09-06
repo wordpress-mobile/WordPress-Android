@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,12 +14,17 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale.Companion
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.graphics.drawscope.scale
+import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.LayoutDirection.Rtl
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import org.wordpress.android.R.color
@@ -71,14 +75,22 @@ class LoginPrologueRevampedFragment: Fragment() {
 
 @Composable
 fun LoginScreenRevamped(onLoginClicked: () -> Unit) {
-    Box(modifier = Modifier.background(color = colorResource(id = color.login_prologue_revamped_background))
+    val brushStrokePainter = painterResource(id = drawable.brush_stroke)
+    // Flip the background image for RTL locales
+    val scaleX = if (LocalLayoutDirection.current == Rtl) -1f else 1f
+
+    Box(modifier = Modifier
+            .background(color = colorResource(id = color.login_prologue_revamped_background))
+            .drawBehind {
+                scale(scaleX = scaleX, scaleY = 1f) {
+                    translate(left = size.width - brushStrokePainter.intrinsicSize.width - 10f, top = -75f) {
+                        with(brushStrokePainter) {
+                            draw(intrinsicSize)
+                        }
+                    }
+                }
+            }
     ) {
-        Image(
-                painter = painterResource(drawable.brush_stroke),
-                contentDescription = stringResource(string.login_prologue_revamped_content_description_wordpress_icon),
-                contentScale = Companion.Crop,
-                modifier = Modifier.align(Alignment.CenterEnd),
-        )
         Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.padding(vertical = 45.dp)
