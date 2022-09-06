@@ -18,23 +18,40 @@ import javax.inject.Inject
  * Main purpose of this wrapper is to make testing easier.
  */
 class PeopleUtilsWrapper @Inject constructor() {
-    fun fetchUsers(site: SiteModel, offset: Int, callback: FetchUsersCallback) =
-            PeopleUtils.fetchUsers(site, offset, callback)
+    fun fetchUsers(
+        site: SiteModel,
+        offset: Int,
+        callback: FetchUsersCallback
+    ) = PeopleUtils.fetchUsers(site, offset, callback)
 
-    fun fetchAuthors(site: SiteModel, callback: FetchUsersCallback) =
-            PeopleUtils.fetchAuthors(site, callback)
+    fun fetchAuthors(
+        site: SiteModel,
+        callback: FetchUsersCallback
+    ) = PeopleUtils.fetchAuthors(site, callback)
 
-    fun fetchRevisionAuthorsDetails(site: SiteModel, authors: List<String>, callback: FetchUsersCallback) =
-            PeopleUtils.fetchRevisionAuthorsDetails(site, authors, callback)
+    fun fetchRevisionAuthorsDetails(
+        site: SiteModel,
+        authors: List<String>,
+        callback: FetchUsersCallback
+    ) = PeopleUtils.fetchRevisionAuthorsDetails(site, authors, callback)
 
-    fun fetchFollowers(site: SiteModel, page: Int, callback: FetchFollowersCallback) =
-            PeopleUtils.fetchFollowers(site, page, callback)
+    fun fetchFollowers(
+        site: SiteModel,
+        page: Int,
+        callback: FetchFollowersCallback
+    ) = PeopleUtils.fetchFollowers(site, page, callback)
 
-    fun fetchEmailFollowers(site: SiteModel, page: Int, callback: FetchFollowersCallback) =
-            PeopleUtils.fetchEmailFollowers(site, page, callback)
+    fun fetchEmailFollowers(
+        site: SiteModel,
+        page: Int,
+        callback: FetchFollowersCallback
+    ) = PeopleUtils.fetchEmailFollowers(site, page, callback)
 
-    fun fetchViewers(site: SiteModel, offset: Int, callback: FetchViewersCallback) =
-            PeopleUtils.fetchViewers(site, offset, callback)
+    fun fetchViewers(
+        site: SiteModel,
+        offset: Int,
+        callback: FetchViewersCallback
+    ) = PeopleUtils.fetchViewers(site, offset, callback)
 
     fun updateRole(
         site: SiteModel,
