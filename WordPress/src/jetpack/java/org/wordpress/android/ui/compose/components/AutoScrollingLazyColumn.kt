@@ -1,14 +1,12 @@
 package org.wordpress.android.ui.compose.components
 
 import androidx.compose.foundation.MutatePriority
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -21,15 +19,10 @@ import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import org.wordpress.android.ui.compose.unit.Margin
-import kotlin.math.abs
+import org.wordpress.android.util.extensions.isNegative
 
-private const val DELAY_BETWEEN_SCROLL_MS = 5L
-private const val SCROLL_BY_PX = 1f
-
-private val DefaultItemDivider = @Composable {
-    Spacer(modifier = Modifier.height(Margin.MediumLarge.value))
-}
+const val DELAY_BETWEEN_AUTOSCROLL_MS = 5L
+const val AUTOSCROLL_DELTA_PX = -1f
 
 interface AutoScrollingListItem {
     val id: Int
@@ -38,18 +31,16 @@ interface AutoScrollingListItem {
 @Composable
 fun <T : AutoScrollingListItem> AutoScrollingLazyColumn(
     items: List<T>,
-    scrollBy: Float = SCROLL_BY_PX,
-    scrollDelay: Long = DELAY_BETWEEN_SCROLL_MS,
+    lazyListState: LazyListState,
+    scrollBy: MutableState<Float> = mutableStateOf(AUTOSCROLL_DELTA_PX),
+    scrollDelay: Long = DELAY_BETWEEN_AUTOSCROLL_MS,
     modifier: Modifier = Modifier,
-    itemDivider: @Composable () -> Unit = DefaultItemDivider,
     itemContent: @Composable (item: T) -> Unit,
 ) {
-    var itemsListState by remember { mutableStateOf(items.run { if (scrollBy >= 0) reversed() else this }) }
-    val lazyListState = rememberLazyListState()
+    var itemsListState by remember { mutableStateOf(items) }
 
     LazyColumn(
             state = lazyListState,
-            reverseLayout = scrollBy >= 0,
             modifier = modifier.scrollable(false)
     ) {
         items(
@@ -57,26 +48,29 @@ fun <T : AutoScrollingListItem> AutoScrollingLazyColumn(
                 key = { it.id }
         ) {
             itemContent(it)
-            itemDivider()
 
-            if (it.id == itemsListState.last().id) {
+            val thresholdItem = if (scrollBy.value.isNegative) itemsListState.first() else itemsListState.last()
+
+            if (it.id == thresholdItem.id && lazyListState.firstVisibleItemScrollOffset == 0) {
                 val currentList = itemsListState
 
-                val itemsAboveFirstVisible = currentList.subList(0, lazyListState.firstVisibleItemIndex)
-                val itemsBelow = currentList.subList(lazyListState.firstVisibleItemIndex, currentList.size)
+                val itemsBeforeFirstVisible = currentList.subList(0, lazyListState.firstVisibleItemIndex)
+                val itemsAfterFirstVisible = currentList.subList(lazyListState.firstVisibleItemIndex, currentList.size)
 
                 rememberCoroutineScope().launch {
-                    val offset = maxOf(0, lazyListState.firstVisibleItemScrollOffset - scrollBy.toInt())
-                    lazyListState.scrollToItem(0, offset)
+                    lazyListState.scrollToItem(
+                            index = if (scrollBy.value.isNegative) currentList.lastIndex else 0,
+                            scrollOffset = scrollBy.value.toInt()
+                    )
                 }
 
-                itemsListState = itemsBelow + itemsAboveFirstVisible
+                itemsListState = itemsAfterFirstVisible + itemsBeforeFirstVisible
             }
         }
     }
 
-    LaunchedEffect(Unit) {
-        autoScroll(lazyListState, abs(scrollBy), scrollDelay)
+    LaunchedEffect(scrollBy.value) {
+        autoScroll(lazyListState, scrollBy.value, scrollDelay)
     }
 }
 

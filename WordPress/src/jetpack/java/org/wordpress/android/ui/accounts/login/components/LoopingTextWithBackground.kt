@@ -27,7 +27,7 @@ fun LoopingTextWithBackground(
                 contentScale = ContentScale.FillBounds,
                 modifier = Modifier.matchParentSize(),
         )
-        LargeTexts(
+        AutoScrollingText(
                 modifier = Modifier
                         .fillMaxSize()
                         .padding(horizontal = 20.dp)
