@@ -66,10 +66,8 @@ class FeatureFlagsRestClientTest {
         initFetchFeatureFlags(data = response)
 
         restClient.fetchFeatureFlags(
-                buildNumber = BUILD_NUMBER_PARAM,
                 deviceId = DEVICE_ID_PARAM,
                 identifier = IDENTIFIER_PARAM,
-                marketingVersion = MARKETING_VERSION_PARAM,
                 platform = PLATFORM_PARAM
             )
 
@@ -83,10 +81,8 @@ class FeatureFlagsRestClientTest {
         initFetchFeatureFlags(data = getResponseFromJsonString(json))
 
         val result = restClient.fetchFeatureFlags(
-            buildNumber = BUILD_NUMBER_PARAM,
             deviceId = DEVICE_ID_PARAM,
             identifier = IDENTIFIER_PARAM,
-            marketingVersion = MARKETING_VERSION_PARAM,
             platform = PLATFORM_PARAM)
 
         assertSuccess(successResponse, result)
@@ -97,10 +93,8 @@ class FeatureFlagsRestClientTest {
         initFetchFeatureFlags(error = WPComGsonNetworkError(BaseNetworkError(TIMEOUT)))
 
         val result = restClient.fetchFeatureFlags(
-            buildNumber = BUILD_NUMBER_PARAM,
             deviceId = DEVICE_ID_PARAM,
             identifier = IDENTIFIER_PARAM,
-            marketingVersion = MARKETING_VERSION_PARAM,
             platform = PLATFORM_PARAM)
 
         assertError(FeatureFlagsErrorType.TIMEOUT, result)
@@ -111,10 +105,8 @@ class FeatureFlagsRestClientTest {
         initFetchFeatureFlags(error = WPComGsonNetworkError(BaseNetworkError(NETWORK_ERROR)))
 
         val result = restClient.fetchFeatureFlags(
-            buildNumber = BUILD_NUMBER_PARAM,
             deviceId = DEVICE_ID_PARAM,
             identifier = IDENTIFIER_PARAM,
-            marketingVersion = MARKETING_VERSION_PARAM,
             platform = PLATFORM_PARAM)
 
         assertError(FeatureFlagsErrorType.API_ERROR, result)
@@ -125,10 +117,8 @@ class FeatureFlagsRestClientTest {
         initFetchFeatureFlags(error = WPComGsonNetworkError(BaseNetworkError(INVALID_RESPONSE)))
 
         val result = restClient.fetchFeatureFlags(
-            buildNumber = BUILD_NUMBER_PARAM,
             deviceId = DEVICE_ID_PARAM,
             identifier = IDENTIFIER_PARAM,
-            marketingVersion = MARKETING_VERSION_PARAM,
             platform = PLATFORM_PARAM)
 
         assertError(FeatureFlagsErrorType.INVALID_RESPONSE, result)
@@ -139,10 +129,8 @@ class FeatureFlagsRestClientTest {
         initFetchFeatureFlags(error = WPComGsonNetworkError(BaseNetworkError(NOT_AUTHENTICATED)))
 
         val result = restClient.fetchFeatureFlags(
-            buildNumber = BUILD_NUMBER_PARAM,
             deviceId = DEVICE_ID_PARAM,
             identifier = IDENTIFIER_PARAM,
-            marketingVersion = MARKETING_VERSION_PARAM,
             platform = PLATFORM_PARAM)
 
         assertError(FeatureFlagsErrorType.AUTH_ERROR, result)
@@ -153,10 +141,8 @@ class FeatureFlagsRestClientTest {
         initFetchFeatureFlags(error = WPComGsonNetworkError(BaseNetworkError(UNKNOWN)))
 
         val result = restClient.fetchFeatureFlags(
-            buildNumber = BUILD_NUMBER_PARAM,
             deviceId = DEVICE_ID_PARAM,
             identifier = IDENTIFIER_PARAM,
-            marketingVersion = MARKETING_VERSION_PARAM,
             platform = PLATFORM_PARAM)
 
         assertError(FeatureFlagsErrorType.GENERIC_ERROR, result)
