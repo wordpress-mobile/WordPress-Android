@@ -2,6 +2,7 @@ package org.wordpress.android.ui.accounts.login.components
 
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -18,42 +19,54 @@ import androidx.compose.ui.unit.sp
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.AutoScrollingLazyColumn
 import org.wordpress.android.ui.compose.components.AutoScrollingListItem
+import org.wordpress.android.ui.compose.components.AUTOSCROLL_DELTA_PX
 import org.wordpress.android.util.extensions.isOdd
 
-private data class LargeTextItem(
+private data class LargeTextsItem(
     override val id: Int,
-    val text: String,
+    val content: @Composable () -> Unit,
 ) : AutoScrollingListItem
 
 @Composable
-private fun rememberLargeTextItems(): List<LargeTextItem> {
-    val texts = stringArrayResource(R.array.login_prologue_revamped_jetpack_feature_texts)
-
-    /**
-     * Duplicating the list fixes a strange issue where the autoscroll doesn't work with smaller font sizes,
-     * if the entire list is visible initially on the screen.
-     */
-    return remember { (texts + texts).mapIndexed(::LargeTextItem) }
+private fun largeTextItems(): List<LargeTextsItem> {
+    return (0..2).map { index ->
+        LargeTextsItem(index) {
+            LargeTexts()
+        }
+    }
 }
 
 @Composable
-fun LargeTexts(
+fun AutoScrollingText(
     modifier: Modifier = Modifier,
 ) {
-    val listItems = rememberLargeTextItems()
+    val listItems = largeTextItems()
+    val scrollBy = remember { mutableStateOf(AUTOSCROLL_DELTA_PX) }
+    val lazyListState = rememberLazyListState(initialFirstVisibleItemIndex = listItems.size / 2)
 
     AutoScrollingLazyColumn(
+            lazyListState = lazyListState,
             items = listItems,
-            itemDivider = { Spacer(modifier = Modifier.height(2.dp)) },
+            scrollBy = scrollBy,
             modifier = modifier,
     ) {
+        it.content()
+    }
+}
+
+@Composable
+fun LargeTexts() {
+    val texts = stringArrayResource(R.array.login_prologue_revamped_jetpack_feature_texts)
+
+    texts.forEachIndexed { index, text ->
         LargeText(
-                text = it.text,
-                color = when (listItems.indexOf(it).isOdd) {
+                text = text,
+                color = when (index.isOdd) {
                     true -> colorResource(R.color.text_color_jetpack_login_feature_odd)
                     false -> colorResource(R.color.text_color_jetpack_login_feature_even)
                 }
         )
+        Spacer(modifier = Modifier.height(2.dp))
     }
 }
 
