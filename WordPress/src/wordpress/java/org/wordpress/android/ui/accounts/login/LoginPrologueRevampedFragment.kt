@@ -109,8 +109,8 @@ fun LoginScreenRevamped(onLoginClicked: () -> Unit) {
 }
 
 
-@Preview(showBackground = true, widthDp = 400, heightDp = 700)
-@Preview(showBackground = true, widthDp = 400, heightDp = 700, uiMode = UI_MODE_NIGHT_YES)
+@Preview(showBackground = true, device = Devices.PIXEL_3A)
+@Preview(showBackground = true, device = Devices.PIXEL_3A, uiMode = UI_MODE_NIGHT_YES)
 @Composable
 fun PreviewLoginScreenRevamped() {
     AppTheme {
