@@ -229,12 +229,14 @@ public class NotificationsSettingsFragment extends PreferenceFragment
         if (mJetpackBrandingUtils.shouldShowJetpackBranding()) {
             LayoutInflater inflater = LayoutInflater.from(getContext());
             final JetpackBadgeFooterBinding binding = JetpackBadgeFooterBinding.inflate(inflater);
-            binding.footerJetpackBadge.jetpackPoweredBadge.setOnClickListener(v -> {
-                mJetpackBrandingUtils.trackBadgeTapped(Screen.NOTIFICATIONS_SETTINGS);
-                new JetpackPoweredBottomSheetFragment().show(
-                        ((AppCompatActivity) getActivity()).getSupportFragmentManager(),
-                        JetpackPoweredBottomSheetFragment.TAG);
-            });
+            if (mJetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
+                binding.footerJetpackBadge.jetpackPoweredBadge.setOnClickListener(v -> {
+                    mJetpackBrandingUtils.trackBadgeTapped(Screen.NOTIFICATIONS_SETTINGS);
+                    new JetpackPoweredBottomSheetFragment().show(
+                            ((AppCompatActivity) getActivity()).getSupportFragmentManager(),
+                            JetpackPoweredBottomSheetFragment.TAG);
+                });
+            }
             listView.addFooterView(binding.getRoot(), null, false);
         }
     }
