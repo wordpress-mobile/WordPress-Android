@@ -28,19 +28,15 @@ class FeatureFlagsRestClient @Inject constructor(
     userAgent: UserAgent
 ) : BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {
     suspend fun fetchFeatureFlags(
-        buildNumber: String,
         deviceId: String,
         identifier: String,
-        marketingVersion: String,
-        platform: String
+        platform: String = "android"
         ): FeatureFlagsFetchedPayload {
         // https://public-api.wordpress.com/wpcom/v2/mobile/feature-flagsdevice_id=12345&platform=android&build_number=570&marketing_version=15.1.1&identifier=com.jetpack.android
         val url = WPCOMV2.mobile.feature_flags.url
         val params = mapOf(
-            "build_number" to buildNumber,
             "device_id" to deviceId,
             "identifier" to identifier,
-            "marketing_version" to  marketingVersion,
             "platform" to platform
         )
         val response = wpComGsonRequestBuilder.syncGetRequest(
