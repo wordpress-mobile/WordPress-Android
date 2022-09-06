@@ -17,7 +17,7 @@ import org.wordpress.android.fluxc.store.AccountStore.UpdateTokenPayload
 import org.wordpress.android.provider.query.QueryResult
 import org.wordpress.android.resolver.ContentResolverWrapper
 import org.wordpress.android.sharedlogin.JetpackSharedLoginFlag
-import org.wordpress.android.sharedlogin.WordPressPublicData
+import org.wordpress.android.sharedlogin.data.WordPressPublicData
 import org.wordpress.android.sharedlogin.provider.SharedLoginProvider
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.AccountActionBuilderWrapper
