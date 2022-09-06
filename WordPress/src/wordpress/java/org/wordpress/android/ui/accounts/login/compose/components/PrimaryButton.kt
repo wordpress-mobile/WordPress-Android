@@ -3,6 +3,7 @@ package org.wordpress.android.ui.accounts.login.compose.components
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.MaterialTheme
@@ -27,7 +28,8 @@ fun PrimaryButton(
     Button(
             onClick = onClick,
             enabled = enabled,
-            elevation = ButtonDefaults.elevation(2.dp),
+            elevation = ButtonDefaults.elevation(0.dp),
+            shape = RoundedCornerShape(5.dp),
             colors = ButtonDefaults.buttonColors(
                     contentColor = Color.White,
                     backgroundColor = colorResource(id = color.blue_50),
