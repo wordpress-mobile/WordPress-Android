@@ -3,6 +3,7 @@ package org.wordpress.android.sharedlogin.resolver
 import android.content.ContentResolver
 import android.content.Context
 import android.database.MatrixCursor
+import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.times
@@ -18,6 +19,7 @@ import org.wordpress.android.provider.query.QueryResult
 import org.wordpress.android.resolver.ContentResolverWrapper
 import org.wordpress.android.sharedlogin.JetpackSharedLoginFlag
 import org.wordpress.android.sharedlogin.SharedLoginAnalyticsTracker
+import org.wordpress.android.sharedlogin.SharedLoginAnalyticsTracker.ErrorType
 import org.wordpress.android.sharedlogin.data.WordPressPublicData
 import org.wordpress.android.sharedlogin.provider.SharedLoginProvider
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
@@ -156,7 +158,7 @@ class SharedLoginResolverTest {
         featureEnabled()
         classToTest.tryJetpackLogin()
         verify(sharedLoginAnalyticsTracker, never()).trackLoginSuccess()
-        verify(sharedLoginAnalyticsTracker, times(1)).trackLoginFailed()
+        verify(sharedLoginAnalyticsTracker, times(1)).trackLoginFailed(ErrorType.QueryTokenError)
     }
 
     @Test
@@ -165,7 +167,7 @@ class SharedLoginResolverTest {
         whenever(queryResult.getValue<String>(mockCursor)).thenReturn(notLoggedInToken)
         classToTest.tryJetpackLogin()
         verify(sharedLoginAnalyticsTracker, never()).trackLoginSuccess()
-        verify(sharedLoginAnalyticsTracker, times(1)).trackLoginFailed()
+        verify(sharedLoginAnalyticsTracker, times(1)).trackLoginFailed(ErrorType.WPNotLoggedInError)
     }
 
     @Test
@@ -173,7 +175,7 @@ class SharedLoginResolverTest {
         featureEnabled()
         whenever(queryResult.getValue<String>(mockCursor)).thenReturn(loggedInToken)
         classToTest.tryJetpackLogin()
-        verify(sharedLoginAnalyticsTracker, never()).trackLoginFailed()
+        verify(sharedLoginAnalyticsTracker, never()).trackLoginFailed(any())
         verify(sharedLoginAnalyticsTracker, times(1)).trackLoginSuccess()
     }
 
