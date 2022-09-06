@@ -38,10 +38,7 @@ class RemoteConfig
         Log.e("Refreshing remote flags", " ")
         val response = featureFlagStore.fetchFeatureFlags(
                 deviceId = "12345",
-                platform = "android",
-                buildNumber = "570",
-                marketingVersion = "15.1.1",
-                identifier = "com.jetpack.android"
+                identifier = BuildConfig.APPLICATION_ID
         )
         Log.e("response", response.toString())
         response.featureFlags?.let { configValues ->
