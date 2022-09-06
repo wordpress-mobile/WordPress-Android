@@ -714,7 +714,7 @@
 
     <dimen name="app_bar_with_site_info_height">146dp</dimen>
     <dimen name="app_bar_with_no_site_info_height">62dp</dimen>
-    <dimen name="app_bar_with_site_info_tabs_height">206dp</dimen>
+    <dimen name="app_bar_with_site_info_tabs_height">200dp</dimen>
     <dimen name="toolbar_bottom_margin_with_no_tabs">0dp</dimen>
     <dimen name="toolbar_bottom_margin_with_tabs">168dp</dimen>
 
