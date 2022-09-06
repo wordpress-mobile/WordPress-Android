@@ -7,6 +7,7 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.provider.query.QueryResult
 import org.wordpress.android.resolver.ContentResolverWrapper
 import org.wordpress.android.sharedlogin.JetpackSharedLoginFlag
+import org.wordpress.android.sharedlogin.SharedLoginAnalyticsTracker
 import org.wordpress.android.sharedlogin.data.WordPressPublicData
 import org.wordpress.android.sharedlogin.provider.SharedLoginProvider
 import org.wordpress.android.ui.main.WPMainActivity
@@ -24,7 +25,8 @@ class SharedLoginResolver @Inject constructor(
     private val accountStore: AccountStore,
     private val contentResolverWrapper: ContentResolverWrapper,
     private val accountActionBuilderWrapper: AccountActionBuilderWrapper,
-    private val appPrefsWrapper: AppPrefsWrapper
+    private val appPrefsWrapper: AppPrefsWrapper,
+    private val sharedLoginAnalyticsTracker: SharedLoginAnalyticsTracker
 ) {
     fun tryJetpackLogin() {
         val isAlreadyLoggedIn = accountStore.accessToken.isNotEmpty()
@@ -33,14 +35,20 @@ class SharedLoginResolver @Inject constructor(
         if (isAlreadyLoggedIn || !isFirstTry || !isFeatureFlagEnabled) {
             return
         }
+        sharedLoginAnalyticsTracker.trackLoginStart()
         appPrefsWrapper.saveIsFirstTrySharedLoginJetpack(false)
         val accessTokenResultCursor = getAccessTokenResultCursor()
         if (accessTokenResultCursor != null) {
             val accessToken = queryResult.getValue<String>(accessTokenResultCursor) ?: ""
             if (accessToken.isNotEmpty()) {
+                sharedLoginAnalyticsTracker.trackLoginSuccess()
                 dispatchUpdateAccessToken(accessToken)
                 reloadMainScreen()
+            } else {
+                trackLoginFailed()
             }
+        } else {
+            trackLoginFailed()
         }
     }
 
@@ -65,5 +73,9 @@ class SharedLoginResolver @Inject constructor(
             mainActivityIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(mainActivityIntent)
         }
+    }
+
+    private fun trackLoginFailed() {
+        sharedLoginAnalyticsTracker.trackLoginFailed()
     }
 }
