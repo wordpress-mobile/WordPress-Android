@@ -2,7 +2,7 @@
 
 20.8
 ----
-* [**] Added author button to the post settings and the author of the post can be changed with it.
+* [**] Added author button to the post settings and the author of the post can be changed with it. [https://github.com/wordpress-mobile/WordPress-Android/pull/17120]
 
 20.7
 -----
