@@ -16,7 +16,7 @@ import org.wordpress.android.R.drawable
 import org.wordpress.android.R.string
 
 @Composable
-fun LoopingTextWithBackground(
+fun AutoScrollingTextBox(
     modifier: Modifier = Modifier,
     textModifier: Modifier = Modifier,
 ) {

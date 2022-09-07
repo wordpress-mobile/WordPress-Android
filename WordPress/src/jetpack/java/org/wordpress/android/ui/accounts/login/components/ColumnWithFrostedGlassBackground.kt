@@ -87,7 +87,7 @@ fun ColumnWithFrostedGlassBackground(
         }
 
         val clippedBackgroundPlaceables = subcompose(ClippedBackground) {
-            LoopingTextWithBackground(
+            AutoScrollingTextBox(
                     modifier = Modifier.clip(buttonsClipShape),
                     textModifier = Modifier.composed {
                         if (VERSION.SDK_INT >= VERSION_CODES.S) {
