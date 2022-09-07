@@ -387,7 +387,10 @@
         <item name="widgetTitle2"></item>
         <item name="widgetContent2"></item>
     </style>
-
+    <style name="ListItem.Preview">
+        <item name="widgetTitle1">@string/stats_views</item>
+        <item name="widgetContent1">1,100</item>
+    </style>
     <style name="ListItem.Preview1">
         <item name="widgetTitle1">@string/stats_views</item>
         <item name="widgetContent1">1,100</item>
