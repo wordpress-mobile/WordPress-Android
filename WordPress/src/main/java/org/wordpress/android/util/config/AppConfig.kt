@@ -91,6 +91,13 @@ class AppConfig
                 ?: throw IllegalArgumentException("Remote variant does not match local value: $value")
     }
 
+    /**
+     * This method clears the remote config values from the database
+     */
+    fun clear() {
+        remoteConfig.clear()
+    }
+
     sealed class FeatureState(open val isEnabled: Boolean, val name: String) {
         data class ManuallyOverriden(override val isEnabled: Boolean) : FeatureState(isEnabled, "manually_overriden")
         data class BuildConfigValue(override val isEnabled: Boolean) : FeatureState(isEnabled, "build_config_value")

@@ -596,6 +596,9 @@ class AppInitializer @Inject constructor(
         // Reset Notifications Data
         NotificationsTable.reset()
 
+        //clear App config data
+        appConfig.clear()
+
         // Cancel QuickStart reminders
         QuickStartUtils.cancelQuickStartReminder(context)
 

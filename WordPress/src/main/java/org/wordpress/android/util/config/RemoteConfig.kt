@@ -84,5 +84,11 @@ class RemoteConfig
         if (differenceInHours >= REMOTE_REFRESH_INTERVAL_IN_HOURS) return true
         return false
     }
+
+    fun clear() {
+        Log.e("clearing", "the remote config values")
+        flags = emptyList()
+        featureFlagStore.clearAllValues()
+    }
 }
 
