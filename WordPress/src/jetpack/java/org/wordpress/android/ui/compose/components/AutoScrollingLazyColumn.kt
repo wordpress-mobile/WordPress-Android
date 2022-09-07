@@ -21,7 +21,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.wordpress.android.util.extensions.isNegative
 
-const val DELAY_BETWEEN_AUTOSCROLL_MS = 5L
+const val AUTOSCROLL_DELAY_MS = 5L
 const val AUTOSCROLL_DELTA_PX = -1f
 
 interface AutoScrollingListItem {
@@ -33,7 +33,7 @@ fun <T : AutoScrollingListItem> AutoScrollingLazyColumn(
     items: List<T>,
     lazyListState: LazyListState,
     scrollBy: MutableState<Float> = mutableStateOf(AUTOSCROLL_DELTA_PX),
-    scrollDelay: Long = DELAY_BETWEEN_AUTOSCROLL_MS,
+    scrollDelay: Long = AUTOSCROLL_DELAY_MS,
     modifier: Modifier = Modifier,
     itemContent: @Composable (item: T) -> Unit,
 ) {
