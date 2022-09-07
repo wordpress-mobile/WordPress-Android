@@ -8,12 +8,12 @@ import javax.inject.Inject
 class SharedLoginAnalyticsTracker @Inject constructor(
     private val analyticsTracker: AnalyticsTrackerWrapper
 ) {
-    fun trackLoginStart() = analyticsTracker.track(Stat.SHARED_LOGIN_START, emptyMap())
+    fun trackLoginStart() = analyticsTracker.track(Stat.SHARED_LOGIN_START)
 
-    fun trackLoginSuccess() = analyticsTracker.track(Stat.SHARED_LOGIN_SUCCESS, emptyMap())
+    fun trackLoginSuccess() = analyticsTracker.track(Stat.SHARED_LOGIN_SUCCESS)
 
     fun trackLoginFailed(errorType: ErrorType) =
-            analyticsTracker.track(Stat.SHARED_LOGIN_FAILED, mapOf(ERROR_TYPE to errorType))
+            analyticsTracker.track(Stat.SHARED_LOGIN_FAILED, mapOf(ERROR_TYPE to errorType.value))
 
     sealed class ErrorType(val value: String) {
         object WPNotLoggedInError : ErrorType("wp_not_logged_in_error")
