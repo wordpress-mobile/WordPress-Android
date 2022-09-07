@@ -388,6 +388,18 @@
         <item name="widgetContent2"></item>
     </style>
 
+    <style name="ListItem.Preview1">
+        <item name="widgetTitle1">@string/stats_views</item>
+        <item name="widgetContent1">1,100</item>
+        <item name="widgetTitle2">@string/stats_visitors</item>
+        <item name="widgetContent2">1,000</item>
+    </style>
+    <style name="ListItem.Preview2">
+        <item name="widgetTitle1">@string/stats_insights_posts</item>
+        <item name="widgetContent1">55</item>
+        <item name="widgetTitle2">@string/stats_insights_best_ever</item>
+        <item name="widgetContent2">50</item>
+    </style>
     <style name="ListItem.Preview3">
         <item name="widgetTitle1">@string/stats_views</item>
         <item name="widgetContent1">1,100</item>
