@@ -11,7 +11,6 @@ import androidx.test.filters.LargeTest;
 import com.google.android.libraries.cloudtesting.screenshots.ScreenShotter;
 
 import org.junit.ClassRule;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
@@ -96,7 +95,6 @@ public class JPScreenshotTest extends BaseTest {
         }
     }
 
-    @Ignore("Ignored until there's a way to exclude tests on FTL properly, via `--test-targets` option.")
     @Test
     public void jPScreenshotTest() {
         if (BuildConfig.IS_JETPACK_APP) {

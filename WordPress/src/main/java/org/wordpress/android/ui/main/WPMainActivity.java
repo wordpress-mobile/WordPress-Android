@@ -69,6 +69,7 @@ import org.wordpress.android.push.GCMRegistrationIntentService;
 import org.wordpress.android.push.NativeNotificationsUtils;
 import org.wordpress.android.push.NotificationType;
 import org.wordpress.android.push.NotificationsProcessingService;
+import org.wordpress.android.sharedlogin.resolver.SharedLoginResolver;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.JetpackConnectionSource;
@@ -252,6 +253,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     @Inject WeeklyRoundupScheduler mWeeklyRoundupScheduler;
     @Inject MySiteDashboardTodaysStatsCardFeatureConfig mTodaysStatsCardFeatureConfig;
     @Inject QuickStartTracker mQuickStartTracker;
+    @Inject SharedLoginResolver mSharedLoginResolver;
 
     @Inject BuildConfigWrapper mBuildConfigWrapper;
 
@@ -446,6 +448,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
         if (!mSelectedSiteRepository.hasSelectedSite()) {
             initSelectedSite();
         }
+        mSharedLoginResolver.tryJetpackLogin();
     }
 
     private void showBloggingPromptsOnboarding() {

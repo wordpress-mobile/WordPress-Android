@@ -964,7 +964,6 @@ Language: pl
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">Stuknij dwukrotnie, by przejść do ustawień kolorów</string>
     <string name="reader_empty_followed_blogs_description">Gdy zaczniesz śledzić inne witryny, zobaczysz tutaj ich treść</string>
     <string name="feature_announcement_find_out_mode">Dowiedz się więcej</string>
-    <string name="feature_announcement_dialog_label">Co nowego w WordPressie</string>
     <string name="insert_label_with_count">Wstaw %d</string>
     <string name="crop">przytnij</string>
     <string name="photo_picker_video_title">Wybierz wideo</string>
@@ -1292,7 +1291,6 @@ Language: pl
     <string name="notification_post_will_be_published_in_ten_minutes">\"%s\" zostanie opublikowany za 10 minut</string>
     <string name="navigate_back_desc">Wróć</string>
     <string name="web_preview_desktop">Komputer stacjonarny</string>
-    <string name="calendar_scheduled_post_description">Wpis „%1$s” został zaplanowany do publikacji w dniu „%2$s” w twojej aplikacji WordPressowej\n%3$s</string>
     <string name="notification_post_will_be_published_in_one_hour">\"%s\" zostanie opublikowany za godzinę</string>
     <string name="notification_post_has_been_published">\"%s\" został opublikowany</string>
     <string name="notification_scheduled_post_ten_minute_reminder">Zaplanowany wpis: przypomnienie 10 minutowe</string>
@@ -1462,7 +1460,6 @@ Language: pl
     <string name="app_rating_rate_now">Oceń teraz</string>
     <string name="app_rating_message">Miło widzieć ciebie ponownie! Jeśli używasz aplikacji, prosimy o ocenę w sklepie Google Play.</string>
     <string name="app_rating_rate_never">Nie, dziękuję</string>
-    <string name="app_rating_title">Lubisz WordPressa?</string>
     <string name="editor_post_converted_back_to_draft">Wpis z powrotem zamieniony na wpis</string>
     <string name="stats_insights_posting_activity">Aktywność publikowania wpisów</string>
     <string name="stats_site_not_loaded_yet">Witryna jeszcze nie załadowana</string>

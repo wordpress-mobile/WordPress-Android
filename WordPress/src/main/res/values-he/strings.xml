@@ -1237,7 +1237,6 @@ Language: he_IL
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">יש להקיש פעמיים כדי לעבור להגדרות הצבע</string>
     <string name="reader_empty_followed_blogs_description">כאשר יש לך אתרים במעקב, התוכן שלהם יופיע כאן</string>
     <string name="feature_announcement_find_out_mode">למידע נוסף</string>
-    <string name="feature_announcement_dialog_label">מה חדש ב-WordPress</string>
     <string name="insert_label_with_count">להוסיף %d</string>
     <string name="crop">לחתוך</string>
     <string name="error_failed_to_load_into_file">הטעינה לתוך הקובץ נכשלה, יש לנסות שוב.</string>
@@ -1563,7 +1562,6 @@ Language: he_IL
     <string name="share_desc">שיתוף</string>
     <string name="navigate_back_desc">Go back</string>
     <string name="navigate_forward_desc">Go forward</string>
-    <string name="calendar_scheduled_post_description">הפוסט \"⁦%1$s⁩\" תוזמן לפרסום בתאריך \"⁦%2$s⁩\" באפליקציה שלך ב-WordPress \n %3$s</string>
     <string name="calendar_scheduled_post_title">WordPress Scheduled Post: \"%s\"</string>
     <string name="notification_post_will_be_published_in_ten_minutes">\"%s\" will be published in 10 minutes</string>
     <string name="notification_post_will_be_published_in_one_hour">\"%s\" will be published in 1 hour</string>
@@ -1735,7 +1733,6 @@ Language: he_IL
     <string name="app_rating_rate_later">מאוחר יותר</string>
     <string name="app_rating_rate_now">לדרג כעת</string>
     <string name="app_rating_message">שמחים לראות אותך שוב! אם אהבת את האפליקציה, נשמח לראות את הדירוג שלך בחנות Google Play.</string>
-    <string name="app_rating_title">מרוצה מ-WordPress?</string>
     <string name="editor_post_converted_back_to_draft">הפוסט הומר בחזרה למצב טיוטה</string>
     <string name="stats_insights_posting_activity">פעילות פרסום</string>
     <string name="stats_site_not_loaded_yet">האתר עדיין לא נטען</string>

@@ -4,6 +4,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <style name="GutenbergContainerTheme" parent="Theme.MaterialComponents.Light.DarkActionBar.Bridge">
+        <item name="colorAccent">@color/accent_color</item>
+    </style>
+
     <style name="FormatBarButton">
         <item name="android:minWidth">@dimen/format_bar_height</item>
         <item name="android:minHeight">@dimen/format_bar_height</item>

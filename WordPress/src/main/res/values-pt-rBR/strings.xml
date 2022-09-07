@@ -1237,7 +1237,6 @@ Language: pt_BR
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">Toque duas vezes para ir para as configurações de cor</string>
     <string name="reader_empty_followed_blogs_description">Ao seguir sites, você verá o conteúdo deles aqui</string>
     <string name="feature_announcement_find_out_mode">Saiba mais</string>
-    <string name="feature_announcement_dialog_label">O que há de novo no WordPress</string>
     <string name="insert_label_with_count">Inserir %d</string>
     <string name="crop">recortar</string>
     <string name="error_failed_to_load_into_file">Falha ao carregar para um arquivo. Tente novamente.</string>
@@ -1563,7 +1562,6 @@ Language: pt_BR
     <string name="share_desc">Compartilhar</string>
     <string name="navigate_back_desc">Voltar</string>
     <string name="navigate_forward_desc">Avançar</string>
-    <string name="calendar_scheduled_post_description">\"%1$s\" agendado para publicação em \"%2$s\" em seu aplicativo do WordPress \n%3$s</string>
     <string name="calendar_scheduled_post_title">Post do WordPress agendado: \"%s\"</string>
     <string name="notification_post_will_be_published_in_ten_minutes">\"%s\" será publicado em 10 minutos</string>
     <string name="notification_post_will_be_published_in_one_hour">\"%s\" será publicado em uma hora</string>
@@ -1735,7 +1733,6 @@ Language: pt_BR
     <string name="app_rating_rate_later">Mais tarde</string>
     <string name="app_rating_rate_now">Avalie agora</string>
     <string name="app_rating_message">Bom te ver de novo! Se você estiver gostando do aplicativo, deixe uma avaliação no Google Play Store.</string>
-    <string name="app_rating_title">Curtindo o WordPress?</string>
     <string name="editor_post_converted_back_to_draft">Post convertido para rascunho</string>
     <string name="stats_insights_posting_activity">Atividade de publicações</string>
     <string name="stats_site_not_loaded_yet">O site não foi carregado ainda</string>

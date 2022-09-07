@@ -1237,7 +1237,6 @@ Language: zh_TW
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">點選兩次即可前往顏色設定</string>
     <string name="reader_empty_followed_blogs_description">關注網站後，網站內容就會顯示於此</string>
     <string name="feature_announcement_find_out_mode">瞭解更多</string>
-    <string name="feature_announcement_dialog_label">WordPress 新功能</string>
     <string name="insert_label_with_count">插入 %d 個</string>
     <string name="error_failed_to_load_into_file">無法載入檔案，請再試一次。</string>
     <string name="preview_image_thumbnail_description">預覽圖片縮圖</string>
@@ -1565,7 +1564,6 @@ Language: zh_TW
     <string name="navigate_forward_desc">下一個</string>
     <string name="calendar_scheduled_post_title">WordPress 已排程的文章：「%s」</string>
     <string name="notification_post_will_be_published_in_ten_minutes">「%s」將會在 10 分鐘後發表</string>
-    <string name="calendar_scheduled_post_description">排程於「%2$s」在你的 WordPress 應用程式發表「%1$s」\n %3$s</string>
     <string name="notification_post_will_be_published_in_one_hour">「%s」將會在 1 小時後發表</string>
     <string name="notification_post_has_been_published">「%s」已發表</string>
     <string name="notification_scheduled_post_ten_minute_reminder">已排程的文章：10 分鐘提醒</string>
@@ -1735,7 +1733,6 @@ Language: zh_TW
     <string name="app_rating_rate_later">稍後再做</string>
     <string name="app_rating_rate_now">立即評分</string>
     <string name="app_rating_message">很高興再次與你見面！如果你喜歡我們的應用程式，歡迎前往 Google Play 商店幫忙評分。</string>
-    <string name="app_rating_title">享受 WordPress 使用體驗嗎？</string>
     <string name="editor_post_converted_back_to_draft">貼文已重新轉換為草稿</string>
     <string name="stats_insights_posting_activity">張貼活動</string>
     <string name="stats_site_not_loaded_yet">尚未載入網站</string>

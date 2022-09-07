@@ -126,11 +126,11 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
                 setTitle(packageManager.getActivityInfo(componentName, PackageManager.GET_META_DATA).labelRes)
             }
         }
-
+        
         if (jetpackBrandingUtils.shouldShowJetpackBranding()) {
-            jetpackBadge.root.isVisible = true
+            jetpackBadge.isVisible = true
             if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
-                jetpackBadge.footerJetpackBadge.jetpackPoweredBadge.setOnClickListener {
+                jetpackBadge.setOnClickListener {
                     jetpackBrandingUtils.trackBadgeTapped(ME)
                     viewModel.showJetpackPoweredBottomSheet()
                 }

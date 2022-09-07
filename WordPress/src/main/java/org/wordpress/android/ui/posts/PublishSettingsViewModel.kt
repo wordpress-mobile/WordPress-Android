@@ -187,10 +187,12 @@ constructor(
                 R.string.calendar_scheduled_post_title,
                 postRepository.title
         )
+        val appName = resourceProvider.getString(R.string.app_name)
         val description = resourceProvider.getString(
                 R.string.calendar_scheduled_post_description,
                 postRepository.title,
                 site?.name ?: site?.url ?: "",
+                appName,
                 postRepository.link
         )
         _onAddToCalendar.value = Event(CalendarEvent(title, description, startTime))

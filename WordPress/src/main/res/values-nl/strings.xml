@@ -1237,7 +1237,6 @@ Language: nl
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">Twee keer tikken om naar de kleurinstellingen te gaan</string>
     <string name="reader_empty_followed_blogs_description">Wanneer je sites volgt, zie je hier de inhoud ervan</string>
     <string name="feature_announcement_find_out_mode">Meer informatie</string>
-    <string name="feature_announcement_dialog_label">Wat is er nieuw in WordPress</string>
     <string name="insert_label_with_count">Invoegen %d</string>
     <string name="crop">bijsnijden</string>
     <string name="error_failed_to_load_into_file">Kan niet laden in bestand, probeer het opnieuw.</string>
@@ -1563,7 +1562,6 @@ Language: nl
     <string name="share_desc">Delen</string>
     <string name="navigate_back_desc">Terugkeren</string>
     <string name="navigate_forward_desc">Doorgaan</string>
-    <string name="calendar_scheduled_post_description">\'%1$s\' ingepland voor publicatie op \'%2$s\' in uw WordPress-app \n %3$s</string>
     <string name="calendar_scheduled_post_title">Ingepland WordPress bericht: \"%s\"</string>
     <string name="notification_post_will_be_published_in_ten_minutes">\"%s\" wordt over 10 minuten gepubliceerd</string>
     <string name="notification_post_will_be_published_in_one_hour">\"%s\" wordt over 1 uur gepubliceerd</string>
@@ -1735,7 +1733,6 @@ Language: nl
     <string name="app_rating_rate_later">Later</string>
     <string name="app_rating_rate_now">Nu beoordelen</string>
     <string name="app_rating_message">Goed je te weer zien! Als je deze app tof vindt, vergeet dan niet een beoordeling te geven in de Google Play Store.</string>
-    <string name="app_rating_title">Geniet je van WordPress?</string>
     <string name="editor_post_converted_back_to_draft">Bericht teruggezet naar concept</string>
     <string name="stats_insights_posting_activity">Berichtactiviteiten</string>
     <string name="stats_site_not_loaded_yet">Site nog niet geladen</string>

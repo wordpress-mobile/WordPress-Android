@@ -1,9 +1,7 @@
 package org.wordpress.android.util
 
-import android.content.res.Configuration
 import android.view.View
 import android.view.View.OnScrollChangeListener
-import android.view.Window
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.R
@@ -64,15 +62,6 @@ class JetpackBrandingUtils @Inject constructor(
                 }
             }
         })
-    }
-
-    /**
-     * Sets the navigation bar color as same as Jetpack banner background color in portrait orientation.
-     */
-    fun setNavigationBarColorForBanner(window: Window) {
-        if (window.context.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            window.navigationBarColor = window.context.getColor(R.color.jetpack_banner_background)
-        }
     }
 
     private fun isWpComSite(): Boolean {

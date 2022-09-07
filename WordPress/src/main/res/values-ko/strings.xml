@@ -1237,7 +1237,6 @@ Language: ko_KR
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">색상 설정으로 이동하려면 두 번 탭하세요.</string>
     <string name="reader_empty_followed_blogs_description">사이트를 팔로우하면 여기에 해당 콘텐츠가 표시됩니다.</string>
     <string name="feature_announcement_find_out_mode">더 알아보기</string>
-    <string name="feature_announcement_dialog_label">워드프레스의 새로운 기능</string>
     <string name="insert_label_with_count">%d 삽입</string>
     <string name="crop">자르기</string>
     <string name="error_failed_to_load_into_file">파일을 로드하지 못했습니다. 다시 시도하십시오.</string>
@@ -1563,7 +1562,6 @@ Language: ko_KR
     <string name="share_desc">공유</string>
     <string name="navigate_back_desc">뒤로 가기</string>
     <string name="navigate_forward_desc">앞으로 가기</string>
-    <string name="calendar_scheduled_post_description">워드프레스 앱 \n에서 \"%2$s\"에 \"%1$s\" 발행 예약됨 %3$s</string>
     <string name="calendar_scheduled_post_title">예약된 워드프레스 글: \"%s\"</string>
     <string name="notification_post_will_be_published_in_ten_minutes">\"%s\"이(가) 10분 후에 게시됩니다.</string>
     <string name="notification_post_will_be_published_in_one_hour">\"%s\"이(가) 1시간 후에 게시됩니다.</string>
@@ -1735,7 +1733,6 @@ Language: ko_KR
     <string name="app_rating_rate_later">나중에</string>
     <string name="app_rating_rate_now">지금 평가</string>
     <string name="app_rating_message">다시 만나서 반가워요! 앱을 알아보고 있다면 Google Play 스토어에서 평가를 확인하는 것이 좋습니다.</string>
-    <string name="app_rating_title">워드프레스가 마음에 드시나요?</string>
     <string name="editor_post_converted_back_to_draft">글을 임시글로 되돌림</string>
     <string name="stats_insights_posting_activity">게시 활동</string>
     <string name="stats_site_not_loaded_yet">사이트가 아직 로드되지 않음</string>

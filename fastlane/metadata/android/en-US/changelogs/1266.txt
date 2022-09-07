@@ -1,0 +1,4 @@
+20.6:
+- You can now log in to the app using an email address that contains a special character.
+- Preloading themes no longer crash the app during Site Creation. Whew.
+- Power up—the Jetpack Powered banner is shown in lists of search results.
