@@ -56,9 +56,10 @@ class RemoteConfig
         }
     }
 
-    fun refresh(appScope: CoroutineScope) {
+    fun refresh(appScope: CoroutineScope, forced: Boolean) {
+        Log.e("refresh remote flags", "function called")
         appScope.launch {
-            if (isRefreshNeeded()) {
+            if (isRefreshNeeded() || forced) {
                 fetchRemoteFlags()
                 flags = featureFlagStore.getFeatureFlags()
             }

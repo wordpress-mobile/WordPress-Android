@@ -504,6 +504,7 @@ class AppInitializer @Inject constructor(
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onAccountChanged(event: OnAccountChanged) {
         if (!FluxCUtils.isSignedInWPComOrHasWPOrgSite(accountStore, siteStore)) {
+            appConfig.refresh(appScope, forced = true)
             flushHttpCache()
 
             // Analytics resets
