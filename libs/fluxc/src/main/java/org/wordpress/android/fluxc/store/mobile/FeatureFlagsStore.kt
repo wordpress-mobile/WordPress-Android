@@ -30,7 +30,7 @@ class FeatureFlagsStore @Inject constructor(
         return@withDefaultContext when {
             payload.isError -> FeatureFlagsResult(payload.error)
             payload.featureFlags != null -> {
-                remoteConfigDao.clearRemoteConfig()
+                clearAllValues()
                 remoteConfigDao.insertRemoteConfig(payload.featureFlags)
                 FeatureFlagsResult(payload.featureFlags)
             }
@@ -60,6 +60,10 @@ class FeatureFlagsStore @Inject constructor(
 
     fun getTheLastSyncedRemoteConfig() =
             remoteConfigDao.getTheLastSyncedRemoteConfig(RemoteConfigValueSource.REMOTE)
+
+    fun clearAllValues() {
+        remoteConfigDao.clearRemoteConfig()
+    }
 
     data class FeatureFlagsResult(
         val featureFlags: Map<String, Boolean>? = null
