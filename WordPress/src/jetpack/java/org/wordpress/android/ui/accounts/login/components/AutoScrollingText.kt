@@ -17,6 +17,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.wordpress.android.R
+import org.wordpress.android.ui.compose.components.AUTOSCROLL_DELTA_PX
 import org.wordpress.android.ui.compose.components.AutoScrollingLazyColumn
 import org.wordpress.android.ui.compose.components.AutoScrollingListItem
 import org.wordpress.android.ui.compose.components.AUTOSCROLL_DELTA_PX
@@ -41,7 +42,7 @@ fun AutoScrollingText(
     modifier: Modifier = Modifier,
 ) {
     val listItems = largeTextItems()
-    val scrollBy = remember { mutableStateOf(AUTOSCROLL_DELTA_PX) }
+    val scrollBy = AUTOSCROLL_DELTA_PX
     val lazyListState = rememberLazyListState(initialFirstVisibleItemIndex = listItems.size / 2)
 
     AutoScrollingLazyColumn(
