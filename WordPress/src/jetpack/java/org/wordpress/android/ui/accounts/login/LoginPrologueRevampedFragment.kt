@@ -25,7 +25,6 @@ import org.wordpress.android.ui.accounts.login.components.PrimaryButton
 import org.wordpress.android.ui.accounts.login.components.SecondaryButton
 import org.wordpress.android.ui.accounts.login.components.TopLinearGradient
 import org.wordpress.android.ui.compose.theme.AppTheme
-import org.wordpress.android.util.extensions.showFullScreen
 
 class LoginPrologueRevampedFragment : Fragment() {
     private lateinit var loginPrologueListener: LoginPrologueListener
@@ -52,22 +51,14 @@ class LoginPrologueRevampedFragment : Fragment() {
         loginPrologueListener = context
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
+    override fun onPause() {
+        super.onPause()
         requireActivity().window.disableFullScreen()
     }
 
-    private fun Window.enableFullScreen() {
-        // Set Translucent Status Bar
-        this.showFullScreen()
+    private fun Window.enableFullScreen() = addFlags(FLAG_LAYOUT_NO_LIMITS)
 
-        // Set Translucent Navigation Bar
-        setFlags(FLAG_LAYOUT_NO_LIMITS, FLAG_LAYOUT_NO_LIMITS)
-    }
-
-    private fun Window.disableFullScreen() {
-        clearFlags(FLAG_LAYOUT_NO_LIMITS)
-    }
+    private fun Window.disableFullScreen() = clearFlags(FLAG_LAYOUT_NO_LIMITS)
 
     companion object {
         const val TAG = "login_prologue_revamped_fragment_tag"
