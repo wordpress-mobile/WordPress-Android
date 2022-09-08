@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-08-26 09:54:08+0000
+Translation-Revision-Date: 2022-09-02 09:59:29+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: nl
 -->
 <resources>
     <string name="login_magic_links_email_sent">We hebben zojuist een magische link verstuurd naar</string>
+    <string name="login_magic_links_sent_label_short">Controleer je e-mail op dit apparaat!</string>
     <string name="or_use_password">Gebruik je wachtwoord om je aan te melden</string>
     <string name="wp_jetpack_powered_notifications_powered_by_jetpack_caption">Blijf op de hoogte met realtime updates voor nieuwe reacties, sitebezoekers, veiligheidsrapporten en meer.</string>
     <string name="wp_jetpack_powered_notifications_powered_by_jetpack">Meldingen worden mogelijk gemaakt door Jetpack</string>
@@ -14,7 +15,7 @@ Language: nl
     <string name="wp_jetpack_powered_stats_powered_by_jetpack">Statistieken worden mogelijk gemaakt door Jetpack</string>
     <string name="wp_jetpack_powered_reader_powered_by_jetpack_caption">Vind, volg en like al je favoriete sites en berichten met Reader, nu beschikbaar in de nieuwe Jetpack-app.</string>
     <string name="wp_jetpack_powered_reader_powered_by_jetpack">Reader wordt mogelijk gemaakt door Jetpack</string>
-    <string name="wp_jetpack_powered_features">De nieuwe Jetpack-app heeft Statistieken, Lezer, Meldingen en nog meer dat je WordPress verbetert.</string>
+    <string name="wp_jetpack_powered_features">De nieuwe Jetpack app heeft Statistieken, Lezer, Meldingen en nog meer dat je WordPress verbetert.</string>
     <string name="wp_jetpack_powered_better_with_jetpack">WordPress is completer met Jetpack</string>
     <string name="gutenberg_native_upgrade_your_plan_to_use_video_covers">Upgrade je abonnement om video-omslagafbeeldingen te gebruiken</string>
     <string name="gutenberg_native_upgrade_your_plan_to_upload_audio">Upgrade je abonnement om audio te uploaden</string>
@@ -24,7 +25,7 @@ Language: nl
     <string name="wp_jetpack_continue_to_notifications">Doorgaan naar Meldingen</string>
     <string name="wp_jetpack_continue_to_stats">Doorgaan naar Statistieken</string>
     <string name="wp_jetpack_continue_to_reader">Doorgaan naar Lezer</string>
-    <string name="wp_jetpack_get_new_jetpack_app">Krijg de Jetpack-app</string>
+    <string name="wp_jetpack_get_new_jetpack_app">Download de Jetpack app</string>
     <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery">Probleem bij het weergeven van het blok. \nTik om blokherstel te proberen.</string>
     <string name="weekly_roundup_notification_text_views_and_comments">Vorige week had je %1$s weergaven en %2$s reacties</string>
     <string name="weekly_roundup_notification_text_views_and_likes">Vorige week had je %1$s weergaven en %2$s likes</string>
@@ -107,8 +108,8 @@ Language: nl
     <string name="quick_start_dialog_check_notifications_title">Controleer je meldingen</string>
     <string name="quick_start_dialog_check_notifications_message_short">Selecteer het %1$s tabblad Meldingen %2$s om onderweg updates te ontvangen.</string>
     <string name="quick_start_dialog_upload_media_message_short_plus">Selecteer het %1$s plusje %2$s om media te uploaden. Je kan vanuit elk apparaat media aan je berichten/pagina\'s toevoegen.</string>
-    <string name="quick_start_dialog_follow_sites_message_short_discover">Gebruik &lt;b&gt; Ontdekken &lt;/b&gt; om sites en tags te zoeken.</string>
-    <string name="quick_start_dialog_follow_sites_message_short_discover_and_settings">Gebruik &lt;b&gt; Ontdekken &lt;/b&gt; om sites en tags te zoeken. Probeer eens %1$s Instellingen %2$s te selecteren om onderwerpen toe te voegen die je leuk vindt.</string>
+    <string name="quick_start_dialog_follow_sites_message_short_discover">Gebruik &lt;b&gt;Ontdekken&lt;/b&gt; om sites en tags te zoeken.</string>
+    <string name="quick_start_dialog_follow_sites_message_short_discover_and_settings">Gebruik &lt;b&gt;Discover&lt;/b&gt; om sites en tags te zoeken. Probeer eens %1$s Instellingen %2$s te selecteren om onderwerpen toe te voegen die je leuk vindt.</string>
     <string name="photo_picker_video_thumbnail_content_description">Miniatuurafbeelding video</string>
     <string name="stats_details_top_commentators">Top commentators</string>
     <string name="stats_insights_total_stats_negative">%1$s minder dan de vorige week</string>
@@ -278,9 +279,9 @@ Language: nl
     <string name="gutenberg_native_gallery_style">Galerij stijl</string>
     <string name="sharing_facebook_warning_positive_button">Ga naar het web</string>
     <string name="sharing_facebook_warning_message">Je kunt je Facebook account koppelen op de WordPress.com site. Als je klaar bent, keer je terug naar de WordPress app om je instellingen voor delen te wijzigen.</string>
-    <string name="about_automattic_app_icon_description">App-pictogram</string>
-    <string name="about_automattic_back_icon_description">Terug-pictogram</string>
-    <string name="about_automattic_logo_description">Automattic-logo</string>
+    <string name="about_automattic_app_icon_description">App pictogram</string>
+    <string name="about_automattic_back_icon_description">Terug pictogram</string>
+    <string name="about_automattic_logo_description">Automattic logo</string>
     <string name="about_automattic_wordpress">WordPress</string>
     <string name="about_automattic_woocommerce">WooCommerce</string>
     <string name="about_automattic_tumblr">Tumblr</string>
@@ -348,7 +349,7 @@ Language: nl
     <string name="button_copy_link">Kopieer link</string>
     <string name="domains_paid_plan_add_your_domain_caption">Een eigen domein maakt het eenvoudig voor je bezoekers om je site te vinden</string>
     <string name="domains_paid_plan_add_your_domain_title">Voeg je domein toe</string>
-    <string name="my_site_create_first_post_excerpt">Berichten verschijnen op je blogpagina in omgekeerde chronologische volgorde. Het is tijd om je ideeēn met de wereld te delen.</string>
+    <string name="my_site_create_first_post_excerpt">Berichten verschijnen op je blogpagina in omgekeerde chronologische volgorde. Het is tijd om je ideeēn met de wereld te delen!</string>
     <string name="my_site_create_first_post_title">Maak je eerste bericht</string>
     <string name="my_site_untitled_post">Ongetiteld</string>
     <string name="my_site_post_card_scheduled_title">Aankomende geplande berichten</string>
@@ -447,7 +448,7 @@ Language: nl
     <string name="gutenberg_native_blocks_are_pieces_of_content_that_you_can_insert_rearrange_and_st">Blokken zijn stukjes inhoud die je kunt invoegen, herschikken en stylen zonder dat je hoeft te weten hoe je moet coderen. Blokken zijn een gemakkelijke en moderne manier voor je om mooie lay-outs te maken.</string>
     <string name="gutenberg_native_blocks_allow_you_to_focus_on_writing_your_content_knowing_that_al">Blokken stellen je in staat je te concentreren op het schrijven van je inhoud, in de wetenschap dat alle opmaakhulpmiddelen die je nodig hebt aanwezig zijn om je te helpen je boodschap over te brengen.</string>
     <string name="gutenberg_native_arrange_your_content_into_columns_add_call_to_action_buttons_and">Rangschik je inhoud in kolommen, voeg Oproep tot actie knoppen toe, en overlap afbeeldingen met tekst.</string>
-    <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar">Voeg op elk moment een nieuw blok toe, door te tikken op het + pictogram in de toolbar links onderaan. </string>
+    <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar">Voeg op elk moment een nieuw blok toe, door te tikken op het + pictogram in de toolbar links onderaan.</string>
     <string name="quick_start_sites_type_tasks_completed">%1$s van %2$s afgerond</string>
     <string name="quick_start_dialog_need_help_manage_site_message">Leer de basis met een snelle walkthrough.</string>
     <string name="comment_batch_moderation_error">Kan een of meerdere reacties niet modereren</string>
@@ -2461,6 +2462,7 @@ Language: nl
     <string name="requesting_otp">Verificatiecode via sms aanvragen.</string>
     <string name="login_text_otp">Sms  mij een code in plaats daarvan</string>
     <string name="enter_verification_code">Bijna klaar! Voer de verificatiecode uit je Authenticator-app in.</string>
+    <string name="open_mail">Open e-mail</string>
     <string name="next">Volgende</string>
     <string name="enter_email_wordpress_com">Log in op WordPress.com met behulp van een e-mailadres om al je WordPress-sites te beheren.</string>
     <string name="image_optimization_promo_desc">Afbeeldingoptimalisatie maakt afbeeldingen kleiner, zodat ze sneller geüpload kunnen worden.\n\nJe kunt deze optie op elk moment wijzigen in de site-instellingen.</string>

@@ -1,0 +1,4 @@
+20.6:
+– Nu kan du logga in i appen även med en e-postadress som innehåller specialtecken.
+– Teman med förladdning kraschar inte längre appen när du skapar en ny webbplats. Lugnare så.
+– Fullt erkännande: bannern för ”Drivs med Jetpack” visas i listor med sökresultat.

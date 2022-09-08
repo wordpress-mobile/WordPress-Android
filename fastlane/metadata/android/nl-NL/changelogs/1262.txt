@@ -1,3 +1,0 @@
-20.5:
-- We hebben een nieuw label toegevoegd in de app-instellingen om de huidige interface-taal van de app weer te geven. Schitterend.
-- Omdat de app nu ook voorbeeldweergaven van afbeeldingen van hoge resolutie ondersteunt, hebben we de grootte van de themaschermafbeeldingen vergroot in de themakiezer van de site. Geen pixels meer, alleen maar pixel-perfectie.
