@@ -12,6 +12,7 @@ import org.wordpress.android.fluxc.action.JetpackAction.INSTALL_JETPACK
 import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.jetpack.JetpackUser
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIAuthenticator
 import org.wordpress.android.fluxc.network.rest.wpapi.jetpack.JetpackWPAPIRestClient
@@ -204,11 +205,11 @@ class JetpackStore
 
             when {
                 result.isError -> JetpackConnectionUrlResult(JetpackConnectionUrlError(result.error?.message))
-                result.response.isNullOrEmpty() -> JetpackConnectionUrlResult(
+                result.result.isNullOrEmpty() -> JetpackConnectionUrlResult(
                     JetpackConnectionUrlError("Response Empty")
                 )
                 else -> {
-                    val url = result.response.trim('"').replace("\\", "")
+                    val url = result.result.trim('"').replace("\\", "")
                     JetpackConnectionUrlResult(url)
                 }
             }
@@ -224,6 +225,37 @@ class JetpackStore
     }
 
     class JetpackConnectionUrlError(
+        val message: String? = null
+    ) : OnChangedError
+
+    suspend fun fetchJetpackUser(site: SiteModel): JetpackUserResult {
+        if (site.isUsingWpComRestApi) error("This function is not implemented yet for Jetpack tunnel")
+        return coroutineEngine.withDefaultContext(T.API, this, "fetchJetpackUser") {
+            val result = wpapiAuthenticator.makeAuthenticatedWPAPIRequest(site) { nonce ->
+                jetpackWPAPIRestClient.fetchJetpackUser(site, nonce)
+            }
+
+            when {
+                result.isError -> JetpackUserResult(JetpackUserError(result.error?.message))
+                result.result == null -> JetpackUserResult(
+                    JetpackUserError("Response Empty")
+                )
+                else -> {
+                    JetpackUserResult(result.result)
+                }
+            }
+        }
+    }
+
+    data class JetpackUserResult(
+        val user: JetpackUser?
+    ) : Payload<JetpackUserError>() {
+        constructor(error: JetpackUserError) : this(null) {
+            this.error = error
+        }
+    }
+
+    class JetpackUserError(
         val message: String? = null
     ) : OnChangedError
 
