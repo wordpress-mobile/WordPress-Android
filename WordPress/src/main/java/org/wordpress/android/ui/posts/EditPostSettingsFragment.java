@@ -367,25 +367,8 @@ public class EditPostSettingsFragment extends Fragment {
             }
         });
 
-        mPublishedViewModel.getAuthors().observe(getViewLifecycleOwner(), authors -> {
-            if (authors.size() > 1) {
-                // Authors are fetched and there are multiple authors. Show the Author button.
-                final LinearLayout authorContainer = rootView.findViewById(R.id.post_author_container);
-                authorContainer.setVisibility(View.VISIBLE);
-                authorContainer.setOnClickListener(view -> showAuthorDialog());
-
-                EditPostRepository editPostRepository = getEditPostRepository();
-                if (editPostRepository == null) {
-                    return;
-                }
-                PostImmutableModel postModel = editPostRepository.getPost();
-                if (postModel != null && postModel.getAuthorDisplayName() == null) {
-                    // There is no current author. That means this is a new unpublished post.
-                    // Set author to current user name.
-                    updateAuthorTextView(mAccountStore.getAccount().getDisplayName());
-                }
-            }
-        });
+        final LinearLayout authorContainer = rootView.findViewById(R.id.post_author_container);
+        authorContainer.setOnClickListener(view -> showAuthorDialog());
 
         mStickySwitch.setOnCheckedChangeListener(mOnStickySwitchChangeListener);
 
@@ -669,20 +652,9 @@ public class EditPostSettingsFragment extends Fragment {
             return;
         }
 
-        List<Person> siteUsers = mPublishedViewModel.getAuthors().getValue();
-        if (siteUsers == null) {
-            return;
-        }
-        String[] authorNames = siteUsers.stream().map(Person::getDisplayName).toArray(String[]::new);
-        int index = getAuthorIndex(siteUsers);
-        if (index < 0) {
-            // index is never negative. But if it is, don't show the dialog.
-            return;
-        }
         FragmentManager fm = getActivity().getSupportFragmentManager();
 
-        PostSettingsListDialogFragment fragment =
-                PostSettingsListDialogFragment.newInstance(DialogType.AUTHOR, index, authorNames);
+        PostSettingsListDialogFragment fragment = PostSettingsListDialogFragment.newAuthorListInstance(getAuthorId());
         fragment.show(fm, PostSettingsListDialogFragment.TAG);
     }
 
@@ -976,7 +948,20 @@ public class EditPostSettingsFragment extends Fragment {
     }
 
     private void updateAuthorTextView(String authorDisplayName) {
-        mAuthorTextView.setText(authorDisplayName);
+        if (authorDisplayName == null) {
+            // If the authorDisplayName is null, that means this is a new unpublished post.
+            // Set author to the current user name.
+            EditPostRepository editPostRepository = getEditPostRepository();
+            if (editPostRepository == null) {
+                return;
+            }
+            PostImmutableModel postModel = editPostRepository.getPost();
+            if (postModel != null && postModel.getAuthorDisplayName() == null) {
+                updateAuthorTextView(mAccountStore.getAccount().getDisplayName());
+            }
+        } else {
+            mAuthorTextView.setText(authorDisplayName);
+        }
     }
 
     private void updateCategoriesTextView(PostImmutableModel post) {
@@ -1058,23 +1043,19 @@ public class EditPostSettingsFragment extends Fragment {
         return 0;
     }
 
-    private int getAuthorIndex(List<Person> siteUsers) {
+    private long getAuthorId() {
         PostImmutableModel postModel = getEditPostRepository().getPost();
         if (postModel == null) {
             return -1;
         }
-        long selectedAuthorId = postModel.getAuthorId();
-        if (postModel.getAuthorId() == 0) {
+        long postAuthorId = postModel.getAuthorId();
+        if (postAuthorId == 0) {
             // If the author id is 0, that means this is the post creating screen.
             // Selected author should be the current user.
-            selectedAuthorId = mAccountStore.getAccount().getUserId();
+            return mAccountStore.getAccount().getUserId();
+        } else {
+            return postAuthorId;
         }
-        for (int i = 0; i < siteUsers.size(); i++) {
-            if (siteUsers.get(i).getPersonID() == selectedAuthorId) {
-                return i;
-            }
-        }
-        return -1;
     }
 
     // Post Format Helpers

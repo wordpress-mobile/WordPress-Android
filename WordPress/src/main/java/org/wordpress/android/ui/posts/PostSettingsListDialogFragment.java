@@ -11,16 +11,21 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.view.ContextThemeWrapper;
 import androidx.fragment.app.DialogFragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
+import org.wordpress.android.models.Person;
 import org.wordpress.android.util.AppLog;
+
+import javax.inject.Inject;
 
 public class PostSettingsListDialogFragment extends DialogFragment {
     private static final String ARG_DIALOG_TYPE = "dialog_type";
     private static final String ARG_CHECKED_INDEX = "checked_index";
-    private static final String ARG_ITEMS = "items";
+    private static final String ARG_POST_AUTHOR_ID = "post_author_id";
 
     public static final String TAG = "post_list_settings_dialog_fragment";
 
@@ -36,24 +41,37 @@ public class PostSettingsListDialogFragment extends DialogFragment {
     }
 
     private DialogType mDialogType;
-    private String[] mItems;
     private int mCheckedIndex;
     private OnPostSettingsDialogFragmentListener mListener;
-
-    public static PostSettingsListDialogFragment newInstance(@NonNull DialogType dialogType, int index) {
-        return newInstance(dialogType, index, null);
-    }
+    private long mPostAuthorId;
+    @Inject ViewModelProvider.Factory mViewModelFactory;
+    private EditPostPublishSettingsViewModel mPublishedViewModel;
 
     public static PostSettingsListDialogFragment newInstance(
             @NonNull DialogType dialogType,
+            int index
+    ) {
+        return newInstance(dialogType, index, -1);
+    }
+
+    public static PostSettingsListDialogFragment newAuthorListInstance(long postAuthorId) {
+        return newInstance(DialogType.AUTHOR, -1, postAuthorId);
+    }
+
+    private static PostSettingsListDialogFragment newInstance(
+            @NonNull DialogType dialogType,
             int index,
-            String[] items
+            long postAuthorId
     ) {
         PostSettingsListDialogFragment fragment = new PostSettingsListDialogFragment();
         Bundle args = new Bundle();
         args.putSerializable(ARG_DIALOG_TYPE, dialogType);
-        args.putInt(ARG_CHECKED_INDEX, index);
-        args.putStringArray(ARG_ITEMS, items);
+        if (index >= 0) {
+            args.putInt(ARG_CHECKED_INDEX, index);
+        }
+        if (postAuthorId > 0) {
+            args.putLong(ARG_POST_AUTHOR_ID, postAuthorId);
+        }
         fragment.setArguments(args);
         return fragment;
     }
@@ -61,7 +79,10 @@ public class PostSettingsListDialogFragment extends DialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((WordPress) getActivity().getApplicationContext()).component().inject(this);
         setCancelable(true);
+        mPublishedViewModel = new ViewModelProvider(getActivity(), mViewModelFactory)
+                .get(EditPostPublishSettingsViewModel.class);
     }
 
     @Override
@@ -69,7 +90,7 @@ public class PostSettingsListDialogFragment extends DialogFragment {
         super.setArguments(args);
         mDialogType = (DialogType) args.getSerializable(ARG_DIALOG_TYPE);
         mCheckedIndex = args.getInt(ARG_CHECKED_INDEX);
-        mItems = args.getStringArray(ARG_ITEMS);
+        mPostAuthorId = args.getLong(ARG_POST_AUTHOR_ID);
     }
 
     @SuppressWarnings("deprecation")
@@ -114,7 +135,19 @@ public class PostSettingsListDialogFragment extends DialogFragment {
                 break;
             case AUTHOR:
                 builder.setTitle(R.string.post_settings_author);
-                builder.setSingleChoiceItems(mItems, mCheckedIndex, clickListener);
+                builder.setMessage(R.string.loading);
+                mPublishedViewModel.getAuthors().observe(this, authors -> {
+                    // Dismiss the loading dialog and show a new dialog with the list.
+                    dismiss();
+
+                    builder.setMessage(null);
+                    String[] authorNames = authors.stream().map(Person::getDisplayName).toArray(String[]::new);
+                    builder.setSingleChoiceItems(
+                            authorNames,
+                            mPublishedViewModel.getAuthorIndex(mPostAuthorId),
+                            clickListener
+                    ).create().show();
+                });
                 break;
             case POST_FORMAT:
                 builder.setTitle(R.string.post_settings_post_format);
