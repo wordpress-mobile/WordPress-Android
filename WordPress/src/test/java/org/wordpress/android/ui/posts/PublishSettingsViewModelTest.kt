@@ -125,8 +125,8 @@ class PublishSettingsViewModelTest : BaseUnitTest() {
         whenever(siteStore.getSiteByLocalId(localSiteId)).thenReturn(site)
 
         val peopleList = listOf(Person(1, 1), Person(2, 1))
-        whenever(peopleUtilsWrapper.fetchAuthors(any(), any()))
-                .then { it.getArgument<FetchUsersCallback>(1).onSuccess(peopleList, true) }
+        whenever(peopleUtilsWrapper.fetchAuthors(any(), any(), any()))
+                .then { it.getArgument<FetchUsersCallback>(2).onSuccess(peopleList, true) }
 
         var authors = listOf<Person>()
         viewModel.authors.observeForever { authors = it }

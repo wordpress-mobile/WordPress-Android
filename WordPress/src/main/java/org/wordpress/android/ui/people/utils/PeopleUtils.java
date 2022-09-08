@@ -25,7 +25,7 @@ public class PeopleUtils {
     // We limit followers we display to 1000 to avoid API performance issues
     public static final int FOLLOWER_PAGE_LIMIT = 50;
     public static final int FETCH_LIMIT = 20;
-    public static final int FETCH_ALL_USERS_LIMIT = 1000;
+    public static final int AUTHOR_FETCH_LIMIT = 100;
 
     public static void fetchUsers(final SiteModel site, final int offset, final FetchUsersCallback callback) {
         RestRequest.Listener listener = new RestRequest.Listener() {
@@ -65,13 +65,15 @@ public class PeopleUtils {
         WordPress.getRestClientUtilsV1_1().get(path, params, null, listener, errorListener);
     }
 
-    public static void fetchAuthors(final SiteModel site, final FetchUsersCallback callback) {
+    public static void fetchAuthors(final SiteModel site, final int offset, final FetchUsersCallback callback) {
         RestRequest.Listener listener = jsonObject -> {
             if (jsonObject != null && callback != null) {
                 try {
                     JSONArray jsonArray = jsonObject.getJSONArray("users");
                     List<Person> people = peopleListFromJSON(jsonArray, site.getId(), Person.PersonType.USER);
-                    callback.onSuccess(people, true);
+                    int numberOfUsers = jsonObject.optInt("found");
+                    boolean isEndOfList = (people.size() + offset) >= numberOfUsers;
+                    callback.onSuccess(people, isEndOfList);
                 } catch (JSONException e) {
                     AppLog.e(T.API, "JSON exception occurred while parsing the response for sites/%s/users: " + e);
                     callback.onError();
@@ -87,8 +89,8 @@ public class PeopleUtils {
         };
 
         Map<String, String> params = new HashMap<>();
-        params.put("number", Integer.toString(PeopleUtils.FETCH_ALL_USERS_LIMIT));
-        params.put("offset", "0");
+        params.put("number", Integer.toString(PeopleUtils.AUTHOR_FETCH_LIMIT));
+        params.put("offset", Integer.toString(offset));
         params.put("order_by", "display_name");
         params.put("order", "ASC");
         params.put("authors_only", "true");

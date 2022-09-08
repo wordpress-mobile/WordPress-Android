@@ -26,8 +26,9 @@ class PeopleUtilsWrapper @Inject constructor() {
 
     fun fetchAuthors(
         site: SiteModel,
+        offset: Int,
         callback: FetchUsersCallback
-    ) = PeopleUtils.fetchAuthors(site, callback)
+    ) = PeopleUtils.fetchAuthors(site, offset, callback)
 
     fun fetchRevisionAuthorsDetails(
         site: SiteModel,
