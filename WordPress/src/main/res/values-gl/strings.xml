@@ -59,7 +59,6 @@ Language: gl_ES
     <string name="stats_insights_comments_guide_card">💡Toca «VER MÁIS» para ver os principais comentaristas.</string>
     <string name="stats_insights_latest_post_empty">Volve a comprobalo cando teñas publicado a túa primeira entrada!</string>
     <string name="stats_insights_views_and_visitors_visitors_empty_state">Comproba os nosos consellos destacados para aumentar as túas visitas e o teu tráfico %1$s</string>
-    <string name="stats_view_publicize">Conexións de redes sociais</string>
     <string name="stats_action_card_schedule_post_message">✍️ Programa os teus borradores para publicar no mellor momento e chegar ao teu público.</string>
     <string name="stats_action_card_blogging_reminders_message">💡Publicar con constancia é unha boa forma de crear o teu público. Engade un recordatorio para manterte ao día.</string>
     <string name="stats_action_card_grow_audience_message">💡Bloguea máis rapidamente co noso curso &lt;i&gt;Introdución aos blogs&lt;/i&gt; ofrecido por expertos.</string>
@@ -1335,7 +1334,6 @@ Language: gl_ES
     <string name="post_list_tab_trashed_posts">Na papeleira</string>
     <string name="post_list_tab_scheduled_posts">Programada</string>
     <string name="post_list_tab_published_posts">Publicada</string>
-    <string name="sharing_facebook_account_must_have_pages">A conexión con Facebook non pode encontrar ningunha páxina. «Difundir» non pode conectar con perfís de Facebook, só con páxinas publicadas.</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">Non conectado</string>
     <string name="notifications_tab_title_likes">Gústame</string>
     <string name="notifications_tab_title_follows">Seguimentos</string>
@@ -2560,10 +2558,8 @@ Language: gl_ES
     <string name="share_btn_disconnect">Desconectar</string>
     <string name="share_btn_connect">Conectar</string>
     <string name="connection_service_description">Conéctate para compartir automaticamente as entradas do teu blog en %s</string>
-    <string name="connection_service_label">Difundir en %s</string>
     <string name="connected_accounts_label">Contas conectadas</string>
     <string name="connections_description">Conecta cos teus servizos de medios sociais favoritos para compartir automaticamente as novas entradas cos teus amigos.</string>
-    <string name="connections_label">Conexións</string>
     <string name="sharing">Compartir</string>
     <string name="tabbar_accessibility_label_notifications">Avisos. Xestiona os teus avisos.</string>
     <string name="tabbar_accessibility_label_reader">Lector. Segue contido doutros sitios.</string>

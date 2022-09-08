@@ -47,7 +47,6 @@ Language: sq_AL
     <string name="stats_insights_comments_guide_card">💡Prekni “SHIHNI MË TEPËR”, që të shihni komentuesit tuaj kryesues.</string>
     <string name="stats_insights_latest_post_empty">Shihni prapë, kur të keni botuar postimin tuaj të parë!</string>
     <string name="stats_insights_views_and_visitors_visitors_empty_state">Shihni ndihmëzat tona kryesuese për shtim të parjeve dhe trafikut %1$s</string>
-    <string name="stats_view_publicize">Lidhje Mediash Shoqërore</string>
     <string name="stats_action_card_schedule_post_message">✍️ Planifikoni botimin e skicave tuaja sipas kohës më të përshtatshme për mbërritjen te publiku juaj.</string>
     <string name="stats_action_card_blogging_reminders_message">💡Postimi në mënyrë të rregullt është një mënyrë e goditur për të krijuar publikun tuaj. Shtoni një kujtues për t’ju mbajtur në këtë pistë.</string>
     <string name="stats_action_card_grow_audience_message">💡Ngrijeni më shpejt një shkallë më lart blogimin tuaj, me kursin tonë &lt;i&gt;Hyrje në Blogim&lt;/i&gt; të drejtuar nga ekspertë.</string>
@@ -1317,7 +1316,6 @@ Language: sq_AL
     <string name="post_list_tab_trashed_posts">Shpënë te hedhurinat</string>
     <string name="post_list_tab_scheduled_posts">Vënë në plan</string>
     <string name="post_list_tab_published_posts">Botuar</string>
-    <string name="sharing_facebook_account_must_have_pages">Lidhja Facebook s’gjen dot ndonjë Faqe. Publicize s’mund të lidhet me Profile Facebook, vetëm me Faqe të botuara.</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">I palidhur</string>
     <string name="notifications_tab_title_likes">Pëlqime</string>
     <string name="notifications_tab_title_follows">Ndjekje</string>
@@ -2541,10 +2539,8 @@ Language: sq_AL
     <string name="share_btn_disconnect">Shkëputu</string>
     <string name="share_btn_connect">Lidhe</string>
     <string name="connection_service_description">Lidheni, që postimet e blogut tuaj të ndahen vetvetiu në %s.</string>
-    <string name="connection_service_label">Publicizo-je te %s</string>
     <string name="connected_accounts_label">Llogari të lidhura</string>
     <string name="connections_description">Lidhni shërbimet tuaja të parapëlqyera shoqërore për media, që postimet e reja të ndahen vetvetiu me miqtë tuaj.</string>
-    <string name="connections_label">Lidhje</string>
     <string name="sharing">Ndarje Me të Tjerët</string>
     <string name="tabbar_accessibility_label_notifications">Njoftime. Administroni njoftimet tuaja.</string>
     <string name="tabbar_accessibility_label_reader">Reader. Ndiqni lëndë nga sajte të tjerë.</string>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-08-23 15:22:04+0000
+Translation-Revision-Date: 2022-09-08 08:05:30+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.1
 Language: ru
@@ -59,7 +59,6 @@ Language: ru
     <string name="stats_insights_comments_guide_card">💡 Нажмите \"ПОДРОБНЕЕ\", чтобы просмотреть список топ-комментаторов.</string>
     <string name="stats_insights_latest_post_empty">Вернитесь, когда опубликуете первую запись!</string>
     <string name="stats_insights_views_and_visitors_visitors_empty_state">Прочитайте советы по повышению просмотров и посещаемости %1$s</string>
-    <string name="stats_view_publicize">Подключение социальных сетей</string>
     <string name="stats_action_card_schedule_post_message">✍️ Запланируйте публикацию из черновиков в удобное для аудитории время.</string>
     <string name="stats_action_card_blogging_reminders_message">💡 Регулярные публикации ― отличный способ расширить аудиторию. Задайте напоминание, чтобы выработать привычку.</string>
     <string name="stats_action_card_grow_audience_message">💡 Быстро освойте нюансы блогинга: пройдите наш курс &lt;i&gt;Основы ведения блога&lt;/i&gt; под руководством экспертов.</string>
@@ -1237,6 +1236,7 @@ Language: ru
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">Нажмите дважды для перехода в настройки цветов</string>
     <string name="reader_empty_followed_blogs_description">При подписке на сайты вы увидите их содержимое здесь</string>
     <string name="feature_announcement_find_out_mode">Подробнее</string>
+    <string name="feature_announcement_dialog_label">Что нового в %s?</string>
     <string name="insert_label_with_count">Вставить %d</string>
     <string name="crop">обрезать</string>
     <string name="error_failed_to_load_into_file">Ошибка загрузки в файл, повторите попытку.</string>
@@ -1335,7 +1335,7 @@ Language: ru
     <string name="post_list_tab_trashed_posts">В корзине</string>
     <string name="post_list_tab_scheduled_posts">Запланированные</string>
     <string name="post_list_tab_published_posts">Опубликованные</string>
-    <string name="sharing_facebook_account_must_have_pages">Подключение к Facebook не может обнаружить страниц, Publicize не может использовать профили Facebook, только страницы.</string>
+    <string name="sharing_facebook_account_must_have_pages">Подключение к Facebook не может обнаружить страниц, Jetpack Social не может использовать профили Facebook, только страницы.</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">Нет подключения</string>
     <string name="notifications_tab_title_likes">Отметки \"Нравится\"</string>
     <string name="notifications_tab_title_follows">Подписки</string>
@@ -1562,6 +1562,7 @@ Language: ru
     <string name="share_desc">Поделиться</string>
     <string name="navigate_back_desc">Назад</string>
     <string name="navigate_forward_desc">Вперед</string>
+    <string name="calendar_scheduled_post_description">Публикация \"%1$s\" запланирована на \"%2$s\" в приложении %3$s \n%4$s</string>
     <string name="calendar_scheduled_post_title">Запланирована запись: \"%s\"</string>
     <string name="notification_post_will_be_published_in_ten_minutes">\"%s\" будет опубликована через 10 минут</string>
     <string name="notification_post_will_be_published_in_one_hour">\"%s\" будет опубликована через 1 час</string>
@@ -2560,10 +2561,8 @@ Language: ru
     <string name="share_btn_disconnect">Отключить</string>
     <string name="share_btn_connect">Подключиться</string>
     <string name="connection_service_description">Подключиться, чтобы автоматически публиковать записи блога в %s.</string>
-    <string name="connection_service_label">Опубликовать в %s</string>
     <string name="connected_accounts_label">Подключённые учётные записи</string>
     <string name="connections_description">Подключите свои любимые службы социальных сетей, чтобы автоматически делиться новыми записями с друзьями.</string>
-    <string name="connections_label">Подключения</string>
     <string name="sharing">Поделиться</string>
     <string name="tabbar_accessibility_label_notifications">Уведомления. Управление уведомлениями.</string>
     <string name="tabbar_accessibility_label_reader">Чтиво. Подписка на материалы других сайтов.</string>

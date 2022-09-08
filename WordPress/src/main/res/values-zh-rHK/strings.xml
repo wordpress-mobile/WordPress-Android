@@ -59,7 +59,6 @@ Language: zh_TW
     <string name="stats_insights_comments_guide_card">💡 點選「檢視更多」即可查看哪些人踴躍留言。</string>
     <string name="stats_insights_latest_post_empty">發表第一篇文章之後，請再回來查看！</string>
     <string name="stats_insights_views_and_visitors_visitors_empty_state">查看我們的頂尖秘訣，瞭解如何增加瀏覽次數和流量 %1$s</string>
-    <string name="stats_view_publicize">社群媒體連結</string>
     <string name="stats_action_card_schedule_post_message">✍️ 排程草稿在最能觸及讀者的時間發表。</string>
     <string name="stats_action_card_blogging_reminders_message">💡 穩定發表文章是培養讀者的絕佳方式。 新增提醒來讓自己按進度撰寫網誌。</string>
     <string name="stats_action_card_grow_audience_message">💡 透過我們專家主導的&lt;i&gt;經營網誌簡介&lt;/i&gt;課程，加速升級你的網誌。</string>
@@ -1335,7 +1334,6 @@ Language: zh_TW
     <string name="post_list_tab_trashed_posts">已移至垃圾桶</string>
     <string name="post_list_tab_scheduled_posts">已排程</string>
     <string name="post_list_tab_published_posts">已發佈</string>
-    <string name="sharing_facebook_account_must_have_pages">Facebook 連結找不到任何頁面。Publicize 無法連結至 Facebook 個人檔案，只能連結至已發表的頁面。</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">未連線</string>
     <string name="notifications_tab_title_likes">按讚數</string>
     <string name="notifications_tab_title_follows">關注者</string>
@@ -2560,10 +2558,8 @@ Language: zh_TW
     <string name="share_btn_disconnect">中斷連結</string>
     <string name="share_btn_connect">連線</string>
     <string name="connection_service_description">連結後，你的網誌文章便能自動分享至 %s。</string>
-    <string name="connection_service_label">透過 Publicize 發佈至 %s</string>
     <string name="connected_accounts_label">已連結的帳號</string>
     <string name="connections_description">連結你最愛的社交媒體服務，自動與朋友分享新文章。</string>
-    <string name="connections_label">連結</string>
     <string name="sharing">分享</string>
     <string name="tabbar_accessibility_label_notifications">通知。管理你的通知。</string>
     <string name="tabbar_accessibility_label_reader">讀取器。關注其他網站的內容。</string>

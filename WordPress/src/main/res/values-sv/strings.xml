@@ -59,7 +59,6 @@ Language: sv_SE
     <string name="stats_insights_comments_guide_card">💡Tryck på ”Visa mer” för att se vilka som kommenterar dig mest.</string>
     <string name="stats_insights_latest_post_empty">Kom tillbaka när du har publicerat ditt första inlägg!</string>
     <string name="stats_insights_views_and_visitors_visitors_empty_state">Kolla in våra bästa tips för fler sidvisningar och mer trafik %1$s</string>
-    <string name="stats_view_publicize">Kopplingar till sociala media</string>
     <string name="stats_action_card_schedule_post_message">✍️ Schemalägg dina utkast för publicering vid den tid du når flest läsare.</string>
     <string name="stats_action_card_blogging_reminders_message">💡Att publicera regelbundet är ett bra sätt att bygga upp en större läsarkrets. Lägg till påminnelser som hjälper dig att hålla takten.</string>
     <string name="stats_action_card_grow_audience_message">💡Lyft snabbare ditt bloggande till en ny nivå med hjälp av vår expertledda kurs &lt;i&gt;Introduktion till bloggning&lt;/i&gt;.</string>
@@ -1335,7 +1334,6 @@ Language: sv_SE
     <string name="post_list_tab_trashed_posts">Borttagna</string>
     <string name="post_list_tab_scheduled_posts">Tidsinställda</string>
     <string name="post_list_tab_published_posts">Publicerade</string>
-    <string name="sharing_facebook_account_must_have_pages">Facebook-kopplingen hittar inga sidor. Publicize kan inte kopplas till Facebook-profiler, utan endast till publicerade sidor.</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">Inte ansluten</string>
     <string name="notifications_tab_title_likes">Gillamarkeringar</string>
     <string name="notifications_tab_title_follows">Följer</string>
@@ -2560,10 +2558,8 @@ Language: sv_SE
     <string name="share_btn_disconnect">Koppla bort</string>
     <string name="share_btn_connect">Anslut</string>
     <string name="connection_service_description">Anslut för att automatiskt dela dina blogginlägg till %s.</string>
-    <string name="connection_service_label">Offentliggör till %s</string>
     <string name="connected_accounts_label">Anslutna konton</string>
     <string name="connections_description">Anslut de sociala nätverk du gillar mest för att automatiskt dela nya inlägg med dina vänner.</string>
-    <string name="connections_label">Kopplingar</string>
     <string name="sharing">Delning</string>
     <string name="tabbar_accessibility_label_notifications">Aviseringar. Hantera dina aviseringar.</string>
     <string name="tabbar_accessibility_label_reader">Läsare. Följ innehåll från andra webbplatser.</string>

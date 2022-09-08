@@ -59,7 +59,6 @@ Language: it
     <string name="stats_insights_comments_guide_card">💡Tocca \"VISUALIZZA ALTRO\" per vedere i tuoi migliori commentatori.</string>
     <string name="stats_insights_latest_post_empty">Ricontrolla quando avrai pubblicato il tuo primo articolo!</string>
     <string name="stats_insights_views_and_visitors_visitors_empty_state">Dai un\'occhiata ai nostri migliori suggerimenti per aumentare le visualizzazioni e il traffico %1$s</string>
-    <string name="stats_view_publicize">Collegamenti ai social media</string>
     <string name="stats_action_card_schedule_post_message">✍️ Pianifica le tue bozze da pubblicare nel momento migliore per raggiungere il tuo pubblico.</string>
     <string name="stats_action_card_blogging_reminders_message">💡Pubblicare in modo coerente è un ottimo modo per costruire il tuo pubblico. Aggiungi un promemoria per restare al passo.</string>
     <string name="stats_action_card_grow_audience_message">💡Fai salire di livello il tuo blog più velocemente con il nostro corso &lt;i&gt;Introduzione al blogging&lt;/i&gt; tenuto da esperti del settore.</string>
@@ -1335,7 +1334,6 @@ Language: it
     <string name="post_list_tab_trashed_posts">Spostato nel cestino</string>
     <string name="post_list_tab_scheduled_posts">Programmato</string>
     <string name="post_list_tab_published_posts">Pubblicato</string>
-    <string name="sharing_facebook_account_must_have_pages">La connessione a Facebook non riesce a trovare alcuna pagina. Pubblicizza non può connettersi ai profili Facebook, bensì solo alle pagine pubblicate.</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">Non collegato</string>
     <string name="notifications_tab_title_likes">Mi piace</string>
     <string name="notifications_tab_title_follows">Segue</string>
@@ -2560,10 +2558,8 @@ Language: it
     <string name="share_btn_disconnect">Disconnetti</string>
     <string name="share_btn_connect">Connetti</string>
     <string name="connection_service_description">Connettiti per condividere automaticamente gli articoli del tuo blog su %s.</string>
-    <string name="connection_service_label">Pubblicizzare su %s</string>
     <string name="connected_accounts_label">Account connessi</string>
     <string name="connections_description">Connetti i tuoi servizi di social media preferiti per condividere automaticamente i nuovi articoli con gli amici.</string>
-    <string name="connections_label">Connessioni</string>
     <string name="sharing">Condivisione</string>
     <string name="tabbar_accessibility_label_notifications">Notifiche. Gestisci le tue notifiche.</string>
     <string name="tabbar_accessibility_label_reader">Reader. Segui i contenuti dagli altri siti.</string>

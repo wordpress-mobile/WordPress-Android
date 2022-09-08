@@ -59,7 +59,6 @@ Language: zh_CN
     <string name="stats_insights_comments_guide_card">💡 点击“查看更多”可查看热门评论者。</string>
     <string name="stats_insights_latest_post_empty">发表第一篇文章后，请回来查看！</string>
     <string name="stats_insights_views_and_visitors_visitors_empty_state">查看我们的重要贴士，增加您的阅读量和流量 %1$s</string>
-    <string name="stats_view_publicize">社交媒体连接</string>
     <string name="stats_action_card_schedule_post_message">✍️ 将您的草稿计划在最佳时间发布，以此来吸引您的受众。</string>
     <string name="stats_action_card_blogging_reminders_message">💡 持续发表文章是建立受众群体的好方法。 添加一个提醒，督促自己坚持下去。</string>
     <string name="stats_action_card_grow_audience_message">💡 通过我们专家指导的&lt;i&gt;博客介绍&lt;/i&gt;课程更快地提升您的博客。</string>
@@ -1335,7 +1334,6 @@ Language: zh_CN
     <string name="post_list_tab_trashed_posts">已放入回收站</string>
     <string name="post_list_tab_scheduled_posts">预发布</string>
     <string name="post_list_tab_published_posts">已发布</string>
-    <string name="sharing_facebook_account_must_have_pages">Facebook 连接无法找到任何页面。Publicize 无法连接到 Facebook 个人资料，只能连接到已发布的页面。</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">未连接</string>
     <string name="notifications_tab_title_likes">喜欢</string>
     <string name="notifications_tab_title_follows">关注</string>
@@ -2560,10 +2558,8 @@ Language: zh_CN
     <string name="share_btn_disconnect">断开连接</string>
     <string name="share_btn_connect">连接</string>
     <string name="connection_service_description">连接以自动将您的博文分享至 %s。</string>
-    <string name="connection_service_label">通过 Publicize 分享至 %s</string>
     <string name="connected_accounts_label">已连接账户</string>
     <string name="connections_description">关联您最喜爱的社交媒体服务，自动与朋友分享新文章。</string>
-    <string name="connections_label">连接</string>
     <string name="sharing">分享</string>
     <string name="tabbar_accessibility_label_notifications">通知。管理您的通知。</string>
     <string name="tabbar_accessibility_label_reader">阅读器。查看其他站点的内容。</string>

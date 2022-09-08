@@ -59,7 +59,6 @@ Language: he_IL
     <string name="stats_insights_comments_guide_card">💡אפשר להקיש על \'להציג עוד\' כדי לראות את המגיבים המובילים שלך.</string>
     <string name="stats_insights_latest_post_empty">כדאי לחזור לכאן אחרי שפרסמת את הפוסט הראשון שלך!</string>
     <string name="stats_insights_views_and_visitors_visitors_empty_state">מומלץ לעיין בעצות המובילות שלנו כדי להגדיל את כמות הצפיות והתעבורה ⁦%1$s⁩</string>
-    <string name="stats_view_publicize">חיבורים לרשתות חברתיות</string>
     <string name="stats_action_card_schedule_post_message">✍️ כדאי לתזמן את פרסום הטיוטות לפי המועד המתאים ביותר לחשיפה מול הקהל שלך.</string>
     <string name="stats_action_card_blogging_reminders_message">💡מומלץ לפרסם פוסטים דרך קבע כדי לבנות את הקהל שלך. להוסיף תזכורת כדי להישאר בעניינים.</string>
     <string name="stats_action_card_grow_audience_message">💡אפשר לשפר את כישורי הכתיבה בבלוג מהר יותר עם הקורס &lt;i&gt;הקדמה לכתיבה בבלוג&lt;/i&gt; בהנחיית המומחים שלנו.</string>
@@ -1335,7 +1334,6 @@ Language: he_IL
     <string name="post_list_tab_trashed_posts">הועבר לפח</string>
     <string name="post_list_tab_scheduled_posts">מתוזמן לפרסום</string>
     <string name="post_list_tab_published_posts">פורסם</string>
-    <string name="sharing_facebook_account_must_have_pages">החיבור עם פייסבוק לא הצליח למצוא דפים. השיתוף האוטומטי לא יכול להתחבר אל פרופילים בפייסבוק, רק לדפים שפורסמו.</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">לא מחובר</string>
     <string name="notifications_tab_title_likes">לייקים</string>
     <string name="notifications_tab_title_follows">עוקבים</string>
@@ -2560,10 +2558,8 @@ Language: he_IL
     <string name="share_btn_disconnect">התנתקות</string>
     <string name="share_btn_connect">להתחבר</string>
     <string name="connection_service_description">יש להתחבר כדי לשתף את הפוסטים בבלוג שלך אוטומטית עם %s.</string>
-    <string name="connection_service_label">שיתוף אוטומטי אל %s</string>
     <string name="connected_accounts_label">חשבונות מחוברים</string>
     <string name="connections_description">חיבור שירותי הרשתות החברתיות המועדפים שלך כדי לשתף פוסטים חדשים עם חברים באופן אוטומטי.</string>
-    <string name="connections_label">חשבונות מקושרים</string>
     <string name="sharing">שיתוף</string>
     <string name="tabbar_accessibility_label_notifications">הודעות. ניהול התראות.</string>
     <string name="tabbar_accessibility_label_reader">Reader. מעקב אחר תוכן מאתרים אחרים.</string>
