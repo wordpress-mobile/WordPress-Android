@@ -715,9 +715,11 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
         if (jetpackBrandingUtils.shouldShowJetpackBranding()) {
             binding.jetpackBadge.root.isVisible = true
-            binding.jetpackBadge.jetpackPoweredBadge.setOnClickListener {
-                jetpackBrandingUtils.trackBadgeTapped(READER_POST_DETAIL)
-                viewModel.showJetpackPoweredBottomSheet()
+            if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
+                binding.jetpackBadge.jetpackPoweredBadge.setOnClickListener {
+                    jetpackBrandingUtils.trackBadgeTapped(READER_POST_DETAIL)
+                    viewModel.showJetpackPoweredBottomSheet()
+                }
             }
         }
 
