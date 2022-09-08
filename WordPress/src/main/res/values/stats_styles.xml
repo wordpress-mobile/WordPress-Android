@@ -386,8 +386,9 @@
         <item name="widgetContent1"></item>
         <item name="widgetTitle2"></item>
         <item name="widgetContent2"></item>
-        <item name="widgetTitle3"></item>
-        <item name="widgetContent3"></item>
+        <item name="widgetContentNeutral"></item>
+        <item name="widgetContentPositive"></item>
+        <item name="widgetContentNegative"></item>
     </style>
     <style name="ListItem.Preview">
         <item name="widgetTitle1">@string/stats_views</item>
@@ -419,17 +420,17 @@
     </style>
     <style name="ListItem.Preview5">
         <item name="widgetContent1">Today</item>
-        <item name="widgetContent2">+10(18%)</item>
-        <item name="widgetContent3">46</item>
+        <item name="widgetContentNeutral">+10(18%)</item>
+        <item name="widgetContent2">46</item>
     </style>
     <style name="ListItem.Preview6">
         <item name="widgetContent1">Jun 26, 2019</item>
-        <item name="widgetContent2">+6(12%)</item>
-        <item name="widgetContent3">56</item>
+        <item name="widgetContentPositive">+6(12%)</item>
+        <item name="widgetContent2">56</item>
     </style>
     <style name="ListItem.Preview7">
         <item name="widgetContent1">Jun 25, 2019</item>
-        <item name="widgetContent2">-3(6%)</item>
-        <item name="widgetContent3">50</item>
+        <item name="widgetContentNegative">-3(6%)</item>
+        <item name="widgetContent2">50</item>
     </style>
 </resources>
