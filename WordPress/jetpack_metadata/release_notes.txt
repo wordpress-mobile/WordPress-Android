@@ -1,5 +1,4 @@
-* [*] Fixes Media control toggles difficult to see [https://github.com/wordpress-mobile/WordPress-Android/pull/17068]
-* [*] Fix night mode text colors on the screens shown after scanning a Login Code [https://github.com/wordpress-mobile/WordPress-Android/pull/17086]
-* [***] Widgets are now on Jetpack. Long press on app icon to find and add widgets to home screen. [https://github.com/wordpress-mobile/WordPress-Android/pull/17100]
-* [*] Block Editor: Makes some small changes to the editor's accent colours for consistency. [https://github.com/wordpress-mobile/WordPress-Android/pull/16968]
-
+- Jetpack widgets are now available on your device’s home screen
+- Media preview controls are visible in both light and dark mode
+- Compose theme’s Login Code screen has better color contrast
+- Certain elements of the editor and post settings are now WordPress blue
