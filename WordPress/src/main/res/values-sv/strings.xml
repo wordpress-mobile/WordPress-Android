@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-08-24 10:05:49+0000
+Translation-Revision-Date: 2022-09-08 13:17:02+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: sv_SE
 -->
 <resources>
+    <string name="app_rating_title">Gillar du %s?</string>
+    <string name="connection_service_label">Dela inlägg till %s</string>
+    <string name="connections_label">Jetpack Social-anslutningar</string>
+    <string name="stats_widget_log_in_to_add_message">Logga in på Jetpack-appen för att lägga till en widget.</string>
+    <string name="stats_view_publicize">Jetpack Social-anslutningar</string>
     <string name="login_magic_links_email_sent">Vi har precis skickat en magisk länk till</string>
     <string name="login_magic_links_sent_label_short">Kontrollera din e-post på denna enhet!</string>
     <string name="or_use_password">Använd lösenord för att logga in</string>
@@ -1236,6 +1241,7 @@ Language: sv_SE
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">Dubbeltryck för att gå till färginställningarna</string>
     <string name="reader_empty_followed_blogs_description">Om du följer några webbplatser kan du se deras innehåll här</string>
     <string name="feature_announcement_find_out_mode">Ta reda på mer</string>
+    <string name="feature_announcement_dialog_label">Vad som är nytt i %s</string>
     <string name="insert_label_with_count">Infoga %d</string>
     <string name="crop">beskär</string>
     <string name="error_failed_to_load_into_file">Lyckades inte ladda in i filen, försök igen.</string>
@@ -1334,6 +1340,7 @@ Language: sv_SE
     <string name="post_list_tab_trashed_posts">Borttagna</string>
     <string name="post_list_tab_scheduled_posts">Tidsinställda</string>
     <string name="post_list_tab_published_posts">Publicerade</string>
+    <string name="sharing_facebook_account_must_have_pages">Facebook-anslutningen kan inte hitta några sidor. Jetpack Social kan inte ansluta till Facebook-profiler, endast publicerade sidor.</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">Inte ansluten</string>
     <string name="notifications_tab_title_likes">Gillamarkeringar</string>
     <string name="notifications_tab_title_follows">Följer</string>
@@ -1560,6 +1567,7 @@ Language: sv_SE
     <string name="share_desc">Dela</string>
     <string name="navigate_back_desc">Gå tillbaka</string>
     <string name="navigate_forward_desc">Gå framåt</string>
+    <string name="calendar_scheduled_post_description">”%1$s” schemalagt för publicering den ”%2$s” i din %3$s-app\n %4$s</string>
     <string name="calendar_scheduled_post_title">Schemalagt WordPress-inlägg: ”%s”</string>
     <string name="notification_post_will_be_published_in_ten_minutes">”%s” kommer att publiceras om 10 minuter</string>
     <string name="notification_post_will_be_published_in_one_hour">”%s” kommer att publiceras om en timme</string>

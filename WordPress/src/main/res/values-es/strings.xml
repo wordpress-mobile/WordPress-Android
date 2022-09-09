@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-08-23 07:06:43+0000
+Translation-Revision-Date: 2022-09-08 13:40:24+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: es
 -->
 <resources>
+    <string name="app_rating_title">¿Estás disfrutando de %s?</string>
+    <string name="connection_service_label">Comparte una entrada en %s</string>
+    <string name="connections_label">Conexiones de Jetpack Social</string>
+    <string name="stats_widget_log_in_to_add_message">Por favor, accede a la aplicación Jetpack para añadir un widget.</string>
+    <string name="stats_view_publicize">Conexiones de Jetpack Social</string>
     <string name="login_magic_links_email_sent">Acabamos de enviar un enlace mágico a</string>
     <string name="login_magic_links_sent_label_short">¡Revisa tu correo electrónico en este dispositivo!</string>
     <string name="or_use_password">Usar una contraseña para acceder</string>
@@ -1236,6 +1241,7 @@ Language: es
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">Toca dos veces para ir a los ajustes del color</string>
     <string name="reader_empty_followed_blogs_description">Cuando sigas sitios, verás aquí su contenido</string>
     <string name="feature_announcement_find_out_mode">Saber más</string>
+    <string name="feature_announcement_dialog_label">Qué hay de nuevo en %s</string>
     <string name="insert_label_with_count">Insertar %d</string>
     <string name="crop">recortar</string>
     <string name="error_failed_to_load_into_file">Fallo al cargar en el archivo, por favor, inténtalo de nuevo.</string>
@@ -1334,6 +1340,7 @@ Language: es
     <string name="post_list_tab_trashed_posts">En la papelera</string>
     <string name="post_list_tab_scheduled_posts">Programada</string>
     <string name="post_list_tab_published_posts">Publicada</string>
+    <string name="sharing_facebook_account_must_have_pages">La conexión con Facebook no puede encontrar ninguna página. Jetpack Social no puede conectar con perfiles de Facebook, solo con páginas publicadas.</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">No conectado</string>
     <string name="notifications_tab_title_likes">Me gusta</string>
     <string name="notifications_tab_title_follows">Seguimientos</string>
@@ -1560,6 +1567,7 @@ Language: es
     <string name="share_desc">Compartir</string>
     <string name="navigate_back_desc">Volver</string>
     <string name="navigate_forward_desc">Avanzar</string>
+    <string name="calendar_scheduled_post_description">«%1$s» programado para publicar el «%2$s» en tu aplicación de %3$s\n%4$s</string>
     <string name="calendar_scheduled_post_title">Entrada programada de WordPress: «%s»</string>
     <string name="notification_post_will_be_published_in_ten_minutes">«%s» se publicará en 10 minutos</string>
     <string name="notification_post_will_be_published_in_one_hour">«%s» se publicará en 1 hora</string>
