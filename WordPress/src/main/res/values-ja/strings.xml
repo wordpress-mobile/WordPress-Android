@@ -59,7 +59,6 @@ Language: ja_JP
     <string name="stats_insights_comments_guide_card">💡「さらに表示」をタップすると上位のコメント投稿者が表示されます。</string>
     <string name="stats_insights_latest_post_empty">最初の投稿を公開したらもう一度確認してください。</string>
     <string name="stats_insights_views_and_visitors_visitors_empty_state">よく読まれているヒントを確認して表示数とトラフィックを増やす %1$s</string>
-    <string name="stats_view_publicize">ソーシャルメディアとの連携</string>
     <string name="stats_action_card_schedule_post_message">✍️ 読者にリーチするのに最良のタイミングに下書きの投稿予定を設定しましょう。</string>
     <string name="stats_action_card_blogging_reminders_message">💡読者を増やすには定期的に投稿することが重要です。 リマインダーを追加して忘れないようにしましょう。</string>
     <string name="stats_action_card_grow_audience_message">💡さっとブログ記事を書けるようにするには、エキスパートが指導する「&lt;i&gt;ブログ執筆の概要&lt;/i&gt;」コースを受講しましょう。</string>
@@ -1335,7 +1334,6 @@ Language: ja_JP
     <string name="post_list_tab_trashed_posts">ゴミ箱に移動済み</string>
     <string name="post_list_tab_scheduled_posts">予約済み</string>
     <string name="post_list_tab_published_posts">公開済み</string>
-    <string name="sharing_facebook_account_must_have_pages">Facebook との連携でページが見つかりません。パブリサイズで Facebook のプロフィールに連携できません。連携できるのは公開されているページのみです。</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">接続されていません</string>
     <string name="notifications_tab_title_likes">いいね</string>
     <string name="notifications_tab_title_follows">フォロー</string>
@@ -2560,10 +2558,8 @@ Language: ja_JP
     <string name="share_btn_disconnect">切断</string>
     <string name="share_btn_connect">連携</string>
     <string name="connection_service_description">連携して自動的にブログ投稿を %s に共有します。</string>
-    <string name="connection_service_label">%s でパブリサイズ共有</string>
     <string name="connected_accounts_label">連携済みアカウント</string>
     <string name="connections_description">お気に入りの SNS に連携し、新しい投稿を自動的に共有しましょう。</string>
-    <string name="connections_label">連携</string>
     <string name="sharing">共有</string>
     <string name="tabbar_accessibility_label_notifications">通知。通知を管理します。</string>
     <string name="tabbar_accessibility_label_reader">Reader。他のサイトのコンテンツをフォローできます。</string>

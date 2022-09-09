@@ -1041,10 +1041,8 @@ Language: en_AU
     <string name="share_btn_disconnect">Disconnect</string>
     <string name="share_btn_connect">Connect</string>
     <string name="connection_service_description">Connect to automatically share your blog posts to %s.</string>
-    <string name="connection_service_label">Publicise to %s</string>
     <string name="connected_accounts_label">Connected accounts</string>
     <string name="connections_description">Connect your favourite social media services to automatically share new posts with friends.</string>
-    <string name="connections_label">Connections</string>
     <string name="sharing">Sharing</string>
     <string name="tabbar_accessibility_label_notifications">Notifications. Manage your notifications.</string>
     <string name="tabbar_accessibility_label_reader">Reader. Follow content from other sites.</string>

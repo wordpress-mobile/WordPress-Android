@@ -1061,7 +1061,6 @@ Language: pl
     <string name="create_post_page_fab_tooltip_contributors">Stwórz wpis</string>
     <string name="post_list_tab_published_posts">Opublikowano</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">Nie połączono</string>
-    <string name="sharing_facebook_account_must_have_pages">Połączenie z Facebookiem nie może odnaleźć żadnych Stron. Publicize nie może połączyć się z profilami Facebooka, tylko z publikowanymi Stronami.</string>
     <string name="post_list_tab_trashed_posts">W koszu</string>
     <string name="post_list_tab_scheduled_posts">Zaplanowano</string>
     <string name="notifications_tab_title_likes">Polubienia</string>
@@ -2286,10 +2285,8 @@ Language: pl
     <string name="share_btn_disconnect">Rozłącz</string>
     <string name="share_btn_connect">Połącz</string>
     <string name="connection_service_description">Połącz się aby automatycznie udostępniać wpisy blogu w serwisie %s.</string>
-    <string name="connection_service_label">Publikuj w serwisie %s</string>
     <string name="connected_accounts_label">Konta połączone</string>
     <string name="connections_description">Połącz się ze swoim ulubionym serwisem mediów społecznościowych aby automatycznie udostępniać nowe wpisy swoim znajomym.</string>
-    <string name="connections_label">Połączenia</string>
     <string name="sharing">Udostępnianie</string>
     <string name="tabbar_accessibility_label_notifications">Powiadomienia. Zarządzaj powiadomieniami.</string>
     <string name="tabbar_accessibility_label_reader">Czytnik. Śledź treści z innych witryn.</string>

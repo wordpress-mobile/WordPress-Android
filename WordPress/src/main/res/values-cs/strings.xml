@@ -1218,7 +1218,6 @@ Language: cs_CZ
     <string name="post_list_tab_scheduled_posts">Naplánováno</string>
     <string name="post_list_tab_published_posts">Publikováno</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">Nepřipojeno</string>
-    <string name="sharing_facebook_account_must_have_pages">Připojení k Facebooku nemůže najít žádné stránky. Publicita se nemůže připojit k profilům Facebooku, pouze k publikovaným stránkám.</string>
     <string name="notifications_tab_title_comments">Komentáře</string>
     <string name="notifications_tab_title_unread_notifications">Nepřečteno</string>
     <string name="dlg_cancel_action_dont_trash">Ponechat</string>
@@ -2442,11 +2441,9 @@ Language: cs_CZ
     <string name="share_btn_connect">Připojit</string>
     <string name="share_btn_reconnect">Obnova propojení</string>
     <string name="connection_service_description">Připojte se k automatickému sdílení příspěvků blogu na %s.</string>
-    <string name="connection_service_label">Publikovat na %s</string>
     <string name="connected_accounts_label">Připojené účty</string>
     <string name="connections_description">Připojte své oblíbené sociální sítě k automatickému sdílení nových příspěvků s přáteli.</string>
     <string name="sharing">Sdílení</string>
-    <string name="connections_label">Připojení</string>
     <string name="tabbar_accessibility_label_notifications">Notifikace. Spravovat notifikace.</string>
     <string name="tabbar_accessibility_label_reader">Čtenář. Sledujte obsah z jiných stránek.</string>
     <string name="tabbar_accessibility_label_my_site">Moje stránka. Zobrazte své stránky a spravujte je, včetně statistik.</string>

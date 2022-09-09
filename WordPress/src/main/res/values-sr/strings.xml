@@ -1321,7 +1321,6 @@ Language: sr_RS
     <string name="connected_accounts_label">Повезани налози</string>
     <string name="sharing">Дељење</string>
     <string name="tabbar_accessibility_label_notifications">Обавештења. Управљајте обавештењима.</string>
-    <string name="connections_label">Повезаности</string>
     <string name="my_site_btn_sharing">Дељење</string>
     <string name="button_not_now">Не сада</string>
     <string name="editor_draft_saved_locally">Нацрт сачуван на уређају</string>

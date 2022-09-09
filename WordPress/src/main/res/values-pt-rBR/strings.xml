@@ -59,7 +59,6 @@ Language: pt_BR
     <string name="stats_insights_comments_guide_card">💡Toque em \'VISUALIZAR MAIS\' para ver seus principais comentaristas.</string>
     <string name="stats_insights_latest_post_empty">Confira novamente quando você tiver feito seu primeiro post!</string>
     <string name="stats_insights_views_and_visitors_visitors_empty_state">Confira nossas principais dicas para aumentar suas visualizações e tráfego %1$s</string>
-    <string name="stats_view_publicize">Conexões nas redes sociais</string>
     <string name="stats_action_card_schedule_post_message">✍️ Agende para publicar seus rascunhos no melhor momento para alcançar seu público.</string>
     <string name="stats_action_card_blogging_reminders_message">💡Publicar de forma consistente é uma ótima maneira de atrair seu público. Adicione um lembrete para você manter o ritmo.</string>
     <string name="stats_action_card_grow_audience_message">💡Aumente o nível de seu conteúdo com nosso curso de &lt;i&gt;Introdução à arte de publicar&lt;/i&gt; conduzido por especialistas.</string>
@@ -1335,7 +1334,6 @@ Language: pt_BR
     <string name="post_list_tab_trashed_posts">Na lixeira</string>
     <string name="post_list_tab_scheduled_posts">Agendado</string>
     <string name="post_list_tab_published_posts">Publicado</string>
-    <string name="sharing_facebook_account_must_have_pages">A conexão com o Facebook não encontrou nenhuma página. O Publicize não consegue se conectar a perfis do Facebook, apenas a páginas públicas.</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">Não conectado</string>
     <string name="notifications_tab_title_likes">Curtidas</string>
     <string name="notifications_tab_title_follows">Seguindo</string>
@@ -2560,10 +2558,8 @@ Language: pt_BR
     <string name="share_btn_disconnect">Desconectar</string>
     <string name="share_btn_connect">Conectar</string>
     <string name="connection_service_description">Conectar para compartilhar automaticamente os posts do seu blog em %s.</string>
-    <string name="connection_service_label">Divulgar em %s</string>
     <string name="connected_accounts_label">Contas conectadas</string>
     <string name="connections_description">Conecte seus serviços de mídias sociais para automaticamente compartilhar novos posts com seus amigos.</string>
-    <string name="connections_label">Conexões</string>
     <string name="sharing">Compartilhamento</string>
     <string name="tabbar_accessibility_label_notifications">Notificações. Gerencie suas notificações.</string>
     <string name="tabbar_accessibility_label_reader">Leitor. Siga conteúdo de outros sites.</string>

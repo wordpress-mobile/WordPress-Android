@@ -59,7 +59,6 @@ Language: id
     <string name="stats_insights_comments_guide_card">💡Ketuk \'LIHAT LEBIH BANYAK\' untuk melihat komentator teratas Anda.</string>
     <string name="stats_insights_latest_post_empty">Periksa lagi setelah Anda memposkan pos pertama Anda!</string>
     <string name="stats_insights_views_and_visitors_visitors_empty_state">Cek tips terbaik kami untuk meningkatkan pratinjau dan kunjungan Anda %1$s</string>
-    <string name="stats_view_publicize">Koneksi Sosial Media</string>
     <string name="stats_action_card_schedule_post_message">✍️ Jadwalkan draf Anda untuk diposkan di waktu ramai untuk mendapatkan lebih banyak pengunjung.</string>
     <string name="stats_action_card_blogging_reminders_message">💡Memposkan secara konsisten membantu Anda menarik lebih banyak pengunjung. Tambahkan pengingat untuk menjaga konsistensi.</string>
     <string name="stats_action_card_grow_audience_message">💡Tingkatkan kemampuan blog Anda lebih cepat dengan pelatihan&lt;i&gt; Pengenalan Blogging&lt;/i&gt; dari para ahli.</string>
@@ -1335,7 +1334,6 @@ Language: id
     <string name="post_list_tab_trashed_posts">Dibuang</string>
     <string name="post_list_tab_scheduled_posts">Terjadwal</string>
     <string name="post_list_tab_published_posts">Dipublikasikan</string>
-    <string name="sharing_facebook_account_must_have_pages">Koneksi Facebook tidak dapat menemukan Halaman apa pun. Publikasikan tidak dapat terhubung ke Profil Facebook, hanya Halaman yang dipublikasikan.</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">Tidak Terhubung</string>
     <string name="notifications_tab_title_likes">Suka</string>
     <string name="notifications_tab_title_follows">Mengikuti</string>
@@ -2560,10 +2558,8 @@ Language: id
     <string name="share_btn_disconnect">Putuskan sambungan</string>
     <string name="share_btn_connect">Hubungkan</string>
     <string name="connection_service_description">Sambungkan agar pos blog Anda dibagikan secara otomatis %s.</string>
-    <string name="connection_service_label">Publikasikan ke %s</string>
     <string name="connected_accounts_label">Akun Terhubung</string>
     <string name="connections_description">Sambungkan layanan media sosial favorit Anda untuk membagikan pos Anda secara otomatis dengan teman Anda.</string>
-    <string name="connections_label">Sambungan</string>
     <string name="sharing">Berbagi</string>
     <string name="tabbar_accessibility_label_notifications">Pemberitahuan. Kelola pemberitahuan.</string>
     <string name="tabbar_accessibility_label_reader">Pembaca. Ikuti konten dari situs lain.</string>
