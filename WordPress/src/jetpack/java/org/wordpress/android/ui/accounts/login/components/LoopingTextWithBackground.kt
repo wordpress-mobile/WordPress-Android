@@ -17,6 +17,7 @@ import org.wordpress.android.R.string
 
 @Composable
 fun LoopingTextWithBackground(
+    acceleration: Float,
     modifier: Modifier = Modifier,
     textModifier: Modifier = Modifier,
 ) {
@@ -27,7 +28,8 @@ fun LoopingTextWithBackground(
                 contentScale = ContentScale.FillBounds,
                 modifier = Modifier.matchParentSize(),
         )
-        AutoScrollingText(
+        AcceleratingLoopingText(
+                acceleration = acceleration,
                 modifier = Modifier
                         .fillMaxSize()
                         .padding(horizontal = 20.dp)
