@@ -25,7 +25,8 @@ import kotlinx.coroutines.isActive
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.util.extensions.isOdd
-
+import kotlin.math.exp
+import kotlin.math.ln
 
 @Composable
 fun LargeTexts() {
@@ -65,7 +66,12 @@ fun LargeText(
     )
 }
 
-const val MAXIMUM_VELOCITY = 0.3f
+// The maximum velocity (in either direction)
+private const val MAXIMUM_VELOCITY = 0.3f
+// The veclocity decay factor (i.e. 1/4th velocity after 1 second)
+private val VELOCITY_DECAY = -ln(4f)
+// An additional acceleration applied to make the text scroll when the device is flat on a table
+private const val DRIFT = -0.05f
 
 /** This composable launches an effect to continuously update the position of the text based on a simplified physics
  *  model. Velocity and position are recalculated for each frame, with the resulting position update passed to the child
@@ -78,7 +84,7 @@ const val MAXIMUM_VELOCITY = 0.3f
  */
 @Composable
 fun AcceleratingLoopingText(acceleration: Float, modifier: Modifier = Modifier) {
-    val currentAcceleration by rememberUpdatedState { acceleration }
+    val currentAcceleration by rememberUpdatedState { acceleration + DRIFT }
     var velocity by remember { mutableStateOf(0f) }
     var position by remember { mutableStateOf(0f) }
     LaunchedEffect(Unit) {
@@ -87,8 +93,9 @@ fun AcceleratingLoopingText(acceleration: Float, modifier: Modifier = Modifier) 
             val currentFrameNanos = awaitFrame()
             // Calculate elapsed time (in seconds) since the last frame
             val elapsed = (currentFrameNanos - (lastFrameNanos?: currentFrameNanos)) / 1e9.toFloat()
-            // Update the velocity (clamped to the maximum)
-            velocity =  (velocity + elapsed * currentAcceleration()).coerceIn(-MAXIMUM_VELOCITY, MAXIMUM_VELOCITY)
+            // Update the velocity, (decayed and clamped to the maximum)
+            velocity = (velocity * exp(elapsed * VELOCITY_DECAY) + elapsed * currentAcceleration())
+                    .coerceIn(-MAXIMUM_VELOCITY, MAXIMUM_VELOCITY)
             // Update the position, modulo 1 (ensuring a value greater or equal to 0, and less than 1)
             position = ((position + elapsed * velocity) % 1 + 1) % 1
             // Update frame timestamp reference
