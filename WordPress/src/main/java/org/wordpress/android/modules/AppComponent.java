@@ -21,6 +21,7 @@ import org.wordpress.android.ui.accounts.PostSignupInterstitialActivity;
 import org.wordpress.android.ui.accounts.SignupEpilogueActivity;
 import org.wordpress.android.ui.accounts.login.LoginEpilogueFragment;
 import org.wordpress.android.ui.accounts.login.LoginPrologueFragment;
+import org.wordpress.android.ui.accounts.login.LoginPrologueRevampedFragment;
 import org.wordpress.android.ui.accounts.login.jetpack.LoginNoSitesFragment;
 import org.wordpress.android.ui.accounts.login.jetpack.LoginSiteCheckErrorFragment;
 import org.wordpress.android.ui.accounts.signup.SignupEpilogueFragment;
@@ -563,6 +564,8 @@ public interface AppComponent {
     void inject(PhotoPickerFragment object);
 
     void inject(LoginPrologueFragment object);
+
+    void inject(LoginPrologueRevampedFragment object);
 
     void inject(ReaderDiscoverLogic object);
 

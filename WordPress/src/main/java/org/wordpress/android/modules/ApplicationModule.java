@@ -11,6 +11,7 @@ import com.tenor.android.core.network.IApiClient;
 
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.ui.CommentFullScreenDialogFragment;
+import org.wordpress.android.ui.accounts.login.LoginPrologueRevampedFragment;
 import org.wordpress.android.ui.accounts.signup.SettingsUsernameChangerFragment;
 import org.wordpress.android.ui.accounts.signup.UsernameChangerFullScreenDialogFragment;
 import org.wordpress.android.ui.debug.DebugSettingsFragment;
@@ -108,6 +109,9 @@ public abstract class ApplicationModule {
 
     @ContributesAndroidInjector
     abstract BasicDialog contributeBasicDialog();
+
+    @ContributesAndroidInjector
+    abstract LoginPrologueRevampedFragment contributePrologueRevampedFragment();
 
     @Provides
     public static WizardManager<SiteCreationStep> provideWizardManager(

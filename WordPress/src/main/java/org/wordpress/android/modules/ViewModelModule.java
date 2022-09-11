@@ -6,6 +6,8 @@ import androidx.lifecycle.ViewModelProvider;
 import org.wordpress.android.ui.JetpackRemoteInstallViewModel;
 import org.wordpress.android.ui.accounts.LoginEpilogueViewModel;
 import org.wordpress.android.ui.accounts.LoginViewModel;
+import org.wordpress.android.ui.accounts.login.LoginPrologueRevampedFragment;
+import org.wordpress.android.ui.accounts.login.LoginPrologueRevampedViewModel;
 import org.wordpress.android.ui.accounts.login.LoginPrologueViewModel;
 import org.wordpress.android.ui.accounts.login.jetpack.LoginNoSitesViewModel;
 import org.wordpress.android.ui.accounts.login.jetpack.LoginSiteCheckErrorViewModel;
@@ -499,6 +501,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(LoginPrologueViewModel.class)
     abstract ViewModel loginPrologueViewModel(LoginPrologueViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(LoginPrologueRevampedViewModel.class)
+    abstract ViewModel loginPrologueRevampedViewModel(LoginPrologueRevampedViewModel viewModel);
 
     @Binds
     @IntoMap
