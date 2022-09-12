@@ -172,6 +172,15 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
                 htmlCompatWrapper
         ) { viewModel.onBloggingPromptsLearnMoreClicked() }
 
+        adapter.registerAdapterDataObserver(object : AdapterDataObserver() {
+            override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
+                super.onItemRangeInserted(positionStart, itemCount)
+                if (itemCount == ONE_ITEM && positionStart == FIRST_ITEM) {
+                    recyclerView.smoothScrollToPosition(0)
+                }
+            }
+        })
+
         savedInstanceState?.getBundle(KEY_NESTED_LISTS_STATES)?.let {
             adapter.onRestoreInstanceState(it)
         }
@@ -607,6 +616,8 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
         private const val TAG_QUICK_START_DIALOG = "TAG_QUICK_START_DIALOG"
         private const val KEY_MY_SITE_TAB_TYPE = "key_my_site_tab_type"
         private const val CHECK_REFRESH_DELAY = 300L
+        private const val ONE_ITEM = 1
+        private const val FIRST_ITEM = 0
 
         @JvmStatic
         fun newInstance(mySiteTabType: MySiteTabType) = MySiteTabFragment().apply {
