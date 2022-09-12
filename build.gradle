@@ -16,7 +16,7 @@ ext {
 
     minSdkVersion = 24
     compileSdkVersion = 31
-    targetSdkVersion = 30
+    targetSdkVersion = 31
 
     coroutinesVersion = '1.5.2'
     androidxWorkVersion = "2.7.0"
