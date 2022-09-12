@@ -1194,6 +1194,7 @@ public class AccountStore extends Store {
     private void signOut() {
         clearAccountAndAccessToken();
         OnAccountChanged accountChanged = new OnAccountChanged();
+        accountChanged.causeOfChange = AccountAction.SIGN_OUT;
         accountChanged.accountInfosChanged = true;
         emitChange(accountChanged);
         emitChange(new OnAuthenticationChanged());
