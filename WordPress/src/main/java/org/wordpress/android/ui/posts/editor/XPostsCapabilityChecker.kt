@@ -35,7 +35,8 @@ class XPostsCapabilityChecker @Inject constructor(
                     if (saved.xPosts.isEmpty()) {
                         // Db was empty, so let's make the api call and ensure there aren't any new xpost suggestions.
                         // This call will be made every time the editor opens on sites that don't have any xpost
-                        // suggestions,but because the response will almost always be empty,it's not an expensive call.
+                        // suggestions, but because the response will almost always be empty, it's not an expensive
+                        // call.
                         fetchingReturnsXposts(site)
                     } else {
                         // We have xposts saved in the db, so set capability to true even though

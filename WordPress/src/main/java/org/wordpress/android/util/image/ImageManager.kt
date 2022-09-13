@@ -333,7 +333,8 @@ class ImageManager @Inject constructor(
     }
 
     /**
-     * Loads an image from the "imgUri" into the ImageView.Doing this allows content and remote URIs to interchangeable.
+     * Loads an image from the "imgUri" into the ImageView. Doing this allows content and remote URIs to
+     * interchangeable.
      * Adds a placeholder and an error placeholder depending
      * on the ImageType. Attaches the ResultListener so the client can manually show/hide progress and error
      * views or add a PhotoViewAttacher(adds support for pinch-to-zoom gesture). Optionally adds

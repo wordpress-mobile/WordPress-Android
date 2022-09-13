@@ -90,15 +90,20 @@ class AppConfig
     }
 
     sealed class FeatureState(open val isEnabled: Boolean, val name: String) {
-        data class ManuallyOverriden(override val isEnabled: Boolean) :
-                FeatureState(isEnabled, "manually_overriden")
-        data class BuildConfigValue(override val isEnabled: Boolean) :
-                FeatureState(isEnabled, "build_config_value")
-        data class RemoteValue(override val isEnabled: Boolean) :
-                FeatureState(isEnabled, "remote_source_value")
-        data class StaticValue(override val isEnabled: Boolean) :
-                FeatureState(isEnabled, "static_source_value")
-        data class DefaultValue(override val isEnabled: Boolean) :
-                FeatureState(isEnabled, "default_source_value")
+        data class ManuallyOverriden(
+            override val isEnabled: Boolean
+            ) : FeatureState(isEnabled, "manually_overriden")
+        data class BuildConfigValue(
+            override val isEnabled: Boolean
+            ) : FeatureState(isEnabled, "build_config_value")
+        data class RemoteValue(
+            override val isEnabled: Boolean
+            ) : FeatureState(isEnabled, "remote_source_value")
+        data class StaticValue(
+            override val isEnabled: Boolean
+            ) : FeatureState(isEnabled, "static_source_value")
+        data class DefaultValue(
+            override val isEnabled: Boolean
+            ) : FeatureState(isEnabled, "default_source_value")
     }
 }
