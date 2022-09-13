@@ -136,6 +136,9 @@ android {
         buildConfigField "boolean", "ENABLE_QRCODE_AUTH_FLOW", "true"
 
         manifestPlaceholders = [magicLinkScheme:"wordpress"]
+
+        // For per-app language
+        resConfigs "ar", "az", "bg", "cs", "cy", "da", "de", "el", "en_AU", "en_CA", "en_GB", "en_US", "es", "es_CL", "es_CO", "es_MX", "es_VE", "eu", "fr", "fr_CA", "gd", "gl", "hi", "hr", "hu", "in", "is", "it", "iw", "ja", "km", "ko", "mk", "ms", "nb", "nl", "pl", "pt_BR", "ro", "ru", "sk", "sq", "sr", "sv", "th", "tr", "vi", "zh_CN", "zh_HK", "zh_TW"
     }
 
     // Gutenberg's dependency - react-native-video is using
@@ -186,7 +189,7 @@ android {
 
             // Limit string resources to Mag16 only for Jetpack
             // Note: this only affects included _locales_; variants for `values-night`, `values-land` and other configs are _still_ preserved in Jetpack and not filtered by this.
-            resourceConfigurations = ["ar", "de", "es", "fr", "he", "id", "it", "ja", "ko", "nl", "pt-rBR", "ru", "sv", "tr", "zh-rCN", "zh-rTW"]
+            resConfigs "ar", "de", "es", "fr", "he", "id", "it", "ja", "ko", "nl", "pt-rBR", "ru", "sv", "tr", "zh-rCN", "zh-rTW"
         }
 
         // Used for release/beta testing builds. Usually shouldn't be build locally.
