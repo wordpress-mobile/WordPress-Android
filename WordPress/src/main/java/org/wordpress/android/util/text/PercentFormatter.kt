@@ -12,7 +12,6 @@ import javax.inject.Inject
 class PercentFormatter @Inject constructor(
     private val localeManagerWrapper: LocaleManagerWrapper
 ) {
-
     /**
      * Returns a String with a percent sign (%) using the given Float parameter. The returned String uses the
      * default Locale.
@@ -43,10 +42,11 @@ class PercentFormatter @Inject constructor(
         maxFractionDigits: Int = MAXIMUM_FRACTION_DIGITS,
         rounding: RoundingMode = RoundingMode.DOWN
     ) = format(
-            value = value.toFloat() / 100,
+            value = value.toFloat() / FORMAT_DIVISOR,
             maxFractionDigits,
             rounding
     )
 }
 
 private const val MAXIMUM_FRACTION_DIGITS = 0
+private const val FORMAT_DIVISOR = 100
