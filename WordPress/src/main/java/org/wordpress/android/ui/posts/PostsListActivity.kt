@@ -543,12 +543,12 @@ class PostsListActivity : LocaleAwareActivity(),
 
     private fun PostListActivityBinding.initSearchView() {
         searchActionButton.setOnActionExpandListener(object : OnActionExpandListener {
-            override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
+            override fun onMenuItemActionExpand(item: MenuItem): Boolean {
                 viewModel.onSearchExpanded(restorePreviousSearch)
                 return true
             }
 
-            override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
+            override fun onMenuItemActionCollapse(item: MenuItem): Boolean {
                 viewModel.onSearchCollapsed()
                 return true
             }

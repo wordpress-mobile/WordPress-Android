@@ -95,12 +95,12 @@ class PageParentFragment : Fragment(R.layout.page_parent_fragment), CoroutineSco
 
     private fun PageParentFragmentBinding.initializeSearchView() {
         searchAction.setOnActionExpandListener(object : OnActionExpandListener {
-            override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
+            override fun onMenuItemActionExpand(item: MenuItem): Boolean {
                 viewModel.onSearchExpanded(restorePreviousSearch)
                 return true
             }
 
-            override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
+            override fun onMenuItemActionCollapse(item: MenuItem): Boolean {
                 viewModel.onSearchCollapsed()
                 return true
             }
@@ -124,7 +124,7 @@ class PageParentFragment : Fragment(R.layout.page_parent_fragment), CoroutineSco
             }
         })
 
-        val searchEditFrame = searchAction.actionView.findViewById<LinearLayout>(R.id.search_edit_frame)
+        val searchEditFrame = (searchAction.actionView as SearchView).findViewById<LinearLayout>(R.id.search_edit_frame)
         (searchEditFrame.layoutParams as LinearLayout.LayoutParams)
                 .apply { this.leftMargin = DisplayUtils.dpToPx(activity, -8) }
 

@@ -76,7 +76,7 @@ class CommentListActionModeCallback(
         menuItem.isEnabled = actionUiModel.isEnabled
         if (menuItem.icon != null) {
             // must mutate the drawable to avoid affecting other instances of it
-            val icon = menuItem.icon.mutate()
+            val icon = menuItem.icon!!.mutate()
             icon.alpha = if (actionUiModel.isEnabled) ICON_ALPHA_ENABLED else ICON_ALPHA_DISABLED
             menuItem.icon = icon
         }

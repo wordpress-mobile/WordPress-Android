@@ -94,9 +94,9 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             toolbar.inflateMenu(R.menu.my_site_menu)
             toolbar.menu.findItem(R.id.me_item)?.let { meMenu ->
                 meMenu.actionView.let { actionView ->
-                    actionView.contentDescription = meMenu.title
-                    actionView.setOnClickListener { viewModel.onAvatarPressed() }
-                    TooltipCompat.setTooltipText(actionView, meMenu.title)
+                    actionView?.contentDescription = meMenu.title
+                    actionView?.setOnClickListener { viewModel.onAvatarPressed() }
+                    actionView?.let { TooltipCompat.setTooltipText(it, meMenu.title) }
                 }
             }
         }
