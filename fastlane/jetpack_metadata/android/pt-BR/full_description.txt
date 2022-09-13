@@ -1,9 +1,47 @@
-Tenha ferramentas poderosas de segurança e desempenho no seu bolso com o Jetpack para Android.
+Jetpack para WordPress
 
-Restaure o seu site de qualquer lugar se algo der errado. Verifique e resolva ameaças com apenas um toque. Monitore a atividade do site para ver quem mudou o quê e quando. Confira as estatísticas para saber de quais novos países são seus visitantes.
+Tenha o poder da publicação na Web no seu bolso. O Jetpack é muito mais que um criador de sites!
 
-O aplicativo também oferece suporte para funcionalidades já esperadas do WordPress. Crie um haikai espontâneo diretamente do seu sofá. Tire e publique fotos na hora do almoço. Responda aos comentários mais recentes.
+CRIAÇÃO
 
-O Jetpack para Android oferece suporte a sites do WordPress que tenham o Jetpack ativado e uma conta conectada ao WordPress.com.
+Dê um espaço na Web para as suas grandes ideias. O Jetpack para Android é um criador de sites e blogs desenvolvido pelo WordPress. Crie seu site com o Jetpack.
+Escolha o visual certo com a grande variedade de temas do WordPress e depois personalize com fotos, cores e fontes que combinem com você.
+O guia integrado de dicas rápidas oferece as noções básicas para configurar seu novo site para o sucesso. (Não somos apenas um construtor de sites, somos seu parceiro e sua torcida!)
 
-View the Privacy Notice for California Users at https://automattic.com/privacy/#california-consumer-privacy-act-ccpa.
+ANÁLISES E INFORMAÇÕES
+
+Veja as estatísticas do seu site e acompanhe as atividades em tempo real.
+Acompanhe quais posts e páginas recebem mais tráfego, com as informações diárias, semanais, mensais e anuais.
+Use o mapa de visitas para saber de quais países os seus visitantes são.
+
+NOTIFICAÇÕES
+
+Receba notificações sobre comentários, curtidas e novos seguidores para que você possa ver as pessoas reagindo ao seu site em tempo real.
+Responda aos novos comentários assim que eles aparecerem para manter a conversa fluida e agradar seus seguidores.
+
+PUBLICAÇÃO
+
+Crie atualizações, stories, anúncios de ensaios fotográficos e o que mais puder imaginar com o editor.
+Dê vida a seus posts e páginas com fotos e vídeos de sua câmera ou encontre a imagem perfeita na coleção de fotos profissionais gratuitas do aplicativo.
+Salve suas ideias como rascunhos e retome quando a inspiração voltar, ou agende novos posts para que seu site esteja sempre atualizado e tenha engajamento.
+Adicione tags e categorias para ajudar novos leitores a encontrar seus posts, e ampliar seu público.
+
+FERRAMENTAS DE SEGURANÇA E DESEMPENHO
+
+Restaure seu site de qualquer lugar se algo der errado.
+Verifique e resolva ameaças com apenas um toque.
+Fique de olho na atividade do site para ver quem mudou o que e quando.
+
+LEITOR
+
+O Jetpack é mais do que um construtor de blogs, ele permite se conectar com uma comunidade de escritores no Leitor do WordPress.com. Explore milhares de temas por tag, descubra novos autores e organizações e siga aqueles que despertam seu interesse.
+Não perca os posts que você achou interessante e salve para ver mais tarde.
+
+COMPARTILHAMENTO
+
+Configure o compartilhamento automatizado para informar seus seguidores nas redes sociais quando você publicar um novo post. Faça publicações cruzadas de maneira automática no Facebook, Twitter e muito mais.
+Adicione botões de compartilhamento social aos seus posts para que seus visitantes compartilhem em suas redes. Deixe seus fãs se tornarem seus embaixadores.
+
+Saiba mais em https://br.jetpack.com/mobile
+
+Aviso de privacidade para usuários residentes da Califórnia: https://automattic.com/privacy/#california-consumer-privacy-act-ccpa

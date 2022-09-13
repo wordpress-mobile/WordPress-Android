@@ -60,7 +60,7 @@ class LocalePickerViewModelTest : BaseUnitTest() {
 
         whenever(currentLocale.toString()).thenReturn("en_US")
         whenever(localeProvider.getAppLocale()).thenReturn(currentLocale)
-        whenever(localeProvider.getLanguageDisplayString(any(), any())).thenReturn("English (United States)")
+        whenever(localeProvider.getAppLanguageDisplayString()).thenReturn("English (United States)")
         whenever(localeProvider.createSortedLocalizedLanguageDisplayStrings(any(), any())).thenReturn(dummyLocales)
         whenever(resourceProvider.getStringArray(any())).thenReturn(languageCodes)
 

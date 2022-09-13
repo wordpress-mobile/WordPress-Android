@@ -13,6 +13,7 @@ import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Tag
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import javax.inject.Inject
 
+@Suppress("DataClassShouldBeImmutable")
 private data class MappedSubfilterListItem(
     val type: Int,
     var feedId: Long = 0,

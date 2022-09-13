@@ -1,11 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-07-07 16:01:09+0000
+Translation-Revision-Date: 2022-09-08 20:33:00+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: en_GB
 -->
 <resources>
+    <string name="app_rating_title">Enjoying %s?</string>
+    <string name="stats_view_publicize">Jetpack Social Connections</string>
+    <string name="connections_label">Jetpack Social Connections</string>
+    <string name="stats_widget_log_in_to_add_message">Please log in to the Jetpack app to add a widget.</string>
+    <string name="connection_service_label">Share post to %s</string>
+    <string name="login_magic_links_sent_label_short">Check your email on this device!</string>
+    <string name="login_magic_links_email_sent">We just sent a magic link to</string>
+    <string name="wp_jetpack_powered_reader_powered_by_jetpack_caption">Find, follow, and like all your favourite sites and posts with Reader, now available in the new Jetpack app.</string>
+    <string name="wp_jetpack_powered_notifications_powered_by_jetpack">Notifications are powered by Jetpack</string>
+    <string name="wp_jetpack_powered_reader_powered_by_jetpack">Reader is powered by Jetpack</string>
+    <string name="wp_jetpack_powered_stats_powered_by_jetpack">Stats are powered by Jetpack</string>
+    <string name="wp_jetpack_powered_notifications_powered_by_jetpack_caption">Stay informed with realtime updates for new comments, site traffic, security reports and more.</string>
+    <string name="or_use_password">Use password to sign in</string>
+    <string name="wp_jetpack_powered_stats_powered_by_jetpack_caption">Watch your traffic grow and learn about your audience with redesigned Stats and Insights, now available in the new Jetpack app.</string>
+    <string name="wp_jetpack_powered_features">The new Jetpack app has Stats, Reader, Notifications, and more that make your WordPress better.</string>
+    <string name="wp_jetpack_powered_better_with_jetpack">WordPress is better with Jetpack</string>
+    <string name="wp_jetpack_continue_to_notifications">Continue to Notifications</string>
+    <string name="wp_jetpack_continue_to_reader">Continue to Reader</string>
+    <string name="wp_jetpack_continue_to_stats">Continue to Stats</string>
+    <string name="wp_jetpack_get_new_jetpack_app">Get the new Jetpack app</string>
+    <string name="gutenberg_native_gradient">Gradient</string>
+    <string name="gutenberg_native_invalid_url">Invalid URL.</string>
+    <string name="gutenberg_native_jetpack_powered">Jetpack powered</string>
+    <string name="gutenberg_native_upgrade_your_plan_to_upload_audio">Upgrade your plan to upload audio</string>
+    <string name="gutenberg_native_upgrade_your_plan_to_use_video_covers">Upgrade your plan to use video covers</string>
+    <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery">Problem displaying block. \nTap to attempt block recovery.</string>
+    <string name="stats_revamp_v2_update_alert_message">Updated to New Insights to help you understand how your content is performing and what\'s resonating with your audience.</string>
+    <string name="stats_insights_like_guide_card">⭐️ Your latest post %1$s has received %2$s like.</string>
+    <string name="weekly_roundup_notification_text_views_and_comments">Last week, you had %1$s views and %2$s comments</string>
+    <string name="weekly_roundup_notification_text_views_and_likes">Last week, you had %1$s views and %2$s likes</string>
+    <string name="weekly_roundup_notification_text_views_only">Last week, you had %1$s views.</string>
+    <string name="weekly_roundup_notification_text_all">Last week, you had %1$s views, %2$s likes, and %3$s comments.</string>
     <string name="wp_jetpack_powered">Jetpack powered</string>
     <string name="qrcode_auth_flow_content_description">Image indicating scan log-in code in process</string>
     <string name="qrcode_auth_flow_error_content_description">Image indicating an error</string>
@@ -27,16 +59,11 @@ Language: en_GB
     <string name="qrcode_auth_flow_validated_subtitle">Only scan QR codes taken directly from your web browser. Never scan a code sent to you by anyone else.</string>
     <string name="qrcode_auth_flow_validated_default_title">Are you trying to log in to your web browser near %1$s?</string>
     <string name="qrcode_auth_flow_validated_title">Are you trying to log in to %1$s near %2$s?</string>
-    <string name="stats_revamp_v2_intro_secondary_button_text">Remind me later</string>
-    <string name="stats_revamp_v2_intro_primary_button_text">Try it now</string>
-    <string name="stats_revamp_v2_intro_content_note">Learn more in My Site &gt; Stats &gt; Insights</string>
-    <string name="stats_revamp_v2_intro_content">Insights help you understand how your content is performing and what\'s resonating with your audience.</string>
     <string name="stats_revamp_v2_intro_header_title">Insights update</string>
     <string name="stats_insights_followers_guide_card">💡Commenting on other blogs is a great way to build attention and followers for your new site.</string>
     <string name="stats_insights_comments_guide_card">💡Tap \'VIEW MORE\' to see your top commenters.</string>
     <string name="stats_insights_latest_post_empty">Check back when you\'ve published your first post!</string>
     <string name="stats_insights_views_and_visitors_visitors_empty_state">Check out our top tips to increase your views and traffic %1$s</string>
-    <string name="stats_view_publicize">Social Media Connections</string>
     <string name="stats_action_card_schedule_post_message">✍️ Schedule your drafts to publish at the best time to reach your audience.</string>
     <string name="stats_action_card_blogging_reminders_message">💡Posting consistently is a great way to build your audience. Add a reminder to keep you on track.</string>
     <string name="stats_action_card_grow_audience_message">💡Level up your blogging faster with our expert-led &lt;i&gt;Intro to Blogging&lt;/i&gt; course.</string>
@@ -72,8 +99,8 @@ Language: en_GB
     <string name="me_btn_scan_login_code">Scan Log-in Code</string>
     <string name="stats_insights_likes_guide_card">⭐️ Your latest post %1$s has received %2$s likes.</string>
     <string name="stats_most_popular_percent_views_empty">Not enough activity. Check back later when your site\'s had more visitors!</string>
-    <string name="stats_total_followers_content_description">%1s, %2s of total followers</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
+    <string name="stats_total_followers_content_description">%1$s, %2$s%% of total followers</string>
     <string name="pages_copy_link">Copy link</string>
     <string name="quick_start_completed_tour_title">Congrats! You know your way around&lt;br/&gt;</string>
     <string name="quick_start_sites_type_get_to_know_app">Get to know the app</string>
@@ -396,7 +423,6 @@ Language: en_GB
     <string name="recommend_app_null_response">No response received</string>
     <string name="recommend_app_bad_format_response">Invalid response received</string>
     <string name="recommend_app_subject">Automattic Apps – Apps for any screen</string>
-    <string name="weekly_roundup_notification_text">Your site got %1$d views, %2$d likes, %3$d comments.</string>
     <string name="blogging_reminders_epilogue_body_everyday_with_time">You\'ll get reminders to blog &lt;b&gt;every day&lt;/b&gt; at &lt;b&gt;%s&lt;/b&gt;.</string>
     <string name="blogging_reminders_notification_time">Notification time</string>
     <string name="weekly_roundup_notification_title">Weekly Roundup: %s</string>
@@ -507,6 +533,7 @@ Language: en_GB
     <string name="gutenberg_native_s_converted_to_regular_blocks">%s converted to normal blocks</string>
     <string name="gutenberg_native_invalid_url_audio_file_not_found">Invalid URL. Audio file not found.</string>
     <string name="gutenberg_native_media_options">Media options</string>
+    <string name="gutenberg_native_opacity">Opacity</string>
     <string name="gutenberg_native_double_tap_to_open_action_sheet_to_add_image_or_video">Double tap to open action sheet to add image or video</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_add_image_or_video">Double tap to open bottom sheet to add image or video</string>
     <string name="gutenberg_native_drag_to_adjust_focal_point">Drag to adjust focal point</string>
@@ -1214,7 +1241,6 @@ Language: en_GB
     <string name="reader_empty_followed_blogs_description">When you follow sites, you\'ll see their content here</string>
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">Double tap to go to colour settings</string>
     <string name="feature_announcement_find_out_mode">Find out more</string>
-    <string name="feature_announcement_dialog_label">What\'s New In WordPress</string>
     <string name="insert_label_with_count">Insert %d</string>
     <string name="crop">crop</string>
     <string name="error_failed_to_load_into_file">Failed to load into file, please try again.</string>
@@ -1224,6 +1250,7 @@ Language: en_GB
     <string name="photo_picker_photo_or_video_title">Choose media</string>
     <string name="photo_picker_video_title">Choose video</string>
     <string name="site_picker_ask_site_select">Couldn\'t select site. Please try again.</string>
+    <string name="feature_announcement_dialog_label">What\'s New In %s</string>
     <string name="sitepicker_continue_flow">Continue</string>
     <string name="reader_reblog_error">Reblog failed</string>
     <string name="reader_no_site_to_reblog_action">Manage Sites</string>
@@ -1313,8 +1340,8 @@ Language: en_GB
     <string name="post_list_tab_trashed_posts">Binned</string>
     <string name="post_list_tab_scheduled_posts">Scheduled</string>
     <string name="post_list_tab_published_posts">Published</string>
-    <string name="sharing_facebook_account_must_have_pages">The Facebook connection cannot find any Pages. Publicise cannot connect to Facebook Profiles, only published Pages.</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">Not Connected</string>
+    <string name="sharing_facebook_account_must_have_pages">The Facebook connection cannot find any Pages. Jetpack Social cannot connect to Facebook Profiles, only published Pages.</string>
     <string name="notifications_tab_title_likes">Likes</string>
     <string name="notifications_tab_title_follows">Follows</string>
     <string name="notifications_tab_title_comments">Comments</string>
@@ -1542,7 +1569,7 @@ Language: en_GB
     <string name="navigate_forward_desc">Go forward</string>
     <string name="calendar_scheduled_post_title">WordPress Scheduled Post: \"%s\"</string>
     <string name="notification_post_will_be_published_in_ten_minutes">\"%s\" will be published in 10 minutes</string>
-    <string name="calendar_scheduled_post_description">\"%1$s\" scheduled for publishing on \"%2$s\" in your WordPress app \n %3$s</string>
+    <string name="calendar_scheduled_post_description">\"%1$s\" scheduled for publishing on \"%2$s\" in your %3$s app \n %4$s</string>
     <string name="notification_post_will_be_published_in_one_hour">\"%s\" will be published in 1 hour</string>
     <string name="notification_post_has_been_published">\"%s\" has been published</string>
     <string name="notification_scheduled_post_ten_minute_reminder">Scheduled post: 10 minute reminder</string>
@@ -1712,7 +1739,6 @@ Language: en_GB
     <string name="app_rating_rate_later">Later</string>
     <string name="app_rating_rate_now">Rate now</string>
     <string name="app_rating_message">Nice to see you again! If you’re digging the app, we’d love a rating on the Google Play Store.</string>
-    <string name="app_rating_title">Enjoying WordPress?</string>
     <string name="editor_post_converted_back_to_draft">Post converted back to draft</string>
     <string name="stats_insights_posting_activity">Posting Activity</string>
     <string name="stats_site_not_loaded_yet">Site not loaded yet</string>
@@ -2444,6 +2470,7 @@ Language: en_GB
     <string name="enter_verification_code">Almost there! Please enter the verification code from your Authenticator app.</string>
     <string name="next">Next</string>
     <string name="enter_email_wordpress_com">Log in to WordPress.com using an email address to manage all your WordPress sites.</string>
+    <string name="open_mail">Open Mail</string>
     <string name="image_optimization_promo_desc">Image optimisation shrinks images for quicker uploading.\n\nYou can change this any time in site settings.</string>
     <string name="image_optimization_promo_title">Turn on image optimisation?</string>
     <string name="leave_off">Leave off</string>
@@ -2539,10 +2566,8 @@ Language: en_GB
     <string name="share_btn_disconnect">Disconnect</string>
     <string name="share_btn_connect">Connect</string>
     <string name="connection_service_description">Connect to automatically share your blog posts to %s.</string>
-    <string name="connection_service_label">Publicise to %s</string>
     <string name="connected_accounts_label">Connected accounts</string>
     <string name="connections_description">Connect your favourite social media services to automatically share new posts with friends.</string>
-    <string name="connections_label">Connections</string>
     <string name="sharing">Sharing</string>
     <string name="tabbar_accessibility_label_notifications">Notifications. Manage your notifications.</string>
     <string name="tabbar_accessibility_label_reader">Reader. Follow content from other sites.</string>

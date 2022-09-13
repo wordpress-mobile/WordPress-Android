@@ -141,7 +141,7 @@ class LocalePickerViewModel @Inject constructor(
     private fun loadLocales() {
         val appLocale = localeProvider.getAppLocale()
 
-        val displayLabel = localeProvider.getLanguageDisplayString(appLocale.toString(), appLocale)
+        val displayLabel = localeProvider.getAppLanguageDisplayString()
         _suggestedLocale.postValue(CurrentLocale(displayLabel, appLocale.toString()))
 
         val availableLocales = resourceProvider.getStringArray(array.available_languages).distinct()

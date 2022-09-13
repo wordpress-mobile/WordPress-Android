@@ -1,3 +1,4 @@
-- When you add an item in the media library to an Image block, the item’s alt text comes with it.
-- You can insert media from a URL in Video blocks.
-- Use the block recovery option to bring back unexpected or invalid content in a block.
+- Jetpack widgets are now available on your device’s home screen
+- Media preview controls are visible in both light and dark mode
+- Compose theme’s Login Code screen has better color contrast
+- Certain elements of the editor and post settings are now WordPress blue

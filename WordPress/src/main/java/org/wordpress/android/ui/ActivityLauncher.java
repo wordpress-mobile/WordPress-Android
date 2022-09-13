@@ -104,7 +104,6 @@ import org.wordpress.android.ui.stats.StatsConstants;
 import org.wordpress.android.ui.stats.StatsTimeframe;
 import org.wordpress.android.ui.stats.StatsViewType;
 import org.wordpress.android.ui.stats.refresh.StatsActivity;
-import org.wordpress.android.ui.stats.refresh.StatsActivity.StatsLaunchedFrom;
 import org.wordpress.android.ui.stats.refresh.StatsViewAllActivity;
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection;
 import org.wordpress.android.ui.stats.refresh.lists.detail.StatsDetailActivity;
@@ -138,7 +137,6 @@ import static org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTIC
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_ACCESS_ERROR;
 import static org.wordpress.android.editor.gutenberg.GutenbergEditorFragment.ARG_STORY_BLOCK_ID;
 import static org.wordpress.android.imageeditor.preview.PreviewImageFragment.ARG_EDIT_IMAGE_DATA;
-import static org.wordpress.android.login.LoginMode.JETPACK_LOGIN_ONLY;
 import static org.wordpress.android.login.LoginMode.WPCOM_LOGIN_ONLY;
 import static org.wordpress.android.push.NotificationsProcessingService.ARG_NOTIFICATION_TYPE;
 import static org.wordpress.android.ui.WPWebViewActivity.ENCODING_UTF8;
@@ -560,24 +558,6 @@ public class ActivityLauncher {
             ToastUtils.showToast(context, R.string.stats_cannot_be_started, ToastUtils.Duration.SHORT);
         } else {
             StatsActivity.start(context, site);
-        }
-    }
-
-    public static void openBlogStats(Context context, SiteModel site) {
-        if (site == null) {
-            AppLog.e(T.STATS, "SiteModel is null when opening the stats.");
-            AnalyticsTracker.track(
-                    STATS_ACCESS_ERROR,
-                    ActivityLauncher.class.getName(),
-                    "NullPointerException",
-                    "Failed to open Stats because of the null SiteModel"
-            );
-            ToastUtils.showToast(context, R.string.stats_cannot_be_started, ToastUtils.Duration.SHORT);
-        } else {
-            Intent intent = new Intent(context, StatsActivity.class);
-            intent.putExtra(StatsActivity.ARG_LAUNCHED_FROM, StatsLaunchedFrom.FEATURE_ANNOUNCEMENT);
-            intent.putExtra(WordPress.SITE, site);
-            context.startActivity(intent);
         }
     }
 
@@ -1461,7 +1441,6 @@ public class ActivityLauncher {
         Intent intent = new Intent(activity, LoginActivity.class);
         intent.setFlags(
                 Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        JETPACK_LOGIN_ONLY.putInto(intent);
         activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
     }
 
@@ -1765,13 +1744,9 @@ public class ActivityLauncher {
         Intent mainActivityIntent = getMainActivityInNewStack(context);
         mainActivityIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
 
-        Intent meIntent = new Intent(context, MeActivity.class);
-        meIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-
         Intent qrcodeAuthFlowIntent = QRCodeAuthActivity.newIntent(context, uri, true);
 
         taskStackBuilder.addNextIntent(mainActivityIntent);
-        taskStackBuilder.addNextIntent(meIntent);
         taskStackBuilder.addNextIntent(qrcodeAuthFlowIntent);
 
         taskStackBuilder.startActivities();

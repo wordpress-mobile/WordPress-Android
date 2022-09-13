@@ -31,7 +31,6 @@ import org.wordpress.android.ui.jetpack.scan.ScanViewModel;
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsViewModel;
 import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryListViewModel;
 import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryViewModel;
-import org.wordpress.android.ui.main.MeViewModel;
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel;
 import org.wordpress.android.ui.mysite.MySiteViewModel;
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel;
@@ -60,7 +59,6 @@ import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel;
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel;
 import org.wordpress.android.ui.reader.subfilter.SubFilterViewModel;
 import org.wordpress.android.ui.reader.viewmodels.ConversationNotificationsViewModel;
-import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel;
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel;
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel;
 import org.wordpress.android.ui.reader.viewmodels.SubfilterPageViewModel;
@@ -88,7 +86,6 @@ import org.wordpress.android.ui.whatsnew.FeatureAnnouncementViewModel;
 import org.wordpress.android.viewmodel.ViewModelFactory;
 import org.wordpress.android.viewmodel.ViewModelKey;
 import org.wordpress.android.viewmodel.accounts.PostSignupInterstitialViewModel;
-import org.wordpress.android.viewmodel.activitylog.ActivityLogDetailViewModel;
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel;
 import org.wordpress.android.viewmodel.history.HistoryViewModel;
 import org.wordpress.android.viewmodel.main.SitePickerViewModel;
@@ -127,11 +124,6 @@ abstract class ViewModelModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(ActivityLogDetailViewModel.class)
-    abstract ViewModel activityLogDetailViewModel(ActivityLogDetailViewModel viewModel);
-
-    @Binds
-    @IntoMap
     @ViewModelKey(PagesViewModel.class)
     abstract ViewModel pagesViewModel(PagesViewModel viewModel);
 
@@ -154,11 +146,6 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(ReaderPostListViewModel.class)
     abstract ViewModel readerPostListViewModel(ReaderPostListViewModel viewModel);
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(ReaderPostDetailViewModel.class)
-    abstract ViewModel readerPostDetailViewModel(ReaderPostDetailViewModel viewModel);
 
     @Binds
     @IntoMap
@@ -379,11 +366,6 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(PrepublishingPublishSettingsViewModel.class)
     abstract ViewModel prepublishingPublishSettingsViewModel(PrepublishingPublishSettingsViewModel viewModel);
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(MeViewModel.class)
-    abstract ViewModel meViewModel(MeViewModel viewModel);
 
     @Binds
     @IntoMap

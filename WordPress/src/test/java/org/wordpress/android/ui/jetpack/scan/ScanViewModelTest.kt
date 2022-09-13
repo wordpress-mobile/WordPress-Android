@@ -66,6 +66,7 @@ private const val SERVER_CREDS_LINK = "${Constants.URL_JETPACK_SETTINGS}/$TEST_S
 
 @ExperimentalCoroutinesApi
 @InternalCoroutinesApi
+@Suppress("LargeClass")
 class ScanViewModelTest : BaseUnitTest() {
     @Rule
     @JvmField val coroutineScope = MainCoroutineScopeRule()

@@ -336,7 +336,6 @@ class ZendeskHelper(
 /**
  * This is a helper function which builds a `UiConfig` through helpers to be used during ticket creation.
  */
-@Suppress("LongParameterList")
 private fun buildZendeskConfig(
     context: Context,
     allSites: List<SiteModel>?,

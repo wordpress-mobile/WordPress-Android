@@ -100,6 +100,7 @@ class LoginNoSitesViewModel @Inject constructor(
         val state: State
     )
 
+    @Suppress("SerialVersionUIDInSerializableClass")
     sealed class State : Serializable {
         object NoUser : State()
         data class ShowUser(

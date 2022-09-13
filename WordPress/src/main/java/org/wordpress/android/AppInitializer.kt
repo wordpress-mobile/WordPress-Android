@@ -81,7 +81,6 @@ import org.wordpress.android.support.ZendeskHelper
 import org.wordpress.android.ui.ActivityId
 import org.wordpress.android.ui.debug.cookies.DebugCookieManager
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
-import org.wordpress.android.ui.mysite.tabs.MySiteDefaultTabExperiment
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils
@@ -125,7 +124,6 @@ import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
 
-@Suppress("TooManyFunctions")
 @Singleton
 class AppInitializer @Inject constructor(
     wellSqlInitializer: WellSqlInitializer,
@@ -154,7 +152,6 @@ class AppInitializer @Inject constructor(
     @Inject lateinit var debugCookieManager: DebugCookieManager
     @Inject @Named(APPLICATION_SCOPE) lateinit var appScope: CoroutineScope
     @Inject lateinit var selectedSiteRepository: SelectedSiteRepository
-    @Inject lateinit var mySiteDefaultTabExperiment: MySiteDefaultTabExperiment
 
     // For development and production `AnalyticsTrackerNosara`, for testing a mocked `Tracker` will be injected.
     @Inject lateinit var tracker: Tracker
@@ -307,8 +304,6 @@ class AppInitializer @Inject constructor(
         exPlat.forceRefresh()
 
         debugCookieManager.sync()
-
-        initAnalyticsExperimentPropertiesIfNeeded()
 
         initialized = true
     }
@@ -539,6 +534,7 @@ class AppInitializer @Inject constructor(
         }
     }
 
+    @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onAuthenticationChanged(event: OnAuthenticationChanged) {
         if (accountStore.hasAccessToken()) {
@@ -642,6 +638,7 @@ class AppInitializer @Inject constructor(
      * enable caching for HttpUrlConnection
      * http://developer.android.com/training/efficient-downloads/redundant_redundant.html
      */
+    @Suppress("SwallowedException")
     private fun enableHttpResponseCache(context: Context) {
         try {
             val httpCacheDir = File(context.cacheDir, "http")
@@ -679,11 +676,6 @@ class AppInitializer @Inject constructor(
             }
         })
         EmojiCompat.init(config)
-    }
-
-    /* If default tab experiment is running, pass along to tracker */
-    private fun initAnalyticsExperimentPropertiesIfNeeded() {
-        mySiteDefaultTabExperiment.checkAndSetTrackingPropertiesIfNeeded()
     }
 
     @Suppress("unused")
@@ -972,7 +964,7 @@ class AppInitializer @Inject constructor(
          * AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/44.0.2403.119 Mobile
          * Safari/537.36"
          */
-        val defaultUserAgent: String by lazy {
+        @Suppress("SwallowedException") val defaultUserAgent: String by lazy {
             try {
                 WebSettings.getDefaultUserAgent(context)
             } catch (e: AndroidRuntimeException) {

@@ -25,8 +25,8 @@ import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.SnackbarItem.Info
 import org.wordpress.android.widgets.WPSnackbarWrapper
 
-private val TEST_MESSAGE_TEMPLATE = "This is test message number "
-private val SNACKBAR_DURATION_MS = 500L
+private const val TEST_MESSAGE_TEMPLATE = "This is test message number "
+private const val SNACKBAR_DURATION_MS = 500L
 
 @ExperimentalCoroutinesApi
 @InternalCoroutinesApi
@@ -78,7 +78,6 @@ class SnackbarSequencerConcurrentTest {
     fun `snackbars are not shown until previous duration elapsed`() = runBlockingTest(coroutineContext) {
         // Given
         val items = getItems(2)
-        val durations = getDurations(items)
 
         // When
         for (item in items) {
@@ -112,12 +111,6 @@ class SnackbarSequencerConcurrentTest {
         advanceTimeBy(SNACKBAR_DURATION_MS * items.size)
         verify(wpSnackbar, times(QUEUE_SIZE_LIMIT + 1)).show()
         verifyNoMoreInteractions(wpSnackbar)
-    }
-
-    private fun getDurations(items: List<SnackbarItem>): List<Long> {
-        return items.map {
-            it.getSnackbarDurationMs()
-        }
     }
 
     private fun getItems(numItems: Int): List<SnackbarItem> {

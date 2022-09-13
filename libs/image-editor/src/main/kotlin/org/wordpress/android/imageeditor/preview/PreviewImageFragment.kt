@@ -257,6 +257,7 @@ class PreviewImageFragment : Fragment(R.layout.preview_image_fragment) {
         ToastUtils.showToast(context, getString(errorResId), Duration.LONG)
     }
 
+    @Suppress("ForbiddenComment")
     private fun navigateToCropScreenWithFileInfo(fileInfo: Triple<String, String?, Boolean>) {
         val (inputFilePath, outputFileExtension, shouldReturnToPreviewScreen) = fileInfo
 

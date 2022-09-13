@@ -1,0 +1,4 @@
+20,6:
+- Artık özel karakterler içeren e-posta adreslerini kullanarak uygulamaya giriş yapabilirsiniz.
+- Temaları önyüklemek artık Site Oluşturma sırasında uygulamanın çökmesine sebep olmuyor. Vay be.
+- Güçlendirme—Jetpack Destekli başlığı arama sonuçları listelerinde gösterilir.

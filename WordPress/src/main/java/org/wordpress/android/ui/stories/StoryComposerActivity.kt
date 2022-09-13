@@ -683,6 +683,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         }
     }
 
+    @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onStoryLoadEnd(event: StoryLoadEnd) {
         // once the Story has been loaded by the Composer, we should mark the composing session start as the

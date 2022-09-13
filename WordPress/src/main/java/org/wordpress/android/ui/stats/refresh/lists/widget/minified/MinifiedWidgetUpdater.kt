@@ -91,6 +91,7 @@ class MinifiedWidgetUpdater
 
     override fun componentName(context: Context) = ComponentName(context, StatsMinifiedWidget::class.java)
 
+    @Suppress("LongParameterList")
     private fun showValue(
         appWidgetManager: AppWidgetManager,
         appWidgetId: Int,
@@ -106,6 +107,7 @@ class MinifiedWidgetUpdater
         }
     }
 
+    @Suppress("LongParameterList")
     private fun loadValue(
         appWidgetManager: AppWidgetManager,
         appWidgetId: Int,

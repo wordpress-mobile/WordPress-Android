@@ -1,11 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-07-08 14:35:29+0000
+Translation-Revision-Date: 2022-09-02 15:09:55+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: pt_BR
 -->
 <resources>
+    <string name="login_magic_links_email_sent">Acabamos de enviar um link mágico para</string>
+    <string name="login_magic_links_sent_label_short">Verifique seu e-mail neste dispositivo.</string>
+    <string name="or_use_password">Usar senha para fazer login</string>
+    <string name="wp_jetpack_powered_notifications_powered_by_jetpack_caption">Receba atualizações em tempo real de novos comentários, tráfego no site, relatórios de segurança e muito mais.</string>
+    <string name="wp_jetpack_powered_notifications_powered_by_jetpack">As Notificações são uma tecnologia Jetpack</string>
+    <string name="wp_jetpack_powered_stats_powered_by_jetpack_caption">Observe o tráfego do seu site crescer e conheça seu público com o novo design das estatísticas e informações, já disponível no novo aplicativo do Jetpack.</string>
+    <string name="wp_jetpack_powered_stats_powered_by_jetpack">As Estatísticas são uma tecnologia Jetpack</string>
+    <string name="wp_jetpack_powered_reader_powered_by_jetpack_caption">Encontre, siga e curta todos seus sites e posts favoritos com o Leitor, já disponível no novo aplicativo do Jetpack.</string>
+    <string name="wp_jetpack_powered_reader_powered_by_jetpack">O Leitor é uma tecnologia Jetpack</string>
+    <string name="wp_jetpack_powered_features">O novo aplicativo Jetpack tem estatísticas, leitor, notificações e muito mais que tornam seu WordPress melhor.</string>
+    <string name="wp_jetpack_powered_better_with_jetpack">WordPress é melhor com Jetpack</string>
+    <string name="gutenberg_native_upgrade_your_plan_to_use_video_covers">Faça upgrade do seu plano para usar capas de vídeo</string>
+    <string name="gutenberg_native_upgrade_your_plan_to_upload_audio">Faça upgrade do seu plano para enviar arquivos de áudio</string>
+    <string name="gutenberg_native_jetpack_powered">Com tecnologia Jetpack</string>
+    <string name="gutenberg_native_invalid_url">URL inválida.</string>
+    <string name="gutenberg_native_gradient">Gradiente</string>
+    <string name="wp_jetpack_continue_to_notifications">Continue para Notificações</string>
+    <string name="wp_jetpack_continue_to_stats">Continue para Estatísticas</string>
+    <string name="wp_jetpack_continue_to_reader">Continue para Leitor</string>
+    <string name="wp_jetpack_get_new_jetpack_app">Obtenha o novo aplicativo do Jetpack</string>
+    <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery">Problema ao exibir o bloco. \nToque para tentar restaurá-lo.</string>
+    <string name="weekly_roundup_notification_text_views_and_comments">Na semana passada, você recebeu %1$s visualizações e %2$s comentários</string>
+    <string name="weekly_roundup_notification_text_views_and_likes">Na semana passada, você recebeu %1$s visualizações e %2$s curtidas</string>
+    <string name="weekly_roundup_notification_text_views_only">Na semana passada, você recebeu %1$s visualizações.</string>
+    <string name="weekly_roundup_notification_text_all">Na semana passada, você recebeu %1$s visualizações, %2$s curtidas e %3$s comentários.</string>
+    <string name="stats_revamp_v2_update_alert_message">Atualização para Novas Informações para ajudar você a entender o desempenho do seu conteúdo e o que está atraindo o seu público.</string>
+    <string name="stats_insights_like_guide_card">⭐️ Seu post mais recente, %1$s, recebeu %2$s curtida.</string>
     <string name="wp_jetpack_powered">Recurso do Jetpack</string>
     <string name="qrcode_auth_flow_content_description">Imagem indicando que a verificação do código de acesso está em andamento</string>
     <string name="qrcode_auth_flow_error_content_description">Imagem indicando um erro</string>
@@ -27,16 +54,11 @@ Language: pt_BR
     <string name="qrcode_auth_flow_validated_subtitle">Leia apenas códigos QR retirados diretamente do seu navegador da web. Nunca leia um código enviado a você por outra pessoa.</string>
     <string name="qrcode_auth_flow_validated_default_title">Você está tentando acessar no seu navegador da web perto de %1$s?</string>
     <string name="qrcode_auth_flow_validated_title">Você está tentando acessar em %1$s perto de %2$s?</string>
-    <string name="stats_revamp_v2_intro_secondary_button_text">Lembre-me depois</string>
-    <string name="stats_revamp_v2_intro_primary_button_text">Tente agora</string>
-    <string name="stats_revamp_v2_intro_content_note">Saiba mais em Meu site &gt; Estatísticas &gt; Informações</string>
-    <string name="stats_revamp_v2_intro_content">As informações ajudam você a entender o desempenho do seu conteúdo e o que está atraindo o seu público.</string>
     <string name="stats_revamp_v2_intro_header_title">Atualização de informações</string>
     <string name="stats_insights_followers_guide_card">💡Comentar em outros blogs é uma ótima maneira de conquistar seguidores para o seu novo site.</string>
     <string name="stats_insights_comments_guide_card">💡Toque em \'VISUALIZAR MAIS\' para ver seus principais comentaristas.</string>
     <string name="stats_insights_latest_post_empty">Confira novamente quando você tiver feito seu primeiro post!</string>
     <string name="stats_insights_views_and_visitors_visitors_empty_state">Confira nossas principais dicas para aumentar suas visualizações e tráfego %1$s</string>
-    <string name="stats_view_publicize">Conexões nas redes sociais</string>
     <string name="stats_action_card_schedule_post_message">✍️ Agende para publicar seus rascunhos no melhor momento para alcançar seu público.</string>
     <string name="stats_action_card_blogging_reminders_message">💡Publicar de forma consistente é uma ótima maneira de atrair seu público. Adicione um lembrete para você manter o ritmo.</string>
     <string name="stats_action_card_grow_audience_message">💡Aumente o nível de seu conteúdo com nosso curso de &lt;i&gt;Introdução à arte de publicar&lt;/i&gt; conduzido por especialistas.</string>
@@ -72,7 +94,7 @@ Language: pt_BR
     <string name="me_btn_scan_login_code">Examinar código de acesso</string>
     <string name="stats_insights_likes_guide_card">⭐️ Seu post mais recente, %1$s, recebeu %2$s curtidas.</string>
     <string name="stats_most_popular_percent_views_empty">Atividade insuficiente. Confira mais tarde quando o seu site tiver mais visitantes!</string>
-    <string name="stats_total_followers_content_description">%1s, %2s do total de seguidores</string>
+    <string name="stats_total_followers_content_description">%1$s, %2$s%% do total de seguidores</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
     <string name="pages_copy_link">Copiar link</string>
     <string name="quick_start_completed_tour_title">Parabéns! Você conhece o caminho&lt;br/&gt;</string>
@@ -396,7 +418,6 @@ Language: pt_BR
     <string name="me_btn_share">Compartilhe o WordPress com um amigo</string>
     <string name="my_site_quick_actions_title">Links rápidos</string>
     <string name="my_site_btn_domains">Domínios</string>
-    <string name="weekly_roundup_notification_text">Seu site teve %1$d visualizações, %2$d curtidas e %3$d comentários.</string>
     <string name="weekly_roundup_notification_title">Resumo semanal: %s</string>
     <string name="blogging_reminders_notification_time">Horário da notificação</string>
     <string name="blogging_reminders_epilogue_body_everyday_with_time">Você receberá lembretes para publicar &lt;b&gt;diariamente&lt;/b&gt; às &lt;b&gt;%s&lt;/b&gt;.</string>
@@ -505,6 +526,7 @@ Language: pt_BR
     <string name="gutenberg_native_s_has_no_url_set">URL não definido para %s</string>
     <string name="gutenberg_native_s_converted_to_regular_blocks">%s convertido para blocos normais</string>
     <string name="gutenberg_native_s_block">Bloco %s </string>
+    <string name="gutenberg_native_opacity">Opacidade</string>
     <string name="gutenberg_native_media_options">Opções de mídia</string>
     <string name="gutenberg_native_invalid_url_audio_file_not_found">URL inválido. Arquivo de áudio não encontrado.</string>
     <string name="gutenberg_native_insert_crosspost">Inserir post cruzado</string>
@@ -1214,7 +1236,6 @@ Language: pt_BR
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">Toque duas vezes para ir para as configurações de cor</string>
     <string name="reader_empty_followed_blogs_description">Ao seguir sites, você verá o conteúdo deles aqui</string>
     <string name="feature_announcement_find_out_mode">Saiba mais</string>
-    <string name="feature_announcement_dialog_label">O que há de novo no WordPress</string>
     <string name="insert_label_with_count">Inserir %d</string>
     <string name="crop">recortar</string>
     <string name="error_failed_to_load_into_file">Falha ao carregar para um arquivo. Tente novamente.</string>
@@ -1313,7 +1334,6 @@ Language: pt_BR
     <string name="post_list_tab_trashed_posts">Na lixeira</string>
     <string name="post_list_tab_scheduled_posts">Agendado</string>
     <string name="post_list_tab_published_posts">Publicado</string>
-    <string name="sharing_facebook_account_must_have_pages">A conexão com o Facebook não encontrou nenhuma página. O Publicize não consegue se conectar a perfis do Facebook, apenas a páginas públicas.</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">Não conectado</string>
     <string name="notifications_tab_title_likes">Curtidas</string>
     <string name="notifications_tab_title_follows">Seguindo</string>
@@ -1540,7 +1560,6 @@ Language: pt_BR
     <string name="share_desc">Compartilhar</string>
     <string name="navigate_back_desc">Voltar</string>
     <string name="navigate_forward_desc">Avançar</string>
-    <string name="calendar_scheduled_post_description">\"%1$s\" agendado para publicação em \"%2$s\" em seu aplicativo do WordPress \n%3$s</string>
     <string name="calendar_scheduled_post_title">Post do WordPress agendado: \"%s\"</string>
     <string name="notification_post_will_be_published_in_ten_minutes">\"%s\" será publicado em 10 minutos</string>
     <string name="notification_post_will_be_published_in_one_hour">\"%s\" será publicado em uma hora</string>
@@ -1712,7 +1731,6 @@ Language: pt_BR
     <string name="app_rating_rate_later">Mais tarde</string>
     <string name="app_rating_rate_now">Avalie agora</string>
     <string name="app_rating_message">Bom te ver de novo! Se você estiver gostando do aplicativo, deixe uma avaliação no Google Play Store.</string>
-    <string name="app_rating_title">Curtindo o WordPress?</string>
     <string name="editor_post_converted_back_to_draft">Post convertido para rascunho</string>
     <string name="stats_insights_posting_activity">Atividade de publicações</string>
     <string name="stats_site_not_loaded_yet">O site não foi carregado ainda</string>
@@ -2442,6 +2460,7 @@ Language: pt_BR
     <string name="requesting_otp">Solicitando um código de verificação via SMS.</string>
     <string name="login_text_otp">Envie-me uma mensagem de texto com o código em vez disso.</string>
     <string name="enter_verification_code">Quase lá! Digite o código de verificação do seu aplicativo de autenticação.</string>
+    <string name="open_mail">Abrir o Mail</string>
     <string name="next">Próximo</string>
     <string name="enter_email_wordpress_com">Fazer login no WordPress.com usando um endereço de e-mail para gerenciar todos os seus sites WordPress.</string>
     <string name="image_optimization_promo_desc">A otimização de imagens as deixa mais leves, tornando seu upload mais rápido.\n\nVocê pode alterar essa funcionalidade a qualquer momento nas configurações do site.</string>
@@ -2539,10 +2558,8 @@ Language: pt_BR
     <string name="share_btn_disconnect">Desconectar</string>
     <string name="share_btn_connect">Conectar</string>
     <string name="connection_service_description">Conectar para compartilhar automaticamente os posts do seu blog em %s.</string>
-    <string name="connection_service_label">Divulgar em %s</string>
     <string name="connected_accounts_label">Contas conectadas</string>
     <string name="connections_description">Conecte seus serviços de mídias sociais para automaticamente compartilhar novos posts com seus amigos.</string>
-    <string name="connections_label">Conexões</string>
     <string name="sharing">Compartilhamento</string>
     <string name="tabbar_accessibility_label_notifications">Notificações. Gerencie suas notificações.</string>
     <string name="tabbar_accessibility_label_reader">Leitor. Siga conteúdo de outros sites.</string>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Translation-Revision-Date: 2022-07-12 09:54:03+0000
+Plural-Forms: nplurals=1; plural=0;
+Generator: GlotPress/2.4.0-alpha
+Language: zh_CN
+-->
+<resources>
+    <string name="me_btn_about">关于 Jetpack</string>
+    <string name="sign_out_wpcom_confirm_with_no_changes">注销 Jetpack？</string>
+    <string name="me_disconnect_from_wordpress_com">注销 Jetpack</string>
+    <string name="support_ticket_subject">Android 版 Jetpack 支持</string>
+    <string name="login_magic_links_sent_label">在此设备上查看您的电子邮件，并轻点您从 Jetpack.com 收到的电子邮件中的链接。</string>
+    <string name="continue_with_wpcom_no_signup">使用 WordPress.com 帐户登录</string>
+    <string name="app_tagline">强大的站点安全性和性能始终如影随形</string>
+    <string name="post_signup_interstitial_title">欢迎使用 Jetpack</string>
+    <string name="app_title">Android 版 Jetpack</string>
+</resources>

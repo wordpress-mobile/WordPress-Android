@@ -11,6 +11,7 @@ import android.widget.Spinner;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDialogFragment;
+import androidx.appcompat.view.ContextThemeWrapper;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
@@ -48,7 +49,8 @@ public class AddCategoryFragment extends AppCompatDialogFragment {
 
         initSite(savedInstanceState);
 
-        AlertDialog.Builder builder = new MaterialAlertDialogBuilder(getActivity());
+        AlertDialog.Builder builder =
+                new MaterialAlertDialogBuilder(new ContextThemeWrapper(getActivity(), R.style.PostSettingsTheme));
         // Get the layout inflater
         LayoutInflater inflater = getActivity().getLayoutInflater();
 

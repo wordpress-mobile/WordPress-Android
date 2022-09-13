@@ -65,7 +65,7 @@ class PostListMainViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when started, it uploads all local drafts`() {
-        viewModel.start(site, PostListRemotePreviewState.NONE, currentBottomSheetPostId, editPostRepository, mock())
+        viewModel.start(site, PostListRemotePreviewState.NONE, currentBottomSheetPostId, editPostRepository)
 
         verify(uploadStarter, times(1)).queueUploadFromSite(eq(site))
     }
@@ -73,7 +73,7 @@ class PostListMainViewModelTest : BaseUnitTest() {
     @Test
     fun `calling onSearch() updates search query`() {
         val testSearch = "keyword"
-        viewModel.start(site, PostListRemotePreviewState.NONE, currentBottomSheetPostId, editPostRepository, mock())
+        viewModel.start(site, PostListRemotePreviewState.NONE, currentBottomSheetPostId, editPostRepository)
 
         var searchQuery: String? = null
         viewModel.searchQuery.observeForever {
@@ -87,7 +87,7 @@ class PostListMainViewModelTest : BaseUnitTest() {
 
     @Test
     fun `expanding and collapsing search triggers isSearchExpanded`() {
-        viewModel.start(site, PostListRemotePreviewState.NONE, currentBottomSheetPostId, editPostRepository, mock())
+        viewModel.start(site, PostListRemotePreviewState.NONE, currentBottomSheetPostId, editPostRepository)
 
         var isSearchExpanded = false
         viewModel.isSearchExpanded.observeForever {
@@ -105,7 +105,7 @@ class PostListMainViewModelTest : BaseUnitTest() {
     fun `expanding search after configuration change preserves search query`() {
         val testSearch = "keyword"
 
-        viewModel.start(site, PostListRemotePreviewState.NONE, currentBottomSheetPostId, editPostRepository, mock())
+        viewModel.start(site, PostListRemotePreviewState.NONE, currentBottomSheetPostId, editPostRepository)
 
         var searchQuery: String? = null
         viewModel.searchQuery.observeForever {
@@ -128,7 +128,7 @@ class PostListMainViewModelTest : BaseUnitTest() {
 
     @Test
     fun `search is using compact view mode independently from normal post list`() {
-        viewModel.start(site, PostListRemotePreviewState.NONE, currentBottomSheetPostId, editPostRepository, mock())
+        viewModel.start(site, PostListRemotePreviewState.NONE, currentBottomSheetPostId, editPostRepository)
         assertThat(viewModel.viewLayoutType.value).isEqualTo(STANDARD) // default value
 
         var viewLayoutType: PostListViewLayoutType? = null
@@ -151,7 +151,7 @@ class PostListMainViewModelTest : BaseUnitTest() {
         val bottomSheetPostId = LocalId(2)
 
         // act
-        viewModel.start(site, PostListRemotePreviewState.NONE, bottomSheetPostId, editPostRepository, mock())
+        viewModel.start(site, PostListRemotePreviewState.NONE, bottomSheetPostId, editPostRepository)
 
         // assert
         verify(editPostRepository, times(1)).loadPostByLocalPostId(any())
@@ -163,7 +163,7 @@ class PostListMainViewModelTest : BaseUnitTest() {
         val bottomSheetPostId = LocalId(0)
 
         // act
-        viewModel.start(site, PostListRemotePreviewState.NONE, bottomSheetPostId, editPostRepository, mock())
+        viewModel.start(site, PostListRemotePreviewState.NONE, bottomSheetPostId, editPostRepository)
 
         // assert
         verify(editPostRepository, times(0)).loadPostByLocalPostId(any())
@@ -178,7 +178,7 @@ class PostListMainViewModelTest : BaseUnitTest() {
         val action = { _: PostModel -> true }
 
         // act
-        viewModel.start(site, PostListRemotePreviewState.NONE, currentBottomSheetPostId, editPostRepository, mock())
+        viewModel.start(site, PostListRemotePreviewState.NONE, currentBottomSheetPostId, editPostRepository)
         // simulates the Publish Date, Status & Visibility or Tags being updated in the bottom sheet.
         editPostRepository.updateAsync(action, null)
 
@@ -190,7 +190,7 @@ class PostListMainViewModelTest : BaseUnitTest() {
     fun `if onFabClicked then _onFabClicked is called`() {
         whenever(site.isWPCom).thenReturn(true)
 
-        viewModel.start(site, PostListRemotePreviewState.NONE, currentBottomSheetPostId, editPostRepository, mock())
+        viewModel.start(site, PostListRemotePreviewState.NONE, currentBottomSheetPostId, editPostRepository)
         viewModel.fabClicked()
 
         assertThat(viewModel.onFabClicked.value?.peekContent()).isNotNull
@@ -200,7 +200,7 @@ class PostListMainViewModelTest : BaseUnitTest() {
     fun `if onFabLongPressed then onFabLongPressedForCreateMenu is called`() {
         whenever(site.isWPCom).thenReturn(true)
 
-        viewModel.start(site, PostListRemotePreviewState.NONE, currentBottomSheetPostId, editPostRepository, mock())
+        viewModel.start(site, PostListRemotePreviewState.NONE, currentBottomSheetPostId, editPostRepository)
         viewModel.onFabLongPressed()
 
         assertThat(viewModel.onFabLongPressedForCreateMenu.value?.peekContent()).isNotNull

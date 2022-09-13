@@ -1,11 +1,13 @@
 package org.wordpress.android.ui.reader
 
 import android.os.Bundle
+import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.tracker.ReaderTrackerType.MAIN_READER
+import org.wordpress.android.util.JetpackBrandingUtils
 import javax.inject.Inject
 
 /**
@@ -13,8 +15,10 @@ import javax.inject.Inject
  * ReaderPostListFragment was out-of-scope. This workaround enabled us writing new "discover" and "following" screens
  * into new tested classes without requiring us to change the search behavior.
  */
+@AndroidEntryPoint
 class ReaderSearchActivity : LocaleAwareActivity() {
     @Inject lateinit var readerTracker: ReaderTracker
+    @Inject lateinit var jetpackBrandingUtils: JetpackBrandingUtils
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

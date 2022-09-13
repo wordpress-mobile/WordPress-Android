@@ -1209,14 +1209,6 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "stats_widget_removed";
             case STATS_WIDGET_TAPPED:
                 return "stats_widget_tapped";
-            case STATS_REVAMP_V2_ANNOUNCEMENT_SHOWN:
-                return "stats_revamp_v2_announcement_shown";
-            case STATS_REVAMP_V2_ANNOUNCEMENT_CONFIRMED:
-                return "stats_revamp_v2_announcement_confirmed";
-            case STATS_REVAMP_V2_ANNOUNCEMENT_DISMISSED:
-                return "stats_revamp_v2_announcement_dismissed";
-                case STATS_REVAMP_V2_ANNOUNCEMENT_REMIND_ME_TAPPED:
-                return "stats_revamp_v2_announcement_remind_me_tapped";
             case PUSH_NOTIFICATION_RECEIVED:
                 return "push_notification_received";
             case PUSH_NOTIFICATION_TAPPED:
@@ -2227,8 +2219,6 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "my_site_dashboard_shown";
             case MY_SITE_SITE_MENU_SHOWN:
                 return "my_site_site_menu_shown";
-            case MY_SITE_DEFAULT_TAB_EXPERIMENT_VARIANT_ASSIGNED:
-                return "my_site_default_tab_experiment_variant_assigned";
             case APP_SETTINGS_INITIAL_SCREEN_CHANGED:
                 return "app_settings_initial_screen_changed";
             case CHANGE_USERNAME_DISPLAYED:
@@ -2389,6 +2379,20 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "qrlogin_verify_failed";
             case QRLOGIN_VERIFY_SCAN_AGAIN:
                 return "qrlogin_verify_scan_again";
+            case JETPACK_POWERED_BANNER_TAPPED:
+                return "jetpack_powered_banner_tapped";
+            case JETPACK_POWERED_BADGE_TAPPED:
+                return "jetpack_powered_badge_tapped";
+            case JETPACK_POWERED_BOTTOM_SHEET_GET_JETPACK_APP_TAPPED:
+                return "jetpack_powered_bottom_sheet_get_jetpack_app_tapped";
+            case JETPACK_POWERED_BOTTOM_SHEET_CONTINUE_TAPPED:
+                return "jetpack_powered_bottom_sheet_continue_tapped";
+            case SHARED_LOGIN_START:
+                return "shared_login_start";
+            case SHARED_LOGIN_SUCCESS:
+                return "shared_login_success";
+            case SHARED_LOGIN_FAILED:
+                return "shared_login_failed";
         }
         return null;
     }

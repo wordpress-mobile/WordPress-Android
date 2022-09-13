@@ -22,7 +22,6 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import javax.inject.Inject
 
-@Suppress("TooManyFunctions")
 class PostCardBuilder @Inject constructor(
     private val localeManagerWrapper: LocaleManagerWrapper,
     private val appLogWrapper: AppLogWrapper

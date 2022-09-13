@@ -9,10 +9,10 @@
     android:paddingTop="@dimen/margin_large">
 
     <com.google.android.material.button.MaterialButton
+        android:id="@+id/jetpack_powered_badge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:enabled="false"
         android:importantForAccessibility="no"
         android:paddingEnd="15dp"
         android:paddingStart="5dp"

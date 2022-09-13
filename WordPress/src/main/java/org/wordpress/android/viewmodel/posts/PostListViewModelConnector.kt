@@ -6,6 +6,7 @@ import org.wordpress.android.ui.posts.PostActionHandler
 import org.wordpress.android.ui.posts.PostListType
 import org.wordpress.android.ui.posts.PostModelUploadStatusTracker
 
+@Suppress("LongParameterList")
 class PostListViewModelConnector(
     val site: SiteModel,
     val postListType: PostListType,

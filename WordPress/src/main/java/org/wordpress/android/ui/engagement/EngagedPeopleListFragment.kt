@@ -136,6 +136,7 @@ class EngagedPeopleListFragment : Fragment() {
         viewModel.start(listScenario!!)
     }
 
+    @Suppress("ForbiddenComment")
     private fun manageNavigation(event: EngagedListNavigationEvent) {
         with(requireActivity()) {
             if (this.isFinishing) return@with

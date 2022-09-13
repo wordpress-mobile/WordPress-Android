@@ -3,10 +3,12 @@ package org.wordpress.android.ui.activitylog.detail
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
+import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.databinding.ActivityLogDetailActivityBinding
 import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.RequestCodes
 
+@AndroidEntryPoint
 class ActivityLogDetailActivity : LocaleAwareActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

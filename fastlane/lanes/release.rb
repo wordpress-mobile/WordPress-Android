@@ -63,7 +63,7 @@ platform :android do
     push_to_git_remote
 
     new_version = android_get_app_version()
-    trigger_release_build(branch_to_build: "release/#{new_version}")
+    trigger_beta_build(branch_to_build: "release/#{new_version}")
   end
 
   #####################################################################################
@@ -88,10 +88,10 @@ platform :android do
     update_frozen_strings_for_translation
     download_translations()
     android_bump_version_beta()
-    return unless UI.confirm('Ready for CI build')
+    next unless UI.confirm('Ready for CI build')
 
     new_version = android_get_app_version()
-    trigger_release_build(branch_to_build: "release/#{new_version}")
+    trigger_beta_build(branch_to_build: "release/#{new_version}")
   end
 
   #####################################################################################
@@ -196,20 +196,41 @@ platform :android do
   end
 
   #####################################################################################
+  # trigger_beta_build
+  # -----------------------------------------------------------------------------------
+  # This lane triggers a beta build using the `.buildkite/beta-builds.yml` pipeline.
+  # -----------------------------------------------------------------------------------
+  # Usage:
+  # bundle exec fastlane trigger_beta_build branch_to_build:<branch_name>
+  #
+  #####################################################################################
+  lane :trigger_beta_build do |options|
+    buildkite_trigger_build(
+      buildkite_organization: 'automattic',
+      buildkite_pipeline: 'wordpress-android',
+      branch: options[:branch_to_build] || git_branch,
+      pipeline_file: 'beta-builds.yml',
+      message: 'Beta Builds'
+    )
+  end
+
+  #####################################################################################
   # trigger_release_build
   # -----------------------------------------------------------------------------------
-  # This lane triggers a stable release build on CI
+  # This lane triggers a release build using the `.buildkite/release-builds.yml`
+  # pipeline.
   # -----------------------------------------------------------------------------------
   # Usage:
   # bundle exec fastlane trigger_release_build branch_to_build:<branch_name>
   #
   #####################################################################################
   lane :trigger_release_build do |options|
-    circleci_trigger_job(
-      circle_ci_token: ENV['CIRCLE_CI_AUTH_TOKEN'],
-      repository: REPOSITORY_NAME,
-      branch: options[:branch_to_build],
-      job_params: { 'release_build' => true }
+    buildkite_trigger_build(
+      buildkite_organization: 'automattic',
+      buildkite_pipeline: 'wordpress-android',
+      branch: options[:branch_to_build] || git_branch,
+      pipeline_file: 'release-builds.yml',
+      message: 'Release Builds'
     )
   end
 
@@ -225,14 +246,14 @@ platform :android do
   # bundle exec fastlane create_gh_release [app:<wordpress|jetpack>] [version:<Hash{name,code}>] [prerelease:<true|false>]
   #
   # Examples:
-  # bundle exec fastlane create_gh_release     # Guesses prerelease status based on version name. Includes existing assets for WPAlpha+WPBeta+JPBeta
-  # bundle exec fastlane create_gh_release app:wordpress prerelease:true                        # Includes existing assets for WPAlpha+WPBeta
+  # bundle exec fastlane create_gh_release     # Guesses prerelease status based on version name. Includes existing assets for WPBeta+JPBeta
+  # bundle exec fastlane create_gh_release app:wordpress prerelease:true                        # Includes existing assets for WPBeta
   # bundle exec fastlane create_gh_release version:{name:12.3-rc-4} prerelease:true             # Includes existing assets for WPBeta+JPBeta 12.3-rc-4
   # bundle exec fastlane create_gh_release app:jetpack version:{name:12.3-rc-4} prerelease:true # Includes only existing asset for JPBeta 12.3-rc-4
   #####################################################################################
   lane :create_gh_release do |options|
     apps = options[:app].nil? ? ['wordpress', 'jetpack'] : [get_app_name_option!(options)]
-    versions = options[:version].nil? ? [android_get_alpha_version(), android_get_release_version()] : [options[:version]]
+    versions = options[:version].nil? ? [android_get_release_version()] : [options[:version]]
 
     release_assets = apps.flat_map do |app|
       versions.flat_map { |vers| bundle_file_path(app, vers) }

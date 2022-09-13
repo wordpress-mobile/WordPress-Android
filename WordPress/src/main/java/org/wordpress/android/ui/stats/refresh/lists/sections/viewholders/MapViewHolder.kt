@@ -116,6 +116,7 @@ class MapViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         return toHexString(ContextCompat.getColor(context, colorId))
     }
 
+    @Suppress("ImplicitDefaultLocale")
     private fun toHexString(@ColorInt color: Int): String {
         return String.format("%06X", (color and 0xffffff))
     }

@@ -26,7 +26,6 @@ public class BlockEditorTests extends BaseTest {
         wpLogin();
     }
 
-    String mTitle = "Hello Espresso!";
     String mPostText = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
     String mCategory = "Wedding";
     String mTag = "Tag " + Instant.now().toEpochMilli();
@@ -41,13 +40,15 @@ public class BlockEditorTests extends BaseTest {
 
     @Test
     public void publishSimplePost() {
+        String title = "publishSimplePost";
+
         new MySitesPage()
                 .go()
                 .startNewPost();
 
         new BlockEditorPage()
                 .waitForTitleDisplayed()
-                .enterTitle(mTitle)
+                .enterTitle(title)
                 .enterParagraphText(mPostText)
                 .publish()
                 .verifyPostPublished();
@@ -55,13 +56,15 @@ public class BlockEditorTests extends BaseTest {
 
     @Test
     public void publishFullPost() {
+        String title = "publishFullPost";
+
         new MySitesPage()
                 .go()
                 .startNewPost();
 
         new BlockEditorPage()
                 .waitForTitleDisplayed()
-                .enterTitle(mTitle)
+                .enterTitle(title)
                 .enterParagraphText(mPostText)
                 .addImage()
                 .addPostSettings(mCategory, mTag)
@@ -73,13 +76,15 @@ public class BlockEditorTests extends BaseTest {
 
     @Test
     public void blockEditorCanDisplayElementAddedInHtmlMode() {
+        String title = "blockEditorCanDisplayElementAddedInHtmlMode";
+
         new MySitesPage()
                 .go()
                 .startNewPost();
 
         new BlockEditorPage()
                 .waitForTitleDisplayed()
-                .enterTitle(mTitle)
+                .enterTitle(title)
                 .switchToHtmlMode()
                 .enterParagraphText(mHtmlPost)
                 .switchToVisualMode()

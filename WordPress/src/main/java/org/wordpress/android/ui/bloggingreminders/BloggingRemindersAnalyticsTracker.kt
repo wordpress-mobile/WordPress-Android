@@ -17,7 +17,6 @@ import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel.Scr
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
 
-@Suppress("TooManyFunctions")
 class BloggingRemindersAnalyticsTracker @Inject constructor(
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val siteStore: SiteStore

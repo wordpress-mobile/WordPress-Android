@@ -118,6 +118,7 @@ class ReaderDiscoverViewModelTest {
     private lateinit var viewModel: ReaderDiscoverViewModel
 
     @Before
+    @Suppress("LongMethod")
     fun setUp() = test {
         viewModel = ReaderDiscoverViewModel(
                 uiStateBuilder,
@@ -661,6 +662,7 @@ class ReaderDiscoverViewModelTest {
         this.featuredVideo = id.toString()
     }
 
+    @Suppress("LongParameterList")
     private fun createDummyReaderPostUiState(
         post: ReaderPost,
         onItemRendered: (ReaderCardUiState) -> Unit = mock(),
@@ -743,7 +745,7 @@ class ReaderDiscoverViewModelTest {
     }
 
     private fun createReaderTagList(numOfTags: Int = 1) = ReaderTagList().apply {
-        for (x in 0 until numOfTags) {
+        (0 until numOfTags).forEach {
             add(createReaderTag())
         }
     }

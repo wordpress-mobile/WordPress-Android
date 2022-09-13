@@ -8,7 +8,7 @@ import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.Fragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
-class GutenbergDialogFragment() : AppCompatDialogFragment() {
+class GutenbergDialogFragment : AppCompatDialogFragment() {
     private lateinit var mTag: String
     private lateinit var mMessage: CharSequence
     private lateinit var mPositiveButtonLabel: CharSequence
@@ -101,6 +101,7 @@ class GutenbergDialogFragment() : AppCompatDialogFragment() {
         return builder.create()
     }
 
+    @Suppress("TooGenericExceptionThrown")
     override fun onAttach(context: Context) {
         super.onAttach(context)
         val parentFragment: Fragment? = parentFragment

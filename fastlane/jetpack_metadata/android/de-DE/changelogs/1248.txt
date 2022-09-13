@@ -1,5 +1,0 @@
-20.2:
-- Wir haben die Ansicht „Einsichten“ in den Statistiken deiner Website aktualisiert.
-- Du kannst dich bei deinem Browser mit einem QR-Code im App-Menü „Ich“ anmelden.
-- Du kannst HEIC- und HEIF-Bilder über die Medienauswahl hochladen.
-- Wir haben einen Fehler bezüglich Reader-Themen in anderen Sprachen behoben.

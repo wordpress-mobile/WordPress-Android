@@ -348,6 +348,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
         }
     }
 
+    @Suppress("SwallowedException")
     private fun handleShareClicked(
         post: ReaderPost,
         source: String

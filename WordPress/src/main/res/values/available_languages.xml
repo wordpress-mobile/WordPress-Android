@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--Warning: Auto-generated file, do not edit.-->
-<resources>
-  <string-array name="available_languages" translatable="false">
+<resources xmlns:tools="http://schemas.android.com/tools">
+  <string-array name="available_languages" translatable="false" tools:ignore="InconsistentArrays">
     <item>en_US</item>
     <item>ar</item>
     <item>de</item>

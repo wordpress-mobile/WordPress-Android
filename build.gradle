@@ -8,9 +8,9 @@ plugins {
 }
 
 ext {
-    wordPressUtilsVersion = '2.6.0'
-    wordPressLoginVersion = '0.15.0'
-    gutenbergMobileVersion = 'v1.80.0-alpha2'
+    wordPressUtilsVersion = '2.7.0'
+    wordPressLoginVersion = '0.19.0'
+    gutenbergMobileVersion = 'v1.82.1'
     storiesVersion = '1.4.0'
     aboutAutomatticVersion = '0.0.6'
 
@@ -21,7 +21,7 @@ ext {
     coroutinesVersion = '1.5.2'
     androidxWorkVersion = "2.7.0"
 
-    fluxCVersion = '1.47.0'
+    fluxCVersion = '1.50.0'
 
     appCompatVersion = '1.0.2'
     androidxCoreVersion = '1.3.2'
@@ -54,6 +54,7 @@ ext {
 
 allprojects {
     apply plugin: 'checkstyle'
+    apply plugin: 'io.gitlab.arturbosch.detekt'
 
     repositories {
         google()
@@ -92,18 +93,14 @@ allprojects {
 
     detekt {
         toolVersion = gradle.ext.detektVersion
+        baseline = file("${project.rootDir}/config/detekt/baseline.xml")
         config = files("${project.rootDir}/config/detekt/detekt.yml")
         autoCorrect = false
-        buildUponDefaultConfig = false
+        buildUponDefaultConfig = true
         disableDefaultRuleSets = false
         ignoreFailures = false
-        parallel = false
+        parallel = true
         debug = false
-        reports {
-            html.enabled = true
-            xml.enabled = true
-            txt.enabled = true
-        }
     }
 
     tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
@@ -177,4 +174,8 @@ tasks.register("configureApply") {
     doLast {
         println("Done")
     }
+}
+
+dependencies {
+    detektPlugins "io.gitlab.arturbosch.detekt:detekt-formatting:$gradle.ext.detektVersion"
 }

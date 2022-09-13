@@ -15,7 +15,7 @@ class ImageBlockProcessorTest {
     @Before
     fun before() {
         whenever(mediaFile.mediaId).thenReturn(TestContent.remoteMediaId)
-        whenever(mediaFile.fileURL).thenReturn(TestContent.remoteImageUrl)
+        whenever(mediaFile.optimalFileURL).thenReturn(TestContent.remoteImageUrl)
         processor = ImageBlockProcessor(TestContent.localMediaId, mediaFile)
     }
 

@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.withContext
@@ -97,6 +98,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 @Suppress("LargeClass")
+@HiltViewModel
 class ReaderPostDetailViewModel @Inject constructor(
     private val readerPostCardActionsHandler: ReaderPostCardActionsHandler,
     private val readerUtilsWrapper: ReaderUtilsWrapper,
@@ -148,6 +150,9 @@ class ReaderPostDetailViewModel @Inject constructor(
     val commentSnippetState: LiveData<CommentSnippetUiState> = _commentSnippetState.map { state ->
         postDetailUiStateBuilder.buildCommentSnippetUiState(state, post, ::onCommentSnippetClicked)
     }
+
+    private val _showJetpackPoweredBottomSheet = MutableLiveData<Event<Boolean>>()
+    val showJetpackPoweredBottomSheet: LiveData<Event<Boolean>> = _showJetpackPoweredBottomSheet
 
     /**
      * Post which is about to be reblogged after the user selects a target site.
@@ -288,6 +293,10 @@ class ReaderPostDetailViewModel @Inject constructor(
                 _updateLikesState.value = state
             }
         }
+    }
+
+    fun showJetpackPoweredBottomSheet() {
+        _showJetpackPoweredBottomSheet.value = Event(true)
     }
 
     fun onRefreshCommentsData(blogId: Long, postId: Long) {

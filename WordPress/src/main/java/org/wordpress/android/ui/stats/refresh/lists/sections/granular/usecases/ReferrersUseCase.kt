@@ -48,7 +48,6 @@ import org.wordpress.android.ui.stats.refresh.utils.trackGranular
 import org.wordpress.android.ui.utils.ListItemInteraction.Companion.create
 import org.wordpress.android.util.UrlUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.util.config.StatsRevampV2FeatureConfig
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.widgets.WPSnackbar
 import java.util.Date
@@ -70,7 +69,6 @@ class ReferrersUseCase(
     private val resourceProvider: ResourceProvider,
     private val useCaseMode: UseCaseMode,
     private val popupMenuHandler: ReferrerPopupMenuHandler,
-    private val statsRevampV2FeatureConfig: StatsRevampV2FeatureConfig
 ) : GranularStatefulUseCase<ReferrersModel, SelectedGroup>(
         REFERRERS,
         mainDispatcher,
@@ -123,7 +121,7 @@ class ReferrersUseCase(
             items.add(Empty(R.string.stats_no_data_for_period))
         } else {
             val header = Header(R.string.stats_referrer_label, R.string.stats_referrer_views_label)
-            if (BuildConfig.IS_JETPACK_APP && statsRevampV2FeatureConfig.isEnabled() && useCaseMode == BLOCK_DETAIL) {
+            if (BuildConfig.IS_JETPACK_APP && useCaseMode == BLOCK_DETAIL) {
                 items.add(buildPieChartItem(domainModel))
             }
             items.add(header)
@@ -350,8 +348,7 @@ class ReferrersUseCase(
         private val statsUtils: StatsUtils,
         private val resourceProvider: ResourceProvider,
         private val analyticsTracker: AnalyticsTrackerWrapper,
-        private val popupMenuHandler: ReferrerPopupMenuHandler,
-        private val statsRevampV2FeatureConfig: StatsRevampV2FeatureConfig
+        private val popupMenuHandler: ReferrerPopupMenuHandler
     ) : GranularUseCaseFactory {
         override fun build(granularity: StatsGranularity, useCaseMode: UseCaseMode) =
                 ReferrersUseCase(
@@ -366,8 +363,7 @@ class ReferrersUseCase(
                         statsUtils,
                         resourceProvider,
                         useCaseMode,
-                        popupMenuHandler,
-                        statsRevampV2FeatureConfig
+                        popupMenuHandler
                 )
     }
 

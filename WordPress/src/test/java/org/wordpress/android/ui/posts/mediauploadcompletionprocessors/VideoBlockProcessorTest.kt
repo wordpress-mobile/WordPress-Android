@@ -15,7 +15,7 @@ class VideoBlockProcessorTest {
     @Before
     fun before() {
         whenever(mediaFile.mediaId).thenReturn(TestContent.remoteMediaId)
-        whenever(mediaFile.fileURL).thenReturn(TestContent.remoteVideoUrl)
+        whenever(mediaFile.optimalFileURL).thenReturn(TestContent.remoteVideoUrl)
         processor = VideoBlockProcessor(TestContent.localMediaId, mediaFile)
     }
 

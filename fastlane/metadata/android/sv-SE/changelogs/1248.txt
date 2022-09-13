@@ -1,3 +1,0 @@
-20.2:
-- Du kan nu ladda upp HEIC- och HEIF-bilder till din webbplats via mediaväljaren.
-- Vi har åtgärdat ett fel som gjorde att specialtecken togs bort från läsarämnen på andra språk.

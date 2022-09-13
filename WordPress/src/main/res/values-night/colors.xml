@@ -5,6 +5,7 @@
     <!-- Switch to attribute after dropping support for api 21-23 -->
     <color name="placeholder">#1AFFFFFF</color>
     <color name="p2_author_bg_stroke">#1E1E1E</color>
+    <color name="bottom_bar_notification_badge">@color/background_dark_elevated</color>
 
     <!-- Login Prologue -->
     <color name="promo_indicator_color_default">@color/white_translucent_20</color>
@@ -25,6 +26,7 @@
     <color name="jetpack_banner_background">@color/jetpack_green_90</color>
     <color name="jetpack_banner_divider">@color/gray_80</color>
     <color name="jetpack_badge_background">@color/jetpack_green_90</color>
+    <color name="jetpack_powered_bottom_sheet_background">@color/jetpack_green_100</color>
 
     <!-- Reader -->
 

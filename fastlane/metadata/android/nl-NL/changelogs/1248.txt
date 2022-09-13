@@ -1,3 +1,0 @@
-20.2:
-- Je kunt vanaf nu via de mediakiezer HEIC- en HEIF-afbeeldingen naar je site uploaden.
-- We hebben een fout verholpen waardoor speciale tekens uit lezersonderwerpen in andere talen werden verwijderd.

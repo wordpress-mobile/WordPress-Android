@@ -4,7 +4,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.anyOrNull
-import com.nhaarman.mockitokotlin2.atLeastOnce
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
@@ -48,7 +47,6 @@ import org.wordpress.android.ui.main.MainActionListItem.CreateAction
 import org.wordpress.android.ui.main.MainFabUiState
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
-import org.wordpress.android.ui.mysite.tabs.MySiteDefaultTabExperiment
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.quickstart.QuickStartType
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncement
@@ -61,6 +59,7 @@ import org.wordpress.android.util.config.BloggingPromptsFeatureConfig
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel.FocusPointInfo
 import java.util.Date
 
+@Suppress("LargeClass")
 @RunWith(MockitoJUnitRunner::class)
 @InternalCoroutinesApi
 class WPMainActivityViewModelTest : BaseUnitTest() {
@@ -78,7 +77,6 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     @Mock lateinit var selectedSiteRepository: SelectedSiteRepository
     @Mock lateinit var accountStore: AccountStore
     @Mock lateinit var siteStore: SiteStore
-    @Mock lateinit var mySiteDefaultTabExperiment: MySiteDefaultTabExperiment
     @Mock lateinit var bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig
     @Mock lateinit var bloggingPromptsStore: BloggingPromptsStore
     @Mock lateinit var quickStartType: QuickStartType
@@ -141,7 +139,6 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
                 selectedSiteRepository,
                 accountStore,
                 siteStore,
-                mySiteDefaultTabExperiment,
                 bloggingPromptsFeatureConfig,
                 bloggingPromptsStore,
                 NoDelayCoroutineDispatcher()
@@ -798,15 +795,6 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         whenever(siteStore.hasSite()).thenReturn(false)
 
         assertThat(viewModel.firstSite).isEqualTo(null)
-    }
-
-    @Test
-    fun `given my site default tab experiment, when requested, then check and set for variant is executed `() {
-        startViewModelWithDefaultParameters()
-
-        viewModel.checkAndSetVariantForMySiteDefaultTabExperiment()
-
-        verify(mySiteDefaultTabExperiment, atLeastOnce()).checkAndSetVariantIfNeeded()
     }
 
     @Test

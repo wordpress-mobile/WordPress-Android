@@ -25,7 +25,6 @@ import org.wordpress.android.util.ToastUtils.Duration.SHORT
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
-@Suppress("TooManyFunctions")
 class CategoryDetailFragment : Fragment(R.layout.category_detail_fragment) {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: CategoryDetailViewModel

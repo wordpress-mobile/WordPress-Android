@@ -16,6 +16,7 @@ class WizardManager<T : WizardStep>(
     private val _navigatorLiveData = SingleLiveEvent<T>()
     val navigatorLiveData: LiveData<T> = _navigatorLiveData
 
+    @Suppress("UseCheckOrError")
     fun showNextStep() {
         if (isIndexValid(++currentStepIndex)) {
             _navigatorLiveData.value = steps[currentStepIndex]
@@ -36,6 +37,7 @@ class WizardManager<T : WizardStep>(
         return !isIndexValid(currentStepIndex + 1)
     }
 
+    @Suppress("UseCheckOrError")
     fun stepPosition(T: WizardStep): Int {
         return if (steps.contains(T)) {
             steps.indexOf(T) + 1
@@ -44,6 +46,7 @@ class WizardManager<T : WizardStep>(
         }
     }
 
+    @Suppress("UseCheckOrError")
     fun setCurrentStepIndex(stepIndex: Int) {
         if (!isIndexValid(stepIndex)) {
             throw IllegalStateException("Invalid index.")

@@ -8,4 +8,4 @@ import org.wordpress.android.login.di.LoginServiceModule
 
 @InstallIn(SingletonComponent::class)
 @Module(includes = [LoginFragmentModule::class, LoginServiceModule::class])
-abstract class LoginModule
+interface LoginModule

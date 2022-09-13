@@ -35,7 +35,7 @@ repositories {
 }
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion rootProject.compileSdkVersion
 
     defaultConfig {
         minSdkVersion rootProject.minSdkVersion
@@ -100,4 +100,3 @@ dependencies {
 
     lintChecks 'org.wordpress:lint:1.1.0'
 }
-

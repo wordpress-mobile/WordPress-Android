@@ -19,11 +19,13 @@ import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.RequestCodes
+import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents
 import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents.DownloadBackupFile
 import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents.ShowBackupDownload
 import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents.ShowRestore
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterFragment
+import org.wordpress.android.ui.prefs.EmptyViewRecyclerView
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper
@@ -58,6 +60,7 @@ class ActivityLogListFragment : Fragment(R.layout.activity_log_list_fragment) {
     @Inject lateinit var uiHelpers: UiHelpers
     private lateinit var viewModel: ActivityLogViewModel
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
+    private lateinit var listView: EmptyViewRecyclerView
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -70,6 +73,7 @@ class ActivityLogListFragment : Fragment(R.layout.activity_log_list_fragment) {
         ).get(ActivityLogViewModel::class.java)
 
         with(ActivityLogListFragmentBinding.bind(view)) {
+            listView = logListView
             logListView.layoutManager = LinearLayoutManager(nonNullActivity, RecyclerView.VERTICAL, false)
 
             swipeToRefreshHelper = buildSwipeToRefreshHelper(swipeRefreshLayout) {
@@ -114,6 +118,13 @@ class ActivityLogListFragment : Fragment(R.layout.activity_log_list_fragment) {
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
         restoreDateRangePickerListeners()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (activity is ScrollableViewInitializedListener) {
+            (activity as ScrollableViewInitializedListener).onScrollableViewInitialized(listView.id)
+        }
     }
 
     private fun restoreDateRangePickerListeners() {

@@ -85,6 +85,7 @@ class ActionPerformer
                 else -> null
             }
 
+    @Suppress("DataClassShouldBeImmutable")
     data class PageAction(var remoteId: Long, val event: EventType, val perform: suspend () -> Unit) {
         var onSuccess: (() -> Unit)? = null
         var onError: (() -> Unit)? = null

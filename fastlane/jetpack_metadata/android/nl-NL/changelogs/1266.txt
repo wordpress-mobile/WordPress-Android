@@ -1,0 +1,3 @@
+20.6:
+- Je kunt nu bij de app inloggen met een e-mailadres dat een speciaal teken bevat.
+- De app crasht niet meer als je voorgeladen thema's gebruikt bij site-ontwerp. Gelukkig maar.

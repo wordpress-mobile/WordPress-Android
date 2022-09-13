@@ -227,10 +227,8 @@ Language: ms
     <string name="connection_service_description">Sambung untuk berkongsi kiriman blog anda ke %s secara automatik.</string>
     <string name="share_btn_disconnect">Putuskan</string>
     <string name="share_btn_reconnect">Sambung Semula</string>
-    <string name="connection_service_label">Umumkan ke %s</string>
     <string name="connections_description">Sambung perkhidmatan media sosial kegemaran anda untuk berkongsi kiriman dengan rakan-rakan secara automatik.</string>
     <string name="connected_accounts_label">Akaun yang telah disambung</string>
-    <string name="connections_label">Sambungan</string>
     <string name="tabbar_accessibility_label_notifications">Pemberitahuan. Urus pemberitahuan anda.</string>
     <string name="sharing">Berkongsi</string>
     <string name="tabbar_accessibility_label_reader">Pembaca. Ikut kandungan dari laman lain.</string>

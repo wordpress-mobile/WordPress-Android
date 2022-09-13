@@ -83,7 +83,6 @@ import org.wordpress.android.viewmodel.observeEvent
 import java.io.File
 import javax.inject.Inject
 
-@Suppress("TooManyFunctions")
 class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
         TextInputDialogFragment.Callback,
         QuickStartPromptClickInterface,
@@ -364,10 +363,9 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
     }
 
     private fun showJetpackPoweredBottomSheet() {
-        JetpackPoweredBottomSheetFragment.newInstance().show(
-                requireActivity().supportFragmentManager,
-                JetpackPoweredBottomSheetFragment.TAG
-        )
+        JetpackPoweredBottomSheetFragment
+                .newInstance()
+                .show(requireActivity().supportFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
     }
 
     private fun openQuickStartFullScreenDialog(action: SiteNavigationAction.OpenQuickStartFullScreenDialog) {

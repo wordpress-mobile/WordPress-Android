@@ -1,6 +1,5 @@
 package org.wordpress.android.util.extensions
 
-import android.content.res.Configuration
 import android.os.Build.VERSION
 import android.os.Build.VERSION_CODES
 import android.view.View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
@@ -49,12 +48,3 @@ fun Window.showFullScreen() {
 }
 
 private fun Window.isLightTheme() = !context.resources.configuration.isDarkTheme()
-
-/**
- * Sets the navigation bar color as same as Jetpack banner background color in portrait orientation.
- */
-fun Window.setNavigationBarColorForBanner() {
-    if (context.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
-        navigationBarColor = context.getColor(R.color.jetpack_banner_background)
-    }
-}

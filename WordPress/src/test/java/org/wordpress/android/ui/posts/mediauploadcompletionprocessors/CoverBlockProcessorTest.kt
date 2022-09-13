@@ -17,7 +17,7 @@ class CoverBlockProcessorTest {
     @Before
     fun before() {
         whenever(mediaFile.mediaId).thenReturn(TestContent.remoteMediaId)
-        whenever(mediaFile.fileURL).thenReturn(TestContent.remoteImageUrl)
+        whenever(mediaFile.optimalFileURL).thenReturn(TestContent.remoteImageUrl)
         processor = CoverBlockProcessor(TestContent.localMediaId, mediaFile, mediaUploadCompletionProcessor)
     }
 
@@ -43,7 +43,7 @@ class CoverBlockProcessorTest {
     @Test
     fun `processBlock works with outer nested cover blocks`() {
         whenever(mediaFile.mediaId).thenReturn(TestContent.remoteMediaId2)
-        whenever(mediaFile.fileURL).thenReturn(TestContent.remoteImageUrl2)
+        whenever(mediaFile.optimalFileURL).thenReturn(TestContent.remoteImageUrl2)
         processor = CoverBlockProcessor(TestContent.localMediaId2, mediaFile, mediaUploadCompletionProcessor)
         val processedBlock = processor.processBlock(TestContent.oldCoverBlockWithNestedCoverBlockOuter)
         Assertions.assertThat(processedBlock).isEqualTo(TestContent.newCoverBlockWithNestedCoverBlockOuter)
@@ -63,7 +63,7 @@ class CoverBlockProcessorTest {
 
     @Test
     fun `processBlock works with videos`() {
-        whenever(mediaFile.fileURL).thenReturn(TestContent.remoteVideoUrl)
+        whenever(mediaFile.optimalFileURL).thenReturn(TestContent.remoteVideoUrl)
         processor = CoverBlockProcessor(TestContent.localMediaId, mediaFile, mediaUploadCompletionProcessor)
         val processedBlock = processor.processBlock(TestContent.oldCoverBlockWithVideo)
         Assertions.assertThat(processedBlock).isEqualTo(TestContent.newCoverBlockWithVideo)

@@ -1,0 +1,59 @@
+# This pipeline is meant to be run via the Buildkite API, and is
+# only used for beta builds
+
+# Nodes with values to reuse in the pipeline.
+common_params:
+  # Common plugin settings to use with the `plugins` key.
+  - &common_plugins
+    - automattic/bash-cache#2.1.0
+
+steps:
+  #################
+  # Lint
+  #################
+  - group: "🕵️ Lint"
+    steps:
+
+      - label: "🕵️ Lint WordPress"
+        key: wplint
+        command: ".buildkite/commands/lint.sh wordpress"
+        artifact_paths:
+          - "**/build/reports/lint-results*.*"
+
+      - label: "🕵️ Lint Jetpack"
+        key: jplint
+        command: ".buildkite/commands/lint.sh jetpack"
+        artifact_paths:
+          - "**/build/reports/lint-results*.*"
+
+  #################
+  # Beta Builds
+  #################
+  - group: "🚀 Beta Builds"
+    steps:
+
+      - label: ":wordpress: :android: Beta Build"
+        key: wpbuild
+        command: ".buildkite/commands/beta-build.sh wordpress"
+        depends_on: wplint
+        plugins: *common_plugins
+        notify:
+          - slack: "#build-and-ship"
+
+      - label: ":jetpack: :android: Beta Build"
+        key: jpbuild
+        command: ".buildkite/commands/beta-build.sh jetpack"
+        depends_on: jplint
+        plugins: *common_plugins
+        notify:
+          - slack: "#build-and-ship"
+
+  #################
+  # GitHub Release
+  #################
+  - label: ":github: Release"
+    depends_on:
+      - wpbuild
+      - jpbuild
+    command: ".buildkite/commands/create-github-release.sh"
+    plugins: *common_plugins

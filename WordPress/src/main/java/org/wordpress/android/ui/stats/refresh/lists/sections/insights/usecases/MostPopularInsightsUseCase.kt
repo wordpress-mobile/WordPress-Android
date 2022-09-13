@@ -22,7 +22,6 @@ import org.wordpress.android.ui.stats.refresh.utils.ActionCardHandler
 import org.wordpress.android.ui.stats.refresh.utils.DateUtils
 import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
-import org.wordpress.android.util.config.StatsRevampV2FeatureConfig
 import org.wordpress.android.util.text.PercentFormatter
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
@@ -38,7 +37,6 @@ class MostPopularInsightsUseCase
     private val statsSiteProvider: StatsSiteProvider,
     private val dateUtils: DateUtils,
     private val resourceProvider: ResourceProvider,
-    private val statsRevampV2FeatureConfig: StatsRevampV2FeatureConfig,
     private val popupMenuHandler: ItemPopupMenuHandler,
     private val actionCardHandler: ActionCardHandler,
     private val percentFormatter: PercentFormatter
@@ -72,7 +70,7 @@ class MostPopularInsightsUseCase
 
         val noActivity = domainModel.highestDayPercent == 0.0 && domainModel.highestHourPercent == 0.0
 
-        if (BuildConfig.IS_JETPACK_APP && statsRevampV2FeatureConfig.isEnabled() && noActivity) {
+        if (BuildConfig.IS_JETPACK_APP && noActivity) {
             items.add(Empty(R.string.stats_most_popular_percent_views_empty))
         } else {
             val highestDayPercent = resourceProvider.getString(
@@ -88,7 +86,7 @@ class MostPopularInsightsUseCase
                             Column(
                                     R.string.stats_insights_best_day,
                                     dateUtils.getWeekDay(domainModel.highestDayOfWeek),
-                                    if (BuildConfig.IS_JETPACK_APP && statsRevampV2FeatureConfig.isEnabled()) {
+                                    if (BuildConfig.IS_JETPACK_APP) {
                                         highestDayPercent
                                     } else {
                                         null
@@ -98,7 +96,7 @@ class MostPopularInsightsUseCase
                             Column(
                                     R.string.stats_insights_best_hour,
                                     dateUtils.getHour(domainModel.highestHour),
-                                    if (BuildConfig.IS_JETPACK_APP && statsRevampV2FeatureConfig.isEnabled()) {
+                                    if (BuildConfig.IS_JETPACK_APP) {
                                         highestHourPercent
                                     } else {
                                         null
@@ -109,7 +107,7 @@ class MostPopularInsightsUseCase
             )
         }
 
-        if (BuildConfig.IS_JETPACK_APP && statsRevampV2FeatureConfig.isEnabled()) {
+        if (BuildConfig.IS_JETPACK_APP) {
             addActionCards(domainModel)
         }
         return items
@@ -126,12 +124,12 @@ class MostPopularInsightsUseCase
     }
 
     private fun buildTitle() = Title(
-            textResource = if (BuildConfig.IS_JETPACK_APP && statsRevampV2FeatureConfig.isEnabled()) {
+            textResource = if (BuildConfig.IS_JETPACK_APP) {
                 R.string.stats_insights_popular_title
             } else {
                 R.string.stats_insights_popular
             },
-            menuAction = if (BuildConfig.IS_JETPACK_APP && statsRevampV2FeatureConfig.isEnabled()) {
+            menuAction = if (BuildConfig.IS_JETPACK_APP) {
                 null
             } else {
                 this::onMenuClick

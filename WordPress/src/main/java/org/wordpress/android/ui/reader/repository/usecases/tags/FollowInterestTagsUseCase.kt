@@ -24,6 +24,7 @@ class FollowInterestTagsUseCase @Inject constructor(
 ) {
     private var continuation: Continuation<ReaderRepositoryCommunication>? = null
 
+    @Suppress("UseCheckOrError")
     suspend fun followInterestTags(tags: List<ReaderTag>): ReaderRepositoryCommunication {
         if (continuation != null) {
             throw IllegalStateException("Follow interest tags already in progress.")

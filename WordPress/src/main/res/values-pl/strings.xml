@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-06-13 05:36:32+0000
+Translation-Revision-Date: 2022-08-17 10:40:10+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.1
 Language: pl
 -->
 <resources>
+    <string name="wp_jetpack_powered_better_with_jetpack">WordPress jest lepszy z JetPackiem</string>
+    <string name="gutenberg_native_gradient">Gradient</string>
     <string name="blogging_prompts_notification_dismiss">Zamknij</string>
     <string name="blogging_prompts_onboarding_got_it">Rozumiem</string>
     <string name="quick_start_dialog_view_your_site_message_short">Stuknij &lt;b&gt;%1$s&lt;/b&gt; aby zobaczyć swoją witrynę</string>
@@ -112,6 +114,7 @@ Language: pl
     <string name="domains_redirected_domains_blurb">Twoje domeny przekierują na twoją witrynę pod adresem %s</string>
     <string name="gutenberg_native_create_link">Stwórz odnośnik</string>
     <string name="domain_registration_result_title">Gratulacje z okazji twojego zakupu!</string>
+    <string name="domain_registration_result_description">Twoja nowa domena &lt;b&gt;%s&lt;/b&gt; jest w tym momencie ustawiana. Może zająć do 30 minut zanim zacznie działać.</string>
     <string name="domains_suggestions_select_domain">Wybierz domenę</string>
     <string name="domains_title">Domeny</string>
     <string name="post_settings_post_sticky">Przypnij wpis na stronie głównej</string>
@@ -172,7 +175,6 @@ Language: pl
     <string name="my_site_quick_actions_title">Szybkie odnośniki</string>
     <string name="my_site_btn_domains">Domeny</string>
     <string name="recommend_app_subject">Aplikacje Automattic - Aplikacje na wszystkie urządzenia</string>
-    <string name="weekly_roundup_notification_text">Twoja witryna ma %1$d wyświetleń, %2$d polubień, %3$d komentarzy.</string>
     <string name="blogging_reminders_notification_time">Czas powiadomienia</string>
     <string name="weekly_roundup_notification_title">W każdym tygodniu: %s</string>
     <string name="blogging_reminders_epilogue_body_everyday_with_time">Otrzymasz powiadomienia o blogowaniu &lt;b&gt;każdego dnia&lt;/b&gt; o &lt;b&gt;%s&lt;/b&gt;.</string>
@@ -664,6 +666,7 @@ Language: pl
     <string name="hpp_retry_error">Sprawdź swoje połączenie internetowe i spróbuj ponownie.</string>
     <string name="hpp_error_subtitle">Stuknij ponów kiedy będziesz spowrotem online</string>
     <string name="hpp_error_title">Szablony nie są dostępne w trybie offline</string>
+    <string name="hpp_choose_error">Wystąpił błąd podczas wyboru szablonu</string>
     <string name="continue_site_credentials">Zaloguj się za pomocą danych uwierzytelniających tej witryny</string>
     <string name="login_find_your_connected_email">Odnajdź swój połączony email</string>
     <string name="reader_discover_no_posts_button_text">Obserwuj tematy</string>
@@ -961,7 +964,6 @@ Language: pl
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">Stuknij dwukrotnie, by przejść do ustawień kolorów</string>
     <string name="reader_empty_followed_blogs_description">Gdy zaczniesz śledzić inne witryny, zobaczysz tutaj ich treść</string>
     <string name="feature_announcement_find_out_mode">Dowiedz się więcej</string>
-    <string name="feature_announcement_dialog_label">Co nowego w WordPressie</string>
     <string name="insert_label_with_count">Wstaw %d</string>
     <string name="crop">przytnij</string>
     <string name="photo_picker_video_title">Wybierz wideo</string>
@@ -1059,7 +1061,6 @@ Language: pl
     <string name="create_post_page_fab_tooltip_contributors">Stwórz wpis</string>
     <string name="post_list_tab_published_posts">Opublikowano</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">Nie połączono</string>
-    <string name="sharing_facebook_account_must_have_pages">Połączenie z Facebookiem nie może odnaleźć żadnych Stron. Publicize nie może połączyć się z profilami Facebooka, tylko z publikowanymi Stronami.</string>
     <string name="post_list_tab_trashed_posts">W koszu</string>
     <string name="post_list_tab_scheduled_posts">Zaplanowano</string>
     <string name="notifications_tab_title_likes">Polubienia</string>
@@ -1289,7 +1290,6 @@ Language: pl
     <string name="notification_post_will_be_published_in_ten_minutes">\"%s\" zostanie opublikowany za 10 minut</string>
     <string name="navigate_back_desc">Wróć</string>
     <string name="web_preview_desktop">Komputer stacjonarny</string>
-    <string name="calendar_scheduled_post_description">Wpis „%1$s” został zaplanowany do publikacji w dniu „%2$s” w twojej aplikacji WordPressowej\n%3$s</string>
     <string name="notification_post_will_be_published_in_one_hour">\"%s\" zostanie opublikowany za godzinę</string>
     <string name="notification_post_has_been_published">\"%s\" został opublikowany</string>
     <string name="notification_scheduled_post_ten_minute_reminder">Zaplanowany wpis: przypomnienie 10 minutowe</string>
@@ -1459,7 +1459,6 @@ Language: pl
     <string name="app_rating_rate_now">Oceń teraz</string>
     <string name="app_rating_message">Miło widzieć ciebie ponownie! Jeśli używasz aplikacji, prosimy o ocenę w sklepie Google Play.</string>
     <string name="app_rating_rate_never">Nie, dziękuję</string>
-    <string name="app_rating_title">Lubisz WordPressa?</string>
     <string name="editor_post_converted_back_to_draft">Wpis z powrotem zamieniony na wpis</string>
     <string name="stats_insights_posting_activity">Aktywność publikowania wpisów</string>
     <string name="stats_site_not_loaded_yet">Witryna jeszcze nie załadowana</string>
@@ -1653,6 +1652,7 @@ Language: pl
     <string name="quick_start_focus_point_description">stuknij tutaj</string>
     <string name="quick_start_list_create_site_title">Utwórz swoją witrynę</string>
     <string name="quick_start_list_create_site_subtitle">Uruchom swoją witrynę.</string>
+    <string name="quick_start_completed_tour_subtitle">Czy to nie fajne uczucie wykreślać kolejne elementy z listy? </string>
     <string name="quick_start_dialog_view_site_title">Zobacz swoją witrynę</string>
     <string name="quick_start_dialog_share_site_title">Udostępnij swoją witrynę</string>
     <string name="quick_start_dialog_share_site_message">Połącz się ze swoimi kontami mediów społecznościowych - twoja witryna automatycznie udostępni nowe wpisy. </string>
@@ -2285,10 +2285,8 @@ Language: pl
     <string name="share_btn_disconnect">Rozłącz</string>
     <string name="share_btn_connect">Połącz</string>
     <string name="connection_service_description">Połącz się aby automatycznie udostępniać wpisy blogu w serwisie %s.</string>
-    <string name="connection_service_label">Publikuj w serwisie %s</string>
     <string name="connected_accounts_label">Konta połączone</string>
     <string name="connections_description">Połącz się ze swoim ulubionym serwisem mediów społecznościowych aby automatycznie udostępniać nowe wpisy swoim znajomym.</string>
-    <string name="connections_label">Połączenia</string>
     <string name="sharing">Udostępnianie</string>
     <string name="tabbar_accessibility_label_notifications">Powiadomienia. Zarządzaj powiadomieniami.</string>
     <string name="tabbar_accessibility_label_reader">Czytnik. Śledź treści z innych witryn.</string>

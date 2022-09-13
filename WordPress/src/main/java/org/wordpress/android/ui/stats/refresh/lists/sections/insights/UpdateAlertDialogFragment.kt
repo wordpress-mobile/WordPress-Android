@@ -7,6 +7,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.wordpress.android.R
 
 class UpdateAlertDialogFragment : DialogFragment() {
+    @Suppress("UseCheckOrError")
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return activity?.let {
             val builder = MaterialAlertDialogBuilder(it)

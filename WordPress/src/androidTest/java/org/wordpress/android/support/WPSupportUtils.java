@@ -818,4 +818,19 @@ public class WPSupportUtils {
             swipeCount += 1;
         }
     }
+
+    public static void dismissJetpackAdIfPresent() {
+        String jetpackAdText = "Stats, Reader, Notifications, and other features are powered by Jetpack.";
+        ViewInteraction jetpackBanner = onView(withText(jetpackAdText));
+
+        // Dismiss Jetpack ad that might be shown after Sign-Up or after opening Stats
+        if (isElementDisplayed(jetpackBanner)) {
+            clickOn(onView(withId(R.id.secondary_button)));
+            waitForElementToNotBeDisplayed(jetpackBanner);
+
+            // Account for potential Emulator slowness on CI: the case of banner text
+            // being already hidden, but top part of banner still sliding away
+            idleFor(1000);
+        }
+    }
 }

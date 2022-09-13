@@ -4,15 +4,13 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
-import android.view.ViewGroup.MarginLayoutParams
-import androidx.core.view.isVisible
-import androidx.core.view.updateLayoutParams
+import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
-import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.databinding.ActivityLogListActivityBinding
 import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.RequestCodes
+import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailActivity
 import org.wordpress.android.ui.jetpack.backup.download.KEY_BACKUP_DOWNLOAD_ACTION_STATE_ID
 import org.wordpress.android.ui.jetpack.backup.download.KEY_BACKUP_DOWNLOAD_DOWNLOAD_ID
@@ -20,37 +18,55 @@ import org.wordpress.android.ui.jetpack.backup.download.KEY_BACKUP_DOWNLOAD_REWI
 import org.wordpress.android.ui.jetpack.common.JetpackBackupDownloadActionState
 import org.wordpress.android.ui.jetpack.restore.KEY_RESTORE_RESTORE_ID
 import org.wordpress.android.ui.jetpack.restore.KEY_RESTORE_REWIND_ID
-import org.wordpress.android.util.config.JetpackPoweredFeatureConfig
-import org.wordpress.android.util.extensions.setNavigationBarColorForBanner
+import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment
+import org.wordpress.android.util.JetpackBrandingUtils
+import org.wordpress.android.util.JetpackBrandingUtils.Screen.ACTIVITY_LOG
 import org.wordpress.android.viewmodel.activitylog.ACTIVITY_LOG_REWINDABLE_ONLY_KEY
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class ActivityLogListActivity : LocaleAwareActivity() {
-    @Inject lateinit var jetpackPoweredFeatureConfig: JetpackPoweredFeatureConfig
+class ActivityLogListActivity : LocaleAwareActivity(), ScrollableViewInitializedListener {
+    @Inject lateinit var jetpackBrandingUtils: JetpackBrandingUtils
+    private var binding: ActivityLogListActivityBinding? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         with(ActivityLogListActivityBinding.inflate(layoutInflater)) {
             setContentView(root)
+            binding = this
             checkAndUpdateUiToBackupScreen()
 
             setSupportActionBar(toolbarMain)
-
-            if (jetpackPoweredFeatureConfig.isEnabled() && !BuildConfig.IS_JETPACK_APP) {
-                jetpackBanner.root.isVisible = true
-                window.setNavigationBarColorForBanner()
-
-                // Add bottom margin to content.
-                val fragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
-                fragment?.view?.updateLayoutParams<MarginLayoutParams> {
-                    bottomMargin = resources.getDimensionPixelSize(R.dimen.jetpack_banner_height)
-                }
-            }
         }
         supportActionBar?.let {
             it.setHomeButtonEnabled(true)
             it.setDisplayHomeAsUpEnabled(true)
+        }
+    }
+
+    override fun onScrollableViewInitialized(containerId: Int) {
+        initJetpackBanner(containerId)
+    }
+
+    private fun initJetpackBanner(scrollableContainerId: Int) {
+        if (jetpackBrandingUtils.shouldShowJetpackBranding()) {
+            binding?.root?.post {
+                val jetpackBannerView = binding?.jetpackBanner?.root ?: return@post
+                val scrollableView = binding?.root?.findViewById<View>(scrollableContainerId) as? RecyclerView
+                        ?: return@post
+
+                jetpackBrandingUtils.showJetpackBannerIfScrolledToTop(jetpackBannerView, scrollableView)
+                jetpackBrandingUtils.initJetpackBannerAnimation(jetpackBannerView, scrollableView)
+
+                if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
+                    binding?.jetpackBanner?.root?.setOnClickListener {
+                        jetpackBrandingUtils.trackBannerTapped(ACTIVITY_LOG)
+                        JetpackPoweredBottomSheetFragment
+                                .newInstance()
+                                .show(supportFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
+                    }
+                }
+            }
         }
     }
 

@@ -80,6 +80,7 @@ class PostRecentWeeksUseCaseTest : BaseUnitTest() {
     }
 
     @Test
+    @Suppress("LongMethod")
     fun `maps years to UI model`() = test {
         val forced = false
         val data = listOf(week)

@@ -90,7 +90,7 @@
         <!-- Main tab activity -->
         <activity
             android:name=".ui.main.WPMainActivity"
-            android:theme="@style/WordPress.NoActionBar"
+            android:theme="@style/Wordpress.BottomBar"
             android:label="" />
 
         <!-- Account activities -->
@@ -203,7 +203,8 @@
             android:configChanges="orientation|screenSize"
             android:theme="@style/WordPress.NoActionBar"
             android:label="@string/notif_settings_screen_title"
-            android:exported="true">
+            android:exported="false"
+            tools:ignore="IntentFilterExportedReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.NOTIFICATION_PREFERENCES" />
@@ -323,7 +324,8 @@
             android:name=".ui.stats.StatsConnectJetpackActivity"
             android:theme="@style/WordPress.NoActionBar" />
         <activity android:name=".ui.JetpackConnectionResultActivity" android:theme="@style/WordPress.NoActionBar"
-            android:exported="true">
+            android:exported="false"
+            tools:ignore="AppLinkUrlError">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -347,7 +349,7 @@
             android:name=".ui.media.MediaPreviewActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/media_settings_image_preview_desc"
-            android:theme="@style/WordPress.NoActionBar" />
+            android:theme="@style/WordPress.Media.Preview" />
         <activity
             android:name=".ui.media.MediaSettingsActivity"
             android:windowSoftInputMode="stateHidden|adjustPan"
@@ -602,8 +604,8 @@
             android:name=".ui.AddQuickPressShortcutActivity"
             android:label="@string/quickpress_shortcut_activity_label"
             android:theme="@style/WordPress.NoActionBar"
-            android:enabled="@string/widgets_enabled"
-            android:exported="true">
+            android:exported="true"
+            tools:ignore="ManifestResource">
             <intent-filter>
                 <action android:name="android.intent.action.CREATE_SHORTCUT" />
 
@@ -870,7 +872,8 @@
             android:name=".ui.stats.refresh.lists.widget.views.StatsViewsWidget"
             android:label="@string/stats_widget_weekly_views_name"
             android:enabled="@string/widgets_enabled"
-            android:exported="false">
+            android:exported="false"
+            tools:ignore="ManifestResource">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
             </intent-filter>
@@ -883,7 +886,8 @@
             android:name=".ui.stats.refresh.lists.widget.alltime.StatsAllTimeWidget"
             android:label="@string/stats_widget_all_time_insights_name"
             android:enabled="@string/widgets_enabled"
-            android:exported="false">
+            android:exported="false"
+            tools:ignore="ManifestResource">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
             </intent-filter>
@@ -896,7 +900,8 @@
             android:name=".ui.stats.refresh.lists.widget.today.StatsTodayWidget"
             android:label="@string/stats_widget_today_insights_name"
             android:enabled="@string/widgets_enabled"
-            android:exported="false">
+            android:exported="false"
+            tools:ignore="ManifestResource">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
             </intent-filter>
@@ -909,7 +914,8 @@
             android:name=".ui.stats.refresh.lists.widget.minified.StatsMinifiedWidget"
             android:label="@string/stats_widget_minified_name"
             android:enabled="@string/widgets_enabled"
-            android:exported="false">
+            android:exported="false"
+            tools:ignore="ManifestResource">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
             </intent-filter>
@@ -1035,5 +1041,7 @@
         <intent>
             <action android:name="android.intent.action.MAIN" />
         </intent>
+        <!-- required for Android 11 (API level 30) or higher -->
+        <package android:name="com.jetpack.android" />
     </queries>
 </manifest>

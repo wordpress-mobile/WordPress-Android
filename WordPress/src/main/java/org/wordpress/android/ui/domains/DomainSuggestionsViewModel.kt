@@ -35,7 +35,6 @@ import javax.inject.Inject
 import javax.inject.Named
 import kotlin.properties.Delegates
 
-@Suppress("TooManyFunctions")
 class DomainSuggestionsViewModel @Inject constructor(
     private val productsStore: ProductsStore,
     private val analyticsTracker: AnalyticsTrackerWrapper,
@@ -214,6 +213,7 @@ class DomainSuggestionsViewModel @Inject constructor(
         }
     }
 
+    @Suppress("UseCheckOrError")
     fun onSelectDomainButtonClicked() {
         val selectedSuggestion = _selectedSuggestion.value ?: throw IllegalStateException("Selected suggestion is null")
         when (domainRegistrationPurpose) {

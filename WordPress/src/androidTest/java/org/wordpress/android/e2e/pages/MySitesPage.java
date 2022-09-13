@@ -1,27 +1,42 @@
 package org.wordpress.android.e2e.pages;
 
 import android.view.View;
+import android.widget.Checkable;
 import android.widget.TextView;
 
 import androidx.annotation.IdRes;
 import androidx.annotation.StringRes;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
+import androidx.test.core.app.ApplicationProvider;
+import androidx.test.espresso.UiController;
+import androidx.test.espresso.ViewAction;
 import androidx.test.espresso.ViewInteraction;
 
+import org.hamcrest.BaseMatcher;
+import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.wordpress.android.R;
+import org.wordpress.android.ui.prefs.WPPreference;
 
+import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.contrib.RecyclerViewActions.actionOnItem;
+import static androidx.test.espresso.matcher.PreferenceMatchers.withKey;
+import static androidx.test.espresso.matcher.PreferenceMatchers.withTitleText;
 import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withParent;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.isA;
 import static org.wordpress.android.support.WPSupportUtils.clickOn;
+import static org.wordpress.android.support.WPSupportUtils.dismissJetpackAdIfPresent;
 import static org.wordpress.android.support.WPSupportUtils.getTranslatedString;
 import static org.wordpress.android.support.WPSupportUtils.idleFor;
 import static org.wordpress.android.support.WPSupportUtils.isElementDisplayed;
@@ -66,6 +81,18 @@ public class MySitesPage {
         }
     }
 
+    public void startNewSite() {
+        switchSite();
+        // If the device has a narrower display, the menu_add is hidden in the overflow
+        if (isElementDisplayed(R.id.menu_add)) {
+            clickOn(R.id.menu_add);
+        } else {
+            // open the overflow and then click on the item with text
+            openActionBarOverflowOrOptionsMenu(ApplicationProvider.getApplicationContext());
+            onView(withText(getTranslatedString(R.string.site_picker_add_site))).perform(click());
+        }
+    }
+
     public void goToSettings() {
         goToMenuTab();
         clickItemWithText(R.string.my_site_btn_site_settings);
@@ -86,6 +113,54 @@ public class MySitesPage {
         clickItemWithText(R.string.scan);
     }
 
+    public void goToBloggingReminders() {
+        goToSettings();
+
+        idleFor(4000);
+
+        onData(allOf(
+                instanceOf(WPPreference.class),
+                withKey(getTranslatedString(R.string.pref_key_blogging_reminders)),
+                withTitleText(getTranslatedString(R.string.site_settings_blogging_reminders_and_prompts_title))))
+                .onChildView(withText(getTranslatedString(R.string.site_settings_blogging_reminders_and_prompts_title)))
+                .perform(click());
+
+        idleFor(4000);
+
+        clickOn(onView(withText(getTranslatedString(R.string.set_your_blogging_reminders_button))));
+
+        onView(withId(R.id.day_one))
+                .perform(click());
+
+        onView(withId(R.id.day_three))
+                .perform(click());
+
+        onView(withId(R.id.day_five))
+                .perform(click());
+
+        idleFor(3000);
+    }
+
+    public void addBloggingPrompts() {
+        goToBloggingReminders();
+
+        idleFor(4000);
+
+        if (isElementDisplayed(R.id.content_recycler_view)) {
+            onView(withId(R.id.content_recycler_view))
+                    .perform(actionOnItem(hasDescendant(withId(R.id.include_prompt_switch)),
+                            setChecked(true, R.id.include_prompt_switch)));
+        }
+
+        idleFor(4000);
+
+        onView(withId(R.id.primary_button))
+                .perform(click());
+
+        onView(withId(R.id.primary_button))
+                .perform(click());
+    }
+
     public void goToBackup() {
         goToMenuTab();
 
@@ -100,7 +175,8 @@ public class MySitesPage {
     public StatsPage goToStats() {
         goToMenuTab();
         clickQuickActionOrSiteMenuItem(R.id.quick_action_stats_button, R.string.stats);
-
+        idleFor(4000);
+        dismissJetpackAdIfPresent();
         waitForElementToBeDisplayedWithoutFailure(R.id.tabLayout);
 
         // Wait for the stats to load
@@ -112,6 +188,13 @@ public class MySitesPage {
     public void goToMedia() {
         goToMenuTab();
         clickQuickActionOrSiteMenuItem(R.id.quick_action_media_button, R.string.media);
+    }
+
+    public void createPost() {
+        // Choose the "sites" tab in the nav
+        clickOn(R.id.fab_button);
+
+        idleFor(2000);
     }
 
     public MySitesPage switchToSite(String siteUrl) {
@@ -159,5 +242,38 @@ public class MySitesPage {
         } else {
             clickItemWithText(siteMenuItemString);
         }
+    }
+
+    public static ViewAction setChecked(final boolean checked, final int id) {
+        return new ViewAction() {
+            @Override
+            public BaseMatcher<View> getConstraints() {
+                return new BaseMatcher<View>() {
+                    @Override
+                    public boolean matches(Object item) {
+                        return isA(Checkable.class).matches(item);
+                    }
+
+                    @Override
+                    public void describeMismatch(Object item, Description mismatchDescription) {
+                    }
+
+                    @Override
+                    public void describeTo(Description description) {
+                    }
+                };
+            }
+
+            @Override
+            public String getDescription() {
+                return null;
+            }
+
+            @Override
+            public void perform(UiController uiController, View view) {
+                SwitchCompat checkableView = (SwitchCompat) view.findViewById(id);
+                checkableView.setChecked(checked);
+            }
+        };
     }
 }

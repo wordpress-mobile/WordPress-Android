@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="UnusedResources">
+
+    <!-- Site creation -->
+    <color name="site_creation_skip_button_text">@color/jetpack_green_40</color>
+</resources>

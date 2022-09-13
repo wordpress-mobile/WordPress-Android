@@ -30,7 +30,6 @@ import javax.inject.Inject
 /**
  * Implements the Home Page Picker UI
  */
-@Suppress("TooManyFunctions")
 @AndroidEntryPoint
 class HomePagePickerFragment : Fragment() {
     @Inject lateinit var imageManager: ImageManager

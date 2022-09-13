@@ -287,6 +287,7 @@ class PreviewImageViewModel : ViewModel() {
         imageState is ImageInHighResLoadSuccessUiState
 
     // TODO: revisit
+    @Suppress("ForbiddenComment")
     private fun canLoadToFile(imageState: ImageUiState) = imageState is ImageInHighResLoadSuccessUiState
 
     private fun List<ImageUiState>.hasSingleElement() = this.size == 1

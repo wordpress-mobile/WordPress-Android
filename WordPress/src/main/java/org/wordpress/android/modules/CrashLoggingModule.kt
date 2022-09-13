@@ -15,7 +15,7 @@ import javax.inject.Singleton
 
 @InstallIn(SingletonComponent::class)
 @Module
-abstract class CrashLoggingModule {
+interface CrashLoggingModule {
     companion object {
         @Provides
         @Singleton
@@ -27,6 +27,5 @@ abstract class CrashLoggingModule {
         }
     }
 
-    @Binds
-    abstract fun bindCrashLoggingDataProvider(dataProvider: WPCrashLoggingDataProvider): CrashLoggingDataProvider
+    @Binds fun bindCrashLoggingDataProvider(dataProvider: WPCrashLoggingDataProvider): CrashLoggingDataProvider
 }

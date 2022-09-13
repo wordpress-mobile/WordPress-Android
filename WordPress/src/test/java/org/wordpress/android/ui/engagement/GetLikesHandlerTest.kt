@@ -46,7 +46,6 @@ class GetLikesHandlerTest {
     private val commentId = 10000L
     private val expectedNumLikes = 6
     private val defaultPageLenght = 20
-    private val noLikesLimit = -1
     private val pageInfo = PagingInfo(
             20,
             1

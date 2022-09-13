@@ -221,6 +221,7 @@ class BatchModerateCommentsUseCaseTest : BaseUnitTest() {
             }
 
     @Test
+    @Suppress("LongMethod")
     fun `moderating multiple comments works as expected`() =
             runBlockingTest {
                 whenever(commentStore.moderateCommentLocally(eq(site), eq(1), eq(UNAPPROVED)))
@@ -295,6 +296,7 @@ class BatchModerateCommentsUseCaseTest : BaseUnitTest() {
             }
 
     @Test
+    @Suppress("LongMethod")
     fun `if we are deleting comments deleteComment method of a store is called`() = runBlockingTest {
         whenever(commentStore.moderateCommentLocally(eq(site), eq(1), eq(DELETED)))
                 .thenReturn(
@@ -368,6 +370,7 @@ class BatchModerateCommentsUseCaseTest : BaseUnitTest() {
     }
 
     @Test
+    @Suppress("LongMethod")
     fun `rollback if an error when deleting or moderating a comment and request local cache refresh`() =
             runBlockingTest {
                 val error = CommentError(INVALID_INPUT, "")

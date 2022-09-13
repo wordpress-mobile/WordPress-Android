@@ -43,7 +43,6 @@ import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
 import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.util.config.StatsRevampV2FeatureConfig
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Date
 
@@ -56,7 +55,6 @@ class FollowersUseCaseTest : BaseUnitTest() {
     @Mock lateinit var tracker: AnalyticsTrackerWrapper
     @Mock lateinit var popupMenuHandler: ItemPopupMenuHandler
     @Mock lateinit var contentDescriptionHelper: ContentDescriptionHelper
-    @Mock private lateinit var statsRevampV2FeatureConfig: StatsRevampV2FeatureConfig
     private lateinit var useCaseFactory: FollowersUseCaseFactory
     private lateinit var useCase: FollowersUseCase
     private val avatar = "avatar.jpg"
@@ -85,8 +83,7 @@ class FollowersUseCaseTest : BaseUnitTest() {
                 resourceProvider,
                 popupMenuHandler,
                 tracker,
-                contentDescriptionHelper,
-                statsRevampV2FeatureConfig
+                contentDescriptionHelper
         )
         useCase = useCaseFactory.build(BLOCK)
         whenever(statsSinceLabelFormatter.getSinceLabelLowerCase(dateSubscribed)).thenReturn(sinceLabel)

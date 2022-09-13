@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Translation-Revision-Date: 2022-07-11 15:54:02+0000
+Plural-Forms: nplurals=2; plural=n != 1;
+Generator: GlotPress/2.4.0-alpha
+Language: de
+-->
+<resources>
+    <string name="me_btn_about">Über Jetpack</string>
+    <string name="sign_out_wpcom_confirm_with_no_changes">Von Jetpack abmelden?</string>
+    <string name="me_disconnect_from_wordpress_com">Von Jetpack abmelden?</string>
+    <string name="support_ticket_subject">Support für Jetpack für Android</string>
+    <string name="login_magic_links_sent_label">Überprüfe deine E-Mails auf diesem Gerät und tippe auf den Link in der E-Mail, die du von Jetpack.com erhalten hast.</string>
+    <string name="continue_with_wpcom_no_signup">Mit WordPress.com anmelden</string>
+    <string name="app_tagline">Website-Sicherheit und -Performance immer dabei</string>
+    <string name="post_signup_interstitial_title">Willkommen bei Jetpack</string>
+    <string name="app_title">Jetpack für Android</string>
+</resources>

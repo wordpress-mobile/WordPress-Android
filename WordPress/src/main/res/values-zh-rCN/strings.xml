@@ -1,11 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-06-30 09:54:09+0000
+Translation-Revision-Date: 2022-08-30 09:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.1
 Language: zh_CN
 -->
 <resources>
+    <string name="login_magic_links_email_sent">我们刚刚发送了一个免密链接至</string>
+    <string name="login_magic_links_sent_label_short">检查此设备上的电子邮件地址！</string>
+    <string name="or_use_password">使用密码登录</string>
+    <string name="wp_jetpack_powered_notifications_powered_by_jetpack_caption">通过实时更新，随时了解新评论、站点流量、安全报告等。</string>
+    <string name="wp_jetpack_powered_notifications_powered_by_jetpack">通知功能由 Jetpack 提供支持</string>
+    <string name="wp_jetpack_powered_stats_powered_by_jetpack_caption">在新版 Jetpack 应用程序中，您可以通过全新设计的“统计信息”和“数据分析”，观察流量增长情况并了解受众。</string>
+    <string name="wp_jetpack_powered_stats_powered_by_jetpack">统计信息功能由 Jetpack 提供支持</string>
+    <string name="wp_jetpack_powered_reader_powered_by_jetpack_caption">在新版 Jetpack 应用程序中，您可以使用“阅读器”来查找、关注和点赞所有您喜欢的网站和帖子。</string>
+    <string name="wp_jetpack_powered_reader_powered_by_jetpack">阅读器由 Jetpack 提供支持</string>
+    <string name="wp_jetpack_powered_features">新的 Jetpack 应用程序具有“统计信息”、“阅读器”、“通知”等功能，让您的 WordPress 变得更好。</string>
+    <string name="wp_jetpack_powered_better_with_jetpack">安装 Jetpack 的 WordPress 性能更优</string>
+    <string name="gutenberg_native_upgrade_your_plan_to_use_video_covers">升级您的套餐即可使用视频封面</string>
+    <string name="gutenberg_native_upgrade_your_plan_to_upload_audio">升级您的套餐即可上传音频</string>
+    <string name="gutenberg_native_jetpack_powered">由 Jetpack 提供支持</string>
+    <string name="gutenberg_native_invalid_url">无效的 URL。</string>
+    <string name="gutenberg_native_gradient">渐变色</string>
+    <string name="wp_jetpack_continue_to_notifications">继续以使用通知功能</string>
+    <string name="wp_jetpack_continue_to_stats">继续以使用统计信息功能</string>
+    <string name="wp_jetpack_continue_to_reader">继续以使用阅读器功能</string>
+    <string name="wp_jetpack_get_new_jetpack_app">获取新版 Jetpack 应用程序</string>
+    <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery">显示区块时出现问题。 \n点击尝试恢复区块。</string>
+    <string name="weekly_roundup_notification_text_views_and_comments">上周共计 %1$s 次查看和 %2$s 条评论</string>
+    <string name="weekly_roundup_notification_text_views_and_likes">上周共计 %1$s 次查看和 %2$s 个赞</string>
+    <string name="weekly_roundup_notification_text_views_only">上周共计 %1$s 次查看。</string>
+    <string name="weekly_roundup_notification_text_all">上周共计 %1$s 次查看、%2$s 个赞和 %3$s 条评论。</string>
+    <string name="stats_revamp_v2_update_alert_message">更新至新数据分析可帮助您了解内容的表现情况，以及是什么引起了受众的共鸣。</string>
+    <string name="stats_insights_like_guide_card">⭐️ 您的最新文章 %1$s 收到了 %2$s 个赞。</string>
+    <string name="wp_jetpack_powered">由 Jetpack 提供支持</string>
     <string name="qrcode_auth_flow_content_description">图片显示正在扫描登录代码</string>
     <string name="qrcode_auth_flow_error_content_description">图片指示错误</string>
     <string name="qrcode_auth_flow_dismiss_dialog_message">是否确定要继续？</string>
@@ -26,16 +54,11 @@ Language: zh_CN
     <string name="qrcode_auth_flow_validated_subtitle">仅扫描直接从网页浏览器获取的二维码。 切勿扫描其他人发送给您的代码。</string>
     <string name="qrcode_auth_flow_validated_default_title">您是否正在尝试登录到%1$s附近的网页浏览器？</string>
     <string name="qrcode_auth_flow_validated_title">您是否正在尝试登录到%2$s附近的 %1$s？</string>
-    <string name="stats_revamp_v2_intro_secondary_button_text">稍后提醒我</string>
-    <string name="stats_revamp_v2_intro_primary_button_text">立即试用</string>
-    <string name="stats_revamp_v2_intro_content_note">在“我的站点”&gt;“统计信息”&gt;“数据分析”中了解更多信息</string>
-    <string name="stats_revamp_v2_intro_content">“数据分析”可帮助您了解自己内容的表现情况以及与受众产生共鸣的内容。</string>
     <string name="stats_revamp_v2_intro_header_title">数据分析更新</string>
     <string name="stats_insights_followers_guide_card">💡 评论其他博客是为您的新站点吸引关注和粉丝的好方法。</string>
     <string name="stats_insights_comments_guide_card">💡 点击“查看更多”可查看热门评论者。</string>
     <string name="stats_insights_latest_post_empty">发表第一篇文章后，请回来查看！</string>
     <string name="stats_insights_views_and_visitors_visitors_empty_state">查看我们的重要贴士，增加您的阅读量和流量 %1$s</string>
-    <string name="stats_view_publicize">社交媒体连接</string>
     <string name="stats_action_card_schedule_post_message">✍️ 将您的草稿计划在最佳时间发布，以此来吸引您的受众。</string>
     <string name="stats_action_card_blogging_reminders_message">💡 持续发表文章是建立受众群体的好方法。 添加一个提醒，督促自己坚持下去。</string>
     <string name="stats_action_card_grow_audience_message">💡 通过我们专家指导的&lt;i&gt;博客介绍&lt;/i&gt;课程更快地提升您的博客。</string>
@@ -71,7 +94,7 @@ Language: zh_CN
     <string name="me_btn_scan_login_code">扫描登录码</string>
     <string name="stats_insights_likes_guide_card">⭐️您的最新文章 %1$s 收到了 %2$s 个赞。</string>
     <string name="stats_most_popular_percent_views_empty">动态数量不足。 请在您的站点拥有更多访客时回来查看！</string>
-    <string name="stats_total_followers_content_description">粉丝总数的 %1s、%2s</string>
+    <string name="stats_total_followers_content_description">粉丝总数的 %1$s、%2$s%%</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
     <string name="pages_copy_link">复制链接</string>
     <string name="quick_start_completed_tour_title">恭喜！ 您搞明白了&lt;br/&gt;</string>
@@ -395,7 +418,6 @@ Language: zh_CN
     <string name="me_btn_share">将 WordPress 与您的朋友分享</string>
     <string name="my_site_quick_actions_title">快速链接</string>
     <string name="my_site_btn_domains">域名</string>
-    <string name="weekly_roundup_notification_text">您的站点获得了%1$d次浏览、%2$d次喜欢、%3$d次评论。</string>
     <string name="weekly_roundup_notification_title">每周综述：%s</string>
     <string name="blogging_reminders_notification_time">通知间隔</string>
     <string name="blogging_reminders_epilogue_body_everyday_with_time">您会收到提醒，要在&lt;b&gt;每天&lt;/b&gt;&lt;b&gt;%s&lt;/b&gt;写博客。</string>
@@ -504,6 +526,7 @@ Language: zh_CN
     <string name="gutenberg_native_s_has_no_url_set">%s没有URL集</string>
     <string name="gutenberg_native_s_converted_to_regular_blocks">%s 已转换为常规区块</string>
     <string name="gutenberg_native_s_block">%s区块</string>
+    <string name="gutenberg_native_opacity">不透明度</string>
     <string name="gutenberg_native_media_options">媒体选项</string>
     <string name="gutenberg_native_invalid_url_audio_file_not_found">无效的URL。找不到音频文件。</string>
     <string name="gutenberg_native_insert_crosspost">插入交叉发表</string>
@@ -1213,7 +1236,6 @@ Language: zh_CN
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">点击两下以进入颜色设置</string>
     <string name="reader_empty_followed_blogs_description">在您关注站点时，您会在这里看到其内容</string>
     <string name="feature_announcement_find_out_mode">了解更多</string>
-    <string name="feature_announcement_dialog_label">WordPress 的新变化</string>
     <string name="insert_label_with_count">插入 %d</string>
     <string name="crop">裁剪</string>
     <string name="error_failed_to_load_into_file">无法加载进文件，请再试一次。</string>
@@ -1312,7 +1334,6 @@ Language: zh_CN
     <string name="post_list_tab_trashed_posts">已放入回收站</string>
     <string name="post_list_tab_scheduled_posts">预发布</string>
     <string name="post_list_tab_published_posts">已发布</string>
-    <string name="sharing_facebook_account_must_have_pages">Facebook 连接无法找到任何页面。Publicize 无法连接到 Facebook 个人资料，只能连接到已发布的页面。</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">未连接</string>
     <string name="notifications_tab_title_likes">喜欢</string>
     <string name="notifications_tab_title_follows">关注</string>
@@ -1539,7 +1560,6 @@ Language: zh_CN
     <string name="share_desc">共享</string>
     <string name="navigate_back_desc">返回</string>
     <string name="navigate_forward_desc">前进</string>
-    <string name="calendar_scheduled_post_description">“%1$s”计划于“%2$s”在您的 WordPress 应用程序中发布\n %3$s</string>
     <string name="calendar_scheduled_post_title">WordPress 定时文章：“%s”</string>
     <string name="notification_post_will_be_published_in_ten_minutes">“%s”将于 10 分钟后发布</string>
     <string name="notification_post_will_be_published_in_one_hour">“%s”将于 1 小时后发布</string>
@@ -1711,7 +1731,6 @@ Language: zh_CN
     <string name="app_rating_rate_later">以后再说</string>
     <string name="app_rating_rate_now">立即评分</string>
     <string name="app_rating_message">欢迎您再次到来！如果您喜欢此应用，我们希望您能在Google Play Store上给我们一个评价。</string>
-    <string name="app_rating_title">喜欢 WordPress 吗?</string>
     <string name="editor_post_converted_back_to_draft">文章已转换回草稿</string>
     <string name="stats_insights_posting_activity">文章发布活动</string>
     <string name="stats_site_not_loaded_yet">站点尚未加载</string>
@@ -2441,6 +2460,7 @@ Language: zh_CN
     <string name="requesting_otp">正在请求短信验证码。</string>
     <string name="login_text_otp">通过短信向我发送代码</string>
     <string name="enter_verification_code">马上就好！请输入验证器应用中的验证码。</string>
+    <string name="open_mail">打开邮件</string>
     <string name="next">下一步</string>
     <string name="enter_email_wordpress_com">使用电子邮件地址登录 WordPress.com 以便管理您的所有 WordPress 站点。</string>
     <string name="image_optimization_promo_desc">图片优化可缩小图片以便更快地上传。\n\n您可以随时在站点设置中更改此选项。</string>
@@ -2538,10 +2558,8 @@ Language: zh_CN
     <string name="share_btn_disconnect">断开连接</string>
     <string name="share_btn_connect">连接</string>
     <string name="connection_service_description">连接以自动将您的博文分享至 %s。</string>
-    <string name="connection_service_label">通过 Publicize 分享至 %s</string>
     <string name="connected_accounts_label">已连接账户</string>
     <string name="connections_description">关联您最喜爱的社交媒体服务，自动与朋友分享新文章。</string>
-    <string name="connections_label">连接</string>
     <string name="sharing">分享</string>
     <string name="tabbar_accessibility_label_notifications">通知。管理您的通知。</string>
     <string name="tabbar_accessibility_label_reader">阅读器。查看其他站点的内容。</string>

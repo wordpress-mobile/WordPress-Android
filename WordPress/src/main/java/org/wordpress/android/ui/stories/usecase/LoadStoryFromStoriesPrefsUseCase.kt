@@ -136,14 +136,14 @@ class LoadStoryFromStoriesPrefsUseCase @Inject constructor(
         val mediaIds = getMediaIdsFromStoryBlockBridgeMediaFiles(
                 mediaFiles
         )
-        var allStorySlidesAreEditable = areAllStorySlidesEditable(
+        val allStorySlidesAreEditable = areAllStorySlidesEditable(
                 site,
                 mediaIds
         )
 
         // now look for a Story in the StoryRepository that has all these frames and, if not found, let's
         // just build the Story object ourselves to match the order in which the media files were passed.
-        var storyIndex = storyRepositoryWrapper.findStoryContainingStoryFrameItemsByIds(mediaIds)
+        val storyIndex = storyRepositoryWrapper.findStoryContainingStoryFrameItemsByIds(mediaIds)
         if (storyIndex == StoryRepository.DEFAULT_NONE_SELECTED) {
             // the StoryRepository didn't have it but we have editable serialized slides so,
             // create a new Story from scratch with these deserialized StoryFrameItems

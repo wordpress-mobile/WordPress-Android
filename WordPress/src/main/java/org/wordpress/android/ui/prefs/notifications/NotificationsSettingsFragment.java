@@ -64,6 +64,7 @@ import org.wordpress.android.models.NotificationsSettings.Type;
 import org.wordpress.android.ui.WPLaunchActivity;
 import org.wordpress.android.ui.bloggingreminders.BloggingReminderUtils;
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel;
+import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment;
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.prefs.notifications.FollowedBlogsProvider.PreferenceModel;
@@ -74,12 +75,13 @@ import org.wordpress.android.ui.utils.UiString;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.BuildConfigWrapper;
+import org.wordpress.android.util.JetpackBrandingUtils;
+import org.wordpress.android.util.JetpackBrandingUtils.Screen;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.config.BloggingRemindersFeatureConfig;
-import org.wordpress.android.util.config.JetpackPoweredFeatureConfig;
 import org.wordpress.android.util.extensions.ContextExtensionsKt;
 
 import java.util.ArrayList;
@@ -136,7 +138,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment
     @Inject BuildConfigWrapper mBuildConfigWrapper;
     @Inject ViewModelProvider.Factory mViewModelFactory;
     @Inject BloggingRemindersFeatureConfig mBloggingRemindersFeatureConfig;
-    @Inject JetpackPoweredFeatureConfig mJetpackPoweredFeatureConfig;
+    @Inject JetpackBrandingUtils mJetpackBrandingUtils;
     @Inject UiHelpers mUiHelpers;
 
     private BloggingRemindersViewModel mBloggingRemindersViewModel;
@@ -224,9 +226,17 @@ public class NotificationsSettingsFragment extends PreferenceFragment
     }
 
     private void addJetpackBadgeAsFooterIfEnabled(ListView listView) {
-        if (mJetpackPoweredFeatureConfig.isEnabled() && !mBuildConfigWrapper.isJetpackApp()) {
+        if (mJetpackBrandingUtils.shouldShowJetpackBranding()) {
             LayoutInflater inflater = LayoutInflater.from(getContext());
             final JetpackBadgeFooterBinding binding = JetpackBadgeFooterBinding.inflate(inflater);
+            if (mJetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
+                binding.footerJetpackBadge.jetpackPoweredBadge.setOnClickListener(v -> {
+                    mJetpackBrandingUtils.trackBadgeTapped(Screen.NOTIFICATIONS_SETTINGS);
+                    new JetpackPoweredBottomSheetFragment().show(
+                            ((AppCompatActivity) getActivity()).getSupportFragmentManager(),
+                            JetpackPoweredBottomSheetFragment.TAG);
+                });
+            }
             listView.addFooterView(binding.getRoot(), null, false);
         }
     }

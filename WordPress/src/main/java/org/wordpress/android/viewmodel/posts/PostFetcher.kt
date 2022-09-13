@@ -32,6 +32,7 @@ class PostFetcher constructor(
      * Handles the [Lifecycle.Event.ON_DESTROY] event to cleanup the registration for dispatcher and removing the
      * observer for lifecycle.
      */
+    @Suppress("unused")
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     private fun onDestroy() {
         lifecycle.removeObserver(this)
@@ -39,6 +40,7 @@ class PostFetcher constructor(
     }
 
     // TODO: We should implement batch fetching when it's available in the API
+    @Suppress("ForbiddenComment")
     fun fetchPosts(site: SiteModel, remoteItemIds: List<RemoteId>) {
         remoteItemIds
                 .filter {

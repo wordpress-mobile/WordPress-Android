@@ -1,5 +1,0 @@
-20.2:
-- Atualizamos a visualização de informações de estatísticas do seu site.
-- Faça login com seu navegador usando um código QR no menu Meu perfil do aplicativo.
-- Faça upload de imagens HEIC e HEIF com o seletor de mídia.
-- Eliminamos um bug que afetava temas do Leitor em outros idiomas.

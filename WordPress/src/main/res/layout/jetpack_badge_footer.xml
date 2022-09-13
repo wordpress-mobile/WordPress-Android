@@ -6,7 +6,7 @@
     android:paddingBottom="@dimen/jetpack_badge_footer_bottom_spacing">
 
     <include
-        android:id="@+id/jetpack_badge"
+        android:id="@+id/footer_jetpack_badge"
         layout="@layout/jetpack_badge"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />

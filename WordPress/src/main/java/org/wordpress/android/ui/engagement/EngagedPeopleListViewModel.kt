@@ -124,6 +124,7 @@ class EngagedPeopleListViewModel @Inject constructor(
         }
     }
 
+    @Suppress("ForbiddenComment")
     private fun loadRequest(
         listScenario: ListScenario?,
         requestPostOrComment: Boolean,

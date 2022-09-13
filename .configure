@@ -1,7 +1,7 @@
 {
   "project_name": "WordPress-Android",
   "branch": "trunk",
-  "pinned_hash": "15876d597d86d75685c5c702078276d75e74f4a7",
+  "pinned_hash": "4deedf776b2e282f9fb8e49774ca474012969b52",
   "files_to_copy": [
     {
       "file": "android/WPAndroid/gradle.properties",
@@ -41,6 +41,11 @@
     {
       "file": "android/automattic_upload.jks",
       "destination": "WordPress/upload.jks",
+      "encrypt": true
+    },
+    {
+      "file": "android/WPAndroid/firebase.secrets.json",
+      "destination": "~/.configure/wordpress-android/secrets/firebase.secrets.json",
       "encrypt": true
     }
   ],

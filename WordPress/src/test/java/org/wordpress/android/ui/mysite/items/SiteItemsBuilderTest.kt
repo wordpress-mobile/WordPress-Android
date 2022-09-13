@@ -256,7 +256,7 @@ class SiteItemsBuilderTest {
         assertThat(siteDomainsItems).contains(DOMAINS_ITEM)
     }
 
-    @Suppress("ComplexMethod", "LongMethod", "LongParameterList")
+    @Suppress("ComplexMethod", "LongMethod")
     private fun setupHeaders(
         addJetpackHeader: Boolean = false,
         addJetpackSettings: Boolean = false,

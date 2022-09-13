@@ -174,9 +174,6 @@ public class AppPrefs {
         SHOULD_SCHEDULE_CREATE_SITE_NOTIFICATION,
         SHOULD_SHOW_WEEKLY_ROUNDUP_NOTIFICATION,
 
-        // Used to indicate if the variant has been assigned for the My Site Tab experiment
-        MY_SITE_DEFAULT_TAB_EXPERIMENT_VARIANT_ASSIGNED,
-
         SKIPPED_BLOGGING_PROMPT_DAY,
     }
 
@@ -276,10 +273,11 @@ public class AppPrefs {
         // Used to identify the App Settings for initial screen that is updated when the variant is assigned
         wp_pref_initial_screen,
 
-        STATS_REVAMP2_FEATURE_ANNOUNCEMENT_DISPLAYED,
-
         // Indicates if this is the first time the user sees the blogging prompts onboarding dialog
-        IS_FIRST_TIME_BLOGGING_PROMPTS_ONBOARDING
+        IS_FIRST_TIME_BLOGGING_PROMPTS_ONBOARDING,
+
+        // Indicates if this is the first time we try to login to Jetpack automatically
+        IS_FIRST_TRY_LOGIN_JETPACK
     }
 
     private static SharedPreferences prefs() {
@@ -1327,15 +1325,6 @@ public class AppPrefs {
         return DeletablePrefKey.SHOULD_SHOW_WEEKLY_ROUNDUP_NOTIFICATION.name() + siteId;
     }
 
-    public static boolean shouldDisplayStatsRevampFeatureAnnouncement() {
-        return prefs().getBoolean(UndeletablePrefKey.STATS_REVAMP2_FEATURE_ANNOUNCEMENT_DISPLAYED.name(), true);
-    }
-
-    public static void setShouldDisplayStatsRevampFeatureAnnouncement(boolean isDisplayed) {
-        prefs().edit().putBoolean(UndeletablePrefKey.STATS_REVAMP2_FEATURE_ANNOUNCEMENT_DISPLAYED.name(), isDisplayed)
-               .apply();
-    }
-
     /*
      * adds a local site ID to the top of list of recently chosen sites
      */
@@ -1386,17 +1375,6 @@ public class AppPrefs {
         return capabilities;
     }
 
-    public static boolean isMySiteDefaultTabExperimentVariantAssigned() {
-        return getBoolean(
-                DeletablePrefKey.MY_SITE_DEFAULT_TAB_EXPERIMENT_VARIANT_ASSIGNED,
-                false
-        );
-    }
-
-    public static void setMySiteDefaultTabExperimentVariantAssigned() {
-        setBoolean(DeletablePrefKey.MY_SITE_DEFAULT_TAB_EXPERIMENT_VARIANT_ASSIGNED, true);
-    }
-
     public static Date getSkippedPromptDay(int siteId) {
         long promptSkippedMillis = prefs().getLong(getSkippedBloggingPromptDayConfigKey(siteId), 0);
         if (promptSkippedMillis == 0) {
@@ -1417,20 +1395,10 @@ public class AppPrefs {
         return DeletablePrefKey.SKIPPED_BLOGGING_PROMPT_DAY.name() + siteId;
     }
 
-    public static void setInitialScreenFromMySiteDefaultTabExperimentVariant(String variant) {
-        // This supports the MySiteDefaultTab AB Experiment.
-        // AppSettings are undeletable across logouts and keys are all lower case.
-        // This method will be removed when the experiment has completed and thus
-        // the settings will be maintained only from the AppSettings view{
-        String initialScreen = variant.equals(MySiteTabType.SITE_MENU.getTrackingLabel())
-                ? MySiteTabType.SITE_MENU.getLabel() : MySiteTabType.DASHBOARD.getLabel();
-        setString(UndeletablePrefKey.wp_pref_initial_screen, initialScreen);
-    }
-
-    public static String getMySiteInitialScreen() {
+    public static String getMySiteInitialScreen(boolean isJetpackApp) {
         return getString(
                 UndeletablePrefKey.wp_pref_initial_screen,
-                MySiteTabType.SITE_MENU.getLabel()
+                isJetpackApp ? MySiteTabType.DASHBOARD.getLabel() : MySiteTabType.SITE_MENU.getLabel()
         );
     }
 
@@ -1440,5 +1408,13 @@ public class AppPrefs {
 
     public static void saveFirstBloggingPromptsOnboarding(final boolean isFirstTime) {
         setBoolean(UndeletablePrefKey.IS_FIRST_TIME_BLOGGING_PROMPTS_ONBOARDING, isFirstTime);
+    }
+
+    public static Boolean getIsFirstTrySharedLoginJetpack() {
+        return getBoolean(UndeletablePrefKey.IS_FIRST_TRY_LOGIN_JETPACK, true);
+    }
+
+    public static void saveIsFirstTrySharedLoginJetpack(final boolean isFirstTry) {
+        setBoolean(UndeletablePrefKey.IS_FIRST_TRY_LOGIN_JETPACK, isFirstTry);
     }
 }

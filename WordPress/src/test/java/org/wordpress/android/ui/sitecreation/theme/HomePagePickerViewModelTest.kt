@@ -37,9 +37,9 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.NoDelayCoroutineDispatcher
 import org.wordpress.android.viewmodel.ResourceProvider
 
-private const val mockedDesignSlug = "mockedDesignSlug"
-private const val mockedDesignSegmentId = 1L
-private const val mockedDesignDemoUrl = "mockedDemoUrl"
+private const val MOCKED_DESIGN_SLUG = "mockedDesignSlug"
+private const val MOCKED_DESIGN_SEGMENT_ID = 1L
+private const val MOCKED_DESIGN_DEMO_URL = "mockedDemoUrl"
 
 @RunWith(MockitoJUnitRunner::class)
 @InternalCoroutinesApi
@@ -97,11 +97,11 @@ class HomePagePickerViewModelTest {
         else OnStarterDesignsFetched(
                 listOf(
                         StarterDesign(
-                                mockedDesignSlug,
+                                MOCKED_DESIGN_SLUG,
                                 "title",
-                                mockedDesignSegmentId,
+                                MOCKED_DESIGN_SEGMENT_ID,
                                 listOf(mockCategory),
-                                mockedDesignDemoUrl,
+                                MOCKED_DESIGN_DEMO_URL,
                                 "theme",
                                 listOf("stable", "blog"),
                                 "desktopThumbnail",
@@ -161,18 +161,18 @@ class HomePagePickerViewModelTest {
     @Test
     fun `when the user taps on a layout the preview flow is triggered`() = mockResponse {
         viewModel.start()
-        viewModel.onThumbnailReady(mockedDesignSlug)
-        viewModel.onLayoutTapped(mockedDesignSlug)
+        viewModel.onThumbnailReady(MOCKED_DESIGN_SLUG)
+        viewModel.onLayoutTapped(MOCKED_DESIGN_SLUG)
         val captor = ArgumentCaptor.forClass(DesignPreviewAction::class.java)
         verify(onPreviewActionObserver).onChanged(captor.capture())
-        assertThat(requireNotNull(captor.value as Show).template).isEqualTo(mockedDesignSlug)
-        assertThat(requireNotNull(captor.value as Show).demoUrl).isEqualTo(mockedDesignDemoUrl)
+        assertThat(requireNotNull(captor.value as Show).template).isEqualTo(MOCKED_DESIGN_SLUG)
+        assertThat(requireNotNull(captor.value as Show).demoUrl).isEqualTo(MOCKED_DESIGN_DEMO_URL)
     }
 
     @Test
     fun `when the user taps on a thumbnail that has not loaded, the preview flow is not triggered`() = mockResponse {
         viewModel.start()
-        viewModel.onLayoutTapped(mockedDesignSlug)
+        viewModel.onLayoutTapped(MOCKED_DESIGN_SLUG)
         verify(onPreviewActionObserver, never()).onChanged(isA(Show::class.java))
     }
 
@@ -213,30 +213,30 @@ class HomePagePickerViewModelTest {
     @Test
     fun `when the user chooses a design the design info is passed to the next step`() = mockResponse {
         viewModel.start()
-        viewModel.onThumbnailReady(mockedDesignSlug)
-        viewModel.onLayoutTapped(mockedDesignSlug)
+        viewModel.onThumbnailReady(MOCKED_DESIGN_SLUG)
+        viewModel.onLayoutTapped(MOCKED_DESIGN_SLUG)
         viewModel.onPreviewChooseTapped()
         val captor = ArgumentCaptor.forClass(DesignSelectionAction::class.java)
         verify(onDesignActionObserver).onChanged(captor.capture())
-        assertThat(captor.value.template).isEqualTo(mockedDesignSlug)
+        assertThat(captor.value.template).isEqualTo(MOCKED_DESIGN_SLUG)
     }
 
     @Test
     fun `when the user chooses a recommended design the recommended information is emitted`() = mockResponse {
         viewModel.start()
-        viewModel.onThumbnailReady(mockedDesignSlug)
-        viewModel.onLayoutTapped(mockedDesignSlug, true)
+        viewModel.onThumbnailReady(MOCKED_DESIGN_SLUG)
+        viewModel.onLayoutTapped(MOCKED_DESIGN_SLUG, true)
         viewModel.onPreviewChooseTapped()
-        verify(analyticsTracker).trackSiteDesignSelected(mockedDesignSlug, true)
+        verify(analyticsTracker).trackSiteDesignSelected(MOCKED_DESIGN_SLUG, true)
     }
 
     @Test
     fun `when the user chooses a design that is not recommended the correct information is emitted`() = mockResponse {
         viewModel.start()
-        viewModel.onThumbnailReady(mockedDesignSlug)
-        viewModel.onLayoutTapped(mockedDesignSlug, false)
+        viewModel.onThumbnailReady(MOCKED_DESIGN_SLUG)
+        viewModel.onLayoutTapped(MOCKED_DESIGN_SLUG, false)
         viewModel.onPreviewChooseTapped()
-        verify(analyticsTracker).trackSiteDesignSelected(mockedDesignSlug, false)
+        verify(analyticsTracker).trackSiteDesignSelected(MOCKED_DESIGN_SLUG, false)
     }
 
     @Test

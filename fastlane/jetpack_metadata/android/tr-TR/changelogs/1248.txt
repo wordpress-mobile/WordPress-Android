@@ -1,5 +1,0 @@
-20.2:
-- Sitenizin İstatistikler bölümündeki Tek Bakışta görünümünü güncelledik.
-- Uygulamanın Ben menüsünde bir QR kodu kullanarak tarayıcınızla oturum açın.
-- Ortam seçiciyi kullanarak HEIC/HEIF görsellerini yükleyin.
-- Diğer dillerdeki okuyucu konularını etkileyen bir hatayı ortadan kaldırdık.

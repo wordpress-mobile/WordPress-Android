@@ -21,11 +21,10 @@ dependencies {
 }
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion rootProject.compileSdkVersion
 
     defaultConfig {
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
     }
 }
-

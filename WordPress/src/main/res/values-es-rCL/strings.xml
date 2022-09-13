@@ -42,7 +42,6 @@ Language: es_CL
     <string name="app_rating_rate_later">Más tarde</string>
     <string name="app_rating_rate_now">Califica ahora</string>
     <string name="app_rating_message">¡Encantado de verte de nuevo! Si está cavando la aplicación, nos encantaría una calificación en la Google Play Store.</string>
-    <string name="app_rating_title">¿Disfrutando de WordPress?</string>
     <string name="editor_post_converted_back_to_draft">Post convertido de nuevo a borrador</string>
     <string name="stats_insights_posting_activity">Actividad de Publicación</string>
     <string name="stats_site_not_loaded_yet">Sitio aún no cargado</string>
@@ -825,10 +824,8 @@ Language: es_CL
     <string name="connection_service_description">Conéctate para compartir automáticamente tus entradas del blog a %s.</string>
     <string name="share_btn_connect">Conectar</string>
     <string name="share_btn_reconnect">Reconectar</string>
-    <string name="connection_service_label">Publicar a %s</string>
     <string name="connected_accounts_label">Cuentas conectadas</string>
     <string name="connections_description">Conecta tus servicios de medios sociales favoritos y comparte automáticamente las entradas nuevas con tus amigos.</string>
-    <string name="connections_label">Conexiones</string>
     <string name="sharing">Compartir</string>
     <string name="tabbar_accessibility_label_notifications">Notificaciones. Administra tus notificaciones.</string>
     <string name="tabbar_accessibility_label_reader">Lector. Sigue el contenido de otros sitios.</string>

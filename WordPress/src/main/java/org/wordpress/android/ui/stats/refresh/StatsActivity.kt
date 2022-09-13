@@ -5,9 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.activity.viewModels
-import androidx.core.view.isVisible
 import dagger.hilt.android.AndroidEntryPoint
-import org.wordpress.android.BuildConfig
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.StatsListActivityBinding
 import org.wordpress.android.fluxc.model.SiteModel
@@ -16,26 +14,19 @@ import org.wordpress.android.push.NotificationsProcessingService.ARG_NOTIFICATIO
 import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.stats.StatsTimeframe
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
-import org.wordpress.android.util.config.JetpackPoweredFeatureConfig
-import org.wordpress.android.util.extensions.setNavigationBarColorForBanner
+import org.wordpress.android.util.JetpackBrandingUtils
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class StatsActivity : LocaleAwareActivity() {
     @Inject lateinit var statsSiteProvider: StatsSiteProvider
-    @Inject lateinit var jetpackPoweredFeatureConfig: JetpackPoweredFeatureConfig
+    @Inject lateinit var jetpackBrandingUtils: JetpackBrandingUtils
     private val viewModel: StatsViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        with(StatsListActivityBinding.inflate(layoutInflater)) {
-            setContentView(root)
-            if (jetpackPoweredFeatureConfig.isEnabled() && !BuildConfig.IS_JETPACK_APP) {
-                jetpackBanner.root.isVisible = true
-                window.setNavigationBarColorForBanner()
-            }
-        }
+        setContentView(StatsListActivityBinding.inflate(layoutInflater).root)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -88,7 +79,6 @@ class StatsActivity : LocaleAwareActivity() {
 
     enum class StatsLaunchedFrom {
         STATS_WIDGET,
-        NOTIFICATIONS,
-        FEATURE_ANNOUNCEMENT
+        NOTIFICATIONS
     }
 }

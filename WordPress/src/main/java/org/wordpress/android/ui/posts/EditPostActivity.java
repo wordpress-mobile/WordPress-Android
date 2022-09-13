@@ -187,6 +187,7 @@ import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AutolinkUtils;
+import org.wordpress.android.util.BuildConfigWrapper;
 import org.wordpress.android.util.DateTimeUtilsWrapper;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FluxCUtils;
@@ -395,6 +396,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Inject EditorTracker mEditorTracker;
     @Inject UploadUtilsWrapper mUploadUtilsWrapper;
     @Inject EditorActionsProvider mEditorActionsProvider;
+    @Inject BuildConfigWrapper mBuildConfigWrapper;
     @Inject DateTimeUtilsWrapper mDateTimeUtils;
     @Inject ViewModelProvider.Factory mViewModelFactory;
     @Inject ReaderUtilsWrapper mReaderUtilsWrapper;
@@ -2341,6 +2343,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
         boolean isWPComSite = mSite.isWPCom() || mSite.isWPComAtomic();
         boolean shouldUseFastImage = !mSite.isPrivate() && !mSite.isPrivateWPComAtomic();
 
+        String hostAppNamespace = mBuildConfigWrapper.isJetpackApp() ? "Jetpack" : "WordPress";
+
         return new GutenbergPropsBuilder(
                 SiteUtils.supportsContactInfoFeature(mSite),
                 SiteUtils.supportsLayoutGridFeature(mSite),
@@ -2359,6 +2363,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 isWPComSite,
                 wpcomLocaleSlug,
                 postType,
+                hostAppNamespace,
                 featuredImageId,
                 themeBundle
         );

@@ -44,6 +44,7 @@ class ListItemInteractionTest {
 
         assertThat(interaction1).isEqualTo(interaction2)
     }
+
     @Test
     fun `not equals when using lambda with a parameter`() {
         val param = "param"
@@ -62,9 +63,8 @@ class ListItemInteractionTest {
         assertThat(interaction1).isEqualTo(interaction2)
     }
 
-    private fun emptyFunction() {
-    }
+    private fun emptyFunction() = Unit
 
-    private fun parametrizedEmptyFunction(param: String) {
-    }
+    @Suppress("unused")
+    private fun parametrizedEmptyFunction(param: String) = Unit
 }

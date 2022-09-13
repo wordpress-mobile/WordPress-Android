@@ -35,6 +35,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.Factory
 import androidx.recyclerview.widget.DefaultItemAnimator
@@ -46,10 +47,10 @@ import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.elevation.ElevationOverlayProvider
 import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
@@ -78,6 +79,7 @@ import org.wordpress.android.ui.main.SitePickerActivity
 import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.media.MediaPreviewActivity
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.OpenUrlType
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.PhotoViewerOption
@@ -117,6 +119,8 @@ import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
+import org.wordpress.android.util.JetpackBrandingUtils
+import org.wordpress.android.util.JetpackBrandingUtils.Screen.READER_POST_DETAIL
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.PermissionUtils
 import org.wordpress.android.util.RtlUtils
@@ -126,7 +130,6 @@ import org.wordpress.android.util.UrlUtils
 import org.wordpress.android.util.WPPermissionUtils.READER_FILE_DOWNLOAD_PERMISSION_REQUEST_CODE
 import org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper
 import org.wordpress.android.util.config.CommentsSnippetFeatureConfig
-import org.wordpress.android.util.config.JetpackPoweredFeatureConfig
 import org.wordpress.android.util.config.LikesEnhancementsFeatureConfig
 import org.wordpress.android.util.extensions.getColorFromAttribute
 import org.wordpress.android.util.extensions.isDarkTheme
@@ -145,6 +148,7 @@ import java.net.HttpURLConnection
 import java.util.EnumSet
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class ReaderPostDetailFragment : ViewPagerFragment(),
         WPMainActivity.OnActivityBackPressedListener,
         ScrollDirectionListener,
@@ -204,7 +208,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
     private var fileForDownload: String? = null
 
-    private lateinit var viewModel: ReaderPostDetailViewModel
+    private val viewModel: ReaderPostDetailViewModel by viewModels()
     private lateinit var conversationViewModel: ConversationNotificationsViewModel
 
     @Inject internal lateinit var accountStore: AccountStore
@@ -222,7 +226,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     @Inject lateinit var likesEnhancementsFeatureConfig: LikesEnhancementsFeatureConfig
     @Inject lateinit var contextProvider: ContextProvider
     @Inject lateinit var commentsSnippetFeatureConfig: CommentsSnippetFeatureConfig
-    @Inject lateinit var jetpackPoweredFeatureConfig: JetpackPoweredFeatureConfig
+    @Inject lateinit var jetpackBrandingUtils: JetpackBrandingUtils
 
     private val mSignInClickListener = View.OnClickListener {
         EventBus.getDefault()
@@ -486,7 +490,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     }
 
     private fun initViewModel(binding: ReaderFragmentPostDetailBinding, savedInstanceState: Bundle?) {
-        viewModel = ViewModelProvider(this, viewModelFactory).get(ReaderPostDetailViewModel::class.java)
         conversationViewModel = ViewModelProvider(this, viewModelFactory).get(
                 ConversationNotificationsViewModel::class.java
         )
@@ -503,6 +506,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         viewModel.start(isRelatedPost = isRelatedPost, isFeed = isFeed, interceptedUri = interceptedUri)
     }
 
+    @Suppress("LongMethod")
     private fun initObservers(binding: ReaderFragmentPostDetailBinding) {
         viewModel.uiState.observe(viewLifecycleOwner, {
             uiHelpers.updateVisibility(binding.textError, it.errorVisible)
@@ -567,6 +571,12 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             viewModel.commentSnippetState.observe(viewLifecycleOwner, { state ->
                 manageCommentSnippetUiState(state)
             })
+        }
+
+        viewModel.showJetpackPoweredBottomSheet.observeEvent(viewLifecycleOwner) {
+            JetpackPoweredBottomSheetFragment
+                    .newInstance()
+                    .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
         }
     }
 
@@ -702,7 +712,17 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
     private fun renderUiState(state: ReaderPostDetailsUiState, binding: ReaderFragmentPostDetailBinding) {
         onPostExecuteShowPost()
-        binding.jetpackBadge.root.isVisible = jetpackPoweredFeatureConfig.isEnabled() && !BuildConfig.IS_JETPACK_APP
+
+        if (jetpackBrandingUtils.shouldShowJetpackBranding()) {
+            binding.jetpackBadge.root.isVisible = true
+            if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
+                binding.jetpackBadge.jetpackPoweredBadge.setOnClickListener {
+                    jetpackBrandingUtils.trackBadgeTapped(READER_POST_DETAIL)
+                    viewModel.showJetpackPoweredBottomSheet()
+                }
+            }
+        }
+
         binding.headerView.updatePost(state.headerUiState)
         showOrHideMoreMenu(state)
 
@@ -721,6 +741,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     }
 
     // TODO: Update using UiState/ NavigationEvent
+    @Suppress("ForbiddenComment")
     private fun onPostExecuteShowPost() {
         // make sure options menu reflects whether we now have a post
         activity?.invalidateOptionsMenu()
@@ -1591,6 +1612,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     /*
      * returns True if the passed URL should be opened in the external browser app
      */
+    @Suppress("ReturnCount")
     private fun shouldOpenExternal(url: String): Boolean {
         // open YouTube videos in external app so they launch the YouTube player
         if (ReaderVideoUtils.isYouTubeVideoLink(url)) {
@@ -1701,6 +1723,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             return newInstance(false, blogId, postId, null, 0, false, null, null, false)
         }
 
+        @Suppress("LongParameterList")
         fun newInstance(
             isFeed: Boolean,
             blogId: Long,

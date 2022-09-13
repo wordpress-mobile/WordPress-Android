@@ -28,6 +28,8 @@ import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.CreateSiteState
 import org.wordpress.android.ui.sitecreation.usecases.FetchHomePageLayoutsUseCase
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.wizard.WizardManager
@@ -124,6 +126,17 @@ class SiteCreationMainVM @Inject constructor(
             preloadingJob = viewModelScope.launch(Dispatchers.IO) {
                 if (networkUtils.isNetworkAvailable()) {
                     val response = fetchHomePageLayoutsUseCase.fetchStarterDesigns()
+
+                    // Else clause added to better understand the reason that causes this crash:
+                    // https://github.com/wordpress-mobile/WordPress-Android/issues/17020
+                    if (response.isError) {
+                        AppLog.e(T.THEMES, "Error preloading starter designs: ${response.error}")
+                        return@launch
+                    } else if (response.designs == null) {
+                        AppLog.e(T.THEMES, "Null starter designs response: $response")
+                        return@launch
+                    }
+
                     for (design in response.designs) {
                         imageManager.preload(context, MShot(design.previewMobile))
                     }

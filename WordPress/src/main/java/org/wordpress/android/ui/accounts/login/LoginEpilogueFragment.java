@@ -173,7 +173,6 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         if (savedInstanceState == null) {
-            mParentViewModel.checkAndSetVariantForMySiteDefaultTabExperiment();
             AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_EPILOGUE_VIEWED);
             mUnifiedLoginTracker.track(Step.SUCCESS);
         }
@@ -317,11 +316,6 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
             doFinishLogin();
         }
         mParentViewModel.onLoginEpilogueResume(mDoLoginUpdate);
-    }
-
-    @Override
-    protected boolean isJetpackAppLogin() {
-        return mDoLoginUpdate && mBuildConfigWrapper.isJetpackApp();
     }
 
     private void bindHeaderViewHolder(LoginHeaderViewHolder holder, SiteList sites) {

@@ -125,7 +125,7 @@ class CropViewModel : ViewModel() {
         val cropResult = createCropResult(cropResultCode, cropResultData)
         when (cropResult.resultCode) {
             RESULT_OK -> onCropAndSaveImageSuccess(cropResult)
-            UCrop.RESULT_ERROR -> onCropAndSaveImageFailure(cropResult)
+            UCrop.RESULT_ERROR -> onCropAndSaveImageFailure()
         }
     }
 
@@ -142,9 +142,8 @@ class CropViewModel : ViewModel() {
         _navigateBackWithCropResult.value = cropResult
     }
 
-    private fun onCropAndSaveImageFailure(cropResult: CropResult) {
-        val errorMsg = getCropError(cropResult.data)
-        updateImageCropAndSaveState(ImageCropAndSaveFailedState(errorMsg, R.string.error_failed_to_crop_and_save_image))
+    private fun onCropAndSaveImageFailure() {
+        updateImageCropAndSaveState(ImageCropAndSaveFailedState(R.string.error_failed_to_crop_and_save_image))
     }
 
     private fun updateUiState(state: UiState) {
@@ -156,8 +155,6 @@ class CropViewModel : ViewModel() {
     }
 
     private fun createCropResult(cropResultCode: Int, cropData: Intent) = CropResult(cropResultCode, cropData)
-
-    private fun getCropError(resultData: Intent): String? = UCrop.getError(resultData)?.message
 
     private fun getOutputPath(): String =
         cropOptionsBundleWithFilesInfo.getParcelable<Uri?>(UCrop.EXTRA_OUTPUT_URI)?.path ?: ""
@@ -172,6 +169,7 @@ class CropViewModel : ViewModel() {
         }
     }
 
+    @Suppress("SerialVersionUIDInSerializableClass")
     data class CropResult(val resultCode: Int, val data: Intent) : Serializable
 
     sealed class UiState(
@@ -184,7 +182,7 @@ class CropViewModel : ViewModel() {
     sealed class ImageCropAndSaveState {
         object ImageCropAndSaveStartState : ImageCropAndSaveState()
         data class ImageCropAndSaveSuccessState(val cropResult: CropResult) : ImageCropAndSaveState()
-        data class ImageCropAndSaveFailedState(val errorMsg: String?, val errorResId: Int) : ImageCropAndSaveState()
+        data class ImageCropAndSaveFailedState(val errorResId: Int) : ImageCropAndSaveState()
     }
 
     companion object {

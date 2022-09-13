@@ -459,6 +459,7 @@ class DomainRegistrationDetailsFragment : Fragment() {
                     as ArrayList<SupportedStateResponse>
         }
 
+        @Suppress("UseCheckOrError")
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
             if (targetFragment == null) {
                 throw IllegalStateException("StatePickerDialogFragment is missing a targetFragment ")
@@ -509,6 +510,7 @@ class DomainRegistrationDetailsFragment : Fragment() {
                     as ArrayList<SupportedDomainCountry>
         }
 
+        @Suppress("UseCheckOrError")
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
             if (targetFragment == null) {
                 throw IllegalStateException("CountryPickerDialogFragment is missing a targetFragment ")

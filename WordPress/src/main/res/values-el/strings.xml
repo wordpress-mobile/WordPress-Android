@@ -512,9 +512,7 @@ Language: el_GR
     <string name="share_btn_reconnect">Επανασύνδεση</string>
     <string name="share_btn_disconnect">Αποσύνδεση</string>
     <string name="share_btn_connect">Σύνδεση</string>
-    <string name="connection_service_label">Κοινοποίηση στο %s</string>
     <string name="connected_accounts_label">Συνδεδεμένοι λογαριασμοί</string>
-    <string name="connections_label">Συνδέσεις</string>
     <string name="sharing">Κοινοποίηση</string>
     <string name="my_site_btn_sharing">Κοινοποίηση</string>
     <string name="button_not_now">Όχι τώρα</string>

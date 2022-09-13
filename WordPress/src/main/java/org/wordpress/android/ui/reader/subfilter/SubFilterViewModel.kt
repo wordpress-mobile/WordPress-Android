@@ -355,12 +355,14 @@ class SubFilterViewModel @Inject constructor(
         outState.putBoolean(ARG_IS_FIRST_LOAD, isFirstLoad)
     }
 
+    @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onEventMainThread(event: ReaderEvents.FollowedTagsChanged) {
         AppLog.d(T.READER, "Subfilter bottom sheet > followed tags changed")
         loadSubFilters()
     }
 
+    @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onEventMainThread(event: ReaderEvents.FollowedBlogsChanged) {
         AppLog.d(T.READER, "Subfilter bottom sheet > followed blogs changed")

@@ -52,6 +52,7 @@ private val POST_STATE_PENDING = PENDING.toString()
 private val POST_STATE_DRAFT = DRAFT.toString()
 private val POST_STATE_TRASHED = PostStatus.TRASHED.toString()
 
+@Suppress("LargeClass")
 @RunWith(MockitoJUnitRunner::class)
 class PostListItemUiStateHelperTest {
     @Mock private lateinit var appPrefsWrapper: AppPrefsWrapper

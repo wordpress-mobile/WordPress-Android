@@ -1,3 +1,0 @@
-20.2 :
-- Vous pouvez désormais charger des images HEIC/HEIF sur votre site via le sélecteur de médias.
-- Nous avons corrigé un bug qui supprimait les caractères spéciaux dans les thèmes du Lecteur pour d’autres langues.

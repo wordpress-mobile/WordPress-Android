@@ -172,6 +172,7 @@ fun <S, T, U, V> merge(
  * @param sourceD fourth source
  * @return new data source
  */
+@Suppress("DestructuringDeclarationWithTooManyEntries")
 fun <S, T, U, V, W> merge(
     sourceA: LiveData<S>,
     sourceB: LiveData<T>,
@@ -225,6 +226,7 @@ fun <S, T, U, V, W> merge(
  * @param sourceE fifth source
  * @return new data source
  */
+@Suppress("DestructuringDeclarationWithTooManyEntries", "LongParameterList")
 fun <S, T, U, V, W, X> merge(
     sourceA: LiveData<S>,
     sourceB: LiveData<T>,

@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.posts
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.Intent
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
@@ -247,8 +246,7 @@ class PostListMainViewModel @Inject constructor(
         site: SiteModel,
         initPreviewState: PostListRemotePreviewState,
         currentBottomSheetPostId: LocalId,
-        editPostRepository: EditPostRepository,
-        context: Context
+        editPostRepository: EditPostRepository
     ) {
         this.site = site
         this.editPostRepository = editPostRepository

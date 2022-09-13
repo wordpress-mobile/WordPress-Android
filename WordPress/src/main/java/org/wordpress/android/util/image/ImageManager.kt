@@ -43,6 +43,7 @@ import org.wordpress.android.ui.media.VideoLoader
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.image.ImageType.VIDEO
 import java.io.File
+import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -79,6 +80,7 @@ class ImageManager @Inject constructor(
      * + [Context] is not null
      * + [Context] is not destroyed (tested with [FragmentActivity.isDestroyed] or [Activity.isDestroyed])
      */
+    @Suppress("ReturnCount")
     private fun Context?.isAvailable(): Boolean {
         if (this == null) {
             return false
@@ -498,7 +500,10 @@ class ImageManager @Inject constructor(
             FIT_START,
             FIT_XY,
             MATRIX -> {
-                AppLog.e(AppLog.T.UTILS, String.format("ScaleType %s is not supported.", scaleType.toString()))
+                AppLog.e(
+                        AppLog.T.UTILS,
+                        String.format(Locale.ENGLISH, "ScaleType %s is not supported.", scaleType.toString())
+                )
                 this
             }
         }

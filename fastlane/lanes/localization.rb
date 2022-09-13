@@ -1,5 +1,5 @@
 # NOTE: When updating this list, ensure the locales having `promo_config: {…}` matches the list of locales
-# used in the `raw-screenshots` job (see `.circleci/config.yml`) by Firebase Test Lab
+# used in the `raw-screenshots` CI job for Firebase Test Lab
 #
 # NOTE: The `promo_config` hash is used by `fastlane/helpers/android_promo_screenshot_helper.rb` and accepts keys `:text_size` and `:font`.
 # When set to `false`, the locale will just not be included during the screenshot generation (see `lanes/screenshots.rb`).
@@ -120,9 +120,9 @@ platform :android do
     files = {
       release_note: File.join(metadata_folder, 'release_notes.txt'),
       release_note_short: File.join(metadata_folder, 'release_notes_short.txt'),
-      play_store_promo: File.join(metadata_folder, 'short_description.txt'),
-      play_store_desc: File.join(metadata_folder, 'full_description.txt'),
       play_store_app_title: File.join(metadata_folder, 'title.txt'),
+      play_store_promo: File.join(metadata_folder, 'short_description.txt'),
+      play_store_desc: File.join(metadata_folder, 'full_description.txt')
     }
     files.merge!((1..9).map do |n|
       [:"play_store_screenshot_#{n}", File.join(metadata_folder, "screenshot_#{n}.txt")]
@@ -156,13 +156,13 @@ platform :android do
     files = {
       release_note: File.join(metadata_folder, 'release_notes.txt'),
       release_note_short: File.join(metadata_folder, 'release_notes_short.txt'),
-      'short-description': File.join(metadata_folder, 'short_description.txt'),
-      'app-store-description': File.join(metadata_folder, 'full_description.txt'),
-      'app-store-name': File.join(metadata_folder, 'title.txt'),
+      play_store_app_title: File.join(metadata_folder, 'title.txt'),
+      play_store_promo: File.join(metadata_folder, 'short_description.txt'),
+      play_store_desc: File.join(metadata_folder, 'full_description.txt')
     }
 
     update_po_file_for_metadata_localization(
-      po_path: metadata_folder = File.join(metadata_folder, 'PlayStoreStrings.po'),
+      po_path: File.join(metadata_folder, 'PlayStoreStrings.po'),
       sources: files,
       release_version: version,
       commit_message: "Update Jetpack `PlayStoreStrings.po` for version #{version}"
@@ -248,9 +248,9 @@ platform :android do
     values = options[:version].split('.')
     files = {
       "release_note_#{values[0]}#{values[1]}" => { desc: "changelogs/#{options[:build_number]}.txt", max_size: 500, alternate_key: "release_note_short_#{values[0]}#{values[1]}" },
-      'app-store-name': { desc: 'title.txt', max_size: 30 },
-      'short-description': { desc: 'short_description.txt', max_size: 80 },
-      'app-store-description': { desc: 'full_description.txt', max_size: 4000 }
+      play_store_app_title: { desc: 'title.txt', max_size: 30 },
+      play_store_promo: { desc: 'short_description.txt', max_size: 80 },
+      play_store_desc: { desc: 'full_description.txt', max_size: 4000 }
     }
 
     delete_old_changelogs(app: 'jetpack', build: options[:build_number])
@@ -390,38 +390,20 @@ platform :android do
   #####################################################################################
   lane :download_translations do
     # WordPress strings
-    wordpress_res_dir = File.join('WordPress', 'src', 'main', 'res')
+    check_declared_locales_consistency(app_flavor: 'wordpress', locales_list: WP_APP_LOCALES)
     android_download_translations(
-      res_dir: wordpress_res_dir,
+      res_dir: File.join('WordPress', 'src', 'main', 'res'),
       glotpress_url: APP_SPECIFIC_VALUES[:wordpress][:glotpress_appstrings_project],
       locales: WP_APP_LOCALES
     )
 
     # Jetpack strings
-    jetpack_res_dir = File.join('WordPress', 'src', 'jetpack', 'res')
+    check_declared_locales_consistency(app_flavor: 'jetpack', locales_list: JP_APP_LOCALES)
     android_download_translations(
-      res_dir: jetpack_res_dir,
+      res_dir: File.join('WordPress', 'src', 'jetpack', 'res'),
       glotpress_url: APP_SPECIFIC_VALUES[:jetpack][:glotpress_appstrings_project],
       locales: JP_APP_LOCALES
     )
-
-    # [pxLjZ-7b9-p2] For any locale in which Jetpack is not translated in (but WordPress is),
-    # ensure we fallback to an existing locale *in Jetpack* — instead of having the runtime
-    # erroneously fall back to the *WordPress-specific* translation in that missing locale.
-    wp_locales_not_in_jp = WP_APP_LOCALES.map { |l| l[:android] } - JP_APP_LOCALES.map { |l| l[:android] }
-    new_strings_files = wp_locales_not_in_jp.map do |locale|
-      language = locale.split('-').first
-      fallback = JP_APP_LOCALES.any? { |l| l[:android] == language } ? "values-#{language}" : 'values'
-      UI.message "Using `#{fallback}` as a fallback for `values-#{locale}` for the Jetpack app."
-      destination = File.join(jetpack_res_dir, "values-#{locale}", 'strings.xml')
-      Dir.chdir('..') do # To get out of `fastlane/` — which is the `pwd` when running code from Fastfile
-        FileUtils.mkdir_p(File.dirname(destination))
-        FileUtils.cp(File.join(jetpack_res_dir, fallback, 'strings.xml'), destination)
-      end
-      destination
-    end
-    git_add(path: new_strings_files)
-    git_commit(path: new_strings_files, message: 'Update translation fallbacks for Jetpack', allow_nothing_to_commit: true)
   end
 
   # Updates the `.po` file at the given `po_path` using the content of the `sources` files, interpolating `release_version` where appropriate.
@@ -438,5 +420,33 @@ platform :android do
 
     git_add(path: po_path)
     git_commit(path: po_path, message: commit_message, allow_nothing_to_commit: true)
+  end
+
+  # Compares the list of locales declared in the `resourceConfigurations` field of `build.gradle` for a given flavor
+  # with the hardcoded list of locales we use in our Fastlane lanes, to ensure they match and we are consistent.
+  #
+  # @param [String] app_flavor `"wordpress"` or `"jetpack"` — The `productFlavor` to read from in the build.gradle
+  # @param [Array<Hash>] locales_list The list of Hash defining the locales to compare that list to.
+  #        Typically one of the `WP_APP_LOCALES` or `JP_APP_LOCALES` constants
+  def check_declared_locales_consistency(app_flavor:, locales_list:)
+    output = gradle(task: 'printResourceConfigurations', flags: '--quiet')
+    resource_configs = output.match(/^#{app_flavor}: \[(.*)\]$/)&.captures&.first&.gsub(' ','')&.split(',')&.sort
+    if resource_configs.nil? || resource_configs.empty?
+      UI.message("No `resourceConfigurations` field set in `build.gradle` for the `#{app_flavor}` flavor. Nothing to check.")
+      return
+    end
+
+    expected_locales = locales_list.map { |l| l[:android] }.sort
+    if resource_configs == expected_locales
+      UI.message("The `resourceConfigurations` field set in `build.gradle` for the `#{app_flavor}` flavor matches what is set in our Fastfile. All is good!")
+    else
+      UI.user_error! <<~ERROR
+        The list of `resourceConfigurations` declared in your `build.gradle` for the `#{app_flavor}` flavor
+        does not match the list of locales we hardcoded in the `fastlane/lanes/localization.rb` for this app.
+
+        If you recently updated the hardcoded list of locales to include for this app, be sure to apply those
+        changes in both places, to keep the Fastlane scripts consistent with the gradle configuration of your app.
+      ERROR
+    end
   end
 end

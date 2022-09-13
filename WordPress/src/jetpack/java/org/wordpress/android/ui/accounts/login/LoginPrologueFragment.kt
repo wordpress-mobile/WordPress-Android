@@ -19,6 +19,7 @@ class LoginPrologueFragment : Fragment(R.layout.jetpack_login_prologue_screen) {
     private lateinit var viewModel: LoginPrologueViewModel
     private lateinit var loginPrologueListener: LoginPrologueListener
 
+    @Suppress("TooGenericExceptionThrown")
     override fun onAttach(context: Context) {
         super.onAttach(context)
         if (context !is LoginPrologueListener) {

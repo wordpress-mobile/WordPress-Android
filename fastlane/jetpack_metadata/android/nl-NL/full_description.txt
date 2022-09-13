@@ -1,9 +1,47 @@
-Krachtige beveiligings- en prestatietools binnen handbereik met Jetpack voor Android.
+Jetpack voor WordPress
 
-Herstel je site overal ter wereld mocht er iets misgaan. Controleer op dreigingen en elimineer deze in een handomdraai. Houd de activiteit op je site in de gaten om te zien welke wijzigingen zijn doorgevoerd door wie en wanneer. Bekijk je statistieken om te zien uit welke landen de bezoekers van vandaag komen.
+Breng de kracht van publiceren binnen handbereik. Jetpack is een websitemaker en nog zo veel meer!
 
-De app ondersteunt ook de WordPress-functies die je mag verwachten. Schrijf een spontane haiku vanaf je bank. Maak een foto tijdens je lunchpauze en upload deze. Reageer op de nieuwste opmerkingen.
+MAKEN
 
-Jetpack voor Android ondersteunt WordPress-sites waarop Jetpack is ingeschakeld en met een account dat is gekoppeld aan WordPress.com.
+Geef je grote ideeën een plekje op het web. Jetpack voor Android is een websitebouwer en een blogmaker die mogelijk wordt gemaakt door WordPress. Gebruik het om je website te maken.
+Kies de juiste look en feel uit een brede selectie WordPress-thema's en pas deze aan met foto's, kleuren en lettertypen in jouw unieke stijl.
+Met de ingebouwde snelle tips loop je snel door de basisprincipes van de installatie en kun je gaan knallen met je nieuwe website. (We zijn niet alleen een websitemaker, maar ook jouw partner en grootste fan!)
 
-View the Privacy Notice for California Users at https://automattic.com/privacy/#california-consumer-privacy-act-ccpa.
+ANALYTISCHE GEGEVENS EN INZICHTEN
+
+Bekijk de statistieken van je website in real-time om de activiteit op je site te volgen.
+Volg welke berichten en pagina's in de loop van de tijd het meeste verkeer krijgen door dagelijkse, wekelijkse, maandelijkse en jaarlijkse inzichten te analyseren.
+Gebruik de verkeerskaart om te zien uit welke landen je bezoekers komen.
+
+MELDINGEN
+
+Ontvang meldingen over opmerkingen, vind-ik-leuks en nieuwe volgers, zodat je kunt zien hoe mensen reageren op je website.
+Reageer op nieuwe commentaren zodra ze verschijnen om het gesprek vlot te laten verlopen en je lezers te erkennen.
+
+PUBLICEREN
+
+Maak met de editor updates, verhalen, fotoverslagen, aankondigingen en wat je ook maar wilt!
+Breng je berichten en pagina's tot leven met foto's en video's uit je camera en albums of vind de perfecte foto in de collectie royaltyvrije professionele foto's in de app.
+Bewaar ideeën als concepten en kom er later op terug als je meer inspiratie hebt of plan nieuwe berichten voor een later moment, zodat je site altijd actueel en aantrekkelijk is.
+Voeg tags en categorieën toe om nieuwe lezers naar je berichten te leiden en kijk toe hoe je publiek groeit.
+
+VEILIGHEID EN PRESTATIETOOLS
+
+Herstel je site overal ter wereld mocht er iets misgaan.
+Controleer op dreigingen en elimineer deze in een handomdraai.
+Houd de activiteit op je site in de gaten om te zien welke wijzigingen zijn doorgevoerd door wie en wanneer.
+
+LEZER
+
+Jetpack is meer dan een blogmaker. Gebruik het om in contact te komen met een community van schrijvers in de WordPress.com Reader. Verken duizenden onderwerpen per tag, ontdek nieuwe auteurs en organisaties en volg mensen die je interesseren.
+Bewaar de berichten die je fascineren met de functie Opslaan voor later.
+
+DELEN
+
+Stel automatische delen in om je volgers op sociale media te laten weten wanneer je een nieuw bericht publiceert. Plaats automatisch dezelfde berichten op Facebook, Twitter en meer.
+Voeg knoppen voor delen op social media toe aan je berichten zodat je bezoekers ze kunnen delen met hun netwerk. Laat je fans jouw promotie doen.
+
+Ga naar https://jetpack.com/mobile voor meer informatie
+
+Privacyverklaring voor gebruikers in Californië: https://automattic.com/privacy/#california-consumer-privacy-act-ccpa

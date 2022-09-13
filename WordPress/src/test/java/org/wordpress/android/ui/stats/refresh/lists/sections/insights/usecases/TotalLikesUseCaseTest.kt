@@ -63,7 +63,7 @@ class TotalLikesUseCaseTest : BaseUnitTest() {
     private lateinit var useCase: TotalLikesUseCase
     private val periodData = PeriodData("2018-10-08", 10, 15, 20, 25, 30, 35)
     private val modelPeriod = "2018-10-10"
-    private val limitMode = Top(14)
+    private val limitMode = Top(15)
     private val model = VisitsAndViewsModel(modelPeriod, listOf(periodData))
 
     @InternalCoroutinesApi

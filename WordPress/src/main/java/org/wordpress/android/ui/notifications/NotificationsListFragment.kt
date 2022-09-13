@@ -10,19 +10,17 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import android.view.ViewGroup.MarginLayoutParams
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.isVisible
-import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
+import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.AppBarLayout.LayoutParams
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.android.material.tabs.TabLayout.Tab
 import dagger.hilt.android.AndroidEntryPoint
 import org.greenrobot.eventbus.EventBus
-import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.NOTIFICATIONS_SELECTED_FILTER
@@ -36,6 +34,8 @@ import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.main.WPMainActivity
+import org.wordpress.android.ui.main.WPMainNavigationView.PageType
+import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment
 import org.wordpress.android.ui.notifications.NotificationEvents.NotificationsUnseenStatus
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter.FILTERS
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter.FILTERS.FILTER_ALL
@@ -48,20 +48,23 @@ import org.wordpress.android.ui.notifications.services.NotificationsUpdateServic
 import org.wordpress.android.ui.stats.StatsConnectJetpackActivity
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.NOTIFS
+import org.wordpress.android.util.JetpackBrandingUtils
+import org.wordpress.android.util.JetpackBrandingUtils.Screen
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.WPUrlUtils
-import org.wordpress.android.util.config.JetpackPoweredFeatureConfig
 import org.wordpress.android.util.extensions.setLiftOnScrollTargetViewIdAndRequestLayout
+import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment), ScrollableViewInitializedListener {
+    @Inject lateinit var accountStore: AccountStore
+    @Inject lateinit var jetpackBrandingUtils: JetpackBrandingUtils
+
+    private val viewModel: NotificationsListViewModel by viewModels()
+
     private var shouldRefreshNotifications = false
     private var lastTabPosition = 0
-
-    @Inject lateinit var accountStore: AccountStore
-    @Inject lateinit var jetpackPoweredFeatureConfig: JetpackPoweredFeatureConfig
-
     private var binding: NotificationsListFragmentBinding? = null
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -82,15 +85,6 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
         binding = NotificationsListFragmentBinding.bind(view).apply {
             toolbarMain.setTitle(R.string.notifications_screen_title)
             (requireActivity() as AppCompatActivity).setSupportActionBar(toolbarMain)
-
-            if (jetpackPoweredFeatureConfig.isEnabled() && !BuildConfig.IS_JETPACK_APP) {
-                jetpackBanner.root.isVisible = true
-
-                // Add bottom margin to viewPager and connectJetpack view for jetpack banner.
-                val margin = resources.getDimensionPixelSize(R.dimen.jetpack_banner_height)
-                viewPager.updateLayoutParams<MarginLayoutParams> { bottomMargin = margin }
-                connectJetpack.updateLayoutParams<MarginLayoutParams> { bottomMargin = margin }
-            }
 
             tabLayout.addOnTabSelectedListener(object : OnTabSelectedListener {
                 override fun onTabSelected(tab: Tab) {
@@ -123,6 +117,12 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
             jetpackFaq.setOnClickListener {
                 WPWebViewActivity.openURL(requireContext(), StatsConnectJetpackActivity.FAQ_URL)
             }
+        }
+
+        viewModel.showJetpackPoweredBottomSheet.observeEvent(viewLifecycleOwner) {
+            JetpackPoweredBottomSheetFragment
+                    .newInstance(it, PageType.NOTIFS)
+                    .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
         }
     }
 
@@ -270,7 +270,9 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
             return detailIntent
         }
 
-        @JvmStatic fun openNoteForReply(
+        @JvmStatic
+        @Suppress("LongParameterList")
+        fun openNoteForReply(
             activity: Activity?,
             noteId: String?,
             shouldShowKeyboard: Boolean,
@@ -301,5 +303,24 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
 
     override fun onScrollableViewInitialized(containerId: Int) {
         binding?.appBar?.setLiftOnScrollTargetViewIdAndRequestLayout(containerId)
+        if (jetpackBrandingUtils.shouldShowJetpackBranding()) {
+            binding?.root?.post {
+                // post is used to create a minimal delay here. containerId changes just before
+                // onScrollableViewInitialized is called, and findViewById can't find the new id before the delay.
+                val jetpackBannerView = binding?.jetpackBanner?.root ?: return@post
+                val scrollableView = binding?.root?.findViewById<View>(containerId) as? RecyclerView ?: return@post
+                jetpackBrandingUtils.showJetpackBannerIfScrolledToTop(jetpackBannerView, scrollableView)
+                jetpackBrandingUtils.initJetpackBannerAnimation(jetpackBannerView, scrollableView)
+
+                if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
+                    jetpackBannerView.setOnClickListener {
+                        jetpackBrandingUtils.trackBannerTapped(Screen.NOTIFICATIONS)
+                        JetpackPoweredBottomSheetFragment
+                                .newInstance()
+                                .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
+                    }
+                }
+            }
+        }
     }
 }

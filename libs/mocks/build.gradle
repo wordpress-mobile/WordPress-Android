@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion rootProject.compileSdkVersion
     defaultConfig {
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
@@ -20,4 +20,3 @@ dependencies {
     }
     implementation 'org.apache.httpcomponents:httpclient-android:4.3.5.1'
 }
-

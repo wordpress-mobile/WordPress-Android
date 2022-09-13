@@ -45,12 +45,11 @@ sealed class PhotoPickerUiItem(
     }
 
     data class ClickAction(
-        val id: Long,
         val uri: UriWrapper?,
         val isVideo: Boolean,
-        private val clickItem: (id: Long, uri: UriWrapper?, isVideo: Boolean) -> Unit
+        private val clickItem: (uri: UriWrapper?, isVideo: Boolean) -> Unit
     ) {
-        fun click() = clickItem(id, uri, isVideo)
+        fun click() = clickItem(uri, isVideo)
     }
 
     enum class Type {

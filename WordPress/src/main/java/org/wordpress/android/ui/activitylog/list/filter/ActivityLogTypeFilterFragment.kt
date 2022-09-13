@@ -85,6 +85,7 @@ class ActivityLogTypeFilterFragment : DialogFragment() {
         initAdapter()
     }
 
+    @Suppress("UseCheckOrError")
     private fun ActivityLogTypeFilterFragmentBinding.initViewModel() {
         viewModel = ViewModelProvider(this@ActivityLogTypeFilterFragment, viewModelFactory)
                 .get(ActivityLogTypeFilterViewModel::class.java)

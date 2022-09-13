@@ -30,8 +30,8 @@ class SelectedSiteRepositoryTest : BaseUnitTest() {
     private var selectedSite: SiteModel? = null
     private lateinit var actions: MutableList<Action<*>>
     private lateinit var selectedSiteRepository: SelectedSiteRepository
-    private var onSaveError: ((error: Exception?) -> Unit)? = null
-    private var onFetchError: ((error: Exception?) -> Unit)? = null
+    private var onSaveError: (() -> Unit)? = null
+    private var onFetchError: (() -> Unit)? = null
     private var onSettingsSaved: (() -> Unit)? = null
     private val selectedSiteId = 1
 
@@ -161,7 +161,7 @@ class SelectedSiteRepositoryTest : BaseUnitTest() {
         selectedSiteRepository.showSiteIconProgressBar(true)
         assertThat(siteIconProgressBarVisible).isTrue
 
-        onSaveError!!.invoke(Exception("testing"))
+        onSaveError!!.invoke()
 
         assertThat(siteIconProgressBarVisible).isFalse
     }
@@ -172,7 +172,7 @@ class SelectedSiteRepositoryTest : BaseUnitTest() {
         selectedSiteRepository.showSiteIconProgressBar(true)
         assertThat(siteIconProgressBarVisible).isTrue
 
-        onFetchError!!.invoke(Exception("testing"))
+        onFetchError!!.invoke()
 
         assertThat(siteIconProgressBarVisible).isFalse
     }

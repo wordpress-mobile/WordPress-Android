@@ -54,7 +54,7 @@ class TotalLikesDetailUseCase @Inject constructor(
         val cachedData = visitsAndViewsStore.getVisits(
                 site,
                 DAYS,
-                LimitMode.Top(TotalStatsMapper.DAY_COUNT_TOTAL),
+                LimitMode.Top(TOTAL_LIKES_ITEMS_TO_LOAD),
                 selectedDate
         )
         if (cachedData != null) {
@@ -71,7 +71,7 @@ class TotalLikesDetailUseCase @Inject constructor(
         val response = visitsAndViewsStore.fetchVisits(
                 statsSiteProvider.siteModel,
                 DAYS,
-                LimitMode.Top(TotalStatsMapper.DAY_COUNT_TOTAL),
+                LimitMode.Top(TOTAL_LIKES_ITEMS_TO_LOAD),
                 selectedDate,
                 forced
         )
@@ -108,6 +108,10 @@ class TotalLikesDetailUseCase @Inject constructor(
     }
 
     private fun buildTitle() = TitleWithMore(string.stats_view_total_likes)
+
+    companion object {
+        private const val TOTAL_LIKES_ITEMS_TO_LOAD = 15
+    }
 
     class TotalLikesGranularUseCaseFactory
     @Inject constructor(

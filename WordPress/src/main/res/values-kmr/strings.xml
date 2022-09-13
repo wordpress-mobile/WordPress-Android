@@ -311,7 +311,6 @@ Language: ku_TR
     <string name="photo_picker_photo_or_video_title">Medya hilbijêre</string>
     <string name="photo_picker_video_title">Vîdyo Hilbijêre</string>
     <string name="site_picker_ask_site_select">Malper nehat bijartin. Jkx, dîsa biceribîne.</string>
-    <string name="feature_announcement_dialog_label">Di WordPress\'ê De Çi Nû Ne</string>
     <string name="crop">biqusîne</string>
     <string name="preview_image_thumbnail_description">Pêşdîtina Wêneyê Biçûk</string>
     <string name="insert_label_with_count">%d\'ê tevlî bike</string>
@@ -399,7 +398,6 @@ Language: ku_TR
     <string name="post_list_tab_trashed_posts">Jêçûyî</string>
     <string name="post_list_tab_scheduled_posts">Demsazkirî</string>
     <string name="post_list_tab_published_posts">Weşandî</string>
-    <string name="sharing_facebook_account_must_have_pages">Girêdana Facebookê nikare ti Rûpelan bibîne. Bangewazî, bi Profîlên Facebookê ve nayê girêdan, tenê dikare bi Rûpelên weşandî ve bê girêdan.</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">Nehatiye girêdan</string>
     <string name="notifications_tab_title_follows">Şopîner</string>
     <string name="notifications_tab_title_comments">Şîrove</string>
@@ -780,7 +778,6 @@ Language: ku_TR
     <string name="app_rating_rate_later">Piştre</string>
     <string name="app_rating_rate_now">Aniha deng bidê</string>
     <string name="app_rating_message">Çavê me li rêya betilî! Heke kêfa te ji sepanê re hatibe, ji dengdayîna te ya li Google Play Storeê em ê kêfxweş bibin.</string>
-    <string name="app_rating_title">Kêfa te ji WordPressê re hat?</string>
     <string name="stats_site_not_loaded_yet">Malper hîn nehatiye barkirin</string>
     <string name="stats_fewer_posts">Şandiyên kêmtir</string>
     <string name="editor_post_converted_back_to_draft">Şandî veguherî rewşa reşnivîsê</string>
@@ -1582,10 +1579,8 @@ Language: ku_TR
     <string name="share_btn_disconnect">Girêdanê qut bike</string>
     <string name="share_btn_connect">Girêde</string>
     <string name="connection_service_description">Ji bo ku tu şandiyên blogê yên li ser %s\'ê bixweber parve bikî, lê girêde.</string>
-    <string name="connection_service_label">Li ser %sê belav bike</string>
     <string name="connected_accounts_label">Hesabên girêdayî</string>
     <string name="connections_description">Servîsên medyaya civakî yên kêfa te ji wan re tê lê girede û bila bixweber şandiyên nû bi hevalên te re werin parvekirin.</string>
-    <string name="connections_label">Girêdan</string>
     <string name="sharing">Parvekirin</string>
     <string name="tabbar_accessibility_label_notifications">Danezan. Danezanên xwe bi rê ve bibe.</string>
     <string name="tabbar_accessibility_label_reader">Xwîner. Ji malperên din naverokan bişopîne.</string>

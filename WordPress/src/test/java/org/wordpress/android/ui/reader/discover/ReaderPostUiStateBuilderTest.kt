@@ -62,6 +62,7 @@ import org.wordpress.android.util.image.ImageType
 import java.util.Date
 
 @InternalCoroutinesApi
+@Suppress("LargeClass")
 @RunWith(MockitoJUnitRunner::class)
 class ReaderPostUiStateBuilderTest {
     // region Set-up
@@ -996,7 +997,7 @@ class ReaderPostUiStateBuilderTest {
     }
 
     private fun createReaderTagList(numOfTags: Int) = ReaderTagList().apply {
-        for (x in 0 until numOfTags) {
+        (0 until numOfTags).forEach {
             add(createReaderTag())
         }
     }

@@ -26,6 +26,7 @@ class CreateSiteUseCase @Inject constructor(
 ) {
     private var continuation: Continuation<OnNewSiteCreated>? = null
 
+    @Suppress("UseCheckOrError")
     suspend fun createSite(
         siteData: SiteCreationServiceData,
         languageWordPressId: String,

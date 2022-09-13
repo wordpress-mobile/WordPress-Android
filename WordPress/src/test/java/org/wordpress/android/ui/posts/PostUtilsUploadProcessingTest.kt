@@ -19,7 +19,7 @@ class PostUtilsUploadProcessingTest {
     @Before
     fun before() {
         whenever(mediaFile.mediaId).thenReturn(TestContent.remoteMediaId)
-        whenever(mediaFile.fileURL).thenReturn(TestContent.remoteImageUrl)
+        whenever(mediaFile.optimalFileURL).thenReturn(TestContent.remoteImageUrl)
         whenever(mediaFile.getAttachmentPageURL(any())).thenReturn(TestContent.attachmentPageUrl)
     }
 
@@ -31,6 +31,7 @@ class PostUtilsUploadProcessingTest {
     }
 
     @Test
+    @Suppress("MaxLineLength")
     fun `replaceMediaFileWithUrlInGutenbergPost replaces temporary local id and url for image block with colliding prefixes`() {
         val oldContent = TestContent.oldImageBlock + TestContent.imageBlockWithPrefixCollision
         val newContent = TestContent.newImageBlock + TestContent.imageBlockWithPrefixCollision
@@ -48,7 +49,7 @@ class PostUtilsUploadProcessingTest {
 
     @Test
     fun `replaceMediaFileWithUrlInGutenbergPost also works with video`() {
-        whenever(mediaFile.fileURL).thenReturn(TestContent.remoteVideoUrl)
+        whenever(mediaFile.optimalFileURL).thenReturn(TestContent.remoteVideoUrl)
         val processedContent = PostUtils.replaceMediaFileWithUrlInGutenbergPost(TestContent.oldMediaTextBlockWithVideo,
                 TestContent.localMediaId, mediaFile, TestContent.siteUrl)
         Assertions.assertThat(processedContent).isEqualTo(TestContent.newMediaTextBlockWithVideo)

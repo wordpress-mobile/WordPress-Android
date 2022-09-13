@@ -96,7 +96,7 @@ class CropFragment : Fragment(), UCropFragmentCallback {
                         }
                     }
                     is ImageCropAndSaveFailedState -> {
-                        showCropError(state.errorMsg, state.errorResId)
+                        showCropError(state.errorResId)
                     }
                     is ImageCropAndSaveSuccessState -> { // Do nothing
                     }
@@ -152,8 +152,7 @@ class CropFragment : Fragment(), UCropFragmentCallback {
         }
     }
 
-    private fun showCropError(errorMsg: String?, errorResId: Int) {
-        // TODO: track exact error errorMsg
+    private fun showCropError(errorResId: Int) {
         ToastUtils.showToast(context, getString(errorResId), Duration.LONG)
     }
 

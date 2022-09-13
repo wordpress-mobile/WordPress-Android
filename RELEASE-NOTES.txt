@@ -1,14 +1,44 @@
 *** PLEASE FOLLOW THIS FORMAT: [<priority indicator, more stars = higher priority>] <description> [<PR URL>]
 
-20.4
+20.8
 -----
 
+
+20.7
+-----
+* [*] Fixes Media control toggles difficult to see [https://github.com/wordpress-mobile/WordPress-Android/pull/17068]
+* [*] Fix night mode text colors on the screens shown after scanning a Login Code [https://github.com/wordpress-mobile/WordPress-Android/pull/17086]
+* [***] Jetpack App: Widgets are now on Jetpack. Long press on app icon to find and add widgets to home screen. [https://github.com/wordpress-mobile/WordPress-Android/pull/17100]
+* [*] [Jetpack-only] Block Editor: Makes some small changes to the editor's accent colours for consistency. [https://github.com/wordpress-mobile/WordPress-Android/pull/16968]
+
+20.6
+-----
+* [*] Login: Fix an issue preventing some users to log-in in with email addresses containing a single quote [https://github.com/wordpress-mobile/WordPress-Android/pull/15526]
+* [*] Fix a possible crash with themes preloading at the start of Site Creation [https://github.com/wordpress-mobile/WordPress-Android/pull/17022]
+* [*] Show Jetpack banner in search results [https://github.com/wordpress-mobile/WordPress-Android/pull/17028]
+
+20.5
+-----
+* [*] Use larger thumbnail previews for recommended themes during site creation [https://github.com/wordpress-mobile/WordPress-Android/pull/16848]
+* [***] [internal] Block Editor: List block: Adds support for V2 behind a feature flag [https://github.com/WordPress/gutenberg/pull/42702]
+* [*] Jetpack App: Use the Jetpack green color for the skip buttons text in site creation [https://github.com/wordpress-mobile/WordPress-Android/pull/16994]
+* [**] App Settings: Show a label with the current language of the app under "Interface Language". [https://github.com/wordpress-mobile/WordPress-Android/pull/17004]
+
+20.4
+-----
+* [*] [internal] Block Editor: Add React Native FastImage [https://github.com/WordPress/gutenberg/pull/42009]
+* [*] Block Editor: Inserter displays block collections [https://github.com/WordPress/gutenberg/pull/42405]
+* [*] Block Editor: Fix incorrect spacing within Image alt text footnote [https://github.com/WordPress/gutenberg/pull/42504]
+* [***] Block Editor: Gallery and Image block - Performance improvements [https://github.com/WordPress/gutenberg/pull/42178]
+* [**] [WP.com and Jetpack sites with VideoPress] Prevent validation error when viewing VideoPress markup within app [https://github.com/Automattic/jetpack/pull/24548]
+* [*] [internal] Adds the "Jetpack powered" badge to non-core features [https://github.com/wordpress-mobile/WordPress-Android/pull/16940]
 
 20.3
 -----
 * [*] Block Editor: Add 'Insert from URL' option to Video block [https://github.com/WordPress/gutenberg/pull/41493]
 * [*] Block Editor: Image block copies the alt text from the media library when selecting an item [https://github.com/WordPress/gutenberg/pull/41839]
 * [*] Block Editor: Introduce "block recovery" option for invalid blocks [https://github.com/WordPress/gutenberg/pull/41988]
+* [**] Block Editor: Fix a crash when scrolling posts containing Embed blocks [https://github.com/wordpress-mobile/gutenberg-mobile/pull/5033]
 
 20.2
 -----

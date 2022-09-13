@@ -1,11 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-06-30 09:54:08+0000
+Translation-Revision-Date: 2022-08-25 08:54:08+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: id
 -->
 <resources>
+    <string name="login_magic_links_email_sent">Kami baru saja mengirimkan tautan ajaib ke </string>
+    <string name="login_magic_links_sent_label_short">Periksa email Anda di perangkat ini!</string>
+    <string name="or_use_password">Gunakan kata sandi untuk login</string>
+    <string name="wp_jetpack_powered_notifications_powered_by_jetpack_caption">Ketahui kabar terbaru dengan pembaruan real-time untuk komentar baru, lalu lintas situs, laporan keamanan, dan lain sebagainya.</string>
+    <string name="wp_jetpack_powered_notifications_powered_by_jetpack">Pemberitahuan didukung oleh Jetpack</string>
+    <string name="wp_jetpack_powered_stats_powered_by_jetpack_caption">Perhatikan pertumbuhan lalu lintas dan pelajari audiens Anda dengan Statistik dan Wawasan yang didesain ulang. Hanya tersedia di aplikasi Jetpack baru. </string>
+    <string name="wp_jetpack_powered_stats_powered_by_jetpack">Statistik didukung oleh Jetpack</string>
+    <string name="wp_jetpack_powered_reader_powered_by_jetpack_caption">Temukan, ikuti, dan sukai semua situs dan pos favorit Anda dengan Pembaca. Hanya tersedia di aplikasi Jetpack baru.</string>
+    <string name="wp_jetpack_powered_reader_powered_by_jetpack">Pembaca didukung oleh Jetpack</string>
+    <string name="wp_jetpack_powered_features">Aplikasi Jetpack yang baru memiliki Statistik, Reader, Notifikasi, dan fitur-fitur lainnya yang membuat WordPress Anda lebih andal.</string>
+    <string name="wp_jetpack_powered_better_with_jetpack">WordPress lebih andal dengan Jetpack</string>
+    <string name="gutenberg_native_upgrade_your_plan_to_use_video_covers">Upgrade paket Anda untuk menggunakan sampul video</string>
+    <string name="gutenberg_native_upgrade_your_plan_to_upload_audio">Upgrade paket Anda untuk mengunggah audio</string>
+    <string name="gutenberg_native_jetpack_powered">Didukung Jetpack</string>
+    <string name="gutenberg_native_invalid_url">URL tidak valid.</string>
+    <string name="gutenberg_native_gradient">Gradien</string>
+    <string name="wp_jetpack_continue_to_notifications">Lanjutkan ke Pemberitahuan</string>
+    <string name="wp_jetpack_continue_to_stats">Lanjutkan ke Statistik</string>
+    <string name="wp_jetpack_continue_to_reader">Lanjutkan ke Pembaca</string>
+    <string name="wp_jetpack_get_new_jetpack_app">Dapatkan aplikasi Jetpack baru</string>
+    <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery">Terjadi masalah saat menampilkan blok. \nKetuk untuk mencoba pemulihan blok.</string>
+    <string name="weekly_roundup_notification_text_views_and_comments">Minggu lalu Anda mendapatkan %1$s tayangan dan %2$s komentar</string>
+    <string name="weekly_roundup_notification_text_views_and_likes">Minggu lalu Anda mendapatkan %1$s tayangan dan %2$s suka</string>
+    <string name="weekly_roundup_notification_text_views_only">Minggu lalu Anda mendapatkan %1$s tayangan.</string>
+    <string name="weekly_roundup_notification_text_all">Minggu lalu Anda mendapatkan %1$s tayangan, %2$s suka, dan %3$s komentar.</string>
+    <string name="stats_revamp_v2_update_alert_message">Diperbarui di Wawasan Baru untuk membantu Anda memahami performa konten dan minat audiens Anda.</string>
+    <string name="stats_insights_like_guide_card">⭐️ Artikel terbaru Anda %1$s telah menerima %2$s suka.</string>
+    <string name="wp_jetpack_powered">Didukung Jetpack</string>
     <string name="qrcode_auth_flow_content_description">Gambar menunjukkan pemindaian kode login sedang berlangsung</string>
     <string name="qrcode_auth_flow_error_content_description">Gambar menunjukkan terjadinya error</string>
     <string name="qrcode_auth_flow_dismiss_dialog_message">Anda yakin ingin melanjutkan?</string>
@@ -26,16 +54,11 @@ Language: id
     <string name="qrcode_auth_flow_validated_subtitle">Hanya pindai kode QR yang diambil langsung dari browser web Anda. Jangan pindai kode yang dikirimkan oleh orang lain.</string>
     <string name="qrcode_auth_flow_validated_default_title">Apakah Anda mencoba login melalui browser web di sekitar %1$s?</string>
     <string name="qrcode_auth_flow_validated_title">Apakah Anda mencoba login ke %1$s di sekitar %2$s</string>
-    <string name="stats_revamp_v2_intro_secondary_button_text">Ingatkan saya nanti</string>
-    <string name="stats_revamp_v2_intro_primary_button_text">Coba sekarang</string>
-    <string name="stats_revamp_v2_intro_content_note">Pelajari lebih lanjut di Situs Saya &gt; Statistik &gt; Wawasan.</string>
-    <string name="stats_revamp_v2_intro_content">Wawasan membantu memahami seberapa laris konten Anda dan apa yang disukai pengunjung situs Anda.</string>
     <string name="stats_revamp_v2_intro_header_title">Wawasan terbaru</string>
     <string name="stats_insights_followers_guide_card">💡Cobalah memberikan komentar di blog lain untuk menarik perhatian dan pengikut ke situs baru Anda.</string>
     <string name="stats_insights_comments_guide_card">💡Ketuk \'LIHAT LEBIH BANYAK\' untuk melihat komentator teratas Anda.</string>
     <string name="stats_insights_latest_post_empty">Periksa lagi setelah Anda memposkan pos pertama Anda!</string>
     <string name="stats_insights_views_and_visitors_visitors_empty_state">Cek tips terbaik kami untuk meningkatkan pratinjau dan kunjungan Anda %1$s</string>
-    <string name="stats_view_publicize">Koneksi Sosial Media</string>
     <string name="stats_action_card_schedule_post_message">✍️ Jadwalkan draf Anda untuk diposkan di waktu ramai untuk mendapatkan lebih banyak pengunjung.</string>
     <string name="stats_action_card_blogging_reminders_message">💡Memposkan secara konsisten membantu Anda menarik lebih banyak pengunjung. Tambahkan pengingat untuk menjaga konsistensi.</string>
     <string name="stats_action_card_grow_audience_message">💡Tingkatkan kemampuan blog Anda lebih cepat dengan pelatihan&lt;i&gt; Pengenalan Blogging&lt;/i&gt; dari para ahli.</string>
@@ -71,7 +94,7 @@ Language: id
     <string name="me_btn_scan_login_code">Pindai Kode Login</string>
     <string name="stats_insights_likes_guide_card">⭐️ Artikel terbaru Anda %1$s telah menerima %2$s suka.</string>
     <string name="stats_most_popular_percent_views_empty">Aktivitas tidak cukup. Periksa lagi nanti saat situs Anda lebih ramai pengunjung!</string>
-    <string name="stats_total_followers_content_description">%1s, %2s total pengikut</string>
+    <string name="stats_total_followers_content_description">%1$s, %2$s%% total pengikut</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
     <string name="pages_copy_link">Salin tautan</string>
     <string name="quick_start_completed_tour_title">Selamat! Anda telah berhasil&lt;br/&gt;</string>
@@ -395,7 +418,6 @@ Language: id
     <string name="me_btn_share">Bagikan WordPress dengan teman</string>
     <string name="my_site_quick_actions_title">Tautan Cepat</string>
     <string name="my_site_btn_domains">Domain</string>
-    <string name="weekly_roundup_notification_text">Situs Anda memiliki %1$d tayangan, %2$d suka, %3$d komentar.</string>
     <string name="weekly_roundup_notification_title">Ringkasan Mingguan: %s</string>
     <string name="blogging_reminders_notification_time">Waktu pemberitahuan</string>
     <string name="blogging_reminders_epilogue_body_everyday_with_time">Anda akan mendapat pengingat blogging &lt;b&gt;setiap hari&lt;/b&gt; pada &lt;b&gt;%s&lt;/b&gt;.</string>
@@ -504,6 +526,7 @@ Language: id
     <string name="gutenberg_native_s_has_no_url_set">URL %s belum ditetapkan</string>
     <string name="gutenberg_native_s_converted_to_regular_blocks">%s diubah ke blok reguler</string>
     <string name="gutenberg_native_s_block">%s blok</string>
+    <string name="gutenberg_native_opacity">Keburaman</string>
     <string name="gutenberg_native_media_options">Opsi media</string>
     <string name="gutenberg_native_invalid_url_audio_file_not_found">URL tidak valid. File audio tidak ditemukan.</string>
     <string name="gutenberg_native_insert_crosspost">Sisipkan lintas pos</string>
@@ -1174,7 +1197,7 @@ Language: id
     <string name="reader_btn_select_few_interests">Pilih beberapa untuk melanjutkan</string>
     <string name="post_status_post_published">Dipublikasikan</string>
     <string name="post_status_post_trashed">Dibuang</string>
-    <string name="post_status_post_scheduled">Dijadwalkan</string>
+    <string name="post_status_post_scheduled">Terjadwal</string>
     <string name="publish_date">Tanggal Publikasi</string>
     <string name="ccpa_privacy_notice_read">Baca pemberitahuan privasi CCPA</string>
     <string name="ccpa_privacy_notice_caption">Undang-Undang Privasi Konsumen California (CCPA) meminta kami untuk menyediakan kepada warga negara California informasi tambahan tentang kategori informasi pribadi yang kami kumpulkan dan bagikan, di mana kami mendapatkan informasi tersebut, dan bagaimana dan mengapa kami menggunakannya.</string>
@@ -1213,7 +1236,6 @@ Language: id
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">Ketuk dua kali untuk membuka pengaturan warna</string>
     <string name="reader_empty_followed_blogs_description">Saat Anda mengikuti situs, Anda akan melihat kontennya di sini</string>
     <string name="feature_announcement_find_out_mode">Cari tahu selengkapnya</string>
-    <string name="feature_announcement_dialog_label">Apa yang Baru di WordPress</string>
     <string name="insert_label_with_count">Sisipkan %d</string>
     <string name="crop">pangkas</string>
     <string name="error_failed_to_load_into_file">Gagal memuat ke file, harap coba lagi.</string>
@@ -1310,9 +1332,8 @@ Language: id
     <string name="gutenberg_native_add_paragraph_block">Tambahkan blok paragraf</string>
     <string name="create_post_page_fab_tooltip_contributors">Buat pos</string>
     <string name="post_list_tab_trashed_posts">Dibuang</string>
-    <string name="post_list_tab_scheduled_posts">Dijadwalkan</string>
+    <string name="post_list_tab_scheduled_posts">Terjadwal</string>
     <string name="post_list_tab_published_posts">Dipublikasikan</string>
-    <string name="sharing_facebook_account_must_have_pages">Koneksi Facebook tidak dapat menemukan Halaman apa pun. Publikasikan tidak dapat terhubung ke Profil Facebook, hanya Halaman yang dipublikasikan.</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">Tidak Terhubung</string>
     <string name="notifications_tab_title_likes">Suka</string>
     <string name="notifications_tab_title_follows">Mengikuti</string>
@@ -1539,7 +1560,6 @@ Language: id
     <string name="share_desc">Bagikan</string>
     <string name="navigate_back_desc">Kembali</string>
     <string name="navigate_forward_desc">Selanjutnya</string>
-    <string name="calendar_scheduled_post_description">\"%1$s\" dijadwalkan untuk diterbitkan di \"%2$s\" di aplikasi WordPress Anda \n %3$s</string>
     <string name="calendar_scheduled_post_title">Pos Terjadwal WordPress: \"%s\"</string>
     <string name="notification_post_will_be_published_in_ten_minutes">\"%s\" akan dipublikasikan dalam 10 menit</string>
     <string name="notification_post_will_be_published_in_one_hour">\"%s\" akan dipublikasikan dalam 1 jam</string>
@@ -1711,7 +1731,6 @@ Language: id
     <string name="app_rating_rate_later">Nanti</string>
     <string name="app_rating_rate_now">Beri penilaian sekarang</string>
     <string name="app_rating_message">Senang bertemu Anda lagi! Jika Anda suka aplikasi ini, kami menantikan penilaian Anda di Google Play Store.</string>
-    <string name="app_rating_title">Suka WordPress?</string>
     <string name="editor_post_converted_back_to_draft">Pos dikembalikan ke format konsep</string>
     <string name="stats_insights_posting_activity">Aktivitas Posting</string>
     <string name="stats_site_not_loaded_yet">Situs belum dimuat</string>
@@ -1883,7 +1902,7 @@ Language: id
     <string name="pages_set_parent">Atur induk</string>
     <string name="pages_view">Lihat</string>
     <string name="pages_trashed">Dibuang</string>
-    <string name="pages_scheduled">Dijadwalkan</string>
+    <string name="pages_scheduled">Terjadwal</string>
     <string name="pages_drafts">Konsep</string>
     <string name="pages_published">Dipublikasikan</string>
     <string name="login_error_sms_throttled">Kami terlalu banyak melakukan upaya pengiriman kode verifikasi SMS. Tunggu sebentar, dan minta kode yang baru beberapa saat lagi.</string>
@@ -2441,6 +2460,7 @@ Language: id
     <string name="requesting_otp">Meminta kode verifikasi melalui SMS.</string>
     <string name="login_text_otp">Kirimi saya kode saja</string>
     <string name="enter_verification_code">Hampir selesai! Masukkan kode verifikasi dari aplikasi Pengautentikasi.</string>
+    <string name="open_mail">Buka Email</string>
     <string name="next">Selanjutnya</string>
     <string name="enter_email_wordpress_com">Login ke WordPress.com dengan alamat email untuk mengelola semua situs WordPress Anda.</string>
     <string name="image_optimization_promo_desc">Pengoptimalan gambar mengecilkan gambar agar pengunggahan lebih cepat.\n\nAnda dapat mengubahnya kapan saja di pengaturan situs.</string>
@@ -2538,10 +2558,8 @@ Language: id
     <string name="share_btn_disconnect">Putuskan sambungan</string>
     <string name="share_btn_connect">Hubungkan</string>
     <string name="connection_service_description">Sambungkan agar pos blog Anda dibagikan secara otomatis %s.</string>
-    <string name="connection_service_label">Publikasikan ke %s</string>
     <string name="connected_accounts_label">Akun Terhubung</string>
     <string name="connections_description">Sambungkan layanan media sosial favorit Anda untuk membagikan pos Anda secara otomatis dengan teman Anda.</string>
-    <string name="connections_label">Sambungan</string>
     <string name="sharing">Berbagi</string>
     <string name="tabbar_accessibility_label_notifications">Pemberitahuan. Kelola pemberitahuan.</string>
     <string name="tabbar_accessibility_label_reader">Pembaca. Ikuti konten dari situs lain.</string>

@@ -441,6 +441,7 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
         notesAdapter!!.addAll(event.notes, true)
     }
 
+    @SuppressWarnings("unused")
     @Subscribe(threadMode = MAIN)
     fun onEventMainThread(error: NotificationsRefreshError?) {
         if (isAdded) {
@@ -478,6 +479,7 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
             return detailIntent
         }
 
+        @Suppress("LongParameterList")
         fun openNoteForReply(
             activity: Activity?,
             noteId: String?,

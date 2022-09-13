@@ -20,7 +20,6 @@ import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.DisplayUtilsWrapper
 import javax.inject.Inject
 
-@Suppress("TooManyFunctions")
 @AndroidEntryPoint
 class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
     private var searchInputWithHeader: SearchInputWithHeader? = null
@@ -31,6 +30,7 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
 
     private var binding: SiteCreationDomainsScreenBinding? = null
 
+    @Suppress("UseCheckOrError")
     override fun onAttach(context: Context) {
         super.onAttach(context)
         if (context !is DomainsScreenListener) {
@@ -45,7 +45,7 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
         return R.layout.site_creation_domains_screen
     }
 
-    override val screenTitle: String
+    @Suppress("UseCheckOrError") override val screenTitle: String
         get() = arguments?.getString(EXTRA_SCREEN_TITLE)
                 ?: throw IllegalStateException("Required argument screen title is missing.")
 
@@ -85,7 +85,7 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
                 searchInputWithHeader?.updateSearchInput(requireActivity(), uiState.searchInputUiState)
                 updateContentUiState(uiState.contentState)
                 uiHelpers.updateVisibility(createSiteButtonContainer, uiState.createSiteButtonContainerVisibility)
-                uiHelpers.updateVisibility(createSiteButtonShaddow, uiState.createSiteButtonContainerVisibility)
+                uiHelpers.updateVisibility(createSiteButtonShadow, uiState.createSiteButtonContainerVisibility)
                 updateTitleVisibility(uiState.headerUiState == null)
             }
         })

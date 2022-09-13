@@ -11,7 +11,6 @@ import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 
-@Suppress("TooManyFunctions")
 class TotalStatsMapper @Inject constructor(
     private val resourceProvider: ResourceProvider,
     private val statsUtils: StatsUtils
@@ -129,6 +128,6 @@ class TotalStatsMapper @Inject constructor(
     companion object {
         private const val DAY_COUNT_FOR_CURRENT_WEEK = 7 // Last 7 days
         private const val DAY_COUNT_FOR_PREVIOUS_WEEK = 7 // Last 7 days before the current week
-        const val DAY_COUNT_TOTAL = DAY_COUNT_FOR_PREVIOUS_WEEK + DAY_COUNT_FOR_CURRENT_WEEK
+        private const val DAY_COUNT_TOTAL = DAY_COUNT_FOR_PREVIOUS_WEEK + DAY_COUNT_FOR_CURRENT_WEEK
     }
 }

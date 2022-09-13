@@ -1,7 +1,6 @@
 package org.wordpress.android.util.analytics
 
 import dagger.Reusable
-import org.wordpress.android.analytics.AnalyticsInjectExperimentProperties
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.SiteModel
@@ -10,7 +9,6 @@ import org.wordpress.android.util.config.ExperimentConfig
 import org.wordpress.android.util.config.FeatureConfig
 import javax.inject.Inject
 
-@Suppress("TooManyFunctions")
 @Reusable
 class AnalyticsTrackerWrapper
 @Inject constructor() {
@@ -60,10 +58,6 @@ class AnalyticsTrackerWrapper
      */
     fun track(stat: Stat, errorContext: String, errorType: String, errorDescription: String) {
         AnalyticsTracker.track(stat, errorContext, errorType, errorDescription)
-    }
-
-    fun setInjectExperimentProperties(properties: Map<String, Any>) {
-        AnalyticsTracker.setInjectExperimentProperties(AnalyticsInjectExperimentProperties.newInstance(properties))
     }
 
     private fun FeatureConfig.toParams() = mapOf(name() to isEnabled())

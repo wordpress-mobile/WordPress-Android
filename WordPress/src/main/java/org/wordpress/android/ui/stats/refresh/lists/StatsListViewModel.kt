@@ -44,7 +44,6 @@ import javax.inject.Named
 
 const val SCROLL_EVENT_DELAY = 2000L
 
-@Suppress("TooManyFunctions", "LongParameterList")
 abstract class StatsListViewModel(
     defaultDispatcher: CoroutineDispatcher,
     private val statsUseCase: BaseListUseCase,

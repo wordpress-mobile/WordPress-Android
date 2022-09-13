@@ -31,7 +31,7 @@ import org.wordpress.android.ui.stats.refresh.utils.LineChartAccessibilityHelper
 import org.wordpress.android.ui.stats.refresh.utils.LineChartLabelFormatter
 import java.lang.Integer.max
 
-@Suppress("MagicNumber", "TooManyFunctions")
+@Suppress("MagicNumber")
 class LineChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         parent,
         R.layout.stats_block_line_chart_item

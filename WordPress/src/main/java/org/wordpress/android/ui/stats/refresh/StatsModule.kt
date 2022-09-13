@@ -67,7 +67,6 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.T
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TotalLikesUseCase.TotalLikesUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.ViewsAndVisitorsUseCase.ViewsAndVisitorsUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
-import org.wordpress.android.util.config.StatsRevampV2FeatureConfig
 import javax.inject.Named
 import javax.inject.Singleton
 
@@ -109,7 +108,6 @@ class StatsModule {
     @Named(BLOCK_INSIGHTS_USE_CASES)
     @Suppress("LongParameterList")
     fun provideBlockInsightsUseCases(
-        statsRevampV2FeatureConfig: StatsRevampV2FeatureConfig,
         viewsAndVisitorsUseCaseFactory: ViewsAndVisitorsUseCaseFactory,
         allTimeStatsUseCase: AllTimeStatsUseCase,
         latestPostSummaryUseCase: LatestPostSummaryUseCase,
@@ -132,7 +130,7 @@ class StatsModule {
         actionCardScheduleUseCase: ActionCardScheduleUseCase
     ): List<@JvmSuppressWildcards BaseStatsUseCase<*, *>> {
         val useCases = mutableListOf<BaseStatsUseCase<*, *>>()
-        if (BuildConfig.IS_JETPACK_APP && statsRevampV2FeatureConfig.isEnabled()) {
+        if (BuildConfig.IS_JETPACK_APP) {
             useCases.add(viewsAndVisitorsUseCaseFactory.build(BLOCK))
             useCases.add(totalLikesUseCaseFactory.build(BLOCK))
             useCases.add(totalCommentsUseCaseFactory.build(BLOCK))
@@ -169,6 +167,7 @@ class StatsModule {
     @Provides
     @Singleton
     @Named(VIEW_ALL_INSIGHTS_USE_CASES)
+    @Suppress("LongParameterList")
     fun provideViewAllInsightsUseCases(
         followersUseCaseFactory: FollowersUseCaseFactory,
         tagsAndCategoriesUseCaseFactory: TagsAndCategoriesUseCaseFactory,
@@ -196,6 +195,7 @@ class StatsModule {
     @Provides
     @Singleton
     @Named(GRANULAR_USE_CASE_FACTORIES)
+    @Suppress("LongParameterList")
     fun provideGranularUseCaseFactories(
         postsAndPagesUseCaseFactory: PostsAndPagesUseCaseFactory,
         referrersUseCaseFactory: ReferrersUseCaseFactory,
@@ -250,6 +250,7 @@ class StatsModule {
     @Provides
     @Singleton
     @Named(INSIGHTS_USE_CASE)
+    @Suppress("LongParameterList")
     fun provideInsightsUseCase(
         statsStore: StatsStore,
         @Named(BG_THREAD) bgDispatcher: CoroutineDispatcher,
@@ -275,6 +276,7 @@ class StatsModule {
     @Provides
     @Singleton
     @Named(DAY_STATS_USE_CASE)
+    @Suppress("LongParameterList")
     fun provideDayStatsUseCase(
         statsStore: StatsStore,
         @Named(BG_THREAD) bgDispatcher: CoroutineDispatcher,
@@ -300,6 +302,7 @@ class StatsModule {
     @Provides
     @Singleton
     @Named(WEEK_STATS_USE_CASE)
+    @Suppress("LongParameterList")
     fun provideWeekStatsUseCase(
         statsStore: StatsStore,
         @Named(BG_THREAD) bgDispatcher: CoroutineDispatcher,
@@ -325,6 +328,7 @@ class StatsModule {
     @Provides
     @Singleton
     @Named(MONTH_STATS_USE_CASE)
+    @Suppress("LongParameterList")
     fun provideMonthStatsUseCase(
         statsStore: StatsStore,
         @Named(BG_THREAD) bgDispatcher: CoroutineDispatcher,
@@ -349,6 +353,7 @@ class StatsModule {
     @Provides
     @Singleton
     @Named(YEAR_STATS_USE_CASE)
+    @Suppress("LongParameterList")
     fun provideYearStatsUseCase(
         statsStore: StatsStore,
         @Named(BG_THREAD) bgDispatcher: CoroutineDispatcher,
@@ -396,6 +401,7 @@ class StatsModule {
     @Provides
     @Singleton
     @Named(BLOCK_DETAIL_USE_CASE)
+    @Suppress("LongParameterList")
     fun provideDetailStatsUseCase(
         statsStore: StatsStore,
         @Named(BG_THREAD) bgDispatcher: CoroutineDispatcher,

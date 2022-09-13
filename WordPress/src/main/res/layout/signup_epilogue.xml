@@ -40,6 +40,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_extra_large"
                     android:hint="@string/signup_epilogue_hint_username"
+                    android:importantForAutofill="noExcludeDescendants"
                     android:inputType="none" />
 
                 <org.wordpress.android.login.widgets.WPLoginInputRow
@@ -49,6 +50,7 @@
                     android:layout_marginTop="@dimen/margin_extra_large"
                     android:hint="@string/signup_epilogue_hint_password"
                     android:inputType="textPassword"
+                    android:importantForAutofill="noExcludeDescendants"
                     android:visibility="gone"
                     app:passwordToggleEnabled="true"
                     tools:visibility="visible" />

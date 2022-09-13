@@ -1,11 +1,81 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-06-01 16:26:06+0000
+Translation-Revision-Date: 2022-07-22 14:44:13+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: es_CO
 -->
 <resources>
+    <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery">Problema al mostrar el bloque. \nToca para intentar la recuperación del bloque.</string>
+    <string name="weekly_roundup_notification_text_views_and_comments">La semana pasada tuviste %1$s visitas y %2$s comentarios</string>
+    <string name="weekly_roundup_notification_text_views_and_likes">La semana pasada tuviste %1$s visitas y %2$s Me gusta</string>
+    <string name="weekly_roundup_notification_text_views_only">La semana pasada tuviste %1$s visitas.</string>
+    <string name="weekly_roundup_notification_text_all">La semana pasada tuviste %1$s visitas, %2$s Me gusta y %3$s comentarios.</string>
+    <string name="stats_revamp_v2_update_alert_message">Se ha actualizado al nuevo Detalles para ayudarte a entender cómo es el rendimiento de tu contenido y qué tiene impacto en tu público.</string>
+    <string name="stats_insights_like_guide_card">⭐️ Tu última entrada %1$s ha recibido %2$s Me gusta.</string>
+    <string name="wp_jetpack_powered">Funciona gracias a Jetpack</string>
+    <string name="qrcode_auth_flow_content_description">Imagen que señala que el escaneo de código de acceso está en proceso</string>
+    <string name="qrcode_auth_flow_error_content_description">Imagen que señala un error</string>
+    <string name="qrcode_auth_flow_dismiss_dialog_message">¿Seguro que quieres continuar?</string>
+    <string name="qrcode_auth_flow_dismiss_dialog_title">Salir del flujo de escaneo de código de acceso</string>
+    <string name="qrcode_auth_flow_error_auth_failed_subtitle">No se ha podido acceder con este código de acceso. Toca el botón Analizar de nuevo para volver a escanear el código.</string>
+    <string name="qrcode_auth_flow_error_auth_failed_title">Ha fallado la autentificación</string>
+    <string name="qrcode_auth_flow_error_expired_subtitle">Este código de acceso ha caducado. Toca el botón Analizar de nuevo para volver a escanear el código.</string>
+    <string name="qrcode_auth_flow_error_expired_title">El código de acceso ha caducado</string>
+    <string name="qrcode_auth_flow_error_invalid_data_subtitle">No se ha podido validar el código de acceso escaneado. Toca el botón Analizar de nuevo para volver a escanear el código.</string>
+    <string name="qrcode_auth_flow_error_invalid_data_title">No se ha podido validar el código de acceso</string>
+    <string name="qrcode_auth_flow_error_no_connection_subtitle">Se requiere una conexión activa a Internet para escanear códigos de acceso</string>
+    <string name="qrcode_auth_flow_error_no_connection_title">No hay conexión</string>
+    <string name="qrcode_auth_flow_scan_again">Analizar de nuevo</string>
+    <string name="qrcode_auth_flow_dismiss">Descartar</string>
+    <string name="qrcode_auth_flow_done_subtitle">Toca Descartar y vuelve a tu navegador web para continuar.</string>
+    <string name="qrcode_auth_flow_done_title">¡Has accedido!</string>
+    <string name="qrcode_auth_flow_validated_primary_action">Sí, quiero acceder</string>
+    <string name="qrcode_auth_flow_validated_subtitle">Escanea solo los códigos QR que has cogido directamente del navegador web. No escanees nunca un código que te haya enviado alguien.</string>
+    <string name="qrcode_auth_flow_validated_default_title">¿Estás intentando acceder a tu navegador web cerca de %1$s?</string>
+    <string name="qrcode_auth_flow_validated_title">¿Estás intentando acceder a %1$s cerca de %2$s?</string>
+    <string name="stats_revamp_v2_intro_header_title">Actualización de Detalles</string>
+    <string name="stats_insights_followers_guide_card">💡Comentar en otros blogs es una buena forma de llamar la atención y tener más seguidores en tu nuevo sitio.</string>
+    <string name="stats_insights_comments_guide_card">💡Toca \"VER MÁS\" para ver los principales comentaristas.</string>
+    <string name="stats_insights_latest_post_empty">¡Vuelve a comprobarlo cuando hayas publicado tu primera entrada!</string>
+    <string name="stats_insights_views_and_visitors_visitors_empty_state">Comprueba nuestros consejos destacados para aumentar tus visitas y tu tráfico %1$s</string>
+    <string name="stats_action_card_schedule_post_message">✍️ Programa tus borradores para publicar en el mejor momento y llegar a tu público.</string>
+    <string name="stats_action_card_blogging_reminders_message">💡Publicar con constancia es una buena forma de crear tu público. Añade un recordatorio para mantenerte al día.</string>
+    <string name="stats_action_card_grow_audience_message">💡Bloguea más rápidamente con nuestro curso &lt;i&gt;Introducción a los blogs&lt;/i&gt; ofrecido por expertos.</string>
+    <string name="blogging_prompts_onboarding_prompts_loading">Se están cargando los estímulos para bloguear. Espera un momento e inténtalo de nuevo.</string>
+    <string name="hpp_bottom_helper_text">¿No puedes decidirte? Puedes cambiar el tema en cualquier momento.</string>
+    <string name="hpp_recommended_default_vertical">Bloguear</string>
+    <string name="hpp_recommended_subtitle">Elegido para ti</string>
+    <string name="hpp_recommended_title">Ideal para %s</string>
+    <string name="hpp_preview_tapped_theme">Vista previa del tema %s</string>
+    <string name="hpp_title">Elige un tema</string>
+    <string name="my_site_blogging_prompt_card_skipped_snackbar">Me he saltado el estímulo para bloguear de hoy</string>
+    <string name="my_site_blogging_prompt_card_menu_learn_more">Más información</string>
+    <string name="my_site_blogging_prompt_card_attribution_dayone">Desde </string>
+    <string name="stats_follower_types_pie_chart_total_label">Totales</string>
+    <string name="stats_referrers_pie_chart_others">Otros</string>
+    <string name="stats_referrers_pie_chart_search">Buscar</string>
+    <string name="stats_referrers_pie_chart_wordpress">WordPress</string>
+    <string name="stats_referrers_pie_chart_total_label">Vistas</string>
+    <string name="stats_action_card_schedule_post_button_label">Programar</string>
+    <string name="stats_action_card_schedule_post_title">Programa tu entrada</string>
+    <string name="stats_action_card_blogging_reminders_button_label">Configurar recordatorios</string>
+    <string name="stats_action_card_blogging_reminders_title">Configura tus recordatorios de blogueo</string>
+    <string name="stats_action_card_grow_audience_button_label">Consulta el curso</string>
+    <string name="stats_action_card_grow_audience_title">Haz crecer tu audiencia</string>
+    <string name="gutenberg_native_you_can_also_rearrange_blocks_by_tapping_a_block_and_then_tapping">También puedes reorganizar los bloques tocando un bloque y luego tocando las flechas arriba y abajo que aparecen en la parte inferior izquierda del bloque para moverlo encima o debajo de otros bloques.</string>
+    <string name="gutenberg_native_image_file_not_found">Archivo de imagen no encontrado.</string>
+    <string name="gutenberg_native_drag_drop_makes_rearranging_blocks_a_breeze_press_and_hold_on_a_b">Arrastrar y soltar hace que reordenar bloques sea algo trivial. Presiona y sujeta un bloque, luego arrástralo a su nueva ubicación y suéltalo.</string>
+    <string name="gutenberg_native_drag_drop">Arrastrar y soltar</string>
+    <string name="gutenberg_native_arrow_buttons">Botones de flechas</string>
+    <string name="gutenberg_native_1_s_currently_selected_2_s">%1$s. Seleccionado actualmente: %2$s</string>
+    <string name="quick_start_sites_type_all_tasks_completed">Todas las tareas están completas</string>
+    <string name="quick_start_list_task_complete">Tarea completada</string>
+    <string name="me_btn_scan_login_code">Explorar código de acceso</string>
+    <string name="stats_insights_likes_guide_card">⭐️  Tu última entrada %1$s ha recibido %2$s me gusta.</string>
+    <string name="stats_most_popular_percent_views_empty">No hay suficiente actividad. ¡Vuelve a comprobarlo más tarde, cuando tu sitio haya tenido más visitas!</string>
+    <string name="stats_total_followers_content_description">%1$s, %2$s%% del total de seguidores</string>
+    <string name="stats_value_percent">%1$s (%2$s%%)</string>
     <string name="pages_copy_link">Copiar enlace</string>
     <string name="quick_start_completed_tour_title">¡Enhorabuena! Ya sabes manejarte&lt;br/&gt;</string>
     <string name="quick_start_sites_type_get_to_know_app">Conoce la aplicación</string>
@@ -49,6 +119,10 @@ Language: es_CO
     <string name="photo_picker_media_thumbnail_content_description">Miniatura del medio</string>
     <string name="stats_insights_popular_title">🔥 La hora más popular</string>
     <string name="stats_insights_views_and_visitors_tooltip_count">%1$s %2$s</string>
+    <string name="stats_insights_views_and_visitors_visitors_negative">Tus visitantes de esta semana son %1$s menos que los de la semana anterior.</string>
+    <string name="stats_insights_views_and_visitors_visitors_positive">Tus visitantes de esta semana son %1$s más que los de la semana anterior.</string>
+    <string name="stats_insights_views_and_visitors_views_negative">Tus visualizaciones de esta semana son %1$s menos que las de la semana anterior.</string>
+    <string name="stats_insights_views_and_visitors_views_positive">Tus visitas de esta semana son %1$s más que las de la semana anterior.</string>
     <string name="stats_timeframe_previous_week">Semana anterior</string>
     <string name="stats_timeframe_this_week">Esta semana</string>
     <string name="scan_vault_press_active_on_site_button_text">Visitar el escritorio</string>
@@ -324,7 +398,6 @@ Language: es_CO
     <string name="me_btn_share">Comparte WordPress con un amigo</string>
     <string name="my_site_quick_actions_title">Enlaces rápidos</string>
     <string name="my_site_btn_domains">Dominios</string>
-    <string name="weekly_roundup_notification_text">Tu sitio recibió %1$d visualizaciones, %2$d me gusta, %3$d comentarios.</string>
     <string name="weekly_roundup_notification_title">Repaso semanal: %s</string>
     <string name="blogging_reminders_notification_time">Hora del aviso</string>
     <string name="blogging_reminders_epilogue_body_everyday_with_time">Recibirás recordatorios para bloquear &lt;b&gt;todos los días&lt;/b&gt; a las &lt;b&gt;%s&lt;/b&gt;.</string>
@@ -470,6 +543,7 @@ Language: es_CO
     <string name="gutenberg_native_three">Tres</string>
     <string name="gutenberg_native_s_social_icon">Icono social %s</string>
     <string name="gutenberg_native_mention">Mención</string>
+    <string name="gutenberg_native_new">NUEVO</string>
     <string name="gutenberg_native_preview_post">Previsualizar la entrada</string>
     <string name="gutenberg_native_preview_page">Previsualizar la página</string>
     <string name="gutenberg_native_retry">Reintentar</string>
@@ -838,6 +912,7 @@ Language: es_CO
     <string name="label_done_button">Hecho</string>
     <string name="label_next_button">Siguiente</string>
     <string name="delete_button_alt">Borrar</string>
+    <string name="hpp_choose_error">Se ha producido un error al elegir el tema.</string>
     <string name="hpp_retry_error">Por favor, revisa tu conexión a Internet e inténtalo de nuevo.</string>
     <string name="hpp_error_subtitle">Toca en reintentar cuando vuelvas a estar conectado.</string>
     <string name="hpp_error_title">Los diseños no están disponibles sin conexión</string>
@@ -1140,7 +1215,6 @@ Language: es_CO
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">Toca dos veces para ir a los ajustes del color</string>
     <string name="reader_empty_followed_blogs_description">Cuando sigas sitios, verás aquí su contenido</string>
     <string name="feature_announcement_find_out_mode">Saber más</string>
-    <string name="feature_announcement_dialog_label">Qué hay de nuevo en WordPress</string>
     <string name="insert_label_with_count">Insertar %d</string>
     <string name="crop">recortar</string>
     <string name="error_failed_to_load_into_file">Fallo al cargar en el archivo, por favor, inténtalo de nuevo.</string>
@@ -1239,7 +1313,6 @@ Language: es_CO
     <string name="post_list_tab_trashed_posts">En la papelera</string>
     <string name="post_list_tab_scheduled_posts">Programada</string>
     <string name="post_list_tab_published_posts">Publicada</string>
-    <string name="sharing_facebook_account_must_have_pages">La conexión con Facebook no puede encontrar ninguna página. «Difundir» no puede conectar con perfiles de Facebook, solo con páginas publicadas.</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">No conectado</string>
     <string name="notifications_tab_title_likes">Me gusta</string>
     <string name="notifications_tab_title_follows">Seguimientos</string>
@@ -1466,7 +1539,6 @@ Language: es_CO
     <string name="share_desc">Compartir</string>
     <string name="navigate_back_desc">Volver</string>
     <string name="navigate_forward_desc">Avanzar</string>
-    <string name="calendar_scheduled_post_description">«%1$s» programado para publicar el «%2$s» en tu aplicación de WordPress\n%3$s</string>
     <string name="calendar_scheduled_post_title">Entrada programada de WordPress: «%s»</string>
     <string name="notification_post_will_be_published_in_ten_minutes">«%s» se publicará en 10 minutos</string>
     <string name="notification_post_will_be_published_in_one_hour">«%s» se publicará en 1 hora</string>
@@ -1638,7 +1710,6 @@ Language: es_CO
     <string name="app_rating_rate_later">Más tarde</string>
     <string name="app_rating_rate_now">Valorar ahora</string>
     <string name="app_rating_message">¡Qué gusto verte de nuevo! Si estás trabajando con la aplicación nos encantaría que nos puntuases en la Google Play Store.</string>
-    <string name="app_rating_title">¿Disfrutas de WordPress?</string>
     <string name="editor_post_converted_back_to_draft">Entrada devuelta a borrador</string>
     <string name="stats_insights_posting_activity">Actividad de publicación</string>
     <string name="stats_site_not_loaded_yet">El sitio no se ha cargado todavía</string>
@@ -2465,10 +2536,8 @@ Language: es_CO
     <string name="share_btn_disconnect">Desconectar</string>
     <string name="share_btn_connect">Conectar</string>
     <string name="connection_service_description">Conéctate para compartir automáticamente las entradas de tu blog en %s</string>
-    <string name="connection_service_label">Difundir en %s</string>
     <string name="connected_accounts_label">Cuentas conectadas</string>
     <string name="connections_description">Conecta con tus servicios de medios sociales favoritos para compartir automáticamente las nuevas entradas con tus amigos.</string>
-    <string name="connections_label">Conexiones</string>
     <string name="sharing">Compartir</string>
     <string name="tabbar_accessibility_label_notifications">Avisos. Gestiona tus avisos.</string>
     <string name="tabbar_accessibility_label_reader">Lector. Sigue contenido de otros sitios.</string>

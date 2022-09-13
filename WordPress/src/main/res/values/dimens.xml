@@ -114,6 +114,7 @@
     <dimen name="margin_extra_medium_large">24dp</dimen>
     <dimen name="margin_extra_extra_medium_large">32dp</dimen>
     <dimen name="margin_extra_extra_large">48dp</dimen>
+    <dimen name="margin_64dp">64dp</dimen>
     <dimen name="margin_68dp">68dp</dimen>
     <dimen name="margin_filter_spinner">16dp</dimen>
     <dimen name="margin_theme_browser_top">160dp</dimen>
@@ -404,7 +405,7 @@
     <dimen name="post_settings_retry_image_size">60dp</dimen>
 
     <!-- login -->
-    <dimen name="promo_indicator_bullet_size">4dp</dimen>
+    <dimen name="promo_indicator_bullet_size" tools:ignore="UnusedResources">4dp</dimen>
 
     <dimen name="button_container_shadow_height">5dp</dimen>
 
@@ -466,6 +467,7 @@
     <dimen name="jetpack_banner_height">40dp</dimen>
     <dimen name="jetpack_badge_footer_bottom_spacing">36dp</dimen>
     <dimen name="jetpack_badge_bottom_spacing">28dp</dimen>
+    <dimen name="me_jetpack_badge_top_margin">0dp</dimen>
 
     <!-- jetpack backup restore last bullet bottom margin-->
     <dimen name="jetpack_backup_restore_last_bullet_bottom_margin">20dp</dimen>
@@ -663,9 +665,9 @@
     <dimen name="hpp_layout_card_height">260dp</dimen>
     <dimen name="hpp_layout_card_width">200dp</dimen>
     <dimen name="hpp_layouts_row_height">330dp</dimen>
-    <dimen name="hpp_recommended_card_height">260dp</dimen>
-    <dimen name="hpp_recommended_card_width">200dp</dimen>
-    <dimen name="hpp_recommended_row_height">350dp</dimen>
+    <dimen name="hpp_recommended_card_height">416dp</dimen>
+    <dimen name="hpp_recommended_card_width">320dp</dimen>
+    <dimen name="hpp_recommended_row_height">500dp</dimen>
     <dimen name="hpp_recommended_subtitle_margin">5dp</dimen>
 
     <!-- Site Intent Question -->

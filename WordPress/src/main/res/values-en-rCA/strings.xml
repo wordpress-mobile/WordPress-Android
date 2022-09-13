@@ -26,16 +26,11 @@ Language: en_CA
     <string name="qrcode_auth_flow_validated_subtitle">Only scan QR codes taken directly from your web browser. Never scan a code sent to you by anyone else.</string>
     <string name="qrcode_auth_flow_validated_default_title">Are you trying to log in to your web browser near %1$s?</string>
     <string name="qrcode_auth_flow_validated_title">Are you trying to log in to %1$s near %2$s?</string>
-    <string name="stats_revamp_v2_intro_secondary_button_text">Remind me later</string>
-    <string name="stats_revamp_v2_intro_primary_button_text">Try it now</string>
-    <string name="stats_revamp_v2_intro_content_note">Learn more in My Site &gt; Stats &gt; Insights</string>
-    <string name="stats_revamp_v2_intro_content">Insights help you understand how your content is performing and what\'s resonating with your audience.</string>
     <string name="stats_revamp_v2_intro_header_title">Insights update</string>
     <string name="stats_insights_followers_guide_card">💡Commenting on other blogs is a great way to build attention and followers for your new site.</string>
     <string name="stats_insights_comments_guide_card">💡Tap \'VIEW MORE\' to see your top commenters.</string>
     <string name="stats_insights_latest_post_empty">Check back when you\'ve published your first post!</string>
     <string name="stats_insights_views_and_visitors_visitors_empty_state">Check out our top tips to increase your views and traffic %1$s</string>
-    <string name="stats_view_publicize">Social Media Connections</string>
     <string name="stats_action_card_schedule_post_message">✍️ Schedule your drafts to publish at the best time to reach your audience.</string>
     <string name="stats_action_card_blogging_reminders_message">💡Posting consistently is a great way to build your audience. Add a reminder to keep you on track.</string>
     <string name="stats_action_card_grow_audience_message">💡Level up your blogging faster with our expert-led &lt;i&gt;Intro to Blogging&lt;/i&gt; course.</string>
@@ -71,7 +66,6 @@ Language: en_CA
     <string name="me_btn_scan_login_code">Scan Log-in Code</string>
     <string name="stats_insights_likes_guide_card">⭐️ Your latest post %1$s has received %2$s likes.</string>
     <string name="stats_most_popular_percent_views_empty">Not enough activity. Check back later when your site\'s had more visitors!</string>
-    <string name="stats_total_followers_content_description">%1s, %2s of total followers</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
     <string name="pages_copy_link">Copy link</string>
     <string name="quick_start_completed_tour_title">Congrats! You know your way around&lt;br/&gt;</string>
@@ -395,7 +389,6 @@ Language: en_CA
     <string name="me_btn_share">Share WordPress with a friend</string>
     <string name="my_site_quick_actions_title">Quick Links</string>
     <string name="my_site_btn_domains">Domains</string>
-    <string name="weekly_roundup_notification_text">Your site got %1$d views, %2$d likes, %3$d comments.</string>
     <string name="weekly_roundup_notification_title">Weekly Roundup: %s</string>
     <string name="blogging_reminders_notification_time">Notification time</string>
     <string name="blogging_reminders_epilogue_body_everyday_with_time">You\'ll get reminders to blog &lt;b&gt;everyday&lt;/b&gt; at &lt;b&gt;%s&lt;/b&gt;.</string>
@@ -504,6 +497,7 @@ Language: en_CA
     <string name="gutenberg_native_s_has_no_url_set">%s has no URL set</string>
     <string name="gutenberg_native_s_converted_to_regular_blocks">%s converted to regular blocks</string>
     <string name="gutenberg_native_s_block">%s block</string>
+    <string name="gutenberg_native_opacity">Opacity</string>
     <string name="gutenberg_native_media_options">Media options</string>
     <string name="gutenberg_native_invalid_url_audio_file_not_found">Invalid URL. Audio file not found.</string>
     <string name="gutenberg_native_insert_crosspost">Insert crosspost</string>
@@ -1213,7 +1207,6 @@ Language: en_CA
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">Double tap to go to colour settings</string>
     <string name="reader_empty_followed_blogs_description">When you follow sites, you\'ll see their content here</string>
     <string name="feature_announcement_find_out_mode">Find out more</string>
-    <string name="feature_announcement_dialog_label">What\'s New In WordPress</string>
     <string name="insert_label_with_count">Insert %d</string>
     <string name="crop">crop</string>
     <string name="error_failed_to_load_into_file">Failed to load into file, please try again.</string>
@@ -1312,7 +1305,6 @@ Language: en_CA
     <string name="post_list_tab_trashed_posts">Trashed</string>
     <string name="post_list_tab_scheduled_posts">Scheduled</string>
     <string name="post_list_tab_published_posts">Published</string>
-    <string name="sharing_facebook_account_must_have_pages">The Facebook connection cannot find any Pages. Publicize cannot connect to Facebook Profiles, only published Pages.</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">Not Connected</string>
     <string name="notifications_tab_title_likes">Likes</string>
     <string name="notifications_tab_title_follows">Follows</string>
@@ -1539,7 +1531,6 @@ Language: en_CA
     <string name="share_desc">Share</string>
     <string name="navigate_back_desc">Go back</string>
     <string name="navigate_forward_desc">Go forward</string>
-    <string name="calendar_scheduled_post_description">\"%1$s\" scheduled for publishing on \"%2$s\" in your WordPress app \n %3$s</string>
     <string name="calendar_scheduled_post_title">WordPress Scheduled Post: \"%s\"</string>
     <string name="notification_post_will_be_published_in_ten_minutes">\"%s\" will be published in 10 minutes</string>
     <string name="notification_post_will_be_published_in_one_hour">\"%s\" will be published in 1 hour</string>
@@ -1711,7 +1702,6 @@ Language: en_CA
     <string name="app_rating_rate_later">Later</string>
     <string name="app_rating_rate_now">Rate now</string>
     <string name="app_rating_message">Nice to see you again! If you’re digging the app, we’d love a rating on the Google Play Store.</string>
-    <string name="app_rating_title">Enjoying WordPress?</string>
     <string name="editor_post_converted_back_to_draft">Post converted back to draft</string>
     <string name="stats_insights_posting_activity">Posting Activity</string>
     <string name="stats_site_not_loaded_yet">Site not loaded yet</string>
@@ -2538,10 +2528,8 @@ Language: en_CA
     <string name="share_btn_disconnect">Disconnect</string>
     <string name="share_btn_connect">Connect</string>
     <string name="connection_service_description">Connect to automatically share your blog posts to %s.</string>
-    <string name="connection_service_label">Publicize to %s</string>
     <string name="connected_accounts_label">Connected accounts</string>
     <string name="connections_description">Connect your favourite social media services to automatically share new posts with friends.</string>
-    <string name="connections_label">Connections</string>
     <string name="sharing">Sharing</string>
     <string name="tabbar_accessibility_label_notifications">Notifications. Manage your notifications.</string>
     <string name="tabbar_accessibility_label_reader">Reader. Follow content from other sites.</string>

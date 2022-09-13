@@ -1,11 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-06-30 13:54:09+0000
+Translation-Revision-Date: 2022-08-25 15:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: he_IL
 -->
 <resources>
+    <string name="login_magic_links_email_sent">שלחנו כעת קישור ישיר אל</string>
+    <string name="login_magic_links_sent_label_short">יש לבדוק את תיבת האימייל במכשיר זה!</string>
+    <string name="or_use_password">להשתמש בסיסמה כדי להתחבר</string>
+    <string name="wp_jetpack_powered_notifications_powered_by_jetpack_caption">לקבל עדכונים בזמן אמת לגבי תגובות חדשות, תעבורה באתר, דוחות אבטחה ועוד.</string>
+    <string name="wp_jetpack_powered_notifications_powered_by_jetpack">ההודעות מופעלות על ידי Jetpack</string>
+    <string name="wp_jetpack_powered_stats_powered_by_jetpack_caption">לשפר את התעבורה באתר ולהבין טוב יותר את הקהל שלך עם נתונים סטטיסטיים ותובנות בעיצוב חדש, כעת זמין באפליקציה החדשה של Jetpack.</string>
+    <string name="wp_jetpack_powered_stats_powered_by_jetpack">הנתונים הסטטיסטיים מופעלים על ידי Jetpack</string>
+    <string name="wp_jetpack_powered_reader_powered_by_jetpack_caption">למצוא, לעקוב ולסמן לייק בכל האתרים והפוסטים האהובים עליך עם Reader, כעת זמין באפליקציה החדשה של Jetpack.</string>
+    <string name="wp_jetpack_powered_reader_powered_by_jetpack">Reader מופעל על ידי Jetpack</string>
+    <string name="wp_jetpack_powered_features">האפליקציה החדשה של Jetpack כוללת נתונים סטטיסטיים, את Reader, הודעות ועוד כדי לשפר את חוויית השימוש שלך ב-WordPress.</string>
+    <string name="wp_jetpack_powered_better_with_jetpack">השירות של WordPress טוב יותר עם Jetpack</string>
+    <string name="gutenberg_native_upgrade_your_plan_to_use_video_covers">יש לשדרג את התוכנית שלך כדי להשתמש בשער של וידאו</string>
+    <string name="gutenberg_native_upgrade_your_plan_to_upload_audio">יש לשדרג את התוכנית שלך כדי להעלות אודיו</string>
+    <string name="gutenberg_native_jetpack_powered">מופעל באמצעות Jetpack</string>
+    <string name="gutenberg_native_invalid_url">כתובת URL לא תקינה.</string>
+    <string name="gutenberg_native_gradient">מעבר צבע</string>
+    <string name="wp_jetpack_continue_to_notifications">להמשיך להודעות</string>
+    <string name="wp_jetpack_continue_to_stats">להמשיך לנתונים הסטטיסטיים</string>
+    <string name="wp_jetpack_continue_to_reader">להמשיך ל-Reader</string>
+    <string name="wp_jetpack_get_new_jetpack_app">להוריד את האפליקציה החדשה של Jetpack</string>
+    <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery">בעיה בהצגת הבלוק. \nיש להקיש כדי לנסות לשחזר את הבלוק.</string>
+    <string name="weekly_roundup_notification_text_views_and_comments">בשבוע הקודם היו לך ⁦%1$s⁩ צפיות ו-⁦%2$s⁩ תגובות</string>
+    <string name="weekly_roundup_notification_text_views_and_likes">בשבוע הקודם היו לך ⁦%1$s⁩ צפיות ו-⁦%2$s⁩ לייקים</string>
+    <string name="weekly_roundup_notification_text_views_only">בשבוע הקודם היו לך ⁦%1$s⁩ צפיות.</string>
+    <string name="weekly_roundup_notification_text_all">בשבוע הקודם היו לך ⁦%1$s⁩ צפיות, ⁦%2$s⁩ לייקים ו-⁦%3$s⁩ תגובות.</string>
+    <string name="stats_revamp_v2_update_alert_message">השירות עודכן כדי להציג תובנות חדשות שיעזרו לך להבין את הביצועים של התוכן ולאילו תכנים הקהל הגיב בצורה חיובית.</string>
+    <string name="stats_insights_like_guide_card">⭐️ הפוסט האחרון שלך ⁦%1$s⁩ קיבל לייק ⁦%2$s⁩.</string>
+    <string name="wp_jetpack_powered">מופעל באמצעות Jetpack</string>
     <string name="qrcode_auth_flow_content_description">תמונה להמחשה שתהליך הסריקה של קוד ההתחברות החל</string>
     <string name="qrcode_auth_flow_error_content_description">תמונה להמחשה שאירעה שגיאה</string>
     <string name="qrcode_auth_flow_dismiss_dialog_message">האם ברצונך להמשיך?</string>
@@ -26,16 +54,11 @@ Language: he_IL
     <string name="qrcode_auth_flow_validated_subtitle">יש לסרוק רק קוד QR שנלקח ישירות מדפדפן האינטרנט שלך. אין לסרוק קוד QR שנשלח אליך ממישהו אחר.</string>
     <string name="qrcode_auth_flow_validated_default_title">האם ניסית להתחבר לדפדפן האינטרנט שלך ליד ⁦%1$s⁩?</string>
     <string name="qrcode_auth_flow_validated_title">האם ניסית להתחבר אל ⁦%1$s⁩ ליד ⁦%2$s⁩?</string>
-    <string name="stats_revamp_v2_intro_secondary_button_text">הזכירו לי מאוחר יותר</string>
-    <string name="stats_revamp_v2_intro_primary_button_text">כדאי לנסות עכשיו</string>
-    <string name="stats_revamp_v2_intro_content_note">מידע נוסף זמין במקטע \'האתר שלי\' &gt; \'נתונים סטטיסטיים\' &gt; \'תובנות\'</string>
-    <string name="stats_revamp_v2_intro_content">התובנות יעזרו לך להבין את הביצועים של התוכן ולאילו תכנים הקהל הגיב בצורה חיובית.</string>
     <string name="stats_revamp_v2_intro_header_title">עדכון לתובנות</string>
     <string name="stats_insights_followers_guide_card">💡הוספת תגובה בבלוגים אחרים היא דרך נהדרת להראות נוכחות ולצבור עוקבים לאתר החדש שלך.</string>
     <string name="stats_insights_comments_guide_card">💡אפשר להקיש על \'להציג עוד\' כדי לראות את המגיבים המובילים שלך.</string>
     <string name="stats_insights_latest_post_empty">כדאי לחזור לכאן אחרי שפרסמת את הפוסט הראשון שלך!</string>
     <string name="stats_insights_views_and_visitors_visitors_empty_state">מומלץ לעיין בעצות המובילות שלנו כדי להגדיל את כמות הצפיות והתעבורה ⁦%1$s⁩</string>
-    <string name="stats_view_publicize">חיבורים לרשתות חברתיות</string>
     <string name="stats_action_card_schedule_post_message">✍️ כדאי לתזמן את פרסום הטיוטות לפי המועד המתאים ביותר לחשיפה מול הקהל שלך.</string>
     <string name="stats_action_card_blogging_reminders_message">💡מומלץ לפרסם פוסטים דרך קבע כדי לבנות את הקהל שלך. להוסיף תזכורת כדי להישאר בעניינים.</string>
     <string name="stats_action_card_grow_audience_message">💡אפשר לשפר את כישורי הכתיבה בבלוג מהר יותר עם הקורס &lt;i&gt;הקדמה לכתיבה בבלוג&lt;/i&gt; בהנחיית המומחים שלנו.</string>
@@ -52,6 +75,7 @@ Language: he_IL
     <string name="stats_follower_types_pie_chart_total_label">סך הכול</string>
     <string name="stats_referrers_pie_chart_others">אחרים</string>
     <string name="stats_referrers_pie_chart_search">לחפש</string>
+    <string name="stats_referrers_pie_chart_wordpress">וורדפרס</string>
     <string name="stats_referrers_pie_chart_total_label">צפיות</string>
     <string name="stats_action_card_schedule_post_button_label">תזמון</string>
     <string name="stats_action_card_schedule_post_title">לתזמן את הפרסום שלך</string>
@@ -70,7 +94,7 @@ Language: he_IL
     <string name="me_btn_scan_login_code">סריקת קוד כניסה למערכת</string>
     <string name="stats_insights_likes_guide_card">הפוסט האחרון שלך %1$s קיבל %2$s לייקים.</string>
     <string name="stats_most_popular_percent_views_empty">אין מספיק פעילות. כדאי לחזור לכאן מאוחד יותר לאחר שעוד מבקרים נכנסו לאתר!</string>
-    <string name="stats_total_followers_content_description">%1s, %2s מסך העוקבים</string>
+    <string name="stats_total_followers_content_description">⁦%1$s⁩, סך הכול ⁦%2$s⁩%% עוקבים</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
     <string name="pages_copy_link">להעתיק את הקישור</string>
     <string name="quick_start_completed_tour_title">ברכותינו! כבר יש לך ניסיון בעבודה עם האפליקציה&lt;br/&gt;</string>
@@ -394,7 +418,6 @@ Language: he_IL
     <string name="me_btn_share">לשתף את WordPress עם חברים</string>
     <string name="my_site_quick_actions_title">קישורים מהירים</string>
     <string name="my_site_btn_domains">דומיינים</string>
-    <string name="weekly_roundup_notification_text">האתר שלך קיבל ⁦%1$d⁩ צפיות, ⁦%2$d⁩ לייקים, ⁦%3$d⁩ תגובות.</string>
     <string name="weekly_roundup_notification_title">סיכום שבועי: %s</string>
     <string name="blogging_reminders_notification_time">מועד ההודעות</string>
     <string name="blogging_reminders_epilogue_body_everyday_with_time">אנחנו נשלח לך תזכורות לכתוב בלוג &lt;b&gt;בכל יום&lt;/b&gt; בשעה &lt;b&gt;%s&lt;/b&gt;.</string>
@@ -503,6 +526,7 @@ Language: he_IL
     <string name="gutenberg_native_s_has_no_url_set">ב-%s לא הוגדרה כתובת URL</string>
     <string name="gutenberg_native_s_converted_to_regular_blocks">התוכן של %s הומר לבלוקים רגילים</string>
     <string name="gutenberg_native_s_block">בלוק %s</string>
+    <string name="gutenberg_native_opacity">שקיפות</string>
     <string name="gutenberg_native_media_options">אפשרויות מדיה</string>
     <string name="gutenberg_native_invalid_url_audio_file_not_found">כתובת URL לא תקינה. לא נמצא קובץ אודיו.</string>
     <string name="gutenberg_native_insert_crosspost">להוסיף למספר פוסטים</string>
@@ -1212,7 +1236,6 @@ Language: he_IL
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">יש להקיש פעמיים כדי לעבור להגדרות הצבע</string>
     <string name="reader_empty_followed_blogs_description">כאשר יש לך אתרים במעקב, התוכן שלהם יופיע כאן</string>
     <string name="feature_announcement_find_out_mode">למידע נוסף</string>
-    <string name="feature_announcement_dialog_label">מה חדש ב-WordPress</string>
     <string name="insert_label_with_count">להוסיף %d</string>
     <string name="crop">לחתוך</string>
     <string name="error_failed_to_load_into_file">הטעינה לתוך הקובץ נכשלה, יש לנסות שוב.</string>
@@ -1311,7 +1334,6 @@ Language: he_IL
     <string name="post_list_tab_trashed_posts">הועבר לפח</string>
     <string name="post_list_tab_scheduled_posts">מתוזמן לפרסום</string>
     <string name="post_list_tab_published_posts">פורסם</string>
-    <string name="sharing_facebook_account_must_have_pages">החיבור עם פייסבוק לא הצליח למצוא דפים. השיתוף האוטומטי לא יכול להתחבר אל פרופילים בפייסבוק, רק לדפים שפורסמו.</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">לא מחובר</string>
     <string name="notifications_tab_title_likes">לייקים</string>
     <string name="notifications_tab_title_follows">עוקבים</string>
@@ -1538,7 +1560,6 @@ Language: he_IL
     <string name="share_desc">שיתוף</string>
     <string name="navigate_back_desc">Go back</string>
     <string name="navigate_forward_desc">Go forward</string>
-    <string name="calendar_scheduled_post_description">הפוסט \"⁦%1$s⁩\" תוזמן לפרסום בתאריך \"⁦%2$s⁩\" באפליקציה שלך ב-WordPress \n %3$s</string>
     <string name="calendar_scheduled_post_title">WordPress Scheduled Post: \"%s\"</string>
     <string name="notification_post_will_be_published_in_ten_minutes">\"%s\" will be published in 10 minutes</string>
     <string name="notification_post_will_be_published_in_one_hour">\"%s\" will be published in 1 hour</string>
@@ -1710,7 +1731,6 @@ Language: he_IL
     <string name="app_rating_rate_later">מאוחר יותר</string>
     <string name="app_rating_rate_now">לדרג כעת</string>
     <string name="app_rating_message">שמחים לראות אותך שוב! אם אהבת את האפליקציה, נשמח לראות את הדירוג שלך בחנות Google Play.</string>
-    <string name="app_rating_title">מרוצה מ-WordPress?</string>
     <string name="editor_post_converted_back_to_draft">הפוסט הומר בחזרה למצב טיוטה</string>
     <string name="stats_insights_posting_activity">פעילות פרסום</string>
     <string name="stats_site_not_loaded_yet">האתר עדיין לא נטען</string>
@@ -2440,6 +2460,7 @@ Language: he_IL
     <string name="requesting_otp">שולח קוד אימות באמצעות SMS.</string>
     <string name="login_text_otp">שליחת קוד במקום</string>
     <string name="enter_verification_code">כמעט סיימת! יש להזין את קוד האימות מאפליקציית האימות.</string>
+    <string name="open_mail">לפתוח את הדואר</string>
     <string name="next">הבא</string>
     <string name="enter_email_wordpress_com">התחברות ל-WordPress.com באמצעות כתובת אימייל כדי לנהל את האתרים שלך ב-WordPress.</string>
     <string name="image_optimization_promo_desc">מיטוב התמונות מכווץ כעת תמונות להעלאה מהירה יותר.\n\nאפשר לשנות את האפשרות הזו בכל עת דרך הגדרות האתר.</string>
@@ -2537,10 +2558,8 @@ Language: he_IL
     <string name="share_btn_disconnect">התנתקות</string>
     <string name="share_btn_connect">להתחבר</string>
     <string name="connection_service_description">יש להתחבר כדי לשתף את הפוסטים בבלוג שלך אוטומטית עם %s.</string>
-    <string name="connection_service_label">שיתוף אוטומטי אל %s</string>
     <string name="connected_accounts_label">חשבונות מחוברים</string>
     <string name="connections_description">חיבור שירותי הרשתות החברתיות המועדפים שלך כדי לשתף פוסטים חדשים עם חברים באופן אוטומטי.</string>
-    <string name="connections_label">חשבונות מקושרים</string>
     <string name="sharing">שיתוף</string>
     <string name="tabbar_accessibility_label_notifications">הודעות. ניהול התראות.</string>
     <string name="tabbar_accessibility_label_reader">Reader. מעקב אחר תוכן מאתרים אחרים.</string>

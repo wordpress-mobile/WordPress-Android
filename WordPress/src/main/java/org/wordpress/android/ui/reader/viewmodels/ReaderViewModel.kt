@@ -35,6 +35,7 @@ import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.ContentUiState.TabUiState
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.util.JetpackBrandingUtils
 import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.distinct
 import org.wordpress.android.viewmodel.Event
@@ -45,6 +46,7 @@ import javax.inject.Named
 const val UPDATE_TAGS_THRESHOLD = 1000 * 60 * 60 // 1 hr
 const val TRACK_TAB_CHANGED_THROTTLE = 100L
 
+@Suppress("ForbiddenComment")
 class ReaderViewModel @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
@@ -55,6 +57,7 @@ class ReaderViewModel @Inject constructor(
     private val accountStore: AccountStore,
     private val quickStartRepository: QuickStartRepository,
     private val selectedSiteRepository: SelectedSiteRepository,
+    private val jetpackBrandingUtils: JetpackBrandingUtils,
     private val snackbarSequencer: SnackbarSequencer
         // todo: annnmarie removed this private val getFollowedTagsUseCase: GetFollowedTagsUseCase
 ) : ScopedViewModel(mainDispatcher) {
@@ -87,6 +90,9 @@ class ReaderViewModel @Inject constructor(
     private val _quickStartPromptEvent = MutableLiveData<Event<QuickStartReaderPrompt>>()
     val quickStartPromptEvent = _quickStartPromptEvent as LiveData<Event<QuickStartReaderPrompt>>
 
+    private val _showJetpackPoweredBottomSheet = MutableLiveData<Event<Boolean>>()
+    val showJetpackPoweredBottomSheet: LiveData<Event<Boolean>> = _showJetpackPoweredBottomSheet
+
     init {
         EventBus.getDefault().register(this)
     }
@@ -95,6 +101,11 @@ class ReaderViewModel @Inject constructor(
         if (tagsRequireUpdate()) _updateTags.value = Event(Unit)
         if (initialized) return
         loadTabs()
+        if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) showJetpackPoweredBottomSheet()
+    }
+
+    private fun showJetpackPoweredBottomSheet() {
+//        _showJetpackPoweredBottomSheet.value = Event(true)
     }
 
     private fun loadTabs() {
@@ -123,8 +134,8 @@ class ReaderViewModel @Inject constructor(
 
     private suspend fun initializeTabSelection(tagList: ReaderTagList) {
         withContext(bgDispatcher) {
-            val selectTab = { it: ReaderTag ->
-                val index = tagList.indexOf(it)
+            val selectTab = { readerTag: ReaderTag ->
+                val index = tagList.indexOf(readerTag)
                 if (index != -1) {
                     _selectTab.postValue(Event(TabNavigation(index, smoothAnimation = false)))
                 }
@@ -207,6 +218,7 @@ class ReaderViewModel @Inject constructor(
         }
     }
 
+    @Suppress("UseCheckOrError")
     fun onSearchActionClicked() {
         if (isSearchSupported()) {
             _showSearch.value = Event(Unit)
@@ -215,6 +227,7 @@ class ReaderViewModel @Inject constructor(
         }
     }
 
+    @Suppress("UseCheckOrError")
     fun onSettingsActionClicked() {
         if (isSettingsSupported()) {
             completeQuickStartFollowSiteTaskIfNeeded()
@@ -226,6 +239,7 @@ class ReaderViewModel @Inject constructor(
 
     private fun ReaderTag.isDefaultSelectedTab(): Boolean = this.isDiscover
 
+    @SuppressWarnings("unused")
     @Subscribe(threadMode = MAIN)
     fun onTagsUpdated(event: ReaderEvents.FollowedTagsChanged) {
         loadTabs()

@@ -60,7 +60,6 @@ import javax.inject.Named
 
 typealias CommentsPagingResult = UseCaseResult<CommentsUseCaseType, CommentError, PagingData>
 
-@Suppress("TooManyFunctions")
 class UnifiedCommentListViewModel @Inject constructor(
     private val commentListUiModelHelper: CommentListUiModelHelper,
     private val selectedSiteRepository: SelectedSiteRepository,

@@ -8,7 +8,6 @@ plugins {
     id "org.jetbrains.kotlin.plugin.parcelize"
     id "org.jetbrains.kotlin.plugin.allopen"
     id "io.sentry.android.gradle"
-    id "io.gitlab.arturbosch.detekt"
     id "se.bjurr.violations.violation-comments-to-github-gradle-plugin"
     id "com.google.gms.google-services"
     id 'dagger.hilt.android.plugin'
@@ -53,10 +52,6 @@ repositories {
     maven { url "https://www.jitpack.io" }
 }
 
-detekt {
-    baseline = file("${project.rootDir}/config/detekt/baseline.xml")
-}
-
 allOpen {
     // allows mocking for classes w/o directly opening them for release builds
     annotation 'org.wordpress.android.testing.OpenClassAnnotation'
@@ -75,9 +70,14 @@ android {
 
     compileSdkVersion rootProject.compileSdkVersion
 
+    def versionProperties = loadPropertiesFromFile(file("${rootDir}/version.properties"))
+
     defaultConfig {
         applicationId "org.wordpress.android"
         archivesBaseName = "$applicationId"
+
+        versionName project.findProperty("installableBuildVersionName") ?: versionProperties.getProperty("versionName")
+        versionCode versionProperties.getProperty("versionCode").toInteger()
 
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
@@ -112,15 +112,16 @@ android {
         buildConfigField "boolean", "READER_COMMENTS_MODERATION", "false"
         buildConfigField "boolean", "SITE_INTENT_QUESTION", "true"
         buildConfigField "boolean", "SITE_NAME", "false"
+        buildConfigField "boolean", "LANDING_SCREEN_REVAMP", "false"
         buildConfigField "boolean", "LAND_ON_THE_EDITOR", "false"
         buildConfigField "boolean", "BLOGGING_PROMPTS", "false"
-        buildConfigField "boolean", "MY_SITE_DEFAULT_TAB_EXPERIMENT", "false"
-        buildConfigField "boolean", "MY_SITE_DEFAULT_TAB_EXPERIMENT_VARIANT_DASHBOARD", "false"
-        buildConfigField "boolean", "STATS_REVAMP_V2", "false"
         buildConfigField "boolean", "QUICK_START_EXISTING_USERS_V2", "false"
         buildConfigField "boolean", "QRCODE_AUTH_FLOW", "false"
         buildConfigField "boolean", "BETA_SITE_DESIGNS", "false"
-        buildConfigField "boolean", "JETPACK_POWERED", "false"
+        buildConfigField "boolean", "JETPACK_POWERED", "true"
+        buildConfigField "boolean", "JETPACK_POWERED_BOTTOM_SHEET", "false"
+        buildConfigField "boolean", "JETPACK_SHARED_LOGIN", "false"
+        buildConfigField "boolean", "JETPACK_LOCAL_USER_FLAGS", "false"
 
         // Override these constants in jetpack product flavor to enable/ disable features
         buildConfigField "boolean", "ENABLE_SITE_CREATION", "true"
@@ -148,8 +149,6 @@ android {
 
     flavorDimensions "app", "buildType"
 
-    def versionProperties = loadPropertiesFromFile(file("${rootDir}/version.properties"))
-
     productFlavors {
         wordpress {
             isDefault true
@@ -170,7 +169,7 @@ android {
             applicationId "com.jetpack.android"
             buildConfigField "boolean", "IS_JETPACK_APP", "true"
             buildConfigField "boolean", "ENABLE_SITE_CREATION", "true"
-            buildConfigField "boolean", "ENABLE_ADD_SELF_HOSTED_SITE", "false"
+            buildConfigField "boolean", "ENABLE_ADD_SELF_HOSTED_SITE", "true"
             buildConfigField "boolean", "ENABLE_SIGNUP", "true"
             buildConfigField "boolean", "ENABLE_READER", "true"
             buildConfigField "boolean", "ENABLE_CREATE_FAB", "true"
@@ -184,6 +183,10 @@ android {
             buildConfigField "boolean", "ENABLE_QRCODE_AUTH_FLOW", "true"
 
             manifestPlaceholders = [magicLinkScheme:"jetpack"]
+
+            // Limit string resources to Mag16 only for Jetpack
+            // Note: this only affects included _locales_; variants for `values-night`, `values-land` and other configs are _still_ preserved in Jetpack and not filtered by this.
+            resourceConfigurations = ["ar", "de", "es", "fr", "he", "id", "it", "ja", "ko", "nl", "pt-rBR", "ru", "sv", "tr", "zh-rCN", "zh-rTW"]
         }
 
         // Used for release/beta testing builds. Usually shouldn't be build locally.
@@ -191,23 +194,8 @@ android {
         vanilla {
             dimension "buildType"
 
-            versionName versionProperties.getProperty("versionName")
-            versionCode versionProperties.getProperty("versionCode").toInteger()
-
             buildConfigField "boolean", "ME_ACTIVITY_AVAILABLE", "false"
             buildConfigField "long", "REMOTE_CONFIG_FETCH_INTERVAL", "3600"
-            buildConfigField "boolean", "ENABLE_DEBUG_SETTINGS", "false"
-        }
-
-        // Used for Alpha builds - testing builds with experimental features enabled.
-        // AppName: WordPress/Jetpack
-        zalpha {
-            dimension "buildType"
-
-            versionName versionProperties.getProperty("alpha.versionName")
-            versionCode versionProperties.getProperty("alpha.versionCode").toInteger()
-
-            buildConfigField "boolean", "VIDEO_OPTIMIZATION_AVAILABLE", "true"
             buildConfigField "boolean", "ENABLE_DEBUG_SETTINGS", "false"
         }
 
@@ -216,21 +204,15 @@ android {
         wasabi {
             applicationIdSuffix ".beta"
             dimension "buildType"
-
-            versionName versionProperties.getProperty("alpha.versionName")
-            versionCode versionProperties.getProperty("alpha.versionCode").toInteger()
         }
 
-        // Used for CI builds on PRs (downloadable apks). Can be used locally when a developer needs
+        // Used for CI builds on PRs (aka "Installable Builds"). Can be used locally when a developer needs
         // to install multiple versions of the app on the same device.
         // AppName: WordPress Pre-Alpha/Jetpack Pre-Alpha
         jalapeno {
             isDefault true
             applicationIdSuffix ".prealpha"
             dimension "buildType"
-
-            versionName project.findProperty("installableBuildVersionName") ?: versionProperties.getProperty("alpha.versionName")
-            versionCode 1 // Fixed versionCode because those builds are not meant to be uploaded to the PlayStore.
         }
 
         // Also dynamically add additional `buildConfigFields` to our app flavors from any `wp.`/`jp.`-prefixed property in `gradle.properties`
@@ -403,6 +385,9 @@ dependencies {
     implementation "androidx.compose.ui:ui:$composeVersion"
     implementation "androidx.compose.foundation:foundation:$composeVersion"
     implementation "androidx.compose.material:material:$composeVersion"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycleVersion"
+    implementation "androidx.compose.ui:ui-tooling-preview:$composeVersion"
+    debugImplementation "androidx.compose.ui:ui-tooling:$composeVersion"
 
     testImplementation "junit:junit:$jUnitVersion"
 
@@ -526,8 +511,6 @@ dependencies {
     // Enables accessibility checks in Espresso
     androidTestImplementation 'androidx.test.espresso:espresso-accessibility:3.3.0-alpha05'
 
-    detektPlugins "io.gitlab.arturbosch.detekt:detekt-formatting:$gradle.ext.detektVersion"
-
     // Enables Java 8+ API desugaring support
     coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:$coreLibraryDesugaringVersion"
 
@@ -611,19 +594,24 @@ tasks.register("dependencyTreeDiffCommentToGitHub", ViolationCommentsToGitHubTas
 
 tasks.register("printVersionName") {
     doLast {
-        if (project.hasProperty('alpha')) {
-          println android.productFlavors.zalpha.versionName
-        } else {
-          println android.productFlavors.vanilla.versionName
-        }
+        println android.defaultConfig.versionName
     }
 }
 
 tasks.register("printAllVersions") {
     doLast {
         android.applicationVariants.all { variant ->
-            def apkData = variant.outputs*.apkData
-            println "${variant.name}: ${apkData*.versionName} (${apkData*.versionCode})"
+            println "${variant.name}: ${variant.versionName} (${variant.versionCode})"
+        }
+    }
+}
+
+tasks.register("printResourceConfigurations") {
+    doLast {
+        android.productFlavors.each { flavor ->
+            if (flavor.dimension == "app") {
+                println "${flavor.name}: ${flavor.resourceConfigurations}"
+            }
         }
     }
 }

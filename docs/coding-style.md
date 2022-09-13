@@ -33,7 +33,7 @@ From there, add and enable the custom configuration file, located at [config/che
 You can run detekt via a gradle command:
 
 ```
-$ ./gradlew WordPress:detekt
+$ ./gradlew detekt
 ```
 
 It generates an HTML report in `WordPress/build/reports/detekt/detekt.html`.
