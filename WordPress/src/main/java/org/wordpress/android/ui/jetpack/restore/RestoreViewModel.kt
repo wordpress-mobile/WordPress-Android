@@ -61,7 +61,6 @@ import org.wordpress.android.ui.jetpack.restore.usecases.PostRestoreUseCase
 import org.wordpress.android.ui.jetpack.usecases.GetActivityLogItemUseCase
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.UiString.UiStringRes
-import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.text.PercentFormatter
 import org.wordpress.android.util.wizard.WizardManager
@@ -417,10 +416,7 @@ class RestoreViewModel @Inject constructor(
                     contentState as JetpackListItemState.ProgressState
                     contentState.copy(
                             progress = restoreStatus.progress ?: 0,
-                            progressLabel = UiStringResWithParams(
-                                    R.string.restore_progress_label,
-                                    listOf(UiStringText(percentFormatter.format(restoreStatus.progress ?: 0)))
-                            ),
+                            progressLabel = UiStringText(percentFormatter.format(restoreStatus.progress ?: 0)),
                             progressInfoLabel = if (restoreStatus.currentEntry != null) {
                                 UiStringText("${restoreStatus.currentEntry}")
                             } else {

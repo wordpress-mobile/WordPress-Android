@@ -298,9 +298,7 @@ class RestoreStateListItemBuilder @Inject constructor(
     private fun buildProgressState(progress: Int, isIndeterminate: Boolean = false) = ProgressState(
             progress = progress,
             isIndeterminate = isIndeterminate,
-            progressLabel = UiStringResWithParams(
-                    R.string.restore_progress_label, listOf(UiStringText(percentFormatter.format(progress)))
-            )
+            progressLabel = UiStringText(percentFormatter.format(progress))
     )
 
     private fun buildBulletState(
