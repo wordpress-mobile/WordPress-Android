@@ -3,7 +3,7 @@
 
     <application>
         <provider
-            android:name=".sharedlogin.provider.SharedLoginProvider"
+            android:name="org.wordpress.android.sharedlogin.provider.SharedLoginProvider"
             android:authorities="${applicationId}.SharedLoginProvider"
             android:exported="true" />
     </application>
