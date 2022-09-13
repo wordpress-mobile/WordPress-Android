@@ -2,7 +2,6 @@ plugins {
     id "com.automattic.android.fetchstyle"
     id "io.gitlab.arturbosch.detekt"
     id "androidx.navigation.safeargs.kotlin" apply false
-    id "com.android.library" apply false
     id 'com.google.gms.google-services' apply false
     id "org.jetbrains.kotlin.plugin.parcelize" apply false
 }
@@ -15,7 +14,7 @@ ext {
     aboutAutomatticVersion = '0.0.6'
 
     minSdkVersion = 24
-    compileSdkVersion = 31
+    compileSdkVersion = 33
     targetSdkVersion = 30
 
     coroutinesVersion = '1.5.2'
