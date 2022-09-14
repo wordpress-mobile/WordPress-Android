@@ -174,6 +174,7 @@ class BackupDownloadViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given details step, when request create download success, then state reflects progress`() = test {
+        whenever(percentFormatter.format(0)).thenReturn("30%")
         whenever(postBackupDownloadUseCase.postBackupDownloadRequest(anyOrNull(), anyOrNull(), anyOrNull()))
                 .thenReturn(postBackupDownloadSuccess)
 
@@ -295,6 +296,7 @@ class BackupDownloadViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given progress step, when started, then the progress is set to zero`() = test {
+        whenever(percentFormatter.format(0)).thenReturn("30%")
         whenever(postBackupDownloadUseCase.postBackupDownloadRequest(anyOrNull(), anyOrNull(), anyOrNull()))
                 .thenReturn(postBackupDownloadSuccess)
 

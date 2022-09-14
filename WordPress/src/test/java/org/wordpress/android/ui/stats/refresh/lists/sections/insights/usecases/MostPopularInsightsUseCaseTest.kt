@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 
-import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
@@ -67,6 +66,8 @@ class MostPopularInsightsUseCaseTest : BaseUnitTest() {
                 actionCardHandler,
                 percentFormatter
         )
+        whenever(percentFormatter.format(highestDayPercent.roundToInt())).thenReturn("10%")
+        whenever(percentFormatter.format(highestHourPercent.roundToInt())).thenReturn("20%")
         whenever(statsSiteProvider.siteModel).thenReturn(site)
         whenever(dateUtils.getWeekDay(day)).thenReturn(dayString)
 
@@ -74,15 +75,13 @@ class MostPopularInsightsUseCaseTest : BaseUnitTest() {
 
         whenever(
                 resourceProvider.getString(
-                        R.string.stats_most_popular_percent_views,
-                        highestDayPercent.roundToInt()
+                        R.string.stats_most_popular_percent_views, "10%"
                 )
         ).thenReturn("${highestDayPercent.roundToInt()}% of views")
 
         whenever(
                 resourceProvider.getString(
-                        R.string.stats_most_popular_percent_views,
-                        highestHourPercent.roundToInt()
+                        R.string.stats_most_popular_percent_views, "20%"
                 )
         ).thenReturn("${highestHourPercent.roundToInt()}% of views")
     }
@@ -127,13 +126,9 @@ class MostPopularInsightsUseCaseTest : BaseUnitTest() {
 
     @Test
     fun `when buildUiModel is called, should call PercentFormatter`() = test {
-        whenever(dateUtils.getWeekDay(any())).thenReturn("week day")
-        whenever(dateUtils.getHour(any())).thenReturn("hour")
-        whenever(percentFormatter.format(10)).thenReturn("10%")
-        whenever(percentFormatter.format(20)).thenReturn("20%")
-        useCase.buildUiModel(InsightsMostPopularModel(0L, 0, 0, 10.0, 20.0))
-        verify(percentFormatter).format(10)
-        verify(percentFormatter).format(20)
+        useCase.buildUiModel(InsightsMostPopularModel(0, day, hour, highestDayPercent, highestHourPercent))
+        verify(percentFormatter).format(highestDayPercent.roundToInt())
+        verify(percentFormatter).format(highestHourPercent.roundToInt())
     }
 
     private fun assertTitle(item: BlockListItem) {

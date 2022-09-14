@@ -319,6 +319,7 @@ class RestoreViewModelTest : BaseUnitTest() {
         val uiStates = initObservers().uiStates
         clearInvocations(wizardManager)
 
+        whenever(percentFormatter.format(0)).thenReturn("0%")
         whenever(postRestoreUseCase.postRestoreRequest(anyOrNull(), anyOrNull(), anyOrNull()))
                 .thenReturn(postSuccess)
         whenever(restoreStatusUseCase.getRestoreStatus(anyOrNull(), anyOrNull(), anyOrNull()))
@@ -336,8 +337,7 @@ class RestoreViewModelTest : BaseUnitTest() {
     fun `given showStep for progress is invoked, then call PercentFormatter`() = test {
         whenever(postRestoreUseCase.postRestoreRequest(anyOrNull(), anyOrNull(), anyOrNull()))
                 .thenReturn(postSuccess)
-        whenever(percentFormatter.format(0))
-                .thenReturn("0%")
+        whenever(percentFormatter.format(0)).thenReturn("0%")
 
         startViewModelForStep(PROGRESS)
 
@@ -388,6 +388,7 @@ class RestoreViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given progress step, when no network connection, then a snackbar message is shown`() = test {
+        whenever(percentFormatter.format(0)).thenReturn("0%")
         whenever(postRestoreUseCase.postRestoreRequest(anyOrNull(), anyOrNull(), anyOrNull()))
                 .thenReturn(postRestoreNetworkError)
 
@@ -404,6 +405,7 @@ class RestoreViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given progress step, when remote request fails, then a snackbar message is shown`() = test {
+        whenever(percentFormatter.format(0)).thenReturn("0%")
         whenever(postRestoreUseCase.postRestoreRequest(anyOrNull(), anyOrNull(), anyOrNull()))
                 .thenReturn(postRestoreRemoteRequestError)
 
@@ -420,6 +422,7 @@ class RestoreViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given progress step, when another request is running, then a snackbar message is shown`() = test {
+        whenever(percentFormatter.format(0)).thenReturn("0%")
         whenever(postRestoreUseCase.postRestoreRequest(anyOrNull(), anyOrNull(), anyOrNull()))
                 .thenReturn(otherRequestRunningError)
 

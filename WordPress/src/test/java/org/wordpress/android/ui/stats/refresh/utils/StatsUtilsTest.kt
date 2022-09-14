@@ -258,6 +258,7 @@ class StatsUtilsTest {
 
     @Test
     fun `build change with positive difference`() {
+        whenever(percentFormatter.format(3.0F)).thenReturn("300")
         val previousValue = 5L
         val value = 20L
         val positive = true
@@ -272,6 +273,7 @@ class StatsUtilsTest {
 
     @Test
     fun `build change with infinite positive difference`() {
+        whenever(percentFormatter.format(3.0F)).thenReturn("∞")
         val previousValue = 0L
         val value = 20L
         val positive = true
@@ -286,6 +288,7 @@ class StatsUtilsTest {
 
     @Test
     fun `build change with negative difference`() {
+        whenever(percentFormatter.format(-0.33333334F)).thenReturn("-33")
         val previousValue = 30L
         val value = 20L
         val positive = false
@@ -301,6 +304,7 @@ class StatsUtilsTest {
     @Test
     fun `build change with max negative difference`() {
         val previousValue = 20L
+        whenever(percentFormatter.format(-1F)).thenReturn("-100")
         val value = 0L
         val positive = false
         val expectedChange = "-20 (-100%)"
