@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-09-08 08:50:29+0000
+Translation-Revision-Date: 2022-09-14 15:55:52+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.1
 Language: ro
@@ -1878,8 +1878,8 @@ Language: ro
     <string name="history_preview_visual">Previzualizare ca vizual</string>
     <string name="history_preview_html">Previzualizare ca HTML</string>
     <string name="history_detail_title">Revizie</string>
-    <string name="history_detail_button_previous">Anterioare</string>
     <string name="history_detail_button_next">Următoare</string>
+    <string name="history_detail_button_previous">Anterior</string>
     <string name="media_space_used">%1$s folosiți</string>
     <string name="history_loaded_revision">Revizie încărcată</string>
     <string name="history_loading_revision">Încărcare revizie</string>

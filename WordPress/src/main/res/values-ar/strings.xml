@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-09-02 08:08:43+0000
+Translation-Revision-Date: 2022-09-13 10:54:08+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/4.0.0-alpha.1
 Language: ar
 -->
 <resources>
+    <string name="app_rating_title">هل تستمتع بـ %s؟</string>
+    <string name="connection_service_label">مشاركة التدوينة على %s</string>
+    <string name="connections_label">عمليات الربط بـ Jetpack Social</string>
+    <string name="stats_widget_log_in_to_add_message">يرجى تسجيل الدخول إلى تطبيق Jetpack لإضافة مربع جانبي.</string>
+    <string name="stats_view_publicize">عمليات الربط بـ Jetpack Social</string>
     <string name="login_magic_links_email_sent">أرسلنا رابطًا سحريًا للتو إلى</string>
     <string name="login_magic_links_sent_label_short">تحقَّق من بريدك الإلكتروني على هذا الجهاز!</string>
     <string name="or_use_password">استخدام كلمة المرور لتسجيل الدخول</string>
@@ -1245,6 +1250,7 @@ Language: ar
     <string name="photo_picker_video_title">اختيار مقطع فيديو</string>
     <string name="site_picker_ask_site_select">تعذر تحديد الموقع. يُرجى المحاولة مرة أخرى.</string>
     <string name="insert_label_with_count">إدراج %d</string>
+    <string name="feature_announcement_dialog_label">ما الجديد في %s</string>
     <string name="sitepicker_continue_flow">المتابعة</string>
     <string name="reader_reblog_error">فشلت إعادة التدوين</string>
     <string name="reader_no_site_to_reblog_action">إدارة المواقع</string>
@@ -1335,6 +1341,7 @@ Language: ar
     <string name="post_list_tab_scheduled_posts">مجدول</string>
     <string name="post_list_tab_trashed_posts">محذوف</string>
     <string name="create_post_page_fab_tooltip_contributors">إنشاء مقالة</string>
+    <string name="sharing_facebook_account_must_have_pages">يتعذر على اتصال فيسبوك العثور على أي صفحات. يتعذر على Jetpack Social الربط بملفات فيسبوك الشخصية، حيث إنه يمكن ربطه بالصفحات المنشورة فقط.</string>
     <string name="dlg_confirm_action_trash">سلة المهملات</string>
     <string name="dlg_cancel_action_dont_trash">عدم الوضع بسلة المهملات</string>
     <string name="notifications_tab_title_unread_notifications">غير مقروء</string>
@@ -1562,6 +1569,7 @@ Language: ar
     <string name="navigate_forward_desc">التقدم للأمام</string>
     <string name="notification_post_will_be_published_in_ten_minutes">سيتم نشر \"%s\" خلال 10 دقائق</string>
     <string name="calendar_scheduled_post_title">مقالة ووردبريس مجدولة: \"%s\"</string>
+    <string name="calendar_scheduled_post_description">تمت جدولة \"⁦%1$s⁩\" للنشر في \"⁦%2$s⁩\" في تطبيق ⁦%3$s⁩ الخاص بك\n %4$s</string>
     <string name="notification_scheduled_post">مقالة مجدولة</string>
     <string name="notification_scheduled_post_one_hour_reminder">مقالة مجدولة: تذكير ساعة واحدة</string>
     <string name="notification_scheduled_post_ten_minute_reminder">مقالة مجدولة: تذكير 10 دقائق</string>
