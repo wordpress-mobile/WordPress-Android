@@ -11,7 +11,9 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,7 +24,8 @@ import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import dagger.android.support.AndroidSupportInjection
-import org.wordpress.android.ui.accounts.login.LoginPrologueRevampedViewModel.AccelerometerLiveData
+import kotlinx.coroutines.android.awaitFrame
+import kotlinx.coroutines.isActive
 import org.wordpress.android.ui.accounts.login.components.ColumnWithFrostedGlassBackground
 import org.wordpress.android.ui.accounts.login.components.JetpackLogo
 import org.wordpress.android.ui.accounts.login.components.LoopingTextWithBackground
@@ -32,6 +35,9 @@ import org.wordpress.android.ui.accounts.login.components.TopLinearGradient
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.util.extensions.showFullScreen
 import javax.inject.Inject
+
+
+val LocalPosition = compositionLocalOf { 0f }
 
 class LoginPrologueRevampedFragment: Fragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -48,11 +54,30 @@ class LoginPrologueRevampedFragment: Fragment() {
         )[LoginPrologueRevampedViewModel::class.java]
         setContent {
             AppTheme {
-                LoginScreenRevamped(
-                        viewModel.accelerometerData,
-                        onWpComLoginClicked = loginPrologueListener::showEmailLoginScreen,
-                        onSiteAddressLoginClicked = loginPrologueListener::loginViaSiteAddress,
-                )
+                /**
+                 * This composable launches an effect to continuously update the view model by providing the elapsed
+                 * time between frames. Velocity and position are recalculated for each frame, with the resulting
+                 * position provided here to be consumed by nested children composables.
+                 */
+                val position = viewModel.positionData.observeAsState(0f)
+                CompositionLocalProvider(LocalPosition provides position.value) {
+                    LaunchedEffect(Unit) {
+                        var lastFrameNanos: Long? = null
+                        while(isActive) {
+                            val currentFrameNanos = awaitFrame()
+                            // Calculate elapsed time (in seconds) since the last frame
+                            val elapsed = (currentFrameNanos - (lastFrameNanos?: currentFrameNanos)) / 1e9.toFloat()
+                            // Update viewModel for frame
+                            viewModel.updateForFrame(elapsed)
+                            // Update frame timestamp reference
+                            lastFrameNanos = currentFrameNanos
+                        }
+                    }
+                    LoginScreenRevamped(
+                            onWpComLoginClicked = loginPrologueListener::showEmailLoginScreen,
+                            onSiteAddressLoginClicked = loginPrologueListener::loginViaSiteAddress,
+                    )
+                }
             }
         }
         requireActivity().window.enableFullScreen()
@@ -89,13 +114,11 @@ class LoginPrologueRevampedFragment: Fragment() {
 
 @Composable
 private fun LoginScreenRevamped(
-    accelerometerLiveData: AccelerometerLiveData = AccelerometerLiveData,
     onWpComLoginClicked: () -> Unit,
     onSiteAddressLoginClicked: () -> Unit,
 ) {
-    val acceleration by accelerometerLiveData.observeAsState(0.0f)
     Box {
-        LoopingTextWithBackground(acceleration)
+        LoopingTextWithBackground()
         TopLinearGradient()
         JetpackLogo(
                 modifier = Modifier
@@ -103,7 +126,7 @@ private fun LoginScreenRevamped(
                         .size(60.dp)
                         .align(Alignment.TopCenter)
         )
-        ColumnWithFrostedGlassBackground(acceleration) {
+        ColumnWithFrostedGlassBackground {
             PrimaryButton(onClick = onWpComLoginClicked)
             SecondaryButton(onClick = onSiteAddressLoginClicked)
         }
