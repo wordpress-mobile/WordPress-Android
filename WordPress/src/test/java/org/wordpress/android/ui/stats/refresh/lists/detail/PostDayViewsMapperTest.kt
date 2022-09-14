@@ -57,6 +57,7 @@ class PostDayViewsMapperTest : BaseUnitTest() {
 
     @Test
     fun `builds title with positive difference`() {
+        whenever(percentFormatter.format(3.0F)).thenReturn("300")
         val previousCount = 5
         val previousItem = selectedItem.copy(count = previousCount)
         val positiveLabel = "+15 (300%)"
@@ -91,6 +92,7 @@ class PostDayViewsMapperTest : BaseUnitTest() {
 
     @Test
     fun `builds title with negative difference`() {
+        whenever(percentFormatter.format(-0.33333334F)).thenReturn("-33")
         val previousCount = 30
         val previousItem = selectedItem.copy(count = previousCount)
         val negativeLabel = "-10 (-33%)"
@@ -107,6 +109,7 @@ class PostDayViewsMapperTest : BaseUnitTest() {
 
     @Test
     fun `builds title with max negative difference`() {
+        whenever(percentFormatter.format(-1F)).thenReturn("-100")
         val newCount = 0
         val newItem = selectedItem.copy(count = newCount)
         val negativeLabel = "-20 (-100%)"
@@ -147,6 +150,7 @@ class PostDayViewsMapperTest : BaseUnitTest() {
 
     @Test
     fun `builds title with negative difference for the last item`() {
+        whenever(percentFormatter.format(-0.33333334F)).thenReturn("-33")
         val previousCount = 30
         val previousItem = selectedItem.copy(count = previousCount)
         val negativeLabel = "-10 (-33%)"
