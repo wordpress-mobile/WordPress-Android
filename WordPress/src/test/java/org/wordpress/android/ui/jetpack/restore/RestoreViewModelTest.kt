@@ -62,6 +62,7 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.util.text.PercentFormatter
 import org.wordpress.android.util.wizard.WizardManager
 import org.wordpress.android.util.wizard.WizardNavigationTarget
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -83,6 +84,7 @@ class RestoreViewModelTest : BaseUnitTest() {
     @Mock private lateinit var postRestoreUseCase: PostRestoreUseCase
     @Mock private lateinit var checkboxSpannableLabel: CheckboxSpannableLabel
     @Mock private lateinit var htmlMessageUtils: HtmlMessageUtils
+    @Mock private lateinit var percentFormatter: PercentFormatter
     private lateinit var availableItemsProvider: JetpackAvailableItemsProvider
     private lateinit var stateListItemBuilder: RestoreStateListItemBuilder
 
@@ -111,7 +113,7 @@ class RestoreViewModelTest : BaseUnitTest() {
         whenever(wizardManager.navigatorLiveData).thenReturn(wizardManagerNavigatorLiveData)
 
         availableItemsProvider = JetpackAvailableItemsProvider()
-        stateListItemBuilder = RestoreStateListItemBuilder(checkboxSpannableLabel, htmlMessageUtils)
+        stateListItemBuilder = RestoreStateListItemBuilder(checkboxSpannableLabel, htmlMessageUtils, percentFormatter)
         viewModel = RestoreViewModel(
                 wizardManager,
                 availableItemsProvider,
@@ -119,7 +121,8 @@ class RestoreViewModelTest : BaseUnitTest() {
                 stateListItemBuilder,
                 postRestoreUseCase,
                 restoreStatusUseCase,
-                TEST_DISPATCHER
+                TEST_DISPATCHER,
+                percentFormatter
         )
         whenever(getActivityLogItemUseCase.get(anyOrNull())).thenReturn(fakeActivityLogModel)
         whenever(checkboxSpannableLabel.buildSpannableLabel(R.string.backup_item_themes, null))
@@ -327,6 +330,20 @@ class RestoreViewModelTest : BaseUnitTest() {
 
         assertThat(uiStates.last()).isInstanceOf(ProgressState::class.java)
         assertThat(uiStates.last().toolbarState).isInstanceOf(ProgressToolbarState::class.java)
+    }
+
+    @Test
+    fun `given showStep for progress is invoked, then call PercentFormatter`() = test {
+        whenever(postRestoreUseCase.postRestoreRequest(anyOrNull(), anyOrNull(), anyOrNull()))
+                .thenReturn(postSuccess)
+        whenever(percentFormatter.format(0))
+                .thenReturn("0%")
+
+        startViewModelForStep(PROGRESS)
+
+        viewModel.showStep(WizardNavigationTarget(PROGRESS, restoreState))
+
+        verify(percentFormatter).format(0)
     }
 
     @Test

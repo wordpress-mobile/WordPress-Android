@@ -244,10 +244,7 @@ class BackupDownloadStateListItemBuilder @Inject constructor(
 
     private fun buildProgressState(progress: Int) = ProgressState(
             progress = progress,
-            progressLabel = UiStringResWithParams(
-                    R.string.backup_download_progress_label,
-                    listOf(UiStringText(percentFormatter.format(progress)))
-            )
+            progressLabel = UiStringText(percentFormatter.format(progress))
     )
 
     private fun buildBulletState(

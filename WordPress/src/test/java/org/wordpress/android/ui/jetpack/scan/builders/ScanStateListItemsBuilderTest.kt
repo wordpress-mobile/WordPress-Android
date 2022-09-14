@@ -39,6 +39,7 @@ import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.util.text.PercentFormatter
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Date
 
@@ -64,6 +65,7 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
     @Mock private lateinit var scanStore: ScanStore
     @Mock private lateinit var onHelpClickedMock: () -> Unit
     @Mock private lateinit var onEnterServerCredsIconClicked: () -> Unit
+    @Mock private lateinit var percentFormatter: PercentFormatter
 
     private val baseThreatModel = BaseThreatModel(
             id = 1L,
@@ -85,7 +87,8 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
                 resourceProvider,
                 threatItemBuilder,
                 threatDetailsListItemsBuilder,
-                scanStore
+                scanStore,
+                percentFormatter
         )
         whenever(htmlMessageUtils.getHtmlMessageFromStringFormatResId(anyInt(), any())).thenReturn("")
         whenever(resourceProvider.getString(anyInt())).thenReturn(DUMMY_TEXT)
@@ -549,13 +552,24 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
         assertThat(scanStateItems.filterIsInstance(ProgressState::class.java).first()).isEqualTo(
                 ProgressState(
                         progress = progress,
-                        progressLabel = UiStringResWithParams(
-                                R.string.scan_progress_label,
-                                listOf(UiStringText(progress.toString()))
-                        )
+                        progressLabel = UiStringText(progress.toString())
                 )
         )
     }
+
+    @Test
+    fun `given initial scanning state, should call PercentFormatter`() =
+            test {
+                val progress = 10
+                whenever(percentFormatter.format(progress))
+                        .thenReturn("10")
+                val scanStateModelInScanningInitialState = scanStateModelWithNoThreats.copy(
+                        state = State.SCANNING,
+                        currentStatus = ScanProgressStatus(progress = progress, startDate = Date(0))
+                )
+                buildScanStateItems(scanStateModelInScanningInitialState)
+                verify(percentFormatter).format(progress)
+            }
 
     /* PROVISIONING STATE */
 

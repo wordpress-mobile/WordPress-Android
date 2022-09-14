@@ -2,6 +2,7 @@ package org.wordpress.android.ui.stats.refresh.utils
 
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.eq
+import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -12,6 +13,7 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.util.LocaleManagerWrapper
+import org.wordpress.android.util.text.PercentFormatter
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Locale
 
@@ -19,6 +21,7 @@ import java.util.Locale
 class StatsUtilsTest {
     @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var localeManagerWrapper: LocaleManagerWrapper
+    @Mock private lateinit var percentFormatter: PercentFormatter
     private lateinit var statsUtils: StatsUtils
     private val suffixThousand = "k"
     private val suffixMillion = "M"
@@ -27,7 +30,7 @@ class StatsUtilsTest {
 
     @Before
     fun setUp() {
-        statsUtils = StatsUtils(resourceProvider, localeManagerWrapper)
+        statsUtils = StatsUtils(resourceProvider, localeManagerWrapper, percentFormatter)
         whenever(localeManagerWrapper.getLocale()).thenReturn(Locale.US)
         whenever(resourceProvider.getString(any(), any())).then {
             val resourceId = it.getArgument<Int>(0)
@@ -321,5 +324,12 @@ class StatsUtilsTest {
         val change = statsUtils.buildChange(previousValue, value, positive, isFormattedNumber = true)
 
         assertThat(change).isEqualTo(expectedChange)
+    }
+
+    @Test
+    fun `when buildChange, should call PercentFormatter`() {
+        whenever(percentFormatter.format(3.0F)).thenReturn("3%")
+        statsUtils.buildChange(5L, 20L, true, isFormattedNumber = true)
+        verify(percentFormatter).format(3.0F)
     }
 }

@@ -201,10 +201,7 @@ class ScanStateListItemsBuilder @Inject constructor(
         val scanDescription = DescriptionState(UiStringRes(descriptionRes))
         val scanProgress = ProgressState(
                 progress = progress,
-                progressLabel = UiStringResWithParams(
-                        R.string.scan_progress_label,
-                        listOf(UiStringText(percentFormatter.format(progress)))
-                )
+                progressLabel = UiStringText(percentFormatter.format(progress))
         )
 
         items.add(scanIcon)
