@@ -188,8 +188,10 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
 
         private fun showSubtitle(inputDate: Date, author: String?, subtitle: Int?, icon: Int?) {
             val date = if (inputDate == Date(0)) Date() else inputDate
-            val stringDate = DateTimeUtils.javaDateToTimeSpan(date, parent.context)
-                    .capitalizeWithLocaleWithoutLint(parent.context.currentLocale)
+            val stringDate = parent.context.currentLocale?.let {
+                DateTimeUtils.javaDateToTimeSpan(date, parent.context)
+                        .capitalizeWithLocaleWithoutLint(it)
+            }
 
             /** The subtitle is split in two TextViews:
              * - Date and Author (if not null) occupy the [pageSubtitle] TextView

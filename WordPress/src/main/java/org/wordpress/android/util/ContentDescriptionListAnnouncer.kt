@@ -22,23 +22,23 @@ class ContentDescriptionListAnnouncer {
                 targetView,
                 object : AccessibilityDelegateCompat() {
                     override fun onPopulateAccessibilityEvent(
-                        host: View?,
-                        event: AccessibilityEvent?
+                        host: View,
+                        event: AccessibilityEvent
                     ) {
                         super.onPopulateAccessibilityEvent(host, event)
-                        if (event?.eventType == TYPE_VIEW_ACCESSIBILITY_FOCUSED) {
+                        if (event.eventType == TYPE_VIEW_ACCESSIBILITY_FOCUSED) {
                             currentIndex = 0
                         }
                     }
 
                     override fun onInitializeAccessibilityNodeInfo(
-                        host: View?,
-                        info: AccessibilityNodeInfoCompat?
+                        host: View,
+                        info: AccessibilityNodeInfoCompat
                     ) {
                         super.onInitializeAccessibilityNodeInfo(host, info)
 
                         clickActionText?.let {
-                            info?.addAction(
+                            info.addAction(
                                     AccessibilityNodeInfoCompat.AccessibilityActionCompat(
                                             ACTION_CLICK, host?.context?.getString(
                                             it
