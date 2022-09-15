@@ -277,7 +277,10 @@ public class AppPrefs {
         IS_FIRST_TIME_BLOGGING_PROMPTS_ONBOARDING,
 
         // Indicates if this is the first time we try to login to Jetpack automatically
-        IS_FIRST_TRY_LOGIN_JETPACK
+        IS_FIRST_TRY_LOGIN_JETPACK,
+
+        // Indicates if this is the first time we try to get the user flags in Jetpack automatically
+        IS_FIRST_TRY_USER_FLAGS_JETPACK
     }
 
     static SharedPreferences prefs() {
@@ -1416,5 +1419,13 @@ public class AppPrefs {
 
     public static void saveIsFirstTrySharedLoginJetpack(final boolean isFirstTry) {
         setBoolean(UndeletablePrefKey.IS_FIRST_TRY_LOGIN_JETPACK, isFirstTry);
+    }
+
+    public static Boolean getIsFirstTryUserFlagsJetpack() {
+        return getBoolean(UndeletablePrefKey.IS_FIRST_TRY_USER_FLAGS_JETPACK, true);
+    }
+
+    public static void saveIsFirstTryUserFlagsJetpack(final boolean isFirstTry) {
+        setBoolean(UndeletablePrefKey.IS_FIRST_TRY_USER_FLAGS_JETPACK, isFirstTry);
     }
 }

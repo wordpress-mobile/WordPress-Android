@@ -234,8 +234,11 @@ class AppPrefsWrapper @Inject constructor() {
 
     fun getIsFirstTrySharedLoginJetpack(): Boolean = AppPrefs.getIsFirstTrySharedLoginJetpack()
 
-    fun saveIsFirstTrySharedLoginJetpack(isFirstTry: Boolean) =
-            AppPrefs.saveIsFirstTrySharedLoginJetpack(isFirstTry)
+    fun saveIsFirstTrySharedLoginJetpack(isFirstTry: Boolean) = AppPrefs.saveIsFirstTrySharedLoginJetpack(isFirstTry)
+
+    fun getIsFirstTryUserFlagsJetpack(): Boolean = AppPrefs.getIsFirstTryUserFlagsJetpack()
+
+    fun saveIsFirstTryUserFlagsJetpack(isFirstTry: Boolean) = AppPrefs.saveIsFirstTryUserFlagsJetpack(isFirstTry)
 
     fun getAllPrefs(): Map<String, Any?> = AppPrefs.prefs().all
 
