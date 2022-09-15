@@ -38,9 +38,9 @@ class SharedLoginResolver @Inject constructor(
         }
         sharedLoginAnalyticsTracker.trackLoginStart()
         appPrefsWrapper.saveIsFirstTrySharedLoginJetpack(false)
-        val accessTokenResultCursor = getAccessTokenResultCursor()
-        if (accessTokenResultCursor != null) {
-            val accessToken = queryResult.getValue<String>(accessTokenResultCursor) ?: ""
+        val accessTokenCursor = getAccessTokenCursor()
+        if (accessTokenCursor != null) {
+            val accessToken = queryResult.getValue<String>(accessTokenCursor) ?: ""
             if (accessToken.isNotEmpty()) {
                 sharedLoginAnalyticsTracker.trackLoginSuccess()
                 dispatchUpdateAccessToken(accessToken)
@@ -53,7 +53,7 @@ class SharedLoginResolver @Inject constructor(
         }
     }
 
-    private fun getAccessTokenResultCursor(): Cursor? {
+    private fun getAccessTokenCursor(): Cursor? {
         val wordpressAccessTokenUriValue =
                 "content://${wordPressPublicData.currentPackageId()}.${SharedLoginProvider::class.simpleName}"
         return contentResolverWrapper.queryUri(
