@@ -15,10 +15,10 @@ class MaterialTextViewWithArabicNumerals @JvmOverloads constructor(
     override fun setText(text: CharSequence?, type: BufferType?) {
         super.setText(text?.enforceWesternArabicNumerals(), type)
     }
-}
 
-fun CharSequence.enforceWesternArabicNumerals() = this
-        // Replace Eastern Arabic numerals
-        .replace(Regex("[٠-٩]")) { match -> (match.value.single() - '٠').toString() }
-        // Replace Persian/Urdu numerals
-        .replace(Regex("[۰-۹]")) { match -> (match.value.single() - '۰').toString() }
+    private fun CharSequence.enforceWesternArabicNumerals() = this
+            // Replace Eastern Arabic numerals
+            .replace(Regex("[٠-٩]")) { match -> (match.value.single() - '٠').toString() }
+            // Replace Persian/Urdu numerals
+            .replace(Regex("[۰-۹]")) { match -> (match.value.single() - '۰').toString() }
+}
