@@ -22,6 +22,7 @@
             style="@style/StatsWidgetBlockKey.Light"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="?widgetTitle1"
             tools:text="@string/stats_views"/>
 
         <TextView
@@ -29,6 +30,7 @@
             style="@style/StatsWidgetBlockValue.Light"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="?widgetContent1"
             tools:text="20,345"/>
     </LinearLayout>
 
@@ -43,6 +45,7 @@
             style="@style/StatsWidgetBlockKey.Light"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="?widgetTitle2"
             tools:text="@string/stats_views"/>
 
         <TextView
@@ -50,6 +53,7 @@
             style="@style/StatsWidgetBlockValue.Light"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="?widgetContent2"
             tools:text="2409"/>
     </LinearLayout>
 </LinearLayout>

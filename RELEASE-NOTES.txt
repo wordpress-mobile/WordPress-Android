@@ -2,6 +2,7 @@
 
 20.8
 -----
+* [*] [Jetpack-only] Adds more widgets, At a glance, All-time and Today widgets with dynamic previews [https://github.com/wordpress-mobile/WordPress-Android/pull/17140]
 
 
 20.7
