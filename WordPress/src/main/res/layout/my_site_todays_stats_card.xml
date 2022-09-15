@@ -31,7 +31,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <org.wordpress.android.widgets.MaterialTextViewWithArabicNumerals
+            <org.wordpress.android.widgets.MaterialTextViewWithNumerals
                 android:id="@+id/views_count"
                 style="@style/MySiteTodaysStatsCardStatCountText"
                 android:layout_width="0dp"
@@ -62,7 +62,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <org.wordpress.android.widgets.MaterialTextViewWithArabicNumerals
+            <org.wordpress.android.widgets.MaterialTextViewWithNumerals
                 android:id="@+id/visitors_count"
                 style="@style/MySiteTodaysStatsCardStatCountText"
                 android:layout_width="0dp"
@@ -94,7 +94,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <org.wordpress.android.widgets.MaterialTextViewWithArabicNumerals
+            <org.wordpress.android.widgets.MaterialTextViewWithNumerals
                 android:id="@+id/likes_count"
                 style="@style/MySiteTodaysStatsCardStatCountText"
                 android:layout_width="0dp"

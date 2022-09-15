@@ -7,7 +7,7 @@
     android:importantForAccessibility="no"
     android:orientation="horizontal">
 
-    <org.wordpress.android.widgets.MaterialTextViewWithArabicNumerals
+    <org.wordpress.android.widgets.MaterialTextViewWithNumerals
         android:id="@+id/start_legend"
         style="@style/StatsMapLegend"
         android:layout_width="wrap_content"
@@ -22,7 +22,7 @@
         android:layout_marginStart="@dimen/margin_medium"
         android:background="@drawable/bg_rectangle_stats_map_legend_gradient" />
 
-    <org.wordpress.android.widgets.MaterialTextViewWithArabicNumerals
+    <org.wordpress.android.widgets.MaterialTextViewWithNumerals
         android:id="@+id/end_legend"
         style="@style/StatsMapLegend"
         android:layout_width="wrap_content"
