@@ -28,8 +28,4 @@ class ReaderInterestsActivity : LocaleAwareActivity() {
         }
         return super.onOptionsItemSelected(item)
     }
-
-    override fun onResume() {
-        super.onResume()
-    }
 }
