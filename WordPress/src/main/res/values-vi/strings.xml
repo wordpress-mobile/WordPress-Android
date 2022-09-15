@@ -1276,7 +1276,6 @@ Language: vi_VN
     <string name="post_list_tab_trashed_posts">Thùng rác</string>
     <string name="post_list_tab_scheduled_posts">Lên lịch</string>
     <string name="post_list_tab_published_posts">Đã đăng</string>
-    <string name="sharing_facebook_account_must_have_pages">Với Facebook, Publicize không thể kết nối Trang Cá Nhân, chỉ kết nối được Trang Doanh Nghiệp.</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">Chưa kết nối</string>
     <string name="notifications_tab_title_likes">Lượt thích</string>
     <string name="notifications_tab_title_follows">Theo dõi</string>
@@ -2500,10 +2499,8 @@ Language: vi_VN
     <string name="share_btn_disconnect">Ngắt kết nối</string>
     <string name="share_btn_connect">Kết nối</string>
     <string name="connection_service_description">Kết nối để tự động chia sẻ bài viết của bạn với %s.</string>
-    <string name="connection_service_label">Kết nối tới %s</string>
     <string name="connected_accounts_label">Tài khoản đã kết nối</string>
     <string name="connections_description">Kết nối tài khoản mạng xã hội của bạn để tự động chia sẻ bài viết mới với bạn bè trên đó.</string>
-    <string name="connections_label">Kết nối mạng xã hội</string>
     <string name="sharing">Chia sẻ</string>
     <string name="tabbar_accessibility_label_notifications">Thông báo. Quản lý thông báo.</string>
     <string name="tabbar_accessibility_label_reader">Đọc. Theo dõi nội dung các blog khác.</string>

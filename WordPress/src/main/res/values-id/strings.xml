@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-08-25 08:54:08+0000
+Translation-Revision-Date: 2022-09-13 10:54:08+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: id
 -->
 <resources>
+    <string name="stats_widget_log_in_to_add_message">Silakan login ke aplikasi Jetpack untuk menambahkan widget.</string>
     <string name="login_magic_links_email_sent">Kami baru saja mengirimkan tautan ajaib ke </string>
     <string name="login_magic_links_sent_label_short">Periksa email Anda di perangkat ini!</string>
     <string name="or_use_password">Gunakan kata sandi untuk login</string>
@@ -59,7 +60,6 @@ Language: id
     <string name="stats_insights_comments_guide_card">💡Ketuk \'LIHAT LEBIH BANYAK\' untuk melihat komentator teratas Anda.</string>
     <string name="stats_insights_latest_post_empty">Periksa lagi setelah Anda memposkan pos pertama Anda!</string>
     <string name="stats_insights_views_and_visitors_visitors_empty_state">Cek tips terbaik kami untuk meningkatkan pratinjau dan kunjungan Anda %1$s</string>
-    <string name="stats_view_publicize">Koneksi Sosial Media</string>
     <string name="stats_action_card_schedule_post_message">✍️ Jadwalkan draf Anda untuk diposkan di waktu ramai untuk mendapatkan lebih banyak pengunjung.</string>
     <string name="stats_action_card_blogging_reminders_message">💡Memposkan secara konsisten membantu Anda menarik lebih banyak pengunjung. Tambahkan pengingat untuk menjaga konsistensi.</string>
     <string name="stats_action_card_grow_audience_message">💡Tingkatkan kemampuan blog Anda lebih cepat dengan pelatihan&lt;i&gt; Pengenalan Blogging&lt;/i&gt; dari para ahli.</string>
@@ -1237,6 +1237,7 @@ Language: id
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">Ketuk dua kali untuk membuka pengaturan warna</string>
     <string name="reader_empty_followed_blogs_description">Saat Anda mengikuti situs, Anda akan melihat kontennya di sini</string>
     <string name="feature_announcement_find_out_mode">Cari tahu selengkapnya</string>
+    <string name="feature_announcement_dialog_label">Apa yang Baru Di %s</string>
     <string name="insert_label_with_count">Sisipkan %d</string>
     <string name="crop">pangkas</string>
     <string name="error_failed_to_load_into_file">Gagal memuat ke file, harap coba lagi.</string>
@@ -1335,7 +1336,7 @@ Language: id
     <string name="post_list_tab_trashed_posts">Dibuang</string>
     <string name="post_list_tab_scheduled_posts">Terjadwal</string>
     <string name="post_list_tab_published_posts">Dipublikasikan</string>
-    <string name="sharing_facebook_account_must_have_pages">Koneksi Facebook tidak dapat menemukan Halaman apa pun. Publikasikan tidak dapat terhubung ke Profil Facebook, hanya Halaman yang dipublikasikan.</string>
+    <string name="sharing_facebook_account_must_have_pages">Koneksi Facebook tidak dapat menemukan Halaman apa pun. Jetpack Social tidak dapat terhubung ke Profil Facebook, hanya Halaman yang dipublikasikan.</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">Tidak Terhubung</string>
     <string name="notifications_tab_title_likes">Suka</string>
     <string name="notifications_tab_title_follows">Mengikuti</string>
@@ -1562,6 +1563,7 @@ Language: id
     <string name="share_desc">Bagikan</string>
     <string name="navigate_back_desc">Kembali</string>
     <string name="navigate_forward_desc">Selanjutnya</string>
+    <string name="calendar_scheduled_post_description">\"%1$s\" dijadwalkan untuk dipublikasikan pada \"%2$s\" di aplikasi %3$s Anda \n %4$s</string>
     <string name="calendar_scheduled_post_title">Pos Terjadwal WordPress: \"%s\"</string>
     <string name="notification_post_will_be_published_in_ten_minutes">\"%s\" akan dipublikasikan dalam 10 menit</string>
     <string name="notification_post_will_be_published_in_one_hour">\"%s\" akan dipublikasikan dalam 1 jam</string>
@@ -2560,10 +2562,8 @@ Language: id
     <string name="share_btn_disconnect">Putuskan sambungan</string>
     <string name="share_btn_connect">Hubungkan</string>
     <string name="connection_service_description">Sambungkan agar pos blog Anda dibagikan secara otomatis %s.</string>
-    <string name="connection_service_label">Publikasikan ke %s</string>
     <string name="connected_accounts_label">Akun Terhubung</string>
     <string name="connections_description">Sambungkan layanan media sosial favorit Anda untuk membagikan pos Anda secara otomatis dengan teman Anda.</string>
-    <string name="connections_label">Sambungan</string>
     <string name="sharing">Berbagi</string>
     <string name="tabbar_accessibility_label_notifications">Pemberitahuan. Kelola pemberitahuan.</string>
     <string name="tabbar_accessibility_label_reader">Pembaca. Ikuti konten dari situs lain.</string>

@@ -11,19 +11,20 @@ msgstr ""
 "Project-Id-Version: Release Notes & Play Store Descriptions\n"
 
 #. translators: Release notes for this version to be displayed in the Play Store. Limit to 500 characters including spaces and commas!
+msgctxt "release_note_207"
+msgid ""
+"20.7:\n"
+"We can see clearly now—media preview controls (like the back button) are now visible in both light and dark mode.\n"
+"\n"
+"The Login Code screen in the Compose theme also has better color contrast for more readable text. Shiny.\n"
+msgstr ""
+
 msgctxt "release_note_206"
 msgid ""
 "20.6:\n"
 "- You can now log in to the app using an email address that contains a special character.\n"
 "- Preloading themes no longer crash the app during Site Creation. Whew.\n"
 "- Power up—the Jetpack Powered banner is shown in lists of search results.\n"
-msgstr ""
-
-msgctxt "release_note_205"
-msgid ""
-"20.5:\n"
-"- We added a new label in App Settings to show the app’s current interface language. Shiny.\n"
-"- Now that the app supports higher-resolution image previews, we bumped up the size of theme screenshots in the site theme picker. No more pixellation, only pixel perfection.\n"
 msgstr ""
 
 #. translators: Shorter Release notes for this version to be displayed in the Play Store. Limit to 500 characters including spaces and commas!

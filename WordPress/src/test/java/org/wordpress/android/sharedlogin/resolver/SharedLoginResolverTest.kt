@@ -3,6 +3,7 @@ package org.wordpress.android.sharedlogin.resolver
 import android.content.ContentResolver
 import android.content.Context
 import android.database.MatrixCursor
+import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.times
@@ -17,7 +18,9 @@ import org.wordpress.android.fluxc.store.AccountStore.UpdateTokenPayload
 import org.wordpress.android.provider.query.QueryResult
 import org.wordpress.android.resolver.ContentResolverWrapper
 import org.wordpress.android.sharedlogin.JetpackSharedLoginFlag
-import org.wordpress.android.sharedlogin.WordPressPublicData
+import org.wordpress.android.sharedlogin.SharedLoginAnalyticsTracker
+import org.wordpress.android.sharedlogin.SharedLoginAnalyticsTracker.ErrorType
+import org.wordpress.android.sharedlogin.data.WordPressPublicData
 import org.wordpress.android.sharedlogin.provider.SharedLoginProvider
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.AccountActionBuilderWrapper
@@ -33,6 +36,7 @@ class SharedLoginResolverTest {
     private val contentResolverWrapper: ContentResolverWrapper = mock()
     private val accountActionBuilderWrapper: AccountActionBuilderWrapper = mock()
     private val appPrefsWrapper: AppPrefsWrapper = mock()
+    private val sharedLoginAnalyticsTracker: SharedLoginAnalyticsTracker = mock()
     private val classToTest = SharedLoginResolver(
             jetpackSharedLoginFlag,
             contextProvider,
@@ -42,7 +46,8 @@ class SharedLoginResolverTest {
             accountStore,
             contentResolverWrapper,
             accountActionBuilderWrapper,
-            appPrefsWrapper
+            appPrefsWrapper,
+            sharedLoginAnalyticsTracker
     )
     private val loggedInToken = "valid"
     private val notLoggedInToken = ""
@@ -110,7 +115,68 @@ class SharedLoginResolverTest {
         featureEnabled()
         whenever(queryResult.getValue<String>(mockCursor)).thenReturn(notLoggedInToken)
         classToTest.tryJetpackLogin()
-        verify(dispatcher, times(0)).dispatch(updateTokenAction)
+        verify(dispatcher, never()).dispatch(updateTokenAction)
+    }
+
+    @Test
+    fun `Should track login start if NOT already logged in, feature flag is ENABLED and IS first try`() {
+        featureEnabled()
+        classToTest.tryJetpackLogin()
+        verify(sharedLoginAnalyticsTracker).trackLoginStart()
+    }
+
+    @Test
+    fun `Should NOT track login start if IS already logged in`() {
+        whenever(appPrefsWrapper.getIsFirstTrySharedLoginJetpack()).thenReturn(true)
+        whenever(accountStore.accessToken).thenReturn(loggedInToken)
+        whenever(jetpackSharedLoginFlag.isEnabled()).thenReturn(true)
+        classToTest.tryJetpackLogin()
+        verify(sharedLoginAnalyticsTracker, never()).trackLoginStart()
+    }
+
+    @Test
+    fun `Should NOT track login start if feature flag is DISABLED`() {
+        whenever(appPrefsWrapper.getIsFirstTrySharedLoginJetpack()).thenReturn(true)
+        whenever(accountStore.accessToken).thenReturn(notLoggedInToken)
+        whenever(jetpackSharedLoginFlag.isEnabled()).thenReturn(false)
+        classToTest.tryJetpackLogin()
+        verify(sharedLoginAnalyticsTracker, never()).trackLoginStart()
+    }
+
+    @Test
+    fun `Should NOT track login start if IS NOT the first try`() {
+        whenever(appPrefsWrapper.getIsFirstTrySharedLoginJetpack()).thenReturn(false)
+        whenever(accountStore.accessToken).thenReturn(notLoggedInToken)
+        whenever(jetpackSharedLoginFlag.isEnabled()).thenReturn(true)
+        classToTest.tryJetpackLogin()
+        verify(sharedLoginAnalyticsTracker, never()).trackLoginStart()
+    }
+
+    @Test
+    fun `Should track login failed if access token result cursor IS null`() {
+        whenever(contentResolverWrapper.queryUri(contentResolver, uriValue)).thenReturn(null)
+        featureEnabled()
+        classToTest.tryJetpackLogin()
+        verify(sharedLoginAnalyticsTracker, never()).trackLoginSuccess()
+        verify(sharedLoginAnalyticsTracker, times(1)).trackLoginFailed(ErrorType.QueryTokenError)
+    }
+
+    @Test
+    fun `Should track login failed if access token IS empty`() {
+        featureEnabled()
+        whenever(queryResult.getValue<String>(mockCursor)).thenReturn(notLoggedInToken)
+        classToTest.tryJetpackLogin()
+        verify(sharedLoginAnalyticsTracker, never()).trackLoginSuccess()
+        verify(sharedLoginAnalyticsTracker, times(1)).trackLoginFailed(ErrorType.WPNotLoggedInError)
+    }
+
+    @Test
+    fun `Should track login success if access token result cursor IS NOT null AND access token IS NOT empty`() {
+        featureEnabled()
+        whenever(queryResult.getValue<String>(mockCursor)).thenReturn(loggedInToken)
+        classToTest.tryJetpackLogin()
+        verify(sharedLoginAnalyticsTracker, never()).trackLoginFailed(any())
+        verify(sharedLoginAnalyticsTracker, times(1)).trackLoginSuccess()
     }
 
     private fun featureEnabled() {

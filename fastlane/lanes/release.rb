@@ -88,7 +88,7 @@ platform :android do
     update_frozen_strings_for_translation
     download_translations()
     android_bump_version_beta()
-    return unless UI.confirm('Ready for CI build')
+    next unless UI.confirm('Ready for CI build')
 
     new_version = android_get_app_version()
     trigger_beta_build(branch_to_build: "release/#{new_version}")

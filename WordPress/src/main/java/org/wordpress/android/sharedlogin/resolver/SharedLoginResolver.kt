@@ -7,7 +7,9 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.provider.query.QueryResult
 import org.wordpress.android.resolver.ContentResolverWrapper
 import org.wordpress.android.sharedlogin.JetpackSharedLoginFlag
-import org.wordpress.android.sharedlogin.WordPressPublicData
+import org.wordpress.android.sharedlogin.SharedLoginAnalyticsTracker
+import org.wordpress.android.sharedlogin.SharedLoginAnalyticsTracker.ErrorType
+import org.wordpress.android.sharedlogin.data.WordPressPublicData
 import org.wordpress.android.sharedlogin.provider.SharedLoginProvider
 import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
@@ -24,7 +26,8 @@ class SharedLoginResolver @Inject constructor(
     private val accountStore: AccountStore,
     private val contentResolverWrapper: ContentResolverWrapper,
     private val accountActionBuilderWrapper: AccountActionBuilderWrapper,
-    private val appPrefsWrapper: AppPrefsWrapper
+    private val appPrefsWrapper: AppPrefsWrapper,
+    private val sharedLoginAnalyticsTracker: SharedLoginAnalyticsTracker
 ) {
     fun tryJetpackLogin() {
         val isAlreadyLoggedIn = accountStore.accessToken.isNotEmpty()
@@ -33,14 +36,20 @@ class SharedLoginResolver @Inject constructor(
         if (isAlreadyLoggedIn || !isFirstTry || !isFeatureFlagEnabled) {
             return
         }
+        sharedLoginAnalyticsTracker.trackLoginStart()
         appPrefsWrapper.saveIsFirstTrySharedLoginJetpack(false)
         val accessTokenResultCursor = getAccessTokenResultCursor()
         if (accessTokenResultCursor != null) {
             val accessToken = queryResult.getValue<String>(accessTokenResultCursor) ?: ""
             if (accessToken.isNotEmpty()) {
+                sharedLoginAnalyticsTracker.trackLoginSuccess()
                 dispatchUpdateAccessToken(accessToken)
                 reloadMainScreen()
+            } else {
+                sharedLoginAnalyticsTracker.trackLoginFailed(ErrorType.WPNotLoggedInError)
             }
+        } else {
+            sharedLoginAnalyticsTracker.trackLoginFailed(ErrorType.QueryTokenError)
         }
     }
 
