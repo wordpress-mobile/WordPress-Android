@@ -2,7 +2,7 @@
 
 20.8
 -----
-
+* [**] Stats: Always use Western Arabic numerals for Arabic language (previously there was a mix of Eastern and Western Arabic numerals) [https://github.com/wordpress-mobile/WordPress-Android/pull/17160]
 
 20.7
 -----
