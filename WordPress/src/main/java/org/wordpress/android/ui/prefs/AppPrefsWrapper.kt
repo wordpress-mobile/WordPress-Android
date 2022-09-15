@@ -237,6 +237,8 @@ class AppPrefsWrapper @Inject constructor() {
     fun saveIsFirstTrySharedLoginJetpack(isFirstTry: Boolean) =
             AppPrefs.saveIsFirstTrySharedLoginJetpack(isFirstTry)
 
+    fun getAllPrefs(): Map<String, Any?> = AppPrefs.prefs().all
+
     companion object {
         private const val LIGHT_MODE_ID = 0
         private const val DARK_MODE_ID = 1

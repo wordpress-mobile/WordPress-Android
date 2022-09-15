@@ -280,7 +280,7 @@ public class AppPrefs {
         IS_FIRST_TRY_LOGIN_JETPACK
     }
 
-    private static SharedPreferences prefs() {
+    static SharedPreferences prefs() {
         return PreferenceManager.getDefaultSharedPreferences(WordPress.getContext());
     }
 
