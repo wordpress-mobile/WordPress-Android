@@ -23,7 +23,7 @@
         android:paddingStart="33dp"
         android:paddingEnd="15dp">
 
-        <com.google.android.material.textview.MaterialTextView
+        <org.wordpress.android.widgets.MaterialTextViewWithArabicNumerals
             android:id="@+id/label_start"
             style="@style/StatsGraphLabel"
             android:layout_width="wrap_content"
@@ -36,7 +36,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1" />
 
-        <com.google.android.material.textview.MaterialTextView
+        <org.wordpress.android.widgets.MaterialTextViewWithArabicNumerals
             android:id="@+id/label_end"
             style="@style/StatsGraphLabel"
             android:layout_width="wrap_content"
