@@ -24,8 +24,6 @@ SCREENSHOT_LOCALES = ALL_LOCALES
   .compact
   .freeze
 
-require_relative '../helpers/android_emulator_helper'
-
 platform :android do
   # Takes screenshots for the WordPress or Jetpack app across multiple device and locales.
   # 
@@ -57,10 +55,8 @@ platform :android do
     test_class = APP_SPECIFIC_VALUES[app.to_sym][:screenshots_test_class]
 
     screenshot_devices.each do |device|
-      helper = Fastlane::Helpers::AndroidEmulator.new
-      sys_img = helper.install_system_image(api: device[:api]) # Ensure we have the system image needed for creating the AVD with this API level
-      name = helper.create_avd(api: device[:api], device: device[:device], system_image: sys_img) # Create the AVD for device+API+system image we need
-      serial = helper.launch_avd(name: name) # Launch an emulator using this AVD and get its serial number, to know which emulator to run the tests on
+      name = android_create_avd(device_model: device[:device], api_level: device[:api]) # Create the AVD for device, API and system image we need
+      serial = android_launch_emulator(avd_name: name) # Launch an emulator using this AVD and get its serial number, to know which emulator to run the tests on
 
       capture_android_screenshots(
         app_apk_path: File.join(apk_dir, "#{app}Vanilla", 'debug', "org.wordpress.android-#{app}-vanilla-debug.apk"),
@@ -79,7 +75,7 @@ platform :android do
         use_timestamp_suffix: false
       )
 
-      helper.shut_down_emulators!(serials: [serial]) # Clean up after ourselves
+      android_shutdown_emulator(serial: serial) # Clean up after ourselves
     end
   end
 
