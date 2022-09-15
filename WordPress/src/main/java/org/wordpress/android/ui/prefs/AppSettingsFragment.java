@@ -21,6 +21,8 @@ import android.widget.ListView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.os.LocaleListCompat;
 import androidx.core.view.ViewCompat;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -502,6 +504,9 @@ public class AppSettingsFragment extends PreferenceFragment
         if (LocaleManager.isSameLanguage(languageCode)) {
             return;
         }
+
+//        LocaleListCompat appLocale = LocaleListCompat.forLanguageTags(languageCode);
+//        AppCompatDelegate.setApplicationLocales(appLocale);
 
         LocaleManager.setNewLocale(WordPress.getContext(), languageCode);
         WordPress.updateContextLocale();
