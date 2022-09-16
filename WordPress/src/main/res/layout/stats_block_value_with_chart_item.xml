@@ -8,7 +8,7 @@
     android:paddingEnd="@dimen/margin_extra_large"
     tools:ignore="RtlSymmetry">
 
-    <com.google.android.material.textview.MaterialTextView
+    <org.wordpress.android.widgets.MaterialTextViewWithNumerals
         android:id="@+id/value"
         style="@style/StatsBlockBigValue"
         android:layout_width="0dp"
