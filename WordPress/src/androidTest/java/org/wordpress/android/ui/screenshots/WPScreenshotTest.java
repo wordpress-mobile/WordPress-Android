@@ -131,7 +131,7 @@ public class WPScreenshotTest extends BaseTest {
             Espresso.closeSoftKeyboard();
         }
 
-        setNightModeAndWait(false);
+        setLightModeAndWait();
 
         if (openBlockList) {
             clickOnViewWithTag("add-block-button");
@@ -173,7 +173,7 @@ public class WPScreenshotTest extends BaseTest {
             e.printStackTrace();
         }
 
-        setNightModeAndWait(true);
+        setLightModeAndWait();
 
         // Wait for the editor to load all images
         idleFor(7000);
@@ -195,7 +195,7 @@ public class WPScreenshotTest extends BaseTest {
             clickOn(R.id.button_negative);
         }
 
-        setNightModeAndWait(true);
+        setLightModeAndWait();
 
         takeScreenshot("3-build-an-audience");
 
@@ -212,7 +212,7 @@ public class WPScreenshotTest extends BaseTest {
             clickOn(R.id.tooltip_message);
         }
 
-        setNightModeAndWait(true);
+        setLightModeAndWait();
 
         takeScreenshot("4-keep-tabs-on-your-site");
     }
@@ -227,7 +227,7 @@ public class WPScreenshotTest extends BaseTest {
         // Wait for the images to load
         idleFor(6000);
 
-        setNightModeAndWait(false);
+        setLightModeAndWait();
 
         takeScreenshot("5-reply-in-real-time");
 
@@ -243,7 +243,7 @@ public class WPScreenshotTest extends BaseTest {
         waitForElementToBeDisplayedWithoutFailure(R.id.media_browser_container);
 
         idleFor(2000);
-        setNightModeAndWait(true);
+        setLightModeAndWait();
 
         takeScreenshot("6-upload-on-the-go");
 
@@ -277,8 +277,8 @@ public class WPScreenshotTest extends BaseTest {
         return editPostActivity.getAztecImageLoader().getNumberOfImagesBeingDownloaded() == 0;
     }
 
-    private void setNightModeAndWait(boolean isNightMode) {
-        setNightMode(isNightMode);
+    private void setLightModeAndWait() {
+        setNightMode(false);
         idleFor(5000);
     }
 }
