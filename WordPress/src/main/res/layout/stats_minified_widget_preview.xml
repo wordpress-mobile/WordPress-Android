@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_rectangle_white_radius_4dp"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/widget_title_container_preview"
+        style="@style/StatsWidgetHeader.Light"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/stats_widget_list_item_height"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/widget_site_icon_preview"
+            style="@style/StatsWidgetSiteIcon"
+            android:layout_width="@dimen/stats_widget_list_item_height"
+            android:layout_height="@dimen/stats_widget_list_item_height"
+            android:contentDescription="@string/my_site_icon_content_description"
+            android:src="@drawable/ic_jetpack_logo_green_24dp" />
+
+        <TextView
+            android:id="@+id/widget_title_preview"
+            style="@style/StatsWidgetTitle.Light"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/stats_widget_list_item_height"
+            android:text="@string/stats_widget_minified_name"/>
+
+    </LinearLayout>
+
+    <include
+        layout="@layout/stats_widget_list_light"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <include layout="@layout/stats_widget_block_item_light"
+        android:theme="@style/ListItem.Preview" />
+
+</LinearLayout>

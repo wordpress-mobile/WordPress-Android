@@ -824,10 +824,8 @@ Language: es_CL
     <string name="connection_service_description">Conéctate para compartir automáticamente tus entradas del blog a %s.</string>
     <string name="share_btn_connect">Conectar</string>
     <string name="share_btn_reconnect">Reconectar</string>
-    <string name="connection_service_label">Publicar a %s</string>
     <string name="connected_accounts_label">Cuentas conectadas</string>
     <string name="connections_description">Conecta tus servicios de medios sociales favoritos y comparte automáticamente las entradas nuevas con tus amigos.</string>
-    <string name="connections_label">Conexiones</string>
     <string name="sharing">Compartir</string>
     <string name="tabbar_accessibility_label_notifications">Notificaciones. Administra tus notificaciones.</string>
     <string name="tabbar_accessibility_label_reader">Lector. Sigue el contenido de otros sitios.</string>

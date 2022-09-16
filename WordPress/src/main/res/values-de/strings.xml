@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-08-25 08:54:08+0000
+Translation-Revision-Date: 2022-09-08 09:34:53+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: de
 -->
 <resources>
+    <string name="app_rating_title">Zufrieden mit %s?</string>
+    <string name="connection_service_label">Beitrag teilen auf %s</string>
+    <string name="connections_label">Jetpack-Social-Verbindungen</string>
+    <string name="stats_widget_log_in_to_add_message">Bitte melde dich bei der Jetpack-App an, um ein Widget hinzuzufügen.</string>
+    <string name="stats_view_publicize">Jetpack-Social-Verbindungen</string>
     <string name="login_magic_links_email_sent">Wir haben einen magischen Link an folgende Adresse geschickt:</string>
     <string name="login_magic_links_sent_label_short">Überprüfe dein Postfach auf diesem Gerät!</string>
     <string name="or_use_password">Mit Passwort anmelden</string>
@@ -59,7 +64,6 @@ Language: de
     <string name="stats_insights_comments_guide_card">💡Tippe auf „MEHR ANZEIGEN“, um dir deine Top-Kommentatoren anzeigen zu lassen.</string>
     <string name="stats_insights_latest_post_empty">Schau nochmal vorbei, wenn du deinen ersten Beitrag veröffentlicht hast!</string>
     <string name="stats_insights_views_and_visitors_visitors_empty_state">Schau dir unsere Top-Tipps für mehr Aufrufe und höheren Traffic an %1$s</string>
-    <string name="stats_view_publicize">Verbindungen mit den sozialen Medien</string>
     <string name="stats_action_card_schedule_post_message">✍️ Plane deine Entwürfe, damit du sie zu dem Zeitpunkt veröffentlichst, an dem du dein Publikum am besten erreichst.</string>
     <string name="stats_action_card_blogging_reminders_message">💡Regelmäßig Beiträge zu veröffentlichen ist ein guter Weg, ein Publikum aufzubauen. Füge eine Erinnerung hinzu, damit du auf Kurs bleibst.</string>
     <string name="stats_action_card_grow_audience_message">💡Verbessere dein Blog schneller mit dem Kurs &lt;i&gt;Einführung in das Bloggen&lt;/i&gt;, der von Experten geleitet wird.</string>
@@ -1237,6 +1241,7 @@ Language: de
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">Zum Wechseln zu den Farbeinstellungen zweimal tippen</string>
     <string name="reader_empty_followed_blogs_description">Wenn du Websites folgst, wirst du ihren Inhalt hier sehen</string>
     <string name="feature_announcement_find_out_mode">Mehr erfahren</string>
+    <string name="feature_announcement_dialog_label">Was ist neu in %s?</string>
     <string name="insert_label_with_count">%d einfügen</string>
     <string name="crop">zuschneiden</string>
     <string name="error_failed_to_load_into_file">Laden in die Datei fehlgeschlagen, bitte versuche es erneut.</string>
@@ -1335,7 +1340,7 @@ Language: de
     <string name="post_list_tab_trashed_posts">Im Papierkorb</string>
     <string name="post_list_tab_scheduled_posts">Geplant</string>
     <string name="post_list_tab_published_posts">Veröffentlicht</string>
-    <string name="sharing_facebook_account_must_have_pages">Die Facebook-Verbindung findet keine Seiten. Publicize kann keine Verbindung zu Facebook-Profilen herstellen, nur zu öffentlichen Seiten.</string>
+    <string name="sharing_facebook_account_must_have_pages">Die Facebook-Verbindung findet keine Seiten. Jetpack Social kann keine Verbindung zu Facebook-Profilen herstellen, nur zu öffentlichen Seiten.</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">Nicht verbunden</string>
     <string name="notifications_tab_title_likes">Likes</string>
     <string name="notifications_tab_title_follows">Follows</string>
@@ -1562,6 +1567,7 @@ Language: de
     <string name="share_desc">Teilen</string>
     <string name="navigate_back_desc">Zurück gehen</string>
     <string name="navigate_forward_desc">Vorwärts gehen</string>
+    <string name="calendar_scheduled_post_description">„%1$s“ ist für die Veröffentlichung auf „%2$s“ in deiner %3$s-App geplant \n %4$s</string>
     <string name="calendar_scheduled_post_title">Von WordPress geplanter Beitrag: „%s“</string>
     <string name="notification_post_will_be_published_in_ten_minutes">„%s“ wird in 10 Minuten veröffentlicht</string>
     <string name="notification_post_will_be_published_in_one_hour">„%s“ wird in 1 Stunde veröffentlicht</string>
@@ -2560,10 +2566,8 @@ Language: de
     <string name="share_btn_disconnect">Trennen</string>
     <string name="share_btn_connect">Verbinden</string>
     <string name="connection_service_description">Verbinden, um Blogbeiträge automatisch mit %s zu teilen.</string>
-    <string name="connection_service_label">Auf %s veröffentlichen</string>
     <string name="connected_accounts_label">Verbundene Konten</string>
     <string name="connections_description">Verbinde deine bevorzugten Social-Media-Dienste, wenn du neue Beiträge automatisch mit deinen Freunden teilen möchtest.</string>
-    <string name="connections_label">Verbindungen</string>
     <string name="sharing">Teilen</string>
     <string name="tabbar_accessibility_label_notifications">Benachrichtigungen. Verwalte deine Benachrichtigungen.</string>
     <string name="tabbar_accessibility_label_reader">Reader. Inhalten anderer Websites folgen.</string>

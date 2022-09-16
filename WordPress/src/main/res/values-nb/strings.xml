@@ -1838,10 +1838,8 @@ Language: nb_NO
     <string name="share_btn_disconnect">Koble fra</string>
     <string name="share_btn_connect">Koble til</string>
     <string name="connection_service_description">Koble til for å automatisk dele dine blogginnlegg til %s.</string>
-    <string name="connection_service_label">Legg ut på %s</string>
     <string name="connected_accounts_label">Tilkoblede kontoer</string>
     <string name="connections_description">Koble til dine sosiale favorittmedietjenester for å automatisk dele nye innlegg med vennene dine.</string>
-    <string name="connections_label">Tilkoblinger</string>
     <string name="sharing">Deling</string>
     <string name="tabbar_accessibility_label_notifications">Notifikasjoner. Håndter dine notifikasjoner.</string>
     <string name="tabbar_accessibility_label_reader">Leseren. Følg innhold fra andre nettsteder.</string>

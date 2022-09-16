@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-09-02 08:08:27+0000
+Translation-Revision-Date: 2022-09-13 16:54:09+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.1
 Language: ko_KR
 -->
 <resources>
+    <string name="app_rating_title">%s을(를) 사용하시나요?</string>
+    <string name="connection_service_label">%s에 글 공유 </string>
+    <string name="connections_label">젯팩 소셜 연결</string>
+    <string name="stats_widget_log_in_to_add_message">위젯을 추가하려면 젯팩 앱에 로그인하세요.</string>
+    <string name="stats_view_publicize">젯팩 소셜 연결</string>
     <string name="login_magic_links_email_sent">방금 다음으로 매직 링크를 보내드렸습니다.</string>
     <string name="login_magic_links_sent_label_short">이 기기에서 이메일을 확인하세요!</string>
     <string name="or_use_password">로그인 비밀번호 사용</string>
@@ -59,7 +64,6 @@ Language: ko_KR
     <string name="stats_insights_comments_guide_card">💡\"더 보기\"를 눌러 상위 댓글 작성자를 참조하세요.</string>
     <string name="stats_insights_latest_post_empty">언제 첫 번째 글을 발행했는지 다시 확인하세요!</string>
     <string name="stats_insights_views_and_visitors_visitors_empty_state">조회수와 트래픽 %1$s을(를) 늘리는 상위 팁을 확인하세요.</string>
-    <string name="stats_view_publicize">소셜 미디어 연결</string>
     <string name="stats_action_card_schedule_post_message">✍️ 잠재 고객에게 도달하기에 가장 적합한 시간에 임시글이 발행되도록 예약하세요.</string>
     <string name="stats_action_card_blogging_reminders_message">💡일관되게 글을 작성하는 것은 잠재 고객을 형성하는 훌륭한 방법입니다. 순조롭게 진행되도록 알림을 추가하세요.</string>
     <string name="stats_action_card_grow_audience_message">💡전문가가 강의하는 &lt;i&gt;블로깅 소개&lt;/i&gt; 과정을 통해 블로깅 수준을 더 빠르게 높이세요.</string>
@@ -1237,6 +1241,7 @@ Language: ko_KR
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">색상 설정으로 이동하려면 두 번 탭하세요.</string>
     <string name="reader_empty_followed_blogs_description">사이트를 팔로우하면 여기에 해당 콘텐츠가 표시됩니다.</string>
     <string name="feature_announcement_find_out_mode">더 알아보기</string>
+    <string name="feature_announcement_dialog_label">%s의 새로운 기능</string>
     <string name="insert_label_with_count">%d 삽입</string>
     <string name="crop">자르기</string>
     <string name="error_failed_to_load_into_file">파일을 로드하지 못했습니다. 다시 시도하십시오.</string>
@@ -1335,7 +1340,7 @@ Language: ko_KR
     <string name="post_list_tab_trashed_posts">삭제된</string>
     <string name="post_list_tab_scheduled_posts">예약됨</string>
     <string name="post_list_tab_published_posts">게시됨</string>
-    <string name="sharing_facebook_account_must_have_pages">페이스북 연결에서 페이지를 찾을 수 없습니다. 배포 기능은 페이스북 프로필에 연결할 수 없으며 게시된 페이지에만 연결할 수 있습니다.</string>
+    <string name="sharing_facebook_account_must_have_pages">페이스북 연결에서 페이지를 찾을 수 없습니다. 젯팩 소셜은 페이스북 프로필에 연결할 수 없으며 발행한 페이지에만 연결할 수 있습니다.</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">연결되지 않음</string>
     <string name="notifications_tab_title_likes">좋아요</string>
     <string name="notifications_tab_title_follows">팔로우</string>
@@ -1562,6 +1567,7 @@ Language: ko_KR
     <string name="share_desc">공유</string>
     <string name="navigate_back_desc">뒤로 가기</string>
     <string name="navigate_forward_desc">앞으로 가기</string>
+    <string name="calendar_scheduled_post_description">%3$s 앱에서 \"%2$s\"에 \"%1$s\" 발행 예약됨 \n %4$s</string>
     <string name="calendar_scheduled_post_title">예약된 워드프레스 글: \"%s\"</string>
     <string name="notification_post_will_be_published_in_ten_minutes">\"%s\"이(가) 10분 후에 게시됩니다.</string>
     <string name="notification_post_will_be_published_in_one_hour">\"%s\"이(가) 1시간 후에 게시됩니다.</string>
@@ -2560,10 +2566,8 @@ Language: ko_KR
     <string name="share_btn_disconnect">연결 해제</string>
     <string name="share_btn_connect">연결</string>
     <string name="connection_service_description">연결하여 자동으로 블로그 글을 %s에 공유합니다.</string>
-    <string name="connection_service_label">%s에 배포</string>
     <string name="connected_accounts_label">연결된 계정</string>
     <string name="connections_description">즐겨 찾는 소셜 미디어 서비스에 연결하여 새 글을 친구와 자동으로 공유하세요.</string>
-    <string name="connections_label">연결</string>
     <string name="sharing">공유</string>
     <string name="tabbar_accessibility_label_notifications">알림. 알림을 관리합니다.</string>
     <string name="tabbar_accessibility_label_reader">리더. 다른 사이트의 콘텐츠를 팔로우합니다.</string>

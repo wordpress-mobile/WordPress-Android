@@ -3,6 +3,8 @@
 20.8
 -----
 * [**] Added author button to the post settings and the author of the post can be changed with it. [https://github.com/wordpress-mobile/WordPress-Android/pull/17120]
+* [*] [Jetpack-only] Adds more widgets, At a glance, All-time and Today widgets with dynamic previews [https://github.com/wordpress-mobile/WordPress-Android/pull/17140]
+
 
 20.7
 -----
