@@ -775,7 +775,6 @@ Language: en_CA
     <string name="backup_download_complete_description_with_two_parameters">We successfully created a backup of your site from %1$s %2$s.</string>
     <string name="backup_download_complete_header">Your backup is now available for download</string>
     <string name="backup_download_complete_page_title">Your Backup</string>
-    <string name="backup_download_progress_label">%1$s%%</string>
     <string name="backup_download_progress_footnote">No need to wait around. We\'ll notify you when your backup is ready.</string>
     <string name="backup_download_progress_icon_content_description">Creating downloadable backup icon</string>
     <string name="backup_download_progress_description_with_two_parameters">We\'re creating a downloadable backup of your site from %1$s %2$s.</string>

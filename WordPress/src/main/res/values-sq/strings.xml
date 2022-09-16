@@ -787,7 +787,6 @@ Language: sq_AL
     <string name="backup_download_complete_description_with_two_parameters">Krijuam me sukses një kopjeruajtje të sajtit tuaj prej %1$s %2$s.</string>
     <string name="backup_download_complete_header">Kopjeruajtja juaj tani është gati për shkarkim</string>
     <string name="backup_download_complete_page_title">Kopjeruajtja Juaj</string>
-    <string name="backup_download_progress_label">%1$s%%</string>
     <string name="backup_download_progress_footnote">S’ka nevojë të rrini e të pritni. Do t’ju njoftojmë, kur kopjeruajtja juaj të jetë gati.</string>
     <string name="backup_download_progress_icon_content_description">Po krijohet ikonë “kopjeruajtjeje të shkarkueshme”</string>
     <string name="backup_download_progress_description_with_two_parameters">Po krijojmë një kopjeruajtje të shkarkueshme të sajtit tuaj prej %1$s %2$s.</string>

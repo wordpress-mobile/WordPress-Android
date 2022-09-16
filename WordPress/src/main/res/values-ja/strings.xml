@@ -804,7 +804,6 @@ Language: ja_JP
     <string name="backup_download_complete_description_with_two_parameters">%1$s %2$s からサイトのバックアップが正常に作成されました。</string>
     <string name="backup_download_complete_header">バックアップをダウンロードする準備が整いました</string>
     <string name="backup_download_complete_page_title">バックアップ</string>
-    <string name="backup_download_progress_label">%1$s%%</string>
     <string name="backup_download_progress_footnote">お待ちいただく必要はありません。 バックアップが完了したら通知します。</string>
     <string name="backup_download_progress_icon_content_description">ダウンロード可能なバックアップを作成中アイコン</string>
     <string name="backup_download_progress_description_with_two_parameters">%1$s %2$s からダウンロード可能なサイトのバックアップを作成中です。</string>

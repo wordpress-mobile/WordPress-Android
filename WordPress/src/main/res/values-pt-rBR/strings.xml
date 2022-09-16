@@ -804,7 +804,6 @@ Language: pt_BR
     <string name="backup_download_complete_description_with_two_parameters">O backup do seu site em %1$s %2$s foi criado com sucesso.</string>
     <string name="backup_download_complete_header">Seu backup já está disponível para ser baixado.</string>
     <string name="backup_download_complete_page_title">Seu backup</string>
-    <string name="backup_download_progress_label">%1$s%%</string>
     <string name="backup_download_progress_footnote">Você não precisa esperar com o celular na mão. Avisaremos quando o backup estiver pronto.</string>
     <string name="backup_download_progress_icon_content_description">Ícone de criação de um backup que pode ser baixado</string>
     <string name="backup_download_progress_description_with_two_parameters">Estamos criando um backup do seu site de %1$s %2$s, que poderá ser baixado.</string>

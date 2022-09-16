@@ -809,7 +809,6 @@ Language: ro
     <string name="backup_download_complete_header">Copia ta de siguranță este disponibilă acum pentru descărcare</string>
     <string name="backup_download_complete_description_with_two_parameters">Am creat cu succes o copie de siguranță a site-ului tău din %1$s %2$s.</string>
     <string name="backup_download_complete_page_title">Copia ta de siguranță</string>
-    <string name="backup_download_progress_label">%1$s%%</string>
     <string name="backup_download_progress_icon_content_description">Icon pentru Creez copii de siguranță care se pot descărca</string>
     <string name="backup_download_progress_footnote">Nu trebuie să aștepți aici. Te vom anunța când copia de siguranță este gata.</string>
     <string name="backup_download_progress_description_with_two_parameters">Creăm o copie de siguranță a site-ului tău din %1$s %2$s, care se poate descărca.</string>

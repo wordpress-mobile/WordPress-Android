@@ -804,7 +804,6 @@ Language: ru
     <string name="backup_download_complete_description_with_two_parameters">Резервная копия вашего сайта на %1$s %2$s создана.</string>
     <string name="backup_download_complete_header">Резервная копия доступна для скачивания</string>
     <string name="backup_download_complete_page_title">Резервная копия</string>
-    <string name="backup_download_progress_label">%1$s%%</string>
     <string name="backup_download_progress_footnote">Не обязательно ждать. Мы уведомим вас о готовности резервной копии</string>
     <string name="backup_download_progress_icon_content_description">Создание значка скачиваемой резервной копии</string>
     <string name="backup_download_progress_description_with_two_parameters">Создается резервная копия вашего сайта на %1$s %2$s.</string>

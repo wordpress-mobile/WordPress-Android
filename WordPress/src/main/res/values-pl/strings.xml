@@ -543,7 +543,6 @@ Language: pl
     <string name="backup_download_complete_icon_content_description">Ilona gotowości do pobrania kopii zapasowej</string>
     <string name="backup_download_complete_header">Twoja kopia zapasowa jest gotowa do pobrania</string>
     <string name="backup_download_complete_page_title">Twoja kopia zapasowa</string>
-    <string name="backup_download_progress_label">%1$s%%</string>
     <string name="backup_download_progress_footnote">Proszę czekać. Powiadomimy ciebie kiedy kopia zapasowa będzie gotowa.</string>
     <string name="backup_download_progress_icon_content_description">Tworzenie ikony kopii zapasowej gotowej do pobrania</string>
     <string name="backup_download_progress_page_title">Pobierz kopię zapasową</string>

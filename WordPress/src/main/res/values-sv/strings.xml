@@ -809,7 +809,6 @@ Language: sv_SE
     <string name="backup_download_complete_description_with_two_parameters">Vi skapade en säkerhetskopia av din webbplats från %1$s %2$s.</string>
     <string name="backup_download_complete_header">Din säkerhetskopia är nu tillgänglig för nedladdning</string>
     <string name="backup_download_complete_page_title">Din säkerhetskopia</string>
-    <string name="backup_download_progress_label">%1$s%%</string>
     <string name="backup_download_progress_footnote">Du behöver inte sitta och vänta. Vi aviserar dig när din säkerhetskopiering är klar.</string>
     <string name="backup_download_progress_icon_content_description">Ikon för skapande av nedladdningsbar säkerhetskopia</string>
     <string name="backup_download_progress_description_with_two_parameters">Vi håller på att skapa en nedladdningsbar säkerhetskopia av din webbplats från %1$s %2$s.</string>

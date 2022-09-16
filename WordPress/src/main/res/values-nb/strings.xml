@@ -293,7 +293,6 @@ Language: nb_NO
     <string name="backup_download_complete_download_share_action_button">Del lenke</string>
     <string name="backup_download_complete_download_action_button">Last ned</string>
     <string name="backup_download_complete_page_title">Din sikkerhetskopi</string>
-    <string name="backup_download_progress_label">%1$s%%</string>
     <string name="backup_download_progress_page_title">Last ned sikkerhetskopi</string>
     <string name="pages_item_date_author_subtitle">%1$s · %2$s ·</string>
     <string name="pages_item_date_author">%1$s · %2$s</string>

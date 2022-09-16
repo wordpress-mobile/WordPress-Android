@@ -690,7 +690,6 @@ Language: cs_CZ
     <string name="backup_download_progress_description_with_two_parameters">Vytváříme zálohu vašeho webu ke stažení z %1$s %2$s.</string>
     <string name="backup_download_progress_icon_content_description">Vytváření ikony zálohy ke stažení</string>
     <string name="backup_download_progress_footnote">Není třeba čekat. Až bude vaše záloha připravena, upozorníme vás</string>
-    <string name="backup_download_progress_label">%1$s%%</string>
     <string name="backup_download_complete_page_title">Vaše záloha</string>
     <string name="backup_download_details_description_with_two_parameters">%1$s %2$s je vybraný bod pro vytvoření zálohy ke stažení.</string>
     <string name="backup_download_details_action_button_content_description">Vytvořit tlačítko pro stažení zálohy</string>

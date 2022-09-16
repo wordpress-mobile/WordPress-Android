@@ -41,7 +41,6 @@ Language: es_MX
     <string name="backup_download_progress_header">Actualmente creando una copia de seguridad descargable de tu sitio</string>
     <string name="backup_download_progress_description_with_two_parameters">Estamos creando una copia de seguridad descargable de tu sitio desde %1$s %2$s.</string>
     <string name="backup_download_progress_icon_content_description">Creando un icono de copia de seguridad descargable</string>
-    <string name="backup_download_progress_label">%1$s%%</string>
     <string name="backup_download_complete_page_title">Tu copia de seguridad</string>
     <string name="backup_download_details_description_with_two_parameters">%1$s %2$s es el punto seleccionado para crear una copia de seguridad descargable.</string>
     <string name="backup_download_details_action_button_content_description">Crear un botón de copia de seguridad descargable</string>

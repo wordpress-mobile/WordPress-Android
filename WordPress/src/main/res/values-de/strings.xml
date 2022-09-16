@@ -809,7 +809,6 @@ Language: de
     <string name="backup_download_complete_description_with_two_parameters">Wir haben erfolgreich ein Backup deiner Website vom %1$s %2$s erstellt.</string>
     <string name="backup_download_complete_header">Du kannst dein Backup nun herunterladen</string>
     <string name="backup_download_complete_page_title">Dein Backup</string>
-    <string name="backup_download_progress_label">%1$s%%</string>
     <string name="backup_download_progress_footnote">Du brauchst nicht zu warten. Wir teilen dir mit, wenn dein Backup fertig ist.</string>
     <string name="backup_download_progress_icon_content_description">Herunterladbares Backup-Icon erstellen</string>
     <string name="backup_download_progress_description_with_two_parameters">Wir erstellen ein herunterladbares Backup deiner Website vom %1$s %2$s.</string>

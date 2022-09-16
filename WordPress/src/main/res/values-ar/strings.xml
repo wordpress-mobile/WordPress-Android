@@ -803,7 +803,6 @@ Language: ar
     <string name="backup_download_complete_download_action_button_content_description">زر التنزيل</string>
     <string name="backup_download_complete_description_with_two_parameters">أنشأنا نسخة احتياطية من موقعك بنجاح من %1$s %2$s.</string>
     <string name="backup_download_complete_icon_content_description">أيقونة جاهزية النسخ الاحتياطية القابلة للتنزيل</string>
-    <string name="backup_download_progress_label">%1$s%%</string>
     <string name="backup_download_complete_page_title">نسختك الاحتياطية</string>
     <string name="backup_download_progress_header">إنشاء نسخة احتياطية قابلة للتنزيل من موقعك في الوقت الحالي</string>
     <string name="backup_download_progress_icon_content_description">جاري إنشاء أيقونة نسخة احتياطية قابلة للتنزيل</string>

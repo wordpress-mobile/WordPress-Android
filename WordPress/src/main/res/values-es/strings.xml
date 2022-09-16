@@ -809,7 +809,6 @@ Language: es
     <string name="backup_download_complete_description_with_two_parameters">Hemos creado una copia de seguridad de tu sitio desde %1$s %2$s.</string>
     <string name="backup_download_complete_header">Tu copia de seguridad ya está disponible para descargarla</string>
     <string name="backup_download_complete_page_title">Tu copia de seguridad</string>
-    <string name="backup_download_progress_label">%1$s%%</string>
     <string name="backup_download_progress_footnote">No hace falta que esperes. Te avisaremos cuando la copia de seguridad esté lista</string>
     <string name="backup_download_progress_icon_content_description">Icono de copia de seguridad descargable en curso</string>
     <string name="backup_download_progress_description_with_two_parameters">Estamos creando una copia de seguridad descargable de tu sitio desde %1$s %2$s.</string>

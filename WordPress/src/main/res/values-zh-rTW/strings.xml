@@ -804,7 +804,6 @@ Language: zh_TW
     <string name="backup_download_complete_description_with_two_parameters">我們已成功建立 %1$s %2$s 的網站備份。</string>
     <string name="backup_download_complete_header">你的備份現在已可下載</string>
     <string name="backup_download_complete_page_title">你的備份</string>
-    <string name="backup_download_progress_label">%1$s%%</string>
     <string name="backup_download_progress_footnote">無需在附近等待。 我們會在備份準備就緒時通知你。</string>
     <string name="backup_download_progress_icon_content_description">建立可下載備份圖示</string>
     <string name="backup_download_progress_description_with_two_parameters">我們正在為你的網站建立 %1$s %2$s 的可下載備份。</string>
