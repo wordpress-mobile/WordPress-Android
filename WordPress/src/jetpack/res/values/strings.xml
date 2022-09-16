@@ -27,7 +27,7 @@
     <!-- About button in Me -->
     <string name="me_btn_about">About Jetpack</string>
 
-    <!-- My SiMte Initial Tab Default value -->
+    <!-- My Site Initial Tab Default value -->
     <string name="initial_screen_entry_value_default_key" translatable="false">@string/initial_screen_entry_value_home</string>
 
     <!-- Share button in Me -->
