@@ -624,14 +624,6 @@ def checkGradlePropertiesFile() {
     return inputFile
 }
 
-static def loadPropertiesFromFile(inputFile) {
-    def properties = new Properties()
-    inputFile.withInputStream { stream ->
-        properties.load(stream)
-    }
-    return properties
-}
-
 // For app signing
 if (["uploadStoreFile", "uploadStorePassword", "uploadKeyAlias", "uploadKeyPassword"].count { !project.hasProperty(it) } == 0) {
     android {

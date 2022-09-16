@@ -1,3 +1,6 @@
+import com.android.build.gradle.AppPlugin
+import com.android.build.gradle.LibraryPlugin
+
 plugins {
     id "com.automattic.android.fetchstyle"
     id "io.gitlab.arturbosch.detekt"
@@ -108,6 +111,42 @@ allprojects {
             jvmTarget = "1.8"
         }
     }
+
+    def localProperties = loadPropertiesFromFile(file("${rootDir}/local.properties"))
+    def ignoredBuildTypes = localProperties.getProperty("gradle.ignored.build.types").split(",")
+    def ignoredBuildTypeFlavors = localProperties.getProperty("gradle.ignored.build.type.flavors").split(",")
+    def ignoredAppFlavors = localProperties.getProperty("gradle.ignored.app.flavors").split(",")
+    plugins.withType(LibraryPlugin).all {
+        android {
+            variantFilter { variant ->
+                if (ignoredBuildTypes.contains(variant.getBuildType().name)) {
+                    variant.setIgnore(true)
+                }
+            }
+        }
+    }
+    plugins.withType(AppPlugin).all {
+        android {
+            variantFilter { variant ->
+                variant.getFlavors().each { flavor ->
+                    if (ignoredBuildTypes.contains(variant.getBuildType().name)
+                            || ignoredBuildTypeFlavors.contains(flavor.name)
+                            || ignoredAppFlavors.contains(flavor.name)
+                    ) {
+                        variant.setIgnore(true)
+                    }
+                }
+            }
+        }
+    }
+}
+
+static def loadPropertiesFromFile(inputFile) {
+    def properties = new Properties()
+    inputFile.withInputStream { stream ->
+        properties.load(stream)
+    }
+    return properties
 }
 
 // Onboarding and dev env setup tasks
