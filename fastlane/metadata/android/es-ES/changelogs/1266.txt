@@ -1,4 +1,0 @@
-20.6:
-- Ahora puedes acceder a la aplicación mediante una dirección de correo electrónico que contenga un carácter especial.
-- La precarga de temas ya no bloquea la aplicación durante la creación del sitio. ¡Menos mal!
-- Aumenta la potencia: el banner "Con tecnología de Jetpack" se muestra en la lista de resultados de búsqueda.
