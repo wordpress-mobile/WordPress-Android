@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-09-02 08:08:27+0000
+Translation-Revision-Date: 2022-09-13 16:54:09+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.1
 Language: ko_KR
 -->
 <resources>
+    <string name="app_rating_title">%s을(를) 사용하시나요?</string>
+    <string name="connection_service_label">%s에 글 공유 </string>
+    <string name="connections_label">젯팩 소셜 연결</string>
+    <string name="stats_widget_log_in_to_add_message">위젯을 추가하려면 젯팩 앱에 로그인하세요.</string>
+    <string name="stats_view_publicize">젯팩 소셜 연결</string>
     <string name="login_magic_links_email_sent">방금 다음으로 매직 링크를 보내드렸습니다.</string>
     <string name="login_magic_links_sent_label_short">이 기기에서 이메일을 확인하세요!</string>
     <string name="or_use_password">로그인 비밀번호 사용</string>
@@ -1236,6 +1241,7 @@ Language: ko_KR
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">색상 설정으로 이동하려면 두 번 탭하세요.</string>
     <string name="reader_empty_followed_blogs_description">사이트를 팔로우하면 여기에 해당 콘텐츠가 표시됩니다.</string>
     <string name="feature_announcement_find_out_mode">더 알아보기</string>
+    <string name="feature_announcement_dialog_label">%s의 새로운 기능</string>
     <string name="insert_label_with_count">%d 삽입</string>
     <string name="crop">자르기</string>
     <string name="error_failed_to_load_into_file">파일을 로드하지 못했습니다. 다시 시도하십시오.</string>
@@ -1334,6 +1340,7 @@ Language: ko_KR
     <string name="post_list_tab_trashed_posts">삭제된</string>
     <string name="post_list_tab_scheduled_posts">예약됨</string>
     <string name="post_list_tab_published_posts">게시됨</string>
+    <string name="sharing_facebook_account_must_have_pages">페이스북 연결에서 페이지를 찾을 수 없습니다. 젯팩 소셜은 페이스북 프로필에 연결할 수 없으며 발행한 페이지에만 연결할 수 있습니다.</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">연결되지 않음</string>
     <string name="notifications_tab_title_likes">좋아요</string>
     <string name="notifications_tab_title_follows">팔로우</string>
@@ -1560,6 +1567,7 @@ Language: ko_KR
     <string name="share_desc">공유</string>
     <string name="navigate_back_desc">뒤로 가기</string>
     <string name="navigate_forward_desc">앞으로 가기</string>
+    <string name="calendar_scheduled_post_description">%3$s 앱에서 \"%2$s\"에 \"%1$s\" 발행 예약됨 \n %4$s</string>
     <string name="calendar_scheduled_post_title">예약된 워드프레스 글: \"%s\"</string>
     <string name="notification_post_will_be_published_in_ten_minutes">\"%s\"이(가) 10분 후에 게시됩니다.</string>
     <string name="notification_post_will_be_published_in_one_hour">\"%s\"이(가) 1시간 후에 게시됩니다.</string>

@@ -3,6 +3,7 @@ package org.wordpress.android.ui.stats.refresh.lists.widget.alltime
 import android.appwidget.AppWidgetManager
 import android.content.ComponentName
 import android.content.Context
+import android.view.View
 import android.widget.RemoteViews
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
@@ -46,6 +47,7 @@ class AllTimeWidgetUpdater
         val networkAvailable = networkUtilsWrapper.isNetworkAvailable()
         val hasToken = accountStore.hasAccessToken()
         val views = RemoteViews(context.packageName, widgetUtils.getLayout(colorMode))
+        views.setViewVisibility(R.id.widget_title_container, View.VISIBLE)
         views.setTextViewText(R.id.widget_title, resourceProvider.getString(R.string.stats_insights_all_time_stats))
         val widgetHasData = appPrefsWrapper.hasAppWidgetData(appWidgetId)
         if (networkAvailable && siteModel != null && hasToken) {

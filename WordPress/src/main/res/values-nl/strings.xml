@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-09-02 09:59:29+0000
+Translation-Revision-Date: 2022-09-13 17:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: nl
 -->
 <resources>
+    <string name="app_rating_title">Werk je graag met %s?</string>
+    <string name="connection_service_label">Deel bericht op %s</string>
+    <string name="connections_label">Jetpack Social-verbindingen</string>
+    <string name="stats_widget_log_in_to_add_message">Meld je aan bij de Jetpack-app om een widget toe te voegen.</string>
+    <string name="stats_view_publicize">Jetpack Social-verbindingen</string>
     <string name="login_magic_links_email_sent">We hebben zojuist een magische link verstuurd naar</string>
     <string name="login_magic_links_sent_label_short">Controleer je e-mail op dit apparaat!</string>
     <string name="or_use_password">Gebruik je wachtwoord om je aan te melden</string>
@@ -1236,6 +1241,7 @@ Language: nl
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">Twee keer tikken om naar de kleurinstellingen te gaan</string>
     <string name="reader_empty_followed_blogs_description">Wanneer je sites volgt, zie je hier de inhoud ervan</string>
     <string name="feature_announcement_find_out_mode">Meer informatie</string>
+    <string name="feature_announcement_dialog_label">Nieuw in %s</string>
     <string name="insert_label_with_count">Invoegen %d</string>
     <string name="crop">bijsnijden</string>
     <string name="error_failed_to_load_into_file">Kan niet laden in bestand, probeer het opnieuw.</string>
@@ -1334,6 +1340,7 @@ Language: nl
     <string name="post_list_tab_trashed_posts">Verwijderd</string>
     <string name="post_list_tab_scheduled_posts">Gepland</string>
     <string name="post_list_tab_published_posts">Gepubliceerd</string>
+    <string name="sharing_facebook_account_must_have_pages">De Facebook-verbinding kan geen pagina\'s vinden. Jetpack Social kan geen verbinding maken met Facebook-profielen, alleen met gepubliceerde pagina\'s.</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">Niet verbonden</string>
     <string name="notifications_tab_title_likes">Vind-ik-leuks</string>
     <string name="notifications_tab_title_follows">Volgt</string>
@@ -1560,6 +1567,7 @@ Language: nl
     <string name="share_desc">Delen</string>
     <string name="navigate_back_desc">Terugkeren</string>
     <string name="navigate_forward_desc">Doorgaan</string>
+    <string name="calendar_scheduled_post_description">\'%1$s\'\' ingepland voor publicatie op \'%2$s\' in uw %3$s-app \n %4$s</string>
     <string name="calendar_scheduled_post_title">Ingepland WordPress bericht: \"%s\"</string>
     <string name="notification_post_will_be_published_in_ten_minutes">\"%s\" wordt over 10 minuten gepubliceerd</string>
     <string name="notification_post_will_be_published_in_one_hour">\"%s\" wordt over 1 uur gepubliceerd</string>

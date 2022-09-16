@@ -3,6 +3,8 @@
 20.8
 -----
 * [**] Stats: Always use Western Arabic numerals for Arabic language (previously there was a mix of Eastern and Western Arabic numerals) [https://github.com/wordpress-mobile/WordPress-Android/pull/17160]
+* [*] [Jetpack-only] Adds more widgets, At a glance, All-time and Today widgets with dynamic previews [https://github.com/wordpress-mobile/WordPress-Android/pull/17140]
+
 
 20.7
 -----

@@ -3,6 +3,7 @@ package org.wordpress.android.ui.stats.refresh.lists.widget.weeks
 import android.appwidget.AppWidgetManager
 import android.content.ComponentName
 import android.content.Context
+import android.view.View
 import android.widget.RemoteViews
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
@@ -44,6 +45,7 @@ class WeekViewsWidgetUpdater @Inject constructor(
         val siteModel = siteStore.getSiteBySiteId(siteId)
         val networkAvailable = networkUtilsWrapper.isNetworkAvailable()
         val views = RemoteViews(context.packageName, widgetUtils.getLayout(colorMode))
+        views.setViewVisibility(R.id.widget_title_container, View.VISIBLE)
         views.setTextViewText(R.id.widget_title, resourceProvider.getString(R.string.stats_widget_weekly_views_name))
         val hasAccessToken = accountStore.hasAccessToken()
         val widgetHasData = appPrefsWrapper.hasAppWidgetData(appWidgetId)
