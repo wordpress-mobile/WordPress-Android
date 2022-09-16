@@ -1766,7 +1766,6 @@ Language: ko_KR
     <string name="notification_channel_reminder_title">알림</string>
     <string name="stats_select_next_period_description">다음 기간 선택</string>
     <string name="stats_select_previous_period_description">이전 기간 선택</string>
-    <string name="stats_most_popular_percent_views">조회수 %1$d%%</string>
     <string name="stats_insights_popular">가장 인기 있는 시간</string>
     <string name="new_site_creation_site_preview_content_description">사이트 미리보기 표시</string>
     <string name="new_site_creation_clear_all_content_description">지우기</string>

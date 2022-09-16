@@ -1774,7 +1774,6 @@ Language: de
     <string name="notification_channel_reminder_title">Erinnerung</string>
     <string name="stats_select_next_period_description">Nächsten Zeitraum auswählen</string>
     <string name="stats_select_previous_period_description">Vorherigen Zeitraum auswählen</string>
-    <string name="stats_most_popular_percent_views">%1$d%% der Aufrufe</string>
     <string name="stats_insights_popular">Beliebteste Zeit</string>
     <string name="new_site_creation_site_preview_content_description">Vorschau der Website anzeigen</string>
     <string name="new_site_creation_clear_all_content_description">Löschen</string>

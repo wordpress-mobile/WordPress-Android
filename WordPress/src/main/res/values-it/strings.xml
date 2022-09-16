@@ -1766,7 +1766,6 @@ Language: it
     <string name="notification_channel_reminder_title">Promemoria</string>
     <string name="stats_select_next_period_description">Seleziona periodo successivo</string>
     <string name="stats_select_previous_period_description">Seleziona periodo precedente</string>
-    <string name="stats_most_popular_percent_views">%1$d%% di visualizzazioni</string>
     <string name="stats_insights_popular">Ora più popolare</string>
     <string name="new_site_creation_site_preview_content_description">Mostra anteprima del sito</string>
     <string name="new_site_creation_clear_all_content_description">Pulisci</string>

@@ -1708,7 +1708,6 @@ Language: vi_VN
     <string name="notification_channel_reminder_title">Lượt nhắc</string>
     <string name="stats_select_next_period_description">Chọn chu kỳ kế</string>
     <string name="stats_select_previous_period_description">Chọn chu kỳ trước</string>
-    <string name="stats_most_popular_percent_views">%1$d%% lượt xem</string>
     <string name="stats_insights_popular">Phổ biến mọi lúc</string>
     <string name="new_site_creation_site_preview_content_description">Đang hiển thị xem trước</string>
     <string name="new_site_creation_clear_all_content_description">Xóa</string>

@@ -1774,7 +1774,6 @@ Language: sv_SE
     <string name="notification_channel_reminder_title">Påminnelse</string>
     <string name="stats_select_next_period_description">Välj nästa period</string>
     <string name="stats_select_previous_period_description">Välj föregående period</string>
-    <string name="stats_most_popular_percent_views">%1$d %% av visningarna</string>
     <string name="stats_insights_popular">Populäraste klockslag</string>
     <string name="new_site_creation_site_preview_content_description">Visar förhandsvisning av webbplatsen</string>
     <string name="new_site_creation_clear_all_content_description">Rensa</string>

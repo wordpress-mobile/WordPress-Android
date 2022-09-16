@@ -1766,7 +1766,6 @@ Language: gl_ES
     <string name="notification_channel_reminder_title">Recordatorio</string>
     <string name="stats_select_next_period_description">Elixe o seguinte período</string>
     <string name="stats_select_previous_period_description">Elixe o período anterior</string>
-    <string name="stats_most_popular_percent_views">%1$d%% de visitas</string>
     <string name="stats_insights_popular">Hora máis popular</string>
     <string name="new_site_creation_site_preview_content_description">Mostrando a vista previa</string>
     <string name="new_site_creation_clear_all_content_description">Baleirar</string>

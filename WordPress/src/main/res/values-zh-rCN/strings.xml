@@ -1766,7 +1766,6 @@ Language: zh_CN
     <string name="notification_channel_reminder_title">提示</string>
     <string name="stats_select_next_period_description">选择下一时间段</string>
     <string name="stats_select_previous_period_description">选择上一时间段</string>
-    <string name="stats_most_popular_percent_views">浏览次数 %1$d%%</string>
     <string name="stats_insights_popular">人气最高的时间</string>
     <string name="new_site_creation_site_preview_content_description">显示站点预览</string>
     <string name="new_site_creation_clear_all_content_description">清除</string>

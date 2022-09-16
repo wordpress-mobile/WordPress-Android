@@ -1766,7 +1766,6 @@ Language: he_IL
     <string name="notification_channel_reminder_title">תזכורת</string>
     <string name="stats_select_next_period_description">בחירת התקופה הבאה</string>
     <string name="stats_select_previous_period_description">בחירת התקופה הקודמת</string>
-    <string name="stats_most_popular_percent_views">%1$d%% מהצפיות</string>
     <string name="stats_insights_popular">המועד הפופולרי ביותר</string>
     <string name="new_site_creation_site_preview_content_description">מציג תצוגה מקדימה של האתר</string>
     <string name="new_site_creation_clear_all_content_description">ניקוי</string>

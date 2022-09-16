@@ -1766,7 +1766,6 @@ Language: ar
     <string name="notification_channel_reminder_title">تذكير</string>
     <string name="stats_select_next_period_description">تحديد الفترة التالية</string>
     <string name="stats_select_previous_period_description">تحديد الفترة السابقة</string>
-    <string name="stats_most_popular_percent_views">%1$d%% من المشاهدات</string>
     <string name="stats_insights_popular">الوقت الأكثر شعبية</string>
     <string name="new_site_creation_site_preview_content_description">عرض معاينة الموقع</string>
     <string name="new_site_creation_clear_all_content_description">مسح</string>

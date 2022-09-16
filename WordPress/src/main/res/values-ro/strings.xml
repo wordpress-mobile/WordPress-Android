@@ -1775,7 +1775,6 @@ Language: ro
     <string name="stats_insights_popular">Cea mai populară oră</string>
     <string name="stats_select_next_period_description">Selectează perioada următoare</string>
     <string name="stats_select_previous_period_description">Selectează perioada anterioară</string>
-    <string name="stats_most_popular_percent_views">%1$d%% din vizualizări</string>
     <string name="new_site_creation_domain_header_subtitle">Aici vei fi găsit pe internet.</string>
     <string name="notification_new_site_creation_failed">A fost o problemă</string>
     <string name="new_site_creation_clear_all_content_description">Anulează</string>

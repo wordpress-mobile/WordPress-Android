@@ -1748,7 +1748,6 @@ Language: sq_AL
     <string name="notification_channel_reminder_title">Kujtues</string>
     <string name="stats_select_next_period_description">Përzgjidhni periudhën pasuese</string>
     <string name="stats_select_previous_period_description">Përzgjidhni periudhën e mëparshme</string>
-    <string name="stats_most_popular_percent_views">%1$d%% e parjeve</string>
     <string name="stats_insights_popular">Koha Më Popullore</string>
     <string name="new_site_creation_site_preview_content_description">Po shfaqet paraparje sajti</string>
     <string name="new_site_creation_clear_all_content_description">Pastroje</string>

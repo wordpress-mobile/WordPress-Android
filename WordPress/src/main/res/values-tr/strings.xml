@@ -1766,7 +1766,6 @@ Language: tr
     <string name="notification_channel_reminder_title">Hatırlatıcı</string>
     <string name="stats_select_next_period_description">Gelecek dönemi seç</string>
     <string name="stats_select_previous_period_description">Önceki dönemi seç</string>
-    <string name="stats_most_popular_percent_views">Görüntülemelerein %%%1$d kadarı</string>
     <string name="stats_insights_popular">En popüler zaman</string>
     <string name="new_site_creation_site_preview_content_description">Site önizlemesi gösteriliyor</string>
     <string name="new_site_creation_clear_all_content_description">Temizle</string>

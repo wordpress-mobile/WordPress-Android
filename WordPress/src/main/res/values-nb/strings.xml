@@ -1070,7 +1070,6 @@ Language: nb_NO
     <string name="notification_channel_reminder_title">Påminnelse</string>
     <string name="stats_select_next_period_description">Velg neste periode</string>
     <string name="stats_select_previous_period_description">Velg forrige periode</string>
-    <string name="stats_most_popular_percent_views">%1$d%% av visninger</string>
     <string name="stats_insights_popular">Mest populære tidspunkt</string>
     <string name="new_site_creation_site_preview_content_description">Forhåndsvisning av nettsted</string>
     <string name="new_site_creation_clear_all_content_description">Tøm</string>

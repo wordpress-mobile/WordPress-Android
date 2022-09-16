@@ -659,7 +659,6 @@ Language: sr_RS
     <string name="stats_insights_popular">Најпопуларније време</string>
     <string name="stats_select_next_period_description">Одабери наредни период</string>
     <string name="stats_select_previous_period_description">Одабери претходни период</string>
-    <string name="stats_most_popular_percent_views">%1$d%% од прегледа</string>
     <string name="new_site_creation_clear_all_content_description">Очисти</string>
     <string name="notification_new_site_creation_failed">Дошло је до проблема</string>
     <string name="notification_new_site_creation_title">Креирај сајт</string>
