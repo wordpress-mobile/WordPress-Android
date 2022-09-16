@@ -210,7 +210,9 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
         }
         mEmailInput.post(new Runnable() {
             @Override public void run() {
-                mEmailInput.addTextChangedListener(LoginEmailFragment.this);
+                if (mEmailInput != null) {
+                    mEmailInput.addTextChangedListener(LoginEmailFragment.this);
+                }
             }
         });
 
