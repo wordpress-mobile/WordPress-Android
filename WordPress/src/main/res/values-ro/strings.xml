@@ -1774,7 +1774,6 @@ Language: ro
     <string name="quick_start_dialog_check_stats_message">Fii la curent cu performanța site-ului.</string>
     <string name="quick_start_task_skip_menu_title">Sari sarcina</string>
     <string name="notification_channel_reminder_title">Reamintire</string>
-    <string name="stats_traffic_change">%1$s (%2$s%%)</string>
     <string name="stats_insights_popular">Cea mai populară oră</string>
     <string name="stats_select_next_period_description">Selectează perioada următoare</string>
     <string name="stats_select_previous_period_description">Selectează perioada anterioară</string>

@@ -1770,7 +1770,6 @@ Language: nl
     <string name="stats_select_previous_period_description">Vorige periode selecteren</string>
     <string name="stats_most_popular_percent_views">%1$d%% van de weergaven</string>
     <string name="stats_insights_popular">Populairste tijd</string>
-    <string name="stats_traffic_change">%1$s (%2$s%%)</string>
     <string name="new_site_creation_site_preview_content_description">Toont site voorbeeld</string>
     <string name="new_site_creation_clear_all_content_description">Wissen</string>
     <string name="site_created_but_not_fetched_snackbar_message">Het lijkt er op dat je op een trage verbinding zit. Als je je nieuwe site niet in de lijst ziet, ververs dan je scherm.</string>

@@ -1773,7 +1773,6 @@ Language: ru
     <string name="stats_select_previous_period_description">Выбор предыдущего периода</string>
     <string name="stats_most_popular_percent_views">%1$d%% просмотров</string>
     <string name="stats_insights_popular">Самое популярное время</string>
-    <string name="stats_traffic_change">%1$s (%2$s%%)</string>
     <string name="new_site_creation_site_preview_content_description">Показ предварительного просмотра сайта</string>
     <string name="new_site_creation_clear_all_content_description">Очистить</string>
     <string name="site_created_but_not_fetched_snackbar_message">Похоже, что ваше подключение слишком медленное. Если вы не видите ваш новый сайт в списке, попробуйте обновить.</string>

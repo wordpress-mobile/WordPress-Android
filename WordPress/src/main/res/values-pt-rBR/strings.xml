@@ -1770,7 +1770,6 @@ Language: pt_BR
     <string name="stats_select_previous_period_description">Selecionar período anterior</string>
     <string name="stats_most_popular_percent_views">%1$d%% de visualizações</string>
     <string name="stats_insights_popular">Horário mais popular</string>
-    <string name="stats_traffic_change">%1$s (%2$s%%)</string>
     <string name="new_site_creation_site_preview_content_description">Mostrando pré-visualização do site</string>
     <string name="new_site_creation_clear_all_content_description">Limpar</string>
     <string name="site_created_but_not_fetched_snackbar_message">Parece que sua conexão está lenta. Se você não encontrar seu site na lista, tente atualizar a tela.</string>

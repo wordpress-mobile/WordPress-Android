@@ -1770,7 +1770,6 @@ Language: ja_JP
     <string name="stats_select_previous_period_description">前の期間を選択</string>
     <string name="stats_most_popular_percent_views">表示数: %1$d%%</string>
     <string name="stats_insights_popular">最も人気の時間</string>
-    <string name="stats_traffic_change">%1$s (%2$s%%)</string>
     <string name="new_site_creation_site_preview_content_description">サイトのプレビューの表示</string>
     <string name="new_site_creation_clear_all_content_description">クリア</string>
     <string name="site_created_but_not_fetched_snackbar_message">接続速度が遅いようです。リストに新しいサイトが表示されない場合は、再度更新してみてください。</string>

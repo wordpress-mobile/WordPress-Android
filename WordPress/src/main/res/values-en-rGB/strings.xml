@@ -1778,7 +1778,6 @@ Language: en_GB
     <string name="stats_select_previous_period_description">Select previous period</string>
     <string name="stats_most_popular_percent_views">%1$d%% of views</string>
     <string name="stats_insights_popular">Most Popular Time</string>
-    <string name="stats_traffic_change">%1$s (%2$s%%)</string>
     <string name="new_site_creation_site_preview_content_description">Showing site preview</string>
     <string name="new_site_creation_clear_all_content_description">Clear</string>
     <string name="site_created_but_not_fetched_snackbar_message">It seems like you\'re on a slow connection. If you don\'t see your new site in the list, try refreshing.</string>
