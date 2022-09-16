@@ -1,0 +1,5 @@
+20.7:
+- Widget Jetpack sekarang tersedia di layar beranda perangkat Anda
+- Kontrol pratinjau media dapat ditampilkan dalam mode terang dan gelap
+- Layar Kode Login tema Compose menggunakan kontras warna yang lebih baik
+- Elemen pengaturan editor dan post tertentu sekarang berwarna biru WordPress
