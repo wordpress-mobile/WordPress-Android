@@ -296,11 +296,15 @@ public class AppPrefs {
     }
 
     private static void setString(PrefKey key, String value) {
+        setString(key.name(), value);
+    }
+
+    public static void setString(String prefKey, String value) {
         SharedPreferences.Editor editor = prefs().edit();
         if (TextUtils.isEmpty(value)) {
-            editor.remove(key.name());
+            editor.remove(prefKey);
         } else {
-            editor.putString(key.name(), value);
+            editor.putString(prefKey, value);
         }
         editor.apply();
     }
@@ -320,6 +324,10 @@ public class AppPrefs {
 
     private static void setLong(PrefKey key, long value) {
         setString(key, Long.toString(value));
+    }
+
+    public static void setLong(String prefKey, long value) {
+        setString(prefKey, Long.toString(value));
     }
 
     private static int getInt(PrefKey key, int def) {
@@ -342,6 +350,10 @@ public class AppPrefs {
         setString(key, Integer.toString(value));
     }
 
+    public static void setInt(String prefKey, int value) {
+        setString(prefKey, Integer.toString(value));
+    }
+
     public static boolean getBoolean(PrefKey key, boolean def) {
         String value = getString(key, Boolean.toString(def));
         return Boolean.parseBoolean(value);
@@ -349,6 +361,10 @@ public class AppPrefs {
 
     public static void setBoolean(PrefKey key, boolean value) {
         setString(key, Boolean.toString(value));
+    }
+
+    public static void setBoolean(String prefKey, boolean value) {
+        setString(prefKey, Boolean.toString(value));
     }
 
     private static void remove(PrefKey key) {

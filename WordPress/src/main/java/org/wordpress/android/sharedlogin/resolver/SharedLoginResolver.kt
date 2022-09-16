@@ -9,11 +9,12 @@ import org.wordpress.android.resolver.ContentResolverWrapper
 import org.wordpress.android.sharedlogin.JetpackSharedLoginFlag
 import org.wordpress.android.sharedlogin.SharedLoginAnalyticsTracker
 import org.wordpress.android.sharedlogin.SharedLoginAnalyticsTracker.ErrorType
-import org.wordpress.android.util.publicdata.WordPressPublicData
 import org.wordpress.android.sharedlogin.provider.SharedLoginProvider
 import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.userflags.resolver.UserFlagsResolver
 import org.wordpress.android.util.AccountActionBuilderWrapper
+import org.wordpress.android.util.publicdata.WordPressPublicData
 import org.wordpress.android.viewmodel.ContextProvider
 import javax.inject.Inject
 
@@ -27,7 +28,8 @@ class SharedLoginResolver @Inject constructor(
     private val contentResolverWrapper: ContentResolverWrapper,
     private val accountActionBuilderWrapper: AccountActionBuilderWrapper,
     private val appPrefsWrapper: AppPrefsWrapper,
-    private val sharedLoginAnalyticsTracker: SharedLoginAnalyticsTracker
+    private val sharedLoginAnalyticsTracker: SharedLoginAnalyticsTracker,
+    private val userFlagsResolver: UserFlagsResolver
 ) {
     fun tryJetpackLogin() {
         val isAlreadyLoggedIn = accountStore.accessToken.isNotEmpty()
@@ -44,7 +46,7 @@ class SharedLoginResolver @Inject constructor(
             if (accessToken.isNotEmpty()) {
                 sharedLoginAnalyticsTracker.trackLoginSuccess()
                 dispatchUpdateAccessToken(accessToken)
-                reloadMainScreen()
+                userFlagsResolver.tryGetUserFlags({ reloadMainScreen() }, { reloadMainScreen() })
             } else {
                 sharedLoginAnalyticsTracker.trackLoginFailed(ErrorType.WPNotLoggedInError)
             }

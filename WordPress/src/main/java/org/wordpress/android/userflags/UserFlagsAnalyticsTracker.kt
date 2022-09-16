@@ -20,6 +20,8 @@ class UserFlagsAnalyticsTracker @Inject constructor(
 
         object QueryUserFlagsError : ErrorType("query_user_flags_error")
 
+        object UpdateUserFlagsError : ErrorType("update_user_flags_error")
+
         companion object {
             const val ERROR_TYPE = "error_type"
         }

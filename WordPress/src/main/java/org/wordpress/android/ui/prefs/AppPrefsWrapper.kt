@@ -242,6 +242,29 @@ class AppPrefsWrapper @Inject constructor() {
 
     fun getAllPrefs(): Map<String, Any?> = AppPrefs.prefs().all
 
+    fun setString(prefKey: String, value: String) {
+        AppPrefs.setString(prefKey, value)
+    }
+
+    fun setLong(prefKey: String, value: Long) {
+        AppPrefs.setLong(prefKey, value)
+    }
+
+    fun setInt(prefKey: String, value: Int) {
+        AppPrefs.setInt(prefKey, value)
+    }
+
+    fun setBoolean(prefKey: String, value: Boolean) {
+        AppPrefs.setBoolean(prefKey, value)
+    }
+
+    fun setStringSet(prefKey: String, set: Set<String>?) {
+        AppPrefs.prefs().edit().apply {
+            putStringSet(prefKey, set)
+            apply()
+        }
+    }
+
     companion object {
         private const val LIGHT_MODE_ID = 0
         private const val DARK_MODE_ID = 1
