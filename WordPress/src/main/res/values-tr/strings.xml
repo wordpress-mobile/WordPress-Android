@@ -733,7 +733,6 @@ Language: tr
     <string name="restore_complete_visit_site_action_button">Siteyi ziyaret et</string>
     <string name="restore_complete_description_with_two_parameters">Seçtiğiniz tüm öğeler şimdi %1$s %2$s konumuna geri yüklendi.</string>
     <string name="restore_complete_header">Siteniz geri yüklendi</string>
-    <string name="restore_progress_label">%%%1$s</string>
     <string name="restore_progress_footnote">Beklemeye gerek yok. Siteniz tamamen geri yüklendiğinde sizi bilgilendireceğiz.</string>
     <string name="restore_progress_icon_content_description">Siteyi geri yükle simgesi</string>
     <string name="restore_progress_description_with_two_parameters">Siteniz %1$s %2$s konumuna geri yükleniyor.</string>

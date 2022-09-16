@@ -3946,7 +3946,6 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="restore_progress_description_with_two_parameters">We\'re restoring your site back to %1$s %2$s.</string>
     <string name="restore_progress_icon_content_description">Restore site icon</string>
     <string name="restore_progress_footnote">No need to wait around. We\'ll notify you when your site has been restored.</string>
-    <string name="restore_progress_label">%1$s%%</string>
 
     <string name="restore_complete_page_title" translatable="false">@string/restore</string>
     <string name="restore_complete_header">Your site has been restored</string>

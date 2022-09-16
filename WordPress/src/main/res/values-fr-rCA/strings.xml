@@ -731,7 +731,6 @@ Language: fr
     <string name="restore_complete_header">Votre site a été restauré.</string>
     <string name="restore_complete_visit_site_button_content_description">Bouton Visiter le site</string>
     <string name="restore_complete_done_button_content_description">Bouton Terminé</string>
-    <string name="restore_progress_label">%1$s%%</string>
     <string name="restore_progress_footnote">Pas besoin d’attendre. Nous vous avertirons lorsque votre site aura été restauré.</string>
     <string name="restore_complete_icon_content_description">Icône Restaurer</string>
     <string name="restore_complete_failed_title">Échec de la restauration</string>

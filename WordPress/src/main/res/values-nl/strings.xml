@@ -733,7 +733,6 @@ Language: nl
     <string name="restore_complete_visit_site_action_button">Bezoek site</string>
     <string name="restore_complete_description_with_two_parameters">Alle geselecteerde items zijn nu teruggezet naar %1$s %2$s.</string>
     <string name="restore_complete_header">Je site is teruggezet</string>
-    <string name="restore_progress_label">%1$s%%</string>
     <string name="restore_progress_footnote">Je hoeft niet te wachten. We laten het je weten als je site teruggezet is.</string>
     <string name="restore_progress_icon_content_description">Terugzetten site pictogram</string>
     <string name="restore_progress_description_with_two_parameters">We zijn je site terug aan het zetten naar %1$s %2$s.</string>

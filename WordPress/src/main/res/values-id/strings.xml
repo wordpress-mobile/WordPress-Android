@@ -733,7 +733,6 @@ Language: id
     <string name="restore_complete_visit_site_action_button">Kunjungi situs</string>
     <string name="restore_complete_description_with_two_parameters">Semua item yang Anda pilih sekarang telah dipulihkan kembali ke %1$s %2$s.</string>
     <string name="restore_complete_header">Situs Anda telah dipulihkan</string>
-    <string name="restore_progress_label">%1$s%%</string>
     <string name="restore_progress_footnote">Tidak perlu lagi menunggu. Kami akan memberi tahu Anda jika situs telah dipulihkan.</string>
     <string name="restore_progress_icon_content_description">Pulihkan ikon situs</string>
     <string name="restore_progress_description_with_two_parameters">Kami memulihkan situs Anda ke %1$s %2$s.</string>

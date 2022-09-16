@@ -733,7 +733,6 @@ Language: ja_JP
     <string name="restore_complete_visit_site_action_button">サイトを表示</string>
     <string name="restore_complete_description_with_two_parameters">選択したすべてのアイテムは %1$s %2$s に復元されました。</string>
     <string name="restore_complete_header">サイトを復元しました</string>
-    <string name="restore_progress_label">%1$s%%</string>
     <string name="restore_progress_footnote">お待ちいただく必要はありません。 サイトが完全に復元されたらお知らせします。</string>
     <string name="restore_progress_icon_content_description">サイト復元アイコン</string>
     <string name="restore_progress_description_with_two_parameters">サイトを %1$s %2$s に復元しています。</string>

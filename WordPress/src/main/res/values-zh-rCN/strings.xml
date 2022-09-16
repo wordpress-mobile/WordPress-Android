@@ -733,7 +733,6 @@ Language: zh_CN
     <string name="restore_complete_visit_site_action_button">访问站点</string>
     <string name="restore_complete_description_with_two_parameters">您选择的所有项目现在都会还原到 %1$s %2$s。</string>
     <string name="restore_complete_header">已还原您的站点</string>
-    <string name="restore_progress_label">%1$s%%</string>
     <string name="restore_progress_footnote">您无需等待。在您的站点还原后，我们会通知您。</string>
     <string name="restore_progress_icon_content_description">“还原站点”图标</string>
     <string name="restore_progress_description_with_two_parameters">我们正在将您的站点还原到 %1$s %2$s。</string>

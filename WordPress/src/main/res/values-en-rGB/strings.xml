@@ -732,7 +732,6 @@ Language: en_GB
     <string name="restore_complete_failed_icon_content_description">Error icon</string>
     <string name="restore_another_process_running">There is another restore running.</string>
     <string name="restore_progress_footnote">No need to wait around. We\'ll notify you when your site has been restored.</string>
-    <string name="restore_progress_label">%1$s%%</string>
     <string name="restore_complete_header">Your site has been restored</string>
     <string name="restore_complete_description_with_two_parameters">All of your selected items are now restored back to %1$s %2$s.</string>
     <string name="restore_complete_visit_site_action_button">Visit site</string>

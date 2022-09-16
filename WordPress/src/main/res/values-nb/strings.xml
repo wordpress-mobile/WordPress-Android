@@ -270,7 +270,6 @@ Language: nb_NO
     <string name="scan_request_failed_title">Noe gikk galt</string>
     <string name="pick_audio">Velg lyd</string>
     <string name="restore_complete_visit_site_action_button">Besøk nettstedet</string>
-    <string name="restore_progress_label">%1$s%%</string>
     <string name="restore_warning_header">Advarsel</string>
     <string name="restore_details_header">Gjenopprett nettsted</string>
     <string name="restore">Gjenopprett</string>

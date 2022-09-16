@@ -738,7 +738,6 @@ Language: de
     <string name="restore_complete_visit_site_action_button">Website besuchen</string>
     <string name="restore_complete_description_with_two_parameters">Alle deine ausgewählten Elemente werden jetzt auf den Stand von %1$s %2$s wiederhergestellt.</string>
     <string name="restore_complete_header">Deine Website wurde wiederhergestellt.</string>
-    <string name="restore_progress_label">%1$s%%</string>
     <string name="restore_progress_footnote">Du brauchst nicht zu warten. Wir benachrichtigen dich, wenn deine Website wiederhergestellt wurde.</string>
     <string name="restore_progress_icon_content_description">Website wiederherstellen-Button</string>
     <string name="restore_progress_description_with_two_parameters">Wir stellen deine Website auf %1$s %2$s wieder her.</string>

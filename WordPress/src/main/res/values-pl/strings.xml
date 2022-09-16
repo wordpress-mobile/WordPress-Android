@@ -468,7 +468,6 @@ Language: pl
     <string name="restore_complete_failed_action_button_content_description">Przycisk \"Wykonano\"</string>
     <string name="restore_complete_failed_title">Przywracanie nie powiodło się</string>
     <string name="restore_complete_icon_content_description">Ikona przywracania</string>
-    <string name="restore_progress_label">%1$s%%</string>
     <string name="restore_complete_visit_site_action_button">Odwiedź witrynę</string>
     <string name="restore_complete_visit_site_button_content_description">Przycisk Przejdź do witryny</string>
     <string name="restore_complete_done_button_content_description">Przycisk \"Wykonano\"</string>

@@ -735,7 +735,6 @@ Language: ro
     <string name="restore_complete_done_button_content_description">Buton Gata</string>
     <string name="restore_complete_icon_content_description">Icon restaurează</string>
     <string name="restore_complete_description_with_two_parameters">Toate elementele selectate sunt restaurate acum înapoi la %1$s %2$s.</string>
-    <string name="restore_progress_label">%1$s%%</string>
     <string name="restore_complete_visit_site_action_button">Vizitează site-ul</string>
     <string name="restore_complete_visit_site_button_content_description">Buton Vizitează site-ul</string>
     <string name="restore_complete_header">Site-ul tău a fost restaurat</string>

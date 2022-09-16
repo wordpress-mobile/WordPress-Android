@@ -738,7 +738,6 @@ Language: sv_SE
     <string name="restore_complete_visit_site_action_button">Besök webbplats</string>
     <string name="restore_complete_description_with_two_parameters">Alla dina valda objekt har nu återställts till läget för %1$s %2$s.</string>
     <string name="restore_complete_header">Din webbplats har återställts</string>
-    <string name="restore_progress_label">%1$s %%</string>
     <string name="restore_progress_footnote">Du behöver inte sitta och vänta. Vi aviserar dig när webbplatsen är återställd.</string>
     <string name="restore_progress_icon_content_description">Ikon för återställning av webbplats</string>
     <string name="restore_progress_description_with_two_parameters">Vi håller på att återställa din webbplats till innehållet från  %1$s %2$s.</string>

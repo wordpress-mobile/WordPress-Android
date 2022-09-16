@@ -675,7 +675,6 @@ Language: vi_VN
     <string name="restore_complete_visit_site_action_button">Ghé thăm blog</string>
     <string name="restore_complete_description_with_two_parameters">Toàn bộ mục đã chọn đã được khôi phục đến %1$s %2$s.</string>
     <string name="restore_complete_header">Blog của bạn đã được khôi phục</string>
-    <string name="restore_progress_label">%1$s%%</string>
     <string name="restore_progress_footnote">Không cần chờ. Chúng tôi sẽ nhắc bạn khi khôi phục blog xong.</string>
     <string name="restore_progress_icon_content_description">Phục hồi biểu tượng blog</string>
     <string name="restore_progress_description_with_two_parameters">Chúng tôi đang khôi phục blog của bạn đến %1$s %2$s.</string>

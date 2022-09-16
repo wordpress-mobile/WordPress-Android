@@ -733,7 +733,6 @@ Language: he_IL
     <string name="restore_complete_visit_site_action_button">לבקר באתר</string>
     <string name="restore_complete_description_with_two_parameters">כל הפריטים שבחרת שוחזרו לגרסה מתאריך ⁦%1$s⁩ %2$s.</string>
     <string name="restore_complete_header">האתר שלך שוחזר</string>
-    <string name="restore_progress_label">%1$s%%</string>
     <string name="restore_progress_footnote">אין צורך לשהות כאן ולהמתין. אנחנו נודיע לך כאשר השחזור של האתר שלך הסתיים.</string>
     <string name="restore_progress_icon_content_description">סמל \'לשחזר את האתר\'</string>
     <string name="restore_progress_description_with_two_parameters">אנחנו משחזרים את האתר שלך לגרסה מתאריך ⁦%1$s⁩ %2$s.</string>

@@ -733,7 +733,6 @@ Language: ru
     <string name="restore_complete_visit_site_action_button">Перейти на сайт</string>
     <string name="restore_complete_description_with_two_parameters">Все выбранные элементы восстановлены на %1$s %2$s.</string>
     <string name="restore_complete_header">Ваш сайт был восстановлен</string>
-    <string name="restore_progress_label">%1$s%%</string>
     <string name="restore_progress_footnote">Не обязательно ждать. Мы уведомим вас по окончании восстановления сайта.</string>
     <string name="restore_progress_icon_content_description">Значок восстановления сайта</string>
     <string name="restore_progress_description_with_two_parameters">Выполняется откат к состоянию сайта на %1$s %2$s.</string>

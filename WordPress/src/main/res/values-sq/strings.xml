@@ -716,7 +716,6 @@ Language: sq_AL
     <string name="restore_complete_visit_site_action_button">Vizitoni sajtin</string>
     <string name="restore_complete_description_with_two_parameters">Krejt zërat tuaj të përzgjedhur janë rikthyer te %1$s %2$s.</string>
     <string name="restore_complete_header">Sajti juaj u rikthye</string>
-    <string name="restore_progress_label">%1$s%%</string>
     <string name="restore_progress_footnote">S’ka nevojë të prisni këtu. Do t’ju njoftojmë, kur sajti të jetë rikthyer.</string>
     <string name="restore_progress_icon_content_description">Ikonë “Riktheni sajtin”</string>
     <string name="restore_progress_description_with_two_parameters">Po e rikthejmë sajtin tuaj te %1$s %2$s.</string>

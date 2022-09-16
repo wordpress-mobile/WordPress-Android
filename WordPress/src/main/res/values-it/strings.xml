@@ -733,7 +733,6 @@ Language: it
     <string name="restore_complete_visit_site_action_button">Visita il sito</string>
     <string name="restore_complete_description_with_two_parameters">Tutti gli elementi selezionati sono ora ripristinati al giorno %1$s %2$s.</string>
     <string name="restore_complete_header">Il tuo sito è stato ripristinato</string>
-    <string name="restore_progress_label">%1$s%%</string>
     <string name="restore_progress_footnote">Non è necessario attendere. Ti invieremo una notifica quando il tuo sito sarà stato ripristinato.</string>
     <string name="restore_progress_icon_content_description">Icona Ripristina sito</string>
     <string name="restore_progress_description_with_two_parameters">Stiamo ripristinando il tuo sito al giorno %1$s %2$s.</string>
