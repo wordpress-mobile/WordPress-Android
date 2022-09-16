@@ -71,6 +71,8 @@ public class WPScreenshotTest extends BaseTest {
             // Enable Demo Mode
             mDemoModeEnabler.enable();
 
+            setLightModeAndWait();
+
             wpLogin();
 
             // Even though the screenshot for edit post is captured without error,
@@ -131,8 +133,6 @@ public class WPScreenshotTest extends BaseTest {
             Espresso.closeSoftKeyboard();
         }
 
-        setLightModeAndWait();
-
         if (openBlockList) {
             clickOnViewWithTag("add-block-button");
             idleFor(2000);
@@ -173,8 +173,6 @@ public class WPScreenshotTest extends BaseTest {
             e.printStackTrace();
         }
 
-        setLightModeAndWait();
-
         // Wait for the editor to load all images
         idleFor(7000);
 
@@ -195,8 +193,6 @@ public class WPScreenshotTest extends BaseTest {
             clickOn(R.id.button_negative);
         }
 
-        setLightModeAndWait();
-
         takeScreenshot("3-build-an-audience");
 
         // Exit the Stats Activity
@@ -212,8 +208,6 @@ public class WPScreenshotTest extends BaseTest {
             clickOn(R.id.tooltip_message);
         }
 
-        setLightModeAndWait();
-
         takeScreenshot("4-keep-tabs-on-your-site");
     }
 
@@ -226,8 +220,6 @@ public class WPScreenshotTest extends BaseTest {
 
         // Wait for the images to load
         idleFor(6000);
-
-        setLightModeAndWait();
 
         takeScreenshot("5-reply-in-real-time");
 
@@ -243,7 +235,6 @@ public class WPScreenshotTest extends BaseTest {
         waitForElementToBeDisplayedWithoutFailure(R.id.media_browser_container);
 
         idleFor(2000);
-        setLightModeAndWait();
 
         takeScreenshot("6-upload-on-the-go");
 
