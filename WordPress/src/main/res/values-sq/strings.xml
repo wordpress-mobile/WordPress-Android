@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-07-29 09:43:19+0000
+Translation-Revision-Date: 2022-09-12 10:43:51+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: sq_AL
@@ -1216,6 +1216,7 @@ Language: sq_AL
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">Prekeni dyfish që të kaloni te rregullimet e ngjyrave</string>
     <string name="reader_empty_followed_blogs_description">Kur ndiqni sajte, lëndën e tyre do ta shihni këtu</string>
     <string name="feature_announcement_find_out_mode">Shihni më tepër</string>
+    <string name="feature_announcement_dialog_label">Ç’ka të Re Në %s</string>
     <string name="insert_label_with_count">Fut %d</string>
     <string name="crop">qethe</string>
     <string name="error_failed_to_load_into_file">S’u arrit të ngarkohej në kartelë, ju lutemi, riprovoni.</string>
@@ -1314,6 +1315,7 @@ Language: sq_AL
     <string name="post_list_tab_trashed_posts">Shpënë te hedhurinat</string>
     <string name="post_list_tab_scheduled_posts">Vënë në plan</string>
     <string name="post_list_tab_published_posts">Botuar</string>
+    <string name="sharing_facebook_account_must_have_pages">Lidhja Facebook s’gjen dot ndonjë Faqe. Jetpack Social s’mund të lidhet me Profile Facebook, vetëm me Faqe të botuara.</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">I palidhur</string>
     <string name="notifications_tab_title_likes">Pëlqime</string>
     <string name="notifications_tab_title_follows">Ndjekje</string>
@@ -1540,6 +1542,7 @@ Language: sq_AL
     <string name="share_desc">Ndajeni me të tjerë</string>
     <string name="navigate_back_desc">Shko mbrapa</string>
     <string name="navigate_forward_desc">Shko përpara</string>
+    <string name="calendar_scheduled_post_description">“%1$s” u vu në plan për botim më “%2$s” te aplikacioni juaj %4$s \n %3$s</string>
     <string name="calendar_scheduled_post_title">Postim WordPress i Vënë Në Plan: \"%s\"</string>
     <string name="notification_post_will_be_published_in_ten_minutes">\"%s\" do të botohet brenda 10 minutash</string>
     <string name="notification_post_will_be_published_in_one_hour">\"%s\" do të botohet pas 1 ore</string>
@@ -2437,6 +2440,7 @@ Language: sq_AL
     <string name="requesting_otp">Po kërkohet një kod verifikimi përmes SMS-je.</string>
     <string name="login_text_otp">Më mirë më dërgoni kod me tekst</string>
     <string name="enter_verification_code">Thuajse arritëm! Ju lutemi, jepni kodin e verifikimit prej aplikacionit tuaj Authenticator.</string>
+    <string name="open_mail">Hap Postën</string>
     <string name="next">Pasuesi</string>
     <string name="enter_email_wordpress_com">Që të administroni krejt sajtet tuaj WordPress, bëni hyrjen te WordPress.com.</string>
     <string name="image_optimization_promo_desc">Optimizimi i figurave i mpak figurat, për ngarkim më të shpejtë.\n\nKëtë mund ta ndryshoni kurdo, te rregullimet e sajtit.</string>

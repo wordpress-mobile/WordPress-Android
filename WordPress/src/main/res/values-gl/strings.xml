@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-08-23 20:31:28+0000
+Translation-Revision-Date: 2022-09-10 01:13:39+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: gl_ES
 -->
 <resources>
+    <string name="app_rating_title">Estás gozando de %s?</string>
+    <string name="connection_service_label">Comparte unha entrada en %s</string>
+    <string name="connections_label">Conexións de Jetpack Social</string>
+    <string name="stats_widget_log_in_to_add_message">Por favor, accede á aplicación Jetpack para engadir un widget.</string>
+    <string name="stats_view_publicize">Conexións de Jetpack Social</string>
     <string name="login_magic_links_email_sent">Acabamos de enviar unha ligazón máxica a</string>
     <string name="login_magic_links_sent_label_short">Revisa o teu correo electrónico neste dispositivo!</string>
     <string name="or_use_password">Usar un contrasinal para acceder</string>
@@ -1234,6 +1239,7 @@ Language: gl_ES
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">Toca dúas veces para ir aos axustes da cor</string>
     <string name="reader_empty_followed_blogs_description">Cando sigas sitios, verás aquí o seu contido</string>
     <string name="feature_announcement_find_out_mode">Saber máis</string>
+    <string name="feature_announcement_dialog_label">Que hai de novo en %s</string>
     <string name="insert_label_with_count">Insertar %d</string>
     <string name="crop">recortar</string>
     <string name="error_failed_to_load_into_file">Erro ao cargar no arquivo, por favor, inténtao de novo.</string>
@@ -1332,6 +1338,7 @@ Language: gl_ES
     <string name="post_list_tab_trashed_posts">Na papeleira</string>
     <string name="post_list_tab_scheduled_posts">Programada</string>
     <string name="post_list_tab_published_posts">Publicada</string>
+    <string name="sharing_facebook_account_must_have_pages">A conexión con Facebook non pode encontrar ningunha páxina. Jetpack Social non pode conectar con perfís de Facebook, só con páxinas publicadas.</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">Non conectado</string>
     <string name="notifications_tab_title_likes">Gústame</string>
     <string name="notifications_tab_title_follows">Seguimentos</string>
@@ -1558,6 +1565,7 @@ Language: gl_ES
     <string name="share_desc">Compartir</string>
     <string name="navigate_back_desc">Volver</string>
     <string name="navigate_forward_desc">Avanzar</string>
+    <string name="calendar_scheduled_post_description">«%1$s» programado para publicar o «%2$s» na túa aplicación de %3$s\n%4$s</string>
     <string name="calendar_scheduled_post_title">Entrada programada de WordPress: «%s»</string>
     <string name="notification_post_will_be_published_in_ten_minutes">«%s» publicarase en 10 minutos</string>
     <string name="notification_post_will_be_published_in_one_hour">«%s» publicarase en 1 hora</string>

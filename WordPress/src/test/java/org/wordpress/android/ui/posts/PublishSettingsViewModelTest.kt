@@ -17,9 +17,12 @@ import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore.Schedul
 import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore.SchedulingReminderModel.Period.OFF
 import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore.SchedulingReminderModel.Period.ONE_HOUR
 import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.models.Person
+import org.wordpress.android.ui.people.utils.PeopleUtils.FetchUsersCallback
+import org.wordpress.android.ui.people.utils.PeopleUtilsWrapper
+import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult
 import org.wordpress.android.ui.posts.PublishSettingsViewModel.CalendarEvent
 import org.wordpress.android.ui.posts.PublishSettingsViewModel.PublishUiModel
-import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.viewmodel.Event
@@ -31,6 +34,7 @@ import java.util.TimeZone
 class PublishSettingsViewModelTest : BaseUnitTest() {
     @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var postSettingsUtils: PostSettingsUtils
+    @Mock lateinit var peopleUtilsWrapper: PeopleUtilsWrapper
     @Mock lateinit var localeManagerWrapper: LocaleManagerWrapper
     @Mock lateinit var postSchedulingNotificationStore: PostSchedulingNotificationStore
     @Mock lateinit var siteStore: SiteStore
@@ -47,6 +51,7 @@ class PublishSettingsViewModelTest : BaseUnitTest() {
         viewModel = EditPostPublishSettingsViewModel(
                 resourceProvider,
                 postSettingsUtils,
+                peopleUtilsWrapper,
                 localeManagerWrapper,
                 postSchedulingNotificationStore,
                 siteStore
@@ -107,6 +112,27 @@ class PublishSettingsViewModelTest : BaseUnitTest() {
         assertThat(viewModel.minute).isEqualTo(20)
 
         assertThat(uiModel!!.publishDateLabel).isEqualTo("Immediately")
+    }
+
+    @Test
+    fun `on start sets authors`() {
+        val localSiteId = 2
+        whenever(editPostRepository.localSiteId).thenReturn(localSiteId)
+
+        val site = SiteModel()
+        val siteTitle = "Site title"
+        site.name = siteTitle
+        whenever(siteStore.getSiteByLocalId(localSiteId)).thenReturn(site)
+
+        val peopleList = listOf(Person(1, 1), Person(2, 1))
+        whenever(peopleUtilsWrapper.fetchAuthors(any(), any(), any()))
+                .then { it.getArgument<FetchUsersCallback>(2).onSuccess(peopleList, true) }
+
+        var authors = listOf<Person>()
+        viewModel.authors.observeForever { authors = it }
+
+        viewModel.start(editPostRepository)
+        assertThat(authors).isEqualTo(peopleList)
     }
 
     @Test

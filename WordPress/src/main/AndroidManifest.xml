@@ -885,7 +885,6 @@
         <receiver
             android:name=".ui.stats.refresh.lists.widget.alltime.StatsAllTimeWidget"
             android:label="@string/stats_widget_all_time_insights_name"
-            android:enabled="@string/widgets_enabled"
             android:exported="false"
             tools:ignore="ManifestResource">
             <intent-filter>
@@ -899,7 +898,6 @@
         <receiver
             android:name=".ui.stats.refresh.lists.widget.today.StatsTodayWidget"
             android:label="@string/stats_widget_today_insights_name"
-            android:enabled="@string/widgets_enabled"
             android:exported="false"
             tools:ignore="ManifestResource">
             <intent-filter>
@@ -913,7 +911,6 @@
         <receiver
             android:name=".ui.stats.refresh.lists.widget.minified.StatsMinifiedWidget"
             android:label="@string/stats_widget_minified_name"
-            android:enabled="@string/widgets_enabled"
             android:exported="false"
             tools:ignore="ManifestResource">
             <intent-filter>

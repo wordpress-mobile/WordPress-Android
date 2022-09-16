@@ -44,11 +44,13 @@ import org.wordpress.android.fluxc.model.PostImmutableModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.TermModel;
 import org.wordpress.android.fluxc.model.post.PostStatus;
+import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.OnPostFormatsChanged;
 import org.wordpress.android.fluxc.store.TaxonomyStore;
 import org.wordpress.android.fluxc.store.TaxonomyStore.OnTaxonomyChanged;
+import org.wordpress.android.models.Person;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher;
 import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult;
@@ -109,6 +111,7 @@ public class EditPostSettingsFragment extends Fragment {
     private TextView mStatusTextView;
     private TextView mPostFormatTextView;
     private TextView mPasswordTextView;
+    private TextView mAuthorTextView;
     private TextView mPublishDateTextView;
     private TextView mPublishDateTitleTextView;
     private TextView mCategoriesTagsHeaderTextView;
@@ -128,6 +131,7 @@ public class EditPostSettingsFragment extends Fragment {
     private ArrayList<String> mPostFormatNames;
 
     @Inject SiteStore mSiteStore;
+    @Inject AccountStore mAccountStore;
     @Inject TaxonomyStore mTaxonomyStore;
     @Inject Dispatcher mDispatcher;
     @Inject ImageManager mImageManager;
@@ -257,6 +261,7 @@ public class EditPostSettingsFragment extends Fragment {
         mStatusTextView = rootView.findViewById(R.id.post_status);
         mPostFormatTextView = rootView.findViewById(R.id.post_format);
         mPasswordTextView = rootView.findViewById(R.id.post_password);
+        mAuthorTextView = rootView.findViewById(R.id.post_author);
         mPublishDateTextView = rootView.findViewById(R.id.publish_date);
         mPublishDateTitleTextView = rootView.findViewById(R.id.publish_date_title);
         mCategoriesTagsHeaderTextView = rootView.findViewById(R.id.post_settings_categories_and_tags_header);
@@ -361,6 +366,9 @@ public class EditPostSettingsFragment extends Fragment {
                 }
             }
         });
+
+        final LinearLayout authorContainer = rootView.findViewById(R.id.post_author_container);
+        authorContainer.setOnClickListener(view -> showAuthorDialog());
 
         mStickySwitch.setOnCheckedChangeListener(mOnStickySwitchChangeListener);
 
@@ -478,6 +486,7 @@ public class EditPostSettingsFragment extends Fragment {
         updateTagsTextView(postModel);
         updateStatusTextView();
         updatePublishDateTextView(postModel);
+        updateAuthorTextView(postModel.getAuthorDisplayName());
         mPublishedViewModel.start(getEditPostRepository());
         updateCategoriesTextView(postModel);
         updateFeaturedImageView(postModel);
@@ -601,6 +610,15 @@ public class EditPostSettingsFragment extends Fragment {
                 index = fragment.getCheckedIndex();
                 status = getPostStatusAtIndex(index);
                 break;
+            case AUTHOR:
+                index = fragment.getCheckedIndex();
+                List<Person> authors = mPublishedViewModel.getAuthors().getValue();
+                if (authors == null) {
+                    return;
+                }
+                Person author = authors.get(index);
+                updateAuthor(author);
+                break;
             case POST_FORMAT:
                 String formatName = fragment.getSelectedItem();
                 updatePostFormat(getPostFormatKeyFromName(formatName));
@@ -626,6 +644,17 @@ public class EditPostSettingsFragment extends Fragment {
         DialogType statusType = isSiteHomepage ? DialogType.HOMEPAGE_STATUS : DialogType.POST_STATUS;
         PostSettingsListDialogFragment fragment =
                 PostSettingsListDialogFragment.newInstance(statusType, index);
+        fragment.show(fm, PostSettingsListDialogFragment.TAG);
+    }
+
+    private void showAuthorDialog() {
+        if (!isAdded()) {
+            return;
+        }
+
+        FragmentManager fm = getActivity().getSupportFragmentManager();
+
+        PostSettingsListDialogFragment fragment = PostSettingsListDialogFragment.newAuthorListInstance(getAuthorId());
         fragment.show(fm, PostSettingsListDialogFragment.TAG);
     }
 
@@ -802,6 +831,22 @@ public class EditPostSettingsFragment extends Fragment {
         }
     }
 
+    void updateAuthor(Person author) {
+        EditPostRepository editPostRepository = getEditPostRepository();
+        if (editPostRepository != null) {
+            editPostRepository.updateAsync(postModel -> {
+                postModel.setAuthorId(author.getPersonID());
+                postModel.setAuthorDisplayName(author.getDisplayName());
+                return true;
+            }, (postModel, result) -> {
+                if (result == UpdatePostResult.Updated.INSTANCE) {
+                    updateAuthorTextView(postModel.getAuthorDisplayName());
+                }
+                return null;
+            });
+        }
+    }
+
     private void updatePostFormat(String postFormat) {
         EditPostRepository editPostRepository = getEditPostRepository();
         if (editPostRepository != null) {
@@ -902,6 +947,23 @@ public class EditPostSettingsFragment extends Fragment {
         mPublishDateContainer.setEnabled(!isPrivatePost);
     }
 
+    private void updateAuthorTextView(String authorDisplayName) {
+        if (authorDisplayName == null) {
+            // If the authorDisplayName is null, that means this is a new unpublished post.
+            // Set author to the current user name.
+            EditPostRepository editPostRepository = getEditPostRepository();
+            if (editPostRepository == null) {
+                return;
+            }
+            PostImmutableModel postModel = editPostRepository.getPost();
+            if (postModel != null && postModel.getAuthorDisplayName() == null) {
+                updateAuthorTextView(mAccountStore.getAccount().getDisplayName());
+            }
+        } else {
+            mAuthorTextView.setText(authorDisplayName);
+        }
+    }
+
     private void updateCategoriesTextView(PostImmutableModel post) {
         if (post == null || getSite() == null) {
             // Since this method can get called after a callback, we have to make sure we have the post and site
@@ -979,6 +1041,21 @@ public class EditPostSettingsFragment extends Fragment {
                 return 0;
         }
         return 0;
+    }
+
+    private long getAuthorId() {
+        PostImmutableModel postModel = getEditPostRepository().getPost();
+        if (postModel == null) {
+            return -1;
+        }
+        long postAuthorId = postModel.getAuthorId();
+        if (postAuthorId == 0) {
+            // If the author id is 0, that means this is the post creating screen.
+            // Selected author should be the current user.
+            return mAccountStore.getAccount().getUserId();
+        } else {
+            return postAuthorId;
+        }
     }
 
     // Post Format Helpers

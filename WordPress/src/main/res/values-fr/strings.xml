@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-08-25 13:54:08+0000
+Translation-Revision-Date: 2022-09-13 14:54:08+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: fr
 -->
 <resources>
+    <string name="app_rating_title">Vous appréciez %s ?</string>
+    <string name="connection_service_label">Partager l’article sur %s</string>
+    <string name="connections_label">Connexions Jetpack Social</string>
+    <string name="stats_widget_log_in_to_add_message">Connectez-vous à l’application Jetpack pour ajouter un widget.</string>
+    <string name="stats_view_publicize">Connexions Jetpack Social</string>
     <string name="login_magic_links_email_sent">Nous venons d\'envoyer un lien magique à </string>
     <string name="login_magic_links_sent_label_short">Consultez votre messagerie sur cet appareil !</string>
     <string name="or_use_password">Utilisez le mot de passe pour la connexion</string>
@@ -1243,6 +1248,7 @@ Language: fr
     <string name="photo_picker_video_title">Choisir une vidéo</string>
     <string name="site_picker_ask_site_select">Impossible de sélectionner le site. Veuillez réessayer.</string>
     <string name="feature_announcement_find_out_mode">En savoir plus</string>
+    <string name="feature_announcement_dialog_label">Quelles sont les nouveautés %s ?</string>
     <string name="sitepicker_continue_flow">Continuer</string>
     <string name="reader_reblog_error">Échec du reblogue</string>
     <string name="reader_no_site_to_reblog_action">Gérer les sites</string>
@@ -1333,6 +1339,7 @@ Language: fr
     <string name="post_list_tab_scheduled_posts">Planifié</string>
     <string name="post_list_tab_published_posts">Publié</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">Non connecté</string>
+    <string name="sharing_facebook_account_must_have_pages">La connexion Facebook ne trouve aucune page. Jetpack Social peut uniquement se connecter aux pages publiées, et non aux profils Facebook.</string>
     <string name="notifications_tab_title_likes">J’aime</string>
     <string name="notifications_tab_title_follows">Abonnements</string>
     <string name="notifications_tab_title_comments">Commentaires</string>
@@ -1560,6 +1567,7 @@ Language: fr
     <string name="navigate_forward_desc">Continuer</string>
     <string name="calendar_scheduled_post_title">Articles WordPress planifiés « %s »</string>
     <string name="notification_post_will_be_published_in_ten_minutes">« %s » sera publié dans 10 minutes</string>
+    <string name="calendar_scheduled_post_description">L’article « %1$s » sera publié le « %2$s » sur votre application %3$s \n %4$s</string>
     <string name="notification_post_will_be_published_in_one_hour">« %s » sera publié dans 1 heure</string>
     <string name="notification_post_has_been_published">« %s » a été publié</string>
     <string name="notification_scheduled_post_ten_minute_reminder">Article planifié : rappel 10 minutes avant</string>

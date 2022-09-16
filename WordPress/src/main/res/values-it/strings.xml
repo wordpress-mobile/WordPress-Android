@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-08-23 14:54:08+0000
+Translation-Revision-Date: 2022-09-13 10:54:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: it
 -->
 <resources>
+    <string name="app_rating_title">Ti piace %s?</string>
+    <string name="connection_service_label">Condividi l\'articolo su %s</string>
+    <string name="connections_label">Connessioni di Jetpack Social</string>
+    <string name="stats_widget_log_in_to_add_message">Accedi all\'app Jetpack per aggiungere un widget.</string>
+    <string name="stats_view_publicize">Connessioni di Jetpack Social</string>
     <string name="login_magic_links_email_sent">Abbiamo appena inviato un link magico a</string>
     <string name="login_magic_links_sent_label_short">Controlla la tua e-mail su questo dispositivo!</string>
     <string name="or_use_password">Usa la password per accedere</string>
@@ -1234,6 +1239,7 @@ Language: it
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">Tocca due volte per andare alle impostazioni del colore</string>
     <string name="reader_empty_followed_blogs_description">Quando segui i siti, visualizzerai i contenuti qui</string>
     <string name="feature_announcement_find_out_mode">Scopri di più</string>
+    <string name="feature_announcement_dialog_label">Novità su %s</string>
     <string name="insert_label_with_count">Inserisci %d</string>
     <string name="crop">ritaglia</string>
     <string name="error_failed_to_load_into_file">Impossibile caricare nel file, riprova.</string>
@@ -1332,6 +1338,7 @@ Language: it
     <string name="post_list_tab_trashed_posts">Spostato nel cestino</string>
     <string name="post_list_tab_scheduled_posts">Programmato</string>
     <string name="post_list_tab_published_posts">Pubblicato</string>
+    <string name="sharing_facebook_account_must_have_pages">La connessione a Facebook non riesce a trovare alcuna pagina. Jetpack Social non può connettersi ai profili Facebook, bensì solo alle pagine pubblicate.</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">Non collegato</string>
     <string name="notifications_tab_title_likes">Mi piace</string>
     <string name="notifications_tab_title_follows">Segue</string>
@@ -1558,6 +1565,7 @@ Language: it
     <string name="share_desc">Condividi</string>
     <string name="navigate_back_desc">Torna indietro</string>
     <string name="navigate_forward_desc">Vai avanti</string>
+    <string name="calendar_scheduled_post_description">\"%1$s\" pianificato per la pubblicazione il giorno \"%2$s\" nella tua app %3$s \n %4$s</string>
     <string name="calendar_scheduled_post_title">Articolo programmato WordPress: \"%s\"</string>
     <string name="notification_post_will_be_published_in_ten_minutes">\"%s\" verrà pubblicato tra 10 minuti</string>
     <string name="notification_post_will_be_published_in_one_hour">\"%s\" verrà pubblicato tra 1 ora</string>
