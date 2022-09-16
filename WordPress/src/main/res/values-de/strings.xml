@@ -1779,7 +1779,6 @@ Language: de
     <string name="stats_most_popular_percent_views">%1$d%% der Aufrufe</string>
     <string name="stats_insights_popular">Beliebteste Zeit</string>
     <string name="stats_traffic_change">%1$s (%2$s%%)</string>
-    <string name="stats_traffic_increase">+%1$s (%2$s%%)</string>
     <string name="new_site_creation_site_preview_content_description">Vorschau der Website anzeigen</string>
     <string name="new_site_creation_clear_all_content_description">Löschen</string>
     <string name="site_created_but_not_fetched_snackbar_message">Es scheint, als ob du eine langsame Verbindung hast. Wenn du deine neue Website nicht in der Liste siehst, versuch sie zu aktualisieren.</string>

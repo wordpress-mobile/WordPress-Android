@@ -1713,7 +1713,6 @@ Language: vi_VN
     <string name="stats_most_popular_percent_views">%1$d%% lượt xem</string>
     <string name="stats_insights_popular">Phổ biến mọi lúc</string>
     <string name="stats_traffic_change">%1$s (%2$s%%)</string>
-    <string name="stats_traffic_increase">+%1$s (%2$s%%)</string>
     <string name="new_site_creation_site_preview_content_description">Đang hiển thị xem trước</string>
     <string name="new_site_creation_clear_all_content_description">Xóa</string>
     <string name="site_created_but_not_fetched_snackbar_message">Có vẻ mạng của bạn đang chậm. Nếu không thấy blog mới của bạn trong danh sách, thử làm tươi.</string>

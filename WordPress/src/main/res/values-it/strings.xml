@@ -1771,7 +1771,6 @@ Language: it
     <string name="stats_most_popular_percent_views">%1$d%% di visualizzazioni</string>
     <string name="stats_insights_popular">Ora più popolare</string>
     <string name="stats_traffic_change">%1$s (%2$s%%)</string>
-    <string name="stats_traffic_increase">+%1$s (%2$s%%)</string>
     <string name="new_site_creation_site_preview_content_description">Mostra anteprima del sito</string>
     <string name="new_site_creation_clear_all_content_description">Pulisci</string>
     <string name="site_created_but_not_fetched_snackbar_message">Sembra che tu sia collegato a una connessione lenta. Se il tuo nuovo sito non è presente nell\'elenco, prova ad aggiornare.</string>

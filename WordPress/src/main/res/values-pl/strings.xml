@@ -1498,7 +1498,6 @@ Language: pl
     <string name="stats_select_previous_period_description">Wybierz poprzedni okres</string>
     <string name="stats_most_popular_percent_views">%1$d%% wyświetleń</string>
     <string name="stats_traffic_change">%1$s (%2$s%%)</string>
-    <string name="stats_traffic_increase">+%1$s (%2$s%%)</string>
     <string name="stats_insights_popular">Najbardziej popularna pora</string>
     <string name="new_site_creation_site_preview_content_description">Prezentacja podglądu witryny</string>
     <string name="new_site_creation_clear_all_content_description">Wyczyść</string>

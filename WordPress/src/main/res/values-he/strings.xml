@@ -1771,7 +1771,6 @@ Language: he_IL
     <string name="stats_most_popular_percent_views">%1$d%% מהצפיות</string>
     <string name="stats_insights_popular">המועד הפופולרי ביותר</string>
     <string name="stats_traffic_change">%1$s (%2$s%%)</string>
-    <string name="stats_traffic_increase">+%1$s (%2$s%%)</string>
     <string name="new_site_creation_site_preview_content_description">מציג תצוגה מקדימה של האתר</string>
     <string name="new_site_creation_clear_all_content_description">ניקוי</string>
     <string name="site_created_but_not_fetched_snackbar_message">נראה שהחיבור שלך איטי. אם אינך רואה את האתר החדש ברשימה, מומלץ לרענן את העמוד.</string>

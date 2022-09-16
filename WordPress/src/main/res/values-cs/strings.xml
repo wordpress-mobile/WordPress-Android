@@ -1650,7 +1650,6 @@ Language: cs_CZ
     <string name="quick_start_task_skip_menu_title">Přeskočit úkol</string>
     <string name="notification_channel_reminder_title">Připomenutí</string>
     <string name="stats_traffic_change">%1$s (%2$s%%)</string>
-    <string name="stats_traffic_increase">+%1$s (%2$s%%)</string>
     <string name="stats_insights_popular">Nejoblíbenější čas</string>
     <string name="stats_most_popular_percent_views">%1$d%% shlédnutí</string>
     <string name="stats_select_previous_period_description">Vyberte předchozí období</string>

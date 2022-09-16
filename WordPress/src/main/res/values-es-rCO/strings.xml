@@ -1750,7 +1750,6 @@ Language: es_CO
     <string name="stats_most_popular_percent_views">%1$d%% de visitas</string>
     <string name="stats_insights_popular">Hora más popular</string>
     <string name="stats_traffic_change">%1$s (%2$s%%)</string>
-    <string name="stats_traffic_increase">+%1$s (%2$s%%)</string>
     <string name="new_site_creation_site_preview_content_description">Mostrando la vista previa</string>
     <string name="new_site_creation_clear_all_content_description">Vaciar</string>
     <string name="site_created_but_not_fetched_snackbar_message">Parece que tienes una conexión lenta. Si no ves tu nuevo sitio en la lista, inténtalo actualizando.</string>

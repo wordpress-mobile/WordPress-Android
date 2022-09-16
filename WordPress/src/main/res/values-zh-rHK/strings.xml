@@ -1771,7 +1771,6 @@ Language: zh_TW
     <string name="stats_most_popular_percent_views">瀏覽次數：%1$d%%</string>
     <string name="stats_insights_popular">最熱門的時間</string>
     <string name="stats_traffic_change">%1$s (%2$s%%)</string>
-    <string name="stats_traffic_increase">+%1$s (%2$s%%)</string>
     <string name="new_site_creation_site_preview_content_description">顯示預覽網站</string>
     <string name="new_site_creation_clear_all_content_description">清除</string>
     <string name="site_created_but_not_fetched_snackbar_message">你的網路連線速度似乎過慢。如果你在清單中沒有看到新網站，請嘗試重新整理。</string>

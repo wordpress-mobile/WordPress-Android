@@ -1771,7 +1771,6 @@ Language: ko_KR
     <string name="stats_most_popular_percent_views">조회수 %1$d%%</string>
     <string name="stats_insights_popular">가장 인기 있는 시간</string>
     <string name="stats_traffic_change">%1$s(%2$s%%)</string>
-    <string name="stats_traffic_increase">+%1$s(%2$s%%)</string>
     <string name="new_site_creation_site_preview_content_description">사이트 미리보기 표시</string>
     <string name="new_site_creation_clear_all_content_description">지우기</string>
     <string name="site_created_but_not_fetched_snackbar_message">사이트 연결이 느린 것 같습니다. 새 사이트가 목록에 없으면 새로 고침하세요.</string>

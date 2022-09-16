@@ -1771,7 +1771,6 @@ Language: ar
     <string name="stats_most_popular_percent_views">%1$d%% من المشاهدات</string>
     <string name="stats_insights_popular">الوقت الأكثر شعبية</string>
     <string name="stats_traffic_change">%1$s (%2$s%%)</string>
-    <string name="stats_traffic_increase">+%1$s (%2$s%%)</string>
     <string name="new_site_creation_site_preview_content_description">عرض معاينة الموقع</string>
     <string name="new_site_creation_clear_all_content_description">مسح</string>
     <string name="site_created_but_not_fetched_snackbar_message">يبدو أنَّ الاتصال بطيء لديك. إذا كنت لا ترى موقعك الجديد في القائمة، فحاول التحديث مجددًا.</string>
