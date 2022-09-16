@@ -4,6 +4,7 @@ import com.android.build.gradle.LibraryPlugin
 plugins {
     id "com.automattic.android.fetchstyle"
     id "io.gitlab.arturbosch.detekt"
+    id "com.autonomousapps.dependency-analysis"
     id "androidx.navigation.safeargs.kotlin" apply false
     id "com.android.library" apply false
     id 'com.google.gms.google-services' apply false
