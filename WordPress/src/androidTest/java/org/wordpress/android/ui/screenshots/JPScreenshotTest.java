@@ -117,6 +117,9 @@ public class JPScreenshotTest extends BaseTest {
 
             // Enable Demo Mode
             mDemoModeEnabler.enable();
+
+            setLightModeAndWait();
+
             wpLogin();
 
             generateActivityLog();
@@ -152,7 +155,6 @@ public class JPScreenshotTest extends BaseTest {
 
         waitForElementToBeDisplayedWithoutFailure(R.id.recycler_view);
 
-        setNightModeAndWait(false);
         takeScreenshot(Screenshots.buildScreenshotName(Screenshots.CREATE_NEW_OPTIONS));
 
         // Exit back to the main activity
@@ -175,7 +177,6 @@ public class JPScreenshotTest extends BaseTest {
         clickOn(onView(withText(getTranslatedString(R.string.my_site_bottom_sheet_add_page))));
         idleFor(2000);
 
-        setNightModeAndWait(false);
         takeScreenshot(Screenshots.buildScreenshotName(Screenshots.CHOOSE_A_LAYOUT));
 
         // Exit the view and return
@@ -196,8 +197,6 @@ public class JPScreenshotTest extends BaseTest {
         // Wait for the images to load
         idleFor(6000);
 
-        setNightModeAndWait(false);
-
         takeScreenshot(Screenshots.buildScreenshotName(Screenshots.NOTIFICATIONS));
 
         // Exit the notifications activity
@@ -216,7 +215,6 @@ public class JPScreenshotTest extends BaseTest {
         // Wait for page to load
         idleFor(2000);
 
-        setNightModeAndWait(false);
         takeScreenshot(Screenshots.buildScreenshotName(Screenshots.SITE_TOPIC));
 
         // Exit the view and return
@@ -244,7 +242,6 @@ public class JPScreenshotTest extends BaseTest {
 
         idleFor(8000);
 
-        setNightModeAndWait(false);
         takeScreenshot(Screenshots.buildScreenshotName(Screenshots.STATS));
 
         // Exit the Stats Activity
@@ -266,7 +263,6 @@ public class JPScreenshotTest extends BaseTest {
         // Wait for the activity log to load
         idleFor(8000);
 
-        setNightModeAndWait(false);
         takeScreenshot(Screenshots.buildScreenshotName(Screenshots.ACTIVITY_LOG));
 
         // Exit the Activity Log Activity
@@ -280,7 +276,6 @@ public class JPScreenshotTest extends BaseTest {
 
         waitForElementToBeDisplayedWithoutFailure(R.id.recycler_view);
 
-        setNightModeAndWait(false);
         takeScreenshot(Screenshots.buildScreenshotName(Screenshots.MY_SITE));
     }
 
@@ -316,7 +311,6 @@ public class JPScreenshotTest extends BaseTest {
         linearLayout.perform(click());
 
 
-        setNightModeAndWait(false);
         takeScreenshot(Screenshots.buildScreenshotName(Screenshots.BACKUP_DOWNLOAD));
 
         // Exit the backup download activity
@@ -360,7 +354,6 @@ public class JPScreenshotTest extends BaseTest {
         // Wait for scan to load
         idleFor(8000);
 
-        setNightModeAndWait(false);
         takeScreenshot(Screenshots.buildScreenshotName(Screenshots.BLOGGING_REMINDERS));
 
         // Exit the Activity scan activity
@@ -379,7 +372,6 @@ public class JPScreenshotTest extends BaseTest {
         waitForElementToBeDisplayedWithoutFailure(R.id.media_browser_container);
 
         idleFor(2000);
-        setNightModeAndWait(true);
 
         // To do should add the logic for gallery of images
         // Right now on navigating to the media no images will be present in gallery
@@ -402,7 +394,6 @@ public class JPScreenshotTest extends BaseTest {
         // Wait for scan to load
         idleFor(8000);
 
-        setNightModeAndWait(false);
         takeScreenshot(Screenshots.buildScreenshotName(Screenshots.SCAN));
 
         // Exit the Activity scan activity
@@ -428,8 +419,6 @@ public class JPScreenshotTest extends BaseTest {
             Espresso.closeSoftKeyboard();
         }
 
-        setNightModeAndWait(false);
-
         if (openBlockList) {
             clickOnViewWithTag("add-block-button");
             idleFor(2000);
@@ -439,8 +428,8 @@ public class JPScreenshotTest extends BaseTest {
         pressBackUntilElementIsDisplayed(R.id.tabLayout);
     }
 
-    private void setNightModeAndWait(boolean isNightMode) {
-        setNightMode(isNightMode);
+    private void setLightModeAndWait() {
+        setNightMode(false);
         idleFor(5000);
     }
 
