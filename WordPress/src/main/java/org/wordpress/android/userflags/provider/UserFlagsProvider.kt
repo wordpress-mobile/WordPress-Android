@@ -23,6 +23,7 @@ class UserFlagsProvider : QueryContentProvider() {
         return true
     }
 
+    @Suppress("SwallowedException")
     override fun query(
         uri: Uri,
         projection: Array<out String>?,

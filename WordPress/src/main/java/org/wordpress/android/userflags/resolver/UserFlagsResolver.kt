@@ -54,6 +54,7 @@ class UserFlagsResolver @Inject constructor(
         )
     }
 
+    @Suppress("TooGenericExceptionCaught", "SwallowedException")
     private fun updateUserFlags(
         onSuccess: () -> Unit,
         onFailure: () -> Unit,
