@@ -4,8 +4,8 @@ import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.WebPreviewUiState.WebPreviewFullscreenUiState
 
 /**
- * This enum could be expanded to allow to re-use the WPWebViewActivity (including the direct usage of actionable empty view)
- * in other scenarios with different WebPreviewUiState, also menu can be customized with the same principle.
+ * This enum could be expanded to allow to re-use the WPWebViewActivity (including the direct usage of actionable empty
+ * view) in other scenarios with different WebPreviewUiState, also menu can be customized with the same principle.
  */
 enum class WPWebViewUsageCategory constructor(val value: Int, val menuUiState: WPWebViewMenuUiState) {
     WEBVIEW_STANDARD(0, WPWebViewMenuUiState()),

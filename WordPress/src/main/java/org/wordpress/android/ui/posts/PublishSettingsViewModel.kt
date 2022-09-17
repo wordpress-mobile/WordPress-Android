@@ -53,7 +53,9 @@ constructor(
     val onPostStatusChanged: LiveData<PostStatus> = _onPostStatusChanged
     private val _onUiModel = MutableLiveData<PublishUiModel>()
     val onUiModel: LiveData<PublishUiModel> = _onUiModel
-    private val _onToast = MutableLiveData<Event<String>>()
+
+    @Suppress("VariableNaming")
+    protected val _onToast = MutableLiveData<Event<String>>()
     val onToast: LiveData<Event<String>> = _onToast
     private val _onShowNotificationDialog = MutableLiveData<Event<Period?>>()
     val onShowNotificationDialog: LiveData<Event<Period?>> = _onShowNotificationDialog
