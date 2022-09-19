@@ -48,32 +48,10 @@ class LoginPrologueRevampedFragment : Fragment() {
     ) = ComposeView(requireContext()).apply {
         setContent {
             AppTheme {
-                val viewModel: LoginPrologueRevampedViewModel = viewModel()
-
-                /**
-                 * This composable launches an effect to continuously update the view model by providing the elapsed
-                 * time between frames. Velocity and position are recalculated for each frame, with the resulting
-                 * position provided here to be consumed by nested children composables.
-                 */
-                val position = viewModel.positionData.observeAsState(0f)
-                CompositionLocalProvider(LocalPosition provides position.value) {
-                    LaunchedEffect(Unit) {
-                        var lastFrameNanos: Long? = null
-                        while (isActive) {
-                            val currentFrameNanos = awaitFrame()
-                            // Calculate elapsed time (in seconds) since the last frame
-                            val elapsed = (currentFrameNanos - (lastFrameNanos ?: currentFrameNanos)) / 1e9.toFloat()
-                            // Update viewModel for frame
-                            viewModel.updateForFrame(elapsed)
-                            // Update frame timestamp reference
-                            lastFrameNanos = currentFrameNanos
-                        }
-                    }
-                    LoginScreenRevamped(
-                            onWpComLoginClicked = loginPrologueListener::showEmailLoginScreen,
-                            onSiteAddressLoginClicked = loginPrologueListener::loginViaSiteAddress,
-                    )
-                }
+                LoginScreenRevamped(
+                        onWpComLoginClicked = loginPrologueListener::showEmailLoginScreen,
+                        onSiteAddressLoginClicked = loginPrologueListener::loginViaSiteAddress,
+                )
             }
         }
         requireActivity().window.enableFullScreen()
@@ -112,19 +90,50 @@ private fun LoginScreenRevamped(
     onWpComLoginClicked: () -> Unit,
     onSiteAddressLoginClicked: () -> Unit,
 ) {
-    Box {
-        LoopingTextWithBackground()
-        TopLinearGradient()
-        JetpackLogo(
-                modifier = Modifier
-                        .padding(top = 60.dp)
-                        .size(60.dp)
-                        .align(Alignment.TopCenter)
-        )
-        ColumnWithFrostedGlassBackground {
-            PrimaryButton(onClick = onWpComLoginClicked)
-            SecondaryButton(onClick = onSiteAddressLoginClicked)
+    PositionProvider {
+        Box {
+            LoopingTextWithBackground()
+            TopLinearGradient()
+            JetpackLogo(
+                    modifier = Modifier
+                            .padding(top = 60.dp)
+                            .size(60.dp)
+                            .align(Alignment.TopCenter)
+            )
+            ColumnWithFrostedGlassBackground {
+                PrimaryButton(onClick = onWpComLoginClicked)
+                SecondaryButton(onClick = onSiteAddressLoginClicked)
+            }
         }
+    }
+}
+
+/**
+ * This composable launches an effect to continuously update the view model by providing the elapsed
+ * time between frames. Velocity and position are recalculated for each frame, with the resulting
+ * position provided here to be consumed by nested children composables.
+ */
+@Composable
+private fun PositionProvider(
+    viewModel: LoginPrologueRevampedViewModel = viewModel(),
+    content: @Composable () -> Unit
+) {
+    val position = viewModel.positionData.observeAsState(0f)
+    CompositionLocalProvider(LocalPosition provides position.value) {
+        LaunchedEffect(Unit) {
+            var lastFrameNanos: Long? = null
+            while (isActive) {
+                val currentFrameNanos = awaitFrame()
+                // Calculate elapsed time (in seconds) since the last frame
+                val elapsed = (currentFrameNanos - (lastFrameNanos ?: currentFrameNanos)) / 1e9.toFloat()
+                // Update viewModel for frame
+                viewModel.updateForFrame(elapsed)
+                // Update frame timestamp reference
+                lastFrameNanos = currentFrameNanos
+            }
+        }
+
+        content()
     }
 }
 
