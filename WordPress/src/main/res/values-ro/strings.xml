@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2022-09-14 15:55:52+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
-Generator: GlotPress/4.0.0-alpha.1
+Generator: GlotPress/4.0.0-alpha.2
 Language: ro
 -->
 <resources>

@@ -8,6 +8,8 @@
     android:layout_height="@dimen/stats_widget_list_item_height"
     android:background="@drawable/bg_rectangle_gray_700_top_radius_4dp"
     android:orientation="horizontal"
+    android:visibility="gone"
+    tools:visibility="visible"
     tools:showIn="@layout/stats_widget_list_dark">
 
     <ImageView

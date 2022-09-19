@@ -1,4 +1,0 @@
-20.6:
-- Ora puoi accedere all'app utilizzando un indirizzo e-mail che contiene un carattere speciale.
-- Il precaricamento dei temi non causa più l'arresto dell'app durante la creazione del sito. Fiu!
-- Potenziamento: il banner con tecnologia Jetpack viene mostrato nell'elenco dei risultati di ricerca.

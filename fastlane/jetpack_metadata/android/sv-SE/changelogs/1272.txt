@@ -1,0 +1,5 @@
+20.7:
+- Jetpack-widgetarna är nu tillgängliga på din enhets startskärm
+- Kontrollerna för förhandsgranskning av media är synliga i både ljust och mörkt läge
+- Skärmen Inloggningskod i temat Compose har bättre färgkontrast
+- Vissa element av redigeraren och inläggsinställningarna är nu WordPress-blå

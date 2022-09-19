@@ -1,4 +1,0 @@
-20.6:
-- Je kunt nu inloggen in de app met een e-mailadres dat een speciaal teken bevat.
-- Het vooraf laden van thema's laat de app niet meer crashen tijdens het maken van sites. Oef.
-- Power up—de Jetpack Powered banner wordt getoond in lijsten met zoekresultaten.
