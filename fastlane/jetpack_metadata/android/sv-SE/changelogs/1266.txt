@@ -1,3 +1,0 @@
-20.6:
-- Du kan nu logga in i appen med en e-postadress som innehåller ett specialtecken.
-- Teman med förhandsinläsning kraschar inte längre appen under webbplatsskapandet. Puh!

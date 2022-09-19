@@ -1,3 +1,0 @@
-20.6:
-- Sekarang Anda dapat login ke aplikasi menggunakan alamat email yang berisi karakter khusus.
-- Pramuat tema tidak lagi menyebabkan aplikasi macet selama Pembuatan Situs. Fiuh.
