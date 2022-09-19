@@ -565,8 +565,6 @@ public interface AppComponent {
 
     void inject(LoginPrologueFragment object);
 
-    void inject(LoginPrologueRevampedFragment object);
-
     void inject(ReaderDiscoverLogic object);
 
     void inject(PostListCreateMenuFragment object);

@@ -22,8 +22,8 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
-import dagger.android.support.AndroidSupportInjection
+import androidx.lifecycle.viewmodel.compose.viewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.android.awaitFrame
 import kotlinx.coroutines.isActive
 import org.wordpress.android.ui.accounts.login.components.ColumnWithFrostedGlassBackground
@@ -34,13 +34,11 @@ import org.wordpress.android.ui.accounts.login.components.SecondaryButton
 import org.wordpress.android.ui.accounts.login.components.TopLinearGradient
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.util.extensions.showFullScreen
-import javax.inject.Inject
-
 
 val LocalPosition = compositionLocalOf { 0f }
 
-class LoginPrologueRevampedFragment: Fragment() {
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+@AndroidEntryPoint
+class LoginPrologueRevampedFragment : Fragment() {
     private lateinit var loginPrologueListener: LoginPrologueListener
 
     override fun onCreateView(
@@ -48,12 +46,10 @@ class LoginPrologueRevampedFragment: Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ) = ComposeView(requireContext()).apply {
-        val viewModel = ViewModelProvider(
-                this@LoginPrologueRevampedFragment,
-                viewModelFactory
-        )[LoginPrologueRevampedViewModel::class.java]
         setContent {
             AppTheme {
+                val viewModel: LoginPrologueRevampedViewModel = viewModel()
+
                 /**
                  * This composable launches an effect to continuously update the view model by providing the elapsed
                  * time between frames. Velocity and position are recalculated for each frame, with the resulting
@@ -87,7 +83,6 @@ class LoginPrologueRevampedFragment: Fragment() {
         super.onAttach(context)
         check(context is LoginPrologueListener) { "$context must implement LoginPrologueListener" }
         loginPrologueListener = context
-        AndroidSupportInjection.inject(this)
     }
 
     override fun onDestroyView() {

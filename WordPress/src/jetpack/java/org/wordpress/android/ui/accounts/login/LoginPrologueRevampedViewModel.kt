@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.accounts.login
 
-import android.app.Application
 import android.content.Context
 import android.hardware.Sensor
 import android.hardware.SensorEvent
@@ -8,11 +7,10 @@ import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import kotlinx.coroutines.CoroutineDispatcher
-import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.viewmodel.ScopedAndroidViewModel
+import androidx.lifecycle.ViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
-import javax.inject.Named
 import kotlin.math.exp
 import kotlin.math.ln
 
@@ -26,10 +24,10 @@ private val VELOCITY_DECAY = -ln(4f)
 // An additional acceleration applied to make the text scroll when the device is flat on a table
 private const val DRIFT = -0.05f
 
+@HiltViewModel
 class LoginPrologueRevampedViewModel @Inject constructor(
-    application: Application,
-    @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher
-): ScopedAndroidViewModel(application, mainDispatcher) {
+    @ApplicationContext appContext: Context,
+): ViewModel() {
     private var acceleration = 0f
     private var velocity = 0f
     var position = 0f
@@ -55,7 +53,7 @@ class LoginPrologueRevampedViewModel @Inject constructor(
 
     /** This LiveData responds to accelerometer data from the y-axis of the device and emits updated position data. */
     private val _positionData = object: MutableLiveData<Float>(), SensorEventListener {
-        private val sensorManager get() = getApplication<Application>().getSystemService(Context.SENSOR_SERVICE)
+        private val sensorManager get() = appContext.getSystemService(Context.SENSOR_SERVICE)
                 as SensorManager
         override fun onActive() {
             super.onActive()
