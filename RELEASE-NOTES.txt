@@ -1,5 +1,9 @@
 *** PLEASE FOLLOW THIS FORMAT: [<priority indicator, more stars = higher priority>] <description> [<PR URL>]
 
+20.9
+-----
+
+
 20.8
 -----
 * [**] Stats: Always use Western Arabic numerals in Arabic languages (previously there was a mix of Eastern and Western Arabic numerals) [https://github.com/wordpress-mobile/WordPress-Android/pull/17160]
