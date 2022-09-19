@@ -16,7 +16,12 @@ import androidx.compose.ui.unit.Constraints
  * @param repeat the number of times to repeat the child composable
  */
 @Composable
-fun RepeatingColumn(position: Float, repeat: Int = 3, modifier: Modifier = Modifier, content: @Composable () -> Unit) {
+fun RepeatingColumn(
+    position: Float,
+    repeat: Int = 3,
+    modifier: Modifier = Modifier,
+    content: @Composable () -> Unit
+) {
     Layout(
             content = {
                 Column(modifier = modifier) {

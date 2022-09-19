@@ -59,11 +59,13 @@ fun LargeText(
 
 @Composable
 fun LoopingText(modifier: Modifier = Modifier) {
-    RepeatingColumn(LocalPosition.current, modifier = modifier) {
+    RepeatingColumn(
+            position = LocalPosition.current,
+            modifier = modifier
+    ) {
         LargeTexts()
     }
 }
-
 
 @Preview(showBackground = true, device = Devices.PIXEL_4_XL)
 @Composable
