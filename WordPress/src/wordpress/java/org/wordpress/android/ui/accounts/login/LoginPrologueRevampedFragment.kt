@@ -6,7 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
+import android.view.WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -30,12 +30,12 @@ import androidx.fragment.app.Fragment
 import org.wordpress.android.R.color
 import org.wordpress.android.R.drawable
 import org.wordpress.android.R.string
-import org.wordpress.android.ui.accounts.login.compose.components.Tagline
 import org.wordpress.android.ui.accounts.login.compose.components.PrimaryButton
 import org.wordpress.android.ui.accounts.login.compose.components.SecondaryButton
+import org.wordpress.android.ui.accounts.login.compose.components.Tagline
 import org.wordpress.android.ui.compose.theme.AppTheme
 
-class LoginPrologueRevampedFragment: Fragment() {
+class LoginPrologueRevampedFragment : Fragment() {
     private lateinit var loginPrologueListener: LoginPrologueListener
 
     override fun onCreateView(
@@ -50,11 +50,7 @@ class LoginPrologueRevampedFragment: Fragment() {
                 )
             }
         }
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        requireActivity().window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
+        requireActivity().window.addFlags(FLAG_LAYOUT_NO_LIMITS)
     }
 
     override fun onAttach(context: Context) {
@@ -63,9 +59,9 @@ class LoginPrologueRevampedFragment: Fragment() {
         loginPrologueListener = context
     }
 
-    override fun onDetach() {
-        super.onDetach()
-        requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
+    override fun onPause() {
+        super.onPause()
+        requireActivity().window.clearFlags(FLAG_LAYOUT_NO_LIMITS)
     }
 
     companion object {
@@ -107,7 +103,6 @@ fun LoginScreenRevamped(onLoginClicked: () -> Unit) {
         }
     }
 }
-
 
 @Preview(showBackground = true, device = Devices.PIXEL_3A)
 @Preview(showBackground = true, device = Devices.PIXEL_3A, uiMode = UI_MODE_NIGHT_YES)
