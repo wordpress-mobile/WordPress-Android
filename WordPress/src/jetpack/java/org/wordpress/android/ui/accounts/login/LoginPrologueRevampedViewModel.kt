@@ -16,7 +16,7 @@ import kotlin.math.ln
 
 // This factor is used to convert the raw values emitted from device sensor to an appropriate scale for the consuming
 // composables.
-private const val ACCERLERATION_FACTOR = -0.1f
+private const val ACCELERATION_FACTOR = -0.1f
 // The maximum velocity (in either direction)
 private const val MAXIMUM_VELOCITY = 0.3f
 // The velocity decay factor (i.e. 1/4th velocity after 1 second)
@@ -66,7 +66,7 @@ class LoginPrologueRevampedViewModel @Inject constructor(
         }
         override fun onSensorChanged(event: SensorEvent?) {
             event?.let {
-                acceleration = it.values[1] * ACCERLERATION_FACTOR + DRIFT
+                acceleration = it.values[1] * ACCELERATION_FACTOR + DRIFT
                 postValue(position)
             }
         }
