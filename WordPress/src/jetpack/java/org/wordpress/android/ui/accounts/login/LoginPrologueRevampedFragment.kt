@@ -59,10 +59,10 @@ class LoginPrologueRevampedFragment : Fragment() {
                 CompositionLocalProvider(LocalPosition provides position.value) {
                     LaunchedEffect(Unit) {
                         var lastFrameNanos: Long? = null
-                        while(isActive) {
+                        while (isActive) {
                             val currentFrameNanos = awaitFrame()
                             // Calculate elapsed time (in seconds) since the last frame
-                            val elapsed = (currentFrameNanos - (lastFrameNanos?: currentFrameNanos)) / 1e9.toFloat()
+                            val elapsed = (currentFrameNanos - (lastFrameNanos ?: currentFrameNanos)) / 1e9.toFloat()
                             // Update viewModel for frame
                             viewModel.updateForFrame(elapsed)
                             // Update frame timestamp reference

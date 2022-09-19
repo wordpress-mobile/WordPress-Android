@@ -25,7 +25,7 @@ fun RepeatingColumn(position: Float, repeat: Int = 3, modifier: Modifier = Modif
                     }
                 }
             }
-    ) {measurables, constraints ->
+    ) { measurables, constraints ->
         val placeables = measurables.map {
             it.measure(constraints.copy(maxHeight = Constraints.Infinity))
         }
