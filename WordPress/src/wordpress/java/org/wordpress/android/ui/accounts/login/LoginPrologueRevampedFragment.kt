@@ -46,7 +46,8 @@ class LoginPrologueRevampedFragment : Fragment() {
         setContent {
             AppTheme {
                 LoginScreenRevamped(
-                        onLoginClicked = { loginPrologueListener.showEmailLoginScreen() }
+                        onWpComLoginClicked = loginPrologueListener::showEmailLoginScreen,
+                        onSiteAddressLoginClicked = loginPrologueListener::loginViaSiteAddress,
                 )
             }
         }
@@ -70,7 +71,10 @@ class LoginPrologueRevampedFragment : Fragment() {
 }
 
 @Composable
-fun LoginScreenRevamped(onLoginClicked: () -> Unit) {
+fun LoginScreenRevamped(
+    onWpComLoginClicked: () -> Unit,
+    onSiteAddressLoginClicked: () -> Unit,
+) {
     val brushStrokePainter = painterResource(id = drawable.brush_stroke)
     // Flip the background image for RTL locales
     val scaleX = if (LocalLayoutDirection.current == Rtl) -1f else 1f
@@ -94,11 +98,11 @@ fun LoginScreenRevamped(onLoginClicked: () -> Unit) {
             Tagline(text = stringResource(string.login_prologue_revamped_tagline))
             PrimaryButton(
                     text = stringResource(string.continue_with_wpcom),
-                    onClick = onLoginClicked,
+                    onClick = onWpComLoginClicked,
             )
             SecondaryButton(
                     text = stringResource(string.enter_your_site_address),
-                    onClick = { /*TODO*/ },
+                    onClick = onSiteAddressLoginClicked,
             )
         }
     }
@@ -109,6 +113,6 @@ fun LoginScreenRevamped(onLoginClicked: () -> Unit) {
 @Composable
 fun PreviewLoginScreenRevamped() {
     AppTheme {
-        LoginScreenRevamped(onLoginClicked = {})
+        LoginScreenRevamped(onWpComLoginClicked = {}, onSiteAddressLoginClicked = {})
     }
 }
