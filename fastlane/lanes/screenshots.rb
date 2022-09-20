@@ -75,7 +75,7 @@ platform :android do
         use_timestamp_suffix: false
       )
 
-      android_shutdown_emulator(serial: serial) # Clean up after ourselves
+      android_shutdown_emulator(serials: [serial]) # Clean up after ourselves
     end
   end
 
