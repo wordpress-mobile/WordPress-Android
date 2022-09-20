@@ -2942,8 +2942,6 @@
 
     <!-- Login Revamped -->
     <string name="login_prologue_revamped_tagline">Write, edit, and publish from anywhere.</string>
-    <string name="login_prologue_revamped_connect">Connect to your WordPress site</string>
-    <string name="login_prologue_revamped_create">Looking to create a new site?</string>
     <string name="login_prologue_revamped_content_description_wordpress_icon">WordPress icon</string>
 
     <!-- Screen titles -->

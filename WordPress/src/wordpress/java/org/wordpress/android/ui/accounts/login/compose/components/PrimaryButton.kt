@@ -28,7 +28,10 @@ fun PrimaryButton(
     Button(
             onClick = onClick,
             enabled = enabled,
-            elevation = ButtonDefaults.elevation(0.dp),
+            elevation = ButtonDefaults.elevation(
+                    defaultElevation = 0.dp,
+                    pressedElevation = 0.dp,
+            ),
             shape = RoundedCornerShape(5.dp),
             colors = ButtonDefaults.buttonColors(
                     contentColor = Color.White,
