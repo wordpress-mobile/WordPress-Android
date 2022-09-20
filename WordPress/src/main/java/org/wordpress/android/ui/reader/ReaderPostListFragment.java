@@ -1306,11 +1306,11 @@ public class ReaderPostListFragment extends ViewPagerFragment
                 false);
         mDispatcher.dispatch(ReaderActionBuilder.newReaderSearchSitesAction(payload));
     }
-    
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(ConnectionChangeReceiver.ConnectionChangeEvent event) {
-        if(event.isConnected()){
-            if(mCurrentSearchQuery != null){
+        if (event.isConnected()) {
+            if (mCurrentSearchQuery != null) {
                 submitSearchQuery(mCurrentSearchQuery);
             }
         }
@@ -1325,7 +1325,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
         hideSearchMessage();
         hideSearchSuggestions();
 
-        if(!NetworkUtils.isNetworkAvailable(getContext())){
+        if (!NetworkUtils.isNetworkAvailable(getContext())) {
             resetPostAdapter(mPostListType);
             showEmptyView();
         }
