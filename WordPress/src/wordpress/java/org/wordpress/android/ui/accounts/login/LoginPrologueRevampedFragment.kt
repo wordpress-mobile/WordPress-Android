@@ -93,11 +93,11 @@ fun LoginScreenRevamped(onLoginClicked: () -> Unit) {
         ) {
             Tagline(text = stringResource(string.login_prologue_revamped_tagline))
             PrimaryButton(
-                    text = stringResource(string.login_prologue_revamped_connect),
+                    text = stringResource(string.continue_with_wpcom),
                     onClick = onLoginClicked,
             )
             SecondaryButton(
-                    text = stringResource(string.login_prologue_revamped_create),
+                    text = stringResource(string.enter_your_site_address),
                     onClick = { /*TODO*/ },
             )
         }
