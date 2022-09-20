@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-09-13 10:54:08+0000
+Translation-Revision-Date: 2022-09-15 22:17:48+0000
 Plural-Forms: nplurals=2; plural=n > 1;
-Generator: GlotPress/4.0.0-alpha.1
+Generator: GlotPress/4.0.0-alpha.2
 Language: id
 -->
 <resources>
+    <string name="app_rating_title">Puas dengan %s?</string>
+    <string name="connection_service_label">Bagikan pos ke %s</string>
+    <string name="connections_label">Koneksi Jetpack Social</string>
     <string name="stats_widget_log_in_to_add_message">Silakan login ke aplikasi Jetpack untuk menambahkan widget.</string>
+    <string name="stats_view_publicize">Koneksi Jetpack Social</string>
     <string name="login_magic_links_email_sent">Kami baru saja mengirimkan tautan ajaib ke </string>
     <string name="login_magic_links_sent_label_short">Periksa email Anda di perangkat ini!</string>
     <string name="or_use_password">Gunakan kata sandi untuk login</string>
