@@ -890,7 +890,7 @@ class AppInitializer @Inject constructor(
         private const val DEFAULT_TIMEOUT = 2 * 60 // 2 minutes
 
         @SuppressLint("StaticFieldLeak") var context: Context? = null
-            private set;
+            private set
 
         // This is for UI testing. AppInitializer is being created more than once for only UI tests. initialized
         // prevents some static functions from being initialized twice and exceptions.
