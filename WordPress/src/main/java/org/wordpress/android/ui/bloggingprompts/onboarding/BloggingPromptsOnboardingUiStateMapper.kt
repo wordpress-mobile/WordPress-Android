@@ -27,7 +27,9 @@ class BloggingPromptsOnboardingUiStateMapper @Inject constructor() {
         )
 
         val trailingLabel = UiStringPluralRes(
-                R.plurals.my_site_blogging_prompt_card_number_of_answers,
+                0,
+                R.string.my_site_blogging_prompt_card_number_of_answers_one,
+                R.string.my_site_blogging_prompt_card_number_of_answers_other,
                 dummyRespondents.size
         )
 
