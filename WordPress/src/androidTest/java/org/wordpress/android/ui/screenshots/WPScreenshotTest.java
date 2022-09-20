@@ -71,6 +71,8 @@ public class WPScreenshotTest extends BaseTest {
             // Enable Demo Mode
             mDemoModeEnabler.enable();
 
+            setLightModeAndWait();
+
             wpLogin();
 
             // Even though the screenshot for edit post is captured without error,
@@ -131,8 +133,6 @@ public class WPScreenshotTest extends BaseTest {
             Espresso.closeSoftKeyboard();
         }
 
-        setNightModeAndWait(false);
-
         if (openBlockList) {
             clickOnViewWithTag("add-block-button");
             idleFor(2000);
@@ -173,8 +173,6 @@ public class WPScreenshotTest extends BaseTest {
             e.printStackTrace();
         }
 
-        setNightModeAndWait(true);
-
         // Wait for the editor to load all images
         idleFor(7000);
 
@@ -195,8 +193,6 @@ public class WPScreenshotTest extends BaseTest {
             clickOn(R.id.button_negative);
         }
 
-        setNightModeAndWait(true);
-
         takeScreenshot("3-build-an-audience");
 
         // Exit the Stats Activity
@@ -212,8 +208,6 @@ public class WPScreenshotTest extends BaseTest {
             clickOn(R.id.tooltip_message);
         }
 
-        setNightModeAndWait(true);
-
         takeScreenshot("4-keep-tabs-on-your-site");
     }
 
@@ -226,8 +220,6 @@ public class WPScreenshotTest extends BaseTest {
 
         // Wait for the images to load
         idleFor(6000);
-
-        setNightModeAndWait(false);
 
         takeScreenshot("5-reply-in-real-time");
 
@@ -243,7 +235,6 @@ public class WPScreenshotTest extends BaseTest {
         waitForElementToBeDisplayedWithoutFailure(R.id.media_browser_container);
 
         idleFor(2000);
-        setNightModeAndWait(true);
 
         takeScreenshot("6-upload-on-the-go");
 
@@ -277,8 +268,8 @@ public class WPScreenshotTest extends BaseTest {
         return editPostActivity.getAztecImageLoader().getNumberOfImagesBeingDownloaded() == 0;
     }
 
-    private void setNightModeAndWait(boolean isNightMode) {
-        setNightMode(isNightMode);
+    private void setLightModeAndWait() {
+        setNightMode(false);
         idleFor(5000);
     }
 }
