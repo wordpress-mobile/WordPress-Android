@@ -43,7 +43,9 @@ class EditPostPublishSettingsViewModel @Inject constructor(
 
         postRepository?.let {
             val site = siteStore.getSiteByLocalId(it.localSiteId) ?: return@let
-            fetchAuthors(site)
+            if (site.hasCapabilityListUsers) {
+                fetchAuthors(site)
+            }
         }
     }
 
