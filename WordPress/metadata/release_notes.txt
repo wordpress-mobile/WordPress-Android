@@ -1,3 +1,2 @@
-* [*] Login: Fix an issue preventing some users to log-in in with email addresses containing a single quote [https://github.com/wordpress-mobile/WordPress-Android/pull/15526]
-* [*] Fix a possible crash with themes preloading at the start of Site Creation [https://github.com/wordpress-mobile/WordPress-Android/pull/17022]
-* [*] Show Jetpack banner in search results [https://github.com/wordpress-mobile/WordPress-Android/pull/17028]
+* [**] Stats: Always use Western Arabic numerals in Arabic languages (previously there was a mix of Eastern and Western Arabic numerals) [https://github.com/wordpress-mobile/WordPress-Android/pull/17160]
+* [**] Added author button to the post settings and the author of the post can be changed with it. [https://github.com/wordpress-mobile/WordPress-Android/pull/17120]

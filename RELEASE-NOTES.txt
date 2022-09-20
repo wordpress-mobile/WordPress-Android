@@ -1,8 +1,21 @@
 *** PLEASE FOLLOW THIS FORMAT: [<priority indicator, more stars = higher priority>] <description> [<PR URL>]
 
-20.7
+20.9
 -----
 
+
+20.8
+-----
+* [**] Stats: Always use Western Arabic numerals in Arabic languages (previously there was a mix of Eastern and Western Arabic numerals) [https://github.com/wordpress-mobile/WordPress-Android/pull/17160]
+* [*] [Jetpack-only] Adds more widgets, At a glance, All-time and Today widgets with dynamic previews [https://github.com/wordpress-mobile/WordPress-Android/pull/17140]
+* [**] Added author button to the post settings and the author of the post can be changed with it. [https://github.com/wordpress-mobile/WordPress-Android/pull/17120]
+
+20.7
+-----
+* [*] Fixes Media control toggles difficult to see [https://github.com/wordpress-mobile/WordPress-Android/pull/17068]
+* [*] Fix night mode text colors on the screens shown after scanning a Login Code [https://github.com/wordpress-mobile/WordPress-Android/pull/17086]
+* [***] Jetpack App: Widgets are now on Jetpack. Long press on app icon to find and add widgets to home screen. [https://github.com/wordpress-mobile/WordPress-Android/pull/17100]
+* [*] [Jetpack-only] Block Editor: Makes some small changes to the editor's accent colours for consistency. [https://github.com/wordpress-mobile/WordPress-Android/pull/16968]
 
 20.6
 -----

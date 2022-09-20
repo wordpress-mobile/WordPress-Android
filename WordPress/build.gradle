@@ -112,6 +112,7 @@ android {
         buildConfigField "boolean", "READER_COMMENTS_MODERATION", "false"
         buildConfigField "boolean", "SITE_INTENT_QUESTION", "true"
         buildConfigField "boolean", "SITE_NAME", "false"
+        buildConfigField "boolean", "LANDING_SCREEN_REVAMP", "false"
         buildConfigField "boolean", "LAND_ON_THE_EDITOR", "false"
         buildConfigField "boolean", "BLOGGING_PROMPTS", "false"
         buildConfigField "boolean", "QUICK_START_EXISTING_USERS_V2", "false"
@@ -119,6 +120,8 @@ android {
         buildConfigField "boolean", "BETA_SITE_DESIGNS", "false"
         buildConfigField "boolean", "JETPACK_POWERED", "true"
         buildConfigField "boolean", "JETPACK_POWERED_BOTTOM_SHEET", "false"
+        buildConfigField "boolean", "JETPACK_SHARED_LOGIN", "false"
+        buildConfigField "boolean", "JETPACK_LOCAL_USER_FLAGS", "false"
 
         // Override these constants in jetpack product flavor to enable/ disable features
         buildConfigField "boolean", "ENABLE_SITE_CREATION", "true"
@@ -166,7 +169,7 @@ android {
             applicationId "com.jetpack.android"
             buildConfigField "boolean", "IS_JETPACK_APP", "true"
             buildConfigField "boolean", "ENABLE_SITE_CREATION", "true"
-            buildConfigField "boolean", "ENABLE_ADD_SELF_HOSTED_SITE", "false"
+            buildConfigField "boolean", "ENABLE_ADD_SELF_HOSTED_SITE", "true"
             buildConfigField "boolean", "ENABLE_SIGNUP", "true"
             buildConfigField "boolean", "ENABLE_READER", "true"
             buildConfigField "boolean", "ENABLE_CREATE_FAB", "true"

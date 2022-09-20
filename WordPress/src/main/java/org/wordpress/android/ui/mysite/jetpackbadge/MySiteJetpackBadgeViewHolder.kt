@@ -10,6 +10,8 @@ class MySiteJetpackBadgeViewHolder(
     parent: ViewGroup,
 ) : MySiteCardAndItemViewHolder<JetpackBadgeBinding>(parent.viewBinding(JetpackBadgeBinding::inflate)) {
     fun bind(item: JetpackBadge) = with(binding) {
-        jetpackPoweredBadge.setOnClickListener { item.onClick.click() }
+        item.onClick?.run {
+            jetpackPoweredBadge.setOnClickListener { click() }
+        }
     }
 }

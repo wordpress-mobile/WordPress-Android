@@ -429,7 +429,7 @@ platform :android do
   # @param [Array<Hash>] locales_list The list of Hash defining the locales to compare that list to.
   #        Typically one of the `WP_APP_LOCALES` or `JP_APP_LOCALES` constants
   def check_declared_locales_consistency(app_flavor:, locales_list:)
-    output = gradle(task: 'printResourceConfigurations')
+    output = gradle(task: 'printResourceConfigurations', flags: '--quiet')
     resource_configs = output.match(/^#{app_flavor}: \[(.*)\]$/)&.captures&.first&.gsub(' ','')&.split(',')&.sort
     if resource_configs.nil? || resource_configs.empty?
       UI.message("No `resourceConfigurations` field set in `build.gradle` for the `#{app_flavor}` flavor. Nothing to check.")

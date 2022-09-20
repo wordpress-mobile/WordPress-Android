@@ -1,4 +1,0 @@
-20.5 :
-- Nous avons ajouté une étiquette dans les paramètres de l’application pour indiquer la langue qui s’affiche dans l’interface de l’application.
-- Avec la prise en charge d’images en haute résolution, nous avons agrandi les captures d’écran dans le sélecteur de thème du site.
-- Dans le processus de création du site, le texte du bouton « Ignorer » est passé de bleu à vert, comme dans Jetpack.

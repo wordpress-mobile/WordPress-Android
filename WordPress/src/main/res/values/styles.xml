@@ -206,6 +206,10 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="WordPress.Media.Preview" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="android:statusBarColor">@color/black</item>
+    </style>
+
     <style name="WordPress.Stories.Immersive" parent="WordPress.NoActionBar">
         <item name="android:navigationBarColor">@android:color/black</item>
         <item name="android:immersive">true</item>
@@ -370,6 +374,7 @@
         <item name="tabTextColor">?attr/wpColorOnSurfaceMedium</item>
         <item name="tabSelectedTextColor">?attr/colorOnSurface</item>
         <item name="tabIndicatorColor">?attr/colorPrimary</item>
+        <item name="tabBackground">@drawable/tab_indicator_color</item>
         <item name="android:layout_marginBottom">@dimen/bottom_tabs_divider_size</item>
     </style>
 
@@ -897,6 +902,18 @@
     </style>
 
     <!--Post Settings Styles-->
+    <style name="PostSettingsTheme" parent="Base.Wordpress">
+        <item name="colorPrimary">@color/colorPrimaryEditor</item>
+        <item name="colorSecondary">@color/colorPrimaryEditor</item>
+        <item name="colorAccent">@color/colorPrimaryEditor</item>
+        <item name="colorControlActivated">@color/colorPrimaryEditor</item>
+    </style>
+
+    <style name="PostSettingsCalendar" parent="ThemeOverlay.Material3.MaterialCalendar">
+        <item name="colorAccent">@color/colorPrimaryEditor</item>
+        <item name="colorControlActivated">@color/colorPrimaryEditor</item>
+    </style>
+
     <style name="PostSettingsCardViewInnerLayout">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -906,7 +923,7 @@
     <style name="PostSettingsSectionHeader">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">?attr/colorPrimary</item>
+        <item name="android:textColor">@color/colorPrimaryEditor</item>
         <item name="android:textAppearance">?attr/textAppearanceSubtitle2</item>
         <item name="android:layout_marginBottom">@dimen/margin_small</item>
         <item name="android:layout_marginTop">@dimen/margin_extra_large</item>

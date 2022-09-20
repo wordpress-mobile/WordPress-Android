@@ -274,7 +274,10 @@ public class AppPrefs {
         wp_pref_initial_screen,
 
         // Indicates if this is the first time the user sees the blogging prompts onboarding dialog
-        IS_FIRST_TIME_BLOGGING_PROMPTS_ONBOARDING
+        IS_FIRST_TIME_BLOGGING_PROMPTS_ONBOARDING,
+
+        // Indicates if this is the first time we try to login to Jetpack automatically
+        IS_FIRST_TRY_LOGIN_JETPACK
     }
 
     private static SharedPreferences prefs() {
@@ -1405,5 +1408,13 @@ public class AppPrefs {
 
     public static void saveFirstBloggingPromptsOnboarding(final boolean isFirstTime) {
         setBoolean(UndeletablePrefKey.IS_FIRST_TIME_BLOGGING_PROMPTS_ONBOARDING, isFirstTime);
+    }
+
+    public static Boolean getIsFirstTrySharedLoginJetpack() {
+        return getBoolean(UndeletablePrefKey.IS_FIRST_TRY_LOGIN_JETPACK, true);
+    }
+
+    public static void saveIsFirstTrySharedLoginJetpack(final boolean isFirstTry) {
+        setBoolean(UndeletablePrefKey.IS_FIRST_TRY_LOGIN_JETPACK, isFirstTry);
     }
 }

@@ -155,17 +155,12 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
             switch (getLoginMode()) {
                 case FULL:
                     mUnifiedLoginTracker.setSource(Source.DEFAULT);
-                    mIsSignupFromLoginEnabled = true;
-                    loginFromPrologue();
-                    break;
-                case JETPACK_LOGIN_ONLY:
-                    mUnifiedLoginTracker.setSource(Source.DEFAULT);
                     mIsSignupFromLoginEnabled = mBuildConfigWrapper.isSignupEnabled();
                     loginFromPrologue();
                     break;
                 case WPCOM_LOGIN_ONLY:
                     mUnifiedLoginTracker.setSource(Source.ADD_WORDPRESS_COM_ACCOUNT);
-                    mIsSignupFromLoginEnabled = true;
+                    mIsSignupFromLoginEnabled = mBuildConfigWrapper.isSignupEnabled();
                     checkSmartLockPasswordAndStartLogin();
                     break;
                 case SELFHOSTED_ONLY:
@@ -174,7 +169,7 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
                     break;
                 case JETPACK_STATS:
                     mUnifiedLoginTracker.setSource(Source.JETPACK);
-                    mIsSignupFromLoginEnabled = true;
+                    mIsSignupFromLoginEnabled = mBuildConfigWrapper.isSignupEnabled();
                     checkSmartLockPasswordAndStartLogin();
                     break;
                 case WPCOM_LOGIN_DEEPLINK:
@@ -306,24 +301,6 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
 
     private void loggedInAndFinish(ArrayList<Integer> oldSitesIds, boolean doLoginUpdate) {
         switch (getLoginMode()) {
-            case JETPACK_LOGIN_ONLY:
-                if (!mSiteStore.hasSite() && !mBuildConfigWrapper.isSiteCreationEnabled()) {
-                    handleNoJetpackSites();
-                } else {
-                    if (!mSiteStore.hasSite()
-                        && AppPrefs.shouldShowPostSignupInterstitial()
-                        && !doLoginUpdate
-                        && mBuildConfigWrapper.isSiteCreationEnabled()
-                        && mBuildConfigWrapper.isSignupEnabled()
-                    ) {
-                        ActivityLauncher.showPostSignupInterstitial(this);
-                    } else {
-                        ActivityLauncher.showMainActivityAndLoginEpilogue(this, oldSitesIds, doLoginUpdate);
-                    }
-                    setResult(Activity.RESULT_OK);
-                    finish();
-                }
-                break;
             case FULL:
             case WPCOM_LOGIN_ONLY:
                 if (!mSiteStore.hasSite() && AppPrefs.shouldShowPostSignupInterstitial() && !doLoginUpdate) {

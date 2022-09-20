@@ -1,11 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-08-10 11:08:39+0000
+Translation-Revision-Date: 2022-09-08 13:40:24+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.1
+Generator: GlotPress/4.0.0-alpha.2
 Language: es
 -->
 <resources>
+    <string name="app_rating_title">¿Estás disfrutando de %s?</string>
+    <string name="connection_service_label">Comparte una entrada en %s</string>
+    <string name="connections_label">Conexiones de Jetpack Social</string>
+    <string name="stats_widget_log_in_to_add_message">Por favor, accede a la aplicación Jetpack para añadir un widget.</string>
+    <string name="stats_view_publicize">Conexiones de Jetpack Social</string>
+    <string name="login_magic_links_email_sent">Acabamos de enviar un enlace mágico a</string>
+    <string name="login_magic_links_sent_label_short">¡Revisa tu correo electrónico en este dispositivo!</string>
+    <string name="or_use_password">Usar una contraseña para acceder</string>
+    <string name="wp_jetpack_powered_notifications_powered_by_jetpack_caption">Mantente informado con actualizaciones en tiempo real para nuevos comentarios, tráfico del sitio, informes de seguridad y más.</string>
+    <string name="wp_jetpack_powered_notifications_powered_by_jetpack">Los avisos funcionan con Jetpack</string>
+    <string name="wp_jetpack_powered_stats_powered_by_jetpack_caption">Observa cómo crece tu tráfico y obtén información sobre tu audiencia con estadísticas e información rediseñadas, ahora disponibles en la nueva aplicación Jetpack.</string>
+    <string name="wp_jetpack_powered_stats_powered_by_jetpack">Las estadísticas funcionan con Jetpack</string>
+    <string name="wp_jetpack_powered_reader_powered_by_jetpack_caption">Encuentra, sigue y dale «Me gusta» a todos tus sitios y publicaciones favoritos con Reader, ahora disponible en la nueva aplicación Jetpack.</string>
+    <string name="wp_jetpack_powered_reader_powered_by_jetpack">Reader funciona con Jetpack</string>
     <string name="wp_jetpack_powered_features">La nueva app de Jetpack tiene estadísticas, lector, avisos, y más para mejorar tu WordPress.</string>
     <string name="wp_jetpack_powered_better_with_jetpack">WordPress es mejor con Jetpack</string>
     <string name="gutenberg_native_upgrade_your_plan_to_use_video_covers">Actualiza tu plan para usar fondos de vídeo </string>
@@ -50,7 +64,6 @@ Language: es
     <string name="stats_insights_comments_guide_card">💡Toca \"VER MÁS\" para ver los principales comentaristas.</string>
     <string name="stats_insights_latest_post_empty">¡Vuelve a comprobarlo cuando hayas publicado tu primera entrada!</string>
     <string name="stats_insights_views_and_visitors_visitors_empty_state">Comprueba nuestros consejos destacados para aumentar tus visitas y tu tráfico %1$s</string>
-    <string name="stats_view_publicize">Conexiones de redes sociales</string>
     <string name="stats_action_card_schedule_post_message">✍️ Programa tus borradores para publicar en el mejor momento y llegar a tu público.</string>
     <string name="stats_action_card_blogging_reminders_message">💡Publicar con constancia es una buena forma de crear tu público. Añade un recordatorio para mantenerte al día.</string>
     <string name="stats_action_card_grow_audience_message">💡Bloguea más rápidamente con nuestro curso &lt;i&gt;Introducción a los blogs&lt;/i&gt; ofrecido por expertos.</string>
@@ -1228,7 +1241,7 @@ Language: es
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">Toca dos veces para ir a los ajustes del color</string>
     <string name="reader_empty_followed_blogs_description">Cuando sigas sitios, verás aquí su contenido</string>
     <string name="feature_announcement_find_out_mode">Saber más</string>
-    <string name="feature_announcement_dialog_label">Qué hay de nuevo en WordPress</string>
+    <string name="feature_announcement_dialog_label">Qué hay de nuevo en %s</string>
     <string name="insert_label_with_count">Insertar %d</string>
     <string name="crop">recortar</string>
     <string name="error_failed_to_load_into_file">Fallo al cargar en el archivo, por favor, inténtalo de nuevo.</string>
@@ -1327,7 +1340,7 @@ Language: es
     <string name="post_list_tab_trashed_posts">En la papelera</string>
     <string name="post_list_tab_scheduled_posts">Programada</string>
     <string name="post_list_tab_published_posts">Publicada</string>
-    <string name="sharing_facebook_account_must_have_pages">La conexión con Facebook no puede encontrar ninguna página. «Difundir» no puede conectar con perfiles de Facebook, solo con páginas publicadas.</string>
+    <string name="sharing_facebook_account_must_have_pages">La conexión con Facebook no puede encontrar ninguna página. Jetpack Social no puede conectar con perfiles de Facebook, solo con páginas publicadas.</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">No conectado</string>
     <string name="notifications_tab_title_likes">Me gusta</string>
     <string name="notifications_tab_title_follows">Seguimientos</string>
@@ -1554,7 +1567,7 @@ Language: es
     <string name="share_desc">Compartir</string>
     <string name="navigate_back_desc">Volver</string>
     <string name="navigate_forward_desc">Avanzar</string>
-    <string name="calendar_scheduled_post_description">«%1$s» programado para publicar el «%2$s» en tu aplicación de WordPress\n%3$s</string>
+    <string name="calendar_scheduled_post_description">«%1$s» programado para publicar el «%2$s» en tu aplicación de %3$s\n%4$s</string>
     <string name="calendar_scheduled_post_title">Entrada programada de WordPress: «%s»</string>
     <string name="notification_post_will_be_published_in_ten_minutes">«%s» se publicará en 10 minutos</string>
     <string name="notification_post_will_be_published_in_one_hour">«%s» se publicará en 1 hora</string>
@@ -1726,7 +1739,6 @@ Language: es
     <string name="app_rating_rate_later">Más tarde</string>
     <string name="app_rating_rate_now">Valorar ahora</string>
     <string name="app_rating_message">¡Qué gusto verte de nuevo! Si estás trabajando con la aplicación nos encantaría que nos puntuases en la Google Play Store.</string>
-    <string name="app_rating_title">¿Disfrutas de WordPress?</string>
     <string name="editor_post_converted_back_to_draft">Entrada devuelta a borrador</string>
     <string name="stats_insights_posting_activity">Actividad de publicación</string>
     <string name="stats_site_not_loaded_yet">El sitio no se ha cargado todavía</string>
@@ -2456,6 +2468,7 @@ Language: es
     <string name="requesting_otp">Solicitando un código de verificación por SMS.</string>
     <string name="login_text_otp">Envíame un mensaje con un código en su lugar</string>
     <string name="enter_verification_code">¡Casi lo tenemos! Por favor, introduce un código de verificación desde tu aplicación Authenticator.</string>
+    <string name="open_mail">Abrir correo electrónico</string>
     <string name="next">Siguiente</string>
     <string name="enter_email_wordpress_com">Accede a WordPress.com usando una dirección de correo electrónico para gestionar todos tus sitios WordPress.</string>
     <string name="image_optimization_promo_desc">La optimización de imagen reduce las imágenes para que suban más rápido.\n\nPuedes cambiar esto en cualquier momento en los ajustes del sitio.</string>
@@ -2553,10 +2566,8 @@ Language: es
     <string name="share_btn_disconnect">Desconectar</string>
     <string name="share_btn_connect">Conectar</string>
     <string name="connection_service_description">Conéctate para compartir automáticamente las entradas de tu blog en %s</string>
-    <string name="connection_service_label">Difundir en %s</string>
     <string name="connected_accounts_label">Cuentas conectadas</string>
     <string name="connections_description">Conecta con tus servicios de medios sociales favoritos para compartir automáticamente las nuevas entradas con tus amigos.</string>
-    <string name="connections_label">Conexiones</string>
     <string name="sharing">Compartir</string>
     <string name="tabbar_accessibility_label_notifications">Avisos. Gestiona tus avisos.</string>
     <string name="tabbar_accessibility_label_reader">Lector. Sigue contenido de otros sitios.</string>

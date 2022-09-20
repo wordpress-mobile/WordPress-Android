@@ -1,11 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-08-14 07:12:04+0000
+Translation-Revision-Date: 2022-09-14 15:55:52+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
-Generator: GlotPress/4.0.0-alpha.1
+Generator: GlotPress/4.0.0-alpha.2
 Language: ro
 -->
 <resources>
+    <string name="app_rating_title">Îți place %s?</string>
+    <string name="connection_service_label">Partajează articolul pe %s</string>
+    <string name="connections_label">Conexiuni la Jetpack Social</string>
+    <string name="stats_widget_log_in_to_add_message">Te rog autentifică-te în aplicația Jetpack pentru a adăuga o piesă.</string>
+    <string name="stats_view_publicize">Conexiuni la Jetpack Social</string>
+    <string name="login_magic_links_sent_label_short">Verifică-ți emailul primit pe acest dispozitiv!</string>
+    <string name="login_magic_links_email_sent">Tocmai am trimis o legătură magică la</string>
+    <string name="wp_jetpack_powered_reader_powered_by_jetpack">Cititor propulsat de Jetpack</string>
+    <string name="wp_jetpack_powered_stats_powered_by_jetpack">Statistici propulsate de Jetpack</string>
+    <string name="wp_jetpack_powered_notifications_powered_by_jetpack">Notificări propulsate de Jetpack</string>
+    <string name="or_use_password">Folosește parola pentru autentificare</string>
+    <string name="wp_jetpack_powered_reader_powered_by_jetpack_caption">Găsește, urmărește și apreciază toate site-urile și articolele tale preferate în Cititor, disponibil acum în noua aplicație Jetpack.</string>
+    <string name="wp_jetpack_powered_stats_powered_by_jetpack_caption">Urmărește creșterea traficului și află despre publicul tău din Statistici și Perspective - reproiectate acum și disponibile în noua aplicație Jetpack.</string>
+    <string name="wp_jetpack_powered_notifications_powered_by_jetpack_caption">Rămâi informat cu actualizări în timp real pentru comentarii noi, trafic pe site, rapoarte de securitate și multe altele.</string>
     <string name="wp_jetpack_powered_features">Noua aplicație Jetpack are Statistici, Cititor, Notificări și altele funcționalități care îmbunătățesc WordPress.</string>
     <string name="wp_jetpack_powered_better_with_jetpack">WordPress este mai bun cu Jetpack</string>
     <string name="gutenberg_native_upgrade_your_plan_to_use_video_covers">Pentru a folosi coperte video, actualizează-ți planul</string>
@@ -50,7 +64,6 @@ Language: ro
     <string name="stats_insights_comments_guide_card">💡 Atinge „Vezi mai multe” pentru a vedea comentatorii cei mai activi.</string>
     <string name="stats_insights_latest_post_empty">Mergi înapoi după ce ai publicat primul articol!</string>
     <string name="stats_insights_views_and_visitors_visitors_empty_state">Vezi sfaturile noastre importante pentru a mări numărul de vizualizări și a-ți crește traficul %1$s</string>
-    <string name="stats_view_publicize">Conexiuni la media socială</string>
     <string name="stats_action_card_schedule_post_message">✍️ Programează-ți ciornele ca să fie publicate la orele dorite, astfel atragi un public mai numeros.</string>
     <string name="stats_action_card_blogging_reminders_message">💡 Publicarea constantă este o modalitate excelentă de a-ți construi o audiență. Adaugă reamintiri ca să rămâi consecvent.</string>
     <string name="stats_action_card_grow_audience_message">💡 Îți dezvolți mai repede blogul cu ajutorul cursului &lt;i&gt;Introducere în blogging&lt;/i&gt; condus de experții noștri.</string>
@@ -1235,9 +1248,9 @@ Language: ro
     <string name="photo_picker_use_media">Folosește acest element media</string>
     <string name="photo_picker_use_video">Folosește acest video</string>
     <string name="photo_picker_photo_or_video_title">Alege un element media</string>
-    <string name="feature_announcement_dialog_label">Care sunt noutățile în WordPress</string>
     <string name="site_picker_ask_site_select">Nu am putut selecta site-ul. Te rog reîncearcă.</string>
     <string name="photo_picker_video_title">Alege videoul</string>
+    <string name="feature_announcement_dialog_label">Care sunt noutățile în %s</string>
     <string name="sitepicker_continue_flow">Continuă</string>
     <string name="reader_reblog_error">Republicarea a eșuat</string>
     <string name="whats_new_in_version_title">Ce este nou</string>
@@ -1327,8 +1340,8 @@ Language: ro
     <string name="post_list_tab_trashed_posts">Aruncate la gunoi</string>
     <string name="post_list_tab_scheduled_posts">Programate</string>
     <string name="post_list_tab_published_posts">Publicate</string>
-    <string name="sharing_facebook_account_must_have_pages">Conexiunea Facebook nu găsește nicio pagină. Publicitatea nu se poate conecta la profilurile Facebook, ci numai la pagini Facebook publicate.</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">Neconectat</string>
+    <string name="sharing_facebook_account_must_have_pages">Conexiunea la Facebook nu găsește nicio pagină. Jetpack Social nu se poate conecta la profilurile Facebook, ci numai la paginile Facebook publicate.</string>
     <string name="notifications_tab_title_likes">Aprecieri</string>
     <string name="notifications_tab_title_follows">Urmăriri</string>
     <string name="notifications_tab_title_comments">Comentarii</string>
@@ -1556,7 +1569,7 @@ Language: ro
     <string name="navigate_forward_desc">Du-te înainte</string>
     <string name="calendar_scheduled_post_title">Articol programat în WordPress: „%s”</string>
     <string name="notification_post_will_be_published_in_ten_minutes">„%s” va fi publicat în 10 minute</string>
-    <string name="calendar_scheduled_post_description">„%1$s” este programat pentru publicare pe „%2$s” în aplicația ta WordPress \n %3$s</string>
+    <string name="calendar_scheduled_post_description">„%1$s” este programat pentru publicare pe „%2$s” în aplicația ta %3$s \n %4$s</string>
     <string name="notification_post_will_be_published_in_one_hour">„%s” va fi publicat după o oră</string>
     <string name="notification_post_has_been_published">„%s” a fost publicat</string>
     <string name="notification_scheduled_post_ten_minute_reminder">Articol programat: reamintire în 10 minute</string>
@@ -1726,7 +1739,6 @@ Language: ro
     <string name="app_rating_rate_later">Mai târziu</string>
     <string name="app_rating_rate_now">Evaluează acum</string>
     <string name="app_rating_message">Ne bucurăm să te revedem! Dacă apreciezi aplicația, ne-ar plăcea s-o evaluezi în Magazinul Google Play.</string>
-    <string name="app_rating_title">Îți place WordPress?</string>
     <string name="editor_post_converted_back_to_draft">Articolul a fost convertit înapoi la ciornă</string>
     <string name="stats_insights_posting_activity">Activitate de publicare</string>
     <string name="stats_more_posts">Mai multe articole</string>
@@ -1866,8 +1878,8 @@ Language: ro
     <string name="history_preview_visual">Previzualizare ca vizual</string>
     <string name="history_preview_html">Previzualizare ca HTML</string>
     <string name="history_detail_title">Revizie</string>
-    <string name="history_detail_button_previous">Anterioare</string>
     <string name="history_detail_button_next">Următoare</string>
+    <string name="history_detail_button_previous">Anterior</string>
     <string name="media_space_used">%1$s folosiți</string>
     <string name="history_loaded_revision">Revizie încărcată</string>
     <string name="history_loading_revision">Încărcare revizie</string>
@@ -2456,6 +2468,7 @@ Language: ro
     <string name="requesting_otp">Cer un cod de verificare prin SMS.</string>
     <string name="login_text_otp">În schimb, trimite-mi un mesaj text cu un cod</string>
     <string name="enter_verification_code">Aproape gata! Te rog codul de verificare din aplicația ta Authenticator.</string>
+    <string name="open_mail">Deschide corespondența</string>
     <string name="next">Următor</string>
     <string name="enter_email_wordpress_com">Autentifică-te în WordPress.com folosind o adresă de email pentru a-ți administra toate site-urile WordPress.</string>
     <string name="image_optimization_promo_desc">Optimizarea imaginilor micșorează imaginile pentru a le încărca mai rapid.\n\nPoți modifica asta oricând în setările site-ului.</string>
@@ -2553,10 +2566,8 @@ Language: ro
     <string name="share_btn_disconnect">Deconectează</string>
     <string name="share_btn_connect">Conectează</string>
     <string name="connection_service_description">Conectează-te pentru a partaja automat articolele blogului tău pe %s.</string>
-    <string name="connection_service_label">Publică pe %s</string>
     <string name="connected_accounts_label">Conturi conectate</string>
     <string name="connections_description">Conectează-ți serviciile media socială preferate pentru a partaja automat articole noi cu prietenii.</string>
-    <string name="connections_label">Conexiuni</string>
     <string name="sharing">Partajare</string>
     <string name="tabbar_accessibility_label_notifications">Notificări. Administrează-ți notificările.</string>
     <string name="tabbar_accessibility_label_reader">Cititor. Urmărește conținutul de pe alte site-uri.</string>

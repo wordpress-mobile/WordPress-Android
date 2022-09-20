@@ -128,10 +128,12 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
         }
 
         if (jetpackBrandingUtils.shouldShowJetpackBranding()) {
-            jetpackBadge.root.isVisible = true
-            jetpackBadge.footerJetpackBadge.jetpackPoweredBadge.setOnClickListener {
-                jetpackBrandingUtils.trackBadgeTapped(ME)
-                viewModel.showJetpackPoweredBottomSheet()
+            jetpackBadge.isVisible = true
+            if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
+                jetpackBadge.setOnClickListener {
+                    jetpackBrandingUtils.trackBadgeTapped(ME)
+                    viewModel.showJetpackPoweredBottomSheet()
+                }
             }
         }
 
@@ -242,8 +244,7 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
     }
 
     private fun MeFragmentBinding.initRecommendUiState() {
-        // Limiting the feature to WordPress only in this v1
-        if (recommendTheAppFeatureConfig.isEnabled() && !BuildConfig.IS_JETPACK_APP) {
+        if (recommendTheAppFeatureConfig.isEnabled()) {
             setRecommendLoadingState(false)
             recommendTheAppContainer.visibility = View.VISIBLE
             rowRecommendTheApp.setOnClickListener {

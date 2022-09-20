@@ -7,7 +7,7 @@
                 "matches": "(.*)"
             },
             "authors_only": {
-                "equalTo": "1"
+                "equalTo": "true"
             },
             "number": {
                 "equalTo": "100"

@@ -249,12 +249,14 @@ public class AppSettingsFragment extends PreferenceFragment
     private void addJetpackBadgeAsFooterIfEnabled(LayoutInflater inflater, ListView listView) {
         if (mJetpackBrandingUtils.shouldShowJetpackBranding()) {
             final JetpackBadgeFooterBinding binding = JetpackBadgeFooterBinding.inflate(inflater);
-            binding.footerJetpackBadge.jetpackPoweredBadge.setOnClickListener(v -> {
+            if (mJetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
+                binding.footerJetpackBadge.jetpackPoweredBadge.setOnClickListener(v -> {
                     mJetpackBrandingUtils.trackBadgeTapped(Screen.APP_SETTINGS);
                     new JetpackPoweredBottomSheetFragment().show(
                             ((AppCompatActivity) getActivity()).getSupportFragmentManager(),
                             JetpackPoweredBottomSheetFragment.TAG);
-            });
+                });
+            }
             listView.addFooterView(binding.getRoot(), null, false);
         }
     }

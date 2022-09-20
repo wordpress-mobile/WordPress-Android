@@ -1,0 +1,4 @@
+20.7:
+Ahora, los controles de la vista previa de medios (como el botón Volver atrás) se verán mejor, ya que se pueden mostrar en modo claro o en modo oscuro.
+
+Además, la pantalla del código de acceso del tema Compose tiene un mejor contraste de color para que el texto sea más legible. Perfecto.
