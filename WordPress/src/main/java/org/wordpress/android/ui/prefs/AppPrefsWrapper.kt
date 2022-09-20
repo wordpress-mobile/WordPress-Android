@@ -5,6 +5,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.posts.PostListViewLayoutType
+import org.wordpress.android.ui.prefs.AppPrefs.PrefKey
 import org.wordpress.android.ui.quickstart.QuickStartType
 import org.wordpress.android.ui.reader.tracker.ReaderTab
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel.Color
@@ -242,25 +243,25 @@ class AppPrefsWrapper @Inject constructor() {
 
     fun getAllPrefs(): Map<String, Any?> = AppPrefs.prefs().all
 
-    fun setString(prefKey: String, value: String) {
+    fun setString(prefKey: PrefKey, value: String) {
         AppPrefs.setString(prefKey, value)
     }
 
-    fun setLong(prefKey: String, value: Long) {
+    fun setLong(prefKey: PrefKey, value: Long) {
         AppPrefs.setLong(prefKey, value)
     }
 
-    fun setInt(prefKey: String, value: Int) {
+    fun setInt(prefKey: PrefKey, value: Int) {
         AppPrefs.setInt(prefKey, value)
     }
 
-    fun setBoolean(prefKey: String, value: Boolean) {
+    fun setBoolean(prefKey: PrefKey, value: Boolean) {
         AppPrefs.setBoolean(prefKey, value)
     }
 
-    fun setStringSet(prefKey: String, set: Set<String>?) {
+    fun setStringSet(key: String, set: Set<String>?) {
         AppPrefs.prefs().edit().apply {
-            putStringSet(prefKey, set)
+            putStringSet(key, set)
             apply()
         }
     }

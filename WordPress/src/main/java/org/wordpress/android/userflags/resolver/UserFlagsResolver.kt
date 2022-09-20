@@ -61,15 +61,16 @@ class UserFlagsResolver @Inject constructor(
         userFlags: Map<String, Any?>
     ) {
         try {
-            for ((prefKey, value) in userFlags) {
+            for ((key, value) in userFlags) {
+                val userFlagPrefKey = UserFlagsPrefKey(key)
                 when (value) {
-                    is String -> appPrefsWrapper.setString(prefKey, value)
-                    is Long -> appPrefsWrapper.setLong(prefKey, value)
-                    is Int -> appPrefsWrapper.setInt(prefKey, value)
-                    is Boolean -> appPrefsWrapper.setBoolean(prefKey, value)
+                    is String -> appPrefsWrapper.setString(userFlagPrefKey, value)
+                    is Long -> appPrefsWrapper.setLong(userFlagPrefKey, value)
+                    is Int -> appPrefsWrapper.setInt(userFlagPrefKey, value)
+                    is Boolean -> appPrefsWrapper.setBoolean(userFlagPrefKey, value)
                     is Collection<*> -> {
                         val stringSet = value.filterIsInstance<String>().toSet()
-                        appPrefsWrapper.setStringSet(prefKey, stringSet)
+                        appPrefsWrapper.setStringSet(key, stringSet)
                     }
                 }
             }

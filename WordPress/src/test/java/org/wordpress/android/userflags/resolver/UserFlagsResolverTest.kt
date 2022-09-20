@@ -165,7 +165,7 @@ class UserFlagsResolverTest {
         whenever(mockCursor.getString(0)).thenReturn("{ \"$key\": \"$value\" }")
         val onSuccess: () -> Unit = mock()
         classToTest.tryGetUserFlags(onSuccess) {}
-        verify(appPrefsWrapper).setString(key, value)
+        verify(appPrefsWrapper).setString(UserFlagsPrefKey(key), value)
     }
 
     private fun featureEnabled() {
