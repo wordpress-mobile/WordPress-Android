@@ -19,27 +19,11 @@ import org.wordpress.android.ui.accounts.login.LocalPosition
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.util.extensions.isOdd
 
-@Composable
-fun LargeTexts() {
-    val texts = stringArrayResource(R.array.login_prologue_revamped_jetpack_feature_texts)
-
-    texts.forEachIndexed { index, text ->
-        LargeText(
-                text = text,
-                color = when (index.isOdd) {
-                    true -> colorResource(R.color.text_color_jetpack_login_feature_odd)
-                    false -> colorResource(R.color.text_color_jetpack_login_feature_even)
-                }
-        )
-        Spacer(modifier = Modifier.height(2.dp))
-    }
-}
-
 private val fontSize = 43.sp
 private val lineHeight = fontSize * 0.95
 
 @Composable
-fun LargeText(
+private fun LargeText(
     text: String,
     color: Color,
     modifier: Modifier = Modifier,
@@ -55,6 +39,22 @@ fun LargeText(
             color = color,
             modifier = modifier
     )
+}
+
+@Composable
+private fun LargeTexts() {
+    val texts = stringArrayResource(R.array.login_prologue_revamped_jetpack_feature_texts)
+
+    texts.forEachIndexed { index, text ->
+        LargeText(
+                text = text,
+                color = when (index.isOdd) {
+                    true -> colorResource(R.color.text_color_jetpack_login_feature_odd)
+                    false -> colorResource(R.color.text_color_jetpack_login_feature_even)
+                }
+        )
+        Spacer(modifier = Modifier.height(2.dp))
+    }
 }
 
 @Composable
