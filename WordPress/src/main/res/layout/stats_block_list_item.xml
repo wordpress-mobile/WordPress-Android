@@ -81,7 +81,7 @@
             android:visibility="gone" />
     </LinearLayout>
 
-    <com.google.android.material.textview.MaterialTextView
+    <org.wordpress.android.widgets.MaterialTextViewWithNumerals
         android:id="@+id/value"
         style="@style/StatsBlockValue"
         android:layout_width="wrap_content"

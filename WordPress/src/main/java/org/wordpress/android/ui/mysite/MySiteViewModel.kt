@@ -497,7 +497,11 @@ class MySiteViewModel @Inject constructor(
         )
 
         val jetpackBadge = JetpackBadge(
-                ListItemInteraction.create(this::onJetpackBadgeClick)
+                if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
+                    ListItemInteraction.create(this::onJetpackBadgeClick)
+                } else {
+                    null
+                }
         ).takeIf { jetpackBrandingUtils.shouldShowJetpackBranding() }
 
         return mapOf(

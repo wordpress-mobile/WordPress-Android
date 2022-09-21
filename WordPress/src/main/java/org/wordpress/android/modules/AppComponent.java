@@ -5,6 +5,7 @@ import com.automattic.android.tracks.crashlogging.CrashLogging;
 import org.wordpress.android.push.GCMMessageService;
 import org.wordpress.android.push.GCMRegistrationIntentService;
 import org.wordpress.android.push.NotificationsProcessingService;
+import org.wordpress.android.sharedlogin.provider.SharedLoginProvider;
 import org.wordpress.android.ui.AddQuickPressShortcutActivity;
 import org.wordpress.android.ui.CommentFullScreenDialogFragment;
 import org.wordpress.android.ui.JetpackConnectionResultActivity;
@@ -117,6 +118,7 @@ import org.wordpress.android.ui.posts.PostDatePickerDialogFragment;
 import org.wordpress.android.ui.posts.PostListCreateMenuFragment;
 import org.wordpress.android.ui.posts.PostListFragment;
 import org.wordpress.android.ui.posts.PostNotificationScheduleTimeDialogFragment;
+import org.wordpress.android.ui.posts.PostSettingsListDialogFragment;
 import org.wordpress.android.ui.posts.PostSettingsTagsFragment;
 import org.wordpress.android.ui.posts.PostTimePickerDialogFragment;
 import org.wordpress.android.ui.posts.PostsListActivity;
@@ -202,6 +204,9 @@ import org.wordpress.android.ui.stats.refresh.lists.widget.today.TodayWidgetBloc
 import org.wordpress.android.ui.stats.refresh.lists.widget.today.TodayWidgetListProvider;
 import org.wordpress.android.ui.stats.refresh.lists.widget.views.StatsViewsWidget;
 import org.wordpress.android.ui.stats.refresh.lists.widget.views.ViewsWidgetListProvider;
+import org.wordpress.android.ui.stats.refresh.lists.widget.weeks.StatsWeekWidget;
+import org.wordpress.android.ui.stats.refresh.lists.widget.weeks.WeekViewsWidgetListProvider;
+import org.wordpress.android.ui.stats.refresh.lists.widget.weeks.WeekWidgetBlockListProviderFactory;
 import org.wordpress.android.ui.stockmedia.StockMediaPickerActivity;
 import org.wordpress.android.ui.stories.StoryComposerActivity;
 import org.wordpress.android.ui.stories.intro.StoriesIntroDialogFragment;
@@ -337,6 +342,8 @@ public interface AppComponent {
     void inject(EditPostActivity object);
 
     void inject(EditPostSettingsFragment object);
+
+    void inject(PostSettingsListDialogFragment object);
 
     void inject(PostsListActivity object);
 
@@ -655,4 +662,12 @@ public interface AppComponent {
     void inject(BloggingPromptsOnboardingDialogFragment object);
 
     void inject(DismissNotificationReceiver object);
+
+    void inject(SharedLoginProvider object);
+
+    void inject(StatsWeekWidget object);
+
+    void inject(WeekViewsWidgetListProvider object);
+
+    void inject(WeekWidgetBlockListProviderFactory object);
 }

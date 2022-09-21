@@ -16,8 +16,8 @@ class AppConfig
     private val manualFeatureConfig: ManualFeatureConfig
 ) {
     /**
-     * We need to keep the value of an already loaded feature flag to make sure the value is not changed while using the app.
-     * We should only reload the flags when the application is created.
+     * We need to keep the value of an already loaded feature flag to make sure the value is not changed
+     * while using the app. We should only reload the flags when the application is created.
      */
     private val experimentValues = mutableMapOf<String, String>()
     private val remoteConfigCheck = RemoteConfigCheck(this)
@@ -38,8 +38,8 @@ class AppConfig
     }
 
     /**
-     * Get the enabled state of a feature flag. If the flag is enabled in the BuildConfig file, it overrides the
-     * remote value. The correct approach is to disable a feature flag for a release version and only enable it remotely.
+     * Get the enabled state of a feature flag. If the flag is enabled in the BuildConfig file, it overrides the remote
+     * value. The correct approach is to disable a feature flag for a release version and only enable it remotely.
      * Once the feature is ready to be fully released, we can enable the BuildConfig value.
      * @param feature feature which we're checking remotely
      */
@@ -90,10 +90,24 @@ class AppConfig
     }
 
     sealed class FeatureState(open val isEnabled: Boolean, val name: String) {
-        data class ManuallyOverriden(override val isEnabled: Boolean) : FeatureState(isEnabled, "manually_overriden")
-        data class BuildConfigValue(override val isEnabled: Boolean) : FeatureState(isEnabled, "build_config_value")
-        data class RemoteValue(override val isEnabled: Boolean) : FeatureState(isEnabled, "remote_source_value")
-        data class StaticValue(override val isEnabled: Boolean) : FeatureState(isEnabled, "static_source_value")
-        data class DefaultValue(override val isEnabled: Boolean) : FeatureState(isEnabled, "default_source_value")
+        data class ManuallyOverriden(
+            override val isEnabled: Boolean
+        ) : FeatureState(isEnabled, "manually_overriden")
+
+        data class BuildConfigValue(
+            override val isEnabled: Boolean
+        ) : FeatureState(isEnabled, "build_config_value")
+
+        data class RemoteValue(
+            override val isEnabled: Boolean
+        ) : FeatureState(isEnabled, "remote_source_value")
+
+        data class StaticValue(
+            override val isEnabled: Boolean
+        ) : FeatureState(isEnabled, "static_source_value")
+
+        data class DefaultValue(
+            override val isEnabled: Boolean
+        ) : FeatureState(isEnabled, "default_source_value")
     }
 }

@@ -94,6 +94,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             toolbar.inflateMenu(R.menu.my_site_menu)
             toolbar.menu.findItem(R.id.me_item)?.let { meMenu ->
                 meMenu.actionView.let { actionView ->
+                    actionView.contentDescription = meMenu.title
                     actionView.setOnClickListener { viewModel.onAvatarPressed() }
                     TooltipCompat.setTooltipText(actionView, meMenu.title)
                 }
@@ -105,9 +106,14 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             val maxOffset = appBarLayout.totalScrollRange
             val currentOffset = maxOffset + verticalOffset
 
-            updateCollapsibleToolbar(currentOffset)
+            val percentage = if (maxOffset == 0) {
+                updateCollapsibleToolbar(1)
+                MAX_PERCENT
+            } else {
+                updateCollapsibleToolbar(currentOffset)
+                ((currentOffset.toFloat() / maxOffset.toFloat()) * MAX_PERCENT).toInt()
+            }
 
-            val percentage = ((currentOffset.toFloat() / maxOffset.toFloat()) * 100).toInt()
             fadeSiteInfoHeader(percentage)
             avatar?.let { avatar ->
                 val minSize = avatar.minimumHeight
@@ -352,6 +358,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
     companion object {
         private const val PASS_TO_TAB_FRAGMENT_DELAY = 300L
+        private const val MAX_PERCENT = 100
         fun newInstance(): MySiteFragment {
             return MySiteFragment()
         }

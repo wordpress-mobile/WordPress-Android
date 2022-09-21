@@ -1,2 +1,2 @@
-- We added a new label in App Settings to show the app’s current interface language. Shiny.
-- Now that the app supports higher-resolution image previews, we bumped up the size of theme screenshots in the site theme picker. No more pixellation, only pixel perfection.
+* [**] Stats: Always use Western Arabic numerals in Arabic languages (previously there was a mix of Eastern and Western Arabic numerals) [https://github.com/wordpress-mobile/WordPress-Android/pull/17160]
+* [**] Added author button to the post settings and the author of the post can be changed with it. [https://github.com/wordpress-mobile/WordPress-Android/pull/17120]

@@ -1,19 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-08-17 10:40:10+0000
+Translation-Revision-Date: 2022-09-16 08:19:53+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
-Generator: GlotPress/4.0.0-alpha.1
+Generator: GlotPress/4.0.0-alpha.2
 Language: pl
 -->
 <resources>
+    <string name="app_rating_title">Lubisz %s?</string>
+    <string name="connection_service_label">Podziel się wpisem %s</string>
+    <string name="connections_label">Połączenia społecznościowe Jetpacka</string>
+    <string name="stats_widget_log_in_to_add_message">Proszę zalogować się do aplikacji Jetpacka, aby dodać widżet.</string>
+    <string name="stats_view_publicize">Połączenia społecznościowe Jetpacka</string>
+    <string name="login_magic_links_email_sent">Właśnie wysłaliśmy magiczny odnośnik do</string>
+    <string name="login_magic_links_sent_label_short">Sprawdź pocztę na tym urządzeniu!</string>
+    <string name="or_use_password">Użyj hasła, aby się zalogować</string>
+    <string name="wp_jetpack_powered_notifications_powered_by_jetpack_caption">Bądź na bieżąco dzięki aktualizacjom w czasie rzeczywistym o nowych komentarzach, ruchu w witrynie, raportach bezpieczeństwa i nie tylko.</string>
+    <string name="wp_jetpack_powered_stats_powered_by_jetpack_caption">Obserwuj wzrost ruchu i poznaj swoich odbiorców dzięki przeprojektowanym statystykom i statystykom, które są teraz dostępne w nowej aplikacji Jetpack.</string>
+    <string name="wp_jetpack_powered_stats_powered_by_jetpack">Statystyki obsługiwane są przez Jetpack</string>
+    <string name="wp_jetpack_powered_notifications_powered_by_jetpack">Powiadomienia obsługiwane są przez Jetpack</string>
+    <string name="wp_jetpack_powered_reader_powered_by_jetpack">Czytnik obsługiwany jest przez Jetpack</string>
     <string name="wp_jetpack_powered_better_with_jetpack">WordPress jest lepszy z JetPackiem</string>
+    <string name="gutenberg_native_invalid_url">Nieprawidłowy adres URL.</string>
     <string name="gutenberg_native_gradient">Gradient</string>
+    <string name="gutenberg_native_jetpack_powered">Obsługiwane przez Jetpack</string>
+    <string name="wp_jetpack_continue_to_notifications">Przejdź do powiadomień</string>
+    <string name="wp_jetpack_continue_to_stats">Przejdź do statystyk</string>
+    <string name="qrcode_auth_flow_error_no_connection_title">Brak połączenia</string>
+    <string name="qrcode_auth_flow_scan_again">Skanuj ponownie</string>
+    <string name="stats_referrers_pie_chart_wordpress">WordPress</string>
     <string name="blogging_prompts_notification_dismiss">Zamknij</string>
     <string name="blogging_prompts_onboarding_got_it">Rozumiem</string>
     <string name="quick_start_dialog_view_your_site_message_short">Stuknij &lt;b&gt;%1$s&lt;/b&gt; aby zobaczyć swoją witrynę</string>
     <string name="blogging_prompts_answer_prompt_notification_answer_action">Odpowiedź</string>
     <string name="photo_picker_video_thumbnail_unselected">Cofnięto zaznaczenie filmu</string>
     <string name="photo_picker_video_thumbnail_selected">Wybrano film</string>
+    <string name="stats_insights_views_and_visitors_tooltip_count">%1$s %2$s</string>
     <string name="stats_timeframe_previous_week">Poprzedni tydzień</string>
     <string name="stats_timeframe_this_week">Bieżący tydzień</string>
     <string name="scan_vault_press_active_on_site_button_text">Przejdź do kokpitu</string>
@@ -26,8 +47,10 @@ Language: pl
     <string name="dialog_title">Wstaw odnośnik</string>
     <string name="editor_title_beta">Beta</string>
     <string name="stop_save_dialog_ok_button">OK</string>
+    <string name="pixel_suffix">%dpx</string>
     <string name="site_creation_intent_books">Książki</string>
     <string name="site_creation_intent_art">Sztuka</string>
+    <string name="site_creation_intent_business">Biznes</string>
     <string name="my_site_menu_tab_title">Menu</string>
     <string name="login_error_xml_rpc_services_disabled">Usługa XML-RPC jest wyłączona.</string>
     <string name="my_site_todays_stat_card_title">Dzisiejsze statystyki</string>
@@ -315,6 +338,7 @@ Language: pl
     <string name="gutenberg_native_three">Trzy</string>
     <string name="gutenberg_native_s_social_icon">Ikona społecznościowa %s</string>
     <string name="gutenberg_native_mention">Wzmianka</string>
+    <string name="gutenberg_native_new">NOWOŚĆ</string>
     <string name="gutenberg_native_preview_post">Podgląd wpisu</string>
     <string name="gutenberg_native_preview_page">Podgląd strony</string>
     <string name="gutenberg_native_retry">Spróbuj ponownie</string>
@@ -964,7 +988,7 @@ Language: pl
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">Stuknij dwukrotnie, by przejść do ustawień kolorów</string>
     <string name="reader_empty_followed_blogs_description">Gdy zaczniesz śledzić inne witryny, zobaczysz tutaj ich treść</string>
     <string name="feature_announcement_find_out_mode">Dowiedz się więcej</string>
-    <string name="feature_announcement_dialog_label">Co nowego w WordPressie</string>
+    <string name="feature_announcement_dialog_label">Co nowego w %s</string>
     <string name="insert_label_with_count">Wstaw %d</string>
     <string name="crop">przytnij</string>
     <string name="photo_picker_video_title">Wybierz wideo</string>
@@ -1062,7 +1086,6 @@ Language: pl
     <string name="create_post_page_fab_tooltip_contributors">Stwórz wpis</string>
     <string name="post_list_tab_published_posts">Opublikowano</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">Nie połączono</string>
-    <string name="sharing_facebook_account_must_have_pages">Połączenie z Facebookiem nie może odnaleźć żadnych Stron. Publicize nie może połączyć się z profilami Facebooka, tylko z publikowanymi Stronami.</string>
     <string name="post_list_tab_trashed_posts">W koszu</string>
     <string name="post_list_tab_scheduled_posts">Zaplanowano</string>
     <string name="notifications_tab_title_likes">Polubienia</string>
@@ -1292,7 +1315,6 @@ Language: pl
     <string name="notification_post_will_be_published_in_ten_minutes">\"%s\" zostanie opublikowany za 10 minut</string>
     <string name="navigate_back_desc">Wróć</string>
     <string name="web_preview_desktop">Komputer stacjonarny</string>
-    <string name="calendar_scheduled_post_description">Wpis „%1$s” został zaplanowany do publikacji w dniu „%2$s” w twojej aplikacji WordPressowej\n%3$s</string>
     <string name="notification_post_will_be_published_in_one_hour">\"%s\" zostanie opublikowany za godzinę</string>
     <string name="notification_post_has_been_published">\"%s\" został opublikowany</string>
     <string name="notification_scheduled_post_ten_minute_reminder">Zaplanowany wpis: przypomnienie 10 minutowe</string>
@@ -1462,7 +1484,6 @@ Language: pl
     <string name="app_rating_rate_now">Oceń teraz</string>
     <string name="app_rating_message">Miło widzieć ciebie ponownie! Jeśli używasz aplikacji, prosimy o ocenę w sklepie Google Play.</string>
     <string name="app_rating_rate_never">Nie, dziękuję</string>
-    <string name="app_rating_title">Lubisz WordPressa?</string>
     <string name="editor_post_converted_back_to_draft">Wpis z powrotem zamieniony na wpis</string>
     <string name="stats_insights_posting_activity">Aktywność publikowania wpisów</string>
     <string name="stats_site_not_loaded_yet">Witryna jeszcze nie załadowana</string>
@@ -1670,10 +1691,10 @@ Language: pl
     <string name="quick_start_button_positive">Dalej</string>
     <string name="quick_start_button_negative_short">Anuluj</string>
     <string name="quick_start_button_negative">Nie teraz</string>
-    <string name="my_site_create_new_site_title">Nie msz żadnych witryn</string>
     <string name="content_description_more">Więcej</string>
     <string name="reader_empty_followed_tags_title">Nie obserwujesz żadnych tematów</string>
     <string name="reader_empty_followed_tags_subtitle">Dodaj tematy aby odnaleźć wpisy dotyczące tych które ciebie interesują</string>
+    <string name="my_site_create_new_site_title">Nie masz żadnych witryn</string>
     <string name="login_to_to_connect_jetpack">Zaloguj się na stronę konto WordPress.com które używałeś do podłączenia Jetpacka.</string>
     <string name="jetpack_installation_problem_message">Nie można było zainstalować  Jetpacka</string>
     <string name="jetpack_installation_problem">Wystąpił problem</string>
@@ -2192,6 +2213,7 @@ Language: pl
     <string name="requesting_otp">Żądanie kodu weryfikacyjnego przez SMS</string>
     <string name="login_text_otp">Wyślij mi zamiast tego kod przez SMS</string>
     <string name="enter_verification_code">Już prawie! Proszę wprowadzić kod weryfikacyjny z aplikacji do Uwierzytelnienia.</string>
+    <string name="open_mail">Otwórz pocztę</string>
     <string name="next">Następny</string>
     <string name="enter_email_wordpress_com">Zaloguj się do WordPress.com używając adresu email aby zarządzać wszystkimi swoimi witrynami WordPress.</string>
     <string name="image_optimization_promo_desc">Optymalizacja obrazów zmniejsza ich rozmiar w celu szybszego przesyłania.\n\nMożesz zmienić to ustawienie później w ustawieniach witryny.</string>
@@ -2289,10 +2311,8 @@ Language: pl
     <string name="share_btn_disconnect">Rozłącz</string>
     <string name="share_btn_connect">Połącz</string>
     <string name="connection_service_description">Połącz się aby automatycznie udostępniać wpisy blogu w serwisie %s.</string>
-    <string name="connection_service_label">Publikuj w serwisie %s</string>
     <string name="connected_accounts_label">Konta połączone</string>
     <string name="connections_description">Połącz się ze swoim ulubionym serwisem mediów społecznościowych aby automatycznie udostępniać nowe wpisy swoim znajomym.</string>
-    <string name="connections_label">Połączenia</string>
     <string name="sharing">Udostępnianie</string>
     <string name="tabbar_accessibility_label_notifications">Powiadomienia. Zarządzaj powiadomieniami.</string>
     <string name="tabbar_accessibility_label_reader">Czytnik. Śledź treści z innych witryn.</string>

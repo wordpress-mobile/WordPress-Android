@@ -1,3 +1,0 @@
-20.5:
-- Vi har lagt till en ny etikett i Appinställningar för visning av appens aktuella gränssnittsspråk. Snyggt.
-- Nu när appen stöder högupplösta förhandsgranskningar av bilder har vi gjort temaskärmbilderna större i din webbplats temaväljare. Ingen mer pixelering, bara pixelperfektion.

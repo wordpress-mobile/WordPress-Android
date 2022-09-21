@@ -1,0 +1,5 @@
+20.7:
+- Jetpack-Widgets sind jetzt auf dem Startbildschirm deines Geräts verfügbar
+- Steuerelemente für die Medienvorschau werden sowohl im hellen als auch im dunklen Modus angezeigt
+- Der Bildschirm mit dem Anmelde-Code für das Compose-Theme hat einen besseren Farbkontrast
+- Einige Elemente der Editor- und Beitragseinstellungen werden nun in WordPress-Blau angezeigt
