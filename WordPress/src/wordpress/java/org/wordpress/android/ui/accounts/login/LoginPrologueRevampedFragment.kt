@@ -51,13 +51,17 @@ class LoginPrologueRevampedFragment : Fragment() {
                 )
             }
         }
-        requireActivity().window.addFlags(FLAG_LAYOUT_NO_LIMITS)
     }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
         check(context is LoginPrologueListener) { "$context must implement LoginPrologueListener" }
         loginPrologueListener = context
+    }
+
+    override fun onResume() {
+        super.onResume()
+        requireActivity().window.addFlags(FLAG_LAYOUT_NO_LIMITS)
     }
 
     override fun onPause() {

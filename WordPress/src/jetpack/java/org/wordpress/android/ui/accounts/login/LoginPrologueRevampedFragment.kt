@@ -5,7 +5,6 @@ import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.view.Window
 import android.view.WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
@@ -42,7 +41,6 @@ class LoginPrologueRevampedFragment : Fragment() {
                 )
             }
         }
-        requireActivity().window.enableFullScreen()
     }
 
     override fun onAttach(context: Context) {
@@ -51,14 +49,15 @@ class LoginPrologueRevampedFragment : Fragment() {
         loginPrologueListener = context
     }
 
-    override fun onPause() {
-        super.onPause()
-        requireActivity().window.disableFullScreen()
+    override fun onResume() {
+        super.onResume()
+        requireActivity().window.addFlags(FLAG_LAYOUT_NO_LIMITS)
     }
 
-    private fun Window.enableFullScreen() = addFlags(FLAG_LAYOUT_NO_LIMITS)
-
-    private fun Window.disableFullScreen() = clearFlags(FLAG_LAYOUT_NO_LIMITS)
+    override fun onPause() {
+        super.onPause()
+        requireActivity().window.clearFlags(FLAG_LAYOUT_NO_LIMITS)
+    }
 
     companion object {
         const val TAG = "login_prologue_revamped_fragment_tag"
