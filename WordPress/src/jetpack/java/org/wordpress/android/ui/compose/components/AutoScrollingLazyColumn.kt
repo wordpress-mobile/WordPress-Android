@@ -9,7 +9,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -17,7 +16,6 @@ import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import org.wordpress.android.util.extensions.isNegative
 
 const val AUTOSCROLL_DELAY_MS = 5L
@@ -56,7 +54,7 @@ fun <T : AutoScrollingListItem> AutoScrollingLazyColumn(
                 val itemsBeforeFirstVisible = currentList.subList(0, lazyListState.firstVisibleItemIndex)
                 val itemsAfterFirstVisible = currentList.subList(lazyListState.firstVisibleItemIndex, currentList.size)
 
-                rememberCoroutineScope().launch {
+                LaunchedEffect(Unit) {
                     lazyListState.scrollToItem(
                             index = if (scrollBy.isNegative) currentList.lastIndex else 0,
                             scrollOffset = scrollBy.toInt()
