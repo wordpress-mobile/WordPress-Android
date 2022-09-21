@@ -232,7 +232,6 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
         } else {
             showFragment(new LoginPrologueFragment(), LoginPrologueFragment.TAG);
         }
-
         mIsSmartLockTriggeredFromPrologue = true;
         mIsSiteLoginAvailableFromPrologue = true;
         initSmartLockIfNotFinished(true);
