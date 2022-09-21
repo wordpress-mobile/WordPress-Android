@@ -2940,6 +2940,10 @@
     <string name="login_empty_view_see_instructions">See instructions</string>
     <string name="login_empty_view_try_another_account">Try with another account</string>
 
+    <!-- Login Revamped -->
+    <string name="login_prologue_revamped_tagline">Write, edit, and publish from anywhere.</string>
+    <string name="login_prologue_revamped_content_description_wordpress_icon">WordPress icon</string>
+
     <!-- Screen titles -->
     <string name="email_address_login_title" tools:ignore="UnusedResources" a8c-src-lib="login">Email address login</string>
     <string name="site_address_login_title" tools:ignore="UnusedResources" a8c-src-lib="login">Site address login</string>
