@@ -1,4 +1,0 @@
-20.5:
-- Abbiamo aggiunto un'etichetta in Impostazioni app per mostrare la lingua dell'interfaccia attuale dell'app.
-- Abbiamo aumentato le dimensioni degli screenshot nel selezionatore di temi del sito affinché si adatti alle anteprime delle immagini ad alta risoluzione.
-- Nel processo di creazione del sito, abbiamo modificato il pulsante Salta da blu a verde Jetpack.

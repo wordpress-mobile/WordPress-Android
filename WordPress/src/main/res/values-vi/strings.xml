@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2022-06-17 15:28:46+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/4.0.0-alpha.1
+Generator: GlotPress/4.0.0-alpha.2
 Language: vi_VN
 -->
 <resources>
@@ -1178,7 +1178,6 @@ Language: vi_VN
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">Nhấn hai lần để thiết lập màu</string>
     <string name="reader_empty_followed_blogs_description">Khi bạn theo dõi blog nào đó, bạn sẽ thấy nội dung của họ ở đây</string>
     <string name="feature_announcement_find_out_mode">Tìm hiểu thêm</string>
-    <string name="feature_announcement_dialog_label">WordPress có gì mới?</string>
     <string name="insert_label_with_count">Chèn %d</string>
     <string name="crop">cắt</string>
     <string name="error_failed_to_load_into_file">Tải thông tin tập tin thất bại, xin thử lại.</string>
@@ -1277,7 +1276,6 @@ Language: vi_VN
     <string name="post_list_tab_trashed_posts">Thùng rác</string>
     <string name="post_list_tab_scheduled_posts">Lên lịch</string>
     <string name="post_list_tab_published_posts">Đã đăng</string>
-    <string name="sharing_facebook_account_must_have_pages">Với Facebook, Publicize không thể kết nối Trang Cá Nhân, chỉ kết nối được Trang Doanh Nghiệp.</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">Chưa kết nối</string>
     <string name="notifications_tab_title_likes">Lượt thích</string>
     <string name="notifications_tab_title_follows">Theo dõi</string>
@@ -1504,7 +1502,6 @@ Language: vi_VN
     <string name="share_desc">Chia sẻ</string>
     <string name="navigate_back_desc">Trở lại</string>
     <string name="navigate_forward_desc">Quay lại</string>
-    <string name="calendar_scheduled_post_description">\"%1$s\" đã lên lịch đăng cho \"%2$s\" bằng WordPress app \n %3$s</string>
     <string name="calendar_scheduled_post_title">Bài viết WordPress đã lên lịch: \"%s\"</string>
     <string name="notification_post_will_be_published_in_ten_minutes">Sẽ đăng \"%s\" trong 10 phút nữa</string>
     <string name="notification_post_will_be_published_in_one_hour">Sẽ đăng \"%s\" trong 1 giờ nữa</string>
@@ -1676,7 +1673,6 @@ Language: vi_VN
     <string name="app_rating_rate_later">Để sau</string>
     <string name="app_rating_rate_now">Đánh giá</string>
     <string name="app_rating_message">Rất vui gặp lại bạn! Nếu bạn thích ứng dụng, hãy đánh giá trên Google Play Store.</string>
-    <string name="app_rating_title">Yêu thích WordPress?</string>
     <string name="editor_post_converted_back_to_draft">Đã chuyển bài viết về nháp</string>
     <string name="stats_insights_posting_activity">Hoạt động</string>
     <string name="stats_site_not_loaded_yet">Chưa tải blog xong</string>
@@ -2503,10 +2499,8 @@ Language: vi_VN
     <string name="share_btn_disconnect">Ngắt kết nối</string>
     <string name="share_btn_connect">Kết nối</string>
     <string name="connection_service_description">Kết nối để tự động chia sẻ bài viết của bạn với %s.</string>
-    <string name="connection_service_label">Kết nối tới %s</string>
     <string name="connected_accounts_label">Tài khoản đã kết nối</string>
     <string name="connections_description">Kết nối tài khoản mạng xã hội của bạn để tự động chia sẻ bài viết mới với bạn bè trên đó.</string>
-    <string name="connections_label">Kết nối mạng xã hội</string>
     <string name="sharing">Chia sẻ</string>
     <string name="tabbar_accessibility_label_notifications">Thông báo. Quản lý thông báo.</string>
     <string name="tabbar_accessibility_label_reader">Đọc. Theo dõi nội dung các blog khác.</string>

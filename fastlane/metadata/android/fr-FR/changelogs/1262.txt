@@ -1,3 +1,0 @@
-20.5 :
-- Nous avons ajouté une nouvelle étiquette dans les paramètres de l’application pour indiquer la langue qui s’affiche dans l’interface de l’application. Brillant !
-- Maintenant que l’application prend en charge les aperçus d’images de plus haute résolution, nous avons agrandi les captures d’écran des thèmes dans le sélecteur de thème du site. Dites adieu à la pixellisation et profitez d’images nettes !

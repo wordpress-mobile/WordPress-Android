@@ -11,19 +11,20 @@ msgstr ""
 "Project-Id-Version: Jetpack - Apps - Android - Release Notes\n"
 
 #. translators: Release notes for this version to be displayed in the Play Store. Limit to 500 characters including spaces and commas!
+msgctxt "release_note_207"
+msgid ""
+"20.7:\n"
+"- Jetpack widgets are now available on your device’s home screen\n"
+"- Media preview controls are visible in both light and dark mode\n"
+"- Compose theme’s Login Code screen has better color contrast\n"
+"- Certain elements of the editor and post settings are now WordPress blue\n"
+msgstr ""
+
 msgctxt "release_note_206"
 msgid ""
 "20.6:\n"
 "- You can now log in to the app using an email address that contains a special character.\n"
 "- Preloading themes no longer crash the app during Site Creation. Whew.\n"
-msgstr ""
-
-msgctxt "release_note_205"
-msgid ""
-"20.5:\n"
-"- We added a label in App Settings to show the app’s current interface language.\n"
-"- We bumped up the screenshot size in the site theme picker to go with high-resolution image previews.\n"
-"- In the site creation process, we changed the Skip button text from blue to Jetpack green.\n"
 msgstr ""
 
 #. translators: Title to be displayed in the Play Store. Limit to 30 characters including spaces and commas!

@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-08-24 17:54:08+0000
+Translation-Revision-Date: 2022-09-13 10:54:08+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
-Generator: GlotPress/4.0.0-alpha.1
+Generator: GlotPress/4.0.0-alpha.2
 Language: ar
 -->
 <resources>
+    <string name="app_rating_title">هل تستمتع بـ %s؟</string>
+    <string name="connection_service_label">مشاركة التدوينة على %s</string>
+    <string name="connections_label">عمليات الربط بـ Jetpack Social</string>
+    <string name="stats_widget_log_in_to_add_message">يرجى تسجيل الدخول إلى تطبيق Jetpack لإضافة مربع جانبي.</string>
+    <string name="stats_view_publicize">عمليات الربط بـ Jetpack Social</string>
     <string name="login_magic_links_email_sent">أرسلنا رابطًا سحريًا للتو إلى</string>
     <string name="login_magic_links_sent_label_short">تحقَّق من بريدك الإلكتروني على هذا الجهاز!</string>
     <string name="or_use_password">استخدام كلمة المرور لتسجيل الدخول</string>
@@ -59,7 +64,6 @@ Language: ar
     <string name="stats_insights_comments_guide_card">💡اضغط على \"عرض المزيد\" للاطلاع على أفضل المعلقين لديك.</string>
     <string name="stats_insights_views_and_visitors_visitors_empty_state">مراجعة أفضل نصائحنا لزيادة مشاهداتك وحركة مرورك ⁦%1$s⁩</string>
     <string name="stats_action_card_schedule_post_message">✍️ قم بجدولة مسوداتك لنشرها في أفضل وقت للوصول إلى جمهورك.</string>
-    <string name="stats_view_publicize">اتصالات شبكات التواصل الاجتماعي</string>
     <string name="stats_insights_latest_post_empty">تحقَّق من هذا مرة أخرى عندما تكون قد نشرت تدوينتك الأولى!</string>
     <string name="stats_action_card_blogging_reminders_message">💡يُعد التدوين باستمرار طريقة رائعة لبناء جمهورك. أضف تذكيرًا يبقيك في المسار الصحيح.</string>
     <string name="stats_action_card_grow_audience_message">💡ارتق بمستوى تدوينك بشكل أسرع بفضل دورة &lt;i&gt;مقدمة إلى التدوين&lt;/i&gt; التدريبية الخاصة بنا التي يقودها الخبراء.</string>
@@ -1237,7 +1241,6 @@ Language: ar
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">الضغط ضغطًا مزدوجًا للانتقال إلى إعدادات الألوان</string>
     <string name="reader_empty_followed_blogs_description">عندما تتابع المواقع، سترى محتواها هنا</string>
     <string name="feature_announcement_find_out_mode">اكتشاف المزيد</string>
-    <string name="feature_announcement_dialog_label">ما الجديد في ووردبريس</string>
     <string name="crop">قص</string>
     <string name="error_failed_to_load_into_file">فشل التحميل إلى الملف، يرجى المحاولة مرة أخرى.</string>
     <string name="preview_image_thumbnail_description">معاينة الصورة المصغَّرة</string>
@@ -1247,6 +1250,7 @@ Language: ar
     <string name="photo_picker_video_title">اختيار مقطع فيديو</string>
     <string name="site_picker_ask_site_select">تعذر تحديد الموقع. يُرجى المحاولة مرة أخرى.</string>
     <string name="insert_label_with_count">إدراج %d</string>
+    <string name="feature_announcement_dialog_label">ما الجديد في %s</string>
     <string name="sitepicker_continue_flow">المتابعة</string>
     <string name="reader_reblog_error">فشلت إعادة التدوين</string>
     <string name="reader_no_site_to_reblog_action">إدارة المواقع</string>
@@ -1333,11 +1337,11 @@ Language: ar
     <string name="gutenberg_native_add_paragraph_block">إضافة مكوّن فقرة</string>
     <string name="gutenberg_native_border_radius">زوايا الحدود</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">غير متصل</string>
-    <string name="sharing_facebook_account_must_have_pages">يتعذر الاتصال بـ Facebook العثور على أي صفحات. لا يمكن لآلية النشر الاتصال بملفات تعريف Facebook الشخصية، فقط للصفحات المنشورة.</string>
     <string name="post_list_tab_published_posts">منشور</string>
     <string name="post_list_tab_scheduled_posts">مجدول</string>
     <string name="post_list_tab_trashed_posts">محذوف</string>
     <string name="create_post_page_fab_tooltip_contributors">إنشاء مقالة</string>
+    <string name="sharing_facebook_account_must_have_pages">يتعذر على اتصال فيسبوك العثور على أي صفحات. يتعذر على Jetpack Social الربط بملفات فيسبوك الشخصية، حيث إنه يمكن ربطه بالصفحات المنشورة فقط.</string>
     <string name="dlg_confirm_action_trash">سلة المهملات</string>
     <string name="dlg_cancel_action_dont_trash">عدم الوضع بسلة المهملات</string>
     <string name="notifications_tab_title_unread_notifications">غير مقروء</string>
@@ -1565,7 +1569,7 @@ Language: ar
     <string name="navigate_forward_desc">التقدم للأمام</string>
     <string name="notification_post_will_be_published_in_ten_minutes">سيتم نشر \"%s\" خلال 10 دقائق</string>
     <string name="calendar_scheduled_post_title">مقالة ووردبريس مجدولة: \"%s\"</string>
-    <string name="calendar_scheduled_post_description">تمت جدولة \"⁦%1$s⁩\" للنشر في \"⁦%2$s⁩\" في تطبيق ووردبريس الخاص بك\n %3$s</string>
+    <string name="calendar_scheduled_post_description">تمت جدولة \"⁦%1$s⁩\" للنشر في \"⁦%2$s⁩\" في تطبيق ⁦%3$s⁩ الخاص بك\n %4$s</string>
     <string name="notification_scheduled_post">مقالة مجدولة</string>
     <string name="notification_scheduled_post_one_hour_reminder">مقالة مجدولة: تذكير ساعة واحدة</string>
     <string name="notification_scheduled_post_ten_minute_reminder">مقالة مجدولة: تذكير 10 دقائق</string>
@@ -1735,7 +1739,6 @@ Language: ar
     <string name="app_rating_rate_later">لاحقًا</string>
     <string name="app_rating_rate_now">التقييم الآن</string>
     <string name="app_rating_message">جميل أن نراك مرة أخرى! إذا راجعت التطبيق، فيسعدنا تقييمك لنا على متجر Google Play.</string>
-    <string name="app_rating_title">مستمتع بـ ووردبريس؟</string>
     <string name="editor_post_converted_back_to_draft">تم تحويل المقالة مرة أخرى إلى مسودّة</string>
     <string name="stats_insights_posting_activity">نشاط النشر</string>
     <string name="stats_site_not_loaded_yet">الموقع لم يتم تحميله بعد</string>
@@ -2465,6 +2468,7 @@ Language: ar
     <string name="requesting_otp">طلب رمز تحقق عن طريق رسالة نصية قصيرة (SMS).</string>
     <string name="login_text_otp">أرسل إليّ رمزًا بدلاً من ذلك.</string>
     <string name="enter_verification_code">تقريبًا هناك! يرجى إدخال رمز التحقق من تطبيق الموثق الخاص بك.</string>
+    <string name="open_mail">فتح البريد</string>
     <string name="next">التالي</string>
     <string name="enter_email_wordpress_com">سجِّل الدخول إلى WordPress.com باستخدام عنوان بريد إلكتروني لإدارة جميع مواقع ووردبريس الخاصة بك.</string>
     <string name="image_optimization_promo_desc">يقلل تحسين الصورة حجم الصور لتحميلها بسرعة.\n\nيمكنك تغيير هذا في أي وقت في إعدادات الموقع.</string>
@@ -2562,10 +2566,8 @@ Language: ar
     <string name="share_btn_disconnect">قطع الاتصال</string>
     <string name="share_btn_connect">اتصال</string>
     <string name="connection_service_description">اتصل لمشاركة مقالات مدونتك تلقائيًا على %s.</string>
-    <string name="connection_service_label">الإشهار على %s</string>
     <string name="connected_accounts_label">الحسابات المتصلة</string>
     <string name="connections_description">قم بتوصيل خدمات التواصل الاجتماعي المفضلة لديك لمشاركة المقالات الجديدة تلقائيًا مع الأصدقاء.</string>
-    <string name="connections_label">اتصالات</string>
     <string name="sharing">مشاركة</string>
     <string name="tabbar_accessibility_label_notifications">تنبيهات. قم بإدارة تنبيهاتك.</string>
     <string name="tabbar_accessibility_label_reader">القارئ. متابعة محتوى من مواقع أخرى.</string>

@@ -121,12 +121,14 @@ object AppRatingDialog {
         @Suppress("SwallowedException")
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
             val builder = MaterialAlertDialogBuilder(activity)
-            builder.setTitle(R.string.app_rating_title)
+            val appName = getString(R.string.app_name)
+            val title = getString(R.string.app_rating_title, appName)
+            builder.setTitle(title)
                     .setMessage(R.string.app_rating_message)
                     .setCancelable(true)
                     .setPositiveButton(R.string.app_rating_rate_now) { _, _ ->
                         val appPackage = activity.packageName
-                        val url: String? = "market://details?id=$appPackage"
+                        val url = "market://details?id=$appPackage"
                         try {
                             activity.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
                         } catch (e: ActivityNotFoundException) {

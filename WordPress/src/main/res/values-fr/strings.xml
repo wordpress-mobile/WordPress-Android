@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-08-25 13:54:08+0000
+Translation-Revision-Date: 2022-09-13 14:54:08+0000
 Plural-Forms: nplurals=2; plural=n > 1;
-Generator: GlotPress/4.0.0-alpha.1
+Generator: GlotPress/4.0.0-alpha.2
 Language: fr
 -->
 <resources>
+    <string name="app_rating_title">Vous appréciez %s ?</string>
+    <string name="connection_service_label">Partager l’article sur %s</string>
+    <string name="connections_label">Connexions Jetpack Social</string>
+    <string name="stats_widget_log_in_to_add_message">Connectez-vous à l’application Jetpack pour ajouter un widget.</string>
+    <string name="stats_view_publicize">Connexions Jetpack Social</string>
     <string name="login_magic_links_email_sent">Nous venons d\'envoyer un lien magique à </string>
     <string name="login_magic_links_sent_label_short">Consultez votre messagerie sur cet appareil !</string>
     <string name="or_use_password">Utilisez le mot de passe pour la connexion</string>
@@ -59,7 +64,6 @@ Language: fr
     <string name="stats_insights_comments_guide_card">💡 Appuyez sur « VOIR PLUS » pour voir les utilisateurs qui ont le plus commenté.</string>
     <string name="stats_insights_latest_post_empty">Revenez lorsque vous aurez publié votre premier article !</string>
     <string name="stats_insights_views_and_visitors_visitors_empty_state">Consultez nos conseils pratiques pour augmenter vos vues et votre trafic %1$s</string>
-    <string name="stats_view_publicize">Connexions aux réseaux sociaux</string>
     <string name="stats_action_card_schedule_post_message">✍️ Programmez la publication de vos brouillons au meilleur moment pour atteindre votre audience.</string>
     <string name="stats_action_card_blogging_reminders_message">💡 Publier régulièrement est un bon moyen de consolider votre audience. Ajoutez un rappel pour vous tenir à jour.</string>
     <string name="stats_action_card_grow_audience_message">💡 Améliorez rapidement votre blogging en suivant notre cours &lt;i&gt;Introduction au blogging&lt;/i&gt; animé par des experts.</string>
@@ -1236,7 +1240,6 @@ Language: fr
     <string name="gutenberg_native_select_a_color">Sélectionnez une couleur</string>
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">Toucher deux fois pour aller aux réglages de couleur</string>
     <string name="reader_empty_followed_blogs_description">Lorsque vous suivez des sites, vous verrez leur contenu ici</string>
-    <string name="feature_announcement_dialog_label">Quoi de neuf dans WordPress</string>
     <string name="insert_label_with_count">Insérer %d</string>
     <string name="crop">rogner</string>
     <string name="error_failed_to_load_into_file">Erreur de chargement dans le fichier, veuillez réessayer.</string>
@@ -1247,6 +1250,7 @@ Language: fr
     <string name="photo_picker_video_title">Choisir une vidéo</string>
     <string name="site_picker_ask_site_select">Impossible de sélectionner le site. Veuillez réessayer.</string>
     <string name="feature_announcement_find_out_mode">En savoir plus</string>
+    <string name="feature_announcement_dialog_label">Quelles sont les nouveautés %s ?</string>
     <string name="sitepicker_continue_flow">Continuer</string>
     <string name="reader_reblog_error">Échec du reblogue</string>
     <string name="reader_no_site_to_reblog_action">Gérer les sites</string>
@@ -1336,8 +1340,8 @@ Language: fr
     <string name="post_list_tab_trashed_posts">Mis à la corbeille</string>
     <string name="post_list_tab_scheduled_posts">Planifié</string>
     <string name="post_list_tab_published_posts">Publié</string>
-    <string name="sharing_facebook_account_must_have_pages">La connexion à Facebook ne trouve aucune page. Publicize ne peut pas se connecter aux profils, seulement aux pages publiées.</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">Non connecté</string>
+    <string name="sharing_facebook_account_must_have_pages">La connexion Facebook ne trouve aucune page. Jetpack Social peut uniquement se connecter aux pages publiées, et non aux profils Facebook.</string>
     <string name="notifications_tab_title_likes">J’aime</string>
     <string name="notifications_tab_title_follows">Abonnements</string>
     <string name="notifications_tab_title_comments">Commentaires</string>
@@ -1565,7 +1569,7 @@ Language: fr
     <string name="navigate_forward_desc">Continuer</string>
     <string name="calendar_scheduled_post_title">Articles WordPress planifiés « %s »</string>
     <string name="notification_post_will_be_published_in_ten_minutes">« %s » sera publié dans 10 minutes</string>
-    <string name="calendar_scheduled_post_description">L’article « %1$s » sera publié le « %2$s » sur l’application WordPress \n %3$s</string>
+    <string name="calendar_scheduled_post_description">L’article « %1$s » sera publié le « %2$s » sur votre application %3$s \n %4$s</string>
     <string name="notification_post_will_be_published_in_one_hour">« %s » sera publié dans 1 heure</string>
     <string name="notification_post_has_been_published">« %s » a été publié</string>
     <string name="notification_scheduled_post_ten_minute_reminder">Article planifié : rappel 10 minutes avant</string>
@@ -1735,7 +1739,6 @@ Language: fr
     <string name="app_rating_rate_later">Plus tard</string>
     <string name="app_rating_rate_now">Évaluer maintenant</string>
     <string name="app_rating_message">Ravi de vous revoir! Si vous creusez l\'application, nous aimerions une évaluation sur le Google Play Store.</string>
-    <string name="app_rating_title">Vous aimez WordPress ?</string>
     <string name="editor_post_converted_back_to_draft">Article reconverti en brouillon</string>
     <string name="stats_insights_posting_activity">Activité de publication</string>
     <string name="stats_site_not_loaded_yet">Site non encore chargé</string>
@@ -2563,10 +2566,8 @@ Language: fr
     <string name="share_btn_connect">Connecter</string>
     <string name="connection_service_description">Connectez-vous pour partager automatiquement vos articles de blog vers %s.</string>
     <string name="share_btn_disconnect">Déconnecter</string>
-    <string name="connection_service_label">Publier sur %s</string>
     <string name="connected_accounts_label">Comptes connectés</string>
     <string name="connections_description">Connectez vos réseaux sociaux préférés pour partager automatiquement vos articles de blog avec vos amis.</string>
-    <string name="connections_label">Connections</string>
     <string name="sharing">Partage</string>
     <string name="tabbar_accessibility_label_notifications">Notifications. Gérez vos notifications.</string>
     <string name="tabbar_accessibility_label_reader">Lecteur. Suivez le contenu d\'autres sites.</string>

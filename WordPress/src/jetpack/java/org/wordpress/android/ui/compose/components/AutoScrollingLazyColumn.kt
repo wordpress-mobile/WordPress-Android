@@ -6,7 +6,6 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -21,7 +20,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.wordpress.android.util.extensions.isNegative
 
-const val DELAY_BETWEEN_AUTOSCROLL_MS = 5L
+const val AUTOSCROLL_DELAY_MS = 5L
 const val AUTOSCROLL_DELTA_PX = -1f
 
 interface AutoScrollingListItem {
@@ -32,8 +31,8 @@ interface AutoScrollingListItem {
 fun <T : AutoScrollingListItem> AutoScrollingLazyColumn(
     items: List<T>,
     lazyListState: LazyListState,
-    scrollBy: MutableState<Float> = mutableStateOf(AUTOSCROLL_DELTA_PX),
-    scrollDelay: Long = DELAY_BETWEEN_AUTOSCROLL_MS,
+    scrollBy: Float = AUTOSCROLL_DELTA_PX,
+    scrollDelay: Long = AUTOSCROLL_DELAY_MS,
     modifier: Modifier = Modifier,
     itemContent: @Composable (item: T) -> Unit,
 ) {
@@ -49,7 +48,7 @@ fun <T : AutoScrollingListItem> AutoScrollingLazyColumn(
         ) {
             itemContent(it)
 
-            val thresholdItem = if (scrollBy.value.isNegative) itemsListState.first() else itemsListState.last()
+            val thresholdItem = if (scrollBy.isNegative) itemsListState.first() else itemsListState.last()
 
             if (it.id == thresholdItem.id && lazyListState.firstVisibleItemScrollOffset == 0) {
                 val currentList = itemsListState
@@ -59,8 +58,8 @@ fun <T : AutoScrollingListItem> AutoScrollingLazyColumn(
 
                 rememberCoroutineScope().launch {
                     lazyListState.scrollToItem(
-                            index = if (scrollBy.value.isNegative) currentList.lastIndex else 0,
-                            scrollOffset = scrollBy.value.toInt()
+                            index = if (scrollBy.isNegative) currentList.lastIndex else 0,
+                            scrollOffset = scrollBy.toInt()
                     )
                 }
 
@@ -69,8 +68,8 @@ fun <T : AutoScrollingListItem> AutoScrollingLazyColumn(
         }
     }
 
-    LaunchedEffect(scrollBy.value) {
-        autoScroll(lazyListState, scrollBy.value, scrollDelay)
+    LaunchedEffect(scrollBy) {
+        autoScroll(lazyListState, scrollBy, scrollDelay)
     }
 }
 

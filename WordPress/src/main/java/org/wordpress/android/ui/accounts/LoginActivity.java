@@ -92,9 +92,7 @@ import static org.wordpress.android.util.ActivityUtils.hideKeyboard;
 import dagger.android.AndroidInjector;
 import dagger.android.DispatchingAndroidInjector;
 import dagger.android.HasAndroidInjector;
-import dagger.hilt.android.AndroidEntryPoint;
 
-@AndroidEntryPoint
 public class LoginActivity extends LocaleAwareActivity implements ConnectionCallbacks, OnConnectionFailedListener,
         Callback, LoginListener, GoogleListener, LoginPrologueListener,
         HasAndroidInjector, BasicDialogPositiveClickInterface {
@@ -234,7 +232,6 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
         } else {
             showFragment(new LoginPrologueFragment(), LoginPrologueFragment.TAG);
         }
-
         mIsSmartLockTriggeredFromPrologue = true;
         mIsSiteLoginAvailableFromPrologue = true;
         initSmartLockIfNotFinished(true);
@@ -442,7 +439,7 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
             return;
         }
 
-        if (getLoginPrologueFragment() == null || getLoginPrologueRevampedFragment() == null) {
+        if (getLoginPrologueFragment() == null && getLoginPrologueRevampedFragment() == null) {
             // prologue fragment is not shown so, the email screen will be the initial screen on the fragment container
             showFragment(LoginEmailFragment.newInstance(mIsSignupFromLoginEnabled), LoginEmailFragment.TAG);
 

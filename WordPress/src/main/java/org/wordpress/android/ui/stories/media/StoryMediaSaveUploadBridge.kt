@@ -129,7 +129,8 @@ class StoryMediaSaveUploadBridge @Inject constructor(
 
                 override fun syncPostObjectWithUiAndSaveIt(listener: OnPostUpdatedFromUIListener?) {
                     // no op
-                    // WARNING: don't remove this, we need to call the listener no matter what, so save & upload actually happen
+                    // WARNING: don't remove this, we need to call the listener no matter what,
+                    // so save & upload actually happen
                     listener?.onPostUpdatedFromUI(null)
                 }
 
@@ -141,8 +142,8 @@ class StoryMediaSaveUploadBridge @Inject constructor(
                     // in order to support Story editing capabilities, we save a serialized version of the Story slides
                     // after their composedFrameFiles have been processed.
 
-                    // here we change the ids on the actual StoryFrameItems, and also update the flattened / composed image
-                    // urls with the new URLs which may have been replaced after image optimization
+                    // here we change the ids on the actual StoryFrameItems, and also update the flattened / composed
+                    // image urls with the new URLs which may have been replaced after image optimization
                     // find the MediaModel for a given Uri from composedFrameFile
                     for (frame in frames) {
                         // if the old URI in frame.composedFrameFile exists as a key in the passed map, then update that

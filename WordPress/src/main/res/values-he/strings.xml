@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-08-25 15:54:08+0000
+Translation-Revision-Date: 2022-09-13 18:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.1
+Generator: GlotPress/4.0.0-alpha.2
 Language: he_IL
 -->
 <resources>
+    <string name="app_rating_title">אהבת את %s?</string>
+    <string name="connection_service_label">לשתף פוסט אל %s</string>
+    <string name="connections_label">החיבורים של Jetpack Social</string>
+    <string name="stats_widget_log_in_to_add_message">עליך להתחבר לאפליקציה של Jetpack כדי להוסיף וידג\'ט.</string>
+    <string name="stats_view_publicize">החיבורים של Jetpack Social</string>
     <string name="login_magic_links_email_sent">שלחנו כעת קישור ישיר אל</string>
     <string name="login_magic_links_sent_label_short">יש לבדוק את תיבת האימייל במכשיר זה!</string>
     <string name="or_use_password">להשתמש בסיסמה כדי להתחבר</string>
@@ -59,7 +64,6 @@ Language: he_IL
     <string name="stats_insights_comments_guide_card">💡אפשר להקיש על \'להציג עוד\' כדי לראות את המגיבים המובילים שלך.</string>
     <string name="stats_insights_latest_post_empty">כדאי לחזור לכאן אחרי שפרסמת את הפוסט הראשון שלך!</string>
     <string name="stats_insights_views_and_visitors_visitors_empty_state">מומלץ לעיין בעצות המובילות שלנו כדי להגדיל את כמות הצפיות והתעבורה ⁦%1$s⁩</string>
-    <string name="stats_view_publicize">חיבורים לרשתות חברתיות</string>
     <string name="stats_action_card_schedule_post_message">✍️ כדאי לתזמן את פרסום הטיוטות לפי המועד המתאים ביותר לחשיפה מול הקהל שלך.</string>
     <string name="stats_action_card_blogging_reminders_message">💡מומלץ לפרסם פוסטים דרך קבע כדי לבנות את הקהל שלך. להוסיף תזכורת כדי להישאר בעניינים.</string>
     <string name="stats_action_card_grow_audience_message">💡אפשר לשפר את כישורי הכתיבה בבלוג מהר יותר עם הקורס &lt;i&gt;הקדמה לכתיבה בבלוג&lt;/i&gt; בהנחיית המומחים שלנו.</string>
@@ -1237,7 +1241,7 @@ Language: he_IL
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">יש להקיש פעמיים כדי לעבור להגדרות הצבע</string>
     <string name="reader_empty_followed_blogs_description">כאשר יש לך אתרים במעקב, התוכן שלהם יופיע כאן</string>
     <string name="feature_announcement_find_out_mode">למידע נוסף</string>
-    <string name="feature_announcement_dialog_label">מה חדש ב-WordPress</string>
+    <string name="feature_announcement_dialog_label">מה חדש ב-%s</string>
     <string name="insert_label_with_count">להוסיף %d</string>
     <string name="crop">לחתוך</string>
     <string name="error_failed_to_load_into_file">הטעינה לתוך הקובץ נכשלה, יש לנסות שוב.</string>
@@ -1336,7 +1340,7 @@ Language: he_IL
     <string name="post_list_tab_trashed_posts">הועבר לפח</string>
     <string name="post_list_tab_scheduled_posts">מתוזמן לפרסום</string>
     <string name="post_list_tab_published_posts">פורסם</string>
-    <string name="sharing_facebook_account_must_have_pages">החיבור עם פייסבוק לא הצליח למצוא דפים. השיתוף האוטומטי לא יכול להתחבר אל פרופילים בפייסבוק, רק לדפים שפורסמו.</string>
+    <string name="sharing_facebook_account_must_have_pages">החיבור עם פייסבוק לא הצליח למצוא דפים. השירות של Jetpack Social לא יכול להתחבר אל פרופילים בפייסבוק, רק לדפים שפורסמו.</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">לא מחובר</string>
     <string name="notifications_tab_title_likes">לייקים</string>
     <string name="notifications_tab_title_follows">עוקבים</string>
@@ -1563,7 +1567,7 @@ Language: he_IL
     <string name="share_desc">שיתוף</string>
     <string name="navigate_back_desc">Go back</string>
     <string name="navigate_forward_desc">Go forward</string>
-    <string name="calendar_scheduled_post_description">הפוסט \"⁦%1$s⁩\" תוזמן לפרסום בתאריך \"⁦%2$s⁩\" באפליקציה שלך ב-WordPress \n %3$s</string>
+    <string name="calendar_scheduled_post_description">הפוסט \"⁦%1$s⁩\" תוזמן לפרסום ב-\"⁦%2$s⁩\" באפליקציה של ⁦%3$s⁩ \n %4$s</string>
     <string name="calendar_scheduled_post_title">WordPress Scheduled Post: \"%s\"</string>
     <string name="notification_post_will_be_published_in_ten_minutes">\"%s\" will be published in 10 minutes</string>
     <string name="notification_post_will_be_published_in_one_hour">\"%s\" will be published in 1 hour</string>
@@ -1735,7 +1739,6 @@ Language: he_IL
     <string name="app_rating_rate_later">מאוחר יותר</string>
     <string name="app_rating_rate_now">לדרג כעת</string>
     <string name="app_rating_message">שמחים לראות אותך שוב! אם אהבת את האפליקציה, נשמח לראות את הדירוג שלך בחנות Google Play.</string>
-    <string name="app_rating_title">מרוצה מ-WordPress?</string>
     <string name="editor_post_converted_back_to_draft">הפוסט הומר בחזרה למצב טיוטה</string>
     <string name="stats_insights_posting_activity">פעילות פרסום</string>
     <string name="stats_site_not_loaded_yet">האתר עדיין לא נטען</string>
@@ -2563,10 +2566,8 @@ Language: he_IL
     <string name="share_btn_disconnect">התנתקות</string>
     <string name="share_btn_connect">להתחבר</string>
     <string name="connection_service_description">יש להתחבר כדי לשתף את הפוסטים בבלוג שלך אוטומטית עם %s.</string>
-    <string name="connection_service_label">שיתוף אוטומטי אל %s</string>
     <string name="connected_accounts_label">חשבונות מחוברים</string>
     <string name="connections_description">חיבור שירותי הרשתות החברתיות המועדפים שלך כדי לשתף פוסטים חדשים עם חברים באופן אוטומטי.</string>
-    <string name="connections_label">חשבונות מקושרים</string>
     <string name="sharing">שיתוף</string>
     <string name="tabbar_accessibility_label_notifications">הודעות. ניהול התראות.</string>
     <string name="tabbar_accessibility_label_reader">Reader. מעקב אחר תוכן מאתרים אחרים.</string>

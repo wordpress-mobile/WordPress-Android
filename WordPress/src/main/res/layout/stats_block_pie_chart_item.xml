@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:paddingVertical="@dimen/margin_large">
 
-    <TextView
+    <org.wordpress.android.widgets.MaterialTextViewWithNumerals
         android:id="@+id/total_text"
         style="@style/StatsPieChartTotalText"
         android:layout_width="wrap_content"

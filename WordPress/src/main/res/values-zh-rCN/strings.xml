@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-08-24 09:54:07+0000
+Translation-Revision-Date: 2022-09-13 10:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/4.0.0-alpha.1
+Generator: GlotPress/4.0.0-alpha.2
 Language: zh_CN
 -->
 <resources>
+    <string name="app_rating_title">喜欢 %s？</string>
+    <string name="connection_service_label">将文章共享至 %s</string>
+    <string name="connections_label">Jetpack Social 连接</string>
+    <string name="stats_widget_log_in_to_add_message">请登录 Jetpack 应用程序以添加小工具。</string>
+    <string name="stats_view_publicize">Jetpack Social 连接</string>
     <string name="login_magic_links_email_sent">我们刚刚发送了一个免密链接至</string>
     <string name="login_magic_links_sent_label_short">检查此设备上的电子邮件地址！</string>
     <string name="or_use_password">使用密码登录</string>
@@ -59,7 +64,6 @@ Language: zh_CN
     <string name="stats_insights_comments_guide_card">💡 点击“查看更多”可查看热门评论者。</string>
     <string name="stats_insights_latest_post_empty">发表第一篇文章后，请回来查看！</string>
     <string name="stats_insights_views_and_visitors_visitors_empty_state">查看我们的重要贴士，增加您的阅读量和流量 %1$s</string>
-    <string name="stats_view_publicize">社交媒体连接</string>
     <string name="stats_action_card_schedule_post_message">✍️ 将您的草稿计划在最佳时间发布，以此来吸引您的受众。</string>
     <string name="stats_action_card_blogging_reminders_message">💡 持续发表文章是建立受众群体的好方法。 添加一个提醒，督促自己坚持下去。</string>
     <string name="stats_action_card_grow_audience_message">💡 通过我们专家指导的&lt;i&gt;博客介绍&lt;/i&gt;课程更快地提升您的博客。</string>
@@ -1237,7 +1241,7 @@ Language: zh_CN
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">点击两下以进入颜色设置</string>
     <string name="reader_empty_followed_blogs_description">在您关注站点时，您会在这里看到其内容</string>
     <string name="feature_announcement_find_out_mode">了解更多</string>
-    <string name="feature_announcement_dialog_label">WordPress 的新变化</string>
+    <string name="feature_announcement_dialog_label">%s 中有何新内容？</string>
     <string name="insert_label_with_count">插入 %d</string>
     <string name="crop">裁剪</string>
     <string name="error_failed_to_load_into_file">无法加载进文件，请再试一次。</string>
@@ -1336,7 +1340,7 @@ Language: zh_CN
     <string name="post_list_tab_trashed_posts">已放入回收站</string>
     <string name="post_list_tab_scheduled_posts">预发布</string>
     <string name="post_list_tab_published_posts">已发布</string>
-    <string name="sharing_facebook_account_must_have_pages">Facebook 连接无法找到任何页面。Publicize 无法连接到 Facebook 个人资料，只能连接到已发布的页面。</string>
+    <string name="sharing_facebook_account_must_have_pages">Facebook 连接无法找到任何页面。 Jetpack Social 无法连接到 Facebook 个人资料，只能连接到已发布的页面。</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">未连接</string>
     <string name="notifications_tab_title_likes">喜欢</string>
     <string name="notifications_tab_title_follows">关注</string>
@@ -1563,7 +1567,7 @@ Language: zh_CN
     <string name="share_desc">共享</string>
     <string name="navigate_back_desc">返回</string>
     <string name="navigate_forward_desc">前进</string>
-    <string name="calendar_scheduled_post_description">“%1$s”计划于“%2$s”在您的 WordPress 应用程序中发布\n %3$s</string>
+    <string name="calendar_scheduled_post_description">“%1$s”计划在您的 %3$s 应用程序中于“%2$s”发布\n %4$s</string>
     <string name="calendar_scheduled_post_title">WordPress 定时文章：“%s”</string>
     <string name="notification_post_will_be_published_in_ten_minutes">“%s”将于 10 分钟后发布</string>
     <string name="notification_post_will_be_published_in_one_hour">“%s”将于 1 小时后发布</string>
@@ -1735,7 +1739,6 @@ Language: zh_CN
     <string name="app_rating_rate_later">以后再说</string>
     <string name="app_rating_rate_now">立即评分</string>
     <string name="app_rating_message">欢迎您再次到来！如果您喜欢此应用，我们希望您能在Google Play Store上给我们一个评价。</string>
-    <string name="app_rating_title">喜欢 WordPress 吗?</string>
     <string name="editor_post_converted_back_to_draft">文章已转换回草稿</string>
     <string name="stats_insights_posting_activity">文章发布活动</string>
     <string name="stats_site_not_loaded_yet">站点尚未加载</string>
@@ -2465,6 +2468,7 @@ Language: zh_CN
     <string name="requesting_otp">正在请求短信验证码。</string>
     <string name="login_text_otp">通过短信向我发送代码</string>
     <string name="enter_verification_code">马上就好！请输入验证器应用中的验证码。</string>
+    <string name="open_mail">打开邮件</string>
     <string name="next">下一步</string>
     <string name="enter_email_wordpress_com">使用电子邮件地址登录 WordPress.com 以便管理您的所有 WordPress 站点。</string>
     <string name="image_optimization_promo_desc">图片优化可缩小图片以便更快地上传。\n\n您可以随时在站点设置中更改此选项。</string>
@@ -2562,10 +2566,8 @@ Language: zh_CN
     <string name="share_btn_disconnect">断开连接</string>
     <string name="share_btn_connect">连接</string>
     <string name="connection_service_description">连接以自动将您的博文分享至 %s。</string>
-    <string name="connection_service_label">通过 Publicize 分享至 %s</string>
     <string name="connected_accounts_label">已连接账户</string>
     <string name="connections_description">关联您最喜爱的社交媒体服务，自动与朋友分享新文章。</string>
-    <string name="connections_label">连接</string>
     <string name="sharing">分享</string>
     <string name="tabbar_accessibility_label_notifications">通知。管理您的通知。</string>
     <string name="tabbar_accessibility_label_reader">阅读器。查看其他站点的内容。</string>

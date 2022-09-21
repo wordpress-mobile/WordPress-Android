@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2022-04-05 13:17:37+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.1
+Generator: GlotPress/4.0.0-alpha.2
 Language: es_MX
 -->
 <resources>
@@ -405,7 +405,6 @@ Language: es_MX
     <string name="reader_empty_followed_blogs_description">Cuando sigas sitios, verás aquí su contenido</string>
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">Toca dos veces para ir a los ajustes del color</string>
     <string name="feature_announcement_find_out_mode">Saber más</string>
-    <string name="feature_announcement_dialog_label">Qué hay de nuevo en WordPress</string>
     <string name="insert_label_with_count">Insertar %d</string>
     <string name="crop">recortar</string>
     <string name="error_failed_to_load_into_file">Fallo al cargar en el archivo, por favor, inténtalo de nuevo.</string>
@@ -501,7 +500,6 @@ Language: es_MX
     <string name="post_list_tab_trashed_posts">En la papelera</string>
     <string name="post_list_tab_scheduled_posts">Programada</string>
     <string name="post_list_tab_published_posts">Publicada</string>
-    <string name="sharing_facebook_account_must_have_pages">La conexión de Facebook no puede encontrar ninguna página. «Divulgar» no se puede conectar con los perfiles de Facebook, solo con las páginas publicadas.</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">No conectado</string>
     <string name="notifications_tab_title_likes">Me gusta</string>
     <string name="notifications_tab_title_follows">Seguimientos</string>
@@ -895,7 +893,6 @@ Language: es_MX
     <string name="app_rating_rate_later">Más tarde</string>
     <string name="app_rating_rate_now">Valorar ahora</string>
     <string name="app_rating_message">¡Qué gusto verte de nuevo! Si te está gustando la aplicación, nos encantaría que nos puntuases en la Google Play Store.</string>
-    <string name="app_rating_title">¿Estás disfrutando de WordPress?</string>
     <string name="stats_site_not_loaded_yet">Sitio aún no cargado</string>
     <string name="editor_post_converted_back_to_draft">Entrada convertida de nuevo a borrador</string>
     <string name="stats_fewer_posts">Menos entradas</string>
@@ -1705,10 +1702,8 @@ Language: es_MX
     <string name="share_btn_disconnect">Desconectar</string>
     <string name="share_btn_reconnect">Reconectar</string>
     <string name="connection_service_description">Conéctate para compartir automáticamente las entradas de tu blog en %s</string>
-    <string name="connection_service_label">Divulgar en %s</string>
     <string name="connected_accounts_label">Cuentas conectadas</string>
     <string name="connections_description">Conecta con tus servicios de medios sociales favoritos para compartir automáticamente las nuevas entradas con tus amigos.</string>
-    <string name="connections_label">Conexiones</string>
     <string name="sharing">Compartir</string>
     <string name="tabbar_accessibility_label_notifications">Avisos. Gestiona tus avisos.</string>
     <string name="tabbar_accessibility_label_reader">Lector. Sigue contenido de otros sitios.</string>
