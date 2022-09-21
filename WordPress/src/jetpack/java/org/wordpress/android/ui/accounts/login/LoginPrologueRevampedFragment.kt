@@ -22,9 +22,6 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
-import org.wordpress.android.ui.accounts.login.components.ColumnWithFrostedGlassBackground
-import org.wordpress.android.ui.accounts.login.components.JetpackLogo
-import org.wordpress.android.ui.accounts.login.components.AutoScrollingTextBox
 import androidx.lifecycle.viewmodel.compose.viewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.android.awaitFrame
@@ -94,7 +91,9 @@ private fun LoginScreenRevamped(
                             .size(60.dp)
                             .align(Alignment.TopCenter)
             )
-            ColumnWithFrostedGlassBackground {
+            ColumnWithFrostedGlassBackground(
+                    { modifier, textModifier -> LoopingTextWithBackground(modifier, textModifier) }
+            ) {
                 PrimaryButton(onClick = onWpComLoginClicked)
                 SecondaryButton(onClick = onSiteAddressLoginClicked)
             }
