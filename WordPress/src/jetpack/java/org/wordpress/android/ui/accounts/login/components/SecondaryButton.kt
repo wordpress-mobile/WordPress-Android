@@ -9,7 +9,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import org.wordpress.android.R.string
 
 @Composable
@@ -28,6 +31,12 @@ fun SecondaryButton(
                     .padding(bottom = 60.dp)
                     .fillMaxWidth(),
     ) {
-        Text(stringResource(string.enter_your_site_address))
+        Text(
+                text = stringResource(string.enter_your_site_address),
+                style = TextStyle(
+                        fontWeight = FontWeight.Medium,
+                        letterSpacing = (-0.25).sp,
+                ),
+        )
     }
 }
