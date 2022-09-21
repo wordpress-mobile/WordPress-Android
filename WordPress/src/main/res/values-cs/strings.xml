@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-08-31 08:15:33+0000
+Translation-Revision-Date: 2022-09-16 15:59:20+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : 2);
-Generator: GlotPress/4.0.0-alpha.2
+Generator: GlotPress/4.0.0-alpha.3
 Language: cs_CZ
 -->
 <resources>
@@ -1127,6 +1127,7 @@ Language: cs_CZ
     <string name="error_failed_to_load_into_file">Načtení do souboru se nezdařilo, zkuste to znovu.</string>
     <string name="crop">oříznutí</string>
     <string name="insert_label_with_count">Vložit %d</string>
+    <string name="feature_announcement_dialog_label">Co je nového na WordPressu</string>
     <string name="feature_announcement_find_out_mode">Zjistit více</string>
     <string name="sitepicker_continue_flow">Pokračovat</string>
     <string name="whats_new_in_version_title">Co je nového</string>
@@ -1218,6 +1219,7 @@ Language: cs_CZ
     <string name="post_list_tab_scheduled_posts">Naplánováno</string>
     <string name="post_list_tab_published_posts">Publikováno</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">Nepřipojeno</string>
+    <string name="sharing_facebook_account_must_have_pages">Připojení k Facebooku nemůže najít žádné stránky. Publicita se nemůže připojit k profilům Facebooku, pouze k publikovaným stránkám.</string>
     <string name="notifications_tab_title_comments">Komentáře</string>
     <string name="notifications_tab_title_unread_notifications">Nepřečteno</string>
     <string name="dlg_cancel_action_dont_trash">Ponechat</string>
@@ -1445,6 +1447,7 @@ Language: cs_CZ
     <string name="navigate_forward_desc">Jít vpřed</string>
     <string name="notification_post_will_be_published_in_ten_minutes">\"%s\" bude publikován za 10 minut</string>
     <string name="calendar_scheduled_post_title">Naplánovaný příspěvek WordPress: \"%s\"</string>
+    <string name="calendar_scheduled_post_description">Publikování \"%1$s\" je naplánováno na \"%2$s\" ve vaší aplikaci WordPress \"%3$s\"</string>
     <string name="post_notification_when_published">Při zveřejnění</string>
     <string name="post_notification_error">Nelze vytvořit oznámení, pokud je datum publikování v minulosti.</string>
     <string name="notification_scheduled_post">Naplánovaný příspěvek</string>
