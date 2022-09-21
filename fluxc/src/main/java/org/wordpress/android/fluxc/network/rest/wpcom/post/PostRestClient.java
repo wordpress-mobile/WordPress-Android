@@ -595,8 +595,9 @@ public class PostRestClient extends BaseWPComRestClient {
         params.put("content", StringUtils.notNullStr(post.getContent()));
         params.put("excerpt", StringUtils.notNullStr(post.getExcerpt()));
         params.put("slug", StringUtils.notNullStr(post.getSlug()));
-        params.put("author", String.valueOf(post.getAuthorId()));
-
+        if (post.getAuthorId() > 0) {
+            params.put("author", String.valueOf(post.getAuthorId()));
+        }
 
         if (!TextUtils.isEmpty(post.getDateCreated())) {
             params.put("date", post.getDateCreated());
