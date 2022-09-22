@@ -2,10 +2,12 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases
 
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
+import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.time.ClicksModel
+import org.wordpress.android.fluxc.model.stats.time.ClicksModel.Group
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.store.StatsStore.TimeStatsType.CLICKS
 import org.wordpress.android.fluxc.store.stats.time.ClicksStore
@@ -102,59 +104,77 @@ class ClicksUseCase constructor(
         if (domainModel.groups.isEmpty()) {
             items.add(Empty(R.string.stats_no_data_for_period))
         } else {
-            val header = Header(R.string.stats_clicks_link_label, R.string.stats_clicks_label)
-            items.add(header)
-            domainModel.groups.forEachIndexed { index, group ->
-                val groupName = group.name
-                val contentDescription = contentDescriptionHelper.buildContentDescription(
-                        header,
-                        groupName ?: "",
-                        group.views ?: 0
-                )
-                val headerItem = ListItemWithIcon(
-                        text = groupName,
-                        value = statsUtils.toFormattedString(group.views),
-                        showDivider = index < domainModel.groups.size - 1,
-                        navigationAction = group.url?.let { create(it, this::onItemClick) },
-                        contentDescription = contentDescription
-                )
-                if (group.clicks.isEmpty()) {
-                    items.add(headerItem)
-                } else {
-                    val isExpanded = group == uiState.group
-                    items.add(ExpandableItem(headerItem, isExpanded) { changedExpandedState ->
-                        onUiState(SelectedClicksGroup(if (changedExpandedState) group else null))
-                    })
-                    if (isExpanded) {
-                        items.addAll(group.clicks.map { click ->
-                            ListItemWithIcon(
-                                    text = click.name,
-                                    textStyle = LIGHT,
-                                    value = statsUtils.toFormattedString(click.views),
-                                    showDivider = false,
-                                    navigationAction = click.url?.let { create(it, this::onItemClick) },
-                                    contentDescription = contentDescriptionHelper.buildContentDescription(
-                                            header,
-                                            click.name,
-                                            click.views
-                                    )
-                            )
-                        })
-                        items.add(Divider)
-                    }
-                }
-            }
-
-            if (useCaseMode == BLOCK && domainModel.hasMore) {
-                items.add(
-                        Link(
-                                text = R.string.stats_insights_view_more,
-                                navigateAction = create(statsGranularity, this::onViewMoreClick)
-                        )
-                )
-            }
+            addDomainModelGroup(items, domainModel, uiState)
         }
         return items
+    }
+
+    private fun addDomainModelGroup(
+        items: MutableList<BlockListItem>,
+        domainModel: ClicksModel,
+        uiState: SelectedClicksGroup
+    ) {
+        val header = Header(string.stats_clicks_link_label, string.stats_clicks_label)
+        items.add(header)
+        domainModel.groups.forEachIndexed { index, group ->
+            val groupName = group.name
+            val contentDescription = contentDescriptionHelper.buildContentDescription(
+                    header,
+                    groupName ?: "",
+                    group.views ?: 0
+            )
+            val headerItem = ListItemWithIcon(
+                    text = groupName,
+                    value = statsUtils.toFormattedString(group.views),
+                    showDivider = index < domainModel.groups.size - 1,
+                    navigationAction = group.url?.let { create(it, this::onItemClick) },
+                    contentDescription = contentDescription
+            )
+            if (group.clicks.isEmpty()) {
+                items.add(headerItem)
+            } else {
+                addGroup(group, uiState, items, headerItem, header)
+            }
+        }
+
+        if (useCaseMode == BLOCK && domainModel.hasMore) {
+            items.add(
+                    Link(
+                            text = string.stats_insights_view_more,
+                            navigateAction = create(statsGranularity, this::onViewMoreClick)
+                    )
+            )
+        }
+    }
+
+    private fun addGroup(
+        group: Group,
+        uiState: SelectedClicksGroup,
+        items: MutableList<BlockListItem>,
+        headerItem: ListItemWithIcon,
+        header: Header
+    ) {
+        val isExpanded = group == uiState.group
+        items.add(ExpandableItem(headerItem, isExpanded) { changedExpandedState ->
+            onUiState(SelectedClicksGroup(if (changedExpandedState) group else null))
+        })
+        if (isExpanded) {
+            items.addAll(group.clicks.map { click ->
+                ListItemWithIcon(
+                        text = click.name,
+                        textStyle = LIGHT,
+                        value = statsUtils.toFormattedString(click.views),
+                        showDivider = false,
+                        navigationAction = click.url?.let { create(it, this::onItemClick) },
+                        contentDescription = contentDescriptionHelper.buildContentDescription(
+                                header,
+                                click.name,
+                                click.views
+                        )
+                )
+            })
+            items.add(Divider)
+        }
     }
 
     private fun onViewMoreClick(statsGranularity: StatsGranularity) {

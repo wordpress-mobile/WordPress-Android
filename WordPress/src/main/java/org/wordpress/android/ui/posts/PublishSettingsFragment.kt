@@ -63,13 +63,46 @@ abstract class PublishSettingsFragment : Fragment() {
 
         setupContent(rootView, viewModel)
 
+        observeOnDatePicked()
+
+        observeOnPublishedDateChanged()
+
+        observeOnNotificationTime()
+
+        oberverOnUiModel(
+                dateAndTime,
+                publishNotificationTitle,
+                publishNotification,
+                publishNotificationContainer,
+                addToCalendar,
+                addToCalendarContainer
+        )
+        observeOnShowNotificationDialog()
+
+        observeOnToast()
+
+        observerOnNotificationAdded()
+
+        observeOnAddToCalendar()
+
+        viewModel.start(getPostRepository())
+        return rootView
+    }
+
+    private fun observeOnDatePicked() {
         viewModel.onDatePicked.observeEvent(viewLifecycleOwner, {
             showPostTimeSelectionDialog()
         })
+    }
+
+    private fun observeOnPublishedDateChanged() {
         viewModel.onPublishedDateChanged.observeEvent(viewLifecycleOwner, { date ->
             viewModel.updatePost(date, getPostRepository())
             trackPostScheduled()
         })
+    }
+
+    private fun observeOnNotificationTime() {
         viewModel.onNotificationTime.observe(viewLifecycleOwner, {
             it?.let { notificationTime ->
                 getPostRepository()?.let { postRepository ->
@@ -77,6 +110,16 @@ abstract class PublishSettingsFragment : Fragment() {
                 }
             }
         })
+    }
+
+    private fun oberverOnUiModel(
+        dateAndTime: TextView,
+        publishNotificationTitle: TextView,
+        publishNotification: TextView,
+        publishNotificationContainer: LinearLayout,
+        addToCalendar: TextView,
+        addToCalendarContainer: LinearLayout
+    ) {
         viewModel.onUiModel.observe(viewLifecycleOwner, {
             it?.let { uiModel ->
                 dateAndTime.text = uiModel.publishDateLabel
@@ -105,9 +148,15 @@ abstract class PublishSettingsFragment : Fragment() {
                 addToCalendarContainer.visibility = if (uiModel.notificationVisible) View.VISIBLE else View.GONE
             }
         })
+    }
+
+    private fun observeOnShowNotificationDialog() {
         viewModel.onShowNotificationDialog.observeEvent(viewLifecycleOwner, { notificationTime ->
             showNotificationTimeSelectionDialog(notificationTime)
         })
+    }
+
+    private fun observeOnToast() {
         viewModel.onToast.observeEvent(viewLifecycleOwner, {
             ToastUtils.showToast(
                     context,
@@ -116,6 +165,9 @@ abstract class PublishSettingsFragment : Fragment() {
                     Gravity.TOP
             )
         })
+    }
+
+    private fun observerOnNotificationAdded() {
         viewModel.onNotificationAdded.observeEvent(viewLifecycleOwner, { notification ->
             activity?.let {
                 NotificationManagerCompat.from(it).cancel(notification.id)
@@ -136,6 +188,9 @@ abstract class PublishSettingsFragment : Fragment() {
                 )
             }
         })
+    }
+
+    private fun observeOnAddToCalendar() {
         viewModel.onAddToCalendar.observeEvent(viewLifecycleOwner, { calendarEvent ->
             val calIntent = Intent(Intent.ACTION_INSERT)
             calIntent.data = Events.CONTENT_URI
@@ -145,8 +200,6 @@ abstract class PublishSettingsFragment : Fragment() {
             calIntent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, calendarEvent.startTime)
             startActivity(calIntent)
         })
-        viewModel.start(getPostRepository())
-        return rootView
     }
 
     private fun trackPostScheduled() {

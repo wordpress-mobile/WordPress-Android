@@ -191,42 +191,11 @@ class MediaPickerActivity : LocaleAwareActivity(), MediaPickerListener {
                 }
             }
             TAKE_PHOTO -> {
-                try {
-                    val intent = Intent()
-                    mediaCapturePath!!.let {
-                        WPMediaUtils.scanMediaFile(this, it)
-                        val f = File(it)
-                        val capturedImageUri = listOf(Uri.fromFile(f))
-                        if (mediaPickerSetup.queueResults) {
-                            intent.putQueuedUris(capturedImageUri)
-                        } else {
-                            intent.putUris(capturedImageUri)
-                        }
-                        intent.putExtra(
-                                EXTRA_MEDIA_SOURCE,
-                                ANDROID_CAMERA.name
-                        )
-                    }
-                    intent
-                } catch (e: RuntimeException) {
-                    AppLog.e(MEDIA, e)
-                    null
-                }
+                takeAPhoto()
             }
             IMAGE_EDITOR_EDIT_IMAGE -> {
                 data?.let {
-                    val intent = Intent()
-                    val uris = WPMediaUtils.retrieveImageEditorResult(data)
-                    if (mediaPickerSetup.queueResults) {
-                        intent.putQueuedUris(uris)
-                    } else {
-                        intent.putUris(uris)
-                    }
-                    intent.putExtra(
-                            EXTRA_MEDIA_SOURCE,
-                            APP_PICKER.name
-                    )
-                    intent
+                    editImageIntent(data)
                 }
             }
             else -> {
@@ -237,6 +206,43 @@ class MediaPickerActivity : LocaleAwareActivity(), MediaPickerListener {
             setResult(Activity.RESULT_OK, intent)
             finish()
         }
+    }
+
+    private fun takeAPhoto() = try {
+        val intent = Intent()
+        mediaCapturePath!!.let {
+            WPMediaUtils.scanMediaFile(this, it)
+            val f = File(it)
+            val capturedImageUri = listOf(Uri.fromFile(f))
+            if (mediaPickerSetup.queueResults) {
+                intent.putQueuedUris(capturedImageUri)
+            } else {
+                intent.putUris(capturedImageUri)
+            }
+            intent.putExtra(
+                    EXTRA_MEDIA_SOURCE,
+                    ANDROID_CAMERA.name
+            )
+        }
+        intent
+    } catch (e: RuntimeException) {
+        AppLog.e(MEDIA, e)
+        null
+    }
+
+    private fun editImageIntent(data: Intent?): Intent {
+        val intent = Intent()
+        val uris = WPMediaUtils.retrieveImageEditorResult(data)
+        if (mediaPickerSetup.queueResults) {
+            intent.putQueuedUris(uris)
+        } else {
+            intent.putUris(uris)
+        }
+        intent.putExtra(
+                EXTRA_MEDIA_SOURCE,
+                APP_PICKER.name
+        )
+        return intent
     }
 
     private fun launchChooserWithContext(openSystemPicker: OpenSystemPicker, uiHelpers: UiHelpers) {

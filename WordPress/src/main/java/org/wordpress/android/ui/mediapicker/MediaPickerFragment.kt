@@ -28,6 +28,7 @@ import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import org.wordpress.android.R
+import org.wordpress.android.R.string
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.MediaPickerFragmentBinding
 import org.wordpress.android.fluxc.model.SiteModel
@@ -266,28 +267,12 @@ class MediaPickerFragment : Fragment() {
                     { navigationEvent ->
                         when (navigationEvent) {
                             is PreviewUrl -> {
-                                MediaPreviewActivity.showPreview(
-                                        requireContext(),
-                                        null,
-                                        navigationEvent.url
-                                )
-                                AccessibilityUtils.setActionModeDoneButtonContentDescription(
-                                        activity,
-                                        getString(R.string.cancel)
-                                )
+                                previewUrl(navigationEvent)
                             }
-                            is PreviewMedia -> MediaPreviewActivity.showPreview(
-                                    requireContext(),
-                                    null,
-                                    navigationEvent.media,
-                                    null
-                            )
+                            is PreviewMedia -> previewMedia(navigationEvent)
+
                             is EditMedia -> {
-                                val inputData = WPMediaUtils.createListOfEditImageInputData(
-                                        requireContext(),
-                                        navigationEvent.uris.map { wrapper -> wrapper.uri }
-                                )
-                                ActivityLauncher.openImageEditor(activity, inputData)
+                                editMedia(navigationEvent)
                             }
                             is InsertMedia -> listener?.onItemsChosen(navigationEvent.identifiers)
                             is IconClickEvent -> listener?.onIconClicked(navigationEvent.action)
@@ -313,6 +298,35 @@ class MediaPickerFragment : Fragment() {
 
             viewModel.start(selectedIds, mediaPickerSetup, lastTappedIcon, site)
         }
+    }
+
+    private fun editMedia(navigationEvent: EditMedia) {
+        val inputData = WPMediaUtils.createListOfEditImageInputData(
+                requireContext(),
+                navigationEvent.uris.map { wrapper -> wrapper.uri }
+        )
+        ActivityLauncher.openImageEditor(activity, inputData)
+    }
+
+    private fun previewMedia(navigationEvent: PreviewMedia) {
+        MediaPreviewActivity.showPreview(
+                requireContext(),
+                null,
+                navigationEvent.media,
+                null
+        )
+    }
+
+    private fun previewUrl(navigationEvent: PreviewUrl) {
+        MediaPreviewActivity.showPreview(
+                requireContext(),
+                null,
+                navigationEvent.url
+        )
+        AccessibilityUtils.setActionModeDoneButtonContentDescription(
+                activity,
+                getString(string.cancel)
+        )
     }
 
     override fun onDestroyView() {

@@ -114,39 +114,7 @@ class SuggestionActivity : LocaleAwareActivity() {
             viewModel.suggestionPrefix.let { prefix ->
 
                 // Ensure the text always starts with appropriate prefix
-                addTextChangedListener(object : TextWatcher {
-                    var matchesPrefixBeforeChanged: Boolean? = null
-
-                    override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                        matchesPrefixBeforeChanged = s?.let { it.length == 1 && it[0] == prefix }
-                    }
-
-                    override fun afterTextChanged(s: Editable?) {}
-                    override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                        if (s == null) {
-                            return
-                        } else if (s.isEmpty() && matchesPrefixBeforeChanged == true) {
-                            // Tapping delete when only the prefix is shown exits the suggestions UI
-                            viewModel.trackExit(false)
-                            finish()
-                        } else if (s.startsWith("$prefix ")) {
-                            // Tapping the space key directly after the prefix exits the suggestions UI
-                            finishWithValue("", false)
-                        } else if (!s.startsWith(prefix)) {
-                            // Re-insert prefix if it was deleted
-                            val string = "$prefix$s"
-                            binding.autocompleteText.setText(string)
-                            binding.autocompleteText.setSelection(1)
-                            showDropDown()
-                        }
-                        matchesPrefixBeforeChanged = null
-                    }
-                })
-
-                if (text.isEmpty()) {
-                    setText("$prefix")
-                    setSelection(1)
-                }
+                showSuggestionPrefix(prefix)
             }
 
             updateEmptyView()
@@ -171,6 +139,42 @@ class SuggestionActivity : LocaleAwareActivity() {
 
             updateEmptyView()
         })
+    }
+
+    private fun SuggestionAutoCompleteText.showSuggestionPrefix(prefix: Char) {
+        addTextChangedListener(object : TextWatcher {
+            var matchesPrefixBeforeChanged: Boolean? = null
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                matchesPrefixBeforeChanged = s?.let { it.length == 1 && it[0] == prefix }
+            }
+
+            override fun afterTextChanged(s: Editable?) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                if (s == null) {
+                    return
+                } else if (s.isEmpty() && matchesPrefixBeforeChanged == true) {
+                    // Tapping delete when only the prefix is shown exits the suggestions UI
+                    viewModel.trackExit(false)
+                    finish()
+                } else if (s.startsWith("$prefix ")) {
+                    // Tapping the space key directly after the prefix exits the suggestions UI
+                    finishWithValue("", false)
+                } else if (!s.startsWith(prefix)) {
+                    // Re-insert prefix if it was deleted
+                    val string = "$prefix$s"
+                    binding.autocompleteText.setText(string)
+                    binding.autocompleteText.setSelection(1)
+                    showDropDown()
+                }
+                matchesPrefixBeforeChanged = null
+            }
+        })
+
+        if (text.isEmpty()) {
+            setText("$prefix")
+            setSelection(1)
+        }
     }
 
     private fun exitIfOnlyOneMatchingUser() {

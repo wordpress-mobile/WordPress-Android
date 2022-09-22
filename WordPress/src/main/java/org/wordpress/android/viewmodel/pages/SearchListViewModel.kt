@@ -18,6 +18,7 @@ import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.pages.PageItem.PublishedPage
 import org.wordpress.android.ui.pages.PageItem.ScheduledPage
 import org.wordpress.android.ui.pages.PageItem.TrashedPage
+import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType
@@ -25,6 +26,8 @@ import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.DRAF
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.PUBLISHED
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.SCHEDULED
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.TRASHED
+import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase.PostUploadUiState
+import org.wordpress.android.viewmodel.uistate.ProgressBarUiState
 import java.util.SortedMap
 import javax.inject.Inject
 import javax.inject.Named
@@ -103,79 +106,142 @@ class SearchListViewModel
         val (labels, labelColor) = createPageListItemLabelsUseCase.createLabels(this.post, uploadUiState)
 
         return when (status) {
-            PageStatus.PUBLISHED, PageStatus.PRIVATE ->
-                PublishedPage(
-                        remoteId = remoteId,
-                        localId = pageId,
-                        title = title,
-                        date = date,
-                        labels = labels,
-                        labelsColor = labelColor,
-                        actions = pageListItemActionsUseCase.setupPageActions(
-                                PUBLISHED,
-                                uploadUiState,
-                                pagesViewModel.site,
-                                remoteId
-                        ),
-                        actionsEnabled = areActionsEnabled,
-                        progressBarUiState = progressBarUiState,
-                        showOverlay = showOverlay,
-                        author = post.authorDisplayName
-                )
-            PageStatus.DRAFT, PageStatus.PENDING -> DraftPage(
-                    remoteId = remoteId,
-                    localId = pageId,
-                    title = title,
-                    date = date,
-                    labels = labels,
-                    labelsColor = labelColor,
-                    actions = pageListItemActionsUseCase.setupPageActions(
-                            DRAFTS,
-                            uploadUiState,
-                            pagesViewModel.site,
-                            remoteId
-                    ),
-                    actionsEnabled = areActionsEnabled,
-                    progressBarUiState = progressBarUiState,
-                    showOverlay = showOverlay,
-                    author = post.authorDisplayName
+            PageStatus.PUBLISHED, PageStatus.PRIVATE -> populatePublishedPage(
+                    labels,
+                    labelColor,
+                    uploadUiState,
+                    areActionsEnabled,
+                    progressBarUiState,
+                    showOverlay
             )
-            PageStatus.TRASHED -> TrashedPage(
-                    remoteId = remoteId,
-                    localId = pageId,
-                    title = title,
-                    date = date,
-                    labels = labels,
-                    labelsColor = labelColor,
-                    actions = pageListItemActionsUseCase.setupPageActions(
-                            TRASHED,
-                            uploadUiState,
-                            pagesViewModel.site,
-                            remoteId
-                    ),
-                    actionsEnabled = areActionsEnabled,
-                    progressBarUiState = progressBarUiState,
-                    showOverlay = showOverlay,
-                    author = post.authorDisplayName
+            PageStatus.DRAFT, PageStatus.PENDING -> populateDraftPage(
+                    labels,
+                    labelColor,
+                    uploadUiState,
+                    areActionsEnabled,
+                    progressBarUiState,
+                    showOverlay
             )
-            PageStatus.SCHEDULED -> ScheduledPage(
-                    remoteId = remoteId,
-                    localId = pageId,
-                    title = title,
-                    date = date,
-                    labels = labels,
-                    labelsColor = labelColor,
-                    actions = pageListItemActionsUseCase.setupPageActions(
-                            SCHEDULED,
-                            uploadUiState,
-                            pagesViewModel.site,
-                            remoteId
-                    ),
-                    actionsEnabled = areActionsEnabled,
-                    progressBarUiState = progressBarUiState,
-                    showOverlay = showOverlay,
-                    author = post.authorDisplayName
+            PageStatus.TRASHED -> populateTrashedPage(
+                    labels,
+                    labelColor,
+                    uploadUiState,
+                    areActionsEnabled,
+                    progressBarUiState,
+                    showOverlay
+            )
+            PageStatus.SCHEDULED -> populateScheduledPage(
+                    labels,
+                    labelColor,
+                    uploadUiState,
+                    areActionsEnabled,
+                    progressBarUiState,
+                    showOverlay
             )
         }
     }
+
+    private fun PageModel.populatePublishedPage(
+        labels: List<UiString>,
+        labelColor: LabelColor,
+        uploadUiState: PostUploadUiState,
+        areActionsEnabled: Boolean,
+        progressBarUiState: ProgressBarUiState,
+        showOverlay: ShouldShowOverlay
+    ) = PublishedPage(
+            remoteId = remoteId,
+            localId = pageId,
+            title = title,
+            date = date,
+            labels = labels,
+            labelsColor = labelColor,
+            actions = pageListItemActionsUseCase.setupPageActions(
+                    PUBLISHED,
+                    uploadUiState,
+                    pagesViewModel.site,
+                    remoteId
+            ),
+            actionsEnabled = areActionsEnabled,
+            progressBarUiState = progressBarUiState,
+            showOverlay = showOverlay,
+            author = post.authorDisplayName
+    )
+
+    private fun PageModel.populateDraftPage(
+        labels: List<UiString>,
+        labelColor: LabelColor,
+        uploadUiState: PostUploadUiState,
+        areActionsEnabled: Boolean,
+        progressBarUiState: ProgressBarUiState,
+        showOverlay: ShouldShowOverlay
+    ) = DraftPage(
+            remoteId = remoteId,
+            localId = pageId,
+            title = title,
+            date = date,
+            labels = labels,
+            labelsColor = labelColor,
+            actions = pageListItemActionsUseCase.setupPageActions(
+                    DRAFTS,
+                    uploadUiState,
+                    pagesViewModel.site,
+                    remoteId
+            ),
+            actionsEnabled = areActionsEnabled,
+            progressBarUiState = progressBarUiState,
+            showOverlay = showOverlay,
+            author = post.authorDisplayName
+    )
+
+    private fun PageModel.populateTrashedPage(
+        labels: List<UiString>,
+        labelColor: LabelColor,
+        uploadUiState: PostUploadUiState,
+        areActionsEnabled: Boolean,
+        progressBarUiState: ProgressBarUiState,
+        showOverlay: ShouldShowOverlay
+    ) = TrashedPage(
+            remoteId = remoteId,
+            localId = pageId,
+            title = title,
+            date = date,
+            labels = labels,
+            labelsColor = labelColor,
+            actions = pageListItemActionsUseCase.setupPageActions(
+                    TRASHED,
+                    uploadUiState,
+                    pagesViewModel.site,
+                    remoteId
+            ),
+            actionsEnabled = areActionsEnabled,
+            progressBarUiState = progressBarUiState,
+            showOverlay = showOverlay,
+            author = post.authorDisplayName
+    )
+
+    private fun PageModel.populateScheduledPage(
+        labels: List<UiString>,
+        labelColor: LabelColor,
+        uploadUiState: PostUploadUiState,
+        areActionsEnabled: Boolean,
+        progressBarUiState: ProgressBarUiState,
+        showOverlay: ShouldShowOverlay
+    ) = ScheduledPage(
+            remoteId = remoteId,
+            localId = pageId,
+            title = title,
+            date = date,
+            labels = labels,
+            labelsColor = labelColor,
+            actions = pageListItemActionsUseCase.setupPageActions(
+                    SCHEDULED,
+                    uploadUiState,
+                    pagesViewModel.site,
+                    remoteId
+            ),
+            actionsEnabled = areActionsEnabled,
+            progressBarUiState = progressBarUiState,
+            showOverlay = showOverlay,
+            author = post.authorDisplayName
+    )
 }

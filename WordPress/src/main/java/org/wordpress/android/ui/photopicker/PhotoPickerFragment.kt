@@ -17,6 +17,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.wordpress.android.R
+import org.wordpress.android.R.string
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.PhotoPickerFragmentBinding
 import org.wordpress.android.fluxc.model.SiteModel
@@ -28,6 +29,7 @@ import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.ProgressDialogU
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.ProgressDialogUiModel.Visible
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon.WP_MEDIA
 import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.ActionModeUiModel
+import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.ActionModeUiModel.Hidden
 import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.BottomBarUiModel
 import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.BottomBarUiModel.BottomBar.INSERT_EDIT
 import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.BottomBarUiModel.BottomBar.MEDIA_SOURCE
@@ -123,67 +125,91 @@ class PhotoPickerFragment : Fragment(R.layout.photo_picker_fragment) {
 
             recycler.layoutManager = layoutManager
 
-            var isShowingActionMode = false
-            viewModel.uiState.observe(viewLifecycleOwner, Observer {
-                it?.let { uiState ->
-                    setupPhotoList(uiState.photoListUiModel)
-                    setupBottomBar(uiState.bottomBarUiModel)
-                    setupSoftAskView(uiState.softAskViewUiModel)
-                    if (uiState.actionModeUiModel is ActionModeUiModel.Visible && !isShowingActionMode) {
-                        isShowingActionMode = true
-                        (activity as AppCompatActivity).startSupportActionMode(
-                                PhotoPickerActionModeCallback(
-                                        viewModel
-                                )
-                        )
-                    } else if (uiState.actionModeUiModel is ActionModeUiModel.Hidden && isShowingActionMode) {
-                        isShowingActionMode = false
-                    }
-                    setupFab(uiState.fabUiModel)
-                }
-            })
+            observeUiState()
 
-            viewModel.onNavigateToPreview.observeEvent(viewLifecycleOwner, { uri ->
-                MediaPreviewActivity.showPreview(
-                        requireContext(),
-                        null,
-                        uri.toString()
-                )
-                AccessibilityUtils.setActionModeDoneButtonContentDescription(activity, getString(R.string.cancel))
-            })
+            observeOnNavigateToPreview()
 
-            viewModel.onInsert.observeEvent(viewLifecycleOwner, { selectedUris ->
-                listener?.onPhotoPickerMediaChosen(selectedUris.map { it.uri })
-            })
+            observeOnInsert()
 
-            viewModel.onIconClicked.observeEvent(viewLifecycleOwner, { (icon, allowMultipleSelection) ->
-                listener?.onPhotoPickerIconClicked(icon, allowMultipleSelection)
-            })
+            observeOnIconClicked()
 
-            viewModel.onShowPopupMenu.observeEvent(viewLifecycleOwner, { uiModel ->
-                val popup = PopupMenu(activity, uiModel.view.view)
-                for (popupMenuItem in uiModel.items) {
-                    val item = popup.menu
-                            .add(popupMenuItem.title.stringRes)
-                    item.setOnMenuItemClickListener {
-                        popupMenuItem.action()
-                        true
-                    }
-                }
-                popup.show()
-            })
+            observeShowPopUpMenu()
 
-            viewModel.onPermissionsRequested.observeEvent(viewLifecycleOwner, {
-                when (it) {
-                    CAMERA -> requestCameraPermission()
-                    STORAGE -> requestStoragePermission()
-                }
-            })
+            observeOnPermissionsRequested()
 
             setupProgressDialog()
 
             viewModel.start(selectedIds, browserType, lastTappedIcon, site)
         }
+    }
+
+    private fun observeOnPermissionsRequested() {
+        viewModel.onPermissionsRequested.observeEvent(viewLifecycleOwner, {
+            when (it) {
+                CAMERA -> requestCameraPermission()
+                STORAGE -> requestStoragePermission()
+            }
+        })
+    }
+
+    private fun PhotoPickerFragmentBinding.observeUiState() {
+        var isShowingActionMode = false
+        viewModel.uiState.observe(viewLifecycleOwner, Observer {
+            it?.let { uiState ->
+                setupPhotoList(uiState.photoListUiModel)
+                setupBottomBar(uiState.bottomBarUiModel)
+                setupSoftAskView(uiState.softAskViewUiModel)
+                if (uiState.actionModeUiModel is ActionModeUiModel.Visible && !isShowingActionMode) {
+                    isShowingActionMode = true
+                    (activity as AppCompatActivity).startSupportActionMode(
+                            PhotoPickerActionModeCallback(
+                                    viewModel
+                            )
+                    )
+                } else if (uiState.actionModeUiModel is Hidden && isShowingActionMode) {
+                    isShowingActionMode = false
+                }
+                setupFab(uiState.fabUiModel)
+            }
+        })
+    }
+
+    private fun observeOnNavigateToPreview() {
+        viewModel.onNavigateToPreview.observeEvent(viewLifecycleOwner, { uri ->
+            MediaPreviewActivity.showPreview(
+                    requireContext(),
+                    null,
+                    uri.toString()
+            )
+            AccessibilityUtils.setActionModeDoneButtonContentDescription(activity, getString(string.cancel))
+        })
+    }
+
+    private fun observeOnInsert() {
+        viewModel.onInsert.observeEvent(viewLifecycleOwner, { selectedUris ->
+            listener?.onPhotoPickerMediaChosen(selectedUris.map { it.uri })
+        })
+    }
+
+    private fun observeOnIconClicked() {
+        viewModel.onIconClicked.observeEvent(viewLifecycleOwner, { (icon, allowMultipleSelection) ->
+            listener?.onPhotoPickerIconClicked(icon, allowMultipleSelection)
+        })
+    }
+
+    private fun observeShowPopUpMenu() {
+        viewModel.onShowPopupMenu.observeEvent(viewLifecycleOwner, { uiModel ->
+            val popup = PopupMenu(activity, uiModel.view.view)
+            for (popupMenuItem in uiModel.items) {
+                val item = popup.menu
+                        .add(popupMenuItem.title.stringRes)
+                item.setOnMenuItemClickListener {
+                    popupMenuItem.action()
+                    true
+                }
+            }
+            popup.show()
+        })
     }
 
     override fun onDestroyView() {

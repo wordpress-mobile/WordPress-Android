@@ -6,6 +6,8 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import org.wordpress.android.R
+import org.wordpress.android.R.color
+import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.post.PostStatus
@@ -83,59 +85,13 @@ class PrepublishingHomeViewModel @Inject constructor(
             }
 
             if (editPostRepository.status != PostStatus.PRIVATE) {
-                add(
-                        HomeUiState(
-                                actionType = PUBLISH,
-                                actionResult = editPostRepository.getEditablePost()
-                                        ?.let {
-                                            UiStringText(
-                                                    postSettingsUtils.getPublishDateLabel(
-                                                            it
-                                                    )
-                                            )
-                                        },
-                                actionClickable = true,
-                                onActionClicked = ::onActionClicked
-                        )
-                )
+                showPrivatePost(editPostRepository)
             } else {
-                add(
-                        HomeUiState(
-                                actionType = PUBLISH,
-                                actionResult = editPostRepository.getEditablePost()
-                                        ?.let {
-                                            UiStringText(
-                                                    postSettingsUtils.getPublishDateLabel(
-                                                            it
-                                                    )
-                                            )
-                                        },
-                                actionTypeColor = R.color.prepublishing_action_type_disabled_color,
-                                actionResultColor = R.color.prepublishing_action_result_disabled_color,
-                                actionClickable = false,
-                                onActionClicked = null
-                        )
-                )
+                showPublicPost(editPostRepository)
             }
 
             if (!editPostRepository.isPage) {
-                add(HomeUiState(
-                        actionType = TAGS,
-                        actionResult = getPostTagsUseCase.getTags(editPostRepository)
-                                ?.let { UiStringText(it) }
-                                ?: run { UiStringRes(R.string.prepublishing_nudges_home_tags_not_set) },
-                        actionClickable = true,
-                        onActionClicked = ::onActionClicked
-                )
-                )
-
-                val categoryString: String = getCategoriesUseCase.getPostCategoriesString(
-                        editPostRepository,
-                        site
-                )
-                if (categoryString.isNotEmpty()) {
-                    UiStringText(categoryString)
-                }
+                editPost(editPostRepository, site)
             } else {
                 UiStringRes(R.string.prepublishing_nudges_home_categories_not_set)
             }
@@ -164,6 +120,71 @@ class PrepublishingHomeViewModel @Inject constructor(
         }.toList()
 
         _uiState.postValue(prepublishingHomeUiStateList)
+    }
+
+    private fun MutableList<PrepublishingHomeItemUiState>.editPost(
+        editPostRepository: EditPostRepository,
+        site: SiteModel
+    ) {
+        add(HomeUiState(
+                actionType = TAGS,
+                actionResult = getPostTagsUseCase.getTags(editPostRepository)
+                        ?.let { UiStringText(it) }
+                        ?: run { UiStringRes(string.prepublishing_nudges_home_tags_not_set) },
+                actionClickable = true,
+                onActionClicked = ::onActionClicked
+        )
+        )
+
+        val categoryString: String = getCategoriesUseCase.getPostCategoriesString(
+                editPostRepository,
+                site
+        )
+        if (categoryString.isNotEmpty()) {
+            UiStringText(categoryString)
+        }
+    }
+
+    private fun MutableList<PrepublishingHomeItemUiState>.showPrivatePost(
+        editPostRepository: EditPostRepository
+    ) {
+        add(
+                HomeUiState(
+                        actionType = PUBLISH,
+                        actionResult = editPostRepository.getEditablePost()
+                                ?.let {
+                                    UiStringText(
+                                            postSettingsUtils.getPublishDateLabel(
+                                                    it
+                                            )
+                                    )
+                                },
+                        actionClickable = true,
+                        onActionClicked = ::onActionClicked
+                )
+        )
+    }
+
+    private fun MutableList<PrepublishingHomeItemUiState>.showPublicPost(
+        editPostRepository: EditPostRepository
+    ) {
+        add(
+                HomeUiState(
+                        actionType = PUBLISH,
+                        actionResult = editPostRepository.getEditablePost()
+                                ?.let {
+                                    UiStringText(
+                                            postSettingsUtils.getPublishDateLabel(
+                                                    it
+                                            )
+                                    )
+                                },
+                        actionTypeColor = color.prepublishing_action_type_disabled_color,
+                        actionResultColor = color.prepublishing_action_result_disabled_color,
+                        actionClickable = false,
+                        onActionClicked = null
+                )
+        )
     }
 
     private fun onStoryTitleChanged(storyTitle: String) {

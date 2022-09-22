@@ -7,6 +7,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.components.Description
+import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
@@ -113,30 +114,11 @@ class BarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
                 R.color.stats_bar_chart_gridline
         )
         axisLeft.apply {
-            valueFormatter = LargeValueFormatter()
-            setDrawGridLines(true)
-            setDrawTopYLabelEntry(true)
-            setDrawZeroLine(false)
-            setDrawAxisLine(false)
-            granularity = 1f
-            axisMinimum = 0f
-            axisMaximum = if (maxYValue < MIN_VALUE) {
-                MIN_VALUE
-            } else {
-                roundUp(maxYValue.toFloat())
-            }
-            setLabelCount(5, true)
-            textColor = greyColor
-            gridColor = lightGreyColor
-            textSize = 10f
-            gridLineWidth = 1f
+            modifyLeftAxis(maxYValue, greyColor, lightGreyColor)
         }
         extraLeftOffset = 8f
         axisRight.apply {
-            setDrawGridLines(false)
-            setDrawZeroLine(false)
-            setDrawLabels(false)
-            setDrawAxisLine(false)
+            modifyRightAxis()
         }
         xAxis.apply {
             granularity = 1f
@@ -153,19 +135,7 @@ class BarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
 
         val isClickable = item.onBarSelected != null
         if (isClickable) {
-            setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
-                override fun onNothingSelected() {
-                    item.selectedItem
-                    highlightColumn(cutEntries.indexOfFirst { it.id == item.selectedItem }, hasOverlappingEntries)
-                    item.onBarSelected?.invoke(item.selectedItem)
-                }
-
-                override fun onValueSelected(e: Entry, h: Highlight) {
-                    val value = (e as? BarEntry)?.data as? String
-                    highlightColumn(e.x.toInt(), hasOverlappingEntries)
-                    item.onBarSelected?.invoke(value)
-                }
-            })
+            selectBar(item, cutEntries, hasOverlappingEntries)
         } else {
             setOnChartValueSelectedListener(null)
         }
@@ -186,6 +156,57 @@ class BarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         }
         invalidate()
         return cutEntries.size
+    }
+
+    private fun BarChart.selectBar(
+        item: BarChartItem,
+        cutEntries: List<Bar>,
+        hasOverlappingEntries: Boolean
+    ) {
+        setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
+            override fun onNothingSelected() {
+                item.selectedItem
+                highlightColumn(cutEntries.indexOfFirst { it.id == item.selectedItem }, hasOverlappingEntries)
+                item.onBarSelected?.invoke(item.selectedItem)
+            }
+
+            override fun onValueSelected(e: Entry, h: Highlight) {
+                val value = (e as? BarEntry)?.data as? String
+                highlightColumn(e.x.toInt(), hasOverlappingEntries)
+                item.onBarSelected?.invoke(value)
+            }
+        })
+    }
+
+    private fun YAxis.modifyRightAxis() {
+        setDrawGridLines(false)
+        setDrawZeroLine(false)
+        setDrawLabels(false)
+        setDrawAxisLine(false)
+    }
+
+    private fun YAxis.modifyLeftAxis(
+        maxYValue: Int,
+        greyColor: Int,
+        lightGreyColor: Int
+    ) {
+        valueFormatter = LargeValueFormatter()
+        setDrawGridLines(true)
+        setDrawTopYLabelEntry(true)
+        setDrawZeroLine(false)
+        setDrawAxisLine(false)
+        granularity = 1f
+        axisMinimum = 0f
+        axisMaximum = if (maxYValue < MIN_VALUE) {
+            MIN_VALUE
+        } else {
+            roundUp(maxYValue.toFloat())
+        }
+        setLabelCount(5, true)
+        textColor = greyColor
+        gridColor = lightGreyColor
+        textSize = 10f
+        gridLineWidth = 1f
     }
 
     private fun BarChart.highlightColumn(index: Int, hasOverlappingColumns: Boolean) {

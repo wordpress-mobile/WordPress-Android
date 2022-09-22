@@ -19,6 +19,7 @@ import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsSi
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetColorSelectionDialogFragment
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetDataTypeSelectionDialogFragment
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetSiteSelectionDialogFragment
+import org.wordpress.android.ui.stats.refresh.lists.widget.minified.StatsMinifiedWidgetConfigureViewModel.WidgetSettingsModel
 import org.wordpress.android.ui.stats.refresh.utils.trackMinifiedWidget
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -79,23 +80,11 @@ class StatsMinifiedWidgetConfigureFragment : DaggerFragment(R.layout.stats_widge
                 viewModel.addWidget()
             }
 
-            siteSelectionViewModel.dialogOpened.observeEvent(viewLifecycleOwner, {
-                StatsWidgetSiteSelectionDialogFragment().show(requireFragmentManager(), "stats_site_selection_fragment")
-            })
+            showSiteSelection()
 
-            colorSelectionViewModel.dialogOpened.observeEvent(viewLifecycleOwner, {
-                StatsWidgetColorSelectionDialogFragment().show(
-                        requireFragmentManager(),
-                        "stats_view_mode_selection_fragment"
-                )
-            })
+            showColorSelection()
 
-            dataTypeSelectionViewModel.dialogOpened.observeEvent(viewLifecycleOwner, {
-                StatsWidgetDataTypeSelectionDialogFragment().show(
-                        requireFragmentManager(),
-                        "stats_data_type_selection_fragment"
-                )
-            })
+            showDataTypeSelection()
 
             mergeNotNull(
                     siteSelectionViewModel.notification,
@@ -108,23 +97,60 @@ class StatsMinifiedWidgetConfigureFragment : DaggerFragment(R.layout.stats_widge
                     })
 
             viewModel.settingsModel.observe(viewLifecycleOwner, { uiModel ->
-                uiModel?.let {
-                    if (uiModel.siteTitle != null) {
-                        siteValue.text = uiModel.siteTitle
-                    }
-                    colorValue.setText(uiModel.color.title)
-                    dataTypeValue.setText(uiModel.dataType.title)
-                    addWidgetButton.isEnabled = uiModel.buttonEnabled
-                }
+                ObserveSettingsModel(uiModel)
             })
         }
         viewModel.widgetAdded.observeEvent(viewLifecycleOwner, {
-            analyticsTrackerWrapper.trackMinifiedWidget(STATS_WIDGET_ADDED)
-            minifiedWidgetUpdater.updateAppWidget(requireContext(), appWidgetId = appWidgetId)
-            val resultValue = Intent()
-            resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
-            activity?.setResult(RESULT_OK, resultValue)
-            activity?.finish()
+            observeWidgetAdded(appWidgetId)
         })
+    }
+
+    private fun StatsMinifiedWidgetConfigureFragment.showSiteSelection() {
+        siteSelectionViewModel.dialogOpened.observeEvent(viewLifecycleOwner, {
+            StatsWidgetSiteSelectionDialogFragment().show(
+                    requireFragmentManager(),
+                    "stats_site_selection_fragment"
+            )
+        })
+    }
+
+    private fun StatsMinifiedWidgetConfigureFragment.showColorSelection() {
+        colorSelectionViewModel.dialogOpened.observeEvent(viewLifecycleOwner, {
+            StatsWidgetColorSelectionDialogFragment().show(
+                    requireFragmentManager(),
+                    "stats_view_mode_selection_fragment"
+            )
+        })
+    }
+
+    private fun StatsMinifiedWidgetConfigureFragment.showDataTypeSelection() {
+        dataTypeSelectionViewModel.dialogOpened.observeEvent(viewLifecycleOwner, {
+            StatsWidgetDataTypeSelectionDialogFragment().show(
+                    requireFragmentManager(),
+                    "stats_data_type_selection_fragment"
+            )
+        })
+    }
+
+    private fun StatsWidgetConfigureFragmentBinding.ObserveSettingsModel(
+        uiModel: WidgetSettingsModel
+    ) {
+        uiModel?.let {
+            if (uiModel.siteTitle != null) {
+                siteValue.text = uiModel.siteTitle
+            }
+            colorValue.setText(uiModel.color.title)
+            dataTypeValue.setText(uiModel.dataType.title)
+            addWidgetButton.isEnabled = uiModel.buttonEnabled
+        }
+    }
+
+    private fun observeWidgetAdded(appWidgetId: Int) {
+        analyticsTrackerWrapper.trackMinifiedWidget(STATS_WIDGET_ADDED)
+        minifiedWidgetUpdater.updateAppWidget(requireContext(), appWidgetId = appWidgetId)
+        val resultValue = Intent()
+        resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
+        activity?.setResult(RESULT_OK, resultValue)
+        activity?.finish()
     }
 }
