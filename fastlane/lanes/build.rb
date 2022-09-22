@@ -261,13 +261,13 @@ platform :android do
     qr_code_url = "https://chart.googleapis.com/chart?chs=500x500&cht=qr&chl=#{CGI.escape(install_url)}&choe=UTF-8"
     comment_body = <<~PR_COMMENT
       <details>
-      <summary>📲 You can test the #{product} changes on this Pull Request by <a href='#{install_url}'>downloading an installable build (#{filename})</a></summary>
+      <summary>📲 You can test these changes on #{product} by <a href='#{install_url}'>downloading <tt>#{filename}</tt></a></summary>
       <table><tr>
-        <td><a href='#{install_url}'><img src='#{qr_code_url}' width='250' height='250' /></a></td>
-        <td>You can also scan this QR code with your Android phone to download and install the APK directly on it.</td>
+        <td width="250"><a href='#{install_url}'><img src='#{qr_code_url}' width='250' height='250' /></a></td>
+        <td>Tip: You can also scan this QR code with your Android phone to download and install the APK directly on it.</td>
       </tr></table>
       </details>
-      _Note: This installable build uses the `#{INSTALLABLE_BUILD_FLAVOR}#{INSTALLABLE_BUILD_TYPE}` flavor, and does not support Google Login._
+      <em>Note: This installable build uses the <tt>#{INSTALLABLE_BUILD_FLAVOR}#{INSTALLABLE_BUILD_TYPE}</tt> flavor, and does not support Google Login.</em>
     PR_COMMENT
 
     comment_on_pr(
