@@ -42,6 +42,10 @@ ext {
 
     composeVersion = '1.1.1'
 
+    // annotations/processors
+    kotlinPoetVersion = '1.6.0'
+    autoServiceVersion = '1.0'
+
     // testing
     jUnitVersion = '4.13'
     jUnitExtVersion = '1.1.3'

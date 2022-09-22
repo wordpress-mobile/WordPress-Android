@@ -3,9 +3,6 @@ plugins {
     id "org.jetbrains.kotlin.kapt"
 }
 
-ext.kotlinPoetVersion = '1.6.0'
-ext.autoServiceVersion = '1.0'
-
 dependencies {
     implementation project(':libs:annotations')
     implementation "com.google.auto.service:auto-service:$autoServiceVersion"
