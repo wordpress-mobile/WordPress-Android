@@ -5,8 +5,3 @@ plugins {
 repositories {
     mavenCentral()
 }
-compileKotlin {
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8
-    }
-}
