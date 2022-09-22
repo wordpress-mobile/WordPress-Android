@@ -1,0 +1,4 @@
+20.7:
+Die Steuerelemente der Medienvorschau (z. B. der „Zurück“-Button) sind jetzt sowohl im hellen als auch im dunklen Modus deutlich sichtbar.
+
+Der Anmeldecode-Bildschirm im Compose-Theme hat zudem einen besseren Farbkontrast für besser lesbaren Text. Glänzend.

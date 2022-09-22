@@ -2323,10 +2323,8 @@
     <string name="my_site_blogging_prompt_card_attribution_dayone">From <b>DayOne</b></string>
     <string name="my_site_blogging_prompt_card_menu_learn_more">Learn more</string>
     <string name="my_site_blogging_prompt_card_skipped_snackbar">Skipped today\'s blogging prompt</string>
-    <plurals name="my_site_blogging_prompt_card_number_of_answers">
-        <item quantity="one">%d answer</item>
-        <item quantity="other">%d answers</item>
-    </plurals>
+    <string name="my_site_blogging_prompt_card_number_of_answers_one">1 answer</string>
+    <string name="my_site_blogging_prompt_card_number_of_answers_other">%d answers</string>
 
     <!-- site picker -->
     <string name="site_picker_title">Choose site</string>

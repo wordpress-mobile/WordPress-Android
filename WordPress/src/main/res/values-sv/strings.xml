@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-09-08 13:17:02+0000
+Translation-Revision-Date: 2022-09-19 11:43:00+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.1
+Generator: GlotPress/4.0.0-alpha.3
 Language: sv_SE
 -->
 <resources>
+    <string name="error_fetch_authors_list">Kunde inte att hämta författare</string>
+    <string name="post_settings_author">Författare</string>
     <string name="app_rating_title">Gillar du %s?</string>
     <string name="connection_service_label">Dela inlägg till %s</string>
     <string name="connections_label">Jetpack Social-anslutningar</string>
@@ -3267,7 +3269,7 @@ Language: sv_SE
     <string name="follows">Följer</string>
     <string name="note_reply_successful">Svar publicerat</string>
     <string name="sign_in">Logga in</string>
-    <string name="loading">Laddar…</string>
+    <string name="loading">Laddar in …</string>
     <string name="httppassword">HTTP-lösenord</string>
     <string name="httpuser">HTTP-användarnamn</string>
     <string name="error_media_upload">Ett fel uppstod vid uppladdning av media</string>

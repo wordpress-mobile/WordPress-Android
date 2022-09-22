@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-09-08 20:33:00+0000
+Translation-Revision-Date: 2022-09-21 08:37:10+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.1
+Generator: GlotPress/4.0.0-alpha.3
 Language: en_GB
 -->
 <resources>
+    <string name="post_settings_author">Author</string>
+    <string name="error_fetch_authors_list">Couldn\'t retrieve authors</string>
     <string name="app_rating_title">Enjoying %s?</string>
     <string name="stats_view_publicize">Jetpack Social Connections</string>
     <string name="connections_label">Jetpack Social Connections</string>

@@ -122,6 +122,7 @@ class PublishSettingsViewModelTest : BaseUnitTest() {
         val site = SiteModel()
         val siteTitle = "Site title"
         site.name = siteTitle
+        site.hasCapabilityListUsers = true
         whenever(siteStore.getSiteByLocalId(localSiteId)).thenReturn(site)
 
         val peopleList = listOf(Person(1, 1), Person(2, 1))
