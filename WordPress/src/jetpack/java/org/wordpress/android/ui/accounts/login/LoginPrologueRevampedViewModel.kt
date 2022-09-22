@@ -73,8 +73,8 @@ class LoginPrologueRevampedViewModel @Inject constructor(
         }
 
         override fun onSensorChanged(event: SensorEvent?) {
-            event?.let {
-                acceleration = it.values[1] * ACCELERATION_FACTOR + DRIFT
+            event?.values?.let { (_, yAxisAcceleration, _) ->
+            acceleration = yAxisAcceleration * ACCELERATION_FACTOR + DRIFT
                 postValue(position)
             }
         }
