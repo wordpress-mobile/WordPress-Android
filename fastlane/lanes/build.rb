@@ -259,10 +259,10 @@ platform :android do
 
     install_url = "#{INSTALLABLE_BUILD_DOMAIN}/#{upload_path}"
     qr_code_url = "https://chart.googleapis.com/chart?chs=500x500&cht=qr&chl=#{CGI.escape(install_url)}&choe=UTF-8"
-    icon = "<img alt='#{product}' src='https://raw.githubusercontent.com/buildkite/emojis/main/img-buildkite-64/#{product.downcase}.png' width='20px' />"
+    icon = "<img alt='#{product}' align='top' src='https://raw.githubusercontent.com/buildkite/emojis/main/img-buildkite-64/#{product.downcase}.png' width='20px' />"
     comment_body = <<~PR_COMMENT
       <details>
-      <summary>📲 You can test these changes on #{icon} #{product} by <a href='#{install_url}'>downloading <tt>#{filename}</tt></a></summary>
+      <summary>#{icon}📲 You can test these changes on #{product} by <a href='#{install_url}'>downloading <tt>#{filename}</tt></a></summary>
       <table><tr>
         <td width="250"><a href='#{install_url}'><img src='#{qr_code_url}' width='250' height='250' /></a></td>
         <td>Tip: You can also scan this QR code with your Android phone to download and install the APK directly on it.</td>
