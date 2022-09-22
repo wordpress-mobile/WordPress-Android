@@ -2,6 +2,7 @@
 
 20.9
 -----
+* [***] [internal] Updates the target sdk to 31 - Android 12 [https://github.com/wordpress-mobile/WordPress-Android/pull/17153]
 
 
 20.8
