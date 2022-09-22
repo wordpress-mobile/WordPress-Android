@@ -2,9 +2,6 @@ plugins {
     id "org.jetbrains.kotlin.jvm"
 }
 
-sourceCompatibility = "7"
-targetCompatibility = "7"
-
 repositories {
     mavenCentral()
 }
