@@ -10,8 +10,10 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.unit.Margin
 
@@ -40,7 +42,10 @@ fun SecondaryButton(
                             horizontal = Margin.ExtraExtraMediumLarge.value,
                     )
     ) {
-        Text(text = text)
+        Text(
+                text = text,
+                style = TextStyle(letterSpacing = (-0.25).sp),
+        )
     }
 }
 
