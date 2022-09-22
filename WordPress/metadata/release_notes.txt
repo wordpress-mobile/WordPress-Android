@@ -1,2 +1,2 @@
-* [**] Stats: Always use Western Arabic numerals in Arabic languages (previously there was a mix of Eastern and Western Arabic numerals) [https://github.com/wordpress-mobile/WordPress-Android/pull/17160]
-* [**] Added author button to the post settings and the author of the post can be changed with it. [https://github.com/wordpress-mobile/WordPress-Android/pull/17120]
+Users on multi-author sites can change content authors in post and page settings.
+Arabic language users will now see numerals on Stats screens exclusively in Western Arabic numbers—no more mix and match with Eastern Arabic numbers.
