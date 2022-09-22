@@ -1019,9 +1019,17 @@ class AppInitializer @Inject constructor(
 
         /**
          * Update locale of the static context when language is changed.
+         *
+         * When calling this method the application context **must** be already initialized.
+         * This is already the case in `Activity`, `Fragment` or `View`.
+         *
+         * When called from other places (E.g. a `TestRule`) we should provide it in the [appContext] parameter.
          */
         fun updateContextLocale(appContext: Context? = null) {
-            val context = appContext ?: context!!
+            val context = appContext ?: run {
+                check (context != null) { "Context must be initialized before calling updateContextLocale" }
+                return@run context
+            }
             this.context = LocaleManager.setLocale(context)
         }
     }
