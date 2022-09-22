@@ -262,11 +262,16 @@ platform :android do
     icon = "<img alt='#{product}' align='top' src='https://raw.githubusercontent.com/buildkite/emojis/main/img-buildkite-64/#{product.downcase}.png' width='20px' />"
     comment_body = <<~PR_COMMENT
       <details>
-      <summary>#{icon}📲 You can test these changes on #{product} by <a href='#{install_url}'>downloading <tt>#{filename}</tt></a></summary>
-      <table><tr>
-        <td width="250"><a href='#{install_url}'><img src='#{qr_code_url}' width='250' height='250' /></a></td>
-        <td>Tip: You can also scan this QR code with your Android phone to download and install the APK directly on it.</td>
-      </tr></table>
+        <summary>#{icon}📲 You can test these changes on #{product} by <a href='#{install_url}'>downloading <tt>#{filename}</tt></a></summary>
+        <table><tr>
+          <td width='250' rowspan='5'><a href='#{install_url}'><img src='#{qr_code_url}' width='250' height='250' /></a></td>
+          <td colspan='2'>💡 Tip: You can also scan this QR code with your Android phone to download and install the APK directly on it.</td>
+        </tr>
+        <tr><td width='150px'><b>Product</b></td><td><tt>#{product}</tt></td></tr>
+        <tr><td><b>Flavor</b></td><td><tt>#{INSTALLABLE_BUILD_FLAVOR}</tt></td></tr>
+        <tr><td><b>Build Type</b></td><td><tt>#{INSTALLABLE_BUILD_TYPE}</tt></td></tr>
+        <tr><td><b>Commit</b></td><td>#{ENV['BUILDKITE_COMMIT']}</td></tr>
+        </table>
       </details>
       <em>Note: This installable build uses the <tt>#{INSTALLABLE_BUILD_FLAVOR}#{INSTALLABLE_BUILD_TYPE}</tt> flavor, and does not support Google Login.</em>
     PR_COMMENT
