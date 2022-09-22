@@ -50,10 +50,10 @@ class RemoteConfigCheckBuilder(private val remoteFeatures: List<TypeName>) {
     private fun buildCheckFunction(remoteFeatures: List<Pair<String, TypeName>>): CodeBlock {
         val stringBuilder = StringBuilder()
         remoteFeatures.forEach { feature ->
-            stringBuilder.appendln("if (${feature.first}.remoteField == null) {")
+            stringBuilder.appendLine("if (${feature.first}.remoteField == null) {")
             val error = "    throw IllegalArgumentException(\"\"\"${feature.second} needs to define remoteField\"\"\")"
-            stringBuilder.appendln(error)
-            stringBuilder.appendln("}")
+            stringBuilder.appendLine(error)
+            stringBuilder.appendLine("}")
         }
         return CodeBlock.of(stringBuilder.toString().trimIndent())
     }
