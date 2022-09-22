@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
 import androidx.compose.foundation.background
@@ -42,7 +41,7 @@ class LoginPrologueRevampedFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View = ComposeView(requireContext()).apply {
+    ) = ComposeView(requireContext()).apply {
         setContent {
             AppTheme {
                 LoginScreenRevamped(
@@ -51,13 +50,17 @@ class LoginPrologueRevampedFragment : Fragment() {
                 )
             }
         }
-        requireActivity().window.addFlags(FLAG_LAYOUT_NO_LIMITS)
     }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
         check(context is LoginPrologueListener) { "$context must implement LoginPrologueListener" }
         loginPrologueListener = context
+    }
+
+    override fun onResume() {
+        super.onResume()
+        requireActivity().window.addFlags(FLAG_LAYOUT_NO_LIMITS)
     }
 
     override fun onPause() {

@@ -2859,6 +2859,7 @@
     <string name="login_prologue_fifth_caption_one">My Top Ten Cafes</string>
     <string name="login_prologue_fifth_caption_two">The World\'s Best Fans</string>
     <string name="login_prologue_fifth_caption_three">Museums in London</string>
+
     <string name="invalid_verification_code" tools:ignore="UnusedResources" a8c-src-lib="login">Invalid verification code</string>
     <string name="send_link_by_email" tools:ignore="UnusedResources" a8c-src-lib="login">Send link by email</string>
     <string name="create_account" tools:ignore="UnusedResources" a8c-src-lib="login">Create account</string>
@@ -2941,8 +2942,8 @@
     <string name="login_empty_view_try_another_account">Try with another account</string>
 
     <!-- Login Revamped -->
-    <string name="login_prologue_revamped_tagline">Write, edit, and publish from anywhere.</string>
-    <string name="login_prologue_revamped_content_description_wordpress_icon">WordPress icon</string>
+    <string name="login_prologue_revamped_tagline" tools:ignore="UnusedResources">Write, edit, and publish from anywhere.</string>
+    <string name="login_prologue_revamped_content_description_wordpress_icon" tools:ignore="UnusedResources">WordPress icon</string>
 
     <!-- Screen titles -->
     <string name="email_address_login_title" tools:ignore="UnusedResources" a8c-src-lib="login">Email address login</string>
