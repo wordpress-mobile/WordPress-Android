@@ -148,8 +148,8 @@ platform :android do
 
     gradle(
       task: 'assemble',
-      flavor: 'WordPressJalapeno',
-      build_type: 'Debug',
+      flavor: "WordPress#{INSTALLABLE_BUILD_FLAVOR}",
+      build_type: INSTALLABLE_BUILD_TYPE,
       properties: { installableBuildVersionName: generate_installable_build_number }
     )
 
@@ -170,8 +170,8 @@ platform :android do
 
     gradle(
       task: 'assemble',
-      flavor: 'JetpackJalapeno',
-      build_type: 'Debug',
+      flavor: "Jetpack#{INSTALLABLE_BUILD_FLAVOR}",
+      build_type: INSTALLABLE_BUILD_TYPE,
       properties: { installableBuildVersionName: generate_installable_build_number }
     )
 
@@ -259,7 +259,16 @@ platform :android do
 
     install_url = "#{INSTALLABLE_BUILD_DOMAIN}/#{upload_path}"
     qr_code_url = "https://chart.googleapis.com/chart?chs=500x500&cht=qr&chl=#{CGI.escape(install_url)}&choe=UTF-8"
-    comment_body = "You can test the #{product} changes on this Pull Request by <a href='#{install_url}'>downloading an installable build (#{filename})</a>, or scanning this QR code:<br><a href='#{install_url}'><img src='#{qr_code_url}' width='250' height='250' /></a>"
+    comment_body = <<~PR_COMMENT
+      <details>
+      <summary>📲 You can test the #{product} changes on this Pull Request by <a href='#{install_url}'>downloading an installable build (#{filename})</a></summary>
+      <table><tr>
+        <td><a href='#{install_url}'><img src='#{qr_code_url}' width='250' height='250' /></a></td>
+        <td>You can also scan this QR code with your Android phone to download and install the APK directly on it.</td>
+      </tr></table>
+      </details>
+      _Note: This installable build uses the `#{INSTALLABLE_BUILD_FLAVOR}#{INSTALLABLE_BUILD_TYPE}` flavor, and does not support Google Login._
+    PR_COMMENT
 
     comment_on_pr(
       project: GHHELPER_REPO,

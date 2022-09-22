@@ -18,7 +18,11 @@ APP_SPECIFIC_VALUES = {
 }.freeze
 
 UPLOAD_TO_PLAY_STORE_JSON_KEY = File.join(Dir.home, '.configure', 'wordpress-android', 'secrets', 'google-upload-credentials.json')
+
+INSTALLABLE_BUILD_FLAVOR = 'Jalapeno'.freeze
+INSTALLABLE_BUILD_TYPE = 'Debug'.freeze
 INSTALLABLE_BUILD_DOMAIN = 'https://d2twmm2nzpx3bg.cloudfront.net'
+
 PROJECT_ROOT_FOLDER = File.dirname(File.expand_path(__dir__))
 
 ########################################################################
