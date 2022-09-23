@@ -1,8 +1,8 @@
 # FIXME: Make this app dependent instead (WordPress vs Jetpack)
-RAW_SCREENSHOTS_DIR = File.join(Dir.pwd, "screenshots", "raw")
-RAW_SCREENSHOTS_PROCESSING_DIR = File.join(Dir.pwd, "screenshots", "raw_tmp")
-PROMO_SCREENSHOTS_PROCESSING_DIR = File.join(Dir.pwd, "screenshots", "promo_tmp")
-FINAL_METADATA_DIR = File.join(Dir.pwd, "metadata", "android")
+RAW_SCREENSHOTS_DIR = File.join(FASTLANE_FOLDER, "screenshots", "raw")
+RAW_SCREENSHOTS_PROCESSING_DIR = File.join(FASTLANE_FOLDER, "screenshots", "raw_tmp")
+PROMO_SCREENSHOTS_PROCESSING_DIR = File.join(FASTLANE_FOLDER, "screenshots", "promo_tmp")
+FINAL_METADATA_DIR = File.join(FASTLANE_FOLDER, "metadata", "android")
 
 # Possible values for `device` parameter can be found using `avdmanager list devices`
 SCREENSHOT_DEVICES = [
@@ -66,7 +66,7 @@ platform :android do
         app_package_name: package_name,
         tests_package_name: "#{package_name}.test",
         locales: locales,
-        output_directory: RAW_SCREENSHOTS_DIR, #FIXME: Make this dependent on the :app (wordpress vs jetpack)
+        output_directory: RAW_SCREENSHOTS_DIR, # FIXME: Make this dependent on the :app (wordpress vs jetpack)
         skip_open_summary: is_ci,
         use_tests_in_classes: test_class,
         test_instrumentation_runner: 'org.wordpress.android.WordPressTestRunner',
@@ -92,6 +92,8 @@ platform :android do
   #####################################################################################
   desc "Downloads translated promo strings from the translation system"
   lane :download_promo_strings do |options|
+    # FIXME: Make this app dependent instead (WordPress vs Jetpack)
+
     # "<key in .po file>" => { desc: "<name of txt file>" }
     files = (1..9).map do |n|
       ["play_store_screenshot_#{n}", { desc: "play_store_screenshot_#{n}.txt" }]
@@ -105,7 +107,7 @@ platform :android do
       target_files: files,
       locales: locales,
       source_locale: "en-US",
-      download_path: File.join(Dir.pwd, "/playstoreres/metadata")
+      download_path: File.join(FASTLANE_FOLDER, 'playstoreres', 'metadata')
     )
   end
 
@@ -273,7 +275,7 @@ platform :android do
   lane :upload_and_replace_screenshots_in_play_store do |options|
     app = get_app_name_option!(options)
     package_name = APP_SPECIFIC_VALUES[app.to_sym][:package_name]
-    metadata_dir = File.join('fastlane', APP_SPECIFIC_VALUES[app.to_sym][:metadata_dir], 'android')
+    metadata_dir = File.join(FASTLANE_FOLDER, APP_SPECIFIC_VALUES[app.to_sym][:metadata_dir], 'android')
 
     upload_to_play_store(
       package_name: package_name,

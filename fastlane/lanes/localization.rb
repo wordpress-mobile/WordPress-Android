@@ -135,7 +135,7 @@ platform :android do
   lane :upload_playstore_localized_metadata do |options|
     app = get_app_name_option!(options)
     package_name = APP_SPECIFIC_VALUES[app.to_sym][:package_name]
-    metadata_dir = File.join('fastlane', APP_SPECIFIC_VALUES[app.to_sym][:metadata_dir], 'android')
+    metadata_dir = File.join(FASTLANE_FOLDER, APP_SPECIFIC_VALUES[app.to_sym][:metadata_dir], 'android')
     version_code = android_get_release_version['code']
 
     upload_to_play_store(
@@ -186,7 +186,7 @@ platform :android do
 
       delete_old_changelogs(app: app, build: build_number)
 
-      download_path = File.join(Dir.pwd, app_values[:metadata_dir], 'android')
+      download_path = File.join(FASTLANE_FOLDER, app_values[:metadata_dir], 'android')
       locales = { wordpress: WP_RELEASE_NOTES_LOCALES, jetpack: JP_RELEASE_NOTES_LOCALES }[app]
       UI.header("Downloading metadata translations for #{app_values[:display_name]}")
       gp_downloadmetadata(
@@ -217,10 +217,10 @@ platform :android do
 
   ### Libraries Translation Merging ###
 
-  WORDPRESS_MAIN_STRINGS_PATH = './WordPress/src/main/res/values/strings.xml'.freeze
-  WORDPRESS_FROZEN_STRINGS_DIR_PATH = './fastlane/resources/values/'.freeze
-  JETPACK_MAIN_STRINGS_PATH = './WordPress/src/jetpack/res/values/strings.xml'.freeze
-  JETPACK_FROZEN_STRINGS_DIR_PATH = './fastlane/jetpack_resources/values/'.freeze
+  WORDPRESS_MAIN_STRINGS_PATH = File.join(PROJECT_ROOT_FOLDER, 'WordPress', 'src', 'main', 'res', 'values', 'strings.xml').freeze
+  WORDPRESS_FROZEN_STRINGS_DIR_PATH = File.join(FASTLANE_FOLDER, 'resources', 'values').freeze
+  JETPACK_MAIN_STRINGS_PATH = File.join(PROJECT_ROOT_FOLDER, 'WordPress', 'src', 'jetpack', 'res', 'values', 'strings.xml').freeze
+  JETPACK_FROZEN_STRINGS_DIR_PATH = File.join(FASTLANE_FOLDER, 'jetpack_resources', 'values').freeze
   LOCAL_LIBRARIES_STRINGS_PATHS = [
     # Note: for those we don't set `add_ignore_attr` to true because we currently use `checkDependencies true` in `WordPress/build.gradle`
     # Which will correctly detect strings from the app's `strings.xml` being used by one of the module.
@@ -260,15 +260,11 @@ platform :android do
   ].freeze
 
   lane :update_frozen_strings_for_translation do
-    # We need to `cd` to the parent directory because, unlike when calling fastlane actions, commands running directly from the `Fastfile`
-    # (like `FileUtils` calls here) run relative to the `./fastlane` folder, but the `*_DIR_PATH` we use are relative to the repo root.
-    # See: https://docs.fastlane.tools/advanced/fastlane/#directory-behavior
-    Dir.chdir('..') do
-      FileUtils.mkdir_p(WORDPRESS_FROZEN_STRINGS_DIR_PATH)
-      FileUtils.cp(WORDPRESS_MAIN_STRINGS_PATH, WORDPRESS_FROZEN_STRINGS_DIR_PATH)
-      FileUtils.mkdir_p(JETPACK_FROZEN_STRINGS_DIR_PATH)
-      FileUtils.cp(JETPACK_MAIN_STRINGS_PATH, JETPACK_FROZEN_STRINGS_DIR_PATH)
-    end
+    FileUtils.mkdir_p(WORDPRESS_FROZEN_STRINGS_DIR_PATH)
+    FileUtils.cp(WORDPRESS_MAIN_STRINGS_PATH, WORDPRESS_FROZEN_STRINGS_DIR_PATH)
+    FileUtils.mkdir_p(JETPACK_FROZEN_STRINGS_DIR_PATH)
+    FileUtils.cp(JETPACK_MAIN_STRINGS_PATH, JETPACK_FROZEN_STRINGS_DIR_PATH)
+
     git_commit(
       path: [File.join(WORDPRESS_FROZEN_STRINGS_DIR_PATH, 'strings.xml'), File.join(JETPACK_FROZEN_STRINGS_DIR_PATH, 'strings.xml')],
       message: 'Freeze strings for translation',
