@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2022-02-14 03:28:36+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
-Generator: GlotPress/4.0.0-alpha.1
+Generator: GlotPress/4.0.0-alpha.3
 Language: sr_RS
 -->
 <resources>
@@ -335,7 +335,6 @@ Language: sr_RS
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">Додирни двапут за подешавања боја</string>
     <string name="reader_empty_followed_blogs_description">Када пратите веб локације, овде ћете видети њихов садржај</string>
     <string name="crop">исеци</string>
-    <string name="feature_announcement_dialog_label">Шта има ново у Вордпресу</string>
     <string name="feature_announcement_find_out_mode">Сазнај више</string>
     <string name="insert_label_with_count">Убаци %d</string>
     <string name="photo_picker_use_video">Користи овај видео запис</string>
@@ -638,7 +637,6 @@ Language: sr_RS
     <string name="app_rating_rate_later">Касније</string>
     <string name="app_rating_rate_now">Оцените сада</string>
     <string name="app_rating_message">Лепо је видети те опет! Ако копате по апликацији, волели бисмо оцену у Гугл Плеј продавници.</string>
-    <string name="app_rating_title">Уживате у Вордпресу?</string>
     <string name="stats_more_posts">Више чланака</string>
     <string name="stats_fewer_posts">Мање чланака</string>
     <string name="stats_site_not_loaded_yet">Сајт још увек није учитан</string>
@@ -1323,7 +1321,6 @@ Language: sr_RS
     <string name="connected_accounts_label">Повезани налози</string>
     <string name="sharing">Дељење</string>
     <string name="tabbar_accessibility_label_notifications">Обавештења. Управљајте обавештењима.</string>
-    <string name="connections_label">Повезаности</string>
     <string name="my_site_btn_sharing">Дељење</string>
     <string name="button_not_now">Не сада</string>
     <string name="editor_draft_saved_locally">Нацрт сачуван на уређају</string>

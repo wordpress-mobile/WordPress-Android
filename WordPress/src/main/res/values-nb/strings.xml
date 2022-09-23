@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2022-06-10 14:21:52+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.1
+Generator: GlotPress/4.0.0-alpha.3
 Language: nb_NO
 -->
 <resources>
@@ -562,7 +562,6 @@ Language: nb_NO
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">Dobbelttrykk for å gå til fargeinnstillinger</string>
     <string name="reader_empty_followed_blogs_description">Når du følger nettsteder vil du se innholdet her</string>
     <string name="feature_announcement_find_out_mode">Finn ut mer</string>
-    <string name="feature_announcement_dialog_label">Hva er nytt i WordPress?</string>
     <string name="insert_label_with_count">Sett inn %d</string>
     <string name="crop">klipp</string>
     <string name="preview_image_thumbnail_description">Forhåndsvis miniatyrbilde</string>
@@ -868,7 +867,6 @@ Language: nb_NO
     <string name="share_desc">Del</string>
     <string name="navigate_back_desc">Gå tilbake</string>
     <string name="navigate_forward_desc">Gå forover</string>
-    <string name="calendar_scheduled_post_description">\"%1$s\" planlagt for publisering den \"%2$s\" i din WordPress-app\n%3$s</string>
     <string name="calendar_scheduled_post_title">WordPress planlagt innlegg: \"%s\"</string>
     <string name="notification_post_will_be_published_in_ten_minutes">\"%s\" vil bli publiser om 10 minutter</string>
     <string name="notification_post_will_be_published_in_one_hour">\"%s\" vil bli publisert om en time</string>
@@ -1038,7 +1036,6 @@ Language: nb_NO
     <string name="app_rating_rate_later">Senere</string>
     <string name="app_rating_rate_now">Vurder nå</string>
     <string name="app_rating_message">Hyggelig å se deg igjen! Om du liker appen skulle vi gjerne ha en vurdering på Google Play-butikken.</string>
-    <string name="app_rating_title">Har du glede av WordPress?</string>
     <string name="editor_post_converted_back_to_draft">Innlegg konvertert tilbake til kladd</string>
     <string name="stats_insights_posting_activity">Publiseringsaktivitet</string>
     <string name="stats_site_not_loaded_yet">Nettstedet er ikke lastet inn ennå</string>
@@ -1841,10 +1838,8 @@ Language: nb_NO
     <string name="share_btn_disconnect">Koble fra</string>
     <string name="share_btn_connect">Koble til</string>
     <string name="connection_service_description">Koble til for å automatisk dele dine blogginnlegg til %s.</string>
-    <string name="connection_service_label">Legg ut på %s</string>
     <string name="connected_accounts_label">Tilkoblede kontoer</string>
     <string name="connections_description">Koble til dine sosiale favorittmedietjenester for å automatisk dele nye innlegg med vennene dine.</string>
-    <string name="connections_label">Tilkoblinger</string>
     <string name="sharing">Deling</string>
     <string name="tabbar_accessibility_label_notifications">Notifikasjoner. Håndter dine notifikasjoner.</string>
     <string name="tabbar_accessibility_label_reader">Leseren. Følg innhold fra andre nettsteder.</string>

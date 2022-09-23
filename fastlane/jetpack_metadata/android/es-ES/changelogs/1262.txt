@@ -1,4 +1,0 @@
-20,5:
-- Hemos añadido una etiqueta en los ajustes de la aplicación para mostrar el idioma actual de la interfaz.
-- Hemos aumentado el tamaño de las capturas de pantalla en el selector de temas del sitio para conseguir una vista previa de alta resolución de las imágenes.
-- En el proceso de creación de sitios, hemos cambiado el color del texto del botón Omitir de azul a verde de Jetpack.

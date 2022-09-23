@@ -553,7 +553,6 @@
             android:theme="@style/WordPress.NoActionBar" />
         <activity
             android:name=".ui.reader.ReaderSubsActivity"
-            android:label="@string/reader_title_subs"
             android:theme="@style/WordPress.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
         <activity
@@ -565,7 +564,6 @@
             android:theme="@style/ReaderMediaViewerTheme" />
         <activity
             android:name=".ui.reader.discover.interests.ReaderInterestsActivity"
-            android:label="@string/reader_title_interests"
             android:theme="@style/WordPress.NoActionBar" />
 
         <!-- Gutenberg activities -->
@@ -604,7 +602,6 @@
             android:name=".ui.AddQuickPressShortcutActivity"
             android:label="@string/quickpress_shortcut_activity_label"
             android:theme="@style/WordPress.NoActionBar"
-            android:enabled="@string/widgets_enabled"
             android:exported="true"
             tools:ignore="ManifestResource">
             <intent-filter>
@@ -886,7 +883,6 @@
         <receiver
             android:name=".ui.stats.refresh.lists.widget.alltime.StatsAllTimeWidget"
             android:label="@string/stats_widget_all_time_insights_name"
-            android:enabled="@string/widgets_enabled"
             android:exported="false"
             tools:ignore="ManifestResource">
             <intent-filter>
@@ -900,7 +896,6 @@
         <receiver
             android:name=".ui.stats.refresh.lists.widget.today.StatsTodayWidget"
             android:label="@string/stats_widget_today_insights_name"
-            android:enabled="@string/widgets_enabled"
             android:exported="false"
             tools:ignore="ManifestResource">
             <intent-filter>
@@ -914,7 +909,6 @@
         <receiver
             android:name=".ui.stats.refresh.lists.widget.minified.StatsMinifiedWidget"
             android:label="@string/stats_widget_minified_name"
-            android:enabled="@string/widgets_enabled"
             android:exported="false"
             tools:ignore="ManifestResource">
             <intent-filter>

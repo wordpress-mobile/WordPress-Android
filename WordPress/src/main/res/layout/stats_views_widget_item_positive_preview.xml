@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/StatsWidgetListItem"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/stats_widget_list_item_height">
+
+    <TextView
+        style="@style/StatsWidgetKey.Light"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:text="?widgetContent1"
+        tools:text="Today"/>
+
+    <TextView
+        style="@style/StatsChange.PositiveDark"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="?widgetContentPositive"
+        tools:text="+25(1%)"/>
+
+    <TextView
+        style="@style/StatsWidgetValue.Light"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="2dp"
+        android:text="?widgetContent2"
+        tools:text="+15,908"/>
+</LinearLayout>
+

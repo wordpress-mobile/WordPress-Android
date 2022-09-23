@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/settings_fragment_root"
     android:theme="@style/PostSettingsTheme"
     android:layout_width="match_parent"
@@ -63,6 +64,27 @@
                     android:id="@+id/post_password"
                     style="@style/PostSettingsSubtitle"
                     android:hint="@string/post_settings_not_set" />
+            </LinearLayout>
+
+            <View
+                android:id="@+id/post_author_divider"
+                style="@style/PostSettingsDivider"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+            <LinearLayout
+                android:id="@+id/post_author_container"
+                style="@style/PostSettingsContainer"
+                android:visibility="gone"
+                tools:visibility="visible" >
+
+                <com.google.android.material.textview.MaterialTextView
+                    style="@style/PostSettingsTitle"
+                    android:text="@string/post_settings_author" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/post_author"
+                    style="@style/PostSettingsSubtitle" />
             </LinearLayout>
         </LinearLayout>
 

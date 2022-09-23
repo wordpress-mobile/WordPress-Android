@@ -1,0 +1,5 @@
+20.7 :
+- Les widgets Jetpack sont désormais disponibles sur l’écran d’accueil de votre appareil
+- Les commandes de l’aperçu des médias sont visibles en mode clair et en mode sombre
+- L’écran du code de connexion du thème Compose présente un meilleur contraste de couleurs
+- Certains éléments de l’éditeur et des réglages d’article se présentent désormais en bleu WordPress

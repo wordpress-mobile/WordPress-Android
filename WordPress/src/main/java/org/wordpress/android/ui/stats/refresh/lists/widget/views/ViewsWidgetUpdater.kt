@@ -3,6 +3,7 @@ package org.wordpress.android.ui.stats.refresh.lists.widget.views
 import android.appwidget.AppWidgetManager
 import android.content.ComponentName
 import android.content.Context
+import android.view.View
 import android.widget.RemoteViews
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
@@ -43,6 +44,7 @@ class ViewsWidgetUpdater
         val networkAvailable = networkUtilsWrapper.isNetworkAvailable()
         val layout = widgetUtils.getLayout(colorMode = colorMode)
         val views = RemoteViews(context.packageName, layout)
+        views.setViewVisibility(R.id.widget_title_container, View.VISIBLE)
         views.setTextViewText(R.id.widget_title, resourceProvider.getString(R.string.stats_views))
         widgetUtils.setSiteIcon(siteModel, context, views, appWidgetId)
         val hasAccessToken = accountStore.hasAccessToken()

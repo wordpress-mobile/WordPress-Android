@@ -1,0 +1,5 @@
+20.7:
+- Jetpack bileşenleri artık cihazınızın ana ekranında mevcut
+- Ortam önizlemesi kontrolleri hem aydınlık hem de karanlık modda görünüyor
+- Compose temasının Oturum Açma Kodu ekranı artık daha iyi bir renk kontrastına sahip
+- Düzenleyici ve gönderi ayarlarının belirli öğeleri artık WordPress mavisi renginde

@@ -1,3 +1,0 @@
-20.5:
-- Kami menambahkan label baru di Pengaturan Aplikasi untuk menunjukkan bahasa antarmuka aplikasi saat ini. Menakjubkan.
-- Sekarang, setelah aplikasi mendukung pratinjau gambar dengan resolusi lebih tinggi, kami memperbesar tangkapan layar pada pemilih tema situs. Gambar pratinjau pun lebih tajam dan tidak pecah.

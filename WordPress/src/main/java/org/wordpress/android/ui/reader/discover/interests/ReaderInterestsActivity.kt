@@ -2,10 +2,11 @@ package org.wordpress.android.ui.reader.discover.interests
 
 import android.os.Bundle
 import android.view.MenuItem
-import androidx.appcompat.app.AppCompatActivity
+import org.wordpress.android.R
 import org.wordpress.android.databinding.ReaderInterestsActivityBinding
+import org.wordpress.android.ui.LocaleAwareActivity
 
-class ReaderInterestsActivity : AppCompatActivity() {
+class ReaderInterestsActivity : LocaleAwareActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -16,6 +17,7 @@ class ReaderInterestsActivity : AppCompatActivity() {
         supportActionBar?.let {
             it.setHomeButtonEnabled(true)
             it.setDisplayHomeAsUpEnabled(true)
+            it.title = getString(R.string.reader_title_interests)
         }
     }
 

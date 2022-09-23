@@ -1,3 +1,0 @@
-20.5:
-- We added a new label in App Settings to show the app’s current interface language. Shiny.
-- Now that the app supports higher-resolution image previews, we bumped up the size of theme screenshots in the site theme picker. No more pixellation, only pixel perfection.

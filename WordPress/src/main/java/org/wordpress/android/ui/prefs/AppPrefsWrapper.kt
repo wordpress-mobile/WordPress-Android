@@ -232,6 +232,11 @@ class AppPrefsWrapper @Inject constructor() {
         AppPrefs.saveFirstBloggingPromptsOnboarding(isFirstTime)
     }
 
+    fun getIsFirstTrySharedLoginJetpack(): Boolean = AppPrefs.getIsFirstTrySharedLoginJetpack()
+
+    fun saveIsFirstTrySharedLoginJetpack(isFirstTry: Boolean) =
+            AppPrefs.saveIsFirstTrySharedLoginJetpack(isFirstTry)
+
     companion object {
         private const val LIGHT_MODE_ID = 0
         private const val DARK_MODE_ID = 1

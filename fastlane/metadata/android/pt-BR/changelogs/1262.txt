@@ -1,3 +1,0 @@
-20.5:
-– Adicionamos um novo rótulo nas configurações do aplicativo para mostrar o idioma atual da interface. Ficou ótimo.
-– Agora que o aplicativo suporta a visualização de imagens em alta resolução, aumentamos o tamanho das capturas de tela do tema no seletor de temas do site. Chega de pixelização, agora temos pixel perfeito.

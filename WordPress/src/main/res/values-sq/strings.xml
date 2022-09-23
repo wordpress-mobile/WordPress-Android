@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-07-29 09:43:19+0000
+Translation-Revision-Date: 2022-09-12 10:43:51+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.1
+Generator: GlotPress/4.0.0-alpha.3
 Language: sq_AL
 -->
 <resources>
@@ -47,7 +47,6 @@ Language: sq_AL
     <string name="stats_insights_comments_guide_card">💡Prekni “SHIHNI MË TEPËR”, që të shihni komentuesit tuaj kryesues.</string>
     <string name="stats_insights_latest_post_empty">Shihni prapë, kur të keni botuar postimin tuaj të parë!</string>
     <string name="stats_insights_views_and_visitors_visitors_empty_state">Shihni ndihmëzat tona kryesuese për shtim të parjeve dhe trafikut %1$s</string>
-    <string name="stats_view_publicize">Lidhje Mediash Shoqërore</string>
     <string name="stats_action_card_schedule_post_message">✍️ Planifikoni botimin e skicave tuaja sipas kohës më të përshtatshme për mbërritjen te publiku juaj.</string>
     <string name="stats_action_card_blogging_reminders_message">💡Postimi në mënyrë të rregullt është një mënyrë e goditur për të krijuar publikun tuaj. Shtoni një kujtues për t’ju mbajtur në këtë pistë.</string>
     <string name="stats_action_card_grow_audience_message">💡Ngrijeni më shpejt një shkallë më lart blogimin tuaj, me kursin tonë &lt;i&gt;Hyrje në Blogim&lt;/i&gt; të drejtuar nga ekspertë.</string>
@@ -1219,7 +1218,7 @@ Language: sq_AL
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">Prekeni dyfish që të kaloni te rregullimet e ngjyrave</string>
     <string name="reader_empty_followed_blogs_description">Kur ndiqni sajte, lëndën e tyre do ta shihni këtu</string>
     <string name="feature_announcement_find_out_mode">Shihni më tepër</string>
-    <string name="feature_announcement_dialog_label">Ç’ka të Re Në WordPress</string>
+    <string name="feature_announcement_dialog_label">Ç’ka të Re Në %s</string>
     <string name="insert_label_with_count">Fut %d</string>
     <string name="crop">qethe</string>
     <string name="error_failed_to_load_into_file">S’u arrit të ngarkohej në kartelë, ju lutemi, riprovoni.</string>
@@ -1318,7 +1317,7 @@ Language: sq_AL
     <string name="post_list_tab_trashed_posts">Shpënë te hedhurinat</string>
     <string name="post_list_tab_scheduled_posts">Vënë në plan</string>
     <string name="post_list_tab_published_posts">Botuar</string>
-    <string name="sharing_facebook_account_must_have_pages">Lidhja Facebook s’gjen dot ndonjë Faqe. Publicize s’mund të lidhet me Profile Facebook, vetëm me Faqe të botuara.</string>
+    <string name="sharing_facebook_account_must_have_pages">Lidhja Facebook s’gjen dot ndonjë Faqe. Jetpack Social s’mund të lidhet me Profile Facebook, vetëm me Faqe të botuara.</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">I palidhur</string>
     <string name="notifications_tab_title_likes">Pëlqime</string>
     <string name="notifications_tab_title_follows">Ndjekje</string>
@@ -1545,7 +1544,7 @@ Language: sq_AL
     <string name="share_desc">Ndajeni me të tjerë</string>
     <string name="navigate_back_desc">Shko mbrapa</string>
     <string name="navigate_forward_desc">Shko përpara</string>
-    <string name="calendar_scheduled_post_description">“%1$s” u vu në plan për botim më “%2$s” te aplikacioni juaj WordPress \n %3$s</string>
+    <string name="calendar_scheduled_post_description">“%1$s” u vu në plan për botim më “%2$s” te aplikacioni juaj %4$s \n %3$s</string>
     <string name="calendar_scheduled_post_title">Postim WordPress i Vënë Në Plan: \"%s\"</string>
     <string name="notification_post_will_be_published_in_ten_minutes">\"%s\" do të botohet brenda 10 minutash</string>
     <string name="notification_post_will_be_published_in_one_hour">\"%s\" do të botohet pas 1 ore</string>
@@ -1717,7 +1716,6 @@ Language: sq_AL
     <string name="app_rating_rate_later">Më vonë</string>
     <string name="app_rating_rate_now">Vlerësojeni tani</string>
     <string name="app_rating_message">Na bëhet qejfi t’ju rishohim! Nëse jua ka ënda aplikacionin, do të na pëlqente të vlerësim te Google Play Store.</string>
-    <string name="app_rating_title">Ju pëlqen WordPress-i?</string>
     <string name="editor_post_converted_back_to_draft">Postimi i shndërrua sërish në skicë</string>
     <string name="stats_insights_posting_activity">Veprimtari Postimi</string>
     <string name="stats_site_not_loaded_yet">Sajt ende i pangarkuar</string>
@@ -2447,6 +2445,7 @@ Language: sq_AL
     <string name="requesting_otp">Po kërkohet një kod verifikimi përmes SMS-je.</string>
     <string name="login_text_otp">Më mirë më dërgoni kod me tekst</string>
     <string name="enter_verification_code">Thuajse arritëm! Ju lutemi, jepni kodin e verifikimit prej aplikacionit tuaj Authenticator.</string>
+    <string name="open_mail">Hap Postën</string>
     <string name="next">Pasuesi</string>
     <string name="enter_email_wordpress_com">Që të administroni krejt sajtet tuaj WordPress, bëni hyrjen te WordPress.com.</string>
     <string name="image_optimization_promo_desc">Optimizimi i figurave i mpak figurat, për ngarkim më të shpejtë.\n\nKëtë mund ta ndryshoni kurdo, te rregullimet e sajtit.</string>
@@ -2544,10 +2543,8 @@ Language: sq_AL
     <string name="share_btn_disconnect">Shkëputu</string>
     <string name="share_btn_connect">Lidhe</string>
     <string name="connection_service_description">Lidheni, që postimet e blogut tuaj të ndahen vetvetiu në %s.</string>
-    <string name="connection_service_label">Publicizo-je te %s</string>
     <string name="connected_accounts_label">Llogari të lidhura</string>
     <string name="connections_description">Lidhni shërbimet tuaja të parapëlqyera shoqërore për media, që postimet e reja të ndahen vetvetiu me miqtë tuaj.</string>
-    <string name="connections_label">Lidhje</string>
     <string name="sharing">Ndarje Me të Tjerët</string>
     <string name="tabbar_accessibility_label_notifications">Njoftime. Administroni njoftimet tuaja.</string>
     <string name="tabbar_accessibility_label_reader">Reader. Ndiqni lëndë nga sajte të tjerë.</string>

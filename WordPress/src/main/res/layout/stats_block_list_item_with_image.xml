@@ -33,7 +33,7 @@
         app:layout_constraintEnd_toStartOf="@id/stats_image"
         tools:text="Fun activities with friends in Kyoto, Japan" />
 
-    <com.google.android.material.textview.MaterialTextView
+    <org.wordpress.android.widgets.MaterialTextViewWithNumerals
         android:id="@+id/stats_sub_title"
         style="@style/StatsBlockText"
         android:layout_width="0dp"

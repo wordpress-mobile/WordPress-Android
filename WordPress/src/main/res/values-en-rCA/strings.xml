@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2022-06-29 06:25:14+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.1
+Generator: GlotPress/4.0.0-alpha.3
 Language: en_CA
 -->
 <resources>
@@ -31,7 +31,6 @@ Language: en_CA
     <string name="stats_insights_comments_guide_card">💡Tap \'VIEW MORE\' to see your top commenters.</string>
     <string name="stats_insights_latest_post_empty">Check back when you\'ve published your first post!</string>
     <string name="stats_insights_views_and_visitors_visitors_empty_state">Check out our top tips to increase your views and traffic %1$s</string>
-    <string name="stats_view_publicize">Social Media Connections</string>
     <string name="stats_action_card_schedule_post_message">✍️ Schedule your drafts to publish at the best time to reach your audience.</string>
     <string name="stats_action_card_blogging_reminders_message">💡Posting consistently is a great way to build your audience. Add a reminder to keep you on track.</string>
     <string name="stats_action_card_grow_audience_message">💡Level up your blogging faster with our expert-led &lt;i&gt;Intro to Blogging&lt;/i&gt; course.</string>
@@ -1208,7 +1207,6 @@ Language: en_CA
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">Double tap to go to colour settings</string>
     <string name="reader_empty_followed_blogs_description">When you follow sites, you\'ll see their content here</string>
     <string name="feature_announcement_find_out_mode">Find out more</string>
-    <string name="feature_announcement_dialog_label">What\'s New In WordPress</string>
     <string name="insert_label_with_count">Insert %d</string>
     <string name="crop">crop</string>
     <string name="error_failed_to_load_into_file">Failed to load into file, please try again.</string>
@@ -1307,7 +1305,6 @@ Language: en_CA
     <string name="post_list_tab_trashed_posts">Trashed</string>
     <string name="post_list_tab_scheduled_posts">Scheduled</string>
     <string name="post_list_tab_published_posts">Published</string>
-    <string name="sharing_facebook_account_must_have_pages">The Facebook connection cannot find any Pages. Publicize cannot connect to Facebook Profiles, only published Pages.</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">Not Connected</string>
     <string name="notifications_tab_title_likes">Likes</string>
     <string name="notifications_tab_title_follows">Follows</string>
@@ -1534,7 +1531,6 @@ Language: en_CA
     <string name="share_desc">Share</string>
     <string name="navigate_back_desc">Go back</string>
     <string name="navigate_forward_desc">Go forward</string>
-    <string name="calendar_scheduled_post_description">\"%1$s\" scheduled for publishing on \"%2$s\" in your WordPress app \n %3$s</string>
     <string name="calendar_scheduled_post_title">WordPress Scheduled Post: \"%s\"</string>
     <string name="notification_post_will_be_published_in_ten_minutes">\"%s\" will be published in 10 minutes</string>
     <string name="notification_post_will_be_published_in_one_hour">\"%s\" will be published in 1 hour</string>
@@ -1706,7 +1702,6 @@ Language: en_CA
     <string name="app_rating_rate_later">Later</string>
     <string name="app_rating_rate_now">Rate now</string>
     <string name="app_rating_message">Nice to see you again! If you’re digging the app, we’d love a rating on the Google Play Store.</string>
-    <string name="app_rating_title">Enjoying WordPress?</string>
     <string name="editor_post_converted_back_to_draft">Post converted back to draft</string>
     <string name="stats_insights_posting_activity">Posting Activity</string>
     <string name="stats_site_not_loaded_yet">Site not loaded yet</string>
@@ -2533,10 +2528,8 @@ Language: en_CA
     <string name="share_btn_disconnect">Disconnect</string>
     <string name="share_btn_connect">Connect</string>
     <string name="connection_service_description">Connect to automatically share your blog posts to %s.</string>
-    <string name="connection_service_label">Publicize to %s</string>
     <string name="connected_accounts_label">Connected accounts</string>
     <string name="connections_description">Connect your favourite social media services to automatically share new posts with friends.</string>
-    <string name="connections_label">Connections</string>
     <string name="sharing">Sharing</string>
     <string name="tabbar_accessibility_label_notifications">Notifications. Manage your notifications.</string>
     <string name="tabbar_accessibility_label_reader">Reader. Follow content from other sites.</string>

@@ -1,11 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-08-08 12:35:44+0000
+Translation-Revision-Date: 2022-09-19 11:43:00+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.1
+Generator: GlotPress/4.0.0-alpha.3
 Language: sv_SE
 -->
 <resources>
+    <string name="error_fetch_authors_list">Kunde inte att hämta författare</string>
+    <string name="post_settings_author">Författare</string>
+    <string name="app_rating_title">Gillar du %s?</string>
+    <string name="connection_service_label">Dela inlägg till %s</string>
+    <string name="connections_label">Jetpack Social-anslutningar</string>
+    <string name="stats_widget_log_in_to_add_message">Logga in på Jetpack-appen för att lägga till en widget.</string>
+    <string name="stats_view_publicize">Jetpack Social-anslutningar</string>
+    <string name="login_magic_links_email_sent">Vi har precis skickat en magisk länk till</string>
+    <string name="login_magic_links_sent_label_short">Kontrollera din e-post på denna enhet!</string>
+    <string name="or_use_password">Använd lösenord för att logga in</string>
+    <string name="wp_jetpack_powered_notifications_powered_by_jetpack_caption">Håll dig informerad med uppdateringar i realtid för nya kommentarer, webbplatstrafik, säkerhetsrapporter och mer.</string>
+    <string name="wp_jetpack_powered_notifications_powered_by_jetpack">Aviseringar drivs med Jetpack</string>
+    <string name="wp_jetpack_powered_stats_powered_by_jetpack_caption">Följ upp hur trafiken växer och hitta mer information om dina läsare i den nydesignade sektionen statistik och insikter som nu finns i den nya Jetpack-appen.</string>
+    <string name="wp_jetpack_powered_stats_powered_by_jetpack">Statistik drivs med Jetpack</string>
+    <string name="wp_jetpack_powered_reader_powered_by_jetpack_caption">Funktionerna för att hitta, följa och gilla dina webbplatser och inlägg i ”läsaren” finns ny i den nya Jetpack-appen.</string>
+    <string name="wp_jetpack_powered_reader_powered_by_jetpack">Läsare drivs med Jetpack</string>
     <string name="wp_jetpack_powered_features">Den nya Jetpack-appen innehåller statistik, läsaren, aviseringar och annat som förbättrar din WordPress-installation.</string>
     <string name="wp_jetpack_powered_better_with_jetpack">WordPress är bättre med Jetpack</string>
     <string name="gutenberg_native_upgrade_your_plan_to_use_video_covers">Uppgradera ditt paket för att använda videocovers</string>
@@ -50,7 +66,6 @@ Language: sv_SE
     <string name="stats_insights_comments_guide_card">💡Tryck på ”Visa mer” för att se vilka som kommenterar dig mest.</string>
     <string name="stats_insights_latest_post_empty">Kom tillbaka när du har publicerat ditt första inlägg!</string>
     <string name="stats_insights_views_and_visitors_visitors_empty_state">Kolla in våra bästa tips för fler sidvisningar och mer trafik %1$s</string>
-    <string name="stats_view_publicize">Kopplingar till sociala media</string>
     <string name="stats_action_card_schedule_post_message">✍️ Schemalägg dina utkast för publicering vid den tid du når flest läsare.</string>
     <string name="stats_action_card_blogging_reminders_message">💡Att publicera regelbundet är ett bra sätt att bygga upp en större läsarkrets. Lägg till påminnelser som hjälper dig att hålla takten.</string>
     <string name="stats_action_card_grow_audience_message">💡Lyft snabbare ditt bloggande till en ny nivå med hjälp av vår expertledda kurs &lt;i&gt;Introduktion till bloggning&lt;/i&gt;.</string>
@@ -1228,7 +1243,7 @@ Language: sv_SE
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">Dubbeltryck för att gå till färginställningarna</string>
     <string name="reader_empty_followed_blogs_description">Om du följer några webbplatser kan du se deras innehåll här</string>
     <string name="feature_announcement_find_out_mode">Ta reda på mer</string>
-    <string name="feature_announcement_dialog_label">Nyheter i WordPress</string>
+    <string name="feature_announcement_dialog_label">Vad som är nytt i %s</string>
     <string name="insert_label_with_count">Infoga %d</string>
     <string name="crop">beskär</string>
     <string name="error_failed_to_load_into_file">Lyckades inte ladda in i filen, försök igen.</string>
@@ -1327,7 +1342,7 @@ Language: sv_SE
     <string name="post_list_tab_trashed_posts">Borttagna</string>
     <string name="post_list_tab_scheduled_posts">Tidsinställda</string>
     <string name="post_list_tab_published_posts">Publicerade</string>
-    <string name="sharing_facebook_account_must_have_pages">Facebook-kopplingen hittar inga sidor. Publicize kan inte kopplas till Facebook-profiler, utan endast till publicerade sidor.</string>
+    <string name="sharing_facebook_account_must_have_pages">Facebook-anslutningen kan inte hitta några sidor. Jetpack Social kan inte ansluta till Facebook-profiler, endast publicerade sidor.</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">Inte ansluten</string>
     <string name="notifications_tab_title_likes">Gillamarkeringar</string>
     <string name="notifications_tab_title_follows">Följer</string>
@@ -1554,7 +1569,7 @@ Language: sv_SE
     <string name="share_desc">Dela</string>
     <string name="navigate_back_desc">Gå tillbaka</string>
     <string name="navigate_forward_desc">Gå framåt</string>
-    <string name="calendar_scheduled_post_description">”%1$s” har schemalagts för publicering den ”%2$s” i din WordPress-app \n%3$s</string>
+    <string name="calendar_scheduled_post_description">”%1$s” schemalagt för publicering den ”%2$s” i din %3$s-app\n %4$s</string>
     <string name="calendar_scheduled_post_title">Schemalagt WordPress-inlägg: ”%s”</string>
     <string name="notification_post_will_be_published_in_ten_minutes">”%s” kommer att publiceras om 10 minuter</string>
     <string name="notification_post_will_be_published_in_one_hour">”%s” kommer att publiceras om en timme</string>
@@ -1726,7 +1741,6 @@ Language: sv_SE
     <string name="app_rating_rate_later">Senare</string>
     <string name="app_rating_rate_now">Betygsätt nu</string>
     <string name="app_rating_message">Kul att se dig igen! Om du gillar appen vore det härligt om du kunde betygsätta den i Google Play-butiken.</string>
-    <string name="app_rating_title">Gillar du WordPress?</string>
     <string name="editor_post_converted_back_to_draft">Inlägget har konverterats tillbaka till ett utkast</string>
     <string name="stats_insights_posting_activity">Publiceringsaktivitet</string>
     <string name="stats_site_not_loaded_yet">Webbplatsen har inte laddats klart</string>
@@ -2456,6 +2470,7 @@ Language: sv_SE
     <string name="requesting_otp">Begär en verifieringskod via SMS.</string>
     <string name="login_text_otp">Skicka mig en kod via SMS istället</string>
     <string name="enter_verification_code">Nästan klart! Skriv in verifieringskoden från din Authenticator-app.</string>
+    <string name="open_mail">Öppna e-posten</string>
     <string name="next">Nästa</string>
     <string name="enter_email_wordpress_com">Logga in på WordPress.com med hjälp av en e-postadress för att hantera alla dina WordPress-webbplatser.</string>
     <string name="image_optimization_promo_desc">Bildoptimering minskar storleken på blder för snabbare uppladdning.\n\nDu kan när som helst ändra detta i webbplatsinställningarna.</string>
@@ -2553,10 +2568,8 @@ Language: sv_SE
     <string name="share_btn_disconnect">Koppla bort</string>
     <string name="share_btn_connect">Anslut</string>
     <string name="connection_service_description">Anslut för att automatiskt dela dina blogginlägg till %s.</string>
-    <string name="connection_service_label">Offentliggör till %s</string>
     <string name="connected_accounts_label">Anslutna konton</string>
     <string name="connections_description">Anslut de sociala nätverk du gillar mest för att automatiskt dela nya inlägg med dina vänner.</string>
-    <string name="connections_label">Kopplingar</string>
     <string name="sharing">Delning</string>
     <string name="tabbar_accessibility_label_notifications">Aviseringar. Hantera dina aviseringar.</string>
     <string name="tabbar_accessibility_label_reader">Läsare. Följ innehåll från andra webbplatser.</string>
@@ -3261,7 +3274,7 @@ Language: sv_SE
     <string name="follows">Följer</string>
     <string name="note_reply_successful">Svar publicerat</string>
     <string name="sign_in">Logga in</string>
-    <string name="loading">Laddar…</string>
+    <string name="loading">Laddar in …</string>
     <string name="httppassword">HTTP-lösenord</string>
     <string name="httpuser">HTTP-användarnamn</string>
     <string name="error_media_upload">Ett fel uppstod vid uppladdning av media</string>

@@ -1,0 +1,4 @@
+- Jetpack widgets are now available on your device’s home screen
+- Media preview controls are visible in both light and dark mode
+- Compose theme’s Login Code screen has better color contrast
+- Certain elements of the editor and post settings are now WordPress blue

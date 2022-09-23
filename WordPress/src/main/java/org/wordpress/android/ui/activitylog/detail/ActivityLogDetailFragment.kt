@@ -75,9 +75,11 @@ class ActivityLogDetailFragment : Fragment(R.layout.activity_log_item_detail) {
 
         if (jetpackBrandingUtils.shouldShowJetpackBranding()) {
             jetpackBadge.root.isVisible = true
-            jetpackBadge.jetpackPoweredBadge.setOnClickListener {
-                jetpackBrandingUtils.trackBadgeTapped(ACTIVITY_LOG_DETAIL)
-                viewModel.showJetpackPoweredBottomSheet()
+            if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
+                jetpackBadge.jetpackPoweredBadge.setOnClickListener {
+                    jetpackBrandingUtils.trackBadgeTapped(ACTIVITY_LOG_DETAIL)
+                    viewModel.showJetpackPoweredBottomSheet()
+                }
             }
         }
     }

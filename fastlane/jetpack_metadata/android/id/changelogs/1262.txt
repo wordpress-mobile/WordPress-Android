@@ -1,4 +1,0 @@
-20.5:
-- Kami menambahkan label di Pengaturan Aplikasi untuk menunjukkan bahasa antarmuka aplikasi saat ini.
-- Kami memperbesar tangkapan layar pada pemilih tema situs untuk menampilkan pratinjau gambar resolusi tinggi.
-- Kami mengubah teks tombol Lewati dalam proses pembuatan situs dari biru menjadi hijau seperti pada Jetpack.

@@ -1,0 +1,5 @@
+20.7:
+- I widget di Jetpack sono ora disponibili sulla schermata principale del dispositivo
+- I controlli per la visualizzazione in anteprima degli elementi multimediali sono visibili sia nella modalità Light che Dark
+- La schermata Codice di accesso del tema Componi ha un migliore contrasto dei colori
+- Determinati elementi dell'editor e delle impostazioni degli articoli sono ora in blu WordPress

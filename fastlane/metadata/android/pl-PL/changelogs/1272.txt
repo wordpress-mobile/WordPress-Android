@@ -1,0 +1,4 @@
+20.7:
+Teraz wyraźnie widzimy — elementy sterujące podglądem multimediów (takie jak przycisk wstecz) są teraz widoczne zarówno w trybie jasnym, jak i ciemnym.
+
+Ekran logowania w personalizacji motywu  ma również lepszy kontrast, aby tekst był bardziej czytelny. Elegancko.

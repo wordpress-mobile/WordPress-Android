@@ -1,3 +1,0 @@
-20.5:
-- Hemos añadido una nueva etiqueta a los ajustes de la aplicación para mostrar el idioma actual de la interfaz. Brillante.
-- Ahora la aplicación admite vistas previas de imagen en alta resolución, hemos subido el tamaño de las capturas de pantalla del tema en el selector del tema del sitio. Se acabó el pixelado, ahora hay perfección al píxel.

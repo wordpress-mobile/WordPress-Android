@@ -1,3 +1,2 @@
-- You can now log in to the app using an email address that contains a special character.
-- Preloading themes no longer crash the app during Site Creation. Whew.
-- Power up—the Jetpack Powered banner is shown in lists of search results.
+Users on multi-author sites can change content authors in post and page settings.
+Arabic language users will now see numerals on Stats screens exclusively in Western Arabic numbers—no more mix and match with Eastern Arabic numbers.

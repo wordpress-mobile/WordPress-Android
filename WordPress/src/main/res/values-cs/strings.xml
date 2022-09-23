@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-07-05 20:18:47+0000
+Translation-Revision-Date: 2022-09-16 15:59:20+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : 2);
-Generator: GlotPress/4.0.0-alpha.1
+Generator: GlotPress/4.0.0-alpha.3
 Language: cs_CZ
 -->
 <resources>
@@ -1127,7 +1127,7 @@ Language: cs_CZ
     <string name="error_failed_to_load_into_file">Načtení do souboru se nezdařilo, zkuste to znovu.</string>
     <string name="crop">oříznutí</string>
     <string name="insert_label_with_count">Vložit %d</string>
-    <string name="feature_announcement_dialog_label">Co je nového na WordPressu</string>
+    <string name="feature_announcement_dialog_label">Co je nového na %s</string>
     <string name="feature_announcement_find_out_mode">Zjistit více</string>
     <string name="sitepicker_continue_flow">Pokračovat</string>
     <string name="whats_new_in_version_title">Co je nového</string>
@@ -1447,7 +1447,6 @@ Language: cs_CZ
     <string name="navigate_forward_desc">Jít vpřed</string>
     <string name="notification_post_will_be_published_in_ten_minutes">\"%s\" bude publikován za 10 minut</string>
     <string name="calendar_scheduled_post_title">Naplánovaný příspěvek WordPress: \"%s\"</string>
-    <string name="calendar_scheduled_post_description">Publikování \"%1$s\" je naplánováno na \"%2$s\" ve vaší aplikaci WordPress \"%3$s\"</string>
     <string name="post_notification_when_published">Při zveřejnění</string>
     <string name="post_notification_error">Nelze vytvořit oznámení, pokud je datum publikování v minulosti.</string>
     <string name="notification_scheduled_post">Naplánovaný příspěvek</string>
@@ -1617,7 +1616,6 @@ Language: cs_CZ
     <string name="app_rating_rate_later">Později</string>
     <string name="app_rating_rate_now">Ohodnotit teď</string>
     <string name="app_rating_message">Nice to see you again! If you’re digging the app, we’d love a rating on the Google Play Store.</string>
-    <string name="app_rating_title">Enjoying WordPress?</string>
     <string name="stats_more_posts">Více příspěvků</string>
     <string name="stats_fewer_posts">Méně příspěvků</string>
     <string name="editor_post_converted_back_to_draft">Příspěvek byl převeden zpět na koncept</string>
@@ -2348,6 +2346,7 @@ Language: cs_CZ
     <string name="login_text_otp">Pošlete mi raději kód.</string>
     <string name="enter_verification_code">Téměř hotovo! Zadejte ověřovací kód z aplikace Authenticator.</string>
     <string name="next">Další</string>
+    <string name="open_mail">Otevřít e-mail</string>
     <string name="enter_email_wordpress_com">Přihlaste se na stránku WordPress.com pomocí e-mailové adresy pro správu všech vašich stránek na WordPress.</string>
     <string name="image_optimization_promo_desc">Optimalizace obrazu mírně sníží kvalitu obrázků pro rychlejší nahrávání\n\nToto nastavení můžete kdykoli změnit v nastavení webu.</string>
     <string name="image_optimization_promo_title">Zapnout optimalizaci obrázků?</string>
@@ -2444,11 +2443,9 @@ Language: cs_CZ
     <string name="share_btn_connect">Připojit</string>
     <string name="share_btn_reconnect">Obnova propojení</string>
     <string name="connection_service_description">Připojte se k automatickému sdílení příspěvků blogu na %s.</string>
-    <string name="connection_service_label">Publikovat na %s</string>
     <string name="connected_accounts_label">Připojené účty</string>
     <string name="connections_description">Připojte své oblíbené sociální sítě k automatickému sdílení nových příspěvků s přáteli.</string>
     <string name="sharing">Sdílení</string>
-    <string name="connections_label">Připojení</string>
     <string name="tabbar_accessibility_label_notifications">Notifikace. Spravovat notifikace.</string>
     <string name="tabbar_accessibility_label_reader">Čtenář. Sledujte obsah z jiných stránek.</string>
     <string name="tabbar_accessibility_label_my_site">Moje stránka. Zobrazte své stránky a spravujte je, včetně statistik.</string>
