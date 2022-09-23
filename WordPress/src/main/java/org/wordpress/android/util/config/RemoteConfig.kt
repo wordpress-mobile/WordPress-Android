@@ -1,13 +1,17 @@
 package org.wordpress.android.util.config
 
+import android.content.Context
 import android.util.Log
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import org.wordpress.android.BuildConfig
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.persistence.RemoteConfigDao
+import org.wordpress.android.fluxc.store.NotificationStore.Companion.WPCOM_PUSH_DEVICE_UUID
 import org.wordpress.android.fluxc.store.mobile.FeatureFlagsStore
+import org.wordpress.android.fluxc.utils.PreferenceUtils
 import org.wordpress.android.modules.APPLICATION_SCOPE
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.UTILS
@@ -16,6 +20,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 const val REMOTE_REFRESH_INTERVAL_IN_HOURS = 12
+const val REMOTE_FLAG_PLATFORM_PARAMETER ="android"
 
 /**
  * Do not use this class outside of this package. Use [AppConfig] instead
@@ -23,8 +28,11 @@ const val REMOTE_REFRESH_INTERVAL_IN_HOURS = 12
 class RemoteConfig
 @Inject constructor(
     private val featureFlagStore: FeatureFlagsStore,
+    private val context: Context,
     @Named(APPLICATION_SCOPE) private val appScope: CoroutineScope
 ) {
+    private val preferences by lazy { PreferenceUtils.getFluxCPreferences(context) }
+
     lateinit var flags: List<RemoteConfigDao.RemoteConfig>
 
     fun init(appScope: CoroutineScope) {
@@ -37,8 +45,11 @@ class RemoteConfig
     private suspend fun fetchRemoteFlags() {
         Log.e("Refreshing remote flags", " ")
         val response = featureFlagStore.fetchFeatureFlags(
-                deviceId = "12345",
-                identifier = BuildConfig.APPLICATION_ID
+                buildNumber = BuildConfig.VERSION_CODE.toString(),
+                deviceId = preferences.getString(WPCOM_PUSH_DEVICE_UUID, "")?:"",
+                identifier = BuildConfig.APPLICATION_ID,
+                marketingVersion = BuildConfig.VERSION_NAME,
+                platform = REMOTE_FLAG_PLATFORM_PARAMETER
         )
         Log.e("response", response.toString())
         response.featureFlags?.let { configValues ->
