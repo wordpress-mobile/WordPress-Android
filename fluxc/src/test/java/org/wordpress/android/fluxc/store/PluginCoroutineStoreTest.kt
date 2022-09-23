@@ -3,12 +3,15 @@ package org.wordpress.android.fluxc.store
 import com.nhaarman.mockitokotlin2.KArgumentCaptor
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.argumentCaptor
+import com.nhaarman.mockitokotlin2.doAnswer
 import com.nhaarman.mockitokotlin2.eq
+import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
+import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -16,18 +19,17 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.plugin.PluginDirectoryType.SITE
 import org.wordpress.android.fluxc.model.plugin.SitePluginModel
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.HTTP_AUTH_ERROR
-import org.wordpress.android.fluxc.network.discovery.DiscoveryWPAPIRestClient
 import org.wordpress.android.fluxc.network.rest.wpapi.Nonce
-import org.wordpress.android.fluxc.network.rest.wpapi.NonceRestClient
+import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIAuthenticator
 import org.wordpress.android.fluxc.network.rest.wpapi.plugin.PluginWPAPIRestClient
 import org.wordpress.android.fluxc.persistence.PluginSqlUtilsWrapper
-import org.wordpress.android.fluxc.persistence.SiteSqlUtils
 import org.wordpress.android.fluxc.store.PluginCoroutineStore.WPApiPluginsPayload
 import org.wordpress.android.fluxc.store.PluginStore.ConfigureSitePluginErrorType
 import org.wordpress.android.fluxc.store.PluginStore.DeleteSitePluginErrorType
@@ -38,16 +40,24 @@ import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginDeleted
 import org.wordpress.android.fluxc.store.PluginStore.PluginDirectoryErrorType.UNAUTHORIZED
 import org.wordpress.android.fluxc.test
 import org.wordpress.android.fluxc.tools.initCoroutineEngine
-import org.wordpress.android.fluxc.utils.CurrentTimeProvider
 
 @RunWith(MockitoJUnitRunner::class)
 class PluginCoroutineStoreTest {
     @Mock lateinit var dispatcher: Dispatcher
     @Mock lateinit var pluginWPAPIRestClient: PluginWPAPIRestClient
-    @Mock lateinit var discoveryWPAPIRestClient: DiscoveryWPAPIRestClient
-    @Mock lateinit var siteSqlUtils: SiteSqlUtils
-    @Mock lateinit var nonceRestClient: NonceRestClient
-    @Mock lateinit var currentTimeProvider: CurrentTimeProvider
+    private val wpapiAuthenticator = mock<WPAPIAuthenticator> {
+        onBlocking {
+            makeAuthenticatedWPAPIRequest(
+                any(),
+                any<suspend (Nonce?) -> Payload<BaseNetworkError?>>()
+            )
+        } doAnswer { invocation ->
+            runBlocking {
+                @Suppress("UNCHECKED_CAST")
+                invocation.getArgument<suspend (Nonce?) -> Payload<BaseNetworkError?>>(1).invoke(nonce)
+            }
+        }
+    }
     @Mock lateinit var pluginSqlUtils: PluginSqlUtilsWrapper
     private lateinit var store: PluginCoroutineStore
     private lateinit var site: SiteModel
@@ -62,15 +72,11 @@ class PluginCoroutineStoreTest {
                 initCoroutineEngine(),
                 dispatcher,
                 pluginWPAPIRestClient,
-                discoveryWPAPIRestClient,
-                siteSqlUtils,
-                nonceRestClient,
-                currentTimeProvider,
+                wpapiAuthenticator,
                 pluginSqlUtils
         )
         site = SiteModel()
         site.url = "site.com"
-        whenever(nonceRestClient.getNonce(site)).thenReturn(nonce)
         onFetchedEventCaptor = argumentCaptor()
         onDeletedEventCaptor = argumentCaptor()
         onConfiguredEventCaptor = argumentCaptor()
