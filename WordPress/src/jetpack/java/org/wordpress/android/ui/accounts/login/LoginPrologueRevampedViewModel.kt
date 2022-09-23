@@ -58,12 +58,11 @@ class LoginPrologueRevampedViewModel @Inject constructor(
     /** This LiveData responds to accelerometer data from the y-axis of the device and emits updated position data. */
     private val _positionData = object : MutableLiveData<Float>(), SensorEventListener {
         private val sensorManager
-            get() = appContext.getSystemService(Context.SENSOR_SERVICE)
-                    as SensorManager
+            get() = appContext.getSystemService(Context.SENSOR_SERVICE) as SensorManager
 
         override fun onActive() {
             super.onActive()
-            val sensor: Sensor? = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
+            val sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
             sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_GAME)
         }
 
@@ -74,7 +73,7 @@ class LoginPrologueRevampedViewModel @Inject constructor(
 
         override fun onSensorChanged(event: SensorEvent?) {
             event?.values?.let { (_, yAxisAcceleration, _) ->
-            acceleration = yAxisAcceleration * ACCELERATION_FACTOR + DRIFT
+                acceleration = yAxisAcceleration * ACCELERATION_FACTOR + DRIFT
                 postValue(position)
             }
         }
