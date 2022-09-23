@@ -5,7 +5,6 @@ package org.wordpress.android.ui.mysite
 import android.content.Intent
 import android.net.Uri
 import android.text.TextUtils
-import android.util.Log
 import androidx.annotation.DimenRes
 import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
@@ -114,7 +113,6 @@ import org.wordpress.android.util.config.BloggingPromptsFeatureConfig
 import org.wordpress.android.util.config.LandOnTheEditorFeatureConfig
 import org.wordpress.android.util.config.MySiteDashboardTabsFeatureConfig
 import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
-import org.wordpress.android.util.config.TestRemoteFeatureConfig
 import org.wordpress.android.util.filter
 import org.wordpress.android.util.getEmailValidationMessage
 import org.wordpress.android.util.map
@@ -128,7 +126,7 @@ import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
 
-@Suppress("LargeClass", "LongMethod")
+@Suppress("LargeClass", "LongMethod", "LongParameterList")
 class MySiteViewModel @Inject constructor(
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     @param:Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
@@ -161,7 +159,6 @@ class MySiteViewModel @Inject constructor(
     private val buildConfigWrapper: BuildConfigWrapper,
     mySiteDashboardTabsFeatureConfig: MySiteDashboardTabsFeatureConfig,
     bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig,
-    private val testRemoteFeatureConfig: TestRemoteFeatureConfig,
     private val jetpackBrandingUtils: JetpackBrandingUtils,
     private val appPrefsWrapper: AppPrefsWrapper,
     private val bloggingPromptsCardAnalyticsTracker: BloggingPromptsCardAnalyticsTracker,
@@ -421,7 +418,6 @@ class MySiteViewModel @Inject constructor(
         cardsUpdate: CardsUpdate?,
         bloggingPromptUpdate: BloggingPromptUpdate?
     ): Map<MySiteTabType, List<MySiteCardAndItem>> {
-        Log.e("test remote feature cofig", testRemoteFeatureConfig.isEnabled().toString())
         val infoItem = siteItemsBuilder.build(
                 InfoItemBuilderParams(
                         isStaleMessagePresent = cardsUpdate?.showStaleMessage ?: false
