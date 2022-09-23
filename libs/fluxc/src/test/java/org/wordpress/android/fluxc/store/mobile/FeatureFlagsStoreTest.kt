@@ -11,6 +11,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.mobile.FeatureFlagsError
 import org.wordpress.android.fluxc.network.rest.wpcom.mobile.FeatureFlagsErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.network.rest.wpcom.mobile.FeatureFlagsFetchedPayload
 import org.wordpress.android.fluxc.network.rest.wpcom.mobile.FeatureFlagsRestClient
+import org.wordpress.android.fluxc.persistence.RemoteConfigDao
 import org.wordpress.android.fluxc.store.mobile.FeatureFlagsStore.FeatureFlagsResult
 import org.wordpress.android.fluxc.test
 import org.wordpress.android.fluxc.tools.initCoroutineEngine
@@ -21,6 +22,7 @@ import kotlin.test.assertNull
 @RunWith(MockitoJUnitRunner::class)
 class FeatureFlagsStoreTest {
     @Mock private lateinit var restClient: FeatureFlagsRestClient
+    @Mock private lateinit var remoteConfigDao: RemoteConfigDao
     private lateinit var store: FeatureFlagsStore
 
     private val successResponse = mapOf("flag-1" to true, "flag-2" to false)
@@ -30,7 +32,7 @@ class FeatureFlagsStoreTest {
 
     @Before
     fun setUp() {
-        store = FeatureFlagsStore(restClient, initCoroutineEngine())
+        store = FeatureFlagsStore(restClient, remoteConfigDao, initCoroutineEngine())
     }
 
     @Test
