@@ -17,7 +17,3 @@ dependencies {
     testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$nhaarmanMockitoVersion"
     testImplementation "org.assertj:assertj-core:$assertJVersion"
 }
-
-sourceCompatibility = "7"
-targetCompatibility = "7"
-

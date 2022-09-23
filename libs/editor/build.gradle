@@ -41,9 +41,9 @@ android {
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
     }
-    compileOptions {
-        sourceCompatibility 1.8
-        targetCompatibility 1.8
+
+    kotlinOptions {
+        allWarningsAsErrors = true
     }
 
     // Avoid 'duplicate files during packaging of APK' errors

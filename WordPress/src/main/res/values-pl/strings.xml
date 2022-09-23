@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-09-16 08:19:53+0000
+Translation-Revision-Date: 2022-09-16 19:43:51+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
-Generator: GlotPress/4.0.0-alpha.2
+Generator: GlotPress/4.0.0-alpha.3
 Language: pl
 -->
 <resources>
@@ -988,7 +988,6 @@ Language: pl
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">Stuknij dwukrotnie, by przejść do ustawień kolorów</string>
     <string name="reader_empty_followed_blogs_description">Gdy zaczniesz śledzić inne witryny, zobaczysz tutaj ich treść</string>
     <string name="feature_announcement_find_out_mode">Dowiedz się więcej</string>
-    <string name="feature_announcement_dialog_label">Co nowego w %s</string>
     <string name="insert_label_with_count">Wstaw %d</string>
     <string name="crop">przytnij</string>
     <string name="photo_picker_video_title">Wybierz wideo</string>
@@ -998,6 +997,7 @@ Language: pl
     <string name="error_failed_to_load_into_file">Nie udało się wczytać z pliku, proszę spróbować później.</string>
     <string name="preview_image_thumbnail_description">Pogląd miniatury obrazka</string>
     <string name="photo_picker_use_media">Użyj tego pliku</string>
+    <string name="feature_announcement_dialog_label">Co nowego w %s</string>
     <string name="button_insert">Wstaw</string>
     <string name="copy_text">Kopiuj</string>
     <string name="comment_share_link_via">Udostępnij przez</string>
@@ -1315,6 +1315,7 @@ Language: pl
     <string name="notification_post_will_be_published_in_ten_minutes">\"%s\" zostanie opublikowany za 10 minut</string>
     <string name="navigate_back_desc">Wróć</string>
     <string name="web_preview_desktop">Komputer stacjonarny</string>
+    <string name="calendar_scheduled_post_description">Wpis „%1$s” został zaplanowany do publikacji w dniu „%2$s” w twojej aplikacji %3$s\n%4$s</string>
     <string name="notification_post_will_be_published_in_one_hour">\"%s\" zostanie opublikowany za godzinę</string>
     <string name="notification_post_has_been_published">\"%s\" został opublikowany</string>
     <string name="notification_scheduled_post_ten_minute_reminder">Zaplanowany wpis: przypomnienie 10 minutowe</string>

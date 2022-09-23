@@ -11,7 +11,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 class GutenbergDialogFragment : AppCompatDialogFragment() {
     private lateinit var mTag: String
     private lateinit var mMessage: CharSequence
-    private lateinit var mPositiveButtonLabel: CharSequence
+    private var mPositiveButtonLabel: CharSequence? = null
     private var mTitle: CharSequence? = null
     private var mNegativeButtonLabel: CharSequence? = null
     private var mId: Int = 0
@@ -56,7 +56,7 @@ class GutenbergDialogFragment : AppCompatDialogFragment() {
             mTag = requireNotNull(savedInstanceState.getString(STATE_KEY_TAG))
             mTitle = savedInstanceState.getCharSequence(STATE_KEY_TITLE)
             mMessage = requireNotNull(savedInstanceState.getCharSequence(STATE_KEY_MESSAGE))
-            mPositiveButtonLabel = requireNotNull(savedInstanceState.getCharSequence(STATE_KEY_POSITIVE_BUTTON_LABEL))
+            mPositiveButtonLabel = savedInstanceState.getCharSequence(STATE_KEY_POSITIVE_BUTTON_LABEL)
             mNegativeButtonLabel = savedInstanceState.getCharSequence(STATE_KEY_NEGATIVE_BUTTON_LABEL)
             mId = savedInstanceState.getInt(STATE_KEY_ID)
         }

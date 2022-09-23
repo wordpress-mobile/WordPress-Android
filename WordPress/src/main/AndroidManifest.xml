@@ -554,7 +554,6 @@
             android:theme="@style/WordPress.NoActionBar" />
         <activity
             android:name=".ui.reader.ReaderSubsActivity"
-            android:label="@string/reader_title_subs"
             android:theme="@style/WordPress.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
         <activity
@@ -566,7 +565,6 @@
             android:theme="@style/ReaderMediaViewerTheme" />
         <activity
             android:name=".ui.reader.discover.interests.ReaderInterestsActivity"
-            android:label="@string/reader_title_interests"
             android:theme="@style/WordPress.NoActionBar" />
 
         <!-- Gutenberg activities -->
