@@ -111,6 +111,8 @@ public class EditPostSettingsFragment extends Fragment {
     private TextView mStatusTextView;
     private TextView mPostFormatTextView;
     private TextView mPasswordTextView;
+    private View mPostAuthorDivider;
+    private LinearLayout mPostAuthorContainer;
     private TextView mAuthorTextView;
     private TextView mPublishDateTextView;
     private TextView mPublishDateTitleTextView;
@@ -261,6 +263,8 @@ public class EditPostSettingsFragment extends Fragment {
         mStatusTextView = rootView.findViewById(R.id.post_status);
         mPostFormatTextView = rootView.findViewById(R.id.post_format);
         mPasswordTextView = rootView.findViewById(R.id.post_password);
+        mPostAuthorDivider = rootView.findViewById(R.id.post_author_divider);
+        mPostAuthorContainer = rootView.findViewById(R.id.post_author_container);
         mAuthorTextView = rootView.findViewById(R.id.post_author);
         mPublishDateTextView = rootView.findViewById(R.id.publish_date);
         mPublishDateTitleTextView = rootView.findViewById(R.id.publish_date_title);
@@ -367,8 +371,7 @@ public class EditPostSettingsFragment extends Fragment {
             }
         });
 
-        final LinearLayout authorContainer = rootView.findViewById(R.id.post_author_container);
-        authorContainer.setOnClickListener(view -> showAuthorDialog());
+        mPostAuthorContainer.setOnClickListener(view -> showAuthorDialog());
 
         mStickySwitch.setOnCheckedChangeListener(mOnStickySwitchChangeListener);
 
@@ -948,19 +951,24 @@ public class EditPostSettingsFragment extends Fragment {
     }
 
     private void updateAuthorTextView(String authorDisplayName) {
-        if (authorDisplayName == null) {
-            // If the authorDisplayName is null, that means this is a new unpublished post.
-            // Set author to the current user name.
-            EditPostRepository editPostRepository = getEditPostRepository();
-            if (editPostRepository == null) {
-                return;
+        if (getSite() != null && getSite().getHasCapabilityListUsers()) {
+            mPostAuthorDivider.setVisibility(View.VISIBLE);
+            mPostAuthorContainer.setVisibility(View.VISIBLE);
+
+            if (authorDisplayName == null) {
+                // If the authorDisplayName is null, that means this is a new unpublished post.
+                // Set author to the current user name.
+                EditPostRepository editPostRepository = getEditPostRepository();
+                if (editPostRepository == null) {
+                    return;
+                }
+                PostImmutableModel postModel = editPostRepository.getPost();
+                if (postModel != null && postModel.getAuthorDisplayName() == null) {
+                    updateAuthorTextView(mAccountStore.getAccount().getDisplayName());
+                }
+            } else {
+                mAuthorTextView.setText(authorDisplayName);
             }
-            PostImmutableModel postModel = editPostRepository.getPost();
-            if (postModel != null && postModel.getAuthorDisplayName() == null) {
-                updateAuthorTextView(mAccountStore.getAccount().getDisplayName());
-            }
-        } else {
-            mAuthorTextView.setText(authorDisplayName);
         }
     }
 

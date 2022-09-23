@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-09-14 15:55:52+0000
+Translation-Revision-Date: 2022-09-19 12:33:34+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
-Generator: GlotPress/4.0.0-alpha.2
+Generator: GlotPress/4.0.0-alpha.3
 Language: ro
 -->
 <resources>
+    <string name="post_settings_author">Autor</string>
+    <string name="error_fetch_authors_list">Nu am putut să preiau autorii</string>
     <string name="app_rating_title">Îți place %s?</string>
     <string name="connection_service_label">Partajează articolul pe %s</string>
     <string name="connections_label">Conexiuni la Jetpack Social</string>
