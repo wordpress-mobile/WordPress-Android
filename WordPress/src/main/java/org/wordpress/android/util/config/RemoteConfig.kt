@@ -1,7 +1,6 @@
 package org.wordpress.android.util.config
 
 import android.content.Context
-import android.util.Log
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -21,6 +20,7 @@ import javax.inject.Named
 
 const val REMOTE_REFRESH_INTERVAL_IN_HOURS = 12
 const val REMOTE_FLAG_PLATFORM_PARAMETER = "android"
+const val ONE_HOUR = (60 * 60 * 1000) % 24
 
 /**
  * Do not use this class outside of this package. Use [AppConfig] instead
@@ -53,7 +53,7 @@ class RemoteConfig
     private fun isRefreshNeeded(): Boolean {
         val lastModifiedFlag = featureFlagStore.getTheLastSyncedRemoteConfig()
         val timeDifferenceInMilliSeconds = System.currentTimeMillis() - lastModifiedFlag
-        val differenceInHours = (timeDifferenceInMilliSeconds / (60 * 60 * 1000) % 24)
+        val differenceInHours = (timeDifferenceInMilliSeconds / ONE_HOUR)
         if (differenceInHours >= REMOTE_REFRESH_INTERVAL_IN_HOURS) return true
         return false
     }

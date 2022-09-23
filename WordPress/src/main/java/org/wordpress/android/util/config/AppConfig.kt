@@ -1,6 +1,5 @@
 package org.wordpress.android.util.config
 
-import android.util.Log
 import kotlinx.coroutines.CoroutineScope
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
