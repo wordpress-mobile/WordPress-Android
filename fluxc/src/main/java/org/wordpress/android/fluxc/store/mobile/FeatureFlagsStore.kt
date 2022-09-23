@@ -1,6 +1,5 @@
 package org.wordpress.android.fluxc.store.mobile
 
-import android.util.Log
 import org.wordpress.android.fluxc.network.rest.wpcom.mobile.FeatureFlagsError
 import org.wordpress.android.fluxc.network.rest.wpcom.mobile.FeatureFlagsErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.network.rest.wpcom.mobile.FeatureFlagsRestClient
@@ -20,12 +19,18 @@ class FeatureFlagsStore @Inject constructor(
     private val coroutineEngine: CoroutineEngine
 ) {
     suspend fun fetchFeatureFlags(
+        buildNumber: String,
         deviceId: String,
-        identifier: String
+        identifier: String,
+        marketingVersion: String,
+        platform: String
     ) = coroutineEngine.withDefaultContext(AppLog.T.API, this, "fetch feature-flags") {
         val payload = featureFlagsRestClient.fetchFeatureFlags(
+                buildNumber,
                 deviceId,
-                identifier
+                identifier,
+                marketingVersion,
+                platform
         )
         return@withDefaultContext when {
             payload.isError -> FeatureFlagsResult(payload.error)
