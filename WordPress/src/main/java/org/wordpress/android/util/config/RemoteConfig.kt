@@ -20,7 +20,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 const val REMOTE_REFRESH_INTERVAL_IN_HOURS = 12
-const val REMOTE_FLAG_PLATFORM_PARAMETER ="android"
+const val REMOTE_FLAG_PLATFORM_PARAMETER = "android"
 
 /**
  * Do not use this class outside of this package. Use [AppConfig] instead
@@ -36,44 +36,45 @@ class RemoteConfig
     lateinit var flags: List<RemoteConfigDao.RemoteConfig>
 
     fun init(appScope: CoroutineScope) {
-        Log.e("Fetching remote flags", "initiated")
         appScope.launch {
             flags = featureFlagStore.getFeatureFlags()
         }
     }
 
+    fun refresh(appScope: CoroutineScope, forced: Boolean) {
+        appScope.launch {
+            if (isRefreshNeeded() || forced) {
+                fetchRemoteFlags()
+                flags = featureFlagStore.getFeatureFlags()
+            }
+        }
+    }
+
+    private fun isRefreshNeeded(): Boolean {
+        val lastModifiedFlag = featureFlagStore.getTheLastSyncedRemoteConfig()
+        val timeDifferenceInMilliSeconds = System.currentTimeMillis() - lastModifiedFlag
+        val differenceInHours = (timeDifferenceInMilliSeconds / (60 * 60 * 1000) % 24)
+        if (differenceInHours >= REMOTE_REFRESH_INTERVAL_IN_HOURS) return true
+        return false
+    }
+
     private suspend fun fetchRemoteFlags() {
-        Log.e("Refreshing remote flags", " ")
         val response = featureFlagStore.fetchFeatureFlags(
                 buildNumber = BuildConfig.VERSION_CODE.toString(),
-                deviceId = preferences.getString(WPCOM_PUSH_DEVICE_UUID, "")?:"",
+                deviceId = preferences.getString(WPCOM_PUSH_DEVICE_UUID, "") ?: "",
                 identifier = BuildConfig.APPLICATION_ID,
                 marketingVersion = BuildConfig.VERSION_NAME,
                 platform = REMOTE_FLAG_PLATFORM_PARAMETER
         )
-        Log.e("response", response.toString())
         response.featureFlags?.let { configValues ->
-            Log.e("Remote config values", configValues.toString())
+            AppLog.e(UTILS, "Remote config values synced")
             AnalyticsTracker.track(
                     Stat.FEATURE_FLAGS_SYNCED_STATE,
                     configValues
             )
         }
         if (response.isError) {
-            AppLog.e(
-                    UTILS,
-                    "Remote config sync failed"
-            )
-        }
-    }
-
-    fun refresh(appScope: CoroutineScope, forced: Boolean) {
-        Log.e("refresh remote flags", "function called")
-        appScope.launch {
-            if (isRefreshNeeded() || forced) {
-                fetchRemoteFlags()
-                flags = featureFlagStore.getFeatureFlags()
-            }
+            AppLog.e(UTILS, "Remote config sync failed")
         }
     }
 
@@ -89,16 +90,8 @@ class RemoteConfig
         }
     }
 
-    private fun isRefreshNeeded(): Boolean {
-        val lastModifiedFlag = featureFlagStore.getTheLastSyncedRemoteConfig()
-        val timeDifferenceInMilliSeconds = System.currentTimeMillis() - lastModifiedFlag
-        val differenceInHours = (timeDifferenceInMilliSeconds / (60 * 60 * 1000) % 24)
-        if (differenceInHours >= REMOTE_REFRESH_INTERVAL_IN_HOURS) return true
-        return false
-    }
-
     fun clear() {
-        Log.e("clearing", "the remote config values")
+        AppLog.e(UTILS, "Remote config values cleared")
         flags = emptyList()
         featureFlagStore.clearAllValues()
     }
