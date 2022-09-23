@@ -14,7 +14,7 @@ class AppConfig
 @Inject constructor(
     private val remoteConfig: RemoteConfig,
     private val analyticsTracker: AnalyticsTrackerWrapper,
-    private val manualFeatureConfig: ManualFeatureConfig,
+    private val manualFeatureConfig: ManualFeatureConfig
 ) {
     /**
      * We need to keep the value of an already loaded feature flag to make sure the value is not changed
