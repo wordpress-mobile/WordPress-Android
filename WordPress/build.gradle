@@ -99,7 +99,6 @@ android {
         buildConfigField "boolean", "MP4_COMPOSER_VIDEO_OPTIMIZATION", "false"
         buildConfigField "boolean", "BLOGGING_REMINDERS", "false"
         buildConfigField "boolean", "MANAGE_CATEGORIES", "false"
-        buildConfigField "boolean", "TEST_REMOTE_CONFIG_TOOL_COLOR", "false"
         buildConfigField "boolean", "GLOBAL_STYLE_SUPPORT", "true"
         buildConfigField "boolean", "QUICK_START_DYNAMIC_CARDS", "false"
         buildConfigField "boolean", "SITE_DOMAINS", "false"
