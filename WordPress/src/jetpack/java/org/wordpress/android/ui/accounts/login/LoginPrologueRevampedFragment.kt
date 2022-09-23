@@ -91,7 +91,7 @@ private fun LoginScreenRevamped(
                             .align(Alignment.TopCenter)
             )
             ColumnWithFrostedGlassBackground(
-                    { modifier, textModifier -> LoopingTextWithBackground(modifier, textModifier) }
+                    background = { modifier, textModifier -> LoopingTextWithBackground(modifier, textModifier) }
             ) {
                 PrimaryButton(onClick = onWpComLoginClicked)
                 SecondaryButton(onClick = onSiteAddressLoginClicked)
