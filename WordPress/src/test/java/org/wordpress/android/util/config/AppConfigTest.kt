@@ -2,6 +2,7 @@ package org.wordpress.android.util.config
 
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
+import kotlinx.coroutines.CoroutineScope
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatIllegalArgumentException
 import org.junit.Before
@@ -19,6 +20,7 @@ class AppConfigTest {
     @Mock lateinit var analyticsTracker: AnalyticsTrackerWrapper
     @Mock lateinit var experimentConfig: ExperimentConfig
     @Mock lateinit var manualFeatureConfig: ManualFeatureConfig
+    @Mock lateinit var appScope: CoroutineScope
     private lateinit var appConfig: AppConfig
     private val remoteField = "remote_field"
     private val experimentVariantA = "variantA"
@@ -31,9 +33,9 @@ class AppConfigTest {
 
     @Test
     fun `refresh passes the call to remote config`() {
-        appConfig.refresh(appScope)
+        appConfig.refresh(appScope, true)
 
-        verify(remoteConfig).refresh(appScope)
+        verify(remoteConfig).refresh(appScope, true)
     }
 
     @Test
