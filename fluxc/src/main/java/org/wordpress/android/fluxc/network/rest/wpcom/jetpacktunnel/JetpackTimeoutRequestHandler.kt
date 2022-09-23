@@ -1,6 +1,5 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.jetpacktunnel
 
-import android.os.Handler
 import com.android.volley.Response.Listener
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComErrorListener
@@ -28,12 +27,17 @@ class JetpackTimeoutRequestHandler<T>(
 
     init {
         val wrappedErrorListener = buildJPTimeoutRetryListener(url, errorListener, retryListener)
-        gsonRequest = WPComGsonRequest.buildGetRequest(url, params, type, listener, wrappedErrorListener)
+        gsonRequest = WPComGsonRequest.buildGetRequest(
+            url,
+            params,
+            type,
+            listener,
+            wrappedErrorListener
+        )
     }
 
     companion object {
-        const val DEFAULT_MAX_RETRIES = 2
-        const val ADDITIONAL_RETRY_DELAY_MS = 5000L
+        const val DEFAULT_MAX_RETRIES = 1
 
         @JvmStatic
         fun WPComGsonNetworkError.isJetpackTimeoutError(): Boolean {
@@ -57,21 +61,16 @@ class JetpackTimeoutRequestHandler<T>(
         return WPComErrorListener { error ->
             if (error.isJetpackTimeoutError()) {
                 if (numRetries < maxRetries) {
-                    AppLog.e(AppLog.T.API, "5-second timeout reached for endpoint $wpApiEndpoint, retrying...")
-                    if (numRetries > 0) {
-                        // Delay retries after the first by a bit
-                        with(Handler()) {
-                            postDelayed({ jpTimeoutListener(gsonRequest.apply { increaseManualRetryCount() }) },
-                                    ADDITIONAL_RETRY_DELAY_MS)
-                        }
-                    } else {
-                        jpTimeoutListener(gsonRequest.apply { increaseManualRetryCount() })
-                    }
+                    AppLog.e(
+                        AppLog.T.API,
+                        "30-second timeout reached for endpoint $wpApiEndpoint, retrying..."
+                    )
+                    jpTimeoutListener(gsonRequest.apply { increaseManualRetryCount() })
                     numRetries++
                 } else {
                     AppLog.e(
-                            AppLog.T.API,
-                            "5-second timeout reached for endpoint $wpApiEndpoint - maximum retries reached"
+                        AppLog.T.API,
+                        "30-second timeout reached for endpoint $wpApiEndpoint - maximum retries reached"
                     )
                     wpComErrorListener.onErrorResponse(error)
                 }
