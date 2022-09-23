@@ -42,6 +42,10 @@ android {
         targetSdkVersion rootProject.targetSdkVersion
     }
 
+    kotlinOptions {
+        allWarningsAsErrors = true
+    }
+
     // Avoid 'duplicate files during packaging of APK' errors
     packagingOptions {
         exclude 'LICENSE.txt'
