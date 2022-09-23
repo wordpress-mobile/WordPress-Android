@@ -33,7 +33,7 @@ class LoginPrologueRevampedViewModel @Inject constructor(
 ) : ViewModel() {
     private var acceleration = 0f
     private var velocity = 0f
-    var position = 0f
+    private var position = 0f
 
     /**
      * This function updates the physics model for the interactive animation by applying the elapsed time (in seconds)
