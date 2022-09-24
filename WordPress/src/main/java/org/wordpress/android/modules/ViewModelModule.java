@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModelProvider;
 
 import org.wordpress.android.ui.JetpackRemoteInstallViewModel;
 import org.wordpress.android.ui.accounts.LoginViewModel;
-import org.wordpress.android.ui.accounts.login.jetpack.LoginNoSitesViewModel;
 import org.wordpress.android.ui.accounts.login.jetpack.LoginSiteCheckErrorViewModel;
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel;
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingViewModel;
@@ -482,11 +481,6 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(SiteSettingsTimezoneViewModel.class)
     abstract ViewModel siteSettingsTimezoneViewModel(SiteSettingsTimezoneViewModel viewModel);
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(LoginNoSitesViewModel.class)
-    abstract ViewModel loginNoSitesErrorViewModel(LoginNoSitesViewModel viewModel);
 
     @Binds
     @IntoMap
