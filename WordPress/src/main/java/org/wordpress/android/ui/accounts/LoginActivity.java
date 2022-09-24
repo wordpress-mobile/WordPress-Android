@@ -20,7 +20,6 @@ import com.google.android.material.snackbar.Snackbar;
 
 import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.network.MemorizingTrustManager;
@@ -90,7 +89,9 @@ import static org.wordpress.android.util.ActivityUtils.hideKeyboard;
 import dagger.android.AndroidInjector;
 import dagger.android.DispatchingAndroidInjector;
 import dagger.android.HasAndroidInjector;
+import dagger.hilt.android.AndroidEntryPoint;
 
+@AndroidEntryPoint
 public class LoginActivity extends LocaleAwareActivity implements ConnectionCallbacks, OnConnectionFailedListener,
         Callback, LoginListener, GoogleListener, LoginPrologueListener,
         HasAndroidInjector, BasicDialogPositiveClickInterface {
@@ -137,7 +138,6 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        ((WordPress) getApplication()).component().inject(this);
         super.onCreate(savedInstanceState);
 
         LoginFlowThemeHelper.injectMissingCustomAttributes(getTheme());

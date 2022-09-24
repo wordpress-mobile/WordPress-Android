@@ -15,7 +15,6 @@ import org.wordpress.android.ui.ShareIntentReceiverFragment;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.about.UnifiedAboutActivity;
 import org.wordpress.android.ui.accounts.HelpActivity;
-import org.wordpress.android.ui.accounts.LoginActivity;
 import org.wordpress.android.ui.accounts.LoginEpilogueActivity;
 import org.wordpress.android.ui.accounts.LoginMagicLinkInterceptActivity;
 import org.wordpress.android.ui.accounts.PostSignupInterstitialActivity;
@@ -238,8 +237,6 @@ public interface AppComponent {
     void inject(MediaUploadHandler object);
 
     void inject(PostUploadHandler object);
-
-    void inject(LoginActivity object);
 
     void inject(LoginEpilogueActivity object);
 
