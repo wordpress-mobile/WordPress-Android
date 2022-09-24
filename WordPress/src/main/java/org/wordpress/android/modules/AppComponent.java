@@ -17,7 +17,6 @@ import org.wordpress.android.ui.about.UnifiedAboutActivity;
 import org.wordpress.android.ui.accounts.HelpActivity;
 import org.wordpress.android.ui.accounts.PostSignupInterstitialActivity;
 import org.wordpress.android.ui.accounts.SignupEpilogueActivity;
-import org.wordpress.android.ui.accounts.login.jetpack.LoginSiteCheckErrorFragment;
 import org.wordpress.android.ui.accounts.signup.SignupEpilogueFragment;
 import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailFragment;
 import org.wordpress.android.ui.activitylog.list.ActivityLogListFragment;
@@ -594,8 +593,6 @@ public interface AppComponent {
     void inject(EngagedPeopleListFragment object);
 
     void inject(SiteSettingsTimezoneBottomSheet object);
-
-    void inject(LoginSiteCheckErrorFragment object);
 
     void inject(UserProfileBottomSheetFragment object);
 
