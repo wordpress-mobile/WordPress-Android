@@ -19,11 +19,15 @@ const val IO_THREAD = "IO_THREAD"
 @InstallIn(SingletonComponent::class)
 @Module
 class ThreadModule {
+    /* SCOPE */
+
     @Provides
     @Named(APPLICATION_SCOPE)
     fun provideApplicationScope(): CoroutineScope {
         return CoroutineScope(Dispatchers.Default)
     }
+
+    /* DISPATCHER */
 
     @Provides
     @Named(UI_THREAD)
@@ -42,6 +46,8 @@ class ThreadModule {
     fun provideIoDispatcher(): CoroutineDispatcher {
         return Dispatchers.IO
     }
+
+    /* OTHER */
 
     @Provides
     fun provideDebouncer(): Debouncer {
