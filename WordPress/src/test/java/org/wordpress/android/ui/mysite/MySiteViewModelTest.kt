@@ -150,8 +150,8 @@ import java.util.Date
 
 private const val DYNAMIC_CARDS_BUILDER_MORE_CLICK_PARAM_POSITION = 3
 
-@ExperimentalCoroutinesApi
 @Suppress("LargeClass")
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var siteItemsBuilder: SiteItemsBuilder

@@ -20,6 +20,7 @@ import org.wordpress.android.util.NoDelayCoroutineDispatcher
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 
 @InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 class StoriesIntroViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: StoriesIntroViewModel
     @Mock lateinit var onDialogClosedObserver: Observer<Unit>
@@ -28,7 +29,6 @@ class StoriesIntroViewModelTest : BaseUnitTest() {
     @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
     @Mock private lateinit var appPrefsWrapper: AppPrefsWrapper
 
-    @ExperimentalCoroutinesApi
     @Before
     fun setUp() = runBlockingTest {
         viewModel = StoriesIntroViewModel(

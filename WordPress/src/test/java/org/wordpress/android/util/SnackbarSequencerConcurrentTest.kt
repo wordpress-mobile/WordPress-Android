@@ -28,8 +28,8 @@ import org.wordpress.android.widgets.WPSnackbarWrapper
 private const val TEST_MESSAGE_TEMPLATE = "This is test message number "
 private const val SNACKBAR_DURATION_MS = 500L
 
-@ExperimentalCoroutinesApi
 @InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class SnackbarSequencerConcurrentTest {
     @get:Rule val rule = InstantTaskExecutorRule()

@@ -27,8 +27,8 @@ import org.wordpress.android.ui.jetpack.scan.usecases.FetchScanStateUseCase.Fetc
 import org.wordpress.android.ui.jetpack.scan.usecases.FetchScanStateUseCase.FetchScanState.Success
 import org.wordpress.android.util.NetworkUtilsWrapper
 
-@ExperimentalCoroutinesApi
 @InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 class FetchScanStateUseCaseTest : BaseUnitTest() {
     private lateinit var useCase: FetchScanStateUseCase
     @Mock private lateinit var site: SiteModel
