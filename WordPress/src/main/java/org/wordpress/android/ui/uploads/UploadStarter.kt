@@ -142,6 +142,7 @@ class UploadStarter @Inject constructor(
      * and `uploadServiceFacade.isPostUploadingOrQueued(it)` might return out-of-date result and a same post is added
      * twice.
      */
+    @Suppress("SYNCHRONIZED_ON_SUSPEND")
     @Synchronized
     private suspend fun upload(site: SiteModel) = coroutineScope {
         val posts = async { postStore.getPostsWithLocalChanges(site) }
