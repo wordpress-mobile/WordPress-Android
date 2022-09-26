@@ -37,7 +37,7 @@ class ThreadModule {
 
     @Provides
     @Named(BG_THREAD)
-    fun provideBackgroundDispatcher(): CoroutineDispatcher {
+    fun provideBgDispatcher(): CoroutineDispatcher {
         return Dispatchers.Default
     }
 
