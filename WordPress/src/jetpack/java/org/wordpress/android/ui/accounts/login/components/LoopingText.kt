@@ -14,12 +14,15 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Devices
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.AUTOSCROLL_DELTA_PX
 import org.wordpress.android.ui.compose.components.AutoScrollingLazyColumn
 import org.wordpress.android.ui.compose.components.AutoScrollingListItem
+import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.util.extensions.isOdd
 
 private data class LargeTextsItem(
@@ -36,15 +39,15 @@ private fun largeTextItems(): List<LargeTextsItem> {
     }
 }
 
+private val fontSize = 43.sp
+private val lineHeight = fontSize * 0.95
+
 @Composable
 private fun LargeText(
     text: String,
     color: Color,
     modifier: Modifier = Modifier,
 ) {
-    val fontSize by remember { mutableStateOf(43.sp) }
-    val lineHeight by remember { mutableStateOf(fontSize * 0.95) }
-
     Text(
             text = text,
             style = TextStyle(
@@ -75,9 +78,7 @@ private fun LargeTexts() {
 }
 
 @Composable
-fun LoopingText(
-    modifier: Modifier = Modifier,
-) {
+fun LoopingText(modifier: Modifier = Modifier) {
     val listItems = largeTextItems()
     val scrollBy by remember { mutableStateOf(AUTOSCROLL_DELTA_PX) }
     val lazyListState = rememberLazyListState(initialFirstVisibleItemIndex = listItems.size / 2)
@@ -89,5 +90,13 @@ fun LoopingText(
             modifier = modifier,
     ) {
         it.content()
+    }
+}
+
+@Preview(showBackground = true, device = Devices.PIXEL_4_XL)
+@Composable
+fun PreviewLoopingText() {
+    AppTheme {
+        LoopingText()
     }
 }
