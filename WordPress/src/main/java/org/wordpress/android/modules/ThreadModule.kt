@@ -11,6 +11,7 @@ import org.wordpress.android.util.helpers.Debouncer
 import javax.inject.Named
 
 const val APPLICATION_SCOPE = "APPLICATION_SCOPE"
+
 const val UI_THREAD = "UI_THREAD"
 const val BG_THREAD = "BG_THREAD"
 const val IO_THREAD = "IO_THREAD"
@@ -19,15 +20,15 @@ const val IO_THREAD = "IO_THREAD"
 @Module
 class ThreadModule {
     @Provides
-    @Named(UI_THREAD)
-    fun provideUiDispatcher(): CoroutineDispatcher {
-        return Dispatchers.Main
-    }
-
-    @Provides
     @Named(APPLICATION_SCOPE)
     fun provideApplicationScope(): CoroutineScope {
         return CoroutineScope(Dispatchers.Default)
+    }
+
+    @Provides
+    @Named(UI_THREAD)
+    fun provideUiDispatcher(): CoroutineDispatcher {
+        return Dispatchers.Main
     }
 
     @Provides
