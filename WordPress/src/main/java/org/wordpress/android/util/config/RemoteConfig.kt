@@ -15,6 +15,7 @@ import org.wordpress.android.modules.APPLICATION_SCOPE
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.UTILS
 import org.wordpress.android.util.config.AppConfig.FeatureState
+import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -61,7 +62,7 @@ class RemoteConfig
     private suspend fun fetchRemoteFlags() {
         val response = featureFlagStore.fetchFeatureFlags(
                 buildNumber = BuildConfig.VERSION_CODE.toString(),
-                deviceId = preferences.getString(WPCOM_PUSH_DEVICE_UUID, "") ?: "",
+                deviceId = preferences.getString(WPCOM_PUSH_DEVICE_UUID, null) ?: generateAndStoreUUID(),
                 identifier = BuildConfig.APPLICATION_ID,
                 marketingVersion = BuildConfig.VERSION_NAME,
                 platform = REMOTE_FLAG_PLATFORM_PARAMETER
@@ -76,6 +77,10 @@ class RemoteConfig
         if (response.isError) {
             AppLog.e(UTILS, "Remote config sync failed")
         }
+    }
+
+    private fun generateAndStoreUUID(): String {
+        return UUID.randomUUID().toString()
     }
 
     fun isEnabled(field: String): Boolean = FirebaseRemoteConfig.getInstance().getBoolean(field)
