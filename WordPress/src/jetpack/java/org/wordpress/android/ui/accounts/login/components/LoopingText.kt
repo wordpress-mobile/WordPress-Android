@@ -37,41 +37,7 @@ private fun largeTextItems(): List<LargeTextsItem> {
 }
 
 @Composable
-fun AutoScrollingText(
-    modifier: Modifier = Modifier,
-) {
-    val listItems = largeTextItems()
-    val scrollBy by remember { mutableStateOf(AUTOSCROLL_DELTA_PX) }
-    val lazyListState = rememberLazyListState(initialFirstVisibleItemIndex = listItems.size / 2)
-
-    AutoScrollingLazyColumn(
-            lazyListState = lazyListState,
-            items = listItems,
-            scrollBy = scrollBy,
-            modifier = modifier,
-    ) {
-        it.content()
-    }
-}
-
-@Composable
-fun LargeTexts() {
-    val texts = stringArrayResource(R.array.login_prologue_revamped_jetpack_feature_texts)
-
-    texts.forEachIndexed { index, text ->
-        LargeText(
-                text = text,
-                color = when (index.isOdd) {
-                    true -> colorResource(R.color.text_color_jetpack_login_feature_odd)
-                    false -> colorResource(R.color.text_color_jetpack_login_feature_even)
-                }
-        )
-        Spacer(modifier = Modifier.height(2.dp))
-    }
-}
-
-@Composable
-fun LargeText(
+private fun LargeText(
     text: String,
     color: Color,
     modifier: Modifier = Modifier,
@@ -90,4 +56,38 @@ fun LargeText(
             color = color,
             modifier = modifier
     )
+}
+
+@Composable
+private fun LargeTexts() {
+    val texts = stringArrayResource(R.array.login_prologue_revamped_jetpack_feature_texts)
+
+    texts.forEachIndexed { index, text ->
+        LargeText(
+                text = text,
+                color = when (index.isOdd) {
+                    true -> colorResource(R.color.text_color_jetpack_login_feature_odd)
+                    false -> colorResource(R.color.text_color_jetpack_login_feature_even)
+                }
+        )
+        Spacer(modifier = Modifier.height(2.dp))
+    }
+}
+
+@Composable
+fun LoopingText(
+    modifier: Modifier = Modifier,
+) {
+    val listItems = largeTextItems()
+    val scrollBy by remember { mutableStateOf(AUTOSCROLL_DELTA_PX) }
+    val lazyListState = rememberLazyListState(initialFirstVisibleItemIndex = listItems.size / 2)
+
+    AutoScrollingLazyColumn(
+            lazyListState = lazyListState,
+            items = listItems,
+            scrollBy = scrollBy,
+            modifier = modifier,
+    ) {
+        it.content()
+    }
 }

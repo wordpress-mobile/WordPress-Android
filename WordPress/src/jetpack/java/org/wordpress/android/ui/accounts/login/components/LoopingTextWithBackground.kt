@@ -16,7 +16,7 @@ import org.wordpress.android.R.drawable
 import org.wordpress.android.R.string
 
 @Composable
-fun AutoScrollingTextBox(
+fun LoopingTextWithBackground(
     modifier: Modifier = Modifier,
     textModifier: Modifier = Modifier,
 ) {
@@ -27,7 +27,7 @@ fun AutoScrollingTextBox(
                 contentScale = ContentScale.FillBounds,
                 modifier = Modifier.matchParentSize(),
         )
-        AutoScrollingText(
+        LoopingText(
                 modifier = Modifier
                         .fillMaxSize()
                         .padding(horizontal = 20.dp)

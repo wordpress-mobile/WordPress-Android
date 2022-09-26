@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import org.wordpress.android.ui.accounts.login.components.ColumnWithFrostedGlassBackground
 import org.wordpress.android.ui.accounts.login.components.JetpackLogo
-import org.wordpress.android.ui.accounts.login.components.AutoScrollingTextBox
+import org.wordpress.android.ui.accounts.login.components.LoopingTextWithBackground
 import org.wordpress.android.ui.accounts.login.components.PrimaryButton
 import org.wordpress.android.ui.accounts.login.components.SecondaryButton
 import org.wordpress.android.ui.accounts.login.components.TopLinearGradient
@@ -70,7 +70,7 @@ private fun LoginScreenRevamped(
     onSiteAddressLoginClicked: () -> Unit,
 ) {
     Box {
-        AutoScrollingTextBox()
+        LoopingTextWithBackground()
         TopLinearGradient()
         JetpackLogo(
                 modifier = Modifier
