@@ -4,8 +4,6 @@ plugins {
     id "org.jetbrains.kotlin.plugin.parcelize"
 }
 
-ext.aztecVersion = 'v1.6.0'
-
 repositories {
     maven {
         url "https://a8c-libs.s3.amazonaws.com/android"
