@@ -31,7 +31,7 @@ private const val DRIFT = -0.05f
 class LoginPrologueRevampedViewModel @Inject constructor(
     @ApplicationContext appContext: Context,
 ) : ViewModel() {
-    private var acceleration = 0f
+    private var acceleration = -0.3f // Default value when sensor is off
     private var velocity = 0f
     private var position = 0f
 
