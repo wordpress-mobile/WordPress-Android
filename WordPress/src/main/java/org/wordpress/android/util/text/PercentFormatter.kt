@@ -5,6 +5,9 @@ import org.wordpress.android.util.LocaleManagerWrapper
 import java.math.RoundingMode
 import javax.inject.Inject
 
+private const val MAXIMUM_FRACTION_DIGITS = 0
+private const val FORMAT_DIVISOR = 100
+
 /**
  * Used to format a string with a percent sign (%) based on the locale.
  * @param localeManagerWrapper provides the Locale used to return the localized formatted string
@@ -47,6 +50,3 @@ class PercentFormatter @Inject constructor(
             rounding
     )
 }
-
-private const val MAXIMUM_FRACTION_DIGITS = 0
-private const val FORMAT_DIVISOR = 100
