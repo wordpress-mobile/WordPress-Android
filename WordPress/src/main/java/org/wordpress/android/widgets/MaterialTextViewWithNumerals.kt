@@ -1,9 +1,6 @@
 package org.wordpress.android.widgets
 
 import android.content.Context
-import android.text.SpannableString
-import android.text.Spanned
-import android.text.TextUtils
 import android.util.AttributeSet
 import com.google.android.material.textview.MaterialTextView
 import org.wordpress.android.util.extensions.enforceWesternArabicNumerals
