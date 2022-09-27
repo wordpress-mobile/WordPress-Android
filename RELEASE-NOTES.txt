@@ -4,6 +4,7 @@
 -----
 * [*] Redesigned the landing screen of the WordPress and Jetpack apps with a modern touch. [https://github.com/wordpress-mobile/WordPress-Android/pull/17203]
 * [**] Added sensor feedback to influence the speed of the scrolling large text on the Jetpack landing screen based on the vertical device orientation. [https://github.com/wordpress-mobile/WordPress-Android/pull/17207]
+* [***] [internal] Redesigned the landing screen of the WordPress and Jetpack apps, behind a feature flag. [https://github.com/wordpress-mobile/WordPress-Android/pull/17203]
 
 20.8
 -----
