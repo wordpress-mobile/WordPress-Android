@@ -2,7 +2,7 @@
 
 20.9
 -----
-* [*] Redesigned the landing screen of the WordPress and Jetpack apps with a modern touch. [https://github.com/wordpress-mobile/WordPress-Android/pull/17203]
+* [***] [internal] Redesigned the landing screen of the WordPress and Jetpack apps, behind a feature flag. [https://github.com/wordpress-mobile/WordPress-Android/pull/17203]
 
 20.8
 -----
