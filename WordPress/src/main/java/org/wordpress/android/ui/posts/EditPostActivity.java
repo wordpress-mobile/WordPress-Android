@@ -34,7 +34,6 @@ import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.preference.PreferenceManager;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
@@ -552,7 +551,14 @@ public class EditPostActivity extends LocaleAwareActivity implements
         }
 
         // Check whether to show the visual editor
-        PreferenceManager.setDefaultValues(this, R.xml.account_settings, false);
+
+        // TODO: Migrate to 'androidx.preference.PreferenceManager' and 'androidx.preference.Preference'
+        //  This migration is not possible at the moment for 'PreferenceManager.setDefaultValues(...)' because it
+        //  depends on the migration of 'EditTextPreferenceWithValidation', which is a type of
+        //  'android.preference.EditTextPreference', thus a type of 'android.preference.Preference', and as such it will
+        //  throw this 'java.lang.ClassCastException': 'org.wordpress.android.ui.prefs.EditTextPreferenceWithValidation
+        //  cannot be cast to androidx.preference.Preference'
+        android.preference.PreferenceManager.setDefaultValues(this, R.xml.account_settings, false);
         mShowAztecEditor = AppPrefs.isAztecEditorEnabled();
         mEditorPhotoPicker = new EditorPhotoPicker(this, this, this, mShowAztecEditor);
 
