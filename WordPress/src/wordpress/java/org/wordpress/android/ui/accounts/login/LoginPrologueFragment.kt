@@ -7,8 +7,8 @@ import androidx.annotation.FloatRange
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
+import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
-import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.LOGIN_PROLOGUE_VIEWED
 import org.wordpress.android.databinding.LoginSignupScreenBinding
@@ -19,6 +19,7 @@ import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Step.PROLOGUE
 import org.wordpress.android.util.analytics.AnalyticsUtils
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class LoginPrologueFragment : Fragment(R.layout.login_signup_screen) {
     private lateinit var loginPrologueListener: LoginPrologueListener
 
@@ -39,8 +40,6 @@ class LoginPrologueFragment : Fragment(R.layout.login_signup_screen) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        (requireActivity().application as WordPress).component().inject(this)
 
         // setting up a full screen flags for the decor view of this fragment,
         // that will work with transparent status bar
