@@ -738,7 +738,6 @@ Language: he_IL
     <string name="restore_complete_visit_site_action_button">לבקר באתר</string>
     <string name="restore_complete_description_with_two_parameters">כל הפריטים שבחרת שוחזרו לגרסה מתאריך ⁦%1$s⁩ %2$s.</string>
     <string name="restore_complete_header">האתר שלך שוחזר</string>
-    <string name="restore_progress_label">%1$s%%</string>
     <string name="restore_progress_footnote">אין צורך לשהות כאן ולהמתין. אנחנו נודיע לך כאשר השחזור של האתר שלך הסתיים.</string>
     <string name="restore_progress_icon_content_description">סמל \'לשחזר את האתר\'</string>
     <string name="restore_progress_description_with_two_parameters">אנחנו משחזרים את האתר שלך לגרסה מתאריך ⁦%1$s⁩ %2$s.</string>
@@ -810,7 +809,6 @@ Language: he_IL
     <string name="backup_download_complete_description_with_two_parameters">יצרנו בהצלחה גיבוי של האתר שלך מתאריך ⁦%1$s⁩ %2$s.</string>
     <string name="backup_download_complete_header">הגיבוי שלך כעת מוכן להורדה</string>
     <string name="backup_download_complete_page_title">הגיבוי שלך</string>
-    <string name="backup_download_progress_label">%1$s%%</string>
     <string name="backup_download_progress_footnote">אין צורך לשהות כאן ולהמתין. אנחנו נודיע לך כאשר הגיבוי לך יהיה מוכן להורדה.</string>
     <string name="backup_download_progress_icon_content_description">סמל \'יוצר גיבוי להורדה\'</string>
     <string name="backup_download_progress_description_with_two_parameters">אנחנו יוצרים גיבוי להורדה של האתר שלך מתאריך ⁦%1$s⁩ %2$s.</string>
@@ -1776,10 +1774,7 @@ Language: he_IL
     <string name="notification_channel_reminder_title">תזכורת</string>
     <string name="stats_select_next_period_description">בחירת התקופה הבאה</string>
     <string name="stats_select_previous_period_description">בחירת התקופה הקודמת</string>
-    <string name="stats_most_popular_percent_views">%1$d%% מהצפיות</string>
     <string name="stats_insights_popular">המועד הפופולרי ביותר</string>
-    <string name="stats_traffic_change">%1$s (%2$s%%)</string>
-    <string name="stats_traffic_increase">+%1$s (%2$s%%)</string>
     <string name="new_site_creation_site_preview_content_description">מציג תצוגה מקדימה של האתר</string>
     <string name="new_site_creation_clear_all_content_description">ניקוי</string>
     <string name="site_created_but_not_fetched_snackbar_message">נראה שהחיבור שלך איטי. אם אינך רואה את האתר החדש ברשימה, מומלץ לרענן את העמוד.</string>

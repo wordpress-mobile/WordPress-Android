@@ -71,12 +71,9 @@ Language: es_CL
     <string name="quick_start_remove_next_steps_menu_title">Quitar esto</string>
     <string name="quick_start_task_skip_menu_title">Omitir tarea</string>
     <string name="notification_channel_reminder_title">Recordatorio</string>
-    <string name="stats_most_popular_percent_views">%1$d%% de vistas</string>
     <string name="stats_select_next_period_description">Seleccione el siguiente período</string>
     <string name="stats_select_previous_period_description">Seleccione el período anterior</string>
     <string name="stats_insights_popular">Tiempo Más Popular</string>
-    <string name="stats_traffic_change">%1$s (%2$s%%)</string>
-    <string name="stats_traffic_increase">+%1$s (%2$s%%)</string>
     <string name="new_site_creation_clear_all_content_description">Limpiar</string>
     <string name="notification_new_site_creation_failed">Hubo un problema</string>
     <string name="new_site_creation_site_preview_content_description">Mostrando vista previa del sitio</string>

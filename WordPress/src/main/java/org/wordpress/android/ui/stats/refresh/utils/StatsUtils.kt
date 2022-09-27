@@ -5,6 +5,7 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem.Bar
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.LineChartItem.Line
 import org.wordpress.android.util.LocaleManagerWrapper
+import org.wordpress.android.util.text.PercentFormatter
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.text.DecimalFormat
 import java.util.TreeMap
@@ -19,7 +20,8 @@ const val MILLION = 1000000
 class StatsUtils
 @Inject constructor(
     private val resourceProvider: ResourceProvider,
-    private val localeManager: LocaleManagerWrapper
+    private val localeManager: LocaleManagerWrapper,
+    private val percentFormatter: PercentFormatter
 ) {
     private val suffixes = TreeMap(
             mapOf(
@@ -194,7 +196,10 @@ class StatsUtils
             val percentage = when (previousValue) {
                 value -> "0"
                 0L -> "∞"
-                else -> mapLongToString((difference * 100 / previousValue), isFormattedNumber)
+                else -> {
+                    val percentageValue = difference.toFloat() / previousValue
+                    percentFormatter.format(percentageValue)
+                }
             }
             val formattedDifference = mapLongToString(difference, isFormattedNumber)
             if (positive) {

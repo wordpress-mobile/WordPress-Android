@@ -58,8 +58,6 @@ Language: el_GR
     <string name="quick_start_sites">Επόμενα βήματα</string>
     <string name="quick_start_sites_type_customize">Προσαρμόστε τον ιστότοπο σας</string>
     <string name="notification_channel_reminder_title">Υπενθύμιση</string>
-    <string name="stats_traffic_change">%1$s (%2$s%%)</string>
-    <string name="stats_traffic_increase">+%1$s (%2$s%%)</string>
     <string name="new_site_creation_clear_all_content_description">Καθαρισμός</string>
     <string name="new_site_creation_create_site_button">Δημιουργία ιστότοπου</string>
     <string name="notification_new_site_creation_failed">Παρουσιάστηκε ένα πρόβλημα</string>
