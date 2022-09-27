@@ -248,15 +248,24 @@ class AppPrefsWrapper @Inject constructor() {
     }
 
     fun setLong(prefKey: PrefKey, value: Long) {
-        AppPrefs.setLong(prefKey, value)
+        AppPrefs.prefs().edit().apply {
+            putLong(prefKey.name(), value)
+            apply()
+        }
     }
 
     fun setInt(prefKey: PrefKey, value: Int) {
-        AppPrefs.setInt(prefKey, value)
+        AppPrefs.prefs().edit().apply {
+            putInt(prefKey.name(), value)
+            apply()
+        }
     }
 
     fun setBoolean(prefKey: PrefKey, value: Boolean) {
-        AppPrefs.setBoolean(prefKey, value)
+        AppPrefs.prefs().edit().apply {
+            putBoolean(prefKey.name(), value)
+            apply()
+        }
     }
 
     fun setStringSet(key: String, set: Set<String>?) {
