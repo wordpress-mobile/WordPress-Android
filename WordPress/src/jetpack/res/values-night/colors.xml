@@ -10,8 +10,9 @@
 
     <color name="border_top_jetpack_login_splash_bottom_panel">#08FFFFFF</color>
 
+    <color name="bg_jetpack_login_splash_top_gradient_1">#FC001C09</color>
     <color name="bg_jetpack_login_splash_top_gradient_2">#FA001C09</color>
-    <color name="bg_jetpack_login_splash_top_gradient_3">#8F001C09</color>
+    <color name="bg_jetpack_login_splash_top_gradient_3">#D9001C09</color>
     <color name="bg_jetpack_login_splash_top_gradient_4">#00001C09</color>
 
     <color name="text_color_jetpack_login_feature_odd">@color/jetpack_green_50</color>

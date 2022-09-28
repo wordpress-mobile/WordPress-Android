@@ -1,8 +1,8 @@
 package org.wordpress.android.ui.accounts.login.components
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -20,6 +20,6 @@ fun TopLinearGradient(modifier: Modifier = Modifier) {
             contentScale = ContentScale.FillBounds,
             modifier = modifier
                     .fillMaxWidth()
-                    .height(height = 292.dp)
+                    .fillMaxHeight(0.62f)
     )
 }
