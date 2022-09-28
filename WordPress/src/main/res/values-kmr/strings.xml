@@ -809,9 +809,6 @@ Language: ku_TR
     <string name="notification_channel_reminder_title">Bîranîner</string>
     <string name="stats_select_previous_period_description">Heyama paşî hilbijêre</string>
     <string name="stats_insights_popular">Dema Herî Populer</string>
-    <string name="stats_traffic_change">%1$s (%2$s%%)</string>
-    <string name="stats_traffic_increase">+%1$s (%2$s%%)</string>
-    <string name="stats_most_popular_percent_views">%1$d%% ji dîtinan</string>
     <string name="stats_select_next_period_description">Heyama pêş hilbijêre</string>
     <string name="new_site_creation_clear_all_content_description">Paqij bike</string>
     <string name="notification_new_site_creation_creating_site_subtitle">Em malpera te ya nû diafirînin</string>

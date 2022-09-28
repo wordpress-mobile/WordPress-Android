@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-09-13 14:54:08+0000
+Translation-Revision-Date: 2022-09-26 14:54:09+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: fr
 -->
 <resources>
+    <string name="error_fetch_authors_list">Impossible de récupérer les auteurs</string>
+    <string name="post_settings_author">Auteur</string>
     <string name="app_rating_title">Vous appréciez %s ?</string>
     <string name="connection_service_label">Partager l’article sur %s</string>
     <string name="connections_label">Connexions Jetpack Social</string>
@@ -736,7 +738,6 @@ Language: fr
     <string name="restore_complete_header">Votre site a été restauré.</string>
     <string name="restore_complete_visit_site_button_content_description">Bouton Visiter le site</string>
     <string name="restore_complete_done_button_content_description">Bouton Terminé</string>
-    <string name="restore_progress_label">%1$s%%</string>
     <string name="restore_progress_footnote">Pas besoin d’attendre. Nous vous avertirons lorsque votre site aura été restauré.</string>
     <string name="restore_complete_icon_content_description">Icône Restaurer</string>
     <string name="restore_complete_failed_title">Échec de la restauration</string>
@@ -813,7 +814,6 @@ Language: fr
     <string name="backup_download_progress_icon_content_description">Icône de sauvegarde téléchargeable en cours de création</string>
     <string name="backup_download_progress_description_with_two_parameters">Nous créons une sauvegarde téléchargeable de votre site tel qu’il était le %1$s %2$s.</string>
     <string name="backup_download_progress_header">Création d’une sauvegarde téléchargeable de votre site en cours</string>
-    <string name="backup_download_progress_label">%1$s%%</string>
     <string name="backup_download_progress_footnote">Pas besoin d’attendre. Nous vous avertirons lorsque votre sauvegarde sera prête.</string>
     <string name="backup_download_progress_page_title">Télécharger la sauvegarde</string>
     <string name="backup_download_another_download_running">Un autre téléchargement est en cours.</string>
@@ -1776,10 +1776,7 @@ Language: fr
     <string name="notification_channel_reminder_title">Rappel</string>
     <string name="stats_select_next_period_description">Sélectionner la période suivante</string>
     <string name="stats_select_previous_period_description">Sélectionner la période précédante</string>
-    <string name="stats_most_popular_percent_views">%1$d%% des vues</string>
     <string name="stats_insights_popular">Heure la plus populaire</string>
-    <string name="stats_traffic_change">%1$s (%2$s%%)</string>
-    <string name="stats_traffic_increase">+%1$s (%2$s%%)</string>
     <string name="new_site_creation_site_preview_content_description">Affichage de l\'aperçu du site</string>
     <string name="new_site_creation_clear_all_content_description">Effacer</string>
     <string name="site_created_but_not_fetched_snackbar_message">Il semblerait que votre connexion soit lente. Si votre nouveau site n\'apparaît pas dans la liste, essayez de la réactualiser.</string>

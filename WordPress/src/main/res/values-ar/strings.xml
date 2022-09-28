@@ -731,7 +731,6 @@ Language: ar
     <string name="restore_complete_failed_icon_content_description">أيقونة الخطأ</string>
     <string name="restore_complete_failed_action_button_content_description">زر الانتهاء</string>
     <string name="restore_another_process_running">هناك عملية استعادة أخرى قيد التشغيل.</string>
-    <string name="restore_progress_label">%1$s%%</string>
     <string name="restore_complete_visit_site_action_button">زيارة الموقع</string>
     <string name="restore_complete_icon_content_description">أيقونة الاستعادة</string>
     <string name="restore_complete_done_button_content_description">زر الانتهاء</string>
@@ -809,7 +808,6 @@ Language: ar
     <string name="backup_download_complete_download_action_button_content_description">زر التنزيل</string>
     <string name="backup_download_complete_description_with_two_parameters">أنشأنا نسخة احتياطية من موقعك بنجاح من %1$s %2$s.</string>
     <string name="backup_download_complete_icon_content_description">أيقونة جاهزية النسخ الاحتياطية القابلة للتنزيل</string>
-    <string name="backup_download_progress_label">%1$s%%</string>
     <string name="backup_download_complete_page_title">نسختك الاحتياطية</string>
     <string name="backup_download_progress_header">إنشاء نسخة احتياطية قابلة للتنزيل من موقعك في الوقت الحالي</string>
     <string name="backup_download_progress_icon_content_description">جاري إنشاء أيقونة نسخة احتياطية قابلة للتنزيل</string>
@@ -1776,10 +1774,7 @@ Language: ar
     <string name="notification_channel_reminder_title">تذكير</string>
     <string name="stats_select_next_period_description">تحديد الفترة التالية</string>
     <string name="stats_select_previous_period_description">تحديد الفترة السابقة</string>
-    <string name="stats_most_popular_percent_views">%1$d%% من المشاهدات</string>
     <string name="stats_insights_popular">الوقت الأكثر شعبية</string>
-    <string name="stats_traffic_change">%1$s (%2$s%%)</string>
-    <string name="stats_traffic_increase">+%1$s (%2$s%%)</string>
     <string name="new_site_creation_site_preview_content_description">عرض معاينة الموقع</string>
     <string name="new_site_creation_clear_all_content_description">مسح</string>
     <string name="site_created_but_not_fetched_snackbar_message">يبدو أنَّ الاتصال بطيء لديك. إذا كنت لا ترى موقعك الجديد في القائمة، فحاول التحديث مجددًا.</string>
