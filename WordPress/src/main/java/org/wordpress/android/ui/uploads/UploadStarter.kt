@@ -1,11 +1,10 @@
 package org.wordpress.android.ui.uploads
 
 import android.content.Context
-import androidx.lifecycle.Lifecycle.Event
-import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
-import androidx.lifecycle.OnLifecycleEvent
 import androidx.lifecycle.ProcessLifecycleOwner
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
@@ -70,9 +69,8 @@ class UploadStarter @Inject constructor(
     /**
      * The hook for making this class automatically launch uploads whenever the app is placed in the foreground.
      */
-    private val processLifecycleObserver = object : LifecycleObserver {
-        @OnLifecycleEvent(Event.ON_START)
-        fun onAppComesFromBackground() {
+    private val processLifecycleObserver = object : DefaultLifecycleObserver {
+        override fun onStart(owner: LifecycleOwner) {
             queueUploadFromAllSites()
         }
     }
