@@ -52,9 +52,7 @@ abstract class PublishSettingsFragment : Fragment() {
         val dateAndTimeContainer = rootView.findViewById<LinearLayout>(R.id.publish_time_and_date_container)
         val publishNotification = rootView.findViewById<TextView>(R.id.publish_notification)
         val publishNotificationTitle = rootView.findViewById<TextView>(R.id.publish_notification_title)
-        val publishNotificationContainer = rootView.findViewById<LinearLayout>(R.id.publish_notification_container)
-        val addToCalendarContainer = rootView.findViewById<LinearLayout>(R.id.post_add_to_calendar_container)
-        val addToCalendar = rootView.findViewById<TextView>(R.id.post_add_to_calendar)
+
 
         AccessibilityUtils.disableHintAnnouncement(dateAndTime)
         AccessibilityUtils.disableHintAnnouncement(publishNotification)
@@ -73,9 +71,7 @@ abstract class PublishSettingsFragment : Fragment() {
                 dateAndTime,
                 publishNotificationTitle,
                 publishNotification,
-                publishNotificationContainer,
-                addToCalendar,
-                addToCalendarContainer
+                rootView
         )
         observeOnShowNotificationDialog()
 
@@ -116,10 +112,12 @@ abstract class PublishSettingsFragment : Fragment() {
         dateAndTime: TextView,
         publishNotificationTitle: TextView,
         publishNotification: TextView,
-        publishNotificationContainer: LinearLayout,
-        addToCalendar: TextView,
-        addToCalendarContainer: LinearLayout
+        rootView: ViewGroup,
     ) {
+        val publishNotificationContainer = rootView.findViewById<LinearLayout>(R.id.publish_notification_container)
+        val addToCalendarContainer = rootView.findViewById<LinearLayout>(R.id.post_add_to_calendar_container)
+        val addToCalendar = rootView.findViewById<TextView>(R.id.post_add_to_calendar)
+
         viewModel.onUiModel.observe(viewLifecycleOwner, {
             it?.let { uiModel ->
                 dateAndTime.text = uiModel.publishDateLabel
