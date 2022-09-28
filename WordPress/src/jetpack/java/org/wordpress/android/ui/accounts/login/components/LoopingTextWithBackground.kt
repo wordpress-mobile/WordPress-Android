@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.accounts.login.components
 
+import android.content.res.Configuration
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -39,6 +40,7 @@ fun LoopingTextWithBackground(
 }
 
 @Preview(showBackground = true, device = Devices.PIXEL_4_XL)
+@Preview(showBackground = true, device = Devices.PIXEL_4_XL, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun PreviewLoopingTextWithBackground() {
     AppTheme {
