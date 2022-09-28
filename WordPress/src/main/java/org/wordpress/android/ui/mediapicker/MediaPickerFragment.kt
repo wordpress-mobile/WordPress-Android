@@ -234,10 +234,7 @@ class MediaPickerFragment : Fragment() {
             layoutManager.onRestoreInstanceState(it)
         }
         with(MediaPickerFragmentBinding.bind(view)) {
-            binding = this
-            recycler.layoutManager = layoutManager
-            recycler.setEmptyView(actionableEmptyView)
-            recycler.setHasFixedSize(true)
+            setUpRecyclerView(layoutManager)
 
             val swipeToRefreshHelper = WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(pullToRefresh) {
                 viewModel.onPullToRefresh()
@@ -263,25 +260,8 @@ class MediaPickerFragment : Fragment() {
                 }
             })
 
-            viewModel.onNavigate.observeEvent(viewLifecycleOwner,
-                    { navigationEvent ->
-                        when (navigationEvent) {
-                            is PreviewUrl -> {
-                                previewUrl(navigationEvent)
-                            }
-                            is PreviewMedia -> previewMedia(navigationEvent)
-
-                            is EditMedia -> {
-                                editMedia(navigationEvent)
-                            }
-                            is InsertMedia -> listener?.onItemsChosen(navigationEvent.identifiers)
-                            is IconClickEvent -> listener?.onIconClicked(navigationEvent.action)
-                            Exit -> {
-                                val activity = requireActivity()
-                                activity.setResult(Activity.RESULT_CANCELED)
-                                activity.finish()
-                            }
-                        }
+            viewModel.onNavigate.observeEvent(viewLifecycleOwner, { navigationEvent ->
+                        navigateEvent(navigationEvent)
                     })
 
             viewModel.onPermissionsRequested.observeEvent(viewLifecycleOwner, {
@@ -297,6 +277,35 @@ class MediaPickerFragment : Fragment() {
             setupProgressDialog()
 
             viewModel.start(selectedIds, mediaPickerSetup, lastTappedIcon, site)
+        }
+    }
+
+    private fun MediaPickerFragmentBinding.setUpRecyclerView(
+        layoutManager: GridLayoutManager
+    ) {
+        binding = this
+        recycler.layoutManager = layoutManager
+        recycler.setEmptyView(actionableEmptyView)
+        recycler.setHasFixedSize(true)
+    }
+
+    private fun navigateEvent(navigationEvent: MediaNavigationEvent) {
+        when (navigationEvent) {
+            is PreviewUrl -> {
+                previewUrl(navigationEvent)
+            }
+            is PreviewMedia -> previewMedia(navigationEvent)
+
+            is EditMedia -> {
+                editMedia(navigationEvent)
+            }
+            is InsertMedia -> listener?.onItemsChosen(navigationEvent.identifiers)
+            is IconClickEvent -> listener?.onIconClicked(navigationEvent.action)
+            Exit -> {
+                val activity = requireActivity()
+                activity.setResult(Activity.RESULT_CANCELED)
+                activity.finish()
+            }
         }
     }
 
