@@ -77,29 +77,6 @@ class LoginPrologueRevampedFragment : Fragment() {
     }
 }
 
-@Composable
-private fun LoginScreenRevamped(
-    onWpComLoginClicked: () -> Unit,
-    onSiteAddressLoginClicked: () -> Unit,
-) {
-    Box {
-        LoopingTextWithBackground()
-        TopLinearGradient()
-        JetpackLogo(
-                modifier = Modifier
-                        .padding(top = 60.dp)
-                        .size(60.dp)
-                        .align(Alignment.TopCenter)
-        )
-        ColumnWithFrostedGlassBackground(
-                background = { modifier, textModifier -> LoopingTextWithBackground(modifier, textModifier) }
-        ) {
-            PrimaryButton(onClick = onWpComLoginClicked)
-            SecondaryButton(onClick = onSiteAddressLoginClicked)
-        }
-    }
-}
-
 /**
  * This composable launches an effect to continuously update the view model by providing the elapsed
  * time between frames. Velocity and position are recalculated for each frame, with the resulting
@@ -126,6 +103,29 @@ private fun PositionProvider(
         }
 
         content()
+    }
+}
+
+@Composable
+private fun LoginScreenRevamped(
+    onWpComLoginClicked: () -> Unit,
+    onSiteAddressLoginClicked: () -> Unit,
+) {
+    Box {
+        LoopingTextWithBackground()
+        TopLinearGradient()
+        JetpackLogo(
+                modifier = Modifier
+                        .padding(top = 60.dp)
+                        .size(60.dp)
+                        .align(Alignment.TopCenter)
+        )
+        ColumnWithFrostedGlassBackground(
+                background = { modifier, textModifier -> LoopingTextWithBackground(modifier, textModifier) }
+        ) {
+            PrimaryButton(onClick = onWpComLoginClicked)
+            SecondaryButton(onClick = onSiteAddressLoginClicked)
+        }
     }
 }
 
