@@ -15,4 +15,6 @@
     <color name="bg_jetpack_login_splash_top_gradient_3">#8F001C09</color>
     <color name="bg_jetpack_login_splash_top_gradient_4">#00001C09</color>
 
+    <color name="text_color_jetpack_login_feature_odd">@color/jetpack_green_50</color>
+    <color name="text_color_jetpack_login_feature_even">@color/jetpack_green_20</color>
 </resources>
