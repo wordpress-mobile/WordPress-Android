@@ -69,7 +69,7 @@ abstract class PublishSettingsFragment : Fragment() {
 
         observeOnNotificationTime()
 
-        oberverOnUiModel(
+        observeOnUiModel(
                 dateAndTime,
                 publishNotificationTitle,
                 publishNotification,
@@ -112,7 +112,7 @@ abstract class PublishSettingsFragment : Fragment() {
         })
     }
 
-    private fun oberverOnUiModel(
+    private fun observeOnUiModel(
         dateAndTime: TextView,
         publishNotificationTitle: TextView,
         publishNotification: TextView,

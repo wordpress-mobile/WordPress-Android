@@ -97,7 +97,7 @@ class StatsMinifiedWidgetConfigureFragment : DaggerFragment(R.layout.stats_widge
                     })
 
             viewModel.settingsModel.observe(viewLifecycleOwner, { uiModel ->
-                ObserveSettingsModel(uiModel)
+                observeSettingsModel(uiModel)
             })
         }
         viewModel.widgetAdded.observeEvent(viewLifecycleOwner, {
@@ -132,7 +132,7 @@ class StatsMinifiedWidgetConfigureFragment : DaggerFragment(R.layout.stats_widge
         })
     }
 
-    private fun StatsWidgetConfigureFragmentBinding.ObserveSettingsModel(
+    private fun StatsWidgetConfigureFragmentBinding.observeSettingsModel(
         uiModel: WidgetSettingsModel
     ) {
         uiModel?.let {
