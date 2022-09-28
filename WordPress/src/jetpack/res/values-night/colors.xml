@@ -6,10 +6,9 @@
     <color name="site_creation_skip_button_text">@color/jetpack_green_40</color>
 
     <!-- Login Prologue Revamped  -->
-    <color name="bg_jetpack_login_splash_bottom_panel">@color/jetpack_green_90</color>
+    <color name="bg_jetpack_login_splash_bottom_panel">#99011D0A</color>
 
-    <color name="border_shadow_jetpack_login_splash_bottom_panel">#40000000</color>
-    <color name="border_highlight_jetpack_login_splash_bottom_panel">#1AFFFFFF</color>
+    <color name="border_top_jetpack_login_splash_bottom_panel">#08FFFFFF</color>
 
     <color name="bg_jetpack_login_splash_top_gradient_2">#FA001C09</color>
     <color name="bg_jetpack_login_splash_top_gradient_3">#8F001C09</color>
