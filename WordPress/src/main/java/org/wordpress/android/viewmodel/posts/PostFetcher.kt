@@ -1,8 +1,8 @@
 package org.wordpress.android.viewmodel.posts
 
+import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleObserver
-import androidx.lifecycle.OnLifecycleEvent
+import androidx.lifecycle.LifecycleOwner
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
@@ -20,7 +20,7 @@ import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload
 class PostFetcher constructor(
     private val lifecycle: Lifecycle,
     private val dispatcher: Dispatcher
-) : LifecycleObserver {
+) : DefaultLifecycleObserver {
     private val ongoingRequests = HashSet<RemoteId>()
 
     init {
@@ -32,9 +32,7 @@ class PostFetcher constructor(
      * Handles the [Lifecycle.Event.ON_DESTROY] event to cleanup the registration for dispatcher and removing the
      * observer for lifecycle.
      */
-    @Suppress("unused")
-    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
-    private fun onDestroy() {
+    override fun onDestroy(owner: LifecycleOwner) {
         lifecycle.removeObserver(this)
         dispatcher.unregister(this)
     }
