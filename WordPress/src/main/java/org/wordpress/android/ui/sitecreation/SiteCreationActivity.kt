@@ -2,8 +2,12 @@ package org.wordpress.android.ui.sitecreation
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Rect
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.MotionEvent
+import android.view.View
+import android.widget.EditText
 import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -146,6 +150,21 @@ class SiteCreationActivity : LocaleAwareActivity(),
         if (!siteNameFeatureConfig.isEnabled()) {
             ActivityUtils.hideKeyboard(this)
         }
+    }
+
+    override fun dispatchTouchEvent(event: MotionEvent): Boolean {
+        if (event.action == MotionEvent.ACTION_DOWN) {
+            val view: View? = currentFocus
+            if (view is EditText) {
+                val rect = Rect()
+                view.getGlobalVisibleRect(rect)
+                if (!rect.contains(event.rawX.toInt(), event.rawY.toInt())) {
+                    ActivityUtils.hideKeyboard(this)
+                    view.clearFocus()
+                }
+            }
+        }
+        return super.dispatchTouchEvent(event)
     }
 
     override fun onSiteNameEntered(siteName: String) {
