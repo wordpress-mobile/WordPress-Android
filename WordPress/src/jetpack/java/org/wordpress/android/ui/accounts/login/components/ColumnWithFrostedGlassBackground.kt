@@ -41,10 +41,7 @@ private fun ColumnWithTopGlassBorder(
     content: @Composable ColumnScope.() -> Unit
 ) {
     Column(
-            modifier = Modifier.background(
-                    brush = SolidColor(colorResource(R.color.bg_jetpack_login_splash_bottom_panel)),
-                    alpha = 0.6f
-            )
+            modifier = Modifier.background(SolidColor(colorResource(R.color.bg_jetpack_login_splash_bottom_panel)))
     ) {
         Divider(
                 thickness = 1.dp,
