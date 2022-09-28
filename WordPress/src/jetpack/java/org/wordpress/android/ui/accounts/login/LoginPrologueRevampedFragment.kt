@@ -14,6 +14,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.withFrameNanos
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
@@ -23,7 +24,6 @@ import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.viewmodel.compose.viewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.android.awaitFrame
 import kotlinx.coroutines.isActive
 import org.wordpress.android.ui.accounts.login.components.ColumnWithFrostedGlassBackground
 import org.wordpress.android.ui.accounts.login.components.JetpackLogo
@@ -92,7 +92,7 @@ private fun PositionProvider(
         LaunchedEffect(Unit) {
             var lastFrameNanos: Long? = null
             while (isActive) {
-                val currentFrameNanos = awaitFrame()
+                val currentFrameNanos = withFrameNanos { it }
                 // Calculate elapsed time (in seconds) since the last frame
                 val elapsed = (currentFrameNanos - (lastFrameNanos ?: currentFrameNanos)) / 1e9.toFloat()
                 // Update viewModel for frame
