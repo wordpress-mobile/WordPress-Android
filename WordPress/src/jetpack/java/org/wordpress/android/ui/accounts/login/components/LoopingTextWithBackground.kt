@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -29,11 +30,13 @@ fun LoopingTextWithBackground(
                 contentDescription = stringResource(R.string.login_prologue_revamped_content_description_bg),
                 contentScale = ContentScale.FillBounds,
                 modifier = Modifier.matchParentSize(),
+                alpha = 0.8f
         )
         LoopingText(
                 modifier = Modifier
                         .fillMaxSize()
                         .padding(horizontal = 20.dp)
+                        .alpha(0.8f)
                         .then(textModifier)
         )
     }
