@@ -46,10 +46,12 @@ class LoginPrologueRevampedFragment : Fragment() {
     ) = ComposeView(requireContext()).apply {
         setContent {
             AppTheme {
-                LoginScreenRevamped(
-                        onWpComLoginClicked = loginPrologueListener::showEmailLoginScreen,
-                        onSiteAddressLoginClicked = loginPrologueListener::loginViaSiteAddress,
-                )
+                PositionProvider {
+                    LoginScreenRevamped(
+                            onWpComLoginClicked = loginPrologueListener::showEmailLoginScreen,
+                            onSiteAddressLoginClicked = loginPrologueListener::loginViaSiteAddress,
+                    )
+                }
             }
         }
     }
@@ -80,22 +82,20 @@ private fun LoginScreenRevamped(
     onWpComLoginClicked: () -> Unit,
     onSiteAddressLoginClicked: () -> Unit,
 ) {
-    PositionProvider {
-        Box {
-            LoopingTextWithBackground()
-            TopLinearGradient()
-            JetpackLogo(
-                    modifier = Modifier
-                            .padding(top = 60.dp)
-                            .size(60.dp)
-                            .align(Alignment.TopCenter)
-            )
-            ColumnWithFrostedGlassBackground(
-                    background = { modifier, textModifier -> LoopingTextWithBackground(modifier, textModifier) }
-            ) {
-                PrimaryButton(onClick = onWpComLoginClicked)
-                SecondaryButton(onClick = onSiteAddressLoginClicked)
-            }
+    Box {
+        LoopingTextWithBackground()
+        TopLinearGradient()
+        JetpackLogo(
+                modifier = Modifier
+                        .padding(top = 60.dp)
+                        .size(60.dp)
+                        .align(Alignment.TopCenter)
+        )
+        ColumnWithFrostedGlassBackground(
+                background = { modifier, textModifier -> LoopingTextWithBackground(modifier, textModifier) }
+        ) {
+            PrimaryButton(onClick = onWpComLoginClicked)
+            SecondaryButton(onClick = onSiteAddressLoginClicked)
         }
     }
 }
