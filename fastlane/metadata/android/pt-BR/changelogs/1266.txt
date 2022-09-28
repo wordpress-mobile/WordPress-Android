@@ -1,4 +1,0 @@
-20.6:
-- Agora você pode fazer login no aplicativo usando um endereço de e-mail que contém algum caractere especial.
-- O pré-carregamento de temas não trava mais o aplicativo durante a criação do site. Ufa.
-- Amente sua potência: o banner com tecnologia Jetpack é exibido nas listas de resultados de pesquisa.

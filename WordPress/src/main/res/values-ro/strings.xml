@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-09-14 15:55:52+0000
+Translation-Revision-Date: 2022-09-19 12:33:34+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
-Generator: GlotPress/4.0.0-alpha.1
+Generator: GlotPress/4.0.0-alpha.3
 Language: ro
 -->
 <resources>
+    <string name="post_settings_author">Autor</string>
+    <string name="error_fetch_authors_list">Nu am putut să preiau autorii</string>
     <string name="app_rating_title">Îți place %s?</string>
     <string name="connection_service_label">Partajează articolul pe %s</string>
     <string name="connections_label">Conexiuni la Jetpack Social</string>
@@ -735,7 +737,6 @@ Language: ro
     <string name="restore_complete_done_button_content_description">Buton Gata</string>
     <string name="restore_complete_icon_content_description">Icon restaurează</string>
     <string name="restore_complete_description_with_two_parameters">Toate elementele selectate sunt restaurate acum înapoi la %1$s %2$s.</string>
-    <string name="restore_progress_label">%1$s%%</string>
     <string name="restore_complete_visit_site_action_button">Vizitează site-ul</string>
     <string name="restore_complete_visit_site_button_content_description">Buton Vizitează site-ul</string>
     <string name="restore_complete_header">Site-ul tău a fost restaurat</string>
@@ -810,7 +811,6 @@ Language: ro
     <string name="backup_download_complete_header">Copia ta de siguranță este disponibilă acum pentru descărcare</string>
     <string name="backup_download_complete_description_with_two_parameters">Am creat cu succes o copie de siguranță a site-ului tău din %1$s %2$s.</string>
     <string name="backup_download_complete_page_title">Copia ta de siguranță</string>
-    <string name="backup_download_progress_label">%1$s%%</string>
     <string name="backup_download_progress_icon_content_description">Icon pentru Creez copii de siguranță care se pot descărca</string>
     <string name="backup_download_progress_footnote">Nu trebuie să aștepți aici. Te vom anunța când copia de siguranță este gata.</string>
     <string name="backup_download_progress_description_with_two_parameters">Creăm o copie de siguranță a site-ului tău din %1$s %2$s, care se poate descărca.</string>
@@ -1774,12 +1774,9 @@ Language: ro
     <string name="quick_start_dialog_check_stats_message">Fii la curent cu performanța site-ului.</string>
     <string name="quick_start_task_skip_menu_title">Sari sarcina</string>
     <string name="notification_channel_reminder_title">Reamintire</string>
-    <string name="stats_traffic_change">%1$s (%2$s%%)</string>
-    <string name="stats_traffic_increase">+%1$s (%2$s%%)</string>
     <string name="stats_insights_popular">Cea mai populară oră</string>
     <string name="stats_select_next_period_description">Selectează perioada următoare</string>
     <string name="stats_select_previous_period_description">Selectează perioada anterioară</string>
-    <string name="stats_most_popular_percent_views">%1$d%% din vizualizări</string>
     <string name="new_site_creation_domain_header_subtitle">Aici vei fi găsit pe internet.</string>
     <string name="notification_new_site_creation_failed">A fost o problemă</string>
     <string name="new_site_creation_clear_all_content_description">Anulează</string>

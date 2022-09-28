@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-09-02 15:09:55+0000
+Translation-Revision-Date: 2022-09-16 13:51:48+0000
 Plural-Forms: nplurals=2; plural=n > 1;
-Generator: GlotPress/4.0.0-alpha.1
+Generator: GlotPress/4.0.0-alpha.3
 Language: pt_BR
 -->
 <resources>
+    <string name="app_rating_title">Curtindo %s?</string>
+    <string name="connection_service_label">Compartilhar post no %s</string>
+    <string name="connections_label">Conexões do Jetpack Social</string>
+    <string name="stats_widget_log_in_to_add_message">Acesse o aplicativo Jetpack para adicionar um widget.</string>
+    <string name="stats_view_publicize">Conexões do Jetpack Social</string>
     <string name="login_magic_links_email_sent">Acabamos de enviar um link mágico para</string>
     <string name="login_magic_links_sent_label_short">Verifique seu e-mail neste dispositivo.</string>
     <string name="or_use_password">Usar senha para fazer login</string>
@@ -733,7 +738,6 @@ Language: pt_BR
     <string name="restore_complete_visit_site_action_button">Visitar site</string>
     <string name="restore_complete_description_with_two_parameters">Todos os itens selecionados estão restaurados de volta para %1$s %2$s.</string>
     <string name="restore_complete_header">Seu site foi restaurado</string>
-    <string name="restore_progress_label">%1$s%%</string>
     <string name="restore_progress_footnote">Você não precisa aguardar por aqui. Te notificaremos quando o site estiver restaurado.</string>
     <string name="restore_progress_icon_content_description">Ícone de restauração do site</string>
     <string name="restore_progress_description_with_two_parameters">Estamos restaurando seu site para %1$s %2$s.</string>
@@ -805,7 +809,6 @@ Language: pt_BR
     <string name="backup_download_complete_description_with_two_parameters">O backup do seu site em %1$s %2$s foi criado com sucesso.</string>
     <string name="backup_download_complete_header">Seu backup já está disponível para ser baixado.</string>
     <string name="backup_download_complete_page_title">Seu backup</string>
-    <string name="backup_download_progress_label">%1$s%%</string>
     <string name="backup_download_progress_footnote">Você não precisa esperar com o celular na mão. Avisaremos quando o backup estiver pronto.</string>
     <string name="backup_download_progress_icon_content_description">Ícone de criação de um backup que pode ser baixado</string>
     <string name="backup_download_progress_description_with_two_parameters">Estamos criando um backup do seu site de %1$s %2$s, que poderá ser baixado.</string>
@@ -1236,6 +1239,7 @@ Language: pt_BR
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">Toque duas vezes para ir para as configurações de cor</string>
     <string name="reader_empty_followed_blogs_description">Ao seguir sites, você verá o conteúdo deles aqui</string>
     <string name="feature_announcement_find_out_mode">Saiba mais</string>
+    <string name="feature_announcement_dialog_label">O que há de novo em %s</string>
     <string name="insert_label_with_count">Inserir %d</string>
     <string name="crop">recortar</string>
     <string name="error_failed_to_load_into_file">Falha ao carregar para um arquivo. Tente novamente.</string>
@@ -1334,6 +1338,7 @@ Language: pt_BR
     <string name="post_list_tab_trashed_posts">Na lixeira</string>
     <string name="post_list_tab_scheduled_posts">Agendado</string>
     <string name="post_list_tab_published_posts">Publicado</string>
+    <string name="sharing_facebook_account_must_have_pages">A conexão com o Facebook não encontrou nenhuma página. O Jetpack Social não consegue se conectar aos perfis do Facebook, apenas às páginas publicadas.</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">Não conectado</string>
     <string name="notifications_tab_title_likes">Curtidas</string>
     <string name="notifications_tab_title_follows">Seguindo</string>
@@ -1560,6 +1565,7 @@ Language: pt_BR
     <string name="share_desc">Compartilhar</string>
     <string name="navigate_back_desc">Voltar</string>
     <string name="navigate_forward_desc">Avançar</string>
+    <string name="calendar_scheduled_post_description">\"%1$s\" agendado para publicação em \"%2$s\" em seu aplicativo %3$s  \n %4$s</string>
     <string name="calendar_scheduled_post_title">Post do WordPress agendado: \"%s\"</string>
     <string name="notification_post_will_be_published_in_ten_minutes">\"%s\" será publicado em 10 minutos</string>
     <string name="notification_post_will_be_published_in_one_hour">\"%s\" será publicado em uma hora</string>
@@ -1768,10 +1774,7 @@ Language: pt_BR
     <string name="notification_channel_reminder_title">Lembrete</string>
     <string name="stats_select_next_period_description">Selecionar próximo período</string>
     <string name="stats_select_previous_period_description">Selecionar período anterior</string>
-    <string name="stats_most_popular_percent_views">%1$d%% de visualizações</string>
     <string name="stats_insights_popular">Horário mais popular</string>
-    <string name="stats_traffic_change">%1$s (%2$s%%)</string>
-    <string name="stats_traffic_increase">+%1$s (%2$s%%)</string>
     <string name="new_site_creation_site_preview_content_description">Mostrando pré-visualização do site</string>
     <string name="new_site_creation_clear_all_content_description">Limpar</string>
     <string name="site_created_but_not_fetched_snackbar_message">Parece que sua conexão está lenta. Se você não encontrar seu site na lista, tente atualizar a tela.</string>

@@ -24,6 +24,7 @@ import javax.tools.Diagnostic.Kind
         "org.wordpress.android.annotation.FeatureInDevelopment"
 )
 class RemoteConfigProcessor : AbstractProcessor() {
+    @Suppress("DEPRECATION")
     override fun process(p0: MutableSet<out TypeElement>?, roundEnvironment: RoundEnvironment?): Boolean {
         val experiments = roundEnvironment?.getElementsAnnotatedWith(Experiment::class.java)?.map { element ->
             val annotation = element.getAnnotation(Experiment::class.java)

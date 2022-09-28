@@ -5,7 +5,8 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
+import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.JetpackLoginEmptyViewBinding
@@ -21,6 +22,7 @@ import org.wordpress.android.ui.main.utils.MeGravatarLoader
 import org.wordpress.android.ui.utils.UiHelpers
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class LoginNoSitesFragment : Fragment(R.layout.jetpack_login_empty_view) {
     companion object {
         const val TAG = "LoginNoSitesFragment"
@@ -30,25 +32,19 @@ class LoginNoSitesFragment : Fragment(R.layout.jetpack_login_empty_view) {
         }
     }
 
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var meGravatarLoader: MeGravatarLoader
     @Inject lateinit var uiHelpers: UiHelpers
     private var loginListener: LoginListener? = null
-    private lateinit var viewModel: LoginNoSitesViewModel
+    private val viewModel: LoginNoSitesViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initDagger()
         initBackPressHandler()
         with(JetpackLoginEmptyViewBinding.bind(view)) {
             initContentViews()
             initClickListeners()
             initViewModel(savedInstanceState)
         }
-    }
-
-    private fun initDagger() {
-        (requireActivity().application as WordPress).component().inject(this)
     }
 
     private fun JetpackLoginEmptyViewBinding.initContentViews() {
@@ -62,9 +58,6 @@ class LoginNoSitesFragment : Fragment(R.layout.jetpack_login_empty_view) {
     }
 
     private fun JetpackLoginEmptyViewBinding.initViewModel(savedInstanceState: Bundle?) {
-        viewModel = ViewModelProvider(this@LoginNoSitesFragment, viewModelFactory)
-                .get(LoginNoSitesViewModel::class.java)
-
         initObservers()
 
         viewModel.start(

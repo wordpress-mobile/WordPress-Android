@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-09-13 10:54:08+0000
+Translation-Revision-Date: 2022-09-19 11:04:49+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
-Generator: GlotPress/4.0.0-alpha.1
+Generator: GlotPress/4.0.0-alpha.3
 Language: ru
 -->
 <resources>
+    <string name="error_fetch_authors_list">Не удалось загрузить список авторов</string>
+    <string name="post_settings_author">Автор</string>
     <string name="app_rating_title">Нравится %s?</string>
     <string name="connection_service_label">Поделиться записью в %s</string>
     <string name="connections_label">Подключения Jetpack Social</string>
@@ -738,7 +740,6 @@ Language: ru
     <string name="restore_complete_visit_site_action_button">Перейти на сайт</string>
     <string name="restore_complete_description_with_two_parameters">Все выбранные элементы восстановлены на %1$s %2$s.</string>
     <string name="restore_complete_header">Ваш сайт был восстановлен</string>
-    <string name="restore_progress_label">%1$s%%</string>
     <string name="restore_progress_footnote">Не обязательно ждать. Мы уведомим вас по окончании восстановления сайта.</string>
     <string name="restore_progress_icon_content_description">Значок восстановления сайта</string>
     <string name="restore_progress_description_with_two_parameters">Выполняется откат к состоянию сайта на %1$s %2$s.</string>
@@ -810,7 +811,6 @@ Language: ru
     <string name="backup_download_complete_description_with_two_parameters">Резервная копия вашего сайта на %1$s %2$s создана.</string>
     <string name="backup_download_complete_header">Резервная копия доступна для скачивания</string>
     <string name="backup_download_complete_page_title">Резервная копия</string>
-    <string name="backup_download_progress_label">%1$s%%</string>
     <string name="backup_download_progress_footnote">Не обязательно ждать. Мы уведомим вас о готовности резервной копии</string>
     <string name="backup_download_progress_icon_content_description">Создание значка скачиваемой резервной копии</string>
     <string name="backup_download_progress_description_with_two_parameters">Создается резервная копия вашего сайта на %1$s %2$s.</string>
@@ -1776,10 +1776,7 @@ Language: ru
     <string name="notification_channel_reminder_title">Напоминание</string>
     <string name="stats_select_next_period_description">Выбор следующего периода</string>
     <string name="stats_select_previous_period_description">Выбор предыдущего периода</string>
-    <string name="stats_most_popular_percent_views">%1$d%% просмотров</string>
     <string name="stats_insights_popular">Самое популярное время</string>
-    <string name="stats_traffic_change">%1$s (%2$s%%)</string>
-    <string name="stats_traffic_increase">+%1$s (%2$s%%)</string>
     <string name="new_site_creation_site_preview_content_description">Показ предварительного просмотра сайта</string>
     <string name="new_site_creation_clear_all_content_description">Очистить</string>
     <string name="site_created_but_not_fetched_snackbar_message">Похоже, что ваше подключение слишком медленное. Если вы не видите ваш новый сайт в списке, попробуйте обновить.</string>

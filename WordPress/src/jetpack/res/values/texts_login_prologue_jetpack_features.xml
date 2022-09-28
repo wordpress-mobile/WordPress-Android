@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="login_prologue_revamped_jetpack_feature_texts">
+        <item>@string/login_prologue_revamped_jetpack_feature_text_1</item>
+        <item>@string/login_prologue_revamped_jetpack_feature_text_2</item>
+        <item>@string/login_prologue_revamped_jetpack_feature_text_3</item>
+        <item>@string/login_prologue_revamped_jetpack_feature_text_4</item>
+        <item>@string/login_prologue_revamped_jetpack_feature_text_5</item>
+        <item>@string/login_prologue_revamped_jetpack_feature_text_6</item>
+        <item>@string/login_prologue_revamped_jetpack_feature_text_7</item>
+        <item>@string/login_prologue_revamped_jetpack_feature_text_8</item>
+        <item>@string/login_prologue_revamped_jetpack_feature_text_9</item>
+        <item>@string/login_prologue_revamped_jetpack_feature_text_10</item>
+        <item>@string/login_prologue_revamped_jetpack_feature_text_11</item>
+        <item>@string/login_prologue_revamped_jetpack_feature_text_12</item>
+    </string-array>
+</resources>

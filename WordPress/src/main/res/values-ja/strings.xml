@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-08-25 08:54:08+0000
+Translation-Revision-Date: 2022-09-15 09:54:07+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/4.0.0-alpha.1
+Generator: GlotPress/4.0.0-alpha.3
 Language: ja_JP
 -->
 <resources>
+    <string name="app_rating_title">%sをお楽しみいただいていますか ?</string>
+    <string name="connection_service_label">投稿を %s にシェア</string>
+    <string name="connections_label">Jetpack ソーシャル連携</string>
+    <string name="stats_widget_log_in_to_add_message">ウィジェットを追加するには Jetpack アプリにログインしてください。</string>
+    <string name="stats_view_publicize">Jetpack ソーシャル連携</string>
     <string name="login_magic_links_email_sent">マジックリンクを次のアドレスに送信しました: </string>
     <string name="login_magic_links_sent_label_short">この端末でメールアドレスを確認してください。</string>
     <string name="or_use_password">パスワードを使用してログイン</string>
@@ -726,14 +731,13 @@ Language: ja_JP
     <string name="restore_complete_failed_icon_content_description">エラーアイコン</string>
     <string name="restore_complete_failed_action_button_content_description">完了ボタン</string>
     <string name="restore_another_process_running">実行中の復元が他にあります。</string>
-    <string name="restore_complete_header">サイトを復元しました</string>
     <string name="restore_complete_visit_site_button_content_description">サイトを表示ボタン</string>
     <string name="restore_complete_visit_site_action_button">サイトを表示</string>
+    <string name="restore_complete_description_with_two_parameters">選択したすべてのアイテムは %1$s %2$s に復元されました。</string>
+    <string name="restore_complete_header">サイトを復元しました</string>
     <string name="restore_complete_icon_content_description">復元アイコン</string>
     <string name="restore_complete_failed_title">復元失敗</string>
     <string name="restore_complete_done_button_content_description">完了ボタン</string>
-    <string name="restore_progress_label">%1$s%%</string>
-    <string name="restore_complete_description_with_two_parameters">選択したすべてのアイテムは %1$s %2$s に復元されました。</string>
     <string name="restore_progress_footnote">お待ちいただく必要はありません。 サイトが完全に復元されたらお知らせします。</string>
     <string name="restore_progress_icon_content_description">サイト復元アイコン</string>
     <string name="restore_progress_header">現在サイトを復元中</string>
@@ -808,7 +812,6 @@ Language: ja_JP
     <string name="backup_download_progress_icon_content_description">ダウンロード可能なバックアップを作成中アイコン</string>
     <string name="backup_download_progress_description_with_two_parameters">%1$s %2$s からダウンロード可能なサイトのバックアップを作成中です。</string>
     <string name="backup_download_progress_header">現在、サイトのダウンロード可能なバックアップを作成中です</string>
-    <string name="backup_download_progress_label">%1$s%%</string>
     <string name="backup_download_progress_footnote">お待ちいただく必要はありません。 バックアップが完了したら通知します。</string>
     <string name="backup_download_progress_page_title">バックアップをダウンロードする</string>
     <string name="backup_download_another_download_running">別のダウンロードを実行中です。</string>
@@ -1245,6 +1248,7 @@ Language: ja_JP
     <string name="photo_picker_video_title">動画を選択</string>
     <string name="site_picker_ask_site_select">サイトを選択できませんでした。もう一度お試しください。</string>
     <string name="feature_announcement_find_out_mode">さらに詳しく</string>
+    <string name="feature_announcement_dialog_label">%s の新機能</string>
     <string name="sitepicker_continue_flow">次へ</string>
     <string name="reader_reblog_error">リブログに失敗しました</string>
     <string name="reader_no_site_to_reblog_action">サイトの管理</string>
@@ -1335,6 +1339,7 @@ Language: ja_JP
     <string name="post_list_tab_scheduled_posts">予約済み</string>
     <string name="post_list_tab_published_posts">公開済み</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">接続されていません</string>
+    <string name="sharing_facebook_account_must_have_pages">Facebook との連携でページが見つかりません。 Jetpack ソーシャルで Facebook のプロフィールに連携できません。連携できるのは公開されているページのみです。</string>
     <string name="notifications_tab_title_likes">いいね</string>
     <string name="notifications_tab_title_follows">フォロー</string>
     <string name="notifications_tab_title_comments">コメント</string>
@@ -1562,6 +1567,7 @@ Language: ja_JP
     <string name="navigate_forward_desc">進む</string>
     <string name="calendar_scheduled_post_title">WordPress の予約済み投稿 :「%s」</string>
     <string name="notification_post_will_be_published_in_ten_minutes">「%s」は10分後に公開されます</string>
+    <string name="calendar_scheduled_post_description">「%1$s」は %3$s アプリの「%2$s」での公開が予定されています\n %4$s</string>
     <string name="notification_post_will_be_published_in_one_hour">「%s」は1時間後に公開されます</string>
     <string name="notification_post_has_been_published">「%s」が公開されました</string>
     <string name="notification_scheduled_post_ten_minute_reminder">予約済みの投稿 :10分前のリマインダー</string>
@@ -1769,9 +1775,6 @@ Language: ja_JP
     <string name="stats_insights_popular">最も人気の時間</string>
     <string name="stats_select_next_period_description">次の期間を選択</string>
     <string name="stats_select_previous_period_description">前の期間を選択</string>
-    <string name="stats_traffic_change">%1$s (%2$s%%)</string>
-    <string name="stats_traffic_increase">+%1$s (%2$s%%)</string>
-    <string name="stats_most_popular_percent_views">表示数: %1$d%%</string>
     <string name="new_site_creation_site_preview_content_description">サイトのプレビューの表示</string>
     <string name="new_site_creation_clear_all_content_description">クリア</string>
     <string name="site_created_but_not_fetched_snackbar_message">接続速度が遅いようです。リストに新しいサイトが表示されない場合は、再度更新してみてください。</string>

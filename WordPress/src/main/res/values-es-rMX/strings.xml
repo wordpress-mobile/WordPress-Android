@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2022-04-05 13:17:37+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.1
+Generator: GlotPress/4.0.0-alpha.3
 Language: es_MX
 -->
 <resources>
@@ -41,7 +41,6 @@ Language: es_MX
     <string name="backup_download_progress_header">Actualmente creando una copia de seguridad descargable de tu sitio</string>
     <string name="backup_download_progress_description_with_two_parameters">Estamos creando una copia de seguridad descargable de tu sitio desde %1$s %2$s.</string>
     <string name="backup_download_progress_icon_content_description">Creando un icono de copia de seguridad descargable</string>
-    <string name="backup_download_progress_label">%1$s%%</string>
     <string name="backup_download_complete_page_title">Tu copia de seguridad</string>
     <string name="backup_download_details_description_with_two_parameters">%1$s %2$s es el punto seleccionado para crear una copia de seguridad descargable.</string>
     <string name="backup_download_details_action_button_content_description">Crear un botón de copia de seguridad descargable</string>
@@ -924,10 +923,7 @@ Language: es_MX
     <string name="notification_channel_reminder_title">Recordatorio</string>
     <string name="stats_select_next_period_description">Elige el siguiente periodo</string>
     <string name="stats_select_previous_period_description">Elige el periodo anterior</string>
-    <string name="stats_most_popular_percent_views">%1$d%% de vistas</string>
     <string name="stats_insights_popular">Hora Más Popular</string>
-    <string name="stats_traffic_change">%1$s (%2$s%%)</string>
-    <string name="stats_traffic_increase">+%1$s (%2$s%%)</string>
     <string name="new_site_creation_site_preview_content_description">Mostrando la vista previa del sitio</string>
     <string name="site_created_but_not_fetched_snackbar_message">Parece que tienes una conexión lenta. Si no ves tu nuevo sitio en la lista, inténtalo actualizado.</string>
     <string name="cancel_new_site_wizard_content_description">Cancelar el Asistente de Creación de Sitios</string>
