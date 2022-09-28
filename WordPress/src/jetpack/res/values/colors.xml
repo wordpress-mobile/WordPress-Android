@@ -8,6 +8,10 @@
     <!-- Login Prologue Revamped  -->
     <color name="bg_jetpack_login_splash">@color/jetpack_green_0</color>
 
+    <color name="bg_jetpack_login_splash_primary_button">@color/jetpack_green_50</color>
+    <color name="text_color_jetpack_login_splash_primary_button">@color/white</color>
+    <color name="text_color_jetpack_login_splash_secondary_button">@color/jetpack_green_90</color>
+
     <color name="bg_jetpack_login_splash_bottom_panel">#99F1F3EC</color>
     <color name="border_top_jetpack_login_splash_bottom_panel">#0D000000</color>
 
