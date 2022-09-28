@@ -18,7 +18,6 @@ import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.pages.PageItem.PublishedPage
 import org.wordpress.android.ui.pages.PageItem.ScheduledPage
 import org.wordpress.android.ui.pages.PageItem.TrashedPage
-import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType
@@ -26,8 +25,6 @@ import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.DRAF
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.PUBLISHED
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.SCHEDULED
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.TRASHED
-import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase.PostUploadUiState
-import org.wordpress.android.viewmodel.uistate.ProgressBarUiState
 import java.util.SortedMap
 import javax.inject.Inject
 import javax.inject.Named

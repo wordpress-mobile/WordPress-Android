@@ -7,6 +7,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.components.Description
+import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
@@ -20,6 +21,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
+import org.wordpress.android.R.color
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem.Bar
 import org.wordpress.android.ui.stats.refresh.utils.BarChartAccessibilityHelper
@@ -86,11 +88,8 @@ class BarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         val mappedEntries = cutEntries.mapIndexed { index, pair -> toBarEntry(pair, index) }
         val maxYValue = cutEntries.maxByOrNull { it.value }!!.value
         val hasData = item.entries.isNotEmpty() && item.entries.any { it.value > 0 }
-        val dataSet = if (hasData) {
-            buildDataSet(context, mappedEntries)
-        } else {
-            buildEmptyDataSet(context, cutEntries.size)
-        }
+        val dataSet = buildDataSet(hasData, mappedEntries, cutEntries)
+
         item.onBarChartDrawn?.invoke(dataSet.entryCount)
         val dataSets = mutableListOf<IBarDataSet>()
         dataSets.add(dataSet)
@@ -105,14 +104,7 @@ class BarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             getHighlightDataSet(context, mappedEntries)?.let { dataSets.add(it) }
         }
         data = BarData(dataSets)
-        val greyColor = ContextCompat.getColor(
-                context,
-                R.color.neutral_30
-        )
-        val lightGreyColor = ContextCompat.getColor(
-                context,
-                R.color.stats_bar_chart_gridline
-        )
+        val (greyColor, lightGreyColor) = returnGreyColor()
         axisLeft.apply {
             modifyLeftAxis(maxYValue, greyColor, lightGreyColor)
         }
@@ -121,10 +113,7 @@ class BarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             modifyRightAxis()
         }
         xAxis.apply {
-            granularity = 1f
-            setDrawAxisLine(false)
-            setDrawGridLines(false)
-            setDrawLabels(false)
+            modifyXAxis()
         }
         labelStart.text = cutEntries.first().label
         labelEnd.text = cutEntries.last().label
@@ -142,20 +131,62 @@ class BarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         isHighlightFullBarEnabled = isClickable
         isHighlightPerDragEnabled = false
         isHighlightPerTapEnabled = isClickable
-        val description = Description()
-        description.text = ""
-        this.description = description
+
+        setDescription()
 
         if (item.selectedItem != null) {
-            val index = cutEntries.indexOfFirst { it.id == item.selectedItem }
-            if (index >= 0) {
-                highlightColumn(index, hasOverlappingEntries)
-            } else {
-                highlightValue(null, false)
-            }
+            hightlight(cutEntries, item, hasOverlappingEntries)
         }
         invalidate()
         return cutEntries.size
+    }
+
+    private fun BarChart.buildDataSet(
+        hasData: Boolean,
+        mappedEntries: List<BarEntry>,
+        cutEntries: List<Bar>
+    ) = if (hasData) {
+        buildDataSet(context, mappedEntries)
+    } else {
+        buildEmptyDataSet(context, cutEntries.size)
+    }
+
+    private fun BarChart.setDescription() {
+        val description = Description()
+        description.text = ""
+        this.description = description
+    }
+
+    private fun BarChart.returnGreyColor(): Pair<Int, Int> {
+        val greyColor = ContextCompat.getColor(
+                context,
+                color.neutral_30
+        )
+        val lightGreyColor = ContextCompat.getColor(
+                context,
+                color.stats_bar_chart_gridline
+        )
+        return Pair(greyColor, lightGreyColor)
+    }
+
+    private fun BarChart.hightlight(
+        cutEntries: List<Bar>,
+        item: BarChartItem,
+        hasOverlappingEntries: Boolean
+    ) {
+        val index = cutEntries.indexOfFirst { it.id == item.selectedItem }
+        if (index >= 0) {
+            highlightColumn(index, hasOverlappingEntries)
+        } else {
+            highlightValue(null, false)
+        }
+    }
+
+    private fun XAxis.modifyXAxis() {
+        granularity = 1f
+        setDrawAxisLine(false)
+        setDrawGridLines(false)
+        setDrawLabels(false)
     }
 
     private fun BarChart.selectBar(
