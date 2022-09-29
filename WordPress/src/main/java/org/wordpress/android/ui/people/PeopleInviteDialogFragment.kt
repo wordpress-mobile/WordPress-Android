@@ -36,6 +36,7 @@ class PeopleInviteDialogFragment : DialogFragment() {
         (requireActivity().applicationContext as WordPress).component().inject(this)
     }
 
+    @Suppress("DEPRECATION")
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         viewModel = ViewModelProvider(
                 targetFragment as ViewModelStoreOwner, viewModelFactory
@@ -78,6 +79,7 @@ class PeopleInviteDialogFragment : DialogFragment() {
 
         @JvmStatic
         @JvmOverloads
+        @Suppress("DEPRECATION")
         fun newInstance(
             fragment: Fragment,
             dialogMode: DialogMode,

@@ -197,7 +197,7 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
         }
     }
 
-    @Suppress("LongMethod")
+    @Suppress("DEPRECATION", "LongMethod")
     private fun MySiteTabFragmentBinding.setupObservers() {
         viewModel.uiModel.observe(viewLifecycleOwner, { uiModel ->
             hideRefreshIndicatorIfNeeded()

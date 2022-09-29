@@ -25,6 +25,7 @@ class PrivateAtCookieRefreshProgressDialog : DialogFragment() {
         return dialog != null && dialog!!.isShowing
     }
 
+    @Suppress("DEPRECATION")
     override fun onCancel(dialog: DialogInterface) {
         super.onCancel(dialog)
         if (targetFragment is PrivateAtCookieProgressDialogOnDismissListener) {
@@ -41,6 +42,7 @@ class PrivateAtCookieRefreshProgressDialog : DialogFragment() {
             showIfNecessary(fragmentManager, null)
         }
 
+        @Suppress("DEPRECATION")
         fun showIfNecessary(fragmentManager: FragmentManager?, targetFragment: Fragment?) {
             fragmentManager?.let {
                 val thisFragment = fragmentManager.findFragmentByTag(TAG)

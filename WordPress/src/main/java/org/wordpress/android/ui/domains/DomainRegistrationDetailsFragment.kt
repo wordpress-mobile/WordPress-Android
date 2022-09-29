@@ -373,12 +373,14 @@ class DomainRegistrationDetailsFragment : Fragment() {
         )
     }
 
+    @Suppress("DEPRECATION")
     private fun showStatePicker(states: List<SupportedStateResponse>) {
         val dialogFragment = StatePickerDialogFragment.newInstance(states.toCollection(ArrayList()))
         dialogFragment.setTargetFragment(this, 0)
         dialogFragment.show(requireFragmentManager(), StatePickerDialogFragment.TAG)
     }
 
+    @Suppress("DEPRECATION")
     private fun showCountryPicker(countries: List<SupportedDomainCountry>) {
         val dialogFragment = CountryPickerDialogFragment.newInstance(
                 countries.toCollection(
@@ -460,7 +462,7 @@ class DomainRegistrationDetailsFragment : Fragment() {
                     as ArrayList<SupportedStateResponse>
         }
 
-        @Suppress("UseCheckOrError")
+        @Suppress("DEPRECATION", "UseCheckOrError")
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
             if (targetFragment == null) {
                 throw IllegalStateException("StatePickerDialogFragment is missing a targetFragment ")
@@ -511,7 +513,7 @@ class DomainRegistrationDetailsFragment : Fragment() {
                     as ArrayList<SupportedDomainCountry>
         }
 
-        @Suppress("UseCheckOrError")
+        @Suppress("DEPRECATION", "UseCheckOrError")
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
             if (targetFragment == null) {
                 throw IllegalStateException("CountryPickerDialogFragment is missing a targetFragment ")
