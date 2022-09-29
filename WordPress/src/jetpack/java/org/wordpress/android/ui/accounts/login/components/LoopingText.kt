@@ -29,7 +29,7 @@ private fun LargeTexts() {
 
     val styledText = buildAnnotatedString {
         texts.forEachIndexed { index, text ->
-            when (index.isOdd) {
+            when ((index + 1).isOdd) {
                 true -> withStyle(SpanStyle(color = oddColor)) {
                     append(text)
                 }
