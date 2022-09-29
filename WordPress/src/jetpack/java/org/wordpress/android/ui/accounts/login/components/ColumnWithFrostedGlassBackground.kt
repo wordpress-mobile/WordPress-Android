@@ -61,6 +61,7 @@ private fun ColumnWithTopGlassBorder(
 
 @Composable
 fun ColumnWithFrostedGlassBackground(
+    background: @Composable (modifier: Modifier, textModifier: Modifier) -> Unit,
     content: @Composable () -> Unit,
 ) {
     val topBorderHeight = with(LocalDensity.current) { 1.dp.toPx() }
@@ -87,7 +88,7 @@ fun ColumnWithFrostedGlassBackground(
         }
 
         val clippedBackgroundPlaceables = subcompose(ClippedBackground) {
-            LoopingTextWithBackground(
+            background(
                     modifier = Modifier.clip(buttonsClipShape),
                     textModifier = Modifier.composed {
                         if (VERSION.SDK_INT >= VERSION_CODES.S) {

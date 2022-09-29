@@ -2,12 +2,8 @@ package org.wordpress.android.ui.accounts.login.components
 
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
@@ -19,25 +15,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.wordpress.android.R
-import org.wordpress.android.ui.compose.components.AUTOSCROLL_DELTA_PX
-import org.wordpress.android.ui.compose.components.AutoScrollingLazyColumn
-import org.wordpress.android.ui.compose.components.AutoScrollingListItem
+import org.wordpress.android.ui.accounts.login.LocalPosition
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.util.extensions.isOdd
-
-private data class LargeTextsItem(
-    override val id: Int,
-    val content: @Composable () -> Unit,
-) : AutoScrollingListItem
-
-@Composable
-private fun largeTextItems(): List<LargeTextsItem> {
-    return (0..2).map { index ->
-        LargeTextsItem(index) {
-            LargeTexts()
-        }
-    }
-}
 
 private val fontSize = 43.sp
 private val lineHeight = fontSize * 0.95
@@ -79,17 +59,11 @@ private fun LargeTexts() {
 
 @Composable
 fun LoopingText(modifier: Modifier = Modifier) {
-    val listItems = largeTextItems()
-    val scrollBy by remember { mutableStateOf(AUTOSCROLL_DELTA_PX) }
-    val lazyListState = rememberLazyListState(initialFirstVisibleItemIndex = listItems.size / 2)
-
-    AutoScrollingLazyColumn(
-            lazyListState = lazyListState,
-            items = listItems,
-            scrollBy = scrollBy,
-            modifier = modifier,
+    RepeatingColumn(
+            position = LocalPosition.current,
+            modifier = modifier
     ) {
-        it.content()
+        LargeTexts()
     }
 }
 
