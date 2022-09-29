@@ -251,6 +251,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     private var onBloggingPromptShareClicked: ((message: String) -> Unit)? = null
     private var onBloggingPromptAnswerClicked: ((promptId: Int) -> Unit)? = null
     private var onBloggingPromptSkipClicked: (() -> Unit)? = null
+    private var onBloggingPromptViewMoreClicked: (() -> Unit)? = null
     private val quickStartCategory: QuickStartCategory
         get() = QuickStartCategory(
                 taskType = QuickStartTaskType.CUSTOMIZE,
@@ -1655,6 +1656,17 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `given blogging prompt card, when view more prompts button is clicked, open prompt list page`() {
+        initSelectedSite()
+
+        requireNotNull(onBloggingPromptViewMoreClicked).invoke()
+
+        assertThat(navigationActions).containsOnly(
+                SiteNavigationAction.ViewMorePrompts(site)
+        )
+    }
+
+    @Test
     fun `given blogging prompt card, when skip button is clicked, prompt is skipped and undo snackbar displayed`() =
             test {
                 initSelectedSite()
@@ -2956,6 +2968,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         onBloggingPromptShareClicked = params.bloggingPromptCardBuilderParams.onShareClick
         onBloggingPromptAnswerClicked = params.bloggingPromptCardBuilderParams.onAnswerClick
         onBloggingPromptSkipClicked = params.bloggingPromptCardBuilderParams.onSkipClick
+        onBloggingPromptViewMoreClicked = params.bloggingPromptCardBuilderParams.onViewMorePrompts
         return BloggingPromptCardWithData(
                 prompt = UiStringText("Test prompt"),
                 respondents = emptyList(),
@@ -2965,7 +2978,8 @@ class MySiteViewModelTest : BaseUnitTest() {
                 attribution = BloggingPromptAttribution.DAY_ONE,
                 onShareClick = onBloggingPromptShareClicked as ((message: String) -> Unit),
                 onAnswerClick = onBloggingPromptAnswerClicked as ((promptId: Int) -> Unit),
-                onSkipClick = onBloggingPromptSkipClicked as (() -> Unit)
+                onSkipClick = onBloggingPromptSkipClicked as (() -> Unit),
+                onViewMorePrompts = onBloggingPromptViewMoreClicked as (() -> Unit)
         )
     }
 
