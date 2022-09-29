@@ -97,6 +97,7 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
         }
     }
 
+    @Suppress("DEPRECATION")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == RequestCodes.NOTE_DETAIL) {
             shouldRefreshNotifications = false

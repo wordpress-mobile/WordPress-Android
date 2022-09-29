@@ -448,7 +448,7 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
         binding = null
     }
 
-    @Suppress("ReturnCount", "LongMethod", "ComplexMethod")
+    @Suppress("DEPRECATION", "ReturnCount", "LongMethod", "ComplexMethod")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (data == null) {

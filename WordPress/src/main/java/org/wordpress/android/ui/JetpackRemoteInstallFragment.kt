@@ -79,6 +79,7 @@ class JetpackRemoteInstallFragment : Fragment(R.layout.jetpack_remote_install_fr
         activity.finish()
     }
 
+    @Suppress("DEPRECATION")
     private fun onLoginResultAction(
         activity: FragmentActivity,
         source: JetpackConnectionSource
@@ -130,6 +131,7 @@ class JetpackRemoteInstallFragment : Fragment(R.layout.jetpack_remote_install_fr
         })
     }
 
+    @Suppress("DEPRECATION")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == JETPACK_LOGIN && resultCode == Activity.RESULT_OK) {
