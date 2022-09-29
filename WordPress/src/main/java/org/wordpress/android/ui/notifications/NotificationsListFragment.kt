@@ -67,6 +67,7 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
     private var lastTabPosition = 0
     private var binding: NotificationsListFragmentBinding? = null
 
+    @Suppress("DEPRECATION")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         if (savedInstanceState != null) {

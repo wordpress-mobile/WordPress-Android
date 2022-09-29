@@ -100,6 +100,7 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
         return view
     }
 
+    @Suppress("DEPRECATION")
     override fun onActivityCreated(bundle: Bundle?) {
         super.onActivityCreated(bundle)
         val listView = listView

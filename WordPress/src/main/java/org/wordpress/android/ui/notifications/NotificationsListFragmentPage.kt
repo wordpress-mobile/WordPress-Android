@@ -80,6 +80,7 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
         fun onClickNote(noteId: String?)
     }
 
+    @Suppress("DEPRECATION")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         val adapter = createOrGetNotesAdapter()

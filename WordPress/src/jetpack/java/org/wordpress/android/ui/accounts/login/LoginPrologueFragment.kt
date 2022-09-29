@@ -79,6 +79,7 @@ class LoginPrologueFragment : Fragment(R.layout.jetpack_login_prologue_screen) {
         viewModel.onFragmentResume()
     }
 
+    @Suppress("DEPRECATION")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         // important for accessibility - talkback
