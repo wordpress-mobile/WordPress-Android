@@ -11,8 +11,6 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
-import org.wordpress.android.R.drawable
-import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.MediaStore
@@ -68,6 +66,7 @@ import org.wordpress.android.ui.mediapicker.insert.MediaInsertHandler.InsertMode
 import org.wordpress.android.ui.mediapicker.insert.MediaInsertHandlerFactory
 import org.wordpress.android.ui.mediapicker.loader.MediaLoader
 import org.wordpress.android.ui.mediapicker.loader.MediaLoader.DomainModel
+import org.wordpress.android.ui.mediapicker.loader.MediaLoader.DomainModel.EmptyState
 import org.wordpress.android.ui.mediapicker.loader.MediaLoader.LoadAction
 import org.wordpress.android.ui.mediapicker.loader.MediaLoader.LoadAction.NextPage
 import org.wordpress.android.ui.mediapicker.loader.MediaLoaderFactory
@@ -200,15 +199,21 @@ class MediaPickerViewModel @Inject constructor(
                 val fileExtension = it.mimeType?.let { mimeType ->
                     mediaUtilsWrapper.getExtensionForMimeType(mimeType).uppercase(localeManagerWrapper.getLocale())
                 }
-                mediaPickerUiItem(
-                        it,
-                        isSelected,
-                        selectedOrder,
-                        showOrderCounter,
-                        toggleAction,
-                        clickAction,
-                        fileExtension
-                )
+                when (it.type) {
+                    IMAGE -> PhotoItem(url = it.url, identifier = it.identifier, isSelected = isSelected,
+                            selectedOrder = selectedOrder, showOrderCounter = showOrderCounter,
+                            toggleAction = toggleAction, clickAction = clickAction
+                    )
+                    VIDEO -> VideoItem(url = it.url, identifier = it.identifier, isSelected = isSelected,
+                            selectedOrder = selectedOrder, showOrderCounter = showOrderCounter,
+                            toggleAction = toggleAction, clickAction = clickAction
+                    )
+                    AUDIO, DOCUMENT -> FileItem(
+                            fileName = it.name ?: "", fileExtension = fileExtension, identifier = it.identifier,
+                            isSelected = isSelected, selectedOrder = selectedOrder, showOrderCounter = showOrderCounter,
+                            toggleAction = toggleAction, clickAction = clickAction
+                    )
+                }
             }
             if (domainModel.hasMore) {
                 loadNextPage(uiItems, domainModel)
@@ -216,25 +221,41 @@ class MediaPickerViewModel @Inject constructor(
                 PhotoListUiModel.Data(items = uiItems)
             }
         } else if (domainModel?.emptyState != null) {
-            PhotoListUiModel.Empty(
-                    domainModel.emptyState.title,
-                    domainModel.emptyState.htmlSubtitle,
-                    domainModel.emptyState.image,
-                    domainModel.emptyState.bottomImage,
-                    domainModel.emptyState.bottomImageDescription,
-                    isSearching == true,
-                    retryAction = if (domainModel.emptyState.isError) {
-                        this::retry
-                    } else {
-                        null
-                    }
-            )
+            showEmptyState(domainModel.emptyState, isSearching)
         } else if (domainModel?.isLoading == true) {
             PhotoListUiModel.Loading
         } else {
-            populateEmptyPhotoListUIModel(domainModel, domainModel?.mediaTypes, isSearching)
+            val onlyMediaType = if (domainModel?.mediaTypes?.size == 1) domainModel.mediaTypes.first() else null
+            val stringId = when (onlyMediaType) {
+                IMAGE -> R.string.media_empty_image_list
+                AUDIO -> R.string.media_empty_audio_list
+                VIDEO -> R.string.media_empty_videos_list
+                DOCUMENT -> R.string.media_empty_documents_list
+                else -> R.string.media_empty_list
+            }
+            PhotoListUiModel.Empty(
+                    UiStringRes(stringId),
+                    image = R.drawable.img_illustration_media_105dp, isSearching = isSearching == true
+            )
         }
     }
+
+    private fun showEmptyState(
+        emptyState: EmptyState,
+        isSearching: Boolean?
+    ) = Empty(
+            emptyState.title,
+            emptyState.htmlSubtitle,
+            emptyState.image,
+            emptyState.bottomImage,
+            emptyState.bottomImageDescription,
+            isSearching == true,
+            retryAction = if (emptyState.isError) {
+                this::retry
+            } else {
+                null
+            }
+    )
 
     private fun loadNextPage(
         uiItems: List<MediaPickerUiItem>,
@@ -256,65 +277,6 @@ class MediaPickerViewModel @Inject constructor(
         }
         updatedItems.add(loaderItem)
         return Data(items = updatedItems)
-    }
-
-    private fun mediaPickerUiItem(
-        it: MediaItem,
-        isSelected: Boolean,
-        selectedOrder: Int?,
-        showOrderCounter: Boolean,
-        toggleAction: ToggleAction,
-        clickAction: ClickAction,
-        fileExtension: String?
-    ) = when (it.type) {
-        IMAGE -> PhotoItem(
-                url = it.url,
-                identifier = it.identifier,
-                isSelected = isSelected,
-                selectedOrder = selectedOrder,
-                showOrderCounter = showOrderCounter,
-                toggleAction = toggleAction,
-                clickAction = clickAction
-        )
-        VIDEO -> VideoItem(
-                url = it.url,
-                identifier = it.identifier,
-                isSelected = isSelected,
-                selectedOrder = selectedOrder,
-                showOrderCounter = showOrderCounter,
-                toggleAction = toggleAction,
-                clickAction = clickAction
-        )
-        AUDIO, DOCUMENT -> FileItem(
-                fileName = it.name ?: "",
-                fileExtension = fileExtension,
-                identifier = it.identifier,
-                isSelected = isSelected,
-                selectedOrder = selectedOrder,
-                showOrderCounter = showOrderCounter,
-                toggleAction = toggleAction,
-                clickAction = clickAction
-        )
-    }
-
-    private fun populateEmptyPhotoListUIModel(
-        domainModel: DomainModel?,
-        mediaTypes: Set<MediaType>?,
-        isSearching: Boolean?
-    ): Empty {
-        val onlyMediaType = if (domainModel?.mediaTypes?.size == 1) mediaTypes?.first() else null
-        val stringId = when (onlyMediaType) {
-            IMAGE -> string.media_empty_image_list
-            AUDIO -> string.media_empty_audio_list
-            VIDEO -> string.media_empty_videos_list
-            DOCUMENT -> string.media_empty_documents_list
-            else -> string.media_empty_list
-        }
-        return Empty(
-                UiStringRes(stringId),
-                image = drawable.img_illustration_media_105dp,
-                isSearching = isSearching == true
-        )
     }
 
     private fun buildActionModeUiModel(
