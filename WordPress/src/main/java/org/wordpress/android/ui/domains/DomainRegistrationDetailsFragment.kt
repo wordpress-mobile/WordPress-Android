@@ -5,7 +5,6 @@ import android.app.ProgressDialog
 import android.content.Context
 import android.os.Bundle
 import android.text.Editable
-import android.text.Html
 import android.text.TextUtils
 import android.text.TextWatcher
 import android.text.method.LinkMovementMethod
@@ -13,6 +12,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import androidx.core.text.HtmlCompat
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -164,12 +164,13 @@ class DomainRegistrationDetailsFragment : Fragment() {
 
     // make link to ToS clickable
     private fun DomainRegistrationDetailsFragmentBinding.setupTosLink() {
-        tosExplanation.text = Html.fromHtml(
+        tosExplanation.text = HtmlCompat.fromHtml(
                 String.format(
                         resources.getString(R.string.domain_registration_privacy_protection_tos),
                         "<u>",
                         "</u>"
-                )
+                ),
+                HtmlCompat.FROM_HTML_MODE_LEGACY
         )
         tosExplanation.movementMethod = LinkMovementMethod.getInstance()
         tosExplanation.setOnClickListener {

@@ -253,7 +253,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
 
         // Subject is stored in db as html to preserve text formatting
         Spanned noteSubjectSpanned = note.getFormattedSubject(mNotificationsUtilsWrapper);
-        // Trim the '\n\n' added by Html.fromHtml()
+        // Trim the '\n\n' added by HtmlCompat.fromHtml(...)
         noteSubjectSpanned =
                 (Spanned) noteSubjectSpanned.subSequence(0, TextUtils.getTrimmedLength(noteSubjectSpanned));
 
