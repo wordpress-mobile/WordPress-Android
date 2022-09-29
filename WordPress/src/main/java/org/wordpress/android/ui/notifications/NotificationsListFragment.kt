@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package org.wordpress.android.ui.notifications
 
 import android.app.Activity
@@ -201,6 +203,7 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
         }
     }
 
+    @Suppress("DEPRECATION")
     private class NotificationsFragmentAdapter(
         fragmentManager: FragmentManager,
         private val titles: List<String>

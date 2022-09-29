@@ -577,6 +577,7 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
     }
 }
 
+@Suppress("DEPRECATION")
 class PagesPagerAdapter(val context: Context, val fm: FragmentManager) : FragmentPagerAdapter(
         fm,
         BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT
