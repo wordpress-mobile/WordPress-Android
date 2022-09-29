@@ -50,7 +50,7 @@ ext {
     autoServiceVersion = '1.0'
 
     // testing
-    jUnitVersion = '4.13'
+    jUnitVersion = '4.13.2'
     jUnitExtVersion = '1.1.3'
     androidxTestCoreVersion = '1.4.0'
     assertJVersion = '3.11.1'
