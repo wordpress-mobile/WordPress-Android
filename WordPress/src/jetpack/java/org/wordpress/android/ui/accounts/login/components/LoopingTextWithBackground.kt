@@ -35,8 +35,8 @@ fun LoopingTextWithBackground(
         LoopingText(
                 modifier = Modifier
                         .fillMaxSize()
-                        .padding(horizontal = 20.dp)
                         .alpha(0.8f)
+                        .padding(horizontal = 20.dp)
                         .then(textModifier)
         )
     }
