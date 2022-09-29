@@ -11,7 +11,6 @@ import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.util.AppLog
 
 class BloggingPromptsActivity : LocaleAwareActivity() {
-
     private lateinit var site: SiteModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,7 +55,6 @@ class BloggingPromptsActivity : LocaleAwareActivity() {
     }
 
     companion object {
-
         @JvmStatic
         @JvmOverloads
         fun start(

@@ -92,7 +92,10 @@ class BloggingPromptCardViewHolder(
         val quickStartPopupMenu = PopupMenu(bloggingPromptCardMenu.context, bloggingPromptCardMenu)
         quickStartPopupMenu.setOnMenuItemClickListener {
             when (it.itemId) {
-                R.id.view_more -> bloggingPromptsCardAnalyticsTracker.trackMySiteCardMenuViewMorePromptsClicked()
+                R.id.view_more -> {
+                    bloggingPromptsCardAnalyticsTracker.trackMySiteCardMenuViewMorePromptsClicked()
+                    card.onViewMorePrompts.invoke()
+                }
                 R.id.skip -> {
                     bloggingPromptsCardAnalyticsTracker.trackMySiteCardMenuSkipThisPromptClicked()
                     card.onSkipClick.invoke()
