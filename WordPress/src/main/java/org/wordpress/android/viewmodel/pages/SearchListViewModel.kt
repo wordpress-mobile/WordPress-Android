@@ -104,11 +104,7 @@ class SearchListViewModel
 
         return when (status) {
             PageStatus.PUBLISHED, PageStatus.PRIVATE -> PublishedPage(
-                    remoteId = remoteId,
-                    localId = pageId,
-                    title = title,
-                    date = date,
-                    labels = labels,
+                    remoteId = remoteId, localId = pageId, title = title, date = date, labels = labels,
                     labelsColor = labelColor,
                     actions = pageListItemActionsUseCase.setupPageActions(
                             PUBLISHED,
@@ -116,18 +112,12 @@ class SearchListViewModel
                             pagesViewModel.site,
                             remoteId
                     ),
-                    actionsEnabled = areActionsEnabled,
-                    progressBarUiState = progressBarUiState,
-                    showOverlay = showOverlay,
-                    author = post.authorDisplayName
+                    actionsEnabled = areActionsEnabled, progressBarUiState = progressBarUiState,
+                    showOverlay = showOverlay, author = post.authorDisplayName
             )
 
             PageStatus.DRAFT, PageStatus.PENDING -> DraftPage(
-                    remoteId = remoteId,
-                    localId = pageId,
-                    title = title,
-                    date = date,
-                    labels = labels,
+                    remoteId = remoteId, localId = pageId, title = title, date = date, labels = labels,
                     labelsColor = labelColor,
                     actions = pageListItemActionsUseCase.setupPageActions(
                             DRAFTS,
@@ -135,17 +125,11 @@ class SearchListViewModel
                             pagesViewModel.site,
                             remoteId
                     ),
-                    actionsEnabled = areActionsEnabled,
-                    progressBarUiState = progressBarUiState,
-                    showOverlay = showOverlay,
-                    author = post.authorDisplayName
+                    actionsEnabled = areActionsEnabled, progressBarUiState = progressBarUiState,
+                    showOverlay = showOverlay, author = post.authorDisplayName
             )
             PageStatus.TRASHED -> TrashedPage(
-                    remoteId = remoteId,
-                    localId = pageId,
-                    title = title,
-                    date = date,
-                    labels = labels,
+                    remoteId = remoteId, localId = pageId, title = title, date = date, labels = labels,
                     labelsColor = labelColor,
                     actions = pageListItemActionsUseCase.setupPageActions(
                             TRASHED,
@@ -153,17 +137,11 @@ class SearchListViewModel
                             pagesViewModel.site,
                             remoteId
                     ),
-                    actionsEnabled = areActionsEnabled,
-                    progressBarUiState = progressBarUiState,
-                    showOverlay = showOverlay,
-                    author = post.authorDisplayName
+                    actionsEnabled = areActionsEnabled, progressBarUiState = progressBarUiState,
+                    showOverlay = showOverlay, author = post.authorDisplayName
             )
             PageStatus.SCHEDULED -> ScheduledPage(
-                    remoteId = remoteId,
-                    localId = pageId,
-                    title = title,
-                    date = date,
-                    labels = labels,
+                    remoteId = remoteId, localId = pageId, title = title, date = date, labels = labels,
                     labelsColor = labelColor,
                     actions = pageListItemActionsUseCase.setupPageActions(
                             SCHEDULED,
@@ -171,10 +149,8 @@ class SearchListViewModel
                             pagesViewModel.site,
                             remoteId
                     ),
-                    actionsEnabled = areActionsEnabled,
-                    progressBarUiState = progressBarUiState,
-                    showOverlay = showOverlay,
-                    author = post.authorDisplayName
+                    actionsEnabled = areActionsEnabled, progressBarUiState = progressBarUiState,
+                    showOverlay = showOverlay, author = post.authorDisplayName
             )
         }
     }
