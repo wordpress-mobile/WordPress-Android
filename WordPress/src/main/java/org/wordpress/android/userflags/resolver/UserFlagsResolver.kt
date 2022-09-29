@@ -70,7 +70,7 @@ class UserFlagsResolver @Inject constructor(
                     is Boolean -> appPrefsWrapper.setBoolean(userFlagPrefKey, value)
                     is Collection<*> -> {
                         val stringSet = value.filterIsInstance<String>().toSet()
-                        appPrefsWrapper.setStringSet(key, stringSet)
+                        appPrefsWrapper.setStringSet(userFlagPrefKey, stringSet)
                     }
                 }
             }

@@ -287,6 +287,10 @@ public class AppPrefs {
         return PreferenceManager.getDefaultSharedPreferences(WordPress.getContext());
     }
 
+    static Map<String, ?> getAllPrefs() {
+        return prefs().getAll();
+    }
+
     private static String getString(PrefKey key) {
         return getString(key, "");
     }
@@ -318,8 +322,12 @@ public class AppPrefs {
         }
     }
 
-    public static void setLong(PrefKey key, long value) {
+    private static void setLong(PrefKey key, long value) {
         setString(key, Long.toString(value));
+    }
+
+    public static void putLong(final PrefKey key, final long value) {
+        prefs().edit().putLong(key.name(), value) .apply();
     }
 
     private static int getInt(PrefKey key, int def) {
@@ -338,6 +346,10 @@ public class AppPrefs {
         return getInt(key, 0);
     }
 
+    public static void putInt(final PrefKey key, final int value) {
+        prefs().edit().putInt(key.name(), value) .apply();
+    }
+
     public static void setInt(PrefKey key, int value) {
         setString(key, Integer.toString(value));
     }
@@ -347,8 +359,16 @@ public class AppPrefs {
         return Boolean.parseBoolean(value);
     }
 
+    public static void putBoolean(final PrefKey key, final boolean value) {
+        prefs().edit().putBoolean(key.name(), value) .apply();
+    }
+
     public static void setBoolean(PrefKey key, boolean value) {
         setString(key, Boolean.toString(value));
+    }
+
+    public static void putStringSet(final PrefKey key, final Set<String> value) {
+        prefs().edit().putStringSet(key.name(), value) .apply();
     }
 
     private static void remove(PrefKey key) {

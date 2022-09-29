@@ -241,38 +241,26 @@ class AppPrefsWrapper @Inject constructor() {
 
     fun saveIsFirstTryUserFlagsJetpack(isFirstTry: Boolean) = AppPrefs.saveIsFirstTryUserFlagsJetpack(isFirstTry)
 
-    fun getAllPrefs(): Map<String, Any?> = AppPrefs.prefs().all
+    fun getAllPrefs(): Map<String, Any?> = AppPrefs.getAllPrefs()
 
     fun setString(prefKey: PrefKey, value: String) {
         AppPrefs.setString(prefKey, value)
     }
 
     fun setLong(prefKey: PrefKey, value: Long) {
-        AppPrefs.prefs().edit().apply {
-            putLong(prefKey.name(), value)
-            apply()
-        }
+        AppPrefs.putLong(prefKey, value)
     }
 
     fun setInt(prefKey: PrefKey, value: Int) {
-        AppPrefs.prefs().edit().apply {
-            putInt(prefKey.name(), value)
-            apply()
-        }
+        AppPrefs.putInt(prefKey, value)
     }
 
     fun setBoolean(prefKey: PrefKey, value: Boolean) {
-        AppPrefs.prefs().edit().apply {
-            putBoolean(prefKey.name(), value)
-            apply()
-        }
+        AppPrefs.putBoolean(prefKey, value)
     }
 
-    fun setStringSet(key: String, set: Set<String>?) {
-        AppPrefs.prefs().edit().apply {
-            putStringSet(key, set)
-            apply()
-        }
+    fun setStringSet(prefKey: PrefKey, set: Set<String>?) {
+        AppPrefs.putStringSet(prefKey, set)
     }
 
     companion object {

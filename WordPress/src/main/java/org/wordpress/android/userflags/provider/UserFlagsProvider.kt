@@ -23,6 +23,8 @@ class UserFlagsProvider : QueryContentProvider() {
 
     private val userFlagsKeysSet: Set<String> = setOf(
             DeletablePrefKey.READER_TAG_NAME.name,
+            DeletablePrefKey.READER_TAG_TYPE.name,
+            DeletablePrefKey.READER_TAG_WAS_FOLLOWING.name,
             DeletablePrefKey.READER_SUBS_PAGE_TITLE.name,
             DeletablePrefKey.MAIN_PAGE_INDEX.name,
             DeletablePrefKey.PEOPLE_LIST_FILTER_INDEX.name,
