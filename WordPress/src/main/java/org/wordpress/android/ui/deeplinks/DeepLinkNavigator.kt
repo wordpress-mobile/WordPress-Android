@@ -8,6 +8,7 @@ import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.Login
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenEditor
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenEditorForPost
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenEditorForSite
+import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenHome
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenInBrowser
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenInReader
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenNotifications
@@ -74,6 +75,7 @@ class DeepLinkNavigator
             is OpenPagesForSite -> ActivityLauncher.viewPagesInNewStack(activity, navigateAction.site)
             OpenPages -> ActivityLauncher.viewPagesInNewStack(activity)
             is OpenQRCodeAuthFlow -> ActivityLauncher.startQRCodeAuthFlowInNewStack(activity, navigateAction.uri)
+            OpenHome -> ActivityLauncher.viewMySiteInNewStack(activity)
         }
         if (navigateAction != LoginForResult) {
             activity.finish()
@@ -101,5 +103,6 @@ class DeepLinkNavigator
         data class OpenPagesForSite(val site: SiteModel) : NavigateAction()
         object OpenPages : NavigateAction()
         data class OpenQRCodeAuthFlow(val uri: String) : NavigateAction()
+        object OpenHome : NavigateAction()
     }
 }
