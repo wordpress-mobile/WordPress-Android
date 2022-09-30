@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package org.wordpress.android.ui.pages
 
 import android.annotation.SuppressLint
@@ -91,7 +93,7 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
     @Inject lateinit var uploadActionUseCase: UploadActionUseCase
     @Inject lateinit var uploadUtilsWrapper: UploadUtilsWrapper
 
-    private var progressDialog: ProgressDialog? = null
+    @Suppress("DEPRECATION") private var progressDialog: ProgressDialog? = null
 
     private var restorePreviousSearch = false
 

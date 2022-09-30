@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package org.wordpress.android.ui.prefs.accountsettings
 
 import android.app.ProgressDialog
@@ -67,7 +69,7 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
     private lateinit var primarySitePreference: DetailListPreference
     private lateinit var webAddressPreference: EditTextPreferenceWithValidation
     private lateinit var changePasswordPreference: EditTextPreferenceWithValidation
-    private var changePasswordProgressDialog: ProgressDialog? = null
+    @Suppress("DEPRECATION") private var changePasswordProgressDialog: ProgressDialog? = null
     private var emailSnackbar: Snackbar? = null
 
     @Deprecated("Deprecated")
@@ -318,6 +320,7 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
         changePasswordProgressDialog?.show()
     }
 
+    @Suppress("DEPRECATION")
     private fun createChangePasswordDialogIfNull() {
         if (changePasswordProgressDialog == null) {
             changePasswordProgressDialog = ProgressDialog(activity).apply {

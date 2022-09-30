@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package org.wordpress.android.ui.domains
 
 import android.app.Dialog
@@ -65,7 +67,7 @@ class DomainRegistrationDetailsFragment : Fragment() {
     private lateinit var viewModel: DomainRegistrationDetailsViewModel
     private lateinit var mainViewModel: DomainRegistrationMainViewModel
 
-    private var loadingProgressDialog: ProgressDialog? = null
+    @Suppress("DEPRECATION") private var loadingProgressDialog: ProgressDialog? = null
     private var binding: DomainRegistrationDetailsFragmentBinding? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -278,6 +280,7 @@ class DomainRegistrationDetailsFragment : Fragment() {
                         } // Something else, will just show a Toast with an error message
                     }
                     affectedInputFields?.forEach {
+                        @Suppress("DEPRECATION")
                         showFieldError(it, StringEscapeUtils.unescapeHtml4(error?.message))
                     }
                     affectedInputFields?.firstOrNull { it.requestFocus() }
@@ -418,6 +421,7 @@ class DomainRegistrationDetailsFragment : Fragment() {
         }
     }
 
+    @Suppress("DEPRECATION")
     private fun showDomainRegistrationProgressDialog() {
         if (loadingProgressDialog == null) {
             loadingProgressDialog = ProgressDialog(context)

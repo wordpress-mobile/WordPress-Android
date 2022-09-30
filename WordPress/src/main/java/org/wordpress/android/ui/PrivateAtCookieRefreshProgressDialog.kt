@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package org.wordpress.android.ui
 
 import android.app.Dialog
@@ -10,6 +12,7 @@ import androidx.fragment.app.FragmentManager
 import org.wordpress.android.R
 
 class PrivateAtCookieRefreshProgressDialog : DialogFragment() {
+    @Suppress("DEPRECATION")
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialogMessage = activity?.getString(R.string.media_accessing_progress)
         return ProgressDialog.show(

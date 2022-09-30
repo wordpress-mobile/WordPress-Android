@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package org.wordpress.android.ui.stories
 
 import android.app.Activity
@@ -123,7 +125,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
 
     private lateinit var viewModel: StoryComposerViewModel
 
-    private var addingMediaToEditorProgressDialog: ProgressDialog? = null
+    @Suppress("DEPRECATION") private var addingMediaToEditorProgressDialog: ProgressDialog? = null
     private val frameIdsToRemove = ArrayList<String>()
 
     override fun getSite() = site
