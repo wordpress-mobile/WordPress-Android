@@ -45,18 +45,11 @@ class UserFlagsProvider : QueryContentProvider() {
             DeletablePrefKey.AZTEC_EDITOR_DISABLE_HW_ACC_KEYS.name,
             DeletablePrefKey.READER_DISCOVER_WELCOME_BANNER_SHOWN.name,
             DeletablePrefKey.SHOULD_SCHEDULE_CREATE_SITE_NOTIFICATION.name,
-            DeletablePrefKey.SKIPPED_BLOGGING_PROMPT_DAY.name,
             UndeletablePrefKey.THEME_IMAGE_SIZE_WIDTH.name,
-            UndeletablePrefKey.AZTEC_EDITOR_TOOLBAR_EXPANDED.name,
             UndeletablePrefKey.BOOKMARKS_SAVED_LOCALLY_DIALOG_SHOWN.name,
             UndeletablePrefKey.IMAGE_OPTIMIZE_PROMO_REQUIRED.name,
             UndeletablePrefKey.SWIPE_TO_NAVIGATE_NOTIFICATIONS.name,
             UndeletablePrefKey.SWIPE_TO_NAVIGATE_READER.name,
-            UndeletablePrefKey.ASKED_PERMISSION_STORAGE_WRITE.name,
-            UndeletablePrefKey.ASKED_PERMISSION_STORAGE_READ.name,
-            UndeletablePrefKey.ASKED_PERMISSION_CAMERA.name,
-            UndeletablePrefKey.SYSTEM_NOTIFICATIONS_ENABLED.name,
-            UndeletablePrefKey.SHOULD_SHOW_POST_SIGNUP_INTERSTITIAL.name,
             UndeletablePrefKey.IS_MAIN_FAB_TOOLTIP_DISABLED.name,
             UndeletablePrefKey.SHOULD_SHOW_STORIES_INTRO.name,
             UndeletablePrefKey.SHOULD_SHOW_STORAGE_WARNING.name,
@@ -65,11 +58,7 @@ class UserFlagsProvider : QueryContentProvider() {
 
     private val userFlagsCompositeKeysSet: Set<String> = setOf(
             DeletablePrefKey.LAST_SELECTED_QUICK_START_TYPE.name,
-            DeletablePrefKey.SHOULD_SHOW_WEEKLY_ROUNDUP_NOTIFICATION.name,
-            DeletablePrefKey.MANUAL_FEATURE_CONFIG.name,
-            DeletablePrefKey.SITE_JETPACK_CAPABILITIES.name,
-            DeletablePrefKey.BLOGGING_REMINDERS_SHOWN.name
-
+            DeletablePrefKey.SHOULD_SHOW_WEEKLY_ROUNDUP_NOTIFICATION.name
     )
 
     override fun onCreate(): Boolean {
