@@ -2,6 +2,7 @@ package org.wordpress.android.ui.whatsnew
 
 import org.wordpress.android.fluxc.model.whatsnew.WhatsNewAnnouncementModel
 import org.wordpress.android.fluxc.store.WhatsNewStore
+import org.wordpress.android.fluxc.store.WhatsNewStore.WhatsNewAppId.JP_ANDROID
 import org.wordpress.android.fluxc.store.WhatsNewStore.WhatsNewAppId.WP_ANDROID
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.StringUtils
@@ -15,14 +16,15 @@ class FeatureAnnouncementProvider @Inject constructor(
         return getFeatureAnnouncements(fromCache).firstOrNull()
     }
 
-    suspend fun getFeatureAnnouncements(fromCache: Boolean): List<FeatureAnnouncement> {
+    private suspend fun getFeatureAnnouncements(fromCache: Boolean): List<FeatureAnnouncement> {
         val featureAnnouncements = mutableListOf<FeatureAnnouncement>()
 
         val onWhatsNewFetched = if (fromCache) {
             whatsNewStore.fetchCachedAnnouncements()
         } else {
             whatsNewStore.fetchRemoteAnnouncements(
-                    buildConfigWrapper.getAppVersionName(), WP_ANDROID
+                    buildConfigWrapper.getAppVersionName(),
+                    if (buildConfigWrapper.isJetpackApp) JP_ANDROID else WP_ANDROID
             )
         }
         onWhatsNewFetched.whatsNewItems?.map { featureAnnouncements.add(it.build()) }?.toList()
