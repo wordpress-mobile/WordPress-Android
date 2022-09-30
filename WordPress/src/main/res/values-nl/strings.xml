@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-09-26 14:54:09+0000
+Translation-Revision-Date: 2022-09-30 10:03:40+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: nl
 -->
 <resources>
     <string name="error_fetch_authors_list">Couldn\'t retrieve authors</string>
+    <string name="post_settings_author">Auteur</string>
     <string name="app_rating_title">Werk je graag met %s?</string>
     <string name="connection_service_label">Deel bericht op %s</string>
     <string name="connections_label">Jetpack Social-verbindingen</string>
@@ -354,7 +355,7 @@ Language: nl
     <string name="button_copy_link">Kopieer link</string>
     <string name="domains_paid_plan_add_your_domain_caption">Een eigen domein maakt het eenvoudig voor je bezoekers om je site te vinden</string>
     <string name="domains_paid_plan_add_your_domain_title">Voeg je domein toe</string>
-    <string name="my_site_create_first_post_excerpt">Berichten verschijnen op je blogpagina in omgekeerde chronologische volgorde. Het is tijd om je ideeēn met de wereld te delen!</string>
+    <string name="my_site_create_first_post_excerpt">Berichten verschijnen op je blogpagina in omgekeerde chronologische volgorde. Het is tijd om je ideeën met de wereld te delen!</string>
     <string name="my_site_create_first_post_title">Maak je eerste bericht</string>
     <string name="my_site_untitled_post">Ongetiteld</string>
     <string name="my_site_post_card_scheduled_title">Aankomende geplande berichten</string>
