@@ -11,7 +11,7 @@ plugins {
 
 ext {
     wordPressUtilsVersion = '110-13b4f06680ed8c145cbd09d63c4998dfe8b3b9de'
-    wordPressLoginVersion = '96-b298ffaad9478bd0025833a01ee411f6d4ae6795'
+    wordPressLoginVersion = '97-b298ffaad9478bd0025833a01ee411f6d4ae6795'
     aztecVersion = '1006-3fdbbc2086fb71d3750b01c013fa5cf6024c3142'
     gutenbergMobileVersion = 'v1.83.0'
     storiesVersion = '724-4adde12819f215a001b6781533fc24c77ea6bee1'
