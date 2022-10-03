@@ -119,6 +119,7 @@ class DeviceMediaLoader
         )
     }
 
+    @Suppress("DEPRECATION")
     fun loadDocuments(filter: String?, pageSize: Int, limitDate: Long? = null): DeviceMediaList {
         val storagePublicDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
         val nextPage = (storagePublicDirectory?.listFiles() ?: arrayOf()).filter {

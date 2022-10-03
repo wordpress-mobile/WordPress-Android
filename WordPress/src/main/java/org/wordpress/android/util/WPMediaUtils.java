@@ -389,6 +389,7 @@ public class WPMediaUtils {
         }
     }
 
+    @SuppressWarnings("deprecation")
     private static Intent getLaunchCameraIntent(Context context, String applicationId, LaunchCameraCallback callback)
             throws IOException {
         File externalStoragePublicDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
