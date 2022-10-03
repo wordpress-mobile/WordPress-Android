@@ -73,7 +73,9 @@ class LoginPrologueRevampedViewModel @Inject constructor(
 
         override fun onSensorChanged(event: SensorEvent?) {
             event?.values?.let { (_, yAxisAcceleration, _) ->
-                acceleration = yAxisAcceleration * ACCELERATION_FACTOR + DRIFT
+                acceleration = yAxisAcceleration * ACCELERATION_FACTOR +
+                        (if (yAxisAcceleration >= -0.2f) DRIFT else -DRIFT) // drift shouldn't change scroll direction.
+
                 postValue(position)
             }
         }
