@@ -618,6 +618,7 @@ class MediaPickerFragment : Fragment() {
         viewModel.checkStoragePermission(isStoragePermissionAlwaysDenied)
     }
 
+    @Suppress("DEPRECATION")
     private fun requestStoragePermission() {
         val permissions = arrayOf(permission.WRITE_EXTERNAL_STORAGE, permission.READ_EXTERNAL_STORAGE)
         requestPermissions(
@@ -625,6 +626,7 @@ class MediaPickerFragment : Fragment() {
         )
     }
 
+    @Suppress("DEPRECATION")
     private fun requestCameraPermission() {
         // in addition to CAMERA permission we also need a storage permission, to store media from the camera
         val permissions = arrayOf(
