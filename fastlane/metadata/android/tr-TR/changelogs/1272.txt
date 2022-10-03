@@ -1,4 +1,0 @@
-20.7:
-Artık net bir şekilde görebiliyoruz; ortam önizleme kontrolleri (geri düğmesi gibi) artık hem aydınlık hem de karanlık modda görülebilir.
-
-Compose temasındaki Oturum Açma Kodu ekranı daha iyi renk kontrastıyla metinlerin daha iyi okunmasını sağlar. Göz alıcı!

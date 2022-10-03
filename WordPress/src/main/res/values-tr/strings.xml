@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-09-13 14:54:08+0000
+Translation-Revision-Date: 2022-09-26 18:54:10+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: tr
 -->
 <resources>
+    <string name="error_fetch_authors_list">Yazarlar alınamadı</string>
+    <string name="post_settings_author">Yazar</string>
     <string name="app_rating_title">%s hoşunuza gitti mi?</string>
     <string name="connection_service_label">Gönderiyi %s ile paylaş</string>
     <string name="connections_label">Jetpack Social Bağlantıları</string>

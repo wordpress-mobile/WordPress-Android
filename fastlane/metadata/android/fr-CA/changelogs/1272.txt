@@ -1,4 +1,0 @@
-20.7 :
-Vous allez y voir plus clair : les commandes de l’aperçu des médias (comme le bouton Retour) sont désormais visibles en mode clair et en mode sombre.
-
-L’écran du code de connexion dans le thème Compose présente également un meilleur contraste de couleurs, pour une lisibilité du texte améliorée. Brillant !

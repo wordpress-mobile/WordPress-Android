@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-09-12 10:43:51+0000
+Translation-Revision-Date: 2022-09-27 09:55:53+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: sq_AL
 -->
 <resources>
+    <string name="post_settings_author">Autor</string>
+    <string name="app_rating_title">Ju pëlqen %s?</string>
+    <string name="login_magic_links_email_sent">Sapo dërguam një lidhje magjike te</string>
+    <string name="login_magic_links_sent_label_short">Shihni email-in tuaj në këtë pajisje!</string>
+    <string name="or_use_password">Përdorni fjalëkalimin për hyrje</string>
+    <string name="wp_jetpack_powered_notifications_powered_by_jetpack">Njoftimet sillen nga Jetpack-u</string>
+    <string name="wp_jetpack_powered_stats_powered_by_jetpack">Statistika jepen nga Jetpack-u</string>
+    <string name="wp_jetpack_powered_better_with_jetpack">WordPress-i është më i mirë me Jetpack-un</string>
     <string name="gutenberg_native_upgrade_your_plan_to_use_video_covers">Që të përdorni kapakë video, përmirësoni planin tuaj</string>
     <string name="gutenberg_native_upgrade_your_plan_to_upload_audio">Që të ngarkoni audio, përmirësoni planin tuaj</string>
     <string name="gutenberg_native_jetpack_powered">Bazuar në Jetpack</string>

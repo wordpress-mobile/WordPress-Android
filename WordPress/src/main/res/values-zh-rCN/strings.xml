@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-09-13 10:54:08+0000
+Translation-Revision-Date: 2022-09-27 09:54:09+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.3
 Language: zh_CN
 -->
 <resources>
+    <string name="error_fetch_authors_list">无法检索作者</string>
+    <string name="post_settings_author">作者</string>
     <string name="app_rating_title">喜欢 %s？</string>
     <string name="connection_service_label">将文章共享至 %s</string>
     <string name="connections_label">Jetpack Social 连接</string>

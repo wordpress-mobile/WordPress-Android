@@ -1,4 +1,0 @@
-20.7:
-Possiamo vedere in modo chiaro ora: i controlli per la visualizzazione in anteprima degli elementi multimediali (come il pulsante Indietro) sono visibili sia nella modalità Light che Dark.
-
-La schermata Codice di accesso nel tema Componi ha un migliore contrasto dei colori per una maggiore leggibilità del testo. È nuovo di zecca.

@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-09-13 10:54:08+0000
+Translation-Revision-Date: 2022-09-28 11:54:09+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/4.0.0-alpha.3
 Language: ar
 -->
 <resources>
+    <string name="error_fetch_authors_list">يتعذر استرداد الكتّاب</string>
+    <string name="post_settings_author">الكاتب</string>
     <string name="app_rating_title">هل تستمتع بـ %s؟</string>
     <string name="connection_service_label">مشاركة التدوينة على %s</string>
     <string name="connections_label">عمليات الربط بـ Jetpack Social</string>

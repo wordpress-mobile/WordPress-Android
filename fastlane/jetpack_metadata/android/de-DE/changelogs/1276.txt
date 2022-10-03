@@ -1,0 +1,4 @@
+20.8:
+Wir haben dynamische Widgets hinzugefügt, damit übersichtliche, tägliche und Statistiken der gesamten Zeit auf den Startseiten der Benutzergeräte angezeigt werden.
+Benutzer auf Websites mit verschiedenen Autoren können die Inhaltautoren in den Beitrags- und Seiteneinstellungen ändern.
+Benutzer, die ihre Inhalte auf Arabisch anzeigen, sehen Zahlen auf der Statistikseite ausschließlich in westarabischen Ziffern.

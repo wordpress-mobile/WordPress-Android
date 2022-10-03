@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-09-16 19:43:51+0000
+Translation-Revision-Date: 2022-09-26 06:31:44+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.3
 Language: pl
 -->
 <resources>
+    <string name="error_fetch_authors_list">Nie można było pobrać autorów</string>
+    <string name="post_settings_author">Autor</string>
     <string name="app_rating_title">Lubisz %s?</string>
     <string name="connection_service_label">Podziel się wpisem %s</string>
     <string name="connections_label">Połączenia społecznościowe Jetpacka</string>
@@ -19,6 +21,7 @@ Language: pl
     <string name="wp_jetpack_powered_stats_powered_by_jetpack">Statystyki obsługiwane są przez Jetpack</string>
     <string name="wp_jetpack_powered_notifications_powered_by_jetpack">Powiadomienia obsługiwane są przez Jetpack</string>
     <string name="wp_jetpack_powered_reader_powered_by_jetpack">Czytnik obsługiwany jest przez Jetpack</string>
+    <string name="wp_jetpack_powered_reader_powered_by_jetpack_caption">Znajduj, obserwuj i polub ulubione witryny i posty dzięki czytnikowi, który jest teraz dostępny w nowej aplikacji Jetpack.</string>
     <string name="wp_jetpack_powered_better_with_jetpack">WordPress jest lepszy z JetPackiem</string>
     <string name="gutenberg_native_invalid_url">Nieprawidłowy adres URL.</string>
     <string name="gutenberg_native_gradient">Gradient</string>
