@@ -19,7 +19,7 @@ import kotlin.math.ln
 private const val ACCELERATION_FACTOR = -0.1f
 
 // The maximum velocity (in either direction)
-private const val MAXIMUM_VELOCITY = 0.125f
+private const val MAXIMUM_VELOCITY = 0.1f
 
 // The velocity decay factor (i.e. 1/4th velocity after 1 second)
 private val VELOCITY_DECAY = -ln(4f)
