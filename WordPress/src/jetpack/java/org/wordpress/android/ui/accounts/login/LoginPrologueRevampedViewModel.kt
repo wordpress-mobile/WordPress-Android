@@ -21,8 +21,8 @@ private const val ACCELERATION_FACTOR = -0.015f
 // The maximum velocity (in either direction)
 private const val MAXIMUM_VELOCITY = 0.1f
 
-// The velocity decay factor (i.e. 1/4th velocity after 1 second)
-private val VELOCITY_DECAY = -ln(4f)
+// The velocity decay factor (i.e. 1/7th velocity after 1 second)
+private val VELOCITY_DECAY = -ln(7f)
 
 // An additional acceleration applied to make the text scroll when the device is flat on a table
 private const val DRIFT = -0.05f
