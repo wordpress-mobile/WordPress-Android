@@ -5,27 +5,14 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import org.wordpress.android.WordPress
-import org.wordpress.android.databinding.BloggingPromptsListActivityBinding
-import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.databinding.BloggingPromptsActivityBinding
 import org.wordpress.android.ui.LocaleAwareActivity
-import org.wordpress.android.util.AppLog
 
 class BloggingPromptsActivity : LocaleAwareActivity() {
-
-    private lateinit var site: SiteModel
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        setContentView(BloggingPromptsListActivityBinding.inflate(layoutInflater).root)
-
-        site = if (savedInstanceState == null) {
-            checkNotNull(intent.getSerializableExtra(WordPress.SITE) as? SiteModel) {
-                "SiteModel cannot be null, check the PendingIntent starting BloggingPromptsActivity"
-            }
-        } else {
-            savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
-        }
+        val binding = BloggingPromptsActivityBinding.inflate(layoutInflater)
+        setContentView(binding.root)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -36,41 +23,21 @@ class BloggingPromptsActivity : LocaleAwareActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onNewIntent(intent: Intent) {
-        if (!intent.hasExtra(WordPress.SITE)) {
-            AppLog.e(AppLog.T.MY_SITE_DASHBOARD, "BloggingPromptsActivity started without a site.")
-            finish()
-            return
-        }
-        restartWhenSiteHasChanged(intent)
-        super.onNewIntent(intent)
-    }
-
-    private fun restartWhenSiteHasChanged(intent: Intent) {
-        val site = intent.getSerializableExtra(WordPress.SITE) as SiteModel
-        if (site.id != this.site.id) {
-            finish()
-            startActivity(intent)
-            return
-        }
-    }
-
     companion object {
-
         @JvmStatic
         @JvmOverloads
         fun start(
             context: Context,
-            site: SiteModel,
-        ) = context.startActivity(buildIntent(context, site))
+            siteId: Long,
+        ) = context.startActivity(buildIntent(context, siteId))
 
         @JvmStatic
         @JvmOverloads
         fun buildIntent(
             context: Context,
-            site: SiteModel,
+            siteId: Long,
         ) = Intent(context, BloggingPromptsActivity::class.java).apply {
-            putExtra(WordPress.SITE, site)
+            putExtra(WordPress.LOCAL_SITE_ID, siteId)
         }
     }
 }

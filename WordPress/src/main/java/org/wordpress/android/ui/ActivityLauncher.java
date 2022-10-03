@@ -1754,6 +1754,6 @@ public class ActivityLauncher {
     }
 
     public static void viewMorePrompts(@NonNull Context context, SiteModel site) {
-        BloggingPromptsActivity.start(context, site);
+        BloggingPromptsActivity.start(context, site.getSiteId());
     }
 }
