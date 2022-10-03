@@ -733,9 +733,10 @@ Language: ja_JP
     <string name="restore_complete_failed_icon_content_description">エラーアイコン</string>
     <string name="restore_complete_failed_action_button_content_description">完了ボタン</string>
     <string name="restore_another_process_running">実行中の復元が他にあります。</string>
-    <string name="restore_complete_header">サイトを復元しました</string>
     <string name="restore_complete_visit_site_button_content_description">サイトを表示ボタン</string>
     <string name="restore_complete_visit_site_action_button">サイトを表示</string>
+    <string name="restore_complete_description_with_two_parameters">選択したすべてのアイテムは %1$s %2$s に復元されました。</string>
+    <string name="restore_complete_header">サイトを復元しました</string>
     <string name="restore_complete_icon_content_description">復元アイコン</string>
     <string name="restore_complete_failed_title">復元失敗</string>
     <string name="restore_complete_done_button_content_description">完了ボタン</string>

@@ -976,8 +976,6 @@
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
     <string name="stats_item_settings">Stats item settings</string>
     <string name="stats_cannot_be_started">We cannot open the statistics at the moment. Please try again later</string>
-    <string name="stats_traffic_increase">+%1$s (%2$s%%)</string>
-    <string name="stats_traffic_change">%1$s (%2$s%%)</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
     <string name="stats_fewer_posts">Fewer posts</string>
     <string name="stats_more_posts">More posts</string>
@@ -1360,7 +1358,6 @@
     <string name="stats_insights_linkedin">LinkedIn</string>
     <string name="stats_insights_social">Social</string>
     <string name="stats_insights_path">Path</string>
-    <string name="stats_most_popular_percent_views">%1$d%% of views</string>
     <string name="stats_most_popular_percent_views_empty">Not enough activity. Check back later when your site\'s had more visitors!</string>
     <string name="stats_insights_posting_activity">Posting Activity</string>
     <string name="stats_insights_management_title">Only see the most relevant stats. Add and organise your insights below.</string>
@@ -3896,7 +3893,6 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="backup_download_progress_description_with_two_parameters">We\'re creating a downloadable backup of your site from %1$s %2$s.</string>
     <string name="backup_download_progress_icon_content_description">Creating downloadable backup icon</string>
     <string name="backup_download_progress_footnote">No need to wait around. We\'ll notify you when your backup is ready.</string>
-    <string name="backup_download_progress_label">%1$s%%</string>
 
     <string name="backup_item_themes">WordPress Themes</string>
     <string name="backup_item_plugins">WordPress Plugins</string>
@@ -3950,7 +3946,6 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="restore_progress_description_with_two_parameters">We\'re restoring your site back to %1$s %2$s.</string>
     <string name="restore_progress_icon_content_description">Restore site icon</string>
     <string name="restore_progress_footnote">No need to wait around. We\'ll notify you when your site has been restored.</string>
-    <string name="restore_progress_label">%1$s%%</string>
 
     <string name="restore_complete_page_title" translatable="false">@string/restore</string>
     <string name="restore_complete_header">Your site has been restored</string>

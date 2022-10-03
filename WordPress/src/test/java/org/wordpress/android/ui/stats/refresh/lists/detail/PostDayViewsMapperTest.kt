@@ -2,6 +2,8 @@ package org.wordpress.android.ui.stats.refresh.lists.detail
 
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.eq
+import com.nhaarman.mockitokotlin2.times
+import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -13,12 +15,14 @@ import org.wordpress.android.fluxc.model.stats.PostDetailStatsModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem.State
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
+import org.wordpress.android.util.text.PercentFormatter
 import org.wordpress.android.viewmodel.ResourceProvider
 
 class PostDayViewsMapperTest : BaseUnitTest() {
     @Mock lateinit var statsDateFormatter: StatsDateFormatter
     @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var statsUtils: StatsUtils
+    @Mock private lateinit var percentFormatter: PercentFormatter
     private lateinit var mapper: PostDayViewsMapper
     private val count = 20
     private val selectedItem = PostDetailStatsModel.Day("2010-10-10", count)
@@ -27,7 +31,7 @@ class PostDayViewsMapperTest : BaseUnitTest() {
     private val contentDescription = "Content description"
     @Before
     fun setUp() {
-        mapper = PostDayViewsMapper(resourceProvider, statsUtils, statsDateFormatter)
+        mapper = PostDayViewsMapper(resourceProvider, statsUtils, statsDateFormatter, percentFormatter)
         whenever(resourceProvider.getString(R.string.stats_views)).thenReturn(views)
         whenever(statsDateFormatter.printDate(any())).thenReturn(date)
         whenever(resourceProvider.getString(
@@ -53,6 +57,7 @@ class PostDayViewsMapperTest : BaseUnitTest() {
 
     @Test
     fun `builds title with positive difference`() {
+        whenever(percentFormatter.format(3.0F)).thenReturn("300")
         val previousCount = 5
         val previousItem = selectedItem.copy(count = previousCount)
         val positiveLabel = "+15 (300%)"
@@ -87,6 +92,7 @@ class PostDayViewsMapperTest : BaseUnitTest() {
 
     @Test
     fun `builds title with negative difference`() {
+        whenever(percentFormatter.format(-0.33333334F)).thenReturn("-33")
         val previousCount = 30
         val previousItem = selectedItem.copy(count = previousCount)
         val negativeLabel = "-10 (-33%)"
@@ -103,6 +109,7 @@ class PostDayViewsMapperTest : BaseUnitTest() {
 
     @Test
     fun `builds title with max negative difference`() {
+        whenever(percentFormatter.format(-1F)).thenReturn("-100")
         val newCount = 0
         val newItem = selectedItem.copy(count = newCount)
         val negativeLabel = "-20 (-100%)"
@@ -143,6 +150,7 @@ class PostDayViewsMapperTest : BaseUnitTest() {
 
     @Test
     fun `builds title with negative difference for the last item`() {
+        whenever(percentFormatter.format(-0.33333334F)).thenReturn("-33")
         val previousCount = 30
         val previousItem = selectedItem.copy(count = previousCount)
         val negativeLabel = "-10 (-33%)"
@@ -155,5 +163,16 @@ class PostDayViewsMapperTest : BaseUnitTest() {
         assertThat(title.unit).isEqualTo(R.string.stats_views)
         assertThat(title.change).isEqualTo(negativeLabel)
         assertThat(title.state).isEqualTo(State.NEUTRAL)
+    }
+
+    @Test
+    fun `should call PercentFormatter when builds title`() {
+        whenever(percentFormatter.format(3.0F)).thenReturn("3%")
+        val previousCount = 5
+        val previousItem = selectedItem.copy(count = previousCount)
+        mapper.buildTitle(selectedItem, previousItem, false)
+
+        // buildChange is called twice: for change and unformattedChange
+        verify(percentFormatter, times(2)).format(3.0F)
     }
 }

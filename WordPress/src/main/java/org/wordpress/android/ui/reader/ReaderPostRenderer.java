@@ -22,6 +22,7 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.StringUtils;
 
 import java.lang.ref.WeakReference;
+import java.text.Bidi;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -349,7 +350,14 @@ public class ReaderPostRenderer {
         final String galleryOnlyClass = "gallery-only-class" + new Random().nextInt(1000);
 
         @SuppressWarnings("StringBufferReplaceableByString")
-        StringBuilder sbHtml = new StringBuilder("<!DOCTYPE html><html><head><meta charset='UTF-8' />");
+        String str;
+        if (isRTL(content)) {
+            str = "<!DOCTYPE html><html dir='rtl' lang=''><head><meta charset='UTF-8' />";
+        } else {
+            str = "<!DOCTYPE html><html><head><meta charset='UTF-8' />";
+        }
+
+        StringBuilder sbHtml = new StringBuilder(str);
 
         // title isn't necessary, but it's invalid html5 without one
         sbHtml.append("<title>Reader Post</title>")
@@ -601,5 +609,10 @@ public class ReaderPostRenderer {
             return 0;
         }
         return DisplayUtils.pxToDp(WordPress.getContext(), px);
+    }
+
+    private boolean isRTL(String content) {
+        Bidi bidi = new Bidi(content, Bidi.DIRECTION_DEFAULT_LEFT_TO_RIGHT);
+        return bidi.isRightToLeft() || bidi.isMixed();
     }
 }
