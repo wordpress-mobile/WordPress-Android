@@ -492,7 +492,6 @@ Language: pl
     <string name="restore_complete_failed_action_button_content_description">Przycisk \"Wykonano\"</string>
     <string name="restore_complete_failed_title">Przywracanie nie powiodło się</string>
     <string name="restore_complete_icon_content_description">Ikona przywracania</string>
-    <string name="restore_progress_label">%1$s%%</string>
     <string name="restore_complete_visit_site_action_button">Odwiedź witrynę</string>
     <string name="restore_complete_visit_site_button_content_description">Przycisk Przejdź do witryny</string>
     <string name="restore_complete_done_button_content_description">Przycisk \"Wykonano\"</string>
@@ -568,7 +567,6 @@ Language: pl
     <string name="backup_download_complete_icon_content_description">Ilona gotowości do pobrania kopii zapasowej</string>
     <string name="backup_download_complete_header">Twoja kopia zapasowa jest gotowa do pobrania</string>
     <string name="backup_download_complete_page_title">Twoja kopia zapasowa</string>
-    <string name="backup_download_progress_label">%1$s%%</string>
     <string name="backup_download_progress_footnote">Proszę czekać. Powiadomimy ciebie kiedy kopia zapasowa będzie gotowa.</string>
     <string name="backup_download_progress_icon_content_description">Tworzenie ikony kopii zapasowej gotowej do pobrania</string>
     <string name="backup_download_progress_page_title">Pobierz kopię zapasową</string>
@@ -1522,9 +1520,6 @@ Language: pl
     <string name="notification_channel_reminder_title">Przypomnienie</string>
     <string name="stats_select_next_period_description">Wybierz kolejny okres</string>
     <string name="stats_select_previous_period_description">Wybierz poprzedni okres</string>
-    <string name="stats_most_popular_percent_views">%1$d%% wyświetleń</string>
-    <string name="stats_traffic_change">%1$s (%2$s%%)</string>
-    <string name="stats_traffic_increase">+%1$s (%2$s%%)</string>
     <string name="stats_insights_popular">Najbardziej popularna pora</string>
     <string name="new_site_creation_site_preview_content_description">Prezentacja podglądu witryny</string>
     <string name="new_site_creation_clear_all_content_description">Wyczyść</string>

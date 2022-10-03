@@ -740,7 +740,6 @@ Language: gl_ES
     <string name="restore_complete_visit_site_action_button">Visitar o sitio</string>
     <string name="restore_complete_description_with_two_parameters">Todos os elementos seleccionados restauráronse á versión do %1$s %2$s.</string>
     <string name="restore_complete_header">Restaurouse o teu sitio</string>
-    <string name="restore_progress_label">%1$s%%</string>
     <string name="restore_progress_footnote">Non fai falta que esperes. Enviarémosche un aviso cando se complete a restauración.</string>
     <string name="restore_progress_icon_content_description">Icona de restaurar sitio</string>
     <string name="restore_progress_description_with_two_parameters">Estamos restaurando a versión do teu sitio do %1$s %2$s.</string>
@@ -812,7 +811,6 @@ Language: gl_ES
     <string name="backup_download_complete_description_with_two_parameters">Creamos unha copia de seguridade do teu sitio desde %1$s %2$s.</string>
     <string name="backup_download_complete_header">A túa copia de seguridade xa está dispoñible para descargala</string>
     <string name="backup_download_complete_page_title">A túa copia de seguridade</string>
-    <string name="backup_download_progress_label">%1$s%%</string>
     <string name="backup_download_progress_footnote">Non fai falta que esperes. Avisarémoste cando estea lista a copia de seguridade</string>
     <string name="backup_download_progress_icon_content_description">Icona de copia de seguridade descargable en curso</string>
     <string name="backup_download_progress_description_with_two_parameters">Estamos creando unha copia de seguridade descargable do teu sitio desde %1$s %2$s.</string>
@@ -1778,10 +1776,7 @@ Language: gl_ES
     <string name="notification_channel_reminder_title">Recordatorio</string>
     <string name="stats_select_next_period_description">Elixe o seguinte período</string>
     <string name="stats_select_previous_period_description">Elixe o período anterior</string>
-    <string name="stats_most_popular_percent_views">%1$d%% de visitas</string>
     <string name="stats_insights_popular">Hora máis popular</string>
-    <string name="stats_traffic_change">%1$s (%2$s%%)</string>
-    <string name="stats_traffic_increase">+%1$s (%2$s%%)</string>
     <string name="new_site_creation_site_preview_content_description">Mostrando a vista previa</string>
     <string name="new_site_creation_clear_all_content_description">Baleirar</string>
     <string name="site_created_but_not_fetched_snackbar_message">Parece que tes unha conexión lenta. Se non ves o teu novo sitio na lista, inténtao actualizando.</string>

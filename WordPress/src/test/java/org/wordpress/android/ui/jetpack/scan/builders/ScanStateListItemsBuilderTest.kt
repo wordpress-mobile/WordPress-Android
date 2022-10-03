@@ -39,6 +39,7 @@ import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.util.text.PercentFormatter
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Date
 
@@ -64,6 +65,7 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
     @Mock private lateinit var scanStore: ScanStore
     @Mock private lateinit var onHelpClickedMock: () -> Unit
     @Mock private lateinit var onEnterServerCredsIconClicked: () -> Unit
+    @Mock private lateinit var percentFormatter: PercentFormatter
 
     private val baseThreatModel = BaseThreatModel(
             id = 1L,
@@ -85,7 +87,8 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
                 resourceProvider,
                 threatItemBuilder,
                 threatDetailsListItemsBuilder,
-                scanStore
+                scanStore,
+                percentFormatter
         )
         whenever(htmlMessageUtils.getHtmlMessageFromStringFormatResId(anyInt(), any())).thenReturn("")
         whenever(resourceProvider.getString(anyInt())).thenReturn(DUMMY_TEXT)
@@ -462,6 +465,7 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
     @Test
     fun `given scanning state, when items are built, then shield icon with light green color exists`() =
             test {
+                whenever(percentFormatter.format(0)).thenReturn("10")
                 val scanStateModelInScanningState = scanStateModelWithNoThreats.copy(state = State.SCANNING)
 
                 val scanStateItems = buildScanStateItems(scanStateModelInScanningState)
@@ -480,6 +484,7 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
     @Test
     fun `given scanning state with zero progress, when items are built, then preparing for scan header exists`() =
             test {
+                whenever(percentFormatter.format(0)).thenReturn("10")
                 val scanStateModelInScanningState = scanStateModelWithNoThreats.copy(
                         state = State.SCANNING,
                         currentStatus = ScanProgressStatus(progress = 0, startDate = Date(0))
@@ -495,9 +500,11 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
     @Test
     fun `given scanning state with non zero progress, when items are built, then scanning files header exists`() =
             test {
+                val progress = 10
+                whenever(percentFormatter.format(progress)).thenReturn("10")
                 val scanStateModelInScanningState = scanStateModelWithNoThreats.copy(
                         state = State.SCANNING,
-                        currentStatus = ScanProgressStatus(progress = 10, startDate = Date(0))
+                        currentStatus = ScanProgressStatus(progress = progress, startDate = Date(0))
                 )
 
                 val scanStateItems = buildScanStateItems(scanStateModelInScanningState)
@@ -510,6 +517,7 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
     @Test
     fun `given initial scanning state, when items are built, then initial scanning description exists`() =
             test {
+                whenever(percentFormatter.format(0)).thenReturn("10")
                 val scanStateModelInScanningInitialState = scanStateModelWithNoThreats.copy(
                         state = State.SCANNING,
                         mostRecentStatus = ScanProgressStatus(isInitial = true, startDate = Date(0))
@@ -524,6 +532,7 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
 
     @Test
     fun `given non initial scanning state, when items are built, then scanning description exists`() = test {
+        whenever(percentFormatter.format(0)).thenReturn("10")
         val scanStateModelInScanningNonInitialState = scanStateModelWithNoThreats.copy(
                 state = State.SCANNING,
                 mostRecentStatus = ScanProgressStatus(isInitial = false, startDate = Date(0))
@@ -539,6 +548,7 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
     @Test
     fun `given scanning state, when items are built, then progress bar with progress values exists`() = test {
         val progress = 10
+        whenever(percentFormatter.format(progress)).thenReturn("10")
         val scanStateModelInScanningState = scanStateModelWithNoThreats.copy(
                 state = State.SCANNING,
                 currentStatus = ScanProgressStatus(progress = progress, startDate = Date(0))
@@ -549,13 +559,23 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
         assertThat(scanStateItems.filterIsInstance(ProgressState::class.java).first()).isEqualTo(
                 ProgressState(
                         progress = progress,
-                        progressLabel = UiStringResWithParams(
-                                R.string.scan_progress_label,
-                                listOf(UiStringText(progress.toString()))
-                        )
+                        progressLabel = UiStringText(progress.toString())
                 )
         )
     }
+
+    @Test
+    fun `given initial scanning state, should call PercentFormatter`() =
+            test {
+                val progress = 10
+                whenever(percentFormatter.format(progress)).thenReturn("10")
+                val scanStateModelInScanningInitialState = scanStateModelWithNoThreats.copy(
+                        state = State.SCANNING,
+                        currentStatus = ScanProgressStatus(progress = progress, startDate = Date(0))
+                )
+                buildScanStateItems(scanStateModelInScanningInitialState)
+                verify(percentFormatter).format(progress)
+            }
 
     /* PROVISIONING STATE */
 
