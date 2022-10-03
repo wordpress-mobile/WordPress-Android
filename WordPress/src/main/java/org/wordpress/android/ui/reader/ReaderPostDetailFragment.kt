@@ -1399,7 +1399,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         viewModel.onShowPost(blogId = blogId, postId = postId)
     }
 
-    @Suppress("unused")
+    @Suppress("unused", "DEPRECATION")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onPrivateAtomicCookieFetched(event: OnPrivateAtomicCookieFetched) {
         if (!isAdded) {
@@ -1461,6 +1461,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         return false
     }
 
+    @Suppress("DEPRECATION")
     private fun ReaderPostDetailFragment.showPostInWebView(post: ReaderPost) {
         readerWebView.setIsPrivatePost(post.isPrivate)
         readerWebView.setBlogSchemeIsHttps(UrlUtils.isHttps(post.blogUrl))
