@@ -6,7 +6,7 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import org.wordpress.android.WordPress
-import org.wordpress.android.databinding.BloggingPromptsListActivityBinding
+import org.wordpress.android.databinding.BloggingPromptsActivityBinding
 import org.wordpress.android.fluxc.model.SiteModel
 
 class BloggingPromptsActivity : AppCompatActivity() {
@@ -14,15 +14,11 @@ class BloggingPromptsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val binding = BloggingPromptsActivityBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        setContentView(BloggingPromptsListActivityBinding.inflate(layoutInflater).root)
-
-        site = if (savedInstanceState == null) {
-            checkNotNull(intent.getSerializableExtra(WordPress.SITE) as? SiteModel) {
-                "${WordPress.SITE} argument cannot be null, when launching ${BloggingPromptsActivity::class.simpleName}"
-            }
-        } else {
-            savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
+        site = checkNotNull((intent.getSerializableExtra(WordPress.SITE) as? SiteModel)) {
+            "${WordPress.SITE} argument cannot be null, when launching ${BloggingPromptsActivity::class.simpleName}"
         }
     }
 
