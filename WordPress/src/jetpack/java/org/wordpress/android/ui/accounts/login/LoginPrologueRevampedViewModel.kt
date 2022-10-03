@@ -16,7 +16,7 @@ import kotlin.math.ln
 
 // This factor is used to convert the raw values emitted from device sensor to an appropriate scale for the consuming
 // composables.
-private const val ACCELERATION_FACTOR = -0.1f
+private const val ACCELERATION_FACTOR = -0.015f
 
 // The maximum velocity (in either direction)
 private const val MAXIMUM_VELOCITY = 0.1f
