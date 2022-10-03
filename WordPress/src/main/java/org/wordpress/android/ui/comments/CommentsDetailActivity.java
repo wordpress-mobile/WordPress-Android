@@ -198,6 +198,7 @@ public class CommentsDetailActivity extends LocaleAwareActivity
         }
     }
 
+    @SuppressWarnings("deprecation")
     private void loadDataInViewPager() {
         if (mIsLoadingComments) {
             AppLog.w(AppLog.T.COMMENTS, "load comments task already active");

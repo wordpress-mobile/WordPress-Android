@@ -349,12 +349,14 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         }
     }
 
+    @SuppressWarnings("deprecation")
     public void reloadNotesFromDBAsync() {
         cancelReloadNotesTask();
         mReloadNotesFromDBTask = new ReloadNotesFromDBTask();
         mReloadNotesFromDBTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
+    @SuppressWarnings("deprecation")
     @SuppressLint("StaticFieldLeak")
     private class ReloadNotesFromDBTask extends AsyncTask<Void, Void, ArrayList<Note>> {
         @Override
