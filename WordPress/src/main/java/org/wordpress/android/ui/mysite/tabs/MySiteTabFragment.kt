@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package org.wordpress.android.ui.mysite.tabs
 
 import android.app.Activity
@@ -48,7 +50,7 @@ import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFra
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.photopicker.MediaPickerConstants
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher
-import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource
+import org.wordpress.android.ui.photopicker.PhotoPickerActivity
 import org.wordpress.android.ui.posts.BasicDialogViewModel
 import org.wordpress.android.ui.posts.BasicDialogViewModel.BasicDialogModel
 import org.wordpress.android.ui.posts.EditPostActivity.EXTRA_IS_LANDING_EDITOR_OPENED_FOR_NEW_SITE
@@ -472,7 +474,7 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
                                 MediaPickerConstants.EXTRA_MEDIA_URIS
                         ) ?: return
 
-                        val source = PhotoPickerMediaSource.fromString(
+                        val source = PhotoPickerActivity.PhotoPickerMediaSource.fromString(
                                 data.getStringExtra(MediaPickerConstants.EXTRA_MEDIA_SOURCE)
                         )
                         val iconUrl = mediaUriStringsArray.getOrNull(0) ?: return
