@@ -339,6 +339,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         }
     }
 
+    @Suppress("DEPRECATION")
     private fun initAppBar(view: View) {
         appBar = view.findViewById(R.id.appbar_with_collapsing_toolbar_layout)
         toolBar = appBar.findViewById(R.id.toolbar_main)
