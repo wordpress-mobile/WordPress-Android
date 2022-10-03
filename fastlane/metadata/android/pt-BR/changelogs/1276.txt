@@ -1,0 +1,3 @@
+20.8:
+Os usuários em sites com vários autores podem alterar os autores de conteúdo nas configurações de post e página.
+Os usuários do idioma árabe agora verão numerais nas telas de estatísticas exclusivamente em números Árabes Ocidentais, não há mais mistura e combinação com números Árabes Orientais.

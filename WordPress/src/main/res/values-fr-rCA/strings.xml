@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-09-13 14:54:08+0000
+Translation-Revision-Date: 2022-09-26 14:54:09+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: fr
 -->
 <resources>
+    <string name="error_fetch_authors_list">Impossible de récupérer les auteurs</string>
+    <string name="post_settings_author">Auteur</string>
     <string name="app_rating_title">Vous appréciez %s ?</string>
     <string name="connection_service_label">Partager l’article sur %s</string>
     <string name="connections_label">Connexions Jetpack Social</string>

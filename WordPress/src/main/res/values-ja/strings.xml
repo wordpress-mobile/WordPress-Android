@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-09-15 09:54:07+0000
+Translation-Revision-Date: 2022-09-27 09:54:11+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.3
 Language: ja_JP
 -->
 <resources>
+    <string name="error_fetch_authors_list">投稿者を取得できませんでした</string>
+    <string name="post_settings_author">投稿者</string>
     <string name="app_rating_title">%sをお楽しみいただいていますか ?</string>
     <string name="connection_service_label">投稿を %s にシェア</string>
     <string name="connections_label">Jetpack ソーシャル連携</string>
@@ -733,11 +735,11 @@ Language: ja_JP
     <string name="restore_another_process_running">実行中の復元が他にあります。</string>
     <string name="restore_complete_visit_site_button_content_description">サイトを表示ボタン</string>
     <string name="restore_complete_visit_site_action_button">サイトを表示</string>
-    <string name="restore_complete_description_with_two_parameters">選択したすべてのアイテムは %1$s %2$s に復元されました。</string>
     <string name="restore_complete_header">サイトを復元しました</string>
     <string name="restore_complete_icon_content_description">復元アイコン</string>
     <string name="restore_complete_failed_title">復元失敗</string>
     <string name="restore_complete_done_button_content_description">完了ボタン</string>
+    <string name="restore_complete_description_with_two_parameters">選択したすべてのアイテムは %1$s %2$s に復元されました。</string>
     <string name="restore_progress_footnote">お待ちいただく必要はありません。 サイトが完全に復元されたらお知らせします。</string>
     <string name="restore_progress_icon_content_description">サイト復元アイコン</string>
     <string name="restore_progress_header">現在サイトを復元中</string>

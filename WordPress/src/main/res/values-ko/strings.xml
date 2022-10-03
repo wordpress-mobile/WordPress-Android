@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-09-13 16:54:09+0000
+Translation-Revision-Date: 2022-09-27 16:54:10+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.3
 Language: ko_KR
 -->
 <resources>
+    <string name="error_fetch_authors_list">글쓴이를 검색할 수 없음</string>
+    <string name="post_settings_author">글쓴이</string>
     <string name="app_rating_title">%s을(를) 사용하시나요?</string>
     <string name="connection_service_label">%s에 글 공유 </string>
     <string name="connections_label">젯팩 소셜 연결</string>

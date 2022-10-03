@@ -1,0 +1,4 @@
+20.8 :
+Nous avons ajouté des widgets dynamiques pour afficher des statistiques quotidiennes depuis le début, visibles en un coup d’œil.
+Les utilisateurs de sites multi-auteurs peuvent modifier les auteurs de contenu dans les réglages des articles et des pages.
+Les utilisateurs de langue arabe verront les chiffres sur les écrans de statistiques exclusivement en chiffres arabes occidentaux.

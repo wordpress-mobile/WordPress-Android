@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-09-13 18:54:08+0000
+Translation-Revision-Date: 2022-09-28 13:54:13+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: he_IL
 -->
 <resources>
+    <string name="error_fetch_authors_list">Couldn\'t retrieve authors</string>
+    <string name="post_settings_author">מחבר…</string>
     <string name="app_rating_title">אהבת את %s?</string>
     <string name="connection_service_label">לשתף פוסט אל %s</string>
     <string name="connections_label">החיבורים של Jetpack Social</string>
