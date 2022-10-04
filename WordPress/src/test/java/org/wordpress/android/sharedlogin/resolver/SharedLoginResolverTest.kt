@@ -74,7 +74,7 @@ class SharedLoginResolverTest {
     @Test
     fun `Should NOT query ContentResolver if feature flag is DISABLED`() {
         whenever(appPrefsWrapper.getIsFirstTrySharedLoginJetpack()).thenReturn(true)
-        whenever(accountStore.accessToken).thenReturn(notLoggedInToken)
+        whenever(accountStore.hasAccessToken()).thenReturn(false)
         whenever(jetpackSharedLoginFlag.isEnabled()).thenReturn(false)
         classToTest.tryJetpackLogin()
         verify(contentResolverWrapper, never()).queryUri(contentResolver, uriValue)
@@ -83,7 +83,7 @@ class SharedLoginResolverTest {
     @Test
     fun `Should NOT query ContentResolver if IS already logged in`() {
         whenever(appPrefsWrapper.getIsFirstTrySharedLoginJetpack()).thenReturn(true)
-        whenever(accountStore.accessToken).thenReturn(loggedInToken)
+        whenever(accountStore.hasAccessToken()).thenReturn(true)
         whenever(jetpackSharedLoginFlag.isEnabled()).thenReturn(true)
         classToTest.tryJetpackLogin()
         verify(contentResolverWrapper, never()).queryUri(contentResolver, uriValue)
@@ -92,7 +92,7 @@ class SharedLoginResolverTest {
     @Test
     fun `Should NOT query ContentResolver if IS NOT the first try`() {
         whenever(appPrefsWrapper.getIsFirstTrySharedLoginJetpack()).thenReturn(false)
-        whenever(accountStore.accessToken).thenReturn(notLoggedInToken)
+        whenever(accountStore.hasAccessToken()).thenReturn(false)
         whenever(jetpackSharedLoginFlag.isEnabled()).thenReturn(true)
         classToTest.tryJetpackLogin()
         verify(contentResolverWrapper, never()).queryUri(contentResolver, uriValue)
@@ -139,7 +139,7 @@ class SharedLoginResolverTest {
     @Test
     fun `Should NOT track login start if IS already logged in`() {
         whenever(appPrefsWrapper.getIsFirstTrySharedLoginJetpack()).thenReturn(true)
-        whenever(accountStore.accessToken).thenReturn(loggedInToken)
+        whenever(accountStore.hasAccessToken()).thenReturn(true)
         whenever(jetpackSharedLoginFlag.isEnabled()).thenReturn(true)
         classToTest.tryJetpackLogin()
         verify(sharedLoginAnalyticsTracker, never()).trackLoginStart()
@@ -148,7 +148,7 @@ class SharedLoginResolverTest {
     @Test
     fun `Should NOT track login start if feature flag is DISABLED`() {
         whenever(appPrefsWrapper.getIsFirstTrySharedLoginJetpack()).thenReturn(true)
-        whenever(accountStore.accessToken).thenReturn(notLoggedInToken)
+        whenever(accountStore.hasAccessToken()).thenReturn(false)
         whenever(jetpackSharedLoginFlag.isEnabled()).thenReturn(false)
         classToTest.tryJetpackLogin()
         verify(sharedLoginAnalyticsTracker, never()).trackLoginStart()
@@ -157,7 +157,7 @@ class SharedLoginResolverTest {
     @Test
     fun `Should NOT track login start if IS NOT the first try`() {
         whenever(appPrefsWrapper.getIsFirstTrySharedLoginJetpack()).thenReturn(false)
-        whenever(accountStore.accessToken).thenReturn(notLoggedInToken)
+        whenever(accountStore.hasAccessToken()).thenReturn(false)
         whenever(jetpackSharedLoginFlag.isEnabled()).thenReturn(true)
         classToTest.tryJetpackLogin()
         verify(sharedLoginAnalyticsTracker, never()).trackLoginStart()
@@ -192,7 +192,7 @@ class SharedLoginResolverTest {
 
     private fun featureEnabled() {
         whenever(appPrefsWrapper.getIsFirstTrySharedLoginJetpack()).thenReturn(true)
-        whenever(accountStore.accessToken).thenReturn(notLoggedInToken)
+        whenever(accountStore.hasAccessToken()).thenReturn(false)
         whenever(jetpackSharedLoginFlag.isEnabled()).thenReturn(true)
     }
 }

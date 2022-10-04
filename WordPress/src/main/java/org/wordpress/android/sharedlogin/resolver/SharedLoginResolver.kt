@@ -32,10 +32,13 @@ class SharedLoginResolver @Inject constructor(
     private val userFlagsResolver: UserFlagsResolver
 ) {
     fun tryJetpackLogin() {
-        val isAlreadyLoggedIn = accountStore.accessToken.isNotEmpty()
-        val isFirstTry = appPrefsWrapper.getIsFirstTrySharedLoginJetpack()
         val isFeatureFlagEnabled = jetpackSharedLoginFlag.isEnabled()
-        if (isAlreadyLoggedIn || !isFirstTry || !isFeatureFlagEnabled) {
+        if (!isFeatureFlagEnabled) {
+            return
+        }
+        val isAlreadyLoggedIn = accountStore.hasAccessToken()
+        val isFirstTry = appPrefsWrapper.getIsFirstTrySharedLoginJetpack()
+        if (isAlreadyLoggedIn || !isFirstTry) {
             return
         }
         sharedLoginAnalyticsTracker.trackLoginStart()
