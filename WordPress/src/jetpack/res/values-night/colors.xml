@@ -20,6 +20,6 @@
     <color name="bg_jetpack_login_splash_top_gradient_3">#D9001C09</color>
     <color name="bg_jetpack_login_splash_top_gradient_4">#00001C09</color>
 
-    <color name="text_color_jetpack_login_feature_odd">#CC008710</color>
-    <color name="text_color_jetpack_login_feature_even">#CC64CA43</color>
+    <color name="text_color_jetpack_login_label_primary">@color/jetpack_green_20</color>
+    <color name="text_color_jetpack_login_label_secondary">@color/jetpack_green_50</color>
 </resources>
