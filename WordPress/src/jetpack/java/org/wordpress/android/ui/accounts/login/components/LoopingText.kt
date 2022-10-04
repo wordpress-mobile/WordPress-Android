@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.accounts.login.components
 
+import android.content.res.Configuration
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -24,16 +25,16 @@ private val fontSize = 40.sp
 private fun LargeTexts() {
     val texts = stringArrayResource(R.array.login_prologue_revamped_jetpack_feature_texts)
 
-    val oddColor = colorResource(R.color.text_color_jetpack_login_feature_odd)
-    val evenColor = colorResource(R.color.text_color_jetpack_login_feature_even)
+    val secondaryColor = colorResource(R.color.text_color_jetpack_login_label_secondary)
+    val primaryColor = colorResource(R.color.text_color_jetpack_login_label_primary)
 
     val styledText = buildAnnotatedString {
         texts.forEachIndexed { index, text ->
             when ((index + 1).isOdd) {
-                true -> withStyle(SpanStyle(color = oddColor)) {
+                true -> withStyle(SpanStyle(color = secondaryColor)) {
                     append(text)
                 }
-                false -> withStyle(SpanStyle(color = evenColor)) {
+                false -> withStyle(SpanStyle(color = primaryColor)) {
                     append(text)
                 }
             }
@@ -63,7 +64,8 @@ fun LoopingText(modifier: Modifier = Modifier) {
     }
 }
 
-@Preview(showBackground = true, device = Devices.PIXEL_4_XL)
+@Preview(showBackground = true, device = Devices.PIXEL_4)
+@Preview(showBackground = true, device = Devices.PIXEL_4, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun PreviewLoopingText() {
     AppTheme {
