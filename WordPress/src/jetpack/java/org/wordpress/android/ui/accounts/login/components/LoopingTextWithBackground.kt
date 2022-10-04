@@ -30,7 +30,6 @@ fun LoopingTextWithBackground(
                 contentDescription = stringResource(R.string.login_prologue_revamped_content_description_bg),
                 contentScale = ContentScale.FillBounds,
                 modifier = Modifier.matchParentSize(),
-                alpha = 0.8f
         )
         LoopingText(
                 modifier = Modifier
