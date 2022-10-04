@@ -70,12 +70,19 @@ class DeepLinkingIntentReceiverViewModel
             if (action != null) {
                 deepLinkTrackingUtils.track(action, it, uriWrapper)
             }
-            if (accountStore.hasAccessToken() || it is OpenInBrowser || it is ShowSignInFlow || it is OpenHome) {
+            if (loginIsUnnecessary(it)) {
                 _navigateAction.value = Event(it)
             } else {
                 _navigateAction.value = Event(LoginForResult)
             }
         } != null
+    }
+
+    private fun loginIsUnnecessary(action: NavigateAction): Boolean {
+        return accountStore.hasAccessToken() ||
+                action is OpenInBrowser ||
+                action is ShowSignInFlow ||
+                action is OpenHome
     }
 
     private fun buildNavigateAction(uri: UriWrapper, rootUri: UriWrapper = uri): NavigateAction? {
