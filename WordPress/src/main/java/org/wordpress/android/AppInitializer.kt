@@ -28,9 +28,8 @@ import androidx.core.provider.FontRequest
 import androidx.emoji.text.EmojiCompat
 import androidx.emoji.text.EmojiCompat.InitCallback
 import androidx.emoji.text.FontRequestEmojiCompatConfig
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleObserver
-import androidx.lifecycle.OnLifecycleEvent
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.work.WorkManager
 import com.android.volley.RequestQueue
@@ -128,7 +127,7 @@ import javax.inject.Singleton
 class AppInitializer @Inject constructor(
     wellSqlInitializer: WellSqlInitializer,
     private val application: Application
-) : LifecycleObserver {
+) : DefaultLifecycleObserver {
     @Inject lateinit var dispatcher: Dispatcher
     @Inject lateinit var accountStore: AccountStore
     @Inject lateinit var siteStore: SiteStore
@@ -678,16 +677,12 @@ class AppInitializer @Inject constructor(
         EmojiCompat.init(config)
     }
 
-    @Suppress("unused")
-    @OnLifecycleEvent(Lifecycle.Event.ON_START)
-    fun onAppComesFromBackground() {
+    override fun onStart(owner: LifecycleOwner) {
         applicationLifecycleMonitor.onAppComesFromBackground()
         appConfig.refresh()
     }
 
-    @Suppress("unused")
-    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
-    fun onAppGoesToBackground() {
+    override fun onStop(owner: LifecycleOwner) {
         applicationLifecycleMonitor.onAppGoesToBackground()
     }
 
