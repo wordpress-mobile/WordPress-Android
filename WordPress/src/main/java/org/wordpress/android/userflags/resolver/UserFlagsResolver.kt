@@ -22,9 +22,13 @@ class UserFlagsResolver @Inject constructor(
     private val userFlagsAnalyticsTracker: UserFlagsAnalyticsTracker
 ) {
     fun tryGetUserFlags(onSuccess: () -> Unit, onFailure: () -> Unit) {
-        val isFirstTry = appPrefsWrapper.getIsFirstTryUserFlagsJetpack()
         val isFeatureFlagEnabled = jetpackLocalUserFlagsFlag.isEnabled()
-        if (!isFirstTry || !isFeatureFlagEnabled) {
+        if (!isFeatureFlagEnabled) {
+            onFailure()
+            return
+        }
+        val isFirstTry = appPrefsWrapper.getIsFirstTryUserFlagsJetpack()
+        if (!isFirstTry) {
             onFailure()
             return
         }
