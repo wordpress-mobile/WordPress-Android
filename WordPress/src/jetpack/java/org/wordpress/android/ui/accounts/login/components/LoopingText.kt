@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringArrayResource
+import androidx.compose.ui.text.ParagraphStyle
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -20,6 +21,7 @@ import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.util.extensions.isOdd
 
 private val fontSize = 40.sp
+private val lineHeight = fontSize / 100 * 105 // last value = % of fontSize
 
 @Composable
 private fun LargeTexts() {
@@ -30,16 +32,15 @@ private fun LargeTexts() {
 
     val styledText = buildAnnotatedString {
         texts.forEachIndexed { index, text ->
-            when ((index + 1).isOdd) {
-                true -> withStyle(SpanStyle(color = secondaryColor)) {
-                    append(text)
+            withStyle(ParagraphStyle(lineHeight = lineHeight)) {
+                when ((index + 1).isOdd) {
+                    true -> withStyle(SpanStyle(color = secondaryColor)) {
+                        append(text)
+                    }
+                    false -> withStyle(SpanStyle(color = primaryColor)) {
+                        append(text)
+                    }
                 }
-                false -> withStyle(SpanStyle(color = primaryColor)) {
-                    append(text)
-                }
-            }
-            if (index != texts.lastIndex) {
-                append("\n")
             }
         }
     }
