@@ -48,8 +48,7 @@ class UserFlagsProvider : QueryContentProvider() {
             UndeletablePrefKey.SWIPE_TO_NAVIGATE_READER.name,
             UndeletablePrefKey.IS_MAIN_FAB_TOOLTIP_DISABLED.name,
             UndeletablePrefKey.SHOULD_SHOW_STORIES_INTRO.name,
-            UndeletablePrefKey.SHOULD_SHOW_STORAGE_WARNING.name,
-            UndeletablePrefKey.GUTENBERG_BLOCK_TYPE_IMPRESSIONS.name
+            UndeletablePrefKey.SHOULD_SHOW_STORAGE_WARNING.name
     )
 
     private val userFlagsCompositeKeysSet: Set<String> = setOf(
