@@ -75,7 +75,7 @@ class DeepLinkNavigator
             is OpenPagesForSite -> ActivityLauncher.viewPagesInNewStack(activity, navigateAction.site)
             OpenPages -> ActivityLauncher.viewPagesInNewStack(activity)
             is OpenQRCodeAuthFlow -> ActivityLauncher.startQRCodeAuthFlowInNewStack(activity, navigateAction.uri)
-            OpenHome -> ActivityLauncher.viewMySiteInNewStack(activity)
+            is OpenHome -> ActivityLauncher.showHome(activity, navigateAction.isLoggedIn)
         }
         if (navigateAction != LoginForResult) {
             activity.finish()
@@ -103,6 +103,6 @@ class DeepLinkNavigator
         data class OpenPagesForSite(val site: SiteModel) : NavigateAction()
         object OpenPages : NavigateAction()
         data class OpenQRCodeAuthFlow(val uri: String) : NavigateAction()
-        object OpenHome : NavigateAction()
+        data class OpenHome(val isLoggedIn: Boolean) : NavigateAction()
     }
 }

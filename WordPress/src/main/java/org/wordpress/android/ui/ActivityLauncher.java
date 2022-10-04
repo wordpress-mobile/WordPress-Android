@@ -1751,4 +1751,13 @@ public class ActivityLauncher {
 
         taskStackBuilder.startActivities();
     }
+
+    public static void showHome(@NonNull Context context, @NonNull Boolean isLoggedIn) {
+        if (isLoggedIn) {
+            viewMySiteInNewStack(context);
+        } else {
+            Intent intent = new Intent(context, LoginActivity.class);
+            context.startActivity(intent);
+        }
+    }
 }

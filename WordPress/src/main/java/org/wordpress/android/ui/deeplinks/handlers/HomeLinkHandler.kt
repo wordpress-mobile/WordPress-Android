@@ -1,12 +1,13 @@
 package org.wordpress.android.ui.deeplinks.handlers
 
+import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenHome
 import org.wordpress.android.util.UriWrapper
 import javax.inject.Inject
 
 class HomeLinkHandler
-@Inject constructor() : DeepLinkHandler {
+@Inject constructor(private val accountStore: AccountStore) : DeepLinkHandler {
     /**
      * Returns true if the URI looks like `wordpress://home`
      */
@@ -15,7 +16,7 @@ class HomeLinkHandler
     }
 
     override fun buildNavigateAction(uri: UriWrapper): NavigateAction {
-        return OpenHome
+        return OpenHome(accountStore.hasAccessToken())
     }
 
     override fun stripUrl(uri: UriWrapper): String {
