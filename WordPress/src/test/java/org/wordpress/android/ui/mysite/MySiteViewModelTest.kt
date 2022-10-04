@@ -17,7 +17,6 @@ import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -150,7 +149,6 @@ import java.util.Date
 
 private const val DYNAMIC_CARDS_BUILDER_MORE_CLICK_PARAM_POSITION = 3
 
-@ExperimentalCoroutinesApi
 @Suppress("LargeClass")
 @RunWith(MockitoJUnitRunner::class)
 class MySiteViewModelTest : BaseUnitTest() {
