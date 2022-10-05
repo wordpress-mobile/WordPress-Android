@@ -148,8 +148,8 @@ platform :android do
 
     gradle(
       task: 'assemble',
-      flavor: 'WordPressJalapeno',
-      build_type: 'Debug',
+      flavor: "WordPress#{INSTALLABLE_BUILD_FLAVOR}",
+      build_type: INSTALLABLE_BUILD_TYPE,
       properties: { installableBuildVersionName: generate_installable_build_number }
     )
 
@@ -170,8 +170,8 @@ platform :android do
 
     gradle(
       task: 'assemble',
-      flavor: 'JetpackJalapeno',
-      build_type: 'Debug',
+      flavor: "Jetpack#{INSTALLABLE_BUILD_FLAVOR}",
+      build_type: INSTALLABLE_BUILD_TYPE,
       properties: { installableBuildVersionName: generate_installable_build_number }
     )
 
@@ -259,7 +259,22 @@ platform :android do
 
     install_url = "#{INSTALLABLE_BUILD_DOMAIN}/#{upload_path}"
     qr_code_url = "https://chart.googleapis.com/chart?chs=500x500&cht=qr&chl=#{CGI.escape(install_url)}&choe=UTF-8"
-    comment_body = "You can test the #{product} changes on this Pull Request by <a href='#{install_url}'>downloading an installable build (#{filename})</a>, or scanning this QR code:<br><a href='#{install_url}'><img src='#{qr_code_url}' width='250' height='250' /></a>"
+    icon = "<img alt='#{product}' align='top' src='https://raw.githubusercontent.com/buildkite/emojis/main/img-buildkite-64/#{product.downcase}.png' width='20px' />"
+    comment_body = <<~PR_COMMENT
+      <details>
+        <summary>#{icon}📲 You can test these changes on #{product} by <a href='#{install_url}'>downloading <tt>#{filename}</tt></a></summary>
+        <table><tr>
+          <td width='250' rowspan='5'><a href='#{install_url}'><img src='#{qr_code_url}' width='250' height='250' /></a></td>
+          <td colspan='2'>💡 Scan this QR code with your Android phone to download and install the APK directly on it.</td>
+        </tr>
+        <tr><td width='150px'><b>App</b></td><td><tt>#{product}</tt></td></tr>
+        <tr><td><b>Build Flavor</b></td><td><tt>#{INSTALLABLE_BUILD_FLAVOR}</tt></td></tr>
+        <tr><td><b>Build Type</b></td><td><tt>#{INSTALLABLE_BUILD_TYPE}</tt></td></tr>
+        <tr><td><b>Commit</b></td><td>#{ENV['BUILDKITE_COMMIT']}</td></tr>
+        </table>
+      </details>
+      <em>Note: This installable build uses the <tt>#{INSTALLABLE_BUILD_FLAVOR}#{INSTALLABLE_BUILD_TYPE}</tt> build flavor, and does not support Google Login.</em>
+    PR_COMMENT
 
     comment_on_pr(
       project: GHHELPER_REPO,
