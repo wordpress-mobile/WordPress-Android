@@ -11,19 +11,19 @@ msgstr ""
 "Project-Id-Version: Release Notes & Play Store Descriptions\n"
 
 #. translators: Release notes for this version to be displayed in the Play Store. Limit to 500 characters including spaces and commas!
+msgctxt "release_note_209"
+msgid ""
+"20.9:\n"
+"- “Get to know your app” flows now stay on screen after rotating your device.\n"
+"- Long titles display properly on Stats cards without being cut off.\n"
+"- We added the Enter key to Post excerpts to allow for easy line breaks.\n"
+msgstr ""
+
 msgctxt "release_note_208"
 msgid ""
 "20.8:\n"
 "Users on multi-author sites can change content authors in post and page settings.\n"
 "Arabic language users will now see numerals on Stats screens exclusively in Western Arabic numbers—no more mix and match with Eastern Arabic numbers.\n"
-msgstr ""
-
-msgctxt "release_note_207"
-msgid ""
-"20.7:\n"
-"We can see clearly now—media preview controls (like the back button) are now visible in both light and dark mode.\n"
-"\n"
-"The Login Code screen in the Compose theme also has better color contrast for more readable text. Shiny.\n"
 msgstr ""
 
 #. translators: Shorter Release notes for this version to be displayed in the Play Store. Limit to 500 characters including spaces and commas!
