@@ -195,18 +195,7 @@ class MediaPickerActivity : LocaleAwareActivity(), MediaPickerListener {
             }
             IMAGE_EDITOR_EDIT_IMAGE -> {
                 data?.let {
-                    val intent = Intent()
-                    val uris = WPMediaUtils.retrieveImageEditorResult(data)
-                    if (mediaPickerSetup.queueResults) {
-                        intent.putQueuedUris(uris)
-                    } else {
-                        intent.putUris(uris)
-                    }
-                    intent.putExtra(
-                            EXTRA_MEDIA_SOURCE,
-                            APP_PICKER.name
-                    )
-                    intent
+                    editImageIntent(it)
                 }
             }
             else -> {
@@ -217,6 +206,21 @@ class MediaPickerActivity : LocaleAwareActivity(), MediaPickerListener {
             setResult(Activity.RESULT_OK, intent)
             finish()
         }
+    }
+
+    private fun editImageIntent(data: Intent?): Intent {
+        val intent = Intent()
+        val uris = WPMediaUtils.retrieveImageEditorResult(data)
+        if (mediaPickerSetup.queueResults) {
+            intent.putQueuedUris(uris)
+        } else {
+            intent.putUris(uris)
+        }
+        intent.putExtra(
+                EXTRA_MEDIA_SOURCE,
+                APP_PICKER.name
+        )
+        return intent
     }
 
     private fun takeAPhoto() = try {
