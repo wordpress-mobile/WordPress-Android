@@ -28,7 +28,6 @@ class LoginPrologueRevampedViewModel @Inject constructor(
     private val magnetometerData = FloatArray(3)
     private val rotationMatrix = FloatArray(9)
     private val orientationAngles = floatArrayOf(0f, DEFAULT_PITCH, 0f)
-    private var velocity = 0f
     private var position = 0f
 
     /**
@@ -43,12 +42,13 @@ class LoginPrologueRevampedViewModel @Inject constructor(
      */
     fun updateForFrame(elapsed: Float) {
         orientationAngles.let { (_, pitch) ->
-            velocity = pitch * VELOCITY_FACTOR
-        }
-        // Update the position, modulo 1 (ensuring a value greater or equal to 0, and less than 1)
-        position = ((position + elapsed * velocity) % 1 + 1) % 1
+            val velocity = pitch * VELOCITY_FACTOR
 
-        _positionData.postValue(position)
+            // Update the position, modulo 1 (ensuring a value greater or equal to 0, and less than 1)
+            position = ((position + elapsed * velocity) % 1 + 1) % 1
+
+            _positionData.postValue(position)
+        }
     }
 
     /** This LiveData responds to accelerometer data from the y-axis of the device and emits updated position data. */
