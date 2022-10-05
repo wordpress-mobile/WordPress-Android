@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-04-05 13:17:37+0000
+Translation-Revision-Date: 2022-10-03 13:32:04+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: es_MX
@@ -14,6 +14,7 @@ Language: es_MX
     <string name="gutenberg_native_s_has_url_set">%s tiene una URL ya establecida</string>
     <string name="gutenberg_native_s_has_no_url_set">%s no tiene una URL establecida</string>
     <string name="gutenberg_native_s_converted_to_regular_blocks">%s convertido a bloques normales</string>
+    <string name="gutenberg_native_link_rel">rel del enlace</string>
     <string name="gutenberg_native_width_settings">Ajustes de medios</string>
     <string name="gutenberg_native_move_image_backward">Mover la imagen hacia atrás</string>
     <string name="gutenberg_native_move_image_forward">Mover la imagen hacia delante</string>
