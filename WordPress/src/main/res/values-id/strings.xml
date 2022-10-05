@@ -508,7 +508,6 @@ Language: id
     <string name="blogging_reminders_notification_title">Waktunya menulis pos pada %s</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios">Menyunting blok pakai ulang belum didukung di WordPress untuk iOS</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and">Menyunting blok pakai ulang belum didukung di WordPress untuk Android</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">Selain itu, blok ini bisa dilepas lalu disunting secara terpisah dengan mengetuk \"Ubah ke blok reguler\".</string>
     <string name="blogging_reminders_done">Selesai</string>
     <string name="blogging_reminders_notify_me">Beri tahu saya</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;Masukkan kredensial server Anda&lt;/a&gt; untuk mengaktifkan pemulihan situs sekali klik dari pencadangan.</string>

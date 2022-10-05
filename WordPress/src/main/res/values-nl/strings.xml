@@ -508,7 +508,6 @@ Language: nl
     <string name="blogging_reminders_notification_title">Het is tijd om te bloggen op %s</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios">Bewerken van herbruikbare blokken wordt momenteel niet ondersteund door WordPress voor iOS</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and">Bewerken van herbruikbare blokken wordt momenteel niet ondersteund door WordPress voor Android</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">Als alternatief, kun je deze blokken ook losmaken en afzonderlijk bewerken door op \"Converteren naar normale blokken\" te tikken.</string>
     <string name="blogging_reminders_done">Klaar</string>
     <string name="blogging_reminders_notify_me">Breng me op de hoogte</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;Voer je inloggegevens voor je server in&lt;/a&gt; om terugzetten in één klik van back-ups in te schakelen.</string>

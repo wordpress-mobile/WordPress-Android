@@ -508,7 +508,6 @@ Language: zh_CN
     <string name="blogging_reminders_notification_title">在 %s 上发布博客的时间到了！</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios">iOS 版 WordPress 尚未支持编辑可重用区块</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and">Android 版 WordPress 尚未支持编辑可重用区块</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">另外，您也可以通过点击“转换为常规区块”将这些区块分离出来并单独编辑。</string>
     <string name="blogging_reminders_done">完成</string>
     <string name="blogging_reminders_notify_me">通知我</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;输入您的服务器凭据&lt;/a&gt;以启用从备份中一键恢复站点的功能。</string>
