@@ -17,9 +17,6 @@ import kotlin.math.PI
 // composables.
 private const val VELOCITY_FACTOR = (0.2 / (PI / 2)).toFloat()
 
-// An additional velocity applied to make the text scroll when the device is flat on a table
-private const val DRIFT = -0.01f
-
 // Default pitch provided for devices lacking support for the sensors used
 private const val DEFAULT_PITCH = (-30 * PI / 180).toFloat()
 
@@ -46,7 +43,7 @@ class LoginPrologueRevampedViewModel @Inject constructor(
      */
     fun updateForFrame(elapsed: Float) {
         orientationAngles.let { (_, pitch) ->
-            velocity = pitch * VELOCITY_FACTOR + DRIFT
+            velocity = pitch * VELOCITY_FACTOR
         }
         // Update the position, modulo 1 (ensuring a value greater or equal to 0, and less than 1)
         position = ((position + elapsed * velocity) % 1 + 1) % 1
