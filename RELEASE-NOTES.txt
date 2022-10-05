@@ -2,7 +2,7 @@
 
 21.0
 -----
-
+* [*] Updates splash screen for Android 12+ [https://github.com/wordpress-mobile/WordPress-Android/pull/17273]
 
 20.9
 -----
