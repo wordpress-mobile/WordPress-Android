@@ -4,12 +4,12 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
+import androidx.appcompat.app.AppCompatActivity
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.BloggingPromptsListActivityBinding
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.ui.LocaleAwareActivity
 
-class BloggingPromptsActivity : LocaleAwareActivity() {
+class BloggingPromptsActivity : AppCompatActivity() {
     private lateinit var site: SiteModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
