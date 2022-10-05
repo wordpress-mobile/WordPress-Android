@@ -4,6 +4,7 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenMySite
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenLoginPrologue
+import org.wordpress.android.ui.deeplinks.DeepLinkingIntentReceiverViewModel
 import org.wordpress.android.util.UriWrapper
 import javax.inject.Inject
 
@@ -25,7 +26,12 @@ class HomeLinkHandler
     }
 
     override fun stripUrl(uri: UriWrapper): String {
-        return HOME_PATH;
+        return buildString {
+            if (uri.host == HOME_PATH) {
+                append(DeepLinkingIntentReceiverViewModel.APPLINK_SCHEME)
+            }
+            append(HOME_PATH)
+        }
     }
 
     companion object {

@@ -47,6 +47,6 @@ class HomeLinkHandlerTest {
 
         val strippedUrl = homeLinkHandler.stripUrl(homeUri)
 
-        assertThat(strippedUrl).isEqualTo("home")
+        assertThat(strippedUrl).isEqualTo("wordpress://home")
     }
 }
