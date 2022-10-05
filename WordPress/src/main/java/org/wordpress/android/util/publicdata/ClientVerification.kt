@@ -10,13 +10,13 @@ class ClientVerification @Inject constructor(
     private val contextProvider: ContextProvider,
 ) {
 
-    fun canTrust(callingPackage: String?): Boolean {
-        if (callingPackage == null) {
+    fun canTrust(callerPackage: String?): Boolean {
+        if (callerPackage == null) {
             return false
         }
         val callerExpectedPackageId = jetpackPublicData.currentPackageId()
         val callerSignatureHash = signatureUtils.getSignatureHash(contextProvider.getContext(), callerExpectedPackageId)
         val callerExpectedSignatureHash = jetpackPublicData.currentPublicKeyHash()
-        return callingPackage == callerExpectedPackageId && callerSignatureHash == callerExpectedSignatureHash
+        return callerPackage == callerExpectedPackageId && callerSignatureHash == callerExpectedSignatureHash
     }
 }
