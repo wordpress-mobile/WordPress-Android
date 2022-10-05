@@ -11,27 +11,26 @@ import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
-import kotlin.math.exp
-import kotlin.math.ln
+import kotlin.math.PI
 
 // This factor is used to convert the raw values emitted from device sensor to an appropriate scale for the consuming
 // composables.
-private const val ACCELERATION_FACTOR = -0.01425f
+private const val VELOCITY_FACTOR = (0.2 / (PI / 2)).toFloat()
 
-// The maximum velocity (in either direction)
-private const val MAXIMUM_VELOCITY = 0.1f
+// An additional velocity applied to make the text scroll when the device is flat on a table
+private const val DRIFT = -0.01f
 
-// The velocity decay factor (i.e. 1/7th velocity after 1 second)
-private val VELOCITY_DECAY = -ln(7f)
-
-// An additional acceleration applied to make the text scroll when the device is flat on a table
-private const val DRIFT = -0.05f
+// Default pitch provided for devices lacking support for the sensors used
+private const val DEFAULT_PITCH = (-30 * PI / 180).toFloat()
 
 @HiltViewModel
 class LoginPrologueRevampedViewModel @Inject constructor(
     @ApplicationContext appContext: Context,
 ) : ViewModel() {
-    private var acceleration = -0.3f // Default value when sensor is off
+    private val accelerometerData = FloatArray(3)
+    private val magnetometerData = FloatArray(3)
+    private val rotationMatrix = FloatArray(9)
+    private val orientationAngles = floatArrayOf(0f, DEFAULT_PITCH, 0f)
     private var velocity = 0f
     private var position = 0f
 
@@ -39,16 +38,16 @@ class LoginPrologueRevampedViewModel @Inject constructor(
      * This function updates the physics model for the interactive animation by applying the elapsed time (in seconds)
      * to update the velocity and position.
      *
-     *  * Velocity is constrained so that it does not fall below -MAXIMUM_VELOCITY and does not exceed MAXIMUM_VELOCITY.
+     *  * Velocity is calculated as proportional to the pitch angle
      *  * Position is constrained so that it always falls between 0 and 1, and represents the relative vertical offset
      *  in terms of the height of the repeated child composable.
      *
      *  @param elapsed the elapsed time (in seconds) since the last frame
      */
     fun updateForFrame(elapsed: Float) {
-        // Update the velocity, (decayed and clamped to the maximum)
-        velocity = (velocity * exp(elapsed * VELOCITY_DECAY) + elapsed * acceleration)
-                .coerceIn(-MAXIMUM_VELOCITY, MAXIMUM_VELOCITY)
+        orientationAngles.let { (_, pitch) ->
+            velocity = pitch * VELOCITY_FACTOR + DRIFT
+        }
         // Update the position, modulo 1 (ensuring a value greater or equal to 0, and less than 1)
         position = ((position + elapsed * velocity) % 1 + 1) % 1
 
@@ -62,8 +61,12 @@ class LoginPrologueRevampedViewModel @Inject constructor(
 
         override fun onActive() {
             super.onActive()
-            val sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
-            sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_GAME)
+            sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)?.also {
+                sensorManager.registerListener( this, it, SensorManager.SENSOR_DELAY_GAME)
+            }
+            sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD)?.also {
+                sensorManager.registerListener( this, it, SensorManager.SENSOR_DELAY_GAME)
+            }
         }
 
         override fun onInactive() {
@@ -71,13 +74,14 @@ class LoginPrologueRevampedViewModel @Inject constructor(
             sensorManager.unregisterListener(this)
         }
 
-        override fun onSensorChanged(event: SensorEvent?) {
-            event?.values?.let { (_, yAxisAcceleration, _) ->
-                acceleration = yAxisAcceleration * ACCELERATION_FACTOR +
-                        (if (yAxisAcceleration >= -0.2f) DRIFT else -DRIFT) // drift shouldn't change scroll direction.
-
-                postValue(position)
+        override fun onSensorChanged(event: SensorEvent) {
+            when (event.sensor.type) {
+                Sensor.TYPE_ACCELEROMETER -> event.values.copyInto(accelerometerData)
+                Sensor.TYPE_MAGNETIC_FIELD -> event.values.copyInto(magnetometerData)
             }
+            // Update the orientation angles when sensor data is updated
+            SensorManager.getRotationMatrix(rotationMatrix, null, accelerometerData, magnetometerData)
+            SensorManager.getOrientation(rotationMatrix, orientationAngles)
         }
 
         override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) = Unit
