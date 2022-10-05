@@ -9,7 +9,6 @@ class ClientVerification @Inject constructor(
     private val signatureUtils: SignatureUtils,
     private val contextProvider: ContextProvider,
 ) {
-
     fun canTrust(callerPackage: String?): Boolean {
         if (callerPackage == null) {
             return false
