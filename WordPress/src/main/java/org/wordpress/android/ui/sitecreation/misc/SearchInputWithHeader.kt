@@ -2,6 +2,7 @@ package org.wordpress.android.ui.sitecreation.misc
 
 import android.content.Context
 import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
@@ -20,7 +21,7 @@ class SearchInputWithHeader(private val uiHelpers: UiHelpers, rootView: View, on
     private val progressBar = rootView.findViewById<View>(R.id.progress_bar)
     private val clearAllLayout = rootView.findViewById<View>(R.id.clear_all_layout)
     private val divider = rootView.findViewById<View>(R.id.divider)
-    private val showKeyboardHandler = Handler()
+    private val showKeyboardHandler = Handler(Looper.getMainLooper())
 
     var onTextChanged: ((String) -> Unit)? = null
 

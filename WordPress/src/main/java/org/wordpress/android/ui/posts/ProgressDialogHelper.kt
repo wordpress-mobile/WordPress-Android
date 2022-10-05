@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package org.wordpress.android.ui.posts
 
 import android.app.ProgressDialog
@@ -22,6 +24,7 @@ class ProgressDialogHelper @Inject constructor() {
      *
      * @return The resulting dialog with its (eventually) modified state. Can be {@code null}
      */
+    @Suppress("DEPRECATION")
     fun updateProgressDialogState(
         context: Context,
         dialog: ProgressDialog?,

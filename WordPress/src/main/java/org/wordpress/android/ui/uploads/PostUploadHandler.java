@@ -168,6 +168,7 @@ public class PostUploadHandler implements UploadHandler<PostModel>, OnAutoSavePo
         return sCurrentUploadingPost != null || !sQueuedPostsList.isEmpty();
     }
 
+    @SuppressWarnings("deprecation")
     private void uploadNextPost() {
         synchronized (sQueuedPostsList) {
             if (mCurrentTask == null) { // make sure nothing is running
@@ -197,6 +198,7 @@ public class PostUploadHandler implements UploadHandler<PostModel>, OnAutoSavePo
         PUSH_POST_DISPATCHED, ERROR, NOTHING_TO_UPLOAD, AUTO_SAVE_OR_UPDATE_DRAFT
     }
 
+    @SuppressWarnings("deprecation")
     @SuppressLint("StaticFieldLeak")
     private class UploadPostTask extends AsyncTask<PostModel, Boolean, UploadPostTaskResult> {
         private Context mContext;

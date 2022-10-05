@@ -1,13 +1,13 @@
 package org.wordpress.android.ui.accounts.login
 
 import android.os.Bundle
-import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.EditText
 import android.widget.TextView
 import androidx.annotation.LayoutRes
 import androidx.annotation.StringRes
+import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
 import org.wordpress.android.R
 import org.wordpress.android.databinding.LoginIntroTemplateViewBinding
@@ -83,12 +83,18 @@ class LoginProloguePageFragment : Fragment(R.layout.login_intro_template_view) {
 
                 // format text from HTML to show bold on third prologue screen
                 if (promoLayoutId == R.layout.login_prologue_third) {
-                    view.findViewById<TextView>(R.id.text_one).text = Html.fromHtml(getString(
-                            R.string.login_prologue_third_subtitle_one))
-                    view.findViewById<TextView>(R.id.text_two).text = Html.fromHtml(getString(
-                            R.string.login_prologue_third_subtitle_two))
-                    view.findViewById<TextView>(R.id.text_three).text = Html.fromHtml(getString(
-                            R.string.login_prologue_third_subtitle_three))
+                    view.findViewById<TextView>(R.id.text_one).text = HtmlCompat.fromHtml(
+                            getString(R.string.login_prologue_third_subtitle_one),
+                            HtmlCompat.FROM_HTML_MODE_LEGACY
+                    )
+                    view.findViewById<TextView>(R.id.text_two).text = HtmlCompat.fromHtml(
+                            getString(R.string.login_prologue_third_subtitle_two),
+                            HtmlCompat.FROM_HTML_MODE_LEGACY
+                    )
+                    view.findViewById<TextView>(R.id.text_three).text = HtmlCompat.fromHtml(
+                            getString(R.string.login_prologue_third_subtitle_three),
+                            HtmlCompat.FROM_HTML_MODE_LEGACY
+                    )
                 }
             }
         }

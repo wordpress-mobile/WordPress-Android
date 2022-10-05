@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 /**
  * One fragment to rule them all (Notes, that is)
  */
@@ -100,6 +102,7 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
         return view
     }
 
+    @Suppress("DEPRECATION")
     override fun onActivityCreated(bundle: Bundle?) {
         super.onActivityCreated(bundle)
         val listView = listView
@@ -185,6 +188,7 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
         super.onSaveInstanceState(outState)
     }
 
+    @Suppress("DEPRECATION")
     private fun reloadNoteBlocks() {
         LoadNoteBlocksTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
     }
@@ -313,6 +317,7 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
 
     // Loop through the 'body' items in this note, and create blocks for each.
     // TODO replace this inner async task with a coroutine
+    @Suppress("DEPRECATION")
     @SuppressLint("StaticFieldLeak")
     private inner class LoadNoteBlocksTask : AsyncTask<Void, Void, List<NoteBlock>?>() {
         private var mIsBadgeView = false
@@ -494,6 +499,7 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
             return hasRangeOfTypePost && hasRangeOfTypeSite
         }
 
+        @Suppress("DEPRECATION")
         private fun buildGeneratedLinkBlock(
             onNoteBlockTextClickListener: OnNoteBlockTextClickListener,
             pingbackUrl: String?,

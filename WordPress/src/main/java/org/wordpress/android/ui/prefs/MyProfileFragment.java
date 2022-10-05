@@ -139,6 +139,7 @@ public class MyProfileFragment extends Fragment implements TextInputDialogFragme
     }
 
     // helper method to create onClickListener to avoid code duplication
+    @SuppressWarnings("deprecation")
     private View.OnClickListener createOnClickListener(final String dialogTitle,
                                                        final String hint,
                                                        final WPTextView textView,

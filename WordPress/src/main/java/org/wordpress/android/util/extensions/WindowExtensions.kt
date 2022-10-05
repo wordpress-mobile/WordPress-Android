@@ -10,6 +10,7 @@ import android.view.Window
 import androidx.core.content.ContextCompat
 import org.wordpress.android.R
 
+@Suppress("DEPRECATION")
 fun Window.setLightStatusBar(showInLightMode: Boolean) {
     if (isLightTheme()) {
         decorView.systemUiVisibility = decorView.systemUiVisibility.let {
@@ -22,6 +23,7 @@ fun Window.setLightStatusBar(showInLightMode: Boolean) {
     }
 }
 
+@Suppress("DEPRECATION")
 fun Window.setLightNavigationBar(showInLightMode: Boolean, applyDefaultColors: Boolean = false) {
     if (isLightTheme() && VERSION.SDK_INT >= VERSION_CODES.O) {
         decorView.systemUiVisibility = decorView.systemUiVisibility.let {
@@ -41,6 +43,7 @@ fun Window.setLightNavigationBar(showInLightMode: Boolean, applyDefaultColors: B
     }
 }
 
+@Suppress("DEPRECATION")
 fun Window.showFullScreen() {
     decorView.systemUiVisibility = decorView.systemUiVisibility.let {
         it or SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or SYSTEM_UI_FLAG_LAYOUT_STABLE

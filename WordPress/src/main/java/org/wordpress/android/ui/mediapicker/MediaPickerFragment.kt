@@ -7,7 +7,6 @@ import android.content.Intent.ACTION_OPEN_DOCUMENT
 import android.net.Uri
 import android.os.Bundle
 import android.os.Parcelable
-import android.text.Html
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -19,6 +18,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AlertDialog.Builder
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
+import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -426,7 +426,7 @@ class MediaPickerFragment : Fragment() {
     private fun MediaPickerFragmentBinding.setupSoftAskView(uiModel: SoftAskViewUiModel) {
         when (uiModel) {
             is SoftAskViewUiModel.Visible -> {
-                softAskView.title.text = Html.fromHtml(uiModel.label)
+                softAskView.title.text = HtmlCompat.fromHtml(uiModel.label, HtmlCompat.FROM_HTML_MODE_LEGACY)
                 softAskView.button.setText(uiModel.allowId.stringRes)
                 softAskView.button.setOnClickListener {
                     if (uiModel.isAlwaysDenied) {
@@ -460,11 +460,12 @@ class MediaPickerFragment : Fragment() {
                 actionableEmptyView.title.text = uiHelpers.getTextOfUiString(requireContext(), uiModel.title)
 
                 actionableEmptyView.subtitle.applyOrHide(uiModel.htmlSubtitle) { htmlSubtitle ->
-                    actionableEmptyView.subtitle.text = Html.fromHtml(
+                    actionableEmptyView.subtitle.text = HtmlCompat.fromHtml(
                             uiHelpers.getTextOfUiString(
                                     requireContext(),
                                     htmlSubtitle
-                            ).toString()
+                            ).toString(),
+                            HtmlCompat.FROM_HTML_MODE_LEGACY
                     )
                     actionableEmptyView.subtitle.movementMethod = WPLinkMovementMethod.getInstance()
                 }
@@ -617,6 +618,7 @@ class MediaPickerFragment : Fragment() {
         viewModel.checkStoragePermission(isStoragePermissionAlwaysDenied)
     }
 
+    @Suppress("DEPRECATION")
     private fun requestStoragePermission() {
         val permissions = arrayOf(permission.WRITE_EXTERNAL_STORAGE, permission.READ_EXTERNAL_STORAGE)
         requestPermissions(
@@ -624,6 +626,7 @@ class MediaPickerFragment : Fragment() {
         )
     }
 
+    @Suppress("DEPRECATION")
     private fun requestCameraPermission() {
         // in addition to CAMERA permission we also need a storage permission, to store media from the camera
         val permissions = arrayOf(
