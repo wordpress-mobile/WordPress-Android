@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-09-15 22:17:48+0000
+Translation-Revision-Date: 2022-09-30 09:52:31+0000
 Plural-Forms: nplurals=2; plural=n > 1;
-Generator: GlotPress/4.0.0-alpha.2
+Generator: GlotPress/4.0.0-alpha.3
 Language: id
 -->
 <resources>
+    <string name="error_fetch_authors_list">Tidak dapat mengambil penulis</string>
+    <string name="post_settings_author">Penulis</string>
     <string name="app_rating_title">Puas dengan %s?</string>
     <string name="connection_service_label">Bagikan pos ke %s</string>
     <string name="connections_label">Koneksi Jetpack Social</string>
@@ -738,7 +740,6 @@ Language: id
     <string name="restore_complete_visit_site_action_button">Kunjungi situs</string>
     <string name="restore_complete_description_with_two_parameters">Semua item yang Anda pilih sekarang telah dipulihkan kembali ke %1$s %2$s.</string>
     <string name="restore_complete_header">Situs Anda telah dipulihkan</string>
-    <string name="restore_progress_label">%1$s%%</string>
     <string name="restore_progress_footnote">Tidak perlu lagi menunggu. Kami akan memberi tahu Anda jika situs telah dipulihkan.</string>
     <string name="restore_progress_icon_content_description">Pulihkan ikon situs</string>
     <string name="restore_progress_description_with_two_parameters">Kami memulihkan situs Anda ke %1$s %2$s.</string>
@@ -810,7 +811,6 @@ Language: id
     <string name="backup_download_complete_description_with_two_parameters">Kami berhasil membuat cadangan situs Anda dari %1$s %2$s.</string>
     <string name="backup_download_complete_header">Cadangan Anda sudah dapat diunduh</string>
     <string name="backup_download_complete_page_title">Cadangan Anda</string>
-    <string name="backup_download_progress_label">%1$s%%</string>
     <string name="backup_download_progress_footnote">Tidak perlu lagi menunggu. Kami akan memberi tahu Anda jika cadangan telah siap.</string>
     <string name="backup_download_progress_icon_content_description">Membuat ikon cadangan yang dapat diunduh</string>
     <string name="backup_download_progress_description_with_two_parameters">Kami sedang membuat cadangan situs yang dapat Anda unduh dari %1$s %2$s.</string>
@@ -1776,10 +1776,7 @@ Language: id
     <string name="notification_channel_reminder_title">Pengingat</string>
     <string name="stats_select_next_period_description">Pilih periode selanjutnya</string>
     <string name="stats_select_previous_period_description">Pilih periode sebelumnya</string>
-    <string name="stats_most_popular_percent_views">%1$d%% dilihat</string>
     <string name="stats_insights_popular">Waktu yang Paling Disukai</string>
-    <string name="stats_traffic_change">%1$s (%2$s%%)</string>
-    <string name="stats_traffic_increase">+%1$s (%2$s%%)</string>
     <string name="new_site_creation_site_preview_content_description">Menampilkan pratinjau situs</string>
     <string name="new_site_creation_clear_all_content_description">Hapus</string>
     <string name="site_created_but_not_fetched_snackbar_message">Tampaknya sambungan internet Anda lambat. Jika tidak melihat situs baru Anda dalam daftar, coba segarkan halaman.</string>

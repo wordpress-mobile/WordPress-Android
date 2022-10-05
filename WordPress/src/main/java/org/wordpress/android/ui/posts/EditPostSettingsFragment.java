@@ -111,6 +111,8 @@ public class EditPostSettingsFragment extends Fragment {
     private TextView mStatusTextView;
     private TextView mPostFormatTextView;
     private TextView mPasswordTextView;
+    private View mPostAuthorDivider;
+    private LinearLayout mPostAuthorContainer;
     private TextView mAuthorTextView;
     private TextView mPublishDateTextView;
     private TextView mPublishDateTitleTextView;
@@ -177,6 +179,7 @@ public class EditPostSettingsFragment extends Fragment {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
@@ -261,6 +264,8 @@ public class EditPostSettingsFragment extends Fragment {
         mStatusTextView = rootView.findViewById(R.id.post_status);
         mPostFormatTextView = rootView.findViewById(R.id.post_format);
         mPasswordTextView = rootView.findViewById(R.id.post_password);
+        mPostAuthorDivider = rootView.findViewById(R.id.post_author_divider);
+        mPostAuthorContainer = rootView.findViewById(R.id.post_author_container);
         mAuthorTextView = rootView.findViewById(R.id.post_author);
         mPublishDateTextView = rootView.findViewById(R.id.publish_date);
         mPublishDateTitleTextView = rootView.findViewById(R.id.publish_date_title);
@@ -367,8 +372,7 @@ public class EditPostSettingsFragment extends Fragment {
             }
         });
 
-        final LinearLayout authorContainer = rootView.findViewById(R.id.post_author_container);
-        authorContainer.setOnClickListener(view -> showAuthorDialog());
+        mPostAuthorContainer.setOnClickListener(view -> showAuthorDialog());
 
         mStickySwitch.setOnCheckedChangeListener(mOnStickySwitchChangeListener);
 
@@ -530,11 +534,12 @@ public class EditPostSettingsFragment extends Fragment {
         }
         PostSettingsInputDialogFragment dialog = PostSettingsInputDialogFragment.newInstance(
                 getEditPostRepository().getExcerpt(), getString(R.string.post_settings_excerpt),
-                getString(R.string.post_settings_excerpt_dialog_hint), false);
+                getString(R.string.post_settings_excerpt_dialog_hint), false, true);
         dialog.setPostSettingsInputDialogListener(
                 new PostSettingsInputDialogFragment.PostSettingsInputDialogListener() {
                     @Override
                     public void onInputUpdated(String input) {
+                        input = input.trim();
                         mAnalyticsTrackerWrapper.track(Stat.EDITOR_POST_EXCERPT_CHANGED);
                         updateExcerpt(input);
                     }
@@ -548,7 +553,7 @@ public class EditPostSettingsFragment extends Fragment {
         }
         PostSettingsInputDialogFragment dialog = PostSettingsInputDialogFragment.newInstance(
                 getEditPostRepository().getSlug(), getString(R.string.post_settings_slug),
-                getString(R.string.post_settings_slug_dialog_hint), true);
+                getString(R.string.post_settings_slug_dialog_hint), true, false);
         dialog.setPostSettingsInputDialogListener(
                 new PostSettingsInputDialogFragment.PostSettingsInputDialogListener() {
                     @Override
@@ -695,7 +700,7 @@ public class EditPostSettingsFragment extends Fragment {
         }
         PostSettingsInputDialogFragment dialog = PostSettingsInputDialogFragment.newInstance(
                 getEditPostRepository().getPassword(), getString(R.string.password),
-                getString(R.string.post_settings_password_dialog_hint), false);
+                getString(R.string.post_settings_password_dialog_hint), false, false);
         dialog.setPostSettingsInputDialogListener(
                 new PostSettingsInputDialogFragment.PostSettingsInputDialogListener() {
                     @Override
@@ -948,19 +953,24 @@ public class EditPostSettingsFragment extends Fragment {
     }
 
     private void updateAuthorTextView(String authorDisplayName) {
-        if (authorDisplayName == null) {
-            // If the authorDisplayName is null, that means this is a new unpublished post.
-            // Set author to the current user name.
-            EditPostRepository editPostRepository = getEditPostRepository();
-            if (editPostRepository == null) {
-                return;
+        if (getSite() != null && getSite().getHasCapabilityListUsers()) {
+            mPostAuthorDivider.setVisibility(View.VISIBLE);
+            mPostAuthorContainer.setVisibility(View.VISIBLE);
+
+            if (authorDisplayName == null) {
+                // If the authorDisplayName is null, that means this is a new unpublished post.
+                // Set author to the current user name.
+                EditPostRepository editPostRepository = getEditPostRepository();
+                if (editPostRepository == null) {
+                    return;
+                }
+                PostImmutableModel postModel = editPostRepository.getPost();
+                if (postModel != null && postModel.getAuthorDisplayName() == null) {
+                    updateAuthorTextView(mAccountStore.getAccount().getDisplayName());
+                }
+            } else {
+                mAuthorTextView.setText(authorDisplayName);
             }
-            PostImmutableModel postModel = editPostRepository.getPost();
-            if (postModel != null && postModel.getAuthorDisplayName() == null) {
-                updateAuthorTextView(mAccountStore.getAccount().getDisplayName());
-            }
-        } else {
-            mAuthorTextView.setText(authorDisplayName);
         }
     }
 

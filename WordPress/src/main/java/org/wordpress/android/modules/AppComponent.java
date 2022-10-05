@@ -15,15 +15,8 @@ import org.wordpress.android.ui.ShareIntentReceiverFragment;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.about.UnifiedAboutActivity;
 import org.wordpress.android.ui.accounts.HelpActivity;
-import org.wordpress.android.ui.accounts.LoginActivity;
-import org.wordpress.android.ui.accounts.LoginEpilogueActivity;
-import org.wordpress.android.ui.accounts.LoginMagicLinkInterceptActivity;
 import org.wordpress.android.ui.accounts.PostSignupInterstitialActivity;
 import org.wordpress.android.ui.accounts.SignupEpilogueActivity;
-import org.wordpress.android.ui.accounts.login.LoginEpilogueFragment;
-import org.wordpress.android.ui.accounts.login.LoginPrologueFragment;
-import org.wordpress.android.ui.accounts.login.jetpack.LoginNoSitesFragment;
-import org.wordpress.android.ui.accounts.login.jetpack.LoginSiteCheckErrorFragment;
 import org.wordpress.android.ui.accounts.signup.SignupEpilogueFragment;
 import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailFragment;
 import org.wordpress.android.ui.activitylog.list.ActivityLogListFragment;
@@ -219,6 +212,7 @@ import org.wordpress.android.ui.uploads.PostUploadHandler;
 import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementDialogFragment;
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementListAdapter;
+import org.wordpress.android.userflags.provider.UserFlagsProvider;
 import org.wordpress.android.util.WPWebViewClient;
 import org.wordpress.android.util.image.getters.WPCustomImageGetter;
 
@@ -238,14 +232,6 @@ public interface AppComponent {
     void inject(MediaUploadHandler object);
 
     void inject(PostUploadHandler object);
-
-    void inject(LoginActivity object);
-
-    void inject(LoginEpilogueActivity object);
-
-    void inject(LoginEpilogueFragment object);
-
-    void inject(LoginMagicLinkInterceptActivity object);
 
     void inject(SignupEpilogueActivity object);
 
@@ -569,8 +555,6 @@ public interface AppComponent {
 
     void inject(PhotoPickerFragment object);
 
-    void inject(LoginPrologueFragment object);
-
     void inject(ReaderDiscoverLogic object);
 
     void inject(PostListCreateMenuFragment object);
@@ -610,10 +594,6 @@ public interface AppComponent {
     void inject(EngagedPeopleListFragment object);
 
     void inject(SiteSettingsTimezoneBottomSheet object);
-
-    void inject(LoginSiteCheckErrorFragment object);
-
-    void inject(LoginNoSitesFragment object);
 
     void inject(UserProfileBottomSheetFragment object);
 
@@ -670,4 +650,6 @@ public interface AppComponent {
     void inject(WeekViewsWidgetListProvider object);
 
     void inject(WeekWidgetBlockListProviderFactory object);
+
+    void inject(UserFlagsProvider object);
 }

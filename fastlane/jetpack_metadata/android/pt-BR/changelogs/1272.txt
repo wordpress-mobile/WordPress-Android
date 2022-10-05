@@ -1,5 +1,0 @@
-20.7:
-- Os widgets do Jetpack agora estão disponíveis na tela inicial do seu dispositivo
-- Os controles de visualização de mídia ficam visíveis tanto no modo claro quanto no escuro
-- A tela Código de login do tema Compose está com um contraste melhor de cores
-- Certos elementos das configurações de post e editor agora têm o azul do WordPress

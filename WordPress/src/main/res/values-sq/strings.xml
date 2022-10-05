@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-09-12 10:43:51+0000
+Translation-Revision-Date: 2022-09-27 09:55:53+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.2
+Generator: GlotPress/4.0.0-alpha.3
 Language: sq_AL
 -->
 <resources>
+    <string name="post_settings_author">Autor</string>
+    <string name="app_rating_title">Ju pëlqen %s?</string>
+    <string name="login_magic_links_email_sent">Sapo dërguam një lidhje magjike te</string>
+    <string name="login_magic_links_sent_label_short">Shihni email-in tuaj në këtë pajisje!</string>
+    <string name="or_use_password">Përdorni fjalëkalimin për hyrje</string>
+    <string name="wp_jetpack_powered_notifications_powered_by_jetpack">Njoftimet sillen nga Jetpack-u</string>
+    <string name="wp_jetpack_powered_stats_powered_by_jetpack">Statistika jepen nga Jetpack-u</string>
+    <string name="wp_jetpack_powered_better_with_jetpack">WordPress-i është më i mirë me Jetpack-un</string>
     <string name="gutenberg_native_upgrade_your_plan_to_use_video_covers">Që të përdorni kapakë video, përmirësoni planin tuaj</string>
     <string name="gutenberg_native_upgrade_your_plan_to_upload_audio">Që të ngarkoni audio, përmirësoni planin tuaj</string>
     <string name="gutenberg_native_jetpack_powered">Bazuar në Jetpack</string>
@@ -716,7 +724,6 @@ Language: sq_AL
     <string name="restore_complete_visit_site_action_button">Vizitoni sajtin</string>
     <string name="restore_complete_description_with_two_parameters">Krejt zërat tuaj të përzgjedhur janë rikthyer te %1$s %2$s.</string>
     <string name="restore_complete_header">Sajti juaj u rikthye</string>
-    <string name="restore_progress_label">%1$s%%</string>
     <string name="restore_progress_footnote">S’ka nevojë të prisni këtu. Do t’ju njoftojmë, kur sajti të jetë rikthyer.</string>
     <string name="restore_progress_icon_content_description">Ikonë “Riktheni sajtin”</string>
     <string name="restore_progress_description_with_two_parameters">Po e rikthejmë sajtin tuaj te %1$s %2$s.</string>
@@ -788,7 +795,6 @@ Language: sq_AL
     <string name="backup_download_complete_description_with_two_parameters">Krijuam me sukses një kopjeruajtje të sajtit tuaj prej %1$s %2$s.</string>
     <string name="backup_download_complete_header">Kopjeruajtja juaj tani është gati për shkarkim</string>
     <string name="backup_download_complete_page_title">Kopjeruajtja Juaj</string>
-    <string name="backup_download_progress_label">%1$s%%</string>
     <string name="backup_download_progress_footnote">S’ka nevojë të rrini e të pritni. Do t’ju njoftojmë, kur kopjeruajtja juaj të jetë gati.</string>
     <string name="backup_download_progress_icon_content_description">Po krijohet ikonë “kopjeruajtjeje të shkarkueshme”</string>
     <string name="backup_download_progress_description_with_two_parameters">Po krijojmë një kopjeruajtje të shkarkueshme të sajtit tuaj prej %1$s %2$s.</string>
@@ -1753,10 +1759,7 @@ Language: sq_AL
     <string name="notification_channel_reminder_title">Kujtues</string>
     <string name="stats_select_next_period_description">Përzgjidhni periudhën pasuese</string>
     <string name="stats_select_previous_period_description">Përzgjidhni periudhën e mëparshme</string>
-    <string name="stats_most_popular_percent_views">%1$d%% e parjeve</string>
     <string name="stats_insights_popular">Koha Më Popullore</string>
-    <string name="stats_traffic_change">%1$s (%2$s%%)</string>
-    <string name="stats_traffic_increase">+%1$s (%2$s%%)</string>
     <string name="new_site_creation_site_preview_content_description">Po shfaqet paraparje sajti</string>
     <string name="new_site_creation_clear_all_content_description">Pastroje</string>
     <string name="site_created_but_not_fetched_snackbar_message">Duket sikur gjendeni në një lidhje të ngadaltë. Nëse nuk e shihni sajtin e ri te lista, provoni rifreskimin.</string>

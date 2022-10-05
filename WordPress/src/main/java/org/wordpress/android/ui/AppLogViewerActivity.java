@@ -5,7 +5,6 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,6 +17,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.text.HtmlCompat;
 
 import org.wordpress.android.R;
 import org.wordpress.android.util.AppLog;
@@ -96,7 +96,7 @@ public class AppLogViewerActivity extends LocaleAwareActivity {
                 holder.mTxtLineNumber.setVisibility(View.GONE);
             }
 
-            holder.mTxtLogEntry.setText(Html.fromHtml(mEntries.get(position)));
+            holder.mTxtLogEntry.setText(HtmlCompat.fromHtml(mEntries.get(position), HtmlCompat.FROM_HTML_MODE_LEGACY));
 
             return convertView;
         }

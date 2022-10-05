@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-09-16 13:51:48+0000
+Translation-Revision-Date: 2022-09-30 10:06:57+0000
 Plural-Forms: nplurals=2; plural=n > 1;
-Generator: GlotPress/4.0.0-alpha.2
+Generator: GlotPress/4.0.0-alpha.3
 Language: pt_BR
 -->
 <resources>
+    <string name="error_fetch_authors_list">Não foi possível recuperar os autores</string>
+    <string name="post_settings_author">Autor</string>
     <string name="app_rating_title">Curtindo %s?</string>
     <string name="connection_service_label">Compartilhar post no %s</string>
     <string name="connections_label">Conexões do Jetpack Social</string>
@@ -738,7 +740,6 @@ Language: pt_BR
     <string name="restore_complete_visit_site_action_button">Visitar site</string>
     <string name="restore_complete_description_with_two_parameters">Todos os itens selecionados estão restaurados de volta para %1$s %2$s.</string>
     <string name="restore_complete_header">Seu site foi restaurado</string>
-    <string name="restore_progress_label">%1$s%%</string>
     <string name="restore_progress_footnote">Você não precisa aguardar por aqui. Te notificaremos quando o site estiver restaurado.</string>
     <string name="restore_progress_icon_content_description">Ícone de restauração do site</string>
     <string name="restore_progress_description_with_two_parameters">Estamos restaurando seu site para %1$s %2$s.</string>
@@ -810,7 +811,6 @@ Language: pt_BR
     <string name="backup_download_complete_description_with_two_parameters">O backup do seu site em %1$s %2$s foi criado com sucesso.</string>
     <string name="backup_download_complete_header">Seu backup já está disponível para ser baixado.</string>
     <string name="backup_download_complete_page_title">Seu backup</string>
-    <string name="backup_download_progress_label">%1$s%%</string>
     <string name="backup_download_progress_footnote">Você não precisa esperar com o celular na mão. Avisaremos quando o backup estiver pronto.</string>
     <string name="backup_download_progress_icon_content_description">Ícone de criação de um backup que pode ser baixado</string>
     <string name="backup_download_progress_description_with_two_parameters">Estamos criando um backup do seu site de %1$s %2$s, que poderá ser baixado.</string>
@@ -1776,10 +1776,7 @@ Language: pt_BR
     <string name="notification_channel_reminder_title">Lembrete</string>
     <string name="stats_select_next_period_description">Selecionar próximo período</string>
     <string name="stats_select_previous_period_description">Selecionar período anterior</string>
-    <string name="stats_most_popular_percent_views">%1$d%% de visualizações</string>
     <string name="stats_insights_popular">Horário mais popular</string>
-    <string name="stats_traffic_change">%1$s (%2$s%%)</string>
-    <string name="stats_traffic_increase">+%1$s (%2$s%%)</string>
     <string name="new_site_creation_site_preview_content_description">Mostrando pré-visualização do site</string>
     <string name="new_site_creation_clear_all_content_description">Limpar</string>
     <string name="site_created_but_not_fetched_snackbar_message">Parece que sua conexão está lenta. Se você não encontrar seu site na lista, tente atualizar a tela.</string>

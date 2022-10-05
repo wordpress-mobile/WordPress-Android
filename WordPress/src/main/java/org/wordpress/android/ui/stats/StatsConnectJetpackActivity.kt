@@ -1,9 +1,9 @@
 package org.wordpress.android.ui.stats
 
 import android.os.Bundle
-import android.text.Html
 import android.text.TextUtils
 import android.view.MenuItem
+import androidx.core.text.HtmlCompat
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.MAIN
 import org.wordpress.android.R.string
@@ -80,8 +80,9 @@ class StatsConnectJetpackActivity : LocaleAwareActivity() {
         jetpackFaq.setOnClickListener {
             WPWebViewActivity.openURL(this@StatsConnectJetpackActivity, FAQ_URL)
         }
-        jetpackTermsAndConditions.text = Html.fromHtml(
-                String.format(resources.getString(string.jetpack_connection_terms_and_conditions), "<u>", "</u>")
+        jetpackTermsAndConditions.text = HtmlCompat.fromHtml(
+                String.format(resources.getString(string.jetpack_connection_terms_and_conditions), "<u>", "</u>"),
+                HtmlCompat.FROM_HTML_MODE_LEGACY
         )
         jetpackTermsAndConditions.setOnClickListener {
             WPWebViewActivity.openURL(

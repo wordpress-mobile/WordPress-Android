@@ -4,19 +4,18 @@ import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import com.google.android.material.button.MaterialButton
+import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
-import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.JetpackLoginPrologueScreenBinding
 import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowEmailLoginScreen
 import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowLoginViaSiteAddressScreen
 import org.wordpress.android.util.WPActivityUtils
-import javax.inject.Inject
 
+@AndroidEntryPoint
 class LoginPrologueFragment : Fragment(R.layout.jetpack_login_prologue_screen) {
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-    private lateinit var viewModel: LoginPrologueViewModel
+    private val viewModel: LoginPrologueViewModel by viewModels()
     private lateinit var loginPrologueListener: LoginPrologueListener
 
     @Suppress("TooGenericExceptionThrown")
@@ -30,7 +29,6 @@ class LoginPrologueFragment : Fragment(R.layout.jetpack_login_prologue_screen) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initDagger()
 
         // setting up a full screen flags for the decor view of this fragment,
         // that will work with transparent status bar
@@ -41,14 +39,7 @@ class LoginPrologueFragment : Fragment(R.layout.jetpack_login_prologue_screen) {
         with(JetpackLoginPrologueScreenBinding.bind(view)) { initViewModel() }
     }
 
-    private fun initDagger() {
-        (requireActivity().application as WordPress).component().inject(this)
-    }
-
     private fun JetpackLoginPrologueScreenBinding.initViewModel() {
-        viewModel = ViewModelProvider(this@LoginPrologueFragment, viewModelFactory).get(
-                LoginPrologueViewModel::class.java
-        )
         initObservers()
         viewModel.start()
     }
@@ -88,6 +79,7 @@ class LoginPrologueFragment : Fragment(R.layout.jetpack_login_prologue_screen) {
         viewModel.onFragmentResume()
     }
 
+    @Suppress("DEPRECATION")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         // important for accessibility - talkback

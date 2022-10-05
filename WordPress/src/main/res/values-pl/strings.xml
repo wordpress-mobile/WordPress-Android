@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-09-16 08:19:53+0000
+Translation-Revision-Date: 2022-09-26 06:31:44+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
-Generator: GlotPress/4.0.0-alpha.2
+Generator: GlotPress/4.0.0-alpha.3
 Language: pl
 -->
 <resources>
+    <string name="error_fetch_authors_list">Nie można było pobrać autorów</string>
+    <string name="post_settings_author">Autor</string>
     <string name="app_rating_title">Lubisz %s?</string>
     <string name="connection_service_label">Podziel się wpisem %s</string>
     <string name="connections_label">Połączenia społecznościowe Jetpacka</string>
@@ -19,6 +21,7 @@ Language: pl
     <string name="wp_jetpack_powered_stats_powered_by_jetpack">Statystyki obsługiwane są przez Jetpack</string>
     <string name="wp_jetpack_powered_notifications_powered_by_jetpack">Powiadomienia obsługiwane są przez Jetpack</string>
     <string name="wp_jetpack_powered_reader_powered_by_jetpack">Czytnik obsługiwany jest przez Jetpack</string>
+    <string name="wp_jetpack_powered_reader_powered_by_jetpack_caption">Znajduj, obserwuj i polub ulubione witryny i posty dzięki czytnikowi, który jest teraz dostępny w nowej aplikacji Jetpack.</string>
     <string name="wp_jetpack_powered_better_with_jetpack">WordPress jest lepszy z JetPackiem</string>
     <string name="gutenberg_native_invalid_url">Nieprawidłowy adres URL.</string>
     <string name="gutenberg_native_gradient">Gradient</string>
@@ -492,7 +495,6 @@ Language: pl
     <string name="restore_complete_failed_action_button_content_description">Przycisk \"Wykonano\"</string>
     <string name="restore_complete_failed_title">Przywracanie nie powiodło się</string>
     <string name="restore_complete_icon_content_description">Ikona przywracania</string>
-    <string name="restore_progress_label">%1$s%%</string>
     <string name="restore_complete_visit_site_action_button">Odwiedź witrynę</string>
     <string name="restore_complete_visit_site_button_content_description">Przycisk Przejdź do witryny</string>
     <string name="restore_complete_done_button_content_description">Przycisk \"Wykonano\"</string>
@@ -568,7 +570,6 @@ Language: pl
     <string name="backup_download_complete_icon_content_description">Ilona gotowości do pobrania kopii zapasowej</string>
     <string name="backup_download_complete_header">Twoja kopia zapasowa jest gotowa do pobrania</string>
     <string name="backup_download_complete_page_title">Twoja kopia zapasowa</string>
-    <string name="backup_download_progress_label">%1$s%%</string>
     <string name="backup_download_progress_footnote">Proszę czekać. Powiadomimy ciebie kiedy kopia zapasowa będzie gotowa.</string>
     <string name="backup_download_progress_icon_content_description">Tworzenie ikony kopii zapasowej gotowej do pobrania</string>
     <string name="backup_download_progress_page_title">Pobierz kopię zapasową</string>
@@ -988,7 +989,6 @@ Language: pl
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">Stuknij dwukrotnie, by przejść do ustawień kolorów</string>
     <string name="reader_empty_followed_blogs_description">Gdy zaczniesz śledzić inne witryny, zobaczysz tutaj ich treść</string>
     <string name="feature_announcement_find_out_mode">Dowiedz się więcej</string>
-    <string name="feature_announcement_dialog_label">Co nowego w %s</string>
     <string name="insert_label_with_count">Wstaw %d</string>
     <string name="crop">przytnij</string>
     <string name="photo_picker_video_title">Wybierz wideo</string>
@@ -998,6 +998,7 @@ Language: pl
     <string name="error_failed_to_load_into_file">Nie udało się wczytać z pliku, proszę spróbować później.</string>
     <string name="preview_image_thumbnail_description">Pogląd miniatury obrazka</string>
     <string name="photo_picker_use_media">Użyj tego pliku</string>
+    <string name="feature_announcement_dialog_label">Co nowego w %s</string>
     <string name="button_insert">Wstaw</string>
     <string name="copy_text">Kopiuj</string>
     <string name="comment_share_link_via">Udostępnij przez</string>
@@ -1315,6 +1316,7 @@ Language: pl
     <string name="notification_post_will_be_published_in_ten_minutes">\"%s\" zostanie opublikowany za 10 minut</string>
     <string name="navigate_back_desc">Wróć</string>
     <string name="web_preview_desktop">Komputer stacjonarny</string>
+    <string name="calendar_scheduled_post_description">Wpis „%1$s” został zaplanowany do publikacji w dniu „%2$s” w twojej aplikacji %3$s\n%4$s</string>
     <string name="notification_post_will_be_published_in_one_hour">\"%s\" zostanie opublikowany za godzinę</string>
     <string name="notification_post_has_been_published">\"%s\" został opublikowany</string>
     <string name="notification_scheduled_post_ten_minute_reminder">Zaplanowany wpis: przypomnienie 10 minutowe</string>
@@ -1521,9 +1523,6 @@ Language: pl
     <string name="notification_channel_reminder_title">Przypomnienie</string>
     <string name="stats_select_next_period_description">Wybierz kolejny okres</string>
     <string name="stats_select_previous_period_description">Wybierz poprzedni okres</string>
-    <string name="stats_most_popular_percent_views">%1$d%% wyświetleń</string>
-    <string name="stats_traffic_change">%1$s (%2$s%%)</string>
-    <string name="stats_traffic_increase">+%1$s (%2$s%%)</string>
     <string name="stats_insights_popular">Najbardziej popularna pora</string>
     <string name="new_site_creation_site_preview_content_description">Prezentacja podglądu witryny</string>
     <string name="new_site_creation_clear_all_content_description">Wyczyść</string>

@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-09-13 16:54:09+0000
+Translation-Revision-Date: 2022-09-27 16:54:10+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/4.0.0-alpha.2
+Generator: GlotPress/4.0.0-alpha.3
 Language: ko_KR
 -->
 <resources>
+    <string name="error_fetch_authors_list">글쓴이를 검색할 수 없음</string>
+    <string name="post_settings_author">글쓴이</string>
     <string name="app_rating_title">%s을(를) 사용하시나요?</string>
     <string name="connection_service_label">%s에 글 공유 </string>
     <string name="connections_label">젯팩 소셜 연결</string>
@@ -738,7 +740,6 @@ Language: ko_KR
     <string name="restore_complete_visit_site_action_button">사이트 방문</string>
     <string name="restore_complete_description_with_two_parameters">이제 선택한 항목이 모두 %1$s %2$s(으)로 다시 복원되었습니다.</string>
     <string name="restore_complete_header">사이트가 복원되었습니다.</string>
-    <string name="restore_progress_label">%1$s%%</string>
     <string name="restore_progress_footnote">기다리시지 않아도 됩니다. 사이트가 복원되면 알려드립니다.</string>
     <string name="restore_progress_icon_content_description">사이트 복원 아이콘</string>
     <string name="restore_progress_description_with_two_parameters">사이트를 %1$s %2$s(으)로 다시 복원하는 중입니다.</string>
@@ -810,7 +811,6 @@ Language: ko_KR
     <string name="backup_download_complete_description_with_two_parameters">%1$s %2$s에서 사이트의 백업을 성공적으로 만들었습니다.</string>
     <string name="backup_download_complete_header">이제 백업을 다운로드할 수 있습니다</string>
     <string name="backup_download_complete_page_title">백업</string>
-    <string name="backup_download_progress_label">%1$s%%</string>
     <string name="backup_download_progress_footnote">기다리시지 않아도 됩니다. 백업이 준비되면 알려드립니다.</string>
     <string name="backup_download_progress_icon_content_description">다운로드할 수 있는 백업 만들기 아이콘</string>
     <string name="backup_download_progress_description_with_two_parameters">%1$s %2$s에서 다운로드할 수 있는 사이트의 백업을 만들고 있습니다.</string>
@@ -1776,10 +1776,7 @@ Language: ko_KR
     <string name="notification_channel_reminder_title">알림</string>
     <string name="stats_select_next_period_description">다음 기간 선택</string>
     <string name="stats_select_previous_period_description">이전 기간 선택</string>
-    <string name="stats_most_popular_percent_views">조회수 %1$d%%</string>
     <string name="stats_insights_popular">가장 인기 있는 시간</string>
-    <string name="stats_traffic_change">%1$s(%2$s%%)</string>
-    <string name="stats_traffic_increase">+%1$s(%2$s%%)</string>
     <string name="new_site_creation_site_preview_content_description">사이트 미리보기 표시</string>
     <string name="new_site_creation_clear_all_content_description">지우기</string>
     <string name="site_created_but_not_fetched_snackbar_message">사이트 연결이 느린 것 같습니다. 새 사이트가 목록에 없으면 새로 고침하세요.</string>

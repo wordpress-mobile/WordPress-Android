@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2022-06-17 15:28:46+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/4.0.0-alpha.2
+Generator: GlotPress/4.0.0-alpha.3
 Language: vi_VN
 -->
 <resources>
@@ -675,7 +675,6 @@ Language: vi_VN
     <string name="restore_complete_visit_site_action_button">Ghé thăm blog</string>
     <string name="restore_complete_description_with_two_parameters">Toàn bộ mục đã chọn đã được khôi phục đến %1$s %2$s.</string>
     <string name="restore_complete_header">Blog của bạn đã được khôi phục</string>
-    <string name="restore_progress_label">%1$s%%</string>
     <string name="restore_progress_footnote">Không cần chờ. Chúng tôi sẽ nhắc bạn khi khôi phục blog xong.</string>
     <string name="restore_progress_icon_content_description">Phục hồi biểu tượng blog</string>
     <string name="restore_progress_description_with_two_parameters">Chúng tôi đang khôi phục blog của bạn đến %1$s %2$s.</string>
@@ -747,7 +746,6 @@ Language: vi_VN
     <string name="backup_download_complete_description_with_two_parameters">Chúng tôi đã tạo xong bản sao lưu blog của bạn từ %1$s %2$s.</string>
     <string name="backup_download_complete_header">Bạn đã có thể tải về bản sao lưu</string>
     <string name="backup_download_complete_page_title">Sao lưu của bạn</string>
-    <string name="backup_download_progress_label">%1$s%%</string>
     <string name="backup_download_progress_footnote">Không cần đợi. Chúng tôi sẽ nhắc bạn khi sao lưu xong.</string>
     <string name="backup_download_progress_icon_content_description">Biểu tượng tạo bản sao lưu có thể tải về</string>
     <string name="backup_download_progress_description_with_two_parameters">Chúng tôi đang tạo một bản sao lưu có thể tải về từ %1$s %2$s.</string>
@@ -1710,10 +1708,7 @@ Language: vi_VN
     <string name="notification_channel_reminder_title">Lượt nhắc</string>
     <string name="stats_select_next_period_description">Chọn chu kỳ kế</string>
     <string name="stats_select_previous_period_description">Chọn chu kỳ trước</string>
-    <string name="stats_most_popular_percent_views">%1$d%% lượt xem</string>
     <string name="stats_insights_popular">Phổ biến mọi lúc</string>
-    <string name="stats_traffic_change">%1$s (%2$s%%)</string>
-    <string name="stats_traffic_increase">+%1$s (%2$s%%)</string>
     <string name="new_site_creation_site_preview_content_description">Đang hiển thị xem trước</string>
     <string name="new_site_creation_clear_all_content_description">Xóa</string>
     <string name="site_created_but_not_fetched_snackbar_message">Có vẻ mạng của bạn đang chậm. Nếu không thấy blog mới của bạn trong danh sách, thử làm tươi.</string>

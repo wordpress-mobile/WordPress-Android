@@ -654,6 +654,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         return changeSet;
     }
 
+    @SuppressWarnings("deprecation")
     void loadSites() {
         new LoadSitesTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -710,6 +711,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     /*
      * AsyncTask which loads sites from database and populates the adapter
      */
+    @SuppressWarnings("deprecation")
     @SuppressLint("StaticFieldLeak")
     private class LoadSitesTask extends AsyncTask<Void, Void, SiteList[]> {
         @Override

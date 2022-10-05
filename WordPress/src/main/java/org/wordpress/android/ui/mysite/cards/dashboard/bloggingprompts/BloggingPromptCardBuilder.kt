@@ -13,7 +13,9 @@ import javax.inject.Inject
 class BloggingPromptCardBuilder @Inject constructor() {
     fun build(params: BloggingPromptCardBuilderParams) = params.bloggingPrompt?.let {
         val trailingLabel = UiStringPluralRes(
-                R.plurals.my_site_blogging_prompt_card_number_of_answers,
+                0,
+                R.string.my_site_blogging_prompt_card_number_of_answers_one,
+                R.string.my_site_blogging_prompt_card_number_of_answers_other,
                 params.bloggingPrompt.respondentsCount
         )
 

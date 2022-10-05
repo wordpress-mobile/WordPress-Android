@@ -61,6 +61,7 @@ class LineChartAccessibilityHelper(
         return false
     }
 
+    @Suppress("DEPRECATION")
     override fun onPopulateNodeForVirtualView(
         virtualViewId: Int,
         node: AccessibilityNodeInfoCompat

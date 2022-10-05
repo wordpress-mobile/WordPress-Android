@@ -110,6 +110,7 @@ public class PublicizeWebViewFragment extends PublicizeBaseFragment {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 

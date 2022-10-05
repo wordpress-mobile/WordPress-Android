@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2019-11-20 03:34:20+0000
+Translation-Revision-Date: 2022-09-28 09:53:56+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.2
+Generator: GlotPress/4.0.0-alpha.3
 Language: en_AU
 -->
 <resources>
+    <string name="post_publishing_set_up_blogging_reminders_message">Your post is publishing… in the meantime, you can set up blogging reminders on days you want to post.</string>
+    <string name="login_empty_view_avatar_content_description">Your profile photo</string>
+    <string name="activity_log_backup_finished_snackbar_message_no_dates">Your site has been successfully backed up</string>
+    <string name="activity_log_backup_finished_snackbar_message">Your site has been successfully backed up\nBacked up from %1$s %2$s</string>
+    <string name="activity_log_backup_started_snackbar_message">Your site is being backed up\nBacking up from %1$s %2$s</string>
+    <string name="restore_complete_header">Your site has been restored</string>
+    <string name="backup_empty_subtitle">Your first backup will appear here within 24 hours and you will receive a notification once the backup has been completed</string>
+    <string name="backup_empty_title">Your first backup will be ready soon</string>
+    <string name="scan_idle_threats_found_title">Your site may be at risk</string>
+    <string name="dialog_discard_story_message">Your story post will not be saved as a draft.</string>
+    <string name="new_site_creation_creating_site_loading_subtitle">Your site will be ready shortly</string>
+    <string name="editor_uploading_page">Your page is uploading</string>
     <string name="reader_empty_saved_posts_content_description">Tap the Add to Save Posts button to save a post to your list.</string>
     <string name="reader_acessibility_list_loaded">\"The list has loaded with %1$d items.\"</string>
     <string name="notifications_tab_dialog_switch_desc">Notifications</string>
@@ -281,10 +293,7 @@ Language: en_AU
     <string name="notification_channel_reminder_title">Reminder</string>
     <string name="stats_select_next_period_description">Select next period</string>
     <string name="stats_select_previous_period_description">Select previous period</string>
-    <string name="stats_most_popular_percent_views">%1$d%% of views</string>
     <string name="stats_insights_popular">Most Popular Time</string>
-    <string name="stats_traffic_change">%1$s (%2$s%%)</string>
-    <string name="stats_traffic_increase">+%1$s (%2$s%%)</string>
     <string name="new_site_creation_site_preview_content_description">Showing site preview</string>
     <string name="new_site_creation_clear_all_content_description">Clear</string>
     <string name="site_created_but_not_fetched_snackbar_message">It seems like you\'re on a slow connection. If you don\'t see your new site in the list, try refreshing.</string>

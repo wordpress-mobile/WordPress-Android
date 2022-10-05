@@ -8,7 +8,6 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.ActivityLauncher;
@@ -30,6 +29,9 @@ import java.util.ArrayList;
 
 import javax.inject.Inject;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class LoginEpilogueActivity extends LocaleAwareActivity implements LoginEpilogueListener {
     public static final String EXTRA_DO_LOGIN_UPDATE = "EXTRA_DO_LOGIN_UPDATE";
     public static final String EXTRA_SHOW_AND_RETURN = "EXTRA_SHOW_AND_RETURN";
@@ -44,7 +46,6 @@ public class LoginEpilogueActivity extends LocaleAwareActivity implements LoginE
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((WordPress) getApplication()).component().inject(this);
 
         LoginFlowThemeHelper.injectMissingCustomAttributes(getTheme());
 

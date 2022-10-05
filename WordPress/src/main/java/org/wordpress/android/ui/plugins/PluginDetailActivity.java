@@ -7,7 +7,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.text.Html;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -30,6 +29,7 @@ import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
+import androidx.core.text.HtmlCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -572,7 +572,8 @@ public class PluginDetailActivity extends LocaleAwareActivity implements OnDomai
         }
         mByLineTextView.setMovementMethod(WPLinkMovementMethod.getInstance());
         if (!TextUtils.isEmpty(mPlugin.getAuthorAsHtml())) {
-            mByLineTextView.setText(Html.fromHtml(mPlugin.getAuthorAsHtml()));
+            //noinspection ConstantConditions
+            mByLineTextView.setText(HtmlCompat.fromHtml(mPlugin.getAuthorAsHtml(), HtmlCompat.FROM_HTML_MODE_LEGACY));
         } else {
             String authorName = mPlugin.getAuthorName();
             String authorUrl = mPlugin.getAuthorUrl();
@@ -582,7 +583,7 @@ public class PluginDetailActivity extends LocaleAwareActivity implements OnDomai
                 String authorLink = "<a href='" + authorUrl + "'>" + authorName + "</a>";
                 String byline = String.format(getString(R.string.plugin_byline), authorLink);
                 mByLineTextView.setMovementMethod(WPLinkMovementMethod.getInstance());
-                mByLineTextView.setText(Html.fromHtml(byline));
+                mByLineTextView.setText(HtmlCompat.fromHtml(byline, HtmlCompat.FROM_HTML_MODE_LEGACY));
             }
         }
 
@@ -603,7 +604,8 @@ public class PluginDetailActivity extends LocaleAwareActivity implements OnDomai
         if (!TextUtils.isEmpty(htmlText)) {
             textView.setTextColor(ContextExtensionsKt.getColorFromAttribute(this, R.attr.colorOnSurface));
             textView.setMovementMethod(WPLinkMovementMethod.getInstance());
-            textView.setText(Html.fromHtml(htmlText));
+            //noinspection ConstantConditions
+            textView.setText(HtmlCompat.fromHtml(htmlText, HtmlCompat.FROM_HTML_MODE_LEGACY));
         } else {
             textView.setTextColor(
                     ContextExtensionsKt.getColorStateListFromAttribute(this, R.attr.wpColorOnSurfaceMedium));

@@ -19,6 +19,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AniUtils.Duration
 import org.wordpress.android.util.DisplayUtils
+import org.wordpress.android.util.StringUtils
 import javax.inject.Inject
 
 class UiHelpers @Inject constructor() {
@@ -41,9 +42,14 @@ class UiHelpers @Inject constructor() {
                             )
                         }.toTypedArray()
                 )
-                is UiStringPluralRes -> context.resources.getQuantityString(
-                        uiString.pluralsRes,
-                        uiString.count,
+                // Current localization process does not support <plurals> resource strings,
+                // so we need to use multiple string resources. Switch to @PluralRes in UiStringPluralRes and
+                // use context.resources.getQuantityString here when <plurals> is supported by localization process.
+                is UiStringPluralRes -> StringUtils.getQuantityString(
+                        context,
+                        uiString.zeroRes,
+                        uiString.oneRes,
+                        uiString.otherRes,
                         uiString.count
                 )
             }
@@ -92,6 +98,7 @@ class UiHelpers @Inject constructor() {
     }
 
     companion object {
+        @Suppress("DEPRECATION")
         fun adjustDialogSize(dialog: Dialog) {
             val window = requireNotNull(dialog.window)
             val size = Point()

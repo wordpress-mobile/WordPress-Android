@@ -4,8 +4,6 @@ plugins {
     id "org.jetbrains.kotlin.plugin.parcelize"
 }
 
-ext.aztecVersion = 'v1.6.0'
-
 repositories {
     maven {
         url "https://a8c-libs.s3.amazonaws.com/android"
@@ -34,9 +32,9 @@ android {
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
     }
-    compileOptions {
-        sourceCompatibility 1.8
-        targetCompatibility 1.8
+
+    kotlinOptions {
+        allWarningsAsErrors = true
     }
 
     // Avoid 'duplicate files during packaging of APK' errors

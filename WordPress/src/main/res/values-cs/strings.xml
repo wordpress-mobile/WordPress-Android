@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-08-31 08:15:33+0000
+Translation-Revision-Date: 2022-09-23 20:20:36+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : 2);
-Generator: GlotPress/4.0.0-alpha.2
+Generator: GlotPress/4.0.0-alpha.3
 Language: cs_CZ
 -->
 <resources>
@@ -610,7 +610,6 @@ Language: cs_CZ
     <string name="restore_complete_failed_icon_content_description">Ikona chyby</string>
     <string name="restore_another_process_running">Probíhá další obnovení.</string>
     <string name="restore_progress_footnote">Není třeba čekat. Až bude váš web obnoven, upozorníme vás.</string>
-    <string name="restore_progress_label">%1$s%%</string>
     <string name="restore_complete_header">Váš web byl obnoven</string>
     <string name="restore_complete_description_with_two_parameters">Všechny vaše vybrané položky jsou nyní obnoveny zpět na %1$s %2$s.</string>
     <string name="restore_complete_visit_site_action_button">Zobrazit web</string>
@@ -691,7 +690,6 @@ Language: cs_CZ
     <string name="backup_download_progress_description_with_two_parameters">Vytváříme zálohu vašeho webu ke stažení z %1$s %2$s.</string>
     <string name="backup_download_progress_icon_content_description">Vytváření ikony zálohy ke stažení</string>
     <string name="backup_download_progress_footnote">Není třeba čekat. Až bude vaše záloha připravena, upozorníme vás</string>
-    <string name="backup_download_progress_label">%1$s%%</string>
     <string name="backup_download_complete_page_title">Vaše záloha</string>
     <string name="backup_download_details_description_with_two_parameters">%1$s %2$s je vybraný bod pro vytvoření zálohy ke stažení.</string>
     <string name="backup_download_details_action_button_content_description">Vytvořit tlačítko pro stažení zálohy</string>
@@ -1128,6 +1126,7 @@ Language: cs_CZ
     <string name="crop">oříznutí</string>
     <string name="insert_label_with_count">Vložit %d</string>
     <string name="feature_announcement_find_out_mode">Zjistit více</string>
+    <string name="feature_announcement_dialog_label">Co je nového v %s</string>
     <string name="sitepicker_continue_flow">Pokračovat</string>
     <string name="whats_new_in_version_title">Co je nového</string>
     <string name="continue_label">Pokračovat</string>
@@ -1218,6 +1217,7 @@ Language: cs_CZ
     <string name="post_list_tab_scheduled_posts">Naplánováno</string>
     <string name="post_list_tab_published_posts">Publikováno</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">Nepřipojeno</string>
+    <string name="sharing_facebook_account_must_have_pages">Připojení k Facebooku nemůže najít žádné stránky. Publicita se nemůže připojit k profilům Facebooku, pouze k publikovaným stránkám.</string>
     <string name="notifications_tab_title_comments">Komentáře</string>
     <string name="notifications_tab_title_unread_notifications">Nepřečteno</string>
     <string name="dlg_cancel_action_dont_trash">Ponechat</string>
@@ -1445,6 +1445,7 @@ Language: cs_CZ
     <string name="navigate_forward_desc">Jít vpřed</string>
     <string name="notification_post_will_be_published_in_ten_minutes">\"%s\" bude publikován za 10 minut</string>
     <string name="calendar_scheduled_post_title">Naplánovaný příspěvek WordPress: \"%s\"</string>
+    <string name="calendar_scheduled_post_description">Publikování \"%1$s\" je naplánováno na \"%2$s\" ve vaší WordPress aplikaci %3$s\n %4$s</string>
     <string name="post_notification_when_published">Při zveřejnění</string>
     <string name="post_notification_error">Nelze vytvořit oznámení, pokud je datum publikování v minulosti.</string>
     <string name="notification_scheduled_post">Naplánovaný příspěvek</string>
@@ -1649,10 +1650,7 @@ Language: cs_CZ
     <string name="quick_start_dialog_check_stats_title">Zkontrolujte statistiky svého webu</string>
     <string name="quick_start_task_skip_menu_title">Přeskočit úkol</string>
     <string name="notification_channel_reminder_title">Připomenutí</string>
-    <string name="stats_traffic_change">%1$s (%2$s%%)</string>
-    <string name="stats_traffic_increase">+%1$s (%2$s%%)</string>
     <string name="stats_insights_popular">Nejoblíbenější čas</string>
-    <string name="stats_most_popular_percent_views">%1$d%% shlédnutí</string>
     <string name="stats_select_previous_period_description">Vyberte předchozí období</string>
     <string name="stats_select_next_period_description">Vyberte další období</string>
     <string name="notification_new_site_creation_title">Vytvořit stránku</string>

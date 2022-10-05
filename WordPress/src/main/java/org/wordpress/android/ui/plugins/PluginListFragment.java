@@ -80,6 +80,7 @@ public class PluginListFragment extends Fragment {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         // this enables us to clear the search icon in onCreateOptionsMenu when the list isn't showing search results
