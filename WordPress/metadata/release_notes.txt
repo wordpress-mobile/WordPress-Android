@@ -1,4 +1,3 @@
-* [***] [internal] Redesigned the landing screen of the WordPress and Jetpack apps, behind a feature flag. [https://github.com/wordpress-mobile/WordPress-Android/pull/17203]
-* [*] Quick Start: Retain Quick Start focus point after device rotation [https://github.com/wordpress-mobile/WordPress-Android/pull/17187]
-* [*] Stats: Fix Long title problem on stats cards [https://github.com/wordpress-mobile/WordPress-Android/pull/17084]
-* [*] Support "Enter" key for Excerpt editing in Post settings [https://github.com/wordpress-mobile/WordPress-Android/pull/17078]
+- “Get to know your app” flows now stay on screen after rotating your device.
+- Long titles display properly on Stats cards without being cut off.
+- We added the Enter key to Post excerpts to allow for easy line breaks.
