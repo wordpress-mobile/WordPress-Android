@@ -2,7 +2,8 @@ package org.wordpress.android.ui.deeplinks.handlers
 
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction
-import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenHome
+import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenMySite
+import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenLoginPrologue
 import org.wordpress.android.util.UriWrapper
 import javax.inject.Inject
 
@@ -16,13 +17,15 @@ class HomeLinkHandler
     }
 
     override fun buildNavigateAction(uri: UriWrapper): NavigateAction {
-        return OpenHome(accountStore.hasAccessToken())
+        return if (accountStore.hasAccessToken()) {
+            OpenMySite
+        } else {
+            OpenLoginPrologue
+        }
     }
 
     override fun stripUrl(uri: UriWrapper): String {
-        return buildString {
-            append(HOME_PATH)
-        }
+        return HOME_PATH;
     }
 
     companion object {

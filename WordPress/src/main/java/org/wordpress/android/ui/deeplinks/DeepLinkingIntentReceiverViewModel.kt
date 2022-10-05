@@ -8,8 +8,8 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.LoginForResult
-import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenHome
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenInBrowser
+import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenLoginPrologue
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.ShowSignInFlow
 import org.wordpress.android.ui.deeplinks.handlers.DeepLinkHandlers
 import org.wordpress.android.ui.deeplinks.handlers.ServerTrackingHandler
@@ -82,7 +82,7 @@ class DeepLinkingIntentReceiverViewModel
         return accountStore.hasAccessToken() ||
                 action is OpenInBrowser ||
                 action is ShowSignInFlow ||
-                action is OpenHome
+                action is OpenLoginPrologue
     }
 
     private fun buildNavigateAction(uri: UriWrapper, rootUri: UriWrapper = uri): NavigateAction? {
