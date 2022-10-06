@@ -486,7 +486,7 @@ private fun getNetworkInformation(context: Context): String {
     return listOf(
             "${ZendeskConstants.networkTypeLabel} $networkType",
             "${ZendeskConstants.networkCarrierLabel} $carrierName",
-            "${ZendeskConstants.networkCountryCodeLabel} ${countryCodeLabel.toUpperCase(context.currentLocale)}"
+            "${ZendeskConstants.networkCountryCodeLabel} ${countryCodeLabel.uppercase(context.currentLocale)}"
     ).joinToString(separator = "\n")
 }
 

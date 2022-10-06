@@ -4,6 +4,7 @@ import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.CoreMatchers.equalTo
 import org.junit.Assert.assertThat
 import org.junit.Test
+import java.util.Locale
 
 class ListStateTest {
     @Test
@@ -94,7 +95,7 @@ class ListStateTest {
         val testData = listOf("item11", "item12", "item13")
         val readyState: ListState<String> = ListState.Ready(testData)
         val toUpperCase: (List<String>) -> List<String> = { list ->
-            list.map { it.toUpperCase() }
+            list.map { it.uppercase(Locale.getDefault()) }
         }
         val transformedReadyState = readyState.transform(toUpperCase)
         assertThat(transformedReadyState.data, `is`(equalTo(toUpperCase(testData))))

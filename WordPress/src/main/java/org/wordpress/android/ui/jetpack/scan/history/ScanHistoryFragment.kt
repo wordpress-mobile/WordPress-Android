@@ -94,7 +94,7 @@ class ScanHistoryFragment : Fragment(R.layout.scan_history_fragment), Scrollable
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             tab.text = uiHelpers.getTextOfUiString(requireContext(), list[position].label)
                     .toString()
-                    .toUpperCase(localeManagerWrapper.getLocale())
+                    .uppercase(localeManagerWrapper.getLocale())
         }.attach()
         tabLayout.addOnTabSelectedListener(onTabSelectedListener)
     }
