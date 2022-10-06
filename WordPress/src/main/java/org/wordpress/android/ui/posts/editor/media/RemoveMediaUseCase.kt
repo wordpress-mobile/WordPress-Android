@@ -35,7 +35,7 @@ class RemoveMediaUseCase @Inject constructor(
                 // also make sure it's not being uploaded anywhere else (maybe on some other Post,
                 // simultaneously)
                 if (mediaModel.uploadState != null &&
-                        mediaUtils.isLocalFile(mediaModel.uploadState.toLowerCase(Locale.ROOT)) &&
+                        mediaUtils.isLocalFile(mediaModel.uploadState.lowercase(Locale.ROOT)) &&
                         !uploadService.isPendingOrInProgressMediaUpload(mediaModel)) {
                     dispatcher.dispatch(MediaActionBuilder.newRemoveMediaAction(mediaModel))
                 }

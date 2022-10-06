@@ -217,7 +217,7 @@ class WPMainActivityViewModel @Inject constructor(
     }
 
     private fun onCreateActionClicked(actionType: ActionType) {
-        val properties = mapOf("action" to actionType.name.toLowerCase(Locale.ROOT))
+        val properties = mapOf("action" to actionType.name.lowercase(Locale.ROOT))
         analyticsTracker.track(Stat.MY_SITE_CREATE_SHEET_ACTION_TAPPED, properties)
         _isBottomSheetShowing.postValue(Event(false))
         _createAction.postValue(actionType)

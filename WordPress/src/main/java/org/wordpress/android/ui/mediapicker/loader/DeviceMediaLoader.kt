@@ -123,7 +123,7 @@ class DeviceMediaLoader
     fun loadDocuments(filter: String?, pageSize: Int, limitDate: Long? = null): DeviceMediaList {
         val storagePublicDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
         val nextPage = (storagePublicDirectory?.listFiles() ?: arrayOf()).filter {
-            (limitDate == null || it.lastModifiedInSecs() <= limitDate) && (filter == null || it.name?.toLowerCase(
+            (limitDate == null || it.lastModifiedInSecs() <= limitDate) && (filter == null || it.name?.lowercase(
                     localeManagerWrapper.getLocale()
             )?.contains(filter) == true)
         }.sortedByDescending { it.lastModified() }.take(pageSize + 1)

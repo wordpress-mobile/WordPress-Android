@@ -190,7 +190,7 @@ class PageListViewModel @Inject constructor(
 
     private fun loadPagesAsync(pages: List<PageModel>) = launch {
         val pageItems = pages
-                .sortedBy { it.title.toLowerCase(localeManagerWrapper.getLocale()) }
+                .sortedBy { it.title.lowercase(localeManagerWrapper.getLocale()) }
                 .filter { listType.pageStatuses.contains(it.status) }
                 .let {
                     when (listType) {

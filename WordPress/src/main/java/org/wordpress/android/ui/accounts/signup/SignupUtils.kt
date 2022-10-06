@@ -37,6 +37,6 @@ class SignupUtils @Inject constructor() {
     fun createUsernameFromEmail(emailAddress: String): String? {
         return emailAddress.split("@".toRegex())[0]
                 .replace("[^A-Za-z0-9]".toRegex(), "")
-                .toLowerCase(Locale.ROOT)
+                .lowercase(Locale.ROOT)
     }
 }
