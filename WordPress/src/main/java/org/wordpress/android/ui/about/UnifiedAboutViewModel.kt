@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.automattic.about.model.AboutConfig
 import com.automattic.about.model.AnalyticsConfig
+import com.automattic.about.model.AutomatticConfig
 import com.automattic.about.model.HeaderConfig
 import com.automattic.about.model.ItemConfig
 import com.automattic.about.model.LegalConfig
@@ -58,6 +59,7 @@ class UnifiedAboutViewModel @Inject constructor(
                     privacyPolicyUrl = Constants.URL_PRIVACY_POLICY,
                     acknowledgementsUrl = LICENSES_FILE_URL
             ),
+            automatticConfig = AutomatticConfig(isVisible = buildConfig.isJetpackApp),
             analyticsConfig = AnalyticsConfig(
                     trackScreenShown = unifiedAboutTracker::trackScreenShown,
                     trackScreenDismissed = unifiedAboutTracker::trackScreenDismissed,
