@@ -190,17 +190,10 @@ class MediaPickerActivity : LocaleAwareActivity(), MediaPickerListener {
                     return
                 }
             }
-            TAKE_PHOTO -> {
-                takeAPhoto()
-            }
-            IMAGE_EDITOR_EDIT_IMAGE -> {
-                data?.let {
-                    editImageIntent(it)
-                }
-            }
-            else -> {
-                data
-            }
+            TAKE_PHOTO -> takeAPhoto()
+            IMAGE_EDITOR_EDIT_IMAGE -> data?.let {  editImageIntent(it) }
+            else -> data
+
         }
         intent?.let {
             setResult(Activity.RESULT_OK, intent)
