@@ -9,6 +9,7 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.LoginForResult
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenInBrowser
+import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenLoginPrologue
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.ShowSignInFlow
 import org.wordpress.android.ui.deeplinks.handlers.DeepLinkHandlers
 import org.wordpress.android.ui.deeplinks.handlers.ServerTrackingHandler
@@ -69,12 +70,19 @@ class DeepLinkingIntentReceiverViewModel
             if (action != null) {
                 deepLinkTrackingUtils.track(action, it, uriWrapper)
             }
-            if (accountStore.hasAccessToken() || it is OpenInBrowser || it is ShowSignInFlow) {
+            if (loginIsUnnecessary(it)) {
                 _navigateAction.value = Event(it)
             } else {
                 _navigateAction.value = Event(LoginForResult)
             }
         } != null
+    }
+
+    private fun loginIsUnnecessary(action: NavigateAction): Boolean {
+        return accountStore.hasAccessToken() ||
+                action is OpenInBrowser ||
+                action is ShowSignInFlow ||
+                action is OpenLoginPrologue
     }
 
     private fun buildNavigateAction(uri: UriWrapper, rootUri: UriWrapper = uri): NavigateAction? {
