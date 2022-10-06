@@ -28,6 +28,8 @@ class UserFlagsProvider : QueryContentProvider() {
             DeletablePrefKey.VIDEO_OPTIMIZE_WIDTH.name,
             DeletablePrefKey.VIDEO_OPTIMIZE_QUALITY.name,
             DeletablePrefKey.STRIP_IMAGE_LOCATION.name,
+            DeletablePrefKey.SUPPORT_EMAIL.name,
+            DeletablePrefKey.SUPPORT_NAME.name,
             DeletablePrefKey.GUTENBERG_DEFAULT_FOR_NEW_POSTS.name,
             DeletablePrefKey.USER_IN_GUTENBERG_ROLLOUT_GROUP.name,
             DeletablePrefKey.SHOULD_AUTO_ENABLE_GUTENBERG_FOR_THE_NEW_POSTS.name,
