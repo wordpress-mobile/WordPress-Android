@@ -32,7 +32,8 @@ class BloggingPromptCardBuilder @Inject constructor() {
                 attribution = BloggingPromptAttribution.fromString(params.bloggingPrompt.attribution),
                 onShareClick = params.onShareClick,
                 onAnswerClick = params.onAnswerClick,
-                onSkipClick = params.onSkipClick
+                onSkipClick = params.onSkipClick,
+                onViewMorePrompts = params.onViewMorePrompts
         )
     }
 }

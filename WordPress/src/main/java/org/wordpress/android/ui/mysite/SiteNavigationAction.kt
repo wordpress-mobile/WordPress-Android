@@ -78,5 +78,6 @@ sealed class SiteNavigationAction {
     data class EditScheduledPost(val site: SiteModel, val postId: Int) : SiteNavigationAction()
     data class OpenStatsInsights(val site: SiteModel) : SiteNavigationAction()
     data class OpenTodaysStatsGetMoreViewsExternalUrl(val url: String) : SiteNavigationAction()
+    data class ViewMorePrompts(val site: SiteModel) : SiteNavigationAction()
     object OpenJetpackPoweredBottomSheet : SiteNavigationAction()
 }
