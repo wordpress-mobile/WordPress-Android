@@ -14,7 +14,7 @@
 
         <provider
             android:name=".bloggingreminders.provider.BloggingRemindersProvider"
-            android:authorities="${applicationId}.UserFlagsProvider"
+            android:authorities="${applicationId}.BloggingRemindersProvider"
             android:exported="true" />
     </application>
 </manifest>
