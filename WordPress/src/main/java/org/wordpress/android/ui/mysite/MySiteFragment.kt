@@ -313,6 +313,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         binding?.viewPager?.getCurrentFragment()?.onNegativeClicked(instanceTag)
     }
 
+    @Suppress("DEPRECATION")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         /* Add brief delay before passing result to nested (view pager) tab fragments to give them time to get created.

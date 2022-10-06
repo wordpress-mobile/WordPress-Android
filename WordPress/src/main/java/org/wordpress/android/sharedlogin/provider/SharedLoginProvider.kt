@@ -6,7 +6,7 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.provider.query.QueryContentProvider
 import org.wordpress.android.provider.query.QueryResult
-import org.wordpress.android.sharedlogin.data.JetpackPublicData
+import org.wordpress.android.util.publicdata.JetpackPublicData
 import org.wordpress.android.util.signature.SignatureNotFoundException
 import org.wordpress.android.util.signature.SignatureUtils
 import javax.inject.Inject

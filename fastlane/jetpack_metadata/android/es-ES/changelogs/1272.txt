@@ -1,5 +1,0 @@
-20.7:
-- Ahora, los widgets de Jetpack están disponibles en la pantalla de inicio del dispositivo.
-- Los controles de la vista previa de medios se pueden mostrar en modo claro o en modo oscuro.
-- La pantalla del código de acceso del tema Compose tiene un mejor contraste de color.
-- Ahora, algunos elementos del editor y los ajustes de las entradas son del color azul de WordPress.

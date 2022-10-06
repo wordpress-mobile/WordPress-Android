@@ -1,0 +1,3 @@
+20.8:
+Benutzer auf Websites mit verschiedenen Autoren können die Inhaltautoren in den Beitrags- und Seiteneinstellungen ändern.
+Benutzer, die ihre Inhalte auf Arabisch anzeigen, sehen Zahlen auf der Statistikseite ausschließlich in westarabischen Ziffern – das Wirrwarr aus west- und ostarabischen Ziffern war einmal.

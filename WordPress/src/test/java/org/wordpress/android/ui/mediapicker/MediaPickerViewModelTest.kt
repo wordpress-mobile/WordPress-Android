@@ -694,7 +694,7 @@ class MediaPickerViewModelTest : BaseUnitTest() {
                 hasStoragePermissions = false
         )
 
-        assertThat(actions.poll()).isNull()
+        assertThat(actions.tryReceive().getOrNull()).isNull()
     }
 
     @Test
@@ -705,7 +705,7 @@ class MediaPickerViewModelTest : BaseUnitTest() {
                 hasStoragePermissions = true
         )
 
-        assertThat(actions.poll()).isEqualTo(LoadAction.Start(null))
+        assertThat(actions.tryReceive().getOrNull()).isEqualTo(LoadAction.Start(null))
     }
 
     @Test
@@ -716,7 +716,7 @@ class MediaPickerViewModelTest : BaseUnitTest() {
                 hasStoragePermissions = false
         )
 
-        assertThat(actions.poll()).isEqualTo(LoadAction.Start(null))
+        assertThat(actions.tryReceive().getOrNull()).isEqualTo(LoadAction.Start(null))
     }
 
     private fun selectItem(position: Int) {

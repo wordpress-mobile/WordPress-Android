@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 
+import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.InternalCoroutinesApi
@@ -29,6 +30,7 @@ import org.wordpress.android.ui.stats.refresh.utils.ActionCardHandler
 import org.wordpress.android.ui.stats.refresh.utils.DateUtils
 import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
+import org.wordpress.android.util.text.PercentFormatter
 import org.wordpress.android.viewmodel.ResourceProvider
 import kotlin.math.roundToInt
 
@@ -41,6 +43,7 @@ class MostPopularInsightsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var popupMenuHandler: ItemPopupMenuHandler
     @Mock lateinit var actionCardHandler: ActionCardHandler
+    @Mock private lateinit var percentFormatter: PercentFormatter
     private lateinit var useCase: MostPopularInsightsUseCase
     private val day = 2
     private val highestDayPercent = 15.0
@@ -60,8 +63,11 @@ class MostPopularInsightsUseCaseTest : BaseUnitTest() {
                 dateUtils,
                 resourceProvider,
                 popupMenuHandler,
-                actionCardHandler
+                actionCardHandler,
+                percentFormatter
         )
+        whenever(percentFormatter.format(highestDayPercent.roundToInt())).thenReturn("10%")
+        whenever(percentFormatter.format(highestHourPercent.roundToInt())).thenReturn("20%")
         whenever(statsSiteProvider.siteModel).thenReturn(site)
         whenever(dateUtils.getWeekDay(day)).thenReturn(dayString)
 
@@ -69,15 +75,13 @@ class MostPopularInsightsUseCaseTest : BaseUnitTest() {
 
         whenever(
                 resourceProvider.getString(
-                        R.string.stats_most_popular_percent_views,
-                        highestDayPercent.roundToInt()
+                        R.string.stats_most_popular_percent_views, "10%"
                 )
         ).thenReturn("${highestDayPercent.roundToInt()}% of views")
 
         whenever(
                 resourceProvider.getString(
-                        R.string.stats_most_popular_percent_views,
-                        highestHourPercent.roundToInt()
+                        R.string.stats_most_popular_percent_views, "20%"
                 )
         ).thenReturn("${highestHourPercent.roundToInt()}% of views")
     }
@@ -118,6 +122,13 @@ class MostPopularInsightsUseCaseTest : BaseUnitTest() {
         val result = loadMostPopularInsights(refresh, forced)
 
         assertThat(result.state).isEqualTo(UseCaseState.ERROR)
+    }
+
+    @Test
+    fun `when buildUiModel is called, should call PercentFormatter`() = test {
+        useCase.buildUiModel(InsightsMostPopularModel(0, day, hour, highestDayPercent, highestHourPercent))
+        verify(percentFormatter).format(highestDayPercent.roundToInt())
+        verify(percentFormatter).format(highestHourPercent.roundToInt())
     }
 
     private fun assertTitle(item: BlockListItem) {

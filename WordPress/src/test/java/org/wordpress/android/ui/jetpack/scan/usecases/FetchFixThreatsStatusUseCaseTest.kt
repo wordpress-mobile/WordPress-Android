@@ -30,8 +30,8 @@ import org.wordpress.android.ui.jetpack.scan.usecases.FetchFixThreatsStatusUseCa
 import org.wordpress.android.ui.jetpack.scan.usecases.FetchFixThreatsStatusUseCase.FetchFixThreatsState.NotStarted
 import org.wordpress.android.util.NetworkUtilsWrapper
 
-@ExperimentalCoroutinesApi
 @InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 class FetchFixThreatsStatusUseCaseTest : BaseUnitTest() {
     @Rule
     @JvmField val coroutineScope = MainCoroutineScopeRule()

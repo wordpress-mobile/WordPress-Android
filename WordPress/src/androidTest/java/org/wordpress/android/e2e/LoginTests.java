@@ -26,7 +26,7 @@ public class LoginTests extends BaseTest {
 
     @Ignore("Ignored temporarily. This sometimes fail on CI while running with whole test suite.")
     @Test
-    public void loginWithEmailPassword() {
+    public void e2eLoginWithEmailPassword() {
         new LoginFlow().chooseContinueWithWpCom()
                        .enterEmailAddress(E2E_WP_COM_USER_EMAIL)
                        .enterPassword(E2E_WP_COM_USER_PASSWORD)
@@ -35,7 +35,7 @@ public class LoginTests extends BaseTest {
 
     @Ignore("Ignored temporarily. This sometimes fail on CI while running with whole test suite.")
     @Test
-    public void loginWithPasswordlessAccount() {
+    public void e2eLoginWithPasswordlessAccount() {
         new LoginFlow().chooseContinueWithWpCom()
                        .enterEmailAddress(E2E_WP_COM_PASSWORDLESS_USER_EMAIL)
                        .openMagicLink()
@@ -43,7 +43,7 @@ public class LoginTests extends BaseTest {
     }
 
     @Test
-    public void loginWithSiteAddress() {
+    public void e2eLoginWithSiteAddress() {
         new LoginFlow().chooseEnterYourSiteAddress()
                        .enterSiteAddress(E2E_WP_COM_USER_SITE_ADDRESS)
                        .enterEmailAddress(E2E_WP_COM_USER_EMAIL)
@@ -53,7 +53,7 @@ public class LoginTests extends BaseTest {
 
     @Ignore("Ignored temporarily. This sometimes fail on CI while running with whole test suite.")
     @Test
-    public void loginWithMagicLink() {
+    public void e2eLoginWithMagicLink() {
         new LoginFlow().chooseContinueWithWpCom()
                        .enterEmailAddress(E2E_WP_COM_USER_EMAIL)
                        .chooseMagicLink()
@@ -62,7 +62,7 @@ public class LoginTests extends BaseTest {
     }
 
     @Test
-    public void loginWithSelfHostedAccount() {
+    public void e2eLoginWithSelfHostedAccount() {
         new LoginFlow().chooseEnterYourSiteAddress()
                        .enterSiteAddress(E2E_SELF_HOSTED_USER_SITE_ADDRESS)
                        .enterUsernameAndPassword(E2E_SELF_HOSTED_USER_USERNAME, E2E_SELF_HOSTED_USER_PASSWORD)

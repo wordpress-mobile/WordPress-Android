@@ -2,6 +2,7 @@ package org.wordpress.android.viewmodel.plugins
 
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -57,7 +58,7 @@ class PluginBrowserViewModel @Inject constructor(
 
     private var isStarted = false
 
-    private val handler = Handler()
+    private val handler = Handler(Looper.getMainLooper())
 
     private val _featuredPluginsLiveData = MutableLiveData<PluginListState>()
     private val _popularPluginsLiveData = MutableLiveData<PluginListState>()

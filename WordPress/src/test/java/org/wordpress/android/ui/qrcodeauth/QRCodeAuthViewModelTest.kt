@@ -62,9 +62,9 @@ const val SCANNED_VALUE =
 const val VALID_EXPIRED_MESSAGE = "qr code data expired"
 const val INVALID_EXPIRED_MESSAGE = "invalid qr code data expired"
 
+@Suppress("LargeClass")
 @InternalCoroutinesApi
 @ExperimentalCoroutinesApi
-@Suppress("LargeClass")
 class QRCodeAuthViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: QRCodeAuthViewModel
     @Mock lateinit var store: QRCodeAuthStore

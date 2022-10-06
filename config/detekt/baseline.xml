@@ -72,7 +72,6 @@
     <ID>LongMethod:BarChartViewHolder.kt$BarChartViewHolder$private fun BarChart.draw( item: BarChartItem, labelStart: TextView, labelEnd: TextView ): BarCount</ID>
     <ID>LongMethod:ClicksUseCase.kt$ClicksUseCase$override fun buildUiModel(domainModel: ClicksModel, uiState: SelectedClicksGroup): List&lt;BlockListItem></ID>
     <ID>LongMethod:HomepageSettingsDialog.kt$HomepageSettingsDialog$override fun onCreateDialog(savedInstanceState: Bundle?): Dialog</ID>
-    <ID>LongMethod:MediaPickerActivity.kt$MediaPickerActivity$override fun onActivityResult( requestCode: Int, resultCode: Int, data: Intent? )</ID>
     <ID>LongMethod:MediaPickerFragment.kt$MediaPickerFragment$override fun onViewCreated(view: View, savedInstanceState: Bundle?)</ID>
     <ID>LongMethod:MediaPickerViewModel.kt$MediaPickerViewModel$private fun buildUiModel( domainModel: DomainModel?, selectedIds: List&lt;Identifier>?, softAskRequest: SoftAskRequest?, isSearching: Boolean? ): PhotoListUiModel</ID>
     <ID>LongMethod:PhotoPickerFragment.kt$PhotoPickerFragment$override fun onViewCreated(view: View, savedInstanceState: Bundle?)</ID>
@@ -80,8 +79,6 @@
     <ID>LongMethod:PublishSettingsFragment.kt$PublishSettingsFragment$override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?</ID>
     <ID>LongMethod:ReferrersUseCase.kt$ReferrersUseCase$override fun buildUiModel(domainModel: ReferrersModel, uiState: SelectedGroup): List&lt;BlockListItem></ID>
     <ID>LongMethod:SearchListViewModel.kt$SearchListViewModel$private fun PageModel.toPageItem(areActionsEnabled: Boolean): PageItem</ID>
-    <ID>LongMethod:StatsMinifiedWidgetConfigureFragment.kt$StatsMinifiedWidgetConfigureFragment$override fun onViewCreated(view: View, savedInstanceState: Bundle?)</ID>
-    <ID>LongMethod:StatsWidgetConfigureFragment.kt$StatsWidgetConfigureFragment$override fun onViewCreated(view: View, savedInstanceState: Bundle?)</ID>
     <ID>LongMethod:SuggestionActivity.kt$SuggestionActivity$private fun initializeActivity(siteModel: SiteModel, suggestionType: SuggestionType)</ID>
     <ID>LoopWithTooManyJumpStatements:RemoveMediaUseCase.kt$RemoveMediaUseCase$for (mediaId in mediaIds) { if (!TextUtils.isEmpty(mediaId)) { // make sure the MediaModel exists val mediaModel = try { mediaStore.getMediaWithLocalId(Integer.valueOf(mediaId)) ?: continue } catch (e: NumberFormatException) { AppLog.e(AppLog.T.MEDIA, "Invalid media id: $mediaId") continue } // also make sure it's not being uploaded anywhere else (maybe on some other Post, // simultaneously) if (mediaModel.uploadState != null &amp;&amp; mediaUtils.isLocalFile(mediaModel.uploadState.toLowerCase(Locale.ROOT)) &amp;&amp; !uploadService.isPendingOrInProgressMediaUpload(mediaModel)) { dispatcher.dispatch(MediaActionBuilder.newRemoveMediaAction(mediaModel)) } } }</ID>
     <ID>MagicNumber:ActivityViewHolder.kt$ActivityViewHolder$3</ID>
@@ -178,8 +175,6 @@
     <ID>NestedBlockDepth:AllTimeWidgetListViewModel.kt$AllTimeWidgetListViewModel$fun onDataSetChanged(onError: (appWidgetId: Int) -> Unit)</ID>
     <ID>NestedBlockDepth:CreatePageListItemActionsUseCase.kt$CreatePageListItemActionsUseCase$fun setupPageActions( listType: PageListType, uploadUiState: PostUploadUiState, siteModel: SiteModel, remoteId: Long ): Set&lt;Action></ID>
     <ID>NestedBlockDepth:LoadStoryFromStoriesPrefsUseCase.kt$LoadStoryFromStoriesPrefsUseCase$private fun loadOrReCreateStoryFromStoriesPrefs(site: SiteModel, mediaIds: ArrayList&lt;String>): ReCreateStoryResult</ID>
-    <ID>NestedBlockDepth:MeFragment.kt$MeFragment$override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?)</ID>
-    <ID>NestedBlockDepth:MediaPickerActivity.kt$MediaPickerActivity$override fun onActivityResult( requestCode: Int, resultCode: Int, data: Intent? )</ID>
     <ID>NestedBlockDepth:PublicizeErrorDialogFragment.kt$PublicizeErrorDialogFragment$override fun onCreateDialog(savedInstanceState: Bundle?): Dialog</ID>
     <ID>NestedBlockDepth:PublishNotificationReceiverViewModel.kt$PublishNotificationReceiverViewModel$fun loadNotification(notificationId: Int): NotificationUiModel?</ID>
     <ID>NestedBlockDepth:ReaderDiscoverLogic.kt$ReaderDiscoverLogic$private fun createSimplifiedRecommendedBlogsCardJson(originalCardJson: JSONObject): JSONObject</ID>

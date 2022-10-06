@@ -1,10 +1,10 @@
 package org.wordpress.android.ui.reader.utils;
 
 import android.net.Uri;
-import android.text.Html;
 import android.text.Spanned;
 
 import androidx.annotation.NonNull;
+import androidx.core.text.HtmlCompat;
 
 import org.wordpress.android.models.ReaderPost;
 
@@ -45,7 +45,7 @@ public class ReaderXPostUtils {
                 "<strong>" + getFromSiteName(post) + "</strong>",
                 "<strong>" + getToSiteName(post) + "</strong>");
 
-        return Html.fromHtml(subtitle);
+        return HtmlCompat.fromHtml(subtitle, HtmlCompat.FROM_HTML_MODE_LEGACY);
     }
 
     // origin site name can be extracted from the excerpt,

@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-09-13 14:54:08+0000
+Translation-Revision-Date: 2022-09-26 18:54:10+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: tr
 -->
 <resources>
+    <string name="error_fetch_authors_list">Yazarlar alınamadı</string>
+    <string name="post_settings_author">Yazar</string>
     <string name="app_rating_title">%s hoşunuza gitti mi?</string>
     <string name="connection_service_label">Gönderiyi %s ile paylaş</string>
     <string name="connections_label">Jetpack Social Bağlantıları</string>
@@ -506,7 +508,6 @@ Language: tr
     <string name="blogging_reminders_notification_title">%s ile blog açmanın zamanı geldi</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios">Yeniden kullanılabilir blokların düzenlenmesi iOS için WordPress\'te henüz desteklenmemektedir</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and">Yeniden kullanılabilir blokların düzenlenmesi Android için WordPress\'te henüz desteklenmemektedir</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">Alternatif olarak, \"Normal bloklara dönüştür\" seçeneğine dokunarak bu blokları ayırabilir ve ayrı ayrı düzenleyebilirsiniz.</string>
     <string name="blogging_reminders_done">Tamamlandı</string>
     <string name="blogging_reminders_notify_me">Bana bildir</string>
     <string name="restore_details_enter_server_creds_msg">Yedeklemelerinizden tek tıkla geri yüklemeyi etkinleştirmek için &lt;a href=\"%1$s\"&gt;sunucu kimlik bilgilerinizi girin&lt;/a&gt;.</string>
@@ -738,7 +739,6 @@ Language: tr
     <string name="restore_complete_visit_site_action_button">Siteyi ziyaret et</string>
     <string name="restore_complete_description_with_two_parameters">Seçtiğiniz tüm öğeler şimdi %1$s %2$s konumuna geri yüklendi.</string>
     <string name="restore_complete_header">Siteniz geri yüklendi</string>
-    <string name="restore_progress_label">%%%1$s</string>
     <string name="restore_progress_footnote">Beklemeye gerek yok. Siteniz tamamen geri yüklendiğinde sizi bilgilendireceğiz.</string>
     <string name="restore_progress_icon_content_description">Siteyi geri yükle simgesi</string>
     <string name="restore_progress_description_with_two_parameters">Siteniz %1$s %2$s konumuna geri yükleniyor.</string>
@@ -810,7 +810,6 @@ Language: tr
     <string name="backup_download_complete_description_with_two_parameters">%1$s %2$s üzerinden başarıyla sitenizin bir yedeğini oluşturduk.</string>
     <string name="backup_download_complete_header">Yedeklemeniz artık indirilebilir</string>
     <string name="backup_download_complete_page_title">Yedeklemeniz</string>
-    <string name="backup_download_progress_label">%1$s%%</string>
     <string name="backup_download_progress_footnote">Beklemeye gerek yok. Yedeğiniz hazır olduğunda sizi bilgilendireceğiz.</string>
     <string name="backup_download_progress_icon_content_description">İndirişebilir yedek simgesi oluşturuluyor</string>
     <string name="backup_download_progress_description_with_two_parameters">%1$s %2$s üzerinden sitenizin indirilebilir bir yedeğini oluşturuyoruz.</string>
@@ -1776,10 +1775,7 @@ Language: tr
     <string name="notification_channel_reminder_title">Hatırlatıcı</string>
     <string name="stats_select_next_period_description">Gelecek dönemi seç</string>
     <string name="stats_select_previous_period_description">Önceki dönemi seç</string>
-    <string name="stats_most_popular_percent_views">Görüntülemelerein %%%1$d kadarı</string>
     <string name="stats_insights_popular">En popüler zaman</string>
-    <string name="stats_traffic_change">%1$s (%2$s%%)</string>
-    <string name="stats_traffic_increase">+%1$s (%2$s%%)</string>
     <string name="new_site_creation_site_preview_content_description">Site önizlemesi gösteriliyor</string>
     <string name="new_site_creation_clear_all_content_description">Temizle</string>
     <string name="site_created_but_not_fetched_snackbar_message">Yavaş bir bağlantı kullanıyorsunuz gibi duruyor. Yeni sitenizi listede görmüyorsanız listeyi yenilemeyi deneyin.</string>

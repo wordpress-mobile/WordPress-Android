@@ -17,6 +17,7 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.drawscope.scale
 import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -82,11 +83,14 @@ fun LoginScreenRevamped(
     // Flip the background image for RTL locales
     val scaleX = if (LocalLayoutDirection.current == Rtl) -1f else 1f
 
+    val offsetX = with(LocalDensity.current) { 10.dp.toPx() }
+    val offsetY = with(LocalDensity.current) { 75.dp.toPx() }
+
     Box(modifier = Modifier
             .background(color = colorResource(id = color.login_prologue_revamped_background))
             .drawBehind {
                 scale(scaleX = scaleX, scaleY = 1f) {
-                    translate(left = size.width - brushStrokePainter.intrinsicSize.width - 10f, top = -75f) {
+                    translate(left = size.width - brushStrokePainter.intrinsicSize.width - offsetX, top = -offsetY) {
                         with(brushStrokePainter) {
                             draw(intrinsicSize)
                         }

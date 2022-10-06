@@ -132,6 +132,7 @@ class StatsViewAllFragment : DaggerFragment(R.layout.stats_view_all_fragment) {
         binding = null
     }
 
+    @Suppress("DEPRECATION")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 

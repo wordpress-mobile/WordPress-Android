@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -32,10 +33,12 @@ public class PostSettingsInputDialogFragment extends DialogFragment implements T
     private static final String TITLE_TAG = "title";
     private static final String HINT_TAG = "hint";
     private static final String DISABLE_EMPTY_INPUT_TAG = "disable_empty_input";
+    private static final String MULTILINE_INPUT_TAG = "is_multiline_input";
     private String mCurrentInput;
     private String mTitle;
     private String mHint;
     private boolean mDisableEmptyInput;
+    private boolean mIsMultilineInput;
     private PostSettingsInputDialogListener mListener;
     private AlertDialog mDialog;
 
@@ -47,11 +50,13 @@ public class PostSettingsInputDialogFragment extends DialogFragment implements T
             mTitle = savedInstanceState.getString(TITLE_TAG, "");
             mHint = savedInstanceState.getString(HINT_TAG, "");
             mDisableEmptyInput = savedInstanceState.getBoolean(DISABLE_EMPTY_INPUT_TAG, false);
+            mIsMultilineInput = savedInstanceState.getBoolean(MULTILINE_INPUT_TAG, false);
         } else if (getArguments() != null) {
             mCurrentInput = getArguments().getString(INPUT_TAG, "");
             mTitle = getArguments().getString(TITLE_TAG, "");
             mHint = getArguments().getString(HINT_TAG, "");
             mDisableEmptyInput = getArguments().getBoolean(DISABLE_EMPTY_INPUT_TAG, false);
+            mIsMultilineInput = getArguments().getBoolean(MULTILINE_INPUT_TAG, false);
         }
     }
 
@@ -62,16 +67,18 @@ public class PostSettingsInputDialogFragment extends DialogFragment implements T
         outState.putSerializable(TITLE_TAG, mTitle);
         outState.putSerializable(HINT_TAG, mHint);
         outState.putBoolean(DISABLE_EMPTY_INPUT_TAG, mDisableEmptyInput);
+        outState.putBoolean(MULTILINE_INPUT_TAG, mIsMultilineInput);
     }
 
     public static PostSettingsInputDialogFragment newInstance(String currentText, String title, String hint,
-                                                              boolean disableEmptyInput) {
+                                                              boolean disableEmptyInput, boolean isMultiline) {
         PostSettingsInputDialogFragment dialogFragment = new PostSettingsInputDialogFragment();
         Bundle args = new Bundle();
         args.putString(INPUT_TAG, currentText);
         args.putString(TITLE_TAG, title);
         args.putString(HINT_TAG, hint);
         args.putBoolean(DISABLE_EMPTY_INPUT_TAG, disableEmptyInput);
+        args.putBoolean(MULTILINE_INPUT_TAG, isMultiline);
         dialogFragment.setArguments(args);
         return dialogFragment;
     }
@@ -91,6 +98,11 @@ public class PostSettingsInputDialogFragment extends DialogFragment implements T
         View dialogView = layoutInflater.inflate(R.layout.post_settings_input_dialog, null);
         builder.setView(dialogView);
         final EditText editText = dialogView.findViewById(R.id.post_settings_input_dialog_edit_text);
+        if (mIsMultilineInput) {
+            editText.setRawInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+        } else {
+            editText.setInputType(InputType.TYPE_CLASS_TEXT);
+        }
         if (!TextUtils.isEmpty(mCurrentInput)) {
             editText.setText(mCurrentInput);
             // move the cursor to the end

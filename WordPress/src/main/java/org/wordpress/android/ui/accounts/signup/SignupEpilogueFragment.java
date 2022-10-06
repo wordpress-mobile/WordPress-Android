@@ -65,7 +65,6 @@ import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Step;
 import org.wordpress.android.ui.photopicker.MediaPickerConstants;
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
-import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource;
 import org.wordpress.android.ui.prefs.AppPrefsWrapper;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
@@ -365,6 +364,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
@@ -378,8 +378,10 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
                                         data.getStringArrayExtra(MediaPickerConstants.EXTRA_MEDIA_URIS);
 
                                 if (mediaUriStringsArray != null && mediaUriStringsArray.length > 0) {
-                                    PhotoPickerMediaSource source = PhotoPickerMediaSource.fromString(
-                                            data.getStringExtra(MediaPickerConstants.EXTRA_MEDIA_SOURCE));
+                                    PhotoPickerActivity.PhotoPickerMediaSource source =
+                                            PhotoPickerActivity.PhotoPickerMediaSource.fromString(
+                                                    data.getStringExtra(MediaPickerConstants.EXTRA_MEDIA_SOURCE)
+                                            );
                                     AnalyticsTracker.Stat stat =
                                             source == PhotoPickerActivity.PhotoPickerMediaSource.ANDROID_CAMERA
                                                     ? SIGNUP_EMAIL_EPILOGUE_GRAVATAR_SHOT_NEW

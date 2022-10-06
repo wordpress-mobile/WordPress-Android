@@ -1,4 +1,0 @@
-20.7:
-We can see clearly now—media preview controls (like the back button) are now visible in both light and dark mode.
-
-The Login Code screen in the Compose theme also has better color contrast for more readable text. Shiny.

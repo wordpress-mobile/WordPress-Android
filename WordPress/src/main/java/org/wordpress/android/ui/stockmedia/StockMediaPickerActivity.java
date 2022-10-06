@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.text.Html;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.view.MenuItem;
@@ -20,6 +19,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.text.HtmlCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -318,7 +318,10 @@ public class StockMediaPickerActivity extends LocaleAwareActivity implements Sea
                 if (isEmpty) {
                     actionableEmptyView.title.setText(R.string.stock_media_picker_initial_empty_text);
                     String link = "<a href='https://pexels.com/'>Pexels</a>";
-                    Spanned html = Html.fromHtml(getString(R.string.stock_media_picker_initial_empty_subtext, link));
+                    Spanned html = HtmlCompat.fromHtml(
+                            getString(R.string.stock_media_picker_initial_empty_subtext, link),
+                            HtmlCompat.FROM_HTML_MODE_LEGACY
+                    );
                     actionableEmptyView.subtitle.setText(html);
                     actionableEmptyView.getSubtitle().setMovementMethod(WPLinkMovementMethod.getInstance());
                     actionableEmptyView.subtitle.setVisibility(View.VISIBLE);
