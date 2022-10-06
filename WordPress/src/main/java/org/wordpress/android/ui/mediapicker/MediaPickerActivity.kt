@@ -173,7 +173,7 @@ class MediaPickerActivity : LocaleAwareActivity(), MediaPickerListener {
         return super.onOptionsItemSelected(item)
     }
 
-    @Suppress("DEPRECATION", "LongMethod", "NestedBlockDepth")
+    @Suppress("DEPRECATION", "OVERRIDE_DEPRECATION", "LongMethod", "NestedBlockDepth")
     override fun onActivityResult(
         requestCode: Int,
         resultCode: Int,

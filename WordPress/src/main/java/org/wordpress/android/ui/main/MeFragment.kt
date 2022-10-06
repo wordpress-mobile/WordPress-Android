@@ -451,7 +451,7 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
         disconnectProgressDialog = null
     }
 
-    @Suppress("DEPRECATION", "LongMethod", "NestedBlockDepth")
+    @Suppress("DEPRECATION", "OVERRIDE_DEPRECATION", "LongMethod", "NestedBlockDepth")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
