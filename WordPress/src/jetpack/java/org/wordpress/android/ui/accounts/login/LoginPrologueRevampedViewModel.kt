@@ -13,11 +13,22 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import kotlin.math.PI
 
-// This factor is used to convert the raw values emitted from device sensor to an appropriate scale for the consuming
-// composables.
+/**
+ * This factor is used to convert the raw values emitted from device sensor to an appropriate scale for the consuming
+ * composables. The range for pitch values is -π/2 to π/2, representing an upright pose and an upside-down pose,
+ * respectively. E.g. Setting this factor to 0.2 / (π/2) will scale this output range to -0.2 to 0.2. The resulting
+ * product is interpreted in units proportional to the repeating child composable's height per second, i.e. at a
+ * velocity of 0.1, it will take 10 seconds for the looping animation to repeat. When applied, the product can also be
+ * thought of as a frequency value in Hz.
+ */
 private const val VELOCITY_FACTOR = (0.2 / (PI / 2)).toFloat()
 
-// Default pitch provided for devices lacking support for the sensors used
+/**
+ * This is the default pitch provided for devices lacking support for the sensors used. This is consumed by the model
+ * as a value in radians, but is specified here as -30 degrees for convenience. This represents a device pose that is
+ * slightly upright from flat, approximating a typical usage pattern, and will ensure that the text is animated at
+ * an appropriate velocity when sensors are unavailable.
+ */
 private const val DEFAULT_PITCH = (-30 * PI / 180).toFloat()
 
 @HiltViewModel
@@ -51,7 +62,10 @@ class LoginPrologueRevampedViewModel @Inject constructor(
         }
     }
 
-    /** This LiveData responds to accelerometer data from the y-axis of the device and emits updated position data. */
+    /**
+     * This LiveData responds to orientation data to calculate the pitch of the device. This is then used to update the
+     * velocity and position for each frame.
+     */
     private val _positionData = object : MutableLiveData<Float>(), SensorEventListener {
         private val sensorManager
             get() = appContext.getSystemService(Context.SENSOR_SERVICE) as SensorManager
