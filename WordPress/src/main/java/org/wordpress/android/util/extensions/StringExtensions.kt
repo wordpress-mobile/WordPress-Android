@@ -13,6 +13,7 @@ import java.util.Locale
  *
  * The [capitalizeWithLocaleWithoutLint] is chosen to communicate this issue with the caller.
  */
+@Suppress("DEPRECATION")
 @SuppressLint("DefaultLocale")
 fun String.capitalizeWithLocaleWithoutLint(locale: Locale): String {
     return this.capitalize(locale)
