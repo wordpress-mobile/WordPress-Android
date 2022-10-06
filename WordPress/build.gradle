@@ -122,6 +122,7 @@ android {
         buildConfigField "boolean", "JETPACK_POWERED_BOTTOM_SHEET", "false"
         buildConfigField "boolean", "JETPACK_SHARED_LOGIN", "false"
         buildConfigField "boolean", "JETPACK_LOCAL_USER_FLAGS", "false"
+        buildConfigField "boolean", "JETPACK_BLOGGING_REMINDERS_SYNC_REMOTE_FIELD", "false"
 
         // Override these constants in jetpack product flavor to enable/ disable features
         buildConfigField "boolean", "ENABLE_SITE_CREATION", "true"
