@@ -951,7 +951,10 @@ public final class AnalyticsTracker {
         SHARED_LOGIN_FAILED,
         USER_FLAGS_START,
         USER_FLAGS_SUCCESS,
-        USER_FLAGS_FAILED
+        USER_FLAGS_FAILED,
+        BLOGGING_REMINDERS_SYNC_START,
+        BLOGGING_REMINDERS_SYNC_SUCCESS,
+        BLOGGING_REMINDERS_SYNC_FAILED,
     }
 
     private static final List<Tracker> TRACKERS = new ArrayList<>();
