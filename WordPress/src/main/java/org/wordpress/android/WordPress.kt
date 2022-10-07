@@ -1,16 +1,11 @@
 package org.wordpress.android
 
-import android.app.Activity
-import android.app.Application
-import android.text.TextUtils
 import androidx.multidex.MultiDexApplication
 import com.android.volley.RequestQueue
 import dagger.hilt.EntryPoints
 import org.wordpress.android.AppInitializer.StoryNotificationTrackerProvider
 import org.wordpress.android.fluxc.tools.FluxCImageLoader
 import org.wordpress.android.modules.AppComponent
-import org.wordpress.android.util.AppLog
-import org.wordpress.android.util.AppLog.T.NUX
 
 /**
  * An abstract class to be extended by {@link WordPressApp} for real application and WordPressTest for UI test
@@ -28,6 +23,7 @@ abstract class WordPress : MultiDexApplication() {
         initializer().wordPressComSignOut()
     }
 
+    @Suppress("TooManyFunctions")
     companion object {
         const val SITE = "SITE"
         const val LOCAL_SITE_ID = "LOCAL_SITE_ID"
@@ -79,57 +75,5 @@ abstract class WordPress : MultiDexApplication() {
 
         @JvmStatic
         fun getUserAgent() = AppInitializer.userAgent
-
-        /**
-         * Gets a field from the project's BuildConfig using reflection. This is useful when flavors are used at the
-         * project level to set custom fields.
-         * based on: https://code.google.com/p/android/issues/detail?id=52962#c38
-         *
-         * @param application Used to find the correct file
-         * @param fieldName The name of the field-to-access
-         * @return The value of the field, or `null` if the field is not found.
-         */
-        @Suppress("TooGenericExceptionCaught", "SwallowedException")
-        fun getBuildConfigValue(application: Application, fieldName: String?): Any? {
-            return try {
-                val packageName = application.javaClass.getPackage().name
-                val clazz = Class.forName("$packageName.BuildConfig")
-                val field = clazz.getField(fieldName)
-                field[null]
-            } catch (e: LinkageError) {
-                null
-            } catch (e: ExceptionInInitializerError) {
-                null
-            } catch (e: ClassNotFoundException) {
-                null
-            } catch (e: NoSuchFieldException) {
-                null
-            } catch (e: NullPointerException) {
-                null
-            }
-        }
-
-        /**
-         * Gets a field from the project's BuildConfig using reflection. This is useful when flavors are used at the
-         * project level to set custom fields.
-         * based on: https://code.google.com/p/android/issues/detail?id=52962#c38
-         *
-         * @param activity Used to get the Application instance
-         * @param configValueName The name of the field-to-access
-         * @return The string value of the field, or empty string if the field is not found.
-         */
-        fun getBuildConfigString(activity: Activity, configValueName: String): String? {
-            return if (!BuildConfig.DEBUG) {
-                ""
-            } else {
-                val value = getBuildConfigValue(activity.application, configValueName) as String?
-                if (!TextUtils.isEmpty(value)) {
-                    AppLog.d(NUX, "Auto-filled from build config: $configValueName")
-                    value
-                } else {
-                    ""
-                }
-            }
-        }
     }
 }
