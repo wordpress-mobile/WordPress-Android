@@ -21,6 +21,7 @@ class RemoveMediaUseCase @Inject constructor(
     private val uploadService: UploadServiceFacade,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) {
+    @Suppress("LoopWithTooManyJumpStatements")
     suspend fun removeMediaIfNotUploading(mediaIds: List<String>) = withContext(bgDispatcher) {
         for (mediaId in mediaIds) {
             if (!TextUtils.isEmpty(mediaId)) {

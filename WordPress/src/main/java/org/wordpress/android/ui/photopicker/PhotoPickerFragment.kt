@@ -84,7 +84,7 @@ class PhotoPickerFragment : Fragment(R.layout.photo_picker_fragment) {
         viewModel = ViewModelProvider(this, viewModelFactory).get(PhotoPickerViewModel::class.java)
     }
 
-    @Suppress("DEPRECATION")
+    @Suppress("DEPRECATION", "LongMethod")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
