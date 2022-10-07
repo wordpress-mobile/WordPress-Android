@@ -7,13 +7,11 @@ import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.wordpress.android.util.signature.SignatureUtils
-import org.wordpress.android.viewmodel.ContextProvider
 
 class ClientVerificationTest {
     private val jetpackPublicData: JetpackPublicData = mock()
     private val signatureUtils: SignatureUtils = mock()
-    private val contextProvider: ContextProvider = mock()
-    private val classToTest = ClientVerification(jetpackPublicData, signatureUtils, contextProvider)
+    private val classToTest = ClientVerification(jetpackPublicData, signatureUtils)
 
     private val expectedPackage = "match"
     private val expectedSignatureHash = "signatureHash"
@@ -22,8 +20,6 @@ class ClientVerificationTest {
     fun setup() {
         whenever(jetpackPublicData.currentPackageId()).thenReturn(expectedPackage)
         whenever(jetpackPublicData.currentPublicKeyHash()).thenReturn(expectedSignatureHash)
-        whenever(signatureUtils.getSignatureHash(contextProvider.getContext(), expectedPackage))
-                .thenReturn(expectedSignatureHash)
     }
 
     @Test
@@ -42,8 +38,8 @@ class ClientVerificationTest {
 
     @Test
     fun `Should return false if caller signature hash does not match the expected when canTrust is called`() {
-        whenever(signatureUtils.getSignatureHash(contextProvider.getContext(), expectedPackage))
-                .thenReturn("no_match")
+        whenever(signatureUtils.checkSignatureHash(expectedPackage, expectedSignatureHash))
+                .thenReturn(false)
         val expected = false
         val actual = classToTest.canTrust(expectedPackage)
         Assert.assertEquals(expected, actual)
@@ -51,6 +47,8 @@ class ClientVerificationTest {
 
     @Test
     fun `Should return true if caller package and signature hash match the expected when canTrust is called`() {
+        whenever(signatureUtils.checkSignatureHash(expectedPackage, expectedSignatureHash))
+                .thenReturn(true)
         val expected = true
         val actual = classToTest.canTrust(expectedPackage)
         Assert.assertEquals(expected, actual)
@@ -65,7 +63,7 @@ class ClientVerificationTest {
     @Test
     fun `Should call signatureUtils getSignatureHash when canTrust is called`() {
         classToTest.canTrust(expectedPackage)
-        verify(signatureUtils).getSignatureHash(contextProvider.getContext(), expectedPackage)
+        verify(signatureUtils).checkSignatureHash(expectedPackage, expectedSignatureHash)
     }
 
     @Test

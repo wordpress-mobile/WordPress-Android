@@ -1,30 +1,61 @@
 package org.wordpress.android.util.signature
 
-import android.content.Context
 import android.content.pm.PackageManager
-import android.content.pm.PackageManager.NameNotFoundException
-import android.content.pm.Signature
-import android.os.Build
+import android.os.Build.VERSION
+import android.os.Build.VERSION_CODES
+import org.wordpress.android.viewmodel.ContextProvider
 import java.security.MessageDigest
 import javax.inject.Inject
 
-class SignatureUtils @Inject constructor() {
-    @Suppress("SwallowedException")
-    fun getSignatureHash(ctxt: Context, packageName: String): String {
-        val md: MessageDigest = MessageDigest.getInstance("SHA-256")
-        val sig: Signature = try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                ctxt.packageManager.getPackageInfo(
-                        packageName, PackageManager.GET_SIGNING_CERTIFICATES
-                ).signingInfo.signingCertificateHistory[0]
-            } else {
-                ctxt.packageManager
-                        .getPackageInfo(packageName, PackageManager.GET_SIGNATURES).signatures[0]
+class SignatureUtils @Inject constructor(
+    private val contextProvider: ContextProvider
+) {
+    private val messageDigest = MessageDigest.getInstance("SHA-256")
+
+    fun checkSignatureHash(
+        trustedPackageId: String,
+        trustedSignatureHash: String
+    ) = if (VERSION.SDK_INT >= VERSION_CODES.P) {
+        checkSignatureHashAfterApi28(trustedPackageId, trustedSignatureHash)
+    } else {
+        checkSignatureHashBeforeBeforeApi28(trustedPackageId, trustedSignatureHash)
+    }
+
+    @Suppress("TooGenericExceptionCaught", "SwallowedException")
+    private fun checkSignatureHashAfterApi28(
+        trustedPackageId: String,
+        trustedSignatureHash: String
+    ) = try {
+        val signingInfo = contextProvider.getContext().packageManager.getPackageInfo(
+                trustedPackageId, PackageManager.GET_SIGNING_CERTIFICATES
+        ).signingInfo
+        val allSignaturesMatch = signingInfo.signingCertificateHistory.all {
+            toHexStringWithColons(messageDigest.digest(it.toByteArray())) == trustedSignatureHash
+        }
+        if (allSignaturesMatch) {
+            true
+        } else throw SignatureNotFoundException()
+    } catch (exception: Exception) {
+        throw SignatureNotFoundException()
+    }
+
+    @Suppress("TooGenericExceptionCaught", "SwallowedException")
+    private fun checkSignatureHashBeforeBeforeApi28(
+        trustedPackageId: String,
+        trustedSignatureHash: String
+    ): Boolean {
+        try {
+            val signatures = contextProvider.getContext().packageManager
+                    .getPackageInfo(trustedPackageId, PackageManager.GET_SIGNATURES).signatures
+            val allSignaturesMatch = signatures.all {
+                toHexStringWithColons(messageDigest.digest(it.toByteArray())) == trustedSignatureHash
             }
-        } catch (nameNotFoundException: NameNotFoundException) {
+            return if (allSignaturesMatch) {
+                true
+            } else throw SignatureNotFoundException()
+        } catch (exception: Exception) {
             throw SignatureNotFoundException()
         }
-        return toHexStringWithColons(md.digest(sig.toByteArray()))
     }
 
     @Suppress("MagicNumber")
