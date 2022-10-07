@@ -420,7 +420,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
         }
     }
 
-  @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+     @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mViewModel = new ViewModelProvider(this, mViewModelFactory)
                 .get(ReaderPostListViewModel.class);
