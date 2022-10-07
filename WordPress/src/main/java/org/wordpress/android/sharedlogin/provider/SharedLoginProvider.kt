@@ -7,6 +7,7 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.provider.query.QueryContentProvider
 import org.wordpress.android.provider.query.QueryResult
 import org.wordpress.android.sharedlogin.data.JetpackPublicData
+import org.wordpress.android.util.config.JetpackProviderSyncFeatureConfig
 import org.wordpress.android.util.signature.SignatureNotFoundException
 import org.wordpress.android.util.signature.SignatureUtils
 import javax.inject.Inject
@@ -16,6 +17,7 @@ class SharedLoginProvider : QueryContentProvider() {
     @Inject lateinit var signatureUtils: SignatureUtils
     @Inject lateinit var queryResult: QueryResult
     @Inject lateinit var jetpackPublicData: JetpackPublicData
+    @Inject lateinit var jetpackProviderSyncFeatureConfig: JetpackProviderSyncFeatureConfig
 
     override fun onCreate(): Boolean {
         return true
@@ -30,6 +32,9 @@ class SharedLoginProvider : QueryContentProvider() {
         sortOrder: String?
     ): Cursor? {
         inject()
+        if (!jetpackProviderSyncFeatureConfig.isEnabled()) {
+            return null
+        }
         return context?.let {
             try {
                 val callerPackageId = callingPackage
