@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package org.wordpress.android
 
 import android.annotation.SuppressLint
@@ -163,7 +165,7 @@ class AppInitializer @Inject constructor(
     lateinit var storyNotificationTrackerProvider: StoryNotificationTrackerProvider
         private set
 
-    private lateinit var credentialsClient: GoogleApiClient
+    @Suppress("DEPRECATION") private lateinit var credentialsClient: GoogleApiClient
 
     private var startDate: Long
 
@@ -341,6 +343,7 @@ class AppInitializer @Inject constructor(
         }
     }
 
+    @Suppress("DEPRECATION")
     private fun setupCredentialsClient() {
         credentialsClient = GoogleApiClient.Builder(application)
                 .addConnectionCallbacks(object : GoogleApiClient.ConnectionCallbacks {
@@ -553,6 +556,7 @@ class AppInitializer @Inject constructor(
         AppLog.d(T.API, "Receiving OnUnexpectedError event, message: " + event.exception.message)
     }
 
+    @Suppress("DEPRECATION")
     private fun removeWpComUserRelatedData(context: Context) {
         // cancel all Volley requests - do this before unregistering push since that uses a Volley request
         VolleyUtils.cancelAllRequests(requestQueue)
