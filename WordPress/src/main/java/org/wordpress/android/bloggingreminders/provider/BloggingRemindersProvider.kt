@@ -11,6 +11,7 @@ import org.wordpress.android.fluxc.store.BloggingRemindersStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.provider.query.QueryContentProvider
 import org.wordpress.android.provider.query.QueryResult
+import org.wordpress.android.util.config.JetpackProviderSyncFeatureConfig
 import org.wordpress.android.util.publicdata.ClientVerification
 import org.wordpress.android.util.signature.SignatureNotFoundException
 import javax.inject.Inject
@@ -22,6 +23,7 @@ class BloggingRemindersProvider : QueryContentProvider() {
     @Inject lateinit var siteStore: SiteStore
     @Inject lateinit var queryResult: QueryResult
     @Inject lateinit var clientVerification: ClientVerification
+    @Inject lateinit var jetpackProviderSyncFeatureConfig: JetpackProviderSyncFeatureConfig
 
     override fun onCreate(): Boolean {
         return true
@@ -36,6 +38,9 @@ class BloggingRemindersProvider : QueryContentProvider() {
         sortOrder: String?
     ): Cursor? {
         inject()
+        if (!jetpackProviderSyncFeatureConfig.isEnabled()) {
+            return null
+        }
         return context?.let {
             try {
                 if (clientVerification.canTrust(callingPackage)) {
