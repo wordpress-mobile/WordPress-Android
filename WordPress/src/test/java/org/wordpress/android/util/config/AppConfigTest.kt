@@ -33,9 +33,9 @@ class AppConfigTest {
 
     @Test
     fun `refresh passes the call to remote config`() {
-        appConfig.refresh(appScope, true)
+        appConfig.refresh(appScope)
 
-        verify(remoteConfig).refresh(appScope, true)
+        verify(remoteConfig).refresh(appScope)
     }
 
     @Test

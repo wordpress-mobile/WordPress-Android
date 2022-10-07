@@ -34,8 +34,8 @@ class AppConfig
     /**
      * This method triggers refresh of remote configuration.
      */
-    fun refresh(appScope: CoroutineScope, forced: Boolean = false) {
-        remoteConfig.refresh(appScope, forced)
+    fun refresh(appScope: CoroutineScope) {
+        remoteConfig.refresh(appScope)
     }
 
     /**

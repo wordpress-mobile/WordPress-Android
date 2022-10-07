@@ -19,9 +19,7 @@ import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
 
-const val REMOTE_REFRESH_INTERVAL_IN_HOURS = 12
 const val REMOTE_FLAG_PLATFORM_PARAMETER = "android"
-const val ONE_HOUR = (60 * 60 * 1000) % 24
 
 /**
  * Do not use this class outside of this package. Use [AppConfig] instead
@@ -42,22 +40,13 @@ class RemoteConfig
         }
     }
 
-    fun refresh(appScope: CoroutineScope, forced: Boolean) {
+    fun refresh(appScope: CoroutineScope) {
         appScope.launch {
-            if (isRefreshNeeded() || forced) {
-                fetchRemoteFlags()
-                flags = featureFlagStore.getFeatureFlags()
-            }
+            fetchRemoteFlags()
+            flags = featureFlagStore.getFeatureFlags()
         }
     }
 
-    private fun isRefreshNeeded(): Boolean {
-        val lastModifiedFlag = featureFlagStore.getTheLastSyncedRemoteConfig()
-        val timeDifferenceInMilliSeconds = System.currentTimeMillis() - lastModifiedFlag
-        val differenceInHours = (timeDifferenceInMilliSeconds / ONE_HOUR)
-        if (differenceInHours >= REMOTE_REFRESH_INTERVAL_IN_HOURS) return true
-        return false
-    }
 
     private suspend fun fetchRemoteFlags() {
         val response = featureFlagStore.fetchFeatureFlags(
