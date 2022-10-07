@@ -29,4 +29,6 @@ class ReaderPostTableWrapper @Inject constructor() {
             ReaderPostTable.getPostsWithTag(readerTag, maxRows, excludeTextColumn)
 
     fun getNumPostsWithTag(readerTag: ReaderTag): Int = ReaderPostTable.getNumPostsWithTag(readerTag)
+
+    fun addOrUpdatePosts(readerTag: ReaderTag, posts: ReaderPostList) = ReaderPostTable.addOrUpdatePosts(readerTag, posts)
 }
