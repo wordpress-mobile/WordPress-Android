@@ -12,6 +12,7 @@ import org.wordpress.android.util.image.ImageType.PHOTO
  * ViewHolder containing a device thumbnail
  */
 
+@Suppress("DEPRECATION")
 @Deprecated(
         "This class is being refactored, if you implement any change, please also update " +
                 "{@link org.wordpress.android.ui.mediapicker.PhotoThumbnailViewHolder}"
@@ -24,6 +25,7 @@ class PhotoThumbnailViewHolder(
     private val imgThumbnail: ImageView = itemView.findViewById(R.id.image_thumbnail)
     private val txtSelectionCount: TextView = itemView.findViewById(R.id.text_selection_count)
 
+    @Suppress("DEPRECATION")
     fun bind(item: PhotoPickerUiItem.PhotoItem, animateSelection: Boolean, updateCount: Boolean) {
         val isSelected = item.isSelected
         thumbnailViewUtils.setupTextSelectionCount(
