@@ -136,27 +136,27 @@ class ReaderDiscoverLogic(
         if (taskType == REQUEST_FIRST_PAGE) {
             clearCache()
         }
-        val fullCardsJson = json.optJSONArray(JSON_CARDS)
+        json.optJSONArray(JSON_CARDS)?.let { fullCardsJson ->
+            // Parse the json into cards model objects
+            val cards = parseCards(fullCardsJson)
+            insertPostsIntoDb(cards.filterIsInstance<ReaderPostCard>().map { it.post })
+            insertBlogsIntoDb(cards.filterIsInstance<ReaderRecommendedBlogsCard>().map { it.blogs }.flatten())
 
-        // Parse the json into cards model objects
-        val cards = parseCards(fullCardsJson)
-        insertPostsIntoDb(cards.filterIsInstance<ReaderPostCard>().map { it.post })
-        insertBlogsIntoDb(cards.filterIsInstance<ReaderRecommendedBlogsCard>().map { it.blogs }.flatten())
+            // Simplify the json. The simplified version is used in the upper layers to load the data from the db.
+            val simplifiedCardsJson = createSimplifiedJson(fullCardsJson)
+            insertCardsJsonIntoDb(simplifiedCardsJson)
 
-        // Simplify the json. The simplified version is used in the upper layers to load the data from the db.
-        val simplifiedCardsJson = createSimplifiedJson(fullCardsJson)
-        insertCardsJsonIntoDb(simplifiedCardsJson)
+            val nextPageHandle = parseDiscoverCardsJsonUseCase.parseNextPageHandle(json)
+            appPrefsWrapper.readerCardsPageHandle = nextPageHandle
 
-        val nextPageHandle = parseDiscoverCardsJsonUseCase.parseNextPageHandle(json)
-        appPrefsWrapper.readerCardsPageHandle = nextPageHandle
+            if (cards.isEmpty()) {
+                readerTagTableWrapper.clearTagLastUpdated(ReaderTag.createDiscoverPostCardsTag())
+            } else {
+                readerTagTableWrapper.setTagLastUpdated(ReaderTag.createDiscoverPostCardsTag())
+            }
 
-        if (cards.isEmpty()) {
-            readerTagTableWrapper.clearTagLastUpdated(ReaderTag.createDiscoverPostCardsTag())
-        } else {
-            readerTagTableWrapper.setTagLastUpdated(ReaderTag.createDiscoverPostCardsTag())
+            resultListener.onUpdateResult(HAS_NEW)
         }
-
-        resultListener.onUpdateResult(HAS_NEW)
     }
 
     private fun parseCards(cardsJsonArray: JSONArray): ArrayList<ReaderDiscoverCard> {
