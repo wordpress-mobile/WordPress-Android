@@ -11,5 +11,10 @@
             android:name=".userflags.provider.UserFlagsProvider"
             android:authorities="${applicationId}.UserFlagsProvider"
             android:exported="true" />
+
+        <provider
+            android:name=".reader.savedposts.provider.ReaderSavedPostsProvider"
+            android:authorities="${applicationId}.ReaderSavedPostsProvider"
+            android:exported="true" />
     </application>
 </manifest>
