@@ -42,8 +42,8 @@ fun ErrorState(uiState: QRCodeAuthUiState.Error) = with(uiState) {
                         .padding(vertical = Margin.ExtraLarge.value)
                         .wrapContentSize()
         )
-        Title(text = uiStringText(title), modifier = Modifier)
-        Subtitle(text = uiStringText(subtitle), modifier = Modifier)
+        Title(text = uiStringText(title))
+        Subtitle(text = uiStringText(subtitle))
         primaryActionButton?.let { actionButton ->
             if (actionButton.isVisible) {
                 PrimaryButton(
