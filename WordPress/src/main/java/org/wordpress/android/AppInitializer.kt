@@ -768,6 +768,7 @@ class AppInitializer @Inject constructor(
          * 1. the app starts (but it's not opened by a service or a broadcast receiver, i.e. an activity is resumed)
          * 2. the app was in background and is now foreground
          */
+        @Suppress("DEPRECATION")
         fun onAppComesFromBackground() {
             readerTracker.setupTrackers()
             AppLog.i(T.UTILS, "App comes from background")

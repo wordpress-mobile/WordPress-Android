@@ -475,7 +475,7 @@ private fun buildZendeskTags(
  * could prove useful for the Happiness Engineers while debugging the users' issues.
  */
 private fun getNetworkInformation(context: Context): String {
-    val networkType = when (NetworkUtils.getActiveNetworkInfo(context)?.type) {
+    @Suppress("DEPRECATION") val networkType = when (NetworkUtils.getActiveNetworkInfo(context)?.type) {
         ConnectivityManager.TYPE_WIFI -> ZendeskConstants.networkWifi
         ConnectivityManager.TYPE_MOBILE -> ZendeskConstants.networkWWAN
         else -> ZendeskConstants.unknownValue
