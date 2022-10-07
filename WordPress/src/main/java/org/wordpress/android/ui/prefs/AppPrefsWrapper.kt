@@ -243,7 +243,8 @@ class AppPrefsWrapper @Inject constructor() {
 
     fun getIsFirstTryReaderSavedPostsJetpack(): Boolean = AppPrefs.getIsFirstTryReaderSavedPostsJetpack()
 
-    fun saveIsFirstTryReaderSavedPostsJetpack(isFirstTry: Boolean) = AppPrefs.saveIsFirstTryReaderSavedPostsJetpack(isFirstTry)
+    fun saveIsFirstTryReaderSavedPostsJetpack(isFirstTry: Boolean) =
+            AppPrefs.saveIsFirstTryReaderSavedPostsJetpack(isFirstTry)
 
     fun getAllPrefs(): Map<String, Any?> = AppPrefs.getAllPrefs()
 

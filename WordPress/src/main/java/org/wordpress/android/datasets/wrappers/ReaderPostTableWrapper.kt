@@ -30,5 +30,6 @@ class ReaderPostTableWrapper @Inject constructor() {
 
     fun getNumPostsWithTag(readerTag: ReaderTag): Int = ReaderPostTable.getNumPostsWithTag(readerTag)
 
-    fun addOrUpdatePosts(readerTag: ReaderTag, posts: ReaderPostList) = ReaderPostTable.addOrUpdatePosts(readerTag, posts)
+    fun addOrUpdatePosts(readerTag: ReaderTag, posts: ReaderPostList) =
+            ReaderPostTable.addOrUpdatePosts(readerTag, posts)
 }

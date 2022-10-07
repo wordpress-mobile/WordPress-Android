@@ -62,13 +62,15 @@ class ReaderSavedPostsResolver @Inject constructor(
     }
 
     private fun getReaderSavedPostsCursor(): Cursor? {
-        val savedPostsUriValue = "content://${wordPressPublicData.currentPackageId()}.${ReaderSavedPostsProvider::class.simpleName}"
+        val savedPostsUriValue =
+                "content://${wordPressPublicData.currentPackageId()}.${ReaderSavedPostsProvider::class.simpleName}"
         return contentResolverWrapper.queryUri(
                 contextProvider.getContext().contentResolver,
                 savedPostsUriValue
         )
     }
 
+    @Suppress("TooGenericExceptionCaught", "SwallowedException")
     private fun updateReaderSavedPosts(
         onSuccess: () -> Unit,
         onFailure: () -> Unit,
