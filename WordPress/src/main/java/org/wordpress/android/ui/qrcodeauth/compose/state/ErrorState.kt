@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -42,8 +43,8 @@ fun ErrorState(uiState: QRCodeAuthUiState.Error) = with(uiState) {
                         .padding(vertical = Margin.ExtraLarge.value)
                         .wrapContentSize()
         )
-        Title(text = uiStringText(title), modifier = Modifier)
-        Subtitle(text = uiStringText(subtitle), modifier = Modifier)
+        Title(text = uiStringText(title))
+        Subtitle(text = uiStringText(subtitle), color = MaterialTheme.colors.error)
         primaryActionButton?.let { actionButton ->
             if (actionButton.isVisible) {
                 PrimaryButton(

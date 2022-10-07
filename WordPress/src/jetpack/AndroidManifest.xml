@@ -37,6 +37,9 @@
                 <data
                     android:host="notifications"
                     android:scheme="jetpack" />
+                <data
+                    android:host="home"
+                    android:scheme="jetpack" />
             </intent-filter>
         </activity>
 
