@@ -201,6 +201,7 @@ class ReaderDiscoverLogic(
      * It for example copies only ids from post object as we don't need to store the gigantic post in the json
      * as it's already stored in the db.
      */
+    @Suppress("NestedBlockDepth")
     private fun createSimplifiedJson(cardsJsonArray: JSONArray): JSONArray {
         var index = 0
         val simplifiedJson = JSONArray()
@@ -208,9 +209,10 @@ class ReaderDiscoverLogic(
             val cardJson = cardsJsonArray.getJSONObject(i)
             when (cardJson.getString(JSON_CARD_TYPE)) {
                 JSON_CARD_RECOMMENDED_BLOGS -> {
-                    val recommendedBlogsCardJson = cardJson.optJSONArray(JSON_CARD_DATA)
-                    if (recommendedBlogsCardJson.length() > 0) {
-                        simplifiedJson.put(index++, createSimplifiedRecommendedBlogsCardJson(cardJson))
+                    cardJson.optJSONArray(JSON_CARD_DATA)?.let { recommendedBlogsCardJson ->
+                        if (recommendedBlogsCardJson.length() > 0) {
+                            simplifiedJson.put(index++, createSimplifiedRecommendedBlogsCardJson(cardJson))
+                        }
                     }
                 }
                 JSON_CARD_INTERESTS_YOU_MAY_LIKE -> {
@@ -242,6 +244,7 @@ class ReaderDiscoverLogic(
         return simplifiedCardJson
     }
 
+    @Suppress("NestedBlockDepth")
     private fun createSimplifiedRecommendedBlogsCardJson(originalCardJson: JSONObject): JSONObject {
         return JSONObject().apply {
             JSONArray().apply {

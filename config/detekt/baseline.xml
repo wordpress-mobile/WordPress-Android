@@ -177,7 +177,6 @@
     <ID>NestedBlockDepth:LoadStoryFromStoriesPrefsUseCase.kt$LoadStoryFromStoriesPrefsUseCase$private fun loadOrReCreateStoryFromStoriesPrefs(site: SiteModel, mediaIds: ArrayList&lt;String>): ReCreateStoryResult</ID>
     <ID>NestedBlockDepth:PublicizeErrorDialogFragment.kt$PublicizeErrorDialogFragment$override fun onCreateDialog(savedInstanceState: Bundle?): Dialog</ID>
     <ID>NestedBlockDepth:PublishNotificationReceiverViewModel.kt$PublishNotificationReceiverViewModel$fun loadNotification(notificationId: Int): NotificationUiModel?</ID>
-    <ID>NestedBlockDepth:ReaderDiscoverLogic.kt$ReaderDiscoverLogic$private fun createSimplifiedRecommendedBlogsCardJson(originalCardJson: JSONObject): JSONObject</ID>
     <ID>NestedBlockDepth:StoriesPrefs.kt$StoriesPrefs$private fun checkSlideOriginalBackgroundMediaExists(storyFrameItem: StoryFrameItem?): Boolean</ID>
     <ID>NestedBlockDepth:StoryComposerActivity.kt$StoryComposerActivity$override fun onStorySaveButtonPressed()</ID>
     <ID>NestedBlockDepth:StoryComposerActivity.kt$StoryComposerActivity$private fun buildStoryMediaFileDataListFromStoryFrameIndexes( storyIndex: StoryIndex ): ArrayList&lt;StoryMediaFileData></ID>
