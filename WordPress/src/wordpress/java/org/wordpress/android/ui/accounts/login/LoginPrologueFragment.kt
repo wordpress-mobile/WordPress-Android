@@ -38,6 +38,7 @@ class LoginPrologueFragment : Fragment(R.layout.login_signup_screen) {
         loginPrologueListener = context
     }
 
+    @Suppress("DEPRECATION")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
