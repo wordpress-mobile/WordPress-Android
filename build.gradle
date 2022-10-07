@@ -13,7 +13,7 @@ ext {
     wordPressUtilsVersion = '110-13b4f06680ed8c145cbd09d63c4998dfe8b3b9de'
     wordPressLoginVersion = '97-b298ffaad9478bd0025833a01ee411f6d4ae6795'
     aztecVersion = '1006-3fdbbc2086fb71d3750b01c013fa5cf6024c3142'
-    gutenbergMobileVersion = '5184-152479afa26caaaf279400f3e0736cdbe6b64eeb'
+    gutenbergMobileVersion = '5184-7abf58a254b16d41e744c3723ae9c6bb77cdd225'
     storiesVersion = '724-4adde12819f215a001b6781533fc24c77ea6bee1'
     aboutAutomatticVersion = '38-2bcffd6d0229b2b5221052cbe4c3efef15038177'
 
