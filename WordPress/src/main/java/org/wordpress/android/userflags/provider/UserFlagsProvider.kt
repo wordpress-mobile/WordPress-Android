@@ -9,17 +9,15 @@ import org.wordpress.android.provider.query.QueryResult
 import org.wordpress.android.ui.prefs.AppPrefs.DeletablePrefKey
 import org.wordpress.android.ui.prefs.AppPrefs.UndeletablePrefKey
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
-import org.wordpress.android.util.publicdata.JetpackPublicData
+import org.wordpress.android.util.publicdata.ClientVerification
 import org.wordpress.android.util.signature.SignatureNotFoundException
-import org.wordpress.android.util.signature.SignatureUtils
 import javax.inject.Inject
 
 class UserFlagsProvider : QueryContentProvider() {
     @Inject lateinit var appPrefsWrapper: AppPrefsWrapper
     @Inject lateinit var siteStore: SiteStore
-    @Inject lateinit var signatureUtils: SignatureUtils
     @Inject lateinit var queryResult: QueryResult
-    @Inject lateinit var jetpackPublicData: JetpackPublicData
+    @Inject lateinit var clientVerification: ClientVerification
 
     private val userFlagsKeysSet: Set<String> = setOf(
             DeletablePrefKey.MAIN_PAGE_INDEX.name,
@@ -71,11 +69,7 @@ class UserFlagsProvider : QueryContentProvider() {
         inject()
         return context?.let {
             try {
-                val callerPackageId = callingPackage
-                val callerExpectedPackageId = jetpackPublicData.currentPackageId()
-                val callerSignatureHash = signatureUtils.getSignatureHash(it, callerExpectedPackageId)
-                val callerExpectedSignatureHash = jetpackPublicData.currentPublicKeyHash()
-                if (callerPackageId == callerExpectedPackageId && callerSignatureHash == callerExpectedSignatureHash) {
+                if (clientVerification.canTrust(callingPackage)) {
                     val userFlagsMap = appPrefsWrapper.getAllPrefs()
                             .filter { entry ->
                                 userFlagsKeysSet.contains(entry.key)

@@ -400,6 +400,9 @@
                 <data
                     android:host="notifications"
                     android:scheme="wordpress" />
+                <data
+                    android:host="home"
+                    android:scheme="wordpress" />
             </intent-filter>
 
             <intent-filter android:autoVerify="true">

@@ -2,7 +2,8 @@
 
 21.0
 -----
-
+* [*] Updates splash screen for Android 12+ [https://github.com/wordpress-mobile/WordPress-Android/pull/17273]
+* [*] Fix text color of success messages in the QR code login flow [https://github.com/wordpress-mobile/WordPress-Android/pull/17286]
 
 20.9
 -----

@@ -38,7 +38,7 @@ public class StatsTests extends BaseTest {
     }
 
     @Test
-    public void allDayStatsLoad() {
+    public void e2eAllDayStatsLoad() {
         StatsVisitsData todayVisits = new StatsVisitsData("97", "28", "14", "11");
         List<StatsKeyValueData> postsList = new StatsMocksReader().readDayTopPostsToList();
         List<StatsKeyValueData> referrersList = new StatsMocksReader().readDayTopReferrersToList();

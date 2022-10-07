@@ -13,6 +13,11 @@
             android:exported="true" />
 
         <provider
+            android:name=".bloggingreminders.provider.BloggingRemindersProvider"
+            android:authorities="${applicationId}.BloggingRemindersProvider"
+            android:exported="true" />
+
+        <provider
             android:name=".reader.savedposts.provider.ReaderSavedPostsProvider"
             android:authorities="${applicationId}.ReaderSavedPostsProvider"
             android:exported="true" />
