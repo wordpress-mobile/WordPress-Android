@@ -64,9 +64,9 @@ class FormattableContentClickHandler @Inject constructor(
                 showPostActivity(activity, siteId, id)
             COMMENT -> {
                 // Load the comment in the reader list if it exists, otherwise show a webview
-                val postId = clickedSpan.postId ?: clickedSpan.rootId ?: 0
-                if (ReaderUtils.postAndCommentExists(siteId, postId, id)) {
-                    showReaderCommentsList(activity, siteId, postId, id, ACTIVITY_LOG_DETAIL)
+                val rootId = clickedSpan.postId ?: clickedSpan.rootId ?: 0
+                if (ReaderUtils.postAndCommentExists(siteId, rootId, id)) {
+                    showReaderCommentsList(activity, siteId, rootId, id, ACTIVITY_LOG_DETAIL)
                 } else {
                     showWebViewActivityForUrl(activity, clickedSpan.url, rangeType)
                 }
