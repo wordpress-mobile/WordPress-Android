@@ -12,7 +12,7 @@ import javax.inject.Singleton
 @Singleton
 class AppConfig
 @Inject constructor(
-    private val remoteConfig: RemoteConfig,
+    private val remoteConfig: FeatureFlagConfig,
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val manualFeatureConfig: ManualFeatureConfig
 ) {

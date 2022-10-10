@@ -24,7 +24,7 @@ const val REMOTE_FLAG_PLATFORM_PARAMETER = "android"
 /**
  * Do not use this class outside of this package. Use [AppConfig] instead
  */
-class RemoteConfig
+class FeatureFlagConfig
 @Inject constructor(
     private val featureFlagStore: FeatureFlagsStore,
     private val context: Context,

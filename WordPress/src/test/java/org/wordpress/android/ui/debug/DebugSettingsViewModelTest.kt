@@ -22,13 +22,13 @@ import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiState
 import org.wordpress.android.ui.notifications.NotificationManagerWrapper
 import org.wordpress.android.util.DebugUtils
 import org.wordpress.android.util.config.ManualFeatureConfig
-import org.wordpress.android.util.config.RemoteConfig
+import org.wordpress.android.util.config.FeatureFlagConfig
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.workers.weeklyroundup.WeeklyRoundupNotifier
 
 class DebugSettingsViewModelTest : BaseUnitTest() {
     @Mock lateinit var manualFeatureConfig: ManualFeatureConfig
-    @Mock lateinit var remoteConfig: RemoteConfig
+    @Mock lateinit var remoteConfig: FeatureFlagConfig
     @Mock lateinit var debugUtils: DebugUtils
     @Mock lateinit var weeklyRoundupNotifier: WeeklyRoundupNotifier
     @Mock lateinit var notificationManager: NotificationManagerWrapper

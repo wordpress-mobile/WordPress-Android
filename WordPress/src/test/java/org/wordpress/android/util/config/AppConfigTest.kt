@@ -16,7 +16,7 @@ import org.wordpress.android.util.config.ExperimentConfig.Variant
 
 @RunWith(MockitoJUnitRunner::class)
 class AppConfigTest {
-    @Mock lateinit var remoteConfig: RemoteConfig
+    @Mock lateinit var remoteConfig: FeatureFlagConfig
     @Mock lateinit var analyticsTracker: AnalyticsTrackerWrapper
     @Mock lateinit var experimentConfig: ExperimentConfig
     @Mock lateinit var manualFeatureConfig: ManualFeatureConfig

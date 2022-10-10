@@ -25,7 +25,7 @@ import org.wordpress.android.ui.utils.ListItemInteraction.Companion.create
 import org.wordpress.android.util.DebugUtils
 import org.wordpress.android.util.config.FeaturesInDevelopment
 import org.wordpress.android.util.config.ManualFeatureConfig
-import org.wordpress.android.util.config.RemoteConfig
+import org.wordpress.android.util.config.FeatureFlagConfig
 import org.wordpress.android.util.config.RemoteConfigDefaults
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.Event
@@ -39,7 +39,7 @@ class DebugSettingsViewModel
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val manualFeatureConfig: ManualFeatureConfig,
-    private val remoteConfig: RemoteConfig,
+    private val remoteConfig: FeatureFlagConfig,
     private val debugUtils: DebugUtils,
     private val weeklyRoundupNotifier: WeeklyRoundupNotifier,
     private val notificationManager: NotificationManagerWrapper,

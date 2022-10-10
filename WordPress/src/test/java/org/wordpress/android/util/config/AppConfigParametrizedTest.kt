@@ -19,7 +19,7 @@ import org.wordpress.android.util.config.AppConfig.FeatureState.StaticValue
 class AppConfigParametrizedTest(
     private val params: Params
 ) {
-    private val remoteConfig: RemoteConfig = mock()
+    private val remoteConfig: FeatureFlagConfig = mock()
     private val analyticsTracker: AnalyticsTrackerWrapper = mock()
     private val featureConfig: FeatureConfig = mock()
     private val manualFeatureConfig: ManualFeatureConfig = mock()
