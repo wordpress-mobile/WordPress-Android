@@ -314,6 +314,7 @@ class StoriesEventListener @Inject constructor(
         return reCreateStoryResult.noSlidesLoaded
     }
 
+    @Suppress("UNCHECKED_CAST")
     fun onCancelUploadForMediaCollection(mediaFiles: ArrayList<Any>) {
         // just cancel upload for each media
         for (mediaFile in mediaFiles) {
@@ -326,6 +327,7 @@ class StoriesEventListener @Inject constructor(
         }
     }
 
+    @Suppress("UNCHECKED_CAST")
     fun onRetryUploadForMediaCollection(
         activity: Activity,
         mediaFiles: ArrayList<Any>,
