@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-09-23 20:20:36+0000
+Translation-Revision-Date: 2022-10-04 18:17:57+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.3
 Language: cs_CZ
@@ -1653,6 +1653,9 @@ Language: cs_CZ
     <string name="stats_insights_popular">Nejoblíbenější čas</string>
     <string name="stats_select_previous_period_description">Vyberte předchozí období</string>
     <string name="stats_select_next_period_description">Vyberte další období</string>
+    <string name="stats_traffic_change">%1$s (%2$s)</string>
+    <string name="stats_traffic_increase">+%1$s (%2$s)</string>
+    <string name="stats_most_popular_percent_views">%1$s shlédnutí</string>
     <string name="notification_new_site_creation_title">Vytvořit stránku</string>
     <string name="new_site_creation_create_site_button">Vytvořit stránku</string>
     <string name="new_site_creation_clear_all_content_description">Vyčistit</string>

@@ -56,7 +56,7 @@ public class EditorTests extends BaseTest {
     // For more info see Issue: https://github.com/wordpress-mobile/WordPress-Android/issues/14389
     @Ignore("Classic Editor being deprecated for new posts, test should be adjusted to editing existing classic post")
     @Test
-    public void testPublishSimplePost() {
+    public void e2ePublishSimplePostClassic() {
         String title = "Hello Espresso!";
         String content = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
 
@@ -70,7 +70,7 @@ public class EditorTests extends BaseTest {
     // For more info see Issue: https://github.com/wordpress-mobile/WordPress-Android/issues/14389
     @Ignore("Classic Editor being deprecated for new posts, test should be adjusted to editing existing classic post")
     @Test
-    public void testPublishFullPost() {
+    public void e2ePublishFullPostClassic() {
         String title = "Hello Espresso!";
         String content = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod "
                          + "tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud "

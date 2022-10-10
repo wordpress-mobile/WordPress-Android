@@ -207,6 +207,7 @@ public class HistoryDetailContainerFragment extends Fragment {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         showHistoryTimeStampInToolbar();

@@ -508,7 +508,6 @@ Language: pt_BR
     <string name="blogging_reminders_notification_title">Está na hora de publicar em %s</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios">Edição de blocos reutilizáveis ainda não é suportado no WordPress para iOS</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and">Edição de blocos reutilizáveis ainda não é suportado no WordPress para Android</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">Como alternativa, você pode desanexar e editar os blocos separadamente tocando em \"Converter para blocos normais\".</string>
     <string name="blogging_reminders_done">Concluído</string>
     <string name="blogging_reminders_notify_me">Avise-me!</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;Insira suas credenciais do servidor&lt;/a&gt; para ativar a restauração de site pelos backups em um clique.</string>

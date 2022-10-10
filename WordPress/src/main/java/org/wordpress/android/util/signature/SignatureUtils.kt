@@ -39,7 +39,7 @@ class SignatureUtils @Inject constructor(
         throw SignatureNotFoundException()
     }
 
-    @Suppress("TooGenericExceptionCaught", "SwallowedException")
+    @Suppress("DEPRECATION", "TooGenericExceptionCaught", "SwallowedException")
     private fun checkSignatureHashBeforeBeforeApi28(
         trustedPackageId: String,
         trustedSignatureHash: String

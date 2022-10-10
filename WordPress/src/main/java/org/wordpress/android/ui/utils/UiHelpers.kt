@@ -98,6 +98,7 @@ class UiHelpers @Inject constructor() {
     }
 
     companion object {
+        @Suppress("DEPRECATION")
         fun adjustDialogSize(dialog: Dialog) {
             val window = requireNotNull(dialog.window)
             val size = Point()

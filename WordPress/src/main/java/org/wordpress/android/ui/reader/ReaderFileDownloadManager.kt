@@ -23,6 +23,7 @@ class ReaderFileDownloadManager
         }
     }
 
+    @Suppress("DEPRECATION")
     fun downloadFile(fileUrl: String) {
         val request = downloadManager.buildRequest(fileUrl)
 

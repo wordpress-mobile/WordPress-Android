@@ -102,7 +102,6 @@ class QRCodeAuthViewModelTest : BaseUnitTest() {
         runBlockingTestWithData(uiStates) {
             viewModel.start()
 
-            assert(uiStates.first().loadingVisibility)
             assertThat(uiStates.last()).isInstanceOf(QRCodeAuthUiState.Scanning::class.java)
         }
     }
@@ -113,7 +112,6 @@ class QRCodeAuthViewModelTest : BaseUnitTest() {
         runBlockingTestWithData(uiStates) {
             initAndStartVMForState(NO_INTERNET)
 
-            assert(uiStates.first().loadingVisibility)
             assertThat(uiStates.last().type).isEqualTo(NO_INTERNET)
         }
     }

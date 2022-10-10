@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-09-26 14:54:09+0000
+Translation-Revision-Date: 2022-10-01 15:00:40+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: it
@@ -134,7 +134,7 @@ Language: it
     <string name="stats_view_total_followers">Follower totali</string>
     <string name="stats_view_total_comments">Commenti totali</string>
     <string name="stats_view_total_likes">Mi piace totali</string>
-    <string name="blogging_prompts_notification_dismiss">Ignora</string>
+    <string name="blogging_prompts_notification_dismiss">Chiudi</string>
     <string name="blogging_prompts_answer_prompt_notification_answer_action">Risposta</string>
     <string name="blogging_prompts_answer_prompt_notification_title">Richiesta giornaliera</string>
     <string name="blogging_prompts_onboarding_got_it">OK</string>
@@ -508,7 +508,6 @@ Language: it
     <string name="blogging_reminders_notification_title">È ora di pubblicare sul blog di %s</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios">La modifica dei blocchi riutilizzabili non è ancora supportata su WordPress per iOS</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and">La modifica dei blocchi riutilizzabili non è ancora supportata su WordPress per Android</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">In alternativa, puoi staccare e modificare questi blocchi separatamente toccando \"Converti in blocchi regolari\".</string>
     <string name="blogging_reminders_done">Fatto</string>
     <string name="blogging_reminders_notify_me">Inviami una notifica</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;Inserisci le credenziali del server&lt;/a&gt; per abilitare i ripristini del sito con un clic dai backup.</string>

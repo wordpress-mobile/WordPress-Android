@@ -267,7 +267,7 @@ class PostListViewModel @Inject constructor(
         connectionStatus.observe(lifecycleOwner, Observer {
             retryOnConnectionAvailableAfterRefreshError()
         })
-        lifecycleOwner.lifecycleRegistry.markState(Lifecycle.State.CREATED)
+        lifecycleOwner.lifecycleRegistry.currentState = Lifecycle.State.CREATED
     }
 
     fun search(query: String?, delay: Long = SEARCH_DELAY_MS) {

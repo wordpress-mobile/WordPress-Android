@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-09-21 07:55:50+0000
+Translation-Revision-Date: 2022-10-04 15:47:46+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: gl_ES
 -->
 <resources>
+    <string name="my_site_blogging_prompt_card_number_of_answers_one">1 resposta</string>
+    <string name="login_prologue_revamped_content_description_wordpress_icon">Icona de WordPress</string>
+    <string name="login_prologue_revamped_tagline">Escribe, edita e publica desde calquera parte.</string>
     <string name="error_fetch_authors_list">Non se puideron recuperar os autores</string>
     <string name="post_settings_author">Autor</string>
     <string name="app_rating_title">Estás gozando de %s?</string>
@@ -250,6 +253,7 @@ Language: gl_ES
     <string name="my_site_blogging_prompt_card_menu_remove">Quitar do escritorio</string>
     <string name="my_site_blogging_prompt_card_menu_skip">Omitir este estímulo</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">Ver máis estímulos</string>
+    <string name="my_site_blogging_prompt_card_number_of_answers_other">%d respostas</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">Comparte o estímulo de bloguear</string>
     <string name="my_site_blogging_prompt_card_answered_prompt">✓ Respondido</string>
     <string name="my_site_blogging_prompt_card_answer_prompt">Responder estímulo</string>
@@ -562,6 +566,7 @@ Language: gl_ES
     <string name="gutenberg_native_move_image_forward">Mover a imaxe cara diante</string>
     <string name="gutenberg_native_move_image_backward">Mover a imaxe cara atrás</string>
     <string name="gutenberg_native_width_settings">Axustes de anchura</string>
+    <string name="gutenberg_native_link_rel">«rel» da ligazón</string>
     <string name="gutenberg_native_column_settings">Axustes de columna</string>
     <string name="user_profile_untitled_site">(Sen título)</string>
     <string name="user_profile_site_section_header">Sitio</string>
@@ -1776,7 +1781,10 @@ Language: gl_ES
     <string name="notification_channel_reminder_title">Recordatorio</string>
     <string name="stats_select_next_period_description">Elixe o seguinte período</string>
     <string name="stats_select_previous_period_description">Elixe o período anterior</string>
+    <string name="stats_most_popular_percent_views">%1$s de vistas</string>
     <string name="stats_insights_popular">Hora máis popular</string>
+    <string name="stats_traffic_change">%1$s (%2$s)</string>
+    <string name="stats_traffic_increase">+%1$s (%2$s)</string>
     <string name="new_site_creation_site_preview_content_description">Mostrando a vista previa</string>
     <string name="new_site_creation_clear_all_content_description">Baleirar</string>
     <string name="site_created_but_not_fetched_snackbar_message">Parece que tes unha conexión lenta. Se non ves o teu novo sitio na lista, inténtao actualizando.</string>

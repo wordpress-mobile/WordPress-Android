@@ -11,7 +11,6 @@ Language: tr
     <string name="me_disconnect_from_wordpress_com">Jetpack oturumunu kapat</string>
     <string name="support_ticket_subject">Android için Jetpack Desteği</string>
     <string name="login_magic_links_sent_label">Bu cihazda e-postanızı kontrol edin ve Jetpack.com’dan gelen e-postadaki bağlantıya dokunun.</string>
-    <string name="continue_with_wpcom_no_signup">WordPress.com Oturumu Aç</string>
     <string name="app_tagline">Cebinizden site güvenliği ve performansı</string>
     <string name="post_signup_interstitial_title">Jetpack\'e Hoş Geldiniz</string>
     <string name="app_title">Android için Jetpack</string>

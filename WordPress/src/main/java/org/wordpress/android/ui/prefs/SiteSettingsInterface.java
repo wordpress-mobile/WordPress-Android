@@ -3,12 +3,12 @@ package org.wordpress.android.ui.prefs;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Handler;
-import android.text.Html;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.collection.SparseArrayCompat;
+import androidx.core.text.HtmlCompat;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -285,7 +285,10 @@ public abstract class SiteSettingsInterface {
         SparseArrayCompat<String> categoryNames = new SparseArrayCompat<>();
         if (mSettings.categories != null && mSettings.categories.length > 0) {
             for (CategoryModel model : mSettings.categories) {
-                categoryNames.put(model.id, Html.fromHtml(model.name).toString());
+                categoryNames.put(
+                        model.id,
+                        HtmlCompat.fromHtml(model.name, HtmlCompat.FROM_HTML_MODE_LEGACY).toString()
+                );
             }
         }
 
@@ -299,7 +302,7 @@ public abstract class SiteSettingsInterface {
     public @NonNull String getDefaultCategoryForDisplay() {
         for (CategoryModel model : getCategories()) {
             if (model != null && model.id == getDefaultCategory()) {
-                return Html.fromHtml(model.name).toString();
+                return HtmlCompat.fromHtml(model.name, HtmlCompat.FROM_HTML_MODE_LEGACY).toString();
             }
         }
 
