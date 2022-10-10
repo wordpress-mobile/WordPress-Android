@@ -37,7 +37,7 @@ class JetpackRemoteInstallFragment : Fragment(R.layout.jetpack_remote_install_fr
     }
 
     private fun initDagger() {
-        (requireActivity().application as WordPress).component()!!.inject(this)
+        (requireActivity().application as WordPress).component().inject(this)
     }
 
     private fun JetpackRemoteInstallFragmentBinding.initViewModel(savedInstanceState: Bundle?) {
