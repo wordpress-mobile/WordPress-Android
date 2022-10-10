@@ -22,11 +22,6 @@ import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType.TAG_FOLLOW
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderRecommendedBlogsCardUiState.ReaderRecommendedBlogUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderWelcomeBannerCardUiState
-import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ContentUiState
-import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.EmptyUiState.RequestFailedUiState
-import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.EmptyUiState.ShowNoFollowedTagsUiState
-import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.EmptyUiState.ShowNoPostsUiState
-import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.LoadingUiState
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBlogPreview
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostsByTag
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReaderSubs
@@ -116,7 +111,7 @@ class ReaderDiscoverViewModel @Inject constructor(
 
     private fun init() {
         // Start with loading state
-        _uiState.value = LoadingUiState
+        _uiState.value = DiscoverUiState.LoadingUiState
 
         readerPostCardActionsHandler.initScope(viewModelScope)
 
@@ -128,10 +123,12 @@ class ReaderDiscoverViewModel @Inject constructor(
             launch {
                 val userTags = getFollowedTagsUseCase.get()
                 if (userTags.isEmpty()) {
-                    _uiState.value = ShowNoFollowedTagsUiState { parentViewModel.onShowReaderInterests() }
+                    _uiState.value = DiscoverUiState.EmptyUiState.ShowNoFollowedTagsUiState {
+                        parentViewModel.onShowReaderInterests()
+                    }
                 } else {
                     if (posts != null && posts.cards.isNotEmpty()) {
-                        _uiState.value = ContentUiState(
+                        _uiState.value = DiscoverUiState.ContentUiState(
                                 convertCardsToUiStates(posts),
                                 reloadProgressVisibility = false,
                                 loadMoreProgressVisibility = false,
@@ -139,7 +136,7 @@ class ReaderDiscoverViewModel @Inject constructor(
                         )
                         swipeToRefreshTriggered = false
                     } else {
-                        _uiState.value = ShowNoPostsUiState {
+                        _uiState.value = DiscoverUiState.EmptyUiState.ShowNoPostsUiState {
                             _navigationEvents.value = Event(ShowReaderSubs)
                         }
                     }
@@ -221,7 +218,7 @@ class ReaderDiscoverViewModel @Inject constructor(
 
     private fun handleStartedEvent(it: ReaderDiscoverCommunication) {
         uiState.value.let { state ->
-            if (state is ContentUiState) {
+            if (state is DiscoverUiState.ContentUiState) {
                 when (it.task) {
                     REQUEST_FIRST_PAGE -> {
                         _uiState.value = state.copy(reloadProgressVisibility = true)
@@ -231,7 +228,7 @@ class ReaderDiscoverViewModel @Inject constructor(
                     }
                 }
             } else {
-                _uiState.value = LoadingUiState
+                _uiState.value = DiscoverUiState.LoadingUiState
             }
         }
     }
@@ -239,11 +236,11 @@ class ReaderDiscoverViewModel @Inject constructor(
     private fun handleErrorEvent() {
         _uiState.value?.let { uiState ->
             when (uiState) {
-                is LoadingUiState -> {
+                is DiscoverUiState.LoadingUiState -> {
                     // show fullscreen error
-                    _uiState.value = RequestFailedUiState { onRetryButtonClick() }
+                    _uiState.value = DiscoverUiState.EmptyUiState.RequestFailedUiState { onRetryButtonClick() }
                 }
-                is ContentUiState -> {
+                is DiscoverUiState.ContentUiState -> {
                     _uiState.value = uiState.copy(
                             reloadProgressVisibility = false,
                             loadMoreProgressVisibility = false
@@ -257,6 +254,9 @@ class ReaderDiscoverViewModel @Inject constructor(
                             )
                     )
                 }
+                is DiscoverUiState.EmptyUiState.RequestFailedUiState -> Unit // Do nothing
+                is DiscoverUiState.EmptyUiState.ShowNoFollowedTagsUiState -> Unit // Do nothing
+                is DiscoverUiState.EmptyUiState.ShowNoPostsUiState -> Unit // Do nothing
             }
         }
     }
@@ -357,7 +357,7 @@ class ReaderDiscoverViewModel @Inject constructor(
     }
 
     private fun initiateLoadMoreIfNecessary(item: ReaderCardUiState) {
-        (uiState.value as? ContentUiState)?.cards?.let {
+        (uiState.value as? DiscoverUiState.ContentUiState)?.cards?.let {
             val closeToEndIndex = it.size - INITIATE_LOAD_MORE_OFFSET
             if (closeToEndIndex > 0) {
                 val isCardCloseToEnd: Boolean = it.getOrNull(closeToEndIndex) == item
@@ -399,7 +399,7 @@ class ReaderDiscoverViewModel @Inject constructor(
     }
 
     private fun replaceUiStateItem(before: ReaderPostUiState, after: ReaderPostUiState) {
-        (_uiState.value as? ContentUiState)?.let {
+        (_uiState.value as? DiscoverUiState.ContentUiState)?.let {
             val updatedList = it.cards.toMutableList()
             val index = it.cards.indexOf(before)
             if (index != -1) {

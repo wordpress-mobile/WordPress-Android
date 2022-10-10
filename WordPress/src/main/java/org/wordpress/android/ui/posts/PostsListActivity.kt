@@ -261,9 +261,10 @@ class PostsListActivity : LocaleAwareActivity(),
             when (createAction) {
                 ActionType.CREATE_NEW_POST -> viewModel.newPost()
                 ActionType.CREATE_NEW_STORY -> viewModel.newStoryPost()
-                ActionType.CREATE_NEW_PAGE -> Unit
-                ActionType.NO_ACTION -> Unit
-                null -> Unit
+                ActionType.CREATE_NEW_PAGE -> Unit // Do nothing
+                ActionType.NO_ACTION -> Unit // Do nothing
+                ActionType.ANSWER_BLOGGING_PROMPT -> Unit // Do nothing
+                null -> Unit // Do nothing
             }
         })
 
