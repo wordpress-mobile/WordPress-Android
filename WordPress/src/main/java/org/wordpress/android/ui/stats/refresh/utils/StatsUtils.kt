@@ -173,7 +173,7 @@ class StatsUtils
         entries: List<Line>
     ): List<String> {
         val contentDescriptions = mutableListOf<String>()
-        entries.forEachIndexed { index, bar ->
+        entries.forEachIndexed { _, bar ->
             val contentDescription = resourceProvider.getString(
                     R.string.stats_bar_chart_accessibility_entry,
                     bar.label,

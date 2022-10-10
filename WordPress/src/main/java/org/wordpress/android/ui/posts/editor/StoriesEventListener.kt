@@ -293,7 +293,7 @@ class StoriesEventListener @Inject constructor(
                 )
                 builder.setTitle(activity.getString(R.string.dialog_edit_story_unavailable_title))
                 builder.setMessage(activity.getString(R.string.dialog_edit_story_unavailable_message))
-                builder.setPositiveButton(R.string.dialog_button_ok) { dialog, id ->
+                builder.setPositiveButton(R.string.dialog_button_ok) { dialog, _ ->
                     dialog.dismiss()
                 }
                 val dialog = builder.create()
@@ -305,7 +305,7 @@ class StoriesEventListener @Inject constructor(
                 )
                 builder.setTitle(activity.getString(R.string.dialog_edit_story_unrecoverable_title))
                 builder.setMessage(activity.getString(R.string.dialog_edit_story_unrecoverable_message))
-                builder.setPositiveButton(R.string.dialog_button_ok) { dialog, id -> dialog.dismiss() }
+                builder.setPositiveButton(R.string.dialog_button_ok) { dialog, _ -> dialog.dismiss() }
                 val dialog = builder.create()
                 dialog.show()
             }
@@ -348,7 +348,7 @@ class StoriesEventListener @Inject constructor(
                             activity
                     )
                     builder.setTitle(activity.getString(R.string.cannot_retry_deleted_media_item_fatal))
-                    builder.setPositiveButton(R.string.ok) { dialog, id -> dialog.dismiss() }
+                    builder.setPositiveButton(R.string.ok) { dialog, _ -> dialog.dismiss() }
                     val dialog = builder.create()
                     dialog.show()
                     return
