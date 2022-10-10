@@ -39,7 +39,7 @@ public class BlockEditorTests extends BaseTest {
                        + "<!-- /wp:image --></div>\n";
 
     @Test
-    public void publishSimplePost() {
+    public void e2ePublishSimplePost() {
         String title = "publishSimplePost";
 
         new MySitesPage()
@@ -55,7 +55,7 @@ public class BlockEditorTests extends BaseTest {
     }
 
     @Test
-    public void publishFullPost() {
+    public void e2ePublishFullPost() {
         String title = "publishFullPost";
 
         new MySitesPage()
@@ -75,7 +75,7 @@ public class BlockEditorTests extends BaseTest {
     }
 
     @Test
-    public void blockEditorCanDisplayElementAddedInHtmlMode() {
+    public void e2eBlockEditorCanDisplayElementAddedInHtmlMode() {
         String title = "blockEditorCanDisplayElementAddedInHtmlMode";
 
         new MySitesPage()

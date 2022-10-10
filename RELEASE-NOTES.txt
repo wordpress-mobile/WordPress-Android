@@ -3,6 +3,8 @@
 21.0
 -----
 * [***] Updated About screen for WordPress and Jetpack apps to their respective urls. [https://github.com/wordpress-mobile/WordPress-Android/pull/17282]
+* [*] Updates splash screen for Android 12+ [https://github.com/wordpress-mobile/WordPress-Android/pull/17273]
+* [*] Fix text color of success messages in the QR code login flow [https://github.com/wordpress-mobile/WordPress-Android/pull/17286]
 
 20.9
 -----

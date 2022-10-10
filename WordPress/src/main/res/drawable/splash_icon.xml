@@ -1,0 +1,4 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:top="64dp" android:left="64dp" android:right="64dp" android:bottom="64dp"
+        android:drawable="@drawable/ic_splash"/>
+</layer-list>
