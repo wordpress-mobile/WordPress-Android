@@ -2,7 +2,6 @@ package org.wordpress.android.ui.mediapicker.loader
 
 import android.content.ContentResolver
 import android.content.Context
-import android.database.Cursor
 import android.net.Uri
 import android.os.Build.VERSION
 import android.os.Build.VERSION_CODES
@@ -42,7 +41,6 @@ class DeviceMediaLoader
         }
         val result = mutableListOf<DeviceMediaItem>()
         val projection = arrayOf(ID_COL, ID_DATE_MODIFIED, ID_TITLE)
-        var cursor: Cursor? = null
         val dateCondition = if (limitDate != null && limitDate != 0L) {
             "$ID_DATE_MODIFIED <= \'$limitDate\'"
         } else {
@@ -55,11 +53,8 @@ class DeviceMediaLoader
             dateCondition ?: filterCondition
         }
 
-        cursor = getCursor(condition, pageSize, baseUri, projection)
+        val cursor = getCursor(condition, pageSize, baseUri, projection) ?: return DeviceMediaList(listOf(), null)
 
-        if (cursor == null) {
-            return DeviceMediaList(listOf(), null)
-        }
         try {
             val idIndex = cursor.getColumnIndexOrThrow(ID_COL)
             val dateIndex = cursor.getColumnIndexOrThrow(ID_DATE_MODIFIED)
