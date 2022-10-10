@@ -13,6 +13,7 @@ import com.automattic.about.model.LegalConfig
 import com.automattic.about.model.RateUsConfig
 import com.automattic.about.model.ShareConfig
 import com.automattic.about.model.SocialsConfig
+import com.automattic.about.model.WorkWithUsConfig
 import org.wordpress.android.Constants
 import org.wordpress.android.R
 import org.wordpress.android.models.recommend.RecommendApiCallsProvider
@@ -61,6 +62,11 @@ class UnifiedAboutViewModel @Inject constructor(
                     acknowledgementsUrl = LICENSES_FILE_URL
             ),
             automatticConfig = AutomatticConfig(isVisible = buildConfig.isJetpackApp),
+            workWithUsConfig = WorkWithUsConfig(
+                    title =  workWithUsTitle(),
+                    subtitle = workWithUsSubTitle(),
+                    url = if (buildConfig.isJetpackApp) JP_WORK_WITH_US_URL else WP_CONTRIBUTE_URL
+            ),
             aboutFooterConfig = AboutFooterConfig(isVisible = buildConfig.isJetpackApp),
             analyticsConfig = AnalyticsConfig(
                     trackScreenShown = unifiedAboutTracker::trackScreenShown,
@@ -94,6 +100,18 @@ class UnifiedAboutViewModel @Inject constructor(
         _onNavigation.postValue(Event(OpenBlog(if (buildConfig.isJetpackApp) JP_BLOG_URL else WP_BLOG_URL)))
     }
 
+    private fun workWithUsTitle() = if (buildConfig.isJetpackApp) {
+        contextProvider.getContext().getString(R.string.about_automattic_work_with_us_item_title)
+    } else {
+        contextProvider.getContext().getString(R.string.about_automattic_contribute_item_title)
+    }
+
+    private fun workWithUsSubTitle() = if (buildConfig.isJetpackApp) {
+        contextProvider.getContext().getString(R.string.about_automattic_work_with_us_item_subtitle)
+    } else {
+        null
+    }
+
     companion object {
         private const val BLOG_ITEM_NAME = "blog"
         private const val LICENSES_FILE_URL = "file:///android_asset/licenses.html"
@@ -101,9 +119,11 @@ class UnifiedAboutViewModel @Inject constructor(
         private const val WP_SOCIAL_HANDLE = "wordpress"
         private const val WP_APPS_URL = "https://apps.wordpress.com"
         private const val WP_BLOG_URL = "https://blog.wordpress.com"
+        private const val WP_CONTRIBUTE_URL = "https://make.wordpress.org/mobile/handbook/"
 
         private const val JP_SOCIAL_HANDLE = "jetpack"
         private const val JP_APPS_URL = "https://jetpack.com/app"
         private const val JP_BLOG_URL = "https://jetpack.com/blog"
+        private const val JP_WORK_WITH_US_URL = "https://automattic.com/work-with-us/"
     }
 }
