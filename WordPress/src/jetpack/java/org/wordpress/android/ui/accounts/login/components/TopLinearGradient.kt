@@ -1,16 +1,19 @@
 package org.wordpress.android.ui.accounts.login.components
 
+import android.content.res.Configuration
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.tooling.preview.Devices
+import androidx.compose.ui.tooling.preview.Preview
 import org.wordpress.android.R.drawable
 import org.wordpress.android.R.string
+import org.wordpress.android.ui.compose.theme.AppTheme
 
 @Composable
 fun TopLinearGradient(modifier: Modifier = Modifier) {
@@ -20,6 +23,15 @@ fun TopLinearGradient(modifier: Modifier = Modifier) {
             contentScale = ContentScale.FillBounds,
             modifier = modifier
                     .fillMaxWidth()
-                    .height(height = 292.dp)
+                    .fillMaxHeight(0.62f)
     )
+}
+
+@Preview(device = Devices.PIXEL_4_XL)
+@Preview(device = Devices.PIXEL_4_XL, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun PreviewTopLinearGradient() {
+    AppTheme {
+        TopLinearGradient()
+    }
 }
