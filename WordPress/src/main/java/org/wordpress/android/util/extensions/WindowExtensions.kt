@@ -7,6 +7,7 @@ import android.view.View.SYSTEM_UI_FLAG_LAYOUT_STABLE
 import android.view.View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
 import android.view.View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
 import android.view.Window
+import android.view.WindowManager.LayoutParams
 import androidx.core.content.ContextCompat
 import org.wordpress.android.R
 
@@ -39,6 +40,20 @@ fun Window.setLightNavigationBar(showInLightMode: Boolean, applyDefaultColors: B
             } else {
                 ContextCompat.getColor(context, android.R.color.black)
             }
+        }
+    }
+}
+
+fun Window.setTransparentSystemBars(isTransparent: Boolean) {
+    if (isTransparent) {
+        when (VERSION.SDK_INT >= VERSION_CODES.R) {
+            true -> setDecorFitsSystemWindows(false)
+            false -> addFlags(LayoutParams.FLAG_LAYOUT_NO_LIMITS)
+        }
+    } else {
+        when (VERSION.SDK_INT >= VERSION_CODES.R) {
+            true -> setDecorFitsSystemWindows(true)
+            false -> clearFlags(LayoutParams.FLAG_LAYOUT_NO_LIMITS)
         }
     }
 }
