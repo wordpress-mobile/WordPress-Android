@@ -949,7 +949,10 @@ public final class AnalyticsTracker {
         JETPACK_POWERED_BOTTOM_SHEET_CONTINUE_TAPPED,
         SHARED_LOGIN_START,
         SHARED_LOGIN_SUCCESS,
-        SHARED_LOGIN_FAILED
+        SHARED_LOGIN_FAILED,
+        USER_FLAGS_START,
+        USER_FLAGS_SUCCESS,
+        USER_FLAGS_FAILED
     }
 
     private static final List<Tracker> TRACKERS = new ArrayList<>();

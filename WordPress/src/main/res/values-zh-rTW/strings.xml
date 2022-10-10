@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-09-13 14:54:09+0000
+Translation-Revision-Date: 2022-09-30 20:52:44+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.3
 Language: zh_TW
 -->
 <resources>
+    <string name="error_fetch_authors_list">無法擷取作者</string>
+    <string name="post_settings_author">作者</string>
     <string name="app_rating_title">喜歡 %s 嗎？</string>
     <string name="connection_service_label">將文章分享到 %s</string>
     <string name="connections_label">Jetpack Social 連結</string>
@@ -506,7 +508,6 @@ Language: zh_TW
     <string name="blogging_reminders_notification_title">該在 %s 新增網誌內容了</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios">iOS 版 WordPress 尚不支援編輯可重複使用區塊</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and">Android 版 WordPress 尚不支援編輯可重複使用區塊</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">你可以改為點選「轉換為一般區塊」，然後分別移除並編輯這些區塊。</string>
     <string name="blogging_reminders_done">完成</string>
     <string name="blogging_reminders_notify_me">通知我</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;輸入你的伺服器憑證&lt;/a&gt;，以啟用從備份一鍵還原網站的功能。</string>
@@ -2302,7 +2303,7 @@ Language: zh_TW
     <string name="delete_yes">刪除</string>
     <string name="plugin_external_link_icon_content_description">外部連結</string>
     <string name="plugin_icon_content_description">外掛程式圖示</string>
-    <string name="plugin_home_page">外掛程式首頁</string>
+    <string name="plugin_home_page">外掛首頁</string>
     <string name="wordpress_dot_org_plugin_page">WordPress.org 外掛程式頁面</string>
     <string name="plugin_remove_dialog_message">確定要將 %1$s 從 %2$s 移除？\n\n這將會停用外掛程式，並刪除所有相關的檔案及資料。</string>
     <string name="plugin_remove_dialog_title">移除外掛程式</string>

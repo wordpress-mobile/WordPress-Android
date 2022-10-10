@@ -1,4 +1,0 @@
-20.7:
-Vi kan se klart nu – kontrollerna för förhandsgranskning av media (t.ex. Tillbaka-knappen) är nu synliga i både ljust och mörkt läge.
-
-Skärmen Inloggningskod i temat Compose har också fått bättre färgkontrast för att göra texten lättare att läsa. Snyggt.

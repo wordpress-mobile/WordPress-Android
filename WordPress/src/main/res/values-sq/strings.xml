@@ -1,11 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-09-12 10:43:51+0000
+Translation-Revision-Date: 2022-10-01 10:08:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: sq_AL
 -->
 <resources>
+    <string name="error_fetch_authors_list">S’u morën dot autorë</string>
+    <string name="post_settings_author">Autor</string>
+    <string name="app_rating_title">Ju pëlqen %s?</string>
+    <string name="connection_service_label">Ndajeni postimin me të tjerë në %s</string>
+    <string name="connections_label">Lidhje Jetpack Social</string>
+    <string name="stats_widget_log_in_to_add_message">Ju lutemi, që të shtoni një &lt;em&gt;widget&lt;/em&gt;, bëni hyrjen te aplikacioni Jetpack.</string>
+    <string name="stats_view_publicize">Lidhje Jetpack Social</string>
+    <string name="login_magic_links_email_sent">Sapo dërguam një lidhje magjike te</string>
+    <string name="login_magic_links_sent_label_short">Shihni email-in tuaj në këtë pajisje!</string>
+    <string name="or_use_password">Përdorni fjalëkalimin për hyrje</string>
+    <string name="wp_jetpack_powered_notifications_powered_by_jetpack_caption">Jini gjithnjë në dijeni me përditësime aty për aty për komente të reja, trafik sajti, raporte mbi sigurinë, etj.</string>
+    <string name="wp_jetpack_powered_notifications_powered_by_jetpack">Njoftimet sillen nga Jetpack-u</string>
+    <string name="wp_jetpack_powered_stats_powered_by_jetpack_caption">Shihni si shtohet trafiku juaj dhe mësoni rreth publikut tuaj, me “Statistika dhe Prirje” të ripunuar, tanimë të përdorshme edhe në aplikacionin e ri Jetpack.</string>
+    <string name="wp_jetpack_powered_stats_powered_by_jetpack">Statistika jepen nga Jetpack-u</string>
+    <string name="wp_jetpack_powered_reader_powered_by_jetpack_caption">Gjeni, ndiqni dhe pëlqeni përmes lexuesit krejt sajtet dhe postimet tuaja të dashura, tanimë i përdorshëm edhe në aplikacionin e ri Jetpack.</string>
+    <string name="wp_jetpack_powered_reader_powered_by_jetpack">Lexuesi bazohet në Jetpack</string>
+    <string name="wp_jetpack_powered_features">Aplikacioni i ri Jetpack ka Statistika, Lexues, Njoftime, etj, që e bëjnë më të mirë WordPress-in tuaj.</string>
+    <string name="wp_jetpack_powered_better_with_jetpack">WordPress-i është më i mirë me Jetpack-un</string>
     <string name="gutenberg_native_upgrade_your_plan_to_use_video_covers">Që të përdorni kapakë video, përmirësoni planin tuaj</string>
     <string name="gutenberg_native_upgrade_your_plan_to_upload_audio">Që të ngarkoni audio, përmirësoni planin tuaj</string>
     <string name="gutenberg_native_jetpack_powered">Bazuar në Jetpack</string>
@@ -486,7 +504,6 @@ Language: sq_AL
     <string name="blogging_reminders_notification_title">Është koha të blogoni te %s</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios">Përpunimi i blloqeve të ripërdorshëm nuk mbulohet ende në WordPress për iOS</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and">Përpunimi i blloqeve të ripërdorshëm nuk mbulohet ende në WordPress për Android</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">Ndryshe, mund t’i shkëputni dhe përpunoni ndarazi këto blloqe, duke prekur “Shndërroji në blloqe të rregullt”.</string>
     <string name="blogging_reminders_done">U bë</string>
     <string name="blogging_reminders_notify_me">Njoftomë</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;Jepni kredencialet tuaja për te shërbyesi&lt;/a&gt;, që të aktivizoni rikthime sajti me një klikim, prej kopjeruajtjesh.</string>

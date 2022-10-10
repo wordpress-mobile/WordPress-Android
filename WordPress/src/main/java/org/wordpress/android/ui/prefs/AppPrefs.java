@@ -277,11 +277,18 @@ public class AppPrefs {
         IS_FIRST_TIME_BLOGGING_PROMPTS_ONBOARDING,
 
         // Indicates if this is the first time we try to login to Jetpack automatically
-        IS_FIRST_TRY_LOGIN_JETPACK
+        IS_FIRST_TRY_LOGIN_JETPACK,
+
+        // Indicates if this is the first time we try to get the user flags in Jetpack automatically
+        IS_FIRST_TRY_USER_FLAGS_JETPACK
     }
 
-    private static SharedPreferences prefs() {
+    static SharedPreferences prefs() {
         return PreferenceManager.getDefaultSharedPreferences(WordPress.getContext());
+    }
+
+    static Map<String, ?> getAllPrefs() {
+        return prefs().getAll();
     }
 
     private static String getString(PrefKey key) {
@@ -292,7 +299,7 @@ public class AppPrefs {
         return prefs().getString(key.name(), defaultValue);
     }
 
-    private static void setString(PrefKey key, String value) {
+    public static void setString(PrefKey key, String value) {
         SharedPreferences.Editor editor = prefs().edit();
         if (TextUtils.isEmpty(value)) {
             editor.remove(key.name());
@@ -319,6 +326,10 @@ public class AppPrefs {
         setString(key, Long.toString(value));
     }
 
+    public static void putLong(final PrefKey key, final long value) {
+        prefs().edit().putLong(key.name(), value) .apply();
+    }
+
     private static int getInt(PrefKey key, int def) {
         try {
             String value = getString(key);
@@ -335,6 +346,10 @@ public class AppPrefs {
         return getInt(key, 0);
     }
 
+    public static void putInt(final PrefKey key, final int value) {
+        prefs().edit().putInt(key.name(), value) .apply();
+    }
+
     public static void setInt(PrefKey key, int value) {
         setString(key, Integer.toString(value));
     }
@@ -344,8 +359,16 @@ public class AppPrefs {
         return Boolean.parseBoolean(value);
     }
 
+    public static void putBoolean(final PrefKey key, final boolean value) {
+        prefs().edit().putBoolean(key.name(), value) .apply();
+    }
+
     public static void setBoolean(PrefKey key, boolean value) {
         setString(key, Boolean.toString(value));
+    }
+
+    public static void putStringSet(final PrefKey key, final Set<String> value) {
+        prefs().edit().putStringSet(key.name(), value) .apply();
     }
 
     private static void remove(PrefKey key) {
@@ -1416,5 +1439,13 @@ public class AppPrefs {
 
     public static void saveIsFirstTrySharedLoginJetpack(final boolean isFirstTry) {
         setBoolean(UndeletablePrefKey.IS_FIRST_TRY_LOGIN_JETPACK, isFirstTry);
+    }
+
+    public static Boolean getIsFirstTryUserFlagsJetpack() {
+        return getBoolean(UndeletablePrefKey.IS_FIRST_TRY_USER_FLAGS_JETPACK, true);
+    }
+
+    public static void saveIsFirstTryUserFlagsJetpack(final boolean isFirstTry) {
+        setBoolean(UndeletablePrefKey.IS_FIRST_TRY_USER_FLAGS_JETPACK, isFirstTry);
     }
 }

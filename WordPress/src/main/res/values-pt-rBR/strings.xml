@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-09-16 13:51:48+0000
+Translation-Revision-Date: 2022-09-30 10:06:57+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: pt_BR
 -->
 <resources>
+    <string name="error_fetch_authors_list">Não foi possível recuperar os autores</string>
+    <string name="post_settings_author">Autor</string>
     <string name="app_rating_title">Curtindo %s?</string>
     <string name="connection_service_label">Compartilhar post no %s</string>
     <string name="connections_label">Conexões do Jetpack Social</string>
@@ -506,7 +508,6 @@ Language: pt_BR
     <string name="blogging_reminders_notification_title">Está na hora de publicar em %s</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios">Edição de blocos reutilizáveis ainda não é suportado no WordPress para iOS</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and">Edição de blocos reutilizáveis ainda não é suportado no WordPress para Android</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">Como alternativa, você pode desanexar e editar os blocos separadamente tocando em \"Converter para blocos normais\".</string>
     <string name="blogging_reminders_done">Concluído</string>
     <string name="blogging_reminders_notify_me">Avise-me!</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;Insira suas credenciais do servidor&lt;/a&gt; para ativar a restauração de site pelos backups em um clique.</string>

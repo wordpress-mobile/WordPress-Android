@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-09-13 17:54:08+0000
+Translation-Revision-Date: 2022-09-30 10:03:40+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: nl
 -->
 <resources>
+    <string name="error_fetch_authors_list">Couldn\'t retrieve authors</string>
+    <string name="post_settings_author">Auteur</string>
     <string name="app_rating_title">Werk je graag met %s?</string>
     <string name="connection_service_label">Deel bericht op %s</string>
     <string name="connections_label">Jetpack Social-verbindingen</string>
@@ -353,7 +355,7 @@ Language: nl
     <string name="button_copy_link">Kopieer link</string>
     <string name="domains_paid_plan_add_your_domain_caption">Een eigen domein maakt het eenvoudig voor je bezoekers om je site te vinden</string>
     <string name="domains_paid_plan_add_your_domain_title">Voeg je domein toe</string>
-    <string name="my_site_create_first_post_excerpt">Berichten verschijnen op je blogpagina in omgekeerde chronologische volgorde. Het is tijd om je ideeēn met de wereld te delen!</string>
+    <string name="my_site_create_first_post_excerpt">Berichten verschijnen op je blogpagina in omgekeerde chronologische volgorde. Het is tijd om je ideeën met de wereld te delen!</string>
     <string name="my_site_create_first_post_title">Maak je eerste bericht</string>
     <string name="my_site_untitled_post">Ongetiteld</string>
     <string name="my_site_post_card_scheduled_title">Aankomende geplande berichten</string>
@@ -506,7 +508,6 @@ Language: nl
     <string name="blogging_reminders_notification_title">Het is tijd om te bloggen op %s</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios">Bewerken van herbruikbare blokken wordt momenteel niet ondersteund door WordPress voor iOS</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and">Bewerken van herbruikbare blokken wordt momenteel niet ondersteund door WordPress voor Android</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">Als alternatief, kun je deze blokken ook losmaken en afzonderlijk bewerken door op \"Converteren naar normale blokken\" te tikken.</string>
     <string name="blogging_reminders_done">Klaar</string>
     <string name="blogging_reminders_notify_me">Breng me op de hoogte</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;Voer je inloggegevens voor je server in&lt;/a&gt; om terugzetten in één klik van back-ups in te schakelen.</string>

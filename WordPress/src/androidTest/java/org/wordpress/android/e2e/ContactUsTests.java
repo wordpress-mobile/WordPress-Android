@@ -20,7 +20,7 @@ public class ContactUsTests extends BaseTest {
 
     @Ignore("Ignored temporarily. This sometimes fail on CI while running with whole test suite.")
     @Test
-    public void sendButtonEnabledWhenTextIsEntered() {
+    public void e2eSendButtonEnabledWhenTextIsEntered() {
         try {
             new LoginFlow()
                 .chooseContinueWithWpCom()
@@ -40,7 +40,7 @@ public class ContactUsTests extends BaseTest {
 
     @Ignore("As long as CI does not use gradle.properties from MobileSecrets")
     @Test
-    public void messageCanBeSent() {
+    public void e2eMessageCanBeSent() {
         String userMessageText = "Please ignore, this is an automated test.";
         String automatedReplyText = "Mobile support will respond as soon as possible, "
                                     + "generally within 48-96 hours. "
@@ -62,7 +62,7 @@ public class ContactUsTests extends BaseTest {
     }
 
     @Test
-    public void helpCanBeOpenedWhileEnteringEmail() {
+    public void e2eHelpCanBeOpenedWhileEnteringEmail() {
         new LoginFlow()
                 .chooseContinueWithWpCom()
                 .tapHelp()
@@ -70,7 +70,7 @@ public class ContactUsTests extends BaseTest {
     }
 
     @Test
-    public void helpCanBeOpenedWhileEnteringPassword() {
+    public void e2eHelpCanBeOpenedWhileEnteringPassword() {
         new LoginFlow()
                 .chooseContinueWithWpCom()
                 .enterEmailAddress(E2E_WP_COM_USER_EMAIL)

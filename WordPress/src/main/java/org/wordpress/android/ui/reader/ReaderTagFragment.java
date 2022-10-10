@@ -56,6 +56,7 @@ public class ReaderTagFragment extends Fragment implements ReaderTagAdapter.TagD
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mRecyclerView.setAdapter(getTagAdapter());

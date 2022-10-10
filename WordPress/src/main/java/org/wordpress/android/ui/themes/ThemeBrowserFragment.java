@@ -179,6 +179,7 @@ public class ThemeBrowserFragment extends Fragment
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 

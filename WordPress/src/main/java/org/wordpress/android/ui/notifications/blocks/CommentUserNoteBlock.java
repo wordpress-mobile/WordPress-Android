@@ -2,7 +2,6 @@ package org.wordpress.android.ui.notifications.blocks;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
@@ -11,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.text.HtmlCompat;
 import androidx.core.view.ViewCompat;
 
 import org.wordpress.android.R;
@@ -85,7 +85,10 @@ public class CommentUserNoteBlock extends UserNoteBlock {
 
     private void setUserName() {
         mNoteBlockHolder.mNameTextView.setText(
-                Html.fromHtml("<strong>" + getNoteText().toString() + "</strong>")
+                HtmlCompat.fromHtml(
+                        "<strong>" + getNoteText().toString() + "</strong>",
+                        HtmlCompat.FROM_HTML_MODE_LEGACY
+                )
         );
     }
 

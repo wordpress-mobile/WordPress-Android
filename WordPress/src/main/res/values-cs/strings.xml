@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-09-16 15:59:20+0000
+Translation-Revision-Date: 2022-10-04 18:17:57+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.3
 Language: cs_CZ
@@ -1125,8 +1125,8 @@ Language: cs_CZ
     <string name="error_failed_to_load_into_file">Načtení do souboru se nezdařilo, zkuste to znovu.</string>
     <string name="crop">oříznutí</string>
     <string name="insert_label_with_count">Vložit %d</string>
-    <string name="feature_announcement_dialog_label">Co je nového na %s</string>
     <string name="feature_announcement_find_out_mode">Zjistit více</string>
+    <string name="feature_announcement_dialog_label">Co je nového v %s</string>
     <string name="sitepicker_continue_flow">Pokračovat</string>
     <string name="whats_new_in_version_title">Co je nového</string>
     <string name="continue_label">Pokračovat</string>
@@ -1445,6 +1445,7 @@ Language: cs_CZ
     <string name="navigate_forward_desc">Jít vpřed</string>
     <string name="notification_post_will_be_published_in_ten_minutes">\"%s\" bude publikován za 10 minut</string>
     <string name="calendar_scheduled_post_title">Naplánovaný příspěvek WordPress: \"%s\"</string>
+    <string name="calendar_scheduled_post_description">Publikování \"%1$s\" je naplánováno na \"%2$s\" ve vaší WordPress aplikaci %3$s\n %4$s</string>
     <string name="post_notification_when_published">Při zveřejnění</string>
     <string name="post_notification_error">Nelze vytvořit oznámení, pokud je datum publikování v minulosti.</string>
     <string name="notification_scheduled_post">Naplánovaný příspěvek</string>
@@ -1652,6 +1653,9 @@ Language: cs_CZ
     <string name="stats_insights_popular">Nejoblíbenější čas</string>
     <string name="stats_select_previous_period_description">Vyberte předchozí období</string>
     <string name="stats_select_next_period_description">Vyberte další období</string>
+    <string name="stats_traffic_change">%1$s (%2$s)</string>
+    <string name="stats_traffic_increase">+%1$s (%2$s)</string>
+    <string name="stats_most_popular_percent_views">%1$s shlédnutí</string>
     <string name="notification_new_site_creation_title">Vytvořit stránku</string>
     <string name="new_site_creation_create_site_button">Vytvořit stránku</string>
     <string name="new_site_creation_clear_all_content_description">Vyčistit</string>

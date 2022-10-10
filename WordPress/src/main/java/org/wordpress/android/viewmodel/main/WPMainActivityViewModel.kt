@@ -47,6 +47,7 @@ import org.wordpress.android.util.merge
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
+import java.io.Serializable
 import java.util.Date
 import java.util.Locale
 import javax.inject.Inject
@@ -389,5 +390,9 @@ class WPMainActivityViewModel @Inject constructor(
     data class FocusPointInfo(
         val task: QuickStartTask,
         val isVisible: Boolean
-    )
+    ) : Serializable {
+        companion object {
+            const val serialVersionUID = 1L
+        }
+    }
 }

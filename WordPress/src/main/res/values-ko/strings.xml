@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-09-13 16:54:09+0000
+Translation-Revision-Date: 2022-09-27 16:54:10+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.3
 Language: ko_KR
 -->
 <resources>
+    <string name="error_fetch_authors_list">글쓴이를 검색할 수 없음</string>
+    <string name="post_settings_author">글쓴이</string>
     <string name="app_rating_title">%s을(를) 사용하시나요?</string>
     <string name="connection_service_label">%s에 글 공유 </string>
     <string name="connections_label">젯팩 소셜 연결</string>
@@ -506,7 +508,6 @@ Language: ko_KR
     <string name="blogging_reminders_notification_title">%s의 블로깅 시간입니다.</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios">재활용 가능한 블록 편집은 아직 iOS용 WordPress에서 지원되지 않습니다.</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and">재활용 가능한 블록 편집은 아직 Android용 WordPress에서 지원되지 않습니다.</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">대신에 \"일반 블록으로 변환\"을 눌러 이러한 블록을 분리하고 따로 편집할 수 있습니다.</string>
     <string name="blogging_reminders_done">완료</string>
     <string name="blogging_reminders_notify_me">알림 받기</string>
     <string name="restore_details_enter_server_creds_msg">클릭 한 번으로 백업에서 사이트를 복원할 수 있도록 &lt;a href=\"%1$s\"&gt;서버 자격 증명을 입력하세요&lt;/a&gt;.</string>

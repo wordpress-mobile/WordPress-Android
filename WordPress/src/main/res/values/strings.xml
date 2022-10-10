@@ -2856,6 +2856,7 @@
     <string name="login_prologue_fifth_caption_one">My Top Ten Cafes</string>
     <string name="login_prologue_fifth_caption_two">The World\'s Best Fans</string>
     <string name="login_prologue_fifth_caption_three">Museums in London</string>
+
     <string name="invalid_verification_code" tools:ignore="UnusedResources" a8c-src-lib="login">Invalid verification code</string>
     <string name="send_link_by_email" tools:ignore="UnusedResources" a8c-src-lib="login">Send link by email</string>
     <string name="create_account" tools:ignore="UnusedResources" a8c-src-lib="login">Create account</string>
@@ -2936,6 +2937,10 @@
     <string name="login_no_jetpack_sites_error_message">If you already have a site, you\'ll need to install the free Jetpack plugin and connect it to your WordPress.com account.</string>
     <string name="login_empty_view_see_instructions">See instructions</string>
     <string name="login_empty_view_try_another_account">Try with another account</string>
+
+    <!-- Login Revamped -->
+    <string name="login_prologue_revamped_tagline" tools:ignore="UnusedResources">Write, edit, and publish from anywhere.</string>
+    <string name="login_prologue_revamped_content_description_wordpress_icon" tools:ignore="UnusedResources">WordPress icon</string>
 
     <!-- Screen titles -->
     <string name="email_address_login_title" tools:ignore="UnusedResources" a8c-src-lib="login">Email address login</string>
@@ -3531,7 +3536,7 @@
     <string name="gutenberg_native_add_video" tools:ignore="UnusedResources">ADD VIDEO</string>
     <string name="gutenberg_native_address_settings" tools:ignore="UnusedResources">Address Settings</string>
     <string name="gutenberg_native_alt_text" tools:ignore="UnusedResources">Alt Text</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by" tools:ignore="UnusedResources">Alternatively, you can detach and edit these blocks separately by tapping \"Convert to regular blocks\".</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Alternatively, you can detach and edit these blocks separately by tapping “Convert to regular blocks”.</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again" tools:ignore="UnusedResources">An unknown error occurred. Please try again.</string>
     <string name="gutenberg_native_applies_the_setting" tools:ignore="UnusedResources">Applies the setting</string>
     <string name="gutenberg_native_arrange_your_content_into_columns_add_call_to_action_buttons_and" tools:ignore="UnusedResources">Arrange your content into columns, add Call to Action buttons, and overlay images with text.</string>
@@ -4224,5 +4229,6 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="open_mail" tools:ignore="UnusedResources" a8c-src-lib="login">Open Mail</string>
     <string name="login_magic_links_sent_label_short" tools:ignore="UnusedResources" a8c-src-lib="login">Check your email on this device!</string>
     <string name="login_magic_links_email_sent" tools:ignore="UnusedResources" a8c-src-lib="login">We just sent a magic link to</string>
+    <string name="gutenberg_native_link_rel" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Link Rel</string>
 
 </resources>

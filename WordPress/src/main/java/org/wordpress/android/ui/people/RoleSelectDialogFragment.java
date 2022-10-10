@@ -34,6 +34,7 @@ public class RoleSelectDialogFragment extends DialogFragment {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         SiteModel site = (SiteModel) getArguments().getSerializable(WordPress.SITE);
         final List<RoleModel> inviteRoles = RoleUtils.getInviteRoles(mSiteStore, site, mContextProvider.getContext());
@@ -59,6 +60,7 @@ public class RoleSelectDialogFragment extends DialogFragment {
         return builder.create();
     }
 
+    @SuppressWarnings("deprecation")
     public static <T extends Fragment & OnRoleSelectListener> void show(T parentFragment, int requestCode,
                                                                         @NonNull SiteModel site) {
         RoleSelectDialogFragment roleChangeDialogFragment = new RoleSelectDialogFragment();

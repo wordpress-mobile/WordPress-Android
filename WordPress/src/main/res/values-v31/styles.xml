@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <style name="WordPress" parent="Base.Wordpress">
+        <item name="android:navigationBarColor">@android:color/white</item>
+        <item name="android:windowLightNavigationBar">true</item>
+        <item name="android:windowSplashScreenBackground">?attr/colorOnPrimary</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/splash_icon</item>
+    </style>
+</resources>

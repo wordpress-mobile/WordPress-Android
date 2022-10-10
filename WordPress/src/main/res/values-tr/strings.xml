@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-09-13 14:54:08+0000
+Translation-Revision-Date: 2022-09-26 18:54:10+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: tr
 -->
 <resources>
+    <string name="error_fetch_authors_list">Yazarlar alınamadı</string>
+    <string name="post_settings_author">Yazar</string>
     <string name="app_rating_title">%s hoşunuza gitti mi?</string>
     <string name="connection_service_label">Gönderiyi %s ile paylaş</string>
     <string name="connections_label">Jetpack Social Bağlantıları</string>
@@ -506,7 +508,6 @@ Language: tr
     <string name="blogging_reminders_notification_title">%s ile blog açmanın zamanı geldi</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios">Yeniden kullanılabilir blokların düzenlenmesi iOS için WordPress\'te henüz desteklenmemektedir</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and">Yeniden kullanılabilir blokların düzenlenmesi Android için WordPress\'te henüz desteklenmemektedir</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">Alternatif olarak, \"Normal bloklara dönüştür\" seçeneğine dokunarak bu blokları ayırabilir ve ayrı ayrı düzenleyebilirsiniz.</string>
     <string name="blogging_reminders_done">Tamamlandı</string>
     <string name="blogging_reminders_notify_me">Bana bildir</string>
     <string name="restore_details_enter_server_creds_msg">Yedeklemelerinizden tek tıkla geri yüklemeyi etkinleştirmek için &lt;a href=\"%1$s\"&gt;sunucu kimlik bilgilerinizi girin&lt;/a&gt;.</string>
