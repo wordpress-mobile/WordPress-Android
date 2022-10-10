@@ -140,7 +140,7 @@ class ScanHistoryFragment : Fragment(R.layout.scan_history_fragment), Scrollable
         override fun createFragment(position: Int): Fragment = ScanHistoryListFragment.newInstance(items[position].type)
     }
 
-    override fun onScrollableViewInitialized(viewId: Int) {
-        binding?.appbarMain?.liftOnScrollTargetViewId = viewId
+    override fun onScrollableViewInitialized(containerId: Int) {
+        binding?.appbarMain?.liftOnScrollTargetViewId = containerId
     }
 }
