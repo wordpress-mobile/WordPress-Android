@@ -186,8 +186,8 @@ class ReaderDiscoverDataProvider @Inject constructor(
     }
 
     // Event bus events
+    @Suppress("unused")
     @Subscribe(threadMode = BACKGROUND)
-    @SuppressWarnings("unused")
     fun onReaderPostTableAction(event: ReaderPostTableActionEnded) {
         if (_discoverFeed.hasObservers()) {
             isDirty.compareAndSet(true, false)
@@ -208,7 +208,7 @@ class ReaderDiscoverDataProvider @Inject constructor(
         }
     }
 
-    @SuppressWarnings("unused")
+    @Suppress("unused")
     @Subscribe(threadMode = BACKGROUND)
     fun onFollowedTagsChanged(event: FollowedTagsChanged) {
         launch {

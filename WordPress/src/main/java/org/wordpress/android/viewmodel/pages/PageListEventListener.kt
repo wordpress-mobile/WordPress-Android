@@ -171,7 +171,7 @@ class PageListEventListener(
         }
     }
 
-    @SuppressWarnings("unused")
+    @Suppress("unused")
     @Subscribe(threadMode = MAIN)
     fun onSiteChanged(event: OnSiteChanged) {
         if (!event.isError && siteStore.hasSiteWithLocalId(site.id)) {

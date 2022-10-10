@@ -96,8 +96,8 @@ class JetpackCapabilitiesUseCase @Inject constructor(
         )
     }
 
+    @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    @SuppressWarnings("unused")
     fun onJetpackCapabilitiesFetched(event: OnJetpackCapabilitiesFetched) {
         continuation[event.remoteSiteId]?.let {
             continuation.remove(event.remoteSiteId)

@@ -58,15 +58,15 @@ abstract class WordPress : MultiDexApplication() {
         @JvmStatic
         fun getRestClientUtils() = AppInitializer.restClientUtils
 
-        @SuppressWarnings("FunctionNaming")
+        @Suppress("FunctionNaming")
         @JvmStatic
         fun getRestClientUtilsV1_1() = AppInitializer.restClientUtilsV1_1
 
-        @SuppressWarnings("FunctionNaming")
+        @Suppress("FunctionNaming")
         @JvmStatic
         fun getRestClientUtilsV1_2() = AppInitializer.restClientUtilsV1_2
 
-        @SuppressWarnings("FunctionNaming")
+        @Suppress("FunctionNaming")
         @JvmStatic
         fun getRestClientUtilsV1_3() = AppInitializer.restClientUtilsV1_3
 

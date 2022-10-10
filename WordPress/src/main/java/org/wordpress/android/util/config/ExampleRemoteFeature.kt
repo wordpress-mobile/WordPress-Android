@@ -7,7 +7,7 @@ import javax.inject.Inject
 /**
  * Configuration of an example remote feature
  */
-@SuppressWarnings("Unused")
+@Suppress("Unused")
 @Feature(remoteField = EXAMPLE_REMOTE_FEATURE_FIELD, defaultValue = false)
 class ExampleRemoteFeature
 @Inject constructor(appConfig: AppConfig) : FeatureConfig(
