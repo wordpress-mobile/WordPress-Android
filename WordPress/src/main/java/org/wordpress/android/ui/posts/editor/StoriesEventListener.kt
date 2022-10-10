@@ -18,7 +18,6 @@ import com.wordpress.stories.compose.story.StoryIndex
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.EDITOR_UPLOAD_MEDIA_RETRIED
 import org.wordpress.android.editor.EditorMediaUploadListener
@@ -348,8 +347,8 @@ class StoriesEventListener @Inject constructor(
                     val builder: Builder = MaterialAlertDialogBuilder(
                             activity
                     )
-                    builder.setTitle(activity.getString(string.cannot_retry_deleted_media_item_fatal))
-                    builder.setPositiveButton(string.ok) { dialog, id -> dialog.dismiss() }
+                    builder.setTitle(activity.getString(R.string.cannot_retry_deleted_media_item_fatal))
+                    builder.setPositiveButton(R.string.ok) { dialog, id -> dialog.dismiss() }
                     val dialog = builder.create()
                     dialog.show()
                     return
@@ -380,7 +379,7 @@ class StoriesEventListener @Inject constructor(
         AnalyticsTracker.track(EDITOR_UPLOAD_MEDIA_RETRIED)
     }
 
-    @Suppress("unused")
+    @Suppress("unused", "UNUSED_PARAMETER")
     fun onCancelSaveForMediaCollection(mediaFiles: ArrayList<Any>) {
         // TODO implement cancelling save process for media collection
     }

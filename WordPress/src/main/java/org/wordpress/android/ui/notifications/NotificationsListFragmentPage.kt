@@ -443,7 +443,7 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
         notesAdapter!!.addAll(event.notes, true)
     }
 
-    @Suppress("unused")
+    @Suppress("unused", "UNUSED_PARAMETER")
     @Subscribe(threadMode = MAIN)
     fun onEventMainThread(error: NotificationsRefreshError?) {
         if (isAdded) {

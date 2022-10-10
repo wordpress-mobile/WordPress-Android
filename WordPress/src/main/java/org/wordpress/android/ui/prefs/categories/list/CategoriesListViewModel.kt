@@ -107,7 +107,7 @@ class CategoriesListViewModel @Inject constructor(
         _navigation.postValue(CreateCategory)
     }
 
-    @Suppress("unused")
+    @Suppress("unused", "UNUSED_PARAMETER")
     fun onCategoryClicked(categoryNode: CategoryNode) {
         // todo implement the logic of navigation to category detail page
     }

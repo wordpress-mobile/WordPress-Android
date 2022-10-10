@@ -369,7 +369,7 @@ class ReaderDiscoverViewModel @Inject constructor(
         }
     }
 
-    @Suppress("unused")
+    @Suppress("unused", "UNUSED_PARAMETER")
     private fun onDiscoverClicked(postId: Long, blogId: Long) {
         // TODO malinjir: add on discover clicked listener
     }

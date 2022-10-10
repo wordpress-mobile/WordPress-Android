@@ -186,7 +186,7 @@ class ReaderDiscoverDataProvider @Inject constructor(
     }
 
     // Event bus events
-    @Suppress("unused")
+    @Suppress("unused", "UNUSED_PARAMETER")
     @Subscribe(threadMode = BACKGROUND)
     fun onReaderPostTableAction(event: ReaderPostTableActionEnded) {
         if (_discoverFeed.hasObservers()) {
@@ -208,7 +208,7 @@ class ReaderDiscoverDataProvider @Inject constructor(
         }
     }
 
-    @Suppress("unused")
+    @Suppress("unused", "UNUSED_PARAMETER")
     @Subscribe(threadMode = BACKGROUND)
     fun onFollowedTagsChanged(event: FollowedTagsChanged) {
         launch {

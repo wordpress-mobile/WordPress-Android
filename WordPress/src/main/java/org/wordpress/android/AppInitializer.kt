@@ -533,7 +533,7 @@ class AppInitializer @Inject constructor(
         }
     }
 
-    @Suppress("unused")
+    @Suppress("unused", "UNUSED_PARAMETER")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onAuthenticationChanged(event: OnAuthenticationChanged) {
         if (accountStore.hasAccessToken()) {
