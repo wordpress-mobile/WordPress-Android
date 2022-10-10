@@ -156,7 +156,7 @@ class PageListEventListener(
     @Suppress("unused")
     @Subscribe(threadMode = BACKGROUND)
     fun onEventBackgroundThread(event: ProgressEvent) {
-        if (event.media != null && site.id == event.media.localSiteId) {
+        if (site.id == event.media.localSiteId) {
             uploadStatusChanged(LocalId(event.media.localPostId))
         }
     }
