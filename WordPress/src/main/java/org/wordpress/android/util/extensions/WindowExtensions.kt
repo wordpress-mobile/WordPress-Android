@@ -45,15 +45,20 @@ fun Window.setLightNavigationBar(showInLightMode: Boolean, applyDefaultColors: B
 }
 
 fun Window.setTransparentSystemBars(isTransparent: Boolean) {
-    if (isTransparent) {
-        when (VERSION.SDK_INT >= VERSION_CODES.R) {
-            true -> setDecorFitsSystemWindows(false)
-            false -> addFlags(LayoutParams.FLAG_LAYOUT_NO_LIMITS)
+    when (isTransparent) {
+        true -> {
+            if (VERSION.SDK_INT >= VERSION_CODES.R) {
+                setDecorFitsSystemWindows(false)
+            } else {
+                addFlags(LayoutParams.FLAG_LAYOUT_NO_LIMITS)
+            }
         }
-    } else {
-        when (VERSION.SDK_INT >= VERSION_CODES.R) {
-            true -> setDecorFitsSystemWindows(true)
-            false -> clearFlags(LayoutParams.FLAG_LAYOUT_NO_LIMITS)
+        false -> {
+            if (VERSION.SDK_INT >= VERSION_CODES.R) {
+                setDecorFitsSystemWindows(true)
+            } else {
+                clearFlags(LayoutParams.FLAG_LAYOUT_NO_LIMITS)
+            }
         }
     }
 }
