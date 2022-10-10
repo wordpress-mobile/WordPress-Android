@@ -49,7 +49,7 @@ class ScanFragment : Fragment(R.layout.scan_fragment) {
     }
 
     private fun initDagger() {
-        (requireActivity().application as WordPress).component()?.inject(this)
+        (requireActivity().application as WordPress).component().inject(this)
     }
 
     private fun ScanFragmentBinding.initRecyclerView() {

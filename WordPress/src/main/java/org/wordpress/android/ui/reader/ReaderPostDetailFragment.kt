@@ -1026,7 +1026,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         }
 
         if (commentsSnippetFeatureConfig.isEnabled()) {
-            commentSnippetRecycler?.layoutManager?.let {
+            commentSnippetRecycler.layoutManager?.let {
                 outState.putParcelable(KEY_COMMENTS_SNIPPET_LIST_STATE, it.onSaveInstanceState())
             }
         }

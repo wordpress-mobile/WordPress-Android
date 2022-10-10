@@ -73,7 +73,7 @@ class DomainRegistrationDetailsFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val nonNullActivity = requireActivity()
-        (nonNullActivity.application as WordPress).component()?.inject(this)
+        (nonNullActivity.application as WordPress).component().inject(this)
     }
 
     override fun onCreateView(

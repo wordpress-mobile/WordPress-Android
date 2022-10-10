@@ -512,21 +512,19 @@ class PostsListActivity : LocaleAwareActivity(),
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         super.onCreateOptionsMenu(menu)
-        menu?.let {
-            menuInflater.inflate(R.menu.posts_list_toggle_view_layout, it)
-            toggleViewLayoutMenuItem = it.findItem(R.id.toggle_post_list_item_layout)
-            viewModel.viewLayoutTypeMenuUiState.observe(this, { menuUiState ->
-                menuUiState?.let {
-                    updateMenuIcon(menuUiState.iconRes, toggleViewLayoutMenuItem)
-                    updateMenuTitle(menuUiState.title, toggleViewLayoutMenuItem)
-                }
-            })
+        menuInflater.inflate(R.menu.posts_list_toggle_view_layout, menu)
+        toggleViewLayoutMenuItem = menu.findItem(R.id.toggle_post_list_item_layout)
+        viewModel.viewLayoutTypeMenuUiState.observe(this, { menuUiState ->
+            menuUiState?.let {
+                updateMenuIcon(menuUiState.iconRes, toggleViewLayoutMenuItem)
+                updateMenuTitle(menuUiState.title, toggleViewLayoutMenuItem)
+            }
+        })
 
-            searchActionButton = it.findItem(R.id.toggle_post_search)
+        searchActionButton = menu.findItem(R.id.toggle_post_search)
 
-            initSearchFragment()
-            binding.initSearchView()
-        }
+        initSearchFragment()
+        binding.initSearchView()
         return true
     }
 

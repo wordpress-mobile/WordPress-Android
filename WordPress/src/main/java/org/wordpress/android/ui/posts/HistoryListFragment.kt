@@ -52,7 +52,7 @@ class HistoryListFragment : Fragment(R.layout.history_list_fragment) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        (requireActivity().application as WordPress).component()?.inject(this)
+        (requireActivity().application as WordPress).component().inject(this)
 
         viewModel = ViewModelProvider(this, viewModelFactory).get(HistoryViewModel::class.java)
     }
@@ -80,7 +80,7 @@ class HistoryListFragment : Fragment(R.layout.history_list_fragment) {
                 viewModel.onPullToRefresh()
             }
 
-            (nonNullActivity.application as WordPress).component()?.inject(this@HistoryListFragment)
+            (nonNullActivity.application as WordPress).component().inject(this@HistoryListFragment)
 
             viewModel = ViewModelProvider(this@HistoryListFragment, viewModelFactory).get(HistoryViewModel::class.java)
             viewModel.create(

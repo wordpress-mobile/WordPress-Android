@@ -66,7 +66,7 @@ class ActivityLogListFragment : Fragment(R.layout.activity_log_list_fragment) {
         super.onViewCreated(view, savedInstanceState)
 
         val nonNullActivity = requireActivity()
-        (nonNullActivity.application as WordPress).component()?.inject(this@ActivityLogListFragment)
+        (nonNullActivity.application as WordPress).component().inject(this@ActivityLogListFragment)
         viewModel = ViewModelProvider(
                 this@ActivityLogListFragment,
                 viewModelFactory

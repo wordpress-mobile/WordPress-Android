@@ -57,7 +57,7 @@ class ScanHistoryFragment : Fragment(R.layout.scan_history_fragment), Scrollable
     }
 
     private fun initDagger() {
-        (requireActivity().application as WordPress).component()?.inject(this)
+        (requireActivity().application as WordPress).component().inject(this)
     }
 
     private fun ScanHistoryFragmentBinding.initViewModel(site: SiteModel) {
