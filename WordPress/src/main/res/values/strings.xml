@@ -4057,6 +4057,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
 
     <!-- About -->
     <string name="about_blog">Blog</string>
+    <string name="about_news">News</string>
     <string name="about_automattic_main_page_title" tools:ignore="UnusedResources" a8c-src-lib="about">About %1$s</string>
     <string name="about_automattic_legal_page_title" tools:ignore="UnusedResources" a8c-src-lib="about">Legal and More</string>
     <string name="about_automattic_acknowledgements_page_title" tools:ignore="UnusedResources" a8c-src-lib="about">Acknowledgements</string>

@@ -52,7 +52,7 @@ class UnifiedAboutViewModel @Inject constructor(
             customItems = listOf(
                     ItemConfig(
                             name = BLOG_ITEM_NAME,
-                            title = contextProvider.getContext().getString(R.string.about_blog),
+                            title = blogTitle(),
                             onClick = ::onBlogClick
                     )
             ),
@@ -100,6 +100,12 @@ class UnifiedAboutViewModel @Inject constructor(
         _onNavigation.postValue(Event(OpenBlog(if (buildConfig.isJetpackApp) JP_BLOG_URL else WP_BLOG_URL)))
     }
 
+    private fun blogTitle() = if (buildConfig.isJetpackApp) {
+        contextProvider.getContext().getString(R.string.about_blog)
+    } else {
+        contextProvider.getContext().getString(R.string.about_news)
+    }
+
     private fun workWithUsTitle() = if (buildConfig.isJetpackApp) {
         contextProvider.getContext().getString(R.string.about_automattic_work_with_us_item_title)
     } else {
@@ -118,7 +124,7 @@ class UnifiedAboutViewModel @Inject constructor(
 
         private const val WP_SOCIAL_HANDLE = "WPAndroid"
         private const val WP_APPS_URL = "https://apps.wordpress.com"
-        private const val WP_BLOG_URL = "https://blog.wordpress.com"
+        private const val WP_BLOG_URL = "https://wordpress.org/news/"
         private const val WP_CONTRIBUTE_URL = "https://make.wordpress.org/mobile/handbook/"
 
         private const val JP_SOCIAL_HANDLE = "jetpack"
