@@ -102,6 +102,7 @@ class WhatsNewStore @Inject constructor(
 
     enum class WhatsNewAppId(val id: Int) {
         WP_ANDROID(1),
-        WOO_ANDROID(3)
+        WOO_ANDROID(3),
+        JP_ANDROID(5)
     }
 }
