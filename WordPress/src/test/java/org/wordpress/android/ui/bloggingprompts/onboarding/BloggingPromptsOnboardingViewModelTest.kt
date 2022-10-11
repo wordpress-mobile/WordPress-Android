@@ -10,7 +10,6 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
@@ -24,6 +23,7 @@ import org.wordpress.android.fluxc.model.bloggingprompts.BloggingPromptModel
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore
 import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore.BloggingPromptsResult
+import org.wordpress.android.test
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingAction.DismissDialog
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingAction.DoNothing
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingAction.OpenEditor
@@ -88,7 +88,7 @@ class BloggingPromptsOnboardingViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `Should provide a Ready UI state when start is called`() = runBlocking {
+    fun `Should provide a Ready UI state when start is called`() = test {
         classToTest.start(ONBOARDING)
         val startState = viewStates[0]
         assertNotNull(startState)
@@ -98,7 +98,7 @@ class BloggingPromptsOnboardingViewModelTest : BaseUnitTest() {
     // ONBOARDING dialog type actions
 
     @Test
-    fun `Should trigger OpenEditor action when primary button is tapped`() = runBlocking {
+    fun `Should trigger OpenEditor action when primary button is tapped`() = test {
         val selectedSiteModel = SiteModel()
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(selectedSiteModel)
         classToTest.start(ONBOARDING)
@@ -111,22 +111,21 @@ class BloggingPromptsOnboardingViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `Should trigger OpenSitePicker if Remind Me is clicked, user has more than 1 site and is first onboarding`() {
-        runBlocking {
-            val selectedSiteModel = SiteModel()
-            whenever(selectedSiteRepository.getSelectedSite()).thenReturn(selectedSiteModel)
-            whenever(siteStore.sitesCount).thenReturn(2)
-            whenever(getIsFirstBloggingPromptsOnboardingUseCase.execute()).thenReturn(true)
-            classToTest.start(ONBOARDING)
-            val startState = viewStates[0]
-            (startState as Ready).onPrimaryButtonClick()
-            startState.onSecondaryButtonClick()
-            verify(actionObserver).onChanged(OpenSitePicker(selectedSiteModel))
-        }
-    }
+    fun `Should trigger OpenSitePicker if Remind Me is clicked, user has more than 1 site and is first onboarding`() =
+            test {
+                val selectedSiteModel = SiteModel()
+                whenever(selectedSiteRepository.getSelectedSite()).thenReturn(selectedSiteModel)
+                whenever(siteStore.sitesCount).thenReturn(2)
+                whenever(getIsFirstBloggingPromptsOnboardingUseCase.execute()).thenReturn(true)
+                classToTest.start(ONBOARDING)
+                val startState = viewStates[0]
+                (startState as Ready).onPrimaryButtonClick()
+                startState.onSecondaryButtonClick()
+                verify(actionObserver).onChanged(OpenSitePicker(selectedSiteModel))
+            }
 
     @Test
-    fun `Should trigger OpenRemindersIntro if Remind Me is clicked and user has only 1 site`() = runBlocking {
+    fun `Should trigger OpenRemindersIntro if Remind Me is clicked and user has only 1 site`() = test {
         classToTest.start(ONBOARDING)
         val siteModel = SiteModel().apply { id = 123 }
         whenever(siteStore.sitesCount).thenReturn(1)
@@ -139,7 +138,7 @@ class BloggingPromptsOnboardingViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `Should trigger OpenRemindersIntro if Remind Me is clicked and is NOT first onboarding`() = runBlocking {
+    fun `Should trigger OpenRemindersIntro if Remind Me is clicked and is NOT first onboarding`() = test {
         val siteModel = SiteModel().apply { id = 123 }
         whenever(siteStore.sitesCount).thenReturn(1)
         whenever(siteStore.sites).thenReturn(listOf(siteModel))
@@ -181,31 +180,30 @@ class BloggingPromptsOnboardingViewModelTest : BaseUnitTest() {
     // INFORMATION dialog type actions
 
     @Test
-    fun `Should trigger DismissDialog action when primary button is tapped and dialog type is INFORMATION`() =
-            runBlocking {
-                classToTest.start(INFORMATION)
+    fun `Should trigger DismissDialog action when primary button is tapped and dialog type is INFORMATION`() = test {
+        classToTest.start(INFORMATION)
 
-                val startState = viewStates[0]
-                (startState as Ready).onPrimaryButtonClick()
-                verify(actionObserver).onChanged(DismissDialog)
-            }
+        val startState = viewStates[0]
+        (startState as Ready).onPrimaryButtonClick()
+        verify(actionObserver).onChanged(DismissDialog)
+    }
 
     @Test
-    fun `Should track screen shown only the first time start is called with ONBOARDING`() = runBlocking {
+    fun `Should track screen shown only the first time start is called with ONBOARDING`() = test {
         classToTest.start(ONBOARDING)
         classToTest.start(ONBOARDING)
         verify(analyticsTracker).trackScreenShown()
     }
 
     @Test
-    fun `Should track screen shown only the first time start is called with INFORMATION`() = runBlocking {
+    fun `Should track screen shown only the first time start is called with INFORMATION`() = test {
         classToTest.start(INFORMATION)
         classToTest.start(INFORMATION)
         verify(analyticsTracker).trackScreenShown()
     }
 
     @Test
-    fun `Should track try it now clicked when onPrimaryButtonClick is called with ONBOARDING`() = runBlocking {
+    fun `Should track try it now clicked when onPrimaryButtonClick is called with ONBOARDING`() = test {
         classToTest.start(ONBOARDING)
         val startState = viewStates[0]
         (startState as Ready).onPrimaryButtonClick()
@@ -213,7 +211,7 @@ class BloggingPromptsOnboardingViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `Should track got it clicked when onPrimaryButtonClick is called with INFORMATION`() = runBlocking {
+    fun `Should track got it clicked when onPrimaryButtonClick is called with INFORMATION`() = test {
         classToTest.start(INFORMATION)
         val startState = viewStates[0]
         (startState as Ready).onPrimaryButtonClick()
@@ -221,7 +219,7 @@ class BloggingPromptsOnboardingViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `Should track remind me clicked when onSecondaryButtonClick is called`() = runBlocking {
+    fun `Should track remind me clicked when onSecondaryButtonClick is called`() = test {
         classToTest.start(INFORMATION)
         val startState = viewStates[0]
         (startState as Ready).onSecondaryButtonClick()

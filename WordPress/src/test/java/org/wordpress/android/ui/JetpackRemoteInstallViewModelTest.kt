@@ -9,7 +9,6 @@ import com.nhaarman.mockitokotlin2.whenever
 import junit.framework.Assert.assertEquals
 import junit.framework.Assert.assertNull
 import junit.framework.Assert.assertTrue
-import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -28,6 +27,7 @@ import org.wordpress.android.fluxc.store.JetpackStore.JetpackInstallError
 import org.wordpress.android.fluxc.store.JetpackStore.JetpackInstallErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.JetpackStore.OnJetpackInstalled
 import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.test
 import org.wordpress.android.ui.JetpackRemoteInstallViewModel.JetpackResultActionData
 import org.wordpress.android.ui.JetpackRemoteInstallViewModel.JetpackResultActionData.Action.CONNECT
 import org.wordpress.android.ui.JetpackRemoteInstallViewModel.JetpackResultActionData.Action.MANUAL_INSTALL
@@ -65,7 +65,7 @@ class JetpackRemoteInstallViewModelTest {
     }
 
     @Test
-    fun `on click starts jetpack install`() = runBlocking {
+    fun `on click starts jetpack install`() = test {
         viewModel.start(site, null)
 
         val startState = viewStates[0]
@@ -83,7 +83,7 @@ class JetpackRemoteInstallViewModelTest {
     }
 
     @Test
-    fun `on successful result finishes jetpack install`() = runBlocking {
+    fun `on successful result finishes jetpack install`() = test {
         val updatedSite = mock<SiteModel>()
         whenever(siteStore.getSiteByLocalId(siteId)).thenReturn(updatedSite)
         whenever(accountStore.hasAccessToken()).thenReturn(true)
@@ -106,7 +106,7 @@ class JetpackRemoteInstallViewModelTest {
     }
 
     @Test
-    fun `on error result shows failure`() = runBlocking {
+    fun `on error result shows failure`() = test {
         val installError = JetpackInstallError(GENERIC_ERROR, "error")
         viewModel.start(site, null)
 
@@ -126,7 +126,7 @@ class JetpackRemoteInstallViewModelTest {
     }
 
     @Test
-    fun `on invalid credentials triggers manual install`() = runBlocking {
+    fun `on invalid credentials triggers manual install`() = test {
         val installError = JetpackInstallError(GENERIC_ERROR, "INVALID_CREDENTIALS", message = "msg")
         viewModel.start(site, null)
 
@@ -141,7 +141,7 @@ class JetpackRemoteInstallViewModelTest {
     }
 
     @Test
-    fun `on login retries jetpack connect with access token`() = runBlocking {
+    fun `on login retries jetpack connect with access token`() = test {
         assertNull(jetpackResultActionData)
 
         val updatedSite = mock<SiteModel>()

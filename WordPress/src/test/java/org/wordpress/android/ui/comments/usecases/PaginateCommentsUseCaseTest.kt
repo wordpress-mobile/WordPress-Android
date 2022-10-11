@@ -8,16 +8,13 @@ import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runBlockingTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mock
-import org.mockito.Mockito
+import org.mockito.Mockito.*
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.MainCoroutineScopeRule
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.CommentStore.CommentError
 import org.wordpress.android.fluxc.store.CommentStore.CommentErrorType.GENERIC_ERROR
@@ -32,6 +29,7 @@ import org.wordpress.android.models.usecases.PaginateCommentsUseCase.PaginateCom
 import org.wordpress.android.models.usecases.PaginateCommentsUseCase.PaginateCommentsAction.OnReloadFromCache
 import org.wordpress.android.models.usecases.PaginateCommentsUseCase.Parameters.GetPageParameters
 import org.wordpress.android.models.usecases.PaginateCommentsUseCase.Parameters.ReloadFromCacheParameters
+import org.wordpress.android.test
 import org.wordpress.android.ui.comments.unified.CommentFilter.ALL
 import org.wordpress.android.ui.comments.unified.CommentFilter.PENDING
 import org.wordpress.android.ui.comments.unified.CommentFilter.UNREPLIED
@@ -45,8 +43,6 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 
 @ExperimentalCoroutinesApi
 class PaginateCommentsUseCaseTest : BaseUnitTest() {
-    @Rule @JvmField val coroutineScopeRule = MainCoroutineScopeRule()
-
     @Mock private lateinit var commentStore: CommentsStore
     @Mock private lateinit var paginateCommentsResourceProvider: PaginateCommentsResourceProvider
     @Mock private lateinit var unrepliedCommentsUtils: UnrepliedCommentsUtils
@@ -57,27 +53,20 @@ class PaginateCommentsUseCaseTest : BaseUnitTest() {
     val site = SiteModel().also { it.id = 5 }.also { it.name = "Test Site" }
 
     @Before
-    fun setup() {
+    fun setup() = test {
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
         whenever(paginateCommentsResourceProvider.commentsStore).thenReturn(commentStore)
         whenever(paginateCommentsResourceProvider.unrepliedCommentsUtils).thenReturn(unrepliedCommentsUtils)
         whenever(paginateCommentsResourceProvider.networkUtilsWrapper).thenReturn(networkUtilsWrapper)
 
-        runBlocking {
-            Mockito.`when`(commentStore.fetchCommentsPage(eq(site), any(), eq(0), any(), any()))
-        }.thenReturn(testCommentsPayload30)
-
-        runBlocking {
-            Mockito.`when`(commentStore.fetchCommentsPage(eq(site), any(), eq(30), any(), any()))
-        }.thenReturn(testCommentsPayload60)
-
-        runBlocking {
-            Mockito.`when`(commentStore.fetchCommentsPage(eq(site), any(), eq(60), any(), any()))
-        }.thenReturn(testCommentsPayloadLastPage)
-
-        runBlocking {
-            Mockito.`when`(commentStore.getCachedComments(eq(site), any(), any()))
-        }.thenReturn(testCommentsPayload60)
+        `when`(commentStore.fetchCommentsPage(eq(site), any(), eq(0), any(), any()))
+                .thenReturn(testCommentsPayload30)
+        `when`(commentStore.fetchCommentsPage(eq(site), any(), eq(30), any(), any()))
+                .thenReturn(testCommentsPayload60)
+        `when`(commentStore.fetchCommentsPage(eq(site), any(), eq(60), any(), any()))
+                .thenReturn(testCommentsPayloadLastPage)
+        `when`(commentStore.getCachedComments(eq(site), any(), any()))
+                .thenReturn(testCommentsPayload60)
 
         paginateCommentsUseCase = PaginateCommentsUseCase(paginateCommentsResourceProvider)
     }
