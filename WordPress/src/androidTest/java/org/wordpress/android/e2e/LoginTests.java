@@ -24,7 +24,6 @@ public class LoginTests extends BaseTest {
         logoutIfNecessary();
     }
 
-    @Ignore("Ignored temporarily. This sometimes fail on CI while running with whole test suite.")
     @Test
     public void e2eLoginWithEmailPassword() {
         new LoginFlow().chooseContinueWithWpCom()
@@ -33,7 +32,6 @@ public class LoginTests extends BaseTest {
                        .confirmLogin(false);
     }
 
-    @Ignore("Ignored temporarily. This sometimes fail on CI while running with whole test suite.")
     @Test
     public void e2eLoginWithPasswordlessAccount() {
         new LoginFlow().chooseContinueWithWpCom()
@@ -51,7 +49,6 @@ public class LoginTests extends BaseTest {
                        .confirmLogin(false);
     }
 
-    @Ignore("Ignored temporarily. This sometimes fail on CI while running with whole test suite.")
     @Test
     public void e2eLoginWithMagicLink() {
         new LoginFlow().chooseContinueWithWpCom()
