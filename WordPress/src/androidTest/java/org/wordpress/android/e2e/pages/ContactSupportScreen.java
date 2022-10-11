@@ -8,7 +8,6 @@ import org.wordpress.android.R;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.isEnabled;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
@@ -18,7 +17,6 @@ import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.not;
 import static org.wordpress.android.support.WPSupportUtils.populateTextField;
 import static org.wordpress.android.support.WPSupportUtils.sleep;
-import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDisplayedWithoutFailure;
 
 public class ContactSupportScreen {
@@ -42,11 +40,6 @@ public class ContactSupportScreen {
     ));
 
     // Actions:
-    public ContactSupportScreen tapSendButton() {
-        sendButton.perform(ViewActions.click());
-        return this;
-    }
-
     public ContactSupportScreen setMessageText(String text) {
         populateTextField(textInput, text);
         // This sleep serves only one purpose: allowing human to notice
@@ -86,34 +79,6 @@ public class ContactSupportScreen {
 
     public ContactSupportScreen assertSendButtonEnabled() {
         sendButton.check(matches(isEnabled()));
-        return this;
-    }
-
-    public ContactSupportScreen assertUserMessageDelivered(String messageText) {
-        ViewInteraction userMessageContainer = onView(allOf(
-                withId(R.id.request_user_message_container),
-                hasDescendant(allOf(
-                        withId(R.id.request_user_message_text),
-                        withText(messageText)
-                )),
-                hasDescendant(allOf(
-                        withId(R.id.request_user_message_status),
-                        withText("Delivered")
-                ))
-        ));
-
-        waitForElementToBeDisplayed(userMessageContainer);
-        userMessageContainer.check(matches(isCompletelyDisplayed()));
-        return this;
-    }
-
-    public ContactSupportScreen assertSystemMessageReceived(String messageText) {
-        ViewInteraction systemResponseBubble = onView(allOf(
-                withId(R.id.request_system_message_text),
-                withText(messageText)));
-
-        waitForElementToBeDisplayed(systemResponseBubble);
-        systemResponseBubble.check(matches(isCompletelyDisplayed()));
         return this;
     }
 }

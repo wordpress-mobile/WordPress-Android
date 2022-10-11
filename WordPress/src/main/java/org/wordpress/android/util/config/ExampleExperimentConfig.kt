@@ -9,7 +9,7 @@ import javax.inject.Inject
  * An example of how to create and use an experiment.
  * The experiment defines a list of variants.
  */
-@SuppressWarnings("Unused")
+@Suppress("Unused")
 @Experiment(remoteField = EXAMPLE_EXPERIMENT_REMOTE_FIELD, defaultVariant = CONTROL_GROUP)
 class ExampleExperimentConfig
 @Inject constructor(appConfig: AppConfig) : ExperimentConfig(appConfig, EXAMPLE_EXPERIMENT_REMOTE_FIELD) {

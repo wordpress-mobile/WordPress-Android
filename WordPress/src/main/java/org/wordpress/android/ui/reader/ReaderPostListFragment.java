@@ -67,6 +67,7 @@ import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostDiscoverData;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
+import org.wordpress.android.networking.ConnectionChangeReceiver;
 import org.wordpress.android.ui.ActionableEmptyView;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.EmptyViewMessageType;
@@ -1308,6 +1309,15 @@ public class ReaderPostListFragment extends ViewPagerFragment
         mDispatcher.dispatch(ReaderActionBuilder.newReaderSearchSitesAction(payload));
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventMainThread(ConnectionChangeReceiver.ConnectionChangeEvent event) {
+        if (event.isConnected()) {
+            if (mCurrentSearchQuery != null) {
+                submitSearchQuery(mCurrentSearchQuery);
+            }
+        }
+    }
+
     private void submitSearchQuery(@NonNull String query) {
         if (!isAdded()) {
             return;
@@ -1316,6 +1326,10 @@ public class ReaderPostListFragment extends ViewPagerFragment
         mSearchView.clearFocus(); // this will hide suggestions and the virtual keyboard
         hideSearchMessage();
         hideSearchSuggestions();
+
+        if (!NetworkUtils.isNetworkAvailable(getContext())) {
+            showEmptyView();
+        }
 
         // remember this query for future suggestions
         String trimQuery = query.trim();
@@ -1669,6 +1683,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
             setEmptyTitleAndDescriptionForBookmarksList();
             return;
         } else if (!NetworkUtils.isNetworkAvailable(getActivity())) {
+            mIsUpdating = false;
             title = getString(R.string.reader_empty_posts_no_connection);
         } else if (requestFailed) {
             if (isSearching()) {

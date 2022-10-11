@@ -4,11 +4,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.TaskStackBuilder;
+import androidx.preference.PreferenceManager;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;

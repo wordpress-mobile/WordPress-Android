@@ -61,6 +61,6 @@ class EngagementUtilsTest {
         assertThat(engageItems.all { (it as Liker).source == source }).isTrue
     }
 
-    @Suppress("unused")
+    @Suppress("unused", "UNUSED_PARAMETER")
     private fun onClickDummy(userProfile: UserProfile, source: EngagementNavigationSource?) = Unit
 }

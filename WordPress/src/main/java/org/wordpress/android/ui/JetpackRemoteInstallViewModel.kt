@@ -147,8 +147,8 @@ class JetpackRemoteInstallViewModel
     }
 
     // Network Callbacks
+    @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    @SuppressWarnings("unused")
     fun onEventsUpdated(event: OnJetpackInstalled) {
         val site = siteModel ?: return
         if (event.isError) {

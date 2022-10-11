@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -52,7 +53,7 @@ fun ContentState(uiState: QRCodeAuthUiState.Content) = with(uiState) {
             Title(text = uiStringText(it))
         }
         subtitle?.let {
-            Subtitle(text = uiStringText(it))
+            Subtitle(text = uiStringText(it), color = MaterialTheme.colors.onBackground)
         }
         primaryActionButton?.let { actionButton ->
             if (actionButton.isVisible) {

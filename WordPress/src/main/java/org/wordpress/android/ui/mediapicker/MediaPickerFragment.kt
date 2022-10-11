@@ -140,6 +140,8 @@ class MediaPickerFragment : Fragment() {
                 is SwitchSource -> {
                     bundle.putInt(KEY_LAST_TAPPED_ICON_DATA_SOURCE, this.dataSource.ordinal)
                 }
+                is CapturePhoto -> Unit // Do nothing
+                is WpStoriesCapture -> Unit // Do nothing
             }
         }
 
@@ -487,6 +489,8 @@ class MediaPickerFragment : Fragment() {
                     }
                 }
             }
+            PhotoListUiModel.Hidden -> Unit // Do nothing
+            PhotoListUiModel.Loading -> Unit // Do nothing
         }
     }
 
