@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package org.wordpress.android.ui.posts.services
 
 import android.content.Context
@@ -83,7 +85,7 @@ class AztecImageLoaderTest {
         whenever(imageManager.loadAsBitmapIntoCustomTarget(any(), any(), any(), any()))
                 .thenAnswer { invocation ->
                     run {
-                        @Suppress("UNCHECKED_CAST")
+                        @Suppress("DEPRECATION", "UNCHECKED_CAST")
                         (invocation.arguments[1] as BaseTarget<Bitmap>).onLoadFailed(mock(Drawable::class.java))
                     }
                 }
@@ -93,7 +95,7 @@ class AztecImageLoaderTest {
         whenever(imageManager.loadAsBitmapIntoCustomTarget(any(), any(), any(), any()))
                 .thenAnswer { invocation ->
                     run {
-                        @Suppress("UNCHECKED_CAST")
+                        @Suppress("DEPRECATION", "UNCHECKED_CAST")
                         (invocation.arguments[1] as BaseTarget<Bitmap>).onResourceReady(bitmap, null)
                     }
                 }
@@ -103,7 +105,7 @@ class AztecImageLoaderTest {
         whenever(imageManager.loadAsBitmapIntoCustomTarget(any(), any(), any(), any()))
                 .thenAnswer { invocation ->
                     run {
-                        @Suppress("UNCHECKED_CAST")
+                        @Suppress("DEPRECATION", "UNCHECKED_CAST")
                         (invocation.arguments[1] as BaseTarget<Bitmap>).onLoadStarted(mock(Drawable::class.java))
                     }
                 }

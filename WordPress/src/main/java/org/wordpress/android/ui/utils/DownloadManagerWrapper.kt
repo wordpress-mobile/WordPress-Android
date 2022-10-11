@@ -45,12 +45,14 @@ class DownloadManagerWrapper
     private fun toPublicUri(fileUrl: String): Uri {
         val fileUri = Uri.parse(fileUrl)
         return if (ContentResolver.SCHEME_FILE == fileUri.scheme) {
-            val file = File(fileUri.path)
-            FileProvider.getUriForFile(
-                    context,
-                    "${BuildConfig.APPLICATION_ID}.provider",
-                    file
-            )
+            fileUri.path?.let { path ->
+                val file = File(path)
+                FileProvider.getUriForFile(
+                        context,
+                        "${BuildConfig.APPLICATION_ID}.provider",
+                        file
+                )
+            } ?: fileUri
         } else {
             fileUri
         }

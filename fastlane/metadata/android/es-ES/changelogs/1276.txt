@@ -1,0 +1,3 @@
+20.8:
+En los sitios de varios autores, los usuarios pueden cambiar los autores del contenido en la configuración de las entradas y de la página.
+Ahora, los usuarios cuyo idioma sea el árabe verán los numerales de las pantallas Estadísticas solo en números arábigos occidentales. Ya no se mezclarán con los números arábigos orientales.

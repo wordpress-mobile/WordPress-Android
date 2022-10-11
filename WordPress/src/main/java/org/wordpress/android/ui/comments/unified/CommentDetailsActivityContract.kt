@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package org.wordpress.android.ui.comments.unified
 
 import android.app.Activity
@@ -13,6 +15,7 @@ import org.wordpress.android.ui.comments.unified.CommentDetailsActivityContract.
 
 class CommentDetailsActivityContract : ActivityResultContract<CommentDetailsActivityRequest,
         CommentDetailsActivityResponse?>() {
+    @Suppress("DEPRECATION")
     override fun createIntent(context: Context, input: CommentDetailsActivityRequest): Intent {
         val detailIntent = Intent(context, CommentsDetailActivity::class.java)
         detailIntent.putExtra(CommentsDetailActivity.COMMENT_ID_EXTRA, input.commentId)

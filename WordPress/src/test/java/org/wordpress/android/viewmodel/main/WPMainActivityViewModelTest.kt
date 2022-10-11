@@ -10,6 +10,7 @@ import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runBlockingTest
@@ -60,8 +61,9 @@ import org.wordpress.android.viewmodel.main.WPMainActivityViewModel.FocusPointIn
 import java.util.Date
 
 @Suppress("LargeClass")
-@RunWith(MockitoJUnitRunner::class)
 @InternalCoroutinesApi
+@ExperimentalCoroutinesApi
+@RunWith(MockitoJUnitRunner::class)
 class WPMainActivityViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: WPMainActivityViewModel
 

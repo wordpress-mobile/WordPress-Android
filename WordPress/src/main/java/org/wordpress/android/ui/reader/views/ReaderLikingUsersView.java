@@ -109,6 +109,7 @@ public class ReaderLikingUsersView extends LinearLayout {
         }
     }
 
+    @SuppressWarnings("deprecation")
     private static class LoadAvatarsTask extends AsyncTask<ReaderPost, Void, ArrayList<String>> {
         private final WeakReference<ReaderLikingUsersView> mViewReference;
         private final long mCurrentUserId;

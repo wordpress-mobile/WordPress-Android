@@ -3,8 +3,11 @@ plugins {
     id "org.jetbrains.kotlin.kapt"
 }
 
-ext.kotlinPoetVersion = '1.6.0'
-ext.autoServiceVersion = '1.0'
+compileKotlin {
+    kotlinOptions {
+        allWarningsAsErrors = true
+    }
+}
 
 dependencies {
     implementation project(':libs:annotations')
@@ -17,7 +20,3 @@ dependencies {
     testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$nhaarmanMockitoVersion"
     testImplementation "org.assertj:assertj-core:$assertJVersion"
 }
-
-sourceCompatibility = "7"
-targetCompatibility = "7"
-

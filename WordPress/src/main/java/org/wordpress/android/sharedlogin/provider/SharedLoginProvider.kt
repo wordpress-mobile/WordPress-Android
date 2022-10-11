@@ -6,16 +6,14 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.provider.query.QueryContentProvider
 import org.wordpress.android.provider.query.QueryResult
-import org.wordpress.android.sharedlogin.data.JetpackPublicData
+import org.wordpress.android.util.publicdata.ClientVerification
 import org.wordpress.android.util.signature.SignatureNotFoundException
-import org.wordpress.android.util.signature.SignatureUtils
 import javax.inject.Inject
 
 class SharedLoginProvider : QueryContentProvider() {
     @Inject lateinit var accountStore: AccountStore
-    @Inject lateinit var signatureUtils: SignatureUtils
     @Inject lateinit var queryResult: QueryResult
-    @Inject lateinit var jetpackPublicData: JetpackPublicData
+    @Inject lateinit var clientVerification: ClientVerification
 
     override fun onCreate(): Boolean {
         return true
@@ -32,11 +30,7 @@ class SharedLoginProvider : QueryContentProvider() {
         inject()
         return context?.let {
             try {
-                val callerPackageId = callingPackage
-                val callerExpectedPackageId = jetpackPublicData.currentPackageId()
-                val callerSignatureHash = signatureUtils.getSignatureHash(it, callerExpectedPackageId)
-                val callerExpectedSignatureHash = jetpackPublicData.currentPublicKeyHash()
-                if (callerPackageId == callerExpectedPackageId && callerSignatureHash == callerExpectedSignatureHash) {
+                if (clientVerification.canTrust(callingPackage)) {
                     queryResult.createCursor(accountStore.accessToken)
                 } else null
             } catch (signatureNotFoundException: SignatureNotFoundException) {

@@ -64,9 +64,9 @@ private const val ON_ENTER_SERVER_CREDS_MESSAGE_CLICKED_PARAM_POSITION = 7
 private const val TEST_SITE_ID = 1L
 private const val SERVER_CREDS_LINK = "${Constants.URL_JETPACK_SETTINGS}/$TEST_SITE_ID}"
 
-@ExperimentalCoroutinesApi
-@InternalCoroutinesApi
 @Suppress("LargeClass")
+@InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 class ScanViewModelTest : BaseUnitTest() {
     @Rule
     @JvmField val coroutineScope = MainCoroutineScopeRule()

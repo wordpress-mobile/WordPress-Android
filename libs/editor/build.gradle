@@ -4,8 +4,6 @@ plugins {
     id "org.jetbrains.kotlin.plugin.parcelize"
 }
 
-ext.aztecVersion = 'v1.6.0'
-
 repositories {
     maven {
         url "https://a8c-libs.s3.amazonaws.com/android"
@@ -41,9 +39,9 @@ android {
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
     }
-    compileOptions {
-        sourceCompatibility 1.8
-        targetCompatibility 1.8
+
+    kotlinOptions {
+        allWarningsAsErrors = true
     }
 
     // Avoid 'duplicate files during packaging of APK' errors
@@ -61,9 +59,12 @@ dependencies {
     implementation 'androidx.vectordrawable:vectordrawable-animated:1.0.0'
     implementation 'androidx.gridlayout:gridlayout:1.0.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation "androidx.preference:preference:$preferenceVersion"
+
     implementation 'com.google.android.material:material:1.2.1'
     implementation 'org.apache.commons:commons-lang3:3.5'
     implementation 'com.android.volley:volley:1.1.1'
+
     implementation "org.wordpress:utils:$wordPressUtilsVersion"
     api ("$gradle.ext.aztecAndroidAztecPath") {
         exclude group: "com.android.volley"

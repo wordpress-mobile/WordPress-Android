@@ -100,7 +100,8 @@
             android:label="@string/me_section_screen_title" />
         <activity
             android:name=".ui.accounts.LoginActivity"
-            android:theme="@style/LoginTheme.TransparentStatusBar"
+            android:theme="@style/LoginTheme.TransparentSystemBars"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
 
         <activity
@@ -399,6 +400,9 @@
                 <data
                     android:host="notifications"
                     android:scheme="wordpress" />
+                <data
+                    android:host="home"
+                    android:scheme="wordpress" />
             </intent-filter>
 
             <intent-filter android:autoVerify="true">
@@ -553,7 +557,6 @@
             android:theme="@style/WordPress.NoActionBar" />
         <activity
             android:name=".ui.reader.ReaderSubsActivity"
-            android:label="@string/reader_title_subs"
             android:theme="@style/WordPress.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
         <activity
@@ -565,7 +568,6 @@
             android:theme="@style/ReaderMediaViewerTheme" />
         <activity
             android:name=".ui.reader.discover.interests.ReaderInterestsActivity"
-            android:label="@string/reader_title_interests"
             android:theme="@style/WordPress.NoActionBar" />
 
         <!-- Gutenberg activities -->

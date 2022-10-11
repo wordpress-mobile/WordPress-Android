@@ -5,6 +5,7 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem.Bar
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.LineChartItem.Line
 import org.wordpress.android.util.LocaleManagerWrapper
+import org.wordpress.android.util.text.PercentFormatter
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.text.DecimalFormat
 import java.util.TreeMap
@@ -16,10 +17,10 @@ const val TEN_THOUSAND = 10000
 const val HUNDRED_THOUSAND = 100000
 const val MILLION = 1000000
 
-class StatsUtils
-@Inject constructor(
+class StatsUtils @Inject constructor(
     private val resourceProvider: ResourceProvider,
-    private val localeManager: LocaleManagerWrapper
+    private val localeManager: LocaleManagerWrapper,
+    private val percentFormatter: PercentFormatter
 ) {
     private val suffixes = TreeMap(
             mapOf(
@@ -90,8 +91,8 @@ class StatsUtils
         }
 
         val e = suffixes.floorEntry(safeNumber)
-        val divideBy = e.key
-        val suffix = e.value
+        val divideBy = e?.key
+        val suffix = e?.value
 
         val truncated = safeNumber / (divideBy!! / 10)
         val hasDecimal = truncated < 100 && truncated / 10.0 != (truncated / 10).toDouble()
@@ -171,7 +172,7 @@ class StatsUtils
         entries: List<Line>
     ): List<String> {
         val contentDescriptions = mutableListOf<String>()
-        entries.forEachIndexed { index, bar ->
+        entries.forEachIndexed { _, bar ->
             val contentDescription = resourceProvider.getString(
                     R.string.stats_bar_chart_accessibility_entry,
                     bar.label,
@@ -194,7 +195,10 @@ class StatsUtils
             val percentage = when (previousValue) {
                 value -> "0"
                 0L -> "∞"
-                else -> mapLongToString((difference * 100 / previousValue), isFormattedNumber)
+                else -> {
+                    val percentageValue = difference.toFloat() / previousValue
+                    percentFormatter.format(percentageValue)
+                }
             }
             val formattedDifference = mapLongToString(difference, isFormattedNumber)
             if (positive) {

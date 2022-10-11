@@ -61,7 +61,7 @@ class LineChartMarkerView @Inject constructor(
                     prevWeekCount = y.toLong()
                 }
             }
-            val positive = thisWeekCount >= (prevWeekCount ?: 0)
+            val positive = thisWeekCount >= prevWeekCount
             val change = statsUtils.buildChange(prevWeekCount, thisWeekCount, positive, isFormattedNumber = false)
             changeView.text = change.toString()
         }

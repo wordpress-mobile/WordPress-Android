@@ -67,8 +67,8 @@ class CreateSiteUseCase @Inject constructor(
         }
     }
 
+    @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    @SuppressWarnings("unused")
     fun onNewSiteCreated(event: OnNewSiteCreated) {
         continuation?.resume(event)
         continuation = null

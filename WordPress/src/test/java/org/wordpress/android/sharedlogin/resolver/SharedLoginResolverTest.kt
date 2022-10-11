@@ -20,9 +20,10 @@ import org.wordpress.android.resolver.ContentResolverWrapper
 import org.wordpress.android.sharedlogin.JetpackSharedLoginFlag
 import org.wordpress.android.sharedlogin.SharedLoginAnalyticsTracker
 import org.wordpress.android.sharedlogin.SharedLoginAnalyticsTracker.ErrorType
-import org.wordpress.android.sharedlogin.data.WordPressPublicData
+import org.wordpress.android.util.publicdata.WordPressPublicData
 import org.wordpress.android.sharedlogin.provider.SharedLoginProvider
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.userflags.resolver.UserFlagsResolver
 import org.wordpress.android.util.AccountActionBuilderWrapper
 import org.wordpress.android.viewmodel.ContextProvider
 
@@ -37,6 +38,7 @@ class SharedLoginResolverTest {
     private val accountActionBuilderWrapper: AccountActionBuilderWrapper = mock()
     private val appPrefsWrapper: AppPrefsWrapper = mock()
     private val sharedLoginAnalyticsTracker: SharedLoginAnalyticsTracker = mock()
+    private val userFlagsResolver: UserFlagsResolver = mock()
     private val classToTest = SharedLoginResolver(
             jetpackSharedLoginFlag,
             contextProvider,
@@ -47,7 +49,8 @@ class SharedLoginResolverTest {
             contentResolverWrapper,
             accountActionBuilderWrapper,
             appPrefsWrapper,
-            sharedLoginAnalyticsTracker
+            sharedLoginAnalyticsTracker,
+            userFlagsResolver
     )
     private val loggedInToken = "valid"
     private val notLoggedInToken = ""
@@ -71,7 +74,7 @@ class SharedLoginResolverTest {
     @Test
     fun `Should NOT query ContentResolver if feature flag is DISABLED`() {
         whenever(appPrefsWrapper.getIsFirstTrySharedLoginJetpack()).thenReturn(true)
-        whenever(accountStore.accessToken).thenReturn(notLoggedInToken)
+        whenever(accountStore.hasAccessToken()).thenReturn(false)
         whenever(jetpackSharedLoginFlag.isEnabled()).thenReturn(false)
         classToTest.tryJetpackLogin()
         verify(contentResolverWrapper, never()).queryUri(contentResolver, uriValue)
@@ -80,7 +83,7 @@ class SharedLoginResolverTest {
     @Test
     fun `Should NOT query ContentResolver if IS already logged in`() {
         whenever(appPrefsWrapper.getIsFirstTrySharedLoginJetpack()).thenReturn(true)
-        whenever(accountStore.accessToken).thenReturn(loggedInToken)
+        whenever(accountStore.hasAccessToken()).thenReturn(true)
         whenever(jetpackSharedLoginFlag.isEnabled()).thenReturn(true)
         classToTest.tryJetpackLogin()
         verify(contentResolverWrapper, never()).queryUri(contentResolver, uriValue)
@@ -89,7 +92,7 @@ class SharedLoginResolverTest {
     @Test
     fun `Should NOT query ContentResolver if IS NOT the first try`() {
         whenever(appPrefsWrapper.getIsFirstTrySharedLoginJetpack()).thenReturn(false)
-        whenever(accountStore.accessToken).thenReturn(notLoggedInToken)
+        whenever(accountStore.hasAccessToken()).thenReturn(false)
         whenever(jetpackSharedLoginFlag.isEnabled()).thenReturn(true)
         classToTest.tryJetpackLogin()
         verify(contentResolverWrapper, never()).queryUri(contentResolver, uriValue)
@@ -111,6 +114,14 @@ class SharedLoginResolverTest {
     }
 
     @Test
+    fun `Should try to get user flags if access token is NOT empty`() {
+        featureEnabled()
+        whenever(queryResult.getValue<String>(mockCursor)).thenReturn(loggedInToken)
+        classToTest.tryJetpackLogin()
+        verify(userFlagsResolver).tryGetUserFlags(any(), any())
+    }
+
+    @Test
     fun `Should NOT dispatch UpdateTokenPayload if access token IS empty`() {
         featureEnabled()
         whenever(queryResult.getValue<String>(mockCursor)).thenReturn(notLoggedInToken)
@@ -128,7 +139,7 @@ class SharedLoginResolverTest {
     @Test
     fun `Should NOT track login start if IS already logged in`() {
         whenever(appPrefsWrapper.getIsFirstTrySharedLoginJetpack()).thenReturn(true)
-        whenever(accountStore.accessToken).thenReturn(loggedInToken)
+        whenever(accountStore.hasAccessToken()).thenReturn(true)
         whenever(jetpackSharedLoginFlag.isEnabled()).thenReturn(true)
         classToTest.tryJetpackLogin()
         verify(sharedLoginAnalyticsTracker, never()).trackLoginStart()
@@ -137,7 +148,7 @@ class SharedLoginResolverTest {
     @Test
     fun `Should NOT track login start if feature flag is DISABLED`() {
         whenever(appPrefsWrapper.getIsFirstTrySharedLoginJetpack()).thenReturn(true)
-        whenever(accountStore.accessToken).thenReturn(notLoggedInToken)
+        whenever(accountStore.hasAccessToken()).thenReturn(false)
         whenever(jetpackSharedLoginFlag.isEnabled()).thenReturn(false)
         classToTest.tryJetpackLogin()
         verify(sharedLoginAnalyticsTracker, never()).trackLoginStart()
@@ -146,7 +157,7 @@ class SharedLoginResolverTest {
     @Test
     fun `Should NOT track login start if IS NOT the first try`() {
         whenever(appPrefsWrapper.getIsFirstTrySharedLoginJetpack()).thenReturn(false)
-        whenever(accountStore.accessToken).thenReturn(notLoggedInToken)
+        whenever(accountStore.hasAccessToken()).thenReturn(false)
         whenever(jetpackSharedLoginFlag.isEnabled()).thenReturn(true)
         classToTest.tryJetpackLogin()
         verify(sharedLoginAnalyticsTracker, never()).trackLoginStart()
@@ -181,7 +192,7 @@ class SharedLoginResolverTest {
 
     private fun featureEnabled() {
         whenever(appPrefsWrapper.getIsFirstTrySharedLoginJetpack()).thenReturn(true)
-        whenever(accountStore.accessToken).thenReturn(notLoggedInToken)
+        whenever(accountStore.hasAccessToken()).thenReturn(false)
         whenever(jetpackSharedLoginFlag.isEnabled()).thenReturn(true)
     }
 }

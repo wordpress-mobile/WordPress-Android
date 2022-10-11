@@ -1,4 +1,0 @@
-20.7:
-Sekarang terlihat jelas—kontrol pratinjau media (seperti tombol kembali) sekarang dapat ditampilkan dalam mode terang dan gelap.
-
-Layar Kode Login pada tema Compose juga memiliki kontras warna yang lebih baik agar teks lebih mudah dibaca.  Menakjubkan.

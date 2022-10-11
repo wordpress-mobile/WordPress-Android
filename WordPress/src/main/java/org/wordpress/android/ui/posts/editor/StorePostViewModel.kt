@@ -187,13 +187,13 @@ class StorePostViewModel
         _onFinish.postValue(Event(state))
     }
 
-    @SuppressWarnings("unused")
+    @Suppress("unused", "UNUSED_PARAMETER")
     @Subscribe
     fun onPostUploaded(event: OnPostUploaded) {
         hideSavingProgressDialog()
     }
 
-    @SuppressWarnings("unused")
+    @Suppress("unused", "UNUSED_PARAMETER")
     @Subscribe
     fun onPostChanged(event: OnPostChanged) {
         hideSavingProgressDialog()

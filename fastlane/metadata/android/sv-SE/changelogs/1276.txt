@@ -1,0 +1,3 @@
+20.8:
+Användare på webbplatser med flera författare kan ändra inläggsförfattare i inläggs- och sidinställningarna.
+Arabiska språkanvändare kommer nu uteslutande att se siffror på statistikskärmarna i västarabiska siffror – inte längre blandat med östarabiska siffror.

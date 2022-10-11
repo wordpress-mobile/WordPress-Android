@@ -11,7 +11,6 @@ Language: he_IL
     <string name="me_disconnect_from_wordpress_com">להתנתק מ-Jetpack</string>
     <string name="support_ticket_subject">תמיכה ב-Jetpack ל-Android</string>
     <string name="login_magic_links_sent_label">עליך לבדוק את האימייל ממכשיר זה ולהקיש על הקישור בהודעה שקיבלת מ-Jetpack.com.</string>
-    <string name="continue_with_wpcom_no_signup">התחברות באמצעות WordPress.com</string>
     <string name="app_tagline">האבטחה והביצועים של האתר ישירות מהמכשיר הנייד</string>
     <string name="post_signup_interstitial_title">ברוך בואך אל Jetpack</string>
     <string name="app_title">Jetpack ל-Android</string>

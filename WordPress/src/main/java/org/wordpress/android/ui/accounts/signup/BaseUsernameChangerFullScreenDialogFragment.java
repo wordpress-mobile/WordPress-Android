@@ -3,7 +3,6 @@ package org.wordpress.android.ui.accounts.signup;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
-import android.text.Html;
 import android.text.Spanned;
 import android.text.SpannedString;
 import android.text.TextUtils;
@@ -17,6 +16,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.text.HtmlCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SimpleItemAnimator;
@@ -381,9 +381,7 @@ public abstract class BaseUsernameChangerFullScreenDialogFragment extends Dagger
                     mUsernameSuggestionInput,
                     "</b>"
             );
-            mUsernameView.setError(Html.fromHtml(
-                    error
-            ));
+            mUsernameView.setError(HtmlCompat.fromHtml(error, HtmlCompat.FROM_HTML_MODE_LEGACY));
         } else {
             populateUsernameSuggestions(event.suggestions);
         }
