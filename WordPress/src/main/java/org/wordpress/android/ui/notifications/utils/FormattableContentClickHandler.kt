@@ -7,20 +7,6 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.tools.FormattableRange
 import org.wordpress.android.fluxc.tools.FormattableRangeType
-import org.wordpress.android.fluxc.tools.FormattableRangeType.BLOCKQUOTE
-import org.wordpress.android.fluxc.tools.FormattableRangeType.COMMENT
-import org.wordpress.android.fluxc.tools.FormattableRangeType.FOLLOW
-import org.wordpress.android.fluxc.tools.FormattableRangeType.LIKE
-import org.wordpress.android.fluxc.tools.FormattableRangeType.MATCH
-import org.wordpress.android.fluxc.tools.FormattableRangeType.MEDIA
-import org.wordpress.android.fluxc.tools.FormattableRangeType.NOTICON
-import org.wordpress.android.fluxc.tools.FormattableRangeType.PAGE
-import org.wordpress.android.fluxc.tools.FormattableRangeType.POST
-import org.wordpress.android.fluxc.tools.FormattableRangeType.REWIND_DOWNLOAD_READY
-import org.wordpress.android.fluxc.tools.FormattableRangeType.SITE
-import org.wordpress.android.fluxc.tools.FormattableRangeType.STAT
-import org.wordpress.android.fluxc.tools.FormattableRangeType.UNKNOWN
-import org.wordpress.android.fluxc.tools.FormattableRangeType.USER
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.WPWebViewActivity
@@ -53,16 +39,16 @@ class FormattableContentClickHandler @Inject constructor(
         val siteId = clickedSpan.siteId ?: 0
         val postId = clickedSpan.postId ?: 0
         when (val rangeType = clickedSpan.rangeType()) {
-            SITE ->
+            FormattableRangeType.SITE ->
                 // Show blog preview
                 showBlogPreviewActivity(activity, id, postId, source)
-            USER ->
+            FormattableRangeType.USER ->
                 // Show blog preview
                 showBlogPreviewActivity(activity, siteId, postId, source)
-            PAGE, POST ->
+            FormattableRangeType.PAGE, FormattableRangeType.POST ->
                 // Show post detail
                 showPostActivity(activity, siteId, id)
-            COMMENT -> {
+            FormattableRangeType.COMMENT -> {
                 // Load the comment in the reader list if it exists, otherwise show a webview
                 val postId = clickedSpan.postId ?: clickedSpan.rootId ?: 0
                 if (ReaderUtils.postAndCommentExists(siteId, postId, id)) {
@@ -71,22 +57,24 @@ class FormattableContentClickHandler @Inject constructor(
                     showWebViewActivityForUrl(activity, clickedSpan.url, rangeType)
                 }
             }
-            STAT, FOLLOW ->
+            FormattableRangeType.STAT, FormattableRangeType.FOLLOW ->
                 // We can open native stats if the site is a wpcom or Jetpack sites
                 showStatsActivityForSite(activity, siteId, rangeType)
-            LIKE -> if (ReaderPostTable.postExists(siteId, id)) {
+            FormattableRangeType.LIKE -> if (ReaderPostTable.postExists(siteId, id)) {
                 showReaderPostLikeUsers(activity, siteId, id)
             } else {
                 showPostActivity(activity, siteId, id)
             }
-            REWIND_DOWNLOAD_READY -> showBackup(activity, siteId)
-            BLOCKQUOTE,
-            NOTICON,
-            MATCH,
-            MEDIA,
-            UNKNOWN -> {
+            FormattableRangeType.REWIND_DOWNLOAD_READY -> showBackup(activity, siteId)
+            FormattableRangeType.BLOCKQUOTE,
+            FormattableRangeType.NOTICON,
+            FormattableRangeType.MATCH,
+            FormattableRangeType.MEDIA,
+            FormattableRangeType.UNKNOWN -> {
                 showWebViewActivityForUrl(activity, clickedSpan.url, rangeType)
             }
+            FormattableRangeType.SCAN -> Unit // Do nothing
+            FormattableRangeType.B -> Unit // Do nothing
         }
     }
 
@@ -126,7 +114,7 @@ class FormattableContentClickHandler @Inject constructor(
         site: SiteModel,
         rangeType: FormattableRangeType
     ) {
-        if (rangeType == FOLLOW) {
+        if (rangeType == FormattableRangeType.FOLLOW) {
             ActivityLauncher.viewAllTabbedInsightsStats(activity, FOLLOWERS, 0, site.id)
         } else {
             ActivityLauncher.viewBlogStats(activity, site)

@@ -17,8 +17,7 @@ const val TEN_THOUSAND = 10000
 const val HUNDRED_THOUSAND = 100000
 const val MILLION = 1000000
 
-class StatsUtils
-@Inject constructor(
+class StatsUtils @Inject constructor(
     private val resourceProvider: ResourceProvider,
     private val localeManager: LocaleManagerWrapper,
     private val percentFormatter: PercentFormatter
@@ -92,8 +91,8 @@ class StatsUtils
         }
 
         val e = suffixes.floorEntry(safeNumber)
-        val divideBy = e.key
-        val suffix = e.value
+        val divideBy = e?.key
+        val suffix = e?.value
 
         val truncated = safeNumber / (divideBy!! / 10)
         val hasDecimal = truncated < 100 && truncated / 10.0 != (truncated / 10).toDouble()

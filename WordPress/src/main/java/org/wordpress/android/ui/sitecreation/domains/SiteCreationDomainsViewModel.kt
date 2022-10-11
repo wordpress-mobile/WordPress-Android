@@ -162,7 +162,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
         if (event.isError && event.error.type != SuggestDomainErrorType.INVALID_QUERY) {
             tracker.trackErrorShown(
                     ERROR_CONTEXT,
-                    event.error.type?.toString() ?: SiteCreationErrorType.UNKNOWN.toString(),
+                    event.error.type.toString(),
                     event.error.message
             )
             updateUiStateToContent(

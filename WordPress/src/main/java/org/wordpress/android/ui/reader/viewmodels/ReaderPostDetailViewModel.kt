@@ -679,7 +679,7 @@ class ReaderPostDetailViewModel @Inject constructor(
         var emptyStateTitle: UiString? = null
 
         if (updateLikesState is Failure && !showLoading) {
-            updateLikesState.emptyStateData?.let {
+            updateLikesState.emptyStateData.let {
                 showEmptyState = it.showEmptyState
                 emptyStateTitle = it.title
             }

@@ -69,7 +69,7 @@ class JetpackCapabilitiesUseCase @Inject constructor(
             dispatcher.dispatch(SiteActionBuilder.newFetchJetpackCapabilitiesAction(payload))
         }
 
-        val capabilities: List<JetpackCapability> = response.capabilities ?: listOf()
+        val capabilities: List<JetpackCapability> = response.capabilities
         if (!response.isError) {
             updateCache(remoteSiteId, capabilities)
         }

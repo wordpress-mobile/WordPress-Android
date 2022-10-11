@@ -261,9 +261,10 @@ class PostsListActivity : LocaleAwareActivity(),
             when (createAction) {
                 ActionType.CREATE_NEW_POST -> viewModel.newPost()
                 ActionType.CREATE_NEW_STORY -> viewModel.newStoryPost()
-                ActionType.CREATE_NEW_PAGE -> Unit
-                ActionType.NO_ACTION -> Unit
-                null -> Unit
+                ActionType.CREATE_NEW_PAGE -> Unit // Do nothing
+                ActionType.NO_ACTION -> Unit // Do nothing
+                ActionType.ANSWER_BLOGGING_PROMPT -> Unit // Do nothing
+                null -> Unit // Do nothing
             }
         })
 
@@ -512,21 +513,19 @@ class PostsListActivity : LocaleAwareActivity(),
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         super.onCreateOptionsMenu(menu)
-        menu?.let {
-            menuInflater.inflate(R.menu.posts_list_toggle_view_layout, it)
-            toggleViewLayoutMenuItem = it.findItem(R.id.toggle_post_list_item_layout)
-            viewModel.viewLayoutTypeMenuUiState.observe(this, { menuUiState ->
-                menuUiState?.let {
-                    updateMenuIcon(menuUiState.iconRes, toggleViewLayoutMenuItem)
-                    updateMenuTitle(menuUiState.title, toggleViewLayoutMenuItem)
-                }
-            })
+        menuInflater.inflate(R.menu.posts_list_toggle_view_layout, menu)
+        toggleViewLayoutMenuItem = menu.findItem(R.id.toggle_post_list_item_layout)
+        viewModel.viewLayoutTypeMenuUiState.observe(this, { menuUiState ->
+            menuUiState?.let {
+                updateMenuIcon(menuUiState.iconRes, toggleViewLayoutMenuItem)
+                updateMenuTitle(menuUiState.title, toggleViewLayoutMenuItem)
+            }
+        })
 
-            searchActionButton = it.findItem(R.id.toggle_post_search)
+        searchActionButton = menu.findItem(R.id.toggle_post_search)
 
-            initSearchFragment()
-            binding.initSearchView()
-        }
+        initSearchFragment()
+        binding.initSearchView()
         return true
     }
 

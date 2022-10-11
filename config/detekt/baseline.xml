@@ -177,7 +177,6 @@
     <ID>NestedBlockDepth:LoadStoryFromStoriesPrefsUseCase.kt$LoadStoryFromStoriesPrefsUseCase$private fun loadOrReCreateStoryFromStoriesPrefs(site: SiteModel, mediaIds: ArrayList&lt;String>): ReCreateStoryResult</ID>
     <ID>NestedBlockDepth:PublicizeErrorDialogFragment.kt$PublicizeErrorDialogFragment$override fun onCreateDialog(savedInstanceState: Bundle?): Dialog</ID>
     <ID>NestedBlockDepth:PublishNotificationReceiverViewModel.kt$PublishNotificationReceiverViewModel$fun loadNotification(notificationId: Int): NotificationUiModel?</ID>
-    <ID>NestedBlockDepth:ReaderDiscoverLogic.kt$ReaderDiscoverLogic$private fun createSimplifiedRecommendedBlogsCardJson(originalCardJson: JSONObject): JSONObject</ID>
     <ID>NestedBlockDepth:StoriesPrefs.kt$StoriesPrefs$private fun checkSlideOriginalBackgroundMediaExists(storyFrameItem: StoryFrameItem?): Boolean</ID>
     <ID>NestedBlockDepth:StoryComposerActivity.kt$StoryComposerActivity$override fun onStorySaveButtonPressed()</ID>
     <ID>NestedBlockDepth:StoryComposerActivity.kt$StoryComposerActivity$private fun buildStoryMediaFileDataListFromStoryFrameIndexes( storyIndex: StoryIndex ): ArrayList&lt;StoryMediaFileData></ID>
@@ -251,7 +250,6 @@
     <ID>TooGenericExceptionThrown:ReaderTracker.kt$ReaderTab.Companion$throw RuntimeException("Unexpected ReaderTab id")</ID>
     <ID>TooGenericExceptionThrown:RestoreFragment.kt$RestoreFragment$throw Throwable("Couldn't initialize ${this.javaClass.simpleName} view model")</ID>
     <ID>TooGenericExceptionThrown:RestoreViewModel.kt$RestoreViewModel$throw Throwable("Unexpected restoreRequestResult ${this.javaClass.simpleName}")</ID>
-    <ID>TooGenericExceptionThrown:StatsDateFormatter.kt$StatsDateFormatter$throw RuntimeException("Unexpected date format")</ID>
     <ID>TooGenericExceptionThrown:ThreatDetailsFragment.kt$ThreatDetailsFragment$throw RuntimeException("ThreatDetailsFragment - missing siteModel extras.")</ID>
     <ID>TopLevelPropertyNaming:ActivityLogTypeFilterAdapter.kt$private const val activityViewType: Int = 2</ID>
     <ID>TopLevelPropertyNaming:ActivityLogTypeFilterAdapter.kt$private const val headerViewType: Int = 1</ID>
