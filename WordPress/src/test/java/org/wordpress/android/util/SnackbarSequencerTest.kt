@@ -32,7 +32,8 @@ private const val TEST_MESSAGE = "This is a test message"
 @InternalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class SnackbarSequencerTest {
-    @Rule @JvmField val rule = InstantTaskExecutorRule()
+    @Rule
+    @JvmField val rule = InstantTaskExecutorRule()
 
     @Mock lateinit var wpSnackbarWrapper: WPSnackbarWrapper
     @Mock lateinit var wpSnackbar: Snackbar

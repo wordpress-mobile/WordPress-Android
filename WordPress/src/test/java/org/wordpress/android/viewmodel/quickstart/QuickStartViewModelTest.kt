@@ -20,7 +20,8 @@ import org.wordpress.android.ui.quickstart.QuickStartTaskState
 
 @RunWith(MockitoJUnitRunner::class)
 class QuickStartViewModelTest {
-    @Rule @JvmField val rule = InstantTaskExecutorRule()
+    @Rule
+    @JvmField val rule = InstantTaskExecutorRule()
 
     @Mock private lateinit var store: QuickStartStore
     private val siteId = 1L
