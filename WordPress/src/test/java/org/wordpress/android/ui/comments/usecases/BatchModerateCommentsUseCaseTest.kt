@@ -15,7 +15,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.notification.Failure
 import org.mockito.Mock
-import org.mockito.Mockito.*
+import org.mockito.Mockito.`when`
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.CommentStatus.APPROVED
 import org.wordpress.android.fluxc.model.CommentStatus.DELETED
@@ -273,7 +273,7 @@ class BatchModerateCommentsUseCaseTest : BaseUnitTest() {
                         )
                 )
 
-                assertThat(result.any { it is Failure }).isFalse() // no errors
+                result.forEach { assertThat(it).isNotInstanceOf(Failure::class.java) }
 
                 verify(commentStore, times(1)).getCommentByLocalSiteAndRemoteId(site.id, 1)
                 verify(commentStore, times(1)).getCommentByLocalSiteAndRemoteId(site.id, 3)
@@ -347,7 +347,7 @@ class BatchModerateCommentsUseCaseTest : BaseUnitTest() {
                 )
         )
 
-        assertThat(result.any { it is Failure }).isFalse() // no errors
+        result.forEach { assertThat(it).isNotInstanceOf(Failure::class.java) }
 
         verify(commentStore, times(1)).getCommentByLocalSiteAndRemoteId(site.id, 1)
         verify(commentStore, times(1)).getCommentByLocalSiteAndRemoteId(site.id, 3)
@@ -429,7 +429,9 @@ class BatchModerateCommentsUseCaseTest : BaseUnitTest() {
                 )
 
                 assertThat(result.size).isEqualTo(2)
-                assertThat(result.filter { it is UseCaseResult.Failure }.size).isEqualTo(2)
+                result.filterIsInstance<UseCaseResult.Failure<CommentsUseCaseType, CommentError, DoNotCare>>().let {
+                    assertThat(it.size).isEqualTo(2)
+                }
 
                 // getting a backup from DB
 
