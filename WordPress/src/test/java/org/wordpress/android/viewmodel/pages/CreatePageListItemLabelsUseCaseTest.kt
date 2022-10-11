@@ -308,7 +308,7 @@ class CreatePageListItemLabelsUseCaseTest {
     }
 
     @Test
-    fun `when a page is locally changed and is local draft only "Local draft" label is displayed`() {
+    fun `when a page is locally changed and is local draft only 'Local draft' label is displayed`() {
         val (labels, _) = useCase.createLabels(
                 PostModel().apply {
                     setIsLocallyChanged(true)
