@@ -3,7 +3,10 @@ package org.wordpress.android.sharedlogin.resolver
 import android.content.ContentResolver
 import android.content.Context
 import android.database.MatrixCursor
+import com.nhaarman.mockitokotlin2.KArgumentCaptor
 import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.argumentCaptor
+import com.nhaarman.mockitokotlin2.doAnswer
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.times
@@ -16,6 +19,7 @@ import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.AccountStore.UpdateTokenPayload
 import org.wordpress.android.provider.query.QueryResult
+import org.wordpress.android.reader.savedposts.resolver.ReaderSavedPostsResolver
 import org.wordpress.android.resolver.ContentResolverWrapper
 import org.wordpress.android.sharedlogin.JetpackSharedLoginFlag
 import org.wordpress.android.sharedlogin.SharedLoginAnalyticsTracker
@@ -28,6 +32,9 @@ import org.wordpress.android.util.AccountActionBuilderWrapper
 import org.wordpress.android.viewmodel.ContextProvider
 
 class SharedLoginResolverTest {
+    private lateinit var onSuccessFlagsCaptor: KArgumentCaptor<() -> Unit>
+    private lateinit var onSuccessRaaderPostsCaptor: KArgumentCaptor<() -> Unit>
+
     private val jetpackSharedLoginFlag: JetpackSharedLoginFlag = mock()
     private val contextProvider: ContextProvider = mock()
     private val wordPressPublicData: WordPressPublicData = mock()
@@ -39,6 +46,8 @@ class SharedLoginResolverTest {
     private val appPrefsWrapper: AppPrefsWrapper = mock()
     private val sharedLoginAnalyticsTracker: SharedLoginAnalyticsTracker = mock()
     private val userFlagsResolver: UserFlagsResolver = mock()
+    private val readerSavedPostsResolver: ReaderSavedPostsResolver = mock()
+
     private val classToTest = SharedLoginResolver(
             jetpackSharedLoginFlag,
             contextProvider,
@@ -50,7 +59,8 @@ class SharedLoginResolverTest {
             accountActionBuilderWrapper,
             appPrefsWrapper,
             sharedLoginAnalyticsTracker,
-            userFlagsResolver
+            userFlagsResolver,
+            readerSavedPostsResolver
     )
     private val loggedInToken = "valid"
     private val notLoggedInToken = ""
@@ -106,10 +116,23 @@ class SharedLoginResolverTest {
     }
 
     @Test
-    fun `Should dispatch UpdateTokenPayload if access token is NOT empty`() {
+    fun `Should dispatch UpdateTokenPayload if access token is NOT, flags and saved posts are migrated`() {
         featureEnabled()
+        onSuccessFlagsCaptor = argumentCaptor()
+        onSuccessRaaderPostsCaptor = argumentCaptor()
+
         whenever(queryResult.getValue<String>(mockCursor)).thenReturn(loggedInToken)
+        whenever(userFlagsResolver.tryGetUserFlags(
+                onSuccessFlagsCaptor.capture(),
+                any()
+        )).doAnswer { onSuccessFlagsCaptor.firstValue.invoke() }
+        whenever(readerSavedPostsResolver.tryGetReaderSavedPosts(
+                onSuccessRaaderPostsCaptor.capture(),
+                any()
+        )).doAnswer { onSuccessRaaderPostsCaptor.firstValue.invoke() }
+
         classToTest.tryJetpackLogin()
+
         verify(dispatcher).dispatch(updateTokenAction)
     }
 
@@ -124,7 +147,19 @@ class SharedLoginResolverTest {
     @Test
     fun `Should NOT dispatch UpdateTokenPayload if access token IS empty`() {
         featureEnabled()
+        onSuccessFlagsCaptor = argumentCaptor()
+        onSuccessRaaderPostsCaptor = argumentCaptor()
+
         whenever(queryResult.getValue<String>(mockCursor)).thenReturn(notLoggedInToken)
+        whenever(userFlagsResolver.tryGetUserFlags(
+                onSuccessFlagsCaptor.capture(),
+                any()
+        )).doAnswer { onSuccessFlagsCaptor.firstValue.invoke() }
+        whenever(readerSavedPostsResolver.tryGetReaderSavedPosts(
+                onSuccessRaaderPostsCaptor.capture(),
+                any()
+        )).doAnswer { onSuccessRaaderPostsCaptor.firstValue.invoke() }
+
         classToTest.tryJetpackLogin()
         verify(dispatcher, never()).dispatch(updateTokenAction)
     }
