@@ -5,7 +5,6 @@ import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.view.WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -32,6 +31,7 @@ import org.wordpress.android.ui.accounts.login.components.PrimaryButton
 import org.wordpress.android.ui.accounts.login.components.SecondaryButton
 import org.wordpress.android.ui.accounts.login.components.TopLinearGradient
 import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.util.extensions.setTransparentSystemBars
 
 val LocalPosition = compositionLocalOf { 0f }
 
@@ -64,12 +64,12 @@ class LoginPrologueRevampedFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        requireActivity().window.addFlags(FLAG_LAYOUT_NO_LIMITS)
+        requireActivity().window.setTransparentSystemBars(true)
     }
 
     override fun onPause() {
         super.onPause()
-        requireActivity().window.clearFlags(FLAG_LAYOUT_NO_LIMITS)
+        requireActivity().window.setTransparentSystemBars(false)
     }
 
     companion object {
