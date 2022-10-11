@@ -164,7 +164,7 @@ class PageListEventListener(
     @Suppress("unused")
     @Subscribe(threadMode = BACKGROUND)
     fun onEventBackgroundThread(event: ProgressEvent) {
-        if (event.media != null && site.id == event.media.localSiteId) {
+        if (site.id == event.media.localSiteId) {
             uploadStatusChanged(LocalId(event.media.localPostId))
         }
     }
@@ -179,7 +179,7 @@ class PageListEventListener(
         }
     }
 
-    @SuppressWarnings("unused")
+    @Suppress("unused")
     @Subscribe(threadMode = MAIN)
     fun onSiteChanged(event: OnSiteChanged) {
         if (!event.isError && siteStore.hasSiteWithLocalId(site.id)) {

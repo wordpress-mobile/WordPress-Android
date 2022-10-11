@@ -348,7 +348,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         appBar.addOnOffsetChangedListener(appBarLayoutOffsetChangedListener)
 
         // Fixes collapsing toolbar layout being obscured by the status bar when drawn behind it
-        ViewCompat.setOnApplyWindowInsetsListener(appBar) { v: View, insets: WindowInsetsCompat ->
+        ViewCompat.setOnApplyWindowInsetsListener(appBar) { _: View, insets: WindowInsetsCompat ->
             val insetTop = insets.systemWindowInsetTop
             if (insetTop > 0) {
                 toolBar.setPadding(0, insetTop, 0, 0)

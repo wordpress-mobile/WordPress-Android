@@ -586,7 +586,7 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
         }
     }
 
-    @SuppressWarnings("unused")
+    @Suppress("unused", "UNUSED_PARAMETER")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onAccountChanged(event: OnAccountChanged?) {
         binding?.refreshAccountDetails()
