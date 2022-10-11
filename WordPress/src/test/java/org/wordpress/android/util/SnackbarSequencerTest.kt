@@ -17,7 +17,6 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.junit.rules.ExpectedException
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
@@ -34,7 +33,6 @@ private const val TEST_MESSAGE = "This is a test message"
 @RunWith(MockitoJUnitRunner::class)
 class SnackbarSequencerTest {
     @Rule @JvmField val rule = InstantTaskExecutorRule()
-    @Rule @JvmField var thrown2: ExpectedException = ExpectedException.none()
 
     @Mock lateinit var wpSnackbarWrapper: WPSnackbarWrapper
     @Mock lateinit var wpSnackbar: Snackbar
