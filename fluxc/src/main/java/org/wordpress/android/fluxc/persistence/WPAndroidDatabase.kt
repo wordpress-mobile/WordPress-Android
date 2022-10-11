@@ -11,7 +11,7 @@ import org.wordpress.android.fluxc.persistence.BloggingRemindersDao.BloggingRemi
 import org.wordpress.android.fluxc.persistence.PlanOffersDao.PlanOffer
 import org.wordpress.android.fluxc.persistence.PlanOffersDao.PlanOfferFeature
 import org.wordpress.android.fluxc.persistence.PlanOffersDao.PlanOfferId
-import org.wordpress.android.fluxc.persistence.RemoteConfigDao.RemoteConfig
+import org.wordpress.android.fluxc.persistence.FeatureFlagConfigDao.FeatureFlag
 import org.wordpress.android.fluxc.persistence.bloggingprompts.BloggingPromptsDao
 import org.wordpress.android.fluxc.persistence.bloggingprompts.BloggingPromptsDao.BloggingPromptEntity
 import org.wordpress.android.fluxc.persistence.comments.CommentsDao
@@ -30,7 +30,7 @@ import org.wordpress.android.fluxc.persistence.dashboard.CardsDao.CardEntity
             CommentEntity::class,
             CardEntity::class,
             BloggingPromptEntity::class,
-            RemoteConfig::class
+            FeatureFlag::class
         ]
 )
 @TypeConverters(
@@ -49,7 +49,7 @@ abstract class WPAndroidDatabase : RoomDatabase() {
 
     abstract fun bloggingPromptsDao(): BloggingPromptsDao
 
-    abstract fun remoteConfigDao(): RemoteConfigDao
+    abstract fun featureFlagConfigDao(): FeatureFlagConfigDao
 
     @Suppress("MemberVisibilityCanBePrivate")
     companion object {

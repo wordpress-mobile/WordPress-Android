@@ -3,9 +3,9 @@ package org.wordpress.android.fluxc.store.mobile
 import org.wordpress.android.fluxc.network.rest.wpcom.mobile.FeatureFlagsError
 import org.wordpress.android.fluxc.network.rest.wpcom.mobile.FeatureFlagsErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.network.rest.wpcom.mobile.FeatureFlagsRestClient
-import org.wordpress.android.fluxc.persistence.RemoteConfigDao
-import org.wordpress.android.fluxc.persistence.RemoteConfigDao.RemoteConfig
-import org.wordpress.android.fluxc.persistence.RemoteConfigDao.RemoteConfigValueSource
+import org.wordpress.android.fluxc.persistence.FeatureFlagConfigDao
+import org.wordpress.android.fluxc.persistence.FeatureFlagConfigDao.FeatureFlag
+import org.wordpress.android.fluxc.persistence.FeatureFlagConfigDao.FeatureFlagValueSource
 import org.wordpress.android.fluxc.store.Store
 import org.wordpress.android.fluxc.tools.CoroutineEngine
 import org.wordpress.android.util.AppLog
@@ -15,7 +15,7 @@ import javax.inject.Singleton
 @Singleton
 class FeatureFlagsStore @Inject constructor(
     private val featureFlagsRestClient: FeatureFlagsRestClient,
-    private val remoteConfigDao: RemoteConfigDao,
+    private val featureFlagConfigDao: FeatureFlagConfigDao,
     private val coroutineEngine: CoroutineEngine
 ) {
     suspend fun fetchFeatureFlags(
@@ -36,38 +36,31 @@ class FeatureFlagsStore @Inject constructor(
             payload.isError -> FeatureFlagsResult(payload.error)
             payload.featureFlags != null -> {
                 clearAllValues()
-                remoteConfigDao.insertRemoteConfig(payload.featureFlags)
+                featureFlagConfigDao.insert(payload.featureFlags)
                 FeatureFlagsResult(payload.featureFlags)
             }
             else -> FeatureFlagsResult(FeatureFlagsError(GENERIC_ERROR))
         }
     }
 
-    fun getFeatureFlags(): List<RemoteConfig> {
-        return remoteConfigDao.getRemoteConfigs()
+    fun getFeatureFlags(): List<FeatureFlag> {
+        return featureFlagConfigDao.getFeatureFlagList()
     }
 
-    fun getFeature(key: String): List<RemoteConfig> {
-        return remoteConfigDao.getRemoteConfig(key)
-    }
-
-    fun insertRemoteConfigValue(key: String, value: Boolean) {
-        remoteConfigDao.insertRemoteConfig(
-                RemoteConfig(
+    fun insertFeatureFlagValue(key: String, value: Boolean) {
+        featureFlagConfigDao.insert(
+                FeatureFlag(
                         key = key,
                         value = value,
                         createdAt = System.currentTimeMillis(),
                         modifiedAt = System.currentTimeMillis(),
-                        source = RemoteConfigValueSource.BUILD_CONFIG
+                        source = FeatureFlagValueSource.BUILD_CONFIG
                 )
         )
     }
 
-    fun getTheLastSyncedRemoteConfig() =
-            remoteConfigDao.getTheLastSyncedRemoteConfig(RemoteConfigValueSource.REMOTE)
-
     fun clearAllValues() {
-        remoteConfigDao.clearRemoteConfig()
+        featureFlagConfigDao.clear()
     }
 
     data class FeatureFlagsResult(
