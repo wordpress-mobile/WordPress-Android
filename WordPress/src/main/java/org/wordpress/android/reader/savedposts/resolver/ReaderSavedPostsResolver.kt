@@ -53,7 +53,7 @@ class ReaderSavedPostsResolver @Inject constructor(
                 updateReaderSavedPosts(onSuccess, onFailure, posts)
             } else {
                 readerSavedPostsAnalyticsTracker.trackFailed(ErrorType.NoUserSavedPostsError)
-                onFailure
+                onFailure()
             }
         } else {
             readerSavedPostsAnalyticsTracker.trackFailed(ErrorType.QuerySavedPostsError)
