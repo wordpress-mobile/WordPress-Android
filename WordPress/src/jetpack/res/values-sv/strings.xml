@@ -11,7 +11,6 @@ Language: sv_SE
     <string name="me_disconnect_from_wordpress_com">Logga ut från Jetpack</string>
     <string name="support_ticket_subject">Support för Jetpack för Android</string>
     <string name="login_magic_links_sent_label">Öppna e-posten på din enhet och tryck på länken i e-postmeddelandet som du har fått från Jetpack.com.</string>
-    <string name="continue_with_wpcom_no_signup">Logga in med WordPress.com</string>
     <string name="app_tagline">Webbplatssäkerhet och prestanda i din ficka</string>
     <string name="post_signup_interstitial_title">Välkommen till Jetpack</string>
     <string name="app_title">Jetpack för Android</string>

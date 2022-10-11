@@ -16,6 +16,7 @@ fun Dialog.getPreferenceDialogContainerView(): View? {
     return view
 }
 
+@Suppress("DEPRECATION")
 fun Dialog.setStatusBarAsSurfaceColor() {
     window?.apply {
         statusBarColor = context.getColorFromAttribute(attr.colorSurface)

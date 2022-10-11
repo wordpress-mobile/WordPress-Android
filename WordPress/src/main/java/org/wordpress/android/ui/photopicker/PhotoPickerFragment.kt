@@ -4,12 +4,12 @@ import android.Manifest.permission
 import android.net.Uri
 import android.os.Bundle
 import android.os.Parcelable
-import android.text.Html
 import android.view.View
 import android.widget.PopupMenu
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AlertDialog.Builder
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -194,7 +194,7 @@ class PhotoPickerFragment : Fragment(R.layout.photo_picker_fragment) {
     private fun PhotoPickerFragmentBinding.setupSoftAskView(uiModel: SoftAskViewUiModel) {
         when (uiModel) {
             is SoftAskViewUiModel.Visible -> {
-                softAskView.title.text = Html.fromHtml(uiModel.label)
+                softAskView.title.text = HtmlCompat.fromHtml(uiModel.label, HtmlCompat.FROM_HTML_MODE_LEGACY)
                 softAskView.button.setText(uiModel.allowId.stringRes)
                 softAskView.button.setOnClickListener {
                     if (uiModel.isAlwaysDenied) {
@@ -408,6 +408,7 @@ class PhotoPickerFragment : Fragment(R.layout.photo_picker_fragment) {
         viewModel.checkStoragePermission(isStoragePermissionAlwaysDenied)
     }
 
+    @Suppress("DEPRECATION")
     private fun requestStoragePermission() {
         val permissions = arrayOf(permission.WRITE_EXTERNAL_STORAGE)
         requestPermissions(
@@ -415,6 +416,7 @@ class PhotoPickerFragment : Fragment(R.layout.photo_picker_fragment) {
         )
     }
 
+    @Suppress("DEPRECATION")
     private fun requestCameraPermission() {
         // in addition to CAMERA permission we also need a storage permission, to store media from the camera
         val permissions = arrayOf(

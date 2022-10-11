@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-09-13 14:54:09+0000
+Translation-Revision-Date: 2022-09-30 20:52:44+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.3
 Language: zh_TW
 -->
 <resources>
+    <string name="error_fetch_authors_list">無法擷取作者</string>
+    <string name="post_settings_author">作者</string>
     <string name="app_rating_title">喜歡 %s 嗎？</string>
     <string name="connection_service_label">將文章分享到 %s</string>
     <string name="connections_label">Jetpack Social 連結</string>
@@ -506,7 +508,6 @@ Language: zh_TW
     <string name="blogging_reminders_notification_title">該在 %s 新增網誌內容了</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios">iOS 版 WordPress 尚不支援編輯可重複使用區塊</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and">Android 版 WordPress 尚不支援編輯可重複使用區塊</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">你可以改為點選「轉換為一般區塊」，然後分別移除並編輯這些區塊。</string>
     <string name="blogging_reminders_done">完成</string>
     <string name="blogging_reminders_notify_me">通知我</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;輸入你的伺服器憑證&lt;/a&gt;，以啟用從備份一鍵還原網站的功能。</string>
@@ -738,7 +739,6 @@ Language: zh_TW
     <string name="restore_complete_visit_site_action_button">造訪網站</string>
     <string name="restore_complete_description_with_two_parameters">所有你選取的項目現在都還原至 %1$s %2$s。</string>
     <string name="restore_complete_header">你的網站已經還原</string>
-    <string name="restore_progress_label">%1$s%%</string>
     <string name="restore_progress_footnote">無須等待。 我們會在網站還原後通知你。</string>
     <string name="restore_progress_icon_content_description">還原網站圖示</string>
     <string name="restore_progress_description_with_two_parameters">我們正在將你的網站還原至 %1$s %2$s。</string>
@@ -810,7 +810,6 @@ Language: zh_TW
     <string name="backup_download_complete_description_with_two_parameters">我們已成功建立 %1$s %2$s 的網站備份。</string>
     <string name="backup_download_complete_header">你的備份現在已可下載</string>
     <string name="backup_download_complete_page_title">你的備份</string>
-    <string name="backup_download_progress_label">%1$s%%</string>
     <string name="backup_download_progress_footnote">無需在附近等待。 我們會在備份準備就緒時通知你。</string>
     <string name="backup_download_progress_icon_content_description">建立可下載備份圖示</string>
     <string name="backup_download_progress_description_with_two_parameters">我們正在為你的網站建立 %1$s %2$s 的可下載備份。</string>
@@ -1776,10 +1775,7 @@ Language: zh_TW
     <string name="notification_channel_reminder_title">提醒</string>
     <string name="stats_select_next_period_description">選取下個期間</string>
     <string name="stats_select_previous_period_description">選取上個期間</string>
-    <string name="stats_most_popular_percent_views">瀏覽次數：%1$d%%</string>
     <string name="stats_insights_popular">最熱門的時間</string>
-    <string name="stats_traffic_change">%1$s (%2$s%%)</string>
-    <string name="stats_traffic_increase">+%1$s (%2$s%%)</string>
     <string name="new_site_creation_site_preview_content_description">顯示預覽網站</string>
     <string name="new_site_creation_clear_all_content_description">清除</string>
     <string name="site_created_but_not_fetched_snackbar_message">你的網路連線速度似乎過慢。如果你在清單中沒有看到新網站，請嘗試重新整理。</string>
@@ -2307,7 +2303,7 @@ Language: zh_TW
     <string name="delete_yes">刪除</string>
     <string name="plugin_external_link_icon_content_description">外部連結</string>
     <string name="plugin_icon_content_description">外掛程式圖示</string>
-    <string name="plugin_home_page">外掛程式首頁</string>
+    <string name="plugin_home_page">外掛首頁</string>
     <string name="wordpress_dot_org_plugin_page">WordPress.org 外掛程式頁面</string>
     <string name="plugin_remove_dialog_message">確定要將 %1$s 從 %2$s 移除？\n\n這將會停用外掛程式，並刪除所有相關的檔案及資料。</string>
     <string name="plugin_remove_dialog_title">移除外掛程式</string>

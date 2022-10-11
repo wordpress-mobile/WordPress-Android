@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package org.wordpress.android.ui.reader.subfilter
 
 import android.content.Context
@@ -133,6 +135,7 @@ class SubfilterPageFragment : DaggerFragment() {
     }
 }
 
+@Suppress("DEPRECATION")
 class SubfilterPagerAdapter(
     val context: Context,
     val fm: FragmentManager,

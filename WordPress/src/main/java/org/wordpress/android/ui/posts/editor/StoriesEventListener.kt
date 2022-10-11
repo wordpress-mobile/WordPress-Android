@@ -3,10 +3,10 @@ package org.wordpress.android.ui.posts.editor
 import android.app.Activity
 import android.net.Uri
 import androidx.appcompat.app.AlertDialog.Builder
+import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Lifecycle.State.CREATED
-import androidx.lifecycle.LifecycleObserver
-import androidx.lifecycle.OnLifecycleEvent
+import androidx.lifecycle.LifecycleOwner
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.wordpress.stories.compose.frame.StorySaveEvents.FrameSaveCompleted
 import com.wordpress.stories.compose.frame.StorySaveEvents.FrameSaveFailed
@@ -56,7 +56,7 @@ class StoriesEventListener @Inject constructor(
     private val loadStoryFromStoriesPrefsUseCase: LoadStoryFromStoriesPrefsUseCase,
     private val storiesPrefs: StoriesPrefs,
     private val storyRepositoryWrapper: StoryRepositoryWrapper
-) : LifecycleObserver {
+) : DefaultLifecycleObserver {
     private lateinit var lifecycle: Lifecycle
     private lateinit var site: SiteModel
     private lateinit var editPostRepository: EditPostRepository
@@ -89,9 +89,7 @@ class StoriesEventListener @Inject constructor(
      * Handles the [Lifecycle.Event.ON_DESTROY] event to cleanup the registration for dispatcher and removing the
      * observer for lifecycle   .
      */
-    @Suppress("unused")
-    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
-    private fun onDestroy() {
+    override fun onDestroy(owner: LifecycleOwner) {
         lifecycle.removeObserver(this)
         pauseListening()
     }

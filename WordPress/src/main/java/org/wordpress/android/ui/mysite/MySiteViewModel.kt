@@ -1,4 +1,4 @@
-@file:Suppress("MaximumLineLength")
+@file:Suppress("DEPRECATION", "MaximumLineLength")
 
 package org.wordpress.android.ui.mysite
 
@@ -83,8 +83,7 @@ import org.wordpress.android.ui.mysite.items.SiteItemsTracker
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
 import org.wordpress.android.ui.mysite.tabs.MySiteTabType
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
-import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource
-import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource.ANDROID_CAMERA
+import org.wordpress.android.ui.photopicker.PhotoPickerActivity
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Dismissed
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Negative
@@ -963,8 +962,13 @@ class MySiteViewModel @Inject constructor(
         quickStartTracker.track(Stat.QUICK_START_REMOVE_DIALOG_NEGATIVE_TAPPED)
     }
 
-    fun handleTakenSiteIcon(iconUrl: String?, source: PhotoPickerMediaSource?) {
-        val stat = if (source == ANDROID_CAMERA) Stat.MY_SITE_ICON_SHOT_NEW else Stat.MY_SITE_ICON_GALLERY_PICKED
+    @Suppress("DEPRECATION")
+    fun handleTakenSiteIcon(iconUrl: String?, source: PhotoPickerActivity.PhotoPickerMediaSource?) {
+        val stat = if (source == PhotoPickerActivity.PhotoPickerMediaSource.ANDROID_CAMERA) {
+            Stat.MY_SITE_ICON_SHOT_NEW
+        } else {
+            Stat.MY_SITE_ICON_GALLERY_PICKED
+        }
         analyticsTrackerWrapper.track(stat)
         val imageUri = Uri.parse(iconUrl)?.let { UriWrapper(it) }
         if (imageUri != null) {

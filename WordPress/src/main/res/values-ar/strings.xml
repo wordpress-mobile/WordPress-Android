@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-09-13 10:54:08+0000
+Translation-Revision-Date: 2022-09-28 11:54:09+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/4.0.0-alpha.3
 Language: ar
 -->
 <resources>
+    <string name="error_fetch_authors_list">يتعذر استرداد الكتّاب</string>
+    <string name="post_settings_author">الكاتب</string>
     <string name="app_rating_title">هل تستمتع بـ %s؟</string>
     <string name="connection_service_label">مشاركة التدوينة على %s</string>
     <string name="connections_label">عمليات الربط بـ Jetpack Social</string>
@@ -506,7 +508,6 @@ Language: ar
     <string name="blogging_reminders_notification_title">حان الوقت للتدوين في %s</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios">تحرير المكوِّنات القابلة لإعادة الاستخدام غير مدعوم بعد على ووردبريس لنظام تشغيل iOS</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and">تحرير المكوِّنات القابلة لإعادة الاستخدام غير مدعوم بعد على ووردبريس لنظام تشغيل Android</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">وبدلاً من ذلك، يمكنك فصل هذه المكوِّنات وتحريرها بشكل منفصل عن طريق الضغط على \"التحويل إلى مكوِّنات عادية\".</string>
     <string name="blogging_reminders_done">تمّ</string>
     <string name="blogging_reminders_notify_me">إشعاري بذلك</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;أدخل بيانات اعتماد الخادم الخاص بك&lt;/a&gt; لتمكين استعادة الموقع بنقرة واحدة من النُسخ الاحتياطية.</string>
@@ -731,7 +732,6 @@ Language: ar
     <string name="restore_complete_failed_icon_content_description">أيقونة الخطأ</string>
     <string name="restore_complete_failed_action_button_content_description">زر الانتهاء</string>
     <string name="restore_another_process_running">هناك عملية استعادة أخرى قيد التشغيل.</string>
-    <string name="restore_progress_label">%1$s%%</string>
     <string name="restore_complete_visit_site_action_button">زيارة الموقع</string>
     <string name="restore_complete_icon_content_description">أيقونة الاستعادة</string>
     <string name="restore_complete_done_button_content_description">زر الانتهاء</string>
@@ -809,7 +809,6 @@ Language: ar
     <string name="backup_download_complete_download_action_button_content_description">زر التنزيل</string>
     <string name="backup_download_complete_description_with_two_parameters">أنشأنا نسخة احتياطية من موقعك بنجاح من %1$s %2$s.</string>
     <string name="backup_download_complete_icon_content_description">أيقونة جاهزية النسخ الاحتياطية القابلة للتنزيل</string>
-    <string name="backup_download_progress_label">%1$s%%</string>
     <string name="backup_download_complete_page_title">نسختك الاحتياطية</string>
     <string name="backup_download_progress_header">إنشاء نسخة احتياطية قابلة للتنزيل من موقعك في الوقت الحالي</string>
     <string name="backup_download_progress_icon_content_description">جاري إنشاء أيقونة نسخة احتياطية قابلة للتنزيل</string>
@@ -1776,10 +1775,7 @@ Language: ar
     <string name="notification_channel_reminder_title">تذكير</string>
     <string name="stats_select_next_period_description">تحديد الفترة التالية</string>
     <string name="stats_select_previous_period_description">تحديد الفترة السابقة</string>
-    <string name="stats_most_popular_percent_views">%1$d%% من المشاهدات</string>
     <string name="stats_insights_popular">الوقت الأكثر شعبية</string>
-    <string name="stats_traffic_change">%1$s (%2$s%%)</string>
-    <string name="stats_traffic_increase">+%1$s (%2$s%%)</string>
     <string name="new_site_creation_site_preview_content_description">عرض معاينة الموقع</string>
     <string name="new_site_creation_clear_all_content_description">مسح</string>
     <string name="site_created_but_not_fetched_snackbar_message">يبدو أنَّ الاتصال بطيء لديك. إذا كنت لا ترى موقعك الجديد في القائمة، فحاول التحديث مجددًا.</string>

@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package org.wordpress.android.ui.posts
 
 import android.view.ViewGroup
@@ -7,6 +9,7 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import java.lang.ref.WeakReference
 
+@Suppress("DEPRECATION")
 class PostsPagerAdapter(
     private val pages: List<PostListType>,
     private val site: SiteModel,

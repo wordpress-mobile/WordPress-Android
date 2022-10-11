@@ -1,8 +1,8 @@
 package org.wordpress.android.ui.posts
 
+import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleObserver
-import androidx.lifecycle.OnLifecycleEvent
+import androidx.lifecycle.LifecycleOwner
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -59,7 +59,7 @@ class PostListEventListener(
     private val triggerPreviewStateUpdate: (PostListRemotePreviewState, PostInfoType) -> Unit,
     private val isRemotePreviewingFromPostsList: () -> Boolean,
     private val hasRemoteAutoSavePreviewError: () -> Boolean
-) : LifecycleObserver, CoroutineScope {
+) : DefaultLifecycleObserver, CoroutineScope {
     init {
         dispatcher.register(this)
         EventBus.getDefault().register(this)
@@ -94,9 +94,7 @@ class PostListEventListener(
      * Handles the [Lifecycle.Event.ON_DESTROY] event to cleanup the registration for dispatcher and removing the
      * observer for lifecycle.
      */
-    @Suppress("unused")
-    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
-    private fun onDestroy() {
+    override fun onDestroy(owner: LifecycleOwner) {
         job.cancel()
         lifecycle.removeObserver(this)
         dispatcher.unregister(this)

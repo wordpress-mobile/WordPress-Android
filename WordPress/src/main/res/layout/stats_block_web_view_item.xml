@@ -9,6 +9,7 @@
     android:paddingStart="16dp">
 
     <org.wordpress.android.ui.WPWebView
+        android:layerType="software"
         android:id="@+id/web_view"
         android:layout_width="match_parent"
         android:layout_height="200dp"

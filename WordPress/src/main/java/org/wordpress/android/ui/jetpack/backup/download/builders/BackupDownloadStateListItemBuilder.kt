@@ -28,12 +28,14 @@ import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.extensions.toFormattedDateString
 import org.wordpress.android.util.extensions.toFormattedTimeString
+import org.wordpress.android.util.text.PercentFormatter
 import java.util.Date
 import javax.inject.Inject
 
 @Reusable
 class BackupDownloadStateListItemBuilder @Inject constructor(
-    private val checkboxSpannableLabel: CheckboxSpannableLabel
+    private val checkboxSpannableLabel: CheckboxSpannableLabel,
+    private val percentFormatter: PercentFormatter
 ) {
     fun buildDetailsListStateItems(
         published: Date,
@@ -242,10 +244,7 @@ class BackupDownloadStateListItemBuilder @Inject constructor(
 
     private fun buildProgressState(progress: Int) = ProgressState(
             progress = progress,
-            progressLabel = UiStringResWithParams(
-                    R.string.backup_download_progress_label,
-                    listOf(UiStringText(progress.toString()))
-            )
+            progressLabel = UiStringText(percentFormatter.format(progress))
     )
 
     private fun buildBulletState(

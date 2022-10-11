@@ -1,0 +1,4 @@
+20.8:
+Abbiamo aggiunto widget dinamici per mostrare statistiche a colpo d'occhio, assolute e giornaliere sulle schermate home dei dispositivi degli utenti.
+Gli utenti di siti con più autori possono modificare gli autori dei contenuti nelle impostazioni dei post e delle pagine.
+Gli utenti di lingua araba vedranno i numeri sugli schermi delle statistiche esclusivamente in numeri arabi occidentali.

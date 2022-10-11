@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package org.wordpress.android.util.image.getters
 
 import android.annotation.SuppressLint
@@ -25,6 +27,7 @@ import org.wordpress.android.util.ImageUtils
  * It clears the View's Request when the View is detached from its Window and restarts the Request when the View is
  * re-attached from its Window.
  */
+@Suppress("DEPRECATION")
 internal class WPRemoteResourceViewTarget(
     view: TextView,
     private val maxSize: Int
@@ -114,6 +117,7 @@ internal class WPRemoteResourceViewTarget(
             drawable?.colorFilter = colorFilter
         }
 
+        @Suppress("DEPRECATION")
         override fun getOpacity(): Int {
             return drawable?.opacity ?: PixelFormat.UNKNOWN
         }

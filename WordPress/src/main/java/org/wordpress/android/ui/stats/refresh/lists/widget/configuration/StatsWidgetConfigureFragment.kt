@@ -71,6 +71,7 @@ class StatsWidgetConfigureFragment : DaggerFragment() {
         return inflater.inflate(R.layout.stats_widget_configure_fragment, container, false)
     }
 
+    @Suppress("DEPRECATION", "LongMethod")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val nonNullActivity = requireActivity()

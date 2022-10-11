@@ -270,7 +270,6 @@ Language: nb_NO
     <string name="scan_request_failed_title">Noe gikk galt</string>
     <string name="pick_audio">Velg lyd</string>
     <string name="restore_complete_visit_site_action_button">Besøk nettstedet</string>
-    <string name="restore_progress_label">%1$s%%</string>
     <string name="restore_warning_header">Advarsel</string>
     <string name="restore_details_header">Gjenopprett nettsted</string>
     <string name="restore">Gjenopprett</string>
@@ -294,7 +293,6 @@ Language: nb_NO
     <string name="backup_download_complete_download_share_action_button">Del lenke</string>
     <string name="backup_download_complete_download_action_button">Last ned</string>
     <string name="backup_download_complete_page_title">Din sikkerhetskopi</string>
-    <string name="backup_download_progress_label">%1$s%%</string>
     <string name="backup_download_progress_page_title">Last ned sikkerhetskopi</string>
     <string name="pages_item_date_author_subtitle">%1$s · %2$s ·</string>
     <string name="pages_item_date_author">%1$s · %2$s</string>
@@ -1072,10 +1070,7 @@ Language: nb_NO
     <string name="notification_channel_reminder_title">Påminnelse</string>
     <string name="stats_select_next_period_description">Velg neste periode</string>
     <string name="stats_select_previous_period_description">Velg forrige periode</string>
-    <string name="stats_most_popular_percent_views">%1$d%% av visninger</string>
     <string name="stats_insights_popular">Mest populære tidspunkt</string>
-    <string name="stats_traffic_change">%1$s (%2$s%%)</string>
-    <string name="stats_traffic_increase">+%1$s (%2$s%%)</string>
     <string name="new_site_creation_site_preview_content_description">Forhåndsvisning av nettsted</string>
     <string name="new_site_creation_clear_all_content_description">Tøm</string>
     <string name="site_created_but_not_fetched_snackbar_message">Det ser ut til at du er på en treg nettforbindelse. Om du ikke kan se ditt nye nettsted i oversikten kan du prøve å oppfriske.</string>

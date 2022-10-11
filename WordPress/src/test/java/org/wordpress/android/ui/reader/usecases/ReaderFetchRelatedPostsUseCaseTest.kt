@@ -23,12 +23,12 @@ import org.wordpress.android.ui.reader.usecases.ReaderFetchRelatedPostsUseCase.F
 import org.wordpress.android.util.NetworkUtilsWrapper
 
 @InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class ReaderFetchRelatedPostsUseCaseTest {
     @Rule
     @JvmField val rule = InstantTaskExecutorRule()
 
-    @ExperimentalCoroutinesApi
     @Rule
     @JvmField val coroutineScope = MainCoroutineScopeRule()
 

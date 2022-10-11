@@ -1,0 +1,4 @@
+20.8:
+We added dynamic widgets to show at-a-glance, all-time, and daily stats on user devices’ home screens.
+Users on multi-author sites can change content authors in post and page settings.
+Arabic language users will see numerals on Stats screens exclusively in Western Arabic numbers.
