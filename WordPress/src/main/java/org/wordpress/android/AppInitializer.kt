@@ -17,7 +17,6 @@ import android.os.Build
 import android.os.Build.VERSION_CODES
 import android.os.Bundle
 import android.os.SystemClock
-import android.preference.PreferenceManager
 import android.text.TextUtils
 import android.util.AndroidRuntimeException
 import android.util.Log
@@ -31,6 +30,7 @@ import androidx.emoji.text.FontRequestEmojiCompatConfig
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ProcessLifecycleOwner
+import androidx.preference.PreferenceManager
 import androidx.work.WorkManager
 import com.android.volley.RequestQueue
 import com.automattic.android.tracks.crashlogging.CrashLogging
