@@ -38,29 +38,6 @@ public class ContactUsTests extends BaseTest {
         }
     }
 
-    @Ignore("As long as CI does not use gradle.properties from MobileSecrets")
-    @Test
-    public void e2eMessageCanBeSent() {
-        String userMessageText = "Please ignore, this is an automated test.";
-        String automatedReplyText = "Mobile support will respond as soon as possible, "
-                                    + "generally within 48-96 hours. "
-                                    + "Please reply with your site address (URL) "
-                                    + "and any additional details we should know.";
-
-        try {
-            new LoginFlow()
-                .chooseContinueWithWpCom()
-                .tapHelp()
-                .openContactUs()
-                .setMessageText(userMessageText)
-                .tapSendButton()
-                .assertUserMessageDelivered(userMessageText)
-                .assertSystemMessageReceived(automatedReplyText);
-        } finally {
-            new ContactSupportScreen().goBackAndDeleteUnsentMessageIfNeeded();
-        }
-    }
-
     @Test
     public void e2eHelpCanBeOpenedWhileEnteringEmail() {
         new LoginFlow()
