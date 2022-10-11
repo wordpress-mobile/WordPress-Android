@@ -250,9 +250,7 @@ android {
 
         // Exclude React Native's JSC and Hermes debug binaries
         exclude '**/libjscexecutor.so'
-        // TO-DO How to exclude this for release builds
-        // exclude '**/libhermes-inspector.so'
-        // exclude '**/libhermes-executor-debug.so'
+        exclude '**/libfabricjni.so' // Since we are not using Fabric yet
 
         pickFirst 'META-INF/-no-jdk.kotlin_module'
 
