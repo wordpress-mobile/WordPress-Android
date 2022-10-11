@@ -7,7 +7,7 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
-import org.wordpress.android.fluxc.persistence.RemoteConfigDao
+import org.wordpress.android.fluxc.persistence.FeatureFlagConfigDao.FeatureFlag
 import org.wordpress.android.fluxc.store.NotificationStore.Companion.WPCOM_PUSH_DEVICE_UUID
 import org.wordpress.android.fluxc.store.mobile.FeatureFlagsStore
 import org.wordpress.android.fluxc.utils.PreferenceUtils
@@ -19,7 +19,7 @@ import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
 
-const val REMOTE_FLAG_PLATFORM_PARAMETER = "android"
+const val FEATURE_FLAG_PLATFORM_PARAMETER = "android"
 
 /**
  * Do not use this class outside of this package. Use [AppConfig] instead
@@ -32,7 +32,7 @@ class FeatureFlagConfig
 ) {
     private val preferences by lazy { PreferenceUtils.getFluxCPreferences(context) }
 
-    lateinit var flags: List<RemoteConfigDao.RemoteConfig>
+    lateinit var flags: List<FeatureFlag>
 
     fun init(appScope: CoroutineScope) {
         appScope.launch {
@@ -47,24 +47,23 @@ class FeatureFlagConfig
         }
     }
 
-
     private suspend fun fetchRemoteFlags() {
         val response = featureFlagStore.fetchFeatureFlags(
                 buildNumber = BuildConfig.VERSION_CODE.toString(),
                 deviceId = preferences.getString(WPCOM_PUSH_DEVICE_UUID, null) ?: generateAndStoreUUID(),
                 identifier = BuildConfig.APPLICATION_ID,
                 marketingVersion = BuildConfig.VERSION_NAME,
-                platform = REMOTE_FLAG_PLATFORM_PARAMETER
+                platform = FEATURE_FLAG_PLATFORM_PARAMETER
         )
         response.featureFlags?.let { configValues ->
-            AppLog.e(UTILS, "Remote config values synced")
+            AppLog.e(UTILS, "Feature flag values synced")
             AnalyticsTracker.track(
                     Stat.FEATURE_FLAGS_SYNCED_STATE,
                     configValues
             )
         }
         if (response.isError) {
-            AppLog.e(UTILS, "Remote config sync failed")
+            AppLog.e(UTILS, "Feature flag values sync failed")
         }
     }
 
@@ -75,17 +74,17 @@ class FeatureFlagConfig
     fun isEnabled(field: String): Boolean = FirebaseRemoteConfig.getInstance().getBoolean(field)
     fun getString(field: String): String = FirebaseRemoteConfig.getInstance().getString(field)
     fun getFeatureState(remoteField: String, buildConfigValue: Boolean): FeatureState {
-        val remoteConfig = flags.find { it.key == remoteField }
-        return if (remoteConfig == null) {
-            appScope.launch { featureFlagStore.insertRemoteConfigValue(remoteField, buildConfigValue) }
+        val remoteFeatureFlag = flags.find { it.key == remoteField }
+        return if (remoteFeatureFlag == null) {
+            appScope.launch { featureFlagStore.insertFeatureFlagValue(remoteField, buildConfigValue) }
             FeatureState.BuildConfigValue(buildConfigValue)
         } else {
-            FeatureState.RemoteValue(remoteConfig.value)
+            FeatureState.RemoteValue(remoteFeatureFlag.value)
         }
     }
 
     fun clear() {
-        AppLog.e(UTILS, "Remote config values cleared")
+        AppLog.e(UTILS, "Feature flag values cleared")
         flags = emptyList()
         featureFlagStore.clearAllValues()
     }
