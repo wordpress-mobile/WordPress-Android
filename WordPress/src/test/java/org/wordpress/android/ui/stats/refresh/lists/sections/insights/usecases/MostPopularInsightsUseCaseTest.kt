@@ -32,6 +32,8 @@ import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.text.PercentFormatter
 import org.wordpress.android.viewmodel.ResourceProvider
+import java.math.RoundingMode
+import java.math.RoundingMode.HALF_UP
 import kotlin.math.roundToInt
 
 class MostPopularInsightsUseCaseTest : BaseUnitTest() {
@@ -66,8 +68,18 @@ class MostPopularInsightsUseCaseTest : BaseUnitTest() {
                 actionCardHandler,
                 percentFormatter
         )
-        whenever(percentFormatter.format(highestDayPercent.roundToInt())).thenReturn("10%")
-        whenever(percentFormatter.format(highestHourPercent.roundToInt())).thenReturn("20%")
+        whenever(
+                percentFormatter.format(
+                        value = highestDayPercent.roundToInt(),
+                        rounding = RoundingMode.HALF_UP
+                )
+        ).thenReturn("10%")
+        whenever(
+                percentFormatter.format(
+                        value = highestHourPercent.roundToInt(),
+                        rounding = RoundingMode.HALF_UP
+                )
+        ).thenReturn("20%")
         whenever(statsSiteProvider.siteModel).thenReturn(site)
         whenever(dateUtils.getWeekDay(day)).thenReturn(dayString)
 
@@ -127,8 +139,14 @@ class MostPopularInsightsUseCaseTest : BaseUnitTest() {
     @Test
     fun `when buildUiModel is called, should call PercentFormatter`() = test {
         useCase.buildUiModel(InsightsMostPopularModel(0, day, hour, highestDayPercent, highestHourPercent))
-        verify(percentFormatter).format(highestDayPercent.roundToInt())
-        verify(percentFormatter).format(highestHourPercent.roundToInt())
+        verify(percentFormatter).format(
+                value = highestDayPercent.roundToInt(),
+                rounding = HALF_UP
+        )
+        verify(percentFormatter).format(
+                value = highestHourPercent.roundToInt(),
+                rounding = HALF_UP
+        )
     }
 
     private fun assertTitle(item: BlockListItem) {
