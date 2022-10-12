@@ -12,4 +12,6 @@
     <dimen name="post_list_content_margin_standard">@dimen/content_margin_tablet</dimen>
     <dimen name="interests_content_margin">@dimen/margin_extra_extra_large</dimen>
 
+    <!-- Login Prologue -->
+    <dimen name="login_prologue_revamped_buttons_padding">@dimen/login_prologue_revamped_buttons_padding_tablet</dimen>
 </resources>
