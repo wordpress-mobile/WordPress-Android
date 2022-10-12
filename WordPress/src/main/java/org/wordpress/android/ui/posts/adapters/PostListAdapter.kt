@@ -95,7 +95,7 @@ class PostListAdapter(
         }
         if (holder is LoadingViewHolder) {
             val item = getItem(position)
-            assert(item is LoadingItem) {
+            assert(item is LoadingItem?) {
                 "If we are presenting LoadingViewHolder, the item has to be of type LoadingItem " +
                         "for position: $position"
             }
