@@ -282,7 +282,7 @@ public class AppPrefs {
         // Indicates if this is the first time we try to get the user flags in Jetpack automatically
         IS_FIRST_TRY_USER_FLAGS_JETPACK,
 
-        // Indicates if this is the first time we try to get the user flags in Jetpack automatically
+        // Indicates if this is the first time we try to get the reader saved posts in Jetpack automatically
         IS_FIRST_TRY_READER_SAVED_POSTS_JETPACK
     }
 

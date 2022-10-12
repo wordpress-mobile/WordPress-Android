@@ -33,7 +33,7 @@ import org.wordpress.android.viewmodel.ContextProvider
 
 class SharedLoginResolverTest {
     private lateinit var onSuccessFlagsCaptor: KArgumentCaptor<() -> Unit>
-    private lateinit var onSuccessRaaderPostsCaptor: KArgumentCaptor<() -> Unit>
+    private lateinit var onSuccessReaderPostsCaptor: KArgumentCaptor<() -> Unit>
 
     private val jetpackSharedLoginFlag: JetpackSharedLoginFlag = mock()
     private val contextProvider: ContextProvider = mock()
@@ -116,10 +116,10 @@ class SharedLoginResolverTest {
     }
 
     @Test
-    fun `Should dispatch UpdateTokenPayload if access token is NOT, flags and saved posts are migrated`() {
+    fun `Should dispatch UpdateTokenPayload if access token is NOT empty, flags and saved posts are migrated`() {
         featureEnabled()
         onSuccessFlagsCaptor = argumentCaptor()
-        onSuccessRaaderPostsCaptor = argumentCaptor()
+        onSuccessReaderPostsCaptor = argumentCaptor()
 
         whenever(queryResult.getValue<String>(mockCursor)).thenReturn(loggedInToken)
         whenever(userFlagsResolver.tryGetUserFlags(
@@ -127,9 +127,9 @@ class SharedLoginResolverTest {
                 any()
         )).doAnswer { onSuccessFlagsCaptor.firstValue.invoke() }
         whenever(readerSavedPostsResolver.tryGetReaderSavedPosts(
-                onSuccessRaaderPostsCaptor.capture(),
+                onSuccessReaderPostsCaptor.capture(),
                 any()
-        )).doAnswer { onSuccessRaaderPostsCaptor.firstValue.invoke() }
+        )).doAnswer { onSuccessReaderPostsCaptor.firstValue.invoke() }
 
         classToTest.tryJetpackLogin()
 
@@ -148,7 +148,7 @@ class SharedLoginResolverTest {
     fun `Should NOT dispatch UpdateTokenPayload if access token IS empty`() {
         featureEnabled()
         onSuccessFlagsCaptor = argumentCaptor()
-        onSuccessRaaderPostsCaptor = argumentCaptor()
+        onSuccessReaderPostsCaptor = argumentCaptor()
 
         whenever(queryResult.getValue<String>(mockCursor)).thenReturn(notLoggedInToken)
         whenever(userFlagsResolver.tryGetUserFlags(
@@ -156,9 +156,9 @@ class SharedLoginResolverTest {
                 any()
         )).doAnswer { onSuccessFlagsCaptor.firstValue.invoke() }
         whenever(readerSavedPostsResolver.tryGetReaderSavedPosts(
-                onSuccessRaaderPostsCaptor.capture(),
+                onSuccessReaderPostsCaptor.capture(),
                 any()
-        )).doAnswer { onSuccessRaaderPostsCaptor.firstValue.invoke() }
+        )).doAnswer { onSuccessReaderPostsCaptor.firstValue.invoke() }
 
         classToTest.tryJetpackLogin()
         verify(dispatcher, never()).dispatch(updateTokenAction)
