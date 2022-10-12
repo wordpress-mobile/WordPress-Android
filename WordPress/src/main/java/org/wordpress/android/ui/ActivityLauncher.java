@@ -45,6 +45,7 @@ import org.wordpress.android.ui.accounts.PostSignupInterstitialActivity;
 import org.wordpress.android.ui.accounts.SignupEpilogueActivity;
 import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailActivity;
 import org.wordpress.android.ui.activitylog.list.ActivityLogListActivity;
+import org.wordpress.android.ui.bloggingprompts.BloggingPromptsActivity;
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsActivity;
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsDetailsActivity;
 import org.wordpress.android.ui.debug.cookies.DebugCookiesActivity;
@@ -1750,6 +1751,10 @@ public class ActivityLauncher {
         taskStackBuilder.addNextIntent(qrcodeAuthFlowIntent);
 
         taskStackBuilder.startActivities();
+    }
+
+    public static void viewMorePrompts(@NonNull Context context, SiteModel site) {
+        BloggingPromptsActivity.start(context, site);
     }
 
     public static void showLoginPrologue(@NonNull Context context) {

@@ -752,6 +752,12 @@
             android:label="@string/qrcode_auth_flow"
             android:theme="@style/WordPress.NoActionBar"/>
 
+        <!-- Blogging Prompts -->
+        <activity
+            android:name=".ui.bloggingprompts.BloggingPromptsActivity"
+            android:label="@string/blogging_prompts_title"
+            android:theme="@style/WordPress.NoActionBar"/>
+
         <!-- Services -->
         <service
             android:name=".ui.uploads.UploadService"

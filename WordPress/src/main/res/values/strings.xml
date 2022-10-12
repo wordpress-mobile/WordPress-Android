@@ -4102,6 +4102,16 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="blogging_prompts_answer_prompt_notification_title">Daily Prompt</string>
     <string name="blogging_prompts_answer_prompt_notification_answer_action">Answer</string>
     <string name="blogging_prompts_notification_dismiss">Dismiss</string>
+    <string name="blogging_prompts_title">Prompts</string>
+    <string name="blogging_prompts_tab_all">All</string>
+    <string name="blogging_prompts_tab_answered">Answered</string>
+    <string name="blogging_prompts_tab_not_answered">Not Answered</string>
+    <string name="blogging_prompts_state_loading_title">Loading prompts…</string>
+    <string name="blogging_prompts_state_empty_title">No prompts yet</string>
+    <string name="blogging_prompts_state_error_title">Oops</string>
+    <string name="blogging_prompts_state_error_subtitle">There was an error loading prompts.</string>
+    <string name="blogging_prompts_state_no_connection_title">Unable to load this content right now</string>
+    <string name="blogging_prompts_state_no_connection_subtitle">Check your network connection and try again.</string>
 
     <!-- Editor module -->
     <string name="post_content" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Content</string>

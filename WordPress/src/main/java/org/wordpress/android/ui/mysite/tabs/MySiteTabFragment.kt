@@ -363,6 +363,8 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
             ActivityLauncher.viewBlogStatsForTimeframe(requireActivity(), action.site, StatsTimeframe.INSIGHTS)
         is SiteNavigationAction.OpenTodaysStatsGetMoreViewsExternalUrl ->
             ActivityLauncher.openUrlExternal(requireActivity(), action.url)
+        is SiteNavigationAction.ViewMorePrompts ->
+            ActivityLauncher.viewMorePrompts(requireActivity(), action.site)
         is SiteNavigationAction.OpenJetpackPoweredBottomSheet -> showJetpackPoweredBottomSheet()
     }
 
