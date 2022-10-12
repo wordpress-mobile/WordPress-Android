@@ -38,7 +38,14 @@ class UserFlagsResolver @Inject constructor(
         if (userFlagsResultCursor != null) {
             val userFlags = queryResult.getValue<Map<String, Any?>>(userFlagsResultCursor) ?: emptyMap()
             if (userFlags.isNotEmpty()) {
-                updateUserFlags(onSuccess, onFailure, userFlags)
+                val success = updateUserFlags(userFlags)
+                if (success) {
+                    userFlagsAnalyticsTracker.trackSuccess()
+                    onSuccess()
+                } else {
+                    userFlagsAnalyticsTracker.trackFailed(ErrorType.UpdateUserFlagsError)
+                    onFailure()
+                }
             } else {
                 userFlagsAnalyticsTracker.trackFailed(ErrorType.NoUserFlagsFoundError)
                 onFailure()
@@ -60,10 +67,8 @@ class UserFlagsResolver @Inject constructor(
 
     @Suppress("TooGenericExceptionCaught", "SwallowedException")
     private fun updateUserFlags(
-        onSuccess: () -> Unit,
-        onFailure: () -> Unit,
         userFlags: Map<String, Any?>
-    ) {
+    ): Boolean {
         try {
             for ((key, value) in userFlags) {
                 val userFlagPrefKey = UserFlagsPrefKey(key)
@@ -78,11 +83,9 @@ class UserFlagsResolver @Inject constructor(
                     }
                 }
             }
-            userFlagsAnalyticsTracker.trackSuccess()
-            onSuccess()
+            return true
         } catch (exception: Exception) {
-            userFlagsAnalyticsTracker.trackFailed(ErrorType.UpdateUserFlagsError)
-            onFailure()
+            return false
         }
     }
 }
