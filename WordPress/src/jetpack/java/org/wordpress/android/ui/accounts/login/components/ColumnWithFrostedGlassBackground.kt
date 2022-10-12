@@ -17,7 +17,6 @@ import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Outline.Rectangle
 import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.layout.SubcomposeLayout
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.Density
@@ -41,7 +40,7 @@ private fun ColumnWithTopGlassBorder(
     content: @Composable ColumnScope.() -> Unit
 ) {
     Column(
-            modifier = Modifier.background(SolidColor(colorResource(R.color.bg_jetpack_login_splash_bottom_panel)))
+            modifier = Modifier.background(colorResource(R.color.bg_jetpack_login_splash_bottom_panel))
     ) {
         Divider(
                 thickness = 1.dp,
