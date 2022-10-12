@@ -12,12 +12,14 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.android.material.tabs.TabLayout.Tab
 import com.google.android.material.tabs.TabLayoutMediator
+import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.databinding.BloggingPromptsParentFragmentBinding
 import org.wordpress.android.ui.bloggingprompts.PromptSection.ALL
 import org.wordpress.android.ui.bloggingprompts.PromptSection.ANSWERED
 import org.wordpress.android.ui.bloggingprompts.PromptSection.NOT_ANSWERED
 
+@AndroidEntryPoint
 class BloggingPromptsParentFragment : Fragment() {
     private lateinit var binding: BloggingPromptsParentFragmentBinding
 
@@ -37,7 +39,9 @@ class BloggingPromptsParentFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.onOpen()
+
+        val currentTabPosition = binding.tabLayout.selectedTabPosition
+        viewModel.onOpen(promptsSections[currentTabPosition])
     }
 
     private fun setupToolbar(binding: BloggingPromptsParentFragmentBinding) {
@@ -76,7 +80,7 @@ class BloggingPromptsParentFragment : Fragment() {
     }
 }
 
-private val promptsSections = listOf(ALL, ANSWERED, NOT_ANSWERED)
+internal val promptsSections = listOf(ALL, ANSWERED, NOT_ANSWERED)
 
 enum class PromptSection(@StringRes val titleRes: Int) {
     ALL(R.string.blogging_prompts_tab_all),

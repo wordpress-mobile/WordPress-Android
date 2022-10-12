@@ -4,13 +4,17 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.BloggingPromptsActivityBinding
 import org.wordpress.android.fluxc.model.SiteModel
 
+@AndroidEntryPoint
 class BloggingPromptsActivity : AppCompatActivity() {
     private lateinit var site: SiteModel
+    private val viewModel: BloggingPromptsParentViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,6 +24,7 @@ class BloggingPromptsActivity : AppCompatActivity() {
         site = checkNotNull((intent.getSerializableExtra(WordPress.SITE) as? SiteModel)) {
             "${WordPress.SITE} argument cannot be null, when launching ${BloggingPromptsActivity::class.simpleName}"
         }
+        viewModel.start(site)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

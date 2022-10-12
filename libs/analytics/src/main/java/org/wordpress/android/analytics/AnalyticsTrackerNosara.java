@@ -2357,6 +2357,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "blogging_reminders_notification_prompt_tapped";
             case BLOGGING_REMINDERS_NOTIFICATION_PROMPT_DISMISSED:
                 return "blogging_reminders_notification_prompt_dismissed";
+            case BLOGGING_PROMPTS_LIST_ACCESSED:
+                return "blogging_prompts_list_accessed";
+            case BLOGGING_PROMPTS_LIST_TAB_CHANGED:
+                return "blogging_prompts_list_tab_changed";
             case QRLOGIN_SCANNER_DISPLAYED:
                 return "qrlogin_scanner_displayed";
             case QRLOGIN_SCANNER_DISMISSED:
