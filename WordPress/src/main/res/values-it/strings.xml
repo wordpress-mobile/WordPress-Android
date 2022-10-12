@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-10-01 15:00:40+0000
+Translation-Revision-Date: 2022-10-10 07:24:12+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: it
 -->
 <resources>
+    <string name="my_site_blogging_prompt_card_number_of_answers_one">1 risposta</string>
+    <string name="login_prologue_revamped_content_description_wordpress_icon">Icona WordPress</string>
+    <string name="login_prologue_revamped_tagline">Scrivi, modifica e pubblica ovunque tu sia.</string>
     <string name="error_fetch_authors_list">Impossibile recuperare gli autori</string>
     <string name="post_settings_author">Autore</string>
     <string name="app_rating_title">Ti piace %s?</string>
@@ -508,6 +511,7 @@ Language: it
     <string name="blogging_reminders_notification_title">È ora di pubblicare sul blog di %s</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios">La modifica dei blocchi riutilizzabili non è ancora supportata su WordPress per iOS</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and">La modifica dei blocchi riutilizzabili non è ancora supportata su WordPress per Android</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">In alternativa, puoi staccare e modificare questi blocchi separatamente toccando “Converti in blocchi regolari”.</string>
     <string name="blogging_reminders_done">Fatto</string>
     <string name="blogging_reminders_notify_me">Inviami una notifica</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;Inserisci le credenziali del server&lt;/a&gt; per abilitare i ripristini del sito con un clic dai backup.</string>
@@ -1775,7 +1779,10 @@ Language: it
     <string name="notification_channel_reminder_title">Promemoria</string>
     <string name="stats_select_next_period_description">Seleziona periodo successivo</string>
     <string name="stats_select_previous_period_description">Seleziona periodo precedente</string>
+    <string name="stats_most_popular_percent_views">%1$s di visualizzazioni</string>
     <string name="stats_insights_popular">Ora più popolare</string>
+    <string name="stats_traffic_change">%1$s (%2$s)</string>
+    <string name="stats_traffic_increase">+%1$s (%2$s)</string>
     <string name="new_site_creation_site_preview_content_description">Mostra anteprima del sito</string>
     <string name="new_site_creation_clear_all_content_description">Pulisci</string>
     <string name="site_created_but_not_fetched_snackbar_message">Sembra che tu sia collegato a una connessione lenta. Se il tuo nuovo sito non è presente nell\'elenco, prova ad aggiornare.</string>
