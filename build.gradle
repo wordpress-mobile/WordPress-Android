@@ -113,6 +113,7 @@ allprojects {
     tasks.withType(KotlinCompile).all {
         kotlinOptions {
             jvmTarget = JavaVersion.VERSION_1_8
+            allWarningsAsErrors = true
             freeCompilerArgs += [
                     "-Xopt-in=kotlin.RequiresOptIn"
             ]

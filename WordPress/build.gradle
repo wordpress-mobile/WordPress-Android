@@ -147,10 +147,6 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
-    kotlinOptions {
-        allWarningsAsErrors = true
-    }
-
     flavorDimensions "app", "buildType"
 
     productFlavors {
