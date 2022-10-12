@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.Layout
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.unit.Constraints
 
 /** This composable accepts a child composable, and repeats that composable `repeat` times (default 3). It places the
@@ -24,7 +25,7 @@ fun RepeatingColumn(
 ) {
     Layout(
             content = {
-                Column(modifier = modifier) {
+                Column(modifier.clearAndSetSemantics {}) {
                     repeat(repeat) {
                         content()
                     }
