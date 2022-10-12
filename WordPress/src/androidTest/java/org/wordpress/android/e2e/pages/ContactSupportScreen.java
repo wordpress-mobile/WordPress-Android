@@ -17,6 +17,7 @@ import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.not;
 import static org.wordpress.android.support.WPSupportUtils.populateTextField;
 import static org.wordpress.android.support.WPSupportUtils.sleep;
+import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDisplayedWithoutFailure;
 
 public class ContactSupportScreen {
@@ -67,6 +68,7 @@ public class ContactSupportScreen {
 
     // Assertions:
     public ContactSupportScreen assertContactSupportScreenLoaded() {
+        waitForElementToBeDisplayed(R.id.message_composer_input_text);
         textInput.check(matches(isCompletelyDisplayed()));
         sendButton.check(matches(isCompletelyDisplayed()));
         return this;
