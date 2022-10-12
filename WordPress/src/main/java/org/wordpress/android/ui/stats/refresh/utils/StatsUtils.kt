@@ -172,7 +172,7 @@ class StatsUtils @Inject constructor(
         entries: List<Line>
     ): List<String> {
         val contentDescriptions = mutableListOf<String>()
-        entries.forEachIndexed { _, bar ->
+        entries.forEach { bar ->
             val contentDescription = resourceProvider.getString(
                     R.string.stats_bar_chart_accessibility_entry,
                     bar.label,

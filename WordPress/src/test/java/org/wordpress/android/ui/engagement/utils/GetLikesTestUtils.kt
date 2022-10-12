@@ -119,6 +119,7 @@ fun getGetLikesState(testConfig: GetLikesTestConfig): GetLikesState {
     }
 }
 
+@Suppress("UNCHECKED_CAST")
 fun List<LikeModel>.isEqualTo(engageItemList: List<EngageItem>): Boolean {
     val sameSize = this.size == engageItemList.size
     val likersList = engageItemList as? List<Liker>

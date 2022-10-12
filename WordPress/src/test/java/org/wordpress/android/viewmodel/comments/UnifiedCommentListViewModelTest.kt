@@ -9,7 +9,6 @@ import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runBlockingTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -35,6 +34,7 @@ import org.wordpress.android.models.usecases.ModerateCommentsResourceProvider
 import org.wordpress.android.models.usecases.PaginateCommentsResourceProvider
 import org.wordpress.android.models.usecases.PaginateCommentsUseCase
 import org.wordpress.android.models.usecases.UnifiedCommentsListHandler
+import org.wordpress.android.test
 import org.wordpress.android.ui.comments.unified.CommentFilter.ALL
 import org.wordpress.android.ui.comments.unified.CommentListUiModelHelper
 import org.wordpress.android.ui.comments.unified.CommentListUiModelHelper.CommentList
@@ -57,7 +57,8 @@ import org.wordpress.android.viewmodel.ResourceProvider
 
 @ExperimentalCoroutinesApi
 class UnifiedCommentListViewModelTest : BaseUnitTest() {
-    @Rule @JvmField val coroutineScopeRule = MainCoroutineScopeRule()
+    @Rule
+    @JvmField val coroutineScope = MainCoroutineScopeRule()
 
     private lateinit var viewModel: UnifiedCommentListViewModel
     private lateinit var unifiedCommentsListHandler: UnifiedCommentsListHandler
@@ -83,7 +84,7 @@ class UnifiedCommentListViewModelTest : BaseUnitTest() {
 
     @InternalCoroutinesApi
     @Before
-    fun setUp() {
+    fun setUp() = test {
         whenever(dateTimeUtilsWrapper.javaDateToTimeSpan(anyOrNull())).thenReturn("Apr 19")
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
         whenever(paginateCommentsResourceProvider.commentsStore).thenReturn(commentStore)
@@ -104,13 +105,10 @@ class UnifiedCommentListViewModelTest : BaseUnitTest() {
         localCommentCacheUpdateUseCase = LocalCommentCacheUpdateUseCase()
         localCommentCacheUpdateHandler = LocalCommentCacheUpdateHandler(localCommentCacheUpdateUseCase)
 
-        runBlocking {
-            `when`(commentStore.fetchCommentsPage(any(), any(), eq(0), any(), any()))
-        }.thenReturn(testCommentsPayload30)
-
-        runBlocking {
-            `when`(commentStore.fetchCommentsPage(any(), any(), eq(30), any(), any()))
-        }.thenReturn(testCommentsPayload60)
+        `when`(commentStore.fetchCommentsPage(any(), any(), eq(0), any(), any()))
+                .thenReturn(testCommentsPayload30)
+        `when`(commentStore.fetchCommentsPage(any(), any(), eq(30), any(), any()))
+                .thenReturn(testCommentsPayload60)
 
         commentListUiModelHelper = CommentListUiModelHelper(resourceProvider, dateTimeUtilsWrapper, networkUtilsWrapper)
 

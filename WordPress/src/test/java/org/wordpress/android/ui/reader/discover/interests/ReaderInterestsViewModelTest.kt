@@ -9,7 +9,6 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Rule
@@ -22,6 +21,7 @@ import org.wordpress.android.R
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.models.ReaderTagType
+import org.wordpress.android.test
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsFragment.EntryPoint
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.DoneButtonUiState.DoneButtonDisabledUiState
@@ -618,21 +618,21 @@ class ReaderInterestsViewModelTest {
     )
 
     private fun <T> testWithEmptyUserTags(block: suspend CoroutineScope.() -> T) {
-        coroutineScope.runBlockingTest {
+        test {
             whenever(readerTagRepository.getUserTags()).thenReturn(SuccessWithData(ReaderTagList()))
             block()
         }
     }
 
     private fun <T> testWithFailedUserTags(block: suspend CoroutineScope.() -> T) {
-        coroutineScope.runBlockingTest {
+        test {
             whenever(readerTagRepository.getUserTags()).thenReturn(NetworkUnavailable)
             block()
         }
     }
 
     private fun <T> testWithNonEmptyUserTags(block: suspend CoroutineScope.() -> T) {
-        coroutineScope.runBlockingTest {
+        test {
             val nonEmptyUserTags = ReaderTagList().apply {
                 this.add(mock())
                 this.add(mock())

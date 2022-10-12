@@ -104,7 +104,7 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
         whenever(dateFormatWrapper.getLongDateFormat()).thenReturn(dateFormat)
         whenever(dateFormat.format(ThreatTestData.genericThreatModel.baseThreatModel.firstDetected))
                 .thenReturn(TEST_FOUND_ON_DATE)
-        whenever(dateFormat.format(ThreatTestData.genericThreatModel.baseThreatModel.fixedOn))
+        whenever(dateFormat.format(ThreatTestData.genericThreatModel.baseThreatModel.fixedOn!!))
                 .thenReturn(TEST_FIXED_ON_DATE)
     }
 
