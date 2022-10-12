@@ -25,6 +25,7 @@ class LoadStoryFromStoriesPrefsUseCase @Inject constructor(
     private val storiesPrefs: StoriesPrefs,
     private val mediaStore: MediaStore
 ) {
+    @Suppress("UNCHECKED_CAST")
     fun getMediaIdsFromStoryBlockBridgeMediaFiles(mediaFiles: ArrayList<Any>): ArrayList<String> {
         val mediaIds = ArrayList<String>()
         for (mediaFile in mediaFiles) {

@@ -46,10 +46,8 @@ import kotlin.coroutines.suspendCoroutine
 class GetLikesUseCase @Inject constructor(
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val dispatcher: Dispatcher,
-    @SuppressWarnings("Unused")
-    val commentStore: CommentStore,
-    @SuppressWarnings("Unused")
-    val postStore: PostStore,
+    @Suppress("Unused") val commentStore: CommentStore,
+    @Suppress("Unused") val postStore: PostStore,
     val accountStore: AccountStore
 ) {
     private var getLikesContinuations = mutableMapOf<String, Continuation<OnChanged<*>>>()
@@ -76,7 +74,7 @@ class GetLikesUseCase @Inject constructor(
         getLikes(COMMENT_LIKE, this, fingerPrint, paginationParams)
     }
 
-    @SuppressWarnings("ComplexMethod", "NestedBlockDepth", "LoopWithTooManyJumpStatements")
+    @Suppress("ComplexMethod", "NestedBlockDepth", "LoopWithTooManyJumpStatements")
     private suspend fun getLikes(
         category: LikeCategory,
         flow: FlowCollector<GetLikesState>,

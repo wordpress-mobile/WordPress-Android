@@ -26,7 +26,7 @@ public class SignUpTests extends BaseTest {
     }
 
     @Test
-    public void signUpWithMagicLink() {
+    public void e2eSignUpWithMagicLink() {
         new SignupFlow().chooseContinueWithWpCom()
                         .enterEmail(E2E_SIGNUP_EMAIL)
                         .openMagicLink()

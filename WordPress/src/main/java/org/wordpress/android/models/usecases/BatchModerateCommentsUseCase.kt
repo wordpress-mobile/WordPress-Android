@@ -35,16 +35,16 @@ class BatchModerateCommentsUseCase @Inject constructor(
             CommentError> {
         object Idle : ModerateCommentsState() {
             override suspend fun runAction(
-                resourceProvider: ModerateCommentsResourceProvider,
+                utilsProvider: ModerateCommentsResourceProvider,
                 action: ModerateCommentsAction,
                 flowChannel: MutableSharedFlow<UseCaseResult<CommentsUseCaseType, CommentError, DoNotCare>>
             ): StateInterface<ModerateCommentsResourceProvider, ModerateCommentsAction, DoNotCare, CommentsUseCaseType,
                     CommentError> {
-                val commentsStore = resourceProvider.commentsStore
+                val commentsStore = utilsProvider.commentsStore
                 return when (action) {
                     is OnModerateComments -> {
                         val parameters = action.parameters
-                        withContext(resourceProvider.bgDispatcher) {
+                        withContext(utilsProvider.bgDispatcher) {
                             val deferredList = parameters.remoteCommentIds.map {
                                 async {
                                     val commentBeforeModeration = commentsStore.getCommentByLocalSiteAndRemoteId(
@@ -66,7 +66,7 @@ class BatchModerateCommentsUseCase @Inject constructor(
                                     if (localModerationResult.isError) {
                                         return@async localModerationResult
                                     } else {
-                                        resourceProvider.localCommentCacheUpdateHandler.requestCommentsUpdate()
+                                        utilsProvider.localCommentCacheUpdateHandler.requestCommentsUpdate()
                                     }
 
                                     val result = if (parameters.newStatus == DELETED) {
@@ -89,7 +89,7 @@ class BatchModerateCommentsUseCase @Inject constructor(
                                                 remoteCommentId = it,
                                                 newStatus = CommentStatus.fromString(commentBeforeModeration.status)
                                         )
-                                        resourceProvider.localCommentCacheUpdateHandler.requestCommentsUpdate()
+                                        utilsProvider.localCommentCacheUpdateHandler.requestCommentsUpdate()
                                     }
                                     return@async result
                                 }

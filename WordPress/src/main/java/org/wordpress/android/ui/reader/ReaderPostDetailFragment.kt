@@ -339,6 +339,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         }
     }
 
+    @Suppress("DEPRECATION")
     private fun initAppBar(view: View) {
         appBar = view.findViewById(R.id.appbar_with_collapsing_toolbar_layout)
         toolBar = appBar.findViewById(R.id.toolbar_main)
@@ -347,7 +348,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         appBar.addOnOffsetChangedListener(appBarLayoutOffsetChangedListener)
 
         // Fixes collapsing toolbar layout being obscured by the status bar when drawn behind it
-        ViewCompat.setOnApplyWindowInsetsListener(appBar) { v: View, insets: WindowInsetsCompat ->
+        ViewCompat.setOnApplyWindowInsetsListener(appBar) { _: View, insets: WindowInsetsCompat ->
             val insetTop = insets.systemWindowInsetTop
             if (insetTop > 0) {
                 toolBar.setPadding(0, insetTop, 0, 0)
@@ -1025,7 +1026,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         }
 
         if (commentsSnippetFeatureConfig.isEnabled()) {
-            commentSnippetRecycler?.layoutManager?.let {
+            commentSnippetRecycler.layoutManager?.let {
                 outState.putParcelable(KEY_COMMENTS_SNIPPET_LIST_STATE, it.onSaveInstanceState())
             }
         }
@@ -1257,6 +1258,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         }
     }
 
+    @Suppress("DEPRECATION")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
@@ -1397,7 +1399,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         viewModel.onShowPost(blogId = blogId, postId = postId)
     }
 
-    @Suppress("unused")
+    @Suppress("unused", "DEPRECATION")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onPrivateAtomicCookieFetched(event: OnPrivateAtomicCookieFetched) {
         if (!isAdded) {
@@ -1434,31 +1436,26 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         renderer?.beginRender()
     }
 
-    private fun handleDirectOperation(): Boolean {
-        if (directOperation != null) {
-            when (directOperation) {
-                DirectOperation.COMMENT_JUMP, DirectOperation.COMMENT_REPLY, DirectOperation.COMMENT_LIKE -> {
-                    viewModel.post?.let {
-                        ReaderActivityLauncher.showReaderComments(
-                                activity, it.blogId, it.postId,
-                                directOperation, commentId.toLong(), viewModel.interceptedUri,
-                                DIRECT_OPERATION.sourceDescription
-                        )
-                    }
-
-                    activity?.finish()
-                    activity?.overridePendingTransition(0, 0)
-                    return true
-                }
-                DirectOperation.POST_LIKE -> {
-                }
+    private fun handleDirectOperation() = when (directOperation) {
+        DirectOperation.COMMENT_JUMP, DirectOperation.COMMENT_REPLY, DirectOperation.COMMENT_LIKE -> {
+            viewModel.post?.let {
+                ReaderActivityLauncher.showReaderComments(
+                        activity, it.blogId, it.postId,
+                        directOperation, commentId.toLong(), viewModel.interceptedUri,
+                        DIRECT_OPERATION.sourceDescription
+                )
             }
-            // Liking needs to be handled "later" after the post has been updated from the server so,
-            // nothing special to do here
+
+            activity?.finish()
+            activity?.overridePendingTransition(0, 0)
+            true
         }
-        return false
+        // Like needs to be handled "later" after the post has been updated from the server, nothing special to do here.
+        DirectOperation.POST_LIKE -> false
+        null -> false
     }
 
+    @Suppress("DEPRECATION")
     private fun ReaderPostDetailFragment.showPostInWebView(post: ReaderPost) {
         readerWebView.setIsPrivatePost(post.isPrivate)
         readerWebView.setBlogSchemeIsHttps(UrlUtils.isHttps(post.blogUrl))

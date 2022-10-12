@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import org.wordpress.android.R
@@ -14,6 +15,7 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.JetpackRemoteInstallFragmentBinding
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.login.LoginMode
+import org.wordpress.android.ui.JetpackRemoteInstallViewModel.JetpackResultActionData
 import org.wordpress.android.ui.JetpackRemoteInstallViewModel.JetpackResultActionData.Action.CONNECT
 import org.wordpress.android.ui.JetpackRemoteInstallViewModel.JetpackResultActionData.Action.LOGIN
 import org.wordpress.android.ui.JetpackRemoteInstallViewModel.JetpackResultActionData.Action.MANUAL_INSTALL
@@ -35,7 +37,7 @@ class JetpackRemoteInstallFragment : Fragment(R.layout.jetpack_remote_install_fr
     }
 
     private fun initDagger() {
-        (requireActivity().application as WordPress).component()!!.inject(this)
+        (requireActivity().application as WordPress).component().inject(this)
     }
 
     private fun JetpackRemoteInstallFragmentBinding.initViewModel(savedInstanceState: Bundle?) {
@@ -54,34 +56,52 @@ class JetpackRemoteInstallFragment : Fragment(R.layout.jetpack_remote_install_fr
             viewModel.liveActionOnResult.observe(viewLifecycleOwner, Observer { result ->
                 if (result != null) {
                     when (result.action) {
-                        MANUAL_INSTALL -> {
-                            JetpackConnectionWebViewActivity.startManualFlow(
-                                    activity,
-                                    source,
-                                    result.site,
-                                    result.loggedIn
-                            )
-                            activity.finish()
-                        }
-                        LOGIN -> {
-                            val loginIntent = Intent(activity, LoginActivity::class.java)
-                            LoginMode.JETPACK_STATS.putInto(loginIntent)
-                            loginIntent.putExtra(LoginActivity.ARG_JETPACK_CONNECT_SOURCE, source)
-                            startActivityForResult(loginIntent, JETPACK_LOGIN)
-                        }
-                        CONNECT -> {
-                            JetpackConnectionWebViewActivity.startJetpackConnectionFlow(
-                                    activity,
-                                    source,
-                                    result.site,
-                                    result.loggedIn
-                            )
-                            activity.finish()
-                        }
+                        MANUAL_INSTALL -> onManualInstallResultAction(activity, source, result)
+                        LOGIN -> onLoginResultAction(activity, source)
+                        CONNECT -> onConnectResultAction(activity, source, result)
                     }
                 }
             })
         }
+    }
+
+    private fun onManualInstallResultAction(
+        activity: FragmentActivity,
+        source: JetpackConnectionSource,
+        result: JetpackResultActionData
+    ) {
+        JetpackConnectionWebViewActivity.startManualFlow(
+                activity,
+                source,
+                result.site,
+                result.loggedIn
+        )
+        activity.finish()
+    }
+
+    @Suppress("DEPRECATION")
+    private fun onLoginResultAction(
+        activity: FragmentActivity,
+        source: JetpackConnectionSource
+    ) {
+        val loginIntent = Intent(activity, LoginActivity::class.java)
+        LoginMode.JETPACK_STATS.putInto(loginIntent)
+        loginIntent.putExtra(LoginActivity.ARG_JETPACK_CONNECT_SOURCE, source)
+        startActivityForResult(loginIntent, JETPACK_LOGIN)
+    }
+
+    private fun onConnectResultAction(
+        activity: FragmentActivity,
+        source: JetpackConnectionSource,
+        result: JetpackResultActionData
+    ) {
+        JetpackConnectionWebViewActivity.startJetpackConnectionFlow(
+                activity,
+                source,
+                result.site,
+                result.loggedIn
+        )
+        activity.finish()
     }
 
     private fun JetpackRemoteInstallFragmentBinding.initLiveViewStateObserver() {
@@ -111,6 +131,7 @@ class JetpackRemoteInstallFragment : Fragment(R.layout.jetpack_remote_install_fr
         })
     }
 
+    @Suppress("DEPRECATION")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == JETPACK_LOGIN && resultCode == Activity.RESULT_OK) {

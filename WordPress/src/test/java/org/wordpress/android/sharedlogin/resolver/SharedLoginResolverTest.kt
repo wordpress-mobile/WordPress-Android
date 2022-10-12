@@ -20,9 +20,10 @@ import org.wordpress.android.resolver.ContentResolverWrapper
 import org.wordpress.android.sharedlogin.JetpackSharedLoginFlag
 import org.wordpress.android.sharedlogin.SharedLoginAnalyticsTracker
 import org.wordpress.android.sharedlogin.SharedLoginAnalyticsTracker.ErrorType
-import org.wordpress.android.sharedlogin.data.WordPressPublicData
+import org.wordpress.android.util.publicdata.WordPressPublicData
 import org.wordpress.android.sharedlogin.provider.SharedLoginProvider
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.userflags.resolver.UserFlagsResolver
 import org.wordpress.android.util.AccountActionBuilderWrapper
 import org.wordpress.android.viewmodel.ContextProvider
 
@@ -37,6 +38,7 @@ class SharedLoginResolverTest {
     private val accountActionBuilderWrapper: AccountActionBuilderWrapper = mock()
     private val appPrefsWrapper: AppPrefsWrapper = mock()
     private val sharedLoginAnalyticsTracker: SharedLoginAnalyticsTracker = mock()
+    private val userFlagsResolver: UserFlagsResolver = mock()
     private val classToTest = SharedLoginResolver(
             jetpackSharedLoginFlag,
             contextProvider,
@@ -47,7 +49,8 @@ class SharedLoginResolverTest {
             contentResolverWrapper,
             accountActionBuilderWrapper,
             appPrefsWrapper,
-            sharedLoginAnalyticsTracker
+            sharedLoginAnalyticsTracker,
+            userFlagsResolver
     )
     private val loggedInToken = "valid"
     private val notLoggedInToken = ""
@@ -108,6 +111,14 @@ class SharedLoginResolverTest {
         whenever(queryResult.getValue<String>(mockCursor)).thenReturn(loggedInToken)
         classToTest.tryJetpackLogin()
         verify(dispatcher).dispatch(updateTokenAction)
+    }
+
+    @Test
+    fun `Should try to get user flags if access token is NOT empty`() {
+        featureEnabled()
+        whenever(queryResult.getValue<String>(mockCursor)).thenReturn(loggedInToken)
+        classToTest.tryJetpackLogin()
+        verify(userFlagsResolver).tryGetUserFlags(any(), any())
     }
 
     @Test

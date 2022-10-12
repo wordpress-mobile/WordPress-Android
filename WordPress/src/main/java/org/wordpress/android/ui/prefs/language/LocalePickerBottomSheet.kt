@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.prefs.language
 
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.LayoutInflater
@@ -55,6 +56,18 @@ class LocalePickerBottomSheet : BottomSheetDialogFragment() {
         binding?.apply {
             setupContentViews()
             setupObservers()
+
+            val orientation = resources.configuration.orientation
+            if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                val sheet = dialog?.findViewById<View>(
+                    com.google.android.material.R.id.design_bottom_sheet
+                ) as? FrameLayout
+                sheet?.let {
+                    val behavior = BottomSheetBehavior.from(it)
+                    behavior.state = BottomSheetBehavior.STATE_EXPANDED
+                    behavior.skipCollapsed = true
+                }
+            }
         }
     }
 
@@ -151,6 +164,23 @@ class LocalePickerBottomSheet : BottomSheetDialogFragment() {
         super.onDestroyView()
         binding = null
         callback = null
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            bottomSheet?.let {
+                val behavior = BottomSheetBehavior.from(it)
+                behavior.state = BottomSheetBehavior.STATE_EXPANDED
+                behavior.skipCollapsed = true
+            }
+        } else {
+            bottomSheet?.let {
+                val behavior = BottomSheetBehavior.from(it)
+                behavior.skipCollapsed = false
+            }
+        }
     }
 
     private fun expandBottomSheet() {

@@ -1,8 +1,8 @@
 package org.wordpress.android.ui.posts
 
+import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleObserver
-import androidx.lifecycle.OnLifecycleEvent
+import androidx.lifecycle.LifecycleOwner
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -14,10 +14,6 @@ import org.greenrobot.eventbus.ThreadMode.MAIN
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged
-import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.DeletePost
-import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.RemoteAutoSavePost
-import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.RemovePost
-import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.RestorePost
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
@@ -59,7 +55,7 @@ class PostListEventListener(
     private val triggerPreviewStateUpdate: (PostListRemotePreviewState, PostInfoType) -> Unit,
     private val isRemotePreviewingFromPostsList: () -> Boolean,
     private val hasRemoteAutoSavePreviewError: () -> Boolean
-) : LifecycleObserver, CoroutineScope {
+) : DefaultLifecycleObserver, CoroutineScope {
     init {
         dispatcher.register(this)
         EventBus.getDefault().register(this)
@@ -94,9 +90,7 @@ class PostListEventListener(
      * Handles the [Lifecycle.Event.ON_DESTROY] event to cleanup the registration for dispatcher and removing the
      * observer for lifecycle.
      */
-    @Suppress("unused")
-    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
-    private fun onDestroy() {
+    override fun onDestroy(owner: LifecycleOwner) {
         job.cancel()
         lifecycle.removeObserver(this)
         dispatcher.unregister(this)
@@ -107,7 +101,7 @@ class PostListEventListener(
      * Has lower priority than the PostUploadHandler and UploadService, which ensures that they already processed this
      * OnPostChanged event. This means we can safely rely on their internal state being up to date.
      */
-    @Suppress("unused")
+    @Suppress("unused", "LongMethod", "ComplexMethod")
     @Subscribe(threadMode = MAIN, priority = 5)
     fun onPostChanged(event: OnPostChanged) {
         // We need to subscribe on the MAIN thread, in order to ensure the priority parameter is taken into account.
@@ -130,7 +124,7 @@ class PostListEventListener(
                     }
                 }
                 is CauseOfOnPostChanged.DeletePost -> {
-                    val deletePostCauseOfChange = event.causeOfChange as DeletePost
+                    val deletePostCauseOfChange = event.causeOfChange as CauseOfOnPostChanged.DeletePost
                     val localPostId = LocalId(deletePostCauseOfChange.localPostId)
                     when (deletePostCauseOfChange.postDeleteActionType) {
                         TRASH -> postActionHandler.handlePostTrashed(localPostId = localPostId, isError = event.isError)
@@ -142,11 +136,11 @@ class PostListEventListener(
                     }
                 }
                 is CauseOfOnPostChanged.RestorePost -> {
-                    val localPostId = LocalId((event.causeOfChange as RestorePost).localPostId)
+                    val localPostId = LocalId((event.causeOfChange as CauseOfOnPostChanged.RestorePost).localPostId)
                     postActionHandler.handlePostRestored(localPostId = localPostId, isError = event.isError)
                 }
                 is CauseOfOnPostChanged.RemovePost -> {
-                    val localPostId = LocalId((event.causeOfChange as RemovePost).localPostId)
+                    val localPostId = LocalId((event.causeOfChange as CauseOfOnPostChanged.RemovePost).localPostId)
                     postActionHandler.handlePostDeletedOrRemoved(
                             localPostId = localPostId,
                             isRemoved = true,
@@ -154,10 +148,13 @@ class PostListEventListener(
                     )
                 }
                 is CauseOfOnPostChanged.RemoteAutoSavePost -> {
-                    val post = postStore.getPostByLocalPostId((event.causeOfChange as RemoteAutoSavePost).localPostId)
+                    val post = postStore.getPostByLocalPostId(
+                            (event.causeOfChange as CauseOfOnPostChanged.RemoteAutoSavePost).localPostId
+                    )
                     if (isRemotePreviewingFromPostsList.invoke()) {
                         if (event.isError) {
-                            AppLog.d(T.POSTS, "REMOTE_AUTO_SAVE_POST failed: " +
+                            AppLog.d(
+                                    T.POSTS, "REMOTE_AUTO_SAVE_POST failed: " +
                                     event.error.type + " - " + event.error.message)
                         }
                         handleRemoteAutoSave(post, event.isError)
@@ -165,6 +162,10 @@ class PostListEventListener(
                         uploadStatusChanged(post.id)
                     }
                 }
+                is CauseOfOnPostChanged.FetchPages -> Unit // Do nothing
+                is CauseOfOnPostChanged.FetchPosts -> Unit // Do nothing
+                is CauseOfOnPostChanged.RemoveAllPosts -> Unit // Do nothing
+                is CauseOfOnPostChanged.FetchPostLikes -> Unit // Do nothing
             }
         }
     }

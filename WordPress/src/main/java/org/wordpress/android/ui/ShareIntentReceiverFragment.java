@@ -66,7 +66,9 @@ public class ShareIntentReceiverFragment extends Fragment {
         }
     }
 
-    @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+    @Override
+    @SuppressWarnings("deprecation")
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         // important for accessibility - talkback
         getActivity().setTitle(R.string.share_intent_screen_title);

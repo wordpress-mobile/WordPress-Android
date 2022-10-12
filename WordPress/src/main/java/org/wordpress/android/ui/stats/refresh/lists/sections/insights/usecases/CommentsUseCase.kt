@@ -66,10 +66,10 @@ class CommentsUseCase
         return listOf(buildTitle(), Empty())
     }
 
-    override fun buildUiModel(model: CommentsModel, uiState: Int): List<BlockListItem> {
+    override fun buildUiModel(domainModel: CommentsModel, uiState: Int): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
         items.add(buildTitle())
-        if (model.authors.isNotEmpty() || model.posts.isNotEmpty()) {
+        if (domainModel.authors.isNotEmpty() || domainModel.posts.isNotEmpty()) {
             items.add(
                     TabsItem(
                             listOf(R.string.stats_comments_authors, R.string.stats_comments_posts_and_pages),
@@ -78,9 +78,9 @@ class CommentsUseCase
             )
 
             if (uiState == 0) {
-                items.addAll(buildAuthorsTab(model.authors))
+                items.addAll(buildAuthorsTab(domainModel.authors))
             } else {
-                items.addAll(buildPostsTab(model.posts))
+                items.addAll(buildPostsTab(domainModel.posts))
             }
         } else {
             items.add(Empty())

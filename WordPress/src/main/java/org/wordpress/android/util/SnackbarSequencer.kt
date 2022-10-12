@@ -66,7 +66,7 @@ class SnackbarSequencer @Inject constructor(
             } as? Activity
 
             if (context != null && isContextAlive(context)) {
-                prepareSnackBar(context, item)?.show()
+                item?.let { prepareSnackBar(context, it)?.show() }
                 AppLog.d(T.UTILS, "SnackbarSequencer > before delay")
                 /**
                  * Delay showing the next snackbar only if the current snack bar is important.

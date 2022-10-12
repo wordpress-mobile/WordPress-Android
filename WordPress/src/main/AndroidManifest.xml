@@ -100,7 +100,7 @@
             android:label="@string/me_section_screen_title" />
         <activity
             android:name=".ui.accounts.LoginActivity"
-            android:theme="@style/LoginTheme.TransparentStatusBar"
+            android:theme="@style/LoginTheme.TransparentSystemBars"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
 
@@ -399,6 +399,9 @@
                     android:scheme="wordpress" />
                 <data
                     android:host="notifications"
+                    android:scheme="wordpress" />
+                <data
+                    android:host="home"
                     android:scheme="wordpress" />
             </intent-filter>
 

@@ -1,11 +1,11 @@
-package org.wordpress.android.sharedlogin.data
+package org.wordpress.android.util.publicdata
 
 import org.wordpress.android.BuildConfig
-import org.wordpress.android.sharedlogin.data.JetpackPublicData.PackageName.Jalapeno
-import org.wordpress.android.sharedlogin.data.JetpackPublicData.PackageName.Vanilla
-import org.wordpress.android.sharedlogin.data.JetpackPublicData.PackageName.Wasabi
-import org.wordpress.android.sharedlogin.data.JetpackPublicData.PublicKeyHash.Debug
-import org.wordpress.android.sharedlogin.data.JetpackPublicData.PublicKeyHash.Release
+import org.wordpress.android.util.publicdata.JetpackPublicData.PackageName.Jalapeno
+import org.wordpress.android.util.publicdata.JetpackPublicData.PackageName.Vanilla
+import org.wordpress.android.util.publicdata.JetpackPublicData.PackageName.Wasabi
+import org.wordpress.android.util.publicdata.JetpackPublicData.PublicKeyHash.Debug
+import org.wordpress.android.util.publicdata.JetpackPublicData.PublicKeyHash.Release
 import javax.inject.Inject
 
 class JetpackPublicData @Inject constructor() {

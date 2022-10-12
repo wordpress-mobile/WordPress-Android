@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.reader
 
 import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 const val FOLLOW_CONVERSATION_UI_STATE_FLAGS_KEY = "follow-conversation-ui-state-flags-key"
 

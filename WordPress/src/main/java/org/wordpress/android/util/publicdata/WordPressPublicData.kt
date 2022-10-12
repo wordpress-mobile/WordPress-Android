@@ -1,9 +1,9 @@
-package org.wordpress.android.sharedlogin.data
+package org.wordpress.android.util.publicdata
 
 import org.wordpress.android.BuildConfig
-import org.wordpress.android.sharedlogin.data.WordPressPublicData.PackageName.Jalapeno
-import org.wordpress.android.sharedlogin.data.WordPressPublicData.PackageName.Vanilla
-import org.wordpress.android.sharedlogin.data.WordPressPublicData.PackageName.Wasabi
+import org.wordpress.android.util.publicdata.WordPressPublicData.PackageName.Jalapeno
+import org.wordpress.android.util.publicdata.WordPressPublicData.PackageName.Vanilla
+import org.wordpress.android.util.publicdata.WordPressPublicData.PackageName.Wasabi
 import javax.inject.Inject
 
 class WordPressPublicData @Inject constructor() {
