@@ -31,7 +31,7 @@ import org.wordpress.android.ui.accounts.login.components.PrimaryButton
 import org.wordpress.android.ui.accounts.login.components.SecondaryButton
 import org.wordpress.android.ui.accounts.login.components.TopLinearGradient
 import org.wordpress.android.ui.compose.theme.AppTheme
-import org.wordpress.android.util.extensions.setTransparentSystemBars
+import org.wordpress.android.util.extensions.setEdgeToEdgeContentDisplay
 
 val LocalPosition = compositionLocalOf { 0f }
 
@@ -64,12 +64,12 @@ class LoginPrologueRevampedFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        requireActivity().window.setTransparentSystemBars(true)
+        requireActivity().window.setEdgeToEdgeContentDisplay(true)
     }
 
     override fun onPause() {
         super.onPause()
-        requireActivity().window.setTransparentSystemBars(false)
+        requireActivity().window.setEdgeToEdgeContentDisplay(true)
     }
 
     companion object {
