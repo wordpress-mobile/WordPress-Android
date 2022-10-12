@@ -163,7 +163,8 @@ class BloggingRemindersResolverTest {
     fun `Should track success if result map has entries`() = test {
         whenever(siteStore.getLocalIdForRemoteSiteId(123)).thenReturn(123)
         featureEnabled()
-        whenever(mockCursor.getString(0)).thenReturn("{\"123\":{\"enabledDays\":[\"MONDAY\"],\"hour\":5,\"isPromptIncluded\":false,\"minute\":43,\"siteId\":123}}")
+        whenever(mockCursor.getString(0)).thenReturn("{\"123\":{\"enabledDays\":[\"MONDAY\"],\"hour\":5" +
+                ",\"isPromptIncluded\":false,\"minute\":43,\"siteId\":123}}")
         classToTest.trySyncBloggingReminders({}, {})
         verify(bloggingRemindersSyncAnalyticsTracker).trackSuccess()
     }
@@ -172,7 +173,8 @@ class BloggingRemindersResolverTest {
     fun `Should trigger success callback if result map has entries`() = test {
         whenever(siteStore.getLocalIdForRemoteSiteId(123)).thenReturn(123)
         featureEnabled()
-        whenever(mockCursor.getString(0)).thenReturn("{\"123\":{\"enabledDays\":[\"MONDAY\"],\"hour\":5,\"isPromptIncluded\":false,\"minute\":43,\"siteId\":123}}")
+        whenever(mockCursor.getString(0)).thenReturn("{\"123\":{\"enabledDays\":[\"MONDAY\"],\"hour\":5" +
+                ",\"isPromptIncluded\":false,\"minute\":43,\"siteId\":123}}")
         val onSuccess: () -> Unit = mock()
         classToTest.trySyncBloggingReminders(onSuccess) {}
         verify(onSuccess).invoke()
@@ -183,7 +185,8 @@ class BloggingRemindersResolverTest {
         val localId = 456
         whenever(siteStore.getLocalIdForRemoteSiteId(123)).thenReturn(localId)
         featureEnabled()
-        whenever(mockCursor.getString(0)).thenReturn("{\"123\":{\"enabledDays\":[\"MONDAY\"],\"hour\":5,\"isPromptIncluded\":false,\"minute\":43,\"siteId\":123}}")
+        whenever(mockCursor.getString(0)).thenReturn("{\"123\":{\"enabledDays\":[\"MONDAY\"],\"hour\":5" +
+                ",\"isPromptIncluded\":false,\"minute\":43,\"siteId\":123}}")
         classToTest.trySyncBloggingReminders({}, {})
         verify(bloggingRemindersStore, times(1)).updateBloggingReminders(
                 BloggingRemindersModel(
@@ -200,7 +203,8 @@ class BloggingRemindersResolverTest {
     fun `Should NOT update blogging reminder if site local ID is 0`() = test {
         whenever(siteStore.getLocalIdForRemoteSiteId(123)).thenReturn(0)
         featureEnabled()
-        whenever(mockCursor.getString(0)).thenReturn("{\"123\":{\"enabledDays\":[\"MONDAY\"],\"hour\":5,\"isPromptIncluded\":false,\"minute\":43,\"siteId\":123}}")
+        whenever(mockCursor.getString(0)).thenReturn("{\"123\":{\"enabledDays\":[\"MONDAY\"],\"hour\":5" +
+                ",\"isPromptIncluded\":false,\"minute\":43,\"siteId\":123}}")
         classToTest.trySyncBloggingReminders({}, {})
         verify(bloggingRemindersStore, times(0)).updateBloggingReminders(any())
     }

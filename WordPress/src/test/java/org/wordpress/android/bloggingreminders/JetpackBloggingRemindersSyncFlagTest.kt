@@ -8,7 +8,6 @@ import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.config.JetpackBloggingRemindersSyncFeatureConfig
 
 class JetpackBloggingRemindersSyncFlagTest {
-
     private val jetpackBloggingRemindersSyncFeatureConfig: JetpackBloggingRemindersSyncFeatureConfig = mock()
     private val buildConfigWrapper: BuildConfigWrapper = mock()
     private val classToTest = JetpackBloggingRemindersSyncFlag(

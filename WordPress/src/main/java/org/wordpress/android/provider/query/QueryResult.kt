@@ -3,8 +3,6 @@ package org.wordpress.android.provider.query
 import android.database.Cursor
 import android.database.MatrixCursor
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
-import org.wordpress.android.fluxc.model.BloggingRemindersModel
 import java.lang.reflect.Type
 import javax.inject.Inject
 
