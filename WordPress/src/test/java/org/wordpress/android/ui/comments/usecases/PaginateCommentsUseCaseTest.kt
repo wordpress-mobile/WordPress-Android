@@ -13,7 +13,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
-import org.mockito.Mockito.*
+import org.mockito.Mockito.`when`
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.CommentStore.CommentError
@@ -127,7 +127,7 @@ class PaginateCommentsUseCaseTest : BaseUnitTest() {
 
         val commentsPayload = dataResult.data
 
-        assertThat(commentsPayload.hasMore).isTrue()
+        assertThat(commentsPayload.hasMore).isTrue
         assertThat(commentsPayload.comments).isEqualTo(testComments.take(30))
         job.cancel()
     }
@@ -152,7 +152,7 @@ class PaginateCommentsUseCaseTest : BaseUnitTest() {
 
         val commentsPayload = dataResult.data
 
-        assertThat(commentsPayload.hasMore).isTrue()
+        assertThat(commentsPayload.hasMore).isTrue
         assertThat(commentsPayload.comments).isEqualTo(testComments.take(60))
         job.cancel()
     }
@@ -177,7 +177,7 @@ class PaginateCommentsUseCaseTest : BaseUnitTest() {
 
         val commentsPayload = dataResult.data
 
-        assertThat(commentsPayload.hasMore).isFalse()
+        assertThat(commentsPayload.hasMore).isFalse
         assertThat(commentsPayload.comments).isEqualTo(testComments.take(90))
         job.cancel()
     }
@@ -214,7 +214,7 @@ class PaginateCommentsUseCaseTest : BaseUnitTest() {
 
         paginateCommentsUseCase.manageAction(OnGetPage(GetPageParameters(site, 30, 30, ALL)))
 
-        assertThat(result.any { it is UseCaseResult.Loading }).isFalse()
+        assertThat(result.any { it is UseCaseResult.Loading }).isFalse
         job.cancel()
     }
 
@@ -362,7 +362,7 @@ class PaginateCommentsUseCaseTest : BaseUnitTest() {
                 )
         )
 
-        assertThat(result.any { it is UseCaseResult.Loading }).isFalse()
+        assertThat(result.any { it is UseCaseResult.Loading }).isFalse
 
         job.cancel()
     }
@@ -399,7 +399,7 @@ class PaginateCommentsUseCaseTest : BaseUnitTest() {
 
                 val commentsPayload = dataResult.data
 
-                assertThat(commentsPayload.hasMore).isTrue()
+                assertThat(commentsPayload.hasMore).isTrue
                 assertThat(commentsPayload.comments).isEqualTo(testComments.take(60))
                 job.cancel()
             }
