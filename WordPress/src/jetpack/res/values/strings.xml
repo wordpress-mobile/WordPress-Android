@@ -13,7 +13,6 @@
     <string name="app_tagline">Site security and performance from your pocket</string>
     <string name="continue_with_wpcom_no_signup">Continue with WordPress.com</string>
     <string name="login_prologue_revamped_content_description_jetpack_logo">Jetpack logo</string>
-    <string name="login_prologue_revamped_content_description_top_bg">Jetpack top background fade</string>
 
     <string name="login_prologue_revamped_jetpack_feature_text_1">Update a plugin</string>
     <string name="login_prologue_revamped_jetpack_feature_text_2">Build a site</string>
