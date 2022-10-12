@@ -8,7 +8,6 @@ import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Rule
@@ -17,7 +16,6 @@ import org.junit.runner.RunWith
 import org.mockito.ArgumentCaptor
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
-import org.wordpress.android.MainCoroutineScopeRule
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.action.SiteAction
 import org.wordpress.android.fluxc.annotations.action.Action
@@ -28,6 +26,7 @@ import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.OnBlockLayoutsFetched
 import org.wordpress.android.fluxc.store.SiteStore.SiteError
 import org.wordpress.android.fluxc.store.SiteStore.SiteErrorType.GENERIC_ERROR
+import org.wordpress.android.test
 import org.wordpress.android.ui.layoutpicker.LayoutPickerUiState.Content
 import org.wordpress.android.ui.layoutpicker.LayoutPickerUiState.Error
 import org.wordpress.android.ui.mlp.ModalLayoutPickerDimensionProvider
@@ -48,9 +47,6 @@ import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel.PageReques
 class ModalLayoutPickerViewModelTest {
     @Rule
     @JvmField val rule = InstantTaskExecutorRule()
-
-    @Rule
-    @JvmField val coroutineScope = MainCoroutineScopeRule()
 
     private lateinit var viewModel: ModalLayoutPickerViewModel
 
@@ -108,8 +104,7 @@ class ModalLayoutPickerViewModelTest {
         isError: Boolean = false,
         isSiteUnavailable: Boolean = false,
         block: suspend CoroutineScope.() -> T
-    ) {
-        coroutineScope.runBlockingTest {
+    ) = test {
             val site = SiteModel().apply {
                 id = 1
                 mobileEditor = GB_EDITOR_NAME
@@ -127,7 +122,6 @@ class ModalLayoutPickerViewModelTest {
             whenever(networkUtils.isNetworkAvailable()).thenReturn(true)
             setupFetchLayoutsDispatcher(isError)
             block()
-        }
     }
 
     private fun setupFetchLayoutsDispatcher(isError: Boolean) {
