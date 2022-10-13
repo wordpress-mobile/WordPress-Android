@@ -301,7 +301,7 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
             }
         }
     }
-    private val mOnGravatarClickedListener = OnGravatarClickedListener { siteId, userId, siteUrl ->
+    private val mOnGravatarClickedListener = OnGravatarClickedListener { siteId, _, siteUrl ->
         if (!isAdded || activity !is NotificationsDetailActivity) {
             return@OnGravatarClickedListener
         }

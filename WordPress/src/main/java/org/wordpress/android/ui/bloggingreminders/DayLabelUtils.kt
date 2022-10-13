@@ -26,7 +26,7 @@ class DayLabelUtils
 
     fun buildLowercaseNTimesLabel(bloggingRemindersModel: BloggingRemindersUiModel?): String? {
         val counts = resourceProvider.getStringArray(R.array.blogging_reminders_count).map {
-            it.toLowerCase(Locale.getDefault())
+            it.lowercase(Locale.getDefault())
         }
         val size = bloggingRemindersModel?.enabledDays?.size ?: 0
         return counts.getOrNull(size - 1)

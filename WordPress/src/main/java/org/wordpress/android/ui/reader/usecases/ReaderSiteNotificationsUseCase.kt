@@ -92,8 +92,8 @@ class ReaderSiteNotificationsUseCase @Inject constructor(
         dispatcher.dispatch(AccountActionBuilder.newUpdateSubscriptionNotificationPostAction(payload))
     }
 
+    @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    @SuppressWarnings("unused")
     fun onSubscriptionUpdated(event: OnSubscriptionUpdated) {
         if (event.isError) {
             continuation?.resume(false)

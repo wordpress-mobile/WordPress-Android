@@ -2,7 +2,8 @@ package org.wordpress.android.analytics;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
+
+import androidx.preference.PreferenceManager;
 
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.util.AppLog;

@@ -27,6 +27,7 @@ class LoginPrologueFragment : Fragment(R.layout.jetpack_login_prologue_screen) {
         loginPrologueListener = context
     }
 
+    @Suppress("DEPRECATION")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -79,7 +80,7 @@ class LoginPrologueFragment : Fragment(R.layout.jetpack_login_prologue_screen) {
         viewModel.onFragmentResume()
     }
 
-    @Suppress("DEPRECATION")
+    @Suppress("DEPRECATION", "OVERRIDE_DEPRECATION")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         // important for accessibility - talkback
@@ -91,6 +92,7 @@ class LoginPrologueFragment : Fragment(R.layout.jetpack_login_prologue_screen) {
         updateSystemBars(showDarkStatusAndNavBarInLightMode = false)
     }
 
+    @Suppress("DEPRECATION")
     private fun updateSystemBars(showDarkStatusAndNavBarInLightMode: Boolean) {
         activity?.let {
             WPActivityUtils.setLightStatusBar(it.window, !showDarkStatusAndNavBarInLightMode)

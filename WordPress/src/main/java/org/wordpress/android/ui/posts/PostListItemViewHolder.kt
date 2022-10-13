@@ -28,8 +28,6 @@ import org.wordpress.android.viewmodel.posts.PostListItemAction
 import org.wordpress.android.viewmodel.posts.PostListItemAction.MoreItem
 import org.wordpress.android.viewmodel.posts.PostListItemAction.SingleItem
 import org.wordpress.android.viewmodel.uistate.ProgressBarUiState
-import org.wordpress.android.viewmodel.uistate.ProgressBarUiState.Determinate
-import org.wordpress.android.viewmodel.uistate.ProgressBarUiState.Indeterminate
 import org.wordpress.android.viewmodel.posts.PostListItemType.PostListItemUiState
 import org.wordpress.android.viewmodel.posts.PostListItemUiStateData
 import org.wordpress.android.widgets.PostListButton
@@ -185,11 +183,12 @@ sealed class PostListItemViewHolder(
     private fun updateProgressBarState(progressBarUiState: ProgressBarUiState) {
         uiHelpers.updateVisibility(uploadProgressBar, progressBarUiState.visibility)
         when (progressBarUiState) {
-            Indeterminate -> uploadProgressBar.isIndeterminate = true
-            is Determinate -> {
+            is ProgressBarUiState.Indeterminate -> uploadProgressBar.isIndeterminate = true
+            is ProgressBarUiState.Determinate -> {
                 uploadProgressBar.isIndeterminate = false
                 uploadProgressBar.progress = progressBarUiState.progress
             }
+            is ProgressBarUiState.Hidden -> Unit // Do nothing
         }
     }
 

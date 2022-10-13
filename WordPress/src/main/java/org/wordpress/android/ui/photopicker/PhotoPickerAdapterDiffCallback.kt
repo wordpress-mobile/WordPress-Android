@@ -1,9 +1,8 @@
 package org.wordpress.android.ui.photopicker
 
 import androidx.recyclerview.widget.DiffUtil
-import org.wordpress.android.ui.photopicker.PhotoPickerAdapterDiffCallback.Payload.COUNT_CHANGE
-import org.wordpress.android.ui.photopicker.PhotoPickerAdapterDiffCallback.Payload.SELECTION_CHANGE
 
+@Suppress("DEPRECATION")
 @Deprecated("This class is being refactored, if you implement any change, please also update " +
         "{@link org.wordpress.android.ui.mediapicker.MedaPickerAdapterDiffCallback}")
 class PhotoPickerAdapterDiffCallback(
@@ -30,11 +29,11 @@ class PhotoPickerAdapterDiffCallback(
         val oldItem = oldItems[oldItemPosition]
         val updatedItem = updatedItems[newItemPosition]
         if (oldItem.isSelected != updatedItem.isSelected) {
-            return SELECTION_CHANGE
+            return Payload.SELECTION_CHANGE
         }
         if (oldItem.showOrderCounter == updatedItem.showOrderCounter &&
                 oldItem.selectedOrder != updatedItem.selectedOrder) {
-            return COUNT_CHANGE
+            return Payload.COUNT_CHANGE
         }
         return super.getChangePayload(oldItemPosition, newItemPosition)
     }

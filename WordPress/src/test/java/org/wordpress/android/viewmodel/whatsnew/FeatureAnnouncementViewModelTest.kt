@@ -8,7 +8,6 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -73,7 +72,7 @@ class FeatureAnnouncementViewModelTest : BaseUnitTest() {
     )
 
     @Before
-    fun setUp() = runBlockingTest {
+    fun setUp() = test {
         uiModelResults.clear()
 
         whenever(featureAnnouncementProvider.getLatestFeatureAnnouncement(any())).thenReturn(featureAnnouncement)

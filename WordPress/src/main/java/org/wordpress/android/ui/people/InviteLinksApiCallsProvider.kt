@@ -50,7 +50,7 @@ class InviteLinksApiCallsProvider @Inject constructor(
     suspend fun generateLinks(blogId: Long): InviteLinksCallResult = suspendCoroutine { cont ->
         val endPointPath = "/sites/$blogId/invites/links/generate"
 
-        val listener = Listener { jsonObject ->
+        val listener = Listener {
             AppLog.d(
                     T.PEOPLE,
                     "generateLinks > Succeeded [blogId=$blogId]"
@@ -72,7 +72,7 @@ class InviteLinksApiCallsProvider @Inject constructor(
     suspend fun disableLinks(blogId: Long): InviteLinksCallResult = suspendCoroutine { cont ->
         val endPointPath = "/sites/$blogId/invites/links/disable"
 
-        val listener = Listener { jsonObject ->
+        val listener = Listener {
             AppLog.d(
                     T.PEOPLE,
                     "deleteLinks > Succeeded [blogId=$blogId]"

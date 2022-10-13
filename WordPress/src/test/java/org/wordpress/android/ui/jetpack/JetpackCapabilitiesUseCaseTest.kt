@@ -87,7 +87,7 @@ class JetpackCapabilitiesUseCaseTest {
 
         useCase.getJetpackPurchasedProducts(SITE_ID).toList(mutableListOf())
 
-        verify(appPrefsWrapper).setSiteJetpackCapabilities(SITE_ID, event.capabilities!!)
+        verify(appPrefsWrapper).setSiteJetpackCapabilities(SITE_ID, event.capabilities)
     }
 
     @Test

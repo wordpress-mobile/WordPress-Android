@@ -190,7 +190,7 @@ class PageListViewModel @Inject constructor(
 
     private fun loadPagesAsync(pages: List<PageModel>) = launch {
         val pageItems = pages
-                .sortedBy { it.title.toLowerCase(localeManagerWrapper.getLocale()) }
+                .sortedBy { it.title.lowercase(localeManagerWrapper.getLocale()) }
                 .filter { listType.pageStatuses.contains(it.status) }
                 .let {
                     when (listType) {
@@ -450,8 +450,8 @@ class PageListViewModel @Inject constructor(
         pagesViewModel.onImagesChanged()
     }
 
+    @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    @SuppressWarnings("unused")
     fun onMediaChanged(event: OnMediaChanged) {
         if (!event.isError && event.mediaList != null) {
             invalidateFeaturedMedia(*event.mediaList.map { it.mediaId }.toLongArray())

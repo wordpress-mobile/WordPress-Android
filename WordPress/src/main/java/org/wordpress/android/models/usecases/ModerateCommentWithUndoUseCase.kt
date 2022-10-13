@@ -34,12 +34,12 @@ class ModerateCommentWithUndoUseCase @Inject constructor(
             CommentError> {
         object Idle : ModerateCommentsState() {
             override suspend fun runAction(
-                resourceProvider: ModerateCommentsResourceProvider,
+                utilsProvider: ModerateCommentsResourceProvider,
                 action: ModerateCommentsAction,
                 flowChannel: MutableSharedFlow<UseCaseResult<CommentsUseCaseType, CommentError, Any>>
             ): StateInterface<ModerateCommentsResourceProvider, ModerateCommentsAction, Any, CommentsUseCaseType,
                     CommentError> {
-                val commentsStore = resourceProvider.commentsStore
+                val commentsStore = utilsProvider.commentsStore
                 return when (action) {
                     is OnModerateComment -> {
                         val parameters = action.parameters
@@ -78,7 +78,7 @@ class ModerateCommentWithUndoUseCase @Inject constructor(
                                             )
                                     )
                             )
-                            resourceProvider.localCommentCacheUpdateHandler.requestCommentsUpdate()
+                            utilsProvider.localCommentCacheUpdateHandler.requestCommentsUpdate()
                         }
                         Idle
                     }
@@ -92,7 +92,7 @@ class ModerateCommentWithUndoUseCase @Inject constructor(
                                 remoteCommentId = parameters.remoteCommentId,
                                 newStatus = parameters.newStatus
                         )
-                        resourceProvider.localCommentCacheUpdateHandler.requestCommentsUpdate()
+                        utilsProvider.localCommentCacheUpdateHandler.requestCommentsUpdate()
 
                         val result = if (parameters.newStatus == DELETED) {
                             commentsStore.deleteComment(
@@ -118,7 +118,7 @@ class ModerateCommentWithUndoUseCase @Inject constructor(
                         } else {
                             flowChannel.emit(Success(MODERATE_USE_CASE, DoNotCare))
                         }
-                        resourceProvider.localCommentCacheUpdateHandler.requestCommentsUpdate()
+                        utilsProvider.localCommentCacheUpdateHandler.requestCommentsUpdate()
                         Idle
                     }
                     is OnUndoModerateComment -> {
@@ -129,7 +129,7 @@ class ModerateCommentWithUndoUseCase @Inject constructor(
                                 newStatus = parameters.fallbackStatus
                         )
                         flowChannel.emit(Success(MODERATE_USE_CASE, DoNotCare))
-                        resourceProvider.localCommentCacheUpdateHandler.requestCommentsUpdate()
+                        utilsProvider.localCommentCacheUpdateHandler.requestCommentsUpdate()
                         Idle
                     }
                 }

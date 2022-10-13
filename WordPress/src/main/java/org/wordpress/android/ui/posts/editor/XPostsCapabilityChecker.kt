@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.posts.editor
 
 import androidx.core.util.Consumer
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -13,6 +14,7 @@ class XPostsCapabilityChecker @Inject constructor(
     private val xPostsStore: XPostsStore
 ) {
     @Suppress("GlobalCoroutineUsage")
+    @OptIn(DelicateCoroutinesApi::class)
     fun retrieveCapability(site: SiteModel, callback: Consumer<Boolean>) {
         GlobalScope.launch(Dispatchers.IO) {
             val capability = isCapable(site)

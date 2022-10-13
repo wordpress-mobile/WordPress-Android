@@ -5,7 +5,6 @@ import android.Manifest.permission;
 import androidx.test.rule.GrantPermissionRule;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.wordpress.android.e2e.pages.ReaderPage;
@@ -28,7 +27,6 @@ public class ReaderTests extends BaseTest {
     String mCoachingPostTitle = "Let's check out the coaching team!";
     String mCompetitionPostTitle = "Let's focus on the competition.";
 
-    @Ignore("Ignored temporarily. This sometimes fail on CI while running with whole test suite.")
     @Test
     public void e2eNavigateThroughPosts() {
         new ReaderPage()
@@ -42,7 +40,6 @@ public class ReaderTests extends BaseTest {
                 .goBackToReader();
     }
 
-    @Ignore("Ignored temporarily. This sometimes fail on CI while running with whole test suite.")
     @Test
     public void e2eLikePost() {
         new ReaderPage()

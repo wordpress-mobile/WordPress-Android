@@ -74,13 +74,11 @@
     <ID>LongMethod:HomepageSettingsDialog.kt$HomepageSettingsDialog$override fun onCreateDialog(savedInstanceState: Bundle?): Dialog</ID>
     <ID>LongMethod:MediaPickerFragment.kt$MediaPickerFragment$override fun onViewCreated(view: View, savedInstanceState: Bundle?)</ID>
     <ID>LongMethod:MediaPickerViewModel.kt$MediaPickerViewModel$private fun buildUiModel( domainModel: DomainModel?, selectedIds: List&lt;Identifier>?, softAskRequest: SoftAskRequest?, isSearching: Boolean? ): PhotoListUiModel</ID>
-    <ID>LongMethod:PhotoPickerFragment.kt$PhotoPickerFragment$override fun onViewCreated(view: View, savedInstanceState: Bundle?)</ID>
     <ID>LongMethod:PrepublishingHomeViewModel.kt$PrepublishingHomeViewModel$private fun setupHomeUiState( editPostRepository: EditPostRepository, site: SiteModel, isStoryPost: Boolean )</ID>
     <ID>LongMethod:PublishSettingsFragment.kt$PublishSettingsFragment$override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?</ID>
     <ID>LongMethod:ReferrersUseCase.kt$ReferrersUseCase$override fun buildUiModel(domainModel: ReferrersModel, uiState: SelectedGroup): List&lt;BlockListItem></ID>
     <ID>LongMethod:SearchListViewModel.kt$SearchListViewModel$private fun PageModel.toPageItem(areActionsEnabled: Boolean): PageItem</ID>
     <ID>LongMethod:SuggestionActivity.kt$SuggestionActivity$private fun initializeActivity(siteModel: SiteModel, suggestionType: SuggestionType)</ID>
-    <ID>LoopWithTooManyJumpStatements:RemoveMediaUseCase.kt$RemoveMediaUseCase$for (mediaId in mediaIds) { if (!TextUtils.isEmpty(mediaId)) { // make sure the MediaModel exists val mediaModel = try { mediaStore.getMediaWithLocalId(Integer.valueOf(mediaId)) ?: continue } catch (e: NumberFormatException) { AppLog.e(AppLog.T.MEDIA, "Invalid media id: $mediaId") continue } // also make sure it's not being uploaded anywhere else (maybe on some other Post, // simultaneously) if (mediaModel.uploadState != null &amp;&amp; mediaUtils.isLocalFile(mediaModel.uploadState.toLowerCase(Locale.ROOT)) &amp;&amp; !uploadService.isPendingOrInProgressMediaUpload(mediaModel)) { dispatcher.dispatch(MediaActionBuilder.newRemoveMediaAction(mediaModel)) } } }</ID>
     <ID>MagicNumber:ActivityViewHolder.kt$ActivityViewHolder$3</ID>
     <ID>MagicNumber:ActivityViewHolder.kt$ActivityViewHolder$50</ID>
     <ID>MagicNumber:BarChartViewHolder.kt$BarChartViewHolder$10</ID>
@@ -177,7 +175,6 @@
     <ID>NestedBlockDepth:LoadStoryFromStoriesPrefsUseCase.kt$LoadStoryFromStoriesPrefsUseCase$private fun loadOrReCreateStoryFromStoriesPrefs(site: SiteModel, mediaIds: ArrayList&lt;String>): ReCreateStoryResult</ID>
     <ID>NestedBlockDepth:PublicizeErrorDialogFragment.kt$PublicizeErrorDialogFragment$override fun onCreateDialog(savedInstanceState: Bundle?): Dialog</ID>
     <ID>NestedBlockDepth:PublishNotificationReceiverViewModel.kt$PublishNotificationReceiverViewModel$fun loadNotification(notificationId: Int): NotificationUiModel?</ID>
-    <ID>NestedBlockDepth:ReaderDiscoverLogic.kt$ReaderDiscoverLogic$private fun createSimplifiedRecommendedBlogsCardJson(originalCardJson: JSONObject): JSONObject</ID>
     <ID>NestedBlockDepth:StoriesPrefs.kt$StoriesPrefs$private fun checkSlideOriginalBackgroundMediaExists(storyFrameItem: StoryFrameItem?): Boolean</ID>
     <ID>NestedBlockDepth:StoryComposerActivity.kt$StoryComposerActivity$override fun onStorySaveButtonPressed()</ID>
     <ID>NestedBlockDepth:StoryComposerActivity.kt$StoryComposerActivity$private fun buildStoryMediaFileDataListFromStoryFrameIndexes( storyIndex: StoryIndex ): ArrayList&lt;StoryMediaFileData></ID>
@@ -251,7 +248,6 @@
     <ID>TooGenericExceptionThrown:ReaderTracker.kt$ReaderTab.Companion$throw RuntimeException("Unexpected ReaderTab id")</ID>
     <ID>TooGenericExceptionThrown:RestoreFragment.kt$RestoreFragment$throw Throwable("Couldn't initialize ${this.javaClass.simpleName} view model")</ID>
     <ID>TooGenericExceptionThrown:RestoreViewModel.kt$RestoreViewModel$throw Throwable("Unexpected restoreRequestResult ${this.javaClass.simpleName}")</ID>
-    <ID>TooGenericExceptionThrown:StatsDateFormatter.kt$StatsDateFormatter$throw RuntimeException("Unexpected date format")</ID>
     <ID>TooGenericExceptionThrown:ThreatDetailsFragment.kt$ThreatDetailsFragment$throw RuntimeException("ThreatDetailsFragment - missing siteModel extras.")</ID>
     <ID>TopLevelPropertyNaming:ActivityLogTypeFilterAdapter.kt$private const val activityViewType: Int = 2</ID>
     <ID>TopLevelPropertyNaming:ActivityLogTypeFilterAdapter.kt$private const val headerViewType: Int = 1</ID>

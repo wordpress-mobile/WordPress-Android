@@ -33,7 +33,8 @@ import java.util.Date
 
 @RunWith(MockitoJUnitRunner::class)
 class ActivityLogDetailViewModelTest {
-    @Rule @JvmField val rule = InstantTaskExecutorRule()
+    @Rule
+    @JvmField val rule = InstantTaskExecutorRule()
 
     @Mock private lateinit var dispatcher: Dispatcher
     @Mock private lateinit var activityLogStore: ActivityLogStore

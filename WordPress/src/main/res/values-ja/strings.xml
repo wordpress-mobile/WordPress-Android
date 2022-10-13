@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-09-27 09:54:11+0000
+Translation-Revision-Date: 2022-10-07 13:02:23+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.3
 Language: ja_JP
 -->
 <resources>
+    <string name="my_site_blogging_prompt_card_number_of_answers_one">1件の回答</string>
+    <string name="login_prologue_revamped_content_description_wordpress_icon">WordPress アイコン</string>
+    <string name="login_prologue_revamped_tagline">どこからでも記事の作成、編集、投稿が可能です。</string>
     <string name="error_fetch_authors_list">投稿者を取得できませんでした</string>
     <string name="post_settings_author">投稿者</string>
     <string name="app_rating_title">%sをお楽しみいただいていますか ?</string>
@@ -250,6 +253,7 @@ Language: ja_JP
     <string name="my_site_blogging_prompt_card_menu_remove">ダッシュボードから削除</string>
     <string name="my_site_blogging_prompt_card_menu_skip">このプロンプトをスキップ</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">プロンプトをさらに表示</string>
+    <string name="my_site_blogging_prompt_card_number_of_answers_other">%d件の回答</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">ブログ作成のプロンプトを共有</string>
     <string name="my_site_blogging_prompt_card_answered_prompt">✓回答済み</string>
     <string name="my_site_blogging_prompt_card_answer_prompt">回答のプロンプト</string>
@@ -508,6 +512,7 @@ Language: ja_JP
     <string name="blogging_reminders_notification_title">%sのブログに投稿する日です</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios">再利用ブロックの編集は WordPress for iOS ではまだサポートされていません</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and">再利用ブロックの編集は WordPress for Android ではまだサポートされていません</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">「通常のブロックへ変換」をタップして、これらのブロックを個別に切り離して編集できます。</string>
     <string name="blogging_reminders_done">完了</string>
     <string name="blogging_reminders_notify_me">通知する</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;サーバーのログイン情報&lt;/a&gt;を入力すると、1クリックでバックアップからサイトを復元できるようになります。</string>
@@ -561,6 +566,7 @@ Language: ja_JP
     <string name="gutenberg_native_move_image_forward">画像を前に移動</string>
     <string name="gutenberg_native_move_image_backward">画像を後ろに移動</string>
     <string name="gutenberg_native_width_settings">幅設定</string>
+    <string name="gutenberg_native_link_rel">リンク rel</string>
     <string name="gutenberg_native_column_settings">カラム設定</string>
     <string name="user_profile_untitled_site">(無題)</string>
     <string name="user_profile_site_section_header">サイト</string>
@@ -1775,7 +1781,10 @@ Language: ja_JP
     <string name="notification_channel_reminder_title">リマインダー</string>
     <string name="stats_select_next_period_description">次の期間を選択</string>
     <string name="stats_select_previous_period_description">前の期間を選択</string>
+    <string name="stats_most_popular_percent_views">表示数: %1$s</string>
     <string name="stats_insights_popular">最も人気の時間</string>
+    <string name="stats_traffic_change">%1$s (%2$s)</string>
+    <string name="stats_traffic_increase">+%1$s (%2$s)</string>
     <string name="new_site_creation_site_preview_content_description">サイトのプレビューの表示</string>
     <string name="new_site_creation_clear_all_content_description">クリア</string>
     <string name="site_created_but_not_fetched_snackbar_message">接続速度が遅いようです。リストに新しいサイトが表示されない場合は、再度更新してみてください。</string>

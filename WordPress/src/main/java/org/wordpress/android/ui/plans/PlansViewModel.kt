@@ -89,8 +89,8 @@ class PlansViewModel @Inject constructor(
         _plans.value = _cachedPlans.value
     }
 
+    @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    @SuppressWarnings("unused")
     fun onPlanOffersFetched(event: OnPlanOffersFetched) {
         if (event.isError && event.planOffers?.isEmpty() == false) {
             _listStatus.value = PlansListStatus.ERROR_WITH_CACHE
