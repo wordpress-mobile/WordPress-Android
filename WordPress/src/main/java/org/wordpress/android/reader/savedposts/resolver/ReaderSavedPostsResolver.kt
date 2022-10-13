@@ -49,12 +49,7 @@ class ReaderSavedPostsResolver @Inject constructor(
         if (savedPostsCursor != null) {
             val posts = queryResult.getValue<ReaderPostList>(savedPostsCursor) ?: ReaderPostList()
 
-            if (posts.isNotEmpty()) {
-                updateReaderSavedPosts(onSuccess, onFailure, posts)
-            } else {
-                readerSavedPostsAnalyticsTracker.trackFailed(ErrorType.NoUserSavedPostsError)
-                onFailure()
-            }
+            updateReaderSavedPosts(onSuccess, onFailure, posts)
         } else {
             readerSavedPostsAnalyticsTracker.trackFailed(ErrorType.QuerySavedPostsError)
             onFailure()
@@ -77,25 +72,29 @@ class ReaderSavedPostsResolver @Inject constructor(
         posts: ReaderPostList
     ) {
         try {
-            readerDatabaseWrapper.reset(false)
-            readerTagTableWrapper.addOrUpdateTag(
-                    ReaderTag(
-                            "",
-                            contextProvider.getContext().getString(R.string.reader_save_for_later_display_name),
-                            contextProvider.getContext().getString(R.string.reader_save_for_later_title),
-                            "",
-                            BOOKMARKED
-                    )
-            )
+            if (posts.isNotEmpty()) {
+                readerDatabaseWrapper.reset(false)
+                readerTagTableWrapper.addOrUpdateTag(
+                        ReaderTag(
+                                "",
+                                contextProvider.getContext().getString(R.string.reader_save_for_later_display_name),
+                                contextProvider.getContext().getString(R.string.reader_save_for_later_title),
+                                "",
+                                BOOKMARKED
+                        )
+                )
 
-            readerTagTableWrapper.getBookmarkTags()!!.first().let {
-                readerPostTableWrapper.addOrUpdatePosts(it, posts)
+                requireNotNull(readerTagTableWrapper.getBookmarkTags()) {
+                    "unexpected null bookmark tags"
+                }.first().let {
+                    readerPostTableWrapper.addOrUpdatePosts(it, posts)
+                }
             }
 
-            readerSavedPostsAnalyticsTracker.trackSuccess()
+            readerSavedPostsAnalyticsTracker.trackSuccess(posts.size)
             onSuccess()
         } catch (exception: Exception) {
-            readerSavedPostsAnalyticsTracker.trackFailed(ErrorType.UpdateSavedPostsError)
+            readerSavedPostsAnalyticsTracker.trackFailed(ErrorType.GenericError(exception.message))
             onFailure()
         }
     }
