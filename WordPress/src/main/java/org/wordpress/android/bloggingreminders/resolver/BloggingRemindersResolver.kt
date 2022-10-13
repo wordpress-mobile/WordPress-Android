@@ -3,6 +3,7 @@ package org.wordpress.android.bloggingreminders.resolver
 import android.database.Cursor
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import org.wordpress.android.bloggingreminders.BloggingRemindersSyncAnalyticsTracker
 import org.wordpress.android.bloggingreminders.BloggingRemindersSyncAnalyticsTracker.ErrorType
@@ -81,7 +82,9 @@ class BloggingRemindersResolver @Inject constructor(
                         continue
                     }
                     val siteLocalId = siteStore.getLocalIdForRemoteSiteId(siteId)
-                    if (siteLocalId != 0) {
+                    val isBloggingReminderAlreadySet = bloggingRemindersStore.bloggingRemindersModel(siteLocalId)
+                            .first().enabledDays.isNotEmpty()
+                    if (siteLocalId != 0 && !isBloggingReminderAlreadySet) {
                         bloggingRemindersStore.updateBloggingReminders(bloggingReminder.copy(siteId = siteLocalId))
                     }
                 }
