@@ -11,6 +11,7 @@ import androidx.compose.ui.draw.paint
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -33,6 +34,7 @@ fun LoopingTextWithBackground(
     ) {
         LoopingText(
                 modifier = Modifier
+                        .clearAndSetSemantics { }
                         .fillMaxSize()
                         .padding(horizontal = 20.dp)
                         .then(textModifier)
