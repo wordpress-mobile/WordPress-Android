@@ -15,7 +15,7 @@ ext {
     aztecVersion = 'v1.6.0'
     gutenbergMobileVersion = 'v1.83.0'
     storiesVersion = '1.4.0'
-    aboutAutomatticVersion = '0.0.6'
+    aboutAutomatticVersion = '0.0.7'
 
     minSdkVersion = 24
     compileSdkVersion = 31

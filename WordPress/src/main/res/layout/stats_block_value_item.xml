@@ -8,6 +8,7 @@
     android:paddingStart="@dimen/margin_extra_large"
     android:paddingTop="@dimen/margin_extra_large"
     android:paddingEnd="@dimen/margin_extra_large"
+    xmlns:tools="http://schemas.android.com/tools"
     android:paddingBottom="8dp">
 
     <org.wordpress.android.widgets.MaterialTextViewWithNumerals
@@ -38,5 +39,8 @@
         android:layout_gravity="bottom"
         android:textColor="?attr/wpColorSuccess"
         android:textSize="16sp"
-        android:visibility="gone" />
+        android:visibility="gone"
+        tools:text="-7 (-100%)"
+        android:layoutDirection="ltr"
+        tools:visibility="visible" />
 </LinearLayout>
