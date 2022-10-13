@@ -34,7 +34,7 @@ fun LoopingTextWithBackground(
     ) {
         LoopingText(
                 modifier = Modifier
-                        .clearAndSetSemantics { }
+                        .clearAndSetSemantics {}
                         .fillMaxSize()
                         .padding(horizontal = 20.dp)
                         .then(textModifier)
