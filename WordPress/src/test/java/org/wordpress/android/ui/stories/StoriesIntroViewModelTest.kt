@@ -8,12 +8,12 @@ import com.nhaarman.mockitokotlin2.reset
 import com.nhaarman.mockitokotlin2.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.test
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.stories.intro.StoriesIntroViewModel
 import org.wordpress.android.util.NoDelayCoroutineDispatcher
@@ -30,7 +30,7 @@ class StoriesIntroViewModelTest : BaseUnitTest() {
     @Mock private lateinit var appPrefsWrapper: AppPrefsWrapper
 
     @Before
-    fun setUp() = runBlockingTest {
+    fun setUp() = test {
         viewModel = StoriesIntroViewModel(
                 analyticsTrackerWrapper,
                 appPrefsWrapper,
