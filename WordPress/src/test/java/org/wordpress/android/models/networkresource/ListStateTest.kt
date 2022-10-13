@@ -2,6 +2,7 @@ package org.wordpress.android.models.networkresource
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
+import java.util.Locale
 
 class ListStateTest {
     @Test
@@ -92,7 +93,7 @@ class ListStateTest {
         val testData = listOf("item11", "item12", "item13")
         val readyState: ListState<String> = ListState.Ready(testData)
         val toUpperCase: (List<String>) -> List<String> = { list ->
-            list.map { it.toUpperCase() }
+            list.map { it.uppercase(Locale.getDefault()) }
         }
         val transformedReadyState = readyState.transform(toUpperCase)
         assertThat(transformedReadyState.data).isEqualTo(toUpperCase(testData))

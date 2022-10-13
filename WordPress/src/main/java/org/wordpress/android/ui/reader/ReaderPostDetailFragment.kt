@@ -1258,7 +1258,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         }
     }
 
-    @Suppress("DEPRECATION")
+    @Suppress("DEPRECATION", "OVERRIDE_DEPRECATION")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
@@ -1655,6 +1655,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         }
     }
 
+    @Suppress("OVERRIDE_DEPRECATION")
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<String>,

@@ -412,6 +412,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (data != null) {
             switch (requestCode) {

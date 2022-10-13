@@ -7,6 +7,7 @@ import javax.inject.Singleton
 @Singleton
 class ImagePlaceholderManager @Inject constructor() {
     fun getErrorResource(imgType: ImageType): Int? {
+        @Suppress("DEPRECATION")
         return when (imgType) {
             ImageType.AVATAR -> R.drawable.bg_rectangle_placeholder_user_32dp
             ImageType.AVATAR_WITH_BACKGROUND -> R.drawable.bg_oval_placeholder_user_32dp
@@ -32,6 +33,7 @@ class ImagePlaceholderManager @Inject constructor() {
     }
 
     fun getPlaceholderResource(imgType: ImageType): Int? {
+        @Suppress("DEPRECATION")
         return when (imgType) {
             ImageType.AVATAR -> R.drawable.bg_oval_placeholder
             ImageType.AVATAR_WITH_BACKGROUND -> R.drawable.bg_oval_placeholder_user_32dp

@@ -1151,6 +1151,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (!mSelectedSiteRepository.hasSelectedSite()) {
