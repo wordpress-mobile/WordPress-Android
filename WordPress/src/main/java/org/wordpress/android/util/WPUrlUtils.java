@@ -52,8 +52,4 @@ public class WPUrlUtils {
     public static String buildTermsOfServiceUrl(Context context) {
         return Constants.URL_TOS + "?locale=" + LanguageUtils.getPatchedCurrentDeviceLanguage(context);
     }
-
-    public static String buildPatchedUrl(Context context, String url) {
-        return url + "?locale=" + LanguageUtils.getPatchedCurrentDeviceLanguage(context);
-    }
 }

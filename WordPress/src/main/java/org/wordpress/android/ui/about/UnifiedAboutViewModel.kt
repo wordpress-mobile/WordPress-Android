@@ -118,12 +118,6 @@ class UnifiedAboutViewModel @Inject constructor(
         null
     }
 
-    private fun termsOfServiceUrl() = if (buildConfig.isJetpackApp) {
-        wpUrlUtils.buildTermsOfServiceUrl(contextProvider.getContext())
-    } else {
-        wpUrlUtils.buildPatchedUrl(contextProvider.getContext(), WP_TOS_URL)
-    }
-
     companion object {
         private const val BLOG_ITEM_NAME = "blog"
         private const val LICENSES_FILE_URL = "file:///android_asset/licenses.html"
@@ -132,7 +126,6 @@ class UnifiedAboutViewModel @Inject constructor(
         private const val WP_APPS_URL = "https://apps.wordpress.com"
         private const val WP_BLOG_URL = "https://wordpress.org/news/"
         private const val WP_CONTRIBUTE_URL = "https://make.wordpress.org/mobile/handbook/"
-        private const val WP_TOS_URL = "https://wordpress.org/about"
 
         private const val JP_SOCIAL_HANDLE = "jetpack"
         private const val JP_APPS_URL = "https://jetpack.com/app"
