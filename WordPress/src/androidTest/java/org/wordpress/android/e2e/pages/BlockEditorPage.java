@@ -75,6 +75,7 @@ public class BlockEditorPage {
     }
 
     public void openPostSetting() {
+        waitForElementToBeDisplayed(R.id.toolbar_main);
         openActionBarOverflowOrOptionsMenu(ApplicationProvider.getApplicationContext());
         clickOn(onView(withText(R.string.post_settings)));
     }
@@ -141,8 +142,8 @@ public class BlockEditorPage {
         clickOn("Image");
         clickOn("WordPress Media Library");
         waitForElementToBeDisplayed(onView(withText("WordPress media")));
-        waitForElementToBeDisplayed(onView(withIndex(withId(R.id.image_thumbnail), 0)));
-        onView(withIndex(withId(R.id.image_thumbnail), 0)).perform(click());
+        waitForElementToBeDisplayed(onView(withIndex(withId(R.id.text_selection_count), 0)));
+        onView(withIndex(withId(R.id.text_selection_count), 0)).perform(click());
         clickOn(R.id.mnu_confirm_selection);
         return this;
     }

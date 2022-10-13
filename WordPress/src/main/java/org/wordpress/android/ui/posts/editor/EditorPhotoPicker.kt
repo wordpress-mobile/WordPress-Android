@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package org.wordpress.android.ui.posts.editor
 
 import android.content.res.Configuration
@@ -10,8 +12,6 @@ import org.wordpress.android.editor.MediaToolbarAction
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.media.MediaBrowserType
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment
-import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon
-import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerListener
 import org.wordpress.android.util.ActivityUtils
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.DisplayUtils
@@ -29,20 +29,22 @@ interface EditorPhotoPickerListener {
  * it is heavily coupled with the `EditPostActivity` and contains logic and dependencies it shouldn't and in dire need
  * of further refactoring.
  */
+@Suppress("DEPRECATION")
 class EditorPhotoPicker(
     private val activity: AppCompatActivity,
-    private val photoPickerListener: PhotoPickerListener,
+    private val photoPickerListener: PhotoPickerFragment.PhotoPickerListener,
     private val editorPhotoPickerListener: EditorPhotoPickerListener,
     private val showAztecEditor: Boolean
 ) : MediaToolbarAction.MediaToolbarButtonClickListener {
     private var photoPickerContainer: View? = null
-    private var photoPickerFragment: PhotoPickerFragment? = null
+    @Suppress("DEPRECATION") private var photoPickerFragment: PhotoPickerFragment? = null
     private var photoPickerOrientation = Configuration.ORIENTATION_UNDEFINED
     var allowMultipleSelection: Boolean = false
 
     /*
      * loads the photo picker fragment, which is hidden until the user taps the media icon
      */
+    @Suppress("DEPRECATION")
     private fun initPhotoPicker(site: SiteModel) {
         photoPickerContainer = activity.findViewById(R.id.photo_fragment_container)
 
@@ -132,6 +134,7 @@ class EditorPhotoPicker(
         }
     }
 
+    @Suppress("DEPRECATION")
     override fun onMediaToolbarButtonClicked(action: MediaToolbarAction?) {
         if (action == null || !isPhotoPickerShowing()) {
             return
@@ -145,7 +148,9 @@ class EditorPhotoPicker(
                 MediaToolbarAction.GALLERY -> photoPickerFragment.performActionOrShowPopup(
                         activity.findViewById(action.buttonId)
                 )
-                MediaToolbarAction.LIBRARY -> photoPickerFragment.doIconClicked(PhotoPickerIcon.WP_MEDIA)
+                MediaToolbarAction.LIBRARY -> photoPickerFragment.doIconClicked(
+                        PhotoPickerFragment.PhotoPickerIcon.WP_MEDIA
+                )
             }
         }
     }

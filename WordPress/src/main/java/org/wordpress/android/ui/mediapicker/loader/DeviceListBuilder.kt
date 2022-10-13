@@ -44,7 +44,7 @@ class DeviceListBuilder(
         if (!loadMore) {
             cache.clear()
         }
-        val lowerCaseFilter = filter?.toLowerCase(localeManagerWrapper.getLocale())
+        val lowerCaseFilter = filter?.lowercase(localeManagerWrapper.getLocale())
         return withContext(bgDispatcher) {
             val mediaItems = mutableListOf<MediaItem>()
             val deferredJobs = mediaTypes.map { mediaType ->

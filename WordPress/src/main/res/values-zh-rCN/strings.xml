@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-09-27 09:54:09+0000
+Translation-Revision-Date: 2022-10-05 14:54:28+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.3
 Language: zh_CN
 -->
 <resources>
+    <string name="my_site_blogging_prompt_card_number_of_answers_one">1 条回复</string>
+    <string name="login_prologue_revamped_tagline">随时随地撰写、编辑和发布内容。</string>
     <string name="error_fetch_authors_list">无法检索作者</string>
     <string name="post_settings_author">作者</string>
     <string name="app_rating_title">喜欢 %s？</string>
@@ -508,6 +510,7 @@ Language: zh_CN
     <string name="blogging_reminders_notification_title">在 %s 上发布博客的时间到了！</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios">iOS 版 WordPress 尚未支持编辑可重用区块</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and">Android 版 WordPress 尚未支持编辑可重用区块</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">或者，您可以轻点“转换为常规区块”单独分离和编辑这些区块。</string>
     <string name="blogging_reminders_done">完成</string>
     <string name="blogging_reminders_notify_me">通知我</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;输入您的服务器凭据&lt;/a&gt;以启用从备份中一键恢复站点的功能。</string>
@@ -561,6 +564,7 @@ Language: zh_CN
     <string name="gutenberg_native_move_image_forward">前移图像</string>
     <string name="gutenberg_native_move_image_backward">后移图像</string>
     <string name="gutenberg_native_width_settings">宽度设置</string>
+    <string name="gutenberg_native_link_rel">链接 Rel</string>
     <string name="gutenberg_native_column_settings">列设置</string>
     <string name="user_profile_untitled_site">（无标题）</string>
     <string name="user_profile_site_section_header">站点</string>
@@ -1775,7 +1779,10 @@ Language: zh_CN
     <string name="notification_channel_reminder_title">提示</string>
     <string name="stats_select_next_period_description">选择下一时间段</string>
     <string name="stats_select_previous_period_description">选择上一时间段</string>
+    <string name="stats_most_popular_percent_views">浏览比率 %1$s</string>
     <string name="stats_insights_popular">人气最高的时间</string>
+    <string name="stats_traffic_change">%1$s (%2$s)</string>
+    <string name="stats_traffic_increase">+%1$s (%2$s)</string>
     <string name="new_site_creation_site_preview_content_description">显示站点预览</string>
     <string name="new_site_creation_clear_all_content_description">清除</string>
     <string name="site_created_but_not_fetched_snackbar_message">您的连接速度可能较慢。如果您在列表中没有看到您的新站点，请尝试刷新。</string>
