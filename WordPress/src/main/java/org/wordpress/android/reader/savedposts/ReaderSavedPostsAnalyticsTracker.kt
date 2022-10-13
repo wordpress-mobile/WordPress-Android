@@ -11,7 +11,9 @@ class ReaderSavedPostsAnalyticsTracker @Inject constructor(
 ) {
     fun trackStart() = analyticsTracker.track(Stat.READER_SAVED_POSTS_START)
 
-    fun trackSuccess(numPosts: Int) = analyticsTracker.track(Stat.READER_SAVED_POSTS_SUCCESS, mapOf(EXPORTED_POSTS to numPosts))
+    fun trackSuccess(numPosts: Int) = analyticsTracker.track(
+            Stat.READER_SAVED_POSTS_SUCCESS, mapOf(EXPORTED_POSTS to numPosts)
+    )
 
     fun trackFailed(errorType: ErrorType) =
             analyticsTracker.track(Stat.READER_SAVED_POSTS_FAILED, mapOf(ERROR_TYPE to errorType.value))
@@ -19,7 +21,9 @@ class ReaderSavedPostsAnalyticsTracker @Inject constructor(
     sealed class ErrorType(open val value: String) {
         object QuerySavedPostsError : ErrorType("query_saved_posts_error")
 
-        class GenericError(errorMessage: String?) : ErrorType("generic_error: ${errorMessage?.take(EXCEPTION_MESSAGE_MAX_LENGTH) ?: ""}")
+        class GenericError(errorMessage: String?) : ErrorType(
+                "generic_error: ${errorMessage?.take(EXCEPTION_MESSAGE_MAX_LENGTH) ?: ""}"
+        )
 
         companion object {
             const val ERROR_TYPE = "error_type"
