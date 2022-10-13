@@ -40,6 +40,8 @@ public class ContactSupportScreen {
             )
     ));
 
+    static ViewInteraction inputTextField = onView(withId(R.id.message_composer_input_text));
+
     // Actions:
     public ContactSupportScreen setMessageText(String text) {
         populateTextField(textInput, text);
@@ -68,7 +70,7 @@ public class ContactSupportScreen {
 
     // Assertions:
     public ContactSupportScreen assertContactSupportScreenLoaded() {
-        waitForElementToBeDisplayed(R.id.message_composer_input_text);
+        waitForElementToBeDisplayed(inputTextField);
         textInput.check(matches(isCompletelyDisplayed()));
         sendButton.check(matches(isCompletelyDisplayed()));
         return this;
