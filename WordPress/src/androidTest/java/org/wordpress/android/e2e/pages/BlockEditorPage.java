@@ -142,7 +142,7 @@ public class BlockEditorPage {
         clickOn("WordPress Media Library");
         waitForElementToBeDisplayed(onView(withText("WordPress media")));
         waitForElementToBeDisplayed(onView(withIndex(withId(R.id.image_thumbnail), 0)));
-        onView(withIndex(withId(R.id.image_thumbnail), 0)).perform(click());
+        onView(withIndex(withId(R.id.text_selection_count), 0)).perform(click());
         clickOn(R.id.mnu_confirm_selection);
         return this;
     }
