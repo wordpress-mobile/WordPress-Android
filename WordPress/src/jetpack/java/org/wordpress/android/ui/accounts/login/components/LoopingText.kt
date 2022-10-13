@@ -26,7 +26,7 @@ private const val FIXED_FONT_SIZE = 40
 @Composable
 private fun LargeTexts() {
     val fontSize = (FIXED_FONT_SIZE / LocalDensity.current.fontScale).sp
-    val lineHeight = fontSize * 1.05 // set line height to 5% larger than the font size
+    val lineHeight = fontSize * 1.05 // calculate line height to 5% larger than the font size
 
     val texts = stringArrayResource(R.array.login_prologue_revamped_jetpack_feature_texts)
 
