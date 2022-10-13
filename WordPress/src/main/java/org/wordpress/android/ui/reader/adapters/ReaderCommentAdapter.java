@@ -232,6 +232,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         return position == 0 ? VIEW_TYPE_HEADER : VIEW_TYPE_COMMENT;
     }
 
+    @SuppressWarnings("deprecation")
     public void refreshComments() {
         if (mIsTaskRunning) {
             AppLog.w(T.READER, "reader comment adapter > Load comments task already running");
@@ -658,6 +659,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
      */
     private boolean mIsTaskRunning = false;
 
+    @SuppressWarnings("deprecation")
     @SuppressLint("StaticFieldLeak")
     private class LoadCommentsTask extends AsyncTask<Void, Void, Boolean> {
         private ReaderCommentList mTmpComments;

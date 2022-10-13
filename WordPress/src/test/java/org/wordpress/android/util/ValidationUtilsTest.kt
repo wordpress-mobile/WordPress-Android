@@ -1,7 +1,6 @@
 package org.wordpress.android.util
 
-import org.hamcrest.CoreMatchers
-import org.junit.Assert.assertThat
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 
 class ValidationUtilsTest {
@@ -12,15 +11,11 @@ class ValidationUtilsTest {
 
     @Test
     fun testValidIPv4Addresses() {
-        validIpV4Addresses.forEach { ip ->
-            assertThat("$ip is a valid ipv4 address", validateIPv4(ip), CoreMatchers.`is`(true))
-        }
+        validIpV4Addresses.forEach { assertThat(validateIPv4(it)).isEqualTo(true) }
     }
 
     @Test
     fun testInvalidIPv4Addresses() {
-        invalidIpV4Addresses.forEach { ip ->
-            assertThat("$ip is not a valid ipv4 address", validateIPv4(ip), CoreMatchers.`is`(false))
-        }
+        invalidIpV4Addresses.forEach { assertThat(validateIPv4(it)).isEqualTo(false) }
     }
 }

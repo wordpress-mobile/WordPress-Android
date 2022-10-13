@@ -444,7 +444,6 @@ Language: vi_VN
     <string name="blogging_reminders_notification_title">Hãy đăng bài trên %s</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios">Chưa hỗ trợ chỉnh sửa những khối có thể dùng lại trên WordPress iOS</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and">Chưa hỗ trợ chỉnh sửa những khối có thể dùng lại trên WordPress Android</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">Bạn có thể tách và chỉnh sửa các khối này bằng cách nhấn \"Chuyển sang khối thường\".</string>
     <string name="blogging_reminders_done">Xong</string>
     <string name="blogging_reminders_notify_me">Nhắc tôi</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;Nhập thông tin đăng nhập máy chủ của bạn&lt;/a&gt; để khôi phục blog từ các bản sao lưu.</string>

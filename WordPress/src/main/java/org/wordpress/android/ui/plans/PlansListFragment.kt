@@ -55,7 +55,7 @@ class PlansListFragment : Fragment() {
                 }
             }
 
-            (nonNullActivity.application as WordPress).component()?.inject(this@PlansListFragment)
+            (nonNullActivity.application as WordPress).component().inject(this@PlansListFragment)
 
             viewModel = ViewModelProvider(this@PlansListFragment, viewModelFactory).get(PlansViewModel::class.java)
             setObservers()

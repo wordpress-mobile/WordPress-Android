@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
@@ -26,6 +25,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.content.ContextCompat;
+import androidx.core.text.HtmlCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
@@ -67,6 +67,7 @@ import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostDiscoverData;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
+import org.wordpress.android.networking.ConnectionChangeReceiver;
 import org.wordpress.android.ui.ActionableEmptyView;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.EmptyViewMessageType;
@@ -419,7 +420,9 @@ public class ReaderPostListFragment extends ViewPagerFragment
         }
     }
 
-    @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+    @Override
+    @SuppressWarnings("deprecation")
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mViewModel = new ViewModelProvider(this, mViewModelFactory)
                 .get(ReaderPostListViewModel.class);
@@ -1306,6 +1309,15 @@ public class ReaderPostListFragment extends ViewPagerFragment
         mDispatcher.dispatch(ReaderActionBuilder.newReaderSearchSitesAction(payload));
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventMainThread(ConnectionChangeReceiver.ConnectionChangeEvent event) {
+        if (event.isConnected()) {
+            if (mCurrentSearchQuery != null) {
+                submitSearchQuery(mCurrentSearchQuery);
+            }
+        }
+    }
+
     private void submitSearchQuery(@NonNull String query) {
         if (!isAdded()) {
             return;
@@ -1314,6 +1326,10 @@ public class ReaderPostListFragment extends ViewPagerFragment
         mSearchView.clearFocus(); // this will hide suggestions and the virtual keyboard
         hideSearchMessage();
         hideSearchSuggestions();
+
+        if (!NetworkUtils.isNetworkAvailable(getContext())) {
+            showEmptyView();
+        }
 
         // remember this query for future suggestions
         String trimQuery = query.trim();
@@ -1667,6 +1683,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
             setEmptyTitleAndDescriptionForBookmarksList();
             return;
         } else if (!NetworkUtils.isNetworkAvailable(getActivity())) {
+            mIsUpdating = false;
             title = getString(R.string.reader_empty_posts_no_connection);
         } else if (requestFailed) {
             if (isSearching()) {
@@ -1793,7 +1810,9 @@ public class ReaderPostListFragment extends ViewPagerFragment
             mActionableEmptyView.subtitle.setVisibility(View.VISIBLE);
 
             if (description.contains("<") && description.contains(">")) {
-                mActionableEmptyView.subtitle.setText(Html.fromHtml(description));
+                mActionableEmptyView.subtitle.setText(
+                        HtmlCompat.fromHtml(description, HtmlCompat.FROM_HTML_MODE_LEGACY)
+                );
             } else {
                 mActionableEmptyView.subtitle.setText(description);
             }
@@ -2666,9 +2685,13 @@ public class ReaderPostListFragment extends ViewPagerFragment
                 : blogName;
 
         if (blogId > 0) {
-            WPSnackbar.make(getSnackbarParent(), Html.fromHtml(getString(R.string.reader_followed_blog_notifications,
-                              "<b>", blog, "</b>")), Snackbar.LENGTH_LONG)
-                      .setAction(getString(R.string.reader_followed_blog_notifications_action),
+            WPSnackbar.make(getSnackbarParent(),
+                              HtmlCompat.fromHtml(
+                                      getString(R.string.reader_followed_blog_notifications, "<b>", blog, "</b>"),
+                                      HtmlCompat.FROM_HTML_MODE_LEGACY
+                              ),
+                              Snackbar.LENGTH_LONG
+                      ).setAction(getString(R.string.reader_followed_blog_notifications_action),
                               new View.OnClickListener() {
                                   @Override public void onClick(View view) {
                                       mReaderTracker.trackBlog(
@@ -2736,6 +2759,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RequestCodes.SITE_PICKER && resultCode == Activity.RESULT_OK) {

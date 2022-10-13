@@ -2,7 +2,7 @@ package org.wordpress.android.sharedlogin
 
 import org.assertj.core.api.Assertions
 import org.junit.Test
-import org.wordpress.android.sharedlogin.data.WordPressPublicData
+import org.wordpress.android.util.publicdata.WordPressPublicData
 
 class WordPressPublicDataTest {
     private val classToTest = WordPressPublicData()

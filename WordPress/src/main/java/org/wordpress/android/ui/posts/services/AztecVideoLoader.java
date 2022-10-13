@@ -47,6 +47,7 @@ public class AztecVideoLoader implements Html.VideoThumbnailGetter {
         new LoadAztecVideoTask(mContext, mAuthenticationUtils, url, maxWidth, callbacks).execute();
     }
 
+    @SuppressWarnings("deprecation")
     private static class LoadAztecVideoTask extends AsyncTask<Void, Void, Bitmap> {
         final String mUrl;
         final int mMaxWidth;

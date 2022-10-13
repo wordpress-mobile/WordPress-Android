@@ -3,10 +3,8 @@ package org.wordpress.android.ui.prefs.categories.detail
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
-import junit.framework.Assert.assertEquals
-import junit.framework.Assert.assertFalse
-import junit.framework.Assert.assertTrue
 import kotlinx.coroutines.InternalCoroutinesApi
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.wordpress.android.BaseUnitTest
@@ -76,15 +74,15 @@ class CategoryDetailViewModelTest : BaseUnitTest() {
     @Test
     fun `when vm starts, then default parent category is selected`() {
         viewModel.start()
-        assertEquals(topLevelCategory, uiStates.first().categories[0].name)
+        assertThat(topLevelCategory).isEqualTo(uiStates.first().categories[0].name)
     }
 
     @Test
     fun `when vm starts, then submit button is shown and disabled`() {
         viewModel.start()
 
-        assertFalse(uiStates.first().submitButtonUiState.enabled)
-        assertTrue(uiStates.first().submitButtonUiState.visibility)
+        assertThat(uiStates.first().submitButtonUiState.enabled).isFalse
+        assertThat(uiStates.first().submitButtonUiState.visibility).isTrue
     }
 
     @Test
@@ -92,7 +90,7 @@ class CategoryDetailViewModelTest : BaseUnitTest() {
         viewModel.start()
         viewModel.onCategoryNameUpdated("category name")
 
-        assertTrue(uiStates.last().submitButtonUiState.enabled)
+        assertThat(uiStates.last().submitButtonUiState.enabled).isTrue
     }
 
     @Test
@@ -104,7 +102,7 @@ class CategoryDetailViewModelTest : BaseUnitTest() {
         val selectedCategoryParent = 2
         viewModel.onParentCategorySelected(selectedCategoryParent)
 
-        assertEquals(selectedCategoryParent, uiStates.last().selectedParentCategoryPosition)
+        assertThat(selectedCategoryParent).isEqualTo(uiStates.last().selectedParentCategoryPosition)
     }
 
     @Test
@@ -115,10 +113,8 @@ class CategoryDetailViewModelTest : BaseUnitTest() {
         viewModel.onCategoryNameUpdated(categoryName)
         viewModel.onSubmitButtonClick()
 
-        assertEquals(
-                Failure(UiStringRes(R.string.no_network_message)),
-                (onCategoryPushStates[0].peekContent() as Failure)
-        )
+        assertThat(Failure(UiStringRes(R.string.no_network_message)))
+                .isEqualTo(onCategoryPushStates[0].peekContent() as Failure)
     }
 
     @Test
@@ -130,7 +126,7 @@ class CategoryDetailViewModelTest : BaseUnitTest() {
         viewModel.onCategoryNameUpdated(categoryName)
         viewModel.onSubmitButtonClick()
 
-        assertEquals(InProgress, onCategoryPushStates[0].peekContent())
+        assertThat(InProgress).isEqualTo(onCategoryPushStates[0].peekContent())
         verify(addCategoryUseCase).addCategory(categoryName, 0, siteModel)
     }
 
@@ -139,10 +135,8 @@ class CategoryDetailViewModelTest : BaseUnitTest() {
         viewModel.start()
         viewModel.onTermUploaded(getTermUploadSuccess())
 
-        assertEquals(
-                Success(UiStringRes(R.string.adding_cat_success)),
-                (onCategoryPushStates[0].peekContent() as Success)
-        )
+        assertThat(Success(UiStringRes(R.string.adding_cat_success)))
+                .isEqualTo(onCategoryPushStates[0].peekContent() as Success)
     }
 
     @Test
@@ -150,10 +144,8 @@ class CategoryDetailViewModelTest : BaseUnitTest() {
         viewModel.start()
         viewModel.onTermUploaded(getTermUploadError())
 
-        assertEquals(
-                Failure(UiStringRes(R.string.adding_cat_failed)),
-                (onCategoryPushStates[0].peekContent() as Failure)
-        )
+        assertThat(Failure(UiStringRes(R.string.adding_cat_failed)))
+                .isEqualTo(onCategoryPushStates[0].peekContent() as Failure)
     }
 
     private fun getTermUploadSuccess() = OnTermUploaded(TermModel())

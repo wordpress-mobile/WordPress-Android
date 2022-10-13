@@ -14,11 +14,6 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flowOn
 import org.wordpress.android.R
 import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource
-import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.FollowCommentsState.Failure
-import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.FollowCommentsState.FollowCommentsNotAllowed
-import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.FollowCommentsState.FollowStateChanged
-import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.FollowCommentsState.Loading
-import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.FollowCommentsState.UserNotAuthenticated
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 
 class ReaderFollowCommentsHandler @Inject constructor(
@@ -31,8 +26,8 @@ class ReaderFollowCommentsHandler @Inject constructor(
     private val _followStatusUpdate = MediatorLiveData<FollowCommentsState>()
     val followStatusUpdate: LiveData<FollowCommentsState> = _followStatusUpdate
 
-    private val _pushNotificationsStatusUpdate = MediatorLiveData<FollowStateChanged>()
-    val pushNotificationsStatusUpdate: LiveData<FollowStateChanged> = _pushNotificationsStatusUpdate
+    private val _pushNotificationsStatusUpdate = MediatorLiveData<FollowCommentsState.FollowStateChanged>()
+    val pushNotificationsStatusUpdate: LiveData<FollowCommentsState.FollowStateChanged> = _pushNotificationsStatusUpdate
 
     suspend fun handleFollowCommentsClicked(
         blogId: Long,
@@ -69,7 +64,7 @@ class ReaderFollowCommentsHandler @Inject constructor(
 
     private fun manageState(state: FollowCommentsState, onSuccessSnackbarAction: (() -> Unit)? = null) {
         when (state) {
-            is FollowStateChanged -> {
+            is FollowCommentsState.FollowStateChanged -> {
                 _followStatusUpdate.postValue(state)
                 if (state.forcePushNotificationsUpdate) {
                     _pushNotificationsStatusUpdate.postValue(state)
@@ -88,19 +83,20 @@ class ReaderFollowCommentsHandler @Inject constructor(
                     )))
                 }
             }
-            is Failure -> {
+            is FollowCommentsState.Failure -> {
                 _followStatusUpdate.postValue(state)
                 _snackbarEvents.postValue(Event(SnackbarMessageHolder(state.error)))
             }
-            Loading -> {
+            is FollowCommentsState.Loading -> {
                 _followStatusUpdate.postValue(state)
             }
-            FollowCommentsNotAllowed -> {
+            is FollowCommentsState.FollowCommentsNotAllowed -> {
                 _followStatusUpdate.postValue(state)
             }
-            UserNotAuthenticated -> {
+            is FollowCommentsState.UserNotAuthenticated -> {
                 _followStatusUpdate.postValue(state)
             }
+            is FollowCommentsState.FlagsMappedState -> Unit // Do nothing
         }
     }
 }

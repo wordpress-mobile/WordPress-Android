@@ -7,6 +7,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.LineC
 import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.util.text.PercentFormatter
 import org.wordpress.android.viewmodel.ResourceProvider
+import java.math.RoundingMode.HALF_UP
 import java.text.DecimalFormat
 import java.util.TreeMap
 import javax.inject.Inject
@@ -17,8 +18,7 @@ const val TEN_THOUSAND = 10000
 const val HUNDRED_THOUSAND = 100000
 const val MILLION = 1000000
 
-class StatsUtils
-@Inject constructor(
+class StatsUtils @Inject constructor(
     private val resourceProvider: ResourceProvider,
     private val localeManager: LocaleManagerWrapper,
     private val percentFormatter: PercentFormatter
@@ -92,8 +92,8 @@ class StatsUtils
         }
 
         val e = suffixes.floorEntry(safeNumber)
-        val divideBy = e.key
-        val suffix = e.value
+        val divideBy = e?.key
+        val suffix = e?.value
 
         val truncated = safeNumber / (divideBy!! / 10)
         val hasDecimal = truncated < 100 && truncated / 10.0 != (truncated / 10).toDouble()
@@ -173,7 +173,7 @@ class StatsUtils
         entries: List<Line>
     ): List<String> {
         val contentDescriptions = mutableListOf<String>()
-        entries.forEachIndexed { index, bar ->
+        entries.forEach { bar ->
             val contentDescription = resourceProvider.getString(
                     R.string.stats_bar_chart_accessibility_entry,
                     bar.label,
@@ -198,7 +198,7 @@ class StatsUtils
                 0L -> "∞"
                 else -> {
                     val percentageValue = difference.toFloat() / previousValue
-                    percentFormatter.format(percentageValue)
+                    percentFormatter.format(value = percentageValue, rounding = HALF_UP)
                 }
             }
             val formattedDifference = mapLongToString(difference, isFormattedNumber)

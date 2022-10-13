@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-09-21 15:54:25+0000
+Translation-Revision-Date: 2022-10-03 12:31:04+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: es
 -->
 <resources>
+    <string name="login_prologue_revamped_content_description_wordpress_icon">Icono de WordPress</string>
+    <string name="login_prologue_revamped_tagline">Escribe, edita y publica desde cualquier parte.</string>
     <string name="error_fetch_authors_list">No se han podido recuperar los autores</string>
     <string name="post_settings_author">Autor</string>
     <string name="app_rating_title">¿Estás disfrutando de %s?</string>
@@ -250,6 +252,7 @@ Language: es
     <string name="my_site_blogging_prompt_card_menu_remove">Quitar del escritorio</string>
     <string name="my_site_blogging_prompt_card_menu_skip">Omitir este estímulo</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">Ver más estímulos</string>
+    <string name="my_site_blogging_prompt_card_number_of_answers_other">%d respuestas</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">Comparte el estímulo de bloguear</string>
     <string name="my_site_blogging_prompt_card_answered_prompt">✓ Respondido</string>
     <string name="my_site_blogging_prompt_card_answer_prompt">Responder estímulo</string>
@@ -562,6 +565,7 @@ Language: es
     <string name="gutenberg_native_move_image_forward">Mover la imagen hacia delante</string>
     <string name="gutenberg_native_move_image_backward">Mover la imagen hacia atrás</string>
     <string name="gutenberg_native_width_settings">Ajustes de anchura</string>
+    <string name="gutenberg_native_link_rel">«rel» del enlace</string>
     <string name="gutenberg_native_column_settings">Ajustes de columna</string>
     <string name="user_profile_untitled_site">(Sin título)</string>
     <string name="user_profile_site_section_header">Sitio</string>
@@ -1776,7 +1780,10 @@ Language: es
     <string name="notification_channel_reminder_title">Recordatorio</string>
     <string name="stats_select_next_period_description">Elige el siguiente periodo</string>
     <string name="stats_select_previous_period_description">Elige el periodo anterior</string>
+    <string name="stats_most_popular_percent_views">%1$s de visitas</string>
     <string name="stats_insights_popular">Hora más popular</string>
+    <string name="stats_traffic_change">%1$s (%2$s)</string>
+    <string name="stats_traffic_increase">+%1$s (%2$s)</string>
     <string name="new_site_creation_site_preview_content_description">Mostrando la vista previa</string>
     <string name="new_site_creation_clear_all_content_description">Vaciar</string>
     <string name="site_created_but_not_fetched_snackbar_message">Parece que tienes una conexión lenta. Si no ves tu nuevo sitio en la lista, inténtalo actualizando.</string>

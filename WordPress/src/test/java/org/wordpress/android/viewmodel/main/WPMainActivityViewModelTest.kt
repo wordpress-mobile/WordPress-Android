@@ -10,9 +10,9 @@ import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.test.runBlockingTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -60,8 +60,9 @@ import org.wordpress.android.viewmodel.main.WPMainActivityViewModel.FocusPointIn
 import java.util.Date
 
 @Suppress("LargeClass")
-@RunWith(MockitoJUnitRunner::class)
 @InternalCoroutinesApi
+@ExperimentalCoroutinesApi
+@RunWith(MockitoJUnitRunner::class)
 class WPMainActivityViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: WPMainActivityViewModel
 
@@ -407,7 +408,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `bottom sheet does show prompt card when FF is ON`() = runBlockingTest {
+    fun `bottom sheet does show prompt card when FF is ON`() = test {
         whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(true)
         startViewModelWithDefaultParameters()
         val hasBloggingPromptAction = viewModel.mainActions.value?.any { it.actionType == ANSWER_BLOGGING_PROMPT }
@@ -423,7 +424,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `bottom sheet action is ANSWER_BLOGGING_PROMPT when the BP answer button is clicked`() = runBlockingTest {
+    fun `bottom sheet action is ANSWER_BLOGGING_PROMPT when the BP answer button is clicked`() = test {
         whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(true)
         startViewModelWithDefaultParameters()
         val action = viewModel.mainActions.value?.firstOrNull {

@@ -44,6 +44,7 @@ class CropViewModel : ViewModel() {
     private var shouldReturnToPreviewScreen: Boolean = false
     private var isStarted = false
 
+    @Suppress("DEPRECATION")
     private val cropOptions by lazy {
         Options().apply {
             setShowCropGrid(true)

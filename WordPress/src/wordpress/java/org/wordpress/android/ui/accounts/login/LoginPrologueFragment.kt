@@ -38,6 +38,7 @@ class LoginPrologueFragment : Fragment(R.layout.login_signup_screen) {
         loginPrologueListener = context
     }
 
+    @Suppress("DEPRECATION")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -125,6 +126,7 @@ class LoginPrologueFragment : Fragment(R.layout.login_signup_screen) {
         unifiedLoginTracker.setFlowAndStep(Flow.PROLOGUE, PROLOGUE)
     }
 
+    @Suppress("DEPRECATION", "OVERRIDE_DEPRECATION")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         // important for accessibility - talkback

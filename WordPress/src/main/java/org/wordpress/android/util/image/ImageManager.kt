@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package org.wordpress.android.util.image
 
 import android.app.Activity
@@ -438,6 +440,7 @@ class ImageManager @Inject constructor(
      * Use this method with caution and only when you necessarily need it(in other words, don't use it
      * when you need to load an image into an ImageView).
      */
+    @Suppress("DEPRECATION")
     fun loadIntoCustomTarget(viewTarget: ViewTarget<TextView, Drawable>, imageType: ImageType, imgUrl: String) {
         val context = WordPress.getContext()
         if (!context.isAvailable()) return
@@ -455,6 +458,7 @@ class ImageManager @Inject constructor(
      * Use this method with caution and only when you necessarily need it(in other words, don't use it
      * when you need to load an image into an ImageView).
      */
+    @Suppress("DEPRECATION")
     fun loadAsBitmapIntoCustomTarget(
         context: Context,
         target: BaseTarget<Bitmap>,
@@ -485,6 +489,7 @@ class ImageManager @Inject constructor(
      * Cancel any pending requests and free any resources that may have been
      * loaded for the view.
      */
+    @Suppress("DEPRECATION")
     fun <T : Any> cancelRequest(context: Context, target: BaseTarget<T>?) {
         GlideApp.with(context).clear(target)
     }

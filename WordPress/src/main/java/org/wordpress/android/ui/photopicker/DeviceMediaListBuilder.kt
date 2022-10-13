@@ -23,6 +23,7 @@ class DeviceMediaListBuilder
     val context: Context,
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) {
+    @Suppress("DEPRECATION")
     suspend fun buildDeviceMedia(
         browserType: MediaBrowserType
     ): List<PhotoPickerItem> {
@@ -42,6 +43,7 @@ class DeviceMediaListBuilder
         }
     }
 
+    @Suppress("DEPRECATION")
     private fun addMedia(baseUri: Uri, isVideo: Boolean): List<PhotoPickerItem> {
         val projection = arrayOf(ID_COL)
         var cursor: Cursor? = null

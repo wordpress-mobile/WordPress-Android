@@ -42,8 +42,9 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
     @Mock lateinit var getCategoriesUseCase: GetCategoriesUseCase
     @Mock lateinit var site: SiteModel
 
-    @InternalCoroutinesApi
     @Before
+    @InternalCoroutinesApi
+    @Suppress("UNCHECKED_CAST")
     fun setUp() {
         viewModel = PrepublishingHomeViewModel(
                 getPostTagsUseCase,

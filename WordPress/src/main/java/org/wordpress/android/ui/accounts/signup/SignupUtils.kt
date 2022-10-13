@@ -3,8 +3,7 @@ package org.wordpress.android.ui.accounts.signup
 import java.util.Locale
 import javax.inject.Inject
 
-class SignupUtils
-@Inject constructor() {
+class SignupUtils @Inject constructor() {
     /**
      * Create a display name from the email address by taking everything before the "@" symbol,
      * removing all non-letters and non-periods, replacing periods with spaces, and capitalizing
@@ -18,7 +17,7 @@ class SignupUtils
         val builder = StringBuilder()
         for (item in usernameArray) {
             if (item.isNotEmpty()) {
-                builder.append(item.substring(0, 1).toUpperCase(Locale.ROOT))
+                builder.append(item.substring(0, 1).uppercase(Locale.ROOT))
                 if (item.length > 1) {
                     builder.append(item.substring(1))
                 }
@@ -38,6 +37,6 @@ class SignupUtils
     fun createUsernameFromEmail(emailAddress: String): String? {
         return emailAddress.split("@".toRegex())[0]
                 .replace("[^A-Za-z0-9]".toRegex(), "")
-                .toLowerCase(Locale.ROOT)
+                .lowercase(Locale.ROOT)
     }
 }

@@ -2,7 +2,6 @@ package org.wordpress.android.ui.jetpack.backup.download.usecases
 
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.whenever
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.toList
 import org.assertj.core.api.Assertions.assertThat
@@ -30,7 +29,6 @@ import java.util.Calendar
 import java.util.Date
 
 @InternalCoroutinesApi
-@ExperimentalCoroutinesApi
 class GetBackupDownloadStatusUseCaseTest : BaseUnitTest() {
     private lateinit var useCase: GetBackupDownloadStatusUseCase
     @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper

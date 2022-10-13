@@ -100,7 +100,8 @@ private val DOWNLOAD_VALID_UNTIL = Date()
 @Suppress("LargeClass")
 @RunWith(MockitoJUnitRunner::class)
 class ActivityLogViewModelTest {
-    @Rule @JvmField val rule = InstantTaskExecutorRule()
+    @Rule
+    @JvmField val rule = InstantTaskExecutorRule()
 
     @Mock private lateinit var store: ActivityLogStore
     @Mock private lateinit var site: SiteModel

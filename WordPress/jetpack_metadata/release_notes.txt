@@ -1,3 +1,3 @@
-* [***] [internal] Redesigned the landing screen of the WordPress and Jetpack apps, behind a feature flag. [https://github.com/wordpress-mobile/WordPress-Android/pull/17203]
-* [**] [internal] Added sensor feedback to influence the speed of the scrolling large text on the redesigned Jetpack landing screen based on the vertical rotation of the device. [https://github.com/wordpress-mobile/WordPress-Android/pull/17207]
-
+- “Get to know your app” flows now stay on screen after rotating your device.
+- Long titles display properly on Stats cards without being cut off.
+- We added the Enter key to Post excerpts to allow for easy line breaks.

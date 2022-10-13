@@ -20,9 +20,6 @@ import org.wordpress.android.networking.MShot
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleEmpty
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleGeneral
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleStepCount
-import org.wordpress.android.ui.sitecreation.SiteCreationStep.DOMAINS
-import org.wordpress.android.ui.sitecreation.SiteCreationStep.SITE_DESIGNS
-import org.wordpress.android.ui.sitecreation.SiteCreationStep.SITE_PREVIEW
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.CreateSiteState
@@ -198,11 +195,13 @@ class SiteCreationMainVM @Inject constructor(
 
     private fun clearOldSiteCreationState(wizardStep: SiteCreationStep) {
         when (wizardStep) {
-            SITE_DESIGNS -> { }
-            DOMAINS -> siteCreationState.domain?.let {
+            SiteCreationStep.SITE_DESIGNS -> Unit // Do nothing
+            SiteCreationStep.DOMAINS -> siteCreationState.domain?.let {
                 siteCreationState = siteCreationState.copy(domain = null)
             }
-            SITE_PREVIEW -> {} // intentionally left empty
+            SiteCreationStep.SITE_PREVIEW -> Unit // Do nothing
+            SiteCreationStep.INTENTS -> Unit // Do nothing
+            SiteCreationStep.SITE_NAME -> Unit // Do nothing
         }
     }
 
@@ -216,7 +215,7 @@ class SiteCreationMainVM @Inject constructor(
         val stepCount = wizardManager.stepsCount
         val firstStep = stepPosition == 1
         val lastStep = stepPosition == stepCount
-        val singleInBetweenStepDomains = step.name == DOMAINS.name
+        val singleInBetweenStepDomains = step.name == SiteCreationStep.DOMAINS.name
 
         return when {
             firstStep -> ScreenTitleGeneral(R.string.new_site_creation_screen_title_general)

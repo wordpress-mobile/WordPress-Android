@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package org.wordpress.android.ui.pages
 
 import android.annotation.SuppressLint
@@ -91,7 +93,7 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
     @Inject lateinit var uploadActionUseCase: UploadActionUseCase
     @Inject lateinit var uploadUtilsWrapper: UploadUtilsWrapper
 
-    private var progressDialog: ProgressDialog? = null
+    @Suppress("DEPRECATION") private var progressDialog: ProgressDialog? = null
 
     private var restorePreviousSearch = false
 
@@ -137,6 +139,7 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
         binding = null
     }
 
+    @Suppress("DEPRECATION", "OVERRIDE_DEPRECATION")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == RequestCodes.EDIT_POST && resultCode == Activity.RESULT_OK && data != null) {
             if (EditPostActivity.checkToRestart(data)) {
@@ -576,6 +579,7 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
     }
 }
 
+@Suppress("DEPRECATION")
 class PagesPagerAdapter(val context: Context, val fm: FragmentManager) : FragmentPagerAdapter(
         fm,
         BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT

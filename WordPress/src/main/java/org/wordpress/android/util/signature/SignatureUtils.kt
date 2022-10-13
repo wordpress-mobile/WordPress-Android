@@ -9,7 +9,7 @@ import java.security.MessageDigest
 import javax.inject.Inject
 
 class SignatureUtils @Inject constructor() {
-    @Suppress("SwallowedException")
+    @Suppress("DEPRECATION", "SwallowedException")
     fun getSignatureHash(ctxt: Context, packageName: String): String {
         val md: MessageDigest = MessageDigest.getInstance("SHA-256")
         val sig: Signature = try {

@@ -4,6 +4,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions
 import org.junit.Before
@@ -38,6 +39,7 @@ import org.wordpress.android.util.EventBusWrapper
 private const val NUMBER_OF_ITEMS = 10L
 
 @InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class ReaderDiscoverDataProviderTest {
     @Rule
@@ -123,7 +125,6 @@ class ReaderDiscoverDataProviderTest {
     fun `when new observer added and db is empty, does NOT post anything to discover feed`() = test {
         whenever(shouldAutoUpdateTagUseCase.get(dataProvider.readerTag)).thenReturn(false)
         whenever(getDiscoverCardsUseCase.get()).thenReturn(ReaderDiscoverCards(listOf()))
-        val event = FetchDiscoverCardsEnded(REQUEST_FIRST_PAGE, HAS_NEW)
 
         dataProvider.discoverFeed.observeForever { }
 
@@ -134,7 +135,6 @@ class ReaderDiscoverDataProviderTest {
     fun `when new observer added and db is NOT empty, the data gets posted to discover feed`() = test {
         whenever(shouldAutoUpdateTagUseCase.get(dataProvider.readerTag)).thenReturn(false)
         whenever(getDiscoverCardsUseCase.get()).thenReturn(createDummyReaderCardsList())
-        val event = FetchDiscoverCardsEnded(REQUEST_FIRST_PAGE, HAS_NEW)
 
         dataProvider.discoverFeed.observeForever { }
 
