@@ -19,7 +19,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.model.AccountModel;
@@ -45,6 +44,9 @@ import java.util.ArrayList;
 
 import javax.inject.Inject;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueListener> {
     public static final String TAG = "login_epilogue_fragment_tag";
 
@@ -154,7 +156,6 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((WordPress) requireActivity().getApplication()).component().inject(this);
 
         mDoLoginUpdate = requireArguments().getBoolean(ARG_DO_LOGIN_UPDATE, false);
         mShowAndReturn = requireArguments().getBoolean(ARG_SHOW_AND_RETURN, false);
@@ -316,11 +317,6 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
             doFinishLogin();
         }
         mParentViewModel.onLoginEpilogueResume(mDoLoginUpdate);
-    }
-
-    @Override
-    protected boolean isJetpackAppLogin() {
-        return mDoLoginUpdate && mBuildConfigWrapper.isJetpackApp();
     }
 
     private void bindHeaderViewHolder(LoginHeaderViewHolder holder, SiteList sites) {

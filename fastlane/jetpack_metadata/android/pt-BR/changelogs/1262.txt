@@ -1,4 +1,0 @@
-20.5:
-– Adicionamos um rótulo nas configurações do aplicativo para exibir a linguagem atual da interface.
-– Aumentamos o tamanho da captura de tela no seletor de temas do site para acompanhar as visualizações de imagens de alta resolução.
-– No processo de criação do site, alteramos a cor do texto do botão Pular de azul para o verde do Jetpack.

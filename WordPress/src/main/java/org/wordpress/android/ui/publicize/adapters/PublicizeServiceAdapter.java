@@ -72,6 +72,7 @@ public class PublicizeServiceAdapter extends RecyclerView.Adapter<PublicizeServi
         mServiceClickListener = listener;
     }
 
+    @SuppressWarnings("deprecation")
     public void refresh() {
         if (!mIsTaskRunning) {
             new LoadServicesTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -173,6 +174,7 @@ public class PublicizeServiceAdapter extends RecyclerView.Adapter<PublicizeServi
         }
     }
 
+    @SuppressWarnings("deprecation")
     @SuppressLint("StaticFieldLeak")
     private class LoadServicesTask extends AsyncTask<Void, Void, Boolean> {
         private final PublicizeServiceList mTmpServices = new PublicizeServiceList();

@@ -1,3 +1,0 @@
-20.5:
-- Wir haben ein neues Label in den App-Einstellungen hinzugefügt, um die aktuelle Sprache der App-Oberfläche anzuzeigen. Prima.
-- Da die App nun höher aufgelöste Bildvorschauen unterstützt, haben wir die Größe der Theme-Screenshots in der Website-Theme-Auswahl erhöht. Keine Verpixelung mehr, nur noch Pixel-Perfektion.

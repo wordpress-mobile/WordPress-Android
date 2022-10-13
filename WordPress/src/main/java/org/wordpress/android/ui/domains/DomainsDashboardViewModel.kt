@@ -224,7 +224,6 @@ class DomainsDashboardViewModel @Inject constructor(
                 TODO("Not yet implemented")
             }
         }
-        return true
     }
 
     fun onSuccessfulDomainRegistration() {

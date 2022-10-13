@@ -976,8 +976,8 @@
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
     <string name="stats_item_settings">Stats item settings</string>
     <string name="stats_cannot_be_started">We cannot open the statistics at the moment. Please try again later</string>
-    <string name="stats_traffic_increase">+%1$s (%2$s%%)</string>
-    <string name="stats_traffic_change">%1$s (%2$s%%)</string>
+    <string name="stats_traffic_increase">+%1$s (%2$s)</string>
+    <string name="stats_traffic_change">%1$s (%2$s)</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
     <string name="stats_fewer_posts">Fewer posts</string>
     <string name="stats_more_posts">More posts</string>
@@ -1174,7 +1174,6 @@
     <string name="scan_in_hours_ago">%s hour(s) ago</string>
     <string name="scan_in_minutes_ago">%s minute(s) ago</string>
     <string name="scan_in_few_seconds">a few seconds ago</string>
-    <string name="scan_progress_label" translatable="false">%1$s%%</string>
     <string name="scan_finished_no_threats_found_message">&lt;b&gt;Scan Finished&lt;/b&gt; &lt;br&gt; No threats found</string>
     <string name="scan_finished_potential_threats_found_message_singular">&lt;b&gt;Scan Finished&lt;/b&gt; &lt;br&gt; One potential threat found</string>
     <string name="scan_finished_potential_threats_found_message_plural">&lt;b&gt;Scan Finished&lt;/b&gt; &lt;br&gt; %s potential threats found</string>
@@ -1277,7 +1276,7 @@
     <string name="stats_view_videos">Videos</string>
     <string name="stats_view_comments" translatable="false">@string/comments</string>
     <string name="stats_view_search_terms">Search Terms</string>
-    <string name="stats_view_publicize">Social Media Connections</string>
+    <string name="stats_view_publicize">Jetpack Social Connections</string>
     <string name="stats_view_followers">Followers</string>
     <string name="stats_view_follower_totals">Follower Totals</string>
     <string name="stats_view_total_likes">Total Likes</string>
@@ -1360,7 +1359,7 @@
     <string name="stats_insights_linkedin">LinkedIn</string>
     <string name="stats_insights_social">Social</string>
     <string name="stats_insights_path">Path</string>
-    <string name="stats_most_popular_percent_views">%1$d%% of views</string>
+    <string name="stats_most_popular_percent_views">%1$s of views</string>
     <string name="stats_most_popular_percent_views_empty">Not enough activity. Check back later when your site\'s had more visitors!</string>
     <string name="stats_insights_posting_activity">Posting Activity</string>
     <string name="stats_insights_management_title">Only see the most relevant stats. Add and organise your insights below.</string>
@@ -1380,6 +1379,7 @@
 
     <!-- Stats refreshed widgets -->
     <string name="stats_widget_log_in_message">Please log in to the WordPress app to add a widget.</string>
+    <string name="stats_widget_log_in_to_add_message">Please log in to the Jetpack app to add a widget.</string>
     <string name="stats_widget_weekly_views_name">Views this week</string>
     <string name="stats_widget_all_time_insights_name">All-time</string>
     <string name="stats_widget_today_insights_name">Today</string>
@@ -1662,6 +1662,7 @@
     <!-- Post Settings -->
     <string name="post_settings">Post settings</string>
     <string name="post_settings_status" translatable="false">@string/status_and_visibility</string>
+    <string name="post_settings_author">Author</string>
     <string name="post_settings_categories_and_tags">Categories &amp; Tags</string>
     <string name="post_settings_publish">Publish</string>
     <string name="post_settings_mark_as_sticky_options_header">Mark as sticky</string>
@@ -1709,7 +1710,7 @@
     <string name="notification_post_will_be_published_in_one_hour">\"%s\" will be published in 1 hour</string>
     <string name="notification_post_will_be_published_in_ten_minutes">\"%s\" will be published in 10 minutes</string>
     <string name="calendar_scheduled_post_title">WordPress Scheduled Post: \"%s\"</string>
-    <string name="calendar_scheduled_post_description">\"%1$s\" scheduled for publishing on \"%2$s\" in your WordPress app \n %3$s</string>
+    <string name="calendar_scheduled_post_description">\"%1$s\" scheduled for publishing on \"%2$s\" in your %3$s app \n %4$s</string>
 
     <!-- Post Status -->
     <string name="post_status_publish_post">Publish</string>
@@ -1945,6 +1946,7 @@
     <string name="error_fetch_remote_site_settings">Couldn\'t retrieve site info</string>
     <string name="error_post_remote_site_settings">Couldn\'t save site info</string>
     <string name="error_fetch_users_list">Couldn\'t retrieve site users</string>
+    <string name="error_fetch_authors_list">Couldn\'t retrieve authors</string>
     <string name="error_fetch_followers_list">Couldn\'t retrieve site followers</string>
     <string name="error_fetch_email_followers_list">Couldn\'t retrieve site email followers</string>
     <string name="error_fetch_viewers_list">Couldn\'t retrieve site viewers</string>
@@ -2321,10 +2323,8 @@
     <string name="my_site_blogging_prompt_card_attribution_dayone">From <b>DayOne</b></string>
     <string name="my_site_blogging_prompt_card_menu_learn_more">Learn more</string>
     <string name="my_site_blogging_prompt_card_skipped_snackbar">Skipped today\'s blogging prompt</string>
-    <plurals name="my_site_blogging_prompt_card_number_of_answers">
-        <item quantity="one">%d answer</item>
-        <item quantity="other">%d answers</item>
-    </plurals>
+    <string name="my_site_blogging_prompt_card_number_of_answers_one">1 answer</string>
+    <string name="my_site_blogging_prompt_card_number_of_answers_other">%d answers</string>
 
     <!-- site picker -->
     <string name="site_picker_title">Choose site</string>
@@ -2368,14 +2368,14 @@
     <string name="previous_button" translatable="false">&lt;</string>
     <string name="next_button" translatable="false">&gt;</string>
 
-    <!-- Publicize and sharing -->
+    <!-- Jetpack Social and sharing -->
     <string name="sharing">Sharing</string>
     <string name="sharing_disabled">Sharing module disabled</string>
     <string name="sharing_disabled_description">You cannot access your sharing settings because your Sharing Jetpack module is disabled.</string>
-    <string name="connections_label">Connections</string>
+    <string name="connections_label">Jetpack Social Connections</string>
     <string name="connections_description">Connect your favorite social media services to automatically share new posts with friends.</string>
     <string name="connected_accounts_label">Connected accounts</string>
-    <string name="connection_service_label">Publicize to %s</string>
+    <string name="connection_service_label">Share post to %s</string>
     <string name="connection_service_description">Connect to automatically share your blog posts to %s.</string>
     <string name="share_btn_connect">Connect</string>
     <string name="share_btn_disconnect">Disconnect</string>
@@ -2427,7 +2427,7 @@
     <string name="sharing_label_message">Change the text of the sharing buttons\' label. This text won\'t appear until you add at least one sharing button.</string>
     <string name="sharing_twitter_message">This will be included in tweets when people share using the Twitter button</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">Not Connected</string>
-    <string name="sharing_facebook_account_must_have_pages">The Facebook connection cannot find any Pages. Publicize cannot connect to Facebook Profiles, only published Pages.</string>
+    <string name="sharing_facebook_account_must_have_pages">The Facebook connection cannot find any Pages. Jetpack Social cannot connect to Facebook Profiles, only published Pages.</string>
     <string name="sharing_facebook_warning_message">You can connect your Facebook account on the WordPress.com website. When you\'re done, return to the WordPress app to change your Sharing settings.</string>
     <string name="sharing_facebook_warning_positive_button">Go to web</string>
 
@@ -2856,6 +2856,7 @@
     <string name="login_prologue_fifth_caption_one">My Top Ten Cafes</string>
     <string name="login_prologue_fifth_caption_two">The World\'s Best Fans</string>
     <string name="login_prologue_fifth_caption_three">Museums in London</string>
+
     <string name="invalid_verification_code" tools:ignore="UnusedResources" a8c-src-lib="login">Invalid verification code</string>
     <string name="send_link_by_email" tools:ignore="UnusedResources" a8c-src-lib="login">Send link by email</string>
     <string name="create_account" tools:ignore="UnusedResources" a8c-src-lib="login">Create account</string>
@@ -2936,6 +2937,10 @@
     <string name="login_no_jetpack_sites_error_message">If you already have a site, you\'ll need to install the free Jetpack plugin and connect it to your WordPress.com account.</string>
     <string name="login_empty_view_see_instructions">See instructions</string>
     <string name="login_empty_view_try_another_account">Try with another account</string>
+
+    <!-- Login Revamped -->
+    <string name="login_prologue_revamped_tagline" tools:ignore="UnusedResources">Write, edit, and publish from anywhere.</string>
+    <string name="login_prologue_revamped_content_description_wordpress_icon" tools:ignore="UnusedResources">WordPress icon</string>
 
     <!-- Screen titles -->
     <string name="email_address_login_title" tools:ignore="UnusedResources" a8c-src-lib="login">Email address login</string>
@@ -3347,7 +3352,7 @@
     <string name="site_creation_intent_writing_poetry">Writing &amp; Poetry</string>
 
     <!-- App rating dialog -->
-    <string name="app_rating_title">Enjoying WordPress?</string>
+    <string name="app_rating_title">Enjoying %s?</string>
     <string name="app_rating_message">Nice to see you again! If you’re digging the app, we\’d love a rating on the Google Play Store.</string>
     <string name="app_rating_rate_now">Rate now</string>
     <string name="app_rating_rate_later">Later</string>
@@ -3366,7 +3371,7 @@
     <string name="insert_label_with_count">Insert %d</string>
 
     <!-- Feature Announcement -->
-    <string name="feature_announcement_dialog_label">What\'s New In WordPress</string>
+    <string name="feature_announcement_dialog_label">What\'s New In %s</string>
     <string name="feature_announcement_find_out_mode">Find out more</string>
 
     <!-- Prepublishing Nudges -->
@@ -3531,7 +3536,7 @@
     <string name="gutenberg_native_add_video" tools:ignore="UnusedResources">ADD VIDEO</string>
     <string name="gutenberg_native_address_settings" tools:ignore="UnusedResources">Address Settings</string>
     <string name="gutenberg_native_alt_text" tools:ignore="UnusedResources">Alt Text</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by" tools:ignore="UnusedResources">Alternatively, you can detach and edit these blocks separately by tapping \"Convert to regular blocks\".</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Alternatively, you can detach and edit these blocks separately by tapping “Convert to regular blocks”.</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again" tools:ignore="UnusedResources">An unknown error occurred. Please try again.</string>
     <string name="gutenberg_native_applies_the_setting" tools:ignore="UnusedResources">Applies the setting</string>
     <string name="gutenberg_native_arrange_your_content_into_columns_add_call_to_action_buttons_and" tools:ignore="UnusedResources">Arrange your content into columns, add Call to Action buttons, and overlay images with text.</string>
@@ -3893,7 +3898,6 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="backup_download_progress_description_with_two_parameters">We\'re creating a downloadable backup of your site from %1$s %2$s.</string>
     <string name="backup_download_progress_icon_content_description">Creating downloadable backup icon</string>
     <string name="backup_download_progress_footnote">No need to wait around. We\'ll notify you when your backup is ready.</string>
-    <string name="backup_download_progress_label">%1$s%%</string>
 
     <string name="backup_item_themes">WordPress Themes</string>
     <string name="backup_item_plugins">WordPress Plugins</string>
@@ -3947,7 +3951,6 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="restore_progress_description_with_two_parameters">We\'re restoring your site back to %1$s %2$s.</string>
     <string name="restore_progress_icon_content_description">Restore site icon</string>
     <string name="restore_progress_footnote">No need to wait around. We\'ll notify you when your site has been restored.</string>
-    <string name="restore_progress_label">%1$s%%</string>
 
     <string name="restore_complete_page_title" translatable="false">@string/restore</string>
     <string name="restore_complete_header">Your site has been restored</string>
@@ -4054,6 +4057,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
 
     <!-- About -->
     <string name="about_blog">Blog</string>
+    <string name="about_news">News</string>
     <string name="about_automattic_main_page_title" tools:ignore="UnusedResources" a8c-src-lib="about">About %1$s</string>
     <string name="about_automattic_legal_page_title" tools:ignore="UnusedResources" a8c-src-lib="about">Legal and More</string>
     <string name="about_automattic_acknowledgements_page_title" tools:ignore="UnusedResources" a8c-src-lib="about">Acknowledgements</string>
@@ -4065,6 +4069,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="about_automattic_legal_and_more_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Legal and More</string>
     <string name="about_automattic_family_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Automattic Family</string>
     <string name="about_automattic_work_with_us_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Work With Us</string>
+    <string name="about_automattic_contribute_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Contribute</string>
     <string name="about_automattic_work_with_us_item_subtitle" tools:ignore="UnusedResources" a8c-src-lib="about">Work from Anywhere</string>
     <string name="about_automattic_terms_of_service_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Terms of Service</string>
     <string name="about_automattic_privacy_policy_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Privacy Policy</string>
@@ -4226,5 +4231,6 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="open_mail" tools:ignore="UnusedResources" a8c-src-lib="login">Open Mail</string>
     <string name="login_magic_links_sent_label_short" tools:ignore="UnusedResources" a8c-src-lib="login">Check your email on this device!</string>
     <string name="login_magic_links_email_sent" tools:ignore="UnusedResources" a8c-src-lib="login">We just sent a magic link to</string>
+    <string name="gutenberg_native_link_rel" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Link Rel</string>
 
 </resources>

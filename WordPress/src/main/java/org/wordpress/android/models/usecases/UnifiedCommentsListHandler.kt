@@ -1,5 +1,6 @@
 package org.wordpress.android.models.usecases
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.merge
 import org.wordpress.android.models.usecases.BatchModerateCommentsUseCase.ModerateCommentsAction.OnModerateComments
 import org.wordpress.android.models.usecases.BatchModerateCommentsUseCase.Parameters.ModerateCommentsParameters
@@ -21,6 +22,7 @@ class UnifiedCommentsListHandler @Inject constructor(
 ) {
     private val useCases = listOf(paginateCommentsUseCase, batchModerationUseCase, moderationWithUndoUseCase)
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     fun subscribe() = useCases.map { it.subscribe() }.merge()
 
     suspend fun requestPage(parameters: GetPageParameters) = paginateCommentsUseCase.manageAction(

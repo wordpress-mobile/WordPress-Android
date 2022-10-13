@@ -1,4 +1,0 @@
-20.5:
-- Uygulamanın mevcut arayüz dilini göstermek için Uygulama Ayarlarına bir etiket ekledik.
-- Yüksek çözünürlüklü görüntü önizlemeleriyle uyumlu olması için, site teması seçicisindeki ekran görüntüsü boyutunu artırdık.
-- Site oluşturma sürecinde Atla düğmesinin mavi renkli metnini Jetpack yeşiline dönüştürdük.

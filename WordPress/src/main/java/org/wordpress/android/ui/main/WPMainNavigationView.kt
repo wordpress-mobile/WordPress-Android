@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.main
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
@@ -17,9 +16,9 @@ import androidx.fragment.app.FragmentManager
 import com.google.android.material.bottomnavigation.BottomNavigationItemView
 import com.google.android.material.bottomnavigation.BottomNavigationMenuView
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.bottomnavigation.BottomNavigationView.OnNavigationItemReselectedListener
-import com.google.android.material.bottomnavigation.BottomNavigationView.OnNavigationItemSelectedListener
-import com.google.android.material.bottomnavigation.LabelVisibilityMode
+import com.google.android.material.navigation.NavigationBarView
+import com.google.android.material.navigation.NavigationBarView.OnItemReselectedListener
+import com.google.android.material.navigation.NavigationBarView.OnItemSelectedListener
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener
@@ -45,7 +44,7 @@ class WPMainNavigationView @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : BottomNavigationView(context, attrs, defStyleAttr),
-        OnNavigationItemSelectedListener, OnNavigationItemReselectedListener {
+        OnItemSelectedListener, OnItemReselectedListener {
     private lateinit var navAdapter: NavAdapter
     private lateinit var fragmentManager: FragmentManager
     private lateinit var pageListener: OnPageListener
@@ -110,14 +109,13 @@ class WPMainNavigationView @JvmOverloads constructor(
         menu.removeItem(R.id.nav_reader)
     }
 
-    @SuppressLint("WrongConstant")
     private fun disableShiftMode() {
-        labelVisibilityMode = LabelVisibilityMode.LABEL_VISIBILITY_LABELED
+        labelVisibilityMode = NavigationBarView.LABEL_VISIBILITY_LABELED
     }
 
     private fun assignNavigationListeners(assign: Boolean) {
-        setOnNavigationItemSelectedListener(if (assign) this else null)
-        setOnNavigationItemReselectedListener(if (assign) this else null)
+        setOnItemSelectedListener(if (assign) this else null)
+        setOnItemReselectedListener(if (assign) this else null)
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {

@@ -2387,6 +2387,18 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "jetpack_powered_bottom_sheet_get_jetpack_app_tapped";
             case JETPACK_POWERED_BOTTOM_SHEET_CONTINUE_TAPPED:
                 return "jetpack_powered_bottom_sheet_continue_tapped";
+            case SHARED_LOGIN_START:
+                return "shared_login_start";
+            case SHARED_LOGIN_SUCCESS:
+                return "shared_login_success";
+            case SHARED_LOGIN_FAILED:
+                return "shared_login_failed";
+            case USER_FLAGS_START:
+                return "user_flags_start";
+            case USER_FLAGS_SUCCESS:
+                return "user_flags_success";
+            case USER_FLAGS_FAILED:
+                return "user_flags_failed";
         }
         return null;
     }

@@ -12,7 +12,6 @@ import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
-import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
 import android.provider.Settings;
 import android.text.TextUtils;
@@ -30,6 +29,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.view.ViewCompat;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.preference.PreferenceManager;
 
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
@@ -229,12 +229,14 @@ public class NotificationsSettingsFragment extends PreferenceFragment
         if (mJetpackBrandingUtils.shouldShowJetpackBranding()) {
             LayoutInflater inflater = LayoutInflater.from(getContext());
             final JetpackBadgeFooterBinding binding = JetpackBadgeFooterBinding.inflate(inflater);
-            binding.footerJetpackBadge.jetpackPoweredBadge.setOnClickListener(v -> {
-                mJetpackBrandingUtils.trackBadgeTapped(Screen.NOTIFICATIONS_SETTINGS);
-                new JetpackPoweredBottomSheetFragment().show(
-                        ((AppCompatActivity) getActivity()).getSupportFragmentManager(),
-                        JetpackPoweredBottomSheetFragment.TAG);
-            });
+            if (mJetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
+                binding.footerJetpackBadge.jetpackPoweredBadge.setOnClickListener(v -> {
+                    mJetpackBrandingUtils.trackBadgeTapped(Screen.NOTIFICATIONS_SETTINGS);
+                    new JetpackPoweredBottomSheetFragment().show(
+                            ((AppCompatActivity) getActivity()).getSupportFragmentManager(),
+                            JetpackPoweredBottomSheetFragment.TAG);
+                });
+            }
             listView.addFooterView(binding.getRoot(), null, false);
         }
     }
@@ -919,8 +921,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (key.equals(getString(R.string.pref_key_notification_pending_drafts))) {
             if (getActivity() != null) {
-                SharedPreferences prefs =
-                        androidx.preference.PreferenceManager.getDefaultSharedPreferences(getActivity());
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
                 boolean shouldNotifyOfPendingDrafts = prefs.getBoolean("wp_pref_notification_pending_drafts", true);
                 if (shouldNotifyOfPendingDrafts) {
                     AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_PENDING_DRAFTS_SETTINGS_ENABLED);

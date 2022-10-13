@@ -679,7 +679,7 @@ class ReaderPostDetailViewModel @Inject constructor(
         var emptyStateTitle: UiString? = null
 
         if (updateLikesState is Failure && !showLoading) {
-            updateLikesState.emptyStateData?.let {
+            updateLikesState.emptyStateData.let {
                 showEmptyState = it.showEmptyState
                 emptyStateTitle = it.title
             }
@@ -895,7 +895,7 @@ class ReaderPostDetailViewModel @Inject constructor(
         }
     }
 
-    @SuppressWarnings("unused")
+    @Suppress("unused")
     @Subscribe(threadMode = MAIN)
     fun onEventMainThread(event: UpdateCommentsStarted?) {
         if (!commentsSnippetFeatureConfig.isEnabled() || event == null || event.scenario != COMMENT_SNIPPET) return
@@ -904,7 +904,7 @@ class ReaderPostDetailViewModel @Inject constructor(
         _commentSnippetState.value = CommentSnippetState.Loading
     }
 
-    @SuppressWarnings("unused")
+    @Suppress("unused")
     @Subscribe(threadMode = MAIN)
     fun onEventMainThread(event: UpdateCommentsEnded?) {
         if (!commentsSnippetFeatureConfig.isEnabled() || event == null || event.scenario != COMMENT_SNIPPET) return

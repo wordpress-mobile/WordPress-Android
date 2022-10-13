@@ -253,7 +253,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
 
         // Subject is stored in db as html to preserve text formatting
         Spanned noteSubjectSpanned = note.getFormattedSubject(mNotificationsUtilsWrapper);
-        // Trim the '\n\n' added by Html.fromHtml()
+        // Trim the '\n\n' added by HtmlCompat.fromHtml(...)
         noteSubjectSpanned =
                 (Spanned) noteSubjectSpanned.subSequence(0, TextUtils.getTrimmedLength(noteSubjectSpanned));
 
@@ -349,12 +349,14 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         }
     }
 
+    @SuppressWarnings("deprecation")
     public void reloadNotesFromDBAsync() {
         cancelReloadNotesTask();
         mReloadNotesFromDBTask = new ReloadNotesFromDBTask();
         mReloadNotesFromDBTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
+    @SuppressWarnings("deprecation")
     @SuppressLint("StaticFieldLeak")
     private class ReloadNotesFromDBTask extends AsyncTask<Void, Void, ArrayList<Note>> {
         @Override

@@ -1,0 +1,3 @@
+20.8:
+Pengguna pada situs multi-penulis dapat mengubah penulis konten pada pengaturan pos dan halaman.
+Pengguna bahasa Arab sekarang akan melihat angka pada layar Statistik secara ekslusif dalam angka Arab Barat—tidak lagi acak dengan angka Arab Timur.

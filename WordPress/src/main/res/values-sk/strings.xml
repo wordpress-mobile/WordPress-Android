@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2021-02-27 18:15:57+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : 2);
-Generator: GlotPress/4.0.0-alpha.1
+Generator: GlotPress/4.0.0-alpha.3
 Language: sk
 -->
 <resources>
@@ -38,8 +38,6 @@ Language: sk
     <string name="plans_loading_error_network_title">Žiadne pripojenie</string>
     <string name="quick_start_sites">Ďalšie kroky</string>
     <string name="quick_start_remove_next_steps_menu_title">Odstrániť toto</string>
-    <string name="stats_traffic_change">%1$s (%2$s%%)</string>
-    <string name="stats_traffic_increase">+%1$s (%2$s%%)</string>
     <string name="notification_new_site_creation_title">Vytvoriť webovú stránku</string>
     <string name="new_site_creation_create_site_button">Vytvoriť webovú stránku</string>
     <string name="notification_new_site_creation_failed">Nastal problém</string>
@@ -772,10 +770,8 @@ Language: sk
     <string name="share_btn_disconnect">Odpojiť</string>
     <string name="share_btn_connect">Pripojiť</string>
     <string name="connection_service_description">Pripojiť a automaticky zdieľať články blogu na %s.</string>
-    <string name="connection_service_label">Zverejniť na %s.</string>
     <string name="connected_accounts_label">Pripojené účty</string>
     <string name="connections_description">Pripojiť obľúbené služby sociálnych médií a automaticky zdieľať nové články s priateľmi.</string>
-    <string name="connections_label">Pripojenia</string>
     <string name="sharing">Zdieľanie</string>
     <string name="tabbar_accessibility_label_notifications">Upozornenia. Upraviť upozornenia.</string>
     <string name="tabbar_accessibility_label_reader">Čitateľ. Nasledovať obsah z ostatných webový stránok.</string>

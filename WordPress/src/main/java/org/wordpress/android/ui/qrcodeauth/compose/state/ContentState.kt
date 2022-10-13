@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.qrcodeauth.compose.state
 
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -7,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -51,7 +53,7 @@ fun ContentState(uiState: QRCodeAuthUiState.Content) = with(uiState) {
             Title(text = uiStringText(it))
         }
         subtitle?.let {
-            Subtitle(text = uiStringText(it))
+            Subtitle(text = uiStringText(it), color = MaterialTheme.colors.onBackground)
         }
         primaryActionButton?.let { actionButton ->
             if (actionButton.isVisible) {
@@ -85,7 +87,8 @@ fun ContentState(uiState: QRCodeAuthUiState.Content) = with(uiState) {
     }
 }
 
-@Preview(showBackground = true)
+@Preview
+@Preview(uiMode = UI_MODE_NIGHT_YES)
 @Composable
 private fun ContentStatePreview() {
     AppTheme {

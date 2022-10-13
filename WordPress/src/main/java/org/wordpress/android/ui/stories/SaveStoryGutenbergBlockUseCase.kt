@@ -168,7 +168,8 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor(
                                 gson.fromJson(mediaFilesJsonString, StoryBlockData::class.java)
                         storyBlockData?.let { storyBlockDataNonNull ->
                             val localMediaId = mediaFile.id.toString()
-                            // now replace matching localMediaId with remoteMediaId in the mediaFileObjects, obtain the URLs and replace
+                            // now replace matching localMediaId with remoteMediaId in the mediaFileObjects,
+                            // obtain the URLs and replace
                             val mediaFiles = storyBlockDataNonNull.mediaFiles.filter { it.id == localMediaId }
                             if (mediaFiles.isNotEmpty()) {
                                 mediaFiles[0].apply {

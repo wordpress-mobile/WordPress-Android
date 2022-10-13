@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package org.wordpress.android.widgets
 
 import android.app.Dialog
@@ -70,6 +72,7 @@ object AppRatingDialog {
      * Show the rate dialog if the criteria is satisfied.
      * @return true if shown, false otherwise.
      */
+    @Suppress("DEPRECATION")
     fun showRateDialogIfNeeded(fragmentManger: FragmentManager): Boolean {
         return if (shouldShowRateDialog()) {
             showRateDialog(fragmentManger)
@@ -104,6 +107,7 @@ object AppRatingDialog {
         }
     }
 
+    @Suppress("DEPRECATION")
     private fun showRateDialog(fragmentManger: FragmentManager) {
         var dialog = fragmentManger.findFragmentByTag(AppRatingDialog.TAG_APP_RATING_PROMPT_DIALOG)
         if (dialog == null) {
@@ -113,6 +117,7 @@ object AppRatingDialog {
         }
     }
 
+    @Suppress("DEPRECATION")
     class AppRatingDialog : DialogFragment() {
         companion object {
             internal const val TAG_APP_RATING_PROMPT_DIALOG = "TAG_APP_RATING_PROMPT_DIALOG"
@@ -121,12 +126,14 @@ object AppRatingDialog {
         @Suppress("SwallowedException")
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
             val builder = MaterialAlertDialogBuilder(activity)
-            builder.setTitle(R.string.app_rating_title)
+            val appName = getString(R.string.app_name)
+            val title = getString(R.string.app_rating_title, appName)
+            builder.setTitle(title)
                     .setMessage(R.string.app_rating_message)
                     .setCancelable(true)
                     .setPositiveButton(R.string.app_rating_rate_now) { _, _ ->
                         val appPackage = activity.packageName
-                        val url: String? = "market://details?id=$appPackage"
+                        val url = "market://details?id=$appPackage"
                         try {
                             activity.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
                         } catch (e: ActivityNotFoundException) {

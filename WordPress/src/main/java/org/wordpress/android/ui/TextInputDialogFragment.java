@@ -52,6 +52,7 @@ public class TextInputDialogFragment extends DialogFragment {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
         //noinspection InflateParams
@@ -112,7 +113,9 @@ public class TextInputDialogFragment extends DialogFragment {
         return alertDialog;
     }
 
-    @Override public void onDismiss(@NonNull DialogInterface dialog) {
+    @Override
+    @SuppressWarnings("deprecation")
+    public void onDismiss(@NonNull DialogInterface dialog) {
         super.onDismiss(dialog);
         if (getTargetFragment() instanceof Callback) {
             ((Callback) getTargetFragment()).onTextInputDialogDismissed(callbackId);

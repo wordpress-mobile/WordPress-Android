@@ -32,7 +32,7 @@ steps:
   - group: "🚀 Beta Builds"
     steps:
 
-      - label: "🛠 WordPress Beta Build"
+      - label: ":wordpress: :android: Beta Build"
         key: wpbuild
         command: ".buildkite/commands/beta-build.sh wordpress"
         depends_on: wplint
@@ -40,7 +40,7 @@ steps:
         notify:
           - slack: "#build-and-ship"
 
-      - label: "🛠 Jetpack Beta Build"
+      - label: ":jetpack: :android: Beta Build"
         key: jpbuild
         command: ".buildkite/commands/beta-build.sh jetpack"
         depends_on: jplint

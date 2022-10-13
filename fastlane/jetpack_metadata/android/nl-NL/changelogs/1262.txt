@@ -1,4 +1,0 @@
-20.5:
-- We hebben een label toegevoegd in de app-instellingen om de huidige interface-taal van de app weer te geven.
-- We hebben de grootte van schermafbeeldingen vergroot in de themakiezer van de site om beter aan te sluiten bij de voorbeeldweergaven van afbeeldingen met een hoge resolutie.
-- Bij het ontwerpen van je site hebben we de tekst van de knop Overslaan aangepast van blauw naar Jetpack-groen.

@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package org.wordpress.android.ui.mysite.tabs
 
 import android.app.Activity
@@ -48,7 +50,7 @@ import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFra
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.photopicker.MediaPickerConstants
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher
-import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource
+import org.wordpress.android.ui.photopicker.PhotoPickerActivity
 import org.wordpress.android.ui.posts.BasicDialogViewModel
 import org.wordpress.android.ui.posts.BasicDialogViewModel.BasicDialogModel
 import org.wordpress.android.ui.posts.EditPostActivity.EXTRA_IS_LANDING_EDITOR_OPENED_FOR_NEW_SITE
@@ -176,7 +178,9 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
         adapter.registerAdapterDataObserver(object : AdapterDataObserver() {
             override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
                 super.onItemRangeInserted(positionStart, itemCount)
-                recyclerView.smoothScrollToPosition(0)
+                if (itemCount == ONE_ITEM && positionStart == FIRST_ITEM) {
+                    recyclerView.smoothScrollToPosition(0)
+                }
             }
         })
 
@@ -195,7 +199,7 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
         }
     }
 
-    @Suppress("LongMethod")
+    @Suppress("DEPRECATION", "LongMethod")
     private fun MySiteTabFragmentBinding.setupObservers() {
         viewModel.uiModel.observe(viewLifecycleOwner, { uiModel ->
             hideRefreshIndicatorIfNeeded()
@@ -446,7 +450,7 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
         binding = null
     }
 
-    @Suppress("ReturnCount", "LongMethod", "ComplexMethod")
+    @Suppress("DEPRECATION", "ReturnCount", "LongMethod", "ComplexMethod")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (data == null) {
@@ -470,7 +474,7 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
                                 MediaPickerConstants.EXTRA_MEDIA_URIS
                         ) ?: return
 
-                        val source = PhotoPickerMediaSource.fromString(
+                        val source = PhotoPickerActivity.PhotoPickerMediaSource.fromString(
                                 data.getStringExtra(MediaPickerConstants.EXTRA_MEDIA_SOURCE)
                         )
                         val iconUrl = mediaUriStringsArray.getOrNull(0) ?: return
@@ -615,6 +619,8 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
         private const val TAG_QUICK_START_DIALOG = "TAG_QUICK_START_DIALOG"
         private const val KEY_MY_SITE_TAB_TYPE = "key_my_site_tab_type"
         private const val CHECK_REFRESH_DELAY = 300L
+        private const val ONE_ITEM = 1
+        private const val FIRST_ITEM = 0
 
         @JvmStatic
         fun newInstance(mySiteTabType: MySiteTabType) = MySiteTabFragment().apply {

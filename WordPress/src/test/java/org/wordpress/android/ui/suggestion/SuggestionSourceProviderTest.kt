@@ -2,7 +2,7 @@ package org.wordpress.android.ui.suggestion
 
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
-import junit.framework.Assert.assertEquals
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -33,7 +33,7 @@ class SuggestionSourceProviderTest {
         whenever(mockSuggestionSourceSubcomponent.xPostSuggestionSource())
                 .thenReturn(expected)
         val actual = provider.get(XPosts, mockSite)
-        assertEquals(expected, actual)
+        assertThat(expected).isEqualTo(actual)
     }
 
     @Test
@@ -42,6 +42,6 @@ class SuggestionSourceProviderTest {
         whenever(mockSuggestionSourceSubcomponent.userSuggestionSource())
                 .thenReturn(expected)
         val actual = provider.get(Users, mockSite)
-        assertEquals(expected, actual)
+        assertThat(expected).isEqualTo(actual)
     }
 }

@@ -2,6 +2,7 @@ package org.wordpress.android.ui.stats.refresh.utils
 
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.eq
+import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -12,13 +13,16 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.util.LocaleManagerWrapper
+import org.wordpress.android.util.text.PercentFormatter
 import org.wordpress.android.viewmodel.ResourceProvider
+import java.math.RoundingMode.HALF_UP
 import java.util.Locale
 
 @RunWith(MockitoJUnitRunner::class)
 class StatsUtilsTest {
     @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var localeManagerWrapper: LocaleManagerWrapper
+    @Mock private lateinit var percentFormatter: PercentFormatter
     private lateinit var statsUtils: StatsUtils
     private val suffixThousand = "k"
     private val suffixMillion = "M"
@@ -27,7 +31,7 @@ class StatsUtilsTest {
 
     @Before
     fun setUp() {
-        statsUtils = StatsUtils(resourceProvider, localeManagerWrapper)
+        statsUtils = StatsUtils(resourceProvider, localeManagerWrapper, percentFormatter)
         whenever(localeManagerWrapper.getLocale()).thenReturn(Locale.US)
         whenever(resourceProvider.getString(any(), any())).then {
             val resourceId = it.getArgument<Int>(0)
@@ -255,6 +259,7 @@ class StatsUtilsTest {
 
     @Test
     fun `build change with positive difference`() {
+        whenever(percentFormatter.format(value = 3.0F, rounding = HALF_UP)).thenReturn("300")
         val previousValue = 5L
         val value = 20L
         val positive = true
@@ -269,6 +274,7 @@ class StatsUtilsTest {
 
     @Test
     fun `build change with infinite positive difference`() {
+        whenever(percentFormatter.format(value = 3.0F, rounding = HALF_UP)).thenReturn("∞")
         val previousValue = 0L
         val value = 20L
         val positive = true
@@ -283,6 +289,7 @@ class StatsUtilsTest {
 
     @Test
     fun `build change with negative difference`() {
+        whenever(percentFormatter.format(value = -0.33333334F, rounding = HALF_UP)).thenReturn("-33")
         val previousValue = 30L
         val value = 20L
         val positive = false
@@ -298,6 +305,7 @@ class StatsUtilsTest {
     @Test
     fun `build change with max negative difference`() {
         val previousValue = 20L
+        whenever(percentFormatter.format(value = -1F, rounding = HALF_UP)).thenReturn("-100")
         val value = 0L
         val positive = false
         val expectedChange = "-20 (-100%)"
@@ -321,5 +329,12 @@ class StatsUtilsTest {
         val change = statsUtils.buildChange(previousValue, value, positive, isFormattedNumber = true)
 
         assertThat(change).isEqualTo(expectedChange)
+    }
+
+    @Test
+    fun `when buildChange, should call PercentFormatter`() {
+        whenever(percentFormatter.format(value = 3.0F, rounding = HALF_UP)).thenReturn("3%")
+        statsUtils.buildChange(5L, 20L, true, isFormattedNumber = true)
+        verify(percentFormatter).format(value = 3.0F, rounding = HALF_UP)
     }
 }

@@ -6,9 +6,7 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
-import junit.framework.Assert.assertEquals
-import junit.framework.Assert.assertFalse
-import junit.framework.Assert.assertTrue
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -58,18 +56,18 @@ class SuggestionViewModelTest {
     fun `init when suggestions not supported`() {
         setSuggestionsSupported(false)
         val anySuggestionType = XPosts
-        assertFalse(viewModel.init(anySuggestionType, mockSite))
+        assertThat(viewModel.init(anySuggestionType, mockSite)).isFalse
     }
 
     @Test
     fun `init with xpost suggestions`() {
-        assertTrue(initViewModel(XPosts))
+        assertThat(initViewModel(XPosts)).isTrue
         verifyViewModelSuggestionType(XPosts)
     }
 
     @Test
     fun `init with user suggestions`() {
-        assertTrue(initViewModel(Users))
+        assertThat(initViewModel(Users)).isTrue
         verifyViewModelSuggestionType(Users)
     }
 
@@ -94,7 +92,7 @@ class SuggestionViewModelTest {
 
         val nonEmptyList = listOf(mock<Suggestion>())
         val actual = viewModel.getEmptyViewState(nonEmptyList)
-        assertEquals(View.GONE, actual.visibility)
+        assertThat(View.GONE).isEqualTo(actual.visibility)
     }
 
     @Test
@@ -103,7 +101,7 @@ class SuggestionViewModelTest {
         stubEmptyViewStateText()
 
         val actual = viewModel.getEmptyViewState(emptyList())
-        assertEquals(View.VISIBLE, actual.visibility)
+        assertThat(View.VISIBLE).isEqualTo(actual.visibility)
     }
 
     private fun stubEmptyViewStateText() {
@@ -121,7 +119,7 @@ class SuggestionViewModelTest {
                 .thenReturn(expectedText)
 
         val actual = viewModel.getEmptyViewState(emptyList())
-        assertEquals(expectedText, actual.string)
+        assertThat(expectedText).isEqualTo(actual.string)
     }
 
     @Test
@@ -133,7 +131,7 @@ class SuggestionViewModelTest {
         whenever(mockResourceProvider.getString(R.string.suggestion_problem)).thenReturn(expectedText)
 
         val actual = viewModel.getEmptyViewState(emptyList())
-        assertEquals(expectedText, actual.string)
+        assertThat(expectedText).isEqualTo(actual.string)
     }
 
     @Test
@@ -146,7 +144,7 @@ class SuggestionViewModelTest {
                 .thenReturn(expectedText)
 
         val actual = viewModel.getEmptyViewState(emptyList())
-        assertEquals(expectedText, actual.string)
+        assertThat(expectedText).isEqualTo(actual.string)
     }
 
     @Test
@@ -159,7 +157,7 @@ class SuggestionViewModelTest {
                 .thenReturn(expectedText)
 
         val actual = viewModel.getEmptyViewState(emptyList())
-        assertEquals(expectedText, actual.string)
+        assertThat(expectedText).isEqualTo(actual.string)
     }
 
     @Test
@@ -172,7 +170,7 @@ class SuggestionViewModelTest {
                 .thenReturn(expectedText)
 
         val actual = viewModel.getEmptyViewState(emptyList())
-        assertEquals(expectedText, actual.string)
+        assertThat(expectedText).isEqualTo(actual.string)
     }
 
     @Test
@@ -191,7 +189,7 @@ class SuggestionViewModelTest {
         val actual = viewModel.onAttemptToFinish(emptyList(), userInput)
 
         val expected = NotExactlyOneAvailable(expectedMesage)
-        assertEquals(expected, actual)
+        assertThat(expected).isEqualTo(actual)
     }
 
     @Test
@@ -206,7 +204,7 @@ class SuggestionViewModelTest {
         val actual = viewModel.onAttemptToFinish(listWithMoreThanOne, emptyUserInput)
 
         val expected = NotExactlyOneAvailable(expectedMesage)
-        assertEquals(expected, actual)
+        assertThat(expected).isEqualTo(actual)
     }
 
     @Test
@@ -226,7 +224,7 @@ class SuggestionViewModelTest {
         val actual = viewModel.onAttemptToFinish(listWithMoreThanOne, userInput)
 
         val expected = NotExactlyOneAvailable(expectedMesage)
-        assertEquals(expected, actual)
+        assertThat(expected).isEqualTo(actual)
     }
 
     @Test
@@ -234,11 +232,11 @@ class SuggestionViewModelTest {
         initViewModel()
 
         val mockSuggestion = Suggestion("", "expected_value", "")
-        val listWithExactlyOne = listOf<Suggestion>(mockSuggestion)
+        val listWithExactlyOne = listOf(mockSuggestion)
         val actual = viewModel.onAttemptToFinish(listWithExactlyOne, "")
 
         val expected = OnlyOneAvailable(mockSuggestion.value)
-        assertEquals(expected, actual)
+        assertThat(expected).isEqualTo(actual)
     }
 
     @Test
@@ -313,7 +311,7 @@ class SuggestionViewModelTest {
             Users -> '@'
         }
         val actualPrefix = viewModel.suggestionPrefix
-        assertEquals(expectedPrefix, actualPrefix)
+        assertThat(expectedPrefix).isEqualTo(actualPrefix)
     }
 
     private fun verifySuggestionTypeString(type: SuggestionType) {
@@ -322,7 +320,7 @@ class SuggestionViewModelTest {
             Users -> userSuggestionTypeString
         }
         val actualTypeString = viewModel.suggestionTypeString
-        assertEquals(expectedTypeString, actualTypeString)
+        assertThat(expectedTypeString).isEqualTo(actualTypeString)
     }
 
     private fun setSuggestionsSupported(areSupported: Boolean) {

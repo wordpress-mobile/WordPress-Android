@@ -173,6 +173,7 @@ class MediaPickerActivity : LocaleAwareActivity(), MediaPickerListener {
         return super.onOptionsItemSelected(item)
     }
 
+    @Suppress("DEPRECATION", "LongMethod", "NestedBlockDepth")
     override fun onActivityResult(
         requestCode: Int,
         resultCode: Int,
@@ -306,6 +307,7 @@ class MediaPickerActivity : LocaleAwareActivity(), MediaPickerListener {
         finish()
     }
 
+    @Suppress("DEPRECATION")
     override fun onIconClicked(action: MediaPickerAction) {
         when (action) {
             is OpenSystemPicker -> {

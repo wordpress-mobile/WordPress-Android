@@ -5,6 +5,7 @@ import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
+import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.modules.UI_THREAD
@@ -50,7 +51,12 @@ class StatsColorSelectionViewModel
         if (accountStore.hasAccessToken()) {
             mutableDialogOpened.postValue(Event(Unit))
         } else {
-            mutableNotification.postValue(Event(R.string.stats_widget_log_in_message))
+            val message = if (BuildConfig.IS_JETPACK_APP) {
+                R.string.stats_widget_log_in_to_add_message
+            } else {
+                R.string.stats_widget_log_in_message
+            }
+            mutableNotification.postValue(Event(message))
         }
     }
 

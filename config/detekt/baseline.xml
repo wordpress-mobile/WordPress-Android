@@ -79,8 +79,6 @@
     <ID>LongMethod:PublishSettingsFragment.kt$PublishSettingsFragment$override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?</ID>
     <ID>LongMethod:ReferrersUseCase.kt$ReferrersUseCase$override fun buildUiModel(domainModel: ReferrersModel, uiState: SelectedGroup): List&lt;BlockListItem></ID>
     <ID>LongMethod:SearchListViewModel.kt$SearchListViewModel$private fun PageModel.toPageItem(areActionsEnabled: Boolean): PageItem</ID>
-    <ID>LongMethod:StatsMinifiedWidgetConfigureFragment.kt$StatsMinifiedWidgetConfigureFragment$override fun onViewCreated(view: View, savedInstanceState: Bundle?)</ID>
-    <ID>LongMethod:StatsWidgetConfigureFragment.kt$StatsWidgetConfigureFragment$override fun onViewCreated(view: View, savedInstanceState: Bundle?)</ID>
     <ID>LongMethod:SuggestionActivity.kt$SuggestionActivity$private fun initializeActivity(siteModel: SiteModel, suggestionType: SuggestionType)</ID>
     <ID>LoopWithTooManyJumpStatements:RemoveMediaUseCase.kt$RemoveMediaUseCase$for (mediaId in mediaIds) { if (!TextUtils.isEmpty(mediaId)) { // make sure the MediaModel exists val mediaModel = try { mediaStore.getMediaWithLocalId(Integer.valueOf(mediaId)) ?: continue } catch (e: NumberFormatException) { AppLog.e(AppLog.T.MEDIA, "Invalid media id: $mediaId") continue } // also make sure it's not being uploaded anywhere else (maybe on some other Post, // simultaneously) if (mediaModel.uploadState != null &amp;&amp; mediaUtils.isLocalFile(mediaModel.uploadState.toLowerCase(Locale.ROOT)) &amp;&amp; !uploadService.isPendingOrInProgressMediaUpload(mediaModel)) { dispatcher.dispatch(MediaActionBuilder.newRemoveMediaAction(mediaModel)) } } }</ID>
     <ID>MagicNumber:ActivityViewHolder.kt$ActivityViewHolder$3</ID>
@@ -172,17 +170,6 @@
     <ID>MagicNumber:WPWebView.kt$21</ID>
     <ID>MagicNumber:WPWebView.kt$22</ID>
     <ID>MagicNumber:WidgetUtils.kt$WidgetUtils$300</ID>
-    <ID>MaxLineLength:AppConfig.kt$AppConfig$*</ID>
-    <ID>MaxLineLength:FeatureAnnouncementViewModel.kt$FeatureAnnouncementViewModel$?:</ID>
-    <ID>MaxLineLength:ImageManager.kt$ImageManager$*</ID>
-    <ID>MaxLineLength:ReaderPostListViewModel.kt$ReaderPostListViewModel$// TODO this is related to tracking time spent in reader - we should move it to the parent but also keep it here for !isTopLevel :(</ID>
-    <ID>MaxLineLength:ReaderUtilsWrapper.kt$ReaderUtilsWrapper$*</ID>
-    <ID>MaxLineLength:SaveStoryGutenbergBlockUseCase.kt$SaveStoryGutenbergBlockUseCase.&lt;no name provided>$// now replace matching localMediaId with remoteMediaId in the mediaFileObjects, obtain the URLs and replace</ID>
-    <ID>MaxLineLength:StoryComposerActivity.kt$StoryComposerActivity$// if the frame.id is populated and is not a temporary id, this should be an actual MediaModel mediaId so,</ID>
-    <ID>MaxLineLength:StoryMediaSaveUploadBridge.kt$StoryMediaSaveUploadBridge.&lt;no name provided>$// WARNING: don't remove this, we need to call the listener no matter what, so save &amp; upload actually happen</ID>
-    <ID>MaxLineLength:StoryMediaSaveUploadBridge.kt$StoryMediaSaveUploadBridge.&lt;no name provided>$// here we change the ids on the actual StoryFrameItems, and also update the flattened / composed image</ID>
-    <ID>MaxLineLength:WPWebViewUsageCategory.kt$WPWebViewUsageCategory$*</ID>
-    <ID>MaxLineLength:XPostsCapabilityChecker.kt$XPostsCapabilityChecker$// suggestions, but because the response will almost always be empty, it's not an expensive call.</ID>
     <ID>MemberNameEqualsClassName:ActivityLogTypeFilterViewModel.kt$ActivityLogTypeFilterViewModel.Action$lateinit var action: (() -> Unit)</ID>
     <ID>NestedBlockDepth:AllTimeWidgetBlockListViewModel.kt$AllTimeWidgetBlockListViewModel$override fun onDataSetChanged(context: Context)</ID>
     <ID>NestedBlockDepth:AllTimeWidgetListViewModel.kt$AllTimeWidgetListViewModel$fun onDataSetChanged(onError: (appWidgetId: Int) -> Unit)</ID>
@@ -191,7 +178,6 @@
     <ID>NestedBlockDepth:MeFragment.kt$MeFragment$override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?)</ID>
     <ID>NestedBlockDepth:PublicizeErrorDialogFragment.kt$PublicizeErrorDialogFragment$override fun onCreateDialog(savedInstanceState: Bundle?): Dialog</ID>
     <ID>NestedBlockDepth:PublishNotificationReceiverViewModel.kt$PublishNotificationReceiverViewModel$fun loadNotification(notificationId: Int): NotificationUiModel?</ID>
-    <ID>NestedBlockDepth:ReaderDiscoverLogic.kt$ReaderDiscoverLogic$private fun createSimplifiedRecommendedBlogsCardJson(originalCardJson: JSONObject): JSONObject</ID>
     <ID>NestedBlockDepth:StoriesPrefs.kt$StoriesPrefs$private fun checkSlideOriginalBackgroundMediaExists(storyFrameItem: StoryFrameItem?): Boolean</ID>
     <ID>NestedBlockDepth:StoryComposerActivity.kt$StoryComposerActivity$override fun onStorySaveButtonPressed()</ID>
     <ID>NestedBlockDepth:StoryComposerActivity.kt$StoryComposerActivity$private fun buildStoryMediaFileDataListFromStoryFrameIndexes( storyIndex: StoryIndex ): ArrayList&lt;StoryMediaFileData></ID>
@@ -265,7 +251,6 @@
     <ID>TooGenericExceptionThrown:ReaderTracker.kt$ReaderTab.Companion$throw RuntimeException("Unexpected ReaderTab id")</ID>
     <ID>TooGenericExceptionThrown:RestoreFragment.kt$RestoreFragment$throw Throwable("Couldn't initialize ${this.javaClass.simpleName} view model")</ID>
     <ID>TooGenericExceptionThrown:RestoreViewModel.kt$RestoreViewModel$throw Throwable("Unexpected restoreRequestResult ${this.javaClass.simpleName}")</ID>
-    <ID>TooGenericExceptionThrown:StatsDateFormatter.kt$StatsDateFormatter$throw RuntimeException("Unexpected date format")</ID>
     <ID>TooGenericExceptionThrown:ThreatDetailsFragment.kt$ThreatDetailsFragment$throw RuntimeException("ThreatDetailsFragment - missing siteModel extras.")</ID>
     <ID>TopLevelPropertyNaming:ActivityLogTypeFilterAdapter.kt$private const val activityViewType: Int = 2</ID>
     <ID>TopLevelPropertyNaming:ActivityLogTypeFilterAdapter.kt$private const val headerViewType: Int = 1</ID>

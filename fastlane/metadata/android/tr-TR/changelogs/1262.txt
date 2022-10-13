@@ -1,3 +1,0 @@
-20.5:
-- Uygulamanın mevcut arayüz dilini göstermek için Uygulama Ayarlarına yeni bir etiket ekledik. Göz alıcı!
-- Uygulama artık daha yüksek çözünürlüklü görsel önizlemelerini desteklediğinden, site teması seçicisinde tema ekran görüntülerinin boyutunu artırdık. Artık pikselleşme değil, yalnızca piksel mükemmelliğini yaşayacaksınız.

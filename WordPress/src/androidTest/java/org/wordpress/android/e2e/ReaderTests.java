@@ -6,6 +6,7 @@ import androidx.test.rule.GrantPermissionRule;
 
 import org.junit.Before;
 import org.junit.Rule;
+import org.junit.Test;
 import org.wordpress.android.e2e.pages.ReaderPage;
 import org.wordpress.android.support.BaseTest;
 
@@ -26,8 +27,8 @@ public class ReaderTests extends BaseTest {
     String mCoachingPostTitle = "Let's check out the coaching team!";
     String mCompetitionPostTitle = "Let's focus on the competition.";
 
-//    @Test
-    public void navigateThroughPosts() {
+    @Test
+    public void e2eNavigateThroughPosts() {
         new ReaderPage()
                 .tapFollowingTab()
                 .openPost(mCoachingPostTitle)
@@ -39,8 +40,8 @@ public class ReaderTests extends BaseTest {
                 .goBackToReader();
     }
 
-//    @Test
-    public void likePost() {
+    @Test
+    public void e2eLikePost() {
         new ReaderPage()
                 .tapFollowingTab()
                 .openPost(mCoachingPostTitle)
