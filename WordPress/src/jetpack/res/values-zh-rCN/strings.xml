@@ -1,16 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-07-12 09:54:03+0000
+Translation-Revision-Date: 2022-10-05 14:54:22+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: zh_CN
 -->
 <resources>
+    <string name="me_btn_share">与朋友分享 Jetpack</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_12">添加作者</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_11">发表图片</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_10">修复安全问题</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_9">在 Facebook 上分享</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_8">搜索插件</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_7">恢复备份</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_6">回复评论</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_5">查看通知</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_4">观看统计数据</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_3">撰写博客</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_2">构建站点</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_1">更新插件</string>
+    <string name="login_prologue_revamped_content_description_top_bg">Jetpack 顶部背景淡化</string>
+    <string name="login_prologue_revamped_content_description_bg">Jetpack 背景</string>
+    <string name="login_prologue_revamped_content_description_jetpack_logo">Jetpack 徽标</string>
     <string name="me_btn_about">关于 Jetpack</string>
     <string name="sign_out_wpcom_confirm_with_no_changes">注销 Jetpack？</string>
     <string name="me_disconnect_from_wordpress_com">注销 Jetpack</string>
     <string name="support_ticket_subject">Android 版 Jetpack 支持</string>
     <string name="login_magic_links_sent_label">在此设备上查看您的电子邮件，并轻点您从 Jetpack.com 收到的电子邮件中的链接。</string>
+    <string name="continue_with_wpcom_no_signup">继续使用 WordPress.com</string>
     <string name="app_tagline">强大的站点安全性和性能始终如影随形</string>
     <string name="post_signup_interstitial_title">欢迎使用 Jetpack</string>
     <string name="app_title">Android 版 Jetpack</string>

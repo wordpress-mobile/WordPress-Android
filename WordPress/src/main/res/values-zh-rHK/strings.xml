@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-09-30 20:52:44+0000
+Translation-Revision-Date: 2022-10-07 09:54:25+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.3
 Language: zh_TW
 -->
 <resources>
+    <string name="my_site_blogging_prompt_card_number_of_answers_one">1 個答案</string>
+    <string name="login_prologue_revamped_content_description_wordpress_icon">WordPress 圖示</string>
+    <string name="login_prologue_revamped_tagline">從任何地方都能撰寫、編輯和發表內容。</string>
     <string name="error_fetch_authors_list">無法擷取作者</string>
     <string name="post_settings_author">作者</string>
     <string name="connection_service_label">將文章分享到 %s</string>
@@ -562,6 +565,7 @@ Language: zh_TW
     <string name="gutenberg_native_move_image_backward">向後移動圖片</string>
     <string name="gutenberg_native_move_image_forward">向前移動圖片</string>
     <string name="gutenberg_native_column_settings">欄位設定</string>
+    <string name="gutenberg_native_link_rel">鏈結 Rel</string>
     <string name="user_profile_site_section_header">網站</string>
     <string name="user_profile_untitled_site">(未命名)</string>
     <string name="user_profile_bottom_sheet_description">使用者個人資料底頁資訊</string>
@@ -1776,6 +1780,9 @@ Language: zh_TW
     <string name="stats_select_next_period_description">選取下個期間</string>
     <string name="stats_select_previous_period_description">選取上個期間</string>
     <string name="stats_insights_popular">最熱門的時間</string>
+    <string name="stats_most_popular_percent_views">%1$s 的瀏覽次數</string>
+    <string name="stats_traffic_change">%1$s (%2$s)</string>
+    <string name="stats_traffic_increase">+%1$s (%2$s)</string>
     <string name="new_site_creation_site_preview_content_description">顯示預覽網站</string>
     <string name="new_site_creation_clear_all_content_description">清除</string>
     <string name="site_created_but_not_fetched_snackbar_message">你的網路連線速度似乎過慢。如果你在清單中沒有看到新網站，請嘗試重新整理。</string>
