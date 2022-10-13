@@ -57,8 +57,8 @@ class UnifiedAboutViewModel @Inject constructor(
                     )
             ),
             legalConfig = LegalConfig(
-                    tosUrl = termsOfServiceUrl(),
-                    privacyPolicyUrl = if (buildConfig.isJetpackApp) Constants.URL_PRIVACY_POLICY else WP_PRIVACY_URL,
+                    tosUrl = wpUrlUtils.buildTermsOfServiceUrl(contextProvider.getContext()),
+                    privacyPolicyUrl = Constants.URL_PRIVACY_POLICY,
                     acknowledgementsUrl = LICENSES_FILE_URL
             ),
             automatticConfig = AutomatticConfig(isVisible = buildConfig.isJetpackApp),
@@ -132,7 +132,6 @@ class UnifiedAboutViewModel @Inject constructor(
         private const val WP_APPS_URL = "https://apps.wordpress.com"
         private const val WP_BLOG_URL = "https://wordpress.org/news/"
         private const val WP_CONTRIBUTE_URL = "https://make.wordpress.org/mobile/handbook/"
-        private const val WP_PRIVACY_URL = "https://wordpress.org/about/privacy/"
         private const val WP_TOS_URL = "https://wordpress.org/about"
 
         private const val JP_SOCIAL_HANDLE = "jetpack"
