@@ -8,6 +8,7 @@ import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagType.BOOKMARKED
 import org.wordpress.android.provider.query.QueryContentProvider
 import org.wordpress.android.provider.query.QueryResult
+import org.wordpress.android.util.config.JetpackProviderSyncFeatureConfig
 import org.wordpress.android.util.publicdata.ClientVerification
 import org.wordpress.android.util.publicdata.JetpackPublicData
 import org.wordpress.android.util.signature.SignatureNotFoundException
@@ -18,6 +19,7 @@ class ReaderSavedPostsProvider : QueryContentProvider() {
     @Inject lateinit var readerPostTableWrapper: ReaderPostTableWrapper
     @Inject lateinit var jetpackPublicData: JetpackPublicData
     @Inject lateinit var clientVerification: ClientVerification
+    @Inject lateinit var jetpackProviderSyncFeatureConfig: JetpackProviderSyncFeatureConfig
 
     override fun onCreate(): Boolean {
         return true
@@ -32,6 +34,9 @@ class ReaderSavedPostsProvider : QueryContentProvider() {
         sortOrder: String?
     ): Cursor? {
         inject()
+        if (!jetpackProviderSyncFeatureConfig.isEnabled()) {
+            return null
+        }
         return context?.let {
             try {
                 if (clientVerification.canTrust(callingPackage)) {
