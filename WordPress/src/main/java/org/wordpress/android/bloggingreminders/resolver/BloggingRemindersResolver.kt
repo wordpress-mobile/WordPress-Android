@@ -74,10 +74,10 @@ class BloggingRemindersResolver @Inject constructor(
     }
 
     @Suppress("TooGenericExceptionCaught", "SwallowedException")
-    private fun syncBloggingReminders(siteIDBloggingReminderMap: SiteIDBloggingReminderMap): Boolean {
+    private fun syncBloggingReminders(siteIdBloggingReminderMap: SiteIDBloggingReminderMap): Boolean {
         try {
             coroutineScope.launch {
-                for ((siteId, bloggingReminder) in siteIDBloggingReminderMap) {
+                for ((siteId, bloggingReminder) in siteIdBloggingReminderMap) {
                     if (siteId == null || bloggingReminder == null) {
                         continue
                     }
