@@ -6,6 +6,12 @@ import java.net.CookiePolicy
 import java.net.HttpCookie
 import java.net.URI
 
+/**
+ * A [CookieManager] that's patched against the bug: https://issuetracker.google.com/issues/174647435
+ * The logic of saving Cookies has been updated using the OpenJdk's implementation, the only changes
+ * made are converting it to Kotlin and adapting for missing APIs.
+ * the source can be found in: https://github.com/openjdk/jdk/commit/20db7800a657b311eeac504a2bbae4adbc209dbf
+ */
 class PatchedCookieManager : CookieManager() {
     private val policyCallback = CookiePolicy.ACCEPT_ORIGINAL_SERVER
 
