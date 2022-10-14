@@ -19,16 +19,10 @@ class BloggingRemindersSyncAnalyticsTrackerTest {
 
     @Test
     fun `Should track get blogging reminders success correctly`() {
-        classToTest.trackSuccess()
-        verify(analyticsTrackerWrapper).track(Stat.BLOGGING_REMINDERS_SYNC_SUCCESS)
-    }
-
-    @Test
-    fun `Should track failed with NoBloggingRemindersFoundError correctly`() {
-        classToTest.trackFailed(ErrorType.NoBloggingRemindersFoundError)
+        val remindersSyncedCount = 3
+        classToTest.trackSuccess(remindersSyncedCount)
         verify(analyticsTrackerWrapper).track(
-                Stat.BLOGGING_REMINDERS_SYNC_FAILED,
-                mapOf("error_type" to "no_blogging_reminders_found_error")
+                Stat.BLOGGING_REMINDERS_SYNC_SUCCESS, mapOf(REMINDERS_SYNCED_COUNT to remindersSyncedCount)
         )
     }
 

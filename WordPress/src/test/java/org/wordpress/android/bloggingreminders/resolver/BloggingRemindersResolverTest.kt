@@ -16,7 +16,6 @@ import org.junit.Rule
 import org.junit.Test
 import org.wordpress.android.MainCoroutineScopeRule
 import org.wordpress.android.bloggingreminders.BloggingRemindersSyncAnalyticsTracker
-import org.wordpress.android.bloggingreminders.BloggingRemindersSyncAnalyticsTracker.ErrorType.NoBloggingRemindersFoundError
 import org.wordpress.android.bloggingreminders.BloggingRemindersSyncAnalyticsTracker.ErrorType.QueryBloggingRemindersError
 import org.wordpress.android.bloggingreminders.JetpackBloggingRemindersSyncFlag
 import org.wordpress.android.bloggingreminders.provider.BloggingRemindersProvider
@@ -149,10 +148,10 @@ class BloggingRemindersResolverTest {
     }
 
     @Test
-    fun `Should track failed with error NoBloggingRemindersFoundError if result map is empty`() {
+    fun `Should track success with reminders synced count 0 if result map is empty`() {
         featureEnabled()
         classToTest.trySyncBloggingReminders({}, {})
-        verify(bloggingRemindersSyncAnalyticsTracker).trackFailed(NoBloggingRemindersFoundError)
+        verify(bloggingRemindersSyncAnalyticsTracker).trackSuccess(0)
     }
 
     @Test
@@ -165,14 +164,14 @@ class BloggingRemindersResolverTest {
 
     @Test
     fun `Should track success if result map has entries`() = test {
-        whenever(bloggingRemindersStore.bloggingRemindersModel(validLocalId))
-                .thenReturn(flowOf(userSetBloggingRemindersModel))
         whenever(siteStore.getLocalIdForRemoteSiteId(123L)).thenReturn(validLocalId)
+        whenever(bloggingRemindersStore.bloggingRemindersModel(validLocalId))
+                .thenReturn(flowOf(defaultBloggingRemindersModel))
         featureEnabled()
         whenever(mockCursor.getString(0)).thenReturn("{\"123\":{\"enabledDays\":[\"MONDAY\"],\"hour\":5" +
                 ",\"isPromptIncluded\":false,\"minute\":43,\"siteId\":123}}")
         classToTest.trySyncBloggingReminders({}, {})
-        verify(bloggingRemindersSyncAnalyticsTracker).trackSuccess()
+        verify(bloggingRemindersSyncAnalyticsTracker).trackSuccess(1)
     }
 
     @Test

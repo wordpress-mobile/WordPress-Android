@@ -56,7 +56,7 @@ class BloggingRemindersResolver @Inject constructor(
                 if (success) onSuccess() else onFailure()
             } else {
                 bloggingRemindersSyncAnalyticsTracker.trackSuccess(0)
-                onFailure()
+                onSuccess()
             }
         } else {
             bloggingRemindersSyncAnalyticsTracker.trackFailed(ErrorType.QueryBloggingRemindersError)
@@ -77,6 +77,7 @@ class BloggingRemindersResolver @Inject constructor(
     private fun syncBloggingReminders(siteIdBloggingReminderMap: SiteIDBloggingReminderMap): Boolean {
         try {
             coroutineScope.launch {
+                var remindersSyncedCount = 0
                 for ((siteId, bloggingReminder) in siteIdBloggingReminderMap) {
                     if (siteId == null || bloggingReminder == null) {
                         continue
@@ -85,7 +86,7 @@ class BloggingRemindersResolver @Inject constructor(
                     val isBloggingReminderAlreadySet = bloggingRemindersStore.bloggingRemindersModel(siteLocalId)
                             .first().enabledDays.isNotEmpty()
                     if (siteLocalId != 0 && !isBloggingReminderAlreadySet) {
-                        remindersSyncedCount = ++remindersSyncedCount
+                        remindersSyncedCount = remindersSyncedCount.inc()
                         bloggingRemindersStore.updateBloggingReminders(bloggingReminder.copy(siteId = siteLocalId))
                     }
                 }
