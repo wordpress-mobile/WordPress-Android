@@ -355,7 +355,7 @@ dependencies {
 
     implementation 'com.android.volley:volley:1.1.1'
     implementation 'com.google.firebase:firebase-messaging:21.1.0'
-    implementation 'com.google.android.gms:play-services-auth:18.1.0'
+    implementation 'com.google.android.gms:play-services-auth:20.3.0'
     implementation 'com.android.installreferrer:installreferrer:2.2'
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
     implementation 'org.greenrobot:eventbus:3.3.1'
