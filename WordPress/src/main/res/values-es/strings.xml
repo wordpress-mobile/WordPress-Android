@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-10-03 12:31:04+0000
+Translation-Revision-Date: 2022-10-05 11:54:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: es
 -->
 <resources>
+    <string name="my_site_blogging_prompt_card_number_of_answers_one">1 respuesta</string>
     <string name="login_prologue_revamped_content_description_wordpress_icon">Icono de WordPress</string>
     <string name="login_prologue_revamped_tagline">Escribe, edita y publica desde cualquier parte.</string>
     <string name="error_fetch_authors_list">No se han podido recuperar los autores</string>
