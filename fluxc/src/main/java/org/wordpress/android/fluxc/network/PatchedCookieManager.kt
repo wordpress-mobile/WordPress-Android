@@ -1,4 +1,4 @@
-package org.wordpress.android.fluxc.network;
+package org.wordpress.android.fluxc.network
 
 import java.io.IOException
 import java.net.CookieManager
@@ -14,7 +14,6 @@ class PatchedCookieManager : CookieManager() {
         // pre-condition check
         require(!(uri == null || responseHeaders == null)) { "Argument is null" }
 
-
         // if there's no default CookieStore, no need to remember any cookie
         if (cookieStore == null) return
         for (headerKey in responseHeaders.keys) {
@@ -22,18 +21,17 @@ class PatchedCookieManager : CookieManager() {
             // we also accept 'Set-Cookie' here for backward compatibility
             if (headerKey == null
                 || !(headerKey.equals("Set-Cookie2", ignoreCase = true)
-                        || headerKey.equals("Set-Cookie", ignoreCase = true))
+                    || headerKey.equals("Set-Cookie", ignoreCase = true))
             ) {
                 continue
             }
             for (headerValue in responseHeaders[headerKey]!!) {
                 try {
-                    var cookies: List<HttpCookie>
-                    try {
-                        cookies = HttpCookie.parse(headerValue)
+                    val cookies: List<HttpCookie> = try {
+                        HttpCookie.parse(headerValue)
                     } catch (e: IllegalArgumentException) {
                         // Bogus header, make an empty list and log the error
-                        cookies = emptyList()
+                        emptyList()
                     }
                     for (cookie in cookies) {
                         if (cookie.path == null) {
@@ -77,11 +75,8 @@ class PatchedCookieManager : CookieManager() {
                                 // Only store cookies with a port list
                                 // IF the URI port is in that list, as per
                                 // RFC 2965 section 3.3.2
-                                if (isInPortList(
-                                        ports,
-                                        port
-                                    ) &&
-                                    shouldAcceptInternal(uri, cookie)
+                                if (isInPortList(lst = ports, port = port)
+                                    && shouldAcceptInternal(uri, cookie)
                                 ) {
                                     cookieStore.add(uri, cookie)
                                 }
@@ -109,27 +104,27 @@ class PatchedCookieManager : CookieManager() {
     }
 
     private fun isInPortList(lst: String, port: Int): Boolean {
-        var lst = lst
-        var i = lst.indexOf(',')
-        var `val` = -1
+        var portsList = lst
+        var i = portsList.indexOf(',')
+        var value: Int
         while (i > 0) {
             try {
-                `val` = lst.substring(0, i).toInt(10)
-                if (`val` == port) {
+                value = portsList.substring(0, i).toInt(10)
+                if (value == port) {
                     return true
                 }
-            } catch (numberFormatException: NumberFormatException) {
+            } catch (_: NumberFormatException) {
             }
-            lst = lst.substring(i + 1)
-            i = lst.indexOf(',')
+            portsList = portsList.substring(i + 1)
+            i = portsList.indexOf(',')
         }
-        if (!lst.isEmpty()) {
+        if (portsList.isNotEmpty()) {
             try {
-                `val` = lst.toInt()
-                if (`val` == port) {
+                value = portsList.toInt()
+                if (value == port) {
                     return true
                 }
-            } catch (numberFormatException: NumberFormatException) {
+            } catch (_: NumberFormatException) {
             }
         }
         return false
