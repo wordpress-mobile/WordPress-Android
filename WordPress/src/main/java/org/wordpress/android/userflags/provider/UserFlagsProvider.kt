@@ -9,6 +9,7 @@ import org.wordpress.android.provider.query.QueryResult
 import org.wordpress.android.ui.prefs.AppPrefs.DeletablePrefKey
 import org.wordpress.android.ui.prefs.AppPrefs.UndeletablePrefKey
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.util.config.JetpackProviderSyncFeatureConfig
 import org.wordpress.android.util.publicdata.ClientVerification
 import org.wordpress.android.util.signature.SignatureNotFoundException
 import javax.inject.Inject
@@ -18,6 +19,7 @@ class UserFlagsProvider : QueryContentProvider() {
     @Inject lateinit var siteStore: SiteStore
     @Inject lateinit var queryResult: QueryResult
     @Inject lateinit var clientVerification: ClientVerification
+    @Inject lateinit var jetpackProviderSyncFeatureConfig: JetpackProviderSyncFeatureConfig
 
     private val userFlagsKeysSet: Set<String> = setOf(
             DeletablePrefKey.MAIN_PAGE_INDEX.name,
@@ -28,6 +30,8 @@ class UserFlagsProvider : QueryContentProvider() {
             DeletablePrefKey.VIDEO_OPTIMIZE_WIDTH.name,
             DeletablePrefKey.VIDEO_OPTIMIZE_QUALITY.name,
             DeletablePrefKey.STRIP_IMAGE_LOCATION.name,
+            DeletablePrefKey.SUPPORT_EMAIL.name,
+            DeletablePrefKey.SUPPORT_NAME.name,
             DeletablePrefKey.GUTENBERG_DEFAULT_FOR_NEW_POSTS.name,
             DeletablePrefKey.USER_IN_GUTENBERG_ROLLOUT_GROUP.name,
             DeletablePrefKey.SHOULD_AUTO_ENABLE_GUTENBERG_FOR_THE_NEW_POSTS.name,
@@ -66,6 +70,9 @@ class UserFlagsProvider : QueryContentProvider() {
         sortOrder: String?
     ): Cursor? {
         inject()
+        if (!jetpackProviderSyncFeatureConfig.isEnabled()) {
+            return null
+        }
         return context?.let {
             try {
                 if (clientVerification.canTrust(callingPackage)) {
