@@ -20,11 +20,7 @@ import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewMod
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.ErrorUiState.ConnectionErrorUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.ErrorUiState.RequestFailedErrorUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.InitialLoadingUiState
-import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.Error
-import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.Error.NetworkUnavailable
-import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.Error.RemoteRequestFailure
-import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.Success
-import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.SuccessWithData
+import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication
 import org.wordpress.android.ui.reader.repository.ReaderTagRepository
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
@@ -74,7 +70,7 @@ class ReaderInterestsViewModel @Inject constructor(
         updateUiState(InitialLoadingUiState)
         viewModelScope.launch {
             when (val result = readerTagRepository.getUserTags()) {
-                is SuccessWithData<*> -> {
+                is ReaderRepositoryCommunication.SuccessWithData<*> -> {
                     userTagsFetchedSuccessfully = true
                     userTags = result.data as ReaderTagList
                     when (entryPoint) {
@@ -82,13 +78,15 @@ class ReaderInterestsViewModel @Inject constructor(
                         EntryPoint.SETTINGS -> loadInterests(userTags)
                     }
                 }
-                is Error -> {
-                    if (result is NetworkUnavailable) {
+                is ReaderRepositoryCommunication.Error -> {
+                    if (result is ReaderRepositoryCommunication.Error.NetworkUnavailable) {
                         updateUiState(ConnectionErrorUiState)
-                    } else if (result is RemoteRequestFailure) {
+                    } else if (result is ReaderRepositoryCommunication.Error.RemoteRequestFailure) {
                         updateUiState(RequestFailedErrorUiState)
                     }
                 }
+                ReaderRepositoryCommunication.Started -> Unit // Do nothing
+                ReaderRepositoryCommunication.Success -> Unit // Do nothing
             }
         }
     }
@@ -105,7 +103,7 @@ class ReaderInterestsViewModel @Inject constructor(
         updateUiState(InitialLoadingUiState)
         viewModelScope.launch {
             val newUiState: UiState? = when (val result = readerTagRepository.getInterests()) {
-                is SuccessWithData<*> -> {
+                is ReaderRepositoryCommunication.SuccessWithData<*> -> {
                     readerTracker.track(AnalyticsTracker.Stat.SELECT_INTERESTS_SHOWN)
 
                     val tags = (result.data as ReaderTagList).filter { checkAndExcludeTag(userTags, it) }
@@ -125,10 +123,10 @@ class ReaderInterestsViewModel @Inject constructor(
                         )
                     }
                 }
-                is NetworkUnavailable -> {
+                is ReaderRepositoryCommunication.Error.NetworkUnavailable -> {
                     ConnectionErrorUiState
                 }
-                is RemoteRequestFailure -> {
+                is ReaderRepositoryCommunication.Error.RemoteRequestFailure -> {
                     RequestFailedErrorUiState
                 }
                 else -> {
@@ -187,18 +185,18 @@ class ReaderInterestsViewModel @Inject constructor(
         viewModelScope.launch {
             readerTagRepository.clearTagLastUpdated(ReaderTag.createDiscoverPostCardsTag())
             when (val result = readerTagRepository.saveInterests(contentUiState.getSelectedInterests())) {
-                is Success -> {
+                is ReaderRepositoryCommunication.Success -> {
                     when (entryPoint) {
                         EntryPoint.DISCOVER -> parentViewModel?.onCloseReaderInterests()
                         EntryPoint.SETTINGS -> _closeReaderInterests.value = Event(Unit)
                     }
                 }
-                is Error -> {
-                    if (result is NetworkUnavailable) {
+                is ReaderRepositoryCommunication.Error -> {
+                    if (result is ReaderRepositoryCommunication.Error.NetworkUnavailable) {
                         _snackbarEvents.postValue(
                                 Event(SnackbarMessageHolder(UiStringRes(R.string.no_network_message)))
                         )
-                    } else if (result is RemoteRequestFailure) {
+                    } else if (result is ReaderRepositoryCommunication.Error.RemoteRequestFailure) {
                         _snackbarEvents.postValue(
                                 Event(SnackbarMessageHolder(UiStringRes(R.string.reader_error_request_failed_title)))
                         )
@@ -210,6 +208,8 @@ class ReaderInterestsViewModel @Inject constructor(
                             )
                     )
                 }
+                is ReaderRepositoryCommunication.Started -> Unit // Do nothing
+                is ReaderRepositoryCommunication.SuccessWithData<*> -> Unit // Do nothing
             }
         }
     }

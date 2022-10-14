@@ -13,7 +13,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
-import org.wordpress.android.MainCoroutineScopeRule
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.test
 import org.wordpress.android.ui.reader.ReaderEvents.RelatedPostsUpdated
@@ -28,9 +27,6 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 class ReaderFetchRelatedPostsUseCaseTest {
     @Rule
     @JvmField val rule = InstantTaskExecutorRule()
-
-    @Rule
-    @JvmField val coroutineScope = MainCoroutineScopeRule()
 
     lateinit var useCase: ReaderFetchRelatedPostsUseCase
     @Mock lateinit var readerPostActionsWrapper: ReaderPostActionsWrapper

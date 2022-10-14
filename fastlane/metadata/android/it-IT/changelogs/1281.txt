@@ -1,0 +1,4 @@
+20.9:
+- I flussi "Conosci la tua app" ora rimangono sullo schermo dopo aver ruotato il dispositivo.
+- I titoli lunghi vengono visualizzati correttamente sulle schede delle statistiche senza essere tagliati.
+- Abbiamo aggiunto il tasto Invio a Riassunto dell'articolo per consentire facili interruzioni di riga.

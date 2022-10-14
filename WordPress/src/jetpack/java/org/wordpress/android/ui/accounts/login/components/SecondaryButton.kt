@@ -8,12 +8,13 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import org.wordpress.android.R.string
+import org.wordpress.android.R
 
 @Composable
 fun SecondaryButton(
@@ -22,20 +23,23 @@ fun SecondaryButton(
 ) {
     Button(
             onClick = onClick,
+            elevation = ButtonDefaults.elevation(
+                    defaultElevation = 0.dp,
+                    pressedElevation = 0.dp,
+            ),
             colors = ButtonDefaults.buttonColors(
-                    backgroundColor = Color.White,
-                    contentColor = Color.Black,
+                    contentColor = colorResource(R.color.text_color_jetpack_login_splash_secondary_button),
+                    backgroundColor = Color.Transparent,
             ),
             modifier = modifier
-                    .padding(horizontal = 20.dp)
+                    .padding(horizontal = dimensionResource(R.dimen.login_prologue_revamped_buttons_padding))
                     .padding(bottom = 60.dp)
                     .fillMaxWidth(),
     ) {
         Text(
-                text = stringResource(string.enter_your_site_address),
+                text = stringResource(R.string.enter_your_site_address),
                 style = TextStyle(
                         fontWeight = FontWeight.Medium,
-                        letterSpacing = (-0.25).sp,
                 ),
         )
     }

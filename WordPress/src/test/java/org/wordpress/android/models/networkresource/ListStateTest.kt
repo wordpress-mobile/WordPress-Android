@@ -1,21 +1,20 @@
 package org.wordpress.android.models.networkresource
 
-import org.hamcrest.CoreMatchers.`is`
-import org.hamcrest.CoreMatchers.equalTo
-import org.junit.Assert.assertThat
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
+import java.util.Locale
 
 class ListStateTest {
     @Test
     fun testInitState() {
         val initState: ListState<String> = ListState.Init()
 
-        assertThat(initState.data, `is`(emptyList()))
+        assertThat(initState.data).isEqualTo(emptyList<ListState<String>>())
 
-        assertThat(initState.isFetchingFirstPage(), `is`(false))
-        assertThat(initState.isLoadingMore(), `is`(false))
-        assertThat(initState.shouldFetch(true), `is`(false))
-        assertThat(initState.shouldFetch(false), `is`(false))
+        assertThat(initState.isFetchingFirstPage()).isEqualTo(false)
+        assertThat(initState.isLoadingMore()).isEqualTo(false)
+        assertThat(initState.shouldFetch(true)).isEqualTo(false)
+        assertThat(initState.shouldFetch(false)).isEqualTo(false)
     }
 
     @Test
@@ -23,12 +22,12 @@ class ListStateTest {
         val testData = listOf("item1", "item2")
         val readyState: ListState<String> = ListState.Ready(testData)
 
-        assertThat(readyState.data, `is`(equalTo(testData)))
+        assertThat(readyState.data).isEqualTo(testData)
 
-        assertThat(readyState.isFetchingFirstPage(), `is`(false))
-        assertThat(readyState.isLoadingMore(), `is`(false))
-        assertThat(readyState.shouldFetch(true), `is`(false))
-        assertThat(readyState.shouldFetch(false), `is`(true))
+        assertThat(readyState.isFetchingFirstPage()).isEqualTo(false)
+        assertThat(readyState.isLoadingMore()).isEqualTo(false)
+        assertThat(readyState.shouldFetch(true)).isEqualTo(false)
+        assertThat(readyState.shouldFetch(false)).isEqualTo(true)
     }
 
     @Test
@@ -37,12 +36,12 @@ class ListStateTest {
         val readyState: ListState<String> = ListState.Ready(testData)
         val loadingState: ListState<String> = ListState.Loading(readyState)
 
-        assertThat(loadingState.data, `is`(equalTo(testData)))
+        assertThat(loadingState.data).isEqualTo(testData)
 
-        assertThat(loadingState.isFetchingFirstPage(), `is`(true))
-        assertThat(loadingState.isLoadingMore(), `is`(false))
-        assertThat(loadingState.shouldFetch(true), `is`(false))
-        assertThat(loadingState.shouldFetch(false), `is`(false))
+        assertThat(loadingState.isFetchingFirstPage()).isEqualTo(true)
+        assertThat(loadingState.isLoadingMore()).isEqualTo(false)
+        assertThat(loadingState.shouldFetch(true)).isEqualTo(false)
+        assertThat(loadingState.shouldFetch(false)).isEqualTo(false)
     }
 
     @Test
@@ -51,12 +50,12 @@ class ListStateTest {
         val readyState: ListState<String> = ListState.Ready(testData)
         val loadingState: ListState<String> = ListState.Loading(readyState, true)
 
-        assertThat(loadingState.data, `is`(equalTo(testData)))
+        assertThat(loadingState.data).isEqualTo(testData)
 
-        assertThat(loadingState.isFetchingFirstPage(), `is`(false))
-        assertThat(loadingState.isLoadingMore(), `is`(true))
-        assertThat(loadingState.shouldFetch(true), `is`(false))
-        assertThat(loadingState.shouldFetch(false), `is`(false))
+        assertThat(loadingState.isFetchingFirstPage()).isEqualTo(false)
+        assertThat(loadingState.isLoadingMore()).isEqualTo(true)
+        assertThat(loadingState.shouldFetch(true)).isEqualTo(false)
+        assertThat(loadingState.shouldFetch(false)).isEqualTo(false)
     }
 
     @Test
@@ -64,8 +63,8 @@ class ListStateTest {
         val testData = listOf("item7")
 
         val successState = ListState.Success(testData)
-        assertThat(successState.data, `is`(equalTo(testData)))
-        assertThat(successState.canLoadMore, `is`(false))
+        assertThat(successState.data).isEqualTo(testData)
+        assertThat(successState.canLoadMore).isEqualTo(false)
     }
 
     @Test
@@ -73,8 +72,8 @@ class ListStateTest {
         val testData = listOf("item8")
 
         val successState2 = ListState.Success(testData, true)
-        assertThat(successState2.data, `is`(equalTo(testData)))
-        assertThat(successState2.canLoadMore, `is`(true))
+        assertThat(successState2.data).isEqualTo(testData)
+        assertThat(successState2.canLoadMore).isEqualTo(true)
     }
 
     @Test
@@ -85,8 +84,8 @@ class ListStateTest {
 
         val errorMessage = "Some error message"
         val errorState = ListState.Error(loadingState, errorMessage)
-        assertThat(errorState.errorMessage, `is`(equalTo(errorMessage)))
-        assertThat(errorState.data, `is`(testDataReady))
+        assertThat(errorState.errorMessage).isEqualTo(errorMessage)
+        assertThat(errorState.data).isEqualTo(testDataReady)
     }
 
     @Test
@@ -94,12 +93,12 @@ class ListStateTest {
         val testData = listOf("item11", "item12", "item13")
         val readyState: ListState<String> = ListState.Ready(testData)
         val toUpperCase: (List<String>) -> List<String> = { list ->
-            list.map { it.toUpperCase() }
+            list.map { it.uppercase(Locale.getDefault()) }
         }
         val transformedReadyState = readyState.transform(toUpperCase)
-        assertThat(transformedReadyState.data, `is`(equalTo(toUpperCase(testData))))
-        assertThat(transformedReadyState.data.size, `is`(3))
-        assertThat(transformedReadyState is ListState.Ready, `is`(true))
+        assertThat(transformedReadyState.data).isEqualTo(toUpperCase(testData))
+        assertThat(transformedReadyState.data.size).isEqualTo(3)
+        assertThat(transformedReadyState is ListState.Ready).isEqualTo(true)
     }
 
     @Test
@@ -111,8 +110,8 @@ class ListStateTest {
             list.filter { it != "not-item" }
         }
         val transformedLoadingState = loadingState.transform(filterNotItem)
-        assertThat(transformedLoadingState.data, `is`(equalTo(filterNotItem(testData))))
-        assertThat(transformedLoadingState.data.size, `is`(2))
-        assertThat(transformedLoadingState is ListState.Loading, `is`(true))
+        assertThat(transformedLoadingState.data).isEqualTo(filterNotItem(testData))
+        assertThat(transformedLoadingState.data.size).isEqualTo(2)
+        assertThat(transformedLoadingState is ListState.Loading).isEqualTo(true)
     }
 }

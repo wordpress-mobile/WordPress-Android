@@ -299,7 +299,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         viewModel.writeToBundle(outState)
     }
 
-    @Suppress("DEPRECATION", "NestedBlockDepth")
+    @Suppress("DEPRECATION", "OVERRIDE_DEPRECATION", "NestedBlockDepth")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         viewModel.onStoryComposerAnalyticsSessionStartTimeReset()
         super.onActivityResult(requestCode, resultCode, data)
@@ -685,7 +685,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         }
     }
 
-    @SuppressWarnings("unused")
+    @Suppress("unused", "UNUSED_PARAMETER")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onStoryLoadEnd(event: StoryLoadEnd) {
         // once the Story has been loaded by the Composer, we should mark the composing session start as the

@@ -54,6 +54,7 @@ class FetchHomePageLayoutsUseCaseTest {
     }
 
     @Test
+    @Suppress("CAST_NEVER_SUCCEEDS")
     fun `when beta site designs are enabled the stable and beta groups are passed to the call`() = test {
         whenever(dispatcher.dispatch(any())).then { useCase.onStarterDesignsFetched(event) }
         whenever(betaSiteDesigns.isEnabled()).thenReturn(true)
@@ -68,6 +69,7 @@ class FetchHomePageLayoutsUseCaseTest {
     }
 
     @Test
+    @Suppress("CAST_NEVER_SUCCEEDS")
     fun `when beta site designs are disabled no groups are passed to the call`() = test {
         whenever(dispatcher.dispatch(any())).then { useCase.onStarterDesignsFetched(event) }
         whenever(betaSiteDesigns.isEnabled()).thenReturn(false)

@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-09-28 13:54:13+0000
+Translation-Revision-Date: 2022-10-14 07:59:02+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: he_IL
 -->
 <resources>
+    <string name="my_site_blogging_prompt_card_number_of_answers_one">תשובה אחת</string>
+    <string name="login_prologue_revamped_content_description_wordpress_icon">סמל של WordPress</string>
+    <string name="login_prologue_revamped_tagline">לכתוב, לערוך ולפרסם מכל מקום.</string>
     <string name="error_fetch_authors_list">Couldn\'t retrieve authors</string>
     <string name="post_settings_author">מחבר…</string>
     <string name="app_rating_title">אהבת את %s?</string>
@@ -250,6 +253,7 @@ Language: he_IL
     <string name="my_site_blogging_prompt_card_menu_remove">להסיר מלוח הבקרה</string>
     <string name="my_site_blogging_prompt_card_menu_skip">לדלג על הצעה זו</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">להציג הצעות נוספות</string>
+    <string name="my_site_blogging_prompt_card_number_of_answers_other">%d תשובות</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">לשתף הצעה לפרסום בבלוג</string>
     <string name="my_site_blogging_prompt_card_answered_prompt">✓ תשובות התקבלו</string>
     <string name="my_site_blogging_prompt_card_answer_prompt">הצעה לתשובה</string>
@@ -508,6 +512,7 @@ Language: he_IL
     <string name="blogging_reminders_notification_title">הגיע הזמן לכתוב בלוג ביום %s</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios">עריכת בלוקים לשימוש חוזר עדיין אינה נתמכת ב-WordPress למערכת iOS</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and">עריכת בלוקים לשימוש חוזר עדיין אינה נתמכת ב-WordPress למערכת Android</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">לחלופין, ניתן לנתק ולערוך את הבלוקים האלה בנפרד על ידי הקשה על \'המרה לבלוקים רגילים\'.</string>
     <string name="blogging_reminders_done">סיימתי</string>
     <string name="blogging_reminders_notify_me">תשלחו לי הודעה</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;יש להזין את פרטי הכניסה של השרת&lt;/a&gt; כדי להפעיל שחזורים בלחיצה אחת מגיבויים.</string>
@@ -562,6 +567,7 @@ Language: he_IL
     <string name="gutenberg_native_move_image_forward">להעביר את התמונה קדימה</string>
     <string name="gutenberg_native_width_settings">הגדרות רוחב</string>
     <string name="gutenberg_native_column_settings">הגדרות טור</string>
+    <string name="gutenberg_native_link_rel">קשר סמנטי (Rel)</string>
     <string name="user_profile_site_section_header">אתר</string>
     <string name="user_profile_untitled_site">(ללא כותרת)</string>
     <string name="user_profile_bottom_sheet_description">פרטי גיליון תחתון של פרופיל המשתמש</string>
@@ -1776,6 +1782,9 @@ Language: he_IL
     <string name="stats_select_next_period_description">בחירת התקופה הבאה</string>
     <string name="stats_select_previous_period_description">בחירת התקופה הקודמת</string>
     <string name="stats_insights_popular">המועד הפופולרי ביותר</string>
+    <string name="stats_most_popular_percent_views">⁦%1$s⁩ מהצפיות</string>
+    <string name="stats_traffic_change">%1$s (%2$s)</string>
+    <string name="stats_traffic_increase">+%1$s (%2$s)</string>
     <string name="new_site_creation_site_preview_content_description">מציג תצוגה מקדימה של האתר</string>
     <string name="new_site_creation_clear_all_content_description">ניקוי</string>
     <string name="site_created_but_not_fetched_snackbar_message">נראה שהחיבור שלך איטי. אם אינך רואה את האתר החדש ברשימה, מומלץ לרענן את העמוד.</string>

@@ -17,9 +17,7 @@ import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Outline.Rectangle
 import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.layout.SubcomposeLayout
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.LayoutDirection
@@ -27,6 +25,8 @@ import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
 import org.wordpress.android.ui.accounts.login.components.SlotsEnum.Buttons
 import org.wordpress.android.ui.accounts.login.components.SlotsEnum.ClippedBackground
+
+private val blurRadius = 30.dp
 
 /**
  * These slots are utilized below in a subcompose layout in order to measure the size of the buttons composable. The
@@ -37,23 +37,14 @@ private enum class SlotsEnum { Buttons, ClippedBackground }
 
 @Composable
 private fun ColumnWithTopGlassBorder(
-    modifier: Modifier = Modifier,
     content: @Composable ColumnScope.() -> Unit
 ) {
     Column(
-            modifier = modifier
-                    .background(
-                            brush = SolidColor(colorResource(R.color.bg_jetpack_login_splash_bottom_panel)),
-                            alpha = 0.6f
-                    )
+            modifier = Modifier.background(colorResource(R.color.bg_jetpack_login_splash_bottom_panel))
     ) {
         Divider(
                 thickness = 1.dp,
-                color = colorResource(R.color.border_shadow_jetpack_login_splash_bottom_panel),
-        )
-        Divider(
-                thickness = 1.dp,
-                color = colorResource(R.color.border_highlight_jetpack_login_splash_bottom_panel),
+                color = colorResource(R.color.border_top_jetpack_login_splash_bottom_panel),
         )
         content()
     }
@@ -64,8 +55,6 @@ fun ColumnWithFrostedGlassBackground(
     background: @Composable (modifier: Modifier, textModifier: Modifier) -> Unit,
     content: @Composable () -> Unit,
 ) {
-    val topBorderHeight = with(LocalDensity.current) { 1.dp.toPx() }
-
     SubcomposeLayout { constraints ->
         val buttonsPlaceables = subcompose(Buttons) {
             ColumnWithTopGlassBorder {
@@ -81,7 +70,7 @@ fun ColumnWithFrostedGlassBackground(
                                 bottom = size.height,
                                 left = 0f,
                                 right = size.width,
-                                top = size.height - buttonsHeight + topBorderHeight,
+                                top = size.height - buttonsHeight,
                         )
                 )
             }
@@ -92,11 +81,11 @@ fun ColumnWithFrostedGlassBackground(
                     modifier = Modifier.clip(buttonsClipShape),
                     textModifier = Modifier.composed {
                         if (VERSION.SDK_INT >= VERSION_CODES.S) {
-                            blur(15.dp, BlurredEdgeTreatment.Unbounded)
+                            blur(blurRadius, BlurredEdgeTreatment.Unbounded)
                         } else {
                             // On versions older than Android 12 the blur modifier is not supported,
                             // so we make the text transparent to have the buttons stand out.
-                            alpha(0.25f)
+                            alpha(0.05f)
                         }
                     }
             )

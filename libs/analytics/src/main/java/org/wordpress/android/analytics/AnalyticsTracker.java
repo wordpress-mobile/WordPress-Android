@@ -2,7 +2,8 @@ package org.wordpress.android.analytics;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
+
+import androidx.preference.PreferenceManager;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -952,6 +953,9 @@ public final class AnalyticsTracker {
         USER_FLAGS_START,
         USER_FLAGS_SUCCESS,
         USER_FLAGS_FAILED,
+        BLOGGING_REMINDERS_SYNC_START,
+        BLOGGING_REMINDERS_SYNC_SUCCESS,
+        BLOGGING_REMINDERS_SYNC_FAILED,
         READER_SAVED_POSTS_START,
         READER_SAVED_POSTS_SUCCESS,
         READER_SAVED_POSTS_FAILED

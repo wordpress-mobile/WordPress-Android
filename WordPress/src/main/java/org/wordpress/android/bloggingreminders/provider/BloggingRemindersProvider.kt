@@ -6,22 +6,23 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.BloggingRemindersModel
-import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.BloggingRemindersStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.provider.query.QueryContentProvider
 import org.wordpress.android.provider.query.QueryResult
+import org.wordpress.android.util.config.JetpackProviderSyncFeatureConfig
 import org.wordpress.android.util.publicdata.ClientVerification
 import org.wordpress.android.util.signature.SignatureNotFoundException
 import javax.inject.Inject
 
-typealias SiteModelBloggingReminderMap = Map<SiteModel, BloggingRemindersModel>
+typealias SiteIDBloggingReminderMap = Map<Long?, BloggingRemindersModel?>
 
 class BloggingRemindersProvider : QueryContentProvider() {
     @Inject lateinit var bloggingRemindersStore: BloggingRemindersStore
     @Inject lateinit var siteStore: SiteStore
     @Inject lateinit var queryResult: QueryResult
     @Inject lateinit var clientVerification: ClientVerification
+    @Inject lateinit var jetpackProviderSyncFeatureConfig: JetpackProviderSyncFeatureConfig
 
     override fun onCreate(): Boolean {
         return true
@@ -36,6 +37,9 @@ class BloggingRemindersProvider : QueryContentProvider() {
         sortOrder: String?
     ): Cursor? {
         inject()
+        if (!jetpackProviderSyncFeatureConfig.isEnabled()) {
+            return null
+        }
         return context?.let {
             try {
                 if (clientVerification.canTrust(callingPackage)) {
@@ -47,13 +51,9 @@ class BloggingRemindersProvider : QueryContentProvider() {
                             bloggingRemindersModel.enabledDays.isNotEmpty()
                         }
                         val filteredSiteIds = filteredBloggingReminders.map { bloggingReminder ->
-                            bloggingReminder.siteId
+                            siteStore.getSiteIdForLocalId(bloggingReminder.siteId)
                         }
-                        val filteredSiteModels = allSiteModels.filter { siteModel ->
-                            filteredSiteIds.contains(siteModel.id)
-                        }
-                        val result: SiteModelBloggingReminderMap =
-                                filteredSiteModels.zip(filteredBloggingReminders).toMap()
+                        val result: SiteIDBloggingReminderMap = filteredSiteIds.zip(filteredBloggingReminders).toMap()
                         queryResult.createCursor(result)
                     }
                 } else null

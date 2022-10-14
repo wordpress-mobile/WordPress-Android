@@ -69,7 +69,7 @@ class JetpackCapabilitiesUseCase @Inject constructor(
             dispatcher.dispatch(SiteActionBuilder.newFetchJetpackCapabilitiesAction(payload))
         }
 
-        val capabilities: List<JetpackCapability> = response.capabilities ?: listOf()
+        val capabilities: List<JetpackCapability> = response.capabilities
         if (!response.isError) {
             updateCache(remoteSiteId, capabilities)
         }
@@ -96,8 +96,8 @@ class JetpackCapabilitiesUseCase @Inject constructor(
         )
     }
 
+    @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    @SuppressWarnings("unused")
     fun onJetpackCapabilitiesFetched(event: OnJetpackCapabilitiesFetched) {
         continuation[event.remoteSiteId]?.let {
             continuation.remove(event.remoteSiteId)

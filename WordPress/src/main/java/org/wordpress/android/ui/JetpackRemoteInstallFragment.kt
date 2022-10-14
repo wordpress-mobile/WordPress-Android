@@ -37,7 +37,7 @@ class JetpackRemoteInstallFragment : Fragment(R.layout.jetpack_remote_install_fr
     }
 
     private fun initDagger() {
-        (requireActivity().application as WordPress).component()!!.inject(this)
+        (requireActivity().application as WordPress).component().inject(this)
     }
 
     private fun JetpackRemoteInstallFragmentBinding.initViewModel(savedInstanceState: Bundle?) {
@@ -131,7 +131,7 @@ class JetpackRemoteInstallFragment : Fragment(R.layout.jetpack_remote_install_fr
         })
     }
 
-    @Suppress("DEPRECATION")
+    @Suppress("DEPRECATION", "OVERRIDE_DEPRECATION")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == JETPACK_LOGIN && resultCode == Activity.RESULT_OK) {

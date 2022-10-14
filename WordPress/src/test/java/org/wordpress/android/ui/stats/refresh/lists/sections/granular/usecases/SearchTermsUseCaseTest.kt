@@ -140,9 +140,9 @@ class SearchTermsUseCaseTest : BaseUnitTest() {
         assertThat(result.type).isEqualTo(TimeStatsType.SEARCH_TERMS)
         assertThat(result.state).isEqualTo(UseCaseState.SUCCESS)
         result.data!!.apply {
-            assertThat(this!!).hasSize(4)
-            assertTitle(this!![0])
-            assertLink(this!![3])
+            assertThat(this).hasSize(4)
+            assertTitle(this[0])
+            assertLink(this[3])
         }
     }
 
