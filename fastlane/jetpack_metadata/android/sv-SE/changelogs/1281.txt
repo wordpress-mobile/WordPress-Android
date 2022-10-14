@@ -1,0 +1,4 @@
+20.9:
+- "Lär känna din app"-flöden stannar nu kvar på skärmen när du roterar din enhet.
+- Långa rubriker visas korrekt på statistikkort, utan att kapas.
+- Vi har lagt till returtangenten till inläggsutdrag för att möjliggöra enkla radbrytningar.
