@@ -956,6 +956,9 @@ public final class AnalyticsTracker {
         BLOGGING_REMINDERS_SYNC_START,
         BLOGGING_REMINDERS_SYNC_SUCCESS,
         BLOGGING_REMINDERS_SYNC_FAILED,
+        READER_SAVED_POSTS_START,
+        READER_SAVED_POSTS_SUCCESS,
+        READER_SAVED_POSTS_FAILED
     }
 
     private static final List<Tracker> TRACKERS = new ArrayList<>();

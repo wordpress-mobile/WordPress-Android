@@ -123,6 +123,7 @@ android {
         buildConfigField "boolean", "JETPACK_SHARED_LOGIN", "false"
         buildConfigField "boolean", "JETPACK_LOCAL_USER_FLAGS", "false"
         buildConfigField "boolean", "JETPACK_BLOGGING_REMINDERS_SYNC", "false"
+        buildConfigField "boolean", "JETPACK_READER_SAVED_POSTS", "false"
         buildConfigField "boolean", "JETPACK_PROVIDER_SYNC", "false"
 
         // Override these constants in jetpack product flavor to enable/ disable features

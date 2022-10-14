@@ -283,7 +283,10 @@ public class AppPrefs {
         IS_FIRST_TRY_USER_FLAGS_JETPACK,
 
         // Indicates if this is the first time we try sync the blogging reminders in Jetpack automatically
-        IS_FIRST_TRY_BLOGGING_REMINDERS_SYNC_JETPACK
+        IS_FIRST_TRY_BLOGGING_REMINDERS_SYNC_JETPACK,
+
+        // Indicates if this is the first time we try to get the reader saved posts in Jetpack automatically
+        IS_FIRST_TRY_READER_SAVED_POSTS_JETPACK
     }
 
     static SharedPreferences prefs() {
@@ -1458,5 +1461,13 @@ public class AppPrefs {
 
     public static void saveIsFirstTryBloggingRemindersSyncJetpack(final boolean isFirstTry) {
         setBoolean(UndeletablePrefKey.IS_FIRST_TRY_BLOGGING_REMINDERS_SYNC_JETPACK, isFirstTry);
+    }
+
+    public static Boolean getIsFirstTryReaderSavedPostsJetpack() {
+        return getBoolean(UndeletablePrefKey.IS_FIRST_TRY_READER_SAVED_POSTS_JETPACK, true);
+    }
+
+    public static void saveIsFirstTryReaderSavedPostsJetpack(final boolean isFirstTry) {
+        setBoolean(UndeletablePrefKey.IS_FIRST_TRY_READER_SAVED_POSTS_JETPACK, isFirstTry);
     }
 }
