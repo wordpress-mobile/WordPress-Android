@@ -10,14 +10,14 @@ class BloggingRemindersSyncAnalyticsTracker @Inject constructor(
 ) {
     fun trackStart() = analyticsTracker.track(Stat.BLOGGING_REMINDERS_SYNC_START)
 
-    fun trackSuccess() = analyticsTracker.track(Stat.BLOGGING_REMINDERS_SYNC_SUCCESS)
+    fun trackSuccess(remindersSyncedCount: Int) = analyticsTracker.track(
+            Stat.BLOGGING_REMINDERS_SYNC_SUCCESS, mapOf(REMINDERS_SYNCED_COUNT to remindersSyncedCount)
+    )
 
     fun trackFailed(errorType: ErrorType) =
             analyticsTracker.track(Stat.BLOGGING_REMINDERS_SYNC_FAILED, mapOf(ERROR_TYPE to errorType.value))
 
     sealed class ErrorType(val value: String) {
-        object NoBloggingRemindersFoundError : ErrorType("no_blogging_reminders_found_error")
-
         object QueryBloggingRemindersError : ErrorType("query_blogging_reminders_error")
 
         object UpdateBloggingRemindersError : ErrorType("update_blogging_reminders_error")
@@ -27,3 +27,5 @@ class BloggingRemindersSyncAnalyticsTracker @Inject constructor(
         }
     }
 }
+
+const val REMINDERS_SYNCED_COUNT = "reminders_synced_count"

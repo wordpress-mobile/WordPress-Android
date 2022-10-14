@@ -55,7 +55,7 @@ class BloggingRemindersResolver @Inject constructor(
                 val success = syncBloggingReminders(siteModelBloggingReminderMap)
                 if (success) onSuccess() else onFailure()
             } else {
-                bloggingRemindersSyncAnalyticsTracker.trackFailed(ErrorType.NoBloggingRemindersFoundError)
+                bloggingRemindersSyncAnalyticsTracker.trackSuccess(0)
                 onFailure()
             }
         } else {
@@ -85,11 +85,12 @@ class BloggingRemindersResolver @Inject constructor(
                     val isBloggingReminderAlreadySet = bloggingRemindersStore.bloggingRemindersModel(siteLocalId)
                             .first().enabledDays.isNotEmpty()
                     if (siteLocalId != 0 && !isBloggingReminderAlreadySet) {
+                        remindersSyncedCount = ++remindersSyncedCount
                         bloggingRemindersStore.updateBloggingReminders(bloggingReminder.copy(siteId = siteLocalId))
                     }
                 }
+                bloggingRemindersSyncAnalyticsTracker.trackSuccess(remindersSyncedCount)
             }
-            bloggingRemindersSyncAnalyticsTracker.trackSuccess()
             return true
         } catch (exception: Exception) {
             bloggingRemindersSyncAnalyticsTracker.trackFailed(ErrorType.UpdateBloggingRemindersError)
