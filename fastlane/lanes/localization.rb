@@ -11,7 +11,6 @@ ALL_LOCALES = [
   # First are the locales which are used for *both* downloading the `strings.xml` files from GlotPress *and* for generating the release notes XML files.
   { glotpress: 'ar', android: 'ar',    google_play: 'ar',     promo_config: {} },
   { glotpress: 'de', android: 'de',    google_play: 'de-DE',  promo_config: {} },
-  { glotpress: 'en-gb', android: 'en-rGB', google_play: 'en-US', promo_config: {} },
   { glotpress: 'es', android: 'es', google_play: 'es-ES', promo_config: {} },
   { glotpress: 'fr', android: 'fr-rCA', google_play: 'fr-CA', promo_config: false },
   { glotpress: 'fr', android: 'fr',    google_play: 'fr-FR',  promo_config: {} },
@@ -209,70 +208,47 @@ platform :android do
   #####################################################################################
   desc 'Downloads translated metadata from GlotPress'
   lane :download_metadata_strings do |options|
-    download_wordpress_metadata_strings(options)
-    download_jetpack_metadata_strings(options)
-  end
+    version = options.fetch(:version, android_get_app_version)
+    build_number = options.fetch(:build_number, android_get_release_version['code'])
 
-  desc "Downloads WordPress's translated metadata from GlotPress"
-  lane :download_wordpress_metadata_strings do |options|
-    app_values = APP_SPECIFIC_VALUES[:wordpress]
-    values = options[:version].split('.')
-    files = {
-      "release_note_#{values[0]}#{values[1]}" => { desc: "changelogs/#{options[:build_number]}.txt", max_size: 500, alternate_key: "release_note_short_#{values[0]}#{values[1]}" },
-      play_store_app_title: { desc: 'title.txt', max_size: 30 },
-      play_store_promo: { desc: 'short_description.txt', max_size: 80 },
-      play_store_desc: { desc: 'full_description.txt', max_size: 4000 }
-    }
+    # If no `app:` is specified, call this for both WordPress and Jetpack
+    apps = options[:app].nil? ? %i[wordpress jetpack] : Array(options[:app]&.downcase&.to_sym)
 
-    delete_old_changelogs(app: 'wordpress', build: options[:build_number])
-    download_path = File.join(Dir.pwd, app_values[:metadata_dir], 'android')
-    # The case for the source locale (en-US) is pulled in a hacky way, by having an {en-gb => en-US} mapping as part of the WP_RELEASE_NOTES_LOCALES,
-    # which is then treated in a special way by gp_downloadmetadata by specifying a `source_locale: 'en-US'` to process it differently from the rest.
-    gp_downloadmetadata(
-      project_url: app_values[:glotpress_metadata_project],
-      target_files: files,
-      locales: WP_RELEASE_NOTES_LOCALES,
-      source_locale: 'en-US',
-      download_path: download_path
-    )
+    apps.each do |app|
+      app_values = APP_SPECIFIC_VALUES[app]
 
-    git_add(path: download_path)
-    git_commit(path: download_path, message: "Update WordPress metadata translations for #{options[:version]}", allow_nothing_to_commit: true)
-    push_to_git_remote
-  end
+      version_suffix = version.split('.').join
+      files = {
+        "release_note_#{version_suffix}" => { desc: "changelogs/#{build_number}.txt", max_size: 500, alternate_key: "release_note_short_#{version_suffix}" },
+        play_store_app_title: { desc: 'title.txt', max_size: 30 },
+        play_store_promo: { desc: 'short_description.txt', max_size: 80 },
+        play_store_desc: { desc: 'full_description.txt', max_size: 4000 }
+      }
 
-  desc "Downloads Jetpack's translated metadata from GlotPress"
-  lane :download_jetpack_metadata_strings do |options|
-    UI.message('Hey')
-    app_values = APP_SPECIFIC_VALUES[:jetpack]
-    values = options[:version].split('.')
-    files = {
-      "release_note_#{values[0]}#{values[1]}" => { desc: "changelogs/#{options[:build_number]}.txt", max_size: 500, alternate_key: "release_note_short_#{values[0]}#{values[1]}" },
-      play_store_app_title: { desc: 'title.txt', max_size: 30 },
-      play_store_promo: { desc: 'short_description.txt', max_size: 80 },
-      play_store_desc: { desc: 'full_description.txt', max_size: 4000 }
-    }
+      delete_old_changelogs(app: app, build: build_number)
 
-    delete_old_changelogs(app: 'jetpack', build: options[:build_number])
-    download_path = File.join(Dir.pwd, app_values[:metadata_dir], 'android')
-    gp_downloadmetadata(
-      project_url: app_values[:glotpress_metadata_project],
-      target_files: files,
-      locales: JP_RELEASE_NOTES_LOCALES,
-      download_path: download_path
-    )
+      download_path = File.join(Dir.pwd, app_values[:metadata_dir], 'android')
+      locales = { wordpress: WP_RELEASE_NOTES_LOCALES, jetpack: JP_RELEASE_NOTES_LOCALES }[app]
+      UI.header("Downloading metadata translations for #{app_values[:display_name]}")
+      gp_downloadmetadata(
+        project_url: app_values[:glotpress_metadata_project],
+        target_files: files,
+        locales: locales,
+        download_path: download_path
+      )
 
-    # For WordPress, the en-US release notes come from using the source keys (instead of translations) downloaded from GlotPress' en-gb locale (which is unused otherwise).
-    # But for Jetpack, we don't have an unused locale like en-gb in the GP release notes project, so copy from source instead as a fallback
-    metadata_source_dir = File.join(Dir.pwd, '..', 'WordPress', 'jetpack_metadata')
-    FileUtils.cp(File.join(metadata_source_dir, 'release_notes.txt'), File.join(download_path, 'en-US', 'changelogs', "#{options[:build_number]}.txt"))
-    FileUtils.cp(
-      ['title.txt', 'short_description.txt', 'full_description.txt'].map { |f| File.join(metadata_source_dir, f) },
-      File.join(download_path, 'en-US')
-    )
-
-    git_add(path: download_path)
-    git_commit(path: download_path, message: "Update Jetpack metadata translations for #{options[:version]}", allow_nothing_to_commit: true)
+      # Copy the source `.txt` files (used as source of truth when we generated the `.po`) to the `fastlane/*metadata/android/en-US` dir,
+      # as `en-US` is the source language, and isn't exported from GlotPress during `gp_downloadmetadata`
+      metadata_source_dir = File.join(PROJECT_ROOT_FOLDER, 'WordPress', app_values[:metadata_dir])
+      FileUtils.cp(File.join(metadata_source_dir, 'release_notes.txt'), File.join(download_path, 'en-US', 'changelogs', "#{build_number}.txt"))
+      FileUtils.cp(
+        ['title.txt', 'short_description.txt', 'full_description.txt'].map { |f| File.join(metadata_source_dir, f) },
+        File.join(download_path, 'en-US')
+      )
+    
+      git_add(path: download_path)
+      git_commit(path: download_path, message: "Update #{app_values[:display_name]} metadata translations for #{version}", allow_nothing_to_commit: true)
+    end
     push_to_git_remote
   end
 

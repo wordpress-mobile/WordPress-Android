@@ -314,7 +314,7 @@ platform :android do
   def get_app_name_option!(options)
     app = options[:app]&.downcase
     UI.user_error!("Missing 'app' parameter. Expected 'app:wordpress' or 'app:jetpack'") if app.nil?
-    unless ['wordpress', 'jetpack'].include?(app)
+    unless %i[wordpress jetpack].include?(app.to_sym)
       UI.user_error!("Invalid 'app' parameter #{app.inspect}. Expected 'wordpress' or 'jetpack'")
     end
     return app
