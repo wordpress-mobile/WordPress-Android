@@ -94,78 +94,36 @@ platform :android do
   #####################################################################################
   desc 'Updates the PlayStoreStrings.po files for WP + JP'
   lane :update_appstore_strings do |options|
-    update_wordpress_appstore_strings(options)
-    update_jetpack_appstore_strings(options)
-  end
+    # If no `app:` is specified, call this for both WordPress and Jetpack
+    apps = options[:app].nil? ? %i[wordpress jetpack] : Array(options[:app]&.downcase&.to_sym)
 
-  #####################################################################################
-  # update_wordpress_appstore_strings
-  # -----------------------------------------------------------------------------------
-  # This lane gets the data from the txt files in the `WordPress/metadata/` folder
-  # and updates the `.po` file that is then picked by GlotPress for translations.
-  # -----------------------------------------------------------------------------------
-  # Usage:
-  # fastlane update_wordpress_appstore_strings [version:<version>]
-  #
-  # Example:
-  # fastlane update_wordpress_appstore_strings version:10.3
-  #####################################################################################
-  desc 'Updates the PlayStoreStrings.po file for WordPress'
-  lane :update_wordpress_appstore_strings do |options|
-    metadata_folder = File.join(Dir.pwd, '..', 'WordPress', 'metadata')
-    version = options.fetch(:version, android_get_app_version)
+    apps.each do |app|
+      app_values = APP_SPECIFIC_VALUES[app]
 
-    # <key in po file> => <path to txt file to read the content from>
-    files = {
-      release_note: File.join(metadata_folder, 'release_notes.txt'),
-      release_note_short: File.join(metadata_folder, 'release_notes_short.txt'),
-      play_store_app_title: File.join(metadata_folder, 'title.txt'),
-      play_store_promo: File.join(metadata_folder, 'short_description.txt'),
-      play_store_desc: File.join(metadata_folder, 'full_description.txt')
-    }
-    files.merge!((1..9).map do |n|
-      [:"play_store_screenshot_#{n}", File.join(metadata_folder, "screenshot_#{n}.txt")]
-    end.to_h)
+      metadata_folder = File.join(PROJECT_ROOT_FOLDER, 'WordPress', app_values[:metadata_dir])
+      version = options.fetch(:version, android_get_app_version)
 
-    update_po_file_for_metadata_localization(
-      po_path: File.join(metadata_folder, 'PlayStoreStrings.po'),
-      sources: files,
-      release_version: version,
-      commit_message: "Update WordPress `PlayStoreStrings.po` for version #{version}"
-    )
-  end
+      # <key in po file> => <path to txt file to read the content from>
+      files = {
+        release_note: File.join(metadata_folder, 'release_notes.txt'),
+        release_note_short: File.join(metadata_folder, 'release_notes_short.txt'),
+        play_store_app_title: File.join(metadata_folder, 'title.txt'),
+        play_store_promo: File.join(metadata_folder, 'short_description.txt'),
+        play_store_desc: File.join(metadata_folder, 'full_description.txt')
+      }
+      # Add entries for `screenshot_*.txt` files as well
+      Dir.glob('screenshot_*.txt', base: metadata_folder).sort.each do |screenshot_file|
+        key = "play_store_#{File.basename(screenshot_file, '.txt')}".to_sym
+        files[key] = File.join(metadata_folder, screenshot_file)
+      end
 
-  #####################################################################################
-  # update_jetpack_appstore_strings
-  # -----------------------------------------------------------------------------------
-  # This lane gets the data from the txt files in the `WordPress/jetpack_metadata/` folder
-  # and updates the `.po` file that is then picked by GlotPress for translations.
-  # -----------------------------------------------------------------------------------
-  # Usage:
-  # fastlane update_jetpack_appstore_strings [version:<version>]
-  #
-  # Example:
-  # fastlane update_jetpack_appstore_strings version:10.3
-  #####################################################################################
-  desc 'Updates the PlayStoreStrings.po file for Jetpack'
-  lane :update_jetpack_appstore_strings do |options|
-    metadata_folder = File.join(Dir.pwd, '..', 'WordPress', 'jetpack_metadata')
-    version = options.fetch(:version, android_get_app_version)
-
-    files = {
-      release_note: File.join(metadata_folder, 'release_notes.txt'),
-      release_note_short: File.join(metadata_folder, 'release_notes_short.txt'),
-      play_store_app_title: File.join(metadata_folder, 'title.txt'),
-      play_store_promo: File.join(metadata_folder, 'short_description.txt'),
-      play_store_desc: File.join(metadata_folder, 'full_description.txt')
-    }
-
-    update_po_file_for_metadata_localization(
-      po_path: File.join(metadata_folder, 'PlayStoreStrings.po'),
-      sources: files,
-      release_version: version,
-      commit_message: "Update Jetpack `PlayStoreStrings.po` for version #{version}"
-    )
+      update_po_file_for_metadata_localization(
+        po_path: File.join(metadata_folder, 'PlayStoreStrings.po'),
+        sources: files,
+        release_version: version,
+        commit_message: "Update #{app_values[:display_name]} `PlayStoreStrings.po` for version #{version}"
+      )
+    end
   end
 
   # Updates the metadata in the Play Store (Main store listing) from the content of `fastlane/{metadata|jetpack_metadata}/android/*/*.txt` files
