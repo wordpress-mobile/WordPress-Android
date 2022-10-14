@@ -1,3 +1,0 @@
-20.8 :
-Les utilisateurs de sites multi-auteurs peuvent modifier les auteurs de contenu dans les réglages des articles et des pages.
-Les utilisateurs de langue arabe verront désormais les chiffres sur les écrans de statistiques exclusivement en chiffres arabes occidentaux. Il n’y aura plus de mélange avec les chiffres arabes orientaux.
