@@ -51,6 +51,7 @@ import org.wordpress.android.fluxc.store.SiteStore.OnPostFormatsChanged;
 import org.wordpress.android.fluxc.store.TaxonomyStore;
 import org.wordpress.android.fluxc.store.TaxonomyStore.OnTaxonomyChanged;
 import org.wordpress.android.models.Person;
+import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher;
 import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult;
@@ -84,6 +85,7 @@ import java.util.Objects;
 import javax.inject.Inject;
 
 import static android.app.Activity.RESULT_OK;
+import static org.wordpress.android.ui.pages.PagesActivityKt.EXTRA_PAGE_PARENT_ID_KEY;
 import static org.wordpress.android.ui.posts.EditPostActivity.EXTRA_POST_LOCAL_ID;
 import static org.wordpress.android.ui.posts.SelectCategoriesActivity.KEY_SELECTED_CATEGORY_IDS;
 
@@ -532,6 +534,14 @@ public class EditPostSettingsFragment extends Fragment {
                         updateTags(selectedTags);
                     }
                     break;
+                case RequestCodes.PAGE_PARENT:
+                    extras = data.getExtras();
+                    if (resultCode == Activity.RESULT_OK && extras != null) {
+                        long parentId = extras.getLong(EXTRA_PAGE_PARENT_ID_KEY, -1);
+                        if (parentId != -1L) {
+                            updateParent(parentId);
+                        }
+                    }
             }
         }
     }
@@ -556,7 +566,15 @@ public class EditPostSettingsFragment extends Fragment {
     }
 
     private void showPageParentActivity() {
-        // TODO call the ActivityLauncher.viewPageParentForResult
+        EditPostRepository repository = getEditPostRepository();
+        SiteModel site = getSite();
+
+        if (!isAdded() || repository == null || site == null) {
+            return;
+        }
+
+        long remoteId = repository.getRemotePostId();
+        ActivityLauncher.viewPageParentForResult(this, site, remoteId);
     }
 
     private void showSlugDialog() {
@@ -759,6 +777,23 @@ public class EditPostSettingsFragment extends Fragment {
     private void updateSaveButton() {
         if (isAdded()) {
             getActivity().invalidateOptionsMenu();
+        }
+    }
+
+    private void updateParent(long parentId) {
+        EditPostRepository editPostRepository = getEditPostRepository();
+        if (editPostRepository != null) {
+            editPostRepository.updateAsync(postModel -> {
+                boolean hasChanged = postModel.getParentId() != parentId;
+                postModel.setParentId(parentId);
+                return hasChanged;
+            }, (postModel, result) -> {
+                if (result == UpdatePostResult.Updated.INSTANCE) {
+                    // TODO need to figure out how to get the updated parent title as well
+                    mParentTextView.setText(String.format(Locale.getDefault(), "%d", parentId));
+                }
+                return null;
+            });
         }
     }
 
