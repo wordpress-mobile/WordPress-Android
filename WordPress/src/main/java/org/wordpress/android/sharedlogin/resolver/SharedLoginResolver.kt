@@ -45,7 +45,7 @@ class SharedLoginResolver @Inject constructor(
         appPrefsWrapper.saveIsFirstTrySharedLoginJetpack(false)
         val accessTokenCursor = getAccessTokenCursor()
         if (accessTokenCursor != null) {
-            val accessToken = queryResult.getValue<String>(accessTokenCursor) ?: ""
+            val accessToken = queryResult.getValue(accessTokenCursor) ?: ""
             if (accessToken.isNotEmpty()) {
                 sharedLoginAnalyticsTracker.trackLoginSuccess()
                 dispatchUpdateAccessToken(accessToken)
