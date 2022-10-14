@@ -157,9 +157,9 @@ class BloggingRemindersResolverTest {
     @Test
     fun `Should trigger failure callback if result map is empty`() {
         featureEnabled()
-        val onFailure: () -> Unit = mock()
-        classToTest.trySyncBloggingReminders({}, onFailure)
-        verify(onFailure).invoke()
+        val onSuccess: () -> Unit = mock()
+        classToTest.trySyncBloggingReminders(onSuccess) {}
+        verify(onSuccess).invoke()
     }
 
     @Test
