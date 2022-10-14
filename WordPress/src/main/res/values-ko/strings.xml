@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-10-06 17:54:07+0000
+Translation-Revision-Date: 2022-10-14 07:59:40+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.3
 Language: ko_KR
@@ -253,6 +253,7 @@ Language: ko_KR
     <string name="my_site_blogging_prompt_card_menu_remove">알림판에서 제거</string>
     <string name="my_site_blogging_prompt_card_menu_skip">이 프롬프트 건너뛰기</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">더 많은 프롬프트 보기</string>
+    <string name="my_site_blogging_prompt_card_number_of_answers_other">%d개 답변</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">블로깅 프롬프트 공유</string>
     <string name="my_site_blogging_prompt_card_answered_prompt">✓ 답변됨</string>
     <string name="my_site_blogging_prompt_card_answer_prompt">답변 프롬프트</string>
@@ -565,6 +566,7 @@ Language: ko_KR
     <string name="gutenberg_native_move_image_forward">이미지를 앞으로 이동</string>
     <string name="gutenberg_native_move_image_backward">이미지를 뒤로 이동</string>
     <string name="gutenberg_native_width_settings">폭 설정</string>
+    <string name="gutenberg_native_link_rel">링크 관계</string>
     <string name="gutenberg_native_column_settings">열 설정</string>
     <string name="user_profile_untitled_site">(제목이 없습니다)</string>
     <string name="user_profile_site_section_header">사이트</string>

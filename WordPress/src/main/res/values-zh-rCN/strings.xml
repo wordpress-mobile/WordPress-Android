@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-10-05 14:54:28+0000
+Translation-Revision-Date: 2022-10-14 08:01:49+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.3
 Language: zh_CN
 -->
 <resources>
     <string name="my_site_blogging_prompt_card_number_of_answers_one">1 条回复</string>
+    <string name="login_prologue_revamped_content_description_wordpress_icon">WordPress 图标</string>
     <string name="login_prologue_revamped_tagline">随时随地撰写、编辑和发布内容。</string>
     <string name="error_fetch_authors_list">无法检索作者</string>
     <string name="post_settings_author">作者</string>
@@ -252,6 +253,7 @@ Language: zh_CN
     <string name="my_site_blogging_prompt_card_menu_remove">从仪表盘中移除</string>
     <string name="my_site_blogging_prompt_card_menu_skip">跳过此提示</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">查看更多提示</string>
+    <string name="my_site_blogging_prompt_card_number_of_answers_other">%d 条回复</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">共享博客提示</string>
     <string name="my_site_blogging_prompt_card_answered_prompt">✓ 已回复</string>
     <string name="my_site_blogging_prompt_card_answer_prompt">回复提示</string>
