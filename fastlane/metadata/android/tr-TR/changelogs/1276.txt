@@ -1,3 +1,0 @@
-20.8:
-Çok yazarlı sitelerdeki kullanıcılar içerik yazarlarını gönderi ve sayfa ayarlarından değiştirebilirler.
-Arapça dilini kullananlar artık İstatistik ekranlarında sayıları yalnızca Batı Arapça rakamlarıyla görecekler, Doğu Arapça rakamlarıyla karıştırma gibi bir sorun yaşanmayacaktır.

@@ -1,0 +1,4 @@
+20.9:
+– Vorgang „Die App kennenlernen“ bleibt jetzt nach dem Drehen deines Geräts auf dem Bildschirm.
+– Lange Titel werden auf Statistikkarten korrekt angezeigt, ohne abgeschnitten zu werden.
+– Die Enter-Taste wurde zu Beitragsauszügen hinzugefügt, um einfache Zeilenumbrüche zu ermöglichen.

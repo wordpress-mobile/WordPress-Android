@@ -1,4 +1,0 @@
-20.8:
-Kami menambahkan widget dinamis untuk menampilkan statistik sekilas, sepanjang waktu, dan harian pada layar beranda perangkat pengguna.
-Pengguna pada situs multi-penulis dapat mengubah penulis konten pada pengaturan pos dan halaman.
-Pengguna bahasa Arab akan melihat angka pada layar Statistik secara ekslusif dalam angka Arab Barat.

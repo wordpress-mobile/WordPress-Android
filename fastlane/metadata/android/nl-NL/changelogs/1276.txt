@@ -1,3 +1,0 @@
-20.8:
-Users on multi-author sites can change content authors in post and page settings.
-Arabic language users will now see numerals on Stats screens exclusively in Western Arabic numbers—no more mix and match with Eastern Arabic numbers.
