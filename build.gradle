@@ -10,21 +10,21 @@ plugins {
 }
 
 ext {
-    wordPressUtilsVersion = '2.7.0'
-    wordPressLoginVersion = '0.19.0'
-    aztecVersion = 'v1.6.0'
+    wordPressUtilsVersion = 'trunk-bc2b41b8adbd28462209bdd654cde074a36a4c0a'
+    wordPressLoginVersion = 'trunk-86258aa940fe32e0d4bfd0a91fe147c80845c19b'
+    aztecVersion = 'v1.6.2'
     gutenbergMobileVersion = 'v1.84.0'
-    storiesVersion = '1.4.0'
-    aboutAutomatticVersion = '0.0.7'
+    storiesVersion = 'trunk-4926f0d5d34adf6a63bd67586a7e56420caa43da'
+    aboutAutomatticVersion = 'trunk-6f46a8aa2abbfa28aa2c65f6b66969abdcf3e8c2'
 
     minSdkVersion = 24
     compileSdkVersion = 31
-    targetSdkVersion = 30
+    targetSdkVersion = 31
 
     coroutinesVersion = '1.5.2'
     androidxWorkVersion = "2.7.0"
 
-    fluxCVersion = '1.55.0'
+    fluxCVersion = 'trunk-065315b4d0a57112dfe8a37d379431735063bc82'
 
     appCompatVersion = '1.0.2'
     androidxCoreVersion = '1.3.2'

@@ -6,6 +6,7 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.provider.query.QueryContentProvider
 import org.wordpress.android.provider.query.QueryResult
+import org.wordpress.android.util.config.JetpackProviderSyncFeatureConfig
 import org.wordpress.android.util.publicdata.ClientVerification
 import org.wordpress.android.util.signature.SignatureNotFoundException
 import javax.inject.Inject
@@ -14,6 +15,7 @@ class SharedLoginProvider : QueryContentProvider() {
     @Inject lateinit var accountStore: AccountStore
     @Inject lateinit var queryResult: QueryResult
     @Inject lateinit var clientVerification: ClientVerification
+    @Inject lateinit var jetpackProviderSyncFeatureConfig: JetpackProviderSyncFeatureConfig
 
     override fun onCreate(): Boolean {
         return true
@@ -28,6 +30,9 @@ class SharedLoginProvider : QueryContentProvider() {
         sortOrder: String?
     ): Cursor? {
         inject()
+        if (!jetpackProviderSyncFeatureConfig.isEnabled()) {
+            return null
+        }
         return context?.let {
             try {
                 if (clientVerification.canTrust(callingPackage)) {
