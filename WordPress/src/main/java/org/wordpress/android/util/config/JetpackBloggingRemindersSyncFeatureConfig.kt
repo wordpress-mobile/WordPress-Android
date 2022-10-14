@@ -11,7 +11,7 @@ class JetpackBloggingRemindersSyncFeatureConfig
     appConfig: AppConfig
 ) : FeatureConfig(
         appConfig,
-        BuildConfig.JETPACK_BLOGGING_REMINDERS_SYNC_REMOTE_FIELD,
+        BuildConfig.JETPACK_BLOGGING_REMINDERS_SYNC,
         JETPACK_BLOGGING_REMINDERS_SYNC_REMOTE_FIELD
 ) {
     companion object {
