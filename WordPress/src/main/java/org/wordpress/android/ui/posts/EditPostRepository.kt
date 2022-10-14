@@ -95,6 +95,8 @@ class EditPostRepository
         get() = post!!.tagNameList
     val dateLocallyChanged: String
         get() = post!!.dateLocallyChanged
+    val parentId: Long
+        get() = post!!.parentId
 
     private var locked = false
 

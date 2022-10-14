@@ -330,6 +330,19 @@ class EditPostRepositoryTest {
     }
 
     @Test
+    fun `reads parentId correctly`() {
+        val post = PostModel()
+        val parentId = 42L
+        post.setParentId(parentId)
+
+        editPostRepository.set { post }
+
+        assertThat(editPostRepository.getPost()!!.parentId).isEqualTo(parentId)
+        assertThat(editPostRepository.parentId).isEqualTo(parentId)
+    }
+
+
+    @Test
     fun `updates publish date when should publish immediately`() {
         val post = PostModel()
         val dateCreated = "2019-05-05T14:33:20+0000"

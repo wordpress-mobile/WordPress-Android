@@ -78,6 +78,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 import javax.inject.Inject;
@@ -99,12 +100,15 @@ public class EditPostSettingsFragment extends Fragment {
 
     private SiteSettingsInterface mSiteSettings;
 
-    private LinearLayout mCategoriesContainer;
+    private LinearLayout mCategoriesTagsContainer;
     private LinearLayout mExcerptContainer;
     private LinearLayout mFormatContainer;
-    private LinearLayout mTagsContainer;
+    private View mFormatBottomSeparator;
+    private LinearLayout mPageAttributesContainer;
+    private LinearLayout mMarkAsStickyContainer;
     private LinearLayout mPublishDateContainer;
     private TextView mExcerptTextView;
+    private TextView mParentTextView;
     private TextView mSlugTextView;
     private TextView mCategoriesTextView;
     private TextView mTagsTextView;
@@ -258,6 +262,7 @@ public class EditPostSettingsFragment extends Fragment {
         }
 
         mExcerptTextView = rootView.findViewById(R.id.post_excerpt);
+        mParentTextView = rootView.findViewById(R.id.post_parent);
         mSlugTextView = rootView.findViewById(R.id.post_slug);
         mCategoriesTextView = rootView.findViewById(R.id.post_categories);
         mTagsTextView = rootView.findViewById(R.id.post_tags);
@@ -314,6 +319,14 @@ public class EditPostSettingsFragment extends Fragment {
             }
         });
 
+        LinearLayout parentContainer = rootView.findViewById(R.id.post_parent_container);
+        parentContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showPageParentActivity();
+            }
+        });
+
         final LinearLayout slugContainer = rootView.findViewById(R.id.post_slug_container);
         slugContainer.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -322,16 +335,18 @@ public class EditPostSettingsFragment extends Fragment {
             }
         });
 
-        mCategoriesContainer = rootView.findViewById(R.id.post_categories_container);
-        mCategoriesContainer.setOnClickListener(new View.OnClickListener() {
+        mCategoriesTagsContainer = rootView.findViewById(R.id.post_categories_and_tags_card);
+
+        LinearLayout categoriesContainer = rootView.findViewById(R.id.post_categories_container);
+        categoriesContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 showCategoriesActivity();
             }
         });
 
-        mTagsContainer = rootView.findViewById(R.id.post_tags_container);
-        mTagsContainer.setOnClickListener(new View.OnClickListener() {
+        LinearLayout tagsContainer = rootView.findViewById(R.id.post_tags_container);
+        tagsContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 showTagsActivity();
@@ -353,6 +368,8 @@ public class EditPostSettingsFragment extends Fragment {
                 showPostFormatDialog();
             }
         });
+
+        mFormatBottomSeparator = rootView.findViewById(R.id.post_format_bottom_separator);
 
         final LinearLayout passwordContainer = rootView.findViewById(R.id.post_password_container);
         passwordContainer.setOnClickListener(new View.OnClickListener() {
@@ -376,16 +393,9 @@ public class EditPostSettingsFragment extends Fragment {
 
         mStickySwitch.setOnCheckedChangeListener(mOnStickySwitchChangeListener);
 
+        mMarkAsStickyContainer = rootView.findViewById(R.id.post_settings_mark_as_sticky_container);
+        mPageAttributesContainer = rootView.findViewById(R.id.post_settings_page_attributes_container);
 
-        if (getEditPostRepository() != null && getEditPostRepository().isPage()) { // remove post specific views
-            final View categoriesTagsContainer = rootView.findViewById(R.id.post_categories_and_tags_card);
-            final View formatBottomSeparator = rootView.findViewById(R.id.post_format_bottom_separator);
-            final View markAsStickyContainer = rootView.findViewById(R.id.post_settings_mark_as_sticky_container);
-            categoriesTagsContainer.setVisibility(View.GONE);
-            formatBottomSeparator.setVisibility(View.GONE);
-            mFormatContainer.setVisibility(View.GONE);
-            markAsStickyContainer.setVisibility(View.GONE);
-        }
 
         mPublishedViewModel.getOnUiModel().observe(getViewLifecycleOwner(), new Observer<PublishUiModel>() {
             @Override public void onChanged(PublishUiModel uiModel) {
@@ -399,6 +409,7 @@ public class EditPostSettingsFragment extends Fragment {
             }
         });
 
+        if (getEditPostRepository() != null) hideSpecificViews(getEditPostRepository().isPage());
         setupSettingHintsForAccessibility();
         applyAccessibilityHeadingToSettings();
 
@@ -454,6 +465,7 @@ public class EditPostSettingsFragment extends Fragment {
         AccessibilityUtils.disableHintAnnouncement(mPasswordTextView);
         AccessibilityUtils.disableHintAnnouncement(mSlugTextView);
         AccessibilityUtils.disableHintAnnouncement(mExcerptTextView);
+        AccessibilityUtils.disableHintAnnouncement(mParentTextView);
     }
 
     private void applyAccessibilityHeadingToSettings() {
@@ -471,18 +483,13 @@ public class EditPostSettingsFragment extends Fragment {
     }
 
     public void refreshViews() {
-        if (!isAdded()) {
+        if (!isAdded() || getEditPostRepository() == null) {
             return;
         }
-
-        if (getEditPostRepository().isPage()) {
-            // remove post specific views
-            mCategoriesContainer.setVisibility(View.GONE);
-            mExcerptContainer.setVisibility(View.GONE);
-            mFormatContainer.setVisibility(View.GONE);
-            mTagsContainer.setVisibility(View.GONE);
-        }
+        hideSpecificViews(getEditPostRepository().isPage());
         mExcerptTextView.setText(getEditPostRepository().getExcerpt());
+        // TODO need to figure out how to get the parent title to show here
+        mParentTextView.setText(String.format(Locale.getDefault(), "%d", getEditPostRepository().getParentId()));
         mSlugTextView.setText(getEditPostRepository().getSlug());
         mPasswordTextView.setText(getEditPostRepository().getPassword());
         PostImmutableModel postModel = getEditPostRepository().getPost();
@@ -546,6 +553,10 @@ public class EditPostSettingsFragment extends Fragment {
                     }
                 });
         dialog.show(getChildFragmentManager(), null);
+    }
+
+    private void showPageParentActivity() {
+        // TODO call the ActivityLauncher.viewPageParentForResult
     }
 
     private void showSlugDialog() {
@@ -1247,6 +1258,18 @@ public class EditPostSettingsFragment extends Fragment {
         mUiHelpers.updateVisibility(mFeaturedImageProgressOverlay, state.getProgressOverlayVisible());
         if (!state.getLocalImageViewVisible()) {
             mImageManager.cancelRequestAndClearImageView(mLocalFeaturedImageView);
+        }
+    }
+
+    private void hideSpecificViews(Boolean isPage) {
+        if (isPage) {
+            mCategoriesTagsContainer.setVisibility(View.GONE);
+            mFormatContainer.setVisibility(View.GONE);
+            mFormatBottomSeparator.setVisibility(View.GONE);
+            mMarkAsStickyContainer.setVisibility(View.GONE);
+            mExcerptContainer.setVisibility(View.GONE);
+        } else {
+            mPageAttributesContainer.setVisibility(View.GONE);
         }
     }
 
