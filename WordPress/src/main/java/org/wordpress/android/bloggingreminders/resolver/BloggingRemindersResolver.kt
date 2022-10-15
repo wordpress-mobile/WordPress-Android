@@ -68,6 +68,7 @@ class BloggingRemindersResolver @Inject constructor(
                     object : TypeToken<Map<RemoteSiteId?, BloggingRemindersModel?>>() {}.type
             ) ?: emptyMap()
 
+    @Suppress("ReturnCount")
     private fun shouldTrySyncBloggingReminders(): Boolean {
         val isFeatureFlagEnabled = jetpackBloggingRemindersSyncFlag.isEnabled()
         if (!isFeatureFlagEnabled) {
