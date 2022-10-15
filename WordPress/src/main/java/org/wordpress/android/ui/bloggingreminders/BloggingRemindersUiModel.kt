@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.bloggingreminders
 
+import org.wordpress.android.workers.reminder.ReminderConfig.WeeklyReminder
 import java.time.DayOfWeek
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
@@ -18,4 +19,6 @@ data class BloggingRemindersUiModel(
 
     fun getNotificationTime24hour(): CharSequence =
             LocalTime.of(hour, minute).format(DateTimeFormatter.ofPattern("HH:mm", Locale.ROOT))
+
+    fun toReminderConfig() = WeeklyReminder(this.enabledDays)
 }
