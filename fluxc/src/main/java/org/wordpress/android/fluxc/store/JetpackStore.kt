@@ -22,12 +22,14 @@ import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged
 import org.wordpress.android.fluxc.tools.CoroutineEngine
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
+import java.net.URI
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
 
 private const val RELOAD_SITE_DELAY = 5000L
+private const val JETPACK_DOMAIN = "jetpack.wordpress.com"
 
 @Singleton
 class JetpackStore
@@ -210,11 +212,26 @@ class JetpackStore
                 )
                 else -> {
                     val url = result.result.trim('"').replace("\\", "")
-                    JetpackConnectionUrlResult(url)
+                    val connectionUri = URI.create(url)
+                    if (connectionUri.host == JETPACK_DOMAIN){
+                        JetpackConnectionUrlResult(url)
+                    } else {
+                        registerJetpackSite(url).fold(
+                            onSuccess = {
+                                JetpackConnectionUrlResult(it)
+                            },
+                            onFailure = {
+                                JetpackConnectionUrlResult(JetpackConnectionUrlError(it.message))
+                            }
+                        )
+                    }
                 }
             }
         }
     }
+
+    private suspend fun registerJetpackSite(registrationUrl: String): Result<String> =
+        jetpackWPAPIRestClient.registerJetpackSite(registrationUrl)
 
     data class JetpackConnectionUrlResult(
         val url: String
