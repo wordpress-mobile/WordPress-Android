@@ -198,7 +198,10 @@ class JetpackStore
         val message: String? = null
     ) : OnChangedError
 
-    suspend fun fetchJetpackConnectionUrl(site: SiteModel): JetpackConnectionUrlResult {
+    suspend fun fetchJetpackConnectionUrl(
+        site: SiteModel,
+        autoRegisterSiteIfNeeded: Boolean = false
+    ): JetpackConnectionUrlResult {
         if (site.isUsingWpComRestApi) error("This function supports only self-hosted site using WPAPI")
         return coroutineEngine.withDefaultContext(T.API, this, "fetchJetpackConnectionUrl") {
             val result = wpapiAuthenticator.makeAuthenticatedWPAPIRequest(site) { nonce ->
@@ -213,7 +216,7 @@ class JetpackStore
                 else -> {
                     val url = result.result.trim('"').replace("\\", "")
                     val connectionUri = URI.create(url)
-                    if (connectionUri.host == JETPACK_DOMAIN){
+                    if (!autoRegisterSiteIfNeeded || connectionUri.host == JETPACK_DOMAIN) {
                         JetpackConnectionUrlResult(url)
                     } else {
                         registerJetpackSite(url).fold(
