@@ -1,5 +1,9 @@
 *** PLEASE FOLLOW THIS FORMAT: [<priority indicator, more stars = higher priority>] <description> [<PR URL>]
 
+21.1
+-----
+
+
 21.0
 -----
 * [***] [internal] Updates the target sdk to 31 - Android 12 [https://github.com/wordpress-mobile/WordPress-Android/pull/17153]
