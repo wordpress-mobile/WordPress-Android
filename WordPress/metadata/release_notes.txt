@@ -1,3 +1,6 @@
-- “Get to know your app” flows now stay on screen after rotating your device.
-- Long titles display properly on Stats cards without being cut off.
-- We added the Enter key to Post excerpts to allow for easy line breaks.
+* [***] [internal] Updates the target sdk to 31 - Android 12 [https://github.com/wordpress-mobile/WordPress-Android/pull/17153]
+* [***] Updated About screen for WordPress and Jetpack apps to their respective urls. [https://github.com/wordpress-mobile/WordPress-Android/pull/17282]
+* [*] Updates splash screen for Android 12+ [https://github.com/wordpress-mobile/WordPress-Android/pull/17273]
+* [*] Fix text color of success messages in the QR code login flow [https://github.com/wordpress-mobile/WordPress-Android/pull/17286]
+* [*] Stats: Fix Western Arabic Numerals not being shown on every text of the stats screens in Arabic languages [https://github.com/wordpress-mobile/WordPress-Android/pull/17217]
+
