@@ -2,6 +2,7 @@ package org.wordpress.android.ui.posts
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
@@ -15,6 +16,8 @@ import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.page.PageModel
+import org.wordpress.android.fluxc.model.page.PageStatus
 import org.wordpress.android.fluxc.model.post.PostLocation
 import org.wordpress.android.fluxc.model.post.PostStatus.DRAFT
 import org.wordpress.android.fluxc.model.post.PostStatus.PENDING
@@ -511,6 +514,53 @@ class EditPostRepositoryTest {
     }
 
     @Test
+    fun `loads parentTitle from store for post loaded by local id when parentId is not 0`() = test {
+        val id = 1
+        val parentId = 10L
+
+        val post = PostModel().apply { setParentId(parentId) }
+        val site = SiteModel()
+
+        val parentTitle = "Parent"
+        val parentPost = PostModel().apply { setTitle(parentTitle) }
+        val parentPage = PageModel(
+                post = parentPost,
+                site = site,
+                pageId = 0,
+                title = parentTitle,
+                status = PageStatus.PUBLISHED,
+                date = Calendar.getInstance().time,
+                hasLocalChanges = false,
+                remoteId = parentId,
+                parent = null,
+                featuredImageId = 0L
+        )
+
+        whenever(postStore.getPostByLocalPostId(id)).thenReturn(post)
+        whenever(pageStore.getPageByRemoteId(parentId, site)).thenReturn(parentPage)
+
+        editPostRepository.loadPostByLocalPostId(id, site)
+
+        assertThat(editPostRepository.parentTitle).isEqualTo(parentTitle)
+    }
+
+    @Test
+    fun `empty parentTitle for post loaded by local id when parentId is 0`() = test {
+        val id = 1
+        val parentId = 0L
+
+        val post = PostModel().apply { setParentId(parentId) }
+        val site = SiteModel()
+
+        whenever(postStore.getPostByLocalPostId(id)).thenReturn(post)
+
+        editPostRepository.loadPostByLocalPostId(id, site)
+
+        assertThat(editPostRepository.parentTitle).isEqualTo("")
+        verifyZeroInteractions(pageStore)
+    }
+
+    @Test
     fun `loads post from store by remote id`() {
         val remoteId = 2L
         val post = PostModel()
@@ -520,6 +570,53 @@ class EditPostRepositoryTest {
         editPostRepository.loadPostByRemotePostId(remoteId, site)
 
         assertThat(editPostRepository.getPost()).isEqualTo(post)
+    }
+
+    @Test
+    fun `loads parentTitle from store for post loaded by remote id is not 0`() = test {
+        val remoteId = 2L
+        val parentId = 10L
+
+        val post = PostModel().apply { setParentId(parentId) }
+        val site = SiteModel()
+
+        val parentTitle = "Parent"
+        val parentPost = PostModel().apply { setTitle(parentTitle) }
+        val parentPage = PageModel(
+                post = parentPost,
+                site = site,
+                pageId = 0,
+                title = parentTitle,
+                status = PageStatus.PUBLISHED,
+                date = Calendar.getInstance().time,
+                hasLocalChanges = false,
+                remoteId = parentId,
+                parent = null,
+                featuredImageId = 0L
+        )
+
+        whenever(postStore.getPostByRemotePostId(remoteId, site)).thenReturn(post)
+        whenever(pageStore.getPageByRemoteId(parentId, site)).thenReturn(parentPage)
+
+        editPostRepository.loadPostByRemotePostId(remoteId, site)
+
+        assertThat(editPostRepository.parentTitle).isEqualTo(parentTitle)
+    }
+
+    @Test
+    fun `loads parentTitle from store for post loaded by remote id is 0`() = test {
+        val remoteId = 2L
+        val parentId = 0L
+
+        val post = PostModel().apply { setParentId(parentId) }
+        val site = SiteModel()
+
+        whenever(postStore.getPostByRemotePostId(remoteId, site)).thenReturn(post)
+
+        editPostRepository.loadPostByRemotePostId(remoteId, site)
+
+        assertThat(editPostRepository.parentTitle).isEqualTo("")
+        verifyZeroInteractions(pageStore)
     }
 
     @Test
@@ -544,5 +641,47 @@ class EditPostRepositoryTest {
         editPostRepository.updateAsync(action, onCompleted)
 
         assertThat(completed).isEqualTo(UpdatePostResult.NoChanges)
+    }
+
+    @Test
+    fun `updateParentTitle updates parentTitle when current parentId is not 0`() = test {
+        val parentId = 10L
+        val site = SiteModel()
+        val post = PostModel().apply { setParentId(parentId) }
+        editPostRepository.set { post }
+
+        val parentTitle = "Parent"
+        val parentPost = PostModel().apply { setTitle(parentTitle) }
+        val parentPage = PageModel(
+                post = parentPost,
+                site = site,
+                pageId = 0,
+                title = parentTitle,
+                status = PageStatus.PUBLISHED,
+                date = Calendar.getInstance().time,
+                hasLocalChanges = false,
+                remoteId = parentId,
+                parent = null,
+                featuredImageId = 0L
+        )
+
+        whenever(pageStore.getPageByRemoteId(parentId, site)).thenReturn(parentPage)
+
+        editPostRepository.updateParentTitle(site)
+
+        assertThat(editPostRepository.parentTitle).isEqualTo(parentTitle)
+    }
+
+    @Test
+    fun `updateParentTitle updates parentTitle to empty string when current parentId is 0`() = test {
+        val parentId = 0L
+        val site = SiteModel()
+        val post = PostModel().apply { setParentId(parentId) }
+        editPostRepository.set { post }
+
+        editPostRepository.updateParentTitle(site)
+
+        assertThat(editPostRepository.parentTitle).isEqualTo("")
+        verifyZeroInteractions(pageStore)
     }
 }
