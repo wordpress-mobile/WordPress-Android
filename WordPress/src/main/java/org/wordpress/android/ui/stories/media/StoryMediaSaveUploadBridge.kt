@@ -249,7 +249,7 @@ class StoryMediaSaveUploadBridge @Inject constructor(
                 // only remove it if it was successful - we want to keep it and show a snackbar once when the user
                 // comes back to the app if it wasn't, see MySiteFragment for details.
                 eventBusWrapper.removeStickyEvent(event)
-                editPostRepository.loadPostByLocalPostId(it.getInt(StoryComposerActivity.KEY_POST_LOCAL_ID))
+                editPostRepository.loadPostByLocalPostId(it.getInt(StoryComposerActivity.KEY_POST_LOCAL_ID), site)
                 // media upload tracking already in addLocalMediaToPostUseCase.addNewMediaToEditorAsync
                 addNewStoryFrameMediaItemsToPostAndUploadAsync(site, event)
             }

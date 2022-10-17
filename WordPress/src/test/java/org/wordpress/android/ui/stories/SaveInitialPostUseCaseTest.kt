@@ -31,7 +31,7 @@ class SaveInitialPostUseCaseTest : BaseUnitTest() {
     @Before
     fun setup() {
         saveInitialPostUseCase = SaveInitialPostUseCase(postStore, savePostToDbUseCase)
-        editPostRepository = EditPostRepository(mock(), mock(), mock(), TEST_DISPATCHER, TEST_DISPATCHER)
+        editPostRepository = EditPostRepository(mock(), mock(), mock(), mock(), TEST_DISPATCHER, TEST_DISPATCHER)
         whenever(postStore.instantiatePostModel(anyOrNull(), any(), anyOrNull(), anyOrNull())).thenReturn(PostModel())
     }
 

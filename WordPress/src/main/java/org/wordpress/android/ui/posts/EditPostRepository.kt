@@ -7,6 +7,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.PostImmutableModel
@@ -16,6 +17,7 @@ import org.wordpress.android.fluxc.model.post.PostLocation
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.model.post.PostStatus.DRAFT
 import org.wordpress.android.fluxc.model.post.PostStatus.fromPost
+import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
@@ -32,11 +34,14 @@ import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.CoroutineContext
 
+private const val EMPTY_STRING = ""
+
 class EditPostRepository
 @Inject constructor(
     private val localeManagerWrapper: LocaleManagerWrapper,
     private val postStore: PostStore,
     private val postUtils: PostUtilsWrapper,
+    private val pageStore: PageStore,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : CoroutineScope {
@@ -97,6 +102,8 @@ class EditPostRepository
         get() = post!!.dateLocallyChanged
     val parentId: Long
         get() = post!!.parentId
+    var parentTitle: String = ""
+        private set
 
     private var locked = false
 
@@ -212,14 +219,16 @@ class EditPostRepository
         reportTransactionState(false)
     }
 
-    fun postWasChangedInCurrentSession() = postUtils.postHasEdits(postSnapshotWhenEditorOpened,
+    fun postWasChangedInCurrentSession() = postUtils.postHasEdits(
+            postSnapshotWhenEditorOpened,
             requireNotNull(post)
     )
 
-    fun loadPostByLocalPostId(postId: Int) {
+    fun loadPostByLocalPostId(postId: Int, site: SiteModel) {
         reportTransactionState(true)
         post = postStore.getPostByLocalPostId(postId)
         savePostSnapshot()
+        updateParentTitle(site)
         reportTransactionState(false)
     }
 
@@ -227,7 +236,17 @@ class EditPostRepository
         reportTransactionState(true)
         post = postStore.getPostByRemotePostId(remotePostId, site)
         savePostSnapshot()
+        updateParentTitle(site)
         reportTransactionState(false)
+    }
+
+    fun updateParentTitle(site: SiteModel) {
+        runBlocking {
+            parentTitle = post?.parentId
+                    ?.takeIf { it != 0L }
+                    ?.let { pageStore.getPageByRemoteId(it, site)?.title }
+                    ?: EMPTY_STRING
+        }
     }
 
     sealed class UpdatePostResult {

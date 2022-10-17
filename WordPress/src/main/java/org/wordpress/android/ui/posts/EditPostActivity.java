@@ -608,7 +608,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     newPostSetup();
                 }
             } else {
-                mEditPostRepository.loadPostByLocalPostId(extras.getInt(EXTRA_POST_LOCAL_ID));
+                mEditPostRepository.loadPostByLocalPostId(extras.getInt(EXTRA_POST_LOCAL_ID), mSite);
                 // Load post from extra)s
 
                 if (mEditPostRepository.hasPost()) {
@@ -662,7 +662,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 mEditPostRepository.loadPostByRemotePostId(savedInstanceState.getLong(STATE_KEY_POST_REMOTE_ID), mSite);
                 initializePostObject();
             } else if (savedInstanceState.containsKey(STATE_KEY_POST_LOCAL_ID)) {
-                mEditPostRepository.loadPostByLocalPostId(savedInstanceState.getInt(STATE_KEY_POST_LOCAL_ID));
+                mEditPostRepository.loadPostByLocalPostId(savedInstanceState.getInt(STATE_KEY_POST_LOCAL_ID), mSite);
                 initializePostObject();
             }
 
@@ -3528,7 +3528,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
             if (event.isError()) {
                 AppLog.e(T.POSTS, "REMOTE_AUTO_SAVE_POST failed: " + event.error.type + " - " + event.error.message);
             }
-            mEditPostRepository.loadPostByLocalPostId(mEditPostRepository.getId());
+            mEditPostRepository.loadPostByLocalPostId(mEditPostRepository.getId(), mSite);
             if (isRemotePreviewingFromEditor()) {
                 handleRemotePreviewUploadResult(event.isError(),
                         RemotePreviewType.REMOTE_PREVIEW_WITH_REMOTE_AUTO_SAVE);

@@ -25,7 +25,7 @@ class PublishPostImmediatelyUseCaseTest : BaseUnitTest() {
     @Before
     fun setup() {
         useCase = PublishPostImmediatelyUseCase(dateTimeUtilsWrapper)
-        editPostRepository = EditPostRepository(mock(), mock(), mock(), TEST_DISPATCHER, TEST_DISPATCHER)
+        editPostRepository = EditPostRepository(mock(), mock(), mock(), mock(), TEST_DISPATCHER, TEST_DISPATCHER)
         editPostRepository.set { PostModel() }
     }
 

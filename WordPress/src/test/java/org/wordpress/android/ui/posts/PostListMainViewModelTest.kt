@@ -154,7 +154,7 @@ class PostListMainViewModelTest : BaseUnitTest() {
         viewModel.start(site, PostListRemotePreviewState.NONE, bottomSheetPostId, editPostRepository)
 
         // assert
-        verify(editPostRepository, times(1)).loadPostByLocalPostId(any())
+        verify(editPostRepository, times(1)).loadPostByLocalPostId(any(), any())
     }
 
     @Test
@@ -166,14 +166,14 @@ class PostListMainViewModelTest : BaseUnitTest() {
         viewModel.start(site, PostListRemotePreviewState.NONE, bottomSheetPostId, editPostRepository)
 
         // assert
-        verify(editPostRepository, times(0)).loadPostByLocalPostId(any())
+        verify(editPostRepository, times(0)).loadPostByLocalPostId(any(), any())
     }
 
     @InternalCoroutinesApi
     @Test
     fun `if post in EditPostRepository is modified then the savePostToDbUseCase should update the post`() {
         // arrange
-        val editPostRepository = EditPostRepository(mock(), mock(), mock(), TEST_DISPATCHER, TEST_DISPATCHER)
+        val editPostRepository = EditPostRepository(mock(), mock(), mock(), mock(), TEST_DISPATCHER, TEST_DISPATCHER)
         editPostRepository.set { mock() }
         val action = { _: PostModel -> true }
 

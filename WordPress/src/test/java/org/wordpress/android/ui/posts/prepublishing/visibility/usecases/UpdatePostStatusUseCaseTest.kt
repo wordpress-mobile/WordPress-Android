@@ -27,7 +27,7 @@ class UpdatePostStatusUseCaseTest : BaseUnitTest() {
     @Before
     fun setup() {
         updatePostStatusUseCase = UpdatePostStatusUseCase(dateTimeUtilsWrapper, postUtilsWrapper)
-        editPostRepository = EditPostRepository(mock(), mock(), mock(), TEST_DISPATCHER, TEST_DISPATCHER)
+        editPostRepository = EditPostRepository(mock(), mock(), mock(), mock(), TEST_DISPATCHER, TEST_DISPATCHER)
     }
 
     @Test

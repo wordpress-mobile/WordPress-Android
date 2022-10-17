@@ -19,6 +19,7 @@ import org.wordpress.android.fluxc.model.post.PostLocation
 import org.wordpress.android.fluxc.model.post.PostStatus.DRAFT
 import org.wordpress.android.fluxc.model.post.PostStatus.PENDING
 import org.wordpress.android.fluxc.model.post.PostStatus.PUBLISHED
+import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.test
 import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult
@@ -33,12 +34,21 @@ class EditPostRepositoryTest {
 
     @Mock lateinit var localeManager: LocaleManagerWrapper
     @Mock lateinit var postStore: PostStore
+    @Mock lateinit var pageStore: PageStore
     @Mock lateinit var postUtils: PostUtilsWrapper
     private lateinit var editPostRepository: EditPostRepository
+
     @InternalCoroutinesApi
     @Before
     fun setUp() {
-        editPostRepository = EditPostRepository(localeManager, postStore, postUtils, TEST_DISPATCHER, TEST_DISPATCHER)
+        editPostRepository = EditPostRepository(
+                localeManager,
+                postStore,
+                postUtils,
+                pageStore,
+                TEST_DISPATCHER,
+                TEST_DISPATCHER
+        )
     }
 
     @Test
@@ -341,7 +351,6 @@ class EditPostRepositoryTest {
         assertThat(editPostRepository.parentId).isEqualTo(parentId)
     }
 
-
     @Test
     fun `updates publish date when should publish immediately`() {
         val post = PostModel()
@@ -493,9 +502,10 @@ class EditPostRepositoryTest {
     fun `loads post from store by local id`() {
         val id = 1
         val post = PostModel()
+        val site = SiteModel()
         whenever(postStore.getPostByLocalPostId(id)).thenReturn(post)
 
-        editPostRepository.loadPostByLocalPostId(id)
+        editPostRepository.loadPostByLocalPostId(id, site)
 
         assertThat(editPostRepository.getPost()).isEqualTo(post)
     }

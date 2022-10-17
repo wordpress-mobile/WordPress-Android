@@ -47,6 +47,7 @@ class SaveStoryGutenbergBlockUseCaseTest : BaseUnitTest() {
                 mock(),
                 postStore,
                 mock(),
+                mock(),
                 TEST_DISPATCHER,
                 TEST_DISPATCHER
         )

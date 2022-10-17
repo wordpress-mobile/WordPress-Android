@@ -300,7 +300,7 @@ class PostListMainViewModel @Inject constructor(
 
         currentBottomSheetPostId.let { postId ->
             if (postId.value != 0) {
-                editPostRepository.loadPostByLocalPostId(postId.value)
+                editPostRepository.loadPostByLocalPostId(postId.value, site)
             }
         }
 
@@ -499,7 +499,7 @@ class PostListMainViewModel @Inject constructor(
 
     private fun showPrepublishingBottomSheet(post: PostModel) {
         currentBottomSheetPostId = LocalId(post.id)
-        editPostRepository.loadPostByLocalPostId(post.id)
+        editPostRepository.loadPostByLocalPostId(post.id, site)
         _openPrepublishingBottomSheet.postValue(Event(Unit))
     }
 
