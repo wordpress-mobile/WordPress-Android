@@ -79,7 +79,6 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 import java.util.Objects;
 
 import javax.inject.Inject;
@@ -490,8 +489,7 @@ public class EditPostSettingsFragment extends Fragment {
         }
         hideSpecificViews(getEditPostRepository().isPage());
         mExcerptTextView.setText(getEditPostRepository().getExcerpt());
-        // TODO need to figure out how to get the parent title to show here
-        mParentTextView.setText(String.format(Locale.getDefault(), "%d", getEditPostRepository().getParentId()));
+        mParentTextView.setText(getEditPostRepository().getParentTitle());
         mSlugTextView.setText(getEditPostRepository().getSlug());
         mPasswordTextView.setText(getEditPostRepository().getPassword());
         PostImmutableModel postModel = getEditPostRepository().getPost();
@@ -782,15 +780,16 @@ public class EditPostSettingsFragment extends Fragment {
 
     private void updateParent(long parentId) {
         EditPostRepository editPostRepository = getEditPostRepository();
-        if (editPostRepository != null) {
+        SiteModel site = getSite();
+        if (editPostRepository != null && site != null) {
             editPostRepository.updateAsync(postModel -> {
                 boolean hasChanged = postModel.getParentId() != parentId;
                 postModel.setParentId(parentId);
                 return hasChanged;
             }, (postModel, result) -> {
                 if (result == UpdatePostResult.Updated.INSTANCE) {
-                    // TODO need to figure out how to get the updated parent title as well
-                    mParentTextView.setText(String.format(Locale.getDefault(), "%d", parentId));
+                    editPostRepository.updateParentTitle(site);
+                    mParentTextView.setText(editPostRepository.getParentTitle());
                 }
                 return null;
             });
