@@ -2,6 +2,8 @@ package org.wordpress.android.fluxc.network;
 
 import android.os.Build;
 
+import androidx.annotation.NonNull;
+
 import java.io.IOException;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
@@ -29,7 +31,8 @@ public class OpenJdkCookieManager extends CookieManager {
      * {@code CookieManager(null, null)}.
      */
     public OpenJdkCookieManager() {
-        super(null, null);
+        super(null, CookiePolicy.ACCEPT_ORIGINAL_SERVER);
+        this.policyCallback = CookiePolicy.ACCEPT_ORIGINAL_SERVER;
     }
 
     /**
@@ -40,11 +43,9 @@ public class OpenJdkCookieManager extends CookieManager {
      *                  which is an in-memory CookieStore implementation.
      * @param cookiePolicy      a {@code CookiePolicy} instance
      *                          to be used by cookie manager as policy callback.
-     *                          if {@code null}, ACCEPT_ORIGINAL_SERVER will
-     *                          be used.
      */
     public OpenJdkCookieManager(CookieStore store,
-                                CookiePolicy cookiePolicy)
+                                @NonNull CookiePolicy cookiePolicy)
     {
         super(store, cookiePolicy);
         this.policyCallback = cookiePolicy;
@@ -200,6 +201,10 @@ public class OpenJdkCookieManager extends CookieManager {
         }
     }
 
+    public void setPolicyCallback(CookiePolicy policyCallback) {
+        super.setCookiePolicy(policyCallback);
+        this.policyCallback = policyCallback;
+    }
 
     /* ---------------- Private operations -------------- */
 
