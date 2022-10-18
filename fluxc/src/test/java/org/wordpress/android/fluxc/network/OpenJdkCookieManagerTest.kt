@@ -11,7 +11,7 @@ import java.util.LinkedList
  * The test cases here are copied from OpenJdk's CookieManagerTest:
  * https://github.com/openjdk/jdk/blob/20db7800a657b311eeac504a2bbae4adbc209dbf/test/jdk/java/net/CookieHandler/CookieManagerTest.java
  */
-class CookieManagerTest {
+class OpenJdkCookieManagerTest {
     private val testCount = 6
     private val localHostAddr = "wordpress.com"
 
@@ -170,7 +170,7 @@ class CookieManagerTest {
 
     @Test
     fun test_cookies() {
-        val cookieManager: CookieManager = PatchedCookieManager()
+        val cookieManager: CookieManager = OpenJdkCookieManager()
         for (testCases in testCases) {
             for (testCase in testCases) {
                 val path = URI("https://$localHostAddr${testCase.serverPath}")
