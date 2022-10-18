@@ -16,8 +16,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+@SuppressWarnings("all")
 /**
- * A [CookieManager] that's based on OpenJdk's implementation https://github.com/openjdk/jdk/blob/20db7800a657b311eeac504a2bbae4adbc209dbf/src/java.base/share/classes/java/net/CookieManager.java
+ * A [CookieManager] that's based on OpenJdk's implementation
+ * https://github.com/openjdk/jdk/blob/20db7800a657b311eeac504a2bbae4adbc209dbf/src/java.base/share/classes/java/net/CookieManager.java
  * This implementation solves the bug: https://issuetracker.google.com/issues/174647435
  */
 public class OpenJdkCookieManager extends CookieManager {
