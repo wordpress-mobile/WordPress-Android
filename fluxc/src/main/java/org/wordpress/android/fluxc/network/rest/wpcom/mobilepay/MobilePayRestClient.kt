@@ -3,7 +3,6 @@ package org.wordpress.android.fluxc.network.rest.wpcom.mobilepay
 import android.content.Context
 import com.android.volley.RequestQueue
 import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMV2
 import org.wordpress.android.fluxc.network.BaseRequest
 import org.wordpress.android.fluxc.network.UserAgent
@@ -12,7 +11,6 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
-import org.wordpress.android.fluxc.store.Store
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -33,7 +31,7 @@ class MobilePayRestClient @Inject constructor(
         currency: String,
         purchaseToken: String,
         appId: String,
-    ): CreateOrderPayload {
+    ): CreateOrderResponse {
         val response = wpComGsonRequestBuilder.syncPostRequest(
             restClient = this,
             url = WPCOMV2.iap.orders.url,
@@ -44,31 +42,29 @@ class MobilePayRestClient @Inject constructor(
                 "currency" to currency,
                 "purchaseToken" to purchaseToken,
             ),
-            clazz = CreateOrderResponse::class.java,
+            clazz = CreateOrderResponseType::class.java,
             headers = mapOf(APP_ID_HEADER to appId)
         )
         return when (response) {
-            is Response.Success -> CreateOrderPayload(response.data.orderId)
-            is Response.Error -> CreateOrderPayload(response.error.toCreateOrderError())
+            is Response.Success -> CreateOrderResponse.Success(response.data.orderId)
+            is Response.Error -> CreateOrderResponse.Error(
+                response.error.toCreateOrderError(),
+                response.error.message
+            )
         }
     }
 
-    data class CreateOrderResponse(
+    data class CreateOrderResponseType(
         val orderId: Long
     )
 
-    data class CreateOrderPayload(
-        val orderId: Long? = null
-    ) : Payload<CreateOrderError>() {
-        constructor(error: CreateOrderError) : this() {
-            this.error = error
-        }
+    sealed class CreateOrderResponse {
+        data class Success(val orderId: Long) : CreateOrderResponse()
+        data class Error(
+            val type: CreateOrderErrorType,
+            val message: String? = null
+        ) : CreateOrderResponse()
     }
-
-    class CreateOrderError(
-        val type: CreateOrderErrorType,
-        val message: String? = null
-    ) : Store.OnChangedError
 
     enum class CreateOrderErrorType {
         API_ERROR,
@@ -78,8 +74,8 @@ class MobilePayRestClient @Inject constructor(
         TIMEOUT,
     }
 
-    private fun WPComGsonRequest.WPComGsonNetworkError.toCreateOrderError(): CreateOrderError {
-        val type = when (type) {
+    private fun WPComGsonRequest.WPComGsonNetworkError.toCreateOrderError() =
+        when (type) {
             BaseRequest.GenericErrorType.TIMEOUT -> CreateOrderErrorType.TIMEOUT
             BaseRequest.GenericErrorType.NO_CONNECTION,
             BaseRequest.GenericErrorType.SERVER_ERROR,
@@ -95,6 +91,4 @@ class MobilePayRestClient @Inject constructor(
             BaseRequest.GenericErrorType.UNKNOWN -> CreateOrderErrorType.GENERIC_ERROR
             null -> CreateOrderErrorType.GENERIC_ERROR
         }
-        return CreateOrderError(type, message)
-    }
 }
