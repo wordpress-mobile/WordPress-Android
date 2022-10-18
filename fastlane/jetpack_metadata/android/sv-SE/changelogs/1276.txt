@@ -1,4 +1,0 @@
-20.8:
-Vi har lagt till dynamiska widgetar för visning av överblicksstatistik, total statistik och daglig statistik på användarenheternas startskärmar.
-Användare på webbplatser med flera författare kan ändra inläggsförfattare i inläggs- och sidinställningarna.
-Arabiska språkanvändare kommer nu uteslutande att se siffror på statistikskärmarna i västarabiska siffror.

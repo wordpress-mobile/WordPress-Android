@@ -36,6 +36,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
+import org.wordpress.android.bloggingreminders.resolver.BloggingRemindersResolver;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
@@ -165,6 +166,7 @@ import static org.wordpress.android.push.NotificationsProcessingService.ARG_NOTI
 import static org.wordpress.android.ui.JetpackConnectionSource.NOTIFICATIONS;
 
 import dagger.hilt.android.AndroidEntryPoint;
+import kotlin.Unit;
 
 /**
  * Main activity which hosts sites, reader, me and notifications pages
@@ -256,6 +258,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     @Inject MySiteDashboardTodaysStatsCardFeatureConfig mTodaysStatsCardFeatureConfig;
     @Inject QuickStartTracker mQuickStartTracker;
     @Inject SharedLoginResolver mSharedLoginResolver;
+    @Inject BloggingRemindersResolver mBloggingRemindersResolver;
 
     @Inject BuildConfigWrapper mBuildConfigWrapper;
 
@@ -1609,6 +1612,9 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 mSelectedSiteRepository.updateSite(site);
             }
         }
+        mBloggingRemindersResolver.trySyncBloggingReminders(
+                () -> Unit.INSTANCE, () -> Unit.INSTANCE
+        );
     }
 
     @SuppressWarnings("unused")

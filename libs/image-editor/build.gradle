@@ -18,10 +18,6 @@ android {
         vectorDrawables.useSupportLibrary = true
     }
 
-    kotlinOptions {
-        allWarningsAsErrors = true
-    }
-
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
         test.java.srcDirs += 'src/test/kotlin'

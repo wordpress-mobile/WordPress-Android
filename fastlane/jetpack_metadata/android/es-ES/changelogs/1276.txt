@@ -1,4 +1,0 @@
-20.8:
-Hemos añadido widgets dinámicos para mostrar estadísticas rápidas, completas y diarias en las pantallas de inicio de los dispositivos de los usuarios.
-En los sitios de varios autores, los usuarios pueden cambiar los autores del contenido en la configuración de las entradas y de la página.
-Los usuarios cuyo idioma sea el árabe verán los numerales de las pantallas Estadísticas solo en números arábigos occidentales.

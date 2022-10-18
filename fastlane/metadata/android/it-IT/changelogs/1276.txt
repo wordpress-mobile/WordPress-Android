@@ -1,3 +1,0 @@
-20.8:
-Gli utenti di siti con più autori possono modificare gli autori dei contenuti nelle impostazioni dei post e delle pagine.
-Gli utenti di lingua araba ora vedranno i numeri sulle schermate delle statistiche esclusivamente in numeri arabi occidentali, non più in abbinamento ai numeri arabi orientali.

@@ -122,6 +122,9 @@ android {
         buildConfigField "boolean", "JETPACK_POWERED_BOTTOM_SHEET", "false"
         buildConfigField "boolean", "JETPACK_SHARED_LOGIN", "false"
         buildConfigField "boolean", "JETPACK_LOCAL_USER_FLAGS", "false"
+        buildConfigField "boolean", "JETPACK_BLOGGING_REMINDERS_SYNC", "false"
+        buildConfigField "boolean", "JETPACK_READER_SAVED_POSTS", "false"
+        buildConfigField "boolean", "JETPACK_PROVIDER_SYNC", "false"
 
         // Override these constants in jetpack product flavor to enable/ disable features
         buildConfigField "boolean", "ENABLE_SITE_CREATION", "true"
@@ -354,7 +357,7 @@ dependencies {
 
     implementation 'com.android.volley:volley:1.1.1'
     implementation 'com.google.firebase:firebase-messaging:21.1.0'
-    implementation 'com.google.android.gms:play-services-auth:18.1.0'
+    implementation 'com.google.android.gms:play-services-auth:20.3.0'
     implementation 'com.android.installreferrer:installreferrer:2.2'
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
     implementation 'org.greenrobot:eventbus:3.3.1'

@@ -1,16 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-07-11 11:54:18+0000
+Translation-Revision-Date: 2022-10-05 11:54:03+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: es
 -->
 <resources>
+    <string name="me_btn_share">Compartir Jetpack con un amigo</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_12">Añadir un autor</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_11">Publicar una foto</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_10">Solucionar un problema de seguridad</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_9">Compartir en Facebook</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_8">Buscar plugins</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_7">Restaurar una copia de seguridad</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_6">Responder a comentarios</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_5">Consultar notificaciones</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_4">Ver las estadísticas</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_3">Escribir un blog</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_2">Crear un sitio</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_1">Actualizar un plugin</string>
+    <string name="login_prologue_revamped_content_description_top_bg">Fundido del fondo superior de Jetpack</string>
+    <string name="login_prologue_revamped_content_description_bg">Fondo de Jetpack</string>
+    <string name="login_prologue_revamped_content_description_jetpack_logo">Logotipo de Jetpack</string>
     <string name="me_btn_about">Sobre Jetpack</string>
     <string name="sign_out_wpcom_confirm_with_no_changes">¿Cerrar sesión en Jetpack?</string>
     <string name="me_disconnect_from_wordpress_com">Salir de Jetpack</string>
     <string name="support_ticket_subject">Jetpack para Ayuda de Android</string>
     <string name="login_magic_links_sent_label">Consulta tu correo electrónico en este dispositivo y pulsa el enlace que encontrarás en el mensaje que has recibido de Jetpack.com.</string>
+    <string name="continue_with_wpcom_no_signup">Continuar con WordPress.com</string>
     <string name="app_tagline">Seguridad y rendimiento del sitio en la palma de tu mano</string>
     <string name="post_signup_interstitial_title">Te damos la bienvenida a Jetpack</string>
     <string name="app_title">Jetpack para Android</string>

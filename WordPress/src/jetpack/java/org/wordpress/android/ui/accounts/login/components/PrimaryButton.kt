@@ -8,6 +8,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -31,7 +32,7 @@ fun PrimaryButton(
                     contentColor = colorResource(R.color.text_color_jetpack_login_splash_primary_button),
             ),
             modifier = modifier
-                    .padding(horizontal = 20.dp)
+                    .padding(horizontal = dimensionResource(R.dimen.login_prologue_revamped_buttons_padding))
                     .padding(top = Margin.ExtraLarge.value)
                     .fillMaxWidth(),
     ) {

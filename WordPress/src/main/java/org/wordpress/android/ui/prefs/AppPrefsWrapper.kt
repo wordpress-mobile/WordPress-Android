@@ -241,6 +241,16 @@ class AppPrefsWrapper @Inject constructor() {
 
     fun saveIsFirstTryUserFlagsJetpack(isFirstTry: Boolean) = AppPrefs.saveIsFirstTryUserFlagsJetpack(isFirstTry)
 
+    fun getIsFirstTryBloggingRemindersSyncJetpack(): Boolean = AppPrefs.getIsFirstTryBloggingRemindersSyncJetpack()
+
+    fun saveIsFirstTryBloggingRemindersSyncJetpack(isFirstTry: Boolean) =
+            AppPrefs.saveIsFirstTryBloggingRemindersSyncJetpack(isFirstTry)
+
+    fun getIsFirstTryReaderSavedPostsJetpack(): Boolean = AppPrefs.getIsFirstTryReaderSavedPostsJetpack()
+
+    fun saveIsFirstTryReaderSavedPostsJetpack(isFirstTry: Boolean) =
+            AppPrefs.saveIsFirstTryReaderSavedPostsJetpack(isFirstTry)
+
     fun getAllPrefs(): Map<String, Any?> = AppPrefs.getAllPrefs()
 
     fun setString(prefKey: PrefKey, value: String) {
