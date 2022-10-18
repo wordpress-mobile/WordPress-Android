@@ -11,15 +11,10 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
-public class OpenJdkCookieManager extends CookieHandler
-{
+public class OpenJdkCookieManager extends CookieManager {
     /* ---------------- Fields -------------- */
 
     private CookiePolicy policyCallback;
-
-
-    private CookieStore cookieJar = null;
-
 
     /* ---------------- Ctors -------------- */
 
@@ -31,9 +26,8 @@ public class OpenJdkCookieManager extends CookieHandler
      * {@code CookieManager(null, null)}.
      */
     public OpenJdkCookieManager() {
-        this(null, null);
+        super(null, null);
     }
-
 
     /**
      * Create a new cookie manager with specified cookie store and cookie policy.
@@ -47,59 +41,22 @@ public class OpenJdkCookieManager extends CookieHandler
      *                          be used.
      */
     public OpenJdkCookieManager(CookieStore store,
-                         CookiePolicy cookiePolicy)
+                                CookiePolicy cookiePolicy)
     {
-        // use default cookie policy if not specify one
-        policyCallback = (cookiePolicy == null) ? CookiePolicy.ACCEPT_ORIGINAL_SERVER
-                : cookiePolicy;
-
-        // if not specify CookieStore to use, use default one
-        if (store == null) {
-            cookieJar = new InMemoryCookieStore();
-        } else {
-            cookieJar = store;
-        }
+        super(store, cookiePolicy);
+        this.policyCallback = cookiePolicy;
     }
-
-
-    /* ---------------- Public operations -------------- */
-
-    /**
-     * To set the cookie policy of this cookie manager.
-     *
-     * <p> A instance of {@code CookieManager} will have
-     * cookie policy ACCEPT_ORIGINAL_SERVER by default. Users always
-     * can call this method to set another cookie policy.
-     *
-     * @param cookiePolicy      the cookie policy. Can be {@code null}, which
-     *                          has no effects on current cookie policy.
-     */
-    public void setCookiePolicy(CookiePolicy cookiePolicy) {
-        if (cookiePolicy != null) policyCallback = cookiePolicy;
-    }
-
-
-    /**
-     * To retrieve current cookie store.
-     *
-     * @return  the cookie store currently used by cookie manager.
-     */
-    public CookieStore getCookieStore() {
-        return cookieJar;
-    }
-
 
     public Map<String, List<String>>
     get(URI uri, Map<String, List<String>> requestHeaders)
-            throws IOException
-    {
+            throws IOException {
         // pre-condition check
         if (uri == null || requestHeaders == null) {
             throw new IllegalArgumentException("Argument is null");
         }
 
         // if there's no default CookieStore, no way for us to get any cookie
-        if (cookieJar == null)
+        if (getCookieStore() == null)
             return Map.of();
 
         boolean secureLink = "https".equalsIgnoreCase(uri.getScheme());
@@ -108,7 +65,7 @@ public class OpenJdkCookieManager extends CookieHandler
         if (path == null || path.isEmpty()) {
             path = "/";
         }
-        for (HttpCookie cookie : cookieJar.get(uri)) {
+        for (HttpCookie cookie : getCookieStore().get(uri)) {
             // apply path-matches rule (RFC 2965 sec. 3.3.4)
             // and check for the possible "secure" tag (i.e. don't send
             // 'secure' cookies over unsecure links)
@@ -154,7 +111,7 @@ public class OpenJdkCookieManager extends CookieHandler
 
 
         // if there's no default CookieStore, no need to remember any cookie
-        if (cookieJar == null)
+        if (getCookieStore() == null)
             return;
 
         PlatformLogger logger = PlatformLogger.getLogger("java.net.CookieManager");
@@ -219,7 +176,7 @@ public class OpenJdkCookieManager extends CookieHandler
                                 // to the incoming URI port
                                 cookie.setPortlist("" + port );
                                 if (shouldAcceptInternal(uri, cookie)) {
-                                    cookieJar.add(uri, cookie);
+                                    getCookieStore().add(uri, cookie);
                                 }
                             } else {
                                 // Only store cookies with a port list
@@ -227,12 +184,12 @@ public class OpenJdkCookieManager extends CookieHandler
                                 // RFC 2965 section 3.3.2
                                 if (isInPortList(ports, port) &&
                                         shouldAcceptInternal(uri, cookie)) {
-                                    cookieJar.add(uri, cookie);
+                                    getCookieStore().add(uri, cookie);
                                 }
                             }
                         } else {
                             if (shouldAcceptInternal(uri, cookie)) {
-                                cookieJar.add(uri, cookie);
+                                getCookieStore().add(uri, cookie);
                             }
                         }
                     }
