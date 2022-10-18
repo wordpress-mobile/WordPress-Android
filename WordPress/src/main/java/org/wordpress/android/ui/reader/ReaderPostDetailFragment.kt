@@ -173,6 +173,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     private lateinit var scrollView: WPScrollView
     private lateinit var layoutFooter: ViewGroup
     private lateinit var readerWebView: ReaderWebView
+    private lateinit var readerProgressBar: ProgressBar
 
     private lateinit var likeFacesTrain: View
     private lateinit var likeProgressBar: ProgressBar
@@ -382,6 +383,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         readerWebView.setCustomViewListener(this)
         readerWebView.setUrlClickListener(this)
         readerWebView.setPageFinishedListener(this)
+
+        readerProgressBar = view.findViewById(R.id.reader_progress_bar)
     }
 
     private fun initLikeFacesTrain(view: View) {
@@ -1459,6 +1462,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     private fun ReaderPostDetailFragment.showPostInWebView(post: ReaderPost) {
         readerWebView.setIsPrivatePost(post.isPrivate)
         readerWebView.setBlogSchemeIsHttps(UrlUtils.isHttps(post.blogUrl))
+        readerProgressBar.visibility = View.VISIBLE
         renderer = ReaderPostRenderer(readerWebView, viewModel.post, readerCssProvider)
 
         // if the post is from private atomic site postpone render until we have a special access cookie
@@ -1492,6 +1496,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         if (!isAdded) {
             return
         }
+
+        readerProgressBar.visibility = View.GONE
 
         if (url != null && url == "about:blank") {
             // brief delay before showing related posts to give page time to render
