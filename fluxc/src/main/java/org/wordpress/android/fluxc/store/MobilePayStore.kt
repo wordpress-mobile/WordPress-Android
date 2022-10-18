@@ -1,5 +1,6 @@
 package org.wordpress.android.fluxc.store
 
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpcom.mobilepay.MobilePayRestClient
 import org.wordpress.android.fluxc.tools.CoroutineEngine
 import org.wordpress.android.util.AppLog.T.API
@@ -15,13 +16,15 @@ class MobilePayStore @Inject constructor(
         currency: String,
         purchaseToken: String,
         appId: String,
+        site: SiteModel,
     ) = coroutineEngine.withDefaultContext(API, this, "createOrder") {
         restClient.createOrder(
             productIdentifier,
             price,
             currency,
             purchaseToken,
-            appId
+            appId,
+            site,
         )
     }
 }

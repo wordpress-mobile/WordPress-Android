@@ -4,6 +4,7 @@ import android.content.Context
 import com.android.volley.RequestQueue
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMV2
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.BaseRequest
 import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient
@@ -31,16 +32,18 @@ class MobilePayRestClient @Inject constructor(
         currency: String,
         purchaseToken: String,
         appId: String,
+        site: SiteModel,
     ): CreateOrderResponse {
         val response = wpComGsonRequestBuilder.syncPostRequest(
             restClient = this,
             url = WPCOMV2.iap.orders.url,
             params = null,
             body = mapOf(
+                "site_id" to site.siteId,
                 "product_id" to productIdentifier,
                 "price" to price,
                 "currency" to currency,
-                "purchaseToken" to purchaseToken,
+                "purchase_token" to purchaseToken,
             ),
             clazz = CreateOrderResponseType::class.java,
             headers = mapOf(APP_ID_HEADER to appId)
