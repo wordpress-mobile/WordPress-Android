@@ -102,7 +102,7 @@ class EditPostRepository
         get() = post!!.dateLocallyChanged
     val parentId: Long
         get() = post!!.parentId
-    var parentTitle: String = ""
+    var parentTitle: String = EMPTY_STRING
         private set
 
     private var locked = false
