@@ -8,5 +8,6 @@ import org.mockito.junit.MockitoJUnitRunner
 @Suppress("UnnecessaryAbstractClass")
 @RunWith(MockitoJUnitRunner::class)
 abstract class BaseUnitTest {
-    @Rule @JvmField val rule = InstantTaskExecutorRule()
+    @Rule
+    @JvmField val rule = InstantTaskExecutorRule()
 }

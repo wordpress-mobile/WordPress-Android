@@ -40,13 +40,6 @@ import org.wordpress.android.ui.stats.refresh.StatsModuleActivateRequestState.Fa
 import org.wordpress.android.ui.stats.refresh.StatsModuleActivateRequestState.Success
 import org.wordpress.android.ui.stats.refresh.lists.BaseListUseCase
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
-import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.ANNUAL_STATS
-import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.DAYS
-import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.DETAIL
-import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.INSIGHTS
-import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.MONTHS
-import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.WEEKS
-import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.YEARS
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.utils.NewsCardHandler
 import org.wordpress.android.ui.stats.refresh.utils.SelectedSectionManager
@@ -98,7 +91,9 @@ class StatsViewModel
 
     val siteChanged = statsSiteProvider.siteChanged
 
-    val toolbarHasShadow: LiveData<Boolean> = statsSectionManager.liveSelectedSection.mapNullable { it == INSIGHTS }
+    val toolbarHasShadow: LiveData<Boolean> = statsSectionManager.liveSelectedSection.mapNullable {
+        it == StatsSection.INSIGHTS
+    }
 
     val hideToolbar = newsCardHandler.hideToolbar
 
@@ -138,11 +133,11 @@ class StatsViewModel
 
     private fun getInitialTimeFrame(intent: Intent): StatsSection? {
         return when (intent.getSerializableExtra(StatsActivity.ARG_DESIRED_TIMEFRAME)) {
-            StatsTimeframe.INSIGHTS -> INSIGHTS
-            DAY -> DAYS
-            WEEK -> WEEKS
-            MONTH -> MONTHS
-            YEAR -> YEARS
+            StatsTimeframe.INSIGHTS -> StatsSection.INSIGHTS
+            DAY -> StatsSection.DAYS
+            WEEK -> StatsSection.WEEKS
+            MONTH -> StatsSection.MONTHS
+            YEAR -> StatsSection.YEARS
             else -> null
         }
     }
@@ -171,7 +166,7 @@ class StatsViewModel
             )
 
             initialSection?.let { statsSectionManager.setSelectedSection(it) }
-            trackSectionSelected(initialSection ?: INSIGHTS)
+            trackSectionSelected(initialSection ?: StatsSection.INSIGHTS)
 
             val initialGranularity = initialSection?.toStatsGranularity()
             if (initialGranularity != null && initialSelectedPeriod != null) {
@@ -203,7 +198,7 @@ class StatsViewModel
             }
         }
 
-        if (statsSectionManager.getSelectedSection() == INSIGHTS) showInsightsUpdateAlert()
+        if (statsSectionManager.getSelectedSection() == StatsSection.INSIGHTS) showInsightsUpdateAlert()
 
         if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) showJetpackPoweredBottomSheet()
     }
@@ -225,7 +220,7 @@ class StatsViewModel
     }
 
     private fun updateRevampedInsights() {
-        val insightsUseCase = listUseCases[INSIGHTS]
+        val insightsUseCase = listUseCases[StatsSection.INSIGHTS]
         insightsUseCase?.launch(defaultDispatcher) {
             val insightTypes = statsStore.getAddedInsights(statsSiteProvider.siteModel)
 
@@ -284,20 +279,24 @@ class StatsViewModel
 
         listUseCases[statsSection]?.onListSelected()
 
-        if (statsSection == INSIGHTS) showInsightsUpdateAlert()
+        if (statsSection == StatsSection.INSIGHTS) showInsightsUpdateAlert()
 
         trackSectionSelected(statsSection)
     }
 
     private fun trackSectionSelected(statsSection: StatsSection) {
         when (statsSection) {
-            INSIGHTS -> analyticsTracker.track(STATS_INSIGHTS_ACCESSED)
-            DAYS -> analyticsTracker.trackGranular(STATS_PERIOD_DAYS_ACCESSED, StatsGranularity.DAYS)
-            WEEKS -> analyticsTracker.trackGranular(STATS_PERIOD_WEEKS_ACCESSED, StatsGranularity.WEEKS)
-            MONTHS -> analyticsTracker.trackGranular(STATS_PERIOD_MONTHS_ACCESSED, StatsGranularity.MONTHS)
-            YEARS -> analyticsTracker.trackGranular(STATS_PERIOD_YEARS_ACCESSED, StatsGranularity.YEARS)
-            ANNUAL_STATS, DETAIL -> {
-            }
+            StatsSection.INSIGHTS -> analyticsTracker.track(STATS_INSIGHTS_ACCESSED)
+            StatsSection.DAYS -> analyticsTracker.trackGranular(STATS_PERIOD_DAYS_ACCESSED, StatsGranularity.DAYS)
+            StatsSection.WEEKS -> analyticsTracker.trackGranular(STATS_PERIOD_WEEKS_ACCESSED, StatsGranularity.WEEKS)
+            StatsSection.MONTHS -> analyticsTracker.trackGranular(STATS_PERIOD_MONTHS_ACCESSED, StatsGranularity.MONTHS)
+            StatsSection.YEARS -> analyticsTracker.trackGranular(STATS_PERIOD_YEARS_ACCESSED, StatsGranularity.YEARS)
+            StatsSection.ANNUAL_STATS -> Unit // Do nothing
+            StatsSection.DETAIL -> Unit // Do nothing
+            StatsSection.INSIGHT_DETAIL -> Unit // Do nothing
+            StatsSection.TOTAL_LIKES_DETAIL -> Unit // Do nothing
+            StatsSection.TOTAL_COMMENTS_DETAIL -> Unit // Do nothing
+            StatsSection.TOTAL_FOLLOWERS_DETAIL -> Unit // Do nothing
         }
     }
 

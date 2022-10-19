@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-09-26 12:54:09+0000
+Translation-Revision-Date: 2022-10-07 18:40:36+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: de
 -->
 <resources>
+    <string name="my_site_blogging_prompt_card_number_of_answers_one">1 Antwort</string>
+    <string name="login_prologue_revamped_content_description_wordpress_icon">WordPress-Icon</string>
+    <string name="login_prologue_revamped_tagline">Schreibe, bearbeite und veröffentliche von überall aus.</string>
     <string name="error_fetch_authors_list">Autoren konnten nicht abgerufen werden</string>
     <string name="post_settings_author">Autor</string>
     <string name="app_rating_title">Zufrieden mit %s?</string>
@@ -165,7 +168,7 @@ Language: de
     <string name="new_site_creation_site_name_header_subtitle">Ein guter Name ist kurz und einprägsam.\nDu kannst es später jederzeit ändern.</string>
     <string name="new_site_creation_site_name_header_title">Gib deiner %s-Website einen Namen</string>
     <string name="new_site_creation_site_name_title">Name der Website</string>
-    <string name="my_site_todays_stats_get_more_views_message">Möchtest du eine Zielgruppe aufbauen? Sieh dir unsere &lt;a href=\"%1$s\"&gt;Top-Tipps&lt;/a&gt; an.</string>
+    <string name="my_site_todays_stats_get_more_views_message">Möchtest du ein Publikum aufbauen? Sieh dir unsere &lt;a href=\"%1$s\"&gt;Top-Tipps&lt;/a&gt; an.</string>
     <string name="stats_insights_views_and_visitors">Aufrufe und Besucher</string>
     <string name="featured_image_removed_notice">Als Beitragsbild entfernt</string>
     <string name="featured_image_confirmation_notice">Als Beitragsbild festlegen</string>
@@ -250,6 +253,7 @@ Language: de
     <string name="my_site_blogging_prompt_card_menu_remove">Aus Dashboard entfernen</string>
     <string name="my_site_blogging_prompt_card_menu_skip">Diesen Themenvorschlag überspringen</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">Mehr Themenvorschläge anzeigen</string>
+    <string name="my_site_blogging_prompt_card_number_of_answers_other">%d Antworten</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">Blog-Vorschlag teilen</string>
     <string name="my_site_blogging_prompt_card_answered_prompt">✓ Geantwortet</string>
     <string name="my_site_blogging_prompt_card_answer_prompt">Auf Themenvorschlag antworten</string>
@@ -272,7 +276,7 @@ Language: de
     <string name="my_site_menu_tab_title">Menü</string>
     <string name="new_site_creation_empty_domain_list_message_invalid_query">Deine Suche beinhaltet Zeichen, die in Domains von WordPress.com nicht unterstützt werden. Die folgenden Zeichen sind erlaubt: A–Z, a–z, 0–9.</string>
     <string name="my_site_error_within_card_subtitle">Überprüfe deine Internetverbindung und lade die Seite neu.</string>
-    <string name="my_site_todays_stats_card_footer_link_go_to_stats">Gehe zu den Statistiken</string>
+    <string name="my_site_todays_stats_card_footer_link_go_to_stats">Zu den Statistiken</string>
     <string name="my_site_todays_stat_card_title">Heutige Statistiken</string>
     <string name="error_edit_notification">Während des Aktualisierens des Benachrichtigungsinhalts ist ein Fehler aufgetreten</string>
     <string name="reader_comment_menu_edit">Bearbeiten</string>
@@ -562,6 +566,7 @@ Language: de
     <string name="gutenberg_native_move_image_forward">Bild nach vorne verschieben</string>
     <string name="gutenberg_native_move_image_backward">Bild nach hinten verschieben</string>
     <string name="gutenberg_native_width_settings">Breite-Einstellungen</string>
+    <string name="gutenberg_native_link_rel">Link-Beziehung</string>
     <string name="gutenberg_native_column_settings">Spalteneinstellungen</string>
     <string name="user_profile_untitled_site">(Ohne Titel)</string>
     <string name="user_profile_site_section_header">Website</string>
@@ -1044,7 +1049,7 @@ Language: de
     <string name="create_post_story_fab_tooltip">Erstelle einen Beitrag oder eine Story</string>
     <string name="create_page_fab_tooltip">Eine Seite erstellen</string>
     <string name="create_post_fab_tooltip">Einen Beitrag erstellen</string>
-    <string name="reader_discover_interests_header">Das gefällt dir vielleicht</string>
+    <string name="reader_discover_interests_header">Das könnte dir gefallen</string>
     <string name="reader_expandable_tags_view_overflow_indicator_collapse_title">Ausblenden</string>
     <string name="gutenberg_native_video_caption_empty">Videountertitel. Leer</string>
     <string name="gutenberg_native_updates_the_title">Aktualisiert den Titel.</string>
@@ -1520,7 +1525,7 @@ Language: de
     <string name="dialog_confirm_autosave_body_second_part">Von dieser App\nGespeichert auf %1$s\n\nVon einem anderen Gerät\nGespeichert auf %2$s\n</string>
     <string name="dialog_confirm_autosave_body_first_part">Sie haben kürzlich Änderungen an diesem Beitrag vorgenommen, aber nicht gespeichert. Wählen Sie eine zu ladende Version aus:\n\n</string>
     <string name="dialog_confirm_autosave_title">Welche Version möchten Sie bearbeiten?</string>
-    <string name="button_delete_permanently">Dauerhaft löschen</string>
+    <string name="button_delete_permanently">Endgültig löschen</string>
     <string name="post_waiting_for_connection_draft_cancel">Wir speichern nicht die neuesten Änderungen an Ihrem Entwurf.</string>
     <string name="post_waiting_for_connection_scheduled_cancel">Wir werden diese Änderungen nicht planen.</string>
     <string name="post_waiting_for_connection_pending_cancel">Wir werden diese Änderungen nicht zur Überprüfung einreichen.</string>
@@ -1776,7 +1781,10 @@ Language: de
     <string name="notification_channel_reminder_title">Erinnerung</string>
     <string name="stats_select_next_period_description">Nächsten Zeitraum auswählen</string>
     <string name="stats_select_previous_period_description">Vorherigen Zeitraum auswählen</string>
+    <string name="stats_most_popular_percent_views">%1$s der Aufrufe</string>
     <string name="stats_insights_popular">Beliebteste Zeit</string>
+    <string name="stats_traffic_change">%1$s (%2$s)</string>
+    <string name="stats_traffic_increase">+%1$s (%2$s)</string>
     <string name="new_site_creation_site_preview_content_description">Vorschau der Website anzeigen</string>
     <string name="new_site_creation_clear_all_content_description">Löschen</string>
     <string name="site_created_but_not_fetched_snackbar_message">Es scheint, als ob du eine langsame Verbindung hast. Wenn du deine neue Website nicht in der Liste siehst, versuch sie zu aktualisieren.</string>
@@ -1901,7 +1909,7 @@ Language: de
     <string name="pages_empty_published">Du hast noch keine Seiten veröffentlicht</string>
     <string name="pages_search_suggestion">Seiten suchen</string>
     <string name="pages_empty_search_result">Keine Seiten entsprechen deiner Suche</string>
-    <string name="pages_delete_permanently">Unwiderruflich löschen</string>
+    <string name="pages_delete_permanently">Endgültig löschen</string>
     <string name="pages_move_to_trash">In Papierkorb verschieben</string>
     <string name="pages_move_to_draft">In Entwurf verschieben</string>
     <string name="pages_set_parent">Übergeordnete Seite festlegen</string>
@@ -2780,7 +2788,7 @@ Language: de
     <string name="let_us_help">Lass uns helfen</string>
     <string name="site_settings_start_over_hint">Nochmal mit deiner Website beginnen</string>
     <string name="start_over">Neu beginnen</string>
-    <string name="me_btn_app_settings">App Einstellungen</string>
+    <string name="me_btn_app_settings">App-Einstellungen</string>
     <string name="editor_remove_failed_uploads">Fehlgeschlagene Uploads entfernen</string>
     <string name="site_settings_advanced_header">Erweitert</string>
     <string name="comments_empty_list_filtered_trashed">Keine gelöschten Kommentare</string>

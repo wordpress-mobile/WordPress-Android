@@ -23,7 +23,8 @@ import org.wordpress.android.viewmodel.accounts.PostSignupInterstitialViewModel.
 
 @RunWith(MockitoJUnitRunner::class)
 class PostSignupInterstitialViewModelTest {
-    @Rule @JvmField val rule = InstantTaskExecutorRule()
+    @Rule
+    @JvmField val rule = InstantTaskExecutorRule()
 
     private val appPrefs: AppPrefsWrapper = mock()
     private val unifiedLoginTracker: UnifiedLoginTracker = mock()

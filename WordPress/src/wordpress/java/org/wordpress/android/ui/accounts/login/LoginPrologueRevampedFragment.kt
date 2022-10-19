@@ -5,7 +5,6 @@ import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.view.WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,6 +16,7 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.drawscope.scale
 import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -33,6 +33,7 @@ import org.wordpress.android.ui.accounts.login.compose.components.PrimaryButton
 import org.wordpress.android.ui.accounts.login.compose.components.SecondaryButton
 import org.wordpress.android.ui.accounts.login.compose.components.Tagline
 import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.util.extensions.setEdgeToEdgeContentDisplay
 
 class LoginPrologueRevampedFragment : Fragment() {
     private lateinit var loginPrologueListener: LoginPrologueListener
@@ -60,12 +61,12 @@ class LoginPrologueRevampedFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        requireActivity().window.addFlags(FLAG_LAYOUT_NO_LIMITS)
+        requireActivity().window.setEdgeToEdgeContentDisplay(true)
     }
 
     override fun onPause() {
         super.onPause()
-        requireActivity().window.clearFlags(FLAG_LAYOUT_NO_LIMITS)
+        requireActivity().window.setEdgeToEdgeContentDisplay(false)
     }
 
     companion object {
@@ -82,11 +83,17 @@ fun LoginScreenRevamped(
     // Flip the background image for RTL locales
     val scaleX = if (LocalLayoutDirection.current == Rtl) -1f else 1f
 
+    val offsetX = with(LocalDensity.current) { 10.dp.toPx() }
+    val offsetY = with(LocalDensity.current) { 75.dp.toPx() }
+
     Box(modifier = Modifier
             .background(color = colorResource(id = color.login_prologue_revamped_background))
             .drawBehind {
                 scale(scaleX = scaleX, scaleY = 1f) {
-                    translate(left = size.width - brushStrokePainter.intrinsicSize.width - 10f, top = -75f) {
+                    translate(
+                            left = size.width - brushStrokePainter.intrinsicSize.width - offsetX,
+                            top = -offsetY
+                    ) {
                         with(brushStrokePainter) {
                             draw(intrinsicSize)
                         }

@@ -71,7 +71,7 @@ class DomainsDashboardFragment : Fragment(R.layout.domains_dashboard_fragment) {
         )
     }
 
-    @Suppress("DEPRECATION")
+    @Suppress("DEPRECATION", "OVERRIDE_DEPRECATION")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == RESULT_OK && requestCode == DOMAIN_REGISTRATION) {

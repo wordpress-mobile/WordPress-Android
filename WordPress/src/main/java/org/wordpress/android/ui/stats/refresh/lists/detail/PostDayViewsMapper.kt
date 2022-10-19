@@ -13,6 +13,7 @@ import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.util.text.PercentFormatter
 import org.wordpress.android.viewmodel.ResourceProvider
+import java.math.RoundingMode.HALF_UP
 import javax.inject.Inject
 
 class PostDayViewsMapper
@@ -67,7 +68,7 @@ class PostDayViewsMapper
                 0 -> "∞"
                 else -> {
                     val percentageValue = difference.toFloat() / previousValue
-                    percentFormatter.format(percentageValue)
+                    percentFormatter.format(value = percentageValue, rounding = HALF_UP)
                 }
             }
             val formattedDifference = mapIntToString(difference, isFormattedNumber)

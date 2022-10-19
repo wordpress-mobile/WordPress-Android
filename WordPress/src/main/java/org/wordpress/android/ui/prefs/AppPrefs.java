@@ -2,11 +2,11 @@ package org.wordpress.android.ui.prefs;
 
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.preference.PreferenceManager;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.preference.PreferenceManager;
 
 import com.google.gson.Gson;
 
@@ -280,7 +280,13 @@ public class AppPrefs {
         IS_FIRST_TRY_LOGIN_JETPACK,
 
         // Indicates if this is the first time we try to get the user flags in Jetpack automatically
-        IS_FIRST_TRY_USER_FLAGS_JETPACK
+        IS_FIRST_TRY_USER_FLAGS_JETPACK,
+
+        // Indicates if this is the first time we try sync the blogging reminders in Jetpack automatically
+        IS_FIRST_TRY_BLOGGING_REMINDERS_SYNC_JETPACK,
+
+        // Indicates if this is the first time we try to get the reader saved posts in Jetpack automatically
+        IS_FIRST_TRY_READER_SAVED_POSTS_JETPACK
     }
 
     static SharedPreferences prefs() {
@@ -1447,5 +1453,21 @@ public class AppPrefs {
 
     public static void saveIsFirstTryUserFlagsJetpack(final boolean isFirstTry) {
         setBoolean(UndeletablePrefKey.IS_FIRST_TRY_USER_FLAGS_JETPACK, isFirstTry);
+    }
+
+    public static Boolean getIsFirstTryBloggingRemindersSyncJetpack() {
+        return getBoolean(UndeletablePrefKey.IS_FIRST_TRY_BLOGGING_REMINDERS_SYNC_JETPACK, true);
+    }
+
+    public static void saveIsFirstTryBloggingRemindersSyncJetpack(final boolean isFirstTry) {
+        setBoolean(UndeletablePrefKey.IS_FIRST_TRY_BLOGGING_REMINDERS_SYNC_JETPACK, isFirstTry);
+    }
+
+    public static Boolean getIsFirstTryReaderSavedPostsJetpack() {
+        return getBoolean(UndeletablePrefKey.IS_FIRST_TRY_READER_SAVED_POSTS_JETPACK, true);
+    }
+
+    public static void saveIsFirstTryReaderSavedPostsJetpack(final boolean isFirstTry) {
+        setBoolean(UndeletablePrefKey.IS_FIRST_TRY_READER_SAVED_POSTS_JETPACK, isFirstTry);
     }
 }

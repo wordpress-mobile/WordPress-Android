@@ -45,7 +45,7 @@ class ScanHistoryListFragment : ViewPagerFragment(R.layout.scan_history_list_fra
     }
 
     private fun initDagger() {
-        (requireActivity().application as WordPress).component()?.inject(this)
+        (requireActivity().application as WordPress).component().inject(this)
     }
 
     private fun ScanHistoryListFragmentBinding.initRecyclerView() {

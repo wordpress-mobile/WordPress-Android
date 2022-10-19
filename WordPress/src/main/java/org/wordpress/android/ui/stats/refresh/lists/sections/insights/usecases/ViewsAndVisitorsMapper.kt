@@ -23,6 +23,7 @@ import org.wordpress.android.ui.stats.refresh.utils.MILLION
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.ui.utils.ListItemInteraction
+import org.wordpress.android.util.extensions.enforceWesternArabicNumerals
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 
@@ -117,7 +118,7 @@ class ViewsAndVisitorsMapper
             val value = it.getValue(selectedType)
             val date = statsDateFormatter.parseStatsDate(statsGranularity, it.period)
             Line(
-                    statsDateFormatter.printDayWithoutYear(date),
+                    statsDateFormatter.printDayWithoutYear(date).enforceWesternArabicNumerals() as String,
                     it.period,
                     value.toInt()
             )

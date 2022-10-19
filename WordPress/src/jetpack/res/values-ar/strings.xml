@@ -1,17 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-07-11 15:54:02+0000
+Translation-Revision-Date: 2022-10-05 11:54:03+0000
 Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;
 Generator: GlotPress/2.4.0-alpha
 Language: ar
 -->
 <resources>
+    <string name="me_btn_share">مشاركة Jetpack مع صديق</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_12">إضافة مؤلف</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_11">نشر صورة</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_10">إصلاح مشكلة الأمان</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_9">شارك على فيسبوك</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_8">البحث عن الإضافات</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_7">استعادة نسخة احتياطية</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_6">الرد على التعليقات</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_5">التحقُّق من الإشعارات</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_4">رصد إحصاءاتك</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_3">كتابة مدونة</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_2">إنشاء موقع</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_1">تحديث إضافة</string>
+    <string name="login_prologue_revamped_content_description_top_bg">تلاشي الخلفية العلوية في Jetpack</string>
+    <string name="login_prologue_revamped_content_description_bg">خلفية Jetpack</string>
+    <string name="login_prologue_revamped_content_description_jetpack_logo">شعار Jetpack</string>
     <string name="me_btn_about">نبذة عن Jetpack</string>
     <string name="sign_out_wpcom_confirm_with_no_changes">هل ترغب في تسجيل الخروج من Jetpack؟</string>
     <string name="me_disconnect_from_wordpress_com">تسجيل الخروج من Jetpack</string>
     <string name="support_ticket_subject">دعم Jetpack الخاص بنظام تشغيل Android</string>
     <string name="login_magic_links_sent_label">تحقَّق من بريدك الإلكتروني على هذا الجهاز، واضغط على الرابط في رسالة البريد الإلكتروني التي تلقيتها من Jetpack.com.</string>
-    <string name="continue_with_wpcom_no_signup">تسجيل الدخول باستخدام ووردبريس.كوم</string>
+    <string name="continue_with_wpcom_no_signup">الاستمرار في ووردبريس.كوم</string>
     <string name="app_tagline">أمان الموقع وأداؤه من جيبك</string>
     <string name="post_signup_interstitial_title">مرحبًا بك في Jetpack</string>
     <string name="app_title">Jetpack الخاص بنظام تشغيل Android</string>

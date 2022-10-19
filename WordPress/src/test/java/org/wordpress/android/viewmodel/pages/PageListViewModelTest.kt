@@ -5,7 +5,6 @@ import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
-import junit.framework.Assert.assertNull
 import kotlinx.coroutines.Dispatchers
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -443,7 +442,7 @@ class PageListViewModelTest : BaseUnitTest() {
 
         val pageItems = pagesResult[1].first
         val pageItem = pageItems[0] as PublishedPage
-        assertNull(pageItem.author)
+        assertThat(pageItem.author).isNull()
     }
 
     private fun buildPageModel(
@@ -468,7 +467,7 @@ class PageListViewModelTest : BaseUnitTest() {
     }
 
     private fun assertDivider(pageItem: PageItem) {
-        assertThat(pageItem is Divider).isTrue()
+        assertThat(pageItem is Divider).isTrue
     }
 
     private fun assertPublishedPage(pageItem: PageItem, pageModel: PageModel, indent: Int = 0) {

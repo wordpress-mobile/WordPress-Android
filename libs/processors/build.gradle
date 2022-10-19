@@ -3,12 +3,6 @@ plugins {
     id "org.jetbrains.kotlin.kapt"
 }
 
-compileKotlin {
-    kotlinOptions {
-        allWarningsAsErrors = true
-    }
-}
-
 dependencies {
     implementation project(':libs:annotations')
     implementation "com.google.auto.service:auto-service:$autoServiceVersion"

@@ -234,8 +234,8 @@ class HistoryViewModel @Inject constructor(
 
     data class ShowDialogEvent(val historyListItem: HistoryListItem, val revisionsList: List<Revision>)
 
+    @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    @SuppressWarnings("unused")
     fun onRevisionsFetched(event: OnRevisionsFetched) {
         if (event.isError) {
             AppLog.e(T.API, "An error occurred while fetching History revisions")

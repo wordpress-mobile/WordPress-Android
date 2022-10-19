@@ -10,21 +10,21 @@ plugins {
 }
 
 ext {
-    wordPressUtilsVersion = '2.7.0'
-    wordPressLoginVersion = '0.19.0'
-    aztecVersion = 'v1.6.0'
+    wordPressUtilsVersion = '3.0.0'
+    wordPressLoginVersion = '1.0.0'
+    aztecVersion = 'v1.6.2'
     gutenbergMobileVersion = '5193-a8efc54b1d85d62c10279726d2a5c5bd3db20689'
-    storiesVersion = '1.4.0'
-    aboutAutomatticVersion = '0.0.6'
+    storiesVersion = '2.0.0'
+    aboutAutomatticVersion = '1.0.0'
 
     minSdkVersion = 24
     compileSdkVersion = 31
-    targetSdkVersion = 30
+    targetSdkVersion = 31
 
     coroutinesVersion = '1.5.2'
     androidxWorkVersion = "2.7.0"
 
-    fluxCVersion = '1.55.0'
+    fluxCVersion = '2.0.0'
 
     appCompatVersion = '1.0.2'
     androidxCoreVersion = '1.3.2'
@@ -113,6 +113,7 @@ allprojects {
     tasks.withType(KotlinCompile).all {
         kotlinOptions {
             jvmTarget = JavaVersion.VERSION_1_8
+            allWarningsAsErrors = true
             freeCompilerArgs += [
                     "-Xopt-in=kotlin.RequiresOptIn"
             ]

@@ -316,7 +316,7 @@ class PreviewImageViewModel : ViewModel() {
     private fun getOutputData() = (uiState.value?.viewPagerItemsStates?.map { OutputData(it.data.highResImageUrl) }
         ?: emptyList())
 
-    private fun isFileUrl(url: String): Boolean = url.toLowerCase(Locale.ROOT).startsWith(FILE_BASE)
+    private fun isFileUrl(url: String): Boolean = url.lowercase(Locale.ROOT).startsWith(FILE_BASE)
 
     data class ImageData(
         val id: Long = UUID.randomUUID().hashCode().toLong(),

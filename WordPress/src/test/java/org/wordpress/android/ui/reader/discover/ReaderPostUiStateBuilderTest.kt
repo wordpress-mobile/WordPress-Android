@@ -203,6 +203,7 @@ class ReaderPostUiStateBuilderTest {
         // Act
         val uiState = mapPostToUiState(post)
         // Assert
+        @Suppress("DEPRECATION")
         assertThat(uiState.discoverSection!!.imageType).isEqualTo(ImageType.AVATAR)
     }
 

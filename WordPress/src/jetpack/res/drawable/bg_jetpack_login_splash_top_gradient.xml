@@ -13,11 +13,14 @@
                 android:startY="0"
                 android:type="linear">
                 <item
+                    android:color="@color/bg_jetpack_login_splash_top_gradient_1"
+                    android:offset="0" />
+                <item
                     android:color="@color/bg_jetpack_login_splash_top_gradient_2"
-                    android:offset="0.38" />
+                    android:offset="0.226" />
                 <item
                     android:color="@color/bg_jetpack_login_splash_top_gradient_3"
-                    android:offset="0.79" />
+                    android:offset="0.51" />
                 <item
                     android:color="@color/bg_jetpack_login_splash_top_gradient_4"
                     android:offset="1" />

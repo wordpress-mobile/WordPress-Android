@@ -71,7 +71,7 @@ class PostSettingsUtilsTest : BaseUnitTest() {
     }
 
     @Test
-    fun `returns "scheduled for" for scheduled post`() {
+    fun `returns 'scheduled for' for scheduled post`() {
         postModel.setStatus(PostStatus.SCHEDULED.toString())
         postModel.setDateCreated(dateCreated)
 
@@ -81,7 +81,7 @@ class PostSettingsUtilsTest : BaseUnitTest() {
     }
 
     @Test
-    fun `returns "published on" for published post`() {
+    fun `returns 'published on' for published post`() {
         postModel.setStatus(PostStatus.PUBLISHED.toString())
         postModel.setDateCreated(dateCreated)
 
@@ -91,7 +91,7 @@ class PostSettingsUtilsTest : BaseUnitTest() {
     }
 
     @Test
-    fun `returns "published on" for private post`() {
+    fun `returns 'published on' for private post`() {
         postModel.setStatus(PostStatus.PRIVATE.toString())
         postModel.setDateCreated(dateCreated)
 
@@ -101,7 +101,7 @@ class PostSettingsUtilsTest : BaseUnitTest() {
     }
 
     @Test
-    fun `returns "scheduled for" for private post that is local and scheduled`() {
+    fun `returns 'scheduled for' for private post that is local and scheduled`() {
         postModel.setStatus(PostStatus.PRIVATE.toString())
         postModel.setIsLocalDraft(true)
 
@@ -115,7 +115,7 @@ class PostSettingsUtilsTest : BaseUnitTest() {
     }
 
     @Test
-    fun `returns "backdated for" for local draft when publish date in the past`() {
+    fun `returns 'backdated for' for local draft when publish date in the past`() {
         postModel.setIsLocalDraft(true)
         postModel.setDateCreated(dateCreated)
 
@@ -125,7 +125,7 @@ class PostSettingsUtilsTest : BaseUnitTest() {
     }
 
     @Test
-    fun `returns "immediately" for local draft when should publish immediately`() {
+    fun `returns 'immediately' for local draft when should publish immediately`() {
         postModel.setIsLocalDraft(true)
         postModel.setStatus(PostStatus.DRAFT.toString())
         postModel.setDateCreated(currentDate)
@@ -136,7 +136,7 @@ class PostSettingsUtilsTest : BaseUnitTest() {
     }
 
     @Test
-    fun `returns "immediately" for local private post that should publish immediately`() {
+    fun `returns 'immediately' for local private post that should publish immediately`() {
         postModel.setIsLocalDraft(true)
         postModel.setStatus(PostStatus.PRIVATE.toString())
         postModel.setDateCreated(currentDate)
@@ -147,7 +147,7 @@ class PostSettingsUtilsTest : BaseUnitTest() {
     }
 
     @Test
-    fun `returns "publish on" for local draft when date within the next 30 minutes`() {
+    fun `returns 'publish on' for local draft when date within the next 30 minutes`() {
         postModel.setIsLocalDraft(true)
 
         // This date is 5 minutes before the currentDate
@@ -161,7 +161,7 @@ class PostSettingsUtilsTest : BaseUnitTest() {
     }
 
     @Test
-    fun `returns "schedule for" when post published in future`() {
+    fun `returns 'schedule for' when post published in future`() {
         // two hours ahead of the currentDate
         val futureDate = "2019-05-05T22:28:20+0200"
 
@@ -173,7 +173,7 @@ class PostSettingsUtilsTest : BaseUnitTest() {
     }
 
     @Test
-    fun `returns "immediately" when post does not have the date and is draft`() {
+    fun `returns 'immediately' when post does not have the date and is draft`() {
         postModel.setStatus(PostStatus.DRAFT.toString())
         postModel.setDateCreated("")
 
@@ -183,7 +183,7 @@ class PostSettingsUtilsTest : BaseUnitTest() {
     }
 
     @Test
-    fun `returns "immediately" in other cases`() {
+    fun `returns 'immediately' in other cases`() {
         postModel.setDateCreated("")
 
         val publishedDate = postSettingsUtils.getPublishDateLabel(postModel)

@@ -8,7 +8,6 @@ import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.test.runBlockingTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Rule
@@ -261,17 +260,16 @@ class ScanViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given no network error ui state, when retry is clicked, then fetch scan state is triggered`() =
-            coroutineScope.runBlockingTest {
-                whenever(scanStore.getScanStateForSite(site)).thenReturn(null)
-                whenever(fetchScanStateUseCase.fetchScanState(site)).thenReturn(flowOf(Failure.NetworkUnavailable))
-                val uiStates = init().uiStates
+    fun `given no network error ui state, when retry is clicked, then fetch scan state is triggered`() = test {
+        whenever(scanStore.getScanStateForSite(site)).thenReturn(null)
+        whenever(fetchScanStateUseCase.fetchScanState(site)).thenReturn(flowOf(Failure.NetworkUnavailable))
+        val uiStates = init().uiStates
 
-                (uiStates.last() as ErrorUiState).action?.invoke()
-                advanceTimeBy(RETRY_DELAY)
+        (uiStates.last() as ErrorUiState).action?.invoke()
+        coroutineScope.advanceTimeBy(RETRY_DELAY)
 
-                verify(fetchScanStateUseCase, times(2)).fetchScanState(site)
-            }
+        verify(fetchScanStateUseCase, times(2)).fetchScanState(site)
+    }
 
     @Test
     fun `given request failed error ui state, when contact support is clicked, then contact support screen is shown`() =

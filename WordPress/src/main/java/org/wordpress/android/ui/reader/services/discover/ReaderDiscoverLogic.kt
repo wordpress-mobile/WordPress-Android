@@ -136,27 +136,27 @@ class ReaderDiscoverLogic(
         if (taskType == REQUEST_FIRST_PAGE) {
             clearCache()
         }
-        val fullCardsJson = json.optJSONArray(JSON_CARDS)
+        json.optJSONArray(JSON_CARDS)?.let { fullCardsJson ->
+            // Parse the json into cards model objects
+            val cards = parseCards(fullCardsJson)
+            insertPostsIntoDb(cards.filterIsInstance<ReaderPostCard>().map { it.post })
+            insertBlogsIntoDb(cards.filterIsInstance<ReaderRecommendedBlogsCard>().map { it.blogs }.flatten())
 
-        // Parse the json into cards model objects
-        val cards = parseCards(fullCardsJson)
-        insertPostsIntoDb(cards.filterIsInstance<ReaderPostCard>().map { it.post })
-        insertBlogsIntoDb(cards.filterIsInstance<ReaderRecommendedBlogsCard>().map { it.blogs }.flatten())
+            // Simplify the json. The simplified version is used in the upper layers to load the data from the db.
+            val simplifiedCardsJson = createSimplifiedJson(fullCardsJson)
+            insertCardsJsonIntoDb(simplifiedCardsJson)
 
-        // Simplify the json. The simplified version is used in the upper layers to load the data from the db.
-        val simplifiedCardsJson = createSimplifiedJson(fullCardsJson)
-        insertCardsJsonIntoDb(simplifiedCardsJson)
+            val nextPageHandle = parseDiscoverCardsJsonUseCase.parseNextPageHandle(json)
+            appPrefsWrapper.readerCardsPageHandle = nextPageHandle
 
-        val nextPageHandle = parseDiscoverCardsJsonUseCase.parseNextPageHandle(json)
-        appPrefsWrapper.readerCardsPageHandle = nextPageHandle
+            if (cards.isEmpty()) {
+                readerTagTableWrapper.clearTagLastUpdated(ReaderTag.createDiscoverPostCardsTag())
+            } else {
+                readerTagTableWrapper.setTagLastUpdated(ReaderTag.createDiscoverPostCardsTag())
+            }
 
-        if (cards.isEmpty()) {
-            readerTagTableWrapper.clearTagLastUpdated(ReaderTag.createDiscoverPostCardsTag())
-        } else {
-            readerTagTableWrapper.setTagLastUpdated(ReaderTag.createDiscoverPostCardsTag())
+            resultListener.onUpdateResult(HAS_NEW)
         }
-
-        resultListener.onUpdateResult(HAS_NEW)
     }
 
     private fun parseCards(cardsJsonArray: JSONArray): ArrayList<ReaderDiscoverCard> {
@@ -201,6 +201,7 @@ class ReaderDiscoverLogic(
      * It for example copies only ids from post object as we don't need to store the gigantic post in the json
      * as it's already stored in the db.
      */
+    @Suppress("NestedBlockDepth")
     private fun createSimplifiedJson(cardsJsonArray: JSONArray): JSONArray {
         var index = 0
         val simplifiedJson = JSONArray()
@@ -208,9 +209,10 @@ class ReaderDiscoverLogic(
             val cardJson = cardsJsonArray.getJSONObject(i)
             when (cardJson.getString(JSON_CARD_TYPE)) {
                 JSON_CARD_RECOMMENDED_BLOGS -> {
-                    val recommendedBlogsCardJson = cardJson.optJSONArray(JSON_CARD_DATA)
-                    if (recommendedBlogsCardJson.length() > 0) {
-                        simplifiedJson.put(index++, createSimplifiedRecommendedBlogsCardJson(cardJson))
+                    cardJson.optJSONArray(JSON_CARD_DATA)?.let { recommendedBlogsCardJson ->
+                        if (recommendedBlogsCardJson.length() > 0) {
+                            simplifiedJson.put(index++, createSimplifiedRecommendedBlogsCardJson(cardJson))
+                        }
                     }
                 }
                 JSON_CARD_INTERESTS_YOU_MAY_LIKE -> {
@@ -242,6 +244,7 @@ class ReaderDiscoverLogic(
         return simplifiedCardJson
     }
 
+    @Suppress("NestedBlockDepth")
     private fun createSimplifiedRecommendedBlogsCardJson(originalCardJson: JSONObject): JSONObject {
         return JSONObject().apply {
             JSONArray().apply {

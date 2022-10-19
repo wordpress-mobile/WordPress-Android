@@ -39,8 +39,8 @@ class ReaderFetchRelatedPostsUseCase @Inject constructor(
         }
     }
 
+    @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    @SuppressWarnings("unused")
     fun onRelatedPostUpdated(event: RelatedPostsUpdated) {
         val result = if (event.didSucceed()) {
             Success(

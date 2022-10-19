@@ -1,17 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-07-12 09:54:03+0000
+Translation-Revision-Date: 2022-10-06 13:54:03+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/2.4.0-alpha
 Language: id
 -->
 <resources>
+    <string name="me_btn_share">Rekomendasikan Jetpack kepada teman</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_12">Tambahkan penulis</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_11">Kirim foto</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_10">Perbaiki masalah keamanan</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_9">Bagikan ke Facebook</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_8">Cari plugin</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_7">Pulihkan cadangan</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_6">Tanggapi komentar</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_5">Periksa pemberitahuan</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_4">Pantau statistik Anda</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_3">Tulis blog</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_2">Buat situs</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_1">Perbarui plugin</string>
+    <string name="login_prologue_revamped_content_description_top_bg">Latar belakang teratas Jetpack memudar</string>
+    <string name="login_prologue_revamped_content_description_bg">Latar belakang Jetpack</string>
+    <string name="login_prologue_revamped_content_description_jetpack_logo">Logo Jetpack</string>
     <string name="me_btn_about">Tentang Jetpack</string>
     <string name="sign_out_wpcom_confirm_with_no_changes">Logout dari Jetpack?</string>
     <string name="me_disconnect_from_wordpress_com">Logout dari Jetpack</string>
     <string name="support_ticket_subject">Jetpack untuk Dukungan Android</string>
     <string name="login_magic_links_sent_label">Periksa email Anda di perangkat ini dan ketuk tautan di email yang Anda terima dari Jetpack.com.</string>
-    <string name="continue_with_wpcom_no_signup">Login dengan WordPress.com</string>
+    <string name="continue_with_wpcom_no_signup">Lanjutkan dengan WordPress.com</string>
     <string name="app_tagline">Keamanan dan performa situs dari saku Anda</string>
     <string name="post_signup_interstitial_title">Selamat datang di Jetpack</string>
     <string name="app_title">Jetpack untuk Android</string>

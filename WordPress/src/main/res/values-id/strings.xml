@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-09-30 09:52:31+0000
+Translation-Revision-Date: 2022-10-05 22:41:59+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: id
 -->
 <resources>
+    <string name="my_site_blogging_prompt_card_number_of_answers_one">1 jawaban</string>
+    <string name="login_prologue_revamped_content_description_wordpress_icon">Ikon WordPress</string>
+    <string name="login_prologue_revamped_tagline">Tulis, edit, dan publikasikan dari mana pun.</string>
     <string name="error_fetch_authors_list">Tidak dapat mengambil penulis</string>
     <string name="post_settings_author">Penulis</string>
     <string name="app_rating_title">Puas dengan %s?</string>
@@ -250,6 +253,7 @@ Language: id
     <string name="my_site_blogging_prompt_card_menu_remove">Hapus dari dasbor</string>
     <string name="my_site_blogging_prompt_card_menu_skip">Lewati prompt ini</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">Lihat lebih banyak prompt</string>
+    <string name="my_site_blogging_prompt_card_number_of_answers_other">%d jawaban</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">Bagikan prompt blogging</string>
     <string name="my_site_blogging_prompt_card_answered_prompt">✓ Terjawab</string>
     <string name="my_site_blogging_prompt_card_answer_prompt">Menjawab prompt</string>
@@ -508,7 +512,7 @@ Language: id
     <string name="blogging_reminders_notification_title">Waktunya menulis pos pada %s</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios">Menyunting blok pakai ulang belum didukung di WordPress untuk iOS</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and">Menyunting blok pakai ulang belum didukung di WordPress untuk Android</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">Selain itu, blok ini bisa dilepas lalu disunting secara terpisah dengan mengetuk \"Ubah ke blok reguler\".</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">Selain itu, blok ini bisa dilepas lalu disunting secara terpisah dengan mengetuk “Ubah ke blok reguler”.</string>
     <string name="blogging_reminders_done">Selesai</string>
     <string name="blogging_reminders_notify_me">Beri tahu saya</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;Masukkan kredensial server Anda&lt;/a&gt; untuk mengaktifkan pemulihan situs sekali klik dari pencadangan.</string>
@@ -562,6 +566,7 @@ Language: id
     <string name="gutenberg_native_move_image_forward">Pindahkan Gambar ke Depan</string>
     <string name="gutenberg_native_move_image_backward">Pindahkan Gambar ke Belakang</string>
     <string name="gutenberg_native_width_settings">Pengaturan Lebar</string>
+    <string name="gutenberg_native_link_rel">Link Rel</string>
     <string name="gutenberg_native_column_settings">Pengaturan Kolom</string>
     <string name="user_profile_untitled_site">(Tanpa judul)</string>
     <string name="user_profile_site_section_header">Situs</string>
@@ -1776,7 +1781,10 @@ Language: id
     <string name="notification_channel_reminder_title">Pengingat</string>
     <string name="stats_select_next_period_description">Pilih periode selanjutnya</string>
     <string name="stats_select_previous_period_description">Pilih periode sebelumnya</string>
+    <string name="stats_most_popular_percent_views">%1$s tayangan</string>
     <string name="stats_insights_popular">Waktu yang Paling Disukai</string>
+    <string name="stats_traffic_change">%1$s (%2$s)</string>
+    <string name="stats_traffic_increase">+%1$s (%2$s)</string>
     <string name="new_site_creation_site_preview_content_description">Menampilkan pratinjau situs</string>
     <string name="new_site_creation_clear_all_content_description">Hapus</string>
     <string name="site_created_but_not_fetched_snackbar_message">Tampaknya sambungan internet Anda lambat. Jika tidak melihat situs baru Anda dalam daftar, coba segarkan halaman.</string>

@@ -2,9 +2,11 @@ package org.wordpress.android.modules;
 
 import com.automattic.android.tracks.crashlogging.CrashLogging;
 
+import org.wordpress.android.bloggingreminders.provider.BloggingRemindersProvider;
 import org.wordpress.android.push.GCMMessageService;
 import org.wordpress.android.push.GCMRegistrationIntentService;
 import org.wordpress.android.push.NotificationsProcessingService;
+import org.wordpress.android.reader.savedposts.provider.ReaderSavedPostsProvider;
 import org.wordpress.android.sharedlogin.provider.SharedLoginProvider;
 import org.wordpress.android.ui.AddQuickPressShortcutActivity;
 import org.wordpress.android.ui.CommentFullScreenDialogFragment;
@@ -652,4 +654,8 @@ public interface AppComponent {
     void inject(WeekWidgetBlockListProviderFactory object);
 
     void inject(UserFlagsProvider object);
+
+    void inject(BloggingRemindersProvider object);
+
+    void inject(ReaderSavedPostsProvider object);
 }

@@ -14,6 +14,8 @@ repositories {
 }
 
 dependencies {
+    implementation "androidx.preference:preference:$preferenceVersion"
+
     implementation "com.automattic:Automattic-Tracks-Android:$tracksVersion"
     implementation "org.wordpress:utils:$wordPressUtilsVersion"
 

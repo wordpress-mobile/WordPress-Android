@@ -9,17 +9,17 @@ import org.wordpress.android.provider.query.QueryResult
 import org.wordpress.android.ui.prefs.AppPrefs.DeletablePrefKey
 import org.wordpress.android.ui.prefs.AppPrefs.UndeletablePrefKey
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
-import org.wordpress.android.util.publicdata.JetpackPublicData
+import org.wordpress.android.util.config.JetpackProviderSyncFeatureConfig
+import org.wordpress.android.util.publicdata.ClientVerification
 import org.wordpress.android.util.signature.SignatureNotFoundException
-import org.wordpress.android.util.signature.SignatureUtils
 import javax.inject.Inject
 
 class UserFlagsProvider : QueryContentProvider() {
     @Inject lateinit var appPrefsWrapper: AppPrefsWrapper
     @Inject lateinit var siteStore: SiteStore
-    @Inject lateinit var signatureUtils: SignatureUtils
     @Inject lateinit var queryResult: QueryResult
-    @Inject lateinit var jetpackPublicData: JetpackPublicData
+    @Inject lateinit var clientVerification: ClientVerification
+    @Inject lateinit var jetpackProviderSyncFeatureConfig: JetpackProviderSyncFeatureConfig
 
     private val userFlagsKeysSet: Set<String> = setOf(
             DeletablePrefKey.MAIN_PAGE_INDEX.name,
@@ -30,6 +30,8 @@ class UserFlagsProvider : QueryContentProvider() {
             DeletablePrefKey.VIDEO_OPTIMIZE_WIDTH.name,
             DeletablePrefKey.VIDEO_OPTIMIZE_QUALITY.name,
             DeletablePrefKey.STRIP_IMAGE_LOCATION.name,
+            DeletablePrefKey.SUPPORT_EMAIL.name,
+            DeletablePrefKey.SUPPORT_NAME.name,
             DeletablePrefKey.GUTENBERG_DEFAULT_FOR_NEW_POSTS.name,
             DeletablePrefKey.USER_IN_GUTENBERG_ROLLOUT_GROUP.name,
             DeletablePrefKey.SHOULD_AUTO_ENABLE_GUTENBERG_FOR_THE_NEW_POSTS.name,
@@ -48,7 +50,8 @@ class UserFlagsProvider : QueryContentProvider() {
             UndeletablePrefKey.SWIPE_TO_NAVIGATE_READER.name,
             UndeletablePrefKey.IS_MAIN_FAB_TOOLTIP_DISABLED.name,
             UndeletablePrefKey.SHOULD_SHOW_STORIES_INTRO.name,
-            UndeletablePrefKey.SHOULD_SHOW_STORAGE_WARNING.name
+            UndeletablePrefKey.SHOULD_SHOW_STORAGE_WARNING.name,
+            UndeletablePrefKey.LAST_USED_USER_ID.name
     )
 
     private val userFlagsCompositeKeysSet: Set<String> = setOf(
@@ -68,13 +71,12 @@ class UserFlagsProvider : QueryContentProvider() {
         sortOrder: String?
     ): Cursor? {
         inject()
+        if (!jetpackProviderSyncFeatureConfig.isEnabled()) {
+            return null
+        }
         return context?.let {
             try {
-                val callerPackageId = callingPackage
-                val callerExpectedPackageId = jetpackPublicData.currentPackageId()
-                val callerSignatureHash = signatureUtils.getSignatureHash(it, callerExpectedPackageId)
-                val callerExpectedSignatureHash = jetpackPublicData.currentPublicKeyHash()
-                if (callerPackageId == callerExpectedPackageId && callerSignatureHash == callerExpectedSignatureHash) {
+                if (clientVerification.canTrust(callingPackage)) {
                     val userFlagsMap = appPrefsWrapper.getAllPrefs()
                             .filter { entry ->
                                 userFlagsKeysSet.contains(entry.key)
