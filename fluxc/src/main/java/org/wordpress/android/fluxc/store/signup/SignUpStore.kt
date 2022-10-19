@@ -6,7 +6,9 @@ import org.wordpress.android.fluxc.store.Store.OnChangedError
 import org.wordpress.android.fluxc.tools.CoroutineEngine
 import org.wordpress.android.util.AppLog
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class SignUpStore @Inject constructor(
     private val signUpRestClient: SignUpRestClient,
     private val coroutineEngine: CoroutineEngine,
