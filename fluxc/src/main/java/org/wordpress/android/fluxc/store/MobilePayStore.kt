@@ -12,7 +12,7 @@ class MobilePayStore @Inject constructor(
 ) {
     suspend fun createOrder(
         productIdentifier: String,
-        price: Long,
+        priceInCents: Int,
         currency: String,
         purchaseToken: String,
         appId: String,
@@ -20,7 +20,7 @@ class MobilePayStore @Inject constructor(
     ) = coroutineEngine.withDefaultContext(API, this, "createOrder") {
         restClient.createOrder(
             productIdentifier,
-            price,
+            priceInCents,
             currency,
             purchaseToken,
             appId,

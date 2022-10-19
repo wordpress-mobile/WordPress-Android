@@ -28,7 +28,7 @@ class MobilePayRestClient @Inject constructor(
 
     suspend fun createOrder(
         productIdentifier: String,
-        price: Long,
+        priceInCents: Int,
         currency: String,
         purchaseToken: String,
         appId: String,
@@ -41,7 +41,7 @@ class MobilePayRestClient @Inject constructor(
             body = mapOf(
                 "site_id" to site.siteId,
                 "product_id" to productIdentifier,
-                "price" to price,
+                "price" to priceInCents,
                 "currency" to currency,
                 "purchase_token" to purchaseToken,
             ),
