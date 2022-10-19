@@ -1,7 +1,7 @@
-package org.wordpress.android.fluxc.store
+package org.wordpress.android.fluxc.store.signup
 
 import org.wordpress.android.fluxc.Payload
-import org.wordpress.android.fluxc.network.rest.wpcom.account.SignUpRestClient
+import org.wordpress.android.fluxc.network.rest.wpcom.account.signup.SignUpRestClient
 import org.wordpress.android.fluxc.store.Store.OnChangedError
 import org.wordpress.android.fluxc.tools.CoroutineEngine
 import org.wordpress.android.util.AppLog
@@ -10,8 +10,11 @@ import javax.inject.Inject
 class SignUpStore @Inject constructor(
     private val signUpRestClient: SignUpRestClient,
     private val coroutineEngine: CoroutineEngine,
+) {
+    companion object {
+        const val EMPTY_SUCCESSFUL_RESPONSE = "Empty successful response"
+    }
 
-    ) {
     suspend fun fetchUserNameSuggestions(username: String): UsernameSuggestionsResult {
         return coroutineEngine.withDefaultContext(AppLog.T.API, this, "fetchUserNameSuggestions") {
             val result = signUpRestClient.fetchUsernameSuggestions(username)
@@ -21,10 +24,6 @@ class SignUpStore @Inject constructor(
                 else -> UsernameSuggestionsResult(result.result)
             }
         }
-    }
-
-    suspend fun createWpAccount(email: String, password: String, username: String) {
-
     }
 
     data class UsernameSuggestionsResult(
@@ -37,5 +36,33 @@ class SignUpStore @Inject constructor(
 
     class UsernameSuggestionsError(
         val message: String? = null
+    ) : OnChangedError
+
+    suspend fun createWpAccount(email: String, password: String, username: String): CreateWpAccountResult {
+        return coroutineEngine.withDefaultContext(AppLog.T.API, this, "createWpAccount") {
+            val result = signUpRestClient.createWPAccount(email, password, username)
+            when {
+                result.isError -> CreateWpAccountResult(
+                    CreateWpAccountError(result.error?.apiError)
+                )
+                result.result == null -> CreateWpAccountResult(
+                    CreateWpAccountError(EMPTY_SUCCESSFUL_RESPONSE)
+                )
+                else -> CreateWpAccountResult(result.result.success, result.result.token)
+            }
+        }
+    }
+
+    data class CreateWpAccountResult(
+        val success: Boolean,
+        val token: String
+    ) : Payload<CreateWpAccountError>() {
+        constructor(error: CreateWpAccountError) : this(false, "") {
+            this.error = error
+        }
+    }
+
+    class CreateWpAccountError(
+        val apiError: String?
     ) : OnChangedError
 }
