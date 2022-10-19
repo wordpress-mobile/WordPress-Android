@@ -3,6 +3,7 @@
 21.1
 -----
 * [**] Added parent page to the page settings in the editor and the page parent can be now changed from it. [https://github.com/wordpress-mobile/WordPress-Android/pull/17329]
+* [***] [Jetpack-only] Redesigned the landing screen. [https://github.com/wordpress-mobile/WordPress-Android/pull/17351]
 
 21.0
 -----
