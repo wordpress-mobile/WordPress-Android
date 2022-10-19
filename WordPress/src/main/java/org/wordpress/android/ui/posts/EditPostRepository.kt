@@ -17,7 +17,6 @@ import org.wordpress.android.fluxc.model.post.PostLocation
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.model.post.PostStatus.DRAFT
 import org.wordpress.android.fluxc.model.post.PostStatus.fromPost
-import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
@@ -41,7 +40,6 @@ class EditPostRepository
     private val localeManagerWrapper: LocaleManagerWrapper,
     private val postStore: PostStore,
     private val postUtils: PostUtilsWrapper,
-    private val pageStore: PageStore,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : CoroutineScope {
@@ -244,7 +242,7 @@ class EditPostRepository
         runBlocking {
             parentTitle = post?.parentId
                     ?.takeIf { it != 0L }
-                    ?.let { pageStore.getPageByRemoteId(it, site)?.title }
+                    ?.let { postStore.getPostByRemotePostId(it, site)?.title }
                     ?: EMPTY_STRING
         }
     }

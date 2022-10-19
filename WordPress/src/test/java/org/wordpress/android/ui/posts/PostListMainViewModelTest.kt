@@ -173,7 +173,7 @@ class PostListMainViewModelTest : BaseUnitTest() {
     @Test
     fun `if post in EditPostRepository is modified then the savePostToDbUseCase should update the post`() {
         // arrange
-        val editPostRepository = EditPostRepository(mock(), mock(), mock(), mock(), TEST_DISPATCHER, TEST_DISPATCHER)
+        val editPostRepository = EditPostRepository(mock(), mock(), mock(), TEST_DISPATCHER, TEST_DISPATCHER)
         editPostRepository.set { mock() }
         val action = { _: PostModel -> true }
 

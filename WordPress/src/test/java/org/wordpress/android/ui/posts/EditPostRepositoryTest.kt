@@ -2,7 +2,6 @@ package org.wordpress.android.ui.posts
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
@@ -16,13 +15,10 @@ import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.page.PageModel
-import org.wordpress.android.fluxc.model.page.PageStatus
 import org.wordpress.android.fluxc.model.post.PostLocation
 import org.wordpress.android.fluxc.model.post.PostStatus.DRAFT
 import org.wordpress.android.fluxc.model.post.PostStatus.PENDING
 import org.wordpress.android.fluxc.model.post.PostStatus.PUBLISHED
-import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.test
 import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult
@@ -37,7 +33,6 @@ class EditPostRepositoryTest {
 
     @Mock lateinit var localeManager: LocaleManagerWrapper
     @Mock lateinit var postStore: PostStore
-    @Mock lateinit var pageStore: PageStore
     @Mock lateinit var postUtils: PostUtilsWrapper
     private lateinit var editPostRepository: EditPostRepository
 
@@ -48,7 +43,6 @@ class EditPostRepositoryTest {
                 localeManager,
                 postStore,
                 postUtils,
-                pageStore,
                 TEST_DISPATCHER,
                 TEST_DISPATCHER
         )
@@ -523,21 +517,9 @@ class EditPostRepositoryTest {
 
         val parentTitle = "Parent"
         val parentPost = PostModel().apply { setTitle(parentTitle) }
-        val parentPage = PageModel(
-                post = parentPost,
-                site = site,
-                pageId = 0,
-                title = parentTitle,
-                status = PageStatus.PUBLISHED,
-                date = Calendar.getInstance().time,
-                hasLocalChanges = false,
-                remoteId = parentId,
-                parent = null,
-                featuredImageId = 0L
-        )
 
         whenever(postStore.getPostByLocalPostId(id)).thenReturn(post)
-        whenever(pageStore.getPageByRemoteId(parentId, site)).thenReturn(parentPage)
+        whenever(postStore.getPostByRemotePostId(parentId, site)).thenReturn(parentPost)
 
         editPostRepository.loadPostByLocalPostId(id, site)
 
@@ -557,7 +539,6 @@ class EditPostRepositoryTest {
         editPostRepository.loadPostByLocalPostId(id, site)
 
         assertThat(editPostRepository.parentTitle).isEqualTo("")
-        verifyZeroInteractions(pageStore)
     }
 
     @Test
@@ -582,21 +563,9 @@ class EditPostRepositoryTest {
 
         val parentTitle = "Parent"
         val parentPost = PostModel().apply { setTitle(parentTitle) }
-        val parentPage = PageModel(
-                post = parentPost,
-                site = site,
-                pageId = 0,
-                title = parentTitle,
-                status = PageStatus.PUBLISHED,
-                date = Calendar.getInstance().time,
-                hasLocalChanges = false,
-                remoteId = parentId,
-                parent = null,
-                featuredImageId = 0L
-        )
 
         whenever(postStore.getPostByRemotePostId(remoteId, site)).thenReturn(post)
-        whenever(pageStore.getPageByRemoteId(parentId, site)).thenReturn(parentPage)
+        whenever(postStore.getPostByRemotePostId(parentId, site)).thenReturn(parentPost)
 
         editPostRepository.loadPostByRemotePostId(remoteId, site)
 
@@ -616,7 +585,6 @@ class EditPostRepositoryTest {
         editPostRepository.loadPostByRemotePostId(remoteId, site)
 
         assertThat(editPostRepository.parentTitle).isEqualTo("")
-        verifyZeroInteractions(pageStore)
     }
 
     @Test
@@ -652,20 +620,8 @@ class EditPostRepositoryTest {
 
         val parentTitle = "Parent"
         val parentPost = PostModel().apply { setTitle(parentTitle) }
-        val parentPage = PageModel(
-                post = parentPost,
-                site = site,
-                pageId = 0,
-                title = parentTitle,
-                status = PageStatus.PUBLISHED,
-                date = Calendar.getInstance().time,
-                hasLocalChanges = false,
-                remoteId = parentId,
-                parent = null,
-                featuredImageId = 0L
-        )
 
-        whenever(pageStore.getPageByRemoteId(parentId, site)).thenReturn(parentPage)
+        whenever(postStore.getPostByRemotePostId(parentId, site)).thenReturn(parentPost)
 
         editPostRepository.updateParentTitle(site)
 
@@ -682,6 +638,5 @@ class EditPostRepositoryTest {
         editPostRepository.updateParentTitle(site)
 
         assertThat(editPostRepository.parentTitle).isEqualTo("")
-        verifyZeroInteractions(pageStore)
     }
 }
