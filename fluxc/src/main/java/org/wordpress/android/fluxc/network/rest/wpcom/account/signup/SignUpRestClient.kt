@@ -17,8 +17,10 @@ import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AppSecrets
 import javax.inject.Inject
 import javax.inject.Named
+import javax.inject.Singleton
 
 @SuppressWarnings("LongParameterList")
+@Singleton
 class SignUpRestClient @Inject constructor(
     dispatcher: Dispatcher,
     appContext: Context?,
