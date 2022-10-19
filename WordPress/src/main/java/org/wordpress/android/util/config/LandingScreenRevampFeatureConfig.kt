@@ -11,6 +11,6 @@ import javax.inject.Inject
 class LandingScreenRevampFeatureConfig
 @Inject constructor(appConfig: AppConfig) : FeatureConfig(appConfig, BuildConfig.LANDING_SCREEN_REVAMP) {
     override fun isEnabled(): Boolean {
-        return super.isEnabled() || BuildConfig.IS_JETPACK_APP
+        return BuildConfig.IS_JETPACK_APP || super.isEnabled()
     }
 }
