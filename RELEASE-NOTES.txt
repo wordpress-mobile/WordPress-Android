@@ -2,7 +2,7 @@
 
 21.1
 -----
-
+* [***] [Jetpack-only] Redesigned the landing screen. [https://github.com/wordpress-mobile/WordPress-Android/pull/17351]
 
 21.0
 -----
