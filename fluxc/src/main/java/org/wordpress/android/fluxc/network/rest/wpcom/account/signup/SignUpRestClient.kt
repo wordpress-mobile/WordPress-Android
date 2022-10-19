@@ -52,7 +52,6 @@ class SignUpRestClient @Inject constructor(
             "email" to email,
             "password" to password,
             "username" to username,
-            "validate" to true,
             "client_id" to appSecrets.appId,
             "client_secret" to appSecrets.appSecret,
             "signup_flow_name" to "mobile-android",
