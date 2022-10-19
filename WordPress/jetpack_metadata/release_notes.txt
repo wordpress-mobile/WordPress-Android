@@ -1,6 +1,4 @@
-* [***] [internal] Updates the target sdk to 31 - Android 12 [https://github.com/wordpress-mobile/WordPress-Android/pull/17153]
-* [*] Updated About screen to use correct urls. [https://github.com/wordpress-mobile/WordPress-Android/pull/17282]
-* [*] Updates splash screen for Android 12+ [https://github.com/wordpress-mobile/WordPress-Android/pull/17273]
-* [*] Fix text color of success messages in the QR code login flow [https://github.com/wordpress-mobile/WordPress-Android/pull/17286]
-* [*] Stats: Fix Western Arabic Numerals not being shown on every text of the stats screens in Arabic languages [https://github.com/wordpress-mobile/WordPress-Android/pull/17217]
-
+- Added correct links to Automattic Family app marbles on the About screen
+- Updated the launch screen for Android versions 12+
+- Changed success message text from red to black for QR code logins
+- Fixed the Stats screen to include Western Arabic numerals for Arabic language users
