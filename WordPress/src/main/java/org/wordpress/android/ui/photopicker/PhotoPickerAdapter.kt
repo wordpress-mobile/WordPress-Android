@@ -4,13 +4,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import kotlinx.coroutines.CoroutineScope
-import org.wordpress.android.ui.photopicker.PhotoPickerAdapterDiffCallback.Payload.COUNT_CHANGE
-import org.wordpress.android.ui.photopicker.PhotoPickerAdapterDiffCallback.Payload.SELECTION_CHANGE
-import org.wordpress.android.ui.photopicker.PhotoPickerUiItem.PhotoItem
-import org.wordpress.android.ui.photopicker.PhotoPickerUiItem.Type
-import org.wordpress.android.ui.photopicker.PhotoPickerUiItem.VideoItem
 import org.wordpress.android.util.image.ImageManager
 
+@Suppress("DEPRECATION")
 @Deprecated(
         "This class is being refactored, if you implement any change, please also update " +
                 "{@link org.wordpress.android.ui.mediapicker.MedaPickerAdapter}"
@@ -19,13 +15,14 @@ class PhotoPickerAdapter internal constructor(
     private val imageManager: ImageManager,
     private val coroutineScope: CoroutineScope
 ) : Adapter<ThumbnailViewHolder>() {
-    private val thumbnailViewUtils = ThumbnailViewUtils(imageManager)
-    private var mediaList = listOf<PhotoPickerUiItem>()
+    @Suppress("DEPRECATION") private val thumbnailViewUtils = ThumbnailViewUtils(imageManager)
+    @Suppress("DEPRECATION") private var mediaList = listOf<PhotoPickerUiItem>()
 
     init {
         setHasStableIds(true)
     }
 
+    @Suppress("DEPRECATION")
     fun loadData(result: List<PhotoPickerUiItem>) {
         val diffResult = DiffUtil.calculateDiff(
                 PhotoPickerAdapterDiffCallback(mediaList, result)
@@ -42,10 +39,20 @@ class PhotoPickerAdapter internal constructor(
         return mediaList[position].id
     }
 
+    @Suppress("DEPRECATION")
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ThumbnailViewHolder {
         return when (viewType) {
-            Type.PHOTO.ordinal -> PhotoThumbnailViewHolder(parent, thumbnailViewUtils, imageManager)
-            Type.VIDEO.ordinal -> VideoThumbnailViewHolder(parent, thumbnailViewUtils, imageManager, coroutineScope)
+            PhotoPickerUiItem.Type.PHOTO.ordinal -> PhotoThumbnailViewHolder(
+                    parent,
+                    thumbnailViewUtils,
+                    imageManager
+            )
+            PhotoPickerUiItem.Type.VIDEO.ordinal -> VideoThumbnailViewHolder(
+                    parent,
+                    thumbnailViewUtils,
+                    imageManager,
+                    coroutineScope
+            )
             else -> throw IllegalArgumentException("Unexpected view type")
         }
     }
@@ -54,6 +61,7 @@ class PhotoPickerAdapter internal constructor(
         return mediaList[position].type.ordinal
     }
 
+    @Suppress("DEPRECATION")
     override fun onBindViewHolder(
         holder: ThumbnailViewHolder,
         position: Int,
@@ -63,19 +71,28 @@ class PhotoPickerAdapter internal constructor(
         var animateSelection = false
         var updateCount = false
         for (payload in payloads) {
-            if (payload === SELECTION_CHANGE) {
+            if (payload === PhotoPickerAdapterDiffCallback.Payload.SELECTION_CHANGE) {
                 animateSelection = true
             }
-            if (payload === COUNT_CHANGE) {
+            if (payload === PhotoPickerAdapterDiffCallback.Payload.COUNT_CHANGE) {
                 updateCount = true
             }
         }
         when (item) {
-            is PhotoItem -> (holder as PhotoThumbnailViewHolder).bind(item, animateSelection, updateCount)
-            is VideoItem -> (holder as VideoThumbnailViewHolder).bind(item, animateSelection, updateCount)
+            is PhotoPickerUiItem.PhotoItem -> (holder as PhotoThumbnailViewHolder).bind(
+                    item,
+                    animateSelection,
+                    updateCount
+            )
+            is PhotoPickerUiItem.VideoItem -> (holder as VideoThumbnailViewHolder).bind(
+                    item,
+                    animateSelection,
+                    updateCount
+            )
         }
     }
 
+    @Suppress("DEPRECATION")
     override fun onBindViewHolder(holder: ThumbnailViewHolder, position: Int) {
         onBindViewHolder(holder, position, listOf())
     }

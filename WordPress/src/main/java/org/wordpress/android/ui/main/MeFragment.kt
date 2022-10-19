@@ -183,6 +183,10 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
         if (unifiedAboutFeatureConfig.isEnabled()) {
             aboutTheAppContainer.isVisible = true
 
+            if (BuildConfig.IS_JETPACK_APP) {
+                meAboutIcon.setImageResource(R.drawable.ic_jetpack_logo_white_24dp)
+            }
+
             rowAboutTheApp.setOnClickListener {
                 viewModel.showUnifiedAbout()
             }
@@ -451,7 +455,7 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
         disconnectProgressDialog = null
     }
 
-    @Suppress("DEPRECATION", "LongMethod", "NestedBlockDepth")
+    @Suppress("DEPRECATION", "OVERRIDE_DEPRECATION", "LongMethod", "NestedBlockDepth")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 

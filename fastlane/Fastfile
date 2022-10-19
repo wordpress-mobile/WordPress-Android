@@ -2,6 +2,7 @@ UI.user_error!('Please run fastlane via `bundle exec`') unless FastlaneCore::Hel
 
 APP_SPECIFIC_VALUES = {
   wordpress: {
+    display_name: 'WordPress',
     metadata_dir: 'metadata',
     glotpress_appstrings_project: 'https://translate.wordpress.org/projects/apps/android/dev/',
     glotpress_metadata_project: 'https://translate.wordpress.org/projects/apps/android/release-notes/',
@@ -9,6 +10,7 @@ APP_SPECIFIC_VALUES = {
     bundle_name_prefix: 'wpandroid'
   },
   jetpack: {
+    display_name: 'Jetpack',
     metadata_dir: 'jetpack_metadata',
     glotpress_appstrings_project: 'https://translate.wordpress.com/projects/jetpack/apps/android/',
     glotpress_metadata_project: 'https://translate.wordpress.com/projects/jetpack/apps/android/release-notes/',

@@ -8,10 +8,12 @@
         <item name="colorSecondaryVariant">@color/colorSecondaryVariant</item>
     </style>
 
-    <style name="LoginTheme.TransparentSystemBars" parent="LoginTheme">
+    <style name="LoginTheme.BaseTransparentSystemBars" parent="LoginTheme">
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
     </style>
+
+    <style name="LoginTheme.TransparentSystemBars" parent="LoginTheme.BaseTransparentSystemBars" />
 
     <style name="Login.EmptyView.TextView.Username" parent="android:Widget.TextView">
         <item name="android:textSize">@null</item>

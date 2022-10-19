@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools">
     <application>
         <!-- Deep Linking Activity -->
-        <activity android:name="org.wordpress.android.ui.deeplinks.DeepLinkingIntentReceiverActivity">
+        <activity android:name="org.wordpress.android.ui.deeplinks.DeepLinkingIntentReceiverActivity"
+            android:exported="true">
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
 

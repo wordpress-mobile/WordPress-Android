@@ -299,7 +299,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         viewModel.writeToBundle(outState)
     }
 
-    @Suppress("DEPRECATION", "NestedBlockDepth")
+    @Suppress("DEPRECATION", "OVERRIDE_DEPRECATION", "NestedBlockDepth")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         viewModel.onStoryComposerAnalyticsSessionStartTimeReset()
         super.onActivityResult(requestCode, resultCode, data)

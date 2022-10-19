@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-09-26 14:54:09+0000
+Translation-Revision-Date: 2022-10-14 08:00:31+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: fr
 -->
 <resources>
+    <string name="my_site_blogging_prompt_card_number_of_answers_one">1 réponse</string>
+    <string name="login_prologue_revamped_content_description_wordpress_icon">Icône WordPress</string>
+    <string name="login_prologue_revamped_tagline">Rédigez, modifiez et publiez depuis n\'importe où.</string>
     <string name="error_fetch_authors_list">Impossible de récupérer les auteurs</string>
     <string name="post_settings_author">Auteur</string>
     <string name="app_rating_title">Vous appréciez %s ?</string>
@@ -250,6 +253,7 @@ Language: fr
     <string name="my_site_blogging_prompt_card_menu_skip">Ignorer cette incitation</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">Afficher plus d’incitations</string>
     <string name="new_site_creation_intents_input_hint">Par ex. Mode, Poésie, Politique</string>
+    <string name="my_site_blogging_prompt_card_number_of_answers_other">%d réponses</string>
     <string name="my_site_blogging_prompt_card_answered_prompt">✓ Vous avez répondu</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">Partager l’incitation à bloguer</string>
     <string name="my_site_all_tab_title">Tout</string>
@@ -508,6 +512,7 @@ Language: fr
     <string name="blogging_reminders_notification_title">C’est l’heure de bloguer sur %s</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios">La modification des blocs réutilisables n’est pas encore prise en charge sur WordPress pour iOS</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and">La modification des blocs réutilisables n’est pas encore prise en charge sur WordPress pour Android</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">Vous pouvez également détacher et modifier ces blocs séparément en appuyant sur « Convertir en bloc normal ».</string>
     <string name="blogging_reminders_done">Terminé</string>
     <string name="blogging_reminders_notify_me">M’avertir</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;Saisissez les identifiants de votre serveur&lt;/a&gt; afin d’activer les restaurations de site en un clic à partir des sauvegardes.</string>
@@ -562,6 +567,7 @@ Language: fr
     <string name="gutenberg_native_move_image_backward">Déplacer l\'image vers l\'arrière</string>
     <string name="gutenberg_native_move_image_forward">Déplacer l\'image vers l\'avant</string>
     <string name="gutenberg_native_column_settings">Réglages de la colonne</string>
+    <string name="gutenberg_native_link_rel">Attribut « Rel » du lien</string>
     <string name="user_profile_site_section_header">Site</string>
     <string name="user_profile_untitled_site">(Sans titre)</string>
     <string name="user_profile_bottom_sheet_description">Profil utilisateur : information sur la feuille du bas</string>
@@ -1776,6 +1782,9 @@ Language: fr
     <string name="stats_select_next_period_description">Sélectionner la période suivante</string>
     <string name="stats_select_previous_period_description">Sélectionner la période précédante</string>
     <string name="stats_insights_popular">Heure la plus populaire</string>
+    <string name="stats_most_popular_percent_views">%1$s de vues</string>
+    <string name="stats_traffic_increase">+%1$s (%2$s)</string>
+    <string name="stats_traffic_change">%1$s (%2$s)</string>
     <string name="new_site_creation_site_preview_content_description">Affichage de l\'aperçu du site</string>
     <string name="new_site_creation_clear_all_content_description">Effacer</string>
     <string name="site_created_but_not_fetched_snackbar_message">Il semblerait que votre connexion soit lente. Si votre nouveau site n\'apparaît pas dans la liste, essayez de la réactualiser.</string>

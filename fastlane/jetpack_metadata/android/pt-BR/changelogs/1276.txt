@@ -1,4 +1,0 @@
-20.8:
-Adicionamos widgets dinâmicos para mostrar estatísticas resumidas, completas e diárias na tela inicial dos dispositivos.
-Usuários em sites com vários autores podem alterar a autoria do conteúdo nas configurações de post e página.
-E usuários falantes de árabe verão apenas numerais arábicos ocidentais nas telas de estatísticas.

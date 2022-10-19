@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-09-26 18:54:10+0000
+Translation-Revision-Date: 2022-10-14 08:00:48+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: tr
 -->
 <resources>
+    <string name="my_site_blogging_prompt_card_number_of_answers_one">1 yanıt</string>
+    <string name="login_prologue_revamped_content_description_wordpress_icon">WordPress simgesi</string>
+    <string name="login_prologue_revamped_tagline">Dilediğiniz yerden yazın, düzenleyin ve yayınlayın.</string>
     <string name="error_fetch_authors_list">Yazarlar alınamadı</string>
     <string name="post_settings_author">Yazar</string>
     <string name="app_rating_title">%s hoşunuza gitti mi?</string>
@@ -250,6 +253,7 @@ Language: tr
     <string name="my_site_blogging_prompt_card_menu_remove">Panodan kaldır</string>
     <string name="my_site_blogging_prompt_card_menu_skip">Bu bilgiyi atla</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">Daha fazla bilgi görüntüle</string>
+    <string name="my_site_blogging_prompt_card_number_of_answers_other">%d yanıt</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">Blog paylaşma istemi</string>
     <string name="my_site_blogging_prompt_card_answered_prompt">✓ Yanıtlandı</string>
     <string name="my_site_blogging_prompt_card_answer_prompt">Yanıt istemi</string>
@@ -508,6 +512,7 @@ Language: tr
     <string name="blogging_reminders_notification_title">%s ile blog açmanın zamanı geldi</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios">Yeniden kullanılabilir blokların düzenlenmesi iOS için WordPress\'te henüz desteklenmemektedir</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and">Yeniden kullanılabilir blokların düzenlenmesi Android için WordPress\'te henüz desteklenmemektedir</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">Alternatif olarak, \"Normal bloklara dönüştür\" seçeneğine dokunarak bu blokları ayırabilir ve ayrı ayrı düzenleyebilirsiniz.</string>
     <string name="blogging_reminders_done">Tamamlandı</string>
     <string name="blogging_reminders_notify_me">Bana bildir</string>
     <string name="restore_details_enter_server_creds_msg">Yedeklemelerinizden tek tıkla geri yüklemeyi etkinleştirmek için &lt;a href=\"%1$s\"&gt;sunucu kimlik bilgilerinizi girin&lt;/a&gt;.</string>
@@ -561,6 +566,7 @@ Language: tr
     <string name="gutenberg_native_move_image_forward">Görseli öne taşı</string>
     <string name="gutenberg_native_move_image_backward">Görseli geriye taşı</string>
     <string name="gutenberg_native_width_settings">Genişlik Ayarları</string>
+    <string name="gutenberg_native_link_rel">Bağlantı için Rel</string>
     <string name="gutenberg_native_column_settings">Sütun Ayarları</string>
     <string name="user_profile_untitled_site">(Başlıksız)</string>
     <string name="user_profile_site_section_header">Site</string>
@@ -1775,7 +1781,10 @@ Language: tr
     <string name="notification_channel_reminder_title">Hatırlatıcı</string>
     <string name="stats_select_next_period_description">Gelecek dönemi seç</string>
     <string name="stats_select_previous_period_description">Önceki dönemi seç</string>
+    <string name="stats_most_popular_percent_views">Görüntüleme oranı: %1$s</string>
     <string name="stats_insights_popular">En popüler zaman</string>
+    <string name="stats_traffic_change">%1$s (%2$s)</string>
+    <string name="stats_traffic_increase">+%1$s (%2$s)</string>
     <string name="new_site_creation_site_preview_content_description">Site önizlemesi gösteriliyor</string>
     <string name="new_site_creation_clear_all_content_description">Temizle</string>
     <string name="site_created_but_not_fetched_snackbar_message">Yavaş bir bağlantı kullanıyorsunuz gibi duruyor. Yeni sitenizi listede görmüyorsanız listeyi yenilemeyi deneyin.</string>
