@@ -4081,6 +4081,9 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="about_automattic_pocketcasts" tools:ignore="UnusedResources" a8c-src-lib="about">Pocket Casts</string>
     <string name="about_automattic_simplenote" tools:ignore="UnusedResources" a8c-src-lib="about">Simplenote</string>
     <string name="about_automattic_tumblr" tools:ignore="UnusedResources" a8c-src-lib="about">Tumblr</string>
+    <string name="about_automattic_youtube" tools:ignore="UnusedResources" a8c-src-lib="about">YouTube</string>
+    <string name="about_automattic_facebook" tools:ignore="UnusedResources" a8c-src-lib="about">Facebook</string>
+    <string name="about_automattic_linkedin" tools:ignore="UnusedResources" a8c-src-lib="about">LinkedIn</string>
     <string name="about_automattic_woocommerce" tools:ignore="UnusedResources" a8c-src-lib="about">WooCommerce</string>
     <string name="about_automattic_wordpress" tools:ignore="UnusedResources" a8c-src-lib="about">WordPress</string>
     <string name="about_automattic_logo_description" tools:ignore="UnusedResources" a8c-src-lib="about">Automattic logo</string>

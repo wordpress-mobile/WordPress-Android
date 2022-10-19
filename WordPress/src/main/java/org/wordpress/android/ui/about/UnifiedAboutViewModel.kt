@@ -49,13 +49,7 @@ class UnifiedAboutViewModel @Inject constructor(
             socialsConfig = SocialsConfig(
                     twitterUsername = if (buildConfig.isJetpackApp) JP_SOCIAL_HANDLE else WP_SOCIAL_HANDLE
             ),
-            customItems = listOf(
-                    ItemConfig(
-                            name = BLOG_ITEM_NAME,
-                            title = blogTitle(),
-                            onClick = ::onBlogClick
-                    )
-            ),
+            customItems = getCustomItems(),
             legalConfig = LegalConfig(
                     tosUrl = wpUrlUtils.buildTermsOfServiceUrl(contextProvider.getContext()),
                     privacyPolicyUrl = Constants.URL_PRIVACY_POLICY,
@@ -92,12 +86,54 @@ class UnifiedAboutViewModel @Inject constructor(
         )
     }
 
+    private fun getCustomItems(): List<ItemConfig> = if (buildConfig.isJetpackApp) {
+        listOf(
+                ItemConfig(
+                        name = JP_TUMBLR_ITEM_NAME,
+                        title = contextProvider.getContext().getString(R.string.about_automattic_tumblr),
+                        onClick = { onItemClick(JP_TUMBLR_URL) }
+                ),
+                ItemConfig(
+                        name = JP_YOUTUBE_ITEM_NAME,
+                        title = contextProvider.getContext().getString(R.string.about_automattic_youtube),
+                        onClick =  { onItemClick(JP_YOUTUBE_URL) }
+                ),
+                ItemConfig(
+                        name = JP_FACEBOOK_ITEM_NAME,
+                        title = contextProvider.getContext().getString(R.string.about_automattic_facebook),
+                        onClick =  { onItemClick(JP_FACEBOOK_URL) }
+                ),
+                ItemConfig(
+                        name = JP_LINKEDIN_ITEM_NAME,
+                        title = contextProvider.getContext().getString(R.string.about_automattic_linkedin),
+                        onClick =  { onItemClick(JP_LINKEDIN_URL) }
+                ),
+                ItemConfig(
+                        name = BLOG_ITEM_NAME,
+                        title = contextProvider.getContext().getString(R.string.about_blog),
+                        onClick = ::onBlogClick
+                )
+        )
+    } else {
+        listOf(
+                ItemConfig(
+                name = BLOG_ITEM_NAME,
+                title = blogTitle(),
+                onClick = ::onBlogClick
+                )
+        )
+    }
+
     private fun onDismiss() {
         _onNavigation.postValue(Event(Dismiss))
     }
 
     private fun onBlogClick() {
         _onNavigation.postValue(Event(OpenBlog(if (buildConfig.isJetpackApp) JP_BLOG_URL else WP_BLOG_URL)))
+    }
+
+    private fun onItemClick(socialMedialUrl: String) {
+        _onNavigation.postValue(Event(OpenBlog(socialMedialUrl)))
     }
 
     private fun blogTitle() = if (buildConfig.isJetpackApp) {
@@ -131,5 +167,15 @@ class UnifiedAboutViewModel @Inject constructor(
         private const val JP_APPS_URL = "https://jetpack.com/app"
         private const val JP_BLOG_URL = "https://jetpack.com/blog"
         private const val JP_WORK_WITH_US_URL = "https://automattic.com/work-with-us/"
+
+        private const val JP_TUMBLR_ITEM_NAME = "tumblr"
+        private const val JP_YOUTUBE_ITEM_NAME = "youtube"
+        private const val JP_FACEBOOK_ITEM_NAME = "facebook"
+        private const val JP_LINKEDIN_ITEM_NAME = "linkedin"
+
+        private const val JP_TUMBLR_URL = "https://www.tumblr.com/jetpack/"
+        private const val JP_YOUTUBE_URL = "https://www.youtube.com/JetpackOfficial/"
+        private const val JP_FACEBOOK_URL = "https://www.facebook.com/jetpackme/"
+        private const val JP_LINKEDIN_URL = "https://www.linkedin.com/company/jetpack-for-wordpress/"
     }
 }
