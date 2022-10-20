@@ -79,6 +79,13 @@ dependencies {
         }
     }
     
+    // Forcing version due to https://github.com/facebook/SoLoader/issues/94
+    // To be removed with React Native 0.70+
+    implementation("com.facebook.soloader:soloader") {
+        version {
+            strictly '0.10.4'
+        }
+    }
     implementation("com.facebook.react:hermes-engine:0.69.4") {
         exclude group:'com.facebook.fbjni'
     }
