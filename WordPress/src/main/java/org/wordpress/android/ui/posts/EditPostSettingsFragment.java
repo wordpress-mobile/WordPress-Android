@@ -410,7 +410,9 @@ public class EditPostSettingsFragment extends Fragment {
             }
         });
 
-        if (getEditPostRepository() != null) hideSpecificViews(getEditPostRepository().isPage());
+        if (getEditPostRepository() != null) {
+            hideSpecificViews(getEditPostRepository().isPage());
+        }
         setupSettingHintsForAccessibility();
         applyAccessibilityHeadingToSettings();
 
