@@ -491,7 +491,7 @@ public class EditPostSettingsFragment extends Fragment {
         }
         hideSpecificViews(getEditPostRepository().isPage());
         mExcerptTextView.setText(getEditPostRepository().getExcerpt());
-        mParentTextView.setText(getEditPostRepository().getParentTitle());
+        mParentTextView.setText(getEditPostRepository().getParentTitle(getSite()));
         mSlugTextView.setText(getEditPostRepository().getSlug());
         mPasswordTextView.setText(getEditPostRepository().getPassword());
         PostImmutableModel postModel = getEditPostRepository().getPost();
@@ -790,8 +790,7 @@ public class EditPostSettingsFragment extends Fragment {
                 return hasChanged;
             }, (postModel, result) -> {
                 if (result == UpdatePostResult.Updated.INSTANCE) {
-                    editPostRepository.updateParentTitle(site);
-                    mParentTextView.setText(editPostRepository.getParentTitle());
+                    mParentTextView.setText(editPostRepository.getParentTitle(site));
                 }
                 return null;
             });

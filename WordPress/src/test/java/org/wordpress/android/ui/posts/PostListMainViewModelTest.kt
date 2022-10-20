@@ -154,7 +154,7 @@ class PostListMainViewModelTest : BaseUnitTest() {
         viewModel.start(site, PostListRemotePreviewState.NONE, bottomSheetPostId, editPostRepository)
 
         // assert
-        verify(editPostRepository, times(1)).loadPostByLocalPostId(any(), any())
+        verify(editPostRepository, times(1)).loadPostByLocalPostId(any())
     }
 
     @Test
@@ -166,7 +166,7 @@ class PostListMainViewModelTest : BaseUnitTest() {
         viewModel.start(site, PostListRemotePreviewState.NONE, bottomSheetPostId, editPostRepository)
 
         // assert
-        verify(editPostRepository, times(0)).loadPostByLocalPostId(any(), any())
+        verify(editPostRepository, times(0)).loadPostByLocalPostId(any())
     }
 
     @InternalCoroutinesApi

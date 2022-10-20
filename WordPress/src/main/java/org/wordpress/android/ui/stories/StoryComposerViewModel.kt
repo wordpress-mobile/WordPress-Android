@@ -92,7 +92,7 @@ class StoryComposerViewModel @Inject constructor(
             // Bump post created analytics only once, first time the editor is opened
             _trackEditorCreatedPost.postValue(Event(Unit))
         } else {
-            editPostRepository.loadPostByLocalPostId(postId.value, site)
+            editPostRepository.loadPostByLocalPostId(postId.value)
         }
 
         // Ensure we have a valid post

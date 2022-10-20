@@ -98,8 +98,7 @@ class EditPostRepository
         get() = post!!.tagNameList
     val dateLocallyChanged: String
         get() = post!!.dateLocallyChanged
-    var parentTitle: String = EMPTY_STRING
-        private set
+    private var parent: ParentPage = ParentPage(0L, EMPTY_STRING)
 
     private var locked = false
 
@@ -149,9 +148,11 @@ class EditPostRepository
     @Synchronized
     private fun reportTransactionState(lock: Boolean) {
         if (lock && locked) {
-            val message = "EditPostRepository: Transaction is writing on a locked thread ${Arrays.toString(
-                    Thread.currentThread().stackTrace
-            )}"
+            val message = "EditPostRepository: Transaction is writing on a locked thread ${
+                Arrays.toString(
+                        Thread.currentThread().stackTrace
+                )
+            }"
             AppLog.e(T.EDITOR, message)
         }
         locked = lock
@@ -220,11 +221,10 @@ class EditPostRepository
             requireNotNull(post)
     )
 
-    fun loadPostByLocalPostId(postId: Int, site: SiteModel) {
+    fun loadPostByLocalPostId(postId: Int) {
         reportTransactionState(true)
         post = postStore.getPostByLocalPostId(postId)
         savePostSnapshot()
-        updateParentTitle(site)
         reportTransactionState(false)
     }
 
@@ -232,21 +232,32 @@ class EditPostRepository
         reportTransactionState(true)
         post = postStore.getPostByRemotePostId(remotePostId, site)
         savePostSnapshot()
-        updateParentTitle(site)
         reportTransactionState(false)
     }
 
-    fun updateParentTitle(site: SiteModel) {
-        runBlocking {
-            parentTitle = post?.parentId
-                    ?.takeIf { it != 0L }
-                    ?.let { postStore.getPostByRemotePostId(it, site)?.title }
-                    ?: EMPTY_STRING
+    fun getParentTitle(site: SiteModel): String {
+        // update parent local field if parent ID of current post has changed
+        if (parent.id != post?.parentId) {
+            runBlocking {
+                val parentId = post?.parentId ?: 0L
+                val parentTitle = parentId
+                        .takeUnless { it == 0L }
+                        ?.let { postStore.getPostByRemotePostId(it, site)?.title }
+                        ?: EMPTY_STRING
+                parent = ParentPage(parentId, parentTitle)
+            }
         }
+
+        return parent.title
     }
 
     sealed class UpdatePostResult {
         object Updated : UpdatePostResult()
         object NoChanges : UpdatePostResult()
     }
+
+    private data class ParentPage(
+        val id: Long,
+        val title: String,
+    )
 }
