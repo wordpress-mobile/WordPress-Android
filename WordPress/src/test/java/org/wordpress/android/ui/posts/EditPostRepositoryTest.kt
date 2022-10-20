@@ -345,7 +345,6 @@ class EditPostRepositoryTest {
         editPostRepository.set { post }
 
         assertThat(editPostRepository.getPost()!!.parentId).isEqualTo(parentId)
-        assertThat(editPostRepository.parentId).isEqualTo(parentId)
     }
 
     @Test
