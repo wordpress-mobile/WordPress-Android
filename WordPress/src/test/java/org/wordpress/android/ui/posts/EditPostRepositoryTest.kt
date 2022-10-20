@@ -572,7 +572,7 @@ class EditPostRepositoryTest {
     }
 
     @Test
-    fun `loads parentTitle from store for post loaded by remote id is 0`() = test {
+    fun `empty parentTitle for post loaded by remote id when parentId is 0`() = test {
         val remoteId = 2L
         val parentId = 0L
 
