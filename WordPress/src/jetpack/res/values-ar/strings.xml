@@ -19,8 +19,6 @@ Language: ar
     <string name="login_prologue_revamped_jetpack_feature_text_3">كتابة مدونة</string>
     <string name="login_prologue_revamped_jetpack_feature_text_2">إنشاء موقع</string>
     <string name="login_prologue_revamped_jetpack_feature_text_1">تحديث إضافة</string>
-    <string name="login_prologue_revamped_content_description_top_bg">تلاشي الخلفية العلوية في Jetpack</string>
-    <string name="login_prologue_revamped_content_description_bg">خلفية Jetpack</string>
     <string name="login_prologue_revamped_content_description_jetpack_logo">شعار Jetpack</string>
     <string name="me_btn_about">نبذة عن Jetpack</string>
     <string name="sign_out_wpcom_confirm_with_no_changes">هل ترغب في تسجيل الخروج من Jetpack؟</string>

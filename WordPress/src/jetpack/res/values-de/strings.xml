@@ -19,8 +19,6 @@ Language: de
     <string name="login_prologue_revamped_jetpack_feature_text_3">Ein Blog schreiben</string>
     <string name="login_prologue_revamped_jetpack_feature_text_2">Eine Website erstellen</string>
     <string name="login_prologue_revamped_jetpack_feature_text_1">Ein Plugin aktualisieren</string>
-    <string name="login_prologue_revamped_content_description_top_bg">Oberen Hintergrund in Jetpack ausblenden</string>
-    <string name="login_prologue_revamped_content_description_bg">Jetpack-Hintergrund</string>
     <string name="login_prologue_revamped_content_description_jetpack_logo">Jetpack-Logo</string>
     <string name="me_btn_about">Über Jetpack</string>
     <string name="sign_out_wpcom_confirm_with_no_changes">Von Jetpack abmelden?</string>

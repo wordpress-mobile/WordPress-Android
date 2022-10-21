@@ -19,8 +19,6 @@ Language: zh_TW
     <string name="login_prologue_revamped_jetpack_feature_text_3">撰寫網誌</string>
     <string name="login_prologue_revamped_jetpack_feature_text_2">建置網站</string>
     <string name="login_prologue_revamped_jetpack_feature_text_1">Update a plugin</string>
-    <string name="login_prologue_revamped_content_description_top_bg">Jetpack top background fade</string>
-    <string name="login_prologue_revamped_content_description_bg">Jetpack background</string>
     <string name="login_prologue_revamped_content_description_jetpack_logo">Jetpack 標誌</string>
     <string name="me_btn_about">關於 Jetpack</string>
     <string name="sign_out_wpcom_confirm_with_no_changes">是否登出 Jetpack？</string>
