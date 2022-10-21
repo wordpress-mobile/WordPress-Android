@@ -19,8 +19,6 @@ Language: tr
     <string name="login_prologue_revamped_jetpack_feature_text_3">Blog yazın</string>
     <string name="login_prologue_revamped_jetpack_feature_text_2">Bir site oluşturun</string>
     <string name="login_prologue_revamped_jetpack_feature_text_1">Eklentiyi güncelle</string>
-    <string name="login_prologue_revamped_content_description_top_bg">Jetpack üst arka planı soluk</string>
-    <string name="login_prologue_revamped_content_description_bg">Jetpack arka planı</string>
     <string name="login_prologue_revamped_content_description_jetpack_logo">Jetpack logosu</string>
     <string name="me_btn_about">Jetpack Hakkında</string>
     <string name="sign_out_wpcom_confirm_with_no_changes">Jetpack\'ten çıkılsın mı?</string>

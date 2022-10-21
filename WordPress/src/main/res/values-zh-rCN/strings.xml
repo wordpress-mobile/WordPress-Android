@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-10-14 08:01:49+0000
+Translation-Revision-Date: 2022-10-20 09:54:07+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.3
 Language: zh_CN
 -->
 <resources>
+    <string name="about_automattic_contribute_item_title">贡献</string>
+    <string name="about_news">新闻</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_one">1 条回复</string>
     <string name="login_prologue_revamped_content_description_wordpress_icon">WordPress 图标</string>
     <string name="login_prologue_revamped_tagline">随时随地撰写、编辑和发布内容。</string>

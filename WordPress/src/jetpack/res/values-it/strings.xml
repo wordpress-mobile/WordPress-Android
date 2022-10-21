@@ -19,8 +19,6 @@ Language: it
     <string name="login_prologue_revamped_jetpack_feature_text_3">Scrivi un blog</string>
     <string name="login_prologue_revamped_jetpack_feature_text_2">Crea un sito</string>
     <string name="login_prologue_revamped_jetpack_feature_text_1">Aggiorna un plugin</string>
-    <string name="login_prologue_revamped_content_description_top_bg">Dissolvenza sfondo superiore Jetpack</string>
-    <string name="login_prologue_revamped_content_description_bg">Sfondo Jetpack</string>
     <string name="login_prologue_revamped_content_description_jetpack_logo">Logo Jetpack</string>
     <string name="me_btn_about">Informazioni su Jetpack</string>
     <string name="sign_out_wpcom_confirm_with_no_changes">Uscire da Jetpack?</string>

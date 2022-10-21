@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-10-07 13:02:23+0000
+Translation-Revision-Date: 2022-10-20 09:54:07+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.3
 Language: ja_JP
 -->
 <resources>
+    <string name="about_automattic_contribute_item_title">参加</string>
+    <string name="about_news">ニュース</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_one">1件の回答</string>
     <string name="login_prologue_revamped_content_description_wordpress_icon">WordPress アイコン</string>
     <string name="login_prologue_revamped_tagline">どこからでも記事の作成、編集、投稿が可能です。</string>

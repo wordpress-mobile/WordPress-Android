@@ -19,8 +19,6 @@ Language: ja_JP
     <string name="login_prologue_revamped_jetpack_feature_text_3">ブログに投稿</string>
     <string name="login_prologue_revamped_jetpack_feature_text_2">サイトを構築</string>
     <string name="login_prologue_revamped_jetpack_feature_text_1">プラグインを更新</string>
-    <string name="login_prologue_revamped_content_description_top_bg">Jetpack のトップ背景のフェード</string>
-    <string name="login_prologue_revamped_content_description_bg">Jetpack の背景</string>
     <string name="login_prologue_revamped_content_description_jetpack_logo">Jetpack のロゴ</string>
     <string name="me_btn_about">Jetpack について</string>
     <string name="sign_out_wpcom_confirm_with_no_changes">Jetpack からログアウトしますか ?</string>

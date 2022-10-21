@@ -19,8 +19,6 @@ Language: sv_SE
     <string name="login_prologue_revamped_jetpack_feature_text_3">Skriv en blogg</string>
     <string name="login_prologue_revamped_jetpack_feature_text_2">Bygg en webbplats</string>
     <string name="login_prologue_revamped_jetpack_feature_text_1">Uppdatera ett tillägg</string>
-    <string name="login_prologue_revamped_content_description_top_bg">Jetpack-bakgrund med toning längst upp</string>
-    <string name="login_prologue_revamped_content_description_bg">Jetpack-bakgrund</string>
     <string name="login_prologue_revamped_content_description_jetpack_logo">Jetpack-logotyp</string>
     <string name="me_btn_about">Om Jetpack</string>
     <string name="sign_out_wpcom_confirm_with_no_changes">Logga ut från Jetpack?</string>

@@ -19,8 +19,6 @@ Language: id
     <string name="login_prologue_revamped_jetpack_feature_text_3">Tulis blog</string>
     <string name="login_prologue_revamped_jetpack_feature_text_2">Buat situs</string>
     <string name="login_prologue_revamped_jetpack_feature_text_1">Perbarui plugin</string>
-    <string name="login_prologue_revamped_content_description_top_bg">Latar belakang teratas Jetpack memudar</string>
-    <string name="login_prologue_revamped_content_description_bg">Latar belakang Jetpack</string>
     <string name="login_prologue_revamped_content_description_jetpack_logo">Logo Jetpack</string>
     <string name="me_btn_about">Tentang Jetpack</string>
     <string name="sign_out_wpcom_confirm_with_no_changes">Logout dari Jetpack?</string>
