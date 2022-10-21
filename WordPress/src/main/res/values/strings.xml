@@ -4216,7 +4216,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="wp_jetpack_powered_stats_powered_by_jetpack_caption">Watch your traffic grow and learn about your audience with redesigned Stats and Insights, now available in the new Jetpack app.</string>
     <string name="wp_jetpack_powered_notifications_powered_by_jetpack">Notifications are powered by Jetpack</string>
     <string name="wp_jetpack_powered_notifications_powered_by_jetpack_caption">Stay informed with realtime updates for new comments, site traffic, security reports and more.</string>
-    <string name="wp_jetpack_get_new_jetpack_app">Get the new Jetpack app</string>
+    <string name="wp_jetpack_get_new_jetpack_app">Try the new Jetpack app</string>
     <string name="wp_jetpack_continue_to_reader">Continue to Reader</string>
     <string name="wp_jetpack_continue_to_stats">Continue to Stats</string>
     <string name="wp_jetpack_continue_to_notifications">Continue to Notifications</string>
