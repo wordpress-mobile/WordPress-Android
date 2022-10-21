@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 
 plugins {
     id "com.automattic.android.fetchstyle"
@@ -119,6 +120,25 @@ allprojects {
                     "-Xopt-in=kotlin.RequiresOptIn"
             ]
         }
+    }
+
+    def isNonStable = { String version ->
+        def nonStableKeyword = ["dev", "alpha", "beta", "rc"].any {keyword ->
+            version.toLowerCase().contains(keyword)
+        }
+        return nonStableKeyword
+    }
+    tasks.withType(DependencyUpdatesTask).all {
+        rejectVersionIf {
+            isNonStable(it.candidate.version) && !isNonStable(it.currentVersion)
+        }
+        checkConstraints = false
+        checkBuildEnvironmentConstraints = false
+        checkForGradleUpdate = true
+        gradleReleaseChannel = "release-candidate"
+        outputDir = "build/reports/dependency-updates"
+        reportfileName = "advise"
+        outputFormatter = "plain,json,xml,html"
     }
 }
 
