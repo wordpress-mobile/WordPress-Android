@@ -285,7 +285,7 @@
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/post_parent"
                     style="@style/PostSettingsSubtitle"
-                    android:hint="@string/post_settings_not_set" />
+                    android:hint="@string/top_level" />
 
             </LinearLayout>
 
