@@ -28,6 +28,8 @@ import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.material.snackbar.Snackbar;
+
 import org.apache.commons.text.StringEscapeUtils;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -68,11 +70,13 @@ import org.wordpress.android.util.AccessibilityUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
+import org.wordpress.android.util.NetworkUtilsWrapper;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageManager.RequestListener;
 import org.wordpress.android.util.image.ImageType;
+import org.wordpress.android.widgets.WPSnackbar;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -149,6 +153,7 @@ public class EditPostSettingsFragment extends Fragment {
     @Inject UpdatePostStatusUseCase mUpdatePostStatusUseCase;
     @Inject MediaPickerLauncher mMediaPickerLauncher;
     @Inject UpdateFeaturedImageUseCase mUpdateFeaturedImageUseCase;
+    @Inject NetworkUtilsWrapper mNetworkUtilsWrapper;
 
     @Inject ViewModelProvider.Factory mViewModelFactory;
     private EditPostPublishSettingsViewModel mPublishedViewModel;
@@ -573,6 +578,11 @@ public class EditPostSettingsFragment extends Fragment {
             return;
         }
 
+        if (!mNetworkUtilsWrapper.isNetworkAvailable()) {
+            showNoNetworkSnackbar();
+            return;
+        }
+
         long remoteId = repository.getRemotePostId();
         ActivityLauncher.viewPageParentForResult(this, site, remoteId);
     }
@@ -684,6 +694,11 @@ public class EditPostSettingsFragment extends Fragment {
 
     private void showAuthorDialog() {
         if (!isAdded()) {
+            return;
+        }
+
+        if (!mNetworkUtilsWrapper.isNetworkAvailable()) {
+            showNoNetworkSnackbar();
             return;
         }
 
@@ -1308,8 +1323,18 @@ public class EditPostSettingsFragment extends Fragment {
         }
     }
 
+    private void showNoNetworkSnackbar() {
+        String message = getString(R.string.no_network_message);
+        WPSnackbar.make(
+                requireView().findViewById(R.id.settings_fragment_root),
+                message,
+                Snackbar.LENGTH_LONG
+        ).show();
+    }
+
     interface EditPostSettingsCallback {
         void onEditPostPublishedSettingsClick();
+
         void clearFeaturedImage();
     }
 }
