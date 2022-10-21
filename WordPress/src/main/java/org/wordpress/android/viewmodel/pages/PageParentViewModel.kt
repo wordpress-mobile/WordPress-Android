@@ -107,7 +107,11 @@ class PageParentViewModel
         )
 
         val choices = pageStore.getPagesFromDb(site)
-                .filter { it.remoteId != pageId && it.status == PUBLISHED }
+                .filter {
+                    // negative local page ID used as a temp remote post ID for local-only pages and can't be assigned
+                    // as parent to other pages properly, better to filter them out
+                    it.remoteId > 0 && it.remoteId != pageId && it.status == PUBLISHED
+                }
         val parentChoices = choices.filter { isNotChild(it, choices) }
         if (parentChoices.isNotEmpty()) {
             parents.add(Divider(resourceProvider.getString(R.string.pages)))

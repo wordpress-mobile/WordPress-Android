@@ -75,9 +75,10 @@ class PageParentViewModelTest {
     }
 
     @Test
-    fun `page list shows all pages for newly created page that was never saved (no id)`() {
-        val allPageIds = fakePublishedPageList()
+    fun `page list shows all pages except local-only pages for newly created page that was never saved (no id)`() {
+        val validIds = fakePublishedPageList()
                 .map { it.remoteId }
+                .filterNot { it < 0 }
 
         viewModel.start(site, 0L)
 
@@ -86,16 +87,16 @@ class PageParentViewModelTest {
                 ?: emptyList()
 
         assertThat(shownPageIds).first().isEqualTo(0L)
-        assertThat(shownPageIds).containsAll(allPageIds)
+        assertThat(shownPageIds).containsAll(validIds)
     }
 
     @Test
-    fun `page list shows all pages except for itself and children`() {
+    fun `page list shows all pages except for itself, children and local-only pages`() {
         val pageId = 3L
         val childrenIds = listOf(4L, 5L)
         val validIds = fakePublishedPageList()
                 .map { it.remoteId }
-                .filterNot { it == pageId || it in childrenIds }
+                .filterNot { it < 0 || it == pageId || it in childrenIds }
 
         viewModel.start(site, pageId)
 
@@ -165,8 +166,9 @@ class PageParentViewModelTest {
         val page3 = fakePublishedPageModel(3L, "Page 3")
         val page3A = fakePublishedPageModel(4L, "Page 3A", parent = page3)
         val page3B = fakePublishedPageModel(5L, "Page 3B", parent = page3A)
+        val localPage = fakePublishedPageModel(-1L, "Local Page")
 
-        return listOf(page1, page2, page3, page3A, page3B)
+        return listOf(page1, page2, page3, page3A, page3B, localPage)
     }
 
     private fun fakePublishedPageModel(id: Long, title: String, parent: PageModel? = null): PageModel {
