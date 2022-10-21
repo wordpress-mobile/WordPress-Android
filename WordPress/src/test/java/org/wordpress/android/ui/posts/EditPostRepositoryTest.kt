@@ -581,7 +581,10 @@ class EditPostRepositoryTest {
         val site = SiteModel()
 
         val parentTitle = "Parent"
-        val parentPost = PostModel().apply { setTitle(parentTitle) }
+        val parentPost = PostModel().apply {
+            setRemotePostId(parentId)
+            setTitle(parentTitle)
+        }
 
         whenever(postStore.getPostByRemotePostId(remoteId, site)).thenReturn(post)
         whenever(postStore.getPostByRemotePostId(parentId, site)).thenReturn(parentPost)
