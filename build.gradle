@@ -3,6 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     id "com.automattic.android.fetchstyle"
     id "io.gitlab.arturbosch.detekt"
+    id "com.github.ben-manes.versions" apply false
     id "androidx.navigation.safeargs.kotlin" apply false
     id "com.android.library" apply false
     id 'com.google.gms.google-services' apply false

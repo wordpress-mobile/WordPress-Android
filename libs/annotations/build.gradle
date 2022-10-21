@@ -1,3 +1,4 @@
 plugins {
     id "org.jetbrains.kotlin.jvm"
+    id "com.github.ben-manes.versions"
 }
