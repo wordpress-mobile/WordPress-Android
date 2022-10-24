@@ -47,7 +47,7 @@
     <color name="jetpack_banner_background">@color/jetpack_green_0</color>
     <color name="jetpack_banner_divider">@color/gray_5</color>
     <color name="jetpack_badge_background">@color/jetpack_green</color>
-    <color name="jetpack_powered_bottom_sheet_background">@color/jetpack_green_0</color>
+    <color name="jetpack_powered_bottom_sheet_background">@color/white</color>
 
     <!-- Reader -->
 
