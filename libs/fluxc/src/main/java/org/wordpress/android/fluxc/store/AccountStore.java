@@ -1213,7 +1213,10 @@ public class AccountStore extends Store {
 
     /**
      * Should be used for very specific purpose (like forwarding the token to a Webview)
+     *
+     * @return the access token if it was already set, otherwise null
      */
+    @Nullable
     public String getAccessToken() {
         return mAccessToken.get();
     }
