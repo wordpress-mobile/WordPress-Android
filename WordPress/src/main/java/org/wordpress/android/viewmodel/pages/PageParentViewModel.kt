@@ -8,7 +8,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.PAGES_SET_PARENT_CHANGES_SAVED
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.page.PageModel
@@ -77,7 +76,7 @@ class PageParentViewModel
         this.site = site
 
         if (!isStarted) {
-            _pages.postValue(listOf(Empty(string.empty_list_default)))
+            _pages.postValue(listOf(Empty(R.string.empty_list_default)))
             isStarted = true
 
             loadPages(pageId)
@@ -87,11 +86,16 @@ class PageParentViewModel
     }
 
     private fun loadPages(pageId: Long) = launch(defaultDispatcher) {
-        page = if (pageId < 0) {
-            // negative local page ID used as a temp remote post ID for local-only pages (assigned by the PageStore)
-            pageStore.getPageByLocalId(-pageId.toInt(), site)
-        } else {
-            pageStore.getPageByRemoteId(pageId, site)
+        page = when {
+            pageId < 0 -> {
+                // negative local page ID used as a temp remote post ID for local-only pages (assigned by the PageStore)
+                pageStore.getPageByLocalId(-pageId.toInt(), site)
+            }
+            pageId > 0 -> pageStore.getPageByRemoteId(pageId, site)
+            else -> {
+                // when page ID is 0 it means the page was just created and was never even uploaded / saved locally yet
+                null
+            }
         }
 
         val parents = mutableListOf<PageItem>(
@@ -102,16 +106,18 @@ class PageParentViewModel
                 )
         )
 
-        if (page != null) {
-            val choices = pageStore.getPagesFromDb(site)
-                    .filter { it.remoteId != pageId && it.status == PUBLISHED }
-            val parentChoices = choices.filter { isNotChild(it, choices) }
-            if (parentChoices.isNotEmpty()) {
-                parents.add(Divider(resourceProvider.getString(R.string.pages)))
-                parents.addAll(parentChoices.map {
-                    ParentPage(it.remoteId, it.title, page?.parent?.remoteId == it.remoteId, PARENT)
-                })
-            }
+        val choices = pageStore.getPagesFromDb(site)
+                .filter {
+                    // negative local page ID used as a temp remote post ID for local-only pages and can't be assigned
+                    // as parent to other pages properly, better to filter them out
+                    it.remoteId > 0 && it.remoteId != pageId && it.status == PUBLISHED
+                }
+        val parentChoices = choices.filter { isNotChild(it, choices) }
+        if (parentChoices.isNotEmpty()) {
+            parents.add(Divider(resourceProvider.getString(R.string.pages)))
+            parents.addAll(parentChoices.map {
+                ParentPage(it.remoteId, it.title, page?.parent?.remoteId == it.remoteId, PARENT)
+            })
         }
 
         _currentParent = parents.firstOrNull { it is ParentPage && it.isSelected } as? ParentPage
@@ -130,21 +136,20 @@ class PageParentViewModel
     }
 
     fun onSaveButtonTapped() {
-        trackSaveEvent()
-
+        page?.let { trackSaveEvent(it) } // don't track event for null pages (just created but not yet saved / uploaded)
         _saveParent.asyncCall()
     }
 
-    private fun trackSaveEvent() {
+    private fun trackSaveEvent(page: PageModel) {
         val properties = mutableMapOf(
-                "page_id" to page?.remoteId as Any,
+                "page_id" to page.remoteId as Any,
                 "new_parent_id" to currentParent.id
         )
         AnalyticsUtils.trackWithSiteDetails(PAGES_SET_PARENT_CHANGES_SAVED, site, properties)
     }
 
     private fun isNotChild(choice: PageModel, choices: List<PageModel>): Boolean {
-        return !getChildren(page!!, choices).contains(choice)
+        return page?.let { !getChildren(it, choices).contains(choice) } ?: true
     }
 
     private fun getChildren(page: PageModel, pages: List<PageModel>): List<PageModel> {

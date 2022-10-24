@@ -1667,8 +1667,10 @@
     <string name="post_settings_publish">Publish</string>
     <string name="post_settings_mark_as_sticky_options_header">Mark as sticky</string>
     <string name="post_settings_more_options">More Options</string>
+    <string name="post_settings_page_attributes">Page Attributes</string>
     <string name="post_settings_not_set">Not Set</string>
     <string name="post_settings_excerpt">Excerpt</string>
+    <string name="post_settings_parent">Parent Page</string>
     <string name="post_settings_slug">Slug</string>
     <string name="post_settings_tags">Tags</string>
     <string name="post_settings_post_format">Post Format</string>
