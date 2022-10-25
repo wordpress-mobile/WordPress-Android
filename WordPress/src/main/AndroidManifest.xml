@@ -642,6 +642,11 @@
             android:name=".ui.debug.cookies.DebugCookiesActivity"
             android:theme="@style/WordPress.NoActionBar" />
 
+        <activity
+            android:name=".ui.main.jetpack.JetpackWelcomeActivity"
+            android:label="@string/jp_welcome_title"
+            android:theme="@style/WordPress.NoActionBar"/>
+
         <!-- Notifications activities -->
         <activity
             android:name=".ui.notifications.NotificationsDetailActivity"

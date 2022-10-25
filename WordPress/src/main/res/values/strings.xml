@@ -4235,4 +4235,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="login_magic_links_email_sent" tools:ignore="UnusedResources" a8c-src-lib="login">We just sent a magic link to</string>
     <string name="gutenberg_native_link_rel" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Link Rel</string>
 
+    <!-- Jetpack Welcome Screen -->
+    <string name="jp_welcome_title">Welcome to Jetpack!</string>
+
 </resources>
