@@ -52,6 +52,7 @@ public class RequestCodes {
     // Jetpack
     public static final int REQUEST_JETPACK = 3000;
     public static final int JETPACK_LOGIN = 3100;
+    public static final int JETPACK_SWITCH = 3300;
 
     // QuickStart
     public static final int QUICK_START_REMINDER_RECEIVER = 4000;
