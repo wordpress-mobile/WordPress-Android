@@ -235,10 +235,7 @@ class MediaPickerFragment : Fragment() {
             layoutManager.onRestoreInstanceState(it)
         }
         with(MediaPickerFragmentBinding.bind(view)) {
-            binding = this
-            recycler.layoutManager = layoutManager
-            recycler.setEmptyView(actionableEmptyView)
-            recycler.setHasFixedSize(true)
+            setUpRecyclerView(layoutManager)
 
             val swipeToRefreshHelper = WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(pullToRefresh) {
                 viewModel.onPullToRefresh()
@@ -315,6 +312,15 @@ class MediaPickerFragment : Fragment() {
 
             viewModel.start(selectedIds, mediaPickerSetup, lastTappedIcon, site)
         }
+    }
+
+    private fun MediaPickerFragmentBinding.setUpRecyclerView(
+        layoutManager: GridLayoutManager
+    ) {
+        binding = this
+        recycler.layoutManager = layoutManager
+        recycler.setEmptyView(actionableEmptyView)
+        recycler.setHasFixedSize(true)
     }
 
     override fun onDestroyView() {
