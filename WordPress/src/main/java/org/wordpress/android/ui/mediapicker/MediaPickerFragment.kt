@@ -28,6 +28,7 @@ import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import org.wordpress.android.R
+import org.wordpress.android.R.string
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.MediaPickerFragmentBinding
 import org.wordpress.android.fluxc.model.SiteModel
@@ -261,42 +262,9 @@ class MediaPickerFragment : Fragment() {
                 }
             })
 
-            viewModel.onNavigate.observeEvent(viewLifecycleOwner,
-                    { navigationEvent ->
-                        when (navigationEvent) {
-                            is PreviewUrl -> {
-                                MediaPreviewActivity.showPreview(
-                                        requireContext(),
-                                        null,
-                                        navigationEvent.url
-                                )
-                                AccessibilityUtils.setActionModeDoneButtonContentDescription(
-                                        activity,
-                                        getString(R.string.cancel)
-                                )
-                            }
-                            is PreviewMedia -> MediaPreviewActivity.showPreview(
-                                    requireContext(),
-                                    null,
-                                    navigationEvent.media,
-                                    null
-                            )
-                            is EditMedia -> {
-                                val inputData = WPMediaUtils.createListOfEditImageInputData(
-                                        requireContext(),
-                                        navigationEvent.uris.map { wrapper -> wrapper.uri }
-                                )
-                                ActivityLauncher.openImageEditor(activity, inputData)
-                            }
-                            is InsertMedia -> listener?.onItemsChosen(navigationEvent.identifiers)
-                            is IconClickEvent -> listener?.onIconClicked(navigationEvent.action)
-                            Exit -> {
-                                val activity = requireActivity()
-                                activity.setResult(Activity.RESULT_CANCELED)
-                                activity.finish()
-                            }
-                        }
-                    })
+            viewModel.onNavigate.observeEvent(viewLifecycleOwner) { navigationEvent ->
+                navigateEvent(navigationEvent)
+            }
 
             viewModel.onPermissionsRequested.observeEvent(viewLifecycleOwner, {
                 when (it) {
@@ -311,6 +279,42 @@ class MediaPickerFragment : Fragment() {
             setupProgressDialog()
 
             viewModel.start(selectedIds, mediaPickerSetup, lastTappedIcon, site)
+        }
+    }
+
+    private fun navigateEvent(navigationEvent: MediaNavigationEvent) {
+        when (navigationEvent) {
+            is PreviewUrl -> {
+                MediaPreviewActivity.showPreview(
+                        requireContext(),
+                        null,
+                        navigationEvent.url
+                )
+                AccessibilityUtils.setActionModeDoneButtonContentDescription(
+                        activity,
+                        getString(string.cancel)
+                )
+            }
+            is PreviewMedia -> MediaPreviewActivity.showPreview(
+                    requireContext(),
+                    null,
+                    navigationEvent.media,
+                    null
+            )
+            is EditMedia -> {
+                val inputData = WPMediaUtils.createListOfEditImageInputData(
+                        requireContext(),
+                        navigationEvent.uris.map { wrapper -> wrapper.uri }
+                )
+                ActivityLauncher.openImageEditor(activity, inputData)
+            }
+            is InsertMedia -> listener?.onItemsChosen(navigationEvent.identifiers)
+            is IconClickEvent -> listener?.onIconClicked(navigationEvent.action)
+            Exit -> {
+                val activity = requireActivity()
+                activity.setResult(Activity.RESULT_CANCELED)
+                activity.finish()
+            }
         }
     }
 
