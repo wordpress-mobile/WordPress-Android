@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-10-14 07:59:02+0000
+Translation-Revision-Date: 2022-10-20 15:54:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: he_IL
 -->
 <resources>
+    <string name="about_automattic_contribute_item_title">להשתתף</string>
+    <string name="about_news">חדשות</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_one">תשובה אחת</string>
     <string name="login_prologue_revamped_content_description_wordpress_icon">סמל של WordPress</string>
     <string name="login_prologue_revamped_tagline">לכתוב, לערוך ולפרסם מכל מקום.</string>
