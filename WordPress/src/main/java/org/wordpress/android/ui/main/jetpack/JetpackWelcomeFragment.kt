@@ -40,6 +40,7 @@ import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.rememberImagePainter
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppTheme
@@ -139,7 +140,10 @@ fun ContentState(uiState: Content) {
                     Row(
                             verticalAlignment = Alignment.CenterVertically,
                     ) {
-                        val painter = painterResource(R.drawable.ic_placeholder_blavatar_grey_lighten_20_40dp)
+                        val painter = rememberImagePainter(site.iconUrl) {
+                            placeholder(R.drawable.ic_placeholder_blavatar_grey_lighten_20_40dp)
+                            crossfade(true)
+                        }
                         Image(
                                 painter = painter,
                                 contentDescription = null,
