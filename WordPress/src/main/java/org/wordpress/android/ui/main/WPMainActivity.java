@@ -3,6 +3,7 @@ package org.wordpress.android.ui.main;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
@@ -459,6 +460,23 @@ public class WPMainActivity extends LocaleAwareActivity implements
             initSelectedSite();
         }
         mSharedLoginResolver.tryJetpackLogin();
+
+        if (!mBuildConfigWrapper.isJetpackApp() && isJetpackInstalled()) {
+            mGCMMessageHandler.removeAllNotifications(this);
+        }
+    }
+
+    private boolean isJetpackInstalled() {
+        final PackageManager packageManager = getPackageManager();
+
+        // TODO - Remove these two lines before merge
+        List<PackageInfo> apps = getPackageManager().getInstalledPackages(0);
+        AppLog.i(T.MAIN, apps.toString());
+
+        Intent jetpackIntent = packageManager.getLaunchIntentForPackage("com.jetpack.android");
+        Intent jetpackBetaIntent = packageManager.getLaunchIntentForPackage("com.jetpack.android.beta");
+
+        return jetpackIntent != null || jetpackBetaIntent != null;
     }
 
     private void showBloggingPromptsOnboarding() {
