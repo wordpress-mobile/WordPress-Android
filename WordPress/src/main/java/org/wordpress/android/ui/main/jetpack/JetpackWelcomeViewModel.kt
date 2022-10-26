@@ -12,7 +12,9 @@ import javax.inject.Inject
 @HiltViewModel
 class JetpackWelcomeViewModel @Inject constructor(
 ) : ViewModel() {
-    private val _uiState = MutableStateFlow<JetpackWelcomeUiState>(JetpackWelcomeUiState.Initial)
+    private val _uiState = MutableStateFlow<JetpackWelcomeUiState>(
+            JetpackWelcomeUiState.Content.SiteList(previewSiteList())
+    )
     val uiState: StateFlow<JetpackWelcomeUiState> = _uiState
 
     fun start() {
@@ -25,12 +27,28 @@ class JetpackWelcomeViewModel @Inject constructor(
 }
 
 sealed class JetpackWelcomeUiState {
-    object Initial : JetpackWelcomeUiState() {
-        val title: UiStringRes = UiStringRes(R.string.jp_welcome_title)
-        val subtitle: UiString = UiStringRes(R.string.jp_welcome_subtitle)
-        val message: UiString = UiStringRes(R.string.jp_welcome_sites_found_message)
+    object Initial : JetpackWelcomeUiState()
+
+    sealed class Content: JetpackWelcomeUiState() {
+        abstract val title: UiString
+        abstract val subtitle: UiString
+        abstract val message: UiString
+
+        data class SiteList (
+            val sites: List<SiteListItem>
+        ) : Content() {
+            override val title = UiStringRes(R.string.jp_welcome_title)
+            override val subtitle = UiStringRes(R.string.jp_welcome_subtitle)
+            override val message = UiStringRes(R.string.jp_welcome_sites_found_message)
+        }
     }
 
     object Error : JetpackWelcomeUiState()
-}
 
+    data class SiteListItem(
+        val id: Long,
+        val name: String,
+        val url: String,
+        val iconUrl: String,
+    )
+}
