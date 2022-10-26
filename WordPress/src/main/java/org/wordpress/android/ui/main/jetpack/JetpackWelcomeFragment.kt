@@ -5,29 +5,36 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Button
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.input.nestedscroll.NestedScrollSource
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -35,6 +42,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
@@ -43,6 +51,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberImagePainter
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
+import org.wordpress.android.ui.compose.components.ColumnWithFrostedGlassBackground
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.unit.FontSize
 import org.wordpress.android.ui.compose.unit.Margin
@@ -126,52 +135,114 @@ fun ContentState(uiState: Content) {
                 modifier = Modifier
                         .padding(top = 20.dp)
         )
-        if (uiState is Content.SiteList) {
-            val items by remember { mutableStateOf(uiState.sites) }
-
-            LazyColumn(
-                    state = rememberLazyListState(),
-                    modifier = Modifier.padding(top = 30.dp)
-            ) {
-                items(
-                        items = items,
-                        key = { it.id },
-                ) { site ->
-                    Row(
-                            verticalAlignment = Alignment.CenterVertically,
+        Box(
+                modifier = Modifier.padding(top = 30.dp),
+        ) {
+            if (uiState is Content.SiteList) {
+                val listState = rememberLazyListState()
+                val blurredListState = rememberLazyListState()
+                SiteList(
+                        uiState.sites,
+                        listState
+                )
+                ColumnWithFrostedGlassBackground(
+                        blurRadius = 4.dp,
+                        backgroundColor = colorResource(R.color.white_translucent_80),
+                        borderColor = colorResource(R.color.gray_10),
+                        background = { clipModifier, blurModifier ->
+                            SiteList(
+                                    uiState.sites,
+                                    blurredListState,
+                                    clipModifier.disableUserScroll(),
+                                    blurModifier,
+                            )
+                        }
+                ) {
+                    Button(
+                            onClick = {},
+                            modifier = Modifier
+                                    .padding(top = 20.dp, bottom = 10.dp)
+                                    .fillMaxWidth()
                     ) {
-                        val painter = rememberImagePainter(site.iconUrl) {
-                            placeholder(R.drawable.ic_placeholder_blavatar_grey_lighten_20_40dp)
-                            crossfade(true)
-                        }
-                        Image(
-                                painter = painter,
-                                contentDescription = null,
-                                modifier = Modifier
-                                        .padding(vertical = 15.dp)
-                                        .padding(end = 20.dp)
-                                        .size(60.dp)
-                                        .clip(RoundedCornerShape(3.dp))
-                        )
-                        Column {
-                            Text(
-                                    text = site.name,
-                                    fontWeight = FontWeight.SemiBold,
-                                    fontSize = 17.sp,
-                            )
-                            Text(
-                                    text = site.url,
-                                    fontSize = FontSize.Large.value,
-                                    color = colorResource(R.color.gray_40)
-                            )
-                        }
+                        Text("Primary Button")
                     }
-                    Divider(color = colorResource(R.color.gray_10))
+                    Button(
+                            onClick = {},
+                            modifier = Modifier
+                                    .padding(bottom = 60.dp)
+                                    .fillMaxWidth()
+                    ) {
+                        Text("Secondary Button")
+                    }
+                }
+                LaunchedEffect(listState.firstVisibleItemIndex, listState.firstVisibleItemScrollOffset) {
+                    blurredListState.scrollToItem(
+                            listState.firstVisibleItemIndex,
+                            listState.firstVisibleItemScrollOffset,
+                    )
                 }
             }
         }
     }
 }
+
+@Composable
+fun SiteList(
+    items: List<SiteListItem>,
+    listState: LazyListState,
+    modifier: Modifier = Modifier,
+    blurModifier: Modifier = Modifier,
+) {
+    LazyColumn(
+            state = listState,
+            modifier = modifier
+                    .background(colorResource(R.color.white))
+                    .then(blurModifier),
+    ) {
+        items(
+                items = items,
+                key = { it.id },
+        ) { site ->
+            Row(
+                    verticalAlignment = Alignment.CenterVertically,
+            ) {
+                val painter = rememberImagePainter(site.iconUrl) {
+                    placeholder(R.drawable.ic_placeholder_blavatar_grey_lighten_20_40dp)
+                    crossfade(true)
+                }
+                Image(
+                        painter = painter,
+                        contentDescription = null,
+                        modifier = Modifier
+                                .padding(vertical = 15.dp)
+                                .padding(end = 20.dp)
+                                .size(60.dp)
+                                .clip(RoundedCornerShape(3.dp))
+                )
+                Column {
+                    Text(
+                            text = site.name,
+                            fontWeight = FontWeight.SemiBold,
+                            fontSize = 17.sp,
+                    )
+                    Text(
+                            text = site.url,
+                            fontSize = FontSize.Large.value,
+                            color = colorResource(R.color.gray_40)
+                    )
+                }
+            }
+            Divider(color = colorResource(R.color.gray_10))
+        }
+    }
+}
+
+private fun Modifier.disableUserScroll() = nestedScroll(
+        connection = object : NestedScrollConnection {
+            override fun onPreScroll(available: Offset, source: NestedScrollSource) = available.copy(x = 0f)
+            override suspend fun onPreFling(available: Velocity) = available.copy(x = 0f)
+        }
+)
 
 fun previewSiteList(): List<SiteListItem> {
     val list = mutableListOf<SiteListItem>()
