@@ -133,6 +133,7 @@ import org.wordpress.android.util.AuthenticationDialogUtils;
 import org.wordpress.android.util.BuildConfigWrapper;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.FluxCUtils;
+import org.wordpress.android.util.JetpackBrandingUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.QuickStartUtils;
@@ -262,6 +263,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     @Inject BloggingRemindersResolver mBloggingRemindersResolver;
 
     @Inject BuildConfigWrapper mBuildConfigWrapper;
+    @Inject JetpackBrandingUtils mJetpackBrandingUtils;
 
     /*
      * fragments implement this if their contents can be scrolled, called when user
@@ -461,7 +463,9 @@ public class WPMainActivity extends LocaleAwareActivity implements
         }
         mSharedLoginResolver.tryJetpackLogin();
 
-        if (!mBuildConfigWrapper.isJetpackApp() && isJetpackInstalled()) {
+        if (mJetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()
+            && !mBuildConfigWrapper.isJetpackApp()
+            && isJetpackInstalled()) {
             mGCMMessageHandler.removeAllNotifications(this);
         }
     }
