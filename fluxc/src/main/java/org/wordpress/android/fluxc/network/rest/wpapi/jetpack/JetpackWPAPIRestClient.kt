@@ -1,12 +1,15 @@
 package org.wordpress.android.fluxc.network.rest.wpapi.jetpack
 
+import com.android.volley.Request
 import com.android.volley.RequestQueue
+import kotlinx.coroutines.suspendCancellableCoroutine
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.generated.endpoint.JPAPI
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.jetpack.JetpackUser
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
+import org.wordpress.android.fluxc.network.RawRequest
 import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.rest.wpapi.BaseWPAPIRestClient
 import org.wordpress.android.fluxc.network.rest.wpapi.Nonce
@@ -17,6 +20,7 @@ import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIResponse.Success
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
+import kotlin.coroutines.resume
 
 @Singleton
 class JetpackWPAPIRestClient @Inject constructor(
@@ -24,6 +28,7 @@ class JetpackWPAPIRestClient @Inject constructor(
     private val wpApiGsonRequestBuilder: WPAPIGsonRequestBuilder,
     dispatcher: Dispatcher,
     @Named("custom-ssl") requestQueue: RequestQueue,
+    @Named("no-redirects") private val noRedirectsRequestQueue: RequestQueue,
     userAgent: UserAgent
 ) : BaseWPAPIRestClient(dispatcher, requestQueue, userAgent) {
     suspend fun fetchJetpackConnectionUrl(
@@ -42,6 +47,42 @@ class JetpackWPAPIRestClient @Inject constructor(
         return when (response) {
             is Success<String> -> JetpackWPAPIPayload(response.data)
             is Error -> JetpackWPAPIPayload(response.error)
+        }
+    }
+
+    suspend fun registerJetpackSite(registrationUrl: String): Result<String> {
+        @Suppress("MagicNumber")
+        fun Int.isRedirect(): Boolean = this in 300..399
+        return suspendCancellableCoroutine { cont ->
+            val request = RawRequest(
+                method = Request.Method.GET,
+                url = registrationUrl,
+                listener = {
+                    cont.resume(Result.failure(Exception("Got a success response instead of the expected redirect")))
+                },
+                onErrorListener = { error ->
+                    val response = error.volleyError.networkResponse
+
+                    if (response == null || !response.statusCode.isRedirect()) {
+                        cont.resume(Result.failure(error.volleyError))
+                        return@RawRequest
+                    }
+
+                    response.headers["Location"].let {
+                        if (!it.isNullOrEmpty()) {
+                            cont.resume(Result.success(response.headers["Location"]!!))
+                        } else {
+                            cont.resume(Result.failure(Exception("Location header missing")))
+                        }
+                    }
+                }
+            )
+
+            noRedirectsRequestQueue.add(request)
+
+            cont.invokeOnCancellation {
+                request.cancel()
+            }
         }
     }
 
