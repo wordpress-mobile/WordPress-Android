@@ -7,21 +7,26 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.main.jetpack.JetpackWelcomeUiState.Content
 import org.wordpress.android.ui.main.jetpack.JetpackWelcomeUiState.Initial
 import org.wordpress.android.ui.main.jetpack.JetpackWelcomeUiState.SiteListItem
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.util.GravatarUtilsWrapper
 import org.wordpress.android.util.SiteUtilsWrapper
 import javax.inject.Inject
 
 const val SITE_ICON_SIZE = 60 * 3
+const val USER_AVATAR_SIZE = 32 * 3
 
 @HiltViewModel
 class JetpackWelcomeViewModel @Inject constructor(
     val siteStore: SiteStore,
+    val accountStore: AccountStore,
     val siteUtilsWrapper: SiteUtilsWrapper,
+    val gravatarUtilsWrapper: GravatarUtilsWrapper,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow<JetpackWelcomeUiState>(Initial)
     val uiState: StateFlow<JetpackWelcomeUiState> = _uiState
@@ -31,12 +36,19 @@ class JetpackWelcomeViewModel @Inject constructor(
     }
 
     private fun initOrRestoreUiState() {
-        getSiteList()
+        val siteList = getSiteList()
+        val avatarUrl = getAvatarUrl()
+
+        postUiState(
+                Content.SiteList(
+                        avatarUrl = avatarUrl,
+                        sites = siteList,
+                )
+        )
     }
 
-    private fun getSiteList() {
-        val sites = siteStore.sites
-        val siteListItems = sites.map { site ->
+    private fun getSiteList(): List<SiteListItem> {
+        return siteStore.sites.map { site ->
             SiteListItem(
                     id = site.siteId,
                     name = siteUtilsWrapper.getSiteNameOrHomeURL(site),
@@ -44,8 +56,11 @@ class JetpackWelcomeViewModel @Inject constructor(
                     iconUrl = siteUtilsWrapper.getSiteIconUrl(site, SITE_ICON_SIZE),
             )
         }
+    }
 
-        postUiState(Content.SiteList(siteListItems))
+
+    private fun getAvatarUrl(): String {
+        return gravatarUtilsWrapper.fixGravatarUrl(accountStore.account?.avatarUrl.orEmpty(), USER_AVATAR_SIZE)
     }
 
     private fun postUiState(state: JetpackWelcomeUiState) {
@@ -59,11 +74,13 @@ sealed class JetpackWelcomeUiState {
     object Initial : JetpackWelcomeUiState()
 
     sealed class Content : JetpackWelcomeUiState() {
+        abstract val avatarUrl: String
         abstract val title: UiString
         abstract val subtitle: UiString
         abstract val message: UiString
 
         data class SiteList(
+            override val avatarUrl: String,
             val sites: List<SiteListItem>
         ) : Content() {
             override val title = UiStringRes(R.string.jp_welcome_title)

@@ -186,7 +186,10 @@ fun previewSiteListItems(): List<SiteListItem> {
 //@Preview(showBackground = true, widthDp = 414, heightDp = 897, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun PreviewContentState() {
-    val uiState = Content.SiteList(previewSiteListItems())
+    val uiState = Content.SiteList(
+            avatarUrl = "",
+            sites = previewSiteListItems(),
+    )
     AppTheme {
         ContentState(uiState)
     }
