@@ -287,14 +287,4 @@ platform :android do
       json_key: UPLOAD_TO_PLAY_STORE_JSON_KEY
     )
   end
-
-
-  # Rebuilds all of the emulators used for generating screenshots.
-  #
-  desc "Rebuild emulators used for screenshots"
-  lane :create_emulators do |options|
-    SCREENSHOT_DEVICES.each do |device|
-      create_avd(api: device[:api], device: device[:device])
-    end
-  end
 end
