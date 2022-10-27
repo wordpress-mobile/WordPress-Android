@@ -1,3 +1,4 @@
-- “Get to know your app” flows now stay on screen after rotating your device.
-- Long titles display properly on Stats cards without being cut off.
-- We added the Enter key to Post excerpts to allow for easy line breaks.
+- Added correct links to Automattic Family app marbles on the About screen
+- Updated the launch screen for Android versions 12+
+- Changed success message text from red to black for QR code logins
+- Fixed the Stats screen to include Western Arabic numerals for Arabic language users

@@ -18,10 +18,6 @@ import org.wordpress.android.fluxc.utils.MimeTypes
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.mediapicker.MediaItem.Identifier
-import org.wordpress.android.ui.mediapicker.MediaItem.Identifier.GifMediaIdentifier
-import org.wordpress.android.ui.mediapicker.MediaItem.Identifier.LocalUri
-import org.wordpress.android.ui.mediapicker.MediaItem.Identifier.RemoteId
-import org.wordpress.android.ui.mediapicker.MediaItem.Identifier.StockMediaIdentifier
 import org.wordpress.android.ui.mediapicker.MediaNavigationEvent.EditMedia
 import org.wordpress.android.ui.mediapicker.MediaNavigationEvent.Exit
 import org.wordpress.android.ui.mediapicker.MediaNavigationEvent.IconClickEvent
@@ -51,7 +47,6 @@ import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.PhotoItem
 import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.ToggleAction
 import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.VideoItem
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.BrowseMenuUiModel.BrowseAction
-import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.BrowseMenuUiModel.BrowseAction.SYSTEM_PICKER
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.ProgressDialogUiModel.Hidden
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.ProgressDialogUiModel.Visible
 import org.wordpress.android.ui.mediapicker.MediaType.AUDIO
@@ -150,7 +145,7 @@ class MediaPickerViewModel @Inject constructor(
         return if (showActions && (showSystemPicker || mediaPickerSetup.availableDataSources.isNotEmpty())) {
             val actions = mutableSetOf<BrowseAction>()
             if (showSystemPicker) {
-                actions.add(SYSTEM_PICKER)
+                actions.add(BrowseAction.SYSTEM_PICKER)
             }
             actions.addAll(mediaPickerSetup.availableDataSources.map {
                 when (it) {
@@ -404,17 +399,17 @@ class MediaPickerViewModel @Inject constructor(
             mediaPickerTracker.trackPreview(isVideo, identifier, mediaPickerSetup)
         }
         when (identifier) {
-            is LocalUri -> {
+            is Identifier.LocalUri -> {
                 mediaUtilsWrapper.getRealPathFromURI(identifier.value.uri)?.let { path ->
                     _onNavigate.postValue(Event(PreviewUrl(path)))
                 }
             }
-            is StockMediaIdentifier -> {
+            is Identifier.StockMediaIdentifier -> {
                 if (identifier.url != null) {
                     _onNavigate.postValue(Event(PreviewUrl(identifier.url)))
                 }
             }
-            is RemoteId -> {
+            is Identifier.RemoteId -> {
                 site?.let {
                     launch {
                         val media: MediaModel = mediaStore.getSiteMediaWithId(it, identifier.value)
@@ -422,9 +417,10 @@ class MediaPickerViewModel @Inject constructor(
                     }
                 }
             }
-            is GifMediaIdentifier -> {
+            is Identifier.GifMediaIdentifier -> {
                 _onNavigate.postValue(Event(PreviewUrl(identifier.largeImageUri.toString())))
             }
+            is Identifier.LocalId -> Unit // Do nothing
         }
     }
 
@@ -665,7 +661,7 @@ class MediaPickerViewModel @Inject constructor(
     fun urisSelectedFromSystemPicker(uris: List<UriWrapper>) {
         launch {
             delay(100)
-            insertIdentifiers(uris.map { LocalUri(it) })
+            insertIdentifiers(uris.map { Identifier.LocalUri(it) })
         }
     }
 

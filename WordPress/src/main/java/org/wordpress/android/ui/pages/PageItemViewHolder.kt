@@ -34,8 +34,6 @@ import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType
 import org.wordpress.android.util.extensions.setVisible
 import org.wordpress.android.viewmodel.uistate.ProgressBarUiState
-import org.wordpress.android.viewmodel.uistate.ProgressBarUiState.Determinate
-import org.wordpress.android.viewmodel.uistate.ProgressBarUiState.Indeterminate
 import java.util.Date
 import java.util.Locale
 
@@ -134,11 +132,12 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
         private fun updateProgressBarState(progressBarUiState: ProgressBarUiState) {
             uiHelper.updateVisibility(uploadProgressBar, progressBarUiState.visibility)
             when (progressBarUiState) {
-                Indeterminate -> uploadProgressBar.isIndeterminate = true
-                is Determinate -> {
+                is ProgressBarUiState.Indeterminate -> uploadProgressBar.isIndeterminate = true
+                is ProgressBarUiState.Determinate -> {
                     uploadProgressBar.isIndeterminate = false
                     uploadProgressBar.progress = progressBarUiState.progress
                 }
+                is ProgressBarUiState.Hidden -> Unit // Do nothing
             }
         }
 

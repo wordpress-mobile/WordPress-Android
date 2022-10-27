@@ -50,7 +50,7 @@ class CategoryDetailFragment : Fragment(R.layout.category_detail_fragment) {
     }
 
     private fun initDagger() {
-        (requireActivity().application as WordPress).component()?.inject(this)
+        (requireActivity().application as WordPress).component().inject(this)
     }
 
     private fun CategoryDetailFragmentBinding.initAdapter() {

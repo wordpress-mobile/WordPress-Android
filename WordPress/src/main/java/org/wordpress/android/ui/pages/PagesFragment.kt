@@ -139,7 +139,7 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
         binding = null
     }
 
-    @Suppress("DEPRECATION")
+    @Suppress("DEPRECATION", "OVERRIDE_DEPRECATION")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == RequestCodes.EDIT_POST && resultCode == Activity.RESULT_OK && data != null) {
             if (EditPostActivity.checkToRestart(data)) {
@@ -393,7 +393,7 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
         })
 
         viewModel.setPageParent.observe(viewLifecycleOwner, { page ->
-            page?.let { ActivityLauncher.viewPageParentForResult(this@PagesFragment, page) }
+            page?.let { ActivityLauncher.viewPageParentForResult(this@PagesFragment, it.site, it.remoteId) }
         })
 
         viewModel.isNewPageButtonVisible.observe(viewLifecycleOwner, { isVisible ->

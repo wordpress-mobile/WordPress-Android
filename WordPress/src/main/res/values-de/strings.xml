@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-10-03 15:20:14+0000
+Translation-Revision-Date: 2022-10-18 16:19:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: de
 -->
 <resources>
+    <string name="about_automattic_contribute_item_title">Mitwirken</string>
+    <string name="about_news">News</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_one">1 Antwort</string>
     <string name="login_prologue_revamped_content_description_wordpress_icon">WordPress-Icon</string>
     <string name="login_prologue_revamped_tagline">Schreibe, bearbeite und veröffentliche von überall aus.</string>
@@ -1525,7 +1527,7 @@ Language: de
     <string name="dialog_confirm_autosave_body_second_part">Von dieser App\nGespeichert auf %1$s\n\nVon einem anderen Gerät\nGespeichert auf %2$s\n</string>
     <string name="dialog_confirm_autosave_body_first_part">Sie haben kürzlich Änderungen an diesem Beitrag vorgenommen, aber nicht gespeichert. Wählen Sie eine zu ladende Version aus:\n\n</string>
     <string name="dialog_confirm_autosave_title">Welche Version möchten Sie bearbeiten?</string>
-    <string name="button_delete_permanently">Dauerhaft löschen</string>
+    <string name="button_delete_permanently">Endgültig löschen</string>
     <string name="post_waiting_for_connection_draft_cancel">Wir speichern nicht die neuesten Änderungen an Ihrem Entwurf.</string>
     <string name="post_waiting_for_connection_scheduled_cancel">Wir werden diese Änderungen nicht planen.</string>
     <string name="post_waiting_for_connection_pending_cancel">Wir werden diese Änderungen nicht zur Überprüfung einreichen.</string>
@@ -1909,7 +1911,7 @@ Language: de
     <string name="pages_empty_published">Du hast noch keine Seiten veröffentlicht</string>
     <string name="pages_search_suggestion">Seiten suchen</string>
     <string name="pages_empty_search_result">Keine Seiten entsprechen deiner Suche</string>
-    <string name="pages_delete_permanently">Unwiderruflich löschen</string>
+    <string name="pages_delete_permanently">Endgültig löschen</string>
     <string name="pages_move_to_trash">In Papierkorb verschieben</string>
     <string name="pages_move_to_draft">In Entwurf verschieben</string>
     <string name="pages_set_parent">Übergeordnete Seite festlegen</string>

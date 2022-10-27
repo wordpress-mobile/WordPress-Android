@@ -66,7 +66,7 @@ class ActivityLogListFragment : Fragment(R.layout.activity_log_list_fragment) {
         super.onViewCreated(view, savedInstanceState)
 
         val nonNullActivity = requireActivity()
-        (nonNullActivity.application as WordPress).component()?.inject(this@ActivityLogListFragment)
+        (nonNullActivity.application as WordPress).component().inject(this@ActivityLogListFragment)
         viewModel = ViewModelProvider(
                 this@ActivityLogListFragment,
                 viewModelFactory
@@ -128,11 +128,10 @@ class ActivityLogListFragment : Fragment(R.layout.activity_log_list_fragment) {
         }
     }
 
+    @Suppress("UNCHECKED_CAST")
     private fun restoreDateRangePickerListeners() {
         (childFragmentManager.findFragmentByTag(DATE_PICKER_TAG) as? MaterialDatePicker<Pair<Long, Long>>)
-                ?.let { picker ->
-                    initDateRangePickerButtonClickListener(picker)
-                }
+                ?.let { initDateRangePickerButtonClickListener(it) }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

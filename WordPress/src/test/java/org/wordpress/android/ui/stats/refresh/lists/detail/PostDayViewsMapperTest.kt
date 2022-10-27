@@ -17,6 +17,8 @@ import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.util.text.PercentFormatter
 import org.wordpress.android.viewmodel.ResourceProvider
+import java.math.RoundingMode
+import java.math.RoundingMode.HALF_UP
 
 class PostDayViewsMapperTest : BaseUnitTest() {
     @Mock lateinit var statsDateFormatter: StatsDateFormatter
@@ -57,7 +59,7 @@ class PostDayViewsMapperTest : BaseUnitTest() {
 
     @Test
     fun `builds title with positive difference`() {
-        whenever(percentFormatter.format(3.0F)).thenReturn("300")
+        whenever(percentFormatter.format(value = 3.0F, rounding = RoundingMode.HALF_UP)).thenReturn("300")
         val previousCount = 5
         val previousItem = selectedItem.copy(count = previousCount)
         val positiveLabel = "+15 (300%)"
@@ -92,7 +94,7 @@ class PostDayViewsMapperTest : BaseUnitTest() {
 
     @Test
     fun `builds title with negative difference`() {
-        whenever(percentFormatter.format(-0.33333334F)).thenReturn("-33")
+        whenever(percentFormatter.format(value = -0.33333334F, rounding = HALF_UP)).thenReturn("-33")
         val previousCount = 30
         val previousItem = selectedItem.copy(count = previousCount)
         val negativeLabel = "-10 (-33%)"
@@ -109,7 +111,7 @@ class PostDayViewsMapperTest : BaseUnitTest() {
 
     @Test
     fun `builds title with max negative difference`() {
-        whenever(percentFormatter.format(-1F)).thenReturn("-100")
+        whenever(percentFormatter.format(value = -1F, rounding = HALF_UP)).thenReturn("-100")
         val newCount = 0
         val newItem = selectedItem.copy(count = newCount)
         val negativeLabel = "-20 (-100%)"
@@ -150,7 +152,7 @@ class PostDayViewsMapperTest : BaseUnitTest() {
 
     @Test
     fun `builds title with negative difference for the last item`() {
-        whenever(percentFormatter.format(-0.33333334F)).thenReturn("-33")
+        whenever(percentFormatter.format(value = -0.33333334F, rounding = HALF_UP)).thenReturn("-33")
         val previousCount = 30
         val previousItem = selectedItem.copy(count = previousCount)
         val negativeLabel = "-10 (-33%)"
@@ -167,12 +169,12 @@ class PostDayViewsMapperTest : BaseUnitTest() {
 
     @Test
     fun `should call PercentFormatter when builds title`() {
-        whenever(percentFormatter.format(3.0F)).thenReturn("3%")
+        whenever(percentFormatter.format(value = 3.0F, rounding = HALF_UP)).thenReturn("3%")
         val previousCount = 5
         val previousItem = selectedItem.copy(count = previousCount)
         mapper.buildTitle(selectedItem, previousItem, false)
 
         // buildChange is called twice: for change and unformattedChange
-        verify(percentFormatter, times(2)).format(3.0F)
+        verify(percentFormatter, times(2)).format(value = 3.0F, rounding = HALF_UP)
     }
 }

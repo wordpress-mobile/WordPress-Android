@@ -81,7 +81,7 @@ class InvitePeopleUtils @Inject constructor(
                         expiryDate = formatter.format(dateTimeUtilsWrapper.dateFromTimestamp(linksData.expiry))
                 )
             }
-        } ?: listOf()
+        }
     }
 
     fun getInviteLinksRoleDisplayNames(

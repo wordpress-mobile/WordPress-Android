@@ -1667,8 +1667,10 @@
     <string name="post_settings_publish">Publish</string>
     <string name="post_settings_mark_as_sticky_options_header">Mark as sticky</string>
     <string name="post_settings_more_options">More Options</string>
+    <string name="post_settings_page_attributes">Page Attributes</string>
     <string name="post_settings_not_set">Not Set</string>
     <string name="post_settings_excerpt">Excerpt</string>
+    <string name="post_settings_parent">Parent Page</string>
     <string name="post_settings_slug">Slug</string>
     <string name="post_settings_tags">Tags</string>
     <string name="post_settings_post_format">Post Format</string>
@@ -4057,6 +4059,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
 
     <!-- About -->
     <string name="about_blog">Blog</string>
+    <string name="about_news">News</string>
     <string name="about_automattic_main_page_title" tools:ignore="UnusedResources" a8c-src-lib="about">About %1$s</string>
     <string name="about_automattic_legal_page_title" tools:ignore="UnusedResources" a8c-src-lib="about">Legal and More</string>
     <string name="about_automattic_acknowledgements_page_title" tools:ignore="UnusedResources" a8c-src-lib="about">Acknowledgements</string>
@@ -4068,6 +4071,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="about_automattic_legal_and_more_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Legal and More</string>
     <string name="about_automattic_family_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Automattic Family</string>
     <string name="about_automattic_work_with_us_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Work With Us</string>
+    <string name="about_automattic_contribute_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Contribute</string>
     <string name="about_automattic_work_with_us_item_subtitle" tools:ignore="UnusedResources" a8c-src-lib="about">Work from Anywhere</string>
     <string name="about_automattic_terms_of_service_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Terms of Service</string>
     <string name="about_automattic_privacy_policy_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Privacy Policy</string>
@@ -4214,7 +4218,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="wp_jetpack_powered_stats_powered_by_jetpack_caption">Watch your traffic grow and learn about your audience with redesigned Stats and Insights, now available in the new Jetpack app.</string>
     <string name="wp_jetpack_powered_notifications_powered_by_jetpack">Notifications are powered by Jetpack</string>
     <string name="wp_jetpack_powered_notifications_powered_by_jetpack_caption">Stay informed with realtime updates for new comments, site traffic, security reports and more.</string>
-    <string name="wp_jetpack_get_new_jetpack_app">Get the new Jetpack app</string>
+    <string name="wp_jetpack_get_new_jetpack_app">Try the new Jetpack app</string>
     <string name="wp_jetpack_continue_to_reader">Continue to Reader</string>
     <string name="wp_jetpack_continue_to_stats">Continue to Stats</string>
     <string name="wp_jetpack_continue_to_notifications">Continue to Notifications</string>

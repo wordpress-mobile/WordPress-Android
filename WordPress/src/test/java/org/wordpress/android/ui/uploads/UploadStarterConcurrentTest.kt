@@ -8,7 +8,6 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.runBlocking
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -18,6 +17,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore
+import org.wordpress.android.test
 import org.wordpress.android.ui.posts.PostUtilsWrapper
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -51,16 +51,14 @@ class UploadStarterConcurrentTest {
     }
 
     @Test
-    fun `it uploads local drafts concurrently`() {
+    fun `it uploads local drafts concurrently`() = test {
         // Given
         val uploadServiceFacade = createMockedUploadServiceFacade()
 
         val starter = createUploadStarter(uploadServiceFacade)
 
         // When
-        runBlocking {
-            starter.queueUploadFromSite(site).join()
-        }
+        starter.queueUploadFromSite(site).join()
 
         // Then
         verify(uploadServiceFacade, times(draftPosts.size)).uploadPost(

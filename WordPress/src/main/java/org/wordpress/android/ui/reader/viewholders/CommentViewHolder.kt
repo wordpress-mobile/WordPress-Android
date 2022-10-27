@@ -10,7 +10,7 @@ import org.wordpress.android.ui.reader.utils.ThreadedCommentsUtils
 import org.wordpress.android.ui.reader.views.uistates.CommentSnippetItemState
 import org.wordpress.android.ui.reader.views.uistates.CommentSnippetItemState.CommentState
 import org.wordpress.android.util.image.ImageManager
-import org.wordpress.android.util.image.ImageType.AVATAR
+import org.wordpress.android.util.image.ImageType
 
 class CommentViewHolder(
     parent: ViewGroup,
@@ -35,7 +35,8 @@ class CommentViewHolder(
 
         textCommentAuthor.text = state.authorName
         textCommentDate.text = state.datePublished
-        imageManager.loadIntoCircle(imageCommentAvatar, AVATAR, state.avatarUrl)
+        @Suppress("DEPRECATION")
+        imageManager.loadIntoCircle(imageCommentAvatar, ImageType.AVATAR, state.avatarUrl)
         authorBadge.visibility = if (state.showAuthorBadge) View.VISIBLE else View.GONE
         commentActionButtonContainer.visibility = View.GONE
 

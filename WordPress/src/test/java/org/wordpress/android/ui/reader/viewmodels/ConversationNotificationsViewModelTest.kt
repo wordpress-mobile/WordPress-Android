@@ -8,7 +8,6 @@ import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
-import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -188,7 +187,7 @@ class ConversationNotificationsViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `followCommentsHandler is not called for external posts`() = runBlocking {
+    fun `followCommentsHandler is not called for external posts`() = test {
         whenever(readerPostTableWrapper.getBlogPost(anyOrNull(), anyOrNull(), anyOrNull())).thenReturn(externalPost)
         setupObserversAndStart()
 

@@ -8,6 +8,7 @@ import android.view.View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
 import android.view.View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
 import android.view.Window
 import androidx.core.content.ContextCompat
+import androidx.core.view.WindowCompat
 import org.wordpress.android.R
 
 @Suppress("DEPRECATION")
@@ -41,6 +42,11 @@ fun Window.setLightNavigationBar(showInLightMode: Boolean, applyDefaultColors: B
             }
         }
     }
+}
+
+fun Window.setEdgeToEdgeContentDisplay(isEnabled: Boolean) {
+    val decorFitsSystemWindows = !isEnabled
+    WindowCompat.setDecorFitsSystemWindows(this, decorFitsSystemWindows)
 }
 
 @Suppress("DEPRECATION")

@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-09-27 16:54:10+0000
+Translation-Revision-Date: 2022-10-21 08:03:44+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.3
 Language: ko_KR
 -->
 <resources>
+    <string name="about_automattic_contribute_item_title">참여</string>
+    <string name="about_news">뉴스</string>
+    <string name="my_site_blogging_prompt_card_number_of_answers_one">1개 답변</string>
+    <string name="login_prologue_revamped_content_description_wordpress_icon">워드프레스 아이콘</string>
+    <string name="login_prologue_revamped_tagline">어디에서나 쓰고, 편집하고 발생합니다.</string>
     <string name="error_fetch_authors_list">글쓴이를 검색할 수 없음</string>
     <string name="post_settings_author">글쓴이</string>
     <string name="app_rating_title">%s을(를) 사용하시나요?</string>
@@ -250,6 +255,7 @@ Language: ko_KR
     <string name="my_site_blogging_prompt_card_menu_remove">알림판에서 제거</string>
     <string name="my_site_blogging_prompt_card_menu_skip">이 프롬프트 건너뛰기</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">더 많은 프롬프트 보기</string>
+    <string name="my_site_blogging_prompt_card_number_of_answers_other">%d개 답변</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">블로깅 프롬프트 공유</string>
     <string name="my_site_blogging_prompt_card_answered_prompt">✓ 답변됨</string>
     <string name="my_site_blogging_prompt_card_answer_prompt">답변 프롬프트</string>
@@ -508,6 +514,7 @@ Language: ko_KR
     <string name="blogging_reminders_notification_title">%s의 블로깅 시간입니다.</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios">재활용 가능한 블록 편집은 아직 iOS용 WordPress에서 지원되지 않습니다.</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and">재활용 가능한 블록 편집은 아직 Android용 WordPress에서 지원되지 않습니다.</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">또는 \"일반 블록으로 변환\"을 눌러 이러한 블록을 분리하고 따로 편집할 수 있습니다.</string>
     <string name="blogging_reminders_done">완료</string>
     <string name="blogging_reminders_notify_me">알림 받기</string>
     <string name="restore_details_enter_server_creds_msg">클릭 한 번으로 백업에서 사이트를 복원할 수 있도록 &lt;a href=\"%1$s\"&gt;서버 자격 증명을 입력하세요&lt;/a&gt;.</string>
@@ -561,6 +568,7 @@ Language: ko_KR
     <string name="gutenberg_native_move_image_forward">이미지를 앞으로 이동</string>
     <string name="gutenberg_native_move_image_backward">이미지를 뒤로 이동</string>
     <string name="gutenberg_native_width_settings">폭 설정</string>
+    <string name="gutenberg_native_link_rel">링크 관계</string>
     <string name="gutenberg_native_column_settings">열 설정</string>
     <string name="user_profile_untitled_site">(제목이 없습니다)</string>
     <string name="user_profile_site_section_header">사이트</string>
@@ -1775,7 +1783,10 @@ Language: ko_KR
     <string name="notification_channel_reminder_title">알림</string>
     <string name="stats_select_next_period_description">다음 기간 선택</string>
     <string name="stats_select_previous_period_description">이전 기간 선택</string>
+    <string name="stats_most_popular_percent_views">조회수 %1$s</string>
     <string name="stats_insights_popular">가장 인기 있는 시간</string>
+    <string name="stats_traffic_change">%1$s(%2$s)</string>
+    <string name="stats_traffic_increase">+%1$s(%2$s)</string>
     <string name="new_site_creation_site_preview_content_description">사이트 미리보기 표시</string>
     <string name="new_site_creation_clear_all_content_description">지우기</string>
     <string name="site_created_but_not_fetched_snackbar_message">사이트 연결이 느린 것 같습니다. 새 사이트가 목록에 없으면 새로 고침하세요.</string>

@@ -1,16 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-07-18 09:54:03+0000
+Translation-Revision-Date: 2022-10-06 23:54:20+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: ko_KR
 -->
 <resources>
+    <string name="me_btn_share">친구와 젯팩 공유</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_12">글쓴이 추가</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_11">사진 게시</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_10">보안 문제 해결</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_9">페이스북에서 공유</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_8">플러그인 검색</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_7">백업 복원</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_6">댓글 응답</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_5">알림 확인</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_4">통계 보기</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_3">블로그 작성</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_2">사이트 구축</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_1">플러그인 업데이트</string>
+    <string name="login_prologue_revamped_content_description_jetpack_logo">젯팩 로고</string>
     <string name="me_btn_about">젯팩 정보</string>
     <string name="sign_out_wpcom_confirm_with_no_changes">젯팩에서 로그아웃하시나요?</string>
     <string name="me_disconnect_from_wordpress_com">젯팩에서 로그아웃하시나요?</string>
     <string name="support_ticket_subject">Android 지원용 젯팩</string>
     <string name="login_magic_links_sent_label">이 기기에서 이메일을 확인하여 젯팩닷컴에서 받은 이메일 내 링크를 누르세요.</string>
+    <string name="continue_with_wpcom_no_signup">워드프레스닷컴 계속</string>
     <string name="app_tagline">어디서나 간편하게 사이트 보안 및 성능</string>
     <string name="post_signup_interstitial_title">젯팩에 오신 것을 환영합니다!</string>
     <string name="app_title">Android용 젯팩</string>

@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-10-03 14:34:13+0000
+Translation-Revision-Date: 2022-10-18 15:09:02+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: sv_SE
 -->
 <resources>
+    <string name="about_automattic_contribute_item_title">Bidra</string>
+    <string name="about_news">Nyheter</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_one">1 svar</string>
     <string name="login_prologue_revamped_content_description_wordpress_icon">WordPress-ikon</string>
     <string name="login_prologue_revamped_tagline">Skriv, redigera och publicera var som helst.</string>

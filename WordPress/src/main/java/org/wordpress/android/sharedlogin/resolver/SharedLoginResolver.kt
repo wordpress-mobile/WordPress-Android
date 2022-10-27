@@ -5,6 +5,7 @@ import android.database.Cursor
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.provider.query.QueryResult
+import org.wordpress.android.reader.savedposts.resolver.ReaderSavedPostsResolver
 import org.wordpress.android.resolver.ContentResolverWrapper
 import org.wordpress.android.sharedlogin.JetpackSharedLoginFlag
 import org.wordpress.android.sharedlogin.SharedLoginAnalyticsTracker
@@ -29,7 +30,8 @@ class SharedLoginResolver @Inject constructor(
     private val accountActionBuilderWrapper: AccountActionBuilderWrapper,
     private val appPrefsWrapper: AppPrefsWrapper,
     private val sharedLoginAnalyticsTracker: SharedLoginAnalyticsTracker,
-    private val userFlagsResolver: UserFlagsResolver
+    private val userFlagsResolver: UserFlagsResolver,
+    private val readerSavedPostsResolver: ReaderSavedPostsResolver
 ) {
     fun tryJetpackLogin() {
         val isFeatureFlagEnabled = jetpackSharedLoginFlag.isEnabled()
@@ -45,11 +47,25 @@ class SharedLoginResolver @Inject constructor(
         appPrefsWrapper.saveIsFirstTrySharedLoginJetpack(false)
         val accessTokenCursor = getAccessTokenCursor()
         if (accessTokenCursor != null) {
-            val accessToken = queryResult.getValue<String>(accessTokenCursor) ?: ""
+            val accessToken = queryResult.getValue(accessTokenCursor) ?: ""
             if (accessToken.isNotEmpty()) {
                 sharedLoginAnalyticsTracker.trackLoginSuccess()
-                dispatchUpdateAccessToken(accessToken)
-                userFlagsResolver.tryGetUserFlags({ reloadMainScreen() }, { reloadMainScreen() })
+                userFlagsResolver.tryGetUserFlags(
+                        {
+                            readerSavedPostsResolver.tryGetReaderSavedPosts(
+                                    {
+                                        dispatchUpdateAccessToken(accessToken)
+                                        reloadMainScreen()
+                                    },
+                                    {
+                                        reloadMainScreen()
+                                    }
+                            )
+                        },
+                        {
+                            reloadMainScreen()
+                        }
+                )
             } else {
                 sharedLoginAnalyticsTracker.trackLoginFailed(ErrorType.WPNotLoggedInError)
             }

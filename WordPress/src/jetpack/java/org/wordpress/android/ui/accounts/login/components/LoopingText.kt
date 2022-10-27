@@ -4,6 +4,7 @@ import android.content.res.Configuration
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.text.ParagraphStyle
@@ -20,11 +21,13 @@ import org.wordpress.android.ui.accounts.login.LocalPosition
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.util.extensions.isOdd
 
-private val fontSize = 40.sp
-private val lineHeight = fontSize / 100 * 105 // last value = % of fontSize
+private const val FIXED_FONT_SIZE = 40
 
 @Composable
 private fun LargeTexts() {
+    val fontSize = (FIXED_FONT_SIZE / LocalDensity.current.fontScale).sp
+    val lineHeight = fontSize * 1.05 // calculate line height to 5% larger than the font size
+
     val texts = stringArrayResource(R.array.login_prologue_revamped_jetpack_feature_texts)
 
     val secondaryColor = colorResource(R.color.text_color_jetpack_login_label_secondary)

@@ -1,18 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-09-30 10:03:40+0000
+Translation-Revision-Date: 2022-10-21 08:04:22+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: nl
 -->
 <resources>
+    <string name="about_automattic_contribute_item_title">Bijdragen</string>
+    <string name="about_news">Nieuws</string>
+    <string name="my_site_blogging_prompt_card_number_of_answers_one">1 antwoord</string>
+    <string name="login_prologue_revamped_content_description_wordpress_icon">WordPress-pictogram</string>
+    <string name="login_prologue_revamped_tagline">Schrijf, bewerk en publiceer waar je ook bent.</string>
     <string name="error_fetch_authors_list">Couldn\'t retrieve authors</string>
     <string name="post_settings_author">Auteur</string>
     <string name="app_rating_title">Werk je graag met %s?</string>
     <string name="connection_service_label">Deel bericht op %s</string>
-    <string name="connections_label">Jetpack Social-verbindingen</string>
+    <string name="connections_label">Jetpack Social verbindingen</string>
     <string name="stats_widget_log_in_to_add_message">Meld je aan bij de Jetpack-app om een widget toe te voegen.</string>
-    <string name="stats_view_publicize">Jetpack Social-verbindingen</string>
+    <string name="stats_view_publicize">Jetpack Social verbindingen</string>
     <string name="login_magic_links_email_sent">We hebben zojuist een magische link verstuurd naar</string>
     <string name="login_magic_links_sent_label_short">Controleer je e-mail op dit apparaat!</string>
     <string name="or_use_password">Gebruik je wachtwoord om je aan te melden</string>
@@ -250,6 +255,7 @@ Language: nl
     <string name="my_site_blogging_prompt_card_menu_remove">Uit dashboard verwijderen</string>
     <string name="my_site_blogging_prompt_card_menu_skip">Sla deze prompt over</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">Bekijk meer prompts</string>
+    <string name="my_site_blogging_prompt_card_number_of_answers_other">%d antwoorden</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">Blog-opdracht delen</string>
     <string name="my_site_blogging_prompt_card_answered_prompt">✓ Beantwoord</string>
     <string name="my_site_blogging_prompt_card_answer_prompt">Antwoord prompt</string>
@@ -508,6 +514,7 @@ Language: nl
     <string name="blogging_reminders_notification_title">Het is tijd om te bloggen op %s</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios">Bewerken van herbruikbare blokken wordt momenteel niet ondersteund door WordPress voor iOS</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and">Bewerken van herbruikbare blokken wordt momenteel niet ondersteund door WordPress voor Android</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">Als alternatief, kun je deze blokken ook losmaken en afzonderlijk bewerken door op \'Converteren naar normale blokken\' te tikken.</string>
     <string name="blogging_reminders_done">Klaar</string>
     <string name="blogging_reminders_notify_me">Breng me op de hoogte</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;Voer je inloggegevens voor je server in&lt;/a&gt; om terugzetten in één klik van back-ups in te schakelen.</string>
@@ -561,6 +568,7 @@ Language: nl
     <string name="gutenberg_native_move_image_forward">Verplaats afbeelding naar voren</string>
     <string name="gutenberg_native_move_image_backward">Verplaats afbeelding naar achteren</string>
     <string name="gutenberg_native_width_settings">Breedte instellingen</string>
+    <string name="gutenberg_native_link_rel">Linkrelatie</string>
     <string name="gutenberg_native_column_settings">Kolominstellingen</string>
     <string name="user_profile_untitled_site">(Zonder titel)</string>
     <string name="user_profile_site_section_header">Site</string>
@@ -1775,7 +1783,10 @@ Language: nl
     <string name="notification_channel_reminder_title">Herinnering</string>
     <string name="stats_select_next_period_description">Volgende periode selecteren</string>
     <string name="stats_select_previous_period_description">Vorige periode selecteren</string>
+    <string name="stats_most_popular_percent_views">%1$s van views</string>
     <string name="stats_insights_popular">Populairste tijd</string>
+    <string name="stats_traffic_change">%1$s (%2$s)</string>
+    <string name="stats_traffic_increase">+%1$s (%2$s)</string>
     <string name="new_site_creation_site_preview_content_description">Toont site voorbeeld</string>
     <string name="new_site_creation_clear_all_content_description">Wissen</string>
     <string name="site_created_but_not_fetched_snackbar_message">Het lijkt er op dat je op een trage verbinding zit. Als je je nieuwe site niet in de lijst ziet, ververs dan je scherm.</string>
