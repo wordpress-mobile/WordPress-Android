@@ -10,7 +10,6 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -21,7 +20,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -58,6 +56,8 @@ import org.wordpress.android.ui.compose.unit.Margin
 import org.wordpress.android.ui.compose.utils.uiStringText
 import org.wordpress.android.ui.main.jetpack.JetpackWelcomeUiState.Content
 import org.wordpress.android.ui.main.jetpack.JetpackWelcomeUiState.SiteListItem
+import org.wordpress.android.ui.main.jetpack.components.PrimaryButton
+import org.wordpress.android.ui.main.jetpack.components.SecondaryButton
 
 @AndroidEntryPoint
 class JetpackWelcomeFragment : Fragment() {
@@ -158,24 +158,14 @@ fun ContentState(uiState: Content) {
                             )
                         }
                 ) {
-                    Button(
+                    PrimaryButton(
+                            text = "Primary Button",
                             onClick = {},
-                            modifier = Modifier
-                                    .padding(top = 20.dp, bottom = 10.dp)
-                                    .padding(horizontal = 30.dp)
-                                    .fillMaxWidth()
-                    ) {
-                        Text("Primary Button")
-                    }
-                    Button(
+                    )
+                    SecondaryButton(
+                            text = "Secondary Button",
                             onClick = {},
-                            modifier = Modifier
-                                    .padding(bottom = 60.dp)
-                                    .padding(horizontal = 30.dp)
-                                    .fillMaxWidth()
-                    ) {
-                        Text("Secondary Button")
-                    }
+                    )
                 }
                 LaunchedEffect(listState.firstVisibleItemIndex, listState.firstVisibleItemScrollOffset) {
                     blurredListState.scrollToItem(
