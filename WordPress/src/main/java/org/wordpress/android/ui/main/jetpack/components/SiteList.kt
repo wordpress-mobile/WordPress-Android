@@ -27,11 +27,11 @@ import coil.compose.rememberImagePainter
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.modifiers.disableUserScroll
 import org.wordpress.android.ui.compose.unit.FontSize
-import org.wordpress.android.ui.main.jetpack.JetpackWelcomeUiState.SiteListItem
+import org.wordpress.android.ui.main.jetpack.JetpackWelcomeViewModel.SiteListItemUiState
 
 @Composable
 fun SiteList(
-    items: List<SiteListItem>,
+    items: List<SiteListItemUiState>,
     listState: LazyListState,
     userScrollEnabled: Boolean = true,
     modifier: Modifier = Modifier,

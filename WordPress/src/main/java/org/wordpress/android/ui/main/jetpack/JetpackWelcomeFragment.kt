@@ -6,35 +6,18 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.viewmodel.compose.viewModel
 import dagger.hilt.android.AndroidEntryPoint
-import org.wordpress.android.R
-import org.wordpress.android.ui.compose.components.ColumnWithFrostedGlassBackground
 import org.wordpress.android.ui.compose.theme.AppTheme
-import org.wordpress.android.ui.compose.utils.uiStringText
-import org.wordpress.android.ui.main.jetpack.JetpackWelcomeUiState.Content
-import org.wordpress.android.ui.main.jetpack.JetpackWelcomeUiState.SiteListItem
-import org.wordpress.android.ui.main.jetpack.components.Message
-import org.wordpress.android.ui.main.jetpack.components.PrimaryButton
-import org.wordpress.android.ui.main.jetpack.components.ScreenIcon
-import org.wordpress.android.ui.main.jetpack.components.SecondaryButton
-import org.wordpress.android.ui.main.jetpack.components.SiteList
-import org.wordpress.android.ui.main.jetpack.components.Subtitle
-import org.wordpress.android.ui.main.jetpack.components.Title
+import org.wordpress.android.ui.main.jetpack.JetpackWelcomeViewModel.StepUiState
 import org.wordpress.android.ui.main.jetpack.components.UserAvatarImage
+import org.wordpress.android.ui.main.jetpack.components.WelcomeStep
 
 @AndroidEntryPoint
 class JetpackWelcomeFragment : Fragment() {
@@ -61,92 +44,15 @@ class JetpackWelcomeFragment : Fragment() {
 @Composable
 private fun JetpackWelcomeScreen(viewModel: JetpackWelcomeViewModel = viewModel()) {
     Box {
-        val uiState by viewModel.uiState.collectAsState()
+        Column {
+            val uiState by viewModel.uiState.collectAsState()
 
-        @Suppress("UnnecessaryVariable") // See: https://stackoverflow.com/a/69558316/4129245
-        when (val state = uiState) {
-            is Content -> ContentState(state)
-            else -> Unit // TODO handle other states
-        }
-    }
-}
+            UserAvatarImage(avatarUrl = uiState.userAvatarUrl)
 
-@Composable
-fun ContentState(uiState: Content) {
-    Column {
-        Column(Modifier.padding(horizontal = 30.dp)) {
-            UserAvatarImage(uiState.avatarUrl)
-            ScreenIcon(uiState.screenIconRes)
-            Title(text = uiStringText(uiState.title))
-            Subtitle(text = uiStringText(uiState.subtitle))
-            Message(text = uiStringText(uiState.message))
-        }
-        Box {
-            if (uiState is Content.SiteList) {
-                val listState = rememberLazyListState()
-                val blurredListState = rememberLazyListState()
-                SiteList(
-                        items = uiState.sites,
-                        listState = listState,
-                )
-                ColumnWithFrostedGlassBackground(
-                        blurRadius = 4.dp,
-                        backgroundColor = colorResource(R.color.white_translucent_80),
-                        borderColor = colorResource(R.color.gray_10).copy(alpha = 0.5f),
-                        background = { clipModifier, blurModifier ->
-                            SiteList(
-                                    items = uiState.sites,
-                                    listState = blurredListState,
-                                    userScrollEnabled = false,
-                                    modifier = clipModifier,
-                                    blurModifier = blurModifier,
-                            )
-                        }
-                ) {
-                    PrimaryButton(
-                            text = "Primary Button",
-                            onClick = {},
-                    )
-                    SecondaryButton(
-                            text = "Secondary Button",
-                            onClick = {},
-                    )
-                }
-                LaunchedEffect(listState.firstVisibleItemIndex, listState.firstVisibleItemScrollOffset) {
-                    blurredListState.scrollToItem(
-                            listState.firstVisibleItemIndex,
-                            listState.firstVisibleItemScrollOffset,
-                    )
-                }
+            when (val step = uiState.stepState) {
+                is StepUiState.Welcome -> WelcomeStep(step)
+                else -> Unit
             }
         }
-    }
-}
-
-fun previewSiteListItems(): List<SiteListItem> {
-    val list = mutableListOf<SiteListItem>()
-    repeat(10) {
-        list.add(
-                SiteListItem(
-                        id = it.toLong(),
-                        name = "Site $it",
-                        url = "site-$it.net",
-                        iconUrl = "https://secure.gravatar.com/blavatar/5b6c1b7c7c7c7c7c7c7c7c7c7c7c7c7c?s=96&d=mm&r=g",
-                )
-        )
-    }
-    return list
-}
-
-@Preview(showBackground = true, widthDp = 414, heightDp = 897)
-//@Preview(showBackground = true, widthDp = 414, heightDp = 897, uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Composable
-private fun PreviewContentState() {
-    val uiState = Content.SiteList(
-            avatarUrl = "",
-            sites = previewSiteListItems(),
-    )
-    AppTheme {
-        ContentState(uiState)
     }
 }
