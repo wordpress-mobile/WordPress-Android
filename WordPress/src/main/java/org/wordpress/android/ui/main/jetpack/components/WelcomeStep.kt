@@ -13,8 +13,8 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.ColumnWithFrostedGlassBackground
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.utils.uiStringText
-import org.wordpress.android.ui.main.jetpack.JetpackWelcomeViewModel.SiteListItemUiState
-import org.wordpress.android.ui.main.jetpack.JetpackWelcomeViewModel.StepUiState
+import org.wordpress.android.ui.main.jetpack.JetpackMigrationViewModel.SiteListItemUiState
+import org.wordpress.android.ui.main.jetpack.JetpackMigrationViewModel.StepUiState
 
 @Composable
 fun WelcomeStep(uiState: StepUiState.Welcome) = with(uiState) {

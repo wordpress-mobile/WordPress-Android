@@ -15,13 +15,13 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.viewmodel.compose.viewModel
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.ui.compose.theme.AppTheme
-import org.wordpress.android.ui.main.jetpack.JetpackWelcomeViewModel.StepUiState
+import org.wordpress.android.ui.main.jetpack.JetpackMigrationViewModel.StepUiState
 import org.wordpress.android.ui.main.jetpack.components.UserAvatarImage
 import org.wordpress.android.ui.main.jetpack.components.WelcomeStep
 
 @AndroidEntryPoint
 class JetpackMigrationFragment : Fragment() {
-    private val viewModel: JetpackWelcomeViewModel by viewModels()
+    private val viewModel: JetpackMigrationViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -42,7 +42,7 @@ class JetpackMigrationFragment : Fragment() {
 }
 
 @Composable
-private fun JetpackWelcomeScreen(viewModel: JetpackWelcomeViewModel = viewModel()) {
+private fun JetpackWelcomeScreen(viewModel: JetpackMigrationViewModel = viewModel()) {
     Box {
         Column {
             val uiState by viewModel.uiState.collectAsState()

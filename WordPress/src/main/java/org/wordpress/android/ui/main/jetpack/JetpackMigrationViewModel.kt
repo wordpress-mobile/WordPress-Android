@@ -17,7 +17,7 @@ const val SITE_ICON_SIZE = 60 * 3
 const val USER_AVATAR_SIZE = 32 * 3
 
 @HiltViewModel
-class JetpackWelcomeViewModel @Inject constructor(
+class JetpackMigrationViewModel @Inject constructor(
     val siteStore: SiteStore,
     val accountStore: AccountStore,
     val siteUtilsWrapper: SiteUtilsWrapper,
