@@ -55,7 +55,7 @@ class JetpackFeatureRemovalPhaseHelperTest {
     fun `given jetpack app, when current phase is fetched, then return null`() {
         whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
 
-        val currentPhase = jetpackFeatureRemovalPhaseHelper.getTheCurrentPhase()
+        val currentPhase = jetpackFeatureRemovalPhaseHelper.getCurrentPhase()
 
         assertNull(currentPhase)
     }
@@ -64,7 +64,7 @@ class JetpackFeatureRemovalPhaseHelperTest {
     fun `given phase one config true, when current phase is fetched, then return phase one`() {
         whenever(jetpackFeatureRemovalPhaseOneConfig.isEnabled()).thenReturn(true)
 
-        val currentPhase = jetpackFeatureRemovalPhaseHelper.getTheCurrentPhase()
+        val currentPhase = jetpackFeatureRemovalPhaseHelper.getCurrentPhase()
 
         assertEquals(currentPhase, PhaseOne)
     }
@@ -73,7 +73,7 @@ class JetpackFeatureRemovalPhaseHelperTest {
     fun `given phase two config true, when current phase is fetched, then return phase two`() {
         whenever(jetpackFeatureRemovalPhaseTwoConfig.isEnabled()).thenReturn(true)
 
-        val currentPhase = jetpackFeatureRemovalPhaseHelper.getTheCurrentPhase()
+        val currentPhase = jetpackFeatureRemovalPhaseHelper.getCurrentPhase()
 
         assertEquals(currentPhase, PhaseTwo)
     }
@@ -82,7 +82,7 @@ class JetpackFeatureRemovalPhaseHelperTest {
     fun `given phase three config true, when current phase is fetched, then return phase three`() {
         whenever(jetpackFeatureRemovalPhaseThreeConfig.isEnabled()).thenReturn(true)
 
-        val currentPhase = jetpackFeatureRemovalPhaseHelper.getTheCurrentPhase()
+        val currentPhase = jetpackFeatureRemovalPhaseHelper.getCurrentPhase()
 
         assertEquals(currentPhase, PhaseThree)
     }
@@ -91,7 +91,7 @@ class JetpackFeatureRemovalPhaseHelperTest {
     fun `given phase four config true, when current phase is fetched, then return phase four`() {
         whenever(jetpackFeatureRemovalPhaseFourConfig.isEnabled()).thenReturn(true)
 
-        val currentPhase = jetpackFeatureRemovalPhaseHelper.getTheCurrentPhase()
+        val currentPhase = jetpackFeatureRemovalPhaseHelper.getCurrentPhase()
 
         assertEquals(currentPhase, PhaseFour)
     }
@@ -100,7 +100,7 @@ class JetpackFeatureRemovalPhaseHelperTest {
     fun `given phase new users config true, when current phase is fetched, then return phase new users`() {
         whenever(jetpackFeatureRemovalNewUsersConfig.isEnabled()).thenReturn(true)
 
-        val currentPhase = jetpackFeatureRemovalPhaseHelper.getTheCurrentPhase()
+        val currentPhase = jetpackFeatureRemovalPhaseHelper.getCurrentPhase()
 
         assertEquals(currentPhase, PhaseNewUsers)
     }

@@ -34,7 +34,7 @@ class JetpackFeatureRemovalPhaseHelper @Inject constructor(
     private val jetpackFeatureRemovalPhaseFourConfig: JetpackFeatureRemovalPhaseFourConfig,
     private val jetpackFeatureRemovalNewUsersConfig: JetpackFeatureRemovalNewUsersConfig
 ) {
-    fun getTheCurrentPhase(): JetpackFeatureRemovalPhase? {
+    fun getCurrentPhase(): JetpackFeatureRemovalPhase? {
         return if (buildConfigWrapper.isJetpackApp) null
         else if (jetpackFeatureRemovalNewUsersConfig.isEnabled()) PhaseNewUsers
         else if (jetpackFeatureRemovalPhaseFourConfig.isEnabled()) PhaseFour
@@ -45,7 +45,7 @@ class JetpackFeatureRemovalPhaseHelper @Inject constructor(
     }
 
     fun getSiteCreationPhase(): JetpackFeatureRemovalSiteCreationPhase? {
-        val currentPhase = getTheCurrentPhase() ?: return null
+        val currentPhase = getCurrentPhase() ?: return null
         return when (currentPhase) {
             is PhaseOne, PhaseTwo, PhaseThree -> PHASE_ONE
             is PhaseFour, PhaseNewUsers -> PHASE_TWO
