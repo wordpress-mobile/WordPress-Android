@@ -96,48 +96,48 @@ private fun JetpackWelcomeScreen(viewModel: JetpackWelcomeViewModel = viewModel(
 
 @Composable
 fun ContentState(uiState: Content) {
-    Column(Modifier.padding(horizontal = 30.dp)) {
-        Image(
-                painter = painterResource(R.drawable.ic_placeholder_blavatar_grey_lighten_20_40dp),
-                contentDescription = stringResource(R.string.jp_welcome_avatar_content_description),
-                modifier = Modifier
-                        .padding(top = Margin.MediumLarge.value)
-                        .size(32.dp)
-                        .clip(CircleShape)
-                        .border(1.dp, colorResource(R.color.black_translucent_20), CircleShape)
-                        .align(Alignment.End)
-        )
-        Image(
-                painter = painterResource(R.drawable.ic_wordpress_jetpack_logo),
-                contentDescription = stringResource(R.string.jp_welcome_icon_logos_content_description),
-                modifier = Modifier
-                        .width(123.dp)
-                        .height(65.dp)
-                        .padding(top = 4.dp)
-        )
-        Text(
-                text = uiStringText(uiState.title),
-                fontSize = FontSize.ExtraExtraExtraLarge.value,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier
-                        .padding(top = 30.dp)
-        )
-        Text(
-                text = uiStringText(uiState.subtitle),
-                fontSize = FontSize.ExtraLarge.value,
-                modifier = Modifier
-                        .padding(top = 20.dp)
-        )
-        Text(
-                text = uiStringText(uiState.message),
-                fontSize = 17.sp,
-                style = TextStyle(letterSpacing = (-0.01).sp),
-                modifier = Modifier
-                        .padding(top = 20.dp)
-        )
-        Box(
-                modifier = Modifier.padding(top = 30.dp),
-        ) {
+    Column {
+        Column(Modifier.padding(horizontal = 30.dp)) {
+            Image(
+                    painter = painterResource(R.drawable.ic_placeholder_blavatar_grey_lighten_20_40dp),
+                    contentDescription = stringResource(R.string.jp_welcome_avatar_content_description),
+                    modifier = Modifier
+                            .padding(top = Margin.MediumLarge.value)
+                            .size(32.dp)
+                            .clip(CircleShape)
+                            .border(1.dp, colorResource(R.color.black_translucent_20), CircleShape)
+                            .align(Alignment.End)
+            )
+            Image(
+                    painter = painterResource(R.drawable.ic_wordpress_jetpack_logo),
+                    contentDescription = stringResource(R.string.jp_welcome_icon_logos_content_description),
+                    modifier = Modifier
+                            .width(123.dp)
+                            .height(65.dp)
+                            .padding(top = 4.dp)
+            )
+            Text(
+                    text = uiStringText(uiState.title),
+                    fontSize = FontSize.ExtraExtraExtraLarge.value,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier
+                            .padding(top = 30.dp)
+            )
+            Text(
+                    text = uiStringText(uiState.subtitle),
+                    fontSize = FontSize.ExtraLarge.value,
+                    modifier = Modifier
+                            .padding(top = 20.dp)
+            )
+            Text(
+                    text = uiStringText(uiState.message),
+                    fontSize = 17.sp,
+                    style = TextStyle(letterSpacing = (-0.01).sp),
+                    modifier = Modifier
+                            .padding(top = 20.dp, bottom = 30.dp)
+            )
+        }
+        Box {
             if (uiState is Content.SiteList) {
                 val listState = rememberLazyListState()
                 val blurredListState = rememberLazyListState()
@@ -148,7 +148,7 @@ fun ContentState(uiState: Content) {
                 ColumnWithFrostedGlassBackground(
                         blurRadius = 4.dp,
                         backgroundColor = colorResource(R.color.white_translucent_80),
-                        borderColor = colorResource(R.color.gray_10),
+                        borderColor = colorResource(R.color.gray_10).copy(alpha = 0.5f),
                         background = { clipModifier, blurModifier ->
                             SiteList(
                                     uiState.sites,
@@ -162,6 +162,7 @@ fun ContentState(uiState: Content) {
                             onClick = {},
                             modifier = Modifier
                                     .padding(top = 20.dp, bottom = 10.dp)
+                                    .padding(horizontal = 30.dp)
                                     .fillMaxWidth()
                     ) {
                         Text("Primary Button")
@@ -170,6 +171,7 @@ fun ContentState(uiState: Content) {
                             onClick = {},
                             modifier = Modifier
                                     .padding(bottom = 60.dp)
+                                    .padding(horizontal = 30.dp)
                                     .fillMaxWidth()
                     ) {
                         Text("Secondary Button")
@@ -197,6 +199,7 @@ fun SiteList(
             state = listState,
             modifier = modifier
                     .background(colorResource(R.color.white))
+                    .padding(horizontal = 30.dp)
                     .then(blurModifier),
     ) {
         items(
@@ -232,7 +235,7 @@ fun SiteList(
                     )
                 }
             }
-            Divider(color = colorResource(R.color.gray_10))
+            Divider(color = colorResource(R.color.gray_10).copy(alpha = 0.5f))
         }
     }
 }
