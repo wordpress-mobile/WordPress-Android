@@ -125,6 +125,11 @@ android {
         buildConfigField "boolean", "JETPACK_BLOGGING_REMINDERS_SYNC", "false"
         buildConfigField "boolean", "JETPACK_READER_SAVED_POSTS", "false"
         buildConfigField "boolean", "JETPACK_PROVIDER_SYNC", "false"
+        buildConfigField "boolean", "JETPACK_FEATURE_REMOVAL_PHASE_ONE", "false"
+        buildConfigField "boolean", "JETPACK_FEATURE_REMOVAL_PHASE_TWO", "false"
+        buildConfigField "boolean", "JETPACK_FEATURE_REMOVAL_PHASE_THREE", "false"
+        buildConfigField "boolean", "JETPACK_FEATURE_REMOVAL_PHASE_FOUR", "false"
+        buildConfigField "boolean", "JETPACK_FEATURE_REMOVAL_NEW_USERS", "false"
 
         // Override these constants in jetpack product flavor to enable/ disable features
         buildConfigField "boolean", "ENABLE_SITE_CREATION", "true"
