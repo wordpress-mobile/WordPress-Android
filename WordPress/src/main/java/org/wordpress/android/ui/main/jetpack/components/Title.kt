@@ -18,6 +18,7 @@ fun Title(
             fontSize = FontSize.ExtraExtraExtraLarge.value,
             fontWeight = FontWeight.Bold,
             modifier = modifier
+                    .padding(horizontal = 30.dp)
                     .padding(top = 30.dp)
     )
 }

@@ -23,6 +23,7 @@ fun ScreenIcon(
             modifier = modifier
                     .width(123.dp)
                     .height(65.dp)
+                    .padding(horizontal = 30.dp)
                     .padding(top = 4.dp)
     )
 }

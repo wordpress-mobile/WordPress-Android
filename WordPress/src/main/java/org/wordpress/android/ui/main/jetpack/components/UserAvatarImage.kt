@@ -34,7 +34,7 @@ fun ColumnScope.UserAvatarImage(
             contentDescription = stringResource(string.jp_welcome_avatar_content_description),
             modifier = modifier
                     .align(Alignment.End)
-                    .padding(top = MediumLarge.value)
+                    .padding(top = MediumLarge.value, end = 30.dp)
                     .size(32.dp)
                     .clip(CircleShape)
                     .border(1.dp, colorResource(color.black_translucent_20), CircleShape)

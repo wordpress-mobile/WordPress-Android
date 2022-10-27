@@ -16,6 +16,7 @@ fun Subtitle(
             text = text,
             fontSize = FontSize.ExtraLarge.value,
             modifier = modifier
+                    .padding(horizontal = 30.dp)
                     .padding(top = 20.dp)
     )
 }
