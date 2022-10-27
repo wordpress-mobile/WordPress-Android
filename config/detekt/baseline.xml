@@ -18,7 +18,6 @@
     <ID>ComplexMethod:HomepageSettingsDialog.kt$HomepageSettingsDialog$override fun onCreateDialog(savedInstanceState: Bundle?): Dialog</ID>
     <ID>ComplexMethod:ImagePlaceholderManager.kt$ImagePlaceholderManager$fun getErrorResource(imgType: ImageType): Int?</ID>
     <ID>ComplexMethod:ImagePlaceholderManager.kt$ImagePlaceholderManager$fun getPlaceholderResource(imgType: ImageType): Int?</ID>
-    <ID>ComplexMethod:MediaPickerFragment.kt$MediaPickerFragment$override fun onViewCreated(view: View, savedInstanceState: Bundle?)</ID>
     <ID>ComplexMethod:MediaPickerViewModel.kt$MediaPickerViewModel$private fun buildUiModel( domainModel: DomainModel?, selectedIds: List&lt;Identifier>?, softAskRequest: SoftAskRequest?, isSearching: Boolean? ): PhotoListUiModel</ID>
     <ID>ComplexMethod:NoticonUtils.kt$NoticonUtils$fun noticonToGridicon(noticon: String): Int</ID>
     <ID>ComplexMethod:PostActionHandler.kt$PostActionHandler$fun handlePostButton(buttonType: PostListButtonType, post: PostModel, hasAutoSave: Boolean)</ID>
