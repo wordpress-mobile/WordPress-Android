@@ -28,7 +28,6 @@ import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.MediaPickerFragmentBinding
 import org.wordpress.android.fluxc.model.SiteModel
@@ -292,7 +291,7 @@ class MediaPickerFragment : Fragment() {
                 )
                 AccessibilityUtils.setActionModeDoneButtonContentDescription(
                         activity,
-                        getString(string.cancel)
+                        getString(R.string.cancel)
                 )
             }
             is PreviewMedia -> MediaPreviewActivity.showPreview(
