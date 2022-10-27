@@ -43,10 +43,12 @@ import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.STOCK_LI
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.WP_LIBRARY
 import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.ClickAction
 import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.FileItem
+import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.NextPageLoader
 import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.PhotoItem
 import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.ToggleAction
 import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.VideoItem
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.BrowseMenuUiModel.BrowseAction
+import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.PhotoListUiModel.Data
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.ProgressDialogUiModel.Hidden
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.ProgressDialogUiModel.Visible
 import org.wordpress.android.ui.mediapicker.MediaType.AUDIO
@@ -209,22 +211,7 @@ class MediaPickerViewModel @Inject constructor(
                 }
             }
             if (domainModel.hasMore) {
-                val updatedItems = uiItems.toMutableList()
-                val loaderItem = if (domainModel.emptyState?.isError == true) {
-                    MediaPickerUiItem.NextPageLoader(false) {
-                        launch {
-                            retry()
-                        }
-                    }
-                } else {
-                    MediaPickerUiItem.NextPageLoader(true) {
-                        launch {
-                            loadActions.send(NextPage)
-                        }
-                    }
-                }
-                updatedItems.add(loaderItem)
-                PhotoListUiModel.Data(items = updatedItems)
+                loadNextPage(uiItems, domainModel)
             } else {
                 PhotoListUiModel.Data(items = uiItems)
             }
@@ -259,6 +246,28 @@ class MediaPickerViewModel @Inject constructor(
                     isSearching = isSearching == true
             )
         }
+    }
+
+    private fun loadNextPage(
+        uiItems: List<MediaPickerUiItem>,
+        domainModel: DomainModel
+    ): Data {
+        val updatedItems = uiItems.toMutableList()
+        val loaderItem = if (domainModel.emptyState?.isError == true) {
+            NextPageLoader(false) {
+                launch {
+                    retry()
+                }
+            }
+        } else {
+            NextPageLoader(true) {
+                launch {
+                    loadActions.send(NextPage)
+                }
+            }
+        }
+        updatedItems.add(loaderItem)
+        return Data(items = updatedItems)
     }
 
     private fun buildActionModeUiModel(
