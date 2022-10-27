@@ -98,8 +98,8 @@ platform :android do
     end.to_h
 
     locales = ALL_LOCALES
-      .select { |hsh| hsh[:promo_config] != false }
-      .map { |h| h[:google_play] }
+      .select { |h| h[:promo_config] != false }
+      .map { |h| [ h[:glotpress], h[:google_play] ]}
 
     gp_downloadmetadata(project_url: APP_SPECIFIC_VALUES[:wordpress][:glotpress_metadata_project],
       target_files: files,
