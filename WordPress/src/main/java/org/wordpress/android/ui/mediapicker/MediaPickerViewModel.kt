@@ -49,6 +49,7 @@ import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.ToggleAction
 import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.VideoItem
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.BrowseMenuUiModel.BrowseAction
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.PhotoListUiModel.Data
+import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.PhotoListUiModel.Empty
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.ProgressDialogUiModel.Hidden
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.ProgressDialogUiModel.Visible
 import org.wordpress.android.ui.mediapicker.MediaType.AUDIO
@@ -60,6 +61,7 @@ import org.wordpress.android.ui.mediapicker.insert.MediaInsertHandler.InsertMode
 import org.wordpress.android.ui.mediapicker.insert.MediaInsertHandlerFactory
 import org.wordpress.android.ui.mediapicker.loader.MediaLoader
 import org.wordpress.android.ui.mediapicker.loader.MediaLoader.DomainModel
+import org.wordpress.android.ui.mediapicker.loader.MediaLoader.DomainModel.EmptyState
 import org.wordpress.android.ui.mediapicker.loader.MediaLoader.LoadAction
 import org.wordpress.android.ui.mediapicker.loader.MediaLoader.LoadAction.NextPage
 import org.wordpress.android.ui.mediapicker.loader.MediaLoaderFactory
@@ -216,19 +218,7 @@ class MediaPickerViewModel @Inject constructor(
                 PhotoListUiModel.Data(items = uiItems)
             }
         } else if (domainModel?.emptyState != null) {
-            PhotoListUiModel.Empty(
-                    domainModel.emptyState.title,
-                    domainModel.emptyState.htmlSubtitle,
-                    domainModel.emptyState.image,
-                    domainModel.emptyState.bottomImage,
-                    domainModel.emptyState.bottomImageDescription,
-                    isSearching == true,
-                    retryAction = if (domainModel.emptyState.isError) {
-                        this::retry
-                    } else {
-                        null
-                    }
-            )
+            showEmptyState(domainModel.emptyState, isSearching)
         } else if (domainModel?.isLoading == true) {
             PhotoListUiModel.Loading
         } else {
@@ -247,6 +237,23 @@ class MediaPickerViewModel @Inject constructor(
             )
         }
     }
+
+    private fun showEmptyState(
+        emptyState: EmptyState,
+        isSearching: Boolean?
+    ) = Empty(
+            emptyState.title,
+            emptyState.htmlSubtitle,
+            emptyState.image,
+            emptyState.bottomImage,
+            emptyState.bottomImageDescription,
+            isSearching == true,
+            retryAction = if (emptyState.isError) {
+                this::retry
+            } else {
+                null
+            }
+    )
 
     private fun loadNextPage(
         uiItems: List<MediaPickerUiItem>,
