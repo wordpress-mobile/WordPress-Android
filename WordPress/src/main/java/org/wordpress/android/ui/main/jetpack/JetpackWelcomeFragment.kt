@@ -12,7 +12,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.colorResource
@@ -28,9 +27,9 @@ import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.utils.uiStringText
 import org.wordpress.android.ui.main.jetpack.JetpackWelcomeUiState.Content
 import org.wordpress.android.ui.main.jetpack.JetpackWelcomeUiState.SiteListItem
-import org.wordpress.android.ui.main.jetpack.components.ScreenIcon
 import org.wordpress.android.ui.main.jetpack.components.Message
 import org.wordpress.android.ui.main.jetpack.components.PrimaryButton
+import org.wordpress.android.ui.main.jetpack.components.ScreenIcon
 import org.wordpress.android.ui.main.jetpack.components.SecondaryButton
 import org.wordpress.android.ui.main.jetpack.components.SiteList
 import org.wordpress.android.ui.main.jetpack.components.Subtitle
@@ -76,10 +75,7 @@ private fun JetpackWelcomeScreen(viewModel: JetpackWelcomeViewModel = viewModel(
 fun ContentState(uiState: Content) {
     Column {
         Column(Modifier.padding(horizontal = 30.dp)) {
-            UserAvatarImage(
-                    avatarUrl = uiState.avatarUrl,
-                    modifier = Modifier.align(Alignment.End)
-            )
+            UserAvatarImage(avatarUrl = uiState.avatarUrl)
             ScreenIcon(uiState.screenIcon)
             Title(text = uiStringText(uiState.title))
             Subtitle(text = uiStringText(uiState.subtitle))

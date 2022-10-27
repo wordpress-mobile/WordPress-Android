@@ -2,10 +2,12 @@ package org.wordpress.android.ui.main.jetpack.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.colorResource
@@ -18,7 +20,7 @@ import org.wordpress.android.R.string
 import org.wordpress.android.ui.compose.unit.Margin.MediumLarge
 
 @Composable
-fun UserAvatarImage(
+fun ColumnScope.UserAvatarImage(
     avatarUrl: String,
     modifier: Modifier = Modifier,
 ) {
@@ -31,6 +33,7 @@ fun UserAvatarImage(
             painter = painter,
             contentDescription = stringResource(string.jp_welcome_avatar_content_description),
             modifier = modifier
+                    .align(Alignment.End)
                     .padding(top = MediumLarge.value)
                     .size(32.dp)
                     .clip(CircleShape)
