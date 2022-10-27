@@ -20,7 +20,7 @@ import org.wordpress.android.ui.main.jetpack.components.UserAvatarImage
 import org.wordpress.android.ui.main.jetpack.components.WelcomeStep
 
 @AndroidEntryPoint
-class JetpackWelcomeFragment : Fragment() {
+class JetpackMigrationFragment : Fragment() {
     private val viewModel: JetpackWelcomeViewModel by viewModels()
 
     override fun onCreateView(
