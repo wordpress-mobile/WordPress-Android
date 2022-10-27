@@ -9,7 +9,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import org.wordpress.android.R.color
+import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.ColumnWithFrostedGlassBackground
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.utils.uiStringText
@@ -53,8 +53,8 @@ private fun ButtonsPanel(
 ) {
     ColumnWithFrostedGlassBackground(
             blurRadius = 4.dp,
-            backgroundColor = colorResource(color.white_translucent_80),
-            borderColor = colorResource(color.gray_10).copy(alpha = 0.5f),
+            backgroundColor = colorResource(R.color.bg_jp_migration_buttons_panel),
+            borderColor = colorResource(R.color.gray_10).copy(alpha = 0.5f),
             background = { clipModifier, blurModifier ->
                 SiteList(
                         items = items,

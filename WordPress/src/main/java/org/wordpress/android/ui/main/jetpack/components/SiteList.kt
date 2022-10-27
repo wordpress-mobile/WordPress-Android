@@ -11,6 +11,7 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Divider
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -41,7 +42,7 @@ fun SiteList(
             state = listState,
             modifier = modifier
                     .composed { if (userScrollEnabled) this else disableUserScroll() }
-                    .background(colorResource(R.color.white))
+                    .background(MaterialTheme.colors.background)
                     .padding(horizontal = 30.dp)
                     .then(blurModifier),
     ) {
