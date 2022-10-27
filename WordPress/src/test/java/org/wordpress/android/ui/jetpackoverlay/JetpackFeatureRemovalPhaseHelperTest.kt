@@ -12,11 +12,11 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalSiteCreationPhase.PHASE_ONE
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalSiteCreationPhase.PHASE_TWO
-import org.wordpress.android.ui.jetpackoverlay.JetpackPoweredCurrentPhase.PhaseFour
-import org.wordpress.android.ui.jetpackoverlay.JetpackPoweredCurrentPhase.PhaseNewUsers
-import org.wordpress.android.ui.jetpackoverlay.JetpackPoweredCurrentPhase.PhaseOne
-import org.wordpress.android.ui.jetpackoverlay.JetpackPoweredCurrentPhase.PhaseThree
-import org.wordpress.android.ui.jetpackoverlay.JetpackPoweredCurrentPhase.PhaseTwo
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseFour
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseNewUsers
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseOne
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseThree
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseTwo
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.config.JetpackFeatureRemovalNewUsersConfig
 import org.wordpress.android.util.config.JetpackFeatureRemovalPhaseFourConfig
