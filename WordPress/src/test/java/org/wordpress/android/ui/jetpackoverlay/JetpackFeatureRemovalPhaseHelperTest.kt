@@ -12,11 +12,11 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalSiteCreationPhase.PHASE_ONE
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalSiteCreationPhase.PHASE_TWO
-import org.wordpress.android.ui.jetpackoverlay.JetpackPoweredCurrentPhase.PhaseFour
-import org.wordpress.android.ui.jetpackoverlay.JetpackPoweredCurrentPhase.PhaseNewUsers
-import org.wordpress.android.ui.jetpackoverlay.JetpackPoweredCurrentPhase.PhaseOne
-import org.wordpress.android.ui.jetpackoverlay.JetpackPoweredCurrentPhase.PhaseThree
-import org.wordpress.android.ui.jetpackoverlay.JetpackPoweredCurrentPhase.PhaseTwo
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseFour
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseNewUsers
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseOne
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseThree
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseTwo
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.config.JetpackFeatureRemovalNewUsersConfig
 import org.wordpress.android.util.config.JetpackFeatureRemovalPhaseFourConfig
@@ -55,7 +55,7 @@ class JetpackFeatureRemovalPhaseHelperTest {
     fun `given jetpack app, when current phase is fetched, then return null`() {
         whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
 
-        val currentPhase = jetpackFeatureRemovalPhaseHelper.getTheCurrentPhase()
+        val currentPhase = jetpackFeatureRemovalPhaseHelper.getCurrentPhase()
 
         assertNull(currentPhase)
     }
@@ -64,7 +64,7 @@ class JetpackFeatureRemovalPhaseHelperTest {
     fun `given phase one config true, when current phase is fetched, then return phase one`() {
         whenever(jetpackFeatureRemovalPhaseOneConfig.isEnabled()).thenReturn(true)
 
-        val currentPhase = jetpackFeatureRemovalPhaseHelper.getTheCurrentPhase()
+        val currentPhase = jetpackFeatureRemovalPhaseHelper.getCurrentPhase()
 
         assertEquals(currentPhase, PhaseOne)
     }
@@ -73,7 +73,7 @@ class JetpackFeatureRemovalPhaseHelperTest {
     fun `given phase two config true, when current phase is fetched, then return phase two`() {
         whenever(jetpackFeatureRemovalPhaseTwoConfig.isEnabled()).thenReturn(true)
 
-        val currentPhase = jetpackFeatureRemovalPhaseHelper.getTheCurrentPhase()
+        val currentPhase = jetpackFeatureRemovalPhaseHelper.getCurrentPhase()
 
         assertEquals(currentPhase, PhaseTwo)
     }
@@ -82,7 +82,7 @@ class JetpackFeatureRemovalPhaseHelperTest {
     fun `given phase three config true, when current phase is fetched, then return phase three`() {
         whenever(jetpackFeatureRemovalPhaseThreeConfig.isEnabled()).thenReturn(true)
 
-        val currentPhase = jetpackFeatureRemovalPhaseHelper.getTheCurrentPhase()
+        val currentPhase = jetpackFeatureRemovalPhaseHelper.getCurrentPhase()
 
         assertEquals(currentPhase, PhaseThree)
     }
@@ -91,7 +91,7 @@ class JetpackFeatureRemovalPhaseHelperTest {
     fun `given phase four config true, when current phase is fetched, then return phase four`() {
         whenever(jetpackFeatureRemovalPhaseFourConfig.isEnabled()).thenReturn(true)
 
-        val currentPhase = jetpackFeatureRemovalPhaseHelper.getTheCurrentPhase()
+        val currentPhase = jetpackFeatureRemovalPhaseHelper.getCurrentPhase()
 
         assertEquals(currentPhase, PhaseFour)
     }
@@ -100,7 +100,7 @@ class JetpackFeatureRemovalPhaseHelperTest {
     fun `given phase new users config true, when current phase is fetched, then return phase new users`() {
         whenever(jetpackFeatureRemovalNewUsersConfig.isEnabled()).thenReturn(true)
 
-        val currentPhase = jetpackFeatureRemovalPhaseHelper.getTheCurrentPhase()
+        val currentPhase = jetpackFeatureRemovalPhaseHelper.getCurrentPhase()
 
         assertEquals(currentPhase, PhaseNewUsers)
     }
