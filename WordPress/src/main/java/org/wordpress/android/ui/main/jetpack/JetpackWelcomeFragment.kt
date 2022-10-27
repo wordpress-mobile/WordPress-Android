@@ -16,7 +16,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
@@ -29,7 +28,7 @@ import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.utils.uiStringText
 import org.wordpress.android.ui.main.jetpack.JetpackWelcomeUiState.Content
 import org.wordpress.android.ui.main.jetpack.JetpackWelcomeUiState.SiteListItem
-import org.wordpress.android.ui.main.jetpack.components.LogoIcon
+import org.wordpress.android.ui.main.jetpack.components.ScreenIcon
 import org.wordpress.android.ui.main.jetpack.components.Message
 import org.wordpress.android.ui.main.jetpack.components.PrimaryButton
 import org.wordpress.android.ui.main.jetpack.components.SecondaryButton
@@ -81,10 +80,7 @@ fun ContentState(uiState: Content) {
                     avatarUrl = uiState.avatarUrl,
                     modifier = Modifier.align(Alignment.End)
             )
-            LogoIcon(
-                    iconRes = R.drawable.ic_wordpress_jetpack_logo,
-                    contentDescription = stringResource(R.string.jp_welcome_icon_logos_content_description),
-            )
+            ScreenIcon(uiState.screenIcon)
             Title(text = uiStringText(uiState.title))
             Subtitle(text = uiStringText(uiState.subtitle))
             Message(text = uiStringText(uiState.message))
