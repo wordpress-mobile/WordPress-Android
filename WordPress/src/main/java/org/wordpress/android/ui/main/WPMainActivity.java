@@ -472,11 +472,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
     private boolean isJetpackInstalled() {
         final PackageManager packageManager = getPackageManager();
-
-        // TODO - Remove these two lines before merge
-        List<PackageInfo> apps = getPackageManager().getInstalledPackages(0);
-        AppLog.i(T.MAIN, apps.toString());
-
         Intent jetpackIntent = packageManager.getLaunchIntentForPackage("com.jetpack.android");
         Intent jetpackBetaIntent = packageManager.getLaunchIntentForPackage("com.jetpack.android.beta");
 
