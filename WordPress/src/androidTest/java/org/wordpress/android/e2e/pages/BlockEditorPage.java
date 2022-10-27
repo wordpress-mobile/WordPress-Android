@@ -25,9 +25,11 @@ import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDis
 import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDisplayedWithoutFailure;
 import static junit.framework.TestCase.assertTrue;
 import static org.wordpress.android.support.WPSupportUtils.withIndex;
+import static org.junit.Assert.fail;
 
 public class BlockEditorPage {
     private static ViewInteraction titleField = onView(withHint("Add title"));
+    private static ViewInteraction postSettingButton = onView(withText(R.string.post_settings));
 
     private ViewInteraction mEditor;
 
@@ -74,10 +76,29 @@ public class BlockEditorPage {
         return this;
     }
 
-    public void openPostSetting() {
+    /**
+     * Taps the three vertical dots menu button located at the editor screen top right.
+     * Since the tap does not always succeed on FTL, one retry is used
+     */
+    public void openPostKebabMenu() {
         waitForElementToBeDisplayed(R.id.toolbar_main);
+
+        // First attempt to tap the kebab menu (three dots)
         openActionBarOverflowOrOptionsMenu(ApplicationProvider.getApplicationContext());
-        clickOn(onView(withText(R.string.post_settings)));
+
+        // Check if the attempt succeeded, retry once if not
+        if (!waitForElementToBeDisplayedWithoutFailure(postSettingButton)) {
+            openActionBarOverflowOrOptionsMenu(ApplicationProvider.getApplicationContext());
+        }
+
+        if (!waitForElementToBeDisplayedWithoutFailure(postSettingButton)) {
+            fail("Failed to open post menu.");
+        }
+    }
+
+    public void openPostSetting() {
+        openPostKebabMenu();
+        clickOn(postSettingButton);
     }
 
     public void addCategory(String category) {
