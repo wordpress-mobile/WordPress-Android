@@ -15,7 +15,7 @@ import org.wordpress.android.util.publicdata.ClientVerification
 import org.wordpress.android.util.signature.SignatureNotFoundException
 import javax.inject.Inject
 
-typealias SiteIDBloggingReminderMap = Map<Long?, BloggingRemindersModel?>
+typealias RemoteSiteId = Long
 
 class BloggingRemindersProvider : QueryContentProvider() {
     @Inject lateinit var bloggingRemindersStore: BloggingRemindersStore
@@ -53,7 +53,9 @@ class BloggingRemindersProvider : QueryContentProvider() {
                         val filteredSiteIds = filteredBloggingReminders.map { bloggingReminder ->
                             siteStore.getSiteIdForLocalId(bloggingReminder.siteId)
                         }
-                        val result: SiteIDBloggingReminderMap = filteredSiteIds.zip(filteredBloggingReminders).toMap()
+                        val result: Map<RemoteSiteId?, BloggingRemindersModel?> = filteredSiteIds.zip(
+                                filteredBloggingReminders
+                        ).toMap()
                         queryResult.createCursor(result)
                     }
                 } else null
