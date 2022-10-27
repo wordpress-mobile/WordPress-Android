@@ -5,11 +5,11 @@ import org.wordpress.android.ui.main.WPMainNavigationView.PageType
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType.MY_SITE
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType.NOTIFS
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType.READER
-import org.wordpress.android.ui.jetpackoverlay.JetpackPoweredCurrentPhase.PhaseFour
-import org.wordpress.android.ui.jetpackoverlay.JetpackPoweredCurrentPhase.PhaseNewUsers
-import org.wordpress.android.ui.jetpackoverlay.JetpackPoweredCurrentPhase.PhaseOne
-import org.wordpress.android.ui.jetpackoverlay.JetpackPoweredCurrentPhase.PhaseThree
-import org.wordpress.android.ui.jetpackoverlay.JetpackPoweredCurrentPhase.PhaseTwo
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseFour
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseNewUsers
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseOne
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseThree
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseTwo
 import javax.inject.Inject
 
 class JetpackFeatureOverlayContentBuilder @Inject constructor() {
@@ -65,7 +65,7 @@ class JetpackFeatureOverlayContentBuilder @Inject constructor() {
 }
 
 data class JetpackFeatureOverlayContentBuilderParams(
-    val currentPhase: JetpackPoweredCurrentPhase,
+    val currentPhase: JetpackFeatureRemovalPhase,
     val isRtl: Boolean = true,
     val pageType: PageType
 )
