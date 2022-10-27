@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -18,11 +17,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -30,14 +26,16 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.ColumnWithFrostedGlassBackground
 import org.wordpress.android.ui.compose.theme.AppTheme
-import org.wordpress.android.ui.compose.unit.FontSize
 import org.wordpress.android.ui.compose.utils.uiStringText
 import org.wordpress.android.ui.main.jetpack.JetpackWelcomeUiState.Content
 import org.wordpress.android.ui.main.jetpack.JetpackWelcomeUiState.SiteListItem
 import org.wordpress.android.ui.main.jetpack.components.LogoIcon
+import org.wordpress.android.ui.main.jetpack.components.Message
 import org.wordpress.android.ui.main.jetpack.components.PrimaryButton
 import org.wordpress.android.ui.main.jetpack.components.SecondaryButton
 import org.wordpress.android.ui.main.jetpack.components.SiteList
+import org.wordpress.android.ui.main.jetpack.components.Subtitle
+import org.wordpress.android.ui.main.jetpack.components.Title
 import org.wordpress.android.ui.main.jetpack.components.UserAvatarImage
 
 @AndroidEntryPoint
@@ -87,26 +85,9 @@ fun ContentState(uiState: Content) {
                     iconRes = R.drawable.ic_wordpress_jetpack_logo,
                     contentDescription = stringResource(R.string.jp_welcome_icon_logos_content_description),
             )
-            Text(
-                    text = uiStringText(uiState.title),
-                    fontSize = FontSize.ExtraExtraExtraLarge.value,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier
-                            .padding(top = 30.dp)
-            )
-            Text(
-                    text = uiStringText(uiState.subtitle),
-                    fontSize = FontSize.ExtraLarge.value,
-                    modifier = Modifier
-                            .padding(top = 20.dp)
-            )
-            Text(
-                    text = uiStringText(uiState.message),
-                    fontSize = 17.sp,
-                    style = TextStyle(letterSpacing = (-0.01).sp),
-                    modifier = Modifier
-                            .padding(top = 20.dp, bottom = 30.dp)
-            )
+            Title(text = uiStringText(uiState.title))
+            Subtitle(text = uiStringText(uiState.subtitle))
+            Message(text = uiStringText(uiState.message))
         }
         Box {
             if (uiState is Content.SiteList) {
