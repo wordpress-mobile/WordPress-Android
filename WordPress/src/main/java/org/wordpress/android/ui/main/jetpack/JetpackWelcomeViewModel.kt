@@ -56,7 +56,6 @@ class JetpackWelcomeViewModel @Inject constructor(
         return gravatarUtilsWrapper.fixGravatarUrl(accountStore.account?.avatarUrl.orEmpty(), USER_AVATAR_SIZE)
     }
 
-
     data class UiState(
         val userAvatarUrl: String = "",
         val stepState: StepUiState? = null,
