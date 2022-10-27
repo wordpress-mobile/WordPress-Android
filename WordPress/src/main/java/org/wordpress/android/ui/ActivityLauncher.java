@@ -67,7 +67,7 @@ import org.wordpress.android.ui.main.MeActivity;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.main.SitePickerAdapter.SitePickerMode;
 import org.wordpress.android.ui.main.WPMainActivity;
-import org.wordpress.android.ui.main.jetpack.JetpackWelcomeActivity;
+import org.wordpress.android.ui.main.jetpack.JetpackMigrationActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.pages.PageParentActivity;
@@ -1758,8 +1758,8 @@ public class ActivityLauncher {
         context.startActivity(intent);
     }
 
-    public static void showJetpackWelcomeScreenForResult(@NonNull Activity activity) {
-        Intent intent = new Intent(activity, JetpackWelcomeActivity.class);
+    public static void startJetpackMigrationFlow(@NonNull Activity activity) {
+        Intent intent = new Intent(activity, JetpackMigrationActivity.class);
         intent.setFlags(
                 Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         activity.startActivityForResult(intent, RequestCodes.JETPACK_SWITCH);

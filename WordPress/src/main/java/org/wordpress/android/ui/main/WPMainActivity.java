@@ -462,7 +462,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
         }
 
         if (mJetpackAppSwitchUtils.shouldShowWelcomeScreenInJetpackApp()) {
-            ActivityLauncher.showJetpackWelcomeScreenForResult(this);
+            ActivityLauncher.startJetpackMigrationFlow(this);
             finish();
         }
 

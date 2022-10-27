@@ -6,7 +6,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.databinding.ActivityJetpackWelcomeBinding
 
 @AndroidEntryPoint
-class JetpackWelcomeActivity : AppCompatActivity() {
+class JetpackMigrationActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
