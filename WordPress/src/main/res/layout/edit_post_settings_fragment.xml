@@ -264,6 +264,33 @@
 
         </LinearLayout>
 
+        <!--Page Attributes-->
+        <LinearLayout
+            android:id="@+id/post_settings_page_attributes_container"
+            style="@style/PostSettingsCardViewInnerLayout" >
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/post_settings_page_attributes_header"
+                style="@style/PostSettingsSectionHeader"
+                android:text="@string/post_settings_page_attributes" />
+
+            <LinearLayout
+                android:id="@+id/post_parent_container"
+                style="@style/PostSettingsContainer">
+
+                <com.google.android.material.textview.MaterialTextView
+                    style="@style/PostSettingsTitle"
+                    android:text="@string/post_settings_parent" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/post_parent"
+                    style="@style/PostSettingsSubtitle"
+                    android:hint="@string/top_level" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
         <!--More Options-->
 
         <LinearLayout style="@style/PostSettingsCardViewInnerLayout">

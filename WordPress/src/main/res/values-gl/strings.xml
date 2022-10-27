@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-10-04 15:47:46+0000
+Translation-Revision-Date: 2022-10-21 10:01:30+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: gl_ES
 -->
 <resources>
+    <string name="about_automattic_contribute_item_title">Contribuír</string>
+    <string name="about_news">Noticias</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_one">1 resposta</string>
     <string name="login_prologue_revamped_content_description_wordpress_icon">Icona de WordPress</string>
     <string name="login_prologue_revamped_tagline">Escribe, edita e publica desde calquera parte.</string>

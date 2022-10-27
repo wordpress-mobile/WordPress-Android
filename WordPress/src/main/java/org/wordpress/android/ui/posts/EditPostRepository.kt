@@ -7,6 +7,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.PostImmutableModel
@@ -31,6 +32,8 @@ import java.util.Arrays
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.CoroutineContext
+
+private const val EMPTY_STRING = ""
 
 class EditPostRepository
 @Inject constructor(
@@ -95,6 +98,7 @@ class EditPostRepository
         get() = post!!.tagNameList
     val dateLocallyChanged: String
         get() = post!!.dateLocallyChanged
+    private var parent: PostModel? = null
 
     private var locked = false
 
@@ -144,9 +148,11 @@ class EditPostRepository
     @Synchronized
     private fun reportTransactionState(lock: Boolean) {
         if (lock && locked) {
-            val message = "EditPostRepository: Transaction is writing on a locked thread ${Arrays.toString(
-                    Thread.currentThread().stackTrace
-            )}"
+            val message = "EditPostRepository: Transaction is writing on a locked thread ${
+                Arrays.toString(
+                        Thread.currentThread().stackTrace
+                )
+            }"
             AppLog.e(T.EDITOR, message)
         }
         locked = lock
@@ -210,7 +216,8 @@ class EditPostRepository
         reportTransactionState(false)
     }
 
-    fun postWasChangedInCurrentSession() = postUtils.postHasEdits(postSnapshotWhenEditorOpened,
+    fun postWasChangedInCurrentSession() = postUtils.postHasEdits(
+            postSnapshotWhenEditorOpened,
             requireNotNull(post)
     )
 
@@ -226,6 +233,19 @@ class EditPostRepository
         post = postStore.getPostByRemotePostId(remotePostId, site)
         savePostSnapshot()
         reportTransactionState(false)
+    }
+
+    fun getParentTitle(site: SiteModel): String {
+        // update parent local field if parent ID of current post has changed
+        if (parent?.remotePostId != post?.parentId) {
+            runBlocking {
+                parent = post?.parentId
+                        ?.takeUnless { it == 0L }
+                        ?.let { postStore.getPostByRemotePostId(it, site) }
+            }
+        }
+
+        return parent?.title ?: EMPTY_STRING
     }
 
     sealed class UpdatePostResult {
