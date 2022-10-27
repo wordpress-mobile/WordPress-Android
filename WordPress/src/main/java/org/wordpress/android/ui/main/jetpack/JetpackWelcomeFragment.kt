@@ -237,7 +237,7 @@ private fun Modifier.disableUserScroll() = nestedScroll(
         }
 )
 
-fun previewSiteList(): List<SiteListItem> {
+fun previewSiteListItems(): List<SiteListItem> {
     val list = mutableListOf<SiteListItem>()
     repeat(10) {
         list.add(
@@ -256,7 +256,7 @@ fun previewSiteList(): List<SiteListItem> {
 //@Preview(showBackground = true, widthDp = 414, heightDp = 897, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun PreviewContentState() {
-    val uiState = Content.SiteList(previewSiteList())
+    val uiState = Content.SiteList(previewSiteListItems())
     AppTheme {
         ContentState(uiState)
     }

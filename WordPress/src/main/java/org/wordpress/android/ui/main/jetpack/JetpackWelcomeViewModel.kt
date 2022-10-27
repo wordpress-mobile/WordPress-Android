@@ -13,7 +13,7 @@ import javax.inject.Inject
 class JetpackWelcomeViewModel @Inject constructor(
 ) : ViewModel() {
     private val _uiState = MutableStateFlow<JetpackWelcomeUiState>(
-            JetpackWelcomeUiState.Content.SiteList(previewSiteList())
+            JetpackWelcomeUiState.Content.SiteList(previewSiteListItems())
     )
     val uiState: StateFlow<JetpackWelcomeUiState> = _uiState
 
