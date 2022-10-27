@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -71,7 +72,7 @@ private fun SiteIcon(
     }
     Image(
             painter = painter,
-            contentDescription = null,
+            contentDescription = stringResource(R.string.blavatar_desc),
             modifier = Modifier
                     .padding(vertical = 15.dp)
                     .padding(end = 20.dp)

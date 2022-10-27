@@ -75,8 +75,8 @@ private fun JetpackWelcomeScreen(viewModel: JetpackWelcomeViewModel = viewModel(
 fun ContentState(uiState: Content) {
     Column {
         Column(Modifier.padding(horizontal = 30.dp)) {
-            UserAvatarImage(avatarUrl = uiState.avatarUrl)
-            ScreenIcon(uiState.screenIcon)
+            UserAvatarImage(uiState.avatarUrl)
+            ScreenIcon(uiState.screenIconRes)
             Title(text = uiStringText(uiState.title))
             Subtitle(text = uiStringText(uiState.subtitle))
             Message(text = uiStringText(uiState.message))

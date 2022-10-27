@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.main.jetpack
 
-import androidx.annotation.DrawableRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -76,7 +75,7 @@ sealed class JetpackWelcomeUiState {
 
     sealed class Content : JetpackWelcomeUiState() {
         abstract val avatarUrl: String
-        abstract val screenIcon: ScreenIcon
+        abstract val screenIconRes: Int
         abstract val title: UiString
         abstract val subtitle: UiString
         abstract val message: UiString
@@ -85,10 +84,7 @@ sealed class JetpackWelcomeUiState {
             override val avatarUrl: String,
             val sites: List<SiteListItem>
         ) : Content() {
-            override val screenIcon = ScreenIcon(
-                    iconRes = R.drawable.ic_wordpress_jetpack_logo,
-                    contentDescription = UiStringRes(R.string.jp_welcome_icon_logos_content_description),
-            )
+            override val screenIconRes = R.drawable.ic_wordpress_jetpack_logo
             override val title = UiStringRes(R.string.jp_welcome_title)
             override val subtitle = UiStringRes(R.string.jp_welcome_subtitle)
             override val message = if (sites.size > 1) {
@@ -106,10 +102,5 @@ sealed class JetpackWelcomeUiState {
         val name: String,
         val url: String,
         val iconUrl: String,
-    )
-
-    data class ScreenIcon(
-        @DrawableRes val iconRes: Int,
-        val contentDescription: UiString,
     )
 }
