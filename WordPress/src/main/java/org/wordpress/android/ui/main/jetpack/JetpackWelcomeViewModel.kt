@@ -1,11 +1,9 @@
 package org.wordpress.android.ui.main.jetpack
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
@@ -32,18 +30,17 @@ class JetpackWelcomeViewModel @Inject constructor(
     val uiState: StateFlow<JetpackWelcomeUiState> = _uiState
 
     fun start() {
-        initOrRestoreUiState()
+        if (_uiState.value !is Initial) return
+        initState()
     }
 
-    private fun initOrRestoreUiState() {
+    private fun initState() {
         val siteList = getSiteList()
         val avatarUrl = getAvatarUrl()
 
-        postUiState(
-                Content.SiteList(
-                        avatarUrl = avatarUrl,
-                        sites = siteList,
-                )
+        _uiState.value = Content.SiteList(
+                avatarUrl = avatarUrl,
+                sites = siteList,
         )
     }
 
@@ -58,15 +55,8 @@ class JetpackWelcomeViewModel @Inject constructor(
         }
     }
 
-
     private fun getAvatarUrl(): String {
         return gravatarUtilsWrapper.fixGravatarUrl(accountStore.account?.avatarUrl.orEmpty(), USER_AVATAR_SIZE)
-    }
-
-    private fun postUiState(state: JetpackWelcomeUiState) {
-        viewModelScope.launch {
-            _uiState.value = state
-        }
     }
 }
 
@@ -94,8 +84,6 @@ sealed class JetpackWelcomeUiState {
             }
         }
     }
-
-    object Error : JetpackWelcomeUiState()
 
     data class SiteListItem(
         val id: Long,
