@@ -192,32 +192,19 @@ class MediaPickerViewModel @Inject constructor(
                 }
                 when (it.type) {
                     IMAGE -> PhotoItem(
-                            url = it.url,
-                            identifier = it.identifier,
-                            isSelected = isSelected,
-                            selectedOrder = selectedOrder,
-                            showOrderCounter = showOrderCounter,
-                            toggleAction = toggleAction,
-                            clickAction = clickAction
+                            url = it.url, identifier = it.identifier, isSelected = isSelected,
+                            selectedOrder = selectedOrder, showOrderCounter = showOrderCounter,
+                            toggleAction = toggleAction, clickAction = clickAction
                     )
                     VIDEO -> VideoItem(
-                            url = it.url,
-                            identifier = it.identifier,
-                            isSelected = isSelected,
-                            selectedOrder = selectedOrder,
-                            showOrderCounter = showOrderCounter,
-                            toggleAction = toggleAction,
-                            clickAction = clickAction
+                            url = it.url, identifier = it.identifier, isSelected = isSelected,
+                            selectedOrder = selectedOrder, showOrderCounter = showOrderCounter,
+                            toggleAction = toggleAction, clickAction = clickAction
                     )
                     AUDIO, DOCUMENT -> FileItem(
-                            fileName = it.name ?: "",
-                            fileExtension = fileExtension,
-                            identifier = it.identifier,
-                            isSelected = isSelected,
-                            selectedOrder = selectedOrder,
-                            showOrderCounter = showOrderCounter,
-                            toggleAction = toggleAction,
-                            clickAction = clickAction
+                            fileName = it.name ?: "", fileExtension = fileExtension, identifier = it.identifier,
+                            isSelected = isSelected, selectedOrder = selectedOrder, showOrderCounter = showOrderCounter,
+                            toggleAction = toggleAction, clickAction = clickAction
                     )
                 }
             }
