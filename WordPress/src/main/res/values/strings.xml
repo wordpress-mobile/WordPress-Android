@@ -4241,5 +4241,6 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="jp_welcome_icon_logos_content_description">WordPress and Jetpack Logo</string>
     <string name="jp_welcome_avatar_content_description">Your profile photo</string>
     <string name="jp_welcome_sites_found_message">We found your sites. Continue to transfer all your data and sign in to Jetpack automatically.</string>
+    <string name="jp_welcome_site_found_message">We found your site. Continue to transfer all your data and sign in to Jetpack automatically.</string>
 
 </resources>

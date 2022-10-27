@@ -68,7 +68,11 @@ sealed class JetpackWelcomeUiState {
         ) : Content() {
             override val title = UiStringRes(R.string.jp_welcome_title)
             override val subtitle = UiStringRes(R.string.jp_welcome_subtitle)
-            override val message = UiStringRes(R.string.jp_welcome_sites_found_message)
+            override val message = if (sites.size > 1) {
+                UiStringRes(R.string.jp_welcome_sites_found_message)
+            } else {
+                UiStringRes(R.string.jp_welcome_site_found_message)
+            }
         }
     }
 
