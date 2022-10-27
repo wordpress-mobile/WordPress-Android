@@ -19,12 +19,13 @@ import androidx.compose.ui.composed
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.modifiers.disableUserScroll
-import org.wordpress.android.ui.compose.unit.FontSize.Large
+import org.wordpress.android.ui.compose.unit.FontSize
 import org.wordpress.android.ui.main.jetpack.JetpackWelcomeUiState.SiteListItem
 
 @Composable
@@ -47,36 +48,56 @@ fun SiteList(
                 items = items,
                 key = { it.id },
         ) { site ->
-            Row(
-                    verticalAlignment = Alignment.CenterVertically,
-            ) {
-                val painter = rememberImagePainter(site.iconUrl) {
-                    placeholder(R.drawable.ic_placeholder_blavatar_grey_lighten_20_40dp)
-                    crossfade(true)
-                }
-                Image(
-                        painter = painter,
-                        contentDescription = null,
-                        modifier = Modifier
-                                .padding(vertical = 15.dp)
-                                .padding(end = 20.dp)
-                                .size(60.dp)
-                                .clip(RoundedCornerShape(3.dp))
-                )
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                SiteIcon(site.iconUrl)
                 Column {
-                    Text(
-                            text = site.name,
-                            fontWeight = FontWeight.SemiBold,
-                            fontSize = 17.sp,
-                    )
-                    Text(
-                            text = site.url,
-                            fontSize = Large.value,
-                            color = colorResource(R.color.gray_40)
-                    )
+                    SiteName(site.name)
+                    SiteAddress(site.url)
                 }
             }
             Divider(color = colorResource(R.color.gray_10).copy(alpha = 0.5f))
         }
     }
+}
+
+@Composable
+private fun SiteIcon(
+    iconUrl: String
+) {
+    val painter = rememberImagePainter(iconUrl) {
+        placeholder(R.drawable.ic_placeholder_blavatar_grey_lighten_20_40dp)
+        error(R.drawable.ic_placeholder_blavatar_grey_lighten_20_40dp)
+        crossfade(true)
+    }
+    Image(
+            painter = painter,
+            contentDescription = null,
+            modifier = Modifier
+                    .padding(vertical = 15.dp)
+                    .padding(end = 20.dp)
+                    .size(60.dp)
+                    .clip(RoundedCornerShape(3.dp))
+    )
+}
+
+@Composable
+private fun SiteName(name: String) {
+    Text(
+            text = name,
+            fontWeight = FontWeight.SemiBold,
+            fontSize = 17.sp,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+    )
+}
+
+@Composable
+private fun SiteAddress(url: String) {
+    Text(
+            text = url,
+            fontSize = FontSize.Large.value,
+            color = colorResource(R.color.gray_40),
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+    )
 }
