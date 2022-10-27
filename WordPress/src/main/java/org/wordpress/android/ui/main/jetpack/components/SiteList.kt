@@ -62,9 +62,7 @@ fun SiteList(
 }
 
 @Composable
-private fun SiteIcon(
-    iconUrl: String
-) {
+private fun SiteIcon(iconUrl: String) {
     val painter = rememberImagePainter(iconUrl) {
         placeholder(R.drawable.ic_placeholder_blavatar_grey_lighten_20_40dp)
         error(R.drawable.ic_placeholder_blavatar_grey_lighten_20_40dp)
