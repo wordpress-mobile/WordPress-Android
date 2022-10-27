@@ -29,7 +29,6 @@ import org.wordpress.android.fluxc.model.PostImmutableModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.bloggingprompts.BloggingPromptModel;
-import org.wordpress.android.fluxc.model.page.PageModel;
 import org.wordpress.android.fluxc.network.utils.StatsGranularity;
 import org.wordpress.android.imageeditor.EditImageActivity;
 import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.EditImageData;
@@ -663,13 +662,14 @@ public class ActivityLauncher {
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_PAGES, site);
     }
 
-    public static void viewPageParentForResult(@NonNull Fragment fragment, @NonNull PageModel page) {
+    public static void viewPageParentForResult(@NonNull Fragment fragment, @NonNull SiteModel site,
+                                               @NonNull Long pageRemoteId) {
         Intent intent = new Intent(fragment.getContext(), PageParentActivity.class);
-        intent.putExtra(WordPress.SITE, page.getSite());
-        intent.putExtra(EXTRA_PAGE_REMOTE_ID_KEY, page.getRemoteId());
+        intent.putExtra(WordPress.SITE, site);
+        intent.putExtra(EXTRA_PAGE_REMOTE_ID_KEY, pageRemoteId);
         fragment.startActivityForResult(intent, RequestCodes.PAGE_PARENT);
 
-        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_PAGE_PARENT, page.getSite());
+        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_PAGE_PARENT, site);
     }
 
     public static void viewUnifiedComments(Context context, SiteModel site) {
@@ -1750,5 +1750,10 @@ public class ActivityLauncher {
         taskStackBuilder.addNextIntent(qrcodeAuthFlowIntent);
 
         taskStackBuilder.startActivities();
+    }
+
+    public static void showLoginPrologue(@NonNull Context context) {
+        Intent intent = new Intent(context, LoginActivity.class);
+        context.startActivity(intent);
     }
 }

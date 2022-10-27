@@ -47,6 +47,7 @@ import org.wordpress.android.util.merge
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
+import java.io.Serializable
 import java.util.Date
 import java.util.Locale
 import javax.inject.Inject
@@ -216,7 +217,7 @@ class WPMainActivityViewModel @Inject constructor(
     }
 
     private fun onCreateActionClicked(actionType: ActionType) {
-        val properties = mapOf("action" to actionType.name.toLowerCase(Locale.ROOT))
+        val properties = mapOf("action" to actionType.name.lowercase(Locale.ROOT))
         analyticsTracker.track(Stat.MY_SITE_CREATE_SHEET_ACTION_TAPPED, properties)
         _isBottomSheetShowing.postValue(Event(false))
         _createAction.postValue(actionType)
@@ -389,5 +390,9 @@ class WPMainActivityViewModel @Inject constructor(
     data class FocusPointInfo(
         val task: QuickStartTask,
         val isVisible: Boolean
-    )
+    ) : Serializable {
+        companion object {
+            const val serialVersionUID = 1L
+        }
+    }
 }

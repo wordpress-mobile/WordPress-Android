@@ -286,7 +286,7 @@ class MediaPickerViewModelTest : BaseUnitTest() {
         viewModel.refreshData(false)
 
         assertThat(navigateEvents).isEmpty()
-        clickItem(0)
+        clickItem()
         assertThat(navigateEvents).isNotEmpty
         verify(mediaPickerTracker).trackPreview(
                 firstItem.type == VIDEO,
@@ -694,7 +694,7 @@ class MediaPickerViewModelTest : BaseUnitTest() {
                 hasStoragePermissions = false
         )
 
-        assertThat(actions.poll()).isNull()
+        assertThat(actions.tryReceive().getOrNull()).isNull()
     }
 
     @Test
@@ -705,7 +705,7 @@ class MediaPickerViewModelTest : BaseUnitTest() {
                 hasStoragePermissions = true
         )
 
-        assertThat(actions.poll()).isEqualTo(LoadAction.Start(null))
+        assertThat(actions.tryReceive().getOrNull()).isEqualTo(LoadAction.Start(null))
     }
 
     @Test
@@ -716,7 +716,7 @@ class MediaPickerViewModelTest : BaseUnitTest() {
                 hasStoragePermissions = false
         )
 
-        assertThat(actions.poll()).isEqualTo(LoadAction.Start(null))
+        assertThat(actions.tryReceive().getOrNull()).isEqualTo(LoadAction.Start(null))
     }
 
     private fun selectItem(position: Int) {
@@ -724,11 +724,12 @@ class MediaPickerViewModelTest : BaseUnitTest() {
             is PhotoItem -> item.toggleAction.toggle()
             is VideoItem -> item.toggleAction.toggle()
             is FileItem -> item.toggleAction.toggle()
+            is NextPageLoader -> Unit // Do nothing
         }
     }
 
-    private fun clickItem(position: Int) {
-        when (val item = itemOnPosition(position)) {
+    private fun clickItem() {
+        when (val item = itemOnPosition(0)) {
             is PhotoItem -> item.clickAction.click()
             is VideoItem -> item.clickAction.click()
             is FileItem -> item.clickAction.click()

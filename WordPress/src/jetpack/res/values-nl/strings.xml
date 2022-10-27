@@ -1,17 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-07-22 12:57:09+0000
+Translation-Revision-Date: 2022-10-06 17:54:03+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: nl
 -->
 <resources>
+    <string name="me_btn_share">Deel Jetpack met een vriend</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_12">Een auteur toevoegen</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_11">Een foto plaatsen</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_10">Een beveiligingsprobleem oplossen</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_9">Delen via Facebook</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_8">Plugins zoeken</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_7">Een back-up terugzetten</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_6">Op reacties reageren</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_5">Meldingen controleren</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_4">Je statistieken bekijken</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_3">Een blog schrijven</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_2">Een website bouwen</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_1">Een plugin bijwerken</string>
+    <string name="login_prologue_revamped_content_description_jetpack_logo">Jetpack-logo</string>
     <string name="me_btn_about">Over Jetpack</string>
     <string name="sign_out_wpcom_confirm_with_no_changes">Uitloggen bij Jetpack?</string>
     <string name="me_disconnect_from_wordpress_com">Uitloggen bij Jetpack</string>
     <string name="support_ticket_subject">Jetpack voor Android Support</string>
     <string name="login_magic_links_sent_label">Controleer je e-mail op dit apparaat en tik op de link in de e-mail die je van Jetpack.com hebt ontvangen.</string>
-    <string name="continue_with_wpcom_no_signup">Inloggen met WordPress.com</string>
+    <string name="continue_with_wpcom_no_signup">Doorgaan met WordPress.com</string>
     <string name="app_tagline">Veiligheid en prestaties van de site vanuit je broekzak</string>
     <string name="post_signup_interstitial_title">Welkom bij Jetpack</string>
     <string name="app_title">Jetpack voor Android</string>

@@ -1,4 +1,0 @@
-20.7:
-Podemos ver claramente agora: os controles de visualização de mídia (como o botão de voltar) agora ficam visíveis tanto no modo claro quanto no escuro.
-
-Além disso, a tela Código de login no tema Compose está com um contraste melhor de cores para deixar o texto mais legível. Brilhante!

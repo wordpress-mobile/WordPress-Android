@@ -31,8 +31,8 @@ class FetchSegmentsUseCase @Inject constructor(
         }
     }
 
+    @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    @SuppressWarnings("unused")
     fun onSiteCategoriesFetched(event: OnSegmentsFetched) {
         continuation?.resume(event)
         continuation = null

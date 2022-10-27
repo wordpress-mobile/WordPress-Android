@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-09-16 13:51:48+0000
+Translation-Revision-Date: 2022-10-19 18:08:26+0000
 Plural-Forms: nplurals=2; plural=n > 1;
-Generator: GlotPress/4.0.0-alpha.2
+Generator: GlotPress/4.0.0-alpha.3
 Language: pt_BR
 -->
 <resources>
+    <string name="about_automattic_contribute_item_title">Contribuir</string>
+    <string name="about_news">Novidades</string>
+    <string name="my_site_blogging_prompt_card_number_of_answers_one">1 resposta</string>
+    <string name="login_prologue_revamped_content_description_wordpress_icon">Ícone do WordPress</string>
+    <string name="login_prologue_revamped_tagline">Escreva, edite e publique de onde estiver.</string>
+    <string name="error_fetch_authors_list">Não foi possível recuperar os autores</string>
+    <string name="post_settings_author">Autor</string>
     <string name="app_rating_title">Curtindo %s?</string>
     <string name="connection_service_label">Compartilhar post no %s</string>
     <string name="connections_label">Conexões do Jetpack Social</string>
@@ -248,6 +255,7 @@ Language: pt_BR
     <string name="my_site_blogging_prompt_card_menu_remove">Remover do painel</string>
     <string name="my_site_blogging_prompt_card_menu_skip">Ignorar esta sugestão</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">Visualizar mais sugestões</string>
+    <string name="my_site_blogging_prompt_card_number_of_answers_other">%d respostas</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">Compartilhar sugestão de publicação</string>
     <string name="my_site_blogging_prompt_card_answered_prompt">✓ Respondida</string>
     <string name="my_site_blogging_prompt_card_answer_prompt">Responder sugestão</string>
@@ -506,7 +514,7 @@ Language: pt_BR
     <string name="blogging_reminders_notification_title">Está na hora de publicar em %s</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios">Edição de blocos reutilizáveis ainda não é suportado no WordPress para iOS</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and">Edição de blocos reutilizáveis ainda não é suportado no WordPress para Android</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">Como alternativa, você pode desanexar e editar os blocos separadamente tocando em \"Converter para blocos normais\".</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">Como alternativa, você pode desanexar e editar os blocos separadamente tocando em \"Converter em blocos comuns\".</string>
     <string name="blogging_reminders_done">Concluído</string>
     <string name="blogging_reminders_notify_me">Avise-me!</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;Insira suas credenciais do servidor&lt;/a&gt; para ativar a restauração de site pelos backups em um clique.</string>
@@ -560,6 +568,7 @@ Language: pt_BR
     <string name="gutenberg_native_move_image_forward">Mover imagem para frente</string>
     <string name="gutenberg_native_move_image_backward">Mover imagem para trás</string>
     <string name="gutenberg_native_width_settings">Configurações de largura</string>
+    <string name="gutenberg_native_link_rel">Rel do link</string>
     <string name="gutenberg_native_column_settings">Configurações de coluna</string>
     <string name="user_profile_untitled_site">(Sem título)</string>
     <string name="user_profile_site_section_header">Site</string>
@@ -738,7 +747,6 @@ Language: pt_BR
     <string name="restore_complete_visit_site_action_button">Visitar site</string>
     <string name="restore_complete_description_with_two_parameters">Todos os itens selecionados estão restaurados de volta para %1$s %2$s.</string>
     <string name="restore_complete_header">Seu site foi restaurado</string>
-    <string name="restore_progress_label">%1$s%%</string>
     <string name="restore_progress_footnote">Você não precisa aguardar por aqui. Te notificaremos quando o site estiver restaurado.</string>
     <string name="restore_progress_icon_content_description">Ícone de restauração do site</string>
     <string name="restore_progress_description_with_two_parameters">Estamos restaurando seu site para %1$s %2$s.</string>
@@ -810,7 +818,6 @@ Language: pt_BR
     <string name="backup_download_complete_description_with_two_parameters">O backup do seu site em %1$s %2$s foi criado com sucesso.</string>
     <string name="backup_download_complete_header">Seu backup já está disponível para ser baixado.</string>
     <string name="backup_download_complete_page_title">Seu backup</string>
-    <string name="backup_download_progress_label">%1$s%%</string>
     <string name="backup_download_progress_footnote">Você não precisa esperar com o celular na mão. Avisaremos quando o backup estiver pronto.</string>
     <string name="backup_download_progress_icon_content_description">Ícone de criação de um backup que pode ser baixado</string>
     <string name="backup_download_progress_description_with_two_parameters">Estamos criando um backup do seu site de %1$s %2$s, que poderá ser baixado.</string>
@@ -1776,10 +1783,10 @@ Language: pt_BR
     <string name="notification_channel_reminder_title">Lembrete</string>
     <string name="stats_select_next_period_description">Selecionar próximo período</string>
     <string name="stats_select_previous_period_description">Selecionar período anterior</string>
-    <string name="stats_most_popular_percent_views">%1$d%% de visualizações</string>
+    <string name="stats_most_popular_percent_views">%1$s de visualizações</string>
     <string name="stats_insights_popular">Horário mais popular</string>
-    <string name="stats_traffic_change">%1$s (%2$s%%)</string>
-    <string name="stats_traffic_increase">+%1$s (%2$s%%)</string>
+    <string name="stats_traffic_change">%1$s (%2$s)</string>
+    <string name="stats_traffic_increase">+%1$s (%2$s)</string>
     <string name="new_site_creation_site_preview_content_description">Mostrando pré-visualização do site</string>
     <string name="new_site_creation_clear_all_content_description">Limpar</string>
     <string name="site_created_but_not_fetched_snackbar_message">Parece que sua conexão está lenta. Se você não encontrar seu site na lista, tente atualizar a tela.</string>

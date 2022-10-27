@@ -32,6 +32,10 @@
     <color name="login_prologue_background_circle_orange">@color/orange_10</color>
     <color name="login_prologue_background_circle_pink">@color/pink_10</color>
 
+    <!-- Login Prologue Revamped -->
+    <color name="login_prologue_revamped_background">@color/gray_0</color>
+    <color name="login_prologue_revamped_icon">@color/gray_80</color>
+
     <!-- Prepublishing Nudges -->
     <color name="prepublishing_toolbar_icon_color">@color/gray_50</color>
     <color name="prepublishing_action_type_enabled_color">@color/black</color>
@@ -43,7 +47,7 @@
     <color name="jetpack_banner_background">@color/jetpack_green_0</color>
     <color name="jetpack_banner_divider">@color/gray_5</color>
     <color name="jetpack_badge_background">@color/jetpack_green</color>
-    <color name="jetpack_powered_bottom_sheet_background">@color/jetpack_green_0</color>
+    <color name="jetpack_powered_bottom_sheet_background">@color/white</color>
 
     <!-- Reader -->
 

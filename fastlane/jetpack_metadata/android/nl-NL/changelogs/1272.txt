@@ -1,5 +1,0 @@
-20.7:
-- Jetpack-widgets zijn nu beschikbaar op het startscherm van je apparaat
-- Jetpack-widgets zijn nu beschikbaar op het startscherm van je apparaat
-- Het kleurcontrast op het inlogcodescherm van het Compose-thema is verbeterd
-- Bepaalde onderdelen van de editor en berichtinstellingen zijn nu WordPress-blauw

@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2022-08-22 17:29:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.2
+Generator: GlotPress/4.0.0-alpha.3
 Language: es_VE
 -->
 <resources>
@@ -501,7 +501,6 @@ Language: es_VE
     <string name="blogging_reminders_notification_title">Es hora de bloguear en %s</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios">WordPress para iOS aún no es compatible con editar bloques reutilizables</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and">WordPress para Android aún no es compatible con editar bloques reutilizables</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">Alternativamente, puedes separar y editar estos bloques por separado tocando en «Convertir en bloques normales».</string>
     <string name="blogging_reminders_done">Hecho</string>
     <string name="blogging_reminders_notify_me">Avísame</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;Introduce las credenciales de tu servidor&lt;/a&gt; para activar las restauraciones del sitio con un clic de las copias de seguridad.</string>
@@ -733,7 +732,6 @@ Language: es_VE
     <string name="restore_complete_visit_site_action_button">Visitar el sitio</string>
     <string name="restore_complete_description_with_two_parameters">Todos los elementos seleccionados se han restaurado a la versión del %1$s %2$s.</string>
     <string name="restore_complete_header">Tu sitio se ha restaurado</string>
-    <string name="restore_progress_label">%1$s%%</string>
     <string name="restore_progress_footnote">No hace falta que esperes. Te enviaremos un aviso cuando la restauración se haya completado.</string>
     <string name="restore_progress_icon_content_description">Icono de restaurar sitio</string>
     <string name="restore_progress_description_with_two_parameters">Estamos restaurando la versión de tu sitio del %1$s %2$s.</string>
@@ -805,7 +803,6 @@ Language: es_VE
     <string name="backup_download_complete_description_with_two_parameters">Hemos creado una copia de seguridad de tu sitio desde %1$s %2$s.</string>
     <string name="backup_download_complete_header">Tu copia de seguridad ya está disponible para descargarla</string>
     <string name="backup_download_complete_page_title">Tu copia de seguridad</string>
-    <string name="backup_download_progress_label">%1$s%%</string>
     <string name="backup_download_progress_footnote">No hace falta que esperes. Te avisaremos cuando la copia de seguridad esté lista</string>
     <string name="backup_download_progress_icon_content_description">Icono de copia de seguridad descargable en curso</string>
     <string name="backup_download_progress_description_with_two_parameters">Estamos creando una copia de seguridad descargable de tu sitio desde %1$s %2$s.</string>
@@ -1768,10 +1765,7 @@ Language: es_VE
     <string name="notification_channel_reminder_title">Recordatorio</string>
     <string name="stats_select_next_period_description">Elige el siguiente periodo</string>
     <string name="stats_select_previous_period_description">Elige el periodo anterior</string>
-    <string name="stats_most_popular_percent_views">%1$d%% de visitas</string>
     <string name="stats_insights_popular">Hora más popular</string>
-    <string name="stats_traffic_change">%1$s (%2$s%%)</string>
-    <string name="stats_traffic_increase">+%1$s (%2$s%%)</string>
     <string name="new_site_creation_site_preview_content_description">Mostrando la vista previa</string>
     <string name="new_site_creation_clear_all_content_description">Vaciar</string>
     <string name="site_created_but_not_fetched_snackbar_message">Parece que tienes una conexión lenta. Si no ves tu nuevo sitio en la lista, inténtalo actualizando.</string>

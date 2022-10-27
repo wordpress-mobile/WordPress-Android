@@ -41,8 +41,8 @@ class FollowInterestTagsUseCase @Inject constructor(
         }
     }
 
+    @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    @SuppressWarnings("unused")
     fun onFollowedTagsChanged(event: FollowedTagsChanged) {
         val result = if (event.didSucceed()) {
             Success

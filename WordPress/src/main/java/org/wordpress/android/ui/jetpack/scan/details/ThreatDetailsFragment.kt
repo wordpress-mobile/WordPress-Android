@@ -44,7 +44,7 @@ class ThreatDetailsFragment : Fragment(R.layout.threat_details_fragment) {
     }
 
     private fun initDagger() {
-        (requireActivity().application as WordPress).component()?.inject(this)
+        (requireActivity().application as WordPress).component().inject(this)
     }
 
     private fun ThreatDetailsFragmentBinding.initAdapter() {
@@ -124,6 +124,7 @@ class ThreatDetailsFragment : Fragment(R.layout.threat_details_fragment) {
         threatActionDialog?.show()
     }
 
+    @Suppress("DEPRECATION")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         if (requireActivity().intent.extras?.containsKey(WordPress.SITE) != true) {

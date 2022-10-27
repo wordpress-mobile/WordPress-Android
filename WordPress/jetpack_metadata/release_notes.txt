@@ -1,3 +1,4 @@
-* [**] Stats: Always use Western Arabic numerals in Arabic languages (previously there was a mix of Eastern and Western Arabic numerals) [https://github.com/wordpress-mobile/WordPress-Android/pull/17160]
-* [*] Add more widgets: "At a glance", "All-time" and "Today" widgets, with dynamic previews [https://github.com/wordpress-mobile/WordPress-Android/pull/17140]
-* [**] Added author button to the post settings and the author of the post can be changed with it. [https://github.com/wordpress-mobile/WordPress-Android/pull/17120]
+- Added correct links to Automattic Family app marbles on the About screen
+- Updated the launch screen for Android versions 12+
+- Changed success message text from red to black for QR code logins
+- Fixed the Stats screen to include Western Arabic numerals for Arabic language users

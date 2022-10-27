@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-09-13 18:54:08+0000
+Translation-Revision-Date: 2022-10-20 15:54:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.2
+Generator: GlotPress/4.0.0-alpha.3
 Language: he_IL
 -->
 <resources>
+    <string name="about_automattic_contribute_item_title">להשתתף</string>
+    <string name="about_news">חדשות</string>
+    <string name="my_site_blogging_prompt_card_number_of_answers_one">תשובה אחת</string>
+    <string name="login_prologue_revamped_content_description_wordpress_icon">סמל של WordPress</string>
+    <string name="login_prologue_revamped_tagline">לכתוב, לערוך ולפרסם מכל מקום.</string>
+    <string name="error_fetch_authors_list">Couldn\'t retrieve authors</string>
+    <string name="post_settings_author">מחבר…</string>
     <string name="app_rating_title">אהבת את %s?</string>
     <string name="connection_service_label">לשתף פוסט אל %s</string>
     <string name="connections_label">החיבורים של Jetpack Social</string>
@@ -248,6 +255,7 @@ Language: he_IL
     <string name="my_site_blogging_prompt_card_menu_remove">להסיר מלוח הבקרה</string>
     <string name="my_site_blogging_prompt_card_menu_skip">לדלג על הצעה זו</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">להציג הצעות נוספות</string>
+    <string name="my_site_blogging_prompt_card_number_of_answers_other">%d תשובות</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">לשתף הצעה לפרסום בבלוג</string>
     <string name="my_site_blogging_prompt_card_answered_prompt">✓ תשובות התקבלו</string>
     <string name="my_site_blogging_prompt_card_answer_prompt">הצעה לתשובה</string>
@@ -506,7 +514,7 @@ Language: he_IL
     <string name="blogging_reminders_notification_title">הגיע הזמן לכתוב בלוג ביום %s</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios">עריכת בלוקים לשימוש חוזר עדיין אינה נתמכת ב-WordPress למערכת iOS</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and">עריכת בלוקים לשימוש חוזר עדיין אינה נתמכת ב-WordPress למערכת Android</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">לחלופין, ניתן לנתק ולערוך את הבלוקים האלה בנפרד על ידי הקשת הטקסט \"המרה לבלוקים רגילים\".</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">לחלופין, ניתן לנתק ולערוך את הבלוקים האלה בנפרד על ידי הקשה על \'המרה לבלוקים רגילים\'.</string>
     <string name="blogging_reminders_done">סיימתי</string>
     <string name="blogging_reminders_notify_me">תשלחו לי הודעה</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;יש להזין את פרטי הכניסה של השרת&lt;/a&gt; כדי להפעיל שחזורים בלחיצה אחת מגיבויים.</string>
@@ -560,6 +568,7 @@ Language: he_IL
     <string name="gutenberg_native_move_image_forward">להעביר את התמונה קדימה</string>
     <string name="gutenberg_native_move_image_backward">להעביר את התמונה אחורה</string>
     <string name="gutenberg_native_width_settings">הגדרות רוחב</string>
+    <string name="gutenberg_native_link_rel">קשר סמנטי (Rel)</string>
     <string name="gutenberg_native_column_settings">הגדרות טור</string>
     <string name="user_profile_untitled_site">(ללא כותרת)</string>
     <string name="user_profile_site_section_header">אתר</string>
@@ -738,7 +747,6 @@ Language: he_IL
     <string name="restore_complete_visit_site_action_button">לבקר באתר</string>
     <string name="restore_complete_description_with_two_parameters">כל הפריטים שבחרת שוחזרו לגרסה מתאריך ⁦%1$s⁩ %2$s.</string>
     <string name="restore_complete_header">האתר שלך שוחזר</string>
-    <string name="restore_progress_label">%1$s%%</string>
     <string name="restore_progress_footnote">אין צורך לשהות כאן ולהמתין. אנחנו נודיע לך כאשר השחזור של האתר שלך הסתיים.</string>
     <string name="restore_progress_icon_content_description">סמל \'לשחזר את האתר\'</string>
     <string name="restore_progress_description_with_two_parameters">אנחנו משחזרים את האתר שלך לגרסה מתאריך ⁦%1$s⁩ %2$s.</string>
@@ -810,7 +818,6 @@ Language: he_IL
     <string name="backup_download_complete_description_with_two_parameters">יצרנו בהצלחה גיבוי של האתר שלך מתאריך ⁦%1$s⁩ %2$s.</string>
     <string name="backup_download_complete_header">הגיבוי שלך כעת מוכן להורדה</string>
     <string name="backup_download_complete_page_title">הגיבוי שלך</string>
-    <string name="backup_download_progress_label">%1$s%%</string>
     <string name="backup_download_progress_footnote">אין צורך לשהות כאן ולהמתין. אנחנו נודיע לך כאשר הגיבוי לך יהיה מוכן להורדה.</string>
     <string name="backup_download_progress_icon_content_description">סמל \'יוצר גיבוי להורדה\'</string>
     <string name="backup_download_progress_description_with_two_parameters">אנחנו יוצרים גיבוי להורדה של האתר שלך מתאריך ⁦%1$s⁩ %2$s.</string>
@@ -1776,10 +1783,10 @@ Language: he_IL
     <string name="notification_channel_reminder_title">תזכורת</string>
     <string name="stats_select_next_period_description">בחירת התקופה הבאה</string>
     <string name="stats_select_previous_period_description">בחירת התקופה הקודמת</string>
-    <string name="stats_most_popular_percent_views">%1$d%% מהצפיות</string>
+    <string name="stats_most_popular_percent_views">⁦%1$s⁩ מהצפיות</string>
     <string name="stats_insights_popular">המועד הפופולרי ביותר</string>
-    <string name="stats_traffic_change">%1$s (%2$s%%)</string>
-    <string name="stats_traffic_increase">+%1$s (%2$s%%)</string>
+    <string name="stats_traffic_change">%1$s (%2$s)</string>
+    <string name="stats_traffic_increase">+%1$s (%2$s)</string>
     <string name="new_site_creation_site_preview_content_description">מציג תצוגה מקדימה של האתר</string>
     <string name="new_site_creation_clear_all_content_description">ניקוי</string>
     <string name="site_created_but_not_fetched_snackbar_message">נראה שהחיבור שלך איטי. אם אינך רואה את האתר החדש ברשימה, מומלץ לרענן את העמוד.</string>

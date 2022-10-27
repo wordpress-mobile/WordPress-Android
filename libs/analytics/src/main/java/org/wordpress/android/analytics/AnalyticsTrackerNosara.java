@@ -2393,6 +2393,24 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "shared_login_success";
             case SHARED_LOGIN_FAILED:
                 return "shared_login_failed";
+            case USER_FLAGS_START:
+                return "user_flags_start";
+            case USER_FLAGS_SUCCESS:
+                return "user_flags_success";
+            case USER_FLAGS_FAILED:
+                return "user_flags_failed";
+            case BLOGGING_REMINDERS_SYNC_START:
+                return "blogging_reminders_sync_start";
+            case BLOGGING_REMINDERS_SYNC_SUCCESS:
+                return "blogging_reminders_sync_success";
+            case BLOGGING_REMINDERS_SYNC_FAILED:
+                return "blogging_reminders_sync_failed";
+            case READER_SAVED_POSTS_START:
+                return "reader_saved_posts_start";
+            case READER_SAVED_POSTS_SUCCESS:
+                return "reader_saved_posts_success";
+            case READER_SAVED_POSTS_FAILED:
+                return "reader_saved_posts_failed";
         }
         return null;
     }

@@ -64,10 +64,10 @@ class AccountSettingsOptimisticUpdateHandler @Inject constructor() {
         ).plus(value)
     }
 
-    fun removeFirstChange(preferenceKey: String): () -> Unit = removeFirstChange@{
+    fun removeFirstChange(preferenceKey: String): () -> Unit = removeFirstChangeLambda@{
         val preferenceValue = optimisticallyChangedPreferenceMap
                 .getOrDefault(preferenceKey, listOf())
-        if (preferenceValue.isEmpty()) return@removeFirstChange
+        if (preferenceValue.isEmpty()) return@removeFirstChangeLambda
         if (preferenceValue.size == 1) {
             optimisticallyChangedPreferenceMap.remove(preferenceKey)
         } else {

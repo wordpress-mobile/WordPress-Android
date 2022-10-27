@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-06-17 08:07:41+0000
+Translation-Revision-Date: 2022-10-07 10:38:48+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.2
+Generator: GlotPress/4.0.0-alpha.3
 Language: el_GR
 -->
 <resources>
@@ -11,6 +11,7 @@ Language: el_GR
     <string name="gutenberg_native_move_image_backward">Μετακίνηση εικόνας πίσω</string>
     <string name="gutenberg_native_width_settings">Ρυθμίσεις πλάτους</string>
     <string name="gutenberg_native_column_settings">Ρυθμίσεις Στήλης</string>
+    <string name="gutenberg_native_link_rel">Σχέση συνδέσμου (Rel)</string>
     <string name="user_profile_untitled_site">(Χωρίς τίτλο)</string>
     <string name="user_profile_site_section_header">Ιστότοπος</string>
     <string name="gutenberg_native_mention">Αναφορά</string>
@@ -58,8 +59,8 @@ Language: el_GR
     <string name="quick_start_sites">Επόμενα βήματα</string>
     <string name="quick_start_sites_type_customize">Προσαρμόστε τον ιστότοπο σας</string>
     <string name="notification_channel_reminder_title">Υπενθύμιση</string>
-    <string name="stats_traffic_change">%1$s (%2$s%%)</string>
-    <string name="stats_traffic_increase">+%1$s (%2$s%%)</string>
+    <string name="stats_traffic_increase">+%1$s (%2$s)</string>
+    <string name="stats_traffic_change">%1$s (%2$s)</string>
     <string name="new_site_creation_clear_all_content_description">Καθαρισμός</string>
     <string name="new_site_creation_create_site_button">Δημιουργία ιστότοπου</string>
     <string name="notification_new_site_creation_failed">Παρουσιάστηκε ένα πρόβλημα</string>

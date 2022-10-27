@@ -7,7 +7,6 @@ import android.content.Intent.ACTION_OPEN_DOCUMENT
 import android.net.Uri
 import android.os.Bundle
 import android.os.Parcelable
-import android.text.Html
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -19,6 +18,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AlertDialog.Builder
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
+import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -140,6 +140,8 @@ class MediaPickerFragment : Fragment() {
                 is SwitchSource -> {
                     bundle.putInt(KEY_LAST_TAPPED_ICON_DATA_SOURCE, this.dataSource.ordinal)
                 }
+                is CapturePhoto -> Unit // Do nothing
+                is WpStoriesCapture -> Unit // Do nothing
             }
         }
 
@@ -233,10 +235,7 @@ class MediaPickerFragment : Fragment() {
             layoutManager.onRestoreInstanceState(it)
         }
         with(MediaPickerFragmentBinding.bind(view)) {
-            binding = this
-            recycler.layoutManager = layoutManager
-            recycler.setEmptyView(actionableEmptyView)
-            recycler.setHasFixedSize(true)
+            setUpRecyclerView(layoutManager)
 
             val swipeToRefreshHelper = WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(pullToRefresh) {
                 viewModel.onPullToRefresh()
@@ -262,42 +261,9 @@ class MediaPickerFragment : Fragment() {
                 }
             })
 
-            viewModel.onNavigate.observeEvent(viewLifecycleOwner,
-                    { navigationEvent ->
-                        when (navigationEvent) {
-                            is PreviewUrl -> {
-                                MediaPreviewActivity.showPreview(
-                                        requireContext(),
-                                        null,
-                                        navigationEvent.url
-                                )
-                                AccessibilityUtils.setActionModeDoneButtonContentDescription(
-                                        activity,
-                                        getString(R.string.cancel)
-                                )
-                            }
-                            is PreviewMedia -> MediaPreviewActivity.showPreview(
-                                    requireContext(),
-                                    null,
-                                    navigationEvent.media,
-                                    null
-                            )
-                            is EditMedia -> {
-                                val inputData = WPMediaUtils.createListOfEditImageInputData(
-                                        requireContext(),
-                                        navigationEvent.uris.map { wrapper -> wrapper.uri }
-                                )
-                                ActivityLauncher.openImageEditor(activity, inputData)
-                            }
-                            is InsertMedia -> listener?.onItemsChosen(navigationEvent.identifiers)
-                            is IconClickEvent -> listener?.onIconClicked(navigationEvent.action)
-                            Exit -> {
-                                val activity = requireActivity()
-                                activity.setResult(Activity.RESULT_CANCELED)
-                                activity.finish()
-                            }
-                        }
-                    })
+            viewModel.onNavigate.observeEvent(viewLifecycleOwner) { navigationEvent ->
+                navigateEvent(navigationEvent)
+            }
 
             viewModel.onPermissionsRequested.observeEvent(viewLifecycleOwner, {
                 when (it) {
@@ -313,6 +279,51 @@ class MediaPickerFragment : Fragment() {
 
             viewModel.start(selectedIds, mediaPickerSetup, lastTappedIcon, site)
         }
+    }
+
+    private fun navigateEvent(navigationEvent: MediaNavigationEvent) {
+        when (navigationEvent) {
+            is PreviewUrl -> {
+                MediaPreviewActivity.showPreview(
+                        requireContext(),
+                        null,
+                        navigationEvent.url
+                )
+                AccessibilityUtils.setActionModeDoneButtonContentDescription(
+                        activity,
+                        getString(R.string.cancel)
+                )
+            }
+            is PreviewMedia -> MediaPreviewActivity.showPreview(
+                    requireContext(),
+                    null,
+                    navigationEvent.media,
+                    null
+            )
+            is EditMedia -> {
+                val inputData = WPMediaUtils.createListOfEditImageInputData(
+                        requireContext(),
+                        navigationEvent.uris.map { wrapper -> wrapper.uri }
+                )
+                ActivityLauncher.openImageEditor(activity, inputData)
+            }
+            is InsertMedia -> listener?.onItemsChosen(navigationEvent.identifiers)
+            is IconClickEvent -> listener?.onIconClicked(navigationEvent.action)
+            Exit -> {
+                val activity = requireActivity()
+                activity.setResult(Activity.RESULT_CANCELED)
+                activity.finish()
+            }
+        }
+    }
+
+    private fun MediaPickerFragmentBinding.setUpRecyclerView(
+        layoutManager: GridLayoutManager
+    ) {
+        binding = this
+        recycler.layoutManager = layoutManager
+        recycler.setEmptyView(actionableEmptyView)
+        recycler.setHasFixedSize(true)
     }
 
     override fun onDestroyView() {
@@ -426,7 +437,7 @@ class MediaPickerFragment : Fragment() {
     private fun MediaPickerFragmentBinding.setupSoftAskView(uiModel: SoftAskViewUiModel) {
         when (uiModel) {
             is SoftAskViewUiModel.Visible -> {
-                softAskView.title.text = Html.fromHtml(uiModel.label)
+                softAskView.title.text = HtmlCompat.fromHtml(uiModel.label, HtmlCompat.FROM_HTML_MODE_LEGACY)
                 softAskView.button.setText(uiModel.allowId.stringRes)
                 softAskView.button.setOnClickListener {
                     if (uiModel.isAlwaysDenied) {
@@ -460,11 +471,12 @@ class MediaPickerFragment : Fragment() {
                 actionableEmptyView.title.text = uiHelpers.getTextOfUiString(requireContext(), uiModel.title)
 
                 actionableEmptyView.subtitle.applyOrHide(uiModel.htmlSubtitle) { htmlSubtitle ->
-                    actionableEmptyView.subtitle.text = Html.fromHtml(
+                    actionableEmptyView.subtitle.text = HtmlCompat.fromHtml(
                             uiHelpers.getTextOfUiString(
                                     requireContext(),
                                     htmlSubtitle
-                            ).toString()
+                            ).toString(),
+                            HtmlCompat.FROM_HTML_MODE_LEGACY
                     )
                     actionableEmptyView.subtitle.movementMethod = WPLinkMovementMethod.getInstance()
                 }
@@ -486,6 +498,8 @@ class MediaPickerFragment : Fragment() {
                     }
                 }
             }
+            PhotoListUiModel.Hidden -> Unit // Do nothing
+            PhotoListUiModel.Loading -> Unit // Do nothing
         }
     }
 
@@ -617,6 +631,7 @@ class MediaPickerFragment : Fragment() {
         viewModel.checkStoragePermission(isStoragePermissionAlwaysDenied)
     }
 
+    @Suppress("DEPRECATION")
     private fun requestStoragePermission() {
         val permissions = arrayOf(permission.WRITE_EXTERNAL_STORAGE, permission.READ_EXTERNAL_STORAGE)
         requestPermissions(
@@ -624,6 +639,7 @@ class MediaPickerFragment : Fragment() {
         )
     }
 
+    @Suppress("DEPRECATION")
     private fun requestCameraPermission() {
         // in addition to CAMERA permission we also need a storage permission, to store media from the camera
         val permissions = arrayOf(
@@ -633,6 +649,7 @@ class MediaPickerFragment : Fragment() {
         requestPermissions(permissions, WPPermissionUtils.PHOTO_PICKER_CAMERA_PERMISSION_REQUEST_CODE)
     }
 
+    @Suppress("OVERRIDE_DEPRECATION")
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<String>,

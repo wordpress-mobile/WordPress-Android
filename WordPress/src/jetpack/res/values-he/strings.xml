@@ -1,17 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-07-12 15:54:03+0000
+Translation-Revision-Date: 2022-10-06 13:54:03+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: he_IL
 -->
 <resources>
+    <string name="me_btn_share">לשתף את Jetpack עם חברים</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_12">להוסיף מחבר</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_11">לפרסם תמונה</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_10">לתקן בעיית אבטחה</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_9">Share on Facebook</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_8">לחפש תוספים</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_7">לשחזר גיבוי</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_6">לענות לתגובות</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_5">לבדוק הודעות</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_4">לצפות בנתונים הסטטיסטיים שלך</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_3">לכתוב בלוג</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_2">לבנות אתר</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_1">יש לעדכן תוסף </string>
+    <string name="login_prologue_revamped_content_description_jetpack_logo">הלוגו של Jetpack</string>
     <string name="me_btn_about">אודות Jetpack</string>
     <string name="sign_out_wpcom_confirm_with_no_changes">האם להתנתק מ-Jetpack?</string>
     <string name="me_disconnect_from_wordpress_com">להתנתק מ-Jetpack</string>
     <string name="support_ticket_subject">תמיכה ב-Jetpack ל-Android</string>
     <string name="login_magic_links_sent_label">עליך לבדוק את האימייל ממכשיר זה ולהקיש על הקישור בהודעה שקיבלת מ-Jetpack.com.</string>
-    <string name="continue_with_wpcom_no_signup">התחברות באמצעות WordPress.com</string>
+    <string name="continue_with_wpcom_no_signup">להמשיך עם WordPress.com</string>
     <string name="app_tagline">האבטחה והביצועים של האתר ישירות מהמכשיר הנייד</string>
     <string name="post_signup_interstitial_title">ברוך בואך אל Jetpack</string>
     <string name="app_title">Jetpack ל-Android</string>

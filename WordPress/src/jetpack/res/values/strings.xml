@@ -11,7 +11,21 @@
 
     <!-- Login Prologue -->
     <string name="app_tagline">Site security and performance from your pocket</string>
-    <string name="continue_with_wpcom_no_signup">Log in with WordPress.com</string>
+    <string name="continue_with_wpcom_no_signup">Continue with WordPress.com</string>
+    <string name="login_prologue_revamped_content_description_jetpack_logo">Jetpack logo</string>
+
+    <string name="login_prologue_revamped_jetpack_feature_text_1">Update a plugin</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_2">Build a site</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_3">Write a blog</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_4">Watch your stats</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_5">Check notifications</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_6">Respond to comments</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_7">Restore a backup</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_8">Search for plugins</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_9">Share on Facebook</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_10">Fix a security issue</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_11">Post a photo</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_12">Add an author</string>
 
     <!-- Login Magic Link -->
     <string name="login_magic_links_sent_label">Check your email on this device and tap the link in the email you received from Jetpack.com.</string>

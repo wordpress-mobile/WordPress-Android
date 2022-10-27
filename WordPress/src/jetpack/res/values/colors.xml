@@ -4,4 +4,22 @@
 
     <!-- Site creation -->
     <color name="site_creation_skip_button_text">@color/jetpack_green_40</color>
+
+    <!-- Login Prologue Revamped  -->
+    <color name="bg_jetpack_login_splash">@color/jetpack_green_0</color>
+
+    <color name="bg_jetpack_login_splash_primary_button">@color/jetpack_green_50</color>
+    <color name="text_color_jetpack_login_splash_primary_button">@color/white</color>
+    <color name="text_color_jetpack_login_splash_secondary_button">@color/jetpack_green_90</color>
+
+    <color name="bg_jetpack_login_splash_bottom_panel">#99F1F3EC</color>
+    <color name="border_top_jetpack_login_splash_bottom_panel">#0D000000</color>
+
+    <color name="bg_jetpack_login_splash_top_gradient_1">#FCF1F3EC</color>
+    <color name="bg_jetpack_login_splash_top_gradient_2">#FAF1F3EC</color>
+    <color name="bg_jetpack_login_splash_top_gradient_3">#D9F1F3EC</color>
+    <color name="bg_jetpack_login_splash_top_gradient_4">#00F1F3EC</color>
+
+    <color name="text_color_jetpack_login_label_primary">#80008710</color>
+    <color name="text_color_jetpack_login_label_secondary">@color/jetpack_green_50</color>
 </resources>

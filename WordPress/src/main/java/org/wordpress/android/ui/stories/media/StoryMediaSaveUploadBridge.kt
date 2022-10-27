@@ -2,11 +2,8 @@ package org.wordpress.android.ui.stories.media
 
 import android.content.Context
 import android.net.Uri
-import androidx.lifecycle.Lifecycle.Event.ON_CREATE
-import androidx.lifecycle.Lifecycle.Event.ON_DESTROY
-import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.OnLifecycleEvent
 import com.wordpress.stories.compose.frame.StorySaveEvents.StorySaveResult
 import com.wordpress.stories.compose.story.StoryFrameItem
 import kotlinx.coroutines.CoroutineDispatcher
@@ -62,7 +59,7 @@ class StoryMediaSaveUploadBridge @Inject constructor(
     private val eventBusWrapper: EventBusWrapper,
     private val storyRepositoryWrapper: StoryRepositoryWrapper,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
-) : CoroutineScope, LifecycleObserver {
+) : CoroutineScope, DefaultLifecycleObserver {
     // region Fields
     private var job: Job = Job()
     private lateinit var appContext: Context
@@ -74,15 +71,11 @@ class StoryMediaSaveUploadBridge @Inject constructor(
     @Inject lateinit var storiesTrackerHelper: StoriesTrackerHelper
     @Inject lateinit var saveStoryGutenbergBlockUseCase: SaveStoryGutenbergBlockUseCase
 
-    @Suppress("unused")
-    @OnLifecycleEvent(ON_CREATE)
-    fun onCreate(source: LifecycleOwner) {
+    override fun onCreate(owner: LifecycleOwner) {
         eventBusWrapper.register(this)
     }
 
-    @Suppress("unused")
-    @OnLifecycleEvent(ON_DESTROY)
-    fun onDestroy(source: LifecycleOwner) {
+    override fun onDestroy(owner: LifecycleOwner) {
         // note: not sure whether this is ever going to get called if we attach it to the lifecycle of the Application
         // class, but leaving it here prepared for the case when this class is attached to some other LifeCycleOwner
         // other than the Application.

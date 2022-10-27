@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-09-13 10:54:09+0000
+Translation-Revision-Date: 2022-10-19 09:54:10+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.2
+Generator: GlotPress/4.0.0-alpha.3
 Language: it
 -->
 <resources>
+    <string name="about_automattic_contribute_item_title">Contribuisci</string>
+    <string name="about_news">Notizie</string>
+    <string name="my_site_blogging_prompt_card_number_of_answers_one">1 risposta</string>
+    <string name="login_prologue_revamped_content_description_wordpress_icon">Icona WordPress</string>
+    <string name="login_prologue_revamped_tagline">Scrivi, modifica e pubblica ovunque tu sia.</string>
+    <string name="error_fetch_authors_list">Impossibile recuperare gli autori</string>
+    <string name="post_settings_author">Autore</string>
     <string name="app_rating_title">Ti piace %s?</string>
     <string name="connection_service_label">Condividi l\'articolo su %s</string>
     <string name="connections_label">Connessioni di Jetpack Social</string>
@@ -132,7 +139,7 @@ Language: it
     <string name="stats_view_total_followers">Follower totali</string>
     <string name="stats_view_total_comments">Commenti totali</string>
     <string name="stats_view_total_likes">Mi piace totali</string>
-    <string name="blogging_prompts_notification_dismiss">Ignora</string>
+    <string name="blogging_prompts_notification_dismiss">Chiudi</string>
     <string name="blogging_prompts_answer_prompt_notification_answer_action">Risposta</string>
     <string name="blogging_prompts_answer_prompt_notification_title">Richiesta giornaliera</string>
     <string name="blogging_prompts_onboarding_got_it">OK</string>
@@ -248,6 +255,7 @@ Language: it
     <string name="my_site_blogging_prompt_card_menu_remove">Rimuovi dalla bacheca</string>
     <string name="my_site_blogging_prompt_card_menu_skip">Ignora questa richiesta</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">Visualizza altre richieste</string>
+    <string name="my_site_blogging_prompt_card_number_of_answers_other">%d risposte</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">Condividi la richiesta di blogging</string>
     <string name="my_site_blogging_prompt_card_answered_prompt">✓ Risposta</string>
     <string name="my_site_blogging_prompt_card_answer_prompt">Rispondi alla richiesta</string>
@@ -506,7 +514,7 @@ Language: it
     <string name="blogging_reminders_notification_title">È ora di pubblicare sul blog di %s</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios">La modifica dei blocchi riutilizzabili non è ancora supportata su WordPress per iOS</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and">La modifica dei blocchi riutilizzabili non è ancora supportata su WordPress per Android</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">In alternativa, puoi staccare e modificare questi blocchi separatamente toccando \"Converti in blocchi regolari\".</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">In alternativa, puoi staccare e modificare questi blocchi separatamente toccando “Converti in blocchi regolari”.</string>
     <string name="blogging_reminders_done">Fatto</string>
     <string name="blogging_reminders_notify_me">Inviami una notifica</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;Inserisci le credenziali del server&lt;/a&gt; per abilitare i ripristini del sito con un clic dai backup.</string>
@@ -560,6 +568,7 @@ Language: it
     <string name="gutenberg_native_move_image_forward">Sposta l\'immagine avanti</string>
     <string name="gutenberg_native_move_image_backward">Sposta l\'immagine indietro</string>
     <string name="gutenberg_native_width_settings">Impostazioni larghezza</string>
+    <string name="gutenberg_native_link_rel">Link Rel</string>
     <string name="gutenberg_native_column_settings">Impostazioni della colonna</string>
     <string name="user_profile_untitled_site">(Senza titolo)</string>
     <string name="user_profile_site_section_header">Sito</string>
@@ -738,7 +747,6 @@ Language: it
     <string name="restore_complete_visit_site_action_button">Visita il sito</string>
     <string name="restore_complete_description_with_two_parameters">Tutti gli elementi selezionati sono ora ripristinati al giorno %1$s %2$s.</string>
     <string name="restore_complete_header">Il tuo sito è stato ripristinato</string>
-    <string name="restore_progress_label">%1$s%%</string>
     <string name="restore_progress_footnote">Non è necessario attendere. Ti invieremo una notifica quando il tuo sito sarà stato ripristinato.</string>
     <string name="restore_progress_icon_content_description">Icona Ripristina sito</string>
     <string name="restore_progress_description_with_two_parameters">Stiamo ripristinando il tuo sito al giorno %1$s %2$s.</string>
@@ -810,7 +818,6 @@ Language: it
     <string name="backup_download_complete_description_with_two_parameters">Abbiamo creato correttamente un backup del sito da %1$s %2$s.</string>
     <string name="backup_download_complete_header">Il tuo backup è pronto per essere scaricato</string>
     <string name="backup_download_complete_page_title">Il tuo backup</string>
-    <string name="backup_download_progress_label">%1$s%%</string>
     <string name="backup_download_progress_footnote">Non è necessario attendere. Ti invieremo una notifica quando il backup sarà pronto.</string>
     <string name="backup_download_progress_icon_content_description">Icona di creazione di un backup scaricabile</string>
     <string name="backup_download_progress_description_with_two_parameters">Stiamo creando un backup scaricabile del sito da %1$s %2$s.</string>
@@ -1776,10 +1783,10 @@ Language: it
     <string name="notification_channel_reminder_title">Promemoria</string>
     <string name="stats_select_next_period_description">Seleziona periodo successivo</string>
     <string name="stats_select_previous_period_description">Seleziona periodo precedente</string>
-    <string name="stats_most_popular_percent_views">%1$d%% di visualizzazioni</string>
+    <string name="stats_most_popular_percent_views">%1$s di visualizzazioni</string>
     <string name="stats_insights_popular">Ora più popolare</string>
-    <string name="stats_traffic_change">%1$s (%2$s%%)</string>
-    <string name="stats_traffic_increase">+%1$s (%2$s%%)</string>
+    <string name="stats_traffic_change">%1$s (%2$s)</string>
+    <string name="stats_traffic_increase">+%1$s (%2$s)</string>
     <string name="new_site_creation_site_preview_content_description">Mostra anteprima del sito</string>
     <string name="new_site_creation_clear_all_content_description">Pulisci</string>
     <string name="site_created_but_not_fetched_snackbar_message">Sembra che tu sia collegato a una connessione lenta. Se il tuo nuovo sito non è presente nell\'elenco, prova ad aggiornare.</string>

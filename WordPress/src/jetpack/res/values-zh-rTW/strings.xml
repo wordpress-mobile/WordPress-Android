@@ -1,17 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-07-12 09:54:03+0000
+Translation-Revision-Date: 2022-10-06 08:54:03+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: zh_TW
 -->
 <resources>
+    <string name="me_btn_share">與親友分享 Jetpack</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_12">新增作者</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_11">發表相片</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_10">修正安全問題</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_9">分享到 Facebook</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_8">搜尋外掛程式</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_7">還原備份</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_6">回應留言</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_5">查看通知</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_4">查看你的統計資料</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_3">撰寫網誌</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_2">建置網站</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_1">Update a plugin</string>
+    <string name="login_prologue_revamped_content_description_jetpack_logo">Jetpack 標誌</string>
     <string name="me_btn_about">關於 Jetpack</string>
     <string name="sign_out_wpcom_confirm_with_no_changes">是否登出 Jetpack？</string>
     <string name="me_disconnect_from_wordpress_com">是否登出 Jetpack？</string>
     <string name="support_ticket_subject">Jetpack for Android 支援</string>
     <string name="login_magic_links_sent_label">請使用此裝置查看電子郵件，並點選 Jetpack.com 所傳送電子郵件中的連結。</string>
-    <string name="continue_with_wpcom_no_signup">透過 WordPress.com 登入</string>
+    <string name="continue_with_wpcom_no_signup">繼續使用 WordPress.com</string>
     <string name="app_tagline">將網站安全性和效能放進口袋帶著走</string>
     <string name="post_signup_interstitial_title">歡迎使用 Jetpack</string>
     <string name="app_title">Jetpack for Android</string>

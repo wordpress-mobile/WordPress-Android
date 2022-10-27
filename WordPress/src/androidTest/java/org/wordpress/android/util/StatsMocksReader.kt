@@ -5,11 +5,10 @@ import org.json.JSONObject
 import java.util.ArrayList
 
 class StatsMocksReader {
-    fun readDayStatsGenericFile(fileName: String, lastObjectName: String, keyName: String, valueName: String):
+    private fun readDayStatsGenericFile(fileName: String, lastObjectName: String, keyName: String, valueName: String):
             MutableList<StatsKeyValueData> {
-        val fileName = "mocks/mappings/wpcom/stats/$fileName.json"
         val todayMarker = "{{now format='yyyy-MM-dd'}}"
-        val readString = this.readAssetsFile(fileName)
+        val readString = this.readAssetsFile("mocks/mappings/wpcom/stats/$fileName.json")
         val wireMockJSON = JSONObject(readString)
         val arrayRaw = wireMockJSON
                 .getJSONObject("response")
@@ -58,7 +57,7 @@ class StatsMocksReader {
     }
 
     fun readDayCountriesToList(): MutableList<StatsKeyValueData> {
-        var countriesList = readDayStatsGenericFile(
+        val countriesList = readDayStatsGenericFile(
                 "stats_country-views-day", "views", "country_code", "views"
         )
 

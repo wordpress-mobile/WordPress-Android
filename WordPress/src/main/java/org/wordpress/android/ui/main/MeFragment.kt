@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package org.wordpress.android.ui.main
 
 import android.app.Activity
@@ -54,8 +56,7 @@ import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFra
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils
 import org.wordpress.android.ui.photopicker.MediaPickerConstants
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher
-import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource
-import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource.ANDROID_CAMERA
+import org.wordpress.android.ui.photopicker.PhotoPickerActivity
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.MAIN
@@ -82,7 +83,7 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
-    private var disconnectProgressDialog: ProgressDialog? = null
+    @Suppress("DEPRECATION") private var disconnectProgressDialog: ProgressDialog? = null
     private var isUpdatingGravatar = false
     private var binding: MeFragmentBinding? = null
 
@@ -181,6 +182,10 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
 
         if (unifiedAboutFeatureConfig.isEnabled()) {
             aboutTheAppContainer.isVisible = true
+
+            if (BuildConfig.IS_JETPACK_APP) {
+                meAboutIcon.setImageResource(R.drawable.ic_jetpack_logo_white_24dp)
+            }
 
             rowAboutTheApp.setOnClickListener {
                 viewModel.showUnifiedAbout()
@@ -433,6 +438,7 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
         NotificationsUtils.cancelAllNotifications(requireActivity())
     }
 
+    @Suppress("DEPRECATION")
     private fun showDisconnectDialog() {
         disconnectProgressDialog = ProgressDialog.show(
                 requireContext(),
@@ -449,6 +455,7 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
         disconnectProgressDialog = null
     }
 
+    @Suppress("DEPRECATION", "OVERRIDE_DEPRECATION", "LongMethod", "NestedBlockDepth")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
@@ -467,10 +474,14 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
                     )
                     return
                 }
-                val source = PhotoPickerMediaSource.fromString(
+                val source = PhotoPickerActivity.PhotoPickerMediaSource.fromString(
                         data.getStringExtra(MediaPickerConstants.EXTRA_MEDIA_SOURCE)
                 )
-                val stat = if (source == ANDROID_CAMERA) ME_GRAVATAR_SHOT_NEW else ME_GRAVATAR_GALLERY_PICKED
+                val stat = if (source == PhotoPickerActivity.PhotoPickerMediaSource.ANDROID_CAMERA) {
+                    ME_GRAVATAR_SHOT_NEW
+                } else {
+                    ME_GRAVATAR_GALLERY_PICKED
+                }
                 AnalyticsTracker.track(stat)
                 val imageUri = Uri.parse(mediaUriStringsArray[0])
                 if (imageUri != null) {
@@ -579,7 +590,7 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
         }
     }
 
-    @SuppressWarnings("unused")
+    @Suppress("unused", "UNUSED_PARAMETER")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onAccountChanged(event: OnAccountChanged?) {
         binding?.refreshAccountDetails()

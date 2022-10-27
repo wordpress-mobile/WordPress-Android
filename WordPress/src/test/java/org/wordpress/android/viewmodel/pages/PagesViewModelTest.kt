@@ -11,7 +11,6 @@ import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Rule
@@ -188,7 +187,7 @@ class PagesViewModelTest {
     }
 
     @Test
-    fun `when searching and the Store is empty, it returns an empty list`() = runBlocking {
+    fun `when searching and the Store is empty, it returns an empty list`() = test {
         // Arrange
         setUpPageStoreWithEmptyPages()
         viewModel.start(site)
@@ -204,7 +203,7 @@ class PagesViewModelTest {
     }
 
     @Test
-    fun `when searching with an empty query, it clears the search results`() = runBlocking {
+    fun `when searching with an empty query, it clears the search results`() = test {
         // Arrange
         setUpPageStoreWithEmptyPages()
         viewModel.start(site)

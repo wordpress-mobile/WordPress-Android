@@ -36,6 +36,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
+import org.wordpress.android.bloggingreminders.resolver.BloggingRemindersResolver;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
@@ -165,6 +166,7 @@ import static org.wordpress.android.push.NotificationsProcessingService.ARG_NOTI
 import static org.wordpress.android.ui.JetpackConnectionSource.NOTIFICATIONS;
 
 import dagger.hilt.android.AndroidEntryPoint;
+import kotlin.Unit;
 
 /**
  * Main activity which hosts sites, reader, me and notifications pages
@@ -209,6 +211,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     public static final String ARG_SELECTED_SITE = "SELECTED_SITE_ID";
     public static final String ARG_STAT_TO_TRACK = "stat_to_track";
     public static final String ARG_EDITOR_ORIGIN = "editor_origin";
+    public static final String ARG_CURRENT_FOCUS = "CURRENT_FOCUS";
 
     // Track the first `onResume` event for the current session so we can use it for Analytics tracking
     private static boolean mFirstResume = true;
@@ -228,6 +231,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     private static final String MAIN_BOTTOM_SHEET_TAG = "MAIN_BOTTOM_SHEET_TAG";
     private static final String BLOGGING_REMINDERS_BOTTOM_SHEET_TAG = "BLOGGING_REMINDERS_BOTTOM_SHEET_TAG";
     private final Handler mHandler = new Handler();
+    private FocusPointInfo mCurrentActiveFocusPoint = null;
 
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
@@ -254,6 +258,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     @Inject MySiteDashboardTodaysStatsCardFeatureConfig mTodaysStatsCardFeatureConfig;
     @Inject QuickStartTracker mQuickStartTracker;
     @Inject SharedLoginResolver mSharedLoginResolver;
+    @Inject BloggingRemindersResolver mBloggingRemindersResolver;
 
     @Inject BuildConfigWrapper mBuildConfigWrapper;
 
@@ -383,6 +388,12 @@ public class WPMainActivity extends LocaleAwareActivity implements
             }
             checkDismissNotification();
             checkTrackAnalyticsEvent();
+        } else {
+            FocusPointInfo current = (FocusPointInfo)
+                    savedInstanceState.getSerializable(ARG_CURRENT_FOCUS);
+            if (current != null) {
+                mHandler.post(() -> addOrRemoveQuickStartFocusPoint(current.getTask(), true));
+            }
         }
 
         // ensure the deep linking activity is enabled. It may have been disabled elsewhere and failed to get re-enabled
@@ -438,7 +449,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
         }
 
         scheduleLocalNotifications();
-
         initViewModel();
 
         if (getIntent().getBooleanExtra(ARG_OPEN_BLOGGING_REMINDERS, false)) {
@@ -511,6 +521,12 @@ public class WPMainActivity extends LocaleAwareActivity implements
     private void scheduleLocalNotifications() {
         mCreateSiteNotificationScheduler.scheduleCreateSiteNotificationIfNeeded();
         mWeeklyRoundupScheduler.schedule();
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        outState.putSerializable(ARG_CURRENT_FOCUS, mCurrentActiveFocusPoint);
+        super.onSaveInstanceState(outState);
     }
 
     private void initViewModel() {
@@ -1007,7 +1023,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
         mReaderTracker.onBottomNavigationTabChanged();
         PageType pageType = WPMainNavigationView.getPageType(position);
         trackLastVisiblePage(pageType, true);
-
+        mCurrentActiveFocusPoint = null;
         if (pageType == PageType.READER) {
             // MySite fragment might not be attached to activity, so we need to remove focus point from here
             QuickStartUtils.removeQuickStartFocusPoint(findViewById(R.id.root_view_main));
@@ -1138,6 +1154,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (!mSelectedSiteRepository.hasSelectedSite()) {
@@ -1337,6 +1354,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 verticalOffset = 0;
             }
             if (targetView != null && shouldAdd) {
+                mCurrentActiveFocusPoint = new FocusPointInfo(activeTask, true);
                 QuickStartUtils.addQuickStartFocusPointAboveTheView(
                         parentView,
                         targetView,
@@ -1594,6 +1612,9 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 mSelectedSiteRepository.updateSite(site);
             }
         }
+        mBloggingRemindersResolver.trySyncBloggingReminders(
+                () -> Unit.INSTANCE, () -> Unit.INSTANCE
+        );
     }
 
     @SuppressWarnings("unused")

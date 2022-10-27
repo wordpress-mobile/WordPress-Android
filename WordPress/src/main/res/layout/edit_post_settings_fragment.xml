@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/settings_fragment_root"
     android:theme="@style/PostSettingsTheme"
     android:layout_width="match_parent"
@@ -65,11 +66,17 @@
                     android:hint="@string/post_settings_not_set" />
             </LinearLayout>
 
-            <View style="@style/PostSettingsDivider" />
+            <View
+                android:id="@+id/post_author_divider"
+                style="@style/PostSettingsDivider"
+                android:visibility="gone"
+                tools:visibility="visible" />
 
             <LinearLayout
                 android:id="@+id/post_author_container"
-                style="@style/PostSettingsContainer" >
+                style="@style/PostSettingsContainer"
+                android:visibility="gone"
+                tools:visibility="visible" >
 
                 <com.google.android.material.textview.MaterialTextView
                     style="@style/PostSettingsTitle"
@@ -252,6 +259,33 @@
                     android:id="@+id/post_settings_sticky_switch"
                     style="@style/PostSettingsSwitch"
                     android:text="@string/post_settings_post_sticky" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!--Page Attributes-->
+        <LinearLayout
+            android:id="@+id/post_settings_page_attributes_container"
+            style="@style/PostSettingsCardViewInnerLayout" >
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/post_settings_page_attributes_header"
+                style="@style/PostSettingsSectionHeader"
+                android:text="@string/post_settings_page_attributes" />
+
+            <LinearLayout
+                android:id="@+id/post_parent_container"
+                style="@style/PostSettingsContainer">
+
+                <com.google.android.material.textview.MaterialTextView
+                    style="@style/PostSettingsTitle"
+                    android:text="@string/post_settings_parent" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/post_parent"
+                    style="@style/PostSettingsSubtitle"
+                    android:hint="@string/top_level" />
 
             </LinearLayout>
 

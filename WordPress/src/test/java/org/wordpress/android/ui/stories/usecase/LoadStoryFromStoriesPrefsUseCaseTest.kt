@@ -36,6 +36,7 @@ class LoadStoryFromStoriesPrefsUseCaseTest {
     }
 
     @Test
+    @Suppress("UNCHECKED_CAST")
     fun `obtain empty media ids list from empty mediaFiles array`() {
         // Given
         val mediaFiles: ArrayList<HashMap<String, Any>> = setupMediaFiles(emptyList = true)
@@ -50,6 +51,7 @@ class LoadStoryFromStoriesPrefsUseCaseTest {
     }
 
     @Test
+    @Suppress("UNCHECKED_CAST")
     fun `obtain media ids list from non empty mediaFiles array`() {
         // Given
         val mediaFiles: ArrayList<HashMap<String, Any>> = setupMediaFiles(emptyList = false)

@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2021-02-27 18:15:57+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : 2);
-Generator: GlotPress/4.0.0-alpha.2
+Generator: GlotPress/4.0.0-alpha.3
 Language: sk
 -->
 <resources>
@@ -38,8 +38,6 @@ Language: sk
     <string name="plans_loading_error_network_title">Žiadne pripojenie</string>
     <string name="quick_start_sites">Ďalšie kroky</string>
     <string name="quick_start_remove_next_steps_menu_title">Odstrániť toto</string>
-    <string name="stats_traffic_change">%1$s (%2$s%%)</string>
-    <string name="stats_traffic_increase">+%1$s (%2$s%%)</string>
     <string name="notification_new_site_creation_title">Vytvoriť webovú stránku</string>
     <string name="new_site_creation_create_site_button">Vytvoriť webovú stránku</string>
     <string name="notification_new_site_creation_failed">Nastal problém</string>

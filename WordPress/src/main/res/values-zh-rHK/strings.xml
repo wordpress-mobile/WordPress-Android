@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-09-13 14:54:09+0000
+Translation-Revision-Date: 2022-10-19 09:54:10+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/4.0.0-alpha.2
+Generator: GlotPress/4.0.0-alpha.3
 Language: zh_TW
 -->
 <resources>
+    <string name="about_automattic_contribute_item_title">參與</string>
+    <string name="about_news">新聞</string>
+    <string name="my_site_blogging_prompt_card_number_of_answers_one">1 個答案</string>
+    <string name="login_prologue_revamped_content_description_wordpress_icon">WordPress 圖示</string>
+    <string name="login_prologue_revamped_tagline">從任何地方都能撰寫、編輯和發表內容。</string>
+    <string name="error_fetch_authors_list">無法擷取作者</string>
+    <string name="post_settings_author">作者</string>
     <string name="app_rating_title">喜歡 %s 嗎？</string>
     <string name="connection_service_label">將文章分享到 %s</string>
     <string name="connections_label">Jetpack Social 連結</string>
@@ -135,7 +142,7 @@ Language: zh_TW
     <string name="blogging_prompts_notification_dismiss">關閉</string>
     <string name="blogging_prompts_answer_prompt_notification_answer_action">答案</string>
     <string name="blogging_prompts_answer_prompt_notification_title">每日提示</string>
-    <string name="blogging_prompts_onboarding_got_it">知道了</string>
+    <string name="blogging_prompts_onboarding_got_it">完全了解</string>
     <string name="quick_start_dialog_view_your_site_message_short">點選 &lt;b&gt;%1$s&lt;/b&gt; 即可檢視你的網站</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">選取「%1$s 閱讀器 %2$s」來尋找其他網站。</string>
     <string name="blogging_reminders_prompt_help_button_desc">深入瞭解提示</string>
@@ -248,6 +255,7 @@ Language: zh_TW
     <string name="my_site_blogging_prompt_card_menu_remove">從儀表板移除</string>
     <string name="my_site_blogging_prompt_card_menu_skip">略過此提示</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">檢視更多提示</string>
+    <string name="my_site_blogging_prompt_card_number_of_answers_other">%d 個答案</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">分享網誌提示</string>
     <string name="my_site_blogging_prompt_card_answered_prompt">✓ 已回答</string>
     <string name="my_site_blogging_prompt_card_answer_prompt">回答提示</string>
@@ -560,6 +568,7 @@ Language: zh_TW
     <string name="gutenberg_native_move_image_forward">向前移動圖片</string>
     <string name="gutenberg_native_move_image_backward">向後移動圖片</string>
     <string name="gutenberg_native_width_settings">寬度設定</string>
+    <string name="gutenberg_native_link_rel">鏈結 Rel</string>
     <string name="gutenberg_native_column_settings">欄位設定</string>
     <string name="user_profile_untitled_site">(未命名)</string>
     <string name="user_profile_site_section_header">網站</string>
@@ -738,7 +747,6 @@ Language: zh_TW
     <string name="restore_complete_visit_site_action_button">造訪網站</string>
     <string name="restore_complete_description_with_two_parameters">所有你選取的項目現在都還原至 %1$s %2$s。</string>
     <string name="restore_complete_header">你的網站已經還原</string>
-    <string name="restore_progress_label">%1$s%%</string>
     <string name="restore_progress_footnote">無須等待。 我們會在網站還原後通知你。</string>
     <string name="restore_progress_icon_content_description">還原網站圖示</string>
     <string name="restore_progress_description_with_two_parameters">我們正在將你的網站還原至 %1$s %2$s。</string>
@@ -810,7 +818,6 @@ Language: zh_TW
     <string name="backup_download_complete_description_with_two_parameters">我們已成功建立 %1$s %2$s 的網站備份。</string>
     <string name="backup_download_complete_header">你的備份現在已可下載</string>
     <string name="backup_download_complete_page_title">你的備份</string>
-    <string name="backup_download_progress_label">%1$s%%</string>
     <string name="backup_download_progress_footnote">無需在附近等待。 我們會在備份準備就緒時通知你。</string>
     <string name="backup_download_progress_icon_content_description">建立可下載備份圖示</string>
     <string name="backup_download_progress_description_with_two_parameters">我們正在為你的網站建立 %1$s %2$s 的可下載備份。</string>
@@ -1776,10 +1783,10 @@ Language: zh_TW
     <string name="notification_channel_reminder_title">提醒</string>
     <string name="stats_select_next_period_description">選取下個期間</string>
     <string name="stats_select_previous_period_description">選取上個期間</string>
-    <string name="stats_most_popular_percent_views">瀏覽次數：%1$d%%</string>
+    <string name="stats_most_popular_percent_views">%1$s 的瀏覽次數</string>
     <string name="stats_insights_popular">最熱門的時間</string>
-    <string name="stats_traffic_change">%1$s (%2$s%%)</string>
-    <string name="stats_traffic_increase">+%1$s (%2$s%%)</string>
+    <string name="stats_traffic_change">%1$s (%2$s)</string>
+    <string name="stats_traffic_increase">+%1$s (%2$s)</string>
     <string name="new_site_creation_site_preview_content_description">顯示預覽網站</string>
     <string name="new_site_creation_clear_all_content_description">清除</string>
     <string name="site_created_but_not_fetched_snackbar_message">你的網路連線速度似乎過慢。如果你在清單中沒有看到新網站，請嘗試重新整理。</string>
@@ -2307,7 +2314,7 @@ Language: zh_TW
     <string name="delete_yes">刪除</string>
     <string name="plugin_external_link_icon_content_description">外部連結</string>
     <string name="plugin_icon_content_description">外掛程式圖示</string>
-    <string name="plugin_home_page">外掛程式首頁</string>
+    <string name="plugin_home_page">外掛首頁</string>
     <string name="wordpress_dot_org_plugin_page">WordPress.org 外掛程式頁面</string>
     <string name="plugin_remove_dialog_message">確定要將 %1$s 從 %2$s 移除？\n\n這將會停用外掛程式，並刪除所有相關的檔案及資料。</string>
     <string name="plugin_remove_dialog_title">移除外掛程式</string>

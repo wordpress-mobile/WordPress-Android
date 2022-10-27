@@ -231,9 +231,7 @@ class FollowedBlogsProviderTest {
         subscriptionModel.emailPostsFrequency = emailFrequency
         subscriptionModel.shouldEmailComments = shouldEmailComments
         subscriptionModel.url = subscriptionUrl
-        feedId?.let {
-            subscriptionModel.feedId = it
-        }
+        subscriptionModel.feedId = feedId
         whenever(urlUtils.getHost(subscriptionUrl)).thenReturn(subscriptionUrlHost)
         return subscriptionModel
     }

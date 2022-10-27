@@ -21,6 +21,7 @@ class RemoveMediaUseCase @Inject constructor(
     private val uploadService: UploadServiceFacade,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) {
+    @Suppress("LoopWithTooManyJumpStatements")
     suspend fun removeMediaIfNotUploading(mediaIds: List<String>) = withContext(bgDispatcher) {
         for (mediaId in mediaIds) {
             if (!TextUtils.isEmpty(mediaId)) {
@@ -35,7 +36,7 @@ class RemoveMediaUseCase @Inject constructor(
                 // also make sure it's not being uploaded anywhere else (maybe on some other Post,
                 // simultaneously)
                 if (mediaModel.uploadState != null &&
-                        mediaUtils.isLocalFile(mediaModel.uploadState.toLowerCase(Locale.ROOT)) &&
+                        mediaUtils.isLocalFile(mediaModel.uploadState.lowercase(Locale.ROOT)) &&
                         !uploadService.isPendingOrInProgressMediaUpload(mediaModel)) {
                     dispatcher.dispatch(MediaActionBuilder.newRemoveMediaAction(mediaModel))
                 }

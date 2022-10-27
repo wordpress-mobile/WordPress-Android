@@ -2,6 +2,7 @@ package org.wordpress.android.ui.accounts.login.jetpack
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.accounts.LoginNavigationEvents
@@ -12,6 +13,7 @@ import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
 
+@HiltViewModel
 class LoginSiteCheckErrorViewModel @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
