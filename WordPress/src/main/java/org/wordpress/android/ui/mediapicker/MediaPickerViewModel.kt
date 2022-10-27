@@ -232,8 +232,7 @@ class MediaPickerViewModel @Inject constructor(
             }
             PhotoListUiModel.Empty(
                     UiStringRes(stringId),
-                    image = R.drawable.img_illustration_media_105dp,
-                    isSearching = isSearching == true
+                    image = R.drawable.img_illustration_media_105dp, isSearching = isSearching == true
             )
         }
     }
