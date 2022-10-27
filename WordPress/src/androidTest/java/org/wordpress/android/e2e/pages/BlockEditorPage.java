@@ -25,6 +25,7 @@ import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDis
 import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDisplayedWithoutFailure;
 import static junit.framework.TestCase.assertTrue;
 import static org.wordpress.android.support.WPSupportUtils.withIndex;
+import static org.junit.Assert.fail;
 
 public class BlockEditorPage {
     private static ViewInteraction titleField = onView(withHint("Add title"));
@@ -88,6 +89,10 @@ public class BlockEditorPage {
         // Check if the attempt succeeded, retry once if not
         if (!waitForElementToBeDisplayedWithoutFailure(postSettingButton)) {
             openActionBarOverflowOrOptionsMenu(ApplicationProvider.getApplicationContext());
+        }
+
+        if (!waitForElementToBeDisplayedWithoutFailure(postSettingButton)) {
+            fail("Failed to open post menu.");
         }
     }
 
