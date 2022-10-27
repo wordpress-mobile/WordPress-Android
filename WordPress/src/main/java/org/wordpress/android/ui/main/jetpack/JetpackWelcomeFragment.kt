@@ -4,12 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -20,7 +17,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -38,6 +34,7 @@ import org.wordpress.android.ui.compose.unit.FontSize
 import org.wordpress.android.ui.compose.utils.uiStringText
 import org.wordpress.android.ui.main.jetpack.JetpackWelcomeUiState.Content
 import org.wordpress.android.ui.main.jetpack.JetpackWelcomeUiState.SiteListItem
+import org.wordpress.android.ui.main.jetpack.components.LogoIcon
 import org.wordpress.android.ui.main.jetpack.components.PrimaryButton
 import org.wordpress.android.ui.main.jetpack.components.SecondaryButton
 import org.wordpress.android.ui.main.jetpack.components.SiteList
@@ -86,13 +83,9 @@ fun ContentState(uiState: Content) {
                     avatarUrl = uiState.avatarUrl,
                     modifier = Modifier.align(Alignment.End)
             )
-            Image(
-                    painter = painterResource(R.drawable.ic_wordpress_jetpack_logo),
+            LogoIcon(
+                    iconRes = R.drawable.ic_wordpress_jetpack_logo,
                     contentDescription = stringResource(R.string.jp_welcome_icon_logos_content_description),
-                    modifier = Modifier
-                            .width(123.dp)
-                            .height(65.dp)
-                            .padding(top = 4.dp)
             )
             Text(
                     text = uiStringText(uiState.title),
