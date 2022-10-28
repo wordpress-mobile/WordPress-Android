@@ -1758,10 +1758,9 @@ public class ActivityLauncher {
         context.startActivity(intent);
     }
 
-    public static void startJetpackMigrationFlow(@NonNull Activity activity) {
-        Intent intent = new Intent(activity, JetpackMigrationActivity.class);
-        intent.setFlags(
-                Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        activity.startActivityForResult(intent, RequestCodes.JETPACK_SWITCH);
+    public static void startJetpackMigrationFlow(@NonNull Context context) {
+        Intent intent = new Intent(context, JetpackMigrationActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
     }
 }

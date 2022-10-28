@@ -89,7 +89,7 @@ import org.wordpress.android.ui.bloggingreminders.BloggingReminderUtils;
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel;
 import org.wordpress.android.ui.main.WPMainNavigationView.OnPageListener;
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType;
-import org.wordpress.android.ui.main.utils.JetpackAppSwitchUtils;
+import org.wordpress.android.ui.main.utils.JetpackAppMigrationFlowUtils;
 import org.wordpress.android.ui.mlp.ModalLayoutPickerFragment;
 import org.wordpress.android.ui.mysite.MySiteFragment;
 import org.wordpress.android.ui.mysite.MySiteViewModel;
@@ -260,7 +260,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     @Inject QuickStartTracker mQuickStartTracker;
     @Inject SharedLoginResolver mSharedLoginResolver;
     @Inject BloggingRemindersResolver mBloggingRemindersResolver;
-    @Inject JetpackAppSwitchUtils mJetpackAppSwitchUtils;
+    @Inject JetpackAppMigrationFlowUtils mJetpackAppMigrationFlowUtils;
 
     @Inject BuildConfigWrapper mBuildConfigWrapper;
 
@@ -461,9 +461,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
             initSelectedSite();
         }
 
-        if (mJetpackAppSwitchUtils.shouldShowWelcomeScreenInJetpackApp()) {
-            ActivityLauncher.startJetpackMigrationFlow(this);
-            finish();
+        if (mJetpackAppMigrationFlowUtils.isFlagEnabled()) {
+            mJetpackAppMigrationFlowUtils.startJetpackMigrationFlow();
         }
 
         mSharedLoginResolver.tryJetpackLogin();

@@ -9,8 +9,8 @@ import javax.inject.Inject
  * This is a temporary flag that will be removed once the screen is configured to be shown at the right time.
  */
 @FeatureInDevelopment
-class JetpackSwitchWelcomeScreenFeatureConfig
-@Inject constructor(appConfig: AppConfig) : FeatureConfig(appConfig, BuildConfig.JETPACK_APP_SWITCH_WELCOME_SCREEN) {
+class JetpackMigrationFlowFeatureConfig
+@Inject constructor(appConfig: AppConfig) : FeatureConfig(appConfig, BuildConfig.JETPACK_MIGRATION_FLOW) {
     override fun isEnabled(): Boolean {
         return BuildConfig.IS_JETPACK_APP || super.isEnabled()
     }
