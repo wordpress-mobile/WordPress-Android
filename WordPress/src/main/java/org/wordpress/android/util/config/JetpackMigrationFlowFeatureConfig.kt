@@ -5,13 +5,12 @@ import org.wordpress.android.annotation.FeatureInDevelopment
 import javax.inject.Inject
 
 /**
- * Convenience build flag to enable/disable the Welcome Screen that follows a switch to the Jetpack app
- * This is a temporary flag that will be removed once the screen is configured to be shown at the right time.
+ * Configuration of the Jetpack Migration Flow.
  */
 @FeatureInDevelopment
 class JetpackMigrationFlowFeatureConfig
 @Inject constructor(appConfig: AppConfig) : FeatureConfig(appConfig, BuildConfig.JETPACK_MIGRATION_FLOW) {
     override fun isEnabled(): Boolean {
-        return BuildConfig.IS_JETPACK_APP || super.isEnabled()
+        return BuildConfig.IS_JETPACK_APP && super.isEnabled()
     }
 }
