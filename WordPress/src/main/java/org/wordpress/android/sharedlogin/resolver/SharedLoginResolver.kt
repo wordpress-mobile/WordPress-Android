@@ -12,6 +12,7 @@ import org.wordpress.android.sharedlogin.SharedLoginAnalyticsTracker
 import org.wordpress.android.sharedlogin.SharedLoginAnalyticsTracker.ErrorType
 import org.wordpress.android.sharedlogin.provider.SharedLoginProvider
 import org.wordpress.android.ui.main.WPMainActivity
+import org.wordpress.android.ui.main.utils.JetpackAppMigrationFlowUtils
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.userflags.resolver.UserFlagsResolver
 import org.wordpress.android.util.AccountActionBuilderWrapper
@@ -31,7 +32,8 @@ class SharedLoginResolver @Inject constructor(
     private val appPrefsWrapper: AppPrefsWrapper,
     private val sharedLoginAnalyticsTracker: SharedLoginAnalyticsTracker,
     private val userFlagsResolver: UserFlagsResolver,
-    private val readerSavedPostsResolver: ReaderSavedPostsResolver
+    private val readerSavedPostsResolver: ReaderSavedPostsResolver,
+    private val jetpackAppMigrationFlowUtils: JetpackAppMigrationFlowUtils,
 ) {
     fun tryJetpackLogin() {
         val isFeatureFlagEnabled = jetpackSharedLoginFlag.isEnabled()
@@ -50,6 +52,13 @@ class SharedLoginResolver @Inject constructor(
             val accessToken = queryResult.getValue(accessTokenCursor) ?: ""
             if (accessToken.isNotEmpty()) {
                 sharedLoginAnalyticsTracker.trackLoginSuccess()
+
+                if (jetpackAppMigrationFlowUtils.isFlagEnabled()) {
+                    dispatchUpdateAccessToken(accessToken)
+                    jetpackAppMigrationFlowUtils.startJetpackMigrationFlow()
+                    return
+                }
+
                 userFlagsResolver.tryGetUserFlags(
                         {
                             readerSavedPostsResolver.tryGetReaderSavedPosts(
