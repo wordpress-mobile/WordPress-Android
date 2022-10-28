@@ -51,7 +51,7 @@ private fun JetpackMigrationScreen(viewModel: JetpackMigrationViewModel = viewMo
 
             when (val step = uiState.stepState) {
                 is StepUiState.Welcome -> WelcomeStep(step)
-                else -> Unit
+                else -> LoadingState()
             }
         }
     }
