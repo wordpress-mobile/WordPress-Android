@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.main.jetpack
+package org.wordpress.android.ui.main.jetpack.migration
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity

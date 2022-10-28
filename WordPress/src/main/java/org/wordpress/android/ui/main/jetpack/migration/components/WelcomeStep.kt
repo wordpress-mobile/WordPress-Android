@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.main.jetpack.components
+package org.wordpress.android.ui.main.jetpack.migration.components
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Box
@@ -13,10 +13,10 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.ColumnWithFrostedGlassBackground
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.utils.uiStringText
-import org.wordpress.android.ui.main.jetpack.JetpackMigrationViewModel.ActionButton.WelcomePrimaryButton
-import org.wordpress.android.ui.main.jetpack.JetpackMigrationViewModel.ActionButton.WelcomeSecondaryButton
-import org.wordpress.android.ui.main.jetpack.JetpackMigrationViewModel.SiteListItemUiState
-import org.wordpress.android.ui.main.jetpack.JetpackMigrationViewModel.StepUiState
+import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.WelcomePrimaryButton
+import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.WelcomeSecondaryButton
+import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.SiteListItemUiState
+import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.StepUiState
 
 @Composable
 fun WelcomeStep(uiState: StepUiState.Welcome) = with(uiState) {

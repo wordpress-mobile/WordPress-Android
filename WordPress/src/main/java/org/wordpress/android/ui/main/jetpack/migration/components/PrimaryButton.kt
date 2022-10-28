@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.main.jetpack.components
+package org.wordpress.android.ui.main.jetpack.migration.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -7,32 +7,25 @@ import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun SecondaryButton(
+fun PrimaryButton(
     text: String,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-    enabled: Boolean = true
+    modifier: Modifier = Modifier
 ) {
     Button(
             onClick = onClick,
-            enabled = enabled,
             elevation = ButtonDefaults.elevation(
                     defaultElevation = 0.dp,
                     pressedElevation = 0.dp,
             ),
-            colors = ButtonDefaults.buttonColors(
-                    backgroundColor = Color.Transparent
-            ),
             modifier = modifier
-                    .padding(bottom = 60.dp)
+                    .padding(top = 20.dp, bottom = 10.dp)
                     .padding(horizontal = 30.dp)
-                    .fillMaxWidth()
+                    .fillMaxWidth(),
     ) {
         Text(text = text)
     }
 }
-

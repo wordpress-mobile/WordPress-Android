@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.main.jetpack.components
+package org.wordpress.android.ui.main.jetpack.migration.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -28,7 +28,7 @@ import coil.compose.rememberImagePainter
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.modifiers.disableUserScroll
 import org.wordpress.android.ui.compose.unit.FontSize
-import org.wordpress.android.ui.main.jetpack.JetpackMigrationViewModel.SiteListItemUiState
+import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.SiteListItemUiState
 
 @Composable
 fun SiteList(

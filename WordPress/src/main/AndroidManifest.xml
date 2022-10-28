@@ -643,7 +643,7 @@
             android:theme="@style/WordPress.NoActionBar" />
 
         <activity
-            android:name=".ui.main.jetpack.JetpackMigrationActivity"
+            android:name=".ui.main.jetpack.migration.JetpackMigrationActivity"
             android:label="@string/jp_migration_welcome_title"
             android:theme="@style/WordPress.NoActionBar"/>
 

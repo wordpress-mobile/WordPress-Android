@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.main.jetpack.components
+package org.wordpress.android.ui.main.jetpack.migration.components
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image

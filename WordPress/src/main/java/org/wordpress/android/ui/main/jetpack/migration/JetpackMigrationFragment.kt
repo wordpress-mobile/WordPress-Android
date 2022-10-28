@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.main.jetpack
+package org.wordpress.android.ui.main.jetpack.migration
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -20,10 +20,10 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged
 import org.wordpress.android.ui.compose.theme.AppTheme
-import org.wordpress.android.ui.main.jetpack.JetpackMigrationViewModel.StepUiState
-import org.wordpress.android.ui.main.jetpack.components.LoadingState
-import org.wordpress.android.ui.main.jetpack.components.UserAvatarImage
-import org.wordpress.android.ui.main.jetpack.components.WelcomeStep
+import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.StepUiState
+import org.wordpress.android.ui.main.jetpack.migration.components.LoadingState
+import org.wordpress.android.ui.main.jetpack.migration.components.UserAvatarImage
+import org.wordpress.android.ui.main.jetpack.migration.components.WelcomeStep
 import javax.inject.Inject
 
 @AndroidEntryPoint

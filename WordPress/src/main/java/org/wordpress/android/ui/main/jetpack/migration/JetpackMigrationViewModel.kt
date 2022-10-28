@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.main.jetpack
+package org.wordpress.android.ui.main.jetpack.migration
 
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -7,6 +7,9 @@ import kotlinx.coroutines.flow.StateFlow
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.WelcomePrimaryButton
+import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.WelcomeSecondaryButton
+import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.StepUiState.Welcome
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.GravatarUtilsWrapper
@@ -32,10 +35,10 @@ class JetpackMigrationViewModel @Inject constructor(
 
     fun onSiteListLoaded() {
         _uiState.value = _uiState.value.copy(
-                stepState = StepUiState.Welcome(
+                stepState = Welcome(
                         sites = getSiteList(),
-                        primaryActionButton = ActionButton.WelcomePrimaryButton(::onContinueClicked),
-                        secondaryActionButton = ActionButton.WelcomeSecondaryButton(::onHelpClicked),
+                        primaryActionButton = WelcomePrimaryButton(::onContinueClicked),
+                        secondaryActionButton = WelcomeSecondaryButton(::onHelpClicked),
                 ),
         )
     }

@@ -67,7 +67,7 @@ import org.wordpress.android.ui.main.MeActivity;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.main.SitePickerAdapter.SitePickerMode;
 import org.wordpress.android.ui.main.WPMainActivity;
-import org.wordpress.android.ui.main.jetpack.JetpackMigrationActivity;
+import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.pages.PageParentActivity;
