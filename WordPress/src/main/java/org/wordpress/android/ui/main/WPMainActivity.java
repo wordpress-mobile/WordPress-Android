@@ -3,6 +3,7 @@ package org.wordpress.android.ui.main;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
@@ -23,6 +24,7 @@ import androidx.core.app.RemoteInput;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.preference.PreferenceManager;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -465,6 +467,10 @@ public class WPMainActivity extends LocaleAwareActivity implements
         if (mJetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()
             && !mBuildConfigWrapper.isJetpackApp()
             && isJetpackInstalled()) {
+            // Turn toggle off on Notifications Settings screen
+            SharedPreferences mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+            mSharedPreferences.edit().putBoolean(getString(R.string.wp_pref_notifications_main), false).apply();
+
             mGCMMessageHandler.removeAllNotifications(this);
         }
     }
@@ -473,8 +479,9 @@ public class WPMainActivity extends LocaleAwareActivity implements
         final PackageManager packageManager = getPackageManager();
         Intent jetpackIntent = packageManager.getLaunchIntentForPackage("com.jetpack.android");
         Intent jetpackBetaIntent = packageManager.getLaunchIntentForPackage("com.jetpack.android.beta");
+        Intent jetpackAlphaIntent = packageManager.getLaunchIntentForPackage("com.jetpack.android.prealpha");
 
-        return jetpackIntent != null || jetpackBetaIntent != null;
+        return jetpackIntent != null || jetpackBetaIntent != null || jetpackAlphaIntent != null;
     }
 
     private void showBloggingPromptsOnboarding() {
