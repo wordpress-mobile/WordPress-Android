@@ -30,7 +30,7 @@ class JetpackMigrationFragment : Fragment() {
     ): View = ComposeView(requireContext()).apply {
         setContent {
             AppTheme {
-                JetpackWelcomeScreen()
+                JetpackMigrationScreen()
             }
         }
     }
@@ -42,7 +42,7 @@ class JetpackMigrationFragment : Fragment() {
 }
 
 @Composable
-private fun JetpackWelcomeScreen(viewModel: JetpackMigrationViewModel = viewModel()) {
+private fun JetpackMigrationScreen(viewModel: JetpackMigrationViewModel = viewModel()) {
     Box {
         Column {
             val uiState by viewModel.uiState.collectAsState()
