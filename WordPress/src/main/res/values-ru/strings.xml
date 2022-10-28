@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-10-03 17:03:09+0000
+Translation-Revision-Date: 2022-10-18 14:32:47+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.3
 Language: ru
 -->
 <resources>
+    <string name="about_automattic_contribute_item_title">Участвовать</string>
+    <string name="about_news">Новости</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_one">1 ответ</string>
     <string name="login_prologue_revamped_content_description_wordpress_icon">Значок WordPress</string>
     <string name="login_prologue_revamped_tagline">Пишите, редактируйте, публикуйте отовсюду.</string>

@@ -2,6 +2,7 @@ package org.wordpress.android.ui.posts
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
@@ -10,6 +11,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
+import org.mockito.internal.verification.Times
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.PostImmutableModel
@@ -35,10 +37,17 @@ class EditPostRepositoryTest {
     @Mock lateinit var postStore: PostStore
     @Mock lateinit var postUtils: PostUtilsWrapper
     private lateinit var editPostRepository: EditPostRepository
+
     @InternalCoroutinesApi
     @Before
     fun setUp() {
-        editPostRepository = EditPostRepository(localeManager, postStore, postUtils, TEST_DISPATCHER, TEST_DISPATCHER)
+        editPostRepository = EditPostRepository(
+                localeManager,
+                postStore,
+                postUtils,
+                TEST_DISPATCHER,
+                TEST_DISPATCHER
+        )
     }
 
     @Test
@@ -330,6 +339,17 @@ class EditPostRepositoryTest {
     }
 
     @Test
+    fun `reads parentId correctly`() {
+        val post = PostModel()
+        val parentId = 42L
+        post.setParentId(parentId)
+
+        editPostRepository.set { post }
+
+        assertThat(editPostRepository.getPost()!!.parentId).isEqualTo(parentId)
+    }
+
+    @Test
     fun `updates publish date when should publish immediately`() {
         val post = PostModel()
         val dateCreated = "2019-05-05T14:33:20+0000"
@@ -488,6 +508,40 @@ class EditPostRepositoryTest {
     }
 
     @Test
+    fun `loads parentTitle from store for post loaded by local id when parentId is not 0`() = test {
+        val id = 1
+        val parentId = 10L
+
+        val post = PostModel().apply { setParentId(parentId) }
+        val site = SiteModel()
+
+        val parentTitle = "Parent"
+        val parentPost = PostModel().apply { setTitle(parentTitle) }
+
+        whenever(postStore.getPostByLocalPostId(id)).thenReturn(post)
+        whenever(postStore.getPostByRemotePostId(parentId, site)).thenReturn(parentPost)
+
+        editPostRepository.loadPostByLocalPostId(id)
+
+        assertThat(editPostRepository.getParentTitle(site)).isEqualTo(parentTitle)
+    }
+
+    @Test
+    fun `empty parentTitle for post loaded by local id when parentId is 0`() = test {
+        val id = 1
+        val parentId = 0L
+
+        val post = PostModel().apply { setParentId(parentId) }
+        val site = SiteModel()
+
+        whenever(postStore.getPostByLocalPostId(id)).thenReturn(post)
+
+        editPostRepository.loadPostByLocalPostId(id)
+
+        assertThat(editPostRepository.getParentTitle(site)).isEqualTo("")
+    }
+
+    @Test
     fun `loads post from store by remote id`() {
         val remoteId = 2L
         val post = PostModel()
@@ -497,6 +551,69 @@ class EditPostRepositoryTest {
         editPostRepository.loadPostByRemotePostId(remoteId, site)
 
         assertThat(editPostRepository.getPost()).isEqualTo(post)
+    }
+
+    @Test
+    fun `gets parentTitle from store for post loaded by remote id when parentId is not 0`() = test {
+        val remoteId = 2L
+        val parentId = 10L
+
+        val post = PostModel().apply { setParentId(parentId) }
+        val site = SiteModel()
+
+        val parentTitle = "Parent"
+        val parentPost = PostModel().apply { setTitle(parentTitle) }
+
+        whenever(postStore.getPostByRemotePostId(remoteId, site)).thenReturn(post)
+        whenever(postStore.getPostByRemotePostId(parentId, site)).thenReturn(parentPost)
+
+        editPostRepository.loadPostByRemotePostId(remoteId, site)
+
+        assertThat(editPostRepository.getParentTitle(site)).isEqualTo(parentTitle)
+    }
+
+    @Test
+    fun `gets parentTitle from store only once for post loaded by remote id when parentId is not 0`() = test {
+        val remoteId = 2L
+        val parentId = 10L
+
+        val post = PostModel().apply { setParentId(parentId) }
+        val site = SiteModel()
+
+        val parentTitle = "Parent"
+        val parentPost = PostModel().apply {
+            setRemotePostId(parentId)
+            setTitle(parentTitle)
+        }
+
+        whenever(postStore.getPostByRemotePostId(remoteId, site)).thenReturn(post)
+        whenever(postStore.getPostByRemotePostId(parentId, site)).thenReturn(parentPost)
+
+        editPostRepository.loadPostByRemotePostId(remoteId, site)
+
+        // get title a first time (should fetch from store)
+        editPostRepository.getParentTitle(site)
+
+        // get title a second time (should not fetch from store)
+        val title = editPostRepository.getParentTitle(site)
+
+        verify(postStore, Times(1)).getPostByRemotePostId(parentId, site)
+        assertThat(title).isEqualTo(parentTitle)
+    }
+
+    @Test
+    fun `empty parentTitle for post loaded by remote id when parentId is 0`() = test {
+        val remoteId = 2L
+        val parentId = 0L
+
+        val post = PostModel().apply { setParentId(parentId) }
+        val site = SiteModel()
+
+        whenever(postStore.getPostByRemotePostId(remoteId, site)).thenReturn(post)
+
+        editPostRepository.loadPostByRemotePostId(remoteId, site)
+
+        assertThat(editPostRepository.getParentTitle(site)).isEqualTo("")
     }
 
     @Test

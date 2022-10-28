@@ -39,6 +39,7 @@ ALL_LOCALES = [
   { glotpress: 'el', android: 'el', promo_config: false },
   { glotpress: 'en-au', android: 'en-rAU', promo_config: false },
   { glotpress: 'en-ca', android: 'en-rCA', promo_config: false },
+  { glotpress: 'en-gb', android: 'en-rGB', promo_config: false },
   { glotpress: 'es-cl', android: 'es-rCL', promo_config: false },
   { glotpress: 'es-co', android: 'es-rCO', promo_config: false },
   { glotpress: 'es-mx', android: 'es-rMX', promo_config: false },

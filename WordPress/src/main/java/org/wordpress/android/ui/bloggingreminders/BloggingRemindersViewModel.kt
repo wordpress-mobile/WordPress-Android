@@ -23,7 +23,6 @@ import org.wordpress.android.util.merge
 import org.wordpress.android.util.perform
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
-import org.wordpress.android.workers.reminder.ReminderConfig.WeeklyReminder
 import org.wordpress.android.workers.reminder.ReminderScheduler
 import java.time.DayOfWeek
 import javax.inject.Inject
@@ -279,9 +278,6 @@ class BloggingRemindersViewModel @Inject constructor(
             null -> Unit // Do nothing
         }
     }
-
-    private fun BloggingRemindersUiModel.toReminderConfig() =
-            WeeklyReminder(this.enabledDays)
 
     enum class Screen(val trackingName: String) {
         PROLOGUE("main"), // displayed after post is published

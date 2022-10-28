@@ -19,8 +19,6 @@ Language: zh_CN
     <string name="login_prologue_revamped_jetpack_feature_text_3">撰写博客</string>
     <string name="login_prologue_revamped_jetpack_feature_text_2">构建站点</string>
     <string name="login_prologue_revamped_jetpack_feature_text_1">更新插件</string>
-    <string name="login_prologue_revamped_content_description_top_bg">Jetpack 顶部背景淡化</string>
-    <string name="login_prologue_revamped_content_description_bg">Jetpack 背景</string>
     <string name="login_prologue_revamped_content_description_jetpack_logo">Jetpack 徽标</string>
     <string name="me_btn_about">关于 Jetpack</string>
     <string name="sign_out_wpcom_confirm_with_no_changes">注销 Jetpack？</string>

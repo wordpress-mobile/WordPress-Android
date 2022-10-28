@@ -28,6 +28,8 @@ import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.material.snackbar.Snackbar;
+
 import org.apache.commons.text.StringEscapeUtils;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -51,6 +53,7 @@ import org.wordpress.android.fluxc.store.SiteStore.OnPostFormatsChanged;
 import org.wordpress.android.fluxc.store.TaxonomyStore;
 import org.wordpress.android.fluxc.store.TaxonomyStore.OnTaxonomyChanged;
 import org.wordpress.android.models.Person;
+import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher;
 import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult;
@@ -67,11 +70,13 @@ import org.wordpress.android.util.AccessibilityUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
+import org.wordpress.android.util.NetworkUtilsWrapper;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageManager.RequestListener;
 import org.wordpress.android.util.image.ImageType;
+import org.wordpress.android.widgets.WPSnackbar;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -83,6 +88,7 @@ import java.util.Objects;
 import javax.inject.Inject;
 
 import static android.app.Activity.RESULT_OK;
+import static org.wordpress.android.ui.pages.PagesActivityKt.EXTRA_PAGE_PARENT_ID_KEY;
 import static org.wordpress.android.ui.posts.EditPostActivity.EXTRA_POST_LOCAL_ID;
 import static org.wordpress.android.ui.posts.SelectCategoriesActivity.KEY_SELECTED_CATEGORY_IDS;
 
@@ -99,12 +105,15 @@ public class EditPostSettingsFragment extends Fragment {
 
     private SiteSettingsInterface mSiteSettings;
 
-    private LinearLayout mCategoriesContainer;
+    private LinearLayout mCategoriesTagsContainer;
     private LinearLayout mExcerptContainer;
     private LinearLayout mFormatContainer;
-    private LinearLayout mTagsContainer;
+    private View mFormatBottomSeparator;
+    private LinearLayout mPageAttributesContainer;
+    private LinearLayout mMarkAsStickyContainer;
     private LinearLayout mPublishDateContainer;
     private TextView mExcerptTextView;
+    private TextView mParentTextView;
     private TextView mSlugTextView;
     private TextView mCategoriesTextView;
     private TextView mTagsTextView;
@@ -144,6 +153,7 @@ public class EditPostSettingsFragment extends Fragment {
     @Inject UpdatePostStatusUseCase mUpdatePostStatusUseCase;
     @Inject MediaPickerLauncher mMediaPickerLauncher;
     @Inject UpdateFeaturedImageUseCase mUpdateFeaturedImageUseCase;
+    @Inject NetworkUtilsWrapper mNetworkUtilsWrapper;
 
     @Inject ViewModelProvider.Factory mViewModelFactory;
     private EditPostPublishSettingsViewModel mPublishedViewModel;
@@ -258,6 +268,7 @@ public class EditPostSettingsFragment extends Fragment {
         }
 
         mExcerptTextView = rootView.findViewById(R.id.post_excerpt);
+        mParentTextView = rootView.findViewById(R.id.post_parent);
         mSlugTextView = rootView.findViewById(R.id.post_slug);
         mCategoriesTextView = rootView.findViewById(R.id.post_categories);
         mTagsTextView = rootView.findViewById(R.id.post_tags);
@@ -314,6 +325,14 @@ public class EditPostSettingsFragment extends Fragment {
             }
         });
 
+        LinearLayout parentContainer = rootView.findViewById(R.id.post_parent_container);
+        parentContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showPageParentActivity();
+            }
+        });
+
         final LinearLayout slugContainer = rootView.findViewById(R.id.post_slug_container);
         slugContainer.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -322,16 +341,18 @@ public class EditPostSettingsFragment extends Fragment {
             }
         });
 
-        mCategoriesContainer = rootView.findViewById(R.id.post_categories_container);
-        mCategoriesContainer.setOnClickListener(new View.OnClickListener() {
+        mCategoriesTagsContainer = rootView.findViewById(R.id.post_categories_and_tags_card);
+
+        LinearLayout categoriesContainer = rootView.findViewById(R.id.post_categories_container);
+        categoriesContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 showCategoriesActivity();
             }
         });
 
-        mTagsContainer = rootView.findViewById(R.id.post_tags_container);
-        mTagsContainer.setOnClickListener(new View.OnClickListener() {
+        LinearLayout tagsContainer = rootView.findViewById(R.id.post_tags_container);
+        tagsContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 showTagsActivity();
@@ -353,6 +374,8 @@ public class EditPostSettingsFragment extends Fragment {
                 showPostFormatDialog();
             }
         });
+
+        mFormatBottomSeparator = rootView.findViewById(R.id.post_format_bottom_separator);
 
         final LinearLayout passwordContainer = rootView.findViewById(R.id.post_password_container);
         passwordContainer.setOnClickListener(new View.OnClickListener() {
@@ -376,16 +399,9 @@ public class EditPostSettingsFragment extends Fragment {
 
         mStickySwitch.setOnCheckedChangeListener(mOnStickySwitchChangeListener);
 
+        mMarkAsStickyContainer = rootView.findViewById(R.id.post_settings_mark_as_sticky_container);
+        mPageAttributesContainer = rootView.findViewById(R.id.post_settings_page_attributes_container);
 
-        if (getEditPostRepository() != null && getEditPostRepository().isPage()) { // remove post specific views
-            final View categoriesTagsContainer = rootView.findViewById(R.id.post_categories_and_tags_card);
-            final View formatBottomSeparator = rootView.findViewById(R.id.post_format_bottom_separator);
-            final View markAsStickyContainer = rootView.findViewById(R.id.post_settings_mark_as_sticky_container);
-            categoriesTagsContainer.setVisibility(View.GONE);
-            formatBottomSeparator.setVisibility(View.GONE);
-            mFormatContainer.setVisibility(View.GONE);
-            markAsStickyContainer.setVisibility(View.GONE);
-        }
 
         mPublishedViewModel.getOnUiModel().observe(getViewLifecycleOwner(), new Observer<PublishUiModel>() {
             @Override public void onChanged(PublishUiModel uiModel) {
@@ -399,6 +415,9 @@ public class EditPostSettingsFragment extends Fragment {
             }
         });
 
+        if (getEditPostRepository() != null) {
+            hideSpecificViews(getEditPostRepository().isPage());
+        }
         setupSettingHintsForAccessibility();
         applyAccessibilityHeadingToSettings();
 
@@ -454,6 +473,7 @@ public class EditPostSettingsFragment extends Fragment {
         AccessibilityUtils.disableHintAnnouncement(mPasswordTextView);
         AccessibilityUtils.disableHintAnnouncement(mSlugTextView);
         AccessibilityUtils.disableHintAnnouncement(mExcerptTextView);
+        AccessibilityUtils.disableHintAnnouncement(mParentTextView);
     }
 
     private void applyAccessibilityHeadingToSettings() {
@@ -471,18 +491,12 @@ public class EditPostSettingsFragment extends Fragment {
     }
 
     public void refreshViews() {
-        if (!isAdded()) {
+        if (!isAdded() || getEditPostRepository() == null) {
             return;
         }
-
-        if (getEditPostRepository().isPage()) {
-            // remove post specific views
-            mCategoriesContainer.setVisibility(View.GONE);
-            mExcerptContainer.setVisibility(View.GONE);
-            mFormatContainer.setVisibility(View.GONE);
-            mTagsContainer.setVisibility(View.GONE);
-        }
+        hideSpecificViews(getEditPostRepository().isPage());
         mExcerptTextView.setText(getEditPostRepository().getExcerpt());
+        mParentTextView.setText(getEditPostRepository().getParentTitle(getSite()));
         mSlugTextView.setText(getEditPostRepository().getSlug());
         mPasswordTextView.setText(getEditPostRepository().getPassword());
         PostImmutableModel postModel = getEditPostRepository().getPost();
@@ -525,6 +539,14 @@ public class EditPostSettingsFragment extends Fragment {
                         updateTags(selectedTags);
                     }
                     break;
+                case RequestCodes.PAGE_PARENT:
+                    extras = data.getExtras();
+                    if (resultCode == Activity.RESULT_OK && extras != null) {
+                        long parentId = extras.getLong(EXTRA_PAGE_PARENT_ID_KEY, -1);
+                        if (parentId != -1L) {
+                            updateParent(parentId);
+                        }
+                    }
             }
         }
     }
@@ -546,6 +568,23 @@ public class EditPostSettingsFragment extends Fragment {
                     }
                 });
         dialog.show(getChildFragmentManager(), null);
+    }
+
+    private void showPageParentActivity() {
+        EditPostRepository repository = getEditPostRepository();
+        SiteModel site = getSite();
+
+        if (!isAdded() || repository == null || site == null) {
+            return;
+        }
+
+        if (!mNetworkUtilsWrapper.isNetworkAvailable()) {
+            showNoNetworkSnackbar();
+            return;
+        }
+
+        long remoteId = repository.getRemotePostId();
+        ActivityLauncher.viewPageParentForResult(this, site, remoteId);
     }
 
     private void showSlugDialog() {
@@ -658,6 +697,11 @@ public class EditPostSettingsFragment extends Fragment {
             return;
         }
 
+        if (!mNetworkUtilsWrapper.isNetworkAvailable()) {
+            showNoNetworkSnackbar();
+            return;
+        }
+
         FragmentManager fm = getActivity().getSupportFragmentManager();
 
         PostSettingsListDialogFragment fragment = PostSettingsListDialogFragment.newAuthorListInstance(getAuthorId());
@@ -748,6 +792,23 @@ public class EditPostSettingsFragment extends Fragment {
     private void updateSaveButton() {
         if (isAdded()) {
             getActivity().invalidateOptionsMenu();
+        }
+    }
+
+    private void updateParent(long parentId) {
+        EditPostRepository editPostRepository = getEditPostRepository();
+        SiteModel site = getSite();
+        if (editPostRepository != null && site != null) {
+            editPostRepository.updateAsync(postModel -> {
+                boolean hasChanged = postModel.getParentId() != parentId;
+                postModel.setParentId(parentId);
+                return hasChanged;
+            }, (postModel, result) -> {
+                if (result == UpdatePostResult.Updated.INSTANCE) {
+                    mParentTextView.setText(editPostRepository.getParentTitle(site));
+                }
+                return null;
+            });
         }
     }
 
@@ -1250,8 +1311,30 @@ public class EditPostSettingsFragment extends Fragment {
         }
     }
 
+    private void hideSpecificViews(Boolean isPage) {
+        if (isPage) {
+            mCategoriesTagsContainer.setVisibility(View.GONE);
+            mFormatContainer.setVisibility(View.GONE);
+            mFormatBottomSeparator.setVisibility(View.GONE);
+            mMarkAsStickyContainer.setVisibility(View.GONE);
+            mExcerptContainer.setVisibility(View.GONE);
+        } else {
+            mPageAttributesContainer.setVisibility(View.GONE);
+        }
+    }
+
+    private void showNoNetworkSnackbar() {
+        String message = getString(R.string.no_network_message);
+        WPSnackbar.make(
+                requireView().findViewById(R.id.settings_fragment_root),
+                message,
+                Snackbar.LENGTH_LONG
+        ).show();
+    }
+
     interface EditPostSettingsCallback {
         void onEditPostPublishedSettingsClick();
+
         void clearFeaturedImage();
     }
 }
