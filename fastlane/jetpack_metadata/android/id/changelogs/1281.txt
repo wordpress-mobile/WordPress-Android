@@ -1,4 +1,0 @@
-20.9:
-- Alur “Kenali aplikasi Anda” kini tetap terlihat di layar setelah perangkat Anda diputar.
-- Judul panjang ditampilkan dengan benar di kartu Statistik tanpa terpotong.
-- Kami menambahkan tombol Enter ke Kutipan artikel untuk mempermudah pemisah baris.
