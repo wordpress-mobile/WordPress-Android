@@ -1,4 +1,0 @@
-20.9:
-- Os fluxos “Conheça seu aplicativo” agora ficam na tela depois de girar seu dispositivo.
-- Os títulos longos são exibidos corretamente nos cartões de estatísticas sem serem cortados.
-- Acrescentamos a tecla Enter aos resumos de post para facilitar as quebras de linha.

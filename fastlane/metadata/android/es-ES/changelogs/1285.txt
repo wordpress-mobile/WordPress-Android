@@ -1,0 +1,5 @@
+21.0:
+- Eliminadas las bolitas de la aplicación Automattic Family de la página «Acerca de».
+- Se ha actualizado la pantalla de inicio para las versiones de Android 12+.
+- Se ha cambiado el texto del mensaje de éxito de rojo a negro para los accesos por código QR.
+- Se ha corregido la pantalla de estadísticas para incluir los números árabes occidentales para los usuarios de lengua árabe.
