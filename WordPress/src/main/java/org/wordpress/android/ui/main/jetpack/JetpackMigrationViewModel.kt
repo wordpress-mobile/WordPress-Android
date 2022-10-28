@@ -46,11 +46,11 @@ class JetpackMigrationViewModel @Inject constructor(
     }
 
     private fun onContinueClicked() {
-        TODO("Not yet implemented")
+        // TODO Handle on Continue
     }
 
     private fun onHelpClicked() {
-        TODO("Not yet implemented")
+        // TODO Handle on Help
     }
 
     private fun getSiteList(): List<SiteListItemUiState> {
