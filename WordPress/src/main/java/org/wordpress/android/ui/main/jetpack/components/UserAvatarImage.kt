@@ -31,7 +31,7 @@ fun ColumnScope.UserAvatarImage(
     }
     Image(
             painter = painter,
-            contentDescription = stringResource(string.jp_welcome_avatar_content_description),
+            contentDescription = stringResource(string.jp_migration_avatar_content_description),
             modifier = modifier
                     .align(Alignment.End)
                     .padding(top = MediumLarge.value, end = 30.dp)

@@ -71,15 +71,15 @@ class JetpackMigrationViewModel @Inject constructor(
             val sites: List<SiteListItemUiState>
         ) : StepUiState(
                 screenIconRes = R.drawable.ic_wordpress_jetpack_logo,
-                title = UiStringRes(R.string.jp_welcome_title),
-                subtitle = UiStringRes(R.string.jp_welcome_subtitle),
+                title = UiStringRes(R.string.jp_migration_welcome_title),
+                subtitle = UiStringRes(R.string.jp_migration_welcome_subtitle),
                 message = UiStringRes(
                         if (sites.size > 1) {
-                            R.string.jp_welcome_sites_found_message
+                            R.string.jp_migration_welcome_sites_found_message
                         } else {
-                            R.string.jp_welcome_site_found_message
+                            R.string.jp_migration_welcome_site_found_message
                         }
-                )
+                ),
         )
     }
 
