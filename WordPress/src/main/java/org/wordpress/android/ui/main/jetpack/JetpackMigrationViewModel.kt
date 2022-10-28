@@ -26,17 +26,12 @@ class JetpackMigrationViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(UiState())
     val uiState: StateFlow<UiState> = _uiState
 
-    var isInitialized = false
-
-    fun start() {
-        if (isInitialized) return
-        isInitialized = true
-        initState()
+    fun onAccountInfoLoaded() {
+        _uiState.value = _uiState.value.copy(userAvatarUrl = getAvatarUrl())
     }
 
-    private fun initState() {
-        _uiState.value = UiState(
-                userAvatarUrl = getAvatarUrl(),
+    fun onSiteListLoaded() {
+        _uiState.value = _uiState.value.copy(
                 stepState = StepUiState.Welcome(
                         sites = getSiteList(),
                         primaryActionButton = ActionButton.WelcomePrimaryButton(::onContinueClicked),
@@ -44,7 +39,6 @@ class JetpackMigrationViewModel @Inject constructor(
                 ),
         )
     }
-
     private fun onContinueClicked() {
         // TODO Handle on Continue
     }
