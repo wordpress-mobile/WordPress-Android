@@ -13,6 +13,8 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.ColumnWithFrostedGlassBackground
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.utils.uiStringText
+import org.wordpress.android.ui.main.jetpack.JetpackMigrationViewModel.ActionButton.WelcomePrimaryButton
+import org.wordpress.android.ui.main.jetpack.JetpackMigrationViewModel.ActionButton.WelcomeSecondaryButton
 import org.wordpress.android.ui.main.jetpack.JetpackMigrationViewModel.SiteListItemUiState
 import org.wordpress.android.ui.main.jetpack.JetpackMigrationViewModel.StepUiState
 
@@ -33,12 +35,12 @@ fun WelcomeStep(uiState: StepUiState.Welcome) = with(uiState) {
         )
         ButtonsPanel(sites, blurredListState) {
             PrimaryButton(
-                    text = "Primary Button",
-                    onClick = {},
+                    text = uiStringText(primaryActionButton.text),
+                    onClick = primaryActionButton.onClick,
             )
             SecondaryButton(
-                    text = "Secondary Button",
-                    onClick = {},
+                    text = uiStringText(secondaryActionButton.text),
+                    onClick = secondaryActionButton.onClick,
             )
         }
         ListStateSync(listState, blurredListState)
@@ -95,7 +97,11 @@ val previewSiteListItems = mutableListOf<SiteListItemUiState>().apply {
 @Preview(showBackground = true, widthDp = 414, heightDp = 897)
 @Preview(showBackground = true, widthDp = 414, heightDp = 897, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable fun PreviewContentState() {
-    val uiState = StepUiState.Welcome(previewSiteListItems)
+    val uiState = StepUiState.Welcome(
+            previewSiteListItems,
+            primaryActionButton = WelcomePrimaryButton {},
+            secondaryActionButton = WelcomeSecondaryButton {},
+    )
     AppTheme {
         WelcomeStep(uiState)
     }

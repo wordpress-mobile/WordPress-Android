@@ -37,8 +37,20 @@ class JetpackMigrationViewModel @Inject constructor(
     private fun initState() {
         _uiState.value = UiState(
                 userAvatarUrl = getAvatarUrl(),
-                stepState = StepUiState.Welcome(sites = getSiteList()),
+                stepState = StepUiState.Welcome(
+                        sites = getSiteList(),
+                        primaryActionButton = ActionButton.WelcomePrimaryButton(::onContinueClicked),
+                        secondaryActionButton = ActionButton.WelcomeSecondaryButton(::onHelpClicked),
+                ),
         )
+    }
+
+    private fun onContinueClicked() {
+        TODO("Not yet implemented")
+    }
+
+    private fun onHelpClicked() {
+        TODO("Not yet implemented")
     }
 
     private fun getSiteList(): List<SiteListItemUiState> {
@@ -66,10 +78,16 @@ class JetpackMigrationViewModel @Inject constructor(
         val title: UiString,
         val subtitle: UiString,
         val message: UiString,
+        open val primaryActionButton: ActionButton,
+        open val secondaryActionButton: ActionButton,
     ) {
         data class Welcome(
-            val sites: List<SiteListItemUiState>
+            val sites: List<SiteListItemUiState>,
+            override val primaryActionButton: ActionButton,
+            override val secondaryActionButton: ActionButton,
         ) : StepUiState(
+                primaryActionButton = primaryActionButton,
+                secondaryActionButton = secondaryActionButton,
                 screenIconRes = R.drawable.ic_wordpress_jetpack_logo,
                 title = UiStringRes(R.string.jp_migration_welcome_title),
                 subtitle = UiStringRes(R.string.jp_migration_welcome_subtitle),
@@ -89,4 +107,23 @@ class JetpackMigrationViewModel @Inject constructor(
         val url: String,
         val iconUrl: String,
     )
+
+    sealed class ActionButton(
+        val text: UiString,
+        open val onClick: () -> Unit,
+    ) {
+        data class WelcomePrimaryButton(
+            override val onClick: () -> Unit,
+        ) : ActionButton(
+                onClick = onClick,
+                text = UiStringRes(R.string.jp_migration_continue_button),
+        )
+
+        data class WelcomeSecondaryButton(
+            override val onClick: () -> Unit,
+        ) : ActionButton(
+                onClick = onClick,
+                text = UiStringRes(R.string.jp_migration_help_button),
+        )
+    }
 }
