@@ -56,25 +56,24 @@ class SharedLoginResolver @Inject constructor(
                 if (jetpackAppMigrationFlowUtils.isFlagEnabled()) {
                     dispatchUpdateAccessToken(accessToken)
                     jetpackAppMigrationFlowUtils.startJetpackMigrationFlow()
-                    return
+                } else {
+                    userFlagsResolver.tryGetUserFlags(
+                            {
+                                readerSavedPostsResolver.tryGetReaderSavedPosts(
+                                        {
+                                            dispatchUpdateAccessToken(accessToken)
+                                            reloadMainScreen()
+                                        },
+                                        {
+                                            reloadMainScreen()
+                                        }
+                                )
+                            },
+                            {
+                                reloadMainScreen()
+                            }
+                    )
                 }
-
-                userFlagsResolver.tryGetUserFlags(
-                        {
-                            readerSavedPostsResolver.tryGetReaderSavedPosts(
-                                    {
-                                        dispatchUpdateAccessToken(accessToken)
-                                        reloadMainScreen()
-                                    },
-                                    {
-                                        reloadMainScreen()
-                                    }
-                            )
-                        },
-                        {
-                            reloadMainScreen()
-                        }
-                )
             } else {
                 sharedLoginAnalyticsTracker.trackLoginFailed(ErrorType.WPNotLoggedInError)
             }
