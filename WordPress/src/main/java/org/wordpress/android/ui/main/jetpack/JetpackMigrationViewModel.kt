@@ -18,10 +18,10 @@ const val USER_AVATAR_SIZE = 32 * 3
 
 @HiltViewModel
 class JetpackMigrationViewModel @Inject constructor(
-    val siteStore: SiteStore,
-    val accountStore: AccountStore,
-    val siteUtilsWrapper: SiteUtilsWrapper,
-    val gravatarUtilsWrapper: GravatarUtilsWrapper,
+    private val siteStore: SiteStore,
+    private val accountStore: AccountStore,
+    private val siteUtilsWrapper: SiteUtilsWrapper,
+    private val gravatarUtilsWrapper: GravatarUtilsWrapper,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(UiState())
     val uiState: StateFlow<UiState> = _uiState
