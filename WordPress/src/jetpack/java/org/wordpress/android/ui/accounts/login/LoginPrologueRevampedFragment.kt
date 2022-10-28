@@ -24,12 +24,12 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.viewmodel.compose.viewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.isActive
-import org.wordpress.android.ui.accounts.login.components.ColumnWithFrostedGlassBackground
 import org.wordpress.android.ui.accounts.login.components.JetpackLogo
 import org.wordpress.android.ui.accounts.login.components.LoopingTextWithBackground
 import org.wordpress.android.ui.accounts.login.components.PrimaryButton
 import org.wordpress.android.ui.accounts.login.components.SecondaryButton
 import org.wordpress.android.ui.accounts.login.components.TopLinearGradient
+import org.wordpress.android.ui.compose.components.ColumnWithFrostedGlassBackground
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.util.extensions.setEdgeToEdgeContentDisplay
 

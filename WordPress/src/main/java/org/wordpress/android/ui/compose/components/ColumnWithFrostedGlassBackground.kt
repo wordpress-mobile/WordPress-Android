@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.accounts.login.components
+package org.wordpress.android.ui.compose.components
 
 import android.os.Build.VERSION
 import android.os.Build.VERSION_CODES
@@ -23,8 +23,8 @@ import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
-import org.wordpress.android.ui.accounts.login.components.SlotsEnum.Buttons
-import org.wordpress.android.ui.accounts.login.components.SlotsEnum.ClippedBackground
+import org.wordpress.android.ui.compose.components.SlotsEnum.Buttons
+import org.wordpress.android.ui.compose.components.SlotsEnum.ClippedBackground
 
 private val blurRadius = 30.dp
 
