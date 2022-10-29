@@ -2,6 +2,7 @@ package org.wordpress.android.ui.main.jetpack.migration.components
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import org.wordpress.android.ui.compose.utils.uiStringText
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.StepUiState
@@ -14,6 +15,12 @@ fun WelcomeStep(uiState: StepUiState.Welcome) = with(uiState) {
     Message(text = uiStringText(message))
 
     Box {
+        val listState = rememberLazyListState()
+
+        SiteList(
+                items = sites,
+                listState = listState,
+        )
         ButtonsPanel {
             PrimaryButton(
                     text = uiStringText(primaryActionButton.text),
