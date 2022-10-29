@@ -1,15 +1,20 @@
 package org.wordpress.android.ui.main.jetpack.migration.components
 
+import android.content.res.Configuration
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.ColumnWithFrostedGlassBackground
+import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.utils.uiStringText
+import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.WelcomePrimaryButton
+import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.WelcomeSecondaryButton
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.SiteListItemUiState
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.StepUiState
 
@@ -51,6 +56,32 @@ private fun ListStateSync(
             source.firstVisibleItemIndex,
             source.firstVisibleItemScrollOffset,
     )
+}
+
+val previewSiteListItems = mutableListOf<SiteListItemUiState>().apply {
+    repeat(10) {
+        add(
+                SiteListItemUiState(
+                        id = it.toLong(),
+                        name = "Site $it",
+                        url = "site-$it-name.com",
+                        iconUrl = "",
+                )
+        )
+    }
+}
+
+@Preview(showBackground = true, widthDp = 414, heightDp = 897)
+@Preview(showBackground = true, widthDp = 414, heightDp = 897, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable fun PreviewContentState() {
+    val uiState = StepUiState.Welcome(
+            previewSiteListItems,
+            primaryActionButton = WelcomePrimaryButton {},
+            secondaryActionButton = WelcomeSecondaryButton {},
+    )
+    AppTheme {
+        WelcomeStep(uiState)
+    }
 }
 
 @Composable
