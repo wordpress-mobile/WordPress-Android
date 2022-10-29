@@ -6,19 +6,24 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.WelcomePrimaryButton
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.WelcomeSecondaryButton
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.StepUiState.Welcome
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.GravatarUtilsWrapper
+import org.wordpress.android.util.SiteUtilsWrapper
 import javax.inject.Inject
 
+const val SITE_ICON_SIZE = 60 * 3
 const val USER_AVATAR_SIZE = 32 * 3
 
 @HiltViewModel
 class JetpackMigrationViewModel @Inject constructor(
+    private val siteStore: SiteStore,
     private val accountStore: AccountStore,
+    private val siteUtilsWrapper: SiteUtilsWrapper,
     private val gravatarUtilsWrapper: GravatarUtilsWrapper,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(UiState())
@@ -47,7 +52,14 @@ class JetpackMigrationViewModel @Inject constructor(
     }
 
     private fun getSiteList(): List<SiteListItemUiState> {
-        return listOf() // TODO load site list and map to UI model
+        return siteStore.sites.map { site ->
+            SiteListItemUiState(
+                    id = site.siteId,
+                    name = siteUtilsWrapper.getSiteNameOrHomeURL(site),
+                    url = siteUtilsWrapper.getHomeURLOrHostName(site),
+                    iconUrl = siteUtilsWrapper.getSiteIconUrl(site, SITE_ICON_SIZE),
+            )
+        }
     }
 
     private fun getAvatarUrl(): String {
