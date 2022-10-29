@@ -7,4 +7,11 @@ import javax.inject.Inject
 @HiltViewModel
 class JetpackMigrationViewModel @Inject constructor(
 ) : ViewModel() {
+    fun onAccountInfoLoaded() {
+        // TODO add logic to handle account info loaded in db
+    }
+
+    fun onSiteListLoaded() {
+        // TODO add logic to handle site list loaded in db
+    }
 }
