@@ -48,6 +48,29 @@ fun WelcomeStep(uiState: StepUiState.Welcome) = with(uiState) {
 }
 
 @Composable
+private fun ButtonsPanel(
+    items: List<SiteListItemUiState>,
+    blurredListState: LazyListState,
+    content: @Composable () -> Unit,
+) {
+    ColumnWithFrostedGlassBackground(
+            blurRadius = 4.dp,
+            backgroundColor = colorResource(R.color.bg_jp_migration_buttons_panel),
+            borderColor = colorResource(R.color.gray_10).copy(alpha = 0.5f),
+            background = { clipModifier, blurModifier ->
+                SiteList(
+                        items = items,
+                        listState = blurredListState,
+                        userScrollEnabled = false,
+                        modifier = clipModifier,
+                        blurModifier = blurModifier,
+                )
+            },
+            content = content
+    )
+}
+
+@Composable
 private fun ListStateSync(
     source: LazyListState,
     target: LazyListState,
@@ -82,27 +105,4 @@ val previewSiteListItems = mutableListOf<SiteListItemUiState>().apply {
     AppTheme {
         WelcomeStep(uiState)
     }
-}
-
-@Composable
-private fun ButtonsPanel(
-    items: List<SiteListItemUiState>,
-    blurredListState: LazyListState,
-    content: @Composable () -> Unit,
-) {
-    ColumnWithFrostedGlassBackground(
-            blurRadius = 4.dp,
-            backgroundColor = colorResource(R.color.bg_jp_migration_buttons_panel),
-            borderColor = colorResource(R.color.gray_10).copy(alpha = 0.5f),
-            background = { clipModifier, blurModifier ->
-                SiteList(
-                        items = items,
-                        listState = blurredListState,
-                        userScrollEnabled = false,
-                        modifier = clipModifier,
-                        blurModifier = blurModifier,
-                )
-            },
-            content = content
-    )
 }
