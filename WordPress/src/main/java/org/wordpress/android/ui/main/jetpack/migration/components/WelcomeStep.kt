@@ -9,4 +9,5 @@ fun WelcomeStep(uiState: StepUiState.Welcome) = with(uiState) {
     ScreenIcon(iconRes = screenIconRes)
     Title(text = uiStringText(title))
     Subtitle(text = uiStringText(subtitle))
+    Message(text = uiStringText(message))
 }

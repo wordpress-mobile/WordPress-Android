@@ -40,6 +40,7 @@ class JetpackMigrationViewModel @Inject constructor(
         val screenIconRes: Int,
         val title: UiString,
         val subtitle: UiString,
+        val message: UiString,
     ) {
         data class Welcome(
             val sites: List<SiteListItemUiState>,
@@ -47,6 +48,13 @@ class JetpackMigrationViewModel @Inject constructor(
                 screenIconRes = R.drawable.ic_wordpress_jetpack_logo,
                 title = UiStringRes(R.string.jp_migration_welcome_title),
                 subtitle = UiStringRes(R.string.jp_migration_welcome_subtitle),
+                message = UiStringRes(
+                        if (sites.size > 1) {
+                            R.string.jp_migration_welcome_sites_found_message
+                        } else {
+                            R.string.jp_migration_welcome_site_found_message
+                        }
+                ),
         )
     }
 
