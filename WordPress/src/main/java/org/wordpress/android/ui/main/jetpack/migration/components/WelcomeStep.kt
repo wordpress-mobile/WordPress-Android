@@ -8,4 +8,5 @@ import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel
 fun WelcomeStep(uiState: StepUiState.Welcome) = with(uiState) {
     ScreenIcon(iconRes = screenIconRes)
     Title(text = uiStringText(title))
+    Subtitle(text = uiStringText(subtitle))
 }

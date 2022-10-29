@@ -39,12 +39,14 @@ class JetpackMigrationViewModel @Inject constructor(
     sealed class StepUiState(
         val screenIconRes: Int,
         val title: UiString,
+        val subtitle: UiString,
     ) {
         data class Welcome(
             val sites: List<SiteListItemUiState>,
         ) : StepUiState(
                 screenIconRes = R.drawable.ic_wordpress_jetpack_logo,
                 title = UiStringRes(R.string.jp_migration_welcome_title),
+                subtitle = UiStringRes(R.string.jp_migration_welcome_subtitle),
         )
     }
 
