@@ -8,10 +8,10 @@ import javax.inject.Inject
 class JetpackMigrationViewModel @Inject constructor(
 ) : ViewModel() {
     fun onAccountInfoLoaded() {
-        // TODO add logic to handle account info loaded in db
+        // TODO update UI when account info is loaded to db
     }
 
     fun onSiteListLoaded() {
-        // TODO add logic to handle site list loaded in db
+        // TODO update UI when site list is loaded to db
     }
 }
