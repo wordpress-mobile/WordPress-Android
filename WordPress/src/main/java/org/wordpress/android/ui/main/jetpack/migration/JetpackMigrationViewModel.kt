@@ -5,19 +5,25 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.StepUiState.Welcome
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.util.GravatarUtilsWrapper
 import javax.inject.Inject
+
+const val USER_AVATAR_SIZE = 32 * 3
 
 @HiltViewModel
 class JetpackMigrationViewModel @Inject constructor(
+    private val accountStore: AccountStore,
+    private val gravatarUtilsWrapper: GravatarUtilsWrapper,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(UiState())
     val uiState: StateFlow<UiState> = _uiState
 
     fun onAccountInfoLoaded() {
-        // TODO update UI when account info is loaded to db
+        _uiState.value = _uiState.value.copy(userAvatarUrl = getAvatarUrl())
     }
 
     fun onSiteListLoaded() {
@@ -32,7 +38,12 @@ class JetpackMigrationViewModel @Inject constructor(
         return listOf() // TODO load site list and map to UI model
     }
 
+    private fun getAvatarUrl(): String {
+        return gravatarUtilsWrapper.fixGravatarUrl(accountStore.account?.avatarUrl.orEmpty(), USER_AVATAR_SIZE)
+    }
+
     data class UiState(
+        val userAvatarUrl: String = "",
         val stepState: StepUiState? = null,
     )
 
