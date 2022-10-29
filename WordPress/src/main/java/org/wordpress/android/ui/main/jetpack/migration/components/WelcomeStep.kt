@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
@@ -37,7 +38,19 @@ fun WelcomeStep(uiState: StepUiState.Welcome) = with(uiState) {
                     onClick = secondaryActionButton.onClick,
             )
         }
+        ListStateSync(listState, blurredListState)
     }
+}
+
+@Composable
+private fun ListStateSync(
+    source: LazyListState,
+    target: LazyListState,
+) = LaunchedEffect(source.firstVisibleItemIndex, target.firstVisibleItemScrollOffset) {
+    target.scrollToItem(
+            source.firstVisibleItemIndex,
+            source.firstVisibleItemScrollOffset,
+    )
 }
 
 @Composable
