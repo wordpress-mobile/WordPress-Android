@@ -7,6 +7,8 @@ import android.view.ViewGroup
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -18,7 +20,9 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged
 import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.StepUiState
 import org.wordpress.android.ui.main.jetpack.migration.components.LoadingState
+import org.wordpress.android.ui.main.jetpack.migration.components.WelcomeStep
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -68,7 +72,12 @@ class JetpackMigrationFragment : Fragment() {
 private fun JetpackMigrationScreen(viewModel: JetpackMigrationViewModel = viewModel()) {
     Box {
         Column {
-            LoadingState()
+            val uiState by viewModel.uiState.collectAsState()
+
+            when (val step = uiState.stepState) {
+                is StepUiState.Welcome -> WelcomeStep(step)
+                else -> LoadingState()
+            }
         }
     }
 }

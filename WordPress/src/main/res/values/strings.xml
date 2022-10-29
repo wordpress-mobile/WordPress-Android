@@ -3084,6 +3084,7 @@
     <string name="close_dialog_button_desc">Close Dialog</string>
     <string name="fab_add_category_desc">Create Category</string>
     <string name="blogging_reminders_prompt_help_button_desc">Learn more about prompts</string>
+    <string name="icon_desc">icon</string>
 
     <string name="content_description_more">More</string>
 
