@@ -6,6 +6,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import org.wordpress.android.R
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.StepUiState.Welcome
+import org.wordpress.android.ui.utils.UiString
+import org.wordpress.android.ui.utils.UiString.UiStringRes
 import javax.inject.Inject
 
 @HiltViewModel
@@ -36,11 +38,13 @@ class JetpackMigrationViewModel @Inject constructor(
 
     sealed class StepUiState(
         val screenIconRes: Int,
+        val title: UiString,
     ) {
         data class Welcome(
             val sites: List<SiteListItemUiState>,
         ) : StepUiState(
                 screenIconRes = R.drawable.ic_wordpress_jetpack_logo,
+                title = UiStringRes(R.string.jp_migration_welcome_title),
         )
     }
 
