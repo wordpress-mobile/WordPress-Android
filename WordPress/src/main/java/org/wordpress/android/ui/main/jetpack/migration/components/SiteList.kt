@@ -16,6 +16,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
@@ -25,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
 import org.wordpress.android.R
+import org.wordpress.android.ui.compose.modifiers.disableUserScroll
 import org.wordpress.android.ui.compose.unit.FontSize
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.SiteListItemUiState
 
@@ -32,12 +34,14 @@ import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel
 fun SiteList(
     items: List<SiteListItemUiState>,
     listState: LazyListState,
+    userScrollEnabled: Boolean = true,
     modifier: Modifier = Modifier,
     blurModifier: Modifier = Modifier,
 ) {
     LazyColumn(
             state = listState,
             modifier = modifier
+                    .composed { if (userScrollEnabled) this else disableUserScroll() }
                     .background(MaterialTheme.colors.background)
                     .padding(horizontal = 30.dp)
                     .then(blurModifier),

@@ -1,10 +1,15 @@
 package org.wordpress.android.ui.main.jetpack.migration.components
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.unit.dp
+import org.wordpress.android.R
+import org.wordpress.android.ui.compose.components.ColumnWithFrostedGlassBackground
 import org.wordpress.android.ui.compose.utils.uiStringText
+import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.SiteListItemUiState
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.StepUiState
 
 @Composable
@@ -16,12 +21,13 @@ fun WelcomeStep(uiState: StepUiState.Welcome) = with(uiState) {
 
     Box {
         val listState = rememberLazyListState()
+        val blurredListState = rememberLazyListState()
 
         SiteList(
                 items = sites,
                 listState = listState,
         )
-        ButtonsPanel {
+        ButtonsPanel(sites, blurredListState) {
             PrimaryButton(
                     text = uiStringText(primaryActionButton.text),
                     onClick = primaryActionButton.onClick,
@@ -36,9 +42,23 @@ fun WelcomeStep(uiState: StepUiState.Welcome) = with(uiState) {
 
 @Composable
 private fun ButtonsPanel(
+    items: List<SiteListItemUiState>,
+    blurredListState: LazyListState,
     content: @Composable () -> Unit,
 ) {
-    Column {
-        content()
-    }
+    ColumnWithFrostedGlassBackground(
+            blurRadius = 4.dp,
+            backgroundColor = colorResource(R.color.bg_jp_migration_buttons_panel),
+            borderColor = colorResource(R.color.gray_10).copy(alpha = 0.5f),
+            background = { clipModifier, blurModifier ->
+                SiteList(
+                        items = items,
+                        listState = blurredListState,
+                        userScrollEnabled = false,
+                        modifier = clipModifier,
+                        blurModifier = blurModifier,
+                )
+            },
+            content = content
+    )
 }
