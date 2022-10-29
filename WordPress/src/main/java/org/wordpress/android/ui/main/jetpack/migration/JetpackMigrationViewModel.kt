@@ -6,6 +6,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.WelcomePrimaryButton
+import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.WelcomeSecondaryButton
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.StepUiState.Welcome
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -30,8 +32,18 @@ class JetpackMigrationViewModel @Inject constructor(
         _uiState.value = _uiState.value.copy(
                 stepState = Welcome(
                         sites = getSiteList(),
+                        primaryActionButton = WelcomePrimaryButton(::onContinueClicked),
+                        secondaryActionButton = WelcomeSecondaryButton(::onHelpClicked),
                 ),
         )
+    }
+
+    private fun onContinueClicked() {
+        // TODO Handle on Continue
+    }
+
+    private fun onHelpClicked() {
+        // TODO Handle on Help
     }
 
     private fun getSiteList(): List<SiteListItemUiState> {
@@ -52,10 +64,16 @@ class JetpackMigrationViewModel @Inject constructor(
         val title: UiString,
         val subtitle: UiString,
         val message: UiString,
+        open val primaryActionButton: ActionButton,
+        open val secondaryActionButton: ActionButton,
     ) {
         data class Welcome(
             val sites: List<SiteListItemUiState>,
+            override val primaryActionButton: ActionButton,
+            override val secondaryActionButton: ActionButton,
         ) : StepUiState(
+                primaryActionButton = primaryActionButton,
+                secondaryActionButton = secondaryActionButton,
                 screenIconRes = R.drawable.ic_wordpress_jetpack_logo,
                 title = UiStringRes(R.string.jp_migration_welcome_title),
                 subtitle = UiStringRes(R.string.jp_migration_welcome_subtitle),
