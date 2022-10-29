@@ -75,4 +75,23 @@ class JetpackMigrationViewModel @Inject constructor(
         val url: String,
         val iconUrl: String,
     )
+
+    sealed class ActionButton(
+        val text: UiString,
+        open val onClick: () -> Unit,
+    ) {
+        data class WelcomePrimaryButton(
+            override val onClick: () -> Unit,
+        ) : ActionButton(
+                onClick = onClick,
+                text = UiStringRes(R.string.jp_migration_continue_button),
+        )
+
+        data class WelcomeSecondaryButton(
+            override val onClick: () -> Unit,
+        ) : ActionButton(
+                onClick = onClick,
+                text = UiStringRes(R.string.jp_migration_help_button),
+        )
+    }
 }
