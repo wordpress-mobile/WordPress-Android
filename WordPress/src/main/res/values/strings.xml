@@ -4244,4 +4244,5 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="jp_migration_welcome_site_found_message">We found your site. Continue to transfer all your data and sign in to Jetpack automatically.</string>
     <string name="jp_migration_continue_button">Continue</string>
     <string name="jp_migration_help_button">Need help?</string>
+
 </resources>
