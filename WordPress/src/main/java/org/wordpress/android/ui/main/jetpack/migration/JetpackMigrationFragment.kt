@@ -30,7 +30,6 @@ import javax.inject.Inject
 class JetpackMigrationFragment : Fragment() {
     @Inject lateinit var dispatcher: Dispatcher
 
-    @Suppress("unused")
     private val viewModel: JetpackMigrationViewModel by viewModels()
 
     override fun onCreateView(
@@ -68,7 +67,6 @@ class JetpackMigrationFragment : Fragment() {
     }
 }
 
-@Suppress("UNUSED_PARAMETER")
 @Composable
 private fun JetpackMigrationScreen(viewModel: JetpackMigrationViewModel = viewModel()) {
     Box {
