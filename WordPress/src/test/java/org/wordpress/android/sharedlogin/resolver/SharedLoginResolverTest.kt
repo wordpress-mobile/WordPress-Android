@@ -82,7 +82,9 @@ class SharedLoginResolverTest {
         whenever(context.contentResolver).thenReturn(contentResolver)
         whenever(wordPressPublicData.currentPackageId()).thenReturn(wordPressCurrentPackageId)
         whenever(mockCursor.getString(0)).thenReturn(notLoggedInToken)
-        whenever(accountActionBuilderWrapper.newUpdateAccessTokenAction(sharedDataLoggedIn.token!!)).thenReturn(updateTokenAction)
+        whenever(accountActionBuilderWrapper.newUpdateAccessTokenAction(
+                sharedDataLoggedIn.token!!
+        )).thenReturn(updateTokenAction)
         whenever(contentResolverWrapper.queryUri(contentResolver, uriValue)).thenReturn(mockCursor)
     }
 
