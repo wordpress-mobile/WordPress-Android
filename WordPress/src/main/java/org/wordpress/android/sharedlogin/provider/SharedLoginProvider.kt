@@ -3,9 +3,13 @@ package org.wordpress.android.sharedlogin.provider
 import android.database.Cursor
 import android.net.Uri
 import org.wordpress.android.WordPress
+import org.wordpress.android.fluxc.persistence.AccountSqlUtils
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.fluxc.store.QuickStartStore
+import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.provider.query.QueryContentProvider
 import org.wordpress.android.provider.query.QueryResult
+import org.wordpress.android.sharedlogin.SharedLoginData
 import org.wordpress.android.util.config.JetpackProviderSyncFeatureConfig
 import org.wordpress.android.util.publicdata.ClientVerification
 import org.wordpress.android.util.signature.SignatureNotFoundException
@@ -13,9 +17,12 @@ import javax.inject.Inject
 
 class SharedLoginProvider : QueryContentProvider() {
     @Inject lateinit var accountStore: AccountStore
+    @Inject lateinit var siteStore: SiteStore
     @Inject lateinit var queryResult: QueryResult
     @Inject lateinit var clientVerification: ClientVerification
     @Inject lateinit var jetpackProviderSyncFeatureConfig: JetpackProviderSyncFeatureConfig
+
+    @Inject lateinit var quickStartStore: QuickStartStore
 
     override fun onCreate(): Boolean {
         return true
@@ -36,7 +43,17 @@ class SharedLoginProvider : QueryContentProvider() {
         return context?.let {
             try {
                 if (clientVerification.canTrust(callingPackage)) {
-                    queryResult.createCursor(accountStore.accessToken)
+                    val data = SharedLoginData(
+                            token = accountStore.accessToken,
+                            accounts = AccountSqlUtils.getAllAccounts(),
+                            sites = if (accountStore.hasAccessToken()) {
+                                siteStore.sites
+                            } else {
+                                // self-hosted only
+                                siteStore.sites.filter { site -> !site.isUsingWpComRestApi }
+                            }
+                    )
+                    queryResult.createCursor(data)
                 } else null
             } catch (signatureNotFoundException: SignatureNotFoundException) {
                 null
