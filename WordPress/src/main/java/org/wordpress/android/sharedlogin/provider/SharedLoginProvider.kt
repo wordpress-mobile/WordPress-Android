@@ -5,7 +5,6 @@ import android.net.Uri
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.persistence.AccountSqlUtils
 import org.wordpress.android.fluxc.store.AccountStore
-import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.provider.query.QueryContentProvider
 import org.wordpress.android.provider.query.QueryResult
@@ -21,8 +20,6 @@ class SharedLoginProvider : QueryContentProvider() {
     @Inject lateinit var queryResult: QueryResult
     @Inject lateinit var clientVerification: ClientVerification
     @Inject lateinit var jetpackProviderSyncFeatureConfig: JetpackProviderSyncFeatureConfig
-
-    @Inject lateinit var quickStartStore: QuickStartStore
 
     override fun onCreate(): Boolean {
         return true
