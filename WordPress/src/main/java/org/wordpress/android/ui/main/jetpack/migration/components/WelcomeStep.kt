@@ -99,6 +99,7 @@ val previewSiteListItems = mutableListOf<SiteListItemUiState>().apply {
     )
     AppTheme {
         Column {
+            UserAvatarImage(avatarUrl = "")
             WelcomeStep(uiState)
         }
     }

@@ -25,8 +25,8 @@ fun ColumnScope.UserAvatarImage(
     modifier: Modifier = Modifier,
 ) {
     val painter = rememberImagePainter(avatarUrl) {
-        placeholder(drawable.ic_placeholder_blavatar_grey_lighten_20_40dp)
-        error(drawable.ic_placeholder_blavatar_grey_lighten_20_40dp)
+        placeholder(drawable.bg_rectangle_placeholder_globe_32dp)
+        error(drawable.bg_rectangle_placeholder_globe_32dp)
         crossfade(true)
     }
     Image(
