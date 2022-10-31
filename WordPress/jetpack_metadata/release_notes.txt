@@ -1,3 +1,2 @@
 * [**] Added functionality to set the parent of a page from page settings in the editor. [https://github.com/wordpress-mobile/WordPress-Android/pull/17329]
-* [***] [Jetpack-only] Redesigned the landing screen. [https://github.com/wordpress-mobile/WordPress-Android/pull/17351]
-
+* [***] Redesigned the landing screen. [https://github.com/wordpress-mobile/WordPress-Android/pull/17351]
