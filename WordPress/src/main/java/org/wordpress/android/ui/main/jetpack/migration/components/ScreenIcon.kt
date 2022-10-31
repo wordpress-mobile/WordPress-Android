@@ -22,7 +22,7 @@ fun ScreenIcon(
             contentDescription = stringResource(R.string.icon_desc),
             modifier = modifier
                     .padding(horizontal = 30.dp)
-                    .padding(top = 4.dp)
+                    .padding(top = 34.dp)
                     .width(123.dp)
                     .height(65.dp)
     )

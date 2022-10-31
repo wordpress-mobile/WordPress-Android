@@ -29,11 +29,12 @@ import coil.compose.rememberImagePainter
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.modifiers.disableUserScroll
 import org.wordpress.android.ui.compose.unit.FontSize
-import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.SiteListItemUiState
+import org.wordpress.android.ui.compose.utils.uiStringText
+import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.StepUiState
 
 @Composable
 fun SiteList(
-    items: List<SiteListItemUiState>,
+    uiState: StepUiState.Welcome,
     listState: LazyListState,
     userScrollEnabled: Boolean = true,
     modifier: Modifier = Modifier,
@@ -44,23 +45,41 @@ fun SiteList(
             modifier = modifier
                     .composed { if (userScrollEnabled) this else disableUserScroll() }
                     .background(MaterialTheme.colors.background)
-                    .padding(horizontal = 30.dp)
                     .fillMaxHeight()
                     .then(blurModifier),
     ) {
+        item {
+            SiteListHeader(uiState)
+        }
         items(
-                items = items,
+                items = uiState.sites,
                 key = { it.id },
         ) { site ->
-            Row(verticalAlignment = Alignment.CenterVertically) {
+            Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(horizontal = 30.dp)
+            ) {
                 SiteIcon(site.iconUrl)
                 Column {
                     SiteName(site.name)
                     SiteAddress(site.url)
                 }
             }
-            Divider(color = colorResource(R.color.gray_10).copy(alpha = 0.5f))
+            Divider(
+                    color = colorResource(R.color.gray_10).copy(alpha = 0.5f),
+                    modifier = Modifier.padding(horizontal = 30.dp)
+            )
         }
+    }
+}
+
+@Composable
+private fun SiteListHeader(uiState: StepUiState.Welcome) = with(uiState) {
+    Column {
+        ScreenIcon(iconRes = screenIconRes)
+        Title(text = uiStringText(title))
+        Subtitle(text = uiStringText(subtitle))
+        Message(text = uiStringText(message))
     }
 }
 
