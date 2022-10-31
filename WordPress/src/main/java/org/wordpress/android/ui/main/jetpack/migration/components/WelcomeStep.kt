@@ -43,7 +43,12 @@ fun WelcomeStep(uiState: StepUiState.Welcome) = with(uiState) {
                     onClick = secondaryActionButton.onClick,
             )
         }
-        ListStateSync(listState, blurredListState)
+        LaunchedEffect(listState.firstVisibleItemIndex, listState.firstVisibleItemScrollOffset) {
+            blurredListState.scrollToItem(
+                    listState.firstVisibleItemIndex,
+                    listState.firstVisibleItemScrollOffset,
+            )
+        }
     }
 }
 
@@ -67,17 +72,6 @@ private fun ButtonsPanel(
                 )
             },
             content = content
-    )
-}
-
-@Composable
-private fun ListStateSync(
-    source: LazyListState,
-    target: LazyListState,
-) = LaunchedEffect(source.firstVisibleItemIndex, target.firstVisibleItemScrollOffset) {
-    target.scrollToItem(
-            source.firstVisibleItemIndex,
-            source.firstVisibleItemScrollOffset,
     )
 }
 
