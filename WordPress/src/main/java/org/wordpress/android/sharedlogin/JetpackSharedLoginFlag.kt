@@ -8,5 +8,5 @@ class JetpackSharedLoginFlag @Inject constructor(
     private val jetpackSharedLoginFeatureConfig: JetpackSharedLoginFeatureConfig,
     private val buildConfigWrapper: BuildConfigWrapper
 ) {
-    fun isEnabled() = jetpackSharedLoginFeatureConfig.isEnabled() && buildConfigWrapper.isJetpackApp
+    fun isEnabled() = buildConfigWrapper.isJetpackApp
 }

@@ -14,6 +14,8 @@ class JetpackProviderSyncFeatureConfig
         BuildConfig.JETPACK_PROVIDER_SYNC,
         JETPACK_PROVIDER_SYNC_REMOTE_FIELD
 ) {
+    override fun isEnabled() = true
+
     companion object {
         const val JETPACK_PROVIDER_SYNC_REMOTE_FIELD = "provider_sync_remote_field"
     }

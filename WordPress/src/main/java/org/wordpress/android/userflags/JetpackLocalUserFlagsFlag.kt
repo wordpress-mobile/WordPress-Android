@@ -8,5 +8,5 @@ class JetpackLocalUserFlagsFlag @Inject constructor(
     private val jetpackLocalUserFlagsFeatureConfig: JetpackLocalUserFlagsFeatureConfig,
     private val buildConfigWrapper: BuildConfigWrapper
 ) {
-    fun isEnabled() = jetpackLocalUserFlagsFeatureConfig.isEnabled() && buildConfigWrapper.isJetpackApp
+    fun isEnabled() = buildConfigWrapper.isJetpackApp
 }
