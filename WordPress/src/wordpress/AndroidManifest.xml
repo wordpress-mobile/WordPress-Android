@@ -21,5 +21,10 @@
             android:name=".reader.savedposts.provider.ReaderSavedPostsProvider"
             android:authorities="${applicationId}.ReaderSavedPostsProvider"
             android:exported="true" />
+
+        <provider
+            android:name=".localcontentmigration.LocalContentMigrationProvider"
+            android:authorities="${applicationId}.LocalContentMigrationProvider"
+            android:exported="true" />
     </application>
 </manifest>
