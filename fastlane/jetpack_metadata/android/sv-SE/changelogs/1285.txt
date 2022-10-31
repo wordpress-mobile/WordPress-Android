@@ -1,0 +1,5 @@
+21.0:
+– Lade till korrekta länkar till Automattic Family-appens kulor på Om-skärmen
+– Startskärmen har uppdaterats för Android-version 12 och uppåt
+– Meddelandetexten vid lyckad inloggning med QR-kod har ändrats från röd till svart
+– Skärmen Statistik har korrigerats och inkluderar nu västarabiska siffror för arabiska språkanvändare

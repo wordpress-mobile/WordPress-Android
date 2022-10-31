@@ -1,4 +1,0 @@
-20.9:
-- Het proces 'Raak bekend met je app' blijft nu op het scherm wanneer je je apparaat draait.
-- Lange titels worden correct weergegeven op de statistiekenkaart en worden niet meer afgebroken.
-- We hebben de Enter-toets toegevoegd aan samenvattingen van berichten voor eenvoudige regeleinden.

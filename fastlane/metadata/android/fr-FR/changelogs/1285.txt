@@ -1,0 +1,5 @@
+21.0 :
+- Suppression de l’application de la famille Automattic marbles de la page À propos
+- Mise à jour de l’écran de lancement pour les versions Android 12 et supérieures
+- Texte du message de réussite désormais noir au lieu de rouge pour les connexions par code QR
+- Correction de l’écran des statistiques qui inclut désormais les chiffres arabes occidentaux pour les utilisateurs de langue arabe
