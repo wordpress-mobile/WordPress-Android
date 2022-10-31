@@ -924,6 +924,11 @@
                 android:resource="@xml/stats_minified_widget_info"/>
         </receiver>
         <receiver android:name=".ui.notifications.DismissNotificationReceiver" />
+        <receiver
+            android:name=".ui.mysite.jetpackbadge.JetpackAppInstallReceiver"
+            android:enabled="true"
+            android:exported="false"
+            tools:ignore="ManifestResource"/>
         <service
             android:name=".ui.stats.refresh.lists.widget.WidgetService"
             android:permission="android.permission.BIND_REMOTEVIEWS" />
