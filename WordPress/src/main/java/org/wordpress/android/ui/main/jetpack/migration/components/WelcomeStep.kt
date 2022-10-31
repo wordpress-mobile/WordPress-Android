@@ -2,6 +2,7 @@ package org.wordpress.android.ui.main.jetpack.migration.components
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
@@ -97,6 +98,8 @@ val previewSiteListItems = mutableListOf<SiteListItemUiState>().apply {
             secondaryActionButton = WelcomeSecondaryButton {},
     )
     AppTheme {
-        WelcomeStep(uiState)
+        Column {
+            WelcomeStep(uiState)
+        }
     }
 }
