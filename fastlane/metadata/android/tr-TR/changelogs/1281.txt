@@ -1,4 +1,0 @@
-20.9:
-- "Uygulamanızı tanıyın" akışları artık cihazınızı döndürdüğünüzde de ekranda kalıyor.
-- İstatistik kartlarında uzun başlıklar artık kesilmeden düzgün bir şekilde görüntüleniyor.
-- Kolay satır sonları için Yazı özetlerine Enter tuşunu ekledik.
