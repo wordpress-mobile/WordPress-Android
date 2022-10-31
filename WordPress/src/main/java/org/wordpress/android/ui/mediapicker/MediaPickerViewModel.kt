@@ -263,25 +263,32 @@ class MediaPickerViewModel @Inject constructor(
             }
         }
         return if (domainModel.hasMore) {
-            val updatedItems = uiItems.toMutableList()
-            val loaderItem = if (domainModel.emptyState?.isError == true) {
-                NextPageLoader(false) {
-                    launch {
-                        retry()
-                    }
-                }
-            } else {
-                NextPageLoader(true) {
-                    launch {
-                        loadActions.send(NextPage)
-                    }
-                }
-            }
-            updatedItems.add(loaderItem)
-            Data(items = updatedItems)
+            loadNextPage(uiItems, domainModel)
         } else {
             Data(items = uiItems)
         }
+    }
+
+    private fun loadNextPage(
+        uiItems: List<MediaPickerUiItem>,
+        domainModel: DomainModel
+    ): Data {
+        val updatedItems = uiItems.toMutableList()
+        val loaderItem = if (domainModel.emptyState?.isError == true) {
+            NextPageLoader(false) {
+                launch {
+                    retry()
+                }
+            }
+        } else {
+            NextPageLoader(true) {
+                launch {
+                    loadActions.send(NextPage)
+                }
+            }
+        }
+        updatedItems.add(loaderItem)
+        return Data(items = updatedItems)
     }
 
     private fun buildActionModeUiModel(
