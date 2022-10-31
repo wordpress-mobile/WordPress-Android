@@ -4,7 +4,9 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -19,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -37,6 +40,7 @@ fun SiteList(
     uiState: StepUiState.Welcome,
     listState: LazyListState,
     userScrollEnabled: Boolean = true,
+    bottomPaddingPx: Int = 0,
     modifier: Modifier = Modifier,
     blurModifier: Modifier = Modifier,
 ) {
@@ -69,6 +73,10 @@ fun SiteList(
                     color = colorResource(R.color.gray_10).copy(alpha = 0.5f),
                     modifier = Modifier.padding(horizontal = 30.dp)
             )
+        }
+        item {
+            val bottomPadding = LocalDensity.current.run { bottomPaddingPx.toDp() + 30.dp }
+            Spacer(modifier = Modifier.height(bottomPadding))
         }
     }
 }
