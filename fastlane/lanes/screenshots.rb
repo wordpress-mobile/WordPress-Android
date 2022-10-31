@@ -9,12 +9,12 @@ SCREENSHOT_DEVICES = [
   {
     device_type: 'phone',
     device: 'pixel_3',
-    api: 28
+    api: 31
   },
   {
     device_type: 'tenInch',
     device: 'Nexus 9',
-    api: 28
+    api: 31
   }
 ].freeze
 
