@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2015-12-08 01:00:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/3.0.0-rc.4
+Generator: GlotPress/4.0.0-alpha.3
 Language: az
 -->
 <resources>
@@ -78,7 +78,6 @@ Language: az
     <string name="stats_followers_seconds_ago">saniyə öncə</string>
     <string name="stats_view_top_posts_and_pages">Yazı və Səhifələr</string>
     <string name="stats_view_videos">Videolar</string>
-    <string name="stats_view_publicize">Bəyan</string>
     <string name="stats_view_followers">İzləyici</string>
     <string name="stats_view_countries">Ölkələr</string>
     <string name="stats_likes">Bəyənmə</string>

@@ -31,6 +31,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.fluxc.store.AccountStore;
@@ -105,6 +106,7 @@ public class ReaderSubsActivity extends LocaleAwareActivity
 
         Toolbar toolbar = findViewById(R.id.toolbar_main);
         if (toolbar != null) {
+            toolbar.setTitle(R.string.reader_title_subs);
             setSupportActionBar(toolbar);
             toolbar.setNavigationOnClickListener(v -> onBackPressed());
         }
@@ -152,6 +154,8 @@ public class ReaderSubsActivity extends LocaleAwareActivity
                 AppPrefs.setReaderSubsPageTitle(pageTitle);
             }
         });
+
+        mReaderTracker.track(Stat.READER_MANAGE_VIEW_DISPLAYED);
     }
 
     @Override
@@ -238,6 +242,7 @@ public class ReaderSubsActivity extends LocaleAwareActivity
         if (!TextUtils.isEmpty(mLastAddedTagName)) {
             EventBus.getDefault().postSticky(new ReaderEvents.TagAdded(mLastAddedTagName));
         }
+        mReaderTracker.track(Stat.READER_MANAGE_VIEW_DISMISSED);
         super.onBackPressed();
     }
 

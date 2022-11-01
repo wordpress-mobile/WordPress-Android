@@ -38,6 +38,7 @@ class SiteCreationServiceManager @Inject constructor(
     private lateinit var serviceListener: SiteCreationServiceManagerListener
     private var isRetry by Delegates.notNull<Boolean>()
     private var newSiteRemoteId by Delegates.notNull<Long>()
+    private var newSiteUrl by Delegates.notNull<String>()
 
     fun onStart(
         languageWordPressId: String,
@@ -84,7 +85,7 @@ class SiteCreationServiceManager @Inject constructor(
                 createSite()
             }
             SUCCESS -> {
-                updateServiceState(SUCCESS, newSiteRemoteId)
+                updateServiceState(SUCCESS, Pair(newSiteRemoteId, newSiteUrl))
                 // This stat is part of a funnel that provides critical information.  Before
                 // making ANY modification to this stat please refer to: p4qSXL-35X-p2
                 tracker.trackSiteCreated(siteData.siteDesign)
@@ -115,6 +116,7 @@ class SiteCreationServiceManager @Inject constructor(
             }
 
             newSiteRemoteId = createSiteEvent.newSiteRemoteId
+            newSiteUrl = createSiteEvent.url ?: ""
             AppLog.i(T.SITE_CREATION, createSiteEvent.toString())
             if (createSiteEvent.isError) {
                 if (createSiteEvent.error.type == SiteStore.NewSiteErrorType.SITE_NAME_EXISTS) {

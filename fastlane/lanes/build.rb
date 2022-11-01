@@ -15,12 +15,7 @@ platform :android do
   #####################################################################################
   desc 'Builds and updates for distribution'
   lane :build_and_upload_release do |options|
-    android_build_prechecks(
-      skip_confirm: options[:skip_confirm],
-      alpha: false,
-      beta: false,
-      final: true
-    )
+    android_build_prechecks(skip_confirm: options[:skip_confirm], final: true) unless options[:skip_prechecks]
     android_build_preflight() unless options[:skip_prechecks]
 
     # Create the file names
@@ -48,44 +43,10 @@ platform :android do
   #####################################################################################
   desc 'Builds and updates for distribution'
   lane :build_and_upload_pre_releases do |options|
-    android_build_prechecks(
-      skip_confirm: options[:skip_confirm],
-      alpha: true,
-      beta: true,
-      final: false
-    )
+    android_build_prechecks(skip_confirm: options[:skip_confirm], beta: true) unless options[:skip_prechecks]
     android_build_preflight() unless options[:skip_prechecks]
     app = get_app_name_option!(options)
-    build_alpha(app: app, skip_prechecks: true, skip_confirm: options[:skip_confirm], upload_to_play_store: true, create_release: options[:create_release])
     build_beta(app: app, skip_prechecks: true, skip_confirm: options[:skip_confirm], upload_to_play_store: true, create_release: options[:create_release])
-  end
-
-  #####################################################################################
-  # build_alpha
-  # -----------------------------------------------------------------------------------
-  # This lane builds the app for internal testing and optionally uploads it
-  # -----------------------------------------------------------------------------------
-  # Usage:
-  # bundle exec fastlane build_alpha app:<wordpress|jetpack> [skip_confirm:<true|false>] [upload_to_play_store:<true|false>] [create_release:<true|false>]
-  #
-  # Example:
-  # bundle exec fastlane build_alpha app:wordpress create_release:true
-  # bundle exec fastlane build_alpha app:wordpress skip_confirm:true upload_to_play_store:true
-  # bundle exec fastlane build_alpha app:jetpack
-  #####################################################################################
-  desc 'Builds and updates for distribution'
-  lane :build_alpha do |options|
-    android_build_prechecks(skip_confirm: options[:skip_confirm], alpha: true) unless options[:skip_prechecks]
-    android_build_preflight() unless options[:skip_prechecks]
-
-    # Create the file names
-    app = get_app_name_option!(options)
-    version = android_get_alpha_version()
-    build_bundle(app: app, version: version, flavor: 'Zalpha', buildType: 'Release')
-
-    upload_build_to_play_store(app: app, version: version, track: 'alpha') if options[:upload_to_play_store]
-
-    create_gh_release(app: app, version: version, prerelease: true) if options[:create_release]
   end
 
   #####################################################################################
@@ -117,34 +78,6 @@ platform :android do
   end
 
   #####################################################################################
-  # build_internal
-  # -----------------------------------------------------------------------------------
-  # This lane builds the app for restricted internal testing, and optionally uploads it to PlayStore's Internal track
-  # -----------------------------------------------------------------------------------
-  # Usage:
-  # bundle exec fastlane build_internal app:<wordpress|jetpack> [skip_confirm:<true|false>] [upload_to_play_store:<true|false>] [create_release:<true|false>]
-  #
-  # Example:
-  # bundle exec fastlane build_internal app:wordpress
-  # bundle exec fastlane build_internal app:wordpress skip_confirm:true upload_to_play_store:true
-  # bundle exec fastlane build_internal app:jetpack create_release:true
-  #####################################################################################
-  desc 'Builds and updates for internal testing'
-  lane :build_internal do |options|
-    android_build_prechecks(skip_confirm: options[:skip_confirm]) unless options[:skip_prechecks]
-    android_build_preflight() unless options[:skip_prechecks]
-
-    # Create the file names
-    app = get_app_name_option!(options)
-    version = android_get_release_version()
-    build_bundle(app: app, version: version, flavor: 'Zalpha', buildType: 'Debug')
-
-    upload_build_to_play_store(app: app, version: version, track: 'internal') if options[:upload_to_play_store]
-
-    create_gh_release(app: app, version: version, prerelease: true) if options[:create_release]
-  end
-
-  #####################################################################################
   # upload_build_to_play_store
   # -----------------------------------------------------------------------------------
   # This lane uploads the build to Play Store for the given version to the given track
@@ -154,12 +87,10 @@ platform :android do
   #
   # Example:
   # bundle exec fastlane upload_build_to_play_store app:wordpress version:15.0 track:production
-  # bundle exec fastlane upload_build_to_play_store app:wordpress version:alpha-228 track:alpha
   # bundle exec fastlane upload_build_to_play_store app:jetpack version:15.0-rc-1 track:beta
   #####################################################################################
   desc 'Upload Build to Play Store'
   lane :upload_build_to_play_store do |options|
-
     app = get_app_name_option!(options)
     package_name = APP_SPECIFIC_VALUES[app.to_sym][:package_name]
     metadata_dir = File.join('fastlane', APP_SPECIFIC_VALUES[app.to_sym][:metadata_dir], 'android')
@@ -173,7 +104,7 @@ platform :android do
 
     aab_file_path = bundle_file_path(app, version)
 
-    if File.exist? aab_file_path then
+    if File.exist? aab_file_path
       retry_count = 2
       begin
         upload_to_play_store(
@@ -182,17 +113,17 @@ platform :android do
           track: options[:track],
           release_status: 'draft',
           metadata_path: metadata_dir,
-          skip_upload_metadata: (options[:track] != 'production'), # Only update app title/description/etc. if uploading for Production, skip for alpha/beta tracks
+          skip_upload_metadata: (options[:track] != 'production'), # Only update app title/description/etc. if uploading for Production, skip for beta tracks
           skip_upload_changelogs: false,
           skip_upload_images: true,
           skip_upload_screenshots: true,
           json_key: UPLOAD_TO_PLAY_STORE_JSON_KEY
         )
-      rescue FastlaneCore::Interface::FastlaneError => ex
+      rescue FastlaneCore::Interface::FastlaneError => e
         # Sometimes the upload fails randomly with a "Google Api Error: Invalid request - This Edit has been deleted.".
-        # It seems one reason might be a race condition when we do multiple edits at the exact same time (WP alpha, WP beta, JP beta). Retrying usually fixes it
-        if ex.message.start_with?('Google Api Error') && (retry_count -= 1) > 0
-          UI.error "Upload failed with Google API error. Retrying in 2mn..."
+        # It seems one reason might be a race condition when we do multiple edits at the exact same time (WP beta, JP beta). Retrying usually fixes it
+        if e.message.start_with?('Google Api Error') && (retry_count -= 1) > 0
+          UI.error 'Upload failed with Google API error. Retrying in 2mn...'
           sleep(120)
           retry
         end
@@ -204,12 +135,56 @@ platform :android do
   end
 
   #####################################################################################
+  # build_and_upload_installable_build
+  # -----------------------------------------------------------------------------------
+  # Build a WordPress Installable Build and make it available for download
+  # -----------------------------------------------------------------------------------
+  # Usage:
+  # bundle exec fastlane build_and_upload_installable_build
+  #####################################################################################
+  desc 'Build an Installable Build and make it available for download'
+  lane :build_and_upload_wordpress_installable_build do
+    UI.user_error!("'BUILDKITE_ARTIFACTS_S3_BUCKET' must be defined as an environment variable.") unless ENV['BUILDKITE_ARTIFACTS_S3_BUCKET']
+
+    gradle(
+      task: 'assemble',
+      flavor: "WordPress#{INSTALLABLE_BUILD_FLAVOR}",
+      build_type: INSTALLABLE_BUILD_TYPE,
+      properties: { installableBuildVersionName: generate_installable_build_number }
+    )
+
+    upload_installable_build(product: 'WordPress')
+  end
+
+  #####################################################################################
+  # build_and_upload_jetpack_installable_build
+  # -----------------------------------------------------------------------------------
+  # Build a Jetpack Installable Build and make it available for download
+  # -----------------------------------------------------------------------------------
+  # Usage:
+  # bundle exec fastlane build_and_upload_installable_build
+  #####################################################################################
+  desc 'Build an Installable Build and make it available for download'
+  lane :build_and_upload_jetpack_installable_build do
+    UI.user_error!("'BUILDKITE_ARTIFACTS_S3_BUCKET' must be defined as an environment variable.") unless ENV['BUILDKITE_ARTIFACTS_S3_BUCKET']
+
+    gradle(
+      task: 'assemble',
+      flavor: "Jetpack#{INSTALLABLE_BUILD_FLAVOR}",
+      build_type: INSTALLABLE_BUILD_TYPE,
+      properties: { installableBuildVersionName: generate_installable_build_number }
+    )
+
+    upload_installable_build(product: 'Jetpack')
+  end
+
+  #####################################################################################
   # build_bundle
   # -----------------------------------------------------------------------------------
   # This lane builds an app bundle
   # -----------------------------------------------------------------------------------
   # Usage:
-  # bundle exec fastlane build_bundle app:<wordpress|jetpack> version:<version> flavor:<flavor> buildType:<debug|release> [skip_lint:<true|false>]
+  # bundle exec fastlane build_bundle app:<wordpress|jetpack> version:<versionName,versionCode> flavor:<flavor> buildType:<debug|release> [skip_lint:<true|false>]
   #####################################################################################
   desc 'Builds an app bundle'
   lane :build_bundle do |options|
@@ -223,6 +198,10 @@ platform :android do
     end
 
     prefix = APP_SPECIFIC_VALUES[app.to_sym][:bundle_name_prefix]
+    if version.is_a?(String) # for when calling from command line
+      (version_name, version_code) = version.split(',')
+      version = { 'name' => version_name, 'code' => version_code || '1' }
+    end
     name = "#{prefix}-#{version['name']}.aab"
 
     aab_file = "org.wordpress.android-#{app}-#{options[:flavor]}-#{options[:buildType]}.aab".downcase
@@ -261,5 +240,69 @@ platform :android do
       sh("echo \"Bundle ready: #{name}\" >> #{logfile_path}")
     end
     "#{build_dir}#{name}"
+  end
+
+  # Uploads the apk built by the `gradle` (i.e. `SharedValues::GRADLE_APK_OUTPUT_PATH`) to S3 then comment on the PR to provide the download link
+  #
+  # @param [String] product the display name of the app to upload to S3. 'WordPress' or 'Jetpack'
+  #
+  def upload_installable_build(product:)
+    filename = "#{product.downcase}-installable-build-#{generate_installable_build_number}.apk"
+
+    upload_path = upload_to_s3(
+      bucket: 'a8c-apps-public-artifacts',
+      key: filename,
+      file: lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH]
+    )
+
+    return if ENV['BUILDKITE_PULL_REQUEST'].nil?
+
+    install_url = "#{INSTALLABLE_BUILD_DOMAIN}/#{upload_path}"
+    qr_code_url = "https://chart.googleapis.com/chart?chs=500x500&cht=qr&chl=#{CGI.escape(install_url)}&choe=UTF-8"
+    icon = "<img alt='#{product}' align='top' src='https://raw.githubusercontent.com/buildkite/emojis/main/img-buildkite-64/#{product.downcase}.png' width='20px' />"
+    comment_body = <<~PR_COMMENT
+      <details>
+        <summary>#{icon}📲 You can test these changes on #{product} by <a href='#{install_url}'>downloading <tt>#{filename}</tt></a></summary>
+        <table><tr>
+          <td width='250' rowspan='5'><a href='#{install_url}'><img src='#{qr_code_url}' width='250' height='250' /></a></td>
+          <td colspan='2'>💡 Scan this QR code with your Android phone to download and install the APK directly on it.</td>
+        </tr>
+        <tr><td width='150px'><b>App</b></td><td><tt>#{product}</tt></td></tr>
+        <tr><td><b>Build Flavor</b></td><td><tt>#{INSTALLABLE_BUILD_FLAVOR}</tt></td></tr>
+        <tr><td><b>Build Type</b></td><td><tt>#{INSTALLABLE_BUILD_TYPE}</tt></td></tr>
+        <tr><td><b>Commit</b></td><td>#{ENV['BUILDKITE_COMMIT']}</td></tr>
+        </table>
+      </details>
+      <em>Note: This installable build uses the <tt>#{INSTALLABLE_BUILD_FLAVOR}#{INSTALLABLE_BUILD_TYPE}</tt> build flavor, and does not support Google Login.</em>
+    PR_COMMENT
+
+    comment_on_pr(
+      project: GHHELPER_REPO,
+      pr_number: Integer(ENV['BUILDKITE_PULL_REQUEST']),
+      reuse_identifier: "#{product.downcase}-installable-build-link",
+      body: comment_body
+    )
+
+    if ENV['BUILDKITE']
+      message = "#{product} Installable Build: [#{filename}](#{install_url})"
+      sh('buildkite-agent', 'annotate', message, '--style', 'info', '--context', "installable-build-#{product}")
+    end
+  end
+
+  # This function is Buildkite-specific
+  def generate_installable_build_number
+    if ENV['BUILDKITE']
+      commit = ENV['BUILDKITE_COMMIT'][0, 7]
+      branch = ENV['BUILDKITE_BRANCH'].parameterize
+      pr_num = ENV['BUILDKITE_PULL_REQUEST']
+
+      pr_num == 'false' ? "#{branch}-#{commit}" : "pr#{pr_num}-#{commit}"
+    else
+      repo = Git.open(PROJECT_ROOT_FOLDER)
+      commit = repo.current_branch.parameterize
+      branch = repo.revparse('HEAD')[0, 7]
+
+      "#{branch}-#{commit}"
+    end
   end
 end

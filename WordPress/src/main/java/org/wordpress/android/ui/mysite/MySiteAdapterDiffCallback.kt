@@ -11,19 +11,11 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.DynamicCard.QuickStartD
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.CategoryHeaderItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.InfoItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.ListItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.JetpackBadge
 
-class MySiteAdapterDiffCallback(
-    private val oldCardAndItems: List<MySiteCardAndItem>,
-    private val updatedCardAndItems: List<MySiteCardAndItem>
-) : DiffUtil.Callback() {
-    override fun getOldListSize(): Int = oldCardAndItems.size
-
-    override fun getNewListSize(): Int = updatedCardAndItems.size
-
-    @Suppress("ComplexMethod")
-    override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        val oldItem = oldCardAndItems[oldItemPosition]
-        val updatedItem = updatedCardAndItems[newItemPosition]
+@Suppress("ComplexMethod")
+object MySiteAdapterDiffCallback : DiffUtil.ItemCallback<MySiteCardAndItem>() {
+    override fun areItemsTheSame(oldItem: MySiteCardAndItem, updatedItem: MySiteCardAndItem): Boolean {
         return oldItem.type == updatedItem.type && when {
             oldItem is QuickActionsCard && updatedItem is QuickActionsCard -> true
             oldItem is QuickLinkRibbon && updatedItem is QuickLinkRibbon -> true
@@ -34,10 +26,13 @@ class MySiteAdapterDiffCallback(
             oldItem is CategoryHeaderItem && updatedItem is CategoryHeaderItem -> oldItem.title == updatedItem.title
             oldItem is ListItem && updatedItem is ListItem -> oldItem.primaryText == updatedItem.primaryText
             oldItem is DashboardCards && updatedItem is DashboardCards -> true
+            oldItem is JetpackBadge && updatedItem is JetpackBadge -> true
             else -> throw NotImplementedException("Diff not implemented yet")
         }
     }
 
-    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int) =
-            oldCardAndItems[oldItemPosition] == updatedCardAndItems[newItemPosition]
+    override fun areContentsTheSame(oldItem: MySiteCardAndItem, newItem: MySiteCardAndItem): Boolean {
+        if (oldItem.activeQuickStartItem || newItem.activeQuickStartItem) return false
+        return oldItem == newItem
+    }
 }

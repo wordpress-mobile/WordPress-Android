@@ -3,6 +3,7 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases
 import android.view.View
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.CoroutineDispatcher
+import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
@@ -19,6 +20,7 @@ import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewUrl
 import org.wordpress.android.ui.stats.refresh.lists.BLOCK_ITEM_COUNT
 import org.wordpress.android.ui.stats.refresh.lists.VIEW_ALL_ITEM_COUNT
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK_DETAIL
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.VIEW_ALL
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Divider
@@ -31,7 +33,8 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListI
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.IconStyle.NORMAL
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.TextStyle
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.TextStyle.LIGHT
-import org.wordpress.android.ui.utils.ListItemInteraction.Companion.create
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.PieChartItem
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.PieChartItem.Pie
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularStatefulUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularUseCaseFactory
@@ -42,13 +45,17 @@ import org.wordpress.android.ui.stats.refresh.utils.ReferrerPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.ui.stats.refresh.utils.trackGranular
+import org.wordpress.android.ui.utils.ListItemInteraction.Companion.create
 import org.wordpress.android.util.UrlUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.widgets.WPSnackbar
 import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
+import kotlin.math.min
 
+@Suppress("LongParameterList")
 class ReferrersUseCase(
     statsGranularity: StatsGranularity,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
@@ -59,8 +66,9 @@ class ReferrersUseCase(
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val contentDescriptionHelper: ContentDescriptionHelper,
     private val statsUtils: StatsUtils,
+    private val resourceProvider: ResourceProvider,
     private val useCaseMode: UseCaseMode,
-    private val popupMenuHandler: ReferrerPopupMenuHandler
+    private val popupMenuHandler: ReferrerPopupMenuHandler,
 ) : GranularStatefulUseCase<ReferrersModel, SelectedGroup>(
         REFERRERS,
         mainDispatcher,
@@ -70,7 +78,8 @@ class ReferrersUseCase(
         statsGranularity,
         SelectedGroup()
 ) {
-    private val itemsToLoad = if (useCaseMode == VIEW_ALL) VIEW_ALL_ITEM_COUNT else BLOCK_ITEM_COUNT
+    private val itemsToLoad = if (useCaseMode == BLOCK) BLOCK_ITEM_COUNT else VIEW_ALL_ITEM_COUNT
+    private val itemsToShow = if (useCaseMode == VIEW_ALL) VIEW_ALL_ITEM_COUNT else BLOCK_ITEM_COUNT
 
     override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_referrers))
 
@@ -104,7 +113,7 @@ class ReferrersUseCase(
     override fun buildUiModel(domainModel: ReferrersModel, uiState: SelectedGroup): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
 
-        if (useCaseMode == BLOCK) {
+        if (useCaseMode != VIEW_ALL) {
             items.add(Title(R.string.stats_referrers))
         }
 
@@ -112,8 +121,12 @@ class ReferrersUseCase(
             items.add(Empty(R.string.stats_no_data_for_period))
         } else {
             val header = Header(R.string.stats_referrer_label, R.string.stats_referrer_views_label)
+            if (BuildConfig.IS_JETPACK_APP && useCaseMode == BLOCK_DETAIL) {
+                items.add(buildPieChartItem(domainModel))
+            }
             items.add(header)
-            domainModel.groups.forEachIndexed { index, group ->
+            val itemCount = min(itemsToShow, domainModel.groups.size)
+            domainModel.groups.subList(0, itemCount).forEachIndexed { index, group ->
                 val contentDescription =
                         contentDescriptionHelper.buildContentDescription(
                                 header,
@@ -184,7 +197,9 @@ class ReferrersUseCase(
                 }
             }
 
-            if (useCaseMode == BLOCK && domainModel.hasMore) {
+            val shouldShowViewMore = itemCount < domainModel.groups.size ||
+                    (useCaseMode == BLOCK && domainModel.hasMore)
+            if (shouldShowViewMore) {
                 items.add(
                         Link(
                                 text = R.string.stats_insights_view_more,
@@ -194,6 +209,55 @@ class ReferrersUseCase(
             }
         }
         return items
+    }
+
+    private fun buildPieChartItem(domainModel: ReferrersModel): PieChartItem {
+        var firstPie: Pie? = null
+        var secondPie: Pie? = null
+        val wordPressGroup = domainModel.groups.find { it.groupId == GROUP_ID_WORDPRESS }
+        val searchGroup = domainModel.groups.find { it.groupId == GROUP_ID_SEARCH }
+
+        // If the wordpress group and search group can be found add them, otherwise add the first and second groups
+        if (wordPressGroup != null && searchGroup != null) {
+            firstPie = Pie(
+                    resourceProvider.getString(R.string.stats_referrers_pie_chart_wordpress),
+                    wordPressGroup.total ?: 0
+            )
+
+            secondPie = Pie(
+                    resourceProvider.getString(R.string.stats_referrers_pie_chart_search),
+                    searchGroup.total ?: 0
+            )
+        } else {
+            if (domainModel.groups.isNotEmpty()) {
+                firstPie = Pie(domainModel.groups.first().name.orEmpty(), domainModel.groups.first().total ?: 0)
+            }
+            if (domainModel.groups.size > 1) {
+                secondPie = Pie(domainModel.groups[1].name.orEmpty(), domainModel.groups[1].total ?: 0)
+            }
+        }
+
+        val othersPie = if (domainModel.groups.size > 2) {
+            Pie(
+                    resourceProvider.getString(R.string.stats_referrers_pie_chart_others),
+                    domainModel.totalViews - (firstPie?.value ?: 0) - (secondPie?.value ?: 0)
+            )
+        } else {
+            null
+        }
+        val pies = listOfNotNull(firstPie, secondPie, othersPie)
+        val totalLabel = resourceProvider.getString(R.string.stats_referrers_pie_chart_total_label)
+        val totalValue = pies.sumOf { it.value }
+        return PieChartItem(
+                pies,
+                totalLabel,
+                statsUtils.toFormattedString(totalValue),
+                COLOR_LIST,
+                contentDescriptionHelper.buildContentDescription(
+                        R.string.stats_referrers_pie_chart_total_label,
+                        totalValue
+                )
+        )
     }
 
     private fun buildTextStyle(spam: Boolean) = if (spam) LIGHT else TextStyle.NORMAL
@@ -282,6 +346,7 @@ class ReferrersUseCase(
         private val selectedDateProvider: SelectedDateProvider,
         private val contentDescriptionHelper: ContentDescriptionHelper,
         private val statsUtils: StatsUtils,
+        private val resourceProvider: ResourceProvider,
         private val analyticsTracker: AnalyticsTrackerWrapper,
         private val popupMenuHandler: ReferrerPopupMenuHandler
     ) : GranularUseCaseFactory {
@@ -296,8 +361,15 @@ class ReferrersUseCase(
                         analyticsTracker,
                         contentDescriptionHelper,
                         statsUtils,
+                        resourceProvider,
                         useCaseMode,
                         popupMenuHandler
                 )
+    }
+
+    companion object {
+        private val COLOR_LIST = listOf(R.color.blue, R.color.blue_80, R.color.blue_5)
+        private const val GROUP_ID_WORDPRESS = "WordPress.com Reader"
+        private const val GROUP_ID_SEARCH = "Search Engines"
     }
 }

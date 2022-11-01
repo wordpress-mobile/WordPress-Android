@@ -1,5 +1,0 @@
-19.5 :
-- Nous avons apporté quelques retouches au message d’erreur concernant le chargement de contenu multimédia dans les blocs.
-- Les GIF animés affichent désormais un badge distinctif.
-- La structure des blocs a changé pour permettre l’affichage des listes ordonnées dans l’éditeur.
-- Vous pouvez désactiver les notifications de résumé hebdomadaire pour tous vos sites depuis la section d’informations de l’application.

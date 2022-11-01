@@ -22,7 +22,6 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import javax.inject.Inject
 
-@Suppress("TooManyFunctions")
 class PostCardBuilder @Inject constructor(
     private val localeManagerWrapper: LocaleManagerWrapper,
     private val appLogWrapper: AppLogWrapper
@@ -47,9 +46,9 @@ class PostCardBuilder @Inject constructor(
                 posts?.hasPublished?.takeIf { !posts.hasDraftsOrScheduledPosts() }
                         ?.let { hasPublished ->
                             if (hasPublished) {
-                                add(createNextPostCard(params.onFooterLinkClick))
+                                add(createNextPostCard(params.onPostItemClick, params.onFooterLinkClick))
                             } else {
-                                add(createFirstPostCard(params.onFooterLinkClick))
+                                add(createFirstPostCard(params.onPostItemClick, params.onFooterLinkClick))
                             }
                         }
                 posts?.draft?.takeIf { it.isNotEmpty() }?.let { add(it.createDraftPostsCard(params)) }
@@ -60,29 +59,41 @@ class PostCardBuilder @Inject constructor(
             title = UiStringRes(R.string.posts)
     )
 
-    private fun createFirstPostCard(onFooterLinkClick: (postCardType: PostCardType) -> Unit) =
-            PostCardWithoutPostItems(
-                    postCardType = PostCardType.CREATE_FIRST,
-                    title = UiStringRes(R.string.my_site_create_first_post_title),
-                    excerpt = UiStringRes(R.string.my_site_create_first_post_excerpt),
-                    imageRes = R.drawable.img_write_212dp,
-                    footerLink = FooterLink(
-                            label = UiStringRes(R.string.my_site_post_card_link_create_post),
-                            onClick = onFooterLinkClick
-                    )
+    private fun createFirstPostCard(
+        onPostItemClick: (params: PostItemClickParams) -> Unit,
+        onFooterLinkClick: (postCardType: PostCardType) -> Unit
+    ) = PostCardWithoutPostItems(
+            postCardType = PostCardType.CREATE_FIRST,
+            title = UiStringRes(R.string.my_site_create_first_post_title),
+            excerpt = UiStringRes(R.string.my_site_create_first_post_excerpt),
+            imageRes = R.drawable.img_write_212dp,
+            footerLink = FooterLink(
+                    label = UiStringRes(R.string.my_site_post_card_link_create_post),
+                    onClick = onFooterLinkClick
+            ),
+            onClick = ListItemInteraction.create(
+                    PostItemClickParams(postCardType = PostCardType.CREATE_FIRST, postId = NOT_SET),
+                    onPostItemClick
             )
+    )
 
-    private fun createNextPostCard(onFooterLinkClick: (postCardType: PostCardType) -> Unit) =
-            PostCardWithoutPostItems(
-                    postCardType = PostCardType.CREATE_NEXT,
-                    title = UiStringRes(R.string.my_site_create_next_post_title),
-                    excerpt = UiStringRes(R.string.my_site_create_next_post_excerpt),
-                    imageRes = R.drawable.img_write_212dp,
-                    footerLink = FooterLink(
-                            label = UiStringRes(R.string.my_site_post_card_link_create_post),
-                            onClick = onFooterLinkClick
-                    )
+    private fun createNextPostCard(
+        onPostItemClick: (params: PostItemClickParams) -> Unit,
+        onFooterLinkClick: (postCardType: PostCardType) -> Unit
+    ) = PostCardWithoutPostItems(
+            postCardType = PostCardType.CREATE_NEXT,
+            title = UiStringRes(R.string.my_site_create_next_post_title),
+            excerpt = UiStringRes(R.string.my_site_create_next_post_excerpt),
+            imageRes = R.drawable.img_write_212dp,
+            footerLink = FooterLink(
+                    label = UiStringRes(R.string.my_site_post_card_link_create_post),
+                    onClick = onFooterLinkClick
+            ),
+            onClick = ListItemInteraction.create(
+                    PostItemClickParams(postCardType = PostCardType.CREATE_NEXT, postId = NOT_SET),
+                    onPostItemClick
             )
+    )
 
     private fun List<PostCardModel>.createDraftPostsCard(params: PostCardBuilderParams) =
             PostCardWithPostItems(
@@ -150,5 +161,6 @@ class PostCardBuilder @Inject constructor(
 
     companion object {
         private const val MONTH_DAY_FORMAT = "MMM d"
+        const val NOT_SET = -1
     }
 }

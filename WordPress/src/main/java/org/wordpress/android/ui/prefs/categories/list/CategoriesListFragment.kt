@@ -18,7 +18,6 @@ import org.wordpress.android.ui.prefs.categories.list.UiState.Loading
 import org.wordpress.android.ui.utils.UiHelpers
 import javax.inject.Inject
 
-@Suppress("TooManyFunctions")
 class CategoriesListFragment : Fragment(R.layout.site_settings_categories_list_fragment) {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: CategoriesListViewModel
@@ -38,7 +37,7 @@ class CategoriesListFragment : Fragment(R.layout.site_settings_categories_list_f
     }
 
     private fun initDagger() {
-        (requireActivity().application as WordPress).component()?.inject(this)
+        (requireActivity().application as WordPress).component().inject(this)
     }
 
     private fun SiteSettingsCategoriesListFragmentBinding.initViewModel(site: SiteModel) {

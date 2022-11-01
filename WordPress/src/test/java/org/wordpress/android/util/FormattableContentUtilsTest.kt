@@ -2,7 +2,6 @@ package org.wordpress.android.util
 
 import com.nhaarman.mockitokotlin2.whenever
 import org.junit.Assert.assertEquals
-import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
@@ -28,10 +27,6 @@ class FormattableContentUtilsTest {
     lateinit var ids: FormattableMeta.Ids
     @Mock
     lateinit var meta: FormattableMeta
-
-    @Before
-    fun setUp() {
-    }
 
     @Test
     fun verifyTextOrEmptyReturnsText() {

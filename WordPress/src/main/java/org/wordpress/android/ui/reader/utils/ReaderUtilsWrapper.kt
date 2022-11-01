@@ -10,12 +10,10 @@ import javax.inject.Inject
 /**
  * Injectable wrapper around ReaderUtils.
  *
- * ReaderUtils interface is consisted of static methods, which make the client code difficult to test/mock. Main purpose of
- * this wrapper is to make testing easier.
- *
+ * ReaderUtils interface is consisted of static methods, which make the client code difficult to test/mock.
+ * Main purpose of this wrapper is to make testing easier.
  */
 @Reusable
-@Suppress("TooManyFunctions")
 class ReaderUtilsWrapper @Inject constructor(
     private val appContext: Context,
     private val tagUpdateClientUtilsProvider: TagUpdateClientUtilsProvider

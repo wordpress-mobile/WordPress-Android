@@ -159,7 +159,7 @@ class PrepublishingAddCategoryViewModelTest : BaseUnitTest() {
         val uiStates = mutableListOf<UiState>()
         viewModel.uiState.observeForever { uiStates.add(it) }
 
-        val navigateBack = mutableListOf<Bundle>()
+        val navigateBack = mutableListOf<Bundle?>()
         viewModel.navigateBack.observeForever { navigateBack.add(it) }
 
         val dismissKeyboard = mutableListOf<Event<Unit>>()
@@ -183,7 +183,7 @@ class PrepublishingAddCategoryViewModelTest : BaseUnitTest() {
     // set up observers
     private data class Observers(
         val uiStates: List<UiState>,
-        val navigateBack: List<Bundle>,
+        val navigateBack: List<Bundle?>,
         val dismissKeyboard: List<Event<Unit>>,
         val toolbarTitleUiState: List<UiString>,
         val snackbarMsgs: List<Event<SnackbarMessageHolder>>

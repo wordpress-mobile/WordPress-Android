@@ -1,5 +1,0 @@
-19.5:
-- Medya yükleme bloklarındaki yükleme hatası metninde ince ayar yaptık.
-- Hareketli GIF'lerde artık bir GIF rozeti görüntüleniyor.
-- Sıralı listelerdeki blok ayarı değişiklikleri artık düzenleyicide de görünüyor.
-- Uygulama Bilgisi'nde tüm siteler için Haftalık Özet bildirimlerini devre dışı bırakabilirsiniz.

@@ -26,6 +26,7 @@ import org.wordpress.android.util.WPMediaUtilsWrapper
 import javax.inject.Inject
 import javax.inject.Named
 
+@Suppress("LongParameterList")
 class GifMediaInsertUseCase(
     private val context: Context,
     private val site: SiteModel,
@@ -38,6 +39,7 @@ class GifMediaInsertUseCase(
     override val actionTitle: Int
         get() = R.string.media_uploading_gif_library_photo
 
+    @Suppress("SwallowedException")
     override suspend fun insert(identifiers: List<Identifier>) = flow {
         emit(InsertModel.Progress(actionTitle))
         emit(coroutineScope {

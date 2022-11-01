@@ -138,6 +138,7 @@ public class ReaderBlogFragment extends Fragment
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mRecyclerView.setAdapter(getBlogAdapter());

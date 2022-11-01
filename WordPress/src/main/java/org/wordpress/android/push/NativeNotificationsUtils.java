@@ -1,7 +1,6 @@
 package org.wordpress.android.push;
 
 import android.content.Context;
-import android.content.Intent;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
@@ -63,10 +62,5 @@ public class NativeNotificationsUtils {
             final NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
             notificationManager.cancel(pushId);
         }
-    }
-
-    public static void hideStatusBar(Context context) {
-        Intent closeIntent = new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
-        context.sendBroadcast(closeIntent);
     }
 }

@@ -16,7 +16,7 @@ class ReaderPostTagsUiStateBuilder @Inject constructor(
 ) {
     private val maxWidthForChip: Int
         get() {
-            val width = DisplayUtils.getDisplayPixelWidth(contextProvider.getContext()) -
+            val width = DisplayUtils.getWindowPixelWidth(contextProvider.getContext()) -
                     resourceProvider.getDimensionPixelSize(R.dimen.reader_card_margin) * 2
             return (width * MAX_WIDTH_FACTOR).toInt()
         }

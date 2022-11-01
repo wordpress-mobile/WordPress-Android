@@ -8,7 +8,6 @@ import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.test.runBlockingTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Rule
@@ -33,6 +32,7 @@ import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.OpenFixThreats
 import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.ShowContactSupport
 import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.ShowJetpackSettings
 import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.ShowThreatDetails
+import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.VisitVaultPressDashboard
 import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState
 import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState.ContentUiState
 import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState.ErrorUiState
@@ -63,8 +63,9 @@ private const val ON_ENTER_SERVER_CREDS_MESSAGE_CLICKED_PARAM_POSITION = 7
 private const val TEST_SITE_ID = 1L
 private const val SERVER_CREDS_LINK = "${Constants.URL_JETPACK_SETTINGS}/$TEST_SITE_ID}"
 
-@ExperimentalCoroutinesApi
+@Suppress("LargeClass")
 @InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 class ScanViewModelTest : BaseUnitTest() {
     @Rule
     @JvmField val coroutineScope = MainCoroutineScopeRule()
@@ -259,17 +260,16 @@ class ScanViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given no network error ui state, when retry is clicked, then fetch scan state is triggered`() =
-            coroutineScope.runBlockingTest {
-                whenever(scanStore.getScanStateForSite(site)).thenReturn(null)
-                whenever(fetchScanStateUseCase.fetchScanState(site)).thenReturn(flowOf(Failure.NetworkUnavailable))
-                val uiStates = init().uiStates
+    fun `given no network error ui state, when retry is clicked, then fetch scan state is triggered`() = test {
+        whenever(scanStore.getScanStateForSite(site)).thenReturn(null)
+        whenever(fetchScanStateUseCase.fetchScanState(site)).thenReturn(flowOf(Failure.NetworkUnavailable))
+        val uiStates = init().uiStates
 
-                (uiStates.last() as ErrorUiState).action?.invoke()
-                advanceTimeBy(RETRY_DELAY)
+        (uiStates.last() as ErrorUiState).action?.invoke()
+        coroutineScope.advanceTimeBy(RETRY_DELAY)
 
-                verify(fetchScanStateUseCase, times(2)).fetchScanState(site)
-            }
+        verify(fetchScanStateUseCase, times(2)).fetchScanState(site)
+    }
 
     @Test
     fun `given request failed error ui state, when contact support is clicked, then contact support screen is shown`() =
@@ -281,6 +281,21 @@ class ScanViewModelTest : BaseUnitTest() {
                 (observers.uiStates.last() as ErrorUiState).action?.invoke()
 
                 assertThat(observers.navigation.last().peekContent()).isEqualTo(ShowContactSupport(site))
+            }
+
+    @Test
+    fun `given vault press active error state, when button is clicked, then vault press dashboard url is shown`() =
+            test {
+                whenever(scanStore.getScanStateForSite(site)).thenReturn(null)
+                whenever(fetchScanStateUseCase.fetchScanState(site)).thenReturn(flowOf(Failure.VaultPressActiveOnSite))
+                val observers = init()
+
+                (observers.uiStates.last() as ErrorUiState).action?.invoke()
+
+                assertThat(
+                        observers.navigation.last()
+                                .peekContent()
+                ).isEqualTo(VisitVaultPressDashboard(Constants.URL_VISIT_VAULTPRESS_DASHBOARD))
             }
 
     @Test
@@ -306,6 +321,32 @@ class ScanViewModelTest : BaseUnitTest() {
                     assertThat(imageColorResId).isEqualTo(R.color.gray)
                     assertThat(title).isEqualTo(UiStringRes(R.string.scan_multisite_not_supported_title))
                     assertThat(subtitle).isEqualTo(UiStringRes(R.string.scan_multisite_not_supported_subtitle))
+                }
+            }
+
+    @Test
+    fun `given vault press active on site, when scan state is fetched, then app is in VaultPressActiveOnSite state`() =
+            test {
+                val observers = initObservers()
+
+                fetchScanStateStatusForState(state = Failure.VaultPressActiveOnSite, observers = observers)
+
+                assertThat(observers.uiStates.last()).isInstanceOf(ErrorUiState.VaultPressActiveOnSite::class.java)
+            }
+
+    @Test
+    fun `given vault press active on site, when scan state is fetched, then corresponding error ui is shown`() =
+            test {
+                val observers = initObservers()
+
+                fetchScanStateStatusForState(state = Failure.VaultPressActiveOnSite, observers = observers)
+
+                val state = observers.uiStates.last() as ErrorUiState
+                with(state) {
+                    assertThat(image).isEqualTo(R.drawable.ic_shield_warning_white)
+                    assertThat(imageColorResId).isEqualTo(R.color.error_60)
+                    assertThat(title).isEqualTo(UiStringRes(R.string.scan_vault_press_active_on_site_title))
+                    assertThat(subtitle).isEqualTo(UiStringRes(R.string.scan_vault_press_active_on_site_subtitle))
                 }
             }
 

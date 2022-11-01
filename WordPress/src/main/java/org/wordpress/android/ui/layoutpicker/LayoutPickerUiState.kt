@@ -17,6 +17,7 @@ sealed class LayoutPickerUiState(
         override val isToolbarVisible: Boolean = false,
         val selectedCategoriesSlugs: ArrayList<String> = arrayListOf(),
         val selectedLayoutSlug: String? = null,
+        val isSelectedLayoutRecommended: Boolean = false,
         val loadedThumbnailSlugs: ArrayList<String> = arrayListOf(),
         val categories: List<CategoryListItemUiState> = listOf(),
         val layoutCategories: List<LayoutCategoryUiState> = listOf(),

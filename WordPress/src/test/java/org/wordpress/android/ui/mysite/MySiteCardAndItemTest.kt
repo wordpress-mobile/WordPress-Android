@@ -33,6 +33,13 @@ class MySiteCardAndItemTest {
     }
 
     @Test
+    fun `when focus point on subtitle, then site info block is active`() {
+        val siteInfoCard = initSiteInfoCard(showSubtitleFocusPoint = true)
+
+        assertThat(siteInfoCard.activeQuickStartItem).isTrue()
+    }
+
+    @Test
     fun `site info block is not active when focus point not added`() {
         val siteInfoCard = initSiteInfoCard()
 
@@ -41,6 +48,7 @@ class MySiteCardAndItemTest {
 
     private fun initSiteInfoCard(
         showTitleFocusPoint: Boolean = false,
+        showSubtitleFocusPoint: Boolean = false,
         showIconFocusPoint: Boolean = false
     ): SiteInfoHeaderCard {
         return SiteInfoHeaderCard(
@@ -48,6 +56,7 @@ class MySiteCardAndItemTest {
                 url = "url",
                 iconState = Visible(null),
                 showTitleFocusPoint = showTitleFocusPoint,
+                showSubtitleFocusPoint = showSubtitleFocusPoint,
                 showIconFocusPoint = showIconFocusPoint,
                 onTitleClick = null,
                 onIconClick = interaction,

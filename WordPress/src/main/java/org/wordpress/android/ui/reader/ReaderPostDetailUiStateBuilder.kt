@@ -216,7 +216,7 @@ class ReaderPostDetailUiStateBuilder @Inject constructor(
                 ReaderPostFeaturedImageUiState(
                         blogId = post.blogId,
                         url = buildReaderPostFeaturedImageUrl(post),
-                        height = (displayUtilsWrapper.getDisplayPixelHeight() *
+                        height = (displayUtilsWrapper.getWindowPixelHeight() *
                                 READER_POST_FEATURED_IMAGE_HEIGHT_PERCENT).toInt()
                 )
             }

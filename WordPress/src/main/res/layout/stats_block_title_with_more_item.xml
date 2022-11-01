@@ -1,32 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:gravity="center_vertical"
     android:layout_height="wrap_content"
-    android:paddingStart="@dimen/margin_extra_large"
-    android:paddingEnd="@dimen/margin_extra_large">
+    android:paddingTop="@dimen/margin_extra_large"
+    android:orientation="horizontal"
+    android:paddingHorizontal="@dimen/margin_extra_large">
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/text"
-        style="@style/TextAppearance.LoginFlow.Subtitle1"
-        android:layout_width="wrap_content"
+        style="@style/StatsBlockTitle"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_medium"
+        android:layout_weight="1"
         android:text="@string/unknown"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="@string/stats_insights_views_and_visitors"/>
+        tools:text="@string/stats_insights_views_and_visitors" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/view_more_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
         android:background="?attr/selectableItemBackgroundBorderless"
         android:text="@string/stats_insights_view_more"
-        android:textAllCaps="true"
-        app:layout_constraintBaseline_toBaselineOf="@id/text"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:textColor="?attr/wpColorOnSurfaceMedium"
+        android:textAllCaps="true" />
+</LinearLayout>

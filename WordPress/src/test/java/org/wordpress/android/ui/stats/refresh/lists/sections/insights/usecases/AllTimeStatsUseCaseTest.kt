@@ -142,7 +142,7 @@ class AllTimeStatsUseCaseTest : BaseUnitTest() {
             assertThat(this.startColumn.value).isEqualTo(posts.toString())
             assertThat(this.endColumn.label).isEqualTo(R.string.stats_insights_best_ever)
             assertThat(this.endColumn.value).isEqualTo(viewsBestDayTotal.toString())
-            assertThat(this.endColumn.tooltip).isEqualTo(bestDayTransformed)
+            assertThat(this.endColumn.highest).isEqualTo(bestDayTransformed)
         }
         verify(statsWidgetUpdaters, times(2)).updateAllTimeWidget(siteId)
     }

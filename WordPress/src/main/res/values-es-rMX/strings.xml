@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-04-05 13:17:37+0000
+Translation-Revision-Date: 2022-10-03 13:32:04+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/3.0.0-rc.4
+Generator: GlotPress/4.0.0-alpha.3
 Language: es_MX
 -->
 <resources>
@@ -14,6 +14,7 @@ Language: es_MX
     <string name="gutenberg_native_s_has_url_set">%s tiene una URL ya establecida</string>
     <string name="gutenberg_native_s_has_no_url_set">%s no tiene una URL establecida</string>
     <string name="gutenberg_native_s_converted_to_regular_blocks">%s convertido a bloques normales</string>
+    <string name="gutenberg_native_link_rel">rel del enlace</string>
     <string name="gutenberg_native_width_settings">Ajustes de medios</string>
     <string name="gutenberg_native_move_image_backward">Mover la imagen hacia atrás</string>
     <string name="gutenberg_native_move_image_forward">Mover la imagen hacia delante</string>
@@ -41,7 +42,6 @@ Language: es_MX
     <string name="backup_download_progress_header">Actualmente creando una copia de seguridad descargable de tu sitio</string>
     <string name="backup_download_progress_description_with_two_parameters">Estamos creando una copia de seguridad descargable de tu sitio desde %1$s %2$s.</string>
     <string name="backup_download_progress_icon_content_description">Creando un icono de copia de seguridad descargable</string>
-    <string name="backup_download_progress_label">%1$s%%</string>
     <string name="backup_download_complete_page_title">Tu copia de seguridad</string>
     <string name="backup_download_details_description_with_two_parameters">%1$s %2$s es el punto seleccionado para crear una copia de seguridad descargable.</string>
     <string name="backup_download_details_action_button_content_description">Crear un botón de copia de seguridad descargable</string>
@@ -106,7 +106,6 @@ Language: es_MX
     <string name="hpp_error_title">Los diseños no están disponibles sin conexión</string>
     <string name="hpp_error_subtitle">Toca en reintentar cuando vuelvas a estar conectado.</string>
     <string name="hpp_retry_error">Por favor, revisa tu conexión a Internet e inténtalo de nuevo.</string>
-    <string name="hpp_choose_error">Ha habido un error al seleccionar el diseño.</string>
     <string name="delete_button_alt">Borrar</string>
     <string name="label_next_button">Siguiente</string>
     <string name="label_done_button">Hecho</string>
@@ -128,8 +127,6 @@ Language: es_MX
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">Se ha abierto el menú de bloques desplazable. Selecciona un bloque.</string>
     <string name="gutenberg_native_scrollable_block_menu_closed">Se ha cerrado el menú de bloques desplazable.</string>
     <string name="hpp_choose_button">Elegir</string>
-    <string name="hpp_subtitle">Elige tu layout favorito de página de inicio. Puedes editarlo y personalizarlo más tarde.</string>
-    <string name="hpp_title">Elige un diseño</string>
     <string name="mlp_error_title">Los layouts no están disponibles debido a un error</string>
     <string name="prepublishing_nudges_add_category_button">Añadir categoría</string>
     <string name="prepublishing_nudges_toolbar_title_add_categories">Añadir una nueva categoría</string>
@@ -408,7 +405,6 @@ Language: es_MX
     <string name="reader_empty_followed_blogs_description">Cuando sigas sitios, verás aquí su contenido</string>
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">Toca dos veces para ir a los ajustes del color</string>
     <string name="feature_announcement_find_out_mode">Saber más</string>
-    <string name="feature_announcement_dialog_label">Qué hay de nuevo en WordPress</string>
     <string name="insert_label_with_count">Insertar %d</string>
     <string name="crop">recortar</string>
     <string name="error_failed_to_load_into_file">Fallo al cargar en el archivo, por favor, inténtalo de nuevo.</string>
@@ -504,7 +500,6 @@ Language: es_MX
     <string name="post_list_tab_trashed_posts">En la papelera</string>
     <string name="post_list_tab_scheduled_posts">Programada</string>
     <string name="post_list_tab_published_posts">Publicada</string>
-    <string name="sharing_facebook_account_must_have_pages">La conexión de Facebook no puede encontrar ninguna página. «Divulgar» no se puede conectar con los perfiles de Facebook, solo con las páginas publicadas.</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">No conectado</string>
     <string name="notifications_tab_title_likes">Me gusta</string>
     <string name="notifications_tab_title_follows">Seguimientos</string>
@@ -898,7 +893,6 @@ Language: es_MX
     <string name="app_rating_rate_later">Más tarde</string>
     <string name="app_rating_rate_now">Valorar ahora</string>
     <string name="app_rating_message">¡Qué gusto verte de nuevo! Si te está gustando la aplicación, nos encantaría que nos puntuases en la Google Play Store.</string>
-    <string name="app_rating_title">¿Estás disfrutando de WordPress?</string>
     <string name="stats_site_not_loaded_yet">Sitio aún no cargado</string>
     <string name="editor_post_converted_back_to_draft">Entrada convertida de nuevo a borrador</string>
     <string name="stats_fewer_posts">Menos entradas</string>
@@ -918,33 +912,19 @@ Language: es_MX
     <string name="plans_loading_error_no_plans_title">No se pueden cargar los Planes</string>
     <string name="exit">salir</string>
     <string name="quick_start_sites">Siguientes Pasos</string>
-    <string name="quick_start_complete_tasks_header">Completo (%d)</string>
-    <string name="quick_start_dialog_view_site_message">¡Disfruta tu producto terminado!</string>
     <string name="quick_start_dialog_upload_icon_message">Tus visitantes verán tu icono en su navegador. Agrega un icono personalizado para conseguir un aspecto profesional y refinado.</string>
-    <string name="quick_start_dialog_explore_plans_message_short">Toca en %1$s Plan %2$s para ver tu plan actual y otros planes disponibles</string>
-    <string name="quick_start_dialog_check_stats_message_short">Toca en %1$s Estadísticas %2$s para ver cómo está rindiendo tu sitio.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Toca en %1$s Icono de Tu Sitio %2$s para subir uno nuevo</string>
-    <string name="quick_start_dialog_explore_plans_title">Explorar planes</string>
-    <string name="quick_start_dialog_explore_plans_message">Aprende sobre las herramientas de mercadotecnia y SEO de nuestros planes de pago.</string>
     <string name="quick_start_dialog_enable_sharing_title">Activar compartir entradas</string>
     <string name="quick_start_dialog_enable_sharing_message">Comparte automáticamente nuevas entradas en tus cuentas de medios sociales.</string>
     <string name="quick_start_dialog_check_stats_title">Revisa las estadísticas de tu sitio</string>
-    <string name="quick_start_dialog_check_stats_message">Mantente al día sobre el rendimiento de tu sitio</string>
     <string name="quick_start_dialog_remove_next_steps_title">Eliminar Siguientes Pasos</string>
     <string name="quick_start_dialog_remove_next_steps_message">Eliminar los Siguientes Pasos ocultará todas las visitas guiadas de este sitio. Esta acción es irreversible.</string>
     <string name="quick_start_remove_next_steps_menu_title">Quitar esto</string>
-    <string name="quick_start_complete_view_subtitle">Felicidades por completar tu lista. Un trabajo bien hecho.</string>
-    <string name="quick_start_complete_view_title">¡Todas las tareas están completas!</string>
     <string name="quick_start_task_skip_menu_title">Saltar tarea</string>
-    <string name="quick_start_completed_tasks_header_chevron_collapse_desc">cerrar</string>
-    <string name="quick_start_completed_tasks_header_chevron_expand_desc">expandir</string>
     <string name="notification_channel_reminder_title">Recordatorio</string>
     <string name="stats_select_next_period_description">Elige el siguiente periodo</string>
     <string name="stats_select_previous_period_description">Elige el periodo anterior</string>
-    <string name="stats_most_popular_percent_views">%1$d%% de vistas</string>
     <string name="stats_insights_popular">Hora Más Popular</string>
-    <string name="stats_traffic_change">%1$s (%2$s%%)</string>
-    <string name="stats_traffic_increase">+%1$s (%2$s%%)</string>
     <string name="new_site_creation_site_preview_content_description">Mostrando la vista previa del sitio</string>
     <string name="site_created_but_not_fetched_snackbar_message">Parece que tienes una conexión lenta. Si no ves tu nuevo sitio en la lista, inténtalo actualizado.</string>
     <string name="cancel_new_site_wizard_content_description">Cancelar el Asistente de Creación de Sitios</string>
@@ -1009,7 +989,6 @@ Language: es_MX
     <string name="gif_picker_empty_search_list">Ningún medio coincide con tu búsqueda</string>
     <string name="gif_picker_initial_empty_text">¡Busca para encontrar GIF para añadir a tu biblioteca de medios!</string>
     <string name="stats_insights_latest_post_with_no_engagement">Ha sido %1$s desde que %2$s fue publicado. Empieza la avalancha y aumenta las vistas de publicaciones compartiendo la publicación.</string>
-    <string name="stats_insights_latest_post_empty">Aún no has hecho ninguna publicacion. Una vez que comiences a publicar, el resumen de tu última publicación aparecerá aquí.</string>
     <string name="stats_insights_tags_and_categories">Tags y Catégorias</string>
     <string name="stats_insights_all_time_stats">Histórico</string>
     <string name="stats_comments_authors">Autores</string>
@@ -1098,16 +1077,12 @@ Language: es_MX
     <string name="quick_start_list_create_site_title">Crea tu sitio</string>
     <string name="quick_start_list_create_site_subtitle">Pon tu sitio en marcha.</string>
     <string name="quick_start_dialog_view_site_title">Ver tu sitio</string>
-    <string name="quick_start_dialog_view_site_message_short">Toca en %1$s Ver sitio %2$s para previsualizar tu sitio</string>
     <string name="quick_start_dialog_share_site_title">Comparte tu sitio</string>
     <string name="quick_start_dialog_share_site_message">Conecta a tus cuentas de medios sociales - tu sitio compartirá automáticamente las nuevas entradas.</string>
     <string name="quick_start_dialog_enable_sharing_message_short_sharing">Toca en %1$s Compartir %2$s para continuar</string>
     <string name="quick_start_dialog_enable_sharing_message_short_connections">Toca en %1$s Conexiones %2$s para añadir tus cuentas de medios sociales</string>
     <string name="quick_start_dialog_publish_post_title">Publica una entrada</string>
     <string name="quick_start_dialog_publish_post_message_short">Toca en %1$s Crear entrada %2$s para crear una nueva entrada</string>
-    <string name="quick_start_dialog_follow_sites_title">Sigue otros sitios</string>
-    <string name="quick_start_dialog_follow_sites_message_short_reader">Toca en %1$s Lector %2$s para seguir</string>
-    <string name="quick_start_dialog_follow_sites_message">Descubre sitios que te inspiren, y síguelos para obtener actualizaciones cuando publiquen.</string>
     <string name="quick_start_button_positive">Ir</string>
     <string name="quick_start_button_negative_short">Cancelar</string>
     <string name="quick_start_button_negative">Ahora no</string>
@@ -1724,10 +1699,8 @@ Language: es_MX
     <string name="share_btn_disconnect">Desconectar</string>
     <string name="share_btn_reconnect">Reconectar</string>
     <string name="connection_service_description">Conéctate para compartir automáticamente las entradas de tu blog en %s</string>
-    <string name="connection_service_label">Divulgar en %s</string>
     <string name="connected_accounts_label">Cuentas conectadas</string>
     <string name="connections_description">Conecta con tus servicios de medios sociales favoritos para compartir automáticamente las nuevas entradas con tus amigos.</string>
-    <string name="connections_label">Conexiones</string>
     <string name="sharing">Compartir</string>
     <string name="tabbar_accessibility_label_notifications">Avisos. Gestiona tus avisos.</string>
     <string name="tabbar_accessibility_label_reader">Lector. Sigue contenido de otros sitios.</string>
@@ -2245,7 +2218,6 @@ Language: es_MX
     <string name="stats_view_countries">Países</string>
     <string name="stats_view_followers">Seguidores</string>
     <string name="stats_likes">Me gusta</string>
-    <string name="stats_view_publicize">Difundir</string>
     <string name="stats_followers_seconds_ago">hace unos segundos</string>
     <string name="stats_views">Vistas</string>
     <string name="stats_visitors">Visitantes</string>

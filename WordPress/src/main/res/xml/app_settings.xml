@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:key="@string/pref_key_app_settings_root">
 
-    <org.wordpress.android.ui.prefs.DetailListPreference
+    <org.wordpress.android.ui.prefs.WPPreference
         android:key="@string/pref_key_language"
         android:title="@string/interface_language" />
 

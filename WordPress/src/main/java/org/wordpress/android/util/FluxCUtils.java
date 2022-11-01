@@ -50,6 +50,7 @@ public class FluxCUtils {
         mediaModel.setTitle(file.getTitle());
         mediaModel.setDescription(file.getDescription());
         mediaModel.setCaption(file.getCaption());
+        mediaModel.setAlt(file.getAlt());
         mediaModel.setMediaId(file.getMediaId() != null ? Long.valueOf(file.getMediaId()) : 0);
         mediaModel.setId(file.getId());
         mediaModel.setUploadState(file.getUploadState());
@@ -71,10 +72,13 @@ public class FluxCUtils {
         mediaFile.setFilePath(media.getFilePath());
         mediaFile.setMimeType(media.getMimeType());
         mediaFile.setThumbnailURL(media.getThumbnailUrl());
+        mediaFile.setFileUrlLargeSize(media.getFileUrlLargeSize());
+        mediaFile.setFileUrlMediumSize(media.getFileUrlMediumSize());
         mediaFile.setFileURL(media.getUrl());
         mediaFile.setTitle(media.getTitle());
         mediaFile.setDescription(media.getDescription());
         mediaFile.setCaption(media.getCaption());
+        mediaFile.setAlt(media.getAlt());
         mediaFile.setUploadState(media.getUploadState());
         mediaFile.setVideo(org.wordpress.android.fluxc.utils.MediaUtils.isVideoMimeType(media.getMimeType()));
         mediaFile.setVideoPressShortCode(ShortcodeUtils.getVideoPressShortcodeFromId(media.getVideoPressGuid()));

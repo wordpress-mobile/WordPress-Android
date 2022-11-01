@@ -1,127 +1,82 @@
+# FIXME: Make this app dependent instead (WordPress vs Jetpack)
 RAW_SCREENSHOTS_DIR = File.join(Dir.pwd, "screenshots", "raw")
 RAW_SCREENSHOTS_PROCESSING_DIR = File.join(Dir.pwd, "screenshots", "raw_tmp")
 PROMO_SCREENSHOTS_PROCESSING_DIR = File.join(Dir.pwd, "screenshots", "promo_tmp")
-FINAL_METADATA_DIR = File.join(Dir.pwd, "metadata/android")
+FINAL_METADATA_DIR = File.join(Dir.pwd, "metadata", "android")
 
+# Possible values for `device` parameter can be found using `avdmanager list devices`
+SCREENSHOT_DEVICES = [
+  {
+    device_type: 'phone',
+    device: 'pixel_3',
+    api: 28
+  },
+  {
+    device_type: 'tenInch',
+    device: 'Nexus 9',
+    api: 28
+  }
+].freeze
+
+SCREENSHOT_LOCALES = ALL_LOCALES
+  .select { |hsh| hsh[:promo_config] != false }
+  .map { |h| h[:google_play] }
+  .compact
+  .freeze
 
 platform :android do
-  #####################################################################################
-  # upload_and_replace_screenshots_in_play_store
-  # -----------------------------------------------------------------------------------
-  # This lane uploads the screenshots in /metadata/android/{locale}/images to Play
-  # Store and replaces the existing ones.
-  # If a locale doesn't have any screenshots, it'll be skipped.
-  # -----------------------------------------------------------------------------------
-  # Usage:
-  # bundle exec fastlane upload_and_replace_screenshots_in_play_store app:<wordpress|jetpack>
+  # Takes screenshots for the WordPress or Jetpack app across multiple device and locales.
+  # 
+  # @option [String|Symbol] app The app to take screenshots for. Must be `wordpress` or `jetpack`
+  # @option [String] device The device type to limit the build of screenshots for (e.g. `phone` or `tenInch`). Defaults to building all device types defined in `SCREENSHOT_DEVICES`.
+  # @option [Array<String>] locale The Google Play locale code(s) to build the screenshots. Default to all the ones in `SCREENSHOT_LOCALES`.
   #
-  # Example:
-  # bundle exec fastlane upload_and_replace_screenshots_in_play_store app:wordpress
-  #####################################################################################
-  desc 'Upload Screenshots to Play Store and Replaces the existing ones'
-  lane :upload_and_replace_screenshots_in_play_store do |options|
-    app = get_app_name_option!(options)
-    package_name = APP_SPECIFIC_VALUES[app.to_sym][:package_name]
-    metadata_dir = File.join('fastlane', APP_SPECIFIC_VALUES[app.to_sym][:metadata_dir], 'android')
-
-    upload_to_play_store(
-      package_name: package_name,
-      metadata_path: metadata_dir,
-      skip_upload_apk: true,
-      skip_upload_aab: true,
-      skip_upload_metadata: true,
-      skip_upload_changelogs: true,
-      skip_upload_images: true,
-      skip_upload_screenshots: false,
-      json_key: UPLOAD_TO_PLAY_STORE_JSON_KEY
-    )
-  end
-
-  #####################################################################################
-  # screenshots
-  # -----------------------------------------------------------------------------------
-  # This lane takes screenshots for the WordPress app across the three device types:
-  # phone, sevenInch and tenInch. If device serials are not provided these avds will be
-  # used: fastlane_screenshots_phone, fastlane_screenshots_seven_inch,
-  # fastlane_screenshots_ten_inch
-  # -----------------------------------------------------------------------------------
-  # Usage:
-  # fastlane screenshots phone_serial:<serial> sevenInch_serial:<serial> tenInch_serial:<serial>
-  #
-  # Example:
-  # fastlane screenshots
-  # fastlane screenshots phone_serial:emulator-5444 sevenInch_serial:emulator-5446 tenInch_serial:emulator-5448
-  #####################################################################################
-  desc "Build and capture screenshots"
+  desc "Build and capture raw screenshots"
   lane :screenshots do |options|
-    gradle(task: "assembleWordPressVanillaDebug assembleWordPressVanillaDebugAndroidTest")
-    take_screenshots(options)
-  end
+    app = get_app_name_option!(options)
 
-  desc "Capture screenshots"
-  lane :take_screenshots do |options|
+    gradle(tasks: ["assemble#{app.to_s.capitalize}VanillaDebug", "assemble#{app.to_s.capitalize}VanillaDebugAndroidTest"])
 
-  	rebuild_screenshot_devices
-
-    # If you update this, be sure to also update the `rebuild_screenshot_devices` lane down below as well as the corresponding `fastlane/emulators/*.ini` config files.
-    # You might also want to mirror the changes of emulators used here with the ones used on Firebase Test Lab (when running on CI via `trigger_screenshots` lane),
-    # by updating the 2 places in the `raw-screenshots` job of `.circleci/config.yml` mentioning the devices used by FTL for screenshots
-    screenshot_devices = [
-      {
-        screenshot_type: 'phone',
-        device_name: 'Pixel_3_API_28',
-        device_serial: options[:phone_serial],
-      },
-      {
-        screenshot_type: 'tenInch',
-        device_name: 'Nexus_9_API_28',
-        device_serial: options[:tenInch_serial],
-      }
-    ]
-
-    # By default, clear previous screenshots
-    should_clear_previous_screenshots = true
+    # Clear previous screenshots if we build for all devices. Don't clear if we only do a subset
+    should_clear_previous_screenshots = options[:device].nil? && options[:locale].nil?
 
     # Allow creating screenshots for just one device type
-    if options[:device] != nil
-      screenshot_devices.keep_if { |device|
-        device[:screenshot_type].casecmp(options[:device]) == 0
-      }
-
-      # Don't clear, because we might just be fixing one device type
-      should_clear_previous_screenshots = false
-    end
-
-    locales = ALL_LOCALES
-      .select { |hsh| hsh[:promo_config] != false }
-      .map { |hsh| hsh[:google_play] }
-      .compact
-
+    screenshot_devices = SCREENSHOT_DEVICES
+    screenshot_devices = screenshot_devices.select { |device| device[:device_type].casecmp(options[:device]) == 0 } unless options[:device].nil?
+    
     # Allow creating screenshots for just one locale
-    if options[:locale] != nil
-      locales.keep_if { |locale|
-        locale.casecmp(options[:locale]) == 0
-      }
+    locales = SCREENSHOT_LOCALES # TODO: Verify that we're using the expected locale code formats here (Google's `fr-FR` vs Android's `fr-rFR` or something else)
+    locales = options[:locale].split(',') unless options[:locale].nil?
+    
+    UI.message("Will run screenshot for devices: #{screenshot_devices.map { |d| "#{d[:device]} API #{d[:api]}" }.inspect } and locales: #{locales.inspect}")
 
-      # Don't clear, because we might just be fixing one locale
-      should_clear_previous_screenshots = false
+    apk_dir = File.join('WordPress', 'build', 'outputs', 'apk')
+    package_name = APP_SPECIFIC_VALUES[app.to_sym][:package_name]
+    test_class = APP_SPECIFIC_VALUES[app.to_sym][:screenshots_test_class]
+
+    screenshot_devices.each do |device|
+      name = android_create_avd(device_model: device[:device], api_level: device[:api]) # Create the AVD for device, API and system image we need
+      serial = android_launch_emulator(avd_name: name) # Launch an emulator using this AVD and get its serial number, to know which emulator to run the tests on
+
+      capture_android_screenshots(
+        app_apk_path: File.join(apk_dir, "#{app}Vanilla", 'debug', "org.wordpress.android-#{app}-vanilla-debug.apk"),
+        tests_apk_path: File.join(apk_dir, 'androidTest', "#{app}Vanilla", 'debug', "org.wordpress.android-#{app}-vanilla-debug-androidTest.apk"),
+        reinstall_app: false,
+        clear_previous_screenshots: should_clear_previous_screenshots,
+        app_package_name: package_name,
+        tests_package_name: "#{package_name}.test",
+        locales: locales,
+        output_directory: RAW_SCREENSHOTS_DIR, #FIXME: Make this dependent on the :app (wordpress vs jetpack)
+        skip_open_summary: is_ci,
+        use_tests_in_classes: test_class,
+        test_instrumentation_runner: 'org.wordpress.android.WordPressTestRunner',
+        specific_device: serial,
+        device_type: device[:device_type],
+        use_timestamp_suffix: false
+      )
+
+      android_shutdown_emulator(serials: [serial]) # Clean up after ourselves
     end
-
-    puts locales
-
-    screenshot_options = {
-      output_directory: RAW_SCREENSHOTS_DIR,
-      app_apk_path: "WordPress/build/outputs/apk/wordpressVanilla/debug/org.wordpress.android-wordpress-vanilla-debug.apk",
-      tests_apk_path: "WordPress/build/outputs/apk/androidTest/wordpressVanilla/debug/org.wordpress.android-wordpress-vanilla-debug-androidTest.apk",
-      use_tests_in_classes: "org.wordpress.android.ui.screenshots.WPScreenshotTest",
-      reinstall_app: false,
-      clear_previous_screenshots: should_clear_previous_screenshots,
-      locales: locales,
-      test_instrumentation_runner: "org.wordpress.android.WordPressTestRunner",
-      use_adb_root: true
-    }
-
-    take_android_emulator_screenshots(devices: screenshot_devices, screenshot_options: screenshot_options)
   end
 
   #####################################################################################
@@ -143,10 +98,10 @@ platform :android do
     end.to_h
 
     locales = ALL_LOCALES
-      .select { |hsh| hsh[:promo_config] != false }
-      .map {| hsh | [ hsh[:glotpress], hsh[:google_play] ]}
+      .select { |h| h[:promo_config] != false }
+      .map { |h| [ h[:glotpress], h[:google_play] ]}
 
-    gp_downloadmetadata(project_url: "https://translate.wordpress.org/projects/apps/android/release-notes/",
+    gp_downloadmetadata(project_url: APP_SPECIFIC_VALUES[:wordpress][:glotpress_metadata_project],
       target_files: files,
       locales: locales,
       source_locale: "en-US",
@@ -156,27 +111,9 @@ platform :android do
 
 
   #####################################################################################
-  # trigger_screenshots
-  # -----------------------------------------------------------------------------------
-  # This lane triggers a CircleCI workflow on demand to generate Raw and Promo screenshots
-  # -----------------------------------------------------------------------------------
-  # Usage:
-  #   bundle exec fastlane trigger_screenshots [token:<circleci_token>] [fork:<github_fork_name>] [branch:<git_branch>
-  # Notes:
-  #   - The CircleCI token can be passed via the CIRCLECI_TOKEN env var instead of as a parameter to the lane call
-  #   - The fork parameter allows us to trigger a build on a fork of WPAndroid instead of the default repo on `wordpress-mobile` org.
-  #####################################################################################
-  lane :trigger_screenshots do |options|
-    new_options = options.merge({ parameters: { "generate_screenshots": true } })
-    trigger_ci(new_options)
-  end
-
-
-  #####################################################################################
   # download_raw_screenshots
   # -----------------------------------------------------------------------------------
   # This lane downloads the raw screenshots generated by a Firebase Test Lab run.
-  # Typically called by CI at the end of the workflow triggered by trigger_screenshots
   # -----------------------------------------------------------------------------------
   # Usage:
   #   fastlane download_raw_screenshots bucket:<gs-url> phone:<model-version> tenInch:<model-version>
@@ -269,8 +206,8 @@ platform :android do
     end
 
     locales = ALL_LOCALES
-      .select { |hsh| hsh[:promo_config] != false }
-      .map { |hsh| hsh[:google_play] }
+      .reject { |h| h[:google_play].nil? }
+      .map { |h| h[:google_play] }
 
     # Allow creating promo screenshots for just one locale
     if options[:locale] != nil
@@ -320,30 +257,34 @@ platform :android do
 
 
   #####################################################################################
-  # rebuild_screenshot_devices
+  # upload_and_replace_screenshots_in_play_store
   # -----------------------------------------------------------------------------------
-  # This lane rebuilds all of the emulators used for generating screenshots. Beware – running
-  # this action will overwrite the following emulators:
-  #     - Nexus 9 API 28
-  #     - Pixel 2 XL API 28
-  # It will not overwrite any other devices.
+  # This lane uploads the screenshots in /metadata/android/{locale}/images to Play
+  # Store and replaces the existing ones.
+  # If a locale doesn't have any screenshots, it'll be skipped.
   # -----------------------------------------------------------------------------------
   # Usage:
-  # fastlane rebuild_screenshot_devices
+  # bundle exec fastlane upload_and_replace_screenshots_in_play_store app:<wordpress|jetpack>
   #
   # Example:
-  # fastlane rebuild_screenshot_devices
+  # bundle exec fastlane upload_and_replace_screenshots_in_play_store app:wordpress
   #####################################################################################
-  desc "Rebuild screenshot devices"
-  lane :rebuild_screenshot_devices do |options|
-    emulators = [
-        Dir.pwd + "/emulators/Nexus_9_API_28.ini",
-        Dir.pwd + "/emulators/Pixel_2_XL_API_28.ini",
-        Dir.pwd + "/emulators/Pixel_3_API_28.ini",
-    ]
+  desc 'Upload Screenshots to Play Store and Replaces the existing ones'
+  lane :upload_and_replace_screenshots_in_play_store do |options|
+    app = get_app_name_option!(options)
+    package_name = APP_SPECIFIC_VALUES[app.to_sym][:package_name]
+    metadata_dir = File.join('fastlane', APP_SPECIFIC_VALUES[app.to_sym][:metadata_dir], 'android')
 
-    emulators.each do |emulator_configuration|
-        sh("helpers/copy-device.sh '#{emulator_configuration}'")
-    end
+    upload_to_play_store(
+      package_name: package_name,
+      metadata_path: metadata_dir,
+      skip_upload_apk: true,
+      skip_upload_aab: true,
+      skip_upload_metadata: true,
+      skip_upload_changelogs: true,
+      skip_upload_images: true,
+      skip_upload_screenshots: false,
+      json_key: UPLOAD_TO_PLAY_STORE_JSON_KEY
+    )
   end
 end

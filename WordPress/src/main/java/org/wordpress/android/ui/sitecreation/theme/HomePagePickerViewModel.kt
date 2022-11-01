@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.sitecreation.theme
 
 import androidx.lifecycle.LiveData
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
@@ -14,8 +15,6 @@ import org.wordpress.android.ui.layoutpicker.LayoutPickerUiState.Content
 import org.wordpress.android.ui.layoutpicker.LayoutPickerUiState.Loading
 import org.wordpress.android.ui.layoutpicker.LayoutPickerUiState.Error
 import org.wordpress.android.ui.layoutpicker.LayoutPickerViewModel
-import org.wordpress.android.ui.layoutpicker.toLayoutCategories
-import org.wordpress.android.ui.layoutpicker.toLayoutModels
 import org.wordpress.android.ui.sitecreation.usecases.FetchHomePageLayoutsUseCase
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -26,13 +25,15 @@ const val defaultTemplateSlug = "default"
 
 private const val ERROR_CONTEXT = "design"
 
+@HiltViewModel
 class HomePagePickerViewModel @Inject constructor(
     override val networkUtils: NetworkUtilsWrapper,
     private val dispatcher: Dispatcher,
     private val fetchHomePageLayoutsUseCase: FetchHomePageLayoutsUseCase,
     private val analyticsTracker: SiteCreationTracker,
     @Named(BG_THREAD) override val bgDispatcher: CoroutineDispatcher,
-    @Named(UI_THREAD) override val mainDispatcher: CoroutineDispatcher
+    @Named(UI_THREAD) override val mainDispatcher: CoroutineDispatcher,
+    private val recommendationProvider: SiteDesignRecommendationProvider
 ) : LayoutPickerViewModel(mainDispatcher, bgDispatcher, networkUtils, analyticsTracker) {
     private val _onDesignActionPressed = SingleLiveEvent<DesignSelectionAction>()
     val onDesignActionPressed: LiveData<DesignSelectionAction> = _onDesignActionPressed
@@ -40,7 +41,11 @@ class HomePagePickerViewModel @Inject constructor(
     private val _onBackButtonPressed = SingleLiveEvent<Unit>()
     val onBackButtonPressed: LiveData<Unit> = _onBackButtonPressed
 
+    private var vertical: String = ""
+
     override val useCachedData: Boolean = false
+    override val shouldUseMobileThumbnail = true
+    override val thumbnailTapOpensPreview = true
 
     sealed class DesignSelectionAction(val template: String) {
         object Skip : DesignSelectionAction(defaultTemplateSlug)
@@ -56,9 +61,13 @@ class HomePagePickerViewModel @Inject constructor(
         dispatcher.unregister(fetchHomePageLayoutsUseCase)
     }
 
-    fun start(isTablet: Boolean = false) {
+    fun start(intent: String? = null, isTablet: Boolean = false) {
+        val verticalChanged = vertical != intent
+        if (verticalChanged) {
+            vertical = intent ?: ""
+        }
         initializePreviewMode(isTablet)
-        if (uiState.value !is Content) {
+        if (uiState.value !is Content || verticalChanged) {
             analyticsTracker.trackSiteDesignViewed(selectedPreviewMode().key)
             fetchLayouts()
         }
@@ -79,21 +88,37 @@ class HomePagePickerViewModel @Inject constructor(
                     analyticsTracker.trackErrorShown(ERROR_CONTEXT, UNKNOWN, "Error fetching designs")
                     updateUiState(Error())
                 } else {
-                    handleResponse(event.designs.toLayoutModels(), event.categories.toLayoutCategories())
+                    recommendationProvider.handleResponse(
+                            vertical,
+                            event.designs,
+                            event.categories,
+                            this@HomePagePickerViewModel::handleResponse
+                    )
                 }
             }
         }
     }
 
+    override fun onLayoutTapped(layoutSlug: String, isRecommended: Boolean) {
+        (uiState.value as? Content)?.let {
+            if (it.loadedThumbnailSlugs.contains(layoutSlug)) {
+                updateUiState(it.copy(selectedLayoutSlug = layoutSlug, isSelectedLayoutRecommended = isRecommended))
+                onPreviewTapped()
+                loadLayouts()
+            }
+        }
+    }
+
     override fun onPreviewChooseTapped() {
-        super.onPreviewChooseTapped()
         onChooseTapped()
     }
 
     fun onChooseTapped() {
         selectedLayout?.let { layout ->
+            super.onPreviewChooseTapped()
             val template = layout.slug
-            analyticsTracker.trackSiteDesignSelected(template)
+            val isRecommended = (uiState.value as? Content)?.isSelectedLayoutRecommended == true
+            analyticsTracker.trackSiteDesignSelected(template, isRecommended)
             _onDesignActionPressed.value = DesignSelectionAction.Choose(template)
             return
         }

@@ -1,5 +1,0 @@
-19.5:
-- We hebben de tekst van uploadfouten in media-uploadblokken aangepast.
-- Bewegende GIF's zijn nu voorzien van een GIF-badge.
-- Gewijzigde blokinstellingen naar geordende lijsten verschijnen nu in de editor.
-- Je kunt meldingen voor het Wekelijkse overzicht uitschakelen voor alle sites onder App-info.

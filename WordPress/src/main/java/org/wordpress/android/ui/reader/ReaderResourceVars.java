@@ -35,7 +35,7 @@ class ReaderResourceVars {
     ReaderResourceVars(Context context) {
         Resources resources = context.getResources();
 
-        int displayWidthPx = DisplayUtils.getDisplayPixelWidth(context);
+        int displayWidthPx = DisplayUtils.getWindowPixelWidth(context);
 
         mIsWideDisplay = DisplayUtils.pxToDp(context, displayWidthPx) > 640;
 

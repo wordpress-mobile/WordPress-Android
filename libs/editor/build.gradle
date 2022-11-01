@@ -1,22 +1,99 @@
-buildscript {
-    repositories {
-        google()
+plugins {
+    id "com.android.library"
+    id "org.jetbrains.kotlin.android"
+    id "org.jetbrains.kotlin.plugin.parcelize"
+}
+
+repositories {
+    maven {
+        url "https://a8c-libs.s3.amazonaws.com/android"
+        content {
+            includeGroup "org.wordpress"
+            includeGroup "org.wordpress.aztec"
+            includeGroup "org.wordpress-mobile"
+            includeGroup "org.wordpress-mobile.gutenberg-mobile"
+        }
+    }
+    maven {
+        url "https://a8c-libs.s3.amazonaws.com/android/react-native-mirror"
+        content {
+            includeGroup "com.facebook.react"
+        }
+    }
+    maven {
+        url "https://a8c-libs.s3.amazonaws.com/android/hermes-mirror"
+        content {
+            includeGroup "org.wordpress-mobile"
+        }
+    }
+    google()
+    mavenCentral()
+    maven { url "https://www.jitpack.io" }
+    maven { url "https://a8c-libs.s3.amazonaws.com/android/hermes-mirror" }
+}
+
+android {
+    compileSdkVersion rootProject.compileSdkVersion
+
+    defaultConfig {
+        minSdkVersion rootProject.minSdkVersion
+        targetSdkVersion rootProject.targetSdkVersion
+    }
+
+    // Avoid 'duplicate files during packaging of APK' errors
+    packagingOptions {
+        exclude 'LICENSE.txt'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/NOTICE.txt'
     }
 }
 
-allprojects {
-    apply plugin: 'checkstyle'
+dependencies {
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.vectordrawable:vectordrawable-animated:1.0.0'
+    implementation 'androidx.gridlayout:gridlayout:1.0.0'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation "androidx.preference:preference:$preferenceVersion"
 
-    if (tasks.findByPath('checkstyle') == null) {
-        tasks.create(name: 'checkstyle', type: Checkstyle) {
-            source 'src'
+    implementation 'com.google.android.material:material:1.2.1'
+    implementation 'org.apache.commons:commons-lang3:3.5'
+    implementation 'com.android.volley:volley:1.1.1'
 
-            classpath = files()
-        }
-
-        checkstyle {
-            toolVersion = '8.3'
-            configFile file("${project.rootDir}/config/checkstyle.xml")
+    implementation "org.wordpress:utils:$wordPressUtilsVersion"
+    api ("$gradle.ext.aztecAndroidAztecPath") {
+        exclude group: "com.android.volley"
+        exclude group: 'org.wordpress', module: 'utils'
+        version {
+            strictly aztecVersion
         }
     }
+    api ("$gradle.ext.aztecAndroidWordPressShortcodesPath:$aztecVersion") {
+        version {
+            strictly aztecVersion
+        }
+    }
+    api ("$gradle.ext.aztecAndroidWordPressCommentsPath:$aztecVersion") {
+        version {
+            strictly aztecVersion
+        }
+    }
+
+    implementation ("$gradle.ext.wputilsBinaryPath") {
+        version {
+            strictly wordPressUtilsVersion
+        }
+    }
+
+    // This dependency will be substituted if the `local-builds.gradle` file contains
+    // `localGutenbergMobilePath`. Details for this can be found in the `settings.gradle` file.
+    implementation "$rootProject.gradle.ext.gutenbergMobileBinaryPath:$rootProject.ext.gutenbergMobileVersion"
+
+    // Required Aztec dependencies (they should be included but Jitpack seems to be stripping these out)
+    implementation "org.jsoup:jsoup:1.10.3"
+
+    implementation 'com.google.code.gson:gson:2.6.2'
+
+    lintChecks 'org.wordpress:lint:1.1.0'
 }

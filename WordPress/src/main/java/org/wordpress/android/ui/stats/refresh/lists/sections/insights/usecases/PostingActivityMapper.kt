@@ -61,14 +61,14 @@ class PostingActivityMapper
                 boxes.add(box)
                 boxDaysForAccessibility.add(Pair(box, day.key))
             }
-            val monthDisplayName = getMonthDisplayName(Calendar.LONG)
+            val monthDisplayName = getMonthDisplayName(Calendar.LONG) ?: ""
             val labelContentDescription = resourceProvider.getString(
                     R.string.stats_posting_activity_label_content_description,
                     monthDisplayName
             )
             blocks.add(
                     Block(
-                            getMonthDisplayName(Calendar.SHORT),
+                            getMonthDisplayName(Calendar.SHORT) ?: "",
                             boxes,
                             labelContentDescription,
                             addBlockContentDescriptions(boxDaysForAccessibility, monthDisplayName)

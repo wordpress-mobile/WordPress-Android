@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2021-08-01 11:11:29+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/3.0.0-rc.4
+Generator: GlotPress/4.0.0-alpha.3
 Language: da_DK
 -->
 <resources>
@@ -140,7 +140,6 @@ Language: da_DK
     <string name="stats_views">Visninger</string>
     <string name="stats_visitors">Besøgende</string>
     <string name="stats_view_top_posts_and_pages">Indlæg &amp; sider</string>
-    <string name="stats_view_publicize">publicize</string>
     <string name="ssl_certificate_details">Detaljer</string>
     <string name="cab_selected">%d markeret</string>
     <string name="browse_our_faq_button">Gennemse vores FAQ</string>

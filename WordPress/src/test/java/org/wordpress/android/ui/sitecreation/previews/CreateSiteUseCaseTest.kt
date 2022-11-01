@@ -24,10 +24,12 @@ import org.wordpress.android.ui.sitecreation.services.SiteCreationServiceData
 import org.wordpress.android.ui.sitecreation.usecases.CreateSiteUseCase
 import org.wordpress.android.util.UrlUtilsWrapper
 
+private const val SITE_TITLE = "site title"
 private val DUMMY_SITE_DATA: SiteCreationServiceData = SiteCreationServiceData(
         123,
         "slug",
-        "domain"
+        "domain",
+        SITE_TITLE
 )
 private const val LANGUAGE_ID = "lang_id"
 private const val TIMEZONE_ID = "timezone_id"
@@ -70,6 +72,7 @@ class CreateSiteUseCaseTest {
         val payload = captor.value.payload as NewSitePayload
         assertThat(payload.siteName).isEqualTo(DUMMY_SITE_DATA.domain)
         assertThat(payload.segmentId).isEqualTo(DUMMY_SITE_DATA.segmentId)
+        assertThat(payload.siteTitle).isEqualTo(SITE_TITLE)
     }
 
     @Test

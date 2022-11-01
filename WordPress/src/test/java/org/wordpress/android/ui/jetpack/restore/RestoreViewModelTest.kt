@@ -20,7 +20,6 @@ import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
-import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Rewind.Status.FINISHED
 import org.wordpress.android.test
 import org.wordpress.android.ui.jetpack.common.CheckboxSpannableLabel
 import org.wordpress.android.ui.jetpack.common.JetpackBackupRestoreListItemState.FootnoteState
@@ -63,6 +62,7 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.util.text.PercentFormatter
 import org.wordpress.android.util.wizard.WizardManager
 import org.wordpress.android.util.wizard.WizardNavigationTarget
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -84,6 +84,7 @@ class RestoreViewModelTest : BaseUnitTest() {
     @Mock private lateinit var postRestoreUseCase: PostRestoreUseCase
     @Mock private lateinit var checkboxSpannableLabel: CheckboxSpannableLabel
     @Mock private lateinit var htmlMessageUtils: HtmlMessageUtils
+    @Mock private lateinit var percentFormatter: PercentFormatter
     private lateinit var availableItemsProvider: JetpackAvailableItemsProvider
     private lateinit var stateListItemBuilder: RestoreStateListItemBuilder
 
@@ -112,7 +113,7 @@ class RestoreViewModelTest : BaseUnitTest() {
         whenever(wizardManager.navigatorLiveData).thenReturn(wizardManagerNavigatorLiveData)
 
         availableItemsProvider = JetpackAvailableItemsProvider()
-        stateListItemBuilder = RestoreStateListItemBuilder(checkboxSpannableLabel, htmlMessageUtils)
+        stateListItemBuilder = RestoreStateListItemBuilder(checkboxSpannableLabel, htmlMessageUtils, percentFormatter)
         viewModel = RestoreViewModel(
                 wizardManager,
                 availableItemsProvider,
@@ -120,7 +121,8 @@ class RestoreViewModelTest : BaseUnitTest() {
                 stateListItemBuilder,
                 postRestoreUseCase,
                 restoreStatusUseCase,
-                TEST_DISPATCHER
+                TEST_DISPATCHER,
+                percentFormatter
         )
         whenever(getActivityLogItemUseCase.get(anyOrNull())).thenReturn(fakeActivityLogModel)
         whenever(checkboxSpannableLabel.buildSpannableLabel(R.string.backup_item_themes, null))
@@ -317,6 +319,7 @@ class RestoreViewModelTest : BaseUnitTest() {
         val uiStates = initObservers().uiStates
         clearInvocations(wizardManager)
 
+        whenever(percentFormatter.format(0)).thenReturn("0%")
         whenever(postRestoreUseCase.postRestoreRequest(anyOrNull(), anyOrNull(), anyOrNull()))
                 .thenReturn(postSuccess)
         whenever(restoreStatusUseCase.getRestoreStatus(anyOrNull(), anyOrNull(), anyOrNull()))
@@ -328,6 +331,19 @@ class RestoreViewModelTest : BaseUnitTest() {
 
         assertThat(uiStates.last()).isInstanceOf(ProgressState::class.java)
         assertThat(uiStates.last().toolbarState).isInstanceOf(ProgressToolbarState::class.java)
+    }
+
+    @Test
+    fun `given showStep for progress is invoked, then call PercentFormatter`() = test {
+        whenever(postRestoreUseCase.postRestoreRequest(anyOrNull(), anyOrNull(), anyOrNull()))
+                .thenReturn(postSuccess)
+        whenever(percentFormatter.format(0)).thenReturn("0%")
+
+        startViewModelForStep(PROGRESS)
+
+        viewModel.showStep(WizardNavigationTarget(PROGRESS, restoreState))
+
+        verify(percentFormatter).format(0)
     }
 
     @Test
@@ -372,6 +388,7 @@ class RestoreViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given progress step, when no network connection, then a snackbar message is shown`() = test {
+        whenever(percentFormatter.format(0)).thenReturn("0%")
         whenever(postRestoreUseCase.postRestoreRequest(anyOrNull(), anyOrNull(), anyOrNull()))
                 .thenReturn(postRestoreNetworkError)
 
@@ -388,6 +405,7 @@ class RestoreViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given progress step, when remote request fails, then a snackbar message is shown`() = test {
+        whenever(percentFormatter.format(0)).thenReturn("0%")
         whenever(postRestoreUseCase.postRestoreRequest(anyOrNull(), anyOrNull(), anyOrNull()))
                 .thenReturn(postRestoreRemoteRequestError)
 
@@ -404,6 +422,7 @@ class RestoreViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given progress step, when another request is running, then a snackbar message is shown`() = test {
+        whenever(percentFormatter.format(0)).thenReturn("0%")
         whenever(postRestoreUseCase.postRestoreRequest(anyOrNull(), anyOrNull(), anyOrNull()))
                 .thenReturn(otherRequestRunningError)
 
@@ -475,5 +494,4 @@ class RestoreViewModelTest : BaseUnitTest() {
     private val postRestoreRemoteRequestError = RestoreRequestState.Failure.RemoteRequestFailure
     private val otherRequestRunningError = RestoreRequestState.Failure.OtherRequestRunning
     private val postSuccess = Success(rewindId = "rewindId", requestRewindId = "rewindId", restoreId = 1L)
-    private val getFinished = FINISHED
 }

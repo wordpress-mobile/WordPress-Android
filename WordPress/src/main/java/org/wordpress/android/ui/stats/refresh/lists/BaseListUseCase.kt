@@ -48,7 +48,7 @@ class BaseListUseCase(
             useCases.associateBy { it.type }.mapValues { entry -> entry.value.liveData }
     )
     private val statsTypes = MutableLiveData<List<StatsType>>()
-    val data: MediatorLiveData<UiModel> = mergeAsyncNotNull(this, statsTypes, blockListData) { types, map ->
+    val data: MediatorLiveData<UiModel?> = mergeAsyncNotNull(this, statsTypes, blockListData) { types, map ->
         val result = types.mapNotNull {
             if (map.containsKey(it)) {
                 map[it]
@@ -69,9 +69,9 @@ class BaseListUseCase(
             distinct = false
     )
 
-    private val mutableSnackbarMessage = MutableLiveData<Int>()
+    private val mutableSnackbarMessage = MutableLiveData<Int?>()
     val snackbarMessage: LiveData<SnackbarMessageHolder> = mutableSnackbarMessage.map {
-        SnackbarMessageHolder(UiStringRes(it))
+        it?.let { SnackbarMessageHolder(UiStringRes(it)) }
     }
 
     private val mutableListSelected = SingleLiveEvent<Unit>()

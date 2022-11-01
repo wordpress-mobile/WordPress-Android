@@ -35,6 +35,7 @@ class ReaderFileDownloadManagerTest {
     }
 
     @Test
+    @Suppress("DEPRECATION")
     fun `enqueues file for download`() {
         val url = "http://wordpress.com/file_name.pdf"
         val header = "Authentication"

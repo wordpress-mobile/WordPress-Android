@@ -1,5 +1,0 @@
-19.5:
-- We tweaked the upload error text in media upload blocks.
-- Animated GIFs now come with a GIF badge.
-- Block setting changes to ordered lists now appear in the editor.
-- You can disable Weekly Roundup notifications for all sites in App Info.

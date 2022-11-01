@@ -2,7 +2,6 @@ package org.wordpress.android.support;
 
 import android.app.Instrumentation;
 
-import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.accessibility.AccessibilityChecks;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -22,15 +21,13 @@ import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Rule;
+import org.wordpress.android.InitializationRule;
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.e2e.flows.LoginFlow;
 import org.wordpress.android.e2e.pages.MePage;
 import org.wordpress.android.e2e.pages.MySitesPage;
 import org.wordpress.android.mocks.AndroidNotifier;
 import org.wordpress.android.mocks.AssetFileSource;
-import org.wordpress.android.modules.AppComponentTest;
-import org.wordpress.android.modules.DaggerAppComponentTest;
 import org.wordpress.android.ui.WPLaunchActivity;
 
 import java.io.IOException;
@@ -49,16 +46,22 @@ import static org.wordpress.android.BuildConfig.E2E_WP_COM_USER_EMAIL;
 import static org.wordpress.android.BuildConfig.E2E_WP_COM_USER_PASSWORD;
 import static org.wordpress.android.support.WPSupportUtils.isElementDisplayed;
 
-public class BaseTest {
-    protected WordPress mAppContext;
-    protected AppComponentTest mMockedAppComponent;
+import dagger.hilt.android.testing.HiltAndroidRule;
 
+public class BaseTest {
     public static final int WIREMOCK_PORT = 8080;
 
-    @Rule
+    @Rule(order = 0)
+    public HiltAndroidRule mHiltRule = new HiltAndroidRule(this);
+
+    @Rule(order = 1)
+    public InitializationRule mInitializationRule = new InitializationRule();
+
+    @Rule(order = 2)
     public ActivityScenarioRule<WPLaunchActivity> mActivityScenarioRule
             = new ActivityScenarioRule<>(WPLaunchActivity.class);
-    @Rule
+
+    @Rule(order = 3)
     public WireMockRule wireMockRule;
 
     {
@@ -77,11 +80,6 @@ public class BaseTest {
 
     @Before
     public void setup() {
-        mAppContext = ApplicationProvider.getApplicationContext();
-        mMockedAppComponent = DaggerAppComponentTest.builder()
-                                                    .application(mAppContext)
-                                                    .build();
-
         Matcher<? super AccessibilityCheckResult> nonErrorLevelMatcher =
                 Matchers.allOf(matchesTypes(
                         anyOf(is(AccessibilityCheckResultType.INFO), is(AccessibilityCheckResultType.WARNING))));

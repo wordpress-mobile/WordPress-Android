@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package org.wordpress.android.ui.domains
 
 import android.app.Dialog
@@ -5,7 +7,6 @@ import android.app.ProgressDialog
 import android.content.Context
 import android.os.Bundle
 import android.text.Editable
-import android.text.Html
 import android.text.TextUtils
 import android.text.TextWatcher
 import android.text.method.LinkMovementMethod
@@ -13,6 +14,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import androidx.core.text.HtmlCompat
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -65,13 +67,13 @@ class DomainRegistrationDetailsFragment : Fragment() {
     private lateinit var viewModel: DomainRegistrationDetailsViewModel
     private lateinit var mainViewModel: DomainRegistrationMainViewModel
 
-    private var loadingProgressDialog: ProgressDialog? = null
+    @Suppress("DEPRECATION") private var loadingProgressDialog: ProgressDialog? = null
     private var binding: DomainRegistrationDetailsFragmentBinding? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val nonNullActivity = requireActivity()
-        (nonNullActivity.application as WordPress).component()?.inject(this)
+        (nonNullActivity.application as WordPress).component().inject(this)
     }
 
     override fun onCreateView(
@@ -164,12 +166,13 @@ class DomainRegistrationDetailsFragment : Fragment() {
 
     // make link to ToS clickable
     private fun DomainRegistrationDetailsFragmentBinding.setupTosLink() {
-        tosExplanation.text = Html.fromHtml(
+        tosExplanation.text = HtmlCompat.fromHtml(
                 String.format(
                         resources.getString(R.string.domain_registration_privacy_protection_tos),
                         "<u>",
                         "</u>"
-                )
+                ),
+                HtmlCompat.FROM_HTML_MODE_LEGACY
         )
         tosExplanation.movementMethod = LinkMovementMethod.getInstance()
         tosExplanation.setOnClickListener {
@@ -277,6 +280,7 @@ class DomainRegistrationDetailsFragment : Fragment() {
                         } // Something else, will just show a Toast with an error message
                     }
                     affectedInputFields?.forEach {
+                        @Suppress("DEPRECATION")
                         showFieldError(it, StringEscapeUtils.unescapeHtml4(error?.message))
                     }
                     affectedInputFields?.firstOrNull { it.requestFocus() }
@@ -372,12 +376,14 @@ class DomainRegistrationDetailsFragment : Fragment() {
         )
     }
 
+    @Suppress("DEPRECATION")
     private fun showStatePicker(states: List<SupportedStateResponse>) {
         val dialogFragment = StatePickerDialogFragment.newInstance(states.toCollection(ArrayList()))
         dialogFragment.setTargetFragment(this, 0)
         dialogFragment.show(requireFragmentManager(), StatePickerDialogFragment.TAG)
     }
 
+    @Suppress("DEPRECATION")
     private fun showCountryPicker(countries: List<SupportedDomainCountry>) {
         val dialogFragment = CountryPickerDialogFragment.newInstance(
                 countries.toCollection(
@@ -415,6 +421,7 @@ class DomainRegistrationDetailsFragment : Fragment() {
         }
     }
 
+    @Suppress("DEPRECATION")
     private fun showDomainRegistrationProgressDialog() {
         if (loadingProgressDialog == null) {
             loadingProgressDialog = ProgressDialog(context)
@@ -459,6 +466,7 @@ class DomainRegistrationDetailsFragment : Fragment() {
                     as ArrayList<SupportedStateResponse>
         }
 
+        @Suppress("DEPRECATION", "UseCheckOrError")
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
             if (targetFragment == null) {
                 throw IllegalStateException("StatePickerDialogFragment is missing a targetFragment ")
@@ -509,6 +517,7 @@ class DomainRegistrationDetailsFragment : Fragment() {
                     as ArrayList<SupportedDomainCountry>
         }
 
+        @Suppress("DEPRECATION", "UseCheckOrError")
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
             if (targetFragment == null) {
                 throw IllegalStateException("CountryPickerDialogFragment is missing a targetFragment ")

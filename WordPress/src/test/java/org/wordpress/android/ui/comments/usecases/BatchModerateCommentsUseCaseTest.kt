@@ -9,17 +9,14 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runBlockingTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.notification.Failure
 import org.mockito.Mock
-import org.mockito.Mockito
+import org.mockito.Mockito.`when`
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.MainCoroutineScopeRule
 import org.wordpress.android.fluxc.model.CommentStatus.APPROVED
 import org.wordpress.android.fluxc.model.CommentStatus.DELETED
 import org.wordpress.android.fluxc.model.CommentStatus.TRASH
@@ -39,6 +36,7 @@ import org.wordpress.android.models.usecases.CommentsUseCaseType
 import org.wordpress.android.models.usecases.CommentsUseCaseType.BATCH_MODERATE_USE_CASE
 import org.wordpress.android.models.usecases.LocalCommentCacheUpdateHandler
 import org.wordpress.android.models.usecases.ModerateCommentsResourceProvider
+import org.wordpress.android.test
 import org.wordpress.android.ui.comments.utils.approvedComment
 import org.wordpress.android.ui.comments.utils.pendingComment
 import org.wordpress.android.ui.comments.utils.trashedComment
@@ -48,8 +46,6 @@ import org.wordpress.android.util.NoDelayCoroutineDispatcher
 @InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 class BatchModerateCommentsUseCaseTest : BaseUnitTest() {
-    @Rule @JvmField val coroutineScopeRule = MainCoroutineScopeRule()
-
     @Mock private lateinit var commentStore: CommentsStore
     @Mock private lateinit var localCommentCacheUpdateHandler: LocalCommentCacheUpdateHandler
 
@@ -60,24 +56,19 @@ class BatchModerateCommentsUseCaseTest : BaseUnitTest() {
     val site = SiteModel().also { it.id = 5 }.also { it.name = "Test Site" }
 
     @Before
-    fun setup() {
+    fun setup() = test {
         whenever(moderateCommentsResourceProvider.commentsStore).thenReturn(commentStore)
         whenever(moderateCommentsResourceProvider.localCommentCacheUpdateHandler).thenReturn(
                 localCommentCacheUpdateHandler
         )
         whenever(moderateCommentsResourceProvider.bgDispatcher).thenReturn(NoDelayCoroutineDispatcher())
 
-        runBlocking {
-            Mockito.`when`(commentStore.getCommentByLocalSiteAndRemoteId(eq(site.id), eq(1)))
-        }.thenReturn(listOf(approvedComment))
-
-        runBlocking {
-            Mockito.`when`(commentStore.getCommentByLocalSiteAndRemoteId(eq(site.id), eq(2)))
-        }.thenReturn(listOf(pendingComment))
-
-        runBlocking {
-            Mockito.`when`(commentStore.getCommentByLocalSiteAndRemoteId(eq(site.id), eq(3)))
-        }.thenReturn(listOf(trashedComment))
+        `when`(commentStore.getCommentByLocalSiteAndRemoteId(eq(site.id), eq(1)))
+                .thenReturn(listOf(approvedComment))
+        `when`(commentStore.getCommentByLocalSiteAndRemoteId(eq(site.id), eq(2)))
+                .thenReturn(listOf(pendingComment))
+        `when`(commentStore.getCommentByLocalSiteAndRemoteId(eq(site.id), eq(3)))
+                .thenReturn(listOf(trashedComment))
 
         batchModerateCommentsUseCase = BatchModerateCommentsUseCase(moderateCommentsResourceProvider)
     }
@@ -221,6 +212,7 @@ class BatchModerateCommentsUseCaseTest : BaseUnitTest() {
             }
 
     @Test
+    @Suppress("LongMethod")
     fun `moderating multiple comments works as expected`() =
             runBlockingTest {
                 whenever(commentStore.moderateCommentLocally(eq(site), eq(1), eq(UNAPPROVED)))
@@ -281,7 +273,7 @@ class BatchModerateCommentsUseCaseTest : BaseUnitTest() {
                         )
                 )
 
-                assertThat(result.any { it is Failure }).isFalse() // no errors
+                result.forEach { assertThat(it).isNotInstanceOf(Failure::class.java) }
 
                 verify(commentStore, times(1)).getCommentByLocalSiteAndRemoteId(site.id, 1)
                 verify(commentStore, times(1)).getCommentByLocalSiteAndRemoteId(site.id, 3)
@@ -295,6 +287,7 @@ class BatchModerateCommentsUseCaseTest : BaseUnitTest() {
             }
 
     @Test
+    @Suppress("LongMethod")
     fun `if we are deleting comments deleteComment method of a store is called`() = runBlockingTest {
         whenever(commentStore.moderateCommentLocally(eq(site), eq(1), eq(DELETED)))
                 .thenReturn(
@@ -354,7 +347,7 @@ class BatchModerateCommentsUseCaseTest : BaseUnitTest() {
                 )
         )
 
-        assertThat(result.any { it is Failure }).isFalse() // no errors
+        result.forEach { assertThat(it).isNotInstanceOf(Failure::class.java) }
 
         verify(commentStore, times(1)).getCommentByLocalSiteAndRemoteId(site.id, 1)
         verify(commentStore, times(1)).getCommentByLocalSiteAndRemoteId(site.id, 3)
@@ -368,6 +361,7 @@ class BatchModerateCommentsUseCaseTest : BaseUnitTest() {
     }
 
     @Test
+    @Suppress("LongMethod")
     fun `rollback if an error when deleting or moderating a comment and request local cache refresh`() =
             runBlockingTest {
                 val error = CommentError(INVALID_INPUT, "")
@@ -435,7 +429,9 @@ class BatchModerateCommentsUseCaseTest : BaseUnitTest() {
                 )
 
                 assertThat(result.size).isEqualTo(2)
-                assertThat(result.filter { it is UseCaseResult.Failure }.size).isEqualTo(2)
+                result.filterIsInstance<UseCaseResult.Failure<CommentsUseCaseType, CommentError, DoNotCare>>().let {
+                    assertThat(it.size).isEqualTo(2)
+                }
 
                 // getting a backup from DB
 

@@ -4,15 +4,10 @@ import com.google.gson.Gson
 import org.wordpress.android.datasets.ReaderBlogTableWrapper
 import org.wordpress.android.models.ReaderBlog
 import org.wordpress.android.models.ReaderTagType
-import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.ItemType.SITE
-import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.ItemType.SITE_ALL
-import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.ItemType.TAG
-import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Site
-import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.SiteAll
-import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Tag
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import javax.inject.Inject
 
+@Suppress("DataClassShouldBeImmutable")
 private data class MappedSubfilterListItem(
     val type: Int,
     var feedId: Long = 0,
@@ -31,14 +26,14 @@ class SubfilterListItemMapper @Inject constructor(
         isSelected: Boolean
     ): SubfilterListItem {
         val mappedItem = if (json.isEmpty()) {
-            MappedSubfilterListItem(type = SITE_ALL.value)
+            MappedSubfilterListItem(type = SubfilterListItem.ItemType.SITE_ALL.value)
         } else {
             val gson = Gson()
             gson.fromJson(json, MappedSubfilterListItem::class.java)
         }
 
         return when (mappedItem.type) {
-            SITE.value -> {
+            SubfilterListItem.ItemType.SITE.value -> {
                 val blogInfo: ReaderBlog? = if (mappedItem.blogId != 0L) {
                     readerBlogTableWrapper.getBlogInfo(mappedItem.blogId)
                 } else if (mappedItem.feedId != 0L) {
@@ -46,29 +41,32 @@ class SubfilterListItemMapper @Inject constructor(
                 } else null
 
                 blogInfo?.let {
-                    Site(
+                    SubfilterListItem.Site(
                         blog = blogInfo,
                         onClickAction = onClickAction,
                         isSelected = isSelected
                     )
-                } ?: SiteAll(onClickAction = onClickAction, isSelected = isSelected)
+                } ?: SubfilterListItem.SiteAll(onClickAction = onClickAction, isSelected = isSelected)
             }
-            TAG.value -> {
+            SubfilterListItem.ItemType.TAG.value -> {
                 if (mappedItem.tagSlug.isNotEmpty()) {
                     val tag = readerUtilsWrapper.getTagFromTagName(
                             mappedItem.tagSlug,
                             ReaderTagType.fromInt(mappedItem.tagType)
                     )
-                    Tag(
+                    SubfilterListItem.Tag(
                         tag = tag,
                         onClickAction = onClickAction,
                         isSelected = isSelected
                     )
                 } else {
-                    SiteAll(onClickAction = onClickAction, isSelected = isSelected)
+                    SubfilterListItem.SiteAll(onClickAction = onClickAction, isSelected = isSelected)
                 }
             }
-            SITE_ALL.value -> SiteAll(onClickAction = onClickAction, isSelected = isSelected)
+            SubfilterListItem.ItemType.SITE_ALL.value -> SubfilterListItem.SiteAll(
+                    onClickAction = onClickAction,
+                    isSelected = isSelected
+            )
             else -> throw IllegalArgumentException("fromJson > Unexpected Subfilter type $mappedItem.type")
         }
     }
@@ -79,14 +77,17 @@ class SubfilterListItemMapper @Inject constructor(
         val mappedItem = MappedSubfilterListItem(type = item.type.value)
 
         when (item) {
-            is Site -> {
+            is SubfilterListItem.Site -> {
                 mappedItem.feedId = item.blog.feedId
                 mappedItem.blogId = item.blog.blogId
             }
-            is Tag -> {
+            is SubfilterListItem.Tag -> {
                 mappedItem.tagSlug = item.tag.tagSlug
                 mappedItem.tagType = item.tag.tagType.toInt()
             }
+            is SubfilterListItem.Divider -> Unit // Do nothing
+            is SubfilterListItem.SectionTitle -> Unit // Do nothing
+            is SubfilterListItem.SiteAll -> Unit // Do nothing
         }
 
         return gson.toJson(mappedItem)

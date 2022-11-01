@@ -26,6 +26,7 @@ import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.util.text.PercentFormatter
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 
@@ -36,7 +37,8 @@ class ScanStateListItemsBuilder @Inject constructor(
     private val resourceProvider: ResourceProvider,
     private val threatItemBuilder: ThreatItemBuilder,
     private val threatDetailsListItemsBuilder: ThreatDetailsListItemsBuilder,
-    private val scanStore: ScanStore
+    private val scanStore: ScanStore,
+    private val percentFormatter: PercentFormatter
 ) {
     @Suppress("LongParameterList")
     suspend fun buildScanStateListItems(
@@ -90,10 +92,10 @@ class ScanStateListItemsBuilder @Inject constructor(
         items.add(scanHeader)
         items.add(scanDescription)
         items.add(scanProgress)
+        items.add(ThreatsHeaderItemState(threatsCount = fixingThreatIds.size))
 
         items.addAll(
                 fixingThreatIds.mapNotNull { threatId ->
-                    items.add(ThreatsHeaderItemState(threatsCount = fixingThreatIds.size))
                     scanStore.getThreatModelByThreatId(threatId)?.let { threatModel ->
                         val threatItem = threatItemBuilder.buildThreatItem(threatModel).copy(
                                 isFixing = true,
@@ -180,6 +182,7 @@ class ScanStateListItemsBuilder @Inject constructor(
         return items
     }
 
+    @Suppress("ForbiddenComment")
     private fun buildScanningStateItems(
         mostRecentStatus: ScanProgressStatus?,
         currentProgress: ScanProgressStatus?
@@ -198,10 +201,7 @@ class ScanStateListItemsBuilder @Inject constructor(
         val scanDescription = DescriptionState(UiStringRes(descriptionRes))
         val scanProgress = ProgressState(
                 progress = progress,
-                progressLabel = UiStringResWithParams(
-                        R.string.scan_progress_label,
-                        listOf(UiStringText(progress.toString()))
-                )
+                progressLabel = UiStringText(percentFormatter.format(progress))
         )
 
         items.add(scanIcon)

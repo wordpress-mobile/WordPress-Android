@@ -124,6 +124,7 @@ class EngagedPeopleListViewModel @Inject constructor(
         }
     }
 
+    @Suppress("ForbiddenComment")
     private fun loadRequest(
         listScenario: ListScenario?,
         requestPostOrComment: Boolean,
@@ -212,7 +213,7 @@ class EngagedPeopleListViewModel @Inject constructor(
         var emptyStateAction: (() -> Unit)? = null
 
         if (updateLikesState is Failure) {
-            updateLikesState.emptyStateData?.let {
+            updateLikesState.emptyStateData.let {
                 showEmptyState = it.showEmptyState
                 emptyStateTitle = it.title
                 emptyStateAction = ::onRefreshData

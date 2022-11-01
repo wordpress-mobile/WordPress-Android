@@ -2,6 +2,7 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.viewholders
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Color
 import android.net.http.SslError
 import android.util.Base64
 import android.view.View
@@ -35,6 +36,7 @@ class MapViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
 
     @SuppressLint("SetJavaScriptEnabled")
     fun bind(item: MapItem) {
+        webView.setBackgroundColor(Color.TRANSPARENT)
         coroutineScope.launch {
             delay(100)
             val context = itemView.context
@@ -116,6 +118,7 @@ class MapViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         return toHexString(ContextCompat.getColor(context, colorId))
     }
 
+    @Suppress("ImplicitDefaultLocale")
     private fun toHexString(@ColorInt color: Int): String {
         return String.format("%06X", (color and 0xffffff))
     }

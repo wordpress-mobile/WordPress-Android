@@ -7,11 +7,13 @@ import org.wordpress.android.BuildConfig
 import org.wordpress.android.fluxc.model.experiments.Assignments
 import org.wordpress.android.fluxc.model.experiments.Variation
 import org.wordpress.android.fluxc.model.experiments.Variation.Control
+import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.ExperimentStore
 import org.wordpress.android.fluxc.store.ExperimentStore.Platform
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.APPLICATION_SCOPE
 import org.wordpress.android.util.AppLog.T
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.experiments.ExPlat.RefreshStrategy.ALWAYS
 import org.wordpress.android.util.experiments.ExPlat.RefreshStrategy.IF_STALE
 import org.wordpress.android.util.experiments.ExPlat.RefreshStrategy.NEVER
@@ -25,6 +27,8 @@ class ExPlat
     private val experiments: Lazy<Set<Experiment>>,
     private val experimentStore: ExperimentStore,
     private val appLog: AppLogWrapper,
+    private val accountStore: AccountStore,
+    private val analyticsTracker: AnalyticsTrackerWrapper,
     @Named(APPLICATION_SCOPE) private val coroutineScope: CoroutineScope
 ) {
     private val platform = Platform.WORDPRESS_ANDROID
@@ -70,7 +74,7 @@ class ExPlat
     }
 
     private fun refresh(refreshStrategy: RefreshStrategy) {
-        if (experimentNames.isNotEmpty()) {
+        if (experimentNames.isNotEmpty() && (accountStore.hasAccessToken() || analyticsTracker.getAnonID() != null)) {
             getAssignments(refreshStrategy)
         }
     }
@@ -83,7 +87,8 @@ class ExPlat
         return cachedAssignments
     }
 
-    private suspend fun fetchAssignments() = experimentStore.fetchAssignments(platform, experimentNames).also {
+    private suspend fun fetchAssignments() =
+            experimentStore.fetchAssignments(platform, experimentNames, analyticsTracker.getAnonID()).also {
         if (it.isError) {
             appLog.d(T.API, "ExPlat: fetching assignments failed with result: ${it.error}")
         } else {

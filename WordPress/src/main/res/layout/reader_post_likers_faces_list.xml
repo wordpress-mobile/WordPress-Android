@@ -25,7 +25,7 @@
         android:importantForAccessibility="no"
         tools:itemCount="5"
         tools:layoutManager="LinearLayoutManager"
-        tools:listitem="@layout/liker_face_item"
+        tools:listitem="@layout/avatar_item"
         tools:orientation="horizontal" />
 
     <ProgressBar

@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 /**
  * One fragment to rule them all (Notes, that is)
  */
@@ -68,12 +70,6 @@ import org.wordpress.android.util.image.ImageType.BLAVATAR
 import java.util.ArrayList
 import javax.inject.Inject
 
-// This file was ported from java and there were many complains from linter,
-// fixed all of them but for the "TooManyFunctions" the total number of functions was reduced
-// but seemed not easily fully avoidable.
-// Skipping it for now since there will be probably more work around this area
-// and so further opportunity to iterate for review/refactor
-@Suppress("TooManyFunctions")
 class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
     private var restoredListPosition = 0
     private var notification: Note? = null
@@ -106,6 +102,7 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
         return view
     }
 
+    @Suppress("DEPRECATION")
     override fun onActivityCreated(bundle: Bundle?) {
         super.onActivityCreated(bundle)
         val listView = listView
@@ -191,6 +188,7 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
         super.onSaveInstanceState(outState)
     }
 
+    @Suppress("DEPRECATION")
     private fun reloadNoteBlocks() {
         LoadNoteBlocksTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
     }
@@ -303,7 +301,7 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
             }
         }
     }
-    private val mOnGravatarClickedListener = OnGravatarClickedListener { siteId, userId, siteUrl ->
+    private val mOnGravatarClickedListener = OnGravatarClickedListener { siteId, _, siteUrl ->
         if (!isAdded || activity !is NotificationsDetailActivity) {
             return@OnGravatarClickedListener
         }
@@ -319,6 +317,7 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
 
     // Loop through the 'body' items in this note, and create blocks for each.
     // TODO replace this inner async task with a coroutine
+    @Suppress("DEPRECATION")
     @SuppressLint("StaticFieldLeak")
     private inner class LoadNoteBlocksTask : AsyncTask<Void, Void, List<NoteBlock>?>() {
         private var mIsBadgeView = false
@@ -500,6 +499,7 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
             return hasRangeOfTypePost && hasRangeOfTypeSite
         }
 
+        @Suppress("DEPRECATION")
         private fun buildGeneratedLinkBlock(
             onNoteBlockTextClickListener: OnNoteBlockTextClickListener,
             pingbackUrl: String?,

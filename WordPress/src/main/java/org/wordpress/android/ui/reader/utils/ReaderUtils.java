@@ -25,6 +25,7 @@ import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.UrlUtils;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -132,12 +133,27 @@ public class ReaderUtils {
             return "";
         }
 
-        return title.trim()
-                    .replaceAll("&[^\\s]*;", "") // remove html entities
-                    .replaceAll("[\\.\\s]+", "-") // replace periods and whitespace with a dash
-                    .replaceAll("[^\\p{L}\\p{Nd}\\-]+",
-                            "") // remove remaining non-alphanum/non-dash chars (Unicode aware)
-                    .replaceAll("--", "-"); // reduce double dashes potentially added above
+        String trimmedTitle = title.trim();
+        if (isValidUrlEncodedString(trimmedTitle)) {
+            return trimmedTitle;
+        } else {
+            return trimmedTitle
+                        .replaceAll("&[^\\s]*;", "") // remove html entities
+                        .replaceAll("[\\.\\s]+", "-") // replace periods and whitespace with a dash
+                        .replaceAll("[^\\p{L}\\p{Nd}\\-]+",
+                                "") // remove remaining non-alphanum/non-dash chars (Unicode aware)
+                        .replaceAll("--", "-"); // reduce double dashes potentially added above
+        }
+    }
+
+    @NonNull
+    private static boolean isValidUrlEncodedString(String title) {
+        try {
+            URI.create(title);
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
+        return true;
     }
 
     /*

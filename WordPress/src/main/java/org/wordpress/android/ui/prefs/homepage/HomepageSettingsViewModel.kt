@@ -140,6 +140,7 @@ class HomepageSettingsViewModel
         return _uiState.value?.isClassicBlogState
     }
 
+    @Suppress("UseCheckOrError")
     fun start(siteId: Int, savedClassicBlogValue: Boolean?, savedPageForPostsId: Long?, savedPageOnFrontId: Long?) {
         dispatcher.register(this)
         launch {
@@ -185,6 +186,7 @@ class HomepageSettingsViewModel
         return remoteId <= 0 || this.any { it.remoteId == remoteId }
     }
 
+    @Suppress("UseCheckOrError")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onSiteChanged(event: OnSiteChanged) {
         val currentUiState = _uiState.value

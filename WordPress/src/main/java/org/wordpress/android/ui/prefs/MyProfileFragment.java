@@ -13,6 +13,8 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.model.AccountModel;
@@ -25,6 +27,7 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPTextView;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -36,6 +39,10 @@ public class MyProfileFragment extends Fragment implements TextInputDialogFragme
 
     @Inject Dispatcher mDispatcher;
     @Inject AccountStore mAccountStore;
+
+    private static final String TRACK_PROPERTY_FIELD_NAME = "field_name";
+    private static final String TRACK_PROPERTY_PAGE = "page";
+    private static final String TRACK_PROPERTY_PAGE_MY_PROFILE = "my_profile";
 
     public static MyProfileFragment newInstance() {
         return new MyProfileFragment();
@@ -132,6 +139,7 @@ public class MyProfileFragment extends Fragment implements TextInputDialogFragme
     }
 
     // helper method to create onClickListener to avoid code duplication
+    @SuppressWarnings("deprecation")
     private View.OnClickListener createOnClickListener(final String dialogTitle,
                                                        final String hint,
                                                        final WPTextView textView,
@@ -166,6 +174,14 @@ public class MyProfileFragment extends Fragment implements TextInputDialogFragme
         payload.params = new HashMap<>();
         payload.params.put(restParamForTextView(textView), textView.getText().toString());
         mDispatcher.dispatch(AccountActionBuilder.newPushSettingsAction(payload));
+        trackSettingsDidChange(restParamForTextView(textView));
+    }
+
+    private void trackSettingsDidChange(String fieldName) {
+        Map<String, String> props = new HashMap<>();
+        props.put(TRACK_PROPERTY_FIELD_NAME, fieldName);
+        props.put(TRACK_PROPERTY_PAGE, TRACK_PROPERTY_PAGE_MY_PROFILE);
+        AnalyticsTracker.track(Stat.SETTINGS_DID_CHANGE, props);
     }
 
     @Override

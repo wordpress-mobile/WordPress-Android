@@ -6,12 +6,11 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Build;
-import android.preference.PreferenceManager;
 import android.text.TextUtils;
-import android.util.Pair;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.preference.PreferenceManager;
 
 import java.text.Collator;
 import java.util.ArrayList;
@@ -20,6 +19,8 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Pattern;
+
+import kotlin.Triple;
 
 /**
  * Helper class for working with localized strings. Ensures updates to the users
@@ -236,8 +237,8 @@ public class LocaleManager {
      * Generates display strings for given language codes. Used as entries in language preference.
      */
     @Nullable
-    public static Pair<String[], String[]> createSortedLanguageDisplayStrings(CharSequence[] languageCodes,
-                                                                              Locale locale) {
+    public static Triple<String[], String[], String[]> createSortedLanguageDisplayStrings(CharSequence[] languageCodes,
+                                                                                Locale locale) {
         if (languageCodes == null || languageCodes.length < 1) {
             return null;
         }
@@ -253,15 +254,18 @@ public class LocaleManager {
 
         String[] sortedEntries = new String[languageCodes.length];
         String[] sortedValues = new String[languageCodes.length];
+        String[] detailStrings = new String[languageCodes.length];
 
         for (int i = 0; i < entryStrings.size(); ++i) {
             // now, we can split the sorted array to extract the display string and the language code
             String[] split = entryStrings.get(i).split("__");
             sortedEntries[i] = split[0];
             sortedValues[i] = split[1];
+            detailStrings[i] =
+                    StringUtils.capitalize(getLanguageString(sortedValues[i], languageLocale(sortedValues[i])));
         }
 
-        return new Pair<>(sortedEntries, sortedValues);
+        return new Triple<>(sortedEntries, sortedValues, detailStrings);
     }
 
     /**

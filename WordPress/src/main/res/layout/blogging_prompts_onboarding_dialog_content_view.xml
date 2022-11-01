@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingEnd="@dimen/margin_extra_medium_large"
+    android:paddingBottom="@dimen/margin_extra_medium_large"
     android:paddingStart="@dimen/margin_extra_medium_large">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -17,16 +18,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/content_top">
 
-        <include
-            android:id="@+id/prompt_card"
-            layout="@layout/my_site_blogging_promp_card"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
         <View
             android:id="@+id/card_cover_view"
             android:layout_width="0dp"
@@ -36,13 +27,24 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <include
+            android:id="@+id/prompt_card"
+            layout="@layout/my_site_blogging_prompt_card"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/content_top"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:gravity="center"
+        android:maxEms="70"
         android:textAppearance="?attr/textAppearanceBody1"
         app:layout_constraintBottom_toTopOf="@+id/prompt_card_container"
         app:layout_constraintEnd_toEndOf="parent"
@@ -53,10 +55,11 @@
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/content_bottom"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_extra_medium_large"
         android:gravity="center"
+        android:maxEms="70"
         android:textAppearance="?attr/textAppearanceBody1"
         app:layout_constraintBottom_toTopOf="@+id/content_note"
         app:layout_constraintEnd_toEndOf="parent"
@@ -72,13 +75,13 @@
         android:background="@drawable/bg_rectangle_black_60_radius_2dp"
         android:gravity="center"
         android:padding="@dimen/margin_large"
-        android:textAppearance="?attr/caption"
+        android:textColor="?attr/colorOnSurface"
+        android:textAppearance="?attr/textAppearanceCaption"
         android:textSize="@dimen/text_sz_small"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/content_bottom"
-        tools:text="@string/blogging_prompts_onboarding_content_note" />
-
+        tools:text="@string/blogging_prompts_onboarding_content_note_content" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

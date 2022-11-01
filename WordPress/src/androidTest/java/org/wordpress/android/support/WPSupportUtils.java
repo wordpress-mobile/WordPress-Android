@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.widget.Checkable;
 
+import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.test.espresso.AmbiguousViewMatcherException;
@@ -284,7 +285,7 @@ public class WPSupportUtils {
         moveCaretToEndAndDisplayIn(postTitle);
     }
 
-    public static Boolean dialogExistsWithTitle(String title) {
+    public static Boolean dialogExistsWithTitle(@StringRes int title) {
         ViewInteraction view = onView(withText(title));
 
         if (!isElementDisplayed(view)) {
@@ -295,7 +296,7 @@ public class WPSupportUtils {
         return isElementDisplayed(dialog);
     }
 
-    public static void tapButtonInDialogWithTitle(String title) {
+    public static void tapButtonInDialogWithTitle(@StringRes int title) {
         ViewInteraction dialogButton = onView(withText(title)).inRoot(isDialog());
         clickOn(dialogButton);
     }
@@ -815,6 +816,21 @@ public class WPSupportUtils {
         while (!isElementCompletelyDisplayed(objectToScrollTo) && swipeCount < 20) {
             swipeUpOnView(scrollableContainerID, yFactor);
             swipeCount += 1;
+        }
+    }
+
+    public static void dismissJetpackAdIfPresent() {
+        String jetpackAdText = "Stats, Reader, Notifications, and other features are powered by Jetpack.";
+        ViewInteraction jetpackBanner = onView(withText(jetpackAdText));
+
+        // Dismiss Jetpack ad that might be shown after Sign-Up or after opening Stats
+        if (isElementDisplayed(jetpackBanner)) {
+            clickOn(onView(withId(R.id.secondary_button)));
+            waitForElementToNotBeDisplayed(jetpackBanner);
+
+            // Account for potential Emulator slowness on CI: the case of banner text
+            // being already hidden, but top part of banner still sliding away
+            idleFor(1000);
         }
     }
 }

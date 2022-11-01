@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2017-05-01 23:08:27+0000
 Plural-Forms: nplurals=2; plural=n % 10 != 1 || n % 100 == 11;
-Generator: GlotPress/3.0.0-rc.4
+Generator: GlotPress/4.0.0-alpha.3
 Language: is
 -->
 <resources>
@@ -458,7 +458,6 @@ Language: is
     <string name="stats_followers_a_minute_ago">fyrir mínútu síðan</string>
     <string name="stats_view_countries">Lönd</string>
     <string name="stats_view_videos">Myndbönd</string>
-    <string name="stats_view_publicize">Birta</string>
     <string name="stats_timeframe_years">Ár</string>
     <string name="stats_views">Flettingar</string>
     <string name="stats_likes">Líkar við</string>

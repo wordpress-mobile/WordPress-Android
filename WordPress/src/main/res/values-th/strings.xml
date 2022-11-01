@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2016-12-01 04:20:36+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/3.0.0-rc.4
+Generator: GlotPress/4.0.0-alpha.3
 Language: th
 -->
 <resources>
@@ -204,7 +204,6 @@ Language: th
     <string name="stats_followers_a_minute_ago">นาทีที่แล้ว</string>
     <string name="stats_followers_seconds_ago">วินาทีที่แล้ว</string>
     <string name="themes_fetching">กำลังดึงข้อมูลธีม</string>
-    <string name="stats_view_publicize">การเผยแพร่</string>
     <string name="ssl_certificate_details">รายละเอียด</string>
     <string name="cab_selected">%d ถูกเลือก</string>
     <string name="comment_reply_to_user">ตอบกลับไปที่ %s</string>

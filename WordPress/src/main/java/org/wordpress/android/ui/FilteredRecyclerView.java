@@ -87,6 +87,11 @@ public class FilteredRecyclerView extends RelativeLayout {
         return mRecyclerView;
     }
 
+    public RecyclerView getSearchSuggestionsRecyclerView() {
+        return mSearchSuggestionsRecyclerView;
+    }
+
+
     public void setRefreshing(boolean refreshing) {
         mSwipeToRefreshHelper.setRefreshing(refreshing);
     }

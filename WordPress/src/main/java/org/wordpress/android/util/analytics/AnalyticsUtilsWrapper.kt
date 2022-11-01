@@ -20,7 +20,6 @@ import javax.inject.Inject
  * Main purpose of this wrapper is to make testing easier.
  */
 @Reusable
-@SuppressWarnings("TooManyFunctions")
 class AnalyticsUtilsWrapper @Inject constructor(
     private val appContext: Context
 ) {

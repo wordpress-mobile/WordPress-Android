@@ -14,27 +14,18 @@
         android:tint="?attr/colorOnSurface" />
 
     <TextView
-        android:id="@+id/title"
+        android:id="@+id/appBarTitle"
         style="@style/ModalLayoutPickerHeader"
         android:layout_width="0dp"
         android:layout_weight="1"
+        android:textAlignment="textStart"
         android:paddingStart="@dimen/hpp_title_padding_start"
         android:paddingEnd="0dp"
         android:text="@string/hpp_title" />
 
-    <ImageButton
-        android:id="@+id/previewTypeSelectorButton"
-        style="@style/WebPreviewNavbarButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_weight="0"
-        android:contentDescription="@string/preview_type_desc"
-        android:src="@drawable/ic_devices_white_24dp" />
-
     <Button
         android:id="@+id/skipButton"
-        style="@style/HomePagePickerSkipButton"
+        style="@style/SiteCreationSkipButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end"

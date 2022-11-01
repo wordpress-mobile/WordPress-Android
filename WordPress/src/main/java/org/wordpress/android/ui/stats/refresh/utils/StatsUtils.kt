@@ -3,8 +3,11 @@ package org.wordpress.android.ui.stats.refresh.utils
 import androidx.annotation.StringRes
 import org.wordpress.android.R
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem.Bar
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.LineChartItem.Line
 import org.wordpress.android.util.LocaleManagerWrapper
+import org.wordpress.android.util.text.PercentFormatter
 import org.wordpress.android.viewmodel.ResourceProvider
+import java.math.RoundingMode.HALF_UP
 import java.text.DecimalFormat
 import java.util.TreeMap
 import javax.inject.Inject
@@ -15,10 +18,10 @@ const val TEN_THOUSAND = 10000
 const val HUNDRED_THOUSAND = 100000
 const val MILLION = 1000000
 
-class StatsUtils
-@Inject constructor(
+class StatsUtils @Inject constructor(
     private val resourceProvider: ResourceProvider,
-    private val localeManager: LocaleManagerWrapper
+    private val localeManager: LocaleManagerWrapper,
+    private val percentFormatter: PercentFormatter
 ) {
     private val suffixes = TreeMap(
             mapOf(
@@ -89,8 +92,8 @@ class StatsUtils
         }
 
         val e = suffixes.floorEntry(safeNumber)
-        val divideBy = e.key
-        val suffix = e.value
+        val divideBy = e?.key
+        val suffix = e?.value
 
         val truncated = safeNumber / (divideBy!! / 10)
         val hasDecimal = truncated < 100 && truncated / 10.0 != (truncated / 10).toDouble()
@@ -163,6 +166,55 @@ class StatsUtils
             contentDescriptions.add(contentDescription)
         }
         return contentDescriptions
+    }
+
+    fun getLineChartEntryContentDescriptions(
+        @StringRes entryType: Int,
+        entries: List<Line>
+    ): List<String> {
+        val contentDescriptions = mutableListOf<String>()
+        entries.forEach { bar ->
+            val contentDescription = resourceProvider.getString(
+                    R.string.stats_bar_chart_accessibility_entry,
+                    bar.label,
+                    bar.value,
+                    resourceProvider.getString(entryType)
+            )
+            contentDescriptions.add(contentDescription)
+        }
+        return contentDescriptions
+    }
+
+    fun buildChange(
+        previousValue: Long?,
+        value: Long,
+        positive: Boolean,
+        isFormattedNumber: Boolean
+    ): String? {
+        return previousValue?.let {
+            val difference = value - previousValue
+            val percentage = when (previousValue) {
+                value -> "0"
+                0L -> "∞"
+                else -> {
+                    val percentageValue = difference.toFloat() / previousValue
+                    percentFormatter.format(value = percentageValue, rounding = HALF_UP)
+                }
+            }
+            val formattedDifference = mapLongToString(difference, isFormattedNumber)
+            if (positive) {
+                resourceProvider.getString(R.string.stats_traffic_increase, formattedDifference, percentage)
+            } else {
+                resourceProvider.getString(R.string.stats_traffic_change, formattedDifference, percentage)
+            }
+        }
+    }
+
+    private fun mapLongToString(value: Long, isFormattedNumber: Boolean): String {
+        return when (isFormattedNumber) {
+            true -> toFormattedString(value)
+            false -> value.toString()
+        }
     }
 }
 

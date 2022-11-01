@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package org.wordpress.android.ui.accounts.signup
 
 import android.app.ProgressDialog
@@ -33,7 +35,7 @@ import org.wordpress.android.widgets.WPDialogSnackbar
  */
 class SettingsUsernameChangerFragment : BaseUsernameChangerFullScreenDialogFragment() {
     private lateinit var dialogController: FullScreenDialogController
-    private var progressDialog: ProgressDialog? = null
+    @Suppress("DEPRECATION") private var progressDialog: ProgressDialog? = null
 
     override fun getSuggestionsFailedStat() = ACCOUNT_SETTINGS_CHANGE_USERNAME_SUGGESTIONS_FAILED
     override fun canHeaderTextLiveUpdate() = false
@@ -45,6 +47,8 @@ class SettingsUsernameChangerFragment : BaseUsernameChangerFullScreenDialogFragm
                     "</b>"
             ), HtmlCompat.FROM_HTML_MODE_LEGACY
     )
+
+    override fun getTrackEventSource() = SOURCE
 
     override fun setController(controller: FullScreenDialogController) {
         super.setController(controller)
@@ -152,6 +156,7 @@ class SettingsUsernameChangerFragment : BaseUsernameChangerFullScreenDialogFragm
         }
     }
 
+    @Suppress("DEPRECATION")
     fun showProgress() {
         if (progressDialog == null || progressDialog?.window == null || progressDialog?.isShowing == false) {
             progressDialog = ProgressDialog(context).apply {
@@ -185,5 +190,9 @@ class SettingsUsernameChangerFragment : BaseUsernameChangerFullScreenDialogFragm
                 Snackbar.LENGTH_LONG
         )
                 .show()
+    }
+
+    companion object {
+        const val SOURCE = "account_settings"
     }
 }

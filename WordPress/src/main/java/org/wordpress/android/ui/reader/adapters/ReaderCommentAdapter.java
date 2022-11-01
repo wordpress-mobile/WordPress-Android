@@ -190,7 +190,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         mPostsSite = mSiteStore.getSiteBySiteId(post.blogId);
 
         // calculate the max width of comment content
-        int displayWidth = DisplayUtils.getDisplayPixelWidth(context);
+        int displayWidth = DisplayUtils.getWindowPixelWidth(context);
         int cardMargin = context.getResources().getDimensionPixelSize(R.dimen.reader_card_margin);
         int contentPadding = context.getResources().getDimensionPixelSize(R.dimen.reader_card_content_padding);
         int mediumMargin = context.getResources().getDimensionPixelSize(R.dimen.margin_medium);
@@ -232,6 +232,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         return position == 0 ? VIEW_TYPE_HEADER : VIEW_TYPE_COMMENT;
     }
 
+    @SuppressWarnings("deprecation")
     public void refreshComments() {
         if (mIsTaskRunning) {
             AppLog.w(T.READER, "reader comment adapter > Load comments task already running");
@@ -658,6 +659,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
      */
     private boolean mIsTaskRunning = false;
 
+    @SuppressWarnings("deprecation")
     @SuppressLint("StaticFieldLeak")
     private class LoadCommentsTask extends AsyncTask<Void, Void, Boolean> {
         private ReaderCommentList mTmpComments;

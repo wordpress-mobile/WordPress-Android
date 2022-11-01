@@ -2,28 +2,32 @@ package org.wordpress.android.modules
 
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import org.wordpress.android.util.helpers.Debouncer
 import javax.inject.Named
 
-@Deprecated(message = "Implement CoroutineScope interface and cancel all child coroutines in onCleared/onDestroy/..")
-const val UI_SCOPE = "UI_SCOPE"
-@Deprecated(message = "Implement CoroutineScope interface and cancel all child coroutines in onCleared/onDestroy/..")
-const val DEFAULT_SCOPE = "DEFAULT_SCOPE"
 const val APPLICATION_SCOPE = "APPLICATION_SCOPE"
+
 const val UI_THREAD = "UI_THREAD"
 const val BG_THREAD = "BG_THREAD"
 const val IO_THREAD = "IO_THREAD"
 
+@InstallIn(SingletonComponent::class)
 @Module
 class ThreadModule {
+    /* SCOPE */
+
     @Provides
-    @Named(UI_SCOPE)
-    fun provideUiScope(): CoroutineScope {
-        return CoroutineScope(Dispatchers.Main)
+    @Named(APPLICATION_SCOPE)
+    fun provideApplicationScope(): CoroutineScope {
+        return CoroutineScope(Dispatchers.Default)
     }
+
+    /* DISPATCHER */
 
     @Provides
     @Named(UI_THREAD)
@@ -32,24 +36,8 @@ class ThreadModule {
     }
 
     @Provides
-    @Named(DEFAULT_SCOPE)
-    @Deprecated(
-            message = "CoroutineScope should be provided by an object which implements CoroutineScope",
-            replaceWith = ReplaceWith("Inject dispatcher and implement CoroutineScope interface")
-    )
-    fun provideBackgroundScope(): CoroutineScope {
-        return CoroutineScope(Dispatchers.Default)
-    }
-
-    @Provides
-    @Named(APPLICATION_SCOPE)
-    fun provideApplicationScope(): CoroutineScope {
-        return CoroutineScope(Dispatchers.Default)
-    }
-
-    @Provides
     @Named(BG_THREAD)
-    fun provideBackgroundDispatcher(): CoroutineDispatcher {
+    fun provideBgDispatcher(): CoroutineDispatcher {
         return Dispatchers.Default
     }
 
@@ -58,6 +46,8 @@ class ThreadModule {
     fun provideIoDispatcher(): CoroutineDispatcher {
         return Dispatchers.IO
     }
+
+    /* OTHER */
 
     @Provides
     fun provideDebouncer(): Debouncer {

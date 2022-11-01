@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-02-05 09:32:53+0000
+Translation-Revision-Date: 2022-10-18 07:57:05+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
-Generator: GlotPress/3.0.0-rc.4
+Generator: GlotPress/4.0.0-alpha.3
 Language: hr
 -->
 <resources>
@@ -17,7 +17,6 @@ Language: hr
     <string name="scan">Skeniraj</string>
     <string name="reader_discover_empty_title">Dobro došli!</string>
     <string name="hpp_choose_button">Odaberi</string>
-    <string name="hpp_title">Odaberite dizajn</string>
     <string name="prepublishing_nudges_add_category_button">Dodaj Kategoriju</string>
     <string name="prepublishing_nudges_toolbar_title_add_categories">Dodaj novu kategoriju</string>
     <string name="prepublishing_nudges_toolbar_title_categories">Kategorije</string>
@@ -80,31 +79,117 @@ Language: hr
     <string name="sound_button_alt">Zvuk</string>
     <string name="text_button_alt">Tekst</string>
     <string name="stickers_button_alt">Naljepnice</string>
+    <string name="comment_q_action_replying">Odgovaram …</string>
+    <string name="comment_q_action_approving">Odobravam …</string>
+    <string name="comment_q_action_liking">Sviđa mi se …</string>
+    <string name="comment_q_action_processing">Obrađujem …</string>
+    <string name="comment_q_action_done_generic">Radnja obavljena!</string>
+    <string name="comment_liked">Komentar mi se sviđa</string>
+    <string name="signout">Odjava</string>
+    <string name="sign_in_wpcom">Prijavite se na WordPress.com</string>
+    <string name="reader_label_global_related_posts">Više na WordPress.com</string>
+    <string name="reader_label_local_related_posts">Više od %s</string>
+    <string name="preference_open_device_settings">Otvorite postavke telefona</string>
+    <string name="invite_invalid_email">%s: Neispravna e-pošta</string>
+    <string name="invite_user_blocked_invites">%s: Korisnik je blokirao pozivnice</string>
+    <string name="invite_already_following">%s: Već pratite</string>
+    <string name="invite_username_not_found">%s: Korisnik nije pronađen</string>
+    <string name="invite_already_a_member">%s: Već ste član</string>
+    <string name="comment_moderated_approved">Komentar odobren!</string>
+    <string name="like">Kao</string>
+    <string name="timespan_now">sada</string>
+    <string name="role_follower">Pratitelj</string>
+    <string name="role_viewer">Pregledavač</string>
+    <string name="error_post_my_profile_no_connection">Nema internetske veze, nije moguće spremiti vaš profil</string>
     <string name="alignment_none">Ništa</string>
     <string name="alignment_right">Desno</string>
     <string name="alignment_left">Lijevo</string>
+    <string name="site_settings_list_editor_action_mode_title">Odabrano %1$d</string>
+    <string name="error_fetch_users_list">Nije moguće dohvatiti korisnike stranice</string>
     <string name="title_follower">Sljedbenik</string>
     <string name="people_fetching">Dohvaćanje korisnika…</string>
+    <string name="title_email_follower">Pratitelji pošte</string>
     <string name="people_dropdown_item_viewers">Posjetitelji</string>
+    <string name="people_dropdown_item_email_followers">Pratitelji putem e-pošte</string>
     <string name="people_dropdown_item_followers">Pratitelji</string>
+    <string name="people_dropdown_item_team">Tim</string>
+    <string name="invite_message_usernames_limit">Pozovite do 10 adresa e-pošte i/ili korisničkih imena s WordPress.com. Oni koji trebaju korisničko ime dobit će upute kako ga izraditi.</string>
+    <string name="follower_remove_confirmation_message">Ako ga uklonite, ovaj će pratitelj prestati primati obavijesti o ovoj stranici, osim ako ih ponovno ne počne pratiti. Želite li i dalje ukloniti ovog pratitelja?</string>
+    <string name="follower_subscribed_since">Od %1$s</string>
+    <string name="error_remove_follower">Nije moguće ukloniti pratitelja</string>
+    <string name="error_remove_viewer">Nije moguće ukloniti pregledavača</string>
+    <string name="error_fetch_email_followers_list">Nije moguće dohvatiti e-poštu pratitelja ove stranice</string>
+    <string name="error_fetch_followers_list">Nije moguće dohvatiti pratitelje stranice</string>
+    <string name="editor_failed_uploads_switch_html">Neki od medijskih zapisa koje ste prenijeli nisu uspješno preneseni. Trenutačno se ne možete prebaciti na HTML način. Želite li ukloniti sve neuspjele medijske zapise i nastaviti?</string>
+    <string name="visual_editor">Vizualni uređivač</string>
+    <string name="image_thumbnail">Sličica</string>
     <string name="image_width">Širina</string>
     <string name="image_link_to">Poveznica za</string>
     <string name="image_caption">Naslov</string>
     <string name="image_settings_save_toast">Promijene spremljene.</string>
+    <string name="image_alt_text">Alternativni tekst</string>
+    <string name="image_settings_dismiss_dialog_title">Odbaciti spremljene promjene?</string>
+    <string name="stop_upload_dialog_title">Zaustaviti prijenos?</string>
+    <string name="alert_error_adding_media">Došlo je do pogreške tijekom unosa medijskog zapisa</string>
+    <string name="alert_action_while_uploading">Trenutno prenosite medijske zapise. Pričekajte dok se prijenos ne završi.</string>
+    <string name="alert_insert_image_html_mode">Nije moguće izravno umetnuti medijske zapise u kodnom HTML uređivaču. Prijeđite na vizualni način rada.</string>
+    <string name="uploading_gallery_placeholder">Prijenos galerije …</string>
+    <string name="tap_to_try_again">Dodirnite za ponovni pokušaj!</string>
+    <string name="invite_sent">Pozivnica je uspješno poslana</string>
+    <string name="invite_error_for_username">%1$s: %2$s</string>
+    <string name="invite_error_some_failed">Pozivnice su poslane, ali bilo je grešaka!</string>
+    <string name="invite_error_sending">Došlo je do pogreške tijekom slanja pozivnica!</string>
+    <string name="invite_error_invalid_usernames_multiple">Nije moguće poslati: neispravna e-pošta ili korisnička imena</string>
+    <string name="invite_error_invalid_usernames_one">Nije moguće poslati: Korisničko ime ili e-pošta nisu ispravno navedeni</string>
+    <string name="invite_error_no_usernames">Dodajte barem jedno korisničko ime</string>
+    <string name="invite_message_title">Prilagođena poruka</string>
     <string name="invite">Pozovi</string>
+    <string name="invite_names_title">Korisnička imena ili adrese e-pošte</string>
     <string name="invite_people">Pozovi osobe</string>
+    <string name="my_site_header_external">Vanjski</string>
+    <string name="label_clear_search_history">Obriši povijest pretraživanja</string>
+    <string name="dlg_confirm_clear_search_history">Očistiti povijest pretraživanja?</string>
+    <string name="reader_hint_post_search">Pretražite WordPress</string>
     <string name="reader_title_related_post_detail">Vezana objava</string>
+    <string name="preview_screen_links_disabled">Poveznice su onemogućene na zaslonu pretpregleda</string>
     <string name="send">Pošalji</string>
+    <string name="person_removed">Uspješno uklonjeno %1$s</string>
+    <string name="user_remove_confirmation_message">Ako uklonite %1$s, taj korisnik više neće moći pristupiti web mjestu, ali sav sadržaj koji je stvorio %1$s ostat će na web mjestu.\n\nJoš uvijek želite ukloniti ovog korisnika?</string>
+    <string name="person_remove_confirmation_title">Ukloni %1$s</string>
     <string name="people">Ljudi</string>
     <string name="role">Uloga</string>
+    <string name="reader_empty_posts_in_custom_list">Web-mjesta na ovom popisu već neko vrijeme nisu ništa objavila</string>
+    <string name="error_remove_user">Korisnik nije uklonjen</string>
+    <string name="error_update_role">Uloga korisnika nije promijenjena</string>
+    <string name="error_updating_gravatar">Pogreška tijekom promjene vašeg Gravatara</string>
+    <string name="error_refreshing_gravatar">Pogreška tijekom učitavanja vašeg Gravatara</string>
+    <string name="error_locating_image">Pogreška tijekom pronalaženja izrezane slike</string>
+    <string name="error_cropping_image">Pogreška tijekom izrezivanja slike</string>
+    <string name="checking_email">Provjeravam e-poštu</string>
+    <string name="magic_link_unavailable_error_message">Trenutačno nedostupno. Molimo unesite svoju lozinku</string>
+    <string name="logging_in">Prijavljivanje</string>
+    <string name="web_address_dialog_hint">Prikazuje se javno kada komentirate.</string>
+    <string name="capture_or_pick_photo">Snimite fotografiju fotoaparatom ili odaberite fotografiju</string>
     <string name="plan">Plan</string>
     <string name="plans">Planovi</string>
+    <string name="export_your_content_message">Vaše će objave, stranice i postavke biti poslani e-poštom na %s.</string>
+    <string name="export_your_content">Izvezite svoj sadržaj</string>
+    <string name="exporting_content_progress">Izvoz sadržaja …</string>
+    <string name="export_email_sent">E-mail obavijest o izvozu sadržaja je poslana</string>
     <string name="show_purchases">Prikaži kupovine</string>
+    <string name="checking_purchases">Provjeravam kupovine</string>
     <string name="premium_upgrades_title">Premium nadogradnje </string>
     <string name="delete_site_progress">Brisanje web-stranice …</string>
     <string name="delete_site_hint">Obriši web-stranicu</string>
+    <string name="export_site_hint">Izvezite svoju web stranicu u XML datoteku</string>
     <string name="primary_domain">Primarna domena</string>
+    <string name="error_deleting_site_summary">Došlo je do pogreške tijekom brisanja vaše stranice. Molimo kontaktirajte podršku za više informacija.</string>
+    <string name="error_deleting_site">Pogreška tijekom brisanja stranice</string>
+    <string name="confirm_delete_site_prompt">Molimo unesite %1$s u donje polje za potvrdu. Vaša će stranica tada biti trajno izbrisana.</string>
+    <string name="site_settings_export_content_title">Izvoz sadržaja</string>
     <string name="contact_support">Kontaktirajte podršku</string>
+    <string name="confirm_delete_site">Potvrdite brisanje stranice</string>
+    <string name="start_over_text">Ako želite web stranicu, ali ne želite članke i stranice koje sada imate, naš tim za podršku može izbrisati vaše članke, stranice, medije i komentare umjesto vas.\n\nOvo će održati vašu web stranicu i URL aktivnima, ali vam dati novi početak u stvaranju sadržaja. Samo nas kontaktirajte kako bismo uklonili vaš trenutni sadržaj.</string>
     <string name="let_us_help">Dopustite nam da pomognemo </string>
     <string name="site_settings_start_over_hint">Pokrenite svoju web stranicu ispočetka </string>
     <string name="start_over">Kreni ispočetka</string>
@@ -114,6 +199,7 @@ Language: hr
     <string name="comments_empty_list_filtered_trashed">Nema komentara u smeću </string>
     <string name="comments_empty_list_filtered_pending">Nema komentara na čekanju </string>
     <string name="comments_empty_list_filtered_approved">Nema odobrenih komentara</string>
+    <string name="button_skip">Preskoči</string>
     <string name="alignment_center">Sredina</string>
     <string name="post_format_video">Video</string>
     <string name="post_format_status">Stanje</string>
@@ -418,7 +504,6 @@ Language: hr
     <string name="stats_followers_years">%1$d godina</string>
     <string name="stats_followers_a_month">Mjesec</string>
     <string name="stats_followers_minutes">%1$d minuta</string>
-    <string name="stats_view_publicize">Publicirajte</string>
     <string name="ssl_certificate_details">Detalji</string>
     <string name="cab_selected">%d odabrano</string>
     <string name="reader_label_like">Lajk</string>

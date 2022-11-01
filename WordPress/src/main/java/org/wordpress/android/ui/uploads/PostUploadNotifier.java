@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.uploads;
 
-import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -12,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.collection.SparseArrayCompat;
 import androidx.core.app.NotificationCompat;
+import androidx.core.app.TaskStackBuilder;
 
 import org.greenrobot.eventbus.EventBus;
 import org.wordpress.android.R;
@@ -25,7 +25,6 @@ import org.wordpress.android.push.NotificationType;
 import org.wordpress.android.push.NotificationsProcessingService;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
-import org.wordpress.android.ui.notifications.ShareAndDismissNotificationReceiver;
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker;
 import org.wordpress.android.ui.pages.PagesActivity;
 import org.wordpress.android.ui.posts.EditPostActivity;
@@ -289,10 +288,9 @@ class PostUploadNotifier {
         }
     }
 
-    @SuppressLint("NotificationTrampoline")
     void updateNotificationSuccessForPost(@NonNull PostImmutableModel post, @NonNull SiteModel site,
                                           boolean isFirstTimePublish) {
-        if (!WordPress.sAppIsInTheBackground) {
+        if (!WordPress.Companion.getAppIsInTheBackground()) {
             // only produce success notifications for the user if the app is in the background
             return;
         }
@@ -366,14 +364,8 @@ class PostUploadNotifier {
 
         // Share intent - started if the user tap the share link button - only if the link exist
         if (shareableUrl != null && PostStatus.fromPost(post) == PostStatus.PUBLISHED) {
-            Intent shareIntent = new Intent(mContext, ShareAndDismissNotificationReceiver.class);
-            shareIntent.putExtra(ShareAndDismissNotificationReceiver.NOTIFICATION_ID_KEY, notificationId);
-            shareIntent.putExtra(Intent.EXTRA_TEXT, shareableUrl);
-            shareIntent.putExtra(Intent.EXTRA_SUBJECT, post.getTitle());
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext, 0, shareIntent,
-                    PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_IMMUTABLE);
             notificationBuilder.addAction(R.drawable.ic_share_white_24dp, mContext.getString(R.string.share_action),
-                    pendingIntent);
+                    getSharePendingIntent(post, shareableUrl));
         }
 
         // add draft Publish action for drafts
@@ -395,7 +387,7 @@ class PostUploadNotifier {
             EventBus.getDefault().postSticky(new UploadService.UploadMediaSuccessEvent(mediaList, snackbarMessage));
         }
 
-        if (!WordPress.sAppIsInTheBackground) {
+        if (!WordPress.Companion.getAppIsInTheBackground()) {
             // only produce success notifications for the user if the app is in the background
             return;
         }
@@ -568,6 +560,21 @@ class PostUploadNotifier {
         notificationIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         return notificationIntent;
+    }
+
+    @Nullable
+    private PendingIntent getSharePendingIntent(@NonNull PostImmutableModel post, String shareableUrl) {
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.setType("text/plain");
+        shareIntent.putExtra(Intent.EXTRA_TEXT, shareableUrl);
+        shareIntent.putExtra(Intent.EXTRA_SUBJECT, post.getTitle());
+        shareIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+        TaskStackBuilder builder = TaskStackBuilder.create(mContext);
+        builder.addNextIntentWithParentStack(shareIntent);
+        PendingIntent pendingIntent = builder
+                .getPendingIntent(0, PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+        return pendingIntent;
     }
 
     void updateNotificationErrorForMedia(@NonNull List<MediaModel> mediaList, @NonNull SiteModel site,

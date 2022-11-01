@@ -4,11 +4,12 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
+import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
+import kotlinx.coroutines.cancel
+import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
-import org.wordpress.android.WordPress
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.accounts.HelpActivity.Origin
@@ -26,6 +27,7 @@ import org.wordpress.android.ui.sitecreation.SiteCreationStep.SITE_PREVIEW
 import org.wordpress.android.ui.sitecreation.domains.DomainsScreenListener
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsFragment
 import org.wordpress.android.ui.sitecreation.misc.OnHelpClickedListener
+import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
 import org.wordpress.android.ui.sitecreation.previews.SiteCreationPreviewFragment
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewScreenListener
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.CreateSiteState
@@ -46,7 +48,7 @@ import org.wordpress.android.util.config.SiteNameFeatureConfig
 import org.wordpress.android.util.wizard.WizardNavigationTarget
 import javax.inject.Inject
 
-@Suppress("TooManyFunctions")
+@AndroidEntryPoint
 class SiteCreationActivity : LocaleAwareActivity(),
         IntentsScreenListener,
         SiteNameScreenListener,
@@ -55,26 +57,19 @@ class SiteCreationActivity : LocaleAwareActivity(),
         OnHelpClickedListener,
         BasicDialogPositiveClickInterface,
         BasicDialogNegativeClickInterface {
-    @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject internal lateinit var uiHelpers: UiHelpers
     @Inject internal lateinit var siteNameFeatureConfig: SiteNameFeatureConfig
-    private lateinit var mainViewModel: SiteCreationMainVM
-    private lateinit var hppViewModel: HomePagePickerViewModel
-    private lateinit var siteCreationIntentsViewModel: SiteCreationIntentsViewModel
-    private lateinit var siteCreationSiteNameViewModel: SiteCreationSiteNameViewModel
+    private val mainViewModel: SiteCreationMainVM by viewModels()
+    private val hppViewModel: HomePagePickerViewModel by viewModels()
+    private val siteCreationIntentsViewModel: SiteCreationIntentsViewModel by viewModels()
+    private val siteCreationSiteNameViewModel: SiteCreationSiteNameViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (application as WordPress).component().inject(this)
         setContentView(R.layout.site_creation_activity)
-        mainViewModel = ViewModelProvider(this, viewModelFactory).get(SiteCreationMainVM::class.java)
-        hppViewModel = ViewModelProvider(this, viewModelFactory).get(HomePagePickerViewModel::class.java)
-        siteCreationIntentsViewModel = ViewModelProvider(this, viewModelFactory)
-                .get(SiteCreationIntentsViewModel::class.java)
-        siteCreationSiteNameViewModel = ViewModelProvider(this, viewModelFactory)
-                .get(SiteCreationSiteNameViewModel::class.java)
-        mainViewModel.start(savedInstanceState)
-        hppViewModel.loadSavedState(savedInstanceState)
+        val siteCreationSource = intent.extras?.getString(ARG_CREATE_SITE_SOURCE)
+        mainViewModel.start(savedInstanceState, SiteCreationSource.fromString(siteCreationSource))
+        mainViewModel.preloadThumbnails(this)
 
         observeVMState()
     }
@@ -82,7 +77,6 @@ class SiteCreationActivity : LocaleAwareActivity(),
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         mainViewModel.writeToBundle(outState)
-        hppViewModel.writeToBundle(outState)
     }
 
     private fun observeVMState() {
@@ -91,18 +85,20 @@ class SiteCreationActivity : LocaleAwareActivity(),
         mainViewModel.wizardFinishedObservable.observe(this, Observer { createSiteState ->
             createSiteState?.let {
                 val intent = Intent()
-                val (siteCreated, localSiteId) = when (createSiteState) {
+                val (siteCreated, localSiteId, titleTaskComplete) = when (createSiteState) {
                     // site creation flow was canceled
-                    is SiteNotCreated -> Pair(false, null)
+                    is SiteNotCreated -> Triple(false, null, false)
                     is SiteNotInLocalDb -> {
                         // Site was created, but we haven't been able to fetch it, let `SitePickerActivity` handle
                         // this with a Snackbar message.
                         intent.putExtra(SitePickerActivity.KEY_SITE_CREATED_BUT_NOT_FETCHED, true)
-                        Pair(true, null)
+                        Triple(true, null, createSiteState.isSiteTitleTaskComplete)
                     }
-                    is SiteCreationCompleted -> Pair(true, createSiteState.localSiteId)
+                    is SiteCreationCompleted -> Triple(true, createSiteState.localSiteId,
+                            createSiteState.isSiteTitleTaskComplete)
                 }
                 intent.putExtra(SitePickerActivity.KEY_SITE_LOCAL_ID, localSiteId)
+                intent.putExtra(SitePickerActivity.KEY_SITE_TITLE_TASK_COMPLETED, titleTaskComplete)
                 setResult(if (siteCreated) Activity.RESULT_OK else Activity.RESULT_CANCELED, intent)
                 finish()
             }
@@ -120,6 +116,7 @@ class SiteCreationActivity : LocaleAwareActivity(),
             finish()
         })
         mainViewModel.onBackPressedObservable.observe(this, Observer {
+            ActivityUtils.hideKeyboard(this)
             super.onBackPressed()
         })
         siteCreationIntentsViewModel.onBackButtonPressed.observe(this, Observer {
@@ -130,6 +127,7 @@ class SiteCreationActivity : LocaleAwareActivity(),
         })
         siteCreationSiteNameViewModel.onBackButtonPressed.observe(this, Observer {
             mainViewModel.onBackPressed()
+            ActivityUtils.hideKeyboard(this)
         })
         siteCreationSiteNameViewModel.onSkipButtonPressed.observe(this, Observer {
             ActivityUtils.hideKeyboard(this)
@@ -143,7 +141,7 @@ class SiteCreationActivity : LocaleAwareActivity(),
         })
     }
 
-    override fun onIntentSelected(intent: String) {
+    override fun onIntentSelected(intent: String?) {
         mainViewModel.onSiteIntentSelected(intent)
         if (!siteNameFeatureConfig.isEnabled()) {
             ActivityUtils.hideKeyboard(this)
@@ -175,8 +173,12 @@ class SiteCreationActivity : LocaleAwareActivity(),
         val screenTitle = getScreenTitle(target.wizardStep)
         val fragment = when (target.wizardStep) {
             INTENTS -> SiteCreationIntentsFragment()
-            SITE_NAME -> SiteCreationSiteNameFragment()
-            SITE_DESIGNS -> HomePagePickerFragment()
+            SITE_NAME -> SiteCreationSiteNameFragment.newInstance(target.wizardState.siteIntent)
+            SITE_DESIGNS -> {
+                // Cancel preload job before displaying the theme picker.
+                mainViewModel.preloadingJob?.cancel("Preload did not complete before theme picker was shown.")
+                HomePagePickerFragment.newInstance(target.wizardState.siteIntent)
+            }
             DOMAINS -> SiteCreationDomainsFragment.newInstance(
                     screenTitle
             )
@@ -228,5 +230,9 @@ class SiteCreationActivity : LocaleAwareActivity(),
 
     override fun onBackPressed() {
         mainViewModel.onBackPressed()
+    }
+
+    companion object {
+        const val ARG_CREATE_SITE_SOURCE = "ARG_CREATE_SITE_SOURCE"
     }
 }

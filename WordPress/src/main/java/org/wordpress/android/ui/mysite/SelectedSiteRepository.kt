@@ -14,7 +14,6 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-@Suppress("TooManyFunctions")
 class SelectedSiteRepository @Inject constructor(
     private val dispatcher: Dispatcher,
     private val siteSettingsInterfaceFactory: SiteSettingsInterfaceWrapper.Factory,
@@ -89,7 +88,7 @@ class SelectedSiteRepository @Inject constructor(
             siteSettings = null
         }
         if (siteSettings == null) {
-            fun onError(error: Exception?) {
+            fun onError() {
                 showSiteIconProgressBar(false)
             }
             siteSettings = siteSettingsInterfaceFactory.build(

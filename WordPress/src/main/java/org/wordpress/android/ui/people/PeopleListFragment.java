@@ -1,10 +1,6 @@
 package org.wordpress.android.ui.people;
 
 import android.content.Context;
-import android.content.res.TypedArray;
-import android.graphics.Canvas;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.InsetDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -19,17 +15,18 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 
 import com.google.android.material.appbar.AppBarLayout;
 
 import org.apache.commons.text.StringEscapeUtils;
-import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.datasets.PeopleTable;
 import org.wordpress.android.fluxc.model.RoleModel;
 import org.wordpress.android.fluxc.model.SiteModel;
@@ -45,7 +42,6 @@ import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.NetworkUtils;
-import org.wordpress.android.util.RtlUtils;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
 
@@ -122,10 +118,11 @@ public class PeopleListFragment extends Fragment {
 
         mActionableEmptyView = rootView.findViewById(R.id.actionable_empty_view);
         mFilteredRecyclerView = rootView.findViewById(R.id.filtered_recycler_view);
-        mFilteredRecyclerView
-                .addItemDecoration(new PeopleItemDecoration(getActivity()));
         mFilteredRecyclerView.setLogT(AppLog.T.PEOPLE);
         mFilteredRecyclerView.setSwipeToRefreshEnabled(false);
+        mFilteredRecyclerView.addItemDecoration(
+                new DividerItemDecoration(mFilteredRecyclerView.getContext(), DividerItemDecoration.VERTICAL)
+        );
 
         // the following will change the look and feel of the toolbar to match the current design
         mFilteredRecyclerView.setToolbarLeftAndRightPadding(
@@ -169,6 +166,7 @@ public class PeopleListFragment extends Fragment {
 
             @Override
             public void onFilterSelected(int position, FilterCriteria criteria) {
+                AnalyticsTracker.track(Stat.PEOPLE_MANAGEMENT_FILTER_CHANGED);
                 mPeopleListFilter = (PeopleListFilter) criteria;
                 AppPrefs.setPeopleListFilter(mPeopleListFilter);
             }
@@ -472,46 +470,6 @@ public class PeopleListFragment extends Fragment {
                     Person person = getPerson(getAdapterPosition());
                     mOnPersonSelectedListener.onPersonSelected(person);
                 }
-            }
-        }
-    }
-
-    // Taken from http://stackoverflow.com/a/27037230
-    private class PeopleItemDecoration extends RecyclerView.ItemDecoration {
-        private InsetDrawable mDivider;
-
-        // use a custom drawable
-        PeopleItemDecoration(Context context) {
-            int[] attrs = {android.R.attr.listDivider};
-            TypedArray ta = context.obtainStyledAttributes(attrs);
-            Drawable drawable = ta.getDrawable(0);
-            ta.recycle();
-
-            int inset = context.getResources().getDimensionPixelOffset(R.dimen.people_list_divider_left_margin);
-
-            if (RtlUtils.isRtl(context)) {
-                mDivider = new InsetDrawable(drawable, 0, 0, inset, 0);
-            } else {
-                mDivider = new InsetDrawable(drawable, inset, 0, 0, 0);
-            }
-        }
-
-        @Override
-        public void onDraw(@NotNull Canvas c, @NotNull RecyclerView parent, @NotNull RecyclerView.State state) {
-            int left = ViewCompat.getPaddingStart(parent);
-            int right = parent.getWidth() - ViewCompat.getPaddingEnd(parent);
-
-            int childCount = parent.getChildCount();
-            for (int i = 0; i < childCount; i++) {
-                View child = parent.getChildAt(i);
-
-                RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child.getLayoutParams();
-
-                int top = child.getBottom() + params.bottomMargin;
-                int bottom = top + mDivider.getIntrinsicHeight();
-
-                mDivider.setBounds(left, top, right, bottom);
-                mDivider.draw(c);
             }
         }
     }

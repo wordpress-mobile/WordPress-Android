@@ -1,9 +1,9 @@
 package org.wordpress.android.ui.sitecreation.sitename
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -14,6 +14,7 @@ import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.CoroutineContext
 
+@HiltViewModel
 class SiteCreationSiteNameViewModel @Inject constructor(
     private val analyticsTracker: SiteCreationTracker,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
@@ -38,28 +39,24 @@ class SiteCreationSiteNameViewModel @Inject constructor(
 
     fun start() {
         if (isInitialized) return
-        // TODO: analyticsTracker.trackSiteNameViewed()
-        Log.d("siteNameWip", "Site name viewed")
+        analyticsTracker.trackSiteNameViewed()
         isInitialized = true
     }
 
     fun onSkipPressed() {
-        // TODO: analyticsTracker.trackSiteNameSkipped()
-        Log.d("siteNameWip", "Site name skipped")
+        analyticsTracker.trackSiteNameSkipped()
         _onSkipButtonPressed.call()
     }
 
     fun onBackPressed() {
-        // TODO: analyticsTracker.trackSiteNameCancelled()
-        Log.d("siteNameWip", "Site name cancelled")
+        analyticsTracker.trackSiteNameCanceled()
         _onBackButtonPressed.call()
     }
 
     fun onSiteNameEntered() {
-        // TODO: analyticsTracker.trackSiteNameEntered(siteName?) maybe we don't want to track the names here?
         uiState.value?.siteName.let {
             if (it.isNullOrBlank()) return
-            Log.d("siteNameWip", "Site name entered: $it")
+            analyticsTracker.trackSiteNameEntered(it)
             _onSiteNameEntered.value = it
         }
     }

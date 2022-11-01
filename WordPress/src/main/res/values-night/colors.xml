@@ -5,6 +5,7 @@
     <!-- Switch to attribute after dropping support for api 21-23 -->
     <color name="placeholder">#1AFFFFFF</color>
     <color name="p2_author_bg_stroke">#1E1E1E</color>
+    <color name="bottom_bar_notification_badge">@color/background_dark_elevated</color>
 
     <!-- Login Prologue -->
     <color name="promo_indicator_color_default">@color/white_translucent_20</color>
@@ -17,9 +18,19 @@
     <color name="login_prologue_background_circle_orange">@color/red_60</color>
     <color name="login_prologue_background_circle_pink">@color/purple_60</color>
 
+    <!-- Login Prologue Revamped -->
+    <color name="login_prologue_revamped_background">@color/gray_80</color>
+    <color name="login_prologue_revamped_icon">@color/white</color>
+
     <!-- Post History -->
 
     <color name="post_history_underlying_background">@color/gray_100</color>
+
+    <!-- Jetpack awareness in WordPress App -->
+    <color name="jetpack_banner_background">@color/jetpack_green_90</color>
+    <color name="jetpack_banner_divider">@color/gray_80</color>
+    <color name="jetpack_badge_background">@color/jetpack_green_90</color>
+    <color name="jetpack_powered_bottom_sheet_background">@color/jetpack_green_100</color>
 
     <!-- Reader -->
 
@@ -51,6 +62,10 @@
     <color name="context_line_highlighted_row_background">@color/red_80</color>
 
     <!-- Quick Start Task Cards -->
+    <color name="quick_start_task_card_background">@color/material_on_surface_emphasis_low</color>
+    <color name="quick_start_task_card_completed_checkmark">@color/material_on_surface_disabled</color>
+
+    <!-- Quick Start Task Dynamic Cards -->
     <color name="quick_start_task_card_illustration_background">#2C2C2E</color>
     <color name="quick_start_task_card_illustration_surface">@color/gray_0</color>
     <color name="quick_start_task_card_illustration_details">@color/gray_50</color>

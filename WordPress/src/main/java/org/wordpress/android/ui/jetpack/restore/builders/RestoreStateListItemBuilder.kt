@@ -30,13 +30,15 @@ import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.extensions.toFormattedDateString
 import org.wordpress.android.util.extensions.toFormattedTimeString
+import org.wordpress.android.util.text.PercentFormatter
 import java.util.Date
 import javax.inject.Inject
 
 @Reusable
 class RestoreStateListItemBuilder @Inject constructor(
     private val checkboxSpannableLabel: CheckboxSpannableLabel,
-    private val htmlMessageUtils: HtmlMessageUtils
+    private val htmlMessageUtils: HtmlMessageUtils,
+    private val percentFormatter: PercentFormatter
 ) {
     @Suppress("LongParameterList")
     fun buildDetailsListStateItems(
@@ -296,9 +298,7 @@ class RestoreStateListItemBuilder @Inject constructor(
     private fun buildProgressState(progress: Int, isIndeterminate: Boolean = false) = ProgressState(
             progress = progress,
             isIndeterminate = isIndeterminate,
-            progressLabel = UiStringResWithParams(
-                    R.string.restore_progress_label, listOf(UiStringText(progress.toString()))
-            )
+            progressLabel = UiStringText(percentFormatter.format(progress))
     )
 
     private fun buildBulletState(

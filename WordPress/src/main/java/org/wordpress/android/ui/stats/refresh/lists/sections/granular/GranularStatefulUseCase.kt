@@ -11,6 +11,7 @@ import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.toStatsSection
 import java.util.Date
 
+@Suppress("LongParameterList")
 abstract class GranularStatefulUseCase<DOMAIN_MODEL, UI_STATE>(
     type: StatsType,
     mainDispatcher: CoroutineDispatcher,

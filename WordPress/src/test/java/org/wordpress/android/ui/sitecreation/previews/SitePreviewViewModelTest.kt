@@ -20,7 +20,6 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged
 import org.wordpress.android.fluxc.store.SiteStore.SiteError
@@ -65,7 +64,6 @@ class SitePreviewViewModelTest {
     @Mock private lateinit var dispatcher: Dispatcher
     @Mock private lateinit var siteStore: SiteStore
     @Mock private lateinit var bundle: Bundle
-    @Mock private lateinit var quickStartStore: QuickStartStore
     @Mock private lateinit var fetchWpComUseCase: FetchWpComSiteUseCase
     @Mock private lateinit var networkUtils: NetworkUtilsWrapper
     @Mock private lateinit var urlUtils: UrlUtilsWrapper
@@ -85,7 +83,6 @@ class SitePreviewViewModelTest {
         viewModel = SitePreviewViewModel(
                 dispatcher,
                 siteStore,
-                quickStartStore,
                 fetchWpComUseCase,
                 networkUtils,
                 urlUtils,
@@ -102,6 +99,7 @@ class SitePreviewViewModelTest {
         whenever(networkUtils.isNetworkAvailable()).thenReturn(true)
         whenever(urlUtils.extractSubDomain(URL)).thenReturn(SUB_DOMAIN)
         whenever(urlUtils.addUrlSchemeIfNeeded(URL, true)).thenReturn(URL)
+        whenever(urlUtils.removeScheme(URL)).thenReturn(URL)
         whenever(siteStore.getSiteBySiteId(REMOTE_SITE_ID)).thenReturn(createLocalDbSiteModelId())
     }
 
@@ -133,7 +131,7 @@ class SitePreviewViewModelTest {
     fun `ProgressUiState's animate field is false only for first emitted event`() = test {
         initViewModel()
         assertThat((viewModel.uiState.value as SitePreviewFullscreenProgressUiState).animate).isFalse()
-        for (i in 1..100) {
+        (1..100).forEach {
             coroutineDispatcher.advanceTimeBy(LOADING_STATE_TEXT_ANIMATION_DELAY)
             assertThat((viewModel.uiState.value as SitePreviewFullscreenProgressUiState).animate).isTrue()
         }
@@ -142,7 +140,7 @@ class SitePreviewViewModelTest {
     @Test
     fun `ProgressUiState's text changes every LOADING_STATE_TEXT_ANIMATION_DELAY seconds`() {
         initViewModel()
-        for (i in 1..100) {
+        (1..100).forEach {
             val lastTextId = (viewModel.uiState.value as SitePreviewFullscreenProgressUiState).loadingTextResId
             coroutineDispatcher.advanceTimeBy(LOADING_STATE_TEXT_ANIMATION_DELAY)
             assertThat((viewModel.uiState.value as SitePreviewFullscreenProgressUiState).loadingTextResId)
@@ -175,7 +173,7 @@ class SitePreviewViewModelTest {
     fun `displaying error screen cancels the progress animation job`() {
         initViewModel()
         viewModel.onSiteCreationServiceStateUpdated(createServiceFailureState())
-        for (i in 1..100) {
+        (1..100).forEach {
             coroutineDispatcher.advanceTimeBy(LOADING_STATE_TEXT_ANIMATION_DELAY)
             assertThat(viewModel.uiState.value).isInstanceOf(SitePreviewGenericErrorUiState::class.java)
         }
@@ -218,7 +216,7 @@ class SitePreviewViewModelTest {
     fun `displaying content cancels the progress animation job`() {
         initViewModel()
         viewModel.onUrlLoaded()
-        for (i in 1..100) {
+        (1..100).forEach {
             coroutineDispatcher.advanceTimeBy(LOADING_STATE_TEXT_ANIMATION_DELAY)
             assertThat(viewModel.uiState.value).isInstanceOf(SitePreviewContentUiState::class.java)
         }
@@ -255,14 +253,14 @@ class SitePreviewViewModelTest {
     fun `CreateSiteState is SiteCreationCompleted on fetchFromRemote success`() = testWithSuccessResponse {
         initViewModel()
         viewModel.onSiteCreationServiceStateUpdated(createServiceSuccessState())
-        assertThat(getCreateSiteState()).isEqualTo(SiteCreationCompleted(LOCAL_SITE_ID))
+        assertThat(getCreateSiteState()).isEqualTo(SiteCreationCompleted(LOCAL_SITE_ID, false))
     }
 
     @Test
     fun `CreateSiteState is NotInLocalDb on fetchFromRemote failure`() = testWithErrorResponse {
         initViewModel()
         viewModel.onSiteCreationServiceStateUpdated(createServiceSuccessState())
-        assertThat(getCreateSiteState()).isEqualTo(SiteNotInLocalDb(REMOTE_SITE_ID))
+        assertThat(getCreateSiteState()).isEqualTo(SiteNotInLocalDb(REMOTE_SITE_ID, false))
     }
 
     @Test
@@ -301,7 +299,7 @@ class SitePreviewViewModelTest {
     @Test
     fun `start pre-loading WebView when restoring from SiteNotInLocalDb state`() = testWithSuccessResponse {
         whenever(bundle.getParcelable<CreateSiteState>(KEY_CREATE_SITE_STATE))
-                .thenReturn(SiteNotInLocalDb(REMOTE_SITE_ID))
+                .thenReturn(SiteNotInLocalDb(REMOTE_SITE_ID, false))
         initViewModel(bundle)
 
         assertThat(viewModel.uiState.value).isInstanceOf(SitePreviewFullscreenProgressUiState::class.java)
@@ -310,7 +308,7 @@ class SitePreviewViewModelTest {
     @Test
     fun `fetch newly created SiteModel when restoring from SiteNotInLocalDb state`() = testWithSuccessResponse {
         whenever(bundle.getParcelable<CreateSiteState>(KEY_CREATE_SITE_STATE))
-                .thenReturn(SiteNotInLocalDb(REMOTE_SITE_ID))
+                .thenReturn(SiteNotInLocalDb(REMOTE_SITE_ID, false))
         initViewModel(bundle)
 
         verify(fetchWpComUseCase).fetchSiteWithRetry(REMOTE_SITE_ID)
@@ -319,7 +317,7 @@ class SitePreviewViewModelTest {
     @Test
     fun `start pre-loading WebView when restoring from SiteCreationCompleted state`() {
         whenever(bundle.getParcelable<CreateSiteState>(KEY_CREATE_SITE_STATE))
-                .thenReturn(SiteCreationCompleted(LOCAL_SITE_ID))
+                .thenReturn(SiteCreationCompleted(LOCAL_SITE_ID, false))
         initViewModel(bundle)
 
         assertThat(viewModel.preloadPreview.value).isEqualTo(URL)
@@ -335,7 +333,7 @@ class SitePreviewViewModelTest {
     }
 
     private fun createServiceSuccessState(): SiteCreationServiceState {
-        return SiteCreationServiceState(SUCCESS, REMOTE_SITE_ID)
+        return SiteCreationServiceState(SUCCESS, Pair(REMOTE_SITE_ID, URL))
     }
 
     private fun createLocalDbSiteModelId(): SiteModel {

@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package org.wordpress.android.ui.posts.services
 
 import android.content.Context
@@ -33,7 +35,7 @@ class AztecImageLoader(
     private val imageManager: ImageManager,
     private val loadingInProgress: Drawable
 ) : Html.ImageGetter {
-    private val targets = ArrayList<WeakReference<BaseTarget<Bitmap>>>()
+    @Suppress("DEPRECATION") private val targets = ArrayList<WeakReference<BaseTarget<Bitmap>>>()
     private val mRequestsInProgress = ArrayList<String>()
 
     override fun loadImage(url: String, callbacks: Html.ImageGetter.Callbacks, maxWidth: Int) {
@@ -43,7 +45,7 @@ class AztecImageLoader(
     override fun loadImage(url: String, callbacks: Html.ImageGetter.Callbacks, maxSize: Int, minWidth: Int) {
         mRequestsInProgress.add(url)
 
-        val target = object : BaseTarget<Bitmap>() {
+        @Suppress("DEPRECATION") val target = object : BaseTarget<Bitmap>() {
             override fun onLoadStarted(placeholder: Drawable?) {
                 callbacks.onImageLoading(loadingInProgress)
             }

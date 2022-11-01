@@ -11,7 +11,6 @@ import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Rule
@@ -45,6 +44,7 @@ import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.test
 import org.wordpress.android.ui.pages.PageItem
 import org.wordpress.android.ui.pages.PageItem.Action.COPY
+import org.wordpress.android.ui.pages.PageItem.Action.COPY_LINK
 import org.wordpress.android.ui.pages.PageItem.Action.PUBLISH_NOW
 import org.wordpress.android.ui.pages.PageItem.Action.SET_AS_HOMEPAGE
 import org.wordpress.android.ui.pages.PageItem.Action.SET_AS_POSTS_PAGE
@@ -107,7 +107,7 @@ class PagesViewModelTest {
                 pageStore = pageStore,
                 postStore = postStore,
                 dispatcher = dispatcher,
-                actionPerfomer = actionPerformer,
+                actionPerformer = actionPerformer,
                 networkUtils = networkUtils,
                 previewStateHelper = mock(),
                 analyticsTracker = mock(),
@@ -187,7 +187,7 @@ class PagesViewModelTest {
     }
 
     @Test
-    fun `when searching and the Store is empty, it returns an empty list`() = runBlocking {
+    fun `when searching and the Store is empty, it returns an empty list`() = test {
         // Arrange
         setUpPageStoreWithEmptyPages()
         viewModel.start(site)
@@ -203,7 +203,7 @@ class PagesViewModelTest {
     }
 
     @Test
-    fun `when searching with an empty query, it clears the search results`() = runBlocking {
+    fun `when searching with an empty query, it clears the search results`() = test {
         // Arrange
         setUpPageStoreWithEmptyPages()
         viewModel.start(site)
@@ -266,6 +266,17 @@ class PagesViewModelTest {
 
         // Then
         assertThat(viewModel.publishAction.value).isEqualTo(pageModel)
+    }
+
+    @Test
+    fun `when copying page link, it copies to device clipboard`() = test {
+        val pageModel = setUpPageStoreWithASinglePage(site)
+        val page: PageItem.Page = mock()
+        whenever(pageStore.getPagesFromDb(anyOrNull())).thenReturn(listOf(pageModel))
+        viewModel.start(site)
+
+        val returnVal = viewModel.onMenuAction(COPY_LINK, page)
+        assertThat(returnVal).isEqualTo(true)
     }
 
     @Test

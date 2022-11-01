@@ -1,11 +1,30 @@
 package org.wordpress.android
 
-import org.wordpress.android.modules.DaggerAppComponentTest
+import dagger.android.AndroidInjector
+import dagger.android.DispatchingAndroidInjector
+import dagger.android.HasAndroidInjector
+import dagger.hilt.EntryPoint
+import dagger.hilt.EntryPoints
+import dagger.hilt.InstallIn
+import dagger.hilt.android.testing.CustomTestApplication
+import dagger.hilt.components.SingletonComponent
 
-class WordPressTest : WordPress() {
-    override fun initDaggerComponent() {
-        mAppComponent = DaggerAppComponentTest.builder()
-                .application(this)
-                .build()
+@CustomTestApplication(BaseWordPressTest::class)
+interface WordPressTest
+
+open class BaseWordPressTest : WordPress(), HasAndroidInjector {
+    @EntryPoint
+    @InstallIn(SingletonComponent::class)
+    interface AndroidInjectorEntryPoint {
+        fun injector(): DispatchingAndroidInjector<Any>
     }
+
+    lateinit var initializer: AppInitializer
+
+    override fun androidInjector(): AndroidInjector<Any> = EntryPoints.get(
+            applicationContext,
+            AndroidInjectorEntryPoint::class.java
+    ).injector()
+
+    override fun initializer() = initializer
 }

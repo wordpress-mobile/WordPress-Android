@@ -15,7 +15,8 @@ import android.view.View.OnLayoutChangeListener
 import android.view.animation.DecelerateInterpolator
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
+import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.FullscreenErrorWithRetryBinding
@@ -45,7 +46,7 @@ import javax.inject.Inject
 private const val ARG_DATA = "arg_site_creation_data"
 private const val SLIDE_IN_ANIMATION_DURATION = 450L
 
-@Suppress("TooManyFunctions")
+@AndroidEntryPoint
 class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
         ErrorManagedWebViewClientListener {
     /**
@@ -53,16 +54,16 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
      * automatically shows system notifications when site creation is in progress and the app is in the background.
      */
     private var serviceEventConnection: ServiceEventConnection? = null
-    private lateinit var viewModel: SitePreviewViewModel
+    private val viewModel: SitePreviewViewModel by viewModels()
     private var animatorSet: AnimatorSet? = null
     private val isLandscape: Boolean
         get() = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
 
-    @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject internal lateinit var uiHelpers: UiHelpers
 
     private var binding: SiteCreationPreviewScreenBinding? = null
 
+    @Suppress("UseCheckOrError")
     override fun onAttach(context: Context) {
         super.onAttach(context)
         if (context !is SitePreviewScreenListener) {
@@ -75,7 +76,6 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (requireNotNull(activity).application as WordPress).component().inject(this)
         if (savedInstanceState == null) {
             // we need to manually clear the SiteCreationService state so we don't for example receive sticky events
             // from the previous run of the SiteCreation flow.
@@ -83,6 +83,7 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
         }
     }
 
+    @Suppress("DEPRECATION")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
@@ -102,7 +103,7 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
         return R.layout.site_creation_preview_screen
     }
 
-    override val screenTitle: String
+    @Suppress("UseCheckOrError") override val screenTitle: String
         get() = arguments?.getString(EXTRA_SCREEN_TITLE)
                 ?: throw IllegalStateException("Required argument screen title is missing.")
 
@@ -121,10 +122,6 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
     }
 
     private fun SiteCreationPreviewScreenDefaultBinding.initViewModel() {
-        viewModel = ViewModelProvider(
-                this@SiteCreationPreviewFragment,
-                viewModelFactory
-        ).get(SitePreviewViewModel::class.java)
         viewModel.uiState.observe(this@SiteCreationPreviewFragment, { uiState ->
             uiState?.let {
                 when (uiState) {

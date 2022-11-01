@@ -83,6 +83,7 @@ import org.wordpress.android.viewmodel.ResourceProvider
 private const val SOURCE = "source"
 
 @InternalCoroutinesApi
+@Suppress("LargeClass")
 @RunWith(MockitoJUnitRunner::class)
 class ReaderPostCardActionsHandlerTest {
     @Rule

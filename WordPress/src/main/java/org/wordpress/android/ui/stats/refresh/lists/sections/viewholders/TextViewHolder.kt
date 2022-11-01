@@ -7,12 +7,16 @@ import android.text.SpannableString
 import android.text.TextPaint
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
+import android.text.style.ForegroundColorSpan
+import android.text.style.ImageSpan
 import android.text.style.StyleSpan
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import org.wordpress.android.R
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Text
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.ViewsAndVisitorsMapper.Companion.EXTERNAL_LINK_ICON_TOKEN
 import org.wordpress.android.util.extensions.getColorFromAttribute
 
 class TextViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
@@ -20,18 +24,52 @@ class TextViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         R.layout.stats_block_text_item
 ) {
     private val text = itemView.findViewById<TextView>(R.id.text)
+
     fun bind(textItem: Text) {
         val loadedText = textItem.text
                 ?: textItem.textResource?.let { text.resources.getString(textItem.textResource) }
                 ?: ""
         val spannableString = SpannableString(loadedText)
         textItem.links?.forEach { link ->
-            spannableString.withClickableSpan(text.context, link.link) {
-                link.navigationAction.click()
+            link.link?.let {
+                spannableString.withClickableSpan(text.context, it) {
+                    link.navigationAction.click()
+                }
+            }
+            link.icon?.let {
+                spannableString.withClickableSpan(
+                        text.context,
+                        loadedText.takeLast(EXTERNAL_LINK_ICON_TOKEN.length)
+                ) {
+                    link.navigationAction.click()
+                }
+
+                val drawable = ContextCompat.getDrawable(text.context, it)
+                drawable?.setBounds(0, 0, drawable.intrinsicWidth, drawable.intrinsicHeight)
+                drawable?.setTint(ContextCompat.getColor(text.context, R.color.primary))
+
+                drawable?.let { icon ->
+                    spannableString.setSpan(
+                            ImageSpan(icon),
+                            loadedText.indexOf(EXTERNAL_LINK_ICON_TOKEN),
+                            loadedText.length,
+                            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                    )
+                }
             }
         }
         textItem.bolds?.forEach { bold ->
             spannableString.withBoldSpan(bold)
+        }
+        textItem.color?.forEach { (color, string) ->
+            spannableString.setSpan(
+                    ForegroundColorSpan(
+                            ContextCompat.getColor(text.context, color)
+                    ),
+                    loadedText.indexOf(string),
+                    loadedText.indexOf(string) + string.length,
+                    Spannable.SPAN_EXCLUSIVE_INCLUSIVE
+            )
         }
         text.text = spannableString
         text.linksClickable = true

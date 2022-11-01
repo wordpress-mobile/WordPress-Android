@@ -3,6 +3,8 @@ package org.wordpress.android.ui.suggestion
 import dagger.BindsInstance
 import dagger.Module
 import dagger.Subcomponent
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import org.wordpress.android.fluxc.model.SiteModel
 
 @Subcomponent
@@ -17,6 +19,7 @@ interface SuggestionSourceSubcomponent {
         ): SuggestionSourceSubcomponent
     }
 
-    @Module(subcomponents = [ SuggestionSourceSubcomponent::class ])
+    @InstallIn(SingletonComponent::class)
+    @Module(subcomponents = [SuggestionSourceSubcomponent::class])
     interface SuggestionSourceModule
 }

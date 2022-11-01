@@ -2,6 +2,7 @@ package org.wordpress.android.viewmodel.plugins
 
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -34,7 +35,6 @@ import org.wordpress.android.viewmodel.plugins.PluginBrowserViewModel.PluginList
 import org.wordpress.android.viewmodel.plugins.PluginBrowserViewModel.PluginListType.POPULAR
 import org.wordpress.android.viewmodel.plugins.PluginBrowserViewModel.PluginListType.SEARCH
 import org.wordpress.android.viewmodel.plugins.PluginBrowserViewModel.PluginListType.SITE
-import java.util.ArrayList
 import javax.inject.Inject
 import kotlin.properties.Delegates
 
@@ -58,7 +58,7 @@ class PluginBrowserViewModel @Inject constructor(
 
     private var isStarted = false
 
-    private val handler = Handler()
+    private val handler = Handler(Looper.getMainLooper())
 
     private val _featuredPluginsLiveData = MutableLiveData<PluginListState>()
     private val _popularPluginsLiveData = MutableLiveData<PluginListState>()
@@ -251,8 +251,8 @@ class PluginBrowserViewModel @Inject constructor(
 
     // Network Callbacks
 
+    @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    @SuppressWarnings("unused")
     fun onWPOrgPluginFetched(event: OnWPOrgPluginFetched) {
         if (event.isError) {
             AppLog.e(T.PLUGINS, "An error occurred while fetching the wporg plugin with type: " + event.error.type)
@@ -261,8 +261,8 @@ class PluginBrowserViewModel @Inject constructor(
         updateAllPluginListsForSlug(event.pluginSlug)
     }
 
+    @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    @SuppressWarnings("unused")
     fun onPluginDirectoryFetched(event: OnPluginDirectoryFetched) {
         if (event.isError) {
             AppLog.e(T.PLUGINS, "An error occurred while fetching the plugin directory " + event.type + ": " +
@@ -273,8 +273,8 @@ class PluginBrowserViewModel @Inject constructor(
         }
     }
 
+    @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    @SuppressWarnings("unused")
     fun onPluginDirectorySearched(event: OnPluginDirectorySearched) {
         if (searchQuery != event.searchTerm) {
             return
@@ -287,8 +287,8 @@ class PluginBrowserViewModel @Inject constructor(
         searchResults = ListState.Success(event.plugins, false) // Disable pagination for search
     }
 
+    @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    @SuppressWarnings("unused")
     fun onSitePluginConfigured(event: OnSitePluginConfigured) {
         if (event.isError) {
             // The error should be handled wherever the action has been triggered from (probably PluginDetailActivity)
@@ -297,8 +297,8 @@ class PluginBrowserViewModel @Inject constructor(
         updateAllPluginListsForSlug(event.slug)
     }
 
+    @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    @SuppressWarnings("unused")
     fun onSitePluginDeleted(event: OnSitePluginDeleted) {
         if (event.isError) {
             // The error should be handled wherever the action has been triggered from (probably PluginDetailActivity)
@@ -307,8 +307,8 @@ class PluginBrowserViewModel @Inject constructor(
         updateAllPluginListsForSlug(event.slug)
     }
 
+    @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    @SuppressWarnings("unused")
     fun onSitePluginInstalled(event: OnSitePluginInstalled) {
         if (event.isError) {
             // The error should be handled wherever the action has been triggered from (probably PluginDetailActivity)
@@ -317,8 +317,8 @@ class PluginBrowserViewModel @Inject constructor(
         updateAllPluginListsForSlug(event.slug)
     }
 
+    @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    @SuppressWarnings("unused")
     fun onSitePluginUpdated(event: OnSitePluginUpdated) {
         if (event.isError) {
             // The error should be handled wherever the action has been triggered from (probably PluginDetailActivity)
@@ -327,8 +327,8 @@ class PluginBrowserViewModel @Inject constructor(
         updateAllPluginListsForSlug(event.slug)
     }
 
+    @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    @SuppressWarnings("unused")
     fun onSiteChanged(event: OnSiteChanged) {
         if (event.isError) {
             // The error should be safe to ignore since we are not triggering the action and there is nothing we need
@@ -397,7 +397,7 @@ class PluginBrowserViewModel @Inject constructor(
     }
 
     fun setTitle(title: String?) {
-        _title.postValue(title)
+        _title.postValue(title ?: "")
     }
 
     // ListState Helpers

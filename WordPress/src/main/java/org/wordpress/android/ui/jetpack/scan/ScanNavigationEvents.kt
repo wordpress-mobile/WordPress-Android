@@ -19,5 +19,7 @@ sealed class ScanNavigationEvents {
 
     data class ShowContactSupport(val site: SiteModel) : ScanNavigationEvents()
 
+    data class VisitVaultPressDashboard(val url: String) : ScanNavigationEvents()
+
     data class ShowJetpackSettings(val url: String) : ScanNavigationEvents()
 }

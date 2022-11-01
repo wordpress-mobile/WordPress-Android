@@ -4,6 +4,8 @@ import android.app.Activity
 import dagger.Reusable
 import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.post.PostStatus
+import org.wordpress.android.fluxc.model.post.PostStatus.DRAFT
 import org.wordpress.android.ui.ActivityLauncherWrapper
 import org.wordpress.android.ui.WPWebViewUsageCategory
 import org.wordpress.android.ui.uploads.UploadActionUseCase
@@ -77,9 +79,10 @@ class RemotePreviewLogicHelper @Inject constructor(
                 PreviewLogicOperationResult.GENERATING_PREVIEW
             }
             shouldRemoteAutoSave(post, uploadAction) -> {
-                // We don't support remote auto-save for self hosted sites (accessed via XMLRPC),
-                // we make the preview unavailable in that case.
-                if (!site.isUsingWpComRestApi) {
+                // We don't support remote auto-save for self hosted sites (accessed via XMLRPC) when a post is not
+                // a draft, so we make the preview unavailable in that case.
+                val status = PostStatus.fromPost(post)
+                if (!site.isUsingWpComRestApi && status != DRAFT) {
                     activityLauncherWrapper.showActionableEmptyView(
                             activity,
                             WPWebViewUsageCategory.REMOTE_PREVIEW_NOT_AVAILABLE,

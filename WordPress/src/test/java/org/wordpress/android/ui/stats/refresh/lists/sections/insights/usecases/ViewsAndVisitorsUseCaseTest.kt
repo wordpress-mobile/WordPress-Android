@@ -2,7 +2,6 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.eq
-import com.nhaarman.mockitokotlin2.isNull
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
@@ -16,9 +15,8 @@ import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R.string
 import org.wordpress.android.TEST_DISPATCHER
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_OVERVIEW_ERROR
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_VIEWS_AND_VISITORS_ERROR
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.stats.LimitMode.All
 import org.wordpress.android.fluxc.model.stats.LimitMode.Top
 import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel
 import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel.PeriodData
@@ -29,13 +27,14 @@ import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.stats.time.VisitsAndViewsStore
 import org.wordpress.android.test
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState.ERROR
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState.SUCCESS
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Chips
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.LineChartItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Text
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValuesItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetUpdater.StatsWidgetUpdaters
 import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
@@ -54,12 +53,13 @@ class ViewsAndVisitorsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var popupMenuHandler: ItemPopupMenuHandler
     @Mock lateinit var statsSiteProvider: StatsSiteProvider
     @Mock lateinit var resourceProvider: ResourceProvider
-    @Mock lateinit var title: ValueItem
+    @Mock lateinit var title: ValuesItem
     @Mock lateinit var chips: Chips
-    @Mock lateinit var barChartItem: BarChartItem
+    @Mock lateinit var lineChartItem: LineChartItem
     @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
     @Mock lateinit var statsWidgetUpdaters: StatsWidgetUpdaters
     @Mock lateinit var localeManagerWrapper: LocaleManagerWrapper
+    @Mock lateinit var useCaseMode: UseCaseMode
     private lateinit var useCase: ViewsAndVisitorsUseCase
     private val site = SiteModel()
     private val siteId = 1L
@@ -73,28 +73,29 @@ class ViewsAndVisitorsUseCaseTest : BaseUnitTest() {
     @Before
     fun setUp() {
         useCase = ViewsAndVisitorsUseCase(
+                VIEWS_AND_VISITORS,
                 statsGranularity,
                 store,
                 selectedDateProvider,
                 statsSiteProvider,
                 statsDateFormatter,
                 viewsAndVisitorsMapper,
-                popupMenuHandler,
                 Dispatchers.Unconfined,
                 TEST_DISPATCHER,
                 analyticsTrackerWrapper,
                 statsWidgetUpdaters,
                 localeManagerWrapper,
-                resourceProvider
+                resourceProvider,
+                useCaseMode
         )
         site.siteId = siteId
         whenever(statsSiteProvider.siteModel).thenReturn(site)
-        whenever(viewsAndVisitorsMapper.buildTitle(any(), isNull(), any(), any(), any(), any())).thenReturn(title)
+        whenever(viewsAndVisitorsMapper.buildTitle(any(), any(), any(), any(), any())).thenReturn(title)
         whenever(viewsAndVisitorsMapper
                 .buildChart(any(), any(), any(), any(), any(), any()))
-                .thenReturn(listOf(barChartItem))
-        whenever(viewsAndVisitorsMapper.buildInformation()).thenReturn(Text(""))
-        whenever(viewsAndVisitorsMapper.buildChips(any(), any(), any())).thenReturn(chips)
+                .thenReturn(listOf(lineChartItem))
+        whenever(viewsAndVisitorsMapper.buildInformation(any(), any(), any())).thenReturn(Text(text = ""))
+        whenever(viewsAndVisitorsMapper.buildChips(any(), any())).thenReturn(chips)
         whenever(resourceProvider.getString(string.stats_loading_card)).thenReturn("Loading")
     }
 
@@ -102,7 +103,7 @@ class ViewsAndVisitorsUseCaseTest : BaseUnitTest() {
     fun `maps domain model to UI model`() = test {
         val forced = false
         setupCalendar()
-        whenever(store.getVisits(site, statsGranularity, All)).thenReturn(model)
+        whenever(store.getVisits(site, statsGranularity, limitMode)).thenReturn(model)
         whenever(store.fetchVisits(site, statsGranularity, limitMode, forced)).thenReturn(
                 OnStatsFetched(
                         model
@@ -114,9 +115,9 @@ class ViewsAndVisitorsUseCaseTest : BaseUnitTest() {
         Assertions.assertThat(result.type).isEqualTo(VIEWS_AND_VISITORS)
         Assertions.assertThat(result.state).isEqualTo(SUCCESS)
         result.data!!.apply {
-            Assertions.assertThat(this[1]).isEqualTo(title)
-            Assertions.assertThat(this[2]).isEqualTo(barChartItem)
-            Assertions.assertThat(this[4]).isEqualTo(chips)
+            Assertions.assertThat(this[2]).isEqualTo(title)
+            Assertions.assertThat(this[3]).isEqualTo(lineChartItem)
+            Assertions.assertThat(this[5]).isEqualTo(chips)
         }
         verify(statsWidgetUpdaters, times(2)).updateViewsWidget(siteId)
     }
@@ -148,7 +149,7 @@ class ViewsAndVisitorsUseCaseTest : BaseUnitTest() {
 
         loadData(true, forced)
 
-        verify(analyticsTrackerWrapper, never()).track(eq(STATS_OVERVIEW_ERROR), any<Map<String, *>>())
+        verify(analyticsTrackerWrapper, never()).track(eq(STATS_VIEWS_AND_VISITORS_ERROR), any<Map<String, *>>())
     }
 
     @Test
@@ -164,7 +165,7 @@ class ViewsAndVisitorsUseCaseTest : BaseUnitTest() {
         loadData(true, forced)
 
         verify(analyticsTrackerWrapper).track(
-                STATS_OVERVIEW_ERROR, mapOf(
+                STATS_VIEWS_AND_VISITORS_ERROR, mapOf(
                 "stats_last_date" to "2020-12-13",
                 "stats_current_date" to "2020-12-15",
                 "stats_age_in_days" to 2,

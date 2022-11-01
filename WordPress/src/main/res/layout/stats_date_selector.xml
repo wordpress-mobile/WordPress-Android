@@ -6,9 +6,9 @@
     android:layout_height="wrap_content"
     android:minHeight="@dimen/one_line_list_item_height">
 
-    <com.google.android.material.textview.MaterialTextView
+    <org.wordpress.android.widgets.MaterialTextViewWithNumerals
         android:id="@+id/selectedDateTextView"
-        style="@style/StatsBlockTitle"
+        style="@style/StatsDateSelectorTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"

@@ -18,6 +18,9 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static org.wordpress.android.support.WPSupportUtils.isElementDisplayed;
 
+import dagger.hilt.android.testing.HiltAndroidTest;
+
+@HiltAndroidTest
 public class StatsTests extends BaseTest {
     @Before
     public void setUp() {
@@ -35,7 +38,7 @@ public class StatsTests extends BaseTest {
     }
 
     @Test
-    public void allDayStatsLoad() {
+    public void e2eAllDayStatsLoad() {
         StatsVisitsData todayVisits = new StatsVisitsData("97", "28", "14", "11");
         List<StatsKeyValueData> postsList = new StatsMocksReader().readDayTopPostsToList();
         List<StatsKeyValueData> referrersList = new StatsMocksReader().readDayTopReferrersToList();
@@ -47,7 +50,7 @@ public class StatsTests extends BaseTest {
 
         new MySitesPage()
                 .go()
-                .clickStats()
+                .goToStats()
                 .openDayStats()
                 .assertVisits(todayVisits)
                 .scrollToPosts().assertPosts(postsList)

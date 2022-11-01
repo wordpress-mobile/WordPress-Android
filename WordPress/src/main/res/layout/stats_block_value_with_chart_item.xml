@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/StatsBlockLine"
+    android:layout_width="match_parent"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:paddingEnd="@dimen/margin_extra_large"
+    tools:ignore="RtlSymmetry">
+
+    <org.wordpress.android.widgets.MaterialTextViewWithNumerals
+        android:id="@+id/value"
+        style="@style/StatsBlockBigValue"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="@string/unknown" />
+
+    <com.github.mikephil.charting.charts.LineChart
+        android:id="@+id/line_chart"
+        android:layout_width="108dp"
+        android:layout_height="25dp" />
+</LinearLayout>

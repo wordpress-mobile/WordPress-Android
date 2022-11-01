@@ -11,4 +11,9 @@
     <dimen name="prologue_intro_content_max_width">600dp</dimen>
 
     <dimen name="prologue_promo_title_size">38sp</dimen>
+
+    <!-- Site Design Picker -->
+    <dimen name="hpp_layout_card_height">325dp</dimen>
+    <dimen name="hpp_layout_card_width">250dp</dimen>
+    <dimen name="hpp_layouts_row_height">400dp</dimen>
 </resources>

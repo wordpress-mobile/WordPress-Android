@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2017-03-25 17:35:05+0000
 Plural-Forms: nplurals=4; plural=(n==1) ? 0 : (n==2) ? 1 : (n != 8 && n != 11) ? 2 : 3;
-Generator: GlotPress/3.0.0-rc.4
+Generator: GlotPress/4.0.0-alpha.3
 Language: cy_GB
 -->
 <resources>
@@ -425,7 +425,6 @@ Language: cy_GB
     <string name="stats_followers_seconds_ago">eiliad yn ôl</string>
     <string name="stats_view_top_posts_and_pages">Cofnod a Thudalen</string>
     <string name="stats_view_videos">Fideos</string>
-    <string name="stats_view_publicize">Publicize</string>
     <string name="stats_view_followers">Dilynwyr</string>
     <string name="stats_view_countries">Gwledydd</string>
     <string name="stats_likes">Hoffi</string>

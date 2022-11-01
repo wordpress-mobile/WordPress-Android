@@ -1,5 +1,0 @@
-19.5:
-- Hemos retocado el texto de error de subida en los bloques de subida de medios.
-- Ahora, los GIF animados vienen con una insignia GIF.
-- Los cambios de los ajustes de los bloques en las listas ordenadas ahora aparecen en el editor.
-- En la información de la aplicación, puedes desactivar los avisos del resumen semanal para todos los sitios.

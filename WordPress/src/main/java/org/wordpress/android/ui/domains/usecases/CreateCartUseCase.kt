@@ -17,7 +17,7 @@ import kotlin.coroutines.suspendCoroutine
  */
 class CreateCartUseCase @Inject constructor(
     private val dispatcher: Dispatcher,
-    private val transactionsStore: TransactionsStore // needed for events to work
+    @Suppress("unused") private val transactionsStore: TransactionsStore // needed for events to work
 ) {
     private var continuation: Continuation<OnShoppingCartCreated>? = null
 
@@ -29,6 +29,7 @@ class CreateCartUseCase @Inject constructor(
         dispatcher.unregister(this)
     }
 
+    @Suppress("UseCheckOrError")
     suspend fun execute(
         site: SiteModel,
         productId: Int,

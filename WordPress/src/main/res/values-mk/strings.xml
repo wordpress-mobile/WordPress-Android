@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2015-01-28 14:24:38+0000
 Plural-Forms: nplurals=2; plural=n % 10 != 1 || n % 100 == 11;
-Generator: GlotPress/3.0.0-rc.4
+Generator: GlotPress/4.0.0-alpha.3
 Language: mk
 -->
 <resources>
@@ -21,7 +21,6 @@ Language: mk
     <string name="stats_followers_a_minute_ago">пред една минута</string>
     <string name="stats_view_videos">Видеа</string>
     <string name="stats_likes">Допаѓања</string>
-    <string name="stats_view_publicize">Објавување</string>
     <string name="stats_view_top_posts_and_pages">Написи и страници</string>
     <string name="stats_followers_months">%1$d месеци</string>
     <string name="stats_visitors">Посетители</string>

@@ -1,3 +1,50 @@
+pluginManagement {
+    gradle.ext.kotlinVersion = '1.6.10'
+    gradle.ext.agpVersion = '7.2.1'
+    gradle.ext.daggerVersion = "2.42"
+    gradle.ext.detektVersion = '1.21.0'
+    gradle.ext.navComponentVersion = '2.4.2'
+
+    plugins {
+        id "org.jetbrains.kotlin.android" version gradle.ext.kotlinVersion
+        id "org.jetbrains.kotlin.jvm" version gradle.ext.kotlinVersion
+        id "org.jetbrains.kotlin.kapt" version gradle.ext.kotlinVersion
+        id "org.jetbrains.kotlin.plugin.serialization" version gradle.ext.kotlinVersion
+        id "org.jetbrains.kotlin.plugin.parcelize" version gradle.ext.kotlinVersion
+        id "org.jetbrains.kotlin.plugin.allopen" version gradle.ext.kotlinVersion
+        id "com.android.application" version gradle.ext.agpVersion
+        id "com.android.library" version gradle.ext.agpVersion
+        id 'com.google.gms.google-services' version '4.3.8'
+        id "io.sentry.android.gradle" version "2.0.0"
+        id "io.gitlab.arturbosch.detekt" version gradle.ext.detektVersion
+        id "se.bjurr.violations.violation-comments-to-github-gradle-plugin" version "1.67"
+        id "com.automattic.android.fetchstyle" version "1.1"
+        id "androidx.navigation.safeargs.kotlin" version gradle.ext.navComponentVersion
+    }
+    repositories {
+        maven {
+            url 'https://a8c-libs.s3.amazonaws.com/android'
+            content {
+                includeGroup "com.automattic.android"
+            }
+        }
+        gradlePluginPortal()
+        google()
+    }
+    resolutionStrategy {
+        eachPlugin {
+            // TODO: Remove this when fetchstyle starts supporting Plugin Marker Artifacts
+            if (requested.id.id == "com.automattic.android.fetchstyle") {
+                useModule("com.automattic.android:fetchstyle:1.1")
+            }
+            // TODO: Remove this when 'dagger.hilt' starts supporting Plugin Marker Artifacts
+            if (requested.id.id == 'dagger.hilt.android.plugin') {
+                useModule("com.google.dagger:hilt-android-gradle-plugin:$gradle.ext.daggerVersion")
+            }
+        }
+    }
+}
+
 plugins {
     id "com.gradle.enterprise" version "3.9"
     id 'com.gradle.common-custom-user-data-gradle-plugin' version '1.6.5'
@@ -7,21 +54,22 @@ gradleEnterprise {
     server = "https://gradle.a8c.com"
     allowUntrustedServer = false
     buildScan {
-        publishAlways()
+        def disableGE = System.getenv("GRADLE_ENTERPRISE_ANALYTICS_DISABLE")
+        if (!(disableGE == "1" || disableGE == "true")) {
+            publishAlways()
+        }
         capture {
             taskInputFiles = true
         }
         uploadInBackground = System.getenv("CI") == null
-    }
-}
 
-if (System.getenv().containsKey("CI")) {
-    buildCache {
-        remote(HttpBuildCache) {
-            url = "http://10.0.2.215:5071/cache/"
-            allowUntrustedServer = true
-            allowInsecureProtocol = true
-            push = true
+        if (!System.getenv().containsKey("CI")) {
+            // Obfuscate personal data unless it's a CI build
+            obfuscation {
+                username { username -> System.getenv("GRADLE_ENTERPRISE_ANALYTICS_USERNAME") ?: username }
+                hostname { hostname -> System.getenv("GRADLE_ENTERPRISE_ANALYTICS_HOSTNAME") ?: hostname }
+                ipAddresses { addresses -> addresses.collect { address -> "0.0.0.0"} }
+            }
         }
     }
 }
@@ -30,15 +78,14 @@ rootProject.name = 'WPAndroid'
 
 include ':WordPress'
 
-include ':libs:image-editor:ImageEditor'
-include ':libs:networking:WordPressNetworking'
-include ':libs:analytics:WordPressAnalytics'
-include ':libs:editor:WordPressEditor'
-include ':libs:WordPressProcessors'
-include ':libs:WordPressAnnotations'
+include ':libs:image-editor'
+include ':libs:networking'
+include ':libs:analytics'
+include ':libs:editor'
+include ':libs:processors'
+include ':libs:annotations'
 
-include ':WordPressMocks'
-project(':WordPressMocks').projectDir = new File(rootProject.projectDir, properties.getOrDefault('wp.wordpress_mocks_path', 'libs/mocks') + '/WordPressMocks')
+include ':libs:mocks'
 
 gradle.ext.fluxCBinaryPath = "org.wordpress:fluxc"
 gradle.ext.wputilsBinaryPath = "org.wordpress:utils"

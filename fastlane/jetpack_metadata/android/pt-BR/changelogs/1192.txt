@@ -1,5 +1,0 @@
-19.5:
-- Ajustamos o texto do erro de upload nos blocos de upload de mídia.
-- GIFs animados agora vêm com um emblema de GIF.
-- Agora as alterações de configuração de bloco em listas ordenadas aparecem no editor.
-- É possível desativar as notificações do resumo semanal para todos os sites nas informações do aplicativo.

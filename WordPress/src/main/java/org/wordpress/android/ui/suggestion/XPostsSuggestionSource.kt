@@ -37,6 +37,7 @@ class XPostsSuggestionSource @Inject constructor(
                         _suggestions.postValue(SuggestionResult(xPostSuggestions, false))
                     }
                 }
+                is XPostsResult.Unknown -> Unit // Do nothing
             }
         }
         refreshSuggestions()

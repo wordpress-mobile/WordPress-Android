@@ -3,6 +3,7 @@ package org.wordpress.android.ui.layoutpicker
 import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.view.updateLayoutParams
 import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.R
 import org.wordpress.android.databinding.ModalLayoutPickerLayoutsCardBinding
@@ -16,13 +17,14 @@ import org.wordpress.android.util.extensions.setVisible
  */
 class LayoutViewHolder(
     private val parent: ViewGroup,
-    private val binding: ModalLayoutPickerLayoutsCardBinding
+    private val binding: ModalLayoutPickerLayoutsCardBinding,
+    private val thumbDimensionProvider: ThumbDimensionProvider
 ) : RecyclerView.ViewHolder(binding.root) {
     fun onBind(
         uiState: LayoutListItemUiState,
         imageManager: ImageManager
     ) {
-        imageManager.loadWithResultListener(binding.preview, MShot(uiState.preview),
+        imageManager.loadWithResultListener(binding.preview, MShot(uiState.mShotPreview),
                 object : RequestListener<Drawable> {
                     override fun onLoadFailed(e: Exception?, model: Any?) {
                     }
@@ -33,6 +35,10 @@ class LayoutViewHolder(
                 })
 
         binding.selectedOverlay.setVisible(uiState.selectedOverlayVisible)
+        binding.preview.updateLayoutParams {
+            height = thumbDimensionProvider.previewHeight
+            width = thumbDimensionProvider.previewWidth
+        }
         binding.preview.contentDescription = parent.context.getString(uiState.contentDescriptionResId, uiState.title)
         binding.preview.context?.let { ctx ->
             binding.layoutContainer.strokeWidth = if (uiState.selectedOverlayVisible) {
@@ -47,13 +53,13 @@ class LayoutViewHolder(
     }
 
     companion object {
-        fun from(parent: ViewGroup): LayoutViewHolder {
+        fun from(parent: ViewGroup, thumbDimensionProvider: ThumbDimensionProvider): LayoutViewHolder {
             val binding = ModalLayoutPickerLayoutsCardBinding.inflate(
                     LayoutInflater.from(parent.context),
                     parent,
                     false
             )
-            return LayoutViewHolder(parent, binding)
+            return LayoutViewHolder(parent, binding, thumbDimensionProvider)
         }
     }
 }

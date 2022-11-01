@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/menu_settings"
-        android:icon="@drawable/ic_cog_white_24dp"
+        app:actionLayout="@layout/reader_home_settings_menu_action_layout"
         android:title="@string/reader_menu_tags"
         android:visible="false"
         app:showAsAction="always" />

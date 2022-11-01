@@ -2,6 +2,7 @@ package org.wordpress.android.util
 
 import android.app.Activity
 import android.content.Context
+import android.content.ContextWrapper
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
@@ -55,9 +56,17 @@ class SnackbarSequencer @Inject constructor(
     private suspend fun start() {
         while (true) {
             val item = snackBarQueue.peek()
-            val context: Activity? = item.info.view.get()?.context as? Activity
+
+            val unwrappedContext = item?.info?.view?.get()?.context
+
+            val context = when (unwrappedContext) {
+                is Activity -> unwrappedContext
+                is ContextWrapper -> unwrappedContext.baseContext
+                else -> null
+            } as? Activity
+
             if (context != null && isContextAlive(context)) {
-                prepareSnackBar(context, item)?.show()
+                item?.let { prepareSnackBar(context, it)?.show() }
                 AppLog.d(T.UTILS, "SnackbarSequencer > before delay")
                 /**
                  * Delay showing the next snackbar only if the current snack bar is important.
@@ -68,8 +77,10 @@ class SnackbarSequencer @Inject constructor(
                 if (item?.info?.isImportant == true) delay(item.getSnackbarDurationMs())
                 AppLog.d(T.UTILS, "SnackbarSequencer > after delay")
             } else {
-                AppLog.d(T.UTILS,
-                        "SnackbarSequencer > start context was ${if (context == null) "null" else "not alive"}")
+                AppLog.d(
+                        T.UTILS,
+                        "SnackbarSequencer > start context was ${if (context == null) "null" else "not alive"}"
+                )
             }
             if (snackBarQueue.peek() == item) {
                 AppLog.d(T.UTILS, "SnackbarSequencer > item removed from the queue")

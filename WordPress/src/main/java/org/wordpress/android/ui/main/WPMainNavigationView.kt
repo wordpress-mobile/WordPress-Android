@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.main
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
@@ -17,9 +16,9 @@ import androidx.fragment.app.FragmentManager
 import com.google.android.material.bottomnavigation.BottomNavigationItemView
 import com.google.android.material.bottomnavigation.BottomNavigationMenuView
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.bottomnavigation.BottomNavigationView.OnNavigationItemReselectedListener
-import com.google.android.material.bottomnavigation.BottomNavigationView.OnNavigationItemSelectedListener
-import com.google.android.material.bottomnavigation.LabelVisibilityMode
+import com.google.android.material.navigation.NavigationBarView
+import com.google.android.material.navigation.NavigationBarView.OnItemReselectedListener
+import com.google.android.material.navigation.NavigationBarView.OnItemSelectedListener
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener
@@ -28,6 +27,7 @@ import org.wordpress.android.ui.main.WPMainNavigationView.PageType.NOTIFS
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType.READER
 import org.wordpress.android.ui.mysite.MySiteFragment
 import org.wordpress.android.ui.notifications.NotificationsListFragment
+import org.wordpress.android.ui.posts.PostUtils.EntryPoint
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.reader.ReaderFragment
 import org.wordpress.android.util.AniUtils
@@ -44,7 +44,7 @@ class WPMainNavigationView @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : BottomNavigationView(context, attrs, defStyleAttr),
-        OnNavigationItemSelectedListener, OnNavigationItemReselectedListener {
+        OnItemSelectedListener, OnItemReselectedListener {
     private lateinit var navAdapter: NavAdapter
     private lateinit var fragmentManager: FragmentManager
     private lateinit var pageListener: OnPageListener
@@ -67,7 +67,7 @@ class WPMainNavigationView @JvmOverloads constructor(
 
     interface OnPageListener {
         fun onPageChanged(position: Int)
-        fun onNewPostButtonClicked()
+        fun onNewPostButtonClicked(promptId: Int, origin: EntryPoint)
     }
 
     fun init(fm: FragmentManager, listener: OnPageListener) {
@@ -95,6 +95,9 @@ class WPMainNavigationView @JvmOverloads constructor(
             if (i == getPosition(READER)) {
                 customView.id = R.id.bottom_nav_reader_button // identify view for QuickStart
             }
+            if (i == getPosition(NOTIFS)) {
+                customView.id = R.id.bottom_nav_notifications_button // identify view for QuickStart
+            }
 
             itemView.addView(customView)
         }
@@ -106,14 +109,13 @@ class WPMainNavigationView @JvmOverloads constructor(
         menu.removeItem(R.id.nav_reader)
     }
 
-    @SuppressLint("WrongConstant")
     private fun disableShiftMode() {
-        labelVisibilityMode = LabelVisibilityMode.LABEL_VISIBILITY_LABELED
+        labelVisibilityMode = NavigationBarView.LABEL_VISIBILITY_LABELED
     }
 
     private fun assignNavigationListeners(assign: Boolean) {
-        setOnNavigationItemSelectedListener(if (assign) this else null)
-        setOnNavigationItemReselectedListener(if (assign) this else null)
+        setOnItemSelectedListener(if (assign) this else null)
+        setOnItemReselectedListener(if (assign) this else null)
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {

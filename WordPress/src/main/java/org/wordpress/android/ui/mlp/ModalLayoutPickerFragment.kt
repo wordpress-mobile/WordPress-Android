@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.ViewCompat
+import androidx.core.view.updateLayoutParams
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -34,10 +35,10 @@ import javax.inject.Inject
 /**
  * Implements the Modal Layout Picker UI
  */
-@Suppress("TooManyFunctions")
 class ModalLayoutPickerFragment : FullscreenBottomSheetDialogFragment() {
     @Inject internal lateinit var uiHelper: UiHelpers
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject lateinit var thumbDimensionProvider: ModalLayoutPickerDimensionProvider
     private lateinit var viewModel: ModalLayoutPickerViewModel
     private lateinit var previewModeSelectorPopup: PreviewModeSelectorPopup
 
@@ -73,7 +74,7 @@ class ModalLayoutPickerFragment : FullscreenBottomSheetDialogFragment() {
 
             layoutsRecyclerView.apply {
                 layoutManager = LinearLayoutManager(requireActivity())
-                adapter = LayoutCategoryAdapter(viewModel.nestedScrollStates)
+                adapter = LayoutCategoryAdapter(viewModel.nestedScrollStates, thumbDimensionProvider)
             }
 
             modalLayoutPickerTitlebar.backButton.setOnClickListener {
@@ -94,6 +95,14 @@ class ModalLayoutPickerFragment : FullscreenBottomSheetDialogFragment() {
             }
             modalLayoutPickerTitlebar.previewTypeSelectorButton.setOnClickListener {
                 viewModel.onThumbnailModePressed()
+            }
+
+            modalLayoutPickerLayoutsSkeleton.layoutsSkeleton.updateLayoutParams {
+                height = thumbDimensionProvider.rowHeight
+            }
+            modalLayoutPickerLayoutsSkeleton.skeletonCardView.updateLayoutParams {
+                height = thumbDimensionProvider.previewHeight
+                width = thumbDimensionProvider.previewWidth
             }
 
             setScrollListener()
@@ -118,7 +127,7 @@ class ModalLayoutPickerFragment : FullscreenBottomSheetDialogFragment() {
     private fun ModalLayoutPickerFragmentBinding.setupViewModel(savedInstanceState: Bundle?) {
         viewModel.loadSavedState(savedInstanceState)
 
-        viewModel.uiState.observe(this@ModalLayoutPickerFragment, { uiState ->
+        viewModel.uiState.observe(this@ModalLayoutPickerFragment) { uiState ->
             setHeaderVisibility(uiState.isHeaderVisible)
             setDescriptionVisibility(uiState.isDescriptionVisible)
             setButtonsVisibility(uiState.buttonsUiState)
@@ -135,13 +144,13 @@ class ModalLayoutPickerFragment : FullscreenBottomSheetDialogFragment() {
                     uiState.subtitle?.let { modalLayoutPickerError.actionableEmptyView.subtitle.setText(it) }
                 }
             }
-        })
+        }
 
-        viewModel.onThumbnailModeButtonPressed.observe(viewLifecycleOwner, {
+        viewModel.onThumbnailModeButtonPressed.observe(viewLifecycleOwner) {
             previewModeSelectorPopup.show(viewModel)
-        })
+        }
 
-        viewModel.onPreviewActionPressed.observe(viewLifecycleOwner, { action ->
+        viewModel.onPreviewActionPressed.observe(viewLifecycleOwner) { action ->
             activity?.supportFragmentManager?.let { fm ->
                 when (action) {
                     is Show -> {
@@ -153,11 +162,11 @@ class ModalLayoutPickerFragment : FullscreenBottomSheetDialogFragment() {
                     }
                 }
             }
-        })
+        }
 
-        viewModel.onCategorySelectionChanged.observeEvent(this@ModalLayoutPickerFragment, {
+        viewModel.onCategorySelectionChanged.observeEvent(this@ModalLayoutPickerFragment) {
             layoutsRecyclerView.smoothScrollToPosition(0)
-        })
+        }
     }
 
     private fun ModalLayoutPickerFragmentBinding.setHeaderVisibility(visible: Boolean) {

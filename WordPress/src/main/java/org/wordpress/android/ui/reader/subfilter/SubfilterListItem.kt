@@ -49,6 +49,7 @@ sealed class SubfilterListItem(val type: ItemType, val isTrackedItem: Boolean = 
 
     object Divider : SubfilterListItem(DIVIDER)
 
+    @Suppress("DataClassShouldBeImmutable")
     data class SiteAll(
         override var isSelected: Boolean = false,
         override val onClickAction: (filter: SubfilterListItem) -> Unit
@@ -56,6 +57,7 @@ sealed class SubfilterListItem(val type: ItemType, val isTrackedItem: Boolean = 
         override val label: UiString = UiStringRes(R.string.reader_filter_cta)
     }
 
+    @Suppress("DataClassShouldBeImmutable")
     data class Site(
         override var isSelected: Boolean = false,
         override val onClickAction: (filter: SubfilterListItem) -> Unit,
@@ -70,6 +72,7 @@ sealed class SubfilterListItem(val type: ItemType, val isTrackedItem: Boolean = 
         val unseenCount: Int = blog.numUnseenPosts
     }
 
+    @Suppress("DataClassShouldBeImmutable")
     data class Tag(
         override var isSelected: Boolean = false,
         override val onClickAction: (filter: SubfilterListItem) -> Unit,

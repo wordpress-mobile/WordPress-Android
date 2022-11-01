@@ -11,7 +11,10 @@ import javax.inject.Inject
 /**
  * Renders the Layout cards
  */
-class LayoutsAdapter(context: Context) : RecyclerView.Adapter<LayoutViewHolder>() {
+class LayoutsAdapter(
+    context: Context,
+    private val thumbDimensionProvider: ThumbDimensionProvider
+) : RecyclerView.Adapter<LayoutViewHolder>() {
     @Inject lateinit var imageManager: ImageManager
 
     private var layouts: List<LayoutListItemUiState> = listOf()
@@ -26,7 +29,8 @@ class LayoutsAdapter(context: Context) : RecyclerView.Adapter<LayoutViewHolder>(
         diffResult.dispatchUpdatesTo(this)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = LayoutViewHolder.from(parent)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
+            LayoutViewHolder.from(parent, thumbDimensionProvider)
 
     override fun getItemCount(): Int = layouts.size
 

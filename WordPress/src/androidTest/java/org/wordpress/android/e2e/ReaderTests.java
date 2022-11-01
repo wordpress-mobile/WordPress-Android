@@ -10,7 +10,9 @@ import org.junit.Test;
 import org.wordpress.android.e2e.pages.ReaderPage;
 import org.wordpress.android.support.BaseTest;
 
+import dagger.hilt.android.testing.HiltAndroidTest;
 
+@HiltAndroidTest
 public class ReaderTests extends BaseTest {
     @Rule
     public GrantPermissionRule mRuntimeImageAccessRule = GrantPermissionRule.grant(permission.WRITE_EXTERNAL_STORAGE);
@@ -26,7 +28,7 @@ public class ReaderTests extends BaseTest {
     String mCompetitionPostTitle = "Let's focus on the competition.";
 
     @Test
-    public void navigateThroughPosts() {
+    public void e2eNavigateThroughPosts() {
         new ReaderPage()
                 .tapFollowingTab()
                 .openPost(mCoachingPostTitle)
@@ -39,7 +41,7 @@ public class ReaderTests extends BaseTest {
     }
 
     @Test
-    public void likePost() {
+    public void e2eLikePost() {
         new ReaderPage()
                 .tapFollowingTab()
                 .openPost(mCoachingPostTitle)

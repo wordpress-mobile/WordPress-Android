@@ -10,8 +10,10 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.Das
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithoutPostItems
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.TodaysStatsCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.TodaysStatsCard.TodaysStatsCardWithData
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.DashboardCardType
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.StatsSubtype
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.Type
+import org.wordpress.android.ui.quickstart.QuickStartType
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
 
@@ -67,9 +69,21 @@ class CardsShownTracker @Inject constructor(
                         card.postCardType.toSubtypeValue().label
                 )
         )
-        is BloggingPromptCardWithData -> {
-            // TODO @klymyam add tracking for blogging prompt card
-        }
+        is BloggingPromptCardWithData -> trackCardShown(
+                Pair(
+                        card.dashboardCardType.toTypeValue().label,
+                        Type.BLOGGING_PROMPT.label
+                )
+        )
+    }
+
+    fun trackQuickStartCardShown(quickStartType: QuickStartType) {
+        trackCardShown(
+                Pair(
+                        DashboardCardType.QUICK_START_CARD.toTypeValue().label,
+                        "quick_start_${quickStartType.trackingLabel}"
+                )
+        )
     }
 
     private fun trackCardShown(pair: Pair<String, String>) {

@@ -113,6 +113,28 @@
 
             </RelativeLayout>
 
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/jetpack_powered_badge"
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:importantForAccessibility="no"
+                android:paddingEnd="15dp"
+                android:paddingStart="5dp"
+                android:paddingVertical="5dp"
+                android:text="@string/wp_jetpack_powered"
+                android:textAppearance="?attr/textAppearanceBody1"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_sz_large"
+                app:backgroundTint="@color/jetpack_badge_background"
+                app:cornerRadius="20dp"
+                app:icon="@drawable/ic_jetpack_logo_24dp"
+                app:iconPadding="10dp"
+                app:iconTint="@null"
+                tools:ignore="TextContrastCheck"
+                tools:visibility="visible" />
+
         </LinearLayout>
     </RelativeLayout>
 </androidx.core.widget.NestedScrollView>

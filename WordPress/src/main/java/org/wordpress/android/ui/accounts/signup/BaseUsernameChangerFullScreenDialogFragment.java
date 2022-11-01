@@ -3,7 +3,6 @@ package org.wordpress.android.ui.accounts.signup;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
-import android.text.Html;
 import android.text.Spanned;
 import android.text.SpannedString;
 import android.text.TextUtils;
@@ -17,6 +16,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.text.HtmlCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SimpleItemAnimator;
@@ -42,8 +42,10 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -71,6 +73,7 @@ public abstract class BaseUsernameChangerFullScreenDialogFragment extends Dagger
     private boolean mIsShowingDismissDialog;
     private boolean mShouldWatchText; // Flag handling text watcher to avoid network call on device rotation.
     private int mUsernameSelectedIndex;
+    private int mSearchCount = 0;
 
     public static final String EXTRA_DISPLAY_NAME = "EXTRA_DISPLAY_NAME";
     public static final String EXTRA_USERNAME = "EXTRA_USERNAME";
@@ -80,7 +83,10 @@ public abstract class BaseUsernameChangerFullScreenDialogFragment extends Dagger
     public static final String KEY_USERNAME_SELECTED_INDEX = "KEY_USERNAME_SELECTED_INDEX";
     public static final String KEY_USERNAME_SUGGESTIONS = "KEY_USERNAME_SUGGESTIONS";
     public static final String RESULT_USERNAME = "RESULT_USERNAME";
+    public static final String KEY_SEARCH_COUNT = "KEY_SEARCH_COUNT";
     public static final int GET_SUGGESTIONS_INTERVAL_MS = 1000;
+    public static final String SOURCE = "source";
+    public static final String SEARCH_COUNT = "search_count";
 
     @Inject protected Dispatcher mDispatcher;
 
@@ -108,6 +114,12 @@ public abstract class BaseUsernameChangerFullScreenDialogFragment extends Dagger
      * @return formatted header template
      */
     abstract Spanned getHeaderText(String username, String display);
+
+    /**
+     * Fragments that extend this class are required to provide the tracking event source
+     * @return String
+     */
+    abstract String getTrackEventSource();
 
     public static Bundle newBundle(String displayName, String username) {
         Bundle bundle = new Bundle();
@@ -149,6 +161,7 @@ public abstract class BaseUsernameChangerFullScreenDialogFragment extends Dagger
             mShouldWatchText = savedInstanceState.getBoolean(KEY_SHOULD_WATCH_TEXT);
             mUsernameSelected = savedInstanceState.getString(KEY_USERNAME_SELECTED);
             mUsernameSelectedIndex = savedInstanceState.getInt(KEY_USERNAME_SELECTED_INDEX);
+            mSearchCount = savedInstanceState.getInt(KEY_SEARCH_COUNT);
             ArrayList<String> suggestions = savedInstanceState.getStringArrayList(KEY_USERNAME_SUGGESTIONS);
             if (suggestions != null) {
                 setUsernameSuggestions(suggestions);
@@ -166,6 +179,7 @@ public abstract class BaseUsernameChangerFullScreenDialogFragment extends Dagger
             mUsernameSelectedIndex = 0;
             mUsernameSuggestionInput = getUsernameQueryFromDisplayName();
             getUsernameSuggestions(mUsernameSuggestionInput);
+            mSearchCount = 0;
         }
 
         mHeaderView = getView().findViewById(R.id.header);
@@ -199,6 +213,8 @@ public abstract class BaseUsernameChangerFullScreenDialogFragment extends Dagger
 
         mGetSuggestionsHandler = new Handler();
         mGetSuggestionsRunnable = () -> {
+            mSearchCount++;
+            trackSearch();
             mUsernameSuggestionInput = mUsernameView.getText().toString();
             getUsernameSuggestions(mUsernameSuggestionInput);
         };
@@ -260,6 +276,7 @@ public abstract class BaseUsernameChangerFullScreenDialogFragment extends Dagger
         if (mUsernamesAdapter != null) {
             outState.putStringArrayList(KEY_USERNAME_SUGGESTIONS, new ArrayList<>(mUsernamesAdapter.mItems));
         }
+        outState.putInt(KEY_SEARCH_COUNT, mSearchCount);
     }
 
     @Override
@@ -342,6 +359,12 @@ public abstract class BaseUsernameChangerFullScreenDialogFragment extends Dagger
         mProgressBar.setVisibility(showProgress ? View.VISIBLE : View.GONE);
     }
 
+    private void trackSearch() {
+        Map<String, String> props = new HashMap<>();
+        props.put(SOURCE, getTrackEventSource());
+        props.put(SEARCH_COUNT, String.valueOf(mSearchCount));
+        AnalyticsTracker.track(Stat.CHANGE_USERNAME_SEARCH_PERFORMED, props);
+    }
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onUsernameSuggestionsFetched(OnUsernameSuggestionsFetched event) {
@@ -358,9 +381,7 @@ public abstract class BaseUsernameChangerFullScreenDialogFragment extends Dagger
                     mUsernameSuggestionInput,
                     "</b>"
             );
-            mUsernameView.setError(Html.fromHtml(
-                    error
-            ));
+            mUsernameView.setError(HtmlCompat.fromHtml(error, HtmlCompat.FROM_HTML_MODE_LEGACY));
         } else {
             populateUsernameSuggestions(event.suggestions);
         }

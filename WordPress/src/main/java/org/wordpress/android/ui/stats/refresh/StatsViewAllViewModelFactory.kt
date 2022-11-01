@@ -69,7 +69,7 @@ class StatsViewAllViewModelFactory(
     private val dateSelector: StatsDateSelector,
     @StringRes private val titleResource: Int
 ) : ViewModelProvider.Factory {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(StatsViewAllViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
             return StatsViewAllViewModel(

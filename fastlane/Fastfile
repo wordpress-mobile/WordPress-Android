@@ -2,20 +2,32 @@ UI.user_error!('Please run fastlane via `bundle exec`') unless FastlaneCore::Hel
 
 APP_SPECIFIC_VALUES = {
   wordpress: {
+    display_name: 'WordPress',
     metadata_dir: 'metadata',
-    gp_url: 'https://translate.wordpress.org/projects/apps/android/release-notes/',
+    glotpress_appstrings_project: 'https://translate.wordpress.org/projects/apps/android/dev/',
+    glotpress_metadata_project: 'https://translate.wordpress.org/projects/apps/android/release-notes/',
     package_name: 'org.wordpress.android',
-    bundle_name_prefix: 'wpandroid'
+    bundle_name_prefix: 'wpandroid',
+    screenshots_test_class: 'org.wordpress.android.ui.screenshots.WPScreenshotTest'
   },
   jetpack: {
+    display_name: 'Jetpack',
     metadata_dir: 'jetpack_metadata',
-    gp_url: 'https://translate.wordpress.com/projects/jetpack/apps/android/release-notes/',
+    glotpress_appstrings_project: 'https://translate.wordpress.com/projects/jetpack/apps/android/',
+    glotpress_metadata_project: 'https://translate.wordpress.com/projects/jetpack/apps/android/release-notes/',
     package_name: 'com.jetpack.android',
-    bundle_name_prefix: 'jpandroid'
+    bundle_name_prefix: 'jpandroid',
+    screenshots_test_class: 'org.wordpress.android.ui.screenshots.JPScreenshotTest'
   }
 }.freeze
 
 UPLOAD_TO_PLAY_STORE_JSON_KEY = File.join(Dir.home, '.configure', 'wordpress-android', 'secrets', 'google-upload-credentials.json')
+
+INSTALLABLE_BUILD_FLAVOR = 'Jalapeno'.freeze
+INSTALLABLE_BUILD_TYPE = 'Debug'.freeze
+INSTALLABLE_BUILD_DOMAIN = 'https://d2twmm2nzpx3bg.cloudfront.net'
+
+PROJECT_ROOT_FOLDER = File.dirname(File.expand_path(__dir__))
 
 ########################################################################
 # Environment
@@ -37,7 +49,7 @@ import 'lanes/build.rb'
 import 'lanes/localization.rb'
 import 'lanes/release.rb'
 import 'lanes/screenshots.rb'
-
+import 'lanes/test.rb'
 
 default_platform(:android)
 

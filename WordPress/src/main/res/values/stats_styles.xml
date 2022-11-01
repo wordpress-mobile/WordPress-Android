@@ -46,7 +46,9 @@
         <item name="android:paddingStart">@dimen/margin_extra_large</item>
     </style>
 
-    <style name="StatsBlockTitle" parent="TextAppearance.MaterialComponents.Subtitle1">
+    <style name="StatsBlockTitle" parent="TextAppearance.MaterialComponents.Headline6"/>
+
+    <style name="StatsDateSelectorTitle" parent="TextAppearance.MaterialComponents.Subtitle1">
         <item name="android:textStyle">bold</item>
     </style>
 
@@ -339,4 +341,93 @@
     </style>
 
     <style name="InsightsManagementItem" parent="TextAppearance.MaterialComponents.Body1" />
+
+    <!-- Stats Revamp styles -->
+    <style name="StatsPieChartTotalText" parent="TextAppearance.MaterialComponents.Body2" />
+
+    <style name="StatsPieChartLegends" parent="TextAppearance.MaterialComponents.Body2" />
+
+    <style name="StatsLegendsBlue" parent="TextAppearance.MaterialComponents.Caption">
+        <item name="android:layout_marginTop">24dp</item>
+        <item name="android:layout_marginBottom">4dp</item>
+        <item name="android:paddingStart">@dimen/margin_extra_large</item>
+        <item name="android:drawablePadding">4dp</item>
+        <item name="android:textColor">@color/blue_50</item>
+        <item name="android:drawableStart">@drawable/bg_stats_legend_start</item>
+        <item name="android:drawableTint">@color/blue_50</item>
+    </style>
+    <style name="StatsLegendsPurple" parent="TextAppearance.MaterialComponents.Caption">
+        <item name="android:layout_marginTop">24dp</item>
+        <item name="android:layout_marginBottom">4dp</item>
+        <item name="android:paddingStart">@dimen/margin_extra_large</item>
+        <item name="android:drawablePadding">4dp</item>
+        <item name="android:textColor">@color/purple_50</item>
+        <item name="android:drawableStart">@drawable/bg_stats_legend_start</item>
+        <item name="android:drawableTint">@color/purple_50</item>
+    </style>
+    <style name="StatsLegendsGray" parent="TextAppearance.MaterialComponents.Caption">
+        <item name="android:layout_marginTop">24dp</item>
+        <item name="android:layout_marginBottom">4dp</item>
+        <item name="android:drawablePadding">4dp</item>
+        <item name="android:drawableStart">@drawable/bg_stats_legend_start</item>
+        <item name="android:drawableTint">@color/stats_legend_previous_week</item>
+    </style>
+
+    <style name="StatsWidget.MaterialComponents.Chip.Choice" parent="Widget.MaterialComponents.Chip.Choice">
+        <item name="chipBackgroundColor">@color/bg_color_chip_state_list</item>
+        <item name="android:textColor">@color/text_color_chip_state_list</item>
+    </style>
+
+    <style name="ListItem">
+        <item name="widgetTitle1"></item>
+        <item name="widgetContent1"></item>
+        <item name="widgetTitle2"></item>
+        <item name="widgetContent2"></item>
+        <item name="widgetContentNeutral"></item>
+        <item name="widgetContentPositive"></item>
+        <item name="widgetContentNegative"></item>
+    </style>
+    <style name="ListItem.Preview">
+        <item name="widgetTitle1">@string/stats_views</item>
+        <item name="widgetContent1">1,100</item>
+    </style>
+    <style name="ListItem.Preview1">
+        <item name="widgetTitle1">@string/stats_views</item>
+        <item name="widgetContent1">1,100</item>
+        <item name="widgetTitle2">@string/stats_visitors</item>
+        <item name="widgetContent2">1,000</item>
+    </style>
+    <style name="ListItem.Preview2">
+        <item name="widgetTitle1">@string/stats_insights_posts</item>
+        <item name="widgetContent1">55</item>
+        <item name="widgetTitle2">@string/stats_insights_best_ever</item>
+        <item name="widgetContent2">50</item>
+    </style>
+    <style name="ListItem.Preview3">
+        <item name="widgetTitle1">@string/stats_views</item>
+        <item name="widgetContent1">1,100</item>
+        <item name="widgetTitle2">@string/stats_visitors</item>
+        <item name="widgetContent2">1,000</item>
+    </style>
+    <style name="ListItem.Preview4">
+        <item name="widgetTitle1">@string/stats_likes</item>
+        <item name="widgetContent1">55</item>
+        <item name="widgetTitle2">@string/stats_comments</item>
+        <item name="widgetContent2">50</item>
+    </style>
+    <style name="ListItem.Preview5">
+        <item name="widgetContent1">Today</item>
+        <item name="widgetContentNeutral">+10(18%)</item>
+        <item name="widgetContent2">46</item>
+    </style>
+    <style name="ListItem.Preview6">
+        <item name="widgetContent1">Jun 26, 2019</item>
+        <item name="widgetContentPositive">+6(12%)</item>
+        <item name="widgetContent2">56</item>
+    </style>
+    <style name="ListItem.Preview7">
+        <item name="widgetContent1">Jun 25, 2019</item>
+        <item name="widgetContentNegative">-3(6%)</item>
+        <item name="widgetContent2">50</item>
+    </style>
 </resources>

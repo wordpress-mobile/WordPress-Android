@@ -25,6 +25,7 @@ import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import javax.inject.Inject
 import javax.inject.Named
 
+@Suppress("LongParameterList")
 class PostRecentWeeksUseCase(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher,

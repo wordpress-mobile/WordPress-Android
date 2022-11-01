@@ -10,16 +10,13 @@ import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runBlockingTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mock
-import org.mockito.Mockito
+import org.mockito.Mockito.`when`
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.MainCoroutineScopeRule
 import org.wordpress.android.fluxc.model.CommentStatus.APPROVED
 import org.wordpress.android.fluxc.model.CommentStatus.DELETED
 import org.wordpress.android.fluxc.model.CommentStatus.TRASH
@@ -42,14 +39,13 @@ import org.wordpress.android.models.usecases.ModerateCommentWithUndoUseCase.Para
 import org.wordpress.android.models.usecases.ModerateCommentWithUndoUseCase.Parameters.ModerateWithFallbackParameters
 import org.wordpress.android.models.usecases.ModerateCommentWithUndoUseCase.SingleCommentModerationResult
 import org.wordpress.android.models.usecases.ModerateCommentsResourceProvider
+import org.wordpress.android.test
 import org.wordpress.android.ui.comments.utils.approvedComment
 import org.wordpress.android.ui.comments.utils.trashedComment
 import org.wordpress.android.usecase.UseCaseResult
 
 @ExperimentalCoroutinesApi
 class ModerateCommentsWithUndoUseCaseTest : BaseUnitTest() {
-    @Rule @JvmField val coroutineScopeRule = MainCoroutineScopeRule()
-
     @Mock private lateinit var commentStore: CommentsStore
     @Mock private lateinit var localCommentCacheUpdateHandler: LocalCommentCacheUpdateHandler
 
@@ -60,15 +56,14 @@ class ModerateCommentsWithUndoUseCaseTest : BaseUnitTest() {
     val site = SiteModel().also { it.id = 5 }.also { it.name = "Test Site" }
 
     @Before
-    fun setup() {
+    fun setup() = test {
         whenever(moderateCommentsResourceProvider.commentsStore).thenReturn(commentStore)
         whenever(moderateCommentsResourceProvider.localCommentCacheUpdateHandler).thenReturn(
                 localCommentCacheUpdateHandler
         )
 
-        runBlocking {
-            Mockito.`when`(commentStore.getCommentByLocalSiteAndRemoteId(eq(site.id), eq(1)))
-        }.thenReturn(listOf(approvedComment))
+        `when`(commentStore.getCommentByLocalSiteAndRemoteId(eq(site.id), eq(1)))
+                .thenReturn(listOf(approvedComment))
 
         moderateCommentWithUndoUseCase = ModerateCommentWithUndoUseCase(moderateCommentsResourceProvider)
     }

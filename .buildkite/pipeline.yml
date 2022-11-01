@@ -1,51 +1,91 @@
-docker-container: &docker-container
-  plugins:
-    - docker#v3.8.0:
-        image: "public.ecr.aws/automattic/android-build-image:v1.2.0"
-        environment:
-          - "CI=true"
+# Nodes with values to reuse in the pipeline.
+common_params:
+  # Common plugin settings to use with the `plugins` key.
+  - &common_plugins
+    - automattic/bash-cache#2.1.0
 
 steps:
-  - label: "checkstyle"
-    <<: *docker-container
+  #################
+  # Linters
+  #################
+  - group: "🕵️‍♂️ Linters"
+    steps:
+      - label: "🕵️ checkstyle"
+        command: |
+          cp gradle.properties-example gradle.properties
+          ./gradlew checkstyle
+        plugins: *common_plugins
+        artifact_paths:
+          - "**/build/reports/checkstyle/checkstyle.*"
+
+      - label: "🕵️ detekt"
+        command: |
+          cp gradle.properties-example gradle.properties
+          ./gradlew detekt
+        plugins: *common_plugins
+        artifact_paths:
+          - "**/build/reports/detekt/detekt.html"
+
+      - label: "🕵️ Lint WordPress"
+        command: ".buildkite/commands/lint.sh wordpress"
+        artifact_paths:
+          - "**/build/reports/lint-results*.*"
+
+      - label: "🕵️ Lint Jetpack"
+        command: ".buildkite/commands/lint.sh jetpack"
+        artifact_paths:
+          - "**/build/reports/lint-results*.*"
+
+  - label: "Dependency Tree Diff"
     command: |
       cp gradle.properties-example gradle.properties
-      ./gradlew checkstyle
+      .buildkite/commands/dependency-tree-diff.sh
+    if: build.pull_request.id != null
+    plugins: *common_plugins
+
+  #################
+  # Unit Tests
+  #################
+  - group: "🔬 Unit Tests"
+    steps:
+      - label: "🔬 Test WordPress"
+        command: |
+          cp gradle.properties-example gradle.properties
+          ./gradlew testWordpressVanillaRelease
+        plugins: *common_plugins
+
+      - label: "🔬 Test Processors"
+        command: |
+          cp gradle.properties-example gradle.properties
+          ./gradlew :libs:processors:test
+        plugins: *common_plugins
+
+      - label: "🔬 Test Image Editor"
+        command: |
+          cp gradle.properties-example gradle.properties
+          ./gradlew :libs:image-editor:test
+        plugins: *common_plugins
+
+  #################
+  # Instrumented (aka UI) Tests
+  #################
+  - label: "🔬 Instrumented tests"
+    command: ".buildkite/commands/instrumented-tests.sh"
+    plugins: *common_plugins
     artifact_paths:
-      - "**/build/reports/checkstyle/checkstyle.*"
-  - label: "ktlint"
-    <<: *docker-container
-    command: |
-      cp gradle.properties-example gradle.properties
-      ./gradlew ciktlint
-    artifact_paths:
-      - "**/build/ktlint.xml"
-  - label: "detekt"
-    <<: *docker-container
-    command: |
-      cp gradle.properties-example gradle.properties
-      ./gradlew WordPress:detekt
-    artifact_paths:
-      - "**/build/reports/detekt/detekt.html"
-  - label: "lint"
-    <<: *docker-container
-    command: |
-      cp gradle.properties-example gradle.properties
-      ./gradlew lintWordpressVanillaRelease
-    artifact_paths:
-      - "**/build/reports/lint-results*.*"
-  - label: "Test WordPress"
-    <<: *docker-container
-    command: |
-      cp gradle.properties-example gradle.properties
-      ./gradlew testWordpressVanillaRelease
-  - label: "Test WordPressProcessors"
-    <<: *docker-container
-    command: |
-      cp gradle.properties-example gradle.properties
-      ./gradlew :libs:WordPressProcessors:test
-  - label: "Test ImageEditor"
-    <<: *docker-container
-    command: |
-      cp gradle.properties-example gradle.properties
-      ./gradlew :libs:image-editor:ImageEditor:test
+      - "**/build/instrumented-tests/**/*"
+
+  #################
+  # Create Installable Builds for WP and JP
+  #################
+  - group: "📲 Installable Builds"
+    steps:
+      - label: ":wordpress: :android: Installable Build"
+        command: ".buildkite/commands/installable-build.sh wordpress"
+        if: build.pull_request.id != null
+        plugins: *common_plugins
+
+      - label: ":jetpack: :android: Installable Build"
+        command: ".buildkite/commands/installable-build.sh jetpack"
+        if: build.pull_request.id != null
+        plugins: *common_plugins

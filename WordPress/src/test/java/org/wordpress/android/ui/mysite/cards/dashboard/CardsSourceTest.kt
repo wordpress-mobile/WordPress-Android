@@ -94,7 +94,11 @@ class CardsSourceTest : BaseUnitTest() {
 
     @Before
     fun setUp() {
-        setUpMocks()
+        init()
+    }
+
+    private fun init(isTodaysStatsCardFeatureConfigEnabled: Boolean = false) {
+        setUpMocks(isTodaysStatsCardFeatureConfigEnabled)
         cardSource = CardsSource(
                 selectedSiteRepository,
                 cardsStore,
@@ -103,7 +107,8 @@ class CardsSourceTest : BaseUnitTest() {
         )
     }
 
-    private fun setUpMocks() {
+    private fun setUpMocks(isTodaysStatsCardFeatureConfigEnabled: Boolean) {
+        whenever(todaysStatsCardFeatureConfig.isEnabled()).thenReturn(isTodaysStatsCardFeatureConfigEnabled)
         whenever(siteModel.id).thenReturn(SITE_LOCAL_ID)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(siteModel)
     }
@@ -121,9 +126,9 @@ class CardsSourceTest : BaseUnitTest() {
 
     @Test
     fun `given today's stats feature enabled, when build is invoked, then todays stats from store(database)`() = test {
+        init(isTodaysStatsCardFeatureConfigEnabled = true)
         val result = mutableListOf<CardsUpdate>()
         whenever(cardsStore.getCards(siteModel, STATS_FEATURED_ENABLED_CARD_TYPES)).thenReturn(flowOf(data))
-        whenever(todaysStatsCardFeatureConfig.isEnabled()).thenReturn(true)
 
         cardSource.build(testScope(), SITE_LOCAL_ID).observeForever { it?.let { result.add(it) } }
 
@@ -170,9 +175,9 @@ class CardsSourceTest : BaseUnitTest() {
     @Test
     fun `given today's stats feature enabled, when refresh is invoked, then todays stats are requested from network`() =
             test {
+                init(isTodaysStatsCardFeatureConfigEnabled = true)
                 val result = mutableListOf<CardsUpdate>()
                 whenever(cardsStore.getCards(siteModel, STATS_FEATURED_ENABLED_CARD_TYPES)).thenReturn(flowOf(data))
-                whenever(todaysStatsCardFeatureConfig.isEnabled()).thenReturn(true)
                 whenever(cardsStore.fetchCards(siteModel, STATS_FEATURED_ENABLED_CARD_TYPES)).thenReturn(success)
                 cardSource.refresh.observeForever { }
 

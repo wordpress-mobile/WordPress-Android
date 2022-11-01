@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    xmlns:tools="http://schemas.android.com/tools"
     android:paddingTop="@dimen/margin_extra_large"
     android:paddingBottom="@dimen/margin_extra_large">
 
@@ -10,6 +12,7 @@
         android:id="@+id/start_value_container"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:layout_marginStart="@dimen/margin_extra_large"
         android:layout_marginEnd="@dimen/margin_extra_large"
         android:focusable="true"
@@ -18,61 +21,139 @@
         app:layout_constraintEnd_toStartOf="@+id/horizontal_divider"
         app:layout_constraintStart_toStartOf="parent">
 
-        <com.google.android.material.textview.MaterialTextView
+        <org.wordpress.android.widgets.MaterialTextViewWithNumerals
             android:id="@+id/start_label"
             style="@style/StatsBlockQuickScanLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:labelFor="@id/end_value"
-            android:text="@string/unknown" />
+            android:text="@string/unknown"
+            tools:text="@string/stats_views"/>
 
-        <com.google.android.material.textview.MaterialTextView
+        <org.wordpress.android.widgets.MaterialTextViewWithNumerals
             android:id="@+id/start_value"
             style="@style/StatsBlockQuickScanValue"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/unknown" />
+            android:text="@string/unknown"
+            tools:text="34"/>
+
+        <org.wordpress.android.widgets.MaterialTextViewWithNumerals
+            android:id="@+id/start_text"
+            style="@style/StatsBlockText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/unknown"
+            android:visibility="gone"
+            tools:visibility="visible"/>
+
     </LinearLayout>
 
     <View
         android:id="@+id/horizontal_divider"
         android:layout_width="1dp"
-        android:layout_height="0dp"
+        android:layout_height="match_parent"
         android:background="?android:attr/listDivider"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@id/start_value_container"
+        app:layout_constraintEnd_toStartOf="@id/end_value_container"
         app:layout_constraintTop_toTopOf="parent" />
-
 
     <LinearLayout
         android:id="@+id/end_value_container"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:layout_marginStart="@dimen/margin_extra_large"
         android:layout_marginEnd="@dimen/margin_extra_large"
         android:focusable="true"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/horizontal_divider">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toEndOf="@id/horizontal_divider"
+        app:layout_constraintEnd_toStartOf="@id/horizontal_divider2">
 
-        <TextView
+        <org.wordpress.android.widgets.MaterialTextViewWithNumerals
             android:id="@+id/end_label"
             style="@style/StatsBlockQuickScanLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:labelFor="@id/end_value"
-            android:text="@string/unknown" />
+            android:text="@string/unknown"
+            tools:text="@string/stats_likes"/>
 
-        <TextView
+        <org.wordpress.android.widgets.MaterialTextViewWithNumerals
             android:id="@+id/end_value"
             style="@style/StatsBlockQuickScanValue"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/unknown" />
+            android:text="@string/unknown"
+            tools:text="12"/>
+
+        <org.wordpress.android.widgets.MaterialTextViewWithNumerals
+            android:id="@+id/end_text"
+            style="@style/StatsBlockText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/unknown"
+            android:visibility="gone"
+            tools:visibility="visible"/>
 
     </LinearLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <View
+        android:id="@+id/horizontal_divider2"
+        android:visibility="gone"
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/end_value_container"
+        app:layout_constraintEnd_toStartOf="@id/third_value_container"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible"/>
+
+    <LinearLayout
+        android:id="@+id/third_value_container"
+        android:visibility="gone"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginStart="@dimen/margin_extra_large"
+        android:layout_marginEnd="@dimen/margin_extra_medium_large"
+        android:focusable="true"
+        android:orientation="vertical"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/horizontal_divider2"
+        tools:visibility="visible">
+
+        <org.wordpress.android.widgets.MaterialTextViewWithNumerals
+            android:id="@+id/third_label"
+            style="@style/StatsBlockQuickScanLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:labelFor="@id/third_value"
+            android:text="@string/unknown"
+            tools:text="@string/stats_comments"/>
+
+        <org.wordpress.android.widgets.MaterialTextViewWithNumerals
+            android:id="@+id/third_value"
+            style="@style/StatsBlockQuickScanValue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/unknown"
+            tools:text="1"/>
+
+        <org.wordpress.android.widgets.MaterialTextViewWithNumerals
+            android:id="@+id/third_text"
+            style="@style/StatsBlockText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/unknown"
+            android:visibility="gone"
+            tools:visibility="visible"/>
+
+    </LinearLayout>
+
+</LinearLayout>

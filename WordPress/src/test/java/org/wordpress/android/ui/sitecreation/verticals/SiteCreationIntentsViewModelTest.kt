@@ -109,7 +109,18 @@ class SiteCreationIntentsViewModelTest {
     }
 
     @Test
-    fun `when there are matching search results but not exact the custom vertical is not visible`() {
+    fun `when the user types white spaces at the beginning or the end of the input those are ignored`() {
+        val valueOfSearchInput = " \n  test1    \n"
+        val matchingItem = "Test1"
+        whenever(resources.getStringArray(any())).thenReturn(arrayOf(matchingItem, "Test2", "Test3"))
+        viewModel.initializeFromResources(resources)
+        viewModel.onSearchTextChanged(valueOfSearchInput)
+        assertThat(viewModel.uiState.value?.content?.items?.size).isEqualTo(1)
+        assertThat(viewModel.uiState.value?.content?.items?.firstOrNull()?.verticalText).isEqualTo("Test1")
+    }
+
+    @Test
+    fun `when there are matching search results but not exact the custom vertical is visible`() {
         val valueOfSearchInput = "test"
         val matchingItem = "Test1"
         whenever(resources.getStringArray(any())).thenReturn(arrayOf(matchingItem, "Test2", "Test3"))
@@ -118,6 +129,15 @@ class SiteCreationIntentsViewModelTest {
         assertThat(viewModel.uiState.value?.content?.items?.size).isEqualTo(4)
         assertThat(viewModel.uiState.value?.content?.items?.getOrNull(0)?.verticalText)
                 .isEqualTo(valueOfSearchInput)
+    }
+
+    @Test
+    fun `when the user types white spaces the custom vertical is not visible`() {
+        val valueOfSearchInput = "   \n "
+        whenever(resources.getStringArray(any())).thenReturn(arrayOf("Test1", "Test2", "Test3"))
+        viewModel.initializeFromResources(resources)
+        viewModel.onSearchTextChanged(valueOfSearchInput)
+        assertThat(viewModel.uiState.value?.content?.items?.size).isEqualTo(3)
     }
 
     @Test

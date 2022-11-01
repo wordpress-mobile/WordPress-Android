@@ -20,9 +20,7 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaChanged
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EDIT_HOMEPAGE
 import org.wordpress.android.modules.BG_THREAD
-import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.pages.PageItem
 import org.wordpress.android.ui.pages.PageItem.Action
 import org.wordpress.android.ui.pages.PageItem.Divider
@@ -34,7 +32,6 @@ import org.wordpress.android.ui.pages.PageItem.ScheduledPage
 import org.wordpress.android.ui.pages.PageItem.TrashedPage
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.posts.AuthorFilterSelection.ME
-import org.wordpress.android.ui.quickstart.QuickStartEvent
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.LocaleManagerWrapper
@@ -63,15 +60,12 @@ class PageListViewModel @Inject constructor(
     private val dispatcher: Dispatcher,
     private val localeManagerWrapper: LocaleManagerWrapper,
     private val accountStore: AccountStore,
-    @Named(BG_THREAD) private val coroutineDispatcher: CoroutineDispatcher,
-    private val quickStartRepository: QuickStartRepository
+    @Named(BG_THREAD) private val coroutineDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(coroutineDispatcher) {
     private val _pages: MutableLiveData<List<PageItem>> = MutableLiveData()
     val pages: LiveData<Triple<List<PageItem>, Boolean, Boolean>> = Transformations.map(_pages) {
         Triple(it, isSitePhotonCapable, isSitePrivateAt)
     }
-    private val _quickStartEvent: MutableLiveData<QuickStartEvent?> = MutableLiveData()
-    val quickStartEvent: LiveData<QuickStartEvent?> = _quickStartEvent
     private val _scrollToPosition = SingleLiveEvent<Int>()
     val scrollToPosition: LiveData<Int> = _scrollToPosition
     private var retryScrollToPage: LocalId? = null
@@ -153,30 +147,13 @@ class PageListViewModel @Inject constructor(
     }
 
     fun onMenuAction(action: Action, pageItem: Page, context: Context): Boolean {
-        completeEditHomePageTour(pageItem, context)
-        return pagesViewModel.onMenuAction(action, pageItem)
+        return pagesViewModel.onMenuAction(action, pageItem, context)
     }
 
-    fun onItemTapped(pageItem: Page, context: Context) {
-        completeEditHomePageTour(pageItem, context)
-        _quickStartEvent.postValue(null)
+    fun onItemTapped(pageItem: Page) {
         if (pageItem.tapActionEnabled) {
             pagesViewModel.onItemTapped(pageItem)
         }
-    }
-
-    private fun completeEditHomePageTour(pageItem: Page, context: Context) {
-        if (isHomepage(pageItem)) quickStartRepository.completeTask(EDIT_HOMEPAGE)
-    }
-
-    fun onQuickStartEvent(event: QuickStartEvent) {
-        if (event.task == EDIT_HOMEPAGE) {
-            _quickStartEvent.postValue(event)
-        }
-    }
-
-    private fun isHomepage(pageItem: Page): Boolean {
-        return pageItem.remoteId == pagesViewModel.site.pageOnFront
     }
 
     fun onEmptyListNewPageButtonTapped() {
@@ -197,7 +174,6 @@ class PageListViewModel @Inject constructor(
     private val pagesObserver = Observer<List<PageModel>> { pages ->
         pages?.let {
             loadPagesAsync(pages)
-
             pagesViewModel.checkIfNewPageButtonShouldBeVisible()
         }
     }
@@ -214,7 +190,7 @@ class PageListViewModel @Inject constructor(
 
     private fun loadPagesAsync(pages: List<PageModel>) = launch {
         val pageItems = pages
-                .sortedBy { it.title.toLowerCase(localeManagerWrapper.getLocale()) }
+                .sortedBy { it.title.lowercase(localeManagerWrapper.getLocale()) }
                 .filter { listType.pageStatuses.contains(it.status) }
                 .let {
                     when (listType) {
@@ -474,8 +450,8 @@ class PageListViewModel @Inject constructor(
         pagesViewModel.onImagesChanged()
     }
 
+    @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    @SuppressWarnings("unused")
     fun onMediaChanged(event: OnMediaChanged) {
         if (!event.isError && event.mediaList != null) {
             invalidateFeaturedMedia(*event.mediaList.map { it.mediaId }.toLongArray())
@@ -507,8 +483,6 @@ class PageListViewModel @Inject constructor(
             pageModel.isPostsPage -> R.drawable.ic_posts_16dp
             else -> null
         }
-        val showQuickStartFocusPoint: Boolean = pageModel.isHomepage &&
-                _quickStartEvent.value?.task == EDIT_HOMEPAGE
         return ItemUiStateData(
                 labels,
                 labelColor,
@@ -516,8 +490,7 @@ class PageListViewModel @Inject constructor(
                 showOverlay,
                 actions,
                 subtitle,
-                icon,
-                showQuickStartFocusPoint
+                icon
         )
     }
 

@@ -7,15 +7,12 @@ import android.text.SpannableString
 import android.text.TextPaint
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
-import android.text.style.ImageSpan
 import android.text.style.StyleSpan
 import android.text.style.URLSpan
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.core.content.ContextCompat
 import org.wordpress.android.R
-import org.wordpress.android.R.drawable
 import org.wordpress.android.databinding.MySiteTodaysStatsCardBinding
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.TodaysStatsCard.TextWithLinks.Clickable
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.TodaysStatsCard.TodaysStatsCardWithData
@@ -66,7 +63,6 @@ class TodaysStatsCardViewHolder(
                     link.navigationAction.click()
                 }
             }
-            spannable.withExternalLinkImageSpan(endIndex)
             spannable.withBoldSpan(startIndex, endIndex)
         }
         text = spannable
@@ -99,23 +95,6 @@ class TodaysStatsCardViewHolder(
         )
     }
 
-    private fun SpannableString.withExternalLinkImageSpan(endIndex: Int) {
-        val drawable = ContextCompat.getDrawable(itemView.context, drawable.ic_external_white_24dp) ?: return
-        drawable.setTint(linkColor)
-        drawable.setBounds(
-                EXTERNAL_LINK_DRAWABLE_BOUND_LEFT,
-                0,
-                drawable.intrinsicWidth / 2,
-                drawable.intrinsicHeight / 2
-        )
-        setSpan(
-                ImageSpan(drawable, ImageSpan.ALIGN_BASELINE),
-                endIndex,
-                endIndex + 1,
-                Spannable.SPAN_INCLUSIVE_EXCLUSIVE
-        )
-    }
-
     private fun SpannableString.withBoldSpan(
         startIndex: Int,
         endIndex: Int
@@ -126,9 +105,5 @@ class TodaysStatsCardViewHolder(
                 endIndex,
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
         )
-    }
-
-    companion object {
-        private const val EXTERNAL_LINK_DRAWABLE_BOUND_LEFT = 5
     }
 }

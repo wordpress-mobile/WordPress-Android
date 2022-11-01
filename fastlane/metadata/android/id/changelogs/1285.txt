@@ -1,0 +1,5 @@
+21.0:
+- Marble aplikasi Automattic Family dihapus dari halaman Tentang Kami
+- Layar peluncuran Android versi 12+ diperbarui
+- Warna teks pesan berhasil untuk login melalui kode QR diubah dari merah ke hitam
+- Layar Statistik diperbaiki agar menyertakan angka Arab Barat untuk pengguna bahasa Arab

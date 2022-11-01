@@ -11,6 +11,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.SiteModel.ORIGIN_WPCOM_REST
 import org.wordpress.android.ui.pages.PageItem.Action.CANCEL_AUTO_UPLOAD
 import org.wordpress.android.ui.pages.PageItem.Action.COPY
+import org.wordpress.android.ui.pages.PageItem.Action.COPY_LINK
 import org.wordpress.android.ui.pages.PageItem.Action.DELETE_PERMANENTLY
 import org.wordpress.android.ui.pages.PageItem.Action.MOVE_TO_DRAFT
 import org.wordpress.android.ui.pages.PageItem.Action.MOVE_TO_TRASH
@@ -41,7 +42,7 @@ class CreatePageListItemActionsUseCaseTest {
     @Test
     fun `Verify DRAFT actions`() {
         // Arrange
-        val expectedActions = setOf(VIEW_PAGE, SET_PARENT, PUBLISH_NOW, MOVE_TO_TRASH, COPY)
+        val expectedActions = setOf(VIEW_PAGE, SET_PARENT, PUBLISH_NOW, MOVE_TO_TRASH, COPY, COPY_LINK)
 
         // Act
         val draftActions = useCase.setupPageActions(DRAFTS, mock(), site, defaultRemoteId)
@@ -70,7 +71,8 @@ class CreatePageListItemActionsUseCaseTest {
                 SET_PARENT,
                 MOVE_TO_DRAFT,
                 MOVE_TO_TRASH,
-                COPY
+                COPY,
+                COPY_LINK
         )
 
         // Act
@@ -90,7 +92,8 @@ class CreatePageListItemActionsUseCaseTest {
                 SET_AS_POSTS_PAGE,
                 MOVE_TO_DRAFT,
                 MOVE_TO_TRASH,
-                COPY
+                COPY,
+                COPY_LINK
         )
         site.showOnFront = ShowOnFront.PAGE.value
         site.setIsWPCom(true)
@@ -112,7 +115,8 @@ class CreatePageListItemActionsUseCaseTest {
                 SET_AS_POSTS_PAGE,
                 MOVE_TO_DRAFT,
                 MOVE_TO_TRASH,
-                COPY
+                COPY,
+                COPY_LINK
         )
         site.showOnFront = ShowOnFront.PAGE.value
         site.setIsJetpackConnected(true)
@@ -132,7 +136,8 @@ class CreatePageListItemActionsUseCaseTest {
                 VIEW_PAGE,
                 SET_PARENT,
                 SET_AS_POSTS_PAGE,
-                COPY
+                COPY,
+                COPY_LINK
         )
         site.showOnFront = ShowOnFront.PAGE.value
         site.pageOnFront = defaultRemoteId
@@ -154,7 +159,8 @@ class CreatePageListItemActionsUseCaseTest {
                 SET_AS_HOMEPAGE,
                 MOVE_TO_DRAFT,
                 MOVE_TO_TRASH,
-                COPY
+                COPY,
+                COPY_LINK
         )
         site.showOnFront = ShowOnFront.PAGE.value
         site.pageForPosts = defaultRemoteId
@@ -173,7 +179,8 @@ class CreatePageListItemActionsUseCaseTest {
         val expectedActions = setOf(
                 VIEW_PAGE,
                 SET_PARENT,
-                COPY
+                COPY,
+                COPY_LINK
         )
         site.showOnFront = ShowOnFront.PAGE.value
         val remoteId = -1L
@@ -193,7 +200,8 @@ class CreatePageListItemActionsUseCaseTest {
                 SET_PARENT,
                 MOVE_TO_DRAFT,
                 MOVE_TO_TRASH,
-                COPY
+                COPY,
+                COPY_LINK
         )
         site.showOnFront = ShowOnFront.PAGE.value
         site.setIsWPCom(false)
@@ -213,7 +221,8 @@ class CreatePageListItemActionsUseCaseTest {
                 VIEW_PAGE,
                 SET_PARENT,
                 MOVE_TO_DRAFT,
-                MOVE_TO_TRASH
+                MOVE_TO_TRASH,
+                COPY_LINK
         )
 
         // Act

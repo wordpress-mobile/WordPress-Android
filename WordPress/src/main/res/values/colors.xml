@@ -11,6 +11,7 @@
     <color name="background_snackbar">@color/neutral_80</color>
     <color name="link_reader">@color/primary</color>
     <color name="link_stats">@color/accent</color>
+    <color name="bottom_bar_notification_badge">@android:color/white</color>
 
     <!-- Switch to attribute after dropping support for api 21-23 -->
     <color name="placeholder">#1A000000</color>
@@ -31,12 +32,22 @@
     <color name="login_prologue_background_circle_orange">@color/orange_10</color>
     <color name="login_prologue_background_circle_pink">@color/pink_10</color>
 
+    <!-- Login Prologue Revamped -->
+    <color name="login_prologue_revamped_background">@color/gray_0</color>
+    <color name="login_prologue_revamped_icon">@color/gray_80</color>
+
     <!-- Prepublishing Nudges -->
     <color name="prepublishing_toolbar_icon_color">@color/gray_50</color>
     <color name="prepublishing_action_type_enabled_color">@color/black</color>
     <color name="prepublishing_action_result_enabled_color">@color/gray_30</color>
     <color name="prepublishing_action_type_disabled_color">@color/gray_10</color>
     <color name="prepublishing_action_result_disabled_color">@color/gray_10</color>
+
+    <!-- Jetpack awareness in WordPress App -->
+    <color name="jetpack_banner_background">@color/jetpack_green_0</color>
+    <color name="jetpack_banner_divider">@color/gray_5</color>
+    <color name="jetpack_badge_background">@color/jetpack_green</color>
+    <color name="jetpack_powered_bottom_sheet_background">@color/white</color>
 
     <!-- Reader -->
 
@@ -70,6 +81,10 @@
     <color name="context_line_highlighted_row_background">@color/red_5</color>
 
     <!-- Quick Start Task Cards -->
+    <color name="quick_start_task_card_background">@color/gray_0</color>
+    <color name="quick_start_task_card_completed_checkmark">@color/gray_5</color>
+
+    <!-- Quick Start Task Dynamic Cards -->
     <color name="quick_start_task_card_illustration_background">@color/gray_0</color>
     <color name="quick_start_task_card_illustration_surface">@color/white</color>
     <color name="quick_start_task_card_illustration_details">@color/gray_30</color>
@@ -113,5 +128,6 @@
     <color name="grey_900">#ff212121</color>
 
     <!-- Site creation  -->
+    <color name="site_creation_skip_button_text">@color/blue_50</color>
     <color name="site_creation_intent_item_emoji_bg">@color/grey_lighten_30</color>
 </resources>

@@ -115,7 +115,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         mInflater = LayoutInflater.from(context);
         mHandler = new Handler();
 
-        int displayWidth = DisplayUtils.getDisplayPixelWidth(mContext);
+        int displayWidth = DisplayUtils.getWindowPixelWidth(mContext);
         mThumbWidth = displayWidth / getColumnCount(mContext);
         mThumbHeight = (int) (mThumbWidth * 0.75f);
     }
@@ -596,7 +596,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         }
     }
 
-    private void setItemSelectedByPosition(GridViewHolder holder, int position, boolean selected) {
+    private void setItemSelectedByPosition(GridViewHolder holder, int position, boolean isVideo, boolean selected) {
         if (!isValidPosition(position)) {
             return;
         }
@@ -638,7 +638,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             mCallback.onAdapterSelectionCountChanged(mSelectedItems.size());
         }
 
-        PhotoPickerUtils.announceSelectedImageForAccessibility(holder.mImageView, selected);
+        PhotoPickerUtils.announceSelectedMediaForAccessibility(holder.mImageView, isVideo, selected);
     }
 
     private void toggleItemSelected(GridViewHolder holder, int position) {
@@ -646,12 +646,17 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             return;
         }
         boolean isSelected = isItemSelectedByPosition(position);
-        setItemSelectedByPosition(holder, position, !isSelected);
+        boolean isVideo = isItemIsVideoByPosition(position);
+        setItemSelectedByPosition(holder, position, isVideo, !isSelected);
     }
 
     private boolean isItemSelectedByPosition(int position) {
         int localMediaId = mMediaList.get(position).getId();
         return mSelectedItems.contains(localMediaId);
+    }
+
+    private boolean isItemIsVideoByPosition(int position) {
+        return mMediaList.get(position).isVideo();
     }
 
     public void setSelectedItems(ArrayList<Integer> selectedItems) {

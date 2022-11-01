@@ -8,17 +8,16 @@ import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.C
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.FILTER
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.LOCATION
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.PREVIEW_MODE
+import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.RECOMMENDED
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.SEARCH_TERM
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.SEGMENT_ID
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.SEGMENT_NAME
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.SELECTED_FILTERS
+import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.SITE_NAME
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.TEMPLATE
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.THUMBNAIL_MODE
-import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.VARIATION
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.VERTICAL_SLUG
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.util.experiments.SiteIntentQuestionABExperiment.Variation
-import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -29,11 +28,10 @@ enum class SiteCreationErrorType {
 
 private const val DESIGN_ERROR_CONTEXT = "design"
 private const val SITE_CREATION_LOCATION = "site_creation"
+private const val SITE_CREATION_SOURCE = "source"
 
 @Singleton
-class SiteCreationTracker @Inject constructor(
-    val tracker: AnalyticsTrackerWrapper
-) : LayoutPickerTracker {
+class SiteCreationTracker @Inject constructor(val tracker: AnalyticsTrackerWrapper) : LayoutPickerTracker {
     private enum class PROPERTY(val key: String) {
         TEMPLATE("template"),
         SEGMENT_NAME("segment_name"),
@@ -46,13 +44,17 @@ class SiteCreationTracker @Inject constructor(
         FILTER("filter"),
         SELECTED_FILTERS("selected_filters"),
         VERTICAL_SLUG("vertical_slug"),
-        VARIATION("variation")
+        SITE_NAME("site_name"),
+        RECOMMENDED("recommended")
     }
 
     private var designSelectionSkipped: Boolean = false
 
-    fun trackSiteCreationAccessed() {
-        tracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_ACCESSED)
+    fun trackSiteCreationAccessed(siteCreationSource: SiteCreationSource) {
+        tracker.track(
+                AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_ACCESSED,
+                mapOf(SITE_CREATION_SOURCE to siteCreationSource.label)
+        )
     }
 
     fun trackSegmentsViewed() {
@@ -140,14 +142,14 @@ class SiteCreationTracker @Inject constructor(
     }
 
     fun trackErrorShown(errorContext: String, errorType: SiteCreationErrorType, errorDescription: String? = null) {
-        trackErrorShown(errorContext, errorType.toString().toLowerCase(Locale.ROOT), errorDescription)
+        trackErrorShown(errorContext, errorType.toString().lowercase(), errorDescription)
     }
 
     fun trackErrorShown(errorContext: String, errorType: String, errorDescription: String? = null) {
         tracker.track(
                 AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_ERROR_SHOWN,
                 errorContext,
-                errorType.toLowerCase(Locale.ROOT),
+                errorType.lowercase(),
                 errorDescription ?: ""
         )
     }
@@ -163,23 +165,16 @@ class SiteCreationTracker @Inject constructor(
         )
     }
 
-    override fun trackThumbnailModeTapped(mode: String) {
-        tracker.track(
-                AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SITE_DESIGN_THUMBNAIL_MODE_BUTTON_TAPPED,
-                mapOf(PREVIEW_MODE.key to mode)
-        )
-    }
-
     fun trackSiteDesignSkipped() {
         designSelectionSkipped = true
         tracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SITE_DESIGN_SKIPPED)
     }
 
-    fun trackSiteDesignSelected(template: String) {
+    fun trackSiteDesignSelected(template: String, recommended: Boolean) {
         designSelectionSkipped = false
         tracker.track(
                 AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SITE_DESIGN_SELECTED,
-                mapOf(TEMPLATE.key to template)
+                mapOf(TEMPLATE.key to template, RECOMMENDED.key to recommended)
         )
     }
 
@@ -275,10 +270,23 @@ class SiteCreationTracker @Inject constructor(
         )
     }
 
-    fun trackSiteIntentQuestionExperimentVariation(variation: Variation) {
-        tracker.track(
-                AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_INTENT_QUESTION_EXPERIMENT,
-                mapOf(VARIATION.key to variation.key)
-        )
+    // region Site Name
+
+    fun trackSiteNameViewed() {
+        tracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SITE_NAME_VIEWED)
     }
+
+    fun trackSiteNameCanceled() {
+        tracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SITE_NAME_CANCELED)
+    }
+
+    fun trackSiteNameSkipped() {
+        tracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SITE_NAME_SKIPPED)
+    }
+
+    fun trackSiteNameEntered(siteName: String?) {
+        tracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SITE_NAME_ENTERED, mapOf(SITE_NAME.key to siteName))
+    }
+
+    // endregion
 }

@@ -9,26 +9,20 @@ import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CREATE_SITE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.fluxc.store.SiteStore.CompleteQuickStartPayload
 import org.wordpress.android.fluxc.store.SiteStore.CompleteQuickStartVariant.NEXT_STEPS
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.quickstart.QuickStartEvent
-import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.ui.quickstart.QuickStartTracker
+import org.wordpress.android.ui.quickstart.QuickStartType
 import javax.inject.Inject
 
-@Suppress("TooManyFunctions")
 class QuickStartUtilsWrapper
 @Inject constructor(
     private val quickStartStore: QuickStartStore,
-    private val dispatcher: Dispatcher,
-    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
+    private val dispatcher: Dispatcher
 ) {
-    fun isQuickStartInProgress(siteLocalId: Int): Boolean {
-        return QuickStartUtils.isQuickStartInProgress(quickStartStore, siteLocalId)
-    }
-
     fun isQuickStartAvailableForTheSite(siteModel: SiteModel): Boolean {
         return QuickStartUtils.isQuickStartAvailableForTheSite(siteModel)
     }
@@ -46,10 +40,6 @@ class QuickStartUtilsWrapper
         )
     }
 
-    fun isEveryQuickStartTaskDone(siteLocalId: Int): Boolean {
-        return QuickStartUtils.isEveryQuickStartTaskDone(quickStartStore, siteLocalId)
-    }
-
     fun isEveryQuickStartTaskDoneForType(siteLocalId: Int, type: QuickStartTaskType): Boolean {
         return quickStartStore.getUncompletedTasksByType(siteLocalId.toLong(), type).isEmpty()
     }
@@ -63,11 +53,12 @@ class QuickStartUtilsWrapper
         task: QuickStartTask,
         site: SiteModel,
         quickStartEvent: QuickStartEvent? = null,
-        context: Context?
+        context: Context?,
+        quickStartType: QuickStartType
     ) {
         val siteLocalId = site.id.toLong()
 
-        if (shouldCancelCompleteAction(siteLocalId, site, task)) {
+        if (shouldCancelCompleteAction(siteLocalId, site, task, quickStartType)) {
             return
         }
 
@@ -77,19 +68,20 @@ class QuickStartUtilsWrapper
 
         quickStartStore.setDoneTask(siteLocalId, task, true)
 
-        if (isEveryQuickStartTaskDone(site.id)) {
+        if (quickStartType.isEveryQuickStartTaskDone(quickStartStore, siteLocalId)) {
             quickStartStore.setQuickStartCompleted(siteLocalId, true)
             val payload = CompleteQuickStartPayload(site, NEXT_STEPS.toString())
             dispatcher.dispatch(SiteActionBuilder.newCompleteQuickStartAction(payload))
         } else {
             if (quickStartEvent?.task == task) AppPrefs.setQuickStartNoticeRequired(true)
 
-            if (context != null && quickStartStore.hasDoneTask(siteLocalId, CREATE_SITE)) {
+            if (context != null && quickStartType.isQuickStartInProgress(quickStartStore, siteLocalId)) {
                 val nextTask =
                         QuickStartUtils.getNextUncompletedQuickStartTaskForReminderNotification(
                                 quickStartStore,
                                 siteLocalId,
-                                task.taskType
+                                task.taskType,
+                                quickStartType
                         )
                 if (nextTask != null) {
                     QuickStartUtils.startQuickStartReminderTimer(context, nextTask)
@@ -101,19 +93,25 @@ class QuickStartUtilsWrapper
     private fun shouldCancelCompleteAction(
         siteLocalId: Long,
         site: SiteModel,
-        task: QuickStartTask
+        task: QuickStartTask,
+        quickStartType: QuickStartType
     ): Boolean {
         return quickStartStore.getQuickStartCompleted(siteLocalId) ||
-                isEveryQuickStartTaskDone(site.id) ||
+                quickStartType.isEveryQuickStartTaskDone(quickStartStore, siteLocalId) ||
                 quickStartStore.hasDoneTask(siteLocalId, task) ||
                 !QuickStartUtils.isQuickStartAvailableForTheSite(site)
     }
 
-    fun startQuickStart(siteLocalId: Int) {
-        quickStartStore.setDoneTask(siteLocalId.toLong(), CREATE_SITE, true)
-        analyticsTrackerWrapper.track(QUICK_START_STARTED)
+    fun startQuickStart(
+        siteLocalId: Int,
+        isSiteTitleTaskCompleted: Boolean,
+        quickStartType: QuickStartType,
+        quickStartTracker: QuickStartTracker
+    ) {
+        quickStartType.startQuickStart(quickStartStore, siteLocalId.toLong(), isSiteTitleTaskCompleted)
+        quickStartTracker.track(QUICK_START_STARTED)
     }
 
-    fun getNextUncompletedQuickStartTask(siteLocalId: Long) =
-            QuickStartUtils.getNextUncompletedQuickStartTask(quickStartStore, siteLocalId)
+    fun getNextUncompletedQuickStartTask(quickStartType: QuickStartType, siteLocalId: Long) =
+            QuickStartUtils.getNextUncompletedQuickStartTask(quickStartStore, quickStartType, siteLocalId)
 }

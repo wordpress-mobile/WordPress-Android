@@ -34,7 +34,7 @@ fi
 
 AAPT2=$(ls -1t "${ANDROID_SDK_ROOT:-$ANDROID_HOME}"/build-tools/*/aapt2 | head -n1)
 APKSIGNER=$(ls -1t "${ANDROID_SDK_ROOT:-$ANDROID_HOME}"/build-tools/*/apksigner | head -n1)
-BUNDLETOOL=$(command -v bundletool)
+BUNDLETOOL=$(command -v bundletool || true)
 
 [[ -x "$AAPT2" ]] || ( echo "Failed to find the \`aapt2\` tool in your \$ANDROID_SDK_ROOT" && exit 1 )
 [[ -x "$APKSIGNER" ]] || ( echo "Failed to find the \`apksigner\` tool in your \$ANDROID_SDK_ROOT" && exit 1 )

@@ -18,15 +18,12 @@
         style="@style/ModalLayoutPickerHeader"
         android:layout_width="0dp"
         android:layout_weight="1"
-        android:layout_marginStart="@dimen/siq_title_padding_start"
-        android:layout_marginEnd="0dp"
+        android:textAlignment="textStart"
         android:text="@string/new_site_creation_intents_title" />
 
     <Button
         android:id="@+id/skipButton"
-        style="@style/Widget.MaterialComponents.Button.TextButton"
-        android:textColor="@color/blue_50"
-        android:textSize="@dimen/text_sz_medium"
+        style="@style/SiteCreationSkipButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end"

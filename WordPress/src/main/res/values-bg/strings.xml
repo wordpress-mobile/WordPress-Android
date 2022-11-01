@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2018-12-10 19:56:03+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/3.0.0-rc.4
+Generator: GlotPress/4.0.0-alpha.3
 Language: bg
 -->
 <resources>
@@ -659,7 +659,6 @@ Language: bg
     <string name="stats_view_followers">Последователи</string>
     <string name="stats_followers_months">%1$d месеца</string>
     <string name="stats_followers_a_minute_ago">преди минута</string>
-    <string name="stats_view_publicize">Publicize</string>
     <string name="stats_likes">Харесвания</string>
     <string name="stats_followers_seconds_ago">секунди</string>
     <string name="stats_view_countries">Държави</string>

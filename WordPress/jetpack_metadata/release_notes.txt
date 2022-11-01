@@ -1,3 +1,2 @@
-This release is short and sweet: after deleting a site, you might’ve noticed that same site sticking around in your My Site list until you restarted the app.
-
-We’ve fixed that—deleted sites now disappear right away. So long, farewell.
+* [**] Added functionality to set the parent of a page from page settings in the editor. [https://github.com/wordpress-mobile/WordPress-Android/pull/17329]
+* [***] Redesigned the landing screen. [https://github.com/wordpress-mobile/WordPress-Android/pull/17351]

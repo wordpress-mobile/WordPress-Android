@@ -1,0 +1,174 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPattern": "/rest/v1.1/jetpack-blogs/181977606/rest-api(/)?($|\\?.*)",
+    "queryParameters": {
+      "locale": {
+        "matches": "(.*)"
+      }
+    }
+  },
+  "response": {
+    "status": 200,
+    "jsonBody": {
+      "data": {
+        "carousel_background_color": "black",
+        "carousel_display_exif": false,
+        "carousel_display_comments": true,
+        "carousel": false,
+        "comment-likes": false,
+        "highlander_comment_form_prompt": "Leave a Reply",
+        "jetpack_comment_form_color_scheme": "light",
+        "comments": false,
+        "contact-form": true,
+        "copy-post": false,
+        "jetpack_portfolio": false,
+        "jetpack_portfolio_posts_per_page": 10,
+        "jetpack_testimonial": false,
+        "jetpack_testimonial_posts_per_page": 10,
+        "custom-content-types": false,
+        "custom-css": false,
+        "enhanced-distribution": true,
+        "google_analytics_tracking_id": "",
+        "google-analytics": false,
+        "gravatar_disable_hovercards": "enabled",
+        "gravatar-hovercards": false,
+        "infinite_scroll": true,
+        "infinite_scroll_google_analytics": false,
+        "infinite-scroll": false,
+        "json-api": true,
+        "latex": false,
+        "lazy-images": false,
+        "wpl_default": "on",
+        "social_notifications_like": true,
+        "likes": false,
+        "wpcom_publish_comments_with_markdown": false,
+        "wpcom_publish_posts_with_markdown": true,
+        "markdown": false,
+        "masterbar": false,
+        "monitor_receive_notifications": true,
+        "monitor": false,
+        "notes": true,
+        "photon-cdn": false,
+        "photon": false,
+        "post_by_email_address": null,
+        "post-by-email": false,
+        "jetpack_protect_key": "5ce9b889539c3b94ee846a66aaf21685aacd0b62",
+        "jetpack_protect_global_whitelist": {
+          "local": []
+        },
+        "protect": true,
+        "publicize": false,
+        "show_headline": false,
+        "show_thumbnails": false,
+        "related-posts": false,
+        "instant_search_enabled": true,
+        "search_auto_config": false,
+        "search": true,
+        "advanced_seo_front_page_description": "",
+        "advanced_seo_title_formats": {
+          "archives": [],
+          "front_page": [],
+          "groups": [],
+          "pages": [],
+          "posts": []
+        },
+        "seo-tools": false,
+        "sharing_services": {
+          "visible": {
+            "twitter": {
+              "shortname": "twitter",
+              "icon": "\\f202",
+              "short_url_length": 24,
+              "button_style": "icon-text",
+              "smart": false
+            },
+            "facebook": {
+              "shortname": "facebook",
+              "icon": "\\f204",
+              "button_style": "icon-text",
+              "smart": false
+            }
+          },
+          "hidden": [],
+          "all": {
+            "twitter": 0,
+            "facebook": 1
+          }
+        },
+        "button_style": "icon-text",
+        "sharing_label": "Share this:",
+        "show": [
+          "post",
+          "page"
+        ],
+        "jetpack-twitter-cards-site-tag": "",
+        "sharedaddy_disable_resources": false,
+        "custom": [],
+        "sharing_delete_service": "",
+        "sharedaddy": false,
+        "shortcodes": false,
+        "shortlinks": false,
+        "sitemaps": false,
+        "jetpack_sso_require_two_step": false,
+        "jetpack_sso_match_by_email": false,
+        "sso": false,
+        "admin_bar": true,
+        "roles": [
+          "administrator"
+        ],
+        "count_roles": [],
+        "blog_id": true,
+        "do_not_track": true,
+        "hide_smile": true,
+        "version": 9,
+        "stats": true,
+        "stb_enabled": true,
+        "stc_enabled": true,
+        "social_notifications_subscribe": false,
+        "subscriptions": false,
+        "tiled_galleries": false,
+        "tiled-gallery": false,
+        "vaultpress": false,
+        "google": "",
+        "bing": "",
+        "pinterest": "",
+        "yandex": "",
+        "verification-tools": true,
+        "videopress": false,
+        "widget-visibility": false,
+        "widgets": false,
+        "woocommerce-analytics": true,
+        "enable_header_ad": true,
+        "wordads_approved": false,
+        "wordads_second_belowpost": true,
+        "wordads_display_front_page": true,
+        "wordads_display_post": true,
+        "wordads_display_page": true,
+        "wordads_display_archive": true,
+        "wordads_custom_adstxt_enabled": false,
+        "wordads_custom_adstxt": "",
+        "wordads_ccpa_enabled": false,
+        "wordads_ccpa_privacy_policy_url": "",
+        "wordads": false,
+        "has_jetpack_search_product": true,
+        "akismet_show_user_comments_approved": false,
+        "wordpress_api_key": "",
+        "dismiss_dash_app_card": false,
+        "dismiss_empty_stats_card": false,
+        "lang_id": "en_US",
+        "onboarding": {
+          "siteTitle": "Weekend Bakes",
+          "siteDescription": "Site with everything enabled",
+          "siteType": false,
+          "homepageFormat": false,
+          "addContactForm": 0,
+          "businessAddress": false,
+          "installWooCommerce": false,
+          "stats": true
+        },
+        "akismet": true
+      }
+    }
+  }
+}

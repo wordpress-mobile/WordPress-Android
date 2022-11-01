@@ -47,7 +47,7 @@ import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
-private const val itemsToLoad = 6
+private const val ITEMS_TO_LOAD = 6
 private val statsGranularity = DAYS
 
 class FileDownloadsUseCaseTest : BaseUnitTest() {
@@ -106,7 +106,7 @@ class FileDownloadsUseCaseTest : BaseUnitTest() {
                 store.fetchFileDownloads(
                         site,
                         statsGranularity,
-                        Top(itemsToLoad),
+                        Top(ITEMS_TO_LOAD),
                         selectedDate,
                         forced
                 )
@@ -127,7 +127,7 @@ class FileDownloadsUseCaseTest : BaseUnitTest() {
                 store.fetchFileDownloads(
                         site,
                         statsGranularity,
-                        Top(itemsToLoad),
+                        Top(ITEMS_TO_LOAD),
                         selectedDate,
                         forced
                 )
@@ -168,7 +168,7 @@ class FileDownloadsUseCaseTest : BaseUnitTest() {
                 store.fetchFileDownloads(
                         site,
                         statsGranularity,
-                        Top(itemsToLoad),
+                        Top(ITEMS_TO_LOAD),
                         pastSelectedDate,
                         forced
                 )
@@ -196,7 +196,7 @@ class FileDownloadsUseCaseTest : BaseUnitTest() {
                 store.getFileDownloads(
                         site,
                         statsGranularity,
-                        Top(itemsToLoad),
+                        Top(ITEMS_TO_LOAD),
                         selectedDate
                 )
         ).thenReturn(model)
@@ -204,7 +204,7 @@ class FileDownloadsUseCaseTest : BaseUnitTest() {
                 store.fetchFileDownloads(
                         site,
                         statsGranularity,
-                        Top(itemsToLoad),
+                        Top(ITEMS_TO_LOAD),
                         selectedDate,
                         forced
                 )
@@ -237,7 +237,7 @@ class FileDownloadsUseCaseTest : BaseUnitTest() {
                 store.getFileDownloads(
                         site,
                         statsGranularity,
-                        Top(itemsToLoad),
+                        Top(ITEMS_TO_LOAD),
                         selectedDate
                 )
         ).thenReturn(model)
@@ -245,7 +245,7 @@ class FileDownloadsUseCaseTest : BaseUnitTest() {
                 store.fetchFileDownloads(
                         site,
                         statsGranularity,
-                        Top(itemsToLoad),
+                        Top(ITEMS_TO_LOAD),
                         selectedDate,
                         forced
                 )
@@ -275,7 +275,7 @@ class FileDownloadsUseCaseTest : BaseUnitTest() {
                 store.getFileDownloads(
                         site,
                         statsGranularity,
-                        Top(itemsToLoad),
+                        Top(ITEMS_TO_LOAD),
                         selectedDate
                 )
         ).thenReturn(model)
@@ -283,7 +283,7 @@ class FileDownloadsUseCaseTest : BaseUnitTest() {
                 store.fetchFileDownloads(
                         site,
                         statsGranularity,
-                        Top(itemsToLoad),
+                        Top(ITEMS_TO_LOAD),
                         selectedDate,
                         forced
                 )

@@ -26,6 +26,7 @@ class FetchInterestTagsUseCase @Inject constructor(
 ) {
     private var continuation: Continuation<ReaderRepositoryCommunication>? = null
 
+    @Suppress("UseCheckOrError")
     suspend fun fetch(): ReaderRepositoryCommunication {
         if (continuation != null) {
             throw IllegalStateException("Fetch already in progress.")
@@ -44,8 +45,8 @@ class FetchInterestTagsUseCase @Inject constructor(
         }
     }
 
+    @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    @SuppressWarnings("unused")
     fun onInterestTagsFetchEnded(event: InterestTagsFetchEnded) {
         val result = if (event.didSucceed()) {
                 SuccessWithData(event.interestTags)

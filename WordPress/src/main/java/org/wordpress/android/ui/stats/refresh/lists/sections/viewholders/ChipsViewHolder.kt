@@ -1,45 +1,33 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.viewholders
 
 import android.view.ViewGroup
+import androidx.core.view.children
 import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipGroup
 import org.wordpress.android.R
-import org.wordpress.android.ui.stats.refresh.BlockDiffCallback.BlockListPayload.SELECTED_COLUMN_CHANGED
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Chips
 
 class ChipsViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         parent,
         R.layout.stats_block_two_chips_item
 ) {
-    private val chips = listOf<Chip>(
-            itemView.findViewById(R.id.chip1),
-            itemView.findViewById(R.id.chip2)
-    )
+    private val chipGroup = itemView.findViewById<ChipGroup>(R.id.choice_chip_group)
 
     fun bind(
-        item: Chips,
-        payloads: List<Any>
+        item: Chips
     ) {
-        val chipSelected = payloads.contains(SELECTED_COLUMN_CHANGED)
-        when {
-            chipSelected -> {
-                chips.forEachIndexed { index, chip ->
-                    chip.isSelected = item.selectedColumn == index
-                }
-            }
-            else -> {
-                chips.forEachIndexed { index, chip ->
-                    chip.setOnCheckedChangeListener { buttonView, _ ->
-                        buttonView.announceForAccessibility(
-                                buttonView.resources.getString(R.string.stats_graph_updated)
-                        )
-                        item.onColumnSelected?.invoke(index)
-                    }
-                    val currentColumn = item.chips[index]
-                    chip.setText(currentColumn.header)
-                    chip.isChecked = item.selectedColumn == null || item.selectedColumn == index
-                    chip.contentDescription = currentColumn.contentDescription
-                }
-            }
+        chipGroup.setOnCheckedChangeListener { group, checkedId ->
+            val checkedChip = group.findViewById<Chip>(checkedId)
+            checkedChip?.announceForAccessibility(group.resources.getString(R.string.stats_graph_updated))
+            item.onColumnSelected?.invoke(group.indexOfChild(checkedChip))
+        }
+
+        chipGroup.children.forEachIndexed { index, view ->
+            val currentColumn = item.chips[index]
+            val chip = view as Chip
+            chip.isChecked = item.selectedColumn == null || item.selectedColumn == index
+            chip.setText(currentColumn.header)
+            chip.contentDescription = currentColumn.contentDescription
         }
     }
 }

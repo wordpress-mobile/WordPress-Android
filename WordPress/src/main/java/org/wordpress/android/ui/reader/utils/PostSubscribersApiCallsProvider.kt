@@ -16,7 +16,6 @@ import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
-@Suppress("TooManyFunctions")
 class PostSubscribersApiCallsProvider @Inject constructor(
     private val contextProvider: ContextProvider
 ) {
@@ -163,7 +162,7 @@ class PostSubscribersApiCallsProvider @Inject constructor(
         postId: Long,
         volleyError: VolleyError?
     ): String {
-        var error = VolleyUtils.errStringFromVolleyError(volleyError)
+        val error = VolleyUtils.errStringFromVolleyError(volleyError)
         return if (error.isNullOrEmpty()) {
             AppLog.d(
                     T.READER,

@@ -5,6 +5,7 @@ import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -45,6 +46,7 @@ import kotlin.properties.Delegates
 private const val THROTTLE_DELAY = 500L
 private const val ERROR_CONTEXT = "domains"
 
+@HiltViewModel
 class SiteCreationDomainsViewModel @Inject constructor(
     private val networkUtils: NetworkUtilsWrapper,
     private val dispatcher: Dispatcher,
@@ -160,7 +162,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
         if (event.isError && event.error.type != SuggestDomainErrorType.INVALID_QUERY) {
             tracker.trackErrorShown(
                     ERROR_CONTEXT,
-                    event.error.type?.toString() ?: SiteCreationErrorType.UNKNOWN.toString(),
+                    event.error.type.toString(),
                     event.error.message
             )
             updateUiStateToContent(

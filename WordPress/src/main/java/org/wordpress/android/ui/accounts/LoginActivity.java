@@ -20,7 +20,6 @@ import com.google.android.material.snackbar.Snackbar;
 
 import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.network.MemorizingTrustManager;
@@ -59,6 +58,7 @@ import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Flow;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Source;
 import org.wordpress.android.ui.accounts.login.LoginPrologueFragment;
 import org.wordpress.android.ui.accounts.login.LoginPrologueListener;
+import org.wordpress.android.ui.accounts.login.LoginPrologueRevampedFragment;
 import org.wordpress.android.ui.accounts.login.jetpack.LoginNoSitesFragment;
 import org.wordpress.android.ui.accounts.login.jetpack.LoginSiteCheckErrorFragment;
 import org.wordpress.android.ui.main.SitePickerActivity;
@@ -76,6 +76,7 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPUrlUtils;
+import org.wordpress.android.util.config.LandingScreenRevampFeatureConfig;
 import org.wordpress.android.widgets.WPSnackbar;
 
 import java.util.ArrayList;
@@ -90,7 +91,9 @@ import static org.wordpress.android.util.ActivityUtils.hideKeyboard;
 import dagger.android.AndroidInjector;
 import dagger.android.DispatchingAndroidInjector;
 import dagger.android.HasAndroidInjector;
+import dagger.hilt.android.AndroidEntryPoint;
 
+@AndroidEntryPoint
 public class LoginActivity extends LocaleAwareActivity implements ConnectionCallbacks, OnConnectionFailedListener,
         Callback, LoginListener, GoogleListener, LoginPrologueListener,
         HasAndroidInjector, BasicDialogPositiveClickInterface {
@@ -135,9 +138,10 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
     @Inject protected ViewModelProvider.Factory mViewModelFactory;
     @Inject BuildConfigWrapper mBuildConfigWrapper;
 
+    @Inject LandingScreenRevampFeatureConfig mLandingScreenRevampFeatureConfig;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        ((WordPress) getApplication()).component().inject(this);
         super.onCreate(savedInstanceState);
 
         LoginFlowThemeHelper.injectMissingCustomAttributes(getTheme());
@@ -155,17 +159,12 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
             switch (getLoginMode()) {
                 case FULL:
                     mUnifiedLoginTracker.setSource(Source.DEFAULT);
-                    mIsSignupFromLoginEnabled = true;
-                    loginFromPrologue();
-                    break;
-                case JETPACK_LOGIN_ONLY:
-                    mUnifiedLoginTracker.setSource(Source.DEFAULT);
                     mIsSignupFromLoginEnabled = mBuildConfigWrapper.isSignupEnabled();
                     loginFromPrologue();
                     break;
                 case WPCOM_LOGIN_ONLY:
                     mUnifiedLoginTracker.setSource(Source.ADD_WORDPRESS_COM_ACCOUNT);
-                    mIsSignupFromLoginEnabled = true;
+                    mIsSignupFromLoginEnabled = mBuildConfigWrapper.isSignupEnabled();
                     checkSmartLockPasswordAndStartLogin();
                     break;
                 case SELFHOSTED_ONLY:
@@ -174,7 +173,7 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
                     break;
                 case JETPACK_STATS:
                     mUnifiedLoginTracker.setSource(Source.JETPACK);
-                    mIsSignupFromLoginEnabled = true;
+                    mIsSignupFromLoginEnabled = mBuildConfigWrapper.isSignupEnabled();
                     checkSmartLockPasswordAndStartLogin();
                     break;
                 case WPCOM_LOGIN_DEEPLINK:
@@ -228,7 +227,11 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
     }
 
     private void loginFromPrologue() {
-        showFragment(new LoginPrologueFragment(), LoginPrologueFragment.TAG);
+        if (mLandingScreenRevampFeatureConfig.isEnabled()) {
+            showFragment(new LoginPrologueRevampedFragment(), LoginPrologueRevampedFragment.TAG);
+        } else {
+            showFragment(new LoginPrologueFragment(), LoginPrologueFragment.TAG);
+        }
         mIsSmartLockTriggeredFromPrologue = true;
         mIsSiteLoginAvailableFromPrologue = true;
         initSmartLockIfNotFinished(true);
@@ -276,6 +279,11 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
         return fragment == null ? null : (LoginPrologueFragment) fragment;
     }
 
+    private LoginPrologueRevampedFragment getLoginPrologueRevampedFragment() {
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(LoginPrologueRevampedFragment.TAG);
+        return fragment == null ? null : (LoginPrologueRevampedFragment) fragment;
+    }
+
     private LoginEmailFragment getLoginEmailFragment() {
         Fragment fragment = getSupportFragmentManager().findFragmentByTag(LoginEmailFragment.TAG);
         return fragment == null ? null : (LoginEmailFragment) fragment;
@@ -306,24 +314,6 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
 
     private void loggedInAndFinish(ArrayList<Integer> oldSitesIds, boolean doLoginUpdate) {
         switch (getLoginMode()) {
-            case JETPACK_LOGIN_ONLY:
-                if (!mSiteStore.hasSite() && !mBuildConfigWrapper.isSiteCreationEnabled()) {
-                    handleNoJetpackSites();
-                } else {
-                    if (!mSiteStore.hasSite()
-                        && AppPrefs.shouldShowPostSignupInterstitial()
-                        && !doLoginUpdate
-                        && mBuildConfigWrapper.isSiteCreationEnabled()
-                        && mBuildConfigWrapper.isSignupEnabled()
-                    ) {
-                        ActivityLauncher.showPostSignupInterstitial(this);
-                    } else {
-                        ActivityLauncher.showMainActivityAndLoginEpilogue(this, oldSitesIds, doLoginUpdate);
-                    }
-                    setResult(Activity.RESULT_OK);
-                    finish();
-                }
-                break;
             case FULL:
             case WPCOM_LOGIN_ONLY:
                 if (!mSiteStore.hasSite() && AppPrefs.shouldShowPostSignupInterstitial() && !doLoginUpdate) {
@@ -449,7 +439,7 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
             return;
         }
 
-        if (getLoginPrologueFragment() == null) {
+        if (getLoginPrologueFragment() == null && getLoginPrologueRevampedFragment() == null) {
             // prologue fragment is not shown so, the email screen will be the initial screen on the fragment container
             showFragment(LoginEmailFragment.newInstance(mIsSignupFromLoginEnabled), LoginEmailFragment.TAG);
 
@@ -562,8 +552,10 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
     @Override
     public void showSignupMagicLink(String email) {
         boolean isEmailClientAvailable = WPActivityUtils.isEmailClientAvailable(this);
+        AuthEmailPayloadScheme scheme = mViewModel.getMagicLinkScheme();
         SignupMagicLinkFragment signupMagicLinkFragment = SignupMagicLinkFragment.newInstance(email, mIsJetpackConnect,
-                mJetpackConnectSource != null ? mJetpackConnectSource.toString() : null, isEmailClientAvailable);
+                mJetpackConnectSource != null ? mJetpackConnectSource.toString() : null, isEmailClientAvailable,
+                scheme);
         slideInFragment(signupMagicLinkFragment, true, SignupMagicLinkFragment.TAG);
     }
 

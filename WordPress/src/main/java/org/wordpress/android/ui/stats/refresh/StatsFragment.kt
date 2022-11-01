@@ -7,18 +7,21 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.activityViewModels
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.MarginPageTransformer
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.android.material.tabs.TabLayout.Tab
 import com.google.android.material.tabs.TabLayoutMediator
-import dagger.android.support.DaggerFragment
+import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.StatsFragmentBinding
 import org.wordpress.android.ui.ScrollableViewInitializedListener
+import org.wordpress.android.ui.main.WPMainNavigationView.PageType.MY_SITE
+import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.stats.refresh.StatsViewModel.StatsModuleUiModel
 import org.wordpress.android.ui.stats.refresh.lists.StatsListFragment
@@ -27,11 +30,19 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSect
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.DAYS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.DETAIL
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.INSIGHTS
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.INSIGHT_DETAIL
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.MONTHS
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.TOTAL_COMMENTS_DETAIL
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.TOTAL_FOLLOWERS_DETAIL
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.TOTAL_LIKES_DETAIL
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.WEEKS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.YEARS
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.UpdateAlertDialogFragment
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.UpdateAlertDialogFragment.Companion.UPDATE_ALERT_DIALOG_TAG
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider.SiteUpdateResult
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.util.JetpackBrandingUtils
+import org.wordpress.android.util.JetpackBrandingUtils.Screen.STATS
 import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.viewmodel.observeEvent
@@ -40,14 +51,17 @@ import javax.inject.Inject
 
 private val statsSections = listOf(INSIGHTS, DAYS, WEEKS, MONTHS, YEARS)
 
-class StatsFragment : DaggerFragment(R.layout.stats_fragment), ScrollableViewInitializedListener {
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+@AndroidEntryPoint
+class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializedListener {
     @Inject lateinit var uiHelpers: UiHelpers
-    private lateinit var viewModel: StatsViewModel
+    @Inject lateinit var jetpackBrandingUtils: JetpackBrandingUtils
+    private val viewModel: StatsViewModel by activityViewModels()
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
     private lateinit var selectedTabListener: SelectedTabListener
 
     private var restorePreviousSearch = false
+
+    private var binding: StatsFragmentBinding? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,6 +73,7 @@ class StatsFragment : DaggerFragment(R.layout.stats_fragment), ScrollableViewIni
 
         val nonNullActivity = requireActivity()
         with(StatsFragmentBinding.bind(view)) {
+            binding = this
             with(nonNullActivity as AppCompatActivity) {
                 setSupportActionBar(toolbar)
                 supportActionBar?.let {
@@ -67,7 +82,7 @@ class StatsFragment : DaggerFragment(R.layout.stats_fragment), ScrollableViewIni
                 }
             }
             initializeViewModels(nonNullActivity, savedInstanceState == null, savedInstanceState)
-            initializeViews(nonNullActivity)
+            initializeViews()
         }
     }
 
@@ -77,12 +92,13 @@ class StatsFragment : DaggerFragment(R.layout.stats_fragment), ScrollableViewIni
         super.onSaveInstanceState(outState)
     }
 
-    private fun StatsFragmentBinding.initializeViews(activity: FragmentActivity) {
-        val adapter = StatsPagerAdapter(activity)
+    private fun StatsFragmentBinding.initializeViews() {
+        val adapter = StatsPagerAdapter(this@StatsFragment)
         statsPager.adapter = adapter
         statsPager.setPageTransformer(
                 MarginPageTransformer(resources.getDimensionPixelSize(R.dimen.margin_extra_large))
         )
+        statsPager.offscreenPageLimit = 2
         selectedTabListener = SelectedTabListener(viewModel)
         TabLayoutMediator(tabLayout, statsPager) { tab, position ->
             tab.text = adapter.getTabTitle(position)
@@ -103,8 +119,6 @@ class StatsFragment : DaggerFragment(R.layout.stats_fragment), ScrollableViewIni
         isFirstStart: Boolean,
         savedInstanceState: Bundle?
     ) {
-        viewModel = ViewModelProvider(activity, viewModelFactory).get(StatsViewModel::class.java)
-
         viewModel.onRestoreInstanceState(savedInstanceState)
 
         setupObservers(activity)
@@ -121,6 +135,14 @@ class StatsFragment : DaggerFragment(R.layout.stats_fragment), ScrollableViewIni
                 swipeToRefreshHelper.setEnabled(true)
             }
             return@setOnTouchListener false
+        }
+
+        viewModel.showJetpackPoweredBottomSheet.observeEvent(viewLifecycleOwner) {
+            if (isFirstStart) {
+                JetpackPoweredBottomSheetFragment
+                        .newInstance(it, MY_SITE)
+                        .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
+            }
         }
     }
 
@@ -159,6 +181,10 @@ class StatsFragment : DaggerFragment(R.layout.stats_fragment), ScrollableViewIni
         viewModel.statsModuleUiModel.observeEvent(viewLifecycleOwner, { event ->
             updateUi(event)
         })
+
+        viewModel.showUpgradeAlert.observeEvent(viewLifecycleOwner) {
+            UpdateAlertDialogFragment.newInstance().show(childFragmentManager, UPDATE_ALERT_DIALOG_TAG)
+        }
     }
 
     private fun StatsFragmentBinding.updateUi(statsModuleUiModel: StatsModuleUiModel) {
@@ -190,7 +216,11 @@ class StatsFragment : DaggerFragment(R.layout.stats_fragment), ScrollableViewIni
             WEEKS -> 2
             MONTHS -> 3
             YEARS -> 4
-            DETAIL -> null
+            DETAIL,
+            INSIGHT_DETAIL,
+            TOTAL_LIKES_DETAIL,
+            TOTAL_COMMENTS_DETAIL,
+            TOTAL_FOLLOWERS_DETAIL,
             ANNUAL_STATS -> null
         }
         position?.let {
@@ -230,10 +260,33 @@ class StatsFragment : DaggerFragment(R.layout.stats_fragment), ScrollableViewIni
 
     override fun onScrollableViewInitialized(containerId: Int) {
         StatsFragmentBinding.bind(requireView()).appBarLayout.liftOnScrollTargetViewId = containerId
+        initJetpackBanner(containerId)
+    }
+
+    private fun initJetpackBanner(scrollableContainerId: Int) {
+        if (jetpackBrandingUtils.shouldShowJetpackBranding()) {
+            binding?.root?.post {
+                val jetpackBannerView = binding?.jetpackBanner?.root ?: return@post
+                val scrollableView = binding?.root?.findViewById<View>(scrollableContainerId) as? RecyclerView
+                        ?: return@post
+
+                jetpackBrandingUtils.showJetpackBannerIfScrolledToTop(jetpackBannerView, scrollableView)
+                jetpackBrandingUtils.initJetpackBannerAnimation(jetpackBannerView, scrollableView)
+
+                if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
+                    binding?.jetpackBanner?.root?.setOnClickListener {
+                        jetpackBrandingUtils.trackBannerTapped(STATS)
+                        JetpackPoweredBottomSheetFragment
+                                .newInstance()
+                                .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
+                    }
+                }
+            }
+        }
     }
 }
 
-class StatsPagerAdapter(val activity: FragmentActivity) : FragmentStateAdapter(activity) {
+class StatsPagerAdapter(private val parent: Fragment) : FragmentStateAdapter(parent) {
     override fun getItemCount(): Int = statsSections.size
 
     override fun createFragment(position: Int): Fragment {
@@ -241,7 +294,7 @@ class StatsPagerAdapter(val activity: FragmentActivity) : FragmentStateAdapter(a
     }
 
     fun getTabTitle(position: Int): CharSequence {
-        return activity.getString(statsSections[position].titleRes)
+        return parent.context?.getString(statsSections[position].titleRes).orEmpty()
     }
 }
 

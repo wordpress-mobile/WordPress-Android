@@ -11,7 +11,6 @@ org.gradle.caching=true
 # WordPress-Android properties.
 
 android.useAndroidX=true
-android.enableJetifier=true
 
 # For more details on what these properties do visit
 # https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/README.md
@@ -29,10 +28,6 @@ wp.sentry.dsn=https://00000000000000000000000000000000@sentry.io/00000000
 jp.sentry.dsn=https://00000000000000000000000000000000@sentry.io/00000000
 wp.tenor.api_key=wordpress
 wp.encrypted_logging_key=z0g+oVkqR4kWNUTxJfTozOZQjfXI7W9f6bD0uMJ5VkA=
-
-# Uncomment and edit the line below to use a local copy of WordPressMocks
-# You should specify a relative path to the root of your WordPressMocks repo
-# wp.wordpress_mocks_path = ../WordPressMocks
 
 # Optional: Needed for the end to end tests
 wp.e2e.wp_com_user.email=e2eflowtestingmobile@example.com

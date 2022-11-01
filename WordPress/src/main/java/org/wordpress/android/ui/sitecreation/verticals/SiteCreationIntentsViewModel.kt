@@ -4,19 +4,21 @@ import android.content.res.Resources
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import org.wordpress.android.R
 import org.wordpress.android.modules.BG_THREAD
-import org.wordpress.android.ui.sitecreation.verticals.SiteCreationIntentsViewModel.IntentsUiState.Content.DefaultItems
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
+import org.wordpress.android.ui.sitecreation.verticals.SiteCreationIntentsViewModel.IntentsUiState.Content.DefaultItems
 import org.wordpress.android.ui.sitecreation.verticals.SiteCreationIntentsViewModel.IntentsUiState.Content.FullItemsList
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.CoroutineContext
 
+@HiltViewModel
 class SiteCreationIntentsViewModel @Inject constructor(
     private val analyticsTracker: SiteCreationTracker,
     private val searchResultsProvider: VerticalsSearchResultsProvider,
@@ -40,8 +42,8 @@ class SiteCreationIntentsViewModel @Inject constructor(
     private val _onBackButtonPressed = SingleLiveEvent<Unit>()
     val onBackButtonPressed: LiveData<Unit> = _onBackButtonPressed
 
-    private val _onIntentSelected = SingleLiveEvent<String>()
-    val onIntentSelected: LiveData<String> = _onIntentSelected
+    private val _onIntentSelected = SingleLiveEvent<String?>()
+    val onIntentSelected: LiveData<String?> = _onIntentSelected
 
     fun start() {
         if (isInitialized) return
@@ -69,6 +71,7 @@ class SiteCreationIntentsViewModel @Inject constructor(
         _uiState.value = uiState
     }
 
+    @Suppress("UseCheckOrError")
     fun initializeFromResources(resources: Resources) {
         if (isInitialized) return
         val slugsArray = resources.getStringArray(R.array.site_creation_intents_slugs)
@@ -126,7 +129,8 @@ class SiteCreationIntentsViewModel @Inject constructor(
         }
     }
 
-    fun onSearchTextChanged(query: String) {
+    fun onSearchTextChanged(userInput: String) {
+        val query = userInput.trim()
         val searchResults = searchResultsProvider.search(fullItemsList.items, query).toMutableList().apply {
             val isAnExactMatch = query.isNotEmpty() && !(size == 1 && this[0].verticalText.equals(query, true))
             if (isAnExactMatch) {

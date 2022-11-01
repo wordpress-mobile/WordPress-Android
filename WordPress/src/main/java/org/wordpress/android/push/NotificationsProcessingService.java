@@ -36,13 +36,12 @@ import org.wordpress.android.fluxc.store.CommentStore.RemoteLikeCommentPayload;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.comments.unified.CommentsStoreAdapter;
-import org.wordpress.android.ui.main.WPMainActivity;
-import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker;
 import org.wordpress.android.ui.notifications.receivers.NotificationsPendingDraftsReceiver;
 import org.wordpress.android.ui.notifications.utils.NotificationsActions;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils;
+import org.wordpress.android.ui.quickstart.QuickStartTracker;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.LocaleManager;
@@ -94,6 +93,7 @@ public class NotificationsProcessingService extends Service {
     @Inject SiteStore mSiteStore;
     @Inject SystemNotificationsTracker mSystemNotificationsTracker;
     @Inject GCMMessageHandler mGCMMessageHandler;
+    @Inject QuickStartTracker mQuickStartTracker;
 
     /*
     * Use this if you want the service to handle a background note Like.
@@ -229,7 +229,7 @@ public class NotificationsProcessingService extends Service {
                     if (notificationId == GROUP_NOTIFICATION_ID) {
                         mGCMMessageHandler.clearNotifications();
                     } else if (notificationId == QUICK_START_REMINDER_NOTIFICATION_ID) {
-                        AnalyticsTracker.track(Stat.QUICK_START_NOTIFICATION_DISMISSED);
+                        mQuickStartTracker.track(Stat.QUICK_START_NOTIFICATION_DISMISSED);
                     } else {
                         mGCMMessageHandler.removeNotification(notificationId);
                         // Dismiss the grouped notification if a user dismisses all notifications from a wear device
@@ -610,49 +610,31 @@ public class NotificationsProcessingService extends Service {
                 return;
             }
 
-            if (!TextUtils.isEmpty(mReplyText)) {
-                SiteModel site = mSiteStore.getSiteBySiteId(mNote.getSiteId());
-                if (site == null) {
-                    AppLog.e(T.NOTIFS, "Impossible to reply to a comment on a site that is not in the App."
-                                       + " SiteId: " + mNote.getSiteId());
-                    requestFailed(ARG_ACTION_APPROVE);
-                    return;
-                }
+            if (TextUtils.isEmpty(mReplyText)) return;
 
-                // Pseudo comment (built from the note)
-                CommentModel comment = mNote.buildComment();
-
-                // Pseudo comment reply
-                CommentModel reply = new CommentModel();
-                reply.setContent(mReplyText);
-
-                // Push the reply
-                RemoteCreateCommentPayload payload = new RemoteCreateCommentPayload(site, comment, reply);
-                mCommentsStoreAdapter.dispatch(CommentActionBuilder.newCreateNewCommentAction(payload));
-
-                // Bump analytics
-                AnalyticsUtils.trackCommentReplyWithDetails(true,
-                        site, comment, AnalyticsCommentActionSource.NOTIFICATIONS);
-                AnalyticsUtils.trackQuickActionTouched(QuickActionTrackPropertyValue.REPLY_TO, site, comment);
-            } else {
-                // cancel the current notification
-                NativeNotificationsUtils.dismissNotification(mPushId, mContext);
-                NativeNotificationsUtils.hideStatusBar(mContext);
-                // and just trigger the Activity to allow the user to write a reply
-                startReplyToCommentActivity();
+            SiteModel site = mSiteStore.getSiteBySiteId(mNote.getSiteId());
+            if (site == null) {
+                AppLog.e(T.NOTIFS, "Impossible to reply to a comment on a site that is not in the App."
+                                   + " SiteId: " + mNote.getSiteId());
+                requestFailed(ARG_ACTION_APPROVE);
+                return;
             }
-        }
 
-        private void startReplyToCommentActivity() {
-            Intent intent = new Intent(mContext, WPMainActivity.class);
-            intent.putExtra(WPMainActivity.ARG_OPENED_FROM_PUSH, true);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
-                            | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            intent.setAction("android.intent.action.MAIN");
-            intent.addCategory("android.intent.category.LAUNCHER");
-            intent.putExtra(NotificationsListFragment.NOTE_ID_EXTRA, mNoteId);
-            intent.putExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA, true);
-            startActivity(intent);
+            // Pseudo comment (built from the note)
+            CommentModel comment = mNote.buildComment();
+
+            // Pseudo comment reply
+            CommentModel reply = new CommentModel();
+            reply.setContent(mReplyText);
+
+            // Push the reply
+            RemoteCreateCommentPayload payload = new RemoteCreateCommentPayload(site, comment, reply);
+            mCommentsStoreAdapter.dispatch(CommentActionBuilder.newCreateNewCommentAction(payload));
+
+            // Bump analytics
+            AnalyticsUtils.trackCommentReplyWithDetails(true,
+                    site, comment, AnalyticsCommentActionSource.NOTIFICATIONS);
+            AnalyticsUtils.trackQuickActionTouched(QuickActionTrackPropertyValue.REPLY_TO, site, comment);
         }
 
         private void resetOriginalNotification() {

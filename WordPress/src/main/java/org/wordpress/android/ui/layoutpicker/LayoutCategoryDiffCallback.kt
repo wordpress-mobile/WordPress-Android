@@ -11,7 +11,8 @@ class LayoutCategoryDiffCallback(
 ) : Callback() {
     object Payload
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        return newList[newItemPosition].slug == oldList[oldItemPosition].slug
+        return newList[newItemPosition].isRecommended == oldList[oldItemPosition].isRecommended &&
+                newList[newItemPosition].slug == oldList[oldItemPosition].slug
     }
 
     override fun getOldListSize(): Int = oldList.size
@@ -19,7 +20,8 @@ class LayoutCategoryDiffCallback(
     override fun getNewListSize(): Int = newList.size
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        return newList[newItemPosition].layouts == oldList[oldItemPosition].layouts
+        return newList[newItemPosition].isRecommended == oldList[oldItemPosition].isRecommended &&
+                newList[newItemPosition].layouts == oldList[oldItemPosition].layouts
     }
 
     override fun getChangePayload(oldItemPosition: Int, newItemPosition: Int): Any? {

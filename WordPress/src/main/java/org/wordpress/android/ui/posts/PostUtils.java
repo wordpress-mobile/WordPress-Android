@@ -231,6 +231,7 @@ public class PostUtils {
                                     && StringUtils.equals(oldPost.getPostFormat(), newPost.getPostFormat())
                                     && StringUtils.equals(oldPost.getDateCreated(), newPost.getDateCreated())
                                     && StringUtils.equals(oldPost.getSlug(), newPost.getSlug())
+                                    && oldPost.getParentId() == newPost.getParentId()
                                     && oldPost.getFeaturedImageId() == newPost.getFeaturedImageId()
                                     && oldPost.getTagNameList().containsAll(newPost.getTagNameList())
                                     && newPost.getTagNameList().containsAll(oldPost.getTagNameList())
@@ -586,5 +587,22 @@ public class PostUtils {
 
     public static boolean contentContainsWPStoryGutenbergBlocks(String postContent) {
         return (postContent != null && postContent.contains(WP_STORIES_GUTENBERG_BLOCK_START));
+    }
+
+    public enum EntryPoint {
+        BLOGGING_PROMPTS_INTRODUCTION("blogging_prompts_introduction"),
+        BLOGGING_REMINDERS_NOTIFICATION_ANSWER_PROMPT("blogging_reminders_notification_answer_prompt"),
+        MY_SITE_CARD_ANSWER_PROMPT("my_site_card_answer_prompt"),
+        ADD_NEW_SHEET_ANSWER_PROMPT("add_new_sheet_answer_prompt");
+
+        private final String mTrackingValue;
+
+        EntryPoint(@NonNull final String trackingValue) {
+            this.mTrackingValue = trackingValue;
+        }
+
+        public String getTrackingValue() {
+            return mTrackingValue;
+        }
     }
 }

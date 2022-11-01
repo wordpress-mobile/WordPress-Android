@@ -1,0 +1,26 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPath": "/wpcom/v2/sites/181977606/scan/"
+  },
+  "response": {
+    "status": 200,
+    "jsonBody": {
+      "state": "idle",
+      "threats": [],
+      "has_cloud": false,
+      "credentials": [{
+        "still_valid": true,
+        "type": "managed",
+        "role": "main"
+      }],
+      "most_recent": {
+        "is_initial": false,
+        "timestamp": "{{fnow format='yyyy-MM-dd'}}T{{now format='HH:mm:ss.SSSZ'}}",
+        "duration": 17,
+        "progress": 100,
+        "error": false
+      }
+    }
+  }
+}

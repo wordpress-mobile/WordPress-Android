@@ -44,9 +44,9 @@ import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsPr
 import org.wordpress.android.ui.jetpack.usecases.GetActivityLogItemUseCase
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.util.text.PercentFormatter
 import org.wordpress.android.util.wizard.WizardManager
 import org.wordpress.android.util.wizard.WizardNavigationTarget
-import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import java.util.Date
 
@@ -59,8 +59,8 @@ class BackupDownloadViewModelTest : BaseUnitTest() {
     @Mock private lateinit var getActivityLogItemUseCase: GetActivityLogItemUseCase
     @Mock private lateinit var backupDownloadStatusUseCase: GetBackupDownloadStatusUseCase
     @Mock private lateinit var postBackupDownloadUseCase: PostBackupDownloadUseCase
-    @Mock private lateinit var resourceProvider: ResourceProvider
     @Mock private lateinit var checkboxSpannableLabel: CheckboxSpannableLabel
+    @Mock private lateinit var percentFormatter: PercentFormatter
     private lateinit var availableItemsProvider: JetpackAvailableItemsProvider
     private lateinit var stateListItemBuilder: BackupDownloadStateListItemBuilder
 
@@ -87,7 +87,7 @@ class BackupDownloadViewModelTest : BaseUnitTest() {
             Unit
         }
         availableItemsProvider = JetpackAvailableItemsProvider()
-        stateListItemBuilder = BackupDownloadStateListItemBuilder(checkboxSpannableLabel)
+        stateListItemBuilder = BackupDownloadStateListItemBuilder(checkboxSpannableLabel, percentFormatter)
         viewModel = BackupDownloadViewModel(
                 wizardManager,
                 availableItemsProvider,
@@ -95,7 +95,8 @@ class BackupDownloadViewModelTest : BaseUnitTest() {
                 stateListItemBuilder,
                 postBackupDownloadUseCase,
                 backupDownloadStatusUseCase,
-                TEST_DISPATCHER
+                TEST_DISPATCHER,
+                percentFormatter
         )
         whenever(getActivityLogItemUseCase.get(anyOrNull())).thenReturn(fakeActivityLogModel)
         whenever(postBackupDownloadUseCase.postBackupDownloadRequest(anyOrNull(), anyOrNull(), anyOrNull()))
@@ -173,6 +174,7 @@ class BackupDownloadViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given details step, when request create download success, then state reflects progress`() = test {
+        whenever(percentFormatter.format(0)).thenReturn("30%")
         whenever(postBackupDownloadUseCase.postBackupDownloadRequest(anyOrNull(), anyOrNull(), anyOrNull()))
                 .thenReturn(postBackupDownloadSuccess)
 
@@ -294,6 +296,7 @@ class BackupDownloadViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given progress step, when started, then the progress is set to zero`() = test {
+        whenever(percentFormatter.format(0)).thenReturn("30%")
         whenever(postBackupDownloadUseCase.postBackupDownloadRequest(anyOrNull(), anyOrNull(), anyOrNull()))
                 .thenReturn(postBackupDownloadSuccess)
 
@@ -335,6 +338,14 @@ class BackupDownloadViewModelTest : BaseUnitTest() {
 
         assertThat(uiStates.last()).isInstanceOf(ProgressState::class.java)
         assertThat(uiStates.last().toolbarState).isInstanceOf(ProgressToolbarState::class.java)
+    }
+
+    @Test
+    fun `given showStep for progress is invoked, then call PercentFormatter`() = test {
+        startViewModelForProgress()
+        viewModel.showStep(WizardNavigationTarget(BackupDownloadStep.PROGRESS, backupDownloadState))
+
+        verify(percentFormatter).format(30)
     }
 
     @Test
@@ -402,6 +413,11 @@ class BackupDownloadViewModelTest : BaseUnitTest() {
                 .thenReturn(BackupDownloadStep.PROGRESS.id)
         whenever(savedInstanceState.getParcelable<BackupDownloadState>(KEY_BACKUP_DOWNLOAD_STATE))
                 .thenReturn(backupDownloadState)
+        whenever(percentFormatter.format(30))
+                .thenReturn("30%")
+        // Necessary to mock the call to BackupDownloadStateListItemBuilder
+        whenever(percentFormatter.format(0))
+                .thenReturn("0%")
         startViewModel(savedInstanceState)
     }
 
@@ -470,7 +486,7 @@ class BackupDownloadViewModelTest : BaseUnitTest() {
 
     private val getStatusProgress = BackupDownloadRequestState.Progress(
             rewindId = "rewindId",
-            progress = 0
+            progress = 30
     )
 
     private val postBackupDownloadNetworkError = BackupDownloadRequestState.Failure.NetworkUnavailable

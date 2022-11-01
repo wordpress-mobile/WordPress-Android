@@ -3,6 +3,7 @@ package org.wordpress.android.ui.accounts.login.jetpack
 import android.os.Bundle
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import org.wordpress.android.WordPress
@@ -24,6 +25,7 @@ import javax.inject.Named
 
 const val KEY_STATE = "key_state"
 
+@HiltViewModel
 class LoginNoSitesViewModel @Inject constructor(
     private val unifiedLoginTracker: UnifiedLoginTracker,
     private val accountStore: AccountStore,
@@ -100,6 +102,7 @@ class LoginNoSitesViewModel @Inject constructor(
         val state: State
     )
 
+    @Suppress("SerialVersionUIDInSerializableClass")
     sealed class State : Serializable {
         object NoUser : State()
         data class ShowUser(

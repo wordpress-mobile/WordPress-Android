@@ -66,6 +66,7 @@ public class ReaderTagAdapter extends RecyclerView.Adapter<ReaderTagAdapter.TagV
         return mWeakContext.get();
     }
 
+    @SuppressWarnings("deprecation")
     public void refresh() {
         if (mIsTaskRunning) {
             AppLog.w(T.READER, "tag task is already running");
@@ -153,6 +154,7 @@ public class ReaderTagAdapter extends RecyclerView.Adapter<ReaderTagAdapter.TagV
      */
     private boolean mIsTaskRunning = false;
 
+    @SuppressWarnings("deprecation")
     @SuppressLint("StaticFieldLeak")
     private class LoadTagsTask extends AsyncTask<Void, Void, ReaderTagList> {
         @Override

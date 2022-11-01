@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package org.wordpress.android.util.image
 
 import android.app.Activity
@@ -43,6 +45,7 @@ import org.wordpress.android.ui.media.VideoLoader
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.image.ImageType.VIDEO
 import java.io.File
+import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -79,6 +82,7 @@ class ImageManager @Inject constructor(
      * + [Context] is not null
      * + [Context] is not destroyed (tested with [FragmentActivity.isDestroyed] or [Activity.isDestroyed])
      */
+    @Suppress("ReturnCount")
     private fun Context?.isAvailable(): Boolean {
         if (this == null) {
             return false
@@ -297,6 +301,21 @@ class ImageManager @Inject constructor(
     }
 
     /**
+     * Preloads an [MShot].
+     *
+     * This is needed because the mshot service redirects to a loading gif image when the thumbnail is not ready.
+     * The loading is handled by [org.wordpress.android.networking.GlideMShotsLoader]
+     */
+    fun preload(context: Context, design: MShot) {
+        if (!context.isAvailable()) return
+        GlideApp.with(context)
+                .downloadOnly()
+                .load(design)
+                .submit()
+                .get() // This makes each call blocking, so subsequent calls can be cancelled if needed.
+    }
+
+    /**
      * Loads an [MShot] into an [ImageView] and attaches a [RequestListener].
      *
      * This is needed because the mshot service redirects to a loading gif image when the thumbnail is not ready.
@@ -316,7 +335,8 @@ class ImageManager @Inject constructor(
     }
 
     /**
-     * Loads an image from the "imgUri" into the ImageView. Doing this allows content and remote URIs to interchangeable.
+     * Loads an image from the "imgUri" into the ImageView. Doing this allows content and remote URIs to
+     * interchangeable.
      * Adds a placeholder and an error placeholder depending
      * on the ImageType. Attaches the ResultListener so the client can manually show/hide progress and error
      * views or add a PhotoViewAttacher(adds support for pinch-to-zoom gesture). Optionally adds
@@ -420,6 +440,7 @@ class ImageManager @Inject constructor(
      * Use this method with caution and only when you necessarily need it(in other words, don't use it
      * when you need to load an image into an ImageView).
      */
+    @Suppress("DEPRECATION")
     fun loadIntoCustomTarget(viewTarget: ViewTarget<TextView, Drawable>, imageType: ImageType, imgUrl: String) {
         val context = WordPress.getContext()
         if (!context.isAvailable()) return
@@ -437,6 +458,7 @@ class ImageManager @Inject constructor(
      * Use this method with caution and only when you necessarily need it(in other words, don't use it
      * when you need to load an image into an ImageView).
      */
+    @Suppress("DEPRECATION")
     fun loadAsBitmapIntoCustomTarget(
         context: Context,
         target: BaseTarget<Bitmap>,
@@ -467,6 +489,7 @@ class ImageManager @Inject constructor(
      * Cancel any pending requests and free any resources that may have been
      * loaded for the view.
      */
+    @Suppress("DEPRECATION")
     fun <T : Any> cancelRequest(context: Context, target: BaseTarget<T>?) {
         GlideApp.with(context).clear(target)
     }
@@ -483,7 +506,10 @@ class ImageManager @Inject constructor(
             FIT_START,
             FIT_XY,
             MATRIX -> {
-                AppLog.e(AppLog.T.UTILS, String.format("ScaleType %s is not supported.", scaleType.toString()))
+                AppLog.e(
+                        AppLog.T.UTILS,
+                        String.format(Locale.ENGLISH, "ScaleType %s is not supported.", scaleType.toString())
+                )
                 this
             }
         }

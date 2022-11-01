@@ -1,8 +1,11 @@
 package org.wordpress.android.e2e.pages;
 
+import android.view.View;
+
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.action.ViewActions;
 
+import org.hamcrest.Matcher;
 import org.wordpress.android.R;
 import org.wordpress.android.util.StatsKeyValueData;
 import org.wordpress.android.util.StatsVisitsData;
@@ -15,23 +18,46 @@ import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.hasSibling;
 import static androidx.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static org.hamcrest.Matchers.allOf;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.wordpress.android.support.WPSupportUtils.dialogExistsWithTitle;
 import static org.wordpress.android.support.WPSupportUtils.scrollIntoView;
-import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDisplayedWithoutFailure;
+import static org.wordpress.android.support.WPSupportUtils.tapButtonInDialogWithTitle;
+import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDisplayed;
 
 public class StatsPage {
+    // We are interested only in "Stats" screen elements that are descendants of
+    // `coordinator_layout` which is actually shown on screen and contains user data.
+    // For whatever reason, there's also an instance of "Stats" screen template,
+    // which contains the cards headers, but has no user data loaded.
+    // It is located at the "right" of the one we need to work with:
+    //
+    // |--------------------|  |------------------------|
+    // | coordinator_layout |  |   coordinator_layout   |
+    // |Visible Stats Screen|  | Invisible Stats Screen |
+    // |--------------------|  |------------------------|
+    //
+    private static Matcher<View> visibleCoordinatorLayout = allOf(
+            withId(R.id.coordinator_layout),
+            isDisplayed()
+    );
+
     public StatsPage openDayStats() {
-        onView(allOf(
-                withText("Days"),
-                isDescendantOfA(withId(R.id.tabLayout))
-        )).perform(ViewActions.click());
+        ViewInteraction daysStatsTab = onView(allOf(
+                isDescendantOfA(withId(R.id.tabLayout)),
+                withText("Days")
+        ));
 
-        waitForElementToBeDisplayedWithoutFailure(
-                onView(withText("Posts and Pages"))
-        );
+        ViewInteraction postsAndPagesCard = onView(allOf(
+                isDescendantOfA(visibleCoordinatorLayout),
+                withText("Posts and Pages")
+        ));
 
+        waitForElementToBeDisplayed(daysStatsTab);
+        daysStatsTab.perform(ViewActions.click());
+        waitForElementToBeDisplayed(postsAndPagesCard);
         return this;
     }
 
@@ -72,6 +98,7 @@ public class StatsPage {
 
     public StatsPage assertVisits(StatsVisitsData visitsData) {
             ViewInteraction cardStructure = onView(allOf(
+                    isDescendantOfA(visibleCoordinatorLayout),
                     withId(R.id.stats_block_list),
                     hasDescendant(allOf(
                             withText("Views"),
@@ -102,11 +129,13 @@ public class StatsPage {
     public void assertKeyValuePairs(String cardHeader, List<StatsKeyValueData> list) {
         for (StatsKeyValueData item : list) {
             // Element with ID = stats_block_list
+            // |--Is a descendant of `coordinator_layout` which `isDisplayed()`
             // |--Has child with text: e.g. "Posts and Pages"
             // |--Has descendant that both:
             //    |- Has text: post.title
             //    |- Has a sibling with post.views (which means they're shown on same row):
             ViewInteraction cardStructure = onView(allOf(
+                    isDescendantOfA(visibleCoordinatorLayout),
                     withId(R.id.stats_block_list),
                     hasDescendant(withText(cardHeader)),
                     hasDescendant(allOf(
@@ -156,15 +185,21 @@ public class StatsPage {
     }
 
     private void scrollToCard(String cardHeader) {
-        // A card that has "stats_block_list"
-        // and additionally contains a descendant
-        // with needed text:
         ViewInteraction card = onView(allOf(
+                isDescendantOfA(visibleCoordinatorLayout),
                 withId(R.id.stats_block_list),
                 hasDescendant(withText(cardHeader))
                 )
         );
 
         scrollIntoView(R.id.statsPager, card, (float) 0.5);
+    }
+
+    public StatsPage dismissUpdateAlertDialogFragmentIfDisplayed() {
+        if (dialogExistsWithTitle(R.string.stats_revamp_v2_intro_header_title)) {
+            tapButtonInDialogWithTitle(R.string.ok);
+        }
+
+        return this;
     }
 }

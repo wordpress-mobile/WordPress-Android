@@ -68,13 +68,30 @@ class RemotePreviewLogicHelperTest {
         doReturn(true).whenever(post).isLocallyChanged
         doReturn("Test title for test purposes").whenever(post).title
         doReturn(999999).whenever(post).contentHashcode()
+        doReturn("").whenever(post).dateCreated
     }
 
     @Test
-    fun `preview not available for self hosted sites not using WPComRestApi on a post with modifications`() {
+    fun `preview available for self hosted sites not using WPComRestApi on a draft post with modifications`() {
         // Given
         doReturn(false).whenever(site).isUsingWpComRestApi
         doReturn(true).whenever(post).isLocallyChanged
+        doReturn("draft").whenever(post).status
+
+        // When
+        val result = remotePreviewLogicHelper.runPostPreviewLogic(activity, site, post, helperFunctions)
+
+        // Then
+        assertThat(result).isEqualTo(RemotePreviewLogicHelper.PreviewLogicOperationResult.GENERATING_PREVIEW)
+        verify(helperFunctions, times(1)).startUploading(true, post)
+    }
+
+    @Test
+    fun `preview not available for self hosted sites not using WPComRestApi on a non-draft post with modifications`() {
+        // Given
+        doReturn(false).whenever(site).isUsingWpComRestApi
+        doReturn(true).whenever(post).isLocallyChanged
+        doReturn("publish").whenever(post).status
 
         // When
         val result = remotePreviewLogicHelper.runPostPreviewLogic(activity, site, post, mock())

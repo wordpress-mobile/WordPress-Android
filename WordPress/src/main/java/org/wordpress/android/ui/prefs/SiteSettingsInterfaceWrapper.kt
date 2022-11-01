@@ -25,26 +25,25 @@ class SiteSettingsInterfaceWrapper(private val siteSettingsInterface: SiteSettin
         siteSettingsInterface.init(fetchRemote)
     }
 
-    class Factory
-    @Inject constructor(private val contextProvider: ContextProvider) {
+    class Factory @Inject constructor(private val contextProvider: ContextProvider) {
         fun build(
             site: SiteModel,
-            onSaveError: ((error: Exception?) -> Unit)? = null,
-            onFetchError: ((error: Exception?) -> Unit)? = null,
+            onSaveError: (() -> Unit)? = null,
+            onFetchError: (() -> Unit)? = null,
             onSettingsUpdated: (() -> Unit)? = null,
             onSettingsSaved: (() -> Unit)? = null,
-            onCredentialsValidated: ((error: Exception?) -> Unit)? = null
+            onCredentialsValidated: (() -> Unit)? = null
         ): SiteSettingsInterfaceWrapper? {
             val siteSettingsInterface = SiteSettingsInterface.getInterface(
                     contextProvider.getContext(),
                     site,
                     object : SiteSettingsInterface.SiteSettingsListener {
                         override fun onSaveError(error: Exception?) {
-                            onSaveError?.invoke(error)
+                            onSaveError?.invoke()
                         }
 
                         override fun onFetchError(error: Exception?) {
-                            onFetchError?.invoke(error)
+                            onFetchError?.invoke()
                         }
 
                         override fun onSettingsUpdated() {
@@ -56,7 +55,7 @@ class SiteSettingsInterfaceWrapper(private val siteSettingsInterface: SiteSettin
                         }
 
                         override fun onCredentialsValidated(error: Exception?) {
-                            onCredentialsValidated?.invoke(error)
+                            onCredentialsValidated?.invoke()
                         }
                     })
             return siteSettingsInterface?.let {

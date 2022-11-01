@@ -75,12 +75,14 @@
 
             <ImageView
                 android:id="@+id/suggestion_search_icon"
+                android:visibility="gone"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginStart="@dimen/margin_extra_extra_small"
                 android:contentDescription="@null"
                 android:src="@drawable/ic_search_white_24dp"
-                app:tint="?attr/wpColorOnSurfaceMedium" />
+                app:tint="?attr/wpColorOnSurfaceMedium"
+                tools:visibility="visible"/>
 
             <ProgressBar
                 android:id="@+id/suggestion_progress_bar"

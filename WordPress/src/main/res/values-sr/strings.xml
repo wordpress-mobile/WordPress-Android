@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2022-02-14 03:28:36+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
-Generator: GlotPress/3.0.0-rc.4
+Generator: GlotPress/4.0.0-alpha.3
 Language: sr_RS
 -->
 <resources>
@@ -51,10 +51,8 @@ Language: sr_RS
     <string name="threat_fix_all_confirmation_message_plural">Молимо потврдите да желите да исправите свих %s активних претњи.</string>
     <string name="scan_idle_threats_description_plural">Скенирањем је пронађено %1s потенцијалних претњи са %2s. Молимо прегледајте их и примените радњу или притисните дугме за поправку свих. Ми смо %3$s ако смо Вам потребни.</string>
     <string name="quick_start_card_menu_hide">Сакриј за сада</string>
-    <string name="quick_start_list_view_site_title">Посетите своје веб место</string>
     <string name="quick_start_list_follow_site_subtitle">Откријте и пратите веб места која Вас инспиришу.</string>
     <string name="quick_start_list_enable_sharing_title">Дељење на друштвеним мрежама</string>
-    <string name="quick_start_list_check_stats_title">Проверите своју статистику</string>
     <string name="restore_warning_action_button">Потврди</string>
     <string name="gutenberg_native_replace_file">Замени датотеку</string>
     <string name="gutenberg_native_replace_audio">Замени звучни запис</string>
@@ -73,7 +71,6 @@ Language: sr_RS
     <string name="restore_complete_failed_action_button_content_description">Дугме за урађено</string>
     <string name="restore_complete_visit_site_button_content_description">Дугме за посети веб место</string>
     <string name="restore_complete_done_button_content_description">Дугме за урађено</string>
-    <string name="restore_progress_label">%1$s%%</string>
     <string name="restore_progress_description_with_two_parameters">Враћамо Ваш сајт назад на %1$s %2$s.</string>
     <string name="restore_progress_header">Тренутно се враћа сајт</string>
     <string name="restore_progress_icon_content_description">Иконица враћања сајта</string>
@@ -89,7 +86,6 @@ Language: sr_RS
     <string name="web_preview_tablet">Таблет</string>
     <string name="web_preview_mobile">Мобилни</string>
     <string name="quick_start_card_menu_remove">Не приказуј поново</string>
-    <string name="quick_start_dialog_edit_homepage_title">Уреди своју почетну страницу</string>
     <string name="reader_menu_mark_as_unseen">Означи као непрегледано</string>
     <string name="reader_menu_mark_as_seen">Означи као прегледано</string>
     <string name="scan_history_all_threats_tab">Све</string>
@@ -124,7 +120,6 @@ Language: sr_RS
     <string name="label_done_button">Готово</string>
     <string name="label_next_button">Следеће</string>
     <string name="delete_button_alt">Обриши</string>
-    <string name="hpp_choose_error">Дошло је до грешке при одабиру дизајна.</string>
     <string name="hpp_error_subtitle">Додирните на покушај поново када се поново повежете на мрежу.</string>
     <string name="dialog_discard_story_message_edit">Било које измене неће бити сачуване.</string>
     <string name="hpp_retry_error">Молимо проверите своју интернет везу и покушајте поново.</string>
@@ -133,7 +128,6 @@ Language: sr_RS
     <string name="scan">Скенирај</string>
     <string name="login_prologue_third_subtitle_three">&lt;b&gt;Јохан Брант&lt;/b&gt; је одговорио на ваш чланак</string>
     <string name="hpp_choose_button">Одабери</string>
-    <string name="hpp_title">Одаберите дизајн</string>
     <string name="prepublishing_nudges_add_category_button">Додај категорију</string>
     <string name="prepublishing_nudges_toolbar_title_add_categories">Додај нову категорију</string>
     <string name="prepublishing_nudges_toolbar_title_categories">Категорије</string>
@@ -340,7 +334,6 @@ Language: sr_RS
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">Додирни двапут за подешавања боја</string>
     <string name="reader_empty_followed_blogs_description">Када пратите веб локације, овде ћете видети њихов садржај</string>
     <string name="crop">исеци</string>
-    <string name="feature_announcement_dialog_label">Шта има ново у Вордпресу</string>
     <string name="feature_announcement_find_out_mode">Сазнај више</string>
     <string name="insert_label_with_count">Убаци %d</string>
     <string name="photo_picker_use_video">Користи овај видео запис</string>
@@ -643,7 +636,6 @@ Language: sr_RS
     <string name="app_rating_rate_later">Касније</string>
     <string name="app_rating_rate_now">Оцените сада</string>
     <string name="app_rating_message">Лепо је видети те опет! Ако копате по апликацији, волели бисмо оцену у Гугл Плеј продавници.</string>
-    <string name="app_rating_title">Уживате у Вордпресу?</string>
     <string name="stats_more_posts">Више чланака</string>
     <string name="stats_fewer_posts">Мање чланака</string>
     <string name="stats_site_not_loaded_yet">Сајт још увек није учитан</string>
@@ -656,26 +648,17 @@ Language: sr_RS
     <string name="quick_start_sites_type_grow">Увећајте свој аудиторијум</string>
     <string name="quick_start_sites_type_customize">Прилагодите свој сајт</string>
     <string name="quick_start_sites">Наредни кораци</string>
-    <string name="quick_start_complete_tasks_header">Завршено (%d)</string>
-    <string name="quick_start_dialog_view_site_message">Уживајте у свом готовом производу!</string>
     <string name="quick_start_dialog_upload_icon_title">Одаберите јединствену иконицу сајта</string>
     <string name="quick_start_dialog_publish_post_message">Направи нацрт и објави чланак</string>
-    <string name="quick_start_dialog_explore_plans_title">Истражи планове</string>
     <string name="quick_start_dialog_enable_sharing_title">Омогући дељење чланака</string>
     <string name="quick_start_dialog_remove_next_steps_title">Уклони наредне кораке</string>
     <string name="quick_start_remove_next_steps_menu_title">Уклони ово</string>
     <string name="quick_start_dialog_check_stats_title">Провери статистику свог сајта</string>
     <string name="quick_start_task_skip_menu_title">Прескочи задатак</string>
-    <string name="quick_start_complete_view_title">Сви задаци су завршени!</string>
-    <string name="quick_start_completed_tasks_header_chevron_collapse_desc">скупи</string>
-    <string name="quick_start_completed_tasks_header_chevron_expand_desc">прошири</string>
     <string name="notification_channel_reminder_title">Подсетник</string>
     <string name="stats_insights_popular">Најпопуларније време</string>
     <string name="stats_select_next_period_description">Одабери наредни период</string>
     <string name="stats_select_previous_period_description">Одабери претходни период</string>
-    <string name="stats_most_popular_percent_views">%1$d%% од прегледа</string>
-    <string name="stats_traffic_change">%1$s (%2$s%%)</string>
-    <string name="stats_traffic_increase">+%1$s (%2$s%%)</string>
     <string name="new_site_creation_clear_all_content_description">Очисти</string>
     <string name="notification_new_site_creation_failed">Дошло је до проблема</string>
     <string name="notification_new_site_creation_title">Креирај сајт</string>
@@ -731,7 +714,6 @@ Language: sr_RS
     <string name="stats_insights_all_time_stats">Све време</string>
     <string name="stats_insights_latest_post_with_no_engagement">Прошло је %1$s од када је %2$s објављен. Покрени причу и увећај прегледе свог чланка дељећи га:</string>
     <string name="stats_insights_tags_and_categories">Ознаке и категорије</string>
-    <string name="stats_insights_latest_post_empty">Нисте до сада објавили ни један чланак. Кад почнете да објављујете, резиме Вашег најновијег чланка ће се појавити овде: </string>
     <string name="stats_comments_label">Коментари</string>
     <string name="stats_comments_title_label">Наслов</string>
     <string name="stats_comments_author_label">Аутор</string>
@@ -816,10 +798,8 @@ Language: sr_RS
     <string name="quick_start_list_create_site_title">Креирај свој сајт</string>
     <string name="quick_start_dialog_view_site_title">Види свој сајт</string>
     <string name="quick_start_dialog_share_site_title">Подели свој сајт</string>
-    <string name="quick_start_dialog_view_site_message_short">Додирни %1$s Види сајт %2$s за преглед свог сајта</string>
     <string name="quick_start_dialog_enable_sharing_message_short_sharing">Додирни %1$s Дељење %2$s за наставак</string>
     <string name="quick_start_dialog_publish_post_title">Објави чланак</string>
-    <string name="quick_start_dialog_follow_sites_title">Прати друге сајтове</string>
     <string name="quick_start_dialog_need_help_button_negative">Не, хвала</string>
     <string name="quick_start_button_positive">Крени</string>
     <string name="quick_start_button_negative_short">Откажи</string>
@@ -1337,7 +1317,6 @@ Language: sr_RS
     <string name="connected_accounts_label">Повезани налози</string>
     <string name="sharing">Дељење</string>
     <string name="tabbar_accessibility_label_notifications">Обавештења. Управљајте обавештењима.</string>
-    <string name="connections_label">Повезаности</string>
     <string name="my_site_btn_sharing">Дељење</string>
     <string name="button_not_now">Не сада</string>
     <string name="editor_draft_saved_locally">Нацрт сачуван на уређају</string>
@@ -1782,7 +1761,6 @@ Language: sr_RS
     <string name="stats_views">Прегледа</string>
     <string name="stats_visitors">Посетиоци</string>
     <string name="stats_view_top_posts_and_pages">Чланци и стране</string>
-    <string name="stats_view_publicize">Објави</string>
     <string name="stats_timeframe_years">Годишња</string>
     <string name="ssl_certificate_details">Детаљи</string>
     <string name="cab_selected">%d изабрано</string>

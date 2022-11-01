@@ -18,6 +18,7 @@ import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.OpenFixThreats
 import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.ShowContactSupport
 import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.ShowJetpackSettings
 import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.ShowThreatDetails
+import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.VisitVaultPressDashboard
 import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState.ContentUiState
 import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState.ErrorUiState
 import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState.FullScreenLoadingUiState
@@ -48,7 +49,7 @@ class ScanFragment : Fragment(R.layout.scan_fragment) {
     }
 
     private fun initDagger() {
-        (requireActivity().application as WordPress).component()?.inject(this)
+        (requireActivity().application as WordPress).component().inject(this)
     }
 
     private fun ScanFragmentBinding.initRecyclerView() {
@@ -92,7 +93,8 @@ class ScanFragment : Fragment(R.layout.scan_fragment) {
                         is ErrorUiState.NoConnection,
                         is ErrorUiState.GenericRequestFailed,
                         is ErrorUiState.ScanRequestFailed,
-                        is ErrorUiState.MultisiteNotSupported -> updateErrorLayout(uiState as ErrorUiState)
+                        is ErrorUiState.MultisiteNotSupported,
+                        is ErrorUiState.VaultPressActiveOnSite -> updateErrorLayout(uiState as ErrorUiState)
                     }
                 }
         )
@@ -100,24 +102,25 @@ class ScanFragment : Fragment(R.layout.scan_fragment) {
         viewModel.snackbarEvents.observeEvent(viewLifecycleOwner, { it.showSnackbar() })
 
         viewModel.navigationEvents.observeEvent(
-                viewLifecycleOwner,
-                { events ->
-                    when (events) {
-                        is OpenFixThreatsConfirmationDialog -> showFixThreatsConfirmationDialog(events)
+                viewLifecycleOwner
+        ) { events ->
+            when (events) {
+                is OpenFixThreatsConfirmationDialog -> showFixThreatsConfirmationDialog(events)
 
-                        is ShowThreatDetails -> ActivityLauncher.viewThreatDetails(
-                                this@ScanFragment,
-                                events.siteModel,
-                                events.threatId
-                        )
+                is ShowThreatDetails -> ActivityLauncher.viewThreatDetails(
+                        this@ScanFragment,
+                        events.siteModel,
+                        events.threatId
+                )
 
-                        is ShowContactSupport ->
-                            ActivityLauncher.viewHelpAndSupport(requireContext(), SCAN_SCREEN_HELP, events.site, null)
+                is ShowContactSupport ->
+                    ActivityLauncher.viewHelpAndSupport(requireContext(), SCAN_SCREEN_HELP, events.site, null)
 
-                        is ShowJetpackSettings -> ActivityLauncher.openUrlExternal(context, events.url)
-                    }
-                }
-        )
+                is ShowJetpackSettings -> ActivityLauncher.openUrlExternal(context, events.url)
+
+                is VisitVaultPressDashboard -> ActivityLauncher.openUrlExternal(context, events.url)
+            }
+        }
     }
 
     private fun ScanFragmentBinding.updateContentLayout(state: ContentUiState) {

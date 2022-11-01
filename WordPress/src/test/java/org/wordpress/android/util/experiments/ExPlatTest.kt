@@ -19,11 +19,13 @@ import org.wordpress.android.fluxc.model.experiments.Assignments
 import org.wordpress.android.fluxc.model.experiments.Variation
 import org.wordpress.android.fluxc.model.experiments.Variation.Control
 import org.wordpress.android.fluxc.model.experiments.Variation.Treatment
+import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.ExperimentStore
 import org.wordpress.android.fluxc.store.ExperimentStore.OnAssignmentsFetched
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.test
 import org.wordpress.android.testScope
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import java.util.Date
 
 @RunWith(MockitoJUnitRunner::class)
@@ -31,14 +33,17 @@ class ExPlatTest : BaseUnitTest() {
     @Mock lateinit var experiments: Lazy<Set<Experiment>>
     @Mock lateinit var experimentStore: ExperimentStore
     @Mock lateinit var appLog: AppLogWrapper
+    @Mock lateinit var accountStore: AccountStore
+    @Mock lateinit var analyticsTracker: AnalyticsTrackerWrapper
     private lateinit var exPlat: ExPlat
     private lateinit var dummyExperiment: Experiment
 
     @Before
     fun setUp() {
-        exPlat = ExPlat(experiments, experimentStore, appLog, testScope())
-        dummyExperiment = object : Experiment("dummy", exPlat) {}
-
+        exPlat = ExPlat(experiments, experimentStore, appLog, accountStore, analyticsTracker, testScope())
+        dummyExperiment = object : Experiment(DUMMY_EXPERIMENT_NAME, exPlat) {}
+        whenever(accountStore.hasAccessToken()).thenReturn(true)
+        whenever(analyticsTracker.getAnonID()).thenReturn(DUMMY_ANON_ID)
         setupExperiments(setOf(dummyExperiment))
     }
 
@@ -178,6 +183,7 @@ class ExPlatTest : BaseUnitTest() {
     }
 
     @Test
+    @Suppress("SwallowedException")
     fun `getVariation does not interact with store if experiments is empty`() = test {
         setupExperiments(emptySet())
 
@@ -188,6 +194,74 @@ class ExPlatTest : BaseUnitTest() {
         } finally {
             verifyZeroInteractions(experimentStore)
         }
+    }
+
+    @Test
+    @Suppress("MaxLineLength")
+    fun `refreshIfNeeded does not interact with store if the user is not authorised and there is no anonymous id`() = test {
+        setupExperiments(setOf(dummyExperiment))
+        whenever(accountStore.hasAccessToken()).thenReturn(false)
+        whenever(analyticsTracker.getAnonID()).thenReturn(null)
+
+        exPlat.refreshIfNeeded()
+
+        verifyZeroInteractions(experimentStore)
+    }
+
+    @Test
+    @Suppress("MaxLineLength")
+    fun `forceRefresh does not interact with store if the user is not authorised and there is no anonymous id`() = test {
+        setupExperiments(setOf(dummyExperiment))
+        whenever(accountStore.hasAccessToken()).thenReturn(false)
+        whenever(analyticsTracker.getAnonID()).thenReturn(null)
+
+        exPlat.forceRefresh()
+
+        verifyZeroInteractions(experimentStore)
+    }
+
+    @Test
+    fun `refreshIfNeeded does interact with store if the user is authorised`() = test {
+        setupExperiments(setOf(dummyExperiment))
+        whenever(accountStore.hasAccessToken()).thenReturn(true)
+        whenever(analyticsTracker.getAnonID()).thenReturn(null)
+
+        exPlat.refreshIfNeeded()
+
+        verify(experimentStore, times(1)).fetchAssignments(any(), any(), anyOrNull())
+    }
+
+    @Test
+    fun `forceRefresh does interact with store if the user is authorised`() = test {
+        setupExperiments(setOf(dummyExperiment))
+        whenever(accountStore.hasAccessToken()).thenReturn(true)
+        whenever(analyticsTracker.getAnonID()).thenReturn(null)
+
+        exPlat.forceRefresh()
+
+        verify(experimentStore, times(1)).fetchAssignments(any(), any(), anyOrNull())
+    }
+
+    @Test
+    fun `refreshIfNeeded does interact with store if there is an anonymous id`() = test {
+        setupExperiments(setOf(dummyExperiment))
+        whenever(accountStore.hasAccessToken()).thenReturn(false)
+        whenever(analyticsTracker.getAnonID()).thenReturn(DUMMY_ANON_ID)
+
+        exPlat.refreshIfNeeded()
+
+        verify(experimentStore, times(1)).fetchAssignments(any(), any(), anyOrNull())
+    }
+
+    @Test
+    fun `forceRefresh does interact with store if there is an anonymous id`() = test {
+        setupExperiments(setOf(dummyExperiment))
+        whenever(accountStore.hasAccessToken()).thenReturn(false)
+        whenever(analyticsTracker.getAnonID()).thenReturn(DUMMY_ANON_ID)
+
+        exPlat.forceRefresh()
+
+        verify(experimentStore, times(1)).fetchAssignments(any(), any(), anyOrNull())
     }
 
     private fun setupExperiments(experiments: Set<Experiment>) {
@@ -216,5 +290,7 @@ class ExPlatTest : BaseUnitTest() {
 
     companion object {
         private const val ONE_HOUR_IN_SECONDS = 3600
+        private const val DUMMY_ANON_ID = "dummy_anon_id"
+        private const val DUMMY_EXPERIMENT_NAME = "dummy"
     }
 }
