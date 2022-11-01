@@ -37,6 +37,9 @@ class FeatureFlagConfig
     fun init(appScope: CoroutineScope) {
         appScope.launch {
             flags = featureFlagStore.getFeatureFlags()
+            if (flags.isEmpty()) {
+                refresh(appScope)
+            }
         }
     }
 
@@ -71,7 +74,7 @@ class FeatureFlagConfig
         return UUID.randomUUID().toString()
     }
 
-    fun isEnabled(field: String): Boolean = FirebaseRemoteConfig.getInstance().getBoolean(field)
+    fun isEnabled(field: String): Boolean = flags.find { it.key == field }!!.value
     fun getString(field: String): String = FirebaseRemoteConfig.getInstance().getString(field)
     fun getFeatureState(remoteField: String, buildConfigValue: Boolean): FeatureState {
         val remoteFeatureFlag = flags.find { it.key == remoteField }
