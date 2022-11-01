@@ -48,7 +48,6 @@ import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.PhotoItem
 import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.ToggleAction
 import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.VideoItem
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.BrowseMenuUiModel.BrowseAction
-import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.PhotoListUiModel.Data
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.ProgressDialogUiModel.Hidden
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.ProgressDialogUiModel.Visible
 import org.wordpress.android.ui.mediapicker.MediaType.AUDIO
@@ -215,7 +214,7 @@ class MediaPickerViewModel @Inject constructor(
         data: List<MediaItem>,
         selectedIds: List<Identifier>?,
         domainModel: DomainModel
-    ): Data {
+    ): PhotoListUiModel.Data {
         val uiItems = data.map {
             val showOrderCounter = mediaPickerSetup.canMultiselect
             val toggleAction = ToggleAction(it.identifier, showOrderCounter, this::toggleItem)
@@ -265,14 +264,14 @@ class MediaPickerViewModel @Inject constructor(
         return if (domainModel.hasMore) {
             loadNextPage(uiItems, domainModel)
         } else {
-            Data(items = uiItems)
+            PhotoListUiModel.Data(items = uiItems)
         }
     }
 
     private fun loadNextPage(
         uiItems: List<MediaPickerUiItem>,
         domainModel: DomainModel
-    ): Data {
+    ): PhotoListUiModel.Data {
         val updatedItems = uiItems.toMutableList()
         val loaderItem = if (domainModel.emptyState?.isError == true) {
             NextPageLoader(false) {
@@ -288,7 +287,7 @@ class MediaPickerViewModel @Inject constructor(
             }
         }
         updatedItems.add(loaderItem)
-        return Data(items = updatedItems)
+        return PhotoListUiModel.Data(items = updatedItems)
     }
 
     private fun buildActionModeUiModel(
