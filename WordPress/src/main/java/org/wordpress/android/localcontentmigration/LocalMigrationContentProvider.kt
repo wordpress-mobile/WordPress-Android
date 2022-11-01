@@ -36,13 +36,13 @@ class LocalMigrationContentProvider: TrustedQueryContentProvider() {
         return query(entity, siteId, entityId)
     }
 
-    private fun query(entity: LocalContentEntity, siteId: Int?, entityId: Int?): Cursor {
+    private fun query(entity: LocalContentEntity, localSiteId: Int?, localEntityId: Int?): Cursor {
         with(EntryPointAccessors.fromApplication(requireContext().applicationContext,
                 LocalMigrationContentProviderEntryPoint::class.java)) {
             val response = when (entity) {
-                EligibilityStatus -> localEligibilityStatusProviderHelper().getData(siteId, entityId)
-                Site -> localSiteProviderHelper().getData(siteId, entityId)
-                Post -> localPostProviderHelper().getData(siteId, entityId)
+                EligibilityStatus -> localEligibilityStatusProviderHelper().getData()
+                Site -> localSiteProviderHelper().getData(localEntityId = localEntityId)
+                Post -> localPostProviderHelper().getData(localSiteId, localEntityId)
             }
             return queryResult().createCursor(response)
         }
@@ -50,7 +50,7 @@ class LocalMigrationContentProvider: TrustedQueryContentProvider() {
 }
 
 interface LocalDataProviderHelper {
-    fun getData(localSiteId: Int?, localPostId: Int?): LocalContentEntityData
+    fun getData(localSiteId: Int? = null, localEntityId: Int? = null): LocalContentEntityData
 }
 
 enum class LocalContentEntity(private val isSiteContent: Boolean = false) {

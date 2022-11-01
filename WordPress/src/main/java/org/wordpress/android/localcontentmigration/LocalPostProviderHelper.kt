@@ -10,9 +10,9 @@ class LocalPostProviderHelper @Inject constructor(
         private val siteStore: SiteStore,
         private val postStore: PostStore,
     ): LocalDataProviderHelper {
-    override fun getData(localSiteId: Int?, localPostId: Int?): LocalContentEntityData {
-        localPostId?.let {
-            val post = postStore.getPostByLocalPostId(it)
+    override fun getData(localSiteId: Int?, localEntityId: Int?): LocalContentEntityData {
+        localEntityId?.let { localPostId ->
+            val post = postStore.getPostByLocalPostId(localPostId)
             return PostData(post = post)
         } ?: run {
             val site = siteStore.getSiteByLocalId(localSiteId!!)

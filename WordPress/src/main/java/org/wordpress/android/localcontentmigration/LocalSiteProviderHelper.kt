@@ -7,7 +7,7 @@ import javax.inject.Inject
 class LocalSiteProviderHelper @Inject constructor(
     private val siteStore: SiteStore,
 ): LocalDataProviderHelper {
-    override fun getData(localSiteId: Int?, localPostId: Int?): LocalContentEntityData {
+    override fun getData(localSiteId: Int?, localEntityId: Int?): LocalContentEntityData {
         return SitesData(localIds = siteStore.sites.map { it.id })
     }
 }
