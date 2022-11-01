@@ -3,6 +3,8 @@ package org.wordpress.android.ui.mysite.jetpackbadge
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.util.Log
+import android.widget.Toast
 import androidx.preference.PreferenceManager
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
@@ -16,6 +18,16 @@ class JetpackAppInstallReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context?, intent: Intent?) {
         (context?.applicationContext as WordPress).component().inject(this)
+
+        // TODO: Remove this logging before merge
+        StringBuilder().apply {
+            append("Action: ${intent?.action}\n")
+            append("URI: ${intent?.toUri(Intent.URI_INTENT_SCHEME)}\n")
+            toString().also { log ->
+                Log.d(TAG, log)
+                Toast.makeText(context, log, Toast.LENGTH_LONG).show()
+            }
+        }
 
         if (intent != null && !mBuildConfigWrapper.isJetpackApp) {
             disableNotifications(context)
@@ -34,6 +46,8 @@ class JetpackAppInstallReceiver : BroadcastReceiver() {
     }
 
     companion object {
+        private const val TAG = "JetpackAppInstallReceiver"
+
         fun newIntent(context: Context): Intent = Intent(context, JetpackAppInstallReceiver::class.java)
     }
 }

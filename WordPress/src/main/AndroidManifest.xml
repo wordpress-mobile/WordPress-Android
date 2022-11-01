@@ -927,8 +927,12 @@
         <receiver
             android:name=".ui.mysite.jetpackbadge.JetpackAppInstallReceiver"
             android:enabled="true"
-            android:exported="false"
-            tools:ignore="ManifestResource"/>
+            android:exported="true"
+            tools:ignore="ManifestResource">
+            <intent-filter>
+                <action android:name="org.wordpress.android.broadcast.DISABLE_NOTIFICATIONS"/>
+            </intent-filter>
+        </receiver>
         <service
             android:name=".ui.stats.refresh.lists.widget.WidgetService"
             android:permission="android.permission.BIND_REMOTEVIEWS" />
