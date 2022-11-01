@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.accounts.login
 
 import android.content.Context
+import android.content.Intent
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -48,7 +49,7 @@ class LoginPrologueRevampedFragment : Fragment() {
             AppTheme {
                 PositionProvider {
                     LoginScreenRevamped(
-                            onWpComLoginClicked = loginPrologueListener::showEmailLoginScreen,
+                            onWpComLoginClicked = { disableNotificationsOnWP() },
                             onSiteAddressLoginClicked = loginPrologueListener::loginViaSiteAddress,
                     )
                 }
@@ -70,6 +71,13 @@ class LoginPrologueRevampedFragment : Fragment() {
     override fun onPause() {
         super.onPause()
         requireActivity().window.setEdgeToEdgeContentDisplay(true)
+    }
+
+    private fun disableNotificationsOnWP() {
+        Intent().also { intent ->
+            intent.action = "org.wordpress.android.broadcast.DISABLE_NOTIFICATIONS"
+            context?.sendBroadcast(intent)
+        }
     }
 
     companion object {
