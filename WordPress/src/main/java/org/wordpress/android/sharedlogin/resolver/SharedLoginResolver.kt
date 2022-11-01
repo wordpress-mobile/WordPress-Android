@@ -4,7 +4,7 @@ import android.content.Intent
 import android.database.Cursor
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.store.AccountStore
-import org.wordpress.android.localcontentmigration.LocalContentMigrationResolver
+import org.wordpress.android.localcontentmigration.LocalMigrationContentResolver
 import org.wordpress.android.provider.query.QueryResult
 import org.wordpress.android.reader.savedposts.resolver.ReaderSavedPostsResolver
 import org.wordpress.android.resolver.ContentResolverWrapper
@@ -33,7 +33,7 @@ class SharedLoginResolver @Inject constructor(
     private val sharedLoginAnalyticsTracker: SharedLoginAnalyticsTracker,
     private val userFlagsResolver: UserFlagsResolver,
     private val readerSavedPostsResolver: ReaderSavedPostsResolver,
-    private val localContentMigrationResolver: LocalContentMigrationResolver,
+    private val localMigrationContentResolver: LocalMigrationContentResolver,
 ) {
     fun tryJetpackLogin() {
         val isFeatureFlagEnabled = jetpackSharedLoginFlag.isEnabled()
@@ -56,7 +56,7 @@ class SharedLoginResolver @Inject constructor(
                         {
                             readerSavedPostsResolver.tryGetReaderSavedPosts(
                                     {
-                                        localContentMigrationResolver.migrateLocalContent()
+                                        localMigrationContentResolver.migrateLocalContent()
                                         dispatchUpdateAccessToken(accessToken)
                                         reloadMainScreen()
                                     },

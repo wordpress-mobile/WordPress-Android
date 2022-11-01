@@ -19,10 +19,10 @@ import org.wordpress.android.localcontentmigration.LocalContentEntityData.SitesD
 import org.wordpress.android.provider.query.QueryResult
 import java.lang.Integer.parseInt
 
-class LocalContentMigrationProvider: TrustedQueryContentProvider() {
+class LocalMigrationContentProvider: TrustedQueryContentProvider() {
     @EntryPoint
     @InstallIn(SingletonComponent::class)
-    interface LocalContentMigrationProviderEntryPoint {
+    interface LocalMigrationContentProviderEntryPoint {
         fun queryResult(): QueryResult
         fun siteStore(): SiteStore
         fun postStore(): PostStore
@@ -43,7 +43,7 @@ class LocalContentMigrationProvider: TrustedQueryContentProvider() {
 
     private fun query(entity: LocalContentEntity, siteId: Int?, entityId: Int?): Cursor {
         with(EntryPointAccessors.fromApplication(requireContext().applicationContext,
-                LocalContentMigrationProviderEntryPoint::class.java)) {
+                LocalMigrationContentProviderEntryPoint::class.java)) {
             val response = when (entity) {
                 EligibilityStatus -> getEligibilityStatus(siteStore(), postStore())
                 Site -> getSiteData(siteStore())

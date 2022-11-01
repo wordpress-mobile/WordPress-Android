@@ -29,7 +29,7 @@ private fun ContentResolver.query(
 }
 
 
-class LocalContentMigrationResolver @Inject constructor(
+class LocalMigrationContentResolver @Inject constructor(
     private val contextProvider: ContextProvider,
     private val wordPressPublicData: WordPressPublicData,
     private val queryResult: QueryResult,
@@ -43,7 +43,7 @@ class LocalContentMigrationResolver @Inject constructor(
         wordPressPublicData.currentPackageId().let { packageId ->
             Uri.Builder().apply {
                 scheme("content")
-                authority("${packageId}.${LocalContentMigrationProvider::class.simpleName}")
+                authority("${packageId}.${LocalMigrationContentProvider::class.simpleName}")
             }
         }.let { uriBuilder ->
             with (contextProvider.getContext().contentResolver) {

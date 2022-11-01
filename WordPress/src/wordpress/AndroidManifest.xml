@@ -23,8 +23,8 @@
             android:exported="true" />
 
         <provider
-            android:name=".localcontentmigration.LocalContentMigrationProvider"
-            android:authorities="${applicationId}.LocalContentMigrationProvider"
+            android:name=".localcontentmigration.LocalMigrationContentProvider"
+            android:authorities="${applicationId}.LocalMigrationContentProvider"
             android:exported="true" />
     </application>
 </manifest>
