@@ -41,12 +41,6 @@ import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.DEVICE
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.GIF_LIBRARY
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.STOCK_LIBRARY
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.WP_LIBRARY
-import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.ClickAction
-import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.FileItem
-import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.NextPageLoader
-import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.PhotoItem
-import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.ToggleAction
-import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.VideoItem
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.BrowseMenuUiModel.BrowseAction
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.ProgressDialogUiModel.Hidden
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.ProgressDialogUiModel.Visible
@@ -217,8 +211,8 @@ class MediaPickerViewModel @Inject constructor(
     ): PhotoListUiModel.Data {
         val uiItems = data.map {
             val showOrderCounter = mediaPickerSetup.canMultiselect
-            val toggleAction = ToggleAction(it.identifier, showOrderCounter, this::toggleItem)
-            val clickAction = ClickAction(it.identifier, it.type == VIDEO, this::clickItem)
+            val toggleAction = MediaPickerUiItem.ToggleAction(it.identifier, showOrderCounter, this::toggleItem)
+            val clickAction = MediaPickerUiItem.ClickAction(it.identifier, it.type == VIDEO, this::clickItem)
             val (selectedOrder, isSelected) = if (selectedIds != null && selectedIds.contains(it.identifier)) {
                 val selectedOrder = if (showOrderCounter) selectedIds.indexOf(it.identifier) + 1 else null
                 val isSelected = true
@@ -231,7 +225,7 @@ class MediaPickerViewModel @Inject constructor(
                 mediaUtilsWrapper.getExtensionForMimeType(mimeType).uppercase(localeManagerWrapper.getLocale())
             }
             when (it.type) {
-                IMAGE -> PhotoItem(
+                IMAGE -> MediaPickerUiItem.PhotoItem(
                         url = it.url,
                         identifier = it.identifier,
                         isSelected = isSelected,
@@ -240,7 +234,7 @@ class MediaPickerViewModel @Inject constructor(
                         toggleAction = toggleAction,
                         clickAction = clickAction
                 )
-                VIDEO -> VideoItem(
+                VIDEO -> MediaPickerUiItem.VideoItem(
                         url = it.url,
                         identifier = it.identifier,
                         isSelected = isSelected,
@@ -249,7 +243,7 @@ class MediaPickerViewModel @Inject constructor(
                         toggleAction = toggleAction,
                         clickAction = clickAction
                 )
-                AUDIO, DOCUMENT -> FileItem(
+                AUDIO, DOCUMENT -> MediaPickerUiItem.FileItem(
                         fileName = it.name ?: "",
                         fileExtension = fileExtension,
                         identifier = it.identifier,
@@ -274,13 +268,13 @@ class MediaPickerViewModel @Inject constructor(
     ): PhotoListUiModel.Data {
         val updatedItems = uiItems.toMutableList()
         val loaderItem = if (domainModel.emptyState?.isError == true) {
-            NextPageLoader(false) {
+            MediaPickerUiItem.NextPageLoader(false) {
                 launch {
                     retry()
                 }
             }
         } else {
-            NextPageLoader(true) {
+            MediaPickerUiItem.NextPageLoader(true) {
                 launch {
                     loadActions.send(NextPage)
                 }
