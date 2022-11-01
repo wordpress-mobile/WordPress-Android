@@ -6,31 +6,29 @@ import android.content.Intent
 import android.util.Log
 import android.widget.Toast
 import androidx.preference.PreferenceManager
+import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
-import org.wordpress.android.WordPress
 import org.wordpress.android.push.GCMMessageHandler
 import org.wordpress.android.util.BuildConfigWrapper
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class JetpackAppInstallReceiver : BroadcastReceiver() {
     @Inject lateinit var mBuildConfigWrapper: BuildConfigWrapper
     @Inject lateinit var gcmMessageHandler: GCMMessageHandler
 
-    override fun onReceive(context: Context?, intent: Intent?) {
-        (context?.applicationContext as WordPress).component().inject(this)
-
-        // TODO: Remove this logging before merge
-        StringBuilder().apply {
-            append("Action: ${intent?.action}\n")
-            append("URI: ${intent?.toUri(Intent.URI_INTENT_SCHEME)}\n")
-            toString().also { log ->
-                Log.d(TAG, log)
-                Toast.makeText(context, log, Toast.LENGTH_LONG).show()
-            }
+    override fun onReceive(context: Context, intent: Intent) {
+        if (!mBuildConfigWrapper.isJetpackApp) {
+            disableNotifications(context)
         }
 
-        if (intent != null && !mBuildConfigWrapper.isJetpackApp) {
-            disableNotifications(context)
+        // TODO: Remove this logging before merge
+        buildString {
+            append("Action: ").append(intent.action).append("\n")
+            append("URI: ").append(intent.toUri(Intent.URI_INTENT_SCHEME)).append("\n")
+        }.also { log ->
+            Log.d(TAG, log)
+            Toast.makeText(context, log, Toast.LENGTH_LONG).show()
         }
     }
 
