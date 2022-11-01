@@ -53,29 +53,20 @@ interface LocalDataProviderHelper {
     fun getData(localSiteId: Int?, localPostId: Int?): LocalContentEntityData
 }
 
-enum class LocalContentEntity {
-    EligibilityStatus {
-        override val contentIdCapturePattern: Regex
-            get() = Regex(this.name)
-
-        override fun getPathForContent(siteId: Int?, entityId: Int?) : String {
-            return this.name
-        }
-    },
-    Site {
-        override val contentIdCapturePattern: Regex
-            get() = Regex(this.name)
-
-        override fun getPathForContent(siteId: Int?, entityId: Int?): String {
-            return this.name
-        }
-    },
-    Post,
+enum class LocalContentEntity(private val isSiteContent: Boolean = false) {
+    EligibilityStatus,
+    Site,
+    Post(isSiteContent = true),
     ;
 
-    open val contentIdCapturePattern = Regex("site/(\\d+)/${this.name}(?:/(\\d*))?")
-    open fun getPathForContent(siteId: Int?, entityId: Int?) : String {
-        return "site/${siteId}/${this.name}${ entityId?.let { "/${it}" } ?: "" }"
+    open val contentIdCapturePattern = when (isSiteContent) {
+        true -> Regex("site/(\\d+)/${name}(?:/(\\d+))?")
+        false -> Regex(name)
+    }
+
+    open fun getPathForContent(localSiteId: Int?, localEntityId: Int?) = when (this.isSiteContent) {
+        true -> "site/${localSiteId}/${name}${ localEntityId?.let { "/${it}" } ?: "" }"
+        false -> name
     }
 }
 
