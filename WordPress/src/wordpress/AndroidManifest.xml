@@ -3,11 +3,6 @@
 
     <application>
         <provider
-            android:name=".sharedlogin.provider.SharedLoginProvider"
-            android:authorities="${applicationId}.SharedLoginProvider"
-            android:exported="true" />
-
-        <provider
             android:name=".userflags.provider.UserFlagsProvider"
             android:authorities="${applicationId}.UserFlagsProvider"
             android:exported="true" />

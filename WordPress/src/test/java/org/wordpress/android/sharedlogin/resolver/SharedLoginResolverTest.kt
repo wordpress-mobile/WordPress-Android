@@ -18,6 +18,8 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.AccountStore.UpdateTokenPayload
+import org.wordpress.android.localcontentmigration.LocalMigrationContentProvider
+import org.wordpress.android.localcontentmigration.LocalMigrationContentResolver
 import org.wordpress.android.provider.query.QueryResult
 import org.wordpress.android.reader.savedposts.resolver.ReaderSavedPostsResolver
 import org.wordpress.android.resolver.ContentResolverWrapper
@@ -25,12 +27,12 @@ import org.wordpress.android.sharedlogin.JetpackSharedLoginFlag
 import org.wordpress.android.sharedlogin.SharedLoginAnalyticsTracker
 import org.wordpress.android.sharedlogin.SharedLoginAnalyticsTracker.ErrorType
 import org.wordpress.android.util.publicdata.WordPressPublicData
-import org.wordpress.android.sharedlogin.provider.SharedLoginProvider
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.userflags.resolver.UserFlagsResolver
 import org.wordpress.android.util.AccountActionBuilderWrapper
 import org.wordpress.android.viewmodel.ContextProvider
 
+// TODO: adapt these tests to the unified provider / orchestrator approach
 class SharedLoginResolverTest {
     private lateinit var onSuccessFlagsCaptor: KArgumentCaptor<() -> Unit>
     private lateinit var onSuccessReaderPostsCaptor: KArgumentCaptor<() -> Unit>
@@ -47,25 +49,24 @@ class SharedLoginResolverTest {
     private val sharedLoginAnalyticsTracker: SharedLoginAnalyticsTracker = mock()
     private val userFlagsResolver: UserFlagsResolver = mock()
     private val readerSavedPostsResolver: ReaderSavedPostsResolver = mock()
+    private val localMigrationContentResolver: LocalMigrationContentResolver = mock()
 
-    private val classToTest = SharedLoginResolver(
+    private val classToTest = LocalMigrationOrchestrator(
             jetpackSharedLoginFlag,
             contextProvider,
-            wordPressPublicData,
             dispatcher,
-            queryResult,
             accountStore,
-            contentResolverWrapper,
             accountActionBuilderWrapper,
             appPrefsWrapper,
             sharedLoginAnalyticsTracker,
             userFlagsResolver,
-            readerSavedPostsResolver
+            readerSavedPostsResolver,
+            localMigrationContentResolver,
     )
     private val loggedInToken = "valid"
     private val notLoggedInToken = ""
     private val wordPressCurrentPackageId = "packageId"
-    private val uriValue = "content://$wordPressCurrentPackageId.${SharedLoginProvider::class.simpleName}"
+    private val uriValue = "content://$wordPressCurrentPackageId.${LocalMigrationContentProvider::class.simpleName}"
     private val context: Context = mock()
     private val contentResolver: ContentResolver = mock()
     private val updateTokenAction: Action<UpdateTokenPayload> = mock()
@@ -86,7 +87,7 @@ class SharedLoginResolverTest {
         whenever(appPrefsWrapper.getIsFirstTrySharedLoginJetpack()).thenReturn(true)
         whenever(accountStore.hasAccessToken()).thenReturn(false)
         whenever(jetpackSharedLoginFlag.isEnabled()).thenReturn(false)
-        classToTest.tryJetpackLogin()
+        classToTest.tryLocalMigration()
         verify(contentResolverWrapper, never()).queryUri(contentResolver, uriValue)
     }
 
@@ -95,7 +96,7 @@ class SharedLoginResolverTest {
         whenever(appPrefsWrapper.getIsFirstTrySharedLoginJetpack()).thenReturn(true)
         whenever(accountStore.hasAccessToken()).thenReturn(true)
         whenever(jetpackSharedLoginFlag.isEnabled()).thenReturn(true)
-        classToTest.tryJetpackLogin()
+        classToTest.tryLocalMigration()
         verify(contentResolverWrapper, never()).queryUri(contentResolver, uriValue)
     }
 
@@ -104,14 +105,14 @@ class SharedLoginResolverTest {
         whenever(appPrefsWrapper.getIsFirstTrySharedLoginJetpack()).thenReturn(false)
         whenever(accountStore.hasAccessToken()).thenReturn(false)
         whenever(jetpackSharedLoginFlag.isEnabled()).thenReturn(true)
-        classToTest.tryJetpackLogin()
+        classToTest.tryLocalMigration()
         verify(contentResolverWrapper, never()).queryUri(contentResolver, uriValue)
     }
 
     @Test
     fun `Should query ContentResolver if NOT already logged in, feature flag is ENABLED and IS first try`() {
         featureEnabled()
-        classToTest.tryJetpackLogin()
+        classToTest.tryLocalMigration()
         verify(contentResolverWrapper).queryUri(contentResolver, uriValue)
     }
 
@@ -131,7 +132,7 @@ class SharedLoginResolverTest {
                 any()
         )).doAnswer { onSuccessReaderPostsCaptor.firstValue.invoke() }
 
-        classToTest.tryJetpackLogin()
+        classToTest.tryLocalMigration()
 
         verify(dispatcher).dispatch(updateTokenAction)
     }
@@ -140,7 +141,7 @@ class SharedLoginResolverTest {
     fun `Should try to get user flags if access token is NOT empty`() {
         featureEnabled()
         whenever(queryResult.getValue<String>(mockCursor)).thenReturn(loggedInToken)
-        classToTest.tryJetpackLogin()
+        classToTest.tryLocalMigration()
         verify(userFlagsResolver).tryGetUserFlags(any(), any())
     }
 
@@ -160,14 +161,14 @@ class SharedLoginResolverTest {
                 any()
         )).doAnswer { onSuccessReaderPostsCaptor.firstValue.invoke() }
 
-        classToTest.tryJetpackLogin()
+        classToTest.tryLocalMigration()
         verify(dispatcher, never()).dispatch(updateTokenAction)
     }
 
     @Test
     fun `Should track login start if NOT already logged in, feature flag is ENABLED and IS first try`() {
         featureEnabled()
-        classToTest.tryJetpackLogin()
+        classToTest.tryLocalMigration()
         verify(sharedLoginAnalyticsTracker).trackLoginStart()
     }
 
@@ -176,7 +177,7 @@ class SharedLoginResolverTest {
         whenever(appPrefsWrapper.getIsFirstTrySharedLoginJetpack()).thenReturn(true)
         whenever(accountStore.hasAccessToken()).thenReturn(true)
         whenever(jetpackSharedLoginFlag.isEnabled()).thenReturn(true)
-        classToTest.tryJetpackLogin()
+        classToTest.tryLocalMigration()
         verify(sharedLoginAnalyticsTracker, never()).trackLoginStart()
     }
 
@@ -185,7 +186,7 @@ class SharedLoginResolverTest {
         whenever(appPrefsWrapper.getIsFirstTrySharedLoginJetpack()).thenReturn(true)
         whenever(accountStore.hasAccessToken()).thenReturn(false)
         whenever(jetpackSharedLoginFlag.isEnabled()).thenReturn(false)
-        classToTest.tryJetpackLogin()
+        classToTest.tryLocalMigration()
         verify(sharedLoginAnalyticsTracker, never()).trackLoginStart()
     }
 
@@ -194,7 +195,7 @@ class SharedLoginResolverTest {
         whenever(appPrefsWrapper.getIsFirstTrySharedLoginJetpack()).thenReturn(false)
         whenever(accountStore.hasAccessToken()).thenReturn(false)
         whenever(jetpackSharedLoginFlag.isEnabled()).thenReturn(true)
-        classToTest.tryJetpackLogin()
+        classToTest.tryLocalMigration()
         verify(sharedLoginAnalyticsTracker, never()).trackLoginStart()
     }
 
@@ -202,7 +203,7 @@ class SharedLoginResolverTest {
     fun `Should track login failed if access token result cursor IS null`() {
         whenever(contentResolverWrapper.queryUri(contentResolver, uriValue)).thenReturn(null)
         featureEnabled()
-        classToTest.tryJetpackLogin()
+        classToTest.tryLocalMigration()
         verify(sharedLoginAnalyticsTracker, never()).trackLoginSuccess()
         verify(sharedLoginAnalyticsTracker, times(1)).trackLoginFailed(ErrorType.QueryTokenError)
     }
@@ -211,7 +212,7 @@ class SharedLoginResolverTest {
     fun `Should track login failed if access token IS empty`() {
         featureEnabled()
         whenever(queryResult.getValue<String>(mockCursor)).thenReturn(notLoggedInToken)
-        classToTest.tryJetpackLogin()
+        classToTest.tryLocalMigration()
         verify(sharedLoginAnalyticsTracker, never()).trackLoginSuccess()
         verify(sharedLoginAnalyticsTracker, times(1)).trackLoginFailed(ErrorType.WPNotLoggedInError)
     }
@@ -220,7 +221,7 @@ class SharedLoginResolverTest {
     fun `Should track login success if access token result cursor IS NOT null AND access token IS NOT empty`() {
         featureEnabled()
         whenever(queryResult.getValue<String>(mockCursor)).thenReturn(loggedInToken)
-        classToTest.tryJetpackLogin()
+        classToTest.tryLocalMigration()
         verify(sharedLoginAnalyticsTracker, never()).trackLoginFailed(any())
         verify(sharedLoginAnalyticsTracker, times(1)).trackLoginSuccess()
     }

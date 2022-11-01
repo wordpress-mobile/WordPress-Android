@@ -7,7 +7,6 @@ import org.wordpress.android.push.GCMMessageService;
 import org.wordpress.android.push.GCMRegistrationIntentService;
 import org.wordpress.android.push.NotificationsProcessingService;
 import org.wordpress.android.reader.savedposts.provider.ReaderSavedPostsProvider;
-import org.wordpress.android.sharedlogin.provider.SharedLoginProvider;
 import org.wordpress.android.ui.AddQuickPressShortcutActivity;
 import org.wordpress.android.ui.CommentFullScreenDialogFragment;
 import org.wordpress.android.ui.JetpackConnectionResultActivity;
@@ -644,8 +643,6 @@ public interface AppComponent {
     void inject(BloggingPromptsOnboardingDialogFragment object);
 
     void inject(DismissNotificationReceiver object);
-
-    void inject(SharedLoginProvider object);
 
     void inject(StatsWeekWidget object);
 

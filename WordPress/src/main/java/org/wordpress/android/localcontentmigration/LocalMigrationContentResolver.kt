@@ -17,7 +17,7 @@ import org.wordpress.android.util.publicdata.WordPressPublicData
 import org.wordpress.android.viewmodel.ContextProvider
 import javax.inject.Inject
 
-private fun ContentResolver.query(
+fun ContentResolver.query(
     builder: Uri.Builder,
     entityType: LocalContentEntity,
     siteId: Int?,
@@ -30,12 +30,12 @@ private fun ContentResolver.query(
 
 
 class LocalMigrationContentResolver @Inject constructor(
-    private val contextProvider: ContextProvider,
-    private val wordPressPublicData: WordPressPublicData,
-    private val queryResult: QueryResult,
+    val contextProvider: ContextProvider,
+    val wordPressPublicData: WordPressPublicData,
+    val queryResult: QueryResult,
     private val dispatcher: Dispatcher,
 ){
-    private inline fun <reified T : LocalContentEntityData> getDataForEntityType(
+    inline fun <reified T : LocalContentEntityData> getDataForEntityType(
         entityType: LocalContentEntity,
         siteId: Int? = null,
         entityId: Int? = null
@@ -66,5 +66,5 @@ class LocalMigrationContentResolver @Inject constructor(
         }
     }
 
-    private inline fun <reified T : LocalContentEntityData> Cursor.getValue() = queryResult.getValue<T>(this)
+    inline fun <reified T : LocalContentEntityData> Cursor.getValue() = queryResult.getValue<T>(this)
 }
