@@ -1,22 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools"
-          package="org.wordpress.android">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="org.wordpress.android">
 
     <application
-        tools:replace="android:name,android:supportsRtl"
         android:name=".WordPressDebug"
-        android:supportsRtl="true">
-    </application>
+        android:supportsRtl="true"
+        tools:replace="android:name,android:supportsRtl" />
 
     <!--
         The below permissions are required by Fastlane for taking screenshots.
         They should never be included in release builds
      -->
     <!-- Allows unlocking your device and activating its screen so UI tests can succeed -->
-    <uses-permission android:name="android.permission.DISABLE_KEYGUARD"/>
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <!-- Allows for storing and retrieving screenshots -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -24,7 +23,16 @@
 
     <!-- Allows changing locales for screenshot automation -->
     <uses-permission
-        tools:ignore="ProtectedPermissions"
         android:name="android.permission.CHANGE_CONFIGURATION"
-        />
+        tools:ignore="ProtectedPermissions" />
+
+    <!-- Allows forcing IME for screenshot automation -->
+    <uses-permission
+        android:name="android.permission.WRITE_SECURE_SETTINGS"
+        tools:ignore="ProtectedPermissions" />
+
+    <!-- Allows changing SystemUI demo mode for screenshot automation -->
+    <uses-permission
+        android:name="android.permission.DUMP"
+        tools:ignore="ProtectedPermissions" />
 </manifest>
