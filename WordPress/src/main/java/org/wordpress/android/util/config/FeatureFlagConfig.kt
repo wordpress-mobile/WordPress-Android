@@ -1,7 +1,6 @@
 package org.wordpress.android.util.config
 
 import android.content.Context
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.wordpress.android.BuildConfig
@@ -18,12 +17,15 @@ import org.wordpress.android.util.config.AppConfig.FeatureState
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
+import javax.inject.Singleton
 
 const val FEATURE_FLAG_PLATFORM_PARAMETER = "android"
 
 /**
  * Do not use this class outside of this package. Use [AppConfig] instead
  */
+
+@Singleton
 class FeatureFlagConfig
 @Inject constructor(
     private val featureFlagStore: FeatureFlagsStore,
@@ -32,7 +34,7 @@ class FeatureFlagConfig
 ) {
     private val preferences by lazy { PreferenceUtils.getFluxCPreferences(context) }
 
-    lateinit var flags: List<FeatureFlag>
+    var flags: List<FeatureFlag> = arrayListOf()
 
     fun init(appScope: CoroutineScope) {
         appScope.launch {
@@ -74,8 +76,14 @@ class FeatureFlagConfig
         return UUID.randomUUID().toString()
     }
 
-    fun isEnabled(field: String): Boolean = flags.find { it.key == field }!!.value
-    fun getString(field: String): String = FirebaseRemoteConfig.getInstance().getString(field)
+    fun isEnabled(field: String): Boolean {
+        return flags.find { it.key == field }?.value ?: false
+    }
+
+    fun getString(field: String): String {
+        return flags.find { it.key == field }?.key ?: ""
+    }
+
     fun getFeatureState(remoteField: String, buildConfigValue: Boolean): FeatureState {
         val remoteFeatureFlag = flags.find { it.key == remoteField }
         return if (remoteFeatureFlag == null) {
