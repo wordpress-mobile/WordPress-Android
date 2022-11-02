@@ -28,6 +28,7 @@ INSTALLABLE_BUILD_TYPE = 'Debug'.freeze
 INSTALLABLE_BUILD_DOMAIN = 'https://d2twmm2nzpx3bg.cloudfront.net'
 
 PROJECT_ROOT_FOLDER = File.dirname(File.expand_path(__dir__))
+FASTLANE_FOLDER = File.join(PROJECT_ROOT_FOLDER, 'fastlane')
 
 ########################################################################
 # Environment
