@@ -50,7 +50,7 @@ ALL_LOCALES = [
   { glotpress: 'hi', android: 'hi', promo_config: false },
   { glotpress: 'hr', android: 'hr', promo_config: false },
   { glotpress: 'hu', android: 'hu', promo_config: false },
-  { glotpress: 'is', android: 'is' },
+  { glotpress: 'is', android: 'is', promo_config: false },
   { glotpress: 'kmr', android: 'kmr', promo_config: false },
   { glotpress: 'mk', android: 'mk', promo_config: false },
   { glotpress: 'ms', android: 'ms', promo_config: false },

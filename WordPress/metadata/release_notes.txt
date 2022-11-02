@@ -1,4 +1,1 @@
-- Removed the Automattic Family app marbles from the About page
-- Updated the launch screen for Android versions 12+
-- Changed success message text from red to black for QR code logins
-- Fixed the Stats screen to include Western Arabic numerals for Arabic language users
+* [**] Added functionality to set the parent of a page from page settings in the editor. [https://github.com/wordpress-mobile/WordPress-Android/pull/17329]

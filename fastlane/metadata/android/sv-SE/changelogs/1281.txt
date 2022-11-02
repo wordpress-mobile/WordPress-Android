@@ -1,4 +1,0 @@
-20.9:
-- Flöden för ”Lär känna appen” försvinner inte längre om skärmen roteras.
-- Långa rubriker blir inte längre avklippta på statistikkort.
-- I inläggsutdrag visas nu en returtangent för enkel radbrytning.
