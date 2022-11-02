@@ -1,2 +1,2 @@
-* [**] Added functionality to set the parent of a page from page settings in the editor. [https://github.com/wordpress-mobile/WordPress-Android/pull/17329]
-* [***] Redesigned the landing screen. [https://github.com/wordpress-mobile/WordPress-Android/pull/17351]
+- You’ll notice a shiny new landing screen in the app that responds to your device’s motion—enjoy!
+- When you’re in the process of editing a page, you can now set a parent page within the child page’s settings.
