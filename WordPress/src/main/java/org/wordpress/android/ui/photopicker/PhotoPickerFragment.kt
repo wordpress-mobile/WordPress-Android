@@ -17,6 +17,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.wordpress.android.R
+import org.wordpress.android.R.string
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.PhotoPickerFragmentBinding
 import org.wordpress.android.fluxc.model.SiteModel
@@ -119,14 +120,7 @@ class PhotoPickerFragment : Fragment(R.layout.photo_picker_fragment) {
 
             observeUIState()
 
-            viewModel.onNavigateToPreview.observeEvent(viewLifecycleOwner, { uri ->
-                MediaPreviewActivity.showPreview(
-                        requireContext(),
-                        null,
-                        uri.toString()
-                )
-                AccessibilityUtils.setActionModeDoneButtonContentDescription(activity, getString(R.string.cancel))
-            })
+            observeOnNavigateToPreview()
 
             viewModel.onInsert.observeEvent(viewLifecycleOwner, { selectedUris ->
                 listener?.onPhotoPickerMediaChosen(selectedUris.map { it.uri })
@@ -160,6 +154,17 @@ class PhotoPickerFragment : Fragment(R.layout.photo_picker_fragment) {
 
             viewModel.start(selectedIds, browserType, lastTappedIcon, site)
         }
+    }
+
+    private fun observeOnNavigateToPreview() {
+        viewModel.onNavigateToPreview.observeEvent(viewLifecycleOwner, { uri ->
+            MediaPreviewActivity.showPreview(
+                    requireContext(),
+                    null,
+                    uri.toString()
+            )
+            AccessibilityUtils.setActionModeDoneButtonContentDescription(activity, getString(string.cancel))
+        })
     }
 
     private fun PhotoPickerFragmentBinding.observeUIState() {
