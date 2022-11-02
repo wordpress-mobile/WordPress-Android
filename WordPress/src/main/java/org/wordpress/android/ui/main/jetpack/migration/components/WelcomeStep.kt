@@ -127,8 +127,6 @@ private fun SiteListLayout(
                         if (VERSION.SDK_INT >= VERSION_CODES.S) {
                             blur(blurRadius, BlurredEdgeTreatment.Unbounded)
                         } else {
-                            // On versions older than Android 12 the blur modifier is not supported,
-                            // so we make the text transparent to have the buttons stand out.
                             alpha(0.05f)
                         }
                     },
