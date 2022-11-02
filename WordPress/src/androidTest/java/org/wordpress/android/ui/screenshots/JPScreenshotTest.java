@@ -11,7 +11,9 @@ import androidx.test.filters.LargeTest;
 import com.google.android.libraries.cloudtesting.screenshots.ScreenShotter;
 
 import org.junit.ClassRule;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.RuleChain;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.e2e.pages.MySitesPage;
@@ -55,12 +57,24 @@ import static org.wordpress.android.support.WPSupportUtils.waitForImagesOfTypeWi
 import dagger.hilt.android.testing.HiltAndroidTest;
 import tools.fastlane.screengrab.Screengrab;
 import tools.fastlane.screengrab.UiAutomatorScreenshotStrategy;
+import tools.fastlane.screengrab.locale.LocaleTestRule;
 
 @LargeTest
 @HiltAndroidTest
 public class JPScreenshotTest extends BaseTest {
     @ClassRule
-    public static final WPLocaleTestRule LOCALE_TEST_RULE = new WPLocaleTestRule();
+    public static final RuleChain LOCALE_TEST_RULES = RuleChain
+            // Run fastlane's official LocaleTestRule (which switches device language + sets up screengrab) first
+            .outerRule(new LocaleTestRule())
+            // Run our own rule (which handles our in-app locale switching logic) second
+            .around(new WPLocaleTestRule());
+
+    // Note: running this as a static @ClassRule as part of the above RuleChain doesn't seem to work
+    // (apparently that would make those run too early?), but running it as @Rule does fix the issue.
+    // Since we only have one test case in that test class (and that the code to change the IME is fast),
+    // that shouldn't really be problem in practice.
+    @Rule
+    public ImeTestRule IME_TEST_RULE = new ImeTestRule();
 
     private static final String JETPACK_SCREENSHOT_SITE_URL = "yourjetpack.blog";
 
@@ -103,6 +117,9 @@ public class JPScreenshotTest extends BaseTest {
 
             // Enable Demo Mode
             mDemoModeEnabler.enable();
+
+            setLightModeAndWait();
+
             wpLogin();
 
             generateActivityLog();
@@ -138,7 +155,6 @@ public class JPScreenshotTest extends BaseTest {
 
         waitForElementToBeDisplayedWithoutFailure(R.id.recycler_view);
 
-        setNightModeAndWait(false);
         takeScreenshot(Screenshots.buildScreenshotName(Screenshots.CREATE_NEW_OPTIONS));
 
         // Exit back to the main activity
@@ -161,7 +177,6 @@ public class JPScreenshotTest extends BaseTest {
         clickOn(onView(withText(getTranslatedString(R.string.my_site_bottom_sheet_add_page))));
         idleFor(2000);
 
-        setNightModeAndWait(false);
         takeScreenshot(Screenshots.buildScreenshotName(Screenshots.CHOOSE_A_LAYOUT));
 
         // Exit the view and return
@@ -182,8 +197,6 @@ public class JPScreenshotTest extends BaseTest {
         // Wait for the images to load
         idleFor(6000);
 
-        setNightModeAndWait(false);
-
         takeScreenshot(Screenshots.buildScreenshotName(Screenshots.NOTIFICATIONS));
 
         // Exit the notifications activity
@@ -202,7 +215,6 @@ public class JPScreenshotTest extends BaseTest {
         // Wait for page to load
         idleFor(2000);
 
-        setNightModeAndWait(false);
         takeScreenshot(Screenshots.buildScreenshotName(Screenshots.SITE_TOPIC));
 
         // Exit the view and return
@@ -230,7 +242,6 @@ public class JPScreenshotTest extends BaseTest {
 
         idleFor(8000);
 
-        setNightModeAndWait(false);
         takeScreenshot(Screenshots.buildScreenshotName(Screenshots.STATS));
 
         // Exit the Stats Activity
@@ -252,7 +263,6 @@ public class JPScreenshotTest extends BaseTest {
         // Wait for the activity log to load
         idleFor(8000);
 
-        setNightModeAndWait(false);
         takeScreenshot(Screenshots.buildScreenshotName(Screenshots.ACTIVITY_LOG));
 
         // Exit the Activity Log Activity
@@ -266,7 +276,6 @@ public class JPScreenshotTest extends BaseTest {
 
         waitForElementToBeDisplayedWithoutFailure(R.id.recycler_view);
 
-        setNightModeAndWait(false);
         takeScreenshot(Screenshots.buildScreenshotName(Screenshots.MY_SITE));
     }
 
@@ -302,7 +311,6 @@ public class JPScreenshotTest extends BaseTest {
         linearLayout.perform(click());
 
 
-        setNightModeAndWait(false);
         takeScreenshot(Screenshots.buildScreenshotName(Screenshots.BACKUP_DOWNLOAD));
 
         // Exit the backup download activity
@@ -346,7 +354,6 @@ public class JPScreenshotTest extends BaseTest {
         // Wait for scan to load
         idleFor(8000);
 
-        setNightModeAndWait(false);
         takeScreenshot(Screenshots.buildScreenshotName(Screenshots.BLOGGING_REMINDERS));
 
         // Exit the Activity scan activity
@@ -365,7 +372,6 @@ public class JPScreenshotTest extends BaseTest {
         waitForElementToBeDisplayedWithoutFailure(R.id.media_browser_container);
 
         idleFor(2000);
-        setNightModeAndWait(true);
 
         // To do should add the logic for gallery of images
         // Right now on navigating to the media no images will be present in gallery
@@ -388,7 +394,6 @@ public class JPScreenshotTest extends BaseTest {
         // Wait for scan to load
         idleFor(8000);
 
-        setNightModeAndWait(false);
         takeScreenshot(Screenshots.buildScreenshotName(Screenshots.SCAN));
 
         // Exit the Activity scan activity
@@ -414,8 +419,6 @@ public class JPScreenshotTest extends BaseTest {
             Espresso.closeSoftKeyboard();
         }
 
-        setNightModeAndWait(false);
-
         if (openBlockList) {
             clickOnViewWithTag("add-block-button");
             idleFor(2000);
@@ -425,8 +428,8 @@ public class JPScreenshotTest extends BaseTest {
         pressBackUntilElementIsDisplayed(R.id.tabLayout);
     }
 
-    private void setNightModeAndWait(boolean isNightMode) {
-        setNightMode(isNightMode);
+    private void setLightModeAndWait() {
+        setNightMode(false);
         idleFor(5000);
     }
 

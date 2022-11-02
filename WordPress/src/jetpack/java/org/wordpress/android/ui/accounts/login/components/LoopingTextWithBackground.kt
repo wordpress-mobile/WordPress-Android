@@ -21,7 +21,7 @@ import org.wordpress.android.ui.compose.theme.AppTheme
 @Composable
 fun LoopingTextWithBackground(
     modifier: Modifier = Modifier,
-    textModifier: Modifier = Modifier,
+    blurModifier: Modifier = Modifier,
 ) {
     Box(
             modifier
@@ -31,13 +31,13 @@ fun LoopingTextWithBackground(
                             sizeToIntrinsics = true,
                             contentScale = ContentScale.FillBounds,
                     )
+                    .then(blurModifier)
     ) {
         LoopingText(
                 modifier = Modifier
                         .clearAndSetSemantics {}
                         .fillMaxSize()
                         .padding(horizontal = dimensionResource(R.dimen.login_prologue_revamped_prompts_padding))
-                        .then(textModifier)
         )
     }
 }

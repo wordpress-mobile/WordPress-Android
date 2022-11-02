@@ -17,6 +17,7 @@ import androidx.compose.runtime.withFrameNanos
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -24,12 +25,13 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.viewmodel.compose.viewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.isActive
-import org.wordpress.android.ui.accounts.login.components.ColumnWithFrostedGlassBackground
+import org.wordpress.android.R
 import org.wordpress.android.ui.accounts.login.components.JetpackLogo
 import org.wordpress.android.ui.accounts.login.components.LoopingTextWithBackground
 import org.wordpress.android.ui.accounts.login.components.PrimaryButton
 import org.wordpress.android.ui.accounts.login.components.SecondaryButton
 import org.wordpress.android.ui.accounts.login.components.TopLinearGradient
+import org.wordpress.android.ui.compose.components.ColumnWithFrostedGlassBackground
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.util.extensions.setEdgeToEdgeContentDisplay
 
@@ -121,7 +123,10 @@ private fun LoginScreenRevamped(
                         .align(Alignment.TopCenter)
         )
         ColumnWithFrostedGlassBackground(
-                background = { modifier, textModifier -> LoopingTextWithBackground(modifier, textModifier) }
+                blurRadius = 30.dp,
+                backgroundColor = colorResource(R.color.bg_jetpack_login_splash_bottom_panel),
+                borderColor = colorResource(R.color.border_top_jetpack_login_splash_bottom_panel),
+                background = { clipModifier, blurModifier -> LoopingTextWithBackground(clipModifier, blurModifier) }
         ) {
             PrimaryButton(onClick = onWpComLoginClicked)
             SecondaryButton(onClick = onSiteAddressLoginClicked)
