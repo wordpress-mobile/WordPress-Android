@@ -69,7 +69,7 @@ class LoginPrologueRevampedFragment : Fragment() {
 
     override fun onPause() {
         super.onPause()
-        requireActivity().window.setEdgeToEdgeContentDisplay(true)
+        requireActivity().window.setEdgeToEdgeContentDisplay(false)
     }
 
     companion object {
