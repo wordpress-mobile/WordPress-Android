@@ -11,7 +11,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 @HiltViewModel
-class JetpackPoweredFullScreenOverlayViewModel @Inject constructor(
+class JetpackFeatureFullScreenOverlayViewModel @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     private val jetpackFeatureOverlayContentBuilder: JetpackFeatureOverlayContentBuilder,
     private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper

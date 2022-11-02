@@ -21,9 +21,9 @@ import org.wordpress.android.util.extensions.setVisible
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class JetpackPoweredOverlayFragment : BottomSheetDialogFragment() {
+class JetpackFeatureFullScreenOverlayFragment : BottomSheetDialogFragment() {
     @Inject lateinit var activityLauncherWrapper: ActivityLauncherWrapper
-    private val viewModel: JetpackPoweredFullScreenOverlayViewModel by viewModels()
+    private val viewModel: JetpackFeatureFullScreenOverlayViewModel by viewModels()
 
     private var _binding: JetpackPoweredOverlayBinding? = null
     private val binding get() = _binding!!
@@ -118,7 +118,7 @@ class JetpackPoweredOverlayFragment : BottomSheetDialogFragment() {
         @JvmStatic
         fun newInstance(
             pageType: PageType = MY_SITE
-        ) = JetpackPoweredOverlayFragment().apply {
+        ) = JetpackFeatureFullScreenOverlayFragment().apply {
             arguments = Bundle().apply {
                 putSerializable(KEY_SITE_SCREEN, pageType)
             }
