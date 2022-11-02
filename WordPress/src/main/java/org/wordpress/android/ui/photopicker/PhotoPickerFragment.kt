@@ -157,14 +157,14 @@ class PhotoPickerFragment : Fragment(R.layout.photo_picker_fragment) {
     }
 
     private fun observeOnNavigateToPreview() {
-        viewModel.onNavigateToPreview.observeEvent(viewLifecycleOwner, { uri ->
+        viewModel.onNavigateToPreview.observeEvent(viewLifecycleOwner) { uri ->
             MediaPreviewActivity.showPreview(
                     requireContext(),
                     null,
                     uri.toString()
             )
             AccessibilityUtils.setActionModeDoneButtonContentDescription(activity, getString(string.cancel))
-        })
+        }
     }
 
     private fun PhotoPickerFragmentBinding.observeUIState() {
