@@ -122,13 +122,9 @@ class PhotoPickerFragment : Fragment(R.layout.photo_picker_fragment) {
 
             observeOnNavigateToPreview()
 
-            viewModel.onInsert.observeEvent(viewLifecycleOwner, { selectedUris ->
-                listener?.onPhotoPickerMediaChosen(selectedUris.map { it.uri })
-            })
+            observeOnInsert()
 
-            viewModel.onIconClicked.observeEvent(viewLifecycleOwner, { (icon, allowMultipleSelection) ->
-                listener?.onPhotoPickerIconClicked(icon, allowMultipleSelection)
-            })
+            observeOnIconClicked()
 
             viewModel.onShowPopupMenu.observeEvent(viewLifecycleOwner, { uiModel ->
                 val popup = PopupMenu(activity, uiModel.view.view)
@@ -153,6 +149,18 @@ class PhotoPickerFragment : Fragment(R.layout.photo_picker_fragment) {
             setupProgressDialog()
 
             viewModel.start(selectedIds, browserType, lastTappedIcon, site)
+        }
+    }
+
+    private fun observeOnIconClicked() {
+        viewModel.onIconClicked.observeEvent(viewLifecycleOwner) { (icon, allowMultipleSelection) ->
+            listener?.onPhotoPickerIconClicked(icon, allowMultipleSelection)
+        }
+    }
+
+    private fun observeOnInsert() {
+        viewModel.onInsert.observeEvent(viewLifecycleOwner) { selectedUris ->
+            listener?.onPhotoPickerMediaChosen(selectedUris.map { it.uri })
         }
     }
 
