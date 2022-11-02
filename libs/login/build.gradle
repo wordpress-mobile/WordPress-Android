@@ -27,11 +27,11 @@ repositories {
 }
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 31
 
     defaultConfig {
         minSdkVersion 21
-        targetSdkVersion 30
+        targetSdkVersion 31
 
         vectorDrawables.useSupportLibrary = true
     }
@@ -55,7 +55,7 @@ dependencies {
 
     api 'com.google.android.gms:play-services-auth:18.1.0'
 
-    implementation("org.wordpress:fluxc:1.50.0") {
+    implementation("org.wordpress:fluxc:2.0.0") {
         exclude group: "com.android.support"
         exclude group: "org.wordpress", module: "utils"
     }
