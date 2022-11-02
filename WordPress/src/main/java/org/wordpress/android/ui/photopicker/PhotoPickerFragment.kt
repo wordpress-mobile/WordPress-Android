@@ -26,6 +26,8 @@ import org.wordpress.android.ui.media.MediaBrowserType
 import org.wordpress.android.ui.media.MediaPreviewActivity
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.ProgressDialogUiModel
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.ProgressDialogUiModel.Visible
+import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.ActionModeUiModel
+import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.ActionModeUiModel.Hidden
 import org.wordpress.android.util.AccessibilityUtils
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AniUtils.Duration.MEDIUM
@@ -115,25 +117,7 @@ class PhotoPickerFragment : Fragment(R.layout.photo_picker_fragment) {
 
             recycler.layoutManager = layoutManager
 
-            var isShowingActionMode = false
-            viewModel.uiState.observe(viewLifecycleOwner, Observer {
-                it?.let { uiState ->
-                    setupPhotoList(uiState.photoListUiModel)
-                    setupBottomBar(uiState.bottomBarUiModel)
-                    setupSoftAskView(uiState.softAskViewUiModel)
-                    if (uiState.actionModeUiModel is PhotoPickerViewModel.ActionModeUiModel.Visible &&
-                            !isShowingActionMode
-                    ) {
-                        isShowingActionMode = true
-                        (activity as AppCompatActivity).startSupportActionMode(PhotoPickerActionModeCallback(viewModel))
-                    } else if (uiState.actionModeUiModel is PhotoPickerViewModel.ActionModeUiModel.Hidden &&
-                            isShowingActionMode
-                    ) {
-                        isShowingActionMode = false
-                    }
-                    setupFab(uiState.fabUiModel)
-                }
-            })
+            observeUIState()
 
             viewModel.onNavigateToPreview.observeEvent(viewLifecycleOwner, { uri ->
                 MediaPreviewActivity.showPreview(
@@ -176,6 +160,28 @@ class PhotoPickerFragment : Fragment(R.layout.photo_picker_fragment) {
 
             viewModel.start(selectedIds, browserType, lastTappedIcon, site)
         }
+    }
+
+    private fun PhotoPickerFragmentBinding.observeUIState() {
+        var isShowingActionMode = false
+        viewModel.uiState.observe(viewLifecycleOwner, Observer {
+            it?.let { uiState ->
+                setupPhotoList(uiState.photoListUiModel)
+                setupBottomBar(uiState.bottomBarUiModel)
+                setupSoftAskView(uiState.softAskViewUiModel)
+                if (uiState.actionModeUiModel is ActionModeUiModel.Visible &&
+                        !isShowingActionMode
+                ) {
+                    isShowingActionMode = true
+                    (activity as AppCompatActivity).startSupportActionMode(PhotoPickerActionModeCallback(viewModel))
+                } else if (uiState.actionModeUiModel is Hidden &&
+                        isShowingActionMode
+                ) {
+                    isShowingActionMode = false
+                }
+                setupFab(uiState.fabUiModel)
+            }
+        })
     }
 
     override fun onDestroyView() {
