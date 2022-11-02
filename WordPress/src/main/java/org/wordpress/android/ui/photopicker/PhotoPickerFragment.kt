@@ -29,6 +29,8 @@ import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.ProgressDialogU
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.ProgressDialogUiModel.Visible
 import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.ActionModeUiModel
 import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.ActionModeUiModel.Hidden
+import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.PermissionsRequested.CAMERA
+import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.PermissionsRequested.STORAGE
 import org.wordpress.android.util.AccessibilityUtils
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AniUtils.Duration.MEDIUM
@@ -87,7 +89,7 @@ class PhotoPickerFragment : Fragment(R.layout.photo_picker_fragment) {
         viewModel = ViewModelProvider(this, viewModelFactory).get(PhotoPickerViewModel::class.java)
     }
 
-    @Suppress("DEPRECATION", "LongMethod")
+    @Suppress("DEPRECATION")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -126,29 +128,37 @@ class PhotoPickerFragment : Fragment(R.layout.photo_picker_fragment) {
 
             observeOnIconClicked()
 
-            viewModel.onShowPopupMenu.observeEvent(viewLifecycleOwner, { uiModel ->
-                val popup = PopupMenu(activity, uiModel.view.view)
-                for (popupMenuItem in uiModel.items) {
-                    val item = popup.menu
-                            .add(popupMenuItem.title.stringRes)
-                    item.setOnMenuItemClickListener {
-                        popupMenuItem.action()
-                        true
-                    }
-                }
-                popup.show()
-            })
+            observeOnShowPopupMenu()
 
-            viewModel.onPermissionsRequested.observeEvent(viewLifecycleOwner, {
-                when (it) {
-                    PhotoPickerViewModel.PermissionsRequested.CAMERA -> requestCameraPermission()
-                    PhotoPickerViewModel.PermissionsRequested.STORAGE -> requestStoragePermission()
-                }
-            })
+            observeOnPermissionsRequested()
 
             setupProgressDialog()
 
             viewModel.start(selectedIds, browserType, lastTappedIcon, site)
+        }
+    }
+
+    private fun observeOnPermissionsRequested() {
+        viewModel.onPermissionsRequested.observeEvent(viewLifecycleOwner) {
+            when (it) {
+                CAMERA -> requestCameraPermission()
+                STORAGE -> requestStoragePermission()
+            }
+        }
+    }
+
+    private fun observeOnShowPopupMenu() {
+        viewModel.onShowPopupMenu.observeEvent(viewLifecycleOwner) { uiModel ->
+            val popup = PopupMenu(activity, uiModel.view.view)
+            for (popupMenuItem in uiModel.items) {
+                val item = popup.menu
+                        .add(popupMenuItem.title.stringRes)
+                item.setOnMenuItemClickListener {
+                    popupMenuItem.action()
+                    true
+                }
+            }
+            popup.show()
         }
     }
 
