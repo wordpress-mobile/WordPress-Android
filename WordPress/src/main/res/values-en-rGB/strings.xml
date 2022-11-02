@@ -32,7 +32,6 @@ Language: en_GB
     <string name="wp_jetpack_continue_to_notifications">Continue to Notifications</string>
     <string name="wp_jetpack_continue_to_reader">Continue to Reader</string>
     <string name="wp_jetpack_continue_to_stats">Continue to Stats</string>
-    <string name="wp_jetpack_get_new_jetpack_app">Get the new Jetpack app</string>
     <string name="gutenberg_native_gradient">Gradient</string>
     <string name="gutenberg_native_invalid_url">Invalid URL.</string>
     <string name="gutenberg_native_jetpack_powered">Jetpack powered</string>

@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-10-19 09:54:10+0000
+Translation-Revision-Date: 2022-11-02 12:54:10+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.3
 Language: zh_TW
 -->
 <resources>
+    <string name="post_settings_parent">上層頁面</string>
+    <string name="post_settings_page_attributes">頁面屬性</string>
     <string name="about_automattic_contribute_item_title">參與</string>
     <string name="about_news">新聞</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_one">1 個答案</string>
@@ -37,7 +39,7 @@ Language: zh_TW
     <string name="wp_jetpack_continue_to_notifications">繼續前往「通知」功能</string>
     <string name="wp_jetpack_continue_to_stats">繼續前往「統計資料」功能</string>
     <string name="wp_jetpack_continue_to_reader">繼續前往「閱讀器」功能</string>
-    <string name="wp_jetpack_get_new_jetpack_app">取得全新 Jetpack 應用程式</string>
+    <string name="wp_jetpack_get_new_jetpack_app">體驗全新 Jetpack 應用程式</string>
     <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery">顯示區塊時發生問題。 \n點選以嘗試還原區塊。</string>
     <string name="weekly_roundup_notification_text_views_and_comments">上週你有 %1$s 個瀏覽次數和 %2$s 個留言</string>
     <string name="weekly_roundup_notification_text_views_and_likes">上週你有 %1$s 個瀏覽次數和 %2$s 個讚</string>

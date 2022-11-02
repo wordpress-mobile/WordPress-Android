@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-10-18 15:09:02+0000
+Translation-Revision-Date: 2022-10-31 12:12:11+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: sv_SE
 -->
 <resources>
+    <string name="post_settings_parent">Överordnad sida</string>
+    <string name="post_settings_page_attributes">Sidattribut</string>
     <string name="about_automattic_contribute_item_title">Bidra</string>
     <string name="about_news">Nyheter</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_one">1 svar</string>
@@ -37,7 +39,7 @@ Language: sv_SE
     <string name="wp_jetpack_continue_to_notifications">Fortsätt till aviseringar</string>
     <string name="wp_jetpack_continue_to_stats">Fortsätt till statistik</string>
     <string name="wp_jetpack_continue_to_reader">Fortsätt till läsare</string>
-    <string name="wp_jetpack_get_new_jetpack_app">Skaffa den nya Jetpack-appen</string>
+    <string name="wp_jetpack_get_new_jetpack_app">Prova den nya Jetpack-appen</string>
     <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery">Problem med att visa block. \nTryck för att försöka med blockåterställning.</string>
     <string name="weekly_roundup_notification_text_views_and_comments">Förra veckan hade du %1$s visningar och %2$s kommentarer</string>
     <string name="weekly_roundup_notification_text_views_and_likes">Förra veckan hade du %1$s visningar och %2$s gillamarkeringar</string>

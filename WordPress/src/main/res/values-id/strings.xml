@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-10-19 11:54:07+0000
+Translation-Revision-Date: 2022-10-31 15:06:31+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: id
 -->
 <resources>
+    <string name="post_settings_parent">Halaman Induk</string>
+    <string name="post_settings_page_attributes">Atribut Halaman</string>
     <string name="about_automattic_contribute_item_title">Kontribusi</string>
     <string name="about_news">Berita</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_one">1 jawaban</string>
@@ -37,7 +39,7 @@ Language: id
     <string name="wp_jetpack_continue_to_notifications">Lanjutkan ke Pemberitahuan</string>
     <string name="wp_jetpack_continue_to_stats">Lanjutkan ke Statistik</string>
     <string name="wp_jetpack_continue_to_reader">Lanjutkan ke Pembaca</string>
-    <string name="wp_jetpack_get_new_jetpack_app">Dapatkan aplikasi Jetpack baru</string>
+    <string name="wp_jetpack_get_new_jetpack_app">Coba aplikasi Jetpack baru</string>
     <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery">Terjadi masalah saat menampilkan blok. \nKetuk untuk mencoba pemulihan blok.</string>
     <string name="weekly_roundup_notification_text_views_and_comments">Minggu lalu Anda mendapatkan %1$s tayangan dan %2$s komentar</string>
     <string name="weekly_roundup_notification_text_views_and_likes">Minggu lalu Anda mendapatkan %1$s tayangan dan %2$s suka</string>
