@@ -256,7 +256,8 @@ android {
         exclude '**/libfabricjni.so' // Since we are not using Fabric yet
 
         pickFirst 'META-INF/-no-jdk.kotlin_module'
-
+        pickFirst '**/libc++_shared.so'
+        pickFirst '**/libfbjni.so'
     }
 
     bundle {
