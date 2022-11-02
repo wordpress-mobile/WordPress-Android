@@ -2,6 +2,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <include layout="@layout/toolbar_login" />
@@ -20,12 +21,12 @@
             android:paddingStart="@dimen/margin_extra_large"
             android:paddingEnd="@dimen/margin_extra_large">
 
-            <ImageView
+            <androidx.appcompat.widget.AppCompatImageView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/open_mail"
                 android:layout_marginTop="@dimen/margin_extra_medium_large"
-                android:src="@drawable/img_envelope" />
+                app:srcCompat="@drawable/img_envelope" />
 
             <com.google.android.material.textview.MaterialTextView
                 style="@style/Widget.LoginFlow.TextView.List.Line1"
