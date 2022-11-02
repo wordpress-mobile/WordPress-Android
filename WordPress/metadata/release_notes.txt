@@ -1,1 +1,1 @@
-* [**] Added functionality to set the parent of a page from page settings in the editor. [https://github.com/wordpress-mobile/WordPress-Android/pull/17329]
+This update is short and sweet—when you’re in the process of editing a page, you can now set a parent page within the child page’s settings.
