@@ -80,7 +80,6 @@ fun WelcomeStep(uiState: StepUiState.Welcome) = with(uiState) {
     }
 }
 
-
 private enum class SlotsEnum { SiteList, Buttons, ClippedBackground }
 
 @Composable
@@ -160,7 +159,8 @@ val previewSiteListItems = mutableListOf<SiteListItemUiState>().apply {
 
 @Preview(showBackground = true, widthDp = 414, heightDp = 897)
 @Preview(showBackground = true, widthDp = 414, heightDp = 897, uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Composable fun PreviewContentState() {
+@Composable
+private fun PreviewContentState() {
     val uiState = StepUiState.Welcome(
             previewSiteListItems,
             primaryActionButton = WelcomePrimaryButton {},
