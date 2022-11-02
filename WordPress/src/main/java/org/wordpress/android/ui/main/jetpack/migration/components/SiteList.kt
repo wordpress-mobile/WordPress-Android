@@ -33,6 +33,7 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.compose.modifiers.disableUserScroll
 import org.wordpress.android.ui.compose.unit.FontSize
 import org.wordpress.android.ui.compose.utils.uiStringText
+import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.SiteListItemUiState
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.StepUiState
 
 @Composable
@@ -59,16 +60,7 @@ fun SiteList(
                 items = uiState.sites,
                 key = { it.id },
         ) { site ->
-            Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.padding(horizontal = 30.dp)
-            ) {
-                SiteIcon(site.iconUrl)
-                Column {
-                    SiteName(site.name)
-                    SiteAddress(site.url)
-                }
-            }
+            SiteListItem(site)
             Divider(
                     color = colorResource(R.color.gray_10).copy(alpha = 0.5f),
                     modifier = Modifier.padding(horizontal = 30.dp)
@@ -77,6 +69,20 @@ fun SiteList(
         item {
             val bottomPadding = LocalDensity.current.run { bottomPaddingPx.toDp() + 30.dp }
             Spacer(modifier = Modifier.height(bottomPadding))
+        }
+    }
+}
+
+@Composable
+private fun SiteListItem(uiState: SiteListItemUiState) = with (uiState) {
+    Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.padding(horizontal = 30.dp)
+    ) {
+        SiteIcon(iconUrl)
+        Column {
+            SiteName(name)
+            SiteAddress(url)
         }
     }
 }
