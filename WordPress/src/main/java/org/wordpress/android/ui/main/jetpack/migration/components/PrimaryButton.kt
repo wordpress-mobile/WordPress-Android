@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.main.jetpack.migration.components
 
+import android.content.res.Configuration
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -12,8 +13,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
+import org.wordpress.android.ui.compose.theme.AppTheme
 
 @Composable
 fun PrimaryButton(
@@ -46,5 +49,23 @@ fun PrimaryButton(
         } else {
             Text(text = text)
         }
+    }
+}
+
+@Preview
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun PrimaryButtonPreview() {
+    AppTheme {
+        PrimaryButton(text = "Continue", onClick = {})
+    }
+}
+
+@Preview
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun PrimaryButtonInProgressPreview() {
+    AppTheme {
+        PrimaryButton(text = "Continue", onClick = {}, isInProgress = true)
     }
 }
