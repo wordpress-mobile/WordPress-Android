@@ -27,7 +27,8 @@ abstract class TrustedQueryContentProvider : QueryContentProvider() {
         selectionArgs: Array<out String>?,
         sortOrder: String?
     ): Cursor? {
-        with (EntryPointAccessors.fromApplication(requireContext().applicationContext,
+        val context = checkNotNull(context) { "Cannot find context from the provider." }
+        with(EntryPointAccessors.fromApplication(context.applicationContext,
                 TrustedQueryContentProviderEntryPoint::class.java)) {
             return if (jetpackProviderSyncFeatureConfig().isEnabled() && clientVerification().canTrust(callingPackage))
                 query(uri)
