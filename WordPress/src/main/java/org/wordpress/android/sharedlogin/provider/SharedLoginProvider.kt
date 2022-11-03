@@ -3,7 +3,6 @@ package org.wordpress.android.sharedlogin.provider
 import android.database.Cursor
 import android.net.Uri
 import org.wordpress.android.WordPress
-import org.wordpress.android.fluxc.persistence.AccountSqlUtils
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.provider.query.QueryContentProvider
@@ -42,7 +41,6 @@ class SharedLoginProvider : QueryContentProvider() {
                 if (clientVerification.canTrust(callingPackage)) {
                     val data = SharedLoginData(
                             token = accountStore.accessToken,
-                            accounts = AccountSqlUtils.getAllAccounts(),
                             sites = if (accountStore.hasAccessToken()) {
                                 siteStore.sites
                             } else {
