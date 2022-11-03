@@ -46,10 +46,7 @@
         <item name="android:paddingStart">@dimen/margin_extra_large</item>
     </style>
 
-    <style name="StatsBlockTitle" parent="TextAppearance.MaterialComponents.Headline6">
-        <item name="android:maxLines">1</item>
-        <item name="android:ellipsize">end</item>
-    </style>
+    <style name="StatsBlockTitle" parent="TextAppearance.MaterialComponents.Headline6"/>
 
     <style name="StatsDateSelectorTitle" parent="TextAppearance.MaterialComponents.Subtitle1">
         <item name="android:textStyle">bold</item>

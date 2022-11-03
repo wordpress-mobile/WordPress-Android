@@ -16,6 +16,7 @@ import org.wordpress.android.sharedlogin.SharedLoginData
 import org.wordpress.android.sharedlogin.provider.SharedLoginProvider
 import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.utils.JetpackAppMigrationFlowUtils
 import org.wordpress.android.userflags.resolver.UserFlagsResolver
 import org.wordpress.android.util.AccountActionBuilderWrapper
 import org.wordpress.android.util.publicdata.WordPressPublicData
@@ -35,8 +36,10 @@ class SharedLoginResolver @Inject constructor(
     private val sharedLoginAnalyticsTracker: SharedLoginAnalyticsTracker,
     private val userFlagsResolver: UserFlagsResolver,
     private val readerSavedPostsResolver: ReaderSavedPostsResolver,
+    private val jetpackAppMigrationFlowUtils: JetpackAppMigrationFlowUtils,
     private val resolverUtility: ResolverUtility
 ) {
+    @Suppress("ReturnCount")
     fun tryJetpackLogin() {
         val isFeatureFlagEnabled = jetpackSharedLoginFlag.isEnabled()
         if (!isFeatureFlagEnabled) {
@@ -86,6 +89,12 @@ class SharedLoginResolver @Inject constructor(
 
         if (hasSites) {
             resolverUtility.copySitesWithIndexes(sites)
+        }
+
+        if (jetpackAppMigrationFlowUtils.isFlagEnabled()) {
+            dispatchUpdateAccessToken(accessToken)
+            jetpackAppMigrationFlowUtils.startJetpackMigrationFlow()
+            return
         }
 
         sharedLoginAnalyticsTracker.trackLoginSuccess()
