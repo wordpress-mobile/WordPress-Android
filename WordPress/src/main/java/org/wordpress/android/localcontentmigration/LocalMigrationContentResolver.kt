@@ -24,10 +24,11 @@ private fun ContentResolver.query(
     entityType: LocalContentEntity,
     siteId: Int?,
     entityId: Int?,
-) : Cursor? {
+) : Cursor {
     val entityPath = entityType.getPathForContent(siteId, entityId)
     builder.appendEncodedPath(entityPath)
-    return query(builder.build(), arrayOf(), "", arrayOf(), "")
+    val cursor = query(builder.build(), arrayOf(), "", arrayOf(), "")
+    return checkNotNull(cursor) { "Provider failed for $entityType" }
 }
 
 
@@ -49,8 +50,9 @@ class LocalMigrationContentResolver @Inject constructor(
             }
         }.let { uriBuilder ->
             with (contextProvider.getContext().contentResolver) {
-                val cursor = query(uriBuilder, entityType, siteId, entityId)!!
-                return cursor.getValue()!!
+                val cursor = query(uriBuilder, entityType, siteId, entityId)
+                val data: T? = cursor.getValue()
+                return checkNotNull(data) { "Failed to parse data from provider for $entityType"}
             }
         }
     }
