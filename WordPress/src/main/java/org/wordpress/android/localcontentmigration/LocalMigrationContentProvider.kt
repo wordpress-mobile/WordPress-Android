@@ -41,7 +41,8 @@ class LocalMigrationContentProvider: TrustedQueryContentProvider() {
     }
 
     private fun query(entity: LocalContentEntity, localSiteId: Int?, localEntityId: Int?): Cursor {
-        with(EntryPointAccessors.fromApplication(requireContext().applicationContext,
+        val context = checkNotNull(context) { "Cannot find context from the provider." }
+        with(EntryPointAccessors.fromApplication(context.applicationContext,
                 LocalMigrationContentProviderEntryPoint::class.java)) {
             val response = when (entity) {
                 EligibilityStatus -> localEligibilityStatusProviderHelper().getData()
