@@ -104,8 +104,6 @@ class SharedLoginResolverTest : BaseUnitTest() {
 
     @Test
     fun `Should NOT query ContentResolver if feature flag is DISABLED`() {
-        whenever(appPrefsWrapper.getIsFirstTrySharedLoginJetpack()).thenReturn(true)
-        whenever(accountStore.hasAccessToken()).thenReturn(false)
         whenever(jetpackSharedLoginFlag.isEnabled()).thenReturn(false)
         classToTest.tryJetpackLogin()
         verify(contentResolverWrapper, never()).queryUri(contentResolver, uriValue)
@@ -166,17 +164,32 @@ class SharedLoginResolverTest : BaseUnitTest() {
     }
 
     @Test
-    fun `Should NOT dispatch UpdateTokenPayload if access token IS empty`() {
+    fun `Should NOT dispatch UpdateTokenPayload if access token IS empty and no self-hosted sites`() {
         featureEnabled()
         onSuccessFlagsCaptor = argumentCaptor()
         onSuccessReaderPostsCaptor = argumentCaptor()
 
-        val notLoggedInData = SharedLoginData(
+        val loginData = SharedLoginData(
                 token = "",
                 sites = listOf()
         )
-        whenever(mockCursor.getString(0)).thenReturn(Gson().toJson(notLoggedInData))
-        whenever(queryResult.getValue<String>(mockCursor)).thenReturn(notLoggedInToken)
+        whenever(mockCursor.getString(0)).thenReturn(Gson().toJson(loginData))
+
+        classToTest.tryJetpackLogin()
+        verify(dispatcher, never()).dispatch(updateTokenAction)
+    }
+
+    @Test
+    fun `Should dispatch UpdateTokenPayload if access token IS empty and there are self-hosted sites`() {
+        featureEnabled()
+        onSuccessFlagsCaptor = argumentCaptor()
+        onSuccessReaderPostsCaptor = argumentCaptor()
+
+        val loginData = SharedLoginData(
+                token = "",
+                sites = listOf(SiteModel())
+        )
+        whenever(mockCursor.getString(0)).thenReturn(Gson().toJson(loginData))
         whenever(userFlagsResolver.tryGetUserFlags(
                 onSuccessFlagsCaptor.capture(),
                 any()
@@ -185,9 +198,12 @@ class SharedLoginResolverTest : BaseUnitTest() {
                 onSuccessReaderPostsCaptor.capture(),
                 any()
         )).doAnswer { onSuccessReaderPostsCaptor.firstValue.invoke() }
+        whenever(accountActionBuilderWrapper.newUpdateAccessTokenAction(
+                loginData.token!!
+        )).thenReturn(updateTokenAction)
 
         classToTest.tryJetpackLogin()
-        verify(dispatcher, never()).dispatch(updateTokenAction)
+        verify(dispatcher, times(1)).dispatch(updateTokenAction)
     }
 
     @Test
@@ -208,8 +224,6 @@ class SharedLoginResolverTest : BaseUnitTest() {
 
     @Test
     fun `Should NOT track login start if feature flag is DISABLED`() {
-        whenever(appPrefsWrapper.getIsFirstTrySharedLoginJetpack()).thenReturn(true)
-        whenever(accountStore.hasAccessToken()).thenReturn(false)
         whenever(jetpackSharedLoginFlag.isEnabled()).thenReturn(false)
         classToTest.tryJetpackLogin()
         verify(sharedLoginAnalyticsTracker, never()).trackLoginStart()
@@ -258,7 +272,7 @@ class SharedLoginResolverTest : BaseUnitTest() {
     @Test
     fun `Should track login success if access token IS empty and we have self-hosted sites`() {
         featureEnabled()
-        val selfHosted = mock<SiteModel>()
+        val selfHosted = SiteModel()
         val notLoggedInData = SharedLoginData(
                 token = notLoggedInToken,
                 sites = listOf(selfHosted)
@@ -272,11 +286,10 @@ class SharedLoginResolverTest : BaseUnitTest() {
     @Test
     fun `Should track login success if access token IS NOT empty and no self-hosted sites`() {
         featureEnabled()
-        val notSelfHosted = mock<SiteModel>()
+        val notSelfHosted = SiteModel().apply { setIsWPCom(true) }
         val loginData = sharedDataLoggedInNoSites.copy(
                 sites = listOf(notSelfHosted)
         )
-        whenever(notSelfHosted.isUsingWpComRestApi).thenReturn(true)
         whenever(mockCursor.getString(0)).thenReturn(Gson().toJson(loginData))
         classToTest.tryJetpackLogin()
         verify(sharedLoginAnalyticsTracker, never()).trackLoginFailed(any())
@@ -286,7 +299,7 @@ class SharedLoginResolverTest : BaseUnitTest() {
     @Test
     fun `Should track login success if access token IS NOT empty and we have self-hosted sites`() {
         featureEnabled()
-        val selfHosted = mock<SiteModel>()
+        val selfHosted = SiteModel()
         val loginData = sharedDataLoggedInNoSites.copy(
                 sites = listOf(selfHosted)
         )
