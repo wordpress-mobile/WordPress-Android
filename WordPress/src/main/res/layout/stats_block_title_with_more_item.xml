@@ -10,12 +10,12 @@
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/text"
-        android:layout_width="0dp"
         style="@style/StatsBlockTitle"
-        android:layout_marginEnd="@dimen/margin_medium"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="@string/unknown"
+        android:layout_marginEnd="@dimen/margin_medium"
         android:layout_weight="1"
+        android:text="@string/unknown"
         tools:text="@string/stats_insights_views_and_visitors" />
 
     <com.google.android.material.button.MaterialButton

@@ -9,7 +9,9 @@ import androidx.test.filters.LargeTest;
 import com.google.android.libraries.cloudtesting.screenshots.ScreenShotter;
 
 import org.junit.ClassRule;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.RuleChain;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.e2e.pages.MySitesPage;
@@ -39,13 +41,24 @@ import static org.wordpress.android.support.WPSupportUtils.waitForImagesOfTypeWi
 import dagger.hilt.android.testing.HiltAndroidTest;
 import tools.fastlane.screengrab.Screengrab;
 import tools.fastlane.screengrab.UiAutomatorScreenshotStrategy;
+import tools.fastlane.screengrab.locale.LocaleTestRule;
 
 @LargeTest
 @HiltAndroidTest
 public class WPScreenshotTest extends BaseTest {
     @ClassRule
-    public static final WPLocaleTestRule LOCALE_TEST_RULE = new WPLocaleTestRule();
+    public static final RuleChain LOCALE_TEST_RULES = RuleChain
+            // Run fastlane's official LocaleTestRule (which switches device language + sets up screengrab) first
+            .outerRule(new LocaleTestRule())
+            // Run our own rule (which handles our in-app locale switching logic) second
+            .around(new WPLocaleTestRule());
 
+    // Note: running this as a static @ClassRule as part of the above RuleChain doesn't seem to work
+    // (apparently that would make those run too early?), but running it as @Rule does fix the issue.
+    // Since we only have one test case in that test class (and that the code to change the IME is fast),
+    // that shouldn't really be problem in practice.
+    @Rule
+    public ImeTestRule IME_TEST_RULE = new ImeTestRule();
 
     private DemoModeEnabler mDemoModeEnabler = new DemoModeEnabler();
 
@@ -57,6 +70,8 @@ public class WPScreenshotTest extends BaseTest {
 
             // Enable Demo Mode
             mDemoModeEnabler.enable();
+
+            setLightModeAndWait();
 
             wpLogin();
 
@@ -118,8 +133,6 @@ public class WPScreenshotTest extends BaseTest {
             Espresso.closeSoftKeyboard();
         }
 
-        setNightModeAndWait(false);
-
         if (openBlockList) {
             clickOnViewWithTag("add-block-button");
             idleFor(2000);
@@ -160,8 +173,6 @@ public class WPScreenshotTest extends BaseTest {
             e.printStackTrace();
         }
 
-        setNightModeAndWait(true);
-
         // Wait for the editor to load all images
         idleFor(7000);
 
@@ -182,8 +193,6 @@ public class WPScreenshotTest extends BaseTest {
             clickOn(R.id.button_negative);
         }
 
-        setNightModeAndWait(true);
-
         takeScreenshot("3-build-an-audience");
 
         // Exit the Stats Activity
@@ -199,8 +208,6 @@ public class WPScreenshotTest extends BaseTest {
             clickOn(R.id.tooltip_message);
         }
 
-        setNightModeAndWait(true);
-
         takeScreenshot("4-keep-tabs-on-your-site");
     }
 
@@ -213,8 +220,6 @@ public class WPScreenshotTest extends BaseTest {
 
         // Wait for the images to load
         idleFor(6000);
-
-        setNightModeAndWait(false);
 
         takeScreenshot("5-reply-in-real-time");
 
@@ -230,7 +235,6 @@ public class WPScreenshotTest extends BaseTest {
         waitForElementToBeDisplayedWithoutFailure(R.id.media_browser_container);
 
         idleFor(2000);
-        setNightModeAndWait(true);
 
         takeScreenshot("6-upload-on-the-go");
 
@@ -264,8 +268,8 @@ public class WPScreenshotTest extends BaseTest {
         return editPostActivity.getAztecImageLoader().getNumberOfImagesBeingDownloaded() == 0;
     }
 
-    private void setNightModeAndWait(boolean isNightMode) {
-        setNightMode(isNightMode);
+    private void setLightModeAndWait() {
+        setNightMode(false);
         idleFor(5000);
     }
 }

@@ -1,3 +1,0 @@
-- “Get to know your app” flows now stay on screen after rotating your device.
-- Long titles display properly on Stats cards without being cut off.
-- We added the Enter key to Post excerpts to allow for easy line breaks.

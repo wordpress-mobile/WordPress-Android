@@ -37,7 +37,6 @@ Language: nl
     <string name="wp_jetpack_continue_to_notifications">Doorgaan naar Meldingen</string>
     <string name="wp_jetpack_continue_to_stats">Doorgaan naar Statistieken</string>
     <string name="wp_jetpack_continue_to_reader">Doorgaan naar Lezer</string>
-    <string name="wp_jetpack_get_new_jetpack_app">Download de Jetpack app</string>
     <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery">Probleem bij het weergeven van het blok. \nTik om blokherstel te proberen.</string>
     <string name="weekly_roundup_notification_text_views_and_comments">Vorige week had je %1$s weergaven en %2$s reacties</string>
     <string name="weekly_roundup_notification_text_views_and_likes">Vorige week had je %1$s weergaven en %2$s likes</string>

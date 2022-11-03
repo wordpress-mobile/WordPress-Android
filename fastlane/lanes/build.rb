@@ -93,7 +93,7 @@ platform :android do
   lane :upload_build_to_play_store do |options|
     app = get_app_name_option!(options)
     package_name = APP_SPECIFIC_VALUES[app.to_sym][:package_name]
-    metadata_dir = File.join('fastlane', APP_SPECIFIC_VALUES[app.to_sym][:metadata_dir], 'android')
+    metadata_dir = File.join(FASTLANE_FOLDER, APP_SPECIFIC_VALUES[app.to_sym][:metadata_dir], 'android')
 
     version = options[:version]
 
