@@ -29,7 +29,7 @@ abstract class TrustedQueryContentProvider : QueryContentProvider() {
     ): Cursor? {
         with (EntryPointAccessors.fromApplication(requireContext().applicationContext,
                 TrustedQueryContentProviderEntryPoint::class.java)) {
-            return if (clientVerification().canTrust(callingPackage))
+            return if (jetpackProviderSyncFeatureConfig().isEnabled() && clientVerification().canTrust(callingPackage))
                 query(uri)
             else
                 null
