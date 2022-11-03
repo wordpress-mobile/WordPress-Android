@@ -37,7 +37,6 @@ Language: ja_JP
     <string name="wp_jetpack_continue_to_notifications">通知に進む</string>
     <string name="wp_jetpack_continue_to_stats">統計に進む</string>
     <string name="wp_jetpack_continue_to_reader">Reader に進む</string>
-    <string name="wp_jetpack_get_new_jetpack_app">新しい Jetpack アプリを入手</string>
     <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery">ブロックの表示中に問題が発生しました。 \nタップしてブロックの回復を試みます。</string>
     <string name="weekly_roundup_notification_text_views_and_comments">先週、%1$s件の表示と%2$s件のコメントがありました。</string>
     <string name="weekly_roundup_notification_text_views_and_likes">先週、%1$s件の表示と%2$s件の「いいね」を受け取りました。</string>

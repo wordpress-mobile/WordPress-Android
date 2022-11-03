@@ -37,7 +37,6 @@ Language: pt_BR
     <string name="wp_jetpack_continue_to_notifications">Continue para Notificações</string>
     <string name="wp_jetpack_continue_to_stats">Continue para Estatísticas</string>
     <string name="wp_jetpack_continue_to_reader">Continue para Leitor</string>
-    <string name="wp_jetpack_get_new_jetpack_app">Obtenha o novo aplicativo do Jetpack</string>
     <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery">Problema ao exibir o bloco. \nToque para tentar restaurá-lo.</string>
     <string name="weekly_roundup_notification_text_views_and_comments">Na semana passada, você recebeu %1$s visualizações e %2$s comentários</string>
     <string name="weekly_roundup_notification_text_views_and_likes">Na semana passada, você recebeu %1$s visualizações e %2$s curtidas</string>
