@@ -8,7 +8,9 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.dp
+import org.wordpress.android.R
 
 @Composable
 fun SecondaryButton(
@@ -29,7 +31,7 @@ fun SecondaryButton(
             ),
             modifier = modifier
                     .padding(bottom = 60.dp)
-                    .padding(horizontal = 30.dp)
+                    .padding(horizontal = dimensionResource(R.dimen.jp_migration_padding_horizontal))
                     .fillMaxWidth()
     ) {
         Text(text = text)

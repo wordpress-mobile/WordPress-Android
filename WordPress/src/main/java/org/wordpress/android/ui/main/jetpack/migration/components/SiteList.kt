@@ -23,6 +23,7 @@ import androidx.compose.ui.composed
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -50,6 +51,7 @@ fun SiteList(
             modifier = modifier
                     .composed { if (userScrollEnabled) this else disableUserScroll() }
                     .background(MaterialTheme.colors.background)
+                    .padding(horizontal = dimensionResource(R.dimen.jp_migration_padding_horizontal))
                     .fillMaxHeight()
                     .then(blurModifier),
     ) {
@@ -61,10 +63,7 @@ fun SiteList(
                 key = { it.id },
         ) { site ->
             SiteListItem(site)
-            Divider(
-                    color = colorResource(R.color.gray_10).copy(alpha = 0.5f),
-                    modifier = Modifier.padding(horizontal = 30.dp)
-            )
+            Divider(color = colorResource(R.color.gray_10).copy(alpha = 0.5f))
         }
         item {
             val bottomPadding = LocalDensity.current.run { bottomPaddingPx.toDp() + 30.dp }
@@ -75,10 +74,7 @@ fun SiteList(
 
 @Composable
 private fun SiteListItem(uiState: SiteListItemUiState) = with (uiState) {
-    Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.padding(horizontal = 30.dp)
-    ) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
         SiteIcon(iconUrl)
         Column {
             SiteName(name)
