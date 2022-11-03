@@ -23,6 +23,7 @@
     <!-- GCM all build types configuration -->
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
 
+    <uses-permission android:name="org.wordpress.android.permission.DISABLE_NOTIFICATIONS"/>
 
     <uses-feature
         android:name="android.hardware.camera"

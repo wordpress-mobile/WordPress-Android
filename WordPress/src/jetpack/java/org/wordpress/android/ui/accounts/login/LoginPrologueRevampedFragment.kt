@@ -25,6 +25,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.viewmodel.compose.viewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.isActive
+import org.wordpress.android.BuildConfig
 import org.wordpress.android.ui.accounts.login.components.ColumnWithFrostedGlassBackground
 import org.wordpress.android.ui.accounts.login.components.JetpackLogo
 import org.wordpress.android.ui.accounts.login.components.LoopingTextWithBackground
@@ -32,6 +33,8 @@ import org.wordpress.android.ui.accounts.login.components.PrimaryButton
 import org.wordpress.android.ui.accounts.login.components.SecondaryButton
 import org.wordpress.android.ui.accounts.login.components.TopLinearGradient
 import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.extensions.setEdgeToEdgeContentDisplay
 
 val LocalPosition = compositionLocalOf { 0f }
@@ -74,9 +77,18 @@ class LoginPrologueRevampedFragment : Fragment() {
     }
 
     private fun disableNotificationsOnWP() {
+        AppLog.d(T.NOTIFS, "Disable Notifications")
         Intent().also { intent ->
             intent.action = "org.wordpress.android.broadcast.DISABLE_NOTIFICATIONS"
-            context?.sendBroadcast(intent)
+            val appSuffix = BuildConfig.APPLICATION_ID.split(".").last()
+            val appPackage = if (appSuffix.isNotBlank()) {
+                "org.wordpress.android.${appSuffix}"
+            } else {
+                "org.wordpress.android"
+            }
+            intent.setPackage(appPackage)
+            AppLog.d(T.NOTIFS, intent.toString())
+            context?.sendBroadcast(intent, "org.wordpress.android.permission.DISABLE_NOTIFICATIONS")
         }
     }
 
