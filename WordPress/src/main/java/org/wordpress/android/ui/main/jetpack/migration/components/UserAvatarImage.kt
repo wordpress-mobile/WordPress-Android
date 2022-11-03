@@ -2,7 +2,6 @@ package org.wordpress.android.ui.main.jetpack.migration.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -12,11 +11,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
-import org.wordpress.android.R.color
 import org.wordpress.android.R.drawable
 import org.wordpress.android.R.string
 import org.wordpress.android.ui.compose.unit.Margin.MediumLarge
@@ -39,7 +36,6 @@ fun BoxScope.UserAvatarImage(
                     .padding(top = MediumLarge.value, end = 30.dp)
                     .size(32.dp)
                     .clip(CircleShape)
-                    .border(1.dp, colorResource(color.black_translucent_20), CircleShape)
                     .background(MaterialTheme.colors.surface)
     )
 }
