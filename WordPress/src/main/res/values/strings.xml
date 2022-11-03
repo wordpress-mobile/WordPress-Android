@@ -4238,4 +4238,10 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
 
     <!-- Jetpack Welcome Screen -->
     <string name="jp_migration_welcome_title">Welcome to Jetpack!</string>
+    <string name="jp_migration_welcome_subtitle">It looks like you’re switching from the WordPress app.</string>
+    <string name="jp_migration_avatar_content_description">Your profile photo</string>
+    <string name="jp_migration_welcome_sites_found_message">We found your sites. Continue to transfer all your data and sign in to Jetpack automatically.</string>
+    <string name="jp_migration_welcome_site_found_message">We found your site. Continue to transfer all your data and sign in to Jetpack automatically.</string>
+    <string name="jp_migration_continue_button">Continue</string>
+    <string name="jp_migration_help_button">Need help?</string>
 </resources>

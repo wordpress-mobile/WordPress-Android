@@ -22,6 +22,7 @@ import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.StepUiState
 import org.wordpress.android.ui.main.jetpack.migration.components.LoadingState
+import org.wordpress.android.ui.main.jetpack.migration.components.UserAvatarImage
 import org.wordpress.android.ui.main.jetpack.migration.components.WelcomeStep
 import javax.inject.Inject
 
@@ -73,6 +74,8 @@ private fun JetpackMigrationScreen(viewModel: JetpackMigrationViewModel = viewMo
     Box {
         Column {
             val uiState by viewModel.uiState.collectAsState()
+
+            UserAvatarImage(avatarUrl = uiState.userAvatarUrl)
 
             when (val step = uiState.stepState) {
                 is StepUiState.Welcome -> WelcomeStep(step)
