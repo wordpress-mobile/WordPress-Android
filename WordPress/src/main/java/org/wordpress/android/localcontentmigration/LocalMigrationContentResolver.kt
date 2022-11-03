@@ -59,7 +59,9 @@ class LocalMigrationContentResolver @Inject constructor(
 
     fun migrateLocalContent() {
         val (isEligible) = getDataForEntityType<EligibilityStatusData>(EligibilityStatus)
-        if (!isEligible) return // TODO: do something more graceful here?
+        @Suppress("ForbiddenComment")
+        // TODO: do something more graceful here?
+        if (!isEligible) return
         val sites: SitesData = getDataForEntityType(Site)
         for (localSiteId in sites.localIds) {
             val posts: PostsData = getDataForEntityType(Post, localSiteId)
