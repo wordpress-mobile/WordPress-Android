@@ -1,12 +1,12 @@
 package org.wordpress.android.fluxc.store.mobile
 
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.whenever
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.any
+import org.mockito.kotlin.whenever
 import org.wordpress.android.fluxc.network.rest.wpcom.mobile.FeatureFlagsError
 import org.wordpress.android.fluxc.network.rest.wpcom.mobile.FeatureFlagsErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.network.rest.wpcom.mobile.FeatureFlagsFetchedPayload
