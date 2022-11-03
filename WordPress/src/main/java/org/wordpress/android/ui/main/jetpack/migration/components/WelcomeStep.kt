@@ -40,7 +40,7 @@ fun WelcomeStep(uiState: StepUiState.Welcome) = with(uiState) {
         val listState = rememberLazyListState()
         val blurredListState = rememberLazyListState()
 
-        SiteListLayout(
+        SiteListScaffold(
                 blurRadius = 4.dp,
                 backgroundColor = colorResource(R.color.bg_jp_migration_buttons_panel),
                 borderColor = colorResource(R.color.gray_10).copy(alpha = 0.5f),
@@ -51,7 +51,7 @@ fun WelcomeStep(uiState: StepUiState.Welcome) = with(uiState) {
                             bottomPaddingPx = buttonsHeightPx,
                     )
                 },
-                background = { clipModifier, blurModifier, buttonsHeightPx ->
+                blurBackground = { clipModifier, blurModifier, buttonsHeightPx ->
                     SiteList(
                             uiState = uiState,
                             listState = blurredListState,
@@ -61,16 +61,17 @@ fun WelcomeStep(uiState: StepUiState.Welcome) = with(uiState) {
                             blurModifier = blurModifier,
                     )
                 },
-        ) {
-            PrimaryButton(
-                    text = uiStringText(primaryActionButton.text),
-                    onClick = primaryActionButton.onClick,
-            )
-            SecondaryButton(
-                    text = uiStringText(secondaryActionButton.text),
-                    onClick = secondaryActionButton.onClick,
-            )
-        }
+                buttonsColumn = {
+                    PrimaryButton(
+                            text = uiStringText(primaryActionButton.text),
+                            onClick = primaryActionButton.onClick,
+                    )
+                    SecondaryButton(
+                            text = uiStringText(secondaryActionButton.text),
+                            onClick = secondaryActionButton.onClick,
+                    )
+                }
+        )
         LaunchedEffect(listState.firstVisibleItemIndex, listState.firstVisibleItemScrollOffset) {
             blurredListState.scrollToItem(
                     listState.firstVisibleItemIndex,
@@ -83,13 +84,13 @@ fun WelcomeStep(uiState: StepUiState.Welcome) = with(uiState) {
 private enum class SlotsEnum { SiteList, Buttons, ClippedBackground }
 
 @Composable
-private fun SiteListLayout(
+private fun SiteListScaffold(
     blurRadius: Dp,
     backgroundColor: Color,
     borderColor: Color,
-    background: @Composable (clipModifier: Modifier, blurModifier: Modifier, buttonsHeightPx: Int) -> Unit,
     siteList: @Composable (buttonsHeightPx: Int) -> Unit,
-    content: @Composable () -> Unit,
+    blurBackground: @Composable (clipModifier: Modifier, blurModifier: Modifier, buttonsHeightPx: Int) -> Unit,
+    buttonsColumn: @Composable () -> Unit,
 ) {
     SubcomposeLayout { constraints ->
         val buttonsPlaceables = subcompose(SlotsEnum.Buttons) {
@@ -97,7 +98,7 @@ private fun SiteListLayout(
                     backgroundColor = backgroundColor,
                     borderColor = borderColor,
             ) {
-                content()
+                buttonsColumn()
             }
         }.map { it.measure(constraints) }
 
@@ -121,7 +122,7 @@ private fun SiteListLayout(
         }
 
         val clippedBackgroundPlaceables = subcompose(SlotsEnum.ClippedBackground) {
-            background(
+            blurBackground(
                     clipModifier = Modifier.clip(buttonsClipShape),
                     blurModifier = Modifier.composed {
                         if (VERSION.SDK_INT >= VERSION_CODES.S) {
