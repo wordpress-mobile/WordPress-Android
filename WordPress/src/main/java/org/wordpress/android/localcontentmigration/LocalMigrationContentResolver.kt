@@ -17,6 +17,8 @@ import org.wordpress.android.util.publicdata.WordPressPublicData
 import org.wordpress.android.viewmodel.ContextProvider
 import javax.inject.Inject
 
+private const val CONTENT_SCHEME = "content"
+
 private fun ContentResolver.query(
     builder: Uri.Builder,
     entityType: LocalContentEntity,
@@ -42,7 +44,7 @@ class LocalMigrationContentResolver @Inject constructor(
     ): T {
         wordPressPublicData.currentPackageId().let { packageId ->
             Uri.Builder().apply {
-                scheme("content")
+                scheme(CONTENT_SCHEME)
                 authority("${packageId}.${LocalMigrationContentProvider::class.simpleName}")
             }
         }.let { uriBuilder ->
