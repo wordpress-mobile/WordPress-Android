@@ -33,7 +33,7 @@ import org.wordpress.android.ui.compose.components.SlotsEnum.ClippedBackground
 private enum class SlotsEnum { Buttons, ClippedBackground }
 
 @Composable
-private fun ColumnWithTopGlassBorder(
+fun ColumnWithTopGlassBorder(
     backgroundColor: Color,
     borderColor: Color,
     content: @Composable ColumnScope.() -> Unit

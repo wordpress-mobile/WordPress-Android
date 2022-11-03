@@ -130,4 +130,7 @@
     <!-- Site creation  -->
     <color name="site_creation_skip_button_text">@color/blue_50</color>
     <color name="site_creation_intent_item_emoji_bg">@color/grey_lighten_30</color>
+
+    <!-- Jetpack Migration -->
+    <color name="bg_jp_migration_buttons_panel">@color/white_translucent_80</color>
 </resources>
