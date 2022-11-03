@@ -6,6 +6,8 @@
     <string name="send_link_by_email">Send link by email</string>
     <string name="create_account">Create account</string>
     <string name="or_type_your_password">Or type your password</string>
+    <string name="or_scan_qr_code_to_log_in">Scan QR code to log in</string>
+    <string name="or_use_password_below_qr_code_scan_option">Or log in with password</string>
     <string name="or_use_password">Use password to sign in</string>
     <string name="username">Username</string>
     <string name="password">Password</string>

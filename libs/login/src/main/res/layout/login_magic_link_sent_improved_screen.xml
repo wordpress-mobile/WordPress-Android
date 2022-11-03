@@ -76,6 +76,16 @@
         android:text="@string/open_mail" />
 
     <com.google.android.material.button.MaterialButton
+        android:id="@+id/magic_link_sent_scan_qr_code"
+        style="@style/Widget.LoginFlow.Button.Secondary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_extra_large"
+        android:layout_marginEnd="@dimen/margin_extra_large"
+        android:visibility="gone"
+        android:text="@string/or_scan_qr_code_to_log_in" />
+
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/login_enter_password"
         style="@style/Widget.LoginFlow.Button.Tertiary"
         android:layout_width="match_parent"

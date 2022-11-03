@@ -24,8 +24,8 @@ import dagger.android.support.AndroidSupportInjection;
 public class LoginMagicLinkSentImprovedFragment extends Fragment {
     public static final String TAG = "login_magic_link_sent_fragment_tag";
 
-    private static final String ARG_EMAIL_ADDRESS = "ARG_EMAIL_ADDRESS";
-    private static final String ARG_ALLOW_PASSWORD = "ARG_ALLOW_PASSWORD";
+    protected static final String ARG_EMAIL_ADDRESS = "ARG_EMAIL_ADDRESS";
+    protected static final String ARG_ALLOW_PASSWORD = "ARG_ALLOW_PASSWORD";
 
     private LoginListener mLoginListener;
 
