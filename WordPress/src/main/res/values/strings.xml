@@ -3084,6 +3084,7 @@
     <string name="close_dialog_button_desc">Close Dialog</string>
     <string name="fab_add_category_desc">Create Category</string>
     <string name="blogging_reminders_prompt_help_button_desc">Learn more about prompts</string>
+    <string name="icon_desc">icon</string>
 
     <string name="content_description_more">More</string>
 
@@ -4235,4 +4236,6 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="login_magic_links_email_sent" tools:ignore="UnusedResources" a8c-src-lib="login">We just sent a magic link to</string>
     <string name="gutenberg_native_link_rel" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Link Rel</string>
 
+    <!-- Jetpack Welcome Screen -->
+    <string name="jp_migration_welcome_title">Welcome to Jetpack!</string>
 </resources>
