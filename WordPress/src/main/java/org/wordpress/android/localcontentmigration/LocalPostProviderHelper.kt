@@ -15,7 +15,8 @@ class LocalPostProviderHelper @Inject constructor(
             val post = postStore.getPostByLocalPostId(localPostId)
             return PostData(post = post)
         } ?: run {
-            val site = siteStore.getSiteByLocalId(localSiteId!!)
+            requireNotNull(localSiteId) { "A local site id must be specified when querying site content." }
+            val site = siteStore.getSiteByLocalId(localSiteId)
             return PostsData(localIds = postStore.getPostsForSite(site).mapNotNull { it.id })
         }
     }

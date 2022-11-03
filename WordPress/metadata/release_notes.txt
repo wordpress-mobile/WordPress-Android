@@ -1,4 +1,1 @@
-- Removed the Automattic Family app marbles from the About page
-- Updated the launch screen for Android versions 12+
-- Changed success message text from red to black for QR code logins
-- Fixed the Stats screen to include Western Arabic numerals for Arabic language users
+This update is short and sweet—when you’re in the process of editing a page, you can now set a parent page within the child page’s settings.

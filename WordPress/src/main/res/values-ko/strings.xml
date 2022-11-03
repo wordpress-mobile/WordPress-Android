@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-10-14 07:59:40+0000
+Translation-Revision-Date: 2022-10-21 08:03:44+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.3
 Language: ko_KR
 -->
 <resources>
+    <string name="about_news">뉴스</string>
+    <string name="about_automattic_contribute_item_title">참여</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_one">1개 답변</string>
     <string name="login_prologue_revamped_content_description_wordpress_icon">워드프레스 아이콘</string>
     <string name="login_prologue_revamped_tagline">어디에서나 쓰고, 편집하고 발생합니다.</string>
@@ -35,7 +37,6 @@ Language: ko_KR
     <string name="wp_jetpack_continue_to_notifications">알림으로 계속</string>
     <string name="wp_jetpack_continue_to_stats">통계로 계속</string>
     <string name="wp_jetpack_continue_to_reader">리더로 계속</string>
-    <string name="wp_jetpack_get_new_jetpack_app">새 젯팩 앱 가져오기</string>
     <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery">블록 표시 중 문제가 발생했습니다. \n눌러서 블록 복구를 시도하세요.</string>
     <string name="weekly_roundup_notification_text_views_and_comments">지난주에는 조회수 %1$s개와 댓글 %2$s개가 있습니다.</string>
     <string name="weekly_roundup_notification_text_views_and_likes">지난주에는 조회수 %1$s개와 좋아요 %2$s개가 있습니다.</string>

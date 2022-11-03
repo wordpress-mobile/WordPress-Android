@@ -17,15 +17,18 @@ import org.wordpress.android.util.publicdata.WordPressPublicData
 import org.wordpress.android.viewmodel.ContextProvider
 import javax.inject.Inject
 
-fun ContentResolver.query(
+private const val CONTENT_SCHEME = "content"
+
+private fun ContentResolver.query(
     builder: Uri.Builder,
     entityType: LocalContentEntity,
     siteId: Int?,
     entityId: Int?,
-) : Cursor? {
+) : Cursor {
     val entityPath = entityType.getPathForContent(siteId, entityId)
     builder.appendEncodedPath(entityPath)
-    return query(builder.build(), arrayOf(), "", arrayOf(), "")
+    val cursor = query(builder.build(), arrayOf(), "", arrayOf(), "")
+    return checkNotNull(cursor) { "Provider failed for $entityType" }
 }
 
 
@@ -42,13 +45,14 @@ class LocalMigrationContentResolver @Inject constructor(
     ): T {
         wordPressPublicData.currentPackageId().let { packageId ->
             Uri.Builder().apply {
-                scheme("content")
+                scheme(CONTENT_SCHEME)
                 authority("${packageId}.${LocalMigrationContentProvider::class.simpleName}")
             }
         }.let { uriBuilder ->
             with (contextProvider.getContext().contentResolver) {
-                val cursor = query(uriBuilder, entityType, siteId, entityId)!!
-                return cursor.getValue()!!
+                val cursor = query(uriBuilder, entityType, siteId, entityId)
+                val data: T? = cursor.getValue()
+                return checkNotNull(data) { "Failed to parse data from provider for $entityType"}
             }
         }
     }

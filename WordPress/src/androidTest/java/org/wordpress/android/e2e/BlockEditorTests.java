@@ -5,6 +5,7 @@ import android.Manifest.permission;
 import androidx.test.rule.GrantPermissionRule;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.wordpress.android.e2e.pages.BlockEditorPage;
@@ -54,6 +55,7 @@ public class BlockEditorTests extends BaseTest {
                 .verifyPostPublished();
     }
 
+    @Ignore
     @Test
     public void e2ePublishFullPost() {
         String title = "publishFullPost";

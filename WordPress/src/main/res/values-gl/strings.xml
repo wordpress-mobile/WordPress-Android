@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-10-04 15:47:46+0000
+Translation-Revision-Date: 2022-10-31 12:41:02+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: gl_ES
 -->
 <resources>
+    <string name="post_settings_parent">Páxina pai</string>
+    <string name="post_settings_page_attributes">Atributos da páxina</string>
+    <string name="about_automattic_contribute_item_title">Contribuír</string>
+    <string name="about_news">Noticias</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_one">1 resposta</string>
     <string name="login_prologue_revamped_content_description_wordpress_icon">Icona de WordPress</string>
     <string name="login_prologue_revamped_tagline">Escribe, edita e publica desde calquera parte.</string>
@@ -35,7 +39,7 @@ Language: gl_ES
     <string name="wp_jetpack_continue_to_notifications">Continuar aos avisos</string>
     <string name="wp_jetpack_continue_to_stats">Continuar ás estatísticas</string>
     <string name="wp_jetpack_continue_to_reader">Continuar ao lector</string>
-    <string name="wp_jetpack_get_new_jetpack_app">Consigue a nova aplicación Jetpack</string>
+    <string name="wp_jetpack_get_new_jetpack_app">Proba a nova aplicación de Jetpack</string>
     <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery">Problema ao mostrar o bloque. \nToca para intentar a recuperación do bloque.</string>
     <string name="weekly_roundup_notification_text_views_and_comments">A semana pasada tiveches %1$s visitas e %2$s comentarios</string>
     <string name="weekly_roundup_notification_text_views_and_likes">A semana pasada tiveches %1$s visitas e %2$s Gústame</string>

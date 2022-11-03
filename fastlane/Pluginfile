@@ -7,4 +7,4 @@ group :screenshots, optional: true do
 end
 
 # gem 'fastlane-plugin-wpmreleasetoolkit', git: 'git@github.com:wordpress-mobile/release-toolkit.git', branch: 'trunk'
-gem 'fastlane-plugin-wpmreleasetoolkit', '~> 5.4'
+gem 'fastlane-plugin-wpmreleasetoolkit', '~> 5.6'

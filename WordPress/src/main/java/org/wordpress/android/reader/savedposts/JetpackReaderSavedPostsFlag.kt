@@ -8,5 +8,5 @@ class JetpackReaderSavedPostsFlag @Inject constructor(
     private val jetpackReaderSavedPostsFeatureConfig: JetpackReaderSavedPostsFeatureConfig,
     private val buildConfigWrapper: BuildConfigWrapper
 ) {
-    fun isEnabled() = buildConfigWrapper.isJetpackApp
+    fun isEnabled() = jetpackReaderSavedPostsFeatureConfig.isEnabled() && buildConfigWrapper.isJetpackApp
 }

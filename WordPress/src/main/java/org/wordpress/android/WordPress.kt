@@ -1,5 +1,6 @@
 package org.wordpress.android
 
+import android.content.Context
 import androidx.multidex.MultiDexApplication
 import com.android.volley.RequestQueue
 import dagger.hilt.EntryPoints
@@ -47,8 +48,9 @@ abstract class WordPress : MultiDexApplication() {
         fun getContext() = AppInitializer.context!!
 
         @JvmStatic
-        fun updateContextLocale() {
-            AppInitializer.updateContextLocale()
+        @JvmOverloads
+        fun updateContextLocale(appContext: Context? = null) {
+            AppInitializer.updateContextLocale(appContext)
         }
 
         @JvmStatic

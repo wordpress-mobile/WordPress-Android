@@ -26,16 +26,20 @@ class LocalMigrationContentProvider: TrustedQueryContentProvider() {
     }
 
     override fun query(uri: Uri): Cursor {
-        val path = uri.path!!
+        val path = checkNotNull(uri.path) { "This provider does not support queries without a path." }
+        // Find the matching entity and its captured groups
         val (entity, groups) = LocalContentEntity.values().firstNotNullOf { entity ->
             entity.contentIdCapturePattern.find(path)?.let { match ->
                 return@firstNotNullOf Pair(entity, match.groups)
             }
         }
-        val parameters = groups.drop(1).mapNotNull { it?.value?.let { id -> parseInt(id) } }
-        val siteId = parameters.getOrNull(0)
-        val entityId = parameters.getOrNull(1)
-        return query(entity, siteId, entityId)
+        val (localSiteId, localEntityId) = extractParametersFromGroups(groups)
+        return query(entity, localSiteId, localEntityId)
+    }
+
+    private fun extractParametersFromGroups(groups: MatchGroupCollection): List<Int?> {
+        // The first group is the entire match, so we drop that and parse the remaining captured groups as integers
+        return groups.drop(1).mapNotNull { it?.value?.let { id -> parseInt(id) } }
     }
 
     private fun query(entity: LocalContentEntity, localSiteId: Int?, localEntityId: Int?): Cursor {
