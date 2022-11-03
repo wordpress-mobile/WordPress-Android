@@ -18,6 +18,7 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.AccountStore.UpdateTokenPayload
+import org.wordpress.android.localcontentmigration.LocalMigrationContentResolver
 import org.wordpress.android.provider.query.QueryResult
 import org.wordpress.android.reader.savedposts.resolver.ReaderSavedPostsResolver
 import org.wordpress.android.resolver.ContentResolverWrapper
@@ -47,6 +48,7 @@ class SharedLoginResolverTest {
     private val sharedLoginAnalyticsTracker: SharedLoginAnalyticsTracker = mock()
     private val userFlagsResolver: UserFlagsResolver = mock()
     private val readerSavedPostsResolver: ReaderSavedPostsResolver = mock()
+    private val localMigrationContentResolver: LocalMigrationContentResolver = mock()
 
     private val classToTest = SharedLoginResolver(
             jetpackSharedLoginFlag,
@@ -60,7 +62,8 @@ class SharedLoginResolverTest {
             appPrefsWrapper,
             sharedLoginAnalyticsTracker,
             userFlagsResolver,
-            readerSavedPostsResolver
+            readerSavedPostsResolver,
+            localMigrationContentResolver,
     )
     private val loggedInToken = "valid"
     private val notLoggedInToken = ""
