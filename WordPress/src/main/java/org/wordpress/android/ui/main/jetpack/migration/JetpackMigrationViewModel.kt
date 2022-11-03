@@ -17,7 +17,6 @@ import org.wordpress.android.util.SiteUtilsWrapper
 import javax.inject.Inject
 
 const val SITE_ICON_SIZE = 60 * 3
-const val USER_AVATAR_SIZE = 32 * 3
 
 @HiltViewModel
 class JetpackMigrationViewModel @Inject constructor(
@@ -63,7 +62,10 @@ class JetpackMigrationViewModel @Inject constructor(
     }
 
     private fun getAvatarUrl(): String {
-        return gravatarUtilsWrapper.fixGravatarUrl(accountStore.account?.avatarUrl.orEmpty(), USER_AVATAR_SIZE)
+        return gravatarUtilsWrapper.fixGravatarUrlWithResource(
+                accountStore.account?.avatarUrl.orEmpty(),
+                R.dimen.jp_migration_user_avatar_size,
+        )
     }
 
     data class UiState(
