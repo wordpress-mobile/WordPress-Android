@@ -1,6 +1,6 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.planoffers
 
-import com.nhaarman.mockitokotlin2.mock
+import org.mockito.kotlin.mock
 import org.wordpress.android.fluxc.model.plans.PlanOffersModel
 import org.wordpress.android.fluxc.network.rest.wpcom.planoffers.PlanOffersRestClient.PlanOffersResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.planoffers.PlanOffersRestClient.PlanOffersResponse.Feature

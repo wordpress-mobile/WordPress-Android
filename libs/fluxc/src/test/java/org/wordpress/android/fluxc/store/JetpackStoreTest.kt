@@ -1,8 +1,5 @@
 package org.wordpress.android.fluxc.store
 
-import com.nhaarman.mockitokotlin2.eq
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.assertj.core.api.Assertions.assertThat
@@ -11,6 +8,9 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.eq
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.action.JetpackAction.ACTIVATE_STATS_MODULE
 import org.wordpress.android.fluxc.action.JetpackAction.INSTALL_JETPACK
