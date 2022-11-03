@@ -86,14 +86,18 @@ dependencies {
             strictly '0.10.4'
         }
     }
-    implementation("com.facebook.react:hermes-engine:0.69.4") {
-        exclude group:'com.facebook.fbjni'
-    }
+
+    implementation 'com.facebook.fresco:fresco:2.5.0'
+    implementation 'com.facebook.fresco:imagepipeline-okhttp3:2.5.0'
+    implementation 'com.facebook.fbjni:fbjni:0.2.2'
+    implementation 'com.facebook.react:hermes-engine:0.69.4:release@aar'
+    implementation 'com.facebook.react:react-native:0.69.4:release@aar'
 
     // This dependency will be substituted if the `local-builds.gradle` file contains
     // `localGutenbergMobilePath`. Details for this can be found in the `settings.gradle` file.
     implementation ("$rootProject.gradle.ext.gutenbergMobileBinaryPath:$rootProject.ext.gutenbergMobileVersion") {
         exclude module: 'hermes-engine'
+        exclude module: 'react-native'
     }
 
     // Required Aztec dependencies (they should be included but Jitpack seems to be stripping these out)

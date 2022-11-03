@@ -260,6 +260,10 @@ android {
         // Exclude React Native's JSC and Hermes debug binaries
         exclude '**/libjscexecutor.so'
         exclude '**/libfabricjni.so' // Since we are not using Fabric yet
+        
+        // Avoid React Native's JNI duplicated classes
+        pickFirst '**/libc++_shared.so'
+        pickFirst '**/libfbjni.so'
 
         pickFirst 'META-INF/-no-jdk.kotlin_module'
 
