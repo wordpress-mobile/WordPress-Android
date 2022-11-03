@@ -1,24 +1,33 @@
 package org.wordpress.android.util
 
+import android.util.Log
 import android.view.View
 import android.view.View.OnScrollChangeListener
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureOverlayShownTracker
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseOne
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
+import org.wordpress.android.ui.jetpackoverlay.JetpackOverlayConnectedFeature
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.JetpackPoweredBottomSheetFeatureConfig
 import org.wordpress.android.util.config.JetpackPoweredFeatureConfig
+import java.util.Date
 import javax.inject.Inject
 
 class JetpackBrandingUtils @Inject constructor(
     private val jetpackPoweredFeatureConfig: JetpackPoweredFeatureConfig,
     private val jetpackPoweredBottomSheetFeatureConfig: JetpackPoweredBottomSheetFeatureConfig,
+    private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper,
+    private val jetpackFeatureOverlayShownTracker: JetpackFeatureOverlayShownTracker,
     private val selectedSiteRepository: SelectedSiteRepository,
     private val siteUtilsWrapper: SiteUtilsWrapper,
     private val buildConfigWrapper: BuildConfigWrapper,
-    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
+    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
+    private val dateTimeUtilsWrapper: DateTimeUtilsWrapper
 ) {
     fun shouldShowJetpackBranding(): Boolean {
         return isWpComSite() && jetpackPoweredFeatureConfig.isEnabled() && !buildConfigWrapper.isJetpackApp
@@ -26,6 +35,50 @@ class JetpackBrandingUtils @Inject constructor(
 
     fun shouldShowJetpackPoweredBottomSheet(): Boolean {
         return isWpComSite() && jetpackPoweredBottomSheetFeatureConfig.isEnabled() && !buildConfigWrapper.isJetpackApp
+    }
+
+    fun clearSharedPreferences() {
+        jetpackFeatureOverlayShownTracker.clear()
+    }
+
+    fun setOverlayShown(feature: JetpackOverlayConnectedFeature, timestamp: Long) {
+        jetpackFeatureOverlayShownTracker.setFeatureOverlayShownTimeStamp(feature, timestamp)
+    }
+
+    fun getOverlayShown(feature: JetpackOverlayConnectedFeature): Long {
+        return jetpackFeatureOverlayShownTracker.getFeatureOverlayShownTimeStamp(feature)
+    }
+
+    fun getEarliestOverlayShownTime() {
+        val overlayShownDate = Date(jetpackFeatureOverlayShownTracker.getEarliestOverlayShownTime())
+        Log.e("overlay shown date", overlayShownDate.toString())
+    }
+
+    fun shouldShowJetpackFullScreenOverlay(feature: JetpackOverlayConnectedFeature): Boolean {
+        return !buildConfigWrapper.isJetpackApp && isWpComSite() &&
+                isInFeatureRemovalPhaseOne() &&
+                (hasExceededFeatureSpecificOverlayFrequency(feature) || hasExceededGlobalOverlayFrequency())
+    }
+
+    private fun isInFeatureRemovalPhaseOne(): Boolean {
+        return jetpackFeatureRemovalPhaseHelper.getCurrentPhase() != null &&
+                jetpackFeatureRemovalPhaseHelper.getCurrentPhase() == PhaseOne
+    }
+
+    fun hasExceededFeatureSpecificOverlayFrequency(feature: JetpackOverlayConnectedFeature): Boolean {
+        val overlayShownDate = Date(jetpackFeatureOverlayShownTracker.getFeatureOverlayShownTimeStamp(feature))
+        val daysPastOverlayShown = dateTimeUtilsWrapper.daysBetween(overlayShownDate, Date(System.currentTimeMillis()))
+        if (daysPastOverlayShown >= PhaseOne.featureSpecificOverlayFrequency)
+            return true
+        return false
+    }
+
+    fun hasExceededGlobalOverlayFrequency(): Boolean {
+        val overlayShownDate = Date(jetpackFeatureOverlayShownTracker.getEarliestOverlayShownTime())
+        val daysPastOverlayShown = dateTimeUtilsWrapper.daysBetween(overlayShownDate, Date(System.currentTimeMillis()))
+        if (daysPastOverlayShown >= PhaseOne.globalOverlayFrequency)
+            return true
+        return false
     }
 
     fun showJetpackBannerIfScrolledToTop(banner: View, scrollableView: RecyclerView) {
