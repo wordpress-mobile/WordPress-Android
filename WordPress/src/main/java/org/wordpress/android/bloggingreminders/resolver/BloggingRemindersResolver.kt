@@ -9,23 +9,18 @@ import org.wordpress.android.bloggingreminders.BloggingRemindersSyncAnalyticsTra
 import org.wordpress.android.bloggingreminders.BloggingRemindersSyncAnalyticsTracker.ErrorType
 import org.wordpress.android.bloggingreminders.JetpackBloggingRemindersSyncFlag
 import org.wordpress.android.bloggingreminders.provider.BloggingRemindersProvider
-import org.wordpress.android.bloggingreminders.provider.RemoteSiteId
 import org.wordpress.android.fluxc.model.BloggingRemindersModel
 import org.wordpress.android.fluxc.store.BloggingRemindersStore
-import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.modules.APPLICATION_SCOPE
 import org.wordpress.android.provider.query.QueryResult
 import org.wordpress.android.resolver.ContentResolverWrapper
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersModelMapper
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
-import org.wordpress.android.util.extensions.filterNull
 import org.wordpress.android.util.publicdata.WordPressPublicData
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.workers.reminder.ReminderScheduler
 import javax.inject.Inject
 import javax.inject.Named
-
-typealias RemoteSiteIdBloggingRemindersMap = Map<RemoteSiteId, BloggingRemindersModel>
 
 class BloggingRemindersResolver @Inject constructor(
     private val jetpackBloggingRemindersSyncFlag: JetpackBloggingRemindersSyncFlag,
@@ -35,7 +30,6 @@ class BloggingRemindersResolver @Inject constructor(
     private val contentResolverWrapper: ContentResolverWrapper,
     private val appPrefsWrapper: AppPrefsWrapper,
     private val bloggingRemindersSyncAnalyticsTracker: BloggingRemindersSyncAnalyticsTracker,
-    private val siteStore: SiteStore,
     private val bloggingRemindersStore: BloggingRemindersStore,
     @Named(APPLICATION_SCOPE) private val coroutineScope: CoroutineScope,
     private val reminderScheduler: ReminderScheduler,
@@ -48,9 +42,9 @@ class BloggingRemindersResolver @Inject constructor(
         }
         val bloggingRemindersResultCursor = getBloggingRemindersSyncResultCursor()
         if (bloggingRemindersResultCursor != null) {
-            val remindersMap = mapBloggingRemindersResultCursor(bloggingRemindersResultCursor).filterNull()
-            if (remindersMap.isNotEmpty()) {
-                val success = setBloggingReminders(remindersMap)
+            val reminders = mapBloggingRemindersResultCursor(bloggingRemindersResultCursor)
+            if (reminders.isNotEmpty()) {
+                val success = setBloggingReminders(reminders)
                 if (success) onSuccess() else onFailure()
             } else {
                 bloggingRemindersSyncAnalyticsTracker.trackSuccess(0)
@@ -63,10 +57,10 @@ class BloggingRemindersResolver @Inject constructor(
     }
 
     private fun mapBloggingRemindersResultCursor(bloggingRemindersResultCursor: Cursor) =
-            queryResult.getValue<Map<RemoteSiteId?, BloggingRemindersModel?>>(
+            queryResult.getValue<List<BloggingRemindersModel>>(
                     bloggingRemindersResultCursor,
-                    object : TypeToken<Map<RemoteSiteId?, BloggingRemindersModel?>>() {}.type
-            ) ?: emptyMap()
+                    object : TypeToken<List<BloggingRemindersModel>>() {}.type
+            ) ?: emptyList()
 
     @Suppress("ReturnCount")
     private fun shouldTrySyncBloggingReminders(): Boolean {
@@ -93,16 +87,14 @@ class BloggingRemindersResolver @Inject constructor(
     }
 
     @Suppress("TooGenericExceptionCaught", "SwallowedException")
-    private fun setBloggingReminders(remindersMap: RemoteSiteIdBloggingRemindersMap): Boolean {
+    private fun setBloggingReminders(reminders: List<BloggingRemindersModel>): Boolean {
         try {
             coroutineScope.launch {
                 var syncCount = 0
-                for ((siteId, bloggingReminder) in remindersMap) {
-                    val siteLocalId = siteStore.getLocalIdForRemoteSiteId(siteId)
-                    if (siteLocalId != 0 && !isBloggingReminderAlreadySet(siteLocalId)) {
-                        val bloggingReminderWithLocalId = bloggingReminder.copy(siteId = siteLocalId)
-                        bloggingRemindersStore.updateBloggingReminders(bloggingReminderWithLocalId)
-                        setLocalReminderNotification(bloggingReminderWithLocalId)
+                for (bloggingReminder in reminders) {
+                    if (!isBloggingReminderAlreadySet(bloggingReminder.siteId)) {
+                        bloggingRemindersStore.updateBloggingReminders(bloggingReminder)
+                        setLocalReminderNotification(bloggingReminder)
                         syncCount = syncCount.inc()
                     }
                 }
