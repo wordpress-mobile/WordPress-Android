@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.Outline.Rectangle
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.SubcomposeLayout
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
@@ -44,11 +45,12 @@ fun WelcomeStep(uiState: StepUiState.Welcome) = with(uiState) {
                 blurRadius = 4.dp,
                 backgroundColor = colorResource(R.color.bg_jp_migration_buttons_panel),
                 borderColor = colorResource(R.color.gray_10).copy(alpha = 0.5f),
-                siteList = { buttonsHeightPx ->
+                siteList = { clipModifier, buttonsHeightPx ->
                     SiteList(
                             uiState = uiState,
                             listState = listState,
                             bottomPaddingPx = buttonsHeightPx,
+                            modifier = clipModifier,
                     )
                 },
                 blurBackground = { clipModifier, blurModifier, buttonsHeightPx ->
@@ -57,7 +59,7 @@ fun WelcomeStep(uiState: StepUiState.Welcome) = with(uiState) {
                             listState = blurredListState,
                             userScrollEnabled = false,
                             bottomPaddingPx = buttonsHeightPx,
-                            modifier = clipModifier,
+                            modifier = clipModifier.clearAndSetSemantics {},
                             blurModifier = blurModifier,
                     )
                 },
@@ -93,7 +95,7 @@ private fun SiteListScaffold(
     blurRadius: Dp,
     backgroundColor: Color,
     borderColor: Color,
-    siteList: @Composable (buttonsHeightPx: Int) -> Unit,
+    siteList: @Composable (clipModifier: Modifier, buttonsHeightPx: Int) -> Unit,
     blurBackground: @Composable (clipModifier: Modifier, blurModifier: Modifier, buttonsHeightPx: Int) -> Unit,
     buttonsColumn: @Composable () -> Unit,
 ) {
@@ -109,8 +111,24 @@ private fun SiteListScaffold(
 
         val buttonsHeight = buttonsPlaceables[0].height
 
+        val siteListClipShape = object : Shape {
+            override fun createOutline(size: Size, layoutDirection: LayoutDirection, density: Density): Rectangle {
+                return Rectangle(
+                        Rect(
+                                top = 0f,
+                                bottom = size.height - buttonsHeight,
+                                left = 0f,
+                                right = size.width,
+                        )
+                )
+            }
+        }
+
         val siteListPlaceables = subcompose(SlotsEnum.SiteList) {
-            siteList(buttonsHeightPx = buttonsHeight)
+            siteList(
+                    clipModifier = Modifier.clip(siteListClipShape),
+                    buttonsHeightPx = buttonsHeight
+            )
         }.map { it.measure(constraints) }
 
         val buttonsClipShape = object : Shape {
@@ -141,8 +159,8 @@ private fun SiteListScaffold(
         }.map { it.measure(constraints) }
 
         layout(constraints.maxWidth, constraints.maxHeight) {
-            siteListPlaceables.forEach { it.placeRelative(0, 0) }
             clippedBackgroundPlaceables.forEach { it.placeRelative(0, 0) }
+            siteListPlaceables.forEach { it.placeRelative(0, 0) }
             buttonsPlaceables.forEach { it.placeRelative(0, constraints.maxHeight - buttonsHeight) }
         }
     }
