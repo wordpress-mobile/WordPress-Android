@@ -83,6 +83,11 @@ fun WelcomeStep(uiState: StepUiState.Welcome) = with(uiState) {
 
 private enum class SlotsEnum { SiteList, Buttons, ClippedBackground }
 
+/**
+ * This custom layout handles the positioning of the site list and the buttons container with the blurred background.
+ * It also ensures the last items are visible when the list is scrolled all the way to the bottom by passing the
+ * measured height of the buttons container to the site list avoiding unnecessary recomposition.
+ */
 @Composable
 private fun SiteListScaffold(
     blurRadius: Dp,
