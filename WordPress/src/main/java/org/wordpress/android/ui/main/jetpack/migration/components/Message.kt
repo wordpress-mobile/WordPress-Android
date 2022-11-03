@@ -18,7 +18,6 @@ fun Message(
             fontSize = 17.sp,
             style = TextStyle(letterSpacing = (-0.01).sp),
             modifier = modifier
-                    .padding(horizontal = 30.dp)
                     .padding(top = 20.dp, bottom = 30.dp)
     )
 }

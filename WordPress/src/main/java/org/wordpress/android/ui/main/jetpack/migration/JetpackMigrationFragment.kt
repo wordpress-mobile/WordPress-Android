@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -30,7 +29,6 @@ import javax.inject.Inject
 class JetpackMigrationFragment : Fragment() {
     @Inject lateinit var dispatcher: Dispatcher
 
-    @Suppress("unused")
     private val viewModel: JetpackMigrationViewModel by viewModels()
 
     override fun onCreateView(
@@ -68,19 +66,16 @@ class JetpackMigrationFragment : Fragment() {
     }
 }
 
-@Suppress("UNUSED_PARAMETER")
 @Composable
 private fun JetpackMigrationScreen(viewModel: JetpackMigrationViewModel = viewModel()) {
     Box {
-        Column {
-            val uiState by viewModel.uiState.collectAsState()
+        val uiState by viewModel.uiState.collectAsState()
 
-            UserAvatarImage(avatarUrl = uiState.userAvatarUrl)
-
-            when (val step = uiState.stepState) {
-                is StepUiState.Welcome -> WelcomeStep(step)
-                else -> LoadingState()
-            }
+        when (val step = uiState.stepState) {
+            is StepUiState.Welcome -> WelcomeStep(step)
+            else -> LoadingState()
         }
+
+        UserAvatarImage(avatarUrl = uiState.userAvatarUrl)
     }
 }
