@@ -728,5 +728,6 @@
 
     <!-- Jetpack Migration Flow -->
     <dimen name="jp_migration_padding_horizontal">30dp</dimen>
+    <dimen name="jp_migration_buttons_padding_horizontal">20dp</dimen>
 
 </resources>

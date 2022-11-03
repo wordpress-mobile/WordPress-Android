@@ -25,7 +25,7 @@ fun PrimaryButton(
             ),
             modifier = modifier
                     .padding(top = 20.dp, bottom = 10.dp)
-                    .padding(horizontal = dimensionResource(R.dimen.jp_migration_padding_horizontal))
+                    .padding(horizontal = dimensionResource(R.dimen.jp_migration_buttons_padding_horizontal))
                     .fillMaxWidth(),
     ) {
         Text(text = text)

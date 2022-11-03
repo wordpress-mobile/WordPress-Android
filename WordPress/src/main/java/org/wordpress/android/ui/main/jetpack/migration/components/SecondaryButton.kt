@@ -31,7 +31,7 @@ fun SecondaryButton(
             ),
             modifier = modifier
                     .padding(bottom = 60.dp)
-                    .padding(horizontal = dimensionResource(R.dimen.jp_migration_padding_horizontal))
+                    .padding(horizontal = dimensionResource(R.dimen.jp_migration_buttons_padding_horizontal))
                     .fillMaxWidth()
     ) {
         Text(text = text)
