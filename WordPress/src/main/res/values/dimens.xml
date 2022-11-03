@@ -726,6 +726,7 @@
     <dimen name="quick_link_ribbon_corner_radius">4dp</dimen>
     <dimen name="quick_link_ribbon_icon_padding">16dp</dimen>
 
-
+    <!-- Jetpack Migration Flow -->
+    <dimen name="jp_migration_padding_horizontal">30dp</dimen>
 
 </resources>
