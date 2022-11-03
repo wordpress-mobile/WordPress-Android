@@ -106,7 +106,7 @@ private fun SiteIcon(iconUrl: String) {
             modifier = Modifier
                     .padding(vertical = 15.dp)
                     .padding(end = 20.dp)
-                    .size(60.dp)
+                    .size(dimensionResource(R.dimen.jp_migration_site_icon_size))
                     .clip(RoundedCornerShape(3.dp))
     )
 }

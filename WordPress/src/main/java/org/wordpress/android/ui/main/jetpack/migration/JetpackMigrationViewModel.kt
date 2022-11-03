@@ -16,8 +16,6 @@ import org.wordpress.android.util.GravatarUtilsWrapper
 import org.wordpress.android.util.SiteUtilsWrapper
 import javax.inject.Inject
 
-const val SITE_ICON_SIZE = 60 * 3
-
 @HiltViewModel
 class JetpackMigrationViewModel @Inject constructor(
     private val siteStore: SiteStore,
@@ -56,7 +54,10 @@ class JetpackMigrationViewModel @Inject constructor(
                     id = site.siteId,
                     name = siteUtilsWrapper.getSiteNameOrHomeURL(site),
                     url = siteUtilsWrapper.getHomeURLOrHostName(site),
-                    iconUrl = siteUtilsWrapper.getSiteIconUrl(site, SITE_ICON_SIZE),
+                    iconUrl = siteUtilsWrapper.getSiteIconUrlOfResourceSize(
+                            site,
+                            R.dimen.jp_migration_site_icon_size,
+                    ),
             )
         }
     }
