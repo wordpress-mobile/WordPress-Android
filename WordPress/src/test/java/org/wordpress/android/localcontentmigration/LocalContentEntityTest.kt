@@ -25,14 +25,14 @@ class LocalContentEntityTest {
     @Test
     fun `when a post URI path is captured without an entity id`() {
         val captures = Post.contentIdCapturePattern.matchEntire(mockPostsPath)?.groups?.mapNotNull { it?.value }!!
-        assertThat(captures.getOrNull(1)).isEqualTo(mockSiteId)
+        assertThat(captures.getOrNull(1)).isEqualTo("$mockSiteId")
         assertThat(captures.getOrNull(2)).isNull()
     }
 
     @Test
     fun `when a post URI path is captured with an entity id`() {
-        val captures = Post.contentIdCapturePattern.matchEntire(mockPostsPath)?.groups?.mapNotNull { it?.value }!!
-        assertThat(captures.getOrNull(1)).isEqualTo(mockSiteId)
-        assertThat(captures.getOrNull(2)).isEqualTo(mockPostId)
+        val captures = Post.contentIdCapturePattern.matchEntire(mockPostPath)?.groups?.mapNotNull { it?.value }!!
+        assertThat(captures.getOrNull(1)).isEqualTo("$mockSiteId")
+        assertThat(captures.getOrNull(2)).isEqualTo("$mockPostId")
     }
 }
