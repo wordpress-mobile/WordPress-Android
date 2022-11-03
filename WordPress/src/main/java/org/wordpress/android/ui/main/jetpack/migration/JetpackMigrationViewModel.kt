@@ -86,6 +86,7 @@ class JetpackMigrationViewModel @Inject constructor(
             val sites: List<SiteListItemUiState>,
             override val primaryActionButton: ActionButton,
             override val secondaryActionButton: ActionButton,
+            val isProcessing: Boolean = false,
         ) : StepUiState(
                 primaryActionButton = primaryActionButton,
                 secondaryActionButton = secondaryActionButton,

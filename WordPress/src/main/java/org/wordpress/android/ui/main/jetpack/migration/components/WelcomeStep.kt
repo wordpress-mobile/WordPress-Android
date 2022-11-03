@@ -67,6 +67,7 @@ fun WelcomeStep(uiState: StepUiState.Welcome) = with(uiState) {
                     PrimaryButton(
                             text = uiStringText(primaryActionButton.text),
                             onClick = primaryActionButton.onClick,
+                            isInProgress = isProcessing,
                     )
                     SecondaryButton(
                             text = uiStringText(secondaryActionButton.text),
