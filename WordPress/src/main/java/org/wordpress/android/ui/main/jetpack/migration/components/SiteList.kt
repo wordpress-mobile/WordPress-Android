@@ -51,7 +51,6 @@ fun SiteList(
             modifier = modifier
                     .composed { if (userScrollEnabled) this else disableUserScroll() }
                     .background(MaterialTheme.colors.background)
-                    .padding(horizontal = dimensionResource(R.dimen.jp_migration_padding_horizontal))
                     .fillMaxHeight()
                     .then(blurModifier),
     ) {
@@ -69,7 +68,9 @@ fun SiteList(
             Divider(
                     color = colorResource(R.color.gray_10),
                     thickness = 0.5.dp,
-                    modifier = Modifier.dimmed(uiState.isProcessing),
+                    modifier = Modifier
+                            .padding(horizontal = dimensionResource(R.dimen.jp_migration_padding_horizontal))
+                            .dimmed(uiState.isProcessing),
             )
         }
         item {
@@ -83,7 +84,9 @@ fun SiteList(
 private fun SiteListItem(uiState: SiteListItemUiState, isDimmed: Boolean) = with(uiState) {
     Row(
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.dimmed(isDimmed),
+            modifier = Modifier
+                    .padding(horizontal = dimensionResource(R.dimen.jp_migration_padding_horizontal))
+                    .dimmed(isDimmed),
     ) {
         SiteIcon(iconUrl)
         Column {
@@ -95,7 +98,11 @@ private fun SiteListItem(uiState: SiteListItemUiState, isDimmed: Boolean) = with
 
 @Composable
 private fun SiteListHeader(uiState: UiState.Content.Welcome) = with(uiState) {
-    Column(modifier = Modifier.dimmed(uiState.isProcessing)) {
+    Column(
+            modifier = Modifier
+                    .padding(horizontal = dimensionResource(R.dimen.jp_migration_padding_horizontal))
+                    .dimmed(uiState.isProcessing)
+    ) {
         ScreenIcon(iconRes = screenIconRes)
         Title(text = uiStringText(title))
         Subtitle(text = uiStringText(subtitle))
