@@ -11,6 +11,7 @@ import org.wordpress.android.bloggingreminders.JetpackBloggingRemindersSyncFlag
 import org.wordpress.android.bloggingreminders.provider.BloggingRemindersProvider
 import org.wordpress.android.fluxc.model.BloggingRemindersModel
 import org.wordpress.android.fluxc.store.BloggingRemindersStore
+import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.modules.APPLICATION_SCOPE
 import org.wordpress.android.provider.query.QueryResult
 import org.wordpress.android.resolver.ContentResolverWrapper
@@ -30,6 +31,7 @@ class BloggingRemindersResolver @Inject constructor(
     private val contentResolverWrapper: ContentResolverWrapper,
     private val appPrefsWrapper: AppPrefsWrapper,
     private val bloggingRemindersSyncAnalyticsTracker: BloggingRemindersSyncAnalyticsTracker,
+    private val siteStore: SiteStore,
     private val bloggingRemindersStore: BloggingRemindersStore,
     @Named(APPLICATION_SCOPE) private val coroutineScope: CoroutineScope,
     private val reminderScheduler: ReminderScheduler,
@@ -92,7 +94,8 @@ class BloggingRemindersResolver @Inject constructor(
             coroutineScope.launch {
                 var syncCount = 0
                 for (bloggingReminder in reminders) {
-                    if (!isBloggingReminderAlreadySet(bloggingReminder.siteId)) {
+                    val site = siteStore.getSiteByLocalId(bloggingReminder.siteId)
+                    if (site != null && !isBloggingReminderAlreadySet(bloggingReminder.siteId)) {
                         bloggingRemindersStore.updateBloggingReminders(bloggingReminder)
                         setLocalReminderNotification(bloggingReminder)
                         syncCount = syncCount.inc()

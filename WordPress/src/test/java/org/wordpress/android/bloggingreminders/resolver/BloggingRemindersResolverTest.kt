@@ -22,7 +22,9 @@ import org.wordpress.android.bloggingreminders.JetpackBloggingRemindersSyncFlag
 import org.wordpress.android.bloggingreminders.provider.BloggingRemindersProvider
 import org.wordpress.android.fluxc.model.BloggingRemindersModel
 import org.wordpress.android.fluxc.model.BloggingRemindersModel.Day.MONDAY
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.BloggingRemindersStore
+import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.provider.query.QueryResult
 import org.wordpress.android.resolver.ContentResolverWrapper
 import org.wordpress.android.test
@@ -46,6 +48,7 @@ class BloggingRemindersResolverTest : BaseUnitTest() {
     private val contentResolverWrapper: ContentResolverWrapper = mock()
     private val appPrefsWrapper: AppPrefsWrapper = mock()
     private val bloggingRemindersSyncAnalyticsTracker: BloggingRemindersSyncAnalyticsTracker = mock()
+    private val siteStore: SiteStore = mock()
     private val bloggingRemindersStore: BloggingRemindersStore = mock()
     private val reminderScheduler: ReminderScheduler = mock()
     private val bloggingRemindersModelMapper: BloggingRemindersModelMapper = mock()
@@ -57,6 +60,7 @@ class BloggingRemindersResolverTest : BaseUnitTest() {
             contentResolverWrapper,
             appPrefsWrapper,
             bloggingRemindersSyncAnalyticsTracker,
+            siteStore,
             bloggingRemindersStore,
             coroutineScope,
             reminderScheduler,
@@ -82,6 +86,7 @@ class BloggingRemindersResolverTest : BaseUnitTest() {
         whenever(wordPressPublicData.currentPackageId()).thenReturn(wordPressCurrentPackageId)
         whenever(mockCursor.getString(0)).thenReturn("{}")
         whenever(contentResolverWrapper.queryUri(contentResolver, uriValue)).thenReturn(mockCursor)
+        whenever(siteStore.getSiteByLocalId(validLocalId)).thenReturn(SiteModel())
     }
 
     @Test
