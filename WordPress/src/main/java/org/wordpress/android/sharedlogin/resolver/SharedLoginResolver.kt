@@ -4,6 +4,7 @@ import android.content.Intent
 import android.database.Cursor
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.localcontentmigration.LocalMigrationContentResolver
 import org.wordpress.android.provider.query.QueryResult
 import org.wordpress.android.reader.savedposts.resolver.ReaderSavedPostsResolver
 import org.wordpress.android.resolver.ContentResolverWrapper
@@ -13,7 +14,6 @@ import org.wordpress.android.sharedlogin.SharedLoginAnalyticsTracker.ErrorType
 import org.wordpress.android.sharedlogin.provider.SharedLoginProvider
 import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
-import org.wordpress.android.ui.utils.JetpackAppMigrationFlowUtils
 import org.wordpress.android.userflags.resolver.UserFlagsResolver
 import org.wordpress.android.util.AccountActionBuilderWrapper
 import org.wordpress.android.util.publicdata.WordPressPublicData
@@ -33,9 +33,8 @@ class SharedLoginResolver @Inject constructor(
     private val sharedLoginAnalyticsTracker: SharedLoginAnalyticsTracker,
     private val userFlagsResolver: UserFlagsResolver,
     private val readerSavedPostsResolver: ReaderSavedPostsResolver,
-    private val jetpackAppMigrationFlowUtils: JetpackAppMigrationFlowUtils,
+    private val localMigrationContentResolver: LocalMigrationContentResolver,
 ) {
-    @Suppress("ReturnCount")
     fun tryJetpackLogin() {
         val isFeatureFlagEnabled = jetpackSharedLoginFlag.isEnabled()
         if (!isFeatureFlagEnabled) {
@@ -53,17 +52,11 @@ class SharedLoginResolver @Inject constructor(
             val accessToken = queryResult.getValue(accessTokenCursor) ?: ""
             if (accessToken.isNotEmpty()) {
                 sharedLoginAnalyticsTracker.trackLoginSuccess()
-
-                if (jetpackAppMigrationFlowUtils.isFlagEnabled()) {
-                    dispatchUpdateAccessToken(accessToken)
-                    jetpackAppMigrationFlowUtils.startJetpackMigrationFlow()
-                    return
-                }
-
                 userFlagsResolver.tryGetUserFlags(
                         {
                             readerSavedPostsResolver.tryGetReaderSavedPosts(
                                     {
+                                        localMigrationContentResolver.migrateLocalContent()
                                         dispatchUpdateAccessToken(accessToken)
                                         reloadMainScreen()
                                     },
