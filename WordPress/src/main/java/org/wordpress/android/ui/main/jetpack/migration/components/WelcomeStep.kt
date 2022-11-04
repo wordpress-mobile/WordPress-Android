@@ -37,6 +37,8 @@ import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel
 
 const val DIM_ALPHA = 0.2f
 
+fun Modifier.dimmed(shouldDim: Boolean) = alpha(if (shouldDim) DIM_ALPHA else 1f)
+
 @Composable
 fun WelcomeStep(uiState: UiState.Content.Welcome) = with(uiState) {
     Box {
@@ -182,8 +184,6 @@ private fun SiteListScaffold(
         }
     }
 }
-
-fun Modifier.dimmed(shouldDim: Boolean) = alpha(if (shouldDim) DIM_ALPHA else 1f)
 
 private val previewSiteListItems = mutableListOf<SiteListItemUiState>().apply {
     repeat(10) {
