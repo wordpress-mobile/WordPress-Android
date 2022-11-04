@@ -5,6 +5,8 @@ import android.database.Cursor
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.localcontentmigration.LocalMigrationContentResolver
 import org.wordpress.android.provider.query.QueryResult
 import org.wordpress.android.reader.savedposts.resolver.ReaderSavedPostsResolver
 import org.wordpress.android.resolver.ContentResolverWrapper
@@ -16,7 +18,6 @@ import org.wordpress.android.sharedlogin.SharedLoginData
 import org.wordpress.android.sharedlogin.provider.SharedLoginProvider
 import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
-import org.wordpress.android.ui.utils.JetpackAppMigrationFlowUtils
 import org.wordpress.android.userflags.resolver.UserFlagsResolver
 import org.wordpress.android.util.AccountActionBuilderWrapper
 import org.wordpress.android.util.publicdata.WordPressPublicData
@@ -36,20 +37,25 @@ class SharedLoginResolver @Inject constructor(
     private val sharedLoginAnalyticsTracker: SharedLoginAnalyticsTracker,
     private val userFlagsResolver: UserFlagsResolver,
     private val readerSavedPostsResolver: ReaderSavedPostsResolver,
-    private val jetpackAppMigrationFlowUtils: JetpackAppMigrationFlowUtils,
-    private val resolverUtility: ResolverUtility
+    private val localMigrationContentResolver: LocalMigrationContentResolver,
+    private val resolverUtility: ResolverUtility,
+    private val siteStore: SiteStore
 ) {
-    @Suppress("ReturnCount")
     fun tryJetpackLogin() {
         val isFeatureFlagEnabled = jetpackSharedLoginFlag.isEnabled()
+
         if (!isFeatureFlagEnabled) {
             return
         }
-        val isAlreadyLoggedIn = accountStore.hasAccessToken()
+
+        val hasSelfhostedSites = siteStore.hasSite() && siteStore.sites.any { !it.isUsingWpComRestApi }
+        val isAlreadyLoggedIn = accountStore.hasAccessToken() || hasSelfhostedSites
         val isFirstTry = appPrefsWrapper.getIsFirstTrySharedLoginJetpack()
+
         if (isAlreadyLoggedIn || !isFirstTry) {
             return
         }
+
         sharedLoginAnalyticsTracker.trackLoginStart()
         appPrefsWrapper.saveIsFirstTrySharedLoginJetpack(false)
         val loginDataCursor = getLoginDataCursor()
@@ -91,17 +97,12 @@ class SharedLoginResolver @Inject constructor(
             resolverUtility.copySitesWithIndexes(sites)
         }
 
-        if (jetpackAppMigrationFlowUtils.isFlagEnabled()) {
-            dispatchUpdateAccessToken(accessToken)
-            jetpackAppMigrationFlowUtils.startJetpackMigrationFlow()
-            return
-        }
-
         sharedLoginAnalyticsTracker.trackLoginSuccess()
         userFlagsResolver.tryGetUserFlags(
                 {
                     readerSavedPostsResolver.tryGetReaderSavedPosts(
                             {
+                                localMigrationContentResolver.migrateLocalContent()
                                 dispatchUpdateAccessToken(accessToken)
                                 reloadMainScreen()
                             },

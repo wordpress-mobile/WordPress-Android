@@ -21,6 +21,8 @@ import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.AccountStore.UpdateTokenPayload
+import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.localcontentmigration.LocalMigrationContentResolver
 import org.wordpress.android.provider.query.QueryResult
 import org.wordpress.android.reader.savedposts.resolver.ReaderSavedPostsResolver
 import org.wordpress.android.resolver.ContentResolverWrapper
@@ -31,7 +33,6 @@ import org.wordpress.android.sharedlogin.SharedLoginAnalyticsTracker.ErrorType
 import org.wordpress.android.sharedlogin.SharedLoginData
 import org.wordpress.android.sharedlogin.provider.SharedLoginProvider
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
-import org.wordpress.android.ui.utils.JetpackAppMigrationFlowUtils
 import org.wordpress.android.userflags.resolver.UserFlagsResolver
 import org.wordpress.android.util.AccountActionBuilderWrapper
 import org.wordpress.android.util.publicdata.WordPressPublicData
@@ -53,8 +54,9 @@ class SharedLoginResolverTest : BaseUnitTest() {
     private val sharedLoginAnalyticsTracker: SharedLoginAnalyticsTracker = mock()
     private val userFlagsResolver: UserFlagsResolver = mock()
     private val readerSavedPostsResolver: ReaderSavedPostsResolver = mock()
-    private val jetpackAppMigrationFlowUtils: JetpackAppMigrationFlowUtils = mock()
+    private val localMigrationContentResolver: LocalMigrationContentResolver = mock()
     private val resolverUtility: ResolverUtility = mock()
+    private val siteStore: SiteStore = mock()
 
     private val classToTest = SharedLoginResolver(
             jetpackSharedLoginFlag,
@@ -69,8 +71,9 @@ class SharedLoginResolverTest : BaseUnitTest() {
             sharedLoginAnalyticsTracker,
             userFlagsResolver,
             readerSavedPostsResolver,
-            jetpackAppMigrationFlowUtils,
-            resolverUtility
+            localMigrationContentResolver,
+            resolverUtility,
+            siteStore
     )
     private val sharedDataLoggedInNoSites = SharedLoginData(
             token = "valid",
@@ -99,7 +102,6 @@ class SharedLoginResolverTest : BaseUnitTest() {
                 sharedDataLoggedInNoSites.token!!
         )).thenReturn(updateTokenAction)
         whenever(contentResolverWrapper.queryUri(contentResolver, uriValue)).thenReturn(mockCursor)
-        whenever(jetpackAppMigrationFlowUtils.isFlagEnabled()).thenReturn(false)
     }
 
     @Test
@@ -114,6 +116,17 @@ class SharedLoginResolverTest : BaseUnitTest() {
         whenever(appPrefsWrapper.getIsFirstTrySharedLoginJetpack()).thenReturn(true)
         whenever(accountStore.hasAccessToken()).thenReturn(true)
         whenever(jetpackSharedLoginFlag.isEnabled()).thenReturn(true)
+        classToTest.tryJetpackLogin()
+        verify(contentResolverWrapper, never()).queryUri(contentResolver, uriValue)
+    }
+
+    @Test
+    fun `Should NOT query ContentResolver if a selfhosted site is already configured`() {
+        whenever(appPrefsWrapper.getIsFirstTrySharedLoginJetpack()).thenReturn(true)
+        whenever(accountStore.hasAccessToken()).thenReturn(false)
+        whenever(jetpackSharedLoginFlag.isEnabled()).thenReturn(true)
+        whenever(siteStore.hasSite()).thenReturn(true)
+        whenever(siteStore.sites).thenReturn(listOf(SiteModel()))
         classToTest.tryJetpackLogin()
         verify(contentResolverWrapper, never()).queryUri(contentResolver, uriValue)
     }
