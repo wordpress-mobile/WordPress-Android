@@ -9,6 +9,7 @@ import dagger.hilt.components.SingletonComponent
 import org.wordpress.android.localcontentmigration.LocalContentEntity.AccessToken
 import org.wordpress.android.localcontentmigration.LocalContentEntity.EligibilityStatus
 import org.wordpress.android.localcontentmigration.LocalContentEntity.Post
+import org.wordpress.android.localcontentmigration.LocalContentEntity.ReaderPosts
 import org.wordpress.android.localcontentmigration.LocalContentEntity.Site
 import org.wordpress.android.localcontentmigration.LocalContentEntity.UserFlags
 import org.wordpress.android.provider.query.QueryResult
@@ -24,6 +25,7 @@ class LocalMigrationContentProvider: TrustedQueryContentProvider() {
         fun localEligibilityStatusProviderHelper(): LocalEligibilityStatusProviderHelper
         fun localAccessTokenProviderHelper(): LocalAccessTokenProviderHelper
         fun userFlagsProviderHelper(): UserFlagsProviderHelper
+        fun readeSavedPostsProviderHelper(): ReaderSavedPostsProviderHelper
     }
 
     override fun query(uri: Uri): Cursor {
@@ -52,6 +54,7 @@ class LocalMigrationContentProvider: TrustedQueryContentProvider() {
                 EligibilityStatus -> localEligibilityStatusProviderHelper().getData()
                 AccessToken -> localAccessTokenProviderHelper().getData()
                 UserFlags -> userFlagsProviderHelper().getData()
+                ReaderPosts -> readeSavedPostsProviderHelper().getData()
                 Site -> localSiteProviderHelper().getData(localEntityId = localEntityId)
                 Post -> localPostProviderHelper().getData(localSiteId, localEntityId)
             }

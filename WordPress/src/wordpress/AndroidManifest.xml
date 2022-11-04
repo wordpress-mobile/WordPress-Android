@@ -8,11 +8,6 @@
             android:exported="true" />
 
         <provider
-            android:name=".reader.savedposts.provider.ReaderSavedPostsProvider"
-            android:authorities="${applicationId}.ReaderSavedPostsProvider"
-            android:exported="true" />
-
-        <provider
             android:name=".localcontentmigration.LocalMigrationContentProvider"
             android:authorities="${applicationId}.LocalMigrationContentProvider"
             android:exported="true" />
