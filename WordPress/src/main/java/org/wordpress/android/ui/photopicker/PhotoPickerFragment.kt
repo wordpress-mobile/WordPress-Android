@@ -83,7 +83,6 @@ class PhotoPickerFragment : Fragment(R.layout.photo_picker_fragment) {
         viewModel = ViewModelProvider(this, viewModelFactory).get(PhotoPickerViewModel::class.java)
     }
 
-    @Suppress("DEPRECATION")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -132,6 +131,7 @@ class PhotoPickerFragment : Fragment(R.layout.photo_picker_fragment) {
         }
     }
 
+    @Suppress("DEPRECATION")
     private fun observeOnPermissionsRequested() {
         viewModel.onPermissionsRequested.observeEvent(viewLifecycleOwner) {
             when (it) {
@@ -179,6 +179,7 @@ class PhotoPickerFragment : Fragment(R.layout.photo_picker_fragment) {
         }
     }
 
+    @Suppress("DEPRECATION")
     private fun PhotoPickerFragmentBinding.observeUIState() {
         var isShowingActionMode = false
         viewModel.uiState.observe(viewLifecycleOwner) {
