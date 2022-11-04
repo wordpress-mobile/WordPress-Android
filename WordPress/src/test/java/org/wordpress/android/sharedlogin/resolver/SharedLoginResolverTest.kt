@@ -21,6 +21,7 @@ import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.AccountStore.UpdateTokenPayload
+import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.localcontentmigration.LocalMigrationContentResolver
 import org.wordpress.android.provider.query.QueryResult
 import org.wordpress.android.reader.savedposts.resolver.ReaderSavedPostsResolver
@@ -55,6 +56,7 @@ class SharedLoginResolverTest : BaseUnitTest() {
     private val readerSavedPostsResolver: ReaderSavedPostsResolver = mock()
     private val localMigrationContentResolver: LocalMigrationContentResolver = mock()
     private val resolverUtility: ResolverUtility = mock()
+    private val siteStore: SiteStore = mock()
 
     private val classToTest = SharedLoginResolver(
             jetpackSharedLoginFlag,
@@ -70,7 +72,8 @@ class SharedLoginResolverTest : BaseUnitTest() {
             userFlagsResolver,
             readerSavedPostsResolver,
             localMigrationContentResolver,
-            resolverUtility
+            resolverUtility,
+            siteStore
     )
     private val sharedDataLoggedInNoSites = SharedLoginData(
             token = "valid",
@@ -113,6 +116,17 @@ class SharedLoginResolverTest : BaseUnitTest() {
         whenever(appPrefsWrapper.getIsFirstTrySharedLoginJetpack()).thenReturn(true)
         whenever(accountStore.hasAccessToken()).thenReturn(true)
         whenever(jetpackSharedLoginFlag.isEnabled()).thenReturn(true)
+        classToTest.tryJetpackLogin()
+        verify(contentResolverWrapper, never()).queryUri(contentResolver, uriValue)
+    }
+
+    @Test
+    fun `Should NOT query ContentResolver if a selfhosted site is already configured`() {
+        whenever(appPrefsWrapper.getIsFirstTrySharedLoginJetpack()).thenReturn(true)
+        whenever(accountStore.hasAccessToken()).thenReturn(false)
+        whenever(jetpackSharedLoginFlag.isEnabled()).thenReturn(true)
+        whenever(siteStore.hasSite()).thenReturn(true)
+        whenever(siteStore.sites).thenReturn(listOf(SiteModel()))
         classToTest.tryJetpackLogin()
         verify(contentResolverWrapper, never()).queryUri(contentResolver, uriValue)
     }

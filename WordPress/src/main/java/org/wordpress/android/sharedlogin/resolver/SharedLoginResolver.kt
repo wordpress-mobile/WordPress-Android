@@ -5,6 +5,7 @@ import android.database.Cursor
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.localcontentmigration.LocalMigrationContentResolver
 import org.wordpress.android.provider.query.QueryResult
 import org.wordpress.android.reader.savedposts.resolver.ReaderSavedPostsResolver
@@ -37,18 +38,24 @@ class SharedLoginResolver @Inject constructor(
     private val userFlagsResolver: UserFlagsResolver,
     private val readerSavedPostsResolver: ReaderSavedPostsResolver,
     private val localMigrationContentResolver: LocalMigrationContentResolver,
-    private val resolverUtility: ResolverUtility
+    private val resolverUtility: ResolverUtility,
+    private val siteStore: SiteStore
 ) {
     fun tryJetpackLogin() {
         val isFeatureFlagEnabled = jetpackSharedLoginFlag.isEnabled()
+
         if (!isFeatureFlagEnabled) {
             return
         }
-        val isAlreadyLoggedIn = accountStore.hasAccessToken()
+
+        val hasSelfhostedSites = siteStore.hasSite() && siteStore.sites.any { !it.isUsingWpComRestApi }
+        val isAlreadyLoggedIn = accountStore.hasAccessToken() || hasSelfhostedSites
         val isFirstTry = appPrefsWrapper.getIsFirstTrySharedLoginJetpack()
+
         if (isAlreadyLoggedIn || !isFirstTry) {
             return
         }
+
         sharedLoginAnalyticsTracker.trackLoginStart()
         appPrefsWrapper.saveIsFirstTrySharedLoginJetpack(false)
         val loginDataCursor = getLoginDataCursor()
