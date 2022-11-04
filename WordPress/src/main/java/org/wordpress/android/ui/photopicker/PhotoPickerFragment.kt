@@ -16,7 +16,6 @@ import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.PhotoPickerFragmentBinding
 import org.wordpress.android.fluxc.model.SiteModel
@@ -180,7 +179,7 @@ class PhotoPickerFragment : Fragment(R.layout.photo_picker_fragment) {
                     null,
                     uri.toString()
             )
-            AccessibilityUtils.setActionModeDoneButtonContentDescription(activity, getString(string.cancel))
+            AccessibilityUtils.setActionModeDoneButtonContentDescription(activity, getString(R.string.cancel))
         }
     }
 
