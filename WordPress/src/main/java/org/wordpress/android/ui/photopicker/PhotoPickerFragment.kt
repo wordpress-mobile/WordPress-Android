@@ -25,7 +25,6 @@ import org.wordpress.android.ui.media.MediaBrowserType
 import org.wordpress.android.ui.media.MediaPreviewActivity
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.ProgressDialogUiModel
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.ProgressDialogUiModel.Visible
-import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.PermissionsRequested.STORAGE
 import org.wordpress.android.util.AccessibilityUtils
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AniUtils.Duration.MEDIUM
@@ -137,7 +136,7 @@ class PhotoPickerFragment : Fragment(R.layout.photo_picker_fragment) {
         viewModel.onPermissionsRequested.observeEvent(viewLifecycleOwner) {
             when (it) {
                 PhotoPickerViewModel.PermissionsRequested.CAMERA -> requestCameraPermission()
-                STORAGE -> requestStoragePermission()
+                PhotoPickerViewModel.PermissionsRequested.STORAGE -> requestStoragePermission()
             }
         }
     }
