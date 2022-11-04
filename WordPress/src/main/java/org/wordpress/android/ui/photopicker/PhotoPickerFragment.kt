@@ -11,7 +11,6 @@ import androidx.appcompat.app.AlertDialog.Builder
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.GridLayoutManager
@@ -187,7 +186,7 @@ class PhotoPickerFragment : Fragment(R.layout.photo_picker_fragment) {
 
     private fun PhotoPickerFragmentBinding.observeUIState() {
         var isShowingActionMode = false
-        viewModel.uiState.observe(viewLifecycleOwner, Observer {
+        viewModel.uiState.observe(viewLifecycleOwner) {
             it?.let { uiState ->
                 setupPhotoList(uiState.photoListUiModel)
                 setupBottomBar(uiState.bottomBarUiModel)
@@ -204,7 +203,7 @@ class PhotoPickerFragment : Fragment(R.layout.photo_picker_fragment) {
                 }
                 setupFab(uiState.fabUiModel)
             }
-        })
+        }
     }
 
     override fun onDestroyView() {
