@@ -198,15 +198,28 @@ private val previewSiteListItems = mutableListOf<SiteListItemUiState>().apply {
     }
 }
 
+private val previewUiState = UiState.Content.Welcome(
+        sites = previewSiteListItems,
+        primaryActionButton = WelcomePrimaryButton {},
+        secondaryActionButton = WelcomeSecondaryButton {},
+)
+
 @Preview(showBackground = true, widthDp = 414, heightDp = 897)
 @Preview(showBackground = true, widthDp = 414, heightDp = 897, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun PreviewWelcomeStep() {
-    val uiState = UiState.Content.Welcome(
-            sites = previewSiteListItems,
-            primaryActionButton = WelcomePrimaryButton {},
-            secondaryActionButton = WelcomeSecondaryButton {},
-    )
+    AppTheme {
+        Box {
+            WelcomeStep(previewUiState)
+        }
+    }
+}
+
+@Preview(showBackground = true, widthDp = 414, heightDp = 897)
+@Preview(showBackground = true, widthDp = 414, heightDp = 897, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun PreviewWelcomeStepInProgress() {
+    val uiState = previewUiState.copy(isProcessing = true)
     AppTheme {
         Box {
             WelcomeStep(uiState)
