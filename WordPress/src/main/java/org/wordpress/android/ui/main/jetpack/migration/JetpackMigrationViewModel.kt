@@ -53,7 +53,11 @@ class JetpackMigrationViewModel @Inject constructor(
     }
 
     private fun onContinueClicked() {
-        // TODO Handle on Continue
+        (_uiState.value as? Content.Welcome)?.let {
+            _uiState.value = it.copy(isProcessing = true)
+            // TODO trigger data migration logic
+            // TODO navigate to notifications screen
+        }
     }
 
     private fun onHelpClicked() {

@@ -62,8 +62,14 @@ fun SiteList(
                 items = uiState.sites,
                 key = { it.id },
         ) { site ->
-            SiteListItem(site)
-            Divider(color = colorResource(R.color.gray_10).copy(alpha = 0.5f))
+            SiteListItem(
+                    uiState = site,
+                    isDimmed = uiState.isProcessing,
+            )
+            Divider(
+                    color = colorResource(R.color.gray_10).copy(alpha = 0.5f),
+                    modifier = Modifier.dimmed(uiState.isProcessing),
+            )
         }
         item {
             val bottomPadding = LocalDensity.current.run { bottomPaddingPx.toDp() + 30.dp }
@@ -73,8 +79,11 @@ fun SiteList(
 }
 
 @Composable
-private fun SiteListItem(uiState: SiteListItemUiState) = with (uiState) {
-    Row(verticalAlignment = Alignment.CenterVertically) {
+private fun SiteListItem(uiState: SiteListItemUiState, isDimmed: Boolean) = with (uiState) {
+    Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.dimmed(isDimmed),
+    ) {
         SiteIcon(iconUrl)
         Column {
             SiteName(name)
@@ -85,7 +94,7 @@ private fun SiteListItem(uiState: SiteListItemUiState) = with (uiState) {
 
 @Composable
 private fun SiteListHeader(uiState: UiState.Content.Welcome) = with(uiState) {
-    Column {
+    Column(modifier = Modifier.dimmed(uiState.isProcessing)) {
         ScreenIcon(iconRes = screenIconRes)
         Title(text = uiStringText(title))
         Subtitle(text = uiStringText(subtitle))

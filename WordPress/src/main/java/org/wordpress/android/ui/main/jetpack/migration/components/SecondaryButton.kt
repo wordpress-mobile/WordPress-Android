@@ -30,6 +30,8 @@ fun SecondaryButton(
             colors = ButtonDefaults.buttonColors(
                     backgroundColor = Color.Transparent,
                     contentColor = MaterialTheme.colors.primary,
+                    disabledBackgroundColor = Color.Transparent,
+                    disabledContentColor = MaterialTheme.colors.primary,
             ),
             modifier = modifier
                     .padding(bottom = 60.dp)

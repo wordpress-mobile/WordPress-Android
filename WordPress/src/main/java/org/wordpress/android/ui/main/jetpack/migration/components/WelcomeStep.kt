@@ -35,6 +35,8 @@ import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.SiteListItemUiState
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState
 
+const val DIM_ALPHA = 0.2f
+
 @Composable
 fun WelcomeStep(uiState: UiState.Content.Welcome) = with(uiState) {
     Box {
@@ -44,11 +46,14 @@ fun WelcomeStep(uiState: UiState.Content.Welcome) = with(uiState) {
         SiteListScaffold(
                 blurRadius = 4.dp,
                 backgroundColor = colorResource(R.color.bg_jp_migration_buttons_panel),
-                borderColor = colorResource(R.color.gray_10).copy(alpha = 0.5f),
+                borderColor = colorResource(R.color.gray_10).copy(alpha = 0.5f).let {
+                    if (isProcessing) it.copy(alpha = DIM_ALPHA) else it
+                },
                 siteList = { clipModifier, buttonsHeightPx ->
                     SiteList(
                             uiState = uiState,
                             listState = listState,
+                            userScrollEnabled = !isProcessing,
                             bottomPaddingPx = buttonsHeightPx,
                             modifier = clipModifier,
                     )
@@ -72,11 +77,16 @@ fun WelcomeStep(uiState: UiState.Content.Welcome) = with(uiState) {
                     SecondaryButton(
                             text = uiStringText(secondaryActionButton.text),
                             onClick = secondaryActionButton.onClick,
+                            enabled = !isProcessing,
+                            modifier = Modifier.dimmed(isProcessing),
                     )
                 }
         )
 
-        UserAvatarImage(avatarUrl = uiState.userAvatarUrl)
+        UserAvatarImage(
+                avatarUrl = uiState.userAvatarUrl,
+                modifier = Modifier.dimmed(isProcessing),
+        )
 
         LaunchedEffect(listState.firstVisibleItemIndex, listState.firstVisibleItemScrollOffset) {
             blurredListState.scrollToItem(
@@ -170,7 +180,9 @@ private fun SiteListScaffold(
     }
 }
 
-val previewSiteListItems = mutableListOf<SiteListItemUiState>().apply {
+fun Modifier.dimmed(shouldDim: Boolean) = alpha(if (shouldDim) DIM_ALPHA else 1f)
+
+private val previewSiteListItems = mutableListOf<SiteListItemUiState>().apply {
     repeat(10) {
         add(
                 SiteListItemUiState(
