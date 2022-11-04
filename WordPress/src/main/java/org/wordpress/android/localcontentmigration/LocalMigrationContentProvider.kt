@@ -37,9 +37,10 @@ class LocalMigrationContentProvider: TrustedQueryContentProvider() {
         return query(entity, localSiteId, localEntityId)
     }
 
-    private fun extractParametersFromGroups(groups: MatchGroupCollection): List<Int?> {
+    private fun extractParametersFromGroups(groups: MatchGroupCollection): Pair<Int?, Int?> {
         // The first group is the entire match, so we drop that and parse the remaining captured groups as integers
-        return groups.drop(1).mapNotNull { it?.value?.let { id -> parseInt(id) } }
+        val parameters = groups.drop(1).mapNotNull { it?.value?.let { id -> parseInt(id) } }
+        return Pair(parameters.getOrNull(0), parameters.getOrNull(1))
     }
 
     private fun query(entity: LocalContentEntity, localSiteId: Int?, localEntityId: Int?): Cursor {
