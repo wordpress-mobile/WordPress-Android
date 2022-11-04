@@ -21,6 +21,7 @@ import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.AccountStore.UpdateTokenPayload
+import org.wordpress.android.localcontentmigration.LocalMigrationContentResolver
 import org.wordpress.android.provider.query.QueryResult
 import org.wordpress.android.reader.savedposts.resolver.ReaderSavedPostsResolver
 import org.wordpress.android.resolver.ContentResolverWrapper
@@ -31,7 +32,6 @@ import org.wordpress.android.sharedlogin.SharedLoginAnalyticsTracker.ErrorType
 import org.wordpress.android.sharedlogin.SharedLoginData
 import org.wordpress.android.sharedlogin.provider.SharedLoginProvider
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
-import org.wordpress.android.ui.utils.JetpackAppMigrationFlowUtils
 import org.wordpress.android.userflags.resolver.UserFlagsResolver
 import org.wordpress.android.util.AccountActionBuilderWrapper
 import org.wordpress.android.util.publicdata.WordPressPublicData
@@ -53,7 +53,7 @@ class SharedLoginResolverTest : BaseUnitTest() {
     private val sharedLoginAnalyticsTracker: SharedLoginAnalyticsTracker = mock()
     private val userFlagsResolver: UserFlagsResolver = mock()
     private val readerSavedPostsResolver: ReaderSavedPostsResolver = mock()
-    private val jetpackAppMigrationFlowUtils: JetpackAppMigrationFlowUtils = mock()
+    private val localMigrationContentResolver: LocalMigrationContentResolver = mock()
     private val resolverUtility: ResolverUtility = mock()
 
     private val classToTest = SharedLoginResolver(
@@ -69,7 +69,7 @@ class SharedLoginResolverTest : BaseUnitTest() {
             sharedLoginAnalyticsTracker,
             userFlagsResolver,
             readerSavedPostsResolver,
-            jetpackAppMigrationFlowUtils,
+            localMigrationContentResolver,
             resolverUtility
     )
     private val sharedDataLoggedInNoSites = SharedLoginData(
@@ -99,7 +99,6 @@ class SharedLoginResolverTest : BaseUnitTest() {
                 sharedDataLoggedInNoSites.token!!
         )).thenReturn(updateTokenAction)
         whenever(contentResolverWrapper.queryUri(contentResolver, uriValue)).thenReturn(mockCursor)
-        whenever(jetpackAppMigrationFlowUtils.isFlagEnabled()).thenReturn(false)
     }
 
     @Test
