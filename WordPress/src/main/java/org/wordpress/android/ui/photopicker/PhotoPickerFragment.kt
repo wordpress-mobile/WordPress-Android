@@ -25,7 +25,6 @@ import org.wordpress.android.ui.media.MediaBrowserType
 import org.wordpress.android.ui.media.MediaPreviewActivity
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.ProgressDialogUiModel
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.ProgressDialogUiModel.Visible
-import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.ActionModeUiModel.Hidden
 import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.PermissionsRequested.CAMERA
 import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.PermissionsRequested.STORAGE
 import org.wordpress.android.util.AccessibilityUtils
@@ -194,7 +193,7 @@ class PhotoPickerFragment : Fragment(R.layout.photo_picker_fragment) {
                 ) {
                     isShowingActionMode = true
                     (activity as AppCompatActivity).startSupportActionMode(PhotoPickerActionModeCallback(viewModel))
-                } else if (uiState.actionModeUiModel is Hidden &&
+                } else if (uiState.actionModeUiModel is PhotoPickerViewModel.ActionModeUiModel.Hidden &&
                         isShowingActionMode
                 ) {
                     isShowingActionMode = false
