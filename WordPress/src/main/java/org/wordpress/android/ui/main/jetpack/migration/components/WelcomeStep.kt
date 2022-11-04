@@ -46,9 +46,10 @@ fun WelcomeStep(uiState: UiState.Content.Welcome) = with(uiState) {
         SiteListScaffold(
                 blurRadius = 4.dp,
                 backgroundColor = colorResource(R.color.bg_jp_migration_buttons_panel),
-                borderColor = colorResource(R.color.gray_10).copy(alpha = 0.5f).let {
+                borderColor = colorResource(R.color.gray_10).let {
                     if (isProcessing) it.copy(alpha = DIM_ALPHA) else it
                 },
+                borderThickness = 0.5.dp,
                 siteList = { clipModifier, buttonsHeightPx ->
                     SiteList(
                             uiState = uiState,
@@ -109,6 +110,7 @@ private fun SiteListScaffold(
     blurRadius: Dp,
     backgroundColor: Color,
     borderColor: Color,
+    borderThickness: Dp,
     siteList: @Composable (clipModifier: Modifier, buttonsHeightPx: Int) -> Unit,
     blurBackground: @Composable (clipModifier: Modifier, blurModifier: Modifier, buttonsHeightPx: Int) -> Unit,
     buttonsColumn: @Composable () -> Unit,
@@ -118,6 +120,7 @@ private fun SiteListScaffold(
             ColumnWithTopGlassBorder(
                     backgroundColor = backgroundColor,
                     borderColor = borderColor,
+                    borderThickness = borderThickness,
             ) {
                 buttonsColumn()
             }
