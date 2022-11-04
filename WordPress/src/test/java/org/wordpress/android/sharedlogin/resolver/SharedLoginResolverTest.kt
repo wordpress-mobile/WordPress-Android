@@ -32,6 +32,7 @@ import org.wordpress.android.util.AccountActionBuilderWrapper
 import org.wordpress.android.util.publicdata.WordPressPublicData
 import org.wordpress.android.viewmodel.ContextProvider
 
+@Suppress("ForbiddenComment")
 // TODO: adapt these tests to the unified provider / orchestrator approach
 class SharedLoginResolverTest {
     private lateinit var onSuccessFlagsCaptor: KArgumentCaptor<() -> Unit>
