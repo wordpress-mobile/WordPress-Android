@@ -10,6 +10,7 @@ import org.wordpress.android.localcontentmigration.LocalContentEntity.AccessToke
 import org.wordpress.android.localcontentmigration.LocalContentEntity.EligibilityStatus
 import org.wordpress.android.localcontentmigration.LocalContentEntity.Post
 import org.wordpress.android.localcontentmigration.LocalContentEntity.Site
+import org.wordpress.android.localcontentmigration.LocalContentEntity.UserFlags
 import org.wordpress.android.provider.query.QueryResult
 import java.lang.Integer.parseInt
 
@@ -22,6 +23,7 @@ class LocalMigrationContentProvider: TrustedQueryContentProvider() {
         fun localPostProviderHelper(): LocalPostProviderHelper
         fun localEligibilityStatusProviderHelper(): LocalEligibilityStatusProviderHelper
         fun localAccessTokenProviderHelper(): LocalAccessTokenProviderHelper
+        fun userFlagsProviderHelper(): UserFlagsProviderHelper
     }
 
     override fun query(uri: Uri): Cursor {
@@ -49,6 +51,7 @@ class LocalMigrationContentProvider: TrustedQueryContentProvider() {
             val response = when (entity) {
                 EligibilityStatus -> localEligibilityStatusProviderHelper().getData()
                 AccessToken -> localAccessTokenProviderHelper().getData()
+                UserFlags -> userFlagsProviderHelper().getData()
                 Site -> localSiteProviderHelper().getData(localEntityId = localEntityId)
                 Post -> localPostProviderHelper().getData(localSiteId, localEntityId)
             }
