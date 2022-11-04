@@ -22,7 +22,6 @@ class JetpackAppInstallReceiver : BroadcastReceiver() {
             disableNotifications(context)
         }
 
-        // TODO: Remove this logging before merge
         buildString {
             append("Action: ").append(intent.action).append("\n")
             append("URI: ").append(intent.toUri(Intent.URI_INTENT_SCHEME)).append("\n")
