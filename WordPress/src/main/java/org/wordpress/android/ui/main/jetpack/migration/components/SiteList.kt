@@ -67,7 +67,8 @@ fun SiteList(
                     isDimmed = uiState.isProcessing,
             )
             Divider(
-                    color = colorResource(R.color.gray_10).copy(alpha = 0.5f),
+                    color = colorResource(R.color.gray_10),
+                    thickness = 0.5.dp,
                     modifier = Modifier.dimmed(uiState.isProcessing),
             )
         }
@@ -79,7 +80,7 @@ fun SiteList(
 }
 
 @Composable
-private fun SiteListItem(uiState: SiteListItemUiState, isDimmed: Boolean) = with (uiState) {
+private fun SiteListItem(uiState: SiteListItemUiState, isDimmed: Boolean) = with(uiState) {
     Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.dimmed(isDimmed),
