@@ -321,7 +321,7 @@ class PhotoPickerFragment : Fragment(R.layout.photo_picker_fragment) {
 
     private fun setupProgressDialog() {
         var progressDialog: AlertDialog? = null
-        viewModel.uiState.observe(viewLifecycleOwner, Observer {
+        viewModel.uiState.observe(viewLifecycleOwner) {
             it?.progressDialogUiModel?.apply {
                 when (this) {
                     is Visible -> {
@@ -345,7 +345,7 @@ class PhotoPickerFragment : Fragment(R.layout.photo_picker_fragment) {
                     }
                 }
             }
-        })
+        }
     }
 
     private fun canShowMediaSourceBottomBar(
