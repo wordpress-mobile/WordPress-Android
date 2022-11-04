@@ -13,7 +13,7 @@ android {
 
     defaultConfig {
         minSdkVersion gradle.ext.minSdkVersion
-        targetSdkVersion 31
+        targetSdkVersion gradle.ext.targetSdkVersion
         javaCompileOptions {
             annotationProcessorOptions {
                 arguments += [
