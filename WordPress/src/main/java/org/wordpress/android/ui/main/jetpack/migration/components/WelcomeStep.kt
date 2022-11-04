@@ -33,10 +33,10 @@ import org.wordpress.android.ui.compose.utils.uiStringText
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.WelcomePrimaryButton
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.WelcomeSecondaryButton
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.SiteListItemUiState
-import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.StepUiState
+import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState
 
 @Composable
-fun WelcomeStep(uiState: StepUiState.Welcome) = with(uiState) {
+fun WelcomeStep(uiState: UiState.Content.Welcome) = with(uiState) {
     Box {
         val listState = rememberLazyListState()
         val blurredListState = rememberLazyListState()
@@ -75,6 +75,9 @@ fun WelcomeStep(uiState: StepUiState.Welcome) = with(uiState) {
                     )
                 }
         )
+
+        UserAvatarImage(avatarUrl = uiState.userAvatarUrl)
+
         LaunchedEffect(listState.firstVisibleItemIndex, listState.firstVisibleItemScrollOffset) {
             blurredListState.scrollToItem(
                     listState.firstVisibleItemIndex,
@@ -183,16 +186,15 @@ val previewSiteListItems = mutableListOf<SiteListItemUiState>().apply {
 @Preview(showBackground = true, widthDp = 414, heightDp = 897)
 @Preview(showBackground = true, widthDp = 414, heightDp = 897, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
-private fun PreviewContentState() {
-    val uiState = StepUiState.Welcome(
-            previewSiteListItems,
+private fun PreviewWelcomeStep() {
+    val uiState = UiState.Content.Welcome(
+            sites = previewSiteListItems,
             primaryActionButton = WelcomePrimaryButton {},
             secondaryActionButton = WelcomeSecondaryButton {},
     )
     AppTheme {
         Box {
             WelcomeStep(uiState)
-            UserAvatarImage(avatarUrl = "")
         }
     }
 }

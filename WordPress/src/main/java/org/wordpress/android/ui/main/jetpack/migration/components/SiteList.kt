@@ -35,11 +35,11 @@ import org.wordpress.android.ui.compose.modifiers.disableUserScroll
 import org.wordpress.android.ui.compose.unit.FontSize
 import org.wordpress.android.ui.compose.utils.uiStringText
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.SiteListItemUiState
-import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.StepUiState
+import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState
 
 @Composable
 fun SiteList(
-    uiState: StepUiState.Welcome,
+    uiState: UiState.Content.Welcome,
     listState: LazyListState,
     userScrollEnabled: Boolean = true,
     bottomPaddingPx: Int = 0,
@@ -84,7 +84,7 @@ private fun SiteListItem(uiState: SiteListItemUiState) = with (uiState) {
 }
 
 @Composable
-private fun SiteListHeader(uiState: StepUiState.Welcome) = with(uiState) {
+private fun SiteListHeader(uiState: UiState.Content.Welcome) = with(uiState) {
     Column {
         ScreenIcon(iconRes = screenIconRes)
         Title(text = uiStringText(title))
