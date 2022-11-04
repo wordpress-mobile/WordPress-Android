@@ -3,6 +3,7 @@ package org.wordpress.android.sharedlogin.resolver
 import android.content.ContentResolver
 import android.content.Context
 import android.database.MatrixCursor
+import com.google.gson.Gson
 import com.nhaarman.mockitokotlin2.KArgumentCaptor
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.argumentCaptor
@@ -14,17 +15,22 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import org.junit.Before
 import org.junit.Test
+import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.annotations.action.Action
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.AccountStore.UpdateTokenPayload
+import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.localcontentmigration.LocalMigrationContentResolver
 import org.wordpress.android.provider.query.QueryResult
 import org.wordpress.android.reader.savedposts.resolver.ReaderSavedPostsResolver
 import org.wordpress.android.resolver.ContentResolverWrapper
+import org.wordpress.android.resolver.ResolverUtility
 import org.wordpress.android.sharedlogin.JetpackSharedLoginFlag
 import org.wordpress.android.sharedlogin.SharedLoginAnalyticsTracker
 import org.wordpress.android.sharedlogin.SharedLoginAnalyticsTracker.ErrorType
+import org.wordpress.android.sharedlogin.SharedLoginData
 import org.wordpress.android.sharedlogin.provider.SharedLoginProvider
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.userflags.resolver.UserFlagsResolver
@@ -32,7 +38,7 @@ import org.wordpress.android.util.AccountActionBuilderWrapper
 import org.wordpress.android.util.publicdata.WordPressPublicData
 import org.wordpress.android.viewmodel.ContextProvider
 
-class SharedLoginResolverTest {
+class SharedLoginResolverTest : BaseUnitTest() {
     private lateinit var onSuccessFlagsCaptor: KArgumentCaptor<() -> Unit>
     private lateinit var onSuccessReaderPostsCaptor: KArgumentCaptor<() -> Unit>
 
@@ -49,6 +55,8 @@ class SharedLoginResolverTest {
     private val userFlagsResolver: UserFlagsResolver = mock()
     private val readerSavedPostsResolver: ReaderSavedPostsResolver = mock()
     private val localMigrationContentResolver: LocalMigrationContentResolver = mock()
+    private val resolverUtility: ResolverUtility = mock()
+    private val siteStore: SiteStore = mock()
 
     private val classToTest = SharedLoginResolver(
             jetpackSharedLoginFlag,
@@ -64,8 +72,13 @@ class SharedLoginResolverTest {
             userFlagsResolver,
             readerSavedPostsResolver,
             localMigrationContentResolver,
+            resolverUtility,
+            siteStore
     )
-    private val loggedInToken = "valid"
+    private val sharedDataLoggedInNoSites = SharedLoginData(
+            token = "valid",
+            sites = listOf()
+    )
     private val notLoggedInToken = ""
     private val wordPressCurrentPackageId = "packageId"
     private val uriValue = "content://$wordPressCurrentPackageId.${SharedLoginProvider::class.simpleName}"
@@ -79,15 +92,20 @@ class SharedLoginResolverTest {
         whenever(contextProvider.getContext()).thenReturn(context)
         whenever(context.contentResolver).thenReturn(contentResolver)
         whenever(wordPressPublicData.currentPackageId()).thenReturn(wordPressCurrentPackageId)
-        whenever(mockCursor.getString(0)).thenReturn(notLoggedInToken)
-        whenever(accountActionBuilderWrapper.newUpdateAccessTokenAction(loggedInToken)).thenReturn(updateTokenAction)
+        val notLoggedInData = SharedLoginData(
+            token = notLoggedInToken,
+            sites = listOf()
+        )
+        whenever(mockCursor.getString(0)).thenReturn(Gson().toJson(notLoggedInData))
+
+        whenever(accountActionBuilderWrapper.newUpdateAccessTokenAction(
+                sharedDataLoggedInNoSites.token!!
+        )).thenReturn(updateTokenAction)
         whenever(contentResolverWrapper.queryUri(contentResolver, uriValue)).thenReturn(mockCursor)
     }
 
     @Test
     fun `Should NOT query ContentResolver if feature flag is DISABLED`() {
-        whenever(appPrefsWrapper.getIsFirstTrySharedLoginJetpack()).thenReturn(true)
-        whenever(accountStore.hasAccessToken()).thenReturn(false)
         whenever(jetpackSharedLoginFlag.isEnabled()).thenReturn(false)
         classToTest.tryJetpackLogin()
         verify(contentResolverWrapper, never()).queryUri(contentResolver, uriValue)
@@ -98,6 +116,17 @@ class SharedLoginResolverTest {
         whenever(appPrefsWrapper.getIsFirstTrySharedLoginJetpack()).thenReturn(true)
         whenever(accountStore.hasAccessToken()).thenReturn(true)
         whenever(jetpackSharedLoginFlag.isEnabled()).thenReturn(true)
+        classToTest.tryJetpackLogin()
+        verify(contentResolverWrapper, never()).queryUri(contentResolver, uriValue)
+    }
+
+    @Test
+    fun `Should NOT query ContentResolver if a selfhosted site is already configured`() {
+        whenever(appPrefsWrapper.getIsFirstTrySharedLoginJetpack()).thenReturn(true)
+        whenever(accountStore.hasAccessToken()).thenReturn(false)
+        whenever(jetpackSharedLoginFlag.isEnabled()).thenReturn(true)
+        whenever(siteStore.hasSite()).thenReturn(true)
+        whenever(siteStore.sites).thenReturn(listOf(SiteModel()))
         classToTest.tryJetpackLogin()
         verify(contentResolverWrapper, never()).queryUri(contentResolver, uriValue)
     }
@@ -124,7 +153,7 @@ class SharedLoginResolverTest {
         onSuccessFlagsCaptor = argumentCaptor()
         onSuccessReaderPostsCaptor = argumentCaptor()
 
-        whenever(queryResult.getValue<String>(mockCursor)).thenReturn(loggedInToken)
+        whenever(mockCursor.getString(0)).thenReturn(Gson().toJson(sharedDataLoggedInNoSites))
         whenever(userFlagsResolver.tryGetUserFlags(
                 onSuccessFlagsCaptor.capture(),
                 any()
@@ -142,18 +171,38 @@ class SharedLoginResolverTest {
     @Test
     fun `Should try to get user flags if access token is NOT empty`() {
         featureEnabled()
-        whenever(queryResult.getValue<String>(mockCursor)).thenReturn(loggedInToken)
+        whenever(mockCursor.getString(0)).thenReturn(Gson().toJson(sharedDataLoggedInNoSites))
         classToTest.tryJetpackLogin()
         verify(userFlagsResolver).tryGetUserFlags(any(), any())
     }
 
     @Test
-    fun `Should NOT dispatch UpdateTokenPayload if access token IS empty`() {
+    fun `Should NOT dispatch UpdateTokenPayload if access token IS empty and no self-hosted sites`() {
         featureEnabled()
         onSuccessFlagsCaptor = argumentCaptor()
         onSuccessReaderPostsCaptor = argumentCaptor()
 
-        whenever(queryResult.getValue<String>(mockCursor)).thenReturn(notLoggedInToken)
+        val loginData = SharedLoginData(
+                token = "",
+                sites = listOf()
+        )
+        whenever(mockCursor.getString(0)).thenReturn(Gson().toJson(loginData))
+
+        classToTest.tryJetpackLogin()
+        verify(dispatcher, never()).dispatch(updateTokenAction)
+    }
+
+    @Test
+    fun `Should dispatch UpdateTokenPayload if access token IS empty and there are self-hosted sites`() {
+        featureEnabled()
+        onSuccessFlagsCaptor = argumentCaptor()
+        onSuccessReaderPostsCaptor = argumentCaptor()
+
+        val loginData = SharedLoginData(
+                token = "",
+                sites = listOf(SiteModel())
+        )
+        whenever(mockCursor.getString(0)).thenReturn(Gson().toJson(loginData))
         whenever(userFlagsResolver.tryGetUserFlags(
                 onSuccessFlagsCaptor.capture(),
                 any()
@@ -162,9 +211,12 @@ class SharedLoginResolverTest {
                 onSuccessReaderPostsCaptor.capture(),
                 any()
         )).doAnswer { onSuccessReaderPostsCaptor.firstValue.invoke() }
+        whenever(accountActionBuilderWrapper.newUpdateAccessTokenAction(
+                loginData.token!!
+        )).thenReturn(updateTokenAction)
 
         classToTest.tryJetpackLogin()
-        verify(dispatcher, never()).dispatch(updateTokenAction)
+        verify(dispatcher, times(1)).dispatch(updateTokenAction)
     }
 
     @Test
@@ -185,8 +237,6 @@ class SharedLoginResolverTest {
 
     @Test
     fun `Should NOT track login start if feature flag is DISABLED`() {
-        whenever(appPrefsWrapper.getIsFirstTrySharedLoginJetpack()).thenReturn(true)
-        whenever(accountStore.hasAccessToken()).thenReturn(false)
         whenever(jetpackSharedLoginFlag.isEnabled()).thenReturn(false)
         classToTest.tryJetpackLogin()
         verify(sharedLoginAnalyticsTracker, never()).trackLoginStart()
@@ -207,22 +257,66 @@ class SharedLoginResolverTest {
         featureEnabled()
         classToTest.tryJetpackLogin()
         verify(sharedLoginAnalyticsTracker, never()).trackLoginSuccess()
-        verify(sharedLoginAnalyticsTracker, times(1)).trackLoginFailed(ErrorType.QueryTokenError)
+        verify(sharedLoginAnalyticsTracker, times(1)).trackLoginFailed(ErrorType.QueryLoginDataError)
     }
 
     @Test
-    fun `Should track login failed if access token IS empty`() {
+    fun `Should track login failed if loginData IS null`() {
+        whenever(mockCursor.getString(0)).thenReturn("{}?trigger an error")
         featureEnabled()
-        whenever(queryResult.getValue<String>(mockCursor)).thenReturn(notLoggedInToken)
+        classToTest.tryJetpackLogin()
+        verify(sharedLoginAnalyticsTracker, never()).trackLoginSuccess()
+        verify(sharedLoginAnalyticsTracker, times(1)).trackLoginFailed(ErrorType.NullLoginDataError)
+    }
+
+    @Test
+    fun `Should track login failed if access token IS empty and no self-hosted sites`() {
+        featureEnabled()
+        val notLoggedInData = SharedLoginData(
+                token = notLoggedInToken,
+                sites = listOf()
+        )
+        whenever(mockCursor.getString(0)).thenReturn(Gson().toJson(notLoggedInData))
         classToTest.tryJetpackLogin()
         verify(sharedLoginAnalyticsTracker, never()).trackLoginSuccess()
         verify(sharedLoginAnalyticsTracker, times(1)).trackLoginFailed(ErrorType.WPNotLoggedInError)
     }
 
     @Test
-    fun `Should track login success if access token result cursor IS NOT null AND access token IS NOT empty`() {
+    fun `Should track login success if access token IS empty and we have self-hosted sites`() {
         featureEnabled()
-        whenever(queryResult.getValue<String>(mockCursor)).thenReturn(loggedInToken)
+        val selfHosted = SiteModel()
+        val notLoggedInData = SharedLoginData(
+                token = notLoggedInToken,
+                sites = listOf(selfHosted)
+        )
+        whenever(mockCursor.getString(0)).thenReturn(Gson().toJson(notLoggedInData))
+        classToTest.tryJetpackLogin()
+        verify(sharedLoginAnalyticsTracker, times(1)).trackLoginSuccess()
+        verify(sharedLoginAnalyticsTracker, never()).trackLoginFailed(any())
+    }
+
+    @Test
+    fun `Should track login success if access token IS NOT empty and no self-hosted sites`() {
+        featureEnabled()
+        val notSelfHosted = SiteModel().apply { setIsWPCom(true) }
+        val loginData = sharedDataLoggedInNoSites.copy(
+                sites = listOf(notSelfHosted)
+        )
+        whenever(mockCursor.getString(0)).thenReturn(Gson().toJson(loginData))
+        classToTest.tryJetpackLogin()
+        verify(sharedLoginAnalyticsTracker, never()).trackLoginFailed(any())
+        verify(sharedLoginAnalyticsTracker, times(1)).trackLoginSuccess()
+    }
+
+    @Test
+    fun `Should track login success if access token IS NOT empty and we have self-hosted sites`() {
+        featureEnabled()
+        val selfHosted = SiteModel()
+        val loginData = sharedDataLoggedInNoSites.copy(
+                sites = listOf(selfHosted)
+        )
+        whenever(mockCursor.getString(0)).thenReturn(Gson().toJson(loginData))
         classToTest.tryJetpackLogin()
         verify(sharedLoginAnalyticsTracker, never()).trackLoginFailed(any())
         verify(sharedLoginAnalyticsTracker, times(1)).trackLoginSuccess()
