@@ -928,7 +928,7 @@
             android:name=".ui.mysite.jetpackbadge.JetpackAppInstallReceiver"
             android:enabled="true"
             android:exported="true"
-            tools:ignore="ManifestResource">
+            tools:ignore="ExportedReceiver">
             <intent-filter>
                 <action android:name="org.wordpress.android.broadcast.DISABLE_NOTIFICATIONS"/>
             </intent-filter>
