@@ -1,15 +1,15 @@
 package org.wordpress.android.fluxc.store
 
-import com.nhaarman.mockitokotlin2.inOrder
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.verifyZeroInteractions
-import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.inOrder
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoInteractions
+import org.mockito.kotlin.whenever
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.PostFormatModel
 import org.wordpress.android.fluxc.model.SiteModel
@@ -113,7 +113,7 @@ class SiteStoreTest {
 
         assertThat(onSiteChanged.rowsAffected).isEqualTo(0)
         assertThat(onSiteChanged.error).isEqualTo(SiteError(GENERIC_ERROR, null))
-        verifyZeroInteractions(siteSqlUtils)
+        verifyNoInteractions(siteSqlUtils)
     }
 
     private suspend fun assertSiteFetched(
@@ -162,7 +162,7 @@ class SiteStoreTest {
 
         assertThat(onSiteChanged.rowsAffected).isEqualTo(0)
         assertThat(onSiteChanged.error).isEqualTo(SiteError(GENERIC_ERROR, null))
-        verifyZeroInteractions(siteSqlUtils)
+        verifyNoInteractions(siteSqlUtils)
     }
 
     @Test
@@ -292,7 +292,7 @@ class SiteStoreTest {
 
         assertThat(onPostFormatsChanged.site).isEqualTo(site)
         assertThat(onPostFormatsChanged.error).isEqualTo(payload.error)
-        verifyZeroInteractions(siteSqlUtils)
+        verifyNoInteractions(siteSqlUtils)
     }
 
     @Test

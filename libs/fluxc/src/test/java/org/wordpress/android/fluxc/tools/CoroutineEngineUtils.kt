@@ -1,14 +1,14 @@
 package org.wordpress.android.fluxc.tools
 
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.runBlocking
 import org.mockito.Mockito.lenient
+import org.mockito.kotlin.any
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
 
 fun initCoroutineEngine() = runBlocking {
     val coroutineEngine = mock<CoroutineEngine>()

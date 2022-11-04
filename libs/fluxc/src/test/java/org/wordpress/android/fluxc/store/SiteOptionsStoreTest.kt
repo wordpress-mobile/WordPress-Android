@@ -1,19 +1,19 @@
 package org.wordpress.android.fluxc.store
 
 import com.android.volley.VolleyError
-import com.nhaarman.mockitokotlin2.KArgumentCaptor
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.argumentCaptor
-import com.nhaarman.mockitokotlin2.eq
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.verifyZeroInteractions
-import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.KArgumentCaptor
+import org.mockito.kotlin.any
+import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.eq
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoInteractions
+import org.mockito.kotlin.whenever
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.action.SiteAction
 import org.wordpress.android.fluxc.annotations.action.Action
@@ -100,7 +100,7 @@ class SiteOptionsStoreTest {
         assertThat(updatedPayload.error.type).isEqualTo(SiteOptionsErrorType.API_ERROR)
         assertThat(updatedPayload.error.message).isEqualTo(errorMessage)
         verify(siteHomepageRestClient).updateHomepage(wpComSite, homepageSettings)
-        verifyZeroInteractions(dispatcher)
+        verifyNoInteractions(dispatcher)
     }
 
     @Test
@@ -116,7 +116,7 @@ class SiteOptionsStoreTest {
                         "Page for posts and page on front cannot be the same"
                 )
         )
-        verifyZeroInteractions(siteHomepageRestClient)
+        verifyNoInteractions(siteHomepageRestClient)
     }
 
     @Test
