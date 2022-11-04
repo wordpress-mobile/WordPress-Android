@@ -124,6 +124,7 @@ import org.wordpress.android.ui.stories.intro.StoriesIntroDialogFragment;
 import org.wordpress.android.ui.uploads.UploadActionUseCase;
 import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper;
+import org.wordpress.android.ui.utils.JetpackAppMigrationFlowUtils;
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementDialogFragment;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
@@ -259,6 +260,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     @Inject QuickStartTracker mQuickStartTracker;
     @Inject LocalMigrationOrchestrator mLocalMigrationOrchestrator;
     @Inject BloggingRemindersResolver mBloggingRemindersResolver;
+    @Inject JetpackAppMigrationFlowUtils mJetpackAppMigrationFlowUtils;
 
     @Inject BuildConfigWrapper mBuildConfigWrapper;
 
@@ -459,6 +461,11 @@ public class WPMainActivity extends LocaleAwareActivity implements
             initSelectedSite();
         }
         mLocalMigrationOrchestrator.tryLocalMigration();
+
+        // TODO: this is temporary to enable testing the migration flow UI
+        if (mJetpackAppMigrationFlowUtils.shouldShowMigrationFlow()) {
+            mJetpackAppMigrationFlowUtils.startJetpackMigrationFlow();
+        }
     }
 
     private void showBloggingPromptsOnboarding() {
