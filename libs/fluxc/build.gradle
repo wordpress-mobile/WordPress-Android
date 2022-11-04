@@ -12,7 +12,7 @@ android {
     compileSdkVersion 31
 
     defaultConfig {
-        minSdkVersion 21
+        minSdkVersion gradle.ext.minSdkVersion
         targetSdkVersion 31
         javaCompileOptions {
             annotationProcessorOptions {
