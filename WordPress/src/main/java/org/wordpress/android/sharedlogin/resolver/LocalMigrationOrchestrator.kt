@@ -42,35 +42,31 @@ class LocalMigrationOrchestrator @Inject constructor(
         sharedLoginAnalyticsTracker.trackLoginStart()
         appPrefsWrapper.saveIsFirstTrySharedLoginJetpack(false)
         val (accessToken) = localMigrationContentResolver.getDataForEntityType<AccessTokenData>(AccessToken)
-//        val accessTokenCursor = getAccessTokenCursor()
-//        if (accessTokenCursor != null) {
-//            val accessToken = queryResult.getValue<String>(accessTokenCursor) ?: ""
-            if (accessToken.isNotEmpty()) {
-                sharedLoginAnalyticsTracker.trackLoginSuccess()
-                userFlagsResolver.tryGetUserFlags(
-                        {
-                            readerSavedPostsResolver.tryGetReaderSavedPosts(
-                                    {
-                                        localMigrationContentResolver.migrateLocalContent()
-                                        dispatchUpdateAccessToken(accessToken)
-                                        reloadMainScreen()
-                                    },
-                                    {
-                                        reloadMainScreen()
-                                    }
-                            )
-                        },
-                        {
-                            reloadMainScreen()
-                        }
-                )
-            } else {
-                sharedLoginAnalyticsTracker.trackLoginFailed(ErrorType.WPNotLoggedInError)
-            }
+
+        @Suppress("ForbiddenComment")
         // TODO: Unify error tracking for resolver / provider errors too
-//        } else {
-//            sharedLoginAnalyticsTracker.trackLoginFailed(ErrorType.QueryTokenError)
-//        }
+        if (accessToken.isNotEmpty()) {
+            sharedLoginAnalyticsTracker.trackLoginSuccess()
+            userFlagsResolver.tryGetUserFlags(
+                    {
+                        readerSavedPostsResolver.tryGetReaderSavedPosts(
+                                {
+                                    localMigrationContentResolver.migrateLocalContent()
+                                    dispatchUpdateAccessToken(accessToken)
+                                    reloadMainScreen()
+                                },
+                                {
+                                    reloadMainScreen()
+                                }
+                        )
+                    },
+                    {
+                        reloadMainScreen()
+                    }
+            )
+        } else {
+            sharedLoginAnalyticsTracker.trackLoginFailed(ErrorType.WPNotLoggedInError)
+        }
     }
 
     private fun dispatchUpdateAccessToken(accessToken: String) {
