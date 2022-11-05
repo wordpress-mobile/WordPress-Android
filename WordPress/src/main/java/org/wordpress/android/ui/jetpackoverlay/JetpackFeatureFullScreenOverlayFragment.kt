@@ -99,6 +99,7 @@ class JetpackFeatureFullScreenOverlayFragment : BottomSheetDialogFragment() {
     private fun JetpackPoweredOverlayBinding.updateContent(overlayContent: JetpackFeatureOverlayContent) {
         overlayContent.let {
             illustrationView.setAnimation(it.illustration)
+            illustrationView.playAnimation()
             title.text = getString(it.title)
             caption.text = getString(it.caption)
             primaryButton.text = getString(it.primaryButtonText)
