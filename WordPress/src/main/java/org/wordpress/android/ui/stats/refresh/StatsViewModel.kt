@@ -27,6 +27,8 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.push.NotificationType
 import org.wordpress.android.push.NotificationsProcessingService.ARG_NOTIFICATION_TYPE
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
+import org.wordpress.android.ui.jetpackoverlay.JetpackOverlayConnectedFeature.Stats
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.stats.StatsTimeframe
@@ -75,7 +77,8 @@ class StatsViewModel
     private val statsModuleActivateUseCase: StatsModuleActivateUseCase,
     private val notificationsTracker: SystemNotificationsTracker,
     private val todaysStatsCardFeatureConfig: MySiteDashboardTodaysStatsCardFeatureConfig,
-    private val jetpackBrandingUtils: JetpackBrandingUtils
+    private val jetpackBrandingUtils: JetpackBrandingUtils,
+    private val jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil
 ) : ScopedViewModel(mainDispatcher) {
     private val _isRefreshing = MutableLiveData<Boolean>()
     val isRefreshing: LiveData<Boolean> = _isRefreshing
@@ -107,6 +110,9 @@ class StatsViewModel
 
     private val _showJetpackPoweredBottomSheet = MutableLiveData<Event<Boolean>>()
     val showJetpackPoweredBottomSheet: LiveData<Event<Boolean>> = _showJetpackPoweredBottomSheet
+
+    private val _showJetpackOverlay = MutableLiveData<Event<Boolean>>()
+    val showJetpackOverlay: LiveData<Event<Boolean>> = _showJetpackOverlay
 
     fun start(intent: Intent, restart: Boolean = false) {
         val localSiteId = intent.getIntExtra(WordPress.LOCAL_SITE_ID, 0)
@@ -201,6 +207,13 @@ class StatsViewModel
         if (statsSectionManager.getSelectedSection() == StatsSection.INSIGHTS) showInsightsUpdateAlert()
 
         if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) showJetpackPoweredBottomSheet()
+
+        if(jetpackFeatureRemovalOverlayUtil.shouldShowFeatureSpecificJetpackOverlay(Stats))
+            showJetpackOverlay()
+    }
+
+    private fun showJetpackOverlay() {
+        _showJetpackOverlay.value = Event(true)
     }
 
     private fun showJetpackPoweredBottomSheet() {
