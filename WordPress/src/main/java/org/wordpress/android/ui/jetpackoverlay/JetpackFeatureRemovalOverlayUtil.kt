@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.jetpackoverlay
 
-import android.util.Log
 import org.wordpress.android.ui.jetpackoverlay.JETPACKFEATUREOVERLAYPHASE.PHASE_ONE
 import org.wordpress.android.ui.jetpackoverlay.JETPACKFEATUREOVERLAYPHASE.PHASE_THREE
 import org.wordpress.android.ui.jetpackoverlay.JETPACKFEATUREOVERLAYPHASE.PHASE_TWO
@@ -50,24 +49,6 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
     ): Boolean {
         return (hasExceededFeatureSpecificOverlayFrequency(feature, currentPhasePreference) ||
                 hasExceededGlobalOverlayFrequency(currentPhasePreference))
-    }
-
-    fun clearSharedPreferences() {
-        jetpackFeatureOverlayShownTracker.clear()
-    }
-
-    fun setOverlayShown(feature: JetpackOverlayConnectedFeature, timestamp: Long) {
-        jetpackFeatureOverlayShownTracker.setFeatureOverlayShownTimeStamp(feature, PHASE_ONE, timestamp)
-    }
-
-    fun getOverlayShown(feature: JetpackOverlayConnectedFeature): Long? {
-        return jetpackFeatureOverlayShownTracker.getFeatureOverlayShownTimeStamp(feature, PHASE_ONE)
-    }
-
-    fun getEarliestOverlayShownTime() {
-        val overlayShownDate = jetpackFeatureOverlayShownTracker.getEarliestOverlayShownTime(PHASE_ONE)
-                ?.let { Date(it) }
-        Log.e("overlay shown date", overlayShownDate.toString())
     }
 
     private fun hasExceededFeatureSpecificOverlayFrequency(

@@ -5,13 +5,13 @@
     <scanScope>AllSourcesWithTests</scanScope>
     <option name="thirdPartyClasspath" />
     <option name="activeLocationIds">
-      <option value="538cf552-a853-40d8-8cf8-8b9613528e6d" />
+      <option value="0dd5fdb0-74a3-4a12-8c7c-c40773cf5d76" />
     </option>
     <option name="locations">
       <list>
         <ConfigurationLocation id="bundled-sun-checks" type="BUNDLED" scope="All" description="Sun Checks">(bundled)</ConfigurationLocation>
         <ConfigurationLocation id="bundled-google-checks" type="BUNDLED" scope="All" description="Google Checks">(bundled)</ConfigurationLocation>
-        <ConfigurationLocation id="538cf552-a853-40d8-8cf8-8b9613528e6d" type="LOCAL_FILE" scope="All" description="a8c Style">$PROJECT_DIR$/config/checkstyle.xml</ConfigurationLocation>
+        <ConfigurationLocation id="0dd5fdb0-74a3-4a12-8c7c-c40773cf5d76" type="LOCAL_FILE" scope="All" description="a8c Style">$PROJECT_DIR$/config/checkstyle.xml</ConfigurationLocation>
       </list>
     </option>
   </component>
