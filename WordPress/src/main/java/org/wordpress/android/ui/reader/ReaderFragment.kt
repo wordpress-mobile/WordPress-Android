@@ -26,6 +26,7 @@ import org.wordpress.android.R.string
 import org.wordpress.android.databinding.ReaderFragmentLayoutBinding
 import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.ui.ScrollableViewInitializedListener
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayFragment
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType.READER
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
@@ -216,6 +217,12 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
             JetpackPoweredBottomSheetFragment
                     .newInstance(it, READER)
                     .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
+        }
+
+        viewModel.showJetpackOverlay.observeEvent(viewLifecycleOwner) {
+            JetpackFeatureFullScreenOverlayFragment
+                    .newInstance(READER)
+                    .show(childFragmentManager, JetpackFeatureFullScreenOverlayFragment.TAG)
         }
 
         viewModel.start()
