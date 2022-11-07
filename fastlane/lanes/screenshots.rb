@@ -39,7 +39,7 @@ platform :android do
     screenshot_devices = screenshot_devices.select { |device| device[:device_type].casecmp(options[:device]) == 0 } unless options[:device].nil?
     
     # Allow creating screenshots for just one locale
-    locales = SCREENSHOT_LOCALES # TODO: Verify that we're using the expected locale code formats here (Google's `fr-FR` vs Android's `fr-rFR` or something else)
+    locales = SCREENSHOT_LOCALES
     locales = options[:locale].split(',') unless options[:locale].nil?
     
     UI.message("Will run screenshot for devices: #{screenshot_devices.map { |d| "#{d[:device]} API #{d[:api]}" }.inspect } and locales: #{locales.inspect}")
