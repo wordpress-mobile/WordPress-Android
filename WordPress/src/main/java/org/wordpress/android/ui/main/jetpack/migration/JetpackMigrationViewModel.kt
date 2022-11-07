@@ -1,9 +1,12 @@
 package org.wordpress.android.ui.main.jetpack.migration
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
@@ -52,11 +55,16 @@ class JetpackMigrationViewModel @Inject constructor(
         )
     }
 
+    @Suppress("ForbiddenComment")
     private fun onContinueClicked() {
         (_uiState.value as? Content.Welcome)?.let {
-            _uiState.value = it.copy(isProcessing = true)
-            // TODO trigger data migration logic
-            // TODO navigate to notifications screen
+            // TODO: Update this to trigger data migration logic after processing uiState is emitted:
+            viewModelScope.launch {
+                _uiState.value = it.copy(isProcessing = true)
+                delay(5000)
+                _uiState.value = it.copy(isProcessing = false)
+                // TODO: navigate to notifications screen
+            }
         }
     }
 
