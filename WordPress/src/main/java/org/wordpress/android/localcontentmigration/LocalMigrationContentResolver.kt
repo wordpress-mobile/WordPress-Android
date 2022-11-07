@@ -36,7 +36,6 @@ class LocalMigrationContentResolver @Inject constructor(
     @PublishedApi internal val contextProvider: ContextProvider,
     @PublishedApi internal val wordPressPublicData: WordPressPublicData,
     @PublishedApi internal val queryResult: QueryResult,
-    private val dispatcher: Dispatcher,
 ){
     inline fun <reified T : LocalContentEntityData> getDataForEntityType(
         entityType: LocalContentEntity,
@@ -56,22 +55,6 @@ class LocalMigrationContentResolver @Inject constructor(
             }
         }
     }
-
-    fun migrateLocalContent() {
-        val (isEligible) = getDataForEntityType<EligibilityStatusData>(EligibilityStatus)
-        @Suppress("ForbiddenComment")
-        // TODO: do something more graceful here?
-        if (!isEligible) return
-        val sites: SitesData = getDataForEntityType(Site)
-        for (localSiteId in sites.localIds) {
-            val posts: PostsData = getDataForEntityType(Post, localSiteId)
-            for (localPostId in posts.localIds) {
-                val postData: PostData = getDataForEntityType(Post, localSiteId, localPostId)
-                dispatcher.dispatch(PostActionBuilder.newUpdatePostAction(postData.post))
-            }
-        }
-    }
-
     @PublishedApi internal inline fun <reified T : LocalContentEntityData> Cursor.getValue() =
             queryResult.getValue<T>(this)
 }
