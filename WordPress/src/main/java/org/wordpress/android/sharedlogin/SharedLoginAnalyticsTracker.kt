@@ -18,7 +18,9 @@ class SharedLoginAnalyticsTracker @Inject constructor(
     sealed class ErrorType(val value: String) {
         object WPNotLoggedInError : ErrorType("wp_not_logged_in_error")
 
-        object QueryTokenError : ErrorType("query_token_error")
+        object NullLoginDataError : ErrorType("null_login_data_error")
+
+        object QueryLoginDataError : ErrorType("query_login_data_error")
 
         companion object {
             const val ERROR_TYPE = "error_type"
