@@ -163,5 +163,12 @@ class JetpackMigrationViewModel @Inject constructor(
                 onClick = onClick,
                 text = UiStringRes(R.string.jp_migration_help_button),
         )
+
+        data class NotificationsPrimaryButton(
+            override val onClick: () -> Unit,
+        ) : ActionButton(
+                onClick = onClick,
+                text = UiStringRes(R.string.jp_migration_continue_button),
+        )
     }
 }
