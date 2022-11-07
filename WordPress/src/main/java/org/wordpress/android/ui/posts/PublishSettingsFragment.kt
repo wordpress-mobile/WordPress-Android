@@ -52,9 +52,7 @@ abstract class PublishSettingsFragment : Fragment() {
         val dateAndTimeContainer = rootView.findViewById<LinearLayout>(R.id.publish_time_and_date_container)
         val publishNotification = rootView.findViewById<TextView>(R.id.publish_notification)
         val publishNotificationTitle = rootView.findViewById<TextView>(R.id.publish_notification_title)
-        val publishNotificationContainer = rootView.findViewById<LinearLayout>(R.id.publish_notification_container)
-        val addToCalendarContainer = rootView.findViewById<LinearLayout>(R.id.post_add_to_calendar_container)
-        val addToCalendar = rootView.findViewById<TextView>(R.id.post_add_to_calendar)
+
 
         AccessibilityUtils.disableHintAnnouncement(dateAndTime)
         AccessibilityUtils.disableHintAnnouncement(publishNotification)
@@ -68,35 +66,14 @@ abstract class PublishSettingsFragment : Fragment() {
         observeOnPublishedDateChanged()
 
         observeOnNotificationTime()
-        
-        viewModel.onUiModel.observe(viewLifecycleOwner, {
-            it?.let { uiModel ->
-                dateAndTime.text = uiModel.publishDateLabel
-                publishNotificationTitle.isEnabled = uiModel.notificationEnabled
-                publishNotification.isEnabled = uiModel.notificationEnabled
-                publishNotificationContainer.isEnabled = uiModel.notificationEnabled
-                addToCalendar.isEnabled = uiModel.notificationEnabled
-                addToCalendarContainer.isEnabled = uiModel.notificationEnabled
-                if (uiModel.notificationEnabled) {
-                    publishNotificationContainer.setOnClickListener {
-                        getPostRepository()?.getPost()?.let { postModel ->
-                            viewModel.onShowDialog(postModel)
-                        }
-                    }
-                    addToCalendarContainer.setOnClickListener {
-                        getPostRepository()?.let { postRepository ->
-                            viewModel.onAddToCalendar(postRepository)
-                        }
-                    }
-                } else {
-                    publishNotificationContainer.setOnClickListener(null)
-                    addToCalendarContainer.setOnClickListener(null)
-                }
-                publishNotification.setText(uiModel.notificationLabel)
-                publishNotificationContainer.visibility = if (uiModel.notificationVisible) View.VISIBLE else View.GONE
-                addToCalendarContainer.visibility = if (uiModel.notificationVisible) View.VISIBLE else View.GONE
-            }
-        })
+
+        observeOnUiModel(
+                dateAndTime,
+                publishNotificationTitle,
+                publishNotification,
+                rootView
+        )
+
         viewModel.onShowNotificationDialog.observeEvent(viewLifecycleOwner, { notificationTime ->
             showNotificationTimeSelectionDialog(notificationTime)
         })
@@ -140,6 +117,48 @@ abstract class PublishSettingsFragment : Fragment() {
         viewModel.start(getPostRepository())
         return rootView
     }
+
+
+    private fun observeOnUiModel(
+        dateAndTime: TextView,
+        publishNotificationTitle: TextView,
+        publishNotification: TextView,
+        rootView: ViewGroup,
+    ) {
+        val publishNotificationContainer = rootView.findViewById<LinearLayout>(R.id.publish_notification_container)
+        val addToCalendarContainer = rootView.findViewById<LinearLayout>(R.id.post_add_to_calendar_container)
+        val addToCalendar = rootView.findViewById<TextView>(R.id.post_add_to_calendar)
+
+        viewModel.onUiModel.observe(viewLifecycleOwner) {
+            it?.let { uiModel ->
+                dateAndTime.text = uiModel.publishDateLabel
+                publishNotificationTitle.isEnabled = uiModel.notificationEnabled
+                publishNotification.isEnabled = uiModel.notificationEnabled
+                publishNotificationContainer.isEnabled = uiModel.notificationEnabled
+                addToCalendar.isEnabled = uiModel.notificationEnabled
+                addToCalendarContainer.isEnabled = uiModel.notificationEnabled
+                if (uiModel.notificationEnabled) {
+                    publishNotificationContainer.setOnClickListener {
+                        getPostRepository()?.getPost()?.let { postModel ->
+                            viewModel.onShowDialog(postModel)
+                        }
+                    }
+                    addToCalendarContainer.setOnClickListener {
+                        getPostRepository()?.let { postRepository ->
+                            viewModel.onAddToCalendar(postRepository)
+                        }
+                    }
+                } else {
+                    publishNotificationContainer.setOnClickListener(null)
+                    addToCalendarContainer.setOnClickListener(null)
+                }
+                publishNotification.setText(uiModel.notificationLabel)
+                publishNotificationContainer.visibility = if (uiModel.notificationVisible) View.VISIBLE else View.GONE
+                addToCalendarContainer.visibility = if (uiModel.notificationVisible) View.VISIBLE else View.GONE
+            }
+        }
+    }
+
 
     private fun observeOnNotificationTime() {
         viewModel.onNotificationTime.observe(viewLifecycleOwner) {
