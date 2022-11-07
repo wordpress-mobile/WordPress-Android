@@ -67,13 +67,8 @@ abstract class PublishSettingsFragment : Fragment() {
 
         observeOnPublishedDateChanged()
 
-        viewModel.onNotificationTime.observe(viewLifecycleOwner, {
-            it?.let { notificationTime ->
-                getPostRepository()?.let { postRepository ->
-                    viewModel.scheduleNotification(postRepository, notificationTime)
-                }
-            }
-        })
+        observeOnNotificationTime()
+        
         viewModel.onUiModel.observe(viewLifecycleOwner, {
             it?.let { uiModel ->
                 dateAndTime.text = uiModel.publishDateLabel
@@ -144,6 +139,16 @@ abstract class PublishSettingsFragment : Fragment() {
         })
         viewModel.start(getPostRepository())
         return rootView
+    }
+
+    private fun observeOnNotificationTime() {
+        viewModel.onNotificationTime.observe(viewLifecycleOwner) {
+            it?.let { notificationTime ->
+                getPostRepository()?.let { postRepository ->
+                    viewModel.scheduleNotification(postRepository, notificationTime)
+                }
+            }
+        }
     }
 
     private fun observeOnPublishedDateChanged() {
