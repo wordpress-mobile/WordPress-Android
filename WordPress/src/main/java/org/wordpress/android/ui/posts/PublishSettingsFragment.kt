@@ -76,14 +76,8 @@ abstract class PublishSettingsFragment : Fragment() {
 
         observeOnShowNotificationDialog()
 
-        viewModel.onToast.observeEvent(viewLifecycleOwner, {
-            ToastUtils.showToast(
-                    context,
-                    it,
-                    SHORT,
-                    Gravity.TOP
-            )
-        })
+        observeOnToast()
+
         viewModel.onNotificationAdded.observeEvent(viewLifecycleOwner, { notification ->
             activity?.let {
                 NotificationManagerCompat.from(it).cancel(notification.id)
@@ -115,6 +109,17 @@ abstract class PublishSettingsFragment : Fragment() {
         })
         viewModel.start(getPostRepository())
         return rootView
+    }
+
+    private fun observeOnToast() {
+        viewModel.onToast.observeEvent(viewLifecycleOwner) {
+            ToastUtils.showToast(
+                    context,
+                    it,
+                    SHORT,
+                    Gravity.TOP
+            )
+        }
     }
 
     private fun observeOnShowNotificationDialog() {
