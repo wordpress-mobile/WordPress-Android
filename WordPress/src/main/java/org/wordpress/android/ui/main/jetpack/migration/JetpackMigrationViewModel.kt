@@ -78,7 +78,6 @@ class JetpackMigrationViewModel @Inject constructor(
     @Suppress("ForbiddenComment")
     private fun onContinueFromNotificationsClicked() {
         // TODO: Disable notifications in WP app
-        //  See https://github.com/wordpress-mobile/WordPress-Android/pull/17371
         // TODO: Navigate to next step (error? or done)
     }
 
