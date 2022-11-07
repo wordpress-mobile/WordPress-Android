@@ -64,10 +64,9 @@ abstract class PublishSettingsFragment : Fragment() {
         setupContent(rootView, viewModel)
 
         observeOnDatePicked()
-        viewModel.onPublishedDateChanged.observeEvent(viewLifecycleOwner, { date ->
-            viewModel.updatePost(date, getPostRepository())
-            trackPostScheduled()
-        })
+
+        observeOnPublishedDateChanged()
+
         viewModel.onNotificationTime.observe(viewLifecycleOwner, {
             it?.let { notificationTime ->
                 getPostRepository()?.let { postRepository ->
@@ -145,6 +144,13 @@ abstract class PublishSettingsFragment : Fragment() {
         })
         viewModel.start(getPostRepository())
         return rootView
+    }
+
+    private fun observeOnPublishedDateChanged() {
+        viewModel.onPublishedDateChanged.observeEvent(viewLifecycleOwner) { date ->
+            viewModel.updatePost(date, getPostRepository())
+            trackPostScheduled()
+        }
     }
 
     private fun observeOnDatePicked() {
