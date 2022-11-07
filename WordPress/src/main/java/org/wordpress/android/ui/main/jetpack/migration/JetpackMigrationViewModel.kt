@@ -104,7 +104,7 @@ class JetpackMigrationViewModel @Inject constructor(
             val subtitle: UiString,
             val message: UiString,
             open val primaryActionButton: ActionButton,
-            open val secondaryActionButton: ActionButton,
+            open val secondaryActionButton: ActionButton? = null,
         ) : UiState() {
             data class Welcome(
                 val userAvatarUrl: String = "",
@@ -125,6 +125,16 @@ class JetpackMigrationViewModel @Inject constructor(
                                 R.string.jp_migration_welcome_site_found_message
                             }
                     ),
+            )
+
+            data class Notifications(
+                override val primaryActionButton: ActionButton,
+            ) : Content(
+                    primaryActionButton = primaryActionButton,
+                    screenIconRes = R.drawable.ic_jetpack_migration_notifications,
+                    title = UiStringRes(R.string.jp_migration_notifications_title),
+                    subtitle = UiStringRes(R.string.jp_migration_notifications_subtitle),
+                    message = UiStringRes(R.string.jp_migration_notifications_disabled_in_wp_message),
             )
         }
     }
