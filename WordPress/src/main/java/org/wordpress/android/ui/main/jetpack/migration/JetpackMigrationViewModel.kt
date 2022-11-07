@@ -11,6 +11,7 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.NotificationsPrimaryButton
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.WelcomePrimaryButton
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.WelcomeSecondaryButton
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Content
@@ -59,15 +60,25 @@ class JetpackMigrationViewModel @Inject constructor(
     @Suppress("ForbiddenComment", "MagicNumber")
     private fun onContinueClicked() {
         (_uiState.value as? Content.Welcome)?.let {
-            // TODO: Update this to trigger data migration logic after processing uiState is emitted:
             viewModelScope.launch {
                 _uiState.value = it.copy(isProcessing = true)
-                // TODO: Remove this temporary delay
-                delay(5000)
-                _uiState.value = it.copy(isProcessing = false)
-                // TODO: navigate to notifications screen
+                // TODO: Replace this temporary delay with migration logic
+                delay(2500)
+                postNotificationsState()
             }
         }
+    }
+
+    private fun postNotificationsState() {
+        _uiState.value = Content.Notifications(
+                primaryActionButton = NotificationsPrimaryButton(::onContinueFromNotificationsClicked),
+        )
+    }
+
+    @Suppress("ForbiddenComment")
+    private fun onContinueFromNotificationsClicked() {
+        // TODO: Disable notifications in WP app
+        // TODO: Navigate to next step (error? or done)
     }
 
     private fun onHelpClicked() {
