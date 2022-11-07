@@ -34,10 +34,8 @@ import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.WelcomeSecondaryButton
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.SiteListItemUiState
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState
-
-const val DIM_ALPHA = 0.2f
-
-fun Modifier.dimmed(shouldDim: Boolean) = alpha(if (shouldDim) DIM_ALPHA else 1f)
+import org.wordpress.android.ui.main.jetpack.migration.compose.DIM_ALPHA
+import org.wordpress.android.ui.main.jetpack.migration.compose.dimmed
 
 @Composable
 fun WelcomeStep(uiState: UiState.Content.Welcome) = with(uiState) {

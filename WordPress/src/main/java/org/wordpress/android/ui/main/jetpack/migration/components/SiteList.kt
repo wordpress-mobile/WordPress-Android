@@ -36,6 +36,7 @@ import org.wordpress.android.ui.compose.unit.FontSize
 import org.wordpress.android.ui.compose.utils.uiStringText
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.SiteListItemUiState
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState
+import org.wordpress.android.ui.main.jetpack.migration.compose.dimmed
 
 @Composable
 fun SiteList(
