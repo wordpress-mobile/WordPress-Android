@@ -1,21 +1,15 @@
 package org.wordpress.android.util
 
-import android.util.Log
 import android.view.View
 import android.view.View.OnScrollChangeListener
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureOverlayShownTracker
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseOne
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
-import org.wordpress.android.ui.jetpackoverlay.JetpackOverlayConnectedFeature
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.JetpackPoweredBottomSheetFeatureConfig
 import org.wordpress.android.util.config.JetpackPoweredFeatureConfig
-import java.util.Date
 import javax.inject.Inject
 
 class JetpackBrandingUtils @Inject constructor(

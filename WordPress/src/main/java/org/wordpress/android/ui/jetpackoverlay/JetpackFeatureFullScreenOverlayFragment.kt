@@ -19,8 +19,6 @@ import org.wordpress.android.ui.ActivityLauncherWrapper.Companion.JETPACK_PACKAG
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureOverlayActions.DismissDialog
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureOverlayActions.OpenPlayStore
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureOverlayScreenType
-import org.wordpress.android.ui.main.WPMainNavigationView.PageType
-import org.wordpress.android.ui.main.WPMainNavigationView.PageType.MY_SITE
 import org.wordpress.android.util.extensions.exhaustive
 import org.wordpress.android.util.extensions.setVisible
 import javax.inject.Inject
@@ -72,8 +70,7 @@ class JetpackFeatureFullScreenOverlayFragment : BottomSheetDialogFragment() {
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
     }
 
-    private fun getSiteScreen() =
-            arguments?.getSerializable(OVERLAY_SCREEN_TYPE) as JetpackFeatureOverlayScreenType
+    private fun getSiteScreen() = arguments?.getSerializable(OVERLAY_SCREEN_TYPE) as JetpackFeatureOverlayScreenType
 
     private fun rtlLayout(view: View): Boolean {
         val config: Configuration = resources.configuration
@@ -101,7 +98,9 @@ class JetpackFeatureFullScreenOverlayFragment : BottomSheetDialogFragment() {
         }
     }
 
-    private fun JetpackFeatureRemovalOverlayBinding.renderUiState(jetpackPoweredOverlayUIState: JetpackFeatureOverlayUIState) {
+    private fun JetpackFeatureRemovalOverlayBinding.renderUiState(
+        jetpackPoweredOverlayUIState: JetpackFeatureOverlayUIState
+    ) {
         updateVisibility(jetpackPoweredOverlayUIState.componentVisibility)
         updateContent(jetpackPoweredOverlayUIState.overlayContent)
         setClickListener(jetpackPoweredOverlayUIState.componentVisibility.secondaryButton)
@@ -112,7 +111,9 @@ class JetpackFeatureFullScreenOverlayFragment : BottomSheetDialogFragment() {
         if (secondaryButtonVisible) secondaryButton.setOnClickListener { viewModel.dismissBottomSheet() }
     }
 
-    private fun JetpackFeatureRemovalOverlayBinding.updateVisibility(componentVisibility: JetpackFeatureOverlayComponentVisibility) {
+    private fun JetpackFeatureRemovalOverlayBinding.updateVisibility(
+        componentVisibility: JetpackFeatureOverlayComponentVisibility
+    ) {
         componentVisibility.let {
             illustrationView.setVisible(it.illustration)
             title.setVisible(it.title)
@@ -142,8 +143,7 @@ class JetpackFeatureFullScreenOverlayFragment : BottomSheetDialogFragment() {
         const val TAG = "JETPACK_POWERED_OVERLAY_FULL_SCREEN_FRAGMENT"
         private const val OVERLAY_SCREEN_TYPE = "KEY_JETPACK_OVERLAY_SCREEN"
 
-        @JvmStatic
-        fun newInstance(
+        @JvmStatic fun newInstance(
             jetpackFeatureOverlayScreenType: JetpackFeatureOverlayScreenType?
         ) = JetpackFeatureFullScreenOverlayFragment().apply {
             arguments = Bundle().apply {

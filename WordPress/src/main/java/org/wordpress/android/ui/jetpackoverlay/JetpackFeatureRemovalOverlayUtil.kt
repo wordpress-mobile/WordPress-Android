@@ -16,7 +16,6 @@ import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.SiteUtilsWrapper
-import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import java.util.Date
 import javax.inject.Inject
 
@@ -26,7 +25,6 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
     private val siteUtilsWrapper: SiteUtilsWrapper,
     private val buildConfigWrapper: BuildConfigWrapper,
-    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     private val dateTimeUtilsWrapper: DateTimeUtilsWrapper
 ) {
     fun shouldShowFeatureSpecificJetpackOverlay(feature: JetpackOverlayConnectedFeature): Boolean {
@@ -40,9 +38,9 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
     private fun isInFeatureSpecificRemovalPhase(): Boolean {
         return jetpackFeatureRemovalPhaseHelper.getCurrentPhase() != null &&
                 when (jetpackFeatureRemovalPhaseHelper.getCurrentPhase()) {
-                    null -> return false
-                    PhaseOne -> return true
-                    PhaseTwo, PhaseThree, PhaseFour, PhaseNewUsers -> return false
+                    null -> false
+                    PhaseOne -> true
+                    PhaseTwo, PhaseThree, PhaseFour, PhaseNewUsers -> false
                 }
     }
 
@@ -62,9 +60,7 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
         val overlayShownDate = jetpackFeatureOverlayShownTracker.getFeatureOverlayShownTimeStamp(feature, phase)
                 ?.let { Date(it) } ?: return true
         val daysPastOverlayShown = dateTimeUtilsWrapper.daysBetween(overlayShownDate, Date(System.currentTimeMillis()))
-        if (daysPastOverlayShown >= PhaseOne.featureSpecificOverlayFrequency)
-            return true
-        return false
+        return daysPastOverlayShown >= PhaseOne.featureSpecificOverlayFrequency
     }
 
     private fun hasExceededGlobalOverlayFrequency(phase: JetpackFeatureRemovalOverlayPhase): Boolean {
@@ -72,9 +68,7 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
         val overlayShownDate = jetpackFeatureOverlayShownTracker.getEarliestOverlayShownTime(phase)
                 ?.let { Date(it) } ?: return true
         val daysPastOverlayShown = dateTimeUtilsWrapper.daysBetween(overlayShownDate, Date(System.currentTimeMillis()))
-        if (daysPastOverlayShown >= PhaseOne.globalOverlayFrequency)
-            return true
-        return false
+        return daysPastOverlayShown >= PhaseOne.globalOverlayFrequency
     }
 
     private fun isWpComSite(): Boolean {

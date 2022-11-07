@@ -220,13 +220,17 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
                     .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
         }
 
+        observeJetpackOverlayEvent()
+
+        viewModel.start()
+    }
+
+    private fun observeJetpackOverlayEvent() {
         viewModel.showJetpackOverlay.observeEvent(viewLifecycleOwner) {
             JetpackFeatureFullScreenOverlayFragment
                     .newInstance(JetpackFeatureOverlayScreenType.READER)
                     .show(childFragmentManager, JetpackFeatureFullScreenOverlayFragment.TAG)
         }
-
-        viewModel.start()
     }
 
     private fun ReaderFragmentLayoutBinding.showSnackbar(holder: SnackbarMessageHolder) {

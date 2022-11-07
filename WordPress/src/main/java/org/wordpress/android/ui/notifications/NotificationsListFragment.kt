@@ -39,7 +39,6 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayFr
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureOverlayScreenType
 import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType
-import org.wordpress.android.ui.main.WPMainNavigationView.PageType.MY_SITE
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment
 import org.wordpress.android.ui.notifications.NotificationEvents.NotificationsUnseenStatus
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter.FILTERS
