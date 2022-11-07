@@ -80,7 +80,14 @@ abstract class PublishSettingsFragment : Fragment() {
 
         observerOnNotificationAdded()
 
-        viewModel.onAddToCalendar.observeEvent(viewLifecycleOwner, { calendarEvent ->
+        observeOnAddToCalendar()
+
+        viewModel.start(getPostRepository())
+        return rootView
+    }
+
+    private fun observeOnAddToCalendar() {
+        viewModel.onAddToCalendar.observeEvent(viewLifecycleOwner) { calendarEvent ->
             val calIntent = Intent(Intent.ACTION_INSERT)
             calIntent.data = Events.CONTENT_URI
             calIntent.type = "vnd.android.cursor.item/event"
@@ -88,9 +95,7 @@ abstract class PublishSettingsFragment : Fragment() {
             calIntent.putExtra(Events.DESCRIPTION, calendarEvent.description)
             calIntent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, calendarEvent.startTime)
             startActivity(calIntent)
-        })
-        viewModel.start(getPostRepository())
-        return rootView
+        }
     }
 
     private fun observerOnNotificationAdded() {
