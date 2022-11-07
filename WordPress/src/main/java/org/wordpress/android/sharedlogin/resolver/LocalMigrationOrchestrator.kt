@@ -2,11 +2,22 @@ package org.wordpress.android.sharedlogin.resolver
 
 import android.content.Intent
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.generated.PostActionBuilder
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.localcontentmigration.LocalContentEntity.AccessToken
 import org.wordpress.android.localcontentmigration.LocalContentEntityData.AccessTokenData
+import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.localcontentmigration.LocalContentEntity.EligibilityStatus
+import org.wordpress.android.localcontentmigration.LocalContentEntity.Post
+import org.wordpress.android.localcontentmigration.LocalContentEntity.Site
+import org.wordpress.android.localcontentmigration.LocalContentEntityData.EligibilityStatusData
+import org.wordpress.android.localcontentmigration.LocalContentEntityData.PostData
+import org.wordpress.android.localcontentmigration.LocalContentEntityData.PostsData
+import org.wordpress.android.localcontentmigration.LocalContentEntityData.SitesData
 import org.wordpress.android.localcontentmigration.LocalMigrationContentResolver
 import org.wordpress.android.reader.savedposts.resolver.ReaderSavedPostsResolver
+import org.wordpress.android.resolver.ResolverUtility
 import org.wordpress.android.sharedlogin.JetpackSharedLoginFlag
 import org.wordpress.android.sharedlogin.SharedLoginAnalyticsTracker
 import org.wordpress.android.sharedlogin.SharedLoginAnalyticsTracker.ErrorType
@@ -28,46 +39,80 @@ class LocalMigrationOrchestrator @Inject constructor(
     private val userFlagsResolver: UserFlagsResolver,
     private val readerSavedPostsResolver: ReaderSavedPostsResolver,
     private val localMigrationContentResolver: LocalMigrationContentResolver,
+    private val resolverUtility: ResolverUtility,
+    private val siteStore: SiteStore,
 ) {
     fun tryLocalMigration() {
         val isFeatureFlagEnabled = jetpackSharedLoginFlag.isEnabled()
+
         if (!isFeatureFlagEnabled) {
             return
         }
-        val isAlreadyLoggedIn = accountStore.hasAccessToken()
+
+        val hasSelfHostedSites = siteStore.hasSite() && siteStore.sites.any { !it.isUsingWpComRestApi }
+        val isAlreadyLoggedIn = accountStore.hasAccessToken() || hasSelfHostedSites
         val isFirstTry = appPrefsWrapper.getIsFirstTrySharedLoginJetpack()
+
         if (isAlreadyLoggedIn || !isFirstTry) {
             return
         }
+
         sharedLoginAnalyticsTracker.trackLoginStart()
         appPrefsWrapper.saveIsFirstTrySharedLoginJetpack(false)
         val (accessToken) = localMigrationContentResolver.getDataForEntityType<AccessTokenData>(AccessToken)
-
+        val (sites) = localMigrationContentResolver.getDataForEntityType<SitesData >(Site)
+        val hasLocalSelfHostedSites = sites.any { !it.isUsingWpComRestApi }
         @Suppress("ForbiddenComment")
         // TODO: Unify error tracking for resolver / provider errors too
-        if (accessToken.isNotEmpty()) {
-            sharedLoginAnalyticsTracker.trackLoginSuccess()
-            userFlagsResolver.tryGetUserFlags(
-                    {
-                        readerSavedPostsResolver.tryGetReaderSavedPosts(
-                                {
-                                    localMigrationContentResolver.migrateLocalContent()
-                                    dispatchUpdateAccessToken(accessToken)
-                                    reloadMainScreen()
-                                },
-                                {
-                                    reloadMainScreen()
-                                }
-                        )
-                    },
-                    {
-                        reloadMainScreen()
-                    }
-            )
+        if (accessToken.isNotEmpty() || hasLocalSelfHostedSites) {
+            runFlow(accessToken, sites)
         } else {
             sharedLoginAnalyticsTracker.trackLoginFailed(ErrorType.WPNotLoggedInError)
         }
     }
+
+    private fun runFlow(accessToken: String, sites: List<SiteModel>) {
+        val hasSites = sites.isNotEmpty()
+
+        if (hasSites) {
+            resolverUtility.copySitesWithIndexes(sites)
+        }
+
+        sharedLoginAnalyticsTracker.trackLoginSuccess()
+        userFlagsResolver.tryGetUserFlags(
+                {
+                    readerSavedPostsResolver.tryGetReaderSavedPosts(
+                            {
+                                migrateLocalContent()
+                                dispatchUpdateAccessToken(accessToken)
+                                reloadMainScreen()
+                            },
+                            {
+                                reloadMainScreen()
+                            }
+                    )
+                },
+                {
+                    reloadMainScreen()
+                }
+        )
+    }
+
+    fun migrateLocalContent() {
+        val (isEligible) = localMigrationContentResolver.getDataForEntityType<EligibilityStatusData>(EligibilityStatus)
+        @Suppress("ForbiddenComment")
+        // TODO: do something more graceful here?
+        if (!isEligible) return
+        val (sites) = localMigrationContentResolver.getDataForEntityType<SitesData >(Site)
+        for (site in sites) {
+            val posts: PostsData = localMigrationContentResolver.getDataForEntityType(Post, site.id)
+            for (localPostId in posts.localIds) {
+                val postData: PostData = localMigrationContentResolver.getDataForEntityType(Post, site.id, localPostId)
+                dispatcher.dispatch(PostActionBuilder.newUpdatePostAction(postData.post))
+            }
+        }
+    }
+
 
     private fun dispatchUpdateAccessToken(accessToken: String) {
         dispatcher.dispatch(
