@@ -36,9 +36,9 @@ class JetpackFeatureOverlayContentBuilder @Inject constructor() {
     private fun getStateForPhaseOneStats(rtl: Boolean): JetpackFeatureOverlayContent {
         return JetpackFeatureOverlayContent(
                 illustration = if (rtl) R.raw.jp_stats_rtl else R.raw.jp_stats_left,
-                title = R.string.wp_jetpack_powered_overlay_phase_one_title_stats,
-                caption = R.string.wp_jetpack_powered_overlay_phase_one_description_stats,
-                primaryButtonText = R.string.wp_jetpack_overlay_switch_to_new_jetpack_app,
+                title = R.string.wp_jetpack_feature_removal_overlay_phase_one_title_stats,
+                caption = R.string.wp_jetpack_feature_removal_overlay_phase_one_description_stats,
+                primaryButtonText = R.string.wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app,
                 secondaryButtonText = R.string.wp_jetpack_continue_to_stats
         )
     }
@@ -46,9 +46,9 @@ class JetpackFeatureOverlayContentBuilder @Inject constructor() {
     private fun getStateForPhaseOneReader(rtl: Boolean): JetpackFeatureOverlayContent {
         return JetpackFeatureOverlayContent(
                 illustration = if (rtl) R.raw.jp_reader_rtl else R.raw.jp_reader_left,
-                title = R.string.wp_jetpack_powered_overlay_phase_one_title_reader,
-                caption = R.string.wp_jetpack_powered_overlay_phase_one_description_reader,
-                primaryButtonText = R.string.wp_jetpack_overlay_switch_to_new_jetpack_app,
+                title = R.string.wp_jetpack_feature_removal_overlay_phase_one_title_reader,
+                caption = R.string.wp_jetpack_feature_removal_overlay_phase_one_description_reader,
+                primaryButtonText = R.string.wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app,
                 secondaryButtonText = R.string.wp_jetpack_continue_to_reader
         )
     }
@@ -56,9 +56,9 @@ class JetpackFeatureOverlayContentBuilder @Inject constructor() {
     private fun getStateForPhaseOneNotifications(rtl: Boolean): JetpackFeatureOverlayContent {
         return JetpackFeatureOverlayContent(
                 illustration = if (rtl) R.raw.jp_notifications_rtl else R.raw.jp_notifications_left,
-                title = R.string.wp_jetpack_powered_overlay_phase_one_title_notifications,
-                caption = R.string.wp_jetpack_powered_overlay_phase_one_description_notifications,
-                primaryButtonText = R.string.wp_jetpack_overlay_switch_to_new_jetpack_app,
+                title = R.string.wp_jetpack_feature_removal_overlay_phase_one_title_notifications,
+                caption = R.string.wp_jetpack_feature_removal_overlay_phase_one_description_notifications,
+                primaryButtonText = R.string.wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app,
                 secondaryButtonText = R.string.wp_jetpack_continue_to_notifications
         )
     }
