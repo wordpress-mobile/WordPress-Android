@@ -85,23 +85,7 @@ class PrepublishingHomeViewModel @Inject constructor(
             if (editPostRepository.status != PostStatus.PRIVATE) {
                 showPublicPost(editPostRepository)
             } else {
-                add(
-                        HomeUiState(
-                                actionType = PUBLISH,
-                                actionResult = editPostRepository.getEditablePost()
-                                        ?.let {
-                                            UiStringText(
-                                                    postSettingsUtils.getPublishDateLabel(
-                                                            it
-                                                    )
-                                            )
-                                        },
-                                actionTypeColor = R.color.prepublishing_action_type_disabled_color,
-                                actionResultColor = R.color.prepublishing_action_result_disabled_color,
-                                actionClickable = false,
-                                onActionClicked = null
-                        )
-                )
+                showPrivatePost(editPostRepository)
             }
 
             if (!editPostRepository.isPage) {
@@ -150,6 +134,28 @@ class PrepublishingHomeViewModel @Inject constructor(
         }.toList()
 
         _uiState.postValue(prepublishingHomeUiStateList)
+    }
+
+    private fun MutableList<PrepublishingHomeItemUiState>.showPrivatePost(
+        editPostRepository: EditPostRepository
+    ) {
+        add(
+                HomeUiState(
+                        actionType = PUBLISH,
+                        actionResult = editPostRepository.getEditablePost()
+                                ?.let {
+                                    UiStringText(
+                                            postSettingsUtils.getPublishDateLabel(
+                                                    it
+                                            )
+                                    )
+                                },
+                        actionTypeColor = R.color.prepublishing_action_type_disabled_color,
+                        actionResultColor = R.color.prepublishing_action_result_disabled_color,
+                        actionClickable = false,
+                        onActionClicked = null
+                )
+        )
     }
 
     private fun MutableList<PrepublishingHomeItemUiState>.showPublicPost(
