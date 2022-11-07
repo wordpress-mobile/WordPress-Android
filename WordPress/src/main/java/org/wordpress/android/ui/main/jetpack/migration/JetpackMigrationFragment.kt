@@ -22,6 +22,7 @@ import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Content
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Loading
 import org.wordpress.android.ui.main.jetpack.migration.compose.state.LoadingState
+import org.wordpress.android.ui.main.jetpack.migration.compose.state.NotificationsStep
 import org.wordpress.android.ui.main.jetpack.migration.compose.state.WelcomeStep
 import javax.inject.Inject
 
@@ -73,6 +74,7 @@ private fun JetpackMigrationScreen(viewModel: JetpackMigrationViewModel = viewMo
 
         when (val state = uiState) {
             is Content.Welcome -> WelcomeStep(state)
+            is Content.Notifications -> NotificationsStep(state)
             is Loading -> LoadingState()
         }
     }
