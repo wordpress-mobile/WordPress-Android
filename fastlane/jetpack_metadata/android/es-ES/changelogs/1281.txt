@@ -1,4 +1,0 @@
-20.9:
-- Ahora, los flujos “Conoce tu aplicación” permanecen en la pantalla al girar el dispositivo.
-- Los títulos largos se muestran adecuadamente en las tarjetas de estadísticas sin que aparezcan cortados.
-- Hemos añadido la tecla Intro a los extractos de las entradas para facilitar la tarea de introducir saltos de línea.
