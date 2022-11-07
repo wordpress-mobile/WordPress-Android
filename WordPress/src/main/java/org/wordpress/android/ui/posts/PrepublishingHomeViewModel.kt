@@ -83,21 +83,7 @@ class PrepublishingHomeViewModel @Inject constructor(
             }
 
             if (editPostRepository.status != PostStatus.PRIVATE) {
-                add(
-                        HomeUiState(
-                                actionType = PUBLISH,
-                                actionResult = editPostRepository.getEditablePost()
-                                        ?.let {
-                                            UiStringText(
-                                                    postSettingsUtils.getPublishDateLabel(
-                                                            it
-                                                    )
-                                            )
-                                        },
-                                actionClickable = true,
-                                onActionClicked = ::onActionClicked
-                        )
-                )
+                showPublicPost(editPostRepository)
             } else {
                 add(
                         HomeUiState(
@@ -164,6 +150,26 @@ class PrepublishingHomeViewModel @Inject constructor(
         }.toList()
 
         _uiState.postValue(prepublishingHomeUiStateList)
+    }
+
+    private fun MutableList<PrepublishingHomeItemUiState>.showPublicPost(
+        editPostRepository: EditPostRepository
+    ) {
+        add(
+                HomeUiState(
+                        actionType = PUBLISH,
+                        actionResult = editPostRepository.getEditablePost()
+                                ?.let {
+                                    UiStringText(
+                                            postSettingsUtils.getPublishDateLabel(
+                                                    it
+                                            )
+                                    )
+                                },
+                        actionClickable = true,
+                        onActionClicked = ::onActionClicked
+                )
+        )
     }
 
     private fun onStoryTitleChanged(storyTitle: String) {
