@@ -57,12 +57,13 @@ class JetpackMigrationViewModel @Inject constructor(
         )
     }
 
-    @Suppress("ForbiddenComment")
+    @Suppress("ForbiddenComment", "MagicNumber")
     private fun onContinueClicked() {
         (_uiState.value as? Content.Welcome)?.let {
             // TODO: Update this to trigger data migration logic after processing uiState is emitted:
             viewModelScope.launch {
                 _uiState.value = it.copy(isProcessing = true)
+                // TODO: Remove this temporary delay
                 delay(5000)
                 _uiState.value = it.copy(isProcessing = false)
                 // TODO: navigate to notifications screen
