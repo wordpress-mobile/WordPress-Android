@@ -13,10 +13,14 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
-import org.wordpress.android.databinding.JetpackPoweredOverlayBinding
+import org.wordpress.android.databinding.JetpackFeatureRemovalOverlayBinding
 import org.wordpress.android.ui.ActivityLauncherWrapper
+import org.wordpress.android.ui.ActivityLauncherWrapper.Companion.JETPACK_PACKAGE_NAME
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureOverlayActions.DismissDialog
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureOverlayActions.OpenPlayStore
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType.MY_SITE
+import org.wordpress.android.util.extensions.exhaustive
 import org.wordpress.android.util.extensions.setVisible
 import javax.inject.Inject
 
@@ -25,7 +29,7 @@ class JetpackFeatureFullScreenOverlayFragment : BottomSheetDialogFragment() {
     @Inject lateinit var activityLauncherWrapper: ActivityLauncherWrapper
     private val viewModel: JetpackFeatureFullScreenOverlayViewModel by viewModels()
 
-    private var _binding: JetpackPoweredOverlayBinding? = null
+    private var _binding: JetpackFeatureRemovalOverlayBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -33,7 +37,7 @@ class JetpackFeatureFullScreenOverlayFragment : BottomSheetDialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = JetpackPoweredOverlayBinding.inflate(inflater, container, false)
+        _binding = JetpackFeatureRemovalOverlayBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -75,18 +79,38 @@ class JetpackFeatureFullScreenOverlayFragment : BottomSheetDialogFragment() {
         return view.layoutDirection == LAYOUT_DIRECTION_RTL
     }
 
-    private fun JetpackPoweredOverlayBinding.setupObservers() {
+    private fun JetpackFeatureRemovalOverlayBinding.setupObservers() {
         viewModel.uiState.observe(viewLifecycleOwner) {
             renderUiState(it)
         }
+
+        viewModel.action.observe(viewLifecycleOwner) { action ->
+            when (action) {
+                is OpenPlayStore -> {
+                    dismiss()
+                    activity?.let {
+                        activityLauncherWrapper.openPlayStoreLink(it, JETPACK_PACKAGE_NAME)
+                    }
+                }
+                is DismissDialog -> {
+                    dismiss()
+                }
+            }.exhaustive
+        }
     }
 
-    private fun JetpackPoweredOverlayBinding.renderUiState(jetpackPoweredOverlayUIState: JetpackFeatureOverlayUIState) {
+    private fun JetpackFeatureRemovalOverlayBinding.renderUiState(jetpackPoweredOverlayUIState: JetpackFeatureOverlayUIState) {
         updateVisibility(jetpackPoweredOverlayUIState.componentVisibility)
         updateContent(jetpackPoweredOverlayUIState.overlayContent)
+        setClickListener(jetpackPoweredOverlayUIState.componentVisibility.secondaryButton)
     }
 
-    private fun JetpackPoweredOverlayBinding.updateVisibility(componentVisibility: JetpackFeatureOverlayComponentVisibility) {
+    private fun JetpackFeatureRemovalOverlayBinding.setClickListener(secondaryButtonVisible: Boolean) {
+        primaryButton.setOnClickListener { viewModel.openJetpackAppDownloadLink() }
+        if (secondaryButtonVisible) secondaryButton.setOnClickListener { viewModel.dismissBottomSheet() }
+    }
+
+    private fun JetpackFeatureRemovalOverlayBinding.updateVisibility(componentVisibility: JetpackFeatureOverlayComponentVisibility) {
         componentVisibility.let {
             illustrationView.setVisible(it.illustration)
             title.setVisible(it.title)
@@ -96,7 +120,7 @@ class JetpackFeatureFullScreenOverlayFragment : BottomSheetDialogFragment() {
         }
     }
 
-    private fun JetpackPoweredOverlayBinding.updateContent(overlayContent: JetpackFeatureOverlayContent) {
+    private fun JetpackFeatureRemovalOverlayBinding.updateContent(overlayContent: JetpackFeatureOverlayContent) {
         overlayContent.let {
             illustrationView.setAnimation(it.illustration)
             illustrationView.playAnimation()

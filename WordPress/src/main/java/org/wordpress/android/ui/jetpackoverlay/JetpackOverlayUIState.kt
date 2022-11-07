@@ -26,3 +26,8 @@ class JetpackFeatureOverlayUIState(
     val overlayContent: JetpackFeatureOverlayContent
 )
 
+sealed class JetpackFeatureOverlayActions {
+    object OpenPlayStore : JetpackFeatureOverlayActions()
+    object DismissDialog : JetpackFeatureOverlayActions()
+}
+
