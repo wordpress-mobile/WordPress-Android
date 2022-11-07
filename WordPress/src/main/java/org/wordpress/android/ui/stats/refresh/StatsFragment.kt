@@ -21,6 +21,7 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.StatsFragmentBinding
 import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayFragment
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureOverlayScreenType
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType.MY_SITE
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
@@ -148,7 +149,7 @@ class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializ
 
         viewModel.showJetpackOverlay.observeEvent(viewLifecycleOwner) {
             JetpackFeatureFullScreenOverlayFragment
-                    .newInstance(MY_SITE)
+                    .newInstance(JetpackFeatureOverlayScreenType.STATS)
                     .show(childFragmentManager, JetpackFeatureFullScreenOverlayFragment.TAG)
         }
     }

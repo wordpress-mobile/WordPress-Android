@@ -21,7 +21,7 @@ import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
-import org.wordpress.android.ui.jetpackoverlay.JetpackOverlayConnectedFeature.Reader
+import org.wordpress.android.ui.jetpackoverlay.JetpackOverlayConnectedFeature.READER
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
@@ -108,7 +108,7 @@ class ReaderViewModel @Inject constructor(
         if (initialized) return
         loadTabs()
         if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) showJetpackPoweredBottomSheet()
-        if(jetpackFeatureRemovalOverlayUtil.shouldShowFeatureSpecificJetpackOverlay(Reader)) showJetpackOverlay()
+        if(jetpackFeatureRemovalOverlayUtil.shouldShowFeatureSpecificJetpackOverlay(READER)) showJetpackOverlay()
     }
 
     private fun showJetpackOverlay() {

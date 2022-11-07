@@ -25,7 +25,7 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.store.StatsStore
 import org.wordpress.android.test
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
-import org.wordpress.android.ui.jetpackoverlay.JetpackOverlayConnectedFeature.Stats
+import org.wordpress.android.ui.jetpackoverlay.JetpackOverlayConnectedFeature.STATS
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.stats.refresh.StatsViewModel.StatsModuleUiModel
@@ -268,7 +268,7 @@ class StatsViewModelTest : BaseUnitTest() {
         viewModel.showJetpackOverlay.observeForever {
             showJetpackOverlayEvent.add(it)
         }
-        whenever(jetpackFeatureRemovalOverlayUtil.shouldShowFeatureSpecificJetpackOverlay(Stats)).thenReturn(false)
+        whenever(jetpackFeatureRemovalOverlayUtil.shouldShowFeatureSpecificJetpackOverlay(STATS)).thenReturn(false)
 
         startViewModel()
 
@@ -281,7 +281,7 @@ class StatsViewModelTest : BaseUnitTest() {
         viewModel.showJetpackOverlay.observeForever {
             showJetpackOverlayEvent.add(it)
         }
-        whenever(jetpackFeatureRemovalOverlayUtil.shouldShowFeatureSpecificJetpackOverlay(Stats)).thenReturn(true)
+        whenever(jetpackFeatureRemovalOverlayUtil.shouldShowFeatureSpecificJetpackOverlay(STATS)).thenReturn(true)
 
         startViewModel()
 

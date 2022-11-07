@@ -28,7 +28,7 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.push.NotificationType
 import org.wordpress.android.push.NotificationsProcessingService.ARG_NOTIFICATION_TYPE
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
-import org.wordpress.android.ui.jetpackoverlay.JetpackOverlayConnectedFeature.Stats
+import org.wordpress.android.ui.jetpackoverlay.JetpackOverlayConnectedFeature.STATS
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.stats.StatsTimeframe
@@ -208,7 +208,7 @@ class StatsViewModel
 
         if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) showJetpackPoweredBottomSheet()
 
-        if(jetpackFeatureRemovalOverlayUtil.shouldShowFeatureSpecificJetpackOverlay(Stats))
+        if(jetpackFeatureRemovalOverlayUtil.shouldShowFeatureSpecificJetpackOverlay(STATS))
             showJetpackOverlay()
     }
 

@@ -6,7 +6,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
-import org.wordpress.android.ui.jetpackoverlay.JetpackOverlayConnectedFeature.Notification
+import org.wordpress.android.ui.jetpackoverlay.JetpackOverlayConnectedFeature.NOTIFICATIONS
 import org.wordpress.android.util.JetpackBrandingUtils
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -29,7 +29,7 @@ class NotificationsListViewModel@Inject constructor(
     init {
         if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) showJetpackPoweredBottomSheet()
 
-        if(jetpackFeatureRemovalOverlayUtil.shouldShowFeatureSpecificJetpackOverlay(Notification))
+        if(jetpackFeatureRemovalOverlayUtil.shouldShowFeatureSpecificJetpackOverlay(NOTIFICATIONS))
             showJetpackOverlay()
     }
 

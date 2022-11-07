@@ -1,8 +1,12 @@
 package org.wordpress.android.ui.jetpackoverlay
 
-import org.wordpress.android.ui.jetpackoverlay.JETPACKFEATUREOVERLAYPHASE.PHASE_ONE
-import org.wordpress.android.ui.jetpackoverlay.JETPACKFEATUREOVERLAYPHASE.PHASE_THREE
-import org.wordpress.android.ui.jetpackoverlay.JETPACKFEATUREOVERLAYPHASE.PHASE_TWO
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayPhase.PHASE_ONE
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayPhase.PHASE_THREE
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayPhase.PHASE_TWO
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureOverlayScreenType.NOTIFICATIONS
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureOverlayScreenType.READER
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureOverlayScreenType.SITE_CREATION
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureOverlayScreenType.STATS
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseFour
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseNewUsers
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseOne
@@ -27,17 +31,17 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
 ) {
     fun shouldShowFeatureSpecificJetpackOverlay(feature: JetpackOverlayConnectedFeature): Boolean {
         return !buildConfigWrapper.isJetpackApp && isWpComSite() &&
-                isInFeatureSpecificRemovalPhase(feature)
+                isInFeatureSpecificRemovalPhase() && hasExceededOverlayFrequency(
+                feature,
+                getCurrentPhasePreference()!!
+        )
     }
 
-    private fun isInFeatureSpecificRemovalPhase(feature: JetpackOverlayConnectedFeature): Boolean {
+    private fun isInFeatureSpecificRemovalPhase(): Boolean {
         return jetpackFeatureRemovalPhaseHelper.getCurrentPhase() != null &&
                 when (jetpackFeatureRemovalPhaseHelper.getCurrentPhase()) {
                     null -> return false
-                    PhaseOne, PhaseTwo, PhaseThree -> hasExceededOverlayFrequency(
-                            feature,
-                            getCurrentPhasePreference()!!
-                    )
+                    PhaseOne, PhaseTwo, PhaseThree -> return true
                     PhaseFour -> return false
                     PhaseNewUsers -> return false
                 }
@@ -45,7 +49,7 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
 
     private fun hasExceededOverlayFrequency(
         feature: JetpackOverlayConnectedFeature,
-        currentPhasePreference: JETPACKFEATUREOVERLAYPHASE
+        currentPhasePreference: JetpackFeatureRemovalOverlayPhase
     ): Boolean {
         return (hasExceededFeatureSpecificOverlayFrequency(feature, currentPhasePreference) ||
                 hasExceededGlobalOverlayFrequency(currentPhasePreference))
@@ -53,7 +57,7 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
 
     private fun hasExceededFeatureSpecificOverlayFrequency(
         feature: JetpackOverlayConnectedFeature,
-        phase: JETPACKFEATUREOVERLAYPHASE
+        phase: JetpackFeatureRemovalOverlayPhase
     ): Boolean {
         // Feature Overlay is never shown
         val overlayShownDate = jetpackFeatureOverlayShownTracker.getFeatureOverlayShownTimeStamp(feature, phase)
@@ -64,7 +68,7 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
         return false
     }
 
-    private fun hasExceededGlobalOverlayFrequency(phase: JETPACKFEATUREOVERLAYPHASE): Boolean {
+    private fun hasExceededGlobalOverlayFrequency(phase: JetpackFeatureRemovalOverlayPhase): Boolean {
         // Overlay is never shown
         val overlayShownDate = jetpackFeatureOverlayShownTracker.getEarliestOverlayShownTime(phase)
                 ?.let { Date(it) } ?: return true
@@ -79,12 +83,35 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
         return selectedSite != null && siteUtilsWrapper.isAccessedViaWPComRest(selectedSite)
     }
 
-    private fun getCurrentPhasePreference(): JETPACKFEATUREOVERLAYPHASE? {
+    private fun getCurrentPhasePreference(): JetpackFeatureRemovalOverlayPhase? {
         return when (jetpackFeatureRemovalPhaseHelper.getCurrentPhase()) {
             PhaseOne -> PHASE_ONE
             PhaseTwo -> PHASE_TWO
             PhaseThree -> PHASE_THREE
             else -> null
         }
+    }
+
+    private fun onFeatureSpecificOverlayShown(feature: JetpackOverlayConnectedFeature) {
+        if (isInFeatureSpecificRemovalPhase())
+            jetpackFeatureOverlayShownTracker.setFeatureOverlayShownTimeStamp(feature, getCurrentPhasePreference()!!)
+    }
+
+    fun onOverlayShown(overlayScreenType: JetpackFeatureOverlayScreenType?) {
+        overlayScreenType?.let {
+            when (it) {
+                STATS -> onFeatureSpecificOverlayShown(JetpackOverlayConnectedFeature.STATS)
+                NOTIFICATIONS -> onFeatureSpecificOverlayShown(JetpackOverlayConnectedFeature.NOTIFICATIONS)
+                READER -> onFeatureSpecificOverlayShown(JetpackOverlayConnectedFeature.READER)
+                SITE_CREATION -> TODO()
+            }
+        }
+    }
+
+    enum class JetpackFeatureOverlayScreenType {
+        STATS,
+        NOTIFICATIONS,
+        READER,
+        SITE_CREATION
     }
 }

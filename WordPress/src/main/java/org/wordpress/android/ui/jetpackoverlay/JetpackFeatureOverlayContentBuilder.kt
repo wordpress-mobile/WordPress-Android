@@ -1,10 +1,8 @@
 package org.wordpress.android.ui.jetpackoverlay
 
 import org.wordpress.android.R
-import org.wordpress.android.ui.main.WPMainNavigationView.PageType
-import org.wordpress.android.ui.main.WPMainNavigationView.PageType.MY_SITE
-import org.wordpress.android.ui.main.WPMainNavigationView.PageType.NOTIFS
-import org.wordpress.android.ui.main.WPMainNavigationView.PageType.READER
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureOverlayScreenType
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureOverlayScreenType.SITE_CREATION
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseFour
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseNewUsers
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseOne
@@ -15,20 +13,23 @@ import javax.inject.Inject
 class JetpackFeatureOverlayContentBuilder @Inject constructor() {
     fun build(params: JetpackFeatureOverlayContentBuilderParams): JetpackFeatureOverlayUIState {
         return when (params.currentPhase) {
-            is PhaseOne -> getStateForPhaseOne(params)
+            is PhaseOne -> getStateForPhaseOne(params,params.feature!!)
             PhaseTwo -> TODO()
             PhaseThree -> TODO()
             PhaseFour -> TODO()
             PhaseNewUsers -> TODO()
         }
     }
-
-    private fun getStateForPhaseOne(params: JetpackFeatureOverlayContentBuilderParams): JetpackFeatureOverlayUIState {
+    private fun getStateForPhaseOne(
+        params: JetpackFeatureOverlayContentBuilderParams,
+        feature: JetpackFeatureOverlayScreenType
+    ): JetpackFeatureOverlayUIState {
         val componentVisibility = JetpackFeatureOverlayComponentVisibility.PhaseOne()
-        val content = when (params.pageType) {
-            MY_SITE -> getStateForPhaseOneStats(params.isRtl)
-            READER -> getStateForPhaseOneReader(params.isRtl)
-            NOTIFS -> getStateForPhaseOneNotifications(params.isRtl)
+        val content = when (feature) {
+            JetpackFeatureOverlayScreenType.STATS -> getStateForPhaseOneStats(params.isRtl)
+            JetpackFeatureOverlayScreenType.NOTIFICATIONS -> getStateForPhaseOneNotifications(params.isRtl)
+            JetpackFeatureOverlayScreenType.READER -> getStateForPhaseOneReader(params.isRtl)
+            SITE_CREATION -> TODO()
         }
         return JetpackFeatureOverlayUIState(componentVisibility, content)
     }
@@ -67,6 +68,6 @@ class JetpackFeatureOverlayContentBuilder @Inject constructor() {
 data class JetpackFeatureOverlayContentBuilderParams(
     val currentPhase: JetpackFeatureRemovalPhase,
     val isRtl: Boolean = true,
-    val pageType: PageType
+    val feature: JetpackFeatureOverlayScreenType?
 )
 

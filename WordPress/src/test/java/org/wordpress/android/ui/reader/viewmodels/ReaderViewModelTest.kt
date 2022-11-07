@@ -28,8 +28,8 @@ import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.models.ReaderTagType
 import org.wordpress.android.test
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
-import org.wordpress.android.ui.jetpackoverlay.JetpackOverlayConnectedFeature.Reader
-import org.wordpress.android.ui.jetpackoverlay.JetpackOverlayConnectedFeature.Stats
+import org.wordpress.android.ui.jetpackoverlay.JetpackOverlayConnectedFeature.READER
+import org.wordpress.android.ui.jetpackoverlay.JetpackOverlayConnectedFeature.STATS
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
@@ -499,7 +499,7 @@ class ReaderViewModelTest {
         viewModel.showJetpackOverlay.observeForever {
             showJetpackOverlayEvent.add(it)
         }
-        whenever(jetpackFeatureRemovalOverlayUtil.shouldShowFeatureSpecificJetpackOverlay(Reader)).thenReturn(false)
+        whenever(jetpackFeatureRemovalOverlayUtil.shouldShowFeatureSpecificJetpackOverlay(READER)).thenReturn(false)
 
         viewModel.start()
 
@@ -512,7 +512,7 @@ class ReaderViewModelTest {
         viewModel.showJetpackOverlay.observeForever {
             showJetpackOverlayEvent.add(it)
         }
-        whenever(jetpackFeatureRemovalOverlayUtil.shouldShowFeatureSpecificJetpackOverlay(Reader)).thenReturn(true)
+        whenever(jetpackFeatureRemovalOverlayUtil.shouldShowFeatureSpecificJetpackOverlay(READER)).thenReturn(true)
 
         viewModel.start()
 

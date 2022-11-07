@@ -18,6 +18,7 @@ import org.wordpress.android.ui.ActivityLauncherWrapper
 import org.wordpress.android.ui.ActivityLauncherWrapper.Companion.JETPACK_PACKAGE_NAME
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureOverlayActions.DismissDialog
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureOverlayActions.OpenPlayStore
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureOverlayScreenType
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType.MY_SITE
 import org.wordpress.android.util.extensions.exhaustive
@@ -71,7 +72,8 @@ class JetpackFeatureFullScreenOverlayFragment : BottomSheetDialogFragment() {
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
     }
 
-    private fun getSiteScreen() = arguments?.getSerializable(KEY_SITE_SCREEN) as? PageType ?: MY_SITE
+    private fun getSiteScreen() =
+            arguments?.getSerializable(OVERLAY_SCREEN_TYPE) as JetpackFeatureOverlayScreenType
 
     private fun rtlLayout(view: View): Boolean {
         val config: Configuration = resources.configuration
@@ -138,14 +140,14 @@ class JetpackFeatureFullScreenOverlayFragment : BottomSheetDialogFragment() {
 
     companion object {
         const val TAG = "JETPACK_POWERED_OVERLAY_FULL_SCREEN_FRAGMENT"
-        private const val KEY_SITE_SCREEN = "KEY_SITE_SCREEN"
+        private const val OVERLAY_SCREEN_TYPE = "KEY_JETPACK_OVERLAY_SCREEN"
 
         @JvmStatic
         fun newInstance(
-            pageType: PageType = MY_SITE
+            jetpackFeatureOverlayScreenType: JetpackFeatureOverlayScreenType?
         ) = JetpackFeatureFullScreenOverlayFragment().apply {
             arguments = Bundle().apply {
-                putSerializable(KEY_SITE_SCREEN, pageType)
+                putSerializable(OVERLAY_SCREEN_TYPE, jetpackFeatureOverlayScreenType)
             }
         }
     }

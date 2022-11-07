@@ -5,9 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseOne
-import org.wordpress.android.ui.main.WPMainNavigationView.PageType
-import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredDialogAction
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureOverlayScreenType
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
@@ -16,7 +14,8 @@ import javax.inject.Named
 class JetpackFeatureFullScreenOverlayViewModel @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     private val jetpackFeatureOverlayContentBuilder: JetpackFeatureOverlayContentBuilder,
-    private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
+    private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper,
+    private val jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil
 ) : ScopedViewModel(mainDispatcher) {
     private val _uiState = MutableLiveData<JetpackFeatureOverlayUIState>()
     val uiState: LiveData<JetpackFeatureOverlayUIState> = _uiState
@@ -32,13 +31,14 @@ class JetpackFeatureFullScreenOverlayViewModel @Inject constructor(
         _action.value = JetpackFeatureOverlayActions.DismissDialog
     }
 
-    fun init(pageType: PageType, rtlLayout: Boolean) {
+    fun init(overlayScreenType: JetpackFeatureOverlayScreenType?, rtlLayout: Boolean) {
         val params = JetpackFeatureOverlayContentBuilderParams(
                 currentPhase = getCurrentPhase()!!,
                 isRtl = rtlLayout,
-                pageType = pageType
+                feature = overlayScreenType
         )
         _uiState.postValue(jetpackFeatureOverlayContentBuilder.build(params = params))
+        jetpackFeatureRemovalOverlayUtil.onOverlayShown(overlayScreenType)
     }
 
     private fun getCurrentPhase() = jetpackFeatureRemovalPhaseHelper.getCurrentPhase()
