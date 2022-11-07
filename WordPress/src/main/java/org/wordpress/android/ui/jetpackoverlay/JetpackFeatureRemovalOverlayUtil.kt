@@ -41,9 +41,8 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
         return jetpackFeatureRemovalPhaseHelper.getCurrentPhase() != null &&
                 when (jetpackFeatureRemovalPhaseHelper.getCurrentPhase()) {
                     null -> return false
-                    PhaseOne, PhaseTwo, PhaseThree -> return true
-                    PhaseFour -> return false
-                    PhaseNewUsers -> return false
+                    PhaseOne -> return true
+                    PhaseTwo, PhaseThree, PhaseFour, PhaseNewUsers -> return false
                 }
     }
 
