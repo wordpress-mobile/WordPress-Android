@@ -89,23 +89,7 @@ class PrepublishingHomeViewModel @Inject constructor(
             }
 
             if (!editPostRepository.isPage) {
-                add(HomeUiState(
-                        actionType = TAGS,
-                        actionResult = getPostTagsUseCase.getTags(editPostRepository)
-                                ?.let { UiStringText(it) }
-                                ?: run { UiStringRes(R.string.prepublishing_nudges_home_tags_not_set) },
-                        actionClickable = true,
-                        onActionClicked = ::onActionClicked
-                )
-                )
-
-                val categoryString: String = getCategoriesUseCase.getPostCategoriesString(
-                        editPostRepository,
-                        site
-                )
-                if (categoryString.isNotEmpty()) {
-                    UiStringText(categoryString)
-                }
+                showNotSetPost(editPostRepository, site)
             } else {
                 UiStringRes(R.string.prepublishing_nudges_home_categories_not_set)
             }
@@ -134,6 +118,29 @@ class PrepublishingHomeViewModel @Inject constructor(
         }.toList()
 
         _uiState.postValue(prepublishingHomeUiStateList)
+    }
+
+    private fun MutableList<PrepublishingHomeItemUiState>.showNotSetPost(
+        editPostRepository: EditPostRepository,
+        site: SiteModel
+    ) {
+        add(HomeUiState(
+                actionType = TAGS,
+                actionResult = getPostTagsUseCase.getTags(editPostRepository)
+                        ?.let { UiStringText(it) }
+                        ?: run { UiStringRes(R.string.prepublishing_nudges_home_tags_not_set) },
+                actionClickable = true,
+                onActionClicked = ::onActionClicked
+        )
+        )
+
+        val categoryString: String = getCategoriesUseCase.getPostCategoriesString(
+                editPostRepository,
+                site
+        )
+        if (categoryString.isNotEmpty()) {
+            UiStringText(categoryString)
+        }
     }
 
     private fun MutableList<PrepublishingHomeItemUiState>.showPrivatePost(
