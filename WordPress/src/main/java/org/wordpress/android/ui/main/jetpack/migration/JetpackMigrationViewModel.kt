@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.main.jetpack.migration
 
+import androidx.annotation.DrawableRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -102,7 +103,7 @@ class JetpackMigrationViewModel @Inject constructor(
         object Loading : UiState()
 
         sealed class Content(
-            val screenIconRes: Int,
+            @DrawableRes val screenIconRes: Int,
             val title: UiString,
             val subtitle: UiString,
             val message: UiString,
