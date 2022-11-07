@@ -4,11 +4,13 @@ import android.database.Cursor
 import android.net.Uri
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.provider.ProviderUtility
 import org.wordpress.android.provider.query.QueryContentProvider
 import org.wordpress.android.provider.query.QueryResult
 import org.wordpress.android.ui.prefs.AppPrefs.DeletablePrefKey
 import org.wordpress.android.ui.prefs.AppPrefs.UndeletablePrefKey
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.userflags.UserFlagsData
 import org.wordpress.android.util.config.JetpackProviderSyncFeatureConfig
 import org.wordpress.android.util.publicdata.ClientVerification
 import org.wordpress.android.util.signature.SignatureNotFoundException
@@ -20,6 +22,7 @@ class UserFlagsProvider : QueryContentProvider() {
     @Inject lateinit var queryResult: QueryResult
     @Inject lateinit var clientVerification: ClientVerification
     @Inject lateinit var jetpackProviderSyncFeatureConfig: JetpackProviderSyncFeatureConfig
+    @Inject lateinit var providerUtility: ProviderUtility
 
     private val userFlagsKeysSet: Set<String> = setOf(
             DeletablePrefKey.MAIN_PAGE_INDEX.name,
@@ -38,6 +41,8 @@ class UserFlagsProvider : QueryContentProvider() {
             DeletablePrefKey.SHOULD_AUTO_ENABLE_GUTENBERG_FOR_THE_NEW_POSTS_PHASE_2.name,
             DeletablePrefKey.GUTENBERG_OPT_IN_DIALOG_SHOWN.name,
             DeletablePrefKey.GUTENBERG_FOCAL_POINT_PICKER_TOOLTIP_SHOWN.name,
+            DeletablePrefKey.IS_QUICK_START_NOTICE_REQUIRED.name,
+            DeletablePrefKey.LAST_SKIPPED_QUICK_START_TASK.name,
             DeletablePrefKey.POST_LIST_AUTHOR_FILTER.name,
             DeletablePrefKey.POST_LIST_VIEW_LAYOUT_TYPE.name,
             DeletablePrefKey.AZTEC_EDITOR_DISABLE_HW_ACC_KEYS.name,
@@ -56,6 +61,7 @@ class UserFlagsProvider : QueryContentProvider() {
     )
 
     private val userFlagsCompositeKeysSet: Set<String> = setOf(
+            DeletablePrefKey.LAST_SELECTED_QUICK_START_TYPE.name,
             DeletablePrefKey.SHOULD_SHOW_WEEKLY_ROUNDUP_NOTIFICATION.name
     )
 
@@ -78,14 +84,18 @@ class UserFlagsProvider : QueryContentProvider() {
         return context?.let {
             try {
                 if (clientVerification.canTrust(callingPackage)) {
-                    val userFlagsMap = appPrefsWrapper.getAllPrefs()
-                            .filter { entry ->
-                                userFlagsKeysSet.contains(entry.key)
-                                        || userFlagsCompositeKeysSet.firstOrNull { flagKey ->
-                                    entry.key.startsWith(flagKey)
-                                } != null
-                            }
-                    queryResult.createCursor(userFlagsMap)
+                    val userFlagsData = UserFlagsData(
+                            flags = appPrefsWrapper.getAllPrefs()
+                                .filter { entry ->
+                                    userFlagsKeysSet.contains(entry.key)
+                                            || userFlagsCompositeKeysSet.firstOrNull { flagKey ->
+                                        entry.key.startsWith(flagKey)
+                                    } != null
+                                },
+                            statusList = providerUtility.getAllQuickStartStatus(),
+                            taskList = providerUtility.getAllQuickStartTask()
+                    )
+                    queryResult.createCursor(userFlagsData)
                 } else null
             } catch (signatureNotFoundException: SignatureNotFoundException) {
                 null
