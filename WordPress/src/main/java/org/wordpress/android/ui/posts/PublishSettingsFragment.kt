@@ -78,7 +78,23 @@ abstract class PublishSettingsFragment : Fragment() {
 
         observeOnToast()
 
-        viewModel.onNotificationAdded.observeEvent(viewLifecycleOwner, { notification ->
+        observerOnNotificationAdded()
+
+        viewModel.onAddToCalendar.observeEvent(viewLifecycleOwner, { calendarEvent ->
+            val calIntent = Intent(Intent.ACTION_INSERT)
+            calIntent.data = Events.CONTENT_URI
+            calIntent.type = "vnd.android.cursor.item/event"
+            calIntent.putExtra(Events.TITLE, calendarEvent.title)
+            calIntent.putExtra(Events.DESCRIPTION, calendarEvent.description)
+            calIntent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, calendarEvent.startTime)
+            startActivity(calIntent)
+        })
+        viewModel.start(getPostRepository())
+        return rootView
+    }
+
+    private fun observerOnNotificationAdded() {
+        viewModel.onNotificationAdded.observeEvent(viewLifecycleOwner) { notification ->
             activity?.let {
                 NotificationManagerCompat.from(it).cancel(notification.id)
                 val notificationIntent = Intent(it, PublishNotificationReceiver::class.java)
@@ -97,18 +113,7 @@ abstract class PublishSettingsFragment : Fragment() {
                         pendingIntent
                 )
             }
-        })
-        viewModel.onAddToCalendar.observeEvent(viewLifecycleOwner, { calendarEvent ->
-            val calIntent = Intent(Intent.ACTION_INSERT)
-            calIntent.data = Events.CONTENT_URI
-            calIntent.type = "vnd.android.cursor.item/event"
-            calIntent.putExtra(Events.TITLE, calendarEvent.title)
-            calIntent.putExtra(Events.DESCRIPTION, calendarEvent.description)
-            calIntent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, calendarEvent.startTime)
-            startActivity(calIntent)
-        })
-        viewModel.start(getPostRepository())
-        return rootView
+        }
     }
 
     private fun observeOnToast() {
