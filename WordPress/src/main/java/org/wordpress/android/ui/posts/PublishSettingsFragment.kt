@@ -74,9 +74,8 @@ abstract class PublishSettingsFragment : Fragment() {
                 rootView
         )
 
-        viewModel.onShowNotificationDialog.observeEvent(viewLifecycleOwner, { notificationTime ->
-            showNotificationTimeSelectionDialog(notificationTime)
-        })
+        observeOnShowNotificationDialog()
+
         viewModel.onToast.observeEvent(viewLifecycleOwner, {
             ToastUtils.showToast(
                     context,
@@ -118,6 +117,11 @@ abstract class PublishSettingsFragment : Fragment() {
         return rootView
     }
 
+    private fun observeOnShowNotificationDialog() {
+        viewModel.onShowNotificationDialog.observeEvent(viewLifecycleOwner) { notificationTime ->
+            showNotificationTimeSelectionDialog(notificationTime)
+        }
+    }
 
     private fun observeOnUiModel(
         dateAndTime: TextView,
