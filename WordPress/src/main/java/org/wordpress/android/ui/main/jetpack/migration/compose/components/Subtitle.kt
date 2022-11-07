@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.main.jetpack.migration.components
+package org.wordpress.android.ui.main.jetpack.migration.compose.components
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text

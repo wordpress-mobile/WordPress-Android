@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.main.jetpack.migration.components
+package org.wordpress.android.ui.main.jetpack.migration.compose.components
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.fillMaxWidth

@@ -21,8 +21,8 @@ import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Content
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Loading
-import org.wordpress.android.ui.main.jetpack.migration.components.LoadingState
-import org.wordpress.android.ui.main.jetpack.migration.components.WelcomeStep
+import org.wordpress.android.ui.main.jetpack.migration.compose.state.LoadingState
+import org.wordpress.android.ui.main.jetpack.migration.compose.state.WelcomeStep
 import javax.inject.Inject
 
 @AndroidEntryPoint

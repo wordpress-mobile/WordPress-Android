@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.main.jetpack.migration.components
+package org.wordpress.android.ui.main.jetpack.migration.compose.state
 
 import android.content.res.Configuration
 import android.os.Build.VERSION
@@ -35,6 +35,10 @@ import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.SiteListItemUiState
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState
 import org.wordpress.android.ui.main.jetpack.migration.compose.DIM_ALPHA
+import org.wordpress.android.ui.main.jetpack.migration.compose.components.PrimaryButton
+import org.wordpress.android.ui.main.jetpack.migration.compose.components.SecondaryButton
+import org.wordpress.android.ui.main.jetpack.migration.compose.components.SiteList
+import org.wordpress.android.ui.main.jetpack.migration.compose.components.UserAvatarImage
 import org.wordpress.android.ui.main.jetpack.migration.compose.dimmed
 
 @Composable
