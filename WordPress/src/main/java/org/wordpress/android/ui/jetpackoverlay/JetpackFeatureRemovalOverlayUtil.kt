@@ -25,7 +25,7 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
     private val siteUtilsWrapper: SiteUtilsWrapper,
     private val buildConfigWrapper: BuildConfigWrapper,
-    private val dateTimeUtilsWrapper: DateTimeUtilsWrapper
+    private val dateTimeUtilsWrapper: DateTimeUtilsWrapper,
 ) {
     fun shouldShowFeatureSpecificJetpackOverlay(feature: JetpackOverlayConnectedFeature): Boolean {
         return !buildConfigWrapper.isJetpackApp && isWpComSite() &&
@@ -44,36 +44,36 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
                 }
     }
 
-    //For testing purposes only - return true
-    @Suppress("unused", "UNUSED_PARAMETER", "FunctionOnlyReturningConstant")
     private fun hasExceededOverlayFrequency(
         feature: JetpackOverlayConnectedFeature,
         currentPhasePreference: JetpackFeatureRemovalOverlayPhase
     ): Boolean {
-        return true
-//        return (hasExceededFeatureSpecificOverlayFrequency(feature, currentPhasePreference) ||
-//                hasExceededGlobalOverlayFrequency(currentPhasePreference))
+        return (hasExceededFeatureSpecificOverlayFrequency(feature, currentPhasePreference) ||
+                hasExceededGlobalOverlayFrequency(currentPhasePreference))
     }
-    // Remove the suppress message after reverting the testing scenario
-    @Suppress("unused", "UNUSED_PARAMETER")
+
     private fun hasExceededFeatureSpecificOverlayFrequency(
         feature: JetpackOverlayConnectedFeature,
         phase: JetpackFeatureRemovalOverlayPhase
     ): Boolean {
         // Feature Overlay is never shown
-        val overlayShownDate = jetpackFeatureOverlayShownTracker.getFeatureOverlayShownTimeStamp(feature, phase)
-                ?.let { Date(it) } ?: return true
-        val daysPastOverlayShown = dateTimeUtilsWrapper.daysBetween(overlayShownDate, Date(System.currentTimeMillis()))
+        val overlayShownDate = jetpackFeatureOverlayShownTracker.getFeatureOverlayShownTimeStamp(
+                feature,
+                phase
+        )?.let { Date(it) } ?: return true
+        val daysPastOverlayShown = dateTimeUtilsWrapper.daysBetween(
+                overlayShownDate,
+                dateTimeUtilsWrapper.getTodaysDate())
         return daysPastOverlayShown >= PhaseOne.featureSpecificOverlayFrequency
     }
 
-    // Remove the suppress message after reverting the testing scenario
-    @Suppress("unused", "UNUSED_PARAMETER")
     private fun hasExceededGlobalOverlayFrequency(phase: JetpackFeatureRemovalOverlayPhase): Boolean {
         // Overlay is never shown
         val overlayShownDate = jetpackFeatureOverlayShownTracker.getEarliestOverlayShownTime(phase)
                 ?.let { Date(it) } ?: return true
-        val daysPastOverlayShown = dateTimeUtilsWrapper.daysBetween(overlayShownDate, Date(System.currentTimeMillis()))
+        val daysPastOverlayShown = dateTimeUtilsWrapper.daysBetween(
+                overlayShownDate,
+                dateTimeUtilsWrapper.getTodaysDate())
         return daysPastOverlayShown >= PhaseOne.globalOverlayFrequency
     }
 
