@@ -14,6 +14,7 @@ repositories {
             includeGroup "org.wordpress.aztec"
             includeGroup "org.wordpress-mobile"
             includeGroup "org.wordpress-mobile.gutenberg-mobile"
+            includeGroupByRegex "org.wordpress-mobile.react-native-libraries.*"
         }
     }
     maven {

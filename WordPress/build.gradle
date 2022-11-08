@@ -23,6 +23,7 @@ repositories {
             includeGroup "org.wordpress.wellsql"
             includeGroup "org.wordpress-mobile"
             includeGroup "org.wordpress-mobile.gutenberg-mobile"
+            includeGroupByRegex "org.wordpress-mobile.react-native-libraries.*"
             includeGroup "com.automattic"
             includeGroup "com.automattic.stories"
             includeGroup "com.automattic.tracks"
