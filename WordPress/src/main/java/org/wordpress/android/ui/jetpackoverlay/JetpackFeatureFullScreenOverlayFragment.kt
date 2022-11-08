@@ -1,13 +1,11 @@
 package org.wordpress.android.ui.jetpackoverlay
 
-import android.content.res.Configuration
 import android.content.res.Resources
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
-import androidx.core.view.ViewCompat.LAYOUT_DIRECTION_RTL
 import androidx.fragment.app.viewModels
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -19,6 +17,7 @@ import org.wordpress.android.ui.ActivityLauncherWrapper.Companion.JETPACK_PACKAG
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureOverlayActions.DismissDialog
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureOverlayActions.OpenPlayStore
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureOverlayScreenType
+import org.wordpress.android.util.RtlUtils
 import org.wordpress.android.util.extensions.exhaustive
 import org.wordpress.android.util.extensions.setVisible
 import javax.inject.Inject
@@ -29,7 +28,7 @@ class JetpackFeatureFullScreenOverlayFragment : BottomSheetDialogFragment() {
     private val viewModel: JetpackFeatureFullScreenOverlayViewModel by viewModels()
 
     private var _binding: JetpackFeatureRemovalOverlayBinding? = null
-    private val binding get() = _binding!!
+    private val binding get() = _binding ?: throw NullPointerException("_binding cannot be null")
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -42,7 +41,7 @@ class JetpackFeatureFullScreenOverlayFragment : BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.init(getSiteScreen(), rtlLayout(view))
+        viewModel.init(getSiteScreen(), RtlUtils.isRtl(view.context))
         binding.setupObservers()
 
         (dialog as? BottomSheetDialog)?.apply {
@@ -70,13 +69,8 @@ class JetpackFeatureFullScreenOverlayFragment : BottomSheetDialogFragment() {
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
     }
 
-    private fun getSiteScreen() = arguments?.getSerializable(OVERLAY_SCREEN_TYPE) as JetpackFeatureOverlayScreenType
-
-    private fun rtlLayout(view: View): Boolean {
-        val config: Configuration = resources.configuration
-        view.layoutDirection = config.layoutDirection
-        return view.layoutDirection == LAYOUT_DIRECTION_RTL
-    }
+    private fun getSiteScreen() =
+            arguments?.getSerializable(OVERLAY_SCREEN_TYPE) as JetpackFeatureOverlayScreenType
 
     private fun JetpackFeatureRemovalOverlayBinding.setupObservers() {
         viewModel.uiState.observe(viewLifecycleOwner) {

@@ -18,7 +18,7 @@ class JetpackBrandingUtils @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
     private val siteUtilsWrapper: SiteUtilsWrapper,
     private val buildConfigWrapper: BuildConfigWrapper,
-    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
+    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
 ) {
     fun shouldShowJetpackBranding(): Boolean {
         return isWpComSite() && jetpackPoweredFeatureConfig.isEnabled() && !buildConfigWrapper.isJetpackApp
