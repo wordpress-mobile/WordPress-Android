@@ -159,6 +159,11 @@ public class ActivityLauncher {
     public static final String ACTIVITY_LOG_TRACK_EVENT_PROPERTY_VALUE = "activity_log";
     private static final String CATEGORY_DETAIL_ID = "category_detail_key";
 
+    public static void showMainActivity(Context context) {
+        Intent intent = getMainActivityInNewStack(context);
+        context.startActivity(intent);
+    }
+
     public static void showMainActivityAndLoginEpilogue(Activity activity, ArrayList<Integer> oldSitesIds,
                                                         boolean doLoginUpdate) {
         Intent intent = new Intent(activity, WPMainActivity.class);

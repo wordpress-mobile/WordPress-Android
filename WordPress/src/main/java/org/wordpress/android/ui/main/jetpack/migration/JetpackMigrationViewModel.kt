@@ -4,9 +4,11 @@ import androidx.annotation.DrawableRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.AccountStore
@@ -15,6 +17,7 @@ import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.NotificationsPrimaryButton
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.WelcomePrimaryButton
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.WelcomeSecondaryButton
+import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.CompleteFlow
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Content
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Loading
 import org.wordpress.android.ui.utils.UiString
@@ -32,6 +35,9 @@ class JetpackMigrationViewModel @Inject constructor(
 ) : ViewModel() {
     private val _uiState = MutableStateFlow<UiState>(Loading)
     val uiState: StateFlow<UiState> = _uiState
+
+    private val _actionEvents = Channel<JetpackMigrationActionEvent>(Channel.BUFFERED)
+    val actionEvents = _actionEvents.receiveAsFlow()
 
     // TODO Review this after data sync work is done
     fun onAccountInfoLoaded() {
@@ -92,7 +98,7 @@ class JetpackMigrationViewModel @Inject constructor(
 
     @Suppress("ForbiddenComment")
     private fun onDoneClicked() {
-        // TODO: Navigate to My Site
+        postActionEvent(CompleteFlow)
     }
 
     private fun onHelpClicked() {
@@ -118,6 +124,12 @@ class JetpackMigrationViewModel @Inject constructor(
                 accountStore.account?.avatarUrl.orEmpty(),
                 R.dimen.jp_migration_user_avatar_size,
         )
+    }
+
+    private fun postActionEvent(actionEvent: JetpackMigrationActionEvent) {
+        viewModelScope.launch {
+            _actionEvents.send(actionEvent)
+        }
     }
 
     sealed class UiState {
@@ -214,5 +226,9 @@ class JetpackMigrationViewModel @Inject constructor(
                 onClick = onClick,
                 text = UiStringRes(R.string.jp_migration_finish_button),
         )
+    }
+
+    sealed class JetpackMigrationActionEvent {
+        object CompleteFlow : JetpackMigrationActionEvent()
     }
 }
