@@ -11,6 +11,7 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.DonePrimaryButton
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.NotificationsPrimaryButton
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.WelcomePrimaryButton
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.WelcomeSecondaryButton
@@ -64,6 +65,7 @@ class JetpackMigrationViewModel @Inject constructor(
                 _uiState.value = it.copy(isProcessing = true)
                 // TODO: Replace this temporary delay with migration logic
                 delay(2500)
+                // TODO: Navigate to error step if migration has errors
                 postNotificationsState()
             }
         }
@@ -78,7 +80,19 @@ class JetpackMigrationViewModel @Inject constructor(
     @Suppress("ForbiddenComment")
     private fun onContinueFromNotificationsClicked() {
         // TODO: Disable notifications in WP app
-        // TODO: Navigate to next step (error? or done)
+        //  See https://github.com/wordpress-mobile/WordPress-Android/pull/17371
+        postDoneState()
+    }
+
+    private fun postDoneState() {
+        _uiState.value = Content.Done(
+                primaryActionButton = DonePrimaryButton(::onDoneClicked),
+        )
+    }
+
+    @Suppress("ForbiddenComment")
+    private fun onDoneClicked() {
+        // TODO: Navigate to My Site
     }
 
     private fun onHelpClicked() {
