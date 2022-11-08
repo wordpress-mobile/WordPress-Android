@@ -147,6 +147,18 @@ class JetpackMigrationViewModel @Inject constructor(
                     subtitle = UiStringRes(R.string.jp_migration_notifications_subtitle),
                     message = UiStringRes(R.string.jp_migration_notifications_disabled_in_wp_message),
             )
+
+            data class Done(
+                override val primaryActionButton: ActionButton,
+            ) : Content(
+                    primaryActionButton = primaryActionButton,
+                    screenIconRes = R.drawable.ic_jetpack_migration_success,
+                    title = UiStringRes(R.string.jp_migration_done_title),
+                    subtitle = UiStringRes(R.string.jp_migration_done_subtitle),
+                    message = UiStringRes(R.string.jp_migration_done_delete_wp_message),
+            ) {
+                val deleteWpIcon = R.drawable.ic_jetpack_migration_delete_wp
+            }
         }
     }
 
