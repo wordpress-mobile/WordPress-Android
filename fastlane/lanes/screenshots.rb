@@ -74,38 +74,6 @@ platform :android do
     end
   end
 
-  #####################################################################################
-  # download_promo_strings
-  # -----------------------------------------------------------------------------------
-  # This lane download the translated promo strings from the translation system
-  # -----------------------------------------------------------------------------------
-  # Usage:
-  # fastlane download_promo_strings
-  #
-  # Example:
-  # fastlane download_promo_strings
-  #####################################################################################
-  desc "Downloads translated promo strings from the translation system"
-  lane :download_promo_strings do |options|
-    # FIXME: Make this app dependent instead (WordPress vs Jetpack)
-
-    # "<key in .po file>" => { desc: "<name of txt file>" }
-    files = (1..9).map do |n|
-      ["play_store_screenshot_#{n}", { desc: "play_store_screenshot_#{n}.txt" }]
-    end.to_h
-
-    locales = ALL_LOCALES
-      .select { |h| h[:promo_config] != false }
-      .map { |h| [ h[:glotpress], h[:google_play] ]}
-
-    gp_downloadmetadata(project_url: APP_SPECIFIC_VALUES[:wordpress][:glotpress_metadata_project],
-      target_files: files,
-      locales: locales,
-      source_locale: "en-US",
-      download_path: File.join(FASTLANE_FOLDER, 'playstoreres', 'metadata')
-    )
-  end
-
 
   #####################################################################################
   # download_raw_screenshots
