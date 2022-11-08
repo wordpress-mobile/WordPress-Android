@@ -3,15 +3,6 @@ package org.wordpress.android.localcontentmigration
 import android.content.ContentResolver
 import android.database.Cursor
 import android.net.Uri
-import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.generated.PostActionBuilder
-import org.wordpress.android.localcontentmigration.LocalContentEntityData.EligibilityStatusData
-import org.wordpress.android.localcontentmigration.LocalContentEntity.EligibilityStatus
-import org.wordpress.android.localcontentmigration.LocalContentEntity.Post
-import org.wordpress.android.localcontentmigration.LocalContentEntity.Site
-import org.wordpress.android.localcontentmigration.LocalContentEntityData.PostData
-import org.wordpress.android.localcontentmigration.LocalContentEntityData.PostsData
-import org.wordpress.android.localcontentmigration.LocalContentEntityData.SitesData
 import org.wordpress.android.provider.query.QueryResult
 import org.wordpress.android.util.publicdata.WordPressPublicData
 import org.wordpress.android.viewmodel.ContextProvider
