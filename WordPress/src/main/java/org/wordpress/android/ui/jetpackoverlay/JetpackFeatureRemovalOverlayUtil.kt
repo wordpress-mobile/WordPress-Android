@@ -44,12 +44,14 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
                 }
     }
 
+    @Suppress("unused", "UNUSED_PARAMETER")
     private fun hasExceededOverlayFrequency(
         feature: JetpackOverlayConnectedFeature,
         currentPhasePreference: JetpackFeatureRemovalOverlayPhase
     ): Boolean {
-        return (hasExceededFeatureSpecificOverlayFrequency(feature, currentPhasePreference) ||
-                hasExceededGlobalOverlayFrequency(currentPhasePreference))
+        return true
+//        return (hasExceededFeatureSpecificOverlayFrequency(feature, currentPhasePreference) ||
+//                hasExceededGlobalOverlayFrequency(currentPhasePreference))
     }
 
     private fun hasExceededFeatureSpecificOverlayFrequency(
