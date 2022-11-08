@@ -121,18 +121,13 @@ platform :android do
   end
 
 
-  #####################################################################################
-  # create_promo_screenshots
-  # -----------------------------------------------------------------------------------
-  # This lane creates the promo screenshot from the original ones that
-  # are taken by the screenshot lane
-  # -----------------------------------------------------------------------------------
-  # Usage:
-  # fastlane create_promo_screenshots app:<wordpress|jetpack>
+  # Creates the promo screenshots, by compositing the raw ones taken by the `screenshots` lane
+  # and adding background image, device frame and promotional text around it.
   #
-  # Example:
-  # fastlane create_promo_screenshots app:wordpress
-  #####################################################################################
+  # @option [String|Symbol] app The app to take screenshots for. Must be `wordpress` or `jetpack`
+  # @option [Boolean] skip_download_strings Skips the call to the `download_metadata_strings`
+  #         which downloads the translated copies used on the screenshots. Defaults to `false`.
+  #
   desc "Creates promo screenshots"
   lane :create_promo_screenshots do |options|
     begin
@@ -142,6 +137,9 @@ platform :android do
     end
     app = get_app_name_option!(options)
 
+    download_metadata_strings(app: app, skip_release_notes: true, skip_git_push: true) unless options.fetch(:skip_download_strings, false)
+
+    # Define intermediate folders
     raw_screenshots_dir = screenshots_dir(app: app, subfolder: 'raw')
     raw_screenshots_processing_dir = screenshots_dir(app: app, subfolder: 'raw_tmp')
     promo_screenshots_processing_dir = screenshots_dir(app: app, subfolder: 'promo_tmp')
