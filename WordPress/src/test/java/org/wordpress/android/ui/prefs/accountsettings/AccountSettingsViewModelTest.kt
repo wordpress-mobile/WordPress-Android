@@ -63,14 +63,7 @@ class AccountSettingsViewModelTest : BaseUnitTest() {
         whenever(account.usernameCanBeChanged).thenReturn(false)
         whenever(getAccountUseCase.account).thenReturn(account)
 
-        val sites = siteViewModels.map {
-            SiteModel().apply {
-                this.siteId = it.siteId
-                this.name = it.siteName
-                this.url = it.homeURLOrHostName
-            }
-        }
-        whenever(getSitesUseCase.get()).thenReturn(sites)
+        mockSites(siteViewModels)
         initialiseViewModel()
     }
 
@@ -311,75 +304,47 @@ class AccountSettingsViewModelTest : BaseUnitTest() {
                 whenever(getAccountUseCase.account.primarySiteId).thenReturn(siteViewModels.first().siteId)
                 viewModel.onPrimarySiteChanged(siteRemoteId = siteViewModels.first().siteId)
                 // Then
-<<<<<<< HEAD
-                Assertions.assertThat(uiStateList.last().primarySiteSettingsUiState?.primarySite?.siteId).isEqualTo(siteViewModels.first().siteId)
 
-                // Cleanup
-                job.cancel()
+                assertThat(uiStateChanges.last().primarySiteSettingsUiState.primarySite?.siteId).isEqualTo(siteViewModels.first().siteId)
             }
 
     @Test
     fun `when there are multiple sites, the user should be shown list of sites to choose primary site when requested`() =
-            test {
-                viewModel = AccountSettingsViewModel(
-                        resourceProvider,
-                        networkUtilsWrapper,
-                        TEST_DISPATCHER,
-                        accountsSettingsRepository
-                )
-
+            testUiStateChanges {
                 val mUiState = viewModel.accountSettingsUiState.value
-                mUiState.primarySiteSettingsUiState?.canShowChoosePrimarySiteDialog?.let {
-                    Assertions.assertThat(it).isEqualTo(true)
+                mUiState.primarySiteSettingsUiState.canShowChoosePrimarySiteDialog.let {
+                    assertThat(it).isEqualTo(true)
                 }
             }
 
     @Test
     fun `when there are one or no sites, the user should not be shown empty dialog or dialog with one site as there is no option to choose from`() =
-            test {
-                whenever(accountsSettingsRepository.getSitesAccessedViaWPComRest()).thenReturn(listOf())
-                viewModel = AccountSettingsViewModel(
-                        resourceProvider,
-                        networkUtilsWrapper,
-                        TEST_DISPATCHER,
-                        accountsSettingsRepository
-                )
-
+            testUiStateChanges {
+                mockSites(emptyList())
+                initialiseViewModel()
                 val mUiState = viewModel.accountSettingsUiState.value
-                mUiState.primarySiteSettingsUiState?.canShowChoosePrimarySiteDialog?.let {
-                    Assertions.assertThat(it).isEqualTo(false)
+                mUiState.primarySiteSettingsUiState.canShowChoosePrimarySiteDialog.let {
+                    assertThat(it).isEqualTo(false)
                 }
             }
 
     //Web Address default
     @Test
     fun `If Web Address is available, Should show Web Address with the account information from AccountSettingsRepository`() =
-            test {
-                whenever(accountsSettingsRepository.account.webAddress).thenReturn("old_webaddress")
-                viewModel = AccountSettingsViewModel(
-                        resourceProvider,
-                        networkUtilsWrapper,
-                        TEST_DISPATCHER,
-                        accountsSettingsRepository
-                )
+            testUiStateChanges {
                 val mUiState = viewModel.accountSettingsUiState.value
-                Assertions.assertThat(mUiState.webAddressSettingsUiState.webAddress).isEqualTo("old_webaddress")
-
-=======
-                assertThat(uiStateChanges.last().primarySiteSettingsUiState.primarySite?.siteId)
-                        .isEqualTo(siteViewModels.first().siteId)
->>>>>>> trunk
+                assertThat(mUiState.webAddressSettingsUiState.webAddress).isEqualTo("http://old_wordpressuser.com")
             }
 
     @Test
     fun `When a new webaddress is entered, then new webaddress is shown optimistically`() =
             testUiStateChanges {
                 // Given
-                whenever(getAccountUseCase.account.webAddress).thenReturn("old_webaddress")
+                whenever(getAccountUseCase.account.webAddress).thenReturn("http://old_wordpressuser.com")
                 // When
                 whenever(pushAccountSettingsUseCase.updateWebAddress("new_webaddress"))
                         .thenReturn(mockErrorResponse())
-                whenever(getAccountUseCase.account.webAddress).thenReturn("old_webaddress")
+                whenever(getAccountUseCase.account.webAddress).thenReturn("http://old_wordpressuser.com")
                 viewModel.onWebAddressChanged("new_webaddress")
                 // Then
                 assertThat(uiStateChanges[uiStateChanges.lastIndex - 1].webAddressSettingsUiState.webAddress)
@@ -465,5 +430,16 @@ class AccountSettingsViewModelTest : BaseUnitTest() {
                 getSitesUseCase,
                 optimisticUpdateHandler
         )
+    }
+
+    private suspend fun mockSites(siteViewModels : List<SiteUiModel>){
+        val sites = siteViewModels.map {
+            SiteModel().apply {
+                this.siteId = it.siteId
+                this.name = it.siteName
+                this.url = it.homeURLOrHostName
+            }
+        }
+        whenever(getSitesUseCase.get()).thenReturn(sites)
     }
 }
