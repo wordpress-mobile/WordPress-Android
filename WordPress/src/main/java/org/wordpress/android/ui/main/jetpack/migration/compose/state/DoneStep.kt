@@ -11,6 +11,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -22,6 +23,7 @@ import androidx.compose.ui.unit.sp
 import org.wordpress.android.R
 import org.wordpress.android.R.dimen
 import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.utils.htmlToAnnotatedString
 import org.wordpress.android.ui.compose.utils.uiStringText
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.DonePrimaryButton
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState
@@ -51,14 +53,15 @@ fun DoneStep(uiState: UiState.Content.Done) = with(uiState) {
                     painter = painterResource(deleteWpIcon),
                     contentDescription = stringResource(R.string.jp_migration_remove_wp_app_icon_content_description),
                     modifier = Modifier
-                            .padding(bottom = 15.dp)
+                            .padding(bottom = 10.dp)
                             .size(70.dp)
             )
             Text(
-                    text = uiStringText(message),
+                    text = htmlToAnnotatedString(uiStringText(message)),
                     textAlign = TextAlign.Center,
                     fontSize = 14.sp,
                     lineHeight = 18.sp,
+                    color = colorResource(R.color.gray_50),
                     modifier = Modifier.fillMaxWidth(0.75f)
             )
         }
