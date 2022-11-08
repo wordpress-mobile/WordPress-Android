@@ -178,6 +178,7 @@ platform :android do
     # Run screenshots generator tool
     promo_screenshots(
       orig_folder: raw_screenshots_processing_dir,
+      config_file: File.join(FASTLANE_FOLDER, APP_SPECIFIC_VALUES[app.to_sym][:screenshot_config_file]),
       metadata_folder: final_metadata_dir,
       output_folder: promo_screenshots_processing_dir,
       force: options[:force],

@@ -59,7 +59,7 @@
 					"position": [0, 465]
 				},
 				{
-					"text": "playstoreres/metadata/%s/play_store_screenshot_1.txt",
+					"text": "jetpack_metadata/android/%s/play_store_screenshot_1.txt",
 					"size": [810,480],
 					"position": [127,0 ],
 					"alignment": "center",
@@ -72,42 +72,42 @@
 			"device": "Pixel 3",
 			"screenshot": "images/phoneScreenshots/1-create-a-site-or-start-a-blog.png",
 			"background": "playstoreres/assets/attachments/phone-backgrounds/Circles-2.png",
-			"text": "playstoreres/metadata/%s/play_store_screenshot_2.txt"
+			"text": "jetpack_metadata/android/%s/play_store_screenshot_2.txt"
 		},
 		// Discover new reads
 		{
 			"device": "Pixel 3",
 			"screenshot": "images/phoneScreenshots/2-discover-new-reads.png",
 			"background": "playstoreres/assets/attachments/phone-backgrounds/Circles-3.png",
-			"text": "playstoreres/metadata/%s/play_store_screenshot_3.txt"
+			"text": "jetpack_metadata/android/%s/play_store_screenshot_3.txt"
 		},
 		// Build an audience
 		{
 			"device": "Pixel 3",
 			"screenshot": "images/phoneScreenshots/3-build-an-audience.png",
 			"background": "playstoreres/assets/attachments/phone-backgrounds/Circles-4.png",
-			"text": "playstoreres/metadata/%s/play_store_screenshot_4.txt"
+			"text": "jetpack_metadata/android/%s/play_store_screenshot_4.txt"
 		},
 		// Keep tabs on your site
 		{
 			"device": "Pixel 3",
 			"screenshot": "images/phoneScreenshots/4-keep-tabs-on-your-site.png",
 			"background": "playstoreres/assets/attachments/phone-backgrounds/Circles-5.png",
-			"text": "playstoreres/metadata/%s/play_store_screenshot_5.txt"
+			"text": "jetpack_metadata/android/%s/play_store_screenshot_5.txt"
 		},
 		// Reply in real time
 		{
 			"device": "Pixel 3",
 			"screenshot": "images/phoneScreenshots/5-reply-in-real-time.png",
 			"background": "playstoreres/assets/attachments/phone-backgrounds/Circles-6.png",
-			"text": "playstoreres/metadata/%s/play_store_screenshot_6.txt"
+			"text": "jetpack_metadata/android/%s/play_store_screenshot_6.txt"
 		},
 		// Upload on the go
 		{
 			"device": "Pixel 3",
 			"screenshot": "images/phoneScreenshots/6-upload-on-the-go.png",
 			"background": "playstoreres/assets/attachments/phone-backgrounds/Circles-7.png",
-			"text": "playstoreres/metadata/%s/play_store_screenshot_7.txt"
+			"text": "jetpack_metadata/android/%s/play_store_screenshot_7.txt"
 		},
 		// The world's most popular website builder
 		{
@@ -125,7 +125,7 @@
 					"position": [0, 424]
 				},
 				{
-					"text": "playstoreres/metadata/%s/play_store_screenshot_1.txt",
+					"text": "jetpack_metadata/android/%s/play_store_screenshot_1.txt",
 					"size": [3000,120],
 					"position": [0,120 ],
 					"alignment": "center",
@@ -138,42 +138,42 @@
 			"device": "Nexus 9",
 			"screenshot": "images/tenInchScreenshots/1-create-a-site-or-start-a-blog.png",
 			"background": "playstoreres/assets/attachments/tablet-backgrounds/Circles-2.png",
-			"text": "playstoreres/metadata/%s/play_store_screenshot_2.txt"
+			"text": "jetpack_metadata/android/%s/play_store_screenshot_2.txt"
 		},
 		// Discover new reads
 		{
 			"device": "Nexus 9",
 			"screenshot": "images/tenInchScreenshots/2-discover-new-reads.png",
 			"background": "playstoreres/assets/attachments/tablet-backgrounds/Circles-3.png",
-			"text": "playstoreres/metadata/%s/play_store_screenshot_3.txt"
+			"text": "jetpack_metadata/android/%s/play_store_screenshot_3.txt"
 		},
 		// Build an audience
 		{
 			"device": "Nexus 9",
 			"screenshot": "images/tenInchScreenshots/3-build-an-audience.png",
 			"background": "playstoreres/assets/attachments/tablet-backgrounds/Circles-4.png",
-			"text": "playstoreres/metadata/%s/play_store_screenshot_4.txt"
+			"text": "jetpack_metadata/android/%s/play_store_screenshot_4.txt"
 		},
 		// Keep tabs on your site
 		{
 			"device": "Nexus 9",
 			"screenshot": "images/tenInchScreenshots/4-keep-tabs-on-your-site.png",
 			"background": "playstoreres/assets/attachments/tablet-backgrounds/Circles-5.png",
-			"text": "playstoreres/metadata/%s/play_store_screenshot_5.txt"
+			"text": "jetpack_metadata/android/%s/play_store_screenshot_5.txt"
 		},
 		// Reply in real time
 		{
 			"device": "Nexus 9",
 			"screenshot": "images/tenInchScreenshots/5-reply-in-real-time.png",
 			"background": "playstoreres/assets/attachments/tablet-backgrounds/Circles-6.png",
-			"text": "playstoreres/metadata/%s/play_store_screenshot_6.txt"
+			"text": "jetpack_metadata/android/%s/play_store_screenshot_6.txt"
 		},
 		// Upload on the go
 		{
 			"device": "Nexus 9",
 			"screenshot": "images/tenInchScreenshots/6-upload-on-the-go.png",
 			"background": "playstoreres/assets/attachments/tablet-backgrounds/Circles-7.png",
-			"text": "playstoreres/metadata/%s/play_store_screenshot_7.txt"
+			"text": "jetpack_metadata/android/%s/play_store_screenshot_7.txt"
 		}
 	]
 }
