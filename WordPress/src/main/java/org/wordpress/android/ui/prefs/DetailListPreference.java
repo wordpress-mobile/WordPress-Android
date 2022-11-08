@@ -76,7 +76,9 @@ public class DetailListPreference extends ListPreference
 
     @Override
     protected void showDialog(Bundle state) {
-        if(!canShowDialog){ return; }
+        if (!canShowDialog) {
+            return;
+        }
         Context context = getContext();
         Resources res = context.getResources();
         int topOffset = res.getDimensionPixelOffset(R.dimen.settings_fragment_dialog_vertical_inset);
