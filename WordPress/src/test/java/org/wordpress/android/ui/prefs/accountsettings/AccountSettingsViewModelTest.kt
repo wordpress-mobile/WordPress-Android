@@ -305,11 +305,12 @@ class AccountSettingsViewModelTest : BaseUnitTest() {
                 viewModel.onPrimarySiteChanged(siteRemoteId = siteViewModels.first().siteId)
                 // Then
 
-                assertThat(uiStateChanges.last().primarySiteSettingsUiState.primarySite?.siteId).isEqualTo(siteViewModels.first().siteId)
+                assertThat(uiStateChanges.last().primarySiteSettingsUiState.primarySite?.siteId)
+                        .isEqualTo(siteViewModels.first().siteId)
             }
 
     @Test
-    fun `when there are multiple sites, the user should be shown list of sites to choose primary site when requested`() =
+    fun `when there are multiple sites, the user should be shown sites to choose primary site when requested`() =
             testUiStateChanges {
                 val mUiState = viewModel.accountSettingsUiState.value
                 mUiState.primarySiteSettingsUiState.canShowChoosePrimarySiteDialog.let {
@@ -318,7 +319,7 @@ class AccountSettingsViewModelTest : BaseUnitTest() {
             }
 
     @Test
-    fun `when there are one or no sites, the user should not be shown empty dialog or dialog with one site as there is no option to choose from`() =
+    fun `when there are one or no sites, the user should not be shown empty dialog or dialog with one site`() =
             testUiStateChanges {
                 mockSites(emptyList())
                 initialiseViewModel()
@@ -328,9 +329,9 @@ class AccountSettingsViewModelTest : BaseUnitTest() {
                 }
             }
 
-    //Web Address default
+    // Web Address default
     @Test
-    fun `If Web Address is available, Should show Web Address with the account information from AccountSettingsRepository`() =
+    fun `If Web Address is available, Should show webaddress from the account information`() =
             testUiStateChanges {
                 val mUiState = viewModel.accountSettingsUiState.value
                 assertThat(mUiState.webAddressSettingsUiState.webAddress).isEqualTo("http://old_wordpressuser.com")
@@ -432,7 +433,7 @@ class AccountSettingsViewModelTest : BaseUnitTest() {
         )
     }
 
-    private suspend fun mockSites(siteViewModels : List<SiteUiModel>){
+    private suspend fun mockSites(siteViewModels: List<SiteUiModel>) {
         val sites = siteViewModels.map {
             SiteModel().apply {
                 this.siteId = it.siteId
