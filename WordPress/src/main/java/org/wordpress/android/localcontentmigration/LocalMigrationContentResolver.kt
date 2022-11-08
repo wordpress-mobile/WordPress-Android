@@ -3,23 +3,14 @@ package org.wordpress.android.localcontentmigration
 import android.content.ContentResolver
 import android.database.Cursor
 import android.net.Uri
-import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.generated.PostActionBuilder
-import org.wordpress.android.localcontentmigration.LocalContentEntityData.EligibilityStatusData
-import org.wordpress.android.localcontentmigration.LocalContentEntity.EligibilityStatus
-import org.wordpress.android.localcontentmigration.LocalContentEntity.Post
-import org.wordpress.android.localcontentmigration.LocalContentEntity.Site
-import org.wordpress.android.localcontentmigration.LocalContentEntityData.PostData
-import org.wordpress.android.localcontentmigration.LocalContentEntityData.PostsData
-import org.wordpress.android.localcontentmigration.LocalContentEntityData.SitesData
 import org.wordpress.android.provider.query.QueryResult
 import org.wordpress.android.util.publicdata.WordPressPublicData
 import org.wordpress.android.viewmodel.ContextProvider
 import javax.inject.Inject
 
-private const val CONTENT_SCHEME = "content"
+@PublishedApi internal const val CONTENT_SCHEME = "content"
 
-private fun ContentResolver.query(
+@PublishedApi internal fun ContentResolver.query(
     builder: Uri.Builder,
     entityType: LocalContentEntity,
     siteId: Int?,
@@ -33,12 +24,11 @@ private fun ContentResolver.query(
 
 
 class LocalMigrationContentResolver @Inject constructor(
-    private val contextProvider: ContextProvider,
-    private val wordPressPublicData: WordPressPublicData,
-    private val queryResult: QueryResult,
-    private val dispatcher: Dispatcher,
+    @PublishedApi internal val contextProvider: ContextProvider,
+    @PublishedApi internal val wordPressPublicData: WordPressPublicData,
+    @PublishedApi internal val queryResult: QueryResult,
 ){
-    private inline fun <reified T : LocalContentEntityData> getDataForEntityType(
+    inline fun <reified T : LocalContentEntityData> getDataForEntityType(
         entityType: LocalContentEntity,
         siteId: Int? = null,
         entityId: Int? = null
@@ -56,21 +46,6 @@ class LocalMigrationContentResolver @Inject constructor(
             }
         }
     }
-
-    fun migrateLocalContent() {
-        val (isEligible) = getDataForEntityType<EligibilityStatusData>(EligibilityStatus)
-        @Suppress("ForbiddenComment")
-        // TODO: do something more graceful here?
-        if (!isEligible) return
-        val sites: SitesData = getDataForEntityType(Site)
-        for (localSiteId in sites.localIds) {
-            val posts: PostsData = getDataForEntityType(Post, localSiteId)
-            for (localPostId in posts.localIds) {
-                val postData: PostData = getDataForEntityType(Post, localSiteId, localPostId)
-                dispatcher.dispatch(PostActionBuilder.newUpdatePostAction(postData.post))
-            }
-        }
-    }
-
-    private inline fun <reified T : LocalContentEntityData> Cursor.getValue() = queryResult.getValue<T>(this)
+    @PublishedApi internal inline fun <reified T : LocalContentEntityData> Cursor.getValue() =
+            queryResult.getValue<T>(this)
 }

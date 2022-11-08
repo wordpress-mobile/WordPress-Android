@@ -7,6 +7,8 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors
 import dagger.hilt.components.SingletonComponent
 import org.wordpress.android.fluxc.model.PostModel
+import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.localcontentmigration.LocalContentEntity.AccessToken
 import org.wordpress.android.localcontentmigration.LocalContentEntity.EligibilityStatus
 import org.wordpress.android.localcontentmigration.LocalContentEntity.Post
 import org.wordpress.android.localcontentmigration.LocalContentEntity.Site
@@ -21,6 +23,7 @@ class LocalMigrationContentProvider: TrustedQueryContentProvider() {
         fun localSiteProviderHelper(): LocalSiteProviderHelper
         fun localPostProviderHelper(): LocalPostProviderHelper
         fun localEligibilityStatusProviderHelper(): LocalEligibilityStatusProviderHelper
+        fun localAccessTokenProviderHelper(): LocalAccessTokenProviderHelper
     }
 
     override fun query(uri: Uri): Cursor {
@@ -47,6 +50,7 @@ class LocalMigrationContentProvider: TrustedQueryContentProvider() {
                 LocalMigrationContentProviderEntryPoint::class.java)) {
             val response = when (entity) {
                 EligibilityStatus -> localEligibilityStatusProviderHelper().getData()
+                AccessToken -> localAccessTokenProviderHelper().getData()
                 Site -> localSiteProviderHelper().getData(localEntityId = localEntityId)
                 Post -> localPostProviderHelper().getData(localSiteId, localEntityId)
             }
@@ -61,6 +65,7 @@ interface LocalDataProviderHelper {
 
 enum class LocalContentEntity(private val isSiteContent: Boolean = false) {
     EligibilityStatus,
+    AccessToken,
     Site,
     Post(isSiteContent = true),
     ;
@@ -82,7 +87,8 @@ sealed class LocalContentEntityData {
         val siteCount: Int,
     ): LocalContentEntityData()
 
-    data class SitesData(val localIds: List<Int>): LocalContentEntityData()
+    data class AccessTokenData(val token: String): LocalContentEntityData()
+    data class SitesData(val sites: List<SiteModel>): LocalContentEntityData()
     data class PostsData(val localIds: List<Int>): LocalContentEntityData()
     data class PostData(val post: PostModel) : LocalContentEntityData()
 }
