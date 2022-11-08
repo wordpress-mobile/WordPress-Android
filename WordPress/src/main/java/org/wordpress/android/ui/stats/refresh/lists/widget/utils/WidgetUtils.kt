@@ -5,6 +5,7 @@ import android.appwidget.AppWidgetManager
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.view.View
 import android.widget.ImageView.ScaleType.FIT_START
 import android.widget.RemoteViews
@@ -191,11 +192,17 @@ class WidgetUtils
     private fun getPendingTemplate(context: Context): PendingIntent {
         val intent = Intent(context, StatsActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        // Before SDK 31, this was mutable by default, but this condition is still needed to satisfy lint rules :)
+        val templateFlags = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S)
+            PendingIntent.FLAG_UPDATE_CURRENT
+        else
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
+
         return PendingIntent.getActivity(
                 context,
                 getRandomId(),
                 intent,
-                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
+                templateFlags,
         )
     }
 
