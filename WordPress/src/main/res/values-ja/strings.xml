@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-10-20 09:54:07+0000
+Translation-Revision-Date: 2022-11-04 06:19:35+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.3
 Language: ja_JP
 -->
 <resources>
+    <string name="post_settings_parent">親ページ</string>
+    <string name="post_settings_page_attributes">ページ属性</string>
     <string name="about_automattic_contribute_item_title">参加</string>
     <string name="about_news">ニュース</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_one">1件の回答</string>
@@ -37,6 +39,7 @@ Language: ja_JP
     <string name="wp_jetpack_continue_to_notifications">通知に進む</string>
     <string name="wp_jetpack_continue_to_stats">統計に進む</string>
     <string name="wp_jetpack_continue_to_reader">Reader に進む</string>
+    <string name="wp_jetpack_get_new_jetpack_app">新しい Jetpack アプリを試す</string>
     <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery">ブロックの表示中に問題が発生しました。 \nタップしてブロックの回復を試みます。</string>
     <string name="weekly_roundup_notification_text_views_and_comments">先週、%1$s件の表示と%2$s件のコメントがありました。</string>
     <string name="weekly_roundup_notification_text_views_and_likes">先週、%1$s件の表示と%2$s件の「いいね」を受け取りました。</string>
@@ -637,8 +640,8 @@ Language: ja_JP
     <string name="activity_log_backup_download_notice_dismiss_action">非表示</string>
     <string name="activity_log_backup_download_notice_download_action">ダウンロード</string>
     <string name="threat_fix_all_status_success_message_plural">脅威の修正に成功しました。</string>
-    <string name="scan_idle_threats_description_plural">スキャンで %2s に%1s個の潜在的な脅威が見つかりました。 以下の内容を確認して操作するか、すべて修正ボタンをタップしてください。 必要な場合は、%3$sにご連絡ください。</string>
     <string name="threat_fix_all_confirmation_message_plural">%s件のアクティブな脅威を修正してもよければ確認してください。</string>
+    <string name="scan_idle_threats_description_plural">スキャンで %2$s に%1$s個の潜在的な脅威が見つかりました。以下の内容を確認して操作するか、すべて修正ボタンをタップしてください。 必要な場合は、%3$sにご連絡ください。</string>
     <string name="scan_fixing_threats_description_plural">現在バックグラウンドでこれらの脅威を修正しています。その間、通常通りサイトを使用し、いつでも進行状況を確認できます。</string>
     <string name="gutenberg_native_edit_focal_point">焦点を編集</string>
     <string name="new_site_creation_search_domain_example">example.com</string>
