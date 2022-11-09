@@ -166,33 +166,7 @@ class ReferrersUseCase(
                         onUiState(SelectedGroup(if (changedExpandedState) group.groupId else null))
                     })
                     if (isExpanded) {
-                        items.addAll(group.referrers.map { referrer ->
-                            val referrerSpam = referrer.markedAsSpam
-                            val referrerIcon = buildIcon(referrer.icon, referrerSpam)
-                            val iconStyle = if (group.icon != null && referrer.icon == null && referrerIcon == null) {
-                                EMPTY_SPACE
-                            } else {
-                                NORMAL
-                            }
-                            ListItemWithIcon(
-                                    icon = referrerIcon,
-                                    iconUrl = if (referrerIcon == null) referrer.icon else null,
-                                    iconStyle = iconStyle,
-                                    textStyle = buildTextStyle(referrerSpam),
-                                    text = referrer.name,
-                                    value = statsUtils.toFormattedString(referrer.views),
-                                    showDivider = false,
-                                    navigationAction = referrer.url?.let {
-                                        create(it, this::onItemClick)
-                                    },
-                                    contentDescription = contentDescriptionHelper.buildContentDescription(
-                                            header,
-                                            referrer.name,
-                                            referrer.views
-                                    )
-                            )
-                        })
-                        items.add(Divider)
+                        showReferrer(items, group, header)
                     }
                 }
             }
@@ -209,6 +183,40 @@ class ReferrersUseCase(
             }
         }
         return items
+    }
+
+    private fun showReferrer(
+        items: MutableList<BlockListItem>,
+        group: Group,
+        header: Header
+    ) {
+        items.addAll(group.referrers.map { referrer ->
+            val referrerSpam = referrer.markedAsSpam
+            val referrerIcon = buildIcon(referrer.icon, referrerSpam)
+            val iconStyle = if (group.icon != null && referrer.icon == null && referrerIcon == null) {
+                EMPTY_SPACE
+            } else {
+                NORMAL
+            }
+            ListItemWithIcon(
+                    icon = referrerIcon,
+                    iconUrl = if (referrerIcon == null) referrer.icon else null,
+                    iconStyle = iconStyle,
+                    textStyle = buildTextStyle(referrerSpam),
+                    text = referrer.name,
+                    value = statsUtils.toFormattedString(referrer.views),
+                    showDivider = false,
+                    navigationAction = referrer.url?.let {
+                        create(it, this::onItemClick)
+                    },
+                    contentDescription = contentDescriptionHelper.buildContentDescription(
+                            header,
+                            referrer.name,
+                            referrer.views
+                    )
+            )
+        })
+        items.add(Divider)
     }
 
     private fun buildPieChartItem(domainModel: ReferrersModel): PieChartItem {
