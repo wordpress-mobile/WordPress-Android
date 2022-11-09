@@ -91,6 +91,7 @@ fun WelcomeStep(uiState: UiState.Content.Welcome) = with(uiState) {
 
         UserAvatarImage(
                 avatarUrl = uiState.userAvatarUrl,
+                onClick = secondaryActionButton.onClick,
                 modifier = Modifier.dimmed(isProcessing),
         )
 
