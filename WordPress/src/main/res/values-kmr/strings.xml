@@ -2392,8 +2392,4 @@ Language: ku_TR
     <string name="save">Tomar bike</string>
     <string name="cancel">Betal bike</string>
     <string name="add">Tevlî bike</string>
-    <string-array name="blogging_reminders_count">
-        <item>Carekê</item>
-        <item>Du caran</item>
-    </string-array>
 </resources>
