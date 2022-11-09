@@ -49,7 +49,11 @@ class UserFlagsResolverTest {
     private val mockCursor: MatrixCursor = mock()
     private val wordPressCurrentPackageId = "packageId"
     private val uriValue = "content://$wordPressCurrentPackageId.${UserFlagsProvider::class.simpleName}"
-    private val emptyFlagsData = UserFlagsData(flags = mapOf(), quickStartTaskList = listOf(), quickStartStatusList = listOf())
+    private val emptyFlagsData = UserFlagsData(
+            flags = mapOf(),
+            quickStartTaskList = listOf(),
+            quickStartStatusList = listOf()
+    )
 
     @Before
     fun setup() {
