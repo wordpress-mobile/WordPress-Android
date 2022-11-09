@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-10-20 15:54:07+0000
+Translation-Revision-Date: 2022-11-03 14:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: he_IL
 -->
 <resources>
+    <string name="post_settings_parent">עמוד ראשי</string>
+    <string name="post_settings_page_attributes">מאפייני עמוד</string>
     <string name="about_automattic_contribute_item_title">להשתתף</string>
     <string name="about_news">חדשות</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_one">תשובה אחת</string>
@@ -37,6 +39,7 @@ Language: he_IL
     <string name="wp_jetpack_continue_to_notifications">להמשיך להודעות</string>
     <string name="wp_jetpack_continue_to_stats">להמשיך לנתונים הסטטיסטיים</string>
     <string name="wp_jetpack_continue_to_reader">להמשיך ל-Reader</string>
+    <string name="wp_jetpack_get_new_jetpack_app">כדאי לנסות את האפליקציה החדשה של Jetpack</string>
     <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery">בעיה בהצגת הבלוק. \nיש להקיש כדי לנסות לשחזר את הבלוק.</string>
     <string name="weekly_roundup_notification_text_views_and_comments">בשבוע הקודם היו לך ⁦%1$s⁩ צפיות ו-⁦%2$s⁩ תגובות</string>
     <string name="weekly_roundup_notification_text_views_and_likes">בשבוע הקודם היו לך ⁦%1$s⁩ צפיות ו-⁦%2$s⁩ לייקים</string>
