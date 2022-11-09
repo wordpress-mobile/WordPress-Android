@@ -8,10 +8,12 @@ import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.ArgumentMatchers.anyString
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.fluxc.model.QuickStartTaskModel
 import org.wordpress.android.fluxc.model.SiteModel
 
 class ResolverUtilityTest : BaseUnitTest() {
@@ -84,5 +86,12 @@ class ResolverUtilityTest : BaseUnitTest() {
         verify(sqliteDatabase, times(2)).compileStatement(
                 "UPDATE SQLITE_SEQUENCE SET seq=? WHERE name='SiteModel'"
         )
+    }
+
+    @Test(expected = SQLException::class)
+    fun `copyQsDataWithIndexes fails if the copy of one table fails`() {
+        whenever(sqliteStatement.execute()).thenThrow(SQLException("Error"))
+        val result = resolverUtility.copyQsDataWithIndexes(listOf(), listOf(QuickStartTaskModel()))
+        assertThat(result).isFalse()
     }
 }
