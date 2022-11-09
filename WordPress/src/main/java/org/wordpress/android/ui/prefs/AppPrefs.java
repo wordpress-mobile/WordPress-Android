@@ -287,9 +287,6 @@ public class AppPrefs {
 
         // Indicates if this is the first time we try to get the reader saved posts in Jetpack automatically
         IS_FIRST_TRY_READER_SAVED_POSTS_JETPACK,
-
-        // Indicates if the WordPress to Jetpack migration flow was completed
-        IS_MIGRATION_TO_JETPACK_FLOW_COMPLETED,
     }
 
     static SharedPreferences prefs() {
@@ -1472,13 +1469,5 @@ public class AppPrefs {
 
     public static void saveIsFirstTryReaderSavedPostsJetpack(final boolean isFirstTry) {
         setBoolean(UndeletablePrefKey.IS_FIRST_TRY_READER_SAVED_POSTS_JETPACK, isFirstTry);
-    }
-
-    public static boolean isJetpackMigrationFlowCompleted() {
-        return getBoolean(UndeletablePrefKey.IS_MIGRATION_TO_JETPACK_FLOW_COMPLETED, false);
-    }
-
-    public static void setJetpackMigrationFlowCompleted(final boolean isCompleted) {
-        setBoolean(UndeletablePrefKey.IS_MIGRATION_TO_JETPACK_FLOW_COMPLETED, isCompleted);
     }
 }

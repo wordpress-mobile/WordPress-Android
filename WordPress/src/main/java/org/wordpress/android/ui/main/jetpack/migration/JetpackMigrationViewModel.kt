@@ -15,7 +15,6 @@ import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.WelcomeSecondaryButton
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Content
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Loading
-import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.GravatarUtilsWrapper
@@ -28,7 +27,6 @@ class JetpackMigrationViewModel @Inject constructor(
     private val accountStore: AccountStore,
     private val siteUtilsWrapper: SiteUtilsWrapper,
     private val gravatarUtilsWrapper: GravatarUtilsWrapper,
-    private val appPrefsWrapper: AppPrefsWrapper,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow<UiState>(Loading)
     val uiState: StateFlow<UiState> = _uiState
@@ -68,8 +66,6 @@ class JetpackMigrationViewModel @Inject constructor(
                 delay(5000)
                 _uiState.value = it.copy(isProcessing = false)
                 // TODO: navigate to notifications screen
-                // TODO: move this to the end of the migration flow
-                appPrefsWrapper.isJetpackMigrationFlowCompleted = true
             }
         }
     }
