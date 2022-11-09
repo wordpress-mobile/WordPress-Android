@@ -43,7 +43,6 @@ class ReaderSavedPostsResolver @Inject constructor(
         appPrefsWrapper.saveIsFirstTryReaderSavedPostsJetpack(false)
         val (savedPosts) = localMigrationContentResolver.getDataForEntityType<ReaderPostsData>(ReaderPosts)
         updateReaderSavedPosts(onSuccess, onFailure, savedPosts)
-//            readerSavedPostsAnalyticsTracker.trackFailed(ErrorType.QuerySavedPostsError)
     }
 
     @Suppress("TooGenericExceptionCaught", "SwallowedException")
