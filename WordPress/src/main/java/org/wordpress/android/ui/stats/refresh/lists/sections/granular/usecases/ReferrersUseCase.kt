@@ -183,6 +183,14 @@ class ReferrersUseCase(
             }
         }
 
+        showViewMore(itemCount, domainModel, items)
+    }
+
+    private fun showViewMore(
+        itemCount: Int,
+        domainModel: ReferrersModel,
+        items: MutableList<BlockListItem>
+    ) {
         val shouldShowViewMore = itemCount < domainModel.groups.size ||
                 (useCaseMode == BLOCK && domainModel.hasMore)
         if (shouldShowViewMore) {
