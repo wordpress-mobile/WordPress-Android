@@ -286,7 +286,7 @@ public class AppPrefs {
         IS_FIRST_TRY_BLOGGING_REMINDERS_SYNC_JETPACK,
 
         // Indicates if this is the first time we try to get the reader saved posts in Jetpack automatically
-        IS_FIRST_TRY_READER_SAVED_POSTS_JETPACK,
+        IS_FIRST_TRY_READER_SAVED_POSTS_JETPACK
     }
 
     static SharedPreferences prefs() {
