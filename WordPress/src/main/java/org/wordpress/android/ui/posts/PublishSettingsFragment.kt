@@ -56,30 +56,16 @@ abstract class PublishSettingsFragment : Fragment() {
 
         AccessibilityUtils.disableHintAnnouncement(dateAndTime)
         AccessibilityUtils.disableHintAnnouncement(publishNotification)
-
         dateAndTimeContainer.setOnClickListener { showPostDateSelectionDialog() }
-
         setupContent(rootView, viewModel)
 
         observeOnDatePicked()
-
         observeOnPublishedDateChanged()
-
         observeOnNotificationTime()
-
-        observeOnUiModel(
-                dateAndTime,
-                publishNotificationTitle,
-                publishNotification,
-                rootView
-        )
-
+        observeOnUiModel(dateAndTime, publishNotificationTitle, publishNotification, rootView)
         observeOnShowNotificationDialog()
-
         observeOnToast()
-
         observerOnNotificationAdded()
-
         observeOnAddToCalendar()
 
         viewModel.start(getPostRepository())
