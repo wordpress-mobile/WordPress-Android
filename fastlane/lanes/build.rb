@@ -288,6 +288,8 @@ platform :android do
       message = "#{product} Installable Build: [#{filename}](#{install_url})"
       sh('buildkite-agent', 'annotate', message, '--style', 'info', '--context', "installable-build-#{product}")
     end
+
+    UI.user_error!('🚧 Force crash just to force the CI step to fail so that we can hit retry on it and test the skip_if_exists works as expected')
   end
 
   # This function is Buildkite-specific
