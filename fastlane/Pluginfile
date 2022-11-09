@@ -6,5 +6,5 @@ group :screenshots, optional: true do
   gem 'rmagick', '~> 4.1'
 end
 
-# gem 'fastlane-plugin-wpmreleasetoolkit', git: 'git@github.com:wordpress-mobile/release-toolkit.git', branch: 'trunk'
-gem 'fastlane-plugin-wpmreleasetoolkit', '~> 5.6'
+gem 'fastlane-plugin-wpmreleasetoolkit', git: 'https://github.com/wordpress-mobile/release-toolkit.git', branch: 'upload_to_s3-skip_if_exists'
+# gem 'fastlane-plugin-wpmreleasetoolkit', '~> 5.6'
