@@ -120,69 +120,79 @@ class ReferrersUseCase(
         if (domainModel.groups.isEmpty()) {
             items.add(Empty(R.string.stats_no_data_for_period))
         } else {
-            val header = Header(R.string.stats_referrer_label, R.string.stats_referrer_views_label)
-            if (BuildConfig.IS_JETPACK_APP && useCaseMode == BLOCK_DETAIL) {
-                items.add(buildPieChartItem(domainModel))
-            }
-            items.add(header)
-            val itemCount = min(itemsToShow, domainModel.groups.size)
-            domainModel.groups.subList(0, itemCount).forEachIndexed { index, group ->
-                val contentDescription =
-                        contentDescriptionHelper.buildContentDescription(
-                                header,
-                                group.name ?: "",
-                                group.total ?: 0
-                        )
-                val spam = group.markedAsSpam
-                val icon = buildIcon(group.icon, spam)
-                if (group.referrers.isEmpty()) {
-                    val headerItem = ListItemWithIcon(
-                            icon = icon,
-                            iconUrl = if (icon == null) group.icon else null,
-                            textStyle = buildTextStyle(spam),
-                            text = group.name,
-                            value = group.total?.let { statsUtils.toFormattedString(it) },
-                            showDivider = index < domainModel.groups.size - 1,
-                            navigationAction = group.url?.let {
-                                create(it, this::onItemClick)
-                            },
-                            longClickAction = { view -> this.onMenuClick(view, group, spam) },
-                            contentDescription = contentDescription
-                    )
-                    items.add(headerItem)
-                } else {
-                    val headerItem = ListItemWithIcon(
-                            icon = icon,
-                            iconUrl = if (icon == null) group.icon else null,
-                            textStyle = buildTextStyle(spam),
-                            text = group.name,
-                            value = group.total?.let { statsUtils.toFormattedString(it) },
-                            showDivider = index < domainModel.groups.size - 1,
-                            contentDescription = contentDescription,
-                            longClickAction = { view -> this.onMenuClick(view, group, spam) }
-                    )
-                    val isExpanded = group.groupId == uiState.groupId
-                    items.add(ExpandableItem(headerItem, isExpanded) { changedExpandedState ->
-                        onUiState(SelectedGroup(if (changedExpandedState) group.groupId else null))
-                    })
-                    if (isExpanded) {
-                        showReferrer(items, group, header)
-                    }
-                }
-            }
-
-            val shouldShowViewMore = itemCount < domainModel.groups.size ||
-                    (useCaseMode == BLOCK && domainModel.hasMore)
-            if (shouldShowViewMore) {
-                items.add(
-                        Link(
-                                text = R.string.stats_insights_view_more,
-                                navigateAction = create(statsGranularity, this::onViewMoreClicked)
-                        )
-                )
-            }
+            populateReferrer(items, domainModel, uiState)
         }
         return items
+    }
+
+    private fun populateReferrer(
+        items: MutableList<BlockListItem>,
+        domainModel: ReferrersModel,
+        uiState: SelectedGroup
+    ) {
+        val header = Header(R.string.stats_referrer_label, R.string.stats_referrer_views_label)
+        if (BuildConfig.IS_JETPACK_APP && useCaseMode == BLOCK_DETAIL) {
+            items.add(buildPieChartItem(domainModel))
+        }
+        items.add(header)
+        val itemCount = min(itemsToShow, domainModel.groups.size)
+
+        domainModel.groups.subList(0, itemCount).forEachIndexed { index, group ->
+            val contentDescription =
+                    contentDescriptionHelper.buildContentDescription(
+                            header,
+                            group.name ?: "",
+                            group.total ?: 0
+                    )
+            val spam = group.markedAsSpam
+            val icon = buildIcon(group.icon, spam)
+
+            if (group.referrers.isEmpty()) {
+                val headerItem = ListItemWithIcon(
+                        icon = icon,
+                        iconUrl = if (icon == null) group.icon else null,
+                        textStyle = buildTextStyle(spam),
+                        text = group.name,
+                        value = group.total?.let { statsUtils.toFormattedString(it) },
+                        showDivider = index < domainModel.groups.size - 1,
+                        navigationAction = group.url?.let {
+                            create(it, this::onItemClick)
+                        },
+                        longClickAction = { view -> this.onMenuClick(view, group, spam) },
+                        contentDescription = contentDescription
+                )
+                items.add(headerItem)
+            } else {
+                val headerItem = ListItemWithIcon(
+                        icon = icon,
+                        iconUrl = if (icon == null) group.icon else null,
+                        textStyle = buildTextStyle(spam),
+                        text = group.name,
+                        value = group.total?.let { statsUtils.toFormattedString(it) },
+                        showDivider = index < domainModel.groups.size - 1,
+                        contentDescription = contentDescription,
+                        longClickAction = { view -> this.onMenuClick(view, group, spam) }
+                )
+                val isExpanded = group.groupId == uiState.groupId
+                items.add(ExpandableItem(headerItem, isExpanded) { changedExpandedState ->
+                    onUiState(SelectedGroup(if (changedExpandedState) group.groupId else null))
+                })
+                if (isExpanded) {
+                    showReferrer(items, group, header)
+                }
+            }
+        }
+
+        val shouldShowViewMore = itemCount < domainModel.groups.size ||
+                (useCaseMode == BLOCK && domainModel.hasMore)
+        if (shouldShowViewMore) {
+            items.add(
+                    Link(
+                            text = R.string.stats_insights_view_more,
+                            navigateAction = create(statsGranularity, this::onViewMoreClicked)
+                    )
+            )
+        }
     }
 
     private fun showReferrer(
