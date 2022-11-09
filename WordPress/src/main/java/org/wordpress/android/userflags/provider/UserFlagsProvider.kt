@@ -92,8 +92,8 @@ class UserFlagsProvider : QueryContentProvider() {
                                         entry.key.startsWith(flagKey)
                                     } != null
                                 },
-                            statusList = providerUtility.getAllQuickStartStatus(),
-                            taskList = providerUtility.getAllQuickStartTask()
+                            quickStartStatusList = providerUtility.getAllQuickStartStatus(),
+                            quickStartTaskList = providerUtility.getAllQuickStartTask()
                     )
                     queryResult.createCursor(userFlagsData)
                 } else null

@@ -5,6 +5,6 @@ import org.wordpress.android.fluxc.model.QuickStartTaskModel
 
 data class UserFlagsData(
     val flags: Map<String, Any?>,
-    val taskList: List<QuickStartTaskModel>,
-    val statusList: List<QuickStartStatusModel>
+    val quickStartTaskList: List<QuickStartTaskModel>,
+    val quickStartStatusList: List<QuickStartStatusModel>
 )

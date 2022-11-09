@@ -74,8 +74,8 @@ class UserFlagsResolver @Inject constructor(
     ): Boolean {
         try {
             val userFlags = userFlagsData.flags
-            val qsStatusList = userFlagsData.statusList
-            val qsTaskList = userFlagsData.taskList
+            val qsStatusList = userFlagsData.quickStartStatusList
+            val qsTaskList = userFlagsData.quickStartTaskList
 
             for ((key, value) in userFlags) {
                 val userFlagPrefKey = UserFlagsPrefKey(key)

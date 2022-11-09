@@ -49,7 +49,7 @@ class UserFlagsResolverTest {
     private val mockCursor: MatrixCursor = mock()
     private val wordPressCurrentPackageId = "packageId"
     private val uriValue = "content://$wordPressCurrentPackageId.${UserFlagsProvider::class.simpleName}"
-    private val emptyFlagsData = UserFlagsData(flags = mapOf(), taskList = listOf(), statusList = listOf())
+    private val emptyFlagsData = UserFlagsData(flags = mapOf(), quickStartTaskList = listOf(), quickStartStatusList = listOf())
 
     @Before
     fun setup() {
@@ -162,8 +162,8 @@ class UserFlagsResolverTest {
         featureEnabled()
         val data = emptyFlagsData.copy(
                 flags = mapOf("key" to "value"),
-                taskList = listOf(),
-                statusList = listOf()
+                quickStartTaskList = listOf(),
+                quickStartStatusList = listOf()
         )
         whenever(mockCursor.getString(0)).thenReturn(Gson().toJson(data))
         classToTest.tryGetUserFlags({}, {})
@@ -175,8 +175,8 @@ class UserFlagsResolverTest {
         featureEnabled()
         val data = emptyFlagsData.copy(
                 flags = mapOf("key" to "value"),
-                taskList = listOf(),
-                statusList = listOf()
+                quickStartTaskList = listOf(),
+                quickStartStatusList = listOf()
         )
         whenever(mockCursor.getString(0)).thenReturn(Gson().toJson(data))
         val onSuccess: () -> Unit = mock()
@@ -191,8 +191,8 @@ class UserFlagsResolverTest {
         val value = "value"
         val data = emptyFlagsData.copy(
                 flags = mapOf(key to value),
-                taskList = listOf(),
-                statusList = listOf()
+                quickStartTaskList = listOf(),
+                quickStartStatusList = listOf()
         )
         whenever(mockCursor.getString(0)).thenReturn(Gson().toJson(data))
         val onSuccess: () -> Unit = mock()
