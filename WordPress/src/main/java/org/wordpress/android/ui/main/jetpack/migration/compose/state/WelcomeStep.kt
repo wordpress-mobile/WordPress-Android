@@ -21,6 +21,7 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.SubcomposeLayout
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
@@ -206,8 +207,8 @@ private val previewUiState = UiState.Content.Welcome(
         secondaryActionButton = WelcomeSecondaryButton {},
 )
 
-@Preview(showBackground = true, widthDp = 414, heightDp = 897)
-@Preview(showBackground = true, widthDp = 414, heightDp = 897, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview(showBackground = true, device = Devices.PIXEL_4_XL)
+@Preview(showBackground = true, device = Devices.PIXEL_4_XL, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun PreviewWelcomeStep() {
     AppTheme {
@@ -217,8 +218,8 @@ private fun PreviewWelcomeStep() {
     }
 }
 
-@Preview(showBackground = true, widthDp = 414, heightDp = 897)
-@Preview(showBackground = true, widthDp = 414, heightDp = 897, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview(showBackground = true, device = Devices.PIXEL_4_XL)
+@Preview(showBackground = true, device = Devices.PIXEL_4_XL, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun PreviewWelcomeStepInProgress() {
     val uiState = previewUiState.copy(isProcessing = true)
