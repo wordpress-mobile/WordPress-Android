@@ -5,6 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.MenuItem
+import androidx.core.view.isVisible
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
@@ -85,6 +86,9 @@ class HelpActivity : LocaleAwareActivity() {
                 }
                 AnalyticsTracker.track(Stat.SUPPORT_IDENTITY_FORM_VIEWED)
             }
+            if (originFromExtras == Origin.JETPACK_MIGRATION_HELP) {
+                configureForJetpackMigrationHelp()
+            }
         }
         /**
          * If the user taps on a Zendesk notification, we want to show them the `My Tickets` page. However, this
@@ -142,6 +146,25 @@ class HelpActivity : LocaleAwareActivity() {
         } else {
             getString(R.string.support_contact_email_not_set)
         }
+    }
+
+    private fun HelpActivityBinding.configureForJetpackMigrationHelp() {
+        supportActionBar?.title = getString(R.string.support_title)
+        faqButton.isVisible = false
+        helpCenterButton.run {
+            isVisible = true
+            setOnClickListener { showFaq() }
+        }
+        applicationVersion.isVisible = false
+        applicationLogButton.isVisible = false
+        logOutButtonContainer.isVisible = true
+        userDetailsContainer.isVisible = true
+        logOutButton.setOnClickListener { logOut() }
+    }
+
+    @Suppress("ForbiddenComment")
+    private fun logOut() {
+        // TODO: implement logout
     }
 
     enum class Origin(private val stringValue: String) {
