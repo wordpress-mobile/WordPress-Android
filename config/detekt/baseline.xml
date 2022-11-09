@@ -66,11 +66,7 @@
     <ID>FunctionParameterNaming:WizardManager.kt$WizardManager$T: WizardStep</ID>
     <ID>LargeClass:PagesViewModel.kt$PagesViewModel : ScopedViewModel</ID>
     <ID>LargeClass:ReaderPostDetailFragment.kt$ReaderPostDetailFragment : ViewPagerFragmentOnActivityBackPressedListenerScrollDirectionListenerReaderCustomViewListenerReaderWebViewPageFinishedListenerReaderWebViewUrlClickListenerPrivateAtCookieProgressDialogOnDismissListenerAutoHideToolbarListener</ID>
-    <ID>LongMethod:AuthorsUseCase.kt$AuthorsUseCase$override fun buildUiModel(domainModel: AuthorsModel, uiState: SelectedAuthor): List&lt;BlockListItem></ID>
     <ID>LongMethod:BarChartViewHolder.kt$BarChartViewHolder$private fun BarChart.draw( item: BarChartItem, labelStart: TextView, labelEnd: TextView ): BarCount</ID>
-    <ID>LongMethod:ClicksUseCase.kt$ClicksUseCase$override fun buildUiModel(domainModel: ClicksModel, uiState: SelectedClicksGroup): List&lt;BlockListItem></ID>
-    <ID>LongMethod:HomepageSettingsDialog.kt$HomepageSettingsDialog$override fun onCreateDialog(savedInstanceState: Bundle?): Dialog</ID>
-    <ID>LongMethod:ReferrersUseCase.kt$ReferrersUseCase$override fun buildUiModel(domainModel: ReferrersModel, uiState: SelectedGroup): List&lt;BlockListItem></ID>
     <ID>LongMethod:SearchListViewModel.kt$SearchListViewModel$private fun PageModel.toPageItem(areActionsEnabled: Boolean): PageItem</ID>
     <ID>LongMethod:SuggestionActivity.kt$SuggestionActivity$private fun initializeActivity(siteModel: SiteModel, suggestionType: SuggestionType)</ID>
     <ID>MagicNumber:ActivityViewHolder.kt$ActivityViewHolder$3</ID>
