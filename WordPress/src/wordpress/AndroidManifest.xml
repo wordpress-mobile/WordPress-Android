@@ -21,5 +21,13 @@
             android:name=".reader.savedposts.provider.ReaderSavedPostsProvider"
             android:authorities="${applicationId}.ReaderSavedPostsProvider"
             android:exported="true" />
+
+        <receiver
+            android:name=".ui.mysite.jetpackbadge.JetpackAppInstallReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="org.wordpress.android.broadcast.DISABLE_NOTIFICATIONS"/>
+            </intent-filter>
+        </receiver>
     </application>
 </manifest>

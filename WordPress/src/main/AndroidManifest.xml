@@ -924,15 +924,6 @@
                 android:resource="@xml/stats_minified_widget_info"/>
         </receiver>
         <receiver android:name=".ui.notifications.DismissNotificationReceiver" />
-        <receiver
-            android:name=".ui.mysite.jetpackbadge.JetpackAppInstallReceiver"
-            android:enabled="true"
-            android:exported="true"
-            tools:ignore="ExportedReceiver">
-            <intent-filter>
-                <action android:name="org.wordpress.android.broadcast.DISABLE_NOTIFICATIONS"/>
-            </intent-filter>
-        </receiver>
         <service
             android:name=".ui.stats.refresh.lists.widget.WidgetService"
             android:permission="android.permission.BIND_REMOTEVIEWS" />

@@ -9,18 +9,14 @@ import androidx.preference.PreferenceManager
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.push.GCMMessageHandler
-import org.wordpress.android.util.BuildConfigWrapper
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class JetpackAppInstallReceiver : BroadcastReceiver() {
-    @Inject lateinit var mBuildConfigWrapper: BuildConfigWrapper
     @Inject lateinit var gcmMessageHandler: GCMMessageHandler
 
     override fun onReceive(context: Context, intent: Intent) {
-        if (!mBuildConfigWrapper.isJetpackApp) {
-            disableNotifications(context)
-        }
+        disableNotifications(context)
 
         buildString {
             append("Action: ").append(intent.action).append("\n")
