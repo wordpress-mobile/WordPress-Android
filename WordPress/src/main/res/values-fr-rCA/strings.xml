@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-10-20 14:54:07+0000
+Translation-Revision-Date: 2022-11-03 12:45:11+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: fr
 -->
 <resources>
+    <string name="post_settings_parent">Page parente</string>
+    <string name="post_settings_page_attributes">Attributs de la page</string>
     <string name="about_automattic_contribute_item_title">Contribuer</string>
     <string name="about_news">Actualités</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_one">1 réponse</string>
@@ -37,7 +39,7 @@ Language: fr
     <string name="wp_jetpack_continue_to_notifications">Poursuivre vers la section Notifications</string>
     <string name="wp_jetpack_continue_to_stats">Poursuivre vers la section Statistiques</string>
     <string name="wp_jetpack_continue_to_reader">Poursuivre vers la section Lecteur</string>
-    <string name="wp_jetpack_get_new_jetpack_app">Obtenez la nouvelle application Jetpack</string>
+    <string name="wp_jetpack_get_new_jetpack_app">Essayez la nouvelle application Jetpack</string>
     <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery">Problème d’affichage du bloc. \nAppuyez pour tenter de restaurer le bloc.</string>
     <string name="weekly_roundup_notification_text_views_and_comments">La semaine dernière, vous avez eu %1$s vues et %2$s commentaires</string>
     <string name="weekly_roundup_notification_text_views_and_likes">La semaine dernière, vous avez eu %1$s vues et %2$s mentions J’aime</string>

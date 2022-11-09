@@ -5,7 +5,6 @@ import android.net.Uri
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.wordpress.android.WordPress
-import org.wordpress.android.fluxc.model.BloggingRemindersModel
 import org.wordpress.android.fluxc.store.BloggingRemindersStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.provider.query.QueryContentProvider
@@ -15,7 +14,7 @@ import org.wordpress.android.util.publicdata.ClientVerification
 import org.wordpress.android.util.signature.SignatureNotFoundException
 import javax.inject.Inject
 
-typealias SiteIDBloggingReminderMap = Map<Long?, BloggingRemindersModel?>
+typealias RemoteSiteId = Long
 
 class BloggingRemindersProvider : QueryContentProvider() {
     @Inject lateinit var bloggingRemindersStore: BloggingRemindersStore
@@ -50,11 +49,7 @@ class BloggingRemindersProvider : QueryContentProvider() {
                         }.filter { bloggingRemindersModel ->
                             bloggingRemindersModel.enabledDays.isNotEmpty()
                         }
-                        val filteredSiteIds = filteredBloggingReminders.map { bloggingReminder ->
-                            siteStore.getSiteIdForLocalId(bloggingReminder.siteId)
-                        }
-                        val result: SiteIDBloggingReminderMap = filteredSiteIds.zip(filteredBloggingReminders).toMap()
-                        queryResult.createCursor(result)
+                        queryResult.createCursor(filteredBloggingReminders)
                     }
                 } else null
             } catch (signatureNotFoundException: SignatureNotFoundException) {

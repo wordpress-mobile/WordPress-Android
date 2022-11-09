@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-10-14 08:02:10+0000
+Translation-Revision-Date: 2022-11-03 16:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: nl
 -->
 <resources>
+    <string name="post_settings_parent">Bovenliggende pagina</string>
+    <string name="post_settings_page_attributes">Pagina-eigenschappen</string>
+    <string name="about_automattic_contribute_item_title">Bijdragen</string>
+    <string name="about_news">Nieuws</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_one">1 antwoord</string>
     <string name="login_prologue_revamped_content_description_wordpress_icon">WordPress-pictogram</string>
     <string name="login_prologue_revamped_tagline">Schrijf, bewerk en publiceer waar je ook bent.</string>
@@ -13,9 +17,9 @@ Language: nl
     <string name="post_settings_author">Auteur</string>
     <string name="app_rating_title">Werk je graag met %s?</string>
     <string name="connection_service_label">Deel bericht op %s</string>
-    <string name="connections_label">Jetpack Social-verbindingen</string>
+    <string name="connections_label">Jetpack Social verbindingen</string>
     <string name="stats_widget_log_in_to_add_message">Meld je aan bij de Jetpack-app om een widget toe te voegen.</string>
-    <string name="stats_view_publicize">Jetpack Social-verbindingen</string>
+    <string name="stats_view_publicize">Jetpack Social verbindingen</string>
     <string name="login_magic_links_email_sent">We hebben zojuist een magische link verstuurd naar</string>
     <string name="login_magic_links_sent_label_short">Controleer je e-mail op dit apparaat!</string>
     <string name="or_use_password">Gebruik je wachtwoord om je aan te melden</string>
@@ -35,7 +39,7 @@ Language: nl
     <string name="wp_jetpack_continue_to_notifications">Doorgaan naar Meldingen</string>
     <string name="wp_jetpack_continue_to_stats">Doorgaan naar Statistieken</string>
     <string name="wp_jetpack_continue_to_reader">Doorgaan naar Lezer</string>
-    <string name="wp_jetpack_get_new_jetpack_app">Download de Jetpack app</string>
+    <string name="wp_jetpack_get_new_jetpack_app">Probeer de Jetpack-app</string>
     <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery">Probleem bij het weergeven van het blok. \nTik om blokherstel te proberen.</string>
     <string name="weekly_roundup_notification_text_views_and_comments">Vorige week had je %1$s weergaven en %2$s reacties</string>
     <string name="weekly_roundup_notification_text_views_and_likes">Vorige week had je %1$s weergaven en %2$s likes</string>
