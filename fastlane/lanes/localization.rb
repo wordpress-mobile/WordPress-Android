@@ -215,7 +215,9 @@ platform :android do
       
       unless skip_commit
         git_add(path: download_path)
-        git_commit(path: download_path, message: "Update #{app_values[:display_name]} metadata translations for #{version}", allow_nothing_to_commit: true)
+        message = "Update #{app_values[:display_name]} metadata translations"
+        message += " for #{version}" unless version.nil?
+        git_commit(path: download_path, message: message, allow_nothing_to_commit: true)
       end
     end
     push_to_git_remote unless skip_commit || skip_git_push
