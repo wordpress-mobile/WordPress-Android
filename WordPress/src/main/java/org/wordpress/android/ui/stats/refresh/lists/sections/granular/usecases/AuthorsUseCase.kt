@@ -127,32 +127,7 @@ class AuthorsUseCase constructor(
                 if (author.posts.isEmpty()) {
                     items.add(headerItem)
                 } else {
-                    val isExpanded = author == uiState.author
-                    items.add(ExpandableItem(headerItem, isExpanded) { changedExpandedState ->
-                        onUiState(SelectedAuthor(if (changedExpandedState) author else null))
-                    })
-                    if (isExpanded) {
-                        items.addAll(author.posts.map { post ->
-                            ListItemWithIcon(
-                                    text = post.title,
-                                    value = statsUtils.toFormattedString(post.views),
-                                    iconStyle = if (author.avatarUrl != null) EMPTY_SPACE else NORMAL,
-                                    textStyle = LIGHT,
-                                    showDivider = false,
-                                    navigationAction = create(
-                                            PostClickParams(post.id, post.url, post.title),
-                                            this::onPostClicked
-                                    ),
-                                    contentDescription = contentDescriptionHelper.buildContentDescription(
-                                            R.string.stats_post_label,
-                                            post.title,
-                                            R.string.stats_post_views_label,
-                                            post.views
-                                    )
-                            )
-                        })
-                        items.add(Divider)
-                    }
+                    addPost(author, uiState, items, headerItem)
                 }
             }
 
@@ -166,6 +141,40 @@ class AuthorsUseCase constructor(
             }
         }
         return items
+    }
+
+    private fun addPost(
+        author: AuthorsModel.Author,
+        uiState: SelectedAuthor,
+        items: MutableList<BlockListItem>,
+        headerItem: ListItemWithIcon
+    ) {
+        val isExpanded = author == uiState.author
+        items.add(ExpandableItem(headerItem, isExpanded) { changedExpandedState ->
+            onUiState(SelectedAuthor(if (changedExpandedState) author else null))
+        })
+        if (isExpanded) {
+            items.addAll(author.posts.map { post ->
+                ListItemWithIcon(
+                        text = post.title,
+                        value = statsUtils.toFormattedString(post.views),
+                        iconStyle = if (author.avatarUrl != null) EMPTY_SPACE else NORMAL,
+                        textStyle = LIGHT,
+                        showDivider = false,
+                        navigationAction = create(
+                                PostClickParams(post.id, post.url, post.title),
+                                this::onPostClicked
+                        ),
+                        contentDescription = contentDescriptionHelper.buildContentDescription(
+                                R.string.stats_post_label,
+                                post.title,
+                                R.string.stats_post_views_label,
+                                post.views
+                        )
+                )
+            })
+            items.add(Divider)
+        }
     }
 
     private fun onViewMoreClicked(statsGranularity: StatsGranularity) {
