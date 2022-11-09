@@ -42,7 +42,6 @@ class UserFlagsResolver @Inject constructor(
                 userFlagsAnalyticsTracker.trackFailed(ErrorType.NoUserFlagsFoundError)
                 onFailure()
             }
-//            userFlagsAnalyticsTracker.trackFailed(ErrorType.QueryUserFlagsError)
     }
 
     @Suppress("TooGenericExceptionCaught", "SwallowedException")
