@@ -25,8 +25,8 @@
 
     <permission
         android:name="org.wordpress.android.permission.DISABLE_NOTIFICATIONS"
-        android:description="@string/notifications_disabled"
-        android:label="@string/notifications_disabled" />
+        android:description="@string/notification_disable_broadcast_permission_desc"
+        android:label="@string/notification_disable_broadcast_permission_label" />
 
     <uses-permission android:name="org.wordpress.android.permission.DISABLE_NOTIFICATIONS"/>
 
