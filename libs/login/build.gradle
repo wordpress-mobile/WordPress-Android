@@ -36,7 +36,7 @@ dependencies {
         exclude group: "com.android.volley"
     }
 
-    implementation "androidx.appcompat:appcompat:$appCompatVersion"
+    implementation "androidx.appcompat:appcompat:$androidxAppCompatVersion"
     implementation "androidx.vectordrawable:vectordrawable-animated:$androidxVectorDrawableAnimatedVersion"
     implementation "androidx.media:media:$androidxMediaVersion"
     implementation "androidx.legacy:legacy-support-v13:$androidxLegacySupportV13Version"
