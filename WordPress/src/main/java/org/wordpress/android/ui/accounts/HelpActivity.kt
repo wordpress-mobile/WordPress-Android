@@ -20,8 +20,10 @@ import org.wordpress.android.support.ZendeskHelper
 import org.wordpress.android.ui.ActivityId
 import org.wordpress.android.ui.AppLogViewerActivity
 import org.wordpress.android.ui.LocaleAwareActivity
+import org.wordpress.android.ui.main.utils.MeGravatarLoader
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.util.SiteUtils
+import org.wordpress.android.util.image.ImageType.AVATAR_WITHOUT_BACKGROUND
 import java.util.ArrayList
 import javax.inject.Inject
 
@@ -30,6 +32,7 @@ class HelpActivity : LocaleAwareActivity() {
     @Inject lateinit var siteStore: SiteStore
     @Inject lateinit var supportHelper: SupportHelper
     @Inject lateinit var zendeskHelper: ZendeskHelper
+    @Inject lateinit var meGravatarLoader: MeGravatarLoader
     private lateinit var binding: HelpActivityBinding
 
     private val originFromExtras by lazy {
@@ -157,9 +160,27 @@ class HelpActivity : LocaleAwareActivity() {
         }
         applicationVersion.isVisible = false
         applicationLogButton.isVisible = false
-        logOutButtonContainer.isVisible = true
-        userDetailsContainer.isVisible = true
-        logOutButton.setOnClickListener { logOut() }
+
+        if (accountStore.hasAccessToken()) {
+            val defaultAccount = accountStore.account
+            logOutButtonContainer.isVisible = true
+            userDetailsContainer.isVisible = true
+            loadAvatar(defaultAccount.avatarUrl.orEmpty())
+            userDisplayName.text = defaultAccount.displayName.ifEmpty { defaultAccount.userName }
+            userName.text = getString(R.string.at_username, defaultAccount.userName)
+            logOutButton.setOnClickListener { logOut() }
+        }
+    }
+
+    private fun HelpActivityBinding.loadAvatar(avatarUrl: String) {
+        meGravatarLoader.load(
+                false,
+                meGravatarLoader.constructGravatarUrl(avatarUrl),
+                null,
+                userAvatar,
+                AVATAR_WITHOUT_BACKGROUND,
+                null
+        )
     }
 
     @Suppress("ForbiddenComment")
