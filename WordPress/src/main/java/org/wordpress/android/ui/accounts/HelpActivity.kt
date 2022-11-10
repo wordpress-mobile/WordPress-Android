@@ -5,6 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.MenuItem
+import androidx.activity.viewModels
 import androidx.core.view.isVisible
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
@@ -19,6 +20,7 @@ import org.wordpress.android.support.SupportHelper
 import org.wordpress.android.support.ZendeskExtraTags
 import org.wordpress.android.support.ZendeskHelper
 import org.wordpress.android.ui.ActivityId
+import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.AppLogViewerActivity
 import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
@@ -36,6 +38,7 @@ class HelpActivity : LocaleAwareActivity() {
     @Inject lateinit var zendeskHelper: ZendeskHelper
     @Inject lateinit var meGravatarLoader: MeGravatarLoader
     private lateinit var binding: HelpActivityBinding
+    private val viewModel: HelpViewModel by viewModels()
 
     private val originFromExtras by lazy {
         (intent.extras?.get(ORIGIN_KEY) as Origin?) ?: Origin.UNKNOWN
@@ -170,6 +173,10 @@ class HelpActivity : LocaleAwareActivity() {
             userDisplayName.text = defaultAccount.displayName.ifEmpty { defaultAccount.userName }
             userName.text = getString(R.string.at_username, defaultAccount.userName)
             logOutButton.setOnClickListener { logOut() }
+
+            viewModel.onSignedOutCompleted.observe(this@HelpActivity) {
+                ActivityLauncher.showMainActivity(this@HelpActivity)
+            }
         }
     }
 
@@ -184,9 +191,8 @@ class HelpActivity : LocaleAwareActivity() {
         )
     }
 
-    @Suppress("ForbiddenComment")
     private fun logOut() {
-        // TODO: implement logout
+        viewModel.signOutWordPress(application as WordPress)
     }
 
     enum class Origin(private val stringValue: String) {
