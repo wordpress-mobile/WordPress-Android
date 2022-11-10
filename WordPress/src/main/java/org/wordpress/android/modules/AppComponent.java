@@ -15,7 +15,6 @@ import org.wordpress.android.ui.ShareIntentReceiverActivity;
 import org.wordpress.android.ui.ShareIntentReceiverFragment;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.about.UnifiedAboutActivity;
-import org.wordpress.android.ui.accounts.HelpActivity;
 import org.wordpress.android.ui.accounts.PostSignupInterstitialActivity;
 import org.wordpress.android.ui.accounts.SignupEpilogueActivity;
 import org.wordpress.android.ui.accounts.signup.SignupEpilogueFragment;
@@ -255,8 +254,6 @@ public interface AppComponent {
     void inject(ShareIntentReceiverFragment object);
 
     void inject(AddQuickPressShortcutActivity object);
-
-    void inject(HelpActivity object);
 
     void inject(CommentDetailFragment object);
 

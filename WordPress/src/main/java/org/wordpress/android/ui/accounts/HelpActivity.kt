@@ -6,6 +6,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.core.view.isVisible
+import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
@@ -27,6 +28,7 @@ import org.wordpress.android.util.image.ImageType.AVATAR_WITHOUT_BACKGROUND
 import java.util.ArrayList
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class HelpActivity : LocaleAwareActivity() {
     @Inject lateinit var accountStore: AccountStore
     @Inject lateinit var siteStore: SiteStore
@@ -47,7 +49,6 @@ class HelpActivity : LocaleAwareActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (application as WordPress).component().inject(this)
         with(HelpActivityBinding.inflate(layoutInflater)) {
             binding = this
             setContentView(root)
