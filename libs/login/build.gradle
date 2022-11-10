@@ -21,11 +21,11 @@ repositories {
 }
 
 android {
-    compileSdkVersion 31
+    compileSdkVersion gradle.ext.compileSdkVersion
 
     defaultConfig {
-        minSdkVersion 21
-        targetSdkVersion 31
+        minSdkVersion gradle.ext.minSdkVersion
+        targetSdkVersion gradle.ext.targetSdkVersion
 
         vectorDrawables.useSupportLibrary = true
     }
