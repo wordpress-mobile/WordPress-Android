@@ -15,9 +15,9 @@ import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
 import org.wordpress.android.fluxc.network.rest.wpcom.jetpacktunnel.JetpackTunnelGsonRequest
 import org.wordpress.android.fluxc.store.PluginStore.ConfigureSitePluginError
 import org.wordpress.android.fluxc.store.PluginStore.ConfiguredSitePluginPayload
-import org.wordpress.android.fluxc.store.PluginStore.FetchPluginForJetpackSiteError
-import org.wordpress.android.fluxc.store.PluginStore.FetchPluginForJetpackSiteErrorType.PLUGIN_DOES_NOT_EXIST
-import org.wordpress.android.fluxc.store.PluginStore.FetchedJetpackSitePluginPayload
+import org.wordpress.android.fluxc.store.PluginStore.FetchSitePluginError
+import org.wordpress.android.fluxc.store.PluginStore.FetchSitePluginErrorType.PLUGIN_DOES_NOT_EXIST
+import org.wordpress.android.fluxc.store.PluginStore.FetchedSitePluginPayload
 import org.wordpress.android.fluxc.store.PluginStore.InstallSitePluginError
 import org.wordpress.android.fluxc.store.PluginStore.InstallSitePluginErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.PluginStore.InstallSitePluginErrorType.PLUGIN_ALREADY_INSTALLED
@@ -54,14 +54,21 @@ class PluginJetpackTunnelRestClient @Inject constructor(
                 PluginResponseModel::class.java,
                 { response: PluginResponseModel? ->
                     response?.let {
-                        val payload = FetchedJetpackSitePluginPayload(it.toDomainModel(site.id))
-                        dispatcher.dispatch(PluginActionBuilder.newFetchedJetpackSitePluginAction(payload))
+                        val payload = FetchedSitePluginPayload(
+                            it.toDomainModel(site.id)
+                        )
+                        dispatcher.dispatch(PluginActionBuilder.newFetchedSitePluginAction(payload))
                     }
                 },
                 {
-                    val fetchError = FetchPluginForJetpackSiteError(PLUGIN_DOES_NOT_EXIST)
-                    val payload = FetchedJetpackSitePluginPayload(pluginName, fetchError)
-                    dispatcher.dispatch(PluginActionBuilder.newFetchedJetpackSitePluginAction(payload))
+                    val fetchError = FetchSitePluginError(
+                        PLUGIN_DOES_NOT_EXIST
+                    )
+                    val payload = FetchedSitePluginPayload(
+                        pluginName,
+                        fetchError
+                    )
+                    dispatcher.dispatch(PluginActionBuilder.newFetchedSitePluginAction(payload))
                 },
                 { request: WPComGsonRequest<*> -> add(request) }
         )
