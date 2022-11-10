@@ -165,14 +165,14 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/log_out_button"
-                style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/help_logout_button_margin"
                 android:layout_marginTop="@dimen/help_logout_button_margin"
                 android:layout_marginBottom="@dimen/help_logout_button_margin_bottom"
-                android:background="?attr/selectableItemBackground"
                 android:text="@string/signout"
+                android:textAppearance="?attr/textAppearanceSubtitle2"
                 android:textColor="?attr/wpColorError" />
         </FrameLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
