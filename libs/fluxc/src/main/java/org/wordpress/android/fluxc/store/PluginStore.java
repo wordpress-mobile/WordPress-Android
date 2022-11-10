@@ -79,11 +79,11 @@ public class PluginStore extends Store {
     }
 
     @SuppressWarnings("WeakerAccess")
-    public static class FetchJetpackSitePluginPayload extends Payload<BaseNetworkError> {
+    public static class FetchSitePluginPayload extends Payload<BaseNetworkError> {
         public SiteModel site;
         public String pluginName;
 
-        public FetchJetpackSitePluginPayload(SiteModel site, String pluginName) {
+        public FetchSitePluginPayload(SiteModel site, String pluginName) {
             this.site = site;
             this.pluginName = pluginName;
         }
@@ -223,15 +223,15 @@ public class PluginStore extends Store {
     }
 
     @SuppressWarnings("WeakerAccess")
-    public static class FetchedJetpackSitePluginPayload extends Payload<FetchPluginForJetpackSiteError> {
+    public static class FetchedSitePluginPayload extends Payload<FetchSitePluginError> {
         public SitePluginModel plugin;
         public String pluginName;
 
-        public FetchedJetpackSitePluginPayload(SitePluginModel plugin) {
+        public FetchedSitePluginPayload(SitePluginModel plugin) {
             this.plugin = plugin;
         }
 
-        public FetchedJetpackSitePluginPayload(String pluginName, FetchPluginForJetpackSiteError error) {
+        public FetchedSitePluginPayload(String pluginName, FetchSitePluginError error) {
             this.pluginName = pluginName;
             this.error = error;
         }
@@ -361,10 +361,10 @@ public class PluginStore extends Store {
         }
     }
 
-    public static class FetchPluginForJetpackSiteError implements OnChangedError {
-        public FetchPluginForJetpackSiteErrorType type;
+    public static class FetchSitePluginError implements OnChangedError {
+        public FetchSitePluginErrorType type;
 
-        public FetchPluginForJetpackSiteError(FetchPluginForJetpackSiteErrorType type) {
+        public FetchSitePluginError(FetchSitePluginErrorType type) {
             this.type = type;
         }
     }
@@ -553,7 +553,7 @@ public class PluginStore extends Store {
         PLUGIN_DOES_NOT_EXIST
     }
 
-    public enum FetchPluginForJetpackSiteErrorType {
+    public enum FetchSitePluginErrorType {
         NOT_JETPACK_SITE,
         EMPTY_RESPONSE,
         GENERIC_ERROR,
@@ -715,11 +715,11 @@ public class PluginStore extends Store {
         }
     }
 
-    public static class OnJetpackSitePluginFetched extends OnChanged<FetchPluginForJetpackSiteError> {
+    public static class OnSitePluginFetched extends OnChanged<FetchSitePluginError> {
         public SitePluginModel plugin;
         public String pluginName;
 
-        public OnJetpackSitePluginFetched(FetchedJetpackSitePluginPayload payload) {
+        public OnSitePluginFetched(FetchedSitePluginPayload payload) {
             this.plugin = payload.plugin;
             this.pluginName = payload.pluginName;
         }
@@ -779,8 +779,8 @@ public class PluginStore extends Store {
             case FETCH_WPORG_PLUGIN:
                 fetchWPOrgPlugin((String) action.getPayload());
                 break;
-            case FETCH_JETPACK_SITE_PLUGIN:
-                fetchPluginForJetpackSite((FetchJetpackSitePluginPayload) action.getPayload());
+            case FETCH_SITE_PLUGIN:
+                fetchSitePlugin((FetchSitePluginPayload) action.getPayload());
                 break;
             case INSTALL_SITE_PLUGIN:
                 installSitePlugin((InstallSitePluginPayload) action.getPayload());
@@ -808,8 +808,8 @@ public class PluginStore extends Store {
             case FETCHED_WPORG_PLUGIN:
                 fetchedWPOrgPlugin((FetchedWPOrgPluginPayload) action.getPayload());
                 break;
-            case FETCHED_JETPACK_SITE_PLUGIN:
-                fetchedJetpackSitePlugin((FetchedJetpackSitePluginPayload) action.getPayload());
+            case FETCHED_SITE_PLUGIN:
+                fetchedSitePlugin((FetchedSitePluginPayload) action.getPayload());
                 break;
             case INSTALLED_SITE_PLUGIN:
                 installedSitePlugin((InstalledSitePluginPayload) action.getPayload());
@@ -924,16 +924,16 @@ public class PluginStore extends Store {
     /* Fetch a single plugin from a site, to get its information and whether it exists or not.
        Currently this is only supported on sites connected using Jetpack plugin or Jetpack Connection Package.
      */
-    private void fetchPluginForJetpackSite(FetchJetpackSitePluginPayload payload) {
+    private void fetchSitePlugin(FetchSitePluginPayload payload) {
         if (payload.site.isJetpackConnected() || payload.site.isJetpackCPConnected()) {
             mPluginJetpackTunnelRestClient.fetchPlugin(payload.site, payload.pluginName);
         } else {
-            FetchPluginForJetpackSiteError error = new FetchPluginForJetpackSiteError(
-                    FetchPluginForJetpackSiteErrorType.NOT_JETPACK_SITE
+            FetchSitePluginError error = new FetchSitePluginError(
+                    FetchSitePluginErrorType.NOT_JETPACK_SITE
             );
-            FetchedJetpackSitePluginPayload errorPayload =
-                    new FetchedJetpackSitePluginPayload(payload.pluginName, error);
-            mDispatcher.dispatch(PluginActionBuilder.newFetchedJetpackSitePluginAction(errorPayload));
+            FetchedSitePluginPayload errorPayload =
+                    new FetchedSitePluginPayload(payload.pluginName, error);
+            mDispatcher.dispatch(PluginActionBuilder.newFetchedSitePluginAction(errorPayload));
         }
     }
 
@@ -1041,8 +1041,8 @@ public class PluginStore extends Store {
         emitChange(event);
     }
 
-    private void fetchedJetpackSitePlugin(FetchedJetpackSitePluginPayload payload) {
-        OnJetpackSitePluginFetched event = new OnJetpackSitePluginFetched(payload);
+    private void fetchedSitePlugin(FetchedSitePluginPayload payload) {
+        OnSitePluginFetched event = new OnSitePluginFetched(payload);
         if (payload.isError()) {
             event.error = payload.error;
         }
