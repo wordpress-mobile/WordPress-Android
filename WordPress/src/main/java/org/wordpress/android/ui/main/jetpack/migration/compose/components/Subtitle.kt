@@ -1,11 +1,12 @@
-package org.wordpress.android.ui.main.jetpack.migration.components
+package org.wordpress.android.ui.main.jetpack.migration.compose.components
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
-import org.wordpress.android.ui.compose.unit.FontSize
+import androidx.compose.ui.unit.sp
 
 @Composable
 fun Subtitle(
@@ -14,7 +15,8 @@ fun Subtitle(
 ) {
     Text(
             text = text,
-            fontSize = FontSize.ExtraLarge.value,
+            fontSize = 17.sp,
+            style = TextStyle(letterSpacing = (-0.01).sp),
             modifier = modifier
                     .padding(top = 20.dp)
     )

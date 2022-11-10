@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.main.jetpack.migration.components
+package org.wordpress.android.ui.main.jetpack.migration.compose.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -35,11 +35,12 @@ import org.wordpress.android.ui.compose.modifiers.disableUserScroll
 import org.wordpress.android.ui.compose.unit.FontSize
 import org.wordpress.android.ui.compose.utils.uiStringText
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.SiteListItemUiState
-import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.StepUiState
+import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState
+import org.wordpress.android.ui.main.jetpack.migration.compose.dimmed
 
 @Composable
 fun SiteList(
-    uiState: StepUiState.Welcome,
+    uiState: UiState.Content.Welcome,
     listState: LazyListState,
     userScrollEnabled: Boolean = true,
     bottomPaddingPx: Int = 0,
@@ -51,7 +52,6 @@ fun SiteList(
             modifier = modifier
                     .composed { if (userScrollEnabled) this else disableUserScroll() }
                     .background(MaterialTheme.colors.background)
-                    .padding(horizontal = dimensionResource(R.dimen.jp_migration_padding_horizontal))
                     .fillMaxHeight()
                     .then(blurModifier),
     ) {
@@ -62,8 +62,17 @@ fun SiteList(
                 items = uiState.sites,
                 key = { it.id },
         ) { site ->
-            SiteListItem(site)
-            Divider(color = colorResource(R.color.gray_10).copy(alpha = 0.5f))
+            SiteListItem(
+                    uiState = site,
+                    isDimmed = uiState.isProcessing,
+            )
+            Divider(
+                    color = colorResource(R.color.gray_10),
+                    thickness = 0.5.dp,
+                    modifier = Modifier
+                            .padding(horizontal = dimensionResource(R.dimen.jp_migration_padding_horizontal))
+                            .dimmed(uiState.isProcessing),
+            )
         }
         item {
             val bottomPadding = LocalDensity.current.run { bottomPaddingPx.toDp() + 30.dp }
@@ -73,8 +82,13 @@ fun SiteList(
 }
 
 @Composable
-private fun SiteListItem(uiState: SiteListItemUiState) = with (uiState) {
-    Row(verticalAlignment = Alignment.CenterVertically) {
+private fun SiteListItem(uiState: SiteListItemUiState, isDimmed: Boolean) = with(uiState) {
+    Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                    .padding(horizontal = dimensionResource(R.dimen.jp_migration_padding_horizontal))
+                    .dimmed(isDimmed),
+    ) {
         SiteIcon(iconUrl)
         Column {
             SiteName(name)
@@ -84,8 +98,12 @@ private fun SiteListItem(uiState: SiteListItemUiState) = with (uiState) {
 }
 
 @Composable
-private fun SiteListHeader(uiState: StepUiState.Welcome) = with(uiState) {
-    Column {
+private fun SiteListHeader(uiState: UiState.Content.Welcome) = with(uiState) {
+    Column(
+            modifier = Modifier
+                    .padding(horizontal = dimensionResource(R.dimen.jp_migration_padding_horizontal))
+                    .dimmed(uiState.isProcessing)
+    ) {
         ScreenIcon(iconRes = screenIconRes)
         Title(text = uiStringText(title))
         Subtitle(text = uiStringText(subtitle))
@@ -106,7 +124,7 @@ private fun SiteIcon(iconUrl: String) {
             modifier = Modifier
                     .padding(vertical = 15.dp)
                     .padding(end = 20.dp)
-                    .size(60.dp)
+                    .size(dimensionResource(R.dimen.jp_migration_site_icon_size))
                     .clip(RoundedCornerShape(3.dp))
     )
 }

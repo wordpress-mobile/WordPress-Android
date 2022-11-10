@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.main.jetpack.migration.components
+package org.wordpress.android.ui.main.jetpack.migration.compose.state
 
 import android.content.res.Configuration
 import android.os.Build.VERSION
@@ -21,6 +21,7 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.SubcomposeLayout
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
@@ -33,10 +34,16 @@ import org.wordpress.android.ui.compose.utils.uiStringText
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.WelcomePrimaryButton
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.WelcomeSecondaryButton
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.SiteListItemUiState
-import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.StepUiState
+import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState
+import org.wordpress.android.ui.main.jetpack.migration.compose.DIM_ALPHA
+import org.wordpress.android.ui.main.jetpack.migration.compose.components.PrimaryButton
+import org.wordpress.android.ui.main.jetpack.migration.compose.components.SecondaryButton
+import org.wordpress.android.ui.main.jetpack.migration.compose.components.SiteList
+import org.wordpress.android.ui.main.jetpack.migration.compose.components.UserAvatarImage
+import org.wordpress.android.ui.main.jetpack.migration.compose.dimmed
 
 @Composable
-fun WelcomeStep(uiState: StepUiState.Welcome) = with(uiState) {
+fun WelcomeStep(uiState: UiState.Content.Welcome) = with(uiState) {
     Box {
         val listState = rememberLazyListState()
         val blurredListState = rememberLazyListState()
@@ -44,11 +51,15 @@ fun WelcomeStep(uiState: StepUiState.Welcome) = with(uiState) {
         SiteListScaffold(
                 blurRadius = 4.dp,
                 backgroundColor = colorResource(R.color.bg_jp_migration_buttons_panel),
-                borderColor = colorResource(R.color.gray_10).copy(alpha = 0.5f),
+                borderColor = colorResource(R.color.gray_10).let {
+                    if (isProcessing) it.copy(alpha = DIM_ALPHA) else it
+                },
+                borderThickness = 0.5.dp,
                 siteList = { clipModifier, buttonsHeightPx ->
                     SiteList(
                             uiState = uiState,
                             listState = listState,
+                            userScrollEnabled = !isProcessing,
                             bottomPaddingPx = buttonsHeightPx,
                             modifier = clipModifier,
                     )
@@ -67,13 +78,22 @@ fun WelcomeStep(uiState: StepUiState.Welcome) = with(uiState) {
                     PrimaryButton(
                             text = uiStringText(primaryActionButton.text),
                             onClick = primaryActionButton.onClick,
+                            isInProgress = isProcessing,
                     )
                     SecondaryButton(
                             text = uiStringText(secondaryActionButton.text),
                             onClick = secondaryActionButton.onClick,
+                            enabled = !isProcessing,
+                            modifier = Modifier.dimmed(isProcessing),
                     )
                 }
         )
+
+        UserAvatarImage(
+                avatarUrl = uiState.userAvatarUrl,
+                modifier = Modifier.dimmed(isProcessing),
+        )
+
         LaunchedEffect(listState.firstVisibleItemIndex, listState.firstVisibleItemScrollOffset) {
             blurredListState.scrollToItem(
                     listState.firstVisibleItemIndex,
@@ -95,6 +115,7 @@ private fun SiteListScaffold(
     blurRadius: Dp,
     backgroundColor: Color,
     borderColor: Color,
+    borderThickness: Dp,
     siteList: @Composable (clipModifier: Modifier, buttonsHeightPx: Int) -> Unit,
     blurBackground: @Composable (clipModifier: Modifier, blurModifier: Modifier, buttonsHeightPx: Int) -> Unit,
     buttonsColumn: @Composable () -> Unit,
@@ -104,6 +125,7 @@ private fun SiteListScaffold(
             ColumnWithTopGlassBorder(
                     backgroundColor = backgroundColor,
                     borderColor = borderColor,
+                    borderThickness = borderThickness,
             ) {
                 buttonsColumn()
             }
@@ -166,7 +188,7 @@ private fun SiteListScaffold(
     }
 }
 
-val previewSiteListItems = mutableListOf<SiteListItemUiState>().apply {
+private val previewSiteListItems = mutableListOf<SiteListItemUiState>().apply {
     repeat(10) {
         add(
                 SiteListItemUiState(
@@ -179,19 +201,31 @@ val previewSiteListItems = mutableListOf<SiteListItemUiState>().apply {
     }
 }
 
-@Preview(showBackground = true, widthDp = 414, heightDp = 897)
-@Preview(showBackground = true, widthDp = 414, heightDp = 897, uiMode = Configuration.UI_MODE_NIGHT_YES)
+private val previewUiState = UiState.Content.Welcome(
+        sites = previewSiteListItems,
+        primaryActionButton = WelcomePrimaryButton {},
+        secondaryActionButton = WelcomeSecondaryButton {},
+)
+
+@Preview(showBackground = true, device = Devices.PIXEL_4_XL)
+@Preview(showBackground = true, device = Devices.PIXEL_4_XL, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
-private fun PreviewContentState() {
-    val uiState = StepUiState.Welcome(
-            previewSiteListItems,
-            primaryActionButton = WelcomePrimaryButton {},
-            secondaryActionButton = WelcomeSecondaryButton {},
-    )
+private fun PreviewWelcomeStep() {
+    AppTheme {
+        Box {
+            WelcomeStep(previewUiState)
+        }
+    }
+}
+
+@Preview(showBackground = true, device = Devices.PIXEL_4_XL)
+@Preview(showBackground = true, device = Devices.PIXEL_4_XL, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun PreviewWelcomeStepInProgress() {
+    val uiState = previewUiState.copy(isProcessing = true)
     AppTheme {
         Box {
             WelcomeStep(uiState)
-            UserAvatarImage(avatarUrl = "")
         }
     }
 }
