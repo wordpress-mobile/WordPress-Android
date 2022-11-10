@@ -1,5 +1,8 @@
+@file:Suppress("DEPRECATION")
+
 package org.wordpress.android.ui.accounts
 
+import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -27,6 +30,7 @@ import org.wordpress.android.ui.main.utils.MeGravatarLoader
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.image.ImageType.AVATAR_WITHOUT_BACKGROUND
+import org.wordpress.android.viewmodel.observeEvent
 import java.util.ArrayList
 import javax.inject.Inject
 
@@ -38,6 +42,8 @@ class HelpActivity : LocaleAwareActivity() {
     @Inject lateinit var zendeskHelper: ZendeskHelper
     @Inject lateinit var meGravatarLoader: MeGravatarLoader
     private lateinit var binding: HelpActivityBinding
+    @Suppress("DEPRECATION") private var signingOutProgressDialog: ProgressDialog? = null
+
     private val viewModel: HelpViewModel by viewModels()
 
     private val originFromExtras by lazy {
@@ -173,10 +179,20 @@ class HelpActivity : LocaleAwareActivity() {
             userDisplayName.text = defaultAccount.displayName.ifEmpty { defaultAccount.userName }
             userName.text = getString(R.string.at_username, defaultAccount.userName)
             logOutButton.setOnClickListener { logOut() }
+            observeViewModelEvents()
+        }
+    }
 
-            viewModel.onSignedOutCompleted.observe(this@HelpActivity) {
-                ActivityLauncher.showMainActivity(this@HelpActivity)
+    private fun observeViewModelEvents() {
+        viewModel.showSigningOutDialog.observeEvent(this@HelpActivity) {
+            when (it) {
+                true -> showSigningOutDialog()
+                false -> hideSigningOutDialog()
             }
+        }
+        viewModel.onSignOutCompleted.observe(this@HelpActivity) {
+            // Load Main Activity once signed out, which launches the login flow
+            ActivityLauncher.showMainActivity(this@HelpActivity)
         }
     }
 
@@ -193,6 +209,23 @@ class HelpActivity : LocaleAwareActivity() {
 
     private fun logOut() {
         viewModel.signOutWordPress(application as WordPress)
+    }
+
+    @Suppress("DEPRECATION")
+    private fun showSigningOutDialog() {
+        signingOutProgressDialog = ProgressDialog.show(
+                this,
+                null,
+                getText(R.string.signing_out),
+                false
+        )
+    }
+
+    private fun hideSigningOutDialog() {
+        if (signingOutProgressDialog?.isShowing == true) {
+            signingOutProgressDialog?.dismiss()
+        }
+        signingOutProgressDialog = null
     }
 
     enum class Origin(private val stringValue: String) {
