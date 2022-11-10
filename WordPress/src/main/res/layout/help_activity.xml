@@ -53,7 +53,7 @@
                         android:layout_height="@dimen/avatar_sz_large"
                         android:layout_centerHorizontal="true"
                         android:contentDescription="@string/reader_avatar_desc"
-                        tools:srcCompat="@drawable/ic_user_circle_no_padding_grey_24dp" />
+                        android:src="@drawable/ic_user_circle_no_padding_grey_24dp" />
 
                     <org.wordpress.android.widgets.WPTextView
                         android:id="@+id/user_display_name"
