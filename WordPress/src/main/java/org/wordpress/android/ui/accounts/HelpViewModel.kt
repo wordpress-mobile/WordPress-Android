@@ -15,8 +15,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 @HiltViewModel
-class HelpViewModel
-@Inject constructor(
+class HelpViewModel @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) val bgDispatcher: CoroutineDispatcher,
 ) : ScopedViewModel(mainDispatcher) {
