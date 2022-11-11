@@ -98,55 +98,12 @@ class AuthorsUseCase constructor(
     }
 
     override fun buildUiModel(domainModel: AuthorsModel, uiState: SelectedAuthor): List<BlockListItem> {
-        val items = mutableListOf<BlockListItem>()
         val isBlockMode = useCaseMode == BLOCK
         return if(domainModel.authors.isEmpty()){
             buildUiModelForNoGroup(isBlockMode)
         }else{
-            //TODO buildUiModelForGroups(domainModel, uiState, isBlockMode)
+            buildUiModelForGroups(domainModel, uiState, isBlockMode)
         }
-
-
-
-
-
-        if (domainModel.authors.isEmpty()) {
-            items.add(Empty(R.string.stats_no_data_for_period))
-        } else {
-            val header = Header(R.string.stats_author_label, R.string.stats_author_views_label)
-            items.add(header)
-            val maxViews = domainModel.authors.maxByOrNull { it.views }?.views ?: 0
-            domainModel.authors.forEachIndexed { index, author ->
-                val headerItem = ListItemWithIcon(
-                        iconUrl = author.avatarUrl,
-                        iconStyle = AVATAR,
-                        text = author.name,
-                        barWidth = getBarWidth(author.views, maxViews),
-                        value = statsUtils.toFormattedString(author.views),
-                        showDivider = index < domainModel.authors.size - 1,
-                        contentDescription = contentDescriptionHelper.buildContentDescription(
-                                header,
-                                author.name,
-                                author.views
-                        )
-                )
-                if (author.posts.isEmpty()) {
-                    items.add(headerItem)
-                } else {
-                    addPost(author, uiState, items, headerItem)
-                }
-            }
-
-            if (useCaseMode == BLOCK && domainModel.hasMore) {
-                items.add(
-                        Link(
-                                text = R.string.stats_insights_view_more,
-                                navigateAction = create(statsGranularity, this::onViewMoreClicked)
-                        )
-                )
-            }
-        }
-        return items
     }
 
     private fun buildUiModelForNoGroup(
@@ -155,6 +112,48 @@ class AuthorsUseCase constructor(
         val items = mutableListOf<BlockListItem>()
         if (isBlockMode) items.add(Title(R.string.stats_authors))
         items.add(Empty(R.string.stats_no_data_for_period))
+        return items
+    }
+
+    private fun buildUiModelForGroups(
+        domainModel: AuthorsModel,
+        uiState: SelectedAuthor,
+        isBlockMode: Boolean
+    ): List<BlockListItem> {
+        val items = mutableListOf<BlockListItem>()
+        if (isBlockMode) items.add(Title(R.string.stats_authors))
+        val header = Header(R.string.stats_author_label, R.string.stats_author_views_label)
+        items.add(header)
+        val maxViews = domainModel.authors.maxByOrNull { it.views }?.views ?: 0
+        domainModel.authors.forEachIndexed { index, author ->
+            val headerItem = ListItemWithIcon(
+                    iconUrl = author.avatarUrl,
+                    iconStyle = AVATAR,
+                    text = author.name,
+                    barWidth = getBarWidth(author.views, maxViews),
+                    value = statsUtils.toFormattedString(author.views),
+                    showDivider = index < domainModel.authors.size - 1,
+                    contentDescription = contentDescriptionHelper.buildContentDescription(
+                            header,
+                            author.name,
+                            author.views
+                    )
+            )
+            if (author.posts.isEmpty()) {
+                items.add(headerItem)
+            } else {
+                addPost(author, uiState, items, headerItem)
+            }
+        }
+
+        if (useCaseMode == BLOCK && domainModel.hasMore) {
+            items.add(
+                    Link(
+                            text = R.string.stats_insights_view_more,
+                            navigateAction = create(statsGranularity, this::onViewMoreClicked)
+                    )
+            )
+        }
         return items
     }
 
