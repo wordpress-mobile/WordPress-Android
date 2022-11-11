@@ -97,9 +97,8 @@ class ClicksUseCase constructor(
         return if(domainModel.groups.isEmpty()){
             buildUiModelForNoGroup(isBlockMode)
         }else{
-           //TODO create buildUiModelForGroup method
+            buildUiModelForGroups(domainModel, uiState, isBlockMode)
         }
-
     }
 
     private fun buildUiModelForNoGroup(
@@ -111,11 +110,13 @@ class ClicksUseCase constructor(
         return items
     }
 
-    private fun populateGroup(
-        items: MutableList<BlockListItem>,
+    private fun buildUiModelForGroups(
         domainModel: ClicksModel,
-        uiState: SelectedClicksGroup
-    ) {
+        uiState: SelectedClicksGroup,
+        isBlockMode: Boolean
+    ): List<BlockListItem> {
+        val items = mutableListOf<BlockListItem>()
+        if (isBlockMode) items.add(Title(R.string.stats_clicks))
         val header = Header(R.string.stats_clicks_link_label, R.string.stats_clicks_label)
         items.add(header)
         domainModel.groups.forEachIndexed { index, group ->
@@ -167,6 +168,7 @@ class ClicksUseCase constructor(
                     )
             )
         }
+        return items
     }
 
     private fun onViewMoreClick(statsGranularity: StatsGranularity) {
