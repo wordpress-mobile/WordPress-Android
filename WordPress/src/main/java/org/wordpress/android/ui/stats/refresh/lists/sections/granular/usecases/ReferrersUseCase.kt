@@ -112,6 +112,12 @@ class ReferrersUseCase(
 
     override fun buildUiModel(domainModel: ReferrersModel, uiState: SelectedGroup): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
+        val isViewAllMode = useCaseMode != VIEW_ALL
+        return if(domainModel.groups.isEmpty()){
+            buildUiModelForNoGroup(isViewAllMode)
+        }else{
+            // TODO buildUiModelForGroups(domainModel, uiState, isBlockMode)
+        }
 
         if (useCaseMode != VIEW_ALL) {
             items.add(Title(R.string.stats_referrers))
@@ -122,6 +128,15 @@ class ReferrersUseCase(
         } else {
             populateReferrer(items, domainModel, uiState)
         }
+        return items
+    }
+
+    private fun buildUiModelForNoGroup(
+        isViewAllMode: Boolean
+    ): List<BlockListItem> {
+        val items = mutableListOf<BlockListItem>()
+        if (isViewAllMode) items.add(Title(R.string.stats_referrers))
+        items.add(Empty(R.string.stats_no_data_for_period))
         return items
     }
 
