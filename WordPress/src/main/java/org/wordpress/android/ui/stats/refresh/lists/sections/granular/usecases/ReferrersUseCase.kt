@@ -5,6 +5,7 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
+import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.LimitMode
@@ -189,20 +190,28 @@ class ReferrersUseCase(
         }
 
         if (useCaseMode == VIEW_ALL && domainModel.hasMore) {
-            val shouldShowViewMore = itemCount < domainModel.groups.size ||
-                    (useCaseMode == BLOCK && domainModel.hasMore)
-            if (shouldShowViewMore) {
-                items.add(
-                        Link(
-                                text = R.string.stats_insights_view_more,
-                                navigateAction = create(statsGranularity, this::onViewMoreClicked)
-                        )
-                )
-            }
+            showMore(itemCount, domainModel)
         }
         return items
     }
 
+    private fun showMore(
+        itemCount: Int,
+        domainModel: ReferrersModel,
+    ): List<BlockListItem>  {
+        val items = mutableListOf<BlockListItem>()
+        val shouldShowViewMore = itemCount < domainModel.groups.size ||
+                (useCaseMode == BLOCK && domainModel.hasMore)
+        if (shouldShowViewMore) {
+            items.add(
+                    Link(
+                            text = string.stats_insights_view_more,
+                            navigateAction = create(statsGranularity, this::onViewMoreClicked)
+                    )
+            )
+        }
+        return items
+    }
 
     private fun showReferrer(
         group: Group,
