@@ -54,8 +54,8 @@ class CommentsXMLRPCClient @Inject constructor(
         }
 
         params.add(site.selfHostedSiteId)
-        params.add(site.username)
-        params.add(site.password)
+        params.add(site.notNullUserName())
+        params.add(site.notNullPassword())
         params.add(commentParams)
 
         val response = xmlrpcRequestBuilder.syncGetRequest(
@@ -105,8 +105,8 @@ class CommentsXMLRPCClient @Inject constructor(
         val params: MutableList<Any> = ArrayList()
 
         params.add(site.selfHostedSiteId)
-        params.add(site.username)
-        params.add(site.password)
+        params.add(site.notNullUserName())
+        params.add(site.notNullPassword())
         params.add(comment.remoteCommentId)
         params.add(commentParams)
 
@@ -132,8 +132,8 @@ class CommentsXMLRPCClient @Inject constructor(
         val params: MutableList<Any> = ArrayList()
 
         params.add(site.selfHostedSiteId)
-        params.add(site.username)
-        params.add(site.password)
+        params.add(site.notNullUserName())
+        params.add(site.notNullPassword())
         params.add(remoteCommentId)
 
         val response = xmlrpcRequestBuilder.syncGetRequest(
@@ -158,8 +158,8 @@ class CommentsXMLRPCClient @Inject constructor(
         val params: MutableList<Any> = ArrayList()
 
         params.add(site.selfHostedSiteId)
-        params.add(site.username)
-        params.add(site.password)
+        params.add(site.notNullUserName())
+        params.add(site.notNullPassword())
         params.add(remoteCommentId)
 
         val response = xmlrpcRequestBuilder.syncGetRequest(
@@ -241,8 +241,8 @@ class CommentsXMLRPCClient @Inject constructor(
         val params: MutableList<Any> = ArrayList()
 
         params.add(site.selfHostedSiteId)
-        params.add(site.username)
-        params.add(site.password)
+        params.add(site.notNullUserName())
+        params.add(site.notNullPassword())
         params.add(remotePostId)
         params.add(commentParams)
 
@@ -282,4 +282,14 @@ class CommentsXMLRPCClient @Inject constructor(
             else -> "approve"
         }
     }
+
+    // This functions are part of a containment fix to avoid a crash happening in the Jetpack app for My Site > Comments
+    // on self-hosted sites not having the full Jetpack plugin but only one of the standalone plugins (like the
+    // jetpack backup plugin). This only avoids the crash allowing the relevant error to be displayed.
+    // For sites like those, the full rest api is not available but the username and password are actually null as well.
+    // This creates some not consistent behaviours in various areas of the app that needs a more broad fix and review
+    // (more details in the internal p2 post and comments pe8j1f-V-p2); numbers of such cases are pretty low actually
+    // and this fix prioritizes the mentioned crash.
+    private fun SiteModel.notNullUserName() = this.username ?: ""
+    private fun SiteModel.notNullPassword() = this.password ?: ""
 }
