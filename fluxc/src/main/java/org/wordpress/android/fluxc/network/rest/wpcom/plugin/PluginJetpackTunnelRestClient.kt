@@ -132,10 +132,7 @@ class PluginJetpackTunnelRestClient @Inject constructor(
                     }
                 },
                 { error ->
-
-                    val configurePluginError = ConfigureSitePluginError(
-                            error.apiError, error.message
-                    )
+                    val configurePluginError = ConfigureSitePluginError(error, active)
 
                     val payload = ConfiguredSitePluginPayload(site, pluginName, configurePluginError)
                     dispatcher.dispatch(PluginActionBuilder.newConfiguredSitePluginAction(payload))
