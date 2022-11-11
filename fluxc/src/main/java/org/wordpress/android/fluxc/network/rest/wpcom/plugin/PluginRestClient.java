@@ -155,6 +155,9 @@ public class PluginRestClient extends BaseWPComRestClient {
                     public void onErrorResponse(@NonNull WPComGsonNetworkError networkError) {
                         InstallSitePluginError installPluginError = new InstallSitePluginError(
                                 networkError.apiError, networkError.message);
+                        if (networkError.hasVolleyError()) {
+                            installPluginError.errorCode = networkError.volleyError.networkResponse.statusCode;
+                        }
                         InstalledSitePluginPayload payload = new InstalledSitePluginPayload(site, pluginSlug,
                                 installPluginError);
                         mDispatcher.dispatch(PluginActionBuilder.newInstalledSitePluginAction(payload));

@@ -152,7 +152,7 @@ class PluginCoroutineStore
         val event = OnSitePluginInstalled(payload.site, payload.data?.slug ?: slug)
         val error = payload.error
         if (error != null) {
-            event.error = InstallSitePluginError(error.type, error.message)
+            event.error = InstallSitePluginError(error)
         } else {
             pluginSqlUtils.insertOrUpdateSitePlugin(site, payload.data)
         }
