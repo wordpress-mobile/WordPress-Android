@@ -18,8 +18,6 @@ import org.wordpress.android.fluxc.store.PluginStore.ConfiguredSitePluginPayload
 import org.wordpress.android.fluxc.store.PluginStore.FetchSitePluginError
 import org.wordpress.android.fluxc.store.PluginStore.FetchedSitePluginPayload
 import org.wordpress.android.fluxc.store.PluginStore.InstallSitePluginError
-import org.wordpress.android.fluxc.store.PluginStore.InstallSitePluginErrorType.GENERIC_ERROR
-import org.wordpress.android.fluxc.store.PluginStore.InstallSitePluginErrorType.PLUGIN_ALREADY_INSTALLED
 import org.wordpress.android.fluxc.store.PluginStore.InstalledSitePluginPayload
 import javax.inject.Inject
 import javax.inject.Named
@@ -33,10 +31,6 @@ class PluginJetpackTunnelRestClient @Inject constructor(
     accessToken: AccessToken,
     userAgent: UserAgent
 ) : BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {
-    companion object {
-        private const val PLUGIN_ALREADY_EXISTS = "Destination folder already exists."
-    }
-
     /**
      * Fetch a plugin's information from a site.
      *
@@ -102,20 +96,7 @@ class PluginJetpackTunnelRestClient @Inject constructor(
                     }
                 },
                 { error ->
-                    val installError = when (error.message) {
-                        PLUGIN_ALREADY_EXISTS -> {
-                            InstallSitePluginError(
-                                    PLUGIN_ALREADY_INSTALLED,
-                                    error.message
-                            )
-                        }
-                        else -> {
-                            InstallSitePluginError(
-                                    GENERIC_ERROR,
-                                    error.message
-                            )
-                        }
-                    }
+                    val installError = InstallSitePluginError(error)
                     val payload = InstalledSitePluginPayload(site, pluginSlug, installError)
                     dispatcher.dispatch(PluginActionBuilder.newInstalledSitePluginAction(payload))
                 }

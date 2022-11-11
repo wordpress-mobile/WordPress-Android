@@ -378,10 +378,16 @@ public class PluginStore extends Store {
 
     public static class InstallSitePluginError implements OnChangedError {
         public InstallSitePluginErrorType type;
+        @Nullable  public Integer errorCode;
         @Nullable public String message;
 
         InstallSitePluginError(InstallSitePluginErrorType type) {
+            this(type, null);
+        }
+
+        InstallSitePluginError(InstallSitePluginErrorType type, @Nullable String message) {
             this.type = type;
+            this.message = message;
         }
 
         public InstallSitePluginError(String type, @Nullable String message) {
@@ -389,14 +395,12 @@ public class PluginStore extends Store {
             this.message = message;
         }
 
-        public InstallSitePluginError(GenericErrorType type, @Nullable String message) {
-            this.type = InstallSitePluginErrorType.fromGenericErrorType(type);
-            this.message = message;
-        }
-
-        public InstallSitePluginError(InstallSitePluginErrorType type, @Nullable String message) {
-            this.type = type;
-            this.message = message;
+        public InstallSitePluginError(BaseNetworkError error) {
+            this.type = InstallSitePluginErrorType.fromNetworkError(error);
+            this.message = error.message;
+            if (error.hasVolleyError()) {
+                this.errorCode = error.volleyError.networkResponse.statusCode;
+            }
         }
     }
 
@@ -602,6 +606,8 @@ public class PluginStore extends Store {
         PLUGIN_ALREADY_INSTALLED,
         UNAUTHORIZED;
 
+        private static final String  PLUGIN_ALREADY_EXISTS = "Destination folder already exists.";
+
         public static InstallSitePluginErrorType fromString(String string) {
             if (string != null) {
                 if (string.equalsIgnoreCase("local-file-does-not-exist")) {
@@ -616,7 +622,11 @@ public class PluginStore extends Store {
             return GENERIC_ERROR;
         }
 
-        public static InstallSitePluginErrorType fromGenericErrorType(GenericErrorType genericErrorType) {
+        public static InstallSitePluginErrorType fromNetworkError(BaseNetworkError error) {
+            if (PLUGIN_ALREADY_EXISTS.equalsIgnoreCase(error.message)) {
+                return PLUGIN_ALREADY_INSTALLED;
+            }
+            GenericErrorType genericErrorType = error.type;
             if (genericErrorType != null) {
                 switch (genericErrorType) {
                     case TIMEOUT:
