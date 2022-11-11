@@ -51,4 +51,5 @@ public class WPAPIGsonRequest<T> extends GsonRequest<T> {
         }
 
         return error;
-    }}
+    }
+}
