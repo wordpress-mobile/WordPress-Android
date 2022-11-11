@@ -297,6 +297,7 @@ public class PluginStore extends Store {
 
     public static class ConfigureSitePluginError implements OnChangedError {
         public ConfigureSitePluginErrorType type;
+        @Nullable public Integer errorCode;
         @Nullable public String message;
 
         ConfigureSitePluginError(ConfigureSitePluginErrorType type) {
@@ -308,9 +309,12 @@ public class PluginStore extends Store {
             this.message = message;
         }
 
-        public ConfigureSitePluginError(GenericErrorType type, @Nullable String message, boolean isActivating) {
-            this.type = ConfigureSitePluginErrorType.fromGenericErrorType(type, isActivating);
-            this.message = message;
+        public ConfigureSitePluginError(BaseNetworkError error, boolean isActivating) {
+            this.type = ConfigureSitePluginErrorType.fromGenericErrorType(error.type, isActivating);
+            this.message = error.message;
+            if (error.hasVolleyError()) {
+                this.errorCode = error.volleyError.networkResponse.statusCode;
+            }
         }
     }
 
