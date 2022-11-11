@@ -1,0 +1,2 @@
+21.1:
+Esta atualização é curta e doce: agora quando você estiver editando uma página, poderá definir uma página ascendente nas configurações da página descendente.

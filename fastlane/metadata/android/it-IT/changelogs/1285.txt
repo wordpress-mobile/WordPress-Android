@@ -1,5 +1,0 @@
-21.0:
-- Rimosse le biglie dell'app Automattic Family dalla pagina Informazioni
-- Aggiornata la schermata di avvio per le versioni di Android successive alla 12
-- Modificato il testo del messaggio di esecuzione corretta da rosso a nero per gli accessi con codice QR
-- Corretta la schermata delle statistiche per includere i numerali arabi occidentali per gli utenti di lingua araba
