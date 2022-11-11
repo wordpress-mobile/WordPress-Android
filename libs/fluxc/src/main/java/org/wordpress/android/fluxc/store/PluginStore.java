@@ -378,7 +378,7 @@ public class PluginStore extends Store {
 
     public static class InstallSitePluginError implements OnChangedError {
         public InstallSitePluginErrorType type;
-        @Nullable  public Integer errorCode;
+        @Nullable public Integer errorCode;
         @Nullable public String message;
 
         InstallSitePluginError(InstallSitePluginErrorType type) {
@@ -606,7 +606,7 @@ public class PluginStore extends Store {
         PLUGIN_ALREADY_INSTALLED,
         UNAUTHORIZED;
 
-        private static final String  PLUGIN_ALREADY_EXISTS = "Destination folder already exists.";
+        private static final String PLUGIN_ALREADY_EXISTS = "Destination folder already exists.";
 
         public static InstallSitePluginErrorType fromString(String string) {
             if (string != null) {
@@ -969,7 +969,7 @@ public class PluginStore extends Store {
     private void fetchSitePlugin(FetchSitePluginPayload payload) {
         if (payload.site.isJetpackConnected() || payload.site.isJetpackCPConnected()) {
             mPluginJetpackTunnelRestClient.fetchPlugin(payload.site, payload.pluginName);
-        } else if (!payload.site.isUsingWpComRestApi()){
+        } else if (!payload.site.isUsingWpComRestApi()) {
             mPluginCoroutineStore.fetchWPApiPlugin(payload.site, payload.pluginName);
         } else {
             FetchSitePluginError error = new FetchSitePluginError(FetchSitePluginErrorType.NOT_AVAILABLE, null);
