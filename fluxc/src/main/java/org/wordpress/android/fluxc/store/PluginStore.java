@@ -363,9 +363,16 @@ public class PluginStore extends Store {
 
     public static class FetchSitePluginError implements OnChangedError {
         public FetchSitePluginErrorType type;
+        @Nullable public String message;
 
-        public FetchSitePluginError(FetchSitePluginErrorType type) {
+        public FetchSitePluginError(FetchSitePluginErrorType type, @Nullable String message) {
             this.type = type;
+            this.message = message;
+        }
+
+        public FetchSitePluginError(GenericErrorType type, @Nullable String message) {
+            this.type = FetchSitePluginErrorType.fromGenericErrorType(type);
+            this.message = message;
         }
     }
 
@@ -554,10 +561,35 @@ public class PluginStore extends Store {
     }
 
     public enum FetchSitePluginErrorType {
+        UNAUTHORIZED,
         NOT_JETPACK_SITE,
         EMPTY_RESPONSE,
         GENERIC_ERROR,
-        PLUGIN_DOES_NOT_EXIST
+        PLUGIN_DOES_NOT_EXIST;
+
+        public static FetchSitePluginErrorType fromGenericErrorType(GenericErrorType genericErrorType) {
+            if (genericErrorType != null) {
+                switch (genericErrorType) {
+                    case INVALID_SSL_CERTIFICATE:
+                    case HTTP_AUTH_ERROR:
+                    case AUTHORIZATION_REQUIRED:
+                    case NOT_AUTHENTICATED:
+                        return UNAUTHORIZED;
+                    case NOT_FOUND:
+                        return PLUGIN_DOES_NOT_EXIST;
+                    case NO_CONNECTION:
+                    case TIMEOUT:
+                    case NETWORK_ERROR:
+                    case SERVER_ERROR:
+                    case CENSORED:
+                    case INVALID_RESPONSE:
+                    case PARSE_ERROR:
+                    case UNKNOWN:
+                        return GENERIC_ERROR;
+                }
+            }
+            return GENERIC_ERROR;
+        }
     }
 
     public enum InstallSitePluginErrorType {
@@ -928,9 +960,7 @@ public class PluginStore extends Store {
         if (payload.site.isJetpackConnected() || payload.site.isJetpackCPConnected()) {
             mPluginJetpackTunnelRestClient.fetchPlugin(payload.site, payload.pluginName);
         } else {
-            FetchSitePluginError error = new FetchSitePluginError(
-                    FetchSitePluginErrorType.NOT_JETPACK_SITE
-            );
+            FetchSitePluginError error = new FetchSitePluginError(FetchSitePluginErrorType.NOT_JETPACK_SITE, null);
             FetchedSitePluginPayload errorPayload =
                     new FetchedSitePluginPayload(payload.pluginName, error);
             mDispatcher.dispatch(PluginActionBuilder.newFetchedSitePluginAction(errorPayload));

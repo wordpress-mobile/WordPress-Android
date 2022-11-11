@@ -12,10 +12,13 @@ import org.wordpress.android.fluxc.persistence.PluginSqlUtilsWrapper
 import org.wordpress.android.fluxc.store.PluginStore.ConfigureSitePluginError
 import org.wordpress.android.fluxc.store.PluginStore.DeleteSitePluginError
 import org.wordpress.android.fluxc.store.PluginStore.DeleteSitePluginErrorType.UNKNOWN_PLUGIN
+import org.wordpress.android.fluxc.store.PluginStore.FetchSitePluginError
+import org.wordpress.android.fluxc.store.PluginStore.FetchedSitePluginPayload
 import org.wordpress.android.fluxc.store.PluginStore.InstallSitePluginError
 import org.wordpress.android.fluxc.store.PluginStore.OnPluginDirectoryFetched
 import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginConfigured
 import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginDeleted
+import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginFetched
 import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginInstalled
 import org.wordpress.android.fluxc.store.PluginStore.PluginDirectoryError
 import org.wordpress.android.fluxc.tools.CoroutineEngine
@@ -32,10 +35,11 @@ class PluginCoroutineStore
     private val wpapiAuthenticator: WPAPIAuthenticator,
     private val pluginSqlUtils: PluginSqlUtilsWrapper
 ) {
-    fun fetchWPApiPlugins(siteModel: SiteModel) = coroutineEngine.launch(T.PLUGINS, this, "Fetching WPAPI plugins") {
-        val event = syncFetchWPApiPlugins(siteModel)
-        dispatcher.emitChange(event)
-    }
+    fun fetchWPApiPlugins(siteModel: SiteModel) =
+        coroutineEngine.launch(T.PLUGINS, this, "Fetching WPAPI plugins") {
+            val event = syncFetchWPApiPlugins(siteModel)
+            dispatcher.emitChange(event)
+        }
 
     suspend fun syncFetchWPApiPlugins(
         siteModel: SiteModel
@@ -52,6 +56,32 @@ class PluginCoroutineStore
             pluginSqlUtils.insertOrReplaceSitePlugins(siteModel, payload.data)
         }
         return event
+    }
+
+    fun fetchWPApiPlugin(site: SiteModel, pluginName: String) =
+        coroutineEngine.launch(T.PLUGINS, this, "Fetching WPAPI plugin") {
+            val event = syncFetchWPApiPlugin(site, pluginName)
+            dispatcher.emitChange(event)
+        }
+
+    suspend fun syncFetchWPApiPlugin(site: SiteModel, pluginName: String): OnSitePluginFetched {
+        val payload = wpapiAuthenticator.makeAuthenticatedWPAPIRequest(site) { nonce ->
+            pluginWPAPIRestClient.fetchPlugin(site, nonce, pluginName)
+        }
+        val error = payload.error
+        return if (error != null) {
+            OnSitePluginFetched(
+                FetchedSitePluginPayload(
+                    pluginName,
+                    FetchSitePluginError(error.type, error.message)
+                )
+            )
+        } else {
+            pluginSqlUtils.insertOrUpdateSitePlugin(site, payload.data)
+            OnSitePluginFetched(
+                FetchedSitePluginPayload(payload.data)
+            )
+        }
     }
 
     fun deleteSitePlugin(site: SiteModel, pluginName: String, slug: String) =

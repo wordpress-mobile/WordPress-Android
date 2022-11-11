@@ -16,7 +16,6 @@ import org.wordpress.android.fluxc.network.rest.wpcom.jetpacktunnel.JetpackTunne
 import org.wordpress.android.fluxc.store.PluginStore.ConfigureSitePluginError
 import org.wordpress.android.fluxc.store.PluginStore.ConfiguredSitePluginPayload
 import org.wordpress.android.fluxc.store.PluginStore.FetchSitePluginError
-import org.wordpress.android.fluxc.store.PluginStore.FetchSitePluginErrorType.PLUGIN_DOES_NOT_EXIST
 import org.wordpress.android.fluxc.store.PluginStore.FetchedSitePluginPayload
 import org.wordpress.android.fluxc.store.PluginStore.InstallSitePluginError
 import org.wordpress.android.fluxc.store.PluginStore.InstallSitePluginErrorType.GENERIC_ERROR
@@ -62,7 +61,8 @@ class PluginJetpackTunnelRestClient @Inject constructor(
                 },
                 {
                     val fetchError = FetchSitePluginError(
-                        PLUGIN_DOES_NOT_EXIST
+                        it.type,
+                        it.message
                     )
                     val payload = FetchedSitePluginPayload(
                         pluginName,
