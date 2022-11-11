@@ -111,24 +111,12 @@ class ReferrersUseCase(
     }
 
     override fun buildUiModel(domainModel: ReferrersModel, uiState: SelectedGroup): List<BlockListItem> {
-        val items = mutableListOf<BlockListItem>()
         val isViewAllMode = useCaseMode != VIEW_ALL
         return if(domainModel.groups.isEmpty()){
             buildUiModelForNoGroup(isViewAllMode)
         }else{
-            // TODO buildUiModelForGroups(domainModel, uiState, isBlockMode)
+            buildUiModelForGroups(domainModel, uiState, isViewAllMode)
         }
-
-        if (useCaseMode != VIEW_ALL) {
-            items.add(Title(R.string.stats_referrers))
-        }
-
-        if (domainModel.groups.isEmpty()) {
-            items.add(Empty(R.string.stats_no_data_for_period))
-        } else {
-            populateReferrer(items, domainModel, uiState)
-        }
-        return items
     }
 
     private fun buildUiModelForNoGroup(
@@ -140,11 +128,13 @@ class ReferrersUseCase(
         return items
     }
 
-    private fun populateReferrer(
-        items: MutableList<BlockListItem>,
+    private fun buildUiModelForGroups(
         domainModel: ReferrersModel,
-        uiState: SelectedGroup
-    ) {
+        uiState: SelectedGroup,
+        isViewAllMode: Boolean
+    ): List<BlockListItem> {
+        val items = mutableListOf<BlockListItem>()
+        if (isViewAllMode) items.add(Title(R.string.stats_clicks))
         val header = Header(R.string.stats_referrer_label, R.string.stats_referrer_views_label)
         if (BuildConfig.IS_JETPACK_APP && useCaseMode == BLOCK_DETAIL) {
             items.add(buildPieChartItem(domainModel))
@@ -193,36 +183,32 @@ class ReferrersUseCase(
                     onUiState(SelectedGroup(if (changedExpandedState) group.groupId else null))
                 })
                 if (isExpanded) {
-                    showReferrer(items, group, header)
+                    showReferrer(group, header)
                 }
             }
         }
 
-        showViewMore(itemCount, domainModel, items)
+        if (useCaseMode == VIEW_ALL && domainModel.hasMore) {
+            val shouldShowViewMore = itemCount < domainModel.groups.size ||
+                    (useCaseMode == BLOCK && domainModel.hasMore)
+            if (shouldShowViewMore) {
+                items.add(
+                        Link(
+                                text = R.string.stats_insights_view_more,
+                                navigateAction = create(statsGranularity, this::onViewMoreClicked)
+                        )
+                )
+            }
+        }
+        return items
     }
 
-    private fun showViewMore(
-        itemCount: Int,
-        domainModel: ReferrersModel,
-        items: MutableList<BlockListItem>
-    ) {
-        val shouldShowViewMore = itemCount < domainModel.groups.size ||
-                (useCaseMode == BLOCK && domainModel.hasMore)
-        if (shouldShowViewMore) {
-            items.add(
-                    Link(
-                            text = R.string.stats_insights_view_more,
-                            navigateAction = create(statsGranularity, this::onViewMoreClicked)
-                    )
-            )
-        }
-    }
 
     private fun showReferrer(
-        items: MutableList<BlockListItem>,
         group: Group,
         header: Header
-    ) {
+    ): List<BlockListItem> {
+        val items = mutableListOf<BlockListItem>()
         items.addAll(group.referrers.map { referrer ->
             val referrerSpam = referrer.markedAsSpam
             val referrerIcon = buildIcon(referrer.icon, referrerSpam)
@@ -250,6 +236,7 @@ class ReferrersUseCase(
             )
         })
         items.add(Divider)
+        return  items
     }
 
     private fun buildPieChartItem(domainModel: ReferrersModel): PieChartItem {
