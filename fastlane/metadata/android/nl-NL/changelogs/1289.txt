@@ -1,0 +1,2 @@
+21.1:
+Deze update is kort maar krachtig. Wanneer je bezig bent met het bewerken van een pagina kan je nu een bovenliggende pagina instellen binnen de instellingen van de onderliggende pagina.

@@ -1,0 +1,3 @@
+21.1:
+- Dir wird in der App ein brandneuer Startbildschirm angezeigt, der auf die Bewegung deines Geräts reagiert. Viel Spaß damit!
+- Wenn du gerade eine Seite bearbeitest, kannst du jetzt in den Einstellungen der untergeordneten Seite eine übergeordnete Seite festlegen.

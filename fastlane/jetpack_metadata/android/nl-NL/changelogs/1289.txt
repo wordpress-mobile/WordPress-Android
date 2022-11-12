@@ -1,0 +1,3 @@
+21.1:
+- Je zult zien dat we in de app een prachtig nieuw landingsscherm hebben dat op de bewegingen van je apparaat reageert—geniet ervan!
+- Wanneer je bezig bent met het bewerken van een pagina kan je nu een bovenliggende pagina instellen binnen de instellingen van de onderliggende pagina.
