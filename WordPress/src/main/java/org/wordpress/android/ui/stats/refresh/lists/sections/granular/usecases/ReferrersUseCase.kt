@@ -5,7 +5,6 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.LimitMode
@@ -137,9 +136,7 @@ class ReferrersUseCase(
         val items = mutableListOf<BlockListItem>()
         if (isViewAllMode) items.add(Title(R.string.stats_clicks))
         val header = Header(R.string.stats_referrer_label, R.string.stats_referrer_views_label)
-        if (BuildConfig.IS_JETPACK_APP && useCaseMode == BLOCK_DETAIL) {
-            items.add(buildPieChartItem(domainModel))
-        }
+        buildPieChart(domainModel)
         items.add(header)
         val itemCount = min(itemsToShow, domainModel.groups.size)
 
@@ -195,6 +192,17 @@ class ReferrersUseCase(
         return items
     }
 
+    private fun buildPieChart(
+        domainModel: ReferrersModel
+    ):List<BlockListItem> {
+        val items = mutableListOf<BlockListItem>()
+
+        if (BuildConfig.IS_JETPACK_APP && useCaseMode == BLOCK_DETAIL) {
+            items.add(buildPieChartItem(domainModel))
+        }
+        return items
+    }
+
     private fun showMore(
         itemCount: Int,
         domainModel: ReferrersModel,
@@ -205,7 +213,7 @@ class ReferrersUseCase(
         if (shouldShowViewMore) {
             items.add(
                     Link(
-                            text = string.stats_insights_view_more,
+                            text = R.string.stats_insights_view_more,
                             navigateAction = create(statsGranularity, this::onViewMoreClicked)
                     )
             )
