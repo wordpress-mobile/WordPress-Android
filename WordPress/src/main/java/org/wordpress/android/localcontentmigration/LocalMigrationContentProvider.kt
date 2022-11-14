@@ -6,7 +6,9 @@ import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors
 import dagger.hilt.components.SingletonComponent
+import org.wordpress.android.bloggingreminders.provider.BloggingRemindersProviderHelper
 import org.wordpress.android.localcontentmigration.LocalContentEntity.AccessToken
+import org.wordpress.android.localcontentmigration.LocalContentEntity.BloggingReminders
 import org.wordpress.android.localcontentmigration.LocalContentEntity.EligibilityStatus
 import org.wordpress.android.localcontentmigration.LocalContentEntity.Post
 import org.wordpress.android.localcontentmigration.LocalContentEntity.ReaderPosts
@@ -26,6 +28,7 @@ class LocalMigrationContentProvider: TrustedQueryContentProvider() {
         fun localAccessTokenProviderHelper(): LocalAccessTokenProviderHelper
         fun userFlagsProviderHelper(): UserFlagsProviderHelper
         fun readeSavedPostsProviderHelper(): ReaderSavedPostsProviderHelper
+        fun bloggingRemindersProviderHelper(): BloggingRemindersProviderHelper
     }
 
     override fun query(uri: Uri): Cursor {
@@ -55,6 +58,7 @@ class LocalMigrationContentProvider: TrustedQueryContentProvider() {
                 AccessToken -> localAccessTokenProviderHelper().getData()
                 UserFlags -> userFlagsProviderHelper().getData()
                 ReaderPosts -> readeSavedPostsProviderHelper().getData()
+                BloggingReminders -> bloggingRemindersProviderHelper().getData()
                 Sites -> localSiteProviderHelper().getData()
                 Post -> localPostProviderHelper().getData(localSiteId, localEntityId)
             }
