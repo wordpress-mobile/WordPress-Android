@@ -57,7 +57,6 @@ ext {
     espressoVersion = '3.4.0'
     mockitoVersion = "3.3.3"
     mockitoKotlinVersion = '4.0.0'
-    nhaarmanMockitoVersion = "2.2.0"
 }
 
 allprojects {
