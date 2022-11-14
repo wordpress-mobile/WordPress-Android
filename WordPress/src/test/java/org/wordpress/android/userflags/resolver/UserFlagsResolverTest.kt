@@ -17,7 +17,7 @@ import org.wordpress.android.userflags.UserFlagsAnalyticsTracker.ErrorType.NoUse
 import org.wordpress.android.userflags.UserFlagsAnalyticsTracker.ErrorType.QueryUserFlagsError
 import org.wordpress.android.util.publicdata.WordPressPublicData
 
-@Suppress("ForbiddenComment", "UnusedPrivateMember")
+@Suppress("ForbiddenComment")
 // TODO: adapt these tests to the unified provider / orchestrator approach
 @Ignore("Disabled for now: will refactor in another PR after unification.")
 class UserFlagsResolverTest {
@@ -146,6 +146,7 @@ class UserFlagsResolverTest {
     @Test
     fun `Should track success if user flags Map has entries`() {
         featureEnabled()
+        @Suppress("UnusedPrivateMember")
         val data = emptyFlagsData.copy(
                 flags = mapOf("key" to "value"),
                 quickStartTaskList = listOf(),
@@ -159,6 +160,7 @@ class UserFlagsResolverTest {
     @Test
     fun `Should trigger success callback if user flags Map has entries`() {
         featureEnabled()
+        @Suppress("UnusedPrivateMember")
         val data = emptyFlagsData.copy(
                 flags = mapOf("key" to "value"),
                 quickStartTaskList = listOf(),
@@ -175,6 +177,7 @@ class UserFlagsResolverTest {
         featureEnabled()
         val key = "key"
         val value = "value"
+        @Suppress("UnusedPrivateMember")
         val data = emptyFlagsData.copy(
                 flags = mapOf(key to value),
                 quickStartTaskList = listOf(),
