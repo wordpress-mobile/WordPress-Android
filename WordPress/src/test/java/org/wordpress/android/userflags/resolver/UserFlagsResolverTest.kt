@@ -7,7 +7,7 @@ import org.junit.Before
 import org.junit.Ignore
 import org.junit.Test
 import org.mockito.ArgumentMatchers.anyList
-import org.wordpress.android.localcontentmigration.LocalContentEntityData.UserFlagsData
+//import org.wordpress.android.localcontentmigration.LocalContentEntityData.UserFlagsData
 import org.wordpress.android.localcontentmigration.LocalMigrationContentResolver
 import org.wordpress.android.resolver.ResolverUtility
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
@@ -35,11 +35,11 @@ class UserFlagsResolverTest {
             resolverUtility,
     )
     private val wordPressCurrentPackageId = "packageId"
-    private val emptyFlagsData = UserFlagsData(
-            flags = mapOf(),
-            quickStartTaskList = listOf(),
-            quickStartStatusList = listOf()
-    )
+//    private val emptyFlagsData = UserFlagsData(
+//            flags = mapOf(),
+//            quickStartTaskList = listOf(),
+//            quickStartStatusList = listOf()
+//    )
 
     @Before
     fun setup() {
