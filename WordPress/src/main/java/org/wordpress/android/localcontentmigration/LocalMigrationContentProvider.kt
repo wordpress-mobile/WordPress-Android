@@ -6,7 +6,6 @@ import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors
 import dagger.hilt.components.SingletonComponent
-import org.wordpress.android.bloggingreminders.provider.BloggingRemindersProviderHelper
 import org.wordpress.android.localcontentmigration.LocalContentEntity.AccessToken
 import org.wordpress.android.localcontentmigration.LocalContentEntity.BloggingReminders
 import org.wordpress.android.localcontentmigration.LocalContentEntity.EligibilityStatus
