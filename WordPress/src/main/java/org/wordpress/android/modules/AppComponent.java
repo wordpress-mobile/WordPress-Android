@@ -6,7 +6,6 @@ import org.wordpress.android.bloggingreminders.provider.BloggingRemindersProvide
 import org.wordpress.android.push.GCMMessageService;
 import org.wordpress.android.push.GCMRegistrationIntentService;
 import org.wordpress.android.push.NotificationsProcessingService;
-import org.wordpress.android.reader.savedposts.provider.ReaderSavedPostsProvider;
 import org.wordpress.android.ui.AddQuickPressShortcutActivity;
 import org.wordpress.android.ui.CommentFullScreenDialogFragment;
 import org.wordpress.android.ui.JetpackConnectionResultActivity;
@@ -650,6 +649,4 @@ public interface AppComponent {
     void inject(WeekWidgetBlockListProviderFactory object);
 
     void inject(BloggingRemindersProvider object);
-
-    void inject(ReaderSavedPostsProvider object);
 }
