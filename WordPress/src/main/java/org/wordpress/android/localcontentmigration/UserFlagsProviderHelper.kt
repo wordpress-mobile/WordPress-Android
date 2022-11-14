@@ -1,5 +1,8 @@
 package org.wordpress.android.localcontentmigration
 
+import com.yarolegovich.wellsql.WellSql
+import org.wordpress.android.fluxc.model.QuickStartStatusModel
+import org.wordpress.android.fluxc.model.QuickStartTaskModel
 import org.wordpress.android.localcontentmigration.LocalContentEntityData.UserFlagsData
 import org.wordpress.android.ui.prefs.AppPrefs.DeletablePrefKey
 import org.wordpress.android.ui.prefs.AppPrefs.UndeletablePrefKey
@@ -10,14 +13,27 @@ class UserFlagsProviderHelper @Inject constructor(
     private val appPrefsWrapper: AppPrefsWrapper,
 ): LocalDataProviderHelper {
     override fun getData(localSiteId: Int?, localEntityId: Int?): LocalContentEntityData =
-            appPrefsWrapper.getAllPrefs().filter(::shouldInclude).let { UserFlagsData(flags = it) }
+            UserFlagsData(
+                    flags = appPrefsWrapper.getAllPrefs().filter(::shouldInclude),
+                    quickStartStatusList = getAllQuickStartStatus(),
+                    quickStartTaskList = getAllQuickStartTask(),
+            )
 
     private fun shouldInclude(flag: Map.Entry<String, Any?>) =
             userFlagsKeysSet.contains(flag.key) || userFlagsCompositeKeysSet.any { flag.key.startsWith(it) }
 
     private val userFlagsCompositeKeysSet: Set<String> = setOf(
-            DeletablePrefKey.SHOULD_SHOW_WEEKLY_ROUNDUP_NOTIFICATION.name
+            DeletablePrefKey.LAST_SELECTED_QUICK_START_TYPE.name,
+            DeletablePrefKey.SHOULD_SHOW_WEEKLY_ROUNDUP_NOTIFICATION.name,
     )
+
+    private fun getAllQuickStartTask() = checkNotNull(WellSql.select(QuickStartTaskModel::class.java).asModel) {
+        "Provider failed because QuickStart task list was null."
+    }
+
+    private fun getAllQuickStartStatus() = checkNotNull(WellSql.select(QuickStartStatusModel::class.java).asModel) {
+        "Provider failed because QuickStart status list was null."
+    }
 
     private val userFlagsKeysSet: Set<String> = setOf(
             DeletablePrefKey.MAIN_PAGE_INDEX.name,
@@ -36,6 +52,8 @@ class UserFlagsProviderHelper @Inject constructor(
             DeletablePrefKey.SHOULD_AUTO_ENABLE_GUTENBERG_FOR_THE_NEW_POSTS_PHASE_2.name,
             DeletablePrefKey.GUTENBERG_OPT_IN_DIALOG_SHOWN.name,
             DeletablePrefKey.GUTENBERG_FOCAL_POINT_PICKER_TOOLTIP_SHOWN.name,
+            DeletablePrefKey.IS_QUICK_START_NOTICE_REQUIRED.name,
+            DeletablePrefKey.LAST_SKIPPED_QUICK_START_TASK.name,
             DeletablePrefKey.POST_LIST_AUTHOR_FILTER.name,
             DeletablePrefKey.POST_LIST_VIEW_LAYOUT_TYPE.name,
             DeletablePrefKey.AZTEC_EDITOR_DISABLE_HW_ACC_KEYS.name,

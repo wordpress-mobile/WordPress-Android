@@ -2,6 +2,7 @@
 
 21.2
 -----
+* [*] Stats: Fix an issue with opening the stats activity from the stats widget. [https://github.com/wordpress-mobile/WordPress-Android/pull/17439]
 
 
 21.1

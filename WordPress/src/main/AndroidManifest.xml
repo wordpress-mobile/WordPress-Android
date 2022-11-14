@@ -645,6 +645,7 @@
         <activity
             android:name=".ui.main.jetpack.migration.JetpackMigrationActivity"
             android:label="@string/jp_migration_welcome_title"
+            android:screenOrientation="portrait"
             android:theme="@style/WordPress.NoActionBar"/>
 
         <!-- Notifications activities -->

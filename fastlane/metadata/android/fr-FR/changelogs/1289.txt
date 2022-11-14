@@ -1,0 +1,2 @@
+21.1 :
+Cette mise à jour tient en une ligne : lorsque vous modifiez une page, vous pouvez désormais définir une page parente directement depuis les réglages de la page-fille.

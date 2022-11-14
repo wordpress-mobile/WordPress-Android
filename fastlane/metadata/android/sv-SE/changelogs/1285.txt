@@ -1,5 +1,0 @@
-21.0:
-– Tagit bort kulorna för Automattics app-familj på sidan ”Om”
-– Uppdaterat startskärmen för Android version 12 och senare
-– Ändrat meddelandet om lyckad åtgärd från röd till svart text vid inloggning via QR-kod
-– Ändrat statistikskärmen så att europeiska siffror används för arabiskspråkiga användare
