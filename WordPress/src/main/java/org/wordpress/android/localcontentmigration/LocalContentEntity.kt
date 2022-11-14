@@ -9,7 +9,7 @@ enum class LocalContentEntity(private val isSiteContent: Boolean = false) {
     EligibilityStatus,
     AccessToken,
     UserFlags,
-    Site,
+    Sites,
     Post(isSiteContent = true),
     ;
 
