@@ -7,7 +7,7 @@ import org.junit.Before
 import org.junit.Ignore
 import org.junit.Test
 import org.mockito.ArgumentMatchers.anyList
-//import org.wordpress.android.localcontentmigration.LocalContentEntityData.UserFlagsData
+import org.wordpress.android.localcontentmigration.LocalContentEntityData.UserFlagsData
 import org.wordpress.android.localcontentmigration.LocalMigrationContentResolver
 import org.wordpress.android.resolver.ResolverUtility
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
@@ -17,7 +17,7 @@ import org.wordpress.android.userflags.UserFlagsAnalyticsTracker.ErrorType.NoUse
 import org.wordpress.android.userflags.UserFlagsAnalyticsTracker.ErrorType.QueryUserFlagsError
 import org.wordpress.android.util.publicdata.WordPressPublicData
 
-@Suppress("ForbiddenComment")
+@Suppress("ForbiddenComment", "UNUSED_VARIABLE")
 // TODO: adapt these tests to the unified provider / orchestrator approach
 @Ignore("Disabled for now: will refactor in another PR after unification.")
 class UserFlagsResolverTest {
@@ -35,11 +35,11 @@ class UserFlagsResolverTest {
             resolverUtility,
     )
     private val wordPressCurrentPackageId = "packageId"
-//    private val emptyFlagsData = UserFlagsData(
-//            flags = mapOf(),
-//            quickStartTaskList = listOf(),
-//            quickStartStatusList = listOf()
-//    )
+    private val emptyFlagsData = UserFlagsData(
+            flags = mapOf(),
+            quickStartTaskList = listOf(),
+            quickStartStatusList = listOf()
+    )
 
     @Before
     fun setup() {
@@ -146,11 +146,11 @@ class UserFlagsResolverTest {
     @Test
     fun `Should track success if user flags Map has entries`() {
         featureEnabled()
-//        val data = emptyFlagsData.copy(
-//                flags = mapOf("key" to "value"),
-//                quickStartTaskList = listOf(),
-//                quickStartStatusList = listOf()
-//        )
+        val data = emptyFlagsData.copy(
+                flags = mapOf("key" to "value"),
+                quickStartTaskList = listOf(),
+                quickStartStatusList = listOf()
+        )
 //        whenever(mockCursor.getString(0)).thenReturn(Gson().toJson(data))
         classToTest.tryGetUserFlags({}, {})
         verify(userFlagsAnalyticsTracker).trackSuccess()
@@ -159,11 +159,11 @@ class UserFlagsResolverTest {
     @Test
     fun `Should trigger success callback if user flags Map has entries`() {
         featureEnabled()
-//        val data = emptyFlagsData.copy(
-//                flags = mapOf("key" to "value"),
-//                quickStartTaskList = listOf(),
-//                quickStartStatusList = listOf()
-//        )
+        val data = emptyFlagsData.copy(
+                flags = mapOf("key" to "value"),
+                quickStartTaskList = listOf(),
+                quickStartStatusList = listOf()
+        )
 //        whenever(mockCursor.getString(0)).thenReturn(Gson().toJson(data))
         val onSuccess: () -> Unit = mock()
         classToTest.tryGetUserFlags(onSuccess) {}
@@ -175,11 +175,11 @@ class UserFlagsResolverTest {
         featureEnabled()
         val key = "key"
         val value = "value"
-//        val data = emptyFlagsData.copy(
-//                flags = mapOf(key to value),
-//                quickStartTaskList = listOf(),
-//                quickStartStatusList = listOf()
-//        )
+        val data = emptyFlagsData.copy(
+                flags = mapOf(key to value),
+                quickStartTaskList = listOf(),
+                quickStartStatusList = listOf()
+        )
 //        whenever(mockCursor.getString(0)).thenReturn(Gson().toJson(data))
         val onSuccess: () -> Unit = mock()
         classToTest.tryGetUserFlags(onSuccess) {}
