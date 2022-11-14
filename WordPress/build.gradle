@@ -404,7 +404,6 @@ dependencies {
     testImplementation "junit:junit:$jUnitVersion"
 
     testImplementation "org.mockito:mockito-core:$mockitoVersion"
-    testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$nhaarmanMockitoVersion"
     testImplementation "org.mockito.kotlin:mockito-kotlin:$mockitoKotlinVersion"
     testImplementation "org.assertj:assertj-core:$assertJVersion"
     testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion"

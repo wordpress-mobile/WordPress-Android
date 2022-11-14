@@ -1,10 +1,5 @@
 package org.wordpress.android.ui.domains
 
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.times
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.verifyZeroInteractions
-import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Assert.assertFalse
@@ -13,6 +8,11 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.ArgumentCaptor
 import org.mockito.Mock
+import org.mockito.kotlin.any
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoInteractions
+import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.Dispatcher
@@ -166,7 +166,7 @@ class DomainSuggestionsViewModelTest : BaseUnitTest() {
         viewModel.onDomainSuggestionSelected(dummySelectedDomainSuggestionItem)
         viewModel.onSelectDomainButtonClicked()
 
-        verifyZeroInteractions(createCartUseCase)
+        verifyNoInteractions(createCartUseCase)
 
         assertThat(onDomainSelectedEvents.last()).isEqualTo(DomainProductDetails(DUMMY_PRODUCT_ID, DUMMY_DOMAIN_NAME))
     }

@@ -1,16 +1,16 @@
 package org.wordpress.android.ui.deeplinks.handlers
 
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
 import org.wordpress.android.fluxc.store.AccountStore
-import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenMySite
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenLoginPrologue
+import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenMySite
 import org.wordpress.android.ui.deeplinks.buildUri
 
 @RunWith(MockitoJUnitRunner::class)
