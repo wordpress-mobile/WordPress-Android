@@ -1,7 +1,9 @@
 package org.wordpress.android.localcontentmigration
 
+import com.yarolegovich.wellsql.WellSql
+import org.wordpress.android.fluxc.model.QuickStartStatusModel
+import org.wordpress.android.fluxc.model.QuickStartTaskModel
 import org.wordpress.android.localcontentmigration.LocalContentEntityData.UserFlagsData
-import org.wordpress.android.provider.ProviderUtility
 import org.wordpress.android.ui.prefs.AppPrefs.DeletablePrefKey
 import org.wordpress.android.ui.prefs.AppPrefs.UndeletablePrefKey
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
@@ -9,13 +11,12 @@ import javax.inject.Inject
 
 class UserFlagsProviderHelper @Inject constructor(
     private val appPrefsWrapper: AppPrefsWrapper,
-    private val providerUtility: ProviderUtility,
 ): LocalDataProviderHelper {
     override fun getData(localSiteId: Int?, localEntityId: Int?): LocalContentEntityData =
             UserFlagsData(
                     flags = appPrefsWrapper.getAllPrefs().filter(::shouldInclude),
-                    quickStartStatusList = providerUtility.getAllQuickStartStatus(),
-                    quickStartTaskList = providerUtility.getAllQuickStartTask(),
+                    quickStartStatusList = getAllQuickStartStatus(),
+                    quickStartTaskList = getAllQuickStartTask(),
             )
 
     private fun shouldInclude(flag: Map.Entry<String, Any?>) =
@@ -25,6 +26,14 @@ class UserFlagsProviderHelper @Inject constructor(
             DeletablePrefKey.LAST_SELECTED_QUICK_START_TYPE.name,
             DeletablePrefKey.SHOULD_SHOW_WEEKLY_ROUNDUP_NOTIFICATION.name,
     )
+
+    private fun getAllQuickStartTask() = checkNotNull(WellSql.select(QuickStartTaskModel::class.java).asModel) {
+        "Provider failed because QuickStart task list was null."
+    }
+
+    private fun getAllQuickStartStatus() = checkNotNull(WellSql.select(QuickStartStatusModel::class.java).asModel) {
+        "Provider failed because QuickStart status list was null."
+    }
 
     private val userFlagsKeysSet: Set<String> = setOf(
             DeletablePrefKey.MAIN_PAGE_INDEX.name,
