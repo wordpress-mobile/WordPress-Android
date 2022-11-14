@@ -10,7 +10,7 @@ import org.wordpress.android.localcontentmigration.LocalContentEntity.AccessToke
 import org.wordpress.android.localcontentmigration.LocalContentEntity.EligibilityStatus
 import org.wordpress.android.localcontentmigration.LocalContentEntity.Post
 import org.wordpress.android.localcontentmigration.LocalContentEntity.ReaderPosts
-import org.wordpress.android.localcontentmigration.LocalContentEntity.Site
+import org.wordpress.android.localcontentmigration.LocalContentEntity.Sites
 import org.wordpress.android.localcontentmigration.LocalContentEntity.UserFlags
 import org.wordpress.android.provider.query.QueryResult
 import java.lang.Integer.parseInt
@@ -55,7 +55,7 @@ class LocalMigrationContentProvider: TrustedQueryContentProvider() {
                 AccessToken -> localAccessTokenProviderHelper().getData()
                 UserFlags -> userFlagsProviderHelper().getData()
                 ReaderPosts -> readeSavedPostsProviderHelper().getData()
-                Site -> localSiteProviderHelper().getData(localEntityId = localEntityId)
+                Sites -> localSiteProviderHelper().getData()
                 Post -> localPostProviderHelper().getData(localSiteId, localEntityId)
             }
             return queryResult().createCursor(response)

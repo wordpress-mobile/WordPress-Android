@@ -213,7 +213,6 @@ import org.wordpress.android.ui.uploads.PostUploadHandler;
 import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementDialogFragment;
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementListAdapter;
-import org.wordpress.android.userflags.provider.UserFlagsProvider;
 import org.wordpress.android.util.WPWebViewClient;
 import org.wordpress.android.util.image.getters.WPCustomImageGetter;
 
@@ -649,8 +648,6 @@ public interface AppComponent {
     void inject(WeekViewsWidgetListProvider object);
 
     void inject(WeekWidgetBlockListProviderFactory object);
-
-    void inject(UserFlagsProvider object);
 
     void inject(BloggingRemindersProvider object);
 

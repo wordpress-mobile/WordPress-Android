@@ -10,7 +10,7 @@ import org.wordpress.android.localcontentmigration.LocalContentEntityData.Access
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.localcontentmigration.LocalContentEntity.EligibilityStatus
 import org.wordpress.android.localcontentmigration.LocalContentEntity.Post
-import org.wordpress.android.localcontentmigration.LocalContentEntity.Site
+import org.wordpress.android.localcontentmigration.LocalContentEntity.Sites
 import org.wordpress.android.localcontentmigration.LocalContentEntityData.EligibilityStatusData
 import org.wordpress.android.localcontentmigration.LocalContentEntityData.PostData
 import org.wordpress.android.localcontentmigration.LocalContentEntityData.PostsData
@@ -60,7 +60,7 @@ class LocalMigrationOrchestrator @Inject constructor(
         sharedLoginAnalyticsTracker.trackLoginStart()
         appPrefsWrapper.saveIsFirstTrySharedLoginJetpack(false)
         val (accessToken) = localMigrationContentResolver.getDataForEntityType<AccessTokenData>(AccessToken)
-        val (sites) = localMigrationContentResolver.getDataForEntityType<SitesData >(Site)
+        val (sites) = localMigrationContentResolver.getDataForEntityType<SitesData >(Sites)
         val hasLocalSelfHostedSites = sites.any { !it.isUsingWpComRestApi }
         @Suppress("ForbiddenComment")
         // TODO: Unify error tracking for resolver / provider errors too
@@ -103,7 +103,7 @@ class LocalMigrationOrchestrator @Inject constructor(
         @Suppress("ForbiddenComment")
         // TODO: do something more graceful here?
         if (!isEligible) return
-        val (sites) = localMigrationContentResolver.getDataForEntityType<SitesData >(Site)
+        val (sites) = localMigrationContentResolver.getDataForEntityType<SitesData >(Sites)
         for (site in sites) {
             val posts: PostsData = localMigrationContentResolver.getDataForEntityType(Post, site.id)
             for (localPostId in posts.localIds) {
