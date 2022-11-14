@@ -1,5 +1,0 @@
-21.0:
-- Se han añadido los enlaces correctos a las aplicaciones de la familia Automattic en la pantalla Acerca de.
-- Se ha actualizado la pantalla de inicio para la versión 12 de Android o posterior.
-- El color del texto del mensaje de operación correcta al acceder a través de un código QR se ha cambiado de rojo a negro.
-- Hemos incluido números arábigos occidentales para los usuarios cuyo idioma sea el árabe en la pantalla Estadísticas.

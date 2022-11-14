@@ -1,5 +1,0 @@
-21.0:
-- Hakkında ekranında Automattic Family uygulaması öğelerine doğru bağlantılar eklendi
-- 12+ Android sürümleri için başlatma ekranı güncellendi
-- QR kodu girişleri için başarılı mesajı metninin kırmızı rengi siyah olarak değiştirildi
-- İstatistikler ekranını Arapça dil kullanıcıları için Batı Arap rakamlarını içerecek şekilde düzelttik 

@@ -1,6 +1,8 @@
 package org.wordpress.android.localcontentmigration
 
 import org.wordpress.android.fluxc.model.PostModel
+import org.wordpress.android.fluxc.model.QuickStartStatusModel
+import org.wordpress.android.fluxc.model.QuickStartTaskModel
 
 enum class LocalContentEntity(private val isSiteContent: Boolean = false) {
     EligibilityStatus,
@@ -28,7 +30,11 @@ sealed class LocalContentEntityData {
     ): LocalContentEntityData()
 
     data class AccessTokenData(val token: String): LocalContentEntityData()
-    data class UserFlagsData(val flags: Map<String, Any?>): LocalContentEntityData()
+    data class UserFlagsData(
+        val flags: Map<String, Any?>,
+        val quickStartTaskList: List<QuickStartTaskModel>,
+        val quickStartStatusList: List<QuickStartStatusModel>,
+    ): LocalContentEntityData()
     data class SitesData(val localIds: List<Int>): LocalContentEntityData()
     data class PostsData(val localIds: List<Int>): LocalContentEntityData()
     data class PostData(val post: PostModel) : LocalContentEntityData()

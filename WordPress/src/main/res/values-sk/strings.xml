@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-11-01 10:59:47+0000
+Translation-Revision-Date: 2022-11-09 19:17:00+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.3
 Language: sk
@@ -315,7 +315,7 @@ Language: sk
     <string name="dialog_confirm_delete_permanently_post">Ste si istý, že chcete natrvalo zmazať tento článok?</string>
     <string name="content_description_person_reading_device_notification">Človek čítajúci na zariadení s notifikáciami</string>
     <string name="content_description_people_looking_charts">Ľudia pozerajúci sa na grafy a tabuľky</string>
-    <string name="comment_title">%s na %s</string>
+    <string name="comment_title">%1$s na %2$s</string>
     <string name="notification_channel_important_title">Dôležité</string>
     <string name="notification_channel_general_title">Všeobecné</string>
     <string name="photo_picker_use_photo">Použiť túto fotografiu</string>
