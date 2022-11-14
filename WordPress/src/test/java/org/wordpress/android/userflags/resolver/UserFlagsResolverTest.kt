@@ -146,7 +146,7 @@ class UserFlagsResolverTest {
     @Test
     fun `Should track success if user flags Map has entries`() {
         featureEnabled()
-        @Suppress("UnusedPrivateMember")
+        @Suppress("unused", "UnusedPrivateMember")
         val data = emptyFlagsData.copy(
                 flags = mapOf("key" to "value"),
                 quickStartTaskList = listOf(),
@@ -160,7 +160,7 @@ class UserFlagsResolverTest {
     @Test
     fun `Should trigger success callback if user flags Map has entries`() {
         featureEnabled()
-        @Suppress("UnusedPrivateMember")
+        @Suppress("unused", "UnusedPrivateMember")
         val data = emptyFlagsData.copy(
                 flags = mapOf("key" to "value"),
                 quickStartTaskList = listOf(),
@@ -177,7 +177,7 @@ class UserFlagsResolverTest {
         featureEnabled()
         val key = "key"
         val value = "value"
-        @Suppress("UnusedPrivateMember")
+        @Suppress("unused", "UnusedPrivateMember")
         val data = emptyFlagsData.copy(
                 flags = mapOf(key to value),
                 quickStartTaskList = listOf(),
