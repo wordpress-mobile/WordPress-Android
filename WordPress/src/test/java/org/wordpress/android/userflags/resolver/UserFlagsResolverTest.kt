@@ -146,12 +146,11 @@ class UserFlagsResolverTest {
     @Test
     fun `Should track success if user flags Map has entries`() {
         featureEnabled()
-        @Suppress("unused", "UnusedPrivateMember")
-        val data = emptyFlagsData.copy(
-                flags = mapOf("key" to "value"),
-                quickStartTaskList = listOf(),
-                quickStartStatusList = listOf()
-        )
+//        val data = emptyFlagsData.copy(
+//                flags = mapOf("key" to "value"),
+//                quickStartTaskList = listOf(),
+//                quickStartStatusList = listOf()
+//        )
 //        whenever(mockCursor.getString(0)).thenReturn(Gson().toJson(data))
         classToTest.tryGetUserFlags({}, {})
         verify(userFlagsAnalyticsTracker).trackSuccess()
@@ -160,12 +159,11 @@ class UserFlagsResolverTest {
     @Test
     fun `Should trigger success callback if user flags Map has entries`() {
         featureEnabled()
-        @Suppress("unused", "UnusedPrivateMember")
-        val data = emptyFlagsData.copy(
-                flags = mapOf("key" to "value"),
-                quickStartTaskList = listOf(),
-                quickStartStatusList = listOf()
-        )
+//        val data = emptyFlagsData.copy(
+//                flags = mapOf("key" to "value"),
+//                quickStartTaskList = listOf(),
+//                quickStartStatusList = listOf()
+//        )
 //        whenever(mockCursor.getString(0)).thenReturn(Gson().toJson(data))
         val onSuccess: () -> Unit = mock()
         classToTest.tryGetUserFlags(onSuccess) {}
@@ -177,12 +175,11 @@ class UserFlagsResolverTest {
         featureEnabled()
         val key = "key"
         val value = "value"
-        @Suppress("unused", "UnusedPrivateMember")
-        val data = emptyFlagsData.copy(
-                flags = mapOf(key to value),
-                quickStartTaskList = listOf(),
-                quickStartStatusList = listOf()
-        )
+//        val data = emptyFlagsData.copy(
+//                flags = mapOf(key to value),
+//                quickStartTaskList = listOf(),
+//                quickStartStatusList = listOf()
+//        )
 //        whenever(mockCursor.getString(0)).thenReturn(Gson().toJson(data))
         val onSuccess: () -> Unit = mock()
         classToTest.tryGetUserFlags(onSuccess) {}
