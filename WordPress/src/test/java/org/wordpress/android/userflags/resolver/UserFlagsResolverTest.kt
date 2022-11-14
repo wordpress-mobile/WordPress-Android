@@ -17,7 +17,7 @@ import org.wordpress.android.userflags.UserFlagsAnalyticsTracker.ErrorType.NoUse
 import org.wordpress.android.userflags.UserFlagsAnalyticsTracker.ErrorType.QueryUserFlagsError
 import org.wordpress.android.util.publicdata.WordPressPublicData
 
-@Suppress("ForbiddenComment")
+@Suppress("ForbiddenComment", "UnusedPrivateMember")
 // TODO: adapt these tests to the unified provider / orchestrator approach
 @Ignore("Disabled for now: will refactor in another PR after unification.")
 class UserFlagsResolverTest {
