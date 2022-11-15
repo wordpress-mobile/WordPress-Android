@@ -4,11 +4,13 @@ import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.QuickStartStatusModel
 import org.wordpress.android.fluxc.model.QuickStartTaskModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.models.ReaderPostList
 
 enum class LocalContentEntity(private val isSiteContent: Boolean = false) {
     EligibilityStatus,
     AccessToken,
     UserFlags,
+    ReaderPosts,
     Sites,
     Post(isSiteContent = true),
     ;
@@ -36,6 +38,7 @@ sealed class LocalContentEntityData {
         val quickStartTaskList: List<QuickStartTaskModel>,
         val quickStartStatusList: List<QuickStartStatusModel>,
     ): LocalContentEntityData()
+    data class ReaderPostsData(val posts: ReaderPostList): LocalContentEntityData()
     data class SitesData(val sites: List<SiteModel>): LocalContentEntityData()
     data class PostsData(val localIds: List<Int>): LocalContentEntityData()
     data class PostData(val post: PostModel) : LocalContentEntityData()
