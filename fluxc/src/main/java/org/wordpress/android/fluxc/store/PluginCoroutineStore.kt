@@ -70,12 +70,11 @@ class PluginCoroutineStore
         }
         val error = payload.error
         return if (error != null) {
-            OnSitePluginFetched(
-                FetchedSitePluginPayload(
-                    pluginName,
-                    FetchSitePluginError(error.type, error.message)
-                )
-            )
+            val fetchError = FetchSitePluginError(error.type, error.message)
+            OnSitePluginFetched(FetchedSitePluginPayload(pluginName, fetchError))
+                .apply {
+                    this.error = fetchError
+                }
         } else {
             pluginSqlUtils.insertOrUpdateSitePlugin(site, payload.data)
             OnSitePluginFetched(
