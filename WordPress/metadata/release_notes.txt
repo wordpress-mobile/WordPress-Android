@@ -1,1 +1,3 @@
-This update is short and sweet—when you’re in the process of editing a page, you can now set a parent page within the child page’s settings.
+* [*] Stats: Fix an issue with opening the stats activity from the stats widget. [https://github.com/wordpress-mobile/WordPress-Android/pull/17439]
+
+
