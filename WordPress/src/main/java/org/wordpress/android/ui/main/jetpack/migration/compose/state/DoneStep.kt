@@ -2,11 +2,15 @@ package org.wordpress.android.ui.main.jetpack.migration.compose.state
 
 import android.content.res.Configuration
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -34,27 +38,35 @@ import org.wordpress.android.ui.main.jetpack.migration.compose.components.Title
 
 @Composable
 fun DoneStep(uiState: UiState.Content.Done) = with(uiState) {
-    Column {
+    Column(
+            modifier = Modifier.fillMaxSize()
+    ) {
+        val scrollState = rememberScrollState()
         Column(
-                modifier = Modifier.padding(horizontal = dimensionResource(dimen.jp_migration_padding_horizontal))
-        ) {
-            ScreenIcon(iconRes = screenIconRes)
-            Title(text = uiStringText(title))
-            Subtitle(text = uiStringText(subtitle))
-        }
-        Column(
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
+                        .verticalScroll(scrollState)
                         .weight(1f)
-                        .fillMaxWidth()
         ) {
+            ScreenIcon(
+                    iconRes = screenIconRes,
+                    modifier = Modifier.padding(horizontal = dimensionResource(dimen.jp_migration_padding_horizontal))
+            )
+            Title(
+                    text = uiStringText(title),
+                    modifier = Modifier.padding(horizontal = dimensionResource(dimen.jp_migration_padding_horizontal))
+            )
+            Subtitle(
+                    text = uiStringText(subtitle),
+                    modifier = Modifier.padding(horizontal = dimensionResource(dimen.jp_migration_padding_horizontal))
+            )
+            Spacer(modifier = Modifier.weight(0.5f))
             Image(
                     painter = painterResource(deleteWpIcon),
                     contentDescription = stringResource(R.string.jp_migration_remove_wp_app_icon_content_description),
                     modifier = Modifier
-                            .padding(bottom = 10.dp)
+                            .padding(top = 10.dp, bottom = 10.dp)
                             .size(70.dp)
+                            .align(Alignment.CenterHorizontally)
             )
             Text(
                     text = htmlToAnnotatedString(uiStringText(message)),
@@ -62,19 +74,30 @@ fun DoneStep(uiState: UiState.Content.Done) = with(uiState) {
                     fontSize = 14.sp,
                     lineHeight = 18.sp,
                     color = colorResource(R.color.gray_50),
-                    modifier = Modifier.fillMaxWidth(0.75f)
+                    modifier = Modifier
+                            .fillMaxWidth(0.75f)
+                            .align(Alignment.CenterHorizontally)
+                            .padding(bottom = 10.dp)
+            )
+            Spacer(modifier = Modifier.weight(0.5f))
+        }
+        Column {
+            Divider(
+                    color = colorResource(R.color.gray_10),
+                    thickness = 0.5.dp,
+            )
+            PrimaryButton(
+                    text = uiStringText(primaryActionButton.text),
+                    onClick = primaryActionButton.onClick,
+                    modifier = Modifier.padding(bottom = 50.dp),
             )
         }
-        PrimaryButton(
-                text = uiStringText(primaryActionButton.text),
-                onClick = primaryActionButton.onClick,
-                modifier = Modifier.padding(bottom = 50.dp),
-        )
     }
 }
 
 @Preview(showBackground = true, device = Devices.PIXEL_4_XL)
 @Preview(showBackground = true, device = Devices.PIXEL_4_XL, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview(showBackground = true, device = Devices.PIXEL_4_XL, fontScale = 2f)
 @Composable
 private fun PreviewDoneStep() {
     AppTheme {
