@@ -6,7 +6,6 @@ import org.wordpress.android.bloggingreminders.provider.BloggingRemindersProvide
 import org.wordpress.android.push.GCMMessageService;
 import org.wordpress.android.push.GCMRegistrationIntentService;
 import org.wordpress.android.push.NotificationsProcessingService;
-import org.wordpress.android.reader.savedposts.provider.ReaderSavedPostsProvider;
 import org.wordpress.android.ui.AddQuickPressShortcutActivity;
 import org.wordpress.android.ui.CommentFullScreenDialogFragment;
 import org.wordpress.android.ui.JetpackConnectionResultActivity;
@@ -213,7 +212,6 @@ import org.wordpress.android.ui.uploads.PostUploadHandler;
 import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementDialogFragment;
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementListAdapter;
-import org.wordpress.android.userflags.provider.UserFlagsProvider;
 import org.wordpress.android.util.WPWebViewClient;
 import org.wordpress.android.util.image.getters.WPCustomImageGetter;
 
@@ -650,9 +648,5 @@ public interface AppComponent {
 
     void inject(WeekWidgetBlockListProviderFactory object);
 
-    void inject(UserFlagsProvider object);
-
     void inject(BloggingRemindersProvider object);
-
-    void inject(ReaderSavedPostsProvider object);
 }
