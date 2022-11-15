@@ -97,7 +97,7 @@ class DebugSettingsViewModel
                 null
             }
             Feature(name, value, ToggleAction(name, value?.not() ?: true, this::toggleFeature))
-        }
+        }.sortedBy { it.title}
     }
 
     private fun buildRemoteFeatures(): List<Feature> {
@@ -115,7 +115,7 @@ class DebugSettingsViewModel
             } else {
                 null
             }
-        }
+        }.sortedBy { it.title }
     }
 
     private fun toggleFeature(remoteKey: String, value: Boolean) {
