@@ -54,7 +54,7 @@ class HomepageSettingsDialog : DialogFragment() {
 
             viewModel = ViewModelProvider(this@HomepageSettingsDialog, viewModelFactory)
                     .get(HomepageSettingsViewModel::class.java)
-            viewModel.uiState.observe(this@HomepageSettingsDialog, { uiState ->
+            viewModel.uiState.observe(this@HomepageSettingsDialog) { uiState ->
                 uiState?.let {
                     loadingPages.visibility = if (uiState.isLoading) View.VISIBLE else View.GONE
                     enablePositiveButton(uiState.isSaveEnabled)
@@ -65,40 +65,46 @@ class HomepageSettingsDialog : DialogFragment() {
                         loadingError.visibility = View.GONE
                         loadingError.text = null
                     }
-                    when (uiState.isClassicBlogState) {
-                        true -> {
-                            homepageSettingsRadioGroup.checkIfNotChecked(R.id.classic_blog)
-                            dropdownContainer.visibility = View.GONE
-                        }
-                        false -> {
-                            homepageSettingsRadioGroup.checkIfNotChecked(R.id.static_homepage)
-                            if (uiState.pageForPostsState != null && uiState.pageOnFrontState != null) {
-                                dropdownContainer.visibility = View.VISIBLE
-                                setupDropdownItem(
-                                        uiState.pageOnFrontState,
-                                        selectedHomepage,
-                                        viewModel::onPageOnFrontDialogOpened,
-                                        viewModel::onPageOnFrontSelected
-                                )
-                                setupDropdownItem(
-                                        uiState.pageForPostsState,
-                                        selectedPostsPage,
-                                        viewModel::onPageForPostsDialogOpened,
-                                        viewModel::onPageForPostsSelected
-                                )
-                            } else {
-                                dropdownContainer.visibility = View.GONE
-                            }
-                        }
-                    }
+                    isClassicBlogState(uiState)
                 }
-            })
+            }
         }
         viewModel.dismissDialogEvent.observeEvent(this, {
             requireDialog().dismiss()
         })
         viewModel.start(requireNotNull(siteId), isClassicBlog, pageForPostsId, pageOnFrontId)
         return builder.create()
+    }
+
+    private fun SiteSettingsHomepageDialogBinding.isClassicBlogState(
+        uiState: HomepageSettingsUiState
+    ) {
+        when (uiState.isClassicBlogState) {
+            true -> {
+                homepageSettingsRadioGroup.checkIfNotChecked(R.id.classic_blog)
+                dropdownContainer.visibility = View.GONE
+            }
+            false -> {
+                homepageSettingsRadioGroup.checkIfNotChecked(R.id.static_homepage)
+                if (uiState.pageForPostsState != null && uiState.pageOnFrontState != null) {
+                    dropdownContainer.visibility = View.VISIBLE
+                    setupDropdownItem(
+                            uiState.pageOnFrontState,
+                            selectedHomepage,
+                            viewModel::onPageOnFrontDialogOpened,
+                            viewModel::onPageOnFrontSelected
+                    )
+                    setupDropdownItem(
+                            uiState.pageForPostsState,
+                            selectedPostsPage,
+                            viewModel::onPageForPostsDialogOpened,
+                            viewModel::onPageForPostsSelected
+                    )
+                } else {
+                    dropdownContainer.visibility = View.GONE
+                }
+            }
+        }
     }
 
     private fun enablePositiveButton(enabled: Boolean) {
