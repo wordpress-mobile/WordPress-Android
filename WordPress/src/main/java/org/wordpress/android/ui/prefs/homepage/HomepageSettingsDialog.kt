@@ -69,9 +69,9 @@ class HomepageSettingsDialog : DialogFragment() {
                 }
             }
         }
-        viewModel.dismissDialogEvent.observeEvent(this, {
+        viewModel.dismissDialogEvent.observeEvent(this) {
             requireDialog().dismiss()
-        })
+        }
         viewModel.start(requireNotNull(siteId), isClassicBlog, pageForPostsId, pageOnFrontId)
         return builder.create()
     }
