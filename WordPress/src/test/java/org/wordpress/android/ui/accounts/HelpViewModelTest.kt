@@ -1,8 +1,8 @@
 package org.wordpress.android.ui.accounts
 
 import androidx.lifecycle.Observer
-import com.nhaarman.mockitokotlin2.times
-import com.nhaarman.mockitokotlin2.verify
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
