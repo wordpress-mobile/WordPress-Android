@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -22,6 +23,7 @@ import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Content
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Loading
 import org.wordpress.android.ui.main.jetpack.migration.compose.state.LoadingState
+import org.wordpress.android.ui.main.jetpack.migration.compose.state.NotificationsStep
 import org.wordpress.android.ui.main.jetpack.migration.compose.state.WelcomeStep
 import javax.inject.Inject
 
@@ -71,9 +73,12 @@ private fun JetpackMigrationScreen(viewModel: JetpackMigrationViewModel = viewMo
     Box {
         val uiState by viewModel.uiState.collectAsState()
 
-        when (val state = uiState) {
-            is Content.Welcome -> WelcomeStep(state)
-            is Loading -> LoadingState()
+        Crossfade(targetState = uiState) { state ->
+            when (state) {
+                is Content.Welcome -> WelcomeStep(state)
+                is Content.Notifications -> NotificationsStep(state)
+                is Loading -> LoadingState()
+            }
         }
     }
 }
