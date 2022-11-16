@@ -1,0 +1,5 @@
+21.0:
+- Tegels van de Automattic Family-app verwijderd van de pagina Over
+- Het startscherm bijgewerkt voor Android-versies 12+
+- De tekst van het succesbericht van rood naar zwart veranderd voor inlogpogingen met een QR-code
+- Het scherm statistieken verbeterd zodat voor Arabische taalgebruikers nu West-Arabische getallen worden weergegeven

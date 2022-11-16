@@ -1,6 +1,2 @@
-* [***] [internal] Updates the target sdk to 31 - Android 12 [https://github.com/wordpress-mobile/WordPress-Android/pull/17153]
-* [*] Updated About screen to use correct urls. [https://github.com/wordpress-mobile/WordPress-Android/pull/17282]
-* [*] Updates splash screen for Android 12+ [https://github.com/wordpress-mobile/WordPress-Android/pull/17273]
-* [*] Fix text color of success messages in the QR code login flow [https://github.com/wordpress-mobile/WordPress-Android/pull/17286]
-* [*] Stats: Fix Western Arabic Numerals not being shown on every text of the stats screens in Arabic languages [https://github.com/wordpress-mobile/WordPress-Android/pull/17217]
-
+- You’ll notice a shiny new landing screen in the app that responds to your device’s motion—enjoy!
+- When you’re in the process of editing a page, you can now set a parent page within the child page’s settings.

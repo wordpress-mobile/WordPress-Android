@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-10-03 17:03:09+0000
+Translation-Revision-Date: 2022-10-31 13:46:43+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.3
 Language: ru
 -->
 <resources>
+    <string name="post_settings_parent">Родительская страница</string>
+    <string name="post_settings_page_attributes">Атрибуты страницы</string>
+    <string name="about_automattic_contribute_item_title">Участвовать</string>
+    <string name="about_news">Новости</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_one">1 ответ</string>
     <string name="login_prologue_revamped_content_description_wordpress_icon">Значок WordPress</string>
     <string name="login_prologue_revamped_tagline">Пишите, редактируйте, публикуйте отовсюду.</string>
@@ -35,7 +39,7 @@ Language: ru
     <string name="wp_jetpack_continue_to_notifications">Перейти к уведомлениям</string>
     <string name="wp_jetpack_continue_to_stats">Перейти к статистике</string>
     <string name="wp_jetpack_continue_to_reader">Перейти в Чтиво</string>
-    <string name="wp_jetpack_get_new_jetpack_app">Загрузить новое приложение Jetpack</string>
+    <string name="wp_jetpack_get_new_jetpack_app">Попробуйте новое приложение Jetpack</string>
     <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery">Возникла проблема отображения блока. \nНажмите для попытки его восстановления.</string>
     <string name="weekly_roundup_notification_text_views_and_comments">За последнюю неделю: просмотров сайта — %1$s, комментариев — %2$s</string>
     <string name="weekly_roundup_notification_text_views_and_likes">За последнюю неделю: просмотров сайта — %1$s, отметок «Нравится» —%2$s</string>

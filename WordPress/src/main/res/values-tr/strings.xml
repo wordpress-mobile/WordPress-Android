@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-10-14 08:00:48+0000
+Translation-Revision-Date: 2022-11-01 22:18:41+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: tr
 -->
 <resources>
+    <string name="post_settings_parent">Üst sayfa</string>
+    <string name="post_settings_page_attributes">Sayfa öznitelikleri</string>
+    <string name="about_automattic_contribute_item_title">Katkıda bulunun</string>
+    <string name="about_news">Haberler</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_one">1 yanıt</string>
     <string name="login_prologue_revamped_content_description_wordpress_icon">WordPress simgesi</string>
     <string name="login_prologue_revamped_tagline">Dilediğiniz yerden yazın, düzenleyin ve yayınlayın.</string>
@@ -35,7 +39,7 @@ Language: tr
     <string name="wp_jetpack_continue_to_notifications">Bildirimlerle Devam Et</string>
     <string name="wp_jetpack_continue_to_stats">İstatistiklerle Devam Et</string>
     <string name="wp_jetpack_continue_to_reader">Okuyucuyla Devam Et</string>
-    <string name="wp_jetpack_get_new_jetpack_app">Jetpack uygulamasını edinin</string>
+    <string name="wp_jetpack_get_new_jetpack_app">Yeni Jetpack uygulamasını deneyin</string>
     <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery">Blok görüntülenirken bir sorun oluştu. \nBlok kurtarmayı denemek için dokunun. </string>
     <string name="weekly_roundup_notification_text_views_and_comments">Geçen hafta %1$s görüntüleme ve %2$s yorum aldınız.</string>
     <string name="weekly_roundup_notification_text_views_and_likes">Geçen hafta %1$s görüntüleme ve %2$s beğeni aldınız.</string>

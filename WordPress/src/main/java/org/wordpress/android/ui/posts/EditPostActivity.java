@@ -609,8 +609,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 }
             } else {
                 mEditPostRepository.loadPostByLocalPostId(extras.getInt(EXTRA_POST_LOCAL_ID));
-                // Load post from extra)s
-
+                // Load post from extra's
                 if (mEditPostRepository.hasPost()) {
                     if (extras.getBoolean(EXTRA_LOAD_AUTO_SAVE_REVISION)) {
                         mEditPostRepository.update(postModel -> {

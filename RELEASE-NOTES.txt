@@ -1,8 +1,13 @@
 *** PLEASE FOLLOW THIS FORMAT: [<priority indicator, more stars = higher priority>] <description> [<PR URL>]
 
-21.1
+21.2
 -----
 
+
+21.1
+-----
+* [**] Added functionality to set the parent of a page from page settings in the editor. [https://github.com/wordpress-mobile/WordPress-Android/pull/17329]
+* [***] [Jetpack-only] Redesigned the landing screen. [https://github.com/wordpress-mobile/WordPress-Android/pull/17351]
 
 21.0
 -----

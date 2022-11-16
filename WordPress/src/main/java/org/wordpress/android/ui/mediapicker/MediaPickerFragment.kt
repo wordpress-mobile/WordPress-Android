@@ -235,10 +235,7 @@ class MediaPickerFragment : Fragment() {
             layoutManager.onRestoreInstanceState(it)
         }
         with(MediaPickerFragmentBinding.bind(view)) {
-            binding = this
-            recycler.layoutManager = layoutManager
-            recycler.setEmptyView(actionableEmptyView)
-            recycler.setHasFixedSize(true)
+            setUpRecyclerView(layoutManager)
 
             val swipeToRefreshHelper = WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(pullToRefresh) {
                 viewModel.onPullToRefresh()
@@ -264,42 +261,9 @@ class MediaPickerFragment : Fragment() {
                 }
             })
 
-            viewModel.onNavigate.observeEvent(viewLifecycleOwner,
-                    { navigationEvent ->
-                        when (navigationEvent) {
-                            is PreviewUrl -> {
-                                MediaPreviewActivity.showPreview(
-                                        requireContext(),
-                                        null,
-                                        navigationEvent.url
-                                )
-                                AccessibilityUtils.setActionModeDoneButtonContentDescription(
-                                        activity,
-                                        getString(R.string.cancel)
-                                )
-                            }
-                            is PreviewMedia -> MediaPreviewActivity.showPreview(
-                                    requireContext(),
-                                    null,
-                                    navigationEvent.media,
-                                    null
-                            )
-                            is EditMedia -> {
-                                val inputData = WPMediaUtils.createListOfEditImageInputData(
-                                        requireContext(),
-                                        navigationEvent.uris.map { wrapper -> wrapper.uri }
-                                )
-                                ActivityLauncher.openImageEditor(activity, inputData)
-                            }
-                            is InsertMedia -> listener?.onItemsChosen(navigationEvent.identifiers)
-                            is IconClickEvent -> listener?.onIconClicked(navigationEvent.action)
-                            Exit -> {
-                                val activity = requireActivity()
-                                activity.setResult(Activity.RESULT_CANCELED)
-                                activity.finish()
-                            }
-                        }
-                    })
+            viewModel.onNavigate.observeEvent(viewLifecycleOwner) { navigationEvent ->
+                navigateEvent(navigationEvent)
+            }
 
             viewModel.onPermissionsRequested.observeEvent(viewLifecycleOwner, {
                 when (it) {
@@ -315,6 +279,51 @@ class MediaPickerFragment : Fragment() {
 
             viewModel.start(selectedIds, mediaPickerSetup, lastTappedIcon, site)
         }
+    }
+
+    private fun navigateEvent(navigationEvent: MediaNavigationEvent) {
+        when (navigationEvent) {
+            is PreviewUrl -> {
+                MediaPreviewActivity.showPreview(
+                        requireContext(),
+                        null,
+                        navigationEvent.url
+                )
+                AccessibilityUtils.setActionModeDoneButtonContentDescription(
+                        activity,
+                        getString(R.string.cancel)
+                )
+            }
+            is PreviewMedia -> MediaPreviewActivity.showPreview(
+                    requireContext(),
+                    null,
+                    navigationEvent.media,
+                    null
+            )
+            is EditMedia -> {
+                val inputData = WPMediaUtils.createListOfEditImageInputData(
+                        requireContext(),
+                        navigationEvent.uris.map { wrapper -> wrapper.uri }
+                )
+                ActivityLauncher.openImageEditor(activity, inputData)
+            }
+            is InsertMedia -> listener?.onItemsChosen(navigationEvent.identifiers)
+            is IconClickEvent -> listener?.onIconClicked(navigationEvent.action)
+            Exit -> {
+                val activity = requireActivity()
+                activity.setResult(Activity.RESULT_CANCELED)
+                activity.finish()
+            }
+        }
+    }
+
+    private fun MediaPickerFragmentBinding.setUpRecyclerView(
+        layoutManager: GridLayoutManager
+    ) {
+        binding = this
+        recycler.layoutManager = layoutManager
+        recycler.setEmptyView(actionableEmptyView)
+        recycler.setHasFixedSize(true)
     }
 
     override fun onDestroyView() {

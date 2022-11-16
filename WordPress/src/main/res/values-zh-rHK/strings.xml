@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-10-14 08:00:02+0000
+Translation-Revision-Date: 2022-11-02 12:54:10+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.3
 Language: zh_TW
 -->
 <resources>
+    <string name="post_settings_parent">上層頁面</string>
+    <string name="post_settings_page_attributes">頁面屬性</string>
+    <string name="about_automattic_contribute_item_title">參與</string>
+    <string name="about_news">新聞</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_one">1 個答案</string>
     <string name="login_prologue_revamped_content_description_wordpress_icon">WordPress 圖示</string>
     <string name="login_prologue_revamped_tagline">從任何地方都能撰寫、編輯和發表內容。</string>
@@ -35,7 +39,7 @@ Language: zh_TW
     <string name="wp_jetpack_continue_to_notifications">繼續前往「通知」功能</string>
     <string name="wp_jetpack_continue_to_stats">繼續前往「統計資料」功能</string>
     <string name="wp_jetpack_continue_to_reader">繼續前往「閱讀器」功能</string>
-    <string name="wp_jetpack_get_new_jetpack_app">取得全新 Jetpack 應用程式</string>
+    <string name="wp_jetpack_get_new_jetpack_app">體驗全新 Jetpack 應用程式</string>
     <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery">顯示區塊時發生問題。 \n點選以嘗試還原區塊。</string>
     <string name="weekly_roundup_notification_text_views_and_comments">上週你有 %1$s 個瀏覽次數和 %2$s 個留言</string>
     <string name="weekly_roundup_notification_text_views_and_likes">上週你有 %1$s 個瀏覽次數和 %2$s 個讚</string>
@@ -140,7 +144,7 @@ Language: zh_TW
     <string name="blogging_prompts_notification_dismiss">關閉</string>
     <string name="blogging_prompts_answer_prompt_notification_answer_action">答案</string>
     <string name="blogging_prompts_answer_prompt_notification_title">每日提示</string>
-    <string name="blogging_prompts_onboarding_got_it">知道了</string>
+    <string name="blogging_prompts_onboarding_got_it">完全了解</string>
     <string name="quick_start_dialog_view_your_site_message_short">點選 &lt;b&gt;%1$s&lt;/b&gt; 即可檢視你的網站</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">選取「%1$s 閱讀器 %2$s」來尋找其他網站。</string>
     <string name="blogging_reminders_prompt_help_button_desc">深入瞭解提示</string>

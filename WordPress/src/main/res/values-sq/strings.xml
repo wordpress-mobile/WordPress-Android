@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-10-08 10:05:28+0000
+Translation-Revision-Date: 2022-10-21 12:16:40+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: sq_AL
 -->
 <resources>
+    <string name="about_automattic_contribute_item_title">Kontribuoni</string>
+    <string name="about_news">Lajme</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_one">1 përgjigje</string>
     <string name="login_prologue_revamped_content_description_wordpress_icon">Ikonë WordPress-i</string>
     <string name="login_prologue_revamped_tagline">Shkruani, përpunoni dhe botoni prej ngado.</string>
@@ -35,7 +37,6 @@ Language: sq_AL
     <string name="wp_jetpack_continue_to_notifications">Vazhdoni te Njoftime</string>
     <string name="wp_jetpack_continue_to_stats">Vazhdoni te Statistika</string>
     <string name="wp_jetpack_continue_to_reader">Vazhdoni te Lexuesi</string>
-    <string name="wp_jetpack_get_new_jetpack_app">Merrni aplikacionin e ri Jetpack</string>
     <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery">Problem me shfaqje blloku. \nPrekeni që të provohet rikthim blloku.</string>
     <string name="weekly_roundup_notification_text_views_and_comments">Javën e kaluar patët %1$s parje dhe %2$s komente</string>
     <string name="weekly_roundup_notification_text_views_and_likes">Javën e kaluar patët %1$s parje dhe %2$s pëlqime</string>

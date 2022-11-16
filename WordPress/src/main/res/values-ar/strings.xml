@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-10-14 07:58:45+0000
+Translation-Revision-Date: 2022-10-19 11:54:08+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/4.0.0-alpha.3
 Language: ar
 -->
 <resources>
+    <string name="about_automattic_contribute_item_title">مساهمة</string>
+    <string name="about_news">الأخبار</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_one">إجابة واحدة</string>
     <string name="login_prologue_revamped_content_description_wordpress_icon">أيقونة ووردبريس</string>
     <string name="login_prologue_revamped_tagline">الكتابة والتحرير والنشر من أي مكان.</string>
@@ -35,7 +37,6 @@ Language: ar
     <string name="wp_jetpack_continue_to_notifications">المتابعة إلى التنبيهات</string>
     <string name="wp_jetpack_continue_to_stats">المتابعة إلى الإحصاءات</string>
     <string name="wp_jetpack_continue_to_reader">المتابعة إلى القارئ</string>
-    <string name="wp_jetpack_get_new_jetpack_app">تنزيل تطبيق Jetpack الجديد</string>
     <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery">ثمَّة مشكلة في أثناء عرض المكوِّن. \nانقر لمحاولة استعادة المكوِّن.</string>
     <string name="weekly_roundup_notification_text_views_and_comments">كانت لديك الأسبوع الماضي ⁦%1$s⁩ من المشاهدات و⁦%2$s⁩ من التعليقات</string>
     <string name="weekly_roundup_notification_text_views_and_likes">كانت لديك الأسبوع الماضي ⁦%1$s⁩ من المشاهدات و⁦%2$s⁩ من الإعجابات</string>

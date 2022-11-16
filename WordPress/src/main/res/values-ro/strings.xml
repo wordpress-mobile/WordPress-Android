@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-10-04 08:06:40+0000
+Translation-Revision-Date: 2022-10-31 13:17:21+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.3
 Language: ro
 -->
 <resources>
+    <string name="post_settings_parent">Pagină părinte</string>
+    <string name="post_settings_page_attributes">Atribute pagină</string>
+    <string name="about_automattic_contribute_item_title">Contribuie</string>
+    <string name="about_news">Știri</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_one">Un răspuns</string>
-    <string name="login_prologue_revamped_tagline">Scrie, editează și publică de oriunde.</string>
     <string name="login_prologue_revamped_content_description_wordpress_icon">Icon WordPress</string>
+    <string name="login_prologue_revamped_tagline">Scrii, editezi și publici de oriunde.</string>
     <string name="post_settings_author">Autor</string>
     <string name="error_fetch_authors_list">Nu am putut să preiau autorii</string>
     <string name="app_rating_title">Îți place %s?</string>
@@ -35,7 +39,7 @@ Language: ro
     <string name="wp_jetpack_continue_to_notifications">Continuă cu Notificări</string>
     <string name="wp_jetpack_continue_to_stats">Continuă cu Statistici</string>
     <string name="wp_jetpack_continue_to_reader">Continuă cu Cititor</string>
-    <string name="wp_jetpack_get_new_jetpack_app">Ia noua aplicație Jetpack</string>
+    <string name="wp_jetpack_get_new_jetpack_app">Încearcă noua aplicație Jetpack</string>
     <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery">Este o problemă la afișarea blocului. \nAtinge pentru a încerca recuperarea blocului.</string>
     <string name="weekly_roundup_notification_text_views_and_comments">Săptămâna trecută ai avut %1$s de vizualizări și %2$s comentarii</string>
     <string name="weekly_roundup_notification_text_views_and_likes">Săptămâna trecută ai avut %1$s de vizualizări și %2$s aprecieri</string>

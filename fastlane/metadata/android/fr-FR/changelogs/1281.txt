@@ -1,4 +1,0 @@
-20.9 :
-- Les flux « Familiarisez-vous avec votre application » continuent désormais de s’afficher à l’écran après avoir fait pivoter l’appareil.
-- Les longs titres s’affichent correctement sur les cartes de statistiques sans être coupés.
-- Nous avons ajouté la touche Entrée aux extraits de publication pour faciliter les sauts de ligne.

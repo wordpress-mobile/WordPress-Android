@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-10-07 18:40:36+0000
+Translation-Revision-Date: 2022-11-02 13:54:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: de
 -->
 <resources>
+    <string name="post_settings_parent">Übergeordnete Seite</string>
+    <string name="post_settings_page_attributes">Seitenattribute</string>
+    <string name="about_automattic_contribute_item_title">Mitwirken</string>
+    <string name="about_news">News</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_one">1 Antwort</string>
     <string name="login_prologue_revamped_content_description_wordpress_icon">WordPress-Icon</string>
     <string name="login_prologue_revamped_tagline">Schreibe, bearbeite und veröffentliche von überall aus.</string>
@@ -35,7 +39,7 @@ Language: de
     <string name="wp_jetpack_continue_to_notifications">Weiter zu Benachrichtigungen</string>
     <string name="wp_jetpack_continue_to_stats">Weiter zu Statistiken</string>
     <string name="wp_jetpack_continue_to_reader">Weiter zum Reader</string>
-    <string name="wp_jetpack_get_new_jetpack_app">Hol dir die neue Jetpack-App</string>
+    <string name="wp_jetpack_get_new_jetpack_app">Die neue Jetpack-App ausprobieren</string>
     <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery">Bei der Anzeige des Blocks ist ein Problem aufgetreten. \nTippe, um die Wiederherstellung des Blocks zu versuchen.</string>
     <string name="weekly_roundup_notification_text_views_and_comments">Letzte Woche hattest du %1$s Aufrufe und %2$s Kommentare</string>
     <string name="weekly_roundup_notification_text_views_and_likes">Letzte Woche hattest du %1$s Aufrufe und %2$s Likes</string>

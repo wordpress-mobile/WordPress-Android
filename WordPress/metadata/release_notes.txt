@@ -1,6 +1,1 @@
-* [***] [internal] Updates the target sdk to 31 - Android 12 [https://github.com/wordpress-mobile/WordPress-Android/pull/17153]
-* [*] Updated About screen to move the Automattic apps marbles to the Jetpack app only. [https://github.com/wordpress-mobile/WordPress-Android/pull/17282]
-* [*] Updates splash screen for Android 12+ [https://github.com/wordpress-mobile/WordPress-Android/pull/17273]
-* [*] Fix text color of success messages in the QR code login flow [https://github.com/wordpress-mobile/WordPress-Android/pull/17286]
-* [*] Stats: Fix Western Arabic Numerals not being shown on every text of the stats screens in Arabic languages [https://github.com/wordpress-mobile/WordPress-Android/pull/17217]
-
+This update is short and sweet—when you’re in the process of editing a page, you can now set a parent page within the child page’s settings.

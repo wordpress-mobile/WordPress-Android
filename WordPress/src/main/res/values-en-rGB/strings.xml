@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-09-21 08:37:10+0000
+Translation-Revision-Date: 2022-10-20 10:56:34+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: en_GB
 -->
 <resources>
+    <string name="about_automattic_contribute_item_title">Contribute</string>
+    <string name="about_news">News</string>
+    <string name="my_site_blogging_prompt_card_number_of_answers_one">1 answer</string>
+    <string name="login_prologue_revamped_content_description_wordpress_icon">WordPress icon</string>
+    <string name="login_prologue_revamped_tagline">Write, edit, and publish from anywhere.</string>
     <string name="post_settings_author">Author</string>
     <string name="error_fetch_authors_list">Couldn\'t retrieve authors</string>
     <string name="app_rating_title">Enjoying %s?</string>
@@ -27,7 +32,6 @@ Language: en_GB
     <string name="wp_jetpack_continue_to_notifications">Continue to Notifications</string>
     <string name="wp_jetpack_continue_to_reader">Continue to Reader</string>
     <string name="wp_jetpack_continue_to_stats">Continue to Stats</string>
-    <string name="wp_jetpack_get_new_jetpack_app">Get the new Jetpack app</string>
     <string name="gutenberg_native_gradient">Gradient</string>
     <string name="gutenberg_native_invalid_url">Invalid URL.</string>
     <string name="gutenberg_native_jetpack_powered">Jetpack powered</string>
@@ -252,6 +256,7 @@ Language: en_GB
     <string name="new_site_creation_intents_input_hint">E.g. Fashion, Poetry, Politics</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">Share blogging prompt</string>
     <string name="my_site_blogging_prompt_card_answered_prompt">✓ Answered</string>
+    <string name="my_site_blogging_prompt_card_number_of_answers_other">%d answers</string>
     <string name="my_site_blogging_prompt_card_answer_prompt">Answer prompt</string>
     <string name="my_site_blogging_prompt_card_title">Prompts</string>
     <string name="my_site_all_tab_title">All</string>
@@ -508,6 +513,7 @@ Language: en_GB
     <string name="blogging_reminders_notification_title">It\'s time to blog on %s</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios">Editing reusable blocks is not yet supported on WordPress for iOS</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and">Editing reusable blocks is not yet supported on WordPress for Android</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">Alternatively, you can detach and edit these blocks separately by tapping “Convert to regular blocks”.</string>
     <string name="blogging_reminders_notify_me">Notify me</string>
     <string name="blogging_reminders_done">Done</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;Enter your server credentials&lt;/a&gt; to enable one-click site restores from backups.</string>
@@ -562,6 +568,7 @@ Language: en_GB
     <string name="gutenberg_native_move_image_forward">Move image forwards</string>
     <string name="gutenberg_native_width_settings">Width settings</string>
     <string name="gutenberg_native_column_settings">Column settings</string>
+    <string name="gutenberg_native_link_rel">Link Rel</string>
     <string name="user_profile_bottom_sheet_description">User profile bottom sheet information</string>
     <string name="user_profile_site_section_header">Site</string>
     <string name="user_profile_untitled_site">(Untitled)</string>
@@ -1776,6 +1783,9 @@ Language: en_GB
     <string name="stats_select_next_period_description">Select next period</string>
     <string name="stats_select_previous_period_description">Select previous period</string>
     <string name="stats_insights_popular">Most Popular Time</string>
+    <string name="stats_traffic_change">%1$s (%2$s)</string>
+    <string name="stats_most_popular_percent_views">%1$s of views</string>
+    <string name="stats_traffic_increase">+%1$s (%2$s)</string>
     <string name="new_site_creation_site_preview_content_description">Showing site preview</string>
     <string name="new_site_creation_clear_all_content_description">Clear</string>
     <string name="site_created_but_not_fetched_snackbar_message">It seems like you\'re on a slow connection. If you don\'t see your new site in the list, try refreshing.</string>

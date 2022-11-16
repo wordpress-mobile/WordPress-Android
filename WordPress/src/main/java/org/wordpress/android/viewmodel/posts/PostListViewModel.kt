@@ -20,6 +20,7 @@ import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.list.AuthorFilter
 import org.wordpress.android.fluxc.model.list.AuthorFilter.Everyone
 import org.wordpress.android.fluxc.model.list.AuthorFilter.SpecificAuthor
+import org.wordpress.android.fluxc.model.list.ListOrder
 import org.wordpress.android.fluxc.model.list.PagedListWrapper
 import org.wordpress.android.fluxc.model.list.PostListDescriptor
 import org.wordpress.android.fluxc.model.list.PostListDescriptor.PostListDescriptorForRestSite
@@ -32,6 +33,7 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.posts.AuthorFilterSelection.EVERYONE
 import org.wordpress.android.ui.posts.AuthorFilterSelection.ME
+import org.wordpress.android.ui.posts.PostListType.SCHEDULED
 import org.wordpress.android.ui.posts.PostListType.SEARCH
 import org.wordpress.android.ui.posts.PostUtils
 import org.wordpress.android.ui.posts.trackPostListAction
@@ -220,13 +222,15 @@ class PostListViewModel @Inject constructor(
                     site = connector.site,
                     statusList = connector.postListType.postStatuses,
                     author = author,
-                    searchQuery = searchQuery
+                    searchQuery = searchQuery,
+                    order = if(connector.postListType == SCHEDULED) ListOrder.ASC else ListOrder.DESC
             )
         } else {
             PostListDescriptorForXmlRpcSite(
                     site = connector.site,
                     statusList = connector.postListType.postStatuses,
-                    searchQuery = searchQuery
+                    searchQuery = searchQuery,
+                    order = if(connector.postListType == SCHEDULED) ListOrder.ASC else ListOrder.DESC
             )
         }
     }

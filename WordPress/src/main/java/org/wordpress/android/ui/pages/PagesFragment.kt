@@ -393,7 +393,7 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
         })
 
         viewModel.setPageParent.observe(viewLifecycleOwner, { page ->
-            page?.let { ActivityLauncher.viewPageParentForResult(this@PagesFragment, page) }
+            page?.let { ActivityLauncher.viewPageParentForResult(this@PagesFragment, it.site, it.remoteId) }
         })
 
         viewModel.isNewPageButtonVisible.observe(viewLifecycleOwner, { isVisible ->
