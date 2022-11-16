@@ -894,6 +894,7 @@ class AppInitializer @Inject constructor(
         private const val DEFAULT_TIMEOUT = 2 * 60 // 2 minutes
 
         @SuppressLint("StaticFieldLeak") var context: Context? = null
+            private set
 
         // This is for UI testing. AppInitializer is being created more than once for only UI tests. initialized
         // prevents some static functions from being initialized twice and exceptions.
@@ -1022,9 +1023,18 @@ class AppInitializer @Inject constructor(
 
         /**
          * Update locale of the static context when language is changed.
+         *
+         * When calling this method the application context **must** be already initialized.
+         * This is already the case in `Activity`, `Fragment` or `View`.
+         *
+         * When called from other places (E.g. a `TestRule`) we should provide it in the [appContext] parameter.
          */
-        fun updateContextLocale() {
-            context = LocaleManager.setLocale(context)
+        fun updateContextLocale(appContext: Context? = null) {
+            val context = appContext ?: run {
+                check (context != null) { "Context must be initialized before calling updateContextLocale" }
+                return@run context
+            }
+            this.context = LocaleManager.setLocale(context)
         }
     }
 }

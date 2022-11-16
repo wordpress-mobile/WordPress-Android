@@ -67,6 +67,7 @@ import org.wordpress.android.ui.main.MeActivity;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.main.SitePickerAdapter.SitePickerMode;
 import org.wordpress.android.ui.main.WPMainActivity;
+import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.pages.PageParentActivity;
@@ -157,6 +158,11 @@ public class ActivityLauncher {
     public static final String BACKUP_TRACK_EVENT_PROPERTY_VALUE = "backup";
     public static final String ACTIVITY_LOG_TRACK_EVENT_PROPERTY_VALUE = "activity_log";
     private static final String CATEGORY_DETAIL_ID = "category_detail_key";
+
+    public static void showMainActivity(Context context) {
+        Intent intent = getMainActivityInNewStack(context);
+        context.startActivity(intent);
+    }
 
     public static void showMainActivityAndLoginEpilogue(Activity activity, ArrayList<Integer> oldSitesIds,
                                                         boolean doLoginUpdate) {
@@ -1754,6 +1760,12 @@ public class ActivityLauncher {
 
     public static void showLoginPrologue(@NonNull Context context) {
         Intent intent = new Intent(context, LoginActivity.class);
+        context.startActivity(intent);
+    }
+
+    public static void startJetpackMigrationFlow(@NonNull Context context) {
+        Intent intent = new Intent(context, JetpackMigrationActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
     }
 }

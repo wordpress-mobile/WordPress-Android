@@ -1667,8 +1667,10 @@
     <string name="post_settings_publish">Publish</string>
     <string name="post_settings_mark_as_sticky_options_header">Mark as sticky</string>
     <string name="post_settings_more_options">More Options</string>
+    <string name="post_settings_page_attributes">Page Attributes</string>
     <string name="post_settings_not_set">Not Set</string>
     <string name="post_settings_excerpt">Excerpt</string>
+    <string name="post_settings_parent">Parent Page</string>
     <string name="post_settings_slug">Slug</string>
     <string name="post_settings_tags">Tags</string>
     <string name="post_settings_post_format">Post Format</string>
@@ -3082,6 +3084,7 @@
     <string name="close_dialog_button_desc">Close Dialog</string>
     <string name="fab_add_category_desc">Create Category</string>
     <string name="blogging_reminders_prompt_help_button_desc">Learn more about prompts</string>
+    <string name="icon_desc">icon</string>
 
     <string name="content_description_more">More</string>
 
@@ -4216,7 +4219,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="wp_jetpack_powered_stats_powered_by_jetpack_caption">Watch your traffic grow and learn about your audience with redesigned Stats and Insights, now available in the new Jetpack app.</string>
     <string name="wp_jetpack_powered_notifications_powered_by_jetpack">Notifications are powered by Jetpack</string>
     <string name="wp_jetpack_powered_notifications_powered_by_jetpack_caption">Stay informed with realtime updates for new comments, site traffic, security reports and more.</string>
-    <string name="wp_jetpack_get_new_jetpack_app">Get the new Jetpack app</string>
+    <string name="wp_jetpack_get_new_jetpack_app">Try the new Jetpack app</string>
     <string name="wp_jetpack_continue_to_reader">Continue to Reader</string>
     <string name="wp_jetpack_continue_to_stats">Continue to Stats</string>
     <string name="wp_jetpack_continue_to_notifications">Continue to Notifications</string>
@@ -4232,5 +4235,14 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="login_magic_links_sent_label_short" tools:ignore="UnusedResources" a8c-src-lib="login">Check your email on this device!</string>
     <string name="login_magic_links_email_sent" tools:ignore="UnusedResources" a8c-src-lib="login">We just sent a magic link to</string>
     <string name="gutenberg_native_link_rel" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Link Rel</string>
+
+    <!-- Jetpack Welcome Screen -->
+    <string name="jp_migration_welcome_title">Welcome to Jetpack!</string>
+    <string name="jp_migration_welcome_subtitle">It looks like you’re switching from the WordPress app.</string>
+    <string name="jp_migration_avatar_content_description">Your profile photo</string>
+    <string name="jp_migration_welcome_sites_found_message">We found your sites. Continue to transfer all your data and sign in to Jetpack automatically.</string>
+    <string name="jp_migration_welcome_site_found_message">We found your site. Continue to transfer all your data and sign in to Jetpack automatically.</string>
+    <string name="jp_migration_continue_button">Continue</string>
+    <string name="jp_migration_help_button">Need help?</string>
 
 </resources>

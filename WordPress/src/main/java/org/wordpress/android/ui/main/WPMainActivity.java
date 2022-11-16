@@ -70,7 +70,7 @@ import org.wordpress.android.push.GCMRegistrationIntentService;
 import org.wordpress.android.push.NativeNotificationsUtils;
 import org.wordpress.android.push.NotificationType;
 import org.wordpress.android.push.NotificationsProcessingService;
-import org.wordpress.android.sharedlogin.resolver.SharedLoginResolver;
+import org.wordpress.android.sharedlogin.resolver.LocalMigrationOrchestrator;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.JetpackConnectionSource;
@@ -124,6 +124,7 @@ import org.wordpress.android.ui.stories.intro.StoriesIntroDialogFragment;
 import org.wordpress.android.ui.uploads.UploadActionUseCase;
 import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper;
+import org.wordpress.android.ui.utils.JetpackAppMigrationFlowUtils;
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementDialogFragment;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
@@ -257,8 +258,9 @@ public class WPMainActivity extends LocaleAwareActivity implements
     @Inject WeeklyRoundupScheduler mWeeklyRoundupScheduler;
     @Inject MySiteDashboardTodaysStatsCardFeatureConfig mTodaysStatsCardFeatureConfig;
     @Inject QuickStartTracker mQuickStartTracker;
-    @Inject SharedLoginResolver mSharedLoginResolver;
+    @Inject LocalMigrationOrchestrator mLocalMigrationOrchestrator;
     @Inject BloggingRemindersResolver mBloggingRemindersResolver;
+    @Inject JetpackAppMigrationFlowUtils mJetpackAppMigrationFlowUtils;
 
     @Inject BuildConfigWrapper mBuildConfigWrapper;
 
@@ -458,7 +460,12 @@ public class WPMainActivity extends LocaleAwareActivity implements
         if (!mSelectedSiteRepository.hasSelectedSite()) {
             initSelectedSite();
         }
-        mSharedLoginResolver.tryJetpackLogin();
+        mLocalMigrationOrchestrator.tryLocalMigration();
+
+        // TODO: this is temporary to enable testing the migration flow UI
+        if (mJetpackAppMigrationFlowUtils.shouldShowMigrationFlow()) {
+            mJetpackAppMigrationFlowUtils.startJetpackMigrationFlow();
+        }
     }
 
     private void showBloggingPromptsOnboarding() {

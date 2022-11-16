@@ -3,23 +3,8 @@
 
     <application>
         <provider
-            android:name=".sharedlogin.provider.SharedLoginProvider"
-            android:authorities="${applicationId}.SharedLoginProvider"
-            android:exported="true" />
-
-        <provider
-            android:name=".userflags.provider.UserFlagsProvider"
-            android:authorities="${applicationId}.UserFlagsProvider"
-            android:exported="true" />
-
-        <provider
-            android:name=".bloggingreminders.provider.BloggingRemindersProvider"
-            android:authorities="${applicationId}.BloggingRemindersProvider"
-            android:exported="true" />
-
-        <provider
-            android:name=".reader.savedposts.provider.ReaderSavedPostsProvider"
-            android:authorities="${applicationId}.ReaderSavedPostsProvider"
+            android:name=".localcontentmigration.LocalMigrationContentProvider"
+            android:authorities="${applicationId}.LocalMigrationContentProvider"
             android:exported="true" />
     </application>
 </manifest>

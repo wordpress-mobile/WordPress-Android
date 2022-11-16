@@ -1,14 +1,14 @@
 package org.wordpress.android.ui.notifications
 
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.verifyZeroInteractions
-import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoInteractions
+import org.mockito.kotlin.whenever
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.NOTIFICATION_DISMISSED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.NOTIFICATION_SHOWN
@@ -124,7 +124,7 @@ class SystemNotificationsTrackerTest {
 
         systemNotificationsTracker.checkSystemNotificationsState()
 
-        verifyZeroInteractions(analyticsTracker)
+        verifyNoInteractions(analyticsTracker)
     }
 
     @Test

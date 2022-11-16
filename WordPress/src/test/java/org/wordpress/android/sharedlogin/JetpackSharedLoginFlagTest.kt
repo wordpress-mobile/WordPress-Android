@@ -1,9 +1,9 @@
 package org.wordpress.android.sharedlogin
 
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.whenever
 import org.junit.Assert
 import org.junit.Test
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.config.JetpackSharedLoginFeatureConfig
 

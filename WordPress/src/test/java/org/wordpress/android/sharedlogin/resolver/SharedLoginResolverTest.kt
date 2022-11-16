@@ -3,35 +3,45 @@ package org.wordpress.android.sharedlogin.resolver
 import android.content.ContentResolver
 import android.content.Context
 import android.database.MatrixCursor
-import com.nhaarman.mockitokotlin2.KArgumentCaptor
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.argumentCaptor
-import com.nhaarman.mockitokotlin2.doAnswer
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.never
-import com.nhaarman.mockitokotlin2.times
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
+import com.google.gson.Gson
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Test
+import org.mockito.kotlin.KArgumentCaptor
+import org.mockito.kotlin.any
+import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.doAnswer
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.never
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
+import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.annotations.action.Action
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.AccountStore.UpdateTokenPayload
-import org.wordpress.android.provider.query.QueryResult
+import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.localcontentmigration.LocalMigrationContentProvider
+import org.wordpress.android.localcontentmigration.LocalMigrationContentResolver
 import org.wordpress.android.reader.savedposts.resolver.ReaderSavedPostsResolver
 import org.wordpress.android.resolver.ContentResolverWrapper
+import org.wordpress.android.resolver.ResolverUtility
 import org.wordpress.android.sharedlogin.JetpackSharedLoginFlag
 import org.wordpress.android.sharedlogin.SharedLoginAnalyticsTracker
 import org.wordpress.android.sharedlogin.SharedLoginAnalyticsTracker.ErrorType
-import org.wordpress.android.util.publicdata.WordPressPublicData
-import org.wordpress.android.sharedlogin.provider.SharedLoginProvider
+import org.wordpress.android.sharedlogin.SharedLoginData
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.userflags.resolver.UserFlagsResolver
 import org.wordpress.android.util.AccountActionBuilderWrapper
+import org.wordpress.android.util.publicdata.WordPressPublicData
 import org.wordpress.android.viewmodel.ContextProvider
 
-class SharedLoginResolverTest {
+@Suppress("ForbiddenComment")
+// TODO: adapt these tests to the unified provider / orchestrator approach
+@Ignore("Disabled for now: will refactor in another PR after unification.")
+class SharedLoginResolverTest : BaseUnitTest() {
     private lateinit var onSuccessFlagsCaptor: KArgumentCaptor<() -> Unit>
     private lateinit var onSuccessReaderPostsCaptor: KArgumentCaptor<() -> Unit>
 
@@ -39,7 +49,6 @@ class SharedLoginResolverTest {
     private val contextProvider: ContextProvider = mock()
     private val wordPressPublicData: WordPressPublicData = mock()
     private val dispatcher: Dispatcher = mock()
-    private val queryResult: QueryResult = mock()
     private val accountStore: AccountStore = mock()
     private val contentResolverWrapper: ContentResolverWrapper = mock()
     private val accountActionBuilderWrapper: AccountActionBuilderWrapper = mock()
@@ -47,25 +56,31 @@ class SharedLoginResolverTest {
     private val sharedLoginAnalyticsTracker: SharedLoginAnalyticsTracker = mock()
     private val userFlagsResolver: UserFlagsResolver = mock()
     private val readerSavedPostsResolver: ReaderSavedPostsResolver = mock()
+    private val localMigrationContentResolver: LocalMigrationContentResolver = mock()
+    private val resolverUtility: ResolverUtility = mock()
+    private val siteStore: SiteStore = mock()
 
-    private val classToTest = SharedLoginResolver(
+    private val classToTest = LocalMigrationOrchestrator(
             jetpackSharedLoginFlag,
             contextProvider,
-            wordPressPublicData,
             dispatcher,
-            queryResult,
             accountStore,
-            contentResolverWrapper,
             accountActionBuilderWrapper,
             appPrefsWrapper,
             sharedLoginAnalyticsTracker,
             userFlagsResolver,
-            readerSavedPostsResolver
+            readerSavedPostsResolver,
+            localMigrationContentResolver,
+            resolverUtility,
+            siteStore
     )
-    private val loggedInToken = "valid"
+    private val sharedDataLoggedInNoSites = SharedLoginData(
+            token = "valid",
+            sites = listOf()
+    )
     private val notLoggedInToken = ""
     private val wordPressCurrentPackageId = "packageId"
-    private val uriValue = "content://$wordPressCurrentPackageId.${SharedLoginProvider::class.simpleName}"
+    private val uriValue = "content://$wordPressCurrentPackageId.${LocalMigrationContentProvider::class.simpleName}"
     private val context: Context = mock()
     private val contentResolver: ContentResolver = mock()
     private val updateTokenAction: Action<UpdateTokenPayload> = mock()
@@ -76,17 +91,22 @@ class SharedLoginResolverTest {
         whenever(contextProvider.getContext()).thenReturn(context)
         whenever(context.contentResolver).thenReturn(contentResolver)
         whenever(wordPressPublicData.currentPackageId()).thenReturn(wordPressCurrentPackageId)
-        whenever(mockCursor.getString(0)).thenReturn(notLoggedInToken)
-        whenever(accountActionBuilderWrapper.newUpdateAccessTokenAction(loggedInToken)).thenReturn(updateTokenAction)
+        val notLoggedInData = SharedLoginData(
+            token = notLoggedInToken,
+            sites = listOf()
+        )
+        whenever(mockCursor.getString(0)).thenReturn(Gson().toJson(notLoggedInData))
+
+        whenever(accountActionBuilderWrapper.newUpdateAccessTokenAction(
+                sharedDataLoggedInNoSites.token!!
+        )).thenReturn(updateTokenAction)
         whenever(contentResolverWrapper.queryUri(contentResolver, uriValue)).thenReturn(mockCursor)
     }
 
     @Test
     fun `Should NOT query ContentResolver if feature flag is DISABLED`() {
-        whenever(appPrefsWrapper.getIsFirstTrySharedLoginJetpack()).thenReturn(true)
-        whenever(accountStore.hasAccessToken()).thenReturn(false)
         whenever(jetpackSharedLoginFlag.isEnabled()).thenReturn(false)
-        classToTest.tryJetpackLogin()
+        classToTest.tryLocalMigration()
         verify(contentResolverWrapper, never()).queryUri(contentResolver, uriValue)
     }
 
@@ -95,7 +115,18 @@ class SharedLoginResolverTest {
         whenever(appPrefsWrapper.getIsFirstTrySharedLoginJetpack()).thenReturn(true)
         whenever(accountStore.hasAccessToken()).thenReturn(true)
         whenever(jetpackSharedLoginFlag.isEnabled()).thenReturn(true)
-        classToTest.tryJetpackLogin()
+        classToTest.tryLocalMigration()
+        verify(contentResolverWrapper, never()).queryUri(contentResolver, uriValue)
+    }
+
+    @Test
+    fun `Should NOT query ContentResolver if a selfhosted site is already configured`() {
+        whenever(appPrefsWrapper.getIsFirstTrySharedLoginJetpack()).thenReturn(true)
+        whenever(accountStore.hasAccessToken()).thenReturn(false)
+        whenever(jetpackSharedLoginFlag.isEnabled()).thenReturn(true)
+        whenever(siteStore.hasSite()).thenReturn(true)
+        whenever(siteStore.sites).thenReturn(listOf(SiteModel()))
+        classToTest.tryLocalMigration()
         verify(contentResolverWrapper, never()).queryUri(contentResolver, uriValue)
     }
 
@@ -104,14 +135,14 @@ class SharedLoginResolverTest {
         whenever(appPrefsWrapper.getIsFirstTrySharedLoginJetpack()).thenReturn(false)
         whenever(accountStore.hasAccessToken()).thenReturn(false)
         whenever(jetpackSharedLoginFlag.isEnabled()).thenReturn(true)
-        classToTest.tryJetpackLogin()
+        classToTest.tryLocalMigration()
         verify(contentResolverWrapper, never()).queryUri(contentResolver, uriValue)
     }
 
     @Test
     fun `Should query ContentResolver if NOT already logged in, feature flag is ENABLED and IS first try`() {
         featureEnabled()
-        classToTest.tryJetpackLogin()
+        classToTest.tryLocalMigration()
         verify(contentResolverWrapper).queryUri(contentResolver, uriValue)
     }
 
@@ -121,7 +152,7 @@ class SharedLoginResolverTest {
         onSuccessFlagsCaptor = argumentCaptor()
         onSuccessReaderPostsCaptor = argumentCaptor()
 
-        whenever(queryResult.getValue<String>(mockCursor)).thenReturn(loggedInToken)
+        whenever(mockCursor.getString(0)).thenReturn(Gson().toJson(sharedDataLoggedInNoSites))
         whenever(userFlagsResolver.tryGetUserFlags(
                 onSuccessFlagsCaptor.capture(),
                 any()
@@ -131,7 +162,7 @@ class SharedLoginResolverTest {
                 any()
         )).doAnswer { onSuccessReaderPostsCaptor.firstValue.invoke() }
 
-        classToTest.tryJetpackLogin()
+        classToTest.tryLocalMigration()
 
         verify(dispatcher).dispatch(updateTokenAction)
     }
@@ -139,18 +170,38 @@ class SharedLoginResolverTest {
     @Test
     fun `Should try to get user flags if access token is NOT empty`() {
         featureEnabled()
-        whenever(queryResult.getValue<String>(mockCursor)).thenReturn(loggedInToken)
-        classToTest.tryJetpackLogin()
+        whenever(mockCursor.getString(0)).thenReturn(Gson().toJson(sharedDataLoggedInNoSites))
+        classToTest.tryLocalMigration()
         verify(userFlagsResolver).tryGetUserFlags(any(), any())
     }
 
     @Test
-    fun `Should NOT dispatch UpdateTokenPayload if access token IS empty`() {
+    fun `Should NOT dispatch UpdateTokenPayload if access token IS empty and no self-hosted sites`() {
         featureEnabled()
         onSuccessFlagsCaptor = argumentCaptor()
         onSuccessReaderPostsCaptor = argumentCaptor()
 
-        whenever(queryResult.getValue<String>(mockCursor)).thenReturn(notLoggedInToken)
+        val loginData = SharedLoginData(
+                token = "",
+                sites = listOf()
+        )
+        whenever(mockCursor.getString(0)).thenReturn(Gson().toJson(loginData))
+
+        classToTest.tryLocalMigration()
+        verify(dispatcher, never()).dispatch(updateTokenAction)
+    }
+
+    @Test
+    fun `Should dispatch UpdateTokenPayload if access token IS empty and there are self-hosted sites`() {
+        featureEnabled()
+        onSuccessFlagsCaptor = argumentCaptor()
+        onSuccessReaderPostsCaptor = argumentCaptor()
+
+        val loginData = SharedLoginData(
+                token = "",
+                sites = listOf(SiteModel())
+        )
+        whenever(mockCursor.getString(0)).thenReturn(Gson().toJson(loginData))
         whenever(userFlagsResolver.tryGetUserFlags(
                 onSuccessFlagsCaptor.capture(),
                 any()
@@ -159,15 +210,18 @@ class SharedLoginResolverTest {
                 onSuccessReaderPostsCaptor.capture(),
                 any()
         )).doAnswer { onSuccessReaderPostsCaptor.firstValue.invoke() }
+        whenever(accountActionBuilderWrapper.newUpdateAccessTokenAction(
+                loginData.token!!
+        )).thenReturn(updateTokenAction)
 
-        classToTest.tryJetpackLogin()
-        verify(dispatcher, never()).dispatch(updateTokenAction)
+        classToTest.tryLocalMigration()
+        verify(dispatcher, times(1)).dispatch(updateTokenAction)
     }
 
     @Test
     fun `Should track login start if NOT already logged in, feature flag is ENABLED and IS first try`() {
         featureEnabled()
-        classToTest.tryJetpackLogin()
+        classToTest.tryLocalMigration()
         verify(sharedLoginAnalyticsTracker).trackLoginStart()
     }
 
@@ -176,16 +230,14 @@ class SharedLoginResolverTest {
         whenever(appPrefsWrapper.getIsFirstTrySharedLoginJetpack()).thenReturn(true)
         whenever(accountStore.hasAccessToken()).thenReturn(true)
         whenever(jetpackSharedLoginFlag.isEnabled()).thenReturn(true)
-        classToTest.tryJetpackLogin()
+        classToTest.tryLocalMigration()
         verify(sharedLoginAnalyticsTracker, never()).trackLoginStart()
     }
 
     @Test
     fun `Should NOT track login start if feature flag is DISABLED`() {
-        whenever(appPrefsWrapper.getIsFirstTrySharedLoginJetpack()).thenReturn(true)
-        whenever(accountStore.hasAccessToken()).thenReturn(false)
         whenever(jetpackSharedLoginFlag.isEnabled()).thenReturn(false)
-        classToTest.tryJetpackLogin()
+        classToTest.tryLocalMigration()
         verify(sharedLoginAnalyticsTracker, never()).trackLoginStart()
     }
 
@@ -194,7 +246,7 @@ class SharedLoginResolverTest {
         whenever(appPrefsWrapper.getIsFirstTrySharedLoginJetpack()).thenReturn(false)
         whenever(accountStore.hasAccessToken()).thenReturn(false)
         whenever(jetpackSharedLoginFlag.isEnabled()).thenReturn(true)
-        classToTest.tryJetpackLogin()
+        classToTest.tryLocalMigration()
         verify(sharedLoginAnalyticsTracker, never()).trackLoginStart()
     }
 
@@ -202,25 +254,69 @@ class SharedLoginResolverTest {
     fun `Should track login failed if access token result cursor IS null`() {
         whenever(contentResolverWrapper.queryUri(contentResolver, uriValue)).thenReturn(null)
         featureEnabled()
-        classToTest.tryJetpackLogin()
+        classToTest.tryLocalMigration()
         verify(sharedLoginAnalyticsTracker, never()).trackLoginSuccess()
-        verify(sharedLoginAnalyticsTracker, times(1)).trackLoginFailed(ErrorType.QueryTokenError)
+        verify(sharedLoginAnalyticsTracker, times(1)).trackLoginFailed(ErrorType.QueryLoginDataError)
     }
 
     @Test
-    fun `Should track login failed if access token IS empty`() {
+    fun `Should track login failed if loginData IS null`() {
+        whenever(mockCursor.getString(0)).thenReturn("{}?trigger an error")
         featureEnabled()
-        whenever(queryResult.getValue<String>(mockCursor)).thenReturn(notLoggedInToken)
-        classToTest.tryJetpackLogin()
+        classToTest.tryLocalMigration()
+        verify(sharedLoginAnalyticsTracker, never()).trackLoginSuccess()
+        verify(sharedLoginAnalyticsTracker, times(1)).trackLoginFailed(ErrorType.NullLoginDataError)
+    }
+
+    @Test
+    fun `Should track login failed if access token IS empty and no self-hosted sites`() {
+        featureEnabled()
+        val notLoggedInData = SharedLoginData(
+                token = notLoggedInToken,
+                sites = listOf()
+        )
+        whenever(mockCursor.getString(0)).thenReturn(Gson().toJson(notLoggedInData))
+        classToTest.tryLocalMigration()
         verify(sharedLoginAnalyticsTracker, never()).trackLoginSuccess()
         verify(sharedLoginAnalyticsTracker, times(1)).trackLoginFailed(ErrorType.WPNotLoggedInError)
     }
 
     @Test
-    fun `Should track login success if access token result cursor IS NOT null AND access token IS NOT empty`() {
+    fun `Should track login success if access token IS empty and we have self-hosted sites`() {
         featureEnabled()
-        whenever(queryResult.getValue<String>(mockCursor)).thenReturn(loggedInToken)
-        classToTest.tryJetpackLogin()
+        val selfHosted = SiteModel()
+        val notLoggedInData = SharedLoginData(
+                token = notLoggedInToken,
+                sites = listOf(selfHosted)
+        )
+        whenever(mockCursor.getString(0)).thenReturn(Gson().toJson(notLoggedInData))
+        classToTest.tryLocalMigration()
+        verify(sharedLoginAnalyticsTracker, times(1)).trackLoginSuccess()
+        verify(sharedLoginAnalyticsTracker, never()).trackLoginFailed(any())
+    }
+
+    @Test
+    fun `Should track login success if access token IS NOT empty and no self-hosted sites`() {
+        featureEnabled()
+        val notSelfHosted = SiteModel().apply { setIsWPCom(true) }
+        val loginData = sharedDataLoggedInNoSites.copy(
+                sites = listOf(notSelfHosted)
+        )
+        whenever(mockCursor.getString(0)).thenReturn(Gson().toJson(loginData))
+        classToTest.tryLocalMigration()
+        verify(sharedLoginAnalyticsTracker, never()).trackLoginFailed(any())
+        verify(sharedLoginAnalyticsTracker, times(1)).trackLoginSuccess()
+    }
+
+    @Test
+    fun `Should track login success if access token IS NOT empty and we have self-hosted sites`() {
+        featureEnabled()
+        val selfHosted = SiteModel()
+        val loginData = sharedDataLoggedInNoSites.copy(
+                sites = listOf(selfHosted)
+        )
+        whenever(mockCursor.getString(0)).thenReturn(Gson().toJson(loginData))
+        classToTest.tryLocalMigration()
         verify(sharedLoginAnalyticsTracker, never()).trackLoginFailed(any())
         verify(sharedLoginAnalyticsTracker, times(1)).trackLoginSuccess()
     }

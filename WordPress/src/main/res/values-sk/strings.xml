@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-02-27 18:15:57+0000
+Translation-Revision-Date: 2022-11-09 19:17:00+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.3
 Language: sk
 -->
 <resources>
+    <string name="gutenberg_native_add_button_text">Pridať text tlačidla</string>
+    <string name="activity_log_backup_download_notice_download_action">Stiahnuť</string>
     <string name="error_failed_to_crop_and_save_image">Nepodarilo sa orezať a uložiť obrázok, skúste znova.</string>
     <string name="preview_image_description">Náhľad obrázku</string>
     <string name="error_unknown_page_type">Neznámy formát stránky</string>
@@ -27,6 +29,7 @@ Language: sk
     <string name="stats_months_and_years_period_label">Obdobie</string>
     <string name="stats_detail_months_and_years">Mesiace a roky</string>
     <string name="stats_insights_load_more">Načítaj viac</string>
+    <string name="new_site_creation_preview_subtitle">Neskôr si budete môcť prispôsobiť vzhľad svojej stránky</string>
     <string name="stats_insights_today_stats">Dnes</string>
     <string name="stats_insights_best_hour">Najlepšia hodina</string>
     <string name="stats_insights_best_day">Najlepší deň</string>
@@ -38,6 +41,8 @@ Language: sk
     <string name="plans_loading_error_network_title">Žiadne pripojenie</string>
     <string name="quick_start_sites">Ďalšie kroky</string>
     <string name="quick_start_remove_next_steps_menu_title">Odstrániť toto</string>
+    <string name="stats_traffic_change">%1$s (%2$s)</string>
+    <string name="stats_traffic_increase">+%1$s (%2$s)</string>
     <string name="notification_new_site_creation_title">Vytvoriť webovú stránku</string>
     <string name="new_site_creation_create_site_button">Vytvoriť webovú stránku</string>
     <string name="notification_new_site_creation_failed">Nastal problém</string>
@@ -158,11 +163,15 @@ Language: sk
     <string name="page_moved_to_scheduled">Stránka sa naplánovala</string>
     <string name="quick_start_focus_point_description">Ťuknite sem</string>
     <string name="quick_start_list_create_site_title">Vytvorte si webovú stránku</string>
+    <string name="quick_start_completed_tour_subtitle">Nie je to dobrý pocit odškrtávať veci zo zoznamu?</string>
     <string name="quick_start_dialog_view_site_title">Zobraziť webovú stránku</string>
     <string name="quick_start_dialog_share_site_title">Zdielajte webovú stránku</string>
     <string name="quick_start_dialog_share_site_message">Pripojte sa na účty sociálnych médii - vaša webová stránka automaticky zdieľa nové články.</string>
+    <string name="quick_start_dialog_view_site_message">Zobrazte náhľad svojej stránky, aby ste videli, čo uvidia vaši návštevníci.</string>
     <string name="quick_start_dialog_publish_post_title">Zverejniť článok</string>
     <string name="quick_start_dialog_publish_post_message_short">Ťuknite %1$s Create Post %2$s a vytvorte nový článok.</string>
+    <string name="quick_start_dialog_need_help_button_negative">Nie, ďakujem</string>
+    <string name="quick_start_dialog_follow_sites_title">Spojenie s inými stránkami</string>
     <string name="quick_start_button_positive">Ísť</string>
     <string name="quick_start_button_negative_short">Zrušiť</string>
     <string name="quick_start_button_negative">Teraz nie</string>
@@ -306,6 +315,7 @@ Language: sk
     <string name="dialog_confirm_delete_permanently_post">Ste si istý, že chcete natrvalo zmazať tento článok?</string>
     <string name="content_description_person_reading_device_notification">Človek čítajúci na zariadení s notifikáciami</string>
     <string name="content_description_people_looking_charts">Ľudia pozerajúci sa na grafy a tabuľky</string>
+    <string name="comment_title">%1$s na %2$s</string>
     <string name="notification_channel_important_title">Dôležité</string>
     <string name="notification_channel_general_title">Všeobecné</string>
     <string name="photo_picker_use_photo">Použiť túto fotografiu</string>
@@ -500,6 +510,7 @@ Language: sk
     <string name="dlg_saving_tag">Ukladanie</string>
     <string name="dlg_deleting_tag">Mazanie</string>
     <string name="dlg_confirm_delete_tag">Trvale zmazať značku \'%s\'?</string>
+    <string name="my_site_btn_site_pages">Stránky</string>
     <string name="error_tag_exists">Značka s týmto názvom už existuje</string>
     <string name="add_new_tag">Pridať novú značku</string>
     <string name="tag_description_hint">Popis</string>
@@ -584,6 +595,7 @@ Language: sk
     <string name="jetpack_disconnect_confirm">Odpojenie</string>
     <string name="jetpack_disconnect_confirmation_message">Ste si istý, že chcete odpojiť jetpack z webovej stránky?</string>
     <string name="jetpack_disconnect_pref_title">\"Odpojenie z WordPress.com\"</string>
+    <string name="site_settings_jetpack_allowlist_description">IP adresu (alebo sériu adries) môžete označiť ako \"Vždy povolené\", čím zabránite tomu, aby ich Jetpack niekedy zablokoval. IPv4 a IPv6 sú prijateľné. Ak chcete určiť rozsah, zadajte najnižšiu a najvyššiu hodnotu oddelenú pomlčkou. Example: 12.12.12.1–12.12.12.100</string>
     <string name="jetpack_require_two_factor_title">Vyžaduje sa dvojkrokové overenie.</string>
     <string name="jetpack_match_wpcom_via_email_title">Prispôsobte účty použitím e-mailovej adresy</string>
     <string name="jetpack_allow_wpcom_sign_in_title">Povoľte WordPress.com prihlásiť sa</string>
@@ -628,6 +640,12 @@ Language: sk
     <string name="notification_settings_category_other">Ostatné</string>
     <string name="notification_settings_item_your_sites_all_your_sites">Všetky moje stránky</string>
     <string name="notification_settings_category_your_sites">Tvoje stránky</string>
+    <string name="notification_settings_main_off_message">Vypnutím funkcie Nastavenie oznámení sa zakážu všetky oznámenia z tejto aplikácie bez ohľadu na ich typ. Po zapnutí funkcie Nastavenia oznámení môžete jemne doladiť, ktorý druh oznámenia budete dostávať.</string>
+    <string name="notification_settings_main_off_title">Ak chcete prijímať oznámenia na tomto zariadení, zapnite Nastavenia oznámení.</string>
+    <string name="notification_settings_main_hint_off">Povoliť upozornenia</string>
+    <string name="notification_settings_main_hint_on">Zakázať upozornenia</string>
+    <string name="notification_settings_main_status_off">Vypnúť</string>
+    <string name="notification_settings_main_status_on">Zapnúť</string>
     <string name="max_video_resolution">Maximálna veľkosť videa</string>
     <string name="max_thumbnail_px_size">Maximálna veľkosť obrázku</string>
     <string name="error_upload_post_media_param">Nastala chyba pri načítavaní médiá v článku: %s.</string>
@@ -674,6 +692,7 @@ Language: sk
     <string name="requesting_otp">Vyžaduje sa overenie kódu prostredníctvom SMS.</string>
     <string name="login_text_otp">Radšej mi pošlite kód</string>
     <string name="enter_verification_code">Takmer dokončené! Prosím, zadajte overovací kód z vašej aplikácie Authenticator.</string>
+    <string name="open_mail">Otvoriť e-mail</string>
     <string name="next">Ďalej</string>
     <string name="enter_email_wordpress_com">Prihláste sa do WordPress.com použití e-mailovej adresy a spravujte všetky vaše webové stránky WordPress.</string>
     <string name="image_optimization_promo_desc">Optimalizácia obrázkov zmenší obrázky pre rýchlejšie nahranie.\n\nPokyn môžete kedykoľvek zmeniť v nastaveniach webovej stránky.</string>
@@ -686,6 +705,7 @@ Language: sk
     <string name="post_title">Názov</string>
     <string name="menu_redo">Opakovať</string>
     <string name="menu_undo">Zrušiť</string>
+    <string name="media_insert_unimplemented">Ospravedlňujeme sa! Doplnok ešte nie je implementovaný :(</string>
     <string name="error_media_small">Príliš malé médiá na zobrazenie</string>
     <string name="editor_dropped_unsupported_files">Upozornenie: nie všetky zrušené príspevky sú podporované!</string>
     <string name="editor_dropped_title_images_not_allowed">Odovzdávanie obrázkov v Názve nie je povolené.</string>
@@ -877,6 +897,7 @@ Language: sk
     <string name="signout">Odhlásiť sa</string>
     <string name="sign_in_wpcom">Prihlásiť sa do WordPress.com</string>
     <string name="reader_label_global_related_posts">Viac na WordPress.com</string>
+    <string name="reader_label_local_related_posts">Viac na %s</string>
     <string name="preference_open_device_settings">Otvoriť nastavenia zariadenia</string>
     <string name="invite_invalid_email">%s: neplatný email</string>
     <string name="invite_user_blocked_invites">%s: Používateľ zablokoval pozvania.</string>
@@ -1080,6 +1101,7 @@ Language: sk
     <string name="site_settings_paging_dialog_description">Rozdeliť komentáre na stránky.</string>
     <string name="site_settings_paging_dialog_header">Počet komentárov na jednu stránku</string>
     <string name="site_settings_close_after_dialog_title">Zavrieť komentovanie</string>
+    <string name="site_settings_denylist_description">Ak komentár obsahuje niektoré z týchto slov vo svojom obsahu, názve, URL, e-maile alebo IP adrese, bude označený ako spam. Môžete zadať čiastočné slová, takže \"press\" bude zodpovedať \"WordPress\".</string>
     <string name="site_settings_hold_for_moderation_description">Ak komentár obsahuje ktorékoľvek z týchto slov vo svojom obsahu, mene, URL adrese, emailovej adrese alebo IP adrese, automaticky bude zadržaný vo fronte. Môžete zadať čiastkové slová, napr. slovo \"press\" bude spárované so slovom \"WordPress.\"</string>
     <string name="site_settings_list_editor_input_hint">Zadajte slovo alebo frázu</string>
     <string name="site_settings_list_editor_no_items_text">Žiadne položky</string>
@@ -1094,8 +1116,10 @@ Language: sk
     <string name="site_settings_rp_show_header_title">Zobraziť hlavičku</string>
     <string name="site_settings_rp_switch_summary">Sekcia s podobnými článkami zobrazuje súvisiaci obsah z vašej stránky pod článkami</string>
     <string name="site_settings_rp_switch_title">Zobraziť podobné články</string>
+    <string name="site_settings_denylist_hint">Komentáre, ktoré vyhovujú filtru, sú označené ako spam</string>
     <string name="site_settings_moderation_hold_hint">Komentáre, ktoré zodpovedajú filtru, budú zadržané vo fronte</string>
     <string name="site_settings_multiple_links_hint">Ignorovať limit na počet odkazov od známych užívateľov</string>
+    <string name="site_settings_allowlist_hint">Autor komentára musí mať v minulosti schválený aspoň jeden komentár</string>
     <string name="site_settings_user_account_required_hint">Používateľ musí byť pred komentovaním zaregistrovaný a prihlásený</string>
     <string name="site_settings_identity_required_hint">Autor komentára musí vyplniť meno a e-mail</string>
     <string name="site_settings_paging_hint">Zobraziť komentáre v blokoch konkrétnej veľkosti</string>
@@ -1118,6 +1142,8 @@ Language: sk
     <string name="site_settings_address_hint">Zmena vašej adresy nie je momentálne podporovaná</string>
     <string name="site_settings_tagline_hint">Krátky popis alebo chytľavá fráza, ktorá popisuje váš blog</string>
     <string name="site_settings_title_hint">Pár slovami popíšte túto stránku</string>
+    <string name="site_settings_allowlist_known_summary">Komentáre od známych užívateľov</string>
+    <string name="site_settings_allowlist_all_summary">Komentáre od všetkých užívateľov</string>
     <string name="site_settings_threading_summary">%d levely/levelov</string>
     <string name="site_settings_privacy_private_summary">Súkromný</string>
     <string name="site_settings_privacy_hidden_summary">Skrytý</string>
@@ -1125,6 +1151,7 @@ Language: sk
     <string name="site_settings_privacy_public_summary">Verejný</string>
     <string name="site_settings_moderation_hold_title">Pozdržať na moderáciu</string>
     <string name="site_settings_multiple_links_title">Odkazy v komentároch</string>
+    <string name="site_settings_allowlist_title">Schváliť automaticky</string>
     <string name="site_settings_paging_title">Stránkovanie</string>
     <string name="site_settings_threading_title">Spracovanie</string>
     <string name="site_settings_sort_by_title">Zoradiť podľa</string>
@@ -1243,7 +1270,9 @@ Language: sk
     <string name="site_picker_title">Vybrať webovú stránku</string>
     <string name="my_site_btn_switch_site">Prepnúť webovú stránku</string>
     <string name="my_site_btn_view_admin">Zobraziť administráciu</string>
+    <string name="my_site_btn_site_settings">Nastavenia</string>
     <string name="my_site_header_publish">Zverejniť</string>
+    <string name="my_site_btn_blog_posts">Články blogu</string>
     <string name="my_site_header_look_and_feel">Vzhľad</string>
     <string name="my_site_header_configuration">Kanfigurácia</string>
     <string name="reader_label_new_posts_subtitle">Ťuknite k ich zobrazeniu</string>
@@ -1301,6 +1330,7 @@ Language: sk
     <string name="reader_title_photo_viewer">%1$d z %2$d</string>
     <string name="reader_label_view_original">Pozrieť originál článku</string>
     <string name="error_refresh_unauthorized_posts">Nemáte oprávnenie prezerať alebo upravovať príspevky</string>
+    <string name="help_and_support">Pomoc a podpora</string>
     <string name="comment_trashed">Komentár bol odstránený</string>
     <string name="error_publish_empty_post">Nie je možné zverejniť prázdny príspevok</string>
     <string name="comment_reply_to_user">Odpovedať užívateľovi %s</string>

@@ -1,11 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-06-29 06:25:14+0000
+Translation-Revision-Date: 2022-11-09 12:03:18+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: en_CA
 -->
 <resources>
+    <string name="post_settings_parent">Parent Page</string>
+    <string name="post_settings_page_attributes">Page Attributes</string>
+    <string name="about_automattic_contribute_item_title">Contribute</string>
+    <string name="about_news">News</string>
+    <string name="my_site_blogging_prompt_card_number_of_answers_one">1 answer</string>
+    <string name="login_prologue_revamped_content_description_wordpress_icon">WordPress icon</string>
+    <string name="login_prologue_revamped_tagline">Write, edit, and publish from anywhere.</string>
+    <string name="error_fetch_authors_list">Couldn\'t retrieve authors</string>
+    <string name="post_settings_author">Author</string>
+    <string name="app_rating_title">Enjoying %s?</string>
+    <string name="connection_service_label">Share post to %s</string>
+    <string name="connections_label">Jetpack Social Connections</string>
+    <string name="stats_widget_log_in_to_add_message">Please log in to the Jetpack app to add a widget.</string>
+    <string name="stats_view_publicize">Jetpack Social Connections</string>
+    <string name="login_magic_links_email_sent">We just sent a magic link to</string>
+    <string name="login_magic_links_sent_label_short">Check your email on this device!</string>
+    <string name="or_use_password">Use password to sign in</string>
+    <string name="wp_jetpack_powered_notifications_powered_by_jetpack_caption">Stay informed with realtime updates for new comments, site traffic, security reports and more.</string>
+    <string name="wp_jetpack_powered_notifications_powered_by_jetpack">Notifications are powered by Jetpack</string>
+    <string name="wp_jetpack_powered_stats_powered_by_jetpack_caption">Watch your traffic grow and learn about your audience with redesigned Stats and Insights, now available in the new Jetpack app.</string>
+    <string name="wp_jetpack_powered_stats_powered_by_jetpack">Stats are powered by Jetpack</string>
+    <string name="wp_jetpack_powered_reader_powered_by_jetpack_caption">Find, follow, and like all your favorite sites and posts with Reader, now available in the new Jetpack app.</string>
+    <string name="wp_jetpack_powered_reader_powered_by_jetpack">Reader is powered by Jetpack</string>
+    <string name="wp_jetpack_powered_features">The new Jetpack app has Stats, Reader, Notifications, and more that make your WordPress better.</string>
+    <string name="wp_jetpack_powered_better_with_jetpack">WordPress is better with Jetpack</string>
+    <string name="gutenberg_native_upgrade_your_plan_to_use_video_covers">Upgrade your plan to use video covers</string>
+    <string name="gutenberg_native_upgrade_your_plan_to_upload_audio">Upgrade your plan to upload audio</string>
+    <string name="gutenberg_native_jetpack_powered">Jetpack powered</string>
+    <string name="gutenberg_native_invalid_url">Invalid URL.</string>
+    <string name="gutenberg_native_gradient">Gradient</string>
+    <string name="wp_jetpack_continue_to_notifications">Continue to Notifications</string>
+    <string name="wp_jetpack_continue_to_stats">Continue to Stats</string>
+    <string name="wp_jetpack_continue_to_reader">Continue to Reader</string>
+    <string name="wp_jetpack_get_new_jetpack_app">Try the new Jetpack app</string>
+    <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery">Problem displaying block. \nTap to attempt block recovery.</string>
+    <string name="weekly_roundup_notification_text_views_and_comments">Last week you had %1$s views and %2$s comments</string>
+    <string name="weekly_roundup_notification_text_views_and_likes">Last week you had %1$s views and %2$s likes</string>
+    <string name="weekly_roundup_notification_text_views_only">Last week you had %1$s views.</string>
+    <string name="weekly_roundup_notification_text_all">Last week you had %1$s views, %2$s likes, and %3$s comments.</string>
+    <string name="stats_revamp_v2_update_alert_message">Updated to New Insights to help you understand how your content is performing and what\'s resonating with your audience.</string>
+    <string name="stats_insights_like_guide_card">⭐️ Your latest post %1$s has received %2$s like.</string>
+    <string name="wp_jetpack_powered">Jetpack powered</string>
     <string name="qrcode_auth_flow_content_description">Image indicating scan log-in code in process</string>
     <string name="qrcode_auth_flow_error_content_description">Image indicating an error</string>
     <string name="qrcode_auth_flow_dismiss_dialog_message">Are you sure you want to continue?</string>
@@ -66,6 +108,7 @@ Language: en_CA
     <string name="me_btn_scan_login_code">Scan Log-in Code</string>
     <string name="stats_insights_likes_guide_card">⭐️ Your latest post %1$s has received %2$s likes.</string>
     <string name="stats_most_popular_percent_views_empty">Not enough activity. Check back later when your site\'s had more visitors!</string>
+    <string name="stats_total_followers_content_description">%1$s, %2$s%% of total followers</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
     <string name="pages_copy_link">Copy link</string>
     <string name="quick_start_completed_tour_title">Congrats! You know your way around&lt;br/&gt;</string>
@@ -214,6 +257,7 @@ Language: en_CA
     <string name="my_site_blogging_prompt_card_menu_remove">Remove from dashboard</string>
     <string name="my_site_blogging_prompt_card_menu_skip">Skip this prompt</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">View more prompts</string>
+    <string name="my_site_blogging_prompt_card_number_of_answers_other">%d answers</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">Share blogging prompt</string>
     <string name="my_site_blogging_prompt_card_answered_prompt">✓ Answered</string>
     <string name="my_site_blogging_prompt_card_answer_prompt">Answer prompt</string>
@@ -472,6 +516,7 @@ Language: en_CA
     <string name="blogging_reminders_notification_title">It\'s time to blog on %s</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios">Editing reusable blocks is not yet supported on WordPress for iOS</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and">Editing reusable blocks is not yet supported on WordPress for Android</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">Alternatively, you can detach and edit these blocks separately by tapping “Convert to regular blocks”.</string>
     <string name="blogging_reminders_done">Done</string>
     <string name="blogging_reminders_notify_me">Notify me</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;Enter your server credentials&lt;/a&gt; to enable one click site restores from backups.</string>
@@ -525,6 +570,7 @@ Language: en_CA
     <string name="gutenberg_native_move_image_forward">Move Image Forward</string>
     <string name="gutenberg_native_move_image_backward">Move Image Backward</string>
     <string name="gutenberg_native_width_settings">Width settings</string>
+    <string name="gutenberg_native_link_rel">Link Rel</string>
     <string name="gutenberg_native_column_settings">Column Settings</string>
     <string name="user_profile_untitled_site">(Untitled)</string>
     <string name="user_profile_site_section_header">Site</string>
@@ -1204,6 +1250,7 @@ Language: en_CA
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">Double tap to go to colour settings</string>
     <string name="reader_empty_followed_blogs_description">When you follow sites, you\'ll see their content here</string>
     <string name="feature_announcement_find_out_mode">Find out more</string>
+    <string name="feature_announcement_dialog_label">What\'s New In %s</string>
     <string name="insert_label_with_count">Insert %d</string>
     <string name="crop">crop</string>
     <string name="error_failed_to_load_into_file">Failed to load into file, please try again.</string>
@@ -1302,6 +1349,7 @@ Language: en_CA
     <string name="post_list_tab_trashed_posts">Trashed</string>
     <string name="post_list_tab_scheduled_posts">Scheduled</string>
     <string name="post_list_tab_published_posts">Published</string>
+    <string name="sharing_facebook_account_must_have_pages">The Facebook connection cannot find any Pages. Jetpack Social cannot connect to Facebook Profiles, only published Pages.</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">Not Connected</string>
     <string name="notifications_tab_title_likes">Likes</string>
     <string name="notifications_tab_title_follows">Follows</string>
@@ -1528,6 +1576,7 @@ Language: en_CA
     <string name="share_desc">Share</string>
     <string name="navigate_back_desc">Go back</string>
     <string name="navigate_forward_desc">Go forward</string>
+    <string name="calendar_scheduled_post_description">\"%1$s\" scheduled for publishing on \"%2$s\" in your %3$s app \n %4$s</string>
     <string name="calendar_scheduled_post_title">WordPress Scheduled Post: \"%s\"</string>
     <string name="notification_post_will_be_published_in_ten_minutes">\"%s\" will be published in 10 minutes</string>
     <string name="notification_post_will_be_published_in_one_hour">\"%s\" will be published in 1 hour</string>
@@ -1736,7 +1785,10 @@ Language: en_CA
     <string name="notification_channel_reminder_title">Reminder</string>
     <string name="stats_select_next_period_description">Select next period</string>
     <string name="stats_select_previous_period_description">Select previous period</string>
+    <string name="stats_most_popular_percent_views">%1$s of views</string>
     <string name="stats_insights_popular">Most Popular Time</string>
+    <string name="stats_traffic_change">%1$s (%2$s)</string>
+    <string name="stats_traffic_increase">+%1$s (%2$s)</string>
     <string name="new_site_creation_site_preview_content_description">Showing site preview</string>
     <string name="new_site_creation_clear_all_content_description">Clear</string>
     <string name="site_created_but_not_fetched_snackbar_message">It seems like you\'re on a slow connection. If you don\'t see your new site in the list, try refreshing.</string>
@@ -2425,6 +2477,7 @@ Language: en_CA
     <string name="requesting_otp">Requesting a verification code via SMS.</string>
     <string name="login_text_otp">Text me a code instead</string>
     <string name="enter_verification_code">Almost there! Please enter the verification code from your Authenticator app.</string>
+    <string name="open_mail">Open Mail</string>
     <string name="next">Next</string>
     <string name="enter_email_wordpress_com">Log in to WordPress.com using an email address to manage all your WordPress sites.</string>
     <string name="image_optimization_promo_desc">Image optimization shrinks images for quicker uploading.\n\nYou can change this any time in site settings.</string>

@@ -99,4 +99,7 @@
 
     <!-- Site creation  -->
     <color name="site_creation_intent_item_emoji_bg">#3d3d3d</color>
+
+    <!-- Jetpack Migration -->
+    <color name="bg_jp_migration_buttons_panel">#E6121212</color>
 </resources>

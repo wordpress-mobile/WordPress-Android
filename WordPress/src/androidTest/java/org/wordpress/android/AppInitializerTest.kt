@@ -17,7 +17,7 @@ import org.wordpress.android.support.BaseTest
 class AppInitializerTest : BaseTest() {
     @Test
     fun verifyOnAppComesFromBackgroundCalled() {
-        Thread.sleep(100)
+        Thread.sleep(200)
         assertFalse(WordPress.appIsInTheBackground)
     }
 }

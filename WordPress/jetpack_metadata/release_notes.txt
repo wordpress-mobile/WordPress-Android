@@ -1,4 +1,1 @@
-- Added correct links to Automattic Family app marbles on the About screen
-- Updated the launch screen for Android versions 12+
-- Changed success message text from red to black for QR code logins
-- Fixed the Stats screen to include Western Arabic numerals for Arabic language users
+If you already have site stats enabled, you won’t see a prompt to enable them again when you tap the stats widget on your device’s home screen. Nice.

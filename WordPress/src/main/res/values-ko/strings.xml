@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-10-21 08:03:44+0000
+Translation-Revision-Date: 2022-11-03 15:54:23+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.3
 Language: ko_KR
 -->
 <resources>
+    <string name="post_settings_parent">상위 페이지</string>
+    <string name="post_settings_page_attributes">페이지 속성</string>
     <string name="about_automattic_contribute_item_title">참여</string>
     <string name="about_news">뉴스</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_one">1개 답변</string>
@@ -37,7 +39,7 @@ Language: ko_KR
     <string name="wp_jetpack_continue_to_notifications">알림으로 계속</string>
     <string name="wp_jetpack_continue_to_stats">통계로 계속</string>
     <string name="wp_jetpack_continue_to_reader">리더로 계속</string>
-    <string name="wp_jetpack_get_new_jetpack_app">새 젯팩 앱 가져오기</string>
+    <string name="wp_jetpack_get_new_jetpack_app">새로운 젯팩 앱 체험하기</string>
     <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery">블록 표시 중 문제가 발생했습니다. \n눌러서 블록 복구를 시도하세요.</string>
     <string name="weekly_roundup_notification_text_views_and_comments">지난주에는 조회수 %1$s개와 댓글 %2$s개가 있습니다.</string>
     <string name="weekly_roundup_notification_text_views_and_likes">지난주에는 조회수 %1$s개와 좋아요 %2$s개가 있습니다.</string>
@@ -2018,7 +2020,7 @@ Language: ko_KR
     <string name="activity_log_currently_restoring_title">현재 사이트 복원 중</string>
     <string name="activity_log_rewind_finished_snackbar_message_no_dates">사이트가 성공적으로 복원되었습니다.</string>
     <string name="activity_log_rewind_finished_snackbar_message">사이트를 성공적으로 복원했습니다.\n%1$s %2$s(으)로 되돌렸습니다</string>
-    <string name="activity_log_rewind_started_snackbar_message">사이트 복원 중\n%s %s(으)로 되돌리는 중</string>
+    <string name="activity_log_rewind_started_snackbar_message">사이트 복원 중\n%1$s %2$s(으)로 되돌리는 중</string>
     <string name="activity_log_button">활동 로그 작업 버튼</string>
     <string name="plugin_auto_managed">자동 관리</string>
     <string name="reader_save_posts_locally_dialog_message">이 글을 저장하고 원할 때마다 돌아와서 다시 읽으세요. 글은 이 기기에서만 읽을 수 있습니다. 저장된 글은 다른 기기와 동기화되지 않습니다.</string>
@@ -2184,7 +2186,7 @@ Language: ko_KR
     <string name="sharing_disabled_description">공유 젯팩 모듈이 비활성화되었기 때문에 공유 설정에 액세스할 수 없습니다.</string>
     <string name="sharing_disabled">공유 모듈이 비활성화됨</string>
     <string name="version_with_name_param">%s 버전</string>
-    <string name="copyright_with_year_and_company_params">© %d %s</string>
+    <string name="copyright_with_year_and_company_params">© %1$d %2$s</string>
     <string name="publisher_with_company_param">발행인: %s</string>
     <string name="notification_sound_has_invalid_path">선택한 사운드의 경로가 잘못되었습니다. 다른 항목을 선택하세요.</string>
     <string name="quickpress_shortcut_with_account_param">QP %s</string>

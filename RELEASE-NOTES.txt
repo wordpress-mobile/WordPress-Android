@@ -1,5 +1,14 @@
 *** PLEASE FOLLOW THIS FORMAT: [<priority indicator, more stars = higher priority>] <description> [<PR URL>]
 
+21.3
+-----
+
+
+21.2
+-----
+* [*] Stats: Fix an issue with opening the stats activity from the stats widget. [https://github.com/wordpress-mobile/WordPress-Android/pull/17439]
+
+
 21.1
 -----
 * [**] Added functionality to set the parent of a page from page settings in the editor. [https://github.com/wordpress-mobile/WordPress-Android/pull/17329]

@@ -13,7 +13,7 @@ ext {
     wordPressUtilsVersion = '3.0.0'
     wordPressLoginVersion = '1.0.0'
     aztecVersion = 'v1.6.2'
-    gutenbergMobileVersion = 'v1.84.1'
+    gutenbergMobileVersion = 'v1.85.0'
     storiesVersion = '2.0.0'
     aboutAutomatticVersion = '1.0.0'
 
@@ -55,8 +55,8 @@ ext {
     androidxTestCoreVersion = '1.4.0'
     assertJVersion = '3.11.1'
     espressoVersion = '3.4.0'
-    mockitoCoreVersion = "3.3.3"
-    nhaarmanMockitoVersion = "2.2.0"
+    mockitoVersion = "4.8.1"
+    mockitoKotlinVersion = '4.0.0'
 }
 
 allprojects {

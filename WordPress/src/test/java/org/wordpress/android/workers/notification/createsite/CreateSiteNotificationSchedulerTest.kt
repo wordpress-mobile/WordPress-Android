@@ -1,18 +1,18 @@
 package org.wordpress.android.workers.notification.createsite
 
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.argThat
-import com.nhaarman.mockitokotlin2.argumentCaptor
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.never
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.verifyZeroInteractions
-import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.any
+import org.mockito.kotlin.argThat
+import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.never
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoInteractions
+import org.mockito.kotlin.whenever
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.CREATE_SITE_NOTIFICATION_SCHEDULED
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -45,8 +45,8 @@ class CreateSiteNotificationSchedulerTest {
 
         createSiteNotificationScheduler.scheduleCreateSiteNotificationIfNeeded()
 
-        verifyZeroInteractions(localNotificationScheduler)
-        verifyZeroInteractions(appsPrefs)
+        verifyNoInteractions(localNotificationScheduler)
+        verifyNoInteractions(appsPrefs)
     }
 
     @Test
@@ -56,7 +56,7 @@ class CreateSiteNotificationSchedulerTest {
 
         createSiteNotificationScheduler.scheduleCreateSiteNotificationIfNeeded()
 
-        verifyZeroInteractions(localNotificationScheduler)
+        verifyNoInteractions(localNotificationScheduler)
         verify(appsPrefs, never()).shouldScheduleCreateSiteNotification = any()
     }
 

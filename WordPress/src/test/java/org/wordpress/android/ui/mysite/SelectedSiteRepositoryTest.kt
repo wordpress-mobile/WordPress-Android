@@ -1,17 +1,17 @@
 package org.wordpress.android.ui.mysite
 
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.doAnswer
-import com.nhaarman.mockitokotlin2.eq
-import com.nhaarman.mockitokotlin2.inOrder
-import com.nhaarman.mockitokotlin2.isNull
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.verifyZeroInteractions
-import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
+import org.mockito.kotlin.any
+import org.mockito.kotlin.doAnswer
+import org.mockito.kotlin.eq
+import org.mockito.kotlin.inOrder
+import org.mockito.kotlin.isNull
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoInteractions
+import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.action.SiteAction
@@ -82,7 +82,7 @@ class SelectedSiteRepositoryTest : BaseUnitTest() {
         selectedSiteRepository.updateSiteIconMediaId(mediaId, true)
 
         assertThat(siteIconProgressBarVisible).isFalse
-        verifyZeroInteractions(siteSettingsInterfaceWrapper)
+        verifyNoInteractions(siteSettingsInterfaceWrapper)
     }
 
     @Test

@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-10-19 09:54:10+0000
+Translation-Revision-Date: 2022-11-03 14:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: it
 -->
 <resources>
+    <string name="post_settings_parent">Pagina madre</string>
+    <string name="post_settings_page_attributes">Attributi della pagina</string>
     <string name="about_automattic_contribute_item_title">Contribuisci</string>
     <string name="about_news">Notizie</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_one">1 risposta</string>
@@ -37,7 +39,7 @@ Language: it
     <string name="wp_jetpack_continue_to_notifications">Continua in Notifiche</string>
     <string name="wp_jetpack_continue_to_stats">Continua in Statistiche</string>
     <string name="wp_jetpack_continue_to_reader">Continua in Reader</string>
-    <string name="wp_jetpack_get_new_jetpack_app">Ottieni la nuova app di Jetpack</string>
+    <string name="wp_jetpack_get_new_jetpack_app">Prova la nuova app Jetpack</string>
     <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery">Problema durante la visualizzazione del blocco. \nTocca per tentare il ripristino del blocco.</string>
     <string name="weekly_roundup_notification_text_views_and_comments">L\'ultima settimana hai avuto %1$s visualizzazioni e %2$s commenti</string>
     <string name="weekly_roundup_notification_text_views_and_likes">L\'ultima settimana hai avuto %1$s visualizzazioni e %2$s Mi piace</string>

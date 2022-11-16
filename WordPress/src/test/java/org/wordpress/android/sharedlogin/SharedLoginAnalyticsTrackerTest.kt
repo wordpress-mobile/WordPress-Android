@@ -1,8 +1,8 @@
 package org.wordpress.android.sharedlogin
 
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.verify
 import org.junit.Test
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.sharedlogin.SharedLoginAnalyticsTracker.ErrorType
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -33,11 +33,11 @@ class SharedLoginAnalyticsTrackerTest {
     }
 
     @Test
-    fun `Should track login failed QueryTokenError correctly`() {
-        classToTest.trackLoginFailed(ErrorType.QueryTokenError)
+    fun `Should track login failed QueryLoginDataError correctly`() {
+        classToTest.trackLoginFailed(ErrorType.QueryLoginDataError)
         verify(analyticsTrackerWrapper).track(
                 Stat.SHARED_LOGIN_FAILED,
-                mapOf("error_type" to "query_token_error")
+                mapOf("error_type" to "query_login_data_error")
         )
     }
 }

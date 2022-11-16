@@ -11,21 +11,17 @@ msgstr ""
 "Project-Id-Version: Jetpack - Apps - Android - Release Notes\n"
 
 #. translators: Release notes for this version to be displayed in the Play Store. Limit to 500 characters including spaces and commas!
-msgctxt "release_note_210"
+msgctxt "release_note_212"
 msgid ""
-"21.0:\n"
-"- Added correct links to Automattic Family app marbles on the About screen\n"
-"- Updated the launch screen for Android versions 12+\n"
-"- Changed success message text from red to black for QR code logins\n"
-"- Fixed the Stats screen to include Western Arabic numerals for Arabic language users\n"
+"21.2:\n"
+"If you already have site stats enabled, you won’t see a prompt to enable them again when you tap the stats widget on your device’s home screen. Nice.\n"
 msgstr ""
 
-msgctxt "release_note_209"
+msgctxt "release_note_211"
 msgid ""
-"20.9:\n"
-"- “Get to know your app” flows now stay on screen after rotating your device.\n"
-"- Long titles display properly on Stats cards without being cut off.\n"
-"- We added the Enter key to Post excerpts to allow for easy line breaks.\n"
+"21.1:\n"
+"- You’ll notice a shiny new landing screen in the app that responds to your device’s motion—enjoy!\n"
+"- When you’re in the process of editing a page, you can now set a parent page within the child page’s settings.\n"
 msgstr ""
 
 #. translators: Title to be displayed in the Play Store. Limit to 30 characters including spaces and commas!
