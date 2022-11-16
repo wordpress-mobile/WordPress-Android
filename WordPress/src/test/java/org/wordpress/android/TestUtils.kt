@@ -1,8 +1,8 @@
 package org.wordpress.android
 
 import androidx.lifecycle.LiveData
-import com.nhaarman.mockitokotlin2.internal.createInstance
 import org.mockito.Mockito
+import org.mockito.kotlin.internal.createInstance
 import org.wordpress.android.viewmodel.Event
 
 /**

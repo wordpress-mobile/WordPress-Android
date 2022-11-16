@@ -1,10 +1,10 @@
 package org.wordpress.android.workers.notification.bloggingprompts
 
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.verifyZeroInteractions
-import com.nhaarman.mockitokotlin2.whenever
 import org.junit.Test
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoInteractions
+import org.mockito.kotlin.whenever
 import org.wordpress.android.R
 import org.wordpress.android.util.config.BloggingPromptsFeatureConfig
 import org.wordpress.android.workers.notification.local.LocalNotification
@@ -44,7 +44,7 @@ class BloggingPromptsOnboardingNotificationSchedulerTest {
     fun `Should NOT schedule the notification if should NOT show notification`() {
         whenever(bloggingPromptsOnboardingNotificationHandler.shouldShowNotification()).thenReturn(false)
         classToTest.scheduleBloggingPromptsOnboardingNotificationIfNeeded()
-        verifyZeroInteractions(localnotificationScheduler)
+        verifyNoInteractions(localnotificationScheduler)
     }
 
     @Test
@@ -52,7 +52,7 @@ class BloggingPromptsOnboardingNotificationSchedulerTest {
         whenever(bloggingPromptsOnboardingNotificationHandler.shouldShowNotification()).thenReturn(true)
         whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(false)
         classToTest.scheduleBloggingPromptsOnboardingNotificationIfNeeded()
-        verifyZeroInteractions(localnotificationScheduler)
+        verifyNoInteractions(localnotificationScheduler)
     }
 
     @Test

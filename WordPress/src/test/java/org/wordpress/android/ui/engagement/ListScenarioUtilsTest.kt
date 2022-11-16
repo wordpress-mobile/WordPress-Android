@@ -2,10 +2,6 @@ package org.wordpress.android.ui.engagement
 
 import android.content.Context
 import android.text.SpannableStringBuilder
-import com.nhaarman.mockitokotlin2.anyOrNull
-import com.nhaarman.mockitokotlin2.eq
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.json.JSONArray
 import org.json.JSONObject
@@ -16,6 +12,10 @@ import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.eq
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
 import org.wordpress.android.fluxc.tools.FormattableContent
 import org.wordpress.android.models.Note
 import org.wordpress.android.ui.engagement.ListScenarioType.LOAD_POST_LIKES
