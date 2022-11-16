@@ -102,7 +102,7 @@ class AuthorsUseCase constructor(
         return if (domainModel.authors.isEmpty()) {
             buildUiModelForNoGroup(isBlockMode)
         } else {
-            //TODO buildUiModelForGroups(domainModel, uiState, isBlockMode)
+            buildUiModelForGroups(domainModel, uiState, isBlockMode)
         }
     }
 
@@ -115,73 +115,81 @@ class AuthorsUseCase constructor(
         return items
     }
 
-
+    private fun buildUiModelForGroups(
+        domainModel: AuthorsModel,
+        uiState: SelectedAuthor,
+        isBlockMode: Boolean
+    ): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
-
-
-
-        if (domainModel.authors.isEmpty()) {
-            items.add(Empty(R.string.stats_no_data_for_period))
-        } else {
-            val header = Header(R.string.stats_author_label, R.string.stats_author_views_label)
-            items.add(header)
-            val maxViews = domainModel.authors.maxByOrNull { it.views }?.views ?: 0
-            domainModel.authors.forEachIndexed { index, author ->
-                val headerItem = ListItemWithIcon(
-                        iconUrl = author.avatarUrl,
-                        iconStyle = AVATAR,
-                        text = author.name,
-                        barWidth = getBarWidth(author.views, maxViews),
-                        value = statsUtils.toFormattedString(author.views),
-                        showDivider = index < domainModel.authors.size - 1,
-                        contentDescription = contentDescriptionHelper.buildContentDescription(
-                                header,
-                                author.name,
-                                author.views
-                        )
-                )
-                if (author.posts.isEmpty()) {
-                    items.add(headerItem)
-                } else {
-                    val isExpanded = author == uiState.author
-                    items.add(ExpandableItem(headerItem, isExpanded) { changedExpandedState ->
-                        onUiState(SelectedAuthor(if (changedExpandedState) author else null))
-                    })
-                    if (isExpanded) {
-                        items.addAll(author.posts.map { post ->
-                            ListItemWithIcon(
-                                    text = post.title,
-                                    value = statsUtils.toFormattedString(post.views),
-                                    iconStyle = if (author.avatarUrl != null) EMPTY_SPACE else NORMAL,
-                                    textStyle = LIGHT,
-                                    showDivider = false,
-                                    navigationAction = create(
-                                            PostClickParams(post.id, post.url, post.title),
-                                            this::onPostClicked
-                                    ),
-                                    contentDescription = contentDescriptionHelper.buildContentDescription(
-                                            R.string.stats_post_label,
-                                            post.title,
-                                            R.string.stats_post_views_label,
-                                            post.views
-                                    )
-                            )
-                        })
-                        items.add(Divider)
-                    }
-                }
-            }
-
-            if (useCaseMode == BLOCK && domainModel.hasMore) {
-                items.add(
-                        Link(
-                                text = R.string.stats_insights_view_more,
-                                navigateAction = create(statsGranularity, this::onViewMoreClicked)
-                        )
-                )
+        if (isBlockMode) items.add(Title(R.string.stats_authors))
+        val header = Header(R.string.stats_author_label, R.string.stats_author_views_label)
+        items.add(header)
+        val maxViews = domainModel.authors.maxByOrNull { it.views }?.views ?: 0
+        domainModel.authors.forEachIndexed { index, author ->
+            val headerItem = ListItemWithIcon(
+                    iconUrl = author.avatarUrl,
+                    iconStyle = AVATAR,
+                    text = author.name,
+                    barWidth = getBarWidth(author.views, maxViews),
+                    value = statsUtils.toFormattedString(author.views),
+                    showDivider = index < domainModel.authors.size - 1,
+                    contentDescription = contentDescriptionHelper.buildContentDescription(
+                            header,
+                            author.name,
+                            author.views
+                    )
+            )
+            if (author.posts.isEmpty()) {
+                items.add(headerItem)
+            } else {
+                addPost(author, uiState, items, headerItem)
             }
         }
+
+        if (isBlockMode && domainModel.hasMore) {
+            items.add(
+                    Link(
+                            text = R.string.stats_insights_view_more,
+                            navigateAction = create(statsGranularity, this::onViewMoreClicked)
+                    )
+            )
+        }
         return items
+    }
+
+
+    private fun addPost(
+        author: AuthorsModel.Author,
+        uiState: SelectedAuthor,
+        items: MutableList<BlockListItem>,
+        headerItem: ListItemWithIcon
+    ) {
+        val isExpanded = author == uiState.author
+        items.add(ExpandableItem(headerItem, isExpanded) { changedExpandedState ->
+            onUiState(SelectedAuthor(if (changedExpandedState) author else null))
+        })
+        if (isExpanded) {
+            items.addAll(author.posts.map { post ->
+                ListItemWithIcon(
+                        text = post.title,
+                        value = statsUtils.toFormattedString(post.views),
+                        iconStyle = if (author.avatarUrl != null) EMPTY_SPACE else NORMAL,
+                        textStyle = LIGHT,
+                        showDivider = false,
+                        navigationAction = create(
+                                PostClickParams(post.id, post.url, post.title),
+                                this::onPostClicked
+                        ),
+                        contentDescription = contentDescriptionHelper.buildContentDescription(
+                                R.string.stats_post_label,
+                                post.title,
+                                R.string.stats_post_views_label,
+                                post.views
+                        )
+                )
+            })
+            items.add(Divider)
+        }
     }
 
     private fun onViewMoreClicked(statsGranularity: StatsGranularity) {
