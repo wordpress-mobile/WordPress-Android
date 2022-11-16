@@ -52,6 +52,22 @@ class PluginWPAPIRestClient @Inject constructor(
         }
     }
 
+    suspend fun fetchPlugin(
+        site: SiteModel,
+        nonce: Nonce?,
+        pluginName: String
+    ): WPApiPluginsPayload<SitePluginModel> {
+        val url = buildUrl(site, pluginName)
+        val response =
+            wpApiGsonRequestBuilder.syncGetRequest(
+                restClient = this,
+                url = url,
+                clazz = PluginResponseModel::class.java,
+                nonce = nonce?.value
+            )
+        return handleResponse(response, site)
+    }
+
     suspend fun installPlugin(
         site: SiteModel,
         nonce: Nonce? = null,
