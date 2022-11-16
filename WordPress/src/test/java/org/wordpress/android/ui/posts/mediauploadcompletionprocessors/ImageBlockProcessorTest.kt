@@ -1,11 +1,10 @@
 package org.wordpress.android.ui.posts.mediauploadcompletionprocessors
 
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions
-import org.junit.Test
 import org.junit.Before
-
+import org.junit.Test
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
 import org.wordpress.android.util.helpers.MediaFile
 
 class ImageBlockProcessorTest {

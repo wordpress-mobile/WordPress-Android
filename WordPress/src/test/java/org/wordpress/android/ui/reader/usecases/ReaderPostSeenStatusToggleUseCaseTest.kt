@@ -1,11 +1,6 @@
 package org.wordpress.android.ui.reader.usecases
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.never
-import com.nhaarman.mockitokotlin2.times
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.toList
 import org.assertj.core.api.Assertions.assertThat
@@ -15,6 +10,11 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.any
+import org.mockito.kotlin.never
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.datasets.ReaderBlogTableWrapper

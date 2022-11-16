@@ -1,13 +1,13 @@
 package org.wordpress.android.ui.mysite.dynamiccards
 
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.verifyZeroInteractions
-import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Java6Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoInteractions
+import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.DynamicCardType.CUSTOMIZE_QUICK_START
 import org.wordpress.android.fluxc.model.DynamicCardType.GROW_QUICK_START
@@ -61,7 +61,7 @@ class DynamicCardsSourceTest : BaseUnitTest() {
 
         dynamicCardsSource.hideItem(GROW_QUICK_START)
 
-        verifyZeroInteractions(dynamicCardStore)
+        verifyNoInteractions(dynamicCardStore)
     }
 
     @Test
@@ -79,7 +79,7 @@ class DynamicCardsSourceTest : BaseUnitTest() {
 
         dynamicCardsSource.pinItem(GROW_QUICK_START)
 
-        verifyZeroInteractions(dynamicCardStore)
+        verifyNoInteractions(dynamicCardStore)
     }
 
     @Test
@@ -97,7 +97,7 @@ class DynamicCardsSourceTest : BaseUnitTest() {
 
         dynamicCardsSource.unpinItem()
 
-        verifyZeroInteractions(dynamicCardStore)
+        verifyNoInteractions(dynamicCardStore)
     }
 
     @Test

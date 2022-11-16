@@ -2,6 +2,7 @@ package org.wordpress.android.ui.main.jetpack.migration.compose.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -23,6 +24,7 @@ import org.wordpress.android.ui.compose.unit.Margin.MediumLarge
 @Composable
 fun BoxScope.UserAvatarImage(
     avatarUrl: String,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val painter = rememberImagePainter(avatarUrl) {
@@ -39,5 +41,6 @@ fun BoxScope.UserAvatarImage(
                     .size(dimensionResource(dimen.jp_migration_user_avatar_size))
                     .clip(CircleShape)
                     .background(MaterialTheme.colors.surface)
+                    .clickable { onClick() }
     )
 }

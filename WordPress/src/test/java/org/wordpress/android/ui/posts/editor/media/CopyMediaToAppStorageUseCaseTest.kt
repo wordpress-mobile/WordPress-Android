@@ -1,11 +1,6 @@
 package org.wordpress.android.ui.posts.editor.media
 
 import android.net.Uri
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.isNull
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.never
-import com.nhaarman.mockitokotlin2.verify
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
@@ -13,6 +8,11 @@ import org.junit.runner.RunWith
 import org.mockito.AdditionalMatchers.or
 import org.mockito.ArgumentMatchers.anyMap
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.any
+import org.mockito.kotlin.isNull
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.never
+import org.mockito.kotlin.verify
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.test

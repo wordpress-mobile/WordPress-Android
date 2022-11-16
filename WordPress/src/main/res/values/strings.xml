@@ -2224,7 +2224,9 @@
 
     <!-- Help view -->
     <string name="help">Help</string>
+    <string name="support_title">Support</string>
     <string name="help_and_support">Help &amp; Support</string>
+    <string name="wordpress_help_center_button">WordPress help center</string>
     <string name="browse_our_faq_button">Browse our FAQ</string>
     <string name="my_tickets">My Tickets</string>
     <string name="application_log_button">Application log</string>
@@ -4244,5 +4246,13 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="jp_migration_welcome_site_found_message">We found your site. Continue to transfer all your data and sign in to Jetpack automatically.</string>
     <string name="jp_migration_continue_button">Continue</string>
     <string name="jp_migration_help_button">Need help?</string>
+    <string name="jp_migration_notifications_title">Notifications now come from Jetpack</string>
+    <string name="jp_migration_notifications_subtitle">You’ll get all the same notifications but now they’ll come from the Jetpack app.</string>
+    <string name="jp_migration_notifications_disabled_in_wp_message">We’ve disabled notifications for the WordPress app.</string>
+    <string name="jp_migration_done_title">Thanks for switching to Jetpack!</string>
+    <string name="jp_migration_done_subtitle">We’ve transferred all your data and settings. Everything is right where you left it.</string>
+    <string name="jp_migration_done_delete_wp_message">Please &lt;b&gt;delete the WordPress app&lt;/b&gt; to&lt;br&gt;avoid data conflicts.</string>
+    <string name="jp_migration_remove_wp_app_icon_content_description">Remove WordPress App icon</string>
+    <string name="jp_migration_finish_button">Finish</string>
 
 </resources>

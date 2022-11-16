@@ -1,17 +1,17 @@
 package org.wordpress.android.ui.bloggingreminders
 
-import com.nhaarman.mockitokotlin2.argumentCaptor
-import com.nhaarman.mockitokotlin2.check
-import com.nhaarman.mockitokotlin2.doReturn
-import com.nhaarman.mockitokotlin2.eq
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.times
-import com.nhaarman.mockitokotlin2.verify
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.check
+import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.eq
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.BLOGGING_REMINDERS_BUTTON_PRESSED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.BLOGGING_REMINDERS_CANCELLED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.BLOGGING_REMINDERS_FLOW_COMPLETED

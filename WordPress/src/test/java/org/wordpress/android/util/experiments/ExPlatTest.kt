@@ -1,12 +1,5 @@
 package org.wordpress.android.util.experiments
 
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.anyOrNull
-import com.nhaarman.mockitokotlin2.never
-import com.nhaarman.mockitokotlin2.times
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.verifyZeroInteractions
-import com.nhaarman.mockitokotlin2.whenever
 import dagger.Lazy
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -14,6 +7,13 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.any
+import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.never
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoInteractions
+import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.experiments.Assignments
 import org.wordpress.android.fluxc.model.experiments.Variation
@@ -170,7 +170,7 @@ class ExPlatTest : BaseUnitTest() {
 
         exPlat.forceRefresh()
 
-        verifyZeroInteractions(experimentStore)
+        verifyNoInteractions(experimentStore)
     }
 
     @Test
@@ -179,7 +179,7 @@ class ExPlatTest : BaseUnitTest() {
 
         exPlat.refreshIfNeeded()
 
-        verifyZeroInteractions(experimentStore)
+        verifyNoInteractions(experimentStore)
     }
 
     @Test
@@ -192,7 +192,7 @@ class ExPlatTest : BaseUnitTest() {
         } catch (e: IllegalArgumentException) {
             // Do nothing.
         } finally {
-            verifyZeroInteractions(experimentStore)
+            verifyNoInteractions(experimentStore)
         }
     }
 
@@ -205,7 +205,7 @@ class ExPlatTest : BaseUnitTest() {
 
         exPlat.refreshIfNeeded()
 
-        verifyZeroInteractions(experimentStore)
+        verifyNoInteractions(experimentStore)
     }
 
     @Test
@@ -217,7 +217,7 @@ class ExPlatTest : BaseUnitTest() {
 
         exPlat.forceRefresh()
 
-        verifyZeroInteractions(experimentStore)
+        verifyNoInteractions(experimentStore)
     }
 
     @Test
