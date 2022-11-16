@@ -1334,6 +1334,11 @@ public class EditPostActivity extends LocaleAwareActivity implements
         }
 
         if (helpMenuItem != null) {
+            // Support section will be disabled in WordPress app when Jetpack-powered features are removed.
+            // Therefore, we have to update the Help menu item accordingly.
+            int helpMenuTitle = mJetpackFeatureRemovalPhaseHelper.getCurrentPhase() == PhaseFour.INSTANCE ? R.string.help : R.string.help_and_support;
+            helpMenuItem.setTitle(helpMenuTitle);
+
             if (mEditorFragment instanceof GutenbergEditorFragment
                 && showMenuItems
             ) {
