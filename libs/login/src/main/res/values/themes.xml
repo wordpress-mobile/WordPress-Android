@@ -64,8 +64,11 @@
     <!-- Top-level theme containing attributes that are overridden by API version variants -->
     <!-- This is the theme that will be used and possibly extended by the client -->
     <style name="Theme.LoginFlow" parent="Base.Theme.LoginFlow" tools:keep="@style/Theme_LoginFlow">
-        <item name="android:statusBarColor">@android:color/black</item>
+        <item name="android:statusBarColor">?attr/colorSurface</item>
+        <item name="android:windowLightStatusBar">true</item>
     </style>
 
-    <style name="Theme.LoginFlow.TransparentStatusBar" parent="Theme.LoginFlow" tools:keep="@style/Theme_LoginFlow_TransparentStatusBar" />
+    <style name="Theme.LoginFlow.TransparentStatusBar" parent="Theme.LoginFlow" tools:keep="@style/Theme_LoginFlow_TransparentStatusBar">
+        <item name="android:statusBarColor">@android:color/transparent</item>
+    </style>
 </resources>
