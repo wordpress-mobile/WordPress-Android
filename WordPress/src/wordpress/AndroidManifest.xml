@@ -3,11 +3,6 @@
 
     <application>
         <provider
-            android:name=".bloggingreminders.provider.BloggingRemindersProvider"
-            android:authorities="${applicationId}.BloggingRemindersProvider"
-            android:exported="true" />
-
-        <provider
             android:name=".localcontentmigration.LocalMigrationContentProvider"
             android:authorities="${applicationId}.LocalMigrationContentProvider"
             android:exported="true" />

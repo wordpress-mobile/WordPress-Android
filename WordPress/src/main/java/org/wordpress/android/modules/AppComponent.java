@@ -2,7 +2,6 @@ package org.wordpress.android.modules;
 
 import com.automattic.android.tracks.crashlogging.CrashLogging;
 
-import org.wordpress.android.bloggingreminders.provider.BloggingRemindersProvider;
 import org.wordpress.android.push.GCMMessageService;
 import org.wordpress.android.push.GCMRegistrationIntentService;
 import org.wordpress.android.push.NotificationsProcessingService;
@@ -647,6 +646,4 @@ public interface AppComponent {
     void inject(WeekViewsWidgetListProvider object);
 
     void inject(WeekWidgetBlockListProviderFactory object);
-
-    void inject(BloggingRemindersProvider object);
 }
