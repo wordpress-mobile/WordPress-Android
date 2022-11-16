@@ -257,12 +257,9 @@ android {
         // MPAndroidChart uses androidX - remove this line when we migrate everything to androidX
         exclude 'META-INF/proguard/androidx-annotations.pro'
 
-        // Exclude React Native's JSC and Hermes debug binaries
-        // TO-DO How to exclude this for release builds
-        // exclude '**/libhermes-inspector.so'
-        // exclude '**/libhermes-executor-debug.so'
+        // Exclude React Native's JSC and Fabric JNI
         exclude '**/libjscexecutor.so'
-        exclude '**/libfabricjni.so' // Since we are not using Fabric yet
+        exclude '**/libfabricjni.so'
         
         // Avoid React Native's JNI duplicated classes
         pickFirst '**/libc++_shared.so'
