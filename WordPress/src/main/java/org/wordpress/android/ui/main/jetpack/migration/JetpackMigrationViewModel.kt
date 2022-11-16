@@ -18,6 +18,7 @@ import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.WelcomePrimaryButton
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.WelcomeSecondaryButton
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.CompleteFlow
+import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.ShowHelp
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Content
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Loading
 import org.wordpress.android.ui.utils.UiString
@@ -102,7 +103,7 @@ class JetpackMigrationViewModel @Inject constructor(
     }
 
     private fun onHelpClicked() {
-        // TODO Handle on Help
+        postActionEvent(ShowHelp)
     }
 
     private fun getSiteList(): List<SiteListItemUiState> {
@@ -229,6 +230,7 @@ class JetpackMigrationViewModel @Inject constructor(
     }
 
     sealed class JetpackMigrationActionEvent {
+        object ShowHelp : JetpackMigrationActionEvent()
         object CompleteFlow : JetpackMigrationActionEvent()
     }
 }
