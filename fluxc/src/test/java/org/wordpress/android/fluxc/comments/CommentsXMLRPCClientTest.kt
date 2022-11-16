@@ -3,15 +3,15 @@ package org.wordpress.android.fluxc.comments
 import com.android.volley.NetworkResponse
 import com.android.volley.RequestQueue
 import com.android.volley.Response
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.doAnswer
-import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mockito
+import org.mockito.kotlin.any
+import org.mockito.kotlin.doAnswer
+import org.mockito.kotlin.whenever
 import org.robolectric.RobolectricTestRunner
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.CommentStatus.APPROVED
@@ -138,6 +138,74 @@ class CommentsXMLRPCClientTest {
         """
 
         whenever(commentErrorUtilsWrapper.networkToCommentError(any())).thenReturn(CommentError(GENERIC_ERROR, ""))
+
+        val payload = xmlRpcClient.fetchCommentsPage(
+                site = site,
+                number = PAGE_LEN,
+                offset = 0,
+                status = APPROVED
+        )
+
+        assertThat(payload.isError).isTrue
+    }
+
+    @Test
+    fun `fetchCommentsPage returns error without crashing when username is null`() = test {
+        mockedResponse = """<?xml version="1.0" encoding="UTF-8"?>
+                            <methodResponse>
+                              <fault>
+                                <value>
+                                  <struct>
+                                    <member>
+                                      <name>faultCode</name>
+                                      <value><int>403</int></value>
+                                    </member>
+                                    <member>
+                                      <name>faultString</name>
+                                      <value><string>Incorrect username or password.</string></value>
+                                    </member>
+                                  </struct>
+                                </value>
+                              </fault>
+                            </methodResponse>
+        """
+
+        whenever(commentErrorUtilsWrapper.networkToCommentError(any())).thenReturn(CommentError(GENERIC_ERROR, ""))
+        whenever(site.username).thenReturn(null)
+
+        val payload = xmlRpcClient.fetchCommentsPage(
+                site = site,
+                number = PAGE_LEN,
+                offset = 0,
+                status = APPROVED
+        )
+
+        assertThat(payload.isError).isTrue
+    }
+
+    @Test
+    fun `fetchCommentsPage returns error without crashing when password is null`() = test {
+        mockedResponse = """<?xml version="1.0" encoding="UTF-8"?>
+                            <methodResponse>
+                              <fault>
+                                <value>
+                                  <struct>
+                                    <member>
+                                      <name>faultCode</name>
+                                      <value><int>403</int></value>
+                                    </member>
+                                    <member>
+                                      <name>faultString</name>
+                                      <value><string>Incorrect username or password.</string></value>
+                                    </member>
+                                  </struct>
+                                </value>
+                              </fault>
+                            </methodResponse>
+        """
+
+        whenever(commentErrorUtilsWrapper.networkToCommentError(any())).thenReturn(CommentError(GENERIC_ERROR, ""))
+        whenever(site.password).thenReturn(null)
 
         val payload = xmlRpcClient.fetchCommentsPage(
                 site = site,
