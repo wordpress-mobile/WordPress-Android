@@ -1,4 +1,0 @@
-- Removed the Automattic Family app marbles from the About page
-- Updated the launch screen for Android versions 12+
-- Changed success message text from red to black for QR code logins
-- Fixed the Stats screen to include Western Arabic numerals for Arabic language users

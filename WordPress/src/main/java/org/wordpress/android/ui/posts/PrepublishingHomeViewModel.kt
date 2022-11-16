@@ -83,59 +83,13 @@ class PrepublishingHomeViewModel @Inject constructor(
             }
 
             if (editPostRepository.status != PostStatus.PRIVATE) {
-                add(
-                        HomeUiState(
-                                actionType = PUBLISH,
-                                actionResult = editPostRepository.getEditablePost()
-                                        ?.let {
-                                            UiStringText(
-                                                    postSettingsUtils.getPublishDateLabel(
-                                                            it
-                                                    )
-                                            )
-                                        },
-                                actionClickable = true,
-                                onActionClicked = ::onActionClicked
-                        )
-                )
+                showPublicPost(editPostRepository)
             } else {
-                add(
-                        HomeUiState(
-                                actionType = PUBLISH,
-                                actionResult = editPostRepository.getEditablePost()
-                                        ?.let {
-                                            UiStringText(
-                                                    postSettingsUtils.getPublishDateLabel(
-                                                            it
-                                                    )
-                                            )
-                                        },
-                                actionTypeColor = R.color.prepublishing_action_type_disabled_color,
-                                actionResultColor = R.color.prepublishing_action_result_disabled_color,
-                                actionClickable = false,
-                                onActionClicked = null
-                        )
-                )
+                showPrivatePost(editPostRepository)
             }
 
             if (!editPostRepository.isPage) {
-                add(HomeUiState(
-                        actionType = TAGS,
-                        actionResult = getPostTagsUseCase.getTags(editPostRepository)
-                                ?.let { UiStringText(it) }
-                                ?: run { UiStringRes(R.string.prepublishing_nudges_home_tags_not_set) },
-                        actionClickable = true,
-                        onActionClicked = ::onActionClicked
-                )
-                )
-
-                val categoryString: String = getCategoriesUseCase.getPostCategoriesString(
-                        editPostRepository,
-                        site
-                )
-                if (categoryString.isNotEmpty()) {
-                    UiStringText(categoryString)
-                }
+                showNotSetPost(editPostRepository, site)
             } else {
                 UiStringRes(R.string.prepublishing_nudges_home_categories_not_set)
             }
@@ -164,6 +118,71 @@ class PrepublishingHomeViewModel @Inject constructor(
         }.toList()
 
         _uiState.postValue(prepublishingHomeUiStateList)
+    }
+
+    private fun MutableList<PrepublishingHomeItemUiState>.showNotSetPost(
+        editPostRepository: EditPostRepository,
+        site: SiteModel
+    ) {
+        add(HomeUiState(
+                actionType = TAGS,
+                actionResult = getPostTagsUseCase.getTags(editPostRepository)
+                        ?.let { UiStringText(it) }
+                        ?: run { UiStringRes(R.string.prepublishing_nudges_home_tags_not_set) },
+                actionClickable = true,
+                onActionClicked = ::onActionClicked
+        )
+        )
+
+        val categoryString: String = getCategoriesUseCase.getPostCategoriesString(
+                editPostRepository,
+                site
+        )
+        if (categoryString.isNotEmpty()) {
+            UiStringText(categoryString)
+        }
+    }
+
+    private fun MutableList<PrepublishingHomeItemUiState>.showPrivatePost(
+        editPostRepository: EditPostRepository
+    ) {
+        add(
+                HomeUiState(
+                        actionType = PUBLISH,
+                        actionResult = editPostRepository.getEditablePost()
+                                ?.let {
+                                    UiStringText(
+                                            postSettingsUtils.getPublishDateLabel(
+                                                    it
+                                            )
+                                    )
+                                },
+                        actionTypeColor = R.color.prepublishing_action_type_disabled_color,
+                        actionResultColor = R.color.prepublishing_action_result_disabled_color,
+                        actionClickable = false,
+                        onActionClicked = null
+                )
+        )
+    }
+
+    private fun MutableList<PrepublishingHomeItemUiState>.showPublicPost(
+        editPostRepository: EditPostRepository
+    ) {
+        add(
+                HomeUiState(
+                        actionType = PUBLISH,
+                        actionResult = editPostRepository.getEditablePost()
+                                ?.let {
+                                    UiStringText(
+                                            postSettingsUtils.getPublishDateLabel(
+                                                    it
+                                            )
+                                    )
+                                },
+                        actionClickable = true,
+                        onActionClicked = ::onActionClicked
+                )
+        )
     }
 
     private fun onStoryTitleChanged(storyTitle: String) {

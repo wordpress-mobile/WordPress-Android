@@ -1,5 +1,0 @@
-21.0:
-- Tautan yang benar ditambahkan untuk marble aplikasi Automattic Family di layar Tentang Kami
-- Layar peluncuran Android versi 12+ diperbarui
-- Warna teks pesan berhasil untuk login melalui kode QR diubah dari merah ke hitam
-- Layar Statistik diperbaiki agar menyertakan angka Arab Barat untuk pengguna bahasa Arab

@@ -1,0 +1,2 @@
+21.1:
+En liten, men naggande god uppdatering. Medan du håller på som bäst att redigera en sida kan du nu ange en överordnad sida i inställningarna för den underordnade sidan.

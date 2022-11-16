@@ -1,0 +1,3 @@
+21.1:
+- Anda juga akan disuguhi layar muka aplikasi baru yang ikut bergerak saat perangkat digerakkan. Selamat mencoba!
+- Saat sedang mengedit halaman, Anda sekarang bisa mengatur halaman induk langsung dari pengaturan halaman turunan.

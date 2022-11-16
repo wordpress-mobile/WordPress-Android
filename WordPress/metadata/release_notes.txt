@@ -1,1 +1,1 @@
-This update is short and sweet—when you’re in the process of editing a page, you can now set a parent page within the child page’s settings.
+If you already have site stats enabled, you won’t see a prompt to enable them again when you tap the stats widget on your device’s home screen. Nice.

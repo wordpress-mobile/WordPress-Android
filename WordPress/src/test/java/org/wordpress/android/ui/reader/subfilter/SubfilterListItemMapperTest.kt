@@ -1,9 +1,6 @@
 package org.wordpress.android.ui.reader.subfilter
 
 import com.google.gson.JsonParser
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.json.JSONObject
 import org.junit.Before
@@ -11,6 +8,9 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.any
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
 import org.wordpress.android.datasets.ReaderBlogTableWrapper
 import org.wordpress.android.models.ReaderBlog
 import org.wordpress.android.models.ReaderTag
