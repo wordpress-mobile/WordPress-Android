@@ -1,5 +1,6 @@
 package org.wordpress.android.util.config
 
+import android.util.Log
 import kotlinx.coroutines.CoroutineScope
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -57,6 +58,7 @@ class AppConfig
     }
 
     private fun buildFeatureState(feature: FeatureConfig): FeatureState {
+        Log.e("build feature state for feature", feature.remoteField.toString())
         return when {
             manualFeatureConfig.hasManualSetup(feature) -> {
                 ManuallyOverriden(manualFeatureConfig.isManuallyEnabled(feature))

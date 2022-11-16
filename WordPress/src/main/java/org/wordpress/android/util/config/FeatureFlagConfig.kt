@@ -1,6 +1,7 @@
 package org.wordpress.android.util.config
 
 import android.content.Context
+import android.util.Log
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.wordpress.android.BuildConfig
@@ -39,8 +40,26 @@ class FeatureFlagConfig
     fun init(appScope: CoroutineScope) {
         appScope.launch {
             flags = featureFlagStore.getFeatureFlags()
+            // If the flags are empty, then this means that the
             if (flags.isEmpty()) {
+                insertRemoteConfigDefaultsInDatabase()
                 refresh(appScope)
+            }
+        }
+    }
+
+    private fun insertRemoteConfigDefaultsInDatabase() {
+        RemoteConfigDefaults.remoteConfigDefaults.mapNotNull { remoteField ->
+            val defaultValue = when (remoteField.value.toString()) {
+                "true" -> true
+                "false" -> false
+                else -> null
+            }
+            defaultValue?.let {
+                featureFlagStore.insertFeatureFlagValue(
+                        remoteField.key,
+                        defaultValue
+                )
             }
         }
     }
@@ -55,7 +74,8 @@ class FeatureFlagConfig
     private suspend fun fetchRemoteFlags() {
         val response = featureFlagStore.fetchFeatureFlags(
                 buildNumber = BuildConfig.VERSION_CODE.toString(),
-                deviceId = preferences.getString(WPCOM_PUSH_DEVICE_UUID, null) ?: generateAndStoreUUID(),
+                deviceId = preferences.getString(WPCOM_PUSH_DEVICE_UUID, null)
+                        ?: generateAndStoreUUID(),
                 identifier = BuildConfig.APPLICATION_ID,
                 marketingVersion = BuildConfig.VERSION_NAME,
                 platform = FEATURE_FLAG_PLATFORM_PARAMETER
@@ -77,6 +97,8 @@ class FeatureFlagConfig
     }
 
     fun isEnabled(field: String): Boolean {
+        Log.e("flags", flags.toString())
+        Log.e("isEnabled invoked for", field)
         return flags.find { it.key == field }?.value ?: false
     }
 
@@ -85,12 +107,44 @@ class FeatureFlagConfig
     }
 
     fun getFeatureState(remoteField: String, buildConfigValue: Boolean): FeatureState {
+        Log.e("flags get feature state", flags.toString())
         val remoteFeatureFlag = flags.find { it.key == remoteField }
         return if (remoteFeatureFlag == null) {
-            appScope.launch { featureFlagStore.insertFeatureFlagValue(remoteField, buildConfigValue) }
-            FeatureState.BuildConfigValue(buildConfigValue)
+            val defaultValue = getRemoteConfigDefaultValue(remoteField)
+            if (defaultValue != null) {
+                appScope.launch {
+                    featureFlagStore.insertFeatureFlagValue(
+                            remoteField,
+                            defaultValue
+                    )
+                    flags = featureFlagStore.getFeatureFlags()
+                    Log.e(
+                            "flags default value updation for field $remoteField",
+                            defaultValue.toString()
+                    )
+                }
+                FeatureState.DefaultValue(defaultValue)
+            } else {
+                appScope.launch {
+                    featureFlagStore.insertFeatureFlagValue(
+                            remoteField,
+                            buildConfigValue
+                    )
+                    flags = featureFlagStore.getFeatureFlags()
+                }
+                FeatureState.BuildConfigValue(buildConfigValue)
+            }
         } else {
             FeatureState.RemoteValue(remoteFeatureFlag.value)
+        }
+    }
+
+    private fun getRemoteConfigDefaultValue(remoteField: String): Boolean? {
+        val defaultValue = RemoteConfigDefaults.remoteConfigDefaults[remoteField]
+        return when (defaultValue.toString()) {
+            "true" -> true
+            "false" -> false
+            else -> null
         }
     }
 
