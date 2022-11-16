@@ -35,7 +35,6 @@ class FeatureFlagsStore @Inject constructor(
         return@withDefaultContext when {
             payload.isError -> FeatureFlagsResult(payload.error)
             payload.featureFlags != null -> {
-                clearAllValues()
                 featureFlagConfigDao.insert(payload.featureFlags)
                 FeatureFlagsResult(payload.featureFlags)
             }
