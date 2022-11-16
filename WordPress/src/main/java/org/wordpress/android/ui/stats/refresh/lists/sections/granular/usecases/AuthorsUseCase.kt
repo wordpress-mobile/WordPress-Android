@@ -98,11 +98,27 @@ class AuthorsUseCase constructor(
     }
 
     override fun buildUiModel(domainModel: AuthorsModel, uiState: SelectedAuthor): List<BlockListItem> {
+        val isBlockMode = useCaseMode == BLOCK
+        return if (domainModel.authors.isEmpty()) {
+            buildUiModelForNoGroup(isBlockMode)
+        } else {
+            //TODO buildUiModelForGroups(domainModel, uiState, isBlockMode)
+        }
+    }
+
+    private fun buildUiModelForNoGroup(
+        isBlockMode: Boolean
+    ): List<BlockListItem> {
+        val items = mutableListOf<BlockListItem>()
+        if (isBlockMode) items.add(Title(R.string.stats_authors))
+        items.add(Empty(R.string.stats_no_data_for_period))
+        return items
+    }
+
+
         val items = mutableListOf<BlockListItem>()
 
-        if (useCaseMode == BLOCK) {
-            items.add(Title(R.string.stats_authors))
-        }
+
 
         if (domainModel.authors.isEmpty()) {
             items.add(Empty(R.string.stats_no_data_for_period))
