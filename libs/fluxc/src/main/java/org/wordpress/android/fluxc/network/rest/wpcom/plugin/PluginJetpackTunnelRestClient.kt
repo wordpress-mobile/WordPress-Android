@@ -15,12 +15,9 @@ import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
 import org.wordpress.android.fluxc.network.rest.wpcom.jetpacktunnel.JetpackTunnelGsonRequest
 import org.wordpress.android.fluxc.store.PluginStore.ConfigureSitePluginError
 import org.wordpress.android.fluxc.store.PluginStore.ConfiguredSitePluginPayload
-import org.wordpress.android.fluxc.store.PluginStore.FetchPluginForJetpackSiteError
-import org.wordpress.android.fluxc.store.PluginStore.FetchPluginForJetpackSiteErrorType.PLUGIN_DOES_NOT_EXIST
-import org.wordpress.android.fluxc.store.PluginStore.FetchedJetpackSitePluginPayload
+import org.wordpress.android.fluxc.store.PluginStore.FetchSitePluginError
+import org.wordpress.android.fluxc.store.PluginStore.FetchedSitePluginPayload
 import org.wordpress.android.fluxc.store.PluginStore.InstallSitePluginError
-import org.wordpress.android.fluxc.store.PluginStore.InstallSitePluginErrorType.GENERIC_ERROR
-import org.wordpress.android.fluxc.store.PluginStore.InstallSitePluginErrorType.PLUGIN_ALREADY_INSTALLED
 import org.wordpress.android.fluxc.store.PluginStore.InstalledSitePluginPayload
 import javax.inject.Inject
 import javax.inject.Named
@@ -34,10 +31,6 @@ class PluginJetpackTunnelRestClient @Inject constructor(
     accessToken: AccessToken,
     userAgent: UserAgent
 ) : BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {
-    companion object {
-        private const val PLUGIN_ALREADY_EXISTS = "Destination folder already exists."
-    }
-
     /**
      * Fetch a plugin's information from a site.
      *
@@ -54,14 +47,22 @@ class PluginJetpackTunnelRestClient @Inject constructor(
                 PluginResponseModel::class.java,
                 { response: PluginResponseModel? ->
                     response?.let {
-                        val payload = FetchedJetpackSitePluginPayload(it.toDomainModel(site.id))
-                        dispatcher.dispatch(PluginActionBuilder.newFetchedJetpackSitePluginAction(payload))
+                        val payload = FetchedSitePluginPayload(
+                            it.toDomainModel(site.id)
+                        )
+                        dispatcher.dispatch(PluginActionBuilder.newFetchedSitePluginAction(payload))
                     }
                 },
                 {
-                    val fetchError = FetchPluginForJetpackSiteError(PLUGIN_DOES_NOT_EXIST)
-                    val payload = FetchedJetpackSitePluginPayload(pluginName, fetchError)
-                    dispatcher.dispatch(PluginActionBuilder.newFetchedJetpackSitePluginAction(payload))
+                    val fetchError = FetchSitePluginError(
+                        it.type,
+                        it.message
+                    )
+                    val payload = FetchedSitePluginPayload(
+                        pluginName,
+                        fetchError
+                    )
+                    dispatcher.dispatch(PluginActionBuilder.newFetchedSitePluginAction(payload))
                 },
                 { request: WPComGsonRequest<*> -> add(request) }
         )
@@ -95,20 +96,7 @@ class PluginJetpackTunnelRestClient @Inject constructor(
                     }
                 },
                 { error ->
-                    val installError = when (error.message) {
-                        PLUGIN_ALREADY_EXISTS -> {
-                            InstallSitePluginError(
-                                    PLUGIN_ALREADY_INSTALLED,
-                                    error.message
-                            )
-                        }
-                        else -> {
-                            InstallSitePluginError(
-                                    GENERIC_ERROR,
-                                    error.message
-                            )
-                        }
-                    }
+                    val installError = InstallSitePluginError(error)
                     val payload = InstalledSitePluginPayload(site, pluginSlug, installError)
                     dispatcher.dispatch(PluginActionBuilder.newInstalledSitePluginAction(payload))
                 }
@@ -144,10 +132,7 @@ class PluginJetpackTunnelRestClient @Inject constructor(
                     }
                 },
                 { error ->
-
-                    val configurePluginError = ConfigureSitePluginError(
-                            error.apiError, error.message
-                    )
+                    val configurePluginError = ConfigureSitePluginError(error, active)
 
                     val payload = ConfiguredSitePluginPayload(site, pluginName, configurePluginError)
                     dispatcher.dispatch(PluginActionBuilder.newConfiguredSitePluginAction(payload))
