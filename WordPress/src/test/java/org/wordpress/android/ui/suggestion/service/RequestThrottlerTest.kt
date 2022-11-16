@@ -1,11 +1,11 @@
 package org.wordpress.android.ui.suggestion.service
 
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.whenever
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
 
 class RequestThrottlerTest {
     private val currentMs: Long = 1000000

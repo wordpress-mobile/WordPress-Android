@@ -1,68 +1,49 @@
 package org.wordpress.android.bloggingreminders.resolver
 
-import android.database.Cursor
-import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import org.wordpress.android.bloggingreminders.BloggingRemindersSyncAnalyticsTracker
 import org.wordpress.android.bloggingreminders.BloggingRemindersSyncAnalyticsTracker.ErrorType
 import org.wordpress.android.bloggingreminders.JetpackBloggingRemindersSyncFlag
-import org.wordpress.android.bloggingreminders.provider.BloggingRemindersProvider
 import org.wordpress.android.fluxc.model.BloggingRemindersModel
 import org.wordpress.android.fluxc.store.BloggingRemindersStore
 import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.localcontentmigration.LocalContentEntity.BloggingReminders
+import org.wordpress.android.localcontentmigration.LocalContentEntityData.BloggingRemindersData
+import org.wordpress.android.localcontentmigration.LocalMigrationContentResolver
 import org.wordpress.android.modules.APPLICATION_SCOPE
-import org.wordpress.android.provider.query.QueryResult
-import org.wordpress.android.resolver.ContentResolverWrapper
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersModelMapper
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
-import org.wordpress.android.util.publicdata.WordPressPublicData
-import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.workers.reminder.ReminderScheduler
 import javax.inject.Inject
 import javax.inject.Named
 
 class BloggingRemindersResolver @Inject constructor(
     private val jetpackBloggingRemindersSyncFlag: JetpackBloggingRemindersSyncFlag,
-    private val contextProvider: ContextProvider,
-    private val wordPressPublicData: WordPressPublicData,
-    private val queryResult: QueryResult,
-    private val contentResolverWrapper: ContentResolverWrapper,
     private val appPrefsWrapper: AppPrefsWrapper,
     private val bloggingRemindersSyncAnalyticsTracker: BloggingRemindersSyncAnalyticsTracker,
     private val siteStore: SiteStore,
     private val bloggingRemindersStore: BloggingRemindersStore,
     @Named(APPLICATION_SCOPE) private val coroutineScope: CoroutineScope,
     private val reminderScheduler: ReminderScheduler,
-    private val bloggingRemindersModelMapper: BloggingRemindersModelMapper
+    private val bloggingRemindersModelMapper: BloggingRemindersModelMapper,
+    private val localMigrationContentResolver: LocalMigrationContentResolver,
 ) {
     fun trySyncBloggingReminders(onSuccess: () -> Unit, onFailure: () -> Unit) {
         if (!shouldTrySyncBloggingReminders()) {
             onFailure()
             return
         }
-        val bloggingRemindersResultCursor = getBloggingRemindersSyncResultCursor()
-        if (bloggingRemindersResultCursor != null) {
-            val reminders = mapBloggingRemindersResultCursor(bloggingRemindersResultCursor)
-            if (reminders.isNotEmpty()) {
-                val success = setBloggingReminders(reminders)
-                if (success) onSuccess() else onFailure()
-            } else {
-                bloggingRemindersSyncAnalyticsTracker.trackSuccess(0)
-                onSuccess()
-            }
+        val (reminders) = localMigrationContentResolver.getDataForEntityType<BloggingRemindersData>(BloggingReminders)
+        if (reminders.isNotEmpty()) {
+            val success = setBloggingReminders(reminders)
+            if (success) onSuccess() else onFailure()
         } else {
-            bloggingRemindersSyncAnalyticsTracker.trackFailed(ErrorType.QueryBloggingRemindersError)
-            onFailure()
+            bloggingRemindersSyncAnalyticsTracker.trackSuccess(0)
+            onSuccess()
         }
     }
-
-    private fun mapBloggingRemindersResultCursor(bloggingRemindersResultCursor: Cursor) =
-            queryResult.getValue<List<BloggingRemindersModel>>(
-                    bloggingRemindersResultCursor,
-                    object : TypeToken<List<BloggingRemindersModel>>() {}.type
-            ) ?: emptyList()
 
     @Suppress("ReturnCount")
     private fun shouldTrySyncBloggingReminders(): Boolean {
@@ -77,15 +58,6 @@ class BloggingRemindersResolver @Inject constructor(
         bloggingRemindersSyncAnalyticsTracker.trackStart()
         appPrefsWrapper.saveIsFirstTryBloggingRemindersSyncJetpack(false)
         return true
-    }
-
-    private fun getBloggingRemindersSyncResultCursor(): Cursor? {
-        val wordpressBloggingRemindersSyncUriValue =
-                "content://${wordPressPublicData.currentPackageId()}.${BloggingRemindersProvider::class.simpleName}"
-        return contentResolverWrapper.queryUri(
-                contextProvider.getContext().contentResolver,
-                wordpressBloggingRemindersSyncUriValue
-        )
     }
 
     @Suppress("TooGenericExceptionCaught", "SwallowedException")

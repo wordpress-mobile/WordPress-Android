@@ -1,15 +1,15 @@
 package org.wordpress.android.ui.posts.editor
 
 import android.content.Context
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.verifyZeroInteractions
-import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
+import org.mockito.kotlin.any
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoInteractions
+import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.editor.gutenberg.DialogVisibility
@@ -214,8 +214,8 @@ class StorePostViewModelTest : BaseUnitTest() {
 
         verify(savePostToDbUseCase).savePostToDb(postRepository, site)
         assertThat(result).isEqualTo(SAVED_LOCALLY)
-        verifyZeroInteractions(postUtils)
-        verifyZeroInteractions(uploadService)
+        verifyNoInteractions(postUtils)
+        verifyNoInteractions(uploadService)
     }
 
     @Test

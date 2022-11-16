@@ -1,8 +1,5 @@
 package org.wordpress.android.ui.mediapicker.loader
 
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.isNull
-import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
@@ -11,6 +8,9 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
+import org.mockito.kotlin.any
+import org.mockito.kotlin.isNull
+import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.test
 import org.wordpress.android.ui.mediapicker.MediaItem

@@ -2,11 +2,6 @@ package org.wordpress.android.ui.sitecreation.theme
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.never
-import com.nhaarman.mockitokotlin2.times
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
@@ -18,6 +13,11 @@ import org.mockito.ArgumentCaptor
 import org.mockito.ArgumentMatchers.isA
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.any
+import org.mockito.kotlin.never
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.network.rest.wpcom.theme.StarterDesign
@@ -27,11 +27,11 @@ import org.wordpress.android.fluxc.store.ThemeStore.ThemeErrorType
 import org.wordpress.android.fluxc.store.ThemeStore.ThemesError
 import org.wordpress.android.test
 import org.wordpress.android.ui.PreviewMode
-import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
+import org.wordpress.android.ui.layoutpicker.LayoutPickerUiState
 import org.wordpress.android.ui.layoutpicker.LayoutPickerViewModel.DesignPreviewAction
 import org.wordpress.android.ui.layoutpicker.LayoutPickerViewModel.DesignPreviewAction.Show
+import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
 import org.wordpress.android.ui.sitecreation.theme.HomePagePickerViewModel.DesignSelectionAction
-import org.wordpress.android.ui.layoutpicker.LayoutPickerUiState
 import org.wordpress.android.ui.sitecreation.usecases.FetchHomePageLayoutsUseCase
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.NoDelayCoroutineDispatcher

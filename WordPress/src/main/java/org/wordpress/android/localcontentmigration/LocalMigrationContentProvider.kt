@@ -6,12 +6,13 @@ import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors
 import dagger.hilt.components.SingletonComponent
-import org.wordpress.android.fluxc.model.PostModel
-import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.localcontentmigration.LocalContentEntity.AccessToken
+import org.wordpress.android.localcontentmigration.LocalContentEntity.BloggingReminders
 import org.wordpress.android.localcontentmigration.LocalContentEntity.EligibilityStatus
 import org.wordpress.android.localcontentmigration.LocalContentEntity.Post
-import org.wordpress.android.localcontentmigration.LocalContentEntity.Site
+import org.wordpress.android.localcontentmigration.LocalContentEntity.ReaderPosts
+import org.wordpress.android.localcontentmigration.LocalContentEntity.Sites
+import org.wordpress.android.localcontentmigration.LocalContentEntity.UserFlags
 import org.wordpress.android.provider.query.QueryResult
 import java.lang.Integer.parseInt
 
@@ -24,6 +25,9 @@ class LocalMigrationContentProvider: TrustedQueryContentProvider() {
         fun localPostProviderHelper(): LocalPostProviderHelper
         fun localEligibilityStatusProviderHelper(): LocalEligibilityStatusProviderHelper
         fun localAccessTokenProviderHelper(): LocalAccessTokenProviderHelper
+        fun userFlagsProviderHelper(): UserFlagsProviderHelper
+        fun readeSavedPostsProviderHelper(): ReaderSavedPostsProviderHelper
+        fun bloggingRemindersProviderHelper(): BloggingRemindersProviderHelper
     }
 
     override fun query(uri: Uri): Cursor {
@@ -51,7 +55,10 @@ class LocalMigrationContentProvider: TrustedQueryContentProvider() {
             val response = when (entity) {
                 EligibilityStatus -> localEligibilityStatusProviderHelper().getData()
                 AccessToken -> localAccessTokenProviderHelper().getData()
-                Site -> localSiteProviderHelper().getData(localEntityId = localEntityId)
+                UserFlags -> userFlagsProviderHelper().getData()
+                ReaderPosts -> readeSavedPostsProviderHelper().getData()
+                BloggingReminders -> bloggingRemindersProviderHelper().getData()
+                Sites -> localSiteProviderHelper().getData()
                 Post -> localPostProviderHelper().getData(localSiteId, localEntityId)
             }
             return queryResult().createCursor(response)
@@ -61,34 +68,4 @@ class LocalMigrationContentProvider: TrustedQueryContentProvider() {
 
 interface LocalDataProviderHelper {
     fun getData(localSiteId: Int? = null, localEntityId: Int? = null): LocalContentEntityData
-}
-
-enum class LocalContentEntity(private val isSiteContent: Boolean = false) {
-    EligibilityStatus,
-    AccessToken,
-    Site,
-    Post(isSiteContent = true),
-    ;
-
-    open val contentIdCapturePattern = when (isSiteContent) {
-        true -> Regex("site/(\\d+)/${name}(?:/(\\d+))?")
-        false -> Regex(name)
-    }
-
-    open fun getPathForContent(localSiteId: Int?, localEntityId: Int?) = when (this.isSiteContent) {
-        true -> "site/${localSiteId}/${name}${ localEntityId?.let { "/${it}" } ?: "" }"
-        false -> name
-    }
-}
-
-sealed class LocalContentEntityData {
-    data class EligibilityStatusData(
-        val isEligible: Boolean,
-        val siteCount: Int,
-    ): LocalContentEntityData()
-
-    data class AccessTokenData(val token: String): LocalContentEntityData()
-    data class SitesData(val sites: List<SiteModel>): LocalContentEntityData()
-    data class PostsData(val localIds: List<Int>): LocalContentEntityData()
-    data class PostData(val post: PostModel) : LocalContentEntityData()
 }

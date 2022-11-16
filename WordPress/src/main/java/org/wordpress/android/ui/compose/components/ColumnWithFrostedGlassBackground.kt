@@ -22,6 +22,7 @@ import androidx.compose.ui.layout.SubcomposeLayout
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
+import androidx.compose.ui.unit.dp
 import org.wordpress.android.ui.compose.components.SlotsEnum.Buttons
 import org.wordpress.android.ui.compose.components.SlotsEnum.ClippedBackground
 
@@ -36,12 +37,16 @@ private enum class SlotsEnum { Buttons, ClippedBackground }
 fun ColumnWithTopGlassBorder(
     backgroundColor: Color,
     borderColor: Color,
+    borderThickness: Dp = 1.dp,
     content: @Composable ColumnScope.() -> Unit
 ) {
     Column(
             modifier = Modifier.background(backgroundColor)
     ) {
-        Divider(color = borderColor)
+        Divider(
+                color = borderColor,
+                thickness = borderThickness,
+        )
         content()
     }
 }

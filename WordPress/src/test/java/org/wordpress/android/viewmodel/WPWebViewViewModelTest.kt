@@ -3,7 +3,6 @@ package org.wordpress.android.viewmodel
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
-import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.AssertionsForClassTypes.assertThat
 import org.junit.Before
 import org.junit.Rule
@@ -11,12 +10,13 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.whenever
 import org.wordpress.android.test
-import org.wordpress.android.ui.WPWebViewUsageCategory
 import org.wordpress.android.ui.PreviewMode
 import org.wordpress.android.ui.PreviewMode.DESKTOP
 import org.wordpress.android.ui.PreviewMode.MOBILE
 import org.wordpress.android.ui.PreviewMode.TABLET
+import org.wordpress.android.ui.WPWebViewUsageCategory
 import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
