@@ -93,11 +93,23 @@ class ClicksUseCase constructor(
     }
 
     override fun buildUiModel(domainModel: ClicksModel, uiState: SelectedClicksGroup): List<BlockListItem> {
-        val items = mutableListOf<BlockListItem>()
-
-        if (useCaseMode == BLOCK) {
-            items.add(Title(R.string.stats_clicks))
+        val isBlockMode = useCaseMode == BLOCK
+        return if (domainModel.groups.isEmpty()) {
+            buildUiModelForNoGroup(isBlockMode)
+        } else {
+            //TODO buildUiModelForGroups(domainModel, uiState, isBlockMode)
         }
+    }
+
+    private fun buildUiModelForNoGroup(
+        isBlockMode: Boolean
+    ): List<BlockListItem> {
+        val items = mutableListOf<BlockListItem>()
+        if (isBlockMode) items.add(Title(R.string.stats_clicks))
+        items.add(Empty(R.string.stats_no_data_for_period))
+        return items
+    }
+
 
         if (domainModel.groups.isEmpty()) {
             items.add(Empty(R.string.stats_no_data_for_period))
