@@ -43,6 +43,9 @@ class LocalMigrationOrchestrator @Inject constructor(
     private val siteStore: SiteStore,
 ) {
     fun tryLocalMigration() {
+        originalTryLocalMigration()
+    }
+    private fun originalTryLocalMigration() {
         localMigrationContentResolver.getResultForEntityType<EligibilityStatusData>(EligibilityStatus)
         val isFeatureFlagEnabled = jetpackSharedLoginFlag.isEnabled()
 
