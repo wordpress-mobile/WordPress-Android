@@ -1,6 +1,5 @@
 package org.wordpress.android
 
-import com.nhaarman.mockitokotlin2.KStubbing
 import kotlinx.coroutines.CancellableContinuation
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
@@ -9,6 +8,7 @@ import kotlinx.coroutines.Dispatchers.Unconfined
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import org.mockito.Mockito
+import org.mockito.kotlin.KStubbing
 import org.mockito.stubbing.OngoingStubbing
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext

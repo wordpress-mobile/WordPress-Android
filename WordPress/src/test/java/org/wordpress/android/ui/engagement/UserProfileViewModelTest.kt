@@ -1,13 +1,13 @@
 package org.wordpress.android.ui.engagement
 
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.times
-import com.nhaarman.mockitokotlin2.verify
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mock
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.ui.engagement.BottomSheetAction.HideBottomSheet
 import org.wordpress.android.ui.engagement.BottomSheetAction.ShowBottomSheet

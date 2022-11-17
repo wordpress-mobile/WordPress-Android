@@ -3,10 +3,10 @@ package org.wordpress.android.provider.query
 import android.database.MatrixCursor
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.whenever
 import org.junit.Assert
 import org.junit.Test
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
 
 class QueryResultTest {
     private val classToTest = QueryResult()

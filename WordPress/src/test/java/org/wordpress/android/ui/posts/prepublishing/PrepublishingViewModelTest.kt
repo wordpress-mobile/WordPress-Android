@@ -1,9 +1,9 @@
 package org.wordpress.android.ui.posts.prepublishing
 
-import com.nhaarman.mockitokotlin2.mock
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
+import org.mockito.kotlin.mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType
 import org.wordpress.android.ui.posts.PrepublishingNavigationTarget

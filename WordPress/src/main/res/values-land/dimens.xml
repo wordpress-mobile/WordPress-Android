@@ -6,4 +6,8 @@
     <dimen name="prologue_promo_illustration_margin_bottom">48dp</dimen>
     <dimen name="app_bar_with_site_info_tabs_height">174dp</dimen>
 
+    <!-- Jetpack Migration Flow -->
+    <dimen name="help_logout_button_margin">0dp</dimen>
+    <dimen name="help_logout_button_margin_bottom">0dp</dimen>
+
 </resources>

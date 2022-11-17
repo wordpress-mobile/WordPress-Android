@@ -1,8 +1,8 @@
 package org.wordpress.android.ui.bloggingprompts.onboarding.usecase
 
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.verify
 import org.junit.Test
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 
 class SaveFirstBloggingPromptsOnboardingUseCaseTest {

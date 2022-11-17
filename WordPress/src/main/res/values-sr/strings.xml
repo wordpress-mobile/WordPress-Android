@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-02-14 03:28:36+0000
+Translation-Revision-Date: 2022-11-07 08:08:01+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.3
 Language: sr_RS
 -->
 <resources>
+    <string name="post_settings_parent">Надређена страна</string>
+    <string name="post_settings_page_attributes">Особине стране</string>
+    <string name="about_automattic_contribute_item_title">Допринесите</string>
+    <string name="about_news">Вести</string>
+    <string name="post_settings_author">Аутор</string>
     <string name="reader_comment_menu_trash">Пребаци у Отпад</string>
     <string name="reader_comment_menu_spam">Означи као Непожељно</string>
     <string name="reader_comment_menu_unapprove">Поништи одобрење</string>
@@ -49,10 +54,12 @@ Language: sr_RS
     <string name="activity_log_backup_download_notice_dismiss_action">Одбаци</string>
     <string name="threat_fix_all_status_success_message_plural">Претње су успешно исправљене.</string>
     <string name="threat_fix_all_confirmation_message_plural">Молимо потврдите да желите да исправите свих %s активних претњи.</string>
-    <string name="scan_idle_threats_description_plural">Скенирањем је пронађено %1s потенцијалних претњи са %2s. Молимо прегледајте их и примените радњу или притисните дугме за поправку свих. Ми смо %3$s ако смо Вам потребни.</string>
+    <string name="scan_idle_threats_description_plural">Скенирањем је пронађено %1$s потенцијалних претњи са %2$s. Молимо прегледајте их и примените радњу или притисните дугме за поправку свих. Ми смо %3$s ако смо Вам потребни.</string>
     <string name="quick_start_card_menu_hide">Сакриј за сада</string>
     <string name="quick_start_list_follow_site_subtitle">Откријте и пратите веб места која Вас инспиришу.</string>
     <string name="quick_start_list_enable_sharing_title">Дељење на друштвеним мрежама</string>
+    <string name="quick_start_list_view_site_title">Видите своје веб место</string>
+    <string name="quick_start_list_check_stats_title">Провери статистику свог сајта</string>
     <string name="restore_warning_action_button">Потврди</string>
     <string name="gutenberg_native_replace_file">Замени датотеку</string>
     <string name="gutenberg_native_replace_audio">Замени звучни запис</string>
@@ -120,6 +127,7 @@ Language: sr_RS
     <string name="label_done_button">Готово</string>
     <string name="label_next_button">Следеће</string>
     <string name="delete_button_alt">Обриши</string>
+    <string name="hpp_choose_error">Дошло је до грешке при одабиру дизајна.</string>
     <string name="hpp_error_subtitle">Додирните на покушај поново када се поново повежете на мрежу.</string>
     <string name="dialog_discard_story_message_edit">Било које измене неће бити сачуване.</string>
     <string name="hpp_retry_error">Молимо проверите своју интернет везу и покушајте поново.</string>
@@ -144,6 +152,7 @@ Language: sr_RS
     <string name="login_prologue_fifth_caption_one">Мојих десет најбољих кафића</string>
     <string name="login_prologue_second_subtitle_two">Врло сам инспирисан радом фотографа Камерона Карстена. Испробаваћу ове технике на свом следећем</string>
     <string name="login_prologue_fifth_subtitle_two">Веб новости</string>
+    <string name="login_prologue_second_subtitle_one">Инспиришите се</string>
     <string name="login_prologue_title_second">Помоћу моћног уређивача можете да објављујете у покрету.</string>
     <string name="login_prologue_title_third">Видите коментаре и обавештења у реалном времену.</string>
     <string name="login_prologue_title_first">Добродошли у најпопуларнији градитељ веб страница на свету.</string>
@@ -151,6 +160,7 @@ Language: sr_RS
     <string name="login_prologue_title_fifth">Пратите своје омиљене локације и откривајте нове блогове.</string>
     <string name="media_loading_failed">Учитавање садржаја није успело</string>
     <string name="reader_discover_recommended_blogs_header">Веб места за праћење</string>
+    <string name="gutenberg_native_s_is_not_fully_supported">\'%s\' није у потпуности подржан</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">Дајемо све од себе да додамо нове блокове са сваком објавом.</string>
     <string name="gutenberg_native_help_button">Дугме помоћи</string>
     <string name="gutenberg_native_edit_using_web_editor">Уреди помоћу веб уређивача</string>
@@ -272,6 +282,7 @@ Language: sr_RS
     <string name="quick_start_dialog_update_site_title_message_short">Додирни &lt;b&gt;%1$s&lt;/b&gt; за постављање новог наслова</string>
     <string name="quick_start_list_update_site_title_title">Проверите наслов свог сајта</string>
     <string name="gutenberg_native_s_block_options">опције блока %s</string>
+    <string name="gutenberg_native_remove_block">Уклони блок</string>
     <string name="gutenberg_native_duplicate_block">Дуплирај блок</string>
     <string name="gutenberg_native_copy_block">Копирај блок</string>
     <string name="gutenberg_native_copied_block">Ископиран блок</string>
@@ -322,6 +333,7 @@ Language: sr_RS
     <string name="site_settings_posts_page">Страница чланака</string>
     <string name="site_settings_static_homepage">Статична почетна страница</string>
     <string name="site_settings_classic_blog">Класичан блог</string>
+    <string name="suggestion_invalid">%1$s није исправан %2$s</string>
     <string name="site_settings_accept_homepage">Прихвати</string>
     <string name="site_settings_failed_to_load_pages">Неуспело учитавање страница</string>
     <string name="site_settings_homepage_settings">Подешавања почетне странице</string>
@@ -340,6 +352,7 @@ Language: sr_RS
     <string name="photo_picker_video_title">Изабери видео запис</string>
     <string name="photo_picker_photo_or_video_title">Одаберите садржај</string>
     <string name="photo_picker_use_media">Користи овај садржај</string>
+    <string name="feature_announcement_dialog_label">Шта је ново у %s</string>
     <string name="copy_link_address">Копирајте адресу линка</string>
     <string name="comment_share_link_via">Поделите путем</string>
     <string name="comment_toast_err_share_intent">Није могуће поделити</string>
@@ -659,6 +672,9 @@ Language: sr_RS
     <string name="stats_insights_popular">Најпопуларније време</string>
     <string name="stats_select_next_period_description">Одабери наредни период</string>
     <string name="stats_select_previous_period_description">Одабери претходни период</string>
+    <string name="stats_most_popular_percent_views">%1$s прегледа</string>
+    <string name="stats_traffic_change">%1$s (%2$s)</string>
+    <string name="stats_traffic_increase">+%1$s (%2$s)</string>
     <string name="new_site_creation_clear_all_content_description">Очисти</string>
     <string name="notification_new_site_creation_failed">Дошло је до проблема</string>
     <string name="notification_new_site_creation_title">Креирај сајт</string>
@@ -801,6 +817,7 @@ Language: sr_RS
     <string name="quick_start_dialog_enable_sharing_message_short_sharing">Додирни %1$s Дељење %2$s за наставак</string>
     <string name="quick_start_dialog_publish_post_title">Објави чланак</string>
     <string name="quick_start_dialog_need_help_button_negative">Не, хвала</string>
+    <string name="quick_start_dialog_follow_sites_title">Повежи са другим веб местима</string>
     <string name="quick_start_button_positive">Крени</string>
     <string name="quick_start_button_negative_short">Откажи</string>
     <string name="quick_start_button_negative">Не сада</string>
@@ -926,6 +943,7 @@ Language: sr_RS
     <string name="notification_settings_item_your_sites_all_followed_sites">Сви моји праћени сајтови</string>
     <string name="notification_settings_category_followed_sites">Праћени сајтови</string>
     <string name="dialog_confirm_delete_permanently_post">Да ли сте сигурни да желите да трајно обришете овај чланак?</string>
+    <string name="comment_title">%1$s на %2$s</string>
     <string name="notification_channel_important_title">Важно</string>
     <string name="notification_channel_general_title">Опште</string>
     <string name="photo_picker_use_photo">Користи ову фотографију</string>
@@ -1243,6 +1261,7 @@ Language: sr_RS
     <string name="connect_more">Повежи други сајт</string>
     <string name="enter_verification_code">Скоро смо тамо! Унесите верификациони код из апликације Authenticator.</string>
     <string name="next">Следећи</string>
+    <string name="open_mail">Отвори пошту</string>
     <string name="image_optimization_promo_title">Укључи оптимизацију слика</string>
     <string name="me_profile_photo">Профилна слика</string>
     <string name="leave_off">Остави искључено</string>
@@ -1421,12 +1440,19 @@ Language: sr_RS
     <string name="error_fetch_email_followers_list">Нисмо могли да преузмемо емаилове пратиоца сајта</string>
     <string name="error_fetch_followers_list">Нисмо могли да преузмемо пратиоце сајта</string>
     <string name="editor_failed_uploads_switch_html">Неки од медија које сте послали нису успешно послати. У овом тренутку не можете да се пребаците у HTML мод.\nЖелите ли да уклоните све неуспешне медије и да наставите?</string>
+    <string name="visual_editor">Визуелни едитор</string>
+    <string name="image_thumbnail">Умањена слика</string>
     <string name="image_width">Ширина</string>
     <string name="image_link_to">Линк ка</string>
     <string name="image_caption">Натпис</string>
     <string name="image_settings_save_toast">Промене сачуване</string>
+    <string name="image_alt_text">Алтернативни текст</string>
     <string name="image_settings_dismiss_dialog_title">Одбаци сачуване промене?</string>
     <string name="stop_upload_dialog_title">Заустави слање?</string>
+    <string name="alert_error_adding_media">Дошло је до грешке током додавања медија</string>
+    <string name="alert_action_while_uploading">Тренутно додајете медиј. Молимо вас сачекајте док се додавање не заврши.</string>
+    <string name="alert_insert_image_html_mode">Није могуће убацити медиј директно у HTML peжиму. Молимo вас пребаците се на визуални режим.</string>
+    <string name="uploading_gallery_placeholder">Отпремам галерију…</string>
     <string name="invite_error_for_username">%1$s: %2$s</string>
     <string name="tap_to_try_again">Притисните да пробате поново!</string>
     <string name="invite_sent">Позивница је успешно послата</string>
@@ -1491,6 +1517,7 @@ Language: sr_RS
     <string name="comments_empty_list_filtered_trashed">Нема коментара у смећу</string>
     <string name="comments_empty_list_filtered_pending">Нема коментара који чекају</string>
     <string name="comments_empty_list_filtered_approved">Нема одобрених коментара</string>
+    <string name="button_skip">Прескочи</string>
     <string name="alignment_center">Центар</string>
     <string name="post_format_video">Видео</string>
     <string name="post_format_status">Статус</string>
@@ -1955,6 +1982,7 @@ Language: sr_RS
     <string name="ok">У реду</string>
     <string name="done">обављено</string>
     <string name="link_enter_url">URL</string>
+    <string name="uploading">Отпремање…</string>
     <string name="app_title">Вордпрес за Андроид</string>
     <string name="tos">Услови сервиса</string>
     <string name="version">Издање</string>

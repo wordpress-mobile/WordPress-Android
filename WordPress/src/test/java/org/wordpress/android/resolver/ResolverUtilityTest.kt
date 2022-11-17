@@ -3,15 +3,17 @@ package org.wordpress.android.resolver
 import android.database.SQLException
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteStatement
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.never
-import com.nhaarman.mockitokotlin2.times
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.ArgumentMatchers.anyString
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.never
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.fluxc.model.QuickStartTaskModel
 import org.wordpress.android.fluxc.model.SiteModel
 
 class ResolverUtilityTest : BaseUnitTest() {
@@ -84,5 +86,12 @@ class ResolverUtilityTest : BaseUnitTest() {
         verify(sqliteDatabase, times(2)).compileStatement(
                 "UPDATE SQLITE_SEQUENCE SET seq=? WHERE name='SiteModel'"
         )
+    }
+
+    @Test(expected = SQLException::class)
+    fun `copyQsDataWithIndexes fails if the copy of one table fails`() {
+        whenever(sqliteStatement.execute()).thenThrow(SQLException("Error"))
+        val result = resolverUtility.copyQsDataWithIndexes(listOf(), listOf(QuickStartTaskModel()))
+        assertThat(result).isFalse()
     }
 }
