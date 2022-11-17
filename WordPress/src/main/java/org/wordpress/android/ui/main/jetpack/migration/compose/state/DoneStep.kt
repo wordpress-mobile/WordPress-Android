@@ -16,7 +16,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -25,7 +24,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.wordpress.android.R
-import org.wordpress.android.R.dimen
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.utils.htmlToAnnotatedString
 import org.wordpress.android.ui.compose.utils.uiStringText
@@ -47,18 +45,10 @@ fun DoneStep(uiState: UiState.Content.Done) = with(uiState) {
                         .verticalScroll(scrollState)
                         .weight(1f)
         ) {
-            ScreenIcon(
-                    iconRes = screenIconRes,
-                    modifier = Modifier.padding(horizontal = dimensionResource(dimen.jp_migration_padding_horizontal))
-            )
-            Title(
-                    text = uiStringText(title),
-                    modifier = Modifier.padding(horizontal = dimensionResource(dimen.jp_migration_padding_horizontal))
-            )
-            Subtitle(
-                    text = uiStringText(subtitle),
-                    modifier = Modifier.padding(horizontal = dimensionResource(dimen.jp_migration_padding_horizontal))
-            )
+            ScreenIcon(iconRes = screenIconRes)
+            Title(text = uiStringText(title))
+            Subtitle(text = uiStringText(subtitle))
+
             Spacer(modifier = Modifier.weight(0.5f))
             Image(
                     painter = painterResource(deleteWpIcon),

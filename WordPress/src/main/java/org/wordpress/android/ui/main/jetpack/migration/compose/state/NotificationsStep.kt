@@ -10,12 +10,10 @@ import androidx.compose.material.Divider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
-import org.wordpress.android.R.dimen
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.utils.uiStringText
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.NotificationsPrimaryButton
@@ -37,22 +35,10 @@ fun NotificationsStep(uiState: UiState.Content.Notifications) = with(uiState) {
                         .verticalScroll(scrollState)
                         .weight(1f)
         ) {
-            ScreenIcon(
-                    iconRes = screenIconRes,
-                    modifier = Modifier.padding(horizontal = dimensionResource(dimen.jp_migration_padding_horizontal))
-            )
-            Title(
-                    text = uiStringText(title),
-                    modifier = Modifier.padding(horizontal = dimensionResource(dimen.jp_migration_padding_horizontal))
-            )
-            Subtitle(
-                    text = uiStringText(subtitle),
-                    modifier = Modifier.padding(horizontal = dimensionResource(dimen.jp_migration_padding_horizontal))
-            )
-            Message(
-                    text = uiStringText(message),
-                    modifier = Modifier.padding(horizontal = dimensionResource(dimen.jp_migration_padding_horizontal))
-            )
+            ScreenIcon(iconRes = screenIconRes)
+            Title(text = uiStringText(title))
+            Subtitle(text = uiStringText(subtitle))
+            Message(text = uiStringText(message))
         }
         Column {
             Divider(
