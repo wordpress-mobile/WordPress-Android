@@ -3,21 +3,17 @@ package org.wordpress.android.ui.main.jetpack.migration.compose.state
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Divider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.utils.uiStringText
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.NotificationsPrimaryButton
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState
+import org.wordpress.android.ui.main.jetpack.migration.compose.components.ButtonsColumn
 import org.wordpress.android.ui.main.jetpack.migration.compose.components.Message
 import org.wordpress.android.ui.main.jetpack.migration.compose.components.PrimaryButton
 import org.wordpress.android.ui.main.jetpack.migration.compose.components.ScreenIcon
@@ -40,15 +36,10 @@ fun NotificationsStep(uiState: UiState.Content.Notifications) = with(uiState) {
             Subtitle(text = uiStringText(subtitle))
             Message(text = uiStringText(message))
         }
-        Column {
-            Divider(
-                    color = colorResource(R.color.gray_10),
-                    thickness = 0.5.dp,
-            )
+        ButtonsColumn {
             PrimaryButton(
                     text = uiStringText(primaryActionButton.text),
                     onClick = primaryActionButton.onClick,
-                    modifier = Modifier.padding(bottom = 50.dp),
             )
         }
     }

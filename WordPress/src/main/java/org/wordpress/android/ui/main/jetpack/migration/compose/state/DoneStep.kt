@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -29,6 +28,7 @@ import org.wordpress.android.ui.compose.utils.htmlToAnnotatedString
 import org.wordpress.android.ui.compose.utils.uiStringText
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.DonePrimaryButton
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState
+import org.wordpress.android.ui.main.jetpack.migration.compose.components.ButtonsColumn
 import org.wordpress.android.ui.main.jetpack.migration.compose.components.PrimaryButton
 import org.wordpress.android.ui.main.jetpack.migration.compose.components.ScreenIcon
 import org.wordpress.android.ui.main.jetpack.migration.compose.components.Subtitle
@@ -71,15 +71,10 @@ fun DoneStep(uiState: UiState.Content.Done) = with(uiState) {
             )
             Spacer(modifier = Modifier.weight(0.5f))
         }
-        Column {
-            Divider(
-                    color = colorResource(R.color.gray_10),
-                    thickness = 0.5.dp,
-            )
+        ButtonsColumn {
             PrimaryButton(
                     text = uiStringText(primaryActionButton.text),
                     onClick = primaryActionButton.onClick,
-                    modifier = Modifier.padding(bottom = 50.dp),
             )
         }
     }
