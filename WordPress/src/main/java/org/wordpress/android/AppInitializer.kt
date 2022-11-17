@@ -81,6 +81,7 @@ import org.wordpress.android.push.NotificationType
 import org.wordpress.android.support.ZendeskHelper
 import org.wordpress.android.ui.ActivityId
 import org.wordpress.android.ui.debug.cookies.DebugCookieManager
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter
@@ -153,6 +154,7 @@ class AppInitializer @Inject constructor(
     @Inject lateinit var debugCookieManager: DebugCookieManager
     @Inject @Named(APPLICATION_SCOPE) lateinit var appScope: CoroutineScope
     @Inject lateinit var selectedSiteRepository: SelectedSiteRepository
+    @Inject lateinit var jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil
 
     // For development and production `AnalyticsTrackerNosara`, for testing a mocked `Tracker` will be injected.
     @Inject lateinit var tracker: Tracker
@@ -216,6 +218,8 @@ class AppInitializer @Inject constructor(
     fun init() {
         dispatcher.register(this)
         appConfig.init()
+
+        jetpackFeatureRemovalOverlayUtil.initializeFeatureShownOn()
 
         // Upload any encrypted logs that were queued but not yet uploaded
         encryptedLogging.start()
