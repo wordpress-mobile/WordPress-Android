@@ -5,6 +5,9 @@ import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.localcontentmigration.EligibilityState.Eligible
 import org.wordpress.android.localcontentmigration.EligibilityState.Ineligible.WPNotLoggedIn
 import org.wordpress.android.localcontentmigration.LocalContentEntityData.EligibilityStatusData
+import org.wordpress.android.localcontentmigration.LocalMigrationError.Ineligibility
+import org.wordpress.android.localcontentmigration.LocalMigrationResult.Failure
+import org.wordpress.android.localcontentmigration.LocalMigrationResult.Success
 import javax.inject.Inject
 
 class LocalEligibilityStatusProviderHelper @Inject constructor(
@@ -23,4 +26,12 @@ class LocalEligibilityStatusProviderHelper @Inject constructor(
                 }
         )
     }
+}
+
+fun <E: LocalMigrationError> LocalMigrationResult<EligibilityStatusData, E>.validate() = when (this) {
+    is Success -> when(this.value.eligibilityState) {
+        is Eligible -> this
+        is WPNotLoggedIn -> Failure(Ineligibility(this.value.eligibilityState))
+    }
+    is Failure -> this
 }

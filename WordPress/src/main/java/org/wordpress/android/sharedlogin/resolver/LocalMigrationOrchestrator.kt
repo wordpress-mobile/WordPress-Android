@@ -16,6 +16,13 @@ import org.wordpress.android.localcontentmigration.LocalContentEntityData.PostDa
 import org.wordpress.android.localcontentmigration.LocalContentEntityData.PostsData
 import org.wordpress.android.localcontentmigration.LocalContentEntityData.SitesData
 import org.wordpress.android.localcontentmigration.LocalMigrationContentResolver
+import org.wordpress.android.localcontentmigration.LocalMigrationError
+import org.wordpress.android.localcontentmigration.LocalMigrationError.Ineligibility
+import org.wordpress.android.localcontentmigration.LocalMigrationError.ProviderError
+import org.wordpress.android.localcontentmigration.LocalMigrationResult.Success
+import org.wordpress.android.localcontentmigration.otherwise
+import org.wordpress.android.localcontentmigration.then
+import org.wordpress.android.localcontentmigration.validate
 import org.wordpress.android.reader.savedposts.resolver.ReaderSavedPostsResolver
 import org.wordpress.android.resolver.ResolverUtility
 import org.wordpress.android.sharedlogin.JetpackSharedLoginFlag
@@ -43,10 +50,22 @@ class LocalMigrationOrchestrator @Inject constructor(
     private val siteStore: SiteStore,
 ) {
     fun tryLocalMigration() {
-        originalTryLocalMigration()
+        localMigrationContentResolver.getResultForEntityType<EligibilityStatusData>(EligibilityStatus).validate()
+                .then {
+                    originalTryLocalMigration()
+                    Success(it)
+                }.otherwise(::handleErrors)
+    }
+
+    @Suppress("ForbiddenComment")
+    // TODO: Handle the errors appropriately
+    private fun handleErrors(error: LocalMigrationError) {
+        when(error) {
+            is ProviderError -> Unit
+            is Ineligibility -> Unit
+        }
     }
     private fun originalTryLocalMigration() {
-        localMigrationContentResolver.getResultForEntityType<EligibilityStatusData>(EligibilityStatus)
         val isFeatureFlagEnabled = jetpackSharedLoginFlag.isEnabled()
 
         if (!isFeatureFlagEnabled) {

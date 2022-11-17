@@ -5,6 +5,7 @@ import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.QuickStartStatusModel
 import org.wordpress.android.fluxc.model.QuickStartTaskModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.localcontentmigration.EligibilityState.Ineligible
 import org.wordpress.android.localcontentmigration.LocalMigrationResult.Failure
 import org.wordpress.android.localcontentmigration.LocalMigrationResult.Success
 import org.wordpress.android.models.ReaderPostList
@@ -58,6 +59,7 @@ sealed class LocalMigrationError: LocalContentEntityData() {
         data class NullCursor(val forEntity: LocalContentEntity): ProviderError()
         data class ParsingException(val forEntity: LocalContentEntity): ProviderError()
     }
+    data class Ineligibility(val reason: Ineligible): LocalMigrationError()
 }
 
 sealed class LocalMigrationResult<out T: LocalContentEntityData, out E: LocalMigrationError> {
