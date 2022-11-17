@@ -28,12 +28,15 @@ enum class LocalContentEntity(private val isIdentifiable: Boolean = false) {
     }
 }
 
-sealed class LocalContentEntityData {
-    data class EligibilityStatusData(
-        val isEligible: Boolean,
-        val siteCount: Int,
-    ): LocalContentEntityData()
+sealed class EligibilityState {
+    object Eligible: EligibilityState()
+    sealed class Ineligible: EligibilityState() {
+        object WPNotLoggedIn: Ineligible()
+    }
+}
 
+sealed class LocalContentEntityData {
+    data class EligibilityStatusData(val eligibilityState: EligibilityState): LocalContentEntityData()
     data class AccessTokenData(val token: String): LocalContentEntityData()
     data class UserFlagsData(
         val flags: Map<String, Any?>,
