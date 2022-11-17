@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.jetpackoverlay
 
 import android.content.SharedPreferences
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayPhase.PHASE_ONE
 import org.wordpress.android.ui.jetpackoverlay.JetpackOverlayConnectedFeature.NOTIFICATIONS
 import org.wordpress.android.ui.jetpackoverlay.JetpackOverlayConnectedFeature.READER
 import org.wordpress.android.ui.jetpackoverlay.JetpackOverlayConnectedFeature.STATS
@@ -33,6 +34,13 @@ class JetpackFeatureOverlayShownTracker @Inject constructor(private val sharedPr
         timeStamp: Long
     ) {
         sharedPrefs.edit().putLong(jetpackOverlayConnectedFeature.getPreferenceKey(phase), timeStamp).apply()
+    }
+
+    // For testing purposes only
+    fun clear() {
+        sharedPrefs.edit().remove(STATS.getPreferenceKey(PHASE_ONE)).apply()
+        sharedPrefs.edit().remove(NOTIFICATIONS.getPreferenceKey(PHASE_ONE)).apply()
+        sharedPrefs.edit().remove(READER.getPreferenceKey(PHASE_ONE)).apply()
     }
 }
 
