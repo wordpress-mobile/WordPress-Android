@@ -48,7 +48,11 @@ sealed class LocalContentEntityData {
 }
 
 sealed class LocalMigrationError: LocalContentEntityData() {
-    data class ProviderError(val message: String?): LocalMigrationError()
+    sealed class ProviderError: LocalMigrationError() {
+        data class NullValueFromQuery(val forEntity: LocalContentEntity): ProviderError()
+        data class NullCursor(val forEntity: LocalContentEntity): ProviderError()
+        data class ParsingException(val forEntity: LocalContentEntity): ProviderError()
+    }
 }
 
 sealed class LocalMigrationResult<out T: LocalContentEntityData, out E: LocalMigrationError> {

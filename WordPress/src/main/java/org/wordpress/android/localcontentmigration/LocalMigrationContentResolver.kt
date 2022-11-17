@@ -3,7 +3,9 @@ package org.wordpress.android.localcontentmigration
 import android.content.ContentResolver
 import android.database.Cursor
 import android.net.Uri
-import org.wordpress.android.localcontentmigration.LocalMigrationError.ProviderError
+import org.wordpress.android.localcontentmigration.LocalMigrationError.ProviderError.NullCursor
+import org.wordpress.android.localcontentmigration.LocalMigrationError.ProviderError.NullValueFromQuery
+import org.wordpress.android.localcontentmigration.LocalMigrationError.ProviderError.ParsingException
 import org.wordpress.android.localcontentmigration.LocalMigrationResult.Failure
 import org.wordpress.android.localcontentmigration.LocalMigrationResult.Success
 import org.wordpress.android.provider.query.QueryResult
@@ -17,11 +19,10 @@ import javax.inject.Inject
     builder: Uri.Builder,
     entityType: LocalContentEntity,
     entityId: Int?,
-) : Cursor {
+) : Cursor? {
     val entityPath = entityType.getPathForContent(entityId)
     builder.appendEncodedPath(entityPath)
-    val cursor = query(builder.build(), arrayOf(), "", arrayOf(), "")
-    return checkNotNull(cursor) { "Provider failed for $entityType" }
+    return query(builder.build(), arrayOf(), "", arrayOf(), "")
 }
 
 
@@ -36,7 +37,7 @@ class LocalMigrationContentResolver @Inject constructor(
     ) = getResultForEntityType<T>(entityType, entityId).let {
         when (it) {
             is Success -> it.value
-            is Failure -> error(it.error.message ?: "Unknown error")
+            is Failure -> error(it.error)
         }
     }
 
@@ -53,11 +54,13 @@ class LocalMigrationContentResolver @Inject constructor(
         }
     }.let { uriBuilder ->
         with (contextProvider.getContext().contentResolver) {
-            query(uriBuilder, entityType, entityId).getValue<T>()?.let {
-                Success(it)
-            } ?: run {
-                Failure(ProviderError("Failed to parse data from provider for $entityType"))
-            }
+            val cursor = query(uriBuilder, entityType, entityId)
+            if (cursor == null) Failure(NullCursor(entityType))
+            else runCatching {
+                val value = cursor.getValue<T>()
+                if (value == null) Failure(NullValueFromQuery(entityType))
+                else Success(value)
+            }.getOrDefault(Failure(ParsingException(entityType)))
         }
     }
 }
