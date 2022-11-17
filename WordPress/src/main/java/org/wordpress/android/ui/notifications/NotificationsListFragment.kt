@@ -177,6 +177,7 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
             }
             setSelectedTab(lastTabPosition)
         }
+        viewModel.onResume()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

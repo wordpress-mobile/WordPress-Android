@@ -108,11 +108,6 @@ class ReaderViewModel @Inject constructor(
         if (initialized) return
         loadTabs()
         if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) showJetpackPoweredBottomSheet()
-        if(jetpackFeatureRemovalOverlayUtil.shouldShowFeatureSpecificJetpackOverlay(READER)) showJetpackOverlay()
-    }
-
-    private fun showJetpackOverlay() {
-        _showJetpackOverlay.value = Event(true)
     }
 
     private fun showJetpackPoweredBottomSheet() {
@@ -261,6 +256,11 @@ class ReaderViewModel @Inject constructor(
         appPrefsWrapper.getReaderTag()?.let {
             trackReaderTabShownIfNecessary(it)
         }
+        if (jetpackFeatureRemovalOverlayUtil.shouldShowFeatureSpecificJetpackOverlay(READER)) showJetpackOverlay()
+    }
+
+    private fun showJetpackOverlay() {
+        _showJetpackOverlay.value = Event(true)
     }
 
     fun onScreenInBackground(isChangingConfigurations: Boolean) {

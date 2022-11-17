@@ -28,16 +28,18 @@ class NotificationsListViewModel@Inject constructor(
 
     init {
         if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) showJetpackPoweredBottomSheet()
+    }
 
+    private fun showJetpackPoweredBottomSheet() {
+//        _showJetpackPoweredBottomSheet.value = Event(true)
+    }
+
+    fun onResume() {
         if(jetpackFeatureRemovalOverlayUtil.shouldShowFeatureSpecificJetpackOverlay(NOTIFICATIONS))
             showJetpackOverlay()
     }
 
     private fun showJetpackOverlay() {
         _showJetpackOverlay.value = Event(true)
-    }
-
-    private fun showJetpackPoweredBottomSheet() {
-//        _showJetpackPoweredBottomSheet.value = Event(true)
     }
 }
