@@ -19,6 +19,9 @@ import org.wordpress.android.util.SiteUtilsWrapper
 import java.util.Date
 import javax.inject.Inject
 
+
+private const val ONE_DAY_TIME_IN_MILLIS = 1000L * 60L * 60L * 24L
+
 class JetpackFeatureRemovalOverlayUtil @Inject constructor(
     private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper,
     private val jetpackFeatureOverlayShownTracker: JetpackFeatureOverlayShownTracker,
@@ -96,6 +99,32 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
     // Commented out for testing purposes only
 //        if (isInFeatureSpecificRemovalPhase())
 //            jetpackFeatureOverlayShownTracker.setFeatureOverlayShownTimeStamp(feature, getCurrentPhasePreference()!!)
+    }
+
+    fun initializeFeatureShownOn() {
+        // This function sets the time when the overlay was show
+        // This is only for testing purposes
+
+        // The first parameter sets the no of days when the overlay was last shown
+        // For example, value 2 means, the overlay shown time stamp will be set 2 days before
+        // The Second parameter sets the feature for which the overlay was shown
+
+        setFeatureAccessedOn(3, JetpackOverlayConnectedFeature.STATS)
+        setFeatureAccessedOn(2, JetpackOverlayConnectedFeature.NOTIFICATIONS)
+        setFeatureAccessedOn(4, JetpackOverlayConnectedFeature.READER)
+
+
+        // Inorder to clear the values and reset when the overlay was shown, un comment the below code
+        // jetpackFeatureOverlayShownTracker.clear()
+    }
+
+
+    private fun setFeatureAccessedOn(noOfDaysPastFeatureAccessed:Int, jetpackConnectedFeature: JetpackOverlayConnectedFeature) {
+        val featureAccessedMockedTimeinMillis = (System.currentTimeMillis() -
+                (noOfDaysPastFeatureAccessed * ONE_DAY_TIME_IN_MILLIS))
+
+        jetpackFeatureOverlayShownTracker.setFeatureOverlayShownTimeStamp(jetpackConnectedFeature
+                ,PHASE_ONE, featureAccessedMockedTimeinMillis)
     }
 
     fun onOverlayShown(overlayScreenType: JetpackFeatureOverlayScreenType?) {
