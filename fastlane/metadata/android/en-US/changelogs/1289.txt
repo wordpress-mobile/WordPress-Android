@@ -1,0 +1,1 @@
+This update is short and sweet—when you’re in the process of editing a page, you can now set a parent page within the child page’s settings.

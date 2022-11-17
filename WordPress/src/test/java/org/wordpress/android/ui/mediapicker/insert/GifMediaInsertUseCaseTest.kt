@@ -2,10 +2,6 @@ package org.wordpress.android.ui.mediapicker.insert
 
 import android.content.Context
 import android.webkit.MimeTypeMap
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.anyOrNull
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.toList
 import org.assertj.core.api.Assertions
@@ -13,6 +9,10 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Mock
+import org.mockito.kotlin.any
+import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.Dispatcher

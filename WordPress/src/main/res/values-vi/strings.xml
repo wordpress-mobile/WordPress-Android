@@ -1,11 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-06-17 15:28:46+0000
+Translation-Revision-Date: 2022-11-08 05:57:29+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.3
 Language: vi_VN
 -->
 <resources>
+    <string name="gutenberg_native_upgrade_your_plan_to_upload_audio">Nâng cấp gói để có thể tải audio lên</string>
+    <string name="gutenberg_native_invalid_url">Đường dẫn không hợp lệ.</string>
+    <string name="weekly_roundup_notification_text_views_and_comments">Tuần trước bạn đã có %1$s lượt xem và %2$s bình luận</string>
+    <string name="weekly_roundup_notification_text_views_and_likes">Tuần trước bạn đã có %1$s lượt xem và %2$s lượt thích</string>
+    <string name="weekly_roundup_notification_text_views_only">Tuần trước bạn đã có %1$s lượt xem.</string>
+    <string name="weekly_roundup_notification_text_all">Tuần trước bạn đã có %1$s lượt xem, %2$s lượt thích, và %3$s bình luận.</string>
+    <string name="qrcode_auth_flow_error_auth_failed_subtitle">Không thể đăng nhập dựa trên mã này. Hãy bấm \"Quét lại\" để quét lại mã.</string>
+    <string name="qrcode_auth_flow_error_auth_failed_title">Xác nhận không thành công</string>
+    <string name="qrcode_auth_flow_error_expired_title">Mã đăng nhập đã hết hạn</string>
+    <string name="qrcode_auth_flow_error_no_connection_title">Không có kết nối</string>
+    <string name="qrcode_auth_flow_scan_again">Quét lại</string>
+    <string name="qrcode_auth_flow_done_title">Bạn đã đăng nhập!</string>
+    <string name="qrcode_auth_flow_validated_primary_action">Có, hãy cho tôi đăng nhập</string>
+    <string name="qrcode_auth_flow_validated_subtitle">Chỉ quét mã QR được lấy từ trình duyệt web của bạn. Không bao giờ được quét mã được gửi từ bất kỳ ai khác.</string>
     <string name="blogging_prompts_onboarding_prompts_loading">Đang tải Nhắc Nhở Viết. Xin chờ và thử lại sau.</string>
     <string name="hpp_bottom_helper_text">Không biết chọn cái nào? Bạn có thể đổi lại chủ đề sau.</string>
     <string name="hpp_recommended_default_vertical">Viết blog</string>
@@ -784,8 +798,8 @@ Language: vi_VN
     <string name="threat_item_sub_header_file_signature">Tìm thấy mối đe dọa %s</string>
     <string name="threat_item_sub_header_core_file">Tìm thấy lỗ hổng bảo mật trong WordPress</string>
     <string name="threat_item_sub_header_misc_vulnerability">Lỗ hổng bảo mật khác</string>
-    <string name="threat_item_header_vulnerable_theme">Chủ đề có lỗ hổng bảo mật: %s (phiên bản %s)</string>
-    <string name="threat_item_header_vulnerable_plugin">Plugin có lỗ hổng bảo mật: %s (phiên bản %s)</string>
+    <string name="threat_item_header_vulnerable_theme">Chủ đề có lỗ hổng bảo mật: %1$s (phiên bản %2$s)</string>
+    <string name="threat_item_header_vulnerable_plugin">Plugin có lỗ hổng bảo mật: %1$s (phiên bản %2$s)</string>
     <string name="threat_item_header_file_malicious_code_pattern">%s: mã độc</string>
     <string name="threat_item_header_database_threat">Mối đe dọa %s cơ sở dữ liệu</string>
     <string name="threat_item_header_infected_core_file">%s: lõi tập tin bị nhiễm</string>
@@ -795,7 +809,7 @@ Language: vi_VN
     <string name="scan_in_minutes_ago">%s phút trước</string>
     <string name="scan_in_hours_ago">%s giờ trước</string>
     <string name="scan_this_site">blog này</string>
-    <string name="scan_idle_last_scan_description">Lần cuối Jetpack quét %s và không tìm thấy mối đe dọa nào. %s</string>
+    <string name="scan_idle_last_scan_description">Lần cuối Jetpack quét %1$s và không tìm thấy mối đe dọa nào. %2$s</string>
     <string name="scan_idle_threats_found_title">Blog của bạn có thể gặp rủi ro</string>
     <string name="scan_idle_no_threats_found_title">Đừng lo lắng quá</string>
     <string name="scan_again">Quét lại</string>
@@ -803,7 +817,7 @@ Language: vi_VN
     <string name="scan_state_icon">Biểu tượng trạng thái quét</string>
     <string name="backup">Sao lưu</string>
     <string name="activity_log_activity_type_filter_multiple_items_selected_content_description">Lọc hoạt động (đã chọn %s loại)</string>
-    <string name="activity_log_activity_type_filter_single_item_selected_content_description">%s (đang hiện %s mục)</string>
+    <string name="activity_log_activity_type_filter_single_item_selected_content_description">%1$s (đang hiện %2$s mục)</string>
     <string name="activity_log_activity_type_filter_no_item_selected_content_description">Lọc hoạt động</string>
     <string name="activity_log_activity_type_empty_subtitle">Không có hoạt động nào trong phạm vi ngày đã chọn.</string>
     <string name="activity_log_activity_type_empty_title">Chưa có hoạt động nào</string>
@@ -1151,7 +1165,7 @@ Language: vi_VN
     <string name="pages_cannot_be_started">Chúng tôi không thể mở trang. Hãy thử lại sau</string>
     <string name="pages_set_as_posts_page">Cài làm trang bài viết</string>
     <string name="pages_set_as_homepage">Cài làm trang chủ</string>
-    <string name="suggestion_invalid">%s là %s không hợp lệ</string>
+    <string name="suggestion_invalid">%1$s là %2$s không hợp lệ</string>
     <string name="site_settings_select_page">Chọn Trang</string>
     <string name="site_settings_posts_page">Trang bài viết</string>
     <string name="site_settings_static_homepage">Trang chủ</string>
@@ -1449,7 +1463,7 @@ Language: vi_VN
     <string name="local_post_autosave_revision_available">Bạn đã thực hiện các thay đổi chưa được lưu đối với bài viết này</string>
     <string name="dialog_confirm_autosave_dont_restore_button">Phiên bản từ ứng dụng này</string>
     <string name="dialog_confirm_autosave_restore_button">Phiên bản từ thiết bị khác</string>
-    <string name="dialog_confirm_autosave_body_second_part">Từ ứng dụng này\nLưu vào %s\n\nTừ thiết bị khác\nLưu vào %s\n</string>
+    <string name="dialog_confirm_autosave_body_second_part">Từ ứng dụng này\nLưu vào %1$s\n\nTừ thiết bị khác\nLưu vào %2$s\n</string>
     <string name="dialog_confirm_autosave_body_first_part">Bạn đã thay đổi nội dung nhưng chưa lưu. Chọn một phiên bản để nạp:\n\n</string>
     <string name="dialog_confirm_autosave_title">Bạn muốn chỉnh sửa phiên bản nào?</string>
     <string name="button_delete_permanently">Xóa vĩnh viễn</string>

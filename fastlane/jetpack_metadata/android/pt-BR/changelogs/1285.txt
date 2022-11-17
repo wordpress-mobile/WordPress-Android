@@ -1,5 +1,0 @@
-21.0:
-- Links corretos adicionados para os mármores do aplicativo Automattic Family na tela Sobre
-- Tela de início atualizada para versões do Android 12+
-- Texto da mensagem de sucesso alterado de vermelho para preto para logins de código QR
-- Corrigida a tela de estatísticas para incluir numerais arábicos ocidentais para usuários do idioma árabe

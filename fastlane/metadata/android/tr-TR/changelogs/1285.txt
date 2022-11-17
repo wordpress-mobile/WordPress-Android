@@ -1,5 +1,0 @@
-21.0:
-- Hakkında sayfasından Automattic ailesi uygulama bilyeleri kaldırıldı
-- Android sürümü 12+ için açılış ekranı güncellendi
-- QR kod girişleri için başarılı mesaj metni kırmızıdan siyaha güncellendi
-- Arapça dili kullanıcıları için istatistik ekranları Batı Arap numaralarını kapsayacak şekilde düzeltildi

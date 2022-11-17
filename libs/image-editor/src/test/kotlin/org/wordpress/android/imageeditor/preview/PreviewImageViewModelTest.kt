@@ -1,12 +1,12 @@
 package org.wordpress.android.imageeditor.preview
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.nhaarman.mockitokotlin2.mock
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Assert.assertNull
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.mockito.kotlin.mock
 import org.wordpress.android.imageeditor.R
 import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.EditImageData.InputData
 import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.EditImageData.OutputData

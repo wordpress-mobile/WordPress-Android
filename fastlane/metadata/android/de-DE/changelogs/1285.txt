@@ -1,5 +1,0 @@
-21.0:
-- App-Murmeln der Automattic-Familie von der Seite „Über“ entfernt
-- Startbildschirm für Android-Versionen 12 und höher aktualisiert
-- Text der Erfolgsnachricht für Anmeldung per QR-Code von Rot in Schwarz geändert
-- Statistikseite so angepasst, dass Benutzern mit arabischer Spracheinstellung westarabische Ziffern angezeigt werden

@@ -1,11 +1,11 @@
 package org.wordpress.android.viewmodel.pages
 
-import com.nhaarman.mockitokotlin2.mock
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.mock
 import org.wordpress.android.fluxc.model.SiteHomepageSettings.ShowOnFront
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.SiteModel.ORIGIN_WPCOM_REST
@@ -20,12 +20,12 @@ import org.wordpress.android.ui.pages.PageItem.Action.SET_AS_HOMEPAGE
 import org.wordpress.android.ui.pages.PageItem.Action.SET_AS_POSTS_PAGE
 import org.wordpress.android.ui.pages.PageItem.Action.SET_PARENT
 import org.wordpress.android.ui.pages.PageItem.Action.VIEW_PAGE
-import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase.PostUploadUiState.UploadWaitingForConnection
-import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase.PostUploadUiState.UploadingPost
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.DRAFTS
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.PUBLISHED
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.SCHEDULED
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.TRASHED
+import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase.PostUploadUiState.UploadWaitingForConnection
+import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase.PostUploadUiState.UploadingPost
 
 @RunWith(MockitoJUnitRunner::class)
 class CreatePageListItemActionsUseCaseTest {
