@@ -30,26 +30,10 @@ class JetpackFeatureOverlayShownTracker @Inject constructor(private val sharedPr
 
     fun setFeatureOverlayShownTimeStamp(
         jetpackOverlayConnectedFeature: JetpackOverlayConnectedFeature,
-        phase: JetpackFeatureRemovalOverlayPhase
-    ) {
-        sharedPrefs.edit()
-                .putLong(jetpackOverlayConnectedFeature.getPreferenceKey(phase), System.currentTimeMillis())
-                .apply()
-    }
-
-    fun setFeatureOverlayShownTimeStamp(
-        jetpackOverlayConnectedFeature: JetpackOverlayConnectedFeature,
         phase: JetpackFeatureRemovalOverlayPhase,
         timeStamp: Long
     ) {
         sharedPrefs.edit().putLong(jetpackOverlayConnectedFeature.getPreferenceKey(phase), timeStamp).apply()
-    }
-
-    // For testing purposes only
-    fun clear() {
-        sharedPrefs.edit().remove(STATS.getPreferenceKey(PHASE_ONE)).apply()
-        sharedPrefs.edit().remove(NOTIFICATIONS.getPreferenceKey(PHASE_ONE)).apply()
-        sharedPrefs.edit().remove(READER.getPreferenceKey(PHASE_ONE)).apply()
     }
 }
 

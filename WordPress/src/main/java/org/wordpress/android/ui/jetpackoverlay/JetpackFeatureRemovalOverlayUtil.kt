@@ -66,7 +66,8 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
         )?.let { Date(it) } ?: return true
         val daysPastOverlayShown = dateTimeUtilsWrapper.daysBetween(
                 overlayShownDate,
-                dateTimeUtilsWrapper.getTodaysDate())
+                dateTimeUtilsWrapper.getTodaysDate()
+        )
         return daysPastOverlayShown >= PhaseOne.featureSpecificOverlayFrequency
     }
 
@@ -76,7 +77,8 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
                 ?.let { Date(it) } ?: return true
         val daysPastOverlayShown = dateTimeUtilsWrapper.daysBetween(
                 overlayShownDate,
-                dateTimeUtilsWrapper.getTodaysDate())
+                dateTimeUtilsWrapper.getTodaysDate()
+        )
         return daysPastOverlayShown >= PhaseOne.globalOverlayFrequency
     }
 
@@ -98,7 +100,11 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
     private fun onFeatureSpecificOverlayShown(feature: JetpackOverlayConnectedFeature) {
     // Commented out for testing purposes only
 //        if (isInFeatureSpecificRemovalPhase())
-//            jetpackFeatureOverlayShownTracker.setFeatureOverlayShownTimeStamp(feature, getCurrentPhasePreference()!!)
+//            jetpackFeatureOverlayShownTracker.setFeatureOverlayShownTimeStamp(
+//                    feature,
+//                    getCurrentPhasePreference()!!,
+//                    System.currentTimeMillis()
+//            )
     }
 
     fun initializeFeatureShownOn() {
