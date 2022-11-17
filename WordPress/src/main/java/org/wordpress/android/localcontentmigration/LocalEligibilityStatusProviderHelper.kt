@@ -7,7 +7,7 @@ import javax.inject.Inject
 class LocalEligibilityStatusProviderHelper @Inject constructor(
         private val siteStore: SiteStore,
 ): LocalDataProviderHelper {
-    override fun getData(localSiteId: Int?, localEntityId: Int?): LocalContentEntityData {
+    override fun getData(localEntityId: Int?): LocalContentEntityData {
         @Suppress("ForbiddenComment")
         // TODO: check for eligibility on-the-fly
         return EligibilityStatusData(true, siteStore.sitesCount)

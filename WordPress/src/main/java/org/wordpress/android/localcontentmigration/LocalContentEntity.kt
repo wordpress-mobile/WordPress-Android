@@ -7,23 +7,23 @@ import org.wordpress.android.fluxc.model.QuickStartTaskModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.models.ReaderPostList
 
-enum class LocalContentEntity(private val isSiteContent: Boolean = false) {
+enum class LocalContentEntity(private val isIdentifiable: Boolean = false) {
     EligibilityStatus,
     AccessToken,
     UserFlags,
     ReaderPosts,
     BloggingReminders,
     Sites,
-    Post(isSiteContent = true),
+    Post(isIdentifiable = true),
     ;
 
-    open val contentIdCapturePattern = when (isSiteContent) {
-        true -> Regex("site/(\\d+)/${name}(?:/(\\d+))?")
+    open val contentIdCapturePattern = when (isIdentifiable) {
+        true -> Regex("${name}(?:/(\\d+))?")
         false -> Regex(name)
     }
 
-    open fun getPathForContent(localSiteId: Int?, localEntityId: Int?) = when (this.isSiteContent) {
-        true -> "site/${localSiteId}/${name}${ localEntityId?.let { "/${it}" } ?: "" }"
+    open fun getPathForContent(localEntityId: Int?) = when (this.isIdentifiable) {
+        true -> "${name}${ localEntityId?.let { "/${it}" } ?: "" }"
         false -> name
     }
 }

@@ -13,10 +13,9 @@ import javax.inject.Inject
 @PublishedApi internal fun ContentResolver.query(
     builder: Uri.Builder,
     entityType: LocalContentEntity,
-    siteId: Int?,
     entityId: Int?,
 ) : Cursor {
-    val entityPath = entityType.getPathForContent(siteId, entityId)
+    val entityPath = entityType.getPathForContent(entityId)
     builder.appendEncodedPath(entityPath)
     val cursor = query(builder.build(), arrayOf(), "", arrayOf(), "")
     return checkNotNull(cursor) { "Provider failed for $entityType" }
@@ -30,7 +29,6 @@ class LocalMigrationContentResolver @Inject constructor(
 ){
     inline fun <reified T : LocalContentEntityData> getDataForEntityType(
         entityType: LocalContentEntity,
-        siteId: Int? = null,
         entityId: Int? = null
     ): T {
         wordPressPublicData.currentPackageId().let { packageId ->
@@ -40,7 +38,7 @@ class LocalMigrationContentResolver @Inject constructor(
             }
         }.let { uriBuilder ->
             with (contextProvider.getContext().contentResolver) {
-                val cursor = query(uriBuilder, entityType, siteId, entityId)
+                val cursor = query(uriBuilder, entityType, entityId)
                 val data: T? = cursor.getValue()
                 return checkNotNull(data) { "Failed to parse data from provider for $entityType"}
             }

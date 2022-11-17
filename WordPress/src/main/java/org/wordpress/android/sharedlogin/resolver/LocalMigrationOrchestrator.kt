@@ -103,13 +103,10 @@ class LocalMigrationOrchestrator @Inject constructor(
         @Suppress("ForbiddenComment")
         // TODO: do something more graceful here?
         if (!isEligible) return
-        val (sites) = localMigrationContentResolver.getDataForEntityType<SitesData >(Sites)
-        for (site in sites) {
-            val posts: PostsData = localMigrationContentResolver.getDataForEntityType(Post, site.id)
-            for (localPostId in posts.localIds) {
-                val postData: PostData = localMigrationContentResolver.getDataForEntityType(Post, site.id, localPostId)
-                dispatcher.dispatch(PostActionBuilder.newUpdatePostAction(postData.post))
-            }
+        val posts: PostsData = localMigrationContentResolver.getDataForEntityType(Post)
+        for (localPostId in posts.localIds) {
+            val postData: PostData = localMigrationContentResolver.getDataForEntityType(Post, localPostId)
+            dispatcher.dispatch(PostActionBuilder.newUpdatePostAction(postData.post))
         }
     }
 
