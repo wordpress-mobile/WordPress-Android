@@ -31,7 +31,7 @@ class JetpackFeatureFullScreenOverlayViewModel @Inject constructor(
         _action.value = JetpackFeatureOverlayActions.DismissDialog
     }
 
-    fun closeBottomSheetDialog() {
+    fun closeBottomSheet() {
         _action.value = JetpackFeatureOverlayActions.DismissDialog
     }
 
