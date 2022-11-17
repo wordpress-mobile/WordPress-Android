@@ -5,6 +5,8 @@ import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.QuickStartStatusModel
 import org.wordpress.android.fluxc.model.QuickStartTaskModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.localcontentmigration.LocalMigrationResult.Failure
+import org.wordpress.android.localcontentmigration.LocalMigrationResult.Success
 import org.wordpress.android.models.ReaderPostList
 
 enum class LocalContentEntity(private val isIdentifiable: Boolean = false) {
@@ -63,3 +65,14 @@ sealed class LocalMigrationResult<out T: LocalContentEntityData, out E: LocalMig
     data class Failure<E: LocalMigrationError>(val error: E): LocalMigrationResult<Nothing, E>()
 }
 
+fun <T: LocalContentEntityData, U: LocalContentEntityData, E: LocalMigrationError> LocalMigrationResult<T, E>
+        .then(next: (T) -> LocalMigrationResult<U, E>) = when (this) {
+    is Success -> next(this.value)
+    is Failure -> this
+}
+
+fun <T: LocalContentEntityData, E: LocalMigrationError> LocalMigrationResult<T, E>
+        .otherwise(handleError: (E) -> Unit) = when (this) {
+    is Success -> Unit
+    is Failure -> handleError(this.error)
+}

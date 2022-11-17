@@ -43,6 +43,7 @@ class LocalMigrationOrchestrator @Inject constructor(
     private val siteStore: SiteStore,
 ) {
     fun tryLocalMigration() {
+        localMigrationContentResolver.getResultForEntityType<EligibilityStatusData>(EligibilityStatus)
         val isFeatureFlagEnabled = jetpackSharedLoginFlag.isEnabled()
 
         if (!isFeatureFlagEnabled) {
@@ -99,10 +100,6 @@ class LocalMigrationOrchestrator @Inject constructor(
     }
 
     fun migrateLocalContent() {
-        val (isEligible) = localMigrationContentResolver.getDataForEntityType<EligibilityStatusData>(EligibilityStatus)
-        @Suppress("ForbiddenComment")
-        // TODO: do something more graceful here?
-        if (!isEligible) return
         val posts: PostsData = localMigrationContentResolver.getDataForEntityType(Post)
         for (localPostId in posts.localIds) {
             val postData: PostData = localMigrationContentResolver.getDataForEntityType(Post, localPostId)
