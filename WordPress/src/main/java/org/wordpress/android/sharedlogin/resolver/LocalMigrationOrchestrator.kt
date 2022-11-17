@@ -66,6 +66,9 @@ class LocalMigrationOrchestrator @Inject constructor(
         }
     }
     private fun originalTryLocalMigration() {
+        @Suppress("ForbiddenComment")
+        // TODO: We should move this login specific logic to a helper. It can happen as a later step, since the
+        // eligibility check is handled separately now (on the provider side).
         val isFeatureFlagEnabled = jetpackSharedLoginFlag.isEnabled()
 
         if (!isFeatureFlagEnabled) {
