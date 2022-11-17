@@ -46,3 +46,13 @@ sealed class LocalContentEntityData {
     data class PostsData(val localIds: List<Int>): LocalContentEntityData()
     data class PostData(val post: PostModel) : LocalContentEntityData()
 }
+
+sealed class LocalMigrationError: LocalContentEntityData() {
+    data class ProviderError(val message: String?): LocalMigrationError()
+}
+
+sealed class LocalMigrationResult<out T: LocalContentEntityData, out E: LocalMigrationError> {
+    data class Success<T: LocalContentEntityData>(val value: T): LocalMigrationResult<T, Nothing>()
+    data class Failure<E: LocalMigrationError>(val error: E): LocalMigrationResult<Nothing, E>()
+}
+
