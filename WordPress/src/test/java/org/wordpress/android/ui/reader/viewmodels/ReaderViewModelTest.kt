@@ -500,7 +500,7 @@ class ReaderViewModelTest {
         }
         whenever(jetpackFeatureRemovalOverlayUtil.shouldShowFeatureSpecificJetpackOverlay(READER)).thenReturn(false)
 
-        viewModel.start()
+        viewModel.onScreenInForeground()
 
         assertThat(showJetpackOverlayEvent.last().peekContent()).isFalse
     }
@@ -513,7 +513,7 @@ class ReaderViewModelTest {
         }
         whenever(jetpackFeatureRemovalOverlayUtil.shouldShowFeatureSpecificJetpackOverlay(READER)).thenReturn(true)
 
-        viewModel.start()
+        viewModel.onScreenInForeground()
 
         assertThat(showJetpackOverlayEvent.last().peekContent()).isTrue
     }
