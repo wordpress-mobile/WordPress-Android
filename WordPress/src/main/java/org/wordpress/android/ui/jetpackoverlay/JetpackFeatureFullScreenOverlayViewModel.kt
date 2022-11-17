@@ -31,6 +31,10 @@ class JetpackFeatureFullScreenOverlayViewModel @Inject constructor(
         _action.value = JetpackFeatureOverlayActions.DismissDialog
     }
 
+    fun closeBottomSheetDialog() {
+        _action.value = JetpackFeatureOverlayActions.DismissDialog
+    }
+
     fun init(overlayScreenType: JetpackFeatureOverlayScreenType?, rtlLayout: Boolean) {
         val params = JetpackFeatureOverlayContentBuilderParams(
                 currentPhase = getCurrentPhase()!!,
