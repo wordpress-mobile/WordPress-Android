@@ -95,6 +95,15 @@ class JetpackMigrationViewModel @Inject constructor(
         )
     }
 
+    @Suppress("ForbiddenComment", "unused")
+    private fun postNetworkingErrorState() {
+        // TODO: Call this method when migration fails with networking error
+        _uiState.value = UiState.Error.Networking(
+                onPrimaryActionButtonClick = ::onTryAgainClicked,
+                onSecondaryActionButtonClick = ::onHelpClicked,
+        )
+    }
+
     @Suppress("ForbiddenComment")
     private fun onTryAgainClicked() {
         // TODO: Replace this delay with migration logic
