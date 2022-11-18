@@ -199,7 +199,7 @@ class JetpackMigrationViewModel @Inject constructor(
         ) {
             @DrawableRes val screenIconRes = R.drawable.ic_jetpack_migration_error
 
-            data class GenericError(
+            data class Generic(
                 override val primaryActionButton: ErrorPrimaryButton,
                 override val secondaryActionButton: ErrorSecondaryButton,
             ) : Error(
@@ -210,7 +210,7 @@ class JetpackMigrationViewModel @Inject constructor(
                     message = UiStringRes(R.string.jp_migration_generic_error_message),
             )
 
-            data class NetworkingError(
+            data class Networking(
                 override val primaryActionButton: ErrorPrimaryButton,
                 override val secondaryActionButton: ErrorSecondaryButton,
             ) : Error(
