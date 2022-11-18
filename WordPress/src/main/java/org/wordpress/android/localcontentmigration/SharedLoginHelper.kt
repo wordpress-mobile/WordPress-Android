@@ -19,7 +19,7 @@ class SharedLoginHelper @Inject constructor(
 ) {
     fun login() = if (!jetpackSharedLoginFlag.isEnabled()) {
         Failure(SharedLoginDisabled)
-    } else if (appPrefsWrapper.getIsFirstTrySharedLoginJetpack()) {
+    } else if (!appPrefsWrapper.getIsFirstTrySharedLoginJetpack()) {
         Failure(SharedLoginAlreadyAttempted)
     } else {
         sharedLoginAnalyticsTracker.trackLoginStart()
