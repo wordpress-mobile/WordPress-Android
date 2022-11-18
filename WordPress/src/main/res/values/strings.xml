@@ -4254,5 +4254,9 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="jp_migration_done_delete_wp_message">Please &lt;b&gt;delete the WordPress app&lt;/b&gt; to&lt;br&gt;avoid data conflicts.</string>
     <string name="jp_migration_remove_wp_app_icon_content_description">Remove WordPress App icon</string>
     <string name="jp_migration_finish_button">Finish</string>
+    <string name="jp_migration_try_again_button">Try again</string>
+    <string name="jp_migration_generic_error_title">Uh oh, something went wrong..</string>
+    <string name="jp_migration_generic_error_subtitle">We’re sorry but something didn’t go as planned. Your data is safe, but we’re unable to transfer it at this time.</string>
+    <string name="jp_migration_generic_error_message">Please contact support or try again later.</string>
 
 </resources>

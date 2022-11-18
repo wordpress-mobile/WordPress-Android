@@ -14,6 +14,8 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.DonePrimaryButton
+import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.ErrorPrimaryButton
+import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.ErrorSecondaryButton
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.NotificationsPrimaryButton
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.WelcomePrimaryButton
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.WelcomeSecondaryButton
@@ -187,6 +189,27 @@ class JetpackMigrationViewModel @Inject constructor(
                 val deleteWpIcon = R.drawable.ic_jetpack_migration_delete_wp
             }
         }
+
+        sealed class Error(
+            open val title: UiString,
+            open val subtitle: UiString,
+            open val message: UiString,
+            open val primaryActionButton: ErrorPrimaryButton,
+            open val secondaryActionButton: ErrorSecondaryButton,
+        ) {
+            @DrawableRes val screenIconRes = R.drawable.ic_jetpack_migration_error
+
+            data class GenericError(
+                override val primaryActionButton: ErrorPrimaryButton,
+                override val secondaryActionButton: ErrorSecondaryButton,
+            ) : Error(
+                    primaryActionButton = primaryActionButton,
+                    secondaryActionButton = secondaryActionButton,
+                    title = UiStringRes(R.string.jp_migration_generic_error_title),
+                    subtitle = UiStringRes(R.string.jp_migration_generic_error_subtitle),
+                    message = UiStringRes(R.string.jp_migration_generic_error_message),
+            )
+        }
     }
 
     data class SiteListItemUiState(
@@ -226,6 +249,20 @@ class JetpackMigrationViewModel @Inject constructor(
         ) : ActionButton(
                 onClick = onClick,
                 text = UiStringRes(R.string.jp_migration_finish_button),
+        )
+
+        data class ErrorPrimaryButton(
+            override val onClick: () -> Unit,
+        ) : ActionButton(
+                onClick = onClick,
+                text = UiStringRes(R.string.jp_migration_try_again_button),
+        )
+
+        data class ErrorSecondaryButton(
+            override val onClick: () -> Unit,
+        ) : ActionButton(
+                onClick = onClick,
+                text = UiStringRes(R.string.jp_migration_help_button),
         )
     }
 
