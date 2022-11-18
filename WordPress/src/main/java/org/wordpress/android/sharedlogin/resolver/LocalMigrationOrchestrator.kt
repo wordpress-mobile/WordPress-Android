@@ -2,10 +2,8 @@ package org.wordpress.android.sharedlogin.resolver
 
 import android.content.Intent
 import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.localcontentmigration.LocalContentEntity.EligibilityStatus
+import org.wordpress.android.localcontentmigration.EligibilityHelper
 import org.wordpress.android.localcontentmigration.LocalContentEntityData.Companion.IneligibleReason.WPNotLoggedIn
-import org.wordpress.android.localcontentmigration.LocalContentEntityData.EligibilityStatusData
-import org.wordpress.android.localcontentmigration.LocalMigrationContentResolver
 import org.wordpress.android.localcontentmigration.LocalMigrationError
 import org.wordpress.android.localcontentmigration.LocalMigrationError.FeatureDisabled
 import org.wordpress.android.localcontentmigration.LocalMigrationError.Ineligibility
@@ -20,7 +18,6 @@ import org.wordpress.android.localcontentmigration.SitesMigrationHelper
 import org.wordpress.android.localcontentmigration.otherwise
 import org.wordpress.android.localcontentmigration.then
 import org.wordpress.android.localcontentmigration.thenWith
-import org.wordpress.android.localcontentmigration.validate
 import org.wordpress.android.reader.savedposts.resolver.ReaderSavedPostsHelper
 import org.wordpress.android.sharedlogin.SharedLoginAnalyticsTracker
 import org.wordpress.android.sharedlogin.SharedLoginAnalyticsTracker.ErrorType
@@ -37,13 +34,13 @@ class LocalMigrationOrchestrator @Inject constructor(
     private val sharedLoginAnalyticsTracker: SharedLoginAnalyticsTracker,
     private val userFlagsHelper: UserFlagsHelper,
     private val readerSavedPostsHelper: ReaderSavedPostsHelper,
-    private val localMigrationContentResolver: LocalMigrationContentResolver,
     private val sharedLoginHelper: SharedLoginHelper,
     private val sitesMigrationHelper: SitesMigrationHelper,
     private val localPostsHelper: LocalPostsHelper,
+        private val eligibilityHelper: EligibilityHelper,
 ) {
     fun tryLocalMigration() {
-        localMigrationContentResolver.getResultForEntityType<EligibilityStatusData>(EligibilityStatus).validate()
+        eligibilityHelper.validate()
                 .then(sitesMigrationHelper::migrateSites)
                 .then(localPostsHelper::migratePosts)
                 .then(userFlagsHelper::migrateUserFlags)
