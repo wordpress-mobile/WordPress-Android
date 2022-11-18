@@ -191,9 +191,9 @@ class JetpackMigrationViewModel @Inject constructor(
         }
 
         sealed class Error(
-            open val title: UiString,
-            open val subtitle: UiString,
-            open val message: UiString,
+            val title: UiString,
+            val subtitle: UiString,
+            val message: UiString,
             open val primaryActionButton: ErrorPrimaryButton,
             open val secondaryActionButton: ErrorSecondaryButton,
         ) {
