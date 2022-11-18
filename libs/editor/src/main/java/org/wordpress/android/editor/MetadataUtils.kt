@@ -1,7 +1,6 @@
 package org.wordpress.android.editor
 
 import android.text.TextUtils
-import org.apache.commons.lang3.math.NumberUtils
 import org.json.JSONException
 import org.json.JSONObject
 import org.wordpress.android.util.AppLog
@@ -52,14 +51,14 @@ object MetadataUtils {
         val isIntRegExp = Pattern.compile("^\\d+$")
 
         val width = attrs.getAttribute("width", "")
-        if (!isIntRegExp.matcher(width).matches() || NumberUtils.toInt(width) == 0) {
+        if (!isIntRegExp.matcher(width).matches() || width.toInt() == 0) {
             addMetadataProperty(metadata, "width", naturalWidth)
         } else {
             addMetadataProperty(metadata, "width", width)
         }
 
         val height = attrs.getAttribute("height", "")
-        if (!isIntRegExp.matcher(height).matches() || NumberUtils.toInt(height) == 0) {
+        if (!isIntRegExp.matcher(height).matches() || height.toInt() == 0) {
             addMetadataProperty(metadata, "height", naturalHeight)
         } else {
             addMetadataProperty(metadata, "height", height)
@@ -70,7 +69,7 @@ object MetadataUtils {
         for (clazz in attrs.classes) {
             if (Pattern.matches("^wp-image.*", clazz)) {
                 val attachmentIdString = clazz.replace("wp-image-", "")
-                if (NumberUtils.toInt(attachmentIdString) != 0) {
+                if (attachmentIdString.toInt() != 0) {
                     addMetadataProperty(metadata, "attachment_id", attachmentIdString)
                 } else {
                     AppLog.d(AppLog.T.EDITOR, "AttachmentId was not an integer! String value: $attachmentIdString")
