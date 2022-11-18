@@ -10,6 +10,7 @@ import org.wordpress.android.ui.avatars.TrainOfAvatarsItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.CATEGORY_HEADER_ITEM
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.DASHBOARD_CARDS
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.DOMAIN_REGISTRATION_CARD
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.INFO_CARD
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.INFO_ITEM
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.JETPACK_BADGE
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.LIST_ITEM
@@ -37,7 +38,8 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
         CATEGORY_HEADER_ITEM,
         LIST_ITEM,
         DASHBOARD_CARDS,
-        JETPACK_BADGE
+        JETPACK_BADGE,
+        INFO_CARD,
     }
 
     enum class DashboardCardType {
@@ -263,6 +265,11 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
         override val activeQuickStartItem: Boolean = false
     ) : MySiteCardAndItem(type, activeQuickStartItem) {
         data class InfoItem(val title: UiString) : Item(INFO_ITEM)
+
+        data class InfoCard(
+            @StringRes val infoResource: Int,
+            val onInfoClick: () -> Unit
+        ) : Item(INFO_CARD)
 
         data class CategoryHeaderItem(val title: UiString) : Item(CATEGORY_HEADER_ITEM)
 
