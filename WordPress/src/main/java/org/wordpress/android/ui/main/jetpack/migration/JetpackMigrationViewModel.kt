@@ -86,6 +86,22 @@ class JetpackMigrationViewModel @Inject constructor(
         )
     }
 
+    @Suppress("ForbiddenComment", "unused")
+    private fun postGenericErrorState() {
+        // TODO: Call this method when migration fails with generic error
+        _uiState.value = UiState.Error.Generic(
+                onPrimaryActionButtonClick = ::onTryAgainClicked,
+                onSecondaryActionButtonClick = ::onHelpClicked,
+        )
+    }
+
+    @Suppress("ForbiddenComment")
+    private fun onTryAgainClicked() {
+        // TODO: Replace this delay with migration logic
+        //   Notice that error states should properly be emitted if migration fails again
+        postNotificationsState()
+    }
+
     @Suppress("ForbiddenComment")
     private fun onContinueFromNotificationsClicked() {
         // TODO: Disable notifications in WP app
