@@ -99,7 +99,6 @@ class JetpackMigrationViewModel @Inject constructor(
         )
     }
 
-    @Suppress("ForbiddenComment")
     private fun onDoneClicked() {
         postActionEvent(CompleteFlow)
     }
