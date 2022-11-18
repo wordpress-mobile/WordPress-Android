@@ -24,7 +24,7 @@ import org.wordpress.android.localcontentmigration.otherwise
 import org.wordpress.android.localcontentmigration.then
 import org.wordpress.android.localcontentmigration.thenWith
 import org.wordpress.android.localcontentmigration.validate
-import org.wordpress.android.reader.savedposts.resolver.ReaderSavedPostsResolver
+import org.wordpress.android.reader.savedposts.resolver.ReaderSavedPostsHelper
 import org.wordpress.android.sharedlogin.SharedLoginAnalyticsTracker
 import org.wordpress.android.sharedlogin.SharedLoginAnalyticsTracker.ErrorType
 import org.wordpress.android.ui.main.WPMainActivity
@@ -39,7 +39,7 @@ class LocalMigrationOrchestrator @Inject constructor(
     private val accountActionBuilderWrapper: AccountActionBuilderWrapper,
     private val sharedLoginAnalyticsTracker: SharedLoginAnalyticsTracker,
     private val userFlagsHelper: UserFlagsHelper,
-    private val readerSavedPostsResolver: ReaderSavedPostsResolver,
+    private val readerSavedPostsHelper: ReaderSavedPostsHelper,
     private val localMigrationContentResolver: LocalMigrationContentResolver,
     private val sharedLoginHelper: SharedLoginHelper,
     private val sitesMigrationHelper: SitesMigrationHelper,
@@ -71,7 +71,7 @@ class LocalMigrationOrchestrator @Inject constructor(
         }
     }
     private fun originalTryLocalMigration(accessToken: String) {
-        readerSavedPostsResolver.tryGetReaderSavedPosts(
+        readerSavedPostsHelper.tryGetReaderSavedPosts(
                 {
                     migrateLocalContent()
                     dispatchUpdateAccessToken(accessToken)

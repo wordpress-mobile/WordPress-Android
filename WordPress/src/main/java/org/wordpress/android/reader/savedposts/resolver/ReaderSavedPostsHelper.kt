@@ -17,7 +17,7 @@ import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.viewmodel.ContextProvider
 import javax.inject.Inject
 
-class ReaderSavedPostsResolver @Inject constructor(
+class ReaderSavedPostsHelper @Inject constructor(
     private val jetpackReaderSavedPostsFlag: JetpackReaderSavedPostsFlag,
     private val contextProvider: ContextProvider,
     private val readerSavedPostsAnalyticsTracker: ReaderSavedPostsAnalyticsTracker,
