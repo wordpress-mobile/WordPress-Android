@@ -209,6 +209,17 @@ class JetpackMigrationViewModel @Inject constructor(
                     subtitle = UiStringRes(R.string.jp_migration_generic_error_subtitle),
                     message = UiStringRes(R.string.jp_migration_generic_error_message),
             )
+
+            data class NetworkingError(
+                override val primaryActionButton: ErrorPrimaryButton,
+                override val secondaryActionButton: ErrorSecondaryButton,
+            ) : Error(
+                    primaryActionButton = primaryActionButton,
+                    secondaryActionButton = secondaryActionButton,
+                    title = UiStringRes(R.string.jp_migration_network_error_title),
+                    subtitle = UiStringRes(R.string.jp_migration_network_error_subtitle),
+                    message = UiStringRes(R.string.jp_migration_network_error_message),
+            )
         }
     }
 
