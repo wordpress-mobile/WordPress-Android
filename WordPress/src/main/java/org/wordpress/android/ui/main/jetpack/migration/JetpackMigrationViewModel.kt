@@ -67,16 +67,10 @@ class JetpackMigrationViewModel @Inject constructor(
         )
     }
 
-    @Suppress("ForbiddenComment", "MagicNumber")
     private fun onContinueClicked() {
         (_uiState.value as? Content.Welcome)?.let {
-            viewModelScope.launch {
-                _uiState.value = it.copy(isProcessing = true)
-                // TODO: Replace this temporary delay with migration logic
-                delay(2500)
-                // TODO: Navigate to error step if migration has errors
-                postNotificationsState()
-            }
+            _uiState.value = it.copy(isProcessing = true)
+            tryMigration()
         }
     }
 
@@ -89,26 +83,42 @@ class JetpackMigrationViewModel @Inject constructor(
     @Suppress("ForbiddenComment", "unused")
     private fun postGenericErrorState() {
         // TODO: Call this method when migration fails with generic error
-        _uiState.value = UiState.Error.Generic(
-                onPrimaryActionButtonClick = ::onTryAgainClicked,
-                onSecondaryActionButtonClick = ::onHelpClicked,
+        _uiState.value = UiState.Error(
+                primaryActionButton = ErrorPrimaryButton(::onTryAgainClicked),
+                secondaryActionButton = ErrorSecondaryButton(::onHelpClicked),
+                title = UiStringRes(R.string.jp_migration_generic_error_title),
+                subtitle = UiStringRes(R.string.jp_migration_generic_error_subtitle),
+                message = UiStringRes(R.string.jp_migration_generic_error_message),
         )
     }
 
     @Suppress("ForbiddenComment", "unused")
     private fun postNetworkingErrorState() {
         // TODO: Call this method when migration fails with networking error
-        _uiState.value = UiState.Error.Networking(
-                onPrimaryActionButtonClick = ::onTryAgainClicked,
-                onSecondaryActionButtonClick = ::onHelpClicked,
+        _uiState.value = UiState.Error(
+                primaryActionButton = ErrorPrimaryButton(::onTryAgainClicked),
+                secondaryActionButton = ErrorSecondaryButton(::onHelpClicked),
+                title = UiStringRes(R.string.jp_migration_network_error_title),
+                subtitle = UiStringRes(R.string.jp_migration_network_error_subtitle),
+                message = UiStringRes(R.string.jp_migration_network_error_message),
         )
     }
 
-    @Suppress("ForbiddenComment")
     private fun onTryAgainClicked() {
-        // TODO: Replace this delay with migration logic
-        //   Notice that error states should properly be emitted if migration fails again
-        postNotificationsState()
+        (_uiState.value as? UiState.Error)?.let {
+            _uiState.value = it.copy(isProcessing = true)
+            tryMigration()
+        }
+    }
+
+    @Suppress("ForbiddenComment", "MagicNumber")
+    private fun tryMigration() {
+        viewModelScope.launch {
+            // TODO: Replace this temporary delay with migration logic
+            delay(2500)
+            // TODO: Handle migration result properly and navigate to the right error screen if migration fails
+            postNotificationsState()
+        }
     }
 
     @Suppress("ForbiddenComment")
@@ -214,36 +224,15 @@ class JetpackMigrationViewModel @Inject constructor(
             }
         }
 
-        sealed class Error(
+        data class Error(
             val title: UiString,
             val subtitle: UiString,
             val message: UiString,
             val primaryActionButton: ErrorPrimaryButton,
             val secondaryActionButton: ErrorSecondaryButton,
-        ): UiState() {
+            val isProcessing: Boolean = false,
+        ) : UiState() {
             @DrawableRes val screenIconRes = R.drawable.ic_jetpack_migration_error
-
-            data class Generic(
-                val onPrimaryActionButtonClick: () -> Unit,
-                val onSecondaryActionButtonClick: () -> Unit,
-            ) : Error(
-                    primaryActionButton = ErrorPrimaryButton(onPrimaryActionButtonClick),
-                    secondaryActionButton = ErrorSecondaryButton(onSecondaryActionButtonClick),
-                    title = UiStringRes(R.string.jp_migration_generic_error_title),
-                    subtitle = UiStringRes(R.string.jp_migration_generic_error_subtitle),
-                    message = UiStringRes(R.string.jp_migration_generic_error_message),
-            )
-
-            data class Networking(
-                val onPrimaryActionButtonClick: () -> Unit,
-                val onSecondaryActionButtonClick: () -> Unit,
-            ) : Error(
-                    primaryActionButton = ErrorPrimaryButton(onPrimaryActionButtonClick),
-                    secondaryActionButton = ErrorSecondaryButton(onSecondaryActionButtonClick),
-                    title = UiStringRes(R.string.jp_migration_network_error_title),
-                    subtitle = UiStringRes(R.string.jp_migration_network_error_subtitle),
-                    message = UiStringRes(R.string.jp_migration_network_error_message),
-            )
         }
     }
 
