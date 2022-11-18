@@ -8,7 +8,6 @@ import org.wordpress.android.util.AppLog
 import org.wordpress.aztec.AztecAttributes
 import org.wordpress.aztec.plugins.shortcodes.extensions.ATTRIBUTE_VIDEOPRESS_HIDDEN_SRC
 import org.xml.sax.Attributes
-import java.util.Arrays
 import java.util.regex.Pattern
 
 object MetadataUtils {
@@ -129,7 +128,7 @@ object MetadataUtils {
         if (attributes.getIndex("class") == -1) {
             return HashSet(ArrayList())
         }
-        return HashSet(Arrays.asList(*attributes.getValue("class").split(" ").toTypedArray()))
+        return HashSet(listOf(*attributes.getValue("class").split(" ").toTypedArray()))
     }
 
     class AttributesWithClass(attrs: Attributes) {
