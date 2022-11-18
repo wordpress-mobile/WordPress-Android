@@ -61,13 +61,17 @@ sealed class LocalMigrationError {
     data class Ineligibility(val reason: IneligibleReason): LocalMigrationError()
     sealed class FeatureDisabled: LocalMigrationError() {
         object SharedLoginDisabled: FeatureDisabled()
+        object UserFlagsDisabled: FeatureDisabled()
     }
     sealed class MigrationAlreadyAttempted: LocalMigrationError() {
         object SharedLoginAlreadyAttempted: MigrationAlreadyAttempted()
+        object UserFlagsAlreadyAttempted: MigrationAlreadyAttempted()
     }
     sealed class PersistenceError: LocalMigrationError() {
         object FailedToSaveSites: PersistenceError()
+        object FailedToSaveUserFlags: PersistenceError()
     }
+    object NoUserFlagsFoundError: LocalMigrationError()
 }
 
 sealed class LocalMigrationResult<out T: LocalContentEntityData, out E: LocalMigrationError> {
