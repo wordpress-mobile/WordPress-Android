@@ -43,7 +43,9 @@ class LocalMigrationContentProvider: TrustedQueryContentProvider() {
     }
 
     // The first group is the entire match, so we drop that and parse the next captured group as an integer
-    private fun extractEntityId(groups: MatchGroupCollection) = groups.drop(1).first()?.let { parseInt(it.value) }
+    private fun extractEntityId(groups: MatchGroupCollection) = groups.drop(1).firstOrNull()?.let {
+        parseInt(it.value)
+    }
 
     private fun query(entity: LocalContentEntity, localEntityId: Int?): Cursor {
         val context = checkNotNull(context) { "Cannot find context from the provider." }
