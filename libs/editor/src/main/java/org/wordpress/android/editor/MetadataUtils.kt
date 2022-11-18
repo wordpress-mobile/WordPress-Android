@@ -13,6 +13,7 @@ import java.util.regex.Pattern
 
 object MetadataUtils {
     @JvmStatic
+    @Suppress("LongMethod")
     fun getMetadata(attrs: AttributesWithClass, naturalWidth: Int, naturalHeight: Int): JSONObject {
         val metadata = JSONObject()
         addMetadataProperty(metadata, "align", "none") // Accepted values: center, left, right or empty string.
@@ -89,6 +90,7 @@ object MetadataUtils {
         return metadata
     }
 
+    @Suppress("PrintStackTrace")
     private fun addMetadataProperty(jsonObject: JSONObject, key: String, value: String?): JSONObject {
         try {
             return jsonObject.put(key, value)
@@ -99,6 +101,7 @@ object MetadataUtils {
         return jsonObject
     }
 
+    @Suppress("PrintStackTrace")
     private fun addMetadataProperty(jsonObject: JSONObject, key: String, value: Int): JSONObject {
         try {
             return jsonObject.put(key, value)
@@ -109,6 +112,7 @@ object MetadataUtils {
         return jsonObject
     }
 
+    @Suppress("SameParameterValue", "PrintStackTrace")
     private fun addMetadataProperty(jsonObject: JSONObject, key: String, value: Boolean): JSONObject {
         try {
             return jsonObject.put(key, value)
@@ -120,6 +124,7 @@ object MetadataUtils {
     }
 
     @JvmStatic
+    @Suppress("SpreadOperator")
     fun getClassAttribute(attributes: Attributes): MutableSet<String> {
         if (attributes.getIndex("class") == -1) {
             return HashSet(ArrayList())
