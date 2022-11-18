@@ -7,7 +7,12 @@ import org.wordpress.android.datasets.wrappers.ReaderTagTableWrapper
 import org.wordpress.android.localcontentmigration.LocalContentEntity.ReaderPosts
 import org.wordpress.android.localcontentmigration.LocalContentEntityData.ReaderPostsData
 import org.wordpress.android.localcontentmigration.LocalMigrationContentResolver
-import org.wordpress.android.models.ReaderPostList
+import org.wordpress.android.localcontentmigration.LocalMigrationError.FeatureDisabled.ReaderSavedPostsDisabled
+import org.wordpress.android.localcontentmigration.LocalMigrationError.MigrationAlreadyAttempted.ReaderSavedPostsAlreadyAttempted
+import org.wordpress.android.localcontentmigration.LocalMigrationError.PersistenceError.FailedToSaveReaderSavedPosts
+import org.wordpress.android.localcontentmigration.LocalMigrationResult.Failure
+import org.wordpress.android.localcontentmigration.LocalMigrationResult.Success
+import org.wordpress.android.localcontentmigration.thenWith
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagType.BOOKMARKED
 import org.wordpress.android.reader.savedposts.JetpackReaderSavedPostsFlag
@@ -27,55 +32,40 @@ class ReaderSavedPostsHelper @Inject constructor(
     private val readerDatabaseWrapper: ReaderDatabaseWrapper,
     private val localMigrationContentResolver: LocalMigrationContentResolver,
 ) {
-    fun tryGetReaderSavedPosts(onSuccess: () -> Unit, onFailure: () -> Unit) {
-        val isFeatureFlagEnabled = jetpackReaderSavedPostsFlag.isEnabled()
-        if (!isFeatureFlagEnabled) {
-            onFailure()
-            return
-        }
-        val isFirstTry = appPrefsWrapper.getIsFirstTryReaderSavedPostsJetpack()
-        if (!isFirstTry) {
-            onFailure()
-            return
-        }
-
+    fun migrateReaderSavedPosts() = if (!jetpackReaderSavedPostsFlag.isEnabled()) {
+        Failure(ReaderSavedPostsDisabled)
+    } else if (!appPrefsWrapper.getIsFirstTryReaderSavedPostsJetpack()) {
+        Failure(ReaderSavedPostsAlreadyAttempted)
+    } else {
         readerSavedPostsAnalyticsTracker.trackStart()
         appPrefsWrapper.saveIsFirstTryReaderSavedPostsJetpack(false)
-        val (savedPosts) = localMigrationContentResolver.getDataForEntityType<ReaderPostsData>(ReaderPosts)
-        updateReaderSavedPosts(onSuccess, onFailure, savedPosts)
-    }
+        localMigrationContentResolver.getResultForEntityType<ReaderPostsData>(ReaderPosts)
+    }.thenWith(::updateReaderSavedPosts)
 
-    @Suppress("TooGenericExceptionCaught", "SwallowedException")
-    private fun updateReaderSavedPosts(
-        onSuccess: () -> Unit,
-        onFailure: () -> Unit,
-        posts: ReaderPostList
-    ) {
-        try {
-            if (posts.isNotEmpty()) {
-                readerDatabaseWrapper.reset(false)
-                readerTagTableWrapper.addOrUpdateTag(
-                        ReaderTag(
-                                "",
-                                contextProvider.getContext().getString(R.string.reader_save_for_later_display_name),
-                                contextProvider.getContext().getString(R.string.reader_save_for_later_title),
-                                "",
-                                BOOKMARKED
-                        )
-                )
+    private fun updateReaderSavedPosts(postsData: ReaderPostsData) = runCatching {
+        if (postsData.posts.isNotEmpty()) {
+            readerDatabaseWrapper.reset(false)
+            readerTagTableWrapper.addOrUpdateTag(
+                    ReaderTag(
+                            "",
+                            contextProvider.getContext().getString(R.string.reader_save_for_later_display_name),
+                            contextProvider.getContext().getString(R.string.reader_save_for_later_title),
+                            "",
+                            BOOKMARKED
+                    )
+            )
 
-                requireNotNull(readerTagTableWrapper.getBookmarkTags()) {
-                    "unexpected null bookmark tags"
-                }.first().let {
-                    readerPostTableWrapper.addOrUpdatePosts(it, posts)
-                }
+            requireNotNull(readerTagTableWrapper.getBookmarkTags()) {
+                "unexpected null bookmark tags"
+            }.first().let {
+                readerPostTableWrapper.addOrUpdatePosts(it, postsData.posts)
             }
-
-            readerSavedPostsAnalyticsTracker.trackSuccess(posts.size)
-            onSuccess()
-        } catch (exception: Exception) {
-            readerSavedPostsAnalyticsTracker.trackFailed(ErrorType.GenericError(exception.message))
-            onFailure()
         }
+
+        readerSavedPostsAnalyticsTracker.trackSuccess(postsData.posts.size)
+        Success(postsData)
+    }.getOrElse { throwable ->
+        readerSavedPostsAnalyticsTracker.trackFailed(ErrorType.GenericError(throwable.message))
+        Failure(FailedToSaveReaderSavedPosts)
     }
 }

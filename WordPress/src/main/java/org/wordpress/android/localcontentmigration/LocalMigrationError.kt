@@ -12,14 +12,17 @@ sealed class LocalMigrationError {
     sealed class FeatureDisabled: LocalMigrationError() {
         object SharedLoginDisabled: FeatureDisabled()
         object UserFlagsDisabled: FeatureDisabled()
+        object ReaderSavedPostsDisabled: FeatureDisabled()
     }
     sealed class MigrationAlreadyAttempted: LocalMigrationError() {
         object SharedLoginAlreadyAttempted: MigrationAlreadyAttempted()
         object UserFlagsAlreadyAttempted: MigrationAlreadyAttempted()
+        object ReaderSavedPostsAlreadyAttempted: MigrationAlreadyAttempted()
     }
     sealed class PersistenceError: LocalMigrationError() {
         object FailedToSaveSites: PersistenceError()
         object FailedToSaveUserFlags: PersistenceError()
+        object FailedToSaveReaderSavedPosts: PersistenceError()
     }
     object NoUserFlagsFoundError: LocalMigrationError()
 }

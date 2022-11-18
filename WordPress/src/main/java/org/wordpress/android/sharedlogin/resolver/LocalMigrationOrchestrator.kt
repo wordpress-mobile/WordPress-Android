@@ -48,6 +48,7 @@ class LocalMigrationOrchestrator @Inject constructor(
         localMigrationContentResolver.getResultForEntityType<EligibilityStatusData>(EligibilityStatus).validate()
                 .then(sitesMigrationHelper::migrateSites)
                 .then(userFlagsHelper::migrateUserFlags)
+                .then(readerSavedPostsHelper::migrateReaderSavedPosts)
                 .then(sharedLoginHelper::login)
                 .thenWith {
                     originalTryLocalMigration(it.token)
@@ -71,16 +72,9 @@ class LocalMigrationOrchestrator @Inject constructor(
         }
     }
     private fun originalTryLocalMigration(accessToken: String) {
-        readerSavedPostsHelper.tryGetReaderSavedPosts(
-                {
-                    migrateLocalContent()
-                    dispatchUpdateAccessToken(accessToken)
-                    reloadMainScreen()
-                },
-                {
-                    reloadMainScreen()
-                }
-        )
+        migrateLocalContent()
+        dispatchUpdateAccessToken(accessToken)
+        reloadMainScreen()
     }
 
     fun migrateLocalContent() {
