@@ -14,9 +14,11 @@ import org.wordpress.android.localcontentmigration.LocalMigrationError
 import org.wordpress.android.localcontentmigration.LocalMigrationError.FeatureDisabled
 import org.wordpress.android.localcontentmigration.LocalMigrationError.Ineligibility
 import org.wordpress.android.localcontentmigration.LocalMigrationError.MigrationAlreadyAttempted
+import org.wordpress.android.localcontentmigration.LocalMigrationError.PersistenceError
 import org.wordpress.android.localcontentmigration.LocalMigrationError.ProviderError
 import org.wordpress.android.localcontentmigration.LocalMigrationResult.Success
 import org.wordpress.android.localcontentmigration.SharedLoginHelper
+import org.wordpress.android.localcontentmigration.SitesMigrationHelper
 import org.wordpress.android.localcontentmigration.otherwise
 import org.wordpress.android.localcontentmigration.then
 import org.wordpress.android.localcontentmigration.thenWith
@@ -39,9 +41,11 @@ class LocalMigrationOrchestrator @Inject constructor(
     private val readerSavedPostsResolver: ReaderSavedPostsResolver,
     private val localMigrationContentResolver: LocalMigrationContentResolver,
     private val sharedLoginHelper: SharedLoginHelper,
+    private val sitesMigrationHelper: SitesMigrationHelper,
 ) {
     fun tryLocalMigration() {
         localMigrationContentResolver.getResultForEntityType<EligibilityStatusData>(EligibilityStatus).validate()
+                .then(sitesMigrationHelper::migrateSites)
                 .then(sharedLoginHelper::login)
                 .thenWith {
                     originalTryLocalMigration(it.token)
@@ -60,16 +64,10 @@ class LocalMigrationOrchestrator @Inject constructor(
             }
             is FeatureDisabled -> Unit
             is MigrationAlreadyAttempted -> Unit
+            is PersistenceError -> Unit
         }
     }
     private fun originalTryLocalMigration(accessToken: String) {
-        @Suppress("ForbiddenComment")
-        // TODO: Extract sites migration to helper
-//        val hasSites = sites.isNotEmpty()
-//
-//        if (hasSites) {
-//            resolverUtility.copySitesWithIndexes(sites)
-//        }
         userFlagsResolver.tryGetUserFlags(
                 {
                     readerSavedPostsResolver.tryGetReaderSavedPosts(

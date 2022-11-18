@@ -65,6 +65,9 @@ sealed class LocalMigrationError {
     sealed class MigrationAlreadyAttempted: LocalMigrationError() {
         object SharedLoginAlreadyAttempted: MigrationAlreadyAttempted()
     }
+    sealed class PersistenceError: LocalMigrationError() {
+        object FailedToSaveSites: PersistenceError()
+    }
 }
 
 sealed class LocalMigrationResult<out T: LocalContentEntityData, out E: LocalMigrationError> {
