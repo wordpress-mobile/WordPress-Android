@@ -194,28 +194,28 @@ class JetpackMigrationViewModel @Inject constructor(
             val title: UiString,
             val subtitle: UiString,
             val message: UiString,
-            open val primaryActionButton: ErrorPrimaryButton,
-            open val secondaryActionButton: ErrorSecondaryButton,
-        ) {
+            val primaryActionButton: ErrorPrimaryButton,
+            val secondaryActionButton: ErrorSecondaryButton,
+        ): UiState() {
             @DrawableRes val screenIconRes = R.drawable.ic_jetpack_migration_error
 
             data class Generic(
-                override val primaryActionButton: ErrorPrimaryButton,
-                override val secondaryActionButton: ErrorSecondaryButton,
+                val onPrimaryActionButtonClick: () -> Unit,
+                val onSecondaryActionButtonClick: () -> Unit,
             ) : Error(
-                    primaryActionButton = primaryActionButton,
-                    secondaryActionButton = secondaryActionButton,
+                    primaryActionButton = ErrorPrimaryButton(onPrimaryActionButtonClick),
+                    secondaryActionButton = ErrorSecondaryButton(onSecondaryActionButtonClick),
                     title = UiStringRes(R.string.jp_migration_generic_error_title),
                     subtitle = UiStringRes(R.string.jp_migration_generic_error_subtitle),
                     message = UiStringRes(R.string.jp_migration_generic_error_message),
             )
 
             data class Networking(
-                override val primaryActionButton: ErrorPrimaryButton,
-                override val secondaryActionButton: ErrorSecondaryButton,
+                val onPrimaryActionButtonClick: () -> Unit,
+                val onSecondaryActionButtonClick: () -> Unit,
             ) : Error(
-                    primaryActionButton = primaryActionButton,
-                    secondaryActionButton = secondaryActionButton,
+                    primaryActionButton = ErrorPrimaryButton(onPrimaryActionButtonClick),
+                    secondaryActionButton = ErrorSecondaryButton(onSecondaryActionButtonClick),
                     title = UiStringRes(R.string.jp_migration_network_error_title),
                     subtitle = UiStringRes(R.string.jp_migration_network_error_subtitle),
                     message = UiStringRes(R.string.jp_migration_network_error_message),
