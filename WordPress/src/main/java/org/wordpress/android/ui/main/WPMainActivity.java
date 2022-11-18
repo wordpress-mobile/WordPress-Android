@@ -460,7 +460,10 @@ public class WPMainActivity extends LocaleAwareActivity implements
         if (!mSelectedSiteRepository.hasSelectedSite()) {
             initSelectedSite();
         }
-        mLocalMigrationOrchestrator.tryLocalMigration();
+
+        if (mBuildConfigWrapper.isJetpackApp()) {
+            mLocalMigrationOrchestrator.tryLocalMigration();
+        }
 
         // TODO: this is temporary to enable testing the migration flow UI
         if (mJetpackAppMigrationFlowUtils.shouldShowMigrationFlow()) {
