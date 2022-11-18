@@ -27,7 +27,7 @@ import org.wordpress.android.reader.savedposts.resolver.ReaderSavedPostsResolver
 import org.wordpress.android.sharedlogin.SharedLoginAnalyticsTracker
 import org.wordpress.android.sharedlogin.SharedLoginAnalyticsTracker.ErrorType
 import org.wordpress.android.ui.main.WPMainActivity
-import org.wordpress.android.userflags.resolver.UserFlagsResolver
+import org.wordpress.android.userflags.resolver.UserFlagsHelper
 import org.wordpress.android.util.AccountActionBuilderWrapper
 import org.wordpress.android.viewmodel.ContextProvider
 import javax.inject.Inject
@@ -37,7 +37,7 @@ class LocalMigrationOrchestrator @Inject constructor(
     private val dispatcher: Dispatcher,
     private val accountActionBuilderWrapper: AccountActionBuilderWrapper,
     private val sharedLoginAnalyticsTracker: SharedLoginAnalyticsTracker,
-    private val userFlagsResolver: UserFlagsResolver,
+    private val userFlagsHelper: UserFlagsHelper,
     private val readerSavedPostsResolver: ReaderSavedPostsResolver,
     private val localMigrationContentResolver: LocalMigrationContentResolver,
     private val sharedLoginHelper: SharedLoginHelper,
@@ -68,7 +68,7 @@ class LocalMigrationOrchestrator @Inject constructor(
         }
     }
     private fun originalTryLocalMigration(accessToken: String) {
-        userFlagsResolver.tryGetUserFlags(
+        userFlagsHelper.tryGetUserFlags(
                 {
                     readerSavedPostsResolver.tryGetReaderSavedPosts(
                             {

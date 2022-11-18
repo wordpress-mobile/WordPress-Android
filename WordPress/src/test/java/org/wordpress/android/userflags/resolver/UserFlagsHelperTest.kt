@@ -20,14 +20,14 @@ import org.wordpress.android.util.publicdata.WordPressPublicData
 @Suppress("ForbiddenComment", "UNUSED_VARIABLE")
 // TODO: adapt these tests to the unified provider / orchestrator approach
 @Ignore("Disabled for now: will refactor in another PR after unification.")
-class UserFlagsResolverTest {
+class UserFlagsHelperTest {
     private val jetpackLocalUserFlagsFlag: JetpackLocalUserFlagsFlag = mock()
     private val wordPressPublicData: WordPressPublicData = mock()
     private val appPrefsWrapper: AppPrefsWrapper = mock()
     private val userFlagsAnalyticsTracker: UserFlagsAnalyticsTracker = mock()
     private val localMigrationContentResolver: LocalMigrationContentResolver = mock()
     private val resolverUtility: ResolverUtility = mock()
-    private val classToTest = UserFlagsResolver(
+    private val classToTest = UserFlagsHelper(
             jetpackLocalUserFlagsFlag,
             appPrefsWrapper,
             userFlagsAnalyticsTracker,

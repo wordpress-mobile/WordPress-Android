@@ -10,7 +10,7 @@ import org.wordpress.android.userflags.UserFlagsAnalyticsTracker
 import org.wordpress.android.userflags.UserFlagsAnalyticsTracker.ErrorType
 import javax.inject.Inject
 
-class UserFlagsResolver @Inject constructor(
+class UserFlagsHelper @Inject constructor(
     private val jetpackLocalUserFlagsFlag: JetpackLocalUserFlagsFlag,
     private val appPrefsWrapper: AppPrefsWrapper,
     private val userFlagsAnalyticsTracker: UserFlagsAnalyticsTracker,
