@@ -14,6 +14,7 @@ import org.wordpress.android.localcontentmigration.LocalMigrationError
 import org.wordpress.android.localcontentmigration.LocalMigrationError.FeatureDisabled
 import org.wordpress.android.localcontentmigration.LocalMigrationError.Ineligibility
 import org.wordpress.android.localcontentmigration.LocalMigrationError.MigrationAlreadyAttempted
+import org.wordpress.android.localcontentmigration.LocalMigrationError.NoUserFlagsFoundError
 import org.wordpress.android.localcontentmigration.LocalMigrationError.PersistenceError
 import org.wordpress.android.localcontentmigration.LocalMigrationError.ProviderError
 import org.wordpress.android.localcontentmigration.LocalMigrationResult.Success
@@ -66,6 +67,7 @@ class LocalMigrationOrchestrator @Inject constructor(
             is FeatureDisabled -> Unit
             is MigrationAlreadyAttempted -> Unit
             is PersistenceError -> Unit
+            is NoUserFlagsFoundError -> Unit
         }
     }
     private fun originalTryLocalMigration(accessToken: String) {
