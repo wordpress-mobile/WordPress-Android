@@ -2,9 +2,20 @@
 common_params:
   # Common plugin settings to use with the `plugins` key.
   - &common_plugins
-    - automattic/bash-cache#2.1.0
+    - automattic/bash-cache#add/validate_gradle_wrapper_script
 
 steps:
+  #################
+  # Gradle Wrapper Validation
+  #################
+  - label: "Gradle Wrapper Validation"
+    command: |
+      validate_gradle_wrapper
+    plugins: *common_plugins
+
+  # Wait for Gradle Wrapper to be validated before running any other jobs
+  - wait
+
   #################
   # Linters
   #################
