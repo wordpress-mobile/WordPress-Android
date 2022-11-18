@@ -60,6 +60,12 @@ sealed class LocalMigrationError {
         data class ParsingException(val forEntity: LocalContentEntity): ProviderError()
     }
     data class Ineligibility(val reason: Ineligible): LocalMigrationError()
+    sealed class FeatureDisabled: LocalMigrationError() {
+        object SharedLoginDisabled: FeatureDisabled()
+    }
+    sealed class MigrationAlreadyAttempted: LocalMigrationError() {
+        object SharedLoginAlreadyAttempted: MigrationAlreadyAttempted()
+    }
 }
 
 sealed class LocalMigrationResult<out T: LocalContentEntityData, out E: LocalMigrationError> {
@@ -68,8 +74,14 @@ sealed class LocalMigrationResult<out T: LocalContentEntityData, out E: LocalMig
 }
 
 fun <T: LocalContentEntityData, U: LocalContentEntityData, E: LocalMigrationError> LocalMigrationResult<T, E>
-        .then(next: (T) -> LocalMigrationResult<U, E>) = when (this) {
+        .thenWith(next: (T) -> LocalMigrationResult<U, E>) = when (this) {
     is Success -> next(this.value)
+    is Failure -> this
+}
+
+fun <T: LocalContentEntityData> LocalMigrationResult<LocalContentEntityData, LocalMigrationError>
+        .then(next: () -> LocalMigrationResult<T, LocalMigrationError>) = when (this) {
+    is Success -> next()
     is Failure -> this
 }
 
