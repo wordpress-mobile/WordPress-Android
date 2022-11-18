@@ -3,9 +3,9 @@ package org.wordpress.android.sharedlogin.resolver
 import android.content.Intent
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.PostActionBuilder
-import org.wordpress.android.localcontentmigration.EligibilityState.Ineligible.WPNotLoggedIn
 import org.wordpress.android.localcontentmigration.LocalContentEntity.EligibilityStatus
 import org.wordpress.android.localcontentmigration.LocalContentEntity.Post
+import org.wordpress.android.localcontentmigration.LocalContentEntityData.Companion.IneligibleReason.WPNotLoggedIn
 import org.wordpress.android.localcontentmigration.LocalContentEntityData.EligibilityStatusData
 import org.wordpress.android.localcontentmigration.LocalContentEntityData.PostData
 import org.wordpress.android.localcontentmigration.LocalContentEntityData.PostsData
@@ -56,7 +56,7 @@ class LocalMigrationOrchestrator @Inject constructor(
         when(error) {
             is ProviderError -> Unit
             is Ineligibility -> when (error.reason) {
-                is WPNotLoggedIn -> sharedLoginAnalyticsTracker.trackLoginFailed(ErrorType.WPNotLoggedInError)
+                WPNotLoggedIn -> sharedLoginAnalyticsTracker.trackLoginFailed(ErrorType.WPNotLoggedInError)
             }
             is FeatureDisabled -> Unit
             is MigrationAlreadyAttempted -> Unit

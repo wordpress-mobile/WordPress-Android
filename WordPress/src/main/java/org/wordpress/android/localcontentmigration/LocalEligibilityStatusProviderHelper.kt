@@ -2,8 +2,7 @@ package org.wordpress.android.localcontentmigration
 
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
-import org.wordpress.android.localcontentmigration.EligibilityState.Eligible
-import org.wordpress.android.localcontentmigration.EligibilityState.Ineligible.WPNotLoggedIn
+import org.wordpress.android.localcontentmigration.LocalContentEntityData.Companion.IneligibleReason.WPNotLoggedIn
 import org.wordpress.android.localcontentmigration.LocalContentEntityData.EligibilityStatusData
 import org.wordpress.android.localcontentmigration.LocalMigrationError.Ineligibility
 import org.wordpress.android.localcontentmigration.LocalMigrationResult.Failure
@@ -19,19 +18,18 @@ class LocalEligibilityStatusProviderHelper @Inject constructor(
         // TODO: check for eligibility of local content
         val hasToken = !accountStore.accessToken.isNullOrBlank()
         val hasSelfHostedSites = siteStore.sites.any { !it.isUsingWpComRestApi }
-        return EligibilityStatusData(
-                eligibilityState = when (hasToken || hasSelfHostedSites) {
-                    true -> Eligible
-                    false -> WPNotLoggedIn
-                }
-        )
+        val isEligible = hasToken || hasSelfHostedSites
+        val reason = if (!isEligible) WPNotLoggedIn else null
+        return EligibilityStatusData(isEligible, reason)
     }
 }
 
 fun <E: LocalMigrationError> LocalMigrationResult<EligibilityStatusData, E>.validate() = when (this) {
-    is Success -> when(this.value.eligibilityState) {
-        is Eligible -> this
-        is WPNotLoggedIn -> Failure(Ineligibility(this.value.eligibilityState))
+    is Success -> if (this.value.isEligible) {
+        this
+    } else {
+        checkNotNull(this.value.reason) { "Migration should never be ineligible without a reason." }
+        Failure(Ineligibility(this.value.reason))
     }
     is Failure -> this
 }

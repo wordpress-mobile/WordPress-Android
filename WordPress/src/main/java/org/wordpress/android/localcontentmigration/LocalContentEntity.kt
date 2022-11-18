@@ -5,7 +5,7 @@ import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.QuickStartStatusModel
 import org.wordpress.android.fluxc.model.QuickStartTaskModel
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.localcontentmigration.EligibilityState.Ineligible
+import org.wordpress.android.localcontentmigration.LocalContentEntityData.Companion.IneligibleReason
 import org.wordpress.android.localcontentmigration.LocalMigrationResult.Failure
 import org.wordpress.android.localcontentmigration.LocalMigrationResult.Success
 import org.wordpress.android.models.ReaderPostList
@@ -31,15 +31,8 @@ enum class LocalContentEntity(private val isIdentifiable: Boolean = false) {
     }
 }
 
-sealed class EligibilityState {
-    object Eligible: EligibilityState()
-    sealed class Ineligible: EligibilityState() {
-        object WPNotLoggedIn: Ineligible()
-    }
-}
-
 sealed class LocalContentEntityData {
-    data class EligibilityStatusData(val eligibilityState: EligibilityState): LocalContentEntityData()
+    data class EligibilityStatusData(val isEligible: Boolean, val reason: IneligibleReason?): LocalContentEntityData()
     data class AccessTokenData(val token: String): LocalContentEntityData()
     data class UserFlagsData(
         val flags: Map<String, Any?>,
@@ -51,6 +44,12 @@ sealed class LocalContentEntityData {
     data class SitesData(val sites: List<SiteModel>): LocalContentEntityData()
     data class PostsData(val localIds: List<Int>): LocalContentEntityData()
     data class PostData(val post: PostModel) : LocalContentEntityData()
+    companion object {
+        enum class IneligibleReason {
+            WPNotLoggedIn,
+            ;
+        }
+    }
 }
 
 sealed class LocalMigrationError {
@@ -59,7 +58,7 @@ sealed class LocalMigrationError {
         data class NullCursor(val forEntity: LocalContentEntity): ProviderError()
         data class ParsingException(val forEntity: LocalContentEntity): ProviderError()
     }
-    data class Ineligibility(val reason: Ineligible): LocalMigrationError()
+    data class Ineligibility(val reason: IneligibleReason): LocalMigrationError()
     sealed class FeatureDisabled: LocalMigrationError() {
         object SharedLoginDisabled: FeatureDisabled()
     }
