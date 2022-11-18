@@ -266,9 +266,9 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
     ) : MySiteCardAndItem(type, activeQuickStartItem) {
         data class InfoItem(val title: UiString) : Item(INFO_ITEM)
 
-        data class InfoCard(
-            @StringRes val infoResource: Int,
-            val onInfoClick: () -> Unit
+        data class SingleActionCard(
+            @StringRes val textResource: Int,
+            val onActionClick: () -> Unit
         ) : Item(INFO_CARD)
 
         data class CategoryHeaderItem(val title: UiString) : Item(CATEGORY_HEADER_ITEM)

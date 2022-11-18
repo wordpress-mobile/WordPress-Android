@@ -99,8 +99,8 @@ sealed class MySiteCardAndItemBuilderParams {
         val onSkipClick: () -> Unit
     ) : MySiteCardAndItemBuilderParams()
 
-    data class InfoCardParams(
-        @StringRes val infoResource: Int,
-        val onInfoClick: () -> Unit
+    data class SingleActionCardParams(
+        @StringRes val textResource: Int,
+        val onActionClick: () -> Unit
     )
 }
