@@ -53,7 +53,7 @@ sealed class LocalContentEntityData {
     data class PostData(val post: PostModel) : LocalContentEntityData()
 }
 
-sealed class LocalMigrationError: LocalContentEntityData() {
+sealed class LocalMigrationError {
     sealed class ProviderError: LocalMigrationError() {
         data class NullValueFromQuery(val forEntity: LocalContentEntity): ProviderError()
         data class NullCursor(val forEntity: LocalContentEntity): ProviderError()
