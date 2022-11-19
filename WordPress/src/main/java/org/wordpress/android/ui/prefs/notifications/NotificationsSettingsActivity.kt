@@ -11,6 +11,8 @@ import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
 import androidx.preference.PreferenceManager
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.MAIN
@@ -20,12 +22,19 @@ import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.NOTIFICATION_SETTINGS_APP_NOTIFICATIONS_DISABLED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.NOTIFICATION_SETTINGS_APP_NOTIFICATIONS_ENABLED
+import org.wordpress.android.modules.APPLICATION_SCOPE
 import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.notifications.NotificationEvents.NotificationsSettingsStatusChanged
 import org.wordpress.android.ui.prefs.notifications.PrefMainSwitchToolbarView.MainSwitchToolbarListener
+import org.wordpress.android.ui.prefs.notifications.usecase.UpdateNotificationSettingsUseCase
+import javax.inject.Inject
+import javax.inject.Named
 
 @AndroidEntryPoint
 class NotificationsSettingsActivity : LocaleAwareActivity(), MainSwitchToolbarListener {
+    @Inject lateinit var updateNotificationSettingsUseCase: UpdateNotificationSettingsUseCase
+    @Inject @Named(APPLICATION_SCOPE) lateinit var applicationScope: CoroutineScope
+
     private lateinit var messageTextView: TextView
     private lateinit var messageContainer: View
 
@@ -116,9 +125,7 @@ class NotificationsSettingsActivity : LocaleAwareActivity(), MainSwitchToolbarLi
     }
 
     override fun onMainSwitchCheckedChanged(buttonView: CompoundButton?, isChecked: Boolean) {
-        sharedPreferences.edit()
-                .putBoolean(getString(string.wp_pref_notifications_main), isChecked)
-                .apply()
+        applicationScope.launch { updateNotificationSettingsUseCase.updateNotificationSettings(isChecked) }
 
         hideDisabledView(isChecked)
 
