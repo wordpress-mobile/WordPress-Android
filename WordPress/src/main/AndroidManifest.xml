@@ -379,32 +379,6 @@
             android:theme="@style/WordPress.NoActionBar"
             android:excludeFromRecents="true"
             android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data
-                    android:host="viewpost"
-                    android:scheme="wordpress" />
-                <data
-                    android:host="stats"
-                    android:scheme="wordpress" />
-                <data
-                    android:host="read"
-                    android:scheme="wordpress" />
-                <data
-                    android:host="post"
-                    android:scheme="wordpress" />
-                <data
-                    android:host="notifications"
-                    android:scheme="wordpress" />
-                <data
-                    android:host="home"
-                    android:scheme="wordpress" />
-            </intent-filter>
-
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
 
@@ -456,6 +430,39 @@
                     android:pathPattern="/notifications/.*"
                     android:scheme="http" />
 
+            </intent-filter>
+        </activity>
+
+        <!-- Custom Wordpress Scheme Deep Linking Activity -->
+        <activity
+            android:name="org.wordpress.android.ui.deeplinks.DeepLinkingCustomIntentReceiverActivity"
+            android:theme="@style/WordPress.NoActionBar"
+            android:excludeFromRecents="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="viewpost"
+                    android:scheme="wordpress" />
+                <data
+                    android:host="stats"
+                    android:scheme="wordpress" />
+                <data
+                    android:host="read"
+                    android:scheme="wordpress" />
+                <data
+                    android:host="post"
+                    android:scheme="wordpress" />
+                <data
+                    android:host="notifications"
+                    android:scheme="wordpress" />
+                <data
+                    android:host="home"
+                    android:scheme="wordpress" />
             </intent-filter>
         </activity>
 
