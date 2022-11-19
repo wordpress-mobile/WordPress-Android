@@ -7,12 +7,16 @@ import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import kotlinx.coroutines.cancel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.cancel
 import org.wordpress.android.R
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.accounts.HelpActivity.Origin
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayFragment
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayViewModel
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureOverlayScreenType
 import org.wordpress.android.ui.main.SitePickerActivity
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogNegativeClickInterface
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface
@@ -46,6 +50,7 @@ import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.ActivityUtils
 import org.wordpress.android.util.config.SiteNameFeatureConfig
 import org.wordpress.android.util.wizard.WizardNavigationTarget
+import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -63,6 +68,8 @@ class SiteCreationActivity : LocaleAwareActivity(),
     private val hppViewModel: HomePagePickerViewModel by viewModels()
     private val siteCreationIntentsViewModel: SiteCreationIntentsViewModel by viewModels()
     private val siteCreationSiteNameViewModel: SiteCreationSiteNameViewModel by viewModels()
+    private val jetpackFullScreenViewModel: JetpackFeatureFullScreenOverlayViewModel by viewModels()
+    @Inject internal lateinit var jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -139,6 +146,19 @@ class SiteCreationActivity : LocaleAwareActivity(),
         hppViewModel.onDesignActionPressed.observe(this, Observer { design ->
             mainViewModel.onSiteDesignSelected(design.template)
         })
+
+        jetpackFullScreenViewModel.action.observe(this) { _ ->
+            if (mainViewModel.siteCreationDisabled) finish()
+        }
+
+        mainViewModel.showJetpackOverlay.observeEvent(this) {
+            val fragment = JetpackFeatureFullScreenOverlayFragment
+                    .newInstance(JetpackFeatureOverlayScreenType.SITE_CREATION)
+            if (mainViewModel.siteCreationDisabled)
+                slideInFragment(fragment, JetpackFeatureFullScreenOverlayFragment.TAG)
+            else fragment.show(supportFragmentManager, JetpackFeatureFullScreenOverlayFragment.TAG)
+
+        }
     }
 
     override fun onIntentSelected(intent: String?) {
