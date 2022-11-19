@@ -147,6 +147,10 @@ class SiteCreationActivity : LocaleAwareActivity(),
             mainViewModel.onSiteDesignSelected(design.template)
         })
 
+        observeOverlayEvents()
+    }
+
+    private fun observeOverlayEvents() {
         jetpackFullScreenViewModel.action.observe(this) { _ ->
             if (mainViewModel.siteCreationDisabled) finish()
         }

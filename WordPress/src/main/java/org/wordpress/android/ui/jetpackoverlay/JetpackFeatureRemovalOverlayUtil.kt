@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.jetpackoverlay
 
-import android.util.Log
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayPhase.PHASE_ONE
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayPhase.PHASE_THREE
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayPhase.PHASE_TWO
@@ -133,7 +132,7 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
     }
 
     private fun trackSiteCreationOverlayShown() {
-        // TODO: add tracking logic
+        // add tracking logic
     }
 
     enum class JetpackFeatureOverlayScreenType {
