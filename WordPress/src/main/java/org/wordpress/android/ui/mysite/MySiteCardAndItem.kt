@@ -268,6 +268,7 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
 
         data class SingleActionCard(
             @StringRes val textResource: Int,
+            @DrawableRes val imageResource: Int,
             val onActionClick: () -> Unit
         ) : Item(INFO_CARD)
 

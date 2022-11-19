@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.mysite
 
+import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.bloggingprompts.BloggingPromptModel
@@ -101,6 +102,7 @@ sealed class MySiteCardAndItemBuilderParams {
 
     data class SingleActionCardParams(
         @StringRes val textResource: Int,
+        @DrawableRes val imageResource: Int,
         val onActionClick: () -> Unit
     )
 }

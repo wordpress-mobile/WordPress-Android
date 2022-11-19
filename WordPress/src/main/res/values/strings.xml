@@ -2330,6 +2330,9 @@
     <string name="my_site_blogging_prompt_card_number_of_answers_one">1 answer</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_other">%d answers</string>
 
+    <!-- My Site - Jetpack migration success card -->
+    <string name="jp_migration_success_card">Please delete the WordPress app</string>
+
     <!-- site picker -->
     <string name="site_picker_title">Choose site</string>
     <string name="site_picker_edit_visibility">Show/hide sites</string>

@@ -8,6 +8,7 @@ class SingleActionCardBuilder @Inject constructor() {
     fun build(params: SingleActionCardParams): SingleActionCard = with(params) {
         SingleActionCard(
                 textResource = textResource,
+                imageResource = imageResource,
                 onActionClick = onActionClick
         )
     }
