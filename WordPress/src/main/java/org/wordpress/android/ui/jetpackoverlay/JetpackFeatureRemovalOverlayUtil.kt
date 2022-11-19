@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.jetpackoverlay
 
+import android.util.Log
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayPhase.PHASE_ONE
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayPhase.PHASE_THREE
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayPhase.PHASE_TWO
@@ -37,6 +38,12 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
 
     fun shouldShowSiteCreationOverlay(): Boolean {
         return !buildConfigWrapper.isJetpackApp && isInSiteCreationPhase()
+    }
+
+    fun shouldDisableSiteCreation(): Boolean {
+        return shouldShowSiteCreationOverlay() &&
+                jetpackFeatureRemovalPhaseHelper.getSiteCreationPhase() ==
+                JetpackFeatureRemovalSiteCreationPhase.PHASE_TWO
     }
 
     private fun isInSiteCreationPhase(): Boolean {
@@ -120,9 +127,13 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
                 STATS -> onFeatureSpecificOverlayShown(JetpackOverlayConnectedFeature.STATS)
                 NOTIFICATIONS -> onFeatureSpecificOverlayShown(JetpackOverlayConnectedFeature.NOTIFICATIONS)
                 READER -> onFeatureSpecificOverlayShown(JetpackOverlayConnectedFeature.READER)
-                SITE_CREATION -> TODO()
+                SITE_CREATION -> trackSiteCreationOverlayShown()
             }
         }
+    }
+
+    private fun trackSiteCreationOverlayShown() {
+        // TODO: add tracking logic
     }
 
     enum class JetpackFeatureOverlayScreenType {

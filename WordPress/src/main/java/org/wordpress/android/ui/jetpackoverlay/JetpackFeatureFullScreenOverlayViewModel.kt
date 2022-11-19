@@ -36,15 +36,24 @@ class JetpackFeatureFullScreenOverlayViewModel @Inject constructor(
     }
 
     fun init(overlayScreenType: JetpackFeatureOverlayScreenType?, rtlLayout: Boolean) {
-        val params = JetpackFeatureOverlayContentBuilderParams(
-                currentPhase = getCurrentPhase()!!,
-                isRtl = rtlLayout,
-                feature = overlayScreenType
-        )
-        _uiState.postValue(jetpackFeatureOverlayContentBuilder.build(params = params))
+        val state: JetpackFeatureOverlayUIState = when (overlayScreenType) {
+            JetpackFeatureOverlayScreenType.SITE_CREATION -> jetpackFeatureOverlayContentBuilder
+                    .buildSiteCreationOverlayState(getSiteCreationPhase()!!, rtlLayout)
+            else -> {
+                val params = JetpackFeatureOverlayContentBuilderParams(
+                        currentPhase = getCurrentPhase()!!,
+                        isRtl = rtlLayout,
+                        feature = overlayScreenType
+                )
+                jetpackFeatureOverlayContentBuilder.build(params = params)
+            }
+        }
+        _uiState.postValue(state)
         jetpackFeatureRemovalOverlayUtil.onOverlayShown(overlayScreenType)
     }
 
     private fun getCurrentPhase() = jetpackFeatureRemovalPhaseHelper.getCurrentPhase()
+
+    private fun getSiteCreationPhase() = jetpackFeatureRemovalPhaseHelper.getSiteCreationPhase()
 }
 

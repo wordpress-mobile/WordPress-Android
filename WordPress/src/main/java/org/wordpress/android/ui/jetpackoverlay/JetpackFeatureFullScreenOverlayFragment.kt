@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -25,7 +25,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class JetpackFeatureFullScreenOverlayFragment : BottomSheetDialogFragment() {
     @Inject lateinit var activityLauncherWrapper: ActivityLauncherWrapper
-    private val viewModel: JetpackFeatureFullScreenOverlayViewModel by viewModels()
+    private val viewModel: JetpackFeatureFullScreenOverlayViewModel by activityViewModels()
 
     private var _binding: JetpackFeatureRemovalOverlayBinding? = null
     private val binding get() = _binding ?: throw NullPointerException("_binding cannot be null")
@@ -126,7 +126,7 @@ class JetpackFeatureFullScreenOverlayFragment : BottomSheetDialogFragment() {
             title.text = getString(it.title)
             caption.text = getString(it.caption)
             primaryButton.text = getString(it.primaryButtonText)
-            secondaryButton.text = getString(it.secondaryButtonText)
+            it.secondaryButtonText?.let {  secondaryButton.text = getString(it) }
         }
     }
 
