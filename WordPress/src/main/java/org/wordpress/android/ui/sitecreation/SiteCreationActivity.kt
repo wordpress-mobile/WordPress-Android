@@ -161,7 +161,6 @@ class SiteCreationActivity : LocaleAwareActivity(),
             if (mainViewModel.siteCreationDisabled)
                 slideInFragment(fragment, JetpackFeatureFullScreenOverlayFragment.TAG)
             else fragment.show(supportFragmentManager, JetpackFeatureFullScreenOverlayFragment.TAG)
-
         }
     }
 
