@@ -2,7 +2,7 @@ package org.wordpress.android.ui.prefs.notifications.usecase
 
 import android.content.SharedPreferences
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.BloggingRemindersStore
@@ -52,18 +52,17 @@ class UpdateNotificationSettingsUseCase @Inject constructor(
      * Fetches saved blogging reminders from the db and schedules reminders for them.
      */
     private suspend fun scheduleSavedBloggingReminders() = withContext(ioDispatcher) {
-        bloggingRemindersStore.getAll().collect { bloggingRemindersModelList ->
-            bloggingRemindersModelList.forEach { bloggingRemindersModel ->
-                val daysCount = bloggingRemindersModel.enabledDays.size
-                if (daysCount > 0) {
-                    val enabledDaysOfWeek = bloggingRemindersModel.enabledDays.map { DayOfWeek.valueOf(it.name) }
-                    reminderScheduler.schedule(
-                            bloggingRemindersModel.siteId,
-                            bloggingRemindersModel.hour,
-                            bloggingRemindersModel.minute,
-                            WeeklyReminder(enabledDaysOfWeek.toSet())
-                    )
-                }
+        val bloggingRemindersModelList = bloggingRemindersStore.getAll().first()
+        bloggingRemindersModelList.forEach { bloggingRemindersModel ->
+            val daysCount = bloggingRemindersModel.enabledDays.size
+            if (daysCount > 0) {
+                val enabledDaysOfWeek = bloggingRemindersModel.enabledDays.map { DayOfWeek.valueOf(it.name) }
+                reminderScheduler.schedule(
+                        bloggingRemindersModel.siteId,
+                        bloggingRemindersModel.hour,
+                        bloggingRemindersModel.minute,
+                        WeeklyReminder(enabledDaysOfWeek.toSet())
+                )
             }
         }
     }
