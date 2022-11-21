@@ -19,10 +19,10 @@ import androidx.appcompat.app.AlertDialog;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.ui.utils.UiHelpers;
+import org.wordpress.android.util.ArrayUtils;
 
 import java.util.Locale;
 
