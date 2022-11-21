@@ -4,9 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/jetpack_powered_bottom_sheet_background"
-    android:paddingEnd="@dimen/margin_extra_extra_medium_large"
-    android:paddingStart="@dimen/margin_extra_extra_medium_large">
+    android:background="@color/jetpack_powered_bottom_sheet_background">
 
     <androidx.constraintlayout.widget.Barrier
         android:id="@+id/topBarrier"
@@ -16,14 +14,17 @@
         app:constraint_referenced_ids="illustration_view"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginEnd="@dimen/margin_extra_extra_medium_large"
+        android:layout_marginStart="@dimen/margin_extra_extra_medium_large"/>
 
     <ImageButton
         android:id="@+id/close_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="20dp"
         android:background="?attr/selectableItemBackground"
-        android:layout_marginTop="@dimen/margin_extra_medium_large"
         android:padding="@dimen/margin_medium"
         android:src="@drawable/ic_close_white_24dp"
         app:layout_constraintStart_toStartOf="parent"
@@ -42,7 +43,9 @@
         app:lottie_autoPlay="true"
         app:lottie_enableMergePathsForKitKatAndAbove="true"
         app:lottie_loop="false"
-        app:lottie_rawRes="@raw/wp2jp_left" />
+        app:lottie_rawRes="@raw/wp2jp_left"
+        android:layout_marginEnd="@dimen/margin_extra_extra_medium_large"
+        android:layout_marginStart="@dimen/margin_extra_extra_medium_large"/>
 
     <TextView
         android:id="@+id/title"
@@ -55,7 +58,9 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/illustration_view"
-        tools:targetApi="p" />
+        tools:targetApi="p"
+        android:layout_marginEnd="@dimen/margin_extra_extra_medium_large"
+        android:layout_marginStart="@dimen/margin_extra_extra_medium_large"/>
 
     <TextView
         android:id="@+id/caption"
@@ -68,7 +73,9 @@
         app:layout_constraintBottom_toTopOf="@id/bottomBarrier"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/title" />
+        app:layout_constraintTop_toBottomOf="@id/title"
+        android:layout_marginEnd="@dimen/margin_extra_extra_medium_large"
+        android:layout_marginStart="@dimen/margin_extra_extra_medium_large"/>
 
     <androidx.constraintlayout.widget.Barrier
         android:id="@+id/bottomBarrier"
@@ -78,13 +85,15 @@
         app:constraint_referenced_ids="primary_button"
         app:layout_constraintBottom_toTopOf="@id/primary_button"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginEnd="@dimen/margin_extra_extra_medium_large"
+        android:layout_marginStart="@dimen/margin_extra_extra_medium_large"/>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/primary_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/jetpack_green_40"
+        android:backgroundTint="@color/jetpack_green_50"
         android:gravity="center"
         android:minHeight="@dimen/margin_64dp"
         android:text="@string/wp_jetpack_get_new_jetpack_app"
@@ -93,7 +102,9 @@
         app:cornerRadius="@dimen/margin_small_medium"
         app:layout_constraintBottom_toTopOf="@id/secondary_button"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginEnd="@dimen/margin_extra_extra_medium_large"
+        android:layout_marginStart="@dimen/margin_extra_extra_medium_large"/>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/secondary_button"
@@ -106,10 +117,12 @@
         android:minHeight="@dimen/margin_extra_extra_large"
         android:textAllCaps="false"
         android:textAppearance="?attr/textAppearanceSubtitle2"
-        android:textColor="@color/jetpack_green"
+        android:textColor="@color/jetpack_green_50"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        tools:text="Continue to Reader" />
+        tools:text="Continue to Reader"
+        android:layout_marginEnd="@dimen/margin_extra_extra_medium_large"
+        android:layout_marginStart="@dimen/margin_extra_extra_medium_large"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
