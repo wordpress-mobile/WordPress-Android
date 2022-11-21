@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.deeplinks
 
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.FirebaseRemoteConfigWrapper
 import org.wordpress.android.util.PackageManagerWrapper
@@ -13,9 +14,15 @@ class DeepLinkOpenWebLinksWithJetpackHelper @Inject constructor(
     private val appPrefsWrapper: AppPrefsWrapper,
     private val firebaseRemoteConfigWrapper: FirebaseRemoteConfigWrapper,
     private val packageManagerWrapper: PackageManagerWrapper,
-    private val dateTimeUtilsWrapper: DateTimeUtilsWrapper
+    private val dateTimeUtilsWrapper: DateTimeUtilsWrapper,
+    private val buildConfigWrapper: BuildConfigWrapper
 ) {
     fun shouldShowDeepLinkOpenWebLinksWithJetpackOverlay() = showOverlay()
+
+    fun shouldShowAppSetting(): Boolean {
+        return openWebLinksWithJetpackFlowFeatureConfig.isEnabled()
+                && isJetpackInstalled()
+    }
 
     private fun showOverlay() : Boolean {
         return openWebLinksWithJetpackFlowFeatureConfig.isEnabled()
@@ -24,7 +31,7 @@ class DeepLinkOpenWebLinksWithJetpackHelper @Inject constructor(
                 && isValidOverlayFrequency()
     }
 
-    private fun isJetpackInstalled() = packageManagerWrapper.isPackageInstalled(JETPACK_PACKAGE_NAME)
+    private fun isJetpackInstalled() = packageManagerWrapper.isPackageInstalled(getPackageName())
 
     private fun isWebDeepLinkHandlerComponentEnabled() =
         packageManagerWrapper.isComponentEnabledSettingEnabled(DeepLinkingIntentReceiverActivity::class.java)
@@ -52,6 +59,16 @@ class DeepLinkOpenWebLinksWithJetpackHelper @Inject constructor(
             appPrefsWrapper.getOpenWebLinksWithJetpackOverlayLastShownTimestamp()
 
     private fun getTodaysDate() = Date(System.currentTimeMillis())
+
+    private fun getPackageName(): String {
+        val appSuffix = buildConfigWrapper.getApplicationId().split(".").last()
+        val appPackage = if (appSuffix.isNotBlank()) {
+            "$JETPACK_PACKAGE_NAME.${appSuffix}"
+        } else {
+            JETPACK_PACKAGE_NAME
+        }
+        return appPackage
+    }
 
     companion object {
         const val JETPACK_PACKAGE_NAME = "com.jetpack.android"
