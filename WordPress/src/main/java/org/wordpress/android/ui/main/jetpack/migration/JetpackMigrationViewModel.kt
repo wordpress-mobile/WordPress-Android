@@ -22,6 +22,8 @@ import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.CompleteFlow
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.ShowHelp
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Content
+import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Error.Generic
+import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Error.Networking
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Loading
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -86,9 +88,7 @@ class JetpackMigrationViewModel @Inject constructor(
         _uiState.value = UiState.Error(
                 primaryActionButton = ErrorPrimaryButton(::onTryAgainClicked),
                 secondaryActionButton = ErrorSecondaryButton(::onHelpClicked),
-                title = UiStringRes(R.string.jp_migration_generic_error_title),
-                subtitle = UiStringRes(R.string.jp_migration_generic_error_subtitle),
-                message = UiStringRes(R.string.jp_migration_generic_error_message),
+                type = Generic,
         )
     }
 
@@ -98,9 +98,7 @@ class JetpackMigrationViewModel @Inject constructor(
         _uiState.value = UiState.Error(
                 primaryActionButton = ErrorPrimaryButton(::onTryAgainClicked),
                 secondaryActionButton = ErrorSecondaryButton(::onHelpClicked),
-                title = UiStringRes(R.string.jp_migration_network_error_title),
-                subtitle = UiStringRes(R.string.jp_migration_network_error_subtitle),
-                message = UiStringRes(R.string.jp_migration_network_error_message),
+                type = Networking,
         )
     }
 
@@ -225,14 +223,30 @@ class JetpackMigrationViewModel @Inject constructor(
         }
 
         data class Error(
-            val title: UiString,
-            val subtitle: UiString,
-            val message: UiString,
             val primaryActionButton: ErrorPrimaryButton,
             val secondaryActionButton: ErrorSecondaryButton,
+            val type: ErrorType,
             val isProcessing: Boolean = false,
         ) : UiState() {
             @DrawableRes val screenIconRes = R.drawable.ic_jetpack_migration_error
+
+            sealed class ErrorType(
+                val title: UiString,
+                val subtitle: UiString,
+                val message: UiString,
+            )
+
+            object Generic : ErrorType(
+                    title = UiStringRes(R.string.jp_migration_generic_error_title),
+                    subtitle = UiStringRes(R.string.jp_migration_generic_error_subtitle),
+                    message = UiStringRes(R.string.jp_migration_generic_error_message),
+            )
+
+            object Networking : ErrorType(
+                    title = UiStringRes(R.string.jp_migration_network_error_title),
+                    subtitle = UiStringRes(R.string.jp_migration_network_error_subtitle),
+                    message = UiStringRes(R.string.jp_migration_network_error_message),
+            )
         }
     }
 

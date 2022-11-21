@@ -9,7 +9,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
-import org.wordpress.android.R.string
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.utils.uiStringText
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.ErrorPrimaryButton
@@ -23,7 +22,6 @@ import org.wordpress.android.ui.main.jetpack.migration.compose.components.Second
 import org.wordpress.android.ui.main.jetpack.migration.compose.components.Subtitle
 import org.wordpress.android.ui.main.jetpack.migration.compose.components.Title
 import org.wordpress.android.ui.main.jetpack.migration.compose.dimmed
-import org.wordpress.android.ui.utils.UiString.UiStringRes
 
 @Composable
 fun ErrorStep(uiState: UiState.Error) = with(uiState) {
@@ -41,15 +39,15 @@ fun ErrorStep(uiState: UiState.Error) = with(uiState) {
                     modifier = Modifier.dimmed(isProcessing)
             )
             Title(
-                    text = uiStringText(title),
+                    text = uiStringText(type.title),
                     modifier = Modifier.dimmed(isProcessing)
             )
             Subtitle(
-                    text = uiStringText(subtitle),
+                    text = uiStringText(type.subtitle),
                     modifier = Modifier.dimmed(isProcessing)
             )
             Message(
-                    text = uiStringText(message),
+                    text = uiStringText(type.message),
                     modifier = Modifier.dimmed(isProcessing)
             )
         }
@@ -75,11 +73,9 @@ fun ErrorStep(uiState: UiState.Error) = with(uiState) {
 private fun PreviewErrorStep() {
     AppTheme {
         val uiState = UiState.Error(
-                primaryActionButton = ErrorPrimaryButton {},
-                secondaryActionButton = ErrorSecondaryButton {},
-                title = UiStringRes(string.jp_migration_generic_error_title),
-                subtitle = UiStringRes(string.jp_migration_generic_error_subtitle),
-                message = UiStringRes(string.jp_migration_generic_error_message),
+            primaryActionButton = ErrorPrimaryButton {},
+            secondaryActionButton = ErrorSecondaryButton {},
+            type = UiState.Error.Generic,
         )
         ErrorStep(uiState)
     }
