@@ -31,7 +31,7 @@ class UpdateNotificationSettingsUseCase @Inject constructor(
 
         if (enabled) {
             // The switch is turned on. Schedule local notifications.
-            weeklyRoundupScheduler.schedule()
+            weeklyRoundupScheduler.scheduleIfNeeded()
             scheduleSavedBloggingReminders()
             createSiteNotificationScheduler.scheduleCreateSiteNotificationIfNeeded()
         } else {

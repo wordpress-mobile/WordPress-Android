@@ -527,7 +527,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
     private void scheduleLocalNotifications() {
         mCreateSiteNotificationScheduler.scheduleCreateSiteNotificationIfNeeded();
-        mWeeklyRoundupScheduler.schedule();
+        mWeeklyRoundupScheduler.scheduleIfNeeded();
     }
 
     @Override
