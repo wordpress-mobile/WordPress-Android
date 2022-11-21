@@ -11,7 +11,7 @@ import java.util.Calendar
 import java.util.Formatter
 import javax.inject.Inject
 
-class DateUtils @Inject constructor(
+class StatsDateUtils @Inject constructor(
     private val contextProvider: ContextProvider,
     private val localeManagerWrapper: LocaleManagerWrapper
 ) {

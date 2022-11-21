@@ -49,7 +49,7 @@ import org.wordpress.android.ui.jetpack.backup.download.usecases.PostDismissBack
 import org.wordpress.android.ui.jetpack.common.JetpackBackupDownloadActionState
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState
 import org.wordpress.android.ui.jetpack.restore.usecases.GetRestoreStatusUseCase
-import org.wordpress.android.ui.stats.refresh.utils.DateUtils
+import org.wordpress.android.ui.stats.refresh.utils.StatsDateUtils
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
@@ -108,7 +108,7 @@ class ActivityLogViewModelTest {
     @Mock private lateinit var getRestoreStatusUseCase: GetRestoreStatusUseCase
     @Mock private lateinit var getBackupDownloadStatusUseCase: GetBackupDownloadStatusUseCase
     @Mock private lateinit var resourceProvider: ResourceProvider
-    @Mock private lateinit var dateUtils: DateUtils
+    @Mock private lateinit var mStatsDateUtils: StatsDateUtils
     @Mock private lateinit var activityLogTracker: ActivityLogTracker
     @Mock private lateinit var jetpackCapabilitiesUseCase: JetpackCapabilitiesUseCase
     @Mock private lateinit var postDismissBackupDownloadUseCase: PostDismissBackupDownloadUseCase
@@ -136,7 +136,7 @@ class ActivityLogViewModelTest {
                 getBackupDownloadStatusUseCase,
                 postDismissBackupDownloadUseCase,
                 resourceProvider,
-                dateUtils,
+                mStatsDateUtils,
                 activityLogTracker,
                 jetpackCapabilitiesUseCase
         )
@@ -387,7 +387,7 @@ class ActivityLogViewModelTest {
 
     @Test
     fun dateRangeTrackDateRangeFilterSelectedEventFired() {
-        whenever(dateUtils.formatDateRange(anyOrNull(), anyOrNull(), anyOrNull())).thenReturn("TEST")
+        whenever(mStatsDateUtils.formatDateRange(anyOrNull(), anyOrNull(), anyOrNull())).thenReturn("TEST")
         val dateRange = Pair(10L, 20L)
 
         viewModel.onDateRangeSelected(dateRange)
@@ -397,7 +397,7 @@ class ActivityLogViewModelTest {
 
     @Test
     fun dateRangeFilterClearActionShownWhenFilterNotEmpty() {
-        whenever(dateUtils.formatDateRange(anyOrNull(), anyOrNull(), anyOrNull())).thenReturn("TEST")
+        whenever(mStatsDateUtils.formatDateRange(anyOrNull(), anyOrNull(), anyOrNull())).thenReturn("TEST")
         val dateRange = Pair(10L, 20L)
 
         viewModel.onDateRangeSelected(dateRange)
@@ -416,7 +416,7 @@ class ActivityLogViewModelTest {
 
     @Test
     fun onDateRangeFilterClearActionClickClearActionDisappears() {
-        whenever(dateUtils.formatDateRange(anyOrNull(), anyOrNull(), anyOrNull())).thenReturn("TEST")
+        whenever(mStatsDateUtils.formatDateRange(anyOrNull(), anyOrNull(), anyOrNull())).thenReturn("TEST")
         viewModel.onDateRangeSelected(Pair(10L, 20L))
 
         (viewModel.filtersUiState.value as FiltersShown).onClearDateRangeFilterClicked!!.invoke()
@@ -435,7 +435,7 @@ class ActivityLogViewModelTest {
 
     @Test
     fun dateRangeLabelWithDatesShownWhenFilterNotEmpty() {
-        whenever(dateUtils.formatDateRange(anyOrNull(), anyOrNull(), anyOrNull())).thenReturn("TEST")
+        whenever(mStatsDateUtils.formatDateRange(anyOrNull(), anyOrNull(), anyOrNull())).thenReturn("TEST")
 
         viewModel.onDateRangeSelected(Pair(10L, 20L))
 
@@ -444,7 +444,7 @@ class ActivityLogViewModelTest {
 
     @Test
     fun dateRangeLabelFormattingUsesGMT0Timezone() {
-        whenever(dateUtils.formatDateRange(anyOrNull(), anyOrNull(), formatDateRangeTimezoneCaptor.capture()))
+        whenever(mStatsDateUtils.formatDateRange(anyOrNull(), anyOrNull(), formatDateRangeTimezoneCaptor.capture()))
                 .thenReturn("TEST")
 
         viewModel.onDateRangeSelected(Pair(10L, 20L))
@@ -461,7 +461,7 @@ class ActivityLogViewModelTest {
 
     @Test
     fun dateRangeEndTimestampGetsAdjustedToEndOfDay() {
-        whenever(dateUtils.formatDateRange(anyOrNull(), anyOrNull(), anyOrNull())).thenReturn("TEST")
+        whenever(mStatsDateUtils.formatDateRange(anyOrNull(), anyOrNull(), anyOrNull())).thenReturn("TEST")
 
         viewModel.onDateRangeSelected(Pair(DATE_1_IN_MILLIS, DATE_2_IN_MILLIS))
         viewModel.dateRangePickerClicked()
@@ -545,7 +545,7 @@ class ActivityLogViewModelTest {
 
     @Test
     fun verifyActivityLogEmptyScreenTextsWhenDateRangeFilterSet() {
-        whenever(dateUtils.formatDateRange(anyOrNull(), anyOrNull(), anyOrNull())).thenReturn("TEST")
+        whenever(mStatsDateUtils.formatDateRange(anyOrNull(), anyOrNull(), anyOrNull())).thenReturn("TEST")
 
         viewModel.onDateRangeSelected(Pair(1L, 2L))
 
@@ -571,7 +571,7 @@ class ActivityLogViewModelTest {
     @Test
     fun verifyBackupEmptyScreenTextsWhenDateRangeFilterSet() {
         viewModel.rewindableOnly = true
-        whenever(dateUtils.formatDateRange(anyOrNull(), anyOrNull(), anyOrNull())).thenReturn("TEST")
+        whenever(mStatsDateUtils.formatDateRange(anyOrNull(), anyOrNull(), anyOrNull())).thenReturn("TEST")
 
         viewModel.onDateRangeSelected(Pair(1L, 2L))
 
