@@ -13,7 +13,7 @@ import javax.inject.Singleton
 @Singleton
 class AppConfig
 @Inject constructor(
-    private val remoteConfig: FeatureFlagConfig,
+    private val featureFlagConfig: FeatureFlagConfig,
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val manualFeatureConfig: ManualFeatureConfig
 ) {
@@ -28,7 +28,7 @@ class AppConfig
      * This method initialized the config
      */
     fun init(appScope: CoroutineScope) {
-        remoteConfig.init(appScope)
+        featureFlagConfig.init(appScope)
         remoteConfigCheck.checkRemoteFields()
     }
 
@@ -36,7 +36,7 @@ class AppConfig
      * This method triggers refresh of remote configuration.
      */
     fun refresh(appScope: CoroutineScope) {
-        remoteConfig.refresh(appScope)
+        featureFlagConfig.refresh(appScope)
     }
 
     /**
@@ -70,7 +70,7 @@ class AppConfig
                 BuildConfigValue(feature.buildConfigValue)
             }
             else -> {
-                remoteConfig.getFeatureState(feature.remoteField, feature.buildConfigValue)
+                featureFlagConfig.getFeatureState(feature.remoteField, feature.buildConfigValue)
             }
         }
     }
@@ -81,7 +81,7 @@ class AppConfig
      */
     fun getCurrentVariant(experiment: ExperimentConfig): Variant {
         val value = experimentValues.getOrPut(experiment.remoteField) {
-            val remoteValue = remoteConfig.getString(experiment.remoteField)
+            val remoteValue = featureFlagConfig.getString(experiment.remoteField)
             analyticsTracker.track(
                     Stat.EXPERIMENT_VARIANT_SET,
                     mapOf(experiment.remoteField to remoteValue)
@@ -96,7 +96,7 @@ class AppConfig
      * This method clears the remote config values from the database
      */
     fun clear() {
-        remoteConfig.clear()
+        featureFlagConfig.clear()
     }
 
     sealed class FeatureState(open val isEnabled: Boolean, val name: String) {

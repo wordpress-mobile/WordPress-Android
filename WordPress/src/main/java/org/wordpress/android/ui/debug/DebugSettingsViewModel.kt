@@ -39,7 +39,7 @@ class DebugSettingsViewModel
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val manualFeatureConfig: ManualFeatureConfig,
-    private val remoteConfig: FeatureFlagConfig,
+    private val featureFlagConfig: FeatureFlagConfig,
     private val debugUtils: DebugUtils,
     private val weeklyRoundupNotifier: WeeklyRoundupNotifier,
     private val notificationManager: NotificationManagerWrapper,
@@ -106,7 +106,7 @@ class DebugSettingsViewModel
                 manualFeatureConfig.isManuallyEnabled(key)
             } else {
                 when (defaultValue.toString()) {
-                    "true", "false" -> remoteConfig.isEnabled(key)
+                    "true", "false" -> featureFlagConfig.isEnabled(key)
                     else -> null
                 }
             }

@@ -19,7 +19,7 @@ import org.wordpress.android.util.config.AppConfig.FeatureState.StaticValue
 class AppConfigParametrizedTest(
     private val params: Params
 ) {
-    private val remoteConfig: FeatureFlagConfig = mock()
+    private val featureFlagConfig: FeatureFlagConfig = mock()
     private val analyticsTracker: AnalyticsTrackerWrapper = mock()
     private val featureConfig: FeatureConfig = mock()
     private val manualFeatureConfig: ManualFeatureConfig = mock()
@@ -27,7 +27,7 @@ class AppConfigParametrizedTest(
 
     @Before
     fun setUp() {
-        appConfig = AppConfig(remoteConfig, analyticsTracker, manualFeatureConfig)
+        appConfig = AppConfig(featureFlagConfig, analyticsTracker, manualFeatureConfig)
     }
 
     @Test
@@ -49,9 +49,9 @@ class AppConfigParametrizedTest(
         whenever(manualFeatureConfig.isManuallyEnabled(featureConfig)).thenReturn(params.isManuallyEnabled)
         whenever(featureConfig.buildConfigValue).thenReturn(params.buildConfigValue)
         whenever(featureConfig.remoteField).thenReturn(params.remoteField)
-        whenever(remoteConfig.isEnabled(REMOTE_FIELD)).thenReturn(params.remoteConfigValue)
+        whenever(featureFlagConfig.isEnabled(REMOTE_FIELD)).thenReturn(params.remoteConfigValue)
         whenever(
-                remoteConfig.getFeatureState(
+                featureFlagConfig.getFeatureState(
                         REMOTE_FIELD,
                         featureConfig.buildConfigValue
                 )

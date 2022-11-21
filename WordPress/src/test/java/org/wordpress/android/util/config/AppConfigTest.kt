@@ -16,7 +16,7 @@ import org.wordpress.android.util.config.ExperimentConfig.Variant
 
 @RunWith(MockitoJUnitRunner::class)
 class AppConfigTest {
-    @Mock lateinit var remoteConfig: FeatureFlagConfig
+    @Mock lateinit var featureFlagConfig: FeatureFlagConfig
     @Mock lateinit var analyticsTracker: AnalyticsTrackerWrapper
     @Mock lateinit var experimentConfig: ExperimentConfig
     @Mock lateinit var manualFeatureConfig: ManualFeatureConfig
@@ -28,14 +28,14 @@ class AppConfigTest {
 
     @Before
     fun setUp() {
-        appConfig = AppConfig(remoteConfig, analyticsTracker, manualFeatureConfig)
+        appConfig = AppConfig(featureFlagConfig, analyticsTracker, manualFeatureConfig)
     }
 
     @Test
     fun `refresh passes the call to remote config`() {
         appConfig.refresh(appScope)
 
-        verify(remoteConfig).refresh(appScope)
+        verify(featureFlagConfig).refresh(appScope)
     }
 
     @Test
@@ -83,6 +83,6 @@ class AppConfigTest {
     private fun setupExperimentConfig(remoteConfigValue: String, experimentVariants: List<Variant>) {
         whenever(experimentConfig.remoteField).thenReturn(remoteField)
         whenever(experimentConfig.variants).thenReturn(experimentVariants)
-        whenever(remoteConfig.getString(remoteField)).thenReturn(remoteConfigValue)
+        whenever(featureFlagConfig.getString(remoteField)).thenReturn(remoteConfigValue)
     }
 }
