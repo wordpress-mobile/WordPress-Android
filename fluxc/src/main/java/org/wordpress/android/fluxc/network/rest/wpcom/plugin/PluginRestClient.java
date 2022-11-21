@@ -104,7 +104,7 @@ public class PluginRestClient extends BaseWPComRestClient {
                     public void onErrorResponse(@NonNull WPComGsonNetworkError networkError) {
                         ConfigureSitePluginError configurePluginError = new ConfigureSitePluginError(
                                 networkError.apiError, networkError.message);
-                        if (networkError.hasVolleyError()) {
+                        if (networkError.hasVolleyError() && networkError.volleyError.networkResponse != null) {
                             configurePluginError.errorCode = networkError.volleyError.networkResponse.statusCode;
                         }
                         ConfiguredSitePluginPayload payload =
@@ -158,7 +158,7 @@ public class PluginRestClient extends BaseWPComRestClient {
                     public void onErrorResponse(@NonNull WPComGsonNetworkError networkError) {
                         InstallSitePluginError installPluginError = new InstallSitePluginError(
                                 networkError.apiError, networkError.message);
-                        if (networkError.hasVolleyError()) {
+                        if (networkError.hasVolleyError() && networkError.volleyError.networkResponse != null) {
                             installPluginError.errorCode = networkError.volleyError.networkResponse.statusCode;
                         }
                         InstalledSitePluginPayload payload = new InstalledSitePluginPayload(site, pluginSlug,
