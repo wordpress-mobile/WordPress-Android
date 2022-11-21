@@ -50,7 +50,7 @@ ext {
     autoServiceVersion = '1.0'
 
     // Apache
-    commonsText = '1.1'
+    commonsText = '1.10.0'
     httpClientAndroidVersion = '4.3.5.1'
 
     // testing
