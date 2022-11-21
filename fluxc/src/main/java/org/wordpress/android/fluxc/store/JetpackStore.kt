@@ -1,5 +1,6 @@
 package org.wordpress.android.fluxc.store
 
+import com.android.volley.VolleyError
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.suspendCancellableCoroutine
 import org.greenrobot.eventbus.Subscribe
@@ -209,7 +210,12 @@ class JetpackStore
             }
 
             when {
-                result.isError -> JetpackConnectionUrlResult(JetpackConnectionUrlError(result.error?.message))
+                result.isError -> JetpackConnectionUrlResult(
+                    JetpackConnectionUrlError(
+                        message = result.error?.message,
+                        errorCode = result.error?.volleyError?.networkResponse?.statusCode
+                    )
+                )
                 result.result.isNullOrEmpty() -> JetpackConnectionUrlResult(
                     JetpackConnectionUrlError("Response Empty")
                 )
@@ -224,7 +230,13 @@ class JetpackStore
                                 JetpackConnectionUrlResult(it)
                             },
                             onFailure = {
-                                JetpackConnectionUrlResult(JetpackConnectionUrlError(it.message))
+                                val errorCode = (it as? VolleyError)?.networkResponse?.statusCode
+                                JetpackConnectionUrlResult(
+                                    JetpackConnectionUrlError(
+                                        message = it.message,
+                                        errorCode = errorCode
+                                    )
+                                )
                             }
                         )
                     }
@@ -245,7 +257,8 @@ class JetpackStore
     }
 
     class JetpackConnectionUrlError(
-        val message: String? = null
+        val message: String? = null,
+        val errorCode: Int? = null
     ) : OnChangedError
 
     suspend fun fetchJetpackUser(site: SiteModel): JetpackUserResult {
@@ -256,7 +269,12 @@ class JetpackStore
             }
 
             when {
-                result.isError -> JetpackUserResult(JetpackUserError(result.error?.message))
+                result.isError -> JetpackUserResult(
+                    JetpackUserError(
+                        message = result.error?.message,
+                        errorCode = result.error?.volleyError?.networkResponse?.statusCode
+                    )
+                )
                 result.result == null -> JetpackUserResult(
                     JetpackUserError("Response Empty")
                 )
@@ -276,7 +294,8 @@ class JetpackStore
     }
 
     class JetpackUserError(
-        val message: String? = null
+        val message: String? = null,
+        val errorCode: Int? = null
     ) : OnChangedError
 
     // Actions
