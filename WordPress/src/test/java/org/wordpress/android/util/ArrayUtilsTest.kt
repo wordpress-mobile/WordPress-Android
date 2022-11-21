@@ -55,4 +55,42 @@ class ArrayUtilsTest {
         val expected = arrayOf("one", "two", "four", "five")
         assertThat(result).isEqualTo(expected)
     }
+
+    /* INDEX OF */
+
+    @Test
+    fun `given valid char sequence, when getting the index start of array, then the result is the expected one`() {
+        val charSequenceArray: Array<CharSequence> = arrayOf("one", "two", "three", "four", "five")
+
+        val result = ArrayUtils.indexOf(charSequenceArray, "three")
+
+        assertThat(result).isEqualTo(2)
+    }
+
+    @Test
+    fun `given valid char sequence, when getting the index middle of array, then the result is the expected one`() {
+        val charSequenceArray: Array<CharSequence> = arrayOf("one", "two", "three", "four", "five")
+
+        val result = ArrayUtils.indexOf(charSequenceArray, "one")
+
+        assertThat(result).isEqualTo(0)
+    }
+
+    @Test
+    fun `given valid char sequence, when getting the index end of array, then the result is the expected one`() {
+        val charSequenceArray: Array<CharSequence> = arrayOf("one", "two", "three", "four", "five")
+
+        val result = ArrayUtils.indexOf(charSequenceArray, "five")
+
+        assertThat(result).isEqualTo(4)
+    }
+
+    @Test
+    fun `given invalid char sequence, when getting the index of array, then the resulting index is minus one`() {
+        val charSequenceArray: Array<CharSequence> = arrayOf("one", "two", "three", "four", "five")
+
+        val result = ArrayUtils.indexOf(charSequenceArray, "ottff")
+
+        assertThat(result).isEqualTo(-1)
+    }
 }
