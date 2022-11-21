@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.jetpackoverlay
 
 import android.content.SharedPreferences
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayPhase.PHASE_ONE
 import org.wordpress.android.ui.jetpackoverlay.JetpackOverlayConnectedFeature.NOTIFICATIONS
 import org.wordpress.android.ui.jetpackoverlay.JetpackOverlayConnectedFeature.READER
 import org.wordpress.android.ui.jetpackoverlay.JetpackOverlayConnectedFeature.STATS
