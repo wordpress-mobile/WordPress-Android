@@ -152,10 +152,10 @@ class SharedLoginResolverTest : BaseUnitTest() {
         onSuccessReaderPostsCaptor = argumentCaptor()
 
         whenever(mockCursor.getString(0)).thenReturn(Gson().toJson(sharedDataLoggedInNoSites))
-        whenever(userFlagsResolver.tryGetUserFlags(
-                onSuccessFlagsCaptor.capture(),
-                any()
-        )).doAnswer { onSuccessFlagsCaptor.firstValue.invoke() }
+//        whenever(userFlagsResolver.tryGetUserFlags(
+//                onSuccessFlagsCaptor.capture(),
+//                any()
+//        )).doAnswer { onSuccessFlagsCaptor.firstValue.invoke() }
         whenever(readerSavedPostsResolver.tryGetReaderSavedPosts(
                 onSuccessReaderPostsCaptor.capture(),
                 any()
@@ -171,7 +171,7 @@ class SharedLoginResolverTest : BaseUnitTest() {
         featureEnabled()
         whenever(mockCursor.getString(0)).thenReturn(Gson().toJson(sharedDataLoggedInNoSites))
         classToTest.tryLocalMigration()
-        verify(userFlagsResolver).tryGetUserFlags(any(), any())
+//        verify(userFlagsResolver).tryGetUserFlags(any(), any())
     }
 
     @Test
@@ -201,10 +201,10 @@ class SharedLoginResolverTest : BaseUnitTest() {
                 sites = listOf(SiteModel())
         )
         whenever(mockCursor.getString(0)).thenReturn(Gson().toJson(loginData))
-        whenever(userFlagsResolver.tryGetUserFlags(
-                onSuccessFlagsCaptor.capture(),
-                any()
-        )).doAnswer { onSuccessFlagsCaptor.firstValue.invoke() }
+//        whenever(userFlagsResolver.tryGetUserFlags(
+//                onSuccessFlagsCaptor.capture(),
+//                any()
+//        )).doAnswer { onSuccessFlagsCaptor.firstValue.invoke() }
         whenever(readerSavedPostsResolver.tryGetReaderSavedPosts(
                 onSuccessReaderPostsCaptor.capture(),
                 any()
