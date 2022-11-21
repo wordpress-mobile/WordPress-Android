@@ -98,12 +98,12 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
     @Suppress("unused", "UNUSED_PARAMETER")
     private fun onFeatureSpecificOverlayShown(feature: JetpackOverlayConnectedFeature) {
         // Commented out for testing purposes only
-//        if (isInFeatureSpecificRemovalPhase())
-//            jetpackFeatureOverlayShownTracker.setFeatureOverlayShownTimeStamp(
-//                    feature,
-//                    getCurrentPhasePreference()!!,
-//                    System.currentTimeMillis()
-//            )
+        if (isInFeatureSpecificRemovalPhase())
+            jetpackFeatureOverlayShownTracker.setFeatureOverlayShownTimeStamp(
+                    feature,
+                    getCurrentPhasePreference()!!,
+                    System.currentTimeMillis()
+            )
     }
 
     @Suppress("MagicNumber")
@@ -116,11 +116,11 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
         // The Second parameter sets the feature for which the overlay was shown
 
         setFeatureAccessedOn(3, JetpackOverlayConnectedFeature.STATS)
-        setFeatureAccessedOn(2, JetpackOverlayConnectedFeature.NOTIFICATIONS)
+        setFeatureAccessedOn(3, JetpackOverlayConnectedFeature.NOTIFICATIONS)
         setFeatureAccessedOn(4, JetpackOverlayConnectedFeature.READER)
 
         // Inorder to clear the values and reset when the overlay was shown, un comment the below code
-         jetpackFeatureOverlayShownTracker.clear()
+    // jetpackFeatureOverlayShownTracker.clear()
     }
 
     private fun setFeatureAccessedOn(
