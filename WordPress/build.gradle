@@ -377,7 +377,7 @@ dependencies {
     implementation 'org.wordpress:emailchecker2:1.1.0'
     implementation "com.automattic:Automattic-Tracks-Android:$tracksVersion"
     implementation 'com.squareup.okio:okio:2.8.0'
-    implementation 'org.apache.commons:commons-text:1.1'
+    implementation "org.apache.commons:commons-text:$commonsText"
     implementation 'com.airbnb.android:lottie:3.4.0'
     implementation 'com.facebook.shimmer:shimmer:0.5.0'
 
@@ -435,7 +435,7 @@ dependencies {
         exclude group: 'asm', module: 'asm'
         exclude group: 'org.json', module: 'json'
     }
-    androidTestImplementation 'org.apache.httpcomponents:httpclient-android:4.3.5.1'
+    androidTestImplementation "org.apache.httpcomponents:httpclient-android:$httpClientAndroidVersion"
 
     androidTestImplementation project(path:':libs:mocks')
 
