@@ -35,13 +35,6 @@ class JetpackFeatureOverlayShownTracker @Inject constructor(private val sharedPr
     ) {
         sharedPrefs.edit().putLong(jetpackOverlayConnectedFeature.getPreferenceKey(phase), timeStamp).apply()
     }
-
-    // For testing purposes only
-    fun clear() {
-        sharedPrefs.edit().remove(STATS.getPreferenceKey(PHASE_ONE)).apply()
-        sharedPrefs.edit().remove(NOTIFICATIONS.getPreferenceKey(PHASE_ONE)).apply()
-        sharedPrefs.edit().remove(READER.getPreferenceKey(PHASE_ONE)).apply()
-    }
 }
 
 enum class JetpackOverlayConnectedFeature(private val featureSpecificPreferenceKey: String) {

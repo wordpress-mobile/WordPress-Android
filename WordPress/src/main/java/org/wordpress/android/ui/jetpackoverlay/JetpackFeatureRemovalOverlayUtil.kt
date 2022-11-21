@@ -95,9 +95,7 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
         }
     }
 
-    @Suppress("unused", "UNUSED_PARAMETER")
     private fun onFeatureSpecificOverlayShown(feature: JetpackOverlayConnectedFeature) {
-        // Commented out for testing purposes only
         if (isInFeatureSpecificRemovalPhase())
             jetpackFeatureOverlayShownTracker.setFeatureOverlayShownTimeStamp(
                     feature,
@@ -119,8 +117,6 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
         setFeatureAccessedOn(3, JetpackOverlayConnectedFeature.NOTIFICATIONS)
         setFeatureAccessedOn(4, JetpackOverlayConnectedFeature.READER)
 
-        // Inorder to clear the values and reset when the overlay was shown, un comment the below code
-    // jetpackFeatureOverlayShownTracker.clear()
     }
 
     private fun setFeatureAccessedOn(
