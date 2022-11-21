@@ -11,6 +11,7 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.FirebaseRemoteConfigWrapper
@@ -25,6 +26,7 @@ class DeepLinkOpenWebLinksWithJetpackHelperTest : BaseUnitTest() {
     @Mock lateinit var firebaseRemoteConfigWrapper: FirebaseRemoteConfigWrapper
     @Mock lateinit var packageManagerWrapper: PackageManagerWrapper
     @Mock lateinit var dateTimeUtilsWrapper: DateTimeUtilsWrapper
+    @Mock lateinit var buildConfigWrapper: BuildConfigWrapper
 
     private lateinit var helper: DeepLinkOpenWebLinksWithJetpackHelper
 
@@ -35,7 +37,8 @@ class DeepLinkOpenWebLinksWithJetpackHelperTest : BaseUnitTest() {
                 appPrefsWrapper,
                 firebaseRemoteConfigWrapper,
                 packageManagerWrapper,
-                dateTimeUtilsWrapper
+                dateTimeUtilsWrapper,
+                buildConfigWrapper
         )
     }
 
@@ -148,6 +151,35 @@ class DeepLinkOpenWebLinksWithJetpackHelperTest : BaseUnitTest() {
         assertThat(result).isTrue
     }
 
+    @Test
+    fun `when feature flag is off, then show app setting is false`() {
+        setTest(isFeatureFlagEnabled = false)
+
+        val result = helper.shouldShowAppSetting()
+
+        assertThat(result).isFalse
+    }
+
+    @Test
+    fun `given flow ff is enabled, when jetpack is not installed, then show app setting is false`() {
+        setTest(isFeatureFlagEnabled = true,
+            isJetpackInstalled = false)
+
+        val result = helper.shouldShowAppSetting()
+
+        assertThat(result).isFalse
+    }
+
+    @Test
+    fun `given flow ff is enabled, when jetpack is installed, then show app setting is true`() {
+        setTest(isFeatureFlagEnabled = true,
+                isJetpackInstalled = true)
+
+        val result = helper.shouldShowAppSetting()
+
+        assertThat(result).isTrue
+    }
+
     private fun setTest(
         isFeatureFlagEnabled: Boolean = true,
         isJetpackInstalled: Boolean = true,
@@ -161,6 +193,7 @@ class DeepLinkOpenWebLinksWithJetpackHelperTest : BaseUnitTest() {
         setLastShownTimestamp(overlayLastShownTimestamp)
         setFlowFrequency(flowFrequency)
         setDaysBetween(overlayLastShownTimestamp)
+        setPackageName(PACKAGE_NAME)
     }
 
     // Helpers
@@ -191,10 +224,15 @@ class DeepLinkOpenWebLinksWithJetpackHelperTest : BaseUnitTest() {
         whenever(packageManagerWrapper.isComponentEnabledSettingEnabled(any())).thenReturn(value)
     }
 
+    private fun setPackageName(value: String) {
+        whenever(buildConfigWrapper.getApplicationId()).thenReturn(value)
+    }
+
     private fun getDateXDaysAgoInMilliseconds(daysAgo: Int) =
             System.currentTimeMillis().minus(DAY_IN_MILLISECONDS * daysAgo)
 
     companion object {
         private const val DAY_IN_MILLISECONDS = 86400000
+        private const val PACKAGE_NAME = "com.jetpack.android"
     }
 }
