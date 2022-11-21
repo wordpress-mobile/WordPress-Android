@@ -9,7 +9,7 @@ APP_SPECIFIC_VALUES = {
     package_name: 'org.wordpress.android',
     bundle_name_prefix: 'wpandroid',
     screenshots_test_class: 'org.wordpress.android.ui.screenshots.WPScreenshotTest',
-    screenshot_config_file: 'wordpress-screenshots-config.json'
+    screenshot_config_file: 'wordpress-config.json'
   },
   jetpack: {
     display_name: 'Jetpack',
@@ -19,7 +19,7 @@ APP_SPECIFIC_VALUES = {
     package_name: 'com.jetpack.android',
     bundle_name_prefix: 'jpandroid',
     screenshots_test_class: 'org.wordpress.android.ui.screenshots.JPScreenshotTest',
-    screenshot_config_file: 'jetpack-screenshots-config.json'
+    screenshot_config_file: 'jetpack-config.json'
   }
 }.freeze
 
