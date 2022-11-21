@@ -1,7 +1,5 @@
 package org.wordpress.android.fluxc.network;
 
-import android.os.Build;
-
 import androidx.annotation.NonNull;
 
 import java.io.IOException;
@@ -83,7 +81,7 @@ public class OpenJdkCookieManager extends CookieManager {
             if (pathMatches(path, cookie.getPath()) &&
                     (secureLink || !cookie.getSecure())) {
                 // Enforce httponly attribute
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && cookie.isHttpOnly()) {
+                if (cookie.isHttpOnly()) {
                     String s = uri.getScheme();
                     if (!"http".equalsIgnoreCase(s) && !"https".equalsIgnoreCase(s)) {
                         continue;
