@@ -1,7 +1,5 @@
 package org.wordpress.android.util
 
-import org.apache.commons.lang3.ArrayUtils
-
 object ArrayUtils {
     @JvmStatic
     fun remove(stringArray: Array<String>, index: Int): Array<String> {
@@ -12,6 +10,6 @@ object ArrayUtils {
 
     @JvmStatic
     fun indexOf(charSequenceArray: Array<CharSequence>, string: String): Int {
-        return ArrayUtils.indexOf(charSequenceArray, string)
+        return charSequenceArray.indexOf(string)
     }
 }
