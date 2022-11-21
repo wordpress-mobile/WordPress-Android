@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-10-31 13:17:21+0000
+Translation-Revision-Date: 2022-11-14 14:34:44+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.3
 Language: ro
 -->
 <resources>
+    <string name="jp_migration_help_button">Ai nevoie de ajutor?</string>
+    <string name="jp_migration_continue_button">Continuă</string>
+    <string name="jp_migration_welcome_site_found_message">Ți-am găsit site-ul. Continuă să transferi toate datele și te autentifici automat la Jetpack.</string>
+    <string name="jp_migration_welcome_sites_found_message">Ți-am găsit site-urile. Continuă să transferi toate datele și te autentifici automat la Jetpack.</string>
+    <string name="jp_migration_avatar_content_description">Poza ta de profil</string>
+    <string name="jp_migration_welcome_subtitle">Se pare că faci o comutare din aplicația WordPress.</string>
+    <string name="jp_migration_welcome_title">Bine ai venit la Jetpack!</string>
+    <string name="icon_desc">icon</string>
     <string name="post_settings_parent">Pagină părinte</string>
     <string name="post_settings_page_attributes">Atribute pagină</string>
     <string name="about_automattic_contribute_item_title">Contribuie</string>
