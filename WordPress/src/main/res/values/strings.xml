@@ -4255,4 +4255,6 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="jp_migration_remove_wp_app_icon_content_description">Remove WordPress App icon</string>
     <string name="jp_migration_finish_button">Finish</string>
 
+    <!-- Open Web Links With Jetpack -->
+    <string name="preference_open_web_links_with_jetpack">Open web links with Jetpack</string>
 </resources>

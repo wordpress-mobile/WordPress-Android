@@ -137,6 +137,9 @@
     <!-- Initial Screen -->
     <string name="pref_key_initial_screen" translatable="false">wp_pref_initial_screen</string>
 
+    <!-- Open web links with Jetpack -->
+    <string name="pref_key_open_web_links_with_jetpack" translatable="false">pref_key_open_web_links_with_jetpack</string>
+
     <string name="wp_pref_notifications_root" translatable="false">wp_pref_notifications_root</string>
     <string name="wp_pref_notifications_main" translatable="false">wp_pref_notifications_master</string>
     <string name="wp_pref_custom_notification_sound" translatable="false">wp_pref_custom_notification_sound</string>
