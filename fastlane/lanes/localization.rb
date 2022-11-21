@@ -209,7 +209,7 @@ platform :android do
       # Copy the source `.txt` files (used as source of truth when we generated the `.po`) to the `fastlane/*metadata/android/en-US` dir,
       # as `en-US` is the source language, and isn't exported from GlotPress during `gp_downloadmetadata`
       files.each do |key, h|
-        source_file = key.to_s.start_with?('release_note_') ? 'release_notes.txt') : h[:desc]
+        source_file = key.to_s.start_with?('release_note_') ? 'release_notes.txt' : h[:desc]
         FileUtils.cp(File.join(metadata_source_dir, source_file), File.join(download_path, 'en-US', h[:desc]))
       end
       
