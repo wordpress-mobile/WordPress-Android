@@ -2411,6 +2411,14 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "reader_saved_posts_success";
             case READER_SAVED_POSTS_FAILED:
                 return "reader_saved_posts_failed";
+            case JETPACK_REMOVE_FEATURE_OVERLAY_DISPLAYED:
+                return "remove_feature_overlay_displayed";
+            case JETPACK_REMOVE_FEATURE_OVERLAY_LINK_TAPPED:
+                return "remove_feature_overlay_link_tapped";
+            case JETPACK_REMOVE_FEATURE_OVERLAY_BUTTON_GET_JETPACK_APP_TAPPED:
+                return "remove_feature_overlay_button_tapped";
+            case JETPACK_REMOVE_FEATURE_OVERLAY_DISMISSED:
+                return "remove_feature_overlay_dismissed";
         }
         return null;
     }
