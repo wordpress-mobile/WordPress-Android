@@ -13,7 +13,6 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseO
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseThree
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseTwo
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
-import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.SiteUtilsWrapper
 import java.util.Date
@@ -24,10 +23,9 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
     private val jetpackFeatureOverlayShownTracker: JetpackFeatureOverlayShownTracker,
     private val selectedSiteRepository: SelectedSiteRepository,
     private val siteUtilsWrapper: SiteUtilsWrapper,
-    private val buildConfigWrapper: BuildConfigWrapper,
-    private val dateTimeUtilsWrapper: DateTimeUtilsWrapper,
+    private val dateTimeUtilsWrapper: DateTimeUtilsWrapper
 ) {
-    @Suppress("unused", "UNUSED_PARAMETER")
+    @Suppress("unused", "UNUSED_PARAMETER", "FunctionOnlyReturningConstant")
     fun shouldShowFeatureSpecificJetpackOverlay(feature: JetpackOverlayConnectedFeature): Boolean {
         return true
     }
@@ -41,6 +39,7 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
                 }
     }
 
+    @Suppress("UnusedPrivateMember")
     private fun hasExceededOverlayFrequency(
         feature: JetpackOverlayConnectedFeature,
         currentPhasePreference: JetpackFeatureRemovalOverlayPhase
@@ -76,6 +75,7 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
         return daysPastOverlayShown >= PhaseOne.globalOverlayFrequency
     }
 
+    @Suppress("UnusedPrivateMember")
     private fun isWpComSite(): Boolean {
         val selectedSite = selectedSiteRepository.getSelectedSite()
         return selectedSite != null && siteUtilsWrapper.isAccessedViaWPComRest(selectedSite)
