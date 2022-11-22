@@ -42,4 +42,42 @@ class ArrayUtilsTest {
 
         assertThat(result).isEqualTo(false)
     }
+
+    /* INDEX OF */
+
+    @Test
+    fun `given valid string, when getting the index start of array, then the result is the expected one`() {
+        val stringArray = arrayOf("one", "two", "three", "four", "five")
+
+        val result = ArrayUtils.indexOf(stringArray, "three")
+
+        assertThat(result).isEqualTo(2)
+    }
+
+    @Test
+    fun `given valid string, when getting the index middle of array, then the result is the expected one`() {
+        val stringArray = arrayOf("one", "two", "three", "four", "five")
+
+        val result = ArrayUtils.indexOf(stringArray, "one")
+
+        assertThat(result).isEqualTo(0)
+    }
+
+    @Test
+    fun `given valid string, when getting the index end of array, then the result is the expected one`() {
+        val stringArray = arrayOf("one", "two", "three", "four", "five")
+
+        val result = ArrayUtils.indexOf(stringArray, "five")
+
+        assertThat(result).isEqualTo(4)
+    }
+
+    @Test
+    fun `given invalid string, when getting the index of array, then the resulting index is minus one`() {
+        val stringArray = arrayOf("one", "two", "three", "four", "five")
+
+        val result = ArrayUtils.indexOf(stringArray, "ottff")
+
+        assertThat(result).isEqualTo(-1)
+    }
 }
