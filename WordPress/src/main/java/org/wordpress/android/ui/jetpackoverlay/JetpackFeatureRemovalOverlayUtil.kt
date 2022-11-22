@@ -27,12 +27,9 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
     private val buildConfigWrapper: BuildConfigWrapper,
     private val dateTimeUtilsWrapper: DateTimeUtilsWrapper,
 ) {
+    @Suppress("unused", "UNUSED_PARAMETER")
     fun shouldShowFeatureSpecificJetpackOverlay(feature: JetpackOverlayConnectedFeature): Boolean {
-        return !buildConfigWrapper.isJetpackApp && isWpComSite() &&
-                isInFeatureSpecificRemovalPhase() && hasExceededOverlayFrequency(
-                feature,
-                getCurrentPhasePreference()!!
-        )
+        return true
     }
 
     private fun isInFeatureSpecificRemovalPhase(): Boolean {
