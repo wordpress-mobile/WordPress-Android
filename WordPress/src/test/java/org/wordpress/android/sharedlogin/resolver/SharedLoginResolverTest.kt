@@ -10,7 +10,7 @@ import org.junit.Test
 import org.mockito.kotlin.KArgumentCaptor
 import org.mockito.kotlin.any
 import org.mockito.kotlin.argumentCaptor
-import org.mockito.kotlin.doAnswer
+//import org.mockito.kotlin.doAnswer
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.times
@@ -25,9 +25,9 @@ import org.wordpress.android.fluxc.store.AccountStore.UpdateTokenPayload
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.localcontentmigration.LocalMigrationContentProvider
 import org.wordpress.android.localcontentmigration.LocalMigrationContentResolver
+import org.wordpress.android.reader.savedposts.resolver.ReaderSavedPostsHelper
 import org.wordpress.android.localcontentmigration.SharedLoginHelper
 import org.wordpress.android.localcontentmigration.SitesMigrationHelper
-import org.wordpress.android.reader.savedposts.resolver.ReaderSavedPostsResolver
 import org.wordpress.android.resolver.ContentResolverWrapper
 import org.wordpress.android.sharedlogin.JetpackSharedLoginFlag
 import org.wordpress.android.sharedlogin.SharedLoginAnalyticsTracker
@@ -56,7 +56,7 @@ class SharedLoginResolverTest : BaseUnitTest() {
     private val appPrefsWrapper: AppPrefsWrapper = mock()
     private val sharedLoginAnalyticsTracker: SharedLoginAnalyticsTracker = mock()
     private val userFlagsResolver: UserFlagsHelper = mock()
-    private val readerSavedPostsResolver: ReaderSavedPostsResolver = mock()
+    private val readerSavedPostsResolver: ReaderSavedPostsHelper = mock()
     private val localMigrationContentResolver: LocalMigrationContentResolver = mock()
     private val siteStore: SiteStore = mock()
     private val sharedLoginHelper: SharedLoginHelper = mock()
@@ -156,10 +156,10 @@ class SharedLoginResolverTest : BaseUnitTest() {
 //                onSuccessFlagsCaptor.capture(),
 //                any()
 //        )).doAnswer { onSuccessFlagsCaptor.firstValue.invoke() }
-        whenever(readerSavedPostsResolver.tryGetReaderSavedPosts(
-                onSuccessReaderPostsCaptor.capture(),
-                any()
-        )).doAnswer { onSuccessReaderPostsCaptor.firstValue.invoke() }
+//        whenever(readerSavedPostsResolver.tryGetReaderSavedPosts(
+//                onSuccessReaderPostsCaptor.capture(),
+//                any()
+//        )).doAnswer { onSuccessReaderPostsCaptor.firstValue.invoke() }
 
         classToTest.tryLocalMigration()
 
@@ -205,10 +205,10 @@ class SharedLoginResolverTest : BaseUnitTest() {
 //                onSuccessFlagsCaptor.capture(),
 //                any()
 //        )).doAnswer { onSuccessFlagsCaptor.firstValue.invoke() }
-        whenever(readerSavedPostsResolver.tryGetReaderSavedPosts(
-                onSuccessReaderPostsCaptor.capture(),
-                any()
-        )).doAnswer { onSuccessReaderPostsCaptor.firstValue.invoke() }
+//        whenever(readerSavedPostsResolver.tryGetReaderSavedPosts(
+//                onSuccessReaderPostsCaptor.capture(),
+//                any()
+//        )).doAnswer { onSuccessReaderPostsCaptor.firstValue.invoke() }
         whenever(accountActionBuilderWrapper.newUpdateAccessTokenAction(
                 loginData.token!!
         )).thenReturn(updateTokenAction)
