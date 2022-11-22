@@ -3,6 +3,7 @@
 21.3
 -----
 * [*] [Jetpack-only] Comments: fix a crash in My Site > Comments with Jetpack standalone plugins. [https://github.com/wordpress-mobile/WordPress-Android/pull/17456]
+* [*] [internal] Fix an issue preventing the text and button on the 'WordPress is Better with Jetpack' overlay to be entirely visible with big fonts. [https://github.com/wordpress-mobile/WordPress-Android/pull/17503]
 
 21.2
 -----
