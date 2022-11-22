@@ -4,7 +4,7 @@ import org.wordpress.android.BuildConfig
 import org.wordpress.android.annotation.Feature
 import javax.inject.Inject
 
-@Feature(OpenWebLinksWithJetpackFlowFeatureConfig.OPEN_WEB_LINKS_WITH_JETPACK_FLOW, true)
+@Feature(OpenWebLinksWithJetpackFlowFeatureConfig.OPEN_WEB_LINKS_WITH_JETPACK_FLOW, false)
 class OpenWebLinksWithJetpackFlowFeatureConfig
 @Inject constructor(appConfig: AppConfig) : FeatureConfig(
         appConfig,

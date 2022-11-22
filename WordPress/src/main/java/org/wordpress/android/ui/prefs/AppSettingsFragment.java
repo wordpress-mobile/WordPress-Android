@@ -45,6 +45,7 @@ import org.wordpress.android.fluxc.store.WhatsNewStore.WhatsNewAppId;
 import org.wordpress.android.fluxc.store.WhatsNewStore.WhatsNewFetchPayload;
 import org.wordpress.android.ui.about.UnifiedAboutActivity;
 import org.wordpress.android.ui.debug.DebugSettingsActivity;
+import org.wordpress.android.ui.deeplinks.DeepLinkOpenWebLinksWithJetpackHelper;
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment;
 import org.wordpress.android.ui.mysite.tabs.MySiteTabType;
 import org.wordpress.android.ui.prefs.language.LocalePickerBottomSheet;
@@ -95,6 +96,7 @@ public class AppSettingsFragment extends PreferenceFragment
     private PreferenceScreen mPrivacySettings;
     private WPSwitchPreference mStripImageLocation;
     private WPSwitchPreference mReportCrashPref;
+    private WPSwitchPreference mOpenWebLinksWithJetpack;
 
     private Preference mWhatsNew;
 
@@ -108,6 +110,7 @@ public class AppSettingsFragment extends PreferenceFragment
     @Inject MySiteDashboardTabsFeatureConfig mMySiteDashboardTabsFeatureConfig;
     @Inject JetpackBrandingUtils mJetpackBrandingUtils;
     @Inject LocaleProvider mLocaleProvider;
+    @Inject DeepLinkOpenWebLinksWithJetpackHelper mOpenWebLinksWithJetpackHelper;
 
     private static final String TRACK_STYLE = "style";
     private static final String TRACK_ENABLED = "enabled";
@@ -192,6 +195,10 @@ public class AppSettingsFragment extends PreferenceFragment
         mReportCrashPref = (WPSwitchPreference) WPPrefUtils
                 .getPrefAndSetChangeListener(this, R.string.pref_key_send_crash, this);
 
+        mOpenWebLinksWithJetpack =
+                (WPSwitchPreference) WPPrefUtils
+                        .getPrefAndSetChangeListener(this, R.string.pref_key_open_web_links_with_jetpack, this);
+
         // Set Local settings
         mOptimizedImage.setChecked(AppPrefs.isImageOptimize());
         setDetailListPreferenceValue(mImageMaxSizePref,
@@ -210,6 +217,9 @@ public class AppSettingsFragment extends PreferenceFragment
                 getLabelForVideoEncoderBitrateValue(AppPrefs.getVideoOptimizeQuality()));
 
         mStripImageLocation.setChecked(AppPrefs.isStripImageLocation());
+
+        mOpenWebLinksWithJetpack.setChecked(
+                (AppPrefs.getOpenWebLinksWithJetpackOverlayLastShownTimestamp()) == 0L ? false : true);
 
         mWhatsNew = findPreference(getString(R.string.pref_key_whats_new));
 
@@ -230,6 +240,10 @@ public class AppSettingsFragment extends PreferenceFragment
 
         if (!mMySiteDashboardTabsFeatureConfig.isEnabled()) {
             removeInitialScreen();
+        }
+
+        if (!mOpenWebLinksWithJetpackHelper.shouldShowAppSetting()) {
+            removeOpenWebLinksWithJetpack();
         }
     }
 
@@ -303,6 +317,14 @@ public class AppSettingsFragment extends PreferenceFragment
         PreferenceScreen preferenceScreen =
                 (PreferenceScreen) findPreference(getString(R.string.pref_key_app_settings_root));
         preferenceScreen.removePreference(initialScreenPreference);
+    }
+
+    private void removeOpenWebLinksWithJetpack() {
+        Preference openWebLinksWithJetpackPreference =
+                findPreference(getString(R.string.pref_key_open_web_links_with_jetpack));
+        PreferenceScreen preferenceScreen =
+                (PreferenceScreen) findPreference(getString(R.string.pref_key_app_settings_root));
+        preferenceScreen.removePreference(openWebLinksWithJetpackPreference);
     }
 
     @Override
@@ -481,6 +503,11 @@ public class AppSettingsFragment extends PreferenceFragment
             AnalyticsTracker.track(Stat.APP_SETTINGS_INITIAL_SCREEN_CHANGED, properties);
         } else if (preference == mReportCrashPref) {
             AnalyticsTracker.track(Stat.PRIVACY_SETTINGS_REPORT_CRASHES_TOGGLED, Collections
+                    .singletonMap(TRACK_ENABLED, newValue));
+        } else if (preference == mOpenWebLinksWithJetpack) {
+            AppPrefs.setOpenWebLinksWithJetpackOverlayLastShownTimestamp(
+                    ((Boolean) newValue) ? System.currentTimeMillis() : 0L);
+            AnalyticsTracker.track(AnalyticsTracker.Stat.APP_SETTINGS_OPEN_WEB_LINKS_WITH_JETPACK_CHANGED, Collections
                     .singletonMap(TRACK_ENABLED, newValue));
         }
         return true;

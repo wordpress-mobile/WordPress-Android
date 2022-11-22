@@ -4264,4 +4264,6 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="jp_migration_network_error_subtitle">Please check to make sure your network connection is working and try again.</string>
     <string name="jp_migration_network_error_message">We are unable to transfer your data and settings without a network connection.</string>
 
+    <!-- Open Web Links With Jetpack -->
+    <string name="preference_open_web_links_with_jetpack">Open web links with Jetpack</string>
 </resources>
