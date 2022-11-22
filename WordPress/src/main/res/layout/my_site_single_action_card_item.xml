@@ -21,7 +21,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:src="@mipmap/app_icon" />
+            tools:src="@drawable/ic_wordpress_blue_32dp" />
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/single_action_card_text"
@@ -37,7 +37,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/single_action_card_image"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="@string/jp_migration_success_card" />
+            tools:text="@string/jp_migration_success_card_message" />
 
         <View
             android:id="@+id/single_action_card_cover"
