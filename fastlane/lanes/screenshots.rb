@@ -125,6 +125,8 @@ platform :android do
   # and adding background image, device frame and promotional text around it.
   #
   # @option [String|Symbol] app The app to take screenshots for. Must be `wordpress` or `jetpack`
+  # @option [Array<String>] locale The Google Play locale code(s) to build the screenshots. Default to all the ones in `SCREENSHOT_LOCALES`.
+  # @option [Boolean] force If set to true, will overwrite existing promo screenshots without asking first
   # @option [Boolean] skip_download_strings Skips the call to the `download_metadata_strings`
   #         which downloads the translated copies used on the screenshots. Defaults to `false`.
   #
