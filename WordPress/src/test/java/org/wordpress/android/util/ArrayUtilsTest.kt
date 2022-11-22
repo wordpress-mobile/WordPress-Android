@@ -40,20 +40,14 @@ class ArrayUtilsTest {
     fun `given invalid negative index, when removing from array, then throw index out of bounds exception`() {
         val stringArray = arrayOf("one", "two", "three", "four", "five")
 
-        val result = ArrayUtils.remove(stringArray, -1)
-
-        val expected = arrayOf("one", "two", "four", "five")
-        assertThat(result).isEqualTo(expected)
+        ArrayUtils.remove(stringArray, -1)
     }
 
     @Test(expected = IndexOutOfBoundsException::class)
     fun `given invalid positive index, when removing from array, then throw index out of bounds exception`() {
         val stringArray = arrayOf("one", "two", "three", "four", "five")
 
-        val result = ArrayUtils.remove(stringArray, 5)
-
-        val expected = arrayOf("one", "two", "four", "five")
-        assertThat(result).isEqualTo(expected)
+        ArrayUtils.remove(stringArray, 5)
     }
 
     /* INDEX OF */
