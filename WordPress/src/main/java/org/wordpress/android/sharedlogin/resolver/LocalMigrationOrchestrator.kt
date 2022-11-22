@@ -14,6 +14,7 @@ import org.wordpress.android.localcontentmigration.LocalMigrationError
 import org.wordpress.android.localcontentmigration.LocalMigrationError.FeatureDisabled
 import org.wordpress.android.localcontentmigration.LocalMigrationError.Ineligibility
 import org.wordpress.android.localcontentmigration.LocalMigrationError.MigrationAlreadyAttempted
+import org.wordpress.android.localcontentmigration.LocalMigrationError.NoUserFlagsFoundError
 import org.wordpress.android.localcontentmigration.LocalMigrationError.PersistenceError
 import org.wordpress.android.localcontentmigration.LocalMigrationError.ProviderError
 import org.wordpress.android.localcontentmigration.LocalMigrationResult.Success
@@ -27,7 +28,7 @@ import org.wordpress.android.reader.savedposts.resolver.ReaderSavedPostsResolver
 import org.wordpress.android.sharedlogin.SharedLoginAnalyticsTracker
 import org.wordpress.android.sharedlogin.SharedLoginAnalyticsTracker.ErrorType
 import org.wordpress.android.ui.main.WPMainActivity
-import org.wordpress.android.userflags.resolver.UserFlagsResolver
+import org.wordpress.android.userflags.resolver.UserFlagsHelper
 import org.wordpress.android.util.AccountActionBuilderWrapper
 import org.wordpress.android.viewmodel.ContextProvider
 import javax.inject.Inject
@@ -37,7 +38,7 @@ class LocalMigrationOrchestrator @Inject constructor(
     private val dispatcher: Dispatcher,
     private val accountActionBuilderWrapper: AccountActionBuilderWrapper,
     private val sharedLoginAnalyticsTracker: SharedLoginAnalyticsTracker,
-    private val userFlagsResolver: UserFlagsResolver,
+    private val userFlagsHelper: UserFlagsHelper,
     private val readerSavedPostsResolver: ReaderSavedPostsResolver,
     private val localMigrationContentResolver: LocalMigrationContentResolver,
     private val sharedLoginHelper: SharedLoginHelper,
@@ -46,6 +47,7 @@ class LocalMigrationOrchestrator @Inject constructor(
     fun tryLocalMigration() {
         localMigrationContentResolver.getResultForEntityType<EligibilityStatusData>(EligibilityStatus).validate()
                 .then(sitesMigrationHelper::migrateSites)
+                .then(userFlagsHelper::migrateUserFlags)
                 .then(sharedLoginHelper::login)
                 .thenWith {
                     originalTryLocalMigration(it.token)
@@ -65,21 +67,15 @@ class LocalMigrationOrchestrator @Inject constructor(
             is FeatureDisabled -> Unit
             is MigrationAlreadyAttempted -> Unit
             is PersistenceError -> Unit
+            is NoUserFlagsFoundError -> Unit
         }
     }
     private fun originalTryLocalMigration(accessToken: String) {
-        userFlagsResolver.tryGetUserFlags(
+        readerSavedPostsResolver.tryGetReaderSavedPosts(
                 {
-                    readerSavedPostsResolver.tryGetReaderSavedPosts(
-                            {
-                                migrateLocalContent()
-                                dispatchUpdateAccessToken(accessToken)
-                                reloadMainScreen()
-                            },
-                            {
-                                reloadMainScreen()
-                            }
-                    )
+                    migrateLocalContent()
+                    dispatchUpdateAccessToken(accessToken)
+                    reloadMainScreen()
                 },
                 {
                     reloadMainScreen()

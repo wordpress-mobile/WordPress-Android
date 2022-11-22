@@ -34,7 +34,7 @@ import org.wordpress.android.sharedlogin.SharedLoginAnalyticsTracker
 import org.wordpress.android.sharedlogin.SharedLoginAnalyticsTracker.ErrorType
 import org.wordpress.android.sharedlogin.SharedLoginData
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
-import org.wordpress.android.userflags.resolver.UserFlagsResolver
+import org.wordpress.android.userflags.resolver.UserFlagsHelper
 import org.wordpress.android.util.AccountActionBuilderWrapper
 import org.wordpress.android.util.publicdata.WordPressPublicData
 import org.wordpress.android.viewmodel.ContextProvider
@@ -55,7 +55,7 @@ class SharedLoginResolverTest : BaseUnitTest() {
     private val accountActionBuilderWrapper: AccountActionBuilderWrapper = mock()
     private val appPrefsWrapper: AppPrefsWrapper = mock()
     private val sharedLoginAnalyticsTracker: SharedLoginAnalyticsTracker = mock()
-    private val userFlagsResolver: UserFlagsResolver = mock()
+    private val userFlagsResolver: UserFlagsHelper = mock()
     private val readerSavedPostsResolver: ReaderSavedPostsResolver = mock()
     private val localMigrationContentResolver: LocalMigrationContentResolver = mock()
     private val siteStore: SiteStore = mock()
@@ -152,10 +152,10 @@ class SharedLoginResolverTest : BaseUnitTest() {
         onSuccessReaderPostsCaptor = argumentCaptor()
 
         whenever(mockCursor.getString(0)).thenReturn(Gson().toJson(sharedDataLoggedInNoSites))
-        whenever(userFlagsResolver.tryGetUserFlags(
-                onSuccessFlagsCaptor.capture(),
-                any()
-        )).doAnswer { onSuccessFlagsCaptor.firstValue.invoke() }
+//        whenever(userFlagsResolver.tryGetUserFlags(
+//                onSuccessFlagsCaptor.capture(),
+//                any()
+//        )).doAnswer { onSuccessFlagsCaptor.firstValue.invoke() }
         whenever(readerSavedPostsResolver.tryGetReaderSavedPosts(
                 onSuccessReaderPostsCaptor.capture(),
                 any()
@@ -171,7 +171,7 @@ class SharedLoginResolverTest : BaseUnitTest() {
         featureEnabled()
         whenever(mockCursor.getString(0)).thenReturn(Gson().toJson(sharedDataLoggedInNoSites))
         classToTest.tryLocalMigration()
-        verify(userFlagsResolver).tryGetUserFlags(any(), any())
+//        verify(userFlagsResolver).tryGetUserFlags(any(), any())
     }
 
     @Test
@@ -201,10 +201,10 @@ class SharedLoginResolverTest : BaseUnitTest() {
                 sites = listOf(SiteModel())
         )
         whenever(mockCursor.getString(0)).thenReturn(Gson().toJson(loginData))
-        whenever(userFlagsResolver.tryGetUserFlags(
-                onSuccessFlagsCaptor.capture(),
-                any()
-        )).doAnswer { onSuccessFlagsCaptor.firstValue.invoke() }
+//        whenever(userFlagsResolver.tryGetUserFlags(
+//                onSuccessFlagsCaptor.capture(),
+//                any()
+//        )).doAnswer { onSuccessFlagsCaptor.firstValue.invoke() }
         whenever(readerSavedPostsResolver.tryGetReaderSavedPosts(
                 onSuccessReaderPostsCaptor.capture(),
                 any()
