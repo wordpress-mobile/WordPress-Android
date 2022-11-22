@@ -11,9 +11,11 @@ import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.localcontentmigration.LocalContentEntityData.PostData
 import org.wordpress.android.localcontentmigration.LocalContentEntityData.PostsData
 import org.wordpress.android.localcontentmigration.LocalContentEntityData.SitesData
+import org.wordpress.android.resolver.DbWrapper
 
 class LocalPostProviderHelperTest {
     private val siteProviderHelper: LocalSiteProviderHelper = mock()
+    private val dbWrapper: DbWrapper = mock()
     private val postStore: PostStore = mock()
     private val mockSiteModel: SiteModel = mock()
     private val mockPostModel: PostModel = mock()
@@ -25,7 +27,11 @@ class LocalPostProviderHelperTest {
     private val mockPostIdsList = listOf(mockPostId, mockPostId2)
 
     // Object under test
-    private val localPostProviderHelper = LocalPostProviderHelper(postStore, siteProviderHelper)
+    private val localPostProviderHelper = LocalPostProviderHelper(
+            postStore,
+            dbWrapper,
+            siteProviderHelper,
+    )
 
     @Before
     fun setUp() {
