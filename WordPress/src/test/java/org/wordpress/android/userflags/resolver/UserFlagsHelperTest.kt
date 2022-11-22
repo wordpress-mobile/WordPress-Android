@@ -50,7 +50,7 @@ class UserFlagsHelperTest {
     @Test
     fun `Should track start if feature flag is ENABLED and IS first try`() {
         featureEnabled()
-        classToTest.tryGetUserFlags({}, {})
+//        classToTest.tryGetUserFlags({}, {})
         verify(userFlagsAnalyticsTracker).trackStart()
     }
 
@@ -59,7 +59,7 @@ class UserFlagsHelperTest {
         whenever(appPrefsWrapper.getIsFirstTryUserFlagsJetpack()).thenReturn(true)
         whenever(jetpackLocalUserFlagsFlag.isEnabled()).thenReturn(false)
         val onFailure: () -> Unit = mock()
-        classToTest.tryGetUserFlags({}, onFailure)
+//        classToTest.tryGetUserFlags({}, onFailure)
         verify(onFailure).invoke()
     }
 
@@ -68,14 +68,14 @@ class UserFlagsHelperTest {
         whenever(appPrefsWrapper.getIsFirstTryUserFlagsJetpack()).thenReturn(false)
         whenever(jetpackLocalUserFlagsFlag.isEnabled()).thenReturn(true)
         val onFailure: () -> Unit = mock()
-        classToTest.tryGetUserFlags({}, onFailure)
+//        classToTest.tryGetUserFlags({}, onFailure)
         verify(onFailure).invoke()
     }
 
     @Test
     fun `Should save IS NOT first try user flags as FALSE if feature flag is ENABLED and IS first try`() {
         featureEnabled()
-        classToTest.tryGetUserFlags({}, {})
+//        classToTest.tryGetUserFlags({}, {})
         verify(appPrefsWrapper).saveIsFirstTryUserFlagsJetpack(false)
     }
 
@@ -83,7 +83,7 @@ class UserFlagsHelperTest {
     fun `Should NOT query ContentResolver if feature flag is DISABLED`() {
         whenever(appPrefsWrapper.getIsFirstTryUserFlagsJetpack()).thenReturn(true)
         whenever(jetpackLocalUserFlagsFlag.isEnabled()).thenReturn(false)
-        classToTest.tryGetUserFlags({}, {})
+//        classToTest.tryGetUserFlags({}, {})
 //        verify(contentResolverWrapper, never()).queryUri(any(), any())
     }
 
@@ -91,14 +91,14 @@ class UserFlagsHelperTest {
     fun `Should NOT query ContentResolver if IS NOT the first try`() {
         whenever(appPrefsWrapper.getIsFirstTryUserFlagsJetpack()).thenReturn(false)
         whenever(jetpackLocalUserFlagsFlag.isEnabled()).thenReturn(true)
-        classToTest.tryGetUserFlags({}, {})
+//        classToTest.tryGetUserFlags({}, {})
 //        verify(contentResolverWrapper, never()).queryUri(any(), any())
     }
 
     @Test
     fun `Should query ContentResolver if feature flag is ENABLED and IS first try`() {
         featureEnabled()
-        classToTest.tryGetUserFlags({}, {})
+//        classToTest.tryGetUserFlags({}, {})
 //        verify(contentResolverWrapper).queryUri(contentResolver, uriValue)
     }
 
@@ -106,7 +106,7 @@ class UserFlagsHelperTest {
     fun `Should track failed with error QueryUserFlagsError if cursor is null`() {
         featureEnabled()
 //        whenever(contentResolverWrapper.queryUri(contentResolver, uriValue)).thenReturn(null)
-        classToTest.tryGetUserFlags({}, {})
+//        classToTest.tryGetUserFlags({}, {})
         verify(userFlagsAnalyticsTracker).trackFailed(QueryUserFlagsError)
     }
 
@@ -115,14 +115,14 @@ class UserFlagsHelperTest {
         featureEnabled()
 //        whenever(contentResolverWrapper.queryUri(contentResolver, uriValue)).thenReturn(null)
         val onFailure: () -> Unit = mock()
-        classToTest.tryGetUserFlags({}, onFailure)
+//        classToTest.tryGetUserFlags({}, onFailure)
         verify(onFailure).invoke()
     }
 
     @Test
     fun `Should track failed with error NoUserFlagsFoundError if user flags Map is empty`() {
         featureEnabled()
-        classToTest.tryGetUserFlags({}, {})
+//        classToTest.tryGetUserFlags({}, {})
         verify(userFlagsAnalyticsTracker).trackFailed(NoUserFlagsFoundError)
     }
 
@@ -130,7 +130,7 @@ class UserFlagsHelperTest {
     fun `Should trigger failure callback if user flags Map is empty`() {
         featureEnabled()
         val onFailure: () -> Unit = mock()
-        classToTest.tryGetUserFlags({}, onFailure)
+//        classToTest.tryGetUserFlags({}, onFailure)
         verify(onFailure).invoke()
     }
 
@@ -139,7 +139,7 @@ class UserFlagsHelperTest {
         featureEnabled()
         whenever(resolverUtility.copyQsDataWithIndexes(anyList(), anyList())).thenReturn(false  )
         val onFailure: () -> Unit = mock()
-        classToTest.tryGetUserFlags({}, onFailure)
+//        classToTest.tryGetUserFlags({}, onFailure)
         verify(onFailure).invoke()
     }
 
@@ -152,7 +152,7 @@ class UserFlagsHelperTest {
                 quickStartStatusList = listOf()
         )
 //        whenever(mockCursor.getString(0)).thenReturn(Gson().toJson(data))
-        classToTest.tryGetUserFlags({}, {})
+//        classToTest.tryGetUserFlags({}, {})
         verify(userFlagsAnalyticsTracker).trackSuccess()
     }
 
@@ -166,7 +166,7 @@ class UserFlagsHelperTest {
         )
 //        whenever(mockCursor.getString(0)).thenReturn(Gson().toJson(data))
         val onSuccess: () -> Unit = mock()
-        classToTest.tryGetUserFlags(onSuccess) {}
+//        classToTest.tryGetUserFlags(onSuccess) {}
         verify(onSuccess).invoke()
     }
 
@@ -182,7 +182,7 @@ class UserFlagsHelperTest {
         )
 //        whenever(mockCursor.getString(0)).thenReturn(Gson().toJson(data))
         val onSuccess: () -> Unit = mock()
-        classToTest.tryGetUserFlags(onSuccess) {}
+//        classToTest.tryGetUserFlags(onSuccess) {}
         verify(appPrefsWrapper).setString(UserFlagsPrefKey(key), value)
     }
 
