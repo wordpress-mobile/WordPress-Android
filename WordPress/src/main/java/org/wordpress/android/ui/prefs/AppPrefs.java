@@ -175,6 +175,7 @@ public class AppPrefs {
         SHOULD_SHOW_WEEKLY_ROUNDUP_NOTIFICATION,
 
         SKIPPED_BLOGGING_PROMPT_DAY,
+        OPEN_WEB_LINKS_WITH_JETPACK_OVERLAY_LAST_SHOWN_TIMESTAMP,
     }
 
     /**
@@ -1469,5 +1470,9 @@ public class AppPrefs {
 
     public static void saveIsFirstTryReaderSavedPostsJetpack(final boolean isFirstTry) {
         setBoolean(UndeletablePrefKey.IS_FIRST_TRY_READER_SAVED_POSTS_JETPACK, isFirstTry);
+    }
+
+    public static Long getOpenWebLinksWithJetpackOverlayLastShownTimestamp() {
+        return getLong(DeletablePrefKey.OPEN_WEB_LINKS_WITH_JETPACK_OVERLAY_LAST_SHOWN_TIMESTAMP, 0L);
     }
 }

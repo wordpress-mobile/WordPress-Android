@@ -251,6 +251,9 @@ class AppPrefsWrapper @Inject constructor() {
     fun saveIsFirstTryReaderSavedPostsJetpack(isFirstTry: Boolean) =
             AppPrefs.saveIsFirstTryReaderSavedPostsJetpack(isFirstTry)
 
+    fun getOpenWebLinksWithJetpackOverlayLastShownTimestamp(): Long =
+            AppPrefs.getOpenWebLinksWithJetpackOverlayLastShownTimestamp()
+
     fun getAllPrefs(): Map<String, Any?> = AppPrefs.getAllPrefs()
 
     fun setString(prefKey: PrefKey, value: String) {
