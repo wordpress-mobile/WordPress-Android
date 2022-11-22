@@ -59,25 +59,29 @@ class JetpackFeatureRemovalPhaseHelper @Inject constructor(
 
 sealed class JetpackFeatureRemovalPhase(
     val globalOverlayFrequency: Int = 0,
-    val featureSpecificOverlayFrequency: Int = 0
+    val featureSpecificOverlayFrequency: Int = 0,
+    val trackingName: String
 ) {
     object PhaseOne : JetpackFeatureRemovalPhase(
             PHASE_ONE_GLOBAL_OVERLAY_FREQUENCY_IN_DAYS,
-            PHASE_ONE_FEATURE_OVERLAY_FREQUENCY_IN_DAYS
+            PHASE_ONE_FEATURE_OVERLAY_FREQUENCY_IN_DAYS,
+            "one"
     )
 
     object PhaseTwo : JetpackFeatureRemovalPhase(
             PHASE_TWO_GLOBAL_OVERLAY_FREQUENCY_IN_DAYS,
-            PHASE_TWO_FEATURE_OVERLAY_FREQUENCY_IN_DAYS
+            PHASE_TWO_FEATURE_OVERLAY_FREQUENCY_IN_DAYS,
+            "two"
     )
 
     object PhaseThree : JetpackFeatureRemovalPhase(
             PHASE_THREE_GLOBAL_OVERLAY_FREQUENCY_IN_DAYS,
-            PHASE_THREE_FEATURE_OVERLAY_FREQUENCY_IN_DAYS
+            PHASE_THREE_FEATURE_OVERLAY_FREQUENCY_IN_DAYS,
+            "three"
     )
 
-    object PhaseFour : JetpackFeatureRemovalPhase()
-    object PhaseNewUsers : JetpackFeatureRemovalPhase()
+    object PhaseFour : JetpackFeatureRemovalPhase(trackingName = "four")
+    object PhaseNewUsers : JetpackFeatureRemovalPhase(trackingName ="new")
 }
 
 enum class JetpackFeatureRemovalSiteCreationPhase {
