@@ -41,9 +41,9 @@ class LocalMigrationOrchestrator @Inject constructor(
 ) {
     fun tryLocalMigration() {
         eligibilityHelper.validate()
+                .then(userFlagsHelper::migrateUserFlags)
                 .then(sitesMigrationHelper::migrateSites)
                 .then(localPostsHelper::migratePosts)
-                .then(userFlagsHelper::migrateUserFlags)
                 .then(readerSavedPostsHelper::migrateReaderSavedPosts)
                 .then(sharedLoginHelper::login)
                 .thenWith {
