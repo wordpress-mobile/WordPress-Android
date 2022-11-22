@@ -41,6 +41,7 @@ sealed class LocalContentEntityData {
     data class SitesData(val sites: List<SiteModel>): LocalContentEntityData()
     data class PostsData(val localIds: List<Int>): LocalContentEntityData()
     data class PostData(val post: PostModel) : LocalContentEntityData()
+    object EmptyData: LocalContentEntityData()
     companion object {
         enum class IneligibleReason {
             WPNotLoggedIn,

@@ -2,14 +2,8 @@ package org.wordpress.android.sharedlogin.resolver
 
 import android.content.Intent
 import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.generated.PostActionBuilder
-import org.wordpress.android.localcontentmigration.LocalContentEntity.EligibilityStatus
-import org.wordpress.android.localcontentmigration.LocalContentEntity.Post
+import org.wordpress.android.localcontentmigration.EligibilityHelper
 import org.wordpress.android.localcontentmigration.LocalContentEntityData.Companion.IneligibleReason.WPNotLoggedIn
-import org.wordpress.android.localcontentmigration.LocalContentEntityData.EligibilityStatusData
-import org.wordpress.android.localcontentmigration.LocalContentEntityData.PostData
-import org.wordpress.android.localcontentmigration.LocalContentEntityData.PostsData
-import org.wordpress.android.localcontentmigration.LocalMigrationContentResolver
 import org.wordpress.android.localcontentmigration.LocalMigrationError
 import org.wordpress.android.localcontentmigration.LocalMigrationError.FeatureDisabled
 import org.wordpress.android.localcontentmigration.LocalMigrationError.Ineligibility
@@ -18,12 +12,12 @@ import org.wordpress.android.localcontentmigration.LocalMigrationError.NoUserFla
 import org.wordpress.android.localcontentmigration.LocalMigrationError.PersistenceError
 import org.wordpress.android.localcontentmigration.LocalMigrationError.ProviderError
 import org.wordpress.android.localcontentmigration.LocalMigrationResult.Success
+import org.wordpress.android.localcontentmigration.LocalPostsHelper
 import org.wordpress.android.localcontentmigration.SharedLoginHelper
 import org.wordpress.android.localcontentmigration.SitesMigrationHelper
 import org.wordpress.android.localcontentmigration.otherwise
 import org.wordpress.android.localcontentmigration.then
 import org.wordpress.android.localcontentmigration.thenWith
-import org.wordpress.android.localcontentmigration.validate
 import org.wordpress.android.reader.savedposts.resolver.ReaderSavedPostsHelper
 import org.wordpress.android.sharedlogin.SharedLoginAnalyticsTracker
 import org.wordpress.android.sharedlogin.SharedLoginAnalyticsTracker.ErrorType
@@ -40,13 +34,15 @@ class LocalMigrationOrchestrator @Inject constructor(
     private val sharedLoginAnalyticsTracker: SharedLoginAnalyticsTracker,
     private val userFlagsHelper: UserFlagsHelper,
     private val readerSavedPostsHelper: ReaderSavedPostsHelper,
-    private val localMigrationContentResolver: LocalMigrationContentResolver,
     private val sharedLoginHelper: SharedLoginHelper,
     private val sitesMigrationHelper: SitesMigrationHelper,
+    private val localPostsHelper: LocalPostsHelper,
+        private val eligibilityHelper: EligibilityHelper,
 ) {
     fun tryLocalMigration() {
-        localMigrationContentResolver.getResultForEntityType<EligibilityStatusData>(EligibilityStatus).validate()
+        eligibilityHelper.validate()
                 .then(sitesMigrationHelper::migrateSites)
+                .then(localPostsHelper::migratePosts)
                 .then(userFlagsHelper::migrateUserFlags)
                 .then(readerSavedPostsHelper::migrateReaderSavedPosts)
                 .then(sharedLoginHelper::login)
@@ -72,19 +68,9 @@ class LocalMigrationOrchestrator @Inject constructor(
         }
     }
     private fun originalTryLocalMigration(accessToken: String) {
-        migrateLocalContent()
         dispatchUpdateAccessToken(accessToken)
         reloadMainScreen()
     }
-
-    fun migrateLocalContent() {
-        val posts: PostsData = localMigrationContentResolver.getDataForEntityType(Post)
-        for (localPostId in posts.localIds) {
-            val postData: PostData = localMigrationContentResolver.getDataForEntityType(Post, localPostId)
-            dispatcher.dispatch(PostActionBuilder.newUpdatePostAction(postData.post))
-        }
-    }
-
 
     private fun dispatchUpdateAccessToken(accessToken: String) {
         dispatcher.dispatch(
