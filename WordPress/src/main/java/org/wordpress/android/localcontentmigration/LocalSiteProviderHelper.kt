@@ -9,7 +9,7 @@ class LocalSiteProviderHelper @Inject constructor(
     private val siteStore: SiteStore,
     private val accountStore: AccountStore,
 ): LocalDataProviderHelper {
-    override fun getData(localSiteId: Int?, localEntityId: Int?): LocalContentEntityData =
+    override fun getData(localEntityId: Int?): SitesData =
             if (accountStore.hasAccessToken())
                 SitesData(sites = siteStore.sites)
             else

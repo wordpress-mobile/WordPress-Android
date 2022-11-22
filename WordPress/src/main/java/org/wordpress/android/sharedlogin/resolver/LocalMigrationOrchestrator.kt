@@ -16,6 +16,13 @@ import org.wordpress.android.localcontentmigration.LocalContentEntityData.PostDa
 import org.wordpress.android.localcontentmigration.LocalContentEntityData.PostsData
 import org.wordpress.android.localcontentmigration.LocalContentEntityData.SitesData
 import org.wordpress.android.localcontentmigration.LocalMigrationContentResolver
+import org.wordpress.android.localcontentmigration.LocalMigrationError
+import org.wordpress.android.localcontentmigration.LocalMigrationError.Ineligibility
+import org.wordpress.android.localcontentmigration.LocalMigrationError.ProviderError
+import org.wordpress.android.localcontentmigration.LocalMigrationResult.Success
+import org.wordpress.android.localcontentmigration.otherwise
+import org.wordpress.android.localcontentmigration.then
+import org.wordpress.android.localcontentmigration.validate
 import org.wordpress.android.reader.savedposts.resolver.ReaderSavedPostsResolver
 import org.wordpress.android.resolver.ResolverUtility
 import org.wordpress.android.sharedlogin.JetpackSharedLoginFlag
@@ -43,6 +50,25 @@ class LocalMigrationOrchestrator @Inject constructor(
     private val siteStore: SiteStore,
 ) {
     fun tryLocalMigration() {
+        localMigrationContentResolver.getResultForEntityType<EligibilityStatusData>(EligibilityStatus).validate()
+                .then {
+                    originalTryLocalMigration()
+                    Success(it)
+                }.otherwise(::handleErrors)
+    }
+
+    @Suppress("ForbiddenComment")
+    // TODO: Handle the errors appropriately
+    private fun handleErrors(error: LocalMigrationError) {
+        when(error) {
+            is ProviderError -> Unit
+            is Ineligibility -> Unit
+        }
+    }
+    private fun originalTryLocalMigration() {
+        @Suppress("ForbiddenComment")
+        // TODO: We should move this login specific logic to a helper. It can happen as a later step, since the
+        // eligibility check is handled separately now (on the provider side).
         val isFeatureFlagEnabled = jetpackSharedLoginFlag.isEnabled()
 
         if (!isFeatureFlagEnabled) {
@@ -99,17 +125,10 @@ class LocalMigrationOrchestrator @Inject constructor(
     }
 
     fun migrateLocalContent() {
-        val (isEligible) = localMigrationContentResolver.getDataForEntityType<EligibilityStatusData>(EligibilityStatus)
-        @Suppress("ForbiddenComment")
-        // TODO: do something more graceful here?
-        if (!isEligible) return
-        val (sites) = localMigrationContentResolver.getDataForEntityType<SitesData >(Sites)
-        for (site in sites) {
-            val posts: PostsData = localMigrationContentResolver.getDataForEntityType(Post, site.id)
-            for (localPostId in posts.localIds) {
-                val postData: PostData = localMigrationContentResolver.getDataForEntityType(Post, site.id, localPostId)
-                dispatcher.dispatch(PostActionBuilder.newUpdatePostAction(postData.post))
-            }
+        val posts: PostsData = localMigrationContentResolver.getDataForEntityType(Post)
+        for (localPostId in posts.localIds) {
+            val postData: PostData = localMigrationContentResolver.getDataForEntityType(Post, localPostId)
+            dispatcher.dispatch(PostActionBuilder.newUpdatePostAction(postData.post))
         }
     }
 
