@@ -60,7 +60,7 @@ class LocalMigrationContentResolver @Inject constructor(
                 val value = cursor.getValue<T>()
                 if (value == null) Failure(NullValueFromQuery(entityType))
                 else Success(value)
-            }.getOrDefault(Failure(ParsingException(entityType)))
+            }.getOrElse { Failure(ParsingException(entityType, it)) }
         }
     }
 }
