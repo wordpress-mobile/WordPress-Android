@@ -50,6 +50,7 @@ class JetpackFeatureFullScreenOverlayFragment : BottomSheetDialogFragment() {
                         com.google.android.material.R.id.design_bottom_sheet
                 ) ?: return@setOnShowListener
                 val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
+                bottomSheetBehavior.setMaxWidth(ViewGroup.LayoutParams.MATCH_PARENT);
                 bottomSheetBehavior.isDraggable = false
                 if (bottomSheet.layoutParams != null) {
                     showFullScreenBottomSheet(bottomSheet)
