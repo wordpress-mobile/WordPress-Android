@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.prefs.notifications
 
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.MenuItem
@@ -38,7 +37,6 @@ class NotificationsSettingsActivity : LocaleAwareActivity(), MainSwitchToolbarLi
     private lateinit var messageTextView: TextView
     private lateinit var messageContainer: View
 
-    private lateinit var sharedPreferences: SharedPreferences
     private lateinit var fragmentContainer: View
 
     public override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,13 +44,8 @@ class NotificationsSettingsActivity : LocaleAwareActivity(), MainSwitchToolbarLi
         setContentView(layout.notifications_settings_activity)
         fragmentContainer = findViewById(id.fragment_container)
 
-        // Get shared preferences for main switch.
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this@NotificationsSettingsActivity)
+        setUpPrimaryToolbar()
 
-        // Set up primary toolbar
-        setUpToolbar()
-
-        // Set up main switch
         setUpMainSwitch()
 
         if (savedInstanceState == null) {
@@ -99,7 +92,7 @@ class NotificationsSettingsActivity : LocaleAwareActivity(), MainSwitchToolbarLi
     /**
      * Set up primary toolbar for navigation and search
      */
-    private fun setUpToolbar() {
+    private fun setUpPrimaryToolbar() {
         val toolbar = findViewById<Toolbar>(id.toolbar_with_search)
 
         toolbar?.let { setSupportActionBar(it) }
@@ -119,6 +112,7 @@ class NotificationsSettingsActivity : LocaleAwareActivity(), MainSwitchToolbarLi
         mainSwitchToolBarView.setMainSwitchToolbarListener(this)
 
         // Set main switch state from shared preferences.
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this@NotificationsSettingsActivity)
         val isMainChecked = sharedPreferences.getBoolean(getString(string.wp_pref_notifications_main), true)
         mainSwitchToolBarView.loadInitialState(isMainChecked)
         hideDisabledView(isMainChecked)
