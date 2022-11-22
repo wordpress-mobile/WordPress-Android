@@ -25,9 +25,10 @@ import org.wordpress.android.fluxc.store.AccountStore.UpdateTokenPayload
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.localcontentmigration.LocalMigrationContentProvider
 import org.wordpress.android.localcontentmigration.LocalMigrationContentResolver
+import org.wordpress.android.localcontentmigration.SharedLoginHelper
+import org.wordpress.android.localcontentmigration.SitesMigrationHelper
 import org.wordpress.android.reader.savedposts.resolver.ReaderSavedPostsResolver
 import org.wordpress.android.resolver.ContentResolverWrapper
-import org.wordpress.android.resolver.ResolverUtility
 import org.wordpress.android.sharedlogin.JetpackSharedLoginFlag
 import org.wordpress.android.sharedlogin.SharedLoginAnalyticsTracker
 import org.wordpress.android.sharedlogin.SharedLoginAnalyticsTracker.ErrorType
@@ -57,22 +58,20 @@ class SharedLoginResolverTest : BaseUnitTest() {
     private val userFlagsResolver: UserFlagsHelper = mock()
     private val readerSavedPostsResolver: ReaderSavedPostsResolver = mock()
     private val localMigrationContentResolver: LocalMigrationContentResolver = mock()
-    private val resolverUtility: ResolverUtility = mock()
     private val siteStore: SiteStore = mock()
+    private val sharedLoginHelper: SharedLoginHelper = mock()
+    private val sitesMigrationHelper: SitesMigrationHelper = mock()
 
     private val classToTest = LocalMigrationOrchestrator(
-            jetpackSharedLoginFlag,
             contextProvider,
             dispatcher,
-            accountStore,
             accountActionBuilderWrapper,
-            appPrefsWrapper,
             sharedLoginAnalyticsTracker,
             userFlagsResolver,
             readerSavedPostsResolver,
             localMigrationContentResolver,
-            resolverUtility,
-            siteStore
+            sharedLoginHelper,
+            sitesMigrationHelper,
     )
     private val sharedDataLoggedInNoSites = SharedLoginData(
             token = "valid",
