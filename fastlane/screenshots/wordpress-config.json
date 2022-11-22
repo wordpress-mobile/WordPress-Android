@@ -2,7 +2,7 @@
 	"version": 0.1,
 	"shadow_offset": 0,
 	"background_color": "#016087",
-	"stylesheet": "assets/style.css",
+	"stylesheet": "screenshots/assets/style.css",
 	"devices": [
 		{
 			"name": "Pixel 2 XL",
@@ -12,7 +12,7 @@
 			"font_size": "70px",
 			"screenshot_size": [740, 1480],
 			"screenshot_offset": [170, 440],
-			"device_frame": "assets/pixel-2-xl.svg",
+			"device_frame": "screenshots/assets/pixel-2-xl.svg",
 			"device_frame_size": [833, 1708],
 			"device_frame_offset": [124, 317]
 		},
@@ -24,8 +24,8 @@
 			"font_size": "80px",
 			"screenshot_size": [636, 1191],
 			"screenshot_offset": [226, 501],
-			"screenshot_mask": "assets/pixel-3-mask.png",
-			"device_frame": "assets/pixel-3.png",
+			"screenshot_mask": "screenshots/assets/pixel-3-mask.png",
+			"device_frame": "screenshots/assets/pixel-3.png",
 			"device_frame_size": [900, 1626],
 			"device_frame_offset": [91, 286]
 		},
@@ -37,7 +37,7 @@
 			"font_size": "100px",
 			"screenshot_size": [1731, 1298],
 			"screenshot_offset": [634, 493],
-			"device_frame": "assets/nexus-9.png",
+			"device_frame": "screenshots/assets/nexus-9.png",
 			"device_frame_size": [2139, 1451],
 			"device_frame_offset": [430, 419]
 		}
@@ -49,21 +49,21 @@
 			"filename": "images/phoneScreenshots/7-the-worlds-most-popular-website-builder.png",
 			"attachments": [
 				{
-					"file": "assets/attachments/phone-backgrounds/Circles-1.png",
+					"file": "screenshots/assets/attachments/phone-backgrounds/Circles-1.png",
 					"size": [1080, 1920],
 					"position": [0, 0]
 				},
 				{
-					"file": "assets/attachments/themes/Themes-Android-Phone.png",
+					"file": "screenshots/assets/attachments/themes/Themes-Android-Phone.png",
 					"size": [1080, 1438],
 					"position": [0, 465]
 				},
 				{
-					"text": "../metadata/android/%s/screenshot_1.txt",
+					"text": "metadata/android/%s/screenshot_1.txt",
 					"size": [810,480],
 					"position": [127,0 ],
 					"alignment": "center",
-					"stylesheet": "assets/intro-text.css"
+					"stylesheet": "screenshots/assets/intro-text.css"
 				}
 			]
 		},
@@ -71,43 +71,43 @@
 		{
 			"device": "Pixel 3",
 			"screenshot": "images/phoneScreenshots/1-create-a-site-or-start-a-blog.png",
-			"background": "assets/attachments/phone-backgrounds/Circles-2.png",
-			"text": "../metadata/android/%s/screenshot_2.txt"
+			"background": "screenshots/assets/attachments/phone-backgrounds/Circles-2.png",
+			"text": "metadata/android/%s/screenshot_2.txt"
 		},
 		// Discover new reads
 		{
 			"device": "Pixel 3",
 			"screenshot": "images/phoneScreenshots/2-discover-new-reads.png",
-			"background": "assets/attachments/phone-backgrounds/Circles-3.png",
-			"text": "../metadata/android/%s/screenshot_3.txt"
+			"background": "screenshots/assets/attachments/phone-backgrounds/Circles-3.png",
+			"text": "metadata/android/%s/screenshot_3.txt"
 		},
 		// Build an audience
 		{
 			"device": "Pixel 3",
 			"screenshot": "images/phoneScreenshots/3-build-an-audience.png",
-			"background": "assets/attachments/phone-backgrounds/Circles-4.png",
-			"text": "../metadata/android/%s/screenshot_4.txt"
+			"background": "screenshots/assets/attachments/phone-backgrounds/Circles-4.png",
+			"text": "metadata/android/%s/screenshot_4.txt"
 		},
 		// Keep tabs on your site
 		{
 			"device": "Pixel 3",
 			"screenshot": "images/phoneScreenshots/4-keep-tabs-on-your-site.png",
-			"background": "assets/attachments/phone-backgrounds/Circles-5.png",
-			"text": "../metadata/android/%s/screenshot_5.txt"
+			"background": "screenshots/assets/attachments/phone-backgrounds/Circles-5.png",
+			"text": "metadata/android/%s/screenshot_5.txt"
 		},
 		// Reply in real time
 		{
 			"device": "Pixel 3",
 			"screenshot": "images/phoneScreenshots/5-reply-in-real-time.png",
-			"background": "assets/attachments/phone-backgrounds/Circles-6.png",
-			"text": "../metadata/android/%s/screenshot_6.txt"
+			"background": "screenshots/assets/attachments/phone-backgrounds/Circles-6.png",
+			"text": "metadata/android/%s/screenshot_6.txt"
 		},
 		// Upload on the go
 		{
 			"device": "Pixel 3",
 			"screenshot": "images/phoneScreenshots/6-upload-on-the-go.png",
-			"background": "assets/attachments/phone-backgrounds/Circles-7.png",
-			"text": "../metadata/android/%s/screenshot_7.txt"
+			"background": "screenshots/assets/attachments/phone-backgrounds/Circles-7.png",
+			"text": "metadata/android/%s/screenshot_7.txt"
 		},
 		// The world's most popular website builder
 		{
@@ -115,21 +115,21 @@
 			"filename": "images/tenInchScreenshots/7-the-worlds-most-popular-website-builder.png",
 			"attachments": [
 				{
-					"file": "assets/attachments/tablet-backgrounds/Circles-1.png",
+					"file": "screenshots/assets/attachments/tablet-backgrounds/Circles-1.png",
 					"size": [3000, 2000],
 					"position": [0, 0]
 				},
 				{
-					"file": "assets/attachments/themes/Themes-Android-Tablet.png",
+					"file": "screenshots/assets/attachments/themes/Themes-Android-Tablet.png",
 					"size": [3000, 1500],
 					"position": [0, 424]
 				},
 				{
-					"text": "../metadata/android/%s/screenshot_1.txt",
+					"text": "metadata/android/%s/screenshot_1.txt",
 					"size": [3000,120],
 					"position": [0,120 ],
 					"alignment": "center",
-					"stylesheet": "assets/intro-text-tablet.css"
+					"stylesheet": "screenshots/assets/intro-text-tablet.css"
 				}
 			]
 		},
@@ -137,43 +137,43 @@
 		{
 			"device": "Nexus 9",
 			"screenshot": "images/tenInchScreenshots/1-create-a-site-or-start-a-blog.png",
-			"background": "assets/attachments/tablet-backgrounds/Circles-2.png",
-			"text": "../metadata/android/%s/screenshot_2.txt"
+			"background": "screenshots/assets/attachments/tablet-backgrounds/Circles-2.png",
+			"text": "metadata/android/%s/screenshot_2.txt"
 		},
 		// Discover new reads
 		{
 			"device": "Nexus 9",
 			"screenshot": "images/tenInchScreenshots/2-discover-new-reads.png",
-			"background": "assets/attachments/tablet-backgrounds/Circles-3.png",
-			"text": "../metadata/android/%s/screenshot_3.txt"
+			"background": "screenshots/assets/attachments/tablet-backgrounds/Circles-3.png",
+			"text": "metadata/android/%s/screenshot_3.txt"
 		},
 		// Build an audience
 		{
 			"device": "Nexus 9",
 			"screenshot": "images/tenInchScreenshots/3-build-an-audience.png",
-			"background": "assets/attachments/tablet-backgrounds/Circles-4.png",
-			"text": "../metadata/android/%s/screenshot_4.txt"
+			"background": "screenshots/assets/attachments/tablet-backgrounds/Circles-4.png",
+			"text": "metadata/android/%s/screenshot_4.txt"
 		},
 		// Keep tabs on your site
 		{
 			"device": "Nexus 9",
 			"screenshot": "images/tenInchScreenshots/4-keep-tabs-on-your-site.png",
-			"background": "assets/attachments/tablet-backgrounds/Circles-5.png",
-			"text": "../metadata/android/%s/screenshot_5.txt"
+			"background": "screenshots/assets/attachments/tablet-backgrounds/Circles-5.png",
+			"text": "metadata/android/%s/screenshot_5.txt"
 		},
 		// Reply in real time
 		{
 			"device": "Nexus 9",
 			"screenshot": "images/tenInchScreenshots/5-reply-in-real-time.png",
-			"background": "assets/attachments/tablet-backgrounds/Circles-6.png",
-			"text": "../metadata/android/%s/screenshot_6.txt"
+			"background": "screenshots/assets/attachments/tablet-backgrounds/Circles-6.png",
+			"text": "metadata/android/%s/screenshot_6.txt"
 		},
 		// Upload on the go
 		{
 			"device": "Nexus 9",
 			"screenshot": "images/tenInchScreenshots/6-upload-on-the-go.png",
-			"background": "assets/attachments/tablet-backgrounds/Circles-7.png",
-			"text": "../metadata/android/%s/screenshot_7.txt"
+			"background": "screenshots/assets/attachments/tablet-backgrounds/Circles-7.png",
+			"text": "metadata/android/%s/screenshot_7.txt"
 		}
 	]
 }
