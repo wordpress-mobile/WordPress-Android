@@ -81,7 +81,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_extra_extra_medium_large"
             android:layout_marginEnd="@dimen/margin_extra_extra_medium_large"
-            android:layout_marginBottom="@dimen/margin_64dp"
+            android:layout_marginBottom="@dimen/margin_extra_extra_medium_large"
             android:backgroundTint="@color/jetpack_green_40"
             android:gravity="center"
             android:minHeight="@dimen/margin_64dp"
