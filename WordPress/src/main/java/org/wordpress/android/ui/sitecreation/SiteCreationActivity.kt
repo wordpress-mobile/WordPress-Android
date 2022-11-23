@@ -157,7 +157,7 @@ class SiteCreationActivity : LocaleAwareActivity(),
 
         mainViewModel.showJetpackOverlay.observeEvent(this) {
             val fragment = JetpackFeatureFullScreenOverlayFragment
-                    .newInstance(JetpackFeatureOverlayScreenType.SITE_CREATION)
+                    .newInstance(isSiteCreationOverlay =  true)
             if (mainViewModel.siteCreationDisabled)
                 slideInFragment(fragment, JetpackFeatureFullScreenOverlayFragment.TAG)
             else fragment.show(supportFragmentManager, JetpackFeatureFullScreenOverlayFragment.TAG)

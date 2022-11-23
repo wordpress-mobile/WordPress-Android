@@ -26,23 +26,42 @@ class JetpackFeatureFullScreenOverlayViewModel @Inject constructor(
     val action: LiveData<JetpackFeatureOverlayActions> = _action
 
     private lateinit var screenType: JetpackFeatureOverlayScreenType
+    private var isSiteCreationOverlayScreen: Boolean = false
 
     fun openJetpackAppDownloadLink() {
         _action.value = JetpackFeatureOverlayActions.OpenPlayStore
-        jetpackFeatureRemovalOverlayUtil.trackInstallJetpackTapped(screenType)
+        if (isSiteCreationOverlayScreen) jetpackFeatureRemovalOverlayUtil.trackInstallJetpackTappedInSiteCreationOverlay()
+        else jetpackFeatureRemovalOverlayUtil.trackInstallJetpackTapped(screenType)
     }
 
     fun continueToFeature() {
         _action.value = JetpackFeatureOverlayActions.DismissDialog
-        jetpackFeatureRemovalOverlayUtil.trackBottomSheetDismissed(screenType, CONTINUE_BUTTON)
+        if (isSiteCreationOverlayScreen)
+            jetpackFeatureRemovalOverlayUtil.trackBottomSheetDismissedInSiteCreationOverlay(CONTINUE_BUTTON)
+        else jetpackFeatureRemovalOverlayUtil.trackBottomSheetDismissed(screenType, CONTINUE_BUTTON)
+
     }
 
     fun closeBottomSheet() {
         _action.value = JetpackFeatureOverlayActions.DismissDialog
-        jetpackFeatureRemovalOverlayUtil.trackBottomSheetDismissed(screenType, CLOSE_BUTTON)
+        if (isSiteCreationOverlayScreen)
+            jetpackFeatureRemovalOverlayUtil.trackBottomSheetDismissedInSiteCreationOverlay(CLOSE_BUTTON)
+        else jetpackFeatureRemovalOverlayUtil.trackBottomSheetDismissed(screenType, CLOSE_BUTTON)
     }
 
-    fun init(overlayScreenType: JetpackFeatureOverlayScreenType?, rtlLayout: Boolean) {
+    fun init(overlayScreenType: JetpackFeatureOverlayScreenType?, isSiteCreationOverlay: Boolean, rtlLayout: Boolean) {
+        if (isSiteCreationOverlay) {
+            isSiteCreationOverlayScreen = true
+            _uiState.postValue(
+                    jetpackFeatureOverlayContentBuilder.buildSiteCreationOverlayState(
+                            getSiteCreationPhase()!!,
+                            rtlLayout
+                    )
+            )
+            jetpackFeatureRemovalOverlayUtil.trackSiteCreationOverlayShown()
+            return
+        }
+
         screenType = overlayScreenType ?: return
         val params = JetpackFeatureOverlayContentBuilderParams(
                 currentPhase = getCurrentPhase()!!,
@@ -51,20 +70,6 @@ class JetpackFeatureFullScreenOverlayViewModel @Inject constructor(
         )
         _uiState.postValue(jetpackFeatureOverlayContentBuilder.build(params = params))
         jetpackFeatureRemovalOverlayUtil.onOverlayShown(overlayScreenType)
-
-        val state: JetpackFeatureOverlayUIState = when (overlayScreenType) {
-            JetpackFeatureOverlayScreenType.SITE_CREATION -> jetpackFeatureOverlayContentBuilder
-                    .buildSiteCreationOverlayState(getSiteCreationPhase()!!, rtlLayout)
-            else -> {
-                val params = JetpackFeatureOverlayContentBuilderParams(
-                        currentPhase = getCurrentPhase()!!,
-                        isRtl = rtlLayout,
-                        feature = overlayScreenType
-                )
-                jetpackFeatureOverlayContentBuilder.build(params = params)
-            }
-        }
-        _uiState.postValue(state)
     }
 
     private fun getCurrentPhase() = jetpackFeatureRemovalPhaseHelper.getCurrentPhase()

@@ -41,7 +41,7 @@ class JetpackFeatureFullScreenOverlayFragment : BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.init(getSiteScreen(), RtlUtils.isRtl(view.context))
+        viewModel.init(getSiteScreen(), getIfSiteCreationOverlay(), RtlUtils.isRtl(view.context))
         binding.setupObservers()
 
         (dialog as? BottomSheetDialog)?.apply {
@@ -72,7 +72,10 @@ class JetpackFeatureFullScreenOverlayFragment : BottomSheetDialogFragment() {
     }
 
     private fun getSiteScreen() =
-            arguments?.getSerializable(OVERLAY_SCREEN_TYPE) as JetpackFeatureOverlayScreenType
+            arguments?.getSerializable(OVERLAY_SCREEN_TYPE) as JetpackFeatureOverlayScreenType?
+
+    private fun getIfSiteCreationOverlay() =
+            arguments?.getSerializable(IS_SITE_CREATION_OVERLAY) as Boolean
 
     private fun JetpackFeatureRemovalOverlayBinding.setupObservers() {
         viewModel.uiState.observe(viewLifecycleOwner) {
@@ -127,7 +130,7 @@ class JetpackFeatureFullScreenOverlayFragment : BottomSheetDialogFragment() {
             title.text = getString(it.title)
             caption.text = getString(it.caption)
             primaryButton.text = getString(it.primaryButtonText)
-            it.secondaryButtonText?.let {  secondaryButton.text = getString(it) }
+            it.secondaryButtonText?.let { secondaryButton.text = getString(it) }
         }
     }
 
@@ -139,12 +142,15 @@ class JetpackFeatureFullScreenOverlayFragment : BottomSheetDialogFragment() {
     companion object {
         const val TAG = "JETPACK_POWERED_OVERLAY_FULL_SCREEN_FRAGMENT"
         private const val OVERLAY_SCREEN_TYPE = "KEY_JETPACK_OVERLAY_SCREEN"
+        private const val IS_SITE_CREATION_OVERLAY = "KEY_IS_SITE_CREATION_OVERLAY"
 
         @JvmStatic fun newInstance(
-            jetpackFeatureOverlayScreenType: JetpackFeatureOverlayScreenType?
+            jetpackFeatureOverlayScreenType: JetpackFeatureOverlayScreenType? = null,
+            isSiteCreationOverlay: Boolean = false
         ) = JetpackFeatureFullScreenOverlayFragment().apply {
             arguments = Bundle().apply {
                 putSerializable(OVERLAY_SCREEN_TYPE, jetpackFeatureOverlayScreenType)
+                putBoolean(IS_SITE_CREATION_OVERLAY, isSiteCreationOverlay)
             }
         }
     }

@@ -29,7 +29,6 @@ class JetpackFeatureOverlayContentBuilder @Inject constructor() {
             JetpackFeatureOverlayScreenType.STATS -> getStateForPhaseOneStats(params.isRtl)
             JetpackFeatureOverlayScreenType.NOTIFICATIONS -> getStateForPhaseOneNotifications(params.isRtl)
             JetpackFeatureOverlayScreenType.READER -> getStateForPhaseOneReader(params.isRtl)
-            JetpackFeatureOverlayScreenType.SITE_CREATION -> TODO()
         }
         return JetpackFeatureOverlayUIState(componentVisibility, content)
     }

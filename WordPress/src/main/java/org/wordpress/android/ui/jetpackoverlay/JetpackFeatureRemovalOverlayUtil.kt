@@ -177,7 +177,17 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
         )
     }
 
-    private fun trackSiteCreationOverlayShown() {
+    fun trackSiteCreationOverlayShown() {
+        // add tracking logic
+    }
+
+    fun trackInstallJetpackTappedInSiteCreationOverlay() {
+        // add tracking logic
+    }
+
+    fun trackBottomSheetDismissedInSiteCreationOverlay(
+        dismissalType: JetpackOverlayDismissalType
+    ) {
         // add tracking logic
     }
 
