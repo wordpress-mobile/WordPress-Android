@@ -4269,7 +4269,6 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="preference_open_web_links_with_jetpack_setting_change_enable_error">Unable to enable open web links with Jetpack</string>
     <string name="preference_open_web_links_with_jetpack_setting_change_disable_error">Unable to disable open web links with Jetpack</string>
 
-
     <!-- Jetpack feature overlay strings in WordPress App -->
     <string name="wp_jetpack_feature_removal_overlay_phase_one_title_stats">Get your stats using the new Jetpack app</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_title_reader">Follow any site with the Jetpack app</string>
@@ -4279,4 +4278,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="wp_jetpack_feature_removal_overlay_phase_one_description_notifications">Switch to the Jetpack app to keep receiving  realtime notifications on your device.</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app" translatable="false"> @string/wp_jetpack_get_new_jetpack_app</string>
 
+    <!-- Deep Linking Activity Aliases -->
+    <string name="deep_linking_urilinks_alias_label">urilinks</string>
+    <string name="deep_linking_weblinks_alias_label">weblinks</string>
 </resources>
