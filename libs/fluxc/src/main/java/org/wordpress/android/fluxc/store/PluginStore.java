@@ -79,11 +79,11 @@ public class PluginStore extends Store {
     }
 
     @SuppressWarnings("WeakerAccess")
-    public static class FetchJetpackSitePluginPayload extends Payload<BaseNetworkError> {
+    public static class FetchSitePluginPayload extends Payload<BaseNetworkError> {
         public SiteModel site;
         public String pluginName;
 
-        public FetchJetpackSitePluginPayload(SiteModel site, String pluginName) {
+        public FetchSitePluginPayload(SiteModel site, String pluginName) {
             this.site = site;
             this.pluginName = pluginName;
         }
@@ -223,15 +223,15 @@ public class PluginStore extends Store {
     }
 
     @SuppressWarnings("WeakerAccess")
-    public static class FetchedJetpackSitePluginPayload extends Payload<FetchPluginForJetpackSiteError> {
+    public static class FetchedSitePluginPayload extends Payload<FetchSitePluginError> {
         public SitePluginModel plugin;
         public String pluginName;
 
-        public FetchedJetpackSitePluginPayload(SitePluginModel plugin) {
+        public FetchedSitePluginPayload(SitePluginModel plugin) {
             this.plugin = plugin;
         }
 
-        public FetchedJetpackSitePluginPayload(String pluginName, FetchPluginForJetpackSiteError error) {
+        public FetchedSitePluginPayload(String pluginName, FetchSitePluginError error) {
             this.pluginName = pluginName;
             this.error = error;
         }
@@ -297,6 +297,7 @@ public class PluginStore extends Store {
 
     public static class ConfigureSitePluginError implements OnChangedError {
         public ConfigureSitePluginErrorType type;
+        @Nullable public Integer errorCode;
         @Nullable public String message;
 
         ConfigureSitePluginError(ConfigureSitePluginErrorType type) {
@@ -308,9 +309,12 @@ public class PluginStore extends Store {
             this.message = message;
         }
 
-        public ConfigureSitePluginError(GenericErrorType type, @Nullable String message, boolean isActivating) {
-            this.type = ConfigureSitePluginErrorType.fromGenericErrorType(type, isActivating);
-            this.message = message;
+        public ConfigureSitePluginError(BaseNetworkError error, boolean isActivating) {
+            this.type = ConfigureSitePluginErrorType.fromGenericErrorType(error.type, isActivating);
+            this.message = error.message;
+            if (error.hasVolleyError() && error.volleyError.networkResponse != null) {
+                this.errorCode = error.volleyError.networkResponse.statusCode;
+            }
         }
     }
 
@@ -361,20 +365,33 @@ public class PluginStore extends Store {
         }
     }
 
-    public static class FetchPluginForJetpackSiteError implements OnChangedError {
-        public FetchPluginForJetpackSiteErrorType type;
+    public static class FetchSitePluginError implements OnChangedError {
+        public FetchSitePluginErrorType type;
+        @Nullable public String message;
 
-        public FetchPluginForJetpackSiteError(FetchPluginForJetpackSiteErrorType type) {
+        public FetchSitePluginError(FetchSitePluginErrorType type, @Nullable String message) {
             this.type = type;
+            this.message = message;
+        }
+
+        public FetchSitePluginError(GenericErrorType type, @Nullable String message) {
+            this.type = FetchSitePluginErrorType.fromGenericErrorType(type);
+            this.message = message;
         }
     }
 
     public static class InstallSitePluginError implements OnChangedError {
         public InstallSitePluginErrorType type;
+        @Nullable public Integer errorCode;
         @Nullable public String message;
 
         InstallSitePluginError(InstallSitePluginErrorType type) {
+            this(type, null);
+        }
+
+        InstallSitePluginError(InstallSitePluginErrorType type, @Nullable String message) {
             this.type = type;
+            this.message = message;
         }
 
         public InstallSitePluginError(String type, @Nullable String message) {
@@ -382,14 +399,12 @@ public class PluginStore extends Store {
             this.message = message;
         }
 
-        public InstallSitePluginError(GenericErrorType type, @Nullable String message) {
-            this.type = InstallSitePluginErrorType.fromGenericErrorType(type);
-            this.message = message;
-        }
-
-        public InstallSitePluginError(InstallSitePluginErrorType type, @Nullable String message) {
-            this.type = type;
-            this.message = message;
+        public InstallSitePluginError(BaseNetworkError error) {
+            this.type = InstallSitePluginErrorType.fromNetworkError(error);
+            this.message = error.message;
+            if (error.hasVolleyError() && error.volleyError.networkResponse != null) {
+                this.errorCode = error.volleyError.networkResponse.statusCode;
+            }
         }
     }
 
@@ -553,11 +568,36 @@ public class PluginStore extends Store {
         PLUGIN_DOES_NOT_EXIST
     }
 
-    public enum FetchPluginForJetpackSiteErrorType {
-        NOT_JETPACK_SITE,
+    public enum FetchSitePluginErrorType {
+        UNAUTHORIZED,
+        NOT_AVAILABLE,
         EMPTY_RESPONSE,
         GENERIC_ERROR,
-        PLUGIN_DOES_NOT_EXIST
+        PLUGIN_DOES_NOT_EXIST;
+
+        public static FetchSitePluginErrorType fromGenericErrorType(GenericErrorType genericErrorType) {
+            if (genericErrorType != null) {
+                switch (genericErrorType) {
+                    case INVALID_SSL_CERTIFICATE:
+                    case HTTP_AUTH_ERROR:
+                    case AUTHORIZATION_REQUIRED:
+                    case NOT_AUTHENTICATED:
+                        return UNAUTHORIZED;
+                    case NOT_FOUND:
+                        return PLUGIN_DOES_NOT_EXIST;
+                    case NO_CONNECTION:
+                    case TIMEOUT:
+                    case NETWORK_ERROR:
+                    case SERVER_ERROR:
+                    case CENSORED:
+                    case INVALID_RESPONSE:
+                    case PARSE_ERROR:
+                    case UNKNOWN:
+                        return GENERIC_ERROR;
+                }
+            }
+            return GENERIC_ERROR;
+        }
     }
 
     public enum InstallSitePluginErrorType {
@@ -569,6 +609,8 @@ public class PluginStore extends Store {
         NOT_AVAILABLE, // Return for non-jetpack sites
         PLUGIN_ALREADY_INSTALLED,
         UNAUTHORIZED;
+
+        private static final String PLUGIN_ALREADY_EXISTS = "Destination folder already exists.";
 
         public static InstallSitePluginErrorType fromString(String string) {
             if (string != null) {
@@ -584,7 +626,11 @@ public class PluginStore extends Store {
             return GENERIC_ERROR;
         }
 
-        public static InstallSitePluginErrorType fromGenericErrorType(GenericErrorType genericErrorType) {
+        public static InstallSitePluginErrorType fromNetworkError(BaseNetworkError error) {
+            if (PLUGIN_ALREADY_EXISTS.equalsIgnoreCase(error.message)) {
+                return PLUGIN_ALREADY_INSTALLED;
+            }
+            GenericErrorType genericErrorType = error.type;
             if (genericErrorType != null) {
                 switch (genericErrorType) {
                     case TIMEOUT:
@@ -715,11 +761,11 @@ public class PluginStore extends Store {
         }
     }
 
-    public static class OnJetpackSitePluginFetched extends OnChanged<FetchPluginForJetpackSiteError> {
+    public static class OnSitePluginFetched extends OnChanged<FetchSitePluginError> {
         public SitePluginModel plugin;
         public String pluginName;
 
-        public OnJetpackSitePluginFetched(FetchedJetpackSitePluginPayload payload) {
+        public OnSitePluginFetched(FetchedSitePluginPayload payload) {
             this.plugin = payload.plugin;
             this.pluginName = payload.pluginName;
         }
@@ -779,8 +825,8 @@ public class PluginStore extends Store {
             case FETCH_WPORG_PLUGIN:
                 fetchWPOrgPlugin((String) action.getPayload());
                 break;
-            case FETCH_JETPACK_SITE_PLUGIN:
-                fetchPluginForJetpackSite((FetchJetpackSitePluginPayload) action.getPayload());
+            case FETCH_SITE_PLUGIN:
+                fetchSitePlugin((FetchSitePluginPayload) action.getPayload());
                 break;
             case INSTALL_SITE_PLUGIN:
                 installSitePlugin((InstallSitePluginPayload) action.getPayload());
@@ -808,8 +854,8 @@ public class PluginStore extends Store {
             case FETCHED_WPORG_PLUGIN:
                 fetchedWPOrgPlugin((FetchedWPOrgPluginPayload) action.getPayload());
                 break;
-            case FETCHED_JETPACK_SITE_PLUGIN:
-                fetchedJetpackSitePlugin((FetchedJetpackSitePluginPayload) action.getPayload());
+            case FETCHED_SITE_PLUGIN:
+                fetchedSitePlugin((FetchedSitePluginPayload) action.getPayload());
                 break;
             case INSTALLED_SITE_PLUGIN:
                 installedSitePlugin((InstalledSitePluginPayload) action.getPayload());
@@ -924,16 +970,16 @@ public class PluginStore extends Store {
     /* Fetch a single plugin from a site, to get its information and whether it exists or not.
        Currently this is only supported on sites connected using Jetpack plugin or Jetpack Connection Package.
      */
-    private void fetchPluginForJetpackSite(FetchJetpackSitePluginPayload payload) {
+    private void fetchSitePlugin(FetchSitePluginPayload payload) {
         if (payload.site.isJetpackConnected() || payload.site.isJetpackCPConnected()) {
             mPluginJetpackTunnelRestClient.fetchPlugin(payload.site, payload.pluginName);
+        } else if (!payload.site.isUsingWpComRestApi()) {
+            mPluginCoroutineStore.fetchWPApiPlugin(payload.site, payload.pluginName);
         } else {
-            FetchPluginForJetpackSiteError error = new FetchPluginForJetpackSiteError(
-                    FetchPluginForJetpackSiteErrorType.NOT_JETPACK_SITE
-            );
-            FetchedJetpackSitePluginPayload errorPayload =
-                    new FetchedJetpackSitePluginPayload(payload.pluginName, error);
-            mDispatcher.dispatch(PluginActionBuilder.newFetchedJetpackSitePluginAction(errorPayload));
+            FetchSitePluginError error = new FetchSitePluginError(FetchSitePluginErrorType.NOT_AVAILABLE, null);
+            FetchedSitePluginPayload errorPayload =
+                    new FetchedSitePluginPayload(payload.pluginName, error);
+            mDispatcher.dispatch(PluginActionBuilder.newFetchedSitePluginAction(errorPayload));
         }
     }
 
@@ -1041,8 +1087,8 @@ public class PluginStore extends Store {
         emitChange(event);
     }
 
-    private void fetchedJetpackSitePlugin(FetchedJetpackSitePluginPayload payload) {
-        OnJetpackSitePluginFetched event = new OnJetpackSitePluginFetched(payload);
+    private void fetchedSitePlugin(FetchedSitePluginPayload payload) {
+        OnSitePluginFetched event = new OnSitePluginFetched(payload);
         if (payload.isError()) {
             event.error = payload.error;
         }
