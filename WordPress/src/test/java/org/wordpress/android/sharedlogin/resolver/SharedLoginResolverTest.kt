@@ -23,6 +23,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.AccountStore.UpdateTokenPayload
 import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.localcontentmigration.ContentMigrationAnalyticsTracker
 import org.wordpress.android.localcontentmigration.EligibilityHelper
 import org.wordpress.android.localcontentmigration.LocalMigrationContentProvider
 import org.wordpress.android.localcontentmigration.LocalMigrationState
@@ -57,6 +58,7 @@ class SharedLoginResolverTest : BaseUnitTest() {
     private val accountActionBuilderWrapper: AccountActionBuilderWrapper = mock()
     private val appPrefsWrapper: AppPrefsWrapper = mock()
     private val sharedLoginAnalyticsTracker: SharedLoginAnalyticsTracker = mock()
+    private val migrationAnalyticsTracker: ContentMigrationAnalyticsTracker = mock()
     private val userFlagsResolver: UserFlagsHelper = mock()
     private val readerSavedPostsResolver: ReaderSavedPostsHelper = mock()
     private val siteStore: SiteStore = mock()
@@ -68,6 +70,7 @@ class SharedLoginResolverTest : BaseUnitTest() {
 
     private val classToTest = LocalMigrationOrchestrator(
             sharedLoginAnalyticsTracker,
+            migrationAnalyticsTracker,
             userFlagsResolver,
             readerSavedPostsResolver,
             sharedLoginHelper,

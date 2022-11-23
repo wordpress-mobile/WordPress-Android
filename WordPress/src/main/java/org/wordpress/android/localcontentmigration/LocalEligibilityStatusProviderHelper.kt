@@ -34,7 +34,7 @@ class LocalEligibilityStatusProviderHelper @Inject constructor(
      * Since posts and pages share the same table, we can directly query the database for the ids without filtering
      * on `isPage`.
      */
-    private fun getLocalDraftPostAndPageIdsForSite(site: SiteModel?) = site?.id?.let { localSiteId ->
+    private fun getLocalDraftPostAndPageIdsForSite(site: SiteModel?) = site?.id?.let {
         with(dbWrapper.giveMeReadableDb()) {
             val ids = mutableListOf<Int>()
             query(
