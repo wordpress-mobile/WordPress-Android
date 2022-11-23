@@ -24,17 +24,29 @@ class DeepLinkOpenWebLinksWithJetpackHelper @Inject constructor(
                 && isJetpackInstalled()
     }
 
+    fun enableDisableOpenWithJetpackComponents(newValue: Boolean) {
+        when (newValue) {
+            true -> {
+                packageManagerWrapper.enableReaderDeeplinks()
+                packageManagerWrapper.enableComponentEnableSetting(
+                        DeepLinkingIntentReceiverActivity::class.java)
+            }
+            false -> {
+                packageManagerWrapper.disableReaderDeepLinks()
+                packageManagerWrapper.disableComponentEnabledSetting(
+                        DeepLinkingIntentReceiverActivity::class.java)
+            }
+        }
+    }
+
     private fun showOverlay() : Boolean {
         return openWebLinksWithJetpackFlowFeatureConfig.isEnabled()
                 && isJetpackInstalled()
-                && isWebDeepLinkHandlerComponentEnabled()
+                && !isOpenWebLinksWithJetpack()
                 && isValidOverlayFrequency()
     }
 
     private fun isJetpackInstalled() = packageManagerWrapper.isPackageInstalled(getPackageName())
-
-    private fun isWebDeepLinkHandlerComponentEnabled() =
-        packageManagerWrapper.isComponentEnabledSettingEnabled(DeepLinkingIntentReceiverActivity::class.java)
 
     private fun isValidOverlayFrequency() : Boolean {
         if (!hasOverlayBeenShown()) return true // short circuit if the overlay has never been shown
@@ -57,6 +69,8 @@ class DeepLinkOpenWebLinksWithJetpackHelper @Inject constructor(
 
     private fun getOpenWebLinksWithJetpackOverlayLastShownTimestamp() =
             appPrefsWrapper.getOpenWebLinksWithJetpackOverlayLastShownTimestamp()
+
+    private fun isOpenWebLinksWithJetpack() = appPrefsWrapper.getIsOpenWebLinksWithJetpack()
 
     private fun getTodaysDate() = Date(System.currentTimeMillis())
 

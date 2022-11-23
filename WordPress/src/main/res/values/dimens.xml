@@ -734,4 +734,6 @@
     <dimen name="help_logout_button_margin">15dp</dimen>
     <dimen name="help_logout_button_margin_bottom">68dp</dimen>
 
+    <dimen name="jetpack_bottom_sheet_button_height">52dp</dimen>
+
 </resources>
