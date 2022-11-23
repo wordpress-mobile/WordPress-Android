@@ -4256,5 +4256,27 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="jp_migration_done_delete_wp_message">Please &lt;b&gt;delete the WordPress app&lt;/b&gt; to&lt;br&gt;avoid data conflicts.</string>
     <string name="jp_migration_remove_wp_app_icon_content_description">Remove WordPress App icon</string>
     <string name="jp_migration_finish_button">Finish</string>
+    <string name="jp_migration_try_again_button">Try again</string>
+    <string name="jp_migration_generic_error_title">Uh oh, something went wrong..</string>
+    <string name="jp_migration_generic_error_subtitle">We’re sorry but something didn’t go as planned. Your data is safe, but we’re unable to transfer it at this time.</string>
+    <string name="jp_migration_generic_error_message">Please contact support or try again later.</string>
+    <string name="jp_migration_network_error_title">Unable to connect to the internet.</string>
+    <string name="jp_migration_network_error_subtitle">Please check to make sure your network connection is working and try again.</string>
+    <string name="jp_migration_network_error_message">We are unable to transfer your data and settings without a network connection.</string>
+
+    <!-- Open Web Links With Jetpack -->
+    <string name="preference_open_web_links_with_jetpack">Open web links with Jetpack</string>
+    <string name="preference_open_web_links_with_jetpack_setting_change_enable_error">Unable to enable open web links with Jetpack</string>
+    <string name="preference_open_web_links_with_jetpack_setting_change_disable_error">Unable to disable open web links with Jetpack</string>
+
+
+    <!-- Jetpack feature overlay strings in WordPress App -->
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_stats">Get your stats using the new Jetpack app</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_reader">Follow any site with the Jetpack app</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_notifications">Get your notifications with the Jetpack app</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_stats">Switch to the Jetpack app to watch your site’s traffic grow with stats and insights.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_reader">Switch to the Jetpack app to find, follow, and like all your favorite sites and posts with Reader.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_notifications">Switch to the Jetpack app to keep receiving  realtime notifications on your device.</string>
+    <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app" translatable="false"> @string/wp_jetpack_get_new_jetpack_app</string>
 
 </resources>

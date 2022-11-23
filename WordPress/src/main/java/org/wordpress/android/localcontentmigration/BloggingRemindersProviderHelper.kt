@@ -14,7 +14,7 @@ class BloggingRemindersProviderHelper @Inject constructor(
     private val bloggingRemindersStore: BloggingRemindersStore,
     private val siteStore: SiteStore,
 ): LocalDataProviderHelper {
-    override fun getData(localSiteId: Int?, localEntityId: Int?) = BloggingRemindersData(
+    override fun getData(localEntityId: Int?) = BloggingRemindersData(
             reminders = runBlocking {
                 siteStore.sites.mapNotNull { site ->
                     bloggingRemindersStore.bloggingRemindersModel(site.id).first().let {

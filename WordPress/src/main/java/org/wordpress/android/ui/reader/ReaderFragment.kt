@@ -26,6 +26,8 @@ import org.wordpress.android.R.string
 import org.wordpress.android.databinding.ReaderFragmentLayoutBinding
 import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.ui.ScrollableViewInitializedListener
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayFragment
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureOverlayScreenType
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType.READER
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
@@ -85,7 +87,7 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
         binding = ReaderFragmentLayoutBinding.bind(view).apply {
             initToolbar()
             initViewPager()
-            initViewModel()
+            initViewModel(savedInstanceState)
         }
     }
 
@@ -148,12 +150,12 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
         viewPager.registerOnPageChangeCallback(viewPagerCallback)
     }
 
-    private fun ReaderFragmentLayoutBinding.initViewModel() {
+    private fun ReaderFragmentLayoutBinding.initViewModel(savedInstanceState: Bundle?) {
         viewModel = ViewModelProvider(this@ReaderFragment, viewModelFactory).get(ReaderViewModel::class.java)
-        startObserving()
+        startObserving(savedInstanceState)
     }
 
-    private fun ReaderFragmentLayoutBinding.startObserving() {
+    private fun ReaderFragmentLayoutBinding.startObserving(savedInstanceState: Bundle?) {
         viewModel.uiState.observe(viewLifecycleOwner) { uiState ->
             uiState?.let {
                 when (it) {
@@ -218,7 +220,18 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
                     .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
         }
 
+        observeJetpackOverlayEvent(savedInstanceState)
+
         viewModel.start()
+    }
+
+    private fun observeJetpackOverlayEvent(savedInstanceState: Bundle?) {
+        if (savedInstanceState == null)
+            viewModel.showJetpackOverlay.observeEvent(viewLifecycleOwner) {
+                JetpackFeatureFullScreenOverlayFragment
+                        .newInstance(JetpackFeatureOverlayScreenType.READER)
+                        .show(childFragmentManager, JetpackFeatureFullScreenOverlayFragment.TAG)
+            }
     }
 
     private fun ReaderFragmentLayoutBinding.showSnackbar(holder: SnackbarMessageHolder) {
