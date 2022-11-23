@@ -9,11 +9,11 @@ plugins {
 android {
     useLibrary 'org.apache.http.legacy'
 
-    compileSdkVersion 31
+    compileSdkVersion rootProject.compileSdkVersion
 
     defaultConfig {
-        minSdkVersion 21
-        targetSdkVersion 31
+        minSdkVersion rootProject.minSdkVersion
+        targetSdkVersion rootProject.targetSdkVersion
         javaCompileOptions {
             annotationProcessorOptions {
                 arguments += [

@@ -4,7 +4,6 @@ package org.wordpress.android.fluxc.persistence
 
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
-import android.os.Build
 import android.preference.PreferenceManager
 import android.view.Gravity
 import android.widget.Toast
@@ -1918,13 +1917,8 @@ open class WellSqlConfig : DefaultWellConfig {
         }
     }
 
-    @Suppress("CheckStyle")
     override fun onConfigure(db: SQLiteDatabase, helper: WellTableManager?) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            db.setForeignKeyConstraintsEnabled(true)
-        } else {
-            db.execSQL("PRAGMA foreign_keys=ON")
-        }
+        db.setForeignKeyConstraintsEnabled(true)
     }
 
     /**

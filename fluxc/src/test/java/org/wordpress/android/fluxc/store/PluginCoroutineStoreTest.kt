@@ -1,16 +1,5 @@
 package org.wordpress.android.fluxc.store
 
-import com.nhaarman.mockitokotlin2.KArgumentCaptor
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.argumentCaptor
-import com.nhaarman.mockitokotlin2.doAnswer
-import com.nhaarman.mockitokotlin2.eq
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.never
-import com.nhaarman.mockitokotlin2.times
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.verifyZeroInteractions
-import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -18,6 +7,17 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.KArgumentCaptor
+import org.mockito.kotlin.any
+import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.doAnswer
+import org.mockito.kotlin.eq
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.never
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoInteractions
+import org.mockito.kotlin.whenever
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.model.SiteModel
@@ -115,7 +115,7 @@ class PluginCoroutineStoreTest {
 
         assertThat(result.isError).isTrue()
         assertThat(result.error.type).isEqualTo(UNAUTHORIZED)
-        verifyZeroInteractions(pluginSqlUtils)
+        verifyNoInteractions(pluginSqlUtils)
     }
 
     @Test
@@ -334,7 +334,7 @@ class PluginCoroutineStoreTest {
         assertThat(result.isError).isTrue()
         assertThat(result.slug).isEqualTo(slug)
         assertThat(result.error.type).isEqualTo(InstallSitePluginErrorType.UNAUTHORIZED)
-        verifyZeroInteractions(pluginSqlUtils)
+        verifyNoInteractions(pluginSqlUtils)
         verify(pluginWPAPIRestClient, never()).updatePlugin(eq(site), eq(nonce), any(), any())
         verify(dispatcher, times(1)).emitChange(any())
     }
