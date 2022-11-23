@@ -1,5 +1,6 @@
 package org.wordpress.android.localcontentmigration
 
+import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.localcontentmigration.LocalContentEntityData.Companion.IneligibleReason
 
 sealed class LocalMigrationError {
@@ -23,6 +24,10 @@ sealed class LocalMigrationError {
         object FailedToSaveSites: PersistenceError()
         object FailedToSaveUserFlags: PersistenceError()
         object FailedToSaveReaderSavedPosts: PersistenceError()
+        sealed class LocalPostsPersistenceError: PersistenceError() {
+            object FailedToResetSequenceForPosts: LocalPostsPersistenceError()
+            data class FailedToSaveLocalPost(val post: PostModel): LocalPostsPersistenceError()
+        }
     }
     object NoUserFlagsFoundError: LocalMigrationError()
 }
