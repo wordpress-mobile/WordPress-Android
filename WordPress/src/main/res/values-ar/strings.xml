@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-11-02 16:54:10+0000
+Translation-Revision-Date: 2022-11-16 16:54:09+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/4.0.0-alpha.3
 Language: ar
 -->
 <resources>
+    <string name="jp_migration_help_button">هل تحتاج إلى مساعدة؟</string>
+    <string name="jp_migration_continue_button">متابعة</string>
+    <string name="jp_migration_welcome_site_found_message">عثرنا على موقعك. استمر في نقل جميع البيانات وسجّل الدخول إلى Jetpack تلقائيًا.</string>
+    <string name="jp_migration_welcome_sites_found_message">عثرنا على موقعك. استمر في نقل جميع البيانات وسجّل الدخول إلى Jetpack تلقائيًا.</string>
+    <string name="jp_migration_avatar_content_description">صورة ملفك الشخصي</string>
+    <string name="jp_migration_welcome_subtitle">يبدو أنك ستقوم بالتبديل من تطبيق ووربريس.</string>
+    <string name="jp_migration_welcome_title">مرحبًا بك في Jetpack!</string>
+    <string name="icon_desc">أيقونة</string>
     <string name="post_settings_parent">الصفحة الأصل</string>
     <string name="post_settings_page_attributes">خصائص الصفحة</string>
     <string name="about_automattic_contribute_item_title">مساهمة</string>

@@ -14,12 +14,16 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.DonePrimaryButton
+import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.ErrorPrimaryButton
+import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.ErrorSecondaryButton
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.NotificationsPrimaryButton
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.WelcomePrimaryButton
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.WelcomeSecondaryButton
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.CompleteFlow
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.ShowHelp
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Content
+import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Error.Generic
+import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Error.Networking
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Loading
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -65,16 +69,10 @@ class JetpackMigrationViewModel @Inject constructor(
         )
     }
 
-    @Suppress("ForbiddenComment", "MagicNumber")
     private fun onContinueClicked() {
         (_uiState.value as? Content.Welcome)?.let {
-            viewModelScope.launch {
-                _uiState.value = it.copy(isProcessing = true)
-                // TODO: Replace this temporary delay with migration logic
-                delay(2500)
-                // TODO: Navigate to error step if migration has errors
-                postNotificationsState()
-            }
+            _uiState.value = it.copy(isProcessing = true)
+            tryMigration()
         }
     }
 
@@ -82,6 +80,43 @@ class JetpackMigrationViewModel @Inject constructor(
         _uiState.value = Content.Notifications(
                 primaryActionButton = NotificationsPrimaryButton(::onContinueFromNotificationsClicked),
         )
+    }
+
+    @Suppress("ForbiddenComment", "unused")
+    private fun postGenericErrorState() {
+        // TODO: Call this method when migration fails with generic error
+        _uiState.value = UiState.Error(
+                primaryActionButton = ErrorPrimaryButton(::onTryAgainClicked),
+                secondaryActionButton = ErrorSecondaryButton(::onHelpClicked),
+                type = Generic,
+        )
+    }
+
+    @Suppress("ForbiddenComment", "unused")
+    private fun postNetworkingErrorState() {
+        // TODO: Call this method when migration fails with networking error
+        _uiState.value = UiState.Error(
+                primaryActionButton = ErrorPrimaryButton(::onTryAgainClicked),
+                secondaryActionButton = ErrorSecondaryButton(::onHelpClicked),
+                type = Networking,
+        )
+    }
+
+    private fun onTryAgainClicked() {
+        (_uiState.value as? UiState.Error)?.let {
+            _uiState.value = it.copy(isProcessing = true)
+            tryMigration()
+        }
+    }
+
+    @Suppress("ForbiddenComment", "MagicNumber")
+    private fun tryMigration() {
+        viewModelScope.launch {
+            // TODO: Replace this temporary delay with migration logic
+            delay(2500)
+            // TODO: Handle migration result properly and navigate to the right error screen if migration fails
+            postNotificationsState()
+        }
     }
 
     @Suppress("ForbiddenComment")
@@ -97,7 +132,6 @@ class JetpackMigrationViewModel @Inject constructor(
         )
     }
 
-    @Suppress("ForbiddenComment")
     private fun onDoneClicked() {
         postActionEvent(CompleteFlow)
     }
@@ -187,6 +221,33 @@ class JetpackMigrationViewModel @Inject constructor(
                 val deleteWpIcon = R.drawable.ic_jetpack_migration_delete_wp
             }
         }
+
+        data class Error(
+            val primaryActionButton: ErrorPrimaryButton,
+            val secondaryActionButton: ErrorSecondaryButton,
+            val type: ErrorType,
+            val isProcessing: Boolean = false,
+        ) : UiState() {
+            @DrawableRes val screenIconRes = R.drawable.ic_jetpack_migration_error
+
+            sealed class ErrorType(
+                val title: UiString,
+                val subtitle: UiString,
+                val message: UiString,
+            )
+
+            object Generic : ErrorType(
+                    title = UiStringRes(R.string.jp_migration_generic_error_title),
+                    subtitle = UiStringRes(R.string.jp_migration_generic_error_subtitle),
+                    message = UiStringRes(R.string.jp_migration_generic_error_message),
+            )
+
+            object Networking : ErrorType(
+                    title = UiStringRes(R.string.jp_migration_network_error_title),
+                    subtitle = UiStringRes(R.string.jp_migration_network_error_subtitle),
+                    message = UiStringRes(R.string.jp_migration_network_error_message),
+            )
+        }
     }
 
     data class SiteListItemUiState(
@@ -226,6 +287,20 @@ class JetpackMigrationViewModel @Inject constructor(
         ) : ActionButton(
                 onClick = onClick,
                 text = UiStringRes(R.string.jp_migration_finish_button),
+        )
+
+        data class ErrorPrimaryButton(
+            override val onClick: () -> Unit,
+        ) : ActionButton(
+                onClick = onClick,
+                text = UiStringRes(R.string.jp_migration_try_again_button),
+        )
+
+        data class ErrorSecondaryButton(
+            override val onClick: () -> Unit,
+        ) : ActionButton(
+                onClick = onClick,
+                text = UiStringRes(R.string.jp_migration_help_button),
         )
     }
 
