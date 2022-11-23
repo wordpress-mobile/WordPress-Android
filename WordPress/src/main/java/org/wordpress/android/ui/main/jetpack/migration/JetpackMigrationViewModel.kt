@@ -8,12 +8,16 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.combineTransform
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.localcontentmigration.LocalContentEntityData.SitesData
+import org.wordpress.android.localcontentmigration.LocalMigrationState
+import org.wordpress.android.localcontentmigration.LocalMigrationState.Finished.Failure
+import org.wordpress.android.localcontentmigration.LocalMigrationState.Finished.Successful
+import org.wordpress.android.localcontentmigration.LocalMigrationState.Initial
+import org.wordpress.android.localcontentmigration.LocalMigrationState.Migrating
 import org.wordpress.android.sharedlogin.resolver.LocalMigrationOrchestrator
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.DonePrimaryButton
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.ErrorPrimaryButton
@@ -24,6 +28,7 @@ import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.CompleteFlow
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.ShowHelp
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Content
+import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Content.Welcome
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Error.Generic
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Error.Networking
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Loading
@@ -44,20 +49,36 @@ class JetpackMigrationViewModel @Inject constructor(
     private val _actionEvents = Channel<JetpackMigrationActionEvent>(Channel.BUFFERED)
     val actionEvents = _actionEvents.receiveAsFlow()
 
-    private val avatarUrlFlow = MutableStateFlow("")
-    private val sitesFlow = MutableStateFlow(SitesData(emptyList()))
-    private val resizedAvatarUrlFlow = avatarUrlFlow.map(::resizeAvatarUrl)
+    private val migrationStateFlow = MutableStateFlow<LocalMigrationState>(Migrating())
+    private val continueClickedFlow = MutableStateFlow(false)
 
-    val uiState = combine(resizedAvatarUrlFlow, sitesFlow) { avatarUrl, (sites) ->
-        if (avatarUrl.isBlank() && sites.isEmpty()) Loading else
-            sites.map(::siteUiFromModel).let { siteItems ->
-                Content.Welcome(
-                        userAvatarUrl = avatarUrl,
-                        sites = siteItems,
-                        primaryActionButton = WelcomePrimaryButton(::onContinueClicked),
-                        secondaryActionButton = WelcomeSecondaryButton(::onHelpClicked),
-                )
-            }
+    val uiState = combineTransform(migrationStateFlow, continueClickedFlow) {
+        migrationState, continueClicked ->
+        when {
+            migrationState is Initial -> emit(Loading)
+            migrationState is Migrating -> emit(
+                    Welcome(
+                            userAvatarUrl = migrationState.avatarUrl,
+                            isProcessing = continueClicked,
+                            sites = migrationState.sites.map(::siteUiFromModel),
+                            primaryActionButton = WelcomePrimaryButton(::onContinueClicked),
+                            secondaryActionButton = WelcomeSecondaryButton(::onHelpClicked),
+                    )
+            )
+            migrationState is Successful && continueClicked -> emit(
+                    Content.Notifications(
+                            primaryActionButton = NotificationsPrimaryButton(::onContinueFromNotificationsClicked),
+                    )
+            )
+            migrationState is Failure -> emit(
+                    UiState.Error(
+                            primaryActionButton = ErrorPrimaryButton(::onTryAgainClicked),
+                            secondaryActionButton = ErrorSecondaryButton(::onHelpClicked),
+                            type = Generic,
+                    )
+            )
+            else -> Unit
+        }
     }
 
     private fun siteUiFromModel(site: SiteModel) = SiteListItemUiState(
@@ -73,10 +94,7 @@ class JetpackMigrationViewModel @Inject constructor(
     fun start() = tryMigration()
 
     private fun onContinueClicked() {
-        (_uiState.value as? Content.Welcome)?.let {
-            _uiState.value = it.copy(isProcessing = true)
-//            tryMigration()
-        }
+        continueClickedFlow.value = true
     }
 
     private fun postNotificationsState() {
@@ -114,7 +132,7 @@ class JetpackMigrationViewModel @Inject constructor(
 
     private fun tryMigration() {
             viewModelScope.launch(Dispatchers.IO) {
-                localMigrationOrchestrator.tryLocalMigration(avatarUrlFlow, sitesFlow)
+                localMigrationOrchestrator.tryLocalMigration(migrationStateFlow)
             }
 
             // TODO: Handle migration result properly and navigate to the right error screen if migration fails

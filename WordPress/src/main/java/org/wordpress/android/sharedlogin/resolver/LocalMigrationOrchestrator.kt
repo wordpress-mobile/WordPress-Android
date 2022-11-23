@@ -2,12 +2,8 @@ package org.wordpress.android.sharedlogin.resolver
 
 import android.content.Intent
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import org.wordpress.android.fluxc.model.AccountModel
-import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.localcontentmigration.EligibilityHelper
 import org.wordpress.android.localcontentmigration.LocalContentEntityData.Companion.IneligibleReason.WPNotLoggedIn
-import org.wordpress.android.localcontentmigration.LocalContentEntityData.SitesData
 import org.wordpress.android.localcontentmigration.LocalMigrationError
 import org.wordpress.android.localcontentmigration.LocalMigrationError.FeatureDisabled
 import org.wordpress.android.localcontentmigration.LocalMigrationError.Ineligibility
@@ -15,13 +11,17 @@ import org.wordpress.android.localcontentmigration.LocalMigrationError.Migration
 import org.wordpress.android.localcontentmigration.LocalMigrationError.NoUserFlagsFoundError
 import org.wordpress.android.localcontentmigration.LocalMigrationError.PersistenceError
 import org.wordpress.android.localcontentmigration.LocalMigrationError.ProviderError
+import org.wordpress.android.localcontentmigration.LocalMigrationResult.Companion.EmptyResult
+import org.wordpress.android.localcontentmigration.LocalMigrationResult.Failure
+import org.wordpress.android.localcontentmigration.LocalMigrationState
+import org.wordpress.android.localcontentmigration.LocalMigrationState.Finished
 import org.wordpress.android.localcontentmigration.LocalPostsHelper
 import org.wordpress.android.localcontentmigration.SharedLoginHelper
 import org.wordpress.android.localcontentmigration.SitesMigrationHelper
 import org.wordpress.android.localcontentmigration.emitTo
+import org.wordpress.android.localcontentmigration.orElse
 import org.wordpress.android.localcontentmigration.otherwise
 import org.wordpress.android.localcontentmigration.then
-import org.wordpress.android.localcontentmigration.thenWith
 import org.wordpress.android.reader.savedposts.resolver.ReaderSavedPostsHelper
 import org.wordpress.android.sharedlogin.SharedLoginAnalyticsTracker
 import org.wordpress.android.sharedlogin.SharedLoginAnalyticsTracker.ErrorType
@@ -40,16 +40,21 @@ class LocalMigrationOrchestrator @Inject constructor(
     private val localPostsHelper: LocalPostsHelper,
     private val eligibilityHelper: EligibilityHelper,
 ) {
-    fun tryLocalMigration(
-        avatarFlow: MutableStateFlow<String>,
-        sitesFlow: MutableStateFlow<SitesData>,
-    ) {
+    fun tryLocalMigration(migrationStateFlow: MutableStateFlow<LocalMigrationState>) {
         eligibilityHelper.validate()
-                .then(sharedLoginHelper::login).emitTo(avatarFlow) { it.avatarUrl }
-                .then(sitesMigrationHelper::migrateSites).emitTo(sitesFlow)
+                .then(sharedLoginHelper::login).emitTo(migrationStateFlow)
+                .then(sitesMigrationHelper::migrateSites).emitTo(migrationStateFlow)
                 .then(userFlagsHelper::migrateUserFlags)
                 .then(readerSavedPostsHelper::migrateReaderSavedPosts)
                 .then(localPostsHelper::migratePosts)
+                .orElse { error ->
+                    migrationStateFlow.value = Finished.Failure(error)
+                    Failure(error)
+                }
+                .then {
+                    migrationStateFlow.value = Finished.Successful
+                    EmptyResult
+                }
                 .otherwise(::handleErrors)
     }
 
