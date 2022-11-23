@@ -7,34 +7,30 @@ import org.wordpress.android.fluxc.model.QuickStartTaskModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.models.ReaderPostList
 
-enum class LocalContentEntity(private val isSiteContent: Boolean = false) {
+enum class LocalContentEntity(private val isIdentifiable: Boolean = false) {
     EligibilityStatus,
     AccessToken,
     UserFlags,
     ReaderPosts,
     BloggingReminders,
     Sites,
-    Post(isSiteContent = true),
+    Post(isIdentifiable = true),
     ;
 
-    open val contentIdCapturePattern = when (isSiteContent) {
-        true -> Regex("site/(\\d+)/${name}(?:/(\\d+))?")
+    open val contentIdCapturePattern = when (isIdentifiable) {
+        true -> Regex("${name}(?:/(\\d+))?")
         false -> Regex(name)
     }
 
-    open fun getPathForContent(localSiteId: Int?, localEntityId: Int?) = when (this.isSiteContent) {
-        true -> "site/${localSiteId}/${name}${ localEntityId?.let { "/${it}" } ?: "" }"
+    open fun getPathForContent(localEntityId: Int?) = when (this.isIdentifiable) {
+        true -> "${name}${ localEntityId?.let { "/${it}" } ?: "" }"
         false -> name
     }
 }
 
 sealed class LocalContentEntityData {
-    data class EligibilityStatusData(
-        val isEligible: Boolean,
-        val siteCount: Int,
-    ): LocalContentEntityData()
-
-    data class AccessTokenData(val token: String): LocalContentEntityData()
+    data class EligibilityStatusData(val isEligible: Boolean, val reason: IneligibleReason?): LocalContentEntityData()
+    data class AccessTokenData(val token: String, val avatarUrl: String): LocalContentEntityData()
     data class UserFlagsData(
         val flags: Map<String, Any?>,
         val quickStartTaskList: List<QuickStartTaskModel>,
@@ -45,4 +41,11 @@ sealed class LocalContentEntityData {
     data class SitesData(val sites: List<SiteModel>): LocalContentEntityData()
     data class PostsData(val localIds: List<Int>): LocalContentEntityData()
     data class PostData(val post: PostModel) : LocalContentEntityData()
+    object EmptyData: LocalContentEntityData()
+    companion object {
+        enum class IneligibleReason {
+            WPNotLoggedIn,
+            ;
+        }
+    }
 }

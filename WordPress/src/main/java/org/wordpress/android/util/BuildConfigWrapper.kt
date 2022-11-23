@@ -16,6 +16,10 @@ class BuildConfigWrapper @Inject constructor() {
         return BuildConfig.DEBUG
     }
 
+    fun getApplicationId(): String {
+        return BuildConfig.APPLICATION_ID
+    }
+
     fun isDebugSettingsEnabled(): Boolean = BuildConfig.ENABLE_DEBUG_SETTINGS
 
     val isJetpackApp = BuildConfig.IS_JETPACK_APP

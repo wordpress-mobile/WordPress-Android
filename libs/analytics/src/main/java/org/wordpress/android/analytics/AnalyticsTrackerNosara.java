@@ -2411,6 +2411,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "reader_saved_posts_success";
             case READER_SAVED_POSTS_FAILED:
                 return "reader_saved_posts_failed";
+            case DEEPLINK_CUSTOM_INTENT_RECEIVED:
+                return "deeplink_custom_intent_received";
+            case APP_SETTINGS_OPEN_WEB_LINKS_WITH_JETPACK_CHANGED:
+                return "app_settings_open_web_links_with_jetpack_changed";
             case JETPACK_REMOVE_FEATURE_OVERLAY_DISPLAYED:
                 return "remove_feature_overlay_displayed";
             case JETPACK_REMOVE_FEATURE_OVERLAY_LINK_TAPPED:

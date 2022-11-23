@@ -252,7 +252,8 @@ platform :android do
     upload_path = upload_to_s3(
       bucket: 'a8c-apps-public-artifacts',
       key: filename,
-      file: lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH]
+      file: lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH],
+      skip_if_exists: true
     )
 
     return if ENV['BUILDKITE_PULL_REQUEST'].nil?

@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-10-31 13:46:43+0000
+Translation-Revision-Date: 2022-11-14 14:59:41+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.3
 Language: ru
 -->
 <resources>
+    <string name="jp_migration_help_button">Нужна помощь?</string>
+    <string name="jp_migration_continue_button">Продолжить</string>
+    <string name="jp_migration_welcome_site_found_message">Мы нашли ваш сайт. После переноса данных вход в Jetpack произойдет автоматически.</string>
+    <string name="jp_migration_welcome_sites_found_message">Мы нашли ваши сайты. После переноса данных вход в Jetpack произойдет автоматически.</string>
+    <string name="jp_migration_avatar_content_description">Фотография в вашем профиле</string>
+    <string name="jp_migration_welcome_subtitle">Похоже, вы перешли с приложения WordPress.</string>
+    <string name="jp_migration_welcome_title">Jetpack приветствует вас!</string>
+    <string name="icon_desc">значок</string>
     <string name="post_settings_parent">Родительская страница</string>
     <string name="post_settings_page_attributes">Атрибуты страницы</string>
     <string name="about_automattic_contribute_item_title">Участвовать</string>
