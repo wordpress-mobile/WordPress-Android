@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-11-01 22:18:41+0000
+Translation-Revision-Date: 2022-11-17 12:54:11+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: tr
 -->
 <resources>
+    <string name="jp_migration_help_button">Yardıma mı ihtiyacınız var?</string>
+    <string name="jp_migration_continue_button">Devam</string>
+    <string name="jp_migration_welcome_site_found_message">Sitenizi bulduk. Tüm verilerinizi aktarmaya devam edin ve Jetpack\'te otomatik olarak oturum açın.</string>
+    <string name="jp_migration_welcome_sites_found_message">Sitelerinizi bulduk. Tüm verilerinizi aktarmaya devam edin ve Jetpack\'te otomatik olarak oturum açın.</string>
+    <string name="jp_migration_avatar_content_description">Profil fotoğrafınız</string>
+    <string name="jp_migration_welcome_subtitle">WordPress uygulamasından geçiş yaptığınız anlaşılıyor.</string>
+    <string name="jp_migration_welcome_title">Jetpack\'e hoş geldiniz.</string>
+    <string name="icon_desc">simge</string>
     <string name="post_settings_parent">Üst sayfa</string>
     <string name="post_settings_page_attributes">Sayfa öznitelikleri</string>
     <string name="about_automattic_contribute_item_title">Katkıda bulunun</string>

@@ -2411,6 +2411,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "reader_saved_posts_success";
             case READER_SAVED_POSTS_FAILED:
                 return "reader_saved_posts_failed";
+            case DEEPLINK_CUSTOM_INTENT_RECEIVED:
+                return "deeplink_custom_intent_received";
         }
         return null;
     }

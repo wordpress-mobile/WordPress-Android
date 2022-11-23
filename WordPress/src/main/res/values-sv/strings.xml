@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-10-31 12:12:11+0000
+Translation-Revision-Date: 2022-11-15 21:01:47+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: sv_SE
 -->
 <resources>
+    <string name="jp_migration_help_button">Behöver du hjälp?</string>
+    <string name="jp_migration_continue_button">Fortsätt</string>
+    <string name="jp_migration_welcome_site_found_message">Vi har hittat din webbplats. Gå vidare för att automatiskt överföra dina data och logga in till Jetpack.</string>
+    <string name="jp_migration_welcome_sites_found_message">Vi har hittat dina webbplatser. Gå vidare för att automatiskt överföra dina data och logga in till Jetpack.</string>
+    <string name="jp_migration_avatar_content_description">Ditt profilfoto</string>
+    <string name="jp_migration_welcome_subtitle">Det verkar som att du byter från WordPress-appen.</string>
+    <string name="jp_migration_welcome_title">Välkommen till Jetpack!</string>
+    <string name="icon_desc">ikon</string>
     <string name="post_settings_parent">Överordnad sida</string>
     <string name="post_settings_page_attributes">Sidattribut</string>
     <string name="about_automattic_contribute_item_title">Bidra</string>

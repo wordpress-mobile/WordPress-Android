@@ -11,17 +11,20 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.utils.uiStringText
-import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.NotificationsPrimaryButton
+import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.ErrorPrimaryButton
+import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.ErrorSecondaryButton
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState
 import org.wordpress.android.ui.main.jetpack.migration.compose.components.ButtonsColumn
 import org.wordpress.android.ui.main.jetpack.migration.compose.components.Message
 import org.wordpress.android.ui.main.jetpack.migration.compose.components.PrimaryButton
 import org.wordpress.android.ui.main.jetpack.migration.compose.components.ScreenIcon
+import org.wordpress.android.ui.main.jetpack.migration.compose.components.SecondaryButton
 import org.wordpress.android.ui.main.jetpack.migration.compose.components.Subtitle
 import org.wordpress.android.ui.main.jetpack.migration.compose.components.Title
+import org.wordpress.android.ui.main.jetpack.migration.compose.dimmed
 
 @Composable
-fun NotificationsStep(uiState: UiState.Content.Notifications) = with(uiState) {
+fun ErrorStep(uiState: UiState.Error) = with(uiState) {
     Column(
             modifier = Modifier.fillMaxSize()
     ) {
@@ -31,15 +34,34 @@ fun NotificationsStep(uiState: UiState.Content.Notifications) = with(uiState) {
                         .verticalScroll(scrollState)
                         .weight(1f)
         ) {
-            ScreenIcon(iconRes = screenIconRes)
-            Title(text = uiStringText(title))
-            Subtitle(text = uiStringText(subtitle))
-            Message(text = uiStringText(message))
+            ScreenIcon(
+                    iconRes = screenIconRes,
+                    modifier = Modifier.dimmed(isProcessing)
+            )
+            Title(
+                    text = uiStringText(type.title),
+                    modifier = Modifier.dimmed(isProcessing)
+            )
+            Subtitle(
+                    text = uiStringText(type.subtitle),
+                    modifier = Modifier.dimmed(isProcessing)
+            )
+            Message(
+                    text = uiStringText(type.message),
+                    modifier = Modifier.dimmed(isProcessing)
+            )
         }
         ButtonsColumn {
             PrimaryButton(
                     text = uiStringText(primaryActionButton.text),
                     onClick = primaryActionButton.onClick,
+                    isInProgress = isProcessing,
+            )
+            SecondaryButton(
+                    text = uiStringText(secondaryActionButton.text),
+                    onClick = secondaryActionButton.onClick,
+                    enabled = !isProcessing,
+                    modifier = Modifier.dimmed(isProcessing)
             )
         }
     }
@@ -47,11 +69,14 @@ fun NotificationsStep(uiState: UiState.Content.Notifications) = with(uiState) {
 
 @Preview(showBackground = true, device = Devices.PIXEL_4_XL)
 @Preview(showBackground = true, device = Devices.PIXEL_4_XL, uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Preview(showBackground = true, device = Devices.PIXEL_4_XL, fontScale = 2f)
 @Composable
-private fun PreviewNotificationsStep() {
+private fun PreviewErrorStep() {
     AppTheme {
-        val uiState = UiState.Content.Notifications(NotificationsPrimaryButton {})
-        NotificationsStep(uiState)
+        val uiState = UiState.Error(
+            primaryActionButton = ErrorPrimaryButton {},
+            secondaryActionButton = ErrorSecondaryButton {},
+            type = UiState.Error.Generic,
+        )
+        ErrorStep(uiState)
     }
 }

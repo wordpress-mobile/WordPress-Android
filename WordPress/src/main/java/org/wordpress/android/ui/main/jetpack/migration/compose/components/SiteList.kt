@@ -101,7 +101,6 @@ private fun SiteListItem(uiState: SiteListItemUiState, isDimmed: Boolean) = with
 private fun SiteListHeader(uiState: UiState.Content.Welcome) = with(uiState) {
     Column(
             modifier = Modifier
-                    .padding(horizontal = dimensionResource(R.dimen.jp_migration_padding_horizontal))
                     .dimmed(uiState.isProcessing)
     ) {
         ScreenIcon(iconRes = screenIconRes)
