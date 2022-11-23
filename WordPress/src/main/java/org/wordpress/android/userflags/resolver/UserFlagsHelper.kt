@@ -67,7 +67,7 @@ class UserFlagsHelper @Inject constructor(
         } else {
             Success(userFlagsData)
         }
-    }.getOrDefault(Failure(FailedToSaveUserFlags))
+    }.getOrElse { Failure(FailedToSaveUserFlags) }
 
     private fun success(userFlagsData: UserFlagsData) = run {
         appPrefsWrapper.saveIsFirstTryUserFlagsJetpack(false)

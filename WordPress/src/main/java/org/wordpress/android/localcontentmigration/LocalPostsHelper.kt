@@ -6,8 +6,9 @@ import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.localcontentmigration.LocalContentEntity.Post
 import org.wordpress.android.localcontentmigration.LocalContentEntityData.PostData
 import org.wordpress.android.localcontentmigration.LocalContentEntityData.PostsData
+import org.wordpress.android.localcontentmigration.LocalMigrationError.PersistenceError.LocalPostsPersistenceError.FailedToInsertLocalPost
+import org.wordpress.android.localcontentmigration.LocalMigrationError.PersistenceError.LocalPostsPersistenceError.FailedToInsertLocalPostWithException
 import org.wordpress.android.localcontentmigration.LocalMigrationError.PersistenceError.LocalPostsPersistenceError.FailedToResetSequenceForPosts
-import org.wordpress.android.localcontentmigration.LocalMigrationError.PersistenceError.LocalPostsPersistenceError.FailedToSaveLocalPost
 import org.wordpress.android.localcontentmigration.LocalMigrationResult.Companion.EmptyResult
 import org.wordpress.android.localcontentmigration.LocalMigrationResult.Failure
 import org.wordpress.android.resolver.DbWrapper
@@ -37,7 +38,7 @@ class LocalPostsHelper @Inject constructor(
             execSQL("INSERT INTO SQLITE_SEQUENCE (name,seq) VALUES ('$tableName', 0)")
             EmptyResult
         }
-    }.getOrDefault(Failure(FailedToResetSequenceForPosts))
+    }.getOrElse { Failure(FailedToResetSequenceForPosts(it)) }
 
     private fun copyPostWithId(localPostId: Int) =
             localMigrationContentResolver.getResultForEntityType<PostData>(Post, localPostId).thenWith { (post) ->
@@ -54,10 +55,10 @@ class LocalPostsHelper @Inject constructor(
 
             val postMapperAdapter = MapperAdapter(PostModelMapper())
             if (insert(POST_TABLE_NAME, null, postMapperAdapter.toCv(post)) == -1L) {
-                Failure(FailedToSaveLocalPost(post))
+                Failure(FailedToInsertLocalPost(post))
             } else {
                 EmptyResult
             }
         }
-    }.getOrDefault(Failure(FailedToSaveLocalPost(post)))
+    }.getOrElse { Failure(FailedToInsertLocalPostWithException(post, it)) }
 }
