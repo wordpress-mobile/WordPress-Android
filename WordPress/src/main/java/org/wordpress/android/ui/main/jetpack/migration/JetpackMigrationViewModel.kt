@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.main.jetpack.migration
 
+import android.content.Intent
 import androidx.annotation.DrawableRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -10,6 +11,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
@@ -27,8 +29,11 @@ import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Loading
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.GravatarUtilsWrapper
 import org.wordpress.android.util.SiteUtilsWrapper
+import org.wordpress.android.viewmodel.ContextProvider
 import javax.inject.Inject
 
 @HiltViewModel
@@ -37,6 +42,7 @@ class JetpackMigrationViewModel @Inject constructor(
     private val accountStore: AccountStore,
     private val siteUtilsWrapper: SiteUtilsWrapper,
     private val gravatarUtilsWrapper: GravatarUtilsWrapper,
+    private val contextProvider: ContextProvider
 ) : ViewModel() {
     private val _uiState = MutableStateFlow<UiState>(Loading)
     val uiState: StateFlow<UiState> = _uiState
@@ -121,9 +127,24 @@ class JetpackMigrationViewModel @Inject constructor(
 
     @Suppress("ForbiddenComment")
     private fun onContinueFromNotificationsClicked() {
-        // TODO: Disable notifications in WP app
-        //  See https://github.com/wordpress-mobile/WordPress-Android/pull/17371
+        disableNotificationsOnWP()
         postDoneState()
+    }
+
+    private fun disableNotificationsOnWP() {
+        AppLog.d(T.NOTIFS, "Disable Notifications")
+        Intent().also { intent ->
+            intent.action = "org.wordpress.android.broadcast.DISABLE_NOTIFICATIONS"
+            val appSuffix = BuildConfig.APPLICATION_ID.split(".").last()
+            val appPackage = if (appSuffix.isNotBlank()) {
+                "org.wordpress.android.${appSuffix}"
+            } else {
+                "org.wordpress.android"
+            }
+            intent.setPackage(appPackage)
+            AppLog.d(T.NOTIFS, intent.toString())
+            contextProvider.getContext().sendBroadcast(intent, "org.wordpress.android.permission.DISABLE_NOTIFICATIONS")
+        }
     }
 
     private fun postDoneState() {
