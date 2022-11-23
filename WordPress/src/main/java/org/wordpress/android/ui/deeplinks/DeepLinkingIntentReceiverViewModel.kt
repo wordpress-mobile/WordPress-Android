@@ -46,6 +46,7 @@ class DeepLinkingIntentReceiverViewModel
     private var uriWrapper: UriWrapper? = null
     private var uri: Uri? = null
     private var deepLinkEntryPoint = DeepLinkEntryPoint.DEFAULT
+    private var showOverlay = false
 
     fun start(intent: Intent, savedInstanceState: Bundle?) {
         if (isStarted) return
@@ -157,7 +158,7 @@ class DeepLinkingIntentReceiverViewModel
     }
 
     private fun checkAndShowOpenWebLinksWithJetpackOverlayIfNeeded() : Boolean {
-        return false
+        return showOverlay
     }
 
     override fun onCleared() {

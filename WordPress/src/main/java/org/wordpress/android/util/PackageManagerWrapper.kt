@@ -46,13 +46,15 @@ class PackageManagerWrapper @Inject constructor(
     fun disableReaderDeepLinks() = WPActivityUtils.disableReaderDeeplinks(contextProvider.getContext())
     fun enableReaderDeeplinks() = WPActivityUtils.enableReaderDeeplinks(contextProvider.getContext())
 
+
+    @Suppress("SwallowedException")
     fun getActivityLabelResFromIntent(intent: Intent) : Int? {
         intent.component?.let {
             try {
                 val context = contextProvider.getContext()
                 val activityInfo = context.packageManager.getActivityInfo(it, PackageManager.GET_META_DATA)
                 return activityInfo.labelRes
-            } catch (ex: Exception) {
+            } catch (ex: PackageManager.NameNotFoundException) {
                 AppLog.e(T.UTILS, "Unable to extract label res from activity info")
             }
         }
