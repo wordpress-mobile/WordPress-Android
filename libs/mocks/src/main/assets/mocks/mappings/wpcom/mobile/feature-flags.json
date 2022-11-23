@@ -1,6 +1,6 @@
 {
   "request": {
-    "urlPath": "/wpcom/v2/mobile/feature-flags",
+    "urlPath": "/wpcom/v2/mobile/feature-flags(\\\\?|/|$).*\",",
     "method": "GET"
   },
   "response": {
