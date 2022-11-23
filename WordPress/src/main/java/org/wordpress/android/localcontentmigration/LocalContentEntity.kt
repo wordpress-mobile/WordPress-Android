@@ -30,7 +30,7 @@ enum class LocalContentEntity(private val isIdentifiable: Boolean = false) {
 
 sealed class LocalContentEntityData {
     data class EligibilityStatusData(val isEligible: Boolean, val reason: IneligibleReason?): LocalContentEntityData()
-    data class AccessTokenData(val token: String): LocalContentEntityData()
+    data class AccessTokenData(val token: String, val avatarUrl: String): LocalContentEntityData()
     data class UserFlagsData(
         val flags: Map<String, Any?>,
         val quickStartTaskList: List<QuickStartTaskModel>,
