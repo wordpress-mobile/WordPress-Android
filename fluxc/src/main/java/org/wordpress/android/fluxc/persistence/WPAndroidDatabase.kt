@@ -11,6 +11,7 @@ import org.wordpress.android.fluxc.persistence.BloggingRemindersDao.BloggingRemi
 import org.wordpress.android.fluxc.persistence.PlanOffersDao.PlanOffer
 import org.wordpress.android.fluxc.persistence.PlanOffersDao.PlanOfferFeature
 import org.wordpress.android.fluxc.persistence.PlanOffersDao.PlanOfferId
+import org.wordpress.android.fluxc.persistence.FeatureFlagConfigDao.FeatureFlag
 import org.wordpress.android.fluxc.persistence.bloggingprompts.BloggingPromptsDao
 import org.wordpress.android.fluxc.persistence.bloggingprompts.BloggingPromptsDao.BloggingPromptEntity
 import org.wordpress.android.fluxc.persistence.comments.CommentsDao
@@ -20,16 +21,17 @@ import org.wordpress.android.fluxc.persistence.dashboard.CardsDao
 import org.wordpress.android.fluxc.persistence.dashboard.CardsDao.CardEntity
 
 @Database(
-    version = 8,
-    entities = [
-        BloggingReminders::class,
-        PlanOffer::class,
-        PlanOfferId::class,
-        PlanOfferFeature::class,
-        CommentEntity::class,
-        CardEntity::class,
-        BloggingPromptEntity::class
-    ]
+        version = 9,
+        entities = [
+            BloggingReminders::class,
+            PlanOffer::class,
+            PlanOfferId::class,
+            PlanOfferFeature::class,
+            CommentEntity::class,
+            CardEntity::class,
+            BloggingPromptEntity::class,
+            FeatureFlag::class
+        ]
 )
 @TypeConverters(
     value = [
@@ -47,6 +49,8 @@ abstract class WPAndroidDatabase : RoomDatabase() {
 
     abstract fun bloggingPromptsDao(): BloggingPromptsDao
 
+    abstract fun featureFlagConfigDao(): FeatureFlagConfigDao
+
     @Suppress("MemberVisibilityCanBePrivate")
     companion object {
         const val WP_DB_NAME = "wp-android-database"
@@ -56,13 +60,13 @@ abstract class WPAndroidDatabase : RoomDatabase() {
             WPAndroidDatabase::class.java,
             WP_DB_NAME
         )
-            .fallbackToDestructiveMigration()
-            .addMigrations(MIGRATION_1_2)
-            .addMigrations(MIGRATION_2_3)
-            .addMigrations(MIGRATION_3_4)
-            .addMigrations(MIGRATION_5_6)
-            .addMigrations(MIGRATION_7_8)
-            .build()
+                .fallbackToDestructiveMigration()
+                .addMigrations(MIGRATION_1_2)
+                .addMigrations(MIGRATION_2_3)
+                .addMigrations(MIGRATION_3_4)
+                .addMigrations(MIGRATION_5_6)
+                .addMigrations(MIGRATION_7_8)
+                .build()
 
         val MIGRATION_1_2 = object : Migration(1, 2) {
             override fun migrate(database: SupportSQLiteDatabase) {
