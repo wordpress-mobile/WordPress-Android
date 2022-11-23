@@ -460,7 +460,10 @@ public class WPMainActivity extends LocaleAwareActivity implements
         if (!mSelectedSiteRepository.hasSelectedSite()) {
             initSelectedSite();
         }
-        mLocalMigrationOrchestrator.tryLocalMigration();
+
+        if (mBuildConfigWrapper.isJetpackApp()) {
+            mLocalMigrationOrchestrator.tryLocalMigration();
+        }
 
         // TODO: this is temporary to enable testing the migration flow UI
         if (mJetpackAppMigrationFlowUtils.shouldShowMigrationFlow()) {
@@ -527,7 +530,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
     private void scheduleLocalNotifications() {
         mCreateSiteNotificationScheduler.scheduleCreateSiteNotificationIfNeeded();
-        mWeeklyRoundupScheduler.schedule();
+        mWeeklyRoundupScheduler.scheduleIfNeeded();
     }
 
     @Override

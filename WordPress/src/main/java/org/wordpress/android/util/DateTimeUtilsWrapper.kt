@@ -18,4 +18,6 @@ class DateTimeUtilsWrapper @Inject constructor(
     fun daysBetween(start: Date, end: Date) = DateTimeUtils.daysBetween(start, end)
 
     fun dateFromTimestamp(timestamp: Long) = DateTimeUtils.dateFromTimestamp(timestamp)
+
+    fun getTodaysDate() = Date(System.currentTimeMillis())
 }

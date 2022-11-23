@@ -27,6 +27,8 @@ import org.wordpress.android.models.ReaderTag.LIKED_PATH
 import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.models.ReaderTagType
 import org.wordpress.android.test
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
+import org.wordpress.android.ui.jetpackoverlay.JetpackOverlayConnectedFeature.READER
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
@@ -66,6 +68,8 @@ class ReaderViewModelTest {
     @Mock lateinit var quickStartType: QuickStartType
     @Mock lateinit var snackbarSequencer: SnackbarSequencer
     @Mock lateinit var jetpackBrandingUtils: JetpackBrandingUtils
+    @Mock lateinit var jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil
+
 
     private val emptyReaderTagList = ReaderTagList()
     private val nonEmptyReaderTagList = createNonMockedNonEmptyReaderTagList()
@@ -84,6 +88,7 @@ class ReaderViewModelTest {
                 selectedSiteRepository,
                 jetpackBrandingUtils,
                 snackbarSequencer,
+                jetpackFeatureRemovalOverlayUtil
         )
 
         whenever(dateProvider.getCurrentDate()).thenReturn(Date(DUMMY_CURRENT_TIME))
@@ -485,6 +490,32 @@ class ReaderViewModelTest {
         viewModel.start()
 
         assertThat(showJetpackPoweredBottomSheetEvent.last().peekContent()).isEqualTo(false)
+    }
+
+    @Test
+    fun `given wp app, when jetpack overlay feature is false, then jp fullscreen overlay is not shown`() {
+        val showJetpackOverlayEvent = mutableListOf<Event<Boolean>>(Event(false))
+        viewModel.showJetpackOverlay.observeForever {
+            showJetpackOverlayEvent.add(it)
+        }
+        whenever(jetpackFeatureRemovalOverlayUtil.shouldShowFeatureSpecificJetpackOverlay(READER)).thenReturn(false)
+
+        viewModel.onScreenInForeground()
+
+        assertThat(showJetpackOverlayEvent.last().peekContent()).isFalse
+    }
+
+    @Test
+    fun `given wp app, when jetpack overlay feature is true, then jp fullscreen overlay is shown`() {
+        val showJetpackOverlayEvent = mutableListOf<Event<Boolean>>(Event(false))
+        viewModel.showJetpackOverlay.observeForever {
+            showJetpackOverlayEvent.add(it)
+        }
+        whenever(jetpackFeatureRemovalOverlayUtil.shouldShowFeatureSpecificJetpackOverlay(READER)).thenReturn(true)
+
+        viewModel.onScreenInForeground()
+
+        assertThat(showJetpackOverlayEvent.last().peekContent()).isTrue
     }
 
     private fun assertQsFollowSiteDiscoverTabStepStarted(

@@ -175,6 +175,7 @@ public class AppPrefs {
         SHOULD_SHOW_WEEKLY_ROUNDUP_NOTIFICATION,
 
         SKIPPED_BLOGGING_PROMPT_DAY,
+        OPEN_WEB_LINKS_WITH_JETPACK_OVERLAY_LAST_SHOWN_TIMESTAMP,
     }
 
     /**
@@ -1480,5 +1481,13 @@ public class AppPrefs {
 
     public static void setIsJetpackMigrationCompleted(final boolean isCompleted) {
         setBoolean(UndeletablePrefKey.IS_JETPACK_MIGRATION_COMPLETED, isCompleted);
+    }
+
+    public static Long getOpenWebLinksWithJetpackOverlayLastShownTimestamp() {
+        return getLong(DeletablePrefKey.OPEN_WEB_LINKS_WITH_JETPACK_OVERLAY_LAST_SHOWN_TIMESTAMP, 0L);
+    }
+
+    public static void setOpenWebLinksWithJetpackOverlayLastShownTimestamp(final Long overlayLastShownTimestamp) {
+        setLong(DeletablePrefKey.OPEN_WEB_LINKS_WITH_JETPACK_OVERLAY_LAST_SHOWN_TIMESTAMP, overlayLastShownTimestamp);
     }
 }

@@ -256,6 +256,9 @@ class AppPrefsWrapper @Inject constructor() {
 
     fun isJetpackMigrationCompleted(): Boolean = AppPrefs.getIsJetpackMigrationCompleted()
 
+    fun getOpenWebLinksWithJetpackOverlayLastShownTimestamp(): Long =
+            AppPrefs.getOpenWebLinksWithJetpackOverlayLastShownTimestamp()
+
     fun getAllPrefs(): Map<String, Any?> = AppPrefs.getAllPrefs()
 
     fun setString(prefKey: PrefKey, value: String) {
