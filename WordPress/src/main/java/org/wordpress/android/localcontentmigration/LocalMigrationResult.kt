@@ -1,5 +1,6 @@
 package org.wordpress.android.localcontentmigration
 
+import kotlinx.coroutines.flow.MutableStateFlow
 import org.wordpress.android.localcontentmigration.LocalContentEntityData.EmptyData
 import org.wordpress.android.localcontentmigration.LocalMigrationResult.Companion.EmptyResult
 import org.wordpress.android.localcontentmigration.LocalMigrationResult.Failure
@@ -45,4 +46,24 @@ inline fun <T: Any?,  U: LocalContentEntityData, E: LocalMigrationError> Iterabl
         is Failure -> return result
         else -> current
     }
+}
+
+fun <T: LocalContentEntityData> LocalMigrationResult<T, LocalMigrationError>.emitTo(flow: MutableStateFlow<T>) =
+        when (this) {
+            is Success -> {
+                flow.value = this.value
+                this
+            }
+            is Failure -> this
+        }
+
+fun <R: LocalContentEntityData, T> LocalMigrationResult<R, LocalMigrationError>.emitTo(
+    flow: MutableStateFlow<T>,
+    transform: (R) -> T,
+) = when (this) {
+    is Success -> {
+        flow.value = transform(this.value)
+        this
+    }
+    is Failure -> this
 }
