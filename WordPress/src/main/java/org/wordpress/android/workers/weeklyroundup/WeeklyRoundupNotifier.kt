@@ -56,7 +56,7 @@ class WeeklyRoundupNotifier @Inject constructor(
             notificationsTracker.trackShownNotification(WEEKLY_ROUNDUP)
         }
 
-        weeklyRoundupScheduler.schedule()
+        weeklyRoundupScheduler.scheduleIfNeeded()
     }
 
     private fun buildNotification(data: WeeklyRoundupData): WeeklyRoundupNotification {

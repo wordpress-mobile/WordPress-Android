@@ -20,6 +20,8 @@ import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
+import org.wordpress.android.ui.jetpackoverlay.JetpackOverlayConnectedFeature.READER
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
@@ -58,7 +60,8 @@ class ReaderViewModel @Inject constructor(
     private val quickStartRepository: QuickStartRepository,
     private val selectedSiteRepository: SelectedSiteRepository,
     private val jetpackBrandingUtils: JetpackBrandingUtils,
-    private val snackbarSequencer: SnackbarSequencer
+    private val snackbarSequencer: SnackbarSequencer,
+    private val jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil
         // todo: annnmarie removed this private val getFollowedTagsUseCase: GetFollowedTagsUseCase
 ) : ScopedViewModel(mainDispatcher) {
     private var initialized: Boolean = false
@@ -92,6 +95,9 @@ class ReaderViewModel @Inject constructor(
 
     private val _showJetpackPoweredBottomSheet = MutableLiveData<Event<Boolean>>()
     val showJetpackPoweredBottomSheet: LiveData<Event<Boolean>> = _showJetpackPoweredBottomSheet
+
+    private val _showJetpackOverlay = MutableLiveData<Event<Boolean>>()
+    val showJetpackOverlay: LiveData<Event<Boolean>> = _showJetpackOverlay
 
     init {
         EventBus.getDefault().register(this)
@@ -250,6 +256,11 @@ class ReaderViewModel @Inject constructor(
         appPrefsWrapper.getReaderTag()?.let {
             trackReaderTabShownIfNecessary(it)
         }
+        if (jetpackFeatureRemovalOverlayUtil.shouldShowFeatureSpecificJetpackOverlay(READER)) showJetpackOverlay()
+    }
+
+    private fun showJetpackOverlay() {
+        _showJetpackOverlay.value = Event(true)
     }
 
     fun onScreenInBackground(isChangingConfigurations: Boolean) {
