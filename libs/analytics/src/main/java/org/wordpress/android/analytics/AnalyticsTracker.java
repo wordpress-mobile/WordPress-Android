@@ -959,7 +959,8 @@ public final class AnalyticsTracker {
         READER_SAVED_POSTS_START,
         READER_SAVED_POSTS_SUCCESS,
         READER_SAVED_POSTS_FAILED,
-        DEEPLINK_CUSTOM_INTENT_RECEIVED
+        DEEPLINK_CUSTOM_INTENT_RECEIVED,
+        APP_SETTINGS_OPEN_WEB_LINKS_WITH_JETPACK_CHANGED,
     }
 
     private static final List<Tracker> TRACKERS = new ArrayList<>();
