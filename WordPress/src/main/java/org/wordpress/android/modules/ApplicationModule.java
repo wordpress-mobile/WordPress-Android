@@ -2,8 +2,10 @@ package org.wordpress.android.modules;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.SharedPreferences;
 
 import androidx.lifecycle.LiveData;
+import androidx.preference.PreferenceManager;
 
 import com.tenor.android.core.network.ApiClient;
 import com.tenor.android.core.network.ApiService;
@@ -108,6 +110,11 @@ public abstract class ApplicationModule {
 
     @ContributesAndroidInjector
     abstract BasicDialog contributeBasicDialog();
+
+    @Provides
+    public static SharedPreferences provideSharedPrefs(@ApplicationContext Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context);
+    }
 
     @Provides
     public static WizardManager<SiteCreationStep> provideWizardManager(
