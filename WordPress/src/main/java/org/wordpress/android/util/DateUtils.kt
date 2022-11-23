@@ -31,8 +31,7 @@ object DateUtils {
         return isSameDay(calendar1, calendar2)
     }
 
-    private fun isSameDay(calendar1: Calendar?, calendar2: Calendar?): Boolean {
-        require(!(calendar1 == null || calendar2 == null)) { "The calendar must not be null" }
+    private fun isSameDay(calendar1: Calendar, calendar2: Calendar): Boolean {
         return calendar1[Calendar.ERA] == calendar2[Calendar.ERA] &&
                 calendar1[Calendar.YEAR] == calendar2[Calendar.YEAR] &&
                 calendar1[Calendar.DAY_OF_YEAR] == calendar2[Calendar.DAY_OF_YEAR]
