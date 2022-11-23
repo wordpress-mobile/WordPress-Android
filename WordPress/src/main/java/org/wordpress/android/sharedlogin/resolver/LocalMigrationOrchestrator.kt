@@ -1,8 +1,13 @@
 package org.wordpress.android.sharedlogin.resolver
 
 import android.content.Intent
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import org.wordpress.android.fluxc.model.AccountModel
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.localcontentmigration.EligibilityHelper
 import org.wordpress.android.localcontentmigration.LocalContentEntityData.Companion.IneligibleReason.WPNotLoggedIn
+import org.wordpress.android.localcontentmigration.LocalContentEntityData.SitesData
 import org.wordpress.android.localcontentmigration.LocalMigrationError
 import org.wordpress.android.localcontentmigration.LocalMigrationError.FeatureDisabled
 import org.wordpress.android.localcontentmigration.LocalMigrationError.Ineligibility
@@ -13,8 +18,10 @@ import org.wordpress.android.localcontentmigration.LocalMigrationError.ProviderE
 import org.wordpress.android.localcontentmigration.LocalPostsHelper
 import org.wordpress.android.localcontentmigration.SharedLoginHelper
 import org.wordpress.android.localcontentmigration.SitesMigrationHelper
+import org.wordpress.android.localcontentmigration.emitTo
 import org.wordpress.android.localcontentmigration.otherwise
 import org.wordpress.android.localcontentmigration.then
+import org.wordpress.android.localcontentmigration.thenWith
 import org.wordpress.android.reader.savedposts.resolver.ReaderSavedPostsHelper
 import org.wordpress.android.sharedlogin.SharedLoginAnalyticsTracker
 import org.wordpress.android.sharedlogin.SharedLoginAnalyticsTracker.ErrorType
@@ -33,10 +40,13 @@ class LocalMigrationOrchestrator @Inject constructor(
     private val localPostsHelper: LocalPostsHelper,
     private val eligibilityHelper: EligibilityHelper,
 ) {
-    fun tryLocalMigration() {
+    fun tryLocalMigration(
+        avatarFlow: MutableStateFlow<String>,
+        sitesFlow: MutableStateFlow<SitesData>,
+    ) {
         eligibilityHelper.validate()
-                .then(sharedLoginHelper::login)
-                .then(sitesMigrationHelper::migrateSites)
+                .then(sharedLoginHelper::login).emitTo(avatarFlow) { it.avatarUrl }
+                .then(sitesMigrationHelper::migrateSites).emitTo(sitesFlow)
                 .then(userFlagsHelper::migrateUserFlags)
                 .then(readerSavedPostsHelper::migrateReaderSavedPosts)
                 .then(localPostsHelper::migratePosts)

@@ -4,15 +4,16 @@ import androidx.annotation.DrawableRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
-import org.wordpress.android.fluxc.store.AccountStore
-import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.localcontentmigration.LocalContentEntityData.SitesData
 import org.wordpress.android.sharedlogin.resolver.LocalMigrationOrchestrator
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.DonePrimaryButton
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.ErrorPrimaryButton
@@ -34,47 +35,47 @@ import javax.inject.Inject
 
 @HiltViewModel
 class JetpackMigrationViewModel @Inject constructor(
-    private val siteStore: SiteStore,
-    private val accountStore: AccountStore,
     private val siteUtilsWrapper: SiteUtilsWrapper,
     private val gravatarUtilsWrapper: GravatarUtilsWrapper,
     private val localMigrationOrchestrator: LocalMigrationOrchestrator,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow<UiState>(Loading)
-    val uiState: StateFlow<UiState> = _uiState
 
     private val _actionEvents = Channel<JetpackMigrationActionEvent>(Channel.BUFFERED)
     val actionEvents = _actionEvents.receiveAsFlow()
 
-    // TODO Review this after data sync work is done
-    fun onAccountInfoLoaded() {
-        if (isDataAvailable()) {
-            initWelcomeState()
-        }
+    private val avatarUrlFlow = MutableStateFlow("")
+    private val sitesFlow = MutableStateFlow(SitesData(emptyList()))
+    private val resizedAvatarUrlFlow = avatarUrlFlow.map(::resizeAvatarUrl)
+
+    val uiState = combine(resizedAvatarUrlFlow, sitesFlow) { avatarUrl, (sites) ->
+        if (avatarUrl.isBlank() && sites.isEmpty()) Loading else
+            sites.map(::siteUiFromModel).let { siteItems ->
+                Content.Welcome(
+                        userAvatarUrl = avatarUrl,
+                        sites = siteItems,
+                        primaryActionButton = WelcomePrimaryButton(::onContinueClicked),
+                        secondaryActionButton = WelcomeSecondaryButton(::onHelpClicked),
+                )
+            }
     }
 
-    // TODO Review this after data sync work is done
-    fun onSiteListLoaded() {
-        if (isDataAvailable()) {
-            initWelcomeState()
-        }
-    }
+    private fun siteUiFromModel(site: SiteModel) = SiteListItemUiState(
+            id = site.siteId,
+            name = siteUtilsWrapper.getSiteNameOrHomeURL(site),
+            url = siteUtilsWrapper.getHomeURLOrHostName(site),
+            iconUrl = siteUtilsWrapper.getSiteIconUrlOfResourceSize(
+                    site,
+                    R.dimen.jp_migration_site_icon_size,
+            ),
+    )
 
-    private fun isDataAvailable() = accountStore.account.userName.isNotEmpty() && siteStore.sites.isNotEmpty()
-
-    private fun initWelcomeState() {
-        _uiState.value = Content.Welcome(
-                userAvatarUrl = getAvatarUrl(),
-                sites = getSiteList(),
-                primaryActionButton = WelcomePrimaryButton(::onContinueClicked),
-                secondaryActionButton = WelcomeSecondaryButton(::onHelpClicked),
-        )
-    }
+    fun start() = tryMigration()
 
     private fun onContinueClicked() {
         (_uiState.value as? Content.Welcome)?.let {
             _uiState.value = it.copy(isProcessing = true)
-            tryMigration()
+//            tryMigration()
         }
     }
 
@@ -111,14 +112,13 @@ class JetpackMigrationViewModel @Inject constructor(
         }
     }
 
-    @Suppress("ForbiddenComment", "MagicNumber")
     private fun tryMigration() {
-        viewModelScope.launch {
-            // TODO: Replace this temporary delay with migration logic
-            delay(2500)
+            viewModelScope.launch(Dispatchers.IO) {
+                localMigrationOrchestrator.tryLocalMigration(avatarUrlFlow, sitesFlow)
+            }
+
             // TODO: Handle migration result properly and navigate to the right error screen if migration fails
-            postNotificationsState()
-        }
+//            postNotificationsState()
     }
 
     @Suppress("ForbiddenComment")
@@ -142,26 +142,10 @@ class JetpackMigrationViewModel @Inject constructor(
         postActionEvent(ShowHelp)
     }
 
-    private fun getSiteList(): List<SiteListItemUiState> {
-        return siteStore.sites.map { site ->
-            SiteListItemUiState(
-                    id = site.siteId,
-                    name = siteUtilsWrapper.getSiteNameOrHomeURL(site),
-                    url = siteUtilsWrapper.getHomeURLOrHostName(site),
-                    iconUrl = siteUtilsWrapper.getSiteIconUrlOfResourceSize(
-                            site,
-                            R.dimen.jp_migration_site_icon_size,
-                    ),
-            )
-        }
-    }
-
-    private fun getAvatarUrl(): String {
-        return gravatarUtilsWrapper.fixGravatarUrlWithResource(
-                accountStore.account?.avatarUrl.orEmpty(),
-                R.dimen.jp_migration_user_avatar_size,
-        )
-    }
+    private fun resizeAvatarUrl(avatarUrl: String) = gravatarUtilsWrapper.fixGravatarUrlWithResource(
+            avatarUrl,
+            R.dimen.jp_migration_user_avatar_size
+    )
 
     private fun postActionEvent(actionEvent: JetpackMigrationActionEvent) {
         viewModelScope.launch {
