@@ -39,7 +39,6 @@ class JetpackFeatureFullScreenOverlayViewModel @Inject constructor(
         if (isSiteCreationOverlayScreen)
             jetpackFeatureRemovalOverlayUtil.trackBottomSheetDismissedInSiteCreationOverlay(CONTINUE_BUTTON)
         else jetpackFeatureRemovalOverlayUtil.trackBottomSheetDismissed(screenType, CONTINUE_BUTTON)
-
     }
 
     fun closeBottomSheet() {
