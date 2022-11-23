@@ -178,17 +178,33 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
     }
 
     fun trackSiteCreationOverlayShown() {
-        // add tracking logic
+        analyticsTrackerWrapper.track(
+                AnalyticsTracker.Stat.JETPACK_REMOVE_SITE_CREATION_OVERLAY_DISPLAYED,
+                mapOf(
+                        CURRENT_PHASE_KEY to jetpackFeatureRemovalPhaseHelper.getSiteCreationPhase()?.trackingName
+                )
+        )
     }
 
     fun trackInstallJetpackTappedInSiteCreationOverlay() {
-        // add tracking logic
+        analyticsTrackerWrapper.track(
+                AnalyticsTracker.Stat.JETPACK_REMOVE_SITE_CREATION_OVERLAY_BUTTON_GET_JETPACK_APP_TAPPED,
+                mapOf(
+                        CURRENT_PHASE_KEY to jetpackFeatureRemovalPhaseHelper.getSiteCreationPhase()?.trackingName
+                )
+        )
     }
 
     fun trackBottomSheetDismissedInSiteCreationOverlay(
         dismissalType: JetpackOverlayDismissalType
     ) {
-        // add tracking logic
+        analyticsTrackerWrapper.track(
+                AnalyticsTracker.Stat.JETPACK_REMOVE_SITE_CREATION_OVERLAY_DISMISSED,
+                mapOf(
+                        CURRENT_PHASE_KEY to jetpackFeatureRemovalPhaseHelper.getSiteCreationPhase()?.trackingName,
+                        DISMISSAL_TYPE_KEY to dismissalType.trackingName
+                )
+        )
     }
 
     enum class JetpackOverlayDismissalType(val trackingName: String) {
