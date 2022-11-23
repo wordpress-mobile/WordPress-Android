@@ -1,6 +1,5 @@
 package org.wordpress.android.sharedlogin.resolver
 
-import android.content.Intent
 import kotlinx.coroutines.flow.MutableStateFlow
 import org.wordpress.android.localcontentmigration.EligibilityHelper
 import org.wordpress.android.localcontentmigration.LocalContentEntityData.Companion.IneligibleReason.WPNotLoggedIn
@@ -25,13 +24,10 @@ import org.wordpress.android.localcontentmigration.then
 import org.wordpress.android.reader.savedposts.resolver.ReaderSavedPostsHelper
 import org.wordpress.android.sharedlogin.SharedLoginAnalyticsTracker
 import org.wordpress.android.sharedlogin.SharedLoginAnalyticsTracker.ErrorType
-import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.userflags.resolver.UserFlagsHelper
-import org.wordpress.android.viewmodel.ContextProvider
 import javax.inject.Inject
 
 class LocalMigrationOrchestrator @Inject constructor(
-    private val contextProvider: ContextProvider,
     private val sharedLoginAnalyticsTracker: SharedLoginAnalyticsTracker,
     private val userFlagsHelper: UserFlagsHelper,
     private val readerSavedPostsHelper: ReaderSavedPostsHelper,
