@@ -251,6 +251,11 @@ class AppPrefsWrapper @Inject constructor() {
     fun saveIsFirstTryReaderSavedPostsJetpack(isFirstTry: Boolean) =
             AppPrefs.saveIsFirstTryReaderSavedPostsJetpack(isFirstTry)
 
+    //TODO @RenanLukas: set migration completed
+    fun setJetpackMigrationCompleted(isCompleted: Boolean) = AppPrefs.setIsJetpackMigrationCompleted(isCompleted)
+
+    fun isJetpackMigrationCompleted(): Boolean = AppPrefs.getIsJetpackMigrationCompleted()
+
     fun getAllPrefs(): Map<String, Any?> = AppPrefs.getAllPrefs()
 
     fun setString(prefKey: PrefKey, value: String) {
