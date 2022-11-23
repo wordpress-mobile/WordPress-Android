@@ -7,6 +7,7 @@ import org.wordpress.android.util.config.JetpackMigrationFlowFeatureConfig
 import org.wordpress.android.viewmodel.ContextProvider
 import javax.inject.Inject
 
+@Suppress("ForbiddenComment")
 class JetpackAppMigrationFlowUtils @Inject constructor(
     private val buildConfigWrapper: BuildConfigWrapper,
     private val jetpackMigrationFlowFeatureConfig: JetpackMigrationFlowFeatureConfig,
