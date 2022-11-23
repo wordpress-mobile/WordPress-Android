@@ -312,7 +312,7 @@ public class PluginStore extends Store {
         public ConfigureSitePluginError(BaseNetworkError error, boolean isActivating) {
             this.type = ConfigureSitePluginErrorType.fromGenericErrorType(error.type, isActivating);
             this.message = error.message;
-            if (error.hasVolleyError()) {
+            if (error.hasVolleyError() && error.volleyError.networkResponse != null) {
                 this.errorCode = error.volleyError.networkResponse.statusCode;
             }
         }
@@ -402,7 +402,7 @@ public class PluginStore extends Store {
         public InstallSitePluginError(BaseNetworkError error) {
             this.type = InstallSitePluginErrorType.fromNetworkError(error);
             this.message = error.message;
-            if (error.hasVolleyError()) {
+            if (error.hasVolleyError() && error.volleyError.networkResponse != null) {
                 this.errorCode = error.volleyError.networkResponse.statusCode;
             }
         }
