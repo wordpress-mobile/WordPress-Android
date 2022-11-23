@@ -148,9 +148,11 @@ class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializ
         }
 
         viewModel.showJetpackOverlay.observeEvent(viewLifecycleOwner) {
-            JetpackFeatureFullScreenOverlayFragment
-                    .newInstance(JetpackFeatureOverlayScreenType.STATS)
-                    .show(childFragmentManager, JetpackFeatureFullScreenOverlayFragment.TAG)
+            if (isFirstStart) {
+                JetpackFeatureFullScreenOverlayFragment
+                        .newInstance(JetpackFeatureOverlayScreenType.STATS)
+                        .show(childFragmentManager, JetpackFeatureFullScreenOverlayFragment.TAG)
+            }
         }
     }
 
