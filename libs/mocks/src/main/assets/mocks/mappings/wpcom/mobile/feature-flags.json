@@ -1,7 +1,24 @@
 {
   "request": {
-    "urlPath": "/wpcom/v2/mobile/feature-flags(\\\\?|/|$).*\",",
-    "method": "GET"
+    "urlPath": "/wpcom/v2/mobile/feature-flags(/)?($|\\?.*)",
+    "method": "GET",
+    "queryParameters": {
+      "device_id": {
+        "matches": "(.*)"
+      },
+      "identifier": {
+        "matches": "(.*)"
+      },
+      "marketing_version": {
+        "matches": "(.*)"
+      },
+      "platform": {
+        "matches": "(.*)"
+      },
+      "_locale": {
+        "matches": "(.*)"
+      }
+    }
   },
   "response": {
     "status": 200,
