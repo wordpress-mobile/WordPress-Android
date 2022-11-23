@@ -1,6 +1,6 @@
 {
   "request": {
-    "urlPath": "/wpcom/v2/mobile/feature-flags/?",
+    "urlPathPattern": "/wpcom/v2/mobile/feature-flags/?",
     "method": "GET",
     "queryParameters": {
         "build_number": {
