@@ -1,23 +1,26 @@
 {
   "request": {
-    "urlPath": "/wpcom/v2/mobile/feature-flags(/)?($|\\?.*)",
+    "urlPath": "/wpcom/v2/mobile/feature-flags/?",
     "method": "GET",
     "queryParameters": {
-      "device_id": {
-        "matches": "(.*)"
-      },
-      "identifier": {
-        "matches": "(.*)"
-      },
-      "marketing_version": {
-        "matches": "(.*)"
-      },
-      "platform": {
-        "matches": "(.*)"
-      },
-      "_locale": {
-        "matches": "(.*)"
-      }
+        "build_number": {
+          "matches": "(.*)"
+        },
+        "device_id": {
+          "matches": "(.*)"
+        },
+        "identifier": {
+          "matches": "(.*)"
+        },
+        "marketing_version": {
+          "matches": "(.*)"
+        },
+        "platform": {
+          "matches": "android"
+        },
+        "_locale": {
+          "matches": "(.*)"
+        }
     }
   },
   "response": {
