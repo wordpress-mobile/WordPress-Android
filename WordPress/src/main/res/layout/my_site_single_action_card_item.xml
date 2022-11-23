@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/WordPress.CardView.Unelevated"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/margin_medium">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -14,9 +15,9 @@
             android:id="@+id/single_action_card_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/single_action_card_padding"
-            android:layout_marginStart="@dimen/single_action_card_padding"
-            android:layout_marginTop="@dimen/single_action_card_padding"
+            android:layout_marginBottom="@dimen/margin_extra_large"
+            android:layout_marginStart="@dimen/margin_extra_large"
+            android:layout_marginTop="@dimen/margin_extra_large"
             android:contentDescription="@null"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -27,10 +28,8 @@
             android:id="@+id/single_action_card_text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/single_action_card_padding"
             android:layout_marginEnd="@dimen/single_action_card_padding"
-            android:layout_marginStart="@dimen/margin_extra_large"
-            android:layout_marginTop="@dimen/single_action_card_padding"
+            android:layout_marginStart="@dimen/single_action_card_padding"
             android:textColor="?attr/colorOnSurface"
             android:textSize="@dimen/text_sz_large"
             app:layout_constraintBottom_toBottomOf="parent"
