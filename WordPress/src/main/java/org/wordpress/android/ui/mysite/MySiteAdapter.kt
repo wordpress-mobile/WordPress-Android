@@ -13,6 +13,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.DynamicCard.QuickStartD
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.CategoryHeaderItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.InfoItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.ListItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.SingleActionCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.JetpackBadge
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsViewHolder
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptsCardAnalyticsTracker
@@ -81,6 +82,7 @@ class MySiteAdapter(
             is MySiteListItemViewHolder -> holder.bind(getItem(position) as ListItem)
             is MySiteJetpackBadgeViewHolder -> holder.bind(getItem(position) as JetpackBadge)
             is CardsViewHolder -> holder.bind(getItem(position) as DashboardCards)
+            is SingleActionCardViewHolder -> holder.bind(getItem(position) as SingleActionCard)
         }
     }
 
