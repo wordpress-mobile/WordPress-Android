@@ -220,6 +220,16 @@ class JetpackMigrationViewModel @Inject constructor(
             ) {
                 val deleteWpIcon = R.drawable.ic_jetpack_migration_delete_wp
             }
+
+            data class Delete(
+                override val primaryActionButton: ActionButton,
+            ) : Content(
+                    primaryActionButton = primaryActionButton,
+                    screenIconRes = R.drawable.ic_jetpack_migration_delete,
+                    title = UiStringRes(R.string.jp_migration_delete_title),
+                    subtitle = UiStringRes(R.string.jp_migration_delete_subtitle),
+                    message = UiStringRes(R.string.jp_migration_delete_message),
+            )
         }
 
         data class Error(
@@ -301,6 +311,13 @@ class JetpackMigrationViewModel @Inject constructor(
         ) : ActionButton(
                 onClick = onClick,
                 text = UiStringRes(R.string.jp_migration_help_button),
+        )
+
+        data class DeletePrimaryButton(
+            override val onClick: () -> Unit
+        ) : ActionButton(
+                onClick = onClick,
+                text = UiStringRes(R.string.jp_migration_got_it_button)
         )
     }
 
