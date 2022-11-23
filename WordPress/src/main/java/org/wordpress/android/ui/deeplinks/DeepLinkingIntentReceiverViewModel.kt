@@ -1,5 +1,8 @@
 package org.wordpress.android.ui.deeplinks
 
+import android.content.Intent
+import android.net.Uri
+import android.os.Bundle
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
@@ -13,6 +16,7 @@ import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenL
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.ShowSignInFlow
 import org.wordpress.android.ui.deeplinks.handlers.DeepLinkHandlers
 import org.wordpress.android.ui.deeplinks.handlers.ServerTrackingHandler
+import org.wordpress.android.util.PackageManagerWrapper
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.viewmodel.Event
@@ -21,6 +25,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 class DeepLinkingIntentReceiverViewModel
+@Suppress("LongParameterList")
 @Inject constructor(
     @Named(UI_THREAD) private val uiDispatcher: CoroutineDispatcher,
     private val deepLinkHandlers: DeepLinkHandlers,
@@ -28,33 +33,62 @@ class DeepLinkingIntentReceiverViewModel
     private val accountStore: AccountStore,
     private val serverTrackingHandler: ServerTrackingHandler,
     private val deepLinkTrackingUtils: DeepLinkTrackingUtils,
-    private val analyticsUtilsWrapper: AnalyticsUtilsWrapper
+    private val analyticsUtilsWrapper: AnalyticsUtilsWrapper,
+    private val packageManagerWrapper: PackageManagerWrapper
 ) : ScopedViewModel(uiDispatcher) {
     private val _navigateAction = MutableLiveData<Event<NavigateAction>>()
     val navigateAction = _navigateAction as LiveData<Event<NavigateAction>>
     private val _finish = MutableLiveData<Event<Unit>>()
     val finish = _finish as LiveData<Event<Unit>>
     val toast = deepLinkHandlers.toast
-    var cachedUri: UriWrapper? = null
+    private var isStarted = false
+    private var action: String? = null
+    private var uriWrapper: UriWrapper? = null
+    private var uri: Uri? = null
+    private var deepLinkEntryPoint = DeepLinkEntryPoint.DEFAULT
 
-    fun start(action: String?, uri: UriWrapper?) {
-        if (uri == null || !handleUrl(uri, action)) {
-            if (action != null) {
-                analyticsUtilsWrapper.trackWithDeepLinkData(
-                        DEEP_LINKED,
-                        action,
-                        uri?.host ?: "",
-                        uri?.uri
-                )
-            }
-            _finish.value = Event(Unit)
+    fun start(intent: Intent, savedInstanceState: Bundle?) {
+        if (isStarted) return
+        isStarted = true
+
+        extractSavedInstanceStateIfNeeded(savedInstanceState)
+        extractFromIntentIfNeeded(intent, savedInstanceState != null)
+
+        uri?.let {
+            uriWrapper = UriWrapper(it)
         }
+
+        val requestHandled = checkAndShowOpenWebLinksWithJetpackOverlayIfNeeded()
+        if (!requestHandled)
+            handleRequest()
+    }
+
+    private fun handleRequest() {
+        uriWrapper?.let { uri ->
+            if (!handleUrl(uri, action)) {
+                trackWithDeepLinkDataAndFinish()
+            }
+        }?:trackWithDeepLinkDataAndFinish()
+    }
+
+    private fun trackWithDeepLinkDataAndFinish() {
+        action?.let {
+            analyticsUtilsWrapper.trackWithDeepLinkData( DEEP_LINKED, it,uri?.host ?: "",  uriWrapper?.uri )
+        }
+        _finish.value = Event(Unit)
     }
 
     fun onSuccessfulLogin() {
-        cachedUri?.let {
+        uriWrapper?.let {
             handleUrl(it)
         }
+    }
+
+    fun writeToBundle(outState: Bundle) {
+        uriWrapper?.let {
+            outState.putParcelable(URI_KEY, it.uri)
+        }
+        outState.putString(DEEP_LINK_ENTRY_POINT_KEY, deepLinkEntryPoint.name)
     }
 
     /**
@@ -65,7 +99,6 @@ class DeepLinkingIntentReceiverViewModel
      * and builds the navigation action based on them
      */
     private fun handleUrl(uriWrapper: UriWrapper, action: String? = null): Boolean {
-        cachedUri = uriWrapper
         return buildNavigateAction(uriWrapper)?.also {
             if (action != null) {
                 deepLinkTrackingUtils.track(action, it, uriWrapper)
@@ -102,9 +135,34 @@ class DeepLinkingIntentReceiverViewModel
         return deepLinkUriUtils.getRedirectUri(uri)?.let { buildNavigateAction(it, rootUri) }
     }
 
+    private fun extractAndSetEntryPoint(intent: Intent) {
+        deepLinkEntryPoint = DeepLinkEntryPoint.fromResId(packageManagerWrapper.getActivityLabelResFromIntent(intent))
+    }
+
+    private fun extractSavedInstanceStateIfNeeded(savedInstanceState: Bundle?) {
+        savedInstanceState?.let {
+            uri = savedInstanceState.getParcelable(URI_KEY)
+            deepLinkEntryPoint =
+                    DeepLinkEntryPoint.valueOf(
+                    savedInstanceState.getString(DEEP_LINK_ENTRY_POINT_KEY, DeepLinkEntryPoint.DEFAULT.name))
+        }
+    }
+
+    private fun extractFromIntentIfNeeded(intent: Intent, hasSavedInstanceState: Boolean) {
+        if (hasSavedInstanceState) return
+
+        action = intent.action
+        uri = intent.data
+        extractAndSetEntryPoint(intent)
+    }
+
+    private fun checkAndShowOpenWebLinksWithJetpackOverlayIfNeeded() : Boolean {
+        return false
+    }
+
     override fun onCleared() {
         serverTrackingHandler.clear()
-        cachedUri = null
+        uriWrapper = null
         super.onCleared()
     }
 
@@ -113,5 +171,8 @@ class DeepLinkingIntentReceiverViewModel
         const val APPLINK_SCHEME = "wordpress://"
         const val SITE_DOMAIN = "domain"
         private const val REGULAR_TRACKING_PATH = "bar"
+
+        private const val URI_KEY = "uri_key"
+        private const val DEEP_LINK_ENTRY_POINT_KEY = "deep_link_entry_point_key"
     }
 }
