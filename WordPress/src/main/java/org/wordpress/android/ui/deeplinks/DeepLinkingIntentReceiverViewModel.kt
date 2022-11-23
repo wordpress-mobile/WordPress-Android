@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.deeplinks
 
-import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import androidx.lifecycle.LiveData
@@ -16,7 +15,6 @@ import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenL
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.ShowSignInFlow
 import org.wordpress.android.ui.deeplinks.handlers.DeepLinkHandlers
 import org.wordpress.android.ui.deeplinks.handlers.ServerTrackingHandler
-import org.wordpress.android.util.PackageManagerWrapper
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.viewmodel.Event
@@ -33,8 +31,7 @@ class DeepLinkingIntentReceiverViewModel
     private val accountStore: AccountStore,
     private val serverTrackingHandler: ServerTrackingHandler,
     private val deepLinkTrackingUtils: DeepLinkTrackingUtils,
-    private val analyticsUtilsWrapper: AnalyticsUtilsWrapper,
-    private val packageManagerWrapper: PackageManagerWrapper
+    private val analyticsUtilsWrapper: AnalyticsUtilsWrapper
 ) : ScopedViewModel(uiDispatcher) {
     private val _navigateAction = MutableLiveData<Event<NavigateAction>>()
     val navigateAction = _navigateAction as LiveData<Event<NavigateAction>>
@@ -48,12 +45,16 @@ class DeepLinkingIntentReceiverViewModel
     private var deepLinkEntryPoint = DeepLinkEntryPoint.DEFAULT
     private var showOverlay = false
 
-    fun start(intent: Intent, savedInstanceState: Bundle?) {
+    fun start(
+        action: String?,
+        data: UriWrapper?,
+        entryPoint: DeepLinkEntryPoint,
+        savedInstanceState: Bundle?) {
         if (isStarted) return
         isStarted = true
 
         extractSavedInstanceStateIfNeeded(savedInstanceState)
-        extractFromIntentIfNeeded(intent, savedInstanceState != null)
+        applyFromArgsIfNeeded(action, data, entryPoint, savedInstanceState != null)
 
         uri?.let {
             uriWrapper = UriWrapper(it)
@@ -136,10 +137,6 @@ class DeepLinkingIntentReceiverViewModel
         return deepLinkUriUtils.getRedirectUri(uri)?.let { buildNavigateAction(it, rootUri) }
     }
 
-    private fun extractAndSetEntryPoint(intent: Intent) {
-        deepLinkEntryPoint = DeepLinkEntryPoint.fromResId(packageManagerWrapper.getActivityLabelResFromIntent(intent))
-    }
-
     private fun extractSavedInstanceStateIfNeeded(savedInstanceState: Bundle?) {
         savedInstanceState?.let {
             uri = savedInstanceState.getParcelable(URI_KEY)
@@ -149,12 +146,17 @@ class DeepLinkingIntentReceiverViewModel
         }
     }
 
-    private fun extractFromIntentIfNeeded(intent: Intent, hasSavedInstanceState: Boolean) {
+    private fun applyFromArgsIfNeeded(
+        actionValue: String?,
+        uriValue: UriWrapper?,
+        deepLinkEntryPointValue: DeepLinkEntryPoint,
+        hasSavedInstanceState: Boolean
+    ) {
         if (hasSavedInstanceState) return
 
-        action = intent.action
-        uri = intent.data
-        extractAndSetEntryPoint(intent)
+        action = actionValue
+        uri = uriValue?.uri
+        deepLinkEntryPoint = deepLinkEntryPointValue
     }
 
     private fun checkAndShowOpenWebLinksWithJetpackOverlayIfNeeded() : Boolean {

@@ -9,7 +9,9 @@ import androidx.lifecycle.ViewModelProvider;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.RequestCodes;
+import org.wordpress.android.util.PackageManagerWrapper;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.UriWrapper;
 
 import javax.inject.Inject;
 
@@ -26,6 +28,7 @@ public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
     @Inject DeepLinkNavigator mDeeplinkNavigator;
     @Inject DeepLinkUriUtils mDeepLinkUriUtils;
     @Inject ViewModelProvider.Factory mViewModelFactory;
+    @Inject PackageManagerWrapper mPackageManagerWrapper;
     private DeepLinkingIntentReceiverViewModel mViewModel;
 
     @Override
@@ -36,7 +39,11 @@ public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
 
         setupObservers();
 
-        mViewModel.start(getIntent(), savedInstanceState);
+        mViewModel.start(
+                getIntent().getAction(),
+                (getIntent().getData() == null) ? null : new UriWrapper(getIntent().getData()),
+                extractEntryPoint(getIntent()),
+                savedInstanceState);
     }
 
     @Override
@@ -60,6 +67,11 @@ public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
             ToastUtils.showToast(getContext(), toastMessage);
             return null;
         }));
+    }
+
+
+    private DeepLinkEntryPoint extractEntryPoint(Intent intent) {
+        return DeepLinkEntryPoint.fromResId(mPackageManagerWrapper.getActivityLabelResFromIntent(intent));
     }
 
     @Override
