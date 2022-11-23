@@ -2,6 +2,7 @@ package org.wordpress.android.util
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
+import kotlin.test.assertFailsWith
 
 class ArrayUtilsTest {
     /* REMOVE */
@@ -36,18 +37,18 @@ class ArrayUtilsTest {
         assertThat(result).isEqualTo(expected)
     }
 
-    @Test(expected = IndexOutOfBoundsException::class)
+    @Test
     fun `given invalid negative index, when removing from array, then throw index out of bounds exception`() {
         val stringArray = arrayOf("one", "two", "three", "four", "five")
 
-        ArrayUtils.remove(stringArray, -1)
+        assertFailsWith<IndexOutOfBoundsException> { ArrayUtils.remove(stringArray, -1) }
     }
 
-    @Test(expected = IndexOutOfBoundsException::class)
+    @Test
     fun `given invalid positive index, when removing from array, then throw index out of bounds exception`() {
         val stringArray = arrayOf("one", "two", "three", "four", "five")
 
-        ArrayUtils.remove(stringArray, 5)
+        assertFailsWith<IndexOutOfBoundsException> { ArrayUtils.remove(stringArray, 5) }
     }
 
     /* INDEX OF */
