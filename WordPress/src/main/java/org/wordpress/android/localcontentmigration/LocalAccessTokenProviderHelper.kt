@@ -7,7 +7,8 @@ import javax.inject.Inject
 class LocalAccessTokenProviderHelper @Inject constructor(
     private val accountStore: AccountStore,
 ): LocalDataProviderHelper {
-    override fun getData(localSiteId: Int?, localEntityId: Int?) = AccessTokenData(
-            token = accountStore.accessToken ?: ""
+    override fun getData(localEntityId: Int?) = AccessTokenData(
+            token = accountStore.accessToken.orEmpty(),
+            accountStore.account?.avatarUrl.orEmpty(),
     )
 }

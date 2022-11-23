@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-11-03 16:54:08+0000
+Translation-Revision-Date: 2022-11-17 10:54:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: nl
 -->
 <resources>
+    <string name="jp_migration_welcome_site_found_message">We hebben je site gevonden. Ga door met het overdragen van je gegevens en meld je automatisch aan bij Jetpack.</string>
+    <string name="jp_migration_welcome_sites_found_message">We hebben je sites gevonden. Ga door met het overdragen van je gegevens en meld je automatisch aan bij Jetpack.</string>
+    <string name="jp_migration_welcome_subtitle">Het lijkt erop dat je vanuit de WordPress-app komt.</string>
     <string name="post_settings_parent">Bovenliggende pagina</string>
     <string name="post_settings_page_attributes">Pagina-eigenschappen</string>
     <string name="about_automattic_contribute_item_title">Bijdragen</string>

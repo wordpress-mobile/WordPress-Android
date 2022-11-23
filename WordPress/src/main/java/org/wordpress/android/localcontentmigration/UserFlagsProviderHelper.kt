@@ -12,7 +12,7 @@ import javax.inject.Inject
 class UserFlagsProviderHelper @Inject constructor(
     private val appPrefsWrapper: AppPrefsWrapper,
 ): LocalDataProviderHelper {
-    override fun getData(localSiteId: Int?, localEntityId: Int?): LocalContentEntityData =
+    override fun getData(localEntityId: Int?): LocalContentEntityData =
             UserFlagsData(
                     flags = appPrefsWrapper.getAllPrefs().filter(::shouldInclude),
                     quickStartStatusList = getAllQuickStartStatus(),

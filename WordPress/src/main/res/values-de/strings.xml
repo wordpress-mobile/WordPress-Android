@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-11-02 13:54:09+0000
+Translation-Revision-Date: 2022-11-16 13:54:10+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: de
 -->
 <resources>
+    <string name="jp_migration_help_button">Brauchst du Hilfe?</string>
+    <string name="jp_migration_continue_button">Weiter</string>
+    <string name="jp_migration_welcome_site_found_message">Wir haben deine Website gefunden. Fahre mit der Übertragung all deiner Daten fort und melde dich automatisch bei Jetpack an.</string>
+    <string name="jp_migration_welcome_sites_found_message">Wir haben deine Websites gefunden. Fahre mit der Übertragung all deiner Daten fort und melde dich automatisch bei Jetpack an.</string>
+    <string name="jp_migration_avatar_content_description">Dein Profilfoto</string>
+    <string name="jp_migration_welcome_subtitle">Anscheinend wechselst du von der WordPress-App.</string>
+    <string name="jp_migration_welcome_title">Willkommen bei Jetpack!</string>
+    <string name="icon_desc">Icon</string>
     <string name="post_settings_parent">Übergeordnete Seite</string>
     <string name="post_settings_page_attributes">Seitenattribute</string>
     <string name="about_automattic_contribute_item_title">Mitwirken</string>
@@ -3134,7 +3142,7 @@ Language: de
     <string name="reader_toast_blog_blocked">Beiträge von dieser Website werden nicht länger angezeigt</string>
     <string name="reader_menu_block_blog">Diese Website blockieren</string>
     <string name="schedule_verb">Zeitplan</string>
-    <string name="update_verb">Update</string>
+    <string name="update_verb">Aktualisieren</string>
     <string name="reader_empty_recommended_blogs">Keine empfohlenen Websites</string>
     <string name="reader_toast_err_unfollow_blog">Kann das Folgen dieser Website nicht beenden</string>
     <string name="reader_toast_err_follow_blog">Kann dieser Website nicht folgen</string>

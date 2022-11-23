@@ -38,17 +38,16 @@ class LocalMigrationContentProvider: TrustedQueryContentProvider() {
                 return@firstNotNullOf Pair(entity, match.groups)
             }
         }
-        val (localSiteId, localEntityId) = extractParametersFromGroups(groups)
-        return query(entity, localSiteId, localEntityId)
+        val localEntityId = extractEntityId(groups)
+        return query(entity, localEntityId)
     }
 
-    private fun extractParametersFromGroups(groups: MatchGroupCollection): Pair<Int?, Int?> {
-        // The first group is the entire match, so we drop that and parse the remaining captured groups as integers
-        val parameters = groups.drop(1).mapNotNull { it?.value?.let { id -> parseInt(id) } }
-        return Pair(parameters.getOrNull(0), parameters.getOrNull(1))
+    // The first group is the entire match, so we drop that and parse the next captured group as an integer
+    private fun extractEntityId(groups: MatchGroupCollection) = groups.drop(1).firstOrNull()?.let {
+        parseInt(it.value)
     }
 
-    private fun query(entity: LocalContentEntity, localSiteId: Int?, localEntityId: Int?): Cursor {
+    private fun query(entity: LocalContentEntity, localEntityId: Int?): Cursor {
         val context = checkNotNull(context) { "Cannot find context from the provider." }
         with(EntryPointAccessors.fromApplication(context.applicationContext,
                 LocalMigrationContentProviderEntryPoint::class.java)) {
@@ -59,7 +58,7 @@ class LocalMigrationContentProvider: TrustedQueryContentProvider() {
                 ReaderPosts -> readeSavedPostsProviderHelper().getData()
                 BloggingReminders -> bloggingRemindersProviderHelper().getData()
                 Sites -> localSiteProviderHelper().getData()
-                Post -> localPostProviderHelper().getData(localSiteId, localEntityId)
+                Post -> localPostProviderHelper().getData(localEntityId)
             }
             return queryResult().createCursor(response)
         }
@@ -67,5 +66,5 @@ class LocalMigrationContentProvider: TrustedQueryContentProvider() {
 }
 
 interface LocalDataProviderHelper {
-    fun getData(localSiteId: Int? = null, localEntityId: Int? = null): LocalContentEntityData
+    fun getData(localEntityId: Int? = null): LocalContentEntityData
 }

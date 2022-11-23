@@ -34,7 +34,7 @@ fun SecondaryButton(
                     disabledContentColor = MaterialTheme.colors.primary,
             ),
             modifier = modifier
-                    .padding(bottom = 60.dp)
+                    .padding(bottom = 10.dp)
                     .padding(horizontal = dimensionResource(R.dimen.jp_migration_buttons_padding_horizontal))
                     .fillMaxWidth()
     ) {

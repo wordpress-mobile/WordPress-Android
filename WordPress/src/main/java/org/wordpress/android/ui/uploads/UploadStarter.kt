@@ -178,7 +178,13 @@ class UploadStarter @Inject constructor(
                         )
                     }
         } finally {
-            mutex.unlock()
+            // If the job of the current coroutine is cancelled while the `lock()` call is suspended,
+            // it results in the mutex ending up unlocked.
+            // We introduced this check to prevent IllegalStateExceptions when `unlock` is called in those cases.
+            // See: https://github.com/wordpress-mobile/WordPress-Android/issues/17463
+            if (mutex.isLocked) {
+                mutex.unlock()
+            }
         }
     }
 
