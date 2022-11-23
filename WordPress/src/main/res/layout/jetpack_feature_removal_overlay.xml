@@ -9,88 +9,92 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
         android:layout_gravity="bottom"
-        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="@dimen/margin_small"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginTop="@dimen/margin_small">
+        app:layout_constraintTop_toTopOf="parent">
 
-    <ScrollView
-        android:id="@+id/scroll_view"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <ScrollView
+            android:id="@+id/scroll_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="0dp"
+            android:layout_weight="1">
 
-            <ImageButton
-                android:id="@+id/close_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/jetpack_full_screen_overlay_margin_close_button"
-                android:layout_marginTop="@dimen/jetpack_full_screen_overlay_margin_close_button"
-                android:background="?attr/selectableItemBackground"
-                android:padding="@dimen/margin_medium"
-                android:src="@drawable/ic_close_white_24dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:tint="?attr/wpColorOnSurfaceMedium"
-                tools:ignore="ContentDescription" />
-
-
-            <TextView
-                android:id="@+id/title"
-                style="@style/TextAppearance.Material3.HeadlineMedium"
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/margin_extra_extra_medium_large"
-                android:layout_marginStart="@dimen/margin_extra_extra_medium_large"
-                android:layout_marginTop="@dimen/margin_extra_medium_large"
-                android:text="@string/wp_jetpack_powered_reader_powered_by_jetpack"
-                android:textFontWeight="700"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/illustration_view"
-                tools:targetApi="p" />
+                android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/caption"
-                style="?attr/textAppearanceBody1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/margin_extra_extra_medium_large"
-                android:layout_marginStart="@dimen/margin_extra_extra_medium_large"
-                android:layout_marginTop="@dimen/margin_extra_medium_large"
-                android:text="@string/wp_jetpack_powered_reader_powered_by_jetpack_caption"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/title" />
+                <ImageButton
+                    android:id="@+id/close_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/jetpack_full_screen_overlay_margin_close_button"
+                    android:layout_marginTop="@dimen/jetpack_full_screen_overlay_margin_close_button"
+                    android:background="?attr/selectableItemBackground"
+                    android:padding="@dimen/margin_medium"
+                    android:src="@drawable/ic_close_white_24dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:tint="?attr/wpColorOnSurfaceMedium"
+                    tools:ignore="ContentDescription" />
 
-            <com.airbnb.lottie.LottieAnimationView
-                android:id="@+id/illustration_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/margin_extra_extra_medium_large"
-                android:layout_marginStart="@dimen/margin_extra_extra_medium_large"
-                android:layout_marginTop="@dimen/margin_64dp"
-                android:scaleType="centerCrop"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/close_button"
-                app:lottie_autoPlay="true"
-                app:lottie_enableMergePathsForKitKatAndAbove="true"
-                app:lottie_loop="false"
-                app:lottie_rawRes="@raw/wp2jp_left" />
+                <com.airbnb.lottie.LottieAnimationView
+                    android:id="@+id/illustration_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/margin_extra_extra_medium_large"
+                    android:layout_marginStart="@dimen/margin_extra_extra_medium_large"
+                    android:layout_marginTop="@dimen/margin_64dp"
+                    android:scaleType="centerCrop"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/close_button"
+                    app:lottie_autoPlay="true"
+                    app:lottie_enableMergePathsForKitKatAndAbove="true"
+                    app:lottie_loop="false"
+                    app:lottie_rawRes="@raw/wp2jp_left" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                <TextView
+                    android:id="@+id/title"
+                    style="@style/TextAppearance.Material3.HeadlineMedium"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/margin_extra_extra_medium_large"
+                    android:layout_marginStart="@dimen/margin_extra_extra_medium_large"
+                    android:layout_marginTop="@dimen/margin_extra_medium_large"
+                    android:text="@string/wp_jetpack_powered_reader_powered_by_jetpack"
+                    android:textFontWeight="700"
+                    app:autoSizeMaxTextSize="@dimen/text_sz_extra_extra_large"
+                    app:autoSizeMinTextSize="@dimen/m3_sys_typescale_headline_medium_text_size"
+                    app:autoSizeStepGranularity="2sp"
+                    app:autoSizeTextType="uniform"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/illustration_view"
+                    tools:targetApi="p" />
 
-    </ScrollView>
+                <TextView
+                    android:id="@+id/caption"
+                    style="?attr/textAppearanceBody1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/margin_large"
+                    android:layout_marginEnd="@dimen/margin_extra_extra_medium_large"
+                    android:layout_marginStart="@dimen/margin_extra_extra_medium_large"
+                    android:layout_marginTop="@dimen/margin_extra_medium_large"
+                    android:text="@string/wp_jetpack_powered_reader_powered_by_jetpack_caption"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/title" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </ScrollView>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/primary_button"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:layout_marginEnd="@dimen/margin_extra_extra_medium_large"
             android:layout_marginStart="@dimen/margin_extra_extra_medium_large"
             android:backgroundTint="@color/jetpack_green_50"
@@ -99,6 +103,9 @@
             android:text="@string/wp_jetpack_get_new_jetpack_app"
             android:textAppearance="?attr/textAppearanceSubtitle2"
             android:textColor="?attr/colorOnSecondary"
+            app:autoSizeMaxTextSize="@dimen/text_sz_medium"
+            app:autoSizeStepGranularity="4sp"
+            app:autoSizeTextType="uniform"
             app:cornerRadius="@dimen/margin_small_medium"
             app:layout_constraintBottom_toTopOf="@id/secondary_button"
             app:layout_constraintEnd_toEndOf="parent"
@@ -118,6 +125,9 @@
             android:textAllCaps="false"
             android:textAppearance="?attr/textAppearanceSubtitle2"
             android:textColor="@color/jetpack_green_50"
+            app:autoSizeMaxTextSize="@dimen/text_sz_medium"
+            app:autoSizeStepGranularity="4sp"
+            app:autoSizeTextType="uniform"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
