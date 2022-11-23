@@ -30,7 +30,8 @@ class JetpackFeatureFullScreenOverlayViewModel @Inject constructor(
 
     fun openJetpackAppDownloadLink() {
         _action.value = JetpackFeatureOverlayActions.OpenPlayStore
-        if (isSiteCreationOverlayScreen) jetpackFeatureRemovalOverlayUtil.trackInstallJetpackTappedInSiteCreationOverlay()
+        if (isSiteCreationOverlayScreen)
+            jetpackFeatureRemovalOverlayUtil.trackInstallJetpackTappedInSiteCreationOverlay()
         else jetpackFeatureRemovalOverlayUtil.trackInstallJetpackTapped(screenType)
     }
 
