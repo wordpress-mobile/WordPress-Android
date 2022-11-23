@@ -49,7 +49,7 @@ class JetpackMigrationViewModel @Inject constructor(
     private val _actionEvents = Channel<JetpackMigrationActionEvent>(Channel.BUFFERED)
     val actionEvents = _actionEvents.receiveAsFlow()
 
-    private val migrationStateFlow = MutableStateFlow<LocalMigrationState>(Migrating())
+    private val migrationStateFlow = MutableStateFlow<LocalMigrationState>(Initial)
     private val continueClickedFlow = MutableStateFlow(false)
     private val notificationContinueClickedFlow = MutableStateFlow(false)
 
