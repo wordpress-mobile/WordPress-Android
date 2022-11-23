@@ -62,7 +62,6 @@ import org.wordpress.android.util.JetpackBrandingUtils.Screen;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.LocaleProvider;
 import org.wordpress.android.util.NetworkUtils;
-import org.wordpress.android.util.PackageManagerWrapper;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPPrefUtils;
@@ -505,10 +504,7 @@ public class AppSettingsFragment extends PreferenceFragment
             AnalyticsTracker.track(Stat.PRIVACY_SETTINGS_REPORT_CRASHES_TOGGLED, Collections
                     .singletonMap(TRACK_ENABLED, newValue));
         } else if (preference == mOpenWebLinksWithJetpack) {
-            AppPrefs.setIsOpenWebLinksWithJetpack((Boolean) newValue);
             handleEnableDisableOpenWebLinksWithJetpackComponents((Boolean) newValue);
-            AnalyticsTracker.track(AnalyticsTracker.Stat.APP_SETTINGS_OPEN_WEB_LINKS_WITH_JETPACK_CHANGED, Collections
-                    .singletonMap(TRACK_ENABLED, newValue));
         }
         return true;
     }
@@ -708,6 +704,9 @@ public class AppSettingsFragment extends PreferenceFragment
     private void handleEnableDisableOpenWebLinksWithJetpackComponents(Boolean newValue) {
         try {
             mOpenWebLinksWithJetpackHelper.enableDisableOpenWithJetpackComponents(newValue);
+            AppPrefs.setIsOpenWebLinksWithJetpack(newValue);
+            AnalyticsTracker.track(AnalyticsTracker.Stat.APP_SETTINGS_OPEN_WEB_LINKS_WITH_JETPACK_CHANGED, Collections
+                    .singletonMap(TRACK_ENABLED, newValue));
         } catch (Exception e) {
             ToastUtils.showToast(
                     getActivity(),
