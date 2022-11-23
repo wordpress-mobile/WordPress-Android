@@ -1,0 +1,31 @@
+{
+  "request": {
+    "urlPathPattern": "/wpcom/v2/mobile/feature-flags/?",
+    "method": "GET",
+    "queryParameters": {
+        "build_number": {
+          "matches": "(.*)"
+        },
+        "device_id": {
+          "matches": "(.*)"
+        },
+        "identifier": {
+          "matches": "(.*)"
+        },
+        "marketing_version": {
+          "matches": "(.*)"
+        },
+        "platform": {
+          "matches": "android"
+        },
+        "_locale": {
+          "matches": "(.*)"
+        }
+    }
+  },
+  "response": {
+    "status": 200,
+    "jsonBody": {
+    }
+  }
+}

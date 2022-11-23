@@ -215,7 +215,7 @@ class AppInitializer @Inject constructor(
 
     fun init() {
         dispatcher.register(this)
-        appConfig.init()
+        appConfig.init(appScope)
 
         // Upload any encrypted logs that were queued but not yet uploaded
         encryptedLogging.start()
@@ -506,6 +506,7 @@ class AppInitializer @Inject constructor(
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onAccountChanged(event: OnAccountChanged) {
         if (!FluxCUtils.isSignedInWPComOrHasWPOrgSite(accountStore, siteStore)) {
+            appConfig.refresh(appScope)
             flushHttpCache()
 
             // Analytics resets
@@ -599,6 +600,9 @@ class AppInitializer @Inject constructor(
         // Reset Notifications Data
         NotificationsTable.reset()
 
+        // clear App config data
+        appConfig.clear()
+
         // Cancel QuickStart reminders
         QuickStartUtils.cancelQuickStartReminder(context)
 
@@ -683,7 +687,7 @@ class AppInitializer @Inject constructor(
 
     override fun onStart(owner: LifecycleOwner) {
         applicationLifecycleMonitor.onAppComesFromBackground()
-        appConfig.refresh()
+        appConfig.refresh(appScope)
     }
 
     override fun onStop(owner: LifecycleOwner) {
