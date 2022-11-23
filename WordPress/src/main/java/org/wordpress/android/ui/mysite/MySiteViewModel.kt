@@ -535,7 +535,11 @@ class MySiteViewModel @Inject constructor(
                         cards = cardsResult.filterNot {
                             getCardTypeExclusionFiltersForTab(MySiteTabType.SITE_MENU).contains(it.type)
                         },
-                        dynamicCards = if (shouldIncludeDynamicCards(MySiteTabType.SITE_MENU)) dynamicCards else listOf(),
+                        dynamicCards = if (shouldIncludeDynamicCards(MySiteTabType.SITE_MENU)) {
+                            dynamicCards
+                        } else {
+                            listOf()
+                        },
                         siteItems = siteItems
                 ),
                 MySiteTabType.DASHBOARD to orderForDisplay(
@@ -544,7 +548,11 @@ class MySiteViewModel @Inject constructor(
                         cards = cardsResult.filterNot {
                             getCardTypeExclusionFiltersForTab(MySiteTabType.DASHBOARD).contains(it.type)
                         },
-                        dynamicCards = if (shouldIncludeDynamicCards(MySiteTabType.DASHBOARD)) dynamicCards else listOf(),
+                        dynamicCards = if (shouldIncludeDynamicCards(MySiteTabType.DASHBOARD)) {
+                            dynamicCards
+                        } else {
+                            listOf()
+                        },
                         siteItems = listOf(),
                         jetpackBadge = jetpackBadge
                 )
