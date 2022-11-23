@@ -87,7 +87,7 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
         binding = ReaderFragmentLayoutBinding.bind(view).apply {
             initToolbar()
             initViewPager()
-            initViewModel()
+            initViewModel(savedInstanceState)
         }
     }
 
@@ -150,12 +150,12 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
         viewPager.registerOnPageChangeCallback(viewPagerCallback)
     }
 
-    private fun ReaderFragmentLayoutBinding.initViewModel() {
+    private fun ReaderFragmentLayoutBinding.initViewModel(savedInstanceState: Bundle?) {
         viewModel = ViewModelProvider(this@ReaderFragment, viewModelFactory).get(ReaderViewModel::class.java)
-        startObserving()
+        startObserving(savedInstanceState)
     }
 
-    private fun ReaderFragmentLayoutBinding.startObserving() {
+    private fun ReaderFragmentLayoutBinding.startObserving(savedInstanceState: Bundle?) {
         viewModel.uiState.observe(viewLifecycleOwner) { uiState ->
             uiState?.let {
                 when (it) {
@@ -220,17 +220,18 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
                     .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
         }
 
-        observeJetpackOverlayEvent()
+        observeJetpackOverlayEvent(savedInstanceState)
 
         viewModel.start()
     }
 
-    private fun observeJetpackOverlayEvent() {
-        viewModel.showJetpackOverlay.observeEvent(viewLifecycleOwner) {
-            JetpackFeatureFullScreenOverlayFragment
-                    .newInstance(JetpackFeatureOverlayScreenType.READER)
-                    .show(childFragmentManager, JetpackFeatureFullScreenOverlayFragment.TAG)
-        }
+    private fun observeJetpackOverlayEvent(savedInstanceState: Bundle?) {
+        if (savedInstanceState == null)
+            viewModel.showJetpackOverlay.observeEvent(viewLifecycleOwner) {
+                JetpackFeatureFullScreenOverlayFragment
+                        .newInstance(JetpackFeatureOverlayScreenType.READER)
+                        .show(childFragmentManager, JetpackFeatureFullScreenOverlayFragment.TAG)
+            }
     }
 
     private fun ReaderFragmentLayoutBinding.showSnackbar(holder: SnackbarMessageHolder) {

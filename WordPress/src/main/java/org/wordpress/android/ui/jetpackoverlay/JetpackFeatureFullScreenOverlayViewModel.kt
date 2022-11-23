@@ -6,6 +6,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureOverlayScreenType
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackOverlayDismissalType.CLOSE_BUTTON
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackOverlayDismissalType.CONTINUE_BUTTON
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
@@ -23,19 +25,33 @@ class JetpackFeatureFullScreenOverlayViewModel @Inject constructor(
     private val _action = MutableLiveData<JetpackFeatureOverlayActions>()
     val action: LiveData<JetpackFeatureOverlayActions> = _action
 
+    private lateinit var screenType: JetpackFeatureOverlayScreenType
+
     fun openJetpackAppDownloadLink() {
         _action.value = JetpackFeatureOverlayActions.OpenPlayStore
+        jetpackFeatureRemovalOverlayUtil.trackInstallJetpackTapped(screenType)
     }
 
-    fun dismissBottomSheet() {
+    fun continueToFeature() {
         _action.value = JetpackFeatureOverlayActions.DismissDialog
+        jetpackFeatureRemovalOverlayUtil.trackBottomSheetDismissed(screenType, CONTINUE_BUTTON)
     }
 
     fun closeBottomSheet() {
         _action.value = JetpackFeatureOverlayActions.DismissDialog
+        jetpackFeatureRemovalOverlayUtil.trackBottomSheetDismissed(screenType, CLOSE_BUTTON)
     }
 
     fun init(overlayScreenType: JetpackFeatureOverlayScreenType?, rtlLayout: Boolean) {
+        screenType = overlayScreenType ?: return
+        val params = JetpackFeatureOverlayContentBuilderParams(
+                currentPhase = getCurrentPhase()!!,
+                isRtl = rtlLayout,
+                feature = overlayScreenType
+        )
+        _uiState.postValue(jetpackFeatureOverlayContentBuilder.build(params = params))
+        jetpackFeatureRemovalOverlayUtil.onOverlayShown(overlayScreenType)
+
         val state: JetpackFeatureOverlayUIState = when (overlayScreenType) {
             JetpackFeatureOverlayScreenType.SITE_CREATION -> jetpackFeatureOverlayContentBuilder
                     .buildSiteCreationOverlayState(getSiteCreationPhase()!!, rtlLayout)
@@ -49,7 +65,6 @@ class JetpackFeatureFullScreenOverlayViewModel @Inject constructor(
             }
         }
         _uiState.postValue(state)
-        jetpackFeatureRemovalOverlayUtil.onOverlayShown(overlayScreenType)
     }
 
     private fun getCurrentPhase() = jetpackFeatureRemovalPhaseHelper.getCurrentPhase()

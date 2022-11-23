@@ -50,6 +50,7 @@ class JetpackFeatureFullScreenOverlayFragment : BottomSheetDialogFragment() {
                         com.google.android.material.R.id.design_bottom_sheet
                 ) ?: return@setOnShowListener
                 val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
+                bottomSheetBehavior.setMaxWidth(ViewGroup.LayoutParams.MATCH_PARENT);
                 bottomSheetBehavior.isDraggable = false
                 if (bottomSheet.layoutParams != null) {
                     showFullScreenBottomSheet(bottomSheet)
@@ -104,7 +105,7 @@ class JetpackFeatureFullScreenOverlayFragment : BottomSheetDialogFragment() {
     private fun JetpackFeatureRemovalOverlayBinding.setClickListener(secondaryButtonVisible: Boolean) {
         primaryButton.setOnClickListener { viewModel.openJetpackAppDownloadLink() }
         closeButton.setOnClickListener { viewModel.closeBottomSheet() }
-        if (secondaryButtonVisible) secondaryButton.setOnClickListener { viewModel.dismissBottomSheet() }
+        if (secondaryButtonVisible) secondaryButton.setOnClickListener { viewModel.continueToFeature() }
     }
 
     private fun JetpackFeatureRemovalOverlayBinding.updateVisibility(
