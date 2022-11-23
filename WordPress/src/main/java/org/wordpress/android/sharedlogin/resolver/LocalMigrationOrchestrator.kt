@@ -72,12 +72,4 @@ class LocalMigrationOrchestrator @Inject constructor(
             is NoUserFlagsFoundError -> Unit
         }
     }
-
-    private fun reloadMainScreen() {
-        contextProvider.getContext().run {
-            val mainActivityIntent = Intent(this, WPMainActivity::class.java)
-            mainActivityIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
-            startActivity(mainActivityIntent)
-        }
-    }
 }
