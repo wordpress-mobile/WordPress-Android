@@ -5,8 +5,6 @@ import org.wordpress.android.localcontentmigration.LocalContentEntity.AccessToke
 import org.wordpress.android.localcontentmigration.LocalContentEntityData.AccessTokenData
 import org.wordpress.android.localcontentmigration.LocalMigrationError.FeatureDisabled.SharedLoginDisabled
 import org.wordpress.android.localcontentmigration.LocalMigrationError.MigrationAlreadyAttempted.SharedLoginAlreadyAttempted
-import org.wordpress.android.localcontentmigration.LocalMigrationResult.Companion
-import org.wordpress.android.localcontentmigration.LocalMigrationResult.Companion.EmptyResult
 import org.wordpress.android.localcontentmigration.LocalMigrationResult.Failure
 import org.wordpress.android.localcontentmigration.LocalMigrationResult.Success
 import org.wordpress.android.sharedlogin.JetpackSharedLoginFlag
@@ -29,16 +27,11 @@ class SharedLoginHelper @Inject constructor(
         Failure(SharedLoginAlreadyAttempted)
     } else {
         sharedLoginAnalyticsTracker.trackLoginStart()
-        localMigrationContentResolver.getResultForEntityType<AccessTokenData>(AccessToken).thenWith { (accessToken) ->
+        localMigrationContentResolver.getResultForEntityType<AccessTokenData>(AccessToken).thenWith {
+            dispatcher.dispatch(accountActionBuilderWrapper.newUpdateAccessTokenAction(it.token))
             appPrefsWrapper.saveIsFirstTrySharedLoginJetpack(false)
             sharedLoginAnalyticsTracker.trackLoginSuccess()
-            dispatchUpdateAccessToken(accessToken)
-            EmptyResult
+            Success(it)
         }
-    }
-    private fun dispatchUpdateAccessToken(accessToken: String) {
-        dispatcher.dispatch(
-                accountActionBuilderWrapper.newUpdateAccessTokenAction(accessToken)
-        )
     }
 }
