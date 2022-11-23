@@ -1,12 +1,8 @@
 package org.wordpress.android.ui.stats.refresh
 
-import android.content.Context
-import android.content.SharedPreferences
-import androidx.preference.PreferenceManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.BuildConfig
@@ -589,10 +585,4 @@ class StatsModule {
             { listOf(InsightType.TOTAL_FOLLOWERS, InsightType.FOLLOWER_TYPES, InsightType.FOLLOWERS) },
             uiModelMapper::mapInsights
     )
-
-    @Provides
-    @Singleton
-    fun provideSharedPrefs(@ApplicationContext context: Context): SharedPreferences {
-        return PreferenceManager.getDefaultSharedPreferences(context)
-    }
 }
