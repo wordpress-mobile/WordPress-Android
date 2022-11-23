@@ -7,7 +7,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.combineTransform
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
@@ -27,7 +26,8 @@ import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.WelcomeSecondaryButton
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.CompleteFlow
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.ShowHelp
-import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Content
+import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Content.Done
+import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Content.Notifications
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Content.Welcome
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Error.Generic
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Error.Networking
@@ -51,25 +51,33 @@ class JetpackMigrationViewModel @Inject constructor(
 
     private val migrationStateFlow = MutableStateFlow<LocalMigrationState>(Migrating())
     private val continueClickedFlow = MutableStateFlow(false)
+    private val notificationContinueClickedFlow = MutableStateFlow(false)
 
-    val uiState = combineTransform(migrationStateFlow, continueClickedFlow) {
-        migrationState, continueClicked ->
+    val uiState = combineTransform(migrationStateFlow, continueClickedFlow, notificationContinueClickedFlow) {
+        migrationState, continueClicked, notificationContinueClicked ->
         when {
             migrationState is Initial -> emit(Loading)
             migrationState is Migrating -> emit(
                     Welcome(
-                            userAvatarUrl = migrationState.avatarUrl,
+                            userAvatarUrl = resizeAvatarUrl(migrationState.avatarUrl),
                             isProcessing = continueClicked,
                             sites = migrationState.sites.map(::siteUiFromModel),
                             primaryActionButton = WelcomePrimaryButton(::onContinueClicked),
                             secondaryActionButton = WelcomeSecondaryButton(::onHelpClicked),
                     )
             )
-            migrationState is Successful && continueClicked -> emit(
-                    Content.Notifications(
-                            primaryActionButton = NotificationsPrimaryButton(::onContinueFromNotificationsClicked),
-                    )
-            )
+            migrationState is Successful && continueClicked -> when {
+                !notificationContinueClicked -> emit(
+                        Notifications(
+                                primaryActionButton = NotificationsPrimaryButton(::onContinueFromNotificationsClicked),
+                        )
+                )
+                else -> emit(
+                        Done(
+                                primaryActionButton = DonePrimaryButton(::onDoneClicked)
+                        )
+                )
+            }
             migrationState is Failure -> emit(
                     UiState.Error(
                             primaryActionButton = ErrorPrimaryButton(::onTryAgainClicked),
@@ -95,12 +103,6 @@ class JetpackMigrationViewModel @Inject constructor(
 
     private fun onContinueClicked() {
         continueClickedFlow.value = true
-    }
-
-    private fun postNotificationsState() {
-        _uiState.value = Content.Notifications(
-                primaryActionButton = NotificationsPrimaryButton(::onContinueFromNotificationsClicked),
-        )
     }
 
     @Suppress("ForbiddenComment", "unused")
@@ -134,22 +136,13 @@ class JetpackMigrationViewModel @Inject constructor(
             viewModelScope.launch(Dispatchers.IO) {
                 localMigrationOrchestrator.tryLocalMigration(migrationStateFlow)
             }
-
-            // TODO: Handle migration result properly and navigate to the right error screen if migration fails
-//            postNotificationsState()
     }
 
     @Suppress("ForbiddenComment")
     private fun onContinueFromNotificationsClicked() {
         // TODO: Disable notifications in WP app
         //  See https://github.com/wordpress-mobile/WordPress-Android/pull/17371
-        postDoneState()
-    }
-
-    private fun postDoneState() {
-        _uiState.value = Content.Done(
-                primaryActionButton = DonePrimaryButton(::onDoneClicked),
-        )
+        notificationContinueClickedFlow.value = true
     }
 
     private fun onDoneClicked() {

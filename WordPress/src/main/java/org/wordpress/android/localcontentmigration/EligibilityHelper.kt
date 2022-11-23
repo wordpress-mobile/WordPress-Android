@@ -7,6 +7,10 @@ import javax.inject.Inject
 class EligibilityHelper @Inject constructor(
     private val localMigrationContentResolver: LocalMigrationContentResolver,
 ) {
+    /** TODO: This should perform some additional pre-flight checks. We should:
+     * * On WordPress:
+     *    1. Check for local-only data
+     */
     fun validate() =
     localMigrationContentResolver.getResultForEntityType<EligibilityStatusData>(EligibilityStatus).validate()
 }
