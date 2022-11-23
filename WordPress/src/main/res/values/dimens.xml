@@ -334,6 +334,9 @@
     <dimen name="my_site_error_card_dash_gap">5dp</dimen>
     <dimen name="my_site_error_card_dash_width">10dp</dimen>
 
+    <!-- my site single action card -->
+    <dimen name="single_action_card_padding">20dp</dimen>
+
     <!--me-->
     <dimen name="me_list_row_icon_size">24dp</dimen>
     <dimen name="me_list_row_padding_horizontal">@dimen/content_margin</dimen>

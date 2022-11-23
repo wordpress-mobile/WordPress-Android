@@ -13,6 +13,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.DynamicCard.QuickStartD
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.CategoryHeaderItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.InfoItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.ListItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.SingleActionCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.JetpackBadge
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsViewHolder
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptsCardAnalyticsTracker
@@ -23,8 +24,9 @@ import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardViewHolder
 import org.wordpress.android.ui.mysite.dynamiccards.quickstart.QuickStartDynamicCardViewHolder
 import org.wordpress.android.ui.mysite.items.categoryheader.MySiteCategoryItemViewHolder
 import org.wordpress.android.ui.mysite.items.infoitem.MySiteInfoItemViewHolder
-import org.wordpress.android.ui.mysite.jetpackbadge.MySiteJetpackBadgeViewHolder
 import org.wordpress.android.ui.mysite.items.listitem.MySiteListItemViewHolder
+import org.wordpress.android.ui.mysite.items.singleactioncard.SingleActionCardViewHolder
+import org.wordpress.android.ui.mysite.jetpackbadge.MySiteJetpackBadgeViewHolder
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.HtmlCompatWrapper
 import org.wordpress.android.util.image.ImageManager
@@ -63,6 +65,7 @@ class MySiteAdapter(
                     learnMoreClicked
             )
             MySiteCardAndItem.Type.JETPACK_BADGE.ordinal -> MySiteJetpackBadgeViewHolder(parent)
+            MySiteCardAndItem.Type.SINGLE_ACTION_CARD.ordinal -> SingleActionCardViewHolder(parent)
             else -> throw IllegalArgumentException("Unexpected view type")
         }
     }
@@ -79,6 +82,7 @@ class MySiteAdapter(
             is MySiteListItemViewHolder -> holder.bind(getItem(position) as ListItem)
             is MySiteJetpackBadgeViewHolder -> holder.bind(getItem(position) as JetpackBadge)
             is CardsViewHolder -> holder.bind(getItem(position) as DashboardCards)
+            is SingleActionCardViewHolder -> holder.bind(getItem(position) as SingleActionCard)
         }
     }
 
