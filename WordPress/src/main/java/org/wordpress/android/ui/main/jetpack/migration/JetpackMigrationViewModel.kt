@@ -26,6 +26,7 @@ import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Error.Generic
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Error.Networking
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Loading
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.GravatarUtilsWrapper
@@ -38,6 +39,7 @@ class JetpackMigrationViewModel @Inject constructor(
     private val accountStore: AccountStore,
     private val siteUtilsWrapper: SiteUtilsWrapper,
     private val gravatarUtilsWrapper: GravatarUtilsWrapper,
+    private val appPrefsWrapper: AppPrefsWrapper,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow<UiState>(Loading)
     val uiState: StateFlow<UiState> = _uiState
@@ -144,7 +146,10 @@ class JetpackMigrationViewModel @Inject constructor(
 
     private fun postDoneState() {
         _uiState.value = Content.Done(
-                primaryActionButton = DonePrimaryButton(::onDoneClicked),
+                primaryActionButton = DonePrimaryButton {
+                    appPrefsWrapper.setJetpackMigrationCompleted(true)
+                    onDoneClicked()
+                },
         )
     }
 
