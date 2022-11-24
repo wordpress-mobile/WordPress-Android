@@ -2,7 +2,7 @@
 common_params:
   # Common plugin settings to use with the `plugins` key.
   - &common_plugins
-    - automattic/bash-cache#add/validate_gradle_wrapper_script
+    - automattic/bash-cache#2.11.0
 
 steps:
   #################
