@@ -13,9 +13,11 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Re
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
 import javax.inject.Inject
 import javax.inject.Named
+import javax.inject.Singleton
 
 private const val APP_ID_HEADER = "X-APP-ID"
 
+@Singleton
 class MobilePayRestClient @Inject constructor(
     private val wpComGsonRequestBuilder: WPComGsonRequestBuilder,
     appContext: Context?,
@@ -24,7 +26,6 @@ class MobilePayRestClient @Inject constructor(
     accessToken: AccessToken,
     userAgent: UserAgent
 ) : BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {
-
     @Suppress("LongParameterList")
     suspend fun createOrder(
         productIdentifier: String,
