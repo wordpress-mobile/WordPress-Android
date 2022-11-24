@@ -117,6 +117,7 @@ import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.UriWrapper;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
@@ -1765,6 +1766,14 @@ public class ActivityLauncher {
 
     public static void startJetpackMigrationFlow(@NonNull Context context) {
         Intent intent = new Intent(context, JetpackMigrationActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
+    }
+
+    public static void openJetpackForDeeplink(@NonNull Context context, String action, UriWrapper uri) {
+        Intent intent = new Intent();
+        intent.setAction(action);
+        intent.setData(uri.getUri());
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
     }
