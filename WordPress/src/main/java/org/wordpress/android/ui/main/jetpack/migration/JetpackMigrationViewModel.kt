@@ -20,6 +20,7 @@ import org.wordpress.android.localcontentmigration.LocalMigrationState.Initial
 import org.wordpress.android.localcontentmigration.LocalMigrationState.Migrating
 import org.wordpress.android.sharedlogin.resolver.LocalMigrationOrchestrator
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.DeletePrimaryButton
+import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.DeleteSecondaryButton
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.DonePrimaryButton
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.ErrorPrimaryButton
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.ErrorSecondaryButton
@@ -90,6 +91,7 @@ class JetpackMigrationViewModel @Inject constructor(
             migrationState is DeleteOnly -> emit(
                     Delete(
                             primaryActionButton = DeletePrimaryButton(::onGotItClicked),
+                            secondaryActionButton = DeleteSecondaryButton(::onHelpClicked),
                     )
             )
             migrationState is Failure -> emit(
@@ -241,6 +243,7 @@ class JetpackMigrationViewModel @Inject constructor(
 
             data class Delete(
                 override val primaryActionButton: ActionButton,
+                override val secondaryActionButton: ActionButton
             ) : Content(
                     primaryActionButton = primaryActionButton,
                     screenIconRes = R.drawable.ic_jetpack_migration_delete,
@@ -338,6 +341,13 @@ class JetpackMigrationViewModel @Inject constructor(
         ) : ActionButton(
                 onClick = onClick,
                 text = UiStringRes(R.string.jp_migration_got_it_button)
+        )
+
+        data class DeleteSecondaryButton(
+            override val onClick: () -> Unit
+        ) : ActionButton(
+                onClick = onClick,
+                text = UiStringRes(R.string.jp_migration_need_help_button)
         )
     }
 

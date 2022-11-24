@@ -4270,6 +4270,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="jp_migration_delete_subtitle">It looks like you still have the WordPress app installed. We recommend you delete the WordPress app to avoid data conflicts.</string>
     <string name="jp_migration_delete_message">Please &lt;b&gt;delete the WordPress app&lt;/b&gt; to&lt;br&gt;avoid data conflicts.</string>
     <string name="jp_migration_got_it_button">Got it</string>
+    <string name="jp_migration_need_help_button">Need help?</string>
 
     <!-- Open Web Links With Jetpack -->
     <string name="preference_open_web_links_with_jetpack">Open web links with Jetpack</string>

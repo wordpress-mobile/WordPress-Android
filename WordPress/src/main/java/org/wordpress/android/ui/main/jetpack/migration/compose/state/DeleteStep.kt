@@ -27,10 +27,12 @@ import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.utils.htmlToAnnotatedString
 import org.wordpress.android.ui.compose.utils.uiStringText
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.DeletePrimaryButton
+import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.DeleteSecondaryButton
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState
 import org.wordpress.android.ui.main.jetpack.migration.compose.components.ButtonsColumn
 import org.wordpress.android.ui.main.jetpack.migration.compose.components.PrimaryButton
 import org.wordpress.android.ui.main.jetpack.migration.compose.components.ScreenIcon
+import org.wordpress.android.ui.main.jetpack.migration.compose.components.SecondaryButton
 import org.wordpress.android.ui.main.jetpack.migration.compose.components.Subtitle
 import org.wordpress.android.ui.main.jetpack.migration.compose.components.Title
 
@@ -76,6 +78,11 @@ fun DeleteStep(uiState: UiState.Content.Delete) = with(uiState) {
                     text = uiStringText(primaryActionButton.text),
                     onClick = primaryActionButton.onClick,
             )
+            SecondaryButton(
+                    text = uiStringText(secondaryActionButton.text),
+                    onClick = secondaryActionButton.onClick,
+                    enabled = true
+            )
         }
     }
 }
@@ -86,7 +93,7 @@ fun DeleteStep(uiState: UiState.Content.Delete) = with(uiState) {
 @Composable
 private fun PreviewDeleteStep() {
     AppTheme {
-        val uiState = UiState.Content.Delete(DeletePrimaryButton {})
+        val uiState = UiState.Content.Delete(DeletePrimaryButton {}, DeleteSecondaryButton {})
         DeleteStep(uiState)
     }
 }
