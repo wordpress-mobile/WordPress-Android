@@ -382,7 +382,7 @@ dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
     implementation "com.google.android.material:material:$materialVersion"
     implementation 'androidx.percentlayout:percentlayout:1.0.0'
-    implementation "androidx.swiperefreshlayout:swiperefreshlayout:$swipeToRefresh"
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:$swipeToRefreshVersion"
     implementation "androidx.preference:preference:$preferenceVersion"
     implementation "androidx.work:work-runtime:$androidxWorkVersion"
     implementation "androidx.work:work-runtime-ktx:$androidxWorkVersion"
