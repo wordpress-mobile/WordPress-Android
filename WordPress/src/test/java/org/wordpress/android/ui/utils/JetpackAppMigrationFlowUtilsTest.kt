@@ -63,7 +63,7 @@ class JetpackAppMigrationFlowUtilsTest {
     }
 
     @Test
-    fun `When the jetpackMigrationFlowFeature is not enableed the Jetpack app the migration flow should not be shown`() {
+    fun `When the jetpackMigrationFlow is not enableed the Jetpack app the migration flow should not be shown`() {
         whenever(jetpackMigrationFlowFeatureConfig.isEnabled()).thenReturn(false)
         val expected = false
         val actual = jetpackAppMigrationFlowUtils.shouldShowMigrationFlow()
@@ -97,6 +97,14 @@ class JetpackAppMigrationFlowUtilsTest {
     @Test
     fun `When the WordPress app is not compatible the Jetpack app the migration flow should not be shown`() {
         whenever(wordPressPublicData.nonSemanticPackageVersion()).thenReturn("21.2")
+        val expected = false
+        val actual = jetpackAppMigrationFlowUtils.shouldShowMigrationFlow()
+        Assert.assertEquals(expected, actual)
+    }
+
+    @Test
+    fun `When the WordPress app version is null the Jetpack app the migration flow should not be shown`() {
+        whenever(wordPressPublicData.nonSemanticPackageVersion()).thenReturn(null)
         val expected = false
         val actual = jetpackAppMigrationFlowUtils.shouldShowMigrationFlow()
         Assert.assertEquals(expected, actual)

@@ -20,7 +20,7 @@ class JetpackAppMigrationFlowUtils @Inject constructor(
     private val appStatus: AppStatus,
     private val wordPressPublicData: WordPressPublicData,
 ) {
-    private val minimumSupportedVersion = "21.3"
+    private val minimumSupportedVersion = "21.3" //non semantic minimum supported version
 
     fun shouldShowMigrationFlow() = buildConfigWrapper.isJetpackApp
             && jetpackMigrationFlowFeatureConfig.isEnabled()
@@ -35,6 +35,8 @@ class JetpackAppMigrationFlowUtils @Inject constructor(
 
     private fun isWordPressInstalled() = appStatus.isAppInstalled(wordPressPublicData.currentPackageId())
 
-    private fun isWordPressCompatible() =
-            Version(wordPressPublicData.nonSemanticPackageVersion()) >= Version(minimumSupportedVersion)
+    private fun isWordPressCompatible(): Boolean {
+        val wordPressVersion = wordPressPublicData.nonSemanticPackageVersion()
+        return wordPressVersion != null && Version(wordPressVersion) >= Version(minimumSupportedVersion)
+    }
 }

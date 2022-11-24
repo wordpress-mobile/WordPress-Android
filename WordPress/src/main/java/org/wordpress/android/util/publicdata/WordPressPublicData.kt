@@ -30,6 +30,9 @@ class WordPressPublicData @Inject constructor(private val packageManagerWrapper:
         // Clean app semantic versioning info. E.g 21.2-rc-3 turns to 21.2
         val wordPressVersion = rawVersion?.split("-")?.getOrNull(0) ?: rawVersion ?: ""
 
-        return if(Regex("^\\d+(\\.\\d+)*\$").matchEntire(wordPressVersion) != null) wordPressVersion else null
+        // Version is supported by org.wordpress.android.util.helpers.Version.Version
+        val versionIsSupportedForComparison = Regex("[0-9]+(\\.[0-9]+)*").matchEntire(wordPressVersion) != null
+
+        return if(versionIsSupportedForComparison) wordPressVersion else null
     }
 }
