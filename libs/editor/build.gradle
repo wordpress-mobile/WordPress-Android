@@ -87,7 +87,7 @@ dependencies {
     implementation "androidx.gridlayout:gridlayout:$androidxGridlayoutVersion"
     implementation "androidx.legacy:legacy-support-v4:$androidXLegacySupportV4Version"
     implementation "androidx.preference:preference:$preferenceVersion"
-    implementation 'com.google.android.material:material:1.2.1'
+    implementation "com.google.android.material:material:$materialVersion"
     implementation "com.android.volley:volley:$volleyVersion"
     implementation 'com.google.code.gson:gson:2.6.2'
 
