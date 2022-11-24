@@ -2,7 +2,6 @@ package org.wordpress.android.ui.jetpackoverlay
 
 import org.wordpress.android.R
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureOverlayScreenType
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureOverlayScreenType.SITE_CREATION
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseFour
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseNewUsers
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseOne
@@ -29,7 +28,6 @@ class JetpackFeatureOverlayContentBuilder @Inject constructor() {
             JetpackFeatureOverlayScreenType.STATS -> getStateForPhaseOneStats(params.isRtl)
             JetpackFeatureOverlayScreenType.NOTIFICATIONS -> getStateForPhaseOneNotifications(params.isRtl)
             JetpackFeatureOverlayScreenType.READER -> getStateForPhaseOneReader(params.isRtl)
-            SITE_CREATION -> TODO()
         }
         return JetpackFeatureOverlayUIState(componentVisibility, content)
     }

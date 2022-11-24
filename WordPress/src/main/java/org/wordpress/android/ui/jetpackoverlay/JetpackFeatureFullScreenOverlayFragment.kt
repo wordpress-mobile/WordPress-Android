@@ -105,7 +105,7 @@ class JetpackFeatureFullScreenOverlayFragment : BottomSheetDialogFragment() {
     private fun JetpackFeatureRemovalOverlayBinding.setClickListener(secondaryButtonVisible: Boolean) {
         primaryButton.setOnClickListener { viewModel.openJetpackAppDownloadLink() }
         closeButton.setOnClickListener { viewModel.closeBottomSheet() }
-        if (secondaryButtonVisible) secondaryButton.setOnClickListener { viewModel.dismissBottomSheet() }
+        if (secondaryButtonVisible) secondaryButton.setOnClickListener { viewModel.continueToFeature() }
     }
 
     private fun JetpackFeatureRemovalOverlayBinding.updateVisibility(
