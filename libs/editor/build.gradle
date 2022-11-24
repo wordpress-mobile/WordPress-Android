@@ -83,7 +83,7 @@ dependencies {
     implementation "org.wordpress:utils:$wordPressUtilsVersion"
 
     implementation "androidx.appcompat:appcompat:$appCompatVersion"
-    implementation 'androidx.vectordrawable:vectordrawable-animated:1.0.0'
+    implementation "androidx.vectordrawable:vectordrawable-animated:$androidxVectordrawableAnimatedVersion"
     implementation 'androidx.gridlayout:gridlayout:1.0.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation "androidx.preference:preference:$preferenceVersion"
