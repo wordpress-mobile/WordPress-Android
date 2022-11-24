@@ -56,7 +56,7 @@ class DeepLinkOpenWebLinksWithJetpackHelper @Inject constructor(
             return true
         } catch (ex: PackageManager.NameNotFoundException) {
             AppLog.e(T.UTILS, "Unable to set open web links with Jetpack ${ex.message}")
-        } 
+        }
         return false
     }
 

@@ -42,7 +42,12 @@ class JetpackFeatureFullScreenOverlayFragment : BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.init(getSiteScreen(), getIfSiteCreationOverlay(), getIfDeepLinkOverlay(), RtlUtils.isRtl(view.context))
+        viewModel.init(
+                getSiteScreen(),
+                getIfSiteCreationOverlay(),
+                getIfDeepLinkOverlay(),
+                RtlUtils.isRtl(view.context)
+        )
         binding.setupObservers()
 
         (dialog as? BottomSheetDialog)?.apply {

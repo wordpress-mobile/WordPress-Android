@@ -61,6 +61,7 @@ class JetpackFeatureFullScreenOverlayViewModel @Inject constructor(
         else jetpackFeatureRemovalOverlayUtil.trackBottomSheetDismissed(screenType, CLOSE_BUTTON)
     }
 
+    @Suppress("ReturnCount")
     fun init(
         overlayScreenType: JetpackFeatureOverlayScreenType?,
         isSiteCreationOverlay: Boolean,
