@@ -16,6 +16,7 @@ ext {
 
 ext {
     // libs
+    wordPressLintVersion = '1.1.0'
     fluxCVersion = '2.6.0'
     wordPressUtilsVersion = '3.1.0'
     wordPressLoginVersion = '1.0.0'

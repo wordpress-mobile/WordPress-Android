@@ -498,7 +498,7 @@ dependencies {
 
     // Enables Java 8+ API desugaring support
     coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:$coreLibraryDesugaringVersion"
-    lintChecks 'org.wordpress:lint:1.1.0'
+    lintChecks "org.wordpress:lint:$wordPressLintVersion"
 }
 
 configurations.all {

@@ -91,5 +91,5 @@ dependencies {
     implementation 'com.android.volley:volley:1.1.1'
     implementation 'com.google.code.gson:gson:2.6.2'
 
-    lintChecks 'org.wordpress:lint:1.1.0'
+    lintChecks "org.wordpress:lint:$wordPressLintVersion"
 }

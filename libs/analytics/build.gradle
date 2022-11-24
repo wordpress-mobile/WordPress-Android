@@ -19,7 +19,7 @@ dependencies {
 
     implementation "androidx.preference:preference:$preferenceVersion"
 
-    lintChecks 'org.wordpress:lint:1.1.0'
+    lintChecks "org.wordpress:lint:$wordPressLintVersion"
 }
 
 android {
