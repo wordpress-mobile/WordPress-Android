@@ -14,13 +14,18 @@ class JetpackAppMigrationFlowUtils @Inject constructor(
     private val contextProvider: ContextProvider,
     private val appPrefsWrapper: AppPrefsWrapper,
     private val accountStore: AccountStore,
+    private val appStatus: AppStatus,
+    private val wordPressPublicData: WordPressPublicData,
 ) {
     fun shouldShowMigrationFlow() = buildConfigWrapper.isJetpackApp
             && jetpackMigrationFlowFeatureConfig.isEnabled()
             && appPrefsWrapper.getIsFirstTrySharedLoginJetpack()
             && !accountStore.hasAccessToken()
+            && isWordPressInstalled()
 
     fun startJetpackMigrationFlow() {
         ActivityLauncher.startJetpackMigrationFlow(contextProvider.getContext())
     }
+
+    private fun isWordPressInstalled() = appStatus.isAppInstalled(wordPressPublicData.currentPackageId())
 }
