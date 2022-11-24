@@ -6,7 +6,7 @@ import org.wordpress.android.util.publicdata.WordPressPublicData.PackageName.Van
 import org.wordpress.android.util.publicdata.WordPressPublicData.PackageName.Wasabi
 import javax.inject.Inject
 
-class WordPressPublicData @Inject constructor() {
+class WordPressPublicData @Inject constructor(private val packageManagerWrapper: PackageManagerWrapper) {
     private sealed class PackageName(val type: String, val value: String) {
         object Jalapeno : PackageName("jalapeno", "org.wordpress.android.prealpha")
 
@@ -20,5 +20,16 @@ class WordPressPublicData @Inject constructor() {
         Vanilla.type -> Vanilla.value
         Wasabi.type -> Wasabi.value
         else -> throw IllegalArgumentException("Failed to get Jetpack package ID: build flavor not found.")
+    }
+
+    fun currentPackageVersion() = packageManagerWrapper.getPackageInfo(currentPackageId())?.versionName
+
+    fun nonSemanticPackageVersion(): String? {
+        val rawVersion = currentPackageVersion()
+
+        // Clean app semantic versioning info. E.g 21.2-rc-3 turns to 21.2
+        val wordPressVersion = rawVersion?.split("-")?.getOrNull(0) ?: rawVersion ?: ""
+
+        return if(Regex("^\\d+(\\.\\d+)*\$").matchEntire(wordPressVersion) != null) wordPressVersion else null
     }
 }
