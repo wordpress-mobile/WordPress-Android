@@ -435,7 +435,7 @@ class MySiteViewModel @Inject constructor(
                 }
         ).takeIf {
             val isJetpackApp = buildConfigWrapper.isJetpackApp
-            val isMigrationCompleted = true//appPrefsWrapper.isJetpackMigrationCompleted()
+            val isMigrationCompleted = appPrefsWrapper.isJetpackMigrationCompleted()
             val isWordPressInstalled = appStatus.isAppInstalled(wordPressPublicData.currentPackageId())
             isJetpackApp && isMigrationCompleted && isWordPressInstalled
         }
