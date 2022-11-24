@@ -60,6 +60,12 @@ class JetpackMigrationFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         observeViewModelEvents()
+        checkDeleteState()
+    }
+
+    private fun checkDeleteState() {
+        val showDeleteWpState = arguments?.getBoolean(KEY_SHOW_DELETE_WP_STATE, false) ?: false
+        viewModel.checkDeleteState(showDeleteWpState)
     }
 
     private fun observeViewModelEvents() {
@@ -102,6 +108,16 @@ class JetpackMigrationFragment : Fragment() {
     fun onSiteChanged(event: OnSiteChanged) {
         if (event.isError) return
         viewModel.onSiteListLoaded()
+    }
+
+    companion object {
+        private const val KEY_SHOW_DELETE_WP_STATE = "KEY_SHOW_DELETE_WP_STATE"
+        fun newInstance(showDeleteWpState: Boolean = false): JetpackMigrationFragment =
+                JetpackMigrationFragment().apply {
+                    arguments = Bundle().apply {
+                        putBoolean(KEY_SHOW_DELETE_WP_STATE, showDeleteWpState)
+                    }
+                }
     }
 }
 

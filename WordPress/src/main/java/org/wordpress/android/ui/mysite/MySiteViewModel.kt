@@ -431,7 +431,7 @@ class MySiteViewModel @Inject constructor(
                 textResource = R.string.jp_migration_success_card_message,
                 imageResource = R.drawable.ic_wordpress_blue_32dp,
                 onActionClick = {
-                    // TODO @RenanLukas: open success dialog https://github.com/wordpress-mobile/WordPress-Android/issues/17479
+                    _onNavigation.value = Event(SiteNavigationAction.OpenJetpackMigrationDeleteWP)
                 }
         ).takeIf {
             val isJetpackApp = buildConfigWrapper.isJetpackApp

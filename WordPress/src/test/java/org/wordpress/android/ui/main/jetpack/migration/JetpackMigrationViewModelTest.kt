@@ -45,6 +45,18 @@ class JetpackMigrationViewModelTest {
     fun `Should init Loading UiState as default`() {
         assertThat(classToTest.uiState.value).isInstanceOf(Loading::class.java)
     }
+    
+    @Test
+    fun `Should post Delete Content if checkDeleteState is called with showDeleteState TRUE`() {
+        classToTest.checkDeleteState(true)
+        assertThat(classToTest.uiState.value).isInstanceOf(Content.Delete::class.java)
+    }
+
+    @Test
+    fun `Should NOT post Delete Content if checkDeleteState is called with showDeleteState FALSE`() {
+        classToTest.checkDeleteState(false)
+        assertThat(classToTest.uiState.value).isNotInstanceOf(Content.Delete::class.java)
+    }
 
     @Test
     fun `Should init Welcome Content from onAccountInfoLoaded if isDataAvailable is TRUE`() {
@@ -57,6 +69,14 @@ class JetpackMigrationViewModelTest {
     @Test
     fun `Should NOT init Welcome Content from onAccountInfoLoaded if isDataAvailable is FALSE`() {
         setDataAvailable(false)
+        classToTest.onAccountInfoLoaded()
+        assertThat(classToTest.uiState.value).isNotInstanceOf(Content.Welcome::class.java)
+    }
+
+    @Test
+    fun `Should NOT init Welcome Content from onAccountInfoLoaded if showDeleteState is TRUE`() {
+        setDataAvailable(true)
+        classToTest.checkDeleteState(true)
         classToTest.onAccountInfoLoaded()
         assertThat(classToTest.uiState.value).isNotInstanceOf(Content.Welcome::class.java)
     }
@@ -101,6 +121,14 @@ class JetpackMigrationViewModelTest {
     @Test
     fun `Should NOT init Welcome Content from onSiteListLoaded if isDataAvailable is FALSE`() {
         setDataAvailable(false)
+        classToTest.onSiteListLoaded()
+        assertThat(classToTest.uiState.value).isNotInstanceOf(Content.Welcome::class.java)
+    }
+
+    @Test
+    fun `Should NOT init Welcome Content from onSiteListLoaded if showDeleteState is TRUE`() {
+        setDataAvailable(true)
+        classToTest.checkDeleteState(true)
         classToTest.onSiteListLoaded()
         assertThat(classToTest.uiState.value).isNotInstanceOf(Content.Welcome::class.java)
     }

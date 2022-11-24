@@ -13,6 +13,7 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.DeletePrimaryButton
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.DonePrimaryButton
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.ErrorPrimaryButton
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.ErrorSecondaryButton
@@ -44,16 +45,25 @@ class JetpackMigrationViewModel @Inject constructor(
     private val _actionEvents = Channel<JetpackMigrationActionEvent>(Channel.BUFFERED)
     val actionEvents = _actionEvents.receiveAsFlow()
 
+    private var showDeleteState = false
+
+    fun checkDeleteState(showDeleteState: Boolean) {
+        if (showDeleteState) {
+            postDeleteState()
+        }
+        this.showDeleteState = showDeleteState
+    }
+
     // TODO Review this after data sync work is done
     fun onAccountInfoLoaded() {
-        if (isDataAvailable()) {
+        if (isDataAvailable() && !showDeleteState) {
             initWelcomeState()
         }
     }
 
     // TODO Review this after data sync work is done
     fun onSiteListLoaded() {
-        if (isDataAvailable()) {
+        if (isDataAvailable() && !showDeleteState) {
             initWelcomeState()
         }
     }
@@ -102,6 +112,12 @@ class JetpackMigrationViewModel @Inject constructor(
         )
     }
 
+    private fun postDeleteState() {
+        _uiState.value = Content.Delete(
+                primaryActionButton = DeletePrimaryButton(::onGotItClicked),
+        )
+    }
+
     private fun onTryAgainClicked() {
         (_uiState.value as? UiState.Error)?.let {
             _uiState.value = it.copy(isProcessing = true)
@@ -138,6 +154,10 @@ class JetpackMigrationViewModel @Inject constructor(
 
     private fun onHelpClicked() {
         postActionEvent(ShowHelp)
+    }
+
+    private fun onGotItClicked() {
+        postActionEvent(CompleteFlow)
     }
 
     private fun getSiteList(): List<SiteListItemUiState> {
