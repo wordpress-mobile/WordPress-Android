@@ -25,6 +25,7 @@ class MobilePayRestClient @Inject constructor(
     userAgent: UserAgent
 ) : BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {
 
+    @Suppress("LongParameterList")
     suspend fun createOrder(
         productIdentifier: String,
         priceInCents: Int,

@@ -9,6 +9,7 @@ class MobilePayStore @Inject constructor(
     private val restClient: MobilePayRestClient,
     private val coroutineEngine: CoroutineEngine
 ) {
+    @Suppress("LongParameterList")
     suspend fun createOrder(
         productIdentifier: String,
         priceInCents: Int,
