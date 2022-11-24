@@ -4285,13 +4285,13 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="deep_linking_urilinks_alias_label">urilinks</string>
     <string name="deep_linking_weblinks_alias_label">weblinks</string>
 
-    <string name="wp_jetpack_feature_removal_site_creation_overlay_title" translatable="false">Create a new WordPress site with the Jetpack app</string>
-    <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_one_description" translatable="false">Jetpack provides stats, notifications and more to help you build and grow the WordPress site of your dreams.</string>
-    <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_two_description" translatable="false">Jetpack provides stats, notifications and more to help you build and grow the WordPress site of your dreams.\n\nThe WordPress app no longer supports creating a new site.</string>
+    <string name="wp_jetpack_feature_removal_site_creation_overlay_title">Create a new WordPress site with the Jetpack app</string>
+    <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_one_description">Jetpack provides stats, notifications and more to help you build and grow the WordPress site of your dreams.</string>
+    <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_two_description">Jetpack provides stats, notifications and more to help you build and grow the WordPress site of your dreams.\n\nThe WordPress app no longer supports creating a new site.</string>
     <string name="wp_jetpack_continue_without_jetpack">Continue without Jetpack</string>
 
     <string name="wp_jetpack_deep_link_overlay_title">Open web links in Jetpack</string>
-    <string name="wp_jetpack_deep_link_overlay_description">Links are currently opening in the WordPress app. Would you like to open links in the Jetpack app instead? You can always change this in App Settings > Open web links in Jetpack</string>
+    <string name="wp_jetpack_deep_link_overlay_description">Links are currently opening in the WordPress app.\n\nWould you like to open links in the Jetpack app instead?\n\You can always change this in App Settings > Open web links in Jetpack</string>
     <string name="wp_jetpack_deep_link_open_with_jetpack">Open with Jetpack</string>
 
 </resources>
