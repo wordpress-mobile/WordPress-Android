@@ -229,7 +229,9 @@ class JetpackMigrationViewModel @Inject constructor(
                     title = UiStringRes(R.string.jp_migration_delete_title),
                     subtitle = UiStringRes(R.string.jp_migration_delete_subtitle),
                     message = UiStringRes(R.string.jp_migration_delete_message),
-            )
+            ) {
+                val deleteWpIcon = R.drawable.ic_jetpack_migration_delete_wp
+            }
         }
 
         data class Error(
