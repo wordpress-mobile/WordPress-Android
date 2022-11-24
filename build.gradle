@@ -53,6 +53,7 @@ ext {
     httpClientAndroidVersion = '4.3.5.1'
     volleyVersion = '1.1.1'
     jsoupVersion = '1.10.3'
+    gsonVersion = '2.6.2'
 
     // test
     jUnitVersion = '4.13'
