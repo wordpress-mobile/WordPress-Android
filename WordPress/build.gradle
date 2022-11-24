@@ -391,7 +391,7 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-process:$lifecycleVersion"
-    implementation 'com.android.volley:volley:1.1.1'
+    implementation "com.android.volley:volley:$volleyVersion"
     implementation 'com.google.firebase:firebase-messaging:21.1.0'
     implementation 'com.google.android.gms:play-services-auth:20.3.0'
     implementation 'com.android.installreferrer:installreferrer:2.2'

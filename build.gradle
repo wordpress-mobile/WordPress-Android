@@ -47,6 +47,7 @@ ext {
     autoServiceVersion = '1.0'
     commonsText = '1.10.0'
     httpClientAndroidVersion = '4.3.5.1'
+    volleyVersion = '1.1.1'
 
     // test
     jUnitVersion = '4.13'
