@@ -47,7 +47,6 @@ class DeepLinkingIntentReceiverViewModel
     val toast = deepLinkHandlers.toast
     private var action: String? = null
     private var uriWrapper: UriWrapper? = null
-    private var uri: Uri? = null
     private var deepLinkEntryPoint = DeepLinkEntryPoint.DEFAULT
 
     fun start(
@@ -147,7 +146,7 @@ class DeepLinkingIntentReceiverViewModel
 
     private fun extractSavedInstanceStateIfNeeded(savedInstanceState: Bundle?) {
         savedInstanceState?.let {
-            uri = savedInstanceState.getParcelable(URI_KEY)
+            val uri: Uri? = savedInstanceState.getParcelable(URI_KEY)
             uriWrapper = uri?.let { UriWrapper(it) }
             deepLinkEntryPoint =
                     DeepLinkEntryPoint.valueOf(
