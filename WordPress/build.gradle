@@ -374,7 +374,7 @@ dependencies {
     implementation "androidx.fragment:fragment:$fragmentVersion"
     implementation "androidx.fragment:fragment-ktx:$fragmentVersion"
     implementation 'androidx.multidex:multidex:2.0.1'
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation "androidx.legacy:legacy-support-v4:$androidXLegacySupportV4Version"
     implementation 'androidx.exifinterface:exifinterface:1.0.0'
     implementation 'androidx.media:media:1.0.1'
     implementation "androidx.appcompat:appcompat:$appCompatVersion"

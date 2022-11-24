@@ -85,7 +85,7 @@ dependencies {
     implementation "androidx.appcompat:appcompat:$appCompatVersion"
     implementation "androidx.vectordrawable:vectordrawable-animated:$androidxVectordrawableAnimatedVersion"
     implementation "androidx.gridlayout:gridlayout:$androidxGridlayoutVersion"
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation "androidx.legacy:legacy-support-v4:$androidXLegacySupportV4Version"
     implementation "androidx.preference:preference:$preferenceVersion"
     implementation 'com.google.android.material:material:1.2.1'
     implementation "com.android.volley:volley:$volleyVersion"
