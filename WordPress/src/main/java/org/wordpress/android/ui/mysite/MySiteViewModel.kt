@@ -40,6 +40,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.InfoItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.SingleActionCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.JetpackBadge
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoHeaderCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type
@@ -116,6 +117,8 @@ import org.wordpress.android.util.filter
 import org.wordpress.android.util.getEmailValidationMessage
 import org.wordpress.android.util.map
 import org.wordpress.android.util.merge
+import org.wordpress.android.util.publicdata.AppStatus
+import org.wordpress.android.util.publicdata.WordPressPublicData
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -125,7 +128,7 @@ import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
 
-@Suppress("LargeClass", "LongMethod")
+@Suppress("LargeClass", "LongMethod", "LongParameterList")
 class MySiteViewModel @Inject constructor(
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     @param:Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
@@ -162,7 +165,9 @@ class MySiteViewModel @Inject constructor(
     private val appPrefsWrapper: AppPrefsWrapper,
     private val bloggingPromptsCardAnalyticsTracker: BloggingPromptsCardAnalyticsTracker,
     private val quickStartTracker: QuickStartTracker,
-    private val dispatcher: Dispatcher
+    private val dispatcher: Dispatcher,
+    private val appStatus: AppStatus,
+    private val wordPressPublicData: WordPressPublicData
 ) : ScopedViewModel(mainDispatcher) {
     private var isDefaultTabSet: Boolean = false
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
@@ -422,6 +427,18 @@ class MySiteViewModel @Inject constructor(
                         isStaleMessagePresent = cardsUpdate?.showStaleMessage ?: false
                 )
         )
+        val migrationSuccessCard = SingleActionCard(
+                textResource = R.string.jp_migration_success_card_message,
+                imageResource = R.drawable.ic_wordpress_blue_32dp,
+                onActionClick = {
+                    // TODO @RenanLukas: open success dialog https://github.com/wordpress-mobile/WordPress-Android/issues/17479
+                }
+        ).takeIf {
+            val isJetpackApp = buildConfigWrapper.isJetpackApp
+            val isMigrationCompleted = appPrefsWrapper.isJetpackMigrationCompleted()
+            val isWordPressInstalled = appStatus.isAppInstalled(wordPressPublicData.currentPackageId())
+            isJetpackApp && isMigrationCompleted && isWordPressInstalled
+        }
         val cardsResult = cardsBuilder.build(
                 QuickActionsCardBuilderParams(
                         siteModel = site,
@@ -505,28 +522,39 @@ class MySiteViewModel @Inject constructor(
 
         return mapOf(
                 MySiteTabType.ALL to orderForDisplay(
-                        infoItem,
-                        cardsResult,
-                        dynamicCards,
-                        siteItems,
-                        jetpackBadge
+                        infoItem = infoItem,
+                        migrationSuccessCard = migrationSuccessCard,
+                        cards = cardsResult,
+                        dynamicCards = dynamicCards,
+                        siteItems = siteItems,
+                        jetpackBadge = jetpackBadge
                 ),
                 MySiteTabType.SITE_MENU to orderForDisplay(
-                        infoItem,
-                        cardsResult.filterNot {
+                        infoItem = infoItem,
+                        migrationSuccessCard = migrationSuccessCard,
+                        cards = cardsResult.filterNot {
                             getCardTypeExclusionFiltersForTab(MySiteTabType.SITE_MENU).contains(it.type)
                         },
-                        if (shouldIncludeDynamicCards(MySiteTabType.SITE_MENU)) dynamicCards else listOf(),
-                        siteItems
+                        dynamicCards = if (shouldIncludeDynamicCards(MySiteTabType.SITE_MENU)) {
+                            dynamicCards
+                        } else {
+                            listOf()
+                        },
+                        siteItems = siteItems
                 ),
                 MySiteTabType.DASHBOARD to orderForDisplay(
-                        infoItem,
-                        cardsResult.filterNot {
+                        infoItem = infoItem,
+                        migrationSuccessCard = migrationSuccessCard,
+                        cards = cardsResult.filterNot {
                             getCardTypeExclusionFiltersForTab(MySiteTabType.DASHBOARD).contains(it.type)
                         },
-                        if (shouldIncludeDynamicCards(MySiteTabType.DASHBOARD)) dynamicCards else listOf(),
-                        listOf(),
-                        jetpackBadge
+                        dynamicCards = if (shouldIncludeDynamicCards(MySiteTabType.DASHBOARD)) {
+                            dynamicCards
+                        } else {
+                            listOf()
+                        },
+                        siteItems = listOf(),
+                        jetpackBadge = jetpackBadge
                 )
         )
     }
@@ -606,6 +634,7 @@ class MySiteViewModel @Inject constructor(
 
     private fun orderForDisplay(
         infoItem: InfoItem?,
+        migrationSuccessCard: SingleActionCard? = null,
         cards: List<MySiteCardAndItem>,
         dynamicCards: List<MySiteCardAndItem>,
         siteItems: List<MySiteCardAndItem>,
@@ -614,6 +643,7 @@ class MySiteViewModel @Inject constructor(
         val indexOfDashboardCards = cards.indexOfFirst { it is DashboardCards }
         return mutableListOf<MySiteCardAndItem>().apply {
             infoItem?.let { add(infoItem) }
+            migrationSuccessCard?.let { add(migrationSuccessCard) }
             addAll(cards)
             if (indexOfDashboardCards == -1) {
                 addAll(dynamicCards)

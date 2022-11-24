@@ -10,6 +10,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.DynamicCard.QuickStartD
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.CategoryHeaderItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.InfoItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.ListItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.SingleActionCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.JetpackBadge
 
 @Suppress("ComplexMethod")
@@ -26,6 +27,7 @@ object MySiteAdapterDiffCallback : DiffUtil.ItemCallback<MySiteCardAndItem>() {
             oldItem is ListItem && updatedItem is ListItem -> oldItem.primaryText == updatedItem.primaryText
             oldItem is DashboardCards && updatedItem is DashboardCards -> true
             oldItem is JetpackBadge && updatedItem is JetpackBadge -> true
+            oldItem is SingleActionCard && updatedItem is SingleActionCard -> oldItem == updatedItem
             else -> throw UnsupportedOperationException("Diff not implemented yet")
         }
     }

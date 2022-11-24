@@ -2,7 +2,10 @@
 
 21.3
 -----
+* [*] Disable local notifications with Notification Settings switch. [https://github.com/wordpress-mobile/WordPress-Android/pull/17496]
 * [*] [Jetpack-only] Comments: fix a crash in My Site > Comments with Jetpack standalone plugins. [https://github.com/wordpress-mobile/WordPress-Android/pull/17456]
+* [*] [internal] Fix an issue preventing the text and button on the 'WordPress is Better with Jetpack' overlay to be entirely visible with big fonts. [https://github.com/wordpress-mobile/WordPress-Android/pull/17503]
+* [*] [internal] Avoid truncation of the 'Try the new Jetpack app' button text on the Jetpack Powered bottom sheets with big fonts. [https://github.com/wordpress-mobile/WordPress-Android/pull/17511]
 
 21.2
 -----

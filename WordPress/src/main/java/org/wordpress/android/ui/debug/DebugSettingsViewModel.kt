@@ -25,7 +25,7 @@ import org.wordpress.android.ui.utils.ListItemInteraction.Companion.create
 import org.wordpress.android.util.DebugUtils
 import org.wordpress.android.util.config.FeaturesInDevelopment
 import org.wordpress.android.util.config.ManualFeatureConfig
-import org.wordpress.android.util.config.RemoteConfig
+import org.wordpress.android.util.config.FeatureFlagConfig
 import org.wordpress.android.util.config.RemoteConfigDefaults
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.Event
@@ -39,7 +39,7 @@ class DebugSettingsViewModel
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val manualFeatureConfig: ManualFeatureConfig,
-    private val remoteConfig: RemoteConfig,
+    private val featureFlagConfig: FeatureFlagConfig,
     private val debugUtils: DebugUtils,
     private val weeklyRoundupNotifier: WeeklyRoundupNotifier,
     private val notificationManager: NotificationManagerWrapper,
@@ -97,7 +97,7 @@ class DebugSettingsViewModel
                 null
             }
             Feature(name, value, ToggleAction(name, value?.not() ?: true, this::toggleFeature))
-        }
+        }.sortedBy { it.title}
     }
 
     private fun buildRemoteFeatures(): List<Feature> {
@@ -106,7 +106,7 @@ class DebugSettingsViewModel
                 manualFeatureConfig.isManuallyEnabled(key)
             } else {
                 when (defaultValue.toString()) {
-                    "true", "false" -> remoteConfig.isEnabled(key)
+                    "true", "false" -> featureFlagConfig.isEnabled(key)
                     else -> null
                 }
             }
@@ -115,7 +115,7 @@ class DebugSettingsViewModel
             } else {
                 null
             }
-        }
+        }.sortedBy { it.title }
     }
 
     private fun toggleFeature(remoteKey: String, value: Boolean) {

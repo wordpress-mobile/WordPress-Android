@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.deeplinks;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -10,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.RequestCodes;
+import org.wordpress.android.util.PackageManagerWrapper;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UriWrapper;
 
@@ -25,11 +25,10 @@ import static org.wordpress.android.WordPress.getContext;
  * Redirects users to the reader activity along with IDs passed in the intent
  */
 public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
-    private static final String URI_KEY = "uri_key";
-
     @Inject DeepLinkNavigator mDeeplinkNavigator;
     @Inject DeepLinkUriUtils mDeepLinkUriUtils;
     @Inject ViewModelProvider.Factory mViewModelFactory;
+    @Inject PackageManagerWrapper mPackageManagerWrapper;
     private DeepLinkingIntentReceiverViewModel mViewModel;
 
     @Override
@@ -37,31 +36,20 @@ public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
         mViewModel = new ViewModelProvider(this, mViewModelFactory).get(DeepLinkingIntentReceiverViewModel.class);
-        String action = null;
-        Uri uri;
-        if (savedInstanceState == null) {
-            action = getIntent().getAction();
-            uri = getIntent().getData();
-        } else {
-            uri = savedInstanceState.getParcelable(URI_KEY);
-        }
 
         setupObservers();
 
-        UriWrapper uriWrapper = null;
-        if (uri != null) {
-            uriWrapper = new UriWrapper(uri);
-        }
-        mViewModel.start(action, uriWrapper);
+        mViewModel.start(
+                getIntent().getAction(),
+                (getIntent().getData() == null) ? null : new UriWrapper(getIntent().getData()),
+                extractEntryPoint(getIntent()),
+                savedInstanceState);
     }
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
+        mViewModel.writeToBundle(outState);
         super.onSaveInstanceState(outState);
-        UriWrapper cachedUri = mViewModel.getCachedUri();
-        if (cachedUri != null) {
-            outState.putParcelable(URI_KEY, cachedUri.getUri());
-        }
     }
 
     private void setupObservers() {
@@ -79,6 +67,11 @@ public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
             ToastUtils.showToast(getContext(), toastMessage);
             return null;
         }));
+    }
+
+
+    private DeepLinkEntryPoint extractEntryPoint(Intent intent) {
+        return DeepLinkEntryPoint.fromResId(mPackageManagerWrapper.getActivityLabelResFromIntent(intent));
     }
 
     @Override

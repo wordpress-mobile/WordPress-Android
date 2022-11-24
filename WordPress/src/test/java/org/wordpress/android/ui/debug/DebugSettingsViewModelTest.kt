@@ -22,13 +22,13 @@ import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiState
 import org.wordpress.android.ui.notifications.NotificationManagerWrapper
 import org.wordpress.android.util.DebugUtils
 import org.wordpress.android.util.config.ManualFeatureConfig
-import org.wordpress.android.util.config.RemoteConfig
+import org.wordpress.android.util.config.FeatureFlagConfig
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.workers.weeklyroundup.WeeklyRoundupNotifier
 
 class DebugSettingsViewModelTest : BaseUnitTest() {
     @Mock lateinit var manualFeatureConfig: ManualFeatureConfig
-    @Mock lateinit var remoteConfig: RemoteConfig
+    @Mock lateinit var featureFlagConfig: FeatureFlagConfig
     @Mock lateinit var debugUtils: DebugUtils
     @Mock lateinit var weeklyRoundupNotifier: WeeklyRoundupNotifier
     @Mock lateinit var notificationManager: NotificationManagerWrapper
@@ -43,7 +43,7 @@ class DebugSettingsViewModelTest : BaseUnitTest() {
                 TEST_DISPATCHER,
                 TEST_DISPATCHER,
                 manualFeatureConfig,
-                remoteConfig,
+                featureFlagConfig,
                 debugUtils,
                 weeklyRoundupNotifier,
                 notificationManager,
@@ -84,7 +84,7 @@ class DebugSettingsViewModelTest : BaseUnitTest() {
 
     @Test
     fun `toggle item changes value and reloads data`() {
-        whenever(remoteConfig.isEnabled(any())).thenReturn(false)
+        whenever(featureFlagConfig.isEnabled(any())).thenReturn(false)
         setup()
 
         viewModel.start()
@@ -93,7 +93,7 @@ class DebugSettingsViewModelTest : BaseUnitTest() {
 
         val featureKey = toggledItem.title
 
-        whenever(remoteConfig.isEnabled(featureKey)).thenReturn(true)
+        whenever(featureFlagConfig.isEnabled(featureKey)).thenReturn(true)
 
         toggledItem.toggleAction.toggle()
 
@@ -103,7 +103,7 @@ class DebugSettingsViewModelTest : BaseUnitTest() {
 
     @Test
     fun `toggle item adds restart button at the end`() {
-        whenever(remoteConfig.isEnabled(any())).thenReturn(false)
+        whenever(featureFlagConfig.isEnabled(any())).thenReturn(false)
         setup()
 
         viewModel.start()
