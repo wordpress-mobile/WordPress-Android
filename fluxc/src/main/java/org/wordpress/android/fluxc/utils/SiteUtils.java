@@ -3,6 +3,7 @@ package org.wordpress.android.fluxc.utils;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import org.apache.commons.lang3.StringUtils;
 import org.wordpress.android.fluxc.model.PostFormatModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.util.MapUtils;
@@ -14,8 +15,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
-
-import static org.apache.commons.lang3.StringUtils.split;
 
 public class SiteUtils {
     /**
@@ -82,7 +81,7 @@ public class SiteUtils {
         if (wpTimeZone == null || wpTimeZone.isEmpty() || wpTimeZone.equals("0") || wpTimeZone.equals("0.0")) {
             timezoneNormalized = "GMT";
         } else {
-            String[] timezoneSplit = split(wpTimeZone, ".");
+            String[] timezoneSplit = StringUtils.split(wpTimeZone, ".");
             timezoneNormalized = timezoneSplit[0];
             if (timezoneSplit.length > 1) {
                 switch (timezoneSplit[1]) {
