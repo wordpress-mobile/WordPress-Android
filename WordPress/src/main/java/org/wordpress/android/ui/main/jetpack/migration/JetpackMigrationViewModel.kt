@@ -81,10 +81,7 @@ class JetpackMigrationViewModel @Inject constructor(
                 )
                 else -> emit(
                         Done(
-                                primaryActionButton = DonePrimaryButton{
-                                    appPrefsWrapper.setJetpackMigrationCompleted(true)
-                                    onDoneClicked()
-                                }
+                                primaryActionButton = DonePrimaryButton(::onDoneClicked)
                         )
                 )
             }
@@ -165,6 +162,7 @@ class JetpackMigrationViewModel @Inject constructor(
     }
 
     private fun onDoneClicked() {
+        appPrefsWrapper.setJetpackMigrationCompleted(true)
         postActionEvent(CompleteFlow)
     }
 
