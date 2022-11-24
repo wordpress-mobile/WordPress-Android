@@ -4,13 +4,16 @@ import android.net.Uri
 import android.os.Bundle
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DEEP_LINKED
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.deeplinks.DeepLinkEntryPoint.WEB_LINKS
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.LoginForResult
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenInBrowser
+import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenJetpackForDeepLink
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenLoginPrologue
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.ShowSignInFlow
 import org.wordpress.android.ui.deeplinks.handlers.DeepLinkHandlers
@@ -22,8 +25,9 @@ import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
 
+@HiltViewModel
+@Suppress("LongParameterList", "TooManyFunctions")
 class DeepLinkingIntentReceiverViewModel
-@Suppress("LongParameterList")
 @Inject constructor(
     @Named(UI_THREAD) private val uiDispatcher: CoroutineDispatcher,
     private val deepLinkHandlers: DeepLinkHandlers,
@@ -31,18 +35,19 @@ class DeepLinkingIntentReceiverViewModel
     private val accountStore: AccountStore,
     private val serverTrackingHandler: ServerTrackingHandler,
     private val deepLinkTrackingUtils: DeepLinkTrackingUtils,
-    private val analyticsUtilsWrapper: AnalyticsUtilsWrapper
+    private val analyticsUtilsWrapper: AnalyticsUtilsWrapper,
+    private val openWebLinksWithJetpackHelper: DeepLinkOpenWebLinksWithJetpackHelper
 ) : ScopedViewModel(uiDispatcher) {
     private val _navigateAction = MutableLiveData<Event<NavigateAction>>()
     val navigateAction = _navigateAction as LiveData<Event<NavigateAction>>
     private val _finish = MutableLiveData<Event<Unit>>()
     val finish = _finish as LiveData<Event<Unit>>
+    private val _showOpenWebLinksWithJetpackOverlay = MutableLiveData<Event<Unit>>()
+    val showOpenWebLinksWithJetpackOverlay = _showOpenWebLinksWithJetpackOverlay as LiveData<Event<Unit>>
     val toast = deepLinkHandlers.toast
     private var action: String? = null
     private var uriWrapper: UriWrapper? = null
-    private var uri: Uri? = null
     private var deepLinkEntryPoint = DeepLinkEntryPoint.DEFAULT
-    private var showOverlay = false
 
     fun start(
         action: String?,
@@ -57,7 +62,7 @@ class DeepLinkingIntentReceiverViewModel
             handleRequest()
     }
 
-    private fun handleRequest() {
+    fun handleRequest() {
         uriWrapper?.let { uri ->
             if (!handleUrl(uri, action)) {
                 trackWithDeepLinkDataAndFinish()
@@ -85,6 +90,16 @@ class DeepLinkingIntentReceiverViewModel
         outState.putString(DEEP_LINK_ENTRY_POINT_KEY, deepLinkEntryPoint.name)
     }
 
+    fun forwardDeepLinkToJetpack() {
+        uriWrapper?.let {
+            if (openWebLinksWithJetpackHelper.handleOpenWebLinksWithJetpack()) {
+                _navigateAction.value = Event(OpenJetpackForDeepLink(action = action, uri = it))
+            } else {
+                handleRequest()
+            }
+        }?: handleRequest()
+    }
+
     /**
      * Handles the following URLs
      * `wordpress.com/post...`
@@ -98,7 +113,7 @@ class DeepLinkingIntentReceiverViewModel
                 deepLinkTrackingUtils.track(action, it, uriWrapper)
             }
             if (loginIsUnnecessary(it)) {
-                _navigateAction.value = Event(it)
+                 _navigateAction.value = Event(it)
             } else {
                 _navigateAction.value = Event(LoginForResult)
             }
@@ -131,7 +146,7 @@ class DeepLinkingIntentReceiverViewModel
 
     private fun extractSavedInstanceStateIfNeeded(savedInstanceState: Bundle?) {
         savedInstanceState?.let {
-            uri = savedInstanceState.getParcelable(URI_KEY)
+            val uri: Uri? = savedInstanceState.getParcelable(URI_KEY)
             uriWrapper = uri?.let { UriWrapper(it) }
             deepLinkEntryPoint =
                     DeepLinkEntryPoint.valueOf(
@@ -153,7 +168,14 @@ class DeepLinkingIntentReceiverViewModel
     }
 
     private fun checkAndShowOpenWebLinksWithJetpackOverlayIfNeeded() : Boolean {
-        return showOverlay
+        return if (deepLinkEntryPoint == WEB_LINKS &&
+                accountStore.hasAccessToken() && // Already logged in
+                openWebLinksWithJetpackHelper.shouldShowDeepLinkOpenWebLinksWithJetpackOverlay()) {
+            _showOpenWebLinksWithJetpackOverlay.value = Event(Unit)
+            true
+        } else {
+            false
+        }
     }
 
     override fun onCleared() {

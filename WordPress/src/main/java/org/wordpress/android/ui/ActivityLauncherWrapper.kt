@@ -7,7 +7,6 @@ import android.net.Uri
 import dagger.Reusable
 import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.ui.deeplinks.DeepLinkingIntentReceiverActivity
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewType
 import javax.inject.Inject
 
@@ -42,15 +41,6 @@ class ActivityLauncherWrapper @Inject constructor() {
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 setPackage("com.android.vending")
             }
-        }
-        context.startActivity(intent)
-    }
-
-    fun forwardDeepLinkIntent(context: Context, deepLinkIntent: Intent) {
-        val intent = Intent(context, DeepLinkingIntentReceiverActivity::class.java).apply {
-            action = deepLinkIntent.action
-            data = deepLinkIntent.data
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK
         }
         context.startActivity(intent)
     }
