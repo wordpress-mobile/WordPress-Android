@@ -37,6 +37,11 @@ class DeepLinkOpenWebLinksWithJetpackHelper @Inject constructor(
         }
     }
 
+    fun handleJetpackUninstalled() {
+        enableDisableOpenWithJetpackComponents(false)
+        appPrefsWrapper.setIsOpenWebLinksWithJetpack(false)
+    }
+
     private fun showOverlay() : Boolean {
         return openWebLinksWithJetpackFlowFeatureConfig.isEnabled()
                 && isJetpackInstalled()
