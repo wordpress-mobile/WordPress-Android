@@ -398,7 +398,7 @@ dependencies {
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
     implementation 'org.greenrobot:eventbus:3.3.1'
     implementation 'com.squareup.okio:okio:2.8.0'
-    implementation "org.apache.commons:commons-text:$commonsText"
+    implementation "org.apache.commons:commons-text:$commonsTextVersion"
     implementation 'com.airbnb.android:lottie:3.4.0'
     implementation 'com.facebook.shimmer:shimmer:0.5.0'
     implementation ("com.github.yalantis:ucrop:$uCropVersion") {
