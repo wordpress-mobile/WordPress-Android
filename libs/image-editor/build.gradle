@@ -42,23 +42,14 @@ repositories {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    // UI
     implementation "androidx.appcompat:appcompat:$appCompatVersion"
     implementation "androidx.constraintlayout:constraintlayout:$constraintLayoutVersion"
     implementation "androidx.viewpager2:viewpager2:1.0.0"
-
-    // Material
     implementation "com.google.android.material:material:$materialVersion"
-
-    // Navigation
     implementation "androidx.navigation:navigation-fragment-ktx:$gradle.ext.navComponentVersion"
     implementation "androidx.navigation:navigation-ui-ktx:$gradle.ext.navComponentVersion"
-
-    // ViewModel and LiveData
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion"
-
-    // uCrop
     implementation ("com.github.yalantis:ucrop:$uCropVersion") {
         exclude group: 'com.squareup.okhttp3'
         exclude group: 'androidx.core', module: 'core'
@@ -66,7 +57,6 @@ dependencies {
         exclude group: 'androidx.appcompat', module: 'appcompat'
     }
 
-    // Testing
     testImplementation "org.mockito.kotlin:mockito-kotlin:$mockitoKotlinVersion"
     testImplementation "junit:junit:$jUnitVersion"
     testImplementation "org.assertj:assertj-core:$assertJVersion"
