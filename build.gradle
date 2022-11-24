@@ -34,6 +34,7 @@ ext {
     androidxArchCoreVersion = '2.0.0'
     androidxViewpager2Version = '1.0.0'
     androidxVectordrawableAnimatedVersion = '1.0.0'
+    androidxGridlayoutVersion = '1.0.0'
     fragmentVersion = '1.4.1'
     constraintLayoutVersion = '1.1.3'
     materialVersion = '1.2.1'
