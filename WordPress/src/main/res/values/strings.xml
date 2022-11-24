@@ -4284,4 +4284,10 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <!-- Deep Linking Activity Aliases -->
     <string name="deep_linking_urilinks_alias_label">urilinks</string>
     <string name="deep_linking_weblinks_alias_label">weblinks</string>
+
+    <string name="wp_jetpack_feature_removal_site_creation_overlay_title" translatable="false">Create a new WordPress site with the Jetpack app</string>
+    <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_one_description" translatable="false">Jetpack provides stats, notifications and more to help you build and grow the WordPress site of your dreams.</string>
+    <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_two_description" translatable="false">Jetpack provides stats, notifications and more to help you build and grow the WordPress site of your dreams.\n\nThe WordPress app no longer supports creating a new site.</string>
+    <string name="wp_jetpack_continue_without_jetpack">Continue without Jetpack</string>
+
 </resources>

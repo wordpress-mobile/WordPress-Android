@@ -41,6 +41,24 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
         )
     }
 
+    fun shouldShowSiteCreationOverlay(): Boolean {
+        return !buildConfigWrapper.isJetpackApp && isInSiteCreationPhase()
+    }
+
+    fun shouldDisableSiteCreation(): Boolean {
+        return shouldShowSiteCreationOverlay() &&
+                jetpackFeatureRemovalPhaseHelper.getSiteCreationPhase() ==
+                JetpackFeatureRemovalSiteCreationPhase.PHASE_TWO
+    }
+
+    private fun isInSiteCreationPhase(): Boolean {
+        return when (jetpackFeatureRemovalPhaseHelper.getSiteCreationPhase()) {
+            null -> false
+            JetpackFeatureRemovalSiteCreationPhase.PHASE_ONE,
+            JetpackFeatureRemovalSiteCreationPhase.PHASE_TWO -> true
+        }
+    }
+
     private fun isInFeatureSpecificRemovalPhase(): Boolean {
         return jetpackFeatureRemovalPhaseHelper.getCurrentPhase() != null &&
                 when (jetpackFeatureRemovalPhaseHelper.getCurrentPhase()) {
@@ -155,6 +173,36 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
                 mapOf(
                         CURRENT_PHASE_KEY to jetpackFeatureRemovalPhaseHelper.getCurrentPhase()?.trackingName,
                         SCREEN_TYPE_KEY to screenType.trackingName
+                )
+        )
+    }
+
+    fun trackSiteCreationOverlayShown() {
+        analyticsTrackerWrapper.track(
+                AnalyticsTracker.Stat.JETPACK_REMOVE_SITE_CREATION_OVERLAY_DISPLAYED,
+                mapOf(
+                        CURRENT_PHASE_KEY to jetpackFeatureRemovalPhaseHelper.getSiteCreationPhase()?.trackingName
+                )
+        )
+    }
+
+    fun trackInstallJetpackTappedInSiteCreationOverlay() {
+        analyticsTrackerWrapper.track(
+                AnalyticsTracker.Stat.JETPACK_REMOVE_SITE_CREATION_OVERLAY_BUTTON_GET_JETPACK_APP_TAPPED,
+                mapOf(
+                        CURRENT_PHASE_KEY to jetpackFeatureRemovalPhaseHelper.getSiteCreationPhase()?.trackingName
+                )
+        )
+    }
+
+    fun trackBottomSheetDismissedInSiteCreationOverlay(
+        dismissalType: JetpackOverlayDismissalType
+    ) {
+        analyticsTrackerWrapper.track(
+                AnalyticsTracker.Stat.JETPACK_REMOVE_SITE_CREATION_OVERLAY_DISMISSED,
+                mapOf(
+                        CURRENT_PHASE_KEY to jetpackFeatureRemovalPhaseHelper.getSiteCreationPhase()?.trackingName,
+                        DISMISSAL_TYPE_KEY to dismissalType.trackingName
                 )
         )
     }

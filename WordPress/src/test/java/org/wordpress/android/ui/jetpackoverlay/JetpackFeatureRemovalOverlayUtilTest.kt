@@ -150,6 +150,51 @@ class JetpackFeatureRemovalOverlayUtilTest {
         assertTrue(shouldShowOverlay)
     }
 
+    @Test
+    fun `given jetpack app, shouldShowSiteCreationOverlay invoked, then return false`() {
+        whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
+
+        val shouldShowOverlay = jetpackFeatureRemovalOverlayUtil
+                .shouldShowSiteCreationOverlay()
+
+        assertFalse(shouldShowOverlay)
+    }
+
+    @Test
+    @Suppress("MaxLineLength")
+    fun `given feature removal not started, when shouldShowSiteCreationOverlay invoked, then return false`() {
+        whenever(jetpackFeatureRemovalPhaseHelper.getSiteCreationPhase()).thenReturn(null)
+
+        val shouldShowOverlay = jetpackFeatureRemovalOverlayUtil
+                .shouldShowSiteCreationOverlay()
+
+        assertFalse(shouldShowOverlay)
+    }
+
+    @Test
+    @Suppress("MaxLineLength")
+    fun `given feature removal in phase one, when shouldShowSiteCreationOverlay invoked, then return false`() {
+        whenever(jetpackFeatureRemovalPhaseHelper.getSiteCreationPhase())
+                .thenReturn(JetpackFeatureRemovalSiteCreationPhase.PHASE_ONE)
+
+        val shouldShowOverlay = jetpackFeatureRemovalOverlayUtil
+                .shouldShowSiteCreationOverlay()
+
+        assertTrue(shouldShowOverlay)
+    }
+
+    @Test
+    @Suppress("MaxLineLength")
+    fun `given feature removal in phase four, when shouldShowSiteCreationOverlay invoked, then return false`() {
+        whenever(jetpackFeatureRemovalPhaseHelper.getSiteCreationPhase())
+                .thenReturn(JetpackFeatureRemovalSiteCreationPhase.PHASE_TWO)
+
+        val shouldShowOverlay = jetpackFeatureRemovalOverlayUtil
+                .shouldShowSiteCreationOverlay()
+
+        assertTrue(shouldShowOverlay)
+    }
+
     private fun setupMockForWpComSite() {
         val fakeSiteModel = SiteModel()
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(fakeSiteModel)

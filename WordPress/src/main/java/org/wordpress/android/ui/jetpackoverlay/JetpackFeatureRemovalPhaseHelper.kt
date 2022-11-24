@@ -84,6 +84,6 @@ sealed class JetpackFeatureRemovalPhase(
     object PhaseNewUsers : JetpackFeatureRemovalPhase(trackingName ="new")
 }
 
-enum class JetpackFeatureRemovalSiteCreationPhase {
-    PHASE_ONE, PHASE_TWO
+enum class JetpackFeatureRemovalSiteCreationPhase(val trackingName: String) {
+    PHASE_ONE("one"), PHASE_TWO("two")
 }
