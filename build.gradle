@@ -49,6 +49,7 @@ ext {
     commonsText = '1.10.0'
     httpClientAndroidVersion = '4.3.5.1'
     volleyVersion = '1.1.1'
+    jsoupVersion = '1.10.3'
 
     // test
     jUnitVersion = '4.13'
