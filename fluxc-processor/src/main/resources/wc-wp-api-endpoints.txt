@@ -10,6 +10,7 @@
 /products/<id>/variations/<variation_id>
 /products/<id>/variations/batch
 /products/
+/products/batch
 /products/shipping_classes
 /products/shipping_classes/<id>/
 /products/attributes/
