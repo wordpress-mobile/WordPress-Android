@@ -28,7 +28,10 @@ object MySiteAdapterDiffCallback : DiffUtil.ItemCallback<MySiteCardAndItem>() {
             oldItem is ListItem && updatedItem is ListItem -> oldItem.primaryText == updatedItem.primaryText
             oldItem is DashboardCards && updatedItem is DashboardCards -> true
             oldItem is JetpackBadge && updatedItem is JetpackBadge -> true
-            oldItem is SingleActionCard && updatedItem is SingleActionCard -> oldItem == updatedItem
+            oldItem is SingleActionCard && updatedItem is SingleActionCard -> {
+                oldItem.textResource == updatedItem.textResource
+                        && oldItem.imageResource == updatedItem.imageResource
+            }
             else -> throw NotImplementedException("Diff not implemented yet")
         }
     }
