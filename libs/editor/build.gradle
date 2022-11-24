@@ -52,16 +52,11 @@ android {
 }
 
 dependencies {
-    implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'androidx.vectordrawable:vectordrawable-animated:1.0.0'
-    implementation 'androidx.gridlayout:gridlayout:1.0.0'
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation "androidx.preference:preference:$preferenceVersion"
-
-    implementation 'com.google.android.material:material:1.2.1'
-    implementation 'com.android.volley:volley:1.1.1'
-
-    implementation "org.wordpress:utils:$wordPressUtilsVersion"
+    implementation ("$gradle.ext.wputilsBinaryPath") {
+        version {
+            strictly wordPressUtilsVersion
+        }
+    }
     api ("$gradle.ext.aztecAndroidAztecPath") {
         exclude group: "com.android.volley"
         exclude group: 'org.wordpress', module: 'utils'
@@ -79,20 +74,21 @@ dependencies {
             strictly aztecVersion
         }
     }
-
-    implementation ("$gradle.ext.wputilsBinaryPath") {
-        version {
-            strictly wordPressUtilsVersion
-        }
-    }
-
     // This dependency will be substituted if the `local-builds.gradle` file contains
     // `localGutenbergMobilePath`. Details for this can be found in the `settings.gradle` file.
     implementation "$rootProject.gradle.ext.gutenbergMobileBinaryPath:$rootProject.ext.gutenbergMobileVersion"
-
     // Required Aztec dependencies (they should be included but Jitpack seems to be stripping these out)
     implementation "org.jsoup:jsoup:1.10.3"
 
+    implementation "org.wordpress:utils:$wordPressUtilsVersion"
+
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.vectordrawable:vectordrawable-animated:1.0.0'
+    implementation 'androidx.gridlayout:gridlayout:1.0.0'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation "androidx.preference:preference:$preferenceVersion"
+    implementation 'com.google.android.material:material:1.2.1'
+    implementation 'com.android.volley:volley:1.1.1'
     implementation 'com.google.code.gson:gson:2.6.2'
 
     lintChecks 'org.wordpress:lint:1.1.0'
