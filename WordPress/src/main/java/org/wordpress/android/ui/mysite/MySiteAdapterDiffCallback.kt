@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.mysite
 
 import androidx.recyclerview.widget.DiffUtil
-import org.apache.commons.lang3.NotImplementedException
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickActionsCard
@@ -32,7 +31,7 @@ object MySiteAdapterDiffCallback : DiffUtil.ItemCallback<MySiteCardAndItem>() {
                 oldItem.textResource == updatedItem.textResource
                         && oldItem.imageResource == updatedItem.imageResource
             }
-            else -> throw NotImplementedException("Diff not implemented yet")
+            else -> throw UnsupportedOperationException("Diff not implemented yet")
         }
     }
 

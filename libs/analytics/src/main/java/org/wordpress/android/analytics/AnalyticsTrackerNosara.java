@@ -2417,6 +2417,20 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "deeplink_custom_intent_received";
             case APP_SETTINGS_OPEN_WEB_LINKS_WITH_JETPACK_CHANGED:
                 return "app_settings_open_web_links_with_jetpack_changed";
+            case JETPACK_REMOVE_FEATURE_OVERLAY_DISPLAYED:
+                return "remove_feature_overlay_displayed";
+            case JETPACK_REMOVE_FEATURE_OVERLAY_LINK_TAPPED:
+                return "remove_feature_overlay_link_tapped";
+            case JETPACK_REMOVE_FEATURE_OVERLAY_BUTTON_GET_JETPACK_APP_TAPPED:
+                return "remove_feature_overlay_button_tapped";
+            case JETPACK_REMOVE_FEATURE_OVERLAY_DISMISSED:
+                return "remove_feature_overlay_dismissed";
+            case JETPACK_REMOVE_SITE_CREATION_OVERLAY_DISPLAYED:
+                return "remove_site_creation_overlay_displayed";
+            case JETPACK_REMOVE_SITE_CREATION_OVERLAY_BUTTON_GET_JETPACK_APP_TAPPED:
+                return "remove_site_creation_overlay_button_tapped";
+            case JETPACK_REMOVE_SITE_CREATION_OVERLAY_DISMISSED:
+                return "remove_site_creation_overlay_dismissed";
         }
         return null;
     }
