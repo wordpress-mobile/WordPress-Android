@@ -4,7 +4,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
-import org.apache.commons.lang3.NotImplementedException
 import org.wordpress.android.ui.quickstart.QuickStartFullScreenDialogFragment.QuickStartListCard
 import org.wordpress.android.ui.quickstart.QuickStartFullScreenDialogFragment.QuickStartListCard.QuickStartHeaderCard
 import org.wordpress.android.ui.quickstart.QuickStartFullScreenDialogFragment.QuickStartListCard.QuickStartTaskCard
@@ -42,7 +41,7 @@ class QuickStartAdapter(
                 oldItem is QuickStartHeaderCard && updatedItem is QuickStartHeaderCard -> true
                 (oldItem is QuickStartTaskCard && updatedItem is QuickStartTaskCard) &&
                         (oldItem.task.string == updatedItem.task.string) -> true
-                else -> throw NotImplementedException("Diff not implemented yet")
+                else -> throw UnsupportedOperationException("Diff not implemented yet")
             }
         }
 

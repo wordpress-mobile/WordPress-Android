@@ -49,6 +49,10 @@ ext {
     kotlinPoetVersion = '1.6.0'
     autoServiceVersion = '1.0'
 
+    // Apache
+    commonsText = '1.10.0'
+    httpClientAndroidVersion = '4.3.5.1'
+
     // testing
     jUnitVersion = '4.13'
     jUnitExtVersion = '1.1.3'
