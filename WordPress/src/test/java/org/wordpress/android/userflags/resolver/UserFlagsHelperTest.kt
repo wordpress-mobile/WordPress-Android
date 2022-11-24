@@ -20,14 +20,14 @@ import org.wordpress.android.util.publicdata.WordPressPublicData
 @Suppress("ForbiddenComment", "UNUSED_VARIABLE")
 // TODO: adapt these tests to the unified provider / orchestrator approach
 @Ignore("Disabled for now: will refactor in another PR after unification.")
-class UserFlagsResolverTest {
+class UserFlagsHelperTest {
     private val jetpackLocalUserFlagsFlag: JetpackLocalUserFlagsFlag = mock()
     private val wordPressPublicData: WordPressPublicData = mock()
     private val appPrefsWrapper: AppPrefsWrapper = mock()
     private val userFlagsAnalyticsTracker: UserFlagsAnalyticsTracker = mock()
     private val localMigrationContentResolver: LocalMigrationContentResolver = mock()
     private val resolverUtility: ResolverUtility = mock()
-    private val classToTest = UserFlagsResolver(
+    private val classToTest = UserFlagsHelper(
             jetpackLocalUserFlagsFlag,
             appPrefsWrapper,
             userFlagsAnalyticsTracker,
@@ -50,7 +50,7 @@ class UserFlagsResolverTest {
     @Test
     fun `Should track start if feature flag is ENABLED and IS first try`() {
         featureEnabled()
-        classToTest.tryGetUserFlags({}, {})
+//        classToTest.tryGetUserFlags({}, {})
         verify(userFlagsAnalyticsTracker).trackStart()
     }
 
@@ -59,7 +59,7 @@ class UserFlagsResolverTest {
         whenever(appPrefsWrapper.getIsFirstTryUserFlagsJetpack()).thenReturn(true)
         whenever(jetpackLocalUserFlagsFlag.isEnabled()).thenReturn(false)
         val onFailure: () -> Unit = mock()
-        classToTest.tryGetUserFlags({}, onFailure)
+//        classToTest.tryGetUserFlags({}, onFailure)
         verify(onFailure).invoke()
     }
 
@@ -68,14 +68,14 @@ class UserFlagsResolverTest {
         whenever(appPrefsWrapper.getIsFirstTryUserFlagsJetpack()).thenReturn(false)
         whenever(jetpackLocalUserFlagsFlag.isEnabled()).thenReturn(true)
         val onFailure: () -> Unit = mock()
-        classToTest.tryGetUserFlags({}, onFailure)
+//        classToTest.tryGetUserFlags({}, onFailure)
         verify(onFailure).invoke()
     }
 
     @Test
     fun `Should save IS NOT first try user flags as FALSE if feature flag is ENABLED and IS first try`() {
         featureEnabled()
-        classToTest.tryGetUserFlags({}, {})
+//        classToTest.tryGetUserFlags({}, {})
         verify(appPrefsWrapper).saveIsFirstTryUserFlagsJetpack(false)
     }
 
@@ -83,7 +83,7 @@ class UserFlagsResolverTest {
     fun `Should NOT query ContentResolver if feature flag is DISABLED`() {
         whenever(appPrefsWrapper.getIsFirstTryUserFlagsJetpack()).thenReturn(true)
         whenever(jetpackLocalUserFlagsFlag.isEnabled()).thenReturn(false)
-        classToTest.tryGetUserFlags({}, {})
+//        classToTest.tryGetUserFlags({}, {})
 //        verify(contentResolverWrapper, never()).queryUri(any(), any())
     }
 
@@ -91,14 +91,14 @@ class UserFlagsResolverTest {
     fun `Should NOT query ContentResolver if IS NOT the first try`() {
         whenever(appPrefsWrapper.getIsFirstTryUserFlagsJetpack()).thenReturn(false)
         whenever(jetpackLocalUserFlagsFlag.isEnabled()).thenReturn(true)
-        classToTest.tryGetUserFlags({}, {})
+//        classToTest.tryGetUserFlags({}, {})
 //        verify(contentResolverWrapper, never()).queryUri(any(), any())
     }
 
     @Test
     fun `Should query ContentResolver if feature flag is ENABLED and IS first try`() {
         featureEnabled()
-        classToTest.tryGetUserFlags({}, {})
+//        classToTest.tryGetUserFlags({}, {})
 //        verify(contentResolverWrapper).queryUri(contentResolver, uriValue)
     }
 
@@ -106,7 +106,7 @@ class UserFlagsResolverTest {
     fun `Should track failed with error QueryUserFlagsError if cursor is null`() {
         featureEnabled()
 //        whenever(contentResolverWrapper.queryUri(contentResolver, uriValue)).thenReturn(null)
-        classToTest.tryGetUserFlags({}, {})
+//        classToTest.tryGetUserFlags({}, {})
         verify(userFlagsAnalyticsTracker).trackFailed(QueryUserFlagsError)
     }
 
@@ -115,14 +115,14 @@ class UserFlagsResolverTest {
         featureEnabled()
 //        whenever(contentResolverWrapper.queryUri(contentResolver, uriValue)).thenReturn(null)
         val onFailure: () -> Unit = mock()
-        classToTest.tryGetUserFlags({}, onFailure)
+//        classToTest.tryGetUserFlags({}, onFailure)
         verify(onFailure).invoke()
     }
 
     @Test
     fun `Should track failed with error NoUserFlagsFoundError if user flags Map is empty`() {
         featureEnabled()
-        classToTest.tryGetUserFlags({}, {})
+//        classToTest.tryGetUserFlags({}, {})
         verify(userFlagsAnalyticsTracker).trackFailed(NoUserFlagsFoundError)
     }
 
@@ -130,7 +130,7 @@ class UserFlagsResolverTest {
     fun `Should trigger failure callback if user flags Map is empty`() {
         featureEnabled()
         val onFailure: () -> Unit = mock()
-        classToTest.tryGetUserFlags({}, onFailure)
+//        classToTest.tryGetUserFlags({}, onFailure)
         verify(onFailure).invoke()
     }
 
@@ -139,7 +139,7 @@ class UserFlagsResolverTest {
         featureEnabled()
         whenever(resolverUtility.copyQsDataWithIndexes(anyList(), anyList())).thenReturn(false  )
         val onFailure: () -> Unit = mock()
-        classToTest.tryGetUserFlags({}, onFailure)
+//        classToTest.tryGetUserFlags({}, onFailure)
         verify(onFailure).invoke()
     }
 
@@ -152,7 +152,7 @@ class UserFlagsResolverTest {
                 quickStartStatusList = listOf()
         )
 //        whenever(mockCursor.getString(0)).thenReturn(Gson().toJson(data))
-        classToTest.tryGetUserFlags({}, {})
+//        classToTest.tryGetUserFlags({}, {})
         verify(userFlagsAnalyticsTracker).trackSuccess()
     }
 
@@ -166,7 +166,7 @@ class UserFlagsResolverTest {
         )
 //        whenever(mockCursor.getString(0)).thenReturn(Gson().toJson(data))
         val onSuccess: () -> Unit = mock()
-        classToTest.tryGetUserFlags(onSuccess) {}
+//        classToTest.tryGetUserFlags(onSuccess) {}
         verify(onSuccess).invoke()
     }
 
@@ -182,7 +182,7 @@ class UserFlagsResolverTest {
         )
 //        whenever(mockCursor.getString(0)).thenReturn(Gson().toJson(data))
         val onSuccess: () -> Unit = mock()
-        classToTest.tryGetUserFlags(onSuccess) {}
+//        classToTest.tryGetUserFlags(onSuccess) {}
         verify(appPrefsWrapper).setString(UserFlagsPrefKey(key), value)
     }
 

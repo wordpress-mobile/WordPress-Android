@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-11-04 19:27:27+0000
+Translation-Revision-Date: 2022-11-12 12:10:37+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: ku_TR
@@ -2392,4 +2392,13 @@ Language: ku_TR
     <string name="save">Tomar bike</string>
     <string name="cancel">Betal bike</string>
     <string name="add">Tevlî bike</string>
+    <string-array name="blogging_reminders_count">
+        <item>Carekê</item>
+        <item>Du caran</item>
+        <item>Three times</item>
+        <item>Four times</item>
+        <item>Five times</item>
+        <item>Six times</item>
+        <item>Seven times</item>
+    </string-array>
 </resources>

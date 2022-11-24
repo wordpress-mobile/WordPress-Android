@@ -76,6 +76,12 @@
         android:summary="%s"
         android:title="@string/initial_screen" />
 
+    <org.wordpress.android.ui.prefs.WPSwitchPreference
+        android:id="@+id/pref_open_web_links_with_jetpack"
+        android:defaultValue="false"
+        android:key="@string/pref_key_open_web_links_with_jetpack"
+        android:title="@string/preference_open_web_links_with_jetpack" />
+
     <Preference
         android:key="@string/pref_key_whats_new"
         android:title="@string/whats_new_in_version_title" />

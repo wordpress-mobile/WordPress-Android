@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-11-03 14:54:08+0000
+Translation-Revision-Date: 2022-11-18 09:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: he_IL
 -->
 <resources>
+    <string name="jp_migration_help_button">נדרשת לך עזרה?</string>
+    <string name="jp_migration_continue_button">המשך</string>
+    <string name="jp_migration_welcome_site_found_message">מצאנו את האתר שלך. אפשר להמשיך להעביר את כל הנתונים שלך ולהתחבר ל-Jetpack באופן אוטומטי.</string>
+    <string name="jp_migration_welcome_sites_found_message">מצאנו את האתרים שלך. אפשר להמשיך להעביר את כל הנתונים שלך ולהתחבר ל-Jetpack באופן אוטומטי.</string>
+    <string name="jp_migration_avatar_content_description">תמונת הפרופיל שלך</string>
+    <string name="jp_migration_welcome_subtitle">נראה שעברת מהאפליקציה של WordPress.</string>
+    <string name="jp_migration_welcome_title">ברוך בואך אל Jetpack!</string>
+    <string name="icon_desc">סמל</string>
     <string name="post_settings_parent">עמוד ראשי</string>
     <string name="post_settings_page_attributes">מאפייני עמוד</string>
     <string name="about_automattic_contribute_item_title">להשתתף</string>

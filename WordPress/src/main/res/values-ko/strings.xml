@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-11-03 15:54:23+0000
+Translation-Revision-Date: 2022-11-17 18:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.3
 Language: ko_KR
 -->
 <resources>
+    <string name="jp_migration_help_button">도움말이 필요하신가요?</string>
+    <string name="jp_migration_continue_button">계속</string>
+    <string name="jp_migration_welcome_site_found_message">사이트를 찾았습니다. 자동으로 모든 데이터를 계속 이전하고 젯팩에 로그인합니다.</string>
+    <string name="jp_migration_welcome_sites_found_message">사이트를 찾았습니다. 자동으로 모든 데이터를 계속 이전하고 젯팩에 로그인합니다.</string>
+    <string name="jp_migration_avatar_content_description">프로필 사진</string>
+    <string name="jp_migration_welcome_subtitle">워드프레스 앱에서 전환 중이신 것 같습니다.</string>
+    <string name="jp_migration_welcome_title">젯팩에 오신 것을 환영합니다!</string>
+    <string name="icon_desc">아이콘</string>
     <string name="post_settings_parent">상위 페이지</string>
     <string name="post_settings_page_attributes">페이지 속성</string>
     <string name="about_automattic_contribute_item_title">참여</string>

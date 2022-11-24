@@ -6,5 +6,23 @@
             android:name=".localcontentmigration.LocalMigrationContentProvider"
             android:authorities="${applicationId}.LocalMigrationContentProvider"
             android:exported="true" />
+
+        <receiver
+            android:name=".ui.mysite.jetpackbadge.JetpackAppInstallReceiver"
+            android:exported="true"
+            android:permission="org.wordpress.android.permission.DISABLE_NOTIFICATIONS">
+            <intent-filter>
+                <action android:name="org.wordpress.android.broadcast.DISABLE_NOTIFICATIONS"/>
+            </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name=".ui.deeplinks.JetpackAppUninstallReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_FULLY_REMOVED"/>
+                <data android:scheme="package"/>
+            </intent-filter>
+        </receiver>
     </application>
 </manifest>
