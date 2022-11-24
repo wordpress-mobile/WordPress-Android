@@ -44,7 +44,7 @@ dependencies {
 
     implementation "androidx.appcompat:appcompat:$appCompatVersion"
     implementation "androidx.constraintlayout:constraintlayout:$constraintLayoutVersion"
-    implementation "androidx.viewpager2:viewpager2:1.0.0"
+    implementation "androidx.viewpager2:viewpager2:$androidxViewpager2Version"
     implementation "com.google.android.material:material:$materialVersion"
     implementation "androidx.navigation:navigation-fragment-ktx:$gradle.ext.navComponentVersion"
     implementation "androidx.navigation:navigation-ui-ktx:$gradle.ext.navComponentVersion"
