@@ -6,7 +6,6 @@ import org.junit.Test
 import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
-import org.wordpress.android.BuildConfig
 import org.wordpress.android.util.publicdata.PackageManagerWrapper
 import org.wordpress.android.util.publicdata.WordPressPublicData
 
@@ -24,8 +23,9 @@ class WordPressPublicDataTest {
 
     @Test
     fun `Should return correct current package version`() {
+        mockVersion("21.2-rc-3")
         val actual = classToTest.currentPackageVersion()
-        val expected = BuildConfig.VERSION_NAME
+        val expected = "21.2-rc-3"
         Assertions.assertThat(actual).isEqualTo(expected)
     }
 
