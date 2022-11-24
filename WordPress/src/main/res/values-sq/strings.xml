@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-11-08 17:49:51+0000
+Translation-Revision-Date: 2022-11-18 20:18:58+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: sq_AL
 -->
 <resources>
+    <string name="jp_migration_help_button">Ju duhet ndihmë?</string>
+    <string name="jp_migration_continue_button">Vazhdo</string>
+    <string name="jp_migration_welcome_site_found_message">E gjetëm sajtin tuaj. Vazhdoni,  që të shpërngulen krejt të dhënat tuaja dhe të bëhet automatikisht hyrja në Jetpack.</string>
+    <string name="jp_migration_welcome_sites_found_message">I gjetëm sajtet tuaj. Vazhdoni,  që të shpërngulen krejt të dhënat tuaja dhe të bëhet automatikisht hyrja në Jetpack.</string>
+    <string name="jp_migration_avatar_content_description">Fotoja juaj e profilit</string>
+    <string name="jp_migration_welcome_subtitle">Duket sikur po bëni migrimin që nga aplikacioni WordPress.</string>
+    <string name="jp_migration_welcome_title">Mirë se vini te Jetpack-u!</string>
+    <string name="icon_desc">ikonë</string>
     <string name="post_settings_parent">Faqe Mëmë</string>
     <string name="post_settings_page_attributes">Atribute Faqeje</string>
     <string name="about_automattic_contribute_item_title">Kontribuoni</string>

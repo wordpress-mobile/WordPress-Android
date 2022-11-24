@@ -24,17 +24,32 @@ class DeepLinkOpenWebLinksWithJetpackHelper @Inject constructor(
                 && isJetpackInstalled()
     }
 
+    fun enableDisableOpenWithJetpackComponents(newValue: Boolean) {
+        when (newValue) {
+            true -> {
+                packageManagerWrapper.disableReaderDeepLinks()
+                packageManagerWrapper.disableComponentEnabledSetting(WEB_LINKS_DEEPLINK_ACTIVITY_ALIAS)
+            }
+            false -> {
+                packageManagerWrapper.enableReaderDeeplinks()
+                packageManagerWrapper.enableComponentEnableSetting(WEB_LINKS_DEEPLINK_ACTIVITY_ALIAS)
+            }
+        }
+    }
+
+    fun handleJetpackUninstalled() {
+        enableDisableOpenWithJetpackComponents(false)
+        appPrefsWrapper.setIsOpenWebLinksWithJetpack(false)
+    }
+
     private fun showOverlay() : Boolean {
         return openWebLinksWithJetpackFlowFeatureConfig.isEnabled()
                 && isJetpackInstalled()
-                && isWebDeepLinkHandlerComponentEnabled()
+                && !isOpenWebLinksWithJetpack()
                 && isValidOverlayFrequency()
     }
 
     private fun isJetpackInstalled() = packageManagerWrapper.isPackageInstalled(getPackageName())
-
-    private fun isWebDeepLinkHandlerComponentEnabled() =
-        packageManagerWrapper.isComponentEnabledSettingEnabled(DeepLinkingIntentReceiverActivity::class.java)
 
     private fun isValidOverlayFrequency() : Boolean {
         if (!hasOverlayBeenShown()) return true // short circuit if the overlay has never been shown
@@ -58,6 +73,8 @@ class DeepLinkOpenWebLinksWithJetpackHelper @Inject constructor(
     private fun getOpenWebLinksWithJetpackOverlayLastShownTimestamp() =
             appPrefsWrapper.getOpenWebLinksWithJetpackOverlayLastShownTimestamp()
 
+    private fun isOpenWebLinksWithJetpack() = appPrefsWrapper.getIsOpenWebLinksWithJetpack()
+
     private fun getTodaysDate() = Date(System.currentTimeMillis())
 
     private fun getPackageName(): String {
@@ -72,5 +89,7 @@ class DeepLinkOpenWebLinksWithJetpackHelper @Inject constructor(
 
     companion object {
         const val JETPACK_PACKAGE_NAME = "com.jetpack.android"
+        const val WEB_LINKS_DEEPLINK_ACTIVITY_ALIAS =
+                "org.wordpress.android.WebLinksDeepLinkingIntentReceiverActivity"
     }
 }

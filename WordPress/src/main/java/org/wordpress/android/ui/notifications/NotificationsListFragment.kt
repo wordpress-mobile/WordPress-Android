@@ -132,9 +132,10 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
         }
 
         viewModel.showJetpackOverlay.observeEvent(viewLifecycleOwner) {
-            JetpackFeatureFullScreenOverlayFragment
-                    .newInstance(JetpackFeatureOverlayScreenType.NOTIFICATIONS)
-                    .show(childFragmentManager, JetpackFeatureFullScreenOverlayFragment.TAG)
+            if (savedInstanceState == null)
+                JetpackFeatureFullScreenOverlayFragment
+                        .newInstance(JetpackFeatureOverlayScreenType.NOTIFICATIONS)
+                        .show(childFragmentManager, JetpackFeatureFullScreenOverlayFragment.TAG)
         }
     }
 

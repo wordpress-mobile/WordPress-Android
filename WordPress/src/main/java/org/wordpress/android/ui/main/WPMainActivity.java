@@ -70,7 +70,6 @@ import org.wordpress.android.push.GCMRegistrationIntentService;
 import org.wordpress.android.push.NativeNotificationsUtils;
 import org.wordpress.android.push.NotificationType;
 import org.wordpress.android.push.NotificationsProcessingService;
-import org.wordpress.android.sharedlogin.resolver.LocalMigrationOrchestrator;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.JetpackConnectionSource;
@@ -258,7 +257,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
     @Inject WeeklyRoundupScheduler mWeeklyRoundupScheduler;
     @Inject MySiteDashboardTodaysStatsCardFeatureConfig mTodaysStatsCardFeatureConfig;
     @Inject QuickStartTracker mQuickStartTracker;
-    @Inject LocalMigrationOrchestrator mLocalMigrationOrchestrator;
     @Inject BloggingRemindersResolver mBloggingRemindersResolver;
     @Inject JetpackAppMigrationFlowUtils mJetpackAppMigrationFlowUtils;
 
@@ -461,11 +459,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
             initSelectedSite();
         }
 
-        if (mBuildConfigWrapper.isJetpackApp()) {
-            mLocalMigrationOrchestrator.tryLocalMigration();
-        }
-
-        // TODO: this is temporary to enable testing the migration flow UI
         if (mJetpackAppMigrationFlowUtils.shouldShowMigrationFlow()) {
             mJetpackAppMigrationFlowUtils.startJetpackMigrationFlow();
         }

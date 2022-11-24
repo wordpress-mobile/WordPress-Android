@@ -950,6 +950,7 @@ public final class AnalyticsTracker {
         SHARED_LOGIN_START,
         SHARED_LOGIN_SUCCESS,
         SHARED_LOGIN_FAILED,
+        CONTENT_MIGRATION_FAILED,
         USER_FLAGS_START,
         USER_FLAGS_SUCCESS,
         USER_FLAGS_FAILED,
