@@ -18,25 +18,14 @@ class MobilePayStore @Inject constructor(
         siteId: Long,
         customUrl: String? = null,
     ) = coroutineEngine.withDefaultContext(API, this, "createOrder") {
-        if (customUrl == null) {
-            restClient.createOrder(
-                productIdentifier,
-                priceInCents,
-                currency,
-                purchaseToken,
-                appId,
-                siteId,
-            )
-        } else {
-            restClient.createOrder(
-                productIdentifier,
-                priceInCents,
-                currency,
-                purchaseToken,
-                appId,
-                siteId,
-                url = customUrl,
-            )
-        }
+        restClient.createOrder(
+            productIdentifier,
+            priceInCents,
+            currency,
+            purchaseToken,
+            appId,
+            siteId,
+            customUrl,
+        )
     }
 }
