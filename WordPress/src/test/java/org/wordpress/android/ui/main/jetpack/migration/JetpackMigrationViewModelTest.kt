@@ -1,17 +1,15 @@
 package org.wordpress.android.ui.main.jetpack.migration
 
+import kotlinx.coroutines.flow.first
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
-import org.mockito.kotlin.any
+import org.junit.runner.RunWith
+import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.mock
-import org.mockito.kotlin.times
-import org.mockito.kotlin.verify
-import org.mockito.kotlin.whenever
+import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
-import org.wordpress.android.fluxc.model.AccountModel
-import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.store.AccountStore
-import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.sharedlogin.resolver.LocalMigrationOrchestrator
+import org.wordpress.android.test
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.DeletePrimaryButton
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.DonePrimaryButton
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.ErrorPrimaryButton
@@ -24,142 +22,28 @@ import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Content
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Error
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Loading
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.GravatarUtilsWrapper
 import org.wordpress.android.util.SiteUtilsWrapper
 
-class JetpackMigrationViewModelTest {
-    private val siteStore: SiteStore = mock()
-    private val accountStore: AccountStore = mock()
+@RunWith(MockitoJUnitRunner::class)
+class JetpackMigrationViewModelTest : BaseUnitTest() {
     private val siteUtilsWrapper: SiteUtilsWrapper = mock()
     private val gravatarUtilsWrapper: GravatarUtilsWrapper = mock()
+    private val appPrefsWrapper: AppPrefsWrapper = mock()
+    private val localMigrationOrchestrator: LocalMigrationOrchestrator = mock()
     private val classToTest = JetpackMigrationViewModel(
-            siteStore = siteStore,
-            accountStore = accountStore,
             siteUtilsWrapper = siteUtilsWrapper,
             gravatarUtilsWrapper = gravatarUtilsWrapper,
+            appPrefsWrapper = appPrefsWrapper,
+            localMigrationOrchestrator = localMigrationOrchestrator,
     )
 
     // region ViewModel
     @Test
-    fun `Should init Loading UiState as default`() {
-        assertThat(classToTest.uiState.value).isInstanceOf(Loading::class.java)
-    }
-    
-    @Test
-    fun `Should post Delete Content if checkDeleteState is called with showDeleteState TRUE`() {
-        classToTest.checkDeleteState(true)
-        assertThat(classToTest.uiState.value).isInstanceOf(Content.Delete::class.java)
-    }
-
-    @Test
-    fun `Should NOT post Delete Content if checkDeleteState is called with showDeleteState FALSE`() {
-        classToTest.checkDeleteState(false)
-        assertThat(classToTest.uiState.value).isNotInstanceOf(Content.Delete::class.java)
-    }
-
-    @Test
-    fun `Should init Welcome Content from onAccountInfoLoaded if isDataAvailable is TRUE`() {
-        whenever(gravatarUtilsWrapper.fixGravatarUrlWithResource(any(), any())).thenReturn("imageUrl")
-        setDataAvailable(true)
-        classToTest.onAccountInfoLoaded()
-        assertThat(classToTest.uiState.value).isInstanceOf(Content.Welcome::class.java)
-    }
-
-    @Test
-    fun `Should NOT init Welcome Content from onAccountInfoLoaded if isDataAvailable is FALSE`() {
-        setDataAvailable(false)
-        classToTest.onAccountInfoLoaded()
-        assertThat(classToTest.uiState.value).isNotInstanceOf(Content.Welcome::class.java)
-    }
-
-    @Test
-    fun `Should NOT init Welcome Content from onAccountInfoLoaded if showDeleteState is TRUE`() {
-        setDataAvailable(true)
-        classToTest.checkDeleteState(true)
-        classToTest.onAccountInfoLoaded()
-        assertThat(classToTest.uiState.value).isNotInstanceOf(Content.Welcome::class.java)
-    }
-
-    @Test
-    fun `Should fix Gravatar URL on Welcome Content init from onAccountInfoLoaded if data IS available`() {
-        whenever(gravatarUtilsWrapper.fixGravatarUrlWithResource(any(), any())).thenReturn("imageUrl")
-        setDataAvailable(true)
-        classToTest.onAccountInfoLoaded()
-        verify(gravatarUtilsWrapper).fixGravatarUrlWithResource(any(), any())
-    }
-
-    @Test
-    fun `Should NOT fix Gravatar URL on Welcome Content init from onAccountInfoLoaded if data IS NOT available`() {
-        setDataAvailable(false)
-        classToTest.onAccountInfoLoaded()
-        verify(gravatarUtilsWrapper, times(0)).fixGravatarUrlWithResource(any(), any())
-    }
-
-    @Test
-    fun `Should get site list on Welcome Content init from onAccountInfoLoaded if data IS available`() {
-        setDataAvailable(true)
-        classToTest.onAccountInfoLoaded()
-        // Called two times: isDataAvailable and initWelcomeState
-        verify(siteStore, times(2)).sites
-    }
-
-    @Test
-    fun `Should NOT get site list on Welcome Content init from onAccountInfoLoaded if data IS NOT available`() {
-        setDataAvailable(false)
-        classToTest.onAccountInfoLoaded()
-        verify(siteStore, times(0)).sites
-    }
-
-    @Test
-    fun `Should init Welcome Content from onSiteListLoaded if isDataAvailable is TRUE`() {
-        setDataAvailable(true)
-        classToTest.onSiteListLoaded()
-        assertThat(classToTest.uiState.value).isInstanceOf(Content.Welcome::class.java)
-    }
-
-    @Test
-    fun `Should NOT init Welcome Content from onSiteListLoaded if isDataAvailable is FALSE`() {
-        setDataAvailable(false)
-        classToTest.onSiteListLoaded()
-        assertThat(classToTest.uiState.value).isNotInstanceOf(Content.Welcome::class.java)
-    }
-
-    @Test
-    fun `Should NOT init Welcome Content from onSiteListLoaded if showDeleteState is TRUE`() {
-        setDataAvailable(true)
-        classToTest.checkDeleteState(true)
-        classToTest.onSiteListLoaded()
-        assertThat(classToTest.uiState.value).isNotInstanceOf(Content.Welcome::class.java)
-    }
-
-    @Test
-    fun `Should fix Gravatar URL on Welcome Content init from onSiteListLoaded if data IS available`() {
-        setDataAvailable(true)
-        classToTest.onSiteListLoaded()
-        verify(gravatarUtilsWrapper).fixGravatarUrlWithResource(any(), any())
-    }
-
-    @Test
-    fun `Should NOT fix Gravatar URL on Welcome Content init from onSiteListLoaded if data IS NOT available`() {
-        setDataAvailable(false)
-        classToTest.onSiteListLoaded()
-        verify(gravatarUtilsWrapper, times(0)).fixGravatarUrlWithResource(any(), any())
-    }
-
-    @Test
-    fun `Should get site list on Welcome Content init from onSiteListLoaded if data IS available`() {
-        setDataAvailable(true)
-        classToTest.onSiteListLoaded()
-        // Called two times: isDataAvailable and initWelcomeState
-        verify(siteStore, times(2)).sites
-    }
-
-    @Test
-    fun `Should NOT get site list on Welcome Content init from onSiteListLoaded if data IS NOT available`() {
-        setDataAvailable(false)
-        classToTest.onSiteListLoaded()
-        verify(siteStore, times(0)).sites
+    fun `Should init Loading UiState as default`() = test {
+        assertThat(classToTest.uiState.first()).isInstanceOf(Loading::class.java)
     }
     // endregion
 
@@ -367,7 +251,7 @@ class JetpackMigrationViewModelTest {
     // region UiState Error
     @Test
     fun `Should have correct default isProcessing for Error UiState`() {
-        val uiStateError = UiState.Error(
+        val uiStateError = Error(
                 primaryActionButton = ErrorPrimaryButton {},
                 secondaryActionButton = ErrorSecondaryButton {},
                 type = Error.Networking,
@@ -379,7 +263,7 @@ class JetpackMigrationViewModelTest {
 
     @Test
     fun `Should have correct screenIconRes for Error UiState`() {
-        val uiStateError = UiState.Error(
+        val uiStateError = Error(
                 primaryActionButton = ErrorPrimaryButton {},
                 secondaryActionButton = ErrorSecondaryButton {},
                 type = Error.Networking,
@@ -495,29 +379,4 @@ class JetpackMigrationViewModelTest {
         assertThat(actual).isEqualTo(expected)
     }
     // endregion
-
-    private fun setDataAvailable(isAvailable: Boolean) {
-        setAccountUsername(isAvailable)
-        setSites(isAvailable)
-        if (isAvailable) {
-            whenever(gravatarUtilsWrapper.fixGravatarUrlWithResource(any(), any())).thenReturn("imageUrl")
-        }
-    }
-
-    private fun setAccountUsername(isAvailable: Boolean) {
-        val username = if (isAvailable) "username" else ""
-        val accountModel: AccountModel = mock()
-        whenever(accountStore.account).thenReturn(accountModel)
-        whenever(accountModel.userName).thenReturn(username)
-    }
-
-    private fun setSites(isAvailable: Boolean) {
-        val siteModel = SiteModel()
-        whenever(siteUtilsWrapper.getSiteNameOrHomeURL(siteModel)).thenReturn("name")
-        whenever(siteUtilsWrapper.getHomeURLOrHostName(siteModel)).thenReturn("url")
-        whenever(siteUtilsWrapper.getSiteIconUrlOfResourceSize(siteModel, R.dimen.jp_migration_site_icon_size))
-                .thenReturn("iconUrl")
-        val sites: List<SiteModel> = if (isAvailable) listOf(siteModel) else emptyList()
-        whenever(siteStore.sites).thenReturn(sites)
-    }
 }

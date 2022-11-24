@@ -11,14 +11,15 @@ import kotlinx.coroutines.flow.combineTransform
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
-import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.DeletePrimaryButton
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.localcontentmigration.LocalMigrationState
+import org.wordpress.android.localcontentmigration.LocalMigrationState.Finished.DeleteOnly
 import org.wordpress.android.localcontentmigration.LocalMigrationState.Finished.Failure
 import org.wordpress.android.localcontentmigration.LocalMigrationState.Finished.Successful
 import org.wordpress.android.localcontentmigration.LocalMigrationState.Initial
 import org.wordpress.android.localcontentmigration.LocalMigrationState.Migrating
 import org.wordpress.android.sharedlogin.resolver.LocalMigrationOrchestrator
+import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.DeletePrimaryButton
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.DonePrimaryButton
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.ErrorPrimaryButton
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.ErrorSecondaryButton
@@ -27,10 +28,10 @@ import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.WelcomeSecondaryButton
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.CompleteFlow
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.ShowHelp
+import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Content.Delete
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Content.Done
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Content.Notifications
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Content.Welcome
-import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Content.Delete
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Error.Generic
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Error.Networking
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Loading
@@ -56,14 +57,7 @@ class JetpackMigrationViewModel @Inject constructor(
     private val migrationStateFlow = MutableStateFlow<LocalMigrationState>(Initial)
     private val continueClickedFlow = MutableStateFlow(false)
     private val notificationContinueClickedFlow = MutableStateFlow(false)
-    private var showDeleteState = false
-
-    fun checkDeleteState(showDeleteState: Boolean) {
-        if (showDeleteState) {
-            postDeleteState()
-        }
-        this.showDeleteState = showDeleteState
-    }
+    private var showDeleteState: Boolean = false
 
     val uiState = combineTransform(migrationStateFlow, continueClickedFlow, notificationContinueClickedFlow) {
         migrationState, continueClicked, notificationContinueClicked ->
@@ -93,6 +87,11 @@ class JetpackMigrationViewModel @Inject constructor(
                         )
                 )
             }
+            migrationState is DeleteOnly -> emit(
+                    Delete(
+                            primaryActionButton = DeletePrimaryButton(::onGotItClicked),
+                    )
+            )
             migrationState is Failure -> emit(
                     UiState.Error(
                             primaryActionButton = ErrorPrimaryButton(::onTryAgainClicked),
@@ -104,6 +103,11 @@ class JetpackMigrationViewModel @Inject constructor(
         }
     }
 
+    fun start(showDeleteState: Boolean) {
+        this.showDeleteState = showDeleteState
+        tryMigration()
+    }
+
     private fun siteUiFromModel(site: SiteModel) = SiteListItemUiState(
             id = site.siteId,
             name = siteUtilsWrapper.getSiteNameOrHomeURL(site),
@@ -113,8 +117,6 @@ class JetpackMigrationViewModel @Inject constructor(
                     R.dimen.jp_migration_site_icon_size,
             ),
     )
-
-    fun start() = tryMigration()
 
     private fun onContinueClicked() {
         continueClickedFlow.value = true
@@ -140,12 +142,6 @@ class JetpackMigrationViewModel @Inject constructor(
         )
     }
 
-    private fun postDeleteState() {
-        _uiState.value = Delete(
-                primaryActionButton = DeletePrimaryButton(::onGotItClicked),
-        )
-    }
-
     private fun onTryAgainClicked() {
         (_uiState.value as? UiState.Error)?.let {
             _uiState.value = it.copy(isProcessing = true)
@@ -155,7 +151,7 @@ class JetpackMigrationViewModel @Inject constructor(
 
     private fun tryMigration() {
             viewModelScope.launch(Dispatchers.IO) {
-                localMigrationOrchestrator.tryLocalMigration(migrationStateFlow)
+                localMigrationOrchestrator.tryLocalMigration(migrationStateFlow, showDeleteState)
             }
     }
 

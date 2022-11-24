@@ -56,13 +56,8 @@ class JetpackMigrationFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         observeViewModelEvents()
-        viewModel.start()
-        checkDeleteState()
-    }
-
-    private fun checkDeleteState() {
         val showDeleteWpState = arguments?.getBoolean(KEY_SHOW_DELETE_WP_STATE, false) ?: false
-        viewModel.checkDeleteState(showDeleteWpState)
+        viewModel.start(showDeleteWpState)
     }
 
     private fun observeViewModelEvents() {
