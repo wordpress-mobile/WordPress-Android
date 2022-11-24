@@ -32,8 +32,13 @@ class MobilePayRestClient @Inject constructor(
         purchaseToken: String,
         appId: String,
         siteId: Long,
-        url: String = WPCOMV2.iap.orders.url,
+        customBaseUrl: String?,
     ): CreateOrderResponse {
+        val url = if (customBaseUrl == null) {
+            WPCOMV2.iap.orders.url
+        } else {
+            "$customBaseUrl/wpcom/v2${WPCOMV2.iap.orders.endpoint}"
+        }
         val response = wpComGsonRequestBuilder.syncPostRequest(
             restClient = this,
             url = url,
