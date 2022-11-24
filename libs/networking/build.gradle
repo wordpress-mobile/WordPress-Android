@@ -21,12 +21,12 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.android.volley:volley:1.1.1'
-
-    implementation "org.wordpress:utils:$wordPressUtilsVersion"
     implementation ('com.automattic:rest:1.0.8') {
         exclude group: 'com.mcxiaoke.volley'
     }
+    implementation "org.wordpress:utils:$wordPressUtilsVersion"
+
+    implementation 'com.android.volley:volley:1.1.1'
 
     lintChecks 'org.wordpress:lint:1.1.0'
 }
