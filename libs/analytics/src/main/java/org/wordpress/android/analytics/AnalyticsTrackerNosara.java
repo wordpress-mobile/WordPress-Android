@@ -2393,6 +2393,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "shared_login_success";
             case SHARED_LOGIN_FAILED:
                 return "shared_login_failed";
+            case MIGRATION_EMAIL_FAILED:
+                return "migration_email_failed";
+            case MIGRATION_EMAIL_TRIGGERED:
+                return "migration_email_triggered";
             case CONTENT_MIGRATION_FAILED:
                 return "content_migration_failed";
             case USER_FLAGS_START:
