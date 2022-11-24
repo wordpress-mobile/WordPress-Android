@@ -16,6 +16,6 @@ class SitesMigrationHelper @Inject constructor(
         runCatching {
             resolverUtility.copySitesWithIndexes(sitesData.sites)
             Success(sitesData)
-        }.getOrDefault(Failure(FailedToSaveSites))
+        }.getOrElse { Failure(FailedToSaveSites(it)) }
     }
 }

@@ -4,13 +4,13 @@ import android.content.ContentResolver
 import android.content.Context
 import android.database.MatrixCursor
 import com.google.gson.Gson
+import kotlinx.coroutines.flow.MutableStateFlow
 import org.junit.Before
 import org.junit.Ignore
 import org.junit.Test
 import org.mockito.kotlin.KArgumentCaptor
 import org.mockito.kotlin.any
 import org.mockito.kotlin.argumentCaptor
-//import org.mockito.kotlin.doAnswer
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.times
@@ -23,8 +23,10 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.AccountStore.UpdateTokenPayload
 import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.localcontentmigration.ContentMigrationAnalyticsTracker
 import org.wordpress.android.localcontentmigration.EligibilityHelper
 import org.wordpress.android.localcontentmigration.LocalMigrationContentProvider
+import org.wordpress.android.localcontentmigration.LocalMigrationState
 import org.wordpress.android.localcontentmigration.LocalPostsHelper
 import org.wordpress.android.reader.savedposts.resolver.ReaderSavedPostsHelper
 import org.wordpress.android.localcontentmigration.SharedLoginHelper
@@ -56,6 +58,7 @@ class SharedLoginResolverTest : BaseUnitTest() {
     private val accountActionBuilderWrapper: AccountActionBuilderWrapper = mock()
     private val appPrefsWrapper: AppPrefsWrapper = mock()
     private val sharedLoginAnalyticsTracker: SharedLoginAnalyticsTracker = mock()
+    private val migrationAnalyticsTracker: ContentMigrationAnalyticsTracker = mock()
     private val userFlagsResolver: UserFlagsHelper = mock()
     private val readerSavedPostsResolver: ReaderSavedPostsHelper = mock()
     private val siteStore: SiteStore = mock()
@@ -63,18 +66,17 @@ class SharedLoginResolverTest : BaseUnitTest() {
     private val sitesMigrationHelper: SitesMigrationHelper = mock()
     private val postsHelper: LocalPostsHelper = mock()
     private val eligibilityHelper: EligibilityHelper = mock()
+    private val migrationStateFlow: MutableStateFlow<LocalMigrationState> = mock()
 
     private val classToTest = LocalMigrationOrchestrator(
-            contextProvider,
-            dispatcher,
-            accountActionBuilderWrapper,
             sharedLoginAnalyticsTracker,
+            migrationAnalyticsTracker,
             userFlagsResolver,
             readerSavedPostsResolver,
             sharedLoginHelper,
             sitesMigrationHelper,
             postsHelper,
-            eligibilityHelper,
+            eligibilityHelper
     )
 
     private val sharedDataLoggedInNoSites = SharedLoginData(
@@ -109,7 +111,7 @@ class SharedLoginResolverTest : BaseUnitTest() {
     @Test
     fun `Should NOT query ContentResolver if feature flag is DISABLED`() {
         whenever(jetpackSharedLoginFlag.isEnabled()).thenReturn(false)
-        classToTest.tryLocalMigration()
+        classToTest.tryLocalMigration(migrationStateFlow)
         verify(contentResolverWrapper, never()).queryUri(contentResolver, uriValue)
     }
 
@@ -118,7 +120,7 @@ class SharedLoginResolverTest : BaseUnitTest() {
         whenever(appPrefsWrapper.getIsFirstTrySharedLoginJetpack()).thenReturn(true)
         whenever(accountStore.hasAccessToken()).thenReturn(true)
         whenever(jetpackSharedLoginFlag.isEnabled()).thenReturn(true)
-        classToTest.tryLocalMigration()
+        classToTest.tryLocalMigration(migrationStateFlow)
         verify(contentResolverWrapper, never()).queryUri(contentResolver, uriValue)
     }
 
@@ -129,7 +131,7 @@ class SharedLoginResolverTest : BaseUnitTest() {
         whenever(jetpackSharedLoginFlag.isEnabled()).thenReturn(true)
         whenever(siteStore.hasSite()).thenReturn(true)
         whenever(siteStore.sites).thenReturn(listOf(SiteModel()))
-        classToTest.tryLocalMigration()
+        classToTest.tryLocalMigration(migrationStateFlow)
         verify(contentResolverWrapper, never()).queryUri(contentResolver, uriValue)
     }
 
@@ -138,14 +140,14 @@ class SharedLoginResolverTest : BaseUnitTest() {
         whenever(appPrefsWrapper.getIsFirstTrySharedLoginJetpack()).thenReturn(false)
         whenever(accountStore.hasAccessToken()).thenReturn(false)
         whenever(jetpackSharedLoginFlag.isEnabled()).thenReturn(true)
-        classToTest.tryLocalMigration()
+        classToTest.tryLocalMigration(migrationStateFlow)
         verify(contentResolverWrapper, never()).queryUri(contentResolver, uriValue)
     }
 
     @Test
     fun `Should query ContentResolver if NOT already logged in, feature flag is ENABLED and IS first try`() {
         featureEnabled()
-        classToTest.tryLocalMigration()
+        classToTest.tryLocalMigration(migrationStateFlow)
         verify(contentResolverWrapper).queryUri(contentResolver, uriValue)
     }
 
@@ -165,7 +167,7 @@ class SharedLoginResolverTest : BaseUnitTest() {
 //                any()
 //        )).doAnswer { onSuccessReaderPostsCaptor.firstValue.invoke() }
 
-        classToTest.tryLocalMigration()
+        classToTest.tryLocalMigration(migrationStateFlow)
 
         verify(dispatcher).dispatch(updateTokenAction)
     }
@@ -174,7 +176,7 @@ class SharedLoginResolverTest : BaseUnitTest() {
     fun `Should try to get user flags if access token is NOT empty`() {
         featureEnabled()
         whenever(mockCursor.getString(0)).thenReturn(Gson().toJson(sharedDataLoggedInNoSites))
-        classToTest.tryLocalMigration()
+        classToTest.tryLocalMigration(migrationStateFlow)
 //        verify(userFlagsResolver).tryGetUserFlags(any(), any())
     }
 
@@ -190,7 +192,7 @@ class SharedLoginResolverTest : BaseUnitTest() {
         )
         whenever(mockCursor.getString(0)).thenReturn(Gson().toJson(loginData))
 
-        classToTest.tryLocalMigration()
+        classToTest.tryLocalMigration(migrationStateFlow)
         verify(dispatcher, never()).dispatch(updateTokenAction)
     }
 
@@ -217,14 +219,14 @@ class SharedLoginResolverTest : BaseUnitTest() {
                 loginData.token!!
         )).thenReturn(updateTokenAction)
 
-        classToTest.tryLocalMigration()
+        classToTest.tryLocalMigration(migrationStateFlow)
         verify(dispatcher, times(1)).dispatch(updateTokenAction)
     }
 
     @Test
     fun `Should track login start if NOT already logged in, feature flag is ENABLED and IS first try`() {
         featureEnabled()
-        classToTest.tryLocalMigration()
+        classToTest.tryLocalMigration(migrationStateFlow)
         verify(sharedLoginAnalyticsTracker).trackLoginStart()
     }
 
@@ -233,14 +235,14 @@ class SharedLoginResolverTest : BaseUnitTest() {
         whenever(appPrefsWrapper.getIsFirstTrySharedLoginJetpack()).thenReturn(true)
         whenever(accountStore.hasAccessToken()).thenReturn(true)
         whenever(jetpackSharedLoginFlag.isEnabled()).thenReturn(true)
-        classToTest.tryLocalMigration()
+        classToTest.tryLocalMigration(migrationStateFlow)
         verify(sharedLoginAnalyticsTracker, never()).trackLoginStart()
     }
 
     @Test
     fun `Should NOT track login start if feature flag is DISABLED`() {
         whenever(jetpackSharedLoginFlag.isEnabled()).thenReturn(false)
-        classToTest.tryLocalMigration()
+        classToTest.tryLocalMigration(migrationStateFlow)
         verify(sharedLoginAnalyticsTracker, never()).trackLoginStart()
     }
 
@@ -249,7 +251,7 @@ class SharedLoginResolverTest : BaseUnitTest() {
         whenever(appPrefsWrapper.getIsFirstTrySharedLoginJetpack()).thenReturn(false)
         whenever(accountStore.hasAccessToken()).thenReturn(false)
         whenever(jetpackSharedLoginFlag.isEnabled()).thenReturn(true)
-        classToTest.tryLocalMigration()
+        classToTest.tryLocalMigration(migrationStateFlow)
         verify(sharedLoginAnalyticsTracker, never()).trackLoginStart()
     }
 
@@ -257,7 +259,7 @@ class SharedLoginResolverTest : BaseUnitTest() {
     fun `Should track login failed if access token result cursor IS null`() {
         whenever(contentResolverWrapper.queryUri(contentResolver, uriValue)).thenReturn(null)
         featureEnabled()
-        classToTest.tryLocalMigration()
+        classToTest.tryLocalMigration(migrationStateFlow)
         verify(sharedLoginAnalyticsTracker, never()).trackLoginSuccess()
         verify(sharedLoginAnalyticsTracker, times(1)).trackLoginFailed(ErrorType.QueryLoginDataError)
     }
@@ -266,7 +268,7 @@ class SharedLoginResolverTest : BaseUnitTest() {
     fun `Should track login failed if loginData IS null`() {
         whenever(mockCursor.getString(0)).thenReturn("{}?trigger an error")
         featureEnabled()
-        classToTest.tryLocalMigration()
+        classToTest.tryLocalMigration(migrationStateFlow)
         verify(sharedLoginAnalyticsTracker, never()).trackLoginSuccess()
         verify(sharedLoginAnalyticsTracker, times(1)).trackLoginFailed(ErrorType.NullLoginDataError)
     }
@@ -279,7 +281,7 @@ class SharedLoginResolverTest : BaseUnitTest() {
                 sites = listOf()
         )
         whenever(mockCursor.getString(0)).thenReturn(Gson().toJson(notLoggedInData))
-        classToTest.tryLocalMigration()
+        classToTest.tryLocalMigration(migrationStateFlow)
         verify(sharedLoginAnalyticsTracker, never()).trackLoginSuccess()
         verify(sharedLoginAnalyticsTracker, times(1)).trackLoginFailed(ErrorType.WPNotLoggedInError)
     }
@@ -293,7 +295,7 @@ class SharedLoginResolverTest : BaseUnitTest() {
                 sites = listOf(selfHosted)
         )
         whenever(mockCursor.getString(0)).thenReturn(Gson().toJson(notLoggedInData))
-        classToTest.tryLocalMigration()
+        classToTest.tryLocalMigration(migrationStateFlow)
         verify(sharedLoginAnalyticsTracker, times(1)).trackLoginSuccess()
         verify(sharedLoginAnalyticsTracker, never()).trackLoginFailed(any())
     }
@@ -306,7 +308,7 @@ class SharedLoginResolverTest : BaseUnitTest() {
                 sites = listOf(notSelfHosted)
         )
         whenever(mockCursor.getString(0)).thenReturn(Gson().toJson(loginData))
-        classToTest.tryLocalMigration()
+        classToTest.tryLocalMigration(migrationStateFlow)
         verify(sharedLoginAnalyticsTracker, never()).trackLoginFailed(any())
         verify(sharedLoginAnalyticsTracker, times(1)).trackLoginSuccess()
     }
@@ -319,7 +321,7 @@ class SharedLoginResolverTest : BaseUnitTest() {
                 sites = listOf(selfHosted)
         )
         whenever(mockCursor.getString(0)).thenReturn(Gson().toJson(loginData))
-        classToTest.tryLocalMigration()
+        classToTest.tryLocalMigration(migrationStateFlow)
         verify(sharedLoginAnalyticsTracker, never()).trackLoginFailed(any())
         verify(sharedLoginAnalyticsTracker, times(1)).trackLoginSuccess()
     }

@@ -64,11 +64,11 @@ class DeepLinkOpenWebLinksWithJetpackHelperTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given flow enabled & JP is installed, when handler is disabled, then show overlay is false`() {
+    fun `given flow enabled & JP is installed, when isOpenWebLinks setting is enabled, then show overlay is false`() {
         setTest(
                 isFeatureFlagEnabled = true,
                 isJetpackInstalled = true,
-                isDeepLinkComponentEnabled = false
+                isOpenWebLinksWithJetpack = true
         )
 
         val result = helper.shouldShowDeepLinkOpenWebLinksWithJetpackOverlay()
@@ -78,11 +78,11 @@ class DeepLinkOpenWebLinksWithJetpackHelperTest : BaseUnitTest() {
 
     @Test
     @Suppress("MaxLineLength")
-    fun `given flow enabled, JP install, handler enabled, when overlay never been shown, then show overlay is true`() {
+    fun `given flow enabled, JP install, isOpenWebLinks disabled, when overlay never been shown, then show overlay is true`() {
         setTest(
                 isFeatureFlagEnabled = true,
                 isJetpackInstalled = true,
-                isDeepLinkComponentEnabled = true,
+                isOpenWebLinksWithJetpack = false,
                 overlayLastShownTimestamp = 0L
         )
 
@@ -93,11 +93,11 @@ class DeepLinkOpenWebLinksWithJetpackHelperTest : BaseUnitTest() {
 
     @Test
     @Suppress("MaxLineLength")
-    fun `given flow enabled, JP install, handler enabled, overlay shown before, when frequency is only once, then show overlay is false`() {
+    fun `given flow enabled, JP install, isOpenWebLinks disabled, overlay shown before, when frequency is only once, then show overlay is false`() {
         setTest(
                 isFeatureFlagEnabled = true,
                 isJetpackInstalled = true,
-                isDeepLinkComponentEnabled = true,
+                isOpenWebLinksWithJetpack = false,
                 overlayLastShownTimestamp = getDateXDaysAgoInMilliseconds(5),
                 flowFrequency = 0L
         )
@@ -112,7 +112,7 @@ class DeepLinkOpenWebLinksWithJetpackHelperTest : BaseUnitTest() {
         setTest(
                 isFeatureFlagEnabled = true,
                 isJetpackInstalled = true,
-                isDeepLinkComponentEnabled = true,
+                isOpenWebLinksWithJetpack = false,
                 overlayLastShownTimestamp = getDateXDaysAgoInMilliseconds(9),
                 flowFrequency = 5L
         )
@@ -127,7 +127,7 @@ class DeepLinkOpenWebLinksWithJetpackHelperTest : BaseUnitTest() {
         setTest(
                 isFeatureFlagEnabled = true,
                 isJetpackInstalled = true,
-                isDeepLinkComponentEnabled = true,
+                isOpenWebLinksWithJetpack = false,
                 overlayLastShownTimestamp = getDateXDaysAgoInMilliseconds(3),
                 flowFrequency = 5L
         )
@@ -141,7 +141,7 @@ class DeepLinkOpenWebLinksWithJetpackHelperTest : BaseUnitTest() {
         setTest(
                 isFeatureFlagEnabled = true,
                 isJetpackInstalled = true,
-                isDeepLinkComponentEnabled = true,
+                isOpenWebLinksWithJetpack = false,
                 overlayLastShownTimestamp = getDateXDaysAgoInMilliseconds(1),
                 flowFrequency = 1L
         )
@@ -183,13 +183,14 @@ class DeepLinkOpenWebLinksWithJetpackHelperTest : BaseUnitTest() {
     private fun setTest(
         isFeatureFlagEnabled: Boolean = true,
         isJetpackInstalled: Boolean = true,
-        isDeepLinkComponentEnabled: Boolean = true,
+        isOpenWebLinksWithJetpack: Boolean = false,
         overlayLastShownTimestamp: Long = 0L,
         flowFrequency: Long = 0L
     ) {
         setFeatureEnabled(isFeatureFlagEnabled)
         setJetpackInstalled(isJetpackInstalled)
-        setDeepLinkHandlerComponentEnabled(isDeepLinkComponentEnabled)
+        setIsOpenWebLinksWithJetpack(isOpenWebLinksWithJetpack)
+//        setDeepLinkHandlerComponentEnabled(isDeepLinkComponentEnabled)
         setLastShownTimestamp(overlayLastShownTimestamp)
         setFlowFrequency(flowFrequency)
         setDaysBetween(overlayLastShownTimestamp)
@@ -220,8 +221,8 @@ class DeepLinkOpenWebLinksWithJetpackHelperTest : BaseUnitTest() {
         whenever(dateTimeUtilsWrapper.daysBetween(any(), any())).thenReturn(between)
     }
 
-    private fun setDeepLinkHandlerComponentEnabled(value: Boolean) {
-        whenever(packageManagerWrapper.isComponentEnabledSettingEnabled(any())).thenReturn(value)
+    private fun setIsOpenWebLinksWithJetpack(value: Boolean) {
+        whenever(appPrefsWrapper.getIsOpenWebLinksWithJetpack()).thenReturn(value)
     }
 
     private fun setPackageName(value: String) {

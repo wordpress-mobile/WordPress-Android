@@ -1,5 +1,6 @@
 package org.wordpress.android.util.config
 
+import kotlinx.coroutines.CoroutineScope
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.AppConfig.FeatureState.BuildConfigValue
@@ -11,7 +12,7 @@ import javax.inject.Singleton
 @Singleton
 class AppConfig
 @Inject constructor(
-    private val remoteConfig: RemoteConfig,
+    private val featureFlagConfig: FeatureFlagConfig,
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val manualFeatureConfig: ManualFeatureConfig
 ) {
@@ -25,16 +26,16 @@ class AppConfig
     /**
      * This method initialized the config
      */
-    fun init() {
-        remoteConfig.init()
+    fun init(appScope: CoroutineScope) {
+        featureFlagConfig.init(appScope)
         remoteConfigCheck.checkRemoteFields()
     }
 
     /**
      * This method triggers refresh of remote configuration.
      */
-    fun refresh() {
-        remoteConfig.refresh()
+    fun refresh(appScope: CoroutineScope) {
+        featureFlagConfig.refresh(appScope)
     }
 
     /**
@@ -67,7 +68,7 @@ class AppConfig
                 BuildConfigValue(feature.buildConfigValue)
             }
             else -> {
-                remoteConfig.getFeatureState(feature.remoteField)
+                featureFlagConfig.getFeatureState(feature.remoteField, feature.buildConfigValue)
             }
         }
     }
@@ -78,7 +79,7 @@ class AppConfig
      */
     fun getCurrentVariant(experiment: ExperimentConfig): Variant {
         val value = experimentValues.getOrPut(experiment.remoteField) {
-            val remoteValue = remoteConfig.getString(experiment.remoteField)
+            val remoteValue = featureFlagConfig.getString(experiment.remoteField)
             analyticsTracker.track(
                     Stat.EXPERIMENT_VARIANT_SET,
                     mapOf(experiment.remoteField to remoteValue)
@@ -87,6 +88,13 @@ class AppConfig
         }
         return experiment.variants.find { it.value == value }
                 ?: throw IllegalArgumentException("Remote variant does not match local value: $value")
+    }
+
+    /**
+     * This method clears the remote config values from the database
+     */
+    fun clear() {
+        featureFlagConfig.clear()
     }
 
     sealed class FeatureState(open val isEnabled: Boolean, val name: String) {

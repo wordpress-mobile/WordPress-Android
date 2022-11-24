@@ -2332,6 +2332,9 @@
     <string name="my_site_blogging_prompt_card_number_of_answers_one">1 answer</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_other">%d answers</string>
 
+    <!-- My Site - Jetpack migration success card -->
+    <string name="jp_migration_success_card_message">Please delete the WordPress app</string>
+
     <!-- site picker -->
     <string name="site_picker_title">Choose site</string>
     <string name="site_picker_edit_visibility">Show/hide sites</string>
@@ -4266,6 +4269,9 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
 
     <!-- Open Web Links With Jetpack -->
     <string name="preference_open_web_links_with_jetpack">Open web links with Jetpack</string>
+    <string name="preference_open_web_links_with_jetpack_setting_change_enable_error">Unable to enable open web links with Jetpack</string>
+    <string name="preference_open_web_links_with_jetpack_setting_change_disable_error">Unable to disable open web links with Jetpack</string>
+
 
     <!-- Jetpack feature overlay strings in WordPress App -->
     <string name="wp_jetpack_feature_removal_overlay_phase_one_title_stats">Get your stats using the new Jetpack app</string>
