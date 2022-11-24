@@ -590,7 +590,8 @@ class CommentsRestClientTest {
                         paramsCaptor.capture(),
                         bodyCaptor.capture(),
                         eq(kclass),
-                        anyOrNull()
+                        anyOrNull(),
+                        anyOrNull(),
                 )
         ).thenReturn(response)
         return response
