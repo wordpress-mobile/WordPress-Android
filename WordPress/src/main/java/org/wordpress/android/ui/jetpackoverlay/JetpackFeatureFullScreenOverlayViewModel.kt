@@ -27,18 +27,28 @@ class JetpackFeatureFullScreenOverlayViewModel @Inject constructor(
 
     private lateinit var screenType: JetpackFeatureOverlayScreenType
     private var isSiteCreationOverlayScreen: Boolean = false
+    private var isDeepLinkOverlayScreen: Boolean = false
 
     fun openJetpackAppDownloadLink() {
-        _action.value = JetpackFeatureOverlayActions.OpenPlayStore
-        if (isSiteCreationOverlayScreen)
+        if (isSiteCreationOverlayScreen) {
+            _action.value = JetpackFeatureOverlayActions.OpenPlayStore
             jetpackFeatureRemovalOverlayUtil.trackInstallJetpackTappedInSiteCreationOverlay()
-        else jetpackFeatureRemovalOverlayUtil.trackInstallJetpackTapped(screenType)
+        } else if (isDeepLinkOverlayScreen) {
+            _action.value = JetpackFeatureOverlayActions.ForwardToJetpack
+            jetpackFeatureRemovalOverlayUtil.trackInstallJetpackTappedInDeepLinkOverlay()
+        }
+        else {
+            _action.value = JetpackFeatureOverlayActions.OpenPlayStore
+            jetpackFeatureRemovalOverlayUtil.trackInstallJetpackTapped(screenType)
+        }
     }
 
     fun continueToFeature() {
         _action.value = JetpackFeatureOverlayActions.DismissDialog
         if (isSiteCreationOverlayScreen)
             jetpackFeatureRemovalOverlayUtil.trackBottomSheetDismissedInSiteCreationOverlay(CONTINUE_BUTTON)
+        else if (isDeepLinkOverlayScreen)
+            jetpackFeatureRemovalOverlayUtil.trackBottomSheetDismissedInDeepLinkOverlay(CONTINUE_BUTTON)
         else jetpackFeatureRemovalOverlayUtil.trackBottomSheetDismissed(screenType, CONTINUE_BUTTON)
     }
 
@@ -46,10 +56,17 @@ class JetpackFeatureFullScreenOverlayViewModel @Inject constructor(
         _action.value = JetpackFeatureOverlayActions.DismissDialog
         if (isSiteCreationOverlayScreen)
             jetpackFeatureRemovalOverlayUtil.trackBottomSheetDismissedInSiteCreationOverlay(CLOSE_BUTTON)
+        else if (isDeepLinkOverlayScreen)
+            jetpackFeatureRemovalOverlayUtil.trackBottomSheetDismissedInDeepLinkOverlay(CLOSE_BUTTON)
         else jetpackFeatureRemovalOverlayUtil.trackBottomSheetDismissed(screenType, CLOSE_BUTTON)
     }
 
-    fun init(overlayScreenType: JetpackFeatureOverlayScreenType?, isSiteCreationOverlay: Boolean, rtlLayout: Boolean) {
+    fun init(
+        overlayScreenType: JetpackFeatureOverlayScreenType?,
+        isSiteCreationOverlay: Boolean,
+        isDeepLinkOverlay: Boolean,
+        rtlLayout: Boolean
+    ) {
         if (isSiteCreationOverlay) {
             isSiteCreationOverlayScreen = true
             _uiState.postValue(
@@ -59,6 +76,13 @@ class JetpackFeatureFullScreenOverlayViewModel @Inject constructor(
                     )
             )
             jetpackFeatureRemovalOverlayUtil.trackSiteCreationOverlayShown()
+            return
+        }
+
+        if (isDeepLinkOverlay) {
+            isDeepLinkOverlayScreen = true
+            _uiState.postValue(jetpackFeatureOverlayContentBuilder.buildDeepLinkOverlayState(rtlLayout))
+            jetpackFeatureRemovalOverlayUtil.trackDeepLinkOverlayShown()
             return
         }
 
