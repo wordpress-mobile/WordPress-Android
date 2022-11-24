@@ -9,16 +9,18 @@ plugins {
 }
 
 ext {
+    minSdkVersion = 24
+    compileSdkVersion = 31
+    targetSdkVersion = 31
+}
+
+ext {
     wordPressUtilsVersion = '3.1.0'
     wordPressLoginVersion = '1.0.0'
     aztecVersion = 'v1.6.2'
     gutenbergMobileVersion = 'v1.85.0'
     storiesVersion = '2.0.0'
     aboutAutomatticVersion = '1.0.0'
-
-    minSdkVersion = 24
-    compileSdkVersion = 31
-    targetSdkVersion = 31
 
     coroutinesVersion = '1.5.2'
     androidxWorkVersion = "2.7.0"
