@@ -4,7 +4,9 @@ import org.wordpress.android.fluxc.network.rest.wpcom.mobilepay.MobilePayRestCli
 import org.wordpress.android.fluxc.tools.CoroutineEngine
 import org.wordpress.android.util.AppLog.T.API
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class MobilePayStore @Inject constructor(
     private val restClient: MobilePayRestClient,
     private val coroutineEngine: CoroutineEngine
