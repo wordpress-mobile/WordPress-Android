@@ -42,8 +42,6 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
     @InternalCoroutinesApi
     @Before
     fun setUp() {
-        whenever(contextProvider.getContext()).thenReturn(context)
-
         viewModel = DeepLinkingIntentReceiverViewModel(
                 TEST_DISPATCHER,
                 deepLinkHandlers,

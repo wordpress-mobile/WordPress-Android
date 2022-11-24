@@ -38,7 +38,6 @@ class DeepLinkingIntentReceiverViewModel
     private val _finish = MutableLiveData<Event<Unit>>()
     val finish = _finish as LiveData<Event<Unit>>
     val toast = deepLinkHandlers.toast
-    private var isStarted = false
     private var action: String? = null
     private var uriWrapper: UriWrapper? = null
     private var uri: Uri? = null
@@ -50,15 +49,8 @@ class DeepLinkingIntentReceiverViewModel
         data: UriWrapper?,
         entryPoint: DeepLinkEntryPoint,
         savedInstanceState: Bundle?) {
-        if (isStarted) return
-        isStarted = true
-
         extractSavedInstanceStateIfNeeded(savedInstanceState)
         applyFromArgsIfNeeded(action, data, entryPoint, savedInstanceState != null)
-
-        uri?.let {
-            uriWrapper = UriWrapper(it)
-        }
 
         val requestHandled = checkAndShowOpenWebLinksWithJetpackOverlayIfNeeded()
         if (!requestHandled)
@@ -75,7 +67,7 @@ class DeepLinkingIntentReceiverViewModel
 
     private fun trackWithDeepLinkDataAndFinish() {
         action?.let {
-            analyticsUtilsWrapper.trackWithDeepLinkData( DEEP_LINKED, it,uri?.host ?: "",  uriWrapper?.uri )
+            analyticsUtilsWrapper.trackWithDeepLinkData( DEEP_LINKED, it,uriWrapper?.host ?: "",  uriWrapper?.uri )
         }
         _finish.value = Event(Unit)
     }
@@ -140,6 +132,7 @@ class DeepLinkingIntentReceiverViewModel
     private fun extractSavedInstanceStateIfNeeded(savedInstanceState: Bundle?) {
         savedInstanceState?.let {
             uri = savedInstanceState.getParcelable(URI_KEY)
+            uriWrapper = uri?.let { UriWrapper(it) }
             deepLinkEntryPoint =
                     DeepLinkEntryPoint.valueOf(
                     savedInstanceState.getString(DEEP_LINK_ENTRY_POINT_KEY, DeepLinkEntryPoint.DEFAULT.name))
@@ -155,7 +148,7 @@ class DeepLinkingIntentReceiverViewModel
         if (hasSavedInstanceState) return
 
         action = actionValue
-        uri = uriValue?.uri
+        uriWrapper = uriValue
         deepLinkEntryPoint = deepLinkEntryPointValue
     }
 
