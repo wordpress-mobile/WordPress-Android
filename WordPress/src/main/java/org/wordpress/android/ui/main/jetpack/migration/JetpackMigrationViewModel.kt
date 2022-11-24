@@ -86,7 +86,10 @@ class JetpackMigrationViewModel @Inject constructor(
                 )
                 else -> emit(
                         Done(
-                                primaryActionButton = DonePrimaryButton(::onDoneClicked)
+                                primaryActionButton = DonePrimaryButton{
+                                    appPrefsWrapper.setJetpackMigrationCompleted(true)
+                                    onDoneClicked()
+                                }
                         )
                 )
             }
