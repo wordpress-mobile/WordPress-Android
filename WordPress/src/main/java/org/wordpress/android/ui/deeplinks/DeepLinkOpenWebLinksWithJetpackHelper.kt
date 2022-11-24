@@ -50,7 +50,7 @@ class DeepLinkOpenWebLinksWithJetpackHelper @Inject constructor(
     fun handleOpenWebLinksWithJetpack() : Boolean {
         try {
             enableDisableOpenWithJetpackComponents(true)
-            packageManagerWrapper.enableReaderDeeplinks()
+            packageManagerWrapper.disableReaderDeepLinks()
             appPrefsWrapper.setIsOpenWebLinksWithJetpack(true)
             appPrefsWrapper.setOpenWebLinksWithJetpackOverlayLastShownTimestamp(System.currentTimeMillis())
             return true
