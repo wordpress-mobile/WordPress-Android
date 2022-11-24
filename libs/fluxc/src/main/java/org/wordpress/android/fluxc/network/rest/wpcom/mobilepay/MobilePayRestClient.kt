@@ -33,11 +33,10 @@ class MobilePayRestClient @Inject constructor(
         purchaseToken: String,
         appId: String,
         siteId: Long,
-        url: String = WPCOMV2.iap.orders.url,
     ): CreateOrderResponse {
         val response = wpComGsonRequestBuilder.syncPostRequest(
             restClient = this,
-            url = url,
+            url = WPCOMV2.iap.orders.url,
             params = null,
             body = mapOf(
                 "site_id" to siteId,
