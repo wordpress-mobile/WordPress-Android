@@ -251,7 +251,6 @@ class AppPrefsWrapper @Inject constructor() {
     fun saveIsFirstTryReaderSavedPostsJetpack(isFirstTry: Boolean) =
             AppPrefs.saveIsFirstTryReaderSavedPostsJetpack(isFirstTry)
 
-    // TODO @RenanLukas: set migration completed
     fun setJetpackMigrationCompleted(isCompleted: Boolean) = AppPrefs.setIsJetpackMigrationCompleted(isCompleted)
 
     fun isJetpackMigrationCompleted(): Boolean = AppPrefs.getIsJetpackMigrationCompleted()
@@ -260,6 +259,9 @@ class AppPrefsWrapper @Inject constructor() {
             AppPrefs.getOpenWebLinksWithJetpackOverlayLastShownTimestamp()
 
     fun getIsOpenWebLinksWithJetpack(): Boolean = AppPrefs.getIsOpenWebLinksWithJetpack()
+
+    fun setIsOpenWebLinksWithJetpack(isOpenWebLinksWithJetpack: Boolean) =
+            AppPrefs.setIsOpenWebLinksWithJetpack(isOpenWebLinksWithJetpack)
 
     fun getAllPrefs(): Map<String, Any?> = AppPrefs.getAllPrefs()
 

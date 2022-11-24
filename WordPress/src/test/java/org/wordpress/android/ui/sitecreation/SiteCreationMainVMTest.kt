@@ -22,6 +22,7 @@ import org.mockito.kotlin.verifyNoMoreInteractions
 import org.mockito.kotlin.whenever
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleEmpty
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleGeneral
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleStepCount
@@ -62,6 +63,7 @@ class SiteCreationMainVMTest {
     @Mock lateinit var dispatcher: Dispatcher
     @Mock lateinit var fetchHomePageLayoutsUseCase: FetchHomePageLayoutsUseCase
     @Mock lateinit var imageManager: ImageManager
+    @Mock lateinit var jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil
     private val wizardManagerNavigatorLiveData = SingleLiveEvent<SiteCreationStep>()
 
     private lateinit var viewModel: SiteCreationMainVM
@@ -268,6 +270,7 @@ class SiteCreationMainVMTest {
             networkUtils,
             dispatcher,
             fetchHomePageLayoutsUseCase,
-            imageManager
+            imageManager,
+            jetpackFeatureRemovalOverlayUtil
     )
 }

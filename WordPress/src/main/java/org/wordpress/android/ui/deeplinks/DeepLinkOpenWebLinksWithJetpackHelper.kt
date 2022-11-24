@@ -27,16 +27,19 @@ class DeepLinkOpenWebLinksWithJetpackHelper @Inject constructor(
     fun enableDisableOpenWithJetpackComponents(newValue: Boolean) {
         when (newValue) {
             true -> {
-                packageManagerWrapper.enableReaderDeeplinks()
-                packageManagerWrapper.enableComponentEnableSetting(
-                        DeepLinkingIntentReceiverActivity::class.java)
+                packageManagerWrapper.disableReaderDeepLinks()
+                packageManagerWrapper.disableComponentEnabledSetting(WEB_LINKS_DEEPLINK_ACTIVITY_ALIAS)
             }
             false -> {
-                packageManagerWrapper.disableReaderDeepLinks()
-                packageManagerWrapper.disableComponentEnabledSetting(
-                        DeepLinkingIntentReceiverActivity::class.java)
+                packageManagerWrapper.enableReaderDeeplinks()
+                packageManagerWrapper.enableComponentEnableSetting(WEB_LINKS_DEEPLINK_ACTIVITY_ALIAS)
             }
         }
+    }
+
+    fun handleJetpackUninstalled() {
+        enableDisableOpenWithJetpackComponents(false)
+        appPrefsWrapper.setIsOpenWebLinksWithJetpack(false)
     }
 
     private fun showOverlay() : Boolean {
@@ -86,5 +89,7 @@ class DeepLinkOpenWebLinksWithJetpackHelper @Inject constructor(
 
     companion object {
         const val JETPACK_PACKAGE_NAME = "com.jetpack.android"
+        const val WEB_LINKS_DEEPLINK_ACTIVITY_ALIAS =
+                "org.wordpress.android.WebLinksDeepLinkingIntentReceiverActivity"
     }
 }

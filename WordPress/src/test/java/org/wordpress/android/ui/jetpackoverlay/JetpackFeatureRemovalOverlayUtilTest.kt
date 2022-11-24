@@ -19,6 +19,7 @@ import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.SiteUtilsWrapper
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import java.util.Date
 
 private const val ONE_DAY_TIME_IN_MILLIS = 1000L * 60L * 60L * 24L
@@ -31,6 +32,7 @@ class JetpackFeatureRemovalOverlayUtilTest {
     @Mock private lateinit var siteUtilsWrapper: SiteUtilsWrapper
     @Mock private lateinit var buildConfigWrapper: BuildConfigWrapper
     @Mock private lateinit var dateTimeUtilsWrapper: DateTimeUtilsWrapper
+    @Mock private lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
 
     @Rule
     @JvmField val rule = InstantTaskExecutorRule()
@@ -47,7 +49,8 @@ class JetpackFeatureRemovalOverlayUtilTest {
                 selectedSiteRepository,
                 siteUtilsWrapper,
                 buildConfigWrapper,
-                dateTimeUtilsWrapper
+                dateTimeUtilsWrapper,
+                analyticsTrackerWrapper
         )
     }
 
@@ -143,6 +146,51 @@ class JetpackFeatureRemovalOverlayUtilTest {
 
         val shouldShowOverlay = jetpackFeatureRemovalOverlayUtil
                 .shouldShowFeatureSpecificJetpackOverlay(STATS)
+
+        assertTrue(shouldShowOverlay)
+    }
+
+    @Test
+    fun `given jetpack app, shouldShowSiteCreationOverlay invoked, then return false`() {
+        whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
+
+        val shouldShowOverlay = jetpackFeatureRemovalOverlayUtil
+                .shouldShowSiteCreationOverlay()
+
+        assertFalse(shouldShowOverlay)
+    }
+
+    @Test
+    @Suppress("MaxLineLength")
+    fun `given feature removal not started, when shouldShowSiteCreationOverlay invoked, then return false`() {
+        whenever(jetpackFeatureRemovalPhaseHelper.getSiteCreationPhase()).thenReturn(null)
+
+        val shouldShowOverlay = jetpackFeatureRemovalOverlayUtil
+                .shouldShowSiteCreationOverlay()
+
+        assertFalse(shouldShowOverlay)
+    }
+
+    @Test
+    @Suppress("MaxLineLength")
+    fun `given feature removal in phase one, when shouldShowSiteCreationOverlay invoked, then return false`() {
+        whenever(jetpackFeatureRemovalPhaseHelper.getSiteCreationPhase())
+                .thenReturn(JetpackFeatureRemovalSiteCreationPhase.PHASE_ONE)
+
+        val shouldShowOverlay = jetpackFeatureRemovalOverlayUtil
+                .shouldShowSiteCreationOverlay()
+
+        assertTrue(shouldShowOverlay)
+    }
+
+    @Test
+    @Suppress("MaxLineLength")
+    fun `given feature removal in phase four, when shouldShowSiteCreationOverlay invoked, then return false`() {
+        whenever(jetpackFeatureRemovalPhaseHelper.getSiteCreationPhase())
+                .thenReturn(JetpackFeatureRemovalSiteCreationPhase.PHASE_TWO)
+
+        val shouldShowOverlay = jetpackFeatureRemovalOverlayUtil
+                .shouldShowSiteCreationOverlay()
 
         assertTrue(shouldShowOverlay)
     }

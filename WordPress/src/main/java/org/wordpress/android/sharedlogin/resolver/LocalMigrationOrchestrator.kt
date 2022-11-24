@@ -2,6 +2,7 @@ package org.wordpress.android.sharedlogin.resolver
 
 import kotlinx.coroutines.flow.MutableStateFlow
 import org.wordpress.android.localcontentmigration.ContentMigrationAnalyticsTracker
+import org.wordpress.android.localcontentmigration.ContentMigrationAnalyticsTracker.ErrorType.LocalDraftContent
 import org.wordpress.android.localcontentmigration.EligibilityHelper
 import org.wordpress.android.localcontentmigration.LocalContentEntityData.Companion.IneligibleReason.LocalDraftContentIsPresent
 import org.wordpress.android.localcontentmigration.LocalContentEntityData.Companion.IneligibleReason.WPNotLoggedIn
@@ -16,6 +17,7 @@ import org.wordpress.android.localcontentmigration.LocalMigrationResult.Companio
 import org.wordpress.android.localcontentmigration.LocalMigrationResult.Failure
 import org.wordpress.android.localcontentmigration.LocalMigrationState
 import org.wordpress.android.localcontentmigration.LocalMigrationState.Finished
+import org.wordpress.android.localcontentmigration.LocalMigrationState.Finished.DeleteOnly
 import org.wordpress.android.localcontentmigration.LocalPostsHelper
 import org.wordpress.android.localcontentmigration.SharedLoginHelper
 import org.wordpress.android.localcontentmigration.SitesMigrationHelper
@@ -26,7 +28,6 @@ import org.wordpress.android.localcontentmigration.then
 import org.wordpress.android.reader.savedposts.resolver.ReaderSavedPostsHelper
 import org.wordpress.android.sharedlogin.SharedLoginAnalyticsTracker
 import org.wordpress.android.sharedlogin.SharedLoginAnalyticsTracker.ErrorType.WPNotLoggedInError
-import org.wordpress.android.localcontentmigration.ContentMigrationAnalyticsTracker.ErrorType.LocalDraftContent
 import org.wordpress.android.userflags.resolver.UserFlagsHelper
 import javax.inject.Inject
 
@@ -40,7 +41,11 @@ class LocalMigrationOrchestrator @Inject constructor(
     private val localPostsHelper: LocalPostsHelper,
     private val eligibilityHelper: EligibilityHelper,
 ) {
-    fun tryLocalMigration(migrationStateFlow: MutableStateFlow<LocalMigrationState>) {
+    fun tryLocalMigration(migrationStateFlow: MutableStateFlow<LocalMigrationState>, showDeleteOnly: Boolean = false) {
+        if (showDeleteOnly) {
+            migrationStateFlow.value = DeleteOnly
+            return
+        }
         eligibilityHelper.validate()
                 .then(sharedLoginHelper::login).emitTo(migrationStateFlow)
                 .then(sitesMigrationHelper::migrateSites).emitTo(migrationStateFlow)

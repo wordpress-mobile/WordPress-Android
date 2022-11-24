@@ -11,10 +11,11 @@ import java.util.Calendar
 import java.util.Formatter
 import javax.inject.Inject
 
-class DateUtils @Inject constructor(
+class StatsDateUtils @Inject constructor(
     private val contextProvider: ContextProvider,
     private val localeManagerWrapper: LocaleManagerWrapper
 ) {
+    @Suppress("MagicNumber")
     fun getWeekDay(dayOfTheWeek: Int): String {
         val c = Calendar.getInstance()
         c.firstDayOfWeek = Calendar.MONDAY
@@ -49,6 +50,7 @@ class DateUtils @Inject constructor(
         )
     }
 
+    @Suppress("MagicNumber")
     fun formatDateRange(from: Long, to: Long, timezone: String): String {
         val formatter = Formatter(StringBuilder(50), localeManagerWrapper.getLocale())
         return DateUtils.formatDateRange(

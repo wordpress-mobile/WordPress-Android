@@ -98,5 +98,6 @@ sealed class LocalMigrationState {
     sealed class Finished: LocalMigrationState() {
         object Successful: Finished()
         data class Failure(val error: LocalMigrationError): Finished()
+        object DeleteOnly: Finished()
     }
 }

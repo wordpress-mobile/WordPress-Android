@@ -4266,12 +4266,16 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="jp_migration_network_error_title">Unable to connect to the internet.</string>
     <string name="jp_migration_network_error_subtitle">Please check to make sure your network connection is working and try again.</string>
     <string name="jp_migration_network_error_message">We are unable to transfer your data and settings without a network connection.</string>
+    <string name="jp_migration_delete_title">You no longer need the WordPress app</string>
+    <string name="jp_migration_delete_subtitle">It looks like you still have the WordPress app installed. We recommend you delete the WordPress app to avoid data conflicts.</string>
+    <string name="jp_migration_delete_message">Please &lt;b&gt;delete the WordPress app&lt;/b&gt; to&lt;br&gt;avoid data conflicts.</string>
+    <string name="jp_migration_got_it_button">Got it</string>
+    <string name="jp_migration_need_help_button">Need help?</string>
 
     <!-- Open Web Links With Jetpack -->
     <string name="preference_open_web_links_with_jetpack">Open web links with Jetpack</string>
     <string name="preference_open_web_links_with_jetpack_setting_change_enable_error">Unable to enable open web links with Jetpack</string>
     <string name="preference_open_web_links_with_jetpack_setting_change_disable_error">Unable to disable open web links with Jetpack</string>
-
 
     <!-- Jetpack feature overlay strings in WordPress App -->
     <string name="wp_jetpack_feature_removal_overlay_phase_one_title_stats">Get your stats using the new Jetpack app</string>
@@ -4281,5 +4285,14 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="wp_jetpack_feature_removal_overlay_phase_one_description_reader">Switch to the Jetpack app to find, follow, and like all your favorite sites and posts with Reader.</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_description_notifications">Switch to the Jetpack app to keep receiving  realtime notifications on your device.</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app" translatable="false"> @string/wp_jetpack_get_new_jetpack_app</string>
+
+    <!-- Deep Linking Activity Aliases -->
+    <string name="deep_linking_urilinks_alias_label">urilinks</string>
+    <string name="deep_linking_weblinks_alias_label">weblinks</string>
+
+    <string name="wp_jetpack_feature_removal_site_creation_overlay_title" translatable="false">Create a new WordPress site with the Jetpack app</string>
+    <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_one_description" translatable="false">Jetpack provides stats, notifications and more to help you build and grow the WordPress site of your dreams.</string>
+    <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_two_description" translatable="false">Jetpack provides stats, notifications and more to help you build and grow the WordPress site of your dreams.\n\nThe WordPress app no longer supports creating a new site.</string>
+    <string name="wp_jetpack_continue_without_jetpack">Continue without Jetpack</string>
 
 </resources>

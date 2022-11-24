@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.stats.refresh.utils
 
-import org.apache.commons.text.WordUtils
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
@@ -100,7 +99,8 @@ class StatsDateFormatter
                 startCalendar.add(Calendar.DAY_OF_WEEK, -6)
                 return printWeek(startCalendar, endCalendar)
             }
-            MONTHS -> WordUtils.capitalize(outputMonthFormat.format(date))
+            MONTHS -> outputMonthFormat.format(date)
+                    .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
             YEARS -> outputYearFormat.format(date)
         }
     }
