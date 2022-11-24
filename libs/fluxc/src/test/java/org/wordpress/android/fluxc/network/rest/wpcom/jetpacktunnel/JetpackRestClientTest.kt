@@ -8,6 +8,7 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.KArgumentCaptor
+import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.isNull
@@ -96,7 +97,8 @@ class JetpackRestClientTest {
                 eq(null),
                 paramsCaptor.capture(),
                 eq(JetpackInstallResponse::class.java),
-                isNull()
+                isNull(),
+                anyOrNull(),
         )).thenReturn(response)
     }
 }

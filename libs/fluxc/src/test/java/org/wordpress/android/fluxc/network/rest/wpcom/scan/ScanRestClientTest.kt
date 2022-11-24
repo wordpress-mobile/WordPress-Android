@@ -446,7 +446,8 @@ class ScanRestClientTest {
                         eq(mapOf()),
                         anyOrNull(),
                         eq(ScanStartResponse::class.java),
-                        isNull()
+                        isNull(),
+                        anyOrNull(),
                 )
         ).thenReturn(response)
         whenever(site.siteId).thenReturn(siteId)
@@ -466,7 +467,8 @@ class ScanRestClientTest {
                         anyOrNull(),
                         anyOrNull(),
                         eq(FixThreatsResponse::class.java),
-                        isNull()
+                        isNull(),
+                        anyOrNull(),
                 )
         ).thenReturn(response)
         return response
@@ -483,7 +485,8 @@ class ScanRestClientTest {
                         anyOrNull(),
                         anyOrNull(),
                         eq(Any::class.java),
-                        isNull()
+                        isNull(),
+                        anyOrNull(),
                 )
         ).thenReturn(response)
         return response
