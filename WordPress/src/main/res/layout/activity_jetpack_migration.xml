@@ -7,7 +7,6 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragment_container"
-        android:name="org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
