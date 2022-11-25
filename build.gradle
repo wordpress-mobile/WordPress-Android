@@ -80,6 +80,7 @@ ext {
     volleyVersion = '1.1.1'
     jsoupVersion = '1.10.3'
     gsonVersion = '2.6.2'
+    zendeskVersion = '5.0.2'
 
     // test
     jUnitVersion = '4.13'
