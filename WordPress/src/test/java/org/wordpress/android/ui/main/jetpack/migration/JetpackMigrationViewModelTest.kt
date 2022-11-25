@@ -8,6 +8,7 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
+import org.wordpress.android.localcontentmigration.MigrationEmailHelper
 import org.wordpress.android.sharedlogin.resolver.LocalMigrationOrchestrator
 import org.wordpress.android.test
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.DeletePrimaryButton
@@ -33,11 +34,13 @@ class JetpackMigrationViewModelTest : BaseUnitTest() {
     private val gravatarUtilsWrapper: GravatarUtilsWrapper = mock()
     private val appPrefsWrapper: AppPrefsWrapper = mock()
     private val localMigrationOrchestrator: LocalMigrationOrchestrator = mock()
+    private val migrationEmailHelper: MigrationEmailHelper = mock()
     private val classToTest = JetpackMigrationViewModel(
             siteUtilsWrapper = siteUtilsWrapper,
             gravatarUtilsWrapper = gravatarUtilsWrapper,
             appPrefsWrapper = appPrefsWrapper,
             localMigrationOrchestrator = localMigrationOrchestrator,
+            migrationEmailHelper = migrationEmailHelper
     )
 
     // region ViewModel
