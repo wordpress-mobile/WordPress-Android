@@ -379,7 +379,7 @@ dependencies {
     implementation "androidx.media:media:$androidxMediaVersion"
     implementation "androidx.appcompat:appcompat:$appCompatVersion"
     implementation "androidx.cardview:cardview:$androidxCardviewVersion"
-    implementation 'androidx.recyclerview:recyclerview:1.0.0'
+    implementation "androidx.recyclerview:recyclerview:$androidxRecyclerviewVersion"
     implementation "com.google.android.material:material:$materialVersion"
     implementation 'androidx.percentlayout:percentlayout:1.0.0'
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:$swipeToRefreshVersion"
