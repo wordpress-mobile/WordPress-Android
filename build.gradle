@@ -55,6 +55,7 @@ ext {
     constraintLayoutVersion = '1.1.3'
     materialVersion = '1.2.1'
     playServicesAuthVersion = '20.3.0'
+    playServicesCodeScannerVersion = '16.0.0-beta1'
     preferenceVersion = '1.1.0'
     swipeToRefreshVersion = '1.1.0'
     uCropVersion = '2.2.4'

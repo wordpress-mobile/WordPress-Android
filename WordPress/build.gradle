@@ -395,7 +395,7 @@ dependencies {
     implementation "com.google.firebase:firebase-messaging:$firebaseMessagingVersion"
     implementation "com.google.firebase:firebase-config:$firebaseConfigVersion"
     implementation "com.google.android.gms:play-services-auth:$playServicesAuthVersion"
-    implementation 'com.google.android.gms:play-services-code-scanner:16.0.0-beta1'
+    implementation "com.google.android.gms:play-services-code-scanner:$playServicesCodeScannerVersion"
     implementation 'com.android.installreferrer:installreferrer:2.2'
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
     implementation 'org.greenrobot:eventbus:3.3.1'
