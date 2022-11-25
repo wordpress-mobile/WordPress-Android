@@ -17,7 +17,7 @@ import org.wordpress.android.localcontentmigration.LocalMigrationResult.Companio
 import org.wordpress.android.localcontentmigration.LocalMigrationResult.Failure
 import org.wordpress.android.localcontentmigration.LocalMigrationState
 import org.wordpress.android.localcontentmigration.LocalMigrationState.Finished
-import org.wordpress.android.localcontentmigration.LocalMigrationState.Finished.DeleteOnly
+import org.wordpress.android.localcontentmigration.LocalMigrationState.SingleStep.DeleteSingleStep
 import org.wordpress.android.localcontentmigration.LocalPostsHelper
 import org.wordpress.android.localcontentmigration.SharedLoginHelper
 import org.wordpress.android.localcontentmigration.SitesMigrationHelper
@@ -43,7 +43,7 @@ class LocalMigrationOrchestrator @Inject constructor(
 ) {
     fun tryLocalMigration(migrationStateFlow: MutableStateFlow<LocalMigrationState>, showDeleteOnly: Boolean = false) {
         if (showDeleteOnly) {
-            migrationStateFlow.value = DeleteOnly
+            migrationStateFlow.value = DeleteSingleStep
             return
         }
         eligibilityHelper.validate()

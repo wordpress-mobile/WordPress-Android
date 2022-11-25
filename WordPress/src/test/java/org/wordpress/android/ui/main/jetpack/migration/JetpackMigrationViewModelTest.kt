@@ -17,6 +17,8 @@ import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.ErrorPrimaryButton
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.ErrorSecondaryButton
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.NotificationsPrimaryButton
+import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.UpdateWPPrimaryButton
+import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.UpdateWPSecondaryButton
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.WelcomePrimaryButton
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.WelcomeSecondaryButton
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.SiteListItemUiState
@@ -220,7 +222,7 @@ class JetpackMigrationViewModelTest : BaseUnitTest() {
     fun `Should have correct screenIconRes for Delete Content`() {
         val deleteContent = Content.Delete(DeletePrimaryButton {}, DeleteSecondaryButton {})
         val actual = deleteContent.screenIconRes
-        val expected = R.drawable.ic_jetpack_migration_delete
+        val expected = R.drawable.ic_jetpack_migration_wp
         assertThat(actual).isEqualTo(expected)
     }
 
@@ -253,6 +255,30 @@ class JetpackMigrationViewModelTest : BaseUnitTest() {
         val deleteContent = Content.Delete(DeletePrimaryButton {}, DeleteSecondaryButton {})
         val actual = deleteContent.deleteWpIcon
         val expected = R.drawable.ic_jetpack_migration_delete_wp
+        assertThat(actual).isEqualTo(expected)
+    }
+
+    @Test
+    fun `Should have correct screenIconRes for UpdateWP Content`() {
+        val updateWPContent = Content.UpdateWP(UpdateWPPrimaryButton {}, UpdateWPSecondaryButton {})
+        val actual = updateWPContent.screenIconRes
+        val expected = R.drawable.ic_jetpack_migration_wp
+        assertThat(actual).isEqualTo(expected)
+    }
+
+    @Test
+    fun `Should have correct title for UpdateWP Content`() {
+        val updateWPContent = Content.UpdateWP(UpdateWPPrimaryButton {}, UpdateWPSecondaryButton {})
+        val actual = updateWPContent.title
+        val expected = UiStringRes(R.string.jp_migration_update_wp_title)
+        assertThat(actual).isEqualTo(expected)
+    }
+
+    @Test
+    fun `Should have correct subtitle for UpdateWP Content`() {
+        val updateWPContent = Content.UpdateWP(UpdateWPPrimaryButton {}, UpdateWPSecondaryButton {})
+        val actual = updateWPContent.subtitle
+        val expected = UiStringRes(R.string.jp_migration_update_wp_subtitle)
         assertThat(actual).isEqualTo(expected)
     }
     // endregion

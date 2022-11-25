@@ -98,6 +98,9 @@ sealed class LocalMigrationState {
     sealed class Finished: LocalMigrationState() {
         object Successful: Finished()
         data class Failure(val error: LocalMigrationError): Finished()
-        object DeleteOnly: Finished()
+    }
+    sealed class SingleStep: LocalMigrationState() {
+        object DeleteSingleStep: SingleStep()
+        object UpdateWPSingleStep: SingleStep()
     }
 }

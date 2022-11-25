@@ -24,6 +24,7 @@ import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.CompleteFlow
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.ShowHelp
+import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.UpdateWPStore
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Content
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Error
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Loading
@@ -32,6 +33,7 @@ import org.wordpress.android.ui.main.jetpack.migration.compose.state.DoneStep
 import org.wordpress.android.ui.main.jetpack.migration.compose.state.ErrorStep
 import org.wordpress.android.ui.main.jetpack.migration.compose.state.LoadingState
 import org.wordpress.android.ui.main.jetpack.migration.compose.state.NotificationsStep
+import org.wordpress.android.ui.main.jetpack.migration.compose.state.UpdateWPStep
 import org.wordpress.android.ui.main.jetpack.migration.compose.state.WelcomeStep
 import javax.inject.Inject
 
@@ -68,6 +70,7 @@ class JetpackMigrationFragment : Fragment() {
         when (actionEvent) {
             is CompleteFlow -> ActivityLauncher.showMainActivity(requireContext())
             is ShowHelp -> launchHelpScreen()
+            is UpdateWPStore -> launchWPPlayStore()
         }
     }
 
@@ -78,6 +81,10 @@ class JetpackMigrationFragment : Fragment() {
                 null,
                 null
         )
+    }
+
+    private fun launchWPPlayStore() {
+        ActivityLauncher.openWordPressPlayStore(requireContext())
     }
 
     companion object {
@@ -102,6 +109,7 @@ private fun JetpackMigrationScreen(viewModel: JetpackMigrationViewModel = viewMo
                 is Content.Notifications -> NotificationsStep(state)
                 is Content.Done -> DoneStep(state)
                 is Content.Delete -> DeleteStep(state)
+                is Content.UpdateWP -> UpdateWPStep(state)
                 is Error -> ErrorStep(state)
                 is Loading -> LoadingState()
             }

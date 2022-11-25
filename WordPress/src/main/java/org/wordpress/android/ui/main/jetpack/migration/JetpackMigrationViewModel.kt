@@ -15,11 +15,12 @@ import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.localcontentmigration.LocalMigrationState
-import org.wordpress.android.localcontentmigration.LocalMigrationState.Finished.DeleteOnly
+import org.wordpress.android.localcontentmigration.LocalMigrationState.SingleStep.DeleteSingleStep
 import org.wordpress.android.localcontentmigration.LocalMigrationState.Finished.Failure
 import org.wordpress.android.localcontentmigration.LocalMigrationState.Finished.Successful
 import org.wordpress.android.localcontentmigration.LocalMigrationState.Initial
 import org.wordpress.android.localcontentmigration.LocalMigrationState.Migrating
+import org.wordpress.android.localcontentmigration.LocalMigrationState.SingleStep.UpdateWPSingleStep
 import org.wordpress.android.localcontentmigration.MigrationEmailHelper
 import org.wordpress.android.sharedlogin.resolver.LocalMigrationOrchestrator
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.DeletePrimaryButton
@@ -28,10 +29,14 @@ import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.ErrorPrimaryButton
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.ErrorSecondaryButton
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.NotificationsPrimaryButton
+import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.UpdateWPPrimaryButton
+import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.UpdateWPSecondaryButton
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.WelcomePrimaryButton
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.WelcomeSecondaryButton
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.CompleteFlow
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.ShowHelp
+import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.UpdateWPStore
+import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Content
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Content.Delete
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Content.Done
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Content.Notifications
@@ -95,10 +100,16 @@ class JetpackMigrationViewModel @Inject constructor(
                         )
                 )
             }
-            migrationState is DeleteOnly -> emit(
+            migrationState is DeleteSingleStep -> emit(
                     Delete(
                             primaryActionButton = DeletePrimaryButton(::onGotItClicked),
                             secondaryActionButton = DeleteSecondaryButton(::onHelpClicked),
+                    )
+            )
+            migrationState is UpdateWPSingleStep -> emit(
+                    Content.UpdateWP(
+                            primaryActionButton = UpdateWPPrimaryButton(::onUpdateWordPressClicked),
+                            secondaryActionButton = UpdateWPSecondaryButton(::onSkipClicked),
                     )
             )
             migrationState is Failure -> emit(
@@ -194,6 +205,14 @@ class JetpackMigrationViewModel @Inject constructor(
         postActionEvent(CompleteFlow)
     }
 
+    private fun onUpdateWordPressClicked() {
+        postActionEvent(UpdateWPStore)
+    }
+
+    private fun onSkipClicked() {
+        postActionEvent(CompleteFlow)
+    }
+
     private fun resizeAvatarUrl(avatarUrl: String) = gravatarUtilsWrapper.fixGravatarUrlWithResource(
             avatarUrl,
             R.dimen.jp_migration_user_avatar_size
@@ -264,13 +283,26 @@ class JetpackMigrationViewModel @Inject constructor(
                 override val secondaryActionButton: ActionButton
             ) : Content(
                     primaryActionButton = primaryActionButton,
-                    screenIconRes = R.drawable.ic_jetpack_migration_delete,
+                    secondaryActionButton = secondaryActionButton,
+                    screenIconRes = R.drawable.ic_jetpack_migration_wp,
                     title = UiStringRes(R.string.jp_migration_delete_title),
                     subtitle = UiStringRes(R.string.jp_migration_delete_subtitle),
                     message = UiStringRes(R.string.jp_migration_delete_message),
             ) {
                 val deleteWpIcon = R.drawable.ic_jetpack_migration_delete_wp
             }
+
+            data class UpdateWP(
+                override val primaryActionButton: ActionButton,
+                override val secondaryActionButton: ActionButton
+            ) : Content(
+                    primaryActionButton = primaryActionButton,
+                    secondaryActionButton = secondaryActionButton,
+                    screenIconRes = R.drawable.ic_jetpack_migration_wp,
+                    title = UiStringRes(R.string.jp_migration_update_wp_title),
+                    subtitle = UiStringRes(R.string.jp_migration_update_wp_subtitle),
+                    message = UiStringRes(0),
+            )
         }
 
         data class Error(
@@ -367,10 +399,25 @@ class JetpackMigrationViewModel @Inject constructor(
                 onClick = onClick,
                 text = UiStringRes(R.string.jp_migration_need_help_button)
         )
+
+        data class UpdateWPPrimaryButton(
+            override val onClick: () -> Unit
+        ) : ActionButton(
+                onClick = onClick,
+                text = UiStringRes(R.string.jp_migration_update_wordpress_button)
+        )
+
+        data class UpdateWPSecondaryButton(
+            override val onClick: () -> Unit
+        ) : ActionButton(
+                onClick = onClick,
+                text = UiStringRes(R.string.jp_migration_skip_button)
+        )
     }
 
     sealed class JetpackMigrationActionEvent {
         object ShowHelp : JetpackMigrationActionEvent()
         object CompleteFlow : JetpackMigrationActionEvent()
+        object UpdateWPStore : JetpackMigrationActionEvent()
     }
 }
