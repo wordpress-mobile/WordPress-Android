@@ -24,6 +24,7 @@ private const val CURRENT_PHASE_KEY = "phase"
 private const val SCREEN_TYPE_KEY = "source"
 private const val DISMISSAL_TYPE_KEY = "dismissal_type"
 
+@Suppress("LongParameterList", "TooManyFunctions")
 class JetpackFeatureRemovalOverlayUtil @Inject constructor(
     private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper,
     private val jetpackFeatureOverlayShownTracker: JetpackFeatureOverlayShownTracker,
@@ -206,6 +207,37 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
                 )
         )
     }
+
+    fun trackDeepLinkOverlayShown() {
+        analyticsTrackerWrapper.track(
+                AnalyticsTracker.Stat.JETPACK_DEEP_LINK_OVERLAY_DISPLAYED,
+                mapOf(
+                        CURRENT_PHASE_KEY to jetpackFeatureRemovalPhaseHelper.getDeepLinkPhase()?.trackingName
+                )
+        )
+    }
+
+    fun trackInstallJetpackTappedInDeepLinkOverlay() {
+        analyticsTrackerWrapper.track(
+                AnalyticsTracker.Stat.JETPACK_DEEP_LINK_OVERLAY_BUTTON_OPEN_IN_JETPACK_APP_TAPPED,
+                mapOf(
+                        CURRENT_PHASE_KEY to jetpackFeatureRemovalPhaseHelper.getDeepLinkPhase()?.trackingName
+                )
+        )
+    }
+
+    fun trackBottomSheetDismissedInDeepLinkOverlay(
+        dismissalType: JetpackOverlayDismissalType
+    ) {
+        analyticsTrackerWrapper.track(
+                AnalyticsTracker.Stat.JETPACK_DEEP_LINK_OVERLAY_DISMISSED,
+                mapOf(
+                        CURRENT_PHASE_KEY to jetpackFeatureRemovalPhaseHelper.getDeepLinkPhase()?.trackingName,
+                        DISMISSAL_TYPE_KEY to dismissalType.trackingName
+                )
+        )
+    }
+
 
     enum class JetpackOverlayDismissalType(val trackingName: String) {
         CLOSE_BUTTON("close"),

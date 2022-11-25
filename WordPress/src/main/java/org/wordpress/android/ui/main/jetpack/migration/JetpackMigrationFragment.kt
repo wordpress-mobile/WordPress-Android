@@ -24,9 +24,10 @@ import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.CompleteFlow
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.ShowHelp
-import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Error
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Content
+import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Error
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Loading
+import org.wordpress.android.ui.main.jetpack.migration.compose.state.DeleteStep
 import org.wordpress.android.ui.main.jetpack.migration.compose.state.DoneStep
 import org.wordpress.android.ui.main.jetpack.migration.compose.state.ErrorStep
 import org.wordpress.android.ui.main.jetpack.migration.compose.state.LoadingState
@@ -55,7 +56,8 @@ class JetpackMigrationFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         observeViewModelEvents()
-        viewModel.start()
+        val showDeleteWpState = arguments?.getBoolean(KEY_SHOW_DELETE_WP_STATE, false) ?: false
+        viewModel.start(showDeleteWpState)
     }
 
     private fun observeViewModelEvents() {
@@ -77,6 +79,16 @@ class JetpackMigrationFragment : Fragment() {
                 null
         )
     }
+
+    companion object {
+        private const val KEY_SHOW_DELETE_WP_STATE = "KEY_SHOW_DELETE_WP_STATE"
+        fun newInstance(showDeleteWpState: Boolean = false): JetpackMigrationFragment =
+                JetpackMigrationFragment().apply {
+                    arguments = Bundle().apply {
+                        putBoolean(KEY_SHOW_DELETE_WP_STATE, showDeleteWpState)
+                    }
+                }
+    }
 }
 
 @Composable
@@ -89,6 +101,7 @@ private fun JetpackMigrationScreen(viewModel: JetpackMigrationViewModel = viewMo
                 is Content.Welcome -> WelcomeStep(state)
                 is Content.Notifications -> NotificationsStep(state)
                 is Content.Done -> DoneStep(state)
+                is Content.Delete -> DeleteStep(state)
                 is Error -> ErrorStep(state)
                 is Loading -> LoadingState()
             }

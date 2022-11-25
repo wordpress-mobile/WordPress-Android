@@ -1,7 +1,6 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id "com.automattic.android.fetchstyle"
     id "io.gitlab.arturbosch.detekt"
     id "androidx.navigation.safeargs.kotlin" apply false
     id "com.android.library" apply false

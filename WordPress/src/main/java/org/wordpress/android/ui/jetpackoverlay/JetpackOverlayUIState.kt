@@ -15,6 +15,9 @@ sealed class JetpackFeatureOverlayComponentVisibility(
         class PhaseOne : SiteCreationPhase()
         class PhaseTwo(override val secondaryButton: Boolean = false) : SiteCreationPhase()
     }
+    sealed class DeepLinkPhase : JetpackFeatureOverlayComponentVisibility() {
+        class All : DeepLinkPhase()
+    }
 }
 
 class JetpackFeatureOverlayContent(
@@ -33,5 +36,6 @@ class JetpackFeatureOverlayUIState(
 sealed class JetpackFeatureOverlayActions {
     object OpenPlayStore : JetpackFeatureOverlayActions()
     object DismissDialog : JetpackFeatureOverlayActions()
+    object ForwardToJetpack : JetpackFeatureOverlayActions()
 }
 

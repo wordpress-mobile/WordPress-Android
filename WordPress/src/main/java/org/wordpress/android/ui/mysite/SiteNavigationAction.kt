@@ -79,4 +79,5 @@ sealed class SiteNavigationAction {
     data class OpenStatsInsights(val site: SiteModel) : SiteNavigationAction()
     data class OpenTodaysStatsGetMoreViewsExternalUrl(val url: String) : SiteNavigationAction()
     object OpenJetpackPoweredBottomSheet : SiteNavigationAction()
+    object OpenJetpackMigrationDeleteWP : SiteNavigationAction()
 }
