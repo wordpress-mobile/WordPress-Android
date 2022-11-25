@@ -378,7 +378,7 @@ dependencies {
     implementation "androidx.exifinterface:exifinterface:$androidXExifInterfaceVersion"
     implementation "androidx.media:media:$androidxMediaVersion"
     implementation "androidx.appcompat:appcompat:$appCompatVersion"
-    implementation 'androidx.cardview:cardview:1.0.0'
+    implementation "androidx.cardview:cardview:$androidxCardviewVersion"
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
     implementation "com.google.android.material:material:$materialVersion"
     implementation 'androidx.percentlayout:percentlayout:1.0.0'
