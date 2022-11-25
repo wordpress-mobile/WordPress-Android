@@ -61,6 +61,30 @@ class WordPressPublicDataTest {
         Assertions.assertThat(actual).isEqualTo(expected)
     }
 
+    @Test
+    fun `Empty versions should return a null non semantic version`() {
+        mockVersion("")
+        val actual = classToTest.nonSemanticPackageVersion()
+        val expected = null
+        Assertions.assertThat(actual).isEqualTo(expected)
+    }
+
+    @Test
+    fun `Only the major-minor version information is returned`() {
+        mockVersion("21.3.1")
+        val actual = classToTest.nonSemanticPackageVersion()
+        val expected = "21.3"
+        Assertions.assertThat(actual).isEqualTo(expected)
+    }
+
+    @Test
+    fun `When only the major is provided a null non semantic version is returned`() {
+        mockVersion("21")
+        val actual = classToTest.nonSemanticPackageVersion()
+        val expected = null
+        Assertions.assertThat(actual).isEqualTo(expected)
+    }
+
     private fun mockVersion(version: String) {
         val packageInfo = PackageInfo().apply { versionName = version }
         whenever(packageManagerWrapper.getPackageInfo(any(), any())).thenReturn(packageInfo)

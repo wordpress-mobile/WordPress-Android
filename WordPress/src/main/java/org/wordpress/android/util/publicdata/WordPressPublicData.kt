@@ -25,14 +25,15 @@ class WordPressPublicData @Inject constructor(private val packageManagerWrapper:
     fun currentPackageVersion(): String? = packageManagerWrapper.getPackageInfo(currentPackageId())?.versionName
 
     fun nonSemanticPackageVersion(): String? {
-        val rawVersion = currentPackageVersion()
+        val rawVersion = currentPackageVersion() ?: return null
 
-        // Clean app semantic versioning info. E.g 21.2-rc-3 turns to 21.2
-        val wordPressVersion = rawVersion?.split("-")?.getOrNull(0) ?: rawVersion ?: ""
+        // Clean app semantic versioning and keep ony major-minor version info. E.g 21.2-rc-3 turns to 21.2
+        val majorMinorRegex = "^(\\d*)(\\.(\\d*))".toRegex()
+        val wordPressVersion = majorMinorRegex.find(rawVersion)?.value ?: return null
 
-        // Version is supported by org.wordpress.android.util.helpers.Version.Version
+        // Verify that the resulting version is supported by org.wordpress.android.util.helpers.Version.Version
         val versionIsSupportedForComparison = Regex("[0-9]+(\\.[0-9]+)*").matchEntire(wordPressVersion) != null
 
-        return if(versionIsSupportedForComparison) wordPressVersion else null
+        return if (versionIsSupportedForComparison) wordPressVersion else null
     }
 }
