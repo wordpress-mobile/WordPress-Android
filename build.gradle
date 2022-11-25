@@ -71,7 +71,7 @@ ext {
     shimmerVersion = '0.5.0'
     androidxSwipeToRefreshVersion = '1.1.0'
     uCropVersion = '2.2.4'
-    lifecycleVersion = '2.4.1'
+    androidxLifecycleVersion = '2.4.1'
     tracksVersion = '2.2.0'
     roomVersion = '2.3.0'
     exoPlayerVersion = '2.13.3'
