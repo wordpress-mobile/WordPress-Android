@@ -82,6 +82,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/jp_migration_full_screen_overlay_padding_horizontal"
                 android:layout_marginStart="@dimen/jp_migration_full_screen_overlay_padding_horizontal"
+                android:layout_marginTop="@dimen/margin_extra_large"
                 android:background="@drawable/bg_rectangle_rounded_jetpack_ripple"
                 app:backgroundTint="@color/jetpack_green_50"
                 android:maxLines="2"
