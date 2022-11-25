@@ -425,7 +425,7 @@ dependencies {
     }
     implementation (name:'tenor-android-core-jetified', ext:'aar') // Jetified Tenor Gif library
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
-    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+    implementation "com.github.PhilJay:MPAndroidChart:$mpAndroidChartVersion"
     implementation "org.jsoup:jsoup:$jsoupVersion"
     implementation 'androidx.emoji:emoji:1.0.0'
     implementation ("com.google.android.exoplayer:exoplayer:$exoPlayerVersion") {
