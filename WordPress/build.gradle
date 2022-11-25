@@ -393,7 +393,7 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-process:$lifecycleVersion"
     implementation "com.android.volley:volley:$volleyVersion"
     implementation "com.google.firebase:firebase-messaging:$firebaseMessagingVersion"
-    implementation 'com.google.firebase:firebase-config:19.1.3'
+    implementation "com.google.firebase:firebase-config:$firebaseConfigVersion"
     implementation 'com.google.android.gms:play-services-auth:20.3.0'
     implementation 'com.android.installreferrer:installreferrer:2.2'
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
