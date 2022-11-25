@@ -396,7 +396,7 @@ dependencies {
     implementation "com.google.firebase:firebase-config:$firebaseConfigVersion"
     implementation "com.google.android.gms:play-services-auth:$playServicesAuthVersion"
     implementation "com.google.android.gms:play-services-code-scanner:$playServicesCodeScannerVersion"
-    implementation 'com.android.installreferrer:installreferrer:2.2'
+    implementation "com.android.installreferrer:installreferrer:$androidInstallReferrerVersion"
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
     implementation 'org.greenrobot:eventbus:3.3.1'
     implementation 'com.squareup.okio:okio:2.8.0'
