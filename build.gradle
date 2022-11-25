@@ -50,6 +50,7 @@ ext {
     androidxMediaVersion = '1.0.1'
     androidxPercentlayoutVersion = '1.0.0'
     androidxRecyclerviewVersion = '1.0.0'
+    coilComposeVersion = '1.4.0'
     eventBusVersion = '3.3.1'
     glideVersion = '4.10.0'
     glideVolleyVersion = '4.6.1@aar'
