@@ -62,6 +62,7 @@ ext {
     playServicesAuthVersion = '20.3.0'
     playServicesCodeScannerVersion = '16.0.0-beta1'
     preferenceVersion = '1.1.0'
+    shimmerVersion = '0.5.0'
     swipeToRefreshVersion = '1.1.0'
     uCropVersion = '2.2.4'
     lifecycleVersion = '2.4.1'

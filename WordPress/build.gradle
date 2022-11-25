@@ -402,7 +402,7 @@ dependencies {
     implementation "com.squareup.okio:okio:$okioVersion"
     implementation "org.apache.commons:commons-text:$commonsTextVersion"
     implementation "com.airbnb.android:lottie:$lottieVersion"
-    implementation 'com.facebook.shimmer:shimmer:0.5.0'
+    implementation "com.facebook.shimmer:shimmer:$shimmerVersion"
     implementation ("com.github.yalantis:ucrop:$uCropVersion") {
         exclude group: 'androidx.core', module: 'core'
         exclude group: 'androidx.constraintlayout', module: 'constraintlayout'
