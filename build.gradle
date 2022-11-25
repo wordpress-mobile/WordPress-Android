@@ -103,7 +103,7 @@ ext {
     androidxTestUiAutomatorVersion = '2.2.0'
 
     // other
-    coreLibraryDesugaringVersion = '1.1.5'
+    androidDesugarVersion = '1.1.5'
 }
 
 allprojects {

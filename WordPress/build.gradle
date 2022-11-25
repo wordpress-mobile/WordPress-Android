@@ -496,7 +496,7 @@ dependencies {
     androidTestImplementation "androidx.test.espresso:espresso-accessibility:$androidxEspressoAccessibilityVersion"
 
     // Enables Java 8+ API desugaring support
-    coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:$coreLibraryDesugaringVersion"
+    coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:$androidDesugarVersion"
     lintChecks "org.wordpress:lint:$wordPressLintVersion"
 }
 
