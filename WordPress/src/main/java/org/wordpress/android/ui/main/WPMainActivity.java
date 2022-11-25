@@ -140,7 +140,6 @@ import org.wordpress.android.util.QuickStartUtilsWrapper;
 import org.wordpress.android.util.ShortcutUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.service.InstallationReferrerServiceStarter;
@@ -401,7 +400,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
         }
 
         // Ensure deep linking activities are enabled.They may have been disabled elsewhere and failed to get re-enabled
-        enableComponentsIfNeeded();
+        enableDeepLinkingComponentsIfNeeded();
 
         // monitor whether we're not the default app
         trackDefaultApp();
@@ -933,7 +932,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
         // ensure the deep linking activity is enabled. We might be returning from the external-browser
         // viewing of a post
-        WPActivityUtils.enableReaderDeeplinks(this);
+        enableDeepLinkingComponentsIfNeeded();
 
         // We need to track the current item on the screen when this activity is resumed.
         // Ex: Notifications -> notifications detail -> back to notifications
@@ -1719,13 +1718,14 @@ public class WPMainActivity extends LocaleAwareActivity implements
         QuickStartUtils.removeQuickStartFocusPoint(findViewById(R.id.root_view_main));
     }
 
-    private void enableComponentsIfNeeded() {
+    private void enableDeepLinkingComponentsIfNeeded() {
         if (mOpenWebLinksWithJetpackFlowFeatureConfig.isEnabled()) {
             if (!AppPrefs.getIsOpenWebLinksWithJetpack()) {
                 mDeepLinkOpenWebLinksWithJetpackHelper.enableDisableOpenWithJetpackComponents(false);
             }
         } else {
-            WPActivityUtils.enableReaderDeeplinks(this);
+            // re-enable all deep linking components
+            mDeepLinkOpenWebLinksWithJetpackHelper.enableDisableOpenWithJetpackComponents(false);
         }
     }
 }
