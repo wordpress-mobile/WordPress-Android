@@ -55,7 +55,7 @@ class WordPressPublicDataTest {
 
     @Test
     fun `Invalid versions should return a null non semantic version`() {
-        mockVersion("21.2...-rc2")
+        mockVersion("21.a2...-rc2")
         val actual = classToTest.nonSemanticPackageVersion()
         val expected = null
         Assertions.assertThat(actual).isEqualTo(expected)
