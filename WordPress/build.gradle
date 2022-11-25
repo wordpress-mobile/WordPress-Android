@@ -376,7 +376,7 @@ dependencies {
     implementation "androidx.multidex:multidex:$androidXMultidexVersion"
     implementation "androidx.legacy:legacy-support-v4:$androidXLegacySupportV4Version"
     implementation "androidx.exifinterface:exifinterface:$androidXExifInterfaceVersion"
-    implementation 'androidx.media:media:1.0.1'
+    implementation "androidx.media:media:$androidxMediaVersion"
     implementation "androidx.appcompat:appcompat:$appCompatVersion"
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
