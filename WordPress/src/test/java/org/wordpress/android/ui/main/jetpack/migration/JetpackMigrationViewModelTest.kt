@@ -26,6 +26,8 @@ import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.GravatarUtilsWrapper
 import org.wordpress.android.util.SiteUtilsWrapper
+import org.wordpress.android.util.config.PreventDuplicateNotifsFeatureConfig
+import org.wordpress.android.viewmodel.ContextProvider
 
 @RunWith(MockitoJUnitRunner::class)
 class JetpackMigrationViewModelTest : BaseUnitTest() {
@@ -33,9 +35,13 @@ class JetpackMigrationViewModelTest : BaseUnitTest() {
     private val gravatarUtilsWrapper: GravatarUtilsWrapper = mock()
     private val appPrefsWrapper: AppPrefsWrapper = mock()
     private val localMigrationOrchestrator: LocalMigrationOrchestrator = mock()
+    private val preventDuplicateNotifsFeatureConfig: PreventDuplicateNotifsFeatureConfig = mock()
+    private val contextProvider: ContextProvider = mock()
     private val classToTest = JetpackMigrationViewModel(
             siteUtilsWrapper = siteUtilsWrapper,
             gravatarUtilsWrapper = gravatarUtilsWrapper,
+            contextProvider = contextProvider,
+            preventDuplicateNotifsFeatureConfig = preventDuplicateNotifsFeatureConfig,
             appPrefsWrapper = appPrefsWrapper,
             localMigrationOrchestrator = localMigrationOrchestrator,
     )
