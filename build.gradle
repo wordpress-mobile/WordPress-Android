@@ -17,6 +17,7 @@ ext {
 ext {
     // libs
     automatticRestVersion = '1.0.8'
+    tracksVersion = '2.2.0'
     wordPressLintVersion = '1.1.0'
     wordPressGraphviewVersion = '3.4.0'
     wordPressPersistentEditTextVersion = '1.0.2'
@@ -72,7 +73,6 @@ ext {
     androidxSwipeToRefreshVersion = '1.1.0'
     uCropVersion = '2.2.4'
     androidxLifecycleVersion = '2.4.1'
-    tracksVersion = '2.2.0'
     androidxRoomVersion = '2.3.0'
     googleExoPlayerVersion = '2.13.3'
     androidxComposeVersion = '1.1.1'
