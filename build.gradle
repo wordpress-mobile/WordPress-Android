@@ -89,6 +89,7 @@ ext {
     jUnitVersion = '4.13'
     androidxTestCoreVersion = '1.4.0'
     assertJVersion = '3.11.1'
+    bouncycastleVersion = '1.64'
     mockitoVersion = "4.8.1"
     mockitoKotlinVersion = '4.0.0'
 

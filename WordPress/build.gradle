@@ -453,7 +453,7 @@ dependencies {
     testImplementation "androidx.test:core:$androidxTestCoreVersion"
     testImplementation('org.bouncycastle:bcprov-jdk15on') {
         version {
-            strictly '1.64'
+            strictly "$bouncycastleVersion"
         }
     }
 
