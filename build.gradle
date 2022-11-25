@@ -29,6 +29,9 @@ ext {
     storiesVersion = '2.0.0'
     aboutAutomatticVersion = '1.0.0'
 
+    // debug
+    stethoVersion = '1.6.0'
+
     // main
     coroutinesVersion = '1.5.2'
     androidxWorkVersion = "2.7.0"

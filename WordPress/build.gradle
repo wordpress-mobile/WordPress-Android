@@ -363,8 +363,8 @@ dependencies {
     implementation "org.wordpress:emailchecker2:$wordPressEmailChecker2Version"
 
     debugImplementation "androidx.compose.ui:ui-tooling:$composeVersion"
-    debugImplementation 'com.facebook.stetho:stetho:1.6.0'
-    debugImplementation 'com.facebook.stetho:stetho-okhttp3:1.6.0'
+    debugImplementation "com.facebook.stetho:stetho:$stethoVersion"
+    debugImplementation "com.facebook.stetho:stetho-okhttp3:$stethoVersion"
 
     implementation "com.google.code.gson:gson:$gsonVersion"
     implementation "androidx.core:core:$androidxCoreVersion"
