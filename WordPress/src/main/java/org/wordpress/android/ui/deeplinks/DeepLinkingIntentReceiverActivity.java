@@ -96,7 +96,7 @@ public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
 
     private void showOverlay() {
         JetpackFeatureFullScreenOverlayFragment
-                .newInstance(null, false, true)
+                .newInstance(null, false, true, null)
                 .show(getSupportFragmentManager(), JetpackFeatureFullScreenOverlayFragment.TAG);
     }
 
