@@ -335,7 +335,7 @@ dependencies {
     }
     implementation("$gradle.ext.fluxCBinaryPath") {
         version {
-            strictly fluxCVersion
+            strictly wordPressFluxCVersion
         }
         exclude group: "com.android.volley"
         exclude group: 'org.wordpress', module: 'utils'
