@@ -397,7 +397,7 @@ dependencies {
     implementation "com.google.android.gms:play-services-auth:$googlePlayServicesAuthVersion"
     implementation "com.google.android.gms:play-services-code-scanner:$googlePlayServicesCodeScannerVersion"
     implementation "com.android.installreferrer:installreferrer:$androidInstallReferrerVersion"
-    implementation "com.github.chrisbanes:PhotoView:$photoviewVersion"
+    implementation "com.github.chrisbanes:PhotoView:$chrisbanesPhotoviewVersion"
     implementation "org.greenrobot:eventbus:$eventBusVersion"
     implementation "com.squareup.okio:okio:$squareupOkioVersion"
     implementation "org.apache.commons:commons-text:$apacheCommonsTextVersion"
