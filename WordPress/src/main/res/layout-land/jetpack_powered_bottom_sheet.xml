@@ -84,7 +84,7 @@
             android:layout_marginEnd="@dimen/margin_extra_extra_medium_large"
             android:layout_marginBottom="@dimen/margin_extra_extra_medium_large"
             android:background="@drawable/bg_rectangle_rounded_jetpack_ripple"
-            app:backgroundTint="@color/jetpack_green_40"
+            app:backgroundTint="@color/jetpack_green_50"
             android:gravity="center"
             android:minHeight="@dimen/jetpack_bottom_sheet_button_height"
             android:text="@string/wp_jetpack_get_new_jetpack_app"
