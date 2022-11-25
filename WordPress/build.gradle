@@ -398,7 +398,7 @@ dependencies {
     implementation "com.google.android.gms:play-services-code-scanner:$playServicesCodeScannerVersion"
     implementation "com.android.installreferrer:installreferrer:$androidInstallReferrerVersion"
     implementation "com.github.chrisbanes:PhotoView:$photoviewVersion"
-    implementation 'org.greenrobot:eventbus:3.3.1'
+    implementation "org.greenrobot:eventbus:$eventBusVersion"
     implementation 'com.squareup.okio:okio:2.8.0'
     implementation "org.apache.commons:commons-text:$commonsTextVersion"
     implementation 'com.airbnb.android:lottie:3.4.0'
