@@ -383,7 +383,7 @@ dependencies {
     implementation "com.google.android.material:material:$googleMaterialVersion"
     implementation "androidx.percentlayout:percentlayout:$androidxPercentlayoutVersion"
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:$androidxSwipeToRefreshVersion"
-    implementation "androidx.preference:preference:$preferenceVersion"
+    implementation "androidx.preference:preference:$androidxPreferenceVersion"
     implementation "androidx.work:work-runtime:$androidxWorkVersion"
     implementation "androidx.work:work-runtime-ktx:$androidxWorkVersion"
     implementation "androidx.work:work-gcm:$androidxWorkVersion" // GCMNetworkManager on api <= 22

@@ -67,7 +67,7 @@ ext {
     photoviewVersion = '2.3.0'
     googlePlayServicesAuthVersion = '20.3.0'
     googlePlayServicesCodeScannerVersion = '16.0.0-beta1'
-    preferenceVersion = '1.1.0'
+    androidxPreferenceVersion = '1.1.0'
     shimmerVersion = '0.5.0'
     androidxSwipeToRefreshVersion = '1.1.0'
     uCropVersion = '2.2.4'
