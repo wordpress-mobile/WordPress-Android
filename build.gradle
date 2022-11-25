@@ -63,7 +63,7 @@ ext {
     lottieVersion = '3.4.0'
     googleMaterialVersion = '1.2.1'
     mpAndroidChartVersion = 'v3.1.0'
-    okioVersion = '2.8.0'
+    squareupOkioVersion = '2.8.0'
     photoviewVersion = '2.3.0'
     googlePlayServicesAuthVersion = '20.3.0'
     googlePlayServicesCodeScannerVersion = '16.0.0-beta1'
