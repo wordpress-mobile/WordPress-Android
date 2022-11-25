@@ -8,7 +8,6 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.BloggingRemindersStore
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.viewmodel.ResourceProvider
-import org.wordpress.android.workers.notification.createsite.CreateSiteNotificationScheduler
 import org.wordpress.android.workers.reminder.ReminderConfig.WeeklyReminder
 import org.wordpress.android.workers.reminder.ReminderScheduler
 import org.wordpress.android.workers.weeklyroundup.WeeklyRoundupScheduler
@@ -22,7 +21,6 @@ class UpdateNotificationSettingsUseCase @Inject constructor(
     private val resourceProvider: ResourceProvider,
     private val weeklyRoundupScheduler: WeeklyRoundupScheduler,
     private val reminderScheduler: ReminderScheduler,
-    private val createSiteNotificationScheduler: CreateSiteNotificationScheduler,
     private val bloggingRemindersStore: BloggingRemindersStore,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher
 ) {
@@ -33,12 +31,10 @@ class UpdateNotificationSettingsUseCase @Inject constructor(
             // The switch is turned on. Schedule local notifications.
             weeklyRoundupScheduler.scheduleIfNeeded()
             scheduleSavedBloggingReminders()
-            createSiteNotificationScheduler.scheduleCreateSiteNotificationIfNeeded()
         } else {
             // The switch is turned off. Cancel scheduled local notifications.
             weeklyRoundupScheduler.cancel()
             reminderScheduler.cancelAll()
-            createSiteNotificationScheduler.cancelCreateSiteNotification()
         }
     }
 
