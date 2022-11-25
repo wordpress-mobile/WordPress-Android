@@ -20,7 +20,7 @@ class JetpackAppMigrationFlowUtils @Inject constructor(
     private val appStatus: AppStatus,
     private val wordPressPublicData: WordPressPublicData,
 ) {
-    private val minimumSupportedVersion = "21.3" //non semantic minimum supported version
+    private val minimumSupportedVersion = "21.3" // non semantic minimum supported version
 
     fun shouldShowMigrationFlow() = buildConfigWrapper.isJetpackApp
             && jetpackMigrationFlowFeatureConfig.isEnabled()
