@@ -111,7 +111,6 @@ import org.wordpress.android.util.QuickStartUtils
 import org.wordpress.android.util.RateLimitedTask
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.VolleyUtils
-import org.wordpress.android.util.WPActivityUtils
 import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.util.config.AppConfig
 import org.wordpress.android.util.config.OpenWebLinksWithJetpackFlowFeatureConfig
