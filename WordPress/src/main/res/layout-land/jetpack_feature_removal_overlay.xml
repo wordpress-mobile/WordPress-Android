@@ -21,7 +21,6 @@
         tools:ignore="ContentDescription" />
 
     <ScrollView
-        android:id="@+id/scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true"
@@ -30,6 +29,21 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/illustration_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/jp_migration_full_screen_overlay_padding_horizontal"
+                android:layout_marginStart="@dimen/jp_migration_full_screen_overlay_padding_horizontal"
+                android:layout_marginTop="@dimen/margin_extra_extra_medium_large"
+                android:scaleType="centerCrop"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:lottie_autoPlay="true"
+                app:lottie_enableMergePathsForKitKatAndAbove="true"
+                app:lottie_loop="false"
+                app:lottie_rawRes="@raw/wp2jp_left" />
 
             <TextView
                 android:id="@+id/title"
@@ -60,21 +74,6 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/title" />
-
-            <com.airbnb.lottie.LottieAnimationView
-                android:id="@+id/illustration_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/jp_migration_full_screen_overlay_padding_horizontal"
-                android:layout_marginStart="@dimen/jp_migration_full_screen_overlay_padding_horizontal"
-                android:layout_marginTop="@dimen/margin_extra_extra_medium_large"
-                android:scaleType="centerCrop"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:lottie_autoPlay="true"
-                app:lottie_enableMergePathsForKitKatAndAbove="true"
-                app:lottie_loop="false"
-                app:lottie_rawRes="@raw/wp2jp_left" />
 
             <Button
                 android:id="@+id/primary_button"
@@ -124,6 +123,5 @@
                 tools:text="Continue to Reader" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-
     </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

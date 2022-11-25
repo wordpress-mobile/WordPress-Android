@@ -28,6 +28,21 @@
             app:tint="?attr/wpColorOnSurfaceMedium"
             tools:ignore="ContentDescription" />
 
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/illustration_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_extra_extra_medium_large"
+            android:layout_marginStart="@dimen/margin_extra_extra_medium_large"
+            android:layout_marginTop="@dimen/margin_64dp"
+            android:scaleType="centerCrop"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/close_button"
+            app:lottie_autoPlay="true"
+            app:lottie_enableMergePathsForKitKatAndAbove="true"
+            app:lottie_loop="false"
+            app:lottie_rawRes="@raw/wp2jp_left" />
+
         <TextView
             android:id="@+id/title"
             style="@style/TextAppearance.Material3.HeadlineMedium"
@@ -60,21 +75,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/title" />
-
-        <com.airbnb.lottie.LottieAnimationView
-            android:id="@+id/illustration_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/margin_extra_extra_medium_large"
-            android:layout_marginStart="@dimen/margin_extra_extra_medium_large"
-            android:layout_marginTop="@dimen/margin_64dp"
-            android:scaleType="centerCrop"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/close_button"
-            app:lottie_autoPlay="true"
-            app:lottie_enableMergePathsForKitKatAndAbove="true"
-            app:lottie_loop="false"
-            app:lottie_rawRes="@raw/wp2jp_left" />
 
         <Button
             android:id="@+id/primary_button"
@@ -124,6 +124,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             tools:text="Continue to Reader" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
 
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
