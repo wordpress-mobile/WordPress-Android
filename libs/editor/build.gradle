@@ -88,7 +88,7 @@ dependencies {
     implementation "androidx.legacy:legacy-support-v4:$androidXLegacySupportV4Version"
     implementation "androidx.preference:preference:$androidxPreferenceVersion"
     implementation "com.google.android.material:material:$googleMaterialVersion"
-    implementation "com.android.volley:volley:$volleyVersion"
+    implementation "com.android.volley:volley:$androidVolleyVersion"
     implementation "com.google.code.gson:gson:$googleGsonVersion"
 
     lintChecks "org.wordpress:lint:$wordPressLintVersion"

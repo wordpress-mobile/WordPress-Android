@@ -26,7 +26,7 @@ dependencies {
     }
     implementation "org.wordpress:utils:$wordPressUtilsVersion"
 
-    implementation "com.android.volley:volley:$volleyVersion"
+    implementation "com.android.volley:volley:$androidVolleyVersion"
 
     lintChecks "org.wordpress:lint:$wordPressLintVersion"
 }
