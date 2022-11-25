@@ -351,8 +351,8 @@ dependencies {
         exclude group: 'org.wordpress', module: 'utils'
     }
     implementation "$gradle.ext.aboutAutomatticBinaryPath:$aboutAutomatticVersion"
-    implementation "$gradle.ext.storiesAndroidPath:$storiesVersion"
-    implementation "$gradle.ext.storiesAndroidMp4ComposePath:$storiesVersion"
+    implementation "$gradle.ext.storiesAndroidPath:$automatticStoriesVersion"
+    implementation "$gradle.ext.storiesAndroidMp4ComposePath:$automatticStoriesVersion"
 
     implementation "com.automattic:Automattic-Tracks-Android:$automatticTracksVersion"
     implementation ("com.automattic:rest:$automatticRestVersion") {
@@ -437,7 +437,7 @@ dependencies {
     implementation "com.google.dagger:hilt-android:$gradle.ext.daggerVersion"
     kapt "com.google.dagger:hilt-compiler:$gradle.ext.daggerVersion"
 
-    testImplementation "$gradle.ext.storiesAndroidPhotoEditorPath:$storiesVersion"
+    testImplementation "$gradle.ext.storiesAndroidPhotoEditorPath:$automatticStoriesVersion"
 
     testImplementation("androidx.arch.core:core-testing:$androidxArchCoreVersion", {
         exclude group: 'com.android.support', module: 'support-compat'

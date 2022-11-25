@@ -204,7 +204,7 @@ platform :android do
         ['title.txt', 'short_description.txt', 'full_description.txt'].map { |f| File.join(metadata_source_dir, f) },
         File.join(download_path, 'en-US')
       )
-    
+
       git_add(path: download_path)
       git_commit(path: download_path, message: "Update #{app_values[:display_name]} metadata translations for #{version}", allow_nothing_to_commit: true)
     end
@@ -245,7 +245,7 @@ platform :android do
     },
     {
       name: "Stories Library",
-      import_key: "storiesVersion",
+      import_key: "automatticStoriesVersion",
       repository: "Automattic/stories-android",
       strings_file_path: "stories/src/main/res/values/strings.xml",
       source_id: 'stories'
