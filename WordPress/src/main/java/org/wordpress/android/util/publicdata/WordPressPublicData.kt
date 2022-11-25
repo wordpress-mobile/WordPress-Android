@@ -22,7 +22,7 @@ class WordPressPublicData @Inject constructor(private val packageManagerWrapper:
         else -> throw IllegalArgumentException("Failed to get Jetpack package ID: build flavor not found.")
     }
 
-    fun currentPackageVersion() = packageManagerWrapper.getPackageInfo(currentPackageId())?.versionName
+    fun currentPackageVersion(): String? = packageManagerWrapper.getPackageInfo(currentPackageId())?.versionName
 
     fun nonSemanticPackageVersion(): String? {
         val rawVersion = currentPackageVersion()
