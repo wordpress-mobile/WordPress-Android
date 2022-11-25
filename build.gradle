@@ -1,7 +1,6 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id "com.automattic.android.fetchstyle"
     id "io.gitlab.arturbosch.detekt"
     id "androidx.navigation.safeargs.kotlin" apply false
     id "com.android.library" apply false
@@ -48,6 +47,10 @@ ext {
     // annotations/processors
     kotlinPoetVersion = '1.6.0'
     autoServiceVersion = '1.0'
+
+    // Apache
+    commonsText = '1.10.0'
+    httpClientAndroidVersion = '4.3.5.1'
 
     // testing
     jUnitVersion = '4.13'

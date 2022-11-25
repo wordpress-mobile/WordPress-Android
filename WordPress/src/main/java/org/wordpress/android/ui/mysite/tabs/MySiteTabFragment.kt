@@ -35,6 +35,7 @@ import org.wordpress.android.ui.domains.DomainRegistrationActivity.Companion.RES
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.CTA_DOMAIN_CREDIT_REDEMPTION
 import org.wordpress.android.ui.main.SitePickerActivity
 import org.wordpress.android.ui.main.WPMainActivity
+import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationActivity
 import org.wordpress.android.ui.mysite.MySiteAdapter
 import org.wordpress.android.ui.mysite.MySiteCardAndItemDecoration
 import org.wordpress.android.ui.mysite.MySiteViewModel
@@ -364,12 +365,21 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
         is SiteNavigationAction.OpenTodaysStatsGetMoreViewsExternalUrl ->
             ActivityLauncher.openUrlExternal(requireActivity(), action.url)
         is SiteNavigationAction.OpenJetpackPoweredBottomSheet -> showJetpackPoweredBottomSheet()
+        is SiteNavigationAction.OpenJetpackMigrationDeleteWP -> showJetpackMigrationDeleteWP()
     }
 
     private fun showJetpackPoweredBottomSheet() {
         JetpackPoweredBottomSheetFragment
                 .newInstance()
                 .show(requireActivity().supportFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
+    }
+
+    private fun showJetpackMigrationDeleteWP() {
+        val intent = JetpackMigrationActivity.createIntent(
+                context = requireActivity(),
+                showDeleteWpState = true
+        )
+        startActivity(intent)
     }
 
     private fun openQuickStartFullScreenDialog(action: SiteNavigationAction.OpenQuickStartFullScreenDialog) {

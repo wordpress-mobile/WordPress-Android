@@ -1,6 +1,9 @@
 package org.wordpress.android.ui.deeplinks
 
+import android.content.pm.PackageManager
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.FirebaseRemoteConfigWrapper
@@ -9,6 +12,7 @@ import org.wordpress.android.util.config.OpenWebLinksWithJetpackFlowFeatureConfi
 import java.util.Date
 import javax.inject.Inject
 
+@Suppress("TooManyFunctions")
 class DeepLinkOpenWebLinksWithJetpackHelper @Inject constructor(
     private val openWebLinksWithJetpackFlowFeatureConfig: OpenWebLinksWithJetpackFlowFeatureConfig,
     private val appPrefsWrapper: AppPrefsWrapper,
@@ -27,16 +31,33 @@ class DeepLinkOpenWebLinksWithJetpackHelper @Inject constructor(
     fun enableDisableOpenWithJetpackComponents(newValue: Boolean) {
         when (newValue) {
             true -> {
-                packageManagerWrapper.enableReaderDeeplinks()
-                packageManagerWrapper.enableComponentEnableSetting(
-                        DeepLinkingIntentReceiverActivity::class.java)
+                packageManagerWrapper.disableReaderDeepLinks()
+                packageManagerWrapper.disableComponentEnabledSetting(WEB_LINKS_DEEPLINK_ACTIVITY_ALIAS)
             }
             false -> {
-                packageManagerWrapper.disableReaderDeepLinks()
-                packageManagerWrapper.disableComponentEnabledSetting(
-                        DeepLinkingIntentReceiverActivity::class.java)
+                packageManagerWrapper.enableReaderDeeplinks()
+                packageManagerWrapper.enableComponentEnableSetting(WEB_LINKS_DEEPLINK_ACTIVITY_ALIAS)
             }
         }
+    }
+
+    fun handleJetpackUninstalled() {
+        enableDisableOpenWithJetpackComponents(false)
+        appPrefsWrapper.setIsOpenWebLinksWithJetpack(false)
+    }
+
+    @Suppress("SwallowedException")
+    fun handleOpenWebLinksWithJetpack() : Boolean {
+        try {
+            enableDisableOpenWithJetpackComponents(true)
+            packageManagerWrapper.disableReaderDeepLinks()
+            appPrefsWrapper.setIsOpenWebLinksWithJetpack(true)
+            appPrefsWrapper.setOpenWebLinksWithJetpackOverlayLastShownTimestamp(System.currentTimeMillis())
+            return true
+        } catch (ex: PackageManager.NameNotFoundException) {
+            AppLog.e(T.UTILS, "Unable to set open web links with Jetpack ${ex.message}")
+        }
+        return false
     }
 
     private fun showOverlay() : Boolean {
@@ -86,5 +107,7 @@ class DeepLinkOpenWebLinksWithJetpackHelper @Inject constructor(
 
     companion object {
         const val JETPACK_PACKAGE_NAME = "com.jetpack.android"
+        const val WEB_LINKS_DEEPLINK_ACTIVITY_ALIAS =
+                "org.wordpress.android.WebLinksDeepLinkingIntentReceiverActivity"
     }
 }

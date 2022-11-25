@@ -13,11 +13,15 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.localcontentmigration.LocalMigrationState
+import org.wordpress.android.localcontentmigration.LocalMigrationState.Finished.DeleteOnly
 import org.wordpress.android.localcontentmigration.LocalMigrationState.Finished.Failure
 import org.wordpress.android.localcontentmigration.LocalMigrationState.Finished.Successful
 import org.wordpress.android.localcontentmigration.LocalMigrationState.Initial
 import org.wordpress.android.localcontentmigration.LocalMigrationState.Migrating
+import org.wordpress.android.localcontentmigration.MigrationEmailHelper
 import org.wordpress.android.sharedlogin.resolver.LocalMigrationOrchestrator
+import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.DeletePrimaryButton
+import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.DeleteSecondaryButton
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.DonePrimaryButton
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.ErrorPrimaryButton
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.ErrorSecondaryButton
@@ -26,12 +30,14 @@ import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.WelcomeSecondaryButton
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.CompleteFlow
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.ShowHelp
+import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Content.Delete
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Content.Done
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Content.Notifications
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Content.Welcome
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Error.Generic
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Error.Networking
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Loading
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.GravatarUtilsWrapper
@@ -42,7 +48,9 @@ import javax.inject.Inject
 class JetpackMigrationViewModel @Inject constructor(
     private val siteUtilsWrapper: SiteUtilsWrapper,
     private val gravatarUtilsWrapper: GravatarUtilsWrapper,
+    private val appPrefsWrapper: AppPrefsWrapper,
     private val localMigrationOrchestrator: LocalMigrationOrchestrator,
+    private val migrationEmailHelper: MigrationEmailHelper,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow<UiState>(Loading)
 
@@ -52,6 +60,7 @@ class JetpackMigrationViewModel @Inject constructor(
     private val migrationStateFlow = MutableStateFlow<LocalMigrationState>(Initial)
     private val continueClickedFlow = MutableStateFlow(false)
     private val notificationContinueClickedFlow = MutableStateFlow(false)
+    private var showDeleteState: Boolean = false
 
     val uiState = combineTransform(migrationStateFlow, continueClickedFlow, notificationContinueClickedFlow) {
         migrationState, continueClicked, notificationContinueClicked ->
@@ -78,6 +87,12 @@ class JetpackMigrationViewModel @Inject constructor(
                         )
                 )
             }
+            migrationState is DeleteOnly -> emit(
+                    Delete(
+                            primaryActionButton = DeletePrimaryButton(::onGotItClicked),
+                            secondaryActionButton = DeleteSecondaryButton(::onHelpClicked),
+                    )
+            )
             migrationState is Failure -> emit(
                     UiState.Error(
                             primaryActionButton = ErrorPrimaryButton(::onTryAgainClicked),
@@ -89,6 +104,11 @@ class JetpackMigrationViewModel @Inject constructor(
         }
     }
 
+    fun start(showDeleteState: Boolean) {
+        this.showDeleteState = showDeleteState
+        tryMigration()
+    }
+
     private fun siteUiFromModel(site: SiteModel) = SiteListItemUiState(
             id = site.siteId,
             name = siteUtilsWrapper.getSiteNameOrHomeURL(site),
@@ -98,8 +118,6 @@ class JetpackMigrationViewModel @Inject constructor(
                     R.dimen.jp_migration_site_icon_size,
             ),
     )
-
-    fun start() = tryMigration()
 
     private fun onContinueClicked() {
         continueClickedFlow.value = true
@@ -134,7 +152,7 @@ class JetpackMigrationViewModel @Inject constructor(
 
     private fun tryMigration() {
             viewModelScope.launch(Dispatchers.IO) {
-                localMigrationOrchestrator.tryLocalMigration(migrationStateFlow)
+                localMigrationOrchestrator.tryLocalMigration(migrationStateFlow, showDeleteState)
             }
     }
 
@@ -146,11 +164,17 @@ class JetpackMigrationViewModel @Inject constructor(
     }
 
     private fun onDoneClicked() {
+        migrationEmailHelper.notifyMigrationComplete()
+        appPrefsWrapper.setJetpackMigrationCompleted(true)
         postActionEvent(CompleteFlow)
     }
 
     private fun onHelpClicked() {
         postActionEvent(ShowHelp)
+    }
+
+    private fun onGotItClicked() {
+        postActionEvent(CompleteFlow)
     }
 
     private fun resizeAvatarUrl(avatarUrl: String) = gravatarUtilsWrapper.fixGravatarUrlWithResource(
@@ -214,6 +238,19 @@ class JetpackMigrationViewModel @Inject constructor(
                     title = UiStringRes(R.string.jp_migration_done_title),
                     subtitle = UiStringRes(R.string.jp_migration_done_subtitle),
                     message = UiStringRes(R.string.jp_migration_done_delete_wp_message),
+            ) {
+                val deleteWpIcon = R.drawable.ic_jetpack_migration_delete_wp
+            }
+
+            data class Delete(
+                override val primaryActionButton: ActionButton,
+                override val secondaryActionButton: ActionButton
+            ) : Content(
+                    primaryActionButton = primaryActionButton,
+                    screenIconRes = R.drawable.ic_jetpack_migration_delete,
+                    title = UiStringRes(R.string.jp_migration_delete_title),
+                    subtitle = UiStringRes(R.string.jp_migration_delete_subtitle),
+                    message = UiStringRes(R.string.jp_migration_delete_message),
             ) {
                 val deleteWpIcon = R.drawable.ic_jetpack_migration_delete_wp
             }
@@ -298,6 +335,20 @@ class JetpackMigrationViewModel @Inject constructor(
         ) : ActionButton(
                 onClick = onClick,
                 text = UiStringRes(R.string.jp_migration_help_button),
+        )
+
+        data class DeletePrimaryButton(
+            override val onClick: () -> Unit
+        ) : ActionButton(
+                onClick = onClick,
+                text = UiStringRes(R.string.jp_migration_got_it_button)
+        )
+
+        data class DeleteSecondaryButton(
+            override val onClick: () -> Unit
+        ) : ActionButton(
+                onClick = onClick,
+                text = UiStringRes(R.string.jp_migration_need_help_button)
         )
     }
 

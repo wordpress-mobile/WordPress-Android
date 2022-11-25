@@ -12,7 +12,6 @@ import org.greenrobot.eventbus.EventBus;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.editor.Utils;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.PostImmutableModel;
 import org.wordpress.android.fluxc.model.PostModel;
@@ -433,8 +432,6 @@ public class PostUtils {
     public static String replaceMediaFileWithUrlInGutenbergPost(@NonNull String postContent,
                                                  String localMediaId, MediaFile mediaFile, String siteUrl) {
         if (mediaFile != null && contentContainsGutenbergBlocks(postContent)) {
-            String remoteUrl = org.wordpress.android.util.StringUtils
-                    .notNullStr(Utils.escapeQuotes(mediaFile.getFileURL()));
             MediaUploadCompletionProcessor processor = new MediaUploadCompletionProcessor(localMediaId, mediaFile,
                     siteUrl);
             postContent = processor.processContent(postContent);

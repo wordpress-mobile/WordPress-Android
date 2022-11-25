@@ -19,8 +19,8 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Quick
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.QuickScanItem.Column
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.utils.ActionCardHandler
-import org.wordpress.android.ui.stats.refresh.utils.DateUtils
 import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
+import org.wordpress.android.ui.stats.refresh.utils.StatsDateUtils
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.text.PercentFormatter
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -36,7 +36,7 @@ class MostPopularInsightsUseCase
     private val mostPopularStore: MostPopularInsightsStore,
     private val postStore: PostStore,
     private val statsSiteProvider: StatsSiteProvider,
-    private val dateUtils: DateUtils,
+    private val statsDateUtils: StatsDateUtils,
     private val resourceProvider: ResourceProvider,
     private val popupMenuHandler: ItemPopupMenuHandler,
     private val actionCardHandler: ActionCardHandler,
@@ -92,7 +92,7 @@ class MostPopularInsightsUseCase
                     QuickScanItem(
                             Column(
                                     R.string.stats_insights_best_day,
-                                    dateUtils.getWeekDay(domainModel.highestDayOfWeek),
+                                    statsDateUtils.getWeekDay(domainModel.highestDayOfWeek),
                                     if (BuildConfig.IS_JETPACK_APP) {
                                         highestDayPercent
                                     } else {
@@ -102,7 +102,7 @@ class MostPopularInsightsUseCase
                             ),
                             Column(
                                     R.string.stats_insights_best_hour,
-                                    dateUtils.getHour(domainModel.highestHour),
+                                    statsDateUtils.getHour(domainModel.highestHour),
                                     if (BuildConfig.IS_JETPACK_APP) {
                                         highestHourPercent
                                     } else {

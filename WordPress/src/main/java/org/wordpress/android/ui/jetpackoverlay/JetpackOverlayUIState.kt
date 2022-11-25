@@ -8,9 +8,16 @@ sealed class JetpackFeatureOverlayComponentVisibility(
     val title: Boolean = true,
     val caption: Boolean = true,
     val primaryButton: Boolean = true,
-    val secondaryButton: Boolean = true
+    open val secondaryButton: Boolean = true
 ) {
     class PhaseOne : JetpackFeatureOverlayComponentVisibility()
+    sealed class SiteCreationPhase : JetpackFeatureOverlayComponentVisibility() {
+        class PhaseOne : SiteCreationPhase()
+        class PhaseTwo(override val secondaryButton: Boolean = false) : SiteCreationPhase()
+    }
+    sealed class DeepLinkPhase : JetpackFeatureOverlayComponentVisibility() {
+        class All : DeepLinkPhase()
+    }
 }
 
 class JetpackFeatureOverlayContent(
@@ -18,7 +25,7 @@ class JetpackFeatureOverlayContent(
     @StringRes val title: Int,
     @StringRes val caption: Int,
     @StringRes val primaryButtonText: Int,
-    @StringRes val secondaryButtonText: Int
+    @StringRes val secondaryButtonText: Int? = null
 )
 
 class JetpackFeatureOverlayUIState(
@@ -29,5 +36,6 @@ class JetpackFeatureOverlayUIState(
 sealed class JetpackFeatureOverlayActions {
     object OpenPlayStore : JetpackFeatureOverlayActions()
     object DismissDialog : JetpackFeatureOverlayActions()
+    object ForwardToJetpack : JetpackFeatureOverlayActions()
 }
 

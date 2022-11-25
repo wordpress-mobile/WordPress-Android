@@ -51,6 +51,14 @@ class JetpackFeatureRemovalPhaseHelper @Inject constructor(
             is PhaseFour, PhaseNewUsers -> PHASE_TWO
         }
     }
+
+    fun getDeepLinkPhase(): JetpackFeatureRemovalSiteCreationPhase? {
+        val currentPhase = getCurrentPhase() ?: return null
+        return when (currentPhase) {
+            is PhaseOne, PhaseTwo, PhaseThree -> PHASE_ONE
+            is PhaseFour, PhaseNewUsers -> PHASE_TWO
+        }
+    }
 }
 // Global overlay frequency is the frequency at which the overlay is shown across the features
 // no matter which feature was accessed last time
@@ -59,27 +67,35 @@ class JetpackFeatureRemovalPhaseHelper @Inject constructor(
 
 sealed class JetpackFeatureRemovalPhase(
     val globalOverlayFrequency: Int = 0,
-    val featureSpecificOverlayFrequency: Int = 0
+    val featureSpecificOverlayFrequency: Int = 0,
+    val trackingName: String
 ) {
     object PhaseOne : JetpackFeatureRemovalPhase(
             PHASE_ONE_GLOBAL_OVERLAY_FREQUENCY_IN_DAYS,
-            PHASE_ONE_FEATURE_OVERLAY_FREQUENCY_IN_DAYS
+            PHASE_ONE_FEATURE_OVERLAY_FREQUENCY_IN_DAYS,
+            "one"
     )
 
     object PhaseTwo : JetpackFeatureRemovalPhase(
             PHASE_TWO_GLOBAL_OVERLAY_FREQUENCY_IN_DAYS,
-            PHASE_TWO_FEATURE_OVERLAY_FREQUENCY_IN_DAYS
+            PHASE_TWO_FEATURE_OVERLAY_FREQUENCY_IN_DAYS,
+            "two"
     )
 
     object PhaseThree : JetpackFeatureRemovalPhase(
             PHASE_THREE_GLOBAL_OVERLAY_FREQUENCY_IN_DAYS,
-            PHASE_THREE_FEATURE_OVERLAY_FREQUENCY_IN_DAYS
+            PHASE_THREE_FEATURE_OVERLAY_FREQUENCY_IN_DAYS,
+            "three"
     )
 
-    object PhaseFour : JetpackFeatureRemovalPhase()
-    object PhaseNewUsers : JetpackFeatureRemovalPhase()
+    object PhaseFour : JetpackFeatureRemovalPhase(trackingName = "four")
+    object PhaseNewUsers : JetpackFeatureRemovalPhase(trackingName ="new")
 }
 
-enum class JetpackFeatureRemovalSiteCreationPhase {
-    PHASE_ONE, PHASE_TWO
+enum class JetpackFeatureRemovalSiteCreationPhase(val trackingName: String) {
+    PHASE_ONE("one"), PHASE_TWO("two")
+}
+
+enum class JetpackDeepLinkPhase(val trackingName: String) {
+    ALL("all")
 }

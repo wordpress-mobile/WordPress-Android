@@ -4,7 +4,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.DiffUtil.Callback
 import androidx.recyclerview.widget.RecyclerView.Adapter
-import org.apache.commons.lang3.NotImplementedException
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BloggingPromptCard.BloggingPromptCardWithData
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.ErrorCard
@@ -91,7 +90,7 @@ class CardsAdapter(
                 oldItem is PostCardWithPostItems && newItem is PostCardWithPostItems -> true
                 oldItem is PostCardWithoutPostItems && newItem is PostCardWithoutPostItems -> true
                 oldItem is BloggingPromptCardWithData && newItem is BloggingPromptCardWithData -> true
-                else -> throw NotImplementedException("Diff not implemented yet")
+                else -> throw UnsupportedOperationException("Diff not implemented yet")
             }
         }
 

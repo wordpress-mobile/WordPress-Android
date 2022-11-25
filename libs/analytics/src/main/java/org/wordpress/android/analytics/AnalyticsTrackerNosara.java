@@ -2393,6 +2393,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "shared_login_success";
             case SHARED_LOGIN_FAILED:
                 return "shared_login_failed";
+            case MIGRATION_EMAIL_FAILED:
+                return "migration_email_failed";
+            case MIGRATION_EMAIL_TRIGGERED:
+                return "migration_email_triggered";
             case CONTENT_MIGRATION_FAILED:
                 return "content_migration_failed";
             case USER_FLAGS_START:
@@ -2417,6 +2421,26 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "deeplink_custom_intent_received";
             case APP_SETTINGS_OPEN_WEB_LINKS_WITH_JETPACK_CHANGED:
                 return "app_settings_open_web_links_with_jetpack_changed";
+            case JETPACK_REMOVE_FEATURE_OVERLAY_DISPLAYED:
+                return "remove_feature_overlay_displayed";
+            case JETPACK_REMOVE_FEATURE_OVERLAY_LINK_TAPPED:
+                return "remove_feature_overlay_link_tapped";
+            case JETPACK_REMOVE_FEATURE_OVERLAY_BUTTON_GET_JETPACK_APP_TAPPED:
+                return "remove_feature_overlay_button_tapped";
+            case JETPACK_REMOVE_FEATURE_OVERLAY_DISMISSED:
+                return "remove_feature_overlay_dismissed";
+            case JETPACK_REMOVE_SITE_CREATION_OVERLAY_DISPLAYED:
+                return "remove_site_creation_overlay_displayed";
+            case JETPACK_REMOVE_SITE_CREATION_OVERLAY_BUTTON_GET_JETPACK_APP_TAPPED:
+                return "remove_site_creation_overlay_button_tapped";
+            case JETPACK_REMOVE_SITE_CREATION_OVERLAY_DISMISSED:
+                return "remove_site_creation_overlay_dismissed";
+            case JETPACK_DEEP_LINK_OVERLAY_DISPLAYED:
+                return "jetpack_deep_link_overlay_displayed";
+            case JETPACK_DEEP_LINK_OVERLAY_BUTTON_OPEN_IN_JETPACK_APP_TAPPED:
+                return "jetpack_deep_link_overlay_button_open_in_jetpack_app_tapped";
+            case JETPACK_DEEP_LINK_OVERLAY_DISMISSED:
+                return "jetpack_deep_link_overlay_dismissed";
         }
         return null;
     }
