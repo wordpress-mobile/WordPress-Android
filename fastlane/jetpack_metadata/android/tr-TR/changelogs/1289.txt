@@ -1,3 +1,0 @@
-21.1:
-- Uygulamada cihazınızın hareketine yanıt veren göz alıcı yeni bir açılış ekranı göreceksiniz.
-- Bir sayfayı düzenlerken artık alt sayfanın ayarlarından bir üst sayfa ayarlayabilirsiniz.

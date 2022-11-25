@@ -1,0 +1,2 @@
+21.2 :
+Si les statistiques de votre site sont déjà activées, aucune invite pour les activer de nouveau ne s’affichera lorsque vous toucherez le widget des statistiques sur l’écran d’accueil de votre appareil. Intéressant, non ?
