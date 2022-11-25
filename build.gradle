@@ -33,7 +33,7 @@ ext {
     stethoVersion = '1.6.0'
 
     // main
-    coroutinesVersion = '1.5.2'
+    kotlinxCoroutinesVersion = '1.5.2'
     androidInstallReferrerVersion = '2.2'
     androidxWorkVersion = "2.7.0"
     androidxAppcompatVersion = '1.1.0'

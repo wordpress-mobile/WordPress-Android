@@ -424,7 +424,7 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     }
     implementation (name:'tenor-android-core-jetified', ext:'aar') // Jetified Tenor Gif library
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinxCoroutinesVersion"
     implementation "com.github.PhilJay:MPAndroidChart:$mpAndroidChartVersion"
     implementation "org.jsoup:jsoup:$jsoupVersion"
     implementation "androidx.emoji:emoji:$androidxEmojiVersion"
@@ -449,7 +449,7 @@ dependencies {
     testImplementation "org.mockito.kotlin:mockito-kotlin:$mockitoKotlinVersion"
     testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$gradle.ext.kotlinVersion"
     testImplementation "org.assertj:assertj-core:$assertJVersion"
-    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion"
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$kotlinxCoroutinesVersion"
     testImplementation "androidx.test:core:$androidxTestCoreVersion"
     testImplementation('org.bouncycastle:bcprov-jdk15on') {
         version {
