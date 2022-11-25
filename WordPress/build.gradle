@@ -359,7 +359,7 @@ dependencies {
         exclude group: 'com.mcxiaoke.volley'
     }
     implementation "org.wordpress:graphview:$wordPressGraphviewVersion"
-    implementation 'org.wordpress:persistentedittext:1.0.2'
+    implementation "org.wordpress:persistentedittext:$wordPressPersistentEditTextVersion"
     implementation 'org.wordpress:emailchecker2:1.1.0'
 
     debugImplementation "androidx.compose.ui:ui-tooling:$composeVersion"
