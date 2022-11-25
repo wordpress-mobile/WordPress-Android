@@ -101,7 +101,7 @@ class DeepLinkOpenWebLinksWithJetpackHelper @Inject constructor(
 
     private fun getPackageName(): String {
         val appSuffix = buildConfigWrapper.getApplicationId().split(".").last()
-        val appPackage = if (appSuffix.isNotBlank()) {
+        val appPackage = if (appSuffix.isNotBlank() && !appSuffix.equals("ANDROID", ignoreCase = true)) {
             "$JETPACK_PACKAGE_NAME.${appSuffix}"
         } else {
             JETPACK_PACKAGE_NAME
