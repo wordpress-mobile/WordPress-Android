@@ -66,6 +66,7 @@ import org.wordpress.android.ui.uploads.UploadUtilsWrapper;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UriWrapper;
@@ -473,17 +474,20 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
     }
 
     private Boolean checkAndShowOpenWebLinksWithJetpackOverlayIfNeeded() {
-        if (mAccountStore == null || mAccountStore.hasAccessToken()) return false;
+        if (!isSignedInWPComOrHasWPOrgSite()) return false;
 
-        if (!mDeepLinkOpenWebLinksWithJetpackHelper.shouldShowDeepLinkOpenWebLinksWithJetpackOverlay()) {
-            return false;
-        }
+        if (!mDeepLinkOpenWebLinksWithJetpackHelper.shouldShowDeepLinkOpenWebLinksWithJetpackOverlay()) return false;
 
         mDeepLinkOpenWebLinksWithJetpackHelper.onOverlayShown();
         JetpackFeatureFullScreenOverlayFragment
                 .newInstance(null, false, true, SiteCreationSource.UNSPECIFIED)
                 .show(getSupportFragmentManager(), JetpackFeatureFullScreenOverlayFragment.TAG);
         return true;
+    }
+
+    private Boolean isSignedInWPComOrHasWPOrgSite() {
+        if (mAccountStore == null || mSiteStore == null) return false;
+        return FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore);
     }
 
     /**
