@@ -31,6 +31,7 @@ import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
 import org.wordpress.android.fluxc.store.SiteStore;
@@ -159,6 +160,7 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
     @Inject SelectedSiteRepository mSelectedSiteRepository;
     @Inject DeepLinkOpenWebLinksWithJetpackHelper mDeepLinkOpenWebLinksWithJetpackHelper;
     private JetpackFeatureFullScreenOverlayViewModel mJetpackFullScreenViewModel;
+    @Inject AccountStore mAccountStore;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -471,9 +473,12 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
     }
 
     private Boolean checkAndShowOpenWebLinksWithJetpackOverlayIfNeeded() {
+        if (mAccountStore == null || mAccountStore.hasAccessToken()) return false;
+
         if (!mDeepLinkOpenWebLinksWithJetpackHelper.shouldShowDeepLinkOpenWebLinksWithJetpackOverlay()) {
             return false;
         }
+
         mDeepLinkOpenWebLinksWithJetpackHelper.onOverlayShown();
         JetpackFeatureFullScreenOverlayFragment
                 .newInstance(null, false, true, SiteCreationSource.UNSPECIFIED)
