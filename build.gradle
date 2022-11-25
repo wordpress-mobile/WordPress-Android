@@ -55,6 +55,7 @@ ext {
     fragmentVersion = '1.4.1'
     constraintLayoutVersion = '1.1.3'
     materialVersion = '1.2.1'
+    photoviewVersion = '2.3.0'
     playServicesAuthVersion = '20.3.0'
     playServicesCodeScannerVersion = '16.0.0-beta1'
     preferenceVersion = '1.1.0'
