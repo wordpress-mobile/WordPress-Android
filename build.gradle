@@ -18,7 +18,6 @@ ext {
     // libs
     automatticRestVersion = '1.0.8'
     automatticTracksVersion = '2.2.0'
-    wordPressLintVersion = '1.1.0'
     wordPressGraphviewVersion = '3.4.0'
     wordPressPersistentEditTextVersion = '1.0.2'
     wordPressEmailChecker2Version = '1.1.0'
@@ -104,6 +103,7 @@ ext {
 
     // other
     androidDesugarVersion = '1.1.5'
+    wordPressLintVersion = '1.1.0'
 }
 
 allprojects {
