@@ -489,9 +489,9 @@ dependencies {
     androidTestImplementation "com.google.dagger:hilt-android-testing:$gradle.ext.daggerVersion"
     kaptAndroidTest "com.google.dagger:hilt-android-compiler:$gradle.ext.daggerVersion"
     // Necessary because of the failing android tests
-    androidTestImplementation "androidx.room:room-runtime:$roomVersion"
-    kapt "androidx.room:room-compiler:$roomVersion"
-    androidTestImplementation "androidx.room:room-ktx:$roomVersion"
+    androidTestImplementation "androidx.room:room-runtime:$androidxRoomVersion"
+    kapt "androidx.room:room-compiler:$androidxRoomVersion"
+    androidTestImplementation "androidx.room:room-ktx:$androidxRoomVersion"
     // Enables accessibility checks in Espresso
     androidTestImplementation "androidx.test.espresso:espresso-accessibility:$androidxEspressoAccessibilityVersion"
 
