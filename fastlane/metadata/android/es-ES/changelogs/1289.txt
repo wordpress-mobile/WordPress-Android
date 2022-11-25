@@ -1,2 +1,0 @@
-21.1:
-Esta actualización es breve y dulce – cuando estás editando una página, ahora puedes definir una página superior en los ajustes de la página hija.

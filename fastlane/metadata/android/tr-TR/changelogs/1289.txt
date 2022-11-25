@@ -1,2 +1,0 @@
-21.1:
-Bu güncelleme kısa ve çok güzel bir işlev getiriyor; artık bir sayfayı düzenleme sürecindeyken alt sayfanın ayarlarından bir üst sayfa ayarlayabilirsiniz.
