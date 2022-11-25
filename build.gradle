@@ -100,7 +100,7 @@ ext {
     androidxTestEspressoVersion = '3.4.0'
     screengrabVersion = '2.1.1'
     squareupMockWebServerVersion = '2.7.5'
-    uiAutomatorVersion = '2.2.0'
+    androidxTestUiAutomatorVersion = '2.2.0'
 
     // other
     coreLibraryDesugaringVersion = '1.1.5'

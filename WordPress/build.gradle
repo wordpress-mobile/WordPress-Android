@@ -465,7 +465,7 @@ dependencies {
     androidTestImplementation "androidx.test.espresso:espresso-core:$androidxTestEspressoVersion", {
         exclude group: 'com.android.support', module: 'support-annotations'
     }
-    androidTestImplementation "androidx.test.uiautomator:uiautomator:$uiAutomatorVersion"
+    androidTestImplementation "androidx.test.uiautomator:uiautomator:$androidxTestUiAutomatorVersion"
     androidTestImplementation("androidx.test.espresso:espresso-contrib:$androidxTestEspressoVersion") {
         exclude group: 'com.android.support', module: 'appcompat'
         exclude group: 'com.android.support', module: 'support-v4'
