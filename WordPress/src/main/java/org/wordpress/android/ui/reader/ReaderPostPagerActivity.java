@@ -474,6 +474,7 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
         if (!mDeepLinkOpenWebLinksWithJetpackHelper.shouldShowDeepLinkOpenWebLinksWithJetpackOverlay()) {
             return false;
         }
+        mDeepLinkOpenWebLinksWithJetpackHelper.onOverlayShown();
         JetpackFeatureFullScreenOverlayFragment
                 .newInstance(null, false, true, SiteCreationSource.UNSPECIFIED)
                 .show(getSupportFragmentManager(), JetpackFeatureFullScreenOverlayFragment.TAG);

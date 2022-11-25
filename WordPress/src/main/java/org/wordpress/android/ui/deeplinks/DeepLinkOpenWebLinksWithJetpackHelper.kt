@@ -52,7 +52,6 @@ class DeepLinkOpenWebLinksWithJetpackHelper @Inject constructor(
             enableDisableOpenWithJetpackComponents(true)
             packageManagerWrapper.disableReaderDeepLinks()
             appPrefsWrapper.setIsOpenWebLinksWithJetpack(true)
-            appPrefsWrapper.setOpenWebLinksWithJetpackOverlayLastShownTimestamp(System.currentTimeMillis())
             return true
         } catch (ex: PackageManager.NameNotFoundException) {
             AppLog.e(T.UTILS, "Unable to set open web links with Jetpack ${ex.message}")
@@ -104,6 +103,10 @@ class DeepLinkOpenWebLinksWithJetpackHelper @Inject constructor(
         }
         return appPackage
     }
+
+    fun onOverlayShown() =
+            appPrefsWrapper.setOpenWebLinksWithJetpackOverlayLastShownTimestamp(System.currentTimeMillis())
+
 
     companion object {
         const val JETPACK_PACKAGE_NAME = "com.jetpack.android"
