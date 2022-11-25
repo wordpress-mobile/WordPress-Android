@@ -100,6 +100,7 @@ ext {
     screengrabVersion = '2.1.1'
     squareupMockWebServerVersion = '2.7.5'
     wiremockVersion = '2.26.3'
+    wiremockMocksVersion = '2.23.2' // TODO: Align 'wiremock' versions.
 
     // other
     androidDesugarVersion = '1.1.5'
