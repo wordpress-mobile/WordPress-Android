@@ -18,6 +18,7 @@ import org.wordpress.android.localcontentmigration.LocalMigrationState.Finished.
 import org.wordpress.android.localcontentmigration.LocalMigrationState.Finished.Successful
 import org.wordpress.android.localcontentmigration.LocalMigrationState.Initial
 import org.wordpress.android.localcontentmigration.LocalMigrationState.Migrating
+import org.wordpress.android.localcontentmigration.MigrationEmailHelper
 import org.wordpress.android.sharedlogin.resolver.LocalMigrationOrchestrator
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.DeletePrimaryButton
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.DeleteSecondaryButton
@@ -49,6 +50,7 @@ class JetpackMigrationViewModel @Inject constructor(
     private val gravatarUtilsWrapper: GravatarUtilsWrapper,
     private val appPrefsWrapper: AppPrefsWrapper,
     private val localMigrationOrchestrator: LocalMigrationOrchestrator,
+    private val migrationEmailHelper: MigrationEmailHelper,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow<UiState>(Loading)
 
@@ -162,6 +164,7 @@ class JetpackMigrationViewModel @Inject constructor(
     }
 
     private fun onDoneClicked() {
+        migrationEmailHelper.notifyMigrationComplete()
         appPrefsWrapper.setJetpackMigrationCompleted(true)
         postActionEvent(CompleteFlow)
     }
