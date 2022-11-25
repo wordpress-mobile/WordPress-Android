@@ -462,11 +462,11 @@ dependencies {
     androidTestImplementation "org.mockito:mockito-android:$mockitoVersion"
     androidTestImplementation "org.mockito.kotlin:mockito-kotlin:$mockitoKotlinVersion"
     androidTestImplementation "com.squareup.okhttp:mockwebserver:$mockWebServerVersion"
-    androidTestImplementation "androidx.test.espresso:espresso-core:$espressoVersion", {
+    androidTestImplementation "androidx.test.espresso:espresso-core:$androidxTestEspressoVersion", {
         exclude group: 'com.android.support', module: 'support-annotations'
     }
     androidTestImplementation "androidx.test.uiautomator:uiautomator:$uiAutomatorVersion"
-    androidTestImplementation("androidx.test.espresso:espresso-contrib:$espressoVersion") {
+    androidTestImplementation("androidx.test.espresso:espresso-contrib:$androidxTestEspressoVersion") {
         exclude group: 'com.android.support', module: 'appcompat'
         exclude group: 'com.android.support', module: 'support-v4'
         exclude module: 'recyclerview-v7'
