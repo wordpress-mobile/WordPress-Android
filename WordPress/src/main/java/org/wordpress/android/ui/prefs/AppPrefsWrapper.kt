@@ -258,6 +258,9 @@ class AppPrefsWrapper @Inject constructor() {
     fun getOpenWebLinksWithJetpackOverlayLastShownTimestamp(): Long =
             AppPrefs.getOpenWebLinksWithJetpackOverlayLastShownTimestamp()
 
+    fun setOpenWebLinksWithJetpackOverlayLastShownTimestamp(lastShown: Long) =
+            AppPrefs.setOpenWebLinksWithJetpackOverlayLastShownTimestamp(lastShown)
+
     fun getIsOpenWebLinksWithJetpack(): Boolean = AppPrefs.getIsOpenWebLinksWithJetpack()
 
     fun setIsOpenWebLinksWithJetpack(isOpenWebLinksWithJetpack: Boolean) =

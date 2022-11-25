@@ -35,6 +35,7 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
     @Mock lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
     @Mock lateinit var contextProvider: ContextProvider
     @Mock lateinit var context: Context
+    @Mock lateinit var openWebLinksWithJetpackHelper: DeepLinkOpenWebLinksWithJetpackHelper
     private lateinit var viewModel: DeepLinkingIntentReceiverViewModel
     private var isFinished = false
     private lateinit var navigateActions: MutableList<NavigateAction>
@@ -49,7 +50,8 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
                 accountStore,
                 serverTrackingHandler,
                 deepLinkTrackingUtils,
-                analyticsUtilsWrapper
+                analyticsUtilsWrapper,
+                openWebLinksWithJetpackHelper
         )
         isFinished = false
         viewModel.finish.observeForever {

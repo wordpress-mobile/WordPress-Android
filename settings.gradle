@@ -18,7 +18,6 @@ pluginManagement {
         id "io.sentry.android.gradle" version "2.0.0"
         id "io.gitlab.arturbosch.detekt" version gradle.ext.detektVersion
         id "se.bjurr.violations.violation-comments-to-github-gradle-plugin" version "1.67"
-        id "com.automattic.android.fetchstyle" version "1.1"
         id "androidx.navigation.safeargs.kotlin" version gradle.ext.navComponentVersion
     }
     repositories {
@@ -33,10 +32,6 @@ pluginManagement {
     }
     resolutionStrategy {
         eachPlugin {
-            // TODO: Remove this when fetchstyle starts supporting Plugin Marker Artifacts
-            if (requested.id.id == "com.automattic.android.fetchstyle") {
-                useModule("com.automattic.android:fetchstyle:1.1")
-            }
             // TODO: Remove this when 'dagger.hilt' starts supporting Plugin Marker Artifacts
             if (requested.id.id == 'dagger.hilt.android.plugin') {
                 useModule("com.google.dagger:hilt-android-gradle-plugin:$gradle.ext.daggerVersion")

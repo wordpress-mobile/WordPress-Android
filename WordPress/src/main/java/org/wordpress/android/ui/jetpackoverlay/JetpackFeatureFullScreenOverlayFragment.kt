@@ -15,6 +15,7 @@ import org.wordpress.android.databinding.JetpackFeatureRemovalOverlayBinding
 import org.wordpress.android.ui.ActivityLauncherWrapper
 import org.wordpress.android.ui.ActivityLauncherWrapper.Companion.JETPACK_PACKAGE_NAME
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureOverlayActions.DismissDialog
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureOverlayActions.ForwardToJetpack
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureOverlayActions.OpenPlayStore
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureOverlayScreenType
 import org.wordpress.android.util.RtlUtils
@@ -41,7 +42,12 @@ class JetpackFeatureFullScreenOverlayFragment : BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.init(getSiteScreen(), getIfSiteCreationOverlay(), RtlUtils.isRtl(view.context))
+        viewModel.init(
+                getSiteScreen(),
+                getIfSiteCreationOverlay(),
+                getIfDeepLinkOverlay(),
+                RtlUtils.isRtl(view.context)
+        )
         binding.setupObservers()
 
         (dialog as? BottomSheetDialog)?.apply {
@@ -50,7 +56,7 @@ class JetpackFeatureFullScreenOverlayFragment : BottomSheetDialogFragment() {
                         com.google.android.material.R.id.design_bottom_sheet
                 ) ?: return@setOnShowListener
                 val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
-                bottomSheetBehavior.setMaxWidth(ViewGroup.LayoutParams.MATCH_PARENT);
+                bottomSheetBehavior.setMaxWidth(ViewGroup.LayoutParams.MATCH_PARENT)
                 bottomSheetBehavior.isDraggable = false
                 if (bottomSheet.layoutParams != null) {
                     showFullScreenBottomSheet(bottomSheet)
@@ -77,6 +83,9 @@ class JetpackFeatureFullScreenOverlayFragment : BottomSheetDialogFragment() {
     private fun getIfSiteCreationOverlay() =
             arguments?.getSerializable(IS_SITE_CREATION_OVERLAY) as Boolean
 
+    private fun getIfDeepLinkOverlay() =
+            arguments?.getSerializable(IS_DEEP_LINK_OVERLAY) as Boolean
+
     private fun JetpackFeatureRemovalOverlayBinding.setupObservers() {
         viewModel.uiState.observe(viewLifecycleOwner) {
             renderUiState(it)
@@ -93,6 +102,9 @@ class JetpackFeatureFullScreenOverlayFragment : BottomSheetDialogFragment() {
                 is DismissDialog -> {
                     dismiss()
                 }
+                is ForwardToJetpack -> {
+                    dismiss()
+                }
             }.exhaustive
         }
     }
@@ -106,7 +118,9 @@ class JetpackFeatureFullScreenOverlayFragment : BottomSheetDialogFragment() {
     }
 
     private fun JetpackFeatureRemovalOverlayBinding.setClickListener(secondaryButtonVisible: Boolean) {
-        primaryButton.setOnClickListener { viewModel.openJetpackAppDownloadLink() }
+        primaryButton.setOnClickListener {
+            viewModel.openJetpackAppDownloadLink()
+        }
         closeButton.setOnClickListener { viewModel.closeBottomSheet() }
         if (secondaryButtonVisible) secondaryButton.setOnClickListener { viewModel.continueToFeature() }
     }
@@ -143,14 +157,17 @@ class JetpackFeatureFullScreenOverlayFragment : BottomSheetDialogFragment() {
         const val TAG = "JETPACK_POWERED_OVERLAY_FULL_SCREEN_FRAGMENT"
         private const val OVERLAY_SCREEN_TYPE = "KEY_JETPACK_OVERLAY_SCREEN"
         private const val IS_SITE_CREATION_OVERLAY = "KEY_IS_SITE_CREATION_OVERLAY"
+        private const val IS_DEEP_LINK_OVERLAY = "KEY_IS_DEEP_LINK_OVERLAY"
 
         @JvmStatic fun newInstance(
             jetpackFeatureOverlayScreenType: JetpackFeatureOverlayScreenType? = null,
-            isSiteCreationOverlay: Boolean = false
+            isSiteCreationOverlay: Boolean = false,
+            isDeepLinkOverlay: Boolean = false
         ) = JetpackFeatureFullScreenOverlayFragment().apply {
             arguments = Bundle().apply {
                 putSerializable(OVERLAY_SCREEN_TYPE, jetpackFeatureOverlayScreenType)
                 putBoolean(IS_SITE_CREATION_OVERLAY, isSiteCreationOverlay)
+                putBoolean(IS_DEEP_LINK_OVERLAY, isDeepLinkOverlay)
             }
         }
     }

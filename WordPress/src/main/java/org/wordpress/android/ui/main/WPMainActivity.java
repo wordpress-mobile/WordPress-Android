@@ -86,6 +86,7 @@ import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboar
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsReminderSchedulerListener;
 import org.wordpress.android.ui.bloggingreminders.BloggingReminderUtils;
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel;
+import org.wordpress.android.ui.deeplinks.DeepLinkOpenWebLinksWithJetpackHelper;
 import org.wordpress.android.ui.main.WPMainNavigationView.OnPageListener;
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType;
 import org.wordpress.android.ui.mlp.ModalLayoutPickerFragment;
@@ -144,6 +145,7 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.service.InstallationReferrerServiceStarter;
 import org.wordpress.android.util.config.MySiteDashboardTodaysStatsCardFeatureConfig;
+import org.wordpress.android.util.config.OpenWebLinksWithJetpackFlowFeatureConfig;
 import org.wordpress.android.util.extensions.ViewExtensionsKt;
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel;
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel.FocusPointInfo;
@@ -259,6 +261,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
     @Inject QuickStartTracker mQuickStartTracker;
     @Inject BloggingRemindersResolver mBloggingRemindersResolver;
     @Inject JetpackAppMigrationFlowUtils mJetpackAppMigrationFlowUtils;
+    @Inject DeepLinkOpenWebLinksWithJetpackHelper mDeepLinkOpenWebLinksWithJetpackHelper;
+    @Inject OpenWebLinksWithJetpackFlowFeatureConfig mOpenWebLinksWithJetpackFlowFeatureConfig;
 
     @Inject BuildConfigWrapper mBuildConfigWrapper;
 
@@ -396,8 +400,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
             }
         }
 
-        // ensure the deep linking activity is enabled. It may have been disabled elsewhere and failed to get re-enabled
-        WPActivityUtils.enableReaderDeeplinks(this);
+        // Ensure deep linking activities are enabled.They may have been disabled elsewhere and failed to get re-enabled
+        enableComponentsIfNeeded();
 
         // monitor whether we're not the default app
         trackDefaultApp();
@@ -1713,5 +1717,15 @@ public class WPMainActivity extends LocaleAwareActivity implements
         super.onPause();
 
         QuickStartUtils.removeQuickStartFocusPoint(findViewById(R.id.root_view_main));
+    }
+
+    private void enableComponentsIfNeeded() {
+        if (mOpenWebLinksWithJetpackFlowFeatureConfig.isEnabled()) {
+            if (!AppPrefs.getIsOpenWebLinksWithJetpack()) {
+                mDeepLinkOpenWebLinksWithJetpackHelper.enableDisableOpenWithJetpackComponents(false);
+            }
+        } else {
+            WPActivityUtils.enableReaderDeeplinks(this);
+        }
     }
 }

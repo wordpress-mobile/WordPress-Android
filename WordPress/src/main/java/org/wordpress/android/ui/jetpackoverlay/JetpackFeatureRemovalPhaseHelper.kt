@@ -51,6 +51,14 @@ class JetpackFeatureRemovalPhaseHelper @Inject constructor(
             is PhaseFour, PhaseNewUsers -> PHASE_TWO
         }
     }
+
+    fun getDeepLinkPhase(): JetpackFeatureRemovalSiteCreationPhase? {
+        val currentPhase = getCurrentPhase() ?: return null
+        return when (currentPhase) {
+            is PhaseOne, PhaseTwo, PhaseThree -> PHASE_ONE
+            is PhaseFour, PhaseNewUsers -> PHASE_TWO
+        }
+    }
 }
 // Global overlay frequency is the frequency at which the overlay is shown across the features
 // no matter which feature was accessed last time
@@ -86,4 +94,8 @@ sealed class JetpackFeatureRemovalPhase(
 
 enum class JetpackFeatureRemovalSiteCreationPhase(val trackingName: String) {
     PHASE_ONE("one"), PHASE_TWO("two")
+}
+
+enum class JetpackDeepLinkPhase(val trackingName: String) {
+    ALL("all")
 }

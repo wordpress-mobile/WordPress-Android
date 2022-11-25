@@ -14,7 +14,6 @@ import org.wordpress.android.ui.comments.unified.UnifiedCommentListViewModel;
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel;
 import org.wordpress.android.ui.debug.DebugSettingsViewModel;
 import org.wordpress.android.ui.debug.cookies.DebugCookiesViewModel;
-import org.wordpress.android.ui.deeplinks.DeepLinkingIntentReceiverViewModel;
 import org.wordpress.android.ui.domains.DomainRegistrationDetailsViewModel;
 import org.wordpress.android.ui.domains.DomainRegistrationMainViewModel;
 import org.wordpress.android.ui.domains.DomainSuggestionsViewModel;
@@ -491,11 +490,6 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(LoginViewModel.class)
     abstract ViewModel loginViewModel(LoginViewModel viewModel);
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(DeepLinkingIntentReceiverViewModel.class)
-    abstract ViewModel deepLinkingIntentReceiverViewModel(DeepLinkingIntentReceiverViewModel viewModel);
 
     @Binds
     @IntoMap

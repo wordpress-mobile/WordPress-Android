@@ -105,6 +105,25 @@ class JetpackFeatureOverlayContentBuilder @Inject constructor() {
                 primaryButtonText = R.string.wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app,
         )
     }
+
+    fun buildDeepLinkOverlayState(isRtl: Boolean): JetpackFeatureOverlayUIState { return getStateForDeepLink(isRtl) }
+
+    private fun getStateForDeepLink(isRtl: Boolean): JetpackFeatureOverlayUIState {
+        val componentVisibility = JetpackFeatureOverlayComponentVisibility
+                .DeepLinkPhase.All()
+        val content = getContentForDeepLink(isRtl)
+        return JetpackFeatureOverlayUIState(componentVisibility, content)
+    }
+
+    private fun getContentForDeepLink(rtl: Boolean): JetpackFeatureOverlayContent {
+        return JetpackFeatureOverlayContent(
+                illustration = if (rtl) R.raw.wp2jp_rtl else R.raw.wp2jp_left,
+                title = R.string.wp_jetpack_deep_link_overlay_title,
+                caption = R.string.wp_jetpack_deep_link_overlay_description,
+                primaryButtonText = R.string.wp_jetpack_deep_link_open_with_jetpack,
+                secondaryButtonText = R.string.wp_jetpack_continue_without_jetpack
+        )
+    }
 }
 
 data class JetpackFeatureOverlayContentBuilderParams(
