@@ -394,7 +394,7 @@ dependencies {
     implementation "com.android.volley:volley:$volleyVersion"
     implementation "com.google.firebase:firebase-messaging:$firebaseMessagingVersion"
     implementation "com.google.firebase:firebase-config:$firebaseConfigVersion"
-    implementation "com.google.android.gms:play-services-auth:$playServicesAuthVersion"
+    implementation "com.google.android.gms:play-services-auth:$googlePlayServicesAuthVersion"
     implementation "com.google.android.gms:play-services-code-scanner:$playServicesCodeScannerVersion"
     implementation "com.android.installreferrer:installreferrer:$androidInstallReferrerVersion"
     implementation "com.github.chrisbanes:PhotoView:$photoviewVersion"
