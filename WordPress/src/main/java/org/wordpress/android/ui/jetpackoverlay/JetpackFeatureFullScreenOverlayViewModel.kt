@@ -8,6 +8,8 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureOverlayScreenType
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackOverlayDismissalType.CLOSE_BUTTON
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackOverlayDismissalType.CONTINUE_BUTTON
+import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
+import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource.UNSPECIFIED
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
@@ -27,17 +29,17 @@ class JetpackFeatureFullScreenOverlayViewModel @Inject constructor(
 
     private lateinit var screenType: JetpackFeatureOverlayScreenType
     private var isSiteCreationOverlayScreen: Boolean = false
+    private var siteCreationOrigin: SiteCreationSource = UNSPECIFIED
     private var isDeepLinkOverlayScreen: Boolean = false
 
     fun openJetpackAppDownloadLink() {
         if (isSiteCreationOverlayScreen) {
             _action.value = JetpackFeatureOverlayActions.OpenPlayStore
-            jetpackFeatureRemovalOverlayUtil.trackInstallJetpackTappedInSiteCreationOverlay()
+            jetpackFeatureRemovalOverlayUtil.trackInstallJetpackTappedInSiteCreationOverlay(siteCreationOrigin)
         } else if (isDeepLinkOverlayScreen) {
             _action.value = JetpackFeatureOverlayActions.ForwardToJetpack
             jetpackFeatureRemovalOverlayUtil.trackInstallJetpackTappedInDeepLinkOverlay()
-        }
-        else {
+        } else {
             _action.value = JetpackFeatureOverlayActions.OpenPlayStore
             jetpackFeatureRemovalOverlayUtil.trackInstallJetpackTapped(screenType)
         }
@@ -46,7 +48,10 @@ class JetpackFeatureFullScreenOverlayViewModel @Inject constructor(
     fun continueToFeature() {
         _action.value = JetpackFeatureOverlayActions.DismissDialog
         if (isSiteCreationOverlayScreen)
-            jetpackFeatureRemovalOverlayUtil.trackBottomSheetDismissedInSiteCreationOverlay(CONTINUE_BUTTON)
+            jetpackFeatureRemovalOverlayUtil.trackBottomSheetDismissedInSiteCreationOverlay(
+                    siteCreationOrigin,
+                    CONTINUE_BUTTON
+            )
         else if (isDeepLinkOverlayScreen)
             jetpackFeatureRemovalOverlayUtil.trackBottomSheetDismissedInDeepLinkOverlay(CONTINUE_BUTTON)
         else jetpackFeatureRemovalOverlayUtil.trackBottomSheetDismissed(screenType, CONTINUE_BUTTON)
@@ -55,7 +60,10 @@ class JetpackFeatureFullScreenOverlayViewModel @Inject constructor(
     fun closeBottomSheet() {
         _action.value = JetpackFeatureOverlayActions.DismissDialog
         if (isSiteCreationOverlayScreen)
-            jetpackFeatureRemovalOverlayUtil.trackBottomSheetDismissedInSiteCreationOverlay(CLOSE_BUTTON)
+            jetpackFeatureRemovalOverlayUtil.trackBottomSheetDismissedInSiteCreationOverlay(
+                    siteCreationOrigin,
+                    CLOSE_BUTTON
+            )
         else if (isDeepLinkOverlayScreen)
             jetpackFeatureRemovalOverlayUtil.trackBottomSheetDismissedInDeepLinkOverlay(CLOSE_BUTTON)
         else jetpackFeatureRemovalOverlayUtil.trackBottomSheetDismissed(screenType, CLOSE_BUTTON)
@@ -66,17 +74,19 @@ class JetpackFeatureFullScreenOverlayViewModel @Inject constructor(
         overlayScreenType: JetpackFeatureOverlayScreenType?,
         isSiteCreationOverlay: Boolean,
         isDeepLinkOverlay: Boolean,
+        siteCreationSource: SiteCreationSource,
         rtlLayout: Boolean
     ) {
         if (isSiteCreationOverlay) {
             isSiteCreationOverlayScreen = true
+            siteCreationOrigin = siteCreationSource
             _uiState.postValue(
                     jetpackFeatureOverlayContentBuilder.buildSiteCreationOverlayState(
                             getSiteCreationPhase()!!,
                             rtlLayout
                     )
             )
-            jetpackFeatureRemovalOverlayUtil.trackSiteCreationOverlayShown()
+            jetpackFeatureRemovalOverlayUtil.trackSiteCreationOverlayShown(siteCreationOrigin)
             return
         }
 

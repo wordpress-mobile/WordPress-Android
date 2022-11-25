@@ -73,8 +73,7 @@ class SiteCreationActivity : LocaleAwareActivity(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.site_creation_activity)
-        val siteCreationSource = intent.extras?.getString(ARG_CREATE_SITE_SOURCE)
-        mainViewModel.start(savedInstanceState, SiteCreationSource.fromString(siteCreationSource))
+        mainViewModel.start(savedInstanceState, getSiteCreationSource())
         mainViewModel.preloadThumbnails(this)
 
         observeVMState()
@@ -156,11 +155,17 @@ class SiteCreationActivity : LocaleAwareActivity(),
 
         mainViewModel.showJetpackOverlay.observeEvent(this) {
             val fragment = JetpackFeatureFullScreenOverlayFragment
-                    .newInstance(isSiteCreationOverlay =  true)
+                    .newInstance(isSiteCreationOverlay =  true,
+                            siteCreationSource = getSiteCreationSource())
             if (mainViewModel.siteCreationDisabled)
                 slideInFragment(fragment, JetpackFeatureFullScreenOverlayFragment.TAG)
             else fragment.show(supportFragmentManager, JetpackFeatureFullScreenOverlayFragment.TAG)
         }
+    }
+
+    private fun getSiteCreationSource(): SiteCreationSource {
+        val siteCreationSource = intent.extras?.getString(ARG_CREATE_SITE_SOURCE)
+        return SiteCreationSource.fromString(siteCreationSource)
     }
 
     override fun onIntentSelected(intent: String?) {
