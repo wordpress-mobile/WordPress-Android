@@ -66,6 +66,6 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-core-utils'
     })
 
-    androidTestImplementation "androidx.test.ext:junit:$jUnitExtVersion"
+    androidTestImplementation "androidx.test.ext:junit:$androidxTestExtJunitVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$espressoVersion"
 }

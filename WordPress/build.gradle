@@ -480,7 +480,7 @@ dependencies {
     androidTestImplementation "org.apache.httpcomponents:httpclient-android:$apacheHttpClientAndroidVersion"
     androidTestImplementation "androidx.test:runner:$androidxTestCoreVersion"
     androidTestImplementation "androidx.test:rules:$androidxTestCoreVersion"
-    androidTestImplementation "androidx.test.ext:junit:$jUnitExtVersion"
+    androidTestImplementation "androidx.test.ext:junit:$androidxTestExtJunitVersion"
     androidTestImplementation "tools.fastlane:screengrab:$screengrabVersion",  {
         exclude group: 'com.android.support.test.uiautomator', module: 'uiautomator-v18'
     }
