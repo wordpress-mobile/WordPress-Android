@@ -120,7 +120,7 @@ class JetpackFeatureOverlayContentBuilder @Inject constructor() {
                 illustration = if (rtl) R.raw.wp2jp_rtl else R.raw.wp2jp_left,
                 title = R.string.wp_jetpack_deep_link_overlay_title,
                 caption = R.string.wp_jetpack_deep_link_overlay_description,
-                primaryButtonText = R.string.wp_jetpack_deep_link_open_with_jetpack,
+                primaryButtonText = R.string.wp_jetpack_deep_link_open_in_jetpack,
                 secondaryButtonText = R.string.wp_jetpack_continue_without_jetpack
         )
     }
