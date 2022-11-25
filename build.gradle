@@ -75,7 +75,7 @@ ext {
     tracksVersion = '2.2.0'
     androidxRoomVersion = '2.3.0'
     exoPlayerVersion = '2.13.3'
-    composeVersion = '1.1.1'
+    androidxComposeVersion = '1.1.1'
     kotlinPoetVersion = '1.6.0'
     autoServiceVersion = '1.0'
     commonsTextVersion = '1.10.0'
