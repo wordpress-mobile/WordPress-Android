@@ -358,7 +358,7 @@ dependencies {
     implementation ("com.automattic:rest:$automatticRestVersion") {
         exclude group: 'com.mcxiaoke.volley'
     }
-    implementation 'org.wordpress:graphview:3.4.0'
+    implementation "org.wordpress:graphview:$wordPressGraphviewVersion"
     implementation 'org.wordpress:persistentedittext:1.0.2'
     implementation 'org.wordpress:emailchecker2:1.1.0'
 

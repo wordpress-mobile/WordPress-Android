@@ -18,6 +18,7 @@ ext {
     // libs
     automatticRestVersion = '1.0.8'
     wordPressLintVersion = '1.1.0'
+    wordPressGraphviewVersion = '3.4.0'
     fluxCVersion = '2.6.0'
     wordPressUtilsVersion = '3.1.0'
     wordPressLoginVersion = '1.0.0'
