@@ -20,6 +20,7 @@ ext {
     wordPressLintVersion = '1.1.0'
     wordPressGraphviewVersion = '3.4.0'
     wordPressPersistentEditTextVersion = '1.0.2'
+    wordPressEmailChecker2Version = '1.1.0'
     fluxCVersion = '2.6.0'
     wordPressUtilsVersion = '3.1.0'
     wordPressLoginVersion = '1.0.0'

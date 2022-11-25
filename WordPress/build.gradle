@@ -360,7 +360,7 @@ dependencies {
     }
     implementation "org.wordpress:graphview:$wordPressGraphviewVersion"
     implementation "org.wordpress:persistentedittext:$wordPressPersistentEditTextVersion"
-    implementation 'org.wordpress:emailchecker2:1.1.0'
+    implementation "org.wordpress:emailchecker2:$wordPressEmailChecker2Version"
 
     debugImplementation "androidx.compose.ui:ui-tooling:$composeVersion"
     debugImplementation 'com.facebook.stetho:stetho:1.6.0'
