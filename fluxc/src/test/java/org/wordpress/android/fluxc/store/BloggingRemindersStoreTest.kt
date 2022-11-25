@@ -24,6 +24,7 @@ class BloggingRemindersStoreTest {
     @Mock lateinit var mapper: BloggingRemindersMapper
     private lateinit var store: BloggingRemindersStore
     private val siteId = 1
+    private val secondSiteId = 2
     private val testHour = 10
     private val testMinute = 0
 
@@ -33,7 +34,30 @@ class BloggingRemindersStoreTest {
     }
 
     @Test
-    fun `maps items emitted from dao`() = test {
+    fun `maps all items emitted from dao`() = test {
+        val dbEntity1 = BloggingReminders(
+            siteId,
+            monday = true,
+            hour = testHour,
+            minute = testMinute
+        )
+        val dbEntity2 = BloggingReminders(
+            secondSiteId,
+            monday = true,
+            hour = testHour,
+            minute = testMinute
+        )
+        val domainModel1 = BloggingRemindersModel(siteId, setOf(MONDAY))
+        val domainModel2 = BloggingRemindersModel(secondSiteId, setOf(MONDAY))
+        whenever(bloggingRemindersDao.getAll()).thenReturn(flowOf(listOf(dbEntity1, dbEntity2)))
+        whenever(mapper.toDomainModel(dbEntity1)).thenReturn(domainModel1)
+        whenever(mapper.toDomainModel(dbEntity2)).thenReturn(domainModel2)
+
+        assertThat(store.getAll().single()).isEqualTo(listOf(domainModel1, domainModel2))
+    }
+
+    @Test
+    fun `maps single item emitted from dao`() = test {
         val dbEntity = BloggingReminders(siteId, monday = true, hour = testHour, minute = testMinute)
         val domainModel = BloggingRemindersModel(siteId, setOf(MONDAY))
         whenever(bloggingRemindersDao.liveGetBySiteId(siteId)).thenReturn(flowOf(dbEntity))

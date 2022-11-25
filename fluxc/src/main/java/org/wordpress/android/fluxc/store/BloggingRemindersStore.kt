@@ -17,6 +17,8 @@ class BloggingRemindersStore
     private val mapper: BloggingRemindersMapper,
     private val coroutineEngine: CoroutineEngine
 ) {
+    fun getAll() = bloggingRemindersDao.getAll().map { dbModel -> dbModel.map { mapper.toDomainModel(it) } }
+
     fun bloggingRemindersModel(siteId: Int): Flow<BloggingRemindersModel> {
         return bloggingRemindersDao.liveGetBySiteId(siteId).map {
             it?.let { dbModel -> mapper.toDomainModel(dbModel) } ?: BloggingRemindersModel(siteId)
