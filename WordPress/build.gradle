@@ -401,7 +401,7 @@ dependencies {
     implementation "org.greenrobot:eventbus:$eventBusVersion"
     implementation "com.squareup.okio:okio:$okioVersion"
     implementation "org.apache.commons:commons-text:$commonsTextVersion"
-    implementation 'com.airbnb.android:lottie:3.4.0'
+    implementation "com.airbnb.android:lottie:$lottieVersion"
     implementation 'com.facebook.shimmer:shimmer:0.5.0'
     implementation ("com.github.yalantis:ucrop:$uCropVersion") {
         exclude group: 'androidx.core', module: 'core'

@@ -55,6 +55,7 @@ ext {
     firebaseMessagingVersion = '21.1.0'
     fragmentVersion = '1.4.1'
     constraintLayoutVersion = '1.1.3'
+    lottieVersion = '3.4.0'
     materialVersion = '1.2.1'
     okioVersion = '2.8.0'
     photoviewVersion = '2.3.0'
