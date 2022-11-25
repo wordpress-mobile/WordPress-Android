@@ -49,6 +49,7 @@ ext {
     androidxMediaVersion = '1.0.1'
     androidxPercentlayoutVersion = '1.0.0'
     androidxRecyclerviewVersion = '1.0.0'
+    firebaseMessagingVersion = '21.1.0'
     fragmentVersion = '1.4.1'
     constraintLayoutVersion = '1.1.3'
     materialVersion = '1.2.1'
