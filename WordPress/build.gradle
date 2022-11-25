@@ -399,7 +399,7 @@ dependencies {
     implementation "com.android.installreferrer:installreferrer:$androidInstallReferrerVersion"
     implementation "com.github.chrisbanes:PhotoView:$photoviewVersion"
     implementation "org.greenrobot:eventbus:$eventBusVersion"
-    implementation 'com.squareup.okio:okio:2.8.0'
+    implementation "com.squareup.okio:okio:$okioVersion"
     implementation "org.apache.commons:commons-text:$commonsTextVersion"
     implementation 'com.airbnb.android:lottie:3.4.0'
     implementation 'com.facebook.shimmer:shimmer:0.5.0'
