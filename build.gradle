@@ -76,7 +76,7 @@ ext {
     androidxRoomVersion = '2.3.0'
     googleExoPlayerVersion = '2.13.3'
     androidxComposeVersion = '1.1.1'
-    kotlinPoetVersion = '1.6.0'
+    squareupKotlinPoetVersion = '1.6.0'
     googleAutoServiceVersion = '1.0'
     apacheCommonsTextVersion = '1.10.0'
     apacheHttpClientAndroidVersion = '4.3.5.1'

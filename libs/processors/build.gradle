@@ -8,7 +8,7 @@ dependencies {
 
     implementation "com.google.auto.service:auto-service:$googleAutoServiceVersion"
     kapt "com.google.auto.service:auto-service:$googleAutoServiceVersion"
-    implementation "com.squareup:kotlinpoet:$kotlinPoetVersion"
+    implementation "com.squareup:kotlinpoet:$squareupKotlinPoetVersion"
 
     testImplementation "junit:junit:$jUnitVersion"
     testImplementation "org.assertj:assertj-core:$assertJVersion"
