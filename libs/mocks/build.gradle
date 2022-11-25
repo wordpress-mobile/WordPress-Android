@@ -18,5 +18,5 @@ dependencies {
         exclude group: 'asm', module: 'asm'
         exclude group: 'org.json', module: 'json'
     }
-    implementation "org.apache.httpcomponents:httpclient-android:$httpClientAndroidVersion"
+    implementation "org.apache.httpcomponents:httpclient-android:$apacheHttpClientAndroidVersion"
 }

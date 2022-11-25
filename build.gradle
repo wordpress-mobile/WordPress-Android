@@ -79,7 +79,7 @@ ext {
     kotlinPoetVersion = '1.6.0'
     googleAutoServiceVersion = '1.0'
     apacheCommonsTextVersion = '1.10.0'
-    httpClientAndroidVersion = '4.3.5.1'
+    apacheHttpClientAndroidVersion = '4.3.5.1'
     androidVolleyVersion = '1.1.1'
     jsoupVersion = '1.10.3'
     googleGsonVersion = '2.6.2'
