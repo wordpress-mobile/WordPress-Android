@@ -1487,6 +1487,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     private void handleSiteRemoved() {
         mViewModel.handleSiteRemoved();
         if (!mViewModel.isSignedInWPComOrHasWPOrgSite()) {
+            mDeepLinkOpenWebLinksWithJetpackHelper.resetAll();
             showSignInForResultBasedOnIsJetpackAppBuildConfig(this);
             return;
         }

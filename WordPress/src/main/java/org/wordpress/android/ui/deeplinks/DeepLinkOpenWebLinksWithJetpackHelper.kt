@@ -42,8 +42,13 @@ class DeepLinkOpenWebLinksWithJetpackHelper @Inject constructor(
     }
 
     fun handleJetpackUninstalled() {
+        resetAll()
+    }
+
+    fun resetAll() {
         enableDisableOpenWithJetpackComponents(false)
         appPrefsWrapper.setIsOpenWebLinksWithJetpack(false)
+        appPrefsWrapper.setOpenWebLinksWithJetpackOverlayLastShownTimestamp(0L)
     }
 
     @Suppress("SwallowedException")
