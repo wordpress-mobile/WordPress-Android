@@ -400,7 +400,7 @@ dependencies {
     implementation "com.github.chrisbanes:PhotoView:$photoviewVersion"
     implementation "org.greenrobot:eventbus:$eventBusVersion"
     implementation "com.squareup.okio:okio:$okioVersion"
-    implementation "org.apache.commons:commons-text:$commonsTextVersion"
+    implementation "org.apache.commons:commons-text:$apacheCommonsTextVersion"
     implementation "com.airbnb.android:lottie:$lottieVersion"
     implementation "com.facebook.shimmer:shimmer:$shimmerVersion"
     implementation ("com.github.yalantis:ucrop:$uCropVersion") {

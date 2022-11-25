@@ -78,7 +78,7 @@ ext {
     androidxComposeVersion = '1.1.1'
     kotlinPoetVersion = '1.6.0'
     googleAutoServiceVersion = '1.0'
-    commonsTextVersion = '1.10.0'
+    apacheCommonsTextVersion = '1.10.0'
     httpClientAndroidVersion = '4.3.5.1'
     androidVolleyVersion = '1.1.1'
     jsoupVersion = '1.10.3'
