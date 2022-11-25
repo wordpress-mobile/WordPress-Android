@@ -410,7 +410,7 @@ dependencies {
     }
     implementation "com.github.bumptech.glide:glide:$glideVersion"
     kapt "com.github.bumptech.glide:compiler:$glideVersion"
-    implementation 'com.github.bumptech.glide:volley-integration:4.6.1@aar'
+    implementation "com.github.bumptech.glide:volley-integration:$glideVolleyVersion"
     implementation "androidx.compose.ui:ui:$composeVersion"
     implementation "androidx.compose.foundation:foundation:$composeVersion"
     implementation "androidx.compose.material:material:$composeVersion"
