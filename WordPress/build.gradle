@@ -431,7 +431,7 @@ dependencies {
     implementation ("com.google.android.exoplayer:exoplayer:$googleExoPlayerVersion") {
         exclude group: 'com.android.support', module: 'support-annotations'
     }
-    compileOnly "org.glassfish:javax.annotation:$javaxAnnotationVersion"
+    compileOnly "org.glassfish:javax.annotation:$glassfishJavaxAnnotationVersion"
     implementation "com.google.dagger:dagger-android-support:$gradle.ext.daggerVersion"
     kapt "com.google.dagger:dagger-android-processor:$gradle.ext.daggerVersion"
     implementation "com.google.dagger:hilt-android:$gradle.ext.daggerVersion"
