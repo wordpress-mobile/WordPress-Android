@@ -11,5 +11,5 @@ dependencies {
     implementation "com.squareup:kotlinpoet:$squareupKotlinPoetVersion"
 
     testImplementation "junit:junit:$junitVersion"
-    testImplementation "org.assertj:assertj-core:$assertJVersion"
+    testImplementation "org.assertj:assertj-core:$assertjVersion"
 }
