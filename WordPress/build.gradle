@@ -354,7 +354,7 @@ dependencies {
     implementation "$gradle.ext.storiesAndroidPath:$storiesVersion"
     implementation "$gradle.ext.storiesAndroidMp4ComposePath:$storiesVersion"
 
-    implementation "com.automattic:Automattic-Tracks-Android:$tracksVersion"
+    implementation "com.automattic:Automattic-Tracks-Android:$automatticTracksVersion"
     implementation ("com.automattic:rest:$automatticRestVersion") {
         exclude group: 'com.mcxiaoke.volley'
     }

@@ -17,7 +17,7 @@ ext {
 ext {
     // libs
     automatticRestVersion = '1.0.8'
-    tracksVersion = '2.2.0'
+    automatticTracksVersion = '2.2.0'
     wordPressLintVersion = '1.1.0'
     wordPressGraphviewVersion = '3.4.0'
     wordPressPersistentEditTextVersion = '1.0.2'
