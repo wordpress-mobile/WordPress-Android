@@ -13,6 +13,7 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseO
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseThree
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseTwo
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.SiteUtilsWrapper
@@ -178,31 +179,35 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
         )
     }
 
-    fun trackSiteCreationOverlayShown() {
+    fun trackSiteCreationOverlayShown(siteCreationSource: SiteCreationSource) {
         analyticsTrackerWrapper.track(
                 AnalyticsTracker.Stat.JETPACK_REMOVE_SITE_CREATION_OVERLAY_DISPLAYED,
                 mapOf(
-                        CURRENT_PHASE_KEY to jetpackFeatureRemovalPhaseHelper.getSiteCreationPhase()?.trackingName
+                        CURRENT_PHASE_KEY to jetpackFeatureRemovalPhaseHelper.getSiteCreationPhase()?.trackingName,
+                        SCREEN_TYPE_KEY to siteCreationSource.label
                 )
         )
     }
 
-    fun trackInstallJetpackTappedInSiteCreationOverlay() {
+    fun trackInstallJetpackTappedInSiteCreationOverlay(siteCreationSource: SiteCreationSource) {
         analyticsTrackerWrapper.track(
                 AnalyticsTracker.Stat.JETPACK_REMOVE_SITE_CREATION_OVERLAY_BUTTON_GET_JETPACK_APP_TAPPED,
                 mapOf(
-                        CURRENT_PHASE_KEY to jetpackFeatureRemovalPhaseHelper.getSiteCreationPhase()?.trackingName
+                        CURRENT_PHASE_KEY to jetpackFeatureRemovalPhaseHelper.getSiteCreationPhase()?.trackingName,
+                        SCREEN_TYPE_KEY to siteCreationSource.label
                 )
         )
     }
 
     fun trackBottomSheetDismissedInSiteCreationOverlay(
+        siteCreationSource: SiteCreationSource,
         dismissalType: JetpackOverlayDismissalType
     ) {
         analyticsTrackerWrapper.track(
                 AnalyticsTracker.Stat.JETPACK_REMOVE_SITE_CREATION_OVERLAY_DISMISSED,
                 mapOf(
                         CURRENT_PHASE_KEY to jetpackFeatureRemovalPhaseHelper.getSiteCreationPhase()?.trackingName,
+                        SCREEN_TYPE_KEY to siteCreationSource.label,
                         DISMISSAL_TYPE_KEY to dismissalType.trackingName
                 )
         )
@@ -237,7 +242,6 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
                 )
         )
     }
-
 
     enum class JetpackOverlayDismissalType(val trackingName: String) {
         CLOSE_BUTTON("close"),
