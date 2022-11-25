@@ -42,6 +42,7 @@
 
 /mobile/feature-announcements/
 /mobile/feature-flags/
+/mobile/migration
 
 /me/gutenberg/
 
