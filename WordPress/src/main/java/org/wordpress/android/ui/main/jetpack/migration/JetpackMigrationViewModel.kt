@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.main.jetpack.migration
 
+import android.content.Intent
 import androidx.annotation.DrawableRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -10,6 +11,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combineTransform
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.localcontentmigration.LocalMigrationState
@@ -40,14 +42,20 @@ import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.GravatarUtilsWrapper
 import org.wordpress.android.util.SiteUtilsWrapper
+import org.wordpress.android.util.config.PreventDuplicateNotifsFeatureConfig
+import org.wordpress.android.viewmodel.ContextProvider
 import javax.inject.Inject
 
 @HiltViewModel
 class JetpackMigrationViewModel @Inject constructor(
     private val siteUtilsWrapper: SiteUtilsWrapper,
     private val gravatarUtilsWrapper: GravatarUtilsWrapper,
+    private val contextProvider: ContextProvider,
+    private val preventDuplicateNotifsFeatureConfig: PreventDuplicateNotifsFeatureConfig,
     private val appPrefsWrapper: AppPrefsWrapper,
     private val localMigrationOrchestrator: LocalMigrationOrchestrator,
     private val migrationEmailHelper: MigrationEmailHelper,
@@ -156,11 +164,20 @@ class JetpackMigrationViewModel @Inject constructor(
             }
     }
 
-    @Suppress("ForbiddenComment")
     private fun onContinueFromNotificationsClicked() {
-        // TODO: Disable notifications in WP app
-        //  See https://github.com/wordpress-mobile/WordPress-Android/pull/17371
+        if (preventDuplicateNotifsFeatureConfig.isEnabled()) disableNotificationsOnWP()
         notificationContinueClickedFlow.value = true
+    }
+
+    private fun disableNotificationsOnWP() {
+        AppLog.d(T.NOTIFS, "Disable Notifications")
+        Intent().also { intent ->
+            intent.action = "org.wordpress.android.broadcast.DISABLE_NOTIFICATIONS"
+            val appPackage = BuildConfig.APPLICATION_ID.replace("com.jetpack", "org.wordpress")
+            intent.setPackage(appPackage)
+            AppLog.d(T.NOTIFS, intent.toString())
+            contextProvider.getContext().sendBroadcast(intent, "org.wordpress.android.permission.DISABLE_NOTIFICATIONS")
+        }
     }
 
     private fun onDoneClicked() {
