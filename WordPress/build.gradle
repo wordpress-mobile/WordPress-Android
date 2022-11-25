@@ -493,7 +493,7 @@ dependencies {
     kapt "androidx.room:room-compiler:$roomVersion"
     androidTestImplementation "androidx.room:room-ktx:$roomVersion"
     // Enables accessibility checks in Espresso
-    androidTestImplementation 'androidx.test.espresso:espresso-accessibility:3.3.0-alpha05'
+    androidTestImplementation "androidx.test.espresso:espresso-accessibility:$androidxEspressoAccessibilityVersion"
 
     // Enables Java 8+ API desugaring support
     coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:$coreLibraryDesugaringVersion"
