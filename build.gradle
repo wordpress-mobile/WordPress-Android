@@ -28,7 +28,7 @@ ext {
     wordPressAztecVersion = 'v1.6.2'
     gutenbergMobileVersion = 'v1.85.0'
     automatticStoriesVersion = '2.0.0'
-    aboutAutomatticVersion = '1.0.0'
+    automatticAboutVersion = '1.0.0'
 
     // debug
     stethoVersion = '1.6.0'

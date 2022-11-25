@@ -252,7 +252,7 @@ platform :android do
     },
     {
       name: "About Library",
-      import_key: "aboutAutomatticVersion",
+      import_key: "automatticAboutVersion",
       repository: "Automattic/about-automattic-android",
       strings_file_path: "library/src/main/res/values/strings.xml",
       source_id: 'about'

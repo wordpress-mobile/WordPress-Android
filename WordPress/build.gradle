@@ -350,7 +350,7 @@ dependencies {
         exclude group: 'com.github.bumptech.glide'
         exclude group: 'org.wordpress', module: 'utils'
     }
-    implementation "$gradle.ext.aboutAutomatticBinaryPath:$aboutAutomatticVersion"
+    implementation "$gradle.ext.aboutAutomatticBinaryPath:$automatticAboutVersion"
     implementation "$gradle.ext.storiesAndroidPath:$automatticStoriesVersion"
     implementation "$gradle.ext.storiesAndroidMp4ComposePath:$automatticStoriesVersion"
 
