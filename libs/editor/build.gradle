@@ -61,17 +61,17 @@ dependencies {
         exclude group: "com.android.volley"
         exclude group: 'org.wordpress', module: 'utils'
         version {
-            strictly aztecVersion
+            strictly wordPressAztecVersion
         }
     }
-    api ("$gradle.ext.aztecAndroidWordPressShortcodesPath:$aztecVersion") {
+    api ("$gradle.ext.aztecAndroidWordPressShortcodesPath:$wordPressAztecVersion") {
         version {
-            strictly aztecVersion
+            strictly wordPressAztecVersion
         }
     }
-    api ("$gradle.ext.aztecAndroidWordPressCommentsPath:$aztecVersion") {
+    api ("$gradle.ext.aztecAndroidWordPressCommentsPath:$wordPressAztecVersion") {
         version {
-            strictly aztecVersion
+            strictly wordPressAztecVersion
         }
     }
     // This dependency will be substituted if the `local-builds.gradle` file contains
