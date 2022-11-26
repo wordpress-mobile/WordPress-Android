@@ -710,8 +710,8 @@ public class AppSettingsFragment extends PreferenceFragment
         } catch (Exception e) {
             ToastUtils.showToast(
                     getActivity(),
-                    (newValue ? R.string.preference_open_web_links_with_jetpack_setting_change_enable_error
-                            : R.string.preference_open_web_links_with_jetpack_setting_change_disable_error),
+                    (newValue ? R.string.preference_open_links_in_jetpack_setting_change_enable_error
+                            : R.string.preference_open_links_in_jetpack_setting_change_disable_error),
                     ToastUtils.Duration.LONG);
             AppLog.e(AppLog.T.UTILS, "Unable to enable or disable open with Jetpack components ", e);
         }

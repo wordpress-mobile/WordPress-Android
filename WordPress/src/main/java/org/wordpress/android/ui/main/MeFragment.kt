@@ -58,6 +58,7 @@ import org.wordpress.android.ui.notifications.utils.NotificationsUtils
 import org.wordpress.android.ui.photopicker.MediaPickerConstants
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.MAIN
@@ -103,6 +104,7 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
     @Inject lateinit var qrCodeAuthFlowFeatureConfig: QRCodeAuthFlowFeatureConfig
     @Inject lateinit var jetpackBrandingUtils: JetpackBrandingUtils
     @Inject lateinit var packageManagerWrapper: PackageManagerWrapper
+    @Inject lateinit var appPrefsWrapper: AppPrefsWrapper
     private val viewModel: MeViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -447,6 +449,8 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
         packageManagerWrapper.enableReaderDeeplinks()
         packageManagerWrapper.enableComponentEnableSetting(
                 DeepLinkOpenWebLinksWithJetpackHelper.WEB_LINKS_DEEPLINK_ACTIVITY_ALIAS)
+        appPrefsWrapper.setOpenWebLinksWithJetpackOverlayLastShownTimestamp(0L)
+        appPrefsWrapper.setIsOpenWebLinksWithJetpack(false)
     }
 
     @Suppress("DEPRECATION")
