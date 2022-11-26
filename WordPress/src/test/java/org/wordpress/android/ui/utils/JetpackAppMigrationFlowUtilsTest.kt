@@ -63,7 +63,7 @@ class JetpackAppMigrationFlowUtilsTest {
     }
 
     @Test
-    fun `When the jetpackMigrationFlow is not enableed the Jetpack app the migration flow should not be shown`() {
+    fun `When the jetpackMigrationFlow is not enabled the Jetpack app the migration flow should not be shown`() {
         whenever(jetpackMigrationFlowFeatureConfig.isEnabled()).thenReturn(false)
         val expected = false
         val actual = jetpackAppMigrationFlowUtils.shouldShowMigrationFlow()
@@ -87,6 +87,14 @@ class JetpackAppMigrationFlowUtilsTest {
     }
 
     @Test
+    fun `If the user has dismissed the WordPress version update screen the migration should not be shown`() {
+        whenever(appPrefsWrapper.getDismissedWordPressUpdateJetpackMigration()).thenReturn(true)
+        val expected = false
+        val actual = jetpackAppMigrationFlowUtils.shouldShowMigrationFlow()
+        Assert.assertEquals(expected, actual)
+    }
+
+    @Test
     fun `When the WordPress app is not installed the Jetpack app the migration flow should not be shown`() {
         whenever(appStatus.isAppInstalled(any())).thenReturn(false)
         val expected = false
@@ -98,15 +106,15 @@ class JetpackAppMigrationFlowUtilsTest {
     fun `When the WordPress app is not compatible the Jetpack app the migration flow should not be shown`() {
         whenever(wordPressPublicData.nonSemanticPackageVersion()).thenReturn("21.2")
         val expected = false
-        val actual = jetpackAppMigrationFlowUtils.shouldShowMigrationFlow()
+        val actual = jetpackAppMigrationFlowUtils.isWordPressCompatible()
         Assert.assertEquals(expected, actual)
     }
 
     @Test
-    fun `When the WordPress app version is null the Jetpack app the migration flow should not be shown`() {
+    fun `When the WordPress app version is null isWordPressCompatible should return FALSE`() {
         whenever(wordPressPublicData.nonSemanticPackageVersion()).thenReturn(null)
         val expected = false
-        val actual = jetpackAppMigrationFlowUtils.shouldShowMigrationFlow()
+        val actual = jetpackAppMigrationFlowUtils.isWordPressCompatible()
         Assert.assertEquals(expected, actual)
     }
 }

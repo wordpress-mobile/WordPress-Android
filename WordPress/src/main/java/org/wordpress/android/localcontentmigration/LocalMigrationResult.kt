@@ -1,6 +1,8 @@
 package org.wordpress.android.localcontentmigration
 
+import android.os.Parcelable
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.parcelize.Parcelize
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.localcontentmigration.LocalContentEntityData.AccessTokenData
 import org.wordpress.android.localcontentmigration.LocalContentEntityData.EmptyData
@@ -99,8 +101,10 @@ sealed class LocalMigrationState {
         object Successful: Finished()
         data class Failure(val error: LocalMigrationError): Finished()
     }
-    sealed class SingleStep: LocalMigrationState() {
+    sealed class SingleStep: LocalMigrationState(), Parcelable {
+        @Parcelize
         object DeleteSingleStep: SingleStep()
+        @Parcelize
         object UpdateWPSingleStep: SingleStep()
     }
 }

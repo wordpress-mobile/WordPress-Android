@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.utils
 
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.localcontentmigration.LocalMigrationState.SingleStep
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.BuildConfigWrapper
@@ -20,23 +21,29 @@ class JetpackAppMigrationFlowUtils @Inject constructor(
     private val appStatus: AppStatus,
     private val wordPressPublicData: WordPressPublicData,
 ) {
-    private val minimumSupportedVersion = "21.3" // non semantic minimum supported version
+    private val minimumSupportedVersion = "21.2" // non semantic minimum supported version
 
     fun shouldShowMigrationFlow() = buildConfigWrapper.isJetpackApp
             && jetpackMigrationFlowFeatureConfig.isEnabled()
             && appPrefsWrapper.getIsFirstTrySharedLoginJetpack()
             && !accountStore.hasAccessToken()
             && isWordPressInstalled()
-            && isWordPressCompatible()
+            && !dismissedWordPressUpdate()
+
+    fun isWordPressCompatible(): Boolean {
+        val wordPressVersion = wordPressPublicData.nonSemanticPackageVersion()
+        return wordPressVersion != null && Version(wordPressVersion) >= Version(minimumSupportedVersion)
+    }
 
     fun startJetpackMigrationFlow() {
         ActivityLauncher.startJetpackMigrationFlow(contextProvider.getContext())
     }
 
+    fun startWordPressUpdateFlow(singleStep: SingleStep) {
+        ActivityLauncher.startJetpackMigrationFlowWithSingleStep(contextProvider.getContext(), singleStep)
+    }
+
     private fun isWordPressInstalled() = appStatus.isAppInstalled(wordPressPublicData.currentPackageId())
 
-    private fun isWordPressCompatible(): Boolean {
-        val wordPressVersion = wordPressPublicData.nonSemanticPackageVersion()
-        return wordPressVersion != null && Version(wordPressVersion) >= Version(minimumSupportedVersion)
-    }
+    private fun dismissedWordPressUpdate() = appPrefsWrapper.getDismissedWordPressUpdateJetpackMigration()
 }

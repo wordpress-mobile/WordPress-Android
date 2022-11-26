@@ -22,6 +22,7 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.databinding.MySiteTabFragmentBinding
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
+import org.wordpress.android.localcontentmigration.LocalMigrationState.SingleStep
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.FullScreenDialogFragment
 import org.wordpress.android.ui.FullScreenDialogFragment.Builder
@@ -377,7 +378,7 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
     private fun showJetpackMigrationDeleteWP() {
         val intent = JetpackMigrationActivity.createIntent(
                 context = requireActivity(),
-                showDeleteWpState = true
+                singleStepState = SingleStep.DeleteSingleStep
         )
         startActivity(intent)
     }

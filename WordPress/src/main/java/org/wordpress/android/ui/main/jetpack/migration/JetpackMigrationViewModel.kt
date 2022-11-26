@@ -15,11 +15,12 @@ import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.localcontentmigration.LocalMigrationState
-import org.wordpress.android.localcontentmigration.LocalMigrationState.SingleStep.DeleteSingleStep
 import org.wordpress.android.localcontentmigration.LocalMigrationState.Finished.Failure
 import org.wordpress.android.localcontentmigration.LocalMigrationState.Finished.Successful
 import org.wordpress.android.localcontentmigration.LocalMigrationState.Initial
 import org.wordpress.android.localcontentmigration.LocalMigrationState.Migrating
+import org.wordpress.android.localcontentmigration.LocalMigrationState.SingleStep
+import org.wordpress.android.localcontentmigration.LocalMigrationState.SingleStep.DeleteSingleStep
 import org.wordpress.android.localcontentmigration.LocalMigrationState.SingleStep.UpdateWPSingleStep
 import org.wordpress.android.localcontentmigration.MigrationEmailHelper
 import org.wordpress.android.sharedlogin.resolver.LocalMigrationOrchestrator
@@ -73,7 +74,6 @@ class JetpackMigrationViewModel @Inject constructor(
     private val migrationStateFlow = MutableStateFlow<LocalMigrationState>(Initial)
     private val continueClickedFlow = MutableStateFlow(false)
     private val notificationContinueClickedFlow = MutableStateFlow(false)
-    private var showDeleteState: Boolean = false
 
     val uiState = combineTransform(migrationStateFlow, continueClickedFlow, notificationContinueClickedFlow) {
         migrationState, continueClicked, notificationContinueClicked ->
@@ -123,9 +123,12 @@ class JetpackMigrationViewModel @Inject constructor(
         }
     }
 
-    fun start(showDeleteState: Boolean) {
-        this.showDeleteState = showDeleteState
-        tryMigration()
+    fun start(singleStepState: SingleStep?) {
+        if (singleStepState != null) {
+            localMigrationOrchestrator.loadSingleStep(migrationStateFlow, singleStepState)
+        } else {
+            tryMigration()
+        }
     }
 
     private fun siteUiFromModel(site: SiteModel) = SiteListItemUiState(
@@ -171,7 +174,7 @@ class JetpackMigrationViewModel @Inject constructor(
 
     private fun tryMigration() {
             viewModelScope.launch(Dispatchers.IO) {
-                localMigrationOrchestrator.tryLocalMigration(migrationStateFlow, showDeleteState)
+                localMigrationOrchestrator.tryLocalMigration(migrationStateFlow)
             }
     }
 
@@ -210,6 +213,7 @@ class JetpackMigrationViewModel @Inject constructor(
     }
 
     private fun onSkipClicked() {
+        appPrefsWrapper.setDismissedWordPressUpdateJetpackMigration(true)
         postActionEvent(CompleteFlow)
     }
 

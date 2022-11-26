@@ -1,6 +1,7 @@
 package org.wordpress.android.ui
 
 import android.app.Activity
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -32,6 +33,7 @@ class ActivityLauncherWrapper @Inject constructor() {
         remotePreviewType: RemotePreviewType
     ) = ActivityLauncher.previewPostOrPageForResult(activity, site, post, remotePreviewType)
 
+    @Suppress("SwallowedException")
     fun openPlayStoreLink(context: Context, packageName: String) {
         var intent: Intent? = context.packageManager.getLaunchIntentForPackage(packageName)
 
@@ -42,10 +44,15 @@ class ActivityLauncherWrapper @Inject constructor() {
                 setPackage("com.android.vending")
             }
         }
-        context.startActivity(intent)
+        try {
+            context.startActivity(intent)
+        } catch (exception: ActivityNotFoundException) {
+            // No Activity found to handle Intent
+        }
     }
 
     companion object {
         const val JETPACK_PACKAGE_NAME = "com.jetpack.android"
+        const val WORDPRESS_PACKAGE_NAME = "org.wordpress.android"
     }
 }

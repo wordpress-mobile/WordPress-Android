@@ -32,6 +32,7 @@ import org.wordpress.android.fluxc.model.bloggingprompts.BloggingPromptModel;
 import org.wordpress.android.fluxc.network.utils.StatsGranularity;
 import org.wordpress.android.imageeditor.EditImageActivity;
 import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.EditImageData;
+import org.wordpress.android.localcontentmigration.LocalMigrationState.SingleStep;
 import org.wordpress.android.login.LoginMode;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.networking.SSLCertsViewActivity;
@@ -1770,21 +1771,20 @@ public class ActivityLauncher {
         context.startActivity(intent);
     }
 
+    public static void startJetpackMigrationFlowWithSingleStep(
+            @NonNull final Context context,
+            @NonNull final SingleStep singleStep
+    ) {
+        final Intent intent = JetpackMigrationActivity.Companion.createIntent(context, singleStep);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
+    }
+
     public static void openJetpackForDeeplink(@NonNull Context context, String action, UriWrapper uri) {
         Intent intent = new Intent();
         intent.setAction(action);
         intent.setData(uri.getUri());
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
-    }
-
-    public static void openWordPressPlayStore(@NonNull final Context context) {
-        final String appPackageName = context.getPackageName();
-        try {
-            context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
-        } catch (android.content.ActivityNotFoundException anfe) {
-            context.startActivity(new Intent(Intent.ACTION_VIEW,
-                    Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
-        }
     }
 }

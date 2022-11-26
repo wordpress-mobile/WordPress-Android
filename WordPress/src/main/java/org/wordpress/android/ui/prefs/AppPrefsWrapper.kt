@@ -266,6 +266,12 @@ class AppPrefsWrapper @Inject constructor() {
     fun setIsOpenWebLinksWithJetpack(isOpenWebLinksWithJetpack: Boolean) =
             AppPrefs.setIsOpenWebLinksWithJetpack(isOpenWebLinksWithJetpack)
 
+    fun getDismissedWordPressUpdateJetpackMigration(): Boolean =
+            AppPrefs.getDismissedWordPressUpdateJetpackMigration()
+
+    fun setDismissedWordPressUpdateJetpackMigration(haveDismissed: Boolean) =
+            AppPrefs.setDismissedWordPressUpdateJetpackMigration(haveDismissed)
+
     fun getAllPrefs(): Map<String, Any?> = AppPrefs.getAllPrefs()
 
     fun setString(prefKey: PrefKey, value: String) {

@@ -5,9 +5,13 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
+import org.wordpress.android.localcontentmigration.LocalMigrationState.SingleStep
 import org.wordpress.android.localcontentmigration.MigrationEmailHelper
 import org.wordpress.android.sharedlogin.resolver.LocalMigrationOrchestrator
 import org.wordpress.android.test
@@ -55,6 +59,18 @@ class JetpackMigrationViewModelTest : BaseUnitTest() {
     @Test
     fun `Should init Loading UiState as default`() = test {
         assertThat(classToTest.uiState.first()).isInstanceOf(Loading::class.java)
+    }
+
+    @Test
+    fun `Should load single step if start is called with SingleStep`() = test {
+        classToTest.start(singleStepState = SingleStep.DeleteSingleStep)
+        verify(localMigrationOrchestrator).loadSingleStep(any(), any())
+    }
+
+    @Test
+    fun `Should NOT try migration if start is called with SingleStep`() = test {
+        classToTest.start(singleStepState = SingleStep.DeleteSingleStep)
+        verify(localMigrationOrchestrator, times(0)).tryLocalMigration(any())
     }
     // endregion
 

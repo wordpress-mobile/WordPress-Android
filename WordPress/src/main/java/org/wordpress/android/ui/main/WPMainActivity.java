@@ -62,6 +62,7 @@ import org.wordpress.android.fluxc.store.SiteStore.OnQuickStartCompleted;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteEditorsChanged;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteRemoved;
+import org.wordpress.android.localcontentmigration.LocalMigrationState.SingleStep.UpdateWPSingleStep;
 import org.wordpress.android.login.LoginAnalyticsListener;
 import org.wordpress.android.networking.ConnectionChangeReceiver;
 import org.wordpress.android.push.GCMMessageHandler;
@@ -464,7 +465,11 @@ public class WPMainActivity extends LocaleAwareActivity implements
         }
 
         if (mJetpackAppMigrationFlowUtils.shouldShowMigrationFlow()) {
-            mJetpackAppMigrationFlowUtils.startJetpackMigrationFlow();
+            if (mJetpackAppMigrationFlowUtils.isWordPressCompatible()) {
+                mJetpackAppMigrationFlowUtils.startJetpackMigrationFlow();
+            } else {
+                mJetpackAppMigrationFlowUtils.startWordPressUpdateFlow(UpdateWPSingleStep.INSTANCE);
+            }
         }
     }
 

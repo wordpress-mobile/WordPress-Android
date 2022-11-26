@@ -18,7 +18,10 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.localcontentmigration.LocalMigrationState.SingleStep
 import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.ActivityLauncherWrapper
+import org.wordpress.android.ui.ActivityLauncherWrapper.Companion.WORDPRESS_PACKAGE_NAME
 import org.wordpress.android.ui.accounts.HelpActivity.Origin.JETPACK_MIGRATION_HELP
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent
@@ -40,6 +43,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class JetpackMigrationFragment : Fragment() {
     @Inject lateinit var dispatcher: Dispatcher
+    @Inject lateinit var activityLauncherWrapper: ActivityLauncherWrapper
 
     private val viewModel: JetpackMigrationViewModel by viewModels()
 
@@ -58,8 +62,8 @@ class JetpackMigrationFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         observeViewModelEvents()
-        val showDeleteWpState = arguments?.getBoolean(KEY_SHOW_DELETE_WP_STATE, false) ?: false
-        viewModel.start(showDeleteWpState)
+        val singleStepState = arguments?.getParcelable<SingleStep?>(KEY_SINGLE_STEP_STATE)
+        viewModel.start(singleStepState)
     }
 
     private fun observeViewModelEvents() {
@@ -84,15 +88,15 @@ class JetpackMigrationFragment : Fragment() {
     }
 
     private fun launchWPPlayStore() {
-        ActivityLauncher.openWordPressPlayStore(requireContext())
+        activityLauncherWrapper.openPlayStoreLink(requireContext(), WORDPRESS_PACKAGE_NAME)
     }
 
     companion object {
-        private const val KEY_SHOW_DELETE_WP_STATE = "KEY_SHOW_DELETE_WP_STATE"
-        fun newInstance(showDeleteWpState: Boolean = false): JetpackMigrationFragment =
+        private const val KEY_SINGLE_STEP_STATE = "KEY_SINGLE_STEP_STATE"
+        fun newInstance(singleStepState: SingleStep? = null): JetpackMigrationFragment =
                 JetpackMigrationFragment().apply {
                     arguments = Bundle().apply {
-                        putBoolean(KEY_SHOW_DELETE_WP_STATE, showDeleteWpState)
+                        putParcelable(KEY_SINGLE_STEP_STATE, singleStepState)
                     }
                 }
     }
