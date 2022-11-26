@@ -1,3 +1,0 @@
-21.1:
-- Det finns också en helt ny landningsskärm i appen som svarar på din enhets rörelser – häftigt, eller hur?
-- När du redigerar en sida kan du nu ange en överordnad sida i den underordnade sidans inställningar.

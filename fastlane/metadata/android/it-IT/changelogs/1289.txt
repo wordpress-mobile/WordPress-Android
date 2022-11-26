@@ -1,2 +1,0 @@
-21.1:
-Questo aggiornamento è breve e gradevole da leggere: durante la modifica di una pagina, ora puoi impostare una pagina principale all'interno delle impostazioni della pagina secondaria.

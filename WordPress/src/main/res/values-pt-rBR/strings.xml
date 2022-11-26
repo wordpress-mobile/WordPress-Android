@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-11-10 01:03:47+0000
+Translation-Revision-Date: 2022-11-25 14:12:52+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: pt_BR
 -->
 <resources>
+    <string name="jp_migration_help_button">Precisa de ajuda?</string>
+    <string name="jp_migration_continue_button">Continuar</string>
+    <string name="jp_migration_welcome_site_found_message">Encontramos seu site. Continue transferindo todos os seus dados e faça login no Jetpack automaticamente.</string>
+    <string name="jp_migration_welcome_sites_found_message">Encontramos seus sites. Continue transferindo todos os seus dados e faça login no Jetpack automaticamente.</string>
+    <string name="jp_migration_avatar_content_description">Sua foto de perfil</string>
+    <string name="jp_migration_welcome_subtitle">Parece que você está migrando do aplicativo WordPress.</string>
+    <string name="jp_migration_welcome_title">Desejamos boas-vindas ao Jetpack!</string>
+    <string name="icon_desc">ícone</string>
     <string name="post_settings_parent">Página ascendente</string>
     <string name="post_settings_page_attributes">Atributos da página</string>
     <string name="about_automattic_contribute_item_title">Contribuir</string>

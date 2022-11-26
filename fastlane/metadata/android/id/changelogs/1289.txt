@@ -1,2 +1,0 @@
-21.1:
-Meski sederhana, pembaruan kali ini sangat membantu—Anda sekarang bisa mengatur halaman induk langsung dari pengaturan halaman turunan saat mengedit halaman.

@@ -1,0 +1,2 @@
+21.2:
+Als je sitestatistieken al hebt ingeschakeld, zie je geen opdracht meer om ze in te schakelen wanneer je op de statistiekenwidget tikt op het startscherm van je apparaat. Wel zo handig.
