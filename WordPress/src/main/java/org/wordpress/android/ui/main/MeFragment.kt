@@ -447,7 +447,7 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
 
     private fun enableDeepLinkComponents() {
         packageManagerWrapper.enableReaderDeeplinks()
-        packageManagerWrapper.enableComponentEnableSetting(
+        packageManagerWrapper.enableComponentEnabledSetting(
                 DeepLinkOpenWebLinksWithJetpackHelper.WEB_LINKS_DEEPLINK_ACTIVITY_ALIAS)
         appPrefsWrapper.setOpenWebLinksWithJetpackOverlayLastShownTimestamp(0L)
         appPrefsWrapper.setIsOpenWebLinksWithJetpack(false)

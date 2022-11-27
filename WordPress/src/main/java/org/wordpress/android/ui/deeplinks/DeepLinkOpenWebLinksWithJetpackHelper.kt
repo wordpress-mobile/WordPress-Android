@@ -30,7 +30,7 @@ class DeepLinkOpenWebLinksWithJetpackHelper @Inject constructor(
 
     fun enableDeepLinks() {
         packageManagerWrapper.enableReaderDeeplinks()
-        packageManagerWrapper.enableComponentEnableSetting(WEB_LINKS_DEEPLINK_ACTIVITY_ALIAS)
+        packageManagerWrapper.enableComponentEnabledSetting(WEB_LINKS_DEEPLINK_ACTIVITY_ALIAS)
     }
 
     fun disableDeepLinks() {

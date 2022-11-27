@@ -22,7 +22,7 @@ class PackageManagerWrapper @Inject constructor(
         )
     }
 
-    fun enableComponentEnableSetting(name: String) {
+    fun enableComponentEnabledSetting(name: String) {
         contextProvider.getContext().packageManager.setComponentEnabledSetting(
                 ComponentName(contextProvider.getContext(), name),
                 PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP
