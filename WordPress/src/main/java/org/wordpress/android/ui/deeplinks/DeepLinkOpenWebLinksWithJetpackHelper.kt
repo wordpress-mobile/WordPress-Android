@@ -39,10 +39,10 @@ class DeepLinkOpenWebLinksWithJetpackHelper @Inject constructor(
     }
 
     fun onJetpackUninstalled() {
-        resetAll()
+        reset()
     }
 
-    fun resetAll() {
+    fun reset() {
         enableDeepLinks()
         appPrefsWrapper.setIsOpenWebLinksWithJetpack(false)
         appPrefsWrapper.setOpenWebLinksWithJetpackOverlayLastShownTimestamp(0L)
