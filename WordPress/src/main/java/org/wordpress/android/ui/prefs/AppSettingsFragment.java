@@ -504,7 +504,7 @@ public class AppSettingsFragment extends PreferenceFragment
             AnalyticsTracker.track(Stat.PRIVACY_SETTINGS_REPORT_CRASHES_TOGGLED, Collections
                     .singletonMap(TRACK_ENABLED, newValue));
         } else if (preference == mOpenWebLinksWithJetpack) {
-            handleEnableDisableOpenWebLinksWithJetpackComponents((Boolean) newValue);
+            handleOpenLinksInJetpack((Boolean) newValue);
         }
         return true;
     }
@@ -701,9 +701,13 @@ public class AppSettingsFragment extends PreferenceFragment
         onPreferenceChange(mLanguagePreference, languageCode);
     }
 
-    private void handleEnableDisableOpenWebLinksWithJetpackComponents(Boolean newValue) {
+    private void handleOpenLinksInJetpack(Boolean newValue) {
         try {
-            mOpenWebLinksWithJetpackHelper.enableDisableOpenWithJetpackComponents(newValue);
+            if (newValue) {
+                mOpenWebLinksWithJetpackHelper.disableDeepLinks();
+            } else {
+                mOpenWebLinksWithJetpackHelper.enableDeepLinks();
+            }
             AppPrefs.setIsOpenWebLinksWithJetpack(newValue);
             AnalyticsTracker.track(AnalyticsTracker.Stat.APP_SETTINGS_OPEN_WEB_LINKS_WITH_JETPACK_CHANGED, Collections
                     .singletonMap(TRACK_ENABLED, newValue));
