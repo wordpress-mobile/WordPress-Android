@@ -476,7 +476,7 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
     private Boolean checkAndShowOpenWebLinksWithJetpackOverlayIfNeeded() {
         if (!isSignedInWPComOrHasWPOrgSite()) return false;
 
-        if (!mDeepLinkOpenWebLinksWithJetpackHelper.shouldShowDeepLinkOpenWebLinksWithJetpackOverlay()) return false;
+        if (!mDeepLinkOpenWebLinksWithJetpackHelper.shouldShowOpenLinksInJetpackOverlay()) return false;
 
         mDeepLinkOpenWebLinksWithJetpackHelper.onOverlayShown();
         JetpackFeatureFullScreenOverlayFragment

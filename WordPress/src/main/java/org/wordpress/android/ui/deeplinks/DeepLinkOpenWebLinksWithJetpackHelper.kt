@@ -21,7 +21,7 @@ class DeepLinkOpenWebLinksWithJetpackHelper @Inject constructor(
     private val dateTimeUtilsWrapper: DateTimeUtilsWrapper,
     private val buildConfigWrapper: BuildConfigWrapper
 ) {
-    fun shouldShowDeepLinkOpenWebLinksWithJetpackOverlay() = showOverlay()
+    fun shouldShowOpenLinksInJetpackOverlay() = showOverlay()
 
     fun shouldShowAppSetting(): Boolean {
         return openWebLinksWithJetpackFlowFeatureConfig.isEnabled()

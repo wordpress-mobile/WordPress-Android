@@ -46,7 +46,7 @@ class DeepLinkOpenWebLinksWithJetpackHelperTest : BaseUnitTest() {
     fun `when feature flag is off, then show overlay is false`() {
         setTest(isFeatureFlagEnabled = false)
 
-        val result = helper.shouldShowDeepLinkOpenWebLinksWithJetpackOverlay()
+        val result = helper.shouldShowOpenLinksInJetpackOverlay()
 
         assertThat(result).isFalse
     }
@@ -58,7 +58,7 @@ class DeepLinkOpenWebLinksWithJetpackHelperTest : BaseUnitTest() {
                 isJetpackInstalled = false
         )
 
-        val result = helper.shouldShowDeepLinkOpenWebLinksWithJetpackOverlay()
+        val result = helper.shouldShowOpenLinksInJetpackOverlay()
 
         assertThat(result).isFalse
     }
@@ -71,7 +71,7 @@ class DeepLinkOpenWebLinksWithJetpackHelperTest : BaseUnitTest() {
                 isOpenWebLinksWithJetpack = true
         )
 
-        val result = helper.shouldShowDeepLinkOpenWebLinksWithJetpackOverlay()
+        val result = helper.shouldShowOpenLinksInJetpackOverlay()
 
         assertThat(result).isFalse
     }
@@ -86,7 +86,7 @@ class DeepLinkOpenWebLinksWithJetpackHelperTest : BaseUnitTest() {
                 overlayLastShownTimestamp = 0L
         )
 
-        val result = helper.shouldShowDeepLinkOpenWebLinksWithJetpackOverlay()
+        val result = helper.shouldShowOpenLinksInJetpackOverlay()
 
         assertThat(result).isTrue
     }
@@ -102,7 +102,7 @@ class DeepLinkOpenWebLinksWithJetpackHelperTest : BaseUnitTest() {
                 flowFrequency = 0L
         )
 
-        val result = helper.shouldShowDeepLinkOpenWebLinksWithJetpackOverlay()
+        val result = helper.shouldShowOpenLinksInJetpackOverlay()
 
         assertThat(result).isFalse
     }
@@ -117,7 +117,7 @@ class DeepLinkOpenWebLinksWithJetpackHelperTest : BaseUnitTest() {
                 flowFrequency = 5L
         )
 
-        val result = helper.shouldShowDeepLinkOpenWebLinksWithJetpackOverlay()
+        val result = helper.shouldShowOpenLinksInJetpackOverlay()
 
         assertThat(result).isTrue
     }
@@ -131,7 +131,7 @@ class DeepLinkOpenWebLinksWithJetpackHelperTest : BaseUnitTest() {
                 overlayLastShownTimestamp = getDateXDaysAgoInMilliseconds(3),
                 flowFrequency = 5L
         )
-        val result = helper.shouldShowDeepLinkOpenWebLinksWithJetpackOverlay()
+        val result = helper.shouldShowOpenLinksInJetpackOverlay()
 
         assertThat(result).isFalse
     }
@@ -146,7 +146,7 @@ class DeepLinkOpenWebLinksWithJetpackHelperTest : BaseUnitTest() {
                 flowFrequency = 1L
         )
 
-        val result = helper.shouldShowDeepLinkOpenWebLinksWithJetpackOverlay()
+        val result = helper.shouldShowOpenLinksInJetpackOverlay()
 
         assertThat(result).isTrue
     }
