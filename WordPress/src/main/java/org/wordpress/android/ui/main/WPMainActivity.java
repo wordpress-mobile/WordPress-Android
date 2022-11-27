@@ -1722,11 +1722,11 @@ public class WPMainActivity extends LocaleAwareActivity implements
     private void enableDeepLinkingComponentsIfNeeded() {
         if (mOpenWebLinksWithJetpackFlowFeatureConfig.isEnabled()) {
             if (!AppPrefs.getIsOpenWebLinksWithJetpack()) {
-                mDeepLinkOpenWebLinksWithJetpackHelper.enableDisableOpenWithJetpackComponents(false);
+                mDeepLinkOpenWebLinksWithJetpackHelper.enableDeepLinks();
             }
         } else {
             // re-enable all deep linking components
-            mDeepLinkOpenWebLinksWithJetpackHelper.enableDisableOpenWithJetpackComponents(false);
+            mDeepLinkOpenWebLinksWithJetpackHelper.enableDeepLinks();
         }
     }
 }

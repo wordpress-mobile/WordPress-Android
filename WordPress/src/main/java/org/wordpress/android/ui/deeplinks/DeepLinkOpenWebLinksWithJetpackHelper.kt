@@ -38,25 +38,12 @@ class DeepLinkOpenWebLinksWithJetpackHelper @Inject constructor(
         packageManagerWrapper.disableComponentEnabledSetting(WEB_LINKS_DEEPLINK_ACTIVITY_ALIAS)
     }
 
-    fun enableDisableOpenWithJetpackComponents(newValue: Boolean) {
-        when (newValue) {
-            true -> {
-                packageManagerWrapper.disableReaderDeepLinks()
-                packageManagerWrapper.disableComponentEnabledSetting(WEB_LINKS_DEEPLINK_ACTIVITY_ALIAS)
-            }
-            false -> {
-                packageManagerWrapper.enableReaderDeeplinks()
-                packageManagerWrapper.enableComponentEnableSetting(WEB_LINKS_DEEPLINK_ACTIVITY_ALIAS)
-            }
-        }
-    }
-
     fun handleJetpackUninstalled() {
         resetAll()
     }
 
     fun resetAll() {
-        enableDisableOpenWithJetpackComponents(false)
+        enableDeepLinks()
         appPrefsWrapper.setIsOpenWebLinksWithJetpack(false)
         appPrefsWrapper.setOpenWebLinksWithJetpackOverlayLastShownTimestamp(0L)
     }
@@ -64,7 +51,7 @@ class DeepLinkOpenWebLinksWithJetpackHelper @Inject constructor(
     @Suppress("SwallowedException")
     fun handleOpenWebLinksWithJetpack() : Boolean {
         try {
-            enableDisableOpenWithJetpackComponents(true)
+            disableDeepLinks()
             packageManagerWrapper.disableReaderDeepLinks()
             appPrefsWrapper.setIsOpenWebLinksWithJetpack(true)
             return true
