@@ -28,6 +28,16 @@ class DeepLinkOpenWebLinksWithJetpackHelper @Inject constructor(
                 && isJetpackInstalled()
     }
 
+    fun enableDeepLinks() {
+        packageManagerWrapper.enableReaderDeeplinks()
+        packageManagerWrapper.enableComponentEnableSetting(WEB_LINKS_DEEPLINK_ACTIVITY_ALIAS)
+    }
+
+    fun disableDeepLinks() {
+        packageManagerWrapper.disableReaderDeepLinks()
+        packageManagerWrapper.disableComponentEnabledSetting(WEB_LINKS_DEEPLINK_ACTIVITY_ALIAS)
+    }
+
     fun enableDisableOpenWithJetpackComponents(newValue: Boolean) {
         when (newValue) {
             true -> {
