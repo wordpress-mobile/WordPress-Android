@@ -16,15 +16,15 @@ class JetpackAppUninstallReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         when (intent.action) {
             ACTION_PACKAGE_FULLY_REMOVED -> {
-                disableOpenWebLinksWithJetpack()
+                onJetpackUninstalled()
                 AppLog.i(UTILS,"JetpackAppUninstallReceiver ACTION_PACKAGE_FULLY_REMOVED handled")
             }
         }
     }
 
-    private fun disableOpenWebLinksWithJetpack() {
+    private fun onJetpackUninstalled() {
         // Toggle the appPref to off + re-enable components
-        openWebLinksWithJetpackHelper.handleJetpackUninstalled()
+        openWebLinksWithJetpackHelper.onJetpackUninstalled()
     }
 
     companion object {

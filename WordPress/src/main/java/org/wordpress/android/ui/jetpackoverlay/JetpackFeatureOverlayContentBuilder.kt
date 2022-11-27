@@ -121,7 +121,7 @@ class JetpackFeatureOverlayContentBuilder @Inject constructor() {
                 title = R.string.wp_jetpack_deep_link_overlay_title,
                 caption = R.string.wp_jetpack_deep_link_overlay_description,
                 primaryButtonText = R.string.wp_jetpack_deep_link_open_in_jetpack,
-                secondaryButtonText = R.string.wp_jetpack_continue_without_jetpack
+                secondaryButtonText = R.string.wp_jetpack_deep_link_open_in_wordpress
         )
     }
 }

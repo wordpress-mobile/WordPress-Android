@@ -663,10 +663,10 @@ class AppInitializer @Inject constructor(
     private fun enableDeepLinkingComponentsIfNeeded() {
         if (openWebLinksWithJetpackFlowFeatureConfig.isEnabled()) {
             if (!AppPrefs.getIsOpenWebLinksWithJetpack()) {
-                openWebLinksWithJetpackHelper.enableDisableOpenWithJetpackComponents(false)
+                openWebLinksWithJetpackHelper.enableDeepLinks()
             }
         } else {
-            openWebLinksWithJetpackHelper.enableDisableOpenWithJetpackComponents(false)
+            openWebLinksWithJetpackHelper.enableDeepLinks()
         }
     }
 

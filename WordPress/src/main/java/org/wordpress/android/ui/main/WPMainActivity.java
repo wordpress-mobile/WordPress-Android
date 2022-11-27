@@ -1487,7 +1487,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     private void handleSiteRemoved() {
         mViewModel.handleSiteRemoved();
         if (!mViewModel.isSignedInWPComOrHasWPOrgSite()) {
-            mDeepLinkOpenWebLinksWithJetpackHelper.resetAll();
+            mDeepLinkOpenWebLinksWithJetpackHelper.reset();
             showSignInForResultBasedOnIsJetpackAppBuildConfig(this);
             return;
         }
@@ -1722,11 +1722,11 @@ public class WPMainActivity extends LocaleAwareActivity implements
     private void enableDeepLinkingComponentsIfNeeded() {
         if (mOpenWebLinksWithJetpackFlowFeatureConfig.isEnabled()) {
             if (!AppPrefs.getIsOpenWebLinksWithJetpack()) {
-                mDeepLinkOpenWebLinksWithJetpackHelper.enableDisableOpenWithJetpackComponents(false);
+                mDeepLinkOpenWebLinksWithJetpackHelper.enableDeepLinks();
             }
         } else {
             // re-enable all deep linking components
-            mDeepLinkOpenWebLinksWithJetpackHelper.enableDisableOpenWithJetpackComponents(false);
+            mDeepLinkOpenWebLinksWithJetpackHelper.enableDeepLinks();
         }
     }
 }

@@ -21,41 +21,37 @@ class DeepLinkOpenWebLinksWithJetpackHelper @Inject constructor(
     private val dateTimeUtilsWrapper: DateTimeUtilsWrapper,
     private val buildConfigWrapper: BuildConfigWrapper
 ) {
-    fun shouldShowDeepLinkOpenWebLinksWithJetpackOverlay() = showOverlay()
+    fun shouldShowOpenLinksInJetpackOverlay() = showOverlay()
 
     fun shouldShowAppSetting(): Boolean {
         return openWebLinksWithJetpackFlowFeatureConfig.isEnabled()
                 && isJetpackInstalled()
     }
 
-    fun enableDisableOpenWithJetpackComponents(newValue: Boolean) {
-        when (newValue) {
-            true -> {
-                packageManagerWrapper.disableReaderDeepLinks()
-                packageManagerWrapper.disableComponentEnabledSetting(WEB_LINKS_DEEPLINK_ACTIVITY_ALIAS)
-            }
-            false -> {
-                packageManagerWrapper.enableReaderDeeplinks()
-                packageManagerWrapper.enableComponentEnableSetting(WEB_LINKS_DEEPLINK_ACTIVITY_ALIAS)
-            }
-        }
+    fun enableDeepLinks() {
+        packageManagerWrapper.enableReaderDeeplinks()
+        packageManagerWrapper.enableComponentEnabledSetting(WEB_LINKS_DEEPLINK_ACTIVITY_ALIAS)
     }
 
-    fun handleJetpackUninstalled() {
-        resetAll()
+    fun disableDeepLinks() {
+        packageManagerWrapper.disableReaderDeepLinks()
+        packageManagerWrapper.disableComponentEnabledSetting(WEB_LINKS_DEEPLINK_ACTIVITY_ALIAS)
     }
 
-    fun resetAll() {
-        enableDisableOpenWithJetpackComponents(false)
+    fun onJetpackUninstalled() {
+        reset()
+    }
+
+    fun reset() {
+        enableDeepLinks()
         appPrefsWrapper.setIsOpenWebLinksWithJetpack(false)
         appPrefsWrapper.setOpenWebLinksWithJetpackOverlayLastShownTimestamp(0L)
     }
 
     @Suppress("SwallowedException")
-    fun handleOpenWebLinksWithJetpack() : Boolean {
+    fun handleOpenLinksInJetpackIfPossible() : Boolean {
         try {
-            enableDisableOpenWithJetpackComponents(true)
-            packageManagerWrapper.disableReaderDeepLinks()
+            disableDeepLinks()
             appPrefsWrapper.setIsOpenWebLinksWithJetpack(true)
             return true
         } catch (ex: PackageManager.NameNotFoundException) {
