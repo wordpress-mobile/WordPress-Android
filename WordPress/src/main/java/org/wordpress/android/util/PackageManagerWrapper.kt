@@ -15,20 +15,6 @@ class PackageManagerWrapper @Inject constructor(
     fun isPackageInstalled(packageName: String) =
             contextProvider.getContext().packageManager.getLaunchIntentForPackage(packageName) != null
 
-    fun disableComponentEnabledSetting(cls: Class<*>) {
-        contextProvider.getContext().packageManager.setComponentEnabledSetting(
-                ComponentName(contextProvider.getContext(), cls),
-                PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP
-        )
-    }
-
-    fun enableComponentEnableSetting(cls: Class<*>) {
-        contextProvider.getContext().packageManager.setComponentEnabledSetting(
-                ComponentName(contextProvider.getContext(), cls),
-                PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP
-        )
-    }
-
     fun disableComponentEnabledSetting(name: String) {
         contextProvider.getContext().packageManager.setComponentEnabledSetting(
                 ComponentName(contextProvider.getContext(), name),
