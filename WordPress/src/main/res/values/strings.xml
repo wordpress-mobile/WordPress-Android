@@ -4274,8 +4274,8 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
 
     <!-- Open Web Links With Jetpack -->
     <string name="preference_open_links_in_jetpack">Open links in Jetpack</string>
-    <string name="preference_open_links_in_jetpack_setting_change_enable_error">Unable to enable open web links with Jetpack</string>
-    <string name="preference_open_links_in_jetpack_setting_change_disable_error">Unable to disable open web links with Jetpack</string>
+    <string name="preference_open_links_in_jetpack_setting_change_enable_error">Unable to enable open links in Jetpack</string>
+    <string name="preference_open_links_in_jetpack_setting_change_disable_error">Unable to disable open links in Jetpack</string>
 
     <!-- Jetpack feature overlay strings in WordPress App -->
     <string name="wp_jetpack_feature_removal_overlay_phase_one_title_stats">Get your stats using the new Jetpack app</string>
@@ -4298,5 +4298,5 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="wp_jetpack_deep_link_overlay_title">Open links in Jetpack?</string>
     <string name="wp_jetpack_deep_link_overlay_description">It looks like you have the Jetpack app installed.\n\nWould you like to open links in the Jetpack app in the future?\n\nYou can always change this in App Settings > Open links in Jetpack</string>
     <string name="wp_jetpack_deep_link_open_in_jetpack" translatable="false">@string/preference_open_links_in_jetpack</string>
-
+    <string name="wp_jetpack_deep_link_open_in_wordpress">Open links in WordPress</string>
 </resources>
