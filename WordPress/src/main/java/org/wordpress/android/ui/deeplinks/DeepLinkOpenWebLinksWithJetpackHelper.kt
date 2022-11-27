@@ -38,7 +38,7 @@ class DeepLinkOpenWebLinksWithJetpackHelper @Inject constructor(
         packageManagerWrapper.disableComponentEnabledSetting(WEB_LINKS_DEEPLINK_ACTIVITY_ALIAS)
     }
 
-    fun handleJetpackUninstalled() {
+    fun onJetpackUninstalled() {
         resetAll()
     }
 
