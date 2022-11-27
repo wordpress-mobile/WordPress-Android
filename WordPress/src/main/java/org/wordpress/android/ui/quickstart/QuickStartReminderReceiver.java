@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.core.app.NotificationCompat;
@@ -21,6 +22,7 @@ import org.wordpress.android.ui.mysite.MySiteViewModel;
 import org.wordpress.android.ui.mysite.SelectedSiteRepository;
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository;
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker;
+import org.wordpress.android.viewmodel.ResourceProvider;
 
 import javax.inject.Inject;
 
@@ -32,6 +34,8 @@ import dagger.hilt.android.AndroidEntryPoint;
 public class QuickStartReminderReceiver extends BroadcastReceiver {
     public static final String ARG_QUICK_START_TASK_BATCH = "ARG_QUICK_START_TASK_BATCH";
 
+    @Inject SharedPreferences mSharedPreferences;
+    @Inject ResourceProvider mResourceProvider;
     @Inject QuickStartStore mQuickStartStore;
     @Inject SystemNotificationsTracker mSystemNotificationsTracker;
     @Inject SelectedSiteRepository mSelectedSiteRepository;
@@ -40,6 +44,12 @@ public class QuickStartReminderReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        String notificationSettingsPrefKey = mResourceProvider.getString(R.string.wp_pref_notifications_main);
+        boolean isNotificationSettingsEnabled = mSharedPreferences.getBoolean(notificationSettingsPrefKey, true);
+        if (!isNotificationSettingsEnabled) {
+            return;
+        }
+
         Bundle bundleWithQuickStartTaskDetails = intent.getBundleExtra(ARG_QUICK_START_TASK_BATCH);
 
         if (bundleWithQuickStartTaskDetails == null) {
