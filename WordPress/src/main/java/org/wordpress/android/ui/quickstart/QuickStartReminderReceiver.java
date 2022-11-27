@@ -22,7 +22,6 @@ import org.wordpress.android.ui.mysite.MySiteViewModel;
 import org.wordpress.android.ui.mysite.SelectedSiteRepository;
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository;
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker;
-import org.wordpress.android.viewmodel.ResourceProvider;
 
 import javax.inject.Inject;
 
@@ -35,7 +34,6 @@ public class QuickStartReminderReceiver extends BroadcastReceiver {
     public static final String ARG_QUICK_START_TASK_BATCH = "ARG_QUICK_START_TASK_BATCH";
 
     @Inject SharedPreferences mSharedPreferences;
-    @Inject ResourceProvider mResourceProvider;
     @Inject QuickStartStore mQuickStartStore;
     @Inject SystemNotificationsTracker mSystemNotificationsTracker;
     @Inject SelectedSiteRepository mSelectedSiteRepository;
@@ -44,7 +42,7 @@ public class QuickStartReminderReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        String notificationSettingsPrefKey = mResourceProvider.getString(R.string.wp_pref_notifications_main);
+        String notificationSettingsPrefKey = context.getString(R.string.wp_pref_notifications_main);
         boolean isNotificationSettingsEnabled = mSharedPreferences.getBoolean(notificationSettingsPrefKey, true);
         if (!isNotificationSettingsEnabled) {
             return;
