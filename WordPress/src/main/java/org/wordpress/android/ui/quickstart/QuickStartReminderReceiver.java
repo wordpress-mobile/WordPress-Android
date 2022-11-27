@@ -11,7 +11,6 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.store.QuickStartStore;
 import org.wordpress.android.push.NotificationPushIds;
@@ -27,6 +26,9 @@ import javax.inject.Inject;
 
 import static org.wordpress.android.push.NotificationsProcessingService.ARG_NOTIFICATION_TYPE;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class QuickStartReminderReceiver extends BroadcastReceiver {
     public static final String ARG_QUICK_START_TASK_BATCH = "ARG_QUICK_START_TASK_BATCH";
 
@@ -38,8 +40,6 @@ public class QuickStartReminderReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        ((WordPress) context.getApplicationContext()).component().inject(this);
-
         Bundle bundleWithQuickStartTaskDetails = intent.getBundleExtra(ARG_QUICK_START_TASK_BATCH);
 
         if (bundleWithQuickStartTaskDetails == null) {
