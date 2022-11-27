@@ -52,7 +52,6 @@ class DeepLinkOpenWebLinksWithJetpackHelper @Inject constructor(
     fun handleOpenWebLinksWithJetpack() : Boolean {
         try {
             disableDeepLinks()
-            packageManagerWrapper.disableReaderDeepLinks()
             appPrefsWrapper.setIsOpenWebLinksWithJetpack(true)
             return true
         } catch (ex: PackageManager.NameNotFoundException) {
