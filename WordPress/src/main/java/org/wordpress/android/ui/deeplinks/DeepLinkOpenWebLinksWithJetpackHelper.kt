@@ -49,7 +49,7 @@ class DeepLinkOpenWebLinksWithJetpackHelper @Inject constructor(
     }
 
     @Suppress("SwallowedException")
-    fun handleOpenWebLinksWithJetpack() : Boolean {
+    fun handleOpenLinksInJetpackIfPossible() : Boolean {
         try {
             disableDeepLinks()
             appPrefsWrapper.setIsOpenWebLinksWithJetpack(true)

@@ -92,7 +92,7 @@ class DeepLinkingIntentReceiverViewModel
 
     fun forwardDeepLinkToJetpack() {
         uriWrapper?.let {
-            if (openWebLinksWithJetpackHelper.handleOpenWebLinksWithJetpack()) {
+            if (openWebLinksWithJetpackHelper.handleOpenLinksInJetpackIfPossible()) {
                 _navigateAction.value = Event(OpenJetpackForDeepLink(action = action, uri = it))
             } else {
                 handleRequest()

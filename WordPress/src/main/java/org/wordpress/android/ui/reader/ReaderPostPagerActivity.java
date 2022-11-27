@@ -259,7 +259,7 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
         mJetpackFullScreenViewModel.getAction().observe(this,
                 action -> {
                     if (action instanceof ForwardToJetpack) {
-                        if (!mDeepLinkOpenWebLinksWithJetpackHelper.handleOpenWebLinksWithJetpack()) {
+                        if (!mDeepLinkOpenWebLinksWithJetpackHelper.handleOpenLinksInJetpackIfPossible()) {
                             finishDeepLinkRequestFromOverlay(getIntent().getAction(), getIntent().getData());
                         } else {
                             WPActivityUtils.disableReaderDeeplinks(this);
