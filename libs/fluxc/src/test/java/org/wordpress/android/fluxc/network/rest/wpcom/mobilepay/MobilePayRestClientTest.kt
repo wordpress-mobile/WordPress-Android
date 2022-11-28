@@ -156,6 +156,7 @@ class MobilePayRestClientTest {
         )
 
         // THEN
+        assertThat(result).isInstanceOf(CreateOrderResponse.Success::class.java)
         assertThat((result as CreateOrderResponse.Success).orderId).isEqualTo(ORDER_ID)
     }
 
