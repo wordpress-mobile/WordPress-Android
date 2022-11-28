@@ -1,17 +1,17 @@
 # How to generate & update Play Store Screenshots
 
-The screenshots used for the Play Store come in multiple device sizes (phone vs tablet) and many locales (currently 16 different languages), so it would be unreasonable to expect designers to generate all the variants by hand every time we want to update those screenshots. For this reason, the generation of those Play Store screenshots are automated with fastlane.
+The screenshots used for the Play Store come in multiple device sizes (phone vs tablet) and many locales (currently 16 different languages), so it would be unreasonable to expect designers to generate all the variants by hand every time we want to update those screenshots. For this reason, the generation of those Play Store screenshots is automated with Fastlane.
 
 ## High Level overview
 
 Generating new screenshots for the Play Store consists of following this multi-stage process:
 
- - First, we have UI tests in the codebase — namely [`WPScreenshotTest`](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/WordPress/src/androidTest/java/org/wordpress/android/ui/screenshots/WPScreenshotTest.java) and [`JPScreenshotTest`](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/WordPress/src/androidTest/java/org/wordpress/android/ui/screenshots/JPScreenshotTest.java) — which are responsible for launching the app and navigating through the various screens we need screenshot for, and taking a "raw screenshot" (screen capture) of those screens.
-    - If you plan to update the Play Store screenshots to include different screens that the ones currently included, or if the navigation of the app to get to those screens changed as the app evolved, you'll need to update those `WPScreenshotTest` and `JPScreenshotTest` test suites accordingly.
- - Then, the lane `fastlane screenshots` is responsible for:
+ - First, we have UI tests in the codebase — namely [`WPScreenshotTest`](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/WordPress/src/androidTest/java/org/wordpress/android/ui/screenshots/WPScreenshotTest.java) and [`JPScreenshotTest`](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/WordPress/src/androidTest/java/org/wordpress/android/ui/screenshots/JPScreenshotTest.java) — which are responsible for launching the app, navigating through the various screens we need screenshot for, and taking a "raw screenshot" (screen capture) of those screens.
+    - If you plan to update the Play Store screenshots to include different screens that the ones currently included, or if the navigation of the app to get to those screens changed, you'll need to update those `WPScreenshotTest` and `JPScreenshotTest` test suites accordingly.
+ - Then, the lane `screenshots` is responsible for:
     - Creating dedicated emulators with the right device model and API level we need for taking the screenshots.
     - Then run the `WPScreenshotTest` / `JPScreenshotTest` UI test in all the supported locales (currently 16), to generate "raw screenshots" in `fastlane/screenshots/{app}/raw/` for all the captured screens, in each of the locales, and for each of the device models / emulators (typically, one `phone` model, and one `tenInch` tablet model).
- - Once we have those "raw screenshots" captured from the app' screens in all the locales, the lane `create_promo_screenshots` assemble (doing image composition, using `imagemagick`) those raw screenshots in a background image and adding a device frame + some (localized) annotation text from the `screenshot_{N}.txt` files. The way on how to assemble those elements (paths to the files, coordinates where to place those in final image, etc) is described in the `fastlane/screenshots/{app}-config.json` file.
+ - Once we have those "raw screenshots" captured from the app screens in all the locales, the lane `create_promo_screenshots` assembles (doing image composition, using `imagemagick`) those raw screenshots in a background image and adding a device frame + some (localized) annotation text from the `screenshot_{N}.txt` files. The way to assemble those elements (paths to the files, coordinates where to place those in final image, etc.) is described in the `fastlane/screenshots/{app}-config.json` file.
 
 > **Vocabulary**
 > - We call "raw screenshots" the images obtained by capturing the various screens of the app (as they appear on the emulator) while navigating in the app using the dedicated UI tests.
@@ -104,7 +104,7 @@ This means that you will need to install those on your machine first before bein
 
 > **Note**: This (especially `brew install imagemagick`) requires you to install something on you machine system-wide (`brew install` install things at the machine level, for all users, unlike `bundle` which installs things only in the folder of your current repo / working copy). So this is a bit invasive.
 >
-> This also sadly comes with risks of having installation troubles depending on the environment of your machine (and which libraries and headers you have installed, etc); in fact, it's sadly not uncommon to have issues when trying to `brew install imagemagick` or to install `rmagick`, especially on the steps which tries to compile those libraries (since they rely on compiled, binary code and libraries) and might come up with compilation errors or missing headers and the like. There's sadly no magic silver bullet solution for those, and ~Google~ DuckDuckGo and StackOverflow are usually your best friends here.
+> This also sadly comes with risks of having installation troubles depending on the environment of your machine (and which libraries and headers you have installed, etc); in fact, it's common to have issues when trying to `brew install imagemagick` or to install `rmagick`, especially on the steps which tries to compile those libraries (since they rely on compiled, binary code and libraries) and might come up with compilation errors or missing headers and the like. There's sadly no magic silver bullet solution for those, and search engines and StackOverflow are usually your best friends here.
 
 ### Generating the promo screenshots
 
