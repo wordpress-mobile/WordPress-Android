@@ -144,3 +144,5 @@
 /encrypted-logging
 
 /products
+
+/plans
