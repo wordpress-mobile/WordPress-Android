@@ -14,8 +14,10 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.localcontentmigration.LocalMigrationError.Ineligibility
 import org.wordpress.android.localcontentmigration.LocalMigrationState
 import org.wordpress.android.localcontentmigration.LocalMigrationState.Finished.Failure
+import org.wordpress.android.localcontentmigration.LocalMigrationState.Finished.Ineligible
 import org.wordpress.android.localcontentmigration.LocalMigrationState.Finished.Successful
 import org.wordpress.android.localcontentmigration.LocalMigrationState.Initial
 import org.wordpress.android.localcontentmigration.LocalMigrationState.Migrating
@@ -30,6 +32,7 @@ import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.WelcomePrimaryButton
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.WelcomeSecondaryButton
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.CompleteFlow
+import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.FallbackToLogin
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.ShowHelp
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Content.Delete
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Content.Done
@@ -78,6 +81,11 @@ class JetpackMigrationViewModel @Inject constructor(
                             secondaryActionButton = DeleteSecondaryButton(::onHelpClicked),
                     )
             )
+            migrationState is Ineligible -> {
+                appPrefsWrapper.setJetpackMigrationEligible(false)
+                emit(Loading)
+                postActionEvent(FallbackToLogin)
+            }
             migrationState is Initial -> emit(Loading)
             migrationState is Migrating -> emit(
                     Welcome(
@@ -371,5 +379,6 @@ class JetpackMigrationViewModel @Inject constructor(
     sealed class JetpackMigrationActionEvent {
         object ShowHelp : JetpackMigrationActionEvent()
         object CompleteFlow : JetpackMigrationActionEvent()
+        object FallbackToLogin: JetpackMigrationActionEvent()
     }
 }

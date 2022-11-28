@@ -17,6 +17,7 @@ import org.wordpress.android.localcontentmigration.LocalMigrationResult.Companio
 import org.wordpress.android.localcontentmigration.LocalMigrationResult.Failure
 import org.wordpress.android.localcontentmigration.LocalMigrationState
 import org.wordpress.android.localcontentmigration.LocalMigrationState.Finished
+import org.wordpress.android.localcontentmigration.LocalMigrationState.Finished.Ineligible
 import org.wordpress.android.localcontentmigration.LocalPostsHelper
 import org.wordpress.android.localcontentmigration.SharedLoginHelper
 import org.wordpress.android.localcontentmigration.SitesMigrationHelper
@@ -48,7 +49,10 @@ class LocalMigrationOrchestrator @Inject constructor(
                 .then(readerSavedPostsHelper::migrateReaderSavedPosts)
                 .then(localPostsHelper::migratePosts)
                 .orElse { error ->
-                    migrationStateFlow.value = Finished.Failure(error)
+                    migrationStateFlow.value = when (error) {
+                        is Ineligibility -> Ineligible
+                        else -> Finished.Failure(error)
+                    }
                     Failure(error)
                 }
                 .then {
