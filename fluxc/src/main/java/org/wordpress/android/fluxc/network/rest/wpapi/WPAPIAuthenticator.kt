@@ -19,26 +19,74 @@ class WPAPIAuthenticator @Inject constructor(
     private val currentTimeProvider: CurrentTimeProvider
 ) {
     suspend fun <T : Payload<BaseNetworkError?>> makeAuthenticatedWPAPIRequest(
+        siteUrl: String,
+        username: String,
+        password: String,
+        fetchMethod: suspend (wpApiUrl: String, nonce: Nonce?) -> T
+    ): T {
+        val wpApiUrl = discoverApiEndpoint(siteUrl)
+
+        return makeAuthenticatedWPAPIRequest(
+            siteUrl = siteUrl,
+            wpApiUrl = wpApiUrl,
+            username = username,
+            password = password,
+            fetchMethod = fetchMethod
+        )
+    }
+
+    suspend fun <T : Payload<BaseNetworkError?>> makeAuthenticatedWPAPIRequest(
         site: SiteModel,
         fetchMethod: suspend (Nonce?) -> T
     ): T {
         val usingSavedRestUrl = site.wpApiRestUrl != null
         if (!usingSavedRestUrl) {
-            site.wpApiRestUrl = discoveryWPAPIRestClient.discoverWPAPIBaseURL(site.url) // discover rest api endpoint
-                ?: ReactNativeStore.slashJoin(
-                    site.url,
-                    "wp-json/"
-                ) // fallback to ".../wp-json/" default if discovery fails
+            site.wpApiRestUrl = discoverApiEndpoint(site.url)
             (siteSqlUtils::insertOrUpdateSite)(site)
         }
-        var nonce = nonceRestClient.getNonce(site)
+
+        val response = makeAuthenticatedWPAPIRequest(
+            siteUrl = site.url,
+            wpApiUrl = site.wpApiRestUrl,
+            username = site.username,
+            password = site.password
+        ) { _, nonce ->
+            fetchMethod(nonce)
+        }
+
+        return if (response.error?.volleyError?.networkResponse?.statusCode == STATUS_CODE_NOT_FOUND) {
+            // call failed with 'not found' so clear the (failing) rest url
+            site.wpApiRestUrl = null
+            (siteSqlUtils::insertOrUpdateSite)(site)
+
+            if (usingSavedRestUrl) {
+                // If we did the previous call with a saved rest url, try again by making
+                // recursive call. This time there is no saved rest url to use
+                // so the rest url will be retrieved using discovery
+                makeAuthenticatedWPAPIRequest(site, fetchMethod)
+            } else {
+                // Already used discovery to fetch the rest base url and still got 'not found', so
+                // just return the error response
+                response
+            }
+        } else response
+    }
+
+    private suspend fun <T : Payload<BaseNetworkError?>> makeAuthenticatedWPAPIRequest(
+        siteUrl: String,
+        wpApiUrl: String,
+        username: String,
+        password: String,
+        fetchMethod: suspend (wpApiUrl: String, nonce: Nonce?) -> T
+    ): T {
+        var nonce = nonceRestClient.getNonce(siteUrl)
         val usingSavedNonce = nonce is Available
         val failedRecently = nonce.failedRecently()
         if (nonce is Unknown || !(usingSavedNonce || failedRecently)) {
-            nonce = nonceRestClient.requestNonce(site)
+            nonce = nonceRestClient.requestNonce(siteUrl, username, password)
         }
 
-        val response = fetchMethod(nonce)
+        val response = fetchMethod(wpApiUrl, nonce)
 
         if (!response.isError) return response
         return when (response.error?.volleyError?.networkResponse?.statusCode) {
@@ -46,12 +94,12 @@ class WPAPIAuthenticator @Inject constructor(
                 if (usingSavedNonce) {
                     // Call with saved nonce failed, so try getting a new one
                     val previousNonce = nonce
-                    val newNonce = nonceRestClient.requestNonce(site)
+                    val newNonce = nonceRestClient.requestNonce(siteUrl, username, password)
 
                     // Try original call again if we have a new nonce
                     val nonceIsUpdated = newNonce != null && newNonce != previousNonce
                     if (nonceIsUpdated) {
-                        fetchMethod(newNonce)
+                        fetchMethod(wpApiUrl, newNonce)
                     } else {
                         response
                     }
@@ -59,25 +107,19 @@ class WPAPIAuthenticator @Inject constructor(
                     response
                 }
             }
-            STATUS_CODE_NOT_FOUND -> {
-                // call failed with 'not found' so clear the (failing) rest url
-                site.wpApiRestUrl = null
-                (siteSqlUtils::insertOrUpdateSite)(site)
-
-                if (usingSavedRestUrl) {
-                    // If we did the previous call with a saved rest url, try again by making
-                    // recursive call. This time there is no saved rest url to use
-                    // so the rest url will be retrieved using discovery
-                    makeAuthenticatedWPAPIRequest(site, fetchMethod)
-                } else {
-                    // Already used discovery to fetch the rest base url and still got 'not found', so
-                    // just return the error response
-                    response
-                }
-            }
             // For all other failures just return the error response
             else -> response
         }
+    }
+
+    private fun discoverApiEndpoint(
+        url: String
+    ): String {
+        return discoveryWPAPIRestClient.discoverWPAPIBaseURL(url) // discover rest api endpoint
+            ?: ReactNativeStore.slashJoin(
+                url,
+                "wp-json/"
+            ) // fallback to ".../wp-json/" default if discovery fails
     }
 
     private fun Nonce?.failedRecently() = (this as? FailedRequest)?.timeOfResponse?.let {
