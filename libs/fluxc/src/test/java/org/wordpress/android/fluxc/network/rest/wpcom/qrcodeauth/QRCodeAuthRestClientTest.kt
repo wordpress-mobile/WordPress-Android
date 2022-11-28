@@ -277,7 +277,8 @@ class QRCodeAuthRestClientTest {
                 params = paramsCaptor.capture(),
                 body = anyOrNull(),
                 clazz = eq(QRCodeAuthValidateResponse::class.java),
-                retryPolicy = isNull()
+                retryPolicy = isNull(),
+                headers = anyOrNull(),
             )
         ).thenReturn(response)
 
@@ -298,7 +299,8 @@ class QRCodeAuthRestClientTest {
                 params = paramsCaptor.capture(),
                 body = anyOrNull(),
                 clazz = eq(QRCodeAuthAuthenticateResponse::class.java),
-                retryPolicy = isNull()
+                retryPolicy = isNull(),
+                headers = anyOrNull()
             )
         ).thenReturn(response)
 
