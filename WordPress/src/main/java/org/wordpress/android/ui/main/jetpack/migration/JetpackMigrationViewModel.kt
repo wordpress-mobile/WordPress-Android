@@ -15,7 +15,6 @@ import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.localcontentmigration.LocalMigrationState
-import org.wordpress.android.localcontentmigration.LocalMigrationState.Finished.DeleteOnly
 import org.wordpress.android.localcontentmigration.LocalMigrationState.Finished.Failure
 import org.wordpress.android.localcontentmigration.LocalMigrationState.Finished.Successful
 import org.wordpress.android.localcontentmigration.LocalMigrationState.Initial
@@ -73,6 +72,12 @@ class JetpackMigrationViewModel @Inject constructor(
     val uiState = combineTransform(migrationStateFlow, continueClickedFlow, notificationContinueClickedFlow) {
         migrationState, continueClicked, notificationContinueClicked ->
         when {
+            showDeleteState -> emit(
+                    Delete(
+                            primaryActionButton = DeletePrimaryButton(::onGotItClicked),
+                            secondaryActionButton = DeleteSecondaryButton(::onHelpClicked),
+                    )
+            )
             migrationState is Initial -> emit(Loading)
             migrationState is Migrating -> emit(
                     Welcome(
@@ -95,12 +100,6 @@ class JetpackMigrationViewModel @Inject constructor(
                         )
                 )
             }
-            migrationState is DeleteOnly -> emit(
-                    Delete(
-                            primaryActionButton = DeletePrimaryButton(::onGotItClicked),
-                            secondaryActionButton = DeleteSecondaryButton(::onHelpClicked),
-                    )
-            )
             migrationState is Failure -> emit(
                     UiState.Error(
                             primaryActionButton = ErrorPrimaryButton(::onTryAgainClicked),
@@ -160,7 +159,7 @@ class JetpackMigrationViewModel @Inject constructor(
 
     private fun tryMigration() {
             viewModelScope.launch(Dispatchers.IO) {
-                localMigrationOrchestrator.tryLocalMigration(migrationStateFlow, showDeleteState)
+                localMigrationOrchestrator.tryLocalMigration(migrationStateFlow)
             }
     }
 
