@@ -50,3 +50,6 @@
 
 /auth/qr-code/validate
 /auth/qr-code/authenticate
+
+/iap/products
+/iap/orders
