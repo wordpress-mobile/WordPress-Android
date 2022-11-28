@@ -14,12 +14,13 @@ import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIResponse.Success
 import org.wordpress.android.fluxc.store.SiteStore.FetchWPAPISitePayload
 import org.wordpress.android.fluxc.utils.extensions.slashJoin
 import javax.inject.Inject
+import javax.inject.Named
 
 class SiteWPAPIRestClient @Inject constructor(
     private val wpapiAuthenticator: WPAPIAuthenticator,
     private val wpapiGsonRequestBuilder: WPAPIGsonRequestBuilder,
     dispatcher: Dispatcher,
-    requestQueue: RequestQueue,
+    @Named("custom-ssl") requestQueue: RequestQueue,
     userAgent: UserAgent
 ) : BaseWPAPIRestClient(dispatcher, requestQueue, userAgent) {
 
