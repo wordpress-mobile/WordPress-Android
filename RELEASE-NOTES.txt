@@ -1,5 +1,9 @@
 *** PLEASE FOLLOW THIS FORMAT: [<priority indicator, more stars = higher priority>] <description> [<PR URL>]
 
+21.4
+-----
+
+
 21.3
 -----
 * [***] Adds a smooth, opt-in transition to the Jetpack app. [https://github.com/wordpress-mobile/WordPress-Android/pull/17538]

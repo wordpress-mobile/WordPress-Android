@@ -1,1 +1,3 @@
-If you already have site stats enabled, you won’t see a prompt to enable them again when you tap the stats widget on your device’s home screen. Nice.
+* [*] [Jetpack-only] The the QR code scanning flow screens are now translated in the app language. [https://github.com/wordpress-mobile/WordPress-Android/pull/17533]
+* [*] Disable local notifications with Notification Settings switch. [https://github.com/wordpress-mobile/WordPress-Android/pull/17496]
+* [*] [Jetpack-only] Comments: fix a crash in My Site > Comments with Jetpack standalone plugins. [https://github.com/wordpress-mobile/WordPress-Android/pull/17456]
