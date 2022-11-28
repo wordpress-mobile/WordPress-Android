@@ -1,0 +1,2 @@
+21.2:
+Om du redan har aktiverat webbplatsstatistiken kommer det inte att visas någon ytterligare anvisning om att aktivera den när du trycker på statistikwidgeten på din enhets startskärm. Skönt.

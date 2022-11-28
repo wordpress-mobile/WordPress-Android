@@ -81,6 +81,7 @@ import org.wordpress.android.push.NotificationType
 import org.wordpress.android.support.ZendeskHelper
 import org.wordpress.android.ui.ActivityId
 import org.wordpress.android.ui.debug.cookies.DebugCookieManager
+import org.wordpress.android.ui.deeplinks.DeepLinkOpenWebLinksWithJetpackHelper
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter
@@ -110,9 +111,9 @@ import org.wordpress.android.util.QuickStartUtils
 import org.wordpress.android.util.RateLimitedTask
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.VolleyUtils
-import org.wordpress.android.util.WPActivityUtils
 import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.util.config.AppConfig
+import org.wordpress.android.util.config.OpenWebLinksWithJetpackFlowFeatureConfig
 import org.wordpress.android.util.enqueuePeriodicUploadWorkRequestForAllSites
 import org.wordpress.android.util.experiments.ExPlat
 import org.wordpress.android.util.image.ImageManager
@@ -160,6 +161,10 @@ class AppInitializer @Inject constructor(
     @Inject @Named("custom-ssl") lateinit var requestQueue: RequestQueue
     @Inject lateinit var imageLoader: FluxCImageLoader
     @Inject lateinit var oAuthAuthenticator: OAuthAuthenticator
+
+    // For jetpack focus
+    @Inject lateinit var openWebLinksWithJetpackFlowFeatureConfig: OpenWebLinksWithJetpackFlowFeatureConfig
+    @Inject lateinit var openWebLinksWithJetpackHelper: DeepLinkOpenWebLinksWithJetpackHelper
 
     private lateinit var applicationLifecycleMonitor: ApplicationLifecycleMonitor
     lateinit var storyNotificationTrackerProvider: StoryNotificationTrackerProvider
@@ -655,6 +660,16 @@ class AppInitializer @Inject constructor(
         }
     }
 
+    private fun enableDeepLinkingComponentsIfNeeded() {
+        if (openWebLinksWithJetpackFlowFeatureConfig.isEnabled()) {
+            if (!AppPrefs.getIsOpenWebLinksWithJetpack()) {
+                openWebLinksWithJetpackHelper.enableDeepLinks()
+            }
+        } else {
+            openWebLinksWithJetpackHelper.enableDeepLinks()
+        }
+    }
+
     private fun flushHttpCache() {
         val cache = HttpResponseCache.getInstalled()
         cache?.flush()
@@ -748,8 +763,8 @@ class AppInitializer @Inject constructor(
 
             readerTracker.onAppGoesToBackground()
 
-            // Ensure that the deeplinking activity is re-enabled.
-            WPActivityUtils.enableReaderDeeplinks(context)
+            // Ensure that the deeplinking activity is are re-enabled if needed
+            enableDeepLinkingComponentsIfNeeded()
 
             AnalyticsTracker.track(Stat.APPLICATION_CLOSED, properties)
             AnalyticsTracker.endSession(false)

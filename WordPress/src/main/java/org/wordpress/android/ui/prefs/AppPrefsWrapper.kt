@@ -255,6 +255,10 @@ class AppPrefsWrapper @Inject constructor() {
 
     fun isJetpackMigrationCompleted(): Boolean = AppPrefs.getIsJetpackMigrationCompleted()
 
+    fun setJetpackMigrationEligible(isEligible: Boolean) = AppPrefs.setIsJetpackMigrationEligible(isEligible)
+
+    fun isJetpackMigrationEligible() = AppPrefs.getIsJetpackMigrationEligible()
+
     fun getOpenWebLinksWithJetpackOverlayLastShownTimestamp(): Long =
             AppPrefs.getOpenWebLinksWithJetpackOverlayLastShownTimestamp()
 

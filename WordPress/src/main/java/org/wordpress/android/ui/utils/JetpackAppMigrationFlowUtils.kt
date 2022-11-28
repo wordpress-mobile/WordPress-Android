@@ -25,6 +25,7 @@ class JetpackAppMigrationFlowUtils @Inject constructor(
 
     fun shouldShowMigrationFlow() = buildConfigWrapper.isJetpackApp
             && jetpackMigrationFlowFeatureConfig.isEnabled()
+            && appPrefsWrapper.isJetpackMigrationEligible()
             && appPrefsWrapper.getIsFirstTrySharedLoginJetpack()
             && !accountStore.hasAccessToken()
             && isWordPressInstalled()

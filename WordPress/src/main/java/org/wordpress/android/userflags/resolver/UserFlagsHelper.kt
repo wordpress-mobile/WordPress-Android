@@ -7,6 +7,7 @@ import org.wordpress.android.localcontentmigration.LocalMigrationError.FeatureDi
 import org.wordpress.android.localcontentmigration.LocalMigrationError.MigrationAlreadyAttempted.UserFlagsAlreadyAttempted
 import org.wordpress.android.localcontentmigration.LocalMigrationError.NoUserFlagsFoundError
 import org.wordpress.android.localcontentmigration.LocalMigrationError.PersistenceError.FailedToSaveUserFlags
+import org.wordpress.android.localcontentmigration.LocalMigrationError.PersistenceError.FailedToSaveUserFlagsWithException
 import org.wordpress.android.localcontentmigration.LocalMigrationResult.Failure
 import org.wordpress.android.localcontentmigration.LocalMigrationResult.Success
 import org.wordpress.android.localcontentmigration.thenWith
@@ -67,7 +68,7 @@ class UserFlagsHelper @Inject constructor(
         } else {
             Success(userFlagsData)
         }
-    }.getOrElse { Failure(FailedToSaveUserFlags) }
+    }.getOrElse { Failure(FailedToSaveUserFlagsWithException(it)) }
 
     private fun success(userFlagsData: UserFlagsData) = run {
         appPrefsWrapper.saveIsFirstTryUserFlagsJetpack(false)

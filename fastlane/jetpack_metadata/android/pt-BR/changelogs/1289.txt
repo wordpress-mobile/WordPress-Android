@@ -1,3 +1,0 @@
-21.1:
-- Você verá no aplicativo uma tela inicial novinha em folha e sensível ao movimento do seu dispositivo. Aproveite!
-- Agora quando você estiver editando uma página, poderá definir uma página principal nas configurações da secundária.

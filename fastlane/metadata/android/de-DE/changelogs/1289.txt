@@ -1,2 +1,0 @@
-21.1:
-Dieses Update ist klein, aber fein: Wenn du gerade eine Seite bearbeitest, kannst du jetzt in den Einstellungen der untergeordneten Seite eine übergeordnete Seite festlegen.

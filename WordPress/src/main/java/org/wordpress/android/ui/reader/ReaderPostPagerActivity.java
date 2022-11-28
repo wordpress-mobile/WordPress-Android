@@ -17,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager.widget.ViewPager;
 
 import org.greenrobot.eventbus.EventBus;
@@ -30,6 +31,7 @@ import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
 import org.wordpress.android.fluxc.store.SiteStore;
@@ -40,7 +42,11 @@ import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.WPLaunchActivity;
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenInReader;
+import org.wordpress.android.ui.deeplinks.DeepLinkOpenWebLinksWithJetpackHelper;
 import org.wordpress.android.ui.deeplinks.DeepLinkTrackingUtils;
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayFragment;
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayViewModel;
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureOverlayActions.ForwardToJetpack;
 import org.wordpress.android.ui.mysite.SelectedSiteRepository;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -53,16 +59,19 @@ import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter;
 import org.wordpress.android.ui.reader.tracker.ReaderTracker;
 import org.wordpress.android.ui.reader.tracker.ReaderTrackerType;
 import org.wordpress.android.ui.reader.utils.ReaderPostSeenStatusWrapper;
+import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource;
 import org.wordpress.android.ui.uploads.UploadActionUseCase;
 import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UriWrapper;
 import org.wordpress.android.util.UrlUtilsWrapper;
+import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper;
 import org.wordpress.android.util.config.SeenUnseenWithCounterFeatureConfig;
 import org.wordpress.android.widgets.WPSwipeSnackbar;
@@ -150,11 +159,15 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
     @Inject UrlUtilsWrapper mUrlUtilsWrapper;
     @Inject DeepLinkTrackingUtils mDeepLinkTrackingUtils;
     @Inject SelectedSiteRepository mSelectedSiteRepository;
+    @Inject DeepLinkOpenWebLinksWithJetpackHelper mDeepLinkOpenWebLinksWithJetpackHelper;
+    private JetpackFeatureFullScreenOverlayViewModel mJetpackFullScreenViewModel;
+    @Inject AccountStore mAccountStore;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
+        mJetpackFullScreenViewModel = new ViewModelProvider(this).get(JetpackFeatureFullScreenOverlayViewModel.class);
 
         setContentView(R.layout.reader_activity_post_pager);
 
@@ -238,6 +251,26 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
                 false,
                 new WPViewPagerTransformer(WPViewPagerTransformer.TransformType.SLIDE_OVER)
         );
+
+        observeOverlayEvents();
+    }
+
+    private void observeOverlayEvents() {
+        mJetpackFullScreenViewModel.getAction().observe(this,
+                action -> {
+                    if (action instanceof ForwardToJetpack) {
+                        if (!mDeepLinkOpenWebLinksWithJetpackHelper.handleOpenLinksInJetpackIfPossible()) {
+                            finishDeepLinkRequestFromOverlay(getIntent().getAction(), getIntent().getData());
+                        } else {
+                            WPActivityUtils.disableReaderDeeplinks(this);
+                            ActivityLauncher.openJetpackForDeeplink(this, getIntent().getAction(),
+                                    new UriWrapper(getIntent().getData()));
+                            finish();
+                        }
+                    } else {
+                        finishDeepLinkRequestFromOverlay(getIntent().getAction(), getIntent().getData());
+                    }
+                });
     }
 
     private void handleDeepLinking() {
@@ -260,6 +293,19 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
             return;
         }
 
+        if (!checkAndShowOpenWebLinksWithJetpackOverlayIfNeeded()) {
+            finishDeepLinkRequest(action, uri);
+        }
+    }
+
+    private void finishDeepLinkRequestFromOverlay(String action, Uri uri) {
+        finishDeepLinkRequest(action, uri);
+        // We interrupted the normal flow to show the overly, we now need to rerun these methods on a dismiss action
+        loadPosts(mBlogId, mPostId);
+        mBackFromLogin = false;
+    }
+
+    private void finishDeepLinkRequest(String action, Uri uri) {
         InterceptType interceptType = InterceptType.READER_BLOG;
         String blogIdentifier = null; // can be an id or a slug
         String postIdentifier = null; // can be an id or a slug
@@ -425,6 +471,23 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
         }
 
         return true;
+    }
+
+    private Boolean checkAndShowOpenWebLinksWithJetpackOverlayIfNeeded() {
+        if (!isSignedInWPComOrHasWPOrgSite()) return false;
+
+        if (!mDeepLinkOpenWebLinksWithJetpackHelper.shouldShowOpenLinksInJetpackOverlay()) return false;
+
+        mDeepLinkOpenWebLinksWithJetpackHelper.onOverlayShown();
+        JetpackFeatureFullScreenOverlayFragment
+                .newInstance(null, false, true, SiteCreationSource.UNSPECIFIED)
+                .show(getSupportFragmentManager(), JetpackFeatureFullScreenOverlayFragment.TAG);
+        return true;
+    }
+
+    private Boolean isSignedInWPComOrHasWPOrgSite() {
+        if (mAccountStore == null || mSiteStore == null) return false;
+        return FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore);
     }
 
     /**

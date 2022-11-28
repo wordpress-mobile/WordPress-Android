@@ -149,7 +149,6 @@ import org.wordpress.android.ui.publicize.PublicizeWebViewFragment;
 import org.wordpress.android.ui.publicize.adapters.PublicizeConnectionAdapter;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter;
 import org.wordpress.android.ui.quickstart.QuickStartFullScreenDialogFragment;
-import org.wordpress.android.ui.quickstart.QuickStartReminderReceiver;
 import org.wordpress.android.ui.reader.CommentNotificationsBottomSheetFragment;
 import org.wordpress.android.ui.reader.ReaderBlogFragment;
 import org.wordpress.android.ui.reader.ReaderCommentListActivity;
@@ -434,8 +433,6 @@ public interface AppComponent {
     void inject(WordPressGlideModule object);
 
     void inject(QuickStartFullScreenDialogFragment object);
-
-    void inject(QuickStartReminderReceiver object);
 
     void inject(MediaGridAdapter object);
 

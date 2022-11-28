@@ -99,6 +99,7 @@ sealed class LocalMigrationState {
     ): LocalMigrationState()
     sealed class Finished: LocalMigrationState() {
         object Successful: Finished()
+        object Ineligible: Finished()
         data class Failure(val error: LocalMigrationError): Finished()
     }
     sealed class SingleStep: LocalMigrationState(), Parcelable {

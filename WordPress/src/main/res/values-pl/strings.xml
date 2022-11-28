@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-10-05 06:08:53+0000
+Translation-Revision-Date: 2022-11-24 06:21:50+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.3
 Language: pl
 -->
 <resources>
+    <string name="jp_migration_help_button">Potrzebujesz pomocy?</string>
+    <string name="jp_migration_continue_button">Dalej</string>
+    <string name="icon_desc">ikona</string>
+    <string name="post_settings_parent">Strona nadrzędna</string>
+    <string name="post_settings_page_attributes">Atrybuty strony</string>
+    <string name="about_automattic_contribute_item_title">Dodaj coś od siebie</string>
+    <string name="about_news">Aktualności</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_one">jedna odpowiedź</string>
     <string name="login_prologue_revamped_content_description_wordpress_icon">Ikonka WordPressa</string>
     <string name="error_fetch_authors_list">Nie można było pobrać autorów</string>

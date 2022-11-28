@@ -294,7 +294,10 @@ public class AppPrefs {
         IS_JETPACK_MIGRATION_COMPLETED,
 
         // Indicates if the user has dismissed the WP update screen in the Jetpack migration flow
-        IS_WP_UPDATE_JETPACK_MIGRATION_DISMISSED
+        IS_WP_UPDATE_JETPACK_MIGRATION_DISMISSED,
+
+        // Indicates if the user is eligible for the Jetpack migration flow
+        IS_JETPACK_MIGRATION_ELIGIBLE,
     }
 
     static SharedPreferences prefs() {
@@ -1485,6 +1488,14 @@ public class AppPrefs {
 
     public static void setIsJetpackMigrationCompleted(final boolean isCompleted) {
         setBoolean(UndeletablePrefKey.IS_JETPACK_MIGRATION_COMPLETED, isCompleted);
+    }
+
+    public static boolean getIsJetpackMigrationEligible() {
+        return getBoolean(UndeletablePrefKey.IS_JETPACK_MIGRATION_ELIGIBLE, true);
+    }
+
+    public static void setIsJetpackMigrationEligible(final boolean isEligible) {
+        setBoolean(UndeletablePrefKey.IS_JETPACK_MIGRATION_ELIGIBLE, isEligible);
     }
 
     public static Long getOpenWebLinksWithJetpackOverlayLastShownTimestamp() {
