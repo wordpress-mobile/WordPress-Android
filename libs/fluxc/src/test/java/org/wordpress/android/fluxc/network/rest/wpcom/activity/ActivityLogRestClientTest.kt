@@ -626,7 +626,8 @@ class ActivityLogRestClientTest {
                 eq(null),
                 eq(mapOf()),
                 eq(RewindResponse::class.java),
-                isNull()
+                isNull(),
+                anyOrNull(),
         )).thenReturn(response)
         whenever(site.siteId).thenReturn(siteId)
         return response
@@ -645,7 +646,8 @@ class ActivityLogRestClientTest {
                 eq(null),
                 eq(mapOf("types" to requestTypes)),
                 eq(RewindResponse::class.java),
-                isNull()
+                isNull(),
+                anyOrNull(),
         )).thenReturn(response)
         whenever(site.siteId).thenReturn(siteId)
         return response
@@ -666,7 +668,8 @@ class ActivityLogRestClientTest {
                 eq(mapOf("rewindId" to rewindId,
                         "types" to requestTypes)),
                 eq(BackupDownloadResponse::class.java),
-                isNull()
+                isNull(),
+                anyOrNull(),
         )).thenReturn(response)
         whenever(site.siteId).thenReturn(siteId)
         return response
@@ -724,7 +727,8 @@ class ActivityLogRestClientTest {
                 anyOrNull(),
                 eq(mapOf("dismissed" to true.toString())),
                 eq(DismissBackupDownloadResponse::class.java),
-                isNull()
+                isNull(),
+                anyOrNull(),
         )).thenReturn(response)
         whenever(site.siteId).thenReturn(siteId)
         return response
