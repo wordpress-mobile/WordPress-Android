@@ -41,6 +41,7 @@ class JetpackAppMigrationFlowUtilsTest {
         whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
         whenever(jetpackMigrationFlowFeatureConfig.isEnabled()).thenReturn(true)
         whenever(appPrefsWrapper.getIsFirstTrySharedLoginJetpack()).thenReturn(true)
+        whenever(appPrefsWrapper.isJetpackMigrationEligible()).thenReturn(true)
         whenever(accountStore.hasAccessToken()).thenReturn(false)
         whenever(wordPressPublicData.currentPackageId()).thenReturn("package")
         whenever(appStatus.isAppInstalled(any())).thenReturn(true)
@@ -63,8 +64,16 @@ class JetpackAppMigrationFlowUtilsTest {
     }
 
     @Test
-    fun `When the jetpackMigrationFlow is not enableed the Jetpack app the migration flow should not be shown`() {
+    fun `When the jetpackMigrationFlow is not enabled the Jetpack app the migration flow should not be shown`() {
         whenever(jetpackMigrationFlowFeatureConfig.isEnabled()).thenReturn(false)
+        val expected = false
+        val actual = jetpackAppMigrationFlowUtils.shouldShowMigrationFlow()
+        Assert.assertEquals(expected, actual)
+    }
+
+    @Test
+    fun `When the jetpackMigrationFlow is not eligible the Jetpack app the migration flow should not be shown`() {
+        whenever(appPrefsWrapper.isJetpackMigrationEligible()).thenReturn(false)
         val expected = false
         val actual = jetpackAppMigrationFlowUtils.shouldShowMigrationFlow()
         Assert.assertEquals(expected, actual)

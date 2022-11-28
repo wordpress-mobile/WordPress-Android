@@ -62,7 +62,7 @@ class LocalPostProviderHelperTest {
     }
 
     @Test
-    fun `when a local post id is not specified but a local site id is specified`() {
+    fun `when a local post id is not specified`() {
         val response = localPostProviderHelper.getData() as PostsData
         assertThat(response.localIds).isEqualTo(mockPostIdsList)
     }
