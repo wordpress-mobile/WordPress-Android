@@ -1,5 +1,6 @@
 package org.wordpress.android.fluxc.network.rest.wpapi
 
+import okhttp3.HttpUrl.Companion.toHttpUrl
 import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
@@ -10,6 +11,7 @@ import org.wordpress.android.fluxc.network.rest.wpapi.Nonce.Unknown
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils
 import org.wordpress.android.fluxc.store.ReactNativeStore
 import org.wordpress.android.fluxc.utils.CurrentTimeProvider
+import org.wordpress.android.util.UrlUtils
 import javax.inject.Inject
 
 class WPAPIAuthenticator @Inject constructor(
@@ -24,10 +26,12 @@ class WPAPIAuthenticator @Inject constructor(
         password: String,
         fetchMethod: suspend (wpApiUrl: String, nonce: Nonce?) -> T
     ): T {
-        val wpApiUrl = discoverApiEndpoint(siteUrl)
+        val wpApiUrl = discoverApiEndpoint(UrlUtils.addUrlSchemeIfNeeded(siteUrl, false))
+        val scheme = wpApiUrl.toHttpUrl().scheme
 
         return makeAuthenticatedWPAPIRequest(
-            siteUrl = siteUrl,
+            // Use the scheme from the discovered URL to avoid redirects
+            siteUrl = UrlUtils.addUrlSchemeIfNeeded(UrlUtils.removeScheme(siteUrl), scheme == "https"),
             wpApiUrl = wpApiUrl,
             username = username,
             password = password,
