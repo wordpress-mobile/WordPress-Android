@@ -64,6 +64,18 @@ class SiteWPAPIRestClient @Inject constructor(
         }
     }
 
+    suspend fun fetchWPAPISite(
+        site: SiteModel
+    ): SiteModel {
+        return fetchWPAPISite(
+            payload = FetchWPAPISitePayload(
+                username = site.username,
+                password = site.password,
+                url = site.url
+            )
+        )
+    }
+
     private data class WPSiteSettingsResponse(
         @SerializedName("title") val title: String? = null,
         @SerializedName("description") val description: String? = null,
