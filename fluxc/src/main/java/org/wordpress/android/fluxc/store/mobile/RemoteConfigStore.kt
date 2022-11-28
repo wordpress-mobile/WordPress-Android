@@ -1,7 +1,7 @@
 package org.wordpress.android.fluxc.store.mobile
 
 import org.wordpress.android.fluxc.network.rest.wpcom.mobile.RemoteConfigErrorType.GENERIC_ERROR
-import org.wordpress.android.fluxc.network.rest.wpcom.mobile.RemoteConfigClient
+import org.wordpress.android.fluxc.network.rest.wpcom.mobile.RemoteConfigRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.mobile.RemoteConfigError
 import org.wordpress.android.fluxc.store.Store
 import org.wordpress.android.fluxc.tools.CoroutineEngine
@@ -11,12 +11,12 @@ import javax.inject.Singleton
 
 @Singleton
 class RemoteConfigStore @Inject constructor(
-    private val remoteConfigClient: RemoteConfigClient,
+    private val remoteConfigRestClient: RemoteConfigRestClient,
     private val coroutineEngine: CoroutineEngine
 ) {
     suspend fun fetchRemoteConfig() = coroutineEngine.withDefaultContext(AppLog.T.API, this,
             "fetch remote-config") {
-        val payload = remoteConfigClient.fetchRemoteConfig()
+        val payload = remoteConfigRestClient.fetchRemoteConfig()
         return@withDefaultContext when {
             payload.isError -> RemoteConfigResult(payload.error)
             payload.remoteConfig != null -> {
