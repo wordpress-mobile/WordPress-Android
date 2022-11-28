@@ -50,6 +50,9 @@ class SiteWPAPIRestClient @Inject constructor(
                         showOnFront = result.data?.showOnFront
                         pageOnFront = result.data?.pageOnFront ?: 0
                         origin = SiteModel.ORIGIN_WPAPI
+                        this.url = result.data?.url ?: payload.url
+                        this.username = payload.username
+                        this.password = payload.password
                     }
                 }
                 is Error -> {
@@ -66,6 +69,7 @@ class SiteWPAPIRestClient @Inject constructor(
         @SerializedName("description") val description: String? = null,
         @SerializedName("timezone") val timezone: String? = null,
         @SerializedName("email") val email: String? = null,
+        @SerializedName("url") val url: String? = null,
         @SerializedName("show_on_front") val showOnFront: String? = null,
         @SerializedName("page_on_front") val pageOnFront: Long? = null
     )
