@@ -19,7 +19,7 @@ import javax.inject.Named
 import javax.inject.Singleton
 
 @Singleton
-class RemoteConfigClient @Inject constructor(
+class RemoteConfigRestClient @Inject constructor(
     private val wpComGsonRequestBuilder: WPComGsonRequestBuilder,
     dispatcher: Dispatcher,
     appContext: Context?,
