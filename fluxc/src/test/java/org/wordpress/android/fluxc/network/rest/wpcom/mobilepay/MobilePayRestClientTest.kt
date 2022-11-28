@@ -280,10 +280,12 @@ class MobilePayRestClientTest {
     @Test
     fun `given generic error response, when create order, then generic error returned`() = test {
         // GIVEN
+        val reason = "reason"
         initResponse(
             error = WPComGsonNetworkError(
                 BaseNetworkError(
                     BaseRequest.GenericErrorType.UNKNOWN,
+                    reason,
                     VolleyError()
                 )
             )
@@ -301,9 +303,11 @@ class MobilePayRestClientTest {
         )
 
         // THEN
+        assertThat(result).isInstanceOf(CreateOrderResponse.Error::class.java)
         assertThat((result as CreateOrderResponse.Error).type).isEqualTo(
             CreateOrderErrorType.GENERIC_ERROR
         )
+        assertThat(result.message).isEqualTo(reason)
     }
 
     private suspend fun initResponse(
