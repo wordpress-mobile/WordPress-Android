@@ -50,6 +50,7 @@ import org.wordpress.android.fluxc.action.SiteAction.FETCH_SITE
 import org.wordpress.android.fluxc.action.SiteAction.FETCH_SITES
 import org.wordpress.android.fluxc.action.SiteAction.FETCH_SITES_XML_RPC
 import org.wordpress.android.fluxc.action.SiteAction.FETCH_SITE_EDITORS
+import org.wordpress.android.fluxc.action.SiteAction.FETCH_SITE_WP_API
 import org.wordpress.android.fluxc.action.SiteAction.FETCH_USER_ROLES
 import org.wordpress.android.fluxc.action.SiteAction.FETCH_WPCOM_SITE_BY_URL
 import org.wordpress.android.fluxc.action.SiteAction.HIDE_SITES
@@ -72,6 +73,7 @@ import org.wordpress.android.fluxc.model.RoleModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.SitesModel
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
+import org.wordpress.android.fluxc.network.rest.wpapi.site.SiteWPAPIRestClient
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPINetworkError
 import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.ApplicationPasswordDeletionResult
 import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.ApplicationPasswordsManager
@@ -131,6 +133,7 @@ open class SiteStore @Inject constructor(
     private val postSqlUtils: PostSqlUtils,
     private val siteRestClient: SiteRestClient,
     private val siteXMLRPCClient: SiteXMLRPCClient,
+    private val siteWPAPIRestClient: SiteWPAPIRestClient,
     private val privateAtomicCookie: PrivateAtomicCookie,
     private val siteSqlUtils: SiteSqlUtils,
     private val coroutineEngine: CoroutineEngine
@@ -144,6 +147,12 @@ open class SiteStore @Inject constructor(
     ) : Payload<BaseNetworkError>()
 
     data class RefreshSitesXMLRPCPayload(
+        @JvmField val username: String = "",
+        @JvmField val password: String = "",
+        @JvmField val url: String = ""
+    ) : Payload<BaseNetworkError>()
+
+    data class FetchWPAPISitePayload(
         @JvmField val username: String = "",
         @JvmField val password: String = "",
         @JvmField val url: String = ""
@@ -1255,6 +1264,9 @@ open class SiteStore @Inject constructor(
             FETCH_SITES_XML_RPC -> coroutineEngine.launch(T.MAIN, this, "Fetch XMLRPC sites") {
                 emitChange(fetchSitesXmlRpc(action.payload as RefreshSitesXMLRPCPayload))
             }
+            FETCH_SITE_WP_API -> coroutineEngine.launch(T.MAIN, this, "Fetch WPAPI Site") {
+                emitChange(fetchWPAPISite(action.payload as FetchWPAPISitePayload))
+            }
             UPDATE_SITE -> {
                 emitChange(updateSite(action.payload as SiteModel))
             }
@@ -1363,6 +1375,10 @@ open class SiteStore @Inject constructor(
         return coroutineEngine.withDefaultContext(T.API, this, "Fetch sites") {
             updateSites(siteXMLRPCClient.fetchSites(payload.url, payload.username, payload.password))
         }
+    }
+
+    suspend fun fetchWPAPISite(payload: FetchWPAPISitePayload): OnSiteChanged {
+        return updateSite(siteWPAPIRestClient.fetchWPAPISite(payload))
     }
 
     @Suppress("ForbiddenComment", "SwallowedException")
