@@ -27,7 +27,7 @@ class RemoteConfigStore @Inject constructor(
     }
 
     data class RemoteConfigResult(
-        val remoteConfig: Map<String, Boolean>? = null
+        val remoteConfig: Map<String, String>? = null
     ) : Store.OnChanged<RemoteConfigError>() {
         constructor(error: RemoteConfigError) : this() {
             this.error = error
