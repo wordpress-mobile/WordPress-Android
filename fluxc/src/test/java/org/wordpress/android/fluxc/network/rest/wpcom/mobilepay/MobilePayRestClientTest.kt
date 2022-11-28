@@ -190,7 +190,7 @@ class MobilePayRestClientTest {
     }
 
     @Test
-    fun `given api error response, when create order, then api error returned`() = test {
+    fun `given api server error response, when create order, then api error returned`() = test {
         // GIVEN
         initResponse(
             error = WPComGsonNetworkError(
@@ -217,6 +217,65 @@ class MobilePayRestClientTest {
             CreateOrderErrorType.API_ERROR
         )
     }
+
+    @Test
+    fun `given api auth error response, when create order, then auth error returned`() = test {
+        // GIVEN
+        initResponse(
+            error = WPComGsonNetworkError(
+                BaseNetworkError(
+                    BaseRequest.GenericErrorType.AUTHORIZATION_REQUIRED,
+                    VolleyError()
+                )
+            )
+        )
+
+        // WHEN
+        val result = restClient.createOrder(
+            productIdentifier = PRODUCT_IDENTIFIER,
+            priceInCents = PRICE_IN_CENTS,
+            currency = CURRENCY,
+            purchaseToken = PURCHASE_TOKEN,
+            appId = APP_ID,
+            siteId = SITE_ID,
+            customBaseUrl = null
+        )
+
+        // THEN
+        assertThat((result as CreateOrderResponse.Error).type).isEqualTo(
+            CreateOrderErrorType.AUTH_ERROR
+        )
+    }
+
+    @Test
+    fun `given api invalid error response, when create order, then invalid error returned`() =
+        test {
+            // GIVEN
+            initResponse(
+                error = WPComGsonNetworkError(
+                    BaseNetworkError(
+                        BaseRequest.GenericErrorType.INVALID_RESPONSE,
+                        VolleyError()
+                    )
+                )
+            )
+
+            // WHEN
+            val result = restClient.createOrder(
+                productIdentifier = PRODUCT_IDENTIFIER,
+                priceInCents = PRICE_IN_CENTS,
+                currency = CURRENCY,
+                purchaseToken = PURCHASE_TOKEN,
+                appId = APP_ID,
+                siteId = SITE_ID,
+                customBaseUrl = null
+            )
+
+            // THEN
+            assertThat((result as CreateOrderResponse.Error).type).isEqualTo(
+                CreateOrderErrorType.INVALID_RESPONSE
+            )
+        }
 
     @Test
     fun `given generic error response, when create order, then generic error returned`() = test {
