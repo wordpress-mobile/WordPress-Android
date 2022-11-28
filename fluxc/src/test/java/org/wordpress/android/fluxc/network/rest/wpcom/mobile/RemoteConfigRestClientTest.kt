@@ -40,7 +40,7 @@ class RemoteConfigRestClientTest {
 
     private lateinit var urlCaptor: KArgumentCaptor<String>
     private lateinit var paramsCaptor: KArgumentCaptor<Map<String, String>>
-    private lateinit var restClient: RemoteConfigClient
+    private lateinit var restClient: RemoteConfigRestClient
     
     private val successResponse = mapOf("jp-deadline" to "2022-10-10")
 
@@ -48,7 +48,7 @@ class RemoteConfigRestClientTest {
     fun setUp() {
         urlCaptor = argumentCaptor()
         paramsCaptor = argumentCaptor()
-        restClient = RemoteConfigClient(
+        restClient = RemoteConfigRestClient(
             wpComGsonRequestBuilder,
             dispatcher,
             null,
