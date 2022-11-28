@@ -14,7 +14,6 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.localcontentmigration.LocalMigrationError.Ineligibility
 import org.wordpress.android.localcontentmigration.LocalMigrationState
 import org.wordpress.android.localcontentmigration.LocalMigrationState.Finished.Failure
 import org.wordpress.android.localcontentmigration.LocalMigrationState.Finished.Ineligible
