@@ -27,26 +27,13 @@ class RemoteConfigClient @Inject constructor(
     accessToken: AccessToken,
     userAgent: UserAgent
 ) : BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {
-    suspend fun fetchFeatureFlags(
-        buildNumber: String,
-        deviceId: String,
-        identifier: String,
-        marketingVersion: String,
-        platform: String
-        ): RemoteConfigFetchedPayload {
+    suspend fun fetchRemoteConfig(): RemoteConfigFetchedPayload {
         // https://public-api.wordpress.com/wpcom/v2/mobile/remote_config
         val url = WPCOMV2.mobile.remote_config.url
-        val params = mapOf(
-            "build_number" to buildNumber,
-            "device_id" to deviceId,
-            "identifier" to identifier,
-            "marketing_version" to  marketingVersion,
-            "platform" to platform
-        )
         val response = wpComGsonRequestBuilder.syncGetRequest(
             this,
             url,
-            params,
+            mapOf(),
             Map::class.java
         )
         return when (response) {
@@ -64,7 +51,7 @@ class RemoteConfigClient @Inject constructor(
 }
 
 data class RemoteConfigFetchedPayload (
-    val featureFlags: Map<String, Boolean>? = null
+    val remoteConfig: Map<String, Boolean>? = null
 ) : Payload<RemoteConfigError>() {
     constructor(error: RemoteConfigError) : this() {
         this.error = error
