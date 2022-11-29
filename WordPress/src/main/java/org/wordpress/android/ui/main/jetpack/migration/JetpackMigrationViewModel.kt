@@ -99,7 +99,7 @@ class JetpackMigrationViewModel @Inject constructor(
                                 secondaryActionButton = WelcomeSecondaryButton(::onHelpClicked),
                         )
                 )
-                    }
+            }
             migrationState is Successful && continueClicked -> when {
                 !notificationContinueClicked -> emit(
                         Notifications(
@@ -151,9 +151,9 @@ class JetpackMigrationViewModel @Inject constructor(
     }
 
     private fun tryMigration() {
-            viewModelScope.launch(Dispatchers.IO) {
-                localMigrationOrchestrator.tryLocalMigration(migrationStateFlow)
-            }
+        viewModelScope.launch(Dispatchers.IO) {
+            localMigrationOrchestrator.tryLocalMigration(migrationStateFlow)
+        }
     }
 
     private fun onContinueFromNotificationsClicked() {
@@ -364,6 +364,6 @@ class JetpackMigrationViewModel @Inject constructor(
     sealed class JetpackMigrationActionEvent {
         object ShowHelp : JetpackMigrationActionEvent()
         object CompleteFlow : JetpackMigrationActionEvent()
-        object FallbackToLogin: JetpackMigrationActionEvent()
+        object FallbackToLogin : JetpackMigrationActionEvent()
     }
 }
