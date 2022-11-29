@@ -78,7 +78,9 @@ class JetpackMigrationViewModel @Inject constructor(
             showDeleteState -> emit(
                     Delete(
                             primaryActionButton = DeletePrimaryButton(::onGotItClicked),
-                            secondaryActionButton = DeleteSecondaryButton(::onHelpClicked),
+                            secondaryActionButton = DeleteSecondaryButton {
+                                onHelpClicked(source = HelpButtonSource.Delete)
+                            },
                     )
             )
             migrationState is Ineligible -> {
@@ -96,7 +98,9 @@ class JetpackMigrationViewModel @Inject constructor(
                                 isProcessing = continueClicked,
                                 sites = migrationState.data.sites.map(::siteUiFromModel),
                                 primaryActionButton = WelcomePrimaryButton(::onContinueClicked),
-                                secondaryActionButton = WelcomeSecondaryButton(::onHelpClicked),
+                                secondaryActionButton = WelcomeSecondaryButton {
+                                    onHelpClicked(source = HelpButtonSource.Welcome)
+                                },
                         )
                 )
             }
@@ -115,7 +119,9 @@ class JetpackMigrationViewModel @Inject constructor(
             migrationState is Failure -> emit(
                     UiState.Error(
                             primaryActionButton = ErrorPrimaryButton(::onTryAgainClicked),
-                            secondaryActionButton = ErrorSecondaryButton(::onHelpClicked),
+                            secondaryActionButton = ErrorSecondaryButton {
+                                onHelpClicked(source = HelpButtonSource.Error)
+                            },
                             type = Generic,
                     )
             )
@@ -178,9 +184,15 @@ class JetpackMigrationViewModel @Inject constructor(
         postActionEvent(CompleteFlow)
     }
 
-    private fun onHelpClicked() {
+    private fun onHelpClicked(source: HelpButtonSource) {
+        when (source) {
+            HelpButtonSource.Welcome -> contentMigrationAnalyticsTracker.trackWelcomeScreenHelpButtonTapped()
+            HelpButtonSource.Error -> contentMigrationAnalyticsTracker.trackErrorHelpTapped()
+            HelpButtonSource.Delete -> contentMigrationAnalyticsTracker.trackPleaseDeleteWordPressHelpTapped()
+        }
         postActionEvent(ShowHelp)
     }
+
 
     private fun onGotItClicked() {
         postActionEvent(CompleteFlow)
@@ -359,6 +371,12 @@ class JetpackMigrationViewModel @Inject constructor(
                 onClick = onClick,
                 text = UiStringRes(R.string.jp_migration_need_help_button)
         )
+    }
+
+    sealed class HelpButtonSource {
+        object Welcome : HelpButtonSource()
+        object Delete : HelpButtonSource()
+        object Error : HelpButtonSource()
     }
 
     sealed class JetpackMigrationActionEvent {
