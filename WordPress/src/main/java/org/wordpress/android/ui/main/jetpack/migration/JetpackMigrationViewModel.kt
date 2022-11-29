@@ -118,7 +118,7 @@ class JetpackMigrationViewModel @Inject constructor(
                     contentMigrationAnalyticsTracker.trackThanksScreenShown()
                     emit(
                             Done(
-                                    primaryActionButton = DonePrimaryButton(::onDoneClicked)
+                                    primaryActionButton = DonePrimaryButton(::onFinishClicked)
                             )
                     )
                 }
@@ -186,7 +186,8 @@ class JetpackMigrationViewModel @Inject constructor(
         }
     }
 
-    private fun onDoneClicked() {
+    private fun onFinishClicked() {
+        contentMigrationAnalyticsTracker.trackThanksScreenFinishButtonTapped()
         migrationEmailHelper.notifyMigrationComplete()
         appPrefsWrapper.setJetpackMigrationCompleted(true)
         postActionEvent(CompleteFlow)
