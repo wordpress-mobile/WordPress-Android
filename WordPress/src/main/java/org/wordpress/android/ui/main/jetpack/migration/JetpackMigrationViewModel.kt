@@ -97,6 +97,7 @@ class JetpackMigrationViewModel @Inject constructor(
                                 userAvatarUrl = resizeAvatarUrl(migrationState.data.avatarUrl),
                                 isProcessing = continueClicked,
                                 sites = migrationState.data.sites.map(::siteUiFromModel),
+                                onAvatarClicked = { onHelpClicked(source = HelpButtonSource.WelcomeAvatar) },
                                 primaryActionButton = WelcomePrimaryButton(::onContinueClicked),
                                 secondaryActionButton = WelcomeSecondaryButton {
                                     onHelpClicked(source = HelpButtonSource.Welcome)
@@ -187,12 +188,12 @@ class JetpackMigrationViewModel @Inject constructor(
     private fun onHelpClicked(source: HelpButtonSource) {
         when (source) {
             HelpButtonSource.Welcome -> contentMigrationAnalyticsTracker.trackWelcomeScreenHelpButtonTapped()
+            HelpButtonSource.WelcomeAvatar -> contentMigrationAnalyticsTracker.trackWelcomeScreenAvatarTapped()
             HelpButtonSource.Error -> contentMigrationAnalyticsTracker.trackErrorHelpTapped()
             HelpButtonSource.Delete -> contentMigrationAnalyticsTracker.trackPleaseDeleteWordPressHelpTapped()
         }
         postActionEvent(ShowHelp)
     }
-
 
     private fun onGotItClicked() {
         postActionEvent(CompleteFlow)
@@ -224,6 +225,7 @@ class JetpackMigrationViewModel @Inject constructor(
                 val userAvatarUrl: String = "",
                 val isProcessing: Boolean = false,
                 val sites: List<SiteListItemUiState>,
+                val onAvatarClicked: () -> Unit,
                 override val primaryActionButton: ActionButton,
                 override val secondaryActionButton: ActionButton,
             ) : Content(
@@ -375,6 +377,7 @@ class JetpackMigrationViewModel @Inject constructor(
 
     sealed class HelpButtonSource {
         object Welcome : HelpButtonSource()
+        object WelcomeAvatar : HelpButtonSource()
         object Delete : HelpButtonSource()
         object Error : HelpButtonSource()
     }
