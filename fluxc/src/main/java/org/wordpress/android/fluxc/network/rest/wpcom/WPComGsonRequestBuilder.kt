@@ -87,6 +87,7 @@ class WPComGsonRequestBuilder
      * @param body the content body, which will be converted to JSON using [Gson][com.google.gson.Gson]
      * @param clazz the class defining the expected response
      * @param retryPolicy optional retry policy for the request
+     * @param headers optional headers for the request
      */
     suspend fun <T> syncPostRequest(
         restClient: BaseWPComRestClient,
@@ -94,13 +95,16 @@ class WPComGsonRequestBuilder
         params: Map<String, String>?,
         body: Map<String, Any>?,
         clazz: Class<T>,
-        retryPolicy: RetryPolicy? = null
+        retryPolicy: RetryPolicy? = null,
+        headers: Map<String, String> = emptyMap()
     ) = suspendCancellableCoroutine<Response<T>> { cont ->
         val request = WPComGsonRequest.buildPostRequest(url, params, body, clazz, {
             cont.resume(Success(it))
         }, {
             cont.resume(Error(it))
-        })
+        }).also { request ->
+            headers.forEach { request.addHeader(it.key, it.value) }
+        }
         retryPolicy?.let {
             request.retryPolicy = retryPolicy
         }
