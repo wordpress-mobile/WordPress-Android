@@ -11,6 +11,9 @@ import java.io.UnsupportedEncodingException
 import java.net.URLEncoder
 import java.nio.charset.Charset
 
+private const val FORBIDDEN = 403
+private const val UNAUTHORIZED = 401
+
 class WPAPIEncodedBodyRequest(
     method: Int,
     url: String,
@@ -29,8 +32,8 @@ class WPAPIEncodedBodyRequest(
 
     override fun deliverBaseNetworkError(error: BaseNetworkError): BaseNetworkError {
         val authenticationError = when(error.volleyError?.networkResponse?.statusCode){
-            401 -> AuthenticationErrorType.AUTHORIZATION_REQUIRED
-            403 -> AuthenticationErrorType.NOT_AUTHENTICATED
+            UNAUTHORIZED -> AuthenticationErrorType.AUTHORIZATION_REQUIRED
+            FORBIDDEN -> AuthenticationErrorType.NOT_AUTHENTICATED
             else -> null
         }
 
