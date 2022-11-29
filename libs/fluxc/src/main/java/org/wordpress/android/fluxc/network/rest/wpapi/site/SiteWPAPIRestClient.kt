@@ -15,7 +15,9 @@ import org.wordpress.android.fluxc.store.SiteStore.FetchWPAPISitePayload
 import org.wordpress.android.fluxc.utils.extensions.slashJoin
 import javax.inject.Inject
 import javax.inject.Named
+import javax.inject.Singleton
 
+@Singleton
 class SiteWPAPIRestClient @Inject constructor(
     private val wpapiAuthenticator: WPAPIAuthenticator,
     private val wpapiGsonRequestBuilder: WPAPIGsonRequestBuilder,
@@ -23,7 +25,6 @@ class SiteWPAPIRestClient @Inject constructor(
     @Named("custom-ssl") requestQueue: RequestQueue,
     userAgent: UserAgent
 ) : BaseWPAPIRestClient(dispatcher, requestQueue, userAgent) {
-
     suspend fun fetchWPAPISite(
         payload: FetchWPAPISitePayload
     ): SiteModel {
