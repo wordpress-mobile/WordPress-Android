@@ -14,6 +14,7 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.localcontentmigration.ContentMigrationAnalyticsTracker
 import org.wordpress.android.localcontentmigration.LocalMigrationState
 import org.wordpress.android.localcontentmigration.LocalMigrationState.Finished.Failure
 import org.wordpress.android.localcontentmigration.LocalMigrationState.Finished.Ineligible
@@ -60,6 +61,7 @@ class JetpackMigrationViewModel @Inject constructor(
     private val appPrefsWrapper: AppPrefsWrapper,
     private val localMigrationOrchestrator: LocalMigrationOrchestrator,
     private val migrationEmailHelper: MigrationEmailHelper,
+    private val contentMigrationAnalyticsTracker: ContentMigrationAnalyticsTracker,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow<UiState>(Loading)
 
