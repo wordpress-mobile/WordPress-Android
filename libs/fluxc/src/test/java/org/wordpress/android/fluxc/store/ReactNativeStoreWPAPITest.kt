@@ -62,7 +62,7 @@ class ReactNativeStoreWPAPITest {
     }
 
     private fun initStore(nonce: Nonce?) {
-        whenever(nonceRestClient.getNonce(any())).thenReturn(nonce)
+        whenever(nonceRestClient.getNonce(any<SiteModel>())).thenReturn(nonce)
         sitePersistenceMock = mock()
         store = ReactNativeStore(
                 mock(),
