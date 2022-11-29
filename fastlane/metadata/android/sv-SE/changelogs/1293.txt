@@ -1,0 +1,2 @@
+21.2:
+Om du redan har aktivera statistik för webbplatsen får du inte längre någon ny uppmaning att aktivera statistiken när du trycker på statistik-widgeten på startskärmen. Så ska det vara, eller hur!

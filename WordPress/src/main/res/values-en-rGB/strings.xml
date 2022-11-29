@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-10-20 10:56:34+0000
+Translation-Revision-Date: 2022-11-14 16:34:22+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: en_GB
 -->
 <resources>
+    <string name="jp_migration_continue_button">Continue</string>
+    <string name="jp_migration_welcome_subtitle">It looks like you’re switching from the WordPress app.</string>
+    <string name="jp_migration_help_button">Need help?</string>
+    <string name="jp_migration_welcome_site_found_message">We found your site. Continue to transfer all your data and sign in to Jetpack automatically.</string>
+    <string name="jp_migration_welcome_sites_found_message">We found your sites. Continue to transfer all your data and sign in to Jetpack automatically.</string>
+    <string name="jp_migration_avatar_content_description">Your profile photo</string>
+    <string name="jp_migration_welcome_title">Welcome to Jetpack!</string>
+    <string name="icon_desc">icon</string>
+    <string name="post_settings_page_attributes">Page Attributes</string>
+    <string name="post_settings_parent">Parent Page</string>
     <string name="about_automattic_contribute_item_title">Contribute</string>
     <string name="about_news">News</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_one">1 answer</string>
@@ -37,6 +47,7 @@ Language: en_GB
     <string name="gutenberg_native_jetpack_powered">Jetpack powered</string>
     <string name="gutenberg_native_upgrade_your_plan_to_upload_audio">Upgrade your plan to upload audio</string>
     <string name="gutenberg_native_upgrade_your_plan_to_use_video_covers">Upgrade your plan to use video covers</string>
+    <string name="wp_jetpack_get_new_jetpack_app">Try the new Jetpack app</string>
     <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery">Problem displaying block. \nTap to attempt block recovery.</string>
     <string name="stats_revamp_v2_update_alert_message">Updated to New Insights to help you understand how your content is performing and what\'s resonating with your audience.</string>
     <string name="stats_insights_like_guide_card">⭐️ Your latest post %1$s has received %2$s like.</string>

@@ -5,17 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStore
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.anyOrNull
-import com.nhaarman.mockitokotlin2.argWhere
-import com.nhaarman.mockitokotlin2.atLeastOnce
-import com.nhaarman.mockitokotlin2.doAnswer
-import com.nhaarman.mockitokotlin2.eq
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.never
-import com.nhaarman.mockitokotlin2.times
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.delay
@@ -28,6 +17,17 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.invocation.InvocationOnMock
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.any
+import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.argWhere
+import org.mockito.kotlin.atLeastOnce
+import org.mockito.kotlin.doAnswer
+import org.mockito.kotlin.eq
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.never
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
@@ -68,6 +68,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.DynamicCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.DynamicCard.QuickStartDynamicCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.InfoItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.ListItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.SingleActionCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.JetpackBadge
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoHeaderCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoHeaderCard.IconState
@@ -144,6 +145,8 @@ import org.wordpress.android.util.config.BloggingPromptsFeatureConfig
 import org.wordpress.android.util.config.LandOnTheEditorFeatureConfig
 import org.wordpress.android.util.config.MySiteDashboardTabsFeatureConfig
 import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
+import org.wordpress.android.util.publicdata.AppStatus
+import org.wordpress.android.util.publicdata.WordPressPublicData
 import org.wordpress.android.viewmodel.ContextProvider
 import java.util.Date
 
@@ -187,6 +190,8 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var quickStartType: QuickStartType
     @Mock lateinit var quickStartTracker: QuickStartTracker
     @Mock private lateinit var dispatcher: Dispatcher
+    @Mock lateinit var appStatus: AppStatus
+    @Mock lateinit var wordPressPublicData: WordPressPublicData
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<UiModel>
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
@@ -388,7 +393,9 @@ class MySiteViewModelTest : BaseUnitTest() {
                 appPrefsWrapper,
                 bloggingPromptsCardAnalyticsTracker,
                 quickStartTracker,
-                dispatcher
+                dispatcher,
+                appStatus,
+                wordPressPublicData
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()
@@ -2156,6 +2163,91 @@ class MySiteViewModelTest : BaseUnitTest() {
         assertThat(getSiteMenuTabLastItems().last()).isNotInstanceOf(JetpackBadge::class.java)
         assertThat(getLastItems().last()).isNotInstanceOf(JetpackBadge::class.java)
         assertThat(getDashboardTabLastItems().last()).isNotInstanceOf(JetpackBadge::class.java)
+    }
+
+    @Test
+    fun `given IS NOT Jetpack app, migration success card SHOULD NOT be shown`() {
+        val packageName = "packageName"
+        whenever(wordPressPublicData.currentPackageId()).thenReturn(packageName)
+        whenever(appPrefsWrapper.isJetpackMigrationCompleted()).thenReturn(true)
+        whenever(appStatus.isAppInstalled(packageName)).thenReturn(true)
+
+        initSelectedSite()
+
+        assertThat(getSiteMenuTabLastItems()[0]).isNotInstanceOf(SingleActionCard::class.java)
+        assertThat(getLastItems()[0]).isNotInstanceOf(SingleActionCard::class.java)
+        assertThat(getDashboardTabLastItems()[0]).isNotInstanceOf(SingleActionCard::class.java)
+    }
+
+    @Test
+    fun `given migration IS NOT completed, migration success card SHOULD NOT be shown`() {
+        val packageName = "packageName"
+        whenever(wordPressPublicData.currentPackageId()).thenReturn(packageName)
+        whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
+        whenever(appStatus.isAppInstalled(packageName)).thenReturn(true)
+
+        initSelectedSite()
+
+        assertThat(getSiteMenuTabLastItems()[0]).isNotInstanceOf(SingleActionCard::class.java)
+        assertThat(getLastItems()[0]).isNotInstanceOf(SingleActionCard::class.java)
+        assertThat(getDashboardTabLastItems()[0]).isNotInstanceOf(SingleActionCard::class.java)
+    }
+
+    @Test
+    fun `given WordPress app IS NOT installed, migration success card SHOULD NOT be shown`() {
+        whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
+        whenever(appPrefsWrapper.isJetpackMigrationCompleted()).thenReturn(true)
+
+        initSelectedSite()
+
+        assertThat(getSiteMenuTabLastItems()[0]).isNotInstanceOf(SingleActionCard::class.java)
+        assertThat(getLastItems()[0]).isNotInstanceOf(SingleActionCard::class.java)
+        assertThat(getDashboardTabLastItems()[0]).isNotInstanceOf(SingleActionCard::class.java)
+    }
+
+    @Test
+    fun `given IS JP app, migration IS complete and WP app IS installed, migration success card SHOULD be shown`() {
+        val packageName = "packageName"
+        whenever(wordPressPublicData.currentPackageId()).thenReturn(packageName)
+        whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
+        whenever(appPrefsWrapper.isJetpackMigrationCompleted()).thenReturn(true)
+        whenever(appStatus.isAppInstalled(packageName)).thenReturn(true)
+
+        initSelectedSite()
+
+        assertThat(getSiteMenuTabLastItems()[0]).isInstanceOf(SingleActionCard::class.java)
+        assertThat(getLastItems()[0]).isInstanceOf(SingleActionCard::class.java)
+        assertThat(getDashboardTabLastItems()[0]).isInstanceOf(SingleActionCard::class.java)
+    }
+
+    @Test
+    fun `JP migration success card should have the correct text`() {
+        val packageName = "packageName"
+        whenever(wordPressPublicData.currentPackageId()).thenReturn(packageName)
+        whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
+        whenever(appPrefsWrapper.isJetpackMigrationCompleted()).thenReturn(true)
+        whenever(appStatus.isAppInstalled(packageName)).thenReturn(true)
+        initSelectedSite()
+
+        val expected = R.string.jp_migration_success_card_message
+        assertThat((getSiteMenuTabLastItems()[0] as SingleActionCard).textResource).isEqualTo(expected)
+        assertThat((getLastItems()[0] as SingleActionCard).textResource).isEqualTo(expected)
+        assertThat((getDashboardTabLastItems()[0] as SingleActionCard).textResource).isEqualTo(expected)
+    }
+
+    @Test
+    fun `JP migration success card should have the correct image`() {
+        val packageName = "packageName"
+        whenever(wordPressPublicData.currentPackageId()).thenReturn(packageName)
+        whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
+        whenever(appPrefsWrapper.isJetpackMigrationCompleted()).thenReturn(true)
+        whenever(appStatus.isAppInstalled(packageName)).thenReturn(true)
+        initSelectedSite()
+
+        val expected = R.drawable.ic_wordpress_blue_32dp
+        assertThat((getSiteMenuTabLastItems()[0] as SingleActionCard).imageResource).isEqualTo(expected)
+        assertThat((getLastItems()[0] as SingleActionCard).imageResource).isEqualTo(expected)
+        assertThat((getDashboardTabLastItems()[0] as SingleActionCard).imageResource).isEqualTo(expected)
     }
 
     @InternalCoroutinesApi

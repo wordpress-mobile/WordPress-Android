@@ -175,6 +175,8 @@ public class AppPrefs {
         SHOULD_SHOW_WEEKLY_ROUNDUP_NOTIFICATION,
 
         SKIPPED_BLOGGING_PROMPT_DAY,
+        OPEN_WEB_LINKS_WITH_JETPACK_OVERLAY_LAST_SHOWN_TIMESTAMP,
+        OPEN_WEB_LINKS_WITH_JETPACK,
     }
 
     /**
@@ -286,7 +288,13 @@ public class AppPrefs {
         IS_FIRST_TRY_BLOGGING_REMINDERS_SYNC_JETPACK,
 
         // Indicates if this is the first time we try to get the reader saved posts in Jetpack automatically
-        IS_FIRST_TRY_READER_SAVED_POSTS_JETPACK
+        IS_FIRST_TRY_READER_SAVED_POSTS_JETPACK,
+
+        // Indicates if the user has completed the Jetpack migration flow
+        IS_JETPACK_MIGRATION_COMPLETED,
+
+        // Indicates if the user is eligible for the Jetpack migration flow
+        IS_JETPACK_MIGRATION_ELIGIBLE,
     }
 
     static SharedPreferences prefs() {
@@ -1469,5 +1477,37 @@ public class AppPrefs {
 
     public static void saveIsFirstTryReaderSavedPostsJetpack(final boolean isFirstTry) {
         setBoolean(UndeletablePrefKey.IS_FIRST_TRY_READER_SAVED_POSTS_JETPACK, isFirstTry);
+    }
+
+    public static boolean getIsJetpackMigrationCompleted() {
+        return getBoolean(UndeletablePrefKey.IS_JETPACK_MIGRATION_COMPLETED, false);
+    }
+
+    public static void setIsJetpackMigrationCompleted(final boolean isCompleted) {
+        setBoolean(UndeletablePrefKey.IS_JETPACK_MIGRATION_COMPLETED, isCompleted);
+    }
+
+    public static boolean getIsJetpackMigrationEligible() {
+        return getBoolean(UndeletablePrefKey.IS_JETPACK_MIGRATION_ELIGIBLE, true);
+    }
+
+    public static void setIsJetpackMigrationEligible(final boolean isEligible) {
+        setBoolean(UndeletablePrefKey.IS_JETPACK_MIGRATION_ELIGIBLE, isEligible);
+    }
+
+    public static Long getOpenWebLinksWithJetpackOverlayLastShownTimestamp() {
+        return getLong(DeletablePrefKey.OPEN_WEB_LINKS_WITH_JETPACK_OVERLAY_LAST_SHOWN_TIMESTAMP, 0L);
+    }
+
+    public static void setOpenWebLinksWithJetpackOverlayLastShownTimestamp(final Long overlayLastShownTimestamp) {
+        setLong(DeletablePrefKey.OPEN_WEB_LINKS_WITH_JETPACK_OVERLAY_LAST_SHOWN_TIMESTAMP, overlayLastShownTimestamp);
+    }
+
+    public static Boolean getIsOpenWebLinksWithJetpack() {
+        return getBoolean(DeletablePrefKey.OPEN_WEB_LINKS_WITH_JETPACK, false);
+    }
+
+    public static void setIsOpenWebLinksWithJetpack(final boolean isOpenWebLinksWithJetpack) {
+        setBoolean(DeletablePrefKey.OPEN_WEB_LINKS_WITH_JETPACK, isOpenWebLinksWithJetpack);
     }
 }

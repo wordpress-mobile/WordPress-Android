@@ -23,6 +23,7 @@ repositories {
             includeGroup "org.wordpress.wellsql"
             includeGroup "org.wordpress-mobile"
             includeGroup "org.wordpress-mobile.gutenberg-mobile"
+            includeGroupByRegex "org.wordpress-mobile.react-native-libraries.*"
             includeGroup "com.automattic"
             includeGroup "com.automattic.stories"
             includeGroup "com.automattic.tracks"
@@ -113,18 +114,20 @@ android {
         buildConfigField "boolean", "QRCODE_AUTH_FLOW", "false"
         buildConfigField "boolean", "BETA_SITE_DESIGNS", "false"
         buildConfigField "boolean", "JETPACK_POWERED", "true"
-        buildConfigField "boolean", "JETPACK_POWERED_BOTTOM_SHEET", "false"
-        buildConfigField "boolean", "JETPACK_SHARED_LOGIN", "false"
-        buildConfigField "boolean", "JETPACK_LOCAL_USER_FLAGS", "false"
-        buildConfigField "boolean", "JETPACK_BLOGGING_REMINDERS_SYNC", "false"
-        buildConfigField "boolean", "JETPACK_READER_SAVED_POSTS", "false"
-        buildConfigField "boolean", "JETPACK_PROVIDER_SYNC", "false"
-        buildConfigField "boolean", "JETPACK_MIGRATION_FLOW", "false"
+        buildConfigField "boolean", "JETPACK_POWERED_BOTTOM_SHEET", "true"
+        buildConfigField "boolean", "JETPACK_SHARED_LOGIN", "true"
+        buildConfigField "boolean", "JETPACK_LOCAL_USER_FLAGS", "true"
+        buildConfigField "boolean", "JETPACK_BLOGGING_REMINDERS_SYNC", "true"
+        buildConfigField "boolean", "JETPACK_READER_SAVED_POSTS", "true"
+        buildConfigField "boolean", "JETPACK_PROVIDER_SYNC", "true"
+        buildConfigField "boolean", "JETPACK_MIGRATION_FLOW", "true"
         buildConfigField "boolean", "JETPACK_FEATURE_REMOVAL_PHASE_ONE", "false"
         buildConfigField "boolean", "JETPACK_FEATURE_REMOVAL_PHASE_TWO", "false"
         buildConfigField "boolean", "JETPACK_FEATURE_REMOVAL_PHASE_THREE", "false"
         buildConfigField "boolean", "JETPACK_FEATURE_REMOVAL_PHASE_FOUR", "false"
         buildConfigField "boolean", "JETPACK_FEATURE_REMOVAL_NEW_USERS", "false"
+        buildConfigField "boolean", "PREVENT_DUPLICATE_NOTIFS_REMOTE_FIELD", "true"
+        buildConfigField "boolean", "OPEN_WEB_LINKS_WITH_JETPACK_FLOW", "false"
 
         // Override these constants in jetpack product flavor to enable/ disable features
         buildConfigField "boolean", "ENABLE_SITE_CREATION", "true"
@@ -137,6 +140,7 @@ android {
         buildConfigField "boolean", "ENABLE_WHATS_NEW_FEATURE", "true"
         buildConfigField "boolean", "ENABLE_MY_SITE_DASHBOARD_TABS", "true"
         buildConfigField "boolean", "ENABLE_QRCODE_AUTH_FLOW", "true"
+        buildConfigField "boolean", "ENABLE_OPEN_WEB_LINKS_WITH_JP_FLOW", "true"
 
         manifestPlaceholders = [magicLinkScheme:"wordpress"]
     }
@@ -162,6 +166,7 @@ android {
             buildConfigField "String", "TRACKS_EVENT_PREFIX", '"wpandroid_"'
             buildConfigField "String", "PUSH_NOTIFICATIONS_APP_KEY", '"org.wordpress.android"'
             buildConfigField "boolean", "ENABLE_QRCODE_AUTH_FLOW", "false"
+            buildConfigField "boolean", "ENABLE_OPEN_WEB_LINKS_WITH_JP_FLOW", "true"
 
             manifestPlaceholders = [magicLinkScheme:"wordpress"]
         }
@@ -184,6 +189,7 @@ android {
             buildConfigField "String", "TRACKS_EVENT_PREFIX", '"jpandroid_"'
             buildConfigField "String", "PUSH_NOTIFICATIONS_APP_KEY", '"com.jetpack.android"'
             buildConfigField "boolean", "ENABLE_QRCODE_AUTH_FLOW", "true"
+            buildConfigField "boolean", "ENABLE_OPEN_WEB_LINKS_WITH_JP_FLOW", "false"
 
             manifestPlaceholders = [magicLinkScheme:"jetpack"]
 
@@ -372,7 +378,7 @@ dependencies {
     implementation 'org.wordpress:emailchecker2:1.1.0'
     implementation "com.automattic:Automattic-Tracks-Android:$tracksVersion"
     implementation 'com.squareup.okio:okio:2.8.0'
-    implementation 'org.apache.commons:commons-text:1.1'
+    implementation "org.apache.commons:commons-text:$commonsText"
     implementation 'com.airbnb.android:lottie:3.4.0'
     implementation 'com.facebook.shimmer:shimmer:0.5.0'
 
@@ -399,14 +405,15 @@ dependencies {
 
     testImplementation "junit:junit:$jUnitVersion"
 
-    testImplementation "org.mockito:mockito-core:$mockitoCoreVersion"
-    testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$nhaarmanMockitoVersion"
+    testImplementation "org.mockito:mockito-core:$mockitoVersion"
+    testImplementation "org.mockito.kotlin:mockito-kotlin:$mockitoKotlinVersion"
+    testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$gradle.ext.kotlinVersion"
     testImplementation "org.assertj:assertj-core:$assertJVersion"
     testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion"
     testImplementation "androidx.test:core:$androidxTestCoreVersion"
 
-    androidTestImplementation 'org.mockito:mockito-android:3.3.3'
-    androidTestImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$nhaarmanMockitoVersion"
+    androidTestImplementation "org.mockito:mockito-android:$mockitoVersion"
+    androidTestImplementation "org.mockito.kotlin:mockito-kotlin:$mockitoKotlinVersion"
     androidTestImplementation 'com.squareup.okhttp:mockwebserver:2.7.5'
     testImplementation('org.bouncycastle:bcprov-jdk15on') {
         version {
@@ -430,7 +437,7 @@ dependencies {
         exclude group: 'asm', module: 'asm'
         exclude group: 'org.json', module: 'json'
     }
-    androidTestImplementation 'org.apache.httpcomponents:httpclient-android:4.3.5.1'
+    androidTestImplementation "org.apache.httpcomponents:httpclient-android:$httpClientAndroidVersion"
 
     androidTestImplementation project(path:':libs:mocks')
 

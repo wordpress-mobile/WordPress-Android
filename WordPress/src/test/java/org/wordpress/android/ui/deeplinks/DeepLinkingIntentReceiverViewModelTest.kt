@@ -1,20 +1,22 @@
 package org.wordpress.android.ui.deeplinks
 
+import android.content.Context
 import android.net.Uri
-import com.nhaarman.mockitokotlin2.eq
-import com.nhaarman.mockitokotlin2.isNull
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
+import org.mockito.kotlin.eq
+import org.mockito.kotlin.isNull
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DEEP_LINKED
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.ui.deeplinks.DeepLinkEntryPoint.DEFAULT
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenInBrowser
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.StartCreateSiteFlow
@@ -22,6 +24,7 @@ import org.wordpress.android.ui.deeplinks.handlers.DeepLinkHandlers
 import org.wordpress.android.ui.deeplinks.handlers.ServerTrackingHandler
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
+import org.wordpress.android.viewmodel.ContextProvider
 
 class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
     @Mock lateinit var deepLinkHandlers: DeepLinkHandlers
@@ -30,6 +33,9 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
     @Mock lateinit var serverTrackingHandler: ServerTrackingHandler
     @Mock lateinit var deepLinkTrackingUtils: DeepLinkTrackingUtils
     @Mock lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
+    @Mock lateinit var contextProvider: ContextProvider
+    @Mock lateinit var context: Context
+    @Mock lateinit var openWebLinksWithJetpackHelper: DeepLinkOpenWebLinksWithJetpackHelper
     private lateinit var viewModel: DeepLinkingIntentReceiverViewModel
     private var isFinished = false
     private lateinit var navigateActions: MutableList<NavigateAction>
@@ -44,7 +50,8 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
                 accountStore,
                 serverTrackingHandler,
                 deepLinkTrackingUtils,
-                analyticsUtilsWrapper
+                analyticsUtilsWrapper,
+                openWebLinksWithJetpackHelper
         )
         isFinished = false
         viewModel.finish.observeForever {
@@ -65,7 +72,7 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
     fun `does not navigate and finishes on WPcom URL`() {
         val uri = buildUri("wordpress.com")
 
-        viewModel.start(null, uri)
+        viewModel.start(null, uri, DEFAULT, null)
 
         assertUriNotHandled()
     }
@@ -74,7 +81,7 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
     fun `does not navigate and finishes on non-mobile URL`() {
         val uri = buildUri("public-api.wordpress.com")
 
-        viewModel.start(null, uri)
+        viewModel.start(null, uri, DEFAULT, null)
 
         assertUriNotHandled()
     }
@@ -85,7 +92,7 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
         val barUri = buildUri("public-api.wordpress.com")
         whenever(uri.copy("bar")).thenReturn(barUri)
 
-        viewModel.start(null, uri)
+        viewModel.start(null, uri, DEFAULT, null)
 
         assertUriHandled(OpenInBrowser(barUri))
     }
@@ -98,7 +105,7 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
 
         whenever(deepLinkHandlers.buildNavigateAction(startUrl)).thenReturn(StartCreateSiteFlow)
 
-        viewModel.start(null, uri)
+        viewModel.start(null, uri, DEFAULT, null)
 
         assertUriHandled(StartCreateSiteFlow)
         verify(serverTrackingHandler).request(uri)
@@ -114,7 +121,7 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
         whenever(deepLinkHandlers.buildNavigateAction(startUrl)).thenReturn(null)
         whenever(uri.copy("bar")).thenReturn(barUri)
 
-        viewModel.start(null, uri)
+        viewModel.start(null, uri, DEFAULT, null)
 
         assertUriHandled(OpenInBrowser(barUri))
     }
@@ -126,7 +133,7 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
         val barUri = buildUri("public-api.wordpress.com")
         whenever(uri.copy("bar")).thenReturn(barUri)
 
-        viewModel.start(null, uri)
+        viewModel.start(null, uri, DEFAULT, null)
 
         assertUriHandled(OpenInBrowser(barUri))
     }
@@ -135,7 +142,7 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
     fun `tracks deeplink when action not null and URL null`() {
         val action = "VIEW"
 
-        viewModel.start(action, null)
+        viewModel.start(action, null, DEFAULT, null)
 
         verify(analyticsUtilsWrapper).trackWithDeepLinkData(eq(DEEP_LINKED), eq(action), eq(""), isNull())
     }
@@ -148,18 +155,18 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
         val mockedUri = mock<Uri>()
         whenever(uriWrapper.uri).thenReturn(mockedUri)
 
-        viewModel.start(action, uriWrapper)
+        viewModel.start(action, uriWrapper, DEFAULT, null)
 
         verify(analyticsUtilsWrapper).trackWithDeepLinkData(DEEP_LINKED, action, host, mockedUri)
     }
 
     private fun assertUriNotHandled() {
-        assertThat(isFinished).isTrue()
+        assertThat(isFinished).isTrue
         assertThat(navigateActions).isEmpty()
     }
 
     private fun assertUriHandled(navigateAction: NavigateAction) {
-        assertThat(isFinished).isFalse()
+        assertThat(isFinished).isFalse
         assertThat(navigateActions.last()).isEqualTo(navigateAction)
     }
 

@@ -1,0 +1,2 @@
+21.2:
+Wenn du auf dem Startbildschirm deines Geräts auf das Statistik-Widget tippst und die Website-Statistiken bereits aktiviert hast, wirst du nicht mehr aufgefordert, diese erneut zu aktivieren. Sehr gut.

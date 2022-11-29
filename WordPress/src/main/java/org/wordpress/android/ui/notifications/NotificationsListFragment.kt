@@ -35,6 +35,8 @@ import org.wordpress.android.ui.JetpackConnectionWebViewActivity
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.WPWebViewActivity
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayFragment
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureOverlayScreenType
 import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment
@@ -128,6 +130,13 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
                     .newInstance(it, PageType.NOTIFS)
                     .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
         }
+
+        viewModel.showJetpackOverlay.observeEvent(viewLifecycleOwner) {
+            if (savedInstanceState == null)
+                JetpackFeatureFullScreenOverlayFragment
+                        .newInstance(JetpackFeatureOverlayScreenType.NOTIFICATIONS)
+                        .show(childFragmentManager, JetpackFeatureFullScreenOverlayFragment.TAG)
+        }
     }
 
     private fun buildTitles(): List<String> {
@@ -169,6 +178,7 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
             }
             setSelectedTab(lastTabPosition)
         }
+        viewModel.onResume()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

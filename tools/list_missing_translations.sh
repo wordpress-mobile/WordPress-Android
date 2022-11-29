@@ -10,12 +10,13 @@
 
 list_translatable_keys() {
   # Extracts the `name` attribute of every `<string>` tag in the `values-$1/strings.xml` file, except for the ones which have the `translatable='false'` attribute
-  xpath -q -e "//string[@translatable != 'false']/@name" WordPress/src/main/res/$1/strings.xml | sort | sed 's/^ *name="\(.*\)"$/\`\1\`/'
+  xpath -q -e "//string[@translatable != 'false']/@name" WordPress/src/main/res/$1/strings.xml | sed 's/^ *name="\(.*\)"$/\`\1\`/' | sort
 }
 
 list_diff() {
   # Runs diff with a custom output format so that it can be used as a bullet-point list of missing entries
-  diff --unchanged-line-format="" --new-line-format="" --old-line-format="    - %L" "$@"
+  #diff --unchanged-line-format="" --new-line-format="" --old-line-format="    - %L" "$@" # Pre-macOS-Ventura `diff` options
+  diff --changed-group-format="    - %<" "$@" | grep '^    - '
 }
 
 ORIGINAL_KEYS_FILE="${TMPDIR}translatable-strings-originals-keys.txt"

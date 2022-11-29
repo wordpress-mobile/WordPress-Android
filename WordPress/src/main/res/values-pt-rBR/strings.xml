@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-10-19 18:08:26+0000
+Translation-Revision-Date: 2022-11-25 14:12:52+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: pt_BR
 -->
 <resources>
+    <string name="jp_migration_help_button">Precisa de ajuda?</string>
+    <string name="jp_migration_continue_button">Continuar</string>
+    <string name="jp_migration_welcome_site_found_message">Encontramos seu site. Continue transferindo todos os seus dados e faça login no Jetpack automaticamente.</string>
+    <string name="jp_migration_welcome_sites_found_message">Encontramos seus sites. Continue transferindo todos os seus dados e faça login no Jetpack automaticamente.</string>
+    <string name="jp_migration_avatar_content_description">Sua foto de perfil</string>
+    <string name="jp_migration_welcome_subtitle">Parece que você está migrando do aplicativo WordPress.</string>
+    <string name="jp_migration_welcome_title">Desejamos boas-vindas ao Jetpack!</string>
+    <string name="icon_desc">ícone</string>
+    <string name="post_settings_parent">Página ascendente</string>
+    <string name="post_settings_page_attributes">Atributos da página</string>
     <string name="about_automattic_contribute_item_title">Contribuir</string>
     <string name="about_news">Novidades</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_one">1 resposta</string>
@@ -37,6 +47,7 @@ Language: pt_BR
     <string name="wp_jetpack_continue_to_notifications">Continue para Notificações</string>
     <string name="wp_jetpack_continue_to_stats">Continue para Estatísticas</string>
     <string name="wp_jetpack_continue_to_reader">Continue para Leitor</string>
+    <string name="wp_jetpack_get_new_jetpack_app">Experimente o novo aplicativo do Jetpack</string>
     <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery">Problema ao exibir o bloco. \nToque para tentar restaurá-lo.</string>
     <string name="weekly_roundup_notification_text_views_and_comments">Na semana passada, você recebeu %1$s visualizações e %2$s comentários</string>
     <string name="weekly_roundup_notification_text_views_and_likes">Na semana passada, você recebeu %1$s visualizações e %2$s curtidas</string>

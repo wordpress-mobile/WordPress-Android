@@ -1,0 +1,2 @@
+21.2:
+Se hai già abilitato le statistiche del sito, non ti verrà chiesto di abilitarle nuovamente quando tocchi il widget delle statistiche nella schermata iniziale del tuo dispositivo. Ottimo.

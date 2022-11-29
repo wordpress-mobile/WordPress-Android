@@ -1,13 +1,13 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
@@ -27,8 +27,8 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.QUICK_SCAN_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
 import org.wordpress.android.ui.stats.refresh.utils.ActionCardHandler
-import org.wordpress.android.ui.stats.refresh.utils.DateUtils
 import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
+import org.wordpress.android.ui.stats.refresh.utils.StatsDateUtils
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.text.PercentFormatter
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -41,7 +41,7 @@ class MostPopularInsightsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var postStore: PostStore
     @Mock lateinit var statsSiteProvider: StatsSiteProvider
     @Mock lateinit var site: SiteModel
-    @Mock lateinit var dateUtils: DateUtils
+    @Mock lateinit var mStatsDateUtils: StatsDateUtils
     @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var popupMenuHandler: ItemPopupMenuHandler
     @Mock lateinit var actionCardHandler: ActionCardHandler
@@ -62,7 +62,7 @@ class MostPopularInsightsUseCaseTest : BaseUnitTest() {
                 insightsStore,
                 postStore,
                 statsSiteProvider,
-                dateUtils,
+                mStatsDateUtils,
                 resourceProvider,
                 popupMenuHandler,
                 actionCardHandler,
@@ -81,9 +81,9 @@ class MostPopularInsightsUseCaseTest : BaseUnitTest() {
                 )
         ).thenReturn("20%")
         whenever(statsSiteProvider.siteModel).thenReturn(site)
-        whenever(dateUtils.getWeekDay(day)).thenReturn(dayString)
+        whenever(mStatsDateUtils.getWeekDay(day)).thenReturn(dayString)
 
-        whenever(dateUtils.getHour(hour)).thenReturn(hourString)
+        whenever(mStatsDateUtils.getHour(hour)).thenReturn(hourString)
 
         whenever(
                 resourceProvider.getString(

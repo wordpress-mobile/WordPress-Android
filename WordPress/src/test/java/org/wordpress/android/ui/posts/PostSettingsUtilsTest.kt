@@ -1,24 +1,24 @@
 package org.wordpress.android.ui.posts
 
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.eq
-import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
+import org.mockito.kotlin.any
+import org.mockito.kotlin.eq
+import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.ui.reader.utils.DateProvider
-import org.wordpress.android.ui.stats.refresh.utils.DateUtils
+import org.wordpress.android.ui.stats.refresh.utils.StatsDateUtils
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.viewmodel.ResourceProvider
 
 class PostSettingsUtilsTest : BaseUnitTest() {
     @Mock lateinit var resourceProvider: ResourceProvider
-    @Mock lateinit var dateUtils: DateUtils
+    @Mock lateinit var mStatsDateUtils: StatsDateUtils
     @Mock lateinit var dateProvider: DateProvider
     private lateinit var postSettingsUtils: PostSettingsUtils
     private lateinit var postUtilsWrapper: PostUtilsWrapper
@@ -31,8 +31,8 @@ class PostSettingsUtilsTest : BaseUnitTest() {
     @Before
     fun setUp() {
         postUtilsWrapper = PostUtilsWrapper(dateProvider)
-        postSettingsUtils = PostSettingsUtils(resourceProvider, dateUtils, postUtilsWrapper)
-        whenever(dateUtils.formatDateTime(any())).thenReturn(formattedDate)
+        postSettingsUtils = PostSettingsUtils(resourceProvider, mStatsDateUtils, postUtilsWrapper)
+        whenever(mStatsDateUtils.formatDateTime(any())).thenReturn(formattedDate)
         whenever(dateProvider.getCurrentDate()).thenReturn(DateTimeUtils.dateUTCFromIso8601(currentDate))
         whenever(
                 resourceProvider.getString(

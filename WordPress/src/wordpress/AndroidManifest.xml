@@ -3,23 +3,26 @@
 
     <application>
         <provider
-            android:name=".sharedlogin.provider.SharedLoginProvider"
-            android:authorities="${applicationId}.SharedLoginProvider"
+            android:name=".localcontentmigration.LocalMigrationContentProvider"
+            android:authorities="${applicationId}.LocalMigrationContentProvider"
             android:exported="true" />
 
-        <provider
-            android:name=".userflags.provider.UserFlagsProvider"
-            android:authorities="${applicationId}.UserFlagsProvider"
-            android:exported="true" />
+        <receiver
+            android:name=".ui.mysite.jetpackbadge.JetpackAppInstallReceiver"
+            android:exported="true"
+            android:permission="org.wordpress.android.permission.DISABLE_NOTIFICATIONS">
+            <intent-filter>
+                <action android:name="org.wordpress.android.broadcast.DISABLE_NOTIFICATIONS"/>
+            </intent-filter>
+        </receiver>
 
-        <provider
-            android:name=".bloggingreminders.provider.BloggingRemindersProvider"
-            android:authorities="${applicationId}.BloggingRemindersProvider"
-            android:exported="true" />
-
-        <provider
-            android:name=".reader.savedposts.provider.ReaderSavedPostsProvider"
-            android:authorities="${applicationId}.ReaderSavedPostsProvider"
-            android:exported="true" />
+        <receiver
+            android:name=".ui.deeplinks.JetpackAppUninstallReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_FULLY_REMOVED"/>
+                <data android:scheme="package"/>
+            </intent-filter>
+        </receiver>
     </application>
 </manifest>

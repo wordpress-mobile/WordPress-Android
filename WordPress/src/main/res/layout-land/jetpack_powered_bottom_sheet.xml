@@ -4,8 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingStart="@dimen/margin_extra_extra_medium_large"
-    android:paddingEnd="@dimen/margin_extra_extra_medium_large"
     android:background="@color/jetpack_powered_bottom_sheet_background">
 
     <include
@@ -18,59 +16,80 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.airbnb.lottie.LottieAnimationView
-        android:id="@+id/illustration_view"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_extra_extra_medium_large"
-        android:scaleType="centerCrop"
+        android:orientation="vertical"
         app:layout_constraintTop_toBottomOf="@id/handle"
-        app:layout_constraintStart_toStartOf="parent"
-        app:lottie_rawRes="@raw/wp2jp_left"
-        app:lottie_enableMergePathsForKitKatAndAbove="true"
-        app:lottie_autoPlay="true"
-        app:lottie_loop="false" />
+        app:layout_constraintBottom_toBottomOf="parent">
 
-    <TextView
-        android:id="@+id/title"
-        style="@style/TextAppearance.Material3.HeadlineMedium"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_extra_medium_large"
-        android:text="@string/wp_jetpack_powered_better_with_jetpack"
-        android:textFontWeight="700"
-        app:layout_constraintTop_toBottomOf="@id/illustration_view"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        tools:targetApi="p" />
+        <ScrollView
+            android:id="@+id/scroll_view"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
 
-    <TextView
-        android:id="@+id/caption"
-        style="?attr/textAppearanceBody1"
-        android:text="@string/wp_jetpack_powered_features"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_extra_medium_large"
-        app:layout_constraintTop_toBottomOf="@id/title"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="@dimen/margin_extra_extra_medium_large"
+                android:paddingEnd="@dimen/margin_extra_extra_medium_large"
+                android:paddingBottom="@dimen/margin_extra_extra_large">
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/primary_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_extra_extra_large"
-        android:layout_marginBottom="@dimen/margin_64dp"
-        android:backgroundTint="@color/jetpack_green_40"
-        android:gravity="center"
-        android:minHeight="@dimen/margin_64dp"
-        app:cornerRadius="@dimen/margin_small_medium"
-        android:text="@string/wp_jetpack_get_new_jetpack_app"
-        android:textAppearance="?attr/textAppearanceSubtitle2"
-        android:textColor="?attr/colorOnSecondary"
-        app:layout_constraintTop_toBottomOf="@id/caption"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+                <com.airbnb.lottie.LottieAnimationView
+                    android:id="@+id/illustration_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_extra_extra_medium_large"
+                    android:scaleType="centerCrop"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:lottie_rawRes="@raw/wp2jp_left"
+                    app:lottie_enableMergePathsForKitKatAndAbove="true"
+                    app:lottie_autoPlay="true"
+                    app:lottie_loop="false" />
 
+                <TextView
+                    android:id="@+id/title"
+                    style="@style/TextAppearance.Material3.HeadlineMedium"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_extra_medium_large"
+                    android:text="@string/wp_jetpack_powered_better_with_jetpack"
+                    android:textFontWeight="700"
+                    app:layout_constraintTop_toBottomOf="@id/illustration_view"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    tools:targetApi="p" />
+
+                <TextView
+                    android:id="@+id/caption"
+                    style="?attr/textAppearanceBody1"
+                    android:text="@string/wp_jetpack_powered_features"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_extra_medium_large"
+                    app:layout_constraintTop_toBottomOf="@id/title"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </ScrollView>
+
+        <Button
+            android:id="@+id/primary_button"
+            style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_extra_extra_medium_large"
+            android:layout_marginEnd="@dimen/margin_extra_extra_medium_large"
+            android:layout_marginBottom="@dimen/margin_extra_extra_medium_large"
+            android:background="@drawable/bg_rectangle_rounded_jetpack_ripple"
+            app:backgroundTint="@color/jetpack_green_50"
+            android:gravity="center"
+            android:minHeight="@dimen/jetpack_bottom_sheet_button_height"
+            android:text="@string/wp_jetpack_get_new_jetpack_app"
+            android:textAppearance="?attr/textAppearanceSubtitle2"
+            android:textColor="?attr/colorOnSecondary"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

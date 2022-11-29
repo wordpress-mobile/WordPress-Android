@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-10-20 09:54:07+0000
+Translation-Revision-Date: 2022-11-17 10:54:09+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.3
 Language: zh_CN
 -->
 <resources>
+    <string name="jp_migration_help_button">需要帮助？</string>
+    <string name="jp_migration_continue_button">继续</string>
+    <string name="jp_migration_welcome_site_found_message">我们找到了您的站点。 继续转移您的所有数据并自动登录至 Jetpack。</string>
+    <string name="jp_migration_welcome_sites_found_message">我们找到了您的站点。 继续转移您的所有数据并自动登录至 Jetpack。</string>
+    <string name="jp_migration_avatar_content_description">您的个人资料照片</string>
+    <string name="jp_migration_welcome_subtitle">您似乎是从 WordPress 应用程序转移过来。</string>
+    <string name="jp_migration_welcome_title">欢迎使用 Jetpack！</string>
+    <string name="icon_desc">图标</string>
+    <string name="post_settings_parent">父页</string>
+    <string name="post_settings_page_attributes">页面属性</string>
     <string name="about_automattic_contribute_item_title">贡献</string>
     <string name="about_news">新闻</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_one">1 条回复</string>
@@ -37,6 +47,7 @@ Language: zh_CN
     <string name="wp_jetpack_continue_to_notifications">继续以使用通知功能</string>
     <string name="wp_jetpack_continue_to_stats">继续以使用统计信息功能</string>
     <string name="wp_jetpack_continue_to_reader">继续以使用阅读器功能</string>
+    <string name="wp_jetpack_get_new_jetpack_app">试用新版 Jetpack 应用程序</string>
     <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery">显示区块时出现问题。 \n点击尝试恢复区块。</string>
     <string name="weekly_roundup_notification_text_views_and_comments">上周共计 %1$s 次查看和 %2$s 条评论</string>
     <string name="weekly_roundup_notification_text_views_and_likes">上周共计 %1$s 次查看和 %2$s 个赞</string>

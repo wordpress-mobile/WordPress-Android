@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-11-02 12:54:10+0000
+Translation-Revision-Date: 2022-11-21 09:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.3
 Language: zh_TW
 -->
 <resources>
+    <string name="jp_migration_help_button">需要協助嗎？</string>
+    <string name="jp_migration_continue_button">繼續</string>
+    <string name="jp_migration_welcome_site_found_message">我們找到你的網站了。 繼續轉移你的所有資料，並自動登入 Jetpack。</string>
+    <string name="jp_migration_welcome_sites_found_message">我們找到你的網站了。 繼續轉移你的所有資料，並自動登入 Jetpack。</string>
+    <string name="jp_migration_avatar_content_description">你的個人檔案照片</string>
+    <string name="jp_migration_welcome_subtitle">你似乎正從 WordPress 應用程式切換過來。</string>
+    <string name="jp_migration_welcome_title">歡迎使用 Jetpack！</string>
+    <string name="icon_desc">圖示</string>
     <string name="post_settings_parent">上層頁面</string>
     <string name="post_settings_page_attributes">頁面屬性</string>
     <string name="about_automattic_contribute_item_title">參與</string>

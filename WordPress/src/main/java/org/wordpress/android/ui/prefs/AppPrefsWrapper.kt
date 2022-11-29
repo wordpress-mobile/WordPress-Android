@@ -251,6 +251,25 @@ class AppPrefsWrapper @Inject constructor() {
     fun saveIsFirstTryReaderSavedPostsJetpack(isFirstTry: Boolean) =
             AppPrefs.saveIsFirstTryReaderSavedPostsJetpack(isFirstTry)
 
+    fun setJetpackMigrationCompleted(isCompleted: Boolean) = AppPrefs.setIsJetpackMigrationCompleted(isCompleted)
+
+    fun isJetpackMigrationCompleted(): Boolean = AppPrefs.getIsJetpackMigrationCompleted()
+
+    fun setJetpackMigrationEligible(isEligible: Boolean) = AppPrefs.setIsJetpackMigrationEligible(isEligible)
+
+    fun isJetpackMigrationEligible() = AppPrefs.getIsJetpackMigrationEligible()
+
+    fun getOpenWebLinksWithJetpackOverlayLastShownTimestamp(): Long =
+            AppPrefs.getOpenWebLinksWithJetpackOverlayLastShownTimestamp()
+
+    fun setOpenWebLinksWithJetpackOverlayLastShownTimestamp(lastShown: Long) =
+            AppPrefs.setOpenWebLinksWithJetpackOverlayLastShownTimestamp(lastShown)
+
+    fun getIsOpenWebLinksWithJetpack(): Boolean = AppPrefs.getIsOpenWebLinksWithJetpack()
+
+    fun setIsOpenWebLinksWithJetpack(isOpenWebLinksWithJetpack: Boolean) =
+            AppPrefs.setIsOpenWebLinksWithJetpack(isOpenWebLinksWithJetpack)
+
     fun getAllPrefs(): Map<String, Any?> = AppPrefs.getAllPrefs()
 
     fun setString(prefKey: PrefKey, value: String) {

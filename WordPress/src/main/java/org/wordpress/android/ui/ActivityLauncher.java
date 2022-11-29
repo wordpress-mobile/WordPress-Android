@@ -117,6 +117,7 @@ import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.UriWrapper;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
@@ -158,6 +159,11 @@ public class ActivityLauncher {
     public static final String BACKUP_TRACK_EVENT_PROPERTY_VALUE = "backup";
     public static final String ACTIVITY_LOG_TRACK_EVENT_PROPERTY_VALUE = "activity_log";
     private static final String CATEGORY_DETAIL_ID = "category_detail_key";
+
+    public static void showMainActivity(Context context) {
+        Intent intent = getMainActivityInNewStack(context);
+        context.startActivity(intent);
+    }
 
     public static void showMainActivityAndLoginEpilogue(Activity activity, ArrayList<Integer> oldSitesIds,
                                                         boolean doLoginUpdate) {
@@ -1760,6 +1766,14 @@ public class ActivityLauncher {
 
     public static void startJetpackMigrationFlow(@NonNull Context context) {
         Intent intent = new Intent(context, JetpackMigrationActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
+    }
+
+    public static void openJetpackForDeeplink(@NonNull Context context, String action, UriWrapper uri) {
+        Intent intent = new Intent();
+        intent.setAction(action);
+        intent.setData(uri.getUri());
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
     }

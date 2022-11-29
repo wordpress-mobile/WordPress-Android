@@ -16,7 +16,7 @@ class SignatureUtils @Inject constructor(
     fun checkSignatureHash(
         trustedPackageId: String,
         trustedSignatureHash: String
-    ) = if (VERSION.SDK_INT >= VERSION_CODES.P) {
+    ): Boolean = if (VERSION.SDK_INT >= VERSION_CODES.P) {
         checkSignatureHashAfterApi28(trustedPackageId, trustedSignatureHash)
     } else {
         checkSignatureHashBeforeBeforeApi28(trustedPackageId, trustedSignatureHash)
@@ -27,7 +27,7 @@ class SignatureUtils @Inject constructor(
     private fun checkSignatureHashAfterApi28(
         trustedPackageId: String,
         trustedSignatureHash: String
-    ) = try {
+    ): Boolean = try {
         val signingInfo = contextProvider.getContext().packageManager.getPackageInfo(
                 trustedPackageId, PackageManager.GET_SIGNING_CERTIFICATES
         ).signingInfo
