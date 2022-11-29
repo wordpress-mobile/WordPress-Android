@@ -86,11 +86,12 @@ class JetpackMigrationViewModel @Inject constructor(
                 postActionEvent(FallbackToLogin)
             }
             migrationState is Initial -> emit(Loading)
-            migrationState is Migrating -> emit(
+            migrationState is Migrating
+                    || migrationState is Successful && !continueClicked -> emit(
                     Welcome(
-                            userAvatarUrl = resizeAvatarUrl(migrationState.avatarUrl),
+                            userAvatarUrl = resizeAvatarUrl(migrationState.data.avatarUrl),
                             isProcessing = continueClicked,
-                            sites = migrationState.sites.map(::siteUiFromModel),
+                            sites = migrationState.data.sites.map(::siteUiFromModel),
                             primaryActionButton = WelcomePrimaryButton(::onContinueClicked),
                             secondaryActionButton = WelcomeSecondaryButton(::onHelpClicked),
                     )

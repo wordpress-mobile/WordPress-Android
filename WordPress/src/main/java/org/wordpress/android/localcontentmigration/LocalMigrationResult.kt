@@ -72,31 +72,33 @@ fun LocalMigrationResult<LocalContentEntityData, LocalMigrationError>.emitTo(
 private fun emitDataToFlow(data: LocalContentEntityData, flow: MutableStateFlow<LocalMigrationState>) {
     if (flow.value is Initial) {
         when (data) {
-            is AccessTokenData -> flow.value = Migrating(avatarUrl = data.avatarUrl)
-            is SitesData -> flow.value = Migrating(sites = data.sites)
+            is AccessTokenData -> flow.value = Migrating(WelcomeScreenData(avatarUrl = data.avatarUrl))
+            is SitesData -> flow.value = Migrating(WelcomeScreenData(sites = data.sites))
             else -> Unit
         }
     } else {
         when (data) {
             is AccessTokenData -> (flow.value as? Migrating)?.let { currentState ->
-                flow.value = currentState.copy(avatarUrl = data.avatarUrl)
+                flow.value = Migrating(currentState.data.copy(avatarUrl = data.avatarUrl))
             }
             is SitesData -> (flow.value as? Migrating)?.let { currentState ->
-                flow.value = currentState.copy(sites = data.sites)
+                flow.value = Migrating(currentState.data.copy(sites = data.sites))
             }
             else -> Unit
         }
     }
 }
 
-sealed class LocalMigrationState {
+data class WelcomeScreenData(
+    val avatarUrl: String = "",
+    val sites: List<SiteModel> = emptyList(),
+)
+
+sealed class LocalMigrationState(val data: WelcomeScreenData = WelcomeScreenData()) {
     object Initial: LocalMigrationState()
-    data class Migrating(
-        val avatarUrl: String = "",
-        val sites: List<SiteModel> = emptyList(),
-    ): LocalMigrationState()
-    sealed class Finished: LocalMigrationState() {
-        object Successful: Finished()
+    class Migrating(data: WelcomeScreenData): LocalMigrationState(data)
+    sealed class Finished(data: WelcomeScreenData = WelcomeScreenData()): LocalMigrationState(data) {
+        class Successful(data: WelcomeScreenData): Finished(data)
         object Ineligible: Finished()
         data class Failure(val error: LocalMigrationError): Finished()
     }
