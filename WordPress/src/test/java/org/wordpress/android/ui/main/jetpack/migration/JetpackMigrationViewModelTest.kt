@@ -8,6 +8,7 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
+import org.wordpress.android.localcontentmigration.ContentMigrationAnalyticsTracker
 import org.wordpress.android.localcontentmigration.MigrationEmailHelper
 import org.wordpress.android.sharedlogin.resolver.LocalMigrationOrchestrator
 import org.wordpress.android.test
@@ -38,6 +39,7 @@ class JetpackMigrationViewModelTest : BaseUnitTest() {
     private val localMigrationOrchestrator: LocalMigrationOrchestrator = mock()
     private val migrationEmailHelper: MigrationEmailHelper = mock()
     private val preventDuplicateNotifsFeatureConfig: PreventDuplicateNotifsFeatureConfig = mock()
+    private val contentMigrationAnalyticsTracker: ContentMigrationAnalyticsTracker = mock()
     private val contextProvider: ContextProvider = mock()
     private val classToTest = JetpackMigrationViewModel(
             siteUtilsWrapper = siteUtilsWrapper,
@@ -46,7 +48,8 @@ class JetpackMigrationViewModelTest : BaseUnitTest() {
             preventDuplicateNotifsFeatureConfig = preventDuplicateNotifsFeatureConfig,
             appPrefsWrapper = appPrefsWrapper,
             localMigrationOrchestrator = localMigrationOrchestrator,
-            migrationEmailHelper = migrationEmailHelper
+            migrationEmailHelper = migrationEmailHelper,
+            contentMigrationAnalyticsTracker = contentMigrationAnalyticsTracker,
     )
 
     // region ViewModel
@@ -63,6 +66,7 @@ class JetpackMigrationViewModelTest : BaseUnitTest() {
                 sites = emptyList(),
                 primaryActionButton = WelcomePrimaryButton {},
                 secondaryActionButton = WelcomeSecondaryButton {},
+                onAvatarClicked = {},
         )
         val actual = welcomeContent.userAvatarUrl
         val expected = ""
@@ -75,6 +79,7 @@ class JetpackMigrationViewModelTest : BaseUnitTest() {
                 sites = emptyList(),
                 primaryActionButton = WelcomePrimaryButton {},
                 secondaryActionButton = WelcomeSecondaryButton {},
+                onAvatarClicked = {},
         )
         val actual = welcomeContent.isProcessing
         val expected = false
@@ -87,6 +92,7 @@ class JetpackMigrationViewModelTest : BaseUnitTest() {
                 sites = emptyList(),
                 primaryActionButton = WelcomePrimaryButton {},
                 secondaryActionButton = WelcomeSecondaryButton {},
+                onAvatarClicked = {},
         )
         val actual = welcomeContent.screenIconRes
         val expected = R.drawable.ic_wordpress_jetpack_logo
@@ -99,6 +105,7 @@ class JetpackMigrationViewModelTest : BaseUnitTest() {
                 sites = emptyList(),
                 primaryActionButton = WelcomePrimaryButton {},
                 secondaryActionButton = WelcomeSecondaryButton {},
+                onAvatarClicked = {},
         )
         val actual = welcomeContent.title
         val expected = UiStringRes(R.string.jp_migration_welcome_title)
@@ -111,6 +118,7 @@ class JetpackMigrationViewModelTest : BaseUnitTest() {
                 sites = emptyList(),
                 primaryActionButton = WelcomePrimaryButton {},
                 secondaryActionButton = WelcomeSecondaryButton {},
+                onAvatarClicked = {},
         )
         val actual = welcomeContent.subtitle
         val expected = UiStringRes(R.string.jp_migration_welcome_subtitle)
@@ -126,6 +134,7 @@ class JetpackMigrationViewModelTest : BaseUnitTest() {
                 ),
                 primaryActionButton = WelcomePrimaryButton {},
                 secondaryActionButton = WelcomeSecondaryButton {},
+                onAvatarClicked = {},
         )
         val actual = welcomeContent.message
         val expected = UiStringRes(R.string.jp_migration_welcome_sites_found_message)
@@ -138,6 +147,7 @@ class JetpackMigrationViewModelTest : BaseUnitTest() {
                 sites = listOf(SiteListItemUiState(123L, "name", "url", "iconUrl")),
                 primaryActionButton = WelcomePrimaryButton {},
                 secondaryActionButton = WelcomeSecondaryButton {},
+                onAvatarClicked = {},
         )
         val actual = welcomeContent.message
         val expected = UiStringRes(R.string.jp_migration_welcome_site_found_message)

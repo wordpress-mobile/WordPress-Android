@@ -48,6 +48,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartExistingSiteT
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
+import org.wordpress.android.localcontentmigration.ContentMigrationAnalyticsTracker
 import org.wordpress.android.test
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
@@ -184,6 +185,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var buildConfigWrapper: BuildConfigWrapper
     @Mock lateinit var mySiteDashboardTabsFeatureConfig: MySiteDashboardTabsFeatureConfig
     @Mock lateinit var bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig
+    @Mock lateinit var contentMigrationAnalyticsTracker: ContentMigrationAnalyticsTracker
     @Mock lateinit var jetpackBrandingUtils: JetpackBrandingUtils
     @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
     @Mock lateinit var bloggingPromptsCardAnalyticsTracker: BloggingPromptsCardAnalyticsTracker
@@ -393,6 +395,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 appPrefsWrapper,
                 bloggingPromptsCardAnalyticsTracker,
                 quickStartTracker,
+                contentMigrationAnalyticsTracker,
                 dispatcher,
                 appStatus,
                 wordPressPublicData
@@ -2248,6 +2251,20 @@ class MySiteViewModelTest : BaseUnitTest() {
         assertThat((getSiteMenuTabLastItems()[0] as SingleActionCard).imageResource).isEqualTo(expected)
         assertThat((getLastItems()[0] as SingleActionCard).imageResource).isEqualTo(expected)
         assertThat((getDashboardTabLastItems()[0] as SingleActionCard).imageResource).isEqualTo(expected)
+    }
+
+    @Test
+    fun `JP migration scuccess card click should be tracked`() {
+        val packageName = "packageName"
+        whenever(wordPressPublicData.currentPackageId()).thenReturn(packageName)
+        whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
+        whenever(appPrefsWrapper.isJetpackMigrationCompleted()).thenReturn(true)
+        whenever(appStatus.isAppInstalled(packageName)).thenReturn(true)
+        initSelectedSite()
+
+        (getSiteMenuTabLastItems()[0] as SingleActionCard).onActionClick.invoke()
+
+        verify(contentMigrationAnalyticsTracker).trackPleaseDeleteWordPressCardTapped()
     }
 
     @InternalCoroutinesApi
