@@ -140,6 +140,7 @@ class JetpackMigrationViewModel @Inject constructor(
     )
 
     private fun onContinueClicked() {
+        contentMigrationAnalyticsTracker.trackWelcomeScreenContinueButtonTapped()
         continueClickedFlow.value = true
     }
 
