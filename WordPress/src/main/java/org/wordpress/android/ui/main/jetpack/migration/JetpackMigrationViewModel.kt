@@ -114,11 +114,14 @@ class JetpackMigrationViewModel @Inject constructor(
                             )
                     )
                 }
-                else -> emit(
-                        Done(
-                                primaryActionButton = DonePrimaryButton(::onDoneClicked)
-                        )
-                )
+                else -> {
+                    contentMigrationAnalyticsTracker.trackThanksScreenShown()
+                    emit(
+                            Done(
+                                    primaryActionButton = DonePrimaryButton(::onDoneClicked)
+                            )
+                    )
+                }
             }
             migrationState is Failure -> emit(
                     UiState.Error(
