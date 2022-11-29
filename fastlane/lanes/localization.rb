@@ -162,7 +162,7 @@ platform :android do
   # @option [Boolean] skip_release_notes If set to true, will not download release notes. Defaults to `false`. This can be useful when all you want to download
   #         is screenshots translations and metadata not linked to a specific version (in which case `version` and `build_number` parameters are optional).
   # @option [Boolean] skip_commit If set to true, will skip the `git add`, `git commit` and `git push` operations. Default to false.
-  # @option [Boolean] skip_git_push If set to true, will skip the `git push` at the end. Default to false. Infered to `true` if `skip_commit` is `true`.
+  # @option [Boolean] skip_git_push If set to true, will skip the `git push` at the end. Default to false. Inferred to `true` if `skip_commit` is `true`.
   #
   desc 'Downloads translated metadata from GlotPress'
   lane :download_metadata_strings do |options|
