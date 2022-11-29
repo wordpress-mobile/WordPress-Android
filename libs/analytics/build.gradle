@@ -14,12 +14,12 @@ repositories {
 }
 
 dependencies {
-    implementation "androidx.preference:preference:$preferenceVersion"
-
-    implementation "com.automattic:Automattic-Tracks-Android:$tracksVersion"
+    implementation "com.automattic:Automattic-Tracks-Android:$automatticTracksVersion"
     implementation "org.wordpress:utils:$wordPressUtilsVersion"
 
-    lintChecks 'org.wordpress:lint:1.1.0'
+    implementation "androidx.preference:preference:$androidxPreferenceVersion"
+
+    lintChecks "org.wordpress:lint:$wordPressLintVersion"
 }
 
 android {
