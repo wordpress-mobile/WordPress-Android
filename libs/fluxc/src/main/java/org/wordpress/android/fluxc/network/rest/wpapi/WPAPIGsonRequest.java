@@ -8,6 +8,9 @@ import com.android.volley.toolbox.HttpHeaderParser;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.fluxc.network.rest.GsonRequest;
+import org.wordpress.android.fluxc.store.AccountStore.AuthenticateErrorPayload;
+import org.wordpress.android.fluxc.store.AccountStore.AuthenticationError;
+import org.wordpress.android.fluxc.store.AccountStore.AuthenticationErrorType;
 import org.wordpress.android.util.AppLog;
 
 import java.io.UnsupportedEncodingException;
@@ -49,6 +52,22 @@ public class WPAPIGsonRequest<T> extends GsonRequest<T> {
                 }
             } catch (UnsupportedEncodingException | JSONException e) {
                 AppLog.w(AppLog.T.API, e.toString());
+            }
+
+            if (errorCode == null) {
+                errorCode = "";
+            }
+
+            AuthenticationError authenticationError = null;
+            if (error.volleyError.networkResponse.statusCode == 401) {
+                authenticationError =
+                        new AuthenticationError(AuthenticationErrorType.AUTHORIZATION_REQUIRED, errorCode);
+            } else if (error.volleyError.networkResponse.statusCode == 403) {
+                authenticationError = new AuthenticationError(AuthenticationErrorType.NOT_AUTHENTICATED, errorCode);
+            }
+
+            if (authenticationError != null) {
+                mOnAuthFailedListener.onAuthFailed(new AuthenticateErrorPayload(authenticationError));
             }
         }
 
