@@ -8,17 +8,76 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseO
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseThree
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseTwo
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
+import org.wordpress.android.ui.utils.UiString.UiStringText
 import javax.inject.Inject
 
 class JetpackFeatureOverlayContentBuilder @Inject constructor() {
     fun build(params: JetpackFeatureOverlayContentBuilderParams): JetpackFeatureOverlayUIState {
         return when (params.currentPhase) {
             is PhaseOne -> getStateForPhaseOne(params, params.feature!!)
-            PhaseTwo -> TODO()
+            PhaseTwo -> getStateForPhaseTwo(params)
             PhaseThree -> TODO()
             PhaseFour -> TODO()
             PhaseNewUsers -> TODO()
         }
+    }
+
+    private fun getStateForPhaseTwo(
+        params: JetpackFeatureOverlayContentBuilderParams,
+    ): JetpackFeatureOverlayUIState {
+        val componentVisibility = JetpackFeatureOverlayComponentVisibility.PhaseTwo()
+        val content = when (params.feature!!) {
+            JetpackFeatureOverlayScreenType.STATS -> getStateForPhaseTwoStats(params)
+            JetpackFeatureOverlayScreenType.NOTIFICATIONS -> getStateForPhaseTwoNotifications(params)
+            JetpackFeatureOverlayScreenType.READER -> getStateForPhaseTwoReader(params)
+        }
+        return JetpackFeatureOverlayUIState(componentVisibility, content)
+    }
+
+    private fun getStateForPhaseTwoStats(
+        params: JetpackFeatureOverlayContentBuilderParams
+    ): JetpackFeatureOverlayContent {
+        return JetpackFeatureOverlayContent(
+                illustration = if (params.isRtl) R.raw.jp_stats_rtl else R.raw.jp_stats_left,
+                title = R.string.wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats,
+                caption = UiStringResWithParams(
+                        R.string.wp_jetpack_feature_removal_overlay_phase_two_and_three_description,
+                        listOf(UiStringText(params.phaseDeadline))
+                ),
+                primaryButtonText = R.string.wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app,
+                secondaryButtonText = R.string.wp_jetpack_continue_to_stats
+        )
+    }
+
+    private fun getStateForPhaseTwoReader(
+        params: JetpackFeatureOverlayContentBuilderParams
+    ): JetpackFeatureOverlayContent {
+        return JetpackFeatureOverlayContent(
+                illustration = if (params.isRtl) R.raw.jp_reader_rtl else R.raw.jp_reader_left,
+                title = R.string.wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader,
+                caption = UiStringResWithParams(
+                        R.string.wp_jetpack_feature_removal_overlay_phase_two_and_three_description,
+                        listOf(UiStringText(params.phaseDeadline))
+                ),
+                primaryButtonText = R.string.wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app,
+                secondaryButtonText = R.string.wp_jetpack_continue_to_reader
+        )
+    }
+
+    private fun getStateForPhaseTwoNotifications(
+        params: JetpackFeatureOverlayContentBuilderParams
+    ): JetpackFeatureOverlayContent {
+        return JetpackFeatureOverlayContent(
+                illustration = if (params.isRtl) R.raw.jp_notifications_rtl else R.raw.jp_notifications_left,
+                title = R.string.wp_jetpack_feature_removal_overlay_phase_two_and_three_title_notifications,
+                caption = UiStringResWithParams(
+                        R.string.wp_jetpack_feature_removal_overlay_phase_two_and_three_description,
+                        listOf(UiStringText(params.phaseDeadline))
+                ),
+                primaryButtonText = R.string.wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app,
+                secondaryButtonText = R.string.wp_jetpack_continue_to_notifications
+        )
     }
 
     private fun getStateForPhaseOne(
@@ -107,7 +166,9 @@ class JetpackFeatureOverlayContentBuilder @Inject constructor() {
         )
     }
 
-    fun buildDeepLinkOverlayState(isRtl: Boolean): JetpackFeatureOverlayUIState { return getStateForDeepLink(isRtl) }
+    fun buildDeepLinkOverlayState(isRtl: Boolean): JetpackFeatureOverlayUIState {
+        return getStateForDeepLink(isRtl)
+    }
 
     private fun getStateForDeepLink(isRtl: Boolean): JetpackFeatureOverlayUIState {
         val componentVisibility = JetpackFeatureOverlayComponentVisibility
@@ -130,6 +191,7 @@ class JetpackFeatureOverlayContentBuilder @Inject constructor() {
 data class JetpackFeatureOverlayContentBuilderParams(
     val currentPhase: JetpackFeatureRemovalPhase,
     val isRtl: Boolean = true,
-    val feature: JetpackFeatureOverlayScreenType?
+    val feature: JetpackFeatureOverlayScreenType?,
+    val phaseDeadline: String = "December 1, 2022"
 )
 
