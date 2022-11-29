@@ -126,15 +126,18 @@ class JetpackMigrationViewModel @Inject constructor(
                     )
                 }
             }
-            migrationState is Failure -> emit(
-                    UiState.Error(
-                            primaryActionButton = ErrorPrimaryButton(::onTryAgainClicked),
-                            secondaryActionButton = ErrorSecondaryButton {
-                                onHelpClicked(source = HelpButtonSource.Error)
-                            },
-                            type = Generic,
-                    )
-            )
+            migrationState is Failure -> {
+                contentMigrationAnalyticsTracker.trackErrorScreenShown()
+                emit(
+                        UiState.Error(
+                                primaryActionButton = ErrorPrimaryButton(::onTryAgainClicked),
+                                secondaryActionButton = ErrorSecondaryButton {
+                                    onHelpClicked(source = HelpButtonSource.Error)
+                                },
+                                type = Generic,
+                        )
+                )
+            }
             else -> Unit
         }
     }
