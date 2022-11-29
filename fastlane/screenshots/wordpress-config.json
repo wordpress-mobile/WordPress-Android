@@ -5,18 +5,6 @@
 	"stylesheet": "screenshots/assets/style.css",
 	"devices": [
 		{
-			"name": "Pixel 2 XL",
-			"canvas_size": [1080,1920],
-			"text_size": [1024, 319],
-			"text_offset": [0, 0],
-			"font_size": "70px",
-			"screenshot_size": [740, 1480],
-			"screenshot_offset": [170, 440],
-			"device_frame": "screenshots/assets/pixel-2-xl.svg",
-			"device_frame_size": [833, 1708],
-			"device_frame_offset": [124, 317]
-		},
-		{
 			"name": "Pixel 3",
 			"canvas_size": [1080,1920],
 			"text_size": [750,350],
