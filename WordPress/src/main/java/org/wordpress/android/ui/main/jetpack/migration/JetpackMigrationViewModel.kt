@@ -89,15 +89,18 @@ class JetpackMigrationViewModel @Inject constructor(
             }
             migrationState is Initial -> emit(Loading)
             migrationState is Migrating
-                    || migrationState is Successful && !continueClicked -> emit(
-                    Welcome(
-                            userAvatarUrl = resizeAvatarUrl(migrationState.data.avatarUrl),
-                            isProcessing = continueClicked,
-                            sites = migrationState.data.sites.map(::siteUiFromModel),
-                            primaryActionButton = WelcomePrimaryButton(::onContinueClicked),
-                            secondaryActionButton = WelcomeSecondaryButton(::onHelpClicked),
-                    )
-            )
+                    || migrationState is Successful && !continueClicked -> {
+                contentMigrationAnalyticsTracker.trackWelcomeScreenShown()
+                emit(
+                        Welcome(
+                                userAvatarUrl = resizeAvatarUrl(migrationState.data.avatarUrl),
+                                isProcessing = continueClicked,
+                                sites = migrationState.data.sites.map(::siteUiFromModel),
+                                primaryActionButton = WelcomePrimaryButton(::onContinueClicked),
+                                secondaryActionButton = WelcomeSecondaryButton(::onHelpClicked),
+                        )
+                )
+                    }
             migrationState is Successful && continueClicked -> when {
                 !notificationContinueClicked -> emit(
                         Notifications(
