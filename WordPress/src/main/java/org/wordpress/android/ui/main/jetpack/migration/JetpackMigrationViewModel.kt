@@ -39,7 +39,6 @@ import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Content.Notifications
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Content.Welcome
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Error.Generic
-import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Error.Networking
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Loading
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.utils.UiString
@@ -142,26 +141,6 @@ class JetpackMigrationViewModel @Inject constructor(
     private fun onContinueClicked() {
         contentMigrationAnalyticsTracker.trackWelcomeScreenContinueButtonTapped()
         continueClickedFlow.value = true
-    }
-
-    @Suppress("ForbiddenComment", "unused")
-    private fun postGenericErrorState() {
-        // TODO: Call this method when migration fails with generic error
-        _uiState.value = UiState.Error(
-                primaryActionButton = ErrorPrimaryButton(::onTryAgainClicked),
-                secondaryActionButton = ErrorSecondaryButton(::onHelpClicked),
-                type = Generic,
-        )
-    }
-
-    @Suppress("ForbiddenComment", "unused")
-    private fun postNetworkingErrorState() {
-        // TODO: Call this method when migration fails with networking error
-        _uiState.value = UiState.Error(
-                primaryActionButton = ErrorPrimaryButton(::onTryAgainClicked),
-                secondaryActionButton = ErrorSecondaryButton(::onHelpClicked),
-                type = Networking,
-        )
     }
 
     private fun onTryAgainClicked() {
