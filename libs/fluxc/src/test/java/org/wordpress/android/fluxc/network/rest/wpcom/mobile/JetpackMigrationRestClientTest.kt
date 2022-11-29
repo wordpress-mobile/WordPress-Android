@@ -9,6 +9,7 @@ import org.junit.Assert.fail
 import org.junit.Before
 import org.junit.Test
 import org.mockito.kotlin.KArgumentCaptor
+import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.isNull
@@ -87,7 +88,8 @@ class JetpackMigrationRestClientTest {
                         eq(mapOf()),
                         eq(mapOf()),
                         eq(JsonElement::class.java),
-                        isNull()
+                        isNull(),
+                        anyOrNull(),
                 )
         ).thenReturn(expectedRestCallResponse)
 
