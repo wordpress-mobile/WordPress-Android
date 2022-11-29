@@ -7,6 +7,7 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseN
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseOne
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseThree
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseTwo
+import org.wordpress.android.ui.utils.UiString.UiStringRes
 import javax.inject.Inject
 
 class JetpackFeatureOverlayContentBuilder @Inject constructor() {
@@ -37,7 +38,7 @@ class JetpackFeatureOverlayContentBuilder @Inject constructor() {
         return JetpackFeatureOverlayContent(
                 illustration = if (rtl) R.raw.jp_stats_rtl else R.raw.jp_stats_left,
                 title = R.string.wp_jetpack_feature_removal_overlay_phase_one_title_stats,
-                caption = R.string.wp_jetpack_feature_removal_overlay_phase_one_description_stats,
+                caption = UiStringRes(R.string.wp_jetpack_feature_removal_overlay_phase_one_description_stats),
                 primaryButtonText = R.string.wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app,
                 secondaryButtonText = R.string.wp_jetpack_continue_to_stats
         )
@@ -47,7 +48,7 @@ class JetpackFeatureOverlayContentBuilder @Inject constructor() {
         return JetpackFeatureOverlayContent(
                 illustration = if (rtl) R.raw.jp_reader_rtl else R.raw.jp_reader_left,
                 title = R.string.wp_jetpack_feature_removal_overlay_phase_one_title_reader,
-                caption = R.string.wp_jetpack_feature_removal_overlay_phase_one_description_reader,
+                caption = UiStringRes(R.string.wp_jetpack_feature_removal_overlay_phase_one_description_reader),
                 primaryButtonText = R.string.wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app,
                 secondaryButtonText = R.string.wp_jetpack_continue_to_reader
         )
@@ -57,7 +58,7 @@ class JetpackFeatureOverlayContentBuilder @Inject constructor() {
         return JetpackFeatureOverlayContent(
                 illustration = if (rtl) R.raw.jp_notifications_rtl else R.raw.jp_notifications_left,
                 title = R.string.wp_jetpack_feature_removal_overlay_phase_one_title_notifications,
-                caption = R.string.wp_jetpack_feature_removal_overlay_phase_one_description_notifications,
+                caption = UiStringRes(R.string.wp_jetpack_feature_removal_overlay_phase_one_description_notifications),
                 primaryButtonText = R.string.wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app,
                 secondaryButtonText = R.string.wp_jetpack_continue_to_notifications
         )
@@ -84,7 +85,7 @@ class JetpackFeatureOverlayContentBuilder @Inject constructor() {
         return JetpackFeatureOverlayContent(
                 illustration = if (rtl) R.raw.wp2jp_rtl else R.raw.wp2jp_left,
                 title = R.string.wp_jetpack_feature_removal_site_creation_overlay_title,
-                caption = R.string.wp_jetpack_feature_removal_site_creation_overlay_phase_one_description,
+                caption = UiStringRes(R.string.wp_jetpack_feature_removal_site_creation_overlay_phase_one_description),
                 primaryButtonText = R.string.wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app,
                 secondaryButtonText = R.string.wp_jetpack_continue_without_jetpack
         )
@@ -101,7 +102,7 @@ class JetpackFeatureOverlayContentBuilder @Inject constructor() {
         return JetpackFeatureOverlayContent(
                 illustration = if (rtl) R.raw.wp2jp_rtl else R.raw.wp2jp_left,
                 title = R.string.wp_jetpack_feature_removal_site_creation_overlay_title,
-                caption = R.string.wp_jetpack_feature_removal_site_creation_overlay_phase_two_description,
+                caption = UiStringRes(R.string.wp_jetpack_feature_removal_site_creation_overlay_phase_two_description),
                 primaryButtonText = R.string.wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app,
         )
     }
@@ -119,7 +120,7 @@ class JetpackFeatureOverlayContentBuilder @Inject constructor() {
         return JetpackFeatureOverlayContent(
                 illustration = if (rtl) R.raw.wp2jp_rtl else R.raw.wp2jp_left,
                 title = R.string.wp_jetpack_deep_link_overlay_title,
-                caption = R.string.wp_jetpack_deep_link_overlay_description,
+                caption = UiStringRes(R.string.wp_jetpack_deep_link_overlay_description),
                 primaryButtonText = R.string.wp_jetpack_deep_link_open_in_jetpack,
                 secondaryButtonText = R.string.wp_jetpack_deep_link_open_in_wordpress
         )

@@ -20,6 +20,7 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureOverlayActions.Open
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureOverlayScreenType
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource.UNSPECIFIED
+import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.RtlUtils
 import org.wordpress.android.util.extensions.exhaustive
 import org.wordpress.android.util.extensions.setVisible
@@ -28,9 +29,11 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class JetpackFeatureFullScreenOverlayFragment : BottomSheetDialogFragment() {
     @Inject lateinit var activityLauncherWrapper: ActivityLauncherWrapper
-    private val viewModel: JetpackFeatureFullScreenOverlayViewModel by activityViewModels()
+    @Inject lateinit var uiHelpers: UiHelpers
 
+    private val viewModel: JetpackFeatureFullScreenOverlayViewModel by activityViewModels()
     private var _binding: JetpackFeatureRemovalOverlayBinding? = null
+
     private val binding get() = _binding ?: throw NullPointerException("_binding cannot be null")
 
     override fun onCreateView(
@@ -148,7 +151,7 @@ class JetpackFeatureFullScreenOverlayFragment : BottomSheetDialogFragment() {
             illustrationView.setAnimation(it.illustration)
             illustrationView.playAnimation()
             title.text = getString(it.title)
-            caption.text = getString(it.caption)
+            uiHelpers.setTextOrHide(caption,it.caption)
             primaryButton.text = getString(it.primaryButtonText)
             it.secondaryButtonText?.let { secondaryButton.text = getString(it) }
         }
