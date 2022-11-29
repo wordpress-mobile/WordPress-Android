@@ -70,7 +70,6 @@ import org.wordpress.android.push.GCMRegistrationIntentService;
 import org.wordpress.android.push.NativeNotificationsUtils;
 import org.wordpress.android.push.NotificationType;
 import org.wordpress.android.push.NotificationsProcessingService;
-import org.wordpress.android.sharedlogin.resolver.LocalMigrationOrchestrator;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.JetpackConnectionSource;
@@ -87,6 +86,7 @@ import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboar
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsReminderSchedulerListener;
 import org.wordpress.android.ui.bloggingreminders.BloggingReminderUtils;
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel;
+import org.wordpress.android.ui.deeplinks.DeepLinkOpenWebLinksWithJetpackHelper;
 import org.wordpress.android.ui.main.WPMainNavigationView.OnPageListener;
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType;
 import org.wordpress.android.ui.mlp.ModalLayoutPickerFragment;
@@ -140,11 +140,11 @@ import org.wordpress.android.util.QuickStartUtilsWrapper;
 import org.wordpress.android.util.ShortcutUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.service.InstallationReferrerServiceStarter;
 import org.wordpress.android.util.config.MySiteDashboardTodaysStatsCardFeatureConfig;
+import org.wordpress.android.util.config.OpenWebLinksWithJetpackFlowFeatureConfig;
 import org.wordpress.android.util.extensions.ViewExtensionsKt;
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel;
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel.FocusPointInfo;
@@ -258,9 +258,10 @@ public class WPMainActivity extends LocaleAwareActivity implements
     @Inject WeeklyRoundupScheduler mWeeklyRoundupScheduler;
     @Inject MySiteDashboardTodaysStatsCardFeatureConfig mTodaysStatsCardFeatureConfig;
     @Inject QuickStartTracker mQuickStartTracker;
-    @Inject LocalMigrationOrchestrator mLocalMigrationOrchestrator;
     @Inject BloggingRemindersResolver mBloggingRemindersResolver;
     @Inject JetpackAppMigrationFlowUtils mJetpackAppMigrationFlowUtils;
+    @Inject DeepLinkOpenWebLinksWithJetpackHelper mDeepLinkOpenWebLinksWithJetpackHelper;
+    @Inject OpenWebLinksWithJetpackFlowFeatureConfig mOpenWebLinksWithJetpackFlowFeatureConfig;
 
     @Inject BuildConfigWrapper mBuildConfigWrapper;
 
@@ -398,8 +399,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
             }
         }
 
-        // ensure the deep linking activity is enabled. It may have been disabled elsewhere and failed to get re-enabled
-        WPActivityUtils.enableReaderDeeplinks(this);
+        // Ensure deep linking activities are enabled.They may have been disabled elsewhere and failed to get re-enabled
+        enableDeepLinkingComponentsIfNeeded();
 
         // monitor whether we're not the default app
         trackDefaultApp();
@@ -461,11 +462,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
             initSelectedSite();
         }
 
-        if (mBuildConfigWrapper.isJetpackApp()) {
-            mLocalMigrationOrchestrator.tryLocalMigration();
-        }
-
-        // TODO: this is temporary to enable testing the migration flow UI
         if (mJetpackAppMigrationFlowUtils.shouldShowMigrationFlow()) {
             mJetpackAppMigrationFlowUtils.startJetpackMigrationFlow();
         }
@@ -530,7 +526,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
     private void scheduleLocalNotifications() {
         mCreateSiteNotificationScheduler.scheduleCreateSiteNotificationIfNeeded();
-        mWeeklyRoundupScheduler.schedule();
+        mWeeklyRoundupScheduler.scheduleIfNeeded();
     }
 
     @Override
@@ -936,7 +932,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
         // ensure the deep linking activity is enabled. We might be returning from the external-browser
         // viewing of a post
-        WPActivityUtils.enableReaderDeeplinks(this);
+        enableDeepLinkingComponentsIfNeeded();
 
         // We need to track the current item on the screen when this activity is resumed.
         // Ex: Notifications -> notifications detail -> back to notifications
@@ -1491,6 +1487,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     private void handleSiteRemoved() {
         mViewModel.handleSiteRemoved();
         if (!mViewModel.isSignedInWPComOrHasWPOrgSite()) {
+            mDeepLinkOpenWebLinksWithJetpackHelper.reset();
             showSignInForResultBasedOnIsJetpackAppBuildConfig(this);
             return;
         }
@@ -1720,5 +1717,16 @@ public class WPMainActivity extends LocaleAwareActivity implements
         super.onPause();
 
         QuickStartUtils.removeQuickStartFocusPoint(findViewById(R.id.root_view_main));
+    }
+
+    private void enableDeepLinkingComponentsIfNeeded() {
+        if (mOpenWebLinksWithJetpackFlowFeatureConfig.isEnabled()) {
+            if (!AppPrefs.getIsOpenWebLinksWithJetpack()) {
+                mDeepLinkOpenWebLinksWithJetpackHelper.enableDeepLinks();
+            }
+        } else {
+            // re-enable all deep linking components
+            mDeepLinkOpenWebLinksWithJetpackHelper.enableDeepLinks();
+        }
     }
 }

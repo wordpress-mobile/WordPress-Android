@@ -1,1 +1,8 @@
-If you already have site stats enabled, you won’t see a prompt to enable them again when you tap the stats widget on your device’s home screen. Nice.
+* [***] Adds a smooth, opt-in transition to the Jetpack app. [https://github.com/wordpress-mobile/WordPress-Android/pull/17538]
+* [*] [Jetpack-only] The the QR code scanning flow screens are now translated in the app language. [https://github.com/wordpress-mobile/WordPress-Android/pull/17533]
+* [*] Disable local notifications with Notification Settings switch. [https://github.com/wordpress-mobile/WordPress-Android/pull/17496]
+* [*] [Jetpack-only] Comments: fix a crash in My Site > Comments with Jetpack standalone plugins. [https://github.com/wordpress-mobile/WordPress-Android/pull/17456]
+* [*] [internal] Fix an issue preventing the text and button on the 'WordPress is Better with Jetpack' overlay to be entirely visible with big fonts. [https://github.com/wordpress-mobile/WordPress-Android/pull/17503]
+* [***] [internal] Disable notifications on WP in migration flow when JP app is installed, behind a feature flag. [https://github.com/wordpress-mobile/WordPress-Android/pull/17513 and https://github.com/wordpress-mobile/WordPress-Android/pull/17371]
+* [*] [internal] Avoid truncation of the 'Try the new Jetpack app' button text on the Jetpack Powered bottom sheets with big fonts. [https://github.com/wordpress-mobile/WordPress-Android/pull/17511]
+

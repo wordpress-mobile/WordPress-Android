@@ -1,6 +1,9 @@
 package org.wordpress.android.ui.deeplinks
 
+import android.content.pm.PackageManager
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.FirebaseRemoteConfigWrapper
@@ -9,6 +12,7 @@ import org.wordpress.android.util.config.OpenWebLinksWithJetpackFlowFeatureConfi
 import java.util.Date
 import javax.inject.Inject
 
+@Suppress("TooManyFunctions")
 class DeepLinkOpenWebLinksWithJetpackHelper @Inject constructor(
     private val openWebLinksWithJetpackFlowFeatureConfig: OpenWebLinksWithJetpackFlowFeatureConfig,
     private val appPrefsWrapper: AppPrefsWrapper,
@@ -17,24 +21,53 @@ class DeepLinkOpenWebLinksWithJetpackHelper @Inject constructor(
     private val dateTimeUtilsWrapper: DateTimeUtilsWrapper,
     private val buildConfigWrapper: BuildConfigWrapper
 ) {
-    fun shouldShowDeepLinkOpenWebLinksWithJetpackOverlay() = showOverlay()
+    fun shouldShowOpenLinksInJetpackOverlay() = showOverlay()
 
     fun shouldShowAppSetting(): Boolean {
         return openWebLinksWithJetpackFlowFeatureConfig.isEnabled()
                 && isJetpackInstalled()
     }
 
+    fun enableDeepLinks() {
+        packageManagerWrapper.enableReaderDeeplinks()
+        packageManagerWrapper.enableComponentEnabledSetting(WEB_LINKS_DEEPLINK_ACTIVITY_ALIAS)
+    }
+
+    fun disableDeepLinks() {
+        packageManagerWrapper.disableReaderDeepLinks()
+        packageManagerWrapper.disableComponentEnabledSetting(WEB_LINKS_DEEPLINK_ACTIVITY_ALIAS)
+    }
+
+    fun onJetpackUninstalled() {
+        reset()
+    }
+
+    fun reset() {
+        enableDeepLinks()
+        appPrefsWrapper.setIsOpenWebLinksWithJetpack(false)
+        appPrefsWrapper.setOpenWebLinksWithJetpackOverlayLastShownTimestamp(0L)
+    }
+
+    @Suppress("SwallowedException")
+    fun handleOpenLinksInJetpackIfPossible() : Boolean {
+        try {
+            disableDeepLinks()
+            appPrefsWrapper.setIsOpenWebLinksWithJetpack(true)
+            return true
+        } catch (ex: PackageManager.NameNotFoundException) {
+            AppLog.e(T.UTILS, "Unable to set open web links with Jetpack ${ex.message}")
+        }
+        return false
+    }
+
     private fun showOverlay() : Boolean {
         return openWebLinksWithJetpackFlowFeatureConfig.isEnabled()
                 && isJetpackInstalled()
-                && isWebDeepLinkHandlerComponentEnabled()
+                && !isOpenWebLinksWithJetpack()
                 && isValidOverlayFrequency()
     }
 
     private fun isJetpackInstalled() = packageManagerWrapper.isPackageInstalled(getPackageName())
-
-    private fun isWebDeepLinkHandlerComponentEnabled() =
-        packageManagerWrapper.isComponentEnabledSettingEnabled(DeepLinkingIntentReceiverActivity::class.java)
 
     private fun isValidOverlayFrequency() : Boolean {
         if (!hasOverlayBeenShown()) return true // short circuit if the overlay has never been shown
@@ -58,11 +91,13 @@ class DeepLinkOpenWebLinksWithJetpackHelper @Inject constructor(
     private fun getOpenWebLinksWithJetpackOverlayLastShownTimestamp() =
             appPrefsWrapper.getOpenWebLinksWithJetpackOverlayLastShownTimestamp()
 
+    private fun isOpenWebLinksWithJetpack() = appPrefsWrapper.getIsOpenWebLinksWithJetpack()
+
     private fun getTodaysDate() = Date(System.currentTimeMillis())
 
     private fun getPackageName(): String {
         val appSuffix = buildConfigWrapper.getApplicationId().split(".").last()
-        val appPackage = if (appSuffix.isNotBlank()) {
+        val appPackage = if (appSuffix.isNotBlank() && !appSuffix.equals("ANDROID", ignoreCase = true)) {
             "$JETPACK_PACKAGE_NAME.${appSuffix}"
         } else {
             JETPACK_PACKAGE_NAME
@@ -70,7 +105,13 @@ class DeepLinkOpenWebLinksWithJetpackHelper @Inject constructor(
         return appPackage
     }
 
+    fun onOverlayShown() =
+            appPrefsWrapper.setOpenWebLinksWithJetpackOverlayLastShownTimestamp(System.currentTimeMillis())
+
+
     companion object {
         const val JETPACK_PACKAGE_NAME = "com.jetpack.android"
+        const val WEB_LINKS_DEEPLINK_ACTIVITY_ALIAS =
+                "org.wordpress.android.WebLinksDeepLinkingIntentReceiverActivity"
     }
 }

@@ -1,0 +1,2 @@
+21.2:
+Site istatistiklerini zaten etkinleştirdiyseniz, cihazınızın ana ekranında istatistik bileşenine dokunduğunuzda bunları tekrar etkinleştirmeniz için bir istem görmezsiniz. Güzel.

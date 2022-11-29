@@ -49,6 +49,7 @@ import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.about.UnifiedAboutActivity
 import org.wordpress.android.ui.accounts.HelpActivity.Origin.ME_SCREEN_HELP
+import org.wordpress.android.ui.deeplinks.DeepLinkOpenWebLinksWithJetpackHelper
 import org.wordpress.android.ui.main.MeViewModel.RecommendAppUiState
 import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
@@ -57,6 +58,7 @@ import org.wordpress.android.ui.notifications.utils.NotificationsUtils
 import org.wordpress.android.ui.photopicker.MediaPickerConstants
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.MAIN
@@ -65,6 +67,7 @@ import org.wordpress.android.util.FluxCUtils
 import org.wordpress.android.util.JetpackBrandingUtils
 import org.wordpress.android.util.JetpackBrandingUtils.Screen.ME
 import org.wordpress.android.util.MediaUtils
+import org.wordpress.android.util.PackageManagerWrapper
 import org.wordpress.android.util.SnackbarItem
 import org.wordpress.android.util.SnackbarItem.Info
 import org.wordpress.android.util.SnackbarSequencer
@@ -82,6 +85,7 @@ import java.io.File
 import javax.inject.Inject
 
 @AndroidEntryPoint
+@Suppress("TooManyFunctions")
 class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
     @Suppress("DEPRECATION") private var disconnectProgressDialog: ProgressDialog? = null
     private var isUpdatingGravatar = false
@@ -99,6 +103,8 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
     @Inject lateinit var unifiedAboutFeatureConfig: UnifiedAboutFeatureConfig
     @Inject lateinit var qrCodeAuthFlowFeatureConfig: QRCodeAuthFlowFeatureConfig
     @Inject lateinit var jetpackBrandingUtils: JetpackBrandingUtils
+    @Inject lateinit var packageManagerWrapper: PackageManagerWrapper
+    @Inject lateinit var appPrefsWrapper: AppPrefsWrapper
     private val viewModel: MeViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -423,6 +429,7 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
                         R.string.signout
                 ) { _, _ ->
                     clearNotifications()
+                    enableDeepLinkComponents()
                     signOutWordPressCom()
                 }
                 .setNegativeButton(R.string.cancel, null)
@@ -436,6 +443,14 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
 
     private fun clearNotifications() {
         NotificationsUtils.cancelAllNotifications(requireActivity())
+    }
+
+    private fun enableDeepLinkComponents() {
+        packageManagerWrapper.enableReaderDeeplinks()
+        packageManagerWrapper.enableComponentEnabledSetting(
+                DeepLinkOpenWebLinksWithJetpackHelper.WEB_LINKS_DEEPLINK_ACTIVITY_ALIAS)
+        appPrefsWrapper.setOpenWebLinksWithJetpackOverlayLastShownTimestamp(0L)
+        appPrefsWrapper.setIsOpenWebLinksWithJetpack(false)
     }
 
     @Suppress("DEPRECATION")

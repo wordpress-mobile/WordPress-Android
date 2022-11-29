@@ -1,3 +1,0 @@
-21.1:
-- Noterai una schermata di destinazione nuova di zecca nell'app che risponde al movimento del tuo dispositivo: divertiti!
-- Durante la modifica di una pagina, ora puoi impostare una pagina principale all'interno delle impostazioni della pagina secondaria.

@@ -1,14 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-11-17 10:54:09+0000
+Translation-Revision-Date: 2022-11-25 13:03:19+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: nl
 -->
 <resources>
+    <string name="jp_migration_help_button">Hulp nodig?</string>
+    <string name="jp_migration_continue_button">Doorgaan</string>
     <string name="jp_migration_welcome_site_found_message">We hebben je site gevonden. Ga door met het overdragen van je gegevens en meld je automatisch aan bij Jetpack.</string>
     <string name="jp_migration_welcome_sites_found_message">We hebben je sites gevonden. Ga door met het overdragen van je gegevens en meld je automatisch aan bij Jetpack.</string>
+    <string name="jp_migration_avatar_content_description">Je profielfoto</string>
     <string name="jp_migration_welcome_subtitle">Het lijkt erop dat je vanuit de WordPress-app komt.</string>
+    <string name="jp_migration_welcome_title">Welkom bij Jetpack!</string>
+    <string name="icon_desc">pictogram</string>
     <string name="post_settings_parent">Bovenliggende pagina</string>
     <string name="post_settings_page_attributes">Pagina-eigenschappen</string>
     <string name="about_automattic_contribute_item_title">Bijdragen</string>
@@ -80,7 +85,7 @@ Language: nl
     <string name="stats_action_card_blogging_reminders_message">💡Door regelmatig en consistent berichten te plaatsen, bouw je een publiek op. Stel een herinnering in om op schema te blijven.</string>
     <string name="stats_action_card_grow_audience_message">💡Til je blogervaring sneller naar een hoger niveau met onze door deskundigen geleide cursus &lt;i&gt;Een inleiding tot bloggen&lt;/i&gt;.</string>
     <string name="blogging_prompts_onboarding_prompts_loading">Blogmeldingen worden geladen. Wacht even en probeer het opnieuw.</string>
-    <string name="hpp_bottom_helper_text">kun je niet kiezen? Je kunt op elk moment het thema veranderen.</string>
+    <string name="hpp_bottom_helper_text">Kun je niet kiezen? Je kunt op elk moment het thema veranderen.</string>
     <string name="hpp_recommended_default_vertical">Bloggen</string>
     <string name="hpp_recommended_subtitle">Uitgekozen voor jou</string>
     <string name="hpp_recommended_title">Beste voor %s</string>
@@ -91,7 +96,7 @@ Language: nl
     <string name="my_site_blogging_prompt_card_attribution_dayone">Van </string>
     <string name="stats_follower_types_pie_chart_total_label">Totalen</string>
     <string name="stats_referrers_pie_chart_others">Anderen</string>
-    <string name="stats_referrers_pie_chart_search">zoek</string>
+    <string name="stats_referrers_pie_chart_search">Zoeken</string>
     <string name="stats_referrers_pie_chart_wordpress">WordPress</string>
     <string name="stats_referrers_pie_chart_total_label">Weergaven</string>
     <string name="stats_action_card_schedule_post_button_label">planning</string>
@@ -126,7 +131,7 @@ Language: nl
     <string name="quick_start_dialog_upload_media_message_short_plus">Selecteer het %1$s plusje %2$s om media te uploaden. Je kan vanuit elk apparaat media aan je berichten/pagina\'s toevoegen.</string>
     <string name="quick_start_dialog_follow_sites_message_short_discover">Gebruik &lt;b&gt;Ontdekken&lt;/b&gt; om sites en tags te zoeken.</string>
     <string name="quick_start_dialog_follow_sites_message_short_discover_and_settings">Gebruik &lt;b&gt;Discover&lt;/b&gt; om sites en tags te zoeken. Probeer eens %1$s Instellingen %2$s te selecteren om onderwerpen toe te voegen die je leuk vindt.</string>
-    <string name="photo_picker_video_thumbnail_content_description">Miniatuurafbeelding video</string>
+    <string name="photo_picker_video_thumbnail_content_description">Video thumbnail</string>
     <string name="stats_details_top_commentators">Top commentators</string>
     <string name="stats_insights_total_stats_negative">%1$s minder dan de vorige week</string>
     <string name="stats_insights_total_stats_positive">%1$s meer dan de vorige week</string>
@@ -319,8 +324,8 @@ Language: nl
     <string name="about_automattic_share_with_friends_item_title">Deel met vrienden</string>
     <string name="gutenberg_native_you_can_edit_this_block_using_the_web_version_of_the_editor">Je kunt dit blok openen met de webversie van de editor.</string>
     <string name="gutenberg_native_open_jetpack_security_settings">Open de beveiligingsinstellingen van Jetpack</string>
-    <string name="gutenberg_native_note_you_must_allow_wordpress_com_login_to_edit_this_block_in_the">Opmerking: Je moet WordPress.com-login toestaan om dit blok te kunnen bewerken in de mobiele editor.</string>
-    <string name="gutenberg_native_note_layout_may_vary_between_themes_and_screen_sizes">Opmerking: Lay-out kan verschillen tussen thema\'s en schermgrootten</string>
+    <string name="gutenberg_native_note_you_must_allow_wordpress_com_login_to_edit_this_block_in_the">Opmerking: je moet WordPress.com login toestaan om dit blok te kunnen bewerken in de mobiele editor.</string>
+    <string name="gutenberg_native_note_layout_may_vary_between_themes_and_screen_sizes">Opmerking: lay-out kan verschillen tussen thema\'s en schermgrootten</string>
     <string name="gutenberg_native_address_settings">Adresinstellingen</string>
     <string name="gutenberg_native_add_media">MEDIA TOEVOEGEN</string>
     <string name="my_site_error_card_subtitle">We kunnen de gegevens van je site momenteel niet laden.</string>
@@ -586,7 +591,7 @@ Language: nl
     <string name="gutenberg_native_new">Nieuw</string>
     <string name="gutenberg_native_preview_post">Voorbeeld bericht</string>
     <string name="gutenberg_native_preview_page">Voorbeeld pagina</string>
-    <string name="gutenberg_native_retry">Probeer het opnieuw</string>
+    <string name="gutenberg_native_retry">Opnieuw proberen</string>
     <string name="gutenberg_native_gif">GIF</string>
     <string name="gutenberg_native_one">Eén</string>
     <string name="gutenberg_native_no_preview_available">Geen voorbeeld beschikbaar</string>
@@ -1100,13 +1105,13 @@ Language: nl
     <string name="label_frame_selected_border">geselecteerd</string>
     <string name="label_frame_unselected_border">niet geselecteerd</string>
     <string name="label_frame_image">Slide</string>
-    <string name="label_retry_icon">Probeer opnieuw</string>
+    <string name="label_retry_icon">Opnieuw proberen</string>
     <string name="label_saved_icon">Opgeslagen</string>
     <string name="label_close_button">Sluiten</string>
     <string name="label_share_to">Deel naar</string>
     <string name="label_snackbar_share">DELEN</string>
     <string name="label_snackbar_loop_frame_saved">Opgeslagen naar foto\'s</string>
-    <string name="label_control_retry">Probeer opnieuw</string>
+    <string name="label_control_retry">Opnieuw proberen</string>
     <string name="label_control_saved">Opgeslagen</string>
     <string name="label_control_saving">Opslaan</string>
     <string name="label_control_flash">Flash</string>
@@ -1579,7 +1584,7 @@ Language: nl
     <string name="share_desc">Delen</string>
     <string name="navigate_back_desc">Terugkeren</string>
     <string name="navigate_forward_desc">Doorgaan</string>
-    <string name="calendar_scheduled_post_description">\'%1$s\'\' ingepland voor publicatie op \'%2$s\' in uw %3$s-app \n %4$s</string>
+    <string name="calendar_scheduled_post_description">\'%1$s\'\' ingepland voor publicatie op \'%2$s\' in je %3$s-app \n %4$s</string>
     <string name="calendar_scheduled_post_title">Ingepland WordPress bericht: \"%s\"</string>
     <string name="notification_post_will_be_published_in_ten_minutes">\"%s\" wordt over 10 minuten gepubliceerd</string>
     <string name="notification_post_will_be_published_in_one_hour">\"%s\" wordt over 1 uur gepubliceerd</string>
@@ -1720,7 +1725,7 @@ Language: nl
     <string name="stats_insights_average_words">Gemiddeld aantal woorden per bericht</string>
     <string name="stats_insights_total_words">Totaalaantal woorden</string>
     <string name="stats_insights_average_likes">Gemiddeld aantal vind-ik-leuk per bericht</string>
-    <string name="stats_insights_total_likes">Totaalaantal vind-ik-leuks</string>
+    <string name="stats_insights_total_likes">Totaal aantal vind-ik-leuks</string>
     <string name="stats_insights_average_comments">Gemiddeld aantal reacties per bericht</string>
     <string name="stats_insights_total_comments">Totaalaantal reacties</string>
     <string name="stats_insights_posts">Berichten</string>
@@ -2240,16 +2245,16 @@ Language: nl
     <string name="signup_user_exists">E-mailadres bestaat al op WordPress.com\nDoorgaan met inloggen. </string>
     <string name="signup_updating_account">Account updaten…</string>
     <string name="signup_magic_link_progress">E-mail versturen</string>
-    <string name="signup_magic_link_error_button_positive">Probeer opnieuw</string>
+    <string name="signup_magic_link_error_button_positive">Opnieuw proberen</string>
     <string name="signup_magic_link_error_button_negative">Sluit</string>
     <string name="signup_magic_link_error">Er waren problemen met het versturen van de e-mail. Je kan het nu nog een keer proberen of sluiten en het later nog een keer proberen. </string>
     <string name="signup_epilogue_hint_username">Gebruikersnaam</string>
     <string name="signup_epilogue_hint_password_detail">Je kunt altijd inloggen met de link zoals je die net hebt gebruikt maar je kunt ook een wachtwoord instellen als dat je voorkeur heeft.</string>
     <string name="signup_epilogue_hint_password">Wachtwoord (optioneel)</string>
     <string name="signup_epilogue_hint_display">Weergavenaam</string>
-    <string name="signup_epilogue_error_button_positive">Probeer opnieuw</string>
+    <string name="signup_epilogue_error_button_positive">Opnieuw proberen</string>
     <string name="signup_epilogue_error_button_negative">Terug draaien</string>
-    <string name="signup_epilogue_error_generic">Er waren wat problemen bij het updaten van jouw account. Je kan het opnieuw proberen of je veranderingen terug draaien om door te gaan. </string>
+    <string name="signup_epilogue_error_generic">Er waren wat problemen bij het updaten van jouw account. Je kan het opnieuw proberen of je veranderingen terug draaien om door te gaan.</string>
     <string name="signup_epilogue_error_avatar">Er waren problemen met het uploaden van je avatar.</string>
     <string name="plugin_needs_update">Update nodig </string>
     <string name="plugin_caption_search">Zoek plugins</string>
@@ -2264,7 +2269,7 @@ Language: nl
     <string name="plugin_install">Installeer</string>
     <string name="site_settings_like_header">Leuk vinden</string>
     <string name="my_site_add_new_site">Voeg nieuwe site toe</string>
-    <string name="my_site_create_new_site">Creëer een nieuwe site voor je bedrijf, magazine, persoonlijke blog of verbind een bestaande WordPress installatie. </string>
+    <string name="my_site_create_new_site">Creëer een nieuwe site voor je bedrijf, magazine, persoonlijke blog of verbind een bestaande WordPress installatie.</string>
     <string name="notifications_jetpack_connection_setup_info">Om nuttige meldingen van je WordPress site op je apparaat te krijgen, moet je de Jetpack plugin installeren. Wil je Jetpack installeren?</string>
     <string name="site_settings_lazy_load_images">Lazy-load afbeeldingen</string>
     <string name="stats_jetpack_connection_setup">Jetpack installeren</string>

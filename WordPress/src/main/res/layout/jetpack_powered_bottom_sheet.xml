@@ -76,17 +76,18 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
         </ScrollView>
 
-        <com.google.android.material.button.MaterialButton
+        <Button
             android:id="@+id/primary_button"
+            style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_extra_extra_medium_large"
             android:layout_marginEnd="@dimen/margin_extra_extra_medium_large"
             android:layout_marginBottom="@dimen/margin_64dp"
-            android:backgroundTint="@color/jetpack_green_40"
+            android:background="@drawable/bg_rectangle_rounded_jetpack_ripple"
+            app:backgroundTint="@color/jetpack_green_50"
             android:gravity="center"
-            android:minHeight="@dimen/margin_64dp"
-            app:cornerRadius="@dimen/margin_small_medium"
+            android:minHeight="@dimen/jetpack_bottom_sheet_button_height"
             android:text="@string/wp_jetpack_get_new_jetpack_app"
             android:textAppearance="?attr/textAppearanceSubtitle2"
             android:textColor="?attr/colorOnSecondary"

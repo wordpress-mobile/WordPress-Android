@@ -1,14 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-11-17 10:54:09+0000
+Translation-Revision-Date: 2022-11-25 12:17:28+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: id
 -->
 <resources>
     <string name="jp_migration_help_button">Butuh bantuan?</string>
+    <string name="jp_migration_continue_button">Lanjutkan</string>
     <string name="jp_migration_welcome_site_found_message">Kami menemukan situs Anda. Lanjutkan memindahkan semua data Anda dan masuk ke Jetpack secara otomatis.</string>
     <string name="jp_migration_welcome_sites_found_message">Kami menemukan situs Anda. Lanjutkan memindahkan semua data Anda dan masuk ke Jetpack secara otomatis.</string>
+    <string name="jp_migration_avatar_content_description">Foto profil Anda</string>
+    <string name="jp_migration_welcome_subtitle">Sepertinya Anda beralih dari aplikasi WordPress.</string>
+    <string name="jp_migration_welcome_title">Selamat datang di Jetpack!</string>
+    <string name="icon_desc">ikon</string>
     <string name="post_settings_parent">Halaman Induk</string>
     <string name="post_settings_page_attributes">Atribut Halaman</string>
     <string name="about_automattic_contribute_item_title">Kontribusi</string>

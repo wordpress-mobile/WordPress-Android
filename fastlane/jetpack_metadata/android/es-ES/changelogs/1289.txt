@@ -1,3 +1,0 @@
-21.1:
-- Descubrirás una nueva pantalla de destino en la aplicación que responde al movimiento de tu dispositivo. ¡Disfrútala!
-- Ahora, cuando edites una página, puedes establecer una página padre en los ajustes de la página hijo.

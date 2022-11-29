@@ -218,8 +218,7 @@ public class AppSettingsFragment extends PreferenceFragment
 
         mStripImageLocation.setChecked(AppPrefs.isStripImageLocation());
 
-        mOpenWebLinksWithJetpack.setChecked(
-                (AppPrefs.getOpenWebLinksWithJetpackOverlayLastShownTimestamp()) == 0L ? false : true);
+        mOpenWebLinksWithJetpack.setChecked(AppPrefs.getIsOpenWebLinksWithJetpack());
 
         mWhatsNew = findPreference(getString(R.string.pref_key_whats_new));
 
@@ -505,10 +504,7 @@ public class AppSettingsFragment extends PreferenceFragment
             AnalyticsTracker.track(Stat.PRIVACY_SETTINGS_REPORT_CRASHES_TOGGLED, Collections
                     .singletonMap(TRACK_ENABLED, newValue));
         } else if (preference == mOpenWebLinksWithJetpack) {
-            AppPrefs.setOpenWebLinksWithJetpackOverlayLastShownTimestamp(
-                    ((Boolean) newValue) ? System.currentTimeMillis() : 0L);
-            AnalyticsTracker.track(AnalyticsTracker.Stat.APP_SETTINGS_OPEN_WEB_LINKS_WITH_JETPACK_CHANGED, Collections
-                    .singletonMap(TRACK_ENABLED, newValue));
+            handleOpenLinksInJetpack((Boolean) newValue);
         }
         return true;
     }
@@ -703,5 +699,25 @@ public class AppSettingsFragment extends PreferenceFragment
     @Override
     public void onLocaleSelected(@NotNull String languageCode) {
         onPreferenceChange(mLanguagePreference, languageCode);
+    }
+
+    private void handleOpenLinksInJetpack(Boolean newValue) {
+        try {
+            if (newValue) {
+                mOpenWebLinksWithJetpackHelper.disableDeepLinks();
+            } else {
+                mOpenWebLinksWithJetpackHelper.enableDeepLinks();
+            }
+            AppPrefs.setIsOpenWebLinksWithJetpack(newValue);
+            AnalyticsTracker.track(AnalyticsTracker.Stat.APP_SETTINGS_OPEN_WEB_LINKS_WITH_JETPACK_CHANGED, Collections
+                    .singletonMap(TRACK_ENABLED, newValue));
+        } catch (Exception e) {
+            ToastUtils.showToast(
+                    getActivity(),
+                    (newValue ? R.string.preference_open_links_in_jetpack_setting_change_enable_error
+                            : R.string.preference_open_links_in_jetpack_setting_change_disable_error),
+                    ToastUtils.Duration.LONG);
+            AppLog.e(AppLog.T.UTILS, "Unable to enable or disable open with Jetpack components ", e);
+        }
     }
 }

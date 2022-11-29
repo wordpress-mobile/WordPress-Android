@@ -2332,6 +2332,9 @@
     <string name="my_site_blogging_prompt_card_number_of_answers_one">1 answer</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_other">%d answers</string>
 
+    <!-- My Site - Jetpack migration success card -->
+    <string name="jp_migration_success_card_message">Please delete the WordPress app</string>
+
     <!-- site picker -->
     <string name="site_picker_title">Choose site</string>
     <string name="site_picker_edit_visibility">Show/hide sites</string>
@@ -4250,7 +4253,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="jp_migration_help_button">Need help?</string>
     <string name="jp_migration_notifications_title">Notifications now come from Jetpack</string>
     <string name="jp_migration_notifications_subtitle">You’ll get all the same notifications but now they’ll come from the Jetpack app.</string>
-    <string name="jp_migration_notifications_disabled_in_wp_message">We’ve disabled notifications for the WordPress app.</string>
+    <string name="jp_migration_notifications_disabled_in_wp_message">We\'ll turn off notifications from the WordPress app.</string>
     <string name="jp_migration_done_title">Thanks for switching to Jetpack!</string>
     <string name="jp_migration_done_subtitle">We’ve transferred all your data and settings. Everything is right where you left it.</string>
     <string name="jp_migration_done_delete_wp_message">Please &lt;b&gt;delete the WordPress app&lt;/b&gt; to&lt;br&gt;avoid data conflicts.</string>
@@ -4263,7 +4266,37 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="jp_migration_network_error_title">Unable to connect to the internet.</string>
     <string name="jp_migration_network_error_subtitle">Please check to make sure your network connection is working and try again.</string>
     <string name="jp_migration_network_error_message">We are unable to transfer your data and settings without a network connection.</string>
+    <string name="jp_migration_delete_title">You no longer need the WordPress app</string>
+    <string name="jp_migration_delete_subtitle">It looks like you still have the WordPress app installed. We recommend you delete the WordPress app to avoid data conflicts.</string>
+    <string name="jp_migration_delete_message">Please &lt;b&gt;delete the WordPress app&lt;/b&gt; to&lt;br&gt;avoid data conflicts.</string>
+    <string name="jp_migration_got_it_button">Got it</string>
+    <string name="jp_migration_need_help_button">Need help?</string>
 
     <!-- Open Web Links With Jetpack -->
-    <string name="preference_open_web_links_with_jetpack">Open web links with Jetpack</string>
+    <string name="preference_open_links_in_jetpack">Open links in Jetpack</string>
+    <string name="preference_open_links_in_jetpack_setting_change_enable_error">Unable to enable open links in Jetpack</string>
+    <string name="preference_open_links_in_jetpack_setting_change_disable_error">Unable to disable open links in Jetpack</string>
+
+    <!-- Jetpack feature overlay strings in WordPress App -->
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_stats">Get your stats using the new Jetpack app</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_reader">Follow any site with the Jetpack app</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_notifications">Get your notifications with the Jetpack app</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_stats">Switch to the Jetpack app to watch your site’s traffic grow with stats and insights.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_reader">Switch to the Jetpack app to find, follow, and like all your favorite sites and posts with Reader.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_notifications">Switch to the Jetpack app to keep receiving  realtime notifications on your device.</string>
+    <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app" translatable="false"> @string/wp_jetpack_get_new_jetpack_app</string>
+
+    <!-- Deep Linking Activity Aliases -->
+    <string name="deep_linking_urilinks_alias_label">urilinks</string>
+    <string name="deep_linking_weblinks_alias_label">weblinks</string>
+
+    <string name="wp_jetpack_feature_removal_site_creation_overlay_title">Create a new WordPress site with the Jetpack app</string>
+    <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_one_description">Jetpack provides stats, notifications and more to help you build and grow the WordPress site of your dreams.</string>
+    <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_two_description">Jetpack provides stats, notifications and more to help you build and grow the WordPress site of your dreams.\n\nThe WordPress app no longer supports creating a new site.</string>
+    <string name="wp_jetpack_continue_without_jetpack">Continue without Jetpack</string>
+
+    <string name="wp_jetpack_deep_link_overlay_title">Open links in Jetpack?</string>
+    <string name="wp_jetpack_deep_link_overlay_description">It looks like you have the Jetpack app installed.\n\nWould you like to open links in the Jetpack app in the future?\n\nYou can always change this in App Settings &gt; Open links in Jetpack</string>
+    <string name="wp_jetpack_deep_link_open_in_jetpack" translatable="false">@string/preference_open_links_in_jetpack</string>
+    <string name="wp_jetpack_deep_link_open_in_wordpress">Open links in WordPress</string>
 </resources>

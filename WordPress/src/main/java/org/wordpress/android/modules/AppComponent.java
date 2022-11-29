@@ -33,7 +33,6 @@ import org.wordpress.android.ui.comments.unified.UnifiedCommentsActivity;
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsDetailsActivity;
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditFragment;
 import org.wordpress.android.ui.debug.cookies.DebugCookiesFragment;
-import org.wordpress.android.ui.deeplinks.DeepLinkingIntentReceiverActivity;
 import org.wordpress.android.ui.domains.DomainRegistrationActivity;
 import org.wordpress.android.ui.domains.DomainRegistrationDetailsFragment;
 import org.wordpress.android.ui.domains.DomainRegistrationResultFragment;
@@ -150,7 +149,6 @@ import org.wordpress.android.ui.publicize.PublicizeWebViewFragment;
 import org.wordpress.android.ui.publicize.adapters.PublicizeConnectionAdapter;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter;
 import org.wordpress.android.ui.quickstart.QuickStartFullScreenDialogFragment;
-import org.wordpress.android.ui.quickstart.QuickStartReminderReceiver;
 import org.wordpress.android.ui.reader.CommentNotificationsBottomSheetFragment;
 import org.wordpress.android.ui.reader.ReaderBlogFragment;
 import org.wordpress.android.ui.reader.ReaderCommentListActivity;
@@ -243,8 +241,6 @@ public interface AppComponent {
     void inject(GCMMessageService object);
 
     void inject(GCMRegistrationIntentService object);
-
-    void inject(DeepLinkingIntentReceiverActivity object);
 
     void inject(ShareIntentReceiverActivity object);
 
@@ -437,8 +433,6 @@ public interface AppComponent {
     void inject(WordPressGlideModule object);
 
     void inject(QuickStartFullScreenDialogFragment object);
-
-    void inject(QuickStartReminderReceiver object);
 
     void inject(MediaGridAdapter object);
 

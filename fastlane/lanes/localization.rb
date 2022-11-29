@@ -257,14 +257,14 @@ platform :android do
     },
     {
       name: "Stories Library",
-      import_key: "storiesVersion",
+      import_key: "automatticStoriesVersion",
       repository: "Automattic/stories-android",
       strings_file_path: "stories/src/main/res/values/strings.xml",
       source_id: 'stories'
     },
     {
       name: "About Library",
-      import_key: "aboutAutomatticVersion",
+      import_key: "automatticAboutVersion",
       repository: "Automattic/about-automattic-android",
       strings_file_path: "library/src/main/res/values/strings.xml",
       source_id: 'about'
