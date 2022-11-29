@@ -4286,6 +4286,12 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="wp_jetpack_feature_removal_overlay_phase_one_description_notifications">Switch to the Jetpack app to keep receiving  realtime notifications on your device.</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app" translatable="false"> @string/wp_jetpack_get_new_jetpack_app</string>
 
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">Your stats are moving to the Jetpack app</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">Reader is moving to the Jetpack app</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_notifications">Notifications are moving to Jetpack</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description">Stats, Reader, Notifications and other Jetpack powered features will be removed from the WordPress app on December 1, 2022.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two__and_three_learn_more_about_migration">Switch to the Jetpack app to keep receiving  realtime notifications on your device.</string>
+
     <!-- Deep Linking Activity Aliases -->
     <string name="deep_linking_urilinks_alias_label">urilinks</string>
     <string name="deep_linking_weblinks_alias_label">weblinks</string>
