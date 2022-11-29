@@ -24,7 +24,7 @@ data class Plan(
     @SerializedName("available") var available: String? = null,
     @SerializedName("outer_slug") var outerSlug: String? = null,
     @SerializedName("capability") var capability: String? = null,
-    @SerializedName("product_name_short") var productNameShort: String? = null,
+    @SerializedName("product_name_short") var productShortName: String? = null,
     @SerializedName("icon") var iconUrl: String? = null,
     @SerializedName("icon_active") var iconActiveUrl: String? = null,
     @SerializedName("bill_period_label") var billPeriodLabel: String? = null,
