@@ -75,14 +75,17 @@ class JetpackMigrationViewModel @Inject constructor(
     val uiState = combineTransform(migrationStateFlow, continueClickedFlow, notificationContinueClickedFlow) {
         migrationState, continueClicked, notificationContinueClicked ->
         when {
-            showDeleteState -> emit(
-                    Delete(
-                            primaryActionButton = DeletePrimaryButton(::onGotItClicked),
-                            secondaryActionButton = DeleteSecondaryButton {
-                                onHelpClicked(source = HelpButtonSource.Delete)
-                            },
-                    )
-            )
+            showDeleteState -> {
+                contentMigrationAnalyticsTracker.trackPleaseDeleteWordPressScreenShown()
+                emit(
+                        Delete(
+                                primaryActionButton = DeletePrimaryButton(::onGotItClicked),
+                                secondaryActionButton = DeleteSecondaryButton {
+                                    onHelpClicked(source = HelpButtonSource.Delete)
+                                },
+                        )
+                )
+            }
             migrationState is Ineligible -> {
                 appPrefsWrapper.setJetpackMigrationEligible(false)
                 emit(Loading)
@@ -204,6 +207,7 @@ class JetpackMigrationViewModel @Inject constructor(
     }
 
     private fun onGotItClicked() {
+        contentMigrationAnalyticsTracker.trackPleaseDeleteWordPressGotItTapped()
         postActionEvent(CompleteFlow)
     }
 
