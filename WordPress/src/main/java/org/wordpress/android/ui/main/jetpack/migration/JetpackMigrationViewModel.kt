@@ -106,11 +106,14 @@ class JetpackMigrationViewModel @Inject constructor(
                 )
             }
             migrationState is Successful && continueClicked -> when {
-                !notificationContinueClicked -> emit(
-                        Notifications(
-                                primaryActionButton = NotificationsPrimaryButton(::onContinueFromNotificationsClicked),
-                        )
-                )
+                !notificationContinueClicked -> {
+                    contentMigrationAnalyticsTracker.trackNotificationsScreenShown()
+                    emit(
+                            Notifications(
+                                    primaryActionButton = NotificationsPrimaryButton(::onContinueFromNotificationsClicked),
+                            )
+                    )
+                }
                 else -> emit(
                         Done(
                                 primaryActionButton = DonePrimaryButton(::onDoneClicked)
@@ -165,6 +168,7 @@ class JetpackMigrationViewModel @Inject constructor(
 
     private fun onContinueFromNotificationsClicked() {
         if (preventDuplicateNotifsFeatureConfig.isEnabled()) disableNotificationsOnWP()
+        contentMigrationAnalyticsTracker.trackNotificationsScreenContinueButtonTapped()
         notificationContinueClickedFlow.value = true
     }
 
