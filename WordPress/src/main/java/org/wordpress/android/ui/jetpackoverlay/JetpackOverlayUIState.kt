@@ -21,7 +21,7 @@ sealed class JetpackFeatureOverlayComponentVisibility(
     }
 }
 
-class JetpackFeatureOverlayContent(
+data class JetpackFeatureOverlayContent(
     @RawRes val illustration: Int,
     @StringRes val title: Int,
     @StringRes val caption: Int,
@@ -29,7 +29,7 @@ class JetpackFeatureOverlayContent(
     @StringRes val secondaryButtonText: Int? = null
 )
 
-class JetpackFeatureOverlayUIState(
+data class JetpackFeatureOverlayUIState(
     val componentVisibility: JetpackFeatureOverlayComponentVisibility,
     val overlayContent: JetpackFeatureOverlayContent
 )
