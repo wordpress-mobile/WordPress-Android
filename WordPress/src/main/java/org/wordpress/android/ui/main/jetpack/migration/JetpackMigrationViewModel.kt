@@ -62,8 +62,6 @@ class JetpackMigrationViewModel @Inject constructor(
     private val migrationEmailHelper: MigrationEmailHelper,
     private val contentMigrationAnalyticsTracker: ContentMigrationAnalyticsTracker,
 ) : ViewModel() {
-    private val _uiState = MutableStateFlow<UiState>(Loading)
-
     private val _actionEvents = Channel<JetpackMigrationActionEvent>(Channel.BUFFERED)
     val actionEvents = _actionEvents.receiveAsFlow()
 
@@ -163,10 +161,8 @@ class JetpackMigrationViewModel @Inject constructor(
     }
 
     private fun onTryAgainClicked() {
-        (_uiState.value as? UiState.Error)?.let {
-            _uiState.value = it.copy(isProcessing = true)
-            tryMigration()
-        }
+        contentMigrationAnalyticsTracker.trackErrorRetryTapped()
+        tryMigration()
     }
 
     private fun tryMigration() {
