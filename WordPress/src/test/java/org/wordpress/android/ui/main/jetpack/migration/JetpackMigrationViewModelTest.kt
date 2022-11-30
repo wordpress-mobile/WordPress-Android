@@ -112,7 +112,6 @@ class JetpackMigrationViewModelTest : BaseUnitTest() {
         verify(contentMigrationAnalyticsTracker).trackNotificationsScreenShown()
     }
 
-
     @Test
     fun `Should track when continue button is tapped on notifications screen`() {
         val notificationsScreen = classToTest.initNotificationsScreenUi()
@@ -120,6 +119,22 @@ class JetpackMigrationViewModelTest : BaseUnitTest() {
         notificationsScreen.primaryActionButton.onClick.invoke()
 
         verify(contentMigrationAnalyticsTracker).trackNotificationsScreenShown()
+    }
+
+    @Test
+    fun `Should track when success screen is shown`() {
+        classToTest.initSuccessScreenUi()
+
+        verify(contentMigrationAnalyticsTracker).trackThanksScreenShown()
+    }
+
+    @Test
+    fun `Should track when finish button is tapped on success screen`() {
+        val successScreen = classToTest.initSuccessScreenUi()
+
+        successScreen.primaryActionButton.onClick.invoke()
+
+        verify(contentMigrationAnalyticsTracker).trackThanksScreenFinishButtonTapped()
     }
 
     // endregion

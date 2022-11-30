@@ -101,14 +101,7 @@ class JetpackMigrationViewModel @Inject constructor(
             )
             migrationState is Successful && continueClicked -> when {
                 !notificationContinueClicked -> emit(initNotificationsScreenUi())
-                else -> {
-                    contentMigrationAnalyticsTracker.trackThanksScreenShown()
-                    emit(
-                            Done(
-                                    primaryActionButton = DonePrimaryButton(::onFinishClicked)
-                            )
-                    )
-                }
+                else -> emit(initSuccessScreenUi())
             }
             migrationState is Failure -> {
                 contentMigrationAnalyticsTracker.trackErrorScreenShown()
@@ -148,11 +141,20 @@ class JetpackMigrationViewModel @Inject constructor(
     }
 
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-    fun initNotificationsScreenUi() : Notifications {
+    fun initNotificationsScreenUi(): Notifications {
         contentMigrationAnalyticsTracker.trackNotificationsScreenShown()
 
         return Notifications(
                 primaryActionButton = NotificationsPrimaryButton(::onContinueFromNotificationsClicked),
+        )
+    }
+
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    fun initSuccessScreenUi(): Done {
+        contentMigrationAnalyticsTracker.trackThanksScreenShown()
+
+        return Done(
+                primaryActionButton = DonePrimaryButton(::onFinishClicked)
         )
     }
 
