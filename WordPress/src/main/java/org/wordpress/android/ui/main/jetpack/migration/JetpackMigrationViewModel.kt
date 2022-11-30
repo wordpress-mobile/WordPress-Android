@@ -78,17 +78,7 @@ class JetpackMigrationViewModel @Inject constructor(
             notificationContinueClickedFlow
     ) { migrationState, continueClicked, notificationContinueClicked ->
         when {
-            showDeleteState -> {
-                contentMigrationAnalyticsTracker.trackPleaseDeleteWordPressScreenShown()
-                emit(
-                        Delete(
-                                primaryActionButton = DeletePrimaryButton(::onGotItClicked),
-                                secondaryActionButton = DeleteSecondaryButton {
-                                    onHelpClicked(source = HelpButtonSource.Delete)
-                                },
-                        )
-                )
-            }
+            showDeleteState -> emit(initPleaseDeleteWordPressAppScreenUi())
             migrationState is Ineligible -> {
                 appPrefsWrapper.setJetpackMigrationEligible(false)
                 emit(Loading)
@@ -155,6 +145,18 @@ class JetpackMigrationViewModel @Inject constructor(
 
         return Done(
                 primaryActionButton = DonePrimaryButton(::onFinishClicked)
+        )
+    }
+
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    fun initPleaseDeleteWordPressAppScreenUi(): Delete {
+        contentMigrationAnalyticsTracker.trackPleaseDeleteWordPressScreenShown()
+
+        return Delete(
+                primaryActionButton = DeletePrimaryButton(::onGotItClicked),
+                secondaryActionButton = DeleteSecondaryButton {
+                    onHelpClicked(source = HelpButtonSource.Delete)
+                },
         )
     }
 

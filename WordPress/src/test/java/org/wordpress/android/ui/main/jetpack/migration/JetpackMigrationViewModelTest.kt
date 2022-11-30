@@ -137,6 +137,31 @@ class JetpackMigrationViewModelTest : BaseUnitTest() {
         verify(contentMigrationAnalyticsTracker).trackThanksScreenFinishButtonTapped()
     }
 
+    @Test
+    fun `Should track when delete wp app screen is shown`() {
+        classToTest.initPleaseDeleteWordPressAppScreenUi()
+
+        verify(contentMigrationAnalyticsTracker).trackPleaseDeleteWordPressScreenShown()
+    }
+
+    @Test
+    fun `Should track when got it button is tapped on delete wp app screen`() {
+        val pleaseDeleteScreen = classToTest.initPleaseDeleteWordPressAppScreenUi()
+
+        pleaseDeleteScreen.primaryActionButton.onClick.invoke()
+
+        verify(contentMigrationAnalyticsTracker).trackPleaseDeleteWordPressGotItTapped()
+    }
+
+    @Test
+    fun `Should track when help button is tapped on delete wp app screen`() {
+        val pleaseDeleteScreen = classToTest.initPleaseDeleteWordPressAppScreenUi()
+
+        pleaseDeleteScreen.secondaryActionButton.onClick.invoke()
+
+        verify(contentMigrationAnalyticsTracker).trackPleaseDeleteWordPressHelpTapped()
+    }
+
     // endregion
 
     // region UiState Content
