@@ -93,16 +93,19 @@ To do this:
 
 If you need a faster feedback loop or to accelerate the translation, get in touch with your Release Manager and/or with Team Global, to see if we can fasttrack the translations outside of the regular cycle; though polyglots will still always need time to do translations, so keep in mind that this will never be instantaneous and you need to account for it in your planning about updating PlayStore screenshots.
 
-### Installing `imagemagick` and `rmagick`
+### Installing `imagemagick`, `rmagick` and `drawText`
 
 To do the image compositing, we rely on the ImageMagick library and the Ruby wrapper gem `rmagick` that interfaces it.
-This means that you will need to install those on your machine first before being able to run the lane generating the promo screenshots.
+We also use [the `drawText` tool that we wrote](https://github.com/automattic/drawText) (and whose brew formula is hosted internally [here](https://github.com/Automattic/homebrew-build-tools)) to draw styled HTML text on those final images.
 
- - Run `brew install imagemagick` to install the ImageMagick library on your system
+This means that you will need to install those on your machine first before being able to run the lane generating the promo screenshots:
+
+ - Run `brew install imagemagick` to install the ImageMagick library on your system.
+ - Run `brew install automattic/build-tools/drawText` to install the `drawText` executable.
  - Then run `bundle install --with screenshots` to include the `rmagick` gem in the list of gems installed.
     - This will make a change to the `.bundle/config` file of the repository. Please don't commit that change, so that other developers won't require to have `rmagick` installed for everything else they work on — as this library and gem is only needed for generating screenshots, which is not as common as all the other everyday tasks developers run.
-
-> **Note**: This (especially `brew install imagemagick`) requires you to install something on you machine system-wide (`brew install` install things at the machine level, for all users, unlike `bundle` which installs things only in the folder of your current repo / working copy). So this is a bit invasive.
+ 
+> **Note**: This (especially `brew install imagemagick` and `brew install automattic/build-tools/drawText`) requires you to install things on you machine _system-wide_ (`brew install` install things at the machine level, for all users, unlike `bundle` which installs things only in the folder of your current repo / working copy). So this is a bit invasive.
 >
 > This also sadly comes with risks of having installation troubles depending on the environment of your machine (and which libraries and headers you have installed, etc); in fact, it's common to have issues when trying to `brew install imagemagick` or to install `rmagick`, especially on the steps which tries to compile those libraries (since they rely on compiled, binary code and libraries) and might come up with compilation errors or missing headers and the like. There's sadly no magic silver bullet solution for those, and search engines and StackOverflow are usually your best friends here.
 
