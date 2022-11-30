@@ -107,7 +107,7 @@ ext {
     squareupMockWebServerVersion = '2.7.5'
     wiremockVersion = '2.26.3'
     wiremockMocksVersion = '2.23.2' // TODO: Align 'wiremock' versions.
-    apacheHttpClientAndroidVersion = '4.3.5.1'
+    wiremockHttpClientVersion = '4.3.5.1'
 
     // other
     androidDesugarVersion = '1.1.5'

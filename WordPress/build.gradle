@@ -477,7 +477,7 @@ dependencies {
         exclude group: 'asm', module: 'asm'
         exclude group: 'org.json', module: 'json'
     }
-    androidTestImplementation "org.apache.httpcomponents:httpclient-android:$apacheHttpClientAndroidVersion"
+    androidTestImplementation "org.apache.httpcomponents:httpclient-android:$wiremockHttpClientVersion"
     androidTestImplementation "androidx.test:runner:$androidxTestCoreVersion"
     androidTestImplementation "androidx.test:rules:$androidxTestCoreVersion"
     androidTestImplementation "androidx.test.ext:junit:$androidxTestExtJunitVersion"
