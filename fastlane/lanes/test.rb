@@ -21,7 +21,7 @@ platform :android do
 
     apk_dir = File.join(PROJECT_ROOT_FOLDER, 'WordPress', 'build', 'outputs', 'apk')
 
-    android_firebase_test(
+    test_succeeded = android_firebase_test(
       project_id: firebase_secret(name: 'project_id'),
       key_file: GOOGLE_FIREBASE_SECRETS_PATH,
       model: 'Pixel2.arm',
@@ -29,8 +29,16 @@ platform :android do
       test_apk_path: File.join(apk_dir, 'androidTest', 'wordpressVanilla', 'debug', 'org.wordpress.android-wordpress-vanilla-debug-androidTest.apk'),
       apk_path: File.join(apk_dir, 'wordpressVanilla', 'debug', 'org.wordpress.android-wordpress-vanilla-debug.apk'),
       test_targets: 'notPackage org.wordpress.android.ui.screenshots',
-      results_output_dir: File.join(PROJECT_ROOT_FOLDER, 'build', 'instrumented-tests')
+      results_output_dir: File.join(PROJECT_ROOT_FOLDER, 'build', 'instrumented-tests'),
+      crash_on_test_failure: false
     )
+
+    unless test_succeeded
+      details_url = lane_context[SharedValues::FIREBASE_TEST_MORE_DETAILS_URL]
+      message = "Firebase Tests failed. Failure details can be seen [here in Firebase Console](#{details_url})"
+      sh('buildkite-agent', 'annotate', message, '--style', 'error', '--context', 'firebase-test-wordpress-vanilla-debug') if is_ci?
+      UI.test_failure!(message)
+    end
   end
 end
 
