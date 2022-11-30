@@ -9,11 +9,15 @@ sealed class JetpackFeatureOverlayComponentVisibility(
     val title: Boolean = true,
     val caption: Boolean = true,
     val primaryButton: Boolean = true,
+    open val closeButton: Boolean = true,
     open val secondaryButton: Boolean = true,
     open val urlLinkText: Boolean = false
 ) {
     class PhaseOne : JetpackFeatureOverlayComponentVisibility()
     class PhaseTwo(override val urlLinkText: Boolean = true) : JetpackFeatureOverlayComponentVisibility()
+    class PhaseThree(override val urlLinkText: Boolean = true, override val closeButton: Boolean = false) :
+            JetpackFeatureOverlayComponentVisibility()
+
     sealed class SiteCreationPhase : JetpackFeatureOverlayComponentVisibility() {
         class PhaseOne : SiteCreationPhase()
         class PhaseTwo(override val secondaryButton: Boolean = false) : SiteCreationPhase()

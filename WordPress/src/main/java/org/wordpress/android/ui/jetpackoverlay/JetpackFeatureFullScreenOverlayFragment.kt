@@ -123,15 +123,17 @@ class JetpackFeatureFullScreenOverlayFragment : BottomSheetDialogFragment() {
     ) {
         updateVisibility(jetpackPoweredOverlayUIState.componentVisibility)
         updateContent(jetpackPoweredOverlayUIState.overlayContent)
-        setClickListener(jetpackPoweredOverlayUIState.componentVisibility.secondaryButton)
+        setClickListener(jetpackPoweredOverlayUIState.componentVisibility)
     }
 
-    private fun JetpackFeatureRemovalOverlayBinding.setClickListener(secondaryButtonVisible: Boolean) {
+    private fun JetpackFeatureRemovalOverlayBinding.setClickListener(
+        componentVisibility: JetpackFeatureOverlayComponentVisibility
+    ) {
         primaryButton.setOnClickListener {
             viewModel.openJetpackAppDownloadLink()
         }
-        closeButton.setOnClickListener { viewModel.closeBottomSheet() }
-        if (secondaryButtonVisible) secondaryButton.setOnClickListener { viewModel.continueToFeature() }
+        if (componentVisibility.closeButton) closeButton.setOnClickListener { viewModel.closeBottomSheet() }
+        if (componentVisibility.secondaryButton) secondaryButton.setOnClickListener { viewModel.continueToFeature() }
     }
 
     private fun JetpackFeatureRemovalOverlayBinding.updateVisibility(
@@ -151,7 +153,7 @@ class JetpackFeatureFullScreenOverlayFragment : BottomSheetDialogFragment() {
             illustrationView.setAnimation(it.illustration)
             illustrationView.playAnimation()
             title.text = getString(it.title)
-            uiHelpers.setTextOrHide(caption,it.caption)
+            uiHelpers.setTextOrHide(caption, it.caption)
             primaryButton.text = getString(it.primaryButtonText)
             it.secondaryButtonText?.let { secondaryButton.text = getString(it) }
         }
