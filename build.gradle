@@ -12,7 +12,7 @@ ext {
     wordPressUtilsVersion = '3.1.0'
     wordPressLoginVersion = '1.0.0'
     aztecVersion = 'v1.6.2'
-    gutenbergMobileVersion = 'v1.85.0'
+    gutenbergMobileVersion = '5292-df86dd2993050f32245f05dae5ac2250e29d95e2'
     storiesVersion = '2.0.0'
     aboutAutomatticVersion = '1.0.0'
 
