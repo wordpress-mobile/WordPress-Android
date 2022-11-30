@@ -111,7 +111,9 @@ class JetpackMigrationViewModel @Inject constructor(
                     contentMigrationAnalyticsTracker.trackNotificationsScreenShown()
                     emit(
                             Notifications(
-                                    primaryActionButton = NotificationsPrimaryButton(::onContinueFromNotificationsClicked),
+                                    primaryActionButton = NotificationsPrimaryButton(
+                                            ::onContinueFromNotificationsClicked
+                                    ),
                             )
                     )
                 }
