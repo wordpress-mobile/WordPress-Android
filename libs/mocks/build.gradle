@@ -11,7 +11,7 @@ android {
 }
 
 dependencies {
-    implementation("com.github.tomakehurst:wiremock:$wiremockMocksVersion") {
+    implementation("com.github.tomakehurst:wiremock:$wiremockVersion") {
         exclude group: 'com.fasterxml.jackson.core', module: 'jackson-core'
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'
         exclude group: 'org.apache.commons', module: 'commons-lang3'
