@@ -24,15 +24,13 @@ class JetpackAppMigrationFlowUtils @Inject constructor(
 ) {
     private val minimumSupportedVersion = "21.3" // non semantic minimum supported version
 
-    fun shouldShowMigrationFlow(): Boolean {
-        return buildConfigWrapper.isJetpackApp
-                && jetpackMigrationFlowFeatureConfig.isEnabled()
-                && appPrefsWrapper.isJetpackMigrationEligible()
-                && appPrefsWrapper.getIsFirstTrySharedLoginJetpack()
-                && !accountStore.hasAccessToken()
-                && isWordPressInstalled()
-                && isWordPressCompatible()
-    }
+    fun shouldShowMigrationFlow() = buildConfigWrapper.isJetpackApp
+            && jetpackMigrationFlowFeatureConfig.isEnabled()
+            && appPrefsWrapper.isJetpackMigrationEligible()
+            && appPrefsWrapper.getIsFirstTrySharedLoginJetpack()
+            && !accountStore.hasAccessToken()
+            && isWordPressInstalled()
+            && isWordPressCompatible()
 
     fun startJetpackMigrationFlow() {
         ActivityLauncher.startJetpackMigrationFlow(contextProvider.getContext())
