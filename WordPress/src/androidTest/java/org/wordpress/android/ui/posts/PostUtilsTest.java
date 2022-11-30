@@ -20,11 +20,11 @@ public class PostUtilsTest {
         String collapsedContent = PostUtils.collapseShortcodes(postContent);
 
         // make sure [gallery] now exists and [gallery number] does not
-        assertTrue(collapsedContent.contains("[zzzgallery]"));
+        assertTrue(collapsedContent.contains("[gallery]"));
         assertFalse(collapsedContent.contains("[gallery number]"));
 
         // make sure the unknown shortcode is intact
-        assertTrue(collapsedContent.contains("[zzzunknown shortcode]"));
+        assertTrue(collapsedContent.contains("[unknown shortcode]"));
     }
 
     @Test
