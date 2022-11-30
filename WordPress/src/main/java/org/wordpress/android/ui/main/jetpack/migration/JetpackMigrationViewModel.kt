@@ -100,16 +100,7 @@ class JetpackMigrationViewModel @Inject constructor(
                     initWelcomeScreenUi(migrationState.data, continueClicked)
             )
             migrationState is Successful && continueClicked -> when {
-                !notificationContinueClicked -> {
-                    contentMigrationAnalyticsTracker.trackNotificationsScreenShown()
-                    emit(
-                            Notifications(
-                                    primaryActionButton = NotificationsPrimaryButton(
-                                            ::onContinueFromNotificationsClicked
-                                    ),
-                            )
-                    )
-                }
+                !notificationContinueClicked -> emit(initNotificationsScreenUi())
                 else -> {
                     contentMigrationAnalyticsTracker.trackThanksScreenShown()
                     emit(
@@ -153,6 +144,15 @@ class JetpackMigrationViewModel @Inject constructor(
                 secondaryActionButton = WelcomeSecondaryButton {
                     onHelpClicked(source = HelpButtonSource.Welcome)
                 },
+        )
+    }
+
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    fun initNotificationsScreenUi() : Notifications {
+        contentMigrationAnalyticsTracker.trackNotificationsScreenShown()
+
+        return Notifications(
+                primaryActionButton = NotificationsPrimaryButton(::onContinueFromNotificationsClicked),
         )
     }
 

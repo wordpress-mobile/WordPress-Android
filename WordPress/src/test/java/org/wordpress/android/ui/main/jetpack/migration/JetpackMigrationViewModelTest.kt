@@ -96,14 +96,30 @@ class JetpackMigrationViewModelTest : BaseUnitTest() {
         verify(contentMigrationAnalyticsTracker).trackWelcomeScreenHelpButtonTapped()
     }
 
-
     @Test
     fun `Should track when avatar is tapped on welcome screen`() {
         val welcomeScreen = classToTest.initWelcomeScreenUi(WelcomeScreenData(), false)
 
-        welcomeScreen.onAvatarClicked()
+        welcomeScreen.onAvatarClicked.invoke()
 
         verify(contentMigrationAnalyticsTracker).trackWelcomeScreenAvatarTapped()
+    }
+
+    @Test
+    fun `Should track when notifications screen is shown`() {
+        classToTest.initNotificationsScreenUi()
+
+        verify(contentMigrationAnalyticsTracker).trackNotificationsScreenShown()
+    }
+
+
+    @Test
+    fun `Should track when continue button is tapped on notifications screen`() {
+        val notificationsScreen = classToTest.initNotificationsScreenUi()
+
+        notificationsScreen.primaryActionButton.onClick.invoke()
+
+        verify(contentMigrationAnalyticsTracker).trackNotificationsScreenShown()
     }
 
     // endregion
