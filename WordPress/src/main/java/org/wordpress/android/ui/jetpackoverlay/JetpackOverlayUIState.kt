@@ -8,14 +8,19 @@ sealed class JetpackFeatureOverlayComponentVisibility(
     val illustration: Boolean = true,
     val title: Boolean = true,
     val caption: Boolean = true,
+    open val migrationText: Boolean = false,
     val primaryButton: Boolean = true,
     open val closeButton: Boolean = true,
     open val secondaryButton: Boolean = true,
-    open val urlLinkText: Boolean = false
+    open val migrationInfoText: Boolean = false
 ) {
     class PhaseOne : JetpackFeatureOverlayComponentVisibility()
-    class PhaseTwo(override val urlLinkText: Boolean = true) : JetpackFeatureOverlayComponentVisibility()
-    class PhaseThree(override val urlLinkText: Boolean = true, override val closeButton: Boolean = false) :
+    class PhaseTwo(override val migrationInfoText: Boolean = true) : JetpackFeatureOverlayComponentVisibility()
+    class PhaseThree(
+        override val migrationInfoText: Boolean = true,
+        override val closeButton: Boolean = false,
+        override val migrationText: Boolean = true
+    ) :
             JetpackFeatureOverlayComponentVisibility()
 
     sealed class SiteCreationPhase : JetpackFeatureOverlayComponentVisibility() {
@@ -32,8 +37,8 @@ data class JetpackFeatureOverlayContent(
     @RawRes val illustration: Int,
     @StringRes val title: Int,
     @StringRes val caption: UiString,
-    @StringRes val urlLinkText: Int? = null,
-    @StringRes val urlLinkHandle: Int? = null,
+    @StringRes val migrationText: Int? = null,
+    @StringRes val migrationInfoText: Int? = null,
     @StringRes val primaryButtonText: Int,
     @StringRes val secondaryButtonText: Int? = null
 )

@@ -17,10 +17,24 @@ class JetpackFeatureOverlayContentBuilder @Inject constructor() {
         return when (params.currentPhase) {
             is PhaseOne -> getStateForPhaseOne(params, params.feature!!)
             PhaseTwo -> getStateForPhaseTwo(params)
-            PhaseThree -> TODO()
+            PhaseThree -> getStateForPhaseThree(params)
             PhaseFour -> TODO()
             PhaseNewUsers -> TODO()
         }
+    }
+
+    private fun getStateForPhaseThree(
+        params: JetpackFeatureOverlayContentBuilderParams,
+    ): JetpackFeatureOverlayUIState {
+        val componentVisibility = JetpackFeatureOverlayComponentVisibility.PhaseThree()
+        val content = when (params.feature!!) {
+            JetpackFeatureOverlayScreenType.STATS -> getStateForPhaseTwoStats(params)
+            JetpackFeatureOverlayScreenType.NOTIFICATIONS -> getStateForPhaseTwoNotifications(params)
+            JetpackFeatureOverlayScreenType.READER -> getStateForPhaseTwoReader(params)
+        }.copy(
+                migrationText = R.string.wp_jetpack_feature_removal_overlay_migration_helper_text
+        )
+        return JetpackFeatureOverlayUIState(componentVisibility, content)
     }
 
     private fun getStateForPhaseTwo(
@@ -45,6 +59,7 @@ class JetpackFeatureOverlayContentBuilder @Inject constructor() {
                         R.string.wp_jetpack_feature_removal_overlay_phase_two_and_three_description,
                         listOf(UiStringText(params.phaseDeadline))
                 ),
+                migrationInfoText = R.string.wp_jetpack_feature_removal_overlay_learn_more_migration_text,
                 primaryButtonText = R.string.wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app,
                 secondaryButtonText = R.string.wp_jetpack_continue_to_stats
         )
@@ -60,6 +75,7 @@ class JetpackFeatureOverlayContentBuilder @Inject constructor() {
                         R.string.wp_jetpack_feature_removal_overlay_phase_two_and_three_description,
                         listOf(UiStringText(params.phaseDeadline))
                 ),
+                migrationInfoText = R.string.wp_jetpack_feature_removal_overlay_learn_more_migration_text,
                 primaryButtonText = R.string.wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app,
                 secondaryButtonText = R.string.wp_jetpack_continue_to_reader
         )
@@ -75,6 +91,7 @@ class JetpackFeatureOverlayContentBuilder @Inject constructor() {
                         R.string.wp_jetpack_feature_removal_overlay_phase_two_and_three_description,
                         listOf(UiStringText(params.phaseDeadline))
                 ),
+                migrationInfoText = R.string.wp_jetpack_feature_removal_overlay_learn_more_migration_text,
                 primaryButtonText = R.string.wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app,
                 secondaryButtonText = R.string.wp_jetpack_continue_to_notifications
         )

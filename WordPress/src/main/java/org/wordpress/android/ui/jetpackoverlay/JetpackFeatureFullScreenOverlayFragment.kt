@@ -134,6 +134,8 @@ class JetpackFeatureFullScreenOverlayFragment : BottomSheetDialogFragment() {
         }
         if (componentVisibility.closeButton) closeButton.setOnClickListener { viewModel.closeBottomSheet() }
         if (componentVisibility.secondaryButton) secondaryButton.setOnClickListener { viewModel.continueToFeature() }
+        if (componentVisibility.migrationInfoText)
+            migrationInfoText.setOnClickListener { viewModel.openJetpackAppDownloadLink() }
     }
 
     private fun JetpackFeatureRemovalOverlayBinding.updateVisibility(
@@ -145,6 +147,9 @@ class JetpackFeatureFullScreenOverlayFragment : BottomSheetDialogFragment() {
             caption.setVisible(it.caption)
             primaryButton.setVisible(it.primaryButton)
             secondaryButton.setVisible(it.secondaryButton)
+            migrationHelperText.setVisible(it.migrationText)
+            closeButton.setVisible(it.closeButton)
+            migrationInfoText.setVisible(it.migrationInfoText)
         }
     }
 
@@ -155,7 +160,9 @@ class JetpackFeatureFullScreenOverlayFragment : BottomSheetDialogFragment() {
             title.text = getString(it.title)
             uiHelpers.setTextOrHide(caption, it.caption)
             primaryButton.text = getString(it.primaryButtonText)
-            it.secondaryButtonText?.let { secondaryButton.text = getString(it) }
+            uiHelpers.setTextOrHide(migrationHelperText,it.migrationText)
+            uiHelpers.setTextOrHide(migrationInfoText,it.migrationInfoText)
+            uiHelpers.setTextOrHide(secondaryButton,it.secondaryButtonText)
         }
     }
 
