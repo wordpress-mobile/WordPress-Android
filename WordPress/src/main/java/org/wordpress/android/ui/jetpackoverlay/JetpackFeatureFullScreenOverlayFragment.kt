@@ -14,6 +14,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.databinding.JetpackFeatureRemovalOverlayBinding
 import org.wordpress.android.ui.ActivityLauncherWrapper
 import org.wordpress.android.ui.ActivityLauncherWrapper.Companion.JETPACK_PACKAGE_NAME
+import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureOverlayActions.DismissDialog
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureOverlayActions.ForwardToJetpack
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureOverlayActions.OpenPlayStore
@@ -25,6 +26,8 @@ import org.wordpress.android.util.RtlUtils
 import org.wordpress.android.util.extensions.exhaustive
 import org.wordpress.android.util.extensions.setVisible
 import javax.inject.Inject
+
+private const val JETPACK_MIGRATION_INFO_URL = "https://jetpack.com"
 
 @AndroidEntryPoint
 class JetpackFeatureFullScreenOverlayFragment : BottomSheetDialogFragment() {
@@ -135,7 +138,7 @@ class JetpackFeatureFullScreenOverlayFragment : BottomSheetDialogFragment() {
         if (componentVisibility.closeButton) closeButton.setOnClickListener { viewModel.closeBottomSheet() }
         if (componentVisibility.secondaryButton) secondaryButton.setOnClickListener { viewModel.continueToFeature() }
         if (componentVisibility.migrationInfoText)
-            migrationInfoText.setOnClickListener { viewModel.openJetpackAppDownloadLink() }
+            migrationInfoText.setOnClickListener { WPWebViewActivity.openURL(requireContext(), JETPACK_MIGRATION_INFO_URL) }
     }
 
     private fun JetpackFeatureRemovalOverlayBinding.updateVisibility(
@@ -160,9 +163,9 @@ class JetpackFeatureFullScreenOverlayFragment : BottomSheetDialogFragment() {
             title.text = getString(it.title)
             uiHelpers.setTextOrHide(caption, it.caption)
             primaryButton.text = getString(it.primaryButtonText)
-            uiHelpers.setTextOrHide(migrationHelperText,it.migrationText)
-            uiHelpers.setTextOrHide(migrationInfoText,it.migrationInfoText)
-            uiHelpers.setTextOrHide(secondaryButton,it.secondaryButtonText)
+            uiHelpers.setTextOrHide(migrationHelperText, it.migrationText)
+            uiHelpers.setTextOrHide(migrationInfoText, it.migrationInfoText)
+            uiHelpers.setTextOrHide(secondaryButton, it.secondaryButtonText)
         }
     }
 
