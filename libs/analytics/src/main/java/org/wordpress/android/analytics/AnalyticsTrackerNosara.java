@@ -2429,6 +2429,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "jpmigration_error_screen_help_button_tapped";
             case JPMIGRATION_ERROR_SCREEN_RETRY_BUTTON_TAPPED:
                 return "jpmigration_error_screen_retry_button_tapped";
+            case JPMIGRATION_WORDPRESSAPP_DETECTED:
+                return "jpmigration_wordpressapp_detected";
             case USER_FLAGS_START:
                 return "user_flags_start";
             case USER_FLAGS_SUCCESS:

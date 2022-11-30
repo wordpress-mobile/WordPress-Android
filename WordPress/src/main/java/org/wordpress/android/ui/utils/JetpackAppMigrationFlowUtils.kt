@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.utils
 
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.localcontentmigration.ContentMigrationAnalyticsTracker
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.BuildConfigWrapper
@@ -19,16 +20,27 @@ class JetpackAppMigrationFlowUtils @Inject constructor(
     private val accountStore: AccountStore,
     private val appStatus: AppStatus,
     private val wordPressPublicData: WordPressPublicData,
+    private val contentMigrationAnalyticsTracker: ContentMigrationAnalyticsTracker,
 ) {
     private val minimumSupportedVersion = "21.3" // non semantic minimum supported version
 
-    fun shouldShowMigrationFlow() = buildConfigWrapper.isJetpackApp
-            && jetpackMigrationFlowFeatureConfig.isEnabled()
-            && appPrefsWrapper.isJetpackMigrationEligible()
-            && appPrefsWrapper.getIsFirstTrySharedLoginJetpack()
-            && !accountStore.hasAccessToken()
-            && isWordPressInstalled()
-            && isWordPressCompatible()
+    fun shouldShowMigrationFlow(): Boolean {
+        trackWordPressAppDetected()
+
+        return buildConfigWrapper.isJetpackApp
+                && jetpackMigrationFlowFeatureConfig.isEnabled()
+                && appPrefsWrapper.isJetpackMigrationEligible()
+                && appPrefsWrapper.getIsFirstTrySharedLoginJetpack()
+                && !accountStore.hasAccessToken()
+                && isWordPressInstalled()
+                && isWordPressCompatible()
+    }
+
+    private fun trackWordPressAppDetected() {
+        if (isWordPressInstalled()) {
+            contentMigrationAnalyticsTracker.trackWordPressAppDetected(isCompatible = isWordPressCompatible())
+        }
+    }
 
     fun startJetpackMigrationFlow() {
         ActivityLauncher.startJetpackMigrationFlow(contextProvider.getContext())

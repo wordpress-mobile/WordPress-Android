@@ -63,6 +63,12 @@ class ContentMigrationAnalyticsTracker @Inject constructor(
     fun trackErrorRetryTapped() =
             analyticsTracker.track(Stat.JPMIGRATION_ERROR_SCREEN_RETRY_BUTTON_TAPPED)
 
+    fun trackWordPressAppDetected(isCompatible: Boolean) =
+            analyticsTracker.track(
+                    Stat.JPMIGRATION_WORDPRESSAPP_DETECTED,
+                    mapOf(WORDPRESS_APP_COMPATIBLE to isCompatible)
+            )
+
     sealed class ErrorType(val value: String) {
         object LocalDraftContent : ErrorType("local_draft_content_is_present")
         class EmailError(val error: String?) : ErrorType(error ?: "unknown_email_error")
@@ -70,5 +76,9 @@ class ContentMigrationAnalyticsTracker @Inject constructor(
         companion object {
             const val ERROR_TYPE = "error_type"
         }
+    }
+
+    companion object {
+        const val WORDPRESS_APP_COMPATIBLE = "compatible"
     }
 }
