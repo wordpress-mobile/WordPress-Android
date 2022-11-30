@@ -183,7 +183,7 @@ class JetpackMigrationViewModel @Inject constructor(
             val appPackage = BuildConfig.APPLICATION_ID.replace("com.jetpack", "org.wordpress")
             intent.setPackage(appPackage)
             AppLog.d(T.NOTIFS, intent.toString())
-            contextProvider.getContext().sendBroadcast(intent, "org.wordpress.android.permission.DISABLE_NOTIFICATIONS")
+            contextProvider.getContext().sendBroadcast(intent)
         }
     }
 
