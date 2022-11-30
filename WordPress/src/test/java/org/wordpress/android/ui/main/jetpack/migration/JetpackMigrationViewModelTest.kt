@@ -162,6 +162,30 @@ class JetpackMigrationViewModelTest : BaseUnitTest() {
         verify(contentMigrationAnalyticsTracker).trackPleaseDeleteWordPressHelpTapped()
     }
 
+    @Test
+    fun `Should track when error screen is shown`() {
+        classToTest.initErrorScreenUi()
+
+        verify(contentMigrationAnalyticsTracker).trackErrorScreenShown()
+    }
+
+    @Test
+    fun `Should track when retry button is tapped on error screen`() {
+        val errorScreen = classToTest.initErrorScreenUi()
+
+        errorScreen.primaryActionButton.onClick.invoke()
+
+        verify(contentMigrationAnalyticsTracker).trackErrorRetryTapped()
+    }
+
+    @Test
+    fun `Should track when help button is tapped on error screen`() {
+        val errorScreen = classToTest.initErrorScreenUi()
+
+        errorScreen.secondaryActionButton.onClick.invoke()
+
+        verify(contentMigrationAnalyticsTracker).trackErrorHelpTapped()
+    }
     // endregion
 
     // region UiState Content

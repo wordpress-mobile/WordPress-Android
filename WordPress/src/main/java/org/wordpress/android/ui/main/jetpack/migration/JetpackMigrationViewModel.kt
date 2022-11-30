@@ -93,18 +93,7 @@ class JetpackMigrationViewModel @Inject constructor(
                 !notificationContinueClicked -> emit(initNotificationsScreenUi())
                 else -> emit(initSuccessScreenUi())
             }
-            migrationState is Failure -> {
-                contentMigrationAnalyticsTracker.trackErrorScreenShown()
-                emit(
-                        UiState.Error(
-                                primaryActionButton = ErrorPrimaryButton(::onTryAgainClicked),
-                                secondaryActionButton = ErrorSecondaryButton {
-                                    onHelpClicked(source = HelpButtonSource.Error)
-                                },
-                                type = Generic,
-                        )
-                )
-            }
+            migrationState is Failure -> emit(initErrorScreenUi())
             else -> Unit
         }
     }
@@ -157,6 +146,19 @@ class JetpackMigrationViewModel @Inject constructor(
                 secondaryActionButton = DeleteSecondaryButton {
                     onHelpClicked(source = HelpButtonSource.Delete)
                 },
+        )
+    }
+
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    fun initErrorScreenUi(): UiState.Error {
+        contentMigrationAnalyticsTracker.trackErrorScreenShown()
+
+        return UiState.Error(
+                primaryActionButton = ErrorPrimaryButton(::onTryAgainClicked),
+                secondaryActionButton = ErrorSecondaryButton {
+                    onHelpClicked(source = HelpButtonSource.Error)
+                },
+                type = Generic,
         )
     }
 
