@@ -62,7 +62,7 @@ class JetpackMigrationViewModel @Inject constructor(
     private val appPrefsWrapper: AppPrefsWrapper,
     private val localMigrationOrchestrator: LocalMigrationOrchestrator,
     private val migrationEmailHelper: MigrationEmailHelper,
-    private val contentMigrationAnalyticsTracker: ContentMigrationAnalyticsTracker,
+    private val migrationAnalyticsTracker: ContentMigrationAnalyticsTracker,
 ) : ViewModel() {
     private val _actionEvents = Channel<JetpackMigrationActionEvent>(Channel.BUFFERED)
     val actionEvents = _actionEvents.receiveAsFlow()
@@ -102,7 +102,7 @@ class JetpackMigrationViewModel @Inject constructor(
 
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     fun initWelcomeScreenUi(data: WelcomeScreenData, isContinueClicked: Boolean): Welcome {
-        contentMigrationAnalyticsTracker.trackWelcomeScreenShown()
+        migrationAnalyticsTracker.trackWelcomeScreenShown()
 
         return Welcome(
                 userAvatarUrl = resizeAvatarUrl(data.avatarUrl),
@@ -118,7 +118,7 @@ class JetpackMigrationViewModel @Inject constructor(
 
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     fun initNotificationsScreenUi(): Notifications {
-        contentMigrationAnalyticsTracker.trackNotificationsScreenShown()
+        migrationAnalyticsTracker.trackNotificationsScreenShown()
 
         return Notifications(
                 primaryActionButton = NotificationsPrimaryButton(::onContinueFromNotificationsClicked),
@@ -127,7 +127,7 @@ class JetpackMigrationViewModel @Inject constructor(
 
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     fun initSuccessScreenUi(): Done {
-        contentMigrationAnalyticsTracker.trackThanksScreenShown()
+        migrationAnalyticsTracker.trackThanksScreenShown()
 
         return Done(
                 primaryActionButton = DonePrimaryButton(::onFinishClicked)
@@ -136,7 +136,7 @@ class JetpackMigrationViewModel @Inject constructor(
 
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     fun initPleaseDeleteWordPressAppScreenUi(): Delete {
-        contentMigrationAnalyticsTracker.trackPleaseDeleteWordPressScreenShown()
+        migrationAnalyticsTracker.trackPleaseDeleteWordPressScreenShown()
 
         return Delete(
                 primaryActionButton = DeletePrimaryButton(::onGotItClicked),
@@ -148,7 +148,7 @@ class JetpackMigrationViewModel @Inject constructor(
 
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     fun initErrorScreenUi(): UiState.Error {
-        contentMigrationAnalyticsTracker.trackErrorScreenShown()
+        migrationAnalyticsTracker.trackErrorScreenShown()
 
         return UiState.Error(
                 primaryActionButton = ErrorPrimaryButton(::onTryAgainClicked),
@@ -170,12 +170,12 @@ class JetpackMigrationViewModel @Inject constructor(
     )
 
     private fun onContinueClicked() {
-        contentMigrationAnalyticsTracker.trackWelcomeScreenContinueButtonTapped()
+        migrationAnalyticsTracker.trackWelcomeScreenContinueButtonTapped()
         continueClickedFlow.value = true
     }
 
     private fun onTryAgainClicked() {
-        contentMigrationAnalyticsTracker.trackErrorRetryTapped()
+        migrationAnalyticsTracker.trackErrorRetryTapped()
         tryMigration()
     }
 
@@ -187,7 +187,7 @@ class JetpackMigrationViewModel @Inject constructor(
 
     private fun onContinueFromNotificationsClicked() {
         if (preventDuplicateNotifsFeatureConfig.isEnabled()) disableNotificationsOnWP()
-        contentMigrationAnalyticsTracker.trackNotificationsScreenContinueButtonTapped()
+        migrationAnalyticsTracker.trackNotificationsScreenContinueButtonTapped()
         notificationContinueClickedFlow.value = true
     }
 
@@ -203,7 +203,7 @@ class JetpackMigrationViewModel @Inject constructor(
     }
 
     private fun onFinishClicked() {
-        contentMigrationAnalyticsTracker.trackThanksScreenFinishButtonTapped()
+        migrationAnalyticsTracker.trackThanksScreenFinishButtonTapped()
         migrationEmailHelper.notifyMigrationComplete()
         appPrefsWrapper.setJetpackMigrationCompleted(true)
         postActionEvent(CompleteFlow)
@@ -211,16 +211,16 @@ class JetpackMigrationViewModel @Inject constructor(
 
     private fun onHelpClicked(source: HelpButtonSource) {
         when (source) {
-            HelpButtonSource.Welcome -> contentMigrationAnalyticsTracker.trackWelcomeScreenHelpButtonTapped()
-            HelpButtonSource.WelcomeAvatar -> contentMigrationAnalyticsTracker.trackWelcomeScreenAvatarTapped()
-            HelpButtonSource.Error -> contentMigrationAnalyticsTracker.trackErrorHelpTapped()
-            HelpButtonSource.Delete -> contentMigrationAnalyticsTracker.trackPleaseDeleteWordPressHelpTapped()
+            HelpButtonSource.Welcome -> migrationAnalyticsTracker.trackWelcomeScreenHelpButtonTapped()
+            HelpButtonSource.WelcomeAvatar -> migrationAnalyticsTracker.trackWelcomeScreenAvatarTapped()
+            HelpButtonSource.Error -> migrationAnalyticsTracker.trackErrorHelpTapped()
+            HelpButtonSource.Delete -> migrationAnalyticsTracker.trackPleaseDeleteWordPressHelpTapped()
         }
         postActionEvent(ShowHelp)
     }
 
     private fun onGotItClicked() {
-        contentMigrationAnalyticsTracker.trackPleaseDeleteWordPressGotItTapped()
+        migrationAnalyticsTracker.trackPleaseDeleteWordPressGotItTapped()
         postActionEvent(CompleteFlow)
     }
 

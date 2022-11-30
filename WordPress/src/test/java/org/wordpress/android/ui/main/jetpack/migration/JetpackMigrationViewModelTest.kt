@@ -54,7 +54,7 @@ class JetpackMigrationViewModelTest : BaseUnitTest() {
             appPrefsWrapper = appPrefsWrapper,
             localMigrationOrchestrator = localMigrationOrchestrator,
             migrationEmailHelper = migrationEmailHelper,
-            contentMigrationAnalyticsTracker = contentMigrationAnalyticsTracker,
+            migrationAnalyticsTracker = contentMigrationAnalyticsTracker,
     )
 
     @Before
