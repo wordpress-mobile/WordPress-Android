@@ -138,7 +138,12 @@ class JetpackFeatureFullScreenOverlayFragment : BottomSheetDialogFragment() {
         if (componentVisibility.closeButton) closeButton.setOnClickListener { viewModel.closeBottomSheet() }
         if (componentVisibility.secondaryButton) secondaryButton.setOnClickListener { viewModel.continueToFeature() }
         if (componentVisibility.migrationInfoText)
-            migrationInfoText.setOnClickListener { WPWebViewActivity.openURL(requireContext(), JETPACK_MIGRATION_INFO_URL) }
+            migrationInfoText.setOnClickListener {
+                WPWebViewActivity.openURL(
+                        requireContext(),
+                        JETPACK_MIGRATION_INFO_URL
+                )
+            }
     }
 
     private fun JetpackFeatureRemovalOverlayBinding.updateVisibility(
