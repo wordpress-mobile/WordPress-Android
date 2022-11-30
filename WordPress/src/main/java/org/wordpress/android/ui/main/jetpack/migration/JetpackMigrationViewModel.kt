@@ -2,6 +2,7 @@ package org.wordpress.android.ui.main.jetpack.migration
 
 import android.content.Intent
 import androidx.annotation.DrawableRes
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,6 +23,7 @@ import org.wordpress.android.localcontentmigration.LocalMigrationState.Finished.
 import org.wordpress.android.localcontentmigration.LocalMigrationState.Initial
 import org.wordpress.android.localcontentmigration.LocalMigrationState.Migrating
 import org.wordpress.android.localcontentmigration.MigrationEmailHelper
+import org.wordpress.android.localcontentmigration.WelcomeScreenData
 import org.wordpress.android.sharedlogin.resolver.LocalMigrationOrchestrator
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.DeletePrimaryButton
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.DeleteSecondaryButton
@@ -70,8 +72,11 @@ class JetpackMigrationViewModel @Inject constructor(
     private val notificationContinueClickedFlow = MutableStateFlow(false)
     private var showDeleteState: Boolean = false
 
-    val uiState = combineTransform(migrationStateFlow, continueClickedFlow, notificationContinueClickedFlow) {
-        migrationState, continueClicked, notificationContinueClicked ->
+    val uiState = combineTransform(
+            migrationStateFlow,
+            continueClickedFlow,
+            notificationContinueClickedFlow
+    ) { migrationState, continueClicked, notificationContinueClicked ->
         when {
             showDeleteState -> {
                 contentMigrationAnalyticsTracker.trackPleaseDeleteWordPressScreenShown()
@@ -91,21 +96,9 @@ class JetpackMigrationViewModel @Inject constructor(
             }
             migrationState is Initial -> emit(Loading)
             migrationState is Migrating
-                    || migrationState is Successful && !continueClicked -> {
-                contentMigrationAnalyticsTracker.trackWelcomeScreenShown()
-                emit(
-                        Welcome(
-                                userAvatarUrl = resizeAvatarUrl(migrationState.data.avatarUrl),
-                                isProcessing = continueClicked,
-                                sites = migrationState.data.sites.map(::siteUiFromModel),
-                                onAvatarClicked = { onHelpClicked(source = HelpButtonSource.WelcomeAvatar) },
-                                primaryActionButton = WelcomePrimaryButton(::onContinueClicked),
-                                secondaryActionButton = WelcomeSecondaryButton {
-                                    onHelpClicked(source = HelpButtonSource.Welcome)
-                                },
-                        )
-                )
-            }
+                    || migrationState is Successful && !continueClicked -> emit(
+                    initWelcomeScreenUi(migrationState.data, continueClicked)
+            )
             migrationState is Successful && continueClicked -> when {
                 !notificationContinueClicked -> {
                     contentMigrationAnalyticsTracker.trackNotificationsScreenShown()
@@ -145,6 +138,22 @@ class JetpackMigrationViewModel @Inject constructor(
     fun start(showDeleteState: Boolean) {
         this.showDeleteState = showDeleteState
         tryMigration()
+    }
+
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    fun initWelcomeScreenUi(data: WelcomeScreenData, isContinueClicked: Boolean): Welcome {
+        contentMigrationAnalyticsTracker.trackWelcomeScreenShown()
+
+        return Welcome(
+                userAvatarUrl = resizeAvatarUrl(data.avatarUrl),
+                isProcessing = isContinueClicked,
+                sites = data.sites.map(::siteUiFromModel),
+                onAvatarClicked = { onHelpClicked(source = HelpButtonSource.WelcomeAvatar) },
+                primaryActionButton = WelcomePrimaryButton(::onContinueClicked),
+                secondaryActionButton = WelcomeSecondaryButton {
+                    onHelpClicked(source = HelpButtonSource.Welcome)
+                },
+        )
     }
 
     private fun siteUiFromModel(site: SiteModel) = SiteListItemUiState(

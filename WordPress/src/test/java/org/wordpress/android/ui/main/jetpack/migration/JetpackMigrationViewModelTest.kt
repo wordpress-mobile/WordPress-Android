@@ -2,14 +2,19 @@ package org.wordpress.android.ui.main.jetpack.migration
 
 import kotlinx.coroutines.flow.first
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.localcontentmigration.ContentMigrationAnalyticsTracker
 import org.wordpress.android.localcontentmigration.MigrationEmailHelper
+import org.wordpress.android.localcontentmigration.WelcomeScreenData
 import org.wordpress.android.sharedlogin.resolver.LocalMigrationOrchestrator
 import org.wordpress.android.test
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.DeletePrimaryButton
@@ -52,11 +57,55 @@ class JetpackMigrationViewModelTest : BaseUnitTest() {
             contentMigrationAnalyticsTracker = contentMigrationAnalyticsTracker,
     )
 
+    @Before
+    fun setUp() {
+        whenever(gravatarUtilsWrapper.fixGravatarUrlWithResource(any(), any())).thenReturn("")
+    }
+
     // region ViewModel
     @Test
     fun `Should init Loading UiState as default`() = test {
         assertThat(classToTest.uiState.first()).isInstanceOf(Loading::class.java)
     }
+    // endregion
+
+    // region Analytics Tracking
+
+    @Test
+    fun `Should track when welcome screen is shown`() {
+        classToTest.initWelcomeScreenUi(WelcomeScreenData(), false)
+
+        verify(contentMigrationAnalyticsTracker).trackWelcomeScreenShown()
+    }
+
+    @Test
+    fun `Should track when continue button is tapped on welcome screen`() {
+        val welcomeScreen = classToTest.initWelcomeScreenUi(WelcomeScreenData(), false)
+
+        welcomeScreen.primaryActionButton.onClick.invoke()
+
+        verify(contentMigrationAnalyticsTracker).trackWelcomeScreenContinueButtonTapped()
+    }
+
+    @Test
+    fun `Should track when help button is tapped on welcome screen`() {
+        val welcomeScreen = classToTest.initWelcomeScreenUi(WelcomeScreenData(), false)
+
+        welcomeScreen.secondaryActionButton.onClick.invoke()
+
+        verify(contentMigrationAnalyticsTracker).trackWelcomeScreenHelpButtonTapped()
+    }
+
+
+    @Test
+    fun `Should track when avatar is tapped on welcome screen`() {
+        val welcomeScreen = classToTest.initWelcomeScreenUi(WelcomeScreenData(), false)
+
+        welcomeScreen.onAvatarClicked()
+
+        verify(contentMigrationAnalyticsTracker).trackWelcomeScreenAvatarTapped()
+    }
+
     // endregion
 
     // region UiState Content
