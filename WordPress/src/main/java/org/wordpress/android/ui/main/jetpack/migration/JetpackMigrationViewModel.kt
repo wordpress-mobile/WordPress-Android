@@ -72,11 +72,8 @@ class JetpackMigrationViewModel @Inject constructor(
     private val notificationContinueClickedFlow = MutableStateFlow(false)
     private var showDeleteState: Boolean = false
 
-    val uiState = combineTransform(
-            migrationStateFlow,
-            continueClickedFlow,
-            notificationContinueClickedFlow
-    ) { migrationState, continueClicked, notificationContinueClicked ->
+    val uiState = combineTransform(migrationStateFlow, continueClickedFlow, notificationContinueClickedFlow) {
+        migrationState, continueClicked, notificationContinueClicked ->
         when {
             showDeleteState -> emit(initPleaseDeleteWordPressAppScreenUi())
             migrationState is Ineligible -> {
