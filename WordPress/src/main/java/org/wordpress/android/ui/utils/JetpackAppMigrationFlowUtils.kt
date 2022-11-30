@@ -25,8 +25,6 @@ class JetpackAppMigrationFlowUtils @Inject constructor(
     private val minimumSupportedVersion = "21.3" // non semantic minimum supported version
 
     fun shouldShowMigrationFlow(): Boolean {
-        trackWordPressAppDetected()
-
         return buildConfigWrapper.isJetpackApp
                 && jetpackMigrationFlowFeatureConfig.isEnabled()
                 && appPrefsWrapper.isJetpackMigrationEligible()
@@ -34,12 +32,6 @@ class JetpackAppMigrationFlowUtils @Inject constructor(
                 && !accountStore.hasAccessToken()
                 && isWordPressInstalled()
                 && isWordPressCompatible()
-    }
-
-    private fun trackWordPressAppDetected() {
-        if (isWordPressInstalled()) {
-            contentMigrationAnalyticsTracker.trackWordPressAppDetected(isCompatible = isWordPressCompatible())
-        }
     }
 
     fun startJetpackMigrationFlow() {
@@ -50,6 +42,8 @@ class JetpackAppMigrationFlowUtils @Inject constructor(
 
     private fun isWordPressCompatible(): Boolean {
         val wordPressVersion = wordPressPublicData.nonSemanticPackageVersion()
-        return wordPressVersion != null && Version(wordPressVersion) >= Version(minimumSupportedVersion)
+        val isCompatible = wordPressVersion != null && Version(wordPressVersion) >= Version(minimumSupportedVersion)
+        contentMigrationAnalyticsTracker.trackWordPressAppDetected(isCompatible)
+        return isCompatible
     }
 }
