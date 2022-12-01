@@ -187,7 +187,7 @@ class JetpackMigrationViewModel @Inject constructor(
 
     private fun onTryAgainClicked() {
         migrationAnalyticsTracker.trackErrorRetryTapped()
-        tryMigration()
+        logoutAndFallbackToLogin()
     }
 
     private fun logoutAndFallbackToLogin() {
