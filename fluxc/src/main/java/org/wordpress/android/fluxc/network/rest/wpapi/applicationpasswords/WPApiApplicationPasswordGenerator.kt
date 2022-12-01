@@ -12,9 +12,6 @@ import org.wordpress.android.fluxc.network.rest.wpapi.BaseWPAPIRestClient
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIAuthenticator
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIGsonRequestBuilder
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIResponse
-import org.wordpress.android.fluxc.network.rest.wpcom.jetpacktunnel.JetpackTunnelGsonRequestBuilder.JetpackResponse.JetpackError
-import org.wordpress.android.fluxc.network.rest.wpcom.jetpacktunnel.JetpackTunnelGsonRequestBuilder.JetpackResponse.JetpackSuccess
-import org.wordpress.android.fluxc.utils.extensions.slashJoin
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import javax.inject.Inject
@@ -35,13 +32,13 @@ class WPApiApplicationPasswordGenerator @Inject constructor(
         applicationName: String
     ): ApplicationPasswordCreationResult {
         AppLog.d(T.MAIN, "Create an application password using Cookie Authentication")
-        val url = site.url.slashJoin(WPAPI.users.me.application_passwords.urlV2)
+        val path = WPAPI.users.me.application_passwords.urlV2
 
         val payload = wpApiAuthenticator.makeAuthenticatedWPAPIRequest(site) { nonce ->
             APIResponseWrapper(
                 wpApiGsonRequestBuilder.syncPostRequest(
                     restClient = this,
-                    url = url,
+                    url = site.buildUrl(path),
                     body = mapOf("name" to applicationName),
                     clazz = ApplicationPasswordCreationResponse::class.java,
                     nonce = nonce?.value
@@ -93,12 +90,12 @@ class WPApiApplicationPasswordGenerator @Inject constructor(
     ): ApplicationPasswordDeletionResult {
         AppLog.d(T.MAIN, "Delete application password using Cookie Authentication")
 
-        val url = WPAPI.users.me.application_passwords.urlV2
+        val path = WPAPI.users.me.application_passwords.urlV2
         val payload = wpApiAuthenticator.makeAuthenticatedWPAPIRequest(siteModel) { nonce ->
             APIResponseWrapper(
                 wpApiGsonRequestBuilder.syncDeleteRequest(
                     restClient = this,
-                    url = url,
+                    url = siteModel.buildUrl(path),
                     body = mapOf("name" to applicationName),
                     clazz = ApplicationPasswordDeleteResponse::class.java,
                     nonce = nonce?.value
@@ -131,6 +128,11 @@ class WPApiApplicationPasswordGenerator @Inject constructor(
                 ApplicationPasswordDeletionResult.Failure(error)
             }
         }
+    }
+
+    private fun SiteModel.buildUrl(path: String): String {
+        val baseUrl = wpApiRestUrl ?: "${url}/wp-json"
+        return "${baseUrl.trimEnd('/')}/${path.trimStart('/')}"
     }
 
     private data class APIResponseWrapper<T>(val response: WPAPIResponse<T>) : Payload<BaseNetworkError?>() {
