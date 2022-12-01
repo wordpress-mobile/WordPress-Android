@@ -1,50 +1,55 @@
 package org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords
 
-import android.content.Context
 import com.android.volley.RequestQueue
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.generated.endpoint.WPAPI
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType
 import org.wordpress.android.fluxc.network.UserAgent
-import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient
-import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
-import org.wordpress.android.fluxc.network.rest.wpcom.jetpacktunnel.JetpackTunnelGsonRequestBuilder
+import org.wordpress.android.fluxc.network.rest.wpapi.BaseWPAPIRestClient
+import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIAuthenticator
+import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIGsonRequestBuilder
+import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.jetpacktunnel.JetpackTunnelGsonRequestBuilder.JetpackResponse.JetpackError
 import org.wordpress.android.fluxc.network.rest.wpcom.jetpacktunnel.JetpackTunnelGsonRequestBuilder.JetpackResponse.JetpackSuccess
+import org.wordpress.android.fluxc.utils.extensions.slashJoin
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class JetpackApplicationPasswordGenerator @Inject constructor(
-    private val jetpackTunnelGsonRequestBuilder: JetpackTunnelGsonRequestBuilder,
-    appContext: Context,
+class WPApiApplicationPasswordGenerator @Inject constructor(
+    private val wpApiGsonRequestBuilder: WPAPIGsonRequestBuilder,
+    private val wpApiAuthenticator: WPAPIAuthenticator,
     dispatcher: Dispatcher,
     requestQueue: RequestQueue,
-    accessToken: AccessToken,
     userAgent: UserAgent
-) : BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent),
+) : BaseWPAPIRestClient(dispatcher, requestQueue, userAgent),
     ApplicationPasswordGenerator {
     override suspend fun createApplicationPassword(
         site: SiteModel,
         applicationName: String
     ): ApplicationPasswordCreationResult {
-        AppLog.d(T.MAIN, "Create an application password using Jetpack Tunnel")
+        AppLog.d(T.MAIN, "Create an application password using Cookie Authentication")
+        val url = site.url.slashJoin(WPAPI.users.me.application_passwords.urlV2)
 
-        val url = WPAPI.users.me.application_passwords.urlV2
-        val response = jetpackTunnelGsonRequestBuilder.syncPostRequest(
-            restClient = this,
-            site = site,
-            url = url,
-            body = mapOf("name" to applicationName),
-            clazz = ApplicationPasswordCreationResponse::class.java
-        )
+        val payload = wpApiAuthenticator.makeAuthenticatedWPAPIRequest(site) { nonce ->
+            APIResponseWrapper(
+                wpApiGsonRequestBuilder.syncPostRequest(
+                    restClient = this,
+                    url = url,
+                    body = mapOf("name" to applicationName),
+                    clazz = ApplicationPasswordCreationResponse::class.java,
+                    nonce = nonce?.value
+                )
+            )
+        }
 
-        return when (response) {
-            is JetpackSuccess<ApplicationPasswordCreationResponse> -> {
+        return when (val response = payload.response) {
+            is WPAPIResponse.Success<ApplicationPasswordCreationResponse> -> {
                 response.data?.let {
                     ApplicationPasswordCreationResult.Success(it.name)
                 } ?: ApplicationPasswordCreationResult.Failure(
@@ -54,7 +59,7 @@ class JetpackApplicationPasswordGenerator @Inject constructor(
                     )
                 )
             }
-            is JetpackError<ApplicationPasswordCreationResponse> -> {
+            is WPAPIResponse.Error<ApplicationPasswordCreationResponse> -> {
                 when (response.error.volleyError?.networkResponse?.statusCode) {
                     409 -> {
                         AppLog.w(T.MAIN, "Application Password already exists")
@@ -85,19 +90,23 @@ class JetpackApplicationPasswordGenerator @Inject constructor(
         siteModel: SiteModel,
         applicationName: String
     ): ApplicationPasswordDeletionResult {
-        AppLog.d(T.MAIN, "Delete application password using Jetpack Tunnel")
+        AppLog.d(T.MAIN, "Delete application password using Cookie Authentication")
 
         val url = WPAPI.users.me.application_passwords.urlV2
-        val response = jetpackTunnelGsonRequestBuilder.syncDeleteRequest(
-            restClient = this,
-            site = siteModel,
-            url = url,
-            params = mapOf("name" to applicationName),
-            clazz = ApplicationPasswordDeleteResponse::class.java
-        )
+        val payload = wpApiAuthenticator.makeAuthenticatedWPAPIRequest(siteModel) { nonce ->
+            APIResponseWrapper(
+                wpApiGsonRequestBuilder.syncDeleteRequest(
+                    restClient = this,
+                    url = url,
+                    body = mapOf("name" to applicationName),
+                    clazz = ApplicationPasswordDeleteResponse::class.java,
+                    nonce = nonce?.value
+                )
+            )
+        }
 
-        return when (response) {
-            is JetpackSuccess<ApplicationPasswordDeleteResponse> -> {
+        return when (val response = payload.response) {
+            is WPAPIResponse.Success<ApplicationPasswordDeleteResponse> -> {
                 if (response.data?.deleted == true) {
                     AppLog.d(T.MAIN, "Application password deleted")
                     ApplicationPasswordDeletionResult.Success
@@ -111,14 +120,22 @@ class JetpackApplicationPasswordGenerator @Inject constructor(
                     )
                 }
             }
-            is JetpackError<ApplicationPasswordDeleteResponse> -> {
+            is WPAPIResponse.Error<ApplicationPasswordDeleteResponse> -> {
                 val error = response.error
                 AppLog.w(
                     T.MAIN, "Application password deletion failed, error: " +
-                        "${error.type} ${error.apiError} ${error.message}\n" +
+                        "${error.type} ${error.message}\n" +
                         "${error.volleyError?.toString()}"
                 )
                 ApplicationPasswordDeletionResult.Failure(error)
+            }
+        }
+    }
+
+    private data class APIResponseWrapper<T>(val response: WPAPIResponse<T>) : Payload<BaseNetworkError?>() {
+        init {
+            if (response is WPAPIResponse.Error) {
+                this.error = response.error
             }
         }
     }
