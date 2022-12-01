@@ -352,6 +352,7 @@ dependencies {
     }
     implementation "$gradle.ext.aboutAutomatticBinaryPath:$automatticAboutVersion"
     implementation ("$gradle.ext.storiesAndroidPath:$automatticStoriesVersion") {
+        exclude group: 'androidx.navigation', module: 'navigation-fragment-ktx'
         exclude group: 'androidx.navigation', module: 'navigation-ui-ktx'
     }
     implementation "$gradle.ext.storiesAndroidMp4ComposePath:$automatticStoriesVersion"
