@@ -49,7 +49,7 @@ class WPApiApplicationPasswordGenerator @Inject constructor(
         return when (val response = payload.response) {
             is WPAPIResponse.Success<ApplicationPasswordCreationResponse> -> {
                 response.data?.let {
-                    ApplicationPasswordCreationResult.Success(it.name)
+                    ApplicationPasswordCreationResult.Success(it.password)
                 } ?: ApplicationPasswordCreationResult.Failure(
                     BaseNetworkError(
                         GenericErrorType.UNKNOWN,
