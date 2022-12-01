@@ -18,6 +18,7 @@ data class Plan(
     @SerializedName("orig_cost") val originalCost: String? = null,
     @SerializedName("is_cost_from_introductory_offer") val isCostFromIntroductoryOffer: Boolean = false,
     @SerializedName("product_slug") val productSlug: String? = null,
+    @SerializedName("path_slug") val pathSlug: String? = null,
     @SerializedName("description") val description: String? = null,
     @SerializedName("bill_period") val billPeriod: Int? = null,
     @SerializedName("product_type") val productType: String? = null,
