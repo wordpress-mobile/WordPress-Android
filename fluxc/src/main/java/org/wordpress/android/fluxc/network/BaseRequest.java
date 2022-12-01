@@ -108,6 +108,10 @@ public abstract class BaseRequest<T> extends Request<T> {
         public BaseNetworkError(@NonNull GenericErrorType error) {
             this.type = error;
         }
+        public BaseNetworkError(@NonNull GenericErrorType error, @NonNull String message) {
+            this.type = error;
+            this.message = message;
+        }
         public BaseNetworkError(@NonNull GenericErrorType error, @NonNull XmlRpcErrorType xmlRpcErrorType) {
             this.type = error;
             this.xmlRpcErrorType = xmlRpcErrorType;
