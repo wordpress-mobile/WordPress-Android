@@ -9,7 +9,7 @@ import javax.inject.Singleton
 @Singleton
 class ApplicationPasswordsStore @Inject constructor(
     context: Context,
-    val applicationName: String
+    private val applicationName: String
 ) {
     companion object {
         private const val PREFERENCE_KEY_PREFIX = "app_password_"
