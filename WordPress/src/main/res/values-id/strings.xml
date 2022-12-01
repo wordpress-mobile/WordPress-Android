@@ -1,11 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-11-25 12:17:28+0000
+Translation-Revision-Date: 2022-11-30 11:54:10+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: id
 -->
 <resources>
+    <string name="wp_jetpack_deep_link_open_in_wordpress">Buka tautan di WordPress</string>
+    <string name="wp_jetpack_deep_link_overlay_description">Aplikasi Jetpack sepertinya sudah terinstal.\n\nUntuk selanjutnya, apakah Anda ingin membuka tautan langsung di aplikasi Jetpack?\n\nPengaturan ini bisa diubah kapan pun lewat Pengaturan Aplikasi &gt; Buka tautan di Jetpack</string>
+    <string name="wp_jetpack_deep_link_overlay_title">Buka tautan di Jetpack?</string>
+    <string name="wp_jetpack_continue_without_jetpack">Lanjutkan tanpa Jetpack</string>
+    <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_two_description">Jetpack menghadirkan fitur statistik, pemberitahuan, dan berbagai fitur lainnya untuk membantu membangun sekaligus mengembangkan situs WordPress impian Anda.\n\nAplikasi WordPress tidak dapat lagi digunakan untuk membuat situs baru.</string>
+    <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_one_description">Jetpack menghadirkan fitur statistik, pemberitahuan, dan berbagai fitur lainnya untuk membantu membangun sekaligus mengembangkan situs WordPress impian Anda.</string>
+    <string name="wp_jetpack_feature_removal_site_creation_overlay_title">Buat situs WordPress baru dengan aplikasi Jetpack</string>
+    <string name="deep_linking_weblinks_alias_label">tautanweb</string>
+    <string name="deep_linking_urilinks_alias_label">tautanuri</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_notifications">Ganti ke aplikasi Jetpack agar dapat tetap menerima  notifikasi real-time langsung di perangkat Anda.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_reader">Ganti ke aplikasi Jetpack untuk menemukan, mengikuti, dan memberi suka ke situs dan pos favorit lewat Reader.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_stats">Ganti ke aplikasi Jetpack untuk memantau perkembangan situs dengan fitur statistik dan wawasan.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_notifications">Dapatkan pemberitahuan dengan aplikasi Jetpack</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_reader">Ikuti situs apa pun dengan aplikasi Jetpack</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_stats">Dapatkan statistik situs Anda lewat aplikasi Jetpack baru</string>
+    <string name="preference_open_links_in_jetpack_setting_change_disable_error">Tidak dapat menonaktifkan fitur buka tautan di Jetpack</string>
+    <string name="preference_open_links_in_jetpack_setting_change_enable_error">Tidak dapat mengaktifkan fitur buka tautan di Jetpack</string>
+    <string name="preference_open_links_in_jetpack">Buka tautan di Jetpack</string>
+    <string name="jp_migration_need_help_button">Butuh bantuan?</string>
+    <string name="jp_migration_got_it_button">Saya mengerti</string>
+    <string name="jp_migration_delete_message">Harap &lt;b&gt;hapus aplikasi WordPress&lt;/b&gt; untuk&lt;br&gt;mencegah terjadinya konflik data.</string>
+    <string name="jp_migration_delete_subtitle">Aplikasi WordPress sepertinya masih terinstal. Kami sarankan untuk menghapus aplikasi WordPress guna mencegah terjadinya konflik data.</string>
+    <string name="jp_migration_delete_title">Anda tidak lagi membutuhkan aplikasi WordPress</string>
+    <string name="jp_migration_network_error_message">Tanpa koneksi internet, kami tidak dapat mentransfer data dan pengaturan.</string>
+    <string name="jp_migration_network_error_subtitle">Pastikan koneksi internet berfungsi lalu coba kembali.</string>
+    <string name="jp_migration_network_error_title">Tidak dapat menyambung ke internet.</string>
+    <string name="jp_migration_generic_error_message">Hubungi dukungan atau coba lagi nanti.</string>
+    <string name="jp_migration_generic_error_subtitle">Mohon maaf, prosesnya tidak berjalan sesuai rencana. Data Anda tetap aman, tetapi kali ini kami tidak dapat mentransfernya.</string>
+    <string name="jp_migration_generic_error_title">Ups, ada yang salah..</string>
+    <string name="jp_migration_try_again_button">Coba lagi</string>
+    <string name="jp_migration_finish_button">Selesai</string>
+    <string name="jp_migration_remove_wp_app_icon_content_description">Hapus ikon Aplikasi WordPress</string>
+    <string name="jp_migration_done_delete_wp_message">Harap &lt;b&gt;hapus aplikasi WordPress&lt;/b&gt; untuk&lt;br&gt;mencegah terjadinya konflik data.</string>
+    <string name="jp_migration_done_title">Terima kasih telah beralih ke Jetpack!</string>
+    <string name="jp_migration_notifications_disabled_in_wp_message">Kami akan menonaktifkan pemberitahuan dari aplikasi WordPress.</string>
+    <string name="jp_migration_notifications_subtitle">Anda akan tetap menerima pemberitahuan tersebut, tetapi dari aplikasi Jetpack.</string>
+    <string name="jp_migration_notifications_title">Pemberitahuan kini dikirimkan lewat Jetpack</string>
+    <string name="jp_migration_success_card_message">Harap hapus aplikasi WordPress</string>
+    <string name="wordpress_help_center_button">Pusat bantuan WordPress</string>
+    <string name="support_title">Dukungan</string>
+    <string name="notification_disable_broadcast_permission_desc">Mengizinkan aplikasi untuk menonaktifkan pemberitahuan WordPress.</string>
+    <string name="notification_disable_broadcast_permission_label">nonaktifkan pemberitahuan WordPress</string>
     <string name="jp_migration_help_button">Butuh bantuan?</string>
     <string name="jp_migration_continue_button">Lanjutkan</string>
     <string name="jp_migration_welcome_site_found_message">Kami menemukan situs Anda. Lanjutkan memindahkan semua data Anda dan masuk ke Jetpack secara otomatis.</string>

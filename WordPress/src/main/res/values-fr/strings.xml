@@ -1,11 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-11-18 09:54:08+0000
+Translation-Revision-Date: 2022-11-30 16:54:11+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: fr
 -->
 <resources>
+    <string name="wp_jetpack_deep_link_open_in_wordpress">Ouvrir des liens dans WordPress</string>
+    <string name="wp_jetpack_deep_link_overlay_description">Il semblerait que l’application Jetpack soit installée sur votre appareil.\n\nVoulez-vous ouvrir les liens dans l’application Jetpack à l’avenir ?\n\nVous pouvez toujours modifier cela dans les Réglages de l’application &gt; Ouvrir des liens dans Jetpack.</string>
+    <string name="wp_jetpack_deep_link_overlay_title">Ouvrir des liens dans Jetpack ?</string>
+    <string name="wp_jetpack_continue_without_jetpack">Continuer sans Jetpack</string>
+    <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_two_description">Jetpack fournit des statistiques, des notifications et plus encore, afin de vous permettre de concevoir et de développer le site WordPress de vos rêves.\n\nL’application WordPress ne prend plus en charge la création de site.</string>
+    <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_one_description">Jetpack fournit des statistiques, des notifications et plus encore, afin de vous permettre de concevoir et de développer le site WordPress de vos rêves.</string>
+    <string name="wp_jetpack_feature_removal_site_creation_overlay_title">Créer un site WordPress avec l’application Jetpack</string>
+    <string name="deep_linking_weblinks_alias_label">liens Web</string>
+    <string name="deep_linking_urilinks_alias_label">liens URI</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_notifications">Passez à l\'application Jetpack pour continuer de recevoir  des notifications en temps réel sur votre appareil.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_reader">Passez à l\'application Jetpack pour trouver, suivre et aimer tous vos sites et articles favoris avec le Lecteur.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_stats">Passez à l\'application Jetpack pour avoir le contrôle du trafic de votre site grâce aux statistiques et aux tendances.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_notifications">Obtenir des notifications avec l\'application JetPack</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_reader">Suivre un site à l\'aide de l\'application Jetpack</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_stats">Obtenir des statistiques grâce à la nouvelle application Jetpack</string>
+    <string name="preference_open_links_in_jetpack_setting_change_disable_error">Impossible de désactiver l’ouverture des liens dans Jetpack</string>
+    <string name="preference_open_links_in_jetpack_setting_change_enable_error">Impossible d’activer l’ouverture des liens dans Jetpack</string>
+    <string name="preference_open_links_in_jetpack">Ouvrir les liens dans Jetpack</string>
+    <string name="jp_migration_need_help_button">Besoin d’aide ?</string>
+    <string name="jp_migration_got_it_button">J’ai compris</string>
+    <string name="jp_migration_delete_message">Veuillez &lt;b&gt;supprimer l’application WordPress&lt;/b&gt; pour&lt;br&gt;éviter les conflits de données.</string>
+    <string name="jp_migration_delete_subtitle">Il semblerait que l\'application WordPress soit toujours installée. Nous vous recommandons de supprimer l\'application WordPress pour éviter les conflits de données.</string>
+    <string name="jp_migration_delete_title">Vous n\'avez plus besoin de l\'application WordPress</string>
+    <string name="jp_migration_network_error_message">Nous ne pouvons pas transférer vos données et réglages sans connexion réseau.</string>
+    <string name="jp_migration_network_error_subtitle">Assurez-vous que votre connexion réseau fonctionne, puis réessayez.</string>
+    <string name="jp_migration_network_error_title">Impossible de se connecter à Internet.</string>
+    <string name="jp_migration_generic_error_message">Contactez l’assistance ou réessayez ultérieurement.</string>
+    <string name="jp_migration_generic_error_subtitle">Une erreur inattendue s’est produite. Veuillez nous en excuser. Vos données sont en sécurité, mais il nous est impossible de les transférer pour l’instant.</string>
+    <string name="jp_migration_generic_error_title">Oups, un problème est survenu.</string>
+    <string name="jp_migration_try_again_button">Réessayer</string>
+    <string name="jp_migration_finish_button">Terminer</string>
+    <string name="jp_migration_remove_wp_app_icon_content_description">Supprimer l’icône de l’application WordPress</string>
+    <string name="jp_migration_done_delete_wp_message">Veuillez &lt;b&gt;supprimer l’application WordPress&lt;/b&gt; pour&lt;br&gt;éviter les conflits de données.</string>
+    <string name="jp_migration_done_subtitle">Nous avons transféré tous vos réglages et données. Tout se trouve au même endroit qu’avant.</string>
+    <string name="jp_migration_done_title">Merci d’être passé à Jetpack !</string>
+    <string name="jp_migration_notifications_disabled_in_wp_message">Nous désactiverons les notifications de l’application WordPress.</string>
+    <string name="jp_migration_notifications_subtitle">Vous recevrez les mêmes notifications, mais elles proviendront maintenant de l’application Jetpack.</string>
+    <string name="jp_migration_notifications_title">Les notifications proviennent désormais de Jetpack</string>
+    <string name="jp_migration_success_card_message">Supprimer l\'application WordPress</string>
+    <string name="wordpress_help_center_button">Centre d’aide WordPress</string>
+    <string name="support_title">Assistance</string>
+    <string name="notification_disable_broadcast_permission_desc">Autorisez l’application à désactiver les notifications de WordPress.</string>
+    <string name="notification_disable_broadcast_permission_label">désactiver les notifications de WordPress</string>
     <string name="jp_migration_help_button">Besoin d’aide ?</string>
     <string name="jp_migration_continue_button">Continuer</string>
     <string name="jp_migration_welcome_site_found_message">Nous avons trouvé votre site. Cliquez sur Continuer pour transférer l’ensemble de vos données et vous connecter automatiquement à Jetpack.</string>

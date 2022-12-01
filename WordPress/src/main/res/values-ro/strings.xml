@@ -1,11 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-11-14 14:34:44+0000
+Translation-Revision-Date: 2022-11-30 09:23:35+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.3
 Language: ro
 -->
 <resources>
+    <string name="deep_linking_weblinks_alias_label">legături web</string>
+    <string name="wp_jetpack_continue_without_jetpack">Continuă fără Jetpack</string>
+    <string name="wp_jetpack_deep_link_overlay_title">Deschizi legăturile în Jetpack?</string>
+    <string name="wp_jetpack_feature_removal_site_creation_overlay_title">Creează un site WordPress nou cu aplicația Jetpack</string>
+    <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_one_description">Jetpack oferă statistici, notificări și multe altele pentru a te ajuta să construiești și să dezvolți site-ul WordPress la care visezi.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_notifications">Comută la aplicația Jetpack pentru a continua să primești notificări în timp real pe dispozitivul tău.</string>
+    <string name="deep_linking_urilinks_alias_label">urilinks</string>
+    <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_two_description">Jetpack oferă statistici, notificări și multe altele pentru a te ajuta să construiești și să dezvolți site-ul WordPress la care visezi.\nAplicația WordPress nu mai permite crearea unui site nou.</string>
+    <string name="wp_jetpack_deep_link_overlay_description">Se pare că ai aplicația Jetpack instalată.\n\nÎn viitor vrei să deschizi legăturile în aplicația Jetpack?\n\nPoți schimba oricând asta în Setări aplicație &gt; Deschide legăturile în Jetpack</string>
+    <string name="wp_jetpack_deep_link_open_in_wordpress">Deschide legăturile în WordPress</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_stats">Comută la aplicația Jetpack pentru a urmări creșterea traficului de pe site cu statistici și priviri generale.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_reader">Comută la aplicația Jetpack pentru a găsi, urmări și aprecia toate site-urile și articolele tale preferate din Cititor.</string>
+    <string name="jp_migration_got_it_button">Am înțeles</string>
+    <string name="jp_migration_need_help_button">Ai nevoie de ajutor?</string>
+    <string name="jp_migration_delete_message">Te rog &lt;b&gt;șterge aplicația WordPress&lt;/b&gt; pentru &lt;br&gt;a evita conflictele de date.</string>
+    <string name="preference_open_links_in_jetpack_setting_change_enable_error">Nu pot activa deschiderea legăturilor în Jetpack</string>
+    <string name="preference_open_links_in_jetpack_setting_change_disable_error">Nu pot dezactiva deschiderea legăturilor în Jetpack</string>
+    <string name="preference_open_links_in_jetpack">Deschide legăturile în Jetpack</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_notifications">Cu aplicația Jetpack, primești notificări</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_reader">Cu aplicația Jetpack, poți să urmărești orice site</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_stats">Folosind noua aplicație Jetpack, îți vezi statisticile</string>
+    <string name="jp_migration_network_error_title">Nu mă pot conecta la internet.</string>
+    <string name="jp_migration_delete_title">Nu mai ai nevoie de aplicația WordPress</string>
+    <string name="jp_migration_delete_subtitle">Se pare că încă ai aplicația WordPress instalată. Îți recomandăm să ștergi aplicația WordPress pentru a evita conflictele de date.</string>
+    <string name="jp_migration_generic_error_subtitle">Ne pare rău, dar ceva nu a mers conform planului. Datele tale sunt în siguranță, dar nu le putem transfera momentan.</string>
+    <string name="jp_migration_generic_error_message">Te rog contactează suportul sau încearcă din nou mai târziu.</string>
+    <string name="jp_migration_network_error_subtitle">Te rog verifică dacă ai o conexiunea la rețea care funcționează și încearcă din nou.</string>
+    <string name="jp_migration_network_error_message">Nu putem să transferăm datele și setările fără o conexiune la rețea.</string>
+    <string name="jp_migration_finish_button">Finalizează</string>
+    <string name="jp_migration_try_again_button">Încearcă din nou</string>
+    <string name="jp_migration_done_delete_wp_message">Te rog &lt;b&gt;șterge aplicația WordPress&lt;/b&gt; pentru &lt;br&gt;a evita conflictele de date.</string>
+    <string name="jp_migration_remove_wp_app_icon_content_description">Înlătură iconul aplicației WordPress</string>
+    <string name="jp_migration_generic_error_title">Of nu, ceva nu a mers bine…</string>
+    <string name="jp_migration_done_subtitle">Am transferat toate datele și setările tale. Toate sunt acolo, exact unde erau.</string>
+    <string name="jp_migration_notifications_subtitle">Vei primi aceleași notificări, dar acum vor veni din aplicația Jetpack.</string>
+    <string name="jp_migration_done_title">Îți mulțumim că ai comutat la Jetpack!</string>
+    <string name="jp_migration_notifications_disabled_in_wp_message">Vom dezactiva notificările din aplicația WordPress.</string>
+    <string name="support_title">Suport</string>
+    <string name="wordpress_help_center_button">Centru de ajutor WordPress</string>
+    <string name="jp_migration_success_card_message">Te rog șterge aplicația WordPress</string>
+    <string name="notification_disable_broadcast_permission_label">dezactivează notificările WordPress</string>
+    <string name="notification_disable_broadcast_permission_desc">Permite aplicației să dezactiveze notificările WordPress.</string>
+    <string name="jp_migration_notifications_title">Notificările vin acum de la Jetpack</string>
     <string name="jp_migration_help_button">Ai nevoie de ajutor?</string>
     <string name="jp_migration_continue_button">Continuă</string>
     <string name="jp_migration_welcome_site_found_message">Ți-am găsit site-ul. Continuă să transferi toate datele și te autentifici automat la Jetpack.</string>
@@ -3179,7 +3222,6 @@ Language: ro
     <string name="gallery_error">Elementul media nu a putut fi readus</string>
     <string name="error_deleting_post">A apărut o eroare în timpul ștergerii articolului</string>
     <string name="connection_error">Eroare de conectare</string>
-    <string name="cancel_edit">Abandonează editarea</string>
     <string name="post_not_found">A apărut o eroare la încărcarea articolului. Reîmprospătează articolele și încearcă din nou.</string>
     <string name="media_gallery_type_thumbnail_grid">Grilă miniaturi</string>
     <string name="media_error_no_permission">Nu ai permisiunea de a vizualiza bibioteca media</string>
@@ -3232,6 +3274,7 @@ Language: ro
     <string name="view_in_browser">Vizualizează în navigator</string>
     <string name="comment_status_trash">Aruncate la gunoi</string>
     <string name="mnu_comment_unapprove">Anulează aprobarea</string>
+    <string name="cancel_edit">Anulează editarea</string>
     <string name="share_link">Partajează legătura</string>
     <string name="reader_empty_posts_in_tag_updating">Se aduc articole…</string>
     <string name="cant_share_no_visible_blog">Nu poți partaja pe WordPress fără ca blogul să fie vizibil</string>

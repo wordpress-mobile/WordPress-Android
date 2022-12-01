@@ -1,11 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-11-17 12:54:11+0000
+Translation-Revision-Date: 2022-11-30 14:54:29+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: tr
 -->
 <resources>
+    <string name="wp_jetpack_deep_link_open_in_wordpress">WordPress\'te bağlantıları aç</string>
+    <string name="wp_jetpack_deep_link_overlay_description">Görünüşe göre Jetpack uygulaması cihazınızda yüklü.\n\nBundan sonra bağlantıları Jetpack uygulamasında açmak ister misiniz?\n\nİstediğiniz zaman bunu Uygulama Ayarları &gt; Bağlantıları Jetpack\'te aç seçeneğini kullanarak değiştirebilirsiniz.</string>
+    <string name="wp_jetpack_deep_link_overlay_title">Bağlantılar Jetpack\'te açılsın mı?</string>
+    <string name="wp_jetpack_continue_without_jetpack">Jetpack\'i kullanmadan devam et</string>
+    <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_two_description">Jetpack, hayallerinizdeki WordPress sitesini oluşturmanıza ve büyütmenize yardımcı olacak istatistikler, bildirimler ve daha fazlasını sağlar.\n\nWordPress uygulaması artık yeni bir site oluşturmayı desteklemiyor.</string>
+    <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_one_description">Jetpack, hayallerinizdeki WordPress sitesini oluşturmanıza ve büyütmenize yardımcı olacak istatistikler, bildirimler ve daha fazlasını sağlar.</string>
+    <string name="wp_jetpack_feature_removal_site_creation_overlay_title">Jetpack uygulamasıyla yeni bir WordPress sitesi oluşturun</string>
+    <string name="deep_linking_weblinks_alias_label">weblinks</string>
+    <string name="deep_linking_urilinks_alias_label">urilinks</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_reader">Okuyucu ile tüm favori sitelerinizi ve gönderilerinizi bulmak, takip etmek ve beğenmek için Jetpack\'e geçiş yapın.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_stats">İstatistikler ve bilgilerle sitenizin trafiğinin büyümesini izlemek için Jetpack uygulamasına geçiş yapın.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_notifications">Bildirimlerinizi Jetpack uygulamasıyla alın</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_reader">Jetpack uygulamasıyla istediğiniz siteyi takip edin</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_stats">Yeni Jetpack uygulamasını kullanarak istatistiklerinizi alın</string>
+    <string name="preference_open_links_in_jetpack_setting_change_disable_error">Bağlantıları Jetpack\'te açma özelliği devre dışı bırakılamıyor</string>
+    <string name="preference_open_links_in_jetpack_setting_change_enable_error">Bağlantıları Jetpack\'te açma özelliği etkinleştirilemiyor</string>
+    <string name="preference_open_links_in_jetpack">Bağlantıları Jetpack\'te aç</string>
+    <string name="jp_migration_need_help_button">Yardıma mı ihtiyacınız var?</string>
+    <string name="jp_migration_got_it_button">Anladım</string>
+    <string name="jp_migration_delete_message">Veri çakışmalarını&lt;br&gt;önlemek için lütfen &lt;b&gt;WordPress uygulamasını silin&lt;/b&gt;.</string>
+    <string name="jp_migration_delete_subtitle">Görünüşe göre WordPress uygulaması hâlâ yüklü. Veri çakışmalarını önlemek için WordPress uygulamasını silmenizi öneririz.</string>
+    <string name="jp_migration_delete_title">Artık WordPress uygulamasına ihtiyacınız yok</string>
+    <string name="jp_migration_network_error_message">Ağ bağlantısı olmadığı için verilerinizi ve ayarlarınızı aktaramıyoruz.</string>
+    <string name="jp_migration_network_error_subtitle">Lütfen ağ bağlantınızın çalışıp çalışmadığını kontrol edip yeniden deneyin.</string>
+    <string name="jp_migration_network_error_title">İnternete bağlanılamıyor.</string>
+    <string name="jp_migration_generic_error_message">Lütfen destek merkezi ile iletişime geçin veya daha sonra tekrar deneyin.</string>
+    <string name="jp_migration_generic_error_subtitle">Ne yazık ki bir sorun oluştu. Verileriniz güvende ama şu an onları aktaramıyoruz.</string>
+    <string name="jp_migration_generic_error_title">Hay aksi, bir sorun oluştu.</string>
+    <string name="jp_migration_try_again_button">Tekrar deneyin</string>
+    <string name="jp_migration_finish_button">Bitir</string>
+    <string name="jp_migration_remove_wp_app_icon_content_description">WordPress Uygulaması simgesini kaldır</string>
+    <string name="jp_migration_done_delete_wp_message">Veri çakışmalarını&lt;br&gt;önlemek için lütfen &lt;b&gt;WordPress uygulamasını silin&lt;/b&gt;.</string>
+    <string name="jp_migration_done_subtitle">Tüm verilerinizi ve ayarlarınızı aktardık. Her şey bıraktığınız yerde.</string>
+    <string name="jp_migration_done_title">Jetpack\'e geçtiğiniz için teşekkürler!</string>
+    <string name="jp_migration_notifications_disabled_in_wp_message">WordPress uygulamasından gelen bildirimleri kapatacağız.</string>
+    <string name="jp_migration_notifications_subtitle">Aynı bildirimleri alacaksınız, ancak bunlar artık Jetpack uygulamasından gelecek.</string>
+    <string name="jp_migration_notifications_title">Artık bildirimler Jetpack\'ten geliyor</string>
+    <string name="jp_migration_success_card_message">Lütfen WordPress uygulamasını silin</string>
+    <string name="wordpress_help_center_button">WordPress yardım merkezi</string>
+    <string name="support_title">Destek</string>
+    <string name="notification_disable_broadcast_permission_desc">Uygulamanın WordPress bildirimlerini devre dışı bırakmasına izin verir.</string>
+    <string name="notification_disable_broadcast_permission_label">WordPress bildirimlerini devre dışı bırak</string>
     <string name="jp_migration_help_button">Yardıma mı ihtiyacınız var?</string>
     <string name="jp_migration_continue_button">Devam</string>
     <string name="jp_migration_welcome_site_found_message">Sitenizi bulduk. Tüm verilerinizi aktarmaya devam edin ve Jetpack\'te otomatik olarak oturum açın.</string>
