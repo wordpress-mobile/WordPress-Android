@@ -14,7 +14,9 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
+import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.localcontentmigration.ContentMigrationAnalyticsTracker
 import org.wordpress.android.localcontentmigration.LocalMigrationState
 import org.wordpress.android.localcontentmigration.LocalMigrationState.Finished.Failure
@@ -35,6 +37,7 @@ import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.WelcomeSecondaryButton
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.CompleteFlow
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.FallbackToLogin
+import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.Logout
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.ShowHelp
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Content.Delete
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Content.Done
@@ -63,6 +66,7 @@ class JetpackMigrationViewModel @Inject constructor(
     private val localMigrationOrchestrator: LocalMigrationOrchestrator,
     private val migrationEmailHelper: MigrationEmailHelper,
     private val migrationAnalyticsTracker: ContentMigrationAnalyticsTracker,
+    private val accountStore: AccountStore,
 ) : ViewModel() {
     private val _actionEvents = Channel<JetpackMigrationActionEvent>(Channel.BUFFERED)
     val actionEvents = _actionEvents.receiveAsFlow()
@@ -79,7 +83,7 @@ class JetpackMigrationViewModel @Inject constructor(
             migrationState is Ineligible -> {
                 appPrefsWrapper.setJetpackMigrationEligible(false)
                 emit(Loading)
-                postActionEvent(FallbackToLogin)
+                logoutAndFallbackToLogin()
             }
             migrationState is Initial -> emit(Loading)
             migrationState is Migrating
@@ -159,6 +163,13 @@ class JetpackMigrationViewModel @Inject constructor(
         )
     }
 
+    fun signOutWordPress(application: WordPress) {
+        viewModelScope.launch(Dispatchers.IO) {
+            application.wordPressComSignOut()
+            postActionEvent(CompleteFlow)
+        }
+    }
+
     private fun siteUiFromModel(site: SiteModel) = SiteListItemUiState(
             id = site.siteId,
             name = siteUtilsWrapper.getSiteNameOrHomeURL(site),
@@ -176,7 +187,15 @@ class JetpackMigrationViewModel @Inject constructor(
 
     private fun onTryAgainClicked() {
         migrationAnalyticsTracker.trackErrorRetryTapped()
-        tryMigration()
+        logoutAndFallbackToLogin()
+    }
+
+    private fun logoutAndFallbackToLogin() {
+        if (accountStore.hasAccessToken()) {
+            postActionEvent(Logout)
+        } else {
+            postActionEvent(FallbackToLogin)
+        }
     }
 
     private fun tryMigration() {
@@ -411,5 +430,6 @@ class JetpackMigrationViewModel @Inject constructor(
         object ShowHelp : JetpackMigrationActionEvent()
         object CompleteFlow : JetpackMigrationActionEvent()
         object FallbackToLogin : JetpackMigrationActionEvent()
+        object Logout : JetpackMigrationActionEvent()
     }
 }
