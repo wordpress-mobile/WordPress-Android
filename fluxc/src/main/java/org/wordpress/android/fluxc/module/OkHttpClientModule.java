@@ -27,6 +27,16 @@ import okhttp3.internal.tls.OkHostnameVerifier;
 
 @Module
 public abstract class OkHttpClientModule {
+    @Singleton
+    @Provides
+    @Named("no-cookies")
+    public static OkHttpClient provideNoCookiesOkHttpClientBuilder(
+            @Named("regular") final OkHttpClient okHttpRegularClient) {
+        return okHttpRegularClient.newBuilder()
+                                  .cookieJar(CookieJar.NO_COOKIES)
+                                  .build();
+    }
+
     @Provides
     @Named("no-redirects")
     public static OkHttpClient provideNoRedirectsOkHttpClientBuilder(

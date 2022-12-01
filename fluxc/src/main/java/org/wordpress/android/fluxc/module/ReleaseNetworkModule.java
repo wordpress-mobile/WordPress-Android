@@ -80,6 +80,14 @@ public class ReleaseNetworkModule {
     }
 
     @Singleton
+    @Named("no-cookies")
+    @Provides
+    public RequestQueue provideRequestQueueNoCookies(@Named("no-cookies") OkHttpClient okHttpClient,
+                                                     Context appContext) {
+        return newRequestQueue(okHttpClient, appContext);
+    }
+
+    @Singleton
     @Provides
     public MemorizingTrustManager provideMemorizingTrustManager() {
         return new MemorizingTrustManager();
