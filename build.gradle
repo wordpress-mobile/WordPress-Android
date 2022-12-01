@@ -74,7 +74,7 @@ ext {
     googleGsonVersion = '2.6.2'
     googleMaterialVersion = '1.2.1'
     googlePlayServicesAuthVersion = '20.3.0'
-    googlePlayServicesCodeScannerVersion = '16.0.0-beta1'
+    googlePlayServicesCodeScannerVersion = '16.0.0-beta3'
     jsoupVersion = '1.10.3'
     kotlinxCoroutinesVersion = '1.5.2'
     lottieVersion = '3.4.0'
