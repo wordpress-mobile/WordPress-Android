@@ -1,9 +1,9 @@
 package org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords
 
-import android.util.Base64
 import com.android.volley.Request.Method
 import com.android.volley.RequestQueue
 import kotlinx.coroutines.suspendCancellableCoroutine
+import okhttp3.Credentials
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIGsonRequest
@@ -20,7 +20,7 @@ private const val AUTHORIZATION_HEADER = "Authorization"
 
 @Singleton
 class ApplicationPasswordRestClient @Inject constructor(
-    @Named("regular") private val requestQueue: RequestQueue,
+    @Named("no-cookies") private val requestQueue: RequestQueue,
     private val userAgent: UserAgent,
     private val applicationPasswordsStore: ApplicationPasswordsStore,
     private val jetpackApplicationPasswordGenerator: JetpackApplicationPasswordGenerator,
@@ -50,10 +50,7 @@ class ApplicationPasswordRestClient @Inject constructor(
                 }
             }
 
-        val authorizationHeader = "Basic " + Base64.encodeToString(
-            "$username:$password".toByteArray(),
-            Base64.NO_WRAP
-        )
+        val authorizationHeader = Credentials.basic(username, password)
 
         val response = suspendCancellableCoroutine<WPAPIResponse<T>> { continuation ->
             val request = WPAPIGsonRequest(
