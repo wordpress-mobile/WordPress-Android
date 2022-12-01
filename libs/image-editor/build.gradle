@@ -48,7 +48,7 @@ dependencies {
     implementation "com.google.android.material:material:$googleMaterialVersion"
     implementation "androidx.navigation:navigation-fragment-ktx:$gradle.ext.navComponentVersion"
     implementation "androidx.navigation:navigation-ui-ktx:$gradle.ext.navComponentVersion"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$androidxLifecycleVersion"
+    implementation "androidx.lifecycle:lifecycle-viewmodel:$androidxLifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-livedata-core:$androidxLifecycleVersion"
     implementation ("com.github.yalantis:ucrop:$uCropVersion") {
         exclude group: 'com.squareup.okhttp3'
