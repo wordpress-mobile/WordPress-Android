@@ -13,3 +13,5 @@ fun String.encodeRfc3986Delimiters(): String {
         URLEncoder.encode(it.value, "UTF-8")
     }
 }
+
+fun String.slashJoin(end: String) = "${this.trimEnd('/')}/${end.trimStart('/')}"
