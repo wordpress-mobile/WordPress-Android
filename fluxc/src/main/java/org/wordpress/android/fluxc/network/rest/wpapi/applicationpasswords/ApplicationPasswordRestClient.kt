@@ -131,7 +131,24 @@ class ApplicationPasswordRestClient @Inject constructor(
         site: SiteModel,
         path: String,
         clazz: Class<T>,
+        body: Map<String, Any> = emptyMap(),
+        params: Map<String, String> = emptyMap()
+    ) = executeGsonRequest(site, Method.POST, path, clazz, params, body)
+
+    suspend fun <T> executePutGsonRequest(
+        site: SiteModel,
+        path: String,
+        clazz: Class<T>,
+        body: Map<String, Any> = emptyMap(),
+        params: Map<String, String> = emptyMap()
+    ) = executeGsonRequest(site, Method.PUT, path, clazz, params, body)
+
+    suspend fun <T> executeDeleteGsonRequest(
+        site: SiteModel,
+        path: String,
+        clazz: Class<T>,
         params: Map<String, String> = emptyMap(),
         body: Map<String, Any> = emptyMap()
-    ) = executeGsonRequest(site, Method.POST, path, clazz, params, body)
+    ) = executeGsonRequest(site, Method.DELETE, path, clazz, params, body)
+
 }
