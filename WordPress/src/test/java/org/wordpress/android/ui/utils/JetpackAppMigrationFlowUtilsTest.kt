@@ -7,8 +7,11 @@ import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.never
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.localcontentmigration.ContentMigrationAnalyticsTracker
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.config.JetpackMigrationFlowFeatureConfig
@@ -25,6 +28,7 @@ class JetpackAppMigrationFlowUtilsTest {
     private val accountStore: AccountStore = mock()
     private val appStatus: AppStatus = mock()
     private val wordPressPublicData: WordPressPublicData = mock()
+    private val contentMigrationAnalyticsTracker: ContentMigrationAnalyticsTracker = mock()
 
     private val jetpackAppMigrationFlowUtils = JetpackAppMigrationFlowUtils(
             buildConfigWrapper,
@@ -33,7 +37,8 @@ class JetpackAppMigrationFlowUtilsTest {
             appPrefsWrapper,
             accountStore,
             appStatus,
-            wordPressPublicData
+            wordPressPublicData,
+            contentMigrationAnalyticsTracker,
     )
 
     @Before
@@ -80,7 +85,7 @@ class JetpackAppMigrationFlowUtilsTest {
     }
 
     @Test
-    fun `When the it is not the first migration attempt the Jetpack app the migration flow should not be shown`() {
+    fun `When it is not the first migration attempt the Jetpack app the migration flow should not be shown`() {
         whenever(appPrefsWrapper.getIsFirstTrySharedLoginJetpack()).thenReturn(false)
         val expected = false
         val actual = jetpackAppMigrationFlowUtils.shouldShowMigrationFlow()
@@ -109,6 +114,7 @@ class JetpackAppMigrationFlowUtilsTest {
         val expected = false
         val actual = jetpackAppMigrationFlowUtils.shouldShowMigrationFlow()
         Assert.assertEquals(expected, actual)
+        verify(contentMigrationAnalyticsTracker).trackWordPressAppDetected(false)
     }
 
     @Test
@@ -117,5 +123,28 @@ class JetpackAppMigrationFlowUtilsTest {
         val expected = false
         val actual = jetpackAppMigrationFlowUtils.shouldShowMigrationFlow()
         Assert.assertEquals(expected, actual)
+    }
+
+    @Test
+    fun `When the WordPress app is installed and compatible detection should be tracked true`() {
+        jetpackAppMigrationFlowUtils.shouldShowMigrationFlow()
+
+        verify(contentMigrationAnalyticsTracker).trackWordPressAppDetected(true)
+    }
+
+    @Test
+    fun `When the WordPress app is installed and not compatible detection should be tracked as false`() {
+        whenever(wordPressPublicData.nonSemanticPackageVersion()).thenReturn("21.2")
+        jetpackAppMigrationFlowUtils.shouldShowMigrationFlow()
+
+        verify(contentMigrationAnalyticsTracker).trackWordPressAppDetected(false)
+    }
+
+    @Test
+    fun `When the WordPress app is not detected detection should not be tracked`() {
+        whenever(appStatus.isAppInstalled(any())).thenReturn(false)
+        jetpackAppMigrationFlowUtils.shouldShowMigrationFlow()
+
+        verify(contentMigrationAnalyticsTracker, never()).trackWordPressAppDetected(any())
     }
 }
