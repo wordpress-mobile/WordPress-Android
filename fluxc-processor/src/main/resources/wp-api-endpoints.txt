@@ -14,6 +14,7 @@
 
 /users/
 /users/me/
+/users/me/application-passwords
 
 /plugins/
 /plugins/<name>#String
