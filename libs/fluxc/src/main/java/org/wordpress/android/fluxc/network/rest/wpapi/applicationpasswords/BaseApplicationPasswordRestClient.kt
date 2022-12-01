@@ -20,7 +20,8 @@ private const val AUTHORIZATION_HEADER = "Authorization"
 class ApplicationPasswordRestClient @Inject constructor(
     private val requestQueue: RequestQueue,
     private val userAgent: UserAgent,
-    private val applicationPasswordsStore: ApplicationPasswordsStore
+    private val applicationPasswordsStore: ApplicationPasswordsStore,
+    private val jetpackApplicationPasswordGenerator: JetpackApplicationPasswordGenerator
 ) {
     suspend fun <T> executeGsonRequest(
         site: SiteModel,
@@ -31,9 +32,14 @@ class ApplicationPasswordRestClient @Inject constructor(
         params: Map<String, String> = emptyMap(),
         body: Map<String, Any> = emptyMap()
     ): WPAPIResponse<T> {
-        val password = applicationPasswordsStore.getApplicationPassword(UrlUtils.removeScheme(site.url))
+        val password = applicationPasswordsStore.getApplicationPassword(site.domainName)
             ?: run {
-                TODO("Implement fetching password")
+                when (val result = createApplicationPassword(site)) {
+                    is ApplicationPasswordCreationResult.Success -> result.password
+                    is ApplicationPasswordCreationResult.Failure ->
+                        return WPAPIResponse.Error(result.error)
+                    ApplicationPasswordCreationResult.NotSupported -> TODO()
+                }
             }
 
         val authorizationHeader = "Basic " + Base64.encodeToString(
@@ -66,6 +72,30 @@ class ApplicationPasswordRestClient @Inject constructor(
             }
         }
     }
+
+    private suspend fun createApplicationPassword(
+        site: SiteModel
+    ): ApplicationPasswordCreationResult {
+        val result = if (site.origin == SiteModel.ORIGIN_WPCOM_REST) {
+            jetpackApplicationPasswordGenerator.createApplicationPassword(
+                site = site,
+                applicationName = applicationPasswordsStore.applicationName
+            )
+        } else {
+            TODO()
+        }
+
+        if (result is ApplicationPasswordCreationResult.Success) {
+            applicationPasswordsStore.saveApplicationPassword(
+                host = site.domainName,
+                password = result.password
+            )
+        }
+        return result
+    }
+
+    private val SiteModel.domainName
+        get() = UrlUtils.removeScheme(url)
 
     suspend fun <T> executeGetGsonRequest(
         site: SiteModel,
