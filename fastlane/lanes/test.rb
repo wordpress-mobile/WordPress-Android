@@ -33,10 +33,13 @@ platform :android do
       crash_on_test_failure: false
     )
 
-    unless test_succeeded
+    annotation_ctx = 'firebase-test-wordpress-vanilla-debug'
+    if test_succeeded
+      sh("buildkite-agent annotation remove --context '#{annotation_ctx}' || true") if is_ci?
+    else
       details_url = lane_context[SharedValues::FIREBASE_TEST_MORE_DETAILS_URL]
       message = "Firebase Tests failed. Failure details can be seen [here in Firebase Console](#{details_url})"
-      sh('buildkite-agent', 'annotate', message, '--style', 'error', '--context', 'firebase-test-wordpress-vanilla-debug') if is_ci?
+      sh('buildkite-agent', 'annotate', message, '--style', 'error', '--context', annotation_ctx) if is_ci?
       UI.test_failure!(message)
     end
   end
