@@ -7,8 +7,8 @@ import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.kotlinpoet.asClassName
 import java.lang.StringBuilder
 
-const val FILE_NAME = "RemoteFeatureConfigDefaults"
-const val VARIABLE_NAME = "remoteFeatureConfigDefaults"
+private const val FILE_NAME = "RemoteFeatureConfigDefaults"
+private const val VARIABLE_NAME = "remoteFeatureConfigDefaults"
 
 class RemoteFeatureConfigDefaultsBuilder(private val defaults: Map<String, String>) {
     fun getContent(): FileSpec {
