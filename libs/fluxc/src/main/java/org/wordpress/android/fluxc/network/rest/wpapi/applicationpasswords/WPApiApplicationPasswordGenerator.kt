@@ -18,6 +18,7 @@ import org.wordpress.android.fluxc.utils.extensions.slashJoin
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import javax.inject.Inject
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Singleton
@@ -25,7 +26,7 @@ class WPApiApplicationPasswordGenerator @Inject constructor(
     private val wpApiGsonRequestBuilder: WPAPIGsonRequestBuilder,
     private val wpApiAuthenticator: WPAPIAuthenticator,
     dispatcher: Dispatcher,
-    requestQueue: RequestQueue,
+    @Named("regular") requestQueue: RequestQueue,
     userAgent: UserAgent
 ) : BaseWPAPIRestClient(dispatcher, requestQueue, userAgent),
     ApplicationPasswordGenerator {

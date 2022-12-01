@@ -16,6 +16,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.jetpacktunnel.JetpackTunne
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import javax.inject.Inject
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Singleton
@@ -23,7 +24,7 @@ class JetpackApplicationPasswordGenerator @Inject constructor(
     private val jetpackTunnelGsonRequestBuilder: JetpackTunnelGsonRequestBuilder,
     appContext: Context,
     dispatcher: Dispatcher,
-    requestQueue: RequestQueue,
+    @Named("regular") requestQueue: RequestQueue,
     accessToken: AccessToken,
     userAgent: UserAgent
 ) : BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent),
