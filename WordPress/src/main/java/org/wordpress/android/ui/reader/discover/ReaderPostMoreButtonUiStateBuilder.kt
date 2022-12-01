@@ -53,7 +53,7 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
         menuItems.add(buildShare(onButtonClicked))
         menuItems.add(buildFollow(isPostFollowed, onButtonClicked))
         menuItems.add(SpacerNoAction())
-        checkAndAddMenuItemForBlockSite(menuItems, isPostFollowed, onButtonClicked)
+        checkAndAddMenuItemForBlockSite(menuItems, onButtonClicked)
         menuItems.add(buildReportPost(onButtonClicked))
 
         return menuItems
@@ -180,10 +180,9 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
 
     private fun checkAndAddMenuItemForBlockSite(
         menuItems: MutableList<ReaderPostCardAction>,
-        isPostFollowed: Boolean,
         onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit
     ) {
-        if (!isPostFollowed) menuItems.add(buildBlockSite(onButtonClicked))
+        menuItems.add(buildBlockSite(onButtonClicked))
     }
 
     private fun buildBlockSite(onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit) =
