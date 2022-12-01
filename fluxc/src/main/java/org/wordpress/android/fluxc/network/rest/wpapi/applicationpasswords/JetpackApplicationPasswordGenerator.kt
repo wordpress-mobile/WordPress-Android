@@ -27,12 +27,11 @@ class JetpackApplicationPasswordGenerator @Inject constructor(
     @Named("regular") requestQueue: RequestQueue,
     accessToken: AccessToken,
     userAgent: UserAgent
-) : BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent),
-    ApplicationPasswordGenerator {
-    override suspend fun createApplicationPassword(
+) : BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {
+    suspend fun createApplicationPassword(
         site: SiteModel,
         applicationName: String
-    ): ApplicationPasswordCreationResult {
+    ): ApplicationPasswordCreationPayload {
         AppLog.d(T.MAIN, "Create an application password using Jetpack Tunnel")
 
         val url = WPAPI.users.me.application_passwords.urlV2
@@ -47,51 +46,28 @@ class JetpackApplicationPasswordGenerator @Inject constructor(
         return when (response) {
             is JetpackSuccess<ApplicationPasswordCreationResponse> -> {
                 response.data?.let {
-                    ApplicationPasswordCreationResult.Success(it.password)
-                } ?: ApplicationPasswordCreationResult.Failure(
+                    ApplicationPasswordCreationPayload(it.password)
+                } ?: ApplicationPasswordCreationPayload(
                     BaseNetworkError(
                         GenericErrorType.UNKNOWN,
                         "Password missing from response"
                     )
                 )
             }
-            is JetpackError<ApplicationPasswordCreationResponse> -> {
-                when (response.error.volleyError?.networkResponse?.statusCode) {
-                    409 -> {
-                        AppLog.w(T.MAIN, "Application Password already exists")
-                        when (val deletionResult = deleteApplicationPassword(site, applicationName)) {
-                            ApplicationPasswordDeletionResult.Success ->
-                                createApplicationPassword(site, applicationName)
-                            is ApplicationPasswordDeletionResult.Failure ->
-                                ApplicationPasswordCreationResult.Failure(deletionResult.error)
-                        }
-                    }
-                    404 -> {
-                        AppLog.w(T.MAIN, "Application Password feature not supported")
-                        ApplicationPasswordCreationResult.NotSupported
-                    }
-                    else -> {
-                        AppLog.w(
-                            T.MAIN,
-                            "Application Password creation failed ${response.error.type}"
-                        )
-                        ApplicationPasswordCreationResult.Failure(response.error)
-                    }
-                }
-            }
+            is JetpackError<ApplicationPasswordCreationResponse> -> ApplicationPasswordCreationPayload(response.error)
         }
     }
 
-    override suspend fun deleteApplicationPassword(
-        siteModel: SiteModel,
+    suspend fun deleteApplicationPassword(
+        site: SiteModel,
         applicationName: String
-    ): ApplicationPasswordDeletionResult {
+    ): ApplicationPasswordDeletionPayload {
         AppLog.d(T.MAIN, "Delete application password using Jetpack Tunnel")
 
         val url = WPAPI.users.me.application_passwords.urlV2
         val response = jetpackTunnelGsonRequestBuilder.syncDeleteRequest(
             restClient = this,
-            site = siteModel,
+            site = site,
             url = url,
             params = mapOf("name" to applicationName),
             clazz = ApplicationPasswordDeleteResponse::class.java
@@ -99,27 +75,10 @@ class JetpackApplicationPasswordGenerator @Inject constructor(
 
         return when (response) {
             is JetpackSuccess<ApplicationPasswordDeleteResponse> -> {
-                if (response.data?.deleted == true) {
-                    AppLog.d(T.MAIN, "Application password deleted")
-                    ApplicationPasswordDeletionResult.Success
-                } else {
-                    AppLog.w(T.MAIN, "Application password deletion failed")
-                    ApplicationPasswordDeletionResult.Failure(
-                        BaseNetworkError(
-                            GenericErrorType.UNKNOWN,
-                            "Deletion not confirmed by API"
-                        )
-                    )
-                }
+                ApplicationPasswordDeletionPayload(response.data!!.deleted)
             }
             is JetpackError<ApplicationPasswordDeleteResponse> -> {
-                val error = response.error
-                AppLog.w(
-                    T.MAIN, "Application password deletion failed, error: " +
-                        "${error.type} ${error.apiError} ${error.message}\n" +
-                        "${error.volleyError?.toString()}"
-                )
-                ApplicationPasswordDeletionResult.Failure(error)
+                ApplicationPasswordDeletionPayload(response.error)
             }
         }
     }

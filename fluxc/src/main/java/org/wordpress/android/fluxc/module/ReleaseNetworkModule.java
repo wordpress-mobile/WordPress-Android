@@ -1,5 +1,7 @@
 package org.wordpress.android.fluxc.module;
 
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
+
 import android.content.Context;
 
 import com.android.volley.Network;
@@ -19,14 +21,17 @@ import org.wordpress.android.fluxc.network.rest.JsonObjectOrFalse;
 import org.wordpress.android.fluxc.network.rest.JsonObjectOrFalseDeserializer;
 
 import java.io.File;
+import java.lang.annotation.Retention;
 import java.net.CookieHandler;
 import java.net.CookieManager;
 
 import javax.inject.Named;
+import javax.inject.Qualifier;
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import kotlin.annotation.MustBeDocumented;
 import kotlin.coroutines.CoroutineContext;
 import kotlinx.coroutines.Dispatchers;
 import okhttp3.CookieJar;
