@@ -12,6 +12,7 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.localcontentmigration.ContentMigrationAnalyticsTracker
 import org.wordpress.android.localcontentmigration.MigrationEmailHelper
 import org.wordpress.android.localcontentmigration.WelcomeScreenData
@@ -46,6 +47,7 @@ class JetpackMigrationViewModelTest : BaseUnitTest() {
     private val preventDuplicateNotifsFeatureConfig: PreventDuplicateNotifsFeatureConfig = mock()
     private val contentMigrationAnalyticsTracker: ContentMigrationAnalyticsTracker = mock()
     private val contextProvider: ContextProvider = mock()
+    private val accountStore: AccountStore = mock()
     private val classToTest = JetpackMigrationViewModel(
             siteUtilsWrapper = siteUtilsWrapper,
             gravatarUtilsWrapper = gravatarUtilsWrapper,
@@ -55,6 +57,7 @@ class JetpackMigrationViewModelTest : BaseUnitTest() {
             localMigrationOrchestrator = localMigrationOrchestrator,
             migrationEmailHelper = migrationEmailHelper,
             migrationAnalyticsTracker = contentMigrationAnalyticsTracker,
+            accountStore = accountStore,
     )
 
     @Before
