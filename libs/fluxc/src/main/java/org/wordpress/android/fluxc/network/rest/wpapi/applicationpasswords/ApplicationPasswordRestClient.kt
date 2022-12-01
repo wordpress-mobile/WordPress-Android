@@ -23,17 +23,23 @@ class ApplicationPasswordRestClient @Inject constructor(
     @Named("regular") private val requestQueue: RequestQueue,
     private val userAgent: UserAgent,
     private val applicationPasswordsStore: ApplicationPasswordsStore,
-    private val jetpackApplicationPasswordGenerator: JetpackApplicationPasswordGenerator
+    private val jetpackApplicationPasswordGenerator: JetpackApplicationPasswordGenerator,
+    private val wpApiApplicationPasswordGenerator: WPApiApplicationPasswordGenerator,
 ) {
     suspend fun <T> executeGsonRequest(
         site: SiteModel,
-        username: String,
         method: Int,
         path: String,
         clazz: Class<T>,
         params: Map<String, String> = emptyMap(),
         body: Map<String, Any> = emptyMap()
     ): WPAPIResponse<T> {
+        val username = if (site.origin != SiteModel.ORIGIN_WPCOM_REST) {
+            site.username
+        } else {
+            TODO()
+        }
+
         val password = applicationPasswordsStore.getApplicationPassword(site.domainName)
             ?: run {
                 when (val result = createApplicationPassword(site)) {
@@ -81,7 +87,7 @@ class ApplicationPasswordRestClient @Inject constructor(
                     " Delete the saved one then retry"
             )
             applicationPasswordsStore.deleteApplicationPassword(site.domainName)
-            executeGsonRequest(site, username, method, path, clazz, params, body)
+            executeGsonRequest(site, method, path, clazz, params, body)
         } else {
             response
         }
@@ -96,7 +102,10 @@ class ApplicationPasswordRestClient @Inject constructor(
                 applicationName = applicationPasswordsStore.applicationName
             )
         } else {
-            TODO()
+            wpApiApplicationPasswordGenerator.createApplicationPassword(
+                site = site,
+                applicationName = applicationPasswordsStore.applicationName
+            )
         }
 
         if (result is ApplicationPasswordCreationResult.Success) {
@@ -113,18 +122,16 @@ class ApplicationPasswordRestClient @Inject constructor(
 
     suspend fun <T> executeGetGsonRequest(
         site: SiteModel,
-        username: String,
         path: String,
         clazz: Class<T>,
         params: Map<String, String> = emptyMap()
-    ) = executeGsonRequest(site, username, Method.GET, path, clazz, params)
+    ) = executeGsonRequest(site, Method.GET, path, clazz, params)
 
     suspend fun <T> executePostGsonRequest(
         site: SiteModel,
-        username: String,
         path: String,
         clazz: Class<T>,
         params: Map<String, String> = emptyMap(),
         body: Map<String, Any> = emptyMap()
-    ) = executeGsonRequest(site, username, Method.POST, path, clazz, params, body)
+    ) = executeGsonRequest(site, Method.POST, path, clazz, params, body)
 }
