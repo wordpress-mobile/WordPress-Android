@@ -26,7 +26,7 @@ import org.wordpress.android.util.DebugUtils
 import org.wordpress.android.util.config.FeaturesInDevelopment
 import org.wordpress.android.util.config.ManualFeatureConfig
 import org.wordpress.android.util.config.FeatureFlagConfig
-import org.wordpress.android.util.config.RemoteConfigDefaults
+import org.wordpress.android.util.config.RemoteFeatureConfigDefaults
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -101,7 +101,7 @@ class DebugSettingsViewModel
     }
 
     private fun buildRemoteFeatures(): List<Feature> {
-        return RemoteConfigDefaults.remoteConfigDefaults.mapNotNull { (key, defaultValue) ->
+        return RemoteFeatureConfigDefaults.remoteFeatureConfigDefaults.mapNotNull { (key, defaultValue) ->
             val value = if (manualFeatureConfig.hasManualSetup(key)) {
                 manualFeatureConfig.isManuallyEnabled(key)
             } else {

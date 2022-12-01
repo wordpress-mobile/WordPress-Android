@@ -21,14 +21,14 @@ class AppConfig
      * while using the app. We should only reload the flags when the application is created.
      */
     private val experimentValues = mutableMapOf<String, String>()
-    private val remoteConfigCheck = RemoteConfigCheck(this)
+    private val remoteFeatureConfigCheck = RemoteFeatureConfigCheck(this)
 
     /**
      * This method initialized the config
      */
     fun init(appScope: CoroutineScope) {
         featureFlagConfig.init(appScope)
-        remoteConfigCheck.checkRemoteFields()
+        remoteFeatureConfigCheck.checkRemoteFields()
     }
 
     /**
