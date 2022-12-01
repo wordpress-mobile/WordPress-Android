@@ -10,7 +10,6 @@ import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIGsonRequest
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIResponse
 import org.wordpress.android.fluxc.utils.extensions.slashJoin
 import org.wordpress.android.util.AppLog
-import org.wordpress.android.util.UrlUtils
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -22,9 +21,7 @@ private const val AUTHORIZATION_HEADER = "Authorization"
 class ApplicationPasswordRestClient @Inject constructor(
     @Named("no-cookies") private val requestQueue: RequestQueue,
     private val userAgent: UserAgent,
-    private val applicationPasswordsStore: ApplicationPasswordsStore,
-    private val jetpackApplicationPasswordGenerator: JetpackApplicationPasswordGenerator,
-    private val wpApiApplicationPasswordGenerator: WPApiApplicationPasswordGenerator,
+    private val applicationPasswordManager: ApplicationPasswordManager
 ) {
     suspend fun <T> executeGsonRequest(
         site: SiteModel,
@@ -40,15 +37,12 @@ class ApplicationPasswordRestClient @Inject constructor(
             TODO()
         }
 
-        val password = applicationPasswordsStore.getApplicationPassword(site.domainName)
-            ?: run {
-                when (val result = createApplicationPassword(site)) {
-                    is ApplicationPasswordCreationResult.Success -> result.password
-                    is ApplicationPasswordCreationResult.Failure ->
-                        return WPAPIResponse.Error(result.error)
-                    ApplicationPasswordCreationResult.NotSupported -> TODO()
-                }
-            }
+        val password = when (val result = applicationPasswordManager.getApplicationPassword(site)) {
+            is ApplicationPasswordCreationResult.Success -> result.password
+            is ApplicationPasswordCreationResult.Failure ->
+                return WPAPIResponse.Error(result.error)
+            ApplicationPasswordCreationResult.NotSupported -> TODO()
+        }
 
         val authorizationHeader = Credentials.basic(username, password)
 
@@ -83,39 +77,12 @@ class ApplicationPasswordRestClient @Inject constructor(
                 "Authentication failure using application password, maybe revoked?" +
                     " Delete the saved one then retry"
             )
-            applicationPasswordsStore.deleteApplicationPassword(site.domainName)
+            applicationPasswordManager.deleteLocalApplicationPassword(site)
             executeGsonRequest(site, method, path, clazz, params, body)
         } else {
             response
         }
     }
-
-    private suspend fun createApplicationPassword(
-        site: SiteModel
-    ): ApplicationPasswordCreationResult {
-        val result = if (site.origin == SiteModel.ORIGIN_WPCOM_REST) {
-            jetpackApplicationPasswordGenerator.createApplicationPassword(
-                site = site,
-                applicationName = applicationPasswordsStore.applicationName
-            )
-        } else {
-            wpApiApplicationPasswordGenerator.createApplicationPassword(
-                site = site,
-                applicationName = applicationPasswordsStore.applicationName
-            )
-        }
-
-        if (result is ApplicationPasswordCreationResult.Success) {
-            applicationPasswordsStore.saveApplicationPassword(
-                host = site.domainName,
-                password = result.password
-            )
-        }
-        return result
-    }
-
-    private val SiteModel.domainName
-        get() = UrlUtils.removeScheme(url)
 
     suspend fun <T> executeGetGsonRequest(
         site: SiteModel,
