@@ -9,6 +9,7 @@ import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIGsonRequest
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIResponse
 import org.wordpress.android.fluxc.utils.extensions.slashJoin
+import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.UrlUtils
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -47,7 +48,7 @@ class ApplicationPasswordRestClient @Inject constructor(
             Base64.NO_WRAP
         )
 
-        return suspendCancellableCoroutine { continuation ->
+        val response = suspendCancellableCoroutine<WPAPIResponse<T>> { continuation ->
             val request = WPAPIGsonRequest(
                 method,
                 (site.wpApiRestUrl ?: site.url.slashJoin("wp-json")).slashJoin(path),
@@ -70,6 +71,18 @@ class ApplicationPasswordRestClient @Inject constructor(
             continuation.invokeOnCancellation {
                 request.cancel()
             }
+        }
+
+        return if (response is WPAPIResponse.Error && response.error.volleyError?.networkResponse?.statusCode == 401) {
+            AppLog.w(
+                AppLog.T.MAIN,
+                "Authentication failure using application password, maybe revoked?" +
+                    " Delete the saved one then retry"
+            )
+            applicationPasswordsStore.deleteApplicationPassword(site.domainName)
+            executeGsonRequest(site, username, method, path, clazz, params, body)
+        } else {
+            response
         }
     }
 
