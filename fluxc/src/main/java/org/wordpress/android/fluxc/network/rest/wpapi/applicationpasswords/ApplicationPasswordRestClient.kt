@@ -12,6 +12,7 @@ import org.wordpress.android.fluxc.utils.extensions.slashJoin
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.UrlUtils
 import javax.inject.Inject
+import javax.inject.Named
 import javax.inject.Singleton
 import kotlin.coroutines.resume
 
@@ -19,7 +20,7 @@ private const val AUTHORIZATION_HEADER = "Authorization"
 
 @Singleton
 class ApplicationPasswordRestClient @Inject constructor(
-    private val requestQueue: RequestQueue,
+    @Named("regular") private val requestQueue: RequestQueue,
     private val userAgent: UserAgent,
     private val applicationPasswordsStore: ApplicationPasswordsStore,
     private val jetpackApplicationPasswordGenerator: JetpackApplicationPasswordGenerator
