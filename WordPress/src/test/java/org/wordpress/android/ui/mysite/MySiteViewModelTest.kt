@@ -2254,7 +2254,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `JP migration scuccess card click should be tracked`() {
+    fun `JP migration success card click should be tracked`() {
         val packageName = "packageName"
         whenever(wordPressPublicData.currentPackageId()).thenReturn(packageName)
         whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
