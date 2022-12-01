@@ -36,7 +36,6 @@ ext {
     androidInstallReferrerVersion = '2.2'
     androidVolleyVersion = '1.1.1'
     androidxAppcompatVersion = '1.1.0'
-    androidxAppcompatImageEditorVersion = '1.0.2' // TODO: Align 'appcompat' versions.
     androidxArchCoreVersion = '2.0.0'
     androidxComposeVersion = '1.1.1'
     androidxCardviewVersion = '1.0.0'
