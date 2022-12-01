@@ -9,8 +9,10 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combineTransform
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
@@ -93,7 +95,7 @@ class JetpackMigrationViewModel @Inject constructor(
             migrationState is Failure -> emit(initErrorScreenUi())
             else -> Unit
         }
-    }
+    }.stateIn(viewModelScope, SharingStarted.Lazily, Loading)
 
     fun start(showDeleteState: Boolean) {
         this.showDeleteState = showDeleteState
@@ -102,7 +104,9 @@ class JetpackMigrationViewModel @Inject constructor(
 
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     fun initWelcomeScreenUi(data: WelcomeScreenData, isContinueClicked: Boolean): Welcome {
-        migrationAnalyticsTracker.trackWelcomeScreenShown()
+        if (uiState.value !is Welcome) {
+            migrationAnalyticsTracker.trackWelcomeScreenShown()
+        }
 
         return Welcome(
                 userAvatarUrl = resizeAvatarUrl(data.avatarUrl),
