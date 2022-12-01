@@ -33,6 +33,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore.Companion.QUICK_START_V
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
+import org.wordpress.android.localcontentmigration.ContentMigrationAnalyticsTracker
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.STORY_FROM_MY_SITE
@@ -165,6 +166,7 @@ class MySiteViewModel @Inject constructor(
     private val appPrefsWrapper: AppPrefsWrapper,
     private val bloggingPromptsCardAnalyticsTracker: BloggingPromptsCardAnalyticsTracker,
     private val quickStartTracker: QuickStartTracker,
+    private val contentMigrationAnalyticsTracker: ContentMigrationAnalyticsTracker,
     private val dispatcher: Dispatcher,
     private val appStatus: AppStatus,
     private val wordPressPublicData: WordPressPublicData
@@ -430,9 +432,7 @@ class MySiteViewModel @Inject constructor(
         val migrationSuccessCard = SingleActionCard(
                 textResource = R.string.jp_migration_success_card_message,
                 imageResource = R.drawable.ic_wordpress_blue_32dp,
-                onActionClick = {
-                    _onNavigation.value = Event(SiteNavigationAction.OpenJetpackMigrationDeleteWP)
-                }
+                onActionClick = ::onPleaseDeleteWordPressAppCardClick
         ).takeIf {
             val isJetpackApp = buildConfigWrapper.isJetpackApp
             val isMigrationCompleted = appPrefsWrapper.isJetpackMigrationCompleted()
@@ -557,6 +557,11 @@ class MySiteViewModel @Inject constructor(
                         jetpackBadge = jetpackBadge
                 )
         )
+    }
+
+    private fun onPleaseDeleteWordPressAppCardClick() {
+        contentMigrationAnalyticsTracker.trackPleaseDeleteWordPressCardTapped()
+        _onNavigation.value = Event(SiteNavigationAction.OpenJetpackMigrationDeleteWP)
     }
 
     private fun onJetpackBadgeClick() {

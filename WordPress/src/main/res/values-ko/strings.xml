@@ -1,11 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-11-17 18:54:08+0000
+Translation-Revision-Date: 2022-12-01 16:54:12+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.3
 Language: ko_KR
 -->
 <resources>
+    <string name="wp_jetpack_deep_link_open_in_wordpress">워드프레스에서 링크 열기</string>
+    <string name="wp_jetpack_deep_link_overlay_description">젯팩 앱을 설치하신 것 같습니다.\n\n앞으로 젯팩 앱에서 링크를 여시겠어요?\n\n언제든지 젯팩의 앱 설정 &gt; 링크 열기에서 변경하실 수 있습니다.</string>
+    <string name="wp_jetpack_deep_link_overlay_title">젯팩에서 링크 열기 여부</string>
+    <string name="wp_jetpack_continue_without_jetpack">젯팩 없이 계속</string>
+    <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_two_description">젯팩에서는 꿈꾸는 워드프레스 사이트 제작 및 성장에 도움이 되는 통계, 알림 등이 제공됩니다.\n\n워드프레스 앱에서는 이제 새 사이트 생성이 지원되지 않습니다.</string>
+    <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_one_description">젯팩에서는 꿈꾸는 워드프레스 사이트 제작 및 성장에 도움이 되는 통계, 알림 등이 제공됩니다.</string>
+    <string name="wp_jetpack_feature_removal_site_creation_overlay_title">젯팩 앱으로 새 워드프레스 사이트 생성</string>
+    <string name="deep_linking_weblinks_alias_label">웹 링크</string>
+    <string name="deep_linking_urilinks_alias_label">URL 링크</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_notifications">젯팩 앱으로 전환하여 계속  기기에서 실시간 알림을 받으세요.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_reader">젯팩 앱으로 전환하여 리더를 통해 좋아하는 모든 사이트와 글을 찾고, 팔로우하고, 좋아요를 표시하세요.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_stats">젯팩 앱으로 전환하여 통계와 인사이트를 통해 사이트의 트래픽 증가를 지켜보세요.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_notifications">젯팩 앱으로 알림 받기</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_reader">젯팩 앱으로 사이트 팔로우</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_stats">새 젯팩 앱을 사용하여 통계 받기</string>
+    <string name="preference_open_links_in_jetpack_setting_change_disable_error">젯팩에서 링크 열기를 비활성화할 수 없음</string>
+    <string name="preference_open_links_in_jetpack_setting_change_enable_error">젯팩에서 링크 여기를 활성화할 수 없음</string>
+    <string name="preference_open_links_in_jetpack">젯팩에서 링크 열기</string>
+    <string name="jp_migration_need_help_button">도움말이 필요하신가요?</string>
+    <string name="jp_migration_got_it_button">알겠습니다.</string>
+    <string name="jp_migration_delete_message">데이터가 충돌하지 않도록 &lt;br&gt;&lt;b&gt;워드프레스 앱을 삭제하세요&lt;/b&gt;.</string>
+    <string name="jp_migration_delete_subtitle">아직 워드프레스 앱이 설치되어 있는 것 같습니다. 데이터가 충돌하지 않도록 워드프레스 앱을 삭제하는 것이 좋습니다.</string>
+    <string name="jp_migration_delete_title">더는 워드프레스 앱 필요 없음</string>
+    <string name="jp_migration_network_error_message">네트워크 연결 없이 데이터와 설정을 이전할 수 없습니다.</string>
+    <string name="jp_migration_network_error_subtitle">네트워크 연결이 작동하도록 점검하고 다시 시도하세요.</string>
+    <string name="jp_migration_network_error_title">인터넷에 연결할 수 없습니다.</string>
+    <string name="jp_migration_generic_error_message">지원팀에 문의하거나 나중에 다시 시도하세요.</string>
+    <string name="jp_migration_generic_error_subtitle">죄송합니다. 계획대로 진행되지 않았습니다. 데이터는 안전하지만, 지금은 이전할 수 없습니다.</string>
+    <string name="jp_migration_generic_error_title">죄송합니다. 문제가 발생했습니다…</string>
+    <string name="jp_migration_try_again_button">다시 시도</string>
+    <string name="jp_migration_finish_button">마침</string>
+    <string name="jp_migration_remove_wp_app_icon_content_description">워드프레스 앱 아이콘 제거</string>
+    <string name="jp_migration_done_delete_wp_message">데이터가 충돌하지 않도록 &lt;br&gt;&lt;b&gt;워드프레스 앱을 삭제하세요&lt;/b&gt;.</string>
+    <string name="jp_migration_done_subtitle">모든 데이터와 설정을 이전했습니다. 모든 것이 그대로 다 남아 있습니다.</string>
+    <string name="jp_migration_done_title">젯팩으로 전환해 주셔서 감사합니다!</string>
+    <string name="jp_migration_notifications_disabled_in_wp_message">워드프레스 앱의 알림을 해제하겠습니다.</string>
+    <string name="jp_migration_notifications_subtitle">동일한 알림을 모두 받겠지만, 이제는 젯팩 앱에서 알림을 보냅니다.</string>
+    <string name="jp_migration_notifications_title">이제 젯팩에서 알림 전송</string>
+    <string name="jp_migration_success_card_message">워드프레스 앱 삭제 요망</string>
+    <string name="wordpress_help_center_button">워드프레스 도움말 센터</string>
+    <string name="support_title">지원</string>
+    <string name="notification_disable_broadcast_permission_desc">앱에 워드프레스 알림 비활성화를 허용하세요.</string>
+    <string name="notification_disable_broadcast_permission_label">워드프레스 알림 비활성화</string>
     <string name="jp_migration_help_button">도움말이 필요하신가요?</string>
     <string name="jp_migration_continue_button">계속</string>
     <string name="jp_migration_welcome_site_found_message">사이트를 찾았습니다. 자동으로 모든 데이터를 계속 이전하고 젯팩에 로그인합니다.</string>

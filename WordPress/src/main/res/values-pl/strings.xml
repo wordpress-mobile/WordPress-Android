@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-11-24 06:21:50+0000
+Translation-Revision-Date: 2022-11-30 08:55:33+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.3
 Language: pl
 -->
 <resources>
+    <string name="wp_jetpack_deep_link_open_in_wordpress">Otwiera odnośniki w WordPressie</string>
     <string name="jp_migration_help_button">Potrzebujesz pomocy?</string>
     <string name="jp_migration_continue_button">Dalej</string>
+    <string name="jp_migration_avatar_content_description">Twoje zdjęcie profilowe</string>
+    <string name="jp_migration_welcome_subtitle">Wygląda na to, że przełączasz się z aplikacji WordPress.</string>
     <string name="icon_desc">ikona</string>
     <string name="post_settings_parent">Strona nadrzędna</string>
     <string name="post_settings_page_attributes">Atrybuty strony</string>
@@ -15,6 +18,7 @@ Language: pl
     <string name="about_news">Aktualności</string>
     <string name="my_site_blogging_prompt_card_number_of_answers_one">jedna odpowiedź</string>
     <string name="login_prologue_revamped_content_description_wordpress_icon">Ikonka WordPressa</string>
+    <string name="login_prologue_revamped_tagline">Pisz, edytuj i publikuj z dowolnego miejsca.</string>
     <string name="error_fetch_authors_list">Nie można było pobrać autorów</string>
     <string name="post_settings_author">Autor</string>
     <string name="app_rating_title">Lubisz %s?</string>
@@ -39,7 +43,37 @@ Language: pl
     <string name="wp_jetpack_continue_to_stats">Przejdź do statystyk</string>
     <string name="qrcode_auth_flow_error_no_connection_title">Brak połączenia</string>
     <string name="qrcode_auth_flow_scan_again">Skanuj ponownie</string>
+    <string name="qrcode_auth_flow_error_auth_failed_title">Nieudane uwierzytelnianie</string>
+    <string name="qrcode_auth_flow_error_expired_title">Wygasł kod logowania</string>
+    <string name="qrcode_auth_flow_done_title">Zalgowano się!</string>
+    <string name="hpp_bottom_helper_text">Nie możesz się zdecydować? W każdej chwili można zmienić motyw.</string>
     <string name="stats_referrers_pie_chart_wordpress">WordPress</string>
+    <string name="hpp_recommended_default_vertical">Blogowanie</string>
+    <string name="hpp_preview_tapped_theme">Podgląd motywu %s</string>
+    <string name="stats_referrers_pie_chart_search">Szukaj</string>
+    <string name="hpp_title">Wybierz motyw</string>
+    <string name="my_site_blogging_prompt_card_menu_learn_more">Dowiedz się więcej</string>
+    <string name="hpp_recommended_subtitle">Wybrano dla ciebie</string>
+    <string name="stats_action_card_blogging_reminders_button_label">Ustaw przypomnienia</string>
+    <string name="stats_action_card_schedule_post_title">Zaplanuj swój wpis</string>
+    <string name="stats_action_card_blogging_reminders_title">Ustaw przypomnienia o blogowaniu</string>
+    <string name="gutenberg_native_drag_drop">Przeciągnij i upuść</string>
+    <string name="quick_start_list_upload_media_title">Prześlij zdjęcia lub filmy</string>
+    <string name="pages_copy_link">Skopiuj odnośnik</string>
+    <string name="quick_start_dialog_check_notifications_title">Sprawdź swoje powiadomienia</string>
+    <string name="stats_published_years_ago">Opublikowano %1$d lat temu</string>
+    <string name="stats_published_a_year_ago">Opublikowano rok temu</string>
+    <string name="stats_published_months_ago">Opublikowano %1$d miesięcy temu</string>
+    <string name="stats_published_a_month_ago">Opublikowano miesiąc temu</string>
+    <string name="stats_published_days_ago">Opublikowano %1$d dni temu</string>
+    <string name="stats_published_a_day_ago">Opublikowano dzień temu</string>
+    <string name="stats_published_hours_ago">Opublikowano %1$d godzin temu</string>
+    <string name="stats_published_an_hour_ago">Opublikowano godzinę temu</string>
+    <string name="stats_published_minutes_ago">Opublikowano %1$d minut temu</string>
+    <string name="stats_published_a_minute_ago">Opublikowano minutę temu</string>
+    <string name="stats_published_seconds_ago">Opublikowano sekundy temu</string>
+    <string name="stats_view_total_followers">Łączna liczba obserwujących</string>
+    <string name="stats_view_total_comments">Łączna liczba komentarzy</string>
     <string name="blogging_prompts_notification_dismiss">Zamknij</string>
     <string name="blogging_prompts_onboarding_got_it">Rozumiem</string>
     <string name="quick_start_dialog_view_your_site_message_short">Stuknij &lt;b&gt;%1$s&lt;/b&gt; aby zobaczyć swoją witrynę</string>
@@ -50,19 +84,47 @@ Language: pl
     <string name="stats_timeframe_previous_week">Poprzedni tydzień</string>
     <string name="stats_timeframe_this_week">Bieżący tydzień</string>
     <string name="scan_vault_press_active_on_site_button_text">Przejdź do kokpitu</string>
+    <string name="locale_picker_current_language">Aktualny język:</string>
+    <string name="new_site_creation_site_name_title">Nazwa witryny</string>
+    <string name="featured_image_confirmation_notice">Ustaw obrazek wyróżniający</string>
+    <string name="featured_image_removed_notice">Usuń obrazek wyróżniający</string>
+    <string name="featured_image_replace_dialog_confirm">Zastąp obrazek wyróżniający</string>
     <string name="dialog_button_ok">OK</string>
     <string name="stop_upload_dialog_button_no">Nie</string>
     <string name="stop_upload_dialog_button_yes">Tak</string>
     <string name="dialog_button_cancel">Anuluj</string>
     <string name="dialog_edit_hint">http(s)://</string>
     <string name="retry_failed_upload_yes">Ponów</string>
+    <string name="long_post_dlg_saving">Zapisywanie</string>
+    <string name="retry_failed_upload_retry_all">Spróbuj ponownie</string>
     <string name="dialog_title">Wstaw odnośnik</string>
     <string name="editor_title_beta">Beta</string>
     <string name="stop_save_dialog_ok_button">OK</string>
     <string name="pixel_suffix">%dpx</string>
+    <string name="blogging_prompt_set_reminders">Ustaw przypomnienia</string>
+    <string name="site_creation_intent_technology">Technologia</string>
+    <string name="site_creation_intent_real_estate">Nieruchomości</string>
+    <string name="site_creation_intent_travel">Podróże</string>
+    <string name="site_creation_intent_sports">Sport</string>
+    <string name="site_creation_intent_people">Ludzie</string>
+    <string name="site_creation_intent_photography">Fotografia</string>
+    <string name="site_creation_intent_politics">Polityka</string>
+    <string name="site_creation_intent_music">Muzyka</string>
+    <string name="site_creation_intent_health">Zdrowie</string>
+    <string name="site_creation_intent_gaming">Gry</string>
+    <string name="site_creation_intent_food">Jedzenie</string>
+    <string name="site_creation_intent_fitness_exercise">Fitness i ćwiczenia</string>
+    <string name="site_creation_intent_film_television">Film i telewizja</string>
+    <string name="site_creation_intent_finance">Finanse</string>
+    <string name="site_creation_intent_fashion">Moda</string>
+    <string name="site_creation_intent_education">Edukacja</string>
+    <string name="site_creation_intent_diy">Zrób to sam</string>
     <string name="site_creation_intent_books">Książki</string>
     <string name="site_creation_intent_art">Sztuka</string>
     <string name="site_creation_intent_business">Biznes</string>
+    <string name="site_creation_intent_beauty">Uroda</string>
+    <string name="new_site_creation_intents_input_hint">Np. moda, poezja, polityka</string>
+    <string name="my_site_blogging_prompt_card_number_of_answers_other">%d odpowiedzi</string>
     <string name="my_site_menu_tab_title">Menu</string>
     <string name="login_error_xml_rpc_services_disabled">Usługa XML-RPC jest wyłączona.</string>
     <string name="my_site_todays_stat_card_title">Dzisiejsze statystyki</string>

@@ -1,11 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-11-16 16:54:09+0000
+Translation-Revision-Date: 2022-11-30 11:54:11+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/4.0.0-alpha.3
 Language: ar
 -->
 <resources>
+    <string name="wp_jetpack_deep_link_open_in_wordpress">فتح الروابط في ووردبريس</string>
+    <string name="wp_jetpack_deep_link_overlay_description">يبدو أن تطبيق Jetpack مثبت لديك.\n\nهل ترغب في فتح الروابط في تطبيق Jetpack في المستقبل؟\n\nيمكنك دومًا تغيير ذلك في إعدادات التطبيق &gt; فتح الروابط في Jetpack</string>
+    <string name="wp_jetpack_deep_link_overlay_title">هل تفتح الروابط في Jetpack؟</string>
+    <string name="wp_jetpack_continue_without_jetpack">الاستمرار من دون Jetpack</string>
+    <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_two_description">يوفر Jetpack الإحصاءات والتنبيهات والمزيد لمساعدتك على إنشاء الموقع الذي تحلم به على ووردبريس وتطويره.\n\nلا يدعم تطبيق ووردبريس إنشاء موقع جديد بعد الآن.</string>
+    <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_one_description">يوفر Jetpack الإحصاءات والتنبيهات والمزيد لمساعدتك على إنشاء الموقع الذي تحلم به على ووردبريس وتطويره.</string>
+    <string name="wp_jetpack_feature_removal_site_creation_overlay_title">إنشاء موقع جديد على ووردبريس باستخدام تطبيق Jetpack</string>
+    <string name="deep_linking_weblinks_alias_label">روابط الويب</string>
+    <string name="deep_linking_urilinks_alias_label">روابط عناوين uri</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_notifications">قم بالتبديل إلى تطبيق Jetpack للاستمرار في تلقي   من التنبيهات في الوقت الفعلي على جهازك.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_reader">قم بالتبديل إلى تطبيق Jetpack للعثور على كل المواقع والتدوينات التي تفضّلها ومتابعتها والإعجاب بها باستخدام القارئ.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_stats">قم بالتبديل إلى تطبيق Jetpack لمراقبة نمو حركة المرور في موقعك من خلال الإحصاءات والرؤى.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_notifications">تلقي تنبيهاتك من خلال تطبيق Jetpack</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_reader">متابعة أي موقع باستخدام تطبيق Jetpack</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_stats">الحصول على إحصاءاتك باستخدام تطبيق Jetpack جديد</string>
+    <string name="preference_open_links_in_jetpack_setting_change_disable_error">يتعذر تعطيل فتح الروابط في Jetpack</string>
+    <string name="preference_open_links_in_jetpack_setting_change_enable_error">يتعذر تمكين فتح الروابط في Jetpack</string>
+    <string name="preference_open_links_in_jetpack">فتح الروابط في Jetpack</string>
+    <string name="jp_migration_need_help_button">هل تحتاج إلى مساعدة؟</string>
+    <string name="jp_migration_got_it_button">فهمت</string>
+    <string name="jp_migration_delete_message">يرجى &lt;b&gt;حذف تطبيق ووردبريس&lt;/b&gt; لتفادي&lt;br&gt;تعارضات البيانات.</string>
+    <string name="jp_migration_delete_subtitle">يبدو أن تطبيق ووردبريس لا يزال مثبتًا لديك. نوصي بأن تحذف تطبيق ووردبريس لتفادي تعارضات البيانات.</string>
+    <string name="jp_migration_delete_title">لن تحتاج إلى تطبيق ووردبريس بعد الآن</string>
+    <string name="jp_migration_network_error_message">يتعذر علينا نقل بياناتك وإعداداتك من دون اتصال الشبكة.</string>
+    <string name="jp_migration_network_error_subtitle">يرجى التحقق للتأكد من أن اتصال الشبكة لديك قيد العمل، وحاول مجددًا.</string>
+    <string name="jp_migration_network_error_title">يتعذر الاتصال بالإنترنت.</string>
+    <string name="jp_migration_generic_error_message">يرجى الاتصال بالدعم  أو المحاولة مرة أخرى لاحقًا.</string>
+    <string name="jp_migration_generic_error_subtitle">عذرًا، ولكن هناك شيء لم يسِر مثلما هو مخطط له. تكون بياناتك آمنة، ولكن يتعذر علينا نقلها في الوقت الحالي.</string>
+    <string name="jp_migration_generic_error_title">حسنًا، حدث خطأ.</string>
+    <string name="jp_migration_try_again_button">المحاولة مجددًا</string>
+    <string name="jp_migration_finish_button">إنهاء</string>
+    <string name="jp_migration_remove_wp_app_icon_content_description">إزالة أيقونة تطبيق ووردبريس</string>
+    <string name="jp_migration_done_delete_wp_message">يرجى &lt;b&gt;حذف تطبيق ووردبريس&lt;/b&gt; لتفادي&lt;br&gt;تعارضات البيانات.</string>
+    <string name="jp_migration_done_subtitle">لقد نقلنا كل بياناتك وإعداداتك. يصبح كل شيء صحيحًا عندما تتركه.</string>
+    <string name="jp_migration_done_title">شكرًا على التبديل إلى Jetpack!</string>
+    <string name="jp_migration_notifications_disabled_in_wp_message">سنقوم بإيقاف تشغيل التنبيهات من تطبيق ووردبريس.</string>
+    <string name="jp_migration_notifications_subtitle">ستتلقى كل التنبيهات نفسها ولكنها ستأتي الآن من تطبيق Jetpack.</string>
+    <string name="jp_migration_notifications_title">تأتي التنبيهات الآن من Jetpack</string>
+    <string name="jp_migration_success_card_message">يرجى حذف تطبيق ووردبريس</string>
+    <string name="wordpress_help_center_button">مركز مساعدة ووردبريس</string>
+    <string name="support_title">دعم</string>
+    <string name="notification_disable_broadcast_permission_desc">يسمح للتطبيق بتعطيل تنبيهات ووردبريس.</string>
+    <string name="notification_disable_broadcast_permission_label">تعطيل تنبيهات ووردبريس</string>
     <string name="jp_migration_help_button">هل تحتاج إلى مساعدة؟</string>
     <string name="jp_migration_continue_button">متابعة</string>
     <string name="jp_migration_welcome_site_found_message">عثرنا على موقعك. استمر في نقل جميع البيانات وسجّل الدخول إلى Jetpack تلقائيًا.</string>
