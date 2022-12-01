@@ -7,7 +7,10 @@ import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.kotlinpoet.asClassName
 import java.lang.StringBuilder
 
-class RemoteConfigDefaultsBuilder(private val defaults: Map<String, String>) {
+const val FILE_NAME = "RemoteFeatureConfigDefaults"
+const val VARIABLE_NAME = "remoteFeatureConfigDefaults"
+
+class RemoteFeatureConfigDefaultsBuilder(private val defaults: Map<String, String>) {
     fun getContent(): FileSpec {
         val map = Map::class.asClassName()
                 .parameterizedBy(String::class.asClassName(), Any::class.asClassName())
@@ -20,14 +23,14 @@ class RemoteConfigDefaultsBuilder(private val defaults: Map<String, String>) {
             }
         }
         stringBuilder.append("\n")
-        val remoteConfigDefaults = TypeSpec.objectBuilder("RemoteConfigDefaults")
+        val remoteConfigDefaults = TypeSpec.objectBuilder("RemoteFeatureConfigDefaults")
                 .addProperty(
-                        PropertySpec.builder("remoteConfigDefaults", map)
+                        PropertySpec.builder(VARIABLE_NAME, map)
                                 .initializer("mapOf($stringBuilder)")
                                 .build()
                 )
                 .build()
-        return FileSpec.builder("org.wordpress.android.util.config", "RemoteConfigDefaults")
+        return FileSpec.builder("org.wordpress.android.util.config", FILE_NAME)
                 .addType(remoteConfigDefaults)
                 .addComment("Automatically generated file. DO NOT MODIFY")
                 .indent("    ")

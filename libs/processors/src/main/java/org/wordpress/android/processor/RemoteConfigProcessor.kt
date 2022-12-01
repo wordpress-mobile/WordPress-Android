@@ -41,8 +41,8 @@ class RemoteConfigProcessor : AbstractProcessor() {
                     element.asType().toString()
                 } ?: listOf()
         return if (experiments.isNotEmpty() || features.isNotEmpty()) {
-            generateRemoteConfigDefaults((experiments + features).toMap())
-            generateRemoteConfigCheck(remoteFeatureNames)
+            generateRemoteFeatureConfigDefaults((experiments + features).toMap())
+            generateRemoteFeatureConfigCheck(remoteFeatureNames)
             generateFeaturesInDevelopment(featuresInDevelopment)
             true
         } else {
@@ -51,32 +51,32 @@ class RemoteConfigProcessor : AbstractProcessor() {
     }
 
     @Suppress("TooGenericExceptionCaught", "SwallowedException")
-    private fun generateRemoteConfigDefaults(
+    private fun generateRemoteFeatureConfigDefaults(
         remoteConfigDefaults: Map<String, String>
     ) {
         try {
-            val fileContent = RemoteConfigDefaultsBuilder(remoteConfigDefaults).getContent()
+            val fileContent = RemoteFeatureConfigDefaultsBuilder(remoteConfigDefaults).getContent()
 
             val kaptKotlinGeneratedDir = processingEnv.options[KAPT_KOTLIN_GENERATED_OPTION_NAME]
             fileContent.writeTo(File(kaptKotlinGeneratedDir))
         } catch (e: Exception) {
-            processingEnv.messager.printMessage(Kind.ERROR, "Failed to generate remote config defaults")
+            processingEnv.messager.printMessage(Kind.ERROR, "Failed to generate remote feature config defaults")
         }
     }
 
     @Suppress("TooGenericExceptionCaught")
-    private fun generateRemoteConfigCheck(
+    private fun generateRemoteFeatureConfigCheck(
         remoteFeatureNames: List<TypeName>
     ) {
         try {
-            val fileContent = RemoteConfigCheckBuilder(remoteFeatureNames).getContent()
+            val fileContent = RemoteFeatureConfigCheckBuilder(remoteFeatureNames).getContent()
 
             val kaptKotlinGeneratedDir = processingEnv.options[KAPT_KOTLIN_GENERATED_OPTION_NAME]
             fileContent.writeTo(File(kaptKotlinGeneratedDir))
         } catch (e: Exception) {
             processingEnv.messager.printMessage(
                     Kind.ERROR,
-                    "Failed to generate remote config check: $e"
+                    "Failed to generate remote feature config check: $e"
             )
         }
     }

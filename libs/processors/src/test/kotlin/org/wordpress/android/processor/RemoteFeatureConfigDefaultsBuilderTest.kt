@@ -3,7 +3,7 @@ package org.wordpress.android.processor
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 
-class RemoteConfigDefaultsBuilderTest {
+class RemoteFeatureConfigDefaultsBuilderTest {
     @Test
     fun `build a remote config file content`() {
         val keyA = "keyA"
@@ -11,7 +11,7 @@ class RemoteConfigDefaultsBuilderTest {
         val keyB = "keyB"
         val valueB = "valueB"
 
-        val remoteConfigDefaultsBuilder = RemoteConfigDefaultsBuilder(mapOf(keyA to valueA, keyB to valueB))
+        val remoteConfigDefaultsBuilder = RemoteFeatureConfigDefaultsBuilder(mapOf(keyA to valueA, keyB to valueB))
 
         val fileContent = remoteConfigDefaultsBuilder.getContent()
 
@@ -24,8 +24,8 @@ class RemoteConfigDefaultsBuilderTest {
             import kotlin.String
             import kotlin.collections.Map
 
-            object RemoteConfigDefaults {
-                val remoteConfigDefaults: Map<String, Any> = mapOf(
+            object RemoteFeatureConfigDefaults {
+                val remoteFeatureConfigDefaults: Map<String, Any> = mapOf(
                         "$keyA" to "$valueA",
                         "$keyB" to "$valueB"
                         )
