@@ -16,6 +16,7 @@ import javax.inject.Singleton
 import kotlin.coroutines.resume
 
 private const val AUTHORIZATION_HEADER = "Authorization"
+private const val UNAUTHORIZED = 401
 
 @Singleton
 class ApplicationPasswordRestClient @Inject constructor(
@@ -31,7 +32,9 @@ class ApplicationPasswordRestClient @Inject constructor(
         params: Map<String, String> = emptyMap(),
         body: Map<String, Any> = emptyMap()
     ): WPAPIResponse<T> {
-        val credentials = when (val result = applicationPasswordManager.getApplicationCredentials(site)) {
+        val credentials = when (val result = applicationPasswordManager.getApplicationCredentials(
+            site
+        )) {
             is ApplicationPasswordCreationResult.Success -> result.credentials
             is ApplicationPasswordCreationResult.Failure ->
                 return WPAPIResponse.Error(result.error)
@@ -65,7 +68,8 @@ class ApplicationPasswordRestClient @Inject constructor(
             }
         }
 
-        return if (response is WPAPIResponse.Error && response.error.volleyError?.networkResponse?.statusCode == 401) {
+        return if (response is WPAPIResponse.Error &&
+            response.error.volleyError?.networkResponse?.statusCode == UNAUTHORIZED) {
             AppLog.w(
                 AppLog.T.MAIN,
                 "Authentication failure using application password, maybe revoked?" +
@@ -108,5 +112,4 @@ class ApplicationPasswordRestClient @Inject constructor(
         params: Map<String, String> = emptyMap(),
         body: Map<String, Any> = emptyMap()
     ) = executeGsonRequest(site, Method.DELETE, path, clazz, params, body)
-
 }
