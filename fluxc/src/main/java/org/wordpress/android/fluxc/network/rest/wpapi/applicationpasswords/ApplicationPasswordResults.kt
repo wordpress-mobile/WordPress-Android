@@ -3,7 +3,11 @@ package org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 
 sealed interface ApplicationPasswordCreationResult {
-    data class Success(
+    data class Existing(
+        val credentials: ApplicationPasswordCredentials
+    ) : ApplicationPasswordCreationResult
+
+    data class Created(
         val credentials: ApplicationPasswordCredentials
     ) : ApplicationPasswordCreationResult
 

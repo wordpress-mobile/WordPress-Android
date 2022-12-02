@@ -32,12 +32,12 @@ class ApplicationPasswordRestClient @Inject constructor(
         params: Map<String, String> = emptyMap(),
         body: Map<String, Any> = emptyMap()
     ): WPAPIResponse<T> {
-        val credentials = when (val result = applicationPasswordManager.getApplicationCredentials(
-            site
-        )) {
-            is ApplicationPasswordCreationResult.Success -> result.credentials
+        val credentialsResult = applicationPasswordManager.getApplicationCredentials(site)
+        val credentials = when (credentialsResult) {
+            is ApplicationPasswordCreationResult.Existing -> credentialsResult.credentials
+            is ApplicationPasswordCreationResult.Created -> credentialsResult.credentials
             is ApplicationPasswordCreationResult.Failure ->
-                return WPAPIResponse.Error(result.error)
+                return WPAPIResponse.Error(credentialsResult.error)
             ApplicationPasswordCreationResult.NotSupported -> TODO()
         }
 
@@ -68,7 +68,8 @@ class ApplicationPasswordRestClient @Inject constructor(
             }
         }
 
-        return if (response is WPAPIResponse.Error &&
+        return if (credentialsResult is ApplicationPasswordCreationResult.Existing &&
+            response is WPAPIResponse.Error &&
             response.error.volleyError?.networkResponse?.statusCode == UNAUTHORIZED) {
             AppLog.w(
                 AppLog.T.MAIN,
