@@ -21,7 +21,7 @@ import javax.inject.Named
 import javax.inject.Singleton
 
 @Singleton
-class JetpackApplicationPasswordRestClient @Inject constructor(
+internal class JetpackApplicationPasswordRestClient @Inject constructor(
     private val jetpackTunnelGsonRequestBuilder: JetpackTunnelGsonRequestBuilder,
     appContext: Context,
     dispatcher: Dispatcher,

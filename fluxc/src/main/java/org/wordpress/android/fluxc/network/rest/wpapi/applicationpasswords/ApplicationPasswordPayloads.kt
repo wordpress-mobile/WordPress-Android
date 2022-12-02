@@ -3,7 +3,7 @@ package org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords
 import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 
-data class ApplicationPasswordCreationPayload(
+internal data class ApplicationPasswordCreationPayload(
     val password: String
 ) : Payload<BaseNetworkError>() {
     constructor(error: BaseNetworkError) : this("") {
@@ -11,7 +11,7 @@ data class ApplicationPasswordCreationPayload(
     }
 }
 
-data class ApplicationPasswordDeletionPayload(
+internal data class ApplicationPasswordDeletionPayload(
     val isDeleted: Boolean
 ) : Payload<BaseNetworkError>() {
     constructor(error: BaseNetworkError) : this(false) {
@@ -19,7 +19,7 @@ data class ApplicationPasswordDeletionPayload(
     }
 }
 
-data class UsernameFetchPayload(
+internal data class UsernameFetchPayload(
     val userName: String
 ) : Payload<BaseNetworkError>() {
     constructor(error: BaseNetworkError) : this("") {
