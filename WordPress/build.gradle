@@ -368,6 +368,7 @@ dependencies {
     // To enable Android Studio specific features for Jetpack Compose.
     debugImplementation "androidx.compose.ui:ui-tooling:$androidxComposeVersion"
     implementation "androidx.compose.ui:ui-tooling-preview:$androidxComposeVersion"
+    // To enable Stetho, a debug bridge that enables the Chrome Developer Tools for debug purposes.
     debugImplementation "com.facebook.stetho:stetho:$stethoVersion"
     debugImplementation "com.facebook.stetho:stetho-okhttp3:$stethoVersion"
 
