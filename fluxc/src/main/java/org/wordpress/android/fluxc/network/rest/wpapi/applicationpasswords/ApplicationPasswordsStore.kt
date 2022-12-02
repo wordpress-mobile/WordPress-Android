@@ -7,7 +7,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class ApplicationPasswordsStore @Inject constructor(
+internal class ApplicationPasswordsStore @Inject constructor(
     context: Context,
     private val applicationName: String
 ) {
