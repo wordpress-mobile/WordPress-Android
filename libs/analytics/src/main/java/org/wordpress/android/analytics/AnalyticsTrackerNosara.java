@@ -2046,6 +2046,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "encrypted_logging_upload_failed";
             case READER_POST_REPORTED:
                 return "reader_post_reported";
+            case READER_USER_REPORTED:
+                return "reader_user_reported";
             case SUGGESTION_SESSION_FINISHED:
                 return "suggestion_session_finished";
             case COMMENT_APPROVED:

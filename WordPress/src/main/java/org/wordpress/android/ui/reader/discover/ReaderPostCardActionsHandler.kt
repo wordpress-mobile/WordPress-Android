@@ -241,6 +241,13 @@ class ReaderPostCardActionsHandler @Inject constructor(
 
     suspend fun handleReportUserClicked(post: ReaderPost) {
         withContext(bgDispatcher) {
+            readerTracker.trackBlogPostAuthor(
+                    AnalyticsTracker.Stat.READER_USER_REPORTED,
+                    post.blogId,
+                    post.postId,
+                    post.isJetpack,
+                    post.authorId
+            )
             _navigationEvents.postValue(Event(ShowReportPost(post.blogUrl)))
         }
     }
