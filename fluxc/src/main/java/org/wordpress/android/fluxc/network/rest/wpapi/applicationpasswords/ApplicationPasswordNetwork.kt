@@ -19,7 +19,7 @@ private const val AUTHORIZATION_HEADER = "Authorization"
 private const val UNAUTHORIZED = 401
 
 @Singleton
-class ApplicationPasswordRestClient @Inject constructor(
+class ApplicationPasswordNetwork @Inject constructor(
     @Named("no-cookies") private val requestQueue: RequestQueue,
     private val userAgent: UserAgent,
     private val applicationPasswordManager: ApplicationPasswordManager
