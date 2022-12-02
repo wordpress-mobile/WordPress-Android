@@ -15,8 +15,8 @@ private const val NOT_FOUND = 404
 class ApplicationPasswordManager @Inject constructor(
     context: Context,
     @ApplicationPasswordClientId private val applicationName: String,
-    private val jetpackApplicationPasswordGenerator: JetpackApplicationPasswordGenerator,
-    private val wpApiApplicationPasswordGenerator: WPApiApplicationPasswordGenerator
+    private val jetpackApplicationPasswordRestClient: JetpackApplicationPasswordRestClient,
+    private val wpApiApplicationPasswordRestClient: WPApiApplicationPasswordRestClient
 ) {
     private val applicationPasswordsStore = ApplicationPasswordsStore(context, applicationName)
 
@@ -45,7 +45,7 @@ class ApplicationPasswordManager @Inject constructor(
 
     private suspend fun getOrFetchUsername(site: SiteModel): UsernameFetchPayload {
         return if (site.origin == SiteModel.ORIGIN_WPCOM_REST) {
-            jetpackApplicationPasswordGenerator.fetchWPAdminUsername(site)
+            jetpackApplicationPasswordRestClient.fetchWPAdminUsername(site)
         } else {
             UsernameFetchPayload(site.username)
         }
@@ -56,12 +56,12 @@ class ApplicationPasswordManager @Inject constructor(
         username: String
     ): ApplicationPasswordCreationResult {
         val payload = if (site.origin == SiteModel.ORIGIN_WPCOM_REST) {
-            jetpackApplicationPasswordGenerator.createApplicationPassword(
+            jetpackApplicationPasswordRestClient.createApplicationPassword(
                 site = site,
                 applicationName = applicationName
             )
         } else {
-            wpApiApplicationPasswordGenerator.createApplicationPassword(
+            wpApiApplicationPasswordRestClient.createApplicationPassword(
                 site = site,
                 applicationName = applicationName
             )
@@ -102,12 +102,12 @@ class ApplicationPasswordManager @Inject constructor(
         site: SiteModel
     ): ApplicationPasswordDeletionResult {
         val payload = if (site.origin == SiteModel.ORIGIN_WPCOM_REST) {
-            jetpackApplicationPasswordGenerator.deleteApplicationPassword(
+            jetpackApplicationPasswordRestClient.deleteApplicationPassword(
                 site = site,
                 applicationName = applicationName
             )
         } else {
-            wpApiApplicationPasswordGenerator.deleteApplicationPassword(
+            wpApiApplicationPasswordRestClient.deleteApplicationPassword(
                 site = site,
                 applicationName = applicationName
             )
