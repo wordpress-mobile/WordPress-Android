@@ -37,9 +37,9 @@ class ApplicationPasswordManager @Inject constructor(
         }
     }
 
-    private fun getOrFetchUsername(site: SiteModel): UsernameFetchPayload {
+    private suspend fun getOrFetchUsername(site: SiteModel): UsernameFetchPayload {
         return if (site.origin == SiteModel.ORIGIN_WPCOM_REST) {
-            TODO()
+            jetpackApplicationPasswordGenerator.fetchWPAdminUsername(site)
         } else {
             UsernameFetchPayload(site.username)
         }
