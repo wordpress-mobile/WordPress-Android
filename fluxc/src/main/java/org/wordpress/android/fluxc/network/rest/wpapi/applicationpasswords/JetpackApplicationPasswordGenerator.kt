@@ -2,6 +2,7 @@ package org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords
 
 import android.content.Context
 import com.android.volley.RequestQueue
+import com.google.gson.annotations.SerializedName
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.endpoint.WPAPI
 import org.wordpress.android.fluxc.model.SiteModel
@@ -54,7 +55,8 @@ class JetpackApplicationPasswordGenerator @Inject constructor(
                     )
                 )
             }
-            is JetpackError<ApplicationPasswordCreationResponse> -> ApplicationPasswordCreationPayload(response.error)
+            is JetpackError<ApplicationPasswordCreationResponse> ->
+                ApplicationPasswordCreationPayload(response.error)
         }
     }
 
@@ -82,4 +84,36 @@ class JetpackApplicationPasswordGenerator @Inject constructor(
             }
         }
     }
+
+    suspend fun fetchWPAdminUsername(
+        site: SiteModel
+    ): UsernameFetchPayload {
+        AppLog.d(T.MAIN, "Fetch wp-admin username using Jetpack Tunnel")
+
+        val url = WPAPI.users.me.urlV2
+
+        val response = jetpackTunnelGsonRequestBuilder.syncGetRequest(
+            restClient = this,
+            site = site,
+            url = url,
+            params = mapOf(
+                "_fields" to "username",
+                "context" to "edit"
+            ),
+            clazz = UserApiResponse::class.java
+        )
+
+        return when (response) {
+            is JetpackSuccess<UserApiResponse> -> {
+                UsernameFetchPayload(response.data!!.username)
+            }
+            is JetpackError<UserApiResponse> -> {
+                UsernameFetchPayload(response.error)
+            }
+        }
+    }
+
+    private data class UserApiResponse(
+        @SerializedName("username") val username: String
+    )
 }
