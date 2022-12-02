@@ -180,6 +180,7 @@ enum class ReaderPostCardActionType {
     REBLOG,
     COMMENTS,
     REPORT_POST,
+    REPORT_USER,
     TOGGLE_SEEN_STATUS,
     SPACER_NO_ACTION
 }
