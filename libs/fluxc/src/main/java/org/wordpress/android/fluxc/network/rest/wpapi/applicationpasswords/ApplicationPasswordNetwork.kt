@@ -21,9 +21,11 @@ private const val UNAUTHORIZED = 401
 @Singleton
 class ApplicationPasswordNetwork @Inject constructor(
     @Named("no-cookies") private val requestQueue: RequestQueue,
-    private val userAgent: UserAgent,
-    private val applicationPasswordManager: ApplicationPasswordManager
+    private val userAgent: UserAgent
 ) {
+    // We can't use construction injection for this variable, as its class is internal
+    @Inject internal lateinit var applicationPasswordManager: ApplicationPasswordManager
+
     suspend fun <T> executeGsonRequest(
         site: SiteModel,
         method: Int,

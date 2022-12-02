@@ -12,7 +12,7 @@ import javax.inject.Inject
 private const val CONFLICT = 409
 private const val NOT_FOUND = 404
 
-class ApplicationPasswordManager @Inject constructor(
+internal class ApplicationPasswordManager @Inject constructor(
     context: Context,
     @ApplicationPasswordClientId private val applicationName: String,
     private val jetpackApplicationPasswordRestClient: JetpackApplicationPasswordRestClient,
@@ -20,7 +20,7 @@ class ApplicationPasswordManager @Inject constructor(
 ) {
     private val applicationPasswordsStore = ApplicationPasswordsStore(context, applicationName)
 
-    suspend fun getApplicationCredentials(
+    internal suspend fun getApplicationCredentials(
         site: SiteModel
     ): ApplicationPasswordCreationResult {
         val existingPassword = applicationPasswordsStore.getCredentials(site.domainName)
@@ -98,7 +98,7 @@ class ApplicationPasswordManager @Inject constructor(
         }
     }
 
-    suspend fun deleteApplicationCredentials(
+    internal suspend fun deleteApplicationCredentials(
         site: SiteModel
     ): ApplicationPasswordDeletionResult {
         val payload = if (site.origin == SiteModel.ORIGIN_WPCOM_REST) {
@@ -141,7 +141,7 @@ class ApplicationPasswordManager @Inject constructor(
         }
     }
 
-    fun deleteLocalApplicationPassword(site: SiteModel) {
+    internal fun deleteLocalApplicationPassword(site: SiteModel) {
         applicationPasswordsStore.deleteCredentials(site.domainName)
     }
 
