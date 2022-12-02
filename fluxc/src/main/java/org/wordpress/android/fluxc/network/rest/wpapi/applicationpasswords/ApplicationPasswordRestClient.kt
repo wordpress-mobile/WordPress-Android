@@ -31,20 +31,14 @@ class ApplicationPasswordRestClient @Inject constructor(
         params: Map<String, String> = emptyMap(),
         body: Map<String, Any> = emptyMap()
     ): WPAPIResponse<T> {
-        val username = if (site.origin != SiteModel.ORIGIN_WPCOM_REST) {
-            site.username
-        } else {
-            TODO()
-        }
-
-        val password = when (val result = applicationPasswordManager.getApplicationPassword(site)) {
-            is ApplicationPasswordCreationResult.Success -> result.password
+        val credentials = when (val result = applicationPasswordManager.getApplicationCredentials(site)) {
+            is ApplicationPasswordCreationResult.Success -> result.credentials
             is ApplicationPasswordCreationResult.Failure ->
                 return WPAPIResponse.Error(result.error)
             ApplicationPasswordCreationResult.NotSupported -> TODO()
         }
 
-        val authorizationHeader = Credentials.basic(username, password)
+        val authorizationHeader = Credentials.basic(credentials.userName, credentials.password)
 
         val response = suspendCancellableCoroutine<WPAPIResponse<T>> { continuation ->
             val request = WPAPIGsonRequest(

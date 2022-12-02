@@ -17,23 +17,37 @@ class ApplicationPasswordManager @Inject constructor(
 ) {
     private val applicationPasswordsStore = ApplicationPasswordsStore(context, applicationName)
 
-    suspend fun getApplicationPassword(
+    suspend fun getApplicationCredentials(
         site: SiteModel
     ): ApplicationPasswordCreationResult {
-        val existingPassword = applicationPasswordsStore.getApplicationPassword(site.domainName)
+        val existingPassword = applicationPasswordsStore.getCredentials(site.domainName)
         if (existingPassword != null) {
             return ApplicationPasswordCreationResult.Success(existingPassword)
         }
 
-        return createApplicationPassword(site).also {
+        val usernamePayload = getOrFetchUsername(site)
+        if (usernamePayload.isError) {
+            return ApplicationPasswordCreationResult.Failure(usernamePayload.error)
+        }
+
+        return createApplicationPassword(site, usernamePayload.userName).also {
             if (it is ApplicationPasswordCreationResult.Success) {
-                applicationPasswordsStore.saveApplicationPassword(site.domainName, it.password)
+                applicationPasswordsStore.saveCredentials(usernamePayload.userName, it.credentials)
             }
         }
     }
 
+    private fun getOrFetchUsername(site: SiteModel): UsernameFetchPayload {
+        return if (site.origin == SiteModel.ORIGIN_WPCOM_REST) {
+            TODO()
+        } else {
+            UsernameFetchPayload(site.username)
+        }
+    }
+
     private suspend fun createApplicationPassword(
-        site: SiteModel
+        site: SiteModel,
+        username: String
     ): ApplicationPasswordCreationResult {
         val payload = if (site.origin == SiteModel.ORIGIN_WPCOM_REST) {
             jetpackApplicationPasswordGenerator.createApplicationPassword(
@@ -48,14 +62,16 @@ class ApplicationPasswordManager @Inject constructor(
         }
 
         return when {
-            !payload.isError -> ApplicationPasswordCreationResult.Success(payload.password)
+            !payload.isError -> ApplicationPasswordCreationResult.Success(
+                ApplicationPasswordCredentials(userName = username, password = payload.password)
+            )
             else -> {
                 when (payload.error.volleyError?.networkResponse?.statusCode) {
                     409 -> {
                         AppLog.w(AppLog.T.MAIN, "Application Password already exists")
-                        when (val deletionResult = deleteApplicationPassword(site)) {
+                        when (val deletionResult = deleteApplicationCredentials(site)) {
                             ApplicationPasswordDeletionResult.Success ->
-                                createApplicationPassword(site)
+                                createApplicationPassword(site, username)
                             is ApplicationPasswordDeletionResult.Failure ->
                                 ApplicationPasswordCreationResult.Failure(deletionResult.error)
                         }
@@ -76,7 +92,7 @@ class ApplicationPasswordManager @Inject constructor(
         }
     }
 
-    suspend fun deleteApplicationPassword(
+    suspend fun deleteApplicationCredentials(
         site: SiteModel
     ): ApplicationPasswordDeletionResult {
         val payload = if (site.origin == SiteModel.ORIGIN_WPCOM_REST) {
@@ -95,6 +111,7 @@ class ApplicationPasswordManager @Inject constructor(
             !payload.isError -> {
                 if (payload.isDeleted) {
                     AppLog.d(AppLog.T.MAIN, "Application password deleted")
+                    deleteLocalApplicationPassword(site)
                     ApplicationPasswordDeletionResult.Success
                 } else {
                     AppLog.w(AppLog.T.MAIN, "Application password deletion failed")
@@ -110,8 +127,8 @@ class ApplicationPasswordManager @Inject constructor(
                 val error = payload.error
                 AppLog.w(
                     AppLog.T.MAIN, "Application password deletion failed, error: " +
-                        "${error.type} ${error.message}\n" +
-                        "${error.volleyError?.toString()}"
+                    "${error.type} ${error.message}\n" +
+                    "${error.volleyError?.toString()}"
                 )
                 ApplicationPasswordDeletionResult.Failure(error)
             }
@@ -119,7 +136,7 @@ class ApplicationPasswordManager @Inject constructor(
     }
 
     fun deleteLocalApplicationPassword(site: SiteModel) {
-        applicationPasswordsStore.deleteApplicationPassword(site.domainName)
+        applicationPasswordsStore.deleteCredentials(site.domainName)
     }
 
     private val SiteModel.domainName
