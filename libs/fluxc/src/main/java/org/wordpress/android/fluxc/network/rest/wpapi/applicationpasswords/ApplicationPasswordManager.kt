@@ -9,6 +9,9 @@ import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.UrlUtils
 import javax.inject.Inject
 
+private const val CONFLICT = 409
+private const val NOT_FOUND = 404
+
 class ApplicationPasswordManager @Inject constructor(
     context: Context,
     @ApplicationName private val applicationName: String,
@@ -26,13 +29,16 @@ class ApplicationPasswordManager @Inject constructor(
         }
 
         val usernamePayload = getOrFetchUsername(site)
-        if (usernamePayload.isError) {
-            return ApplicationPasswordCreationResult.Failure(usernamePayload.error)
-        }
-
-        return createApplicationPassword(site, usernamePayload.userName).also {
-            if (it is ApplicationPasswordCreationResult.Success) {
-                applicationPasswordsStore.saveCredentials(usernamePayload.userName, it.credentials)
+        return if (usernamePayload.isError) {
+            ApplicationPasswordCreationResult.Failure(usernamePayload.error)
+        } else {
+            createApplicationPassword(site, usernamePayload.userName).also {
+                if (it is ApplicationPasswordCreationResult.Success) {
+                    applicationPasswordsStore.saveCredentials(
+                        usernamePayload.userName,
+                        it.credentials
+                    )
+                }
             }
         }
     }
@@ -67,7 +73,7 @@ class ApplicationPasswordManager @Inject constructor(
             )
             else -> {
                 when (payload.error.volleyError?.networkResponse?.statusCode) {
-                    409 -> {
+                    CONFLICT -> {
                         AppLog.w(AppLog.T.MAIN, "Application Password already exists")
                         when (val deletionResult = deleteApplicationCredentials(site)) {
                             ApplicationPasswordDeletionResult.Success ->
@@ -76,7 +82,7 @@ class ApplicationPasswordManager @Inject constructor(
                                 ApplicationPasswordCreationResult.Failure(deletionResult.error)
                         }
                     }
-                    404 -> {
+                    NOT_FOUND -> {
                         AppLog.w(AppLog.T.MAIN, "Application Password feature not supported")
                         ApplicationPasswordCreationResult.NotSupported
                     }
