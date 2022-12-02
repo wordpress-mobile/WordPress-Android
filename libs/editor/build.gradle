@@ -77,8 +77,6 @@ dependencies {
     // This dependency will be substituted if the `local-builds.gradle` file contains
     // `localGutenbergMobilePath`. Details for this can be found in the `settings.gradle` file.
     implementation "$rootProject.gradle.ext.gutenbergMobileBinaryPath:$rootProject.ext.gutenbergMobileVersion"
-    // Required Aztec dependencies (they should be included but Jitpack seems to be stripping these out)
-    implementation "org.jsoup:jsoup:$jsoupVersion"
 
     implementation "org.wordpress:utils:$wordPressUtilsVersion"
 
