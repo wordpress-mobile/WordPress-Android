@@ -18,3 +18,11 @@ data class ApplicationPasswordDeletionPayload(
         this.error = error
     }
 }
+
+data class UsernameFetchPayload(
+    val userName: String
+) : Payload<BaseNetworkError>() {
+    constructor(error: BaseNetworkError) : this("") {
+        this.error = error
+    }
+}
