@@ -586,6 +586,6 @@ public class ReaderBlogActions {
                 ReaderPostTable.addOrUpdatePosts(tag, blockResult.deletedRows.get(tagInfo));
             }
         }
-        ReaderBlockedBlogTable.removeBlockedBlog(blockResult.blogId);
+        ReaderBlockedBlogTable.whitelistBlogLocally(blockResult.blogId);
     }
 }
