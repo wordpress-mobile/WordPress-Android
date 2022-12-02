@@ -420,7 +420,7 @@ dependencies {
     implementation "androidx.compose.ui:ui:$androidxComposeVersion"
     implementation "androidx.compose.foundation:foundation:$androidxComposeVersion"
     implementation "androidx.compose.material:material:$androidxComposeVersion"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:$androidxLifecycleVersion"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:$androidxComposeLifecycleVersion"
     implementation "androidx.compose.runtime:runtime-livedata:$androidxComposeVersion"
     implementation "io.coil-kt:coil-compose:$coilComposeVersion"
     implementation ('com.github.indexos.media-for-mobile:android:43a9026f0973a2f0a74fa813132f6a16f7499c3a')
