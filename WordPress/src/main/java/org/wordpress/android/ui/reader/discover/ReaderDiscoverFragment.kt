@@ -164,7 +164,7 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
         )
         is ShowReportUser -> ReaderActivityLauncher.openUrl(
                 context,
-                readerUtilsWrapper.getReportUserUrl(event.url, event.userId),
+                readerUtilsWrapper.getReportUserUrl(event.url, event.authorId),
                 OpenUrlType.INTERNAL
         )
         is ShowReaderSubs -> ReaderActivityLauncher.showReaderSubs(context)

@@ -469,7 +469,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
                         ShowReportUser data = (ShowReportUser) navTarget;
                         ReaderActivityLauncher.openUrl(
                                 getContext(),
-                                ReaderUtils.getReportUserUrl(data.getUrl(), data.getUserId()),
+                                ReaderUtils.getReportUserUrl(data.getUrl(), data.getAuthorId()),
                                 INTERNAL);
                     } else {
                         throw new IllegalStateException("Action not supported in ReaderPostListFragment " + navTarget);

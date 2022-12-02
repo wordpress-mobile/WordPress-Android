@@ -785,7 +785,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
             is ReaderNavigationEvents.ShowReportUser -> ReaderActivityLauncher.openUrl(
                     context,
-                    readerUtilsWrapper.getReportUserUrl(url, userId),
+                    readerUtilsWrapper.getReportUserUrl(url, authorId),
                     OpenUrlType.INTERNAL
             )
 
