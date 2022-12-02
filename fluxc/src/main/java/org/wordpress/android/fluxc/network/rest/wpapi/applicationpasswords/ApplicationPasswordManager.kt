@@ -2,7 +2,7 @@ package org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords
 
 import android.content.Context
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.module.ApplicationName
+import org.wordpress.android.fluxc.module.ApplicationPasswordClientId
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.UNKNOWN
 import org.wordpress.android.util.AppLog
@@ -14,7 +14,7 @@ private const val NOT_FOUND = 404
 
 class ApplicationPasswordManager @Inject constructor(
     context: Context,
-    @ApplicationName private val applicationName: String,
+    @ApplicationPasswordClientId private val applicationName: String,
     private val jetpackApplicationPasswordGenerator: JetpackApplicationPasswordGenerator,
     private val wpApiApplicationPasswordGenerator: WPApiApplicationPasswordGenerator
 ) {
