@@ -12,7 +12,8 @@ class ApplicationPasswordsStore @Inject constructor(
     private val applicationName: String
 ) {
     companion object {
-        private const val PREFERENCE_KEY_PREFIX = "app_password_"
+        private const val USERNAME_PREFERENCE_KEY_PREFIX = "username_"
+        private const val PASSWORD_PREFERENCE_KEY_PREFIX = "app_password_"
     }
 
     private val encryptedPreferences by lazy {
@@ -26,22 +27,34 @@ class ApplicationPasswordsStore @Inject constructor(
         )
     }
 
-    fun getApplicationPassword(host: String): String? {
-        return encryptedPreferences.getString(host.prefKey, null)
+    fun getCredentials(host: String): ApplicationPasswordCredentials? {
+        val username = encryptedPreferences.getString(host.usernamePrefKey, null)
+        val password = encryptedPreferences.getString(host.passwordPrefKey, null)
+
+        return if (username != null && password != null) {
+            ApplicationPasswordCredentials(username, password)
+        } else {
+            null
+        }
     }
 
-    fun saveApplicationPassword(host: String, password: String) {
+    fun saveCredentials(host: String, credentials: ApplicationPasswordCredentials) {
         encryptedPreferences.edit()
-            .putString(host.prefKey, password)
+            .putString(host.usernamePrefKey, credentials.userName)
+            .putString(host.passwordPrefKey, credentials.password)
             .apply()
     }
 
-    fun deleteApplicationPassword(host: String) {
+    fun deleteCredentials(host: String) {
         encryptedPreferences.edit()
-            .remove(host.prefKey)
+            .remove(host.usernamePrefKey)
+            .remove(host.passwordPrefKey)
             .apply()
     }
 
-    private val String.prefKey
-        get() = "$PREFERENCE_KEY_PREFIX$this"
+    private val String.usernamePrefKey
+        get() = "$USERNAME_PREFERENCE_KEY_PREFIX$this"
+
+    private val String.passwordPrefKey
+        get() = "$PASSWORD_PREFERENCE_KEY_PREFIX$this"
 }
