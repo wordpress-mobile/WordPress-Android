@@ -25,7 +25,7 @@ class ApplicationPasswordManager @Inject constructor(
     ): ApplicationPasswordCreationResult {
         val existingPassword = applicationPasswordsStore.getCredentials(site.domainName)
         if (existingPassword != null) {
-            return ApplicationPasswordCreationResult.Success(existingPassword)
+            return ApplicationPasswordCreationResult.Existing(existingPassword)
         }
 
         val usernamePayload = getOrFetchUsername(site)
@@ -33,7 +33,7 @@ class ApplicationPasswordManager @Inject constructor(
             ApplicationPasswordCreationResult.Failure(usernamePayload.error)
         } else {
             createApplicationPassword(site, usernamePayload.userName).also {
-                if (it is ApplicationPasswordCreationResult.Success) {
+                if (it is ApplicationPasswordCreationResult.Created) {
                     applicationPasswordsStore.saveCredentials(
                         usernamePayload.userName,
                         it.credentials
@@ -68,7 +68,7 @@ class ApplicationPasswordManager @Inject constructor(
         }
 
         return when {
-            !payload.isError -> ApplicationPasswordCreationResult.Success(
+            !payload.isError -> ApplicationPasswordCreationResult.Created(
                 ApplicationPasswordCredentials(userName = username, password = payload.password)
             )
             else -> {
