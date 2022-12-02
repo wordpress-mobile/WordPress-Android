@@ -12,6 +12,7 @@ import com.wordpress.rest.RestRequest;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.datasets.ReaderBlockedBlogTable;
 import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderTagTable;
@@ -507,6 +508,7 @@ public class ReaderBlogActions {
 
         ReaderPostTable.deletePostsInBlog(blockResult.blogId);
         ReaderBlogTable.setIsFollowedBlogId(blockResult.blogId, false);
+        ReaderBlockedBlogTable.blacklistBlogLocally(blockResult.blogId);
         return blockResult;
     }
 
@@ -584,5 +586,6 @@ public class ReaderBlogActions {
                 ReaderPostTable.addOrUpdatePosts(tag, blockResult.deletedRows.get(tagInfo));
             }
         }
+        ReaderBlockedBlogTable.removeBlockedBlog(blockResult.blogId);
     }
 }
