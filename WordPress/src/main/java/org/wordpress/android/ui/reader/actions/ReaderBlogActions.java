@@ -12,6 +12,7 @@ import com.wordpress.rest.RestRequest;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.datasets.BlockedAuthorTable;
 import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderTagTable;
@@ -521,6 +522,7 @@ public class ReaderBlogActions {
         blockResult.authorId = authorId;
         blockResult.feedId = feedId;
         blockResult.deletedRows = ReaderPostTable.getAuthorPostMap(authorId);
+        BlockedAuthorTable.blacklistAuthorLocally(blockResult.authorId);
         ReaderPostTable.deletePostsForAuthor(blockResult.authorId);
         return blockResult;
     }
@@ -529,6 +531,7 @@ public class ReaderBlogActions {
         if (blockResult == null) {
             return;
         }
+        BlockedAuthorTable.whitelistAuthorLocally(blockResult.authorId);
         undoBlockUserLocal(blockResult);
     }
 
