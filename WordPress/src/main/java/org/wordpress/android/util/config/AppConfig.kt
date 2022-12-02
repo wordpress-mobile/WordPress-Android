@@ -56,6 +56,11 @@ class AppConfig
         return buildFeatureState(feature)
     }
 
+    fun getRemoteConfigValue(remoteField: String): String {
+        //Todo update the logic to fetch from database
+        return remoteField.toString()
+    }
+
     private fun buildFeatureState(feature: FeatureConfig): FeatureState {
         return when {
             manualFeatureConfig.hasManualSetup(feature) -> {
