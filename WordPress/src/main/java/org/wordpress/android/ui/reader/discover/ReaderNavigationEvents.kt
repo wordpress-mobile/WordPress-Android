@@ -45,6 +45,7 @@ sealed class ReaderNavigationEvents {
     ) : ReaderNavigationEvents()
 
     data class ShowReportPost(val url: String) : ReaderNavigationEvents()
+    data class ShowReportUser(val url: String, val userId: Long) : ReaderNavigationEvents()
     object ShowReaderSubs : ReaderNavigationEvents()
     data class ShowRelatedPostDetails(val postId: Long, val blogId: Long) :
             ReaderNavigationEvents()

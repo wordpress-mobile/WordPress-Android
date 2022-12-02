@@ -29,6 +29,7 @@ import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBookm
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostDetail
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReaderComments
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReportPost
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReportUser
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowVideoViewer
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BLOCK_SITE
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BOOKMARK
@@ -248,7 +249,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
                     post.isJetpack,
                     post.authorId
             )
-            _navigationEvents.postValue(Event(ShowReportPost(post.blogUrl)))
+            _navigationEvents.postValue(Event(ShowReportUser(post.blogUrl, post.authorId)))
         }
     }
 

@@ -783,6 +783,12 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             is ReaderNavigationEvents.ShowReportPost ->
                 ReaderActivityLauncher.openUrl(context, readerUtilsWrapper.getReportPostUrl(url), OpenUrlType.INTERNAL)
 
+            is ReaderNavigationEvents.ShowReportUser -> ReaderActivityLauncher.openUrl(
+                    context,
+                    readerUtilsWrapper.getReportUserUrl(url, userId),
+                    OpenUrlType.INTERNAL
+            )
+
             is ReaderNavigationEvents.ShowReaderComments -> ReaderActivityLauncher.showReaderCommentsForResult(
                     this@ReaderPostDetailFragment,
                     blogId,

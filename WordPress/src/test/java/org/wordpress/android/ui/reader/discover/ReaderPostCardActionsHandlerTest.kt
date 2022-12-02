@@ -40,6 +40,7 @@ import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowNoSit
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostDetail
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReaderComments
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReportPost
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReportUser
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSitePickerForResult
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowVideoViewer
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BLOCK_SITE
@@ -1176,7 +1177,7 @@ class ReaderPostCardActionsHandlerTest {
         return Observers(navigation, snackbarMsgs, preloadPost, followStatusUpdated, refreshPosts)
     }
 
-    /** REPORT POST ACTION start **/
+    /** REPORT ACTIONS start **/
     @Test
     fun `Clicking on a report this post opens webview`() = test {
         // Arrange
@@ -1191,7 +1192,21 @@ class ReaderPostCardActionsHandlerTest {
         assertThat(navigation[0]).isInstanceOf(ShowReportPost::class.java)
     }
 
-    /** REPORT POST ACTION end **/
+    @Test
+    fun `Clicking on report user opens webview`() = test {
+        // Arrange
+        val navigation = mutableListOf<ReaderNavigationEvents>()
+        actionHandler.navigationEvents.observeForever {
+            navigation.add(it.peekContent())
+        }
+        // Act
+        actionHandler.handleReportUserClicked(dummyReaderPostModel())
+
+        // Assert
+        assertThat(navigation[0]).isInstanceOf(ShowReportUser::class.java)
+    }
+
+    /** REPORT ACTIONS end **/
 
     private fun dummyReaderPostModel(): ReaderPost {
         return ReaderPost().apply {

@@ -535,6 +535,10 @@ public class ReaderUtils {
         return "https://wordpress.com/abuse/?report_url=" + blogUrl;
     }
 
+    public static String getReportUserUrl(String blogUrl, long userId) {
+        return getReportPostUrl(blogUrl) + "&report_user_id=" + userId;
+    }
+
     public static boolean postExists(long blogId, long postId) {
         return ReaderPostTable.postExists(blogId, postId);
     }
