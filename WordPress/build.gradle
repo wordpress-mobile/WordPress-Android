@@ -376,8 +376,6 @@ dependencies {
     implementation "androidx.core:core:$androidxCoreVersion"
     implementation "androidx.core:core-ktx:$androidxCoreVersion"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$androidxLifecycleVersion"
-    implementation "androidx.legacy:legacy-support-core-ui:$androidXLegacyVersion"
-    implementation "androidx.legacy:legacy-support-v4:$androidXLegacyVersion"
     implementation "androidx.fragment:fragment:$androidxFragmentVersion"
     implementation "androidx.fragment:fragment-ktx:$androidxFragmentVersion"
     implementation "androidx.multidex:multidex:$androidXMultidexVersion"
