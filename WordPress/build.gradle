@@ -365,7 +365,9 @@ dependencies {
     implementation "org.wordpress:persistentedittext:$wordPressPersistentEditTextVersion"
     implementation "org.wordpress:emailchecker2:$wordPressEmailChecker2Version"
 
+    // To enable Android Studio specific features for Jetpack Compose.
     debugImplementation "androidx.compose.ui:ui-tooling:$androidxComposeVersion"
+    implementation "androidx.compose.ui:ui-tooling-preview:$androidxComposeVersion"
     debugImplementation "com.facebook.stetho:stetho:$stethoVersion"
     debugImplementation "com.facebook.stetho:stetho-okhttp3:$stethoVersion"
 
@@ -418,7 +420,6 @@ dependencies {
     implementation "androidx.compose.foundation:foundation:$androidxComposeVersion"
     implementation "androidx.compose.material:material:$androidxComposeVersion"
     implementation "androidx.lifecycle:lifecycle-viewmodel-compose:$androidxLifecycleVersion"
-    implementation "androidx.compose.ui:ui-tooling-preview:$androidxComposeVersion"
     implementation "androidx.compose.runtime:runtime-livedata:$androidxComposeVersion"
     implementation "io.coil-kt:coil-compose:$coilComposeVersion"
     implementation ('com.github.indexos.media-for-mobile:android:43a9026f0973a2f0a74fa813132f6a16f7499c3a')
