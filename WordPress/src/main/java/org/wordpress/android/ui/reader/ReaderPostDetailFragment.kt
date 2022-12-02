@@ -755,6 +755,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         }
     }
 
+    @Suppress("ComplexMethod", "LongMethod")
     private fun ReaderNavigationEvents.handleNavigationEvent() {
         when (this) {
             is ReaderNavigationEvents.ShowMediaPreview -> MediaPreviewActivity
