@@ -9,12 +9,10 @@ import org.wordpress.android.ui.reader.actions.ReaderBlogActionsWrapper
 import org.wordpress.android.ui.reader.repository.usecases.BlockUserState.Failed.AlreadyRunning
 import org.wordpress.android.ui.reader.repository.usecases.BlockUserState.UserBlockedInLocalDb
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
-import org.wordpress.android.util.NetworkUtilsWrapper
 import javax.inject.Inject
 import kotlin.coroutines.Continuation
 
 class BlockUserUseCase @Inject constructor(
-    private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val readerTracker: ReaderTracker,
     private val readerBlogActionsWrapper: ReaderBlogActionsWrapper
 ) {
