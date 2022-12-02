@@ -291,7 +291,7 @@ android {
         compose true
 
         composeOptions {
-            kotlinCompilerExtensionVersion = androidxComposeVersion
+            kotlinCompilerExtensionVersion = androidxComposeCompilerVersion
         }
     }
 }

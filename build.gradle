@@ -38,6 +38,7 @@ ext {
     androidxAppcompatVersion = '1.1.0'
     androidxArchCoreVersion = '2.0.0'
     androidxComposeVersion = '1.1.1'
+    androidxComposeCompilerVersion = '1.1.1'
     androidxComposeLifecycleVersion = '2.4.1'
     androidxCardviewVersion = '1.0.0'
     androidxConstraintlayoutVersion = '1.1.3'
