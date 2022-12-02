@@ -1,14 +1,16 @@
 package org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords
 
 import android.content.Context
+import android.content.SharedPreferences
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
+import org.wordpress.android.util.AppLog
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 internal class ApplicationPasswordsStore @Inject constructor(
-    context: Context,
+    private val context: Context,
     private val applicationName: String
 ) {
     companion object {
@@ -17,14 +19,7 @@ internal class ApplicationPasswordsStore @Inject constructor(
     }
 
     private val encryptedPreferences by lazy {
-        val masterKey = MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC)
-        EncryptedSharedPreferences.create(
-            "$applicationName-encrypted-prefs",
-            masterKey,
-            context,
-            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
-            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
-        )
+        initEncryptedPrefs()
     }
 
     fun getCredentials(host: String): ApplicationPasswordCredentials? {
@@ -50,6 +45,37 @@ internal class ApplicationPasswordsStore @Inject constructor(
             .remove(host.usernamePrefKey)
             .remove(host.passwordPrefKey)
             .apply()
+    }
+
+    private fun initEncryptedPrefs(): SharedPreferences {
+        val masterKey = MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC)
+        val filename = "$applicationName-encrypted-prefs"
+
+        fun createPrefs() = EncryptedSharedPreferences.create(
+            filename,
+            masterKey,
+            context,
+            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+        )
+
+        // The documentation recommends excluding the file from auto backup, but since the file
+        // is defined in an internal library, adding to the backup rules and maintaining them won't
+        // be straightforward.
+        // So instead, we use a destructive approach, if we can't decrypt the file after restoring it,
+        // We simply delete it and create a new one.
+        @Suppress("TooGenericExceptionCaught", "SwallowedException")
+        return try {
+            createPrefs()
+        } catch (e: Exception) {
+            // In case we can't decrypt the file after a backup, let's delete it
+            AppLog.d(
+                AppLog.T.MAIN,
+                "Can't decrypt encrypted preferences, delete it and create new one"
+            )
+            context.deleteSharedPreferences(filename)
+            createPrefs()
+        }
     }
 
     private val String.usernamePrefKey
