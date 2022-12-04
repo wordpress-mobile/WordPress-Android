@@ -40,12 +40,31 @@
             app:layout_constraintVertical_chainStyle="packed"
             tools:text="Porro totam quia architecto ducimus laudantium minus autem"/>
 
+        <androidx.constraintlayout.helper.widget.Flow
+            android:id="@+id/page_subtitle_container"
+            android:layout_width="0dp"
+            android:orientation="horizontal"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/page_item_horizontal_padding"
+            android:layout_marginTop="@dimen/margin_extra_small"
+            android:layout_marginBottom="@dimen/margin_small"
+            app:flow_horizontalAlign="start"
+            app:flow_horizontalStyle="packed"
+            app:constraint_referenced_ids="page_subtitle, icon_suffix_container"
+            app:layout_constraintEnd_toStartOf="@id/page_more"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/page_title"
+            app:layout_constraintBottom_toTopOf="@+id/labels"
+            app:flow_horizontalBias="0.0"
+            app:flow_verticalStyle="packed"
+            app:flow_wrapMode="chain"
+            app:flow_horizontalGap="@dimen/margin_small"
+            app:flow_verticalGap="@dimen/margin_extra_small" />
+
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/page_subtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/page_item_horizontal_padding"
-            android:layout_marginTop="@dimen/margin_extra_small"
             android:ellipsize="end"
             android:maxLines="1"
             android:textAppearance="?attr/textAppearanceBody2"
@@ -55,38 +74,41 @@
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/page_title"
-            tools:text="99 days ago • Eulah Kuvalis •" />
+            tools:text="99 days ago • Eulah Kuvalis •"
+            android:layout_marginTop="@dimen/margin_extra_small"/>
 
-        <ImageView
-            android:id="@+id/page_subtitle_icon"
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/icon_suffix_container"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_small"
-            app:layout_constraintBottom_toTopOf="@+id/labels"
-            app:layout_constraintHorizontal_bias="0.0"
+            android:orientation="horizontal"
+            android:gravity="center"
             app:layout_constraintStart_toEndOf="@+id/page_subtitle"
-            app:layout_constraintTop_toBottomOf="@+id/page_title"
+            app:layout_constraintTop_toTopOf="@+id/page_subtitle"
             app:layout_goneMarginBottom="@dimen/margin_large"
-            tools:ignore="ContentDescription"
-            tools:src="@drawable/ic_posts_16dp" />
+            android:layout_marginTop="@dimen/margin_extra_small">
+            <ImageView
+                android:id="@+id/page_subtitle_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintHorizontal_bias="0.0"
+                tools:ignore="ContentDescription"
+                tools:src="@drawable/ic_posts_16dp"/>
 
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/page_subtitle_suffix"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_small"
-            android:layout_marginTop="@dimen/margin_extra_small"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:textAppearance="?attr/textAppearanceBody2"
-            android:textColor="?attr/wpColorOnSurfaceMedium"
-            app:layout_constraintBottom_toTopOf="@+id/labels"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toEndOf="@+id/page_subtitle_icon"
-            app:layout_constraintEnd_toStartOf="@+id/featured_image"
-            app:layout_constraintTop_toBottomOf="@+id/page_title"
-            app:layout_goneMarginBottom="@dimen/margin_large"
-            tools:text="@string/site_settings_posts_page" />
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/page_subtitle_suffix"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_small"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textAppearance="?attr/textAppearanceBody2"
+                android:textColor="?attr/wpColorOnSurfaceMedium"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_goneMarginBottom="@dimen/margin_large"
+                tools:text="@string/site_settings_posts_page"/>
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
         <ImageView
             android:id="@+id/featured_image"
@@ -142,7 +164,7 @@
             app:layout_constraintStart_toStartOf="@+id/page_title"
             app:layout_constraintEnd_toEndOf="@+id/page_title"
             app:layout_constraintHorizontal_bias="0"
-            app:layout_constraintTop_toBottomOf="@+id/page_subtitle"
+            app:layout_constraintTop_toBottomOf="@+id/page_subtitle_container"
             app:layout_constraintBottom_toTopOf="@+id/upload_progress"
             tools:text="Facere molestiae est maxime. Laborum nihil voluptatem qui est aut ut. Nisi eveniet id sit voluptatem. Id doloribus itaque sequi eum molestias id repellendus."/>
 
@@ -167,4 +189,3 @@
 
 
 </LinearLayout>
-
