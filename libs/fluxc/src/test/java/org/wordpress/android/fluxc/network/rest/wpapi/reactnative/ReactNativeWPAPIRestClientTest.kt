@@ -13,6 +13,7 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIGsonRequestBuilder
+import org.wordpress.android.fluxc.network.rest.wpapi.WPAPINetworkError
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIResponse
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIResponse.Error
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIResponse.Success
@@ -64,7 +65,7 @@ class ReactNativeWPAPIRestClientTest {
         }
 
         val expected = mock<ReactNativeFetchResponse>()
-        val expectedBaseNetworkError = mock<BaseNetworkError>()
+        val expectedBaseNetworkError = mock<WPAPINetworkError>()
         val errorHandler = { error: BaseNetworkError ->
             if (error != expectedBaseNetworkError) fail("expected error was not passed to errorHandler")
             expected

@@ -100,7 +100,7 @@ class NonceRestClientTest {
                 "redirect_to" to "${site.url}/wp-admin/admin-ajax.php?action=rest-nonce"
         )
 
-        val baseNetworkError = mock<BaseNetworkError>()
+        val baseNetworkError = mock<WPAPINetworkError>()
         baseNetworkError.message = "an_error_message"
         val response = Error<String>(baseNetworkError)
         whenever(wpApiEncodedRequestBuilder.syncPostRequest(subject, "${site.url}/wp-login.php", body = body))
@@ -124,7 +124,7 @@ class NonceRestClientTest {
                 "redirect_to" to "${site.url}/wp-admin/admin-ajax.php?action=rest-nonce"
         )
 
-        val baseNetworkError = mock<BaseNetworkError>()
+        val baseNetworkError = mock<WPAPINetworkError>()
         baseNetworkError.volleyError = NoConnectionError()
         val response = Error<String>(baseNetworkError)
         whenever(wpApiEncodedRequestBuilder.syncPostRequest(subject, "${site.url}/wp-login.php", body = body))
