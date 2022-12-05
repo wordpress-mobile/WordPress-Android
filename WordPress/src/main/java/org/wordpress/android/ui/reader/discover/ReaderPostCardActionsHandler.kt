@@ -175,6 +175,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
         return isSiteFetched
     }
 
+    @Suppress("ComplexMethod")
     private suspend fun handleAction(
         post: ReaderPost,
         type: ReaderPostCardActionType,
