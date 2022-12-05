@@ -33,7 +33,7 @@ import okhttp3.CookieJar;
 import okhttp3.JavaNetCookieJar;
 import okhttp3.OkHttpClient;
 
-@Module
+@Module(includes = ApplicationPasswordsModule.class)
 public class ReleaseNetworkModule {
     private static final String DEFAULT_CACHE_DIR = "volley-fluxc";
     private static final int NETWORK_THREAD_POOL_SIZE = 10;
