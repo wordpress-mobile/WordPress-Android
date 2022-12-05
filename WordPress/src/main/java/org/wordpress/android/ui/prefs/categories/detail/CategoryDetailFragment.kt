@@ -48,14 +48,14 @@ class CategoryDetailFragment : Fragment(R.layout.category_detail_fragment) {
             initSubmitButton()
             initSpinner()
             initViewModel(categoryId)
-            initInputText()
+            if(categoryId==null)initInputText()
         }
     }
 
     private fun getCategoryId(savedInstanceState: Bundle?): Long? {
-        val categoryId =  savedInstanceState?.getLong(ActivityLauncher.CATEGORY_DETAIL_ID)
+        val categoryId = savedInstanceState?.getLong(ActivityLauncher.CATEGORY_DETAIL_ID)
                 ?: requireActivity().intent.getLongExtra(ActivityLauncher.CATEGORY_DETAIL_ID, 0L)
-        if(categoryId == 0L)
+        if (categoryId == 0L)
             return null
         return categoryId
     }
@@ -123,7 +123,7 @@ class CategoryDetailFragment : Fragment(R.layout.category_detail_fragment) {
         ActivityUtils.showKeyboard(categoryName)
     }
 
-    private fun CategoryDetailFragmentBinding.initViewModel(categoryId:Long?) {
+    private fun CategoryDetailFragmentBinding.initViewModel(categoryId: Long?) {
         viewModel = ViewModelProvider(this@CategoryDetailFragment, viewModelFactory)
                 .get(CategoryDetailViewModel::class.java)
         startObserving()
@@ -135,6 +135,8 @@ class CategoryDetailFragment : Fragment(R.layout.category_detail_fragment) {
             loadCategories(uiState.categories)
             if (uiState.selectedParentCategoryPosition != parentCategory.selectedItemPosition) {
                 parentCategory.setSelection(uiState.selectedParentCategoryPosition)
+                categoryName.setText(uiState.categoryName)
+                initInputText()
             }
             updateSubmitButton(uiState.submitButtonUiState)
         }
@@ -151,6 +153,7 @@ class CategoryDetailFragment : Fragment(R.layout.category_detail_fragment) {
     private fun CategoryDetailFragmentBinding.updateSubmitButton(submitButtonUiState: SubmitButtonUiState) {
         with(submitButton) {
             isEnabled = submitButtonUiState.enabled
+            uiHelpers.setTextOrHide(this, submitButtonUiState.buttonText)
             uiHelpers.updateVisibility(this, submitButtonUiState.visibility)
         }
     }

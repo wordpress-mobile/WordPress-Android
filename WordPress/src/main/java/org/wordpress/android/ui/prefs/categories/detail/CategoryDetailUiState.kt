@@ -1,15 +1,16 @@
 package org.wordpress.android.ui.prefs.categories.detail
 
+import org.wordpress.android.R
 import org.wordpress.android.models.CategoryNode
-import org.wordpress.android.ui.prefs.categories.detail.SubmitButtonUiState.SubmitButtonDisabledUiState
 import org.wordpress.android.ui.utils.UiString
+import org.wordpress.android.ui.utils.UiString.UiStringRes
 
 data class UiState(
     val categories: ArrayList<CategoryNode>,
     val selectedParentCategoryPosition: Int,
     val categoryName: String,
     val categoryId: Long? = null,
-    val submitButtonUiState: SubmitButtonUiState = SubmitButtonDisabledUiState
+    val submitButtonUiState: SubmitButtonUiState = SubmitButtonUiState()
 )
 
 sealed class CategoryUpdateUiState {
@@ -18,15 +19,8 @@ sealed class CategoryUpdateUiState {
     object InProgress : CategoryUpdateUiState()
 }
 
-sealed class SubmitButtonUiState(
+data class SubmitButtonUiState(
     val visibility: Boolean = true,
-    val enabled: Boolean = false
-) {
-    object SubmitButtonEnabledUiState : SubmitButtonUiState(
-            enabled = true
-    )
-
-    object SubmitButtonDisabledUiState : SubmitButtonUiState(
-            enabled = false
-    )
-}
+    val enabled: Boolean = false,
+    val buttonText: UiString = UiStringRes(R.string.add_new_category)
+)

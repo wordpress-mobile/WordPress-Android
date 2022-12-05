@@ -19,8 +19,6 @@ import org.wordpress.android.ui.posts.GetCategoriesUseCase
 import org.wordpress.android.ui.prefs.categories.detail.CategoryUpdateUiState.Failure
 import org.wordpress.android.ui.prefs.categories.detail.CategoryUpdateUiState.InProgress
 import org.wordpress.android.ui.prefs.categories.detail.CategoryUpdateUiState.Success
-import org.wordpress.android.ui.prefs.categories.detail.SubmitButtonUiState.SubmitButtonDisabledUiState
-import org.wordpress.android.ui.prefs.categories.detail.SubmitButtonUiState.SubmitButtonEnabledUiState
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
@@ -90,19 +88,17 @@ class CategoryDetailViewModel @Inject constructor(
     }
 
     private fun initializeEditCategoryState(siteCategories: ArrayList<CategoryNode>, categoryId: Long) {
-        Log.e("initializeEditCategoryState: ", categoryId.toString())
         val existingCategory = siteCategories.filter { it.categoryId == categoryId }[0]
         var parentCategoryPosition = siteCategories.indexOfFirst { it.categoryId == existingCategory.parentId }
         if (parentCategoryPosition == -1) parentCategoryPosition = 0
-        Log.e("initializeEditCategoryState: parentCategoryPosition ", parentCategoryPosition.toString())
-        Log.e("initializeEditCategoryState: existing category", existingCategory.toString())
         existingCategoryname = existingCategory.name
         _uiState.postValue(
                 UiState(
                         categories = siteCategories,
                         selectedParentCategoryPosition = parentCategoryPosition,
                         categoryName = existingCategory.name,
-                        categoryId = categoryId
+                        categoryId = categoryId,
+                        submitButtonUiState = SubmitButtonUiState(buttonText = UiStringRes(R.string.update_category))
                 )
         )
     }
@@ -150,9 +146,9 @@ class CategoryDetailViewModel @Inject constructor(
     fun onCategoryNameUpdated(inputValue: String) {
         uiState.value?.let { state ->
             val submitButtonUiState = if (inputValue.isNotEmpty()) {
-                SubmitButtonEnabledUiState
+                state.submitButtonUiState.copy(enabled = true)
             } else {
-                SubmitButtonDisabledUiState
+                state.submitButtonUiState.copy(enabled = false)
             }
             _uiState.value = state.copy(
                     categoryName = inputValue,

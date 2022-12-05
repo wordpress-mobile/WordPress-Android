@@ -550,6 +550,7 @@
     <!-- category management -->
     <string name="categories">Categories</string>
     <string name="add_new_category">Add new category</string>
+    <string name="update_category">Update category</string>
     <string name="category_name">Category name</string>
     <string name="category_parent">Parent category (optional):</string>
     <string name="adding_cat">Adding category</string>
