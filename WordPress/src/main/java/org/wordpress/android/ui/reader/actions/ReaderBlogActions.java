@@ -580,12 +580,12 @@ public class ReaderBlogActions {
     }
 
     private static void undoBlockBlogLocal(final BlockedBlogResult blockResult) {
+        ReaderBlockedBlogTable.whitelistBlogLocally(blockResult.blogId);
         if (blockResult.deletedRows != null) {
             for (Pair<String, ReaderTagType> tagInfo : blockResult.deletedRows.keySet()) {
                 ReaderTag tag = ReaderTagTable.getTag(tagInfo.first, tagInfo.second);
                 ReaderPostTable.addOrUpdatePosts(tag, blockResult.deletedRows.get(tagInfo));
             }
         }
-        ReaderBlockedBlogTable.whitelistBlogLocally(blockResult.blogId);
     }
 }
