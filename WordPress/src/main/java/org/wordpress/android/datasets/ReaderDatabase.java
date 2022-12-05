@@ -29,7 +29,7 @@ import java.util.Locale;
  */
 public class ReaderDatabase extends SQLiteOpenHelper {
     protected static final String DB_NAME = "wpreader.db";
-    private static final int DB_VERSION = 154;
+    private static final int DB_VERSION = 155;
     private static final int DB_LAST_VERSION_WITHOUT_MIGRATION_SCRIPT = 136; // do not change this value
 
     /*
@@ -116,7 +116,8 @@ public class ReaderDatabase extends SQLiteOpenHelper {
      * 151 - removed existing followed-sites, blog posts from tbl_posts to fix duplicate posts issue
      * 152 - added short_url to tbl_comments
      * 153 - added author_email to tbl_comments
-     * 154 - added tbl_blocked_blogs table
+     * 154 - added tbl_blocked_authors table
+     * 155 - added tbl_blocked_blogs table
      */
 
     /*
@@ -267,6 +268,9 @@ public class ReaderDatabase extends SQLiteOpenHelper {
                 db.execSQL("ALTER TABLE tbl_comments ADD author_email TEXT;");
                 currentVersion++;
             case 153:
+                BlockedAuthorTable.createTables(db);
+                currentVersion++;
+            case 154:
                 ReaderBlockedBlogTable.createTables(db);
                 currentVersion++;
         }
@@ -289,6 +293,7 @@ public class ReaderDatabase extends SQLiteOpenHelper {
         ReaderCommentTable.createTables(db);
         ReaderLikeTable.createTables(db);
         ReaderPostTable.createTables(db);
+        BlockedAuthorTable.createTables(db);
         ReaderTagTable.createTables(db);
         ReaderUserTable.createTables(db);
         ReaderThumbnailTable.createTables(db);
@@ -302,6 +307,7 @@ public class ReaderDatabase extends SQLiteOpenHelper {
         ReaderCommentTable.dropTables(db);
         ReaderLikeTable.dropTables(db);
         ReaderPostTable.dropTables(db);
+        BlockedAuthorTable.dropTables(db);
         ReaderTagTable.dropTables(db);
         ReaderUserTable.dropTables(db);
         ReaderThumbnailTable.dropTables(db);

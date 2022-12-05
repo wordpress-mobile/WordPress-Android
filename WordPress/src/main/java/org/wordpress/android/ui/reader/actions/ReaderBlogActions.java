@@ -12,6 +12,7 @@ import com.wordpress.rest.RestRequest;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.datasets.BlockedAuthorTable;
 import org.wordpress.android.datasets.ReaderBlockedBlogTable;
 import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.datasets.ReaderPostTable;
@@ -39,6 +40,12 @@ public class ReaderBlogActions {
         // Key: Pair<ReaderTagSlug, ReaderTagType>, Value: ReaderPostList
         public Map<Pair<String, ReaderTagType>, ReaderPostList> deletedRows;
         public boolean wasFollowing;
+    }
+    public static class BlockedUserResult {
+        public long authorId;
+        public long feedId;
+        // Key: Pair<ReaderTagSlug, ReaderTagType>, Value: ReaderPostList
+        public Map<Pair<String, ReaderTagType>, ReaderPostList> deletedRows;
     }
 
     private static String jsonToString(JSONObject json) {
@@ -512,6 +519,24 @@ public class ReaderBlogActions {
         return blockResult;
     }
 
+    public static BlockedUserResult blockUserFromReaderLocal(final long authorId, final long feedId) {
+        final BlockedUserResult blockResult = new BlockedUserResult();
+        blockResult.authorId = authorId;
+        blockResult.feedId = feedId;
+        blockResult.deletedRows = ReaderPostTable.getAuthorPostMap(authorId);
+        BlockedAuthorTable.blacklistAuthorLocally(blockResult.authorId);
+        ReaderPostTable.deletePostsForAuthor(blockResult.authorId);
+        return blockResult;
+    }
+
+    public static void undoBlockUserFromReader(final BlockedUserResult blockResult) {
+        if (blockResult == null) {
+            return;
+        }
+        BlockedAuthorTable.whitelistAuthorLocally(blockResult.authorId);
+        undoBlockUserLocal(blockResult);
+    }
+
     /*
      * block a blog - result includes the list of posts that were deleted by the block so they
      * can be restored if the user undoes the block
@@ -581,6 +606,15 @@ public class ReaderBlogActions {
 
     private static void undoBlockBlogLocal(final BlockedBlogResult blockResult) {
         ReaderBlockedBlogTable.whitelistBlogLocally(blockResult.blogId);
+        if (blockResult.deletedRows != null) {
+            for (Pair<String, ReaderTagType> tagInfo : blockResult.deletedRows.keySet()) {
+                ReaderTag tag = ReaderTagTable.getTag(tagInfo.first, tagInfo.second);
+                ReaderPostTable.addOrUpdatePosts(tag, blockResult.deletedRows.get(tagInfo));
+            }
+        }
+    }
+
+    private static void undoBlockUserLocal(final BlockedUserResult blockResult) {
         if (blockResult.deletedRows != null) {
             for (Pair<String, ReaderTagType> tagInfo : blockResult.deletedRows.keySet()) {
                 ReaderTag tag = ReaderTagTable.getTag(tagInfo.first, tagInfo.second);
