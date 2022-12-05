@@ -10,7 +10,6 @@ import androidx.lifecycle.Lifecycle.Event.ON_STOP
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.flow.collect
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.CommentStatus.APPROVED
 import org.wordpress.android.fluxc.model.CommentStatus.DELETED
@@ -76,8 +75,8 @@ class CommentListActionModeCallback(
         menuItem.isEnabled = actionUiModel.isEnabled
         if (menuItem.icon != null) {
             // must mutate the drawable to avoid affecting other instances of it
-            val icon = menuItem.icon.mutate()
-            icon.alpha = if (actionUiModel.isEnabled) ICON_ALPHA_ENABLED else ICON_ALPHA_DISABLED
+            val icon = menuItem.icon?.mutate()
+            icon?.alpha = if (actionUiModel.isEnabled) ICON_ALPHA_ENABLED else ICON_ALPHA_DISABLED
             menuItem.icon = icon
         }
     }
