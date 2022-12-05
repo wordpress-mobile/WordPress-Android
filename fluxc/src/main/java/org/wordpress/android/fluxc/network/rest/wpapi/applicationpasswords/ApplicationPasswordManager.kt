@@ -100,7 +100,7 @@ internal class ApplicationPasswordManager @Inject constructor(
                             "Application Password feature not supported, " +
                                 "status code: $statusCode, errorCode: $errorCode"
                         )
-                        ApplicationPasswordCreationResult.NotSupported
+                        ApplicationPasswordCreationResult.NotSupported(payload.error)
                     }
                     else -> {
                         AppLog.w(
