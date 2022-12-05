@@ -14,6 +14,7 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSitePickerForResult
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BLOCK_SITE
+import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BLOCK_USER
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BOOKMARK
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.FOLLOW
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.LIKE
@@ -137,6 +138,21 @@ class ReaderPostListViewModel @Inject constructor(
             readerPostCardActionsHandler.onAction(
                     post,
                     BLOCK_SITE,
+                    bookmarksList,
+                    source = source
+            )
+        }
+    }
+
+    fun onBlockUserButtonClicked(
+        post: ReaderPost,
+        bookmarksList: Boolean,
+        source: String
+    ) {
+        launch {
+            readerPostCardActionsHandler.onAction(
+                    post,
+                    BLOCK_USER,
                     bookmarksList,
                     source = source
             )

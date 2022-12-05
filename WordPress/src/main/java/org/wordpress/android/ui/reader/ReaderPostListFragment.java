@@ -2660,6 +2660,13 @@ public class ReaderPostListFragment extends ViewPagerFragment
                         mPostAdapter.getSource()
                 );
                 break;
+            case BLOCK_USER:
+                mViewModel.onBlockUserButtonClicked(
+                        post,
+                        isBookmarksList(),
+                        mPostAdapter.getSource()
+                );
+                break;
             case BOOKMARK:
                 mViewModel.onBookmarkButtonClicked(
                         post.blogId,
