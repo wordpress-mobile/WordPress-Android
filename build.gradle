@@ -10,7 +10,7 @@ plugins {
 
 ext {
     minSdkVersion = 24
-    compileSdkVersion = 31
+    compileSdkVersion = 33
     targetSdkVersion = 31
 }
 
@@ -35,7 +35,7 @@ ext {
     // main
     androidInstallReferrerVersion = '2.2'
     androidVolleyVersion = '1.1.1'
-    androidxAppcompatVersion = '1.1.0'
+    androidxAppcompatVersion = '1.6.0-rc01'
     androidxArchCoreVersion = '2.0.0'
     androidxComposeVersion = '1.1.1'
     androidxCardviewVersion = '1.0.0'
@@ -163,7 +163,8 @@ allprojects {
             jvmTarget = JavaVersion.VERSION_1_8
             allWarningsAsErrors = true
             freeCompilerArgs += [
-                    "-Xopt-in=kotlin.RequiresOptIn"
+                    "-Xopt-in=kotlin.RequiresOptIn",
+                    '-Xjvm-default=all'
             ]
         }
     }
