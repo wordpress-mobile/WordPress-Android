@@ -90,7 +90,7 @@ ext {
     zendeskVersion = '5.0.2'
 
     // test
-    androidxTestCoreVersion = '1.4.0'
+    androidxTestCoreVersion = '1.5.0'
     assertjVersion = '3.11.1'
     bouncycastleVersion = '1.64'
     junitVersion = '4.13'
