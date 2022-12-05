@@ -80,4 +80,3 @@ class PhaseSelfHostedPostLinkConfig @Inject constructor(appConfig: AppConfig) :
                 PHASE_SIX_BLOG_POST_LINK_REMOTE_FIELD,
                 PHASE_SIX_BLOG_POST_LINK_DEFAULT_VALUE
         )
-
