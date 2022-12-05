@@ -654,6 +654,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "reader_article_rendered";
             case READER_BLOG_BLOCKED:
                 return "reader_blog_blocked";
+            case READER_USER_BLOCKED:
+                return "reader_user_blocked";
             case READER_BLOG_FOLLOWED:
                 return "reader_site_followed";
             case READER_BLOG_PREVIEWED:
