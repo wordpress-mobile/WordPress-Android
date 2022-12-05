@@ -15,8 +15,8 @@ class WPAPIEncodedBodyRequest(
     private val params: Map<String, String>,
     private val body: Map<String, String>,
     private val listener: Listener<String>,
-    errorListener: BaseErrorListener
-) : BaseRequest<String>(method, url, errorListener) {
+    errorListener: OnWPAPIErrorListener
+) : BaseRequest<String>(method, url, WPAPIErrorListenerWrapper(errorListener)) {
     override fun getBody(): ByteArray {
         return encodeParameters(body)
     }
@@ -26,7 +26,7 @@ class WPAPIEncodedBodyRequest(
     }
 
     override fun deliverBaseNetworkError(error: BaseNetworkError): BaseNetworkError {
-        return error
+        return WPAPINetworkError(error)
     }
 
     override fun parseNetworkResponse(response: NetworkResponse?): Response<String> {
