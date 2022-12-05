@@ -351,7 +351,10 @@ dependencies {
         exclude group: 'org.wordpress', module: 'utils'
     }
     implementation "$gradle.ext.aboutAutomatticBinaryPath:$automatticAboutVersion"
-    implementation "$gradle.ext.storiesAndroidPath:$automatticStoriesVersion"
+    implementation ("$gradle.ext.storiesAndroidPath:$automatticStoriesVersion") {
+        exclude group: 'androidx.navigation', module: 'navigation-fragment-ktx'
+        exclude group: 'androidx.navigation', module: 'navigation-ui-ktx'
+    }
     implementation "$gradle.ext.storiesAndroidMp4ComposePath:$automatticStoriesVersion"
 
     implementation "com.automattic:Automattic-Tracks-Android:$automatticTracksVersion"
@@ -370,11 +373,11 @@ dependencies {
     implementation "androidx.core:core:$androidxCoreVersion"
     implementation "androidx.core:core-ktx:$androidxCoreVersion"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$androidxLifecycleVersion"
-    implementation "androidx.legacy:legacy-support-core-ui:$androidXLegacySupportCoreUiVersion"
+    implementation "androidx.legacy:legacy-support-core-ui:$androidXLegacyVersion"
+    implementation "androidx.legacy:legacy-support-v4:$androidXLegacyVersion"
     implementation "androidx.fragment:fragment:$androidxFragmentVersion"
     implementation "androidx.fragment:fragment-ktx:$androidxFragmentVersion"
     implementation "androidx.multidex:multidex:$androidXMultidexVersion"
-    implementation "androidx.legacy:legacy-support-v4:$androidXLegacySupportV4Version"
     implementation "androidx.exifinterface:exifinterface:$androidXExifInterfaceVersion"
     implementation "androidx.media:media:$androidxMediaVersion"
     implementation "androidx.appcompat:appcompat:$androidxAppcompatVersion"
@@ -462,22 +465,23 @@ dependencies {
     androidTestImplementation "org.mockito:mockito-android:$mockitoVersion"
     androidTestImplementation "org.mockito.kotlin:mockito-kotlin:$mockitoKotlinVersion"
     androidTestImplementation "com.squareup.okhttp:mockwebserver:$squareupMockWebServerVersion"
+    androidTestImplementation "androidx.test.uiautomator:uiautomator:$androidxTestUiAutomatorVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$androidxTestEspressoVersion", {
         exclude group: 'com.android.support', module: 'support-annotations'
     }
-    androidTestImplementation "androidx.test.uiautomator:uiautomator:$androidxTestUiAutomatorVersion"
     androidTestImplementation("androidx.test.espresso:espresso-contrib:$androidxTestEspressoVersion") {
         exclude group: 'com.android.support', module: 'appcompat'
         exclude group: 'com.android.support', module: 'support-v4'
         exclude module: 'recyclerview-v7'
     }
+    androidTestImplementation "androidx.test.espresso:espresso-accessibility:$androidxTestEspressoVersion"
     androidTestImplementation("com.github.tomakehurst:wiremock:$wiremockVersion") {
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'
         exclude group: 'org.apache.commons', module: 'commons-lang3'
         exclude group: 'asm', module: 'asm'
         exclude group: 'org.json', module: 'json'
     }
-    androidTestImplementation "org.apache.httpcomponents:httpclient-android:$apacheHttpClientAndroidVersion"
+    androidTestImplementation "org.apache.httpcomponents:httpclient-android:$wiremockHttpClientVersion"
     androidTestImplementation "androidx.test:runner:$androidxTestCoreVersion"
     androidTestImplementation "androidx.test:rules:$androidxTestCoreVersion"
     androidTestImplementation "androidx.test.ext:junit:$androidxTestExtJunitVersion"
@@ -492,8 +496,6 @@ dependencies {
     androidTestImplementation "androidx.room:room-runtime:$androidxRoomVersion"
     kapt "androidx.room:room-compiler:$androidxRoomVersion"
     androidTestImplementation "androidx.room:room-ktx:$androidxRoomVersion"
-    // Enables accessibility checks in Espresso
-    androidTestImplementation "androidx.test.espresso:espresso-accessibility:$androidxTestEspressoAccessibilityVersion"
 
     // Enables Java 8+ API desugaring support
     coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:$androidDesugarVersion"
