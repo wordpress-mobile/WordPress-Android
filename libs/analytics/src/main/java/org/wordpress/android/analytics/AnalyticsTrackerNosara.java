@@ -2399,6 +2399,38 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "migration_email_triggered";
             case CONTENT_MIGRATION_FAILED:
                 return "content_migration_failed";
+            case JPMIGRATION_WELCOME_SCREEN_SHOWN:
+                return "jpmigration_welcome_screen_shown";
+            case JPMIGRATION_WELCOME_SCREEN_CONTINUE_BUTTON_TAPPED:
+                return "jpmigration_welcome_screen_continue_button_tapped";
+            case JPMIGRATION_WELCOME_SCREEN_HELP_BUTTON_TAPPED:
+                return "jpmigration_welcome_screen_help_button_tapped";
+            case JPMIGRATION_WELCOME_SCREEN_AVATAR_TAPPED:
+                return "jpmigration_welcome_screen_avatar_tapped";
+            case JPMIGRATION_NOTIFICATIONS_SCREEN_SHOWN:
+                return "jpmigration_notifications_screen_shown";
+            case JPMIGRATION_NOTIFICATIONS_SCREEN_CONTINUE_BUTTON_TAPPED:
+                return "jpmigration_notifications_screen_continue_button_tapped";
+            case JPMIGRATION_THANKS_SCREEN_SHOWN:
+                return "jpmigration_thanks_screen_shown";
+            case JPMIGRATION_THANKS_SCREEN_FINISH_BUTTON_TAPPED:
+                return "jpmigration_thanks_screen_finish_button_tapped";
+            case JPMIGRATION_PLEASE_DELETE_WORDPRESS_CARD_TAPPED:
+                return "jpmigration_please_delete_wordpress_card_tapped";
+            case JPMIGRATION_PLEASE_DELETE_WORDPRESS_SCREEN_SHOWN:
+                return "jpmigration_please_delete_wordpress_screen_shown";
+            case JPMIGRATION_PLEASE_DELETE_WORDPRESS_GOTIT_TAPPED:
+                return "jpmigration_please_delete_wordpress_gotit_tapped";
+            case JPMIGRATION_PLEASE_DELETE_WORDPRESS_HELP_BUTTON_TAPPED:
+                return "jpmigration_please_delete_wordpress_help_button_tapped";
+            case JPMIGRATION_ERROR_SCREEN_SHOWN:
+                return "jpmigration_error_screen_shown";
+            case JPMIGRATION_ERROR_SCREEN_HELP_BUTTON_TAPPED:
+                return "jpmigration_error_screen_help_button_tapped";
+            case JPMIGRATION_ERROR_SCREEN_RETRY_BUTTON_TAPPED:
+                return "jpmigration_error_screen_retry_button_tapped";
+            case JPMIGRATION_WORDPRESSAPP_DETECTED:
+                return "jpmigration_wordpressapp_detected";
             case USER_FLAGS_START:
                 return "user_flags_start";
             case USER_FLAGS_SUCCESS:

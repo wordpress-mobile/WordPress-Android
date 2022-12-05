@@ -1,11 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-11-14 14:59:41+0000
+Translation-Revision-Date: 2022-11-30 14:54:27+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.3
 Language: ru
 -->
 <resources>
+    <string name="wp_jetpack_deep_link_open_in_wordpress">Открывать ссылки в WordPress</string>
+    <string name="wp_jetpack_deep_link_overlay_description">Кажется, у вас установлено приложение Jetpack.\n\nОткрывать в дальнейшем ссылки в приложении Jetpack?\n\nЭто можно изменить в любой момент в разделе «Настройки приложения &gt; Открывать ссылки в Jetpack»</string>
+    <string name="wp_jetpack_deep_link_overlay_title">Открывать ссылки в Jetpack?</string>
+    <string name="wp_jetpack_continue_without_jetpack">Продолжить без Jetpack</string>
+    <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_two_description">В Jetpack есть статистика, уведомления и множество других функций, которые помогут создать сайт мечты.\n\nПриложение WordPress больше не поддерживает создание новых сайтов.</string>
+    <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_one_description">В Jetpack есть статистика, уведомления и множество других функций, которые помогут создать сайт мечты.</string>
+    <string name="wp_jetpack_feature_removal_site_creation_overlay_title">Создайте новый сайт WordPress в приложении Jetpack</string>
+    <string name="deep_linking_weblinks_alias_label">веб-ссылки</string>
+    <string name="deep_linking_urilinks_alias_label">URI-ссылки</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_notifications">Перейдите в приложение Jetpack, чтобы получать на устройство  уведомления в реальном времени.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_reader">Перейдите в приложение Jetpack, чтобы найти, подписаться и поставить отметки «Нравится» любимым сайтам и записям в Чтиве.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_stats">Перейдите в приложение Jetpack, чтобы следить за ростом посещаемости в разделах «Статистика» и «Обзор».</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_notifications">Получайте уведомления в приложении Jetpack</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_reader">Подпишитесь на любые сайты в приложении Jetpack</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_stats">Просматривайте статистику в новом приложении Jetpack</string>
+    <string name="preference_open_links_in_jetpack_setting_change_disable_error">Не удалось отключить открытие ссылок в Jetpack</string>
+    <string name="preference_open_links_in_jetpack_setting_change_enable_error">Не удалось включить открытие ссылок в Jetpack</string>
+    <string name="preference_open_links_in_jetpack">Открывать ссылки в Jetpack</string>
+    <string name="jp_migration_need_help_button">Нужна помощь?</string>
+    <string name="jp_migration_got_it_button">Понятно</string>
+    <string name="jp_migration_delete_message">&lt;b&gt;Удалите приложение WordPress&lt;/b&gt;, чтобы &lt;br&gt;избежать конфликтов данных.</string>
+    <string name="jp_migration_delete_subtitle">Кажется, у вас всё ещё установлено приложение WordPress. Рекомендуем удалить приложение WordPress, чтобы избежать конфликтов данных.</string>
+    <string name="jp_migration_delete_title">Вам больше не требуется приложение WordPress</string>
+    <string name="jp_migration_network_error_message">Не удаётся перенести ваши данные и настройки без подключения к сети.</string>
+    <string name="jp_migration_network_error_subtitle">Убедитесь, что сетевое подключение работает, и повторите попытку.</string>
+    <string name="jp_migration_network_error_title">Не удаётся подключиться к Интернету.</string>
+    <string name="jp_migration_generic_error_message">Обратитесь в службу поддержки или повторите попытку позже.</string>
+    <string name="jp_migration_generic_error_subtitle">К сожалению, что-то пошло не по плану. Ваши данные в безопасности, но сейчас не могут быть перенесены.</string>
+    <string name="jp_migration_generic_error_title">Что-то пошло не так…</string>
+    <string name="jp_migration_try_again_button">Повторить попытку</string>
+    <string name="jp_migration_finish_button">Завершить</string>
+    <string name="jp_migration_remove_wp_app_icon_content_description">Удаление значка приложения WordPress</string>
+    <string name="jp_migration_done_delete_wp_message">&lt;b&gt;Удалите приложение WordPress&lt;/b&gt;, чтобы &lt;br&gt;избежать конфликтов данных.</string>
+    <string name="jp_migration_done_subtitle">Все данные и настройки перенесены. Всё осталось по-прежнему.</string>
+    <string name="jp_migration_done_title">Благодарим за переход в Jetpack!</string>
+    <string name="jp_migration_notifications_disabled_in_wp_message">Уведомления из приложения WordPress будут отключены.</string>
+    <string name="jp_migration_notifications_subtitle">Вам будут приходить те же уведомления, но теперь из приложения Jetpack.</string>
+    <string name="jp_migration_notifications_title">Теперь уведомления будут поступать из Jetpack</string>
+    <string name="jp_migration_success_card_message">Удалите приложение WordPress</string>
+    <string name="wordpress_help_center_button">Справочный центр WordPress</string>
+    <string name="support_title">Поддержка</string>
+    <string name="notification_disable_broadcast_permission_desc">Позволяет отключить уведомления WordPress в приложении.</string>
+    <string name="notification_disable_broadcast_permission_label">Отключите уведомления WordPress</string>
     <string name="jp_migration_help_button">Нужна помощь?</string>
     <string name="jp_migration_continue_button">Продолжить</string>
     <string name="jp_migration_welcome_site_found_message">Мы нашли ваш сайт. После переноса данных вход в Jetpack произойдет автоматически.</string>

@@ -288,7 +288,7 @@ android {
         compose true
 
         composeOptions {
-            kotlinCompilerExtensionVersion = composeVersion
+            kotlinCompilerExtensionVersion = androidxComposeVersion
         }
     }
 }
@@ -317,165 +317,8 @@ static def addBuildConfigFieldsFromPrefixedProperties(variant, properties, prefi
 }
 
 dependencies {
-    implementation "$gradle.ext.aboutAutomatticBinaryPath:$aboutAutomatticVersion"
-    implementation "$gradle.ext.storiesAndroidPath:$storiesVersion"
-    implementation "$gradle.ext.storiesAndroidMp4ComposePath:$storiesVersion"
-    testImplementation "$gradle.ext.storiesAndroidPhotoEditorPath:$storiesVersion"
-    implementation project(path:':libs:image-editor')
-
-    // Provided by maven central
-    implementation 'com.google.code.gson:gson:2.6.2'
-
-    implementation "androidx.core:core:$androidxCoreVersion"
-    implementation "androidx.core:core-ktx:$androidxCoreVersion"
-    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion"
-    implementation 'androidx.legacy:legacy-support-core-ui:1.0.0'
-    implementation "androidx.fragment:fragment:$fragmentVersion"
-    implementation "androidx.fragment:fragment-ktx:$fragmentVersion"
-
-    implementation 'androidx.multidex:multidex:2.0.1'
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.exifinterface:exifinterface:1.0.0'
-    implementation 'androidx.media:media:1.0.1'
-    implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'androidx.cardview:cardview:1.0.0'
-    implementation 'androidx.recyclerview:recyclerview:1.0.0'
-    implementation "com.google.android.material:material:$materialVersion"
-    implementation 'androidx.percentlayout:percentlayout:1.0.0'
-    implementation "androidx.swiperefreshlayout:swiperefreshlayout:$swipeToRefresh"
-    implementation "androidx.preference:preference:$preferenceVersion"
-    implementation "androidx.work:work-runtime:$androidxWorkVersion"
-    implementation "androidx.work:work-runtime-ktx:$androidxWorkVersion"
-    // GCMNetworkManager on api <= 22
-    implementation "androidx.work:work-gcm:$androidxWorkVersion"
-
-    implementation "androidx.constraintlayout:constraintlayout:$constraintLayoutVersion"
-
-    // ViewModel and LiveData
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion"
-    // LiveData
-    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion"
-    // ProcessLifecycleOwner
-    implementation "androidx.lifecycle:lifecycle-process:$lifecycleVersion"
-
-    testImplementation("androidx.arch.core:core-testing:$androidxArchCoreVersion", {
-        exclude group: 'com.android.support', module: 'support-compat'
-        exclude group: 'com.android.support', module: 'support-annotations'
-        exclude group: 'com.android.support', module: 'support-core-utils'
-    })
-
-    implementation 'com.android.volley:volley:1.1.1'
-    implementation 'com.google.firebase:firebase-messaging:21.1.0'
-    implementation 'com.google.android.gms:play-services-auth:20.3.0'
-    implementation 'com.android.installreferrer:installreferrer:2.2'
-    implementation 'com.github.chrisbanes:PhotoView:2.3.0'
-    implementation 'org.greenrobot:eventbus:3.3.1'
-    implementation ('com.automattic:rest:1.0.8') {
-        exclude group: 'com.mcxiaoke.volley'
-    }
-    implementation 'org.wordpress:graphview:3.4.0'
-    implementation 'org.wordpress:persistentedittext:1.0.2'
-    implementation 'org.wordpress:emailchecker2:1.1.0'
-    implementation "com.automattic:Automattic-Tracks-Android:$tracksVersion"
-    implementation 'com.squareup.okio:okio:2.8.0'
-    implementation "org.apache.commons:commons-text:$commonsText"
-    implementation 'com.airbnb.android:lottie:3.4.0'
-    implementation 'com.facebook.shimmer:shimmer:0.5.0'
-
-    implementation ("com.github.yalantis:ucrop:$uCropVersion") {
-        exclude group: 'androidx.core', module: 'core'
-        exclude group: 'androidx.constraintlayout', module: 'constraintlayout'
-        exclude group: 'androidx.appcompat', module: 'appcompat'
-    }
-
-    implementation 'com.github.bumptech.glide:glide:4.10.0'
-    kapt 'com.github.bumptech.glide:compiler:4.10.0'
-    implementation 'com.github.bumptech.glide:volley-integration:4.6.1@aar'
-    implementation 'com.google.android.gms:play-services-code-scanner:16.0.0-beta1'
-
-    // Compose
-    implementation "androidx.compose.ui:ui:$composeVersion"
-    implementation "androidx.compose.foundation:foundation:$composeVersion"
-    implementation "androidx.compose.material:material:$composeVersion"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycleVersion"
-    implementation "androidx.compose.ui:ui-tooling-preview:$composeVersion"
-    implementation "androidx.compose.runtime:runtime-livedata:$composeVersion"
-    debugImplementation "androidx.compose.ui:ui-tooling:$composeVersion"
-    implementation "io.coil-kt:coil-compose:1.4.0"
-
-    testImplementation "junit:junit:$jUnitVersion"
-
-    testImplementation "org.mockito:mockito-core:$mockitoVersion"
-    testImplementation "org.mockito.kotlin:mockito-kotlin:$mockitoKotlinVersion"
-    testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$gradle.ext.kotlinVersion"
-    testImplementation "org.assertj:assertj-core:$assertJVersion"
-    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion"
-    testImplementation "androidx.test:core:$androidxTestCoreVersion"
-
-    androidTestImplementation "org.mockito:mockito-android:$mockitoVersion"
-    androidTestImplementation "org.mockito.kotlin:mockito-kotlin:$mockitoKotlinVersion"
-    androidTestImplementation 'com.squareup.okhttp:mockwebserver:2.7.5'
-    testImplementation('org.bouncycastle:bcprov-jdk15on') {
-        version {
-            strictly '1.64'
-        }
-    }
-
-    androidTestImplementation 'com.squareup.okio:okio:2.8.0'
-    androidTestImplementation "androidx.test.espresso:espresso-core:$espressoVersion", {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    }
-    androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.2.0'
-    androidTestImplementation("androidx.test.espresso:espresso-contrib:$espressoVersion") {
-        exclude group: 'com.android.support', module: 'appcompat'
-        exclude group: 'com.android.support', module: 'support-v4'
-        exclude module: 'recyclerview-v7'
-    }
-    androidTestImplementation('com.github.tomakehurst:wiremock:2.26.3') {
-        exclude group: 'org.apache.httpcomponents', module: 'httpclient'
-        exclude group: 'org.apache.commons', module: 'commons-lang3'
-        exclude group: 'asm', module: 'asm'
-        exclude group: 'org.json', module: 'json'
-    }
-    androidTestImplementation "org.apache.httpcomponents:httpclient-android:$httpClientAndroidVersion"
-
-    androidTestImplementation project(path:':libs:mocks')
-
-    androidTestImplementation "androidx.test:runner:$androidxTestCoreVersion"
-    androidTestImplementation "androidx.test:rules:$androidxTestCoreVersion"
-    androidTestImplementation "androidx.test.ext:junit:$jUnitExtVersion"
-    androidTestImplementation 'tools.fastlane:screengrab:2.1.1',  {
-        exclude group: 'com.android.support.test.uiautomator', module: 'uiautomator-v18'
-    }
-    androidTestImplementation (name:'cloudtestingscreenshotter_lib', ext:'aar') // Screenshots on Firebase Cloud Testing
-    androidTestImplementation "androidx.work:work-testing:$androidxWorkVersion"
-
-    // Dagger and Hilt
-    compileOnly 'org.glassfish:javax.annotation:10.0-b28'
-    implementation "com.google.dagger:dagger-android-support:$gradle.ext.daggerVersion"
-    kapt "com.google.dagger:dagger-android-processor:$gradle.ext.daggerVersion"
-    implementation "com.google.dagger:hilt-android:$gradle.ext.daggerVersion"
-    kapt "com.google.dagger:hilt-compiler:$gradle.ext.daggerVersion"
-    androidTestImplementation "com.google.dagger:hilt-android-testing:$gradle.ext.daggerVersion"
-    kaptAndroidTest "com.google.dagger:hilt-android-compiler:$gradle.ext.daggerVersion"
-
-    implementation("$gradle.ext.fluxCBinaryPath") {
-        version {
-            strictly fluxCVersion
-        }
-        exclude group: "com.android.volley"
-        exclude group: 'org.wordpress', module: 'utils'
-        exclude group: 'com.android.support', module: 'support-annotations'
-    }
-
-    implementation ('com.github.indexos.media-for-mobile:android:43a9026f0973a2f0a74fa813132f6a16f7499c3a')
-
-    implementation ("$gradle.ext.wputilsBinaryPath") {
-        version {
-            strictly wordPressUtilsVersion
-        }
-    }
-
+    compileOnly project(path: ':libs:annotations')
+    kapt project(':libs:processors')
     implementation (project(path:':libs:networking')) {
         exclude group: "com.android.volley"
         exclude group: 'org.wordpress', module: 'utils'
@@ -483,55 +326,175 @@ dependencies {
     implementation (project(path:':libs:analytics')) {
         exclude group: 'org.wordpress', module: 'utils'
     }
+    implementation project(path:':libs:image-editor')
     implementation (project(path:':libs:editor')) {
         exclude group: 'org.wordpress', module: 'utils'
     }
-
+    implementation("$gradle.ext.fluxCBinaryPath") {
+        version {
+            strictly wordPressFluxCVersion
+        }
+        exclude group: "com.android.volley"
+        exclude group: 'org.wordpress', module: 'utils'
+        exclude group: 'com.android.support', module: 'support-annotations'
+    }
+    implementation ("$gradle.ext.wputilsBinaryPath") {
+        version {
+            strictly wordPressUtilsVersion
+        }
+    }
     implementation ("$gradle.ext.loginFlowBinaryPath:$wordPressLoginVersion") {
         exclude group: 'com.github.bumptech.glide'
         exclude group: 'org.wordpress', module: 'utils'
     }
+    implementation "$gradle.ext.aboutAutomatticBinaryPath:$automatticAboutVersion"
+    implementation "$gradle.ext.storiesAndroidPath:$automatticStoriesVersion"
+    implementation "$gradle.ext.storiesAndroidMp4ComposePath:$automatticStoriesVersion"
 
-    implementation (group: 'com.zendesk', name: 'support', version: '5.0.2') {
+    implementation "com.automattic:Automattic-Tracks-Android:$automatticTracksVersion"
+    implementation ("com.automattic:rest:$automatticRestVersion") {
+        exclude group: 'com.mcxiaoke.volley'
+    }
+    implementation "org.wordpress:graphview:$wordPressGraphviewVersion"
+    implementation "org.wordpress:persistentedittext:$wordPressPersistentEditTextVersion"
+    implementation "org.wordpress:emailchecker2:$wordPressEmailChecker2Version"
+
+    debugImplementation "androidx.compose.ui:ui-tooling:$androidxComposeVersion"
+    debugImplementation "com.facebook.stetho:stetho:$stethoVersion"
+    debugImplementation "com.facebook.stetho:stetho-okhttp3:$stethoVersion"
+
+    implementation "com.google.code.gson:gson:$googleGsonVersion"
+    implementation "androidx.core:core:$androidxCoreVersion"
+    implementation "androidx.core:core-ktx:$androidxCoreVersion"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$androidxLifecycleVersion"
+    implementation "androidx.legacy:legacy-support-core-ui:$androidXLegacySupportCoreUiVersion"
+    implementation "androidx.fragment:fragment:$androidxFragmentVersion"
+    implementation "androidx.fragment:fragment-ktx:$androidxFragmentVersion"
+    implementation "androidx.multidex:multidex:$androidXMultidexVersion"
+    implementation "androidx.legacy:legacy-support-v4:$androidXLegacySupportV4Version"
+    implementation "androidx.exifinterface:exifinterface:$androidXExifInterfaceVersion"
+    implementation "androidx.media:media:$androidxMediaVersion"
+    implementation "androidx.appcompat:appcompat:$androidxAppcompatVersion"
+    implementation "androidx.cardview:cardview:$androidxCardviewVersion"
+    implementation "androidx.recyclerview:recyclerview:$androidxRecyclerviewVersion"
+    implementation "com.google.android.material:material:$googleMaterialVersion"
+    implementation "androidx.percentlayout:percentlayout:$androidxPercentlayoutVersion"
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:$androidxSwipeToRefreshVersion"
+    implementation "androidx.preference:preference:$androidxPreferenceVersion"
+    implementation "androidx.work:work-runtime:$androidxWorkVersion"
+    implementation "androidx.work:work-runtime-ktx:$androidxWorkVersion"
+    implementation "androidx.work:work-gcm:$androidxWorkVersion" // GCMNetworkManager on api <= 22
+    implementation "androidx.constraintlayout:constraintlayout:$androidxConstraintlayoutVersion"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$androidxLifecycleVersion"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$androidxLifecycleVersion"
+    implementation "androidx.lifecycle:lifecycle-process:$androidxLifecycleVersion"
+    implementation "com.android.volley:volley:$androidVolleyVersion"
+    implementation "com.google.firebase:firebase-messaging:$firebaseMessagingVersion"
+    implementation "com.google.firebase:firebase-config:$firebaseConfigVersion"
+    implementation "com.google.android.gms:play-services-auth:$googlePlayServicesAuthVersion"
+    implementation "com.google.android.gms:play-services-code-scanner:$googlePlayServicesCodeScannerVersion"
+    implementation "com.android.installreferrer:installreferrer:$androidInstallReferrerVersion"
+    implementation "com.github.chrisbanes:PhotoView:$chrisbanesPhotoviewVersion"
+    implementation "org.greenrobot:eventbus:$eventBusVersion"
+    implementation "com.squareup.okio:okio:$squareupOkioVersion"
+    implementation "org.apache.commons:commons-text:$apacheCommonsTextVersion"
+    implementation "com.airbnb.android:lottie:$lottieVersion"
+    implementation "com.facebook.shimmer:shimmer:$facebookShimmerVersion"
+    implementation ("com.github.yalantis:ucrop:$uCropVersion") {
+        exclude group: 'androidx.core', module: 'core'
+        exclude group: 'androidx.constraintlayout', module: 'constraintlayout'
+        exclude group: 'androidx.appcompat', module: 'appcompat'
+    }
+    implementation "com.github.bumptech.glide:glide:$glideVersion"
+    kapt "com.github.bumptech.glide:compiler:$glideVersion"
+    implementation "com.github.bumptech.glide:volley-integration:$glideVolleyVersion"
+    implementation "androidx.compose.ui:ui:$androidxComposeVersion"
+    implementation "androidx.compose.foundation:foundation:$androidxComposeVersion"
+    implementation "androidx.compose.material:material:$androidxComposeVersion"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:$androidxLifecycleVersion"
+    implementation "androidx.compose.ui:ui-tooling-preview:$androidxComposeVersion"
+    implementation "androidx.compose.runtime:runtime-livedata:$androidxComposeVersion"
+    implementation "io.coil-kt:coil-compose:$coilComposeVersion"
+    implementation ('com.github.indexos.media-for-mobile:android:43a9026f0973a2f0a74fa813132f6a16f7499c3a')
+    implementation (group: 'com.zendesk', name: 'support', version: "$zendeskVersion") {
         exclude group: 'com.google.dagger'
         exclude group: 'com.android.support', module: 'support-annotations'
     }
-
     implementation (name:'tenor-android-core-jetified', ext:'aar') // Jetified Tenor Gif library
-
-    lintChecks 'org.wordpress:lint:1.1.0'
-
-    // Firebase
-    implementation 'com.google.firebase:firebase-config:19.1.3'
-
-    compileOnly project(path: ':libs:annotations')
-    kapt project(':libs:processors')
-
-    // Debug
-    debugImplementation 'com.facebook.stetho:stetho:1.6.0'
-    debugImplementation 'com.facebook.stetho:stetho-okhttp3:1.6.0'
-
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
-
-    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
-
-    implementation "org.jsoup:jsoup:1.10.3"
-    implementation 'androidx.emoji:emoji:1.0.0'
-
-    // Necessary because of the failing android tests
-    androidTestImplementation "androidx.room:room-runtime:$roomVersion"
-    kapt "androidx.room:room-compiler:$roomVersion"
-    androidTestImplementation "androidx.room:room-ktx:$roomVersion"
-
-    // Enables accessibility checks in Espresso
-    androidTestImplementation 'androidx.test.espresso:espresso-accessibility:3.3.0-alpha05'
-
-    // Enables Java 8+ API desugaring support
-    coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:$coreLibraryDesugaringVersion"
-
-    implementation ("com.google.android.exoplayer:exoplayer:$exoPlayerVersion") {
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinxCoroutinesVersion"
+    implementation "com.github.PhilJay:MPAndroidChart:$philjayMpAndroidChartVersion"
+    implementation "org.jsoup:jsoup:$jsoupVersion"
+    implementation "androidx.emoji:emoji:$androidxEmojiVersion"
+    implementation ("com.google.android.exoplayer:exoplayer:$googleExoPlayerVersion") {
         exclude group: 'com.android.support', module: 'support-annotations'
     }
+    compileOnly "org.glassfish:javax.annotation:$glassfishJavaxAnnotationVersion"
+    implementation "com.google.dagger:dagger-android-support:$gradle.ext.daggerVersion"
+    kapt "com.google.dagger:dagger-android-processor:$gradle.ext.daggerVersion"
+    implementation "com.google.dagger:hilt-android:$gradle.ext.daggerVersion"
+    kapt "com.google.dagger:hilt-compiler:$gradle.ext.daggerVersion"
+
+    testImplementation "$gradle.ext.storiesAndroidPhotoEditorPath:$automatticStoriesVersion"
+
+    testImplementation("androidx.arch.core:core-testing:$androidxArchCoreVersion", {
+        exclude group: 'com.android.support', module: 'support-compat'
+        exclude group: 'com.android.support', module: 'support-annotations'
+        exclude group: 'com.android.support', module: 'support-core-utils'
+    })
+    testImplementation "junit:junit:$junitVersion"
+    testImplementation "org.mockito:mockito-core:$mockitoVersion"
+    testImplementation "org.mockito.kotlin:mockito-kotlin:$mockitoKotlinVersion"
+    testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$gradle.ext.kotlinVersion"
+    testImplementation "org.assertj:assertj-core:$assertjVersion"
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$kotlinxCoroutinesVersion"
+    testImplementation "androidx.test:core:$androidxTestCoreVersion"
+    testImplementation('org.bouncycastle:bcprov-jdk15on') {
+        version {
+            strictly "$bouncycastleVersion"
+        }
+    }
+
+    androidTestImplementation project(path:':libs:mocks')
+
+    androidTestImplementation "org.mockito:mockito-android:$mockitoVersion"
+    androidTestImplementation "org.mockito.kotlin:mockito-kotlin:$mockitoKotlinVersion"
+    androidTestImplementation "com.squareup.okhttp:mockwebserver:$squareupMockWebServerVersion"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$androidxTestEspressoVersion", {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    }
+    androidTestImplementation "androidx.test.uiautomator:uiautomator:$androidxTestUiAutomatorVersion"
+    androidTestImplementation("androidx.test.espresso:espresso-contrib:$androidxTestEspressoVersion") {
+        exclude group: 'com.android.support', module: 'appcompat'
+        exclude group: 'com.android.support', module: 'support-v4'
+        exclude module: 'recyclerview-v7'
+    }
+    androidTestImplementation("com.github.tomakehurst:wiremock:$wiremockVersion") {
+        exclude group: 'org.apache.httpcomponents', module: 'httpclient'
+        exclude group: 'org.apache.commons', module: 'commons-lang3'
+        exclude group: 'asm', module: 'asm'
+        exclude group: 'org.json', module: 'json'
+    }
+    androidTestImplementation "org.apache.httpcomponents:httpclient-android:$apacheHttpClientAndroidVersion"
+    androidTestImplementation "androidx.test:runner:$androidxTestCoreVersion"
+    androidTestImplementation "androidx.test:rules:$androidxTestCoreVersion"
+    androidTestImplementation "androidx.test.ext:junit:$androidxTestExtJunitVersion"
+    androidTestImplementation "tools.fastlane:screengrab:$screengrabVersion",  {
+        exclude group: 'com.android.support.test.uiautomator', module: 'uiautomator-v18'
+    }
+    androidTestImplementation (name:'cloudtestingscreenshotter_lib', ext:'aar') // Screenshots on Firebase Cloud Testing
+    androidTestImplementation "androidx.work:work-testing:$androidxWorkVersion"
+    androidTestImplementation "com.google.dagger:hilt-android-testing:$gradle.ext.daggerVersion"
+    kaptAndroidTest "com.google.dagger:hilt-android-compiler:$gradle.ext.daggerVersion"
+    // Necessary because of the failing android tests
+    androidTestImplementation "androidx.room:room-runtime:$androidxRoomVersion"
+    kapt "androidx.room:room-compiler:$androidxRoomVersion"
+    androidTestImplementation "androidx.room:room-ktx:$androidxRoomVersion"
+    // Enables accessibility checks in Espresso
+    androidTestImplementation "androidx.test.espresso:espresso-accessibility:$androidxTestEspressoAccessibilityVersion"
+
+    // Enables Java 8+ API desugaring support
+    coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:$androidDesugarVersion"
+    lintChecks "org.wordpress:lint:$wordPressLintVersion"
 }
 
 configurations.all {

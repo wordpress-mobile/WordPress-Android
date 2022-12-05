@@ -1,11 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-11-17 10:54:09+0000
+Translation-Revision-Date: 2022-11-30 09:54:10+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.3
 Language: zh_CN
 -->
 <resources>
+    <string name="wp_jetpack_deep_link_open_in_wordpress">在 WordPress 中打开链接</string>
+    <string name="wp_jetpack_deep_link_overlay_description">似乎您已安装 Jetpack 应用。\n\n以后是否想要在 Jetpack 应用中打开链接？\n\n您始终可以在 Jetpack 中的“应用设置” &gt; “打开链接”中更改此设置</string>
+    <string name="wp_jetpack_deep_link_overlay_title">是否在 Jetpack 中打开链接？</string>
+    <string name="wp_jetpack_continue_without_jetpack">继续，不使用 Jetpack</string>
+    <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_two_description">Jetpack 可提供统计数据、通知等，帮助您创建和扩展理想中的 WordPress 站点。\n\nWordPress 应用不再支持创建新站点。</string>
+    <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_one_description">Jetpack 可提供统计数据、通知等，帮助您创建和扩展理想中的 WordPress 站点。</string>
+    <string name="wp_jetpack_feature_removal_site_creation_overlay_title">使用 Jetpack 应用创建新的 WordPress 站点</string>
+    <string name="deep_linking_weblinks_alias_label">网络链接</string>
+    <string name="deep_linking_urilinks_alias_label">URI 链接</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_notifications">切换到 Jetpack 应用，以在设备上接收 实时通知。</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_reader">切换到 Jetpack 应用，使用阅读器来查找、关注和点赞所有您喜欢的站点和文章。</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_stats">切换到 Jetpack 应用，通过统计数据和数据分析查看站点的流量增长情况。</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_notifications">使用 Jetpack 应用获取通知</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_reader">借助 Jetpack 应用以关注任何站点状况</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_stats">使用新版 Jetpack 应用获取统计数据</string>
+    <string name="preference_open_links_in_jetpack_setting_change_disable_error">无法禁用在 Jetpack 中打开链接</string>
+    <string name="preference_open_links_in_jetpack_setting_change_enable_error">无法启用在 Jetpack 中打开链接</string>
+    <string name="preference_open_links_in_jetpack">在 Jetpack 中打开链接</string>
+    <string name="jp_migration_need_help_button">需要帮助？</string>
+    <string name="jp_migration_got_it_button">知道了</string>
+    <string name="jp_migration_delete_message">请&lt;b&gt;删除 WordPress 应用&lt;/b&gt;以&lt;br&gt;避免发生数据冲突。</string>
+    <string name="jp_migration_delete_subtitle">似乎您仍然安装了 WordPress 应用。 我们建议您删除 WordPress 应用以避免发生数据冲突。</string>
+    <string name="jp_migration_delete_title">您不再需要 WordPress 应用</string>
+    <string name="jp_migration_network_error_message">如果没有网络连接，我们将无法传输您的数据和设置。</string>
+    <string name="jp_migration_network_error_subtitle">请检查以确保您的网络连接正常，然后重试。</string>
+    <string name="jp_migration_network_error_title">无法连接到互联网。</string>
+    <string name="jp_migration_generic_error_message">请联系支持人员或稍后重试。</string>
+    <string name="jp_migration_generic_error_subtitle">很抱歉，发生了些意外。 您的数据是安全的，但我们目前无法传输数据。</string>
+    <string name="jp_migration_generic_error_title">糟糕，出错了..</string>
+    <string name="jp_migration_try_again_button">重试</string>
+    <string name="jp_migration_finish_button">完成</string>
+    <string name="jp_migration_remove_wp_app_icon_content_description">删除 WordPress 应用图标</string>
+    <string name="jp_migration_done_delete_wp_message">请&lt;b&gt;删除 WordPress 应用&lt;/b&gt;以&lt;br&gt;避免发生数据冲突。</string>
+    <string name="jp_migration_done_subtitle">我们已传输您的所有数据和设置。 一切都完好如初。</string>
+    <string name="jp_migration_done_title">感谢您切换至 Jetpack！</string>
+    <string name="jp_migration_notifications_disabled_in_wp_message">我们将关闭 WordPress 应用中的通知功能。</string>
+    <string name="jp_migration_notifications_subtitle">您将收到所有相同的通知，但现在这些通知来自 Jetpack 应用。</string>
+    <string name="jp_migration_notifications_title">现在通知来自 Jetpack 应用</string>
+    <string name="jp_migration_success_card_message">请删除 WordPress 应用</string>
+    <string name="wordpress_help_center_button">WordPress 帮助中心</string>
+    <string name="support_title">支持</string>
+    <string name="notification_disable_broadcast_permission_desc">允许此应用禁用 WordPress 通知功能。</string>
+    <string name="notification_disable_broadcast_permission_label">禁用 WordPress 通知功能</string>
     <string name="jp_migration_help_button">需要帮助？</string>
     <string name="jp_migration_continue_button">继续</string>
     <string name="jp_migration_welcome_site_found_message">我们找到了您的站点。 继续转移您的所有数据并自动登录至 Jetpack。</string>
