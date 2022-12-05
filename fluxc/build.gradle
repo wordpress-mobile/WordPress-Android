@@ -62,6 +62,7 @@ dependencies {
     implementation sharedLibs.androidx.recyclerview
 
     implementation sharedLibs.androidx.exifinterface
+    implementation sharedLibs.androidx.security.crypto
 
     implementation(sharedLibs.wordpress.utils) {
         // Using official volley package
