@@ -361,7 +361,6 @@ dependencies {
     implementation ("com.automattic:rest:$automatticRestVersion") {
         exclude group: 'com.mcxiaoke.volley'
     }
-    implementation "org.wordpress:graphview:$wordPressGraphviewVersion"
     implementation "org.wordpress:persistentedittext:$wordPressPersistentEditTextVersion"
 
     // To enable Android Studio specific features for Jetpack Compose.
