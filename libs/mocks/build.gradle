@@ -12,11 +12,10 @@ android {
 
 dependencies {
     implementation("com.github.tomakehurst:wiremock:$wiremockVersion") {
-        exclude group: 'com.fasterxml.jackson.core', module: 'jackson-core'
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'
         exclude group: 'org.apache.commons', module: 'commons-lang3'
         exclude group: 'asm', module: 'asm'
         exclude group: 'org.json', module: 'json'
     }
-    implementation "org.apache.httpcomponents:httpclient-android:$apacheHttpClientAndroidVersion"
+    implementation "org.apache.httpcomponents:httpclient-android:$wiremockHttpClientVersion"
 }

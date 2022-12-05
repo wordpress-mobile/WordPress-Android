@@ -2,13 +2,20 @@ package org.wordpress.android.ui.main.jetpack.migration
 
 import kotlinx.coroutines.flow.first
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.localcontentmigration.ContentMigrationAnalyticsTracker
 import org.wordpress.android.localcontentmigration.MigrationEmailHelper
+import org.wordpress.android.localcontentmigration.WelcomeScreenData
 import org.wordpress.android.sharedlogin.resolver.LocalMigrationOrchestrator
 import org.wordpress.android.test
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.DeletePrimaryButton
@@ -38,7 +45,9 @@ class JetpackMigrationViewModelTest : BaseUnitTest() {
     private val localMigrationOrchestrator: LocalMigrationOrchestrator = mock()
     private val migrationEmailHelper: MigrationEmailHelper = mock()
     private val preventDuplicateNotifsFeatureConfig: PreventDuplicateNotifsFeatureConfig = mock()
+    private val contentMigrationAnalyticsTracker: ContentMigrationAnalyticsTracker = mock()
     private val contextProvider: ContextProvider = mock()
+    private val accountStore: AccountStore = mock()
     private val classToTest = JetpackMigrationViewModel(
             siteUtilsWrapper = siteUtilsWrapper,
             gravatarUtilsWrapper = gravatarUtilsWrapper,
@@ -46,13 +55,139 @@ class JetpackMigrationViewModelTest : BaseUnitTest() {
             preventDuplicateNotifsFeatureConfig = preventDuplicateNotifsFeatureConfig,
             appPrefsWrapper = appPrefsWrapper,
             localMigrationOrchestrator = localMigrationOrchestrator,
-            migrationEmailHelper = migrationEmailHelper
+            migrationEmailHelper = migrationEmailHelper,
+            migrationAnalyticsTracker = contentMigrationAnalyticsTracker,
+            accountStore = accountStore,
     )
+
+    @Before
+    fun setUp() {
+        whenever(gravatarUtilsWrapper.fixGravatarUrlWithResource(any(), any())).thenReturn("")
+    }
 
     // region ViewModel
     @Test
     fun `Should init Loading UiState as default`() = test {
         assertThat(classToTest.uiState.first()).isInstanceOf(Loading::class.java)
+    }
+    // endregion
+
+    // region Analytics Tracking
+
+    @Test
+    fun `Should track when welcome screen is shown`() {
+        classToTest.initWelcomeScreenUi(WelcomeScreenData(), false)
+
+        verify(contentMigrationAnalyticsTracker).trackWelcomeScreenShown()
+    }
+
+    @Test
+    fun `Should track when continue button is tapped on welcome screen`() {
+        val welcomeScreen = classToTest.initWelcomeScreenUi(WelcomeScreenData(), false)
+
+        welcomeScreen.primaryActionButton.onClick.invoke()
+
+        verify(contentMigrationAnalyticsTracker).trackWelcomeScreenContinueButtonTapped()
+    }
+
+    @Test
+    fun `Should track when help button is tapped on welcome screen`() {
+        val welcomeScreen = classToTest.initWelcomeScreenUi(WelcomeScreenData(), false)
+
+        welcomeScreen.secondaryActionButton.onClick.invoke()
+
+        verify(contentMigrationAnalyticsTracker).trackWelcomeScreenHelpButtonTapped()
+    }
+
+    @Test
+    fun `Should track when avatar is tapped on welcome screen`() {
+        val welcomeScreen = classToTest.initWelcomeScreenUi(WelcomeScreenData(), false)
+
+        welcomeScreen.onAvatarClicked.invoke()
+
+        verify(contentMigrationAnalyticsTracker).trackWelcomeScreenAvatarTapped()
+    }
+
+    @Test
+    fun `Should track when notifications screen is shown`() {
+        classToTest.initNotificationsScreenUi()
+
+        verify(contentMigrationAnalyticsTracker).trackNotificationsScreenShown()
+    }
+
+    @Test
+    fun `Should track when continue button is tapped on notifications screen`() {
+        val notificationsScreen = classToTest.initNotificationsScreenUi()
+
+        notificationsScreen.primaryActionButton.onClick.invoke()
+
+        verify(contentMigrationAnalyticsTracker).trackNotificationsScreenShown()
+    }
+
+    @Test
+    fun `Should track when success screen is shown`() {
+        classToTest.initSuccessScreenUi()
+
+        verify(contentMigrationAnalyticsTracker).trackThanksScreenShown()
+    }
+
+    @Test
+    fun `Should track when finish button is tapped on success screen`() {
+        val successScreen = classToTest.initSuccessScreenUi()
+
+        successScreen.primaryActionButton.onClick.invoke()
+
+        verify(contentMigrationAnalyticsTracker).trackThanksScreenFinishButtonTapped()
+    }
+
+    @Test
+    fun `Should track when delete wp app screen is shown`() {
+        classToTest.initPleaseDeleteWordPressAppScreenUi()
+
+        verify(contentMigrationAnalyticsTracker).trackPleaseDeleteWordPressScreenShown()
+    }
+
+    @Test
+    fun `Should track when got it button is tapped on delete wp app screen`() {
+        val pleaseDeleteScreen = classToTest.initPleaseDeleteWordPressAppScreenUi()
+
+        pleaseDeleteScreen.primaryActionButton.onClick.invoke()
+
+        verify(contentMigrationAnalyticsTracker).trackPleaseDeleteWordPressGotItTapped()
+    }
+
+    @Test
+    fun `Should track when help button is tapped on delete wp app screen`() {
+        val pleaseDeleteScreen = classToTest.initPleaseDeleteWordPressAppScreenUi()
+
+        pleaseDeleteScreen.secondaryActionButton.onClick.invoke()
+
+        verify(contentMigrationAnalyticsTracker).trackPleaseDeleteWordPressHelpTapped()
+    }
+
+    @Test
+    fun `Should track when error screen is shown`() {
+        classToTest.initErrorScreenUi()
+
+        verify(contentMigrationAnalyticsTracker).trackErrorScreenShown()
+    }
+
+    @Test
+    fun `Should track when retry button is tapped on error screen`() {
+        val errorScreen = classToTest.initErrorScreenUi()
+
+        errorScreen.primaryActionButton.onClick.invoke()
+
+        verify(contentMigrationAnalyticsTracker).trackErrorRetryTapped()
+    }
+
+    @Test
+    fun `Should track when help button is tapped on error screen`() {
+        val errorScreen = classToTest.initErrorScreenUi()
+
+        errorScreen.secondaryActionButton.onClick.invoke()
+
+        verify(contentMigrationAnalyticsTracker).trackErrorHelpTapped()
     }
     // endregion
 
@@ -63,6 +198,7 @@ class JetpackMigrationViewModelTest : BaseUnitTest() {
                 sites = emptyList(),
                 primaryActionButton = WelcomePrimaryButton {},
                 secondaryActionButton = WelcomeSecondaryButton {},
+                onAvatarClicked = {},
         )
         val actual = welcomeContent.userAvatarUrl
         val expected = ""
@@ -75,6 +211,7 @@ class JetpackMigrationViewModelTest : BaseUnitTest() {
                 sites = emptyList(),
                 primaryActionButton = WelcomePrimaryButton {},
                 secondaryActionButton = WelcomeSecondaryButton {},
+                onAvatarClicked = {},
         )
         val actual = welcomeContent.isProcessing
         val expected = false
@@ -87,6 +224,7 @@ class JetpackMigrationViewModelTest : BaseUnitTest() {
                 sites = emptyList(),
                 primaryActionButton = WelcomePrimaryButton {},
                 secondaryActionButton = WelcomeSecondaryButton {},
+                onAvatarClicked = {},
         )
         val actual = welcomeContent.screenIconRes
         val expected = R.drawable.ic_wordpress_jetpack_logo
@@ -99,6 +237,7 @@ class JetpackMigrationViewModelTest : BaseUnitTest() {
                 sites = emptyList(),
                 primaryActionButton = WelcomePrimaryButton {},
                 secondaryActionButton = WelcomeSecondaryButton {},
+                onAvatarClicked = {},
         )
         val actual = welcomeContent.title
         val expected = UiStringRes(R.string.jp_migration_welcome_title)
@@ -111,6 +250,7 @@ class JetpackMigrationViewModelTest : BaseUnitTest() {
                 sites = emptyList(),
                 primaryActionButton = WelcomePrimaryButton {},
                 secondaryActionButton = WelcomeSecondaryButton {},
+                onAvatarClicked = {},
         )
         val actual = welcomeContent.subtitle
         val expected = UiStringRes(R.string.jp_migration_welcome_subtitle)
@@ -126,6 +266,7 @@ class JetpackMigrationViewModelTest : BaseUnitTest() {
                 ),
                 primaryActionButton = WelcomePrimaryButton {},
                 secondaryActionButton = WelcomeSecondaryButton {},
+                onAvatarClicked = {},
         )
         val actual = welcomeContent.message
         val expected = UiStringRes(R.string.jp_migration_welcome_sites_found_message)
@@ -138,6 +279,7 @@ class JetpackMigrationViewModelTest : BaseUnitTest() {
                 sites = listOf(SiteListItemUiState(123L, "name", "url", "iconUrl")),
                 primaryActionButton = WelcomePrimaryButton {},
                 secondaryActionButton = WelcomeSecondaryButton {},
+                onAvatarClicked = {},
         )
         val actual = welcomeContent.message
         val expected = UiStringRes(R.string.jp_migration_welcome_site_found_message)

@@ -94,7 +94,7 @@ fun WelcomeStep(uiState: UiState.Content.Welcome) = with(uiState) {
 
         UserAvatarImage(
                 avatarUrl = uiState.userAvatarUrl,
-                onClick = secondaryActionButton.onClick,
+                onClick = onAvatarClicked,
                 modifier = Modifier.dimmed(isProcessing),
         )
 
@@ -209,6 +209,7 @@ private val previewUiState = UiState.Content.Welcome(
         sites = previewSiteListItems,
         primaryActionButton = WelcomePrimaryButton {},
         secondaryActionButton = WelcomeSecondaryButton {},
+        onAvatarClicked = {},
 )
 
 @Preview(showBackground = true, device = Devices.PIXEL_4_XL)

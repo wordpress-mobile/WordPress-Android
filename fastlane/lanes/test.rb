@@ -12,25 +12,36 @@ platform :android do
   #####################################################################################
   desc "Build the application and instrumented tests, then run the tests in Firebase Test Lab"
   lane :build_and_run_instrumented_test do | options |
-   gradle(tasks: ['WordPress:assembleWordPressVanillaDebug', 'WordPress:assembleWordPressVanillaDebugAndroidTest'])
+    gradle(tasks: ['WordPress:assembleWordPressVanillaDebug', 'WordPress:assembleWordPressVanillaDebugAndroidTest'])
 
-   # Run the instrumented tests in Firebase Test Lab
-   firebase_login(
-     key_file: GOOGLE_FIREBASE_SECRETS_PATH
-   )
+    # Run the instrumented tests in Firebase Test Lab
+    firebase_login(
+      key_file: GOOGLE_FIREBASE_SECRETS_PATH
+    )
 
-   apk_dir = File.join(PROJECT_ROOT_FOLDER, 'WordPress', 'build', 'outputs', 'apk')
+    apk_dir = File.join(PROJECT_ROOT_FOLDER, 'WordPress', 'build', 'outputs', 'apk')
 
-   android_firebase_test(
-     project_id: firebase_secret(name: 'project_id'),
-     key_file: GOOGLE_FIREBASE_SECRETS_PATH,
-     model: 'Pixel2.arm',
-     version: 30,
-     test_apk_path: File.join(apk_dir, 'androidTest', 'wordpressVanilla', 'debug', 'org.wordpress.android-wordpress-vanilla-debug-androidTest.apk'),
-     apk_path: File.join(apk_dir, 'wordpressVanilla', 'debug', 'org.wordpress.android-wordpress-vanilla-debug.apk'),
-     test_targets: 'notPackage org.wordpress.android.ui.screenshots',
-     results_output_dir: File.join(PROJECT_ROOT_FOLDER, 'build', 'instrumented-tests')
-   )
+    test_succeeded = android_firebase_test(
+      project_id: firebase_secret(name: 'project_id'),
+      key_file: GOOGLE_FIREBASE_SECRETS_PATH,
+      model: 'Pixel2.arm',
+      version: 30,
+      test_apk_path: File.join(apk_dir, 'androidTest', 'wordpressVanilla', 'debug', 'org.wordpress.android-wordpress-vanilla-debug-androidTest.apk'),
+      apk_path: File.join(apk_dir, 'wordpressVanilla', 'debug', 'org.wordpress.android-wordpress-vanilla-debug.apk'),
+      test_targets: 'notPackage org.wordpress.android.ui.screenshots',
+      results_output_dir: File.join(PROJECT_ROOT_FOLDER, 'build', 'instrumented-tests'),
+      crash_on_test_failure: false
+    )
+
+    annotation_ctx = 'firebase-test-wordpress-vanilla-debug'
+    if test_succeeded
+      sh("buildkite-agent annotation remove --context '#{annotation_ctx}' || true") if is_ci?
+    else
+      details_url = lane_context[SharedValues::FIREBASE_TEST_MORE_DETAILS_URL]
+      message = "Firebase Tests failed. Failure details can be seen [here in Firebase Console](#{details_url})"
+      sh('buildkite-agent', 'annotate', message, '--style', 'error', '--context', annotation_ctx) if is_ci?
+      UI.test_failure!(message)
+    end
   end
 end
 

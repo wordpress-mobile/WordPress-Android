@@ -2,18 +2,24 @@ package org.wordpress.android.ui.main.jetpack.migration
 
 import android.content.Intent
 import androidx.annotation.DrawableRes
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combineTransform
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
+import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.localcontentmigration.ContentMigrationAnalyticsTracker
 import org.wordpress.android.localcontentmigration.LocalMigrationState
 import org.wordpress.android.localcontentmigration.LocalMigrationState.Finished.Failure
 import org.wordpress.android.localcontentmigration.LocalMigrationState.Finished.Ineligible
@@ -21,6 +27,7 @@ import org.wordpress.android.localcontentmigration.LocalMigrationState.Finished.
 import org.wordpress.android.localcontentmigration.LocalMigrationState.Initial
 import org.wordpress.android.localcontentmigration.LocalMigrationState.Migrating
 import org.wordpress.android.localcontentmigration.MigrationEmailHelper
+import org.wordpress.android.localcontentmigration.WelcomeScreenData
 import org.wordpress.android.sharedlogin.resolver.LocalMigrationOrchestrator
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.DeletePrimaryButton
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.DeleteSecondaryButton
@@ -32,13 +39,13 @@ import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.WelcomeSecondaryButton
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.CompleteFlow
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.FallbackToLogin
+import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.Logout
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.ShowHelp
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Content.Delete
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Content.Done
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Content.Notifications
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Content.Welcome
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Error.Generic
-import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Error.Networking
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Loading
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.utils.UiString
@@ -60,9 +67,9 @@ class JetpackMigrationViewModel @Inject constructor(
     private val appPrefsWrapper: AppPrefsWrapper,
     private val localMigrationOrchestrator: LocalMigrationOrchestrator,
     private val migrationEmailHelper: MigrationEmailHelper,
+    private val migrationAnalyticsTracker: ContentMigrationAnalyticsTracker,
+    private val accountStore: AccountStore,
 ) : ViewModel() {
-    private val _uiState = MutableStateFlow<UiState>(Loading)
-
     private val _actionEvents = Channel<JetpackMigrationActionEvent>(Channel.BUFFERED)
     val actionEvents = _actionEvents.receiveAsFlow()
 
@@ -74,53 +81,97 @@ class JetpackMigrationViewModel @Inject constructor(
     val uiState = combineTransform(migrationStateFlow, continueClickedFlow, notificationContinueClickedFlow) {
         migrationState, continueClicked, notificationContinueClicked ->
         when {
-            showDeleteState -> emit(
-                    Delete(
-                            primaryActionButton = DeletePrimaryButton(::onGotItClicked),
-                            secondaryActionButton = DeleteSecondaryButton(::onHelpClicked),
-                    )
-            )
+            showDeleteState -> emit(initPleaseDeleteWordPressAppScreenUi())
             migrationState is Ineligible -> {
                 appPrefsWrapper.setJetpackMigrationEligible(false)
                 emit(Loading)
-                postActionEvent(FallbackToLogin)
+                logoutAndFallbackToLogin()
             }
             migrationState is Initial -> emit(Loading)
-            migrationState is Migrating -> emit(
-                    Welcome(
-                            userAvatarUrl = resizeAvatarUrl(migrationState.avatarUrl),
-                            isProcessing = continueClicked,
-                            sites = migrationState.sites.map(::siteUiFromModel),
-                            primaryActionButton = WelcomePrimaryButton(::onContinueClicked),
-                            secondaryActionButton = WelcomeSecondaryButton(::onHelpClicked),
-                    )
+            migrationState is Migrating
+                    || migrationState is Successful && !continueClicked -> emit(
+                    initWelcomeScreenUi(migrationState.data, continueClicked)
             )
             migrationState is Successful && continueClicked -> when {
-                !notificationContinueClicked -> emit(
-                        Notifications(
-                                primaryActionButton = NotificationsPrimaryButton(::onContinueFromNotificationsClicked),
-                        )
-                )
-                else -> emit(
-                        Done(
-                                primaryActionButton = DonePrimaryButton(::onDoneClicked)
-                        )
-                )
+                !notificationContinueClicked -> emit(initNotificationsScreenUi())
+                else -> emit(initSuccessScreenUi())
             }
-            migrationState is Failure -> emit(
-                    UiState.Error(
-                            primaryActionButton = ErrorPrimaryButton(::onTryAgainClicked),
-                            secondaryActionButton = ErrorSecondaryButton(::onHelpClicked),
-                            type = Generic,
-                    )
-            )
+            migrationState is Failure -> emit(initErrorScreenUi())
             else -> Unit
         }
-    }
+    }.stateIn(viewModelScope, SharingStarted.Lazily, Loading)
 
     fun start(showDeleteState: Boolean) {
         this.showDeleteState = showDeleteState
         tryMigration()
+    }
+
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    fun initWelcomeScreenUi(data: WelcomeScreenData, isContinueClicked: Boolean): Welcome {
+        if (uiState.value !is Welcome) {
+            migrationAnalyticsTracker.trackWelcomeScreenShown()
+        }
+
+        return Welcome(
+                userAvatarUrl = resizeAvatarUrl(data.avatarUrl),
+                isProcessing = isContinueClicked,
+                sites = data.sites.map(::siteUiFromModel),
+                onAvatarClicked = { onHelpClicked(source = HelpButtonSource.WelcomeAvatar) },
+                primaryActionButton = WelcomePrimaryButton(::onContinueClicked),
+                secondaryActionButton = WelcomeSecondaryButton {
+                    onHelpClicked(source = HelpButtonSource.Welcome)
+                },
+        )
+    }
+
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    fun initNotificationsScreenUi(): Notifications {
+        migrationAnalyticsTracker.trackNotificationsScreenShown()
+
+        return Notifications(
+                primaryActionButton = NotificationsPrimaryButton(::onContinueFromNotificationsClicked),
+        )
+    }
+
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    fun initSuccessScreenUi(): Done {
+        migrationAnalyticsTracker.trackThanksScreenShown()
+
+        return Done(
+                primaryActionButton = DonePrimaryButton(::onFinishClicked)
+        )
+    }
+
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    fun initPleaseDeleteWordPressAppScreenUi(): Delete {
+        migrationAnalyticsTracker.trackPleaseDeleteWordPressScreenShown()
+
+        return Delete(
+                primaryActionButton = DeletePrimaryButton(::onGotItClicked),
+                secondaryActionButton = DeleteSecondaryButton {
+                    onHelpClicked(source = HelpButtonSource.Delete)
+                },
+        )
+    }
+
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    fun initErrorScreenUi(): UiState.Error {
+        migrationAnalyticsTracker.trackErrorScreenShown()
+
+        return UiState.Error(
+                primaryActionButton = ErrorPrimaryButton(::onTryAgainClicked),
+                secondaryActionButton = ErrorSecondaryButton {
+                    onHelpClicked(source = HelpButtonSource.Error)
+                },
+                type = Generic,
+        )
+    }
+
+    fun signOutWordPress(application: WordPress) {
+        viewModelScope.launch(Dispatchers.IO) {
+            application.wordPressComSignOut()
+            postActionEvent(CompleteFlow)
+        }
     }
 
     private fun siteUiFromModel(site: SiteModel) = SiteListItemUiState(
@@ -134,44 +185,32 @@ class JetpackMigrationViewModel @Inject constructor(
     )
 
     private fun onContinueClicked() {
+        migrationAnalyticsTracker.trackWelcomeScreenContinueButtonTapped()
         continueClickedFlow.value = true
     }
 
-    @Suppress("ForbiddenComment", "unused")
-    private fun postGenericErrorState() {
-        // TODO: Call this method when migration fails with generic error
-        _uiState.value = UiState.Error(
-                primaryActionButton = ErrorPrimaryButton(::onTryAgainClicked),
-                secondaryActionButton = ErrorSecondaryButton(::onHelpClicked),
-                type = Generic,
-        )
-    }
-
-    @Suppress("ForbiddenComment", "unused")
-    private fun postNetworkingErrorState() {
-        // TODO: Call this method when migration fails with networking error
-        _uiState.value = UiState.Error(
-                primaryActionButton = ErrorPrimaryButton(::onTryAgainClicked),
-                secondaryActionButton = ErrorSecondaryButton(::onHelpClicked),
-                type = Networking,
-        )
-    }
-
     private fun onTryAgainClicked() {
-        (_uiState.value as? UiState.Error)?.let {
-            _uiState.value = it.copy(isProcessing = true)
-            tryMigration()
+        migrationAnalyticsTracker.trackErrorRetryTapped()
+        logoutAndFallbackToLogin()
+    }
+
+    private fun logoutAndFallbackToLogin() {
+        if (accountStore.hasAccessToken()) {
+            postActionEvent(Logout)
+        } else {
+            postActionEvent(FallbackToLogin)
         }
     }
 
     private fun tryMigration() {
-            viewModelScope.launch(Dispatchers.IO) {
-                localMigrationOrchestrator.tryLocalMigration(migrationStateFlow)
-            }
+        viewModelScope.launch(Dispatchers.IO) {
+            localMigrationOrchestrator.tryLocalMigration(migrationStateFlow)
+        }
     }
 
     private fun onContinueFromNotificationsClicked() {
         if (preventDuplicateNotifsFeatureConfig.isEnabled()) disableNotificationsOnWP()
+        migrationAnalyticsTracker.trackNotificationsScreenContinueButtonTapped()
         notificationContinueClickedFlow.value = true
     }
 
@@ -182,21 +221,29 @@ class JetpackMigrationViewModel @Inject constructor(
             val appPackage = BuildConfig.APPLICATION_ID.replace("com.jetpack", "org.wordpress")
             intent.setPackage(appPackage)
             AppLog.d(T.NOTIFS, intent.toString())
-            contextProvider.getContext().sendBroadcast(intent, "org.wordpress.android.permission.DISABLE_NOTIFICATIONS")
+            contextProvider.getContext().sendBroadcast(intent)
         }
     }
 
-    private fun onDoneClicked() {
+    private fun onFinishClicked() {
+        migrationAnalyticsTracker.trackThanksScreenFinishButtonTapped()
         migrationEmailHelper.notifyMigrationComplete()
         appPrefsWrapper.setJetpackMigrationCompleted(true)
         postActionEvent(CompleteFlow)
     }
 
-    private fun onHelpClicked() {
+    private fun onHelpClicked(source: HelpButtonSource) {
+        when (source) {
+            HelpButtonSource.Welcome -> migrationAnalyticsTracker.trackWelcomeScreenHelpButtonTapped()
+            HelpButtonSource.WelcomeAvatar -> migrationAnalyticsTracker.trackWelcomeScreenAvatarTapped()
+            HelpButtonSource.Error -> migrationAnalyticsTracker.trackErrorHelpTapped()
+            HelpButtonSource.Delete -> migrationAnalyticsTracker.trackPleaseDeleteWordPressHelpTapped()
+        }
         postActionEvent(ShowHelp)
     }
 
     private fun onGotItClicked() {
+        migrationAnalyticsTracker.trackPleaseDeleteWordPressGotItTapped()
         postActionEvent(CompleteFlow)
     }
 
@@ -226,6 +273,7 @@ class JetpackMigrationViewModel @Inject constructor(
                 val userAvatarUrl: String = "",
                 val isProcessing: Boolean = false,
                 val sites: List<SiteListItemUiState>,
+                val onAvatarClicked: () -> Unit,
                 override val primaryActionButton: ActionButton,
                 override val secondaryActionButton: ActionButton,
             ) : Content(
@@ -375,9 +423,17 @@ class JetpackMigrationViewModel @Inject constructor(
         )
     }
 
+    sealed class HelpButtonSource {
+        object Welcome : HelpButtonSource()
+        object WelcomeAvatar : HelpButtonSource()
+        object Delete : HelpButtonSource()
+        object Error : HelpButtonSource()
+    }
+
     sealed class JetpackMigrationActionEvent {
         object ShowHelp : JetpackMigrationActionEvent()
         object CompleteFlow : JetpackMigrationActionEvent()
-        object FallbackToLogin: JetpackMigrationActionEvent()
+        object FallbackToLogin : JetpackMigrationActionEvent()
+        object Logout : JetpackMigrationActionEvent()
     }
 }
