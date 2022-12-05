@@ -84,7 +84,7 @@ ext {
 
     // test
     androidxTestCoreVersion = '1.4.0'
-    assertjVersion = '3.11.1'
+    assertjVersion = '3.23.1'
     bouncycastleVersion = '1.64'
     junitVersion = '4.13'
     mockitoVersion = "4.8.1"
