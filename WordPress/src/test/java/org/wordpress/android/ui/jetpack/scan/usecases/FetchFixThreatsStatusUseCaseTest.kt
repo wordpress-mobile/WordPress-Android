@@ -1,18 +1,17 @@
 package org.wordpress.android.ui.jetpack.scan.usecases
 
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.times
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.test.runBlockingTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mock
+import org.mockito.kotlin.any
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.MainCoroutineScopeRule
 import org.wordpress.android.TEST_DISPATCHER
@@ -30,8 +29,8 @@ import org.wordpress.android.ui.jetpack.scan.usecases.FetchFixThreatsStatusUseCa
 import org.wordpress.android.ui.jetpack.scan.usecases.FetchFixThreatsStatusUseCase.FetchFixThreatsState.NotStarted
 import org.wordpress.android.util.NetworkUtilsWrapper
 
-@ExperimentalCoroutinesApi
 @InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 class FetchFixThreatsStatusUseCaseTest : BaseUnitTest() {
     @Rule
     @JvmField val coroutineScope = MainCoroutineScopeRule()
@@ -72,24 +71,23 @@ class FetchFixThreatsStatusUseCaseTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when in progress threats fix status is fetched, then polling occurs until in progress status changes`() =
-            coroutineScope.runBlockingTest {
-                whenever(scanStore.fetchFixThreatsStatus(any()))
-                        .thenReturn(storeResultWithInProgressFixStatusModel)
-                        .thenReturn(storeResultWithInProgressFixStatusModel)
-                        .thenReturn(storeResultWithFixedFixStatusModel)
+    fun `when in progress threats fix status fetched, then polling occurs until in progress status changes`() = test {
+        whenever(scanStore.fetchFixThreatsStatus(any()))
+                .thenReturn(storeResultWithInProgressFixStatusModel)
+                .thenReturn(storeResultWithInProgressFixStatusModel)
+                .thenReturn(storeResultWithFixedFixStatusModel)
 
-                val useCaseResult = useCase.fetchFixThreatsStatus(fakeSiteId, listOf(fakeThreatId))
-                        .toList(mutableListOf())
-                advanceTimeBy(FETCH_FIX_THREATS_STATUS_DELAY_MILLIS)
+        val useCaseResult = useCase.fetchFixThreatsStatus(fakeSiteId, listOf(fakeThreatId))
+                .toList(mutableListOf())
+        coroutineScope.advanceTimeBy(FETCH_FIX_THREATS_STATUS_DELAY_MILLIS)
 
-                verify(scanStore, times(3)).fetchFixThreatsStatus(any())
-                assertThat(useCaseResult).containsSequence(
-                        InProgress(listOf(fakeThreatId)),
-                        InProgress(listOf(fakeThreatId)),
-                        Complete(fixedThreatsCount = 1)
-                )
-            }
+        verify(scanStore, times(3)).fetchFixThreatsStatus(any())
+        assertThat(useCaseResult).containsSequence(
+                InProgress(listOf(fakeThreatId)),
+                InProgress(listOf(fakeThreatId)),
+                Complete(fixedThreatsCount = 1)
+        )
+    }
 
     @Test
     fun `given threats fixed successfully, when threats fix status is fetched, then Complete is returned`() = test {

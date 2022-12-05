@@ -20,7 +20,6 @@ import javax.inject.Inject
 /**
  * Implements the Site Intent Question UI
  */
-@Suppress("TooManyFunctions")
 @AndroidEntryPoint
 class SiteCreationIntentsFragment : Fragment() {
     @Inject internal lateinit var uiHelper: UiHelpers

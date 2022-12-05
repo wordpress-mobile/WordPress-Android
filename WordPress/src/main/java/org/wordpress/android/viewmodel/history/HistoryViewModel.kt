@@ -38,7 +38,6 @@ import org.wordpress.android.viewmodel.helpers.ConnectionStatus.AVAILABLE
 import javax.inject.Inject
 import javax.inject.Named
 
-@Suppress("TooManyFunctions")
 class HistoryViewModel @Inject constructor(
     private val dispatcher: Dispatcher,
     private val resourceProvider: ResourceProvider,
@@ -137,8 +136,8 @@ class HistoryViewModel @Inject constructor(
                 val updatedRevisions = mutableListOf<HistoryListItem>()
                 revisionsList.clear()
 
-                existingRevisions.forEach { it ->
-                    var mutableRevision = it
+                existingRevisions.forEach { existingRevision ->
+                    var mutableRevision = existingRevision
 
                     if (mutableRevision is Revision) {
                         // we shouldn't directly update items in MutableLiveData, as they will be updated downstream
@@ -235,8 +234,8 @@ class HistoryViewModel @Inject constructor(
 
     data class ShowDialogEvent(val historyListItem: HistoryListItem, val revisionsList: List<Revision>)
 
+    @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    @SuppressWarnings("unused")
     fun onRevisionsFetched(event: OnRevisionsFetched) {
         if (event.isError) {
             AppLog.e(T.API, "An error occurred while fetching History revisions")

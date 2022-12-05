@@ -1,7 +1,5 @@
 package org.wordpress.android.ui.photopicker
 
-import org.wordpress.android.ui.photopicker.PhotoPickerUiItem.Type.PHOTO
-import org.wordpress.android.ui.photopicker.PhotoPickerUiItem.Type.VIDEO
 import org.wordpress.android.util.UriWrapper
 
 @Deprecated("This class is being refactored, if you implement any change, please also update " +
@@ -16,6 +14,7 @@ sealed class PhotoPickerUiItem(
     open val toggleAction: ToggleAction,
     open val clickAction: ClickAction
 ) {
+    @Suppress("DEPRECATION")
     data class PhotoItem(
         override val id: Long,
         override val uri: UriWrapper? = null,
@@ -24,8 +23,9 @@ sealed class PhotoPickerUiItem(
         override val showOrderCounter: Boolean = false,
         override val toggleAction: ToggleAction,
         override val clickAction: ClickAction
-    ) : PhotoPickerUiItem(PHOTO, id, uri, isSelected, selectedOrder, showOrderCounter, toggleAction, clickAction)
+    ) : PhotoPickerUiItem(Type.PHOTO, id, uri, isSelected, selectedOrder, showOrderCounter, toggleAction, clickAction)
 
+    @Suppress("DEPRECATION")
     data class VideoItem(
         override val id: Long,
         override val uri: UriWrapper? = null,
@@ -34,7 +34,7 @@ sealed class PhotoPickerUiItem(
         override val showOrderCounter: Boolean = false,
         override val toggleAction: ToggleAction,
         override val clickAction: ClickAction
-    ) : PhotoPickerUiItem(VIDEO, id, uri, isSelected, selectedOrder, showOrderCounter, toggleAction, clickAction)
+    ) : PhotoPickerUiItem(Type.VIDEO, id, uri, isSelected, selectedOrder, showOrderCounter, toggleAction, clickAction)
 
     data class ToggleAction(
         val id: Long,
@@ -45,12 +45,11 @@ sealed class PhotoPickerUiItem(
     }
 
     data class ClickAction(
-        val id: Long,
         val uri: UriWrapper?,
         val isVideo: Boolean,
-        private val clickItem: (id: Long, uri: UriWrapper?, isVideo: Boolean) -> Unit
+        private val clickItem: (uri: UriWrapper?, isVideo: Boolean) -> Unit
     ) {
-        fun click() = clickItem(id, uri, isVideo)
+        fun click() = clickItem(uri, isVideo)
     }
 
     enum class Type {

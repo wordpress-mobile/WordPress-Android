@@ -1,4 +1,0 @@
-20.1:
-- Site Oluşturma sürecinde site tasarımı seçim ekranını iyileştirdik.
-- Bir WordPress bağlantısına tıkladığınızda, varsayılan tarayıcınız yerine uygulamada açılacak.
-- Sağdan sola yazılan dilleri kullananlar için Hızlı Başlangıç odak noktalarını doğru yerlere taşıdık.

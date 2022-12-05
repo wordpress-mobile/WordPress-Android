@@ -22,6 +22,7 @@ class TaskViewHolder(
     parent: ViewGroup,
     private val binding: QuickStartListItemBinding = parent.viewBinding(QuickStartListItemBinding::inflate)
 ) : ViewHolder(binding.root) {
+    @Suppress("UseCheckOrError")
     fun bind(taskCard: QuickStartTaskCard) {
         val isEnabled = !taskCard.isCompleted
         val quickStartTaskDetails = QuickStartTaskDetails.getDetailsForTask(taskCard.task)

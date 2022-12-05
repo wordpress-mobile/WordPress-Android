@@ -1,13 +1,13 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases
 
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
+import org.mockito.kotlin.any
+import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
@@ -140,9 +140,9 @@ class SearchTermsUseCaseTest : BaseUnitTest() {
         assertThat(result.type).isEqualTo(TimeStatsType.SEARCH_TERMS)
         assertThat(result.state).isEqualTo(UseCaseState.SUCCESS)
         result.data!!.apply {
-            assertThat(this!!).hasSize(4)
-            assertTitle(this!![0])
-            assertLink(this!![3])
+            assertThat(this).hasSize(4)
+            assertTitle(this[0])
+            assertLink(this[3])
         }
     }
 

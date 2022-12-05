@@ -1,5 +1,0 @@
-20.1:
-- Ontvang dagelijks nieuwe blogideeën ter inspiratie van je berichten.
-- We hebben het selectiescherm voor site-ontwerp verbeterd tijdens het aanmaken van je site.
-- WordPress-links openen in de app, niet in je standaardbrowser.
-- Snelstart-focuspunten staan op de juiste plekken voor talen die van links naar rechts worden gelezen.

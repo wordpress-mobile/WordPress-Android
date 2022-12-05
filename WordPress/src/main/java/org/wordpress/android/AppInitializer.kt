@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package org.wordpress.android
 
 import android.annotation.SuppressLint
@@ -17,7 +19,6 @@ import android.os.Build
 import android.os.Build.VERSION_CODES
 import android.os.Bundle
 import android.os.SystemClock
-import android.preference.PreferenceManager
 import android.text.TextUtils
 import android.util.AndroidRuntimeException
 import android.util.Log
@@ -28,10 +29,10 @@ import androidx.core.provider.FontRequest
 import androidx.emoji.text.EmojiCompat
 import androidx.emoji.text.EmojiCompat.InitCallback
 import androidx.emoji.text.FontRequestEmojiCompatConfig
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleObserver
-import androidx.lifecycle.OnLifecycleEvent
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ProcessLifecycleOwner
+import androidx.preference.PreferenceManager
 import androidx.work.WorkManager
 import com.android.volley.RequestQueue
 import com.automattic.android.tracks.crashlogging.CrashLogging
@@ -80,8 +81,8 @@ import org.wordpress.android.push.NotificationType
 import org.wordpress.android.support.ZendeskHelper
 import org.wordpress.android.ui.ActivityId
 import org.wordpress.android.ui.debug.cookies.DebugCookieManager
+import org.wordpress.android.ui.deeplinks.DeepLinkOpenWebLinksWithJetpackHelper
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
-import org.wordpress.android.ui.mysite.tabs.MySiteDefaultTabExperiment
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils
@@ -110,9 +111,9 @@ import org.wordpress.android.util.QuickStartUtils
 import org.wordpress.android.util.RateLimitedTask
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.VolleyUtils
-import org.wordpress.android.util.WPActivityUtils
 import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.util.config.AppConfig
+import org.wordpress.android.util.config.OpenWebLinksWithJetpackFlowFeatureConfig
 import org.wordpress.android.util.enqueuePeriodicUploadWorkRequestForAllSites
 import org.wordpress.android.util.experiments.ExPlat
 import org.wordpress.android.util.image.ImageManager
@@ -125,12 +126,11 @@ import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
 
-@Suppress("TooManyFunctions")
 @Singleton
 class AppInitializer @Inject constructor(
     wellSqlInitializer: WellSqlInitializer,
     private val application: Application
-) : LifecycleObserver {
+) : DefaultLifecycleObserver {
     @Inject lateinit var dispatcher: Dispatcher
     @Inject lateinit var accountStore: AccountStore
     @Inject lateinit var siteStore: SiteStore
@@ -154,7 +154,6 @@ class AppInitializer @Inject constructor(
     @Inject lateinit var debugCookieManager: DebugCookieManager
     @Inject @Named(APPLICATION_SCOPE) lateinit var appScope: CoroutineScope
     @Inject lateinit var selectedSiteRepository: SelectedSiteRepository
-    @Inject lateinit var mySiteDefaultTabExperiment: MySiteDefaultTabExperiment
 
     // For development and production `AnalyticsTrackerNosara`, for testing a mocked `Tracker` will be injected.
     @Inject lateinit var tracker: Tracker
@@ -163,11 +162,15 @@ class AppInitializer @Inject constructor(
     @Inject lateinit var imageLoader: FluxCImageLoader
     @Inject lateinit var oAuthAuthenticator: OAuthAuthenticator
 
+    // For jetpack focus
+    @Inject lateinit var openWebLinksWithJetpackFlowFeatureConfig: OpenWebLinksWithJetpackFlowFeatureConfig
+    @Inject lateinit var openWebLinksWithJetpackHelper: DeepLinkOpenWebLinksWithJetpackHelper
+
     private lateinit var applicationLifecycleMonitor: ApplicationLifecycleMonitor
     lateinit var storyNotificationTrackerProvider: StoryNotificationTrackerProvider
         private set
 
-    private lateinit var credentialsClient: GoogleApiClient
+    @Suppress("DEPRECATION") private lateinit var credentialsClient: GoogleApiClient
 
     private var startDate: Long
 
@@ -217,7 +220,7 @@ class AppInitializer @Inject constructor(
 
     fun init() {
         dispatcher.register(this)
-        appConfig.init()
+        appConfig.init(appScope)
 
         // Upload any encrypted logs that were queued but not yet uploaded
         encryptedLogging.start()
@@ -308,8 +311,6 @@ class AppInitializer @Inject constructor(
 
         debugCookieManager.sync()
 
-        initAnalyticsExperimentPropertiesIfNeeded()
-
         initialized = true
     }
 
@@ -347,6 +348,7 @@ class AppInitializer @Inject constructor(
         }
     }
 
+    @Suppress("DEPRECATION")
     private fun setupCredentialsClient() {
         credentialsClient = GoogleApiClient.Builder(application)
                 .addConnectionCallbacks(object : GoogleApiClient.ConnectionCallbacks {
@@ -509,6 +511,7 @@ class AppInitializer @Inject constructor(
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onAccountChanged(event: OnAccountChanged) {
         if (!FluxCUtils.isSignedInWPComOrHasWPOrgSite(accountStore, siteStore)) {
+            appConfig.refresh(appScope)
             flushHttpCache()
 
             // Analytics resets
@@ -539,6 +542,7 @@ class AppInitializer @Inject constructor(
         }
     }
 
+    @Suppress("unused", "UNUSED_PARAMETER")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onAuthenticationChanged(event: OnAuthenticationChanged) {
         if (accountStore.hasAccessToken()) {
@@ -558,6 +562,7 @@ class AppInitializer @Inject constructor(
         AppLog.d(T.API, "Receiving OnUnexpectedError event, message: " + event.exception.message)
     }
 
+    @Suppress("DEPRECATION")
     private fun removeWpComUserRelatedData(context: Context) {
         // cancel all Volley requests - do this before unregistering push since that uses a Volley request
         VolleyUtils.cancelAllRequests(requestQueue)
@@ -599,6 +604,9 @@ class AppInitializer @Inject constructor(
 
         // Reset Notifications Data
         NotificationsTable.reset()
+
+        // clear App config data
+        appConfig.clear()
 
         // Cancel QuickStart reminders
         QuickStartUtils.cancelQuickStartReminder(context)
@@ -642,12 +650,23 @@ class AppInitializer @Inject constructor(
      * enable caching for HttpUrlConnection
      * http://developer.android.com/training/efficient-downloads/redundant_redundant.html
      */
+    @Suppress("SwallowedException")
     private fun enableHttpResponseCache(context: Context) {
         try {
             val httpCacheDir = File(context.cacheDir, "http")
             HttpResponseCache.install(httpCacheDir, HTTP_CACHE_SIZE)
         } catch (e: IOException) {
             AppLog.w(T.UTILS, "Failed to enable http response cache")
+        }
+    }
+
+    private fun enableDeepLinkingComponentsIfNeeded() {
+        if (openWebLinksWithJetpackFlowFeatureConfig.isEnabled()) {
+            if (!AppPrefs.getIsOpenWebLinksWithJetpack()) {
+                openWebLinksWithJetpackHelper.enableDeepLinks()
+            }
+        } else {
+            openWebLinksWithJetpackHelper.enableDeepLinks()
         }
     }
 
@@ -681,21 +700,12 @@ class AppInitializer @Inject constructor(
         EmojiCompat.init(config)
     }
 
-    /* If default tab experiment is running, pass along to tracker */
-    private fun initAnalyticsExperimentPropertiesIfNeeded() {
-        mySiteDefaultTabExperiment.checkAndSetTrackingPropertiesIfNeeded()
-    }
-
-    @Suppress("unused")
-    @OnLifecycleEvent(Lifecycle.Event.ON_START)
-    fun onAppComesFromBackground() {
+    override fun onStart(owner: LifecycleOwner) {
         applicationLifecycleMonitor.onAppComesFromBackground()
-        appConfig.refresh()
+        appConfig.refresh(appScope)
     }
 
-    @Suppress("unused")
-    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
-    fun onAppGoesToBackground() {
+    override fun onStop(owner: LifecycleOwner) {
         applicationLifecycleMonitor.onAppGoesToBackground()
     }
 
@@ -753,8 +763,8 @@ class AppInitializer @Inject constructor(
 
             readerTracker.onAppGoesToBackground()
 
-            // Ensure that the deeplinking activity is re-enabled.
-            WPActivityUtils.enableReaderDeeplinks(context)
+            // Ensure that the deeplinking activity is are re-enabled if needed
+            enableDeepLinkingComponentsIfNeeded()
 
             AnalyticsTracker.track(Stat.APPLICATION_CLOSED, properties)
             AnalyticsTracker.endSession(false)
@@ -777,6 +787,7 @@ class AppInitializer @Inject constructor(
          * 1. the app starts (but it's not opened by a service or a broadcast receiver, i.e. an activity is resumed)
          * 2. the app was in background and is now foreground
          */
+        @Suppress("DEPRECATION")
         fun onAppComesFromBackground() {
             readerTracker.setupTrackers()
             AppLog.i(T.UTILS, "App comes from background")
@@ -898,6 +909,7 @@ class AppInitializer @Inject constructor(
         private const val DEFAULT_TIMEOUT = 2 * 60 // 2 minutes
 
         @SuppressLint("StaticFieldLeak") var context: Context? = null
+            private set
 
         // This is for UI testing. AppInitializer is being created more than once for only UI tests. initialized
         // prevents some static functions from being initialized twice and exceptions.
@@ -972,7 +984,7 @@ class AppInitializer @Inject constructor(
          * AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/44.0.2403.119 Mobile
          * Safari/537.36"
          */
-        val defaultUserAgent: String by lazy {
+        @Suppress("SwallowedException") val defaultUserAgent: String by lazy {
             try {
                 WebSettings.getDefaultUserAgent(context)
             } catch (e: AndroidRuntimeException) {
@@ -1026,9 +1038,18 @@ class AppInitializer @Inject constructor(
 
         /**
          * Update locale of the static context when language is changed.
+         *
+         * When calling this method the application context **must** be already initialized.
+         * This is already the case in `Activity`, `Fragment` or `View`.
+         *
+         * When called from other places (E.g. a `TestRule`) we should provide it in the [appContext] parameter.
          */
-        fun updateContextLocale() {
-            context = LocaleManager.setLocale(context)
+        fun updateContextLocale(appContext: Context? = null) {
+            val context = appContext ?: run {
+                check (context != null) { "Context must be initialized before calling updateContextLocale" }
+                return@run context
+            }
+            this.context = LocaleManager.setLocale(context)
         }
     }
 }

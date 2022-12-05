@@ -2,57 +2,101 @@
 common_params:
   # Common plugin settings to use with the `plugins` key.
   - &common_plugins
-    - automattic/bash-cache#2.1.0
+    - automattic/bash-cache#2.11.0
 
 steps:
-  - label: "checkstyle"
+  #################
+  # Gradle Wrapper Validation
+  #################
+  - label: "Gradle Wrapper Validation"
     command: |
-      cp gradle.properties-example gradle.properties
-      ./gradlew checkstyle
-    plugins: *common_plugins
-    artifact_paths:
-      - "**/build/reports/checkstyle/checkstyle.*"
-
-  - label: "detekt"
-    command: |
-      cp gradle.properties-example gradle.properties
-      ./gradlew WordPress:detekt
-    plugins: *common_plugins
-    artifact_paths:
-      - "**/build/reports/detekt/detekt.html"
-
-  - label: "lint"
-    command: |
-      cp gradle.properties-example gradle.properties
-      ./gradlew lintWordpressVanillaRelease
-    plugins: *common_plugins
-    artifact_paths:
-      - "**/build/reports/lint-results*.*"
-
-  - label: "Test WordPress"
-    command: |
-      cp gradle.properties-example gradle.properties
-      ./gradlew testWordpressVanillaRelease
+      validate_gradle_wrapper
     plugins: *common_plugins
 
-  - label: "Test Processors"
+  # Wait for Gradle Wrapper to be validated before running any other jobs
+  - wait
+
+  #################
+  # Linters
+  #################
+  - group: "🕵️‍♂️ Linters"
+    steps:
+      - label: "🕵️ checkstyle"
+        command: |
+          cp gradle.properties-example gradle.properties
+          ./gradlew checkstyle
+        plugins: *common_plugins
+        artifact_paths:
+          - "**/build/reports/checkstyle/checkstyle.*"
+
+      - label: "🕵️ detekt"
+        command: |
+          cp gradle.properties-example gradle.properties
+          ./gradlew detekt
+        plugins: *common_plugins
+        artifact_paths:
+          - "**/build/reports/detekt/detekt.html"
+
+      - label: "🕵️ Lint WordPress"
+        command: ".buildkite/commands/lint.sh wordpress"
+        artifact_paths:
+          - "**/build/reports/lint-results*.*"
+
+      - label: "🕵️ Lint Jetpack"
+        command: ".buildkite/commands/lint.sh jetpack"
+        artifact_paths:
+          - "**/build/reports/lint-results*.*"
+
+  - label: "Dependency Tree Diff"
     command: |
       cp gradle.properties-example gradle.properties
-      ./gradlew :libs:processors:test
-    plugins: *common_plugins
-
-  - label: "Test Image Editor"
-    command: |
-      cp gradle.properties-example gradle.properties
-      ./gradlew :libs:image-editor:test
-    plugins: *common_plugins
-
-  - label: "🛠 WordPress Installable Build"
-    command: ".buildkite/commands/wordpress-installable-build.sh"
+      .buildkite/commands/dependency-tree-diff.sh
     if: build.pull_request.id != null
     plugins: *common_plugins
 
-  - label: "🛠 Jetpack Installable Build"
-    command: ".buildkite/commands/jetpack-installable-build.sh"
-    if: build.pull_request.id != null
+  #################
+  # Unit Tests
+  #################
+  - group: "🔬 Unit Tests"
+    steps:
+      - label: "🔬 Test WordPress"
+        command: |
+          cp gradle.properties-example gradle.properties
+          ./gradlew testWordpressVanillaRelease
+        plugins: *common_plugins
+
+      - label: "🔬 Test Processors"
+        command: |
+          cp gradle.properties-example gradle.properties
+          ./gradlew :libs:processors:test
+        plugins: *common_plugins
+
+      - label: "🔬 Test Image Editor"
+        command: |
+          cp gradle.properties-example gradle.properties
+          ./gradlew :libs:image-editor:test
+        plugins: *common_plugins
+
+  #################
+  # Instrumented (aka UI) Tests
+  #################
+  - label: "🔬 Instrumented tests"
+    command: ".buildkite/commands/instrumented-tests.sh"
     plugins: *common_plugins
+    artifact_paths:
+      - "**/build/instrumented-tests/**/*"
+
+  #################
+  # Create Installable Builds for WP and JP
+  #################
+  - group: "📲 Installable Builds"
+    steps:
+      - label: ":wordpress: :android: Installable Build"
+        command: ".buildkite/commands/installable-build.sh wordpress"
+        if: build.pull_request.id != null
+        plugins: *common_plugins
+
+      - label: ":jetpack: :android: Installable Build"
+        command: ".buildkite/commands/installable-build.sh jetpack"
+        if: build.pull_request.id != null
+        plugins: *common_plugins

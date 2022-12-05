@@ -1,11 +1,131 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-06-30 04:53:15+0000
+Translation-Revision-Date: 2022-11-30 14:54:27+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/4.0.0-alpha.1
+Generator: GlotPress/4.0.0-alpha.3
 Language: zh_TW
 -->
 <resources>
+    <string name="wp_jetpack_deep_link_open_in_wordpress">在 WordPress 開啟連結</string>
+    <string name="wp_jetpack_deep_link_overlay_description">你似乎已安裝 Jetpack 應用程式。\n\n之後要在 Jetpack 應用程式中開啟連結嗎？\n\n你隨時可在「應用程式設定」&gt;「在 Jetpack 中開啟連結」變更此設定</string>
+    <string name="wp_jetpack_deep_link_overlay_title">在 Jetpack 中開啟連結嗎？</string>
+    <string name="wp_jetpack_continue_without_jetpack">繼續但不使用 Jetpack</string>
+    <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_two_description">Jetpack 提供統計資料、通知等其他功能，可協助你建置和發展夢想中的 WordPress 網站。\n\nWordPress 應用程式不再支援建立新網站。</string>
+    <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_one_description">Jetpack 提供統計資料、通知等其他功能，可協助你建置和發展夢想中的 WordPress 網站。</string>
+    <string name="wp_jetpack_feature_removal_site_creation_overlay_title">使用 Jetpack 應用程式建立新的 WordPress 網站</string>
+    <string name="deep_linking_weblinks_alias_label">網頁連結</string>
+    <string name="deep_linking_urilinks_alias_label">URI 連結</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_notifications">切換至 Jetpack 應用程式，以便繼續 在你的裝置上接收即時通知。</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_reader">切換至 Jetpack 應用程式，以便透過閱讀器搜尋、追蹤並按讚所有喜愛的網站及文章。</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_stats">切換至 Jetpack 應用程式，以便透過統計資料和洞察報告，查看網站流量成長。</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_notifications">透過 Jetpack 應用程式接收通知</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_reader">透過 Jetpack 應用程式追蹤任何網站</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_stats">使用全新 Jetpack 應用程式取得統計資料</string>
+    <string name="preference_open_links_in_jetpack_setting_change_disable_error">無法停用在 Jetpack 中開啟連結</string>
+    <string name="preference_open_links_in_jetpack_setting_change_enable_error">無法啟用在 Jetpack 中開啟連結</string>
+    <string name="preference_open_links_in_jetpack">在 Jetpack 中開啟連結</string>
+    <string name="jp_migration_need_help_button">需要協助嗎？</string>
+    <string name="jp_migration_got_it_button">知道了</string>
+    <string name="jp_migration_delete_message">請&lt;b&gt;刪除 WordPress 應用程式&lt;/b&gt;以&lt;br&gt;避免資料衝突。</string>
+    <string name="jp_migration_delete_subtitle">你似乎仍有安裝 WordPress 應用程式。 建議刪除 WordPress 應用程式以避免資料衝突。</string>
+    <string name="jp_migration_delete_title">你不再需要 WordPress 應用程式了</string>
+    <string name="jp_migration_network_error_title">無法連線到網際網路。</string>
+    <string name="jp_migration_generic_error_message">請聯絡支援團隊，或稍後再試一次。</string>
+    <string name="jp_migration_generic_error_subtitle">很抱歉，發生未預期的情況。 你的資料安全無虞，但目前無法傳輸資料。</string>
+    <string name="jp_migration_network_error_message">沒有網路連線的情況下，我們無法轉移你的資料和設定。</string>
+    <string name="jp_migration_network_error_subtitle">請檢查並確認你的網路連線正常，然後再試一次。</string>
+    <string name="jp_migration_generic_error_title">糟糕，發生錯誤…</string>
+    <string name="jp_migration_try_again_button">再試一次</string>
+    <string name="jp_migration_finish_button">完成</string>
+    <string name="jp_migration_remove_wp_app_icon_content_description">移除 WordPress 應用程式圖示</string>
+    <string name="jp_migration_done_delete_wp_message">請&lt;b&gt;刪除 WordPress 應用程式&lt;/b&gt;以&lt;br&gt;避免資料衝突。</string>
+    <string name="jp_migration_done_subtitle">我們已轉移你的所有資料和設定。 一切全部順暢銜接。</string>
+    <string name="jp_migration_done_title">感謝改用 Jetpack！</string>
+    <string name="jp_migration_notifications_disabled_in_wp_message">我們會關閉 WordPress 應用程式的通知。</string>
+    <string name="jp_migration_notifications_subtitle">你將收到所有相同的通知，但來源為 Jetpack 應用程式。</string>
+    <string name="jp_migration_success_card_message">請刪除 WordPress 應用程式</string>
+    <string name="wordpress_help_center_button">WordPress 說明中心</string>
+    <string name="support_title">支援</string>
+    <string name="notification_disable_broadcast_permission_desc">允許應用程式停用 WordPress 通知。</string>
+    <string name="notification_disable_broadcast_permission_label">停用 WordPress 通知</string>
+    <string name="jp_migration_help_button">需要協助嗎？</string>
+    <string name="jp_migration_continue_button">繼續</string>
+    <string name="jp_migration_welcome_site_found_message">我們找到你的網站了。 繼續轉移你的所有資料，並自動登入 Jetpack。</string>
+    <string name="jp_migration_welcome_sites_found_message">我們找到你的網站了。 繼續轉移你的所有資料，並自動登入 Jetpack。</string>
+    <string name="jp_migration_avatar_content_description">你的個人檔案照片</string>
+    <string name="jp_migration_welcome_subtitle">你似乎正從 WordPress 應用程式切換過來。</string>
+    <string name="jp_migration_welcome_title">歡迎使用 Jetpack！</string>
+    <string name="icon_desc">圖示</string>
+    <string name="post_settings_parent">上層頁面</string>
+    <string name="post_settings_page_attributes">頁面屬性</string>
+    <string name="about_automattic_contribute_item_title">參與</string>
+    <string name="about_news">新聞</string>
+    <string name="my_site_blogging_prompt_card_number_of_answers_one">1 個答案</string>
+    <string name="login_prologue_revamped_content_description_wordpress_icon">WordPress 圖示</string>
+    <string name="login_prologue_revamped_tagline">從任何地方都能撰寫、編輯和發表內容。</string>
+    <string name="error_fetch_authors_list">無法擷取作者</string>
+    <string name="post_settings_author">作者</string>
+    <string name="connection_service_label">將文章分享到 %s</string>
+    <string name="connections_label">Jetpack Social 連結</string>
+    <string name="stats_widget_log_in_to_add_message">若要新增小工具，請登入 Jetpack 應用程式。</string>
+    <string name="stats_view_publicize">Jetpack Social 連結</string>
+    <string name="app_rating_title">喜歡 %s 嗎？</string>
+    <string name="login_magic_links_email_sent">我們剛將神奇連結傳送至：</string>
+    <string name="login_magic_links_sent_label_short">在此裝置查看你的電子郵件！</string>
+    <string name="or_use_password">使用密碼登入</string>
+    <string name="wp_jetpack_powered_notifications_powered_by_jetpack_caption">接收即時更新，掌握新留言、網站流量、安全報告等項目的第一手資訊。</string>
+    <string name="wp_jetpack_powered_notifications_powered_by_jetpack">通知功能採用 Jetpack 技術</string>
+    <string name="wp_jetpack_powered_stats_powered_by_jetpack_caption">透過重新設計的統計資料和洞察報告關注流量成長並瞭解你的讀者，這些功能現可於全新 Jetpack 應用程式中取得。</string>
+    <string name="wp_jetpack_powered_stats_powered_by_jetpack">統計資料功能採用 Jetpack 技術</string>
+    <string name="wp_jetpack_powered_reader_powered_by_jetpack_caption">透過閱讀器搜尋、追蹤並按讚所有喜愛的網站及文章，此工具現可於全新 Jetpack 應用程式中取得。</string>
+    <string name="wp_jetpack_powered_reader_powered_by_jetpack">閱讀器採用 Jetpack 技術</string>
+    <string name="wp_jetpack_powered_features">全新 Jetpack 應用程式提供統計資料、閱讀器、通知等其他功能，可讓 WordPress 功能更加完善。</string>
+    <string name="wp_jetpack_powered_better_with_jetpack">WordPress 搭配 Jetpack 效果更加</string>
+    <string name="gutenberg_native_upgrade_your_plan_to_use_video_covers">升級方案即可使用影片封面</string>
+    <string name="gutenberg_native_upgrade_your_plan_to_upload_audio">升級方案即可上傳音訊</string>
+    <string name="gutenberg_native_jetpack_powered">採用 Jetpack 技術</string>
+    <string name="gutenberg_native_invalid_url">URL 無效。</string>
+    <string name="gutenberg_native_gradient">漸層色彩</string>
+    <string name="wp_jetpack_continue_to_notifications">繼續前往「通知」功能</string>
+    <string name="wp_jetpack_continue_to_stats">繼續前往「統計資料」功能</string>
+    <string name="wp_jetpack_continue_to_reader">繼續前往「閱讀器」功能</string>
+    <string name="wp_jetpack_get_new_jetpack_app">體驗全新 Jetpack 應用程式</string>
+    <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery">顯示區塊時發生問題。 \n點選以嘗試還原區塊。</string>
+    <string name="weekly_roundup_notification_text_views_and_comments">上週你有 %1$s 個瀏覽次數和 %2$s 個留言</string>
+    <string name="weekly_roundup_notification_text_views_and_likes">上週你有 %1$s 個瀏覽次數和 %2$s 個讚</string>
+    <string name="weekly_roundup_notification_text_views_only">上週你有 %1$s 個瀏覽次數。</string>
+    <string name="weekly_roundup_notification_text_all">上週你有 %1$s 個瀏覽次數、%2$s 個讚和 %3$s 個留言。</string>
+    <string name="stats_revamp_v2_update_alert_message">全新洞察報告的更新內容有助於瞭解你的內容成效如何，以及哪些內容能讓讀者產生共鳴。</string>
+    <string name="stats_insights_like_guide_card">⭐️ 你的最新文章 %1$s 已獲得 %2$s 個讚。</string>
+    <string name="wp_jetpack_powered">採用 Jetpack 技術</string>
+    <string name="qrcode_auth_flow_content_description">圖片表示正在掃描登入碼</string>
+    <string name="qrcode_auth_flow_error_content_description">圖片表示錯誤</string>
+    <string name="qrcode_auth_flow_dismiss_dialog_message">確定要繼續？</string>
+    <string name="qrcode_auth_flow_dismiss_dialog_title">退出掃描登入碼流程</string>
+    <string name="qrcode_auth_flow_error_auth_failed_subtitle">無法使用此登入碼登入。 請點選「重新掃描」按鈕以重新掃描代碼。</string>
+    <string name="qrcode_auth_flow_error_auth_failed_title">驗證失敗</string>
+    <string name="qrcode_auth_flow_error_expired_subtitle">此登入碼已過期。 請點選「重新掃描」按鈕以重新掃描代碼。</string>
+    <string name="qrcode_auth_flow_error_expired_title">過期登入碼</string>
+    <string name="qrcode_auth_flow_error_invalid_data_subtitle">無法驗證掃描的登入碼。 請點選「重新掃描」按鈕以重新掃描代碼。</string>
+    <string name="qrcode_auth_flow_error_invalid_data_title">無法驗證登入碼</string>
+    <string name="qrcode_auth_flow_error_no_connection_subtitle">需要有效的網際網路連線才能掃描登入碼</string>
+    <string name="qrcode_auth_flow_error_no_connection_title">沒有連線</string>
+    <string name="qrcode_auth_flow_scan_again">重新掃瞄</string>
+    <string name="qrcode_auth_flow_dismiss">關閉</string>
+    <string name="qrcode_auth_flow_done_subtitle">點選關閉並返回網頁瀏覽器以繼續操作。</string>
+    <string name="qrcode_auth_flow_done_title">你已登入！</string>
+    <string name="qrcode_auth_flow_validated_primary_action">是，讓我登入</string>
+    <string name="qrcode_auth_flow_validated_subtitle">請只掃描直接由網頁瀏覽器顯示的 QR 碼。 永遠不要掃描其他任何人傳送給你的代碼。</string>
+    <string name="qrcode_auth_flow_validated_default_title">你是否在 %1$s 附近嘗試登入網頁瀏覽器？</string>
+    <string name="qrcode_auth_flow_validated_title">你是否在 %2$s 附近嘗試登入 %1$s？</string>
+    <string name="stats_revamp_v2_intro_header_title">洞察報告更新</string>
+    <string name="stats_insights_followers_guide_card">💡 在其他網誌留言是為自己的新網站吸引注意和關注者的絕佳方式。</string>
+    <string name="stats_insights_comments_guide_card">💡 點選「檢視更多」即可查看哪些人踴躍留言。</string>
+    <string name="stats_insights_latest_post_empty">發表第一篇文章之後，請再回來查看！</string>
+    <string name="stats_insights_views_and_visitors_visitors_empty_state">查看我們的頂尖秘訣，瞭解如何增加瀏覽次數和流量 %1$s</string>
+    <string name="stats_action_card_schedule_post_message">✍️ 排程草稿在最能觸及讀者的時間發表。</string>
+    <string name="stats_action_card_blogging_reminders_message">💡 穩定發表文章是培養讀者的絕佳方式。 新增提醒來讓自己按進度撰寫網誌。</string>
+    <string name="stats_action_card_grow_audience_message">💡 透過我們專家主導的&lt;i&gt;經營網誌簡介&lt;/i&gt;課程，加速升級你的網誌。</string>
     <string name="blogging_prompts_onboarding_prompts_loading">正在載入網誌提示。 請稍後再試。</string>
     <string name="hpp_bottom_helper_text">下不了決定嗎？ 你可以隨時變更佈景主題。</string>
     <string name="hpp_recommended_default_vertical">撰寫網誌</string>
@@ -38,8 +158,8 @@ Language: zh_TW
     <string name="me_btn_scan_login_code">掃描登入碼</string>
     <string name="stats_insights_likes_guide_card">⭐️ 你的最新文章 %1$s 已獲得 %2$s 次按讚。</string>
     <string name="stats_most_popular_percent_views_empty">沒有足夠的活動。 有更多訪客造訪網站的時候，請再回來查看！</string>
-    <string name="stats_total_followers_content_description">%1s，追蹤者總數的 %2s</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
+    <string name="stats_total_followers_content_description">%1$s 個追蹤者，共 %2$s%% 個</string>
     <string name="pages_copy_link">複製連結</string>
     <string name="quick_start_completed_tour_title">恭喜！ 你熟知&lt;br/&gt;</string>
     <string name="quick_start_sites_type_get_to_know_app">開始瞭解應用程式</string>
@@ -74,8 +194,8 @@ Language: zh_TW
     <string name="blogging_prompts_notification_dismiss">關閉</string>
     <string name="blogging_prompts_answer_prompt_notification_answer_action">答案</string>
     <string name="blogging_prompts_answer_prompt_notification_title">每日提示</string>
-    <string name="blogging_prompts_onboarding_got_it">知道了</string>
     <string name="quick_start_dialog_view_your_site_message_short">點選 &lt;b&gt;%1$s&lt;/b&gt; 即可檢視你的網站</string>
+    <string name="blogging_prompts_onboarding_got_it">完全了解</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">選取「%1$s 閱讀器 %2$s」來尋找其他網站。</string>
     <string name="blogging_reminders_prompt_help_button_desc">深入瞭解提示</string>
     <string name="photo_picker_video_thumbnail_unselected">已取消選取影片</string>
@@ -187,6 +307,7 @@ Language: zh_TW
     <string name="my_site_blogging_prompt_card_menu_remove">從儀表板移除</string>
     <string name="my_site_blogging_prompt_card_menu_skip">略過此提示</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">檢視更多提示</string>
+    <string name="my_site_blogging_prompt_card_number_of_answers_other">%d 個答案</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">分享網誌提示</string>
     <string name="my_site_blogging_prompt_card_answered_prompt">✓ 已回答</string>
     <string name="my_site_blogging_prompt_card_answer_prompt">回答提示</string>
@@ -362,7 +483,6 @@ Language: zh_TW
     <string name="my_site_quick_actions_title">快速連結</string>
     <string name="my_site_btn_domains">網域</string>
     <string name="recommend_app_subject">Automattic 應用程式 - 任何螢幕都適用的應用程式</string>
-    <string name="weekly_roundup_notification_text">你的網站獲得 %1$d 次瀏覽、%2$d 個讚和 %3$d 個留言。</string>
     <string name="weekly_roundup_notification_title">每週綜合整理：%s</string>
     <string name="blogging_reminders_notification_time">通知時間</string>
     <string name="blogging_reminders_epilogue_body_everyday_with_time">你會&lt;b&gt;每天&lt;/b&gt;在 &lt;b&gt;%s&lt;/b&gt; 收到寫網誌通知。</string>
@@ -471,6 +591,7 @@ Language: zh_TW
     <string name="gutenberg_native_s_has_no_url_set">%s 沒有 URL 集</string>
     <string name="gutenberg_native_s_converted_to_regular_blocks">%s 已轉換為一般區塊</string>
     <string name="gutenberg_native_s_block">%s 區塊</string>
+    <string name="gutenberg_native_opacity">不透明度  </string>
     <string name="gutenberg_native_media_options">媒體選項</string>
     <string name="gutenberg_native_invalid_url_audio_file_not_found">無效網址。 找不到音訊檔案。</string>
     <string name="gutenberg_native_insert_crosspost">插入多重發佈</string>
@@ -500,6 +621,7 @@ Language: zh_TW
     <string name="gutenberg_native_move_image_backward">向後移動圖片</string>
     <string name="gutenberg_native_move_image_forward">向前移動圖片</string>
     <string name="gutenberg_native_column_settings">欄位設定</string>
+    <string name="gutenberg_native_link_rel">鏈結 Rel</string>
     <string name="user_profile_site_section_header">網站</string>
     <string name="user_profile_untitled_site">(未命名)</string>
     <string name="user_profile_bottom_sheet_description">使用者個人資料底頁資訊</string>
@@ -677,7 +799,6 @@ Language: zh_TW
     <string name="restore_complete_visit_site_action_button">造訪網站</string>
     <string name="restore_complete_description_with_two_parameters">所有你選取的項目現在都還原至 %1$s %2$s。</string>
     <string name="restore_complete_header">你的網站已經還原</string>
-    <string name="restore_progress_label">%1$s%%</string>
     <string name="restore_progress_footnote">無須等待。 我們會在網站還原後通知你。</string>
     <string name="restore_progress_icon_content_description">還原網站圖示</string>
     <string name="restore_progress_description_with_two_parameters">我們正在將你的網站還原至 %1$s %2$s。</string>
@@ -752,7 +873,6 @@ Language: zh_TW
     <string name="backup_download_progress_icon_content_description">建立可下載備份圖示</string>
     <string name="backup_download_progress_description_with_two_parameters">我們正在為你的網站建立 %1$s %2$s 的可下載備份。</string>
     <string name="backup_download_progress_header">目前正在為你的網站建立可下載的備份</string>
-    <string name="backup_download_progress_label">%1$s%%</string>
     <string name="backup_download_progress_footnote">無需在附近等待。 我們會在備份準備就緒時通知你。</string>
     <string name="backup_download_progress_page_title">下載備份</string>
     <string name="backup_download_another_download_running">正在執行其他下載作業。</string>
@@ -1180,7 +1300,6 @@ Language: zh_TW
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">點選兩次即可前往顏色設定</string>
     <string name="reader_empty_followed_blogs_description">關注網站後，網站內容就會顯示於此</string>
     <string name="feature_announcement_find_out_mode">瞭解更多</string>
-    <string name="feature_announcement_dialog_label">WordPress 新功能</string>
     <string name="insert_label_with_count">插入 %d 個</string>
     <string name="error_failed_to_load_into_file">無法載入檔案，請再試一次。</string>
     <string name="preview_image_thumbnail_description">預覽圖片縮圖</string>
@@ -1190,6 +1309,7 @@ Language: zh_TW
     <string name="photo_picker_video_title">選擇視訊</string>
     <string name="site_picker_ask_site_select">無法選擇網站，請再試一次。</string>
     <string name="crop">裁剪</string>
+    <string name="feature_announcement_dialog_label">%s 新功能</string>
     <string name="sitepicker_continue_flow">繼續</string>
     <string name="reader_reblog_error">轉發失敗</string>
     <string name="reader_no_site_to_reblog_action">管理網站</string>
@@ -1279,8 +1399,8 @@ Language: zh_TW
     <string name="post_list_tab_trashed_posts">已移至垃圾桶</string>
     <string name="post_list_tab_scheduled_posts">已排程</string>
     <string name="post_list_tab_published_posts">已發佈</string>
-    <string name="sharing_facebook_account_must_have_pages">Facebook 連結找不到任何頁面。Publicize 無法連結至 Facebook 個人檔案，只能連結至已發表的頁面。</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">未連線</string>
+    <string name="sharing_facebook_account_must_have_pages">Facebook 連結找不到任何頁面。 Jetpack Social 無法連結至 Facebook 個人檔案，只能連結至已發表的頁面。</string>
     <string name="notifications_tab_title_likes">按讚數</string>
     <string name="notifications_tab_title_follows">關注者</string>
     <string name="notifications_tab_title_comments">留言</string>
@@ -1508,7 +1628,7 @@ Language: zh_TW
     <string name="navigate_forward_desc">下一個</string>
     <string name="calendar_scheduled_post_title">WordPress 已排程的文章：「%s」</string>
     <string name="notification_post_will_be_published_in_ten_minutes">「%s」將會在 10 分鐘後發表</string>
-    <string name="calendar_scheduled_post_description">排程於「%2$s」在你的 WordPress 應用程式發表「%1$s」\n %3$s</string>
+    <string name="calendar_scheduled_post_description">「%1$s」已排程透過你的 %3$s 應用程式發表到「%2$s」\n %4$s</string>
     <string name="notification_post_will_be_published_in_one_hour">「%s」將會在 1 小時後發表</string>
     <string name="notification_post_has_been_published">「%s」已發表</string>
     <string name="notification_scheduled_post_ten_minute_reminder">已排程的文章：10 分鐘提醒</string>
@@ -1678,7 +1798,6 @@ Language: zh_TW
     <string name="app_rating_rate_later">稍後再做</string>
     <string name="app_rating_rate_now">立即評分</string>
     <string name="app_rating_message">很高興再次與你見面！如果你喜歡我們的應用程式，歡迎前往 Google Play 商店幫忙評分。</string>
-    <string name="app_rating_title">享受 WordPress 使用體驗嗎？</string>
     <string name="editor_post_converted_back_to_draft">貼文已重新轉換為草稿</string>
     <string name="stats_insights_posting_activity">張貼活動</string>
     <string name="stats_site_not_loaded_yet">尚未載入網站</string>
@@ -1716,10 +1835,10 @@ Language: zh_TW
     <string name="notification_channel_reminder_title">提醒</string>
     <string name="stats_select_next_period_description">選取下個期間</string>
     <string name="stats_select_previous_period_description">選取上個期間</string>
-    <string name="stats_most_popular_percent_views">瀏覽次數：%1$d%%</string>
     <string name="stats_insights_popular">最熱門的時間</string>
-    <string name="stats_traffic_change">%1$s (%2$s%%)</string>
-    <string name="stats_traffic_increase">+%1$s (%2$s%%)</string>
+    <string name="stats_most_popular_percent_views">%1$s 的瀏覽次數</string>
+    <string name="stats_traffic_change">%1$s (%2$s)</string>
+    <string name="stats_traffic_increase">+%1$s (%2$s)</string>
     <string name="new_site_creation_site_preview_content_description">顯示預覽網站</string>
     <string name="new_site_creation_clear_all_content_description">清除</string>
     <string name="site_created_but_not_fetched_snackbar_message">你的網路連線速度似乎過慢。如果你在清單中沒有看到新網站，請嘗試重新整理。</string>
@@ -1881,8 +2000,8 @@ Language: zh_TW
     <string name="quick_start_dialog_view_site_message">預覽你的網站即可查看訪客將會看到的內容。</string>
     <string name="quick_start_dialog_publish_post_title">發表文章</string>
     <string name="quick_start_dialog_publish_post_message_short">點選%1$s建立文章%2$s以建立新文章</string>
-    <string name="quick_start_dialog_need_help_button_negative">不用！謝謝</string>
     <string name="quick_start_dialog_follow_sites_title">連結其他網站</string>
+    <string name="quick_start_dialog_need_help_button_negative">不用了，謝謝</string>
     <string name="quick_start_button_positive">執行</string>
     <string name="quick_start_button_negative_short">取消</string>
     <string name="quick_start_button_negative">現在不要</string>
@@ -2247,8 +2366,8 @@ Language: zh_TW
     <string name="delete_yes">刪除</string>
     <string name="plugin_external_link_icon_content_description">外部連結</string>
     <string name="plugin_icon_content_description">外掛程式圖示</string>
-    <string name="plugin_home_page">外掛程式首頁</string>
     <string name="wordpress_dot_org_plugin_page">WordPress.org 外掛程式頁面</string>
+    <string name="plugin_home_page">外掛首頁</string>
     <string name="plugin_remove_dialog_message">確定要將 %1$s 從 %2$s 移除？\n\n這將會停用外掛程式，並刪除所有相關的檔案及資料。</string>
     <string name="plugin_remove_dialog_title">移除外掛程式</string>
     <string name="plugin_remove_progress_dialog_message">正在移除 %s…</string>
@@ -2408,6 +2527,7 @@ Language: zh_TW
     <string name="requesting_otp">透過 SMS 要求驗證碼。</string>
     <string name="login_text_otp">請改用簡訊傳送驗證碼給我</string>
     <string name="enter_verification_code">快完成了！請輸入驗證器應用程式上的驗證碼。</string>
+    <string name="open_mail">開啟郵件</string>
     <string name="next">下一篇</string>
     <string name="enter_email_wordpress_com">使用電子郵件地址登入 WordPress.com，即可管理你的所有 WordPress 網站。</string>
     <string name="image_optimization_promo_desc">圖片最佳化會壓縮圖片，以加快上傳速度。\n\n你可以隨時在網站設定變更此設定。</string>
@@ -2505,10 +2625,8 @@ Language: zh_TW
     <string name="share_btn_disconnect">中斷連結</string>
     <string name="share_btn_connect">連線</string>
     <string name="connection_service_description">連結後，你的網誌文章便能自動分享至 %s。</string>
-    <string name="connection_service_label">透過 Publicize 發佈至 %s</string>
     <string name="connected_accounts_label">已連結的帳號</string>
     <string name="connections_description">連結你最愛的社交媒體服務，自動與朋友分享新文章。</string>
-    <string name="connections_label">連結</string>
     <string name="sharing">分享</string>
     <string name="tabbar_accessibility_label_notifications">通知。管理你的通知。</string>
     <string name="tabbar_accessibility_label_reader">讀取器。關注其他網站的內容。</string>

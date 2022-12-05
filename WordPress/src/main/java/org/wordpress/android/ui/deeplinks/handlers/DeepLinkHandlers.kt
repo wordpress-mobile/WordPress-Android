@@ -7,7 +7,6 @@ import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
 
-@Suppress("LongParameterList")
 class DeepLinkHandlers
 @Inject constructor(
     editorLinkHandler: EditorLinkHandler,
@@ -16,7 +15,8 @@ class DeepLinkHandlers
     readerLinkHandler: ReaderLinkHandler,
     pagesLinkHandler: PagesLinkHandler,
     notificationsLinkHandler: NotificationsLinkHandler,
-    qrCodeAuthLinkHandler: QRCodeAuthLinkHandler
+    qrCodeAuthLinkHandler: QRCodeAuthLinkHandler,
+    homeLinkHandler: HomeLinkHandler
 ) {
     private val handlers = listOf(
             editorLinkHandler,
@@ -25,7 +25,8 @@ class DeepLinkHandlers
             readerLinkHandler,
             pagesLinkHandler,
             notificationsLinkHandler,
-            qrCodeAuthLinkHandler
+            qrCodeAuthLinkHandler,
+            homeLinkHandler
     )
 
     private val _toast by lazy {

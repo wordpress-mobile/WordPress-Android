@@ -57,8 +57,8 @@ class ActionPerformer
         }
     }
 
+    @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    @SuppressWarnings("unused")
     fun onPostUploaded(event: OnPostUploaded) {
         // negative local page ID used as a temp remote post ID for local-only pages (assigned by the PageStore)
         val continuation = continuations[event.post.remotePostId to UPLOAD]
@@ -66,8 +66,8 @@ class ActionPerformer
         continuation?.resume(!event.isError to event.post.remotePostId)
     }
 
+    @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    @SuppressWarnings("unused")
     fun onPostChange(event: OnPostChanged) {
         postCauseOfChangeToPostAction(event.causeOfChange)?.let { (remoteId, localId, eventType) ->
             // negative local page ID used as a temp remote post ID for local-only pages (assigned by the PageStore)
@@ -85,6 +85,7 @@ class ActionPerformer
                 else -> null
             }
 
+    @Suppress("DataClassShouldBeImmutable")
     data class PageAction(var remoteId: Long, val event: EventType, val perform: suspend () -> Unit) {
         var onSuccess: (() -> Unit)? = null
         var onError: (() -> Unit)? = null

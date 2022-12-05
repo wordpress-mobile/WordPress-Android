@@ -23,8 +23,7 @@ import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 
-class OverviewMapper
-@Inject constructor(
+class OverviewMapper @Inject constructor(
     private val statsDateFormatter: StatsDateFormatter,
     private val resourceProvider: ResourceProvider,
     private val statsUtils: StatsUtils,
@@ -143,6 +142,7 @@ class OverviewMapper
         )
     }
 
+    @Suppress("LongParameterList", "LongMethod")
     fun buildChart(
         dates: List<PeriodData>,
         statsGranularity: StatsGranularity,

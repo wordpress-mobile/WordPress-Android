@@ -5,6 +5,7 @@
     <!-- Switch to attribute after dropping support for api 21-23 -->
     <color name="placeholder">#1AFFFFFF</color>
     <color name="p2_author_bg_stroke">#1E1E1E</color>
+    <color name="bottom_bar_notification_badge">@color/background_dark_elevated</color>
 
     <!-- Login Prologue -->
     <color name="promo_indicator_color_default">@color/white_translucent_20</color>
@@ -17,9 +18,19 @@
     <color name="login_prologue_background_circle_orange">@color/red_60</color>
     <color name="login_prologue_background_circle_pink">@color/purple_60</color>
 
+    <!-- Login Prologue Revamped -->
+    <color name="login_prologue_revamped_background">@color/gray_80</color>
+    <color name="login_prologue_revamped_icon">@color/white</color>
+
     <!-- Post History -->
 
     <color name="post_history_underlying_background">@color/gray_100</color>
+
+    <!-- Jetpack awareness in WordPress App -->
+    <color name="jetpack_banner_background">@color/jetpack_green_90</color>
+    <color name="jetpack_banner_divider">@color/gray_80</color>
+    <color name="jetpack_badge_background">@color/jetpack_green_90</color>
+    <color name="jetpack_powered_bottom_sheet_background">@color/jetpack_green_100</color>
 
     <!-- Reader -->
 
@@ -88,4 +99,7 @@
 
     <!-- Site creation  -->
     <color name="site_creation_intent_item_emoji_bg">#3d3d3d</color>
+
+    <!-- Jetpack Migration -->
+    <color name="bg_jp_migration_buttons_panel">#E6121212</color>
 </resources>

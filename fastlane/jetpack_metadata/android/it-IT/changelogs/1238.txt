@@ -1,5 +1,0 @@
-20.1:
-- Get new daily blogging prompts to inspire your posts.
-- We improved the site design selection screen in the Site Creation process.
-- WordPress links open in the app, not your default browser.
-- Quick Start focus points are in the correct spots for right-to-left language users.

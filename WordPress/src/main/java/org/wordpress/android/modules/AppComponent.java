@@ -13,19 +13,10 @@ import org.wordpress.android.ui.ShareIntentReceiverActivity;
 import org.wordpress.android.ui.ShareIntentReceiverFragment;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.about.UnifiedAboutActivity;
-import org.wordpress.android.ui.accounts.HelpActivity;
-import org.wordpress.android.ui.accounts.LoginActivity;
-import org.wordpress.android.ui.accounts.LoginEpilogueActivity;
-import org.wordpress.android.ui.accounts.LoginMagicLinkInterceptActivity;
 import org.wordpress.android.ui.accounts.PostSignupInterstitialActivity;
 import org.wordpress.android.ui.accounts.SignupEpilogueActivity;
-import org.wordpress.android.ui.accounts.login.LoginEpilogueFragment;
-import org.wordpress.android.ui.accounts.login.LoginPrologueFragment;
-import org.wordpress.android.ui.accounts.login.jetpack.LoginNoSitesFragment;
-import org.wordpress.android.ui.accounts.login.jetpack.LoginSiteCheckErrorFragment;
 import org.wordpress.android.ui.accounts.signup.SignupEpilogueFragment;
 import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailFragment;
-import org.wordpress.android.ui.activitylog.list.ActivityLogListActivity;
 import org.wordpress.android.ui.activitylog.list.ActivityLogListFragment;
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterFragment;
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingDialogFragment;
@@ -42,7 +33,6 @@ import org.wordpress.android.ui.comments.unified.UnifiedCommentsActivity;
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsDetailsActivity;
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditFragment;
 import org.wordpress.android.ui.debug.cookies.DebugCookiesFragment;
-import org.wordpress.android.ui.deeplinks.DeepLinkingIntentReceiverActivity;
 import org.wordpress.android.ui.domains.DomainRegistrationActivity;
 import org.wordpress.android.ui.domains.DomainRegistrationDetailsFragment;
 import org.wordpress.android.ui.domains.DomainRegistrationResultFragment;
@@ -85,7 +75,6 @@ import org.wordpress.android.ui.mysite.tabs.MySiteTabFragment;
 import org.wordpress.android.ui.notifications.DismissNotificationReceiver;
 import org.wordpress.android.ui.notifications.NotificationsDetailActivity;
 import org.wordpress.android.ui.notifications.NotificationsDetailListFragment;
-import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.notifications.NotificationsListFragmentPage;
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter;
 import org.wordpress.android.ui.notifications.receivers.NotificationsPendingDraftsReceiver;
@@ -98,7 +87,6 @@ import org.wordpress.android.ui.pages.SearchListFragment;
 import org.wordpress.android.ui.people.PeopleInviteDialogFragment;
 import org.wordpress.android.ui.people.PeopleInviteFragment;
 import org.wordpress.android.ui.people.PeopleListFragment;
-import org.wordpress.android.ui.people.PeopleManagementActivity;
 import org.wordpress.android.ui.people.PersonDetailFragment;
 import org.wordpress.android.ui.people.RoleChangeDialogFragment;
 import org.wordpress.android.ui.people.RoleSelectDialogFragment;
@@ -120,6 +108,7 @@ import org.wordpress.android.ui.posts.PostDatePickerDialogFragment;
 import org.wordpress.android.ui.posts.PostListCreateMenuFragment;
 import org.wordpress.android.ui.posts.PostListFragment;
 import org.wordpress.android.ui.posts.PostNotificationScheduleTimeDialogFragment;
+import org.wordpress.android.ui.posts.PostSettingsListDialogFragment;
 import org.wordpress.android.ui.posts.PostSettingsTagsFragment;
 import org.wordpress.android.ui.posts.PostTimePickerDialogFragment;
 import org.wordpress.android.ui.posts.PostsListActivity;
@@ -135,7 +124,6 @@ import org.wordpress.android.ui.posts.SelectCategoriesActivity;
 import org.wordpress.android.ui.posts.adapters.AuthorSelectionAdapter;
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingPublishSettingsFragment;
 import org.wordpress.android.ui.posts.services.AztecVideoLoader;
-import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsFragment;
 import org.wordpress.android.ui.prefs.AppSettingsActivity;
 import org.wordpress.android.ui.prefs.AppSettingsFragment;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
@@ -146,6 +134,7 @@ import org.wordpress.android.ui.prefs.SiteSettingsFragment;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.prefs.SiteSettingsTagDetailFragment;
 import org.wordpress.android.ui.prefs.SiteSettingsTagListActivity;
+import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsFragment;
 import org.wordpress.android.ui.prefs.categories.detail.CategoryDetailFragment;
 import org.wordpress.android.ui.prefs.categories.list.CategoriesListFragment;
 import org.wordpress.android.ui.prefs.homepage.HomepageSettingsDialog;
@@ -155,17 +144,14 @@ import org.wordpress.android.ui.prefs.timezone.SiteSettingsTimezoneBottomSheet;
 import org.wordpress.android.ui.publicize.PublicizeAccountChooserListAdapter;
 import org.wordpress.android.ui.publicize.PublicizeButtonPrefsFragment;
 import org.wordpress.android.ui.publicize.PublicizeDetailFragment;
-import org.wordpress.android.ui.publicize.PublicizeListActivity;
 import org.wordpress.android.ui.publicize.PublicizeListFragment;
 import org.wordpress.android.ui.publicize.PublicizeWebViewFragment;
 import org.wordpress.android.ui.publicize.adapters.PublicizeConnectionAdapter;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter;
 import org.wordpress.android.ui.quickstart.QuickStartFullScreenDialogFragment;
-import org.wordpress.android.ui.quickstart.QuickStartReminderReceiver;
 import org.wordpress.android.ui.reader.CommentNotificationsBottomSheetFragment;
 import org.wordpress.android.ui.reader.ReaderBlogFragment;
 import org.wordpress.android.ui.reader.ReaderCommentListActivity;
-import org.wordpress.android.ui.reader.ReaderFragment;
 import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
 import org.wordpress.android.ui.reader.ReaderPostListActivity;
 import org.wordpress.android.ui.reader.ReaderPostListFragment;
@@ -207,12 +193,14 @@ import org.wordpress.android.ui.stats.refresh.lists.widget.today.TodayWidgetBloc
 import org.wordpress.android.ui.stats.refresh.lists.widget.today.TodayWidgetListProvider;
 import org.wordpress.android.ui.stats.refresh.lists.widget.views.StatsViewsWidget;
 import org.wordpress.android.ui.stats.refresh.lists.widget.views.ViewsWidgetListProvider;
+import org.wordpress.android.ui.stats.refresh.lists.widget.weeks.StatsWeekWidget;
+import org.wordpress.android.ui.stats.refresh.lists.widget.weeks.WeekViewsWidgetListProvider;
+import org.wordpress.android.ui.stats.refresh.lists.widget.weeks.WeekWidgetBlockListProviderFactory;
 import org.wordpress.android.ui.stockmedia.StockMediaPickerActivity;
 import org.wordpress.android.ui.stories.StoryComposerActivity;
 import org.wordpress.android.ui.stories.intro.StoriesIntroDialogFragment;
 import org.wordpress.android.ui.suggestion.SuggestionActivity;
 import org.wordpress.android.ui.suggestion.adapters.SuggestionAdapter;
-import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.ui.themes.ThemeBrowserFragment;
 import org.wordpress.android.ui.uploads.MediaUploadHandler;
 import org.wordpress.android.ui.uploads.MediaUploadReadyProcessor;
@@ -240,14 +228,6 @@ public interface AppComponent {
 
     void inject(PostUploadHandler object);
 
-    void inject(LoginActivity object);
-
-    void inject(LoginEpilogueActivity object);
-
-    void inject(LoginEpilogueFragment object);
-
-    void inject(LoginMagicLinkInterceptActivity object);
-
     void inject(SignupEpilogueActivity object);
 
     void inject(SignupEpilogueFragment object);
@@ -262,15 +242,11 @@ public interface AppComponent {
 
     void inject(GCMRegistrationIntentService object);
 
-    void inject(DeepLinkingIntentReceiverActivity object);
-
     void inject(ShareIntentReceiverActivity object);
 
     void inject(ShareIntentReceiverFragment object);
 
     void inject(AddQuickPressShortcutActivity object);
-
-    void inject(HelpActivity object);
 
     void inject(CommentDetailFragment object);
 
@@ -299,8 +275,6 @@ public interface AppComponent {
     void inject(BlogPreferencesActivity object);
 
     void inject(AppSettingsFragment object);
-
-    void inject(PeopleManagementActivity object);
 
     void inject(PeopleListFragment object);
 
@@ -334,8 +308,6 @@ public interface AppComponent {
 
     void inject(SiteSettingsTagDetailFragment object);
 
-    void inject(PublicizeListActivity object);
-
     void inject(PublicizeWebViewFragment object);
 
     void inject(PublicizeDetailFragment object);
@@ -347,6 +319,8 @@ public interface AppComponent {
     void inject(EditPostActivity object);
 
     void inject(EditPostSettingsFragment object);
+
+    void inject(PostSettingsListDialogFragment object);
 
     void inject(PostsListActivity object);
 
@@ -361,8 +335,6 @@ public interface AppComponent {
     void inject(HistoryAdapter object);
 
     void inject(HistoryDetailContainerFragment object);
-
-    void inject(NotificationsListFragment object);
 
     void inject(NotificationsListFragmentPage object);
 
@@ -426,8 +398,6 @@ public interface AppComponent {
 
     void inject(WPWebViewClient object);
 
-    void inject(ThemeBrowserActivity object);
-
     void inject(NotesAdapter object);
 
     void inject(ThemeBrowserFragment object);
@@ -441,8 +411,6 @@ public interface AppComponent {
     void inject(AddCategoryFragment object);
 
     void inject(PluginBrowserActivity object);
-
-    void inject(ActivityLogListActivity object);
 
     void inject(ActivityLogListFragment object);
 
@@ -465,8 +433,6 @@ public interface AppComponent {
     void inject(WordPressGlideModule object);
 
     void inject(QuickStartFullScreenDialogFragment object);
-
-    void inject(QuickStartReminderReceiver object);
 
     void inject(MediaGridAdapter object);
 
@@ -564,8 +530,6 @@ public interface AppComponent {
 
     void inject(StoriesIntroDialogFragment object);
 
-    void inject(ReaderFragment object);
-
     void inject(ReaderDiscoverFragment object);
 
     void inject(ReaderSearchActivity object);
@@ -579,8 +543,6 @@ public interface AppComponent {
     void inject(AztecVideoLoader object);
 
     void inject(PhotoPickerFragment object);
-
-    void inject(LoginPrologueFragment object);
 
     void inject(ReaderDiscoverLogic object);
 
@@ -621,10 +583,6 @@ public interface AppComponent {
     void inject(EngagedPeopleListFragment object);
 
     void inject(SiteSettingsTimezoneBottomSheet object);
-
-    void inject(LoginSiteCheckErrorFragment object);
-
-    void inject(LoginNoSitesFragment object);
 
     void inject(UserProfileBottomSheetFragment object);
 
@@ -673,4 +631,10 @@ public interface AppComponent {
     void inject(BloggingPromptsOnboardingDialogFragment object);
 
     void inject(DismissNotificationReceiver object);
+
+    void inject(StatsWeekWidget object);
+
+    void inject(WeekViewsWidgetListProvider object);
+
+    void inject(WeekWidgetBlockListProviderFactory object);
 }

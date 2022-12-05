@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.async
-import org.wordpress.android.Constants
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAINS_DASHBOARD_ADD_DOMAIN_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAINS_DASHBOARD_GET_DOMAIN_TAPPED
@@ -25,7 +24,6 @@ import org.wordpress.android.ui.domains.DomainsDashboardItem.SiteDomains
 import org.wordpress.android.ui.domains.DomainsDashboardItem.SiteDomainsHeader
 import org.wordpress.android.ui.domains.DomainsDashboardNavigationAction.ClaimDomain
 import org.wordpress.android.ui.domains.DomainsDashboardNavigationAction.GetDomain
-import org.wordpress.android.ui.domains.DomainsDashboardNavigationAction.OpenManageDomains
 import org.wordpress.android.ui.domains.usecases.FetchPlansUseCase
 import org.wordpress.android.ui.plans.isDomainCreditAvailable
 import org.wordpress.android.ui.utils.HtmlMessageUtils
@@ -44,7 +42,6 @@ import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
 
-@Suppress("TooManyFunctions")
 class DomainsDashboardViewModel @Inject constructor(
     private val siteStore: SiteStore,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
@@ -220,10 +217,6 @@ class DomainsDashboardViewModel @Inject constructor(
         if (hasDomainCredit) onClaimDomainClick() else onGetDomainClick()
     }
 
-    private fun onManageDomainClick() {
-        _onNavigation.postValue(Event(OpenManageDomains("${Constants.URL_MANAGE_DOMAINS}/${site.siteId}")))
-    }
-
     //  NOTE: Change site option is de-scoped for v1 release
     private fun onChangeSiteClick(action: Action): Boolean {
         when (action) {
@@ -231,7 +224,6 @@ class DomainsDashboardViewModel @Inject constructor(
                 TODO("Not yet implemented")
             }
         }
-        return true
     }
 
     fun onSuccessfulDomainRegistration() {

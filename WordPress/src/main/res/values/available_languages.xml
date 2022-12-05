@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--Warning: Auto-generated file, do not edit.-->
-<resources>
-  <string-array name="available_languages" translatable="false">
+<resources xmlns:tools="http://schemas.android.com/tools">
+  <string-array name="available_languages" translatable="false" tools:ignore="InconsistentArrays">
     <item>en_US</item>
     <item>ar</item>
     <item>de</item>
-    <item>en_GB</item>
     <item>es</item>
     <item>fr_CA</item>
     <item>fr</item>
@@ -33,6 +32,7 @@
     <item>el</item>
     <item>en_AU</item>
     <item>en_CA</item>
+    <item>en_GB</item>
     <item>es_CL</item>
     <item>es_CO</item>
     <item>es_MX</item>

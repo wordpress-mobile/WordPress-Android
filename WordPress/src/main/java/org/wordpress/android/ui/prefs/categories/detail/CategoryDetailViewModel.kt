@@ -169,7 +169,7 @@ class CategoryDetailViewModel @Inject constructor(
         }
     }
 
-    @SuppressWarnings("unused")
+    @Suppress("unused")
     @Subscribe(threadMode = MAIN)
     fun onTermUploaded(event: OnTermUploaded) {
         if (event.isError) AppLog.e(

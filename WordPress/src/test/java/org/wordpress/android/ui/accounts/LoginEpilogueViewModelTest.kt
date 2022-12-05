@@ -1,16 +1,12 @@
 package org.wordpress.android.ui.accounts
 
-import com.nhaarman.mockitokotlin2.atLeastOnce
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
-
 import org.junit.Test
 import org.mockito.Mock
+import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.store.SiteStore
-import org.wordpress.android.ui.mysite.tabs.MySiteDefaultTabExperiment
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.BuildConfigWrapper
 
@@ -20,11 +16,10 @@ class LoginEpilogueViewModelTest : BaseUnitTest() {
     @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
     @Mock lateinit var buildConfigWrapper: BuildConfigWrapper
     @Mock lateinit var siteStore: SiteStore
-    @Mock lateinit var mySiteDefaultTabExperiment: MySiteDefaultTabExperiment
 
     @Before
     fun setUp() {
-        viewModel = LoginEpilogueViewModel(appPrefsWrapper, buildConfigWrapper, siteStore, mySiteDefaultTabExperiment)
+        viewModel = LoginEpilogueViewModel(appPrefsWrapper, buildConfigWrapper, siteStore)
     }
 
     @Test
@@ -258,13 +253,6 @@ class LoginEpilogueViewModelTest : BaseUnitTest() {
         viewModel.onContinue()
 
         assertThat(navigationEvents.last()).isInstanceOf(LoginNavigationEvents.ShowNoJetpackSites::class.java)
-    }
-
-    @Test
-    fun `given my site default tab experiment, when requested, then check and set for variant is executed `() {
-        viewModel.checkAndSetVariantForMySiteDefaultTabExperiment()
-
-        verify(mySiteDefaultTabExperiment, atLeastOnce()).checkAndSetVariantIfNeeded()
     }
 
     private data class Observers(val navigationEvents: List<LoginNavigationEvents>)

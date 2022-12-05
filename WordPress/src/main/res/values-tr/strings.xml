@@ -1,11 +1,103 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-06-28 10:25:29+0000
+Translation-Revision-Date: 2022-11-30 14:54:29+0000
 Plural-Forms: nplurals=2; plural=n > 1;
-Generator: GlotPress/4.0.0-alpha.1
+Generator: GlotPress/4.0.0-alpha.3
 Language: tr
 -->
 <resources>
+    <string name="wp_jetpack_deep_link_open_in_wordpress">WordPress\'te bağlantıları aç</string>
+    <string name="wp_jetpack_deep_link_overlay_description">Görünüşe göre Jetpack uygulaması cihazınızda yüklü.\n\nBundan sonra bağlantıları Jetpack uygulamasında açmak ister misiniz?\n\nİstediğiniz zaman bunu Uygulama Ayarları &gt; Bağlantıları Jetpack\'te aç seçeneğini kullanarak değiştirebilirsiniz.</string>
+    <string name="wp_jetpack_deep_link_overlay_title">Bağlantılar Jetpack\'te açılsın mı?</string>
+    <string name="wp_jetpack_continue_without_jetpack">Jetpack\'i kullanmadan devam et</string>
+    <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_two_description">Jetpack, hayallerinizdeki WordPress sitesini oluşturmanıza ve büyütmenize yardımcı olacak istatistikler, bildirimler ve daha fazlasını sağlar.\n\nWordPress uygulaması artık yeni bir site oluşturmayı desteklemiyor.</string>
+    <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_one_description">Jetpack, hayallerinizdeki WordPress sitesini oluşturmanıza ve büyütmenize yardımcı olacak istatistikler, bildirimler ve daha fazlasını sağlar.</string>
+    <string name="wp_jetpack_feature_removal_site_creation_overlay_title">Jetpack uygulamasıyla yeni bir WordPress sitesi oluşturun</string>
+    <string name="deep_linking_weblinks_alias_label">weblinks</string>
+    <string name="deep_linking_urilinks_alias_label">urilinks</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_reader">Okuyucu ile tüm favori sitelerinizi ve gönderilerinizi bulmak, takip etmek ve beğenmek için Jetpack\'e geçiş yapın.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_stats">İstatistikler ve bilgilerle sitenizin trafiğinin büyümesini izlemek için Jetpack uygulamasına geçiş yapın.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_notifications">Bildirimlerinizi Jetpack uygulamasıyla alın</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_reader">Jetpack uygulamasıyla istediğiniz siteyi takip edin</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_stats">Yeni Jetpack uygulamasını kullanarak istatistiklerinizi alın</string>
+    <string name="preference_open_links_in_jetpack_setting_change_disable_error">Bağlantıları Jetpack\'te açma özelliği devre dışı bırakılamıyor</string>
+    <string name="preference_open_links_in_jetpack_setting_change_enable_error">Bağlantıları Jetpack\'te açma özelliği etkinleştirilemiyor</string>
+    <string name="preference_open_links_in_jetpack">Bağlantıları Jetpack\'te aç</string>
+    <string name="jp_migration_need_help_button">Yardıma mı ihtiyacınız var?</string>
+    <string name="jp_migration_got_it_button">Anladım</string>
+    <string name="jp_migration_delete_message">Veri çakışmalarını&lt;br&gt;önlemek için lütfen &lt;b&gt;WordPress uygulamasını silin&lt;/b&gt;.</string>
+    <string name="jp_migration_delete_subtitle">Görünüşe göre WordPress uygulaması hâlâ yüklü. Veri çakışmalarını önlemek için WordPress uygulamasını silmenizi öneririz.</string>
+    <string name="jp_migration_delete_title">Artık WordPress uygulamasına ihtiyacınız yok</string>
+    <string name="jp_migration_network_error_message">Ağ bağlantısı olmadığı için verilerinizi ve ayarlarınızı aktaramıyoruz.</string>
+    <string name="jp_migration_network_error_subtitle">Lütfen ağ bağlantınızın çalışıp çalışmadığını kontrol edip yeniden deneyin.</string>
+    <string name="jp_migration_network_error_title">İnternete bağlanılamıyor.</string>
+    <string name="jp_migration_generic_error_message">Lütfen destek merkezi ile iletişime geçin veya daha sonra tekrar deneyin.</string>
+    <string name="jp_migration_generic_error_subtitle">Ne yazık ki bir sorun oluştu. Verileriniz güvende ama şu an onları aktaramıyoruz.</string>
+    <string name="jp_migration_generic_error_title">Hay aksi, bir sorun oluştu.</string>
+    <string name="jp_migration_try_again_button">Tekrar deneyin</string>
+    <string name="jp_migration_finish_button">Bitir</string>
+    <string name="jp_migration_remove_wp_app_icon_content_description">WordPress Uygulaması simgesini kaldır</string>
+    <string name="jp_migration_done_delete_wp_message">Veri çakışmalarını&lt;br&gt;önlemek için lütfen &lt;b&gt;WordPress uygulamasını silin&lt;/b&gt;.</string>
+    <string name="jp_migration_done_subtitle">Tüm verilerinizi ve ayarlarınızı aktardık. Her şey bıraktığınız yerde.</string>
+    <string name="jp_migration_done_title">Jetpack\'e geçtiğiniz için teşekkürler!</string>
+    <string name="jp_migration_notifications_disabled_in_wp_message">WordPress uygulamasından gelen bildirimleri kapatacağız.</string>
+    <string name="jp_migration_notifications_subtitle">Aynı bildirimleri alacaksınız, ancak bunlar artık Jetpack uygulamasından gelecek.</string>
+    <string name="jp_migration_notifications_title">Artık bildirimler Jetpack\'ten geliyor</string>
+    <string name="jp_migration_success_card_message">Lütfen WordPress uygulamasını silin</string>
+    <string name="wordpress_help_center_button">WordPress yardım merkezi</string>
+    <string name="support_title">Destek</string>
+    <string name="notification_disable_broadcast_permission_desc">Uygulamanın WordPress bildirimlerini devre dışı bırakmasına izin verir.</string>
+    <string name="notification_disable_broadcast_permission_label">WordPress bildirimlerini devre dışı bırak</string>
+    <string name="jp_migration_help_button">Yardıma mı ihtiyacınız var?</string>
+    <string name="jp_migration_continue_button">Devam</string>
+    <string name="jp_migration_welcome_site_found_message">Sitenizi bulduk. Tüm verilerinizi aktarmaya devam edin ve Jetpack\'te otomatik olarak oturum açın.</string>
+    <string name="jp_migration_welcome_sites_found_message">Sitelerinizi bulduk. Tüm verilerinizi aktarmaya devam edin ve Jetpack\'te otomatik olarak oturum açın.</string>
+    <string name="jp_migration_avatar_content_description">Profil fotoğrafınız</string>
+    <string name="jp_migration_welcome_subtitle">WordPress uygulamasından geçiş yaptığınız anlaşılıyor.</string>
+    <string name="jp_migration_welcome_title">Jetpack\'e hoş geldiniz.</string>
+    <string name="icon_desc">simge</string>
+    <string name="post_settings_parent">Üst sayfa</string>
+    <string name="post_settings_page_attributes">Sayfa öznitelikleri</string>
+    <string name="about_automattic_contribute_item_title">Katkıda bulunun</string>
+    <string name="about_news">Haberler</string>
+    <string name="my_site_blogging_prompt_card_number_of_answers_one">1 yanıt</string>
+    <string name="login_prologue_revamped_content_description_wordpress_icon">WordPress simgesi</string>
+    <string name="login_prologue_revamped_tagline">Dilediğiniz yerden yazın, düzenleyin ve yayınlayın.</string>
+    <string name="error_fetch_authors_list">Yazarlar alınamadı</string>
+    <string name="post_settings_author">Yazar</string>
+    <string name="app_rating_title">%s hoşunuza gitti mi?</string>
+    <string name="connection_service_label">Gönderiyi %s ile paylaş</string>
+    <string name="connections_label">Jetpack Social Bağlantıları</string>
+    <string name="stats_widget_log_in_to_add_message">Bir bileşen eklemek için lütfen Jetpack uygulamasına giriş yapın.</string>
+    <string name="stats_view_publicize">Jetpack Social Bağlantıları</string>
+    <string name="login_magic_links_email_sent">Az önce size sihirli bir bağlantı gönderdik</string>
+    <string name="login_magic_links_sent_label_short">Bu cihazda e-postanızı kontrol edin!</string>
+    <string name="or_use_password">Oturum açmak için şifreyi kullanın</string>
+    <string name="wp_jetpack_powered_notifications_powered_by_jetpack_caption">Yeni yorumlar, site trafiği, güvenlik raporları ve daha fazlası için gerçek zamanlı güncellemelerden haberdar olun.</string>
+    <string name="wp_jetpack_powered_notifications_powered_by_jetpack">Bildirimler, Jetpack tarafından desteklenmektedir</string>
+    <string name="wp_jetpack_powered_stats_powered_by_jetpack_caption">Artık yeni Jetpack uygulamasında bulunan yeniden tasarlanmış İstatistikler ve Öngörüler ile trafiğinizin büyümesini izleyin ve hedef kitleniz hakkında bilgi edinin.</string>
+    <string name="wp_jetpack_powered_stats_powered_by_jetpack">İstatistikler, Jetpack tarafından desteklenmektedir.</string>
+    <string name="wp_jetpack_powered_reader_powered_by_jetpack_caption">Artık yeni Jetpack uygulamasında bulunan Okuyucu ile tüm favori sitelerinizi ve gönderilerinizi bulun, takip edin ve beğenin.</string>
+    <string name="wp_jetpack_powered_reader_powered_by_jetpack">Okuyucu, Jetpack tarafından desteklenmektedir.</string>
+    <string name="wp_jetpack_powered_features">Yeni Jetpack uygulaması, WordPress\'inizi daha iyi hale getiren İstatistikler, Okuyucu, Bildirimler gibi özellikleri ve daha fazlasını içerir.</string>
+    <string name="wp_jetpack_powered_better_with_jetpack">WordPress, Jetpack ile daha iyi</string>
+    <string name="gutenberg_native_upgrade_your_plan_to_use_video_covers">Video başlıkları kullanmak için paketinizi yükseltin</string>
+    <string name="gutenberg_native_upgrade_your_plan_to_upload_audio">Ses yüklemek için paketinizi yükseltin</string>
+    <string name="gutenberg_native_jetpack_powered">Jetpack destekli</string>
+    <string name="gutenberg_native_invalid_url">Geçersiz URL.</string>
+    <string name="gutenberg_native_gradient">Degrade</string>
+    <string name="wp_jetpack_continue_to_notifications">Bildirimlerle Devam Et</string>
+    <string name="wp_jetpack_continue_to_stats">İstatistiklerle Devam Et</string>
+    <string name="wp_jetpack_continue_to_reader">Okuyucuyla Devam Et</string>
+    <string name="wp_jetpack_get_new_jetpack_app">Yeni Jetpack uygulamasını deneyin</string>
+    <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery">Blok görüntülenirken bir sorun oluştu. \nBlok kurtarmayı denemek için dokunun. </string>
+    <string name="weekly_roundup_notification_text_views_and_comments">Geçen hafta %1$s görüntüleme ve %2$s yorum aldınız.</string>
+    <string name="weekly_roundup_notification_text_views_and_likes">Geçen hafta %1$s görüntüleme ve %2$s beğeni aldınız.</string>
+    <string name="weekly_roundup_notification_text_views_only">Geçen hafta %1$s görüntüleme aldınız.</string>
+    <string name="weekly_roundup_notification_text_all">Geçen hafta %1$s görüntüleme, %2$s beğeni ve %3$s yorum aldınız.</string>
+    <string name="stats_revamp_v2_update_alert_message">İçeriğinizin nasıl performans gösterdiğini ve kitlenizde nelerin ilgi çektiğini anlamanıza yardımcı olacak Yeni Tek Bakışta sürümüne güncellendi.</string>
+    <string name="stats_insights_like_guide_card">⭐️ En son yazınız (%1$s) %2$s beğeni aldı.</string>
+    <string name="wp_jetpack_powered">Jetpack destekli</string>
     <string name="qrcode_auth_flow_content_description">İşlem sırasında tarama giriş kodunu gösteren görsel</string>
     <string name="qrcode_auth_flow_error_content_description">Hata gösteren görsel</string>
     <string name="qrcode_auth_flow_dismiss_dialog_message">Devam etmek istediğinize emin misiniz?</string>
@@ -26,16 +118,11 @@ Language: tr
     <string name="qrcode_auth_flow_validated_subtitle">Yalnızca doğrudan web tarayıcınızdan alınan QR kodlarını tarayın. Size başkaları tarafından gönderilen bir kodu asla taramayın.</string>
     <string name="qrcode_auth_flow_validated_default_title">%1$s yakınından web tarayıcınız ile giriş yapmaya mı çalışıyorsunuz?</string>
     <string name="qrcode_auth_flow_validated_title">%1$s için %2$s yakınından giriş yapmaya mı çalışıyorsunuz?</string>
-    <string name="stats_revamp_v2_intro_secondary_button_text">Daha sonra hatırlat</string>
-    <string name="stats_revamp_v2_intro_primary_button_text">Şimdi deneyin</string>
-    <string name="stats_revamp_v2_intro_content_note">Sitem &gt; İstatistikler &gt; İçgörüler bölümünde daha fazla bilgi edinin</string>
-    <string name="stats_revamp_v2_intro_content">İçgörüler, içeriğinizin nasıl performans gösterdiğini ve hedef kitlenizde nelerin yankı uyandırdığını anlamanıza yardımcı olur.</string>
     <string name="stats_revamp_v2_intro_header_title">İçgörüler güncellemesi</string>
     <string name="stats_insights_followers_guide_card">💡Diğer bloglara yorum yapmak, yeni siteniz için dikkat çekmenin ve takipçi oluşturmanın harika bir yoludur.</string>
     <string name="stats_insights_comments_guide_card">💡En iyi yorumcularınızı görmek için \'DAHA FAZLASI\' düğmesine dokunun.</string>
     <string name="stats_insights_latest_post_empty">İlk yazınızı yayınladıktan sonra tekrar kontrol edin!</string>
     <string name="stats_insights_views_and_visitors_visitors_empty_state">Görüntülemelerinizi ve trafiğinizi artırmak için en iyi ipuçlarımıza göz atın %1$s</string>
-    <string name="stats_view_publicize">Sosyal medya bağlantıları</string>
     <string name="stats_action_card_schedule_post_message">✍️ Hedef kitlenize ulaşmak için taslaklarınızı en iyi zamanda yayınlanacak şekilde planlayın.</string>
     <string name="stats_action_card_blogging_reminders_message">💡Sürekli olarak paylaşım yapmak, hedef kitlenizi oluşturmanın harika bir yoludur. Yolunuza devam etmeniz için bir anımsatıcı ekleyin.</string>
     <string name="stats_action_card_grow_audience_message">💡Uzman liderliğindeki Bloglamaya Giriş kursumuzla &lt;i&gt;blogunuzu&lt;/i&gt; daha hızlı bir şekilde yükseltin.</string>
@@ -71,7 +158,7 @@ Language: tr
     <string name="me_btn_scan_login_code">Oturum Açma Kodunu Tara</string>
     <string name="stats_insights_likes_guide_card">⭐️ En son gönderiniz (%1$s) %2$s beğeni aldı.</string>
     <string name="stats_most_popular_percent_views_empty">Yeterli etkinlik yok. Sitenizin daha fazla ziyaretçisi olduğunda tekrar kontrol edin!</string>
-    <string name="stats_total_followers_content_description">%1s, %2s/toplam takipçi sayısı</string>
+    <string name="stats_total_followers_content_description">%1$s, %2$s%% toplam takipçi sayısı</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
     <string name="pages_copy_link">Bağlantıyı kopyala</string>
     <string name="quick_start_completed_tour_title">Tebrikler! Yolunuzu biliyorsunuz&lt;br/&gt;</string>
@@ -220,6 +307,7 @@ Language: tr
     <string name="my_site_blogging_prompt_card_menu_remove">Panodan kaldır</string>
     <string name="my_site_blogging_prompt_card_menu_skip">Bu bilgiyi atla</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">Daha fazla bilgi görüntüle</string>
+    <string name="my_site_blogging_prompt_card_number_of_answers_other">%d yanıt</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">Blog paylaşma istemi</string>
     <string name="my_site_blogging_prompt_card_answered_prompt">✓ Yanıtlandı</string>
     <string name="my_site_blogging_prompt_card_answer_prompt">Yanıt istemi</string>
@@ -395,7 +483,6 @@ Language: tr
     <string name="me_btn_share">WordPress\'i bir arkadaşınızla paylaşın</string>
     <string name="my_site_quick_actions_title">Hızlı Bağlantılar</string>
     <string name="my_site_btn_domains">Alan adları</string>
-    <string name="weekly_roundup_notification_text">Siteniz %1$d görüntüleme, %2$d beğeni, %3$d yorum aldı.</string>
     <string name="weekly_roundup_notification_title">Haftalık Özet: %s</string>
     <string name="blogging_reminders_notification_time">Bildirim zamanı</string>
     <string name="blogging_reminders_epilogue_body_everyday_with_time">&lt;b&gt;Her gün&lt;/b&gt; (&lt;b&gt;%s&lt;/b&gt;) blog yazmanız gerektiğini hatırlatan bildirimler alacaksınız.</string>
@@ -504,6 +591,7 @@ Language: tr
     <string name="gutenberg_native_s_has_no_url_set">%s için ayarlanmış bir URL yok</string>
     <string name="gutenberg_native_s_converted_to_regular_blocks">%s normal bloklara dönüştürüldü</string>
     <string name="gutenberg_native_s_block">%s blok</string>
+    <string name="gutenberg_native_opacity">Opaklık</string>
     <string name="gutenberg_native_media_options">Medya seçenekleri</string>
     <string name="gutenberg_native_invalid_url_audio_file_not_found">Geçersiz URL. Ses dosyası bulunamadı.</string>
     <string name="gutenberg_native_insert_crosspost">Çapraz gönderi ekle</string>
@@ -532,6 +620,7 @@ Language: tr
     <string name="gutenberg_native_move_image_forward">Görseli öne taşı</string>
     <string name="gutenberg_native_move_image_backward">Görseli geriye taşı</string>
     <string name="gutenberg_native_width_settings">Genişlik Ayarları</string>
+    <string name="gutenberg_native_link_rel">Bağlantı için Rel</string>
     <string name="gutenberg_native_column_settings">Sütun Ayarları</string>
     <string name="user_profile_untitled_site">(Başlıksız)</string>
     <string name="user_profile_site_section_header">Site</string>
@@ -710,7 +799,6 @@ Language: tr
     <string name="restore_complete_visit_site_action_button">Siteyi ziyaret et</string>
     <string name="restore_complete_description_with_two_parameters">Seçtiğiniz tüm öğeler şimdi %1$s %2$s konumuna geri yüklendi.</string>
     <string name="restore_complete_header">Siteniz geri yüklendi</string>
-    <string name="restore_progress_label">%%%1$s</string>
     <string name="restore_progress_footnote">Beklemeye gerek yok. Siteniz tamamen geri yüklendiğinde sizi bilgilendireceğiz.</string>
     <string name="restore_progress_icon_content_description">Siteyi geri yükle simgesi</string>
     <string name="restore_progress_description_with_two_parameters">Siteniz %1$s %2$s konumuna geri yükleniyor.</string>
@@ -782,7 +870,6 @@ Language: tr
     <string name="backup_download_complete_description_with_two_parameters">%1$s %2$s üzerinden başarıyla sitenizin bir yedeğini oluşturduk.</string>
     <string name="backup_download_complete_header">Yedeklemeniz artık indirilebilir</string>
     <string name="backup_download_complete_page_title">Yedeklemeniz</string>
-    <string name="backup_download_progress_label">%1$s%%</string>
     <string name="backup_download_progress_footnote">Beklemeye gerek yok. Yedeğiniz hazır olduğunda sizi bilgilendireceğiz.</string>
     <string name="backup_download_progress_icon_content_description">İndirişebilir yedek simgesi oluşturuluyor</string>
     <string name="backup_download_progress_description_with_two_parameters">%1$s %2$s üzerinden sitenizin indirilebilir bir yedeğini oluşturuyoruz.</string>
@@ -1213,7 +1300,7 @@ Language: tr
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">Renk ayarlarına gitmek için çift dokunun</string>
     <string name="reader_empty_followed_blogs_description">Siteleri takip ettiğinizde, içeriklerini burada görürsünüz</string>
     <string name="feature_announcement_find_out_mode">Daha fazlasını bul</string>
-    <string name="feature_announcement_dialog_label">WordPress\'de neler yeni</string>
+    <string name="feature_announcement_dialog_label">%s İle İlgili Yenilikler </string>
     <string name="insert_label_with_count">%d ekle</string>
     <string name="crop">kırp</string>
     <string name="error_failed_to_load_into_file">Dosyaya yüklenemedi, lütfen tekrar deneyin.</string>
@@ -1312,7 +1399,7 @@ Language: tr
     <string name="post_list_tab_trashed_posts">Çöpe taşındı</string>
     <string name="post_list_tab_scheduled_posts">Zamanlandı</string>
     <string name="post_list_tab_published_posts">Yayımlandı</string>
-    <string name="sharing_facebook_account_must_have_pages">Facebook bağlantısı hiçbir sayfa bulamıyor. Duyuru, Facebook profillerine bağlanamaz, yalnızca yayınlanan sayfalara bağlanabilir.</string>
+    <string name="sharing_facebook_account_must_have_pages">Facebook bağlantısı herhangi bir Sayfa bulamıyor. Jetpack Social, Facebook Profillerine bağlanamaz, yalnızca yayınlanan Sayfalara bağlanır.</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">Bağlı değil</string>
     <string name="notifications_tab_title_likes">Beğeniler</string>
     <string name="notifications_tab_title_follows">Takipçiler</string>
@@ -1539,7 +1626,7 @@ Language: tr
     <string name="share_desc">Paylaş</string>
     <string name="navigate_back_desc">Geri dön</string>
     <string name="navigate_forward_desc">İleri git</string>
-    <string name="calendar_scheduled_post_description">\"%1$s\", \n WordPress uygulamanızda \"%2$s\" tarihinde yayınlanmak üzere zamanlandı %3$s</string>
+    <string name="calendar_scheduled_post_description">\"%1$s\", %3$s uygulamanızda \"%2$s\" tarihinde yayınlanmak üzere zamanlandı \n %4$s</string>
     <string name="calendar_scheduled_post_title">WordPress Zamanlanmış Gönderi: \"%s\"</string>
     <string name="notification_post_will_be_published_in_ten_minutes">\"%s\" 10 dakika içinde yayımlanacak</string>
     <string name="notification_post_will_be_published_in_one_hour">\"%s\" 1 saat içinde yayımlanacak</string>
@@ -1711,7 +1798,6 @@ Language: tr
     <string name="app_rating_rate_later">Sonra</string>
     <string name="app_rating_rate_now">Şimdi puanla</string>
     <string name="app_rating_message">Seni tekrar görmek güzel! Eğer uygulamayı sonuna kadar kullandıysan, Google Play mağazasında bir derecelendirmeye bayılırız.</string>
-    <string name="app_rating_title">WordPress hoşunuza gitti mi?</string>
     <string name="editor_post_converted_back_to_draft">Yazı taslağa geri dönderildi</string>
     <string name="stats_insights_posting_activity">Yazma etkinliği</string>
     <string name="stats_site_not_loaded_yet">Site henüz yüklenmedi</string>
@@ -1749,10 +1835,10 @@ Language: tr
     <string name="notification_channel_reminder_title">Hatırlatıcı</string>
     <string name="stats_select_next_period_description">Gelecek dönemi seç</string>
     <string name="stats_select_previous_period_description">Önceki dönemi seç</string>
-    <string name="stats_most_popular_percent_views">Görüntülemelerein %%%1$d kadarı</string>
+    <string name="stats_most_popular_percent_views">Görüntüleme oranı: %1$s</string>
     <string name="stats_insights_popular">En popüler zaman</string>
-    <string name="stats_traffic_change">%1$s (%2$s%%)</string>
-    <string name="stats_traffic_increase">+%1$s (%2$s%%)</string>
+    <string name="stats_traffic_change">%1$s (%2$s)</string>
+    <string name="stats_traffic_increase">+%1$s (%2$s)</string>
     <string name="new_site_creation_site_preview_content_description">Site önizlemesi gösteriliyor</string>
     <string name="new_site_creation_clear_all_content_description">Temizle</string>
     <string name="site_created_but_not_fetched_snackbar_message">Yavaş bir bağlantı kullanıyorsunuz gibi duruyor. Yeni sitenizi listede görmüyorsanız listeyi yenilemeyi deneyin.</string>
@@ -2441,6 +2527,7 @@ Language: tr
     <string name="requesting_otp">SMS ile bir doğrulama kodu istemek.</string>
     <string name="login_text_otp">Bunun yerine bana SMS ile bir kod gönder</string>
     <string name="enter_verification_code">Neredeyse tamam. Lütfen kimlik doğrulayıcı uygulamanızdan doğrulama kodunu girin.</string>
+    <string name="open_mail">E-postayı Aç</string>
     <string name="next">Sonraki</string>
     <string name="enter_email_wordpress_com">Tüm WordPress sitelerinizi yönetmek için bir e-posta adresi kullanarak WordPress.com\'a oturum açın.</string>
     <string name="image_optimization_promo_desc">Görsel optimizasyonu daha hızlı yükleme için görselleri küçültür\n\nSite ayarlarından bu ayarı istediğiniz zaman değiştirebilirsiniz.</string>
@@ -2538,10 +2625,8 @@ Language: tr
     <string name="share_btn_disconnect">Bağlantıyı kes</string>
     <string name="share_btn_connect">Bağlan</string>
     <string name="connection_service_description">%s üzerinde blog yazılarınızı otomatik paylaşmak için bağlayın.</string>
-    <string name="connection_service_label">%s üzerinde yayımlayın</string>
     <string name="connected_accounts_label">Bağlı hesaplar</string>
     <string name="connections_description">Sevdiğiniz sosyal medya servislerini bağlayarak yazılarınızı arkadaşlarınızla paylaşın.</string>
-    <string name="connections_label">Bağlantılar</string>
     <string name="sharing">Paylaşım</string>
     <string name="tabbar_accessibility_label_notifications">Bildirimler. Bildirimlerinizi yönetin.</string>
     <string name="tabbar_accessibility_label_reader">Okuyucu. Diğer sitelerden içerikleri takip edin.</string>

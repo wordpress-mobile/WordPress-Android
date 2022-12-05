@@ -19,7 +19,7 @@ class SiteDesignRecommendationProvider @Inject constructor(private val resourceP
     ) {
         val verticalSlug: String? = if (vertical.isNullOrEmpty()) null else getVerticalSlug(vertical)
         val hasRecommendations = !verticalSlug.isNullOrEmpty() &&
-                designs.any { it.group != null && it.group.contains(verticalSlug) }
+                designs.any { it.group.contains(verticalSlug) }
 
         if (hasRecommendations) {
             val recommendedTitle = resourceProvider.getString(R.string.hpp_recommended_title, vertical)
@@ -65,6 +65,7 @@ class SiteDesignRecommendationProvider @Inject constructor(private val resourceP
         }
     }
 
+    @Suppress("UseCheckOrError")
     private fun getVerticalSlug(vertical: String): String? {
         val slugsArray = resourceProvider.getStringArray(R.array.site_creation_intents_slugs)
         val verticalArray = resourceProvider.getStringArray(R.array.site_creation_intents_strings)

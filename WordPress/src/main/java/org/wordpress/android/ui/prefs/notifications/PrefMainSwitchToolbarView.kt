@@ -186,7 +186,10 @@ class PrefMainSwitchToolbarView @JvmOverloads constructor(
      * Loads initial state of the main switch and toolbar
      */
     fun loadInitialState(checkMain: Boolean) {
+        val tmpMainSwitchToolbarListener = mainSwitchToolbarListener
+        mainSwitchToolbarListener = null // Don't trigger the listener for the initialization
         setChecked(checkMain)
+        mainSwitchToolbarListener = tmpMainSwitchToolbarListener
         setToolbarTitle(checkMain)
         toolbarSwitch.visibility = View.VISIBLE
         updateToolbarSwitchForAccessibility()
@@ -212,7 +215,7 @@ class PrefMainSwitchToolbarView @JvmOverloads constructor(
         this.hintOff = hintOff
     }
 
-    @Suppress("MemberVisibilityCanBePrivate")
+    @Suppress("MemberVisibilityCanBePrivate", "UseCheckOrError")
     fun setViewStyle(viewStyleInt: Int) {
         if (viewStyleInt == this.viewStyle?.value) {
             return

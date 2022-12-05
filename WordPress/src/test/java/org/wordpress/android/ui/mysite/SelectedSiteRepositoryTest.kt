@@ -1,17 +1,17 @@
 package org.wordpress.android.ui.mysite
 
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.doAnswer
-import com.nhaarman.mockitokotlin2.eq
-import com.nhaarman.mockitokotlin2.inOrder
-import com.nhaarman.mockitokotlin2.isNull
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.verifyZeroInteractions
-import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
+import org.mockito.kotlin.any
+import org.mockito.kotlin.doAnswer
+import org.mockito.kotlin.eq
+import org.mockito.kotlin.inOrder
+import org.mockito.kotlin.isNull
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoInteractions
+import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.action.SiteAction
@@ -30,8 +30,8 @@ class SelectedSiteRepositoryTest : BaseUnitTest() {
     private var selectedSite: SiteModel? = null
     private lateinit var actions: MutableList<Action<*>>
     private lateinit var selectedSiteRepository: SelectedSiteRepository
-    private var onSaveError: ((error: Exception?) -> Unit)? = null
-    private var onFetchError: ((error: Exception?) -> Unit)? = null
+    private var onSaveError: (() -> Unit)? = null
+    private var onFetchError: (() -> Unit)? = null
     private var onSettingsSaved: (() -> Unit)? = null
     private val selectedSiteId = 1
 
@@ -82,7 +82,7 @@ class SelectedSiteRepositoryTest : BaseUnitTest() {
         selectedSiteRepository.updateSiteIconMediaId(mediaId, true)
 
         assertThat(siteIconProgressBarVisible).isFalse
-        verifyZeroInteractions(siteSettingsInterfaceWrapper)
+        verifyNoInteractions(siteSettingsInterfaceWrapper)
     }
 
     @Test
@@ -161,7 +161,7 @@ class SelectedSiteRepositoryTest : BaseUnitTest() {
         selectedSiteRepository.showSiteIconProgressBar(true)
         assertThat(siteIconProgressBarVisible).isTrue
 
-        onSaveError!!.invoke(Exception("testing"))
+        onSaveError!!.invoke()
 
         assertThat(siteIconProgressBarVisible).isFalse
     }
@@ -172,7 +172,7 @@ class SelectedSiteRepositoryTest : BaseUnitTest() {
         selectedSiteRepository.showSiteIconProgressBar(true)
         assertThat(siteIconProgressBarVisible).isTrue
 
-        onFetchError!!.invoke(Exception("testing"))
+        onFetchError!!.invoke()
 
         assertThat(siteIconProgressBarVisible).isFalse
     }

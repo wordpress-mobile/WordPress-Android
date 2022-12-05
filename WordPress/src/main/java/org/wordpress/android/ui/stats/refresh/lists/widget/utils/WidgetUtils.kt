@@ -5,6 +5,7 @@ import android.appwidget.AppWidgetManager
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.view.View
 import android.widget.ImageView.ScaleType.FIT_START
 import android.widget.RemoteViews
@@ -15,6 +16,8 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel
+import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel.PeriodData
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.StatsTimeframe
 import org.wordpress.android.ui.stats.refresh.StatsActivity
@@ -29,6 +32,9 @@ import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWi
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.ICON
 import org.wordpress.android.viewmodel.ResourceProvider
+import org.wordpress.android.workers.weeklyroundup.WeeklyRoundupUtils
+import java.time.DayOfWeek.MONDAY
+import java.time.temporal.TemporalAdjusters
 import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
@@ -81,6 +87,7 @@ class WidgetUtils
         }
     }
 
+    @Suppress("LongParameterList")
     fun showError(
         appWidgetManager: AppWidgetManager,
         views: RemoteViews,
@@ -136,6 +143,7 @@ class WidgetUtils
         )
     }
 
+    @Suppress("LongParameterList")
     fun showList(
         appWidgetManager: AppWidgetManager,
         views: RemoteViews,
@@ -184,15 +192,27 @@ class WidgetUtils
     private fun getPendingTemplate(context: Context): PendingIntent {
         val intent = Intent(context, StatsActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        // Before SDK 31, this was mutable by default, but this condition is still needed to satisfy lint rules :)
+        val templateFlags = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S)
+            PendingIntent.FLAG_UPDATE_CURRENT
+        else
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
+
         return PendingIntent.getActivity(
                 context,
                 getRandomId(),
                 intent,
-                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+                templateFlags,
         )
     }
 
     private fun getRandomId(): Int {
         return Random(Date().time).nextInt()
+    }
+
+    fun getLastWeekPeriodData(visitsAndViewsModel: VisitsAndViewsModel): PeriodData? {
+        val currentDateForSite = WeeklyRoundupUtils.parseStandardDate(visitsAndViewsModel.period) ?: return null
+        val lastWeekStartDate = currentDateForSite.minusWeeks(1).with(TemporalAdjusters.previousOrSame(MONDAY))
+        return visitsAndViewsModel.dates.find { WeeklyRoundupUtils.parseWeekPeriodDate(it.period) == lastWeekStartDate }
     }
 }

@@ -1,5 +1,0 @@
-20.1:
-- Få nya bloggningsförslag dagligen med idéer för nya inlägg.
-- Vi har förbättrat skärmen för val av webbplatsdesign i processen för webbplatsskapande.
-- WordPress-länkar öppnas i appen, inte i din standardwebbläsare.
-- Fokuspunkterna för snabbstart är på rätt platser för användare av höger-till-vänster-språk.

@@ -1,0 +1,17 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPath": "/wpcom/v2/sites/181977606/rewind/downloads/"
+  },
+  "response": {
+    "status": 200,
+    "jsonBody":{
+      "downloadId":305125,
+      "rewindId":"1620888407.673",
+      "backupPoint":"2021-05-13T06:46:47+00:00",
+      "startedAt":"2021-05-14T13:32:49+00:00",
+      "downloadCount":0,
+      "validUntil":"2021-05-15T13:32:55+00:00"
+    }
+  }
+}

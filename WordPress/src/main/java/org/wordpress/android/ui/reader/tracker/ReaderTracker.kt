@@ -17,7 +17,7 @@ import javax.inject.Singleton
 
 @Singleton
 @MainThread
-@Suppress("TooManyFunctions")
+@Suppress("ForbiddenComment")
 class ReaderTracker @Inject constructor(
     private val dateProvider: DateProvider,
     private val appPrefsWrapper: AppPrefsWrapper,

@@ -114,6 +114,7 @@
     <dimen name="margin_extra_medium_large">24dp</dimen>
     <dimen name="margin_extra_extra_medium_large">32dp</dimen>
     <dimen name="margin_extra_extra_large">48dp</dimen>
+    <dimen name="margin_64dp">64dp</dimen>
     <dimen name="margin_68dp">68dp</dimen>
     <dimen name="margin_filter_spinner">16dp</dimen>
     <dimen name="margin_theme_browser_top">160dp</dimen>
@@ -333,6 +334,9 @@
     <dimen name="my_site_error_card_dash_gap">5dp</dimen>
     <dimen name="my_site_error_card_dash_width">10dp</dimen>
 
+    <!-- my site single action card -->
+    <dimen name="single_action_card_padding">20dp</dimen>
+
     <!--me-->
     <dimen name="me_list_row_icon_size">24dp</dimen>
     <dimen name="me_list_row_padding_horizontal">@dimen/content_margin</dimen>
@@ -383,7 +387,6 @@
     <dimen name="people_avatar_sz">40dp</dimen>
     <dimen name="people_list_row_height">72dp</dimen>
     <dimen name="people_list_row_role_margin_top">20dp</dimen>
-    <dimen name="people_list_divider_left_margin">72dp</dimen>
     <dimen name="people_chips_min_target">40dp</dimen>
     <dimen name="people_default_margin_top">5dp</dimen>
 
@@ -405,7 +408,7 @@
     <dimen name="post_settings_retry_image_size">60dp</dimen>
 
     <!-- login -->
-    <dimen name="promo_indicator_bullet_size">4dp</dimen>
+    <dimen name="promo_indicator_bullet_size" tools:ignore="UnusedResources">4dp</dimen>
 
     <dimen name="button_container_shadow_height">5dp</dimen>
 
@@ -464,6 +467,10 @@
     <dimen name="jetpack_icon_size">32dp</dimen>
     <dimen name="jetpack_icon_margin">0dp</dimen>
     <dimen name="jetpack_button_icon_size">16dp</dimen>
+    <dimen name="jetpack_banner_height">40dp</dimen>
+    <dimen name="jetpack_badge_footer_bottom_spacing">36dp</dimen>
+    <dimen name="jetpack_badge_bottom_spacing">28dp</dimen>
+    <dimen name="me_jetpack_badge_top_margin">0dp</dimen>
 
     <!-- jetpack backup restore last bullet bottom margin-->
     <dimen name="jetpack_backup_restore_last_bullet_bottom_margin">20dp</dimen>
@@ -661,9 +668,9 @@
     <dimen name="hpp_layout_card_height">260dp</dimen>
     <dimen name="hpp_layout_card_width">200dp</dimen>
     <dimen name="hpp_layouts_row_height">330dp</dimen>
-    <dimen name="hpp_recommended_card_height">260dp</dimen>
-    <dimen name="hpp_recommended_card_width">200dp</dimen>
-    <dimen name="hpp_recommended_row_height">350dp</dimen>
+    <dimen name="hpp_recommended_card_height">416dp</dimen>
+    <dimen name="hpp_recommended_card_width">320dp</dimen>
+    <dimen name="hpp_recommended_row_height">500dp</dimen>
     <dimen name="hpp_recommended_subtitle_margin">5dp</dimen>
 
     <!-- Site Intent Question -->
@@ -673,6 +680,7 @@
     <dimen name="login_prologue_content_area">320dp</dimen>
     <dimen name="login_prologue_background_circle_size">140dp</dimen>
     <dimen name="login_prologue_background_circle_size_large">160dp</dimen>
+    <dimen name="login_prologue_revamped_buttons_padding">32dp</dimen>
 
     <!-- edit text with chips view -->
     <dimen name="edit_text_with_chips_margin_top">5dp</dimen>
@@ -711,7 +719,7 @@
 
     <dimen name="app_bar_with_site_info_height">146dp</dimen>
     <dimen name="app_bar_with_no_site_info_height">62dp</dimen>
-    <dimen name="app_bar_with_site_info_tabs_height">206dp</dimen>
+    <dimen name="app_bar_with_site_info_tabs_height">200dp</dimen>
     <dimen name="toolbar_bottom_margin_with_no_tabs">0dp</dimen>
     <dimen name="toolbar_bottom_margin_with_tabs">168dp</dimen>
 
@@ -721,6 +729,18 @@
     <dimen name="quick_link_ribbon_corner_radius">4dp</dimen>
     <dimen name="quick_link_ribbon_icon_padding">16dp</dimen>
 
+    <!-- Jetpack Migration Flow -->
+    <dimen name="jp_migration_padding_horizontal">30dp</dimen>
+    <dimen name="jp_migration_buttons_padding_horizontal">20dp</dimen>
+    <dimen name="jp_migration_user_avatar_size">32dp</dimen>
+    <dimen name="jp_migration_site_icon_size">60dp</dimen>
+    <dimen name="help_logout_button_margin">15dp</dimen>
+    <dimen name="help_logout_button_margin_bottom">68dp</dimen>
 
+    <dimen name="jetpack_bottom_sheet_button_height">52dp</dimen>
+
+    <!-- Jetpack full screen overlay -->
+    <dimen name="jp_migration_full_screen_overlay_padding_horizontal">90dp</dimen>
+    <dimen name="jetpack_full_screen_overlay_margin_close_button">20dp</dimen>
 
 </resources>

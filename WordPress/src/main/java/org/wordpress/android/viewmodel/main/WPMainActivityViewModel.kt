@@ -32,7 +32,6 @@ import org.wordpress.android.ui.main.MainFabUiState
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptAttribution
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
-import org.wordpress.android.ui.mysite.tabs.MySiteDefaultTabExperiment
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementProvider
@@ -48,6 +47,7 @@ import org.wordpress.android.util.merge
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
+import java.io.Serializable
 import java.util.Date
 import java.util.Locale
 import javax.inject.Inject
@@ -65,7 +65,6 @@ class WPMainActivityViewModel @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
     private val accountStore: AccountStore,
     private val siteStore: SiteStore,
-    private val mySiteDefaultTabExperiment: MySiteDefaultTabExperiment,
     private val bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig,
     private val bloggingPromptsStore: BloggingPromptsStore,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
@@ -218,7 +217,7 @@ class WPMainActivityViewModel @Inject constructor(
     }
 
     private fun onCreateActionClicked(actionType: ActionType) {
-        val properties = mapOf("action" to actionType.name.toLowerCase(Locale.ROOT))
+        val properties = mapOf("action" to actionType.name.lowercase(Locale.ROOT))
         analyticsTracker.track(Stat.MY_SITE_CREATE_SHEET_ACTION_TAPPED, properties)
         _isBottomSheetShowing.postValue(Event(false))
         _createAction.postValue(actionType)
@@ -298,10 +297,6 @@ class WPMainActivityViewModel @Inject constructor(
         _switchToMySite.value = Event(Unit)
     }
 
-    fun checkAndSetVariantForMySiteDefaultTabExperiment() {
-        mySiteDefaultTabExperiment.checkAndSetVariantIfNeeded()
-    }
-
     fun onResume(site: SiteModel?, isOnMySitePageWithValidSite: Boolean) {
         val showFab = if (buildConfigWrapper.isCreateFabEnabled) isOnMySitePageWithValidSite else false
         setMainFabUiState(showFab, site)
@@ -340,14 +335,14 @@ class WPMainActivityViewModel @Inject constructor(
 
     fun getCreateContentMessageId(site: SiteModel?): Int {
         return if (SiteUtils.supportsStoriesFeature(site)) {
-            getCreateContentMessageId_StoriesFlagOn(hasFullAccessToContent(site))
+            getCreateContentMessageIdStoriesFlagOn(hasFullAccessToContent(site))
         } else {
-            getCreateContentMessageId_StoriesFlagOff(hasFullAccessToContent(site))
+            getCreateContentMessageIdStoriesFlagOff(hasFullAccessToContent(site))
         }
     }
 
     // create_post_page_fab_tooltip_stories_feature_flag_on
-    private fun getCreateContentMessageId_StoriesFlagOn(hasFullAccessToContent: Boolean): Int {
+    private fun getCreateContentMessageIdStoriesFlagOn(hasFullAccessToContent: Boolean): Int {
         return if (hasFullAccessToContent) {
             R.string.create_post_page_fab_tooltip_stories_enabled
         } else {
@@ -355,7 +350,7 @@ class WPMainActivityViewModel @Inject constructor(
         }
     }
 
-    private fun getCreateContentMessageId_StoriesFlagOff(hasFullAccessToContent: Boolean): Int {
+    private fun getCreateContentMessageIdStoriesFlagOff(hasFullAccessToContent: Boolean): Int {
         return if (hasFullAccessToContent) {
             R.string.create_post_page_fab_tooltip
         } else {
@@ -395,5 +390,9 @@ class WPMainActivityViewModel @Inject constructor(
     data class FocusPointInfo(
         val task: QuickStartTask,
         val isVisible: Boolean
-    )
+    ) : Serializable {
+        companion object {
+            const val serialVersionUID = 1L
+        }
+    }
 }

@@ -24,6 +24,7 @@ import javax.tools.Diagnostic.Kind
         "org.wordpress.android.annotation.FeatureInDevelopment"
 )
 class RemoteConfigProcessor : AbstractProcessor() {
+    @Suppress("DEPRECATION")
     override fun process(p0: MutableSet<out TypeElement>?, roundEnvironment: RoundEnvironment?): Boolean {
         val experiments = roundEnvironment?.getElementsAnnotatedWith(Experiment::class.java)?.map { element ->
             val annotation = element.getAnnotation(Experiment::class.java)
@@ -49,6 +50,7 @@ class RemoteConfigProcessor : AbstractProcessor() {
         }
     }
 
+    @Suppress("TooGenericExceptionCaught", "SwallowedException")
     private fun generateRemoteConfigDefaults(
         remoteConfigDefaults: Map<String, String>
     ) {
@@ -62,6 +64,7 @@ class RemoteConfigProcessor : AbstractProcessor() {
         }
     }
 
+    @Suppress("TooGenericExceptionCaught")
     private fun generateRemoteConfigCheck(
         remoteFeatureNames: List<TypeName>
     ) {
@@ -78,6 +81,7 @@ class RemoteConfigProcessor : AbstractProcessor() {
         }
     }
 
+    @Suppress("TooGenericExceptionCaught")
     private fun generateFeaturesInDevelopment(
         remoteFeatureNames: List<String>
     ) {

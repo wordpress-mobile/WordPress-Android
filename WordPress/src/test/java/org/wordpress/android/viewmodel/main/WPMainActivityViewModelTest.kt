@@ -2,24 +2,23 @@ package org.wordpress.android.viewmodel.main
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.anyOrNull
-import com.nhaarman.mockitokotlin2.atLeastOnce
-import com.nhaarman.mockitokotlin2.eq
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.never
-import com.nhaarman.mockitokotlin2.times
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.test.runBlockingTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.any
+import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.eq
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.never
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
@@ -48,7 +47,6 @@ import org.wordpress.android.ui.main.MainActionListItem.CreateAction
 import org.wordpress.android.ui.main.MainFabUiState
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
-import org.wordpress.android.ui.mysite.tabs.MySiteDefaultTabExperiment
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.quickstart.QuickStartType
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncement
@@ -61,8 +59,10 @@ import org.wordpress.android.util.config.BloggingPromptsFeatureConfig
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel.FocusPointInfo
 import java.util.Date
 
-@RunWith(MockitoJUnitRunner::class)
+@Suppress("LargeClass")
 @InternalCoroutinesApi
+@ExperimentalCoroutinesApi
+@RunWith(MockitoJUnitRunner::class)
 class WPMainActivityViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: WPMainActivityViewModel
 
@@ -78,7 +78,6 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     @Mock lateinit var selectedSiteRepository: SelectedSiteRepository
     @Mock lateinit var accountStore: AccountStore
     @Mock lateinit var siteStore: SiteStore
-    @Mock lateinit var mySiteDefaultTabExperiment: MySiteDefaultTabExperiment
     @Mock lateinit var bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig
     @Mock lateinit var bloggingPromptsStore: BloggingPromptsStore
     @Mock lateinit var quickStartType: QuickStartType
@@ -141,7 +140,6 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
                 selectedSiteRepository,
                 accountStore,
                 siteStore,
-                mySiteDefaultTabExperiment,
                 bloggingPromptsFeatureConfig,
                 bloggingPromptsStore,
                 NoDelayCoroutineDispatcher()
@@ -410,7 +408,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `bottom sheet does show prompt card when FF is ON`() = runBlockingTest {
+    fun `bottom sheet does show prompt card when FF is ON`() = test {
         whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(true)
         startViewModelWithDefaultParameters()
         val hasBloggingPromptAction = viewModel.mainActions.value?.any { it.actionType == ANSWER_BLOGGING_PROMPT }
@@ -426,7 +424,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `bottom sheet action is ANSWER_BLOGGING_PROMPT when the BP answer button is clicked`() = runBlockingTest {
+    fun `bottom sheet action is ANSWER_BLOGGING_PROMPT when the BP answer button is clicked`() = test {
         whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(true)
         startViewModelWithDefaultParameters()
         val action = viewModel.mainActions.value?.firstOrNull {
@@ -798,15 +796,6 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         whenever(siteStore.hasSite()).thenReturn(false)
 
         assertThat(viewModel.firstSite).isEqualTo(null)
-    }
-
-    @Test
-    fun `given my site default tab experiment, when requested, then check and set for variant is executed `() {
-        startViewModelWithDefaultParameters()
-
-        viewModel.checkAndSetVariantForMySiteDefaultTabExperiment()
-
-        verify(mySiteDefaultTabExperiment, atLeastOnce()).checkAndSetVariantIfNeeded()
     }
 
     @Test

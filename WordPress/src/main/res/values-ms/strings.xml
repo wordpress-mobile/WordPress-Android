@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2017-12-20 12:00:16+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/4.0.0-alpha.1
+Generator: GlotPress/4.0.0-alpha.3
 Language: ms
 -->
 <resources>
@@ -227,10 +227,8 @@ Language: ms
     <string name="connection_service_description">Sambung untuk berkongsi kiriman blog anda ke %s secara automatik.</string>
     <string name="share_btn_disconnect">Putuskan</string>
     <string name="share_btn_reconnect">Sambung Semula</string>
-    <string name="connection_service_label">Umumkan ke %s</string>
     <string name="connections_description">Sambung perkhidmatan media sosial kegemaran anda untuk berkongsi kiriman dengan rakan-rakan secara automatik.</string>
     <string name="connected_accounts_label">Akaun yang telah disambung</string>
-    <string name="connections_label">Sambungan</string>
     <string name="tabbar_accessibility_label_notifications">Pemberitahuan. Urus pemberitahuan anda.</string>
     <string name="sharing">Berkongsi</string>
     <string name="tabbar_accessibility_label_reader">Pembaca. Ikut kandungan dari laman lain.</string>

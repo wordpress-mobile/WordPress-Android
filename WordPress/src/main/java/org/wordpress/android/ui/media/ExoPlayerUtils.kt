@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package org.wordpress.android.ui.media
 
 import android.content.Context
@@ -22,8 +24,8 @@ import org.wordpress.android.ui.utils.AuthenticationUtils
 import javax.inject.Inject
 
 @Reusable
-class ExoPlayerUtils
-@Inject constructor(
+@Suppress("DEPRECATION")
+class ExoPlayerUtils @Inject constructor(
     private val authenticationUtils: AuthenticationUtils,
     private val appContext: Context
 ) {
@@ -40,6 +42,7 @@ class ExoPlayerUtils
     private fun buildDefaultDataSourceFactory(httpDataSourceFactory: DefaultHttpDataSourceFactory) =
             DefaultDataSourceFactory(appContext, httpDataSourceFactory)
 
+    @Suppress("UseCheckOrError")
     fun buildMediaSource(uri: Uri): MediaSource? {
         val httpDataSourceFactory = buildHttpDataSourceFactory(uri.toString())
         val defaultDataSourceFactory = buildDefaultDataSourceFactory(httpDataSourceFactory)

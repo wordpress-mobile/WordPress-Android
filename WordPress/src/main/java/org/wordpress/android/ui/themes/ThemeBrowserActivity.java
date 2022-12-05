@@ -45,6 +45,9 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class ThemeBrowserActivity extends LocaleAwareActivity implements ThemeBrowserFragmentCallback {
     public static final int ACTIVATE_THEME = 1;
     public static final String THEME_ID = "theme_id";
@@ -63,7 +66,6 @@ public class ThemeBrowserActivity extends LocaleAwareActivity implements ThemeBr
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((WordPress) getApplication()).component().inject(this);
         mDispatcher.register(this);
 
         if (savedInstanceState == null) {

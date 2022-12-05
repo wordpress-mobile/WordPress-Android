@@ -8,8 +8,11 @@ import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.Login
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenEditor
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenEditorForPost
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenEditorForSite
+import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenMySite
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenInBrowser
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenInReader
+import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenJetpackForDeepLink
+import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenLoginPrologue
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenNotifications
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenPages
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenPagesForSite
@@ -74,6 +77,10 @@ class DeepLinkNavigator
             is OpenPagesForSite -> ActivityLauncher.viewPagesInNewStack(activity, navigateAction.site)
             OpenPages -> ActivityLauncher.viewPagesInNewStack(activity)
             is OpenQRCodeAuthFlow -> ActivityLauncher.startQRCodeAuthFlowInNewStack(activity, navigateAction.uri)
+            OpenMySite -> ActivityLauncher.viewMySiteInNewStack(activity)
+            OpenLoginPrologue -> ActivityLauncher.showLoginPrologue(activity)
+            is OpenJetpackForDeepLink ->
+                ActivityLauncher.openJetpackForDeeplink(activity, navigateAction.action, navigateAction.uri)
         }
         if (navigateAction != LoginForResult) {
             activity.finish()
@@ -101,5 +108,8 @@ class DeepLinkNavigator
         data class OpenPagesForSite(val site: SiteModel) : NavigateAction()
         object OpenPages : NavigateAction()
         data class OpenQRCodeAuthFlow(val uri: String) : NavigateAction()
+        object OpenMySite : NavigateAction()
+        object OpenLoginPrologue : NavigateAction()
+        data class OpenJetpackForDeepLink(val action: String?, val uri: UriWrapper) : NavigateAction()
     }
 }

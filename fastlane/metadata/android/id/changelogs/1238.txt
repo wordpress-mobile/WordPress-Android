@@ -1,4 +1,0 @@
-20.1:
-- Kami meningkatkan layar pemilihan desain situs dalam proses Pembuatan Situs.
-- Saat Anda mengeklik tautan WordPress, maka tautan tersebut dibuka di aplikasi, bukan di browser default Anda.
-- Kami memindahkan titik fokus Mulai Cepat ke tempat yang benar untuk pengguna bahasa kanan-ke-kiri.

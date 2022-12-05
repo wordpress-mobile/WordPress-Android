@@ -44,6 +44,7 @@ class MediaThumbnailViewUtils(val imageManager: ImageManager) {
         displaySelection(animateSelection, isSelected, imgThumbnail)
     }
 
+    @Suppress("LongParameterList")
     fun setupFileImageView(
         container: View,
         imgThumbnail: ImageView,

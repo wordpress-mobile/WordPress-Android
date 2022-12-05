@@ -8,7 +8,6 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
@@ -16,6 +15,7 @@ import androidx.collection.ArrayMap;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.app.RemoteInput;
+import androidx.preference.PreferenceManager;
 
 import org.apache.commons.text.StringEscapeUtils;
 import org.greenrobot.eventbus.EventBus;
@@ -473,7 +473,10 @@ public class GCMMessageHandler {
                 // if the comment is lacking approval, offer moderation actions
                 if (note.getCommentStatus() == CommentStatus.UNAPPROVED) {
                     if (note.canModerate()) {
-                        addCommentApproveActionForCommentNotification(context, builder, noteId);
+                        // TODO
+                        // Enable comment approve action after fixing content lost after approval.
+                        // Issue: https://github.com/wordpress-mobile/WordPress-Android/issues/17026
+                        // addCommentApproveActionForCommentNotification(context, builder, noteId);
                     }
                 } else {
                     // else offer REPLY / LIKE actions

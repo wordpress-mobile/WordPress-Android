@@ -15,7 +15,7 @@ import java.lang.ref.WeakReference
 import javax.inject.Inject
 
 /**
- * ImageGetter for Html.fromHtml(). Retrieves images for HTML img tags using Glide library.
+ * ImageGetter for HtmlCompat.fromHtml(...). Retrieves images for HTML img tags using Glide library.
  *
  *
  * See {@link android.text.Html} for more details.

@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion rootProject.compileSdkVersion
 
     defaultConfig {
         minSdkVersion rootProject.minSdkVersion
@@ -21,13 +21,12 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.android.volley:volley:1.1.1'
-
-    implementation "org.wordpress:utils:$wordPressUtilsVersion"
-    implementation ('com.automattic:rest:1.0.8') {
+    implementation ("com.automattic:rest:$automatticRestVersion") {
         exclude group: 'com.mcxiaoke.volley'
     }
+    implementation "org.wordpress:utils:$wordPressUtilsVersion"
 
-    lintChecks 'org.wordpress:lint:1.1.0'
+    implementation "com.android.volley:volley:$androidVolleyVersion"
+
+    lintChecks "org.wordpress:lint:$wordPressLintVersion"
 }
-

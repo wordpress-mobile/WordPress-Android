@@ -1,20 +1,20 @@
 package org.wordpress.android.workers.reminder
 
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
+import org.mockito.kotlin.any
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
 import org.wordpress.android.fluxc.model.BloggingRemindersModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.BloggingRemindersStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore
+import org.wordpress.android.test
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersAnalyticsTracker
 import org.wordpress.android.util.HtmlCompatWrapper
 import org.wordpress.android.util.config.BloggingPromptsFeatureConfig
@@ -54,26 +54,26 @@ class PromptReminderNotifierTest {
     }
 
     @Test
-    fun `Should NOT notify if hasAccessToken returns FALSE`() = runBlocking {
+    fun `Should NOT notify if hasAccessToken returns FALSE`() = test {
         whenever(accountStore.hasAccessToken()).thenReturn(false)
         assertFalse(classToTest.shouldNotify(123))
     }
 
     @Test
-    fun `Should NOT notify if blogging prompts notification flag isEnabled returns FALSE`() = runBlocking {
+    fun `Should NOT notify if blogging prompts notification flag isEnabled returns FALSE`() = test {
         whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(false)
         assertFalse(classToTest.shouldNotify(123))
     }
 
     @Test
-    fun `Should NOT notify if getSiteByLocalId returns NULL`() = runBlocking {
+    fun `Should NOT notify if getSiteByLocalId returns NULL`() = test {
         val siteId = 123
         whenever(siteStore.getSiteByLocalId(siteId)).thenReturn(null)
         assertFalse(classToTest.shouldNotify(siteId))
     }
 
     @Test
-    fun `Should NOT notify if user did NOT opt in to include prompts in the reminders`() = runBlocking {
+    fun `Should NOT notify if user did NOT opt in to include prompts in the reminders`() = test {
         val siteId = 123
         val siteModel: SiteModel = mock()
         val disabledPromptBloggingReminderModel = BloggingRemindersModel(
@@ -89,20 +89,19 @@ class PromptReminderNotifierTest {
     }
 
     @Test
-    fun `Should notify if has access token, flag is enabled and user opted in to include prompts in the reminders`() =
-            runBlocking {
-                val siteId = 123
-                val siteModel: SiteModel = mock()
-                val enabledPromptBloggingReminderModel = BloggingRemindersModel(
-                        siteId = siteId,
-                        isPromptIncluded = true
-                )
-                whenever(bloggingRemindersStore.bloggingRemindersModel(siteId)).thenReturn(
-                        flowOf(enabledPromptBloggingReminderModel)
-                )
-                whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(true)
-                whenever(accountStore.hasAccessToken()).thenReturn(true)
-                whenever(siteStore.getSiteByLocalId(siteId)).thenReturn(siteModel)
-                assertTrue(classToTest.shouldNotify(siteId))
-            }
+    fun `Should notify if has access token, flag enabled and user opted in to include prompts in reminders`() = test {
+        val siteId = 123
+        val siteModel: SiteModel = mock()
+        val enabledPromptBloggingReminderModel = BloggingRemindersModel(
+                siteId = siteId,
+                isPromptIncluded = true
+        )
+        whenever(bloggingRemindersStore.bloggingRemindersModel(siteId)).thenReturn(
+                flowOf(enabledPromptBloggingReminderModel)
+        )
+        whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(true)
+        whenever(accountStore.hasAccessToken()).thenReturn(true)
+        whenever(siteStore.getSiteByLocalId(siteId)).thenReturn(siteModel)
+        assertTrue(classToTest.shouldNotify(siteId))
+    }
 }

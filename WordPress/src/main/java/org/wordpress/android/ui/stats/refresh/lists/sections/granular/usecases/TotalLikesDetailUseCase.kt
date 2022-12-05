@@ -2,36 +2,27 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases
 
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R.string
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_INSIGHTS_TOTAL_LIKES_GUIDE_TAPPED
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.TOTAL_LIKES
-import org.wordpress.android.fluxc.store.stats.insights.LatestPostInsightsStore
 import org.wordpress.android.fluxc.store.stats.time.VisitsAndViewsStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewPost
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemGuideCard
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Text.Clickable
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TitleWithMore
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularStatefulUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
-import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.LatestPostSummaryUseCase.LinkClickParams
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TotalStatsMapper
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.ViewsAndVisitorsUseCase.UiState
 import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetUpdater.StatsWidgetUpdaters
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
-import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
-import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
@@ -42,11 +33,8 @@ class TotalLikesDetailUseCase @Inject constructor(
     statsGranularity: StatsGranularity,
     selectedDateProvider: SelectedDateProvider,
     private val visitsAndViewsStore: VisitsAndViewsStore,
-    private val latestPostStore: LatestPostInsightsStore,
     statsSiteProvider: StatsSiteProvider,
-    private val resourceProvider: ResourceProvider,
     private val totalStatsMapper: TotalStatsMapper,
-    private val analyticsTracker: AnalyticsTrackerWrapper,
     private val statsWidgetUpdaters: StatsWidgetUpdaters
 ) : GranularStatefulUseCase<VisitsAndViewsModel, UiState>(
         TOTAL_LIKES,
@@ -66,7 +54,7 @@ class TotalLikesDetailUseCase @Inject constructor(
         val cachedData = visitsAndViewsStore.getVisits(
                 site,
                 DAYS,
-                LimitMode.Top(TotalStatsMapper.DAY_COUNT_TOTAL),
+                LimitMode.Top(TOTAL_LIKES_ITEMS_TO_LOAD),
                 selectedDate
         )
         if (cachedData != null) {
@@ -83,7 +71,7 @@ class TotalLikesDetailUseCase @Inject constructor(
         val response = visitsAndViewsStore.fetchVisits(
                 statsSiteProvider.siteModel,
                 DAYS,
-                LimitMode.Top(TotalStatsMapper.DAY_COUNT_TOTAL),
+                LimitMode.Top(TOTAL_LIKES_ITEMS_TO_LOAD),
                 selectedDate,
                 forced
         )
@@ -112,9 +100,6 @@ class TotalLikesDetailUseCase @Inject constructor(
             items.add(buildTitle())
             items.add(totalStatsMapper.buildTotalLikesValue(domainModel.dates))
             totalStatsMapper.buildTotalLikesInformation(domainModel.dates)?.let { items.add(it) }
-            if (totalStatsMapper.shouldShowLikesGuideCard(domainModel.dates)) {
-                buildLatestPostGuideCard(items, this::onLinkClicked)
-            }
         } else {
             selectedDateProvider.onDateLoadingFailed(statsGranularity)
             AppLog.e(T.STATS, "There is no data to be shown in the total likes block")
@@ -124,39 +109,8 @@ class TotalLikesDetailUseCase @Inject constructor(
 
     private fun buildTitle() = TitleWithMore(string.stats_view_total_likes)
 
-    private fun buildLatestPostGuideCard(
-        items: MutableList<BlockListItem>,
-        navigationAction: (params: LinkClickParams) -> Unit
-    ) {
-        val postModel = latestPostStore.getLatestPostInsights(statsSiteProvider.siteModel)
-        postModel?.let {
-            if (it.postTitle.isNotBlank()) {
-                items.add(
-                        ListItemGuideCard(
-                                text = resourceProvider.getString(
-                                        string.stats_insights_likes_guide_card,
-                                        it.postTitle,
-                                        it.postLikeCount
-                                ),
-                                links = listOf(
-                                        Clickable(
-                                                link = it.postTitle,
-                                                navigationAction = ListItemInteraction.create(
-                                                        data = LinkClickParams(it.postId, it.postURL),
-                                                        action = navigationAction
-                                                )
-                                        )
-                                ),
-                                bolds = listOf(it.postLikeCount.toString())
-                        )
-                )
-            }
-        }
-    }
-
-    private fun onLinkClicked(params: LinkClickParams) {
-        analyticsTracker.track(STATS_INSIGHTS_TOTAL_LIKES_GUIDE_TAPPED)
-        navigateTo(ViewPost(params.postId, params.postUrl))
+    companion object {
+        private const val TOTAL_LIKES_ITEMS_TO_LOAD = 15
     }
 
     class TotalLikesGranularUseCaseFactory
@@ -165,11 +119,8 @@ class TotalLikesDetailUseCase @Inject constructor(
         @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher,
         private val selectedDateProvider: SelectedDateProvider,
         private val visitsAndViewsStore: VisitsAndViewsStore,
-        private val latestPostStore: LatestPostInsightsStore,
         private val statsSiteProvider: StatsSiteProvider,
-        private val resourceProvider: ResourceProvider,
         private val totalStatsMapper: TotalStatsMapper,
-        private val analyticsTracker: AnalyticsTrackerWrapper,
         private val statsWidgetUpdaters: StatsWidgetUpdaters
     ) : GranularUseCaseFactory {
         override fun build(granularity: StatsGranularity, useCaseMode: UseCaseMode) =
@@ -179,11 +130,8 @@ class TotalLikesDetailUseCase @Inject constructor(
                         granularity,
                         selectedDateProvider,
                         visitsAndViewsStore,
-                        latestPostStore,
                         statsSiteProvider,
-                        resourceProvider,
                         totalStatsMapper,
-                        analyticsTracker,
                         statsWidgetUpdaters
                 )
     }

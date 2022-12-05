@@ -14,6 +14,7 @@ private const val activityViewType: Int = 2
 class ActivityLogTypeFilterAdapter(private val uiHelpers: UiHelpers) : Adapter<ActivityLogTypeFilterViewHolder>() {
     private val items = mutableListOf<ListItemUiState>()
 
+    @Suppress("UseCheckOrError")
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ActivityLogTypeFilterViewHolder {
         return when (viewType) {
             headerViewType -> ActivityLogTypeFilterViewHolder.HeaderViewHolder(parent, uiHelpers)

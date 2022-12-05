@@ -26,6 +26,7 @@ class FetchFollowedTagsUseCase @Inject constructor(
 ) {
     private var continuation: Continuation<ReaderRepositoryCommunication>? = null
 
+    @Suppress("UseCheckOrError")
     suspend fun fetch(): ReaderRepositoryCommunication {
         if (continuation != null) {
             throw IllegalStateException("Follow tags already in progress.")
@@ -45,8 +46,8 @@ class FetchFollowedTagsUseCase @Inject constructor(
         }
     }
 
+    @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    @SuppressWarnings("unused")
     fun onFollowedTagsChanged(event: FollowedTagsChanged) {
         val result = if (event.didSucceed()) {
             Success

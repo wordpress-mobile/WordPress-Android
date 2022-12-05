@@ -1,5 +1,0 @@
-20.1:
-- Yazılarınıza ilham verecek yeni günlük blog istemleri alın.
-- Site Oluşturma sürecinde iyileştirilmiş site tasarımı seçim ekranından yararlanın.
-- WordPress bağlantıları varsayılan tarayıcınızda değil, uygulamada açılır.
-- Hızlı Başlangıç odak noktaları, sağdan sola yazılan dilleri kullananlar için doğru noktalardadır.

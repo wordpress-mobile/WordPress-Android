@@ -58,6 +58,7 @@ class StatsDetailActivity : LocaleAwareActivity() {
     }
 
     companion object {
+        @Suppress("LongParameterList")
         fun start(
             context: Context,
             site: SiteModel,

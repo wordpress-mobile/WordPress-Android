@@ -1,4 +1,0 @@
-20.1 :
-- Nous avons amélioré l’écran de sélection du design du site dans le processus de création du site.
-- Lorsque vous cliquez sur un lien WordPress, il s’ouvre dans l’application et non dans votre navigateur par défaut.
-- Nous avons déplacé les points de focalisation de Quick Start aux endroits appropriés pour les utilisateurs dont la langue se lit de droite à gauche.

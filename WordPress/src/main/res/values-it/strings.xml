@@ -1,11 +1,132 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-06-21 09:54:08+0000
+Translation-Revision-Date: 2022-11-29 16:54:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.1
+Generator: GlotPress/4.0.0-alpha.3
 Language: it
 -->
 <resources>
+    <string name="wp_jetpack_deep_link_open_in_wordpress">Apri i link in WordPress</string>
+    <string name="wp_jetpack_deep_link_overlay_description">Sembra che tu abbia l\'app Jetpack installata.\n\nVorresti aprire i collegamenti nell\'app Jetpack in futuro?\n\nPuoi sempre modificarlo in Impostazioni app &gt; Apri collegamenti in Jetpack</string>
+    <string name="wp_jetpack_deep_link_overlay_title">Aprire i collegamenti in Jetpack?</string>
+    <string name="wp_jetpack_continue_without_jetpack">Continua senza Jetpack</string>
+    <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_two_description">Jetpack fornisce statistiche, notifiche e altro per aiutarti a costruire e far crescere il sito WordPress dei tuoi sogni.\n\nL\'app WordPress non supporta più la creazione di un nuovo sito.</string>
+    <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_one_description">Jetpack fornisce statistiche, notifiche e altro per aiutarti a costruire e far crescere il sito WordPress dei tuoi sogni.</string>
+    <string name="wp_jetpack_feature_removal_site_creation_overlay_title">Crea un nuovo sito WordPress con l\'app Jetpack</string>
+    <string name="deep_linking_weblinks_alias_label">link web</string>
+    <string name="deep_linking_urilinks_alias_label">link url</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_notifications">Passa all\'app Jetpack per continuare a ricevere notifiche  in tempo reale sul tuo dispositivo.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_reader">Passa all\'app Jetpack per trovare, seguire e mettere mi piace a tutti i tuoi siti e post preferiti con Reader.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_stats">Passa all\'app Jetpack per vedere crescere il traffico del tuo sito con statistiche e approfondimenti.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_notifications">Ricevi le tue notifiche con l\'app Jetpack</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_reader">Segui qualsiasi sito con l\'app Jetpack</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_stats">Ottieni le statistiche usando la nuova app di Jetpack</string>
+    <string name="preference_open_links_in_jetpack_setting_change_disable_error">Impossibile disabilitare i collegamenti aperti in Jetpack</string>
+    <string name="preference_open_links_in_jetpack_setting_change_enable_error">Impossibile abilitare i collegamenti aperti in Jetpack</string>
+    <string name="preference_open_links_in_jetpack">Apri i collegamenti in Jetpack</string>
+    <string name="jp_migration_need_help_button">Hai bisogno di aiuto?</string>
+    <string name="jp_migration_got_it_button">OK</string>
+    <string name="jp_migration_delete_message">Elimina &lt;b&gt;l\'app WordPress&lt;/b&gt; per&lt;br&gt;evitare conflitti di dati.</string>
+    <string name="jp_migration_delete_subtitle">Sembra che tu abbia ancora l\'app WordPress installata. Ti consigliamo di eliminare l\'app WordPress per evitare conflitti di dati.</string>
+    <string name="jp_migration_delete_title">Non hai più bisogno dell\'app WordPress</string>
+    <string name="jp_migration_network_error_message">Non siamo in grado di trasferire i dati e le impostazioni senza una connessione di rete.</string>
+    <string name="jp_migration_network_error_subtitle">Verifica che la tua connessione di rete funzioni e riprova.</string>
+    <string name="jp_migration_network_error_title">Impossibile connettersi a Internet.</string>
+    <string name="jp_migration_generic_error_message">Riprova più tardi o contatta l\'assistenza.</string>
+    <string name="jp_migration_generic_error_subtitle">Spiacenti, ma qualcosa non è andato secondo i piani. I tuoi dati sono al sicuro, ma al momento non siamo in grado di trasferirli.</string>
+    <string name="jp_migration_generic_error_title">Oh, si è verificato un problema.</string>
+    <string name="jp_migration_try_again_button">Riprova</string>
+    <string name="jp_migration_finish_button">Finito</string>
+    <string name="jp_migration_remove_wp_app_icon_content_description">Rimuovi l\'icona dell\'app WordPress</string>
+    <string name="jp_migration_done_delete_wp_message">Elimina &lt;b&gt;l\'app WordPress&lt;/b&gt; per&lt;br&gt;evitare conflitti di dati.</string>
+    <string name="jp_migration_done_subtitle">Abbiamo trasferito tutti i tuoi dati e le impostazioni. Tutto è dove lo hai lasciato.</string>
+    <string name="jp_migration_done_title">Grazie per aver scelto di passare a Jetpack!</string>
+    <string name="jp_migration_notifications_disabled_in_wp_message">Disattiveremo le notifiche dall\'app WordPress.</string>
+    <string name="jp_migration_notifications_subtitle">Riceverai tutte le stesse notifiche, ma ora arriveranno dall\'app Jetpack.</string>
+    <string name="jp_migration_notifications_title">Le notifiche ora arrivano da Jetpack</string>
+    <string name="jp_migration_success_card_message">Elimina l\'app WordPress</string>
+    <string name="wordpress_help_center_button">Centro d\'assistenza di WordPress</string>
+    <string name="support_title">Supporto</string>
+    <string name="notification_disable_broadcast_permission_desc">Consenti all\'app di disabilitare le notifiche WordPress.</string>
+    <string name="notification_disable_broadcast_permission_label">disabilita notifiche WordPress</string>
+    <string name="jp_migration_help_button">Hai bisogno di aiuto?</string>
+    <string name="jp_migration_continue_button">Continua</string>
+    <string name="jp_migration_welcome_site_found_message">Abbiamo trovato il tuo sito Continua a trasferire tutti i tuoi dati e accedi automaticamente a Jetpack.</string>
+    <string name="jp_migration_welcome_sites_found_message">Abbiamo trovato i tuoi siti. Continua a trasferire tutti i tuoi dati e accedi automaticamente a Jetpack.</string>
+    <string name="jp_migration_avatar_content_description">Foto del profilo</string>
+    <string name="jp_migration_welcome_subtitle">Sembra che tu stia passando dall\'app WordPress.</string>
+    <string name="jp_migration_welcome_title">Jetpack ti dà il benvenuto!</string>
+    <string name="icon_desc">icona</string>
+    <string name="post_settings_parent">Pagina madre</string>
+    <string name="post_settings_page_attributes">Attributi della pagina</string>
+    <string name="about_automattic_contribute_item_title">Contribuisci</string>
+    <string name="about_news">Notizie</string>
+    <string name="my_site_blogging_prompt_card_number_of_answers_one">1 risposta</string>
+    <string name="login_prologue_revamped_content_description_wordpress_icon">Icona WordPress</string>
+    <string name="login_prologue_revamped_tagline">Scrivi, modifica e pubblica ovunque tu sia.</string>
+    <string name="error_fetch_authors_list">Impossibile recuperare gli autori</string>
+    <string name="post_settings_author">Autore</string>
+    <string name="app_rating_title">Ti piace %s?</string>
+    <string name="connection_service_label">Condividi l\'articolo su %s</string>
+    <string name="connections_label">Connessioni di Jetpack Social</string>
+    <string name="stats_widget_log_in_to_add_message">Accedi all\'app Jetpack per aggiungere un widget.</string>
+    <string name="stats_view_publicize">Connessioni di Jetpack Social</string>
+    <string name="login_magic_links_email_sent">Abbiamo appena inviato un link magico a</string>
+    <string name="login_magic_links_sent_label_short">Controlla la tua e-mail su questo dispositivo!</string>
+    <string name="or_use_password">Usa la password per accedere</string>
+    <string name="wp_jetpack_powered_notifications_powered_by_jetpack_caption">Non perderti gli ultimi aggiornamenti sui nuovi commenti, sul traffico del sito, sui rapporti sulla sicurezza e molto altro.</string>
+    <string name="wp_jetpack_powered_notifications_powered_by_jetpack">Le notifiche vengono gestite da Jetpack</string>
+    <string name="wp_jetpack_powered_stats_powered_by_jetpack_caption">Guarda il tuo traffico crescere e scopri di più sul tuo pubblico con Statistiche e Panoramiche riprogettate, ora disponibili nella nuova app Jetpack.</string>
+    <string name="wp_jetpack_powered_stats_powered_by_jetpack">Le statistiche vengono gestite da Jetpack</string>
+    <string name="wp_jetpack_powered_reader_powered_by_jetpack_caption">Trova, segui e scopri tutti i tuoi siti e articoli preferiti con Reader, ora disponibile nella nuova app Jetpack.</string>
+    <string name="wp_jetpack_powered_reader_powered_by_jetpack">Reader è gestito da Jetpack</string>
+    <string name="wp_jetpack_powered_features">La nuova app Jetpack offre Statistiche, Reader, Notifiche e altro che migliorano il tuo WordPress.</string>
+    <string name="wp_jetpack_powered_better_with_jetpack">WordPress è migliore insieme a Jetpack</string>
+    <string name="gutenberg_native_upgrade_your_plan_to_use_video_covers">Aggiorna il piano per utilizzare cover video</string>
+    <string name="gutenberg_native_upgrade_your_plan_to_upload_audio">Aggiorna il piano per caricare audio</string>
+    <string name="gutenberg_native_jetpack_powered">Con tecnologia Jetpack</string>
+    <string name="gutenberg_native_invalid_url">URL non valida.</string>
+    <string name="gutenberg_native_gradient">Gradiente</string>
+    <string name="wp_jetpack_continue_to_notifications">Continua in Notifiche</string>
+    <string name="wp_jetpack_continue_to_stats">Continua in Statistiche</string>
+    <string name="wp_jetpack_continue_to_reader">Continua in Reader</string>
+    <string name="wp_jetpack_get_new_jetpack_app">Prova la nuova app Jetpack</string>
+    <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery">Problema durante la visualizzazione del blocco. \nTocca per tentare il ripristino del blocco.</string>
+    <string name="weekly_roundup_notification_text_views_and_comments">L\'ultima settimana hai avuto %1$s visualizzazioni e %2$s commenti</string>
+    <string name="weekly_roundup_notification_text_views_and_likes">L\'ultima settimana hai avuto %1$s visualizzazioni e %2$s Mi piace</string>
+    <string name="weekly_roundup_notification_text_views_only">L\'ultima settimana hai avuto %1$s visualizzazioni.</string>
+    <string name="weekly_roundup_notification_text_all">L\'ultima settimana hai avuto %1$s visualizzazioni, %2$s Mi piace e %3$s commenti.</string>
+    <string name="stats_revamp_v2_update_alert_message">Aggiornato alla nuova Panoramica per aiutarti a capire come stanno andando i tuoi contenuti e cosa sta riscuotendo il favore del pubblico.</string>
+    <string name="stats_insights_like_guide_card">⭐️ Il tuo ultimo articolo %1$s ha ricevuto %2$s Mi piace.</string>
+    <string name="wp_jetpack_powered">Con tecnologia Jetpack</string>
+    <string name="qrcode_auth_flow_content_description">Immagine indicante la scansione del codice di accesso in elaborazione</string>
+    <string name="qrcode_auth_flow_error_content_description">Immagine indiante un errore</string>
+    <string name="qrcode_auth_flow_dismiss_dialog_message">Desideri continuare?</string>
+    <string name="qrcode_auth_flow_dismiss_dialog_title">Esci dalla scansione del flusso di codici di accesso</string>
+    <string name="qrcode_auth_flow_error_auth_failed_subtitle">Impossibile accedere usando questo codice di accesso. Tocca il pulsante Scansiona di nuovo per scansionare nuovamente il codice.</string>
+    <string name="qrcode_auth_flow_error_auth_failed_title">Autenticazione non riuscita</string>
+    <string name="qrcode_auth_flow_error_expired_subtitle">Il codice di accesso è scaduto. Tocca il pulsante Scansiona di nuovo per scansionare nuovamente il codice.</string>
+    <string name="qrcode_auth_flow_error_expired_title">Codice di accesso scaduto</string>
+    <string name="qrcode_auth_flow_error_invalid_data_subtitle">Il codice di accesso scansionato non può essere convalidato. Tocca il pulsante Scansiona di nuovo per scansionare nuovamente il codice.</string>
+    <string name="qrcode_auth_flow_error_invalid_data_title">Impossibile convalidare il codice di accesso</string>
+    <string name="qrcode_auth_flow_error_no_connection_subtitle">È necessaria una connessione Internet funzionante per la scansione dei codici di accesso</string>
+    <string name="qrcode_auth_flow_error_no_connection_title">Nessuna connessione</string>
+    <string name="qrcode_auth_flow_scan_again">Esegui di nuovo la scansione</string>
+    <string name="qrcode_auth_flow_dismiss">Ignora</string>
+    <string name="qrcode_auth_flow_done_subtitle">Tocca Ignora e torna al tuo browser web per continuare.</string>
+    <string name="qrcode_auth_flow_done_title">Sei connesso!</string>
+    <string name="qrcode_auth_flow_validated_primary_action">Sì, connettimi</string>
+    <string name="qrcode_auth_flow_validated_subtitle">Scansiona solo i codici QR presi direttamente dal tuo browser web. Non scansionare mai un codice inviato a te da qualcun altro.</string>
+    <string name="qrcode_auth_flow_validated_default_title">Stai tentando di accedere al browser web nei pressi di %1$s?</string>
+    <string name="qrcode_auth_flow_validated_title">Stai tentando di accedere a %1$s neipressi di %2$s?</string>
+    <string name="stats_revamp_v2_intro_header_title">Aggiornamento panoramica</string>
+    <string name="stats_insights_followers_guide_card">💡Commentare su altri blog è un ottimo modo per attirare l\'attenzione e i follower sul tuo nuovo sito.</string>
+    <string name="stats_insights_comments_guide_card">💡Tocca \"VISUALIZZA ALTRO\" per vedere i tuoi migliori commentatori.</string>
+    <string name="stats_insights_latest_post_empty">Ricontrolla quando avrai pubblicato il tuo primo articolo!</string>
+    <string name="stats_insights_views_and_visitors_visitors_empty_state">Dai un\'occhiata ai nostri migliori suggerimenti per aumentare le visualizzazioni e il traffico %1$s</string>
+    <string name="stats_action_card_schedule_post_message">✍️ Pianifica le tue bozze da pubblicare nel momento migliore per raggiungere il tuo pubblico.</string>
+    <string name="stats_action_card_blogging_reminders_message">💡Pubblicare in modo coerente è un ottimo modo per costruire il tuo pubblico. Aggiungi un promemoria per restare al passo.</string>
+    <string name="stats_action_card_grow_audience_message">💡Fai salire di livello il tuo blog più velocemente con il nostro corso &lt;i&gt;Introduzione al blogging&lt;/i&gt; tenuto da esperti del settore.</string>
     <string name="blogging_prompts_onboarding_prompts_loading">Le richieste di blogging si stanno caricando. Attendi un momento e riprova.</string>
     <string name="hpp_bottom_helper_text">Non riesci a decidere? Puoi cambiare tema in qualsiasi momento.</string>
     <string name="hpp_recommended_default_vertical">Blog</string>
@@ -38,7 +159,7 @@ Language: it
     <string name="me_btn_scan_login_code">Scansiona codice di accesso</string>
     <string name="stats_insights_likes_guide_card">⭐️ Il tuo ultimo articolo %1$s ha ricevuto %2$s Mi piace.</string>
     <string name="stats_most_popular_percent_views_empty">Attività insufficiente. Controlla nuovamente più tardi quando più utenti hanno visitato il tuo sito.</string>
-    <string name="stats_total_followers_content_description">%1s, %2s dei follower totali</string>
+    <string name="stats_total_followers_content_description">%1$s, %2$s%% di follower totali</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
     <string name="pages_copy_link">Copia link</string>
     <string name="quick_start_completed_tour_title">Congratulazioni! Conosci la strada&lt;br/&gt;</string>
@@ -71,7 +192,7 @@ Language: it
     <string name="stats_view_total_followers">Follower totali</string>
     <string name="stats_view_total_comments">Commenti totali</string>
     <string name="stats_view_total_likes">Mi piace totali</string>
-    <string name="blogging_prompts_notification_dismiss">Ignora</string>
+    <string name="blogging_prompts_notification_dismiss">Chiudi</string>
     <string name="blogging_prompts_answer_prompt_notification_answer_action">Risposta</string>
     <string name="blogging_prompts_answer_prompt_notification_title">Richiesta giornaliera</string>
     <string name="blogging_prompts_onboarding_got_it">OK</string>
@@ -187,6 +308,7 @@ Language: it
     <string name="my_site_blogging_prompt_card_menu_remove">Rimuovi dalla bacheca</string>
     <string name="my_site_blogging_prompt_card_menu_skip">Ignora questa richiesta</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">Visualizza altre richieste</string>
+    <string name="my_site_blogging_prompt_card_number_of_answers_other">%d risposte</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">Condividi la richiesta di blogging</string>
     <string name="my_site_blogging_prompt_card_answered_prompt">✓ Risposta</string>
     <string name="my_site_blogging_prompt_card_answer_prompt">Rispondi alla richiesta</string>
@@ -362,7 +484,6 @@ Language: it
     <string name="me_btn_share">Condividi WordPress con un amico</string>
     <string name="my_site_quick_actions_title">Link veloci</string>
     <string name="my_site_btn_domains">Domini</string>
-    <string name="weekly_roundup_notification_text">Il tuo sito ha avuto %1$d visualizzazioni, %2$d Mi piace, %3$d commenti.</string>
     <string name="weekly_roundup_notification_title">Resoconto settimanale: %s</string>
     <string name="blogging_reminders_notification_time">Orario di notifica</string>
     <string name="blogging_reminders_epilogue_body_everyday_with_time">Riceverai promemoria relativi al blog &lt;b&gt;tutti i giorni&lt;/b&gt; alle &lt;b&gt;%s&lt;/b&gt;.</string>
@@ -446,7 +567,7 @@ Language: it
     <string name="blogging_reminders_notification_title">È ora di pubblicare sul blog di %s</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios">La modifica dei blocchi riutilizzabili non è ancora supportata su WordPress per iOS</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and">La modifica dei blocchi riutilizzabili non è ancora supportata su WordPress per Android</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">In alternativa, puoi staccare e modificare questi blocchi separatamente toccando \"Converti in blocchi regolari\".</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">In alternativa, puoi staccare e modificare questi blocchi separatamente toccando “Converti in blocchi regolari”.</string>
     <string name="blogging_reminders_done">Fatto</string>
     <string name="blogging_reminders_notify_me">Inviami una notifica</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;Inserisci le credenziali del server&lt;/a&gt; per abilitare i ripristini del sito con un clic dai backup.</string>
@@ -471,6 +592,7 @@ Language: it
     <string name="gutenberg_native_s_has_no_url_set">%s non ha un URL impostato</string>
     <string name="gutenberg_native_s_converted_to_regular_blocks">Conversione di %s in blocchi regolari</string>
     <string name="gutenberg_native_s_block">%s blocco</string>
+    <string name="gutenberg_native_opacity">Opacità</string>
     <string name="gutenberg_native_media_options">Opzioni Media</string>
     <string name="gutenberg_native_invalid_url_audio_file_not_found">URL non valido. File audio non trovato.</string>
     <string name="gutenberg_native_insert_crosspost">Inserisci pubblicazione incrociata</string>
@@ -499,6 +621,7 @@ Language: it
     <string name="gutenberg_native_move_image_forward">Sposta l\'immagine avanti</string>
     <string name="gutenberg_native_move_image_backward">Sposta l\'immagine indietro</string>
     <string name="gutenberg_native_width_settings">Impostazioni larghezza</string>
+    <string name="gutenberg_native_link_rel">Link Rel</string>
     <string name="gutenberg_native_column_settings">Impostazioni della colonna</string>
     <string name="user_profile_untitled_site">(Senza titolo)</string>
     <string name="user_profile_site_section_header">Sito</string>
@@ -677,7 +800,6 @@ Language: it
     <string name="restore_complete_visit_site_action_button">Visita il sito</string>
     <string name="restore_complete_description_with_two_parameters">Tutti gli elementi selezionati sono ora ripristinati al giorno %1$s %2$s.</string>
     <string name="restore_complete_header">Il tuo sito è stato ripristinato</string>
-    <string name="restore_progress_label">%1$s%%</string>
     <string name="restore_progress_footnote">Non è necessario attendere. Ti invieremo una notifica quando il tuo sito sarà stato ripristinato.</string>
     <string name="restore_progress_icon_content_description">Icona Ripristina sito</string>
     <string name="restore_progress_description_with_two_parameters">Stiamo ripristinando il tuo sito al giorno %1$s %2$s.</string>
@@ -749,7 +871,6 @@ Language: it
     <string name="backup_download_complete_description_with_two_parameters">Abbiamo creato correttamente un backup del sito da %1$s %2$s.</string>
     <string name="backup_download_complete_header">Il tuo backup è pronto per essere scaricato</string>
     <string name="backup_download_complete_page_title">Il tuo backup</string>
-    <string name="backup_download_progress_label">%1$s%%</string>
     <string name="backup_download_progress_footnote">Non è necessario attendere. Ti invieremo una notifica quando il backup sarà pronto.</string>
     <string name="backup_download_progress_icon_content_description">Icona di creazione di un backup scaricabile</string>
     <string name="backup_download_progress_description_with_two_parameters">Stiamo creando un backup scaricabile del sito da %1$s %2$s.</string>
@@ -1180,7 +1301,7 @@ Language: it
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">Tocca due volte per andare alle impostazioni del colore</string>
     <string name="reader_empty_followed_blogs_description">Quando segui i siti, visualizzerai i contenuti qui</string>
     <string name="feature_announcement_find_out_mode">Scopri di più</string>
-    <string name="feature_announcement_dialog_label">Novità in WordPress</string>
+    <string name="feature_announcement_dialog_label">Novità su %s</string>
     <string name="insert_label_with_count">Inserisci %d</string>
     <string name="crop">ritaglia</string>
     <string name="error_failed_to_load_into_file">Impossibile caricare nel file, riprova.</string>
@@ -1279,7 +1400,7 @@ Language: it
     <string name="post_list_tab_trashed_posts">Spostato nel cestino</string>
     <string name="post_list_tab_scheduled_posts">Programmato</string>
     <string name="post_list_tab_published_posts">Pubblicato</string>
-    <string name="sharing_facebook_account_must_have_pages">La connessione a Facebook non riesce a trovare alcuna pagina. Pubblicizza non può connettersi ai profili Facebook, bensì solo alle pagine pubblicate.</string>
+    <string name="sharing_facebook_account_must_have_pages">La connessione a Facebook non riesce a trovare alcuna pagina. Jetpack Social non può connettersi ai profili Facebook, bensì solo alle pagine pubblicate.</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">Non collegato</string>
     <string name="notifications_tab_title_likes">Mi piace</string>
     <string name="notifications_tab_title_follows">Segue</string>
@@ -1506,7 +1627,7 @@ Language: it
     <string name="share_desc">Condividi</string>
     <string name="navigate_back_desc">Torna indietro</string>
     <string name="navigate_forward_desc">Vai avanti</string>
-    <string name="calendar_scheduled_post_description">\"%1$s\" pianificato per la pubblicazione il giorno \"%2$s\" nella tua app WordPress \n %3$s</string>
+    <string name="calendar_scheduled_post_description">\"%1$s\" pianificato per la pubblicazione il giorno \"%2$s\" nella tua app %3$s \n %4$s</string>
     <string name="calendar_scheduled_post_title">Articolo programmato WordPress: \"%s\"</string>
     <string name="notification_post_will_be_published_in_ten_minutes">\"%s\" verrà pubblicato tra 10 minuti</string>
     <string name="notification_post_will_be_published_in_one_hour">\"%s\" verrà pubblicato tra 1 ora</string>
@@ -1678,7 +1799,6 @@ Language: it
     <string name="app_rating_rate_later">Più tardi</string>
     <string name="app_rating_rate_now">Valuta ora</string>
     <string name="app_rating_message">È un piacere rivederti. Se apprezzi l\'app, ci piacerebbe ricevere una valutazione sul Google Play Store.</string>
-    <string name="app_rating_title">Ti piace WordPress?</string>
     <string name="editor_post_converted_back_to_draft">Articolo riconvertito in bozza</string>
     <string name="stats_insights_posting_activity">Attività di pubblicazione</string>
     <string name="stats_site_not_loaded_yet">Sito non ancora caricato</string>
@@ -1716,10 +1836,10 @@ Language: it
     <string name="notification_channel_reminder_title">Promemoria</string>
     <string name="stats_select_next_period_description">Seleziona periodo successivo</string>
     <string name="stats_select_previous_period_description">Seleziona periodo precedente</string>
-    <string name="stats_most_popular_percent_views">%1$d%% di visualizzazioni</string>
+    <string name="stats_most_popular_percent_views">%1$s di visualizzazioni</string>
     <string name="stats_insights_popular">Ora più popolare</string>
-    <string name="stats_traffic_change">%1$s (%2$s%%)</string>
-    <string name="stats_traffic_increase">+%1$s (%2$s%%)</string>
+    <string name="stats_traffic_change">%1$s (%2$s)</string>
+    <string name="stats_traffic_increase">+%1$s (%2$s)</string>
     <string name="new_site_creation_site_preview_content_description">Mostra anteprima del sito</string>
     <string name="new_site_creation_clear_all_content_description">Pulisci</string>
     <string name="site_created_but_not_fetched_snackbar_message">Sembra che tu sia collegato a una connessione lenta. Se il tuo nuovo sito non è presente nell\'elenco, prova ad aggiornare.</string>
@@ -2408,6 +2528,7 @@ Language: it
     <string name="requesting_otp">Richiesta codice di verifica tramite SMS.</string>
     <string name="login_text_otp">Inviami invece un messaggio con un codice</string>
     <string name="enter_verification_code">Ci sei quasi! Inserisci il codice di verifica dalla tua app di autenticazione.</string>
+    <string name="open_mail">Apri e-mail</string>
     <string name="next">Successivo</string>
     <string name="enter_email_wordpress_com">Accedi a WordPress.com utilizzando un indirizzo email per gestire tutti i tuoi siti WordPress.com.</string>
     <string name="image_optimization_promo_desc">L\'ottimizzazione dell\'immagine restringe l\'immagine per un caricamento più veloce.\n\nPuoi modificare questa opzione in qualsiasi momento nelle impostazioni del sito.</string>
@@ -2505,10 +2626,8 @@ Language: it
     <string name="share_btn_disconnect">Disconnetti</string>
     <string name="share_btn_connect">Connetti</string>
     <string name="connection_service_description">Connettiti per condividere automaticamente gli articoli del tuo blog su %s.</string>
-    <string name="connection_service_label">Pubblicizzare su %s</string>
     <string name="connected_accounts_label">Account connessi</string>
     <string name="connections_description">Connetti i tuoi servizi di social media preferiti per condividere automaticamente i nuovi articoli con gli amici.</string>
-    <string name="connections_label">Connessioni</string>
     <string name="sharing">Condivisione</string>
     <string name="tabbar_accessibility_label_notifications">Notifiche. Gestisci le tue notifiche.</string>
     <string name="tabbar_accessibility_label_reader">Reader. Segui i contenuti dagli altri siti.</string>

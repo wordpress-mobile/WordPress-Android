@@ -1,11 +1,11 @@
 package org.wordpress.android.ui.deeplinks.handlers
 
 import androidx.lifecycle.MutableLiveData
-import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
+import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenEditor
@@ -20,6 +20,7 @@ class DeepLinkHandlersTest : BaseUnitTest() {
     @Mock lateinit var pagesLinkHandler: PagesLinkHandler
     @Mock lateinit var notificationsLinkHandler: NotificationsLinkHandler
     @Mock lateinit var qrCodeAuthLinkHandler: QRCodeAuthLinkHandler
+    @Mock lateinit var homeLinkHandler: HomeLinkHandler
     @Mock lateinit var uri: UriWrapper
     private lateinit var deepLinkHandlers: DeepLinkHandlers
     private lateinit var handlers: List<DeepLinkHandler>
@@ -33,7 +34,8 @@ class DeepLinkHandlersTest : BaseUnitTest() {
                 readerLinkHandler,
                 pagesLinkHandler,
                 notificationsLinkHandler,
-                qrCodeAuthLinkHandler
+                qrCodeAuthLinkHandler,
+                homeLinkHandler
         )
         initDeepLinkHandlers()
     }
@@ -46,7 +48,8 @@ class DeepLinkHandlersTest : BaseUnitTest() {
                 readerLinkHandler,
                 pagesLinkHandler,
                 notificationsLinkHandler,
-                qrCodeAuthLinkHandler
+                qrCodeAuthLinkHandler,
+                homeLinkHandler
         )
     }
 

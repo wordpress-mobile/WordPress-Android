@@ -132,7 +132,7 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
     }
 
     private fun onClearClicked() {
-        (_uiState.value as? Content)?.let { it ->
+        (_uiState.value as? Content)?.let {
             _uiState.value = it.copy(items = getAllActivityTypeItemsUnchecked(it.items))
         }
     }
@@ -206,6 +206,7 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
         ) : ListItemUiState()
     }
 
+    @Suppress("DataClassShouldBeImmutable")
     data class Action(val label: UiString) {
         lateinit var action: (() -> Unit)
     }

@@ -2,13 +2,13 @@ package org.wordpress.android.ui.prefs.locale
 
 import android.content.Context
 import androidx.lifecycle.Observer
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
+import org.mockito.kotlin.any
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.test
 import org.wordpress.android.ui.prefs.language.LocalePickerListItem.LocaleRow
@@ -60,7 +60,7 @@ class LocalePickerViewModelTest : BaseUnitTest() {
 
         whenever(currentLocale.toString()).thenReturn("en_US")
         whenever(localeProvider.getAppLocale()).thenReturn(currentLocale)
-        whenever(localeProvider.getLanguageDisplayString(any(), any())).thenReturn("English (United States)")
+        whenever(localeProvider.getAppLanguageDisplayString()).thenReturn("English (United States)")
         whenever(localeProvider.createSortedLocalizedLanguageDisplayStrings(any(), any())).thenReturn(dummyLocales)
         whenever(resourceProvider.getStringArray(any())).thenReturn(languageCodes)
 

@@ -1,11 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-06-17 15:28:46+0000
+Translation-Revision-Date: 2022-11-08 05:57:29+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/4.0.0-alpha.1
+Generator: GlotPress/4.0.0-alpha.3
 Language: vi_VN
 -->
 <resources>
+    <string name="gutenberg_native_upgrade_your_plan_to_upload_audio">Nâng cấp gói để có thể tải audio lên</string>
+    <string name="gutenberg_native_invalid_url">Đường dẫn không hợp lệ.</string>
+    <string name="weekly_roundup_notification_text_views_and_comments">Tuần trước bạn đã có %1$s lượt xem và %2$s bình luận</string>
+    <string name="weekly_roundup_notification_text_views_and_likes">Tuần trước bạn đã có %1$s lượt xem và %2$s lượt thích</string>
+    <string name="weekly_roundup_notification_text_views_only">Tuần trước bạn đã có %1$s lượt xem.</string>
+    <string name="weekly_roundup_notification_text_all">Tuần trước bạn đã có %1$s lượt xem, %2$s lượt thích, và %3$s bình luận.</string>
+    <string name="qrcode_auth_flow_error_auth_failed_subtitle">Không thể đăng nhập dựa trên mã này. Hãy bấm \"Quét lại\" để quét lại mã.</string>
+    <string name="qrcode_auth_flow_error_auth_failed_title">Xác nhận không thành công</string>
+    <string name="qrcode_auth_flow_error_expired_title">Mã đăng nhập đã hết hạn</string>
+    <string name="qrcode_auth_flow_error_no_connection_title">Không có kết nối</string>
+    <string name="qrcode_auth_flow_scan_again">Quét lại</string>
+    <string name="qrcode_auth_flow_done_title">Bạn đã đăng nhập!</string>
+    <string name="qrcode_auth_flow_validated_primary_action">Có, hãy cho tôi đăng nhập</string>
+    <string name="qrcode_auth_flow_validated_subtitle">Chỉ quét mã QR được lấy từ trình duyệt web của bạn. Không bao giờ được quét mã được gửi từ bất kỳ ai khác.</string>
     <string name="blogging_prompts_onboarding_prompts_loading">Đang tải Nhắc Nhở Viết. Xin chờ và thử lại sau.</string>
     <string name="hpp_bottom_helper_text">Không biết chọn cái nào? Bạn có thể đổi lại chủ đề sau.</string>
     <string name="hpp_recommended_default_vertical">Viết blog</string>
@@ -38,7 +52,6 @@ Language: vi_VN
     <string name="me_btn_scan_login_code">Quét mã đăng nhập</string>
     <string name="stats_insights_likes_guide_card">⭐️ Bài đăng gần nhất %1$s đã nhận %2$s lượt thích.</string>
     <string name="stats_most_popular_percent_views_empty">Chưa có hoạt động. Kiểm tra lại sau khi trang của bạn có khách truy cập!</string>
-    <string name="stats_total_followers_content_description">%1s, %2s trong tổng số người theo dõi</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
     <string name="pages_copy_link">Chép liên kết</string>
     <string name="quick_start_completed_tour_title">Chúc mừng! Bạn đã rành rồi đó&lt;br/&gt;</string>
@@ -362,7 +375,6 @@ Language: vi_VN
     <string name="me_btn_share">Giới thiệu WordPress cho bạn bè</string>
     <string name="my_site_quick_actions_title">Lối Tắt</string>
     <string name="my_site_btn_domains">Tên miền</string>
-    <string name="weekly_roundup_notification_text">%1$d lượt xem, %2$d lượt thích, %3$d bình luận.</string>
     <string name="weekly_roundup_notification_title">Tóm Tắt Tuần: %s</string>
     <string name="blogging_reminders_notification_time">Thời gian thông báo</string>
     <string name="blogging_reminders_epilogue_body_everyday_with_time">Bạn sẽ nhận thông báo &lt;b&gt;mỗi ngày&lt;/b&gt; vào lúc &lt;b&gt;%s&lt;/b&gt;.</string>
@@ -446,7 +458,6 @@ Language: vi_VN
     <string name="blogging_reminders_notification_title">Hãy đăng bài trên %s</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios">Chưa hỗ trợ chỉnh sửa những khối có thể dùng lại trên WordPress iOS</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and">Chưa hỗ trợ chỉnh sửa những khối có thể dùng lại trên WordPress Android</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">Bạn có thể tách và chỉnh sửa các khối này bằng cách nhấn \"Chuyển sang khối thường\".</string>
     <string name="blogging_reminders_done">Xong</string>
     <string name="blogging_reminders_notify_me">Nhắc tôi</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;Nhập thông tin đăng nhập máy chủ của bạn&lt;/a&gt; để khôi phục blog từ các bản sao lưu.</string>
@@ -677,7 +688,6 @@ Language: vi_VN
     <string name="restore_complete_visit_site_action_button">Ghé thăm blog</string>
     <string name="restore_complete_description_with_two_parameters">Toàn bộ mục đã chọn đã được khôi phục đến %1$s %2$s.</string>
     <string name="restore_complete_header">Blog của bạn đã được khôi phục</string>
-    <string name="restore_progress_label">%1$s%%</string>
     <string name="restore_progress_footnote">Không cần chờ. Chúng tôi sẽ nhắc bạn khi khôi phục blog xong.</string>
     <string name="restore_progress_icon_content_description">Phục hồi biểu tượng blog</string>
     <string name="restore_progress_description_with_two_parameters">Chúng tôi đang khôi phục blog của bạn đến %1$s %2$s.</string>
@@ -749,7 +759,6 @@ Language: vi_VN
     <string name="backup_download_complete_description_with_two_parameters">Chúng tôi đã tạo xong bản sao lưu blog của bạn từ %1$s %2$s.</string>
     <string name="backup_download_complete_header">Bạn đã có thể tải về bản sao lưu</string>
     <string name="backup_download_complete_page_title">Sao lưu của bạn</string>
-    <string name="backup_download_progress_label">%1$s%%</string>
     <string name="backup_download_progress_footnote">Không cần đợi. Chúng tôi sẽ nhắc bạn khi sao lưu xong.</string>
     <string name="backup_download_progress_icon_content_description">Biểu tượng tạo bản sao lưu có thể tải về</string>
     <string name="backup_download_progress_description_with_two_parameters">Chúng tôi đang tạo một bản sao lưu có thể tải về từ %1$s %2$s.</string>
@@ -789,8 +798,8 @@ Language: vi_VN
     <string name="threat_item_sub_header_file_signature">Tìm thấy mối đe dọa %s</string>
     <string name="threat_item_sub_header_core_file">Tìm thấy lỗ hổng bảo mật trong WordPress</string>
     <string name="threat_item_sub_header_misc_vulnerability">Lỗ hổng bảo mật khác</string>
-    <string name="threat_item_header_vulnerable_theme">Chủ đề có lỗ hổng bảo mật: %s (phiên bản %s)</string>
-    <string name="threat_item_header_vulnerable_plugin">Plugin có lỗ hổng bảo mật: %s (phiên bản %s)</string>
+    <string name="threat_item_header_vulnerable_theme">Chủ đề có lỗ hổng bảo mật: %1$s (phiên bản %2$s)</string>
+    <string name="threat_item_header_vulnerable_plugin">Plugin có lỗ hổng bảo mật: %1$s (phiên bản %2$s)</string>
     <string name="threat_item_header_file_malicious_code_pattern">%s: mã độc</string>
     <string name="threat_item_header_database_threat">Mối đe dọa %s cơ sở dữ liệu</string>
     <string name="threat_item_header_infected_core_file">%s: lõi tập tin bị nhiễm</string>
@@ -800,7 +809,7 @@ Language: vi_VN
     <string name="scan_in_minutes_ago">%s phút trước</string>
     <string name="scan_in_hours_ago">%s giờ trước</string>
     <string name="scan_this_site">blog này</string>
-    <string name="scan_idle_last_scan_description">Lần cuối Jetpack quét %s và không tìm thấy mối đe dọa nào. %s</string>
+    <string name="scan_idle_last_scan_description">Lần cuối Jetpack quét %1$s và không tìm thấy mối đe dọa nào. %2$s</string>
     <string name="scan_idle_threats_found_title">Blog của bạn có thể gặp rủi ro</string>
     <string name="scan_idle_no_threats_found_title">Đừng lo lắng quá</string>
     <string name="scan_again">Quét lại</string>
@@ -808,7 +817,7 @@ Language: vi_VN
     <string name="scan_state_icon">Biểu tượng trạng thái quét</string>
     <string name="backup">Sao lưu</string>
     <string name="activity_log_activity_type_filter_multiple_items_selected_content_description">Lọc hoạt động (đã chọn %s loại)</string>
-    <string name="activity_log_activity_type_filter_single_item_selected_content_description">%s (đang hiện %s mục)</string>
+    <string name="activity_log_activity_type_filter_single_item_selected_content_description">%1$s (đang hiện %2$s mục)</string>
     <string name="activity_log_activity_type_filter_no_item_selected_content_description">Lọc hoạt động</string>
     <string name="activity_log_activity_type_empty_subtitle">Không có hoạt động nào trong phạm vi ngày đã chọn.</string>
     <string name="activity_log_activity_type_empty_title">Chưa có hoạt động nào</string>
@@ -1156,7 +1165,7 @@ Language: vi_VN
     <string name="pages_cannot_be_started">Chúng tôi không thể mở trang. Hãy thử lại sau</string>
     <string name="pages_set_as_posts_page">Cài làm trang bài viết</string>
     <string name="pages_set_as_homepage">Cài làm trang chủ</string>
-    <string name="suggestion_invalid">%s là %s không hợp lệ</string>
+    <string name="suggestion_invalid">%1$s là %2$s không hợp lệ</string>
     <string name="site_settings_select_page">Chọn Trang</string>
     <string name="site_settings_posts_page">Trang bài viết</string>
     <string name="site_settings_static_homepage">Trang chủ</string>
@@ -1180,7 +1189,6 @@ Language: vi_VN
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">Nhấn hai lần để thiết lập màu</string>
     <string name="reader_empty_followed_blogs_description">Khi bạn theo dõi blog nào đó, bạn sẽ thấy nội dung của họ ở đây</string>
     <string name="feature_announcement_find_out_mode">Tìm hiểu thêm</string>
-    <string name="feature_announcement_dialog_label">WordPress có gì mới?</string>
     <string name="insert_label_with_count">Chèn %d</string>
     <string name="crop">cắt</string>
     <string name="error_failed_to_load_into_file">Tải thông tin tập tin thất bại, xin thử lại.</string>
@@ -1279,7 +1287,6 @@ Language: vi_VN
     <string name="post_list_tab_trashed_posts">Thùng rác</string>
     <string name="post_list_tab_scheduled_posts">Lên lịch</string>
     <string name="post_list_tab_published_posts">Đã đăng</string>
-    <string name="sharing_facebook_account_must_have_pages">Với Facebook, Publicize không thể kết nối Trang Cá Nhân, chỉ kết nối được Trang Doanh Nghiệp.</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">Chưa kết nối</string>
     <string name="notifications_tab_title_likes">Lượt thích</string>
     <string name="notifications_tab_title_follows">Theo dõi</string>
@@ -1456,7 +1463,7 @@ Language: vi_VN
     <string name="local_post_autosave_revision_available">Bạn đã thực hiện các thay đổi chưa được lưu đối với bài viết này</string>
     <string name="dialog_confirm_autosave_dont_restore_button">Phiên bản từ ứng dụng này</string>
     <string name="dialog_confirm_autosave_restore_button">Phiên bản từ thiết bị khác</string>
-    <string name="dialog_confirm_autosave_body_second_part">Từ ứng dụng này\nLưu vào %s\n\nTừ thiết bị khác\nLưu vào %s\n</string>
+    <string name="dialog_confirm_autosave_body_second_part">Từ ứng dụng này\nLưu vào %1$s\n\nTừ thiết bị khác\nLưu vào %2$s\n</string>
     <string name="dialog_confirm_autosave_body_first_part">Bạn đã thay đổi nội dung nhưng chưa lưu. Chọn một phiên bản để nạp:\n\n</string>
     <string name="dialog_confirm_autosave_title">Bạn muốn chỉnh sửa phiên bản nào?</string>
     <string name="button_delete_permanently">Xóa vĩnh viễn</string>
@@ -1506,7 +1513,6 @@ Language: vi_VN
     <string name="share_desc">Chia sẻ</string>
     <string name="navigate_back_desc">Trở lại</string>
     <string name="navigate_forward_desc">Quay lại</string>
-    <string name="calendar_scheduled_post_description">\"%1$s\" đã lên lịch đăng cho \"%2$s\" bằng WordPress app \n %3$s</string>
     <string name="calendar_scheduled_post_title">Bài viết WordPress đã lên lịch: \"%s\"</string>
     <string name="notification_post_will_be_published_in_ten_minutes">Sẽ đăng \"%s\" trong 10 phút nữa</string>
     <string name="notification_post_will_be_published_in_one_hour">Sẽ đăng \"%s\" trong 1 giờ nữa</string>
@@ -1678,7 +1684,6 @@ Language: vi_VN
     <string name="app_rating_rate_later">Để sau</string>
     <string name="app_rating_rate_now">Đánh giá</string>
     <string name="app_rating_message">Rất vui gặp lại bạn! Nếu bạn thích ứng dụng, hãy đánh giá trên Google Play Store.</string>
-    <string name="app_rating_title">Yêu thích WordPress?</string>
     <string name="editor_post_converted_back_to_draft">Đã chuyển bài viết về nháp</string>
     <string name="stats_insights_posting_activity">Hoạt động</string>
     <string name="stats_site_not_loaded_yet">Chưa tải blog xong</string>
@@ -1716,10 +1721,7 @@ Language: vi_VN
     <string name="notification_channel_reminder_title">Lượt nhắc</string>
     <string name="stats_select_next_period_description">Chọn chu kỳ kế</string>
     <string name="stats_select_previous_period_description">Chọn chu kỳ trước</string>
-    <string name="stats_most_popular_percent_views">%1$d%% lượt xem</string>
     <string name="stats_insights_popular">Phổ biến mọi lúc</string>
-    <string name="stats_traffic_change">%1$s (%2$s%%)</string>
-    <string name="stats_traffic_increase">+%1$s (%2$s%%)</string>
     <string name="new_site_creation_site_preview_content_description">Đang hiển thị xem trước</string>
     <string name="new_site_creation_clear_all_content_description">Xóa</string>
     <string name="site_created_but_not_fetched_snackbar_message">Có vẻ mạng của bạn đang chậm. Nếu không thấy blog mới của bạn trong danh sách, thử làm tươi.</string>
@@ -2505,10 +2507,8 @@ Language: vi_VN
     <string name="share_btn_disconnect">Ngắt kết nối</string>
     <string name="share_btn_connect">Kết nối</string>
     <string name="connection_service_description">Kết nối để tự động chia sẻ bài viết của bạn với %s.</string>
-    <string name="connection_service_label">Kết nối tới %s</string>
     <string name="connected_accounts_label">Tài khoản đã kết nối</string>
     <string name="connections_description">Kết nối tài khoản mạng xã hội của bạn để tự động chia sẻ bài viết mới với bạn bè trên đó.</string>
-    <string name="connections_label">Kết nối mạng xã hội</string>
     <string name="sharing">Chia sẻ</string>
     <string name="tabbar_accessibility_label_notifications">Thông báo. Quản lý thông báo.</string>
     <string name="tabbar_accessibility_label_reader">Đọc. Theo dõi nội dung các blog khác.</string>

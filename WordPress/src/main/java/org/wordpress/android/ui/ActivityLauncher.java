@@ -29,7 +29,6 @@ import org.wordpress.android.fluxc.model.PostImmutableModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.bloggingprompts.BloggingPromptModel;
-import org.wordpress.android.fluxc.model.page.PageModel;
 import org.wordpress.android.fluxc.network.utils.StatsGranularity;
 import org.wordpress.android.imageeditor.EditImageActivity;
 import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.EditImageData;
@@ -68,6 +67,7 @@ import org.wordpress.android.ui.main.MeActivity;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.main.SitePickerAdapter.SitePickerMode;
 import org.wordpress.android.ui.main.WPMainActivity;
+import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.pages.PageParentActivity;
@@ -104,7 +104,6 @@ import org.wordpress.android.ui.stats.StatsConstants;
 import org.wordpress.android.ui.stats.StatsTimeframe;
 import org.wordpress.android.ui.stats.StatsViewType;
 import org.wordpress.android.ui.stats.refresh.StatsActivity;
-import org.wordpress.android.ui.stats.refresh.StatsActivity.StatsLaunchedFrom;
 import org.wordpress.android.ui.stats.refresh.StatsViewAllActivity;
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection;
 import org.wordpress.android.ui.stats.refresh.lists.detail.StatsDetailActivity;
@@ -118,6 +117,7 @@ import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.UriWrapper;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
@@ -138,7 +138,6 @@ import static org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTIC
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_ACCESS_ERROR;
 import static org.wordpress.android.editor.gutenberg.GutenbergEditorFragment.ARG_STORY_BLOCK_ID;
 import static org.wordpress.android.imageeditor.preview.PreviewImageFragment.ARG_EDIT_IMAGE_DATA;
-import static org.wordpress.android.login.LoginMode.JETPACK_LOGIN_ONLY;
 import static org.wordpress.android.login.LoginMode.WPCOM_LOGIN_ONLY;
 import static org.wordpress.android.push.NotificationsProcessingService.ARG_NOTIFICATION_TYPE;
 import static org.wordpress.android.ui.WPWebViewActivity.ENCODING_UTF8;
@@ -160,6 +159,11 @@ public class ActivityLauncher {
     public static final String BACKUP_TRACK_EVENT_PROPERTY_VALUE = "backup";
     public static final String ACTIVITY_LOG_TRACK_EVENT_PROPERTY_VALUE = "activity_log";
     public static final String CATEGORY_DETAIL_ID = "category_detail_key";
+
+    public static void showMainActivity(Context context) {
+        Intent intent = getMainActivityInNewStack(context);
+        context.startActivity(intent);
+    }
 
     public static void showMainActivityAndLoginEpilogue(Activity activity, ArrayList<Integer> oldSitesIds,
                                                         boolean doLoginUpdate) {
@@ -563,24 +567,6 @@ public class ActivityLauncher {
         }
     }
 
-    public static void openBlogStats(Context context, SiteModel site) {
-        if (site == null) {
-            AppLog.e(T.STATS, "SiteModel is null when opening the stats.");
-            AnalyticsTracker.track(
-                    STATS_ACCESS_ERROR,
-                    ActivityLauncher.class.getName(),
-                    "NullPointerException",
-                    "Failed to open Stats because of the null SiteModel"
-            );
-            ToastUtils.showToast(context, R.string.stats_cannot_be_started, ToastUtils.Duration.SHORT);
-        } else {
-            Intent intent = new Intent(context, StatsActivity.class);
-            intent.putExtra(StatsActivity.ARG_LAUNCHED_FROM, StatsLaunchedFrom.FEATURE_ANNOUNCEMENT);
-            intent.putExtra(WordPress.SITE, site);
-            context.startActivity(intent);
-        }
-    }
-
     public static void viewBlogStatsForTimeframe(Context context, SiteModel site, StatsTimeframe statsTimeframe) {
         if (site == null) {
             AppLog.e(T.STATS, "SiteModel is null when opening the stats.");
@@ -683,13 +669,14 @@ public class ActivityLauncher {
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_PAGES, site);
     }
 
-    public static void viewPageParentForResult(@NonNull Fragment fragment, @NonNull PageModel page) {
+    public static void viewPageParentForResult(@NonNull Fragment fragment, @NonNull SiteModel site,
+                                               @NonNull Long pageRemoteId) {
         Intent intent = new Intent(fragment.getContext(), PageParentActivity.class);
-        intent.putExtra(WordPress.SITE, page.getSite());
-        intent.putExtra(EXTRA_PAGE_REMOTE_ID_KEY, page.getRemoteId());
+        intent.putExtra(WordPress.SITE, site);
+        intent.putExtra(EXTRA_PAGE_REMOTE_ID_KEY, pageRemoteId);
         fragment.startActivityForResult(intent, RequestCodes.PAGE_PARENT);
 
-        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_PAGE_PARENT, page.getSite());
+        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_PAGE_PARENT, site);
     }
 
     public static void viewUnifiedComments(Context context, SiteModel site) {
@@ -1461,7 +1448,6 @@ public class ActivityLauncher {
         Intent intent = new Intent(activity, LoginActivity.class);
         intent.setFlags(
                 Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        JETPACK_LOGIN_ONLY.putInto(intent);
         activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
     }
 
@@ -1765,15 +1751,30 @@ public class ActivityLauncher {
         Intent mainActivityIntent = getMainActivityInNewStack(context);
         mainActivityIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
 
-        Intent meIntent = new Intent(context, MeActivity.class);
-        meIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-
         Intent qrcodeAuthFlowIntent = QRCodeAuthActivity.newIntent(context, uri, true);
 
         taskStackBuilder.addNextIntent(mainActivityIntent);
-        taskStackBuilder.addNextIntent(meIntent);
         taskStackBuilder.addNextIntent(qrcodeAuthFlowIntent);
 
         taskStackBuilder.startActivities();
+    }
+
+    public static void showLoginPrologue(@NonNull Context context) {
+        Intent intent = new Intent(context, LoginActivity.class);
+        context.startActivity(intent);
+    }
+
+    public static void startJetpackMigrationFlow(@NonNull Context context) {
+        Intent intent = new Intent(context, JetpackMigrationActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
+    }
+
+    public static void openJetpackForDeeplink(@NonNull Context context, String action, UriWrapper uri) {
+        Intent intent = new Intent();
+        intent.setAction(action);
+        intent.setData(uri.getUri());
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
     }
 }

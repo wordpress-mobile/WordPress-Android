@@ -1,8 +1,85 @@
 *** PLEASE FOLLOW THIS FORMAT: [<priority indicator, more stars = higher priority>] <description> [<PR URL>]
 
-20.3
+21.4
 -----
 
+
+21.3
+-----
+* [***] Adds a smooth, opt-in transition to the Jetpack app. [https://github.com/wordpress-mobile/WordPress-Android/pull/17538]
+* [*] [Jetpack-only] The the QR code scanning flow screens are now translated in the app language. [https://github.com/wordpress-mobile/WordPress-Android/pull/17533]
+* [*] Disable local notifications with Notification Settings switch. [https://github.com/wordpress-mobile/WordPress-Android/pull/17496]
+* [*] [Jetpack-only] Comments: fix a crash in My Site > Comments with Jetpack standalone plugins. [https://github.com/wordpress-mobile/WordPress-Android/pull/17456]
+* [*] [internal] Fix an issue preventing the text and button on the 'WordPress is Better with Jetpack' overlay to be entirely visible with big fonts. [https://github.com/wordpress-mobile/WordPress-Android/pull/17503]
+* [***] [internal] Disable notifications on WP in migration flow when JP app is installed, behind a feature flag. [https://github.com/wordpress-mobile/WordPress-Android/pull/17513 and https://github.com/wordpress-mobile/WordPress-Android/pull/17371]
+* [*] [internal] Avoid truncation of the 'Try the new Jetpack app' button text on the Jetpack Powered bottom sheets with big fonts. [https://github.com/wordpress-mobile/WordPress-Android/pull/17511]
+
+21.2
+-----
+* [*] Stats: Fix an issue with opening the stats activity from the stats widget. [https://github.com/wordpress-mobile/WordPress-Android/pull/17439]
+
+21.1
+-----
+* [**] Added functionality to set the parent of a page from page settings in the editor. [https://github.com/wordpress-mobile/WordPress-Android/pull/17329]
+* [***] [Jetpack-only] Redesigned the landing screen. [https://github.com/wordpress-mobile/WordPress-Android/pull/17351]
+
+21.0
+-----
+* [***] [internal] Updates the target sdk to 31 - Android 12 [https://github.com/wordpress-mobile/WordPress-Android/pull/17153]
+* [***] Updated About screen for WordPress and Jetpack apps to their respective urls. [https://github.com/wordpress-mobile/WordPress-Android/pull/17282]
+* [*] Updates splash screen for Android 12+ [https://github.com/wordpress-mobile/WordPress-Android/pull/17273]
+* [*] Fix text color of success messages in the QR code login flow [https://github.com/wordpress-mobile/WordPress-Android/pull/17286]
+* [*] Stats: Fix Western Arabic Numerals not being shown on every text of the stats screens in Arabic languages [https://github.com/wordpress-mobile/WordPress-Android/pull/17217]
+
+20.9
+-----
+* [***] [internal] Redesigned the landing screen of the WordPress and Jetpack apps, behind a feature flag. [https://github.com/wordpress-mobile/WordPress-Android/pull/17203]
+* [**] [internal] Added sensor feedback to influence the speed of the scrolling large text on the redesigned Jetpack landing screen based on the vertical rotation of the device. [https://github.com/wordpress-mobile/WordPress-Android/pull/17207]
+* [*] Quick Start: Retain Quick Start focus point after device rotation [https://github.com/wordpress-mobile/WordPress-Android/pull/17187]
+* [*] Stats: Fix Long title problem on stats cards [https://github.com/wordpress-mobile/WordPress-Android/pull/17084]
+* [*] Support "Enter" key for Excerpt editing in Post settings [https://github.com/wordpress-mobile/WordPress-Android/pull/17078]
+
+20.8
+-----
+* [**] Stats: Always use Western Arabic numerals in Arabic languages (previously there was a mix of Eastern and Western Arabic numerals) [https://github.com/wordpress-mobile/WordPress-Android/pull/17160]
+* [*] [Jetpack-only] Adds more widgets, At a glance, All-time and Today widgets with dynamic previews [https://github.com/wordpress-mobile/WordPress-Android/pull/17140]
+* [**] Added author button to the post settings and the author of the post can be changed with it. [https://github.com/wordpress-mobile/WordPress-Android/pull/17120]
+
+20.7
+-----
+* [*] Fixes Media control toggles difficult to see [https://github.com/wordpress-mobile/WordPress-Android/pull/17068]
+* [*] Fix night mode text colors on the screens shown after scanning a Login Code [https://github.com/wordpress-mobile/WordPress-Android/pull/17086]
+* [***] Jetpack App: Widgets are now on Jetpack. Long press on app icon to find and add widgets to home screen. [https://github.com/wordpress-mobile/WordPress-Android/pull/17100]
+* [*] [Jetpack-only] Block Editor: Makes some small changes to the editor's accent colours for consistency. [https://github.com/wordpress-mobile/WordPress-Android/pull/16968]
+
+20.6
+-----
+* [*] Login: Fix an issue preventing some users to log-in in with email addresses containing a single quote [https://github.com/wordpress-mobile/WordPress-Android/pull/15526]
+* [*] Fix a possible crash with themes preloading at the start of Site Creation [https://github.com/wordpress-mobile/WordPress-Android/pull/17022]
+* [*] Show Jetpack banner in search results [https://github.com/wordpress-mobile/WordPress-Android/pull/17028]
+
+20.5
+-----
+* [*] Use larger thumbnail previews for recommended themes during site creation [https://github.com/wordpress-mobile/WordPress-Android/pull/16848]
+* [***] [internal] Block Editor: List block: Adds support for V2 behind a feature flag [https://github.com/WordPress/gutenberg/pull/42702]
+* [*] Jetpack App: Use the Jetpack green color for the skip buttons text in site creation [https://github.com/wordpress-mobile/WordPress-Android/pull/16994]
+* [**] App Settings: Show a label with the current language of the app under "Interface Language". [https://github.com/wordpress-mobile/WordPress-Android/pull/17004]
+
+20.4
+-----
+* [*] [internal] Block Editor: Add React Native FastImage [https://github.com/WordPress/gutenberg/pull/42009]
+* [*] Block Editor: Inserter displays block collections [https://github.com/WordPress/gutenberg/pull/42405]
+* [*] Block Editor: Fix incorrect spacing within Image alt text footnote [https://github.com/WordPress/gutenberg/pull/42504]
+* [***] Block Editor: Gallery and Image block - Performance improvements [https://github.com/WordPress/gutenberg/pull/42178]
+* [**] [WP.com and Jetpack sites with VideoPress] Prevent validation error when viewing VideoPress markup within app [https://github.com/Automattic/jetpack/pull/24548]
+* [*] [internal] Adds the "Jetpack powered" badge to non-core features [https://github.com/wordpress-mobile/WordPress-Android/pull/16940]
+
+20.3
+-----
+* [*] Block Editor: Add 'Insert from URL' option to Video block [https://github.com/WordPress/gutenberg/pull/41493]
+* [*] Block Editor: Image block copies the alt text from the media library when selecting an item [https://github.com/WordPress/gutenberg/pull/41839]
+* [*] Block Editor: Introduce "block recovery" option for invalid blocks [https://github.com/WordPress/gutenberg/pull/41988]
+* [**] Block Editor: Fix a crash when scrolling posts containing Embed blocks [https://github.com/wordpress-mobile/gutenberg-mobile/pull/5033]
 
 20.2
 -----

@@ -31,7 +31,7 @@ import org.wordpress.android.ui.stats.refresh.utils.LineChartAccessibilityHelper
 import org.wordpress.android.ui.stats.refresh.utils.LineChartLabelFormatter
 import java.lang.Integer.max
 
-@Suppress("MagicNumber", "TooManyFunctions")
+@Suppress("MagicNumber")
 class LineChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         parent,
         R.layout.stats_block_line_chart_item
@@ -88,29 +88,16 @@ class LineChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
     }
 
     private fun getData(item: LineChartItem): List<ILineDataSet> {
-        val hasData = hasData(item.entries)
-
-        val prevWeekData = if (hasData && item.entries.size > 7) {
-            item.entries.subList(0, 7)
-        } else {
-            emptyList()
-        }
-        val hasPrevWeekData = prevWeekData.isNotEmpty() && prevWeekData.any { it.value > 0 }
-        val prevWeekDataSet = if (hasPrevWeekData) {
+        val prevWeekData = getPreviousWeekData(item)
+        val prevWeekDataSet = if (hasData(prevWeekData)) {
             val mappedEntries = prevWeekData.mapIndexed { index, pair -> toLineEntry(pair, index) }
             LineDataSet(mappedEntries, "Previous week data")
         } else {
             buildEmptyDataSet(prevWeekData.size)
         }
 
-        val thisWeekData = if (hasData && item.entries.size > 7) {
-            item.entries.subList(7, item.entries.size)
-        } else {
-            emptyList()
-        }
-
-        val hasThisWeekData = thisWeekData.isNotEmpty() && thisWeekData.any { it.value > 0 }
-        val thisWeekDataSet = if (hasThisWeekData) {
+        val thisWeekData = getThisWeekData(item)
+        val thisWeekDataSet = if (hasData(thisWeekData)) {
             val mappedEntries = thisWeekData.mapIndexed { index, pair -> toLineEntry(pair, index) }
             LineDataSet(mappedEntries, "Current week data")
         } else {
@@ -188,12 +175,7 @@ class LineChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
     }
 
     private fun configureXAxis(item: LineChartItem) {
-        val hasData = item.entries.isNotEmpty() && item.entries.any { it.value > 0 }
-        val thisWeekData = if (hasData && item.entries.size > 7) {
-            item.entries.subList(7, item.entries.size)
-        } else {
-            emptyList()
-        }
+        val thisWeekData = getThisWeekData(item)
 
         chart.xAxis.apply {
             granularity = 1f
@@ -278,6 +260,20 @@ class LineChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             isHighlightEnabled = false
         }
     }
+
+    private fun getPreviousWeekData(item: LineChartItem): List<Line> =
+            if (hasData(item.entries) && item.entries.size > 7) {
+                item.entries.subList(1, 8)
+            } else {
+                item.entries
+            }
+
+    private fun getThisWeekData(item: LineChartItem): List<Line> =
+            if (hasData(item.entries) && item.entries.size > 7) {
+                item.entries.subList(8, item.entries.size)
+            } else {
+                emptyList()
+            }
 
     private fun buildEmptyDataSet(count: Int): LineDataSet {
         val emptyValues = (0 until count).map { index -> Entry(index.toFloat(), 0f, "empty") }

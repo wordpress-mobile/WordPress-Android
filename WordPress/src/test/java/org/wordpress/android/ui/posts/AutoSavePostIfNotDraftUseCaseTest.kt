@@ -1,10 +1,6 @@
 package org.wordpress.android.ui.posts
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.argWhere
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Rule
@@ -12,6 +8,10 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.any
+import org.mockito.kotlin.argWhere
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.action.PostAction
@@ -50,12 +50,7 @@ class AutoSavePostIfNotDraftUseCaseTest {
         val useCase = AutoSavePostIfNotDraftUseCase(mock(), postStore, TEST_DISPATCHER)
         val post = PostModel()
         post.setIsLocalDraft(true)
-        useCase.autoSavePostOrUpdateDraft(
-                RemotePostPayload(post, SiteModel()),
-                object : OnAutoSavePostIfNotDraftCallback {
-                    override fun handleAutoSavePostIfNotDraftResult(result: AutoSavePostIfNotDraftResult) {
-                    }
-                })
+        useCase.autoSavePostOrUpdateDraft(RemotePostPayload(post, SiteModel()), mock())
     }
 
     @Test

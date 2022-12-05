@@ -1,4 +1,4 @@
-@file:Suppress("MaximumLineLength")
+@file:Suppress("DEPRECATION", "MaximumLineLength")
 
 package org.wordpress.android.ui.mysite
 
@@ -33,6 +33,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore.Companion.QUICK_START_V
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
+import org.wordpress.android.localcontentmigration.ContentMigrationAnalyticsTracker
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.STORY_FROM_MY_SITE
@@ -40,6 +41,8 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.InfoItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.SingleActionCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.JetpackBadge
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoHeaderCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BloggingPromptCardBuilderParams
@@ -82,8 +85,7 @@ import org.wordpress.android.ui.mysite.items.SiteItemsTracker
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
 import org.wordpress.android.ui.mysite.tabs.MySiteTabType
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
-import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource
-import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource.ANDROID_CAMERA
+import org.wordpress.android.ui.photopicker.PhotoPickerActivity
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Dismissed
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Negative
@@ -92,11 +94,14 @@ import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.quickstart.QuickStartTracker
 import org.wordpress.android.ui.quickstart.QuickStartType.NewSiteQuickStartType
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
+import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.FluxCUtilsWrapper
+import org.wordpress.android.util.JetpackBrandingUtils
+import org.wordpress.android.util.JetpackBrandingUtils.Screen.HOME
 import org.wordpress.android.util.MediaUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.QuickStartUtilsWrapper
@@ -113,6 +118,8 @@ import org.wordpress.android.util.filter
 import org.wordpress.android.util.getEmailValidationMessage
 import org.wordpress.android.util.map
 import org.wordpress.android.util.merge
+import org.wordpress.android.util.publicdata.AppStatus
+import org.wordpress.android.util.publicdata.WordPressPublicData
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -122,7 +129,7 @@ import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
 
-@Suppress("LargeClass", "LongMethod", "LongParameterList", "TooManyFunctions")
+@Suppress("LargeClass", "LongMethod", "LongParameterList")
 class MySiteViewModel @Inject constructor(
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     @param:Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
@@ -155,12 +162,16 @@ class MySiteViewModel @Inject constructor(
     private val buildConfigWrapper: BuildConfigWrapper,
     mySiteDashboardTabsFeatureConfig: MySiteDashboardTabsFeatureConfig,
     bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig,
+    private val jetpackBrandingUtils: JetpackBrandingUtils,
     private val appPrefsWrapper: AppPrefsWrapper,
     private val bloggingPromptsCardAnalyticsTracker: BloggingPromptsCardAnalyticsTracker,
     private val quickStartTracker: QuickStartTracker,
-    private val dispatcher: Dispatcher
+    private val contentMigrationAnalyticsTracker: ContentMigrationAnalyticsTracker,
+    private val dispatcher: Dispatcher,
+    private val appStatus: AppStatus,
+    private val wordPressPublicData: WordPressPublicData
 ) : ScopedViewModel(mainDispatcher) {
-    private var isDefaultABExperimentTabSet: Boolean = false
+    private var isDefaultTabSet: Boolean = false
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     private val _onTechInputDialogShown = MutableLiveData<Event<TextInputDialogModel>>()
     private val _onBasicDialogShown = MutableLiveData<Event<SiteDialogModel>>()
@@ -205,9 +216,10 @@ class MySiteViewModel @Inject constructor(
             listOf(MySiteTabType.ALL)
         }
 
-    private val defaultABExperimentTab: MySiteTabType
+    private val defaultTab: MySiteTabType
         get() = if (isMySiteTabsEnabled) {
-            if (appPrefsWrapper.getMySiteInitialScreen() == MySiteTabType.SITE_MENU.label) {
+            if (appPrefsWrapper.getMySiteInitialScreen(buildConfigWrapper.isJetpackApp) ==
+                    MySiteTabType.SITE_MENU.label) {
                 MySiteTabType.SITE_MENU
             } else {
                 MySiteTabType.DASHBOARD
@@ -417,6 +429,16 @@ class MySiteViewModel @Inject constructor(
                         isStaleMessagePresent = cardsUpdate?.showStaleMessage ?: false
                 )
         )
+        val migrationSuccessCard = SingleActionCard(
+                textResource = R.string.jp_migration_success_card_message,
+                imageResource = R.drawable.ic_wordpress_blue_32dp,
+                onActionClick = ::onPleaseDeleteWordPressAppCardClick
+        ).takeIf {
+            val isJetpackApp = buildConfigWrapper.isJetpackApp
+            val isMigrationCompleted = appPrefsWrapper.isJetpackMigrationCompleted()
+            val isWordPressInstalled = appStatus.isAppInstalled(wordPressPublicData.currentPackageId())
+            isJetpackApp && isMigrationCompleted && isWordPressInstalled
+        }
         val cardsResult = cardsBuilder.build(
                 QuickActionsCardBuilderParams(
                         siteModel = site,
@@ -490,46 +512,77 @@ class MySiteViewModel @Inject constructor(
                 )
         )
 
+        val jetpackBadge = JetpackBadge(
+                if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
+                    ListItemInteraction.create(this::onJetpackBadgeClick)
+                } else {
+                    null
+                }
+        ).takeIf { jetpackBrandingUtils.shouldShowJetpackBranding() }
+
         return mapOf(
                 MySiteTabType.ALL to orderForDisplay(
-                        infoItem,
-                        cardsResult,
-                        dynamicCards,
-                        siteItems
+                        infoItem = infoItem,
+                        migrationSuccessCard = migrationSuccessCard,
+                        cards = cardsResult,
+                        dynamicCards = dynamicCards,
+                        siteItems = siteItems,
+                        jetpackBadge = jetpackBadge
                 ),
                 MySiteTabType.SITE_MENU to orderForDisplay(
-                        infoItem,
-                        cardsResult.filterNot {
+                        infoItem = infoItem,
+                        migrationSuccessCard = migrationSuccessCard,
+                        cards = cardsResult.filterNot {
                             getCardTypeExclusionFiltersForTab(MySiteTabType.SITE_MENU).contains(it.type)
                         },
-                        if (shouldIncludeDynamicCards(MySiteTabType.SITE_MENU)) dynamicCards else listOf(),
-                        siteItems
+                        dynamicCards = if (shouldIncludeDynamicCards(MySiteTabType.SITE_MENU)) {
+                            dynamicCards
+                        } else {
+                            listOf()
+                        },
+                        siteItems = siteItems
                 ),
                 MySiteTabType.DASHBOARD to orderForDisplay(
-                        infoItem,
-                        cardsResult.filterNot {
+                        infoItem = infoItem,
+                        migrationSuccessCard = migrationSuccessCard,
+                        cards = cardsResult.filterNot {
                             getCardTypeExclusionFiltersForTab(MySiteTabType.DASHBOARD).contains(it.type)
                         },
-                        if (shouldIncludeDynamicCards(MySiteTabType.DASHBOARD)) dynamicCards else listOf(),
-                        listOf()
+                        dynamicCards = if (shouldIncludeDynamicCards(MySiteTabType.DASHBOARD)) {
+                            dynamicCards
+                        } else {
+                            listOf()
+                        },
+                        siteItems = listOf(),
+                        jetpackBadge = jetpackBadge
                 )
         )
     }
 
-    private fun shouldEnableQuickLinkRibbonFocusPoints() = defaultABExperimentTab == MySiteTabType.DASHBOARD
+    private fun onPleaseDeleteWordPressAppCardClick() {
+        contentMigrationAnalyticsTracker.trackPleaseDeleteWordPressCardTapped()
+        _onNavigation.value = Event(SiteNavigationAction.OpenJetpackMigrationDeleteWP)
+    }
 
-    private fun shouldEnableSiteItemsFocusPoints() = defaultABExperimentTab != MySiteTabType.DASHBOARD
+    private fun onJetpackBadgeClick() {
+        jetpackBrandingUtils.trackBadgeTapped(HOME)
+        _onNavigation.value = Event(SiteNavigationAction.OpenJetpackPoweredBottomSheet)
+    }
+
+    private fun shouldEnableQuickLinkRibbonFocusPoints() = defaultTab == MySiteTabType.DASHBOARD
+
+    private fun shouldEnableSiteItemsFocusPoints() = defaultTab != MySiteTabType.DASHBOARD
 
     private fun getCardTypeExclusionFiltersForTab(tabType: MySiteTabType) = when (tabType) {
         MySiteTabType.SITE_MENU -> mutableListOf<Type>().apply {
             add(Type.DASHBOARD_CARDS)
-            if (defaultABExperimentTab == MySiteTabType.DASHBOARD) {
+            if (defaultTab == MySiteTabType.DASHBOARD) {
                 add(Type.QUICK_START_CARD)
             }
             add(Type.QUICK_LINK_RIBBON)
         }
         MySiteTabType.DASHBOARD -> mutableListOf<Type>().apply {
-            if (defaultABExperimentTab == MySiteTabType.SITE_MENU) {
+            if (defaultTab == MySiteTabType.SITE_MENU) {
                 add(Type.QUICK_START_CARD)
             }
             add(Type.DOMAIN_REGISTRATION_CARD)
@@ -539,8 +592,8 @@ class MySiteViewModel @Inject constructor(
     }
 
     private fun shouldIncludeDynamicCards(tabType: MySiteTabType) = when (tabType) {
-        MySiteTabType.SITE_MENU -> defaultABExperimentTab != MySiteTabType.DASHBOARD
-        MySiteTabType.DASHBOARD -> defaultABExperimentTab != MySiteTabType.SITE_MENU
+        MySiteTabType.SITE_MENU -> defaultTab != MySiteTabType.DASHBOARD
+        MySiteTabType.DASHBOARD -> defaultTab != MySiteTabType.SITE_MENU
         MySiteTabType.ALL -> true
     }
 
@@ -586,13 +639,16 @@ class MySiteViewModel @Inject constructor(
 
     private fun orderForDisplay(
         infoItem: InfoItem?,
+        migrationSuccessCard: SingleActionCard? = null,
         cards: List<MySiteCardAndItem>,
         dynamicCards: List<MySiteCardAndItem>,
-        siteItems: List<MySiteCardAndItem>
+        siteItems: List<MySiteCardAndItem>,
+        jetpackBadge: JetpackBadge? = null
     ): List<MySiteCardAndItem> {
         val indexOfDashboardCards = cards.indexOfFirst { it is DashboardCards }
         return mutableListOf<MySiteCardAndItem>().apply {
             infoItem?.let { add(infoItem) }
+            migrationSuccessCard?.let { add(migrationSuccessCard) }
             addAll(cards)
             if (indexOfDashboardCards == -1) {
                 addAll(dynamicCards)
@@ -600,6 +656,7 @@ class MySiteViewModel @Inject constructor(
                 addAll(indexOfDashboardCards, dynamicCards)
             }
             addAll(siteItems)
+            jetpackBadge?.let { add(jetpackBadge) }
         }.toList()
     }
 
@@ -704,7 +761,7 @@ class MySiteViewModel @Inject constructor(
 
     private fun onQuickStartTaskTypeItemClick(type: QuickStartTaskType) {
         clearActiveQuickStartTask()
-        if (defaultABExperimentTab == MySiteTabType.DASHBOARD) {
+        if (defaultTab == MySiteTabType.DASHBOARD) {
             cardsTracker.trackQuickStartCardItemClicked(type)
         } else {
             quickStartTracker.track(Stat.QUICK_START_TAPPED, mapOf(TYPE to type.toString()))
@@ -940,8 +997,13 @@ class MySiteViewModel @Inject constructor(
         quickStartTracker.track(Stat.QUICK_START_REMOVE_DIALOG_NEGATIVE_TAPPED)
     }
 
-    fun handleTakenSiteIcon(iconUrl: String?, source: PhotoPickerMediaSource?) {
-        val stat = if (source == ANDROID_CAMERA) Stat.MY_SITE_ICON_SHOT_NEW else Stat.MY_SITE_ICON_GALLERY_PICKED
+    @Suppress("DEPRECATION")
+    fun handleTakenSiteIcon(iconUrl: String?, source: PhotoPickerActivity.PhotoPickerMediaSource?) {
+        val stat = if (source == PhotoPickerActivity.PhotoPickerMediaSource.ANDROID_CAMERA) {
+            Stat.MY_SITE_ICON_SHOT_NEW
+        } else {
+            Stat.MY_SITE_ICON_GALLERY_PICKED
+        }
         analyticsTrackerWrapper.track(stat)
         val imageUri = Uri.parse(iconUrl)?.let { UriWrapper(it) }
         if (imageUri != null) {
@@ -1058,7 +1120,7 @@ class MySiteViewModel @Inject constructor(
     }
 
     fun onCreateSiteResult() {
-        isDefaultABExperimentTabSet = false
+        isDefaultTabSet = false
         selectDefaultTabIfNeeded()
     }
 
@@ -1253,9 +1315,9 @@ class MySiteViewModel @Inject constructor(
     @Suppress("NestedBlockDepth")
     private fun selectDefaultTabIfNeeded() {
         if (!isMySiteTabsEnabled) return
-        val index = orderedTabTypes.indexOf(defaultABExperimentTab)
+        val index = orderedTabTypes.indexOf(defaultTab)
         if (index != -1) {
-            if (isDefaultABExperimentTabSet) {
+            if (isDefaultTabSet) {
                 // This logic checks if the current default tab is the same as the tab
                 // set as initial screen, if yes then return
                 _selectTab.value?.let { tab ->
@@ -1265,7 +1327,7 @@ class MySiteViewModel @Inject constructor(
             }
             quickStartRepository.quickStartTaskOriginTab = orderedTabTypes[index]
             _selectTab.postValue(Event(TabNavigation(index, smoothAnimation = false)))
-            isDefaultABExperimentTabSet = true
+            isDefaultTabSet = true
         }
     }
 
@@ -1274,7 +1336,7 @@ class MySiteViewModel @Inject constructor(
                 .forEach { domainRegistrationCardShownTracker.trackShown(it.type) }
         siteSelected.cardAndItems.filterIsInstance<DashboardCards>().forEach { cardsTracker.trackShown(it) }
         siteSelected.cardAndItems.filterIsInstance<QuickStartCard>()
-                .firstOrNull()?.let { quickStartTracker.trackShown(it.type, defaultABExperimentTab) }
+                .firstOrNull()?.let { quickStartTracker.trackShown(it.type, defaultTab) }
         siteSelected.dashboardCardsAndItems.filterIsInstance<QuickStartCard>()
                 .firstOrNull()?.let { cardsTracker.trackQuickStartCardShown(quickStartRepository.quickStartType) }
     }

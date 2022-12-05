@@ -20,9 +20,11 @@ import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.stats.refresh.lists.widget.alltime.AllTimeWidgetUpdater
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureFragment.WidgetType.ALL_TIME_VIEWS
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureFragment.WidgetType.TODAY_VIEWS
+import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureFragment.WidgetType.WEEK_TOTAL
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureFragment.WidgetType.WEEK_VIEWS
 import org.wordpress.android.ui.stats.refresh.lists.widget.today.TodayWidgetUpdater
 import org.wordpress.android.ui.stats.refresh.lists.widget.views.ViewsWidgetUpdater
+import org.wordpress.android.ui.stats.refresh.lists.widget.weeks.WeekViewsWidgetUpdater
 import org.wordpress.android.ui.stats.refresh.utils.trackWithWidgetType
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -36,6 +38,7 @@ class StatsWidgetConfigureFragment : DaggerFragment() {
     @Inject lateinit var viewsWidgetUpdater: ViewsWidgetUpdater
     @Inject lateinit var allTimeWidgetUpdater: AllTimeWidgetUpdater
     @Inject lateinit var todayWidgetUpdater: TodayWidgetUpdater
+    @Inject lateinit var weekViewsWidgetUpdater: WeekViewsWidgetUpdater
     @Inject lateinit var appPrefsWrapper: AppPrefsWrapper
     @Inject lateinit var siteStore: SiteStore
     @Inject lateinit var imageManager: ImageManager
@@ -45,6 +48,7 @@ class StatsWidgetConfigureFragment : DaggerFragment() {
     private lateinit var colorSelectionViewModel: StatsColorSelectionViewModel
     private lateinit var widgetType: WidgetType
 
+    @Suppress("MagicNumber")
     override fun onInflate(context: Context, attrs: AttributeSet, savedInstanceState: Bundle?) {
         super.onInflate(context, attrs, savedInstanceState)
         activity?.let {
@@ -54,6 +58,7 @@ class StatsWidgetConfigureFragment : DaggerFragment() {
                 0 -> WEEK_VIEWS
                 1 -> ALL_TIME_VIEWS
                 2 -> TODAY_VIEWS
+                3 -> WEEK_TOTAL
                 else -> {
                     throw IllegalArgumentException("The view type with the value $views needs to be specified")
                 }
@@ -66,6 +71,7 @@ class StatsWidgetConfigureFragment : DaggerFragment() {
         return inflater.inflate(R.layout.stats_widget_configure_fragment, container, false)
     }
 
+    @Suppress("DEPRECATION", "LongMethod")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val nonNullActivity = requireActivity()
@@ -127,7 +133,7 @@ class StatsWidgetConfigureFragment : DaggerFragment() {
                 }
             })
 
-            viewModel.widgetAdded.observeEvent(viewLifecycleOwner, {
+            viewModel.widgetAdded.observeEvent(viewLifecycleOwner) {
                 analyticsTrackerWrapper.trackWithWidgetType(STATS_WIDGET_ADDED, it.widgetType)
                 when (it.widgetType) {
                     WEEK_VIEWS -> {
@@ -139,14 +145,17 @@ class StatsWidgetConfigureFragment : DaggerFragment() {
                     TODAY_VIEWS -> {
                         todayWidgetUpdater.updateAppWidget(requireContext(), appWidgetId = it.appWidgetId)
                     }
+                    WEEK_TOTAL -> {
+                        weekViewsWidgetUpdater.updateAppWidget(requireContext(), appWidgetId = it.appWidgetId)
+                    }
                 }
                 val resultValue = Intent()
                 resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
                 activity?.setResult(RESULT_OK, resultValue)
                 activity?.finish()
-            })
+            }
         }
     }
 
-    enum class WidgetType { WEEK_VIEWS, ALL_TIME_VIEWS, TODAY_VIEWS }
+    enum class WidgetType { WEEK_VIEWS, ALL_TIME_VIEWS, TODAY_VIEWS, WEEK_TOTAL }
 }

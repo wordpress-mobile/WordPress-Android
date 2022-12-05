@@ -241,6 +241,7 @@ class ThreatDetailsListItemsBuilder @Inject constructor(
         )
     }
 
+    @Suppress("ForbiddenComment")
     private fun buildDiff(diff: String) = DescriptionState(UiStringText(diff)) // TODO: ashiagr custom diff view?
 
     private fun buildFixTitleHeader(status: ThreatStatus, fixable: Fixable?) = HeaderState(

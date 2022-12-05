@@ -6,8 +6,8 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.R
 import org.wordpress.android.R.attr
-import org.wordpress.android.R.plurals
 import org.wordpress.android.fluxc.model.bloggingprompts.BloggingPromptModel
 import org.wordpress.android.ui.avatars.TrainOfAvatarsItem.AvatarItem
 import org.wordpress.android.ui.avatars.TrainOfAvatarsItem.TrailingLabelTextItem
@@ -26,7 +26,9 @@ private val RESPONDENTS_IN_CARD = listOf(
         AvatarItem("http://avatar3.url"),
         TrailingLabelTextItem(
                 UiStringPluralRes(
-                        plurals.my_site_blogging_prompt_card_number_of_answers,
+                        0,
+                        R.string.my_site_blogging_prompt_card_number_of_answers_one,
+                        R.string.my_site_blogging_prompt_card_number_of_answers_other,
                         NUMBER_OF_RESPONDENTS
                 ), attr.colorOnSurface
         )
@@ -41,7 +43,7 @@ private val RESPONDENTS = listOf(
 @RunWith(MockitoJUnitRunner::class)
 class BloggingPromptCardBuilderTest : BaseUnitTest() {
     private lateinit var builder: BloggingPromptCardBuilder
-    private val bloggingPrompt = BloggingPromptModel(
+    @Suppress("MaxLineLength") private val bloggingPrompt = BloggingPromptModel(
             id = 123,
             text = PROMPT_TITLE,
             title = "",

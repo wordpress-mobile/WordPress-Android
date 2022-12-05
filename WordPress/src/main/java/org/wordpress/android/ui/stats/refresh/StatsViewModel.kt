@@ -27,9 +27,10 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.push.NotificationType
 import org.wordpress.android.push.NotificationsProcessingService.ARG_NOTIFICATION_TYPE
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
+import org.wordpress.android.ui.jetpackoverlay.JetpackOverlayConnectedFeature.STATS
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
-import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.stats.StatsTimeframe
 import org.wordpress.android.ui.stats.StatsTimeframe.DAY
 import org.wordpress.android.ui.stats.StatsTimeframe.MONTH
@@ -41,13 +42,6 @@ import org.wordpress.android.ui.stats.refresh.StatsModuleActivateRequestState.Fa
 import org.wordpress.android.ui.stats.refresh.StatsModuleActivateRequestState.Success
 import org.wordpress.android.ui.stats.refresh.lists.BaseListUseCase
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
-import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.ANNUAL_STATS
-import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.DAYS
-import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.DETAIL
-import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.INSIGHTS
-import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.MONTHS
-import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.WEEKS
-import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.YEARS
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.utils.NewsCardHandler
 import org.wordpress.android.ui.stats.refresh.utils.SelectedSectionManager
@@ -55,10 +49,10 @@ import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.toStatsGranularity
 import org.wordpress.android.ui.stats.refresh.utils.trackGranular
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.util.JetpackBrandingUtils
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.MySiteDashboardTodaysStatsCardFeatureConfig
-import org.wordpress.android.util.config.StatsRevampV2FeatureConfig
 import org.wordpress.android.util.mapNullable
 import org.wordpress.android.util.mergeNotNull
 import org.wordpress.android.viewmodel.Event
@@ -67,7 +61,6 @@ import java.io.Serializable
 import javax.inject.Inject
 import javax.inject.Named
 
-@Suppress("TooManyFunctions", "LongParameterList")
 @HiltViewModel
 class StatsViewModel
 @Inject constructor(
@@ -76,7 +69,6 @@ class StatsViewModel
     @Named(BG_THREAD) private val defaultDispatcher: CoroutineDispatcher,
     private val selectedDateProvider: SelectedDateProvider,
     private val statsSectionManager: SelectedSectionManager,
-    private val appPrefsWrapper: AppPrefsWrapper,
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val statsSiteProvider: StatsSiteProvider,
@@ -85,7 +77,8 @@ class StatsViewModel
     private val statsModuleActivateUseCase: StatsModuleActivateUseCase,
     private val notificationsTracker: SystemNotificationsTracker,
     private val todaysStatsCardFeatureConfig: MySiteDashboardTodaysStatsCardFeatureConfig,
-    private val statsRevampV2FeatureConfig: StatsRevampV2FeatureConfig
+    private val jetpackBrandingUtils: JetpackBrandingUtils,
+    private val jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil
 ) : ScopedViewModel(mainDispatcher) {
     private val _isRefreshing = MutableLiveData<Boolean>()
     val isRefreshing: LiveData<Boolean> = _isRefreshing
@@ -101,7 +94,9 @@ class StatsViewModel
 
     val siteChanged = statsSiteProvider.siteChanged
 
-    val toolbarHasShadow: LiveData<Boolean> = statsSectionManager.liveSelectedSection.mapNullable { it == INSIGHTS }
+    val toolbarHasShadow: LiveData<Boolean> = statsSectionManager.liveSelectedSection.mapNullable {
+        it == StatsSection.INSIGHTS
+    }
 
     val hideToolbar = newsCardHandler.hideToolbar
 
@@ -109,6 +104,15 @@ class StatsViewModel
 
     private val _statsModuleUiModel = MediatorLiveData<Event<StatsModuleUiModel>>()
     val statsModuleUiModel: LiveData<Event<StatsModuleUiModel>> = _statsModuleUiModel
+
+    private val _showUpgradeAlert = MutableLiveData<Event<Boolean>>()
+    val showUpgradeAlert: LiveData<Event<Boolean>> = _showUpgradeAlert
+
+    private val _showJetpackPoweredBottomSheet = MutableLiveData<Event<Boolean>>()
+    val showJetpackPoweredBottomSheet: LiveData<Event<Boolean>> = _showJetpackPoweredBottomSheet
+
+    private val _showJetpackOverlay = MutableLiveData<Event<Boolean>>()
+    val showJetpackOverlay: LiveData<Event<Boolean>> = _showJetpackOverlay
 
     fun start(intent: Intent, restart: Boolean = false) {
         val localSiteId = intent.getIntExtra(WordPress.LOCAL_SITE_ID, 0)
@@ -135,16 +139,16 @@ class StatsViewModel
 
     private fun getInitialTimeFrame(intent: Intent): StatsSection? {
         return when (intent.getSerializableExtra(StatsActivity.ARG_DESIRED_TIMEFRAME)) {
-            StatsTimeframe.INSIGHTS -> INSIGHTS
-            DAY -> DAYS
-            WEEK -> WEEKS
-            MONTH -> MONTHS
-            YEAR -> YEARS
+            StatsTimeframe.INSIGHTS -> StatsSection.INSIGHTS
+            DAY -> StatsSection.DAYS
+            WEEK -> StatsSection.WEEKS
+            MONTH -> StatsSection.MONTHS
+            YEAR -> StatsSection.YEARS
             else -> null
         }
     }
 
-    @Suppress("ComplexMethod")
+    @Suppress("ComplexMethod", "LongParameterList")
     fun start(
         localSiteId: Int,
         launchedFrom: Serializable?,
@@ -168,7 +172,7 @@ class StatsViewModel
             )
 
             initialSection?.let { statsSectionManager.setSelectedSection(it) }
-            trackSectionSelected(initialSection ?: INSIGHTS)
+            trackSectionSelected(initialSection ?: StatsSection.INSIGHTS)
 
             val initialGranularity = initialSection?.toStatsGranularity()
             if (initialGranularity != null && initialSelectedPeriod != null) {
@@ -200,37 +204,45 @@ class StatsViewModel
             }
         }
 
-        if (BuildConfig.IS_JETPACK_APP && statsRevampV2FeatureConfig.isEnabled()) {
-            updateRevampedInsights()
-        }
+        if (statsSectionManager.getSelectedSection() == StatsSection.INSIGHTS) showInsightsUpdateAlert()
 
-        if (launchedFrom == StatsLaunchedFrom.FEATURE_ANNOUNCEMENT) {
-            if (statsSectionManager.getSelectedSection() != INSIGHTS) statsSectionManager.setSelectedSection(INSIGHTS)
+        if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) showJetpackPoweredBottomSheet()
+
+        if(jetpackFeatureRemovalOverlayUtil.shouldShowFeatureSpecificJetpackOverlay(STATS))
+            showJetpackOverlay()
+    }
+
+    private fun showJetpackOverlay() {
+        _showJetpackOverlay.value = Event(true)
+    }
+
+    private fun showJetpackPoweredBottomSheet() {
+//        _showJetpackPoweredBottomSheet.value = Event(true)
+    }
+
+    private fun showInsightsUpdateAlert() {
+        if (BuildConfig.IS_JETPACK_APP) {
+            launch {
+                val insightTypes = statsStore.getAddedInsights(statsSiteProvider.siteModel)
+                if (insightTypes.containsAll(DEFAULT_INSIGHTS)) { // means not upgraded to new insights
+                    _showUpgradeAlert.value = Event(true)
+                    updateRevampedInsights()
+                }
+            }
         }
     }
 
     private fun updateRevampedInsights() {
-        val insightsUseCase = listUseCases[INSIGHTS]
+        val insightsUseCase = listUseCases[StatsSection.INSIGHTS]
         insightsUseCase?.launch(defaultDispatcher) {
-            when (val insightTypes = statsStore.getAddedInsights(statsSiteProvider.siteModel)) {
-                JETPACK_DEFAULT_INSIGHTS -> {
-                    return@launch
-                }
-                DEFAULT_INSIGHTS -> {
-                    // Insights cards match the previous default set of cards,
-                    // switch it to show the new set of default cards
-                    statsStore.updateTypes(statsSiteProvider.siteModel, JETPACK_DEFAULT_INSIGHTS)
-                }
-                else -> {
-                    // Insights cards does not match the existing defaults,
-                    // the new set of default cards is added at the top of their list and preserve their additions
-                    val addedInsightTypes = insightTypes - DEFAULT_INSIGHTS.toSet()
-                    val updateInsightTypes: MutableSet<InsightType> = mutableSetOf()
-                    updateInsightTypes.addAll(JETPACK_DEFAULT_INSIGHTS)
-                    updateInsightTypes.addAll(addedInsightTypes)
-                    statsStore.updateTypes(statsSiteProvider.siteModel, updateInsightTypes.toList())
-                }
-            }
+            val insightTypes = statsStore.getAddedInsights(statsSiteProvider.siteModel)
+
+            // The new set of default cards is added at the top of their list and preserve their additions
+            val addedInsightTypes = insightTypes - DEFAULT_INSIGHTS.toSet()
+            val updateInsightTypes: MutableSet<InsightType> = mutableSetOf()
+            updateInsightTypes.addAll(JETPACK_DEFAULT_INSIGHTS)
+            updateInsightTypes.addAll(addedInsightTypes)
+            statsStore.updateTypes(statsSiteProvider.siteModel, updateInsightTypes.toList())
             insightsUseCase.loadData()
         }
     }
@@ -280,18 +292,24 @@ class StatsViewModel
 
         listUseCases[statsSection]?.onListSelected()
 
+        if (statsSection == StatsSection.INSIGHTS) showInsightsUpdateAlert()
+
         trackSectionSelected(statsSection)
     }
 
     private fun trackSectionSelected(statsSection: StatsSection) {
         when (statsSection) {
-            INSIGHTS -> analyticsTracker.track(STATS_INSIGHTS_ACCESSED)
-            DAYS -> analyticsTracker.trackGranular(STATS_PERIOD_DAYS_ACCESSED, StatsGranularity.DAYS)
-            WEEKS -> analyticsTracker.trackGranular(STATS_PERIOD_WEEKS_ACCESSED, StatsGranularity.WEEKS)
-            MONTHS -> analyticsTracker.trackGranular(STATS_PERIOD_MONTHS_ACCESSED, StatsGranularity.MONTHS)
-            YEARS -> analyticsTracker.trackGranular(STATS_PERIOD_YEARS_ACCESSED, StatsGranularity.YEARS)
-            ANNUAL_STATS, DETAIL -> {
-            }
+            StatsSection.INSIGHTS -> analyticsTracker.track(STATS_INSIGHTS_ACCESSED)
+            StatsSection.DAYS -> analyticsTracker.trackGranular(STATS_PERIOD_DAYS_ACCESSED, StatsGranularity.DAYS)
+            StatsSection.WEEKS -> analyticsTracker.trackGranular(STATS_PERIOD_WEEKS_ACCESSED, StatsGranularity.WEEKS)
+            StatsSection.MONTHS -> analyticsTracker.trackGranular(STATS_PERIOD_MONTHS_ACCESSED, StatsGranularity.MONTHS)
+            StatsSection.YEARS -> analyticsTracker.trackGranular(STATS_PERIOD_YEARS_ACCESSED, StatsGranularity.YEARS)
+            StatsSection.ANNUAL_STATS -> Unit // Do nothing
+            StatsSection.DETAIL -> Unit // Do nothing
+            StatsSection.INSIGHT_DETAIL -> Unit // Do nothing
+            StatsSection.TOTAL_LIKES_DETAIL -> Unit // Do nothing
+            StatsSection.TOTAL_COMMENTS_DETAIL -> Unit // Do nothing
+            StatsSection.TOTAL_FOLLOWERS_DETAIL -> Unit // Do nothing
         }
     }
 

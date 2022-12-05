@@ -44,10 +44,9 @@ import javax.inject.Inject
 import javax.inject.Named
 import kotlin.math.ceil
 
-const val VIEWS_AND_VISITORS_ITEMS_TO_LOAD = 14
+const val VIEWS_AND_VISITORS_ITEMS_TO_LOAD = 15
 const val TOP_TIPS_URL = "https://wordpress.com/support/getting-more-views-and-traffic/"
 
-@Suppress("TooManyFunctions")
 class ViewsAndVisitorsUseCase
 @Inject constructor(
     statsType: StatsType,
@@ -90,7 +89,6 @@ class ViewsAndVisitorsUseCase
         )
         if (cachedData != null) {
             logIfIncorrectData(cachedData, statsGranularity, statsSiteProvider.siteModel, false)
-            selectedDateProvider.onDateLoadingSucceeded(statsGranularity)
         }
         return cachedData
     }
@@ -107,16 +105,13 @@ class ViewsAndVisitorsUseCase
 
         return when {
             error != null -> {
-                selectedDateProvider.onDateLoadingFailed(statsGranularity)
                 State.Error(error.message ?: error.type.name)
             }
             model != null && model.dates.isNotEmpty() -> {
                 logIfIncorrectData(model, statsGranularity, statsSiteProvider.siteModel, true)
-                selectedDateProvider.onDateLoadingSucceeded(statsGranularity)
                 State.Data(model)
             }
             else -> {
-                selectedDateProvider.onDateLoadingSucceeded(statsGranularity)
                 State.Empty()
             }
         }

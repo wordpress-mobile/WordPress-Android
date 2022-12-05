@@ -1,11 +1,82 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2020-11-21 10:07:13+0000
+Translation-Revision-Date: 2022-11-12 12:10:37+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.1
+Generator: GlotPress/4.0.0-alpha.3
 Language: ku_TR
 -->
 <resources>
+    <string name="post_settings_parent">Make-Rûpel</string>
+    <string name="post_settings_page_attributes">Taybetiyên Rûpelê</string>
+    <string name="about_automattic_contribute_item_title">Beşdariyê bike</string>
+    <string name="about_news">Nûçe</string>
+    <string name="my_site_blogging_prompt_card_number_of_answers_one">Bersivek</string>
+    <string name="login_prologue_revamped_content_description_wordpress_icon">Sembola WordPressê</string>
+    <string name="login_prologue_revamped_tagline">Ji her derê binivîse, biguherîne û biweşîne.</string>
+    <string name="error_fetch_authors_list">Nivîskar nehatin stendin</string>
+    <string name="post_settings_author">Nivîskar</string>
+    <string name="app_rating_title">%s ket serê te?</string>
+    <string name="stats_referrers_pie_chart_total_label">Dîtin</string>
+    <string name="my_site_blogging_prompt_card_attribution_dayone">Ji</string>
+    <string name="stats_referrers_pie_chart_search">Lê bigere</string>
+    <string name="stats_referrers_pie_chart_others">Yên din</string>
+    <string name="stats_follower_types_pie_chart_total_label">Giştî</string>
+    <string name="dialog_button_ok">Baş e</string>
+    <string name="stop_upload_dialog_button_no">Na</string>
+    <string name="stop_upload_dialog_button_yes">Erê</string>
+    <string name="retry_failed_upload_yes">Dîsa biceribîne</string>
+    <string name="stop_save_dialog_ok_button">Baş e</string>
+    <string name="pixel_suffix">%dpiksel</string>
+    <string name="editor_title_beta">Beta</string>
+    <string name="blogging_prompts_onboarding_content_note_title">Nîşe:</string>
+    <string name="site_creation_intent_food">Xwarin</string>
+    <string name="site_creation_intent_news">Nûçe</string>
+    <string name="site_creation_intent_music">Muzîk</string>
+    <string name="site_creation_intent_art">Huner</string>
+    <string name="site_creation_intent_books">Pirtûk</string>
+    <string name="my_site_all_tab_title">Hemû</string>
+    <string name="my_site_dashboard_tab_title">Destpêk</string>
+    <string name="my_site_menu_tab_title">Menû</string>
+    <string name="reader_comment_menu_edit">Serrast bike</string>
+    <string name="about_automattic_tumblr">Tumblr</string>
+    <string name="about_automattic_rate_us_item_title">Me Binirxîne</string>
+    <string name="about_automattic_twitter_item_title">Twitter</string>
+    <string name="about_blog">Blog</string>
+    <string name="post_status_sticky">Zeliqok</string>
+    <string name="comment_edit_menu_done">Qediya</string>
+    <string name="comment_edit_user_name">Nav</string>
+    <string name="comment_edit_comment">Şîrove bike</string>
+    <string name="domains_primary_site_address">%s</string>
+    <string name="blogging_reminders_tip">Serbend</string>
+    <string name="blogging_reminders_update">Nûvekirin</string>
+    <string name="blogging_reminders_done">Qediya</string>
+    <string name="user_profile_site_section_header">Malper</string>
+    <string name="gutenberg_native_two">Du</string>
+    <string name="gutenberg_native_three">Sê</string>
+    <string name="gutenberg_native_mention">Behskirin</string>
+    <string name="gutenberg_native_new">NÛ</string>
+    <string name="gutenberg_native_gif">GIF</string>
+    <string name="gutenberg_native_retry">Dîsa biceribîne</string>
+    <string name="gutenberg_native_one">Yek</string>
+    <string name="gutenberg_native_four">Çar</string>
+    <string name="like_title_singular">Ecibandinek</string>
+    <string name="gutenberg_native_inside">Di nav de</string>
+    <string name="gutenberg_native_outside">Li derve</string>
+    <string name="disable">Neçalak bike</string>
+    <string name="backup_item_sqls_hint">(SQL)</string>
+    <string name="gutenberg_native_open">VEKIRÎ</string>
+    <string name="threat_found_header">Hat dîtin</string>
+    <string name="threat_status_fixed">Hat serrastkirin</string>
+    <string name="backup_download_complete_failed_action_button">Qediya</string>
+    <string name="scan_history_all_threats_tab">Hemû</string>
+    <string name="scan_history_fixed_threats_tab">Hat serrastkirin</string>
+    <string name="jetpack_icon_content_description">Sembol</string>
+    <string name="suggestion_user">bikarhêner</string>
+    <string name="backup">Yedek</string>
+    <string name="gutenberg_native_error">Çewtî</string>
+    <string name="my_site_header_jetpack">Jetpack</string>
+    <string name="activity_log_activity_type_filter_apply">Bisepîne</string>
+    <string name="activity_log_activity_type_filter_clear">Paqij bike</string>
     <string name="color_picker_label_background">Paşrû</string>
     <string name="color_picker_label_text">Nivîs</string>
     <string name="dialog_discard_story_ok_button_edit">Biavêje</string>
@@ -311,7 +382,6 @@ Language: ku_TR
     <string name="photo_picker_photo_or_video_title">Medya hilbijêre</string>
     <string name="photo_picker_video_title">Vîdyo Hilbijêre</string>
     <string name="site_picker_ask_site_select">Malper nehat bijartin. Jkx, dîsa biceribîne.</string>
-    <string name="feature_announcement_dialog_label">Di WordPress\'ê De Çi Nû Ne</string>
     <string name="crop">biqusîne</string>
     <string name="preview_image_thumbnail_description">Pêşdîtina Wêneyê Biçûk</string>
     <string name="insert_label_with_count">%d\'ê tevlî bike</string>
@@ -399,7 +469,6 @@ Language: ku_TR
     <string name="post_list_tab_trashed_posts">Jêçûyî</string>
     <string name="post_list_tab_scheduled_posts">Demsazkirî</string>
     <string name="post_list_tab_published_posts">Weşandî</string>
-    <string name="sharing_facebook_account_must_have_pages">Girêdana Facebookê nikare ti Rûpelan bibîne. Bangewazî, bi Profîlên Facebookê ve nayê girêdan, tenê dikare bi Rûpelên weşandî ve bê girêdan.</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">Nehatiye girêdan</string>
     <string name="notifications_tab_title_follows">Şopîner</string>
     <string name="notifications_tab_title_comments">Şîrove</string>
@@ -780,7 +849,6 @@ Language: ku_TR
     <string name="app_rating_rate_later">Piştre</string>
     <string name="app_rating_rate_now">Aniha deng bidê</string>
     <string name="app_rating_message">Çavê me li rêya betilî! Heke kêfa te ji sepanê re hatibe, ji dengdayîna te ya li Google Play Storeê em ê kêfxweş bibin.</string>
-    <string name="app_rating_title">Kêfa te ji WordPressê re hat?</string>
     <string name="stats_site_not_loaded_yet">Malper hîn nehatiye barkirin</string>
     <string name="stats_fewer_posts">Şandiyên kêmtir</string>
     <string name="editor_post_converted_back_to_draft">Şandî veguherî rewşa reşnivîsê</string>
@@ -812,9 +880,6 @@ Language: ku_TR
     <string name="notification_channel_reminder_title">Bîranîner</string>
     <string name="stats_select_previous_period_description">Heyama paşî hilbijêre</string>
     <string name="stats_insights_popular">Dema Herî Populer</string>
-    <string name="stats_traffic_change">%1$s (%2$s%%)</string>
-    <string name="stats_traffic_increase">+%1$s (%2$s%%)</string>
-    <string name="stats_most_popular_percent_views">%1$d%% ji dîtinan</string>
     <string name="stats_select_next_period_description">Heyama pêş hilbijêre</string>
     <string name="new_site_creation_clear_all_content_description">Paqij bike</string>
     <string name="notification_new_site_creation_creating_site_subtitle">Em malpera te ya nû diafirînin</string>
@@ -1582,10 +1647,8 @@ Language: ku_TR
     <string name="share_btn_disconnect">Girêdanê qut bike</string>
     <string name="share_btn_connect">Girêde</string>
     <string name="connection_service_description">Ji bo ku tu şandiyên blogê yên li ser %s\'ê bixweber parve bikî, lê girêde.</string>
-    <string name="connection_service_label">Li ser %sê belav bike</string>
     <string name="connected_accounts_label">Hesabên girêdayî</string>
     <string name="connections_description">Servîsên medyaya civakî yên kêfa te ji wan re tê lê girede û bila bixweber şandiyên nû bi hevalên te re werin parvekirin.</string>
-    <string name="connections_label">Girêdan</string>
     <string name="sharing">Parvekirin</string>
     <string name="tabbar_accessibility_label_notifications">Danezan. Danezanên xwe bi rê ve bibe.</string>
     <string name="tabbar_accessibility_label_reader">Xwîner. Ji malperên din naverokan bişopîne.</string>
@@ -1804,6 +1867,7 @@ Language: ku_TR
     <string name="comments_empty_list_filtered_trashed">Di jêbirdankê de şîrove tune ye</string>
     <string name="comments_empty_list_filtered_pending">Şîroveyên hilawestî tune ye</string>
     <string name="comments_empty_list_filtered_approved">Şîroveyên pejirandî tune ye</string>
+    <string name="button_skip">Derbas bibe</string>
     <string name="xmlrpc_missing_method_error">Girêdan pêk nehat. Fonksiyonên XML-RPC yên pêwîst di serverê de kêm in.</string>
     <string name="post_format_video">Vîdyo</string>
     <string name="post_format_status">Rewş</string>
@@ -2328,4 +2392,13 @@ Language: ku_TR
     <string name="save">Tomar bike</string>
     <string name="cancel">Betal bike</string>
     <string name="add">Tevlî bike</string>
+    <string-array name="blogging_reminders_count">
+        <item>Carekê</item>
+        <item>Du caran</item>
+        <item>Three times</item>
+        <item>Four times</item>
+        <item>Five times</item>
+        <item>Six times</item>
+        <item>Seven times</item>
+    </string-array>
 </resources>

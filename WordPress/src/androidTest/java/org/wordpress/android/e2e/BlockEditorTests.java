@@ -5,6 +5,7 @@ import android.Manifest.permission;
 import androidx.test.rule.GrantPermissionRule;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.wordpress.android.e2e.pages.BlockEditorPage;
@@ -26,7 +27,6 @@ public class BlockEditorTests extends BaseTest {
         wpLogin();
     }
 
-    String mTitle = "Hello Espresso!";
     String mPostText = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
     String mCategory = "Wedding";
     String mTag = "Tag " + Instant.now().toEpochMilli();
@@ -40,28 +40,33 @@ public class BlockEditorTests extends BaseTest {
                        + "<!-- /wp:image --></div>\n";
 
     @Test
-    public void publishSimplePost() {
+    public void e2ePublishSimplePost() {
+        String title = "publishSimplePost";
+
         new MySitesPage()
                 .go()
                 .startNewPost();
 
         new BlockEditorPage()
                 .waitForTitleDisplayed()
-                .enterTitle(mTitle)
+                .enterTitle(title)
                 .enterParagraphText(mPostText)
                 .publish()
                 .verifyPostPublished();
     }
 
+    @Ignore
     @Test
-    public void publishFullPost() {
+    public void e2ePublishFullPost() {
+        String title = "publishFullPost";
+
         new MySitesPage()
                 .go()
                 .startNewPost();
 
         new BlockEditorPage()
                 .waitForTitleDisplayed()
-                .enterTitle(mTitle)
+                .enterTitle(title)
                 .enterParagraphText(mPostText)
                 .addImage()
                 .addPostSettings(mCategory, mTag)
@@ -72,14 +77,16 @@ public class BlockEditorTests extends BaseTest {
     }
 
     @Test
-    public void blockEditorCanDisplayElementAddedInHtmlMode() {
+    public void e2eBlockEditorCanDisplayElementAddedInHtmlMode() {
+        String title = "blockEditorCanDisplayElementAddedInHtmlMode";
+
         new MySitesPage()
                 .go()
                 .startNewPost();
 
         new BlockEditorPage()
                 .waitForTitleDisplayed()
-                .enterTitle(mTitle)
+                .enterTitle(title)
                 .switchToHtmlMode()
                 .enterParagraphText(mHtmlPost)
                 .switchToVisualMode()

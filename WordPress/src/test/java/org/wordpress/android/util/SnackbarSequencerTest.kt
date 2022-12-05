@@ -4,23 +4,22 @@ import android.app.Activity
 import android.view.View
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.android.material.snackbar.Snackbar
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.argumentCaptor
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.never
-import com.nhaarman.mockitokotlin2.spy
-import com.nhaarman.mockitokotlin2.times
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.junit.rules.ExpectedException
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.any
+import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.never
+import org.mockito.kotlin.spy
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString.UiStringText
@@ -33,8 +32,8 @@ private const val TEST_MESSAGE = "This is a test message"
 @InternalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class SnackbarSequencerTest {
-    @Rule @JvmField val rule = InstantTaskExecutorRule()
-    @Rule @JvmField var thrown2: ExpectedException = ExpectedException.none()
+    @Rule
+    @JvmField val rule = InstantTaskExecutorRule()
 
     @Mock lateinit var wpSnackbarWrapper: WPSnackbarWrapper
     @Mock lateinit var wpSnackbar: Snackbar

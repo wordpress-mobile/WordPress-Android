@@ -25,7 +25,7 @@ import org.wordpress.android.ui.jetpack.backup.download.usecases.PostDismissBack
 import org.wordpress.android.ui.jetpack.common.JetpackBackupDownloadActionState.PROGRESS
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState
 import org.wordpress.android.ui.jetpack.restore.usecases.GetRestoreStatusUseCase
-import org.wordpress.android.ui.stats.refresh.utils.DateUtils
+import org.wordpress.android.ui.stats.refresh.utils.StatsDateUtils
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
@@ -60,14 +60,14 @@ typealias DateRange = Pair<Long, Long>
  * necessity to split those features in separate screens in order not to increase further the complexity of this
  * screen's architecture.
  */
-@Suppress("LargeClass", "LongParameterList")
+@Suppress("LargeClass")
 class ActivityLogViewModel @Inject constructor(
     private val activityLogStore: ActivityLogStore,
     private val getRestoreStatusUseCase: GetRestoreStatusUseCase,
     private val getBackupDownloadStatusUseCase: GetBackupDownloadStatusUseCase,
     private val postDismissBackupDownloadUseCase: PostDismissBackupDownloadUseCase,
     private val resourceProvider: ResourceProvider,
-    private val dateUtils: DateUtils,
+    private val statsDateUtils: StatsDateUtils,
     private val activityLogTracker: ActivityLogTracker,
     private val jetpackCapabilitiesUseCase: JetpackCapabilitiesUseCase
 ) : ViewModel() {
@@ -440,7 +440,7 @@ class ActivityLogViewModel @Inject constructor(
     private fun createDateRangeFilterLabel(): kotlin.Pair<UiString, UiString> {
         return currentDateRangeFilter?.let {
             val label = UiStringText(
-                    dateUtils.formatDateRange(requireNotNull(it.first), requireNotNull(it.second), TIMEZONE_GMT_0)
+                    statsDateUtils.formatDateRange(requireNotNull(it.first), requireNotNull(it.second), TIMEZONE_GMT_0)
             )
             kotlin.Pair(label, label)
         } ?: kotlin.Pair(

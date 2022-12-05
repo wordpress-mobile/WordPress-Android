@@ -1,18 +1,16 @@
 package org.wordpress.android.ui.reader.subfilter
 
 import com.google.gson.JsonParser
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
-import org.hamcrest.core.StringContains
 import org.json.JSONObject
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
-import org.junit.rules.ExpectedException
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.any
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
 import org.wordpress.android.datasets.ReaderBlogTableWrapper
 import org.wordpress.android.models.ReaderBlog
 import org.wordpress.android.models.ReaderTag
@@ -21,20 +19,17 @@ import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Site
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.SiteAll
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Tag
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
-import java.lang.IllegalArgumentException
 
 @RunWith(MockitoJUnitRunner::class)
 class SubfilterListItemMapperTest {
     @Mock lateinit var readerUtilsWrapper: ReaderUtilsWrapper
     @Mock lateinit var readerBlogTableWrapper: ReaderBlogTableWrapper
 
-    @Rule @JvmField var thrown: ExpectedException = ExpectedException.none()
-
     private lateinit var listItemMapper: SubfilterListItemMapper
     private val jsonTester = JsonParser()
 
-    val blog = ReaderBlog.fromJson(JSONObject(SITE_JSON_WITH_BLOGID))
-    val feed = ReaderBlog.fromJson(JSONObject(SITE_JSON_WITH_FEEDID))
+    private val blog: ReaderBlog = ReaderBlog.fromJson(JSONObject(SITE_JSON_WITH_BLOG_ID))
+    private val feed: ReaderBlog = ReaderBlog.fromJson(JSONObject(SITE_JSON_WITH_FEED_ID))
 
     private val tag = ReaderTag(
             "news",
@@ -61,25 +56,23 @@ class SubfilterListItemMapperTest {
         // When
         val item = listItemMapper.fromJson(
                 json = json,
-                onClickAction = ::onClickActionDummy,
+                onClickAction = mock(),
                 isSelected = false
         )
 
         // Then
-        assertThat(item is SiteAll).isTrue()
+        assertThat(item is SiteAll).isTrue
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException::class)
     fun `fromJson returns exception on unknown type`() {
         // Given
         val json = WRONG_TYPE_JSON
-        thrown.expect(IllegalArgumentException::class.java)
-        thrown.expectMessage(StringContains("fromJson > Unexpected Subfilter type"))
 
         // When
         listItemMapper.fromJson(
                 json = json,
-                onClickAction = ::onClickActionDummy,
+                onClickAction = mock(),
                 isSelected = false
         )
 
@@ -95,44 +88,44 @@ class SubfilterListItemMapperTest {
         // When
         val item = listItemMapper.fromJson(
                 json = json,
-                onClickAction = ::onClickActionDummy,
+                onClickAction = mock(),
                 isSelected = false
         )
 
         // Then
-        assertThat(item is SiteAll).isTrue()
+        assertThat(item is SiteAll).isTrue
     }
 
     @Test
     fun `fromJson returns blog when valid blogId`() {
         // Given
-        val json = SITE_JSON_WITH_BLOGID
+        val json = SITE_JSON_WITH_BLOG_ID
 
         // When
         val item = listItemMapper.fromJson(
                 json = json,
-                onClickAction = ::onClickActionDummy,
+                onClickAction = mock(),
                 isSelected = false
         )
 
         // Then
-        assertThat(item is Site && item.blog == blog).isTrue()
+        assertThat(item is Site && item.blog == blog).isTrue
     }
 
     @Test
     fun `fromJson returns feed when valid feedId`() {
         // Given
-        val json = SITE_JSON_WITH_FEEDID
+        val json = SITE_JSON_WITH_FEED_ID
 
         // When
         val item = listItemMapper.fromJson(
                 json = json,
-                onClickAction = ::onClickActionDummy,
+                onClickAction = mock(),
                 isSelected = false
         )
 
         // Then
-        assertThat(item is Site && item.blog == feed).isTrue()
+        assertThat(item is Site && item.blog == feed).isTrue
     }
 
     @Test
@@ -143,12 +136,12 @@ class SubfilterListItemMapperTest {
         // When
         val item = listItemMapper.fromJson(
                 json = json,
-                onClickAction = ::onClickActionDummy,
+                onClickAction = mock(),
                 isSelected = false
         )
 
         // Then
-        assertThat(item is Tag && item.tag == tag).isTrue()
+        assertThat(item is Tag && item.tag == tag).isTrue
     }
 
     @Test
@@ -159,18 +152,18 @@ class SubfilterListItemMapperTest {
         // When
         val item = listItemMapper.fromJson(
                 json = json,
-                onClickAction = ::onClickActionDummy,
+                onClickAction = mock(),
                 isSelected = false
         )
 
         // Then
-        assertThat(item is SiteAll).isTrue()
+        assertThat(item is SiteAll).isTrue
     }
 
     @Test
     fun `toJson returns correct SiteAll JSON`() {
         // Given
-        val item = SiteAll(onClickAction = ::onClickActionDummy)
+        val item = SiteAll(onClickAction = mock())
 
         // When
         val json = listItemMapper.toJson(item)
@@ -187,7 +180,7 @@ class SubfilterListItemMapperTest {
         // Given
         val blog = ReaderBlog.fromJson(JSONObject(SITE_JSON))
         val item = Site(
-                onClickAction = ::onClickActionDummy,
+                onClickAction = mock(),
                 blog = blog
         )
 
@@ -205,7 +198,7 @@ class SubfilterListItemMapperTest {
     fun `toJson returns correct Tag JSON`() {
         // Given
         val item = Tag(
-                onClickAction = ::onClickActionDummy,
+                onClickAction = mock(),
                 tag = tag
         )
 
@@ -222,14 +215,12 @@ class SubfilterListItemMapperTest {
     private companion object Fixtures {
         private const val SITE_ALL_JSON = "{\"blogId\":0,\"feedId\":0,\"tagSlug\":\"\",\"tagType\":0,\"type\":1}"
         private const val SITE_JSON = "{\"blogId\":0,\"feedId\":0,\"tagSlug\":\"\",\"tagType\":0,\"type\":2}"
-        private const val SITE_JSON_WITH_BLOGID =
+        private const val SITE_JSON_WITH_BLOG_ID =
                 "{\"blogId\":1234,\"feedId\":0,\"tagSlug\":\"\",\"tagType\":0,\"type\":2}"
-        private const val SITE_JSON_WITH_FEEDID =
+        private const val SITE_JSON_WITH_FEED_ID =
                 "{\"blogId\":0,\"feedId\":1234,\"tagSlug\":\"\",\"tagType\":0,\"type\":2}"
         private const val TAG_JSON = "{\"blogId\":0,\"feedId\":0,\"tagSlug\":\"news\",\"tagType\":1,\"type\":4}"
         private const val TAG_JSON_EMPTY_SLUG = "{\"blogId\":0,\"feedId\":0,\"tagSlug\":\"\",\"tagType\":1,\"type\":4}"
         private const val WRONG_TYPE_JSON = "{\"blogId\":0,\"feedId\":0,\"tagSlug\":\"news\",\"tagType\":1,\"type\":10}"
-
-        private fun onClickActionDummy(filter: SubfilterListItem) {}
     }
 }

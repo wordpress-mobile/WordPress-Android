@@ -17,7 +17,6 @@ import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistr
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.DOMAIN_PURCHASE
 import org.wordpress.android.ui.domains.DomainsDashboardNavigationAction.ClaimDomain
 import org.wordpress.android.ui.domains.DomainsDashboardNavigationAction.GetDomain
-import org.wordpress.android.ui.domains.DomainsDashboardNavigationAction.OpenManageDomains
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
@@ -70,12 +69,9 @@ class DomainsDashboardFragment : Fragment(R.layout.domains_dashboard_fragment) {
                 action.site,
                 CTA_DOMAIN_CREDIT_REDEMPTION
         )
-        is OpenManageDomains -> ActivityLauncher.openUrlExternal(
-                requireContext(),
-                action.url
-        )
     }
 
+    @Suppress("DEPRECATION", "OVERRIDE_DEPRECATION")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == RESULT_OK && requestCode == DOMAIN_REGISTRATION) {

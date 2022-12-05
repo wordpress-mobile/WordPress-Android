@@ -1,14 +1,14 @@
 package org.wordpress.android.ui.stats.refresh.utils
 
-import com.nhaarman.mockitokotlin2.KArgumentCaptor
-import com.nhaarman.mockitokotlin2.argumentCaptor
-import com.nhaarman.mockitokotlin2.times
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
+import org.mockito.kotlin.KArgumentCaptor
+import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.action.SiteAction
@@ -116,7 +116,7 @@ class StatsSiteProviderTest : BaseUnitTest() {
             event = it.getContentIfNotHandled()
         }
 
-        for (i in 0..2) {
+        (0..2).forEach {
             statsSiteProvider.onSiteChanged(OnSiteChanged(1))
         }
 
@@ -134,7 +134,7 @@ class StatsSiteProviderTest : BaseUnitTest() {
             event = it.getContentIfNotHandled()
         }
 
-        for (i in 0..3) {
+        (0..3).forEach {
             statsSiteProvider.onSiteChanged(OnSiteChanged(1))
         }
 

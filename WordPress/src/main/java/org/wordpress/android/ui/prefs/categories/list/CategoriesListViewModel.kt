@@ -87,7 +87,7 @@ class CategoriesListViewModel @Inject constructor(
         } else if (_uiState.value is Loading) _uiState.postValue(NoConnection(::onRetryClicked))
     }
 
-    @SuppressWarnings("unused")
+    @Suppress("unused")
     @Subscribe(threadMode = MAIN)
     fun onTaxonomyChanged(event: OnTaxonomyChanged) {
         if (event.isError) AppLog.e(
@@ -101,7 +101,7 @@ class CategoriesListViewModel @Inject constructor(
             launch { fetchCategoriesFromNetwork() }
     }
 
-    @SuppressWarnings("unused")
+    @Suppress("unused")
     @Subscribe(threadMode = MAIN)
     fun onTermUploaded(event: OnTermUploaded) {
         if (!event.isError) getCategoriesFromDb()
@@ -111,7 +111,7 @@ class CategoriesListViewModel @Inject constructor(
         _navigation.postValue(CreateCategory)
     }
 
-    @SuppressWarnings("unused")
+    @Suppress("unused", "UNUSED_PARAMETER")
     fun onCategoryClicked(categoryNode: CategoryNode) {
         _navigation.postValue(EditCategory(categoryNode.categoryId))
     }

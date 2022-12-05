@@ -205,13 +205,13 @@ class PrepublishingCategoriesFragment : Fragment(R.layout.prepublishing_categori
         }
     }
 
-    @SuppressWarnings("unused")
+    @Suppress("unused")
     @Subscribe(threadMode = MAIN)
     fun onTermUploaded(event: OnTermUploaded) {
         viewModel.onTermUploadedComplete(event)
     }
 
-    @SuppressWarnings("unused")
+    @Suppress("unused")
     @Subscribe(threadMode = MAIN)
     fun onTaxonomyChanged(event: OnTaxonomyChanged) {
         viewModel.onTaxonomyChanged(event)

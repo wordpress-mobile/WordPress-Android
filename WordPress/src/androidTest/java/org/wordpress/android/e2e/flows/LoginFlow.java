@@ -23,6 +23,7 @@ import static org.wordpress.android.BuildConfig.E2E_WP_COM_USER_PASSWORD;
 import static org.wordpress.android.BuildConfig.E2E_WP_COM_USER_USERNAME;
 import static org.wordpress.android.support.WPSupportUtils.atLeastOneElementWithIdIsDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.clickOn;
+import static org.wordpress.android.support.WPSupportUtils.isElementDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.populateTextField;
 import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDisplayed;
 
@@ -56,27 +57,22 @@ public class LoginFlow {
             enterUsernameAndPassword(E2E_WP_COM_USER_USERNAME, E2E_WP_COM_USER_PASSWORD);
         }
 
-        if (!BuildConfig.IS_JETPACK_APP) {
-            // New Epilogue Screen - Choose the first site from the list of site.
-            // See LoginEpilogueFragment
-            ViewInteraction sitesList = onView(withId(R.id.recycler_view));
-            waitForElementToBeDisplayed(sitesList);
-            sitesList.perform(actionOnItemAtPosition(1, click()));
+        // New Epilogue Screen - Choose the first site from the list of site.
+        // See LoginEpilogueFragment
+        ViewInteraction sitesList = onView(withId(R.id.recycler_view));
+        waitForElementToBeDisplayed(sitesList);
+        sitesList.perform(actionOnItemAtPosition(1, click()));
 
-            if (!isSelfHosted) {
-                // Quick Start Prompt Dialog - Click the "No thanks" negative button to continue.
-                // See QuickStartPromptDialogFragment
-                ViewInteraction negativeButton = onView(withId(R.id.quick_start_prompt_dialog_button_negative));
-                waitForElementToBeDisplayed(negativeButton);
-                clickOn(negativeButton);
-            }
-        } else {
-            // Epilogue Screen - Click the "Done" bottom button to continue.
-            // See LoginEpilogueFragment
-            ViewInteraction continueButton = onView(withId(R.id.bottom_button));
+        if (!isSelfHosted) {
+            // Quick Start Prompt Dialog - Click the "No thanks" negative button to continue.
+            // See QuickStartPromptDialogFragment
+            ViewInteraction negativeButton = onView(withId(R.id.quick_start_prompt_dialog_button_negative));
+            waitForElementToBeDisplayed(negativeButton);
+            clickOn(negativeButton);
+        }
 
-            waitForElementToBeDisplayed(continueButton);
-            clickOn(continueButton);
+        if (BuildConfig.IS_JETPACK_APP) {
+            dismissNewFeaturesDialogIfDisplayed();
         }
 
         waitForElementToBeDisplayed(R.id.nav_sites);
@@ -132,5 +128,11 @@ public class LoginFlow {
     public HelpAndSupportScreen tapHelp() {
         clickOn(onView(withId(R.id.help)));
         return new HelpAndSupportScreen();
+    }
+
+    public static void dismissNewFeaturesDialogIfDisplayed() {
+        if (isElementDisplayed(R.id.blogging_prompts_onboarding_button_container)) {
+            clickOn(R.id.close_button);
+        }
     }
 }

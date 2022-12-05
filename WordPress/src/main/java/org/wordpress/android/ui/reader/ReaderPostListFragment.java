@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
@@ -15,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.MarginLayoutParams;
 import android.view.animation.Animation;
 import android.widget.AutoCompleteTextView;
 import android.widget.ProgressBar;
@@ -25,6 +25,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.content.ContextCompat;
+import androidx.core.text.HtmlCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
@@ -66,6 +67,7 @@ import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostDiscoverData;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
+import org.wordpress.android.networking.ConnectionChangeReceiver;
 import org.wordpress.android.ui.ActionableEmptyView;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.EmptyViewMessageType;
@@ -79,6 +81,7 @@ import org.wordpress.android.ui.main.WPMainNavigationView;
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType;
 import org.wordpress.android.ui.mysite.SelectedSiteRepository;
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository;
+import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment;
 import org.wordpress.android.ui.pages.SnackbarMessageHolder;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderEvents.TagAdded;
@@ -120,6 +123,9 @@ import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.util.DisplayUtilsWrapper;
+import org.wordpress.android.util.JetpackBrandingUtils;
+import org.wordpress.android.util.JetpackBrandingUtils.Screen;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.QuickStartUtilsWrapper;
 import org.wordpress.android.util.SnackbarItem;
@@ -178,6 +184,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
     private View mSubFiltersListButton;
     private TextView mSubFilterTitle;
     private View mRemoveFilterButton;
+    private View mJetpackBanner;
 
     private boolean mIsTopLevel = false;
     private static final String SUBFILTER_BOTTOM_SHEET_TAG = "SUBFILTER_BOTTOM_SHEET_TAG";
@@ -223,9 +230,11 @@ public class ReaderPostListFragment extends ViewPagerFragment
     @Inject TagUpdateClientUtilsProvider mTagUpdateClientUtilsProvider;
     @Inject QuickStartUtilsWrapper mQuickStartUtilsWrapper;
     @Inject SeenUnseenWithCounterFeatureConfig mSeenUnseenWithCounterFeatureConfig;
+    @Inject JetpackBrandingUtils mJetpackBrandingUtils;
     @Inject QuickStartRepository mQuickStartRepository;
     @Inject ReaderTracker mReaderTracker;
     @Inject SnackbarSequencer mSnackbarSequencer;
+    @Inject DisplayUtilsWrapper mDisplayUtilsWrapper;
 
     private enum ActionableEmptyViewButtonType {
         DISCOVER,
@@ -411,7 +420,9 @@ public class ReaderPostListFragment extends ViewPagerFragment
         }
     }
 
-    @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+    @Override
+    @SuppressWarnings("deprecation")
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mViewModel = new ViewModelProvider(this, mViewModelFactory)
                 .get(ReaderPostListViewModel.class);
@@ -488,11 +499,48 @@ public class ReaderPostListFragment extends ViewPagerFragment
             mSubFilterViewModel.onUserComesToReader();
         }
 
-        if (getPostListType() == ReaderPostListType.SEARCH_RESULTS) {
+        if (isSearching()) {
             mRecyclerView.showAppBarLayout();
             mSearchMenuItem.expandActionView();
             mRecyclerView.setToolbarScrollFlags(0);
         }
+    }
+
+    private void toggleJetpackBannerIfEnabled(final boolean showIfEnabled, boolean animateOnScroll) {
+        if (!isAdded() || getView() == null || !isSearching()) return;
+
+        if (mJetpackBrandingUtils.shouldShowJetpackBranding()) {
+            if (animateOnScroll) {
+                RecyclerView scrollView = mRecyclerView.getInternalRecyclerView();
+                mJetpackBrandingUtils.showJetpackBannerIfScrolledToTop(mJetpackBanner, scrollView);
+                // Return early since the banner visibility was handled by showJetpackBannerIfScrolledToTop
+                return;
+            }
+
+            if (showIfEnabled && !mDisplayUtilsWrapper.isPhoneLandscape()) {
+                showJetpackBanner();
+            } else {
+                hideJetpackBanner();
+            }
+        }
+    }
+
+    private void showJetpackBanner() {
+        mJetpackBanner.setVisibility(View.VISIBLE);
+
+        // Add bottom margin to search suggestions list and empty view.
+        int jetpackBannerHeight = getResources().getDimensionPixelSize(R.dimen.jetpack_banner_height);
+        ((MarginLayoutParams) mRecyclerView.getSearchSuggestionsRecyclerView().getLayoutParams()).bottomMargin
+                = jetpackBannerHeight;
+        ((MarginLayoutParams) mActionableEmptyView.getLayoutParams()).bottomMargin = jetpackBannerHeight;
+    }
+
+    private void hideJetpackBanner() {
+        mJetpackBanner.setVisibility(View.GONE);
+
+        // Remove bottom margin from search suggestions list and empty view.
+        ((MarginLayoutParams) mRecyclerView.getSearchSuggestionsRecyclerView().getLayoutParams()).bottomMargin = 0;
+        ((MarginLayoutParams) mActionableEmptyView.getLayoutParams()).bottomMargin = 0;
     }
 
     private void setFollowStatusForBlog(FollowStatusChanged readerData) {
@@ -686,8 +734,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
         }
         mWasPaused = true;
 
-        mViewModel.onFragmentPause(mIsTopLevel, getPostListType() == ReaderPostListType.SEARCH_RESULTS,
-                isFilterableScreen());
+        mViewModel.onFragmentPause(mIsTopLevel, isSearching(), isFilterableScreen());
     }
 
     @Override
@@ -719,12 +766,12 @@ public class ReaderPostListFragment extends ViewPagerFragment
 
             // if the user tapped a site to show site preview, it's possible they also changed the follow
             // status so tell the search adapter to check whether it has the correct follow status
-            if (getPostListType() == ReaderPostListType.SEARCH_RESULTS && mLastTappedSiteSearchResult != null) {
+            if (isSearching() && mLastTappedSiteSearchResult != null) {
                 getSiteSearchAdapter().checkFollowStatusForSite(mLastTappedSiteSearchResult);
                 mLastTappedSiteSearchResult = null;
             }
 
-            if (getPostListType() == ReaderPostListType.SEARCH_RESULTS) {
+            if (isSearching()) {
                 return;
             }
         }
@@ -734,8 +781,8 @@ public class ReaderPostListFragment extends ViewPagerFragment
             showEmptyView();
         }
 
-        mViewModel.onFragmentResume(mIsTopLevel, getPostListType() == ReaderPostListType.SEARCH_RESULTS,
-                isFilterableScreen(), isFilterableScreen() ? mSubFilterViewModel.getCurrentSubfilterValue() : null);
+        mViewModel.onFragmentResume(mIsTopLevel, isSearching(), isFilterableScreen(),
+                isFilterableScreen() ? mSubFilterViewModel.getCurrentSubfilterValue() : null);
     }
 
     /*
@@ -903,9 +950,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
 
         if (getPostListType() == ReaderPostListType.TAG_PREVIEW) {
             mTagPreviewHistory.saveInstance(outState);
-        } else if (getPostListType() == ReaderPostListType.SEARCH_RESULTS
-                   && mSearchView != null
-                   && mSearchView.getQuery() != null) {
+        } else if (isSearching() && mSearchView != null && mSearchView.getQuery() != null) {
             String query = mSearchView.getQuery().toString();
             outState.putString(ReaderConstants.ARG_SEARCH_QUERY, query);
         }
@@ -1083,7 +1128,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
         }
 
         // add a menu to the filtered recycler's toolbar
-        if (mAccountStore.hasAccessToken() && getPostListType() == ReaderPostListType.SEARCH_RESULTS) {
+        if (mAccountStore.hasAccessToken() && isSearching()) {
             setupRecyclerToolbar();
         }
 
@@ -1092,17 +1137,27 @@ public class ReaderPostListFragment extends ViewPagerFragment
         // bar that appears at top after new posts are loaded
         mNewPostsBar = rootView.findViewById(R.id.layout_new_posts);
         mNewPostsBar.setVisibility(View.GONE);
-        mNewPostsBar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mRecyclerView.scrollRecycleViewToPosition(0);
-                refreshPosts();
-            }
+        mNewPostsBar.setOnClickListener(view -> {
+            mRecyclerView.scrollRecycleViewToPosition(0);
+            refreshPosts();
         });
 
         // progress bar that appears when loading more posts
         mProgress = rootView.findViewById(R.id.progress_footer);
         mProgress.setVisibility(View.GONE);
+
+        mJetpackBanner = rootView.findViewById(R.id.jetpack_banner);
+        if (mJetpackBrandingUtils.shouldShowJetpackBranding()) {
+            mJetpackBrandingUtils.initJetpackBannerAnimation(mJetpackBanner, mRecyclerView.getInternalRecyclerView());
+
+            if (mJetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
+                mJetpackBanner.setOnClickListener(v -> {
+                    mJetpackBrandingUtils.trackBannerTapped(Screen.READER_SEARCH);
+                    new JetpackPoweredBottomSheetFragment()
+                            .show(getChildFragmentManager(), JetpackPoweredBottomSheetFragment.TAG);
+                });
+            }
+        }
 
         if (savedInstanceState != null && savedInstanceState.getBoolean(ReaderConstants.KEY_IS_REFRESHING)) {
             mIsUpdating = true;
@@ -1187,10 +1242,11 @@ public class ReaderPostListFragment extends ViewPagerFragment
     private void showSearchMessageOrSuggestions() {
         boolean hasQuery = !isSearchViewEmpty();
         boolean hasPerformedSearch = !TextUtils.isEmpty(mCurrentSearchQuery);
-        boolean isSearching = getPostListType() == ReaderPostListType.SEARCH_RESULTS;
+
+        toggleJetpackBannerIfEnabled(true, false);
 
         // prevents suggestions from being shown after the search view has been collapsed
-        if (!isSearching) {
+        if (!isSearching()) {
             return;
         }
 
@@ -1222,6 +1278,10 @@ public class ReaderPostListFragment extends ViewPagerFragment
         }
     }
 
+    private boolean isSearching() {
+        return getPostListType() == ReaderPostListType.SEARCH_RESULTS;
+    }
+
     /*
      * start the search service to search for posts matching the current query - the passed
      * offset is used during infinite scroll, pass zero for initial search
@@ -1249,6 +1309,15 @@ public class ReaderPostListFragment extends ViewPagerFragment
         mDispatcher.dispatch(ReaderActionBuilder.newReaderSearchSitesAction(payload));
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventMainThread(ConnectionChangeReceiver.ConnectionChangeEvent event) {
+        if (event.isConnected()) {
+            if (mCurrentSearchQuery != null) {
+                submitSearchQuery(mCurrentSearchQuery);
+            }
+        }
+    }
+
     private void submitSearchQuery(@NonNull String query) {
         if (!isAdded()) {
             return;
@@ -1257,6 +1326,10 @@ public class ReaderPostListFragment extends ViewPagerFragment
         mSearchView.clearFocus(); // this will hide suggestions and the virtual keyboard
         hideSearchMessage();
         hideSearchSuggestions();
+
+        if (!NetworkUtils.isNetworkAvailable(getContext())) {
+            showEmptyView();
+        }
 
         // remember this query for future suggestions
         String trimQuery = query.trim();
@@ -1271,6 +1344,8 @@ public class ReaderPostListFragment extends ViewPagerFragment
         mCurrentSearchQuery = trimQuery;
         updatePostsInCurrentSearch(0);
         updateSitesInCurrentSearch(0);
+
+        toggleJetpackBannerIfEnabled(false, false);
 
         // track that the user performed a search
         if (!trimQuery.equals("")) {
@@ -1472,10 +1547,6 @@ public class ReaderPostListFragment extends ViewPagerFragment
         mSearchSuggestionAdapter.setFilter(query);
     }
 
-    private void resetSearchSuggestionAdapter() {
-        mSearchView.setSuggestionsAdapter(null);
-        mSearchSuggestionAdapter = null;
-    }
 
     private void createSearchSuggestionRecyclerAdapter() {
         mSearchSuggestionRecyclerAdapter = new ReaderSearchSuggestionRecyclerAdapter();
@@ -1491,11 +1562,6 @@ public class ReaderPostListFragment extends ViewPagerFragment
             createSearchSuggestionRecyclerAdapter();
         }
         mSearchSuggestionRecyclerAdapter.setQuery(query);
-    }
-
-    private void resetSearchSuggestionRecyclerAdapter() {
-        mRecyclerView.setSearchSuggestionAdapter(null);
-        mSearchSuggestionRecyclerAdapter = null;
     }
 
     private void onSearchSuggestionClicked(String query) {
@@ -1573,9 +1639,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
         // load the results if the search succeeded and it's the current search - note that success
         // means the search didn't fail, not necessarily that is has results - which is fine because
         // if there aren't results then refreshing will show the empty message
-        if (event.didSucceed()
-            && getPostListType() == ReaderPostListType.SEARCH_RESULTS
-            && event.getQuery().equals(mCurrentSearchQuery)) {
+        if (event.didSucceed() && isSearching() && event.getQuery().equals(mCurrentSearchQuery)) {
             refreshPosts();
             showSearchTabs();
         } else {
@@ -1619,9 +1683,10 @@ public class ReaderPostListFragment extends ViewPagerFragment
             setEmptyTitleAndDescriptionForBookmarksList();
             return;
         } else if (!NetworkUtils.isNetworkAvailable(getActivity())) {
+            mIsUpdating = false;
             title = getString(R.string.reader_empty_posts_no_connection);
         } else if (requestFailed) {
-            if (getPostListType() == ReaderPostListType.SEARCH_RESULTS) {
+            if (isSearching()) {
                 title = getString(R.string.reader_empty_search_request_failed);
             } else {
                 title = getString(R.string.reader_empty_posts_request_failed);
@@ -1745,7 +1810,9 @@ public class ReaderPostListFragment extends ViewPagerFragment
             mActionableEmptyView.subtitle.setVisibility(View.VISIBLE);
 
             if (description.contains("<") && description.contains(">")) {
-                mActionableEmptyView.subtitle.setText(Html.fromHtml(description));
+                mActionableEmptyView.subtitle.setText(
+                        HtmlCompat.fromHtml(description, HtmlCompat.FROM_HTML_MODE_LEGACY)
+                );
             } else {
                 mActionableEmptyView.subtitle.setText(description);
             }
@@ -1827,8 +1894,10 @@ public class ReaderPostListFragment extends ViewPagerFragment
                     AppLog.d(T.READER, "reader post list > restoring position");
                     mRecyclerView.scrollRecycleViewToPosition(mRestorePosition);
                 }
-                if (getPostListType() == ReaderPostListType.SEARCH_RESULTS && !isSearchTabsShowing()) {
+                if (isSearching() && !isSearchTabsShowing()) {
                     showSearchTabs();
+                } else if (isSearching()) {
+                    toggleJetpackBannerIfEnabled(true, true);
                 }
             }
             mRestorePosition = 0;
@@ -1930,7 +1999,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
                 mPostAdapter.setCurrentTag(getCurrentTag());
             } else if (getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
                 mPostAdapter.setCurrentBlogAndFeed(mCurrentBlogId, mCurrentFeedId);
-            } else if (getPostListType() == ReaderPostListType.SEARCH_RESULTS) {
+            } else if (isSearching()) {
                 ReaderTag searchTag = ReaderUtils.getTagForSearchQuery(mCurrentSearchQuery);
                 mPostAdapter.setCurrentTag(searchTag);
             }
@@ -2177,8 +2246,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
 
         // don't show new posts if user is searching - posts will automatically
         // appear when search is exited
-        if (isSearchViewExpanded()
-            || getPostListType() == ReaderPostListType.SEARCH_RESULTS) {
+        if (isSearchViewExpanded() || isSearching()) {
             return;
         }
 
@@ -2617,9 +2685,13 @@ public class ReaderPostListFragment extends ViewPagerFragment
                 : blogName;
 
         if (blogId > 0) {
-            WPSnackbar.make(getSnackbarParent(), Html.fromHtml(getString(R.string.reader_followed_blog_notifications,
-                    "<b>", blog, "</b>")), Snackbar.LENGTH_LONG)
-                      .setAction(getString(R.string.reader_followed_blog_notifications_action),
+            WPSnackbar.make(getSnackbarParent(),
+                              HtmlCompat.fromHtml(
+                                      getString(R.string.reader_followed_blog_notifications, "<b>", blog, "</b>"),
+                                      HtmlCompat.FROM_HTML_MODE_LEGACY
+                              ),
+                              Snackbar.LENGTH_LONG
+                      ).setAction(getString(R.string.reader_followed_blog_notifications_action),
                               new View.OnClickListener() {
                                   @Override public void onClick(View view) {
                                       mReaderTracker.trackBlog(
@@ -2687,6 +2759,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RequestCodes.SITE_PICKER && resultCode == Activity.RESULT_OK) {

@@ -56,6 +56,7 @@ sealed class PostListEmptyUiState(
     )
 }
 
+@Suppress("LongParameterList")
 fun createEmptyUiState(
     postListType: PostListType,
     isNetworkAvailable: Boolean,

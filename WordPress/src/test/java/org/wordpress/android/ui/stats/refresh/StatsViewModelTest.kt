@@ -2,16 +2,17 @@ package org.wordpress.android.ui.stats.refresh
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.anyOrNull
-import com.nhaarman.mockitokotlin2.times
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Test
 import org.mockito.Mock
+import org.mockito.kotlin.any
+import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_INSIGHTS_ACCESSED
@@ -23,9 +24,10 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.store.StatsStore
 import org.wordpress.android.test
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
+import org.wordpress.android.ui.jetpackoverlay.JetpackOverlayConnectedFeature.STATS
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
-import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.stats.refresh.StatsViewModel.StatsModuleUiModel
 import org.wordpress.android.ui.stats.refresh.lists.BaseListUseCase
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
@@ -40,17 +42,17 @@ import org.wordpress.android.ui.stats.refresh.utils.SelectedSectionManager
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.trackGranular
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.util.JetpackBrandingUtils
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.MySiteDashboardTodaysStatsCardFeatureConfig
-import org.wordpress.android.util.config.StatsRevampV2FeatureConfig
+import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
 
 class StatsViewModelTest : BaseUnitTest() {
     @Mock lateinit var baseListUseCase: BaseListUseCase
     @Mock lateinit var selectedDateProvider: SelectedDateProvider
     @Mock lateinit var statsSectionManager: SelectedSectionManager
-    @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
     @Mock lateinit var analyticsTracker: AnalyticsTrackerWrapper
     @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
@@ -61,7 +63,8 @@ class StatsViewModelTest : BaseUnitTest() {
     @Mock lateinit var statsModuleActivateUseCase: StatsModuleActivateUseCase
     @Mock lateinit var notificationsTracker: SystemNotificationsTracker
     @Mock lateinit var todaysStatsCardFeatureConfig: MySiteDashboardTodaysStatsCardFeatureConfig
-    @Mock lateinit var statsRevampV2FeatureConfig: StatsRevampV2FeatureConfig
+    @Mock lateinit var jetpackBrandingUtils: JetpackBrandingUtils
+    @Mock lateinit var jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil
     private lateinit var viewModel: StatsViewModel
     private val _liveSelectedSection = MutableLiveData<StatsSection>()
     private val liveSelectedSection: LiveData<StatsSection> = _liveSelectedSection
@@ -76,7 +79,6 @@ class StatsViewModelTest : BaseUnitTest() {
                 Dispatchers.Default,
                 selectedDateProvider,
                 statsSectionManager,
-                appPrefsWrapper,
                 analyticsTracker,
                 networkUtilsWrapper,
                 statsSiteProvider,
@@ -85,7 +87,8 @@ class StatsViewModelTest : BaseUnitTest() {
                 statsModuleActivateUseCase,
                 notificationsTracker,
                 todaysStatsCardFeatureConfig,
-                statsRevampV2FeatureConfig
+                jetpackBrandingUtils,
+                jetpackFeatureRemovalOverlayUtil
         )
 
         viewModel.start(1, false, null, null, false, null)
@@ -231,6 +234,58 @@ class StatsViewModelTest : BaseUnitTest() {
         viewModel.onEnableStatsModuleClick()
 
         assertThat(uiModel.last().disabledStatsViewVisible).isFalse
+    }
+
+    @Ignore("Disabled until next sprint") @Test
+    fun `given wp app, when jetpack powered bottom sheet feature is on, then jp powered bottom sheet is shown`() {
+        val showJetpackPoweredBottomSheetEvent = mutableListOf<Event<Boolean>>()
+        viewModel.showJetpackPoweredBottomSheet.observeForever {
+            showJetpackPoweredBottomSheetEvent.add(it)
+        }
+        whenever(jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()).thenReturn(true)
+
+        startViewModel()
+
+        assertThat(showJetpackPoweredBottomSheetEvent.last().peekContent()).isTrue
+    }
+
+    @Test
+    fun `given wp app, when jetpack powered bottom sheet feature is off, then jp powered bottom sheet is not shown`() {
+        val showJetpackPoweredBottomSheetEvent = mutableListOf<Event<Boolean>>(Event(false))
+        viewModel.showJetpackPoweredBottomSheet.observeForever {
+            showJetpackPoweredBottomSheetEvent.add(it)
+        }
+        whenever(jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()).thenReturn(false)
+
+        startViewModel()
+
+        assertThat(showJetpackPoweredBottomSheetEvent.last().peekContent()).isFalse
+    }
+
+    @Test
+    fun `given wp app, when jetpack overlay feature is false, then jp fullscreen overlay is not shown`() {
+        val showJetpackOverlayEvent = mutableListOf<Event<Boolean>>(Event(false))
+        viewModel.showJetpackOverlay.observeForever {
+            showJetpackOverlayEvent.add(it)
+        }
+        whenever(jetpackFeatureRemovalOverlayUtil.shouldShowFeatureSpecificJetpackOverlay(STATS)).thenReturn(false)
+
+        startViewModel()
+
+        assertThat(showJetpackOverlayEvent.last().peekContent()).isFalse
+    }
+
+    @Test
+    fun `given wp app, when jetpack overlay feature is true, then jp fullscreen overlay is shown`() {
+        val showJetpackOverlayEvent = mutableListOf<Event<Boolean>>(Event(false))
+        viewModel.showJetpackOverlay.observeForever {
+            showJetpackOverlayEvent.add(it)
+        }
+        whenever(jetpackFeatureRemovalOverlayUtil.shouldShowFeatureSpecificJetpackOverlay(STATS)).thenReturn(true)
+
+        startViewModel()
+
+        assertThat(showJetpackOverlayEvent.last().peekContent()).isTrue()
     }
 
     private fun initObservers(): Observers {

@@ -1,20 +1,19 @@
 package org.wordpress.android.ui.jetpack.scan
 
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.times
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.test.runBlockingTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Mock
+import org.mockito.kotlin.any
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.Constants
 import org.wordpress.android.MainCoroutineScopeRule
@@ -64,8 +63,9 @@ private const val ON_ENTER_SERVER_CREDS_MESSAGE_CLICKED_PARAM_POSITION = 7
 private const val TEST_SITE_ID = 1L
 private const val SERVER_CREDS_LINK = "${Constants.URL_JETPACK_SETTINGS}/$TEST_SITE_ID}"
 
-@ExperimentalCoroutinesApi
+@Suppress("LargeClass")
 @InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 class ScanViewModelTest : BaseUnitTest() {
     @Rule
     @JvmField val coroutineScope = MainCoroutineScopeRule()
@@ -260,17 +260,16 @@ class ScanViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given no network error ui state, when retry is clicked, then fetch scan state is triggered`() =
-            coroutineScope.runBlockingTest {
-                whenever(scanStore.getScanStateForSite(site)).thenReturn(null)
-                whenever(fetchScanStateUseCase.fetchScanState(site)).thenReturn(flowOf(Failure.NetworkUnavailable))
-                val uiStates = init().uiStates
+    fun `given no network error ui state, when retry is clicked, then fetch scan state is triggered`() = test {
+        whenever(scanStore.getScanStateForSite(site)).thenReturn(null)
+        whenever(fetchScanStateUseCase.fetchScanState(site)).thenReturn(flowOf(Failure.NetworkUnavailable))
+        val uiStates = init().uiStates
 
-                (uiStates.last() as ErrorUiState).action?.invoke()
-                advanceTimeBy(RETRY_DELAY)
+        (uiStates.last() as ErrorUiState).action?.invoke()
+        coroutineScope.advanceTimeBy(RETRY_DELAY)
 
-                verify(fetchScanStateUseCase, times(2)).fetchScanState(site)
-            }
+        verify(fetchScanStateUseCase, times(2)).fetchScanState(site)
+    }
 
     @Test
     fun `given request failed error ui state, when contact support is clicked, then contact support screen is shown`() =

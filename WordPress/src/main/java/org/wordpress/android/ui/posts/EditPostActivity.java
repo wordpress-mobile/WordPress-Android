@@ -8,7 +8,6 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.view.DragEvent;
 import android.view.Menu;
@@ -187,6 +186,7 @@ import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AutolinkUtils;
+import org.wordpress.android.util.BuildConfigWrapper;
 import org.wordpress.android.util.DateTimeUtilsWrapper;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FluxCUtils;
@@ -395,6 +395,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Inject EditorTracker mEditorTracker;
     @Inject UploadUtilsWrapper mUploadUtilsWrapper;
     @Inject EditorActionsProvider mEditorActionsProvider;
+    @Inject BuildConfigWrapper mBuildConfigWrapper;
     @Inject DateTimeUtilsWrapper mDateTimeUtils;
     @Inject ViewModelProvider.Factory mViewModelFactory;
     @Inject ReaderUtilsWrapper mReaderUtilsWrapper;
@@ -550,7 +551,14 @@ public class EditPostActivity extends LocaleAwareActivity implements
         }
 
         // Check whether to show the visual editor
-        PreferenceManager.setDefaultValues(this, R.xml.account_settings, false);
+
+        // TODO: Migrate to 'androidx.preference.PreferenceManager' and 'androidx.preference.Preference'
+        //  This migration is not possible at the moment for 'PreferenceManager.setDefaultValues(...)' because it
+        //  depends on the migration of 'EditTextPreferenceWithValidation', which is a type of
+        //  'android.preference.EditTextPreference', thus a type of 'android.preference.Preference', and as such it will
+        //  throw this 'java.lang.ClassCastException': 'org.wordpress.android.ui.prefs.EditTextPreferenceWithValidation
+        //  cannot be cast to androidx.preference.Preference'
+        android.preference.PreferenceManager.setDefaultValues(this, R.xml.account_settings, false);
         mShowAztecEditor = AppPrefs.isAztecEditorEnabled();
         mEditorPhotoPicker = new EditorPhotoPicker(this, this, this, mShowAztecEditor);
 
@@ -601,8 +609,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 }
             } else {
                 mEditPostRepository.loadPostByLocalPostId(extras.getInt(EXTRA_POST_LOCAL_ID));
-                // Load post from extra)s
-
+                // Load post from extra's
                 if (mEditPostRepository.hasPost()) {
                     if (extras.getBoolean(EXTRA_LOAD_AUTO_SAVE_REVISION)) {
                         mEditPostRepository.update(postModel -> {
@@ -2339,6 +2346,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
         boolean isFreeWPCom = mSite.isWPCom() && SiteUtils.onFreePlan(mSite);
         boolean isWPComSite = mSite.isWPCom() || mSite.isWPComAtomic();
+        boolean shouldUseFastImage = !mSite.isPrivate() && !mSite.isPrivateWPComAtomic();
+
+        String hostAppNamespace = mBuildConfigWrapper.isJetpackApp() ? "Jetpack" : "WordPress";
 
         return new GutenbergPropsBuilder(
                 SiteUtils.supportsContactInfoFeature(mSite),
@@ -2354,9 +2364,11 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 isUnsupportedBlockEditorEnabled,
                 unsupportedBlockEditorSwitch,
                 !isFreeWPCom,
+                shouldUseFastImage,
                 isWPComSite,
                 wpcomLocaleSlug,
                 postType,
+                hostAppNamespace,
                 featuredImageId,
                 themeBundle
         );
@@ -2604,6 +2616,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 

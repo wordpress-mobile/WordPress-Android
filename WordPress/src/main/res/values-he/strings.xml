@@ -1,11 +1,132 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-06-16 16:54:20+0000
+Translation-Revision-Date: 2022-11-30 16:54:11+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.1
+Generator: GlotPress/4.0.0-alpha.3
 Language: he_IL
 -->
 <resources>
+    <string name="wp_jetpack_deep_link_open_in_wordpress">לפתוח את הקישור ב-WordPress</string>
+    <string name="wp_jetpack_deep_link_overlay_description">נראה שכבר התקנת את האפליקציה של Jetpack.\n\nהאם ברצונך לפתוח קישורים באפליקציה של Jetpack בעתיד?\n\nתמיד אפשר לשנות זאת מאוחר יותר דרך \'הגדרות אפליקציה\' &gt; \'לפתוח קישורים ב-Jetpack\'</string>
+    <string name="wp_jetpack_deep_link_overlay_title">האם לפתוח את הקישורים ב-Jetpack?</string>
+    <string name="wp_jetpack_continue_without_jetpack">להמשיך בלי Jetpack</string>
+    <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_two_description">השירות של Jetpack מאפשר גישה לנתונים סטטיסטיים, להודעות ולפרטים נוספים כדי לעזור לך לבנות ולפתח את האתר של WordPress שתמיד רצית.\n\nהאפליקציה של WordPress כבר לא תומכת ביצירת אתר חדש.</string>
+    <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_one_description">השירות של Jetpack מאפשר גישה לנתונים סטטיסטיים, להודעות ולפרטים נוספים כדי לעזור לך לבנות ולפתח את האתר של WordPress שתמיד רצית.</string>
+    <string name="wp_jetpack_feature_removal_site_creation_overlay_title">ליצור אתר WordPress.com חדש עם האפליקציה של Jetpack</string>
+    <string name="deep_linking_weblinks_alias_label">weblinks</string>
+    <string name="deep_linking_urilinks_alias_label">urilinks</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_notifications">יש לעבור לאפליקציה של Jetpack כדי להמשיך לקבל  התראות בזמן אמת אל המכשיר שלך.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_reader">כדאי לעבור לאפליקציה של Jetpack כדי למצוא, לעקוב ולסמן לייק בכל האתרים והפוסטים האהובים עליך עם Reader.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_stats">יש לעבור לאפליקציה של Jetpack כדי לראות איך התעבורה של האתר שלך גדלה הודות לנתונים סטטיסטיים ולתובנות.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_notifications">אפשר לקבל הודעות דרך האפליקציה של Jetpack</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_reader">אפשר לעקוב אחרי כל אתר דרך האפליקציה של Jetpack</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_stats">אפשר לקבל את הנתונים הסטטיסטיים שלך דרך האפליקציה החדשה של Jetpack</string>
+    <string name="preference_open_links_in_jetpack_setting_change_disable_error">אין אפשרות להשבית את פתיחת הקישורים ב-Jetpack</string>
+    <string name="preference_open_links_in_jetpack_setting_change_enable_error">אין אפשרות להפעיל את פתיחת הקישורים ב-Jetpack</string>
+    <string name="preference_open_links_in_jetpack">לפתוח את הקישורים ב-Jetpack</string>
+    <string name="jp_migration_need_help_button">נדרשת לך עזרה?</string>
+    <string name="jp_migration_got_it_button">הבנתי</string>
+    <string name="jp_migration_delete_message">יש &lt;b&gt;למחוק את האפליקציה של WordPress&lt;/b&gt; כדי &lt;br&gt;להימנע מהתנגשויות נתונים.</string>
+    <string name="jp_migration_delete_subtitle">נראה שהאפליקציה של WordPress עדיין מותקנת אצלך. אנחנו ממליצים למחוק את האפליקציה של WordPress כדי להימנע מהתנגשויות נתונים.</string>
+    <string name="jp_migration_delete_title">כבר אין לך צורך באפליקציה של WordPress</string>
+    <string name="jp_migration_network_error_message">אין לנו אפשרות להעביר את הנתונים וההגדרות שלך ללא חיבור לרשת.</string>
+    <string name="jp_migration_network_error_subtitle">יש לבדוק שהחיבור לרשת תקין ולנסות שוב.</string>
+    <string name="jp_migration_network_error_title">לא ניתן להתחבר לאינטרנט.</string>
+    <string name="jp_migration_generic_error_message">יש לפנות לתמיכה או לנסות שוב מאוחר יותר.</string>
+    <string name="jp_migration_generic_error_subtitle">מצטערים, משהו לא פעל כמו שצריך. הנתונים שלך בטוחים אבל אנחנו לא יכולים להעביר אותם כעת.</string>
+    <string name="jp_migration_generic_error_title">אוי, משהו השתבש…</string>
+    <string name="jp_migration_try_again_button">לנסות שוב</string>
+    <string name="jp_migration_finish_button">סיום</string>
+    <string name="jp_migration_remove_wp_app_icon_content_description">סמל של \'להסיר את האפליקציה של WordPress\'</string>
+    <string name="jp_migration_done_delete_wp_message">יש &lt;b&gt;למחוק את האפליקציה של WordPress&lt;/b&gt; כדי &lt;br&gt;להימנע מהתנגשויות נתונים.</string>
+    <string name="jp_migration_done_subtitle">העברנו את כל הנתונים וההגדרות שלך. השארנו הכול במקום.</string>
+    <string name="jp_migration_done_title">תודה שעברת אל Jetpack!</string>
+    <string name="jp_migration_notifications_disabled_in_wp_message">אנחנו נשבית את קבלת ההודעות מהאפליקציה של WordPress.</string>
+    <string name="jp_migration_notifications_subtitle">אותן הודעות ימשיכו להישלח אליך אבל כעת הן יגיעו מהאפליקציה של Jetpack.</string>
+    <string name="jp_migration_notifications_title">ההודעות מגיעות עכשיו מ-Jetpack</string>
+    <string name="jp_migration_success_card_message">יש למחוק את האפליקציה של WordPress</string>
+    <string name="wordpress_help_center_button">מרכז העזרה של WordPress</string>
+    <string name="support_title">תמיכה</string>
+    <string name="notification_disable_broadcast_permission_desc">הפעולה מאפשרת לאפליקציה להשבית את ההודעות של WordPress.</string>
+    <string name="notification_disable_broadcast_permission_label">להשבית הודעות של WordPress</string>
+    <string name="jp_migration_help_button">נדרשת לך עזרה?</string>
+    <string name="jp_migration_continue_button">המשך</string>
+    <string name="jp_migration_welcome_site_found_message">מצאנו את האתר שלך. אפשר להמשיך להעביר את כל הנתונים שלך ולהתחבר ל-Jetpack באופן אוטומטי.</string>
+    <string name="jp_migration_welcome_sites_found_message">מצאנו את האתרים שלך. אפשר להמשיך להעביר את כל הנתונים שלך ולהתחבר ל-Jetpack באופן אוטומטי.</string>
+    <string name="jp_migration_avatar_content_description">תמונת הפרופיל שלך</string>
+    <string name="jp_migration_welcome_subtitle">נראה שעברת מהאפליקציה של WordPress.</string>
+    <string name="jp_migration_welcome_title">ברוך בואך אל Jetpack!</string>
+    <string name="icon_desc">סמל</string>
+    <string name="post_settings_parent">עמוד ראשי</string>
+    <string name="post_settings_page_attributes">מאפייני עמוד</string>
+    <string name="about_automattic_contribute_item_title">להשתתף</string>
+    <string name="about_news">חדשות</string>
+    <string name="my_site_blogging_prompt_card_number_of_answers_one">תשובה אחת</string>
+    <string name="login_prologue_revamped_content_description_wordpress_icon">סמל של WordPress</string>
+    <string name="login_prologue_revamped_tagline">לכתוב, לערוך ולפרסם מכל מקום.</string>
+    <string name="error_fetch_authors_list">Couldn\'t retrieve authors</string>
+    <string name="post_settings_author">מחבר…</string>
+    <string name="app_rating_title">אהבת את %s?</string>
+    <string name="connection_service_label">לשתף פוסט אל %s</string>
+    <string name="connections_label">החיבורים של Jetpack Social</string>
+    <string name="stats_widget_log_in_to_add_message">עליך להתחבר לאפליקציה של Jetpack כדי להוסיף וידג\'ט.</string>
+    <string name="stats_view_publicize">החיבורים של Jetpack Social</string>
+    <string name="login_magic_links_email_sent">שלחנו כעת קישור ישיר אל</string>
+    <string name="login_magic_links_sent_label_short">יש לבדוק את תיבת האימייל במכשיר זה!</string>
+    <string name="or_use_password">להשתמש בסיסמה כדי להתחבר</string>
+    <string name="wp_jetpack_powered_notifications_powered_by_jetpack_caption">לקבל עדכונים בזמן אמת לגבי תגובות חדשות, תעבורה באתר, דוחות אבטחה ועוד.</string>
+    <string name="wp_jetpack_powered_notifications_powered_by_jetpack">ההודעות מופעלות על ידי Jetpack</string>
+    <string name="wp_jetpack_powered_stats_powered_by_jetpack_caption">לשפר את התעבורה באתר ולהבין טוב יותר את הקהל שלך עם נתונים סטטיסטיים ותובנות בעיצוב חדש, כעת זמין באפליקציה החדשה של Jetpack.</string>
+    <string name="wp_jetpack_powered_stats_powered_by_jetpack">הנתונים הסטטיסטיים מופעלים על ידי Jetpack</string>
+    <string name="wp_jetpack_powered_reader_powered_by_jetpack_caption">למצוא, לעקוב ולסמן לייק בכל האתרים והפוסטים האהובים עליך עם Reader, כעת זמין באפליקציה החדשה של Jetpack.</string>
+    <string name="wp_jetpack_powered_reader_powered_by_jetpack">Reader מופעל על ידי Jetpack</string>
+    <string name="wp_jetpack_powered_features">האפליקציה החדשה של Jetpack כוללת נתונים סטטיסטיים, את Reader, הודעות ועוד כדי לשפר את חוויית השימוש שלך ב-WordPress.</string>
+    <string name="wp_jetpack_powered_better_with_jetpack">השירות של WordPress טוב יותר עם Jetpack</string>
+    <string name="gutenberg_native_upgrade_your_plan_to_use_video_covers">יש לשדרג את התוכנית שלך כדי להשתמש בשער של וידאו</string>
+    <string name="gutenberg_native_upgrade_your_plan_to_upload_audio">יש לשדרג את התוכנית שלך כדי להעלות אודיו</string>
+    <string name="gutenberg_native_jetpack_powered">מופעל באמצעות Jetpack</string>
+    <string name="gutenberg_native_invalid_url">כתובת URL לא תקינה.</string>
+    <string name="gutenberg_native_gradient">מעבר צבע</string>
+    <string name="wp_jetpack_continue_to_notifications">להמשיך להודעות</string>
+    <string name="wp_jetpack_continue_to_stats">להמשיך לנתונים הסטטיסטיים</string>
+    <string name="wp_jetpack_continue_to_reader">להמשיך ל-Reader</string>
+    <string name="wp_jetpack_get_new_jetpack_app">כדאי לנסות את האפליקציה החדשה של Jetpack</string>
+    <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery">בעיה בהצגת הבלוק. \nיש להקיש כדי לנסות לשחזר את הבלוק.</string>
+    <string name="weekly_roundup_notification_text_views_and_comments">בשבוע הקודם היו לך ⁦%1$s⁩ צפיות ו-⁦%2$s⁩ תגובות</string>
+    <string name="weekly_roundup_notification_text_views_and_likes">בשבוע הקודם היו לך ⁦%1$s⁩ צפיות ו-⁦%2$s⁩ לייקים</string>
+    <string name="weekly_roundup_notification_text_views_only">בשבוע הקודם היו לך ⁦%1$s⁩ צפיות.</string>
+    <string name="weekly_roundup_notification_text_all">בשבוע הקודם היו לך ⁦%1$s⁩ צפיות, ⁦%2$s⁩ לייקים ו-⁦%3$s⁩ תגובות.</string>
+    <string name="stats_revamp_v2_update_alert_message">השירות עודכן כדי להציג תובנות חדשות שיעזרו לך להבין את הביצועים של התוכן ולאילו תכנים הקהל הגיב בצורה חיובית.</string>
+    <string name="stats_insights_like_guide_card">⭐️ הפוסט האחרון שלך ⁦%1$s⁩ קיבל לייק ⁦%2$s⁩.</string>
+    <string name="wp_jetpack_powered">מופעל באמצעות Jetpack</string>
+    <string name="qrcode_auth_flow_content_description">תמונה להמחשה שתהליך הסריקה של קוד ההתחברות החל</string>
+    <string name="qrcode_auth_flow_error_content_description">תמונה להמחשה שאירעה שגיאה</string>
+    <string name="qrcode_auth_flow_dismiss_dialog_message">האם ברצונך להמשיך?</string>
+    <string name="qrcode_auth_flow_dismiss_dialog_title">לצאת מתהליך הסריקה של קוד ההתחברות</string>
+    <string name="qrcode_auth_flow_error_auth_failed_subtitle">לא ניתן היה להתחבר באמצעות קוד ההתחברות. יש ללחוץ על הכפתור \'לסרוק שוב\' כדי לסרוק שוב את הקוד.</string>
+    <string name="qrcode_auth_flow_error_auth_failed_title">האימות נכשל</string>
+    <string name="qrcode_auth_flow_error_expired_subtitle">פג תוקפו של קוד ההתחברות. יש ללחוץ על הכפתור \'לסרוק שוב\' כדי לסרוק שוב את הקוד.</string>
+    <string name="qrcode_auth_flow_error_expired_title">קוד התחברות פג תוקף</string>
+    <string name="qrcode_auth_flow_error_invalid_data_subtitle">לא ניתן היה לאמת את קוד ההתחברות שנסרק. יש ללחוץ על הכפתור \'לסרוק שוב\' כדי לסרוק שוב את הקוד.</string>
+    <string name="qrcode_auth_flow_error_invalid_data_title">לא ניתן היה לאמת את קוד ההתחברות</string>
+    <string name="qrcode_auth_flow_error_no_connection_subtitle">נדרש חיבור פעיל לאינטרנט כדי לסרוק קודים של התחברות</string>
+    <string name="qrcode_auth_flow_error_no_connection_title">אין חיבור</string>
+    <string name="qrcode_auth_flow_scan_again">לסרוק שוב</string>
+    <string name="qrcode_auth_flow_dismiss">ביטול</string>
+    <string name="qrcode_auth_flow_done_subtitle">יש להקיש על \'ביטול\' ולחזור לדפדפן האינטרנט כדי להמשיך.</string>
+    <string name="qrcode_auth_flow_done_title">התחברת בהצלחה לחשבון!</string>
+    <string name="qrcode_auth_flow_validated_primary_action">כן, אני רוצה להתחבר לחשבון</string>
+    <string name="qrcode_auth_flow_validated_subtitle">יש לסרוק רק קוד QR שנלקח ישירות מדפדפן האינטרנט שלך. אין לסרוק קוד QR שנשלח אליך ממישהו אחר.</string>
+    <string name="qrcode_auth_flow_validated_default_title">האם ניסית להתחבר לדפדפן האינטרנט שלך ליד ⁦%1$s⁩?</string>
+    <string name="qrcode_auth_flow_validated_title">האם ניסית להתחבר אל ⁦%1$s⁩ ליד ⁦%2$s⁩?</string>
+    <string name="stats_revamp_v2_intro_header_title">עדכון לתובנות</string>
+    <string name="stats_insights_followers_guide_card">💡הוספת תגובה בבלוגים אחרים היא דרך נהדרת להראות נוכחות ולצבור עוקבים לאתר החדש שלך.</string>
+    <string name="stats_insights_comments_guide_card">💡אפשר להקיש על \'להציג עוד\' כדי לראות את המגיבים המובילים שלך.</string>
+    <string name="stats_insights_latest_post_empty">כדאי לחזור לכאן אחרי שפרסמת את הפוסט הראשון שלך!</string>
+    <string name="stats_insights_views_and_visitors_visitors_empty_state">מומלץ לעיין בעצות המובילות שלנו כדי להגדיל את כמות הצפיות והתעבורה ⁦%1$s⁩</string>
+    <string name="stats_action_card_schedule_post_message">✍️ כדאי לתזמן את פרסום הטיוטות לפי המועד המתאים ביותר לחשיפה מול הקהל שלך.</string>
+    <string name="stats_action_card_blogging_reminders_message">💡מומלץ לפרסם פוסטים דרך קבע כדי לבנות את הקהל שלך. להוסיף תזכורת כדי להישאר בעניינים.</string>
+    <string name="stats_action_card_grow_audience_message">💡אפשר לשפר את כישורי הכתיבה בבלוג מהר יותר עם הקורס &lt;i&gt;הקדמה לכתיבה בבלוג&lt;/i&gt; בהנחיית המומחים שלנו.</string>
     <string name="blogging_prompts_onboarding_prompts_loading">ההצעות לפרסום בבלוג נטענות. כדאי להמתין קצת ולנסות שוב.</string>
     <string name="hpp_bottom_helper_text">לא הצלחת להחליט? תהיה לך אפשרות לשנות את ערכת העיצוב בכל עת.</string>
     <string name="hpp_recommended_default_vertical">פרסום בבלוג</string>
@@ -19,6 +140,7 @@ Language: he_IL
     <string name="stats_follower_types_pie_chart_total_label">סך הכול</string>
     <string name="stats_referrers_pie_chart_others">אחרים</string>
     <string name="stats_referrers_pie_chart_search">לחפש</string>
+    <string name="stats_referrers_pie_chart_wordpress">וורדפרס</string>
     <string name="stats_referrers_pie_chart_total_label">צפיות</string>
     <string name="stats_action_card_schedule_post_button_label">תזמון</string>
     <string name="stats_action_card_schedule_post_title">לתזמן את הפרסום שלך</string>
@@ -37,7 +159,7 @@ Language: he_IL
     <string name="me_btn_scan_login_code">סריקת קוד כניסה למערכת</string>
     <string name="stats_insights_likes_guide_card">הפוסט האחרון שלך %1$s קיבל %2$s לייקים.</string>
     <string name="stats_most_popular_percent_views_empty">אין מספיק פעילות. כדאי לחזור לכאן מאוחד יותר לאחר שעוד מבקרים נכנסו לאתר!</string>
-    <string name="stats_total_followers_content_description">%1s, %2s מסך העוקבים</string>
+    <string name="stats_total_followers_content_description">⁦%1$s⁩, סך הכול ⁦%2$s⁩%% עוקבים</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
     <string name="pages_copy_link">להעתיק את הקישור</string>
     <string name="quick_start_completed_tour_title">ברכותינו! כבר יש לך ניסיון בעבודה עם האפליקציה&lt;br/&gt;</string>
@@ -186,6 +308,7 @@ Language: he_IL
     <string name="my_site_blogging_prompt_card_menu_remove">להסיר מלוח הבקרה</string>
     <string name="my_site_blogging_prompt_card_menu_skip">לדלג על הצעה זו</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">להציג הצעות נוספות</string>
+    <string name="my_site_blogging_prompt_card_number_of_answers_other">%d תשובות</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">לשתף הצעה לפרסום בבלוג</string>
     <string name="my_site_blogging_prompt_card_answered_prompt">✓ תשובות התקבלו</string>
     <string name="my_site_blogging_prompt_card_answer_prompt">הצעה לתשובה</string>
@@ -361,7 +484,6 @@ Language: he_IL
     <string name="me_btn_share">לשתף את WordPress עם חברים</string>
     <string name="my_site_quick_actions_title">קישורים מהירים</string>
     <string name="my_site_btn_domains">דומיינים</string>
-    <string name="weekly_roundup_notification_text">האתר שלך קיבל ⁦%1$d⁩ צפיות, ⁦%2$d⁩ לייקים, ⁦%3$d⁩ תגובות.</string>
     <string name="weekly_roundup_notification_title">סיכום שבועי: %s</string>
     <string name="blogging_reminders_notification_time">מועד ההודעות</string>
     <string name="blogging_reminders_epilogue_body_everyday_with_time">אנחנו נשלח לך תזכורות לכתוב בלוג &lt;b&gt;בכל יום&lt;/b&gt; בשעה &lt;b&gt;%s&lt;/b&gt;.</string>
@@ -445,7 +567,7 @@ Language: he_IL
     <string name="blogging_reminders_notification_title">הגיע הזמן לכתוב בלוג ביום %s</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios">עריכת בלוקים לשימוש חוזר עדיין אינה נתמכת ב-WordPress למערכת iOS</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and">עריכת בלוקים לשימוש חוזר עדיין אינה נתמכת ב-WordPress למערכת Android</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">לחלופין, ניתן לנתק ולערוך את הבלוקים האלה בנפרד על ידי הקשת הטקסט \"המרה לבלוקים רגילים\".</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">לחלופין, ניתן לנתק ולערוך את הבלוקים האלה בנפרד על ידי הקשה על \'המרה לבלוקים רגילים\'.</string>
     <string name="blogging_reminders_done">סיימתי</string>
     <string name="blogging_reminders_notify_me">תשלחו לי הודעה</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;יש להזין את פרטי הכניסה של השרת&lt;/a&gt; כדי להפעיל שחזורים בלחיצה אחת מגיבויים.</string>
@@ -470,6 +592,7 @@ Language: he_IL
     <string name="gutenberg_native_s_has_no_url_set">ב-%s לא הוגדרה כתובת URL</string>
     <string name="gutenberg_native_s_converted_to_regular_blocks">התוכן של %s הומר לבלוקים רגילים</string>
     <string name="gutenberg_native_s_block">בלוק %s</string>
+    <string name="gutenberg_native_opacity">שקיפות</string>
     <string name="gutenberg_native_media_options">אפשרויות מדיה</string>
     <string name="gutenberg_native_invalid_url_audio_file_not_found">כתובת URL לא תקינה. לא נמצא קובץ אודיו.</string>
     <string name="gutenberg_native_insert_crosspost">להוסיף למספר פוסטים</string>
@@ -498,6 +621,7 @@ Language: he_IL
     <string name="gutenberg_native_move_image_forward">להעביר את התמונה קדימה</string>
     <string name="gutenberg_native_move_image_backward">להעביר את התמונה אחורה</string>
     <string name="gutenberg_native_width_settings">הגדרות רוחב</string>
+    <string name="gutenberg_native_link_rel">קשר סמנטי (Rel)</string>
     <string name="gutenberg_native_column_settings">הגדרות טור</string>
     <string name="user_profile_untitled_site">(ללא כותרת)</string>
     <string name="user_profile_site_section_header">אתר</string>
@@ -676,7 +800,6 @@ Language: he_IL
     <string name="restore_complete_visit_site_action_button">לבקר באתר</string>
     <string name="restore_complete_description_with_two_parameters">כל הפריטים שבחרת שוחזרו לגרסה מתאריך ⁦%1$s⁩ %2$s.</string>
     <string name="restore_complete_header">האתר שלך שוחזר</string>
-    <string name="restore_progress_label">%1$s%%</string>
     <string name="restore_progress_footnote">אין צורך לשהות כאן ולהמתין. אנחנו נודיע לך כאשר השחזור של האתר שלך הסתיים.</string>
     <string name="restore_progress_icon_content_description">סמל \'לשחזר את האתר\'</string>
     <string name="restore_progress_description_with_two_parameters">אנחנו משחזרים את האתר שלך לגרסה מתאריך ⁦%1$s⁩ %2$s.</string>
@@ -748,7 +871,6 @@ Language: he_IL
     <string name="backup_download_complete_description_with_two_parameters">יצרנו בהצלחה גיבוי של האתר שלך מתאריך ⁦%1$s⁩ %2$s.</string>
     <string name="backup_download_complete_header">הגיבוי שלך כעת מוכן להורדה</string>
     <string name="backup_download_complete_page_title">הגיבוי שלך</string>
-    <string name="backup_download_progress_label">%1$s%%</string>
     <string name="backup_download_progress_footnote">אין צורך לשהות כאן ולהמתין. אנחנו נודיע לך כאשר הגיבוי לך יהיה מוכן להורדה.</string>
     <string name="backup_download_progress_icon_content_description">סמל \'יוצר גיבוי להורדה\'</string>
     <string name="backup_download_progress_description_with_two_parameters">אנחנו יוצרים גיבוי להורדה של האתר שלך מתאריך ⁦%1$s⁩ %2$s.</string>
@@ -1179,7 +1301,7 @@ Language: he_IL
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">יש להקיש פעמיים כדי לעבור להגדרות הצבע</string>
     <string name="reader_empty_followed_blogs_description">כאשר יש לך אתרים במעקב, התוכן שלהם יופיע כאן</string>
     <string name="feature_announcement_find_out_mode">למידע נוסף</string>
-    <string name="feature_announcement_dialog_label">מה חדש ב-WordPress</string>
+    <string name="feature_announcement_dialog_label">מה חדש ב-%s</string>
     <string name="insert_label_with_count">להוסיף %d</string>
     <string name="crop">לחתוך</string>
     <string name="error_failed_to_load_into_file">הטעינה לתוך הקובץ נכשלה, יש לנסות שוב.</string>
@@ -1278,7 +1400,7 @@ Language: he_IL
     <string name="post_list_tab_trashed_posts">הועבר לפח</string>
     <string name="post_list_tab_scheduled_posts">מתוזמן לפרסום</string>
     <string name="post_list_tab_published_posts">פורסם</string>
-    <string name="sharing_facebook_account_must_have_pages">החיבור עם פייסבוק לא הצליח למצוא דפים. השיתוף האוטומטי לא יכול להתחבר אל פרופילים בפייסבוק, רק לדפים שפורסמו.</string>
+    <string name="sharing_facebook_account_must_have_pages">החיבור עם פייסבוק לא הצליח למצוא דפים. השירות של Jetpack Social לא יכול להתחבר אל פרופילים בפייסבוק, רק לדפים שפורסמו.</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">לא מחובר</string>
     <string name="notifications_tab_title_likes">לייקים</string>
     <string name="notifications_tab_title_follows">עוקבים</string>
@@ -1505,7 +1627,7 @@ Language: he_IL
     <string name="share_desc">שיתוף</string>
     <string name="navigate_back_desc">Go back</string>
     <string name="navigate_forward_desc">Go forward</string>
-    <string name="calendar_scheduled_post_description">הפוסט \"⁦%1$s⁩\" תוזמן לפרסום בתאריך \"⁦%2$s⁩\" באפליקציה שלך ב-WordPress \n %3$s</string>
+    <string name="calendar_scheduled_post_description">הפוסט \"⁦%1$s⁩\" תוזמן לפרסום ב-\"⁦%2$s⁩\" באפליקציה של ⁦%3$s⁩ \n %4$s</string>
     <string name="calendar_scheduled_post_title">WordPress Scheduled Post: \"%s\"</string>
     <string name="notification_post_will_be_published_in_ten_minutes">\"%s\" will be published in 10 minutes</string>
     <string name="notification_post_will_be_published_in_one_hour">\"%s\" will be published in 1 hour</string>
@@ -1677,7 +1799,6 @@ Language: he_IL
     <string name="app_rating_rate_later">מאוחר יותר</string>
     <string name="app_rating_rate_now">לדרג כעת</string>
     <string name="app_rating_message">שמחים לראות אותך שוב! אם אהבת את האפליקציה, נשמח לראות את הדירוג שלך בחנות Google Play.</string>
-    <string name="app_rating_title">מרוצה מ-WordPress?</string>
     <string name="editor_post_converted_back_to_draft">הפוסט הומר בחזרה למצב טיוטה</string>
     <string name="stats_insights_posting_activity">פעילות פרסום</string>
     <string name="stats_site_not_loaded_yet">האתר עדיין לא נטען</string>
@@ -1715,10 +1836,10 @@ Language: he_IL
     <string name="notification_channel_reminder_title">תזכורת</string>
     <string name="stats_select_next_period_description">בחירת התקופה הבאה</string>
     <string name="stats_select_previous_period_description">בחירת התקופה הקודמת</string>
-    <string name="stats_most_popular_percent_views">%1$d%% מהצפיות</string>
+    <string name="stats_most_popular_percent_views">⁦%1$s⁩ מהצפיות</string>
     <string name="stats_insights_popular">המועד הפופולרי ביותר</string>
-    <string name="stats_traffic_change">%1$s (%2$s%%)</string>
-    <string name="stats_traffic_increase">+%1$s (%2$s%%)</string>
+    <string name="stats_traffic_change">%1$s (%2$s)</string>
+    <string name="stats_traffic_increase">+%1$s (%2$s)</string>
     <string name="new_site_creation_site_preview_content_description">מציג תצוגה מקדימה של האתר</string>
     <string name="new_site_creation_clear_all_content_description">ניקוי</string>
     <string name="site_created_but_not_fetched_snackbar_message">נראה שהחיבור שלך איטי. אם אינך רואה את האתר החדש ברשימה, מומלץ לרענן את העמוד.</string>
@@ -2407,6 +2528,7 @@ Language: he_IL
     <string name="requesting_otp">שולח קוד אימות באמצעות SMS.</string>
     <string name="login_text_otp">שליחת קוד במקום</string>
     <string name="enter_verification_code">כמעט סיימת! יש להזין את קוד האימות מאפליקציית האימות.</string>
+    <string name="open_mail">לפתוח את הדואר</string>
     <string name="next">הבא</string>
     <string name="enter_email_wordpress_com">התחברות ל-WordPress.com באמצעות כתובת אימייל כדי לנהל את האתרים שלך ב-WordPress.</string>
     <string name="image_optimization_promo_desc">מיטוב התמונות מכווץ כעת תמונות להעלאה מהירה יותר.\n\nאפשר לשנות את האפשרות הזו בכל עת דרך הגדרות האתר.</string>
@@ -2504,10 +2626,8 @@ Language: he_IL
     <string name="share_btn_disconnect">התנתקות</string>
     <string name="share_btn_connect">להתחבר</string>
     <string name="connection_service_description">יש להתחבר כדי לשתף את הפוסטים בבלוג שלך אוטומטית עם %s.</string>
-    <string name="connection_service_label">שיתוף אוטומטי אל %s</string>
     <string name="connected_accounts_label">חשבונות מחוברים</string>
     <string name="connections_description">חיבור שירותי הרשתות החברתיות המועדפים שלך כדי לשתף פוסטים חדשים עם חברים באופן אוטומטי.</string>
-    <string name="connections_label">חשבונות מקושרים</string>
     <string name="sharing">שיתוף</string>
     <string name="tabbar_accessibility_label_notifications">הודעות. ניהול התראות.</string>
     <string name="tabbar_accessibility_label_reader">Reader. מעקב אחר תוכן מאתרים אחרים.</string>

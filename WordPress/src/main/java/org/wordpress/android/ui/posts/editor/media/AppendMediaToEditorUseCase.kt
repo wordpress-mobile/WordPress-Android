@@ -24,9 +24,7 @@ class AppendMediaToEditorUseCase @Inject constructor(private val fluxCUtilsWrapp
                             AppLog.e(AppLog.T.MEDIA, "Media with remote id ${media.mediaId} not " +
                                     "added to editor.")
                         }
-                        mediaFile?.let { it ->
-                            Pair(urlToUse, it)
-                        }
+                        mediaFile?.let { Pair(urlToUse, it) }
                     }
                 }
                 .toMap()

@@ -39,6 +39,7 @@ class StatsMinifiedWidgetConfigureFragment : DaggerFragment(R.layout.stats_widge
     private lateinit var colorSelectionViewModel: StatsColorSelectionViewModel
     private lateinit var dataTypeSelectionViewModel: StatsDataTypeSelectionViewModel
 
+    @Suppress("DEPRECATION", "LongMethod")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val nonNullActivity = requireActivity()

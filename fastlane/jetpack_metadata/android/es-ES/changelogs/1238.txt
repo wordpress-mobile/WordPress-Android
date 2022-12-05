@@ -1,5 +1,0 @@
-20.1:
-- Obtén estímulos diarios para bloguear que te sirvan de inspiración para tus entradas.
-- Hemos mejorado la pantalla de selección de diseño del sitio en el proceso de creación de sitios.
-- Los enlaces de WordPress se abren en la aplicación, no en tu navegador por defecto.
-- Los puntos de interés de Inicio rápido están en el sitio correcto para usuarios con idiomas que se leen de derecha a izquierda.

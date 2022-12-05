@@ -6,9 +6,6 @@ import androidx.lifecycle.ViewModelProvider;
 import org.wordpress.android.ui.JetpackRemoteInstallViewModel;
 import org.wordpress.android.ui.accounts.LoginEpilogueViewModel;
 import org.wordpress.android.ui.accounts.LoginViewModel;
-import org.wordpress.android.ui.accounts.login.LoginPrologueViewModel;
-import org.wordpress.android.ui.accounts.login.jetpack.LoginNoSitesViewModel;
-import org.wordpress.android.ui.accounts.login.jetpack.LoginSiteCheckErrorViewModel;
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel;
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingViewModel;
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel;
@@ -17,7 +14,6 @@ import org.wordpress.android.ui.comments.unified.UnifiedCommentListViewModel;
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel;
 import org.wordpress.android.ui.debug.DebugSettingsViewModel;
 import org.wordpress.android.ui.debug.cookies.DebugCookiesViewModel;
-import org.wordpress.android.ui.deeplinks.DeepLinkingIntentReceiverViewModel;
 import org.wordpress.android.ui.domains.DomainRegistrationDetailsViewModel;
 import org.wordpress.android.ui.domains.DomainRegistrationMainViewModel;
 import org.wordpress.android.ui.domains.DomainSuggestionsViewModel;
@@ -31,7 +27,6 @@ import org.wordpress.android.ui.jetpack.scan.ScanViewModel;
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsViewModel;
 import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryListViewModel;
 import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryViewModel;
-import org.wordpress.android.ui.main.MeViewModel;
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel;
 import org.wordpress.android.ui.mysite.MySiteViewModel;
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel;
@@ -60,7 +55,6 @@ import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel;
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel;
 import org.wordpress.android.ui.reader.subfilter.SubFilterViewModel;
 import org.wordpress.android.ui.reader.viewmodels.ConversationNotificationsViewModel;
-import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel;
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel;
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel;
 import org.wordpress.android.ui.reader.viewmodels.SubfilterPageViewModel;
@@ -88,7 +82,6 @@ import org.wordpress.android.ui.whatsnew.FeatureAnnouncementViewModel;
 import org.wordpress.android.viewmodel.ViewModelFactory;
 import org.wordpress.android.viewmodel.ViewModelKey;
 import org.wordpress.android.viewmodel.accounts.PostSignupInterstitialViewModel;
-import org.wordpress.android.viewmodel.activitylog.ActivityLogDetailViewModel;
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel;
 import org.wordpress.android.viewmodel.history.HistoryViewModel;
 import org.wordpress.android.viewmodel.main.SitePickerViewModel;
@@ -127,11 +120,6 @@ abstract class ViewModelModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(ActivityLogDetailViewModel.class)
-    abstract ViewModel activityLogDetailViewModel(ActivityLogDetailViewModel viewModel);
-
-    @Binds
-    @IntoMap
     @ViewModelKey(PagesViewModel.class)
     abstract ViewModel pagesViewModel(PagesViewModel viewModel);
 
@@ -154,11 +142,6 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(ReaderPostListViewModel.class)
     abstract ViewModel readerPostListViewModel(ReaderPostListViewModel viewModel);
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(ReaderPostDetailViewModel.class)
-    abstract ViewModel readerPostDetailViewModel(ReaderPostDetailViewModel viewModel);
 
     @Binds
     @IntoMap
@@ -382,11 +365,6 @@ abstract class ViewModelModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(MeViewModel.class)
-    abstract ViewModel meViewModel(MeViewModel viewModel);
-
-    @Binds
-    @IntoMap
     @ViewModelKey(PostListCreateMenuViewModel.class)
     abstract ViewModel postListCreateMenuViewModel(PostListCreateMenuViewModel postListCreateMenuViewModel);
 
@@ -505,33 +483,13 @@ abstract class ViewModelModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(LoginNoSitesViewModel.class)
-    abstract ViewModel loginNoSitesErrorViewModel(LoginNoSitesViewModel viewModel);
-
-    @Binds
-    @IntoMap
     @ViewModelKey(LoginEpilogueViewModel.class)
     abstract ViewModel loginEpilogueViewModel(LoginEpilogueViewModel viewModel);
 
     @Binds
     @IntoMap
-    @ViewModelKey(LoginPrologueViewModel.class)
-    abstract ViewModel loginPrologueViewModel(LoginPrologueViewModel viewModel);
-
-    @Binds
-    @IntoMap
     @ViewModelKey(LoginViewModel.class)
     abstract ViewModel loginViewModel(LoginViewModel viewModel);
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(DeepLinkingIntentReceiverViewModel.class)
-    abstract ViewModel deepLinkingIntentReceiverViewModel(DeepLinkingIntentReceiverViewModel viewModel);
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(LoginSiteCheckErrorViewModel.class)
-    abstract ViewModel loginSiteCheckErrorViewModel(LoginSiteCheckErrorViewModel viewModel);
 
     @Binds
     @IntoMap

@@ -41,8 +41,8 @@ private const val THRESHOLD_YEAR = 2019
 private const val THRESHOLD_MONTH = Calendar.JUNE
 private const val THRESHOLD_DAY = 29
 
-class FileDownloadsUseCase
-constructor(
+@Suppress("LongParameterList")
+class FileDownloadsUseCase constructor(
     statsGranularity: StatsGranularity,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher,

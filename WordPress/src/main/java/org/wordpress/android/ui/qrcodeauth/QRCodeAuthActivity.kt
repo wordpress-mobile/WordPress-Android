@@ -3,12 +3,12 @@ package org.wordpress.android.ui.qrcodeauth
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.databinding.QrcodeauthActivityBinding
+import org.wordpress.android.ui.LocaleAwareActivity
 
 @AndroidEntryPoint
-class QRCodeAuthActivity : AppCompatActivity() {
+class QRCodeAuthActivity : LocaleAwareActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

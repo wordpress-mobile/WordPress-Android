@@ -1,1 +1,1 @@
-Kraftfulla WordPress-verktyg för säkerhet och prestanda.
+Bygg en WordPress-webbplats, skapa inlägg, lägg till foton och se statistik!

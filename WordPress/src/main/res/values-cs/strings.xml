@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-05-27 08:19:45+0000
+Translation-Revision-Date: 2022-10-04 18:17:57+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : 2);
-Generator: GlotPress/4.0.0-alpha.1
+Generator: GlotPress/4.0.0-alpha.3
 Language: cs_CZ
 -->
 <resources>
+    <string name="qrcode_auth_flow_content_description">Obrázek označující probíhající skenování přihlašovacího kódu</string>
+    <string name="qrcode_auth_flow_error_content_description">Obrázek označující chybu</string>
+    <string name="qrcode_auth_flow_dismiss_dialog_message">Jste si jistý, že chcete pokračovat?</string>
+    <string name="qrcode_auth_flow_dismiss_dialog_title">Ukončit tok přihlašovacích kódů skenování</string>
+    <string name="qrcode_auth_flow_error_auth_failed_subtitle">Nepodařilo se vás přihlásit pomocí tohoto přihlašovacího kódu. Klepnutím na tlačítko Skenovat znovu kód znovu naskenujte.</string>
     <string name="blogging_prompts_notification_dismiss">Odmítnout</string>
     <string name="blogging_prompts_answer_prompt_notification_answer_action">Odpověď</string>
     <string name="blogging_prompts_answer_prompt_notification_title">Denní výzva</string>
@@ -18,6 +23,10 @@ Language: cs_CZ
     <string name="photo_picker_media_thumbnail_content_description">Náhled mediálních souborů</string>
     <string name="stats_insights_popular_title">🔥 Nejoblíbenější čas</string>
     <string name="stats_insights_views_and_visitors_tooltip_count">%1$s %2$s</string>
+    <string name="stats_insights_views_and_visitors_visitors_negative">Návštěvníci za tento týden jsou o %1$s nižší než v předchozím týdnu.</string>
+    <string name="stats_insights_views_and_visitors_visitors_positive">Vaši návštěvníci za tento týden jsou o %1$s vyšší než v předchozím týdnu.</string>
+    <string name="stats_insights_views_and_visitors_views_negative">Vaše zhlédnutí za tento týden jsou o %1$s nižší než v předchozím týdnu.</string>
+    <string name="stats_insights_views_and_visitors_views_positive">Vaše zhlédnutí za tento týden jsou o %1$s vyšší než v předchozím týdnu.</string>
     <string name="stats_timeframe_previous_week">Minulý týden</string>
     <string name="stats_timeframe_this_week">Tento týden</string>
     <string name="scan_vault_press_active_on_site_button_text">Přejít na nástěnku</string>
@@ -293,7 +302,6 @@ Language: cs_CZ
     <string name="me_btn_share">Sdílejte WordPress s přítelem</string>
     <string name="my_site_quick_actions_title">Rychlé odkazy</string>
     <string name="my_site_btn_domains">Domény</string>
-    <string name="weekly_roundup_notification_text">Vaše stránky zaznamenaly %1$d zobrazení, %2$d lajků, %3$d komentářů.</string>
     <string name="weekly_roundup_notification_title">Týdenní shrnutí: %s</string>
     <string name="blogging_reminders_notification_time">Doba oznámení</string>
     <string name="blogging_reminders_epilogue_body_everyday_with_time">Připomenutí blogu budete dostávat &lt;b&gt;každý&lt;/b&gt; na &lt;b&gt;%s&lt;/b&gt;.</string>
@@ -402,6 +410,7 @@ Language: cs_CZ
     <string name="gutenberg_native_slash_inserter_results">Výsledky lomítka</string>
     <string name="gutenberg_native_s_converted_to_regular_blocks">%s převeden na běžné bloky</string>
     <string name="gutenberg_native_s_block">%s blok</string>
+    <string name="gutenberg_native_opacity">Průhlednost</string>
     <string name="gutenberg_native_media_options">Nastavení médií</string>
     <string name="gutenberg_native_invalid_url_audio_file_not_found">Neplatná URL. Audio soubor se nepodařilo nalézt.</string>
     <string name="gutenberg_native_insert_crosspost">Vložit crosspost</string>
@@ -601,7 +610,6 @@ Language: cs_CZ
     <string name="restore_complete_failed_icon_content_description">Ikona chyby</string>
     <string name="restore_another_process_running">Probíhá další obnovení.</string>
     <string name="restore_progress_footnote">Není třeba čekat. Až bude váš web obnoven, upozorníme vás.</string>
-    <string name="restore_progress_label">%1$s%%</string>
     <string name="restore_complete_header">Váš web byl obnoven</string>
     <string name="restore_complete_description_with_two_parameters">Všechny vaše vybrané položky jsou nyní obnoveny zpět na %1$s %2$s.</string>
     <string name="restore_complete_visit_site_action_button">Zobrazit web</string>
@@ -682,7 +690,6 @@ Language: cs_CZ
     <string name="backup_download_progress_description_with_two_parameters">Vytváříme zálohu vašeho webu ke stažení z %1$s %2$s.</string>
     <string name="backup_download_progress_icon_content_description">Vytváření ikony zálohy ke stažení</string>
     <string name="backup_download_progress_footnote">Není třeba čekat. Až bude vaše záloha připravena, upozorníme vás</string>
-    <string name="backup_download_progress_label">%1$s%%</string>
     <string name="backup_download_complete_page_title">Vaše záloha</string>
     <string name="backup_download_details_description_with_two_parameters">%1$s %2$s je vybraný bod pro vytvoření zálohy ke stažení.</string>
     <string name="backup_download_details_action_button_content_description">Vytvořit tlačítko pro stažení zálohy</string>
@@ -805,6 +812,7 @@ Language: cs_CZ
     <string name="hpp_error_title">Rozložení nejsou k dispozici v režimu offline</string>
     <string name="hpp_error_subtitle">Až budete znovu online, klepněte na opakovat.</string>
     <string name="hpp_retry_error">Zkontrolujte prosím připojení k internetu a zkuste to znovu.</string>
+    <string name="hpp_choose_error">Při výběru designu došlo k chybě.</string>
     <string name="dialog_discard_story_title_edit">Zrušit změny?</string>
     <string name="dialog_discard_story_message_edit">Jakékoli provedené změny nebudou uloženy.</string>
     <string name="dialog_discard_story_ok_button_edit">Zahodit</string>
@@ -1117,8 +1125,8 @@ Language: cs_CZ
     <string name="error_failed_to_load_into_file">Načtení do souboru se nezdařilo, zkuste to znovu.</string>
     <string name="crop">oříznutí</string>
     <string name="insert_label_with_count">Vložit %d</string>
-    <string name="feature_announcement_dialog_label">Co je nového na WordPressu</string>
     <string name="feature_announcement_find_out_mode">Zjistit více</string>
+    <string name="feature_announcement_dialog_label">Co je nového v %s</string>
     <string name="sitepicker_continue_flow">Pokračovat</string>
     <string name="whats_new_in_version_title">Co je nového</string>
     <string name="continue_label">Pokračovat</string>
@@ -1437,7 +1445,7 @@ Language: cs_CZ
     <string name="navigate_forward_desc">Jít vpřed</string>
     <string name="notification_post_will_be_published_in_ten_minutes">\"%s\" bude publikován za 10 minut</string>
     <string name="calendar_scheduled_post_title">Naplánovaný příspěvek WordPress: \"%s\"</string>
-    <string name="calendar_scheduled_post_description">Publikování \"%1$s\" je naplánováno na \"%2$s\" ve vaší aplikaci WordPress \"%3$s\"</string>
+    <string name="calendar_scheduled_post_description">Publikování \"%1$s\" je naplánováno na \"%2$s\" ve vaší WordPress aplikaci %3$s\n %4$s</string>
     <string name="post_notification_when_published">Při zveřejnění</string>
     <string name="post_notification_error">Nelze vytvořit oznámení, pokud je datum publikování v minulosti.</string>
     <string name="notification_scheduled_post">Naplánovaný příspěvek</string>
@@ -1607,7 +1615,6 @@ Language: cs_CZ
     <string name="app_rating_rate_later">Později</string>
     <string name="app_rating_rate_now">Ohodnotit teď</string>
     <string name="app_rating_message">Nice to see you again! If you’re digging the app, we’d love a rating on the Google Play Store.</string>
-    <string name="app_rating_title">Enjoying WordPress?</string>
     <string name="stats_more_posts">Více příspěvků</string>
     <string name="stats_fewer_posts">Méně příspěvků</string>
     <string name="editor_post_converted_back_to_draft">Příspěvek byl převeden zpět na koncept</string>
@@ -1643,12 +1650,12 @@ Language: cs_CZ
     <string name="quick_start_dialog_check_stats_title">Zkontrolujte statistiky svého webu</string>
     <string name="quick_start_task_skip_menu_title">Přeskočit úkol</string>
     <string name="notification_channel_reminder_title">Připomenutí</string>
-    <string name="stats_traffic_change">%1$s (%2$s%%)</string>
-    <string name="stats_traffic_increase">+%1$s (%2$s%%)</string>
     <string name="stats_insights_popular">Nejoblíbenější čas</string>
-    <string name="stats_most_popular_percent_views">%1$d%% shlédnutí</string>
     <string name="stats_select_previous_period_description">Vyberte předchozí období</string>
     <string name="stats_select_next_period_description">Vyberte další období</string>
+    <string name="stats_traffic_change">%1$s (%2$s)</string>
+    <string name="stats_traffic_increase">+%1$s (%2$s)</string>
+    <string name="stats_most_popular_percent_views">%1$s shlédnutí</string>
     <string name="notification_new_site_creation_title">Vytvořit stránku</string>
     <string name="new_site_creation_create_site_button">Vytvořit stránku</string>
     <string name="new_site_creation_clear_all_content_description">Vyčistit</string>
@@ -2338,6 +2345,7 @@ Language: cs_CZ
     <string name="login_text_otp">Pošlete mi raději kód.</string>
     <string name="enter_verification_code">Téměř hotovo! Zadejte ověřovací kód z aplikace Authenticator.</string>
     <string name="next">Další</string>
+    <string name="open_mail">Otevřít e-mail</string>
     <string name="enter_email_wordpress_com">Přihlaste se na stránku WordPress.com pomocí e-mailové adresy pro správu všech vašich stránek na WordPress.</string>
     <string name="image_optimization_promo_desc">Optimalizace obrazu mírně sníží kvalitu obrázků pro rychlejší nahrávání\n\nToto nastavení můžete kdykoli změnit v nastavení webu.</string>
     <string name="image_optimization_promo_title">Zapnout optimalizaci obrázků?</string>
@@ -2434,11 +2442,9 @@ Language: cs_CZ
     <string name="share_btn_connect">Připojit</string>
     <string name="share_btn_reconnect">Obnova propojení</string>
     <string name="connection_service_description">Připojte se k automatickému sdílení příspěvků blogu na %s.</string>
-    <string name="connection_service_label">Publikovat na %s</string>
     <string name="connected_accounts_label">Připojené účty</string>
     <string name="connections_description">Připojte své oblíbené sociální sítě k automatickému sdílení nových příspěvků s přáteli.</string>
     <string name="sharing">Sdílení</string>
-    <string name="connections_label">Připojení</string>
     <string name="tabbar_accessibility_label_notifications">Notifikace. Spravovat notifikace.</string>
     <string name="tabbar_accessibility_label_reader">Čtenář. Sledujte obsah z jiných stránek.</string>
     <string name="tabbar_accessibility_label_my_site">Moje stránka. Zobrazte své stránky a spravujte je, včetně statistik.</string>

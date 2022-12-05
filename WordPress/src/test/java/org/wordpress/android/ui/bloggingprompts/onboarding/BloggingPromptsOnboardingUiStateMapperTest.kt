@@ -19,7 +19,12 @@ class BloggingPromptsOnboardingUiStateMapperTest {
             AvatarItem(""),
             AvatarItem(""),
             TrailingLabelTextItem(
-                    UiStringPluralRes(R.plurals.my_site_blogging_prompt_card_number_of_answers, 3),
+                    UiStringPluralRes(
+                            0,
+                            R.string.my_site_blogging_prompt_card_number_of_answers_one,
+                            R.string.my_site_blogging_prompt_card_number_of_answers_other,
+                            3
+                    ),
                     R.attr.colorOnSurface
             )
     )

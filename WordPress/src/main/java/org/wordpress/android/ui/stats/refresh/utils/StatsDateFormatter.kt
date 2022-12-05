@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.stats.refresh.utils
 
-import org.apache.commons.text.WordUtils
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
@@ -57,8 +56,14 @@ class StatsDateFormatter
      * @param period in this format yyyy-MM-dd
      * @return localized date in the medium format, in English - Jan 5, 2019
      */
+    @Suppress("TooGenericExceptionThrown")
     fun printDate(period: String): String {
-        return printDate(inputFormat.parse(period))
+        try {
+            return inputFormat.parse(period)?.let { outputFormat.format(it) }
+                    ?: throw RuntimeException("Unexpected date format")
+        } catch (e: ParseException) {
+            throw RuntimeException("Unexpected date format")
+        }
     }
 
     /**
@@ -68,14 +73,6 @@ class StatsDateFormatter
      */
     fun printStatsDate(date: Date): String {
         return inputFormat.format(date)
-    }
-
-    private fun printDate(date: Date): String {
-        try {
-            return outputFormat.format(date)
-        } catch (e: ParseException) {
-            throw RuntimeException("Unexpected date format")
-        }
     }
 
     /**
@@ -102,7 +99,8 @@ class StatsDateFormatter
                 startCalendar.add(Calendar.DAY_OF_WEEK, -6)
                 return printWeek(startCalendar, endCalendar)
             }
-            MONTHS -> WordUtils.capitalize(outputMonthFormat.format(date))
+            MONTHS -> outputMonthFormat.format(date)
+                    .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
             YEARS -> outputYearFormat.format(date)
         }
     }
@@ -175,12 +173,13 @@ class StatsDateFormatter
      * @param date string date coming from the endpoints
      * @return parsed Date
      */
+    @Suppress("TooGenericExceptionThrown", "ThrowsCount")
     fun parseStatsDate(
         granularity: StatsGranularity,
         date: String
     ): Date {
         return when (granularity) {
-            DAYS -> inputFormat.parse(date)
+            DAYS -> inputFormat.parse(date) ?: throw RuntimeException("Unexpected date format")
             WEEKS -> {
                 // first four digits are the year
                 // followed by Wxx where xx is the month
@@ -188,13 +187,13 @@ class StatsDateFormatter
                 // ex: 2013W07W22 = July 22, 2013
                 val sdf = SimpleDateFormat("yyyy'W'MM'W'dd", Locale.ROOT)
                 // Calculate the end of the week
-                val parsedDate = sdf.parse(date)
+                val parsedDate = sdf.parse(date) ?: throw RuntimeException("Unexpected date format")
                 dateToWeekDate(parsedDate)
             }
             MONTHS -> {
                 val sdf = SimpleDateFormat("yyyy-MM", Locale.ROOT)
                 // Calculate the end of the month
-                val parsedDate = sdf.parse(date)
+                val parsedDate = sdf.parse(date) ?: throw RuntimeException("Unexpected date format")
                 val calendar: Calendar = Calendar.getInstance()
                 calendar.time = parsedDate
                 // last day of this month
@@ -206,7 +205,7 @@ class StatsDateFormatter
             YEARS -> {
                 val sdf = SimpleDateFormat(STATS_INPUT_FORMAT, Locale.ROOT)
                 // Calculate the end of the week
-                val parsedDate = sdf.parse(date)
+                val parsedDate = sdf.parse(date) ?: throw RuntimeException("Unexpected date format")
                 val calendar: Calendar = Calendar.getInstance()
                 calendar.time = parsedDate
                 calendar.set(Calendar.MONTH, Calendar.DECEMBER)

@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="login_prologue_revamped_prompts_padding">150dp</dimen>
+</resources>

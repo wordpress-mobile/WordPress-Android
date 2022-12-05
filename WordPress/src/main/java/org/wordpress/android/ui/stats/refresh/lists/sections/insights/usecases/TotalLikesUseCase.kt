@@ -1,12 +1,12 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 
+import androidx.core.text.HtmlCompat
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_INSIGHTS_TOTAL_LIKES_GUIDE_TAPPED
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_TOTAL_LIKES_ERROR
-import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.LimitMode
+import org.wordpress.android.fluxc.model.stats.LimitMode.All
 import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.TOTAL_LIKES
@@ -27,19 +27,15 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.InsightUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.LatestPostSummaryUseCase.LinkClickParams
 import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetUpdater.StatsWidgetUpdaters
-import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.trackWithType
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
-import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
-import java.util.Calendar
 import javax.inject.Inject
 import javax.inject.Named
-import kotlin.math.ceil
 
 class TotalLikesUseCase @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
@@ -48,11 +44,9 @@ class TotalLikesUseCase @Inject constructor(
     private val latestPostStore: LatestPostInsightsStore,
     private val statsSiteProvider: StatsSiteProvider,
     private val resourceProvider: ResourceProvider,
-    private val statsDateFormatter: StatsDateFormatter,
     private val totalStatsMapper: TotalStatsMapper,
     private val analyticsTracker: AnalyticsTrackerWrapper,
-    private val statsWidgetUpdaters: StatsWidgetUpdaters,
-    private val localeManagerWrapper: LocaleManagerWrapper
+    private val statsWidgetUpdaters: StatsWidgetUpdaters
 ) : StatelessUseCase<VisitsAndViewsModel>(TOTAL_LIKES, mainDispatcher, bgDispatcher) {
     override fun buildLoadingItem() = listOf(TitleWithMore(string.stats_view_total_likes))
 
@@ -60,22 +54,18 @@ class TotalLikesUseCase @Inject constructor(
 
     override suspend fun loadCachedData(): VisitsAndViewsModel? {
         statsWidgetUpdaters.updateViewsWidget(statsSiteProvider.siteModel.siteId)
-        val cachedData = visitsAndViewsStore.getVisits(
+        return visitsAndViewsStore.getVisits(
                 statsSiteProvider.siteModel,
                 DAYS,
-                LimitMode.All
+                All
         )
-        if (cachedData != null) {
-            logIfIncorrectData(cachedData, statsSiteProvider.siteModel, false)
-        }
-        return cachedData
     }
 
     override suspend fun fetchRemoteData(forced: Boolean): State<VisitsAndViewsModel> {
         val response = visitsAndViewsStore.fetchVisits(
                 statsSiteProvider.siteModel,
                 DAYS,
-                LimitMode.Top(TotalStatsMapper.DAY_COUNT_TOTAL),
+                LimitMode.Top(TOTAL_LIKES_ITEMS_TO_LOAD),
                 forced
         )
         val model = response.model
@@ -84,42 +74,9 @@ class TotalLikesUseCase @Inject constructor(
         return when {
             error != null -> State.Error(error.message ?: error.type.name)
             model != null && model.dates.isNotEmpty() -> {
-                logIfIncorrectData(model, statsSiteProvider.siteModel, true)
                 State.Data(model)
             }
             else -> State.Empty()
-        }
-    }
-
-    /**
-     * Track the incorrect data shown for some users
-     * see https://github.com/wordpress-mobile/WordPress-Android/issues/11412
-     */
-    @Suppress("MagicNumber")
-    private fun logIfIncorrectData(
-        model: VisitsAndViewsModel,
-        site: SiteModel,
-        fetched: Boolean
-    ) {
-        model.dates.lastOrNull()?.let { lastDayData ->
-            val yesterday = localeManagerWrapper.getCurrentCalendar()
-            yesterday.add(Calendar.DAY_OF_YEAR, -1)
-            val lastDayDate = statsDateFormatter.parseStatsDate(DAYS, lastDayData.period)
-            if (lastDayDate.before(yesterday.time)) {
-                val currentCalendar = localeManagerWrapper.getCurrentCalendar()
-                val lastItemAge = ceil((currentCalendar.timeInMillis - lastDayDate.time) / 86400000.0)
-                analyticsTracker.track(
-                        STATS_TOTAL_LIKES_ERROR,
-                        mapOf(
-                                "stats_last_date" to statsDateFormatter.printStatsDate(lastDayDate),
-                                "stats_current_date" to statsDateFormatter.printStatsDate(currentCalendar.time),
-                                "stats_age_in_days" to lastItemAge.toInt(),
-                                "is_jetpack_connected" to site.isJetpackConnected,
-                                "is_atomic" to site.isWPComAtomic,
-                                "action_source" to if (fetched) "remote" else "cached"
-                        )
-                )
-            }
         }
     }
 
@@ -149,16 +106,21 @@ class TotalLikesUseCase @Inject constructor(
     ) {
         val postModel = latestPostStore.getLatestPostInsights(statsSiteProvider.siteModel)
         postModel?.let {
-            if (it.postTitle.isNotBlank()) {
+            if (it.postTitle.isNotBlank() && it.postLikeCount > 0) {
+                val htmlTitle = HtmlCompat.fromHtml(it.postTitle, HtmlCompat.FROM_HTML_MODE_LEGACY)
                 items.add(
                         ListItemGuideCard(
                                 text = resourceProvider.getString(
-                                        string.stats_insights_likes_guide_card,
-                                        it.postTitle,
+                                        if (it.postLikeCount <= 1) {
+                                            string.stats_insights_like_guide_card
+                                        } else {
+                                            string.stats_insights_likes_guide_card
+                                        },
+                                        htmlTitle,
                                         it.postLikeCount
                                 ),
                                 links = listOf(Clickable(
-                                                link = it.postTitle,
+                                                link = htmlTitle.toString(),
                                                 navigationAction = ListItemInteraction.create(
                                                         data = LinkClickParams(it.postId, it.postURL),
                                                         action = navigationAction
@@ -188,6 +150,10 @@ class TotalLikesUseCase @Inject constructor(
         )
     }
 
+    companion object {
+        private const val TOTAL_LIKES_ITEMS_TO_LOAD = 15
+    }
+
     class TotalLikesUseCaseFactory
     @Inject constructor(
         @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
@@ -196,11 +162,9 @@ class TotalLikesUseCase @Inject constructor(
         private val latestPostStore: LatestPostInsightsStore,
         private val statsSiteProvider: StatsSiteProvider,
         private val resourceProvider: ResourceProvider,
-        private val statsDateFormatter: StatsDateFormatter,
         private val totalStatsMapper: TotalStatsMapper,
         private val analyticsTracker: AnalyticsTrackerWrapper,
-        private val statsWidgetUpdaters: StatsWidgetUpdaters,
-        private val localeManagerWrapper: LocaleManagerWrapper
+        private val statsWidgetUpdaters: StatsWidgetUpdaters
     ) : InsightUseCaseFactory {
         override fun build(useCaseMode: UseCaseMode) =
                 TotalLikesUseCase(
@@ -210,11 +174,9 @@ class TotalLikesUseCase @Inject constructor(
                         latestPostStore,
                         statsSiteProvider,
                         resourceProvider,
-                        statsDateFormatter,
                         totalStatsMapper,
                         analyticsTracker,
-                        statsWidgetUpdaters,
-                        localeManagerWrapper
+                        statsWidgetUpdaters
                 )
     }
 }

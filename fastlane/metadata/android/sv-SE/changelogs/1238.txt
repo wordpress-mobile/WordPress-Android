@@ -1,4 +1,0 @@
-20.1:
-- I webbplatsskaparen har vi förbättrat sidan för val av webbplatsdesign.
-- Om du klickar på en WordPress-länk öppnas den nu i appen och inte i din webbläsare.
-- För dem som använder appen på ett RTL-språk (skrivs från höger till vänster) har vi flyttat starthjälpens fokuspunkter så att de kommer rätt.

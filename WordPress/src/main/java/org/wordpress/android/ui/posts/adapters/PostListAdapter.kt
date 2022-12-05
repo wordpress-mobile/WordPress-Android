@@ -55,6 +55,7 @@ class PostListAdapter(
         }
     }
 
+    @Suppress("UseCheckOrError")
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return when (viewType) {
             VIEW_TYPE_ENDLIST_INDICATOR -> {
@@ -94,7 +95,7 @@ class PostListAdapter(
         }
         if (holder is LoadingViewHolder) {
             val item = getItem(position)
-            assert(item is LoadingItem) {
+            assert(item is LoadingItem?) {
                 "If we are presenting LoadingViewHolder, the item has to be of type LoadingItem " +
                         "for position: $position"
             }

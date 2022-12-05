@@ -1,4 +1,3 @@
-- We updated the Insights view in your site’s Stats.
-- Sign in with your browser using a QR code in the app’s Me menu.
-- Upload HEIC/HEIF images through the media picker.
-- We squashed a bug that affected reader topics in other languages.
+* [*] [Jetpack-only] The the QR code scanning flow screens are now translated in the app language. [https://github.com/wordpress-mobile/WordPress-Android/pull/17533]
+* [*] Disable local notifications with Notification Settings switch. [https://github.com/wordpress-mobile/WordPress-Android/pull/17496]
+* [*] [Jetpack-only] Comments: fix a crash in My Site > Comments with Jetpack standalone plugins. [https://github.com/wordpress-mobile/WordPress-Android/pull/17456]

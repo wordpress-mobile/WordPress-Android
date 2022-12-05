@@ -25,7 +25,6 @@ import javax.inject.Inject
 /**
  * Implements the Site Name UI
  */
-@Suppress("TooManyFunctions")
 @AndroidEntryPoint
 class SiteCreationSiteNameFragment : Fragment() {
     @Inject internal lateinit var uiHelper: UiHelpers

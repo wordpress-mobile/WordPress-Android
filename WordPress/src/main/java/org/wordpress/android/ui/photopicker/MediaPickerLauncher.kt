@@ -73,6 +73,7 @@ class MediaPickerLauncher @Inject constructor(
         activity.startActivityForResult(intent, RequestCodes.PHOTO_PICKER)
     }
 
+    @Suppress("DEPRECATION")
     fun showSiteIconPicker(
         fragment: Fragment,
         site: SiteModel?
@@ -127,6 +128,7 @@ class MediaPickerLauncher @Inject constructor(
         showStoriesPhotoPickerForResult(activity, site)
     }
 
+    @Suppress("DEPRECATION")
     fun showStoriesPhotoPickerForResult(
         activity: Activity,
         site: SiteModel?
@@ -134,6 +136,7 @@ class MediaPickerLauncher @Inject constructor(
         ActivityLauncher.showPhotoPickerForResult(activity, WP_STORIES_MEDIA_PICKER, site, null)
     }
 
+    @Suppress("DEPRECATION")
     fun showGravatarPicker(fragment: Fragment) {
         val mediaPickerSetup = MediaPickerSetup(
                 primaryDataSource = DEVICE,
@@ -177,7 +180,6 @@ class MediaPickerLauncher @Inject constructor(
         )
     }
 
-    @Suppress("LongParameterList")
     private fun showFilePicker(
         activity: Activity,
         site: SiteModel,

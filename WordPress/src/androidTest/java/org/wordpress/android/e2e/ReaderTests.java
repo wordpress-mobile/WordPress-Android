@@ -28,7 +28,7 @@ public class ReaderTests extends BaseTest {
     String mCompetitionPostTitle = "Let's focus on the competition.";
 
     @Test
-    public void navigateThroughPosts() {
+    public void e2eNavigateThroughPosts() {
         new ReaderPage()
                 .tapFollowingTab()
                 .openPost(mCoachingPostTitle)
@@ -41,7 +41,7 @@ public class ReaderTests extends BaseTest {
     }
 
     @Test
-    public void likePost() {
+    public void e2eLikePost() {
         new ReaderPage()
                 .tapFollowingTab()
                 .openPost(mCoachingPostTitle)

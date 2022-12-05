@@ -1,14 +1,15 @@
 package org.wordpress.android.ui.jetpack.restore.builders
 
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Mock
+import org.mockito.kotlin.any
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.Constants
 import org.wordpress.android.R
@@ -20,6 +21,8 @@ import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ActionButton
 import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.util.text.PercentFormatter
+import java.util.Date
 
 private const val TEST_SITE_ID = 1L
 private const val SERVER_CREDS_LINK = "${Constants.URL_JETPACK_SETTINGS}/$TEST_SITE_ID"
@@ -33,10 +36,11 @@ class RestoreStateListItemBuilderTest : BaseUnitTest() {
 
     @Mock private lateinit var checkboxSpannableLabel: CheckboxSpannableLabel
     @Mock private lateinit var htmlMessageUtils: HtmlMessageUtils
+    @Mock private lateinit var percentFormatter: PercentFormatter
 
     @Before
     fun setUp() {
-        builder = RestoreStateListItemBuilder(checkboxSpannableLabel, htmlMessageUtils)
+        builder = RestoreStateListItemBuilder(checkboxSpannableLabel, htmlMessageUtils, percentFormatter)
         whenever(htmlMessageUtils.getHtmlMessageFromStringFormatResId(anyInt(), any()))
                 .thenReturn(SERVER_CREDS_MSG_WITH_CLICKABLE_LINK)
     }
@@ -92,6 +96,15 @@ class RestoreStateListItemBuilderTest : BaseUnitTest() {
                     assertThat(iconColorResId).isEqualTo(R.color.colorPrimary)
                 }
             }
+
+    @Test
+    fun `whenever buildProgressListStateItems is called should call PercentFormatter`() = test {
+        val progress = 30
+        whenever(percentFormatter.format(progress))
+                .thenReturn("100")
+        builder.buildProgressListStateItems(progress, Date(0))
+        verify(percentFormatter).format(progress)
+    }
 
     private fun buildDetailsListStateItems(
         isAwaitingCredentials: Boolean = false

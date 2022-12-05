@@ -2,20 +2,9 @@ package org.wordpress.android.ui.sitecreation.domains
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.eq
-import com.nhaarman.mockitokotlin2.firstValue
-import com.nhaarman.mockitokotlin2.isNull
-import com.nhaarman.mockitokotlin2.lastValue
-import com.nhaarman.mockitokotlin2.secondValue
-import com.nhaarman.mockitokotlin2.thirdValue
-import com.nhaarman.mockitokotlin2.times
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.InternalCoroutinesApi
-import org.hamcrest.CoreMatchers.instanceOf
-import org.hamcrest.MatcherAssert.assertThat
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -23,6 +12,16 @@ import org.junit.runner.RunWith
 import org.mockito.ArgumentCaptor
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.any
+import org.mockito.kotlin.eq
+import org.mockito.kotlin.firstValue
+import org.mockito.kotlin.isNull
+import org.mockito.kotlin.lastValue
+import org.mockito.kotlin.secondValue
+import org.mockito.kotlin.thirdValue
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.Dispatcher
@@ -39,7 +38,6 @@ import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
 import org.wordpress.android.ui.sitecreation.usecases.FetchDomainsUseCase
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.NetworkUtilsWrapper
-import org.hamcrest.CoreMatchers.`is` as Is
 
 private const val MULTI_RESULT_DOMAIN_FETCH_RESULT_SIZE = 20
 private val MULTI_RESULT_DOMAIN_FETCH_QUERY = "multi_result_query" to MULTI_RESULT_DOMAIN_FETCH_RESULT_SIZE
@@ -201,10 +199,8 @@ class SiteCreationDomainsViewModelTest {
                 showClearButton = true,
                 numberOfItems = 1
         )
-        assertThat(
-                captor.thirdValue.contentState.items[0],
-                instanceOf(DomainsFetchSuggestionsErrorUiState::class.java)
-        )
+        assertThat(captor.thirdValue.contentState.items[0])
+                .isInstanceOf(DomainsFetchSuggestionsErrorUiState::class.java)
     }
 
     /**
@@ -279,7 +275,7 @@ class SiteCreationDomainsViewModelTest {
         viewModel.createSiteBtnClicked()
         val captor = ArgumentCaptor.forClass(String::class.java)
         verify(createSiteBtnObserver, times(1)).onChanged(captor.capture())
-        assertThat(captor.firstValue, Is(domainName))
+        assertThat(captor.firstValue).isEqualTo(domainName)
     }
 
     /**
@@ -290,10 +286,10 @@ class SiteCreationDomainsViewModelTest {
         showProgress: Boolean = false,
         showClearButton: Boolean = false
     ) {
-        assertThat(uiState.searchInputUiState.showProgress, Is(showProgress))
-        assertThat(uiState.searchInputUiState.showClearButton, Is(showClearButton))
-        assertThat(uiState.contentState, instanceOf(DomainsUiContentState.Initial::class.java))
-        assertThat(uiState.createSiteButtonContainerVisibility, Is(false))
+        assertThat(uiState.searchInputUiState.showProgress).isEqualTo(showProgress)
+        assertThat(uiState.searchInputUiState.showClearButton).isEqualTo(showClearButton)
+        assertThat(uiState.contentState).isInstanceOf(DomainsUiContentState.Initial::class.java)
+        assertThat(uiState.createSiteButtonContainerVisibility).isEqualTo(false)
     }
 
     /**
@@ -304,10 +300,10 @@ class SiteCreationDomainsViewModelTest {
         showClearButton: Boolean = false,
         numberOfItems: Int = MULTI_RESULT_DOMAIN_FETCH_RESULT_SIZE
     ) {
-        assertThat(uiState.searchInputUiState.showProgress, Is(false))
-        assertThat(uiState.searchInputUiState.showClearButton, Is(showClearButton))
-        assertThat(uiState.contentState, instanceOf(DomainsUiContentState.VisibleItems::class.java))
-        assertThat(uiState.contentState.items.size, Is(numberOfItems))
+        assertThat(uiState.searchInputUiState.showProgress).isEqualTo(false)
+        assertThat(uiState.searchInputUiState.showClearButton).isEqualTo(showClearButton)
+        assertThat(uiState.contentState).isInstanceOf(DomainsUiContentState.VisibleItems::class.java)
+        assertThat(uiState.contentState.items.size).isEqualTo(numberOfItems)
     }
 
     /**
@@ -316,10 +312,8 @@ class SiteCreationDomainsViewModelTest {
     private fun verifyContentAndDomainValidityUiStatesAreVisible(
         uiState: DomainsUiState
     ) {
-        assertThat(
-                uiState.contentState.items.first(),
-                instanceOf(DomainsModelUnavailabilityUiState::class.java)
-        )
+        assertThat(uiState.contentState.items.first())
+                .isInstanceOf(DomainsModelUnavailabilityUiState::class.java)
     }
 
     /**
@@ -330,18 +324,18 @@ class SiteCreationDomainsViewModelTest {
         showClearButton: Boolean = false,
         isInvalidQuery: Boolean = false
     ) {
-        assertThat(uiState.searchInputUiState.showProgress, Is(false))
-        assertThat(uiState.searchInputUiState.showClearButton, Is(showClearButton))
-        assertThat(uiState.contentState, instanceOf(DomainsUiContentState.Empty::class.java))
+        assertThat(uiState.searchInputUiState.showProgress).isEqualTo(false)
+        assertThat(uiState.searchInputUiState.showClearButton).isEqualTo(showClearButton)
+        assertThat(uiState.contentState).isInstanceOf(DomainsUiContentState.Empty::class.java)
         val contentStateAsEmpty = uiState.contentState as DomainsUiContentState.Empty
-        assertThat(contentStateAsEmpty.message, instanceOf(UiStringRes::class.java))
+        assertThat(contentStateAsEmpty.message).isInstanceOf(UiStringRes::class.java)
         val expectedEmptyListTextMessage = if (isInvalidQuery) {
             R.string.new_site_creation_empty_domain_list_message_invalid_query
         } else {
             R.string.new_site_creation_empty_domain_list_message
         }
-        assertThat((contentStateAsEmpty.message as UiStringRes).stringRes, Is(expectedEmptyListTextMessage))
-        assertThat(uiState.contentState.items.size, Is(0))
+        assertThat((contentStateAsEmpty.message as UiStringRes).stringRes).isEqualTo(expectedEmptyListTextMessage)
+        assertThat(uiState.contentState.items.size).isEqualTo(0)
     }
 
     /**

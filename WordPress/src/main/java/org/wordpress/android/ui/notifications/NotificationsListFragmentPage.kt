@@ -80,6 +80,7 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
         fun onClickNote(noteId: String?)
     }
 
+    @Suppress("DEPRECATION")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         val adapter = createOrGetNotesAdapter()
@@ -97,6 +98,7 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
         }
     }
 
+    @Suppress("DEPRECATION", "OVERRIDE_DEPRECATION")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == RequestCodes.NOTE_DETAIL) {
             shouldRefreshNotifications = false
@@ -441,6 +443,7 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
         notesAdapter!!.addAll(event.notes, true)
     }
 
+    @Suppress("unused", "UNUSED_PARAMETER")
     @Subscribe(threadMode = MAIN)
     fun onEventMainThread(error: NotificationsRefreshError?) {
         if (isAdded) {
@@ -478,6 +481,7 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
             return detailIntent
         }
 
+        @Suppress("LongParameterList")
         fun openNoteForReply(
             activity: Activity?,
             noteId: String?,

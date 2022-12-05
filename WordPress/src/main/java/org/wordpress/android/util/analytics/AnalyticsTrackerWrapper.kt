@@ -1,7 +1,6 @@
 package org.wordpress.android.util.analytics
 
 import dagger.Reusable
-import org.wordpress.android.analytics.AnalyticsInjectExperimentProperties
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.SiteModel
@@ -48,6 +47,8 @@ class AnalyticsTrackerWrapper
         AnalyticsUtils.trackWithSiteDetails(this, stat, site, feature.toParams().toMutableMap<String, Any>())
     }
 
+    fun getAnonID(): String? = AnalyticsTracker.getAnonID()
+
     /**
      * A convenience method for logging an error event with some additional meta data.
      * @param stat The stat to track.
@@ -57,10 +58,6 @@ class AnalyticsTrackerWrapper
      */
     fun track(stat: Stat, errorContext: String, errorType: String, errorDescription: String) {
         AnalyticsTracker.track(stat, errorContext, errorType, errorDescription)
-    }
-
-    fun setInjectExperimentProperties(properties: Map<String, Any>) {
-        AnalyticsTracker.setInjectExperimentProperties(AnalyticsInjectExperimentProperties.newInstance(properties))
     }
 
     private fun FeatureConfig.toParams() = mapOf(name() to isEnabled())

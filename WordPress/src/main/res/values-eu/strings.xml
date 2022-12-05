@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-05-22 13:14:12+0000
+Translation-Revision-Date: 2022-07-23 20:48:05+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.1
+Generator: GlotPress/4.0.0-alpha.3
 Language: eu_ES
 -->
 <resources>
@@ -577,6 +577,7 @@ Language: eu_ES
     <string name="comment_spammed">Iruzkina spam bezala markatuta</string>
     <string name="reader_likes_multi">%,d pertsonak hau gustuko dute</string>
     <string name="reader_likes_you_and_multi">Zuk eta %,d pertsonak hau gustuko duzue</string>
+    <string name="comment_unapproved">Iruzkin onartugabea</string>
     <string name="reader_likes_you_and_one">Zuk eta beste batek hau gustuko duzue.</string>
     <string name="pick_photo">Aukeratu argazkia</string>
     <string name="pick_video">Aukeratu bideoa</string>

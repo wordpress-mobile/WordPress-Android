@@ -1,4 +1,0 @@
-20.1:
-- We improved the site design selection screen in the Site Creation process.
-- When you click a WordPress link, it opens in the app instead of your default browser.
-- We moved Quick Start focus points to the correct spots for right-to-left language users.

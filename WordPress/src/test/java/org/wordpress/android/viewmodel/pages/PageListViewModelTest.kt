@@ -1,16 +1,15 @@
 package org.wordpress.android.viewmodel.pages
 
 import androidx.lifecycle.MutableLiveData
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.anyOrNull
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.whenever
-import junit.framework.Assert.assertNull
 import kotlinx.coroutines.Dispatchers
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
+import org.mockito.kotlin.any
+import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.AccountModel
@@ -443,7 +442,7 @@ class PageListViewModelTest : BaseUnitTest() {
 
         val pageItems = pagesResult[1].first
         val pageItem = pageItems[0] as PublishedPage
-        assertNull(pageItem.author)
+        assertThat(pageItem.author).isNull()
     }
 
     private fun buildPageModel(
@@ -468,7 +467,7 @@ class PageListViewModelTest : BaseUnitTest() {
     }
 
     private fun assertDivider(pageItem: PageItem) {
-        assertThat(pageItem is Divider).isTrue()
+        assertThat(pageItem is Divider).isTrue
     }
 
     private fun assertPublishedPage(pageItem: PageItem, pageModel: PageModel, indent: Int = 0) {

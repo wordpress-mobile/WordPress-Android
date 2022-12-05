@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package org.wordpress.android.viewmodel.helpers
 
 import android.content.BroadcastReceiver
@@ -6,16 +8,14 @@ import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.LiveData
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.argumentCaptor
-import com.nhaarman.mockitokotlin2.doReturn
-import com.nhaarman.mockitokotlin2.mock
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.wordpress.android.viewmodel.helpers.ConnectionStatus.AVAILABLE
-import org.wordpress.android.viewmodel.helpers.ConnectionStatus.UNAVAILABLE
+import org.mockito.kotlin.any
+import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.mock
 
 class ConnectionStatusLiveDataTest {
     @get:Rule val rule = InstantTaskExecutorRule()
@@ -43,20 +43,20 @@ class ConnectionStatusLiveDataTest {
 
         broadcastReceiver.onReceive(mockedBroadcastReceiverContext(connectedNetwork = false), mock())
 
-        assertThat(connectionStatusLiveData.value).isEqualTo(UNAVAILABLE)
+        assertThat(connectionStatusLiveData.value).isEqualTo(ConnectionStatus.UNAVAILABLE)
     }
 
     @Test
     fun `it emits a value when the network availability changes`() {
         // Arrange
         broadcastReceiver.onReceive(mockedBroadcastReceiverContext(connectedNetwork = true), mock())
-        assertThat(connectionStatusLiveData.value).isEqualTo(AVAILABLE)
+        assertThat(connectionStatusLiveData.value).isEqualTo(ConnectionStatus.AVAILABLE)
 
         // Act
         broadcastReceiver.onReceive(mockedBroadcastReceiverContext(connectedNetwork = false), mock())
 
         // Assert
-        assertThat(connectionStatusLiveData.value).isEqualTo(UNAVAILABLE)
+        assertThat(connectionStatusLiveData.value).isEqualTo(ConnectionStatus.UNAVAILABLE)
     }
 
     @Test
@@ -77,9 +77,10 @@ class ConnectionStatusLiveDataTest {
 
         // Assert
         assertThat(emitCount).isEqualTo(1)
-        assertThat(connectionStatusLiveData.value).isEqualTo(AVAILABLE)
+        assertThat(connectionStatusLiveData.value).isEqualTo(ConnectionStatus.AVAILABLE)
     }
 
+    @Suppress("DEPRECATION")
     private fun mockedBroadcastReceiverContext(connectedNetwork: Boolean): Context {
         val networkInfo = mock<NetworkInfo> {
             on { isConnected } doReturn connectedNetwork

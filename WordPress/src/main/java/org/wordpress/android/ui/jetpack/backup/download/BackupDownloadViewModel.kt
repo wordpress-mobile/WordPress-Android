@@ -58,8 +58,8 @@ import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsPr
 import org.wordpress.android.ui.jetpack.usecases.GetActivityLogItemUseCase
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.UiString.UiStringRes
-import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.util.text.PercentFormatter
 import org.wordpress.android.util.wizard.WizardManager
 import org.wordpress.android.util.wizard.WizardNavigationTarget
 import org.wordpress.android.util.wizard.WizardState
@@ -98,7 +98,8 @@ class BackupDownloadViewModel @Inject constructor(
     private val stateListItemBuilder: BackupDownloadStateListItemBuilder,
     private val postBackupDownloadUseCase: PostBackupDownloadUseCase,
     private val getBackupDownloadStatusUseCase: GetBackupDownloadStatusUseCase,
-    @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
+    @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
+    private val percentFormatter: PercentFormatter
 ) : ScopedViewModel(mainDispatcher) {
     private var isStarted = false
     private lateinit var site: SiteModel
@@ -348,10 +349,7 @@ class BackupDownloadViewModel @Inject constructor(
                     contentState as JetpackListItemState.ProgressState
                     contentState.copy(
                             progress = state.progress ?: 0,
-                            progressLabel = UiStringResWithParams(
-                                    string.backup_download_progress_label,
-                                    listOf(UiStringText(state.progress?.toString() ?: "0"))
-                            )
+                            progressLabel = UiStringText(percentFormatter.format(state.progress ?: 0))
                     )
                 } else {
                     contentState

@@ -336,7 +336,6 @@ class ZendeskHelper(
 /**
  * This is a helper function which builds a `UiConfig` through helpers to be used during ticket creation.
  */
-@Suppress("LongParameterList")
 private fun buildZendeskConfig(
     context: Context,
     allSites: List<SiteModel>?,
@@ -476,7 +475,7 @@ private fun buildZendeskTags(
  * could prove useful for the Happiness Engineers while debugging the users' issues.
  */
 private fun getNetworkInformation(context: Context): String {
-    val networkType = when (NetworkUtils.getActiveNetworkInfo(context)?.type) {
+    @Suppress("DEPRECATION") val networkType = when (NetworkUtils.getActiveNetworkInfo(context)?.type) {
         ConnectivityManager.TYPE_WIFI -> ZendeskConstants.networkWifi
         ConnectivityManager.TYPE_MOBILE -> ZendeskConstants.networkWWAN
         else -> ZendeskConstants.unknownValue
@@ -487,7 +486,7 @@ private fun getNetworkInformation(context: Context): String {
     return listOf(
             "${ZendeskConstants.networkTypeLabel} $networkType",
             "${ZendeskConstants.networkCarrierLabel} $carrierName",
-            "${ZendeskConstants.networkCountryCodeLabel} ${countryCodeLabel.toUpperCase(context.currentLocale)}"
+            "${ZendeskConstants.networkCountryCodeLabel} ${countryCodeLabel.uppercase(context.currentLocale)}"
     ).joinToString(separator = "\n")
 }
 

@@ -246,6 +246,7 @@ public class EditCommentActivity extends LocaleAwareActivity {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     protected Dialog onCreateDialog(int id) {
         if (id == ID_DIALOG_SAVING) {
             ProgressDialog savingDialog = new ProgressDialog(this);

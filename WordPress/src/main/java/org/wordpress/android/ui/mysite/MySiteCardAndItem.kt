@@ -10,7 +10,9 @@ import org.wordpress.android.ui.avatars.TrainOfAvatarsItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.CATEGORY_HEADER_ITEM
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.DASHBOARD_CARDS
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.DOMAIN_REGISTRATION_CARD
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.SINGLE_ACTION_CARD
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.INFO_ITEM
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.JETPACK_BADGE
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.LIST_ITEM
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.QUICK_ACTIONS_CARD
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.QUICK_LINK_RIBBON
@@ -35,7 +37,9 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
         INFO_ITEM,
         CATEGORY_HEADER_ITEM,
         LIST_ITEM,
-        DASHBOARD_CARDS
+        DASHBOARD_CARDS,
+        JETPACK_BADGE,
+        SINGLE_ACTION_CARD,
     }
 
     enum class DashboardCardType {
@@ -262,6 +266,12 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
     ) : MySiteCardAndItem(type, activeQuickStartItem) {
         data class InfoItem(val title: UiString) : Item(INFO_ITEM)
 
+        data class SingleActionCard(
+            @StringRes val textResource: Int,
+            @DrawableRes val imageResource: Int,
+            val onActionClick: () -> Unit
+        ) : Item(SINGLE_ACTION_CARD)
+
         data class CategoryHeaderItem(val title: UiString) : Item(CATEGORY_HEADER_ITEM)
 
         data class ListItem(
@@ -273,4 +283,8 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
             val onClick: ListItemInteraction
         ) : Item(LIST_ITEM, activeQuickStartItem = showFocusPoint)
     }
+
+    data class JetpackBadge(
+        val onClick: ListItemInteraction? = null
+    ) : MySiteCardAndItem(JETPACK_BADGE)
 }

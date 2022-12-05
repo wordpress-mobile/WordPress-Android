@@ -65,6 +65,7 @@ class RevisionItemViewHolder(
             val avatarUrl = bundle.getString(HistoryDiffCallback.AVATAR_CHANGED_KEY)
             boundRevision.authorAvatarURL = avatarUrl
             if (!TextUtils.isEmpty(avatarUrl)) {
+                @Suppress("DEPRECATION")
                 imageManager.loadIntoCircle(avatar, ImageType.AVATAR, StringUtils.notNullStr(avatarUrl))
             }
         }

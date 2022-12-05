@@ -1,13 +1,6 @@
 package org.wordpress.android.ui.mediapicker
 
 import android.content.Context
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.anyOrNull
-import com.nhaarman.mockitokotlin2.doAnswer
-import com.nhaarman.mockitokotlin2.inOrder
-import com.nhaarman.mockitokotlin2.times
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.flow
@@ -15,6 +8,13 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
+import org.mockito.kotlin.any
+import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.doAnswer
+import org.mockito.kotlin.inOrder
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
@@ -72,6 +72,7 @@ import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Locale
 
+@Suppress("LargeClass")
 class MediaPickerViewModelTest : BaseUnitTest() {
     @Mock lateinit var mediaLoaderFactory: MediaLoaderFactory
     @Mock lateinit var mediaLoader: MediaLoader
@@ -285,7 +286,7 @@ class MediaPickerViewModelTest : BaseUnitTest() {
         viewModel.refreshData(false)
 
         assertThat(navigateEvents).isEmpty()
-        clickItem(0)
+        clickItem()
         assertThat(navigateEvents).isNotEmpty
         verify(mediaPickerTracker).trackPreview(
                 firstItem.type == VIDEO,
@@ -693,7 +694,7 @@ class MediaPickerViewModelTest : BaseUnitTest() {
                 hasStoragePermissions = false
         )
 
-        assertThat(actions.poll()).isNull()
+        assertThat(actions.tryReceive().getOrNull()).isNull()
     }
 
     @Test
@@ -704,7 +705,7 @@ class MediaPickerViewModelTest : BaseUnitTest() {
                 hasStoragePermissions = true
         )
 
-        assertThat(actions.poll()).isEqualTo(LoadAction.Start(null))
+        assertThat(actions.tryReceive().getOrNull()).isEqualTo(LoadAction.Start(null))
     }
 
     @Test
@@ -715,7 +716,7 @@ class MediaPickerViewModelTest : BaseUnitTest() {
                 hasStoragePermissions = false
         )
 
-        assertThat(actions.poll()).isEqualTo(LoadAction.Start(null))
+        assertThat(actions.tryReceive().getOrNull()).isEqualTo(LoadAction.Start(null))
     }
 
     private fun selectItem(position: Int) {
@@ -723,11 +724,12 @@ class MediaPickerViewModelTest : BaseUnitTest() {
             is PhotoItem -> item.toggleAction.toggle()
             is VideoItem -> item.toggleAction.toggle()
             is FileItem -> item.toggleAction.toggle()
+            is NextPageLoader -> Unit // Do nothing
         }
     }
 
-    private fun clickItem(position: Int) {
-        when (val item = itemOnPosition(position)) {
+    private fun clickItem() {
+        when (val item = itemOnPosition(0)) {
             is PhotoItem -> item.clickAction.click()
             is VideoItem -> item.clickAction.click()
             is FileItem -> item.clickAction.click()
@@ -897,12 +899,6 @@ class MediaPickerViewModelTest : BaseUnitTest() {
         uiStates.last().searchUiModel.let { model ->
             assertThat(model is SearchUiModel.Expanded).isTrue()
             assertThat((model as SearchUiModel.Expanded).filter).isEqualTo(filter)
-        }
-    }
-
-    private fun assertSearchHidden() {
-        uiStates.last().searchUiModel.let { model ->
-            assertThat(model is SearchUiModel.Hidden).isTrue()
         }
     }
 

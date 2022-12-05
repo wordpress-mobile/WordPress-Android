@@ -1,11 +1,88 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-06-26 10:10:50+0000
+Translation-Revision-Date: 2022-11-18 20:18:58+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.1
+Generator: GlotPress/4.0.0-alpha.3
 Language: sq_AL
 -->
 <resources>
+    <string name="jp_migration_help_button">Ju duhet ndihmë?</string>
+    <string name="jp_migration_continue_button">Vazhdo</string>
+    <string name="jp_migration_welcome_site_found_message">E gjetëm sajtin tuaj. Vazhdoni,  që të shpërngulen krejt të dhënat tuaja dhe të bëhet automatikisht hyrja në Jetpack.</string>
+    <string name="jp_migration_welcome_sites_found_message">I gjetëm sajtet tuaj. Vazhdoni,  që të shpërngulen krejt të dhënat tuaja dhe të bëhet automatikisht hyrja në Jetpack.</string>
+    <string name="jp_migration_avatar_content_description">Fotoja juaj e profilit</string>
+    <string name="jp_migration_welcome_subtitle">Duket sikur po bëni migrimin që nga aplikacioni WordPress.</string>
+    <string name="jp_migration_welcome_title">Mirë se vini te Jetpack-u!</string>
+    <string name="icon_desc">ikonë</string>
+    <string name="post_settings_parent">Faqe Mëmë</string>
+    <string name="post_settings_page_attributes">Atribute Faqeje</string>
+    <string name="about_automattic_contribute_item_title">Kontribuoni</string>
+    <string name="about_news">Lajme</string>
+    <string name="my_site_blogging_prompt_card_number_of_answers_one">1 përgjigje</string>
+    <string name="login_prologue_revamped_content_description_wordpress_icon">Ikonë WordPress-i</string>
+    <string name="login_prologue_revamped_tagline">Shkruani, përpunoni dhe botoni prej ngado.</string>
+    <string name="error_fetch_authors_list">S’u morën dot autorë</string>
+    <string name="post_settings_author">Autor</string>
+    <string name="app_rating_title">Ju pëlqen %s?</string>
+    <string name="connection_service_label">Ndajeni postimin me të tjerë në %s</string>
+    <string name="connections_label">Lidhje Jetpack Social</string>
+    <string name="stats_widget_log_in_to_add_message">Ju lutemi, që të shtoni një &lt;em&gt;widget&lt;/em&gt;, bëni hyrjen te aplikacioni Jetpack.</string>
+    <string name="stats_view_publicize">Lidhje Jetpack Social</string>
+    <string name="login_magic_links_email_sent">Sapo dërguam një lidhje magjike te</string>
+    <string name="login_magic_links_sent_label_short">Shihni email-in tuaj në këtë pajisje!</string>
+    <string name="or_use_password">Përdorni fjalëkalimin për hyrje</string>
+    <string name="wp_jetpack_powered_notifications_powered_by_jetpack_caption">Jini gjithnjë në dijeni me përditësime aty për aty për komente të reja, trafik sajti, raporte mbi sigurinë, etj.</string>
+    <string name="wp_jetpack_powered_notifications_powered_by_jetpack">Njoftimet sillen nga Jetpack-u</string>
+    <string name="wp_jetpack_powered_stats_powered_by_jetpack_caption">Shihni si shtohet trafiku juaj dhe mësoni rreth publikut tuaj, me “Statistika dhe Prirje” të ripunuar, tanimë të përdorshme edhe në aplikacionin e ri Jetpack.</string>
+    <string name="wp_jetpack_powered_stats_powered_by_jetpack">Statistika jepen nga Jetpack-u</string>
+    <string name="wp_jetpack_powered_reader_powered_by_jetpack_caption">Gjeni, ndiqni dhe pëlqeni përmes lexuesit krejt sajtet dhe postimet tuaja të dashura, tanimë i përdorshëm edhe në aplikacionin e ri Jetpack.</string>
+    <string name="wp_jetpack_powered_reader_powered_by_jetpack">Lexuesi bazohet në Jetpack</string>
+    <string name="wp_jetpack_powered_features">Aplikacioni i ri Jetpack ka Statistika, Lexues, Njoftime, etj, që e bëjnë më të mirë WordPress-in tuaj.</string>
+    <string name="wp_jetpack_powered_better_with_jetpack">WordPress-i është më i mirë me Jetpack-un</string>
+    <string name="gutenberg_native_upgrade_your_plan_to_use_video_covers">Që të përdorni kapakë video, përmirësoni planin tuaj</string>
+    <string name="gutenberg_native_upgrade_your_plan_to_upload_audio">Që të ngarkoni audio, përmirësoni planin tuaj</string>
+    <string name="gutenberg_native_jetpack_powered">Bazuar në Jetpack</string>
+    <string name="gutenberg_native_invalid_url">URL e pavlefshme.</string>
+    <string name="gutenberg_native_gradient">Gradient</string>
+    <string name="wp_jetpack_continue_to_notifications">Vazhdoni te Njoftime</string>
+    <string name="wp_jetpack_continue_to_stats">Vazhdoni te Statistika</string>
+    <string name="wp_jetpack_continue_to_reader">Vazhdoni te Lexuesi</string>
+    <string name="wp_jetpack_get_new_jetpack_app">Provoni aplikacionin e ri Jetpack</string>
+    <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery">Problem me shfaqje blloku. \nPrekeni që të provohet rikthim blloku.</string>
+    <string name="weekly_roundup_notification_text_views_and_comments">Javën e kaluar patët %1$s parje dhe %2$s komente</string>
+    <string name="weekly_roundup_notification_text_views_and_likes">Javën e kaluar patët %1$s parje dhe %2$s pëlqime</string>
+    <string name="weekly_roundup_notification_text_views_only">Javën e kaluar patët %1$s parje.</string>
+    <string name="weekly_roundup_notification_text_all">Javën e kaluar patët %1$s parje, %2$s pëlqime dhe %3$s komente.</string>
+    <string name="stats_revamp_v2_update_alert_message">U përditësua me Tendenca të Reja për t’ju ndihmuar të kuptoni se si ecën lënda juaj dhe se çfarë ka rezonancë me publikun.</string>
+    <string name="stats_insights_like_guide_card">⭐️ Postimi juaj më i ri %1$s ka marrë %2$s pëlqime.</string>
+    <string name="wp_jetpack_powered">Bazuar në Jetpack</string>
+    <string name="qrcode_auth_flow_content_description">Figurë që tregon skanim kodi hyrjeje në punë e sipër</string>
+    <string name="qrcode_auth_flow_error_content_description">Figurë që tregon një gabim</string>
+    <string name="qrcode_auth_flow_dismiss_dialog_message">Jeni i sigurt se doni të vazhdohet?</string>
+    <string name="qrcode_auth_flow_error_auth_failed_subtitle">S’u bë dot futja juaj duke përdorur këtë kod hyrjeje. Ju lutemi, prekni butonin “Riskanoje” që të riskanohet kodi.</string>
+    <string name="qrcode_auth_flow_error_auth_failed_title">Mirëfilltësimi Dështoi</string>
+    <string name="qrcode_auth_flow_error_expired_subtitle">Ky kod hyrjeje ka skaduar. Ju lutemi, prekni butonin “Riskanoje” që të riskanohet kodi.</string>
+    <string name="qrcode_auth_flow_error_expired_title">Kod hyrjeje i skaduar</string>
+    <string name="qrcode_auth_flow_error_invalid_data_subtitle">Kodi i hyrjes që u skanua, s’u vlerësua dot. Ju lutemi, prekni butonin “Riskanoje” që të riskanohet kodi.</string>
+    <string name="qrcode_auth_flow_error_invalid_data_title">S’u bë dot vleftësimi i kodit të hyrjes</string>
+    <string name="qrcode_auth_flow_error_no_connection_subtitle">Për të skanuar kode hyrjesh, lypset një lidhje internet aktive</string>
+    <string name="qrcode_auth_flow_error_no_connection_title">S’ka lidhje</string>
+    <string name="qrcode_auth_flow_scan_again">Riskanoje</string>
+    <string name="qrcode_auth_flow_dismiss">Mos e merr parasysh</string>
+    <string name="qrcode_auth_flow_done_subtitle">Prekni mbi “mos e merr parasysh” dhe kthehuni te shfletuesi juaj që të vazhdoni.</string>
+    <string name="qrcode_auth_flow_done_title">Jeni i futur!</string>
+    <string name="qrcode_auth_flow_validated_primary_action">Po, futmë</string>
+    <string name="qrcode_auth_flow_validated_subtitle">Skanoni vetëm kode QR të marrë drejt e nga shfletuesi juaj. Mos skanoni kurrë një kod të dërguar për ju nga dikush tjetër.</string>
+    <string name="qrcode_auth_flow_validated_default_title">Po provoni të hyni në shfletuesin tuaj pranë %1$s?</string>
+    <string name="qrcode_auth_flow_validated_title">A po provoni të hyni te %1$s pranë %2$s?</string>
+    <string name="stats_revamp_v2_intro_header_title">Përditësim Tendencash</string>
+    <string name="stats_insights_followers_guide_card">💡Komentimi në blogje të tjerë është një mënyrë e goditur për të shtuar vëmendjen dhe ndjekësit për sajtin tuaj të ri.</string>
+    <string name="stats_insights_comments_guide_card">💡Prekni “SHIHNI MË TEPËR”, që të shihni komentuesit tuaj kryesues.</string>
+    <string name="stats_insights_latest_post_empty">Shihni prapë, kur të keni botuar postimin tuaj të parë!</string>
+    <string name="stats_insights_views_and_visitors_visitors_empty_state">Shihni ndihmëzat tona kryesuese për shtim të parjeve dhe trafikut %1$s</string>
+    <string name="stats_action_card_schedule_post_message">✍️ Planifikoni botimin e skicave tuaja sipas kohës më të përshtatshme për mbërritjen te publiku juaj.</string>
+    <string name="stats_action_card_blogging_reminders_message">💡Postimi në mënyrë të rregullt është një mënyrë e goditur për të krijuar publikun tuaj. Shtoni një kujtues për t’ju mbajtur në këtë pistë.</string>
+    <string name="stats_action_card_grow_audience_message">💡Ngrijeni më shpejt një shkallë më lart blogimin tuaj, me kursin tonë &lt;i&gt;Hyrje në Blogim&lt;/i&gt; të drejtuar nga ekspertë.</string>
     <string name="blogging_prompts_onboarding_prompts_loading">Po ngarkohen Cytje për Blogim. Ju lutemi, pritni një çast dhe riprovoni.</string>
     <string name="hpp_bottom_helper_text">S’e ndani dot mendjen? Temën mund ta ndryshoni kurdo.</string>
     <string name="hpp_recommended_default_vertical">Blogim</string>
@@ -38,7 +115,7 @@ Language: sq_AL
     <string name="me_btn_scan_login_code">Skanoni Kod Hyrje</string>
     <string name="stats_insights_likes_guide_card">⭐️ Postimi juaj më i ri %1$s ka marrë %2$s pëlqime.</string>
     <string name="stats_most_popular_percent_views_empty">Pa veprimtari të mjaftueshme. Kontrolloni më vonë, kur sajti juaj të ketë më tepër vizitorë!</string>
-    <string name="stats_total_followers_content_description">%1s, %2s e ndjekësve gjithsej</string>
+    <string name="stats_total_followers_content_description">%1$s, %2$s%% e ndjekësve gjithsej</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
     <string name="pages_copy_link">Kopjoji lidhjen</string>
     <string name="quick_start_completed_tour_title">Përgëzime! Dini nga shkoni&lt;br/&gt;</string>
@@ -185,6 +262,7 @@ Language: sq_AL
     <string name="my_site_blogging_prompt_card_menu_remove">Hiqe nga pulti</string>
     <string name="my_site_blogging_prompt_card_menu_skip">Anashkaloje këtë cytje</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">Shihni më tepër cytje</string>
+    <string name="my_site_blogging_prompt_card_number_of_answers_other">%d përgjigje</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">Ndani me të tjerë cytje blogimi</string>
     <string name="my_site_blogging_prompt_card_answered_prompt">✓ Me Përgjigje</string>
     <string name="my_site_blogging_prompt_card_answer_prompt">Përgjigjuni cytjes</string>
@@ -359,7 +437,6 @@ Language: sq_AL
     <string name="me_btn_share">Jepjani WordPress-in një shoku</string>
     <string name="my_site_quick_actions_title">Lidhje të Shpejta</string>
     <string name="my_site_btn_domains">Përkatësi</string>
-    <string name="weekly_roundup_notification_text">Sajti juaj pati %1$d parje, %2$d pëlqime, %3$d komente.</string>
     <string name="weekly_roundup_notification_title">Përmbledhje Javore: %s</string>
     <string name="blogging_reminders_notification_time">Kohë njoftimi</string>
     <string name="blogging_reminders_epilogue_body_everyday_with_time">Do të merrni kujtues për të bloguar &lt;b&gt;çdo ditë&lt;/b&gt; më &lt;b&gt;%s&lt;/b&gt;.</string>
@@ -467,6 +544,7 @@ Language: sq_AL
     <string name="gutenberg_native_s_has_no_url_set">%s s’ka të caktuar URL</string>
     <string name="gutenberg_native_s_converted_to_regular_blocks">%s shndërruar në blloqe të rregullt</string>
     <string name="gutenberg_native_s_block">Bllok %s</string>
+    <string name="gutenberg_native_opacity">Patejdukshmëri</string>
     <string name="gutenberg_native_media_options">Mundësi media</string>
     <string name="gutenberg_native_invalid_url_audio_file_not_found">URL e pavlefshme. S’u gjet kartelë audio.</string>
     <string name="gutenberg_native_insert_crosspost">Futni “crosspost”</string>
@@ -494,6 +572,7 @@ Language: sq_AL
     <string name="gutenberg_native_move_image_forward">Shpjere Figurën Përpara</string>
     <string name="gutenberg_native_move_image_backward">Shpjere Figurën Prapa</string>
     <string name="gutenberg_native_width_settings">Rregullime Gjerësie</string>
+    <string name="gutenberg_native_link_rel">Atribut “Rel” Lidhjeje</string>
     <string name="gutenberg_native_column_settings">Rregullime Shtylle</string>
     <string name="user_profile_untitled_site">(I patitull)</string>
     <string name="user_profile_site_section_header">Sajt</string>
@@ -672,7 +751,6 @@ Language: sq_AL
     <string name="restore_complete_visit_site_action_button">Vizitoni sajtin</string>
     <string name="restore_complete_description_with_two_parameters">Krejt zërat tuaj të përzgjedhur janë rikthyer te %1$s %2$s.</string>
     <string name="restore_complete_header">Sajti juaj u rikthye</string>
-    <string name="restore_progress_label">%1$s%%</string>
     <string name="restore_progress_footnote">S’ka nevojë të prisni këtu. Do t’ju njoftojmë, kur sajti të jetë rikthyer.</string>
     <string name="restore_progress_icon_content_description">Ikonë “Riktheni sajtin”</string>
     <string name="restore_progress_description_with_two_parameters">Po e rikthejmë sajtin tuaj te %1$s %2$s.</string>
@@ -744,7 +822,6 @@ Language: sq_AL
     <string name="backup_download_complete_description_with_two_parameters">Krijuam me sukses një kopjeruajtje të sajtit tuaj prej %1$s %2$s.</string>
     <string name="backup_download_complete_header">Kopjeruajtja juaj tani është gati për shkarkim</string>
     <string name="backup_download_complete_page_title">Kopjeruajtja Juaj</string>
-    <string name="backup_download_progress_label">%1$s%%</string>
     <string name="backup_download_progress_footnote">S’ka nevojë të rrini e të pritni. Do t’ju njoftojmë, kur kopjeruajtja juaj të jetë gati.</string>
     <string name="backup_download_progress_icon_content_description">Po krijohet ikonë “kopjeruajtjeje të shkarkueshme”</string>
     <string name="backup_download_progress_description_with_two_parameters">Po krijojmë një kopjeruajtje të shkarkueshme të sajtit tuaj prej %1$s %2$s.</string>
@@ -1174,7 +1251,7 @@ Language: sq_AL
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">Prekeni dyfish që të kaloni te rregullimet e ngjyrave</string>
     <string name="reader_empty_followed_blogs_description">Kur ndiqni sajte, lëndën e tyre do ta shihni këtu</string>
     <string name="feature_announcement_find_out_mode">Shihni më tepër</string>
-    <string name="feature_announcement_dialog_label">Ç’ka të Re Në WordPress</string>
+    <string name="feature_announcement_dialog_label">Ç’ka të Re Në %s</string>
     <string name="insert_label_with_count">Fut %d</string>
     <string name="crop">qethe</string>
     <string name="error_failed_to_load_into_file">S’u arrit të ngarkohej në kartelë, ju lutemi, riprovoni.</string>
@@ -1273,7 +1350,7 @@ Language: sq_AL
     <string name="post_list_tab_trashed_posts">Shpënë te hedhurinat</string>
     <string name="post_list_tab_scheduled_posts">Vënë në plan</string>
     <string name="post_list_tab_published_posts">Botuar</string>
-    <string name="sharing_facebook_account_must_have_pages">Lidhja Facebook s’gjen dot ndonjë Faqe. Publicize s’mund të lidhet me Profile Facebook, vetëm me Faqe të botuara.</string>
+    <string name="sharing_facebook_account_must_have_pages">Lidhja Facebook s’gjen dot ndonjë Faqe. Jetpack Social s’mund të lidhet me Profile Facebook, vetëm me Faqe të botuara.</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">I palidhur</string>
     <string name="notifications_tab_title_likes">Pëlqime</string>
     <string name="notifications_tab_title_follows">Ndjekje</string>
@@ -1500,7 +1577,7 @@ Language: sq_AL
     <string name="share_desc">Ndajeni me të tjerë</string>
     <string name="navigate_back_desc">Shko mbrapa</string>
     <string name="navigate_forward_desc">Shko përpara</string>
-    <string name="calendar_scheduled_post_description">“%1$s” u vu në plan për botim më “%2$s” te aplikacioni juaj WordPress \n %3$s</string>
+    <string name="calendar_scheduled_post_description">“%1$s” u vu në plan për botim më “%2$s” te aplikacioni juaj %4$s \n %3$s</string>
     <string name="calendar_scheduled_post_title">Postim WordPress i Vënë Në Plan: \"%s\"</string>
     <string name="notification_post_will_be_published_in_ten_minutes">\"%s\" do të botohet brenda 10 minutash</string>
     <string name="notification_post_will_be_published_in_one_hour">\"%s\" do të botohet pas 1 ore</string>
@@ -1672,7 +1749,6 @@ Language: sq_AL
     <string name="app_rating_rate_later">Më vonë</string>
     <string name="app_rating_rate_now">Vlerësojeni tani</string>
     <string name="app_rating_message">Na bëhet qejfi t’ju rishohim! Nëse jua ka ënda aplikacionin, do të na pëlqente të vlerësim te Google Play Store.</string>
-    <string name="app_rating_title">Ju pëlqen WordPress-i?</string>
     <string name="editor_post_converted_back_to_draft">Postimi i shndërrua sërish në skicë</string>
     <string name="stats_insights_posting_activity">Veprimtari Postimi</string>
     <string name="stats_site_not_loaded_yet">Sajt ende i pangarkuar</string>
@@ -1710,10 +1786,10 @@ Language: sq_AL
     <string name="notification_channel_reminder_title">Kujtues</string>
     <string name="stats_select_next_period_description">Përzgjidhni periudhën pasuese</string>
     <string name="stats_select_previous_period_description">Përzgjidhni periudhën e mëparshme</string>
-    <string name="stats_most_popular_percent_views">%1$d%% e parjeve</string>
+    <string name="stats_most_popular_percent_views">%1$s e parjeve</string>
     <string name="stats_insights_popular">Koha Më Popullore</string>
-    <string name="stats_traffic_change">%1$s (%2$s%%)</string>
-    <string name="stats_traffic_increase">+%1$s (%2$s%%)</string>
+    <string name="stats_traffic_change">%1$s (%2$s)</string>
+    <string name="stats_traffic_increase">+%1$s (%2$s)</string>
     <string name="new_site_creation_site_preview_content_description">Po shfaqet paraparje sajti</string>
     <string name="new_site_creation_clear_all_content_description">Pastroje</string>
     <string name="site_created_but_not_fetched_snackbar_message">Duket sikur gjendeni në një lidhje të ngadaltë. Nëse nuk e shihni sajtin e ri te lista, provoni rifreskimin.</string>
@@ -2402,6 +2478,7 @@ Language: sq_AL
     <string name="requesting_otp">Po kërkohet një kod verifikimi përmes SMS-je.</string>
     <string name="login_text_otp">Më mirë më dërgoni kod me tekst</string>
     <string name="enter_verification_code">Thuajse arritëm! Ju lutemi, jepni kodin e verifikimit prej aplikacionit tuaj Authenticator.</string>
+    <string name="open_mail">Hap Postën</string>
     <string name="next">Pasuesi</string>
     <string name="enter_email_wordpress_com">Që të administroni krejt sajtet tuaj WordPress, bëni hyrjen te WordPress.com.</string>
     <string name="image_optimization_promo_desc">Optimizimi i figurave i mpak figurat, për ngarkim më të shpejtë.\n\nKëtë mund ta ndryshoni kurdo, te rregullimet e sajtit.</string>
@@ -2499,10 +2576,8 @@ Language: sq_AL
     <string name="share_btn_disconnect">Shkëputu</string>
     <string name="share_btn_connect">Lidhe</string>
     <string name="connection_service_description">Lidheni, që postimet e blogut tuaj të ndahen vetvetiu në %s.</string>
-    <string name="connection_service_label">Publicizo-je te %s</string>
     <string name="connected_accounts_label">Llogari të lidhura</string>
     <string name="connections_description">Lidhni shërbimet tuaja të parapëlqyera shoqërore për media, që postimet e reja të ndahen vetvetiu me miqtë tuaj.</string>
-    <string name="connections_label">Lidhje</string>
     <string name="sharing">Ndarje Me të Tjerët</string>
     <string name="tabbar_accessibility_label_notifications">Njoftime. Administroni njoftimet tuaja.</string>
     <string name="tabbar_accessibility_label_reader">Reader. Ndiqni lëndë nga sajte të tjerë.</string>

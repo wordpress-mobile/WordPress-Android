@@ -1,11 +1,10 @@
 package org.wordpress.android.ui.posts.mediauploadcompletionprocessors
 
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions
-import org.junit.Test
 import org.junit.Before
-
+import org.junit.Test
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
 import org.wordpress.android.util.helpers.MediaFile
 
 class MediaTextBlockProcessorTest {
@@ -15,7 +14,7 @@ class MediaTextBlockProcessorTest {
     @Before
     fun before() {
         whenever(mediaFile.mediaId).thenReturn(TestContent.remoteMediaId)
-        whenever(mediaFile.fileURL).thenReturn(TestContent.remoteImageUrl)
+        whenever(mediaFile.optimalFileURL).thenReturn(TestContent.remoteImageUrl)
         processor = MediaTextBlockProcessor(TestContent.localMediaId, mediaFile)
     }
 
@@ -33,7 +32,7 @@ class MediaTextBlockProcessorTest {
 
     @Test
     fun `processBlock also works for video`() {
-        whenever(mediaFile.fileURL).thenReturn(TestContent.remoteVideoUrl)
+        whenever(mediaFile.optimalFileURL).thenReturn(TestContent.remoteVideoUrl)
         processor = MediaTextBlockProcessor(TestContent.localMediaId, mediaFile)
         val processedBlock = processor.processBlock(TestContent.oldMediaTextBlockWithVideo)
         Assertions.assertThat(processedBlock).isEqualTo(TestContent.newMediaTextBlockWithVideo)

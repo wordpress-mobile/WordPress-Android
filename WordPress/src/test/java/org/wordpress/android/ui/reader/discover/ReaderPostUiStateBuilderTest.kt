@@ -1,12 +1,6 @@
 package org.wordpress.android.ui.reader.discover
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.anyOrNull
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.spy
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -17,6 +11,12 @@ import org.mockito.ArgumentMatchers.anyBoolean
 import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.any
+import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.spy
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.store.AccountStore
@@ -62,6 +62,7 @@ import org.wordpress.android.util.image.ImageType
 import java.util.Date
 
 @InternalCoroutinesApi
+@Suppress("LargeClass")
 @RunWith(MockitoJUnitRunner::class)
 class ReaderPostUiStateBuilderTest {
     // region Set-up
@@ -202,6 +203,7 @@ class ReaderPostUiStateBuilderTest {
         // Act
         val uiState = mapPostToUiState(post)
         // Assert
+        @Suppress("DEPRECATION")
         assertThat(uiState.discoverSection!!.imageType).isEqualTo(ImageType.AVATAR)
     }
 
@@ -996,7 +998,7 @@ class ReaderPostUiStateBuilderTest {
     }
 
     private fun createReaderTagList(numOfTags: Int) = ReaderTagList().apply {
-        for (x in 0 until numOfTags) {
+        (0 until numOfTags).forEach {
             add(createReaderTag())
         }
     }

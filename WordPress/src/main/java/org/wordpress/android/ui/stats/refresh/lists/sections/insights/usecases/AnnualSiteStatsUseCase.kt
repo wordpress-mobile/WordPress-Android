@@ -11,8 +11,6 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.NavigationTarget
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.ANNUAL_STATS
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatelessUseCase
-import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK
-import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.VIEW_ALL
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.utils.ListItemInteraction
@@ -29,6 +27,7 @@ import javax.inject.Named
 
 private const val VISIBLE_ITEMS = 1
 
+@Suppress("LongParameterList")
 class AnnualSiteStatsUseCase(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher,
@@ -71,7 +70,7 @@ class AnnualSiteStatsUseCase(
         val items = mutableListOf<BlockListItem>()
 
         when (useCaseMode) {
-            BLOCK -> {
+            UseCaseMode.BLOCK -> {
                 items.add(buildTitle())
                 items.addAll(annualStatsMapper.mapYearInBlock(domainModel.years.last()))
                 if (domainModel.years.size > VISIBLE_ITEMS) {
@@ -83,13 +82,14 @@ class AnnualSiteStatsUseCase(
                     )
                 }
             }
-            VIEW_ALL -> {
+            UseCaseMode.VIEW_ALL -> {
                 items.addAll(
                         annualStatsMapper.mapYearInViewAll(
                                 domainModel.years.getOrNull(index) ?: domainModel.years.last()
                         )
                 )
             }
+            UseCaseMode.BLOCK_DETAIL -> Unit // Do nothing
         }
         return items
     }

@@ -1,11 +1,6 @@
 package org.wordpress.android.ui.sitecreation.theme
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.nhaarman.mockitokotlin2.KArgumentCaptor
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.argumentCaptor
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Assert
 import org.junit.Before
@@ -14,6 +9,11 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.KArgumentCaptor
+import org.mockito.kotlin.any
+import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainsPayload
@@ -32,7 +32,7 @@ class FetchHomePageLayoutsUseCaseTest {
 
     @Mock lateinit var dispatcher: Dispatcher
     @Mock lateinit var store: ThemeStore
-    @Mock lateinit var thumbDimensionProvider: SiteDesignPickerDimensionProvider
+    @Mock lateinit var thumbDimensionProvider: SiteDesignRecommendedDimensionProvider
     @Mock lateinit var betaSiteDesigns: BetaSiteDesignsFeatureConfig
 
     private lateinit var useCase: FetchHomePageLayoutsUseCase
@@ -54,6 +54,7 @@ class FetchHomePageLayoutsUseCaseTest {
     }
 
     @Test
+    @Suppress("CAST_NEVER_SUCCEEDS")
     fun `when beta site designs are enabled the stable and beta groups are passed to the call`() = test {
         whenever(dispatcher.dispatch(any())).then { useCase.onStarterDesignsFetched(event) }
         whenever(betaSiteDesigns.isEnabled()).thenReturn(true)
@@ -68,6 +69,7 @@ class FetchHomePageLayoutsUseCaseTest {
     }
 
     @Test
+    @Suppress("CAST_NEVER_SUCCEEDS")
     fun `when beta site designs are disabled no groups are passed to the call`() = test {
         whenever(dispatcher.dispatch(any())).then { useCase.onStarterDesignsFetched(event) }
         whenever(betaSiteDesigns.isEnabled()).thenReturn(false)

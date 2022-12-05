@@ -976,8 +976,8 @@
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
     <string name="stats_item_settings">Stats item settings</string>
     <string name="stats_cannot_be_started">We cannot open the statistics at the moment. Please try again later</string>
-    <string name="stats_traffic_increase">+%1$s (%2$s%%)</string>
-    <string name="stats_traffic_change">%1$s (%2$s%%)</string>
+    <string name="stats_traffic_increase">+%1$s (%2$s)</string>
+    <string name="stats_traffic_change">%1$s (%2$s)</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
     <string name="stats_fewer_posts">Fewer posts</string>
     <string name="stats_more_posts">More posts</string>
@@ -1003,7 +1003,7 @@
     <!-- Stats accessibility strings -->
     <string name="stats_loading_card">Loading selected card data</string>
     <string name="stats_overview_content_description">%1$s %2$s for period: %3$s, change from previous period - %4$s</string>
-    <string name="stats_total_followers_content_description">%1s, %2s of total followers</string>
+    <string name="stats_total_followers_content_description">%1$s, %2$s%% of total followers</string>
     <string name="stats_graph_updated">Graph updated.</string>
     <string name="stats_expand_content_description">Expand</string>
     <string name="stats_collapse_content_description">Collapse</string>
@@ -1174,7 +1174,6 @@
     <string name="scan_in_hours_ago">%s hour(s) ago</string>
     <string name="scan_in_minutes_ago">%s minute(s) ago</string>
     <string name="scan_in_few_seconds">a few seconds ago</string>
-    <string name="scan_progress_label" translatable="false">%1$s%%</string>
     <string name="scan_finished_no_threats_found_message">&lt;b&gt;Scan Finished&lt;/b&gt; &lt;br&gt; No threats found</string>
     <string name="scan_finished_potential_threats_found_message_singular">&lt;b&gt;Scan Finished&lt;/b&gt; &lt;br&gt; One potential threat found</string>
     <string name="scan_finished_potential_threats_found_message_plural">&lt;b&gt;Scan Finished&lt;/b&gt; &lt;br&gt; %s potential threats found</string>
@@ -1277,7 +1276,7 @@
     <string name="stats_view_videos">Videos</string>
     <string name="stats_view_comments" translatable="false">@string/comments</string>
     <string name="stats_view_search_terms">Search Terms</string>
-    <string name="stats_view_publicize">Social Media Connections</string>
+    <string name="stats_view_publicize">Jetpack Social Connections</string>
     <string name="stats_view_followers">Followers</string>
     <string name="stats_view_follower_totals">Follower Totals</string>
     <string name="stats_view_total_likes">Total Likes</string>
@@ -1360,7 +1359,7 @@
     <string name="stats_insights_linkedin">LinkedIn</string>
     <string name="stats_insights_social">Social</string>
     <string name="stats_insights_path">Path</string>
-    <string name="stats_most_popular_percent_views">%1$d%% of views</string>
+    <string name="stats_most_popular_percent_views">%1$s of views</string>
     <string name="stats_most_popular_percent_views_empty">Not enough activity. Check back later when your site\'s had more visitors!</string>
     <string name="stats_insights_posting_activity">Posting Activity</string>
     <string name="stats_insights_management_title">Only see the most relevant stats. Add and organise your insights below.</string>
@@ -1369,20 +1368,18 @@
     <string name="stats_insights_management_posts_and_pages">Posts and Pages</string>
     <string name="stats_insights_management_activity">Activity</string>
 
+    <string name="stats_insights_like_guide_card">⭐️ Your latest post %1$s has received %2$s like.</string>
     <string name="stats_insights_likes_guide_card">⭐️ Your latest post %1$s has received %2$s likes.</string>
     <string name="stats_insights_comments_guide_card">💡Tap \'VIEW MORE\' to see your top commenters.</string>
     <string name="stats_insights_followers_guide_card">💡Commenting on other blogs is a great way to build attention and followers for your new site.</string>
 
     <!-- Stats Revamp v2 Feature Introduction -->
     <string name="stats_revamp_v2_intro_header_title">Insights update</string>
-    <string name="stats_revamp_v2_intro_content">Insights help you understand how your content is performing and what\'s resonating with your audience.</string>
-    <string name="stats_revamp_v2_intro_content_note">Learn more in My Site &gt; Stats &gt; Insights</string>
-    <string name="stats_revamp_v2_intro_primary_button_text">Try it now</string>
-    <string name="stats_revamp_v2_intro_secondary_button_text">Remind me later</string>
-
+    <string name="stats_revamp_v2_update_alert_message">Updated to New Insights to help you understand how your content is performing and what\'s resonating with your audience.</string>
 
     <!-- Stats refreshed widgets -->
     <string name="stats_widget_log_in_message">Please log in to the WordPress app to add a widget.</string>
+    <string name="stats_widget_log_in_to_add_message">Please log in to the Jetpack app to add a widget.</string>
     <string name="stats_widget_weekly_views_name">Views this week</string>
     <string name="stats_widget_all_time_insights_name">All-time</string>
     <string name="stats_widget_today_insights_name">Today</string>
@@ -1525,6 +1522,8 @@
     <string name="search_sites">Search sites</string>
     <string name="notifications_no_search_results">No sites matched \'%s\'</string>
     <string name="notification_sound_has_invalid_path">The chosen sound has invalid path. Please choose another.</string>
+    <string name="notification_disable_broadcast_permission_label" tools:ignore="UnusedResources">disable WordPress notifications</string>
+    <string name="notification_disable_broadcast_permission_desc" tools:ignore="UnusedResources">Allows the app to disable WordPress notifications.</string>
 
     <string name="notification_settings_followed_dialog_email_posts_switch">Email me new posts</string>
     <string name="notification_settings_followed_dialog_notification_posts_description">Receive notifications for new posts from this site</string>
@@ -1665,12 +1664,15 @@
     <!-- Post Settings -->
     <string name="post_settings">Post settings</string>
     <string name="post_settings_status" translatable="false">@string/status_and_visibility</string>
+    <string name="post_settings_author">Author</string>
     <string name="post_settings_categories_and_tags">Categories &amp; Tags</string>
     <string name="post_settings_publish">Publish</string>
     <string name="post_settings_mark_as_sticky_options_header">Mark as sticky</string>
     <string name="post_settings_more_options">More Options</string>
+    <string name="post_settings_page_attributes">Page Attributes</string>
     <string name="post_settings_not_set">Not Set</string>
     <string name="post_settings_excerpt">Excerpt</string>
+    <string name="post_settings_parent">Parent Page</string>
     <string name="post_settings_slug">Slug</string>
     <string name="post_settings_tags">Tags</string>
     <string name="post_settings_post_format">Post Format</string>
@@ -1712,7 +1714,7 @@
     <string name="notification_post_will_be_published_in_one_hour">\"%s\" will be published in 1 hour</string>
     <string name="notification_post_will_be_published_in_ten_minutes">\"%s\" will be published in 10 minutes</string>
     <string name="calendar_scheduled_post_title">WordPress Scheduled Post: \"%s\"</string>
-    <string name="calendar_scheduled_post_description">\"%1$s\" scheduled for publishing on \"%2$s\" in your WordPress app \n %3$s</string>
+    <string name="calendar_scheduled_post_description">\"%1$s\" scheduled for publishing on \"%2$s\" in your %3$s app \n %4$s</string>
 
     <!-- Post Status -->
     <string name="post_status_publish_post">Publish</string>
@@ -1948,6 +1950,7 @@
     <string name="error_fetch_remote_site_settings">Couldn\'t retrieve site info</string>
     <string name="error_post_remote_site_settings">Couldn\'t save site info</string>
     <string name="error_fetch_users_list">Couldn\'t retrieve site users</string>
+    <string name="error_fetch_authors_list">Couldn\'t retrieve authors</string>
     <string name="error_fetch_followers_list">Couldn\'t retrieve site followers</string>
     <string name="error_fetch_email_followers_list">Couldn\'t retrieve site email followers</string>
     <string name="error_fetch_viewers_list">Couldn\'t retrieve site viewers</string>
@@ -2223,7 +2226,9 @@
 
     <!-- Help view -->
     <string name="help">Help</string>
+    <string name="support_title">Support</string>
     <string name="help_and_support">Help &amp; Support</string>
+    <string name="wordpress_help_center_button">WordPress help center</string>
     <string name="browse_our_faq_button">Browse our FAQ</string>
     <string name="my_tickets">My Tickets</string>
     <string name="application_log_button">Application log</string>
@@ -2324,10 +2329,11 @@
     <string name="my_site_blogging_prompt_card_attribution_dayone">From <b>DayOne</b></string>
     <string name="my_site_blogging_prompt_card_menu_learn_more">Learn more</string>
     <string name="my_site_blogging_prompt_card_skipped_snackbar">Skipped today\'s blogging prompt</string>
-    <plurals name="my_site_blogging_prompt_card_number_of_answers">
-        <item quantity="one">%d answer</item>
-        <item quantity="other">%d answers</item>
-    </plurals>
+    <string name="my_site_blogging_prompt_card_number_of_answers_one">1 answer</string>
+    <string name="my_site_blogging_prompt_card_number_of_answers_other">%d answers</string>
+
+    <!-- My Site - Jetpack migration success card -->
+    <string name="jp_migration_success_card_message">Please delete the WordPress app</string>
 
     <!-- site picker -->
     <string name="site_picker_title">Choose site</string>
@@ -2371,14 +2377,14 @@
     <string name="previous_button" translatable="false">&lt;</string>
     <string name="next_button" translatable="false">&gt;</string>
 
-    <!-- Publicize and sharing -->
+    <!-- Jetpack Social and sharing -->
     <string name="sharing">Sharing</string>
     <string name="sharing_disabled">Sharing module disabled</string>
     <string name="sharing_disabled_description">You cannot access your sharing settings because your Sharing Jetpack module is disabled.</string>
-    <string name="connections_label">Connections</string>
+    <string name="connections_label">Jetpack Social Connections</string>
     <string name="connections_description">Connect your favorite social media services to automatically share new posts with friends.</string>
     <string name="connected_accounts_label">Connected accounts</string>
-    <string name="connection_service_label">Publicize to %s</string>
+    <string name="connection_service_label">Share post to %s</string>
     <string name="connection_service_description">Connect to automatically share your blog posts to %s.</string>
     <string name="share_btn_connect">Connect</string>
     <string name="share_btn_disconnect">Disconnect</string>
@@ -2430,7 +2436,7 @@
     <string name="sharing_label_message">Change the text of the sharing buttons\' label. This text won\'t appear until you add at least one sharing button.</string>
     <string name="sharing_twitter_message">This will be included in tweets when people share using the Twitter button</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">Not Connected</string>
-    <string name="sharing_facebook_account_must_have_pages">The Facebook connection cannot find any Pages. Publicize cannot connect to Facebook Profiles, only published Pages.</string>
+    <string name="sharing_facebook_account_must_have_pages">The Facebook connection cannot find any Pages. Jetpack Social cannot connect to Facebook Profiles, only published Pages.</string>
     <string name="sharing_facebook_warning_message">You can connect your Facebook account on the WordPress.com website. When you\'re done, return to the WordPress app to change your Sharing settings.</string>
     <string name="sharing_facebook_warning_positive_button">Go to web</string>
 
@@ -2859,6 +2865,7 @@
     <string name="login_prologue_fifth_caption_one">My Top Ten Cafes</string>
     <string name="login_prologue_fifth_caption_two">The World\'s Best Fans</string>
     <string name="login_prologue_fifth_caption_three">Museums in London</string>
+
     <string name="invalid_verification_code" tools:ignore="UnusedResources" a8c-src-lib="login">Invalid verification code</string>
     <string name="send_link_by_email" tools:ignore="UnusedResources" a8c-src-lib="login">Send link by email</string>
     <string name="create_account" tools:ignore="UnusedResources" a8c-src-lib="login">Create account</string>
@@ -2939,6 +2946,10 @@
     <string name="login_no_jetpack_sites_error_message">If you already have a site, you\'ll need to install the free Jetpack plugin and connect it to your WordPress.com account.</string>
     <string name="login_empty_view_see_instructions">See instructions</string>
     <string name="login_empty_view_try_another_account">Try with another account</string>
+
+    <!-- Login Revamped -->
+    <string name="login_prologue_revamped_tagline" tools:ignore="UnusedResources">Write, edit, and publish from anywhere.</string>
+    <string name="login_prologue_revamped_content_description_wordpress_icon" tools:ignore="UnusedResources">WordPress icon</string>
 
     <!-- Screen titles -->
     <string name="email_address_login_title" tools:ignore="UnusedResources" a8c-src-lib="login">Email address login</string>
@@ -3080,6 +3091,7 @@
     <string name="close_dialog_button_desc">Close Dialog</string>
     <string name="fab_add_category_desc">Create Category</string>
     <string name="blogging_reminders_prompt_help_button_desc">Learn more about prompts</string>
+    <string name="icon_desc">icon</string>
 
     <string name="content_description_more">More</string>
 
@@ -3350,7 +3362,7 @@
     <string name="site_creation_intent_writing_poetry">Writing &amp; Poetry</string>
 
     <!-- App rating dialog -->
-    <string name="app_rating_title">Enjoying WordPress?</string>
+    <string name="app_rating_title">Enjoying %s?</string>
     <string name="app_rating_message">Nice to see you again! If you’re digging the app, we\’d love a rating on the Google Play Store.</string>
     <string name="app_rating_rate_now">Rate now</string>
     <string name="app_rating_rate_later">Later</string>
@@ -3369,7 +3381,7 @@
     <string name="insert_label_with_count">Insert %d</string>
 
     <!-- Feature Announcement -->
-    <string name="feature_announcement_dialog_label">What\'s New In WordPress</string>
+    <string name="feature_announcement_dialog_label">What\'s New In %s</string>
     <string name="feature_announcement_find_out_mode">Find out more</string>
 
     <!-- Prepublishing Nudges -->
@@ -3534,7 +3546,7 @@
     <string name="gutenberg_native_add_video" tools:ignore="UnusedResources">ADD VIDEO</string>
     <string name="gutenberg_native_address_settings" tools:ignore="UnusedResources">Address Settings</string>
     <string name="gutenberg_native_alt_text" tools:ignore="UnusedResources">Alt Text</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by" tools:ignore="UnusedResources">Alternatively, you can detach and edit these blocks separately by tapping \"Convert to regular blocks\".</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Alternatively, you can detach and edit these blocks separately by tapping “Convert to regular blocks”.</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again" tools:ignore="UnusedResources">An unknown error occurred. Please try again.</string>
     <string name="gutenberg_native_applies_the_setting" tools:ignore="UnusedResources">Applies the setting</string>
     <string name="gutenberg_native_arrange_your_content_into_columns_add_call_to_action_buttons_and" tools:ignore="UnusedResources">Arrange your content into columns, add Call to Action buttons, and overlay images with text.</string>
@@ -3896,7 +3908,6 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="backup_download_progress_description_with_two_parameters">We\'re creating a downloadable backup of your site from %1$s %2$s.</string>
     <string name="backup_download_progress_icon_content_description">Creating downloadable backup icon</string>
     <string name="backup_download_progress_footnote">No need to wait around. We\'ll notify you when your backup is ready.</string>
-    <string name="backup_download_progress_label">%1$s%%</string>
 
     <string name="backup_item_themes">WordPress Themes</string>
     <string name="backup_item_plugins">WordPress Plugins</string>
@@ -3950,7 +3961,6 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="restore_progress_description_with_two_parameters">We\'re restoring your site back to %1$s %2$s.</string>
     <string name="restore_progress_icon_content_description">Restore site icon</string>
     <string name="restore_progress_footnote">No need to wait around. We\'ll notify you when your site has been restored.</string>
-    <string name="restore_progress_label">%1$s%%</string>
 
     <string name="restore_complete_page_title" translatable="false">@string/restore</string>
     <string name="restore_complete_header">Your site has been restored</string>
@@ -4050,10 +4060,14 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <!-- Weekly Roundup Notification -->
     <string name="weekly_roundup">Weekly Roundup</string>
     <string name="weekly_roundup_notification_title">Weekly Roundup: %s</string>
-    <string name="weekly_roundup_notification_text">Your site got %1$d views, %2$d likes, %3$d comments.</string>
+    <string name="weekly_roundup_notification_text_all">Last week you had %1$s views, %2$s likes, and %3$s comments.</string>
+    <string name="weekly_roundup_notification_text_views_only">Last week you had %1$s views.</string>
+    <string name="weekly_roundup_notification_text_views_and_likes">Last week you had %1$s views and %2$s likes</string>
+    <string name="weekly_roundup_notification_text_views_and_comments">Last week you had %1$s views and %2$s comments</string>
 
     <!-- About -->
     <string name="about_blog">Blog</string>
+    <string name="about_news">News</string>
     <string name="about_automattic_main_page_title" tools:ignore="UnusedResources" a8c-src-lib="about">About %1$s</string>
     <string name="about_automattic_legal_page_title" tools:ignore="UnusedResources" a8c-src-lib="about">Legal and More</string>
     <string name="about_automattic_acknowledgements_page_title" tools:ignore="UnusedResources" a8c-src-lib="about">Acknowledgements</string>
@@ -4065,6 +4079,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="about_automattic_legal_and_more_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Legal and More</string>
     <string name="about_automattic_family_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Automattic Family</string>
     <string name="about_automattic_work_with_us_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Work With Us</string>
+    <string name="about_automattic_contribute_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Contribute</string>
     <string name="about_automattic_work_with_us_item_subtitle" tools:ignore="UnusedResources" a8c-src-lib="about">Work from Anywhere</string>
     <string name="about_automattic_terms_of_service_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Terms of Service</string>
     <string name="about_automattic_privacy_policy_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Privacy Policy</string>
@@ -4201,4 +4216,87 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="gutenberg_native_new" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">NEW</string>
     <string name="gutenberg_native_you_can_also_rearrange_blocks_by_tapping_a_block_and_then_tapping" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">You can also rearrange blocks by tapping a block and then tapping the up and down arrows that appear on the bottom left side of the block to move it up or down.</string>
 
+    <!-- Jetpack awareness in WordPress App -->
+    <string name="wp_jetpack_powered">Jetpack powered</string>
+    <string name="wp_jetpack_powered_better_with_jetpack">WordPress is better with Jetpack</string>
+    <string name="wp_jetpack_powered_features">The new Jetpack app has Stats, Reader, Notifications, and more that make your WordPress better.</string>
+    <string name="wp_jetpack_powered_reader_powered_by_jetpack">Reader is powered by Jetpack</string>
+    <string name="wp_jetpack_powered_reader_powered_by_jetpack_caption">Find, follow, and like all your favorite sites and posts with Reader, now available in the new Jetpack app.</string>
+    <string name="wp_jetpack_powered_stats_powered_by_jetpack">Stats are powered by Jetpack</string>
+    <string name="wp_jetpack_powered_stats_powered_by_jetpack_caption">Watch your traffic grow and learn about your audience with redesigned Stats and Insights, now available in the new Jetpack app.</string>
+    <string name="wp_jetpack_powered_notifications_powered_by_jetpack">Notifications are powered by Jetpack</string>
+    <string name="wp_jetpack_powered_notifications_powered_by_jetpack_caption">Stay informed with realtime updates for new comments, site traffic, security reports and more.</string>
+    <string name="wp_jetpack_get_new_jetpack_app">Try the new Jetpack app</string>
+    <string name="wp_jetpack_continue_to_reader">Continue to Reader</string>
+    <string name="wp_jetpack_continue_to_stats">Continue to Stats</string>
+    <string name="wp_jetpack_continue_to_notifications">Continue to Notifications</string>
+    <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Problem displaying block. \nTap to attempt block recovery.</string>
+    <string name="gutenberg_native_gradient" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Gradient</string>
+    <string name="gutenberg_native_invalid_url" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Invalid URL.</string>
+    <string name="gutenberg_native_jetpack_powered" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Jetpack powered</string>
+    <string name="gutenberg_native_opacity" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Opacity</string>
+    <string name="gutenberg_native_upgrade_your_plan_to_upload_audio" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Upgrade your plan to upload audio</string>
+    <string name="gutenberg_native_upgrade_your_plan_to_use_video_covers" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Upgrade your plan to use video covers</string>
+    <string name="or_use_password" tools:ignore="UnusedResources" a8c-src-lib="login">Use password to sign in</string>
+    <string name="open_mail" tools:ignore="UnusedResources" a8c-src-lib="login">Open Mail</string>
+    <string name="login_magic_links_sent_label_short" tools:ignore="UnusedResources" a8c-src-lib="login">Check your email on this device!</string>
+    <string name="login_magic_links_email_sent" tools:ignore="UnusedResources" a8c-src-lib="login">We just sent a magic link to</string>
+    <string name="gutenberg_native_link_rel" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Link Rel</string>
+
+    <!-- Jetpack Welcome Screen -->
+    <string name="jp_migration_welcome_title">Welcome to Jetpack!</string>
+    <string name="jp_migration_welcome_subtitle">It looks like you’re switching from the WordPress app.</string>
+    <string name="jp_migration_avatar_content_description">Your profile photo</string>
+    <string name="jp_migration_welcome_sites_found_message">We found your sites. Continue to transfer all your data and sign in to Jetpack automatically.</string>
+    <string name="jp_migration_welcome_site_found_message">We found your site. Continue to transfer all your data and sign in to Jetpack automatically.</string>
+    <string name="jp_migration_continue_button">Continue</string>
+    <string name="jp_migration_help_button">Need help?</string>
+    <string name="jp_migration_notifications_title">Notifications now come from Jetpack</string>
+    <string name="jp_migration_notifications_subtitle">You’ll get all the same notifications but now they’ll come from the Jetpack app.</string>
+    <string name="jp_migration_notifications_disabled_in_wp_message">We\'ll turn off notifications from the WordPress app.</string>
+    <string name="jp_migration_done_title">Thanks for switching to Jetpack!</string>
+    <string name="jp_migration_done_subtitle">We’ve transferred all your data and settings. Everything is right where you left it.</string>
+    <string name="jp_migration_done_delete_wp_message">Please &lt;b&gt;delete the WordPress app&lt;/b&gt; to&lt;br&gt;avoid data conflicts.</string>
+    <string name="jp_migration_remove_wp_app_icon_content_description">Remove WordPress App icon</string>
+    <string name="jp_migration_finish_button">Finish</string>
+    <string name="jp_migration_try_again_button">Try again</string>
+    <string name="jp_migration_generic_error_title">Uh oh, something went wrong..</string>
+    <string name="jp_migration_generic_error_subtitle">We’re sorry but something didn’t go as planned. Your data is safe, but we’re unable to transfer it at this time.</string>
+    <string name="jp_migration_generic_error_message">Please contact support or try again later.</string>
+    <string name="jp_migration_network_error_title">Unable to connect to the internet.</string>
+    <string name="jp_migration_network_error_subtitle">Please check to make sure your network connection is working and try again.</string>
+    <string name="jp_migration_network_error_message">We are unable to transfer your data and settings without a network connection.</string>
+    <string name="jp_migration_delete_title">You no longer need the WordPress app</string>
+    <string name="jp_migration_delete_subtitle">It looks like you still have the WordPress app installed. We recommend you delete the WordPress app to avoid data conflicts.</string>
+    <string name="jp_migration_delete_message">Please &lt;b&gt;delete the WordPress app&lt;/b&gt; to&lt;br&gt;avoid data conflicts.</string>
+    <string name="jp_migration_got_it_button">Got it</string>
+    <string name="jp_migration_need_help_button">Need help?</string>
+
+    <!-- Open Web Links With Jetpack -->
+    <string name="preference_open_links_in_jetpack">Open links in Jetpack</string>
+    <string name="preference_open_links_in_jetpack_setting_change_enable_error">Unable to enable open links in Jetpack</string>
+    <string name="preference_open_links_in_jetpack_setting_change_disable_error">Unable to disable open links in Jetpack</string>
+
+    <!-- Jetpack feature overlay strings in WordPress App -->
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_stats">Get your stats using the new Jetpack app</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_reader">Follow any site with the Jetpack app</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_notifications">Get your notifications with the Jetpack app</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_stats">Switch to the Jetpack app to watch your site’s traffic grow with stats and insights.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_reader">Switch to the Jetpack app to find, follow, and like all your favorite sites and posts with Reader.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_notifications">Switch to the Jetpack app to keep receiving  realtime notifications on your device.</string>
+    <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app" translatable="false"> @string/wp_jetpack_get_new_jetpack_app</string>
+
+    <!-- Deep Linking Activity Aliases -->
+    <string name="deep_linking_urilinks_alias_label">urilinks</string>
+    <string name="deep_linking_weblinks_alias_label">weblinks</string>
+
+    <string name="wp_jetpack_feature_removal_site_creation_overlay_title">Create a new WordPress site with the Jetpack app</string>
+    <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_one_description">Jetpack provides stats, notifications and more to help you build and grow the WordPress site of your dreams.</string>
+    <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_two_description">Jetpack provides stats, notifications and more to help you build and grow the WordPress site of your dreams.\n\nThe WordPress app no longer supports creating a new site.</string>
+    <string name="wp_jetpack_continue_without_jetpack">Continue without Jetpack</string>
+
+    <string name="wp_jetpack_deep_link_overlay_title">Open links in Jetpack?</string>
+    <string name="wp_jetpack_deep_link_overlay_description">It looks like you have the Jetpack app installed.\n\nWould you like to open links in the Jetpack app in the future?\n\nYou can always change this in App Settings &gt; Open links in Jetpack</string>
+    <string name="wp_jetpack_deep_link_open_in_jetpack" translatable="false">@string/preference_open_links_in_jetpack</string>
+    <string name="wp_jetpack_deep_link_open_in_wordpress">Open links in WordPress</string>
 </resources>

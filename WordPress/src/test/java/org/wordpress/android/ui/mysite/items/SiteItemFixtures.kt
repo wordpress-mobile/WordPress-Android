@@ -21,7 +21,7 @@ val CONFIGURATION_HEADER = CategoryHeaderItem(
         UiStringRes(R.string.my_site_header_configuration)
 )
 val EXTERNAL_HEADER = CategoryHeaderItem(UiStringRes(R.string.my_site_header_external))
-val PLAN_NAME = "plan_name"
+const val PLAN_NAME = "plan_name"
 val PLAN_ITEM = ListItem(
         R.drawable.ic_plans_white_24dp,
         UiStringRes(R.string.plan),

@@ -1,16 +1,16 @@
 package org.wordpress.android.ui.photopicker
 
 import android.content.Context
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.eq
-import com.nhaarman.mockitokotlin2.isNull
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
+import org.mockito.kotlin.any
+import org.mockito.kotlin.eq
+import org.mockito.kotlin.isNull
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
@@ -18,16 +18,6 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_PICKER_PREVIE
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.test
 import org.wordpress.android.ui.media.MediaBrowserType
-import org.wordpress.android.ui.media.MediaBrowserType.EDITOR_PICKER
-import org.wordpress.android.ui.media.MediaBrowserType.GUTENBERG_IMAGE_PICKER
-import org.wordpress.android.ui.media.MediaBrowserType.GUTENBERG_MEDIA_PICKER
-import org.wordpress.android.ui.media.MediaBrowserType.GUTENBERG_SINGLE_IMAGE_PICKER
-import org.wordpress.android.ui.media.MediaBrowserType.GUTENBERG_SINGLE_VIDEO_PICKER
-import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.ActionModeUiModel
-import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.BottomBarUiModel.BottomBar
-import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.PhotoListUiModel
-import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.PhotoPickerUiState
-import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.SoftAskViewUiModel
 import org.wordpress.android.ui.posts.editor.media.CopyMediaToAppStorageUseCase
 import org.wordpress.android.ui.posts.editor.media.GetMediaModelUseCase
 import org.wordpress.android.ui.utils.UiString
@@ -40,6 +30,7 @@ import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
 
 class PhotoPickerViewModelTest : BaseUnitTest() {
+    @Suppress("DEPRECATION")
     @Mock lateinit var deviceMediaListBuilder: DeviceMediaListBuilder
     @Mock lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
     @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
@@ -50,17 +41,18 @@ class PhotoPickerViewModelTest : BaseUnitTest() {
     @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var copyMediaToAppStorageUseCase: CopyMediaToAppStorageUseCase
     @Mock lateinit var getMediaModelUseCase: GetMediaModelUseCase
-    private lateinit var viewModel: PhotoPickerViewModel
-    private var uiStates = mutableListOf<PhotoPickerUiState>()
+    @Suppress("DEPRECATION") private lateinit var viewModel: PhotoPickerViewModel
+    @Suppress("DEPRECATION") private var uiStates = mutableListOf<PhotoPickerViewModel.PhotoPickerUiState>()
     private var navigateEvents = mutableListOf<Event<UriWrapper>>()
-    private val singleSelectBrowserType = GUTENBERG_SINGLE_IMAGE_PICKER
+    private val singleSelectBrowserType = MediaBrowserType.GUTENBERG_SINGLE_IMAGE_PICKER
     private val multiSelectBrowserType = MediaBrowserType.GUTENBERG_IMAGE_PICKER
     private val site = SiteModel()
-    private lateinit var firstItem: PhotoPickerItem
-    private lateinit var secondItem: PhotoPickerItem
+    @Suppress("DEPRECATION") private lateinit var firstItem: PhotoPickerItem
+    @Suppress("DEPRECATION") private lateinit var secondItem: PhotoPickerItem
 
-    @InternalCoroutinesApi
     @Before
+    @InternalCoroutinesApi
+    @Suppress("DEPRECATION")
     fun setUp() {
         viewModel = PhotoPickerViewModel(
                 TEST_DISPATCHER,
@@ -222,7 +214,7 @@ class PhotoPickerViewModelTest : BaseUnitTest() {
         viewModel.refreshData(false)
 
         assertThat(navigateEvents).isEmpty()
-        clickItem(0)
+        clickItem()
         assertThat(navigateEvents).isNotEmpty
         verify(analyticsTrackerWrapper).track(eq(MEDIA_PICKER_PREVIEW_OPENED), any<MutableMap<String, Any>>())
     }
@@ -243,7 +235,7 @@ class PhotoPickerViewModelTest : BaseUnitTest() {
 
     @Test
     fun `action mode title is Use Photo when photo browser type`() = test {
-        setupViewModel(listOf(firstItem, secondItem), GUTENBERG_SINGLE_IMAGE_PICKER)
+        setupViewModel(listOf(firstItem, secondItem), MediaBrowserType.GUTENBERG_SINGLE_IMAGE_PICKER)
 
         viewModel.refreshData(false)
 
@@ -254,7 +246,7 @@ class PhotoPickerViewModelTest : BaseUnitTest() {
 
     @Test
     fun `action mode title is Use Video when video browser type`() = test {
-        setupViewModel(listOf(firstItem, secondItem), GUTENBERG_SINGLE_VIDEO_PICKER)
+        setupViewModel(listOf(firstItem, secondItem), MediaBrowserType.GUTENBERG_SINGLE_VIDEO_PICKER)
 
         viewModel.refreshData(false)
 
@@ -265,7 +257,7 @@ class PhotoPickerViewModelTest : BaseUnitTest() {
 
     @Test
     fun `action mode title is Use Media when image and video browser type`() = test {
-        setupViewModel(listOf(firstItem, secondItem), GUTENBERG_MEDIA_PICKER)
+        setupViewModel(listOf(firstItem, secondItem), MediaBrowserType.GUTENBERG_MEDIA_PICKER)
 
         viewModel.refreshData(false)
 
@@ -277,7 +269,7 @@ class PhotoPickerViewModelTest : BaseUnitTest() {
     @Test
     fun `action mode title is Select N items when multi selection available`() = test {
         whenever(resourceProvider.getString(R.string.cab_selected)).thenReturn("%d selected")
-        setupViewModel(listOf(firstItem, secondItem), GUTENBERG_IMAGE_PICKER)
+        setupViewModel(listOf(firstItem, secondItem), MediaBrowserType.GUTENBERG_IMAGE_PICKER)
 
         viewModel.refreshData(false)
 
@@ -290,7 +282,7 @@ class PhotoPickerViewModelTest : BaseUnitTest() {
     @Test
     fun `action mode shows confirmation action in EDITOR PICKER`() = test {
         whenever(resourceProvider.getString(R.string.cab_selected)).thenReturn("%d selected")
-        setupViewModel(listOf(firstItem, secondItem), EDITOR_PICKER)
+        setupViewModel(listOf(firstItem, secondItem), MediaBrowserType.EDITOR_PICKER)
 
         viewModel.refreshData(false)
 
@@ -299,22 +291,31 @@ class PhotoPickerViewModelTest : BaseUnitTest() {
         assertActionModeVisible(UiStringText("1 selected"), showConfirmationAction = true)
     }
 
+    @Suppress("DEPRECATION")
     private fun selectItem(position: Int) {
-        (uiStates.last().photoListUiModel as PhotoListUiModel.Data).items[position].toggleAction.toggle()
+        (uiStates.last().photoListUiModel as PhotoPickerViewModel.PhotoListUiModel.Data)
+                .items[position]
+                .toggleAction
+                .toggle()
     }
 
-    private fun clickItem(position: Int) {
-        (uiStates.last().photoListUiModel as PhotoListUiModel.Data).items[position].clickAction.click()
+    @Suppress("DEPRECATION")
+    private fun clickItem() {
+        (uiStates.last().photoListUiModel as PhotoPickerViewModel.PhotoListUiModel.Data)
+                .items[0]
+                .clickAction
+                .click()
     }
 
+    @Suppress("DEPRECATION")
     private fun assertDataList(
         browserType: MediaBrowserType,
         selectedItems: List<PhotoPickerItem>,
         domainItems: List<PhotoPickerItem>
     ) {
         uiStates.last().apply {
-            assertThat(this.photoListUiModel).isNotNull()
-            (uiStates.last().photoListUiModel as PhotoListUiModel.Data).apply {
+            assertThat(this.photoListUiModel).isNotNull
+            (uiStates.last().photoListUiModel as PhotoPickerViewModel.PhotoListUiModel.Data).apply {
                 assertThat(this.items).hasSize(domainItems.size)
                 domainItems.forEachIndexed { index, photoPickerItem ->
                     val isSelected = selectedItems.any { it.id == photoPickerItem.id }
@@ -333,21 +334,24 @@ class PhotoPickerViewModelTest : BaseUnitTest() {
         assertSoftAskUiModelHidden()
     }
 
+    @Suppress("DEPRECATION")
     private fun assertSoftAskUiModelVisible() {
         uiStates.last().softAskViewUiModel.let {
-            val model = it as SoftAskViewUiModel.Visible
+            val model = it as PhotoPickerViewModel.SoftAskViewUiModel.Visible
             assertThat(model.allowId).isEqualTo(UiStringRes(R.string.photo_picker_soft_ask_allow))
             assertThat(model.isAlwaysDenied).isEqualTo(false)
             assertThat(model.label).isEqualTo("Soft ask label")
         }
     }
 
+    @Suppress("DEPRECATION")
     private fun assertSoftAskUiModelHidden() {
         uiStates.last().softAskViewUiModel.let {
-            assertThat(it is SoftAskViewUiModel.Hidden).isTrue()
+            assertThat(it is PhotoPickerViewModel.SoftAskViewUiModel.Hidden).isTrue
         }
     }
 
+    @Suppress("DEPRECATION")
     private suspend fun setupViewModel(
         domainModel: List<PhotoPickerItem>,
         browserType: MediaBrowserType,
@@ -369,7 +373,8 @@ class PhotoPickerViewModelTest : BaseUnitTest() {
         assertThat(uiStates).hasSize(1)
     }
 
-    private fun PhotoListUiModel.Data.assertSelection(
+    @Suppress("DEPRECATION")
+    private fun PhotoPickerViewModel.PhotoListUiModel.Data.assertSelection(
         position: Int,
         isSelected: Boolean,
         isMultiSelection: Boolean = false,
@@ -388,6 +393,7 @@ class PhotoPickerViewModelTest : BaseUnitTest() {
         }
     }
 
+    @Suppress("DEPRECATION")
     private fun PhotoPickerUiItem.assertEqualToDomainItem(domainItem: PhotoPickerItem) {
         assertThat(this.id).isEqualTo(domainItem.id)
         if (domainItem.isVideo) {
@@ -399,41 +405,46 @@ class PhotoPickerViewModelTest : BaseUnitTest() {
         assertThat(this.uri).isEqualTo(domainItem.uri)
     }
 
+    @Suppress("DEPRECATION")
     private fun assertBottomBarHidden() {
         uiStates.last().apply {
-            assertThat(bottomBarUiModel.type).isEqualTo(BottomBar.NONE)
+            assertThat(bottomBarUiModel.type).isEqualTo(PhotoPickerViewModel.BottomBarUiModel.BottomBar.NONE)
         }
     }
 
+    @Suppress("DEPRECATION")
     private fun assertSingleIconMediaBottomBarVisible() {
         uiStates.last().apply {
-            assertThat(bottomBarUiModel.type).isEqualTo(BottomBar.MEDIA_SOURCE)
-            assertThat(bottomBarUiModel.canShowInsertEditBottomBar).isTrue()
-            assertThat(bottomBarUiModel.hideMediaBottomBarInPortrait).isFalse()
-            assertThat(bottomBarUiModel.showCameraButton).isFalse()
+            assertThat(bottomBarUiModel.type).isEqualTo(PhotoPickerViewModel.BottomBarUiModel.BottomBar.MEDIA_SOURCE)
+            assertThat(bottomBarUiModel.canShowInsertEditBottomBar).isTrue
+            assertThat(bottomBarUiModel.hideMediaBottomBarInPortrait).isFalse
+            assertThat(bottomBarUiModel.showCameraButton).isFalse
             assertThat(bottomBarUiModel.showWPMediaIcon).isFalse()
         }
     }
 
+    @Suppress("DEPRECATION")
     private fun assertInsertEditBottomBarVisible() {
         uiStates.last().apply {
-            assertThat(bottomBarUiModel.type).isEqualTo(BottomBar.INSERT_EDIT)
-            assertThat(bottomBarUiModel.canShowInsertEditBottomBar).isTrue()
-            assertThat(bottomBarUiModel.hideMediaBottomBarInPortrait).isFalse()
-            assertThat(bottomBarUiModel.showCameraButton).isFalse()
+            assertThat(bottomBarUiModel.type).isEqualTo(PhotoPickerViewModel.BottomBarUiModel.BottomBar.INSERT_EDIT)
+            assertThat(bottomBarUiModel.canShowInsertEditBottomBar).isTrue
+            assertThat(bottomBarUiModel.hideMediaBottomBarInPortrait).isFalse
+            assertThat(bottomBarUiModel.showCameraButton).isFalse
             assertThat(bottomBarUiModel.showWPMediaIcon).isFalse()
         }
     }
 
+    @Suppress("DEPRECATION")
     private fun assertActionModeHidden() {
         uiStates.last().actionModeUiModel.let { model ->
-            assertThat(model is ActionModeUiModel.Hidden).isTrue()
+            assertThat(model is PhotoPickerViewModel.ActionModeUiModel.Hidden).isTrue
         }
     }
 
+    @Suppress("DEPRECATION")
     private fun assertActionModeVisible(title: UiString, showConfirmationAction: Boolean = false) {
         uiStates.last().actionModeUiModel.let {
-            val model = it as ActionModeUiModel.Visible
+            val model = it as PhotoPickerViewModel.ActionModeUiModel.Visible
             assertThat(model.actionModeTitle).isEqualTo(title)
             assertThat(model.showConfirmAction).isEqualTo(showConfirmationAction)
         }

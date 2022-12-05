@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package org.wordpress.android.ui.prefs.categories.detail
 
 import android.app.ProgressDialog
@@ -27,7 +29,6 @@ import org.wordpress.android.util.ToastUtils.Duration.SHORT
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
-@Suppress("TooManyFunctions")
 class CategoryDetailFragment : Fragment(R.layout.category_detail_fragment) {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: CategoryDetailViewModel
@@ -35,7 +36,7 @@ class CategoryDetailFragment : Fragment(R.layout.category_detail_fragment) {
     private lateinit var categoryAdapter: ParentCategorySpinnerAdapter
 
     private var spinnerTouched: Boolean = false
-    private var progressDialog: ProgressDialog? = null
+    @Suppress("DEPRECATION") private var progressDialog: ProgressDialog? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -61,7 +62,7 @@ class CategoryDetailFragment : Fragment(R.layout.category_detail_fragment) {
     }
 
     private fun initDagger() {
-        (requireActivity().application as WordPress).component()?.inject(this)
+        (requireActivity().application as WordPress).component().inject(this)
     }
 
     private fun CategoryDetailFragmentBinding.initAdapter() {
@@ -159,6 +160,7 @@ class CategoryDetailFragment : Fragment(R.layout.category_detail_fragment) {
         categoryAdapter.replaceItems(categoryLevels)
     }
 
+    @Suppress("DEPRECATION")
     private fun showProgressDialog(@StringRes messageId: Int) {
         progressDialog = ProgressDialog(requireContext())
         progressDialog?.apply {

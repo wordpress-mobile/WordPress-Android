@@ -21,7 +21,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -52,6 +51,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.core.util.Pair;
 import androidx.lifecycle.LiveData;
+import androidx.preference.PreferenceManager;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -1304,6 +1304,11 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         if (!TextUtils.isEmpty(localMediaId)) {
             mEditorFragmentListener.onMediaDeleted(localMediaId);
         }
+    }
+
+    @Override
+    public void beforeMediaDeleted(@NonNull AztecAttributes aztecAttributes) {
+        // noop implementation for shared interface with block editor
     }
 
     private static class MediaPredicate implements AztecText.AttributePredicate, Parcelable {

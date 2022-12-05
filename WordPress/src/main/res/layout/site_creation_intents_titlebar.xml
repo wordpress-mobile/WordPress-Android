@@ -23,9 +23,7 @@
 
     <Button
         android:id="@+id/skipButton"
-        style="@style/Widget.MaterialComponents.Button.TextButton"
-        android:textColor="@color/blue_50"
-        android:textSize="@dimen/text_sz_medium"
+        style="@style/SiteCreationSkipButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end"

@@ -1,7 +1,5 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases
 
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
@@ -9,6 +7,8 @@ import org.junit.Before
 import org.junit.Ignore
 import org.junit.Test
 import org.mockito.Mock
+import org.mockito.kotlin.any
+import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
@@ -50,16 +50,15 @@ import org.wordpress.android.ui.stats.refresh.utils.ReferrerPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.util.config.StatsRevampV2FeatureConfig
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Date
 
-private const val itemsToLoad = 300
-private const val groupIdWordPress = "WordPress.com Reader"
-private const val groupIdSearch = "Search Engines"
+private const val ITEMS_TO_LOAD = 300
+private const val GROUP_ID_WORDPRESS = "WordPress.com Reader"
+private const val GROUP_ID_SEARCH = "Search Engines"
 private val statsGranularity = DAYS
 private val selectedDate = Date(0)
-private val limitMode = Top(itemsToLoad)
+private val limitMode = Top(ITEMS_TO_LOAD)
 
 @InternalCoroutinesApi
 class ReferrersUseCaseTest : BaseUnitTest() {
@@ -72,14 +71,13 @@ class ReferrersUseCaseTest : BaseUnitTest() {
     @Mock lateinit var statsUtils: StatsUtils
     @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var popupMenuHandler: ReferrerPopupMenuHandler
-    @Mock lateinit var statsRevampV2FeatureConfig: StatsRevampV2FeatureConfig
     private lateinit var useCase: ReferrersUseCase
     private val firstGroupViews = 50
     private val secondGroupViews = 50
     private val thirdGroupViews = 40
     private val totalViews = firstGroupViews + secondGroupViews + thirdGroupViews
     private val wordPressReferrer = Group(
-            groupIdWordPress,
+            GROUP_ID_WORDPRESS,
             "Group 1",
             "group1.jpg",
             "group1.com",
@@ -88,7 +86,7 @@ class ReferrersUseCaseTest : BaseUnitTest() {
             false
     )
     private val searchReferrer = Group(
-            groupIdSearch,
+            GROUP_ID_SEARCH,
             "Group 2",
             "group2.jpg",
             "group2.com",
@@ -128,8 +126,7 @@ class ReferrersUseCaseTest : BaseUnitTest() {
                 statsUtils,
                 resourceProvider,
                 BLOCK_DETAIL,
-                popupMenuHandler,
-                statsRevampV2FeatureConfig
+                popupMenuHandler
         )
         whenever(statsSiteProvider.siteModel).thenReturn(site)
         whenever((selectedDateProvider.getSelectedDate(statsGranularity))).thenReturn(selectedDate)
@@ -152,7 +149,6 @@ class ReferrersUseCaseTest : BaseUnitTest() {
                 )
         ).thenReturn(contentDescription)
         whenever(statsUtils.toFormattedString(any<Int>(), any())).then { (it.arguments[0] as Int).toString() }
-        whenever(statsRevampV2FeatureConfig.isEnabled()).thenReturn(true)
     }
 
     @Ignore @Test
@@ -191,7 +187,7 @@ class ReferrersUseCaseTest : BaseUnitTest() {
                 wordPressReferrer.icon,
                 wordPressReferrer.markedAsSpam
         )
-        return assertExpandableItem(this[4], group.name!!, group.total!!, group.icon, group.markedAsSpam)
+        return assertExpandableItem(this[4], group.name!!, group.icon, group.markedAsSpam)
     }
 
     private fun List<BlockListItem>.assertExpandedList(): ExpandableItem {
@@ -206,7 +202,7 @@ class ReferrersUseCaseTest : BaseUnitTest() {
                 wordPressReferrer.icon,
                 wordPressReferrer.markedAsSpam
         )
-        val expandableItem = assertExpandableItem(this[4], group.name!!, group.total!!, group.icon, group.markedAsSpam)
+        val expandableItem = assertExpandableItem(this[4], group.name!!, group.icon, group.markedAsSpam)
         assertSingleItem(this[5], referrer1.name, referrer1.views, referrer1.icon, referrer1.markedAsSpam)
         assertSingleItem(this[6], referrer2.name, referrer2.views, referrer2.icon, referrer2.markedAsSpam)
         assertThat(this[7]).isEqualTo(Divider)
@@ -227,8 +223,7 @@ class ReferrersUseCaseTest : BaseUnitTest() {
                 statsUtils,
                 resourceProvider,
                 BLOCK,
-                popupMenuHandler,
-                statsRevampV2FeatureConfig
+                popupMenuHandler
         )
 
         val forced = false
@@ -345,7 +340,6 @@ class ReferrersUseCaseTest : BaseUnitTest() {
     private fun assertExpandableItem(
         item: BlockListItem,
         label: String,
-        views: Int,
         icon: String?,
         spam: Boolean?
     ): ExpandableItem {

@@ -18,10 +18,6 @@ import org.wordpress.android.fluxc.utils.MimeTypes
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.mediapicker.MediaItem.Identifier
-import org.wordpress.android.ui.mediapicker.MediaItem.Identifier.GifMediaIdentifier
-import org.wordpress.android.ui.mediapicker.MediaItem.Identifier.LocalUri
-import org.wordpress.android.ui.mediapicker.MediaItem.Identifier.RemoteId
-import org.wordpress.android.ui.mediapicker.MediaItem.Identifier.StockMediaIdentifier
 import org.wordpress.android.ui.mediapicker.MediaNavigationEvent.EditMedia
 import org.wordpress.android.ui.mediapicker.MediaNavigationEvent.Exit
 import org.wordpress.android.ui.mediapicker.MediaNavigationEvent.IconClickEvent
@@ -45,13 +41,7 @@ import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.DEVICE
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.GIF_LIBRARY
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.STOCK_LIBRARY
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.WP_LIBRARY
-import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.ClickAction
-import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.FileItem
-import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.PhotoItem
-import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.ToggleAction
-import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.VideoItem
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.BrowseMenuUiModel.BrowseAction
-import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.BrowseMenuUiModel.BrowseAction.SYSTEM_PICKER
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.ProgressDialogUiModel.Hidden
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.ProgressDialogUiModel.Visible
 import org.wordpress.android.ui.mediapicker.MediaType.AUDIO
@@ -150,7 +140,7 @@ class MediaPickerViewModel @Inject constructor(
         return if (showActions && (showSystemPicker || mediaPickerSetup.availableDataSources.isNotEmpty())) {
             val actions = mutableSetOf<BrowseAction>()
             if (showSystemPicker) {
-                actions.add(SYSTEM_PICKER)
+                actions.add(BrowseAction.SYSTEM_PICKER)
             }
             actions.addAll(mediaPickerSetup.availableDataSources.map {
                 when (it) {
@@ -180,72 +170,7 @@ class MediaPickerViewModel @Inject constructor(
         return if (null != softAskRequest && softAskRequest.show) {
             PhotoListUiModel.Hidden
         } else if (data != null && data.isNotEmpty()) {
-            val uiItems = data.map {
-                val showOrderCounter = mediaPickerSetup.canMultiselect
-                val toggleAction = ToggleAction(it.identifier, showOrderCounter, this::toggleItem)
-                val clickAction = ClickAction(it.identifier, it.type == VIDEO, this::clickItem)
-                val (selectedOrder, isSelected) = if (selectedIds != null && selectedIds.contains(it.identifier)) {
-                    val selectedOrder = if (showOrderCounter) selectedIds.indexOf(it.identifier) + 1 else null
-                    val isSelected = true
-                    selectedOrder to isSelected
-                } else {
-                    null to false
-                }
-
-                val fileExtension = it.mimeType?.let { mimeType ->
-                    mediaUtilsWrapper.getExtensionForMimeType(mimeType).uppercase(localeManagerWrapper.getLocale())
-                }
-                when (it.type) {
-                    IMAGE -> PhotoItem(
-                            url = it.url,
-                            identifier = it.identifier,
-                            isSelected = isSelected,
-                            selectedOrder = selectedOrder,
-                            showOrderCounter = showOrderCounter,
-                            toggleAction = toggleAction,
-                            clickAction = clickAction
-                    )
-                    VIDEO -> VideoItem(
-                            url = it.url,
-                            identifier = it.identifier,
-                            isSelected = isSelected,
-                            selectedOrder = selectedOrder,
-                            showOrderCounter = showOrderCounter,
-                            toggleAction = toggleAction,
-                            clickAction = clickAction
-                    )
-                    AUDIO, DOCUMENT -> FileItem(
-                            fileName = it.name ?: "",
-                            fileExtension = fileExtension,
-                            identifier = it.identifier,
-                            isSelected = isSelected,
-                            selectedOrder = selectedOrder,
-                            showOrderCounter = showOrderCounter,
-                            toggleAction = toggleAction,
-                            clickAction = clickAction
-                    )
-                }
-            }
-            if (domainModel.hasMore) {
-                val updatedItems = uiItems.toMutableList()
-                val loaderItem = if (domainModel.emptyState?.isError == true) {
-                    MediaPickerUiItem.NextPageLoader(false) {
-                        launch {
-                            retry()
-                        }
-                    }
-                } else {
-                    MediaPickerUiItem.NextPageLoader(true) {
-                        launch {
-                            loadActions.send(NextPage)
-                        }
-                    }
-                }
-                updatedItems.add(loaderItem)
-                PhotoListUiModel.Data(items = updatedItems)
-            } else {
-                PhotoListUiModel.Data(items = uiItems)
-            }
+            populateDomainItems(data, selectedIds, domainModel)
         } else if (domainModel?.emptyState != null) {
             PhotoListUiModel.Empty(
                     domainModel.emptyState.title,
@@ -277,6 +202,86 @@ class MediaPickerViewModel @Inject constructor(
                     isSearching = isSearching == true
             )
         }
+    }
+
+    private fun populateDomainItems(
+        data: List<MediaItem>,
+        selectedIds: List<Identifier>?,
+        domainModel: DomainModel
+    ): PhotoListUiModel.Data {
+        val uiItems = data.map {
+            val showOrderCounter = mediaPickerSetup.canMultiselect
+            val toggleAction = MediaPickerUiItem.ToggleAction(it.identifier, showOrderCounter, this::toggleItem)
+            val clickAction = MediaPickerUiItem.ClickAction(it.identifier, it.type == VIDEO, this::clickItem)
+            val (selectedOrder, isSelected) = if (selectedIds != null && selectedIds.contains(it.identifier)) {
+                val selectedOrder = if (showOrderCounter) selectedIds.indexOf(it.identifier) + 1 else null
+                val isSelected = true
+                selectedOrder to isSelected
+            } else {
+                null to false
+            }
+
+            val fileExtension = it.mimeType?.let { mimeType ->
+                mediaUtilsWrapper.getExtensionForMimeType(mimeType).uppercase(localeManagerWrapper.getLocale())
+            }
+            when (it.type) {
+                IMAGE -> MediaPickerUiItem.PhotoItem(
+                        url = it.url,
+                        identifier = it.identifier,
+                        isSelected = isSelected,
+                        selectedOrder = selectedOrder,
+                        showOrderCounter = showOrderCounter,
+                        toggleAction = toggleAction,
+                        clickAction = clickAction
+                )
+                VIDEO -> MediaPickerUiItem.VideoItem(
+                        url = it.url,
+                        identifier = it.identifier,
+                        isSelected = isSelected,
+                        selectedOrder = selectedOrder,
+                        showOrderCounter = showOrderCounter,
+                        toggleAction = toggleAction,
+                        clickAction = clickAction
+                )
+                AUDIO, DOCUMENT -> MediaPickerUiItem.FileItem(
+                        fileName = it.name ?: "",
+                        fileExtension = fileExtension,
+                        identifier = it.identifier,
+                        isSelected = isSelected,
+                        selectedOrder = selectedOrder,
+                        showOrderCounter = showOrderCounter,
+                        toggleAction = toggleAction,
+                        clickAction = clickAction
+                )
+            }
+        }
+        return if (domainModel.hasMore) {
+            loadNextPage(uiItems, domainModel)
+        } else {
+            PhotoListUiModel.Data(items = uiItems)
+        }
+    }
+
+    private fun loadNextPage(
+        uiItems: List<MediaPickerUiItem>,
+        domainModel: DomainModel
+    ): PhotoListUiModel.Data {
+        val updatedItems = uiItems.toMutableList()
+        val loaderItem = if (domainModel.emptyState?.isError == true) {
+            MediaPickerUiItem.NextPageLoader(false) {
+                launch {
+                    retry()
+                }
+            }
+        } else {
+            MediaPickerUiItem.NextPageLoader(true) {
+                launch {
+                    loadActions.send(NextPage)
+                }
+            }
+        }
+        updatedItems.add(loaderItem)
+        return PhotoListUiModel.Data(items = updatedItems)
     }
 
     private fun buildActionModeUiModel(
@@ -404,17 +409,17 @@ class MediaPickerViewModel @Inject constructor(
             mediaPickerTracker.trackPreview(isVideo, identifier, mediaPickerSetup)
         }
         when (identifier) {
-            is LocalUri -> {
+            is Identifier.LocalUri -> {
                 mediaUtilsWrapper.getRealPathFromURI(identifier.value.uri)?.let { path ->
                     _onNavigate.postValue(Event(PreviewUrl(path)))
                 }
             }
-            is StockMediaIdentifier -> {
+            is Identifier.StockMediaIdentifier -> {
                 if (identifier.url != null) {
                     _onNavigate.postValue(Event(PreviewUrl(identifier.url)))
                 }
             }
-            is RemoteId -> {
+            is Identifier.RemoteId -> {
                 site?.let {
                     launch {
                         val media: MediaModel = mediaStore.getSiteMediaWithId(it, identifier.value)
@@ -422,9 +427,10 @@ class MediaPickerViewModel @Inject constructor(
                     }
                 }
             }
-            is GifMediaIdentifier -> {
+            is Identifier.GifMediaIdentifier -> {
                 _onNavigate.postValue(Event(PreviewUrl(identifier.largeImageUri.toString())))
             }
+            is Identifier.LocalId -> Unit // Do nothing
         }
     }
 
@@ -665,7 +671,7 @@ class MediaPickerViewModel @Inject constructor(
     fun urisSelectedFromSystemPicker(uris: List<UriWrapper>) {
         launch {
             delay(100)
-            insertIdentifiers(uris.map { LocalUri(it) })
+            insertIdentifiers(uris.map { Identifier.LocalUri(it) })
         }
     }
 

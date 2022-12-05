@@ -1,4 +1,0 @@
-20.1:
-- Wir haben den Bildschirm zur Auswahl des Website-Designs bei der Website-Erstellung verbessert.
-- Wenn du auf einen WordPress-Link klickst, wird er in der App und nicht in deinem Standardbrowser geöffnet.
-- Wir haben die Schnellstart-Fokuspunkte für Benutzer von Rechts-nach-Links-Sprachen an die richtigen Stellen verschoben.

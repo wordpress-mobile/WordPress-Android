@@ -1,23 +1,23 @@
 package org.wordpress.android.ui.uploads
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.doReturn
-import com.nhaarman.mockitokotlin2.eq
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.times
-import com.nhaarman.mockitokotlin2.verify
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.runBlocking
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.any
+import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.eq
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore
+import org.wordpress.android.test
 import org.wordpress.android.ui.posts.PostUtilsWrapper
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -51,16 +51,14 @@ class UploadStarterConcurrentTest {
     }
 
     @Test
-    fun `it uploads local drafts concurrently`() {
+    fun `it uploads local drafts concurrently`() = test {
         // Given
         val uploadServiceFacade = createMockedUploadServiceFacade()
 
         val starter = createUploadStarter(uploadServiceFacade)
 
         // When
-        runBlocking {
-            starter.queueUploadFromSite(site).join()
-        }
+        starter.queueUploadFromSite(site).join()
 
         // Then
         verify(uploadServiceFacade, times(draftPosts.size)).uploadPost(

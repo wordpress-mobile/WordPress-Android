@@ -35,8 +35,8 @@ import kotlin.math.ceil
 
 const val OVERVIEW_ITEMS_TO_LOAD = 15
 
-class OverviewUseCase
-constructor(
+@Suppress("LongParameterList")
+class OverviewUseCase constructor(
     private val statsGranularity: StatsGranularity,
     private val visitsAndViewsStore: VisitsAndViewsStore,
     private val selectedDateProvider: SelectedDateProvider,
@@ -68,6 +68,7 @@ constructor(
 
     override suspend fun loadCachedData(): VisitsAndViewsModel? {
         statsWidgetUpdaters.updateViewsWidget(statsSiteProvider.siteModel.siteId)
+        statsWidgetUpdaters.updateWeekViewsWidget(statsSiteProvider.siteModel.siteId)
         val cachedData = visitsAndViewsStore.getVisits(
                 statsSiteProvider.siteModel,
                 statsGranularity,

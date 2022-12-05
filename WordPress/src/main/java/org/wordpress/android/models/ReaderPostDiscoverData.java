@@ -1,11 +1,11 @@
 package org.wordpress.android.models;
 
 import android.content.Context;
-import android.text.Html;
 import android.text.Spanned;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
+import androidx.core.text.HtmlCompat;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -183,7 +183,7 @@ public class ReaderPostDiscoverData {
                     html = "";
             }
 
-            mAttributionHtml = Html.fromHtml(html);
+            mAttributionHtml = HtmlCompat.fromHtml(html, HtmlCompat.FROM_HTML_MODE_LEGACY);
         }
         return mAttributionHtml;
     }

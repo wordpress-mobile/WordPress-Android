@@ -45,8 +45,8 @@ import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
 
-class AuthorsUseCase
-constructor(
+@Suppress("LongParameterList")
+class AuthorsUseCase constructor(
     statsGranularity: StatsGranularity,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher,

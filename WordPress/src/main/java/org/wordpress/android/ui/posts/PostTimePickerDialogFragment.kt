@@ -6,11 +6,11 @@ import android.app.TimePickerDialog.OnTimeSetListener
 import android.content.Context
 import android.os.Bundle
 import android.text.format.DateFormat
+import androidx.appcompat.view.ContextThemeWrapper
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
+import org.wordpress.android.R.style
 import org.wordpress.android.WordPress
-import org.wordpress.android.ui.posts.PublishSettingsFragmentType.EDIT_POST
-import org.wordpress.android.ui.posts.PublishSettingsFragmentType.PREPUBLISHING_NUDGES
 
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingPublishSettingsViewModel
 import javax.inject.Inject
@@ -24,16 +24,18 @@ class PostTimePickerDialogFragment : DialogFragment() {
                 ARG_PUBLISH_SETTINGS_FRAGMENT_TYPE
         )
 
-        when (publishSettingsFragmentType) {
-            EDIT_POST -> viewModel = ViewModelProvider(requireActivity(), viewModelFactory)
-                    .get(EditPostPublishSettingsViewModel::class.java)
-            PREPUBLISHING_NUDGES -> viewModel = ViewModelProvider(requireActivity(), viewModelFactory)
-                    .get(PrepublishingPublishSettingsViewModel::class.java)
+        viewModel = when (publishSettingsFragmentType) {
+            PublishSettingsFragmentType.EDIT_POST -> ViewModelProvider(requireActivity(), viewModelFactory)
+                        .get(EditPostPublishSettingsViewModel::class.java)
+            PublishSettingsFragmentType.PREPUBLISHING_NUDGES -> ViewModelProvider(requireActivity(), viewModelFactory)
+                        .get(PrepublishingPublishSettingsViewModel::class.java)
+            null -> error("PublishSettingsViewModel not initialized")
         }
 
         val is24HrFormat = DateFormat.is24HourFormat(activity)
+        val context = ContextThemeWrapper(activity, style.PostSettingsCalendar)
         val timePickerDialog = TimePickerDialog(
-                activity,
+                context,
                 OnTimeSetListener { _, selectedHour, selectedMinute ->
                     viewModel.onTimeSelected(selectedHour, selectedMinute)
                 },

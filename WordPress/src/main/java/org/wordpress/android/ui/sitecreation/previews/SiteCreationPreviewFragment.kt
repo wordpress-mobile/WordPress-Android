@@ -46,7 +46,6 @@ import javax.inject.Inject
 private const val ARG_DATA = "arg_site_creation_data"
 private const val SLIDE_IN_ANIMATION_DURATION = 450L
 
-@Suppress("TooManyFunctions")
 @AndroidEntryPoint
 class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
         ErrorManagedWebViewClientListener {
@@ -64,6 +63,7 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
 
     private var binding: SiteCreationPreviewScreenBinding? = null
 
+    @Suppress("UseCheckOrError")
     override fun onAttach(context: Context) {
         super.onAttach(context)
         if (context !is SitePreviewScreenListener) {
@@ -83,6 +83,7 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
         }
     }
 
+    @Suppress("DEPRECATION")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
@@ -102,7 +103,7 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
         return R.layout.site_creation_preview_screen
     }
 
-    override val screenTitle: String
+    @Suppress("UseCheckOrError") override val screenTitle: String
         get() = arguments?.getString(EXTRA_SCREEN_TITLE)
                 ?: throw IllegalStateException("Required argument screen title is missing.")
 

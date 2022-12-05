@@ -1,5 +1,0 @@
-20.1:
-- Dapatkan ide tulisan setiap hari untuk menginspirasi pos blog Anda.
-- Kami menyempurnakan layar pemilihan desain situs dalam proses Pembuatan Situs
-- Tautan WordPress dibuka di aplikasi, bukan di browser web asal Anda.
-- Poin fokus Mulai Cepat berada di tempat yang sesuai untuk pengguna bahasa yang ditulis dari kanan ke kiri.

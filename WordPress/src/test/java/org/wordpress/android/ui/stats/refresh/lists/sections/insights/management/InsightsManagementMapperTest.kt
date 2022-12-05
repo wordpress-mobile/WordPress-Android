@@ -4,7 +4,6 @@ import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
-import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
@@ -24,17 +23,15 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementViewModel.InsightListItem.Header
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementViewModel.InsightListItem.InsightModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementViewModel.InsightListItem.InsightModel.Status
-import org.wordpress.android.util.config.StatsRevampV2FeatureConfig
 
 class InsightsManagementMapperTest : BaseUnitTest() {
-    @Mock private lateinit var statsRevampV2FeatureConfig: StatsRevampV2FeatureConfig
     private lateinit var insightsManagementMapper: InsightsManagementMapper
     private val insightTypeCount = 10 // POSTS_AND_PAGES_INSIGHTS.size + ACTIVITY_INSIGHTS.size + GENERAL_INSIGHTS.size
     private val sectionsCount = 3
     @InternalCoroutinesApi
     @Before
     fun setUp() {
-        insightsManagementMapper = InsightsManagementMapper(TEST_DISPATCHER, statsRevampV2FeatureConfig)
+        insightsManagementMapper = InsightsManagementMapper(TEST_DISPATCHER)
     }
 
     @Test

@@ -287,6 +287,7 @@ class PreviewImageViewModel : ViewModel() {
         imageState is ImageInHighResLoadSuccessUiState
 
     // TODO: revisit
+    @Suppress("ForbiddenComment")
     private fun canLoadToFile(imageState: ImageUiState) = imageState is ImageInHighResLoadSuccessUiState
 
     private fun List<ImageUiState>.hasSingleElement() = this.size == 1
@@ -315,7 +316,7 @@ class PreviewImageViewModel : ViewModel() {
     private fun getOutputData() = (uiState.value?.viewPagerItemsStates?.map { OutputData(it.data.highResImageUrl) }
         ?: emptyList())
 
-    private fun isFileUrl(url: String): Boolean = url.toLowerCase(Locale.ROOT).startsWith(FILE_BASE)
+    private fun isFileUrl(url: String): Boolean = url.lowercase(Locale.ROOT).startsWith(FILE_BASE)
 
     data class ImageData(
         val id: Long = UUID.randomUUID().hashCode().toLong(),

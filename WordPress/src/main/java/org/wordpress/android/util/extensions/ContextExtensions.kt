@@ -67,6 +67,7 @@ fun Context.getDrawableFromAttribute(attributeId: Int): Drawable? {
  * @param assetFilename the asset filename
  * @return the content of the asset file
  */
+@Suppress("SwallowedException")
 fun Context.getStringFromAsset(assetFilename: String): String? = try {
     assets.open(assetFilename).bufferedReader().use { it.readText() }
 } catch (ioException: IOException) {

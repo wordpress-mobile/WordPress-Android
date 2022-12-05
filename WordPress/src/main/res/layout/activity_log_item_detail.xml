@@ -188,6 +188,12 @@
             tools:text="Jetpack Backup for Multisite installations provides downloadable backups, no one-click restores. For more information visit our documentation page."
             tools:visibility="visible" />
 
+        <include
+            android:id="@+id/jetpack_badge"
+            layout="@layout/jetpack_badge"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
     </LinearLayout>
 
 </androidx.core.widget.NestedScrollView>

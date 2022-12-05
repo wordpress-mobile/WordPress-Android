@@ -5,6 +5,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.posts.PostListViewLayoutType
+import org.wordpress.android.ui.prefs.AppPrefs.PrefKey
 import org.wordpress.android.ui.quickstart.QuickStartType
 import org.wordpress.android.ui.reader.tracker.ReaderTab
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel.Color
@@ -220,20 +221,76 @@ class AppPrefsWrapper @Inject constructor() {
     fun setLastSelectedQuickStartTypeForSite(quickStartType: QuickStartType, siteLocalId: Long) =
             AppPrefs.setLastSelectedQuickStartTypeForSite(quickStartType, siteLocalId)
 
-    fun isMySiteDefaultTabExperimentVariantAssigned() = AppPrefs.isMySiteDefaultTabExperimentVariantAssigned()
-
-    fun setMySiteDefaultTabExperimentVariantAssigned() = AppPrefs.setMySiteDefaultTabExperimentVariantAssigned()
-
-    fun setInitialScreenFromMySiteDefaultTabExperimentVariant(variant: String) =
-            AppPrefs.setInitialScreenFromMySiteDefaultTabExperimentVariant(variant)
-
-    fun getMySiteInitialScreen(): String = AppPrefs.getMySiteInitialScreen()
+    fun getMySiteInitialScreen(isJetpackApp: Boolean): String = AppPrefs.getMySiteInitialScreen(isJetpackApp)
 
     fun setSkippedPromptDay(date: Date?, siteId: Int) = AppPrefs.setSkippedPromptDay(date, siteId)
 
     fun getSkippedPromptDay(siteId: Int): Date? = AppPrefs.getSkippedPromptDay(siteId)
 
-    fun markStatsRevampFeatureAnnouncementAsDisplayed() = AppPrefs.setShouldDisplayStatsRevampFeatureAnnouncement(false)
+    fun getIsFirstBloggingPromptsOnboarding(): Boolean = AppPrefs.getIsFirstBloggingPromptsOnboarding()
+
+    fun saveFirstBloggingPromptsOnboarding(isFirstTime: Boolean) {
+        AppPrefs.saveFirstBloggingPromptsOnboarding(isFirstTime)
+    }
+
+    fun getIsFirstTrySharedLoginJetpack(): Boolean = AppPrefs.getIsFirstTrySharedLoginJetpack()
+
+    fun saveIsFirstTrySharedLoginJetpack(isFirstTry: Boolean) = AppPrefs.saveIsFirstTrySharedLoginJetpack(isFirstTry)
+
+    fun getIsFirstTryUserFlagsJetpack(): Boolean = AppPrefs.getIsFirstTryUserFlagsJetpack()
+
+    fun saveIsFirstTryUserFlagsJetpack(isFirstTry: Boolean) = AppPrefs.saveIsFirstTryUserFlagsJetpack(isFirstTry)
+
+    fun getIsFirstTryBloggingRemindersSyncJetpack(): Boolean = AppPrefs.getIsFirstTryBloggingRemindersSyncJetpack()
+
+    fun saveIsFirstTryBloggingRemindersSyncJetpack(isFirstTry: Boolean) =
+            AppPrefs.saveIsFirstTryBloggingRemindersSyncJetpack(isFirstTry)
+
+    fun getIsFirstTryReaderSavedPostsJetpack(): Boolean = AppPrefs.getIsFirstTryReaderSavedPostsJetpack()
+
+    fun saveIsFirstTryReaderSavedPostsJetpack(isFirstTry: Boolean) =
+            AppPrefs.saveIsFirstTryReaderSavedPostsJetpack(isFirstTry)
+
+    fun setJetpackMigrationCompleted(isCompleted: Boolean) = AppPrefs.setIsJetpackMigrationCompleted(isCompleted)
+
+    fun isJetpackMigrationCompleted(): Boolean = AppPrefs.getIsJetpackMigrationCompleted()
+
+    fun setJetpackMigrationEligible(isEligible: Boolean) = AppPrefs.setIsJetpackMigrationEligible(isEligible)
+
+    fun isJetpackMigrationEligible() = AppPrefs.getIsJetpackMigrationEligible()
+
+    fun getOpenWebLinksWithJetpackOverlayLastShownTimestamp(): Long =
+            AppPrefs.getOpenWebLinksWithJetpackOverlayLastShownTimestamp()
+
+    fun setOpenWebLinksWithJetpackOverlayLastShownTimestamp(lastShown: Long) =
+            AppPrefs.setOpenWebLinksWithJetpackOverlayLastShownTimestamp(lastShown)
+
+    fun getIsOpenWebLinksWithJetpack(): Boolean = AppPrefs.getIsOpenWebLinksWithJetpack()
+
+    fun setIsOpenWebLinksWithJetpack(isOpenWebLinksWithJetpack: Boolean) =
+            AppPrefs.setIsOpenWebLinksWithJetpack(isOpenWebLinksWithJetpack)
+
+    fun getAllPrefs(): Map<String, Any?> = AppPrefs.getAllPrefs()
+
+    fun setString(prefKey: PrefKey, value: String) {
+        AppPrefs.setString(prefKey, value)
+    }
+
+    fun setLong(prefKey: PrefKey, value: Long) {
+        AppPrefs.putLong(prefKey, value)
+    }
+
+    fun setInt(prefKey: PrefKey, value: Int) {
+        AppPrefs.putInt(prefKey, value)
+    }
+
+    fun setBoolean(prefKey: PrefKey, value: Boolean) {
+        AppPrefs.putBoolean(prefKey, value)
+    }
+
+    fun setStringSet(prefKey: PrefKey, set: Set<String>?) {
+        AppPrefs.putStringSet(prefKey, set)
+    }
 
     companion object {
         private const val LIGHT_MODE_ID = 0

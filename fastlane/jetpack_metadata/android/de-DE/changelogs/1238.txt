@@ -1,5 +1,0 @@
-20.1:
-- Erhalte neue tägliche Blog-Vorschläge als Inspiration für deine Beiträge.
-- Wir haben den Auswahlbildschirm für Website-Designs bei der Website-Erstellung verbessert.
-- WordPress-Links werden in der App, nicht in deinem Standard-Browser geöffnet.
-- Schnellstart-Fokuspunkte sind für Benutzer von Rechts-nach-Links-Sprachen richtig platziert.

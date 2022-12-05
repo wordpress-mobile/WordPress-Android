@@ -1,19 +1,20 @@
 package org.wordpress.android.ui.reader.viewmodels
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.store.AccountStore
@@ -26,6 +27,8 @@ import org.wordpress.android.models.ReaderTag.LIKED_PATH
 import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.models.ReaderTagType
 import org.wordpress.android.test
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
+import org.wordpress.android.ui.jetpackoverlay.JetpackOverlayConnectedFeature.READER
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
@@ -38,6 +41,7 @@ import org.wordpress.android.ui.reader.utils.DateProvider
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.QuickStartReaderPrompt
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.ContentUiState
+import org.wordpress.android.util.JetpackBrandingUtils
 import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.viewmodel.Event
 import java.util.Date
@@ -63,6 +67,9 @@ class ReaderViewModelTest {
     @Mock lateinit var selectedSiteRepository: SelectedSiteRepository
     @Mock lateinit var quickStartType: QuickStartType
     @Mock lateinit var snackbarSequencer: SnackbarSequencer
+    @Mock lateinit var jetpackBrandingUtils: JetpackBrandingUtils
+    @Mock lateinit var jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil
+
 
     private val emptyReaderTagList = ReaderTagList()
     private val nonEmptyReaderTagList = createNonMockedNonEmptyReaderTagList()
@@ -79,7 +86,9 @@ class ReaderViewModelTest {
                 accountStore,
                 quickStartRepository,
                 selectedSiteRepository,
-                snackbarSequencer
+                jetpackBrandingUtils,
+                snackbarSequencer,
+                jetpackFeatureRemovalOverlayUtil
         )
 
         whenever(dateProvider.getCurrentDate()).thenReturn(Date(DUMMY_CURRENT_TIME))
@@ -455,6 +464,58 @@ class ReaderViewModelTest {
 
             assertQsFollowSiteTaskCompleted(observers)
         }
+    }
+
+    @Ignore("Disabled until next sprint") @Test
+    fun `given wp app, when jp powered bottom sheet feature is true, then jp powered bottom sheet is shown`() {
+        val showJetpackPoweredBottomSheetEvent = mutableListOf<Event<Boolean>>()
+        viewModel.showJetpackPoweredBottomSheet.observeForever {
+            showJetpackPoweredBottomSheetEvent.add(it)
+        }
+        whenever(jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()).thenReturn(true)
+
+        viewModel.start()
+
+        assertThat(showJetpackPoweredBottomSheetEvent.last().peekContent()).isEqualTo(true)
+    }
+
+    @Test
+    fun `given wp app, when jp powered bottom sheet feature is false, then jp powered bottom sheet is not shown`() {
+        val showJetpackPoweredBottomSheetEvent = mutableListOf<Event<Boolean>>(Event(false))
+        viewModel.showJetpackPoweredBottomSheet.observeForever {
+            showJetpackPoweredBottomSheetEvent.add(it)
+        }
+        whenever(jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()).thenReturn(false)
+
+        viewModel.start()
+
+        assertThat(showJetpackPoweredBottomSheetEvent.last().peekContent()).isEqualTo(false)
+    }
+
+    @Test
+    fun `given wp app, when jetpack overlay feature is false, then jp fullscreen overlay is not shown`() {
+        val showJetpackOverlayEvent = mutableListOf<Event<Boolean>>(Event(false))
+        viewModel.showJetpackOverlay.observeForever {
+            showJetpackOverlayEvent.add(it)
+        }
+        whenever(jetpackFeatureRemovalOverlayUtil.shouldShowFeatureSpecificJetpackOverlay(READER)).thenReturn(false)
+
+        viewModel.onScreenInForeground()
+
+        assertThat(showJetpackOverlayEvent.last().peekContent()).isFalse
+    }
+
+    @Test
+    fun `given wp app, when jetpack overlay feature is true, then jp fullscreen overlay is shown`() {
+        val showJetpackOverlayEvent = mutableListOf<Event<Boolean>>(Event(false))
+        viewModel.showJetpackOverlay.observeForever {
+            showJetpackOverlayEvent.add(it)
+        }
+        whenever(jetpackFeatureRemovalOverlayUtil.shouldShowFeatureSpecificJetpackOverlay(READER)).thenReturn(true)
+
+        viewModel.onScreenInForeground()
+
+        assertThat(showJetpackOverlayEvent.last().peekContent()).isTrue
     }
 
     private fun assertQsFollowSiteDiscoverTabStepStarted(

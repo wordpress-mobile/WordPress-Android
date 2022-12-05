@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="me_jetpack_badge_top_margin">@dimen/margin_extra_medium_large</dimen>
+</resources>

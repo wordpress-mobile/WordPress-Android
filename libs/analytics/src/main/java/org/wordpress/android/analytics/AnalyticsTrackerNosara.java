@@ -1209,14 +1209,6 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "stats_widget_removed";
             case STATS_WIDGET_TAPPED:
                 return "stats_widget_tapped";
-            case STATS_REVAMP_V2_ANNOUNCEMENT_SHOWN:
-                return "stats_revamp_v2_announcement_shown";
-            case STATS_REVAMP_V2_ANNOUNCEMENT_CONFIRMED:
-                return "stats_revamp_v2_announcement_confirmed";
-            case STATS_REVAMP_V2_ANNOUNCEMENT_DISMISSED:
-                return "stats_revamp_v2_announcement_dismissed";
-                case STATS_REVAMP_V2_ANNOUNCEMENT_REMIND_ME_TAPPED:
-                return "stats_revamp_v2_announcement_remind_me_tapped";
             case PUSH_NOTIFICATION_RECEIVED:
                 return "push_notification_received";
             case PUSH_NOTIFICATION_TAPPED:
@@ -2227,8 +2219,6 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "my_site_dashboard_shown";
             case MY_SITE_SITE_MENU_SHOWN:
                 return "my_site_site_menu_shown";
-            case MY_SITE_DEFAULT_TAB_EXPERIMENT_VARIANT_ASSIGNED:
-                return "my_site_default_tab_experiment_variant_assigned";
             case APP_SETTINGS_INITIAL_SCREEN_CHANGED:
                 return "app_settings_initial_screen_changed";
             case CHANGE_USERNAME_DISPLAYED:
@@ -2389,6 +2379,100 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "qrlogin_verify_failed";
             case QRLOGIN_VERIFY_SCAN_AGAIN:
                 return "qrlogin_verify_scan_again";
+            case JETPACK_POWERED_BANNER_TAPPED:
+                return "jetpack_powered_banner_tapped";
+            case JETPACK_POWERED_BADGE_TAPPED:
+                return "jetpack_powered_badge_tapped";
+            case JETPACK_POWERED_BOTTOM_SHEET_GET_JETPACK_APP_TAPPED:
+                return "jetpack_powered_bottom_sheet_get_jetpack_app_tapped";
+            case JETPACK_POWERED_BOTTOM_SHEET_CONTINUE_TAPPED:
+                return "jetpack_powered_bottom_sheet_continue_tapped";
+            case SHARED_LOGIN_START:
+                return "shared_login_start";
+            case SHARED_LOGIN_SUCCESS:
+                return "shared_login_success";
+            case SHARED_LOGIN_FAILED:
+                return "shared_login_failed";
+            case MIGRATION_EMAIL_FAILED:
+                return "migration_email_failed";
+            case MIGRATION_EMAIL_TRIGGERED:
+                return "migration_email_triggered";
+            case CONTENT_MIGRATION_FAILED:
+                return "content_migration_failed";
+            case JPMIGRATION_WELCOME_SCREEN_SHOWN:
+                return "jpmigration_welcome_screen_shown";
+            case JPMIGRATION_WELCOME_SCREEN_CONTINUE_BUTTON_TAPPED:
+                return "jpmigration_welcome_screen_continue_button_tapped";
+            case JPMIGRATION_WELCOME_SCREEN_HELP_BUTTON_TAPPED:
+                return "jpmigration_welcome_screen_help_button_tapped";
+            case JPMIGRATION_WELCOME_SCREEN_AVATAR_TAPPED:
+                return "jpmigration_welcome_screen_avatar_tapped";
+            case JPMIGRATION_NOTIFICATIONS_SCREEN_SHOWN:
+                return "jpmigration_notifications_screen_shown";
+            case JPMIGRATION_NOTIFICATIONS_SCREEN_CONTINUE_BUTTON_TAPPED:
+                return "jpmigration_notifications_screen_continue_button_tapped";
+            case JPMIGRATION_THANKS_SCREEN_SHOWN:
+                return "jpmigration_thanks_screen_shown";
+            case JPMIGRATION_THANKS_SCREEN_FINISH_BUTTON_TAPPED:
+                return "jpmigration_thanks_screen_finish_button_tapped";
+            case JPMIGRATION_PLEASE_DELETE_WORDPRESS_CARD_TAPPED:
+                return "jpmigration_please_delete_wordpress_card_tapped";
+            case JPMIGRATION_PLEASE_DELETE_WORDPRESS_SCREEN_SHOWN:
+                return "jpmigration_please_delete_wordpress_screen_shown";
+            case JPMIGRATION_PLEASE_DELETE_WORDPRESS_GOTIT_TAPPED:
+                return "jpmigration_please_delete_wordpress_gotit_tapped";
+            case JPMIGRATION_PLEASE_DELETE_WORDPRESS_HELP_BUTTON_TAPPED:
+                return "jpmigration_please_delete_wordpress_help_button_tapped";
+            case JPMIGRATION_ERROR_SCREEN_SHOWN:
+                return "jpmigration_error_screen_shown";
+            case JPMIGRATION_ERROR_SCREEN_HELP_BUTTON_TAPPED:
+                return "jpmigration_error_screen_help_button_tapped";
+            case JPMIGRATION_ERROR_SCREEN_RETRY_BUTTON_TAPPED:
+                return "jpmigration_error_screen_retry_button_tapped";
+            case JPMIGRATION_WORDPRESSAPP_DETECTED:
+                return "jpmigration_wordpressapp_detected";
+            case USER_FLAGS_START:
+                return "user_flags_start";
+            case USER_FLAGS_SUCCESS:
+                return "user_flags_success";
+            case USER_FLAGS_FAILED:
+                return "user_flags_failed";
+            case BLOGGING_REMINDERS_SYNC_START:
+                return "blogging_reminders_sync_start";
+            case BLOGGING_REMINDERS_SYNC_SUCCESS:
+                return "blogging_reminders_sync_success";
+            case BLOGGING_REMINDERS_SYNC_FAILED:
+                return "blogging_reminders_sync_failed";
+            case READER_SAVED_POSTS_START:
+                return "reader_saved_posts_start";
+            case READER_SAVED_POSTS_SUCCESS:
+                return "reader_saved_posts_success";
+            case READER_SAVED_POSTS_FAILED:
+                return "reader_saved_posts_failed";
+            case DEEPLINK_CUSTOM_INTENT_RECEIVED:
+                return "deeplink_custom_intent_received";
+            case APP_SETTINGS_OPEN_WEB_LINKS_WITH_JETPACK_CHANGED:
+                return "app_settings_open_web_links_with_jetpack_changed";
+            case JETPACK_REMOVE_FEATURE_OVERLAY_DISPLAYED:
+                return "remove_feature_overlay_displayed";
+            case JETPACK_REMOVE_FEATURE_OVERLAY_LINK_TAPPED:
+                return "remove_feature_overlay_link_tapped";
+            case JETPACK_REMOVE_FEATURE_OVERLAY_BUTTON_GET_JETPACK_APP_TAPPED:
+                return "remove_feature_overlay_button_tapped";
+            case JETPACK_REMOVE_FEATURE_OVERLAY_DISMISSED:
+                return "remove_feature_overlay_dismissed";
+            case JETPACK_REMOVE_SITE_CREATION_OVERLAY_DISPLAYED:
+                return "remove_site_creation_overlay_displayed";
+            case JETPACK_REMOVE_SITE_CREATION_OVERLAY_BUTTON_GET_JETPACK_APP_TAPPED:
+                return "remove_site_creation_overlay_button_tapped";
+            case JETPACK_REMOVE_SITE_CREATION_OVERLAY_DISMISSED:
+                return "remove_site_creation_overlay_dismissed";
+            case JETPACK_DEEP_LINK_OVERLAY_DISPLAYED:
+                return "jetpack_deep_link_overlay_displayed";
+            case JETPACK_DEEP_LINK_OVERLAY_BUTTON_OPEN_IN_JETPACK_APP_TAPPED:
+                return "jetpack_deep_link_overlay_button_open_in_jetpack_app_tapped";
+            case JETPACK_DEEP_LINK_OVERLAY_DISMISSED:
+                return "jetpack_deep_link_overlay_dismissed";
         }
         return null;
     }

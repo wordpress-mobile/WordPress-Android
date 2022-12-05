@@ -2,17 +2,18 @@ package org.wordpress.android.analytics;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
+
+import androidx.preference.PreferenceManager;
+
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public final class AnalyticsTracker {
     private static boolean mHasUserOptedOut;
-    private static AnalyticsInjectExperimentProperties mInjectExperimentProperties;
 
     public static final String READER_DETAIL_TYPE_KEY = "post_detail_type";
     public static final String READER_DETAIL_TYPE_NORMAL = "normal";
@@ -151,10 +152,6 @@ public final class AnalyticsTracker {
         STATS_CLICKS_ITEM_TAPPED,
         STATS_VIDEO_PLAYS_VIDEO_TAPPED,
         STATS_DETAIL_POST_TAPPED,
-        STATS_REVAMP_V2_ANNOUNCEMENT_SHOWN,
-        STATS_REVAMP_V2_ANNOUNCEMENT_CONFIRMED,
-        STATS_REVAMP_V2_ANNOUNCEMENT_DISMISSED,
-        STATS_REVAMP_V2_ANNOUNCEMENT_REMIND_ME_TAPPED,
         EDITOR_CREATED_POST,
         EDITOR_ADDED_PHOTO_VIA_DEVICE_LIBRARY,
         EDITOR_ADDED_VIDEO_VIA_DEVICE_LIBRARY,
@@ -866,7 +863,6 @@ public final class AnalyticsTracker {
         MY_SITE_TAB_TAPPED,
         MY_SITE_DASHBOARD_SHOWN,
         MY_SITE_SITE_MENU_SHOWN,
-        MY_SITE_DEFAULT_TAB_EXPERIMENT_VARIANT_ASSIGNED,
         APP_SETTINGS_INITIAL_SCREEN_CHANGED,
         CHANGE_USERNAME_DISPLAYED,
         CHANGE_USERNAME_DISMISSED,
@@ -946,7 +942,54 @@ public final class AnalyticsTracker {
         QRLOGIN_AUTHENTICATED,
         QRLOGIN_VERIFY_DISMISS,
         QRLOGIN_VERIFY_FAILED,
-        QRLOGIN_VERIFY_SCAN_AGAIN
+        QRLOGIN_VERIFY_SCAN_AGAIN,
+        JETPACK_POWERED_BANNER_TAPPED,
+        JETPACK_POWERED_BADGE_TAPPED,
+        JETPACK_POWERED_BOTTOM_SHEET_GET_JETPACK_APP_TAPPED,
+        JETPACK_POWERED_BOTTOM_SHEET_CONTINUE_TAPPED,
+        SHARED_LOGIN_START,
+        SHARED_LOGIN_SUCCESS,
+        SHARED_LOGIN_FAILED,
+        MIGRATION_EMAIL_TRIGGERED,
+        MIGRATION_EMAIL_FAILED,
+        CONTENT_MIGRATION_FAILED,
+        JPMIGRATION_WELCOME_SCREEN_SHOWN,
+        JPMIGRATION_WELCOME_SCREEN_CONTINUE_BUTTON_TAPPED,
+        JPMIGRATION_WELCOME_SCREEN_HELP_BUTTON_TAPPED,
+        JPMIGRATION_WELCOME_SCREEN_AVATAR_TAPPED,
+        JPMIGRATION_NOTIFICATIONS_SCREEN_SHOWN,
+        JPMIGRATION_NOTIFICATIONS_SCREEN_CONTINUE_BUTTON_TAPPED,
+        JPMIGRATION_THANKS_SCREEN_SHOWN,
+        JPMIGRATION_THANKS_SCREEN_FINISH_BUTTON_TAPPED,
+        JPMIGRATION_PLEASE_DELETE_WORDPRESS_CARD_TAPPED,
+        JPMIGRATION_PLEASE_DELETE_WORDPRESS_SCREEN_SHOWN,
+        JPMIGRATION_PLEASE_DELETE_WORDPRESS_GOTIT_TAPPED,
+        JPMIGRATION_PLEASE_DELETE_WORDPRESS_HELP_BUTTON_TAPPED,
+        JPMIGRATION_ERROR_SCREEN_SHOWN,
+        JPMIGRATION_ERROR_SCREEN_HELP_BUTTON_TAPPED,
+        JPMIGRATION_ERROR_SCREEN_RETRY_BUTTON_TAPPED,
+        JPMIGRATION_WORDPRESSAPP_DETECTED,
+        USER_FLAGS_START,
+        USER_FLAGS_SUCCESS,
+        USER_FLAGS_FAILED,
+        BLOGGING_REMINDERS_SYNC_START,
+        BLOGGING_REMINDERS_SYNC_SUCCESS,
+        BLOGGING_REMINDERS_SYNC_FAILED,
+        READER_SAVED_POSTS_START,
+        READER_SAVED_POSTS_SUCCESS,
+        READER_SAVED_POSTS_FAILED,
+        DEEPLINK_CUSTOM_INTENT_RECEIVED,
+        APP_SETTINGS_OPEN_WEB_LINKS_WITH_JETPACK_CHANGED,
+        JETPACK_REMOVE_FEATURE_OVERLAY_DISPLAYED,
+        JETPACK_REMOVE_FEATURE_OVERLAY_LINK_TAPPED,
+        JETPACK_REMOVE_FEATURE_OVERLAY_BUTTON_GET_JETPACK_APP_TAPPED,
+        JETPACK_REMOVE_FEATURE_OVERLAY_DISMISSED,
+        JETPACK_REMOVE_SITE_CREATION_OVERLAY_DISPLAYED,
+        JETPACK_REMOVE_SITE_CREATION_OVERLAY_BUTTON_GET_JETPACK_APP_TAPPED,
+        JETPACK_REMOVE_SITE_CREATION_OVERLAY_DISMISSED,
+        JETPACK_DEEP_LINK_OVERLAY_DISPLAYED,
+        JETPACK_DEEP_LINK_OVERLAY_BUTTON_OPEN_IN_JETPACK_APP_TAPPED,
+        JETPACK_DEEP_LINK_OVERLAY_DISMISSED
     }
 
     private static final List<Tracker> TRACKERS = new ArrayList<>();
@@ -979,13 +1022,21 @@ public final class AnalyticsTracker {
             return;
         }
 
-        if (shouldInjectExperimentProperties()) {
-            trackWithExperimentProperties(stat, Collections.emptyMap());
-            return;
-        }
-
         for (Tracker tracker : TRACKERS) {
             tracker.track(stat);
+        }
+    }
+
+    public static @Nullable String getAnonID() {
+        if (TRACKERS.isEmpty()) {
+            return null;
+        }
+        Tracker tracker = TRACKERS.get(0);
+        String anonId = tracker.getAnonID();
+        if (anonId == null) {
+            return tracker.generateNewAnonID();
+        } else {
+            return anonId;
         }
     }
 
@@ -994,25 +1045,8 @@ public final class AnalyticsTracker {
             return;
         }
 
-        if (shouldInjectExperimentProperties()) {
-            trackWithExperimentProperties(stat, properties);
-            return;
-        }
-
         for (Tracker tracker : TRACKERS) {
             tracker.track(stat, properties);
-        }
-    }
-
-    private static void trackWithExperimentProperties(Stat stat, Map<String, ?> properties) {
-        Map<String, ?> props = mInjectExperimentProperties.injectProperties(properties);
-
-        for (Tracker tracker : TRACKERS) {
-            if (props.isEmpty()) {
-                tracker.track(stat);
-            } else {
-                tracker.track(stat, props);
-            }
         }
     }
 
@@ -1059,16 +1093,5 @@ public final class AnalyticsTracker {
         for (Tracker tracker : TRACKERS) {
             tracker.refreshMetadata(metadata);
         }
-    }
-
-    public static void setInjectExperimentProperties(AnalyticsInjectExperimentProperties injectExperimentProperties) {
-        mInjectExperimentProperties = (injectExperimentProperties != null)
-                ? injectExperimentProperties
-                : AnalyticsInjectExperimentProperties.emptyInstance();
-    }
-
-    private static boolean shouldInjectExperimentProperties() {
-        return mInjectExperimentProperties != null
-               && !mInjectExperimentProperties.getProperties().isEmpty();
     }
 }

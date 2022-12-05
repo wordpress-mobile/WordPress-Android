@@ -2,11 +2,11 @@ package org.wordpress.android.ui.prefs;
 
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.preference.PreferenceManager;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.preference.PreferenceManager;
 
 import com.google.gson.Gson;
 
@@ -174,10 +174,9 @@ public class AppPrefs {
         SHOULD_SCHEDULE_CREATE_SITE_NOTIFICATION,
         SHOULD_SHOW_WEEKLY_ROUNDUP_NOTIFICATION,
 
-        // Used to indicate if the variant has been assigned for the My Site Tab experiment
-        MY_SITE_DEFAULT_TAB_EXPERIMENT_VARIANT_ASSIGNED,
-
         SKIPPED_BLOGGING_PROMPT_DAY,
+        OPEN_WEB_LINKS_WITH_JETPACK_OVERLAY_LAST_SHOWN_TIMESTAMP,
+        OPEN_WEB_LINKS_WITH_JETPACK,
     }
 
     /**
@@ -276,11 +275,34 @@ public class AppPrefs {
         // Used to identify the App Settings for initial screen that is updated when the variant is assigned
         wp_pref_initial_screen,
 
-        STATS_REVAMP2_FEATURE_ANNOUNCEMENT_DISPLAYED
+        // Indicates if this is the first time the user sees the blogging prompts onboarding dialog
+        IS_FIRST_TIME_BLOGGING_PROMPTS_ONBOARDING,
+
+        // Indicates if this is the first time we try to login to Jetpack automatically
+        IS_FIRST_TRY_LOGIN_JETPACK,
+
+        // Indicates if this is the first time we try to get the user flags in Jetpack automatically
+        IS_FIRST_TRY_USER_FLAGS_JETPACK,
+
+        // Indicates if this is the first time we try sync the blogging reminders in Jetpack automatically
+        IS_FIRST_TRY_BLOGGING_REMINDERS_SYNC_JETPACK,
+
+        // Indicates if this is the first time we try to get the reader saved posts in Jetpack automatically
+        IS_FIRST_TRY_READER_SAVED_POSTS_JETPACK,
+
+        // Indicates if the user has completed the Jetpack migration flow
+        IS_JETPACK_MIGRATION_COMPLETED,
+
+        // Indicates if the user is eligible for the Jetpack migration flow
+        IS_JETPACK_MIGRATION_ELIGIBLE,
     }
 
-    private static SharedPreferences prefs() {
+    static SharedPreferences prefs() {
         return PreferenceManager.getDefaultSharedPreferences(WordPress.getContext());
+    }
+
+    static Map<String, ?> getAllPrefs() {
+        return prefs().getAll();
     }
 
     private static String getString(PrefKey key) {
@@ -291,7 +313,7 @@ public class AppPrefs {
         return prefs().getString(key.name(), defaultValue);
     }
 
-    private static void setString(PrefKey key, String value) {
+    public static void setString(PrefKey key, String value) {
         SharedPreferences.Editor editor = prefs().edit();
         if (TextUtils.isEmpty(value)) {
             editor.remove(key.name());
@@ -318,6 +340,10 @@ public class AppPrefs {
         setString(key, Long.toString(value));
     }
 
+    public static void putLong(final PrefKey key, final long value) {
+        prefs().edit().putLong(key.name(), value) .apply();
+    }
+
     private static int getInt(PrefKey key, int def) {
         try {
             String value = getString(key);
@@ -334,6 +360,10 @@ public class AppPrefs {
         return getInt(key, 0);
     }
 
+    public static void putInt(final PrefKey key, final int value) {
+        prefs().edit().putInt(key.name(), value) .apply();
+    }
+
     public static void setInt(PrefKey key, int value) {
         setString(key, Integer.toString(value));
     }
@@ -343,8 +373,16 @@ public class AppPrefs {
         return Boolean.parseBoolean(value);
     }
 
+    public static void putBoolean(final PrefKey key, final boolean value) {
+        prefs().edit().putBoolean(key.name(), value) .apply();
+    }
+
     public static void setBoolean(PrefKey key, boolean value) {
         setString(key, Boolean.toString(value));
+    }
+
+    public static void putStringSet(final PrefKey key, final Set<String> value) {
+        prefs().edit().putStringSet(key.name(), value) .apply();
     }
 
     private static void remove(PrefKey key) {
@@ -1324,15 +1362,6 @@ public class AppPrefs {
         return DeletablePrefKey.SHOULD_SHOW_WEEKLY_ROUNDUP_NOTIFICATION.name() + siteId;
     }
 
-    public static boolean shouldDisplayStatsRevampFeatureAnnouncement() {
-        return prefs().getBoolean(UndeletablePrefKey.STATS_REVAMP2_FEATURE_ANNOUNCEMENT_DISPLAYED.name(), true);
-    }
-
-    public static void setShouldDisplayStatsRevampFeatureAnnouncement(boolean isDisplayed) {
-        prefs().edit().putBoolean(UndeletablePrefKey.STATS_REVAMP2_FEATURE_ANNOUNCEMENT_DISPLAYED.name(), isDisplayed)
-               .apply();
-    }
-
     /*
      * adds a local site ID to the top of list of recently chosen sites
      */
@@ -1383,17 +1412,6 @@ public class AppPrefs {
         return capabilities;
     }
 
-    public static boolean isMySiteDefaultTabExperimentVariantAssigned() {
-        return getBoolean(
-                DeletablePrefKey.MY_SITE_DEFAULT_TAB_EXPERIMENT_VARIANT_ASSIGNED,
-                false
-        );
-    }
-
-    public static void setMySiteDefaultTabExperimentVariantAssigned() {
-        setBoolean(DeletablePrefKey.MY_SITE_DEFAULT_TAB_EXPERIMENT_VARIANT_ASSIGNED, true);
-    }
-
     public static Date getSkippedPromptDay(int siteId) {
         long promptSkippedMillis = prefs().getLong(getSkippedBloggingPromptDayConfigKey(siteId), 0);
         if (promptSkippedMillis == 0) {
@@ -1414,20 +1432,82 @@ public class AppPrefs {
         return DeletablePrefKey.SKIPPED_BLOGGING_PROMPT_DAY.name() + siteId;
     }
 
-    public static void setInitialScreenFromMySiteDefaultTabExperimentVariant(String variant) {
-        // This supports the MySiteDefaultTab AB Experiment.
-        // AppSettings are undeletable across logouts and keys are all lower case.
-        // This method will be removed when the experiment has completed and thus
-        // the settings will be maintained only from the AppSettings view{
-        String initialScreen = variant.equals(MySiteTabType.SITE_MENU.getTrackingLabel())
-                ? MySiteTabType.SITE_MENU.getLabel() : MySiteTabType.DASHBOARD.getLabel();
-        setString(UndeletablePrefKey.wp_pref_initial_screen, initialScreen);
-    }
-
-    public static String getMySiteInitialScreen() {
+    public static String getMySiteInitialScreen(boolean isJetpackApp) {
         return getString(
                 UndeletablePrefKey.wp_pref_initial_screen,
-                MySiteTabType.SITE_MENU.getLabel()
+                isJetpackApp ? MySiteTabType.DASHBOARD.getLabel() : MySiteTabType.SITE_MENU.getLabel()
         );
+    }
+
+    public static Boolean getIsFirstBloggingPromptsOnboarding() {
+        return getBoolean(UndeletablePrefKey.IS_FIRST_TIME_BLOGGING_PROMPTS_ONBOARDING, true);
+    }
+
+    public static void saveFirstBloggingPromptsOnboarding(final boolean isFirstTime) {
+        setBoolean(UndeletablePrefKey.IS_FIRST_TIME_BLOGGING_PROMPTS_ONBOARDING, isFirstTime);
+    }
+
+    public static Boolean getIsFirstTrySharedLoginJetpack() {
+        return getBoolean(UndeletablePrefKey.IS_FIRST_TRY_LOGIN_JETPACK, true);
+    }
+
+    public static void saveIsFirstTrySharedLoginJetpack(final boolean isFirstTry) {
+        setBoolean(UndeletablePrefKey.IS_FIRST_TRY_LOGIN_JETPACK, isFirstTry);
+    }
+
+    public static Boolean getIsFirstTryUserFlagsJetpack() {
+        return getBoolean(UndeletablePrefKey.IS_FIRST_TRY_USER_FLAGS_JETPACK, true);
+    }
+
+    public static void saveIsFirstTryUserFlagsJetpack(final boolean isFirstTry) {
+        setBoolean(UndeletablePrefKey.IS_FIRST_TRY_USER_FLAGS_JETPACK, isFirstTry);
+    }
+
+    public static Boolean getIsFirstTryBloggingRemindersSyncJetpack() {
+        return getBoolean(UndeletablePrefKey.IS_FIRST_TRY_BLOGGING_REMINDERS_SYNC_JETPACK, true);
+    }
+
+    public static void saveIsFirstTryBloggingRemindersSyncJetpack(final boolean isFirstTry) {
+        setBoolean(UndeletablePrefKey.IS_FIRST_TRY_BLOGGING_REMINDERS_SYNC_JETPACK, isFirstTry);
+    }
+
+    public static Boolean getIsFirstTryReaderSavedPostsJetpack() {
+        return getBoolean(UndeletablePrefKey.IS_FIRST_TRY_READER_SAVED_POSTS_JETPACK, true);
+    }
+
+    public static void saveIsFirstTryReaderSavedPostsJetpack(final boolean isFirstTry) {
+        setBoolean(UndeletablePrefKey.IS_FIRST_TRY_READER_SAVED_POSTS_JETPACK, isFirstTry);
+    }
+
+    public static boolean getIsJetpackMigrationCompleted() {
+        return getBoolean(UndeletablePrefKey.IS_JETPACK_MIGRATION_COMPLETED, false);
+    }
+
+    public static void setIsJetpackMigrationCompleted(final boolean isCompleted) {
+        setBoolean(UndeletablePrefKey.IS_JETPACK_MIGRATION_COMPLETED, isCompleted);
+    }
+
+    public static boolean getIsJetpackMigrationEligible() {
+        return getBoolean(UndeletablePrefKey.IS_JETPACK_MIGRATION_ELIGIBLE, true);
+    }
+
+    public static void setIsJetpackMigrationEligible(final boolean isEligible) {
+        setBoolean(UndeletablePrefKey.IS_JETPACK_MIGRATION_ELIGIBLE, isEligible);
+    }
+
+    public static Long getOpenWebLinksWithJetpackOverlayLastShownTimestamp() {
+        return getLong(DeletablePrefKey.OPEN_WEB_LINKS_WITH_JETPACK_OVERLAY_LAST_SHOWN_TIMESTAMP, 0L);
+    }
+
+    public static void setOpenWebLinksWithJetpackOverlayLastShownTimestamp(final Long overlayLastShownTimestamp) {
+        setLong(DeletablePrefKey.OPEN_WEB_LINKS_WITH_JETPACK_OVERLAY_LAST_SHOWN_TIMESTAMP, overlayLastShownTimestamp);
+    }
+
+    public static Boolean getIsOpenWebLinksWithJetpack() {
+        return getBoolean(DeletablePrefKey.OPEN_WEB_LINKS_WITH_JETPACK, false);
+    }
+
+    public static void setIsOpenWebLinksWithJetpack(final boolean isOpenWebLinksWithJetpack) {
+        setBoolean(DeletablePrefKey.OPEN_WEB_LINKS_WITH_JETPACK, isOpenWebLinksWithJetpack);
     }
 }

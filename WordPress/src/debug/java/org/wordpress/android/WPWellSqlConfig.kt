@@ -19,6 +19,7 @@ class WPWellSqlConfig(context: Context) : WellSqlConfig(context) {
      * and show a toast alerting to the downgrade. The sole purpose of this is to avoid the hassle of devs switching
      * branches and having to clear storage and login again due to a version downgrade.
      */
+    @Suppress("DEPRECATION")
     override fun onDowngrade(db: SQLiteDatabase?, helper: WellTableManager?, oldVersion: Int, newVersion: Int) {
         if (BuildConfig.RESET_DB_ON_DOWNGRADE.toBoolean()) {
             // note: don't call super() here because it throws an exception
@@ -43,5 +44,6 @@ class WPWellSqlConfig(context: Context) : WellSqlConfig(context) {
      * number of SQLiteBlobTooBigExceptions. Note that this is only called on API 28 and
      * above since earlier versions don't allow adjusting the cursor window size.
      */
+    @Suppress("MagicNumber")
     override fun getCursorWindowSize() = (1024L * 1024L * 20L)
 }
