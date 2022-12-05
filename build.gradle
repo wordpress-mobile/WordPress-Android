@@ -81,7 +81,6 @@ ext {
     zendeskVersion = '5.0.2'
 
     // test
-    androidxTestCoreVersion = '1.4.0'
     assertjVersion = '3.11.1'
     bouncycastleVersion = '1.64'
     junitVersion = '4.13'
@@ -89,6 +88,7 @@ ext {
     mockitoKotlinVersion = '4.0.0'
 
     // android test
+    androidxTestCoreVersion = '1.4.0'
     androidxTestEspressoVersion = '3.4.0'
     androidxTestExtJunitVersion = '1.1.3'
     androidxTestUiAutomatorVersion = '2.2.0'
