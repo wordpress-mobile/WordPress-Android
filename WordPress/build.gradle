@@ -30,12 +30,6 @@ repositories {
         }
     }
     maven {
-        url "https://a8c-libs.s3.amazonaws.com/android/hermes-mirror"
-        content {
-            includeGroup "org.wordpress-mobile"
-        }
-    }
-    maven {
         url "https://a8c-libs.s3.amazonaws.com/android/react-native-mirror"
         content {
             includeGroup "com.facebook.react"
@@ -269,10 +263,13 @@ android {
         // MPAndroidChart uses androidX - remove this line when we migrate everything to androidX
         exclude 'META-INF/proguard/androidx-annotations.pro'
 
-        // Exclude React Native's JSC and Hermes debug binaries
+        // Exclude React Native's JSC and Fabric JNI
         exclude '**/libjscexecutor.so'
-        exclude '**/libhermes-inspector.so'
-        exclude '**/libhermes-executor-debug.so'
+        exclude '**/libfabricjni.so'
+        
+        // Avoid React Native's JNI duplicated classes
+        pickFirst '**/libc++_shared.so'
+        pickFirst '**/libfbjni.so'
 
         pickFirst 'META-INF/-no-jdk.kotlin_module'
 
