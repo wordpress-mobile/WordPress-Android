@@ -11,7 +11,7 @@ internal sealed interface ApplicationPasswordCreationResult {
         val credentials: ApplicationPasswordCredentials
     ) : ApplicationPasswordCreationResult
 
-    object NotSupported : ApplicationPasswordCreationResult
+    data class NotSupported(val originalError: BaseNetworkError) : ApplicationPasswordCreationResult
     data class Failure(val error: BaseNetworkError) : ApplicationPasswordCreationResult
 }
 

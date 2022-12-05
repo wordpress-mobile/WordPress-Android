@@ -13,6 +13,7 @@ import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError
 import org.wordpress.android.fluxc.utils.extensions.slashJoin
 import org.wordpress.android.util.AppLog
+import java.util.Optional
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -24,7 +25,8 @@ private const val UNAUTHORIZED = 401
 @Singleton
 class ApplicationPasswordNetwork @Inject constructor(
     @Named("no-cookies") private val requestQueue: RequestQueue,
-    private val userAgent: UserAgent
+    private val userAgent: UserAgent,
+    private val notSupportedListener: Optional<ApplicationPasswordsUnavailableListener>
 ) {
     // We can't use construction injection for this variable, as its class is internal
     @Inject internal lateinit var applicationPasswordManager: ApplicationPasswordManager
@@ -43,7 +45,12 @@ class ApplicationPasswordNetwork @Inject constructor(
             is ApplicationPasswordCreationResult.Created -> credentialsResult.credentials
             is ApplicationPasswordCreationResult.Failure ->
                 return WPAPIResponse.Error(credentialsResult.error.toWPAPINetworkError())
-            ApplicationPasswordCreationResult.NotSupported -> TODO()
+            is ApplicationPasswordCreationResult.NotSupported -> {
+                if (notSupportedListener.isPresent) {
+                    notSupportedListener.get().featureIsUnavailable(site)
+                }
+                return WPAPIResponse.Error(credentialsResult.originalError.toWPAPINetworkError())
+            }
         }
 
         val authorizationHeader = Credentials.basic(credentials.userName, credentials.password)
