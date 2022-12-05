@@ -22,7 +22,6 @@ ext {
     automatticTracksVersion = '2.2.0'
     gutenbergMobileVersion = 'v1.85.1'
     wordPressAztecVersion = 'v1.6.2'
-    wordPressEmailChecker2Version = '1.1.0'
     wordPressFluxCVersion = '2.6.0'
     wordPressGraphviewVersion = '3.4.0'
     wordPressLoginVersion = '1.0.0'
@@ -119,7 +118,6 @@ allprojects {
                 includeVersion "com.android.volley", "volley", "1.1.1"
                 includeVersion "com.automattic", "rest", "1.0.8"
                 includeVersion "com.google.android", "flexbox", "2.0.1"
-                includeVersion "org.wordpress", "emailchecker2", "1.1.0"
                 includeVersion "org.wordpress", "persistentedittext", "1.0.2"
                 includeVersion "org.wordpress", "wellsql-core", "1.6.0"
                 includeVersion "org.wordpress", "wellsql", "1.6.0"

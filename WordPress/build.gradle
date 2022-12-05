@@ -363,7 +363,6 @@ dependencies {
     }
     implementation "org.wordpress:graphview:$wordPressGraphviewVersion"
     implementation "org.wordpress:persistentedittext:$wordPressPersistentEditTextVersion"
-    implementation "org.wordpress:emailchecker2:$wordPressEmailChecker2Version"
 
     // To enable Android Studio specific features for Jetpack Compose.
     debugImplementation "androidx.compose.ui:ui-tooling:$androidxComposeVersion"
