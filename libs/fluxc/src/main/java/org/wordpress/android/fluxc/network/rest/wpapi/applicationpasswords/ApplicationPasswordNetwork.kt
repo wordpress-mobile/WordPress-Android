@@ -1,16 +1,17 @@
 package org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords
 
-import com.android.volley.Request.Method
 import com.android.volley.RequestQueue
 import kotlinx.coroutines.suspendCancellableCoroutine
 import okhttp3.Credentials
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
+import org.wordpress.android.fluxc.network.HttpMethod
 import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIGsonRequest
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPINetworkError
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError
+import org.wordpress.android.fluxc.network.toVolleyMethod
 import org.wordpress.android.fluxc.utils.extensions.slashJoin
 import org.wordpress.android.util.AppLog
 import java.util.Optional
@@ -34,7 +35,7 @@ class ApplicationPasswordNetwork @Inject constructor(
     @Suppress("ReturnCount")
     suspend fun <T> executeGsonRequest(
         site: SiteModel,
-        method: Int,
+        method: HttpMethod,
         path: String,
         clazz: Class<T>,
         params: Map<String, String> = emptyMap(),
@@ -64,7 +65,7 @@ class ApplicationPasswordNetwork @Inject constructor(
 
         val response = suspendCancellableCoroutine<WPAPIResponse<T>> { continuation ->
             val request = WPAPIGsonRequest(
-                method,
+                method.toVolleyMethod(),
                 (site.wpApiRestUrl ?: site.url.slashJoin("wp-json")).slashJoin(path),
                 params,
                 body,
@@ -107,7 +108,7 @@ class ApplicationPasswordNetwork @Inject constructor(
         path: String,
         clazz: Class<T>,
         params: Map<String, String> = emptyMap()
-    ) = executeGsonRequest(site, Method.GET, path, clazz, params)
+    ) = executeGsonRequest(site, HttpMethod.GET, path, clazz, params)
 
     suspend fun <T> executePostGsonRequest(
         site: SiteModel,
@@ -115,7 +116,7 @@ class ApplicationPasswordNetwork @Inject constructor(
         clazz: Class<T>,
         body: Map<String, Any> = emptyMap(),
         params: Map<String, String> = emptyMap()
-    ) = executeGsonRequest(site, Method.POST, path, clazz, params, body)
+    ) = executeGsonRequest(site, HttpMethod.POST, path, clazz, params, body)
 
     suspend fun <T> executePutGsonRequest(
         site: SiteModel,
@@ -123,7 +124,7 @@ class ApplicationPasswordNetwork @Inject constructor(
         clazz: Class<T>,
         body: Map<String, Any> = emptyMap(),
         params: Map<String, String> = emptyMap()
-    ) = executeGsonRequest(site, Method.PUT, path, clazz, params, body)
+    ) = executeGsonRequest(site, HttpMethod.PUT, path, clazz, params, body)
 
     suspend fun <T> executeDeleteGsonRequest(
         site: SiteModel,
@@ -131,7 +132,7 @@ class ApplicationPasswordNetwork @Inject constructor(
         clazz: Class<T>,
         params: Map<String, String> = emptyMap(),
         body: Map<String, Any> = emptyMap()
-    ) = executeGsonRequest(site, Method.DELETE, path, clazz, params, body)
+    ) = executeGsonRequest(site, HttpMethod.DELETE, path, clazz, params, body)
 }
 
 private fun BaseNetworkError.toWPAPINetworkError(): WPAPINetworkError {
