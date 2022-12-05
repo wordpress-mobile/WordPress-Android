@@ -267,7 +267,7 @@ public class ReaderDatabase extends SQLiteOpenHelper {
                 db.execSQL("ALTER TABLE tbl_comments ADD author_email TEXT;");
                 currentVersion++;
             case 153:
-                db.execSQL("DROP TABLE IF EXISTS " + ReaderBlockedBlogTable.BLOCKED_BLOGS_TABLE + ";");
+                ReaderBlockedBlogTable.createTables(db);
                 currentVersion++;
         }
         if (currentVersion != newVersion) {
