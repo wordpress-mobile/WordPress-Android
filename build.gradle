@@ -161,7 +161,7 @@ allprojects {
     tasks.withType(KotlinCompile).all {
         kotlinOptions {
             jvmTarget = JavaVersion.VERSION_1_8
-            allWarningsAsErrors = true
+            allWarningsAsErrors = false
             freeCompilerArgs += [
                     "-Xopt-in=kotlin.RequiresOptIn",
                     '-Xjvm-default=all'
