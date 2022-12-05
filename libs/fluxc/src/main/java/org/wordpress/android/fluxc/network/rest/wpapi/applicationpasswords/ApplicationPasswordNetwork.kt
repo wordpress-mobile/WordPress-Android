@@ -5,9 +5,12 @@ import com.android.volley.RequestQueue
 import kotlinx.coroutines.suspendCancellableCoroutine
 import okhttp3.Credentials
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIGsonRequest
+import org.wordpress.android.fluxc.network.rest.wpapi.WPAPINetworkError
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError
 import org.wordpress.android.fluxc.utils.extensions.slashJoin
 import org.wordpress.android.util.AppLog
 import javax.inject.Inject
@@ -39,7 +42,7 @@ class ApplicationPasswordNetwork @Inject constructor(
             is ApplicationPasswordCreationResult.Existing -> credentialsResult.credentials
             is ApplicationPasswordCreationResult.Created -> credentialsResult.credentials
             is ApplicationPasswordCreationResult.Failure ->
-                return WPAPIResponse.Error(credentialsResult.error)
+                return WPAPIResponse.Error(credentialsResult.error.toWPAPINetworkError())
             ApplicationPasswordCreationResult.NotSupported -> TODO()
         }
 
@@ -115,4 +118,15 @@ class ApplicationPasswordNetwork @Inject constructor(
         params: Map<String, String> = emptyMap(),
         body: Map<String, Any> = emptyMap()
     ) = executeGsonRequest(site, Method.DELETE, path, clazz, params, body)
+}
+
+private fun BaseNetworkError.toWPAPINetworkError(): WPAPINetworkError {
+    return when (this) {
+        is WPAPINetworkError -> this
+        is WPComGsonNetworkError -> WPAPINetworkError(
+            baseError = this,
+            errorCode = this.apiError.orEmpty()
+        )
+        else -> WPAPINetworkError(this)
+    }
 }
