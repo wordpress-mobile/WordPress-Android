@@ -99,7 +99,7 @@ ext {
 
     // android test
     androidxTestEspressoVersion = '3.4.0'
-    androidxTestExtJunitVersion = '1.1.3'
+    androidxTestExtJunitVersion = '1.1.4'
     androidxTestUiAutomatorVersion = '2.2.0'
     screengrabVersion = '2.1.1'
     squareupMockWebServerVersion = '2.7.5'
