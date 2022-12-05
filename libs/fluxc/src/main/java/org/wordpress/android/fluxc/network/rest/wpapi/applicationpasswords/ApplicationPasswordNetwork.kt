@@ -47,10 +47,11 @@ class ApplicationPasswordNetwork @Inject constructor(
             is ApplicationPasswordCreationResult.Failure ->
                 return WPAPIResponse.Error(credentialsResult.error.toWPAPINetworkError())
             is ApplicationPasswordCreationResult.NotSupported -> {
+                val networkError = credentialsResult.originalError.toWPAPINetworkError()
                 if (notSupportedListener.isPresent) {
-                    notSupportedListener.get().featureIsUnavailable(site)
+                    notSupportedListener.get().featureIsUnavailable(site, networkError)
                 }
-                return WPAPIResponse.Error(credentialsResult.originalError.toWPAPINetworkError())
+                return WPAPIResponse.Error(networkError)
             }
         }
 
