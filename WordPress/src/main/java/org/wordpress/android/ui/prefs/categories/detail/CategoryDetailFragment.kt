@@ -143,7 +143,7 @@ class CategoryDetailFragment : Fragment(R.layout.category_detail_fragment) {
 
         viewModel.onCategoryPush.observeEvent(viewLifecycleOwner) {
             when (it) {
-                InProgress -> showProgressDialog(R.string.adding_cat)
+                is InProgress -> showProgressDialog(it.message)
                 is Success -> showPostSuccess(it.message)
                 is Failure -> showPostError(it.errorMessage)
             }

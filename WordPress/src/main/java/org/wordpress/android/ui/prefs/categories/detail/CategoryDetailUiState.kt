@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.prefs.categories.detail
 
+import androidx.annotation.StringRes
 import org.wordpress.android.R
 import org.wordpress.android.models.CategoryNode
 import org.wordpress.android.ui.utils.UiString
@@ -16,7 +17,7 @@ data class UiState(
 sealed class CategoryUpdateUiState {
     data class Success(val message: UiString) : CategoryUpdateUiState()
     data class Failure(val errorMessage: UiString) : CategoryUpdateUiState()
-    object InProgress : CategoryUpdateUiState()
+    data class InProgress(@StringRes val message: Int) : CategoryUpdateUiState()
 }
 
 data class SubmitButtonUiState(

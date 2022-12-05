@@ -119,7 +119,7 @@ class CategoryDetailViewModel @Inject constructor(
             return
         }
         launch {
-            _onCategoryPush.postValue(Event(InProgress))
+            _onCategoryPush.postValue(Event(InProgress(R.string.adding_cat)))
             addCategoryUseCase.addCategory(categoryText, parentCategory.categoryId, siteModel)
         }
     }
@@ -132,7 +132,7 @@ class CategoryDetailViewModel @Inject constructor(
             return
         }
         launch {
-            _onCategoryPush.postValue(Event(InProgress))
+            _onCategoryPush.postValue(Event(InProgress(R.string.updating_cat)))
             editCategoryUseCase.editCategory(
                     categoryId,
                     existingCategoryname,
@@ -171,9 +171,19 @@ class CategoryDetailViewModel @Inject constructor(
                 "An error occurred while uploading taxonomy with type: " + event.error.type
         )
         val categoryUiState = if (event.isError) {
-            Failure(UiStringRes(R.string.adding_cat_failed))
+            Failure(
+                    UiStringRes(
+                            if (existingCategoryname.isEmpty()) R.string.adding_cat_failed
+                            else R.string.updating_cat_failed
+                    )
+            )
         } else {
-            Success(UiStringRes(R.string.adding_cat_success))
+            Success(
+                    UiStringRes(
+                            if (existingCategoryname.isEmpty()) R.string.adding_cat_success
+                            else R.string.updating_cat_success
+                    )
+            )
         }
         _onCategoryPush.postValue(Event(categoryUiState))
     }
