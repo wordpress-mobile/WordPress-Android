@@ -16,16 +16,16 @@ import java.util.Map;
 
 public class WPAPIGsonRequest<T> extends GsonRequest<T> {
     public WPAPIGsonRequest(int method, String url, Map<String, String> params, Map<String, Object> body,
-                             Class<T> clazz, Listener<T> listener, BaseErrorListener errorListener) {
-        super(method, params, body, url, clazz, null, listener, errorListener);
+                             Class<T> clazz, Listener<T> listener, OnWPAPIErrorListener errorListener) {
+        super(method, params, body, url, clazz, null, listener, new WPAPIErrorListenerWrapper(errorListener));
         // If it's a GET request, add the parameters to the URL
         if (method == Method.GET) {
             addQueryParameters(params);
         }
     }
     public WPAPIGsonRequest(int method, String url, Map<String, String> params, Map<String, Object> body,
-                            Type type, Listener<T> listener, BaseErrorListener errorListener) {
-        super(method, params, body, url, null, type, listener, errorListener);
+                            Type type, Listener<T> listener, OnWPAPIErrorListener errorListener) {
+        super(method, params, body, url, null, type, listener, new WPAPIErrorListenerWrapper(errorListener));
         // If it's a GET request, add the parameters to the URL
         if (method == Method.GET) {
             addQueryParameters(params);
@@ -50,6 +50,6 @@ public class WPAPIGsonRequest<T> extends GsonRequest<T> {
             }
         }
 
-        return error;
+        return new WPAPINetworkError(error, null);
     }
 }
