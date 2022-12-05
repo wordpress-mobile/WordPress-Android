@@ -8,6 +8,7 @@ import com.android.volley.Response.Listener;
 import com.android.volley.toolbox.HttpHeaderParser;
 
 import org.wordpress.android.fluxc.network.BaseRequest;
+import org.wordpress.android.fluxc.network.rest.wpapi.WPAPINetworkError;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -37,7 +38,7 @@ public class WPAPIHeadRequest extends BaseRequest<String> {
     @Override
     public BaseNetworkError deliverBaseNetworkError(@NonNull BaseNetworkError error) {
         // no op
-        return error;
+        return new WPAPINetworkError(error, null);
     }
 
     private static String extractEndpointFromLinkHeader(String linkHeader) {
