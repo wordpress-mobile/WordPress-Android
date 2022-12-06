@@ -22,9 +22,7 @@ ext {
     automatticTracksVersion = '2.2.0'
     gutenbergMobileVersion = 'v1.85.1'
     wordPressAztecVersion = 'v1.6.2'
-    wordPressEmailChecker2Version = '1.1.0'
     wordPressFluxCVersion = '2.6.0'
-    wordPressGraphviewVersion = '3.4.0'
     wordPressLoginVersion = '1.0.0'
     wordPressPersistentEditTextVersion = '1.0.2'
     wordPressUtilsVersion = '3.1.0'
@@ -38,14 +36,14 @@ ext {
     androidxAppcompatVersion = '1.1.0'
     androidxArchCoreVersion = '2.0.0'
     androidxComposeVersion = '1.1.1'
+    androidxComposeCompilerVersion = '1.1.1'
+    androidxComposeLifecycleVersion = '2.4.1'
     androidxCardviewVersion = '1.0.0'
     androidxConstraintlayoutVersion = '1.1.3'
     androidxCoreVersion = '1.3.2'
     androidxEmojiVersion = '1.0.0'
-    androidXExifInterfaceVersion = '1.0.0'
     androidxFragmentVersion = '1.4.1'
     androidxGridlayoutVersion = '1.0.0'
-    androidXLegacyVersion = '1.0.0'
     androidxLifecycleVersion = '2.4.1'
     androidxMediaVersion = '1.0.1'
     androidXMultidexVersion = '2.0.1'
@@ -83,21 +81,19 @@ ext {
     zendeskVersion = '5.0.2'
 
     // test
-    androidxTestCoreVersion = '1.4.0'
     assertjVersion = '3.11.1'
-    bouncycastleVersion = '1.64'
     junitVersion = '4.13.2'
     mockitoVersion = "4.8.1"
     mockitoKotlinVersion = '4.0.0'
 
     // android test
+    androidxTestCoreVersion = '1.5.0'
     androidxTestEspressoVersion = '3.4.0'
-    androidxTestExtJunitVersion = '1.1.3'
+    androidxTestExtJunitVersion = '1.1.4'
     androidxTestUiAutomatorVersion = '2.2.0'
     screengrabVersion = '2.1.1'
     squareupMockWebServerVersion = '2.7.5'
     wiremockVersion = '2.26.3'
-    wiremockMocksVersion = '2.23.2' // TODO: Align 'wiremock' versions.
     wiremockHttpClientVersion = '4.3.5.1'
 
     // other
@@ -118,7 +114,6 @@ allprojects {
                 includeVersion "com.android.volley", "volley", "1.1.1"
                 includeVersion "com.automattic", "rest", "1.0.8"
                 includeVersion "com.google.android", "flexbox", "2.0.1"
-                includeVersion "org.wordpress", "emailchecker2", "1.1.0"
                 includeVersion "org.wordpress", "persistentedittext", "1.0.2"
                 includeVersion "org.wordpress", "wellsql-core", "1.6.0"
                 includeVersion "org.wordpress", "wellsql", "1.6.0"
