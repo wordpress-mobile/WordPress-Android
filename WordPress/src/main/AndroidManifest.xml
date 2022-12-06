@@ -52,6 +52,7 @@
 
     <application
         android:allowBackup="true"
+        android:localeConfig="@xml/locales_config"
         android:fullBackupContent="@xml/legacy_backup_scheme"
         android:dataExtractionRules="@xml/backup_scheme"
         android:hardwareAccelerated="true"
