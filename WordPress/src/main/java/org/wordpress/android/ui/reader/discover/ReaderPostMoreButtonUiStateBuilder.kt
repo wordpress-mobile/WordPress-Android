@@ -56,7 +56,7 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
         menuItems.add(SpacerNoAction())
         menuItems.add(buildBlockSite(onButtonClicked))
         menuItems.add(buildReportPost(onButtonClicked))
-        checkAndAddMenuItemForBlockUser(menuItems, onButtonClicked)
+        menuItems.add(buildBlockUser(onButtonClicked))
 
         return menuItems
     }
@@ -189,13 +189,6 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
                     iconColor = R.attr.wpColorError,
                     onClicked = onButtonClicked
             )
-
-    private fun checkAndAddMenuItemForBlockUser(
-        menuItems: MutableList<ReaderPostCardAction>,
-        onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit
-    ) {
-        menuItems.add(buildBlockUser(onButtonClicked))
-    }
 
     private fun buildBlockUser(onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit) =
             SecondaryAction(
