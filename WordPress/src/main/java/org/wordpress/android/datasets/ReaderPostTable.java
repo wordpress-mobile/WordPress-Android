@@ -906,6 +906,7 @@ public class ReaderPostTable {
             for (ReaderPost post : posts) {
                 // Skip blocked content
                 if (BlockedAuthorTable.isBlockedAuthor(post)) continue;
+                if (ReaderBlockedBlogTable.isBlockedBlog(post)) continue;
 
                 // keep the gapMarker flag
                 boolean hasGapMarker = postWithGapMarker != null && postWithGapMarker.getPostId() == post.postId
