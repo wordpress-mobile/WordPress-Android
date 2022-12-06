@@ -9,6 +9,7 @@ import org.greenrobot.eventbus.ThreadMode.MAIN
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.TermModel
 import org.wordpress.android.fluxc.store.TaxonomyStore.OnTermUploaded
 import org.wordpress.android.models.CategoryNode
 import org.wordpress.android.modules.BG_THREAD
@@ -41,8 +42,7 @@ class CategoryDetailViewModel @Inject constructor(
 ) : ScopedViewModel(bgDispatcher) {
     private var isStarted = false
     private val siteModel: SiteModel = requireNotNull(selectedSiteRepository.getSelectedSite())
-    private var existingCategoryname: String = ""
-    private var categorySlug: String = ""
+    var existingCategory: TermModel? = null
 
     private val topLevelCategory = CategoryNode(0, 0, resourceProvider.getString(R.string.top_level_category_name))
 
@@ -88,17 +88,15 @@ class CategoryDetailViewModel @Inject constructor(
     }
 
     private fun initializeEditCategoryState(siteCategories: ArrayList<CategoryNode>, categoryId: Long) {
-        val existingCategory = siteCategories.filter { it.categoryId == categoryId }[0]
-        categorySlug = getCategoriesUseCase.getCategoriesForSite(siteModel)
-                .find { it.remoteTermId == existingCategory.categoryId }?.slug ?: ""
-        var parentCategoryPosition = siteCategories.indexOfFirst { it.categoryId == existingCategory.parentId }
+        existingCategory = getCategoriesUseCase.getCategoriesForSite(siteModel)
+                .find { it.remoteTermId == categoryId }
+        var parentCategoryPosition = siteCategories.indexOfFirst { it.categoryId == existingCategory!!.parentRemoteId }
         if (parentCategoryPosition == -1) parentCategoryPosition = 0
-        existingCategoryname = existingCategory.name
         _uiState.postValue(
                 UiState(
                         categories = siteCategories,
                         selectedParentCategoryPosition = parentCategoryPosition,
-                        categoryName = existingCategory.name,
+                        categoryName = existingCategory!!.name,
                         categoryId = categoryId,
                         submitButtonUiState = SubmitButtonUiState(buttonText = UiStringRes(R.string.update_category))
                 )
@@ -137,7 +135,7 @@ class CategoryDetailViewModel @Inject constructor(
             _onCategoryPush.postValue(Event(InProgress(R.string.updating_cat)))
             editCategoryUseCase.editCategory(
                     categoryId,
-                    categorySlug,
+                    existingCategory!!.slug,
                     categoryText,
                     parentCategory.categoryId,
                     siteModel
@@ -146,9 +144,10 @@ class CategoryDetailViewModel @Inject constructor(
     }
 
     fun onCategoryNameUpdated(inputValue: String) {
-        if (existingCategoryname.isNotEmpty())
-            if (inputValue.trim() == existingCategoryname.trim())
-                return
+        existingCategory?.let {
+            if (inputValue.trim() == it.name.trim())
+                return@onCategoryNameUpdated
+        }
         uiState.value?.let { state ->
             val submitButtonUiState = if (inputValue.isNotEmpty()) {
                 state.submitButtonUiState.copy(enabled = true)
@@ -181,13 +180,11 @@ class CategoryDetailViewModel @Inject constructor(
     }
 
     private fun getTermUploadErrorMessage(): Int {
-        return if (existingCategoryname.isEmpty()) R.string.adding_cat_failed
-        else R.string.updating_cat_failed
+        return existingCategory?.let { R.string.updating_cat_failed } ?: R.string.adding_cat_failed
     }
 
     private fun getTermUploadSuccessMessage(): Int {
-        return if (existingCategoryname.isEmpty()) R.string.adding_cat_success
-        else R.string.updating_cat_success
+        return existingCategory?.let { R.string.updating_cat_success} ?: R.string.adding_cat_success
     }
 
     fun deleteCategory() {
