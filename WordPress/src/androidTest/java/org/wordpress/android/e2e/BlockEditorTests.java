@@ -39,6 +39,7 @@ public class BlockEditorTests extends BaseTest {
                        + ".wordpress.com/2020/08/image-1.jpg?w=731\" alt=\"\" class=\"wp-image-65\"/></figure>\n"
                        + "<!-- /wp:image --></div>\n";
 
+    @Ignore
     @Test
     public void e2ePublishSimplePost() {
         String title = "publishSimplePost";
@@ -76,6 +77,7 @@ public class BlockEditorTests extends BaseTest {
                 .verifyPostPublished();
     }
 
+    @Ignore
     @Test
     public void e2eBlockEditorCanDisplayElementAddedInHtmlMode() {
         String title = "blockEditorCanDisplayElementAddedInHtmlMode";
