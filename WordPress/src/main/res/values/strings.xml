@@ -555,10 +555,13 @@
     <string name="category_parent">Parent category (optional):</string>
     <string name="adding_cat">Adding category</string>
     <string name="updating_cat">Updating category</string>
+    <string name="deleting_cat">Deleting category</string>
     <string name="adding_cat_failed">Adding category failed</string>
     <string name="adding_cat_success">Category added successfully</string>
     <string name="updating_cat_failed">Updating category failed</string>
     <string name="updating_cat_success">Category updated successfully</string>
+    <string name="deleting_cat_failed">Deleting category failed</string>
+    <string name="deleting_cat_success">Category deleted successfully</string>
     <string name="cat_name_required">The category name field is required</string>
     <string name="top_level_category_name">Top level</string>
     <string name="dlg_confirm_delete_category">Permanently delete \'%s\' Category?</string>

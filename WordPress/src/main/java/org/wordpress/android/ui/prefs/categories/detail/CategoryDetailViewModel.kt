@@ -7,8 +7,10 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.MAIN
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.action.TaxonomyAction.REMOVE_TERM
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.TermModel
+import org.wordpress.android.fluxc.store.TaxonomyStore.OnTaxonomyChanged
 import org.wordpress.android.fluxc.store.TaxonomyStore.OnTermUploaded
 import org.wordpress.android.models.CategoryNode
 import org.wordpress.android.modules.BG_THREAD
@@ -180,12 +182,31 @@ class CategoryDetailViewModel @Inject constructor(
         _onCategoryPush.postValue(Event(categoryUiState))
     }
 
+    @Suppress("unused")
+    @Subscribe(threadMode = MAIN)
+    fun onTaxonomyChanged(event: OnTaxonomyChanged) {
+        if (event.isError) AppLog.e(
+                T.SETTINGS,
+                "An error occurred while deleting taxonomy with type: " + event.error.type
+        )
+        when (event.causeOfChange) {
+            REMOVE_TERM -> showDeleteStatusMessage(event.isError)
+            else -> return
+        }
+    }
+
+    private fun showDeleteStatusMessage(isError: Boolean) {
+        val categoryUiState = if (isError) Failure(UiStringRes(R.string.deleting_cat_failed))
+        else Success(UiStringRes(R.string.deleting_cat_success))
+        _onCategoryPush.postValue(Event(categoryUiState))
+    }
+
     private fun getTermUploadErrorMessage(): Int {
         return existingCategory?.let { R.string.updating_cat_failed } ?: R.string.adding_cat_failed
     }
 
     private fun getTermUploadSuccessMessage(): Int {
-        return existingCategory?.let { R.string.updating_cat_success} ?: R.string.adding_cat_success
+        return existingCategory?.let { R.string.updating_cat_success } ?: R.string.adding_cat_success
     }
 
     fun deleteCategory() {
