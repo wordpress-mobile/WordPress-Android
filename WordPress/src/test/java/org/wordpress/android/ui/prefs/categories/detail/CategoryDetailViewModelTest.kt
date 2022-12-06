@@ -19,6 +19,7 @@ import org.wordpress.android.fluxc.store.TaxonomyStore.TaxonomyErrorType.GENERIC
 import org.wordpress.android.models.CategoryNode
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.posts.AddCategoryUseCase
+import org.wordpress.android.ui.posts.DeleteCategoryUseCase
 import org.wordpress.android.ui.posts.EditCategoryUseCase
 import org.wordpress.android.ui.posts.GetCategoriesUseCase
 import org.wordpress.android.ui.prefs.categories.detail.CategoryUpdateUiState.Failure
@@ -38,6 +39,7 @@ class CategoryDetailViewModelTest : BaseUnitTest() {
     private val getCategoriesUseCase: GetCategoriesUseCase = mock()
     private val addCategoryUseCase: AddCategoryUseCase = mock()
     private val editCategoryUseCase: EditCategoryUseCase = mock()
+    private val deleteCategoryUseCase: DeleteCategoryUseCase = mock()
     private val resourceProvider: ResourceProvider = mock()
     private val selectedSiteRepository: SelectedSiteRepository = mock()
 
@@ -56,6 +58,7 @@ class CategoryDetailViewModelTest : BaseUnitTest() {
                 getCategoriesUseCase,
                 addCategoryUseCase,
                 editCategoryUseCase,
+                deleteCategoryUseCase,
                 resourceProvider,
                 dispatcher,
                 selectedSiteRepository
@@ -154,17 +157,20 @@ class CategoryDetailViewModelTest : BaseUnitTest() {
     // Edit category tests
     @Test
     fun `when vm starts in edit mode, then parent category is selected`() {
-        val siteCategories = siteCategoriesList()
-        whenever(getCategoriesUseCase.getSiteCategories(siteModel)).thenReturn(siteCategories)
+        val siteCategories = getDummySiteCategories()
+        val siteCategoriesAsNode  = getCategoriesAsNode()
+        whenever(getCategoriesUseCase.getCategoriesForSite(siteModel)).thenReturn(siteCategories)
+        whenever(getCategoriesUseCase.getSiteCategories(siteModel)).thenReturn(siteCategoriesAsNode)
 
         viewModel.start(14L)
-        assertThat(siteCategories[0].name).isEqualTo(uiStates.first().categories[0].name)
+
+        assertThat(uiStates.first().categories[0].name).isEqualTo(siteCategoriesAsNode[0].name)
     }
 
     @Test
     fun `when vm starts in edit mode, then submit button is shown and disabled`() {
-        val siteCategories = siteCategoriesList()
-        whenever(getCategoriesUseCase.getSiteCategories(siteModel)).thenReturn(siteCategories)
+        val siteCategories = getDummySiteCategories()
+        whenever(getCategoriesUseCase.getCategoriesForSite(siteModel)).thenReturn(siteCategories)
 
         viewModel.start(14L)
 
@@ -182,8 +188,8 @@ class CategoryDetailViewModelTest : BaseUnitTest() {
 
     @Test
     fun ` given parent category while editing categories, when vm starts, then ui state is updated`() {
-        val siteCategories = siteCategoriesList()
-        whenever(getCategoriesUseCase.getSiteCategories(siteModel)).thenReturn(siteCategories)
+        val siteCategories = getDummySiteCategories()
+        whenever(getCategoriesUseCase.getCategoriesForSite(siteModel)).thenReturn(siteCategories)
 
         viewModel.start(14L)
         val selectedCategoryParent = 2
@@ -194,8 +200,8 @@ class CategoryDetailViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given no internet while editing categories, when submit is invoked, then no network message is shown`() {
-        val siteCategories = siteCategoriesList()
-        whenever(getCategoriesUseCase.getSiteCategories(siteModel)).thenReturn(siteCategories)
+        val siteCategories = getDummySiteCategories()
+        whenever(getCategoriesUseCase.getCategoriesForSite(siteModel)).thenReturn(siteCategories)
 
         viewModel.start(14L)
         viewModel.onCategoryNameUpdated("New category name from test")
@@ -206,9 +212,11 @@ class CategoryDetailViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given internet available while editing categories, when submit is invoked, then add edit category is invoked`() {
-        val siteCategories = siteCategoriesList()
-        whenever(getCategoriesUseCase.getSiteCategories(siteModel)).thenReturn(siteCategories)
+    fun `given internet available while editing categories, when submit is invoked, then edit category is invoked`() {
+        val siteCategories = getDummySiteCategories()
+        val siteCategoriesAsNode  = getCategoriesAsNode()
+        whenever(getCategoriesUseCase.getCategoriesForSite(siteModel)).thenReturn(siteCategories)
+        whenever(getCategoriesUseCase.getSiteCategories(siteModel)).thenReturn(siteCategoriesAsNode)
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
         val updatedCategoryName = "New category name from test"
 
@@ -218,15 +226,15 @@ class CategoryDetailViewModelTest : BaseUnitTest() {
 
         assertThat(InProgress(R.string.updating_cat)).isEqualTo(onCategoryPushStates[0].peekContent())
         verify(editCategoryUseCase).editCategory(
-                14L, "",
-                updatedCategoryName, 4, siteModel
+                14L, "dog",
+                updatedCategoryName, 1, siteModel
         )
     }
 
     @Test
     fun `given api success, when submit is invoked while editing categories, then success message is shown`() {
-        val siteCategories = siteCategoriesList()
-        whenever(getCategoriesUseCase.getSiteCategories(siteModel)).thenReturn(siteCategories)
+        val siteCategories = getDummySiteCategories()
+        whenever(getCategoriesUseCase.getCategoriesForSite(siteModel)).thenReturn(siteCategories)
 
         viewModel.start(14L)
         viewModel.onTermUploaded(getTermUploadSuccess())
@@ -237,8 +245,8 @@ class CategoryDetailViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given api error while editing categories, when submit is invoked, then error message is shown`() {
-        val siteCategories = siteCategoriesList()
-        whenever(getCategoriesUseCase.getSiteCategories(siteModel)).thenReturn(siteCategories)
+        val siteCategories = getDummySiteCategories()
+        whenever(getCategoriesUseCase.getCategoriesForSite(siteModel)).thenReturn(siteCategories)
 
         viewModel.start(14L)
         viewModel.onTermUploaded(getTermUploadError())
@@ -247,17 +255,35 @@ class CategoryDetailViewModelTest : BaseUnitTest() {
                 .isEqualTo(onCategoryPushStates[0].peekContent() as Failure)
     }
 
-    private fun siteCategoriesList(): ArrayList<CategoryNode> {
+    private fun getDummySiteCategories(): java.util.ArrayList<TermModel> {
+        val siteCategories = java.util.ArrayList<TermModel>()
+        siteCategories.add(getParentTermModel())
+        siteCategories.add(getChildTermModel())
+        return siteCategories
+    }
+
+    private fun getCategoriesAsNode(): ArrayList<CategoryNode> {
         return arrayListOf(
                 CategoryNode(1, 0, "Animals"),
-                CategoryNode(2, 0, "Colors"),
-                CategoryNode(3, 0, "Flavors"),
-                CategoryNode(4, 0, "Articles"),
-                CategoryNode(14, 4, "New"),
-                CategoryNode(5, 0, "Fruit"),
-                CategoryNode(6, 0, "Recipes"),
-                CategoryNode(16, 6, "New")
+                CategoryNode(14, 1, "Dog"),
         )
+    }
+
+    private fun getParentTermModel(): TermModel {
+        val termModel = TermModel()
+        termModel.name = "Animals"
+        termModel.remoteTermId = 1
+        termModel.slug = "Animals"
+        return termModel
+    }
+
+    private fun getChildTermModel(): TermModel {
+        val termModel = TermModel()
+        termModel.name = "Dog"
+        termModel.remoteTermId = 14
+        termModel.parentRemoteId = 1
+        termModel.slug = "dog"
+        return termModel
     }
 
     private fun getTermUploadSuccess() = OnTermUploaded(TermModel())
