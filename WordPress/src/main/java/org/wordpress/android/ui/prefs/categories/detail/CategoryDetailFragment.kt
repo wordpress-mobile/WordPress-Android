@@ -44,12 +44,17 @@ class CategoryDetailFragment : Fragment(R.layout.category_detail_fragment) {
         val categoryId = getCategoryId(savedInstanceState)
 
         with(CategoryDetailFragmentBinding.bind(view)) {
+            if (categoryId != null) updateToolbarTitle()
             initAdapter()
             initSubmitButton()
             initSpinner()
             initViewModel(categoryId)
-            if(categoryId==null)initInputText()
+            if (categoryId == null) initInputText()
         }
+    }
+
+    private fun updateToolbarTitle() {
+        (requireActivity() as CategoryDetailActivity).title = getString(R.string.update_category)
     }
 
     private fun getCategoryId(savedInstanceState: Bundle?): Long? {
