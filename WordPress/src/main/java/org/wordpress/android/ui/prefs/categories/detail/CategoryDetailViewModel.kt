@@ -145,6 +145,9 @@ class CategoryDetailViewModel @Inject constructor(
     }
 
     fun onCategoryNameUpdated(inputValue: String) {
+        if (existingCategoryname.isNotEmpty())
+            if (inputValue.trim() == existingCategoryname.trim())
+                return
         uiState.value?.let { state ->
             val submitButtonUiState = if (inputValue.isNotEmpty()) {
                 state.submitButtonUiState.copy(enabled = true)
