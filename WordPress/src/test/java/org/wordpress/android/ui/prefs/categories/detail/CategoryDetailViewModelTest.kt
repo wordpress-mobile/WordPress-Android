@@ -11,8 +11,10 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.action.TaxonomyAction.REMOVE_TERM
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.TermModel
+import org.wordpress.android.fluxc.store.TaxonomyStore.OnTaxonomyChanged
 import org.wordpress.android.fluxc.store.TaxonomyStore.OnTermUploaded
 import org.wordpress.android.fluxc.store.TaxonomyStore.TaxonomyError
 import org.wordpress.android.fluxc.store.TaxonomyStore.TaxonomyErrorType.GENERIC_ERROR
@@ -255,6 +257,61 @@ class CategoryDetailViewModelTest : BaseUnitTest() {
                 .isEqualTo(onCategoryPushStates[0].peekContent() as Failure)
     }
 
+    // Delete category use case
+    @Test
+    fun `given no internet while deleting categories, when submit is invoked, then no network message is shown`() {
+        val siteCategories = getDummySiteCategories()
+        whenever(getCategoriesUseCase.getCategoriesForSite(siteModel)).thenReturn(siteCategories)
+
+        viewModel.start(14L)
+        viewModel.deleteCategory()
+
+        assertThat(Failure(UiStringRes(R.string.no_network_message)))
+                .isEqualTo(onCategoryPushStates[0].peekContent() as Failure)
+    }
+
+    @Test
+    fun `given internet available while delete categories, when submit is invoked, then delete category is invoked`() {
+        val siteCategories = getDummySiteCategories()
+        val siteCategoriesAsNode  = getCategoriesAsNode()
+        whenever(getCategoriesUseCase.getCategoriesForSite(siteModel)).thenReturn(siteCategories)
+        whenever(getCategoriesUseCase.getSiteCategories(siteModel)).thenReturn(siteCategoriesAsNode)
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
+
+        viewModel.start(14L)
+        viewModel.deleteCategory()
+
+        assertThat(InProgress(R.string.deleting_cat)).isEqualTo(onCategoryPushStates[0].peekContent())
+        verify(deleteCategoryUseCase).deleteCategory(
+                siteCategories[1], siteModel
+        )
+    }
+
+    @Test
+    fun `given api success, when submit is invoked while deleting category, then success message is shown`() {
+        val siteCategories = getDummySiteCategories()
+        whenever(getCategoriesUseCase.getCategoriesForSite(siteModel)).thenReturn(siteCategories)
+
+        viewModel.start(14L)
+        viewModel.onTaxonomyChanged(getTaxonomyChangedCallback())
+
+        assertThat(Success(UiStringRes(R.string.deleting_cat_success)))
+                .isEqualTo(onCategoryPushStates[0].peekContent() as Success)
+    }
+
+    @Test
+    fun `given api error while deleting category, when submit is invoked, then error message is shown`() {
+        val siteCategories = getDummySiteCategories()
+        whenever(getCategoriesUseCase.getCategoriesForSite(siteModel)).thenReturn(siteCategories)
+
+        viewModel.start(14L)
+        viewModel.onTaxonomyChanged(getTaxonomyChangedErrorCallback())
+
+        assertThat(Failure(UiStringRes(R.string.deleting_cat_failed)))
+                .isEqualTo(onCategoryPushStates[0].peekContent() as Failure)
+    }
+
+
     private fun getDummySiteCategories(): java.util.ArrayList<TermModel> {
         val siteCategories = java.util.ArrayList<TermModel>()
         siteCategories.add(getParentTermModel())
@@ -292,5 +349,17 @@ class CategoryDetailViewModelTest : BaseUnitTest() {
         val event = OnTermUploaded(TermModel())
         event.error = TaxonomyError(GENERIC_ERROR)
         return event
+    }
+    private fun getTaxonomyChangedCallback(): OnTaxonomyChanged {
+        val taxonomyChanged = OnTaxonomyChanged(0)
+        taxonomyChanged.causeOfChange = REMOVE_TERM
+        return taxonomyChanged
+    }
+
+    private fun getTaxonomyChangedErrorCallback(): OnTaxonomyChanged {
+        val taxonomyChanged = OnTaxonomyChanged(0)
+        taxonomyChanged.causeOfChange = REMOVE_TERM
+        taxonomyChanged.error = TaxonomyError(GENERIC_ERROR)
+        return taxonomyChanged
     }
 }
