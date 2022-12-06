@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.prefs.categories.detail
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
@@ -61,7 +60,6 @@ class CategoryDetailViewModel @Inject constructor(
     }
 
     fun start(categoryId: Long? = null) {
-        Log.e("start: categoryId", categoryId.toString())
         if (isStarted) return
         isStarted = true
 
