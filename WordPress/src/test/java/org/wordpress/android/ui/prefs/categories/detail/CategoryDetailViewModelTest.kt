@@ -19,6 +19,7 @@ import org.wordpress.android.fluxc.store.TaxonomyStore.TaxonomyErrorType.GENERIC
 import org.wordpress.android.models.CategoryNode
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.posts.AddCategoryUseCase
+import org.wordpress.android.ui.posts.EditCategoryUseCase
 import org.wordpress.android.ui.posts.GetCategoriesUseCase
 import org.wordpress.android.ui.prefs.categories.detail.CategoryUpdateUiState.Failure
 import org.wordpress.android.ui.prefs.categories.detail.CategoryUpdateUiState.InProgress
@@ -36,6 +37,7 @@ class CategoryDetailViewModelTest : BaseUnitTest() {
     private val networkUtilsWrapper: NetworkUtilsWrapper = mock()
     private val getCategoriesUseCase: GetCategoriesUseCase = mock()
     private val addCategoryUseCase: AddCategoryUseCase = mock()
+    private val editCategoryUseCase: EditCategoryUseCase = mock()
     private val resourceProvider: ResourceProvider = mock()
     private val selectedSiteRepository: SelectedSiteRepository = mock()
 
@@ -53,6 +55,7 @@ class CategoryDetailViewModelTest : BaseUnitTest() {
                 networkUtilsWrapper,
                 getCategoriesUseCase,
                 addCategoryUseCase,
+                editCategoryUseCase,
                 resourceProvider,
                 dispatcher,
                 selectedSiteRepository
@@ -126,7 +129,7 @@ class CategoryDetailViewModelTest : BaseUnitTest() {
         viewModel.onCategoryNameUpdated(categoryName)
         viewModel.onSubmitButtonClick()
 
-        assertThat(InProgress).isEqualTo(onCategoryPushStates[0].peekContent())
+        assertThat(InProgress(R.string.adding_cat)).isEqualTo(onCategoryPushStates[0].peekContent())
         verify(addCategoryUseCase).addCategory(categoryName, 0, siteModel)
     }
 
