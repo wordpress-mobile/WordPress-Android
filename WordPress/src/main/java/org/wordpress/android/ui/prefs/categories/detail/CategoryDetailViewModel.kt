@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.prefs.categories.detail
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
@@ -15,6 +14,7 @@ import org.wordpress.android.models.CategoryNode
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.posts.AddCategoryUseCase
+import org.wordpress.android.ui.posts.DeleteCategoryUseCase
 import org.wordpress.android.ui.posts.EditCategoryUseCase
 import org.wordpress.android.ui.posts.GetCategoriesUseCase
 import org.wordpress.android.ui.prefs.categories.detail.CategoryUpdateUiState.Failure
@@ -36,6 +36,7 @@ class CategoryDetailViewModel @Inject constructor(
     private val getCategoriesUseCase: GetCategoriesUseCase,
     private val addCategoryUseCase: AddCategoryUseCase,
     private val editCategoryUseCase: EditCategoryUseCase,
+    private val deleteCategoryUseCase: DeleteCategoryUseCase,
     resourceProvider: ResourceProvider,
     private val dispatcher: Dispatcher,
     selectedSiteRepository: SelectedSiteRepository
@@ -188,6 +189,15 @@ class CategoryDetailViewModel @Inject constructor(
     }
 
     fun deleteCategory() {
-        Log.e("delete category is called", "delete category is called")
+        if (!networkUtilsWrapper.isNetworkAvailable()) {
+            _onCategoryPush.postValue(
+                    Event(Failure(UiStringRes(R.string.no_network_message)))
+            )
+            return
+        }
+        launch {
+            _onCategoryPush.postValue(Event(InProgress(R.string.deleting_cat)))
+            deleteCategoryUseCase.deleteCategory(existingCategory!!, siteModel)
+        }
     }
 }
