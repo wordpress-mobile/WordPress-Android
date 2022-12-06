@@ -174,6 +174,10 @@ class JetpackMigrationViewModel @Inject constructor(
         }
     }
 
+    fun onBackPressed() {
+        logoutAndFallbackToLogin()
+    }
+
     private fun siteUiFromModel(site: SiteModel) = SiteListItemUiState(
             id = site.siteId,
             name = siteUtilsWrapper.getSiteNameOrHomeURL(site),
