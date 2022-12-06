@@ -87,9 +87,9 @@ ext {
     mockitoKotlinVersion = '4.0.0'
 
     // android test
-    androidxTestCoreVersion = '1.4.0'
+    androidxTestCoreVersion = '1.5.0'
     androidxTestEspressoVersion = '3.5.0'
-    androidxTestExtJunitVersion = '1.1.3'
+    androidxTestExtJunitVersion = '1.1.4'
     androidxTestUiAutomatorVersion = '2.2.0'
     screengrabVersion = '2.1.1'
     squareupMockWebServerVersion = '2.7.5'
