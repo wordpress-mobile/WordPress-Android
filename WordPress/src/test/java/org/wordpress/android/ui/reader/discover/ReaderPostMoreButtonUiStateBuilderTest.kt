@@ -170,13 +170,13 @@ class ReaderPostMoreButtonUiStateBuilderTest {
     }
 
     @Test
-    fun `does not contain block site action when post is followed`() = test {
+    fun `contains block site action when post is followed`() = test {
         // Arrange
         val post = init(isFollowed = true)
         // Act
         val menuItems = builder.buildMoreMenuItems(post, dummyOnClick)
         // Assert
-        assertThat(menuItems.find { it.type == ReaderPostCardActionType.BLOCK_SITE }).isNull()
+        assertThat(menuItems.find { it.type == ReaderPostCardActionType.BLOCK_SITE }).isNotNull
     }
 
     @Test
