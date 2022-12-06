@@ -206,18 +206,21 @@ class CategoryDetailViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given internet available while editing categories, when submit is invoked, then add category is invoked`() {
+    fun `given internet available while editing categories, when submit is invoked, then add edit category is invoked`() {
         val siteCategories = siteCategoriesList()
         whenever(getCategoriesUseCase.getSiteCategories(siteModel)).thenReturn(siteCategories)
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
+        val updatedCategoryName = "New category name from test"
 
         viewModel.start(14L)
-        viewModel.onCategoryNameUpdated("New category name from test")
+        viewModel.onCategoryNameUpdated(updatedCategoryName)
         viewModel.onSubmitButtonClick()
 
         assertThat(InProgress(R.string.updating_cat)).isEqualTo(onCategoryPushStates[0].peekContent())
-        verify(editCategoryUseCase).editCategory(14L, "New",
-                "New category name from test", 4, siteModel)
+        verify(editCategoryUseCase).editCategory(
+                14L, "",
+                updatedCategoryName, 4, siteModel
+        )
     }
 
     @Test
