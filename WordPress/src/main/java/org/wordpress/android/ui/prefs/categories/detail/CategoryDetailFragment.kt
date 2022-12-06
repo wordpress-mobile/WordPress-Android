@@ -154,7 +154,6 @@ class CategoryDetailFragment : Fragment(R.layout.category_detail_fragment) {
         with(submitButton) {
             isEnabled = submitButtonUiState.enabled
             uiHelpers.setTextOrHide(this, submitButtonUiState.buttonText)
-            uiHelpers.updateVisibility(this, submitButtonUiState.visibility)
         }
     }
 

@@ -21,7 +21,6 @@ sealed class CategoryUpdateUiState {
 }
 
 data class SubmitButtonUiState(
-    val visibility: Boolean = true,
     val enabled: Boolean = false,
     val buttonText: UiString = UiStringRes(R.string.add_new_category)
 )
