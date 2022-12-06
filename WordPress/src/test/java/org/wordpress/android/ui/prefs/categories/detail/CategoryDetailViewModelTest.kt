@@ -85,7 +85,7 @@ class CategoryDetailViewModelTest : BaseUnitTest() {
         viewModel.start()
 
         assertThat(uiStates.first().submitButtonUiState.enabled).isFalse
-        assertThat(uiStates.first().submitButtonUiState.visibility).isTrue
+        assertThat(uiStates.first().submitButtonUiState.buttonText).isEqualTo(UiStringRes(R.string.add_new_category))
     }
 
     @Test
@@ -149,6 +149,112 @@ class CategoryDetailViewModelTest : BaseUnitTest() {
 
         assertThat(Failure(UiStringRes(R.string.adding_cat_failed)))
                 .isEqualTo(onCategoryPushStates[0].peekContent() as Failure)
+    }
+
+    // Edit category tests
+    @Test
+    fun `when vm starts in edit mode, then parent category is selected`() {
+        val siteCategories = siteCategoriesList()
+        whenever(getCategoriesUseCase.getSiteCategories(siteModel)).thenReturn(siteCategories)
+
+        viewModel.start(14L)
+        assertThat(siteCategories[0].name).isEqualTo(uiStates.first().categories[0].name)
+    }
+
+    @Test
+    fun `when vm starts in edit mode, then submit button is shown and disabled`() {
+        val siteCategories = siteCategoriesList()
+        whenever(getCategoriesUseCase.getSiteCategories(siteModel)).thenReturn(siteCategories)
+
+        viewModel.start(14L)
+
+        assertThat(uiStates.first().submitButtonUiState.enabled).isFalse
+        assertThat(uiStates.first().submitButtonUiState.buttonText).isEqualTo(UiStringRes(R.string.update_category))
+    }
+
+    @Test
+    fun `given category name is updated in edit mode, when vm starts, then submit button is enabled`() {
+        viewModel.start()
+        viewModel.onCategoryNameUpdated("category name")
+
+        assertThat(uiStates.last().submitButtonUiState.enabled).isTrue
+    }
+
+    @Test
+    fun ` given parent category while editing categories, when vm starts, then ui state is updated`() {
+        val siteCategories = siteCategoriesList()
+        whenever(getCategoriesUseCase.getSiteCategories(siteModel)).thenReturn(siteCategories)
+
+        viewModel.start(14L)
+        val selectedCategoryParent = 2
+        viewModel.onParentCategorySelected(selectedCategoryParent)
+
+        assertThat(selectedCategoryParent).isEqualTo(uiStates.last().selectedParentCategoryPosition)
+    }
+
+    @Test
+    fun `given no internet while editing categories, when submit is invoked, then no network message is shown`() {
+        val siteCategories = siteCategoriesList()
+        whenever(getCategoriesUseCase.getSiteCategories(siteModel)).thenReturn(siteCategories)
+
+        viewModel.start(14L)
+        viewModel.onCategoryNameUpdated("New category name from test")
+        viewModel.onSubmitButtonClick()
+
+        assertThat(Failure(UiStringRes(R.string.no_network_message)))
+                .isEqualTo(onCategoryPushStates[0].peekContent() as Failure)
+    }
+
+    @Test
+    fun `given internet available while editing categories, when submit is invoked, then add category is invoked`() {
+        val siteCategories = siteCategoriesList()
+        whenever(getCategoriesUseCase.getSiteCategories(siteModel)).thenReturn(siteCategories)
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
+
+        viewModel.start(14L)
+        viewModel.onCategoryNameUpdated("New category name from test")
+        viewModel.onSubmitButtonClick()
+
+        assertThat(InProgress(R.string.updating_cat)).isEqualTo(onCategoryPushStates[0].peekContent())
+        verify(editCategoryUseCase).editCategory(14L, "New",
+                "New category name from test", 4, siteModel)
+    }
+
+    @Test
+    fun `given api success, when submit is invoked while editing categories, then success message is shown`() {
+        val siteCategories = siteCategoriesList()
+        whenever(getCategoriesUseCase.getSiteCategories(siteModel)).thenReturn(siteCategories)
+
+        viewModel.start(14L)
+        viewModel.onTermUploaded(getTermUploadSuccess())
+
+        assertThat(Success(UiStringRes(R.string.updating_cat_success)))
+                .isEqualTo(onCategoryPushStates[0].peekContent() as Success)
+    }
+
+    @Test
+    fun `given api error while editing categories, when submit is invoked, then error message is shown`() {
+        val siteCategories = siteCategoriesList()
+        whenever(getCategoriesUseCase.getSiteCategories(siteModel)).thenReturn(siteCategories)
+
+        viewModel.start(14L)
+        viewModel.onTermUploaded(getTermUploadError())
+
+        assertThat(Failure(UiStringRes(R.string.updating_cat_failed)))
+                .isEqualTo(onCategoryPushStates[0].peekContent() as Failure)
+    }
+
+    private fun siteCategoriesList(): ArrayList<CategoryNode> {
+        return arrayListOf(
+                CategoryNode(1, 0, "Animals"),
+                CategoryNode(2, 0, "Colors"),
+                CategoryNode(3, 0, "Flavors"),
+                CategoryNode(4, 0, "Articles"),
+                CategoryNode(14, 4, "New"),
+                CategoryNode(5, 0, "Fruit"),
+                CategoryNode(6, 0, "Recipes"),
+                CategoryNode(16, 6, "New")
+        )
     }
 
     private fun getTermUploadSuccess() = OnTermUploaded(TermModel())
