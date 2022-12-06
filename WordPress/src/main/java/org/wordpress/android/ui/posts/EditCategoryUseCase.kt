@@ -15,7 +15,7 @@ class EditCategoryUseCase @Inject constructor(
 ) {
     fun editCategory(
         categoryId: Long,
-        existingCategoryName: String,
+        existingCategorySlug: String,
         categoryName: String,
         parentCategoryId: Long,
         siteModel: SiteModel
@@ -24,7 +24,7 @@ class EditCategoryUseCase @Inject constructor(
         existingCategory.remoteTermId = categoryId
         existingCategory.taxonomy = TaxonomyStore.DEFAULT_TAXONOMY_CATEGORY
         existingCategory.name = categoryName
-        existingCategory.slug = existingCategoryName
+        existingCategory.slug = existingCategorySlug
         existingCategory.parentRemoteId = parentCategoryId
         val payload = RemoteTermPayload(existingCategory, siteModel)
         dispatcher.dispatch(TaxonomyActionBuilder.newPushTermAction(payload))

@@ -41,6 +41,7 @@ class CategoryDetailViewModel @Inject constructor(
     private var isStarted = false
     private val siteModel: SiteModel = requireNotNull(selectedSiteRepository.getSelectedSite())
     private var existingCategoryname: String = ""
+    private var categorySlug: String = ""
 
     private val topLevelCategory = CategoryNode(0, 0, resourceProvider.getString(R.string.top_level_category_name))
 
@@ -87,6 +88,8 @@ class CategoryDetailViewModel @Inject constructor(
 
     private fun initializeEditCategoryState(siteCategories: ArrayList<CategoryNode>, categoryId: Long) {
         val existingCategory = siteCategories.filter { it.categoryId == categoryId }[0]
+        categorySlug = getCategoriesUseCase.getCategoriesForSite(siteModel)
+                .find { it.remoteTermId == existingCategory.categoryId }?.slug ?: ""
         var parentCategoryPosition = siteCategories.indexOfFirst { it.categoryId == existingCategory.parentId }
         if (parentCategoryPosition == -1) parentCategoryPosition = 0
         existingCategoryname = existingCategory.name
@@ -133,7 +136,7 @@ class CategoryDetailViewModel @Inject constructor(
             _onCategoryPush.postValue(Event(InProgress(R.string.updating_cat)))
             editCategoryUseCase.editCategory(
                     categoryId,
-                    existingCategoryname,
+                    categorySlug,
                     categoryText,
                     parentCategory.categoryId,
                     siteModel
