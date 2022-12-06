@@ -110,7 +110,7 @@ class UploadActionUseCaseTest {
         val siteModel: SiteModel = createSiteModel()
 
         // Act and Assert
-        assertThat(posts).allSatisfy (Consumer { post ->
+        assertThat(posts).allSatisfy(Consumer { post ->
             val action = uploadActionUseCase.getAutoUploadAction(post, siteModel)
 
             assertThat(action).isEqualTo(UploadAction.DO_NOTHING)
