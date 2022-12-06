@@ -65,7 +65,7 @@ class ReaderSavedPostsHelperTest {
     }
 
     @Test
-    fun `Should call userFlagsAnalyticsTracker trackStart if first try AND feature flag returns TRUE`() {
+    fun `Should call readerSavedPostsAnalyticsTracker trackStart if first try AND feature flag returns TRUE`() {
         mockLocalMigrationContentResolver()
         featureFlagEnabled(true)
         firstTry(true)
