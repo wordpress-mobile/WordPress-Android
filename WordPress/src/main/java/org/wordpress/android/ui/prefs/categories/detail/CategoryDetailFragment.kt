@@ -6,6 +6,9 @@ import android.app.ProgressDialog
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
 import androidx.annotation.StringRes
@@ -37,19 +40,22 @@ class CategoryDetailFragment : Fragment(R.layout.category_detail_fragment) {
     private var spinnerTouched: Boolean = false
     @Suppress("DEPRECATION") private var progressDialog: ProgressDialog? = null
 
+    private var isInEditMode: Boolean = false
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setHasOptionsMenu(true)
         initDagger()
 
         val categoryId = getCategoryId(savedInstanceState)
 
         with(CategoryDetailFragmentBinding.bind(view)) {
-            if (categoryId != null) updateToolbarTitle()
+            if (isInEditMode) updateToolbarTitle()
             initAdapter()
             initSubmitButton()
             initSpinner()
             initViewModel(categoryId)
-            if (categoryId == null) initInputText()
+            if (!isInEditMode) initInputText()
         }
     }
 
@@ -62,6 +68,7 @@ class CategoryDetailFragment : Fragment(R.layout.category_detail_fragment) {
                 ?: requireActivity().intent.getLongExtra(ActivityLauncher.CATEGORY_DETAIL_ID, 0L)
         if (categoryId == 0L)
             return null
+        isInEditMode = true
         return categoryId
     }
 
@@ -164,6 +171,25 @@ class CategoryDetailFragment : Fragment(R.layout.category_detail_fragment) {
 
     private fun loadCategories(categoryLevels: ArrayList<CategoryNode>) {
         categoryAdapter.replaceItems(categoryLevels)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        menu.clear()
+        inflater.inflate(R.menu.tag_detail, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu) {
+        super.onPrepareOptionsMenu(menu)
+        menu.findItem(R.id.menu_trash).isVisible = isInEditMode
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.menu_trash) {
+            viewModel.deleteCategory()
+            return true
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     @Suppress("DEPRECATION")

@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.prefs.categories.detail
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
@@ -187,5 +188,9 @@ class CategoryDetailViewModel @Inject constructor(
     private fun getTermUploadSuccessMessage(): Int {
         return if (existingCategoryname.isEmpty()) R.string.adding_cat_success
         else R.string.updating_cat_success
+    }
+
+    fun deleteCategory() {
+        Log.e("delete category is called", "delete category is called")
     }
 }
