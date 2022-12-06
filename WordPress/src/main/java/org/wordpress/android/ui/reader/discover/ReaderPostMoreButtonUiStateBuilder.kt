@@ -212,7 +212,7 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
                     type = REPORT_POST,
                     label = UiStringRes(R.string.reader_menu_report_post),
                     labelColor = R.attr.wpColorError,
-                    iconRes = R.drawable.ic_block_white_24dp,
+                    iconRes = R.drawable.ic_report_white_24dp,
                     iconColor = R.attr.wpColorError,
                     onClicked = onButtonClicked
             )
