@@ -3,6 +3,7 @@
 package org.wordpress.android.ui.prefs.categories.detail
 
 import android.app.ProgressDialog
+import android.content.DialogInterface
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -12,8 +13,10 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
 import androidx.annotation.StringRes
+import androidx.appcompat.app.AlertDialog.Builder
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.CategoryDetailFragmentBinding
@@ -186,7 +189,7 @@ class CategoryDetailFragment : Fragment(R.layout.category_detail_fragment) {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.menu_trash) {
-            viewModel.deleteCategory()
+            confirmDeleteCategory()
             return true
         }
         return super.onOptionsItemSelected(item)
@@ -218,6 +221,21 @@ class CategoryDetailFragment : Fragment(R.layout.category_detail_fragment) {
         hideProgressDialog()
         showToast(message)
         requireActivity().finish()
+    }
+
+    private fun confirmDeleteCategory() {
+        val message = String.format(getString(R.string.dlg_confirm_delete_category),
+                viewModel.existingCategory!!.name)
+        val dialogBuilder: Builder = MaterialAlertDialogBuilder(requireActivity())
+        dialogBuilder.setMessage(message)
+        dialogBuilder.setPositiveButton(
+                resources.getText(R.string.delete_yes)
+        ) { _: DialogInterface?, _: Int ->
+            viewModel.deleteCategory()
+        }
+        dialogBuilder.setNegativeButton(R.string.cancel, null)
+        dialogBuilder.setCancelable(true)
+        dialogBuilder.create().show()
     }
 
     private fun showToast(uiString: UiString) {
