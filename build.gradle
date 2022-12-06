@@ -81,7 +81,7 @@ ext {
     zendeskVersion = '5.0.2'
 
     // test
-    assertjVersion = '3.11.1'
+    assertjVersion = '3.23.1'
     junitVersion = '4.13.2'
     mockitoVersion = '4.9.0'
     mockitoKotlinVersion = '4.1.0'

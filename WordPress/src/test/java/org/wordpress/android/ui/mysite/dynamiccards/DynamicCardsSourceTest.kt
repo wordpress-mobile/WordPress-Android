@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.mysite.dynamiccards
 
 import kotlinx.coroutines.InternalCoroutinesApi
-import org.assertj.core.api.Java6Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
