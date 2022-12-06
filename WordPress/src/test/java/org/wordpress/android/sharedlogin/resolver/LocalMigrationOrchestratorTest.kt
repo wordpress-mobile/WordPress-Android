@@ -206,7 +206,8 @@ class LocalMigrationOrchestratorTest : BaseUnitTest() {
         whenever(sharedLoginHelper.login()).thenReturn(Success(AccessTokenData("", avatarUrl)))
         whenever(sitesMigrationHelper.migrateSites()).thenReturn(Success(SitesData(sites)))
         whenever(userFlagsHelper.migrateUserFlags()).thenReturn(Success(UserFlagsData(mapOf(), listOf(), listOf())))
-        whenever(readerSavedPostsHelper.migrateReaderSavedPosts()).thenReturn(Success(ReaderPostsData(ReaderPostList())))
+        whenever(readerSavedPostsHelper.migrateReaderSavedPosts())
+                .thenReturn(Success(ReaderPostsData(ReaderPostList())))
         whenever(localPostsHelper.migratePosts()).thenReturn(Success(PostData(PostModel())))
     }
 
