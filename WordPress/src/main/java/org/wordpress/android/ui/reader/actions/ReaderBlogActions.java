@@ -13,6 +13,7 @@ import org.json.JSONObject;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.BlockedAuthorTable;
+import org.wordpress.android.datasets.ReaderBlockedBlogTable;
 import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderTagTable;
@@ -514,6 +515,7 @@ public class ReaderBlogActions {
 
         ReaderPostTable.deletePostsInBlog(blockResult.blogId);
         ReaderBlogTable.setIsFollowedBlogId(blockResult.blogId, false);
+        ReaderBlockedBlogTable.blacklistBlogLocally(blockResult.blogId);
         return blockResult;
     }
 
@@ -603,6 +605,7 @@ public class ReaderBlogActions {
     }
 
     private static void undoBlockBlogLocal(final BlockedBlogResult blockResult) {
+        ReaderBlockedBlogTable.whitelistBlogLocally(blockResult.blogId);
         if (blockResult.deletedRows != null) {
             for (Pair<String, ReaderTagType> tagInfo : blockResult.deletedRows.keySet()) {
                 ReaderTag tag = ReaderTagTable.getTag(tagInfo.first, tagInfo.second);
