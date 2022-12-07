@@ -206,7 +206,7 @@ class CategoryDetailViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given internet available while editing categories, when submit is invoked, then add edit category is invoked`() {
+    fun `given internet available while editing categories, when submit is invoked, then edit category is invoked`() {
         val siteCategories = siteCategoriesList()
         whenever(getCategoriesUseCase.getSiteCategories(siteModel)).thenReturn(siteCategories)
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
