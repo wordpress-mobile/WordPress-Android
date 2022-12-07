@@ -3,9 +3,12 @@ package org.wordpress.android.ui.main;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
+import android.os.Build;
+import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -18,11 +21,14 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.app.RemoteInput;
+import androidx.core.os.LocaleListCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.preference.PreferenceManager;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -115,6 +121,7 @@ import org.wordpress.android.ui.prefs.SiteSettingsFragment;
 import org.wordpress.android.ui.quickstart.QuickStartMySitePrompts;
 import org.wordpress.android.ui.quickstart.QuickStartTracker;
 import org.wordpress.android.ui.reader.ReaderFragment;
+import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
 import org.wordpress.android.ui.reader.tracker.ReaderTracker;
@@ -133,6 +140,7 @@ import org.wordpress.android.util.AuthenticationDialogUtils;
 import org.wordpress.android.util.BuildConfigWrapper;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.FluxCUtils;
+import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.QuickStartUtils;
@@ -146,6 +154,7 @@ import org.wordpress.android.util.analytics.service.InstallationReferrerServiceS
 import org.wordpress.android.util.config.MySiteDashboardTodaysStatsCardFeatureConfig;
 import org.wordpress.android.util.config.OpenWebLinksWithJetpackFlowFeatureConfig;
 import org.wordpress.android.util.extensions.ViewExtensionsKt;
+import org.wordpress.android.viewmodel.ContextProvider;
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel;
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel.FocusPointInfo;
 import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel;
@@ -154,7 +163,10 @@ import org.wordpress.android.workers.notification.createsite.CreateSiteNotificat
 import org.wordpress.android.workers.weeklyroundup.WeeklyRoundupScheduler;
 
 import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -214,6 +226,11 @@ public class WPMainActivity extends LocaleAwareActivity implements
     public static final String ARG_EDITOR_ORIGIN = "editor_origin";
     public static final String ARG_CURRENT_FOCUS = "CURRENT_FOCUS";
 
+    // Per-app language preferences migration
+    private static final String FIRST_TIME_MIGRATION = "first_time_migration";
+    private static final String SELECTED_LANGUAGE = "language-pref";
+    private static final String STATUS_DONE = "status_done";
+
     // Track the first `onResume` event for the current session so we can use it for Analytics tracking
     private static boolean mFirstResume = true;
 
@@ -262,7 +279,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     @Inject JetpackAppMigrationFlowUtils mJetpackAppMigrationFlowUtils;
     @Inject DeepLinkOpenWebLinksWithJetpackHelper mDeepLinkOpenWebLinksWithJetpackHelper;
     @Inject OpenWebLinksWithJetpackFlowFeatureConfig mOpenWebLinksWithJetpackFlowFeatureConfig;
-
+    @Inject ContextProvider mContextProvider;
     @Inject BuildConfigWrapper mBuildConfigWrapper;
 
     /*
@@ -965,7 +982,60 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 mSelectedSiteRepository.hasSelectedSite() && mBottomNav.getCurrentSelectedPage() == PageType.MY_SITE
         );
 
+        if (mFirstResume) {
+            // Check if the per app language migration has already been done or not
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+            String firstTimeMigration = prefs.getString(FIRST_TIME_MIGRATION, null);
+            String selectedLanguage = prefs.getString(SELECTED_LANGUAGE, null);
+
+            if (firstTimeMigration != null && !firstTimeMigration.equals(STATUS_DONE)) {
+                // Fetch the selected language from wherever it was stored. In this case its SharedPref
+                if (selectedLanguage != null) {
+                    // Set this locale using the AndroidX library that will handle the storage itself
+                    LocaleListCompat localeList = LocaleListCompat.forLanguageTags(selectedLanguage);
+                    AppCompatDelegate.setApplicationLocales(localeList);
+                    // Set the migration flag to ensure that this is executed only once
+                    prefs.edit().putString(FIRST_TIME_MIGRATION, STATUS_DONE).apply();
+                }
+            }
+        }
+
         mFirstResume = false;
+
+        if (Build.VERSION.SDK_INT >= VERSION_CODES.TIRAMISU) {
+            Locale selectedLocale = AppCompatDelegate.getApplicationLocales().get(0);
+            if (selectedLocale != null) {
+                String selectedLanguage = selectedLocale.getLanguage();
+                AppLog.d(T.MAIN, selectedLanguage);
+                String storedLanguage = LocaleManager.getLanguage(this);
+                AppLog.d(T.MAIN, storedLanguage);
+
+                if (!selectedLanguage.equals(storedLanguage)) {
+                    changeLanguage(selectedLanguage);
+                }
+            }
+        }
+    }
+
+    private void changeLanguage(String languageCode) {
+        LocaleManager.setNewLocale(WordPress.getContext(), languageCode);
+        WordPress.updateContextLocale();
+        mContextProvider.refreshContext();
+
+        // Track language change on Analytics because we have both the device language and app selected language
+        // data in Tracks metadata.
+        Map<String, Object> properties = new HashMap<>();
+        properties.put("app_locale", Locale.getDefault());
+        AnalyticsTracker.track(Stat.ACCOUNT_SETTINGS_LANGUAGE_CHANGED, properties);
+
+        // Language is now part of metadata, so we need to refresh them
+        AnalyticsUtils.refreshMetadata(mAccountStore, mSiteStore);
+
+        // Refresh the app
+        appLanguageChanged();
+
+        // update Reader tags as they need be localized
+        ReaderUpdateServiceStarter.startService(WordPress.getContext(), EnumSet.of(ReaderUpdateLogic.UpdateTask.TAGS));
     }
 
     private void checkQuickStartNotificationStatus() {
