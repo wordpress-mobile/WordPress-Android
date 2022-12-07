@@ -44,7 +44,7 @@ ext {
     androidxEmojiVersion = '1.0.0'
     androidxFragmentVersion = '1.4.1'
     androidxGridlayoutVersion = '1.0.0'
-    androidxLifecycleVersion = '2.4.1'
+    androidxLifecycleVersion = '2.5.1'
     androidxMediaVersion = '1.0.1'
     androidXMultidexVersion = '2.0.1'
     androidxPercentlayoutVersion = '1.0.0'
