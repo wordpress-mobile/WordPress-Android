@@ -24,7 +24,7 @@ platform :android do
     test_succeeded = android_firebase_test(
       project_id: firebase_secret(name: 'project_id'),
       key_file: GOOGLE_FIREBASE_SECRETS_PATH,
-      model: 'Pixel2.arm',
+      model: 'MediumPhone.arm',
       version: 32,
       test_apk_path: File.join(apk_dir, 'androidTest', 'wordpressVanilla', 'debug', 'org.wordpress.android-wordpress-vanilla-debug-androidTest.apk'),
       apk_path: File.join(apk_dir, 'wordpressVanilla', 'debug', 'org.wordpress.android-wordpress-vanilla-debug.apk'),
