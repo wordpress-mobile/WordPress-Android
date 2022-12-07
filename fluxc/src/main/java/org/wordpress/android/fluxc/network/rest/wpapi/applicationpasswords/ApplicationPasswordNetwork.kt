@@ -26,7 +26,7 @@ private const val UNAUTHORIZED = 401
 class ApplicationPasswordNetwork @Inject constructor(
     @Named("no-cookies") private val requestQueue: RequestQueue,
     private val userAgent: UserAgent,
-    private val notSupportedListener: Optional<ApplicationPasswordsUnavailableListener>
+    private val listener: Optional<ApplicationPasswordsListener>
 ) {
     // We can't use construction injection for this variable, as its class is internal
     @Inject internal lateinit var applicationPasswordManager: ApplicationPasswordManager
@@ -48,8 +48,8 @@ class ApplicationPasswordNetwork @Inject constructor(
                 return WPAPIResponse.Error(credentialsResult.error.toWPAPINetworkError())
             is ApplicationPasswordCreationResult.NotSupported -> {
                 val networkError = credentialsResult.originalError.toWPAPINetworkError()
-                if (notSupportedListener.isPresent) {
-                    notSupportedListener.get().featureIsUnavailable(site, networkError)
+                if (listener.isPresent) {
+                    listener.get().onFeatureUnavailable(site, networkError)
                 }
                 return WPAPIResponse.Error(networkError)
             }
