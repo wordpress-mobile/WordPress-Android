@@ -12,7 +12,6 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.rest.wpapi.Nonce.Available
 import org.wordpress.android.fluxc.network.rest.wpapi.Nonce.FailedRequest
@@ -101,7 +100,7 @@ class NonceRestClientTest {
                 "redirect_to" to "${site.url}/wp-admin/admin-ajax.php?action=rest-nonce"
         )
 
-        val baseNetworkError = mock<BaseNetworkError>()
+        val baseNetworkError = mock<WPAPINetworkError>()
         baseNetworkError.message = "an_error_message"
         val response = Error<String>(baseNetworkError)
         whenever(wpApiEncodedRequestBuilder.syncPostRequest(subject, "${site.url}/wp-login.php", body = body))
@@ -125,7 +124,7 @@ class NonceRestClientTest {
                 "redirect_to" to "${site.url}/wp-admin/admin-ajax.php?action=rest-nonce"
         )
 
-        val baseNetworkError = mock<BaseNetworkError>()
+        val baseNetworkError = mock<WPAPINetworkError>()
         baseNetworkError.volleyError = NoConnectionError()
         val response = Error<String>(baseNetworkError)
         whenever(wpApiEncodedRequestBuilder.syncPostRequest(subject, "${site.url}/wp-login.php", body = body))
