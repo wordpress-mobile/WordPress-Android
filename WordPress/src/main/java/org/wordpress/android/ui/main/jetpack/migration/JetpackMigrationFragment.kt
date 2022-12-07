@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.Composable
@@ -58,6 +59,7 @@ class JetpackMigrationFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initBackPressHandler()
         observeViewModelEvents()
         val showDeleteWpState = arguments?.getBoolean(KEY_SHOW_DELETE_WP_STATE, false) ?: false
         viewModel.start(showDeleteWpState)
@@ -82,6 +84,18 @@ class JetpackMigrationFragment : Fragment() {
                 null,
                 null
         )
+    }
+
+    private fun initBackPressHandler() {
+        requireActivity().onBackPressedDispatcher.addCallback(
+                viewLifecycleOwner,
+                object : OnBackPressedCallback(
+                        true
+                ) {
+                    override fun handleOnBackPressed() {
+                        viewModel.onBackPressed()
+                    }
+                })
     }
 
     companion object {
