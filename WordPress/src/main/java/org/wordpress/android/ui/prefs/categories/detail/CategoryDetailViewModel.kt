@@ -166,7 +166,13 @@ class CategoryDetailViewModel @Inject constructor(
 
     fun onParentCategorySelected(position: Int) {
         _uiState.value?.let { state ->
-            _uiState.value = state.copy(selectedParentCategoryPosition = position)
+            val submitButtonUiState = existingCategory?.let {
+                state.submitButtonUiState.copy(enabled = true)
+            } ?: state.submitButtonUiState
+            _uiState.value = state.copy(
+                    selectedParentCategoryPosition = position,
+                    submitButtonUiState = submitButtonUiState
+            )
         }
     }
 
