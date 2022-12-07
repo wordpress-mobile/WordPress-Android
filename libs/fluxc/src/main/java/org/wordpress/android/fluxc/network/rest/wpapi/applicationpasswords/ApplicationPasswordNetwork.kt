@@ -43,7 +43,12 @@ class ApplicationPasswordNetwork @Inject constructor(
         val credentialsResult = applicationPasswordManager.getApplicationCredentials(site)
         val credentials = when (credentialsResult) {
             is ApplicationPasswordCreationResult.Existing -> credentialsResult.credentials
-            is ApplicationPasswordCreationResult.Created -> credentialsResult.credentials
+            is ApplicationPasswordCreationResult.Created -> {
+                if (listener.isPresent) {
+                    listener.get().onNewPasswordCreated()
+                }
+                credentialsResult.credentials
+            }
             is ApplicationPasswordCreationResult.Failure ->
                 return WPAPIResponse.Error(credentialsResult.error.toWPAPINetworkError())
             is ApplicationPasswordCreationResult.NotSupported -> {
