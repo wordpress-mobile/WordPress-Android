@@ -5,12 +5,15 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.module.ApplicationPasswordClientId
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.UNKNOWN
+import org.wordpress.android.fluxc.network.rest.wpapi.WPAPINetworkError
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.UrlUtils
 import javax.inject.Inject
 
 private const val CONFLICT = 409
 private const val NOT_FOUND = 404
+private const val APPLICATION_PASSWORDS_DISABLED_ERROR_CODE = "application_passwords_disabled"
 
 internal class ApplicationPasswordManager @Inject constructor(
     context: Context,
@@ -72,8 +75,16 @@ internal class ApplicationPasswordManager @Inject constructor(
                 ApplicationPasswordCredentials(userName = username, password = payload.password)
             )
             else -> {
-                when (payload.error.volleyError?.networkResponse?.statusCode) {
-                    CONFLICT -> {
+                val statusCode = payload.error.volleyError?.networkResponse?.statusCode
+                val errorCode = payload.error.let {
+                    when (it) {
+                        is WPComGsonNetworkError -> it.apiError
+                        is WPAPINetworkError -> it.errorCode
+                        else -> null
+                    }
+                }
+                when {
+                    statusCode == CONFLICT -> {
                         AppLog.w(AppLog.T.MAIN, "Application Password already exists")
                         when (val deletionResult = deleteApplicationCredentials(site)) {
                             ApplicationPasswordDeletionResult.Success ->
@@ -82,9 +93,14 @@ internal class ApplicationPasswordManager @Inject constructor(
                                 ApplicationPasswordCreationResult.Failure(deletionResult.error)
                         }
                     }
-                    NOT_FOUND -> {
-                        AppLog.w(AppLog.T.MAIN, "Application Password feature not supported")
-                        ApplicationPasswordCreationResult.NotSupported
+                    statusCode == NOT_FOUND ||
+                        errorCode == APPLICATION_PASSWORDS_DISABLED_ERROR_CODE -> {
+                        AppLog.w(
+                            AppLog.T.MAIN,
+                            "Application Password feature not supported, " +
+                                "status code: $statusCode, errorCode: $errorCode"
+                        )
+                        ApplicationPasswordCreationResult.NotSupported(payload.error)
                     }
                     else -> {
                         AppLog.w(

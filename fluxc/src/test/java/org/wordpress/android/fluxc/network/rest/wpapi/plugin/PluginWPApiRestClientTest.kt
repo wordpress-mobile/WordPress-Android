@@ -23,6 +23,7 @@ import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.NETWORK_
 import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.rest.wpapi.Nonce.Available
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIGsonRequestBuilder
+import org.wordpress.android.fluxc.network.rest.wpapi.WPAPINetworkError
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIResponse
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIResponse.Error
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIResponse.Success
@@ -74,13 +75,15 @@ class PluginWPApiRestClientTest {
     @Test
     fun `returns error response on fetch`() = test {
         val errorMessage = "message"
-        val error = BaseNetworkError(
+        val error = WPAPINetworkError(
+            BaseNetworkError(
                 NETWORK_ERROR,
                 errorMessage,
                 VolleyError(errorMessage)
+            )
         )
         initFetchPluginsResponse(
-                error = error
+            error = error
         )
         val responseModel = restClient.fetchPlugins(site, Available("nonce"), false)
         assertThat(responseModel.error).isEqualTo(error)
@@ -149,7 +152,7 @@ class PluginWPApiRestClientTest {
 
     private suspend fun initFetchPluginsResponse(
         data: List<PluginResponseModel>? = null,
-        error: BaseNetworkError? = null
+        error: WPAPINetworkError? = null
     ): WPAPIResponse<List<PluginResponseModel>> {
         val typeToken = object : TypeToken<List<PluginResponseModel>>() {}
         return initSyncGetResponse(typeToken.type, data ?: mock(), error)
@@ -158,7 +161,7 @@ class PluginWPApiRestClientTest {
     private suspend fun <T> initSyncGetResponse(
         type: Type,
         data: T,
-        error: BaseNetworkError? = null,
+        error: WPAPINetworkError? = null,
         cachingEnabled: Boolean = false
     ): WPAPIResponse<T> {
         val response = if (error != null) WPAPIResponse.Error(error) else WPAPIResponse.Success(data)
@@ -180,7 +183,7 @@ class PluginWPApiRestClientTest {
 
     private suspend fun initInstallPluginResponse(
         data: PluginResponseModel? = null,
-        error: BaseNetworkError? = null
+        error: WPAPINetworkError? = null
     ): WPAPIResponse<PluginResponseModel> {
         val response = if (error != null) Error(error) else Success(data ?: mock())
         whenever(
@@ -198,7 +201,7 @@ class PluginWPApiRestClientTest {
 
     private suspend fun initConfigurePluginResponse(
         data: PluginResponseModel? = null,
-        error: BaseNetworkError? = null
+        error: WPAPINetworkError? = null
     ): WPAPIResponse<PluginResponseModel> {
         val response = if (error != null) Error(error) else Success(data ?: mock())
         whenever(
@@ -216,7 +219,7 @@ class PluginWPApiRestClientTest {
 
     private suspend fun initDeletePluginResponse(
         data: PluginResponseModel? = null,
-        error: BaseNetworkError? = null
+        error: WPAPINetworkError? = null
     ): WPAPIResponse<PluginResponseModel> {
         val response = if (error != null) Error(error) else Success(data ?: mock())
         whenever(
