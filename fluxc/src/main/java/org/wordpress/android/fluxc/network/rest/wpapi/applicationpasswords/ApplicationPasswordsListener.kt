@@ -4,5 +4,6 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPINetworkError
 
 interface ApplicationPasswordsListener {
-    fun onFeatureUnavailable(siteModel: SiteModel, networkError: WPAPINetworkError)
+    fun onNewPasswordCreated() {}
+    fun onFeatureUnavailable(siteModel: SiteModel, networkError: WPAPINetworkError) {}
 }
