@@ -59,9 +59,9 @@ class JetpackMigrationFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initBackPressHandler()
         observeViewModelEvents()
         val showDeleteWpState = arguments?.getBoolean(KEY_SHOW_DELETE_WP_STATE, false) ?: false
+        initBackPressHandler(showDeleteWpState)
         viewModel.start(showDeleteWpState)
     }
 
@@ -86,7 +86,8 @@ class JetpackMigrationFragment : Fragment() {
         )
     }
 
-    private fun initBackPressHandler() {
+    private fun initBackPressHandler(showDeleteWpState: Boolean) {
+        if (showDeleteWpState) return
         requireActivity().onBackPressedDispatcher.addCallback(
                 viewLifecycleOwner,
                 object : OnBackPressedCallback(
