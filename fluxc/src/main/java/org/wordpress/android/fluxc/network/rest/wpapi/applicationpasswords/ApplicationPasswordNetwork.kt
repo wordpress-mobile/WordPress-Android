@@ -5,11 +5,15 @@ import com.android.volley.RequestQueue
 import kotlinx.coroutines.suspendCancellableCoroutine
 import okhttp3.Credentials
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIGsonRequest
+import org.wordpress.android.fluxc.network.rest.wpapi.WPAPINetworkError
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError
 import org.wordpress.android.fluxc.utils.extensions.slashJoin
 import org.wordpress.android.util.AppLog
+import java.util.Optional
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -21,11 +25,13 @@ private const val UNAUTHORIZED = 401
 @Singleton
 class ApplicationPasswordNetwork @Inject constructor(
     @Named("no-cookies") private val requestQueue: RequestQueue,
-    private val userAgent: UserAgent
+    private val userAgent: UserAgent,
+    private val listener: Optional<ApplicationPasswordsListener>
 ) {
     // We can't use construction injection for this variable, as its class is internal
     @Inject internal lateinit var applicationPasswordManager: ApplicationPasswordManager
 
+    @Suppress("ReturnCount")
     suspend fun <T> executeGsonRequest(
         site: SiteModel,
         method: Int,
@@ -37,10 +43,21 @@ class ApplicationPasswordNetwork @Inject constructor(
         val credentialsResult = applicationPasswordManager.getApplicationCredentials(site)
         val credentials = when (credentialsResult) {
             is ApplicationPasswordCreationResult.Existing -> credentialsResult.credentials
-            is ApplicationPasswordCreationResult.Created -> credentialsResult.credentials
+            is ApplicationPasswordCreationResult.Created -> {
+                if (listener.isPresent) {
+                    listener.get().onNewPasswordCreated()
+                }
+                credentialsResult.credentials
+            }
             is ApplicationPasswordCreationResult.Failure ->
-                return WPAPIResponse.Error(credentialsResult.error)
-            ApplicationPasswordCreationResult.NotSupported -> TODO()
+                return WPAPIResponse.Error(credentialsResult.error.toWPAPINetworkError())
+            is ApplicationPasswordCreationResult.NotSupported -> {
+                val networkError = credentialsResult.originalError.toWPAPINetworkError()
+                if (listener.isPresent) {
+                    listener.get().onFeatureUnavailable(site, networkError)
+                }
+                return WPAPIResponse.Error(networkError)
+            }
         }
 
         val authorizationHeader = Credentials.basic(credentials.userName, credentials.password)
@@ -115,4 +132,15 @@ class ApplicationPasswordNetwork @Inject constructor(
         params: Map<String, String> = emptyMap(),
         body: Map<String, Any> = emptyMap()
     ) = executeGsonRequest(site, Method.DELETE, path, clazz, params, body)
+}
+
+private fun BaseNetworkError.toWPAPINetworkError(): WPAPINetworkError {
+    return when (this) {
+        is WPAPINetworkError -> this
+        is WPComGsonNetworkError -> WPAPINetworkError(
+            baseError = this,
+            errorCode = this.apiError.orEmpty()
+        )
+        else -> WPAPINetworkError(this)
+    }
 }

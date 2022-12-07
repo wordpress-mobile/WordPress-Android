@@ -7,6 +7,7 @@ import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.network.BaseRequestFuture;
 import org.wordpress.android.fluxc.network.UserAgent;
 import org.wordpress.android.fluxc.network.rest.wpapi.BaseWPAPIRestClient;
+import org.wordpress.android.fluxc.network.rest.wpapi.OnWPAPIErrorListener;
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIGsonRequest;
 import org.wordpress.android.util.AppLog;
 
@@ -51,8 +52,10 @@ public class DiscoveryWPAPIRestClient extends BaseWPAPIRestClient {
 
     public String verifyWPAPIV2Support(String wpApiBaseUrl) {
         BaseRequestFuture<RootWPAPIRestResponse> future = BaseRequestFuture.newFuture();
+        OnWPAPIErrorListener errorListener = future::onErrorResponse;
+
         WPAPIGsonRequest request = new WPAPIGsonRequest<>(Request.Method.GET, wpApiBaseUrl, null, null,
-                RootWPAPIRestResponse.class, future, future);
+                RootWPAPIRestResponse.class, future, errorListener);
         add(request);
         try {
             RootWPAPIRestResponse response = future.get(TIMEOUT_MS, TimeUnit.MILLISECONDS);
