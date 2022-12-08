@@ -2044,6 +2044,7 @@
     <string name="reader_menu_tags">Edit topics and sites</string>
     <string name="reader_menu_block_blog">Block this site</string>
     <string name="reader_menu_report_post">Report this post</string>
+    <string name="reader_menu_report_user">Report this user</string>
     <string name="reader_menu_mark_as_seen">Mark as seen</string>
     <string name="reader_menu_mark_as_unseen">Mark as unseen</string>
     <string name="reader_menu_block_user">Block user</string>

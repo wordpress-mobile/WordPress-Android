@@ -17,6 +17,7 @@
 21.2.1
 -----
 * [*] Reader: Adds option to block reader user [https://github.com/wordpress-mobile/WordPress-Android/pull/17604]
+* [*] Reader: Adds option to report reader user [https://github.com/wordpress-mobile/WordPress-Android/pull/17606]
 
 21.2
 -----
