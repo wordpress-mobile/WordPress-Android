@@ -180,7 +180,6 @@ import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderSiteSearchResultView;
 import org.wordpress.android.ui.reader.views.ReaderTagHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderWebView;
-import org.wordpress.android.ui.sitecreation.services.SiteCreationService;
 import org.wordpress.android.ui.sitecreation.theme.DesignPreviewFragment;
 import org.wordpress.android.ui.stats.StatsConnectJetpackActivity;
 import org.wordpress.android.ui.stats.refresh.lists.StatsListFragment;
@@ -205,7 +204,6 @@ import org.wordpress.android.ui.themes.ThemeBrowserFragment;
 import org.wordpress.android.ui.uploads.MediaUploadHandler;
 import org.wordpress.android.ui.uploads.MediaUploadReadyProcessor;
 import org.wordpress.android.ui.uploads.PostUploadHandler;
-import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementDialogFragment;
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementListAdapter;
 import org.wordpress.android.util.WPWebViewClient;
@@ -219,8 +217,6 @@ import dagger.hilt.components.SingletonComponent;
 @EntryPoint
 public interface AppComponent {
     void inject(WPMainActivity object);
-
-    void inject(UploadService object);
 
     void inject(MediaUploadHandler object);
 
