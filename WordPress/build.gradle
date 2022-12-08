@@ -370,6 +370,8 @@ dependencies {
     debugImplementation "com.facebook.stetho:stetho:$stethoVersion"
     debugImplementation "com.facebook.stetho:stetho-okhttp3:$stethoVersion"
 
+    implementation "androidx.arch.core:core-common:$androidxArchCoreVersion"
+    implementation "androidx.arch.core:core-runtime:$androidxArchCoreVersion"
     implementation "com.google.code.gson:gson:$googleGsonVersion"
     implementation "androidx.core:core:$androidxCoreVersion"
     implementation "androidx.core:core-ktx:$androidxCoreVersion"
