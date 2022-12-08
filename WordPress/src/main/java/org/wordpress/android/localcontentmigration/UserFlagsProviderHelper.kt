@@ -1,16 +1,19 @@
 package org.wordpress.android.localcontentmigration
 
 import com.yarolegovich.wellsql.WellSql
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.QuickStartStatusModel
 import org.wordpress.android.fluxc.model.QuickStartTaskModel
 import org.wordpress.android.localcontentmigration.LocalContentEntityData.UserFlagsData
 import org.wordpress.android.ui.prefs.AppPrefs.DeletablePrefKey
 import org.wordpress.android.ui.prefs.AppPrefs.UndeletablePrefKey
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.viewmodel.ContextProvider
 import javax.inject.Inject
 
 class UserFlagsProviderHelper @Inject constructor(
     private val appPrefsWrapper: AppPrefsWrapper,
+    contextProvider: ContextProvider,
 ) : LocalDataProviderHelper {
     override fun getData(localEntityId: Int?): LocalContentEntityData =
             UserFlagsData(
@@ -69,6 +72,7 @@ class UserFlagsProviderHelper @Inject constructor(
             UndeletablePrefKey.IS_MAIN_FAB_TOOLTIP_DISABLED.name,
             UndeletablePrefKey.SHOULD_SHOW_STORIES_INTRO.name,
             UndeletablePrefKey.SHOULD_SHOW_STORAGE_WARNING.name,
-            UndeletablePrefKey.LAST_USED_USER_ID.name
+            UndeletablePrefKey.LAST_USED_USER_ID.name,
+            contextProvider.getContext().getString(R.string.pref_key_app_theme),
     )
 }
