@@ -175,6 +175,9 @@ android {
             buildConfigField "boolean", "ENABLE_OPEN_WEB_LINKS_WITH_JP_FLOW", "true"
 
             manifestPlaceholders = [magicLinkScheme:"wordpress"]
+
+            // For per-app language, the build system only includes language resource in the APK for these specified languages, preventing translated strings from being included from other libraries that might support languages that our app does not support.
+            resourceConfigurations = ["ar", "az", "bg", "cs", "cy", "da", "de", "el", "en_AU", "en_CA", "en_GB", "en_US", "es", "es_CL", "es_CO", "es_MX", "es_VE", "eu", "fr", "fr_CA", "gd", "gl", "hi", "hr", "hu", "in", "is", "it", "iw", "ja", "km", "ko", "mk", "ms", "nb", "nl", "pl", "pt_BR", "ro", "ru", "sk", "sq", "sr", "sv", "th", "tr", "vi", "zh_CN", "zh_HK", "zh_TW"]
         }
 
         jetpack {
