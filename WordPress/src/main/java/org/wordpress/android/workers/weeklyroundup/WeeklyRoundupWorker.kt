@@ -1,5 +1,6 @@
 package org.wordpress.android.workers.weeklyroundup
 
+import android.annotation.SuppressLint
 import android.content.Context
 import androidx.core.app.NotificationManagerCompat
 import androidx.work.CoroutineWorker
@@ -22,6 +23,7 @@ class WeeklyRoundupWorker(
         Result.success()
     }
 
+    @SuppressLint("MissingPermission")
     private fun showNotification(notification: WeeklyRoundupNotification) {
         NotificationManagerCompat.from(context)
                 .notify(notification.id, notification.asNotificationCompatBuilder(context).build())

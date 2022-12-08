@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.posts
 
+import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -15,6 +16,8 @@ import javax.inject.Inject
 class PublishNotificationReceiver : BroadcastReceiver() {
     @Inject lateinit var publishNotificationReceiverViewModel: PublishNotificationReceiverViewModel
     @Inject lateinit var systemNotificationsTracker: SystemNotificationsTracker
+
+    @SuppressLint("MissingPermission")
     override fun onReceive(context: Context, intent: Intent) {
         (context.applicationContext as WordPress).component().inject(this)
         val notificationId = intent.getIntExtra(NOTIFICATION_ID, 0)

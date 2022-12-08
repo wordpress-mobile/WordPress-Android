@@ -1,5 +1,6 @@
 package org.wordpress.android.push;
 
+import android.annotation.SuppressLint;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -747,6 +748,7 @@ public class GCMMessageHandler {
         }
 
         // Displays a notification to the user
+        @SuppressLint("MissingPermission")
         private void showNotificationForBuilder(NotificationCompat.Builder builder, Context context,
                                                 Intent resultIntent, int pushId, boolean notifyUser,
                                                 NotificationType notificationType) {
@@ -958,6 +960,7 @@ public class GCMMessageHandler {
         }
 
         // Show a notification for two-step auth users who log in from a web browser
+        @SuppressLint("MissingPermission")
         private void handlePushAuth(Context context, Bundle data) {
             if (data == null) {
                 return;

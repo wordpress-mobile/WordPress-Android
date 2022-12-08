@@ -1,5 +1,6 @@
 package org.wordpress.android.push;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 
 import androidx.core.app.NotificationCompat;
@@ -38,6 +39,7 @@ public class NativeNotificationsUtils {
         showMessageToUserWithBuilder(builder, message, intermediateMessage, pushId, context);
     }
 
+    @SuppressLint("MissingPermission")
     public static void showMessageToUserWithBuilder(NotificationCompat.Builder builder, String message,
                                                     boolean intermediateMessage, int pushId, Context context) {
         if (!intermediateMessage) {

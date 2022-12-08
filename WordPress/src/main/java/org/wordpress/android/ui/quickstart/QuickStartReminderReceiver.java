@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.quickstart;
 
+import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -40,6 +41,7 @@ public class QuickStartReminderReceiver extends BroadcastReceiver {
     @Inject QuickStartRepository mQuickStartRepository;
     @Inject QuickStartTracker mQuickStartTracker;
 
+    @SuppressLint("MissingPermission")
     @Override
     public void onReceive(Context context, Intent intent) {
         String notificationSettingsPrefKey = context.getString(R.string.wp_pref_notifications_main);

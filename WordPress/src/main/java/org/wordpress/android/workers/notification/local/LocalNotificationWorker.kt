@@ -1,5 +1,6 @@
 package org.wordpress.android.workers.notification.local
 
+import android.annotation.SuppressLint
 import android.app.PendingIntent
 import android.content.Context
 import androidx.core.app.NotificationCompat
@@ -19,6 +20,7 @@ class LocalNotificationWorker(
     params: WorkerParameters,
     private val localNotificationHandlerFactory: LocalNotificationHandlerFactory
 ) : CoroutineWorker(context, params) {
+    @SuppressLint("MissingPermission")
     override suspend fun doWork(): Result {
         val id = inputData.getInt(ID, -1)
         val type = Type.fromTag(inputData.getString(TYPE))
