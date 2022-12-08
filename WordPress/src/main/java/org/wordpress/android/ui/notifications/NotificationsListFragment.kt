@@ -10,6 +10,7 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
@@ -41,6 +42,7 @@ import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment
 import org.wordpress.android.ui.notifications.NotificationEvents.NotificationsUnseenStatus
+import org.wordpress.android.ui.notifications.NotificationsListFragment.Companion.TabPosition.All
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter.FILTERS
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter.FILTERS.FILTER_ALL
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter.FILTERS.FILTER_COMMENT
@@ -73,7 +75,7 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         if (savedInstanceState != null) {
-            binding?.setSelectedTab(savedInstanceState.getInt(KEY_LAST_TAB_POSITION, TAB_POSITION_ALL))
+            binding?.setSelectedTab(savedInstanceState.getInt(KEY_LAST_TAB_POSITION, All.ordinal))
         }
     }
 
@@ -91,16 +93,10 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
 
             tabLayout.addOnTabSelectedListener(object : OnTabSelectedListener {
                 override fun onTabSelected(tab: Tab) {
-                    val properties: MutableMap<String, String?> = HashMap(1)
-                    when (tab.position) {
-                        TAB_POSITION_ALL -> properties[NOTIFICATIONS_SELECTED_FILTER] = FILTER_ALL.toString()
-                        TAB_POSITION_COMMENT -> properties[NOTIFICATIONS_SELECTED_FILTER] = FILTER_COMMENT.toString()
-                        TAB_POSITION_FOLLOW -> properties[NOTIFICATIONS_SELECTED_FILTER] = FILTER_FOLLOW.toString()
-                        TAB_POSITION_LIKE -> properties[NOTIFICATIONS_SELECTED_FILTER] = FILTER_LIKE.toString()
-                        TAB_POSITION_UNREAD -> properties[NOTIFICATIONS_SELECTED_FILTER] = FILTER_UNREAD.toString()
-                        else -> properties[NOTIFICATIONS_SELECTED_FILTER] = FILTER_ALL.toString()
-                    }
-                    AnalyticsTracker.track(NOTIFICATION_TAPPED_SEGMENTED_CONTROL, properties)
+                    val tabPosition = TabPosition.values().getOrNull(tab.position) ?: All
+                    AnalyticsTracker.track(NOTIFICATION_TAPPED_SEGMENTED_CONTROL, hashMapOf(
+                            NOTIFICATIONS_SELECTED_FILTER to tabPosition.filter.toString()
+                    ))
                     lastTabPosition = tab.position
                 }
 
@@ -108,13 +104,9 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
                 override fun onTabReselected(tab: Tab) = Unit
             })
             viewPager.adapter = NotificationsFragmentAdapter(this@NotificationsListFragment)
-            buildTitles().let { titles ->
-                TabLayoutMediator(tabLayout, viewPager) { tab, position ->
-                    if (0 <= position && position < titles.size) {
-                        tab.text =  titles[position]
-                    }
-                }.attach()
-            }
+            TabLayoutMediator(tabLayout, viewPager) { tab, position ->
+                    tab.text =  TabPosition.values().getOrNull(position)?.let { getString(it.titleRes) } ?: ""
+            }.attach()
             viewPager.setPageTransformer(
                 MarginPageTransformer(resources.getDimensionPixelSize(R.dimen.margin_extra_large))
             )
@@ -143,16 +135,6 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
                         .newInstance(JetpackFeatureOverlayScreenType.NOTIFICATIONS)
                         .show(childFragmentManager, JetpackFeatureFullScreenOverlayFragment.TAG)
         }
-    }
-
-    private fun buildTitles(): List<String> {
-        val result: ArrayList<String> = ArrayList(TAB_COUNT)
-        result.add(TAB_POSITION_ALL, getString(R.string.notifications_tab_title_all))
-        result.add(TAB_POSITION_UNREAD, getString(R.string.notifications_tab_title_unread_notifications))
-        result.add(TAB_POSITION_COMMENT, getString(R.string.notifications_tab_title_comments))
-        result.add(TAB_POSITION_FOLLOW, getString(R.string.notifications_tab_title_follows))
-        result.add(TAB_POSITION_LIKE, getString(R.string.notifications_tab_title_likes))
-        return result
     }
 
     override fun onPause() {
@@ -221,7 +203,7 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
 
     private class NotificationsFragmentAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
         override fun getItemCount(): Int {
-            return TAB_COUNT
+            return TabPosition.values().size
         }
 
         override fun createFragment(position: Int): Fragment {
@@ -255,12 +237,13 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
         const val NOTE_MODERATE_ID_EXTRA = "moderateNoteId"
         const val NOTE_MODERATE_STATUS_EXTRA = "moderateNoteStatus"
         const val NOTE_CURRENT_LIST_FILTER_EXTRA = "currentFilter"
-        private const val TAB_COUNT = 5
-        const val TAB_POSITION_ALL = 0
-        const val TAB_POSITION_UNREAD = 1
-        const val TAB_POSITION_COMMENT = 2
-        const val TAB_POSITION_FOLLOW = 3
-        const val TAB_POSITION_LIKE = 4
+        enum class TabPosition(@StringRes val titleRes: Int, val filter: FILTERS) {
+            All(R.string.notifications_tab_title_all, FILTER_ALL),
+            Unread(R.string.notifications_tab_title_unread_notifications, FILTER_UNREAD),
+            Comment(R.string.notifications_tab_title_comments, FILTER_COMMENT),
+            Follow(R.string.notifications_tab_title_follows, FILTER_FOLLOW),
+            Like(R.string.notifications_tab_title_likes, FILTER_LIKE);
+        }
         private const val KEY_LAST_TAB_POSITION = "lastTabPosition"
         fun newInstance(): NotificationsListFragment {
             return NotificationsListFragment()
