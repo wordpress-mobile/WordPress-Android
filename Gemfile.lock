@@ -191,7 +191,7 @@ GEM
     multipart-post (2.0.0)
     nanaimo (0.3.0)
     naturally (2.2.1)
-    nokogiri (1.13.9)
+    nokogiri (1.13.10)
       mini_portile2 (~> 2.8.0)
       racc (~> 1.4)
     octokit (4.25.1)
@@ -206,7 +206,7 @@ GEM
       highline (>= 1.6, < 3)
       options (~> 2.3.0)
     public_suffix (5.0.0)
-    racc (1.6.0)
+    racc (1.6.1)
     rake (13.0.6)
     rake-compiler (1.2.0)
       rake
