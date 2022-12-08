@@ -74,5 +74,6 @@ class UserFlagsProviderHelper @Inject constructor(
             UndeletablePrefKey.SHOULD_SHOW_STORAGE_WARNING.name,
             UndeletablePrefKey.LAST_USED_USER_ID.name,
             contextProvider.getContext().getString(R.string.pref_key_app_theme),
+            contextProvider.getContext().getString(R.string.pref_key_initial_screen),
     )
 }
