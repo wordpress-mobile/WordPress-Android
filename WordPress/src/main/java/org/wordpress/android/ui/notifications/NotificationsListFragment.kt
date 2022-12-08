@@ -5,7 +5,6 @@ package org.wordpress.android.ui.notifications
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.os.Parcelable
 import android.text.TextUtils
 import android.view.Menu
 import android.view.MenuInflater
@@ -14,13 +13,14 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentPagerAdapter
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.widget.MarginPageTransformer
 import com.google.android.material.appbar.AppBarLayout.LayoutParams
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.android.material.tabs.TabLayout.Tab
+import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 import org.greenrobot.eventbus.EventBus
 import org.wordpress.android.R
@@ -50,8 +50,6 @@ import org.wordpress.android.ui.notifications.adapters.NotesAdapter.FILTERS.FILT
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter.IS_TAPPED_ON_NOTIFICATION
 import org.wordpress.android.ui.stats.StatsConnectJetpackActivity
-import org.wordpress.android.util.AppLog
-import org.wordpress.android.util.AppLog.T.NOTIFS
 import org.wordpress.android.util.JetpackBrandingUtils
 import org.wordpress.android.util.JetpackBrandingUtils.Screen
 import org.wordpress.android.util.NetworkUtils
@@ -106,12 +104,20 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
                     lastTabPosition = tab.position
                 }
 
-                override fun onTabUnselected(tab: Tab) {}
-                override fun onTabReselected(tab: Tab) {}
+                override fun onTabUnselected(tab: Tab) = Unit
+                override fun onTabReselected(tab: Tab) = Unit
             })
-            viewPager.adapter = NotificationsFragmentAdapter(childFragmentManager, buildTitles())
-            viewPager.pageMargin = resources.getDimensionPixelSize(R.dimen.margin_extra_large)
-            tabLayout.setupWithViewPager(viewPager)
+            viewPager.adapter = NotificationsFragmentAdapter(this@NotificationsListFragment)
+            buildTitles().let { titles ->
+                TabLayoutMediator(tabLayout, viewPager) { tab, position ->
+                    if (0 <= position && position < titles.size) {
+                        tab.text =  titles[position]
+                    }
+                }.attach()
+            }
+            viewPager.setPageTransformer(
+                MarginPageTransformer(resources.getDimensionPixelSize(R.dimen.margin_extra_large))
+            )
 
             jetpackTermsAndConditions.text = HtmlCompat.fromHtml(
                     String.format(resources.getString(R.string.jetpack_connection_terms_and_conditions), "<u>", "</u>"),
@@ -213,32 +219,13 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
         }
     }
 
-    @Suppress("DEPRECATION")
-    private class NotificationsFragmentAdapter(
-        fragmentManager: FragmentManager,
-        private val titles: List<String>
-    ) : FragmentPagerAdapter(fragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
-        override fun getCount(): Int {
+    private class NotificationsFragmentAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
+        override fun getItemCount(): Int {
             return TAB_COUNT
         }
 
-        override fun getItem(position: Int): Fragment {
+        override fun createFragment(position: Int): Fragment {
             return NotificationsListFragmentPage.newInstance(position)
-        }
-
-        override fun getPageTitle(position: Int): CharSequence? {
-            if (titles.size > position && position >= 0) {
-                return titles[position]
-            }
-            return super.getPageTitle(position)
-        }
-
-        override fun restoreState(state: Parcelable?, loader: ClassLoader?) {
-            try {
-                super.restoreState(state, loader)
-            } catch (exception: IllegalStateException) {
-                AppLog.e(NOTIFS, exception)
-            }
         }
     }
 
