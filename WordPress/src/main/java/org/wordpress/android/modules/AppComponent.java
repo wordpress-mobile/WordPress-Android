@@ -220,8 +220,6 @@ import dagger.hilt.components.SingletonComponent;
 public interface AppComponent {
     void inject(WPMainActivity object);
 
-    void inject(SiteCreationService object);
-
     void inject(UploadService object);
 
     void inject(MediaUploadHandler object);
