@@ -17,7 +17,7 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.Constants
-import org.wordpress.android.MainCoroutineScopeRule
+import org.wordpress.android.CoroutineTestRule
 import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
@@ -69,7 +69,7 @@ private const val SERVER_CREDS_LINK = "${Constants.URL_JETPACK_SETTINGS}/$TEST_S
 @ExperimentalCoroutinesApi
 class ScanViewModelTest : BaseUnitTest() {
     @Rule
-    @JvmField val coroutineScope = MainCoroutineScopeRule()
+    @JvmField val coroutineScope = CoroutineTestRule()
 
     @Mock private lateinit var site: SiteModel
     @Mock private lateinit var scanStateItemsBuilder: ScanStateListItemsBuilder

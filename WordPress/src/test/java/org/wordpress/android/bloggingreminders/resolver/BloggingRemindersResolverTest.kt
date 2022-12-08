@@ -16,7 +16,7 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.MainCoroutineScopeRule
+import org.wordpress.android.CoroutineTestRule
 import org.wordpress.android.bloggingreminders.BloggingRemindersSyncAnalyticsTracker
 import org.wordpress.android.bloggingreminders.BloggingRemindersSyncAnalyticsTracker.ErrorType.QueryBloggingRemindersError
 import org.wordpress.android.bloggingreminders.JetpackBloggingRemindersSyncFlag
@@ -42,7 +42,7 @@ import java.time.DayOfWeek
 @ExperimentalCoroutinesApi
 class BloggingRemindersResolverTest : BaseUnitTest() {
     @Rule
-    @JvmField val coroutineScope = MainCoroutineScopeRule()
+    @JvmField val coroutineScope = CoroutineTestRule()
 
     private val jetpackBloggingRemindersSyncFlag: JetpackBloggingRemindersSyncFlag = mock()
     private val contextProvider: ContextProvider = mock()

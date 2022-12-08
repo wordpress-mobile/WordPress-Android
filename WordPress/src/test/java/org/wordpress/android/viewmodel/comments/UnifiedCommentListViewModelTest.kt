@@ -17,7 +17,7 @@ import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.MainCoroutineScopeRule
+import org.wordpress.android.CoroutineTestRule
 import org.wordpress.android.R.string
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
@@ -58,7 +58,7 @@ import org.wordpress.android.viewmodel.ResourceProvider
 @ExperimentalCoroutinesApi
 class UnifiedCommentListViewModelTest : BaseUnitTest() {
     @Rule
-    @JvmField val coroutineScope = MainCoroutineScopeRule()
+    @JvmField val coroutineScope = CoroutineTestRule()
 
     private lateinit var viewModel: UnifiedCommentListViewModel
     private lateinit var unifiedCommentsListHandler: UnifiedCommentsListHandler

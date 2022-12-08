@@ -15,7 +15,7 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
-import org.wordpress.android.MainCoroutineScopeRule
+import org.wordpress.android.CoroutineTestRule
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.discover.ReaderDiscoverCard.ReaderPostCard
@@ -49,7 +49,7 @@ class ReaderDiscoverDataProviderTest {
     val rule = InstantTaskExecutorRule()
 
     @Rule
-    @JvmField val coroutineScope = MainCoroutineScopeRule()
+    @JvmField val coroutineScope = CoroutineTestRule()
 
     private lateinit var dataProvider: ReaderDiscoverDataProvider
 

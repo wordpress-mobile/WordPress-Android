@@ -5,8 +5,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.pauseDispatcher
 import kotlinx.coroutines.test.resumeDispatcher
-import kotlinx.coroutines.test.pauseDispatcher
-import kotlinx.coroutines.test.resumeDispatcher
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Rule
@@ -20,7 +18,7 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
-import org.wordpress.android.MainCoroutineScopeRule
+import org.wordpress.android.CoroutineTestRule
 import org.wordpress.android.R
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagList
@@ -52,7 +50,7 @@ class ReaderInterestsViewModelTest {
     @JvmField val rule = InstantTaskExecutorRule()
 
     @Rule
-    @JvmField val coroutineScope = MainCoroutineScopeRule()
+    @JvmField val coroutineScope = CoroutineTestRule()
 
     private lateinit var viewModel: ReaderInterestsViewModel
     @Mock lateinit var parentViewModel: ReaderViewModel

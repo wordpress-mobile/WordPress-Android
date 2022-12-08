@@ -14,7 +14,7 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.MainCoroutineScopeRule
+import org.wordpress.android.CoroutineTestRule
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.action.ScanAction.FETCH_FIX_THREATS_STATUS
 import org.wordpress.android.fluxc.model.scan.threat.FixThreatStatusModel
@@ -34,7 +34,7 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 @ExperimentalCoroutinesApi
 class FetchFixThreatsStatusUseCaseTest : BaseUnitTest() {
     @Rule
-    @JvmField val coroutineScope = MainCoroutineScopeRule()
+    @JvmField val coroutineScope = CoroutineTestRule()
 
     private lateinit var useCase: FetchFixThreatsStatusUseCase
     @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper

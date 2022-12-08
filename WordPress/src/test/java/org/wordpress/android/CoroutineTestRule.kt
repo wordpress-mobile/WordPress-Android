@@ -13,15 +13,15 @@ import org.junit.runner.Description
 /**
  * MainCoroutineRule installs a TestCoroutineDispatcher for Disptachers.Main.
  *
- * You may call [DelayController] methods on [MainCoroutineScopeRule] and they will control the
+ * You may call [DelayController] methods on [CoroutineTestRule] and they will control the
  * virtual-clock.
  *
- * By default, [MainCoroutineScopeRule] will be in a *resumed* state.
+ * By default, [CoroutineTestRule] will be in a *resumed* state.
  *
  * @param dispatcher if provided, this [TestCoroutineDispatcher] will be used.
  */
 @ExperimentalCoroutinesApi
-class MainCoroutineScopeRule(val dispatcher: TestCoroutineDispatcher = TestCoroutineDispatcher()) :
+class CoroutineTestRule(val dispatcher: TestCoroutineDispatcher = TestCoroutineDispatcher()) :
         TestWatcher(),
         TestCoroutineScope by TestCoroutineScope(dispatcher) {
     override fun starting(description: Description?) {
