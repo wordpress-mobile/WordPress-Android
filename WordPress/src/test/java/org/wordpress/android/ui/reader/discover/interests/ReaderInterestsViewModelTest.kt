@@ -3,6 +3,10 @@ package org.wordpress.android.ui.reader.discover.interests
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.pauseDispatcher
+import kotlinx.coroutines.test.resumeDispatcher
+import kotlinx.coroutines.test.pauseDispatcher
+import kotlinx.coroutines.test.resumeDispatcher
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Rule

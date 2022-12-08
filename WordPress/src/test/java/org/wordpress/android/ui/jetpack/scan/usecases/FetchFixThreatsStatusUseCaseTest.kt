@@ -3,6 +3,7 @@ package org.wordpress.android.ui.jetpack.scan.usecases
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.test.advanceTimeBy
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Rule
