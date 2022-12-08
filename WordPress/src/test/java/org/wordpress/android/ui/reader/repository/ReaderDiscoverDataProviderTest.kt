@@ -1,26 +1,21 @@
 package org.wordpress.android.ui.reader.repository
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
-import kotlinx.coroutines.test.pauseDispatcher
-import kotlinx.coroutines.test.resumeDispatcher
+import kotlinx.coroutines.withContext
 import org.assertj.core.api.Assertions
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
-import org.wordpress.android.CoroutineTestRule
-import org.wordpress.android.TEST_DISPATCHER
+import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.discover.ReaderDiscoverCard.ReaderPostCard
 import org.wordpress.android.models.discover.ReaderDiscoverCards
-import org.wordpress.android.test
 import org.wordpress.android.ui.reader.ReaderEvents.FetchDiscoverCardsEnded
 import org.wordpress.android.ui.reader.ReaderEvents.FollowedTagsChanged
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.FAILED
@@ -43,14 +38,7 @@ private const val NUMBER_OF_ITEMS = 10L
 @InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
-class ReaderDiscoverDataProviderTest {
-    @Rule
-    @JvmField
-    val rule = InstantTaskExecutorRule()
-
-    @Rule
-    @JvmField val coroutineScope = CoroutineTestRule()
-
+class ReaderDiscoverDataProviderTest : BaseUnitTest() {
     private lateinit var dataProvider: ReaderDiscoverDataProvider
 
     @Mock private lateinit var eventBusWrapper: EventBusWrapper
@@ -62,8 +50,8 @@ class ReaderDiscoverDataProviderTest {
     @Before
     fun setUp() {
         dataProvider = ReaderDiscoverDataProvider(
-                TEST_DISPATCHER,
-                TEST_DISPATCHER,
+                coroutinesTestRule.testDispatcher,
+                coroutinesTestRule.testDispatcher,
                 eventBusWrapper,
                 readerTagWrapper,
                 getDiscoverCardsUseCase,
@@ -173,15 +161,13 @@ class ReaderDiscoverDataProviderTest {
         Assertions.assertThat(requireNotNull(started)).isEqualTo(Started(REQUEST_MORE))
 
         // Pause the dispatcher
-        coroutineScope.pauseDispatcher()
+        withContext(coroutinesTestRule.testDispatcher) {
+            dataProvider.loadMoreCards()
 
-        dataProvider.loadMoreCards()
-
-        val noUnhandledContent = dataProvider.communicationChannel.value?.getContentIfNotHandled()
-        Assertions.assertThat(noUnhandledContent).isNull()
-
+            val noUnhandledContent = dataProvider.communicationChannel.value?.getContentIfNotHandled()
+            Assertions.assertThat(noUnhandledContent).isNull()
+        }
         // Resume pending coroutine so next tests don't get hung up
-        coroutineScope.resumeDispatcher()
     }
 
     // The following test the loadData(), which is kicked off when discoverFeed obtains observers

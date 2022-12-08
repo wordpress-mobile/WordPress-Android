@@ -8,7 +8,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runBlockingTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
@@ -17,7 +16,6 @@ import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.CoroutineTestRule
 import org.wordpress.android.R.string
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
@@ -34,7 +32,6 @@ import org.wordpress.android.models.usecases.ModerateCommentsResourceProvider
 import org.wordpress.android.models.usecases.PaginateCommentsResourceProvider
 import org.wordpress.android.models.usecases.PaginateCommentsUseCase
 import org.wordpress.android.models.usecases.UnifiedCommentsListHandler
-import org.wordpress.android.test
 import org.wordpress.android.ui.comments.unified.CommentFilter.ALL
 import org.wordpress.android.ui.comments.unified.CommentListUiModelHelper
 import org.wordpress.android.ui.comments.unified.CommentListUiModelHelper.CommentList
@@ -57,9 +54,6 @@ import org.wordpress.android.viewmodel.ResourceProvider
 
 @ExperimentalCoroutinesApi
 class UnifiedCommentListViewModelTest : BaseUnitTest() {
-    @Rule
-    @JvmField val coroutineScope = CoroutineTestRule()
-
     private lateinit var viewModel: UnifiedCommentListViewModel
     private lateinit var unifiedCommentsListHandler: UnifiedCommentsListHandler
     private lateinit var commentListUiModelHelper: CommentListUiModelHelper

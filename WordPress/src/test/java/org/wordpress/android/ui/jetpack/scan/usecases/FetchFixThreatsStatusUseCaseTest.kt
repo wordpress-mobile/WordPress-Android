@@ -6,7 +6,6 @@ import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.advanceTimeBy
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
@@ -14,7 +13,6 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.CoroutineTestRule
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.action.ScanAction.FETCH_FIX_THREATS_STATUS
 import org.wordpress.android.fluxc.model.scan.threat.FixThreatStatusModel
@@ -23,7 +21,6 @@ import org.wordpress.android.fluxc.store.ScanStore
 import org.wordpress.android.fluxc.store.ScanStore.FixThreatsStatusError
 import org.wordpress.android.fluxc.store.ScanStore.FixThreatsStatusErrorType
 import org.wordpress.android.fluxc.store.ScanStore.OnFixThreatsStatusFetched
-import org.wordpress.android.test
 import org.wordpress.android.ui.jetpack.scan.usecases.FetchFixThreatsStatusUseCase.FetchFixThreatsState.Complete
 import org.wordpress.android.ui.jetpack.scan.usecases.FetchFixThreatsStatusUseCase.FetchFixThreatsState.Failure
 import org.wordpress.android.ui.jetpack.scan.usecases.FetchFixThreatsStatusUseCase.FetchFixThreatsState.InProgress
@@ -33,9 +30,6 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 @InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 class FetchFixThreatsStatusUseCaseTest : BaseUnitTest() {
-    @Rule
-    @JvmField val coroutineScope = CoroutineTestRule()
-
     private lateinit var useCase: FetchFixThreatsStatusUseCase
     @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
     @Mock lateinit var scanStore: ScanStore
@@ -80,7 +74,7 @@ class FetchFixThreatsStatusUseCaseTest : BaseUnitTest() {
 
         val useCaseResult = useCase.fetchFixThreatsStatus(fakeSiteId, listOf(fakeThreatId))
                 .toList(mutableListOf())
-        coroutineScope.advanceTimeBy(FETCH_FIX_THREATS_STATUS_DELAY_MILLIS)
+        advanceTimeBy(FETCH_FIX_THREATS_STATUS_DELAY_MILLIS)
 
         verify(scanStore, times(3)).fetchFixThreatsStatus(any())
         assertThat(useCaseResult).containsSequence(

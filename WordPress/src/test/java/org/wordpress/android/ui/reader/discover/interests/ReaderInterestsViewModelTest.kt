@@ -1,13 +1,10 @@
 package org.wordpress.android.ui.reader.discover.interests
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.pauseDispatcher
-import kotlinx.coroutines.test.resumeDispatcher
+import kotlinx.coroutines.withContext
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
@@ -18,12 +15,11 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
-import org.wordpress.android.CoroutineTestRule
+import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.models.ReaderTagType
-import org.wordpress.android.test
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsFragment.EntryPoint
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.DoneButtonUiState.DoneButtonDisabledUiState
@@ -45,13 +41,7 @@ private const val CURRENT_LANGUAGE = "en"
 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
-class ReaderInterestsViewModelTest {
-    @Rule
-    @JvmField val rule = InstantTaskExecutorRule()
-
-    @Rule
-    @JvmField val coroutineScope = CoroutineTestRule()
-
+class ReaderInterestsViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: ReaderInterestsViewModel
     @Mock lateinit var parentViewModel: ReaderViewModel
 
@@ -119,15 +109,13 @@ class ReaderInterestsViewModelTest {
                 whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
 
                 // Pause dispatcher so we can verify progress bar initial state
-                coroutineScope.pauseDispatcher()
+                withContext(coroutinesTestRule.testDispatcher) {
+                    // Trigger data load
+                    initViewModel()
 
-                // Trigger data load
-                initViewModel()
-
-                assertThat(requireNotNull(viewModel.uiState.value).progressBarVisible).isEqualTo(true)
-
+                    assertThat(requireNotNull(viewModel.uiState.value).progressBarVisible).isEqualTo(true)
+                }
                 // Resume pending coroutines execution
-                coroutineScope.resumeDispatcher()
 
                 assertThat(requireNotNull(viewModel.uiState.value).progressBarVisible).isEqualTo(false)
             }
@@ -140,15 +128,13 @@ class ReaderInterestsViewModelTest {
                 whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
 
                 // Pause dispatcher so we can verify title initial state
-                coroutineScope.pauseDispatcher()
+                withContext(coroutinesTestRule.testDispatcher) {
+                    // Trigger data load
+                    initViewModel()
 
-                // Trigger data load
-                initViewModel()
-
-                assertThat(requireNotNull(viewModel.uiState.value).titleVisible).isEqualTo(false)
-
+                    assertThat(requireNotNull(viewModel.uiState.value).titleVisible).isEqualTo(false)
+                }
                 // Resume pending coroutines execution
-                coroutineScope.resumeDispatcher()
 
                 assertThat(requireNotNull(viewModel.uiState.value).titleVisible).isEqualTo(true)
             }
@@ -209,13 +195,11 @@ class ReaderInterestsViewModelTest {
                 whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
 
                 // Pause dispatcher so we can verify done button initial state
-                coroutineScope.pauseDispatcher()
-
-                // Trigger data load
-                initViewModel(EntryPoint.DISCOVER)
-
+                withContext(coroutinesTestRule.testDispatcher) {
+                    // Trigger data load
+                    initViewModel(EntryPoint.DISCOVER)
+                }
                 // Resume pending coroutines execution
-                coroutineScope.resumeDispatcher()
 
                 assertThat(requireNotNull(viewModel.uiState.value).titleVisible).isTrue
             }
@@ -228,13 +212,11 @@ class ReaderInterestsViewModelTest {
                 whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
 
                 // Pause dispatcher so we can verify done button initial state
-                coroutineScope.pauseDispatcher()
-
-                // Trigger data load
-                initViewModel(EntryPoint.SETTINGS)
-
+                withContext(coroutinesTestRule.testDispatcher) {
+                    // Trigger data load
+                    initViewModel(EntryPoint.SETTINGS)
+                }
                 // Resume pending coroutines execution
-                coroutineScope.resumeDispatcher()
 
                 assertThat(requireNotNull(viewModel.uiState.value).titleVisible).isFalse
             }
@@ -247,16 +229,14 @@ class ReaderInterestsViewModelTest {
                 whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
 
                 // Pause dispatcher so we can verify done button initial state
-                coroutineScope.pauseDispatcher()
+                withContext(coroutinesTestRule.testDispatcher) {
+                    // Trigger data load
+                    initViewModel(EntryPoint.DISCOVER)
 
-                // Trigger data load
-                initViewModel(EntryPoint.DISCOVER)
-
-                assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState)
-                        .isInstanceOf(DoneButtonHiddenUiState::class.java)
-
+                    assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState)
+                            .isInstanceOf(DoneButtonHiddenUiState::class.java)
+                }
                 // Resume pending coroutines execution
-                coroutineScope.resumeDispatcher()
 
                 assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState)
                         .isInstanceOf(DoneButtonDisabledUiState::class.java)
@@ -272,16 +252,14 @@ class ReaderInterestsViewModelTest {
                 whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
 
                 // Pause dispatcher so we can verify done button initial state
-                coroutineScope.pauseDispatcher()
+                withContext(coroutinesTestRule.testDispatcher) {
+                    // Trigger data load
+                    initViewModel(EntryPoint.SETTINGS)
 
-                // Trigger data load
-                initViewModel(EntryPoint.SETTINGS)
-
-                assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState)
-                        .isInstanceOf(DoneButtonHiddenUiState::class.java)
-
+                    assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState)
+                            .isInstanceOf(DoneButtonHiddenUiState::class.java)
+                }
                 // Resume pending coroutines execution
-                coroutineScope.resumeDispatcher()
 
                 assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState)
                         .isInstanceOf(DoneButtonDisabledUiState::class.java)
