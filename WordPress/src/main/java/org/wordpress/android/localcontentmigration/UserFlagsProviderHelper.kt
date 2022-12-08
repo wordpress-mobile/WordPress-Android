@@ -11,7 +11,7 @@ import javax.inject.Inject
 
 class UserFlagsProviderHelper @Inject constructor(
     private val appPrefsWrapper: AppPrefsWrapper,
-): LocalDataProviderHelper {
+) : LocalDataProviderHelper {
     override fun getData(localEntityId: Int?): LocalContentEntityData =
             UserFlagsData(
                     flags = appPrefsWrapper.getAllPrefs().filter(::shouldInclude),
@@ -60,6 +60,7 @@ class UserFlagsProviderHelper @Inject constructor(
             DeletablePrefKey.READER_DISCOVER_WELCOME_BANNER_SHOWN.name,
             DeletablePrefKey.SHOULD_SCHEDULE_CREATE_SITE_NOTIFICATION.name,
             DeletablePrefKey.SELECTED_SITE_LOCAL_ID.name,
+            DeletablePrefKey.RECENTLY_PICKED_SITE_IDS.name,
             UndeletablePrefKey.THEME_IMAGE_SIZE_WIDTH.name,
             UndeletablePrefKey.BOOKMARKS_SAVED_LOCALLY_DIALOG_SHOWN.name,
             UndeletablePrefKey.IMAGE_OPTIMIZE_PROMO_REQUIRED.name,
