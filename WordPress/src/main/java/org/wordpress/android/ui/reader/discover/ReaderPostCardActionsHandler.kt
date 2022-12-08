@@ -29,6 +29,7 @@ import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBookm
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostDetail
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReaderComments
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReportPost
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReportUser
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowVideoViewer
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BLOCK_SITE
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BLOCK_USER
@@ -38,6 +39,7 @@ import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.FOLLOW
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.LIKE
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.REBLOG
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.REPORT_POST
+import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.REPORT_USER
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.SHARE
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.SITE_NOTIFICATIONS
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.SPACER_NO_ACTION
@@ -173,6 +175,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
         return isSiteFetched
     }
 
+    @Suppress("ComplexMethod")
     private suspend fun handleAction(
         post: ReaderPost,
         type: ReaderPostCardActionType,
@@ -191,6 +194,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
             REBLOG -> handleReblogClicked(post)
             COMMENTS -> handleCommentsClicked(post.postId, post.blogId, source)
             REPORT_POST -> handleReportPostClicked(post)
+            REPORT_USER -> handleReportUserClicked(post)
             TOGGLE_SEEN_STATUS -> handleToggleSeenStatusClicked(post, source)
             SPACER_NO_ACTION -> Unit // Do nothing
         }
@@ -239,6 +243,19 @@ class ReaderPostCardActionsHandler @Inject constructor(
                     post.isJetpack
             )
             _navigationEvents.postValue(Event(ShowReportPost(post.blogUrl)))
+        }
+    }
+
+    suspend fun handleReportUserClicked(post: ReaderPost) {
+        withContext(bgDispatcher) {
+            readerTracker.trackBlogPostAuthor(
+                    AnalyticsTracker.Stat.READER_USER_REPORTED,
+                    post.blogId,
+                    post.postId,
+                    post.isJetpack,
+                    post.authorId
+            )
+            _navigationEvents.postValue(Event(ShowReportUser(post.blogUrl, post.authorId)))
         }
     }
 

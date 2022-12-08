@@ -242,6 +242,16 @@ class ReaderPostMoreButtonUiStateBuilderTest {
     }
 
     @Test
+    fun `contains report user action`() = test {
+        // Arrange
+        val post = init()
+        // Act
+        val menuItems = builder.buildMoreMenuItems(post, dummyOnClick)
+        // Assert
+        assertThat(menuItems.find { it.type == ReaderPostCardActionType.REPORT_USER }).isNotNull
+    }
+
+    @Test
     fun `contains mark as seen when post is unseen`() = test {
         // Arrange
         val post = init(isSeen = false)
