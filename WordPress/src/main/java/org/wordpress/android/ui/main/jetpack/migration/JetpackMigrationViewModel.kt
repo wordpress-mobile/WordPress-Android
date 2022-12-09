@@ -3,6 +3,8 @@ package org.wordpress.android.ui.main.jetpack.migration
 import android.content.Intent
 import androidx.annotation.DrawableRes
 import androidx.annotation.VisibleForTesting
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -72,6 +74,9 @@ class JetpackMigrationViewModel @Inject constructor(
 ) : ViewModel() {
     private val _actionEvents = Channel<JetpackMigrationActionEvent>(Channel.BUFFERED)
     val actionEvents = _actionEvents.receiveAsFlow()
+
+    private val _refreshAppTheme = MutableLiveData<Unit>()
+    val refreshAppTheme: LiveData<Unit> = _refreshAppTheme
 
     private val migrationStateFlow = MutableStateFlow<LocalMigrationState>(Initial)
     private val continueClickedFlow = MutableStateFlow(false)
@@ -230,6 +235,7 @@ class JetpackMigrationViewModel @Inject constructor(
     }
 
     private fun onFinishClicked() {
+        _refreshAppTheme.value = Unit
         migrationAnalyticsTracker.trackThanksScreenFinishButtonTapped()
         migrationEmailHelper.notifyMigrationComplete()
         appPrefsWrapper.setJetpackMigrationCompleted(true)
