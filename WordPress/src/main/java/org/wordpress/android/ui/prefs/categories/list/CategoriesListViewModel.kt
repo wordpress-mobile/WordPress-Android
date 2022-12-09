@@ -2,6 +2,7 @@ package org.wordpress.android.ui.prefs.categories.list
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
 import org.greenrobot.eventbus.Subscribe
@@ -30,6 +31,7 @@ import javax.inject.Named
 
 private const val RETRY_DELAY = 300L
 
+@HiltViewModel
 class CategoriesListViewModel @Inject constructor(
     private val getCategoriesUseCase: GetCategoriesUseCase,
     private val networkUtilsWrapper: NetworkUtilsWrapper,

@@ -135,8 +135,6 @@ import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.prefs.SiteSettingsTagDetailFragment;
 import org.wordpress.android.ui.prefs.SiteSettingsTagListActivity;
 import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsFragment;
-import org.wordpress.android.ui.prefs.categories.detail.CategoryDetailFragment;
-import org.wordpress.android.ui.prefs.categories.list.CategoriesListFragment;
 import org.wordpress.android.ui.prefs.homepage.HomepageSettingsDialog;
 import org.wordpress.android.ui.prefs.language.LocalePickerBottomSheet;
 import org.wordpress.android.ui.prefs.notifications.NotificationsSettingsFragment;
@@ -601,10 +599,6 @@ public interface AppComponent {
     void inject(BloggingReminderBottomSheetFragment object);
 
     void inject(LocalePickerBottomSheet object);
-
-    void inject(CategoriesListFragment object);
-
-    void inject(CategoryDetailFragment object);
 
     void inject(LayoutPreviewFragment object);
 
