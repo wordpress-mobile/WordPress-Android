@@ -73,6 +73,7 @@ class JetpackMigrationViewModel @Inject constructor(
     private val _actionEvents = Channel<JetpackMigrationActionEvent>(Channel.BUFFERED)
     val actionEvents = _actionEvents.receiveAsFlow()
 
+    private var isStarted = false
     private val migrationStateFlow = MutableStateFlow<LocalMigrationState>(Initial)
     private val continueClickedFlow = MutableStateFlow(false)
     private val notificationContinueClickedFlow = MutableStateFlow(false)
@@ -102,6 +103,9 @@ class JetpackMigrationViewModel @Inject constructor(
     }.stateIn(viewModelScope, SharingStarted.Lazily, Loading)
 
     fun start(showDeleteState: Boolean) {
+        if (isStarted) return
+        isStarted = true
+
         this.showDeleteState = showDeleteState
         tryMigration()
     }
