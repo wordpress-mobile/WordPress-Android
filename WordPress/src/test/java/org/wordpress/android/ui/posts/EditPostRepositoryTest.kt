@@ -363,7 +363,7 @@ class EditPostRepositoryTest {
         post.setStatus(DRAFT.toString())
         post.setDateCreated(dateCreated)
         editPostRepository.set { post }
-        whenever(postUtils.shouldPublishImmediately(DRAFT, dateCreated)).thenReturn(true)
+        whenever(postUtils.shouldPublishImmediately(post)).thenReturn(true)
 
         editPostRepository.updatePublishDateIfShouldBePublishedImmediately(post)
 
@@ -382,7 +382,7 @@ class EditPostRepositoryTest {
         post.setStatus(PUBLISHED.toString())
         post.setDateCreated(dateCreated)
         editPostRepository.set { post }
-        whenever(postUtils.shouldPublishImmediately(PUBLISHED, dateCreated)).thenReturn(false)
+        whenever(postUtils.shouldPublishImmediately(post)).thenReturn(false)
 
         editPostRepository.updatePublishDateIfShouldBePublishedImmediately(post)
 

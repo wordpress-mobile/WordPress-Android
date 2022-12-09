@@ -177,7 +177,7 @@ class EditPostRepository
             UploadService.getPendingOrInProgressMediaUploadsForPost(post)
 
     fun updatePublishDateIfShouldBePublishedImmediately(post: PostModel) {
-        if (postUtils.shouldPublishImmediately(fromPost(post), post.dateCreated)) {
+        if (postUtils.shouldPublishImmediately(post)) {
             post.setDateCreated(DateTimeUtils.iso8601FromDate(localeManagerWrapper.getCurrentCalendar().time))
         }
     }

@@ -314,14 +314,16 @@ public class PostUtils {
         }
     }
 
-    static boolean shouldPublishImmediately(PostModel postModel) {
+    static boolean shouldPublishImmediately(PostImmutableModel postModel) {
         if (!shouldPublishImmediatelyOptionBeAvailable(PostStatus.fromPost(postModel))) {
             return false;
         }
         Date pubDate = DateTimeUtils.dateFromIso8601(postModel.getDateCreated());
+        Date modifiedDate = DateTimeUtils.dateFromIso8601(postModel.getLastModified());
         Date now = new Date();
         // Publish immediately for posts that don't have any date set yet and drafts with publish dates in the past
-        return pubDate == null || !pubDate.after(now);
+        // that were also modified at the same date, meaning the user didn't set that past date deliberately
+        return pubDate == null || (!pubDate.after(now) && pubDate.getTime() == modifiedDate.getTime());
     }
 
     static boolean shouldPublishImmediately(PostStatus postStatus, String dateCreated) {
@@ -348,10 +350,8 @@ public class PostUtils {
 
         Calendar cal = Calendar.getInstance();
         cal.setTime(currentDate);
-        // just use half an hour before now as a threshold to make sure this is backdated, to avoid false positives
-        cal.add(Calendar.MINUTE, -30);
-        Date halfHourBack = cal.getTime();
-        return pubDate != null && pubDate.before(halfHourBack);
+        Date current = cal.getTime();
+        return pubDate != null && pubDate.before(current);
     }
 
     // Only drafts should have the option to publish immediately to avoid user confusion

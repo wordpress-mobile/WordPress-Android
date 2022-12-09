@@ -25,8 +25,8 @@ class PostUtilsWrapper @Inject constructor(private val dateProvider: DateProvide
     fun isPostCurrentlyBeingEdited(post: PostImmutableModel) =
             PostUtils.isPostCurrentlyBeingEdited(post)
 
-    fun shouldPublishImmediately(postStatus: PostStatus, dateCreated: String) =
-            PostUtils.shouldPublishImmediately(postStatus, dateCreated)
+    fun shouldPublishImmediately(postModel: PostImmutableModel) =
+            PostUtils.shouldPublishImmediately(postModel)
 
     fun postHasEdits(oldPost: PostImmutableModel?, newPost: PostImmutableModel) =
             PostUtils.postHasEdits(oldPost, newPost)

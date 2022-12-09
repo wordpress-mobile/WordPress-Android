@@ -2111,8 +2111,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 if (publishPost) {
                     // now set status to PUBLISHED - only do this AFTER we have run the isFirstTimePublish() check,
                     // otherwise we'd have an incorrect value
-                    // also re-set the published date in case it was SCHEDULED and they want to publish NOW
-                    if (postModel.getStatus().equals(PostStatus.SCHEDULED.toString())) {
+                    // also re-set the published date in case it was SCHEDULED and they want to publish NOW or
+                    // it should be published immediately based on shouldPublishImmediately logic
+                    if (postModel.getStatus().equals(PostStatus.SCHEDULED.toString())
+                        || mPostUtils.shouldPublishImmediately(postModel)) {
                         postModel.setDateCreated(mDateTimeUtils.currentTimeInIso8601());
                     }
 
