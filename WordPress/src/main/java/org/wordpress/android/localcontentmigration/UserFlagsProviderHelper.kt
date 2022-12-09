@@ -8,12 +8,14 @@ import org.wordpress.android.localcontentmigration.LocalContentEntityData.UserFl
 import org.wordpress.android.ui.prefs.AppPrefs.DeletablePrefKey
 import org.wordpress.android.ui.prefs.AppPrefs.UndeletablePrefKey
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.viewmodel.ContextProvider
 import javax.inject.Inject
 
 class UserFlagsProviderHelper @Inject constructor(
     private val appPrefsWrapper: AppPrefsWrapper,
     contextProvider: ContextProvider,
+    localeManagerWrapper: LocaleManagerWrapper
 ) : LocalDataProviderHelper {
     override fun getData(localEntityId: Int?): LocalContentEntityData =
             UserFlagsData(
@@ -75,5 +77,7 @@ class UserFlagsProviderHelper @Inject constructor(
             UndeletablePrefKey.LAST_USED_USER_ID.name,
             contextProvider.getContext().getString(R.string.pref_key_app_theme),
             contextProvider.getContext().getString(R.string.pref_key_initial_screen),
+            contextProvider.getContext().getString(R.string.pref_key_send_crash),
+            localeManagerWrapper.getLocalePrefKeyString()
     )
 }
