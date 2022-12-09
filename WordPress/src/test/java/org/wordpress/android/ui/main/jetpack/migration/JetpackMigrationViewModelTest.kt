@@ -152,7 +152,6 @@ class JetpackMigrationViewModelTest : BaseUnitTest() {
         verify(refreshAppThemeObserver).onChanged(Unit)
     }
 
-
     @Test
     fun `Should track when delete wp app screen is shown`() {
         classToTest.initPleaseDeleteWordPressAppScreenUi()
