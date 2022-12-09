@@ -2,9 +2,11 @@ package org.wordpress.android.ui.prefs.categories.detail
 
 import android.os.Bundle
 import android.view.MenuItem
+import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.databinding.CategoryDetailActivityBinding
 import org.wordpress.android.ui.LocaleAwareActivity
 
+@AndroidEntryPoint
 class CategoryDetailActivity : LocaleAwareActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
