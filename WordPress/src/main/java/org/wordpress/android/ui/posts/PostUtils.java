@@ -321,9 +321,17 @@ public class PostUtils {
         Date pubDate = DateTimeUtils.dateFromIso8601(postModel.getDateCreated());
         Date modifiedDate = DateTimeUtils.dateFromIso8601(postModel.getLastModified());
         Date now = new Date();
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(now);
+        // just use half an hour before now as a threshold to make sure this is not backdated, to avoid false negatives
+        cal.add(Calendar.MINUTE, -30);
+        Date halfHourBack = cal.getTime();
+
         // Publish immediately for posts that don't have any date set yet and drafts with publish dates in the past
         // that were also modified at the same date, meaning the user didn't set that past date deliberately
-        return pubDate == null || (!pubDate.after(now) && pubDate.getTime() == modifiedDate.getTime());
+        return pubDate == null || (!pubDate.after(now) && (pubDate.getTime() == modifiedDate.getTime()
+                || pubDate.after(halfHourBack)));
     }
 
     static boolean shouldPublishImmediately(PostStatus postStatus, String dateCreated) {
