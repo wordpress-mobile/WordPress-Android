@@ -2,7 +2,7 @@
 
 21.4
 -----
-
+* [*] [Jetpack-only] Hiding Scan Login QR Code when logged into an account with 2FA. [https://github.com/wordpress-mobile/WordPress-Android/pull/17662]
 
 21.3
 -----
