@@ -34,6 +34,7 @@ public class AccountModel extends Payload<BaseNetworkError> implements Identifia
     @Column private String mDate;
     @Column private String mNewEmail;
     @Column private boolean mPendingEmailChange;
+    @Column private boolean mTwoStepEnabled;
     @Column private String mWebAddress; // WPCom rest API: user_URL
     @Column private boolean mTracksOptOut;
     @Column private boolean mUsernameCanBeChanged;
@@ -75,6 +76,7 @@ public class AccountModel extends Payload<BaseNetworkError> implements Identifia
                && StringUtils.equals(getDate(), otherAccount.getDate())
                && StringUtils.equals(getNewEmail(), otherAccount.getNewEmail())
                && getPendingEmailChange() == otherAccount.getPendingEmailChange()
+               && getTwoStepEnabled() == otherAccount.getTwoStepEnabled()
                && StringUtils.equals(getWebAddress(), otherAccount.getWebAddress())
                && getHasUnseenNotes() == otherAccount.getHasUnseenNotes()
                && getTracksOptOut() == otherAccount.getTracksOptOut()
@@ -98,6 +100,7 @@ public class AccountModel extends Payload<BaseNetworkError> implements Identifia
         mDate = "";
         mNewEmail = "";
         mPendingEmailChange = false;
+        mTwoStepEnabled = false;
         mWebAddress = "";
         mTracksOptOut = false;
         mUsernameCanBeChanged = false;
@@ -134,6 +137,7 @@ public class AccountModel extends Payload<BaseNetworkError> implements Identifia
         setDate(other.getDate());
         setNewEmail(other.getNewEmail());
         setPendingEmailChange(other.getPendingEmailChange());
+        setTwoStepEnabled(other.getTwoStepEnabled());
         setTracksOptOut(other.getTracksOptOut());
         setWebAddress(other.getWebAddress());
         setDisplayName(other.getDisplayName());
@@ -266,6 +270,14 @@ public class AccountModel extends Payload<BaseNetworkError> implements Identifia
 
     public boolean getPendingEmailChange() {
         return mPendingEmailChange;
+    }
+
+    public void setTwoStepEnabled(boolean twoStepEnabled) {
+        mTwoStepEnabled = twoStepEnabled;
+    }
+
+    public boolean getTwoStepEnabled() {
+        return mTwoStepEnabled;
     }
 
     public void setWebAddress(String webAddress) {
