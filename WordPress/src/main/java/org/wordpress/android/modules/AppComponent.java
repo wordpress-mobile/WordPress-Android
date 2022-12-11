@@ -163,9 +163,7 @@ import org.wordpress.android.ui.reader.adapters.ReaderTagAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderUserAdapter;
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverFragment;
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsFragment;
-import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverJobService;
 import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic;
-import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverService;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic;
 import org.wordpress.android.ui.reader.views.ReaderCommentsPostHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderExpandableTagsView;
@@ -529,10 +527,6 @@ public interface AppComponent {
     void inject(ReaderDiscoverLogic object);
 
     void inject(PostListCreateMenuFragment object);
-
-    void inject(ReaderDiscoverJobService object);
-
-    void inject(ReaderDiscoverService object);
 
     void inject(SuggestionActivity object);
 
