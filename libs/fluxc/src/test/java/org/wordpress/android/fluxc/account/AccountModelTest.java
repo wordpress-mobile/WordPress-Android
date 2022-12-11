@@ -37,11 +37,13 @@ public class AccountModelTest {
         copyAccount.setVisibleSiteCount(testAccount.getVisibleSiteCount() + 1);
         copyAccount.setEmail("copyEmail");
         copyAccount.setPendingEmailChange(!testAccount.getPendingEmailChange());
+        copyAccount.setTwoStepEnabled(!testAccount.getTwoStepEnabled());
         copyAccount.setTracksOptOut(!testAccount.getTracksOptOut());
         Assert.assertFalse(copyAccount.equals(testAccount));
         testAccount.copyAccountAttributes(copyAccount);
         Assert.assertFalse(copyAccount.equals(testAccount));
         copyAccount.setPendingEmailChange(testAccount.getPendingEmailChange());
+        copyAccount.setTwoStepEnabled(testAccount.getTwoStepEnabled());
         copyAccount.setTracksOptOut(testAccount.getTracksOptOut());
         Assert.assertTrue(copyAccount.equals(testAccount));
     }
@@ -58,6 +60,7 @@ public class AccountModelTest {
         copyAccount.setDate("copyDate");
         copyAccount.setNewEmail("copyNewEmail");
         copyAccount.setPendingEmailChange(!testAccount.getPendingEmailChange());
+        copyAccount.setTwoStepEnabled(!testAccount.getTwoStepEnabled());
         copyAccount.setTracksOptOut(!testAccount.getTracksOptOut());
         copyAccount.setUsernameCanBeChanged(!testAccount.getUsernameCanBeChanged());
         copyAccount.setWebAddress("copyWebAddress");
