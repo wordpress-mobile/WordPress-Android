@@ -200,7 +200,8 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
 
         if (qrCodeAuthFlowFeatureConfig.isEnabled() &&
                 BuildConfig.ENABLE_QRCODE_AUTH_FLOW &&
-                accountStore.hasAccessToken()) {
+                accountStore.hasAccessToken() &&
+                accountStore.account?.twoStepEnabled != true) {
             rowScanLoginCode.isVisible = true
 
             rowScanLoginCode.setOnClickListener {
