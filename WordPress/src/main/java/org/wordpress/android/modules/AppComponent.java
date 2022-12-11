@@ -62,7 +62,6 @@ import org.wordpress.android.ui.media.MediaGridFragment;
 import org.wordpress.android.ui.media.MediaPreviewActivity;
 import org.wordpress.android.ui.media.MediaPreviewFragment;
 import org.wordpress.android.ui.media.MediaSettingsActivity;
-import org.wordpress.android.ui.media.services.MediaDeleteService;
 import org.wordpress.android.ui.mediapicker.MediaPickerActivity;
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment;
 import org.wordpress.android.ui.mlp.ModalLayoutPickerFragment;
@@ -386,8 +385,6 @@ public interface AppComponent {
     void inject(NotesAdapter object);
 
     void inject(ThemeBrowserFragment object);
-
-    void inject(MediaDeleteService object);
 
     void inject(SelectCategoriesActivity object);
 
