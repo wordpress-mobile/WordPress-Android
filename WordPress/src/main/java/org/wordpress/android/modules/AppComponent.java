@@ -2,7 +2,6 @@ package org.wordpress.android.modules;
 
 import com.automattic.android.tracks.crashlogging.CrashLogging;
 
-import org.wordpress.android.push.NotificationsProcessingService;
 import org.wordpress.android.ui.AddQuickPressShortcutActivity;
 import org.wordpress.android.ui.CommentFullScreenDialogFragment;
 import org.wordpress.android.ui.JetpackConnectionResultActivity;
@@ -329,8 +328,6 @@ public interface AppComponent {
     void inject(NotificationsSettingsFragment object);
 
     void inject(NotificationsDetailActivity object);
-
-    void inject(NotificationsProcessingService object);
 
     void inject(NotificationsPendingDraftsReceiver object);
 
