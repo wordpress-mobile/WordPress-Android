@@ -3,8 +3,9 @@ package org.wordpress.android.ui.prefs.categories.list
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
+import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.SiteSettingsCategoriesListFragmentBinding
@@ -18,15 +19,14 @@ import org.wordpress.android.ui.prefs.categories.list.UiState.Loading
 import org.wordpress.android.ui.utils.UiHelpers
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class CategoriesListFragment : Fragment(R.layout.site_settings_categories_list_fragment) {
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-    private lateinit var viewModel: CategoriesListViewModel
+    private val viewModel: CategoriesListViewModel by viewModels()
     @Inject lateinit var uiHelpers: UiHelpers
     private lateinit var adapter: SiteSettingsCategoriesAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initDagger()
 
         with(SiteSettingsCategoriesListFragmentBinding.bind(view)) {
             initRecyclerView()
@@ -36,13 +36,7 @@ class CategoriesListFragment : Fragment(R.layout.site_settings_categories_list_f
         }
     }
 
-    private fun initDagger() {
-        (requireActivity().application as WordPress).component().inject(this)
-    }
-
     private fun SiteSettingsCategoriesListFragmentBinding.initViewModel(site: SiteModel) {
-        viewModel = ViewModelProvider(this@CategoriesListFragment, viewModelFactory)
-                .get(CategoriesListViewModel::class.java)
         setupObservers()
         viewModel.start(site)
     }

@@ -158,7 +158,7 @@ public class ActivityLauncher {
     public static final String SOURCE_TRACK_EVENT_PROPERTY_KEY = "source";
     public static final String BACKUP_TRACK_EVENT_PROPERTY_VALUE = "backup";
     public static final String ACTIVITY_LOG_TRACK_EVENT_PROPERTY_VALUE = "activity_log";
-    private static final String CATEGORY_DETAIL_ID = "category_detail_key";
+    public static final String CATEGORY_DETAIL_ID = "category_detail_key";
 
     public static void showMainActivity(Context context) {
         Intent intent = getMainActivityInNewStack(context);
