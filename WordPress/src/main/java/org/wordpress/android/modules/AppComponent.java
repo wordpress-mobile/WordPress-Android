@@ -2,7 +2,6 @@ package org.wordpress.android.modules;
 
 import com.automattic.android.tracks.crashlogging.CrashLogging;
 
-import org.wordpress.android.push.GCMMessageService;
 import org.wordpress.android.push.GCMRegistrationIntentService;
 import org.wordpress.android.push.NotificationsProcessingService;
 import org.wordpress.android.ui.AddQuickPressShortcutActivity;
@@ -231,8 +230,6 @@ public interface AppComponent {
     void inject(JetpackConnectionResultActivity object);
 
     void inject(StatsConnectJetpackActivity object);
-
-    void inject(GCMMessageService object);
 
     void inject(GCMRegistrationIntentService object);
 
