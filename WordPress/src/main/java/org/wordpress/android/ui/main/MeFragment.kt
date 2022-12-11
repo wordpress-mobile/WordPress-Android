@@ -198,10 +198,7 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
             }
         }
 
-        if (qrCodeAuthFlowFeatureConfig.isEnabled() &&
-                BuildConfig.ENABLE_QRCODE_AUTH_FLOW &&
-                accountStore.hasAccessToken() &&
-                accountStore.account?.twoStepEnabled != true) {
+        if (shouldShowQrCodeLogin()) {
             rowScanLoginCode.isVisible = true
 
             rowScanLoginCode.setOnClickListener {
@@ -237,6 +234,13 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
                     .newInstance()
                     .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
         }
+    }
+
+    private fun shouldShowQrCodeLogin(): Boolean {
+        return qrCodeAuthFlowFeatureConfig.isEnabled() &&
+                BuildConfig.ENABLE_QRCODE_AUTH_FLOW &&
+                accountStore.hasAccessToken() &&
+                accountStore.account?.twoStepEnabled != true
     }
 
     private fun MeFragmentBinding.setRecommendLoadingState(startShimmer: Boolean) {
