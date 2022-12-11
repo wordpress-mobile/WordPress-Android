@@ -1278,6 +1278,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
             case RequestCodes.APP_SETTINGS:
                 if (resultCode == AppSettingsFragment.LANGUAGE_CHANGED) {
                     appLanguageChanged();
+                } else if (mAccountStore.hasAccessToken()) {
+                    mDispatcher.dispatch(AccountActionBuilder.newFetchSettingsAction());
                 }
                 break;
             case RequestCodes.NOTE_DETAIL:
@@ -1436,9 +1438,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
             mBottomNav.showNoteBadge(mAccountStore.getAccount().getHasUnseenNotes());
             if (AppPrefs.getShouldTrackMagicLinkSignup()) {
                 trackMagicLinkSignupIfNeeded();
-            }
-            if (!event.isError() && event.causeOfChange == AccountAction.FETCH_ACCOUNT) {
-                mDispatcher.dispatch(AccountActionBuilder.newFetchSettingsAction());
             }
         }
     }
