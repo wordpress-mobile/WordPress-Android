@@ -1,17 +1,22 @@
 package org.wordpress.android.localcontentmigration
 
 import com.yarolegovich.wellsql.WellSql
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.QuickStartStatusModel
 import org.wordpress.android.fluxc.model.QuickStartTaskModel
 import org.wordpress.android.localcontentmigration.LocalContentEntityData.UserFlagsData
 import org.wordpress.android.ui.prefs.AppPrefs.DeletablePrefKey
 import org.wordpress.android.ui.prefs.AppPrefs.UndeletablePrefKey
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.util.LocaleManagerWrapper
+import org.wordpress.android.viewmodel.ContextProvider
 import javax.inject.Inject
 
 class UserFlagsProviderHelper @Inject constructor(
     private val appPrefsWrapper: AppPrefsWrapper,
-): LocalDataProviderHelper {
+    contextProvider: ContextProvider,
+    localeManagerWrapper: LocaleManagerWrapper
+) : LocalDataProviderHelper {
     override fun getData(localEntityId: Int?): LocalContentEntityData =
             UserFlagsData(
                     flags = appPrefsWrapper.getAllPrefs().filter(::shouldInclude),
@@ -60,6 +65,7 @@ class UserFlagsProviderHelper @Inject constructor(
             DeletablePrefKey.READER_DISCOVER_WELCOME_BANNER_SHOWN.name,
             DeletablePrefKey.SHOULD_SCHEDULE_CREATE_SITE_NOTIFICATION.name,
             DeletablePrefKey.SELECTED_SITE_LOCAL_ID.name,
+            DeletablePrefKey.RECENTLY_PICKED_SITE_IDS.name,
             UndeletablePrefKey.THEME_IMAGE_SIZE_WIDTH.name,
             UndeletablePrefKey.BOOKMARKS_SAVED_LOCALLY_DIALOG_SHOWN.name,
             UndeletablePrefKey.IMAGE_OPTIMIZE_PROMO_REQUIRED.name,
@@ -68,6 +74,10 @@ class UserFlagsProviderHelper @Inject constructor(
             UndeletablePrefKey.IS_MAIN_FAB_TOOLTIP_DISABLED.name,
             UndeletablePrefKey.SHOULD_SHOW_STORIES_INTRO.name,
             UndeletablePrefKey.SHOULD_SHOW_STORAGE_WARNING.name,
-            UndeletablePrefKey.LAST_USED_USER_ID.name
+            UndeletablePrefKey.LAST_USED_USER_ID.name,
+            contextProvider.getContext().getString(R.string.pref_key_app_theme),
+            contextProvider.getContext().getString(R.string.pref_key_initial_screen),
+            contextProvider.getContext().getString(R.string.pref_key_send_crash),
+            localeManagerWrapper.getLocalePrefKeyString()
     )
 }

@@ -304,4 +304,8 @@ public class LocaleManager {
         }
         return displayLanguage;
     }
+
+    public static String getLocalePrefKeyString() {
+        return LANGUAGE_KEY;
+    }
 }

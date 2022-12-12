@@ -37,6 +37,7 @@ import org.wordpress.android.ui.main.jetpack.migration.compose.state.ErrorStep
 import org.wordpress.android.ui.main.jetpack.migration.compose.state.LoadingState
 import org.wordpress.android.ui.main.jetpack.migration.compose.state.NotificationsStep
 import org.wordpress.android.ui.main.jetpack.migration.compose.state.WelcomeStep
+import org.wordpress.android.util.AppThemeUtils
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -60,6 +61,7 @@ class JetpackMigrationFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         observeViewModelEvents()
+        observeRefreshAppThemeEvents()
         val showDeleteWpState = arguments?.getBoolean(KEY_SHOW_DELETE_WP_STATE, false) ?: false
         initBackPressHandler(showDeleteWpState)
         viewModel.start(showDeleteWpState)
@@ -67,6 +69,12 @@ class JetpackMigrationFragment : Fragment() {
 
     private fun observeViewModelEvents() {
         viewModel.actionEvents.onEach(this::handleActionEvents).launchIn(viewLifecycleOwner.lifecycleScope)
+    }
+
+    private fun observeRefreshAppThemeEvents() {
+        viewModel.refreshAppTheme.observe(viewLifecycleOwner) {
+            AppThemeUtils.setAppTheme(requireActivity())
+        }
     }
 
     private fun handleActionEvents(actionEvent: JetpackMigrationActionEvent) {
