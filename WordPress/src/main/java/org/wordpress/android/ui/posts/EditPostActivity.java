@@ -125,6 +125,7 @@ import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog.PrivateAtCo
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.Shortcut;
 import org.wordpress.android.ui.history.HistoryListItem.Revision;
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase;
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseFour;
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
@@ -1336,7 +1337,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
         if (helpMenuItem != null) {
             // Support section will be disabled in WordPress app when Jetpack-powered features are removed.
             // Therefore, we have to update the Help menu item accordingly.
-            int helpMenuTitle = mJetpackFeatureRemovalPhaseHelper.getCurrentPhase() == PhaseFour.INSTANCE ? R.string.help : R.string.help_and_support;
+            JetpackFeatureRemovalPhase currentRemovalPhase = mJetpackFeatureRemovalPhaseHelper.getCurrentPhase();
+            int helpMenuTitle = currentRemovalPhase == PhaseFour.INSTANCE ? R.string.help : R.string.help_and_support;
             helpMenuItem.setTitle(helpMenuTitle);
 
             if (mEditorFragment instanceof GutenbergEditorFragment
@@ -2360,7 +2362,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
         // Disable Jetpack-powered editor features in WordPress app based on Jetpack Features Removal Phase helper
         boolean shouldRemoveFeatures = mJetpackFeatureRemovalPhaseHelper.getCurrentPhase() == PhaseFour.INSTANCE;
-        if(shouldRemoveFeatures) {
+        if (shouldRemoveFeatures) {
             return new GutenbergPropsBuilder(
                     false,
                     false,
