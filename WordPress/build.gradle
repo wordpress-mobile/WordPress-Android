@@ -266,7 +266,7 @@ android {
         // Exclude React Native's JSC and Fabric JNI
         exclude '**/libjscexecutor.so'
         exclude '**/libfabricjni.so'
-        
+
         // Avoid React Native's JNI duplicated classes
         pickFirst '**/libc++_shared.so'
         pickFirst '**/libfbjni.so'
@@ -469,7 +469,7 @@ dependencies {
         exclude module: 'recyclerview-v7'
     }
     androidTestImplementation "androidx.test.espresso:espresso-accessibility:$androidxTestEspressoVersion"
-    androidTestImplementation("com.github.tomakehurst:wiremock:$wiremockVersion") {
+    androidTestImplementation("com.github.tomakehurst:wiremock-jre8:$wiremockVersion") {
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'
         exclude group: 'org.apache.commons', module: 'commons-lang3'
         exclude group: 'asm', module: 'asm'
