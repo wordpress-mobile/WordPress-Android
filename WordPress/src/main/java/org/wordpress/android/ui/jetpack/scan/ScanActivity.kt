@@ -49,7 +49,7 @@ class ScanActivity : AppCompatActivity(), ScrollableViewInitializedListener {
     }
 
     private fun initJetpackBanner(scrollableContainerId: Int) {
-        if (jetpackBrandingUtils.shouldShowJetpackBranding()) {
+        if (jetpackBrandingUtils.shouldShowJetpackBrandingForPhaseOne()) {
             binding?.root?.post {
                 val jetpackBannerView = binding?.jetpackBanner?.root ?: return@post
                 val scrollableView = binding?.root?.findViewById<View>(scrollableContainerId) as? RecyclerView
