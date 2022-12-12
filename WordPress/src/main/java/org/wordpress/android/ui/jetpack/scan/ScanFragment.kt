@@ -13,6 +13,7 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.ScanFragmentBinding
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.accounts.HelpActivity.Origin.SCAN_SCREEN_HELP
 import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.OpenFixThreatsConfirmationDialog
 import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.ShowContactSupport
@@ -25,6 +26,7 @@ import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState.FullScreenLoa
 import org.wordpress.android.ui.jetpack.scan.adapters.HorizontalMarginItemDecoration
 import org.wordpress.android.ui.jetpack.scan.adapters.ScanAdapter
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.prefs.EmptyViewRecyclerView
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.ColorUtils
 import org.wordpress.android.util.image.ImageManager
@@ -37,6 +39,7 @@ class ScanFragment : Fragment(R.layout.scan_fragment) {
     @Inject lateinit var uiHelpers: UiHelpers
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: ScanViewModel
+    private lateinit var listView: EmptyViewRecyclerView
     private var fixThreatsConfirmationDialog: AlertDialog? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -44,7 +47,15 @@ class ScanFragment : Fragment(R.layout.scan_fragment) {
         with(ScanFragmentBinding.bind(view)) {
             initDagger()
             initRecyclerView()
+            listView = recyclerView
             initViewModel(getSite(savedInstanceState))
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (activity is ScrollableViewInitializedListener) {
+            (activity as ScrollableViewInitializedListener).onScrollableViewInitialized(listView.id)
         }
     }
 

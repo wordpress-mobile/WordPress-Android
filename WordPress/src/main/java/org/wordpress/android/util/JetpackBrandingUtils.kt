@@ -102,7 +102,8 @@ class JetpackBrandingUtils @Inject constructor(
         READER_POST_DETAIL("reader_post_detail"),
         READER_SEARCH("reader_search"),
         SHARE("share"),
-        STATS("stats")
+        STATS("stats"),
+        SCAN("scan")
     }
 
     companion object {
