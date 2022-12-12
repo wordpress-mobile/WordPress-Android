@@ -23,6 +23,7 @@ internal class ApplicationPasswordManager @Inject constructor(
 ) {
     private val applicationPasswordsStore = ApplicationPasswordsStore(context, applicationName)
 
+    @Suppress("ReturnCount")
     internal suspend fun getApplicationCredentials(
         site: SiteModel
     ): ApplicationPasswordCreationResult {
