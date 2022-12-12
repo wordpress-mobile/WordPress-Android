@@ -11,7 +11,6 @@ import androidx.preference.PreferenceManager;
 
 import com.google.firebase.messaging.FirebaseMessaging;
 
-import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.support.ZendeskHelper;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
@@ -24,15 +23,12 @@ import javax.inject.Inject;
 
 import static org.wordpress.android.JobServiceId.JOB_GCM_REG_SERVICE_ID;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class GCMRegistrationIntentService extends JobIntentService {
     @Inject AccountStore mAccountStore;
     @Inject ZendeskHelper mZendeskHelper;
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        ((WordPress) getApplication()).component().inject(this);
-    }
 
     public static void enqueueWork(Context context, Intent work) {
         enqueueWork(context, GCMRegistrationIntentService.class, JOB_GCM_REG_SERVICE_ID, work);

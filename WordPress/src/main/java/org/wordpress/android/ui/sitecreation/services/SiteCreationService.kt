@@ -4,7 +4,7 @@ import android.app.Notification
 import android.app.Service
 import android.content.Context
 import android.content.Intent
-import org.wordpress.android.WordPress
+import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
 import org.wordpress.android.ui.sitecreation.services.SiteCreationServiceManager.SiteCreationServiceManagerListener
@@ -17,11 +17,11 @@ import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.AutoForeground
 import org.wordpress.android.util.LocaleManager
 import org.wordpress.android.util.LocaleManagerWrapper
-import java.util.HashMap
 import javax.inject.Inject
 
 private val INITIAL_STATE = IDLE
 
+@AndroidEntryPoint
 class SiteCreationService : AutoForeground<SiteCreationServiceState>(SiteCreationServiceState(INITIAL_STATE)),
         SiteCreationServiceManagerListener {
     @Inject lateinit var manager: SiteCreationServiceManager
@@ -32,7 +32,6 @@ class SiteCreationService : AutoForeground<SiteCreationServiceState>(SiteCreatio
 
     override fun onCreate() {
         super.onCreate()
-        (application as WordPress).component().inject(this)
         manager.onCreate()
         AppLog.i(T.MAIN, "SiteCreationService > Created")
     }
