@@ -23,7 +23,7 @@ internal class ApplicationPasswordManager @Inject constructor(
     private val appLogWrapper: AppLogWrapper
 ) {
     @Suppress("ReturnCount")
-    internal suspend fun getApplicationCredentials(
+    suspend fun getApplicationCredentials(
         site: SiteModel
     ): ApplicationPasswordCreationResult {
         if (site.isWPCom) return ApplicationPasswordCreationResult.NotSupported(
@@ -122,7 +122,7 @@ internal class ApplicationPasswordManager @Inject constructor(
         }
     }
 
-    internal suspend fun deleteApplicationCredentials(
+    suspend fun deleteApplicationCredentials(
         site: SiteModel
     ): ApplicationPasswordDeletionResult {
         val payload = if (site.origin == SiteModel.ORIGIN_WPCOM_REST) {
@@ -165,7 +165,7 @@ internal class ApplicationPasswordManager @Inject constructor(
         }
     }
 
-    internal fun deleteLocalApplicationPassword(site: SiteModel) {
+    fun deleteLocalApplicationPassword(site: SiteModel) {
         applicationPasswordsStore.deleteCredentials(site.domainName)
     }
 
