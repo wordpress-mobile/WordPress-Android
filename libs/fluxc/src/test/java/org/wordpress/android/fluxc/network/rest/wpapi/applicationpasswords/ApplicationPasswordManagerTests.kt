@@ -2,6 +2,7 @@ package org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords
 
 import com.android.volley.NetworkResponse
 import com.android.volley.VolleyError
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Assert
 import org.junit.Before
@@ -14,6 +15,7 @@ import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError
 import kotlin.test.assertEquals
 
+@ExperimentalCoroutinesApi
 class ApplicationPasswordManagerTests {
     private val applicationName = "name"
     private val siteDomain = "test-site.com"

@@ -4,6 +4,7 @@ import com.android.volley.NetworkResponse
 import com.android.volley.Request
 import com.android.volley.RequestQueue
 import com.android.volley.VolleyError
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Before
 import org.junit.Test
@@ -25,6 +26,7 @@ import java.util.Optional
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
 
+@ExperimentalCoroutinesApi
 @RunWith(RobolectricTestRunner::class)
 class ApplicationPasswordNetworkTests {
     private val testSite = SiteModel().apply {
