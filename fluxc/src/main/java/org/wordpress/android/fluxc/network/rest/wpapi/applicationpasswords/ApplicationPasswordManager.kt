@@ -1,12 +1,12 @@
 package org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords
 
-import android.content.Context
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.module.ApplicationPasswordClientId
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPINetworkError
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError
+import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.UrlUtils
 import javax.inject.Inject
@@ -16,13 +16,12 @@ private const val NOT_FOUND = 404
 private const val APPLICATION_PASSWORDS_DISABLED_ERROR_CODE = "application_passwords_disabled"
 
 internal class ApplicationPasswordManager @Inject constructor(
-    context: Context,
+    private val applicationPasswordsStore: ApplicationPasswordsStore,
     @ApplicationPasswordClientId private val applicationName: String,
     private val jetpackApplicationPasswordRestClient: JetpackApplicationPasswordRestClient,
-    private val wpApiApplicationPasswordRestClient: WPApiApplicationPasswordRestClient
+    private val wpApiApplicationPasswordRestClient: WPApiApplicationPasswordRestClient,
+    private val appLogWrapper: AppLogWrapper
 ) {
-    private val applicationPasswordsStore = ApplicationPasswordsStore(context, applicationName)
-
     @Suppress("ReturnCount")
     internal suspend fun getApplicationCredentials(
         site: SiteModel
@@ -94,7 +93,7 @@ internal class ApplicationPasswordManager @Inject constructor(
                 }
                 when {
                     statusCode == CONFLICT -> {
-                        AppLog.w(AppLog.T.MAIN, "Application Password already exists")
+                        appLogWrapper.w(AppLog.T.MAIN, "Application Password already exists")
                         when (val deletionResult = deleteApplicationCredentials(site)) {
                             ApplicationPasswordDeletionResult.Success ->
                                 createApplicationPassword(site, username)
@@ -104,7 +103,7 @@ internal class ApplicationPasswordManager @Inject constructor(
                     }
                     statusCode == NOT_FOUND ||
                         errorCode == APPLICATION_PASSWORDS_DISABLED_ERROR_CODE -> {
-                        AppLog.w(
+                        appLogWrapper.w(
                             AppLog.T.MAIN,
                             "Application Password feature not supported, " +
                                 "status code: $statusCode, errorCode: $errorCode"
@@ -112,7 +111,7 @@ internal class ApplicationPasswordManager @Inject constructor(
                         ApplicationPasswordCreationResult.NotSupported(payload.error)
                     }
                     else -> {
-                        AppLog.w(
+                        appLogWrapper.w(
                             AppLog.T.MAIN,
                             "Application Password creation failed ${payload.error.type}"
                         )
@@ -141,11 +140,11 @@ internal class ApplicationPasswordManager @Inject constructor(
         return when {
             !payload.isError -> {
                 if (payload.isDeleted) {
-                    AppLog.d(AppLog.T.MAIN, "Application password deleted")
+                    appLogWrapper.d(AppLog.T.MAIN, "Application password deleted")
                     deleteLocalApplicationPassword(site)
                     ApplicationPasswordDeletionResult.Success
                 } else {
-                    AppLog.w(AppLog.T.MAIN, "Application password deletion failed")
+                    appLogWrapper.w(AppLog.T.MAIN, "Application password deletion failed")
                     ApplicationPasswordDeletionResult.Failure(
                         BaseNetworkError(
                             GenericErrorType.UNKNOWN,
@@ -156,7 +155,7 @@ internal class ApplicationPasswordManager @Inject constructor(
             }
             else -> {
                 val error = payload.error
-                AppLog.w(
+                appLogWrapper.w(
                     AppLog.T.MAIN, "Application password deletion failed, error: " +
                     "${error.type} ${error.message}\n" +
                     "${error.volleyError?.toString()}"
