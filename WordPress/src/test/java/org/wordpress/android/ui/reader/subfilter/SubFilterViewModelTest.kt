@@ -1,11 +1,10 @@
 package org.wordpress.android.ui.reader.subfilter
 
 import android.os.Bundle
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
@@ -17,6 +16,7 @@ import org.mockito.kotlin.reset
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.store.AccountStore
@@ -48,12 +48,9 @@ import org.wordpress.android.util.EventBusWrapper
 import java.util.EnumSet
 
 @InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
-class SubFilterViewModelTest {
-    @Rule
-    @JvmField
-    val rule = InstantTaskExecutorRule()
-
+class SubFilterViewModelTest : BaseUnitTest() {
     /**
      * First tag for which the card was shown.
      */

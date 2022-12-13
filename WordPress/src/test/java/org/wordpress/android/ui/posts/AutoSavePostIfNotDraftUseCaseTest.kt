@@ -1,9 +1,8 @@
 package org.wordpress.android.ui.posts
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
@@ -12,6 +11,7 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.argWhere
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
+import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.action.PostAction
@@ -38,11 +38,9 @@ private const val DRAFT_STATUS = "draft"
 private const val PUBLISH_STATUS = "publish"
 
 @InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
-class AutoSavePostIfNotDraftUseCaseTest {
-    @Rule
-    @JvmField val rule = InstantTaskExecutorRule()
-
+class AutoSavePostIfNotDraftUseCaseTest : BaseUnitTest() {
     @Mock lateinit var postStore: PostStore
 
     @Test(expected = IllegalArgumentException::class)

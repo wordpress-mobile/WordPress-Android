@@ -2,7 +2,6 @@ package org.wordpress.android.util
 
 import android.app.Activity
 import android.view.View
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
@@ -11,7 +10,6 @@ import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
@@ -21,6 +19,7 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoMoreInteractions
 import org.mockito.kotlin.whenever
+import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.SnackbarItem.Info
@@ -32,9 +31,7 @@ private const val SNACKBAR_DURATION_MS = 500L
 @InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
-class SnackbarSequencerConcurrentTest {
-    @get:Rule val rule = InstantTaskExecutorRule()
-
+class SnackbarSequencerConcurrentTest : BaseUnitTest() {
     @Mock lateinit var wpSnackbarWrapper: WPSnackbarWrapper
     @Mock lateinit var wpSnackbar: Snackbar
     @Mock lateinit var view: View

@@ -1,14 +1,14 @@
 package org.wordpress.android.viewmodel.accounts
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
+import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.WELCOME_NO_SITES_INTERSTITIAL_ADD_SELF_HOSTED_SITE_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.WELCOME_NO_SITES_INTERSTITIAL_CREATE_NEW_SITE_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.WELCOME_NO_SITES_INTERSTITIAL_DISMISSED
@@ -21,11 +21,9 @@ import org.wordpress.android.viewmodel.accounts.PostSignupInterstitialViewModel.
 import org.wordpress.android.viewmodel.accounts.PostSignupInterstitialViewModel.NavigationAction.START_SITE_CONNECTION_FLOW
 import org.wordpress.android.viewmodel.accounts.PostSignupInterstitialViewModel.NavigationAction.START_SITE_CREATION_FLOW
 
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
-class PostSignupInterstitialViewModelTest {
-    @Rule
-    @JvmField val rule = InstantTaskExecutorRule()
-
+class PostSignupInterstitialViewModelTest : BaseUnitTest() {
     private val appPrefs: AppPrefsWrapper = mock()
     private val unifiedLoginTracker: UnifiedLoginTracker = mock()
     private val analyticsTracker: AnalyticsTrackerWrapper = mock()
