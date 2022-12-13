@@ -13,6 +13,7 @@ import javax.inject.Singleton
 class AppConfig
 @Inject constructor(
     private val featureFlagConfig: FeatureFlagConfig,
+    private val remoteFieldConfigRepository: RemoteFieldConfigRepository,
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val manualFeatureConfig: ManualFeatureConfig
 ) {
@@ -29,6 +30,7 @@ class AppConfig
     fun init(appScope: CoroutineScope) {
         featureFlagConfig.init(appScope)
         remoteFeatureConfigCheck.checkRemoteFields()
+        remoteFieldConfigRepository.init()
     }
 
     /**
@@ -36,6 +38,7 @@ class AppConfig
      */
     fun refresh(appScope: CoroutineScope) {
         featureFlagConfig.refresh(appScope)
+        remoteFieldConfigRepository.refresh()
     }
 
     /**
@@ -56,9 +59,8 @@ class AppConfig
         return buildFeatureState(feature)
     }
 
-    fun getRemoteConfigValue(remoteField: String): String {
-        //Todo update the logic to fetch from database
-        return remoteField.toString()
+    fun getRemoteFieldConfigValue(remoteField: String): String {
+        return remoteFieldConfigRepository.getValue(remoteField)
     }
 
     private fun buildFeatureState(feature: FeatureConfig): FeatureState {
