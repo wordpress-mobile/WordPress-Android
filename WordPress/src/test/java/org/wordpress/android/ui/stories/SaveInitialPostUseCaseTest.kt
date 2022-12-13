@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.stories
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -20,6 +21,7 @@ import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.ui.posts.EditPostRepository
 import org.wordpress.android.ui.posts.SavePostToDbUseCase
 
+@ExperimentalCoroutinesApi
 class SaveInitialPostUseCaseTest : BaseUnitTest() {
     private lateinit var editPostRepository: EditPostRepository
     private lateinit var saveInitialPostUseCase: SaveInitialPostUseCase

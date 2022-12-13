@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.stats.refresh.lists.widget.configuration
 
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -15,6 +16,7 @@ import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsSiteSelectionViewModel.SiteUiModel
 import org.wordpress.android.viewmodel.Event
 
+@ExperimentalCoroutinesApi
 class StatsSiteSelectionViewModelTest : BaseUnitTest() {
     @Mock private lateinit var siteStore: SiteStore
     @Mock private lateinit var accountStore: AccountStore

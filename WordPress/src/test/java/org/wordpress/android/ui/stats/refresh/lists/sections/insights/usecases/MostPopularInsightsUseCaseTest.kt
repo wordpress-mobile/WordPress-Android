@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -35,6 +36,7 @@ import java.math.RoundingMode
 import java.math.RoundingMode.HALF_UP
 import kotlin.math.roundToInt
 
+@ExperimentalCoroutinesApi
 class MostPopularInsightsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var insightsStore: MostPopularInsightsStore
     @Mock lateinit var postStore: PostStore

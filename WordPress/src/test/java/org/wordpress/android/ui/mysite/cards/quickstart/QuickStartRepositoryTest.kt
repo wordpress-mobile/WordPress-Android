@@ -2,6 +2,7 @@ package org.wordpress.android.ui.mysite.cards.quickstart
 
 import androidx.core.text.HtmlCompat
 import com.google.android.material.snackbar.Snackbar.Callback
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -44,6 +45,7 @@ import org.wordpress.android.util.config.QuickStartExistingUsersV2FeatureConfig
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.ResourceProvider
 
+@ExperimentalCoroutinesApi
 class QuickStartRepositoryTest : BaseUnitTest() {
     @Mock lateinit var quickStartStore: QuickStartStore
     @Mock lateinit var quickStartUtilsWrapper: QuickStartUtilsWrapper

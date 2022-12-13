@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.accounts
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -13,6 +14,7 @@ import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowSiteAddressEr
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 
+@ExperimentalCoroutinesApi
 class LoginViewModelTest : BaseUnitTest() {
     @Mock lateinit var buildConfigWrapper: BuildConfigWrapper
     @Mock lateinit var resourceProvider: ResourceProvider

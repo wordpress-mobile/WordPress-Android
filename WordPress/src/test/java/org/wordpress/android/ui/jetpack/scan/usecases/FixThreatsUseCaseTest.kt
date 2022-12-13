@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.jetpack.scan.usecases
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -19,6 +20,7 @@ import org.wordpress.android.ui.jetpack.scan.usecases.FixThreatsUseCase.FixThrea
 import org.wordpress.android.util.NetworkUtilsWrapper
 
 @InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 class FixThreatsUseCaseTest : BaseUnitTest() {
     private lateinit var useCase: FixThreatsUseCase
     @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper

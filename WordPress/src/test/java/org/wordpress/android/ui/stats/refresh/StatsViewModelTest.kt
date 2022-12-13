@@ -3,6 +3,7 @@ package org.wordpress.android.ui.stats.refresh
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Ignore
@@ -48,6 +49,7 @@ import org.wordpress.android.util.config.MySiteDashboardTodaysStatsCardFeatureCo
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
 
+@ExperimentalCoroutinesApi
 class StatsViewModelTest : BaseUnitTest() {
     @Mock lateinit var baseListUseCase: BaseListUseCase
     @Mock lateinit var selectedDateProvider: SelectedDateProvider

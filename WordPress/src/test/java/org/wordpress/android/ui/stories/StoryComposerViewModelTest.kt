@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.stories
 
 import com.wordpress.stories.compose.frame.StorySaveEvents.StorySaveResult
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -29,6 +30,7 @@ import org.wordpress.android.ui.posts.PostEditorAnalyticsSessionWrapper
 import org.wordpress.android.ui.posts.SavePostToDbUseCase
 import org.wordpress.android.ui.stories.usecase.SetUntitledStoryTitleIfTitleEmptyUseCase
 
+@ExperimentalCoroutinesApi
 class StoryComposerViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: StoryComposerViewModel
     private lateinit var editPostRepository: EditPostRepository

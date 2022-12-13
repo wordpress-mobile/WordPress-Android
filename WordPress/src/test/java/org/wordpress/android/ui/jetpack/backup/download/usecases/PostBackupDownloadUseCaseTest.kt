@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.jetpack.backup.download.usecases
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -25,6 +26,7 @@ import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestSta
 import org.wordpress.android.util.NetworkUtilsWrapper
 
 @InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 class PostBackupDownloadUseCaseTest : BaseUnitTest() {
     private lateinit var useCase: PostBackupDownloadUseCase
     @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper

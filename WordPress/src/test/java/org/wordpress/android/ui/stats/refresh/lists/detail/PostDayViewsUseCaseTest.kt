@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.stats.refresh.lists.detail
 
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -34,6 +35,7 @@ import org.wordpress.android.ui.stats.refresh.utils.StatsPostProvider
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.viewmodel.ResourceProvider
 
+@ExperimentalCoroutinesApi
 class PostDayViewsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var store: PostDetailStore
     @Mock lateinit var selectedDateProvider: SelectedDateProvider

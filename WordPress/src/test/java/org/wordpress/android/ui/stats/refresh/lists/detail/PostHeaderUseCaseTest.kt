@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.stats.refresh.lists.detail
 
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -20,6 +21,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Refer
 import org.wordpress.android.ui.stats.refresh.utils.StatsPostProvider
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 
+@ExperimentalCoroutinesApi
 class PostHeaderUseCaseTest : BaseUnitTest() {
     @Mock lateinit var statsPostProvider: StatsPostProvider
     @Mock lateinit var tracker: AnalyticsTrackerWrapper

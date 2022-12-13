@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.bloggingprompts.editor
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
 import org.assertj.core.api.Assertions.assertThat
@@ -23,6 +24,7 @@ import org.wordpress.android.ui.posts.EditorBloggingPromptsViewModel.EditorLoade
 import java.util.Date
 
 @InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 class EditorBloggingPromptsViewModelTest : BaseUnitTest() {
     @Mock lateinit var siteModel: SiteModel
 

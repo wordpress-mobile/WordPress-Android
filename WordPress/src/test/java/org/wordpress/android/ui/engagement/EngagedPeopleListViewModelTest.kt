@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.engagement
 
 import androidx.lifecycle.MutableLiveData
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -47,6 +48,7 @@ import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.viewmodel.Event
 
 @InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 class EngagedPeopleListViewModelTest : BaseUnitTest() {
     @Mock lateinit var getLikesHandler: GetLikesHandler
     @Mock lateinit var readerUtilsWrapper: ReaderUtilsWrapper

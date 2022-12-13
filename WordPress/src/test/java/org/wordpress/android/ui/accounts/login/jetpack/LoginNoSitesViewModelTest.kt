@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.accounts.login.jetpack
 
 import android.os.Bundle
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -28,6 +29,7 @@ private const val DISPLAY_NAME = "display_name"
 private const val AVATAR_URL = "avatar_url"
 
 @InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 class LoginNoSitesViewModelTest : BaseUnitTest() {
     @Mock lateinit var unifiedLoginTracker: UnifiedLoginTracker
     @Mock lateinit var wordPress: WordPress

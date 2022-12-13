@@ -4,6 +4,7 @@ import android.content.ContentResolver
 import android.content.Context
 import android.database.MatrixCursor
 import com.google.gson.Gson
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import org.junit.Before
 import org.junit.Ignore
@@ -45,6 +46,7 @@ import org.wordpress.android.viewmodel.ContextProvider
 @Suppress("ForbiddenComment")
 // TODO: adapt these tests to the unified provider / orchestrator approach
 @Ignore("Disabled for now: will refactor in another PR after unification.")
+@ExperimentalCoroutinesApi
 class SharedLoginResolverTest : BaseUnitTest() {
     private lateinit var onSuccessFlagsCaptor: KArgumentCaptor<() -> Unit>
     private lateinit var onSuccessReaderPostsCaptor: KArgumentCaptor<() -> Unit>

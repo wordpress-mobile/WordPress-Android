@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.mediapicker.loader
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -27,6 +28,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.NetworkUtilsWrapper
 
 @InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 class StockMediaDataSourceTest : BaseUnitTest() {
     @Mock lateinit var site: SiteModel
     @Mock lateinit var stockMediaStore: StockMediaStore

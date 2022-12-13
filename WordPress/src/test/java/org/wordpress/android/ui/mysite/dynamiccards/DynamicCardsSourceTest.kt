@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.mysite.dynamiccards
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -18,6 +19,7 @@ import org.wordpress.android.testScope
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.DynamicCardsUpdate
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 
+@ExperimentalCoroutinesApi
 class DynamicCardsSourceTest : BaseUnitTest() {
     @Mock lateinit var dynamicCardStore: DynamicCardStore
     @Mock lateinit var selectedSiteRepository: SelectedSiteRepository

@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.jetpack.scan.usecases
 
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.toList
 import org.assertj.core.api.Assertions.assertThat
@@ -24,6 +25,7 @@ import org.wordpress.android.ui.jetpack.scan.usecases.StartScanUseCase.StartScan
 import org.wordpress.android.util.NetworkUtilsWrapper
 
 @InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 class StartScanUseCaseTest : BaseUnitTest() {
     private lateinit var useCase: StartScanUseCase
     @Mock private lateinit var site: SiteModel

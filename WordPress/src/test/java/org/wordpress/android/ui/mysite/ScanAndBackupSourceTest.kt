@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.mysite
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.flow
 import org.assertj.core.api.Assertions.assertThat
@@ -19,6 +20,7 @@ import org.wordpress.android.ui.jetpack.JetpackCapabilitiesUseCase.JetpackPurcha
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.JetpackCapabilities
 
 @InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 class ScanAndBackupSourceTest : BaseUnitTest() {
     @Mock lateinit var selectedSiteRepository: SelectedSiteRepository
     @Mock lateinit var jetpackCapabilitiesUseCase: JetpackCapabilitiesUseCase

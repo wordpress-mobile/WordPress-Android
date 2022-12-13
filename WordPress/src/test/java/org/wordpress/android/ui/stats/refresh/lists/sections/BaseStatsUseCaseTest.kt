@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections
 
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.After
@@ -20,6 +21,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import javax.inject.Provider
 
 @InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 class BaseStatsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var localDataProvider: Provider<String?>
     @Mock lateinit var remoteDataProvider: Provider<String?>

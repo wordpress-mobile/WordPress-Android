@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.mysite
 
 import androidx.lifecycle.MediatorLiveData
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -31,6 +32,7 @@ import org.wordpress.android.ui.quickstart.QuickStartTracker
 
 const val SITE_LOCAL_ID = 1
 
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class MySiteSourceManagerTest : BaseUnitTest() {
     @Mock lateinit var quickStartTracker: QuickStartTracker

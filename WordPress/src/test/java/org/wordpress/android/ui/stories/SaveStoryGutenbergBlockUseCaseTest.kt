@@ -3,6 +3,7 @@ package org.wordpress.android.ui.stories
 import android.content.Context
 import com.automattic.android.tracks.crashlogging.CrashLogging
 import com.wordpress.stories.compose.story.StoryFrameItem
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions
 import org.junit.Before
@@ -28,6 +29,7 @@ import org.wordpress.android.ui.stories.SaveStoryGutenbergBlockUseCase.StoryMedi
 import org.wordpress.android.ui.stories.prefs.StoriesPrefs
 import org.wordpress.android.util.helpers.MediaFile
 
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class SaveStoryGutenbergBlockUseCaseTest : BaseUnitTest() {
     private lateinit var saveStoryGutenbergBlockUseCase: SaveStoryGutenbergBlockUseCase

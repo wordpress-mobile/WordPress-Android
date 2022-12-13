@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.domains
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -30,6 +31,7 @@ import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 
+@ExperimentalCoroutinesApi
 class DomainsDashboardViewModelTest : BaseUnitTest() {
     private val siteStore: SiteStore = mock()
     private val analyticsTracker: AnalyticsTrackerWrapper = mock()

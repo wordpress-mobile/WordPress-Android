@@ -2,6 +2,7 @@ package org.wordpress.android.ui.stats.refresh.lists.widget.configuration
 
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -18,6 +19,7 @@ import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWi
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureViewModel.WidgetSettingsModel
 import org.wordpress.android.viewmodel.Event
 
+@ExperimentalCoroutinesApi
 class StatsWidgetConfigureViewModelTest : BaseUnitTest() {
     @Mock private lateinit var appPrefsWrapper: AppPrefsWrapper
     @Mock private lateinit var siteSelectionViewModel: StatsSiteSelectionViewModel

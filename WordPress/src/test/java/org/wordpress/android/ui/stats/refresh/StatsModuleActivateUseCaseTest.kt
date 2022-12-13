@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.stats.refresh
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions
 import org.junit.Before
@@ -21,6 +22,7 @@ import org.wordpress.android.ui.stats.refresh.StatsModuleActivateRequestState.Su
 import org.wordpress.android.util.NetworkUtilsWrapper
 
 @InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 class StatsModuleActivateUseCaseTest : BaseUnitTest() {
     private lateinit var useCase: StatsModuleActivateUseCase
     @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper

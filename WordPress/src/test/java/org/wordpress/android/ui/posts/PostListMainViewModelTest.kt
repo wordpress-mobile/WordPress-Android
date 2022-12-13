@@ -2,6 +2,7 @@ package org.wordpress.android.ui.posts
 
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -26,6 +27,7 @@ import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.uploads.UploadStarter
 import org.wordpress.android.viewmodel.Event
 
+@ExperimentalCoroutinesApi
 class PostListMainViewModelTest : BaseUnitTest() {
     @Mock lateinit var site: SiteModel
     private val currentBottomSheetPostId = LocalId(0)

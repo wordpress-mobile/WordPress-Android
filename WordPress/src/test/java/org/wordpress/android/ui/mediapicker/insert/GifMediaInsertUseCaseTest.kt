@@ -2,6 +2,7 @@ package org.wordpress.android.ui.mediapicker.insert
 
 import android.content.Context
 import android.webkit.MimeTypeMap
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.toList
 import org.assertj.core.api.Assertions
@@ -28,6 +29,7 @@ import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.WPMediaUtilsWrapper
 
 @InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 class GifMediaInsertUseCaseTest : BaseUnitTest() {
     @Mock lateinit var context: Context
     @Mock lateinit var site: SiteModel

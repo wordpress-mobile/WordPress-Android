@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.posts.prepublishing
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -19,6 +20,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.viewmodel.Event
 
 @InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 class PrepublishingTagsViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: PrepublishingTagsViewModel
     @Mock lateinit var updatePostTagsUseCase: UpdatePostTagsUseCase

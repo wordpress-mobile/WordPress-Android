@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.debug
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -26,6 +27,7 @@ import org.wordpress.android.util.config.FeatureFlagConfig
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.workers.weeklyroundup.WeeklyRoundupNotifier
 
+@ExperimentalCoroutinesApi
 class DebugSettingsViewModelTest : BaseUnitTest() {
     @Mock lateinit var manualFeatureConfig: ManualFeatureConfig
     @Mock lateinit var featureFlagConfig: FeatureFlagConfig

@@ -1,5 +1,6 @@
 package org.wordpress.android.viewmodel.posts
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -27,6 +28,7 @@ private const val DEFAULT_PHOTON_DIMENSIONS = -9
 private val DEFAULT_AUTHOR_FILTER = AuthorFilterSelection.EVERYONE
 
 @InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 class PostListViewModelTest : BaseUnitTest() {
     @Mock private lateinit var site: SiteModel
     @Mock private lateinit var uploadStarter: UploadStarter

@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.bloggingprompts.onboarding
 
 import androidx.lifecycle.Observer
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
 import org.assertj.core.api.Assertions
@@ -40,6 +41,7 @@ import org.wordpress.android.viewmodel.Event
 import java.util.Date
 
 @InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 class BloggingPromptsOnboardingViewModelTest : BaseUnitTest() {
     private val uiStateMapper = BloggingPromptsOnboardingUiStateMapper()
     private val siteStore: SiteStore = mock()

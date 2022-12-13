@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
 import org.assertj.core.api.Assertions.assertThat
@@ -50,6 +51,7 @@ private val PROMPT = BloggingPromptModel(
         respondentsAvatarUrls = listOf()
 )
 @InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 class BloggingPromptCardSourceTest : BaseUnitTest() {
     @Mock private lateinit var selectedSiteRepository: SelectedSiteRepository
     @Mock private lateinit var bloggingPromptsStore: BloggingPromptsStore

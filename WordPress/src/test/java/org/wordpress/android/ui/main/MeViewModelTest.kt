@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.main
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -25,6 +26,7 @@ import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.viewmodel.Event
 
 @InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 class MeViewModelTest : BaseUnitTest() {
     @Mock lateinit var wordPress: WordPress
     @Mock lateinit var selectedSiteRepository: SelectedSiteRepository

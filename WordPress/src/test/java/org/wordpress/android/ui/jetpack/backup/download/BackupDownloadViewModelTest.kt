@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.jetpack.backup.download
 
 import android.os.Bundle
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.flow
 import org.assertj.core.api.Assertions.assertThat
@@ -50,6 +51,7 @@ import org.wordpress.android.viewmodel.SingleLiveEvent
 import java.util.Date
 
 @InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 class BackupDownloadViewModelTest : BaseUnitTest() {
     @Mock lateinit var wizardManager: WizardManager<BackupDownloadStep>
     @Mock lateinit var backupDownloadStep: BackupDownloadStep

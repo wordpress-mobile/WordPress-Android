@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.jetpack.scan.usecases
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.toList
 import org.assertj.core.api.Assertions.assertThat
@@ -27,6 +28,7 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 import java.util.function.Consumer
 
 @InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 class FetchScanStateUseCaseTest : BaseUnitTest() {
     private lateinit var useCase: FetchScanStateUseCase
     @Mock private lateinit var site: SiteModel

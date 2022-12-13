@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.mediapicker.loader
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
@@ -21,6 +22,7 @@ import org.wordpress.android.ui.mediapicker.loader.MediaLoader.LoadAction
 import org.wordpress.android.ui.mediapicker.loader.MediaSource.MediaLoadingResult
 import org.wordpress.android.ui.utils.UiString.UiStringText
 
+@ExperimentalCoroutinesApi
 class MediaLoaderTest : BaseUnitTest() {
     @Mock lateinit var mediaSource: MediaSource
     @Mock lateinit var identifier1: Identifier

@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.prefs.categories
 
 import junit.framework.TestCase.assertTrue
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.junit.Before
 import org.junit.Test
@@ -27,6 +28,7 @@ import org.wordpress.android.ui.prefs.categories.list.UiState.Loading
 import org.wordpress.android.util.NetworkUtilsWrapper
 
 @InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 class CategoriesListViewModelTest : BaseUnitTest() {
     private val getCategoriesUseCase: GetCategoriesUseCase = mock()
     private val networkUtilsWrapper: NetworkUtilsWrapper = mock()

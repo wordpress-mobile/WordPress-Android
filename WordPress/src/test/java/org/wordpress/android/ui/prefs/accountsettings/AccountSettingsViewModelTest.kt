@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.prefs.accountsettings
 
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
@@ -30,6 +31,7 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 
 @InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 class AccountSettingsViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: AccountSettingsViewModel
     @Mock private lateinit var resourceProvider: ResourceProvider

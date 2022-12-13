@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.mysite
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -11,6 +12,7 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.testScope
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CurrentAvatarUrl
 
+@ExperimentalCoroutinesApi
 class CurrentAvatarSourceTest : BaseUnitTest() {
     @Mock lateinit var accountStore: AccountStore
     @Mock lateinit var accountModel: AccountModel

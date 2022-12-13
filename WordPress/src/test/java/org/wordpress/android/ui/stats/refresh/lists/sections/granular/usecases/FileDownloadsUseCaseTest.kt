@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases
 
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -49,6 +50,7 @@ import java.util.Locale
 private const val ITEMS_TO_LOAD = 6
 private val statsGranularity = DAYS
 
+@ExperimentalCoroutinesApi
 class FileDownloadsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var store: FileDownloadsStore
     @Mock lateinit var siteModelProvider: StatsSiteProvider

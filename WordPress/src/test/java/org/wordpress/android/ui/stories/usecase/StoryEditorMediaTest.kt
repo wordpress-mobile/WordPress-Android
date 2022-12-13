@@ -2,6 +2,7 @@ package org.wordpress.android.ui.stories.usecase
 
 import android.net.Uri
 import androidx.lifecycle.Observer
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
@@ -27,6 +28,7 @@ import org.wordpress.android.util.MediaUtilsWrapper
 import org.wordpress.android.viewmodel.Event
 
 @InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 class StoryEditorMediaTest : BaseUnitTest() {
     @Test
     fun `advertiseImageOptimisationAndAddMedia shows dialog when shouldAdvertiseImageOptimization is true`() {

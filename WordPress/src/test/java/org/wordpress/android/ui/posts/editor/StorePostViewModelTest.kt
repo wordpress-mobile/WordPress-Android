@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.posts.editor
 
 import android.content.Context
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -32,6 +33,7 @@ import org.wordpress.android.ui.uploads.UploadServiceFacade
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.Event
 
+@ExperimentalCoroutinesApi
 class StorePostViewModelTest : BaseUnitTest() {
     @Mock lateinit var siteStore: SiteStore
     @Mock lateinit var postUtils: PostUtilsWrapper

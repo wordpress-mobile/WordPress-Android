@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.reader
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -10,6 +11,7 @@ import org.wordpress.android.ui.reader.ReaderCommentListViewModel.ScrollPosition
 import org.wordpress.android.viewmodel.Event
 
 @InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 class ReaderCommentListViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: ReaderCommentListViewModel
 

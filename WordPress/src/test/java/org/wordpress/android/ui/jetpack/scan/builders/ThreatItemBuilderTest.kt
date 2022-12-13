@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.jetpack.scan.builders
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -31,6 +32,7 @@ import java.text.DateFormat
 private const val TEST_FIXED_ON_DATE = "2 January, 2020"
 
 @InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 class ThreatItemBuilderTest : BaseUnitTest() {
     private lateinit var builder: ThreatItemBuilder
 

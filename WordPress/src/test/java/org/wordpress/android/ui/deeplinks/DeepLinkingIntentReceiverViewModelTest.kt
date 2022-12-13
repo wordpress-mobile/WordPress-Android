@@ -2,6 +2,7 @@ package org.wordpress.android.ui.deeplinks
 
 import android.content.Context
 import android.net.Uri
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -26,6 +27,7 @@ import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.viewmodel.ContextProvider
 
+@ExperimentalCoroutinesApi
 class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
     @Mock lateinit var deepLinkHandlers: DeepLinkHandlers
     @Mock lateinit var accountStore: AccountStore

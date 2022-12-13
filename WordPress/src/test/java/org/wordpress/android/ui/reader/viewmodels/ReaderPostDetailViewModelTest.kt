@@ -2,6 +2,7 @@ package org.wordpress.android.ui.reader.viewmodels
 
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -120,8 +121,9 @@ private const val ON_RELATED_POST_ITEM_CLICKED_PARAM_POSITION = 3
 
 private const val INTERCEPTED_URI = "intercepted uri"
 
-@InternalCoroutinesApi
 @Suppress("LargeClass")
+@InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 class ReaderPostDetailViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: ReaderPostDetailViewModel
 

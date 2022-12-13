@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.posts.editor.media
 
 import android.net.Uri
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
@@ -18,8 +19,9 @@ import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.ui.utils.AuthenticationUtils
 import org.wordpress.android.util.MediaUtilsWrapper
 
-@RunWith(MockitoJUnitRunner::class)
 @InternalCoroutinesApi
+@ExperimentalCoroutinesApi
+@RunWith(MockitoJUnitRunner::class)
 class CopyMediaToAppStorageUseCaseTest : BaseUnitTest() {
     @Test
     fun `do NOT copy files which are present in media store`() = test {

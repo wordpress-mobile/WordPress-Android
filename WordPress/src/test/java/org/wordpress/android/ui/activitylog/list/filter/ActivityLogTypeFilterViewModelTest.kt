@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.activitylog.list.filter
 
 import androidx.core.util.Pair
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -32,6 +33,7 @@ import org.wordpress.android.viewmodel.activitylog.DateRange
 private const val REMOTE_SITE_ID = 0L
 
 @InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 class ActivityLogTypeFilterViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: ActivityLogTypeFilterViewModel
     @Mock private lateinit var parentViewModel: ActivityLogViewModel

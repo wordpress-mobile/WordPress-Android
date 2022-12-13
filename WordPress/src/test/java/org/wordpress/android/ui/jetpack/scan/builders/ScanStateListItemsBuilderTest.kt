@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.jetpack.scan.builders
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -52,6 +53,7 @@ private const val SERVER_CREDS_MSG_WITH_CLICKABLE_LINK =
                 "to fix threat."
 
 @InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 class ScanStateListItemsBuilderTest : BaseUnitTest() {
     private lateinit var builder: ScanStateListItemsBuilder
 

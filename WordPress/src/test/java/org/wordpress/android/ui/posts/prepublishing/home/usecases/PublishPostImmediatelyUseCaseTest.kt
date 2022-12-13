@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.posts.prepublishing.home.usecases
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -14,6 +15,7 @@ import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.ui.posts.EditPostRepository
 import org.wordpress.android.util.DateTimeUtilsWrapper
 
+@ExperimentalCoroutinesApi
 class PublishPostImmediatelyUseCaseTest : BaseUnitTest() {
     private lateinit var useCase: PublishPostImmediatelyUseCase
     private lateinit var editPostRepository: EditPostRepository

@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.stories.usecase
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -10,6 +11,7 @@ import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.ui.posts.EditPostRepository
 
+@ExperimentalCoroutinesApi
 class UpdateStoryPostTitleUseCaseTest : BaseUnitTest() {
     private lateinit var editPostRepository: EditPostRepository
     private lateinit var updateStoryTitleUseCase: UpdateStoryPostTitleUseCase

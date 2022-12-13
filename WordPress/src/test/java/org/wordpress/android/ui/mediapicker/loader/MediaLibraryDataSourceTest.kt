@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.mediapicker.loader
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.ObjectAssert
@@ -42,6 +43,7 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 import java.util.Date
 
 @InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 class MediaLibraryDataSourceTest : BaseUnitTest() {
     @Mock lateinit var mediaStore: MediaStore
     @Mock lateinit var dispatcher: Dispatcher

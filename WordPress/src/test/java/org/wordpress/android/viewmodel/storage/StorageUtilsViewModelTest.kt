@@ -2,6 +2,7 @@ package org.wordpress.android.viewmodel.storage
 
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Observer
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.junit.Before
 import org.junit.Test
@@ -16,6 +17,7 @@ import org.wordpress.android.util.StorageUtilsProvider.Source
 import org.wordpress.android.viewmodel.Event
 
 @InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 class StorageUtilsViewModelTest : BaseUnitTest() {
     @Mock lateinit var storageUtilsProvider: StorageUtilsProvider
     @Mock lateinit var checkStorageWarningObserver: Observer<Event<Unit>>

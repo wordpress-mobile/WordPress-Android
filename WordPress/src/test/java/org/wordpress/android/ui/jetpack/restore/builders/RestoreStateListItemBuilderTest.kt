@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.jetpack.restore.builders
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -30,6 +31,7 @@ private const val SERVER_CREDS_MSG_WITH_CLICKABLE_LINK =
                 "to enable one click site restores from backups."
 
 @InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 class RestoreStateListItemBuilderTest : BaseUnitTest() {
     private lateinit var builder: RestoreStateListItemBuilder
 

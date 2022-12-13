@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.posts.prepublishing
 
 import android.os.Bundle
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -28,6 +29,7 @@ import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
 
 @InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class PrepublishingAddCategoryViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: PrepublishingAddCategoryViewModel

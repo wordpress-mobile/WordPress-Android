@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.jetpack.backup.download.usecases
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -19,6 +20,7 @@ import org.wordpress.android.fluxc.store.ActivityLogStore.OnDismissBackupDownloa
 import org.wordpress.android.util.NetworkUtilsWrapper
 
 @InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 class PostDismissBackupDownloadUseCaseTest : BaseUnitTest() {
     private lateinit var useCase: PostDismissBackupDownloadUseCase
     @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper

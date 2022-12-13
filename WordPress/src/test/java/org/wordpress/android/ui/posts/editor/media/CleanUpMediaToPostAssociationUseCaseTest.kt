@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.posts.editor.media
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
@@ -28,6 +29,7 @@ import org.wordpress.android.ui.posts.editor.media.CleanUpMediaToPostAssociation
 import org.wordpress.android.ui.posts.editor.media.CleanUpMediaToPostAssociationUseCaseTest.Fixtures.createUploadStore
 
 @InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 @RunWith(Parameterized::class)
 class CleanUpMediaToPostAssociationUseCaseTest(private val containsGutenbergBlocks: Boolean) : BaseUnitTest() {
     @Test

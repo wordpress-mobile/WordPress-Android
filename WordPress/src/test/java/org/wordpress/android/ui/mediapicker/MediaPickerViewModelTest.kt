@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.mediapicker
 
 import android.content.Context
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.flow
@@ -72,6 +73,7 @@ import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Locale
 
 @Suppress("LargeClass")
+@ExperimentalCoroutinesApi
 class MediaPickerViewModelTest : BaseUnitTest() {
     @Mock lateinit var mediaLoaderFactory: MediaLoaderFactory
     @Mock lateinit var mediaLoader: MediaLoader

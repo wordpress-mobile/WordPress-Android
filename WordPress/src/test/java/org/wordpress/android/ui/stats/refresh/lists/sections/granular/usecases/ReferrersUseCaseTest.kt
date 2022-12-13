@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases
 
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -60,6 +61,7 @@ private val selectedDate = Date(0)
 private val limitMode = Top(ITEMS_TO_LOAD)
 
 @InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 class ReferrersUseCaseTest : BaseUnitTest() {
     @Mock lateinit var store: ReferrersStore
     @Mock lateinit var statsSiteProvider: StatsSiteProvider

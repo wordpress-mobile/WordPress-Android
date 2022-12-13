@@ -1,6 +1,7 @@
 package org.wordpress.android.util.experiments
 
 import dagger.Lazy
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -27,6 +28,7 @@ import org.wordpress.android.testScope
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import java.util.Date
 
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class ExPlatTest : BaseUnitTest() {
     @Mock lateinit var experiments: Lazy<Set<Experiment>>

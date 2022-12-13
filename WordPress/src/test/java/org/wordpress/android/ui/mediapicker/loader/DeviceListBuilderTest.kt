@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.mediapicker.loader
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -22,6 +23,7 @@ import org.wordpress.android.util.MediaUtilsWrapper
 import org.wordpress.android.util.UriWrapper
 
 @InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 class DeviceListBuilderTest : BaseUnitTest() {
     @Mock lateinit var localeManagerWrapper: LocaleManagerWrapper
     @Mock lateinit var deviceMediaLoader: DeviceMediaLoader

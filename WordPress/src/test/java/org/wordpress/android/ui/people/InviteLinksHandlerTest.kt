@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.people
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.flow
 import org.assertj.core.api.Assertions.assertThat
@@ -20,6 +21,7 @@ import org.wordpress.android.ui.people.InviteLinksUseCase.UseCaseScenarioContext
 import org.wordpress.android.ui.utils.UiString.UiStringText
 
 @InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 class InviteLinksHandlerTest : BaseUnitTest() {
     @Mock lateinit var inviteLinksUseCase: InviteLinksUseCase
 

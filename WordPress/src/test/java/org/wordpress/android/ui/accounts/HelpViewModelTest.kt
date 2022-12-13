@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.accounts
 
 import androidx.lifecycle.Observer
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import kotlinx.coroutines.InternalCoroutinesApi
@@ -15,6 +16,7 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.viewmodel.Event
 
 @InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 class HelpViewModelTest : BaseUnitTest() {
     @Mock lateinit var wordPress: WordPress
     @Mock private lateinit var onSignoutCompletedObserver: Observer<Unit>

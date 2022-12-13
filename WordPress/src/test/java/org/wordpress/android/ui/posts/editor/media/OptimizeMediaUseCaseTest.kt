@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.posts.editor.media
 
 import android.net.Uri
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
@@ -14,8 +15,9 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.posts.editor.EditorTracker
 import org.wordpress.android.util.MediaUtilsWrapper
 
-@RunWith(MockitoJUnitRunner::class)
 @InternalCoroutinesApi
+@ExperimentalCoroutinesApi
+@RunWith(MockitoJUnitRunner::class)
 class OptimizeMediaUseCaseTest : BaseUnitTest() {
     @Test
     fun `Uri filtered out when getRealPathFromURI returns null`() = test {

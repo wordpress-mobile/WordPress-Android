@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.posts.editor.media
 
 import android.net.Uri
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
@@ -22,8 +23,9 @@ import org.wordpress.android.util.FluxCUtilsWrapper
 import org.wordpress.android.util.MediaUtilsWrapper
 import java.io.File
 
-@RunWith(MockitoJUnitRunner::class)
 @InternalCoroutinesApi
+@ExperimentalCoroutinesApi
+@RunWith(MockitoJUnitRunner::class)
 class GetMediaModelUseCaseTest : BaseUnitTest() {
     @Test
     fun `loadMediaByLocalId loads models from db and returns them`() = test {
