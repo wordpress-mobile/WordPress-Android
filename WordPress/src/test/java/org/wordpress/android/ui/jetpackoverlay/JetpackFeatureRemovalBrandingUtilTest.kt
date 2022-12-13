@@ -32,7 +32,7 @@ class JetpackFeatureRemovalBrandingUtilTest {
     }
 
     @Test
-    fun `given jetpack app, jetpack branding should not show`() {
+    fun `given jetpack app, when phase one branding is checked, should return false`() {
         whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
         val shouldShowBranding = jetpackFeatureRemovalBrandingUtil.shouldShowPhaseOneBranding()
 
@@ -40,7 +40,7 @@ class JetpackFeatureRemovalBrandingUtilTest {
     }
 
     @Test
-    fun `given phase one, jetpack branding should show`() {
+    fun `given phase one, when phase one branding is checked, should return true`() {
         whenever(jetpackFeatureRemovalPhaseHelper.getCurrentPhase()).thenReturn(PhaseOne)
         val shouldShowBranding = jetpackFeatureRemovalBrandingUtil.shouldShowPhaseOneBranding()
 
