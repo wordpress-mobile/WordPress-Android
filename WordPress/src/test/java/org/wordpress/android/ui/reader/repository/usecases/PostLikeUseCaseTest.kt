@@ -1,11 +1,10 @@
 package org.wordpress.android.ui.reader.repository.usecases
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.toList
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers.anyBoolean
@@ -16,10 +15,10 @@ import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.models.ReaderPost
-import org.wordpress.android.test
 import org.wordpress.android.ui.reader.actions.ReaderActions.ActionListener
 import org.wordpress.android.ui.reader.actions.ReaderPostActionsWrapper
 import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase.PostLikeState.Failed
@@ -33,12 +32,9 @@ private const val POST_AND_BLOG_ID = 1L
 private const val SOURCE = "source"
 
 @InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
-class PostLikeUseCaseTest {
-    @Rule
-    @JvmField
-    val rule = InstantTaskExecutorRule()
-
+class PostLikeUseCaseTest : BaseUnitTest() {
     @Mock private lateinit var accountStore: AccountStore
     @Mock private lateinit var networkUtilsWrapper: NetworkUtilsWrapper
     @Mock private lateinit var readerPostActionsWrapper: ReaderPostActionsWrapper

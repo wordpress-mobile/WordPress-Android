@@ -1,12 +1,11 @@
 package org.wordpress.android.ui.reader.viewmodels
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Ignore
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers.any
@@ -15,6 +14,7 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.store.AccountStore
@@ -26,7 +26,6 @@ import org.wordpress.android.models.ReaderTag.FOLLOWING_PATH
 import org.wordpress.android.models.ReaderTag.LIKED_PATH
 import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.models.ReaderTagType
-import org.wordpress.android.test
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
 import org.wordpress.android.ui.jetpackoverlay.JetpackOverlayConnectedFeature.READER
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
@@ -49,12 +48,9 @@ import java.util.Date
 private const val DUMMY_CURRENT_TIME: Long = 10000000000
 
 @InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
-class ReaderViewModelTest {
-    @Rule
-    @JvmField
-    val rule = InstantTaskExecutorRule()
-
+class ReaderViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: ReaderViewModel
 
     @Mock lateinit var appPrefsWrapper: AppPrefsWrapper

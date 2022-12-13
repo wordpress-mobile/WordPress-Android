@@ -1,10 +1,9 @@
 package org.wordpress.android.ui.posts
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
@@ -13,6 +12,7 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.PostModel
@@ -22,17 +22,14 @@ import org.wordpress.android.fluxc.model.post.PostStatus.DRAFT
 import org.wordpress.android.fluxc.model.post.PostStatus.PENDING
 import org.wordpress.android.fluxc.model.post.PostStatus.PUBLISHED
 import org.wordpress.android.fluxc.store.PostStore
-import org.wordpress.android.test
 import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult
 import org.wordpress.android.util.LocaleManagerWrapper
 import java.util.Calendar
 import java.util.TimeZone
 
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
-class EditPostRepositoryTest {
-    @Rule
-    @JvmField val rule = InstantTaskExecutorRule()
-
+class EditPostRepositoryTest : BaseUnitTest() {
     @Mock lateinit var localeManager: LocaleManagerWrapper
     @Mock lateinit var postStore: PostStore
     @Mock lateinit var postUtils: PostUtilsWrapper

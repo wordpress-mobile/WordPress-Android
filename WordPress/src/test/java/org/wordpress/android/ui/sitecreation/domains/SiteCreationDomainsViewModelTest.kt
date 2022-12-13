@@ -1,12 +1,11 @@
 package org.wordpress.android.ui.sitecreation.domains
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.ArgumentCaptor
@@ -22,13 +21,13 @@ import org.mockito.kotlin.thirdValue
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainSuggestionResponse
 import org.wordpress.android.fluxc.store.SiteStore.OnSuggestedDomains
 import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainError
-import org.wordpress.android.test
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsListItemUiState.DomainsFetchSuggestionsErrorUiState
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsListItemUiState.DomainsModelUiState.DomainsModelAvailableUiState
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsListItemUiState.DomainsModelUiState.DomainsModelUnavailabilityUiState
@@ -44,11 +43,9 @@ private val MULTI_RESULT_DOMAIN_FETCH_QUERY = "multi_result_query" to MULTI_RESU
 private val EMPTY_RESULT_DOMAIN_FETCH_QUERY = "empty_result_query" to 0
 
 @InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
-class SiteCreationDomainsViewModelTest {
-    @Rule
-    @JvmField val rule = InstantTaskExecutorRule()
-
+class SiteCreationDomainsViewModelTest : BaseUnitTest() {
     @Mock lateinit var dispatcher: Dispatcher
     @Mock lateinit var fetchDomainsUseCase: FetchDomainsUseCase
     @Mock private lateinit var tracker: SiteCreationTracker

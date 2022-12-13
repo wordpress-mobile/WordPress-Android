@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.sitecreation.previews
 
 import android.os.Bundle
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -9,7 +8,6 @@ import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.test.TestCoroutineDispatcher
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
@@ -18,13 +16,13 @@ import org.mockito.kotlin.eq
 import org.mockito.kotlin.notNull
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged
 import org.wordpress.android.fluxc.store.SiteStore.SiteError
 import org.wordpress.android.fluxc.store.SiteStore.SiteErrorType.GENERIC_ERROR
-import org.wordpress.android.test
 import org.wordpress.android.ui.sitecreation.SiteCreationState
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.CreateSiteState
@@ -57,10 +55,7 @@ private val SITE_CREATION_STATE = SiteCreationState(segmentId = 1, siteDesign = 
 @InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
-class SitePreviewViewModelTest {
-    @Rule
-    @JvmField val rule = InstantTaskExecutorRule()
-
+class SitePreviewViewModelTest : BaseUnitTest() {
     @Mock private lateinit var dispatcher: Dispatcher
     @Mock private lateinit var siteStore: SiteStore
     @Mock private lateinit var bundle: Bundle

@@ -1,18 +1,17 @@
 package org.wordpress.android.ui.reader
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.flow
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.whenever
+import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.TEST_DISPATCHER
-import org.wordpress.android.test
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource.READER_THREADED_COMMENTS
 import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase
@@ -21,11 +20,9 @@ import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.Foll
 import org.wordpress.android.ui.utils.UiString.UiStringText
 
 @InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
-class ReaderFollowCommentsHandlerTest {
-    @Rule
-    @JvmField val rule = InstantTaskExecutorRule()
-
+class ReaderFollowCommentsHandlerTest : BaseUnitTest() {
     @Mock lateinit var readerCommentsFollowUseCase: ReaderCommentsFollowUseCase
 
     private lateinit var followCommentsHandler: ReaderFollowCommentsHandler

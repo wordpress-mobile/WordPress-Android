@@ -1,10 +1,9 @@
 package org.wordpress.android.ui.reader.discover
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers.anyBoolean
@@ -17,6 +16,7 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.spy
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.store.AccountStore
@@ -34,7 +34,6 @@ import org.wordpress.android.models.ReaderPostDiscoverData.DiscoverType.OTHER
 import org.wordpress.android.models.ReaderPostDiscoverData.DiscoverType.SITE_PICK
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagList
-import org.wordpress.android.test
 import org.wordpress.android.ui.Organization.NO_ORGANIZATION
 import org.wordpress.android.ui.Organization.P2
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
@@ -61,14 +60,12 @@ import org.wordpress.android.util.UrlUtilsWrapper
 import org.wordpress.android.util.image.ImageType
 import java.util.Date
 
-@InternalCoroutinesApi
 @Suppress("LargeClass")
+@InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
-class ReaderPostUiStateBuilderTest {
+class ReaderPostUiStateBuilderTest : BaseUnitTest() {
     // region Set-up
-    @Rule
-    @JvmField val rule = InstantTaskExecutorRule()
-
     private lateinit var builder: ReaderPostUiStateBuilder
 
     @Mock lateinit var accountStore: AccountStore

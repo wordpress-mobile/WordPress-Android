@@ -2,11 +2,10 @@ package org.wordpress.android.ui.reader
 
 import android.content.Context
 import android.content.res.Resources
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers.anyInt
@@ -17,11 +16,11 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
+import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.models.ReaderComment
 import org.wordpress.android.models.ReaderCommentList
 import org.wordpress.android.models.ReaderPost
-import org.wordpress.android.test
 import org.wordpress.android.ui.reader.discover.ReaderPostUiStateBuilder
 import org.wordpress.android.ui.reader.models.ReaderSimplePost
 import org.wordpress.android.ui.reader.models.ReaderSimplePostList
@@ -49,11 +48,9 @@ import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Date
 
 @InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
-class ReaderPostDetailUiStateBuilderTest {
-    @Rule
-    @JvmField val rule = InstantTaskExecutorRule()
-
+class ReaderPostDetailUiStateBuilderTest : BaseUnitTest() {
     private lateinit var builder: ReaderPostDetailUiStateBuilder
     @Mock lateinit var postUiStateBuilder: ReaderPostUiStateBuilder
     @Mock lateinit var headerViewUiStateBuilder: ReaderPostDetailsHeaderViewUiStateBuilder

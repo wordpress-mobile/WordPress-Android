@@ -1,8 +1,7 @@
 package org.wordpress.android.ui.uploads
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import kotlinx.coroutines.Dispatchers
-import org.junit.Rule
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
@@ -12,12 +11,12 @@ import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
+import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore
-import org.wordpress.android.test
 import org.wordpress.android.ui.posts.PostUtilsWrapper
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -29,10 +28,9 @@ import java.util.Date
  * This is intentionally a separate class from [UploadStarterTest] because this contains non-deterministic
  * tests.
  */
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
-class UploadStarterConcurrentTest {
-    @get:Rule val rule = InstantTaskExecutorRule()
-
+class UploadStarterConcurrentTest : BaseUnitTest() {
     private val site = createSiteModel()
     private val draftPosts = listOf(
             createLocallyChangedPostModel(),

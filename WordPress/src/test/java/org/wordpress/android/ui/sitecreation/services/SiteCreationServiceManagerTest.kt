@@ -1,10 +1,9 @@
 package org.wordpress.android.ui.sitecreation.services
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
@@ -13,13 +12,13 @@ import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.store.SiteStore.NewSiteError
 import org.wordpress.android.fluxc.store.SiteStore.NewSiteErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.SiteStore.NewSiteErrorType.SITE_NAME_EXISTS
 import org.wordpress.android.fluxc.store.SiteStore.OnNewSiteCreated
-import org.wordpress.android.test
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
 import org.wordpress.android.ui.sitecreation.services.SiteCreationServiceManager.SiteCreationServiceManagerListener
 import org.wordpress.android.ui.sitecreation.services.SiteCreationServiceState.SiteCreationStep.CREATE_SITE
@@ -46,11 +45,9 @@ private val SUCCESS_STATE = SiteCreationServiceState(SUCCESS, Pair(NEW_SITE_REMO
 private val FAILURE_STATE = SiteCreationServiceState(FAILURE)
 
 @InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
-class SiteCreationServiceManagerTest {
-    @Rule
-    @JvmField val rule = InstantTaskExecutorRule()
-
+class SiteCreationServiceManagerTest : BaseUnitTest() {
     @Mock lateinit var useCase: CreateSiteUseCase
     @Mock lateinit var dispatcher: Dispatcher
     @Mock lateinit var serviceListener: SiteCreationServiceManagerListener

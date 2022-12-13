@@ -1,11 +1,10 @@
 package org.wordpress.android.ui.engagement
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.flow
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
@@ -13,10 +12,10 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.LikeModel.LikeType.COMMENT_LIKE
 import org.wordpress.android.fluxc.model.LikeModel.LikeType.POST_LIKE
-import org.wordpress.android.test
 import org.wordpress.android.ui.engagement.GetLikesUseCase.FailureType
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.Failure
@@ -30,11 +29,9 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.UiString.UiStringText
 
 @InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
-class GetLikesHandlerTest {
-    @Rule
-    @JvmField val rule = InstantTaskExecutorRule()
-
+class GetLikesHandlerTest : BaseUnitTest() {
     @Mock lateinit var getLikesUseCase: GetLikesUseCase
 
     private lateinit var getLikesHandler: GetLikesHandler

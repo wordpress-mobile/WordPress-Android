@@ -1,11 +1,10 @@
 package org.wordpress.android.ui.jetpack
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.toList
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
@@ -13,6 +12,7 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.JetpackCapability
 import org.wordpress.android.fluxc.model.JetpackCapability.BACKUP
@@ -21,17 +21,14 @@ import org.wordpress.android.fluxc.model.JetpackCapability.BACKUP_REALTIME
 import org.wordpress.android.fluxc.model.JetpackCapability.SCAN
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.OnJetpackCapabilitiesFetched
-import org.wordpress.android.test
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 
 private const val SITE_ID = 1L
 
 @InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
-class JetpackCapabilitiesUseCaseTest {
-    @Rule
-    @JvmField val rule = InstantTaskExecutorRule()
-
+class JetpackCapabilitiesUseCaseTest : BaseUnitTest() {
     @Mock private lateinit var dispatcher: Dispatcher
     @Mock private lateinit var store: SiteStore
     @Mock private lateinit var appPrefsWrapper: AppPrefsWrapper

@@ -1,12 +1,11 @@
 package org.wordpress.android.viewmodel.pages
 
 import android.content.Intent
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
@@ -19,6 +18,7 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.PostModel
@@ -41,7 +41,6 @@ import org.wordpress.android.fluxc.store.SiteOptionsStore.SiteOptionsError
 import org.wordpress.android.fluxc.store.SiteOptionsStore.SiteOptionsErrorType.INVALID_PARAMETERS
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
-import org.wordpress.android.test
 import org.wordpress.android.ui.pages.PageItem
 import org.wordpress.android.ui.pages.PageItem.Action.COPY
 import org.wordpress.android.ui.pages.PageItem.Action.COPY_LINK
@@ -67,11 +66,9 @@ import org.wordpress.android.viewmodel.uistate.ProgressBarUiState
 import java.util.Date
 import java.util.SortedMap
 
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
-class PagesViewModelTest {
-    @Rule
-    @JvmField val rule = InstantTaskExecutorRule()
-
+class PagesViewModelTest : BaseUnitTest() {
     @Mock lateinit var pageStore: PageStore
     @Mock lateinit var site: SiteModel
     @Mock lateinit var dispatcher: Dispatcher
