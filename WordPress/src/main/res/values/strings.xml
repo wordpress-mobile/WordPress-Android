@@ -931,6 +931,7 @@
     <string name="preference_open_debug_settings" translatable="false">Debug settings</string>
     <string name="debug_settings_remote_features" translatable="false">Remote features</string>
     <string name="debug_settings_features_in_development" translatable="false">Features in development</string>
+    <string name="debug_settings_remote_field_configs" translatable="false">Remote Field configs</string>
     <string name="debug_settings_restart_app" translatable="false">Restart the app</string>
     <string name="debug_settings_missing_developed_feature" translatable="false">Don\'t see a feature you\'re working on? Check that your feature config file is annotated with the FeatureInDevelopment annotation.</string>
     <string name="debug_settings_tools" translatable="false">Tools</string>
