@@ -20,7 +20,6 @@ import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.store.UploadStore
 import org.wordpress.android.fluxc.store.UploadStore.ClearMediaPayload
-import org.wordpress.android.test
 import org.wordpress.android.ui.posts.PostUtilsWrapper
 import org.wordpress.android.ui.posts.editor.AztecEditorFragmentStaticWrapper
 import org.wordpress.android.ui.posts.editor.media.CleanUpMediaToPostAssociationUseCaseTest.Fixtures.createAztecEditorWrapper

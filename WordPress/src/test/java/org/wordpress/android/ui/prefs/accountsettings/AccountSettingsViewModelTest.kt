@@ -18,7 +18,6 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore.AccountError
 import org.wordpress.android.fluxc.store.AccountStore.AccountErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged
-import org.wordpress.android.test
 import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel.AccountSettingsUiState
 import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel.SiteUiModel
 import org.wordpress.android.ui.prefs.accountsettings.usecase.FetchAccountSettingsUseCase

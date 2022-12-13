@@ -13,7 +13,6 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.Constants
 import org.wordpress.android.R
-import org.wordpress.android.test
 import org.wordpress.android.ui.jetpack.common.CheckboxSpannableLabel
 import org.wordpress.android.ui.jetpack.common.JetpackBackupRestoreListItemState.FootnoteState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState

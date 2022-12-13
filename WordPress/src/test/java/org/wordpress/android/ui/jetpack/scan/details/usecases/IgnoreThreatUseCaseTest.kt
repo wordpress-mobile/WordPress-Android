@@ -14,7 +14,6 @@ import org.wordpress.android.fluxc.store.ScanStore
 import org.wordpress.android.fluxc.store.ScanStore.IgnoreThreatError
 import org.wordpress.android.fluxc.store.ScanStore.IgnoreThreatErrorType.INVALID_RESPONSE
 import org.wordpress.android.fluxc.store.ScanStore.OnIgnoreThreatStarted
-import org.wordpress.android.test
 import org.wordpress.android.ui.jetpack.scan.details.usecases.IgnoreThreatUseCase.IgnoreThreatState.Failure
 import org.wordpress.android.ui.jetpack.scan.details.usecases.IgnoreThreatUseCase.IgnoreThreatState.Success
 import org.wordpress.android.util.NetworkUtilsWrapper

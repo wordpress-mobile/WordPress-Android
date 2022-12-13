@@ -17,7 +17,6 @@ import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.stats.time.VisitsAndViewsStore
-import org.wordpress.android.test
 
 @RunWith(MockitoJUnitRunner::class)
 class WeeklyRoundupRepositoryTest : BaseUnitTest() {

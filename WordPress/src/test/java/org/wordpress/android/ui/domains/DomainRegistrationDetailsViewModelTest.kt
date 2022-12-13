@@ -54,7 +54,6 @@ import org.wordpress.android.fluxc.store.TransactionsStore.OnSupportedCountriesF
 import org.wordpress.android.fluxc.store.TransactionsStore.RedeemShoppingCartError
 import org.wordpress.android.fluxc.store.TransactionsStore.RedeemShoppingCartPayload
 import org.wordpress.android.fluxc.store.TransactionsStore.TransactionErrorType.PHONE
-import org.wordpress.android.test
 import org.wordpress.android.ui.domains.DomainRegistrationDetailsViewModel.DomainContactFormModel
 import org.wordpress.android.ui.domains.DomainRegistrationDetailsViewModel.DomainRegistrationDetailsUiState
 import org.wordpress.android.util.NoDelayCoroutineDispatcher

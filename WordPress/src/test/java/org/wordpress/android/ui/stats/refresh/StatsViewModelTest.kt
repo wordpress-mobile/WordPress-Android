@@ -23,7 +23,6 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PERIOD_YEARS_
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.store.StatsStore
-import org.wordpress.android.test
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
 import org.wordpress.android.ui.jetpackoverlay.JetpackOverlayConnectedFeature.STATS
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker

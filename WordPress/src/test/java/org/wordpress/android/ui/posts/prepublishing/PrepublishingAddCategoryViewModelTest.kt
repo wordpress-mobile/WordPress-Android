@@ -17,7 +17,6 @@ import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.models.CategoryNode
-import org.wordpress.android.test
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.GetCategoriesUseCase
 import org.wordpress.android.ui.posts.PrepublishingAddCategoryViewModel

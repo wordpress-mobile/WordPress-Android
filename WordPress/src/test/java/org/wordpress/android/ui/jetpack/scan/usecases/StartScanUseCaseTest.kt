@@ -20,7 +20,6 @@ import org.wordpress.android.fluxc.store.ScanStore
 import org.wordpress.android.fluxc.store.ScanStore.OnScanStarted
 import org.wordpress.android.fluxc.store.ScanStore.ScanStartError
 import org.wordpress.android.fluxc.store.ScanStore.ScanStartErrorType
-import org.wordpress.android.test
 import org.wordpress.android.ui.jetpack.scan.usecases.StartScanUseCase.StartScanState
 import org.wordpress.android.util.NetworkUtilsWrapper
 

@@ -26,7 +26,6 @@ import org.wordpress.android.fluxc.model.BloggingRemindersModel.Day.SUNDAY
 import org.wordpress.android.fluxc.model.BloggingRemindersModel.Day.WEDNESDAY
 import org.wordpress.android.fluxc.store.BloggingRemindersStore
 import org.wordpress.android.fluxc.store.SiteStore
-import org.wordpress.android.test
 import org.wordpress.android.toList
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersAnalyticsTracker.Source.BLOG_SETTINGS
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersAnalyticsTracker.Source.PUBLISH_FLOW

@@ -28,7 +28,6 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.U
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.CUSTOMIZE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GROW
-import org.wordpress.android.test
 import org.wordpress.android.testScope
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.QuickStartUpdate
 import org.wordpress.android.ui.mysite.SelectedSiteRepository

@@ -20,7 +20,6 @@ import org.wordpress.android.fluxc.store.dashboard.CardsStore
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsError
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsErrorType
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsResult
-import org.wordpress.android.test
 import org.wordpress.android.testScope
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CardsUpdate
 import org.wordpress.android.ui.mysite.SelectedSiteRepository

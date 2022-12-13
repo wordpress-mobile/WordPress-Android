@@ -18,7 +18,6 @@ import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.fluxc.store.ActivityLogStore.BackupDownloadStatusError
 import org.wordpress.android.fluxc.store.ActivityLogStore.BackupDownloadStatusErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.ActivityLogStore.OnBackupDownloadStatusFetched
-import org.wordpress.android.test
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Complete
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Empty
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Failure

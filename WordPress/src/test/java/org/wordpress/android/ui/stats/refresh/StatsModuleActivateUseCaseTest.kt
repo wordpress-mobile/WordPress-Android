@@ -15,7 +15,6 @@ import org.wordpress.android.fluxc.store.JetpackStore
 import org.wordpress.android.fluxc.store.JetpackStore.ActivateStatsModuleError
 import org.wordpress.android.fluxc.store.JetpackStore.ActivateStatsModuleErrorType
 import org.wordpress.android.fluxc.store.JetpackStore.OnActivateStatsModule
-import org.wordpress.android.test
 import org.wordpress.android.ui.stats.refresh.StatsModuleActivateRequestState.Failure.NetworkUnavailable
 import org.wordpress.android.ui.stats.refresh.StatsModuleActivateRequestState.Failure.RemoteRequestFailure
 import org.wordpress.android.ui.stats.refresh.StatsModuleActivateRequestState.Success

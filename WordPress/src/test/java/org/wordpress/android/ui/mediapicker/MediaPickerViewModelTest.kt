@@ -21,7 +21,6 @@ import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.fluxc.utils.MimeTypes
-import org.wordpress.android.test
 import org.wordpress.android.ui.mediapicker.MediaItem.Identifier.LocalUri
 import org.wordpress.android.ui.mediapicker.MediaNavigationEvent.IconClickEvent
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.ChooserContext

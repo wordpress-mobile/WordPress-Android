@@ -16,7 +16,6 @@ import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.MediaStore
-import org.wordpress.android.test
 import org.wordpress.android.ui.utils.AuthenticationUtils
 import org.wordpress.android.util.FileProvider
 import org.wordpress.android.util.FluxCUtilsWrapper

@@ -15,7 +15,6 @@ import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.TEST_DISPATCHER
-import org.wordpress.android.test
 import org.wordpress.android.ui.utils.AuthenticationUtils
 import org.wordpress.android.util.MediaUtilsWrapper
 

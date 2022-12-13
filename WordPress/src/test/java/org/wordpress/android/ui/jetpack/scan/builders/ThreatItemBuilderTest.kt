@@ -17,7 +17,6 @@ import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus.CU
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus.FIXED
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus.IGNORED
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.VulnerableExtensionThreatModel.Extension.ExtensionType
-import org.wordpress.android.test
 import org.wordpress.android.ui.jetpack.scan.TEST_FILE_NAME
 import org.wordpress.android.ui.jetpack.scan.TEST_SIGNATURE
 import org.wordpress.android.ui.jetpack.scan.TEST_VULNERABLE_THREAT_SLUG

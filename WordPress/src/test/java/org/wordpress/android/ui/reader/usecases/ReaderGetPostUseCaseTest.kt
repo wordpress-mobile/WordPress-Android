@@ -14,7 +14,6 @@ import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderPostDiscoverData
 import org.wordpress.android.models.ReaderPostDiscoverData.DiscoverType
-import org.wordpress.android.test
 
 @InternalCoroutinesApi
 class ReaderGetPostUseCaseTest : BaseUnitTest() {

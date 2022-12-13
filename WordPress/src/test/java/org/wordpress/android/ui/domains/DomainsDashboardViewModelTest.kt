@@ -17,7 +17,6 @@ import org.wordpress.android.fluxc.network.rest.wpcom.site.Domain
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.FetchedDomainsPayload
 import org.wordpress.android.fluxc.store.SiteStore.OnPlansFetched
-import org.wordpress.android.test
 import org.wordpress.android.ui.domains.DomainsDashboardItem.AddDomain
 import org.wordpress.android.ui.domains.DomainsDashboardItem.DomainBlurb
 import org.wordpress.android.ui.domains.DomainsDashboardItem.FreeDomain

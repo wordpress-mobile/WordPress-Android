@@ -18,7 +18,6 @@ import org.wordpress.android.models.recommend.RecommendApiCallsProvider.Recommen
 import org.wordpress.android.models.recommend.RecommendApiCallsProvider.RecommendCallResult.Failure
 import org.wordpress.android.models.recommend.RecommendApiCallsProvider.RecommendCallResult.Success
 import org.wordpress.android.models.recommend.RecommendApiCallsProvider.RecommendTemplateData
-import org.wordpress.android.test
 import org.wordpress.android.ui.main.MeViewModel.RecommendAppUiState
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.util.analytics.AnalyticsUtils.RecommendAppSource

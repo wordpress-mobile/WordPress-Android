@@ -13,7 +13,6 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.XPostsResult
 import org.wordpress.android.fluxc.store.XPostsResult.Companion
 import org.wordpress.android.fluxc.store.XPostsStore
-import org.wordpress.android.test
 
 @RunWith(MockitoJUnitRunner::class)
 class XPostsCapabilityCheckerTest : BaseUnitTest() {

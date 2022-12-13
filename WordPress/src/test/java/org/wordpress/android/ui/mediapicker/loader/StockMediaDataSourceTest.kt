@@ -17,7 +17,6 @@ import org.wordpress.android.fluxc.model.StockMediaModel
 import org.wordpress.android.fluxc.store.StockMediaItem
 import org.wordpress.android.fluxc.store.StockMediaStore
 import org.wordpress.android.fluxc.store.StockMediaStore.OnStockMediaListFetched
-import org.wordpress.android.test
 import org.wordpress.android.ui.mediapicker.MediaItem
 import org.wordpress.android.ui.mediapicker.MediaItem.Identifier.StockMediaIdentifier
 import org.wordpress.android.ui.mediapicker.MediaType.IMAGE

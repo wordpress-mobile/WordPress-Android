@@ -17,7 +17,6 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.bloggingprompts.BloggingPromptModel
 import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore
 import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore.BloggingPromptsResult
-import org.wordpress.android.test
 import org.wordpress.android.ui.posts.BLOGGING_PROMPT_TAG
 import org.wordpress.android.ui.posts.EditorBloggingPromptsViewModel
 import org.wordpress.android.ui.posts.EditorBloggingPromptsViewModel.EditorLoadedPrompt

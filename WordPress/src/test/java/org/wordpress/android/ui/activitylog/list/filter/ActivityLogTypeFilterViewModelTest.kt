@@ -22,7 +22,6 @@ import org.wordpress.android.fluxc.store.ActivityLogStore.ActivityTypesError
 import org.wordpress.android.fluxc.store.ActivityLogStore.ActivityTypesErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchActivityTypesPayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.OnActivityTypesFetched
-import org.wordpress.android.test
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel.ListItemUiState
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel.ListItemUiState.ActivityType
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel.UiState

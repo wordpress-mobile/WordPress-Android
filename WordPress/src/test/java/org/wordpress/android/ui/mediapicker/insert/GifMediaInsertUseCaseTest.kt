@@ -18,7 +18,6 @@ import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.test
 import org.wordpress.android.ui.mediapicker.MediaItem.Identifier.GifMediaIdentifier
 import org.wordpress.android.ui.mediapicker.MediaItem.Identifier.LocalId
 import org.wordpress.android.ui.mediapicker.insert.MediaInsertHandler.InsertModel.Progress

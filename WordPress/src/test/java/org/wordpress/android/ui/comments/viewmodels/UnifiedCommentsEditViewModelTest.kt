@@ -26,7 +26,6 @@ import org.wordpress.android.fluxc.store.CommentsStore.CommentsActionPayload
 import org.wordpress.android.fluxc.store.CommentsStore.CommentsData.CommentsActionData
 import org.wordpress.android.models.ReaderComment
 import org.wordpress.android.models.usecases.LocalCommentCacheUpdateHandler
-import org.wordpress.android.test
 import org.wordpress.android.ui.comments.unified.CommentEssentials
 import org.wordpress.android.ui.comments.unified.CommentIdentifier.NotificationCommentIdentifier
 import org.wordpress.android.ui.comments.unified.CommentIdentifier.ReaderCommentIdentifier

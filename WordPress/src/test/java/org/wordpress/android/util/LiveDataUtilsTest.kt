@@ -5,7 +5,6 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.TestScope
-import org.wordpress.android.test
 
 class LiveDataUtilsTest : BaseUnitTest() {
     @Test

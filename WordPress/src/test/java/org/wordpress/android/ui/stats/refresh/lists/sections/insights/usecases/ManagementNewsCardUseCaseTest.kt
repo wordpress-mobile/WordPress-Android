@@ -12,7 +12,6 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
-import org.wordpress.android.test
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BigTitle
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.DialogButtons

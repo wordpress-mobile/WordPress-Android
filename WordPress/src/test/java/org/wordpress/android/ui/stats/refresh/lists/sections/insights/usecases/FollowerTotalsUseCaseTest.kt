@@ -20,7 +20,6 @@ import org.wordpress.android.fluxc.model.stats.PublicizeModel.Service
 import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.stats.insights.FollowersStore
 import org.wordpress.android.fluxc.store.stats.insights.PublicizeStore
-import org.wordpress.android.test
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState.SUCCESS
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem

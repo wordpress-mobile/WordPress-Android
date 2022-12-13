@@ -15,7 +15,6 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.MediaStore.OnStockMediaUploaded
 import org.wordpress.android.fluxc.store.StockMediaStore
 import org.wordpress.android.fluxc.store.StockMediaUploadItem
-import org.wordpress.android.test
 import org.wordpress.android.ui.mediapicker.MediaItem.Identifier
 import org.wordpress.android.ui.mediapicker.MediaItem.Identifier.RemoteId
 import org.wordpress.android.ui.mediapicker.insert.MediaInsertHandler.InsertModel

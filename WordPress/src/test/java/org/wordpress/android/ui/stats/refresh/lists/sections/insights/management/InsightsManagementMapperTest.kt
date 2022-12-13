@@ -18,7 +18,6 @@ import org.wordpress.android.fluxc.store.StatsStore.InsightType.POSTING_ACTIVITY
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.PUBLICIZE
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.TAGS_AND_CATEGORIES
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.TODAY_STATS
-import org.wordpress.android.test
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementViewModel.InsightListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementViewModel.InsightListItem.Header
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementViewModel.InsightListItem.InsightModel

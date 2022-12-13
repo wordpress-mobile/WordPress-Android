@@ -14,7 +14,6 @@ import org.wordpress.android.fluxc.store.ScanStore
 import org.wordpress.android.fluxc.store.ScanStore.FixThreatsError
 import org.wordpress.android.fluxc.store.ScanStore.FixThreatsErrorType.INVALID_RESPONSE
 import org.wordpress.android.fluxc.store.ScanStore.OnFixThreatsStarted
-import org.wordpress.android.test
 import org.wordpress.android.ui.jetpack.scan.usecases.FixThreatsUseCase.FixThreatsState.Failure
 import org.wordpress.android.ui.jetpack.scan.usecases.FixThreatsUseCase.FixThreatsState.Success
 import org.wordpress.android.util.NetworkUtilsWrapper

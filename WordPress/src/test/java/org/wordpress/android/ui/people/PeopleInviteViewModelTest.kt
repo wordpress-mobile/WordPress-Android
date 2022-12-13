@@ -18,7 +18,6 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.models.InvitePeopleUtils
-import org.wordpress.android.test
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.people.InviteLinksApiCallsProvider.InviteLinksItem
 import org.wordpress.android.ui.people.InviteLinksUiStateType.HIDDEN

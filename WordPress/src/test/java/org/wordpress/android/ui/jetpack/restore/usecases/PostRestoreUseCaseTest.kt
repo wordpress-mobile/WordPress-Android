@@ -29,7 +29,6 @@ import org.wordpress.android.fluxc.store.ActivityLogStore.RewindErrorType.INVALI
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindRequestTypes
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindStatusError
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindStatusErrorType
-import org.wordpress.android.test
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.Failure.NetworkUnavailable
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.Failure.OtherRequestRunning
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.Failure.RemoteRequestFailure

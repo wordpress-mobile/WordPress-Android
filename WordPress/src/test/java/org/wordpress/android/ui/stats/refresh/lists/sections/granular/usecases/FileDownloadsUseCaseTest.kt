@@ -21,7 +21,6 @@ import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.StatsStore.TimeStatsType.FILE_DOWNLOADS
 import org.wordpress.android.fluxc.store.stats.time.FileDownloadsStore
-import org.wordpress.android.test
 import org.wordpress.android.ui.stats.refresh.NavigationTarget
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewFileDownloads
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK

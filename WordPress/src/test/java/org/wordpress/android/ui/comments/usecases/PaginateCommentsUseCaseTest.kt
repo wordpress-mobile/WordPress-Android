@@ -29,7 +29,6 @@ import org.wordpress.android.models.usecases.PaginateCommentsUseCase.PaginateCom
 import org.wordpress.android.models.usecases.PaginateCommentsUseCase.PaginateCommentsAction.OnReloadFromCache
 import org.wordpress.android.models.usecases.PaginateCommentsUseCase.Parameters.GetPageParameters
 import org.wordpress.android.models.usecases.PaginateCommentsUseCase.Parameters.ReloadFromCacheParameters
-import org.wordpress.android.test
 import org.wordpress.android.ui.comments.unified.CommentFilter.ALL
 import org.wordpress.android.ui.comments.unified.CommentFilter.PENDING
 import org.wordpress.android.ui.comments.unified.CommentFilter.UNREPLIED

@@ -14,7 +14,6 @@ import org.wordpress.android.fluxc.model.DynamicCardType.GROW_QUICK_START
 import org.wordpress.android.fluxc.model.DynamicCardsModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.DynamicCardStore
-import org.wordpress.android.test
 import org.wordpress.android.testScope
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.DynamicCardsUpdate
 import org.wordpress.android.ui.mysite.SelectedSiteRepository

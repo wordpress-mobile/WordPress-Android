@@ -27,7 +27,6 @@ import org.wordpress.android.fluxc.store.TaxonomyStore
 import org.wordpress.android.fluxc.store.TaxonomyStore.TaxonomyError
 import org.wordpress.android.fluxc.store.TaxonomyStore.TaxonomyErrorType.GENERIC_ERROR
 import org.wordpress.android.models.CategoryNode
-import org.wordpress.android.test
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.AddCategoryUseCase
 import org.wordpress.android.ui.posts.EditPostRepository

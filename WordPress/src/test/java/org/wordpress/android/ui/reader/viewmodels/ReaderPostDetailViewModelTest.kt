@@ -36,7 +36,6 @@ import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.models.ReaderComment
 import org.wordpress.android.models.ReaderCommentList
 import org.wordpress.android.models.ReaderPost
-import org.wordpress.android.test
 import org.wordpress.android.ui.avatars.TrainOfAvatarsItem.AvatarItem
 import org.wordpress.android.ui.avatars.TrainOfAvatarsItem.TrailingLabelTextItem
 import org.wordpress.android.ui.engagement.EngageItem.Liker

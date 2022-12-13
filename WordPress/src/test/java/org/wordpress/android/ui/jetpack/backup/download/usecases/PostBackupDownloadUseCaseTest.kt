@@ -18,7 +18,6 @@ import org.wordpress.android.fluxc.store.ActivityLogStore.BackupDownloadErrorTyp
 import org.wordpress.android.fluxc.store.ActivityLogStore.BackupDownloadErrorType.INVALID_RESPONSE
 import org.wordpress.android.fluxc.store.ActivityLogStore.BackupDownloadRequestTypes
 import org.wordpress.android.fluxc.store.ActivityLogStore.OnBackupDownload
-import org.wordpress.android.test
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Failure.NetworkUnavailable
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Failure.OtherRequestRunning
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Failure.RemoteRequestFailure

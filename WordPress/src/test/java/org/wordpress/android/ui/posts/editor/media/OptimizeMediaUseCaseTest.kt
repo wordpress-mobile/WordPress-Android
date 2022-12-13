@@ -11,7 +11,6 @@ import org.mockito.kotlin.mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.test
 import org.wordpress.android.ui.posts.editor.EditorTracker
 import org.wordpress.android.util.MediaUtilsWrapper
 

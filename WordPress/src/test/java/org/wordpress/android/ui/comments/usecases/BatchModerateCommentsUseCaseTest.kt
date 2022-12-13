@@ -36,7 +36,6 @@ import org.wordpress.android.models.usecases.CommentsUseCaseType
 import org.wordpress.android.models.usecases.CommentsUseCaseType.BATCH_MODERATE_USE_CASE
 import org.wordpress.android.models.usecases.LocalCommentCacheUpdateHandler
 import org.wordpress.android.models.usecases.ModerateCommentsResourceProvider
-import org.wordpress.android.test
 import org.wordpress.android.ui.comments.utils.approvedComment
 import org.wordpress.android.ui.comments.utils.pendingComment
 import org.wordpress.android.ui.comments.utils.trashedComment

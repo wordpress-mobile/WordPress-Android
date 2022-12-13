@@ -20,7 +20,6 @@ import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
-import org.wordpress.android.test
 import org.wordpress.android.ui.jetpack.common.CheckboxSpannableLabel
 import org.wordpress.android.ui.jetpack.common.JetpackBackupRestoreListItemState.FootnoteState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ActionButtonState

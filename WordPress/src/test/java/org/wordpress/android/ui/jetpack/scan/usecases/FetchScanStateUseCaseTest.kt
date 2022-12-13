@@ -21,7 +21,6 @@ import org.wordpress.android.fluxc.store.ScanStore
 import org.wordpress.android.fluxc.store.ScanStore.OnScanStateFetched
 import org.wordpress.android.fluxc.store.ScanStore.ScanStateError
 import org.wordpress.android.fluxc.store.ScanStore.ScanStateErrorType
-import org.wordpress.android.test
 import org.wordpress.android.ui.jetpack.scan.usecases.FetchScanStateUseCase.FetchScanState.Failure
 import org.wordpress.android.ui.jetpack.scan.usecases.FetchScanStateUseCase.FetchScanState.Success
 import org.wordpress.android.util.NetworkUtilsWrapper

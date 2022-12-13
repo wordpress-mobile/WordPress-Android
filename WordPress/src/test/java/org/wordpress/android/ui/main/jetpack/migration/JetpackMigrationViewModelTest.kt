@@ -17,7 +17,6 @@ import org.wordpress.android.localcontentmigration.ContentMigrationAnalyticsTrac
 import org.wordpress.android.localcontentmigration.MigrationEmailHelper
 import org.wordpress.android.localcontentmigration.WelcomeScreenData
 import org.wordpress.android.sharedlogin.resolver.LocalMigrationOrchestrator
-import org.wordpress.android.test
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.DeletePrimaryButton
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.DeleteSecondaryButton
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.DonePrimaryButton

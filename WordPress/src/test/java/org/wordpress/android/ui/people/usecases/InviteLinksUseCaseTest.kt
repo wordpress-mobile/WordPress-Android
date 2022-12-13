@@ -12,7 +12,6 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
-import org.wordpress.android.test
 import org.wordpress.android.ui.people.InviteLinksApiCallsProvider
 import org.wordpress.android.ui.people.InviteLinksApiCallsProvider.InviteLinksCallResult.Failure
 import org.wordpress.android.ui.people.InviteLinksApiCallsProvider.InviteLinksCallResult.Success

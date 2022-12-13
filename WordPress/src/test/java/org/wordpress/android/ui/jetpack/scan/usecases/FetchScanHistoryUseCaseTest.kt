@@ -18,7 +18,6 @@ import org.wordpress.android.fluxc.store.ScanStore
 import org.wordpress.android.fluxc.store.ScanStore.FetchScanHistoryError
 import org.wordpress.android.fluxc.store.ScanStore.FetchScanHistoryErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.ScanStore.OnScanHistoryFetched
-import org.wordpress.android.test
 import org.wordpress.android.ui.jetpack.scan.usecases.FetchScanHistoryUseCase.FetchScanHistoryState.Failure
 import org.wordpress.android.ui.jetpack.scan.usecases.FetchScanHistoryUseCase.FetchScanHistoryState.Success
 import org.wordpress.android.util.NetworkUtilsWrapper

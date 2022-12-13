@@ -19,7 +19,6 @@ import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.GenericThreatMo
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus.FIXED
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus.IGNORED
-import org.wordpress.android.test
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ActionButtonState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.DescriptionState

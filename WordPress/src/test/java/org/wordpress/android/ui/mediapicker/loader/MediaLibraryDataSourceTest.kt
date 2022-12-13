@@ -25,7 +25,6 @@ import org.wordpress.android.fluxc.store.MediaStore.MediaError
 import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaListFetched
 import org.wordpress.android.fluxc.utils.MimeType.Type
-import org.wordpress.android.test
 import org.wordpress.android.ui.mediapicker.MediaItem
 import org.wordpress.android.ui.mediapicker.MediaType
 import org.wordpress.android.ui.mediapicker.MediaType.AUDIO

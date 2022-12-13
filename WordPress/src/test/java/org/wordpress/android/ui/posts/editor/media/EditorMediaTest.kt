@@ -24,7 +24,6 @@ import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.MediaStore.CancelMediaPayload
 import org.wordpress.android.fluxc.store.MediaStore.FetchMediaListPayload
-import org.wordpress.android.test
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.editor.media.EditorMedia.AddMediaToPostUiState
 import org.wordpress.android.ui.utils.UiString.UiStringRes

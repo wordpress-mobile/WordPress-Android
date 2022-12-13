@@ -39,7 +39,6 @@ import org.wordpress.android.models.usecases.ModerateCommentWithUndoUseCase.Para
 import org.wordpress.android.models.usecases.ModerateCommentWithUndoUseCase.Parameters.ModerateWithFallbackParameters
 import org.wordpress.android.models.usecases.ModerateCommentWithUndoUseCase.SingleCommentModerationResult
 import org.wordpress.android.models.usecases.ModerateCommentsResourceProvider
-import org.wordpress.android.test
 import org.wordpress.android.ui.comments.utils.approvedComment
 import org.wordpress.android.ui.comments.utils.trashedComment
 import org.wordpress.android.usecase.UseCaseResult

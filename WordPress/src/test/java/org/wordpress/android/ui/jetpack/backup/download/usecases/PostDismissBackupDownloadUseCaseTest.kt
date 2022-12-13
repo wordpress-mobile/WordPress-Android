@@ -16,7 +16,6 @@ import org.wordpress.android.fluxc.store.ActivityLogStore.DismissBackupDownloadE
 import org.wordpress.android.fluxc.store.ActivityLogStore.DismissBackupDownloadErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.ActivityLogStore.DismissBackupDownloadErrorType.INVALID_RESPONSE
 import org.wordpress.android.fluxc.store.ActivityLogStore.OnDismissBackupDownload
-import org.wordpress.android.test
 import org.wordpress.android.util.NetworkUtilsWrapper
 
 @InternalCoroutinesApi

@@ -16,7 +16,6 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.test
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.editor.media.AddExistingMediaToPostUseCase
 import org.wordpress.android.ui.posts.editor.media.AddLocalMediaToPostUseCase

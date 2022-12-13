@@ -20,7 +20,6 @@ import org.wordpress.android.fluxc.store.SiteStore.PlansError
 import org.wordpress.android.fluxc.store.SiteStore.PlansErrorType
 import org.wordpress.android.fluxc.store.SiteStore.PlansErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.utils.AppLogWrapper
-import org.wordpress.android.test
 import org.wordpress.android.testScope
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.DomainCreditAvailable
 import org.wordpress.android.ui.mysite.SelectedSiteRepository

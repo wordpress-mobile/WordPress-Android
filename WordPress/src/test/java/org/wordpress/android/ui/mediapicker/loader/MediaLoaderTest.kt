@@ -12,7 +12,6 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.isNull
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.test
 import org.wordpress.android.ui.mediapicker.MediaItem
 import org.wordpress.android.ui.mediapicker.MediaItem.Identifier
 import org.wordpress.android.ui.mediapicker.MediaType.IMAGE

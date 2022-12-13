@@ -22,7 +22,6 @@ import org.wordpress.android.R
 import org.wordpress.android.models.recommend.RecommendApiCallsProvider.RecommendAppName.WordPress
 import org.wordpress.android.models.recommend.RecommendApiCallsProvider.RecommendCallResult.Failure
 import org.wordpress.android.networking.RestClientUtils
-import org.wordpress.android.test
 import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.RestClientProvider

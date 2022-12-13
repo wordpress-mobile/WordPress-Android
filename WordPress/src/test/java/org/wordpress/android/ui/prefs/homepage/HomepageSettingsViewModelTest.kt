@@ -25,7 +25,6 @@ import org.wordpress.android.fluxc.store.SiteOptionsStore.HomepageUpdatedPayload
 import org.wordpress.android.fluxc.store.SiteOptionsStore.SiteOptionsError
 import org.wordpress.android.fluxc.store.SiteOptionsStore.SiteOptionsErrorType.API_ERROR
 import org.wordpress.android.fluxc.store.SiteStore
-import org.wordpress.android.test
 import org.wordpress.android.ui.prefs.homepage.HomepageSettingsDataLoader.LoadingResult
 import org.wordpress.android.ui.prefs.homepage.HomepageSettingsDataLoader.LoadingResult.Data
 import org.wordpress.android.ui.prefs.homepage.HomepageSettingsDataLoader.LoadingResult.Loading

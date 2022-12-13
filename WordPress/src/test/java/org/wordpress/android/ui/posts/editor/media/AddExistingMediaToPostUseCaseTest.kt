@@ -14,7 +14,6 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.MediaModel
-import org.wordpress.android.test
 import org.wordpress.android.ui.posts.editor.EditorTracker
 
 @RunWith(MockitoJUnitRunner::class)

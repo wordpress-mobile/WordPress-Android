@@ -19,7 +19,6 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.XPostSiteModel
 import org.wordpress.android.fluxc.store.XPostsResult
 import org.wordpress.android.fluxc.store.XPostsStore
-import org.wordpress.android.test
 import org.wordpress.android.util.NoDelayCoroutineDispatcher
 
 @InternalCoroutinesApi

@@ -23,7 +23,6 @@ import org.wordpress.android.fluxc.network.rest.wpcom.transactions.TransactionsR
 import org.wordpress.android.fluxc.store.ProductsStore
 import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainsPayload
 import org.wordpress.android.fluxc.store.TransactionsStore.OnShoppingCartCreated
-import org.wordpress.android.test
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.CTA_DOMAIN_CREDIT_REDEMPTION
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.DOMAIN_PURCHASE

@@ -18,7 +18,6 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.models.ReaderPost
-import org.wordpress.android.test
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.FollowCommentsUiStateType
 import org.wordpress.android.ui.reader.FollowCommentsUiStateType.VISIBLE_WITH_STATE

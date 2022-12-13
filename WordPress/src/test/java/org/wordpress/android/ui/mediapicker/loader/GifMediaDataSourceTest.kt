@@ -18,7 +18,6 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
-import org.wordpress.android.test
 import org.wordpress.android.ui.mediapicker.loader.GifMediaDataSourceTest.GifResponseTestScenario.EmptyList
 import org.wordpress.android.ui.mediapicker.loader.GifMediaDataSourceTest.GifResponseTestScenario.PopulatedList
 import org.wordpress.android.ui.mediapicker.loader.MediaSource.MediaLoadingResult
