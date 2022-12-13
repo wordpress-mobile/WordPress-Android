@@ -6,6 +6,7 @@ import dagger.Provides
 import org.wordpress.android.fluxc.persistence.BloggingRemindersDao
 import org.wordpress.android.fluxc.persistence.PlanOffersDao
 import org.wordpress.android.fluxc.persistence.FeatureFlagConfigDao
+import org.wordpress.android.fluxc.persistence.RemoteConfigDao
 import org.wordpress.android.fluxc.persistence.WPAndroidDatabase
 import org.wordpress.android.fluxc.persistence.WPAndroidDatabase.Companion.buildDb
 import org.wordpress.android.fluxc.persistence.bloggingprompts.BloggingPromptsDao
@@ -55,5 +56,11 @@ class DatabaseModule {
     @Provides
     fun provideFeatureFlagConfigDao(wpAndroidDatabase: WPAndroidDatabase): FeatureFlagConfigDao {
         return wpAndroidDatabase.featureFlagConfigDao()
+    }
+
+    @Singleton
+    @Provides
+    fun provideRemoteConfigDao(wpAndroidDatabase: WPAndroidDatabase): RemoteConfigDao {
+        return wpAndroidDatabase.remoteConfigDao()
     }
 }
