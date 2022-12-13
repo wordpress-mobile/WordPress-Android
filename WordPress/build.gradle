@@ -266,7 +266,7 @@ android {
         // Exclude React Native's JSC and Fabric JNI
         exclude '**/libjscexecutor.so'
         exclude '**/libfabricjni.so'
-        
+
         // Avoid React Native's JNI duplicated classes
         pickFirst '**/libc++_shared.so'
         pickFirst '**/libfbjni.so'
@@ -458,7 +458,7 @@ dependencies {
 
     androidTestImplementation "org.mockito:mockito-android:$mockitoVersion"
     androidTestImplementation "org.mockito.kotlin:mockito-kotlin:$mockitoKotlinVersion"
-    androidTestImplementation "com.squareup.okhttp:mockwebserver:$squareupMockWebServerVersion"
+    androidTestImplementation "com.squareup.okhttp3:mockwebserver:$squareupMockWebServerVersion"
     androidTestImplementation "androidx.test.uiautomator:uiautomator:$androidxTestUiAutomatorVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$androidxTestEspressoVersion", {
         exclude group: 'com.android.support', module: 'support-annotations'
