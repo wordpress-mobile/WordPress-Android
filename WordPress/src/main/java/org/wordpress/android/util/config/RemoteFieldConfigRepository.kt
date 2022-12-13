@@ -6,9 +6,11 @@ import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.persistence.RemoteConfigDao.RemoteConfig
 import org.wordpress.android.fluxc.store.mobile.RemoteConfigStore
+import org.wordpress.android.modules.APPLICATION_SCOPE
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.UTILS
 import javax.inject.Inject
+import javax.inject.Named
 import javax.inject.Singleton
 
 /**
@@ -18,11 +20,12 @@ import javax.inject.Singleton
 @Singleton
 class RemoteFieldConfigRepository
 @Inject constructor(
-    private val remoteConfigStore: RemoteConfigStore
+    private val remoteConfigStore: RemoteConfigStore,
+    @Named(APPLICATION_SCOPE) private val appScope: CoroutineScope
 ) {
     var remoteFields: List<RemoteConfig> = arrayListOf()
 
-    fun init(appScope: CoroutineScope) {
+    fun init() {
         appScope.launch {
             remoteFields = remoteConfigStore.getRemoteConfigs()
             // If the flags are empty, then this means that the
@@ -30,7 +33,7 @@ class RemoteFieldConfigRepository
             // store the default in the database
             if (remoteFields.isEmpty()) {
                 insertRemoteConfigDefaultsInDatabase()
-                refresh(appScope)
+                refresh()
             }
         }
     }
@@ -46,7 +49,7 @@ class RemoteFieldConfigRepository
         }
     }
 
-    fun refresh(appScope: CoroutineScope) {
+    fun refresh() {
         appScope.launch {
             fetchRemoteFieldConfigs()
             remoteFields = remoteConfigStore.getRemoteConfigs()
