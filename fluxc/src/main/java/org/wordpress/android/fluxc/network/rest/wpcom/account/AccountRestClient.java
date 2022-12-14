@@ -1177,7 +1177,7 @@ public class AccountRestClient extends BaseWPComRestClient {
         }
         if (from.containsKey("two_step_enabled")) {
             Object twoStepEnabledValue = from.get("two_step_enabled");
-            accountModel.setTwoStepEnabled(twoStepEnabledValue != null && (Boolean) twoStepEnabledValue);
+            accountModel.setTwoStepEnabled(twoStepEnabledValue instanceof Boolean && (Boolean) twoStepEnabledValue);
         }
         if (from.containsKey("tracks_opt_out")) {
             accountModel.setTracksOptOut((Boolean) from.get("tracks_opt_out"));
