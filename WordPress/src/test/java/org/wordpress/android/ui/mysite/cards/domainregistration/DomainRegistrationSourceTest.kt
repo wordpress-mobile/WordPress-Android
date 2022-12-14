@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.mysite.cards.domainregistration
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.TestScope
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -103,7 +102,7 @@ class DomainRegistrationSourceTest : BaseUnitTest() {
     fun `when build is invoked, then refresh is true`() = test {
         source.refresh.observeForever { isRefreshing.add(it) }
 
-        source.build(TestScope(coroutinesTestRule.testDispatcher), siteLocalId)
+        source.build(testScope(), siteLocalId)
 
         assertThat(isRefreshing.last()).isTrue
     }
@@ -122,7 +121,7 @@ class DomainRegistrationSourceTest : BaseUnitTest() {
         setupSite(site = site, currentPlan = buildPlan(hasDomainCredit = true))
         source.refresh.observeForever { isRefreshing.add(it) }
 
-        source.build(TestScope(coroutinesTestRule.testDispatcher), siteLocalId).observeForever { }
+        source.build(testScope(), siteLocalId).observeForever { }
         source.refresh()
 
         assertThat(isRefreshing.last()).isFalse
@@ -138,7 +137,7 @@ class DomainRegistrationSourceTest : BaseUnitTest() {
         buildOnPlansFetchedEvent(site, currentPlan, error)?.let { event ->
             whenever(dispatcher.dispatch(any())).then { source.onPlansFetched(event) }
         }
-        source.build(TestScope(coroutinesTestRule.testDispatcher), siteLocalId).observeForever { result.add(it) }
+        source.build(testScope(), siteLocalId).observeForever { result.add(it) }
     }
 
     private fun buildOnPlansFetchedEvent(

@@ -2,7 +2,6 @@ package org.wordpress.android.ui.mysite
 
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.TestScope
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -36,7 +35,7 @@ class SiteIconProgressSourceTest : BaseUnitTest() {
     fun `when source site, then icon progress bar is not visible`() = test {
         onShowSiteIconProgressBar.value = false
 
-        source.build(TestScope(coroutinesTestRule.testDispatcher), siteLocalId).observeForever { result.add(it) }
+        source.build(testScope(), siteLocalId).observeForever { result.add(it) }
 
         assertThat(siteIconProgressBarVisible).isFalse
     }

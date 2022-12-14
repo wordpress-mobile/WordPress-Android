@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.mysite.cards.quickstart
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.TestScope
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -208,7 +207,7 @@ class QuickStartCardSourceTest : BaseUnitTest() {
     fun `start marks CREATE_SITE as done and loads model`() = test {
         initStore()
 
-        quickStartCardSource.build(TestScope(coroutinesTestRule.testDispatcher), site.id)
+        quickStartCardSource.build(testScope(), site.id)
         quickStartCardSource.refresh()
 
         assertModel()
@@ -328,7 +327,7 @@ class QuickStartCardSourceTest : BaseUnitTest() {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         quickStartCardSource.refresh.observeForever { isRefreshing.add(it) }
 
-        quickStartCardSource.build(TestScope(coroutinesTestRule.testDispatcher), site.id)
+        quickStartCardSource.build(testScope(), site.id)
 
         quickStartCardSource.refresh()
 
@@ -412,7 +411,7 @@ class QuickStartCardSourceTest : BaseUnitTest() {
     }
 
     private fun initBuild() {
-        quickStartCardSource.build(TestScope(coroutinesTestRule.testDispatcher), siteLocalId).observeForever { result.add(it) }
+        quickStartCardSource.build(testScope(), siteLocalId).observeForever { result.add(it) }
     }
 
     private fun assertModel() {

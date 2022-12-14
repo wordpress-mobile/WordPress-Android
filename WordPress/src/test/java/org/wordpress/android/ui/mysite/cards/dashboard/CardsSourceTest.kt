@@ -2,7 +2,6 @@ package org.wordpress.android.ui.mysite.cards.dashboard
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.test.TestScope
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -117,7 +116,7 @@ class CardsSourceTest : BaseUnitTest() {
     fun `when build is invoked, then start collecting cards from store (database)`() = test {
         cardSource.refresh.observeForever { }
 
-        cardSource.build(TestScope(coroutinesTestRule.testDispatcher), SITE_LOCAL_ID).observeForever { }
+        cardSource.build(testScope(), SITE_LOCAL_ID).observeForever { }
 
         verify(cardsStore).getCards(siteModel, DEFAULT_CARD_TYPE)
     }
@@ -128,7 +127,7 @@ class CardsSourceTest : BaseUnitTest() {
         val result = mutableListOf<CardsUpdate>()
         whenever(cardsStore.getCards(siteModel, STATS_FEATURED_ENABLED_CARD_TYPES)).thenReturn(flowOf(data))
 
-        cardSource.build(TestScope(coroutinesTestRule.testDispatcher), SITE_LOCAL_ID).observeForever {
+        cardSource.build(testScope(), SITE_LOCAL_ID).observeForever {
             it?.let { result.add(it) }
         }
 
@@ -141,7 +140,7 @@ class CardsSourceTest : BaseUnitTest() {
         whenever(cardsStore.getCards(siteModel, DEFAULT_CARD_TYPE)).thenReturn(flowOf(data))
         cardSource.refresh.observeForever { }
 
-        cardSource.build(TestScope(coroutinesTestRule.testDispatcher), SITE_LOCAL_ID).observeForever {
+        cardSource.build(testScope(), SITE_LOCAL_ID).observeForever {
             it?.let { result.add(it) }
         }
 
@@ -156,7 +155,7 @@ class CardsSourceTest : BaseUnitTest() {
         whenever(cardsStore.getCards(siteModel, DEFAULT_CARD_TYPE)).thenReturn(flowOf(CardsResult(CARDS_MODEL)))
         cardSource.refresh.observeForever { }
 
-        cardSource.build(TestScope(coroutinesTestRule.testDispatcher), SITE_LOCAL_ID).observeForever { }
+        cardSource.build(testScope(), SITE_LOCAL_ID).observeForever { }
 
         verify(cardsStore).fetchCards(siteModel, DEFAULT_CARD_TYPE)
     }
@@ -168,7 +167,7 @@ class CardsSourceTest : BaseUnitTest() {
         whenever(cardsStore.fetchCards(siteModel, DEFAULT_CARD_TYPE)).thenReturn(CardsResult())
         cardSource.refresh.observeForever { }
 
-        cardSource.build(TestScope(coroutinesTestRule.testDispatcher), SITE_LOCAL_ID).observeForever {
+        cardSource.build(testScope(), SITE_LOCAL_ID).observeForever {
             it?.let { result.add(it) }
         }
 
@@ -185,7 +184,7 @@ class CardsSourceTest : BaseUnitTest() {
                 whenever(cardsStore.fetchCards(siteModel, STATS_FEATURED_ENABLED_CARD_TYPES)).thenReturn(success)
                 cardSource.refresh.observeForever { }
 
-                cardSource.build(TestScope(coroutinesTestRule.testDispatcher), SITE_LOCAL_ID).observeForever {
+                cardSource.build(testScope(), SITE_LOCAL_ID).observeForever {
                     it?.let { result.add(it) }
                 }
 
@@ -199,7 +198,7 @@ class CardsSourceTest : BaseUnitTest() {
         whenever(cardsStore.fetchCards(siteModel, DEFAULT_CARD_TYPE)).thenReturn(apiError)
         cardSource.refresh.observeForever { }
 
-        cardSource.build(TestScope(coroutinesTestRule.testDispatcher), SITE_LOCAL_ID).observeForever {
+        cardSource.build(testScope(), SITE_LOCAL_ID).observeForever {
             it?.let { result.add(it) }
         }
 
@@ -219,7 +218,7 @@ class CardsSourceTest : BaseUnitTest() {
         whenever(cardsStore.getCards(siteModel, DEFAULT_CARD_TYPE)).thenReturn(flowOf(data))
         whenever(cardsStore.fetchCards(siteModel, DEFAULT_CARD_TYPE)).thenReturn(success).thenReturn(success)
         cardSource.refresh.observeForever { }
-        cardSource.build(TestScope(coroutinesTestRule.testDispatcher), SITE_LOCAL_ID).observeForever {
+        cardSource.build(testScope(), SITE_LOCAL_ID).observeForever {
             it?.let { result.add(it) }
         }
 
@@ -235,7 +234,7 @@ class CardsSourceTest : BaseUnitTest() {
         whenever(cardsStore.getCards(siteModel, DEFAULT_CARD_TYPE)).thenReturn(flowOf(data))
         whenever(cardsStore.fetchCards(siteModel, DEFAULT_CARD_TYPE)).thenReturn(success).thenReturn(apiError)
         cardSource.refresh.observeForever { }
-        cardSource.build(TestScope(coroutinesTestRule.testDispatcher), SITE_LOCAL_ID).observeForever {
+        cardSource.build(testScope(), SITE_LOCAL_ID).observeForever {
             it?.let { result.add(it) }
         }
 
@@ -259,7 +258,7 @@ class CardsSourceTest : BaseUnitTest() {
         val result = mutableListOf<Boolean>()
         cardSource.refresh.observeForever { result.add(it) }
 
-        cardSource.build(TestScope(coroutinesTestRule.testDispatcher), SITE_LOCAL_ID).observeForever { }
+        cardSource.build(testScope(), SITE_LOCAL_ID).observeForever { }
 
         assertThat(result.size).isEqualTo(2)
         assertThat(result.first()).isFalse
@@ -272,7 +271,7 @@ class CardsSourceTest : BaseUnitTest() {
         whenever(cardsStore.getCards(siteModel, DEFAULT_CARD_TYPE)).thenReturn(flowOf(data))
         whenever(cardsStore.fetchCards(siteModel, DEFAULT_CARD_TYPE)).thenReturn(success).thenReturn(success)
         cardSource.refresh.observeForever { result.add(it) }
-        cardSource.build(TestScope(coroutinesTestRule.testDispatcher), SITE_LOCAL_ID).observeForever { }
+        cardSource.build(testScope(), SITE_LOCAL_ID).observeForever { }
 
         cardSource.refresh()
 
@@ -290,7 +289,7 @@ class CardsSourceTest : BaseUnitTest() {
         whenever(cardsStore.getCards(siteModel, DEFAULT_CARD_TYPE)).thenReturn(flowOf(data))
         whenever(cardsStore.fetchCards(siteModel, DEFAULT_CARD_TYPE)).thenReturn(success)
         cardSource.refresh.observeForever { result.add(it) }
-        cardSource.build(TestScope(coroutinesTestRule.testDispatcher), SITE_LOCAL_ID).observeForever { }
+        cardSource.build(testScope(), SITE_LOCAL_ID).observeForever { }
 
         cardSource.refresh()
 
@@ -308,7 +307,7 @@ class CardsSourceTest : BaseUnitTest() {
         whenever(cardsStore.getCards(siteModel, DEFAULT_CARD_TYPE)).thenReturn(flowOf(data))
         whenever(cardsStore.fetchCards(siteModel, DEFAULT_CARD_TYPE)).thenReturn(apiError)
         cardSource.refresh.observeForever { result.add(it) }
-        cardSource.build(TestScope(coroutinesTestRule.testDispatcher), SITE_LOCAL_ID).observeForever { }
+        cardSource.build(testScope(), SITE_LOCAL_ID).observeForever { }
 
         cardSource.refresh()
 
@@ -328,7 +327,7 @@ class CardsSourceTest : BaseUnitTest() {
         val result = mutableListOf<CardsUpdate>()
         cardSource.refresh.observeForever { }
 
-        cardSource.build(TestScope(coroutinesTestRule.testDispatcher), invalidSiteLocalId).observeForever {
+        cardSource.build(testScope(), invalidSiteLocalId).observeForever {
             it?.let { result.add(it) }
         }
 
@@ -341,7 +340,7 @@ class CardsSourceTest : BaseUnitTest() {
         val invalidSiteLocalId = 2
         val result = mutableListOf<CardsUpdate>()
         cardSource.refresh.observeForever { }
-        cardSource.build(TestScope(coroutinesTestRule.testDispatcher), invalidSiteLocalId).observeForever {
+        cardSource.build(testScope(), invalidSiteLocalId).observeForever {
             result.add(it)
         }
 

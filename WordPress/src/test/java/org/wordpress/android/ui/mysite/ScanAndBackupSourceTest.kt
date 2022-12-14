@@ -2,7 +2,6 @@ package org.wordpress.android.ui.mysite
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.test.TestScope
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -40,7 +39,7 @@ class ScanAndBackupSourceTest : BaseUnitTest() {
         initScanAndBackupSource(hasSelectedSite = false)
 
         var result: JetpackCapabilities? = null
-        scanAndBackupSource.build(TestScope(coroutinesTestRule.testDispatcher), siteLocalId).observeForever {
+        scanAndBackupSource.build(testScope(), siteLocalId).observeForever {
             result = it
         }
 
@@ -53,7 +52,7 @@ class ScanAndBackupSourceTest : BaseUnitTest() {
         initScanAndBackupSource(hasSelectedSite = true, scanPurchased = true, backupPurchased = true)
 
         var result: JetpackCapabilities? = null
-        scanAndBackupSource.build(TestScope(coroutinesTestRule.testDispatcher), siteLocalId).observeForever {
+        scanAndBackupSource.build(testScope(), siteLocalId).observeForever {
             result = it
         }
 
@@ -66,7 +65,7 @@ class ScanAndBackupSourceTest : BaseUnitTest() {
         initScanAndBackupSource(hasSelectedSite = true, scanPurchased = false, backupPurchased = false)
 
         var result: JetpackCapabilities? = null
-        scanAndBackupSource.build(TestScope(coroutinesTestRule.testDispatcher), siteLocalId).observeForever {
+        scanAndBackupSource.build(testScope(), siteLocalId).observeForever {
             result = it
         }
 
@@ -80,7 +79,7 @@ class ScanAndBackupSourceTest : BaseUnitTest() {
         whenever(site.isWPCom).thenReturn(true)
 
         var result: JetpackCapabilities? = null
-        scanAndBackupSource.build(TestScope(coroutinesTestRule.testDispatcher), siteLocalId).observeForever {
+        scanAndBackupSource.build(testScope(), siteLocalId).observeForever {
             result = it
         }
 
@@ -93,7 +92,7 @@ class ScanAndBackupSourceTest : BaseUnitTest() {
         whenever(site.isWPComAtomic).thenReturn(true)
 
         var result: JetpackCapabilities? = null
-        scanAndBackupSource.build(TestScope(coroutinesTestRule.testDispatcher), siteLocalId).observeForever {
+        scanAndBackupSource.build(testScope(), siteLocalId).observeForever {
             result = it
         }
 
@@ -107,7 +106,7 @@ class ScanAndBackupSourceTest : BaseUnitTest() {
         whenever(site.isWPComAtomic).thenReturn(false)
 
         var result: JetpackCapabilities? = null
-        scanAndBackupSource.build(TestScope(coroutinesTestRule.testDispatcher), siteLocalId).observeForever {
+        scanAndBackupSource.build(testScope(), siteLocalId).observeForever {
             result = it
         }
 
@@ -118,7 +117,7 @@ class ScanAndBackupSourceTest : BaseUnitTest() {
     fun `when refresh is invoked, then data is refreshed`() = test {
         initScanAndBackupSource(hasSelectedSite = true, scanPurchased = true, backupPurchased = true)
 
-        scanAndBackupSource.build(TestScope(coroutinesTestRule.testDispatcher), siteLocalId).observeForever { }
+        scanAndBackupSource.build(testScope(), siteLocalId).observeForever { }
         scanAndBackupSource.refresh.observeForever { isRefreshing.add(it) }
 
         scanAndBackupSource.refresh()
@@ -131,7 +130,7 @@ class ScanAndBackupSourceTest : BaseUnitTest() {
         initScanAndBackupSource(hasSelectedSite = true, scanPurchased = true, backupPurchased = true)
         scanAndBackupSource.refresh.observeForever { isRefreshing.add(it) }
 
-        scanAndBackupSource.build(TestScope(coroutinesTestRule.testDispatcher), siteLocalId)
+        scanAndBackupSource.build(testScope(), siteLocalId)
 
         assertThat(isRefreshing.last()).isTrue
     }
@@ -150,7 +149,7 @@ class ScanAndBackupSourceTest : BaseUnitTest() {
     fun `when data has been refreshed, then refresh is set to false`() = test {
         initScanAndBackupSource(hasSelectedSite = true, scanPurchased = true, backupPurchased = false)
 
-        scanAndBackupSource.build(TestScope(coroutinesTestRule.testDispatcher), siteLocalId).observeForever { }
+        scanAndBackupSource.build(testScope(), siteLocalId).observeForever { }
         scanAndBackupSource.refresh.observeForever { isRefreshing.add(it) }
 
         scanAndBackupSource.refresh()

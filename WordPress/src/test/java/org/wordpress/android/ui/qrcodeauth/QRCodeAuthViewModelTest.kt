@@ -613,7 +613,7 @@ class QRCodeAuthViewModelTest : BaseUnitTest() {
     ) = test {
         val uiStatesJob = launch { viewModel.uiState.toList(uiStates) }
         val actionEventsJob = launch { viewModel.actionEvents.toList(actionEvents) }
-        testBody(TestScope(coroutinesTestRule.testDispatcher))
+        testBody(testScope())
         uiStatesJob.cancel()
         actionEventsJob.cancel()
     }

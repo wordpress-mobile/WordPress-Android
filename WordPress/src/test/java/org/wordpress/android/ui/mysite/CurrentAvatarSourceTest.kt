@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.mysite
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.TestScope
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -28,7 +27,7 @@ class CurrentAvatarSourceTest : BaseUnitTest() {
     @Test
     fun `current avatar is empty on start`() = test {
         var result: CurrentAvatarUrl? = null
-        currentAvatarSource.build(TestScope(coroutinesTestRule.testDispatcher)).observeForever {
+        currentAvatarSource.build(testScope()).observeForever {
             it?.let { result = it }
         }
 
@@ -42,7 +41,7 @@ class CurrentAvatarSourceTest : BaseUnitTest() {
         whenever(accountModel.avatarUrl).thenReturn(avatarUrl)
 
         var result: CurrentAvatarUrl? = null
-        currentAvatarSource.build(TestScope(coroutinesTestRule.testDispatcher)).observeForever {
+        currentAvatarSource.build(testScope()).observeForever {
             it?.let { result = it }
         }
 
@@ -55,7 +54,7 @@ class CurrentAvatarSourceTest : BaseUnitTest() {
     fun `when buildSource is invoked, then refresh is true`() = test {
         currentAvatarSource.refresh.observeForever { isRefreshing.add(it) }
 
-        currentAvatarSource.build(TestScope(coroutinesTestRule.testDispatcher))
+        currentAvatarSource.build(testScope())
 
         assertThat(isRefreshing.last()).isTrue
     }
@@ -76,7 +75,7 @@ class CurrentAvatarSourceTest : BaseUnitTest() {
         whenever(accountModel.avatarUrl).thenReturn(avatarUrl)
         currentAvatarSource.refresh.observeForever { isRefreshing.add(it) }
 
-        currentAvatarSource.build(TestScope(coroutinesTestRule.testDispatcher)).observeForever { }
+        currentAvatarSource.build(testScope()).observeForever { }
         currentAvatarSource.refresh()
 
         assertThat(isRefreshing.last()).isFalse

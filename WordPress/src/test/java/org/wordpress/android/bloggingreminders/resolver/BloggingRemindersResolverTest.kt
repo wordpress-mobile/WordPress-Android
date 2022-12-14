@@ -5,7 +5,6 @@ import android.content.Context
 import android.database.MatrixCursor
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.test.TestScope
 import org.junit.Before
 import org.junit.Ignore
 import org.junit.Test
@@ -56,7 +55,7 @@ class BloggingRemindersResolverTest : BaseUnitTest() {
             bloggingRemindersSyncAnalyticsTracker,
             siteStore,
             bloggingRemindersStore,
-            TestScope(coroutinesTestRule.testDispatcher),
+            testScope(),
             reminderScheduler,
             bloggingRemindersModelMapper,
             localMigrationContentResolver,

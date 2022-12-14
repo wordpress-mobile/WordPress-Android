@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.mysite.dynamiccards
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.TestScope
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -39,7 +38,7 @@ class DynamicCardsSourceTest : BaseUnitTest() {
         initDynamicCardsSource(hasSelectedSite = true)
 
         var result: DynamicCardsUpdate? = null
-        dynamicCardsSource.build(TestScope(coroutinesTestRule.testDispatcher), siteLocalId).observeForever {
+        dynamicCardsSource.build(testScope(), siteLocalId).observeForever {
             result = it
         }
 
@@ -106,7 +105,7 @@ class DynamicCardsSourceTest : BaseUnitTest() {
         initDynamicCardsSource(hasSelectedSite = true)
         dynamicCardsSource.refresh.observeForever { isRefreshing.add(it) }
 
-        dynamicCardsSource.build(TestScope(coroutinesTestRule.testDispatcher), siteLocalId)
+        dynamicCardsSource.build(testScope(), siteLocalId)
 
         assertThat(isRefreshing.last()).isTrue
     }
@@ -126,7 +125,7 @@ class DynamicCardsSourceTest : BaseUnitTest() {
         initDynamicCardsSource(hasSelectedSite = true)
         dynamicCardsSource.refresh.observeForever { isRefreshing.add(it) }
 
-        dynamicCardsSource.build(TestScope(coroutinesTestRule.testDispatcher), siteLocalId).observeForever { }
+        dynamicCardsSource.build(testScope(), siteLocalId).observeForever { }
         dynamicCardsSource.refresh()
 
         assertThat(isRefreshing.last()).isFalse

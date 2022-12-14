@@ -2,7 +2,6 @@ package org.wordpress.android.ui.reader.discover
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.test.TestScope
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -121,7 +120,7 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
                 readerBlogTableWrapper,
                 coroutinesTestRule.testDispatcher
         )
-        actionHandler.initScope(TestScope(coroutinesTestRule.testDispatcher))
+        actionHandler.initScope(testScope())
         whenever(appPrefsWrapper.shouldShowBookmarksSavedLocallyDialog()).thenReturn(false)
         whenever(htmlMessageUtils.getHtmlMessageFromStringFormatResId(anyInt(), anyOrNull())).thenReturn(mock())
         whenever(readerBlogTableWrapper.getReaderBlog(any(), any())).thenReturn(mock())

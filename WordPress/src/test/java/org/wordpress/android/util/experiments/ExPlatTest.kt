@@ -2,7 +2,6 @@ package org.wordpress.android.util.experiments
 
 import dagger.Lazy
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.TestScope
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -47,7 +46,7 @@ class ExPlatTest : BaseUnitTest() {
                 appLog,
                 accountStore,
                 analyticsTracker,
-                TestScope(coroutinesTestRule.testDispatcher)
+                testScope()
         )
         dummyExperiment = object : Experiment(DUMMY_EXPERIMENT_NAME, exPlat) {}
         whenever(accountStore.hasAccessToken()).thenReturn(true)

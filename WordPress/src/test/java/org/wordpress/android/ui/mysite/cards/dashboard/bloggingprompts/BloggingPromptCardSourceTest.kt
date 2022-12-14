@@ -2,7 +2,6 @@ package org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.test.TestScope
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -104,7 +103,7 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
     fun `when build is invoked, then start collecting prompts from store (database)`() = test {
         bloggingPromptCardSource.refresh.observeForever { }
 
-        bloggingPromptCardSource.build(TestScope(coroutinesTestRule.testDispatcher), SITE_LOCAL_ID).observeForever { }
+        bloggingPromptCardSource.build(testScope(), SITE_LOCAL_ID).observeForever { }
 
         verify(bloggingPromptsStore).getPrompts(eq(siteModel))
     }
@@ -114,7 +113,7 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
         init(isBloggingPromptFeatureEnabled = false)
         val result = mutableListOf<BloggingPromptUpdate>()
 
-        bloggingPromptCardSource.build(TestScope(coroutinesTestRule.testDispatcher), SITE_LOCAL_ID).observeForever {
+        bloggingPromptCardSource.build(testScope(), SITE_LOCAL_ID).observeForever {
             it?.let { result.add(it) }
         }
 
@@ -130,7 +129,7 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
         whenever(bloggingPromptsStore.getPrompts(eq(siteModel))).thenReturn(flowOf(data))
         bloggingPromptCardSource.refresh.observeForever { }
 
-        bloggingPromptCardSource.build(TestScope(coroutinesTestRule.testDispatcher), SITE_LOCAL_ID).observeForever {
+        bloggingPromptCardSource.build(testScope(), SITE_LOCAL_ID).observeForever {
             it?.let { result.add(it) }
         }
 
@@ -145,7 +144,7 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
         whenever(bloggingPromptsStore.getPrompts(eq(siteModel))).thenReturn(flowOf(data))
         bloggingPromptCardSource.refresh.observeForever { }
 
-        bloggingPromptCardSource.build(TestScope(coroutinesTestRule.testDispatcher), SITE_LOCAL_ID).observeForever { }
+        bloggingPromptCardSource.build(testScope(), SITE_LOCAL_ID).observeForever { }
 
         verify(bloggingPromptsStore).fetchPrompts(eq(siteModel), eq(20), any())
     }
@@ -157,7 +156,7 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
         whenever(bloggingPromptsStore.fetchPrompts(any(), any(), any())).thenReturn(BloggingPromptsResult())
         bloggingPromptCardSource.refresh.observeForever { }
 
-        bloggingPromptCardSource.build(TestScope(coroutinesTestRule.testDispatcher), SITE_LOCAL_ID).observeForever {
+        bloggingPromptCardSource.build(testScope(), SITE_LOCAL_ID).observeForever {
             it?.let { result.add(it) }
         }
 
@@ -171,7 +170,7 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
         whenever(bloggingPromptsStore.getPrompts(eq(siteModel))).thenReturn(flowOf(data))
         whenever(bloggingPromptsStore.fetchPrompts(any(), any(), any())).thenReturn(success).thenReturn(success)
         bloggingPromptCardSource.refresh.observeForever { }
-        bloggingPromptCardSource.build(TestScope(coroutinesTestRule.testDispatcher), SITE_LOCAL_ID).observeForever {
+        bloggingPromptCardSource.build(testScope(), SITE_LOCAL_ID).observeForever {
             it?.let { result.add(it) }
         }
 
@@ -189,7 +188,7 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
         whenever(appPrefsWrapper.getSkippedPromptDay(any())).thenReturn(Date())
         bloggingPromptCardSource.refresh.observeForever { }
 
-        bloggingPromptCardSource.build(TestScope(coroutinesTestRule.testDispatcher), SITE_LOCAL_ID).observeForever {
+        bloggingPromptCardSource.build(testScope(), SITE_LOCAL_ID).observeForever {
             it?.let { result.add(it) }
         }
 
@@ -215,7 +214,7 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
                 bloggingPromptCardSource.refresh.observeForever { }
 
                 bloggingPromptCardSource.build(
-                        TestScope(coroutinesTestRule.testDispatcher),
+                        testScope(),
                         SITE_LOCAL_ID
                 ).observeForever { it?.let { result.add(it) } }
 
@@ -244,7 +243,7 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
                 bloggingPromptCardSource.refresh.observeForever { }
 
                 bloggingPromptCardSource.build(
-                        TestScope(coroutinesTestRule.testDispatcher),
+                        testScope(),
                         SITE_LOCAL_ID
                 ).observeForever { it?.let { result.add(it) } }
 
@@ -272,7 +271,7 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
                 bloggingPromptCardSource.refresh.observeForever { }
 
                 bloggingPromptCardSource.build(
-                        TestScope(coroutinesTestRule.testDispatcher),
+                        testScope(),
                         SITE_LOCAL_ID
                 ).observeForever { it?.let { result.add(it) } }
 
@@ -301,7 +300,7 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
                 bloggingPromptCardSource.refresh.observeForever { }
 
                 bloggingPromptCardSource.build(
-                        TestScope(coroutinesTestRule.testDispatcher),
+                        testScope(),
                         SITE_LOCAL_ID
                 ).observeForever { it?.let { result.add(it) } }
 
@@ -316,7 +315,7 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
         val result = mutableListOf<Boolean>()
         bloggingPromptCardSource.refresh.observeForever { result.add(it) }
 
-        bloggingPromptCardSource.build(TestScope(coroutinesTestRule.testDispatcher), SITE_LOCAL_ID).observeForever { }
+        bloggingPromptCardSource.build(testScope(), SITE_LOCAL_ID).observeForever { }
 
         assertThat(result.size).isEqualTo(2)
         assertThat(result.first()).isFalse
@@ -329,7 +328,7 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
         whenever(bloggingPromptsStore.getPrompts(eq(siteModel))).thenReturn(flowOf(data))
         whenever(bloggingPromptsStore.fetchPrompts(any(), any(), any())).thenReturn(success).thenReturn(success)
         bloggingPromptCardSource.refresh.observeForever { result.add(it) }
-        bloggingPromptCardSource.build(TestScope(coroutinesTestRule.testDispatcher), SITE_LOCAL_ID).observeForever { }
+        bloggingPromptCardSource.build(testScope(), SITE_LOCAL_ID).observeForever { }
 
         bloggingPromptCardSource.refresh()
 
@@ -349,7 +348,7 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
         whenever(bloggingPromptsStore.fetchPrompts(any(), any(), any())).thenReturn(success).thenReturn(success)
         bloggingPromptCardSource.singleRefresh.observeForever { singlePromptRefreshResult.add(it) }
         bloggingPromptCardSource.refresh.observeForever { regularRefreshResult.add(it) }
-        bloggingPromptCardSource.build(TestScope(coroutinesTestRule.testDispatcher), SITE_LOCAL_ID).observeForever { }
+        bloggingPromptCardSource.build(testScope(), SITE_LOCAL_ID).observeForever { }
 
         bloggingPromptCardSource.refreshTodayPrompt()
 
@@ -366,7 +365,7 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
         // we do not return success from bloggingPromptsStore.fetchPrompts() which locks live data in refreshing state
         bloggingPromptCardSource.singleRefresh.observeForever { singlePromptRefreshResult.add(it) }
         bloggingPromptCardSource.refresh.observeForever { regularRefreshResult.add(it) }
-        bloggingPromptCardSource.build(TestScope(coroutinesTestRule.testDispatcher), SITE_LOCAL_ID).observeForever { }
+        bloggingPromptCardSource.build(testScope(), SITE_LOCAL_ID).observeForever { }
 
         bloggingPromptCardSource.refreshTodayPrompt()
 
@@ -380,7 +379,7 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
         whenever(bloggingPromptsStore.getPrompts(eq(siteModel))).thenReturn(flowOf(data))
         whenever(bloggingPromptsStore.fetchPrompts(any(), any(), any())).thenReturn(success)
         bloggingPromptCardSource.refresh.observeForever { result.add(it) }
-        bloggingPromptCardSource.build(TestScope(coroutinesTestRule.testDispatcher), SITE_LOCAL_ID).observeForever { }
+        bloggingPromptCardSource.build(testScope(), SITE_LOCAL_ID).observeForever { }
 
         bloggingPromptCardSource.refresh()
 
@@ -400,7 +399,7 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
         bloggingPromptCardSource.refresh.observeForever {
             result.add(it)
         }
-        bloggingPromptCardSource.build(TestScope(coroutinesTestRule.testDispatcher), SITE_LOCAL_ID).observeForever { }
+        bloggingPromptCardSource.build(testScope(), SITE_LOCAL_ID).observeForever { }
 
         bloggingPromptCardSource.refresh()
 

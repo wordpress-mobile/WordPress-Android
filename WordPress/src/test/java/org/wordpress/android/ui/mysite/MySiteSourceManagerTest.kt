@@ -2,7 +2,6 @@ package org.wordpress.android.ui.mysite
 
 import androidx.lifecycle.MediatorLiveData
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.TestScope
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -112,7 +111,7 @@ class MySiteSourceManagerTest : BaseUnitTest() {
 
     @Test
     fun `given with site local id, when build, then all sources are built`() {
-        val coroutineScope = TestScope(coroutinesTestRule.testDispatcher)
+        val coroutineScope = testScope()
 
         mySiteSourceManager.build(coroutineScope, SITE_LOCAL_ID)
 
@@ -121,7 +120,7 @@ class MySiteSourceManagerTest : BaseUnitTest() {
 
     @Test
     fun `given without site local id, when build, then all site independent sources are built`() {
-        val coroutineScope = TestScope(coroutinesTestRule.testDispatcher)
+        val coroutineScope = testScope()
 
         mySiteSourceManager.build(coroutineScope, null)
 
@@ -130,7 +129,7 @@ class MySiteSourceManagerTest : BaseUnitTest() {
 
     @Test
     fun `given without site local id, when build, then site dependent sources are not built`() {
-        val coroutineScope = TestScope(coroutinesTestRule.testDispatcher)
+        val coroutineScope = testScope()
 
         mySiteSourceManager.build(coroutineScope, null)
 
@@ -139,7 +138,7 @@ class MySiteSourceManagerTest : BaseUnitTest() {
 
     @Test
     fun `given without site local id, when refresh, then site independent sources are built`() {
-        val coroutineScope = TestScope(coroutinesTestRule.testDispatcher)
+        val coroutineScope = testScope()
         mySiteSourceManager.build(coroutineScope, null)
 
         mySiteSourceManager.refresh()
@@ -149,7 +148,7 @@ class MySiteSourceManagerTest : BaseUnitTest() {
 
     @Test
     fun `given without site local id, when refresh, then site dependent sources are not built`() {
-        val coroutineScope = TestScope(coroutinesTestRule.testDispatcher)
+        val coroutineScope = testScope()
         mySiteSourceManager.build(coroutineScope, null)
 
         mySiteSourceManager.refresh()
@@ -159,7 +158,7 @@ class MySiteSourceManagerTest : BaseUnitTest() {
 
     @Test
     fun `given non wpcom site, when build, then all sources except cards source are built`() {
-        val coroutineScope = TestScope(coroutinesTestRule.testDispatcher)
+        val coroutineScope = testScope()
         whenever(siteModel.isUsingWpComRestApi).thenReturn(false)
 
         mySiteSourceManager.build(coroutineScope, SITE_LOCAL_ID)
