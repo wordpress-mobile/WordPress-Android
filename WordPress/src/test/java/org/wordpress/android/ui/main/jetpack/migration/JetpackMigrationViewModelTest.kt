@@ -49,21 +49,23 @@ class JetpackMigrationViewModelTest : BaseUnitTest() {
     private val contentMigrationAnalyticsTracker: ContentMigrationAnalyticsTracker = mock()
     private val contextProvider: ContextProvider = mock()
     private val accountStore: AccountStore = mock()
-    private val classToTest = JetpackMigrationViewModel(
-            siteUtilsWrapper = siteUtilsWrapper,
-            gravatarUtilsWrapper = gravatarUtilsWrapper,
-            contextProvider = contextProvider,
-            preventDuplicateNotifsFeatureConfig = preventDuplicateNotifsFeatureConfig,
-            appPrefsWrapper = appPrefsWrapper,
-            localMigrationOrchestrator = localMigrationOrchestrator,
-            migrationEmailHelper = migrationEmailHelper,
-            migrationAnalyticsTracker = contentMigrationAnalyticsTracker,
-            accountStore = accountStore,
-    )
+
+    private lateinit var classToTest: JetpackMigrationViewModel
 
     @Before
     fun setUp() {
         whenever(gravatarUtilsWrapper.fixGravatarUrlWithResource(any(), any())).thenReturn("")
+        classToTest = JetpackMigrationViewModel(
+                siteUtilsWrapper = siteUtilsWrapper,
+                gravatarUtilsWrapper = gravatarUtilsWrapper,
+                contextProvider = contextProvider,
+                preventDuplicateNotifsFeatureConfig = preventDuplicateNotifsFeatureConfig,
+                appPrefsWrapper = appPrefsWrapper,
+                localMigrationOrchestrator = localMigrationOrchestrator,
+                migrationEmailHelper = migrationEmailHelper,
+                migrationAnalyticsTracker = contentMigrationAnalyticsTracker,
+                accountStore = accountStore,
+        )
     }
 
     // region ViewModel
