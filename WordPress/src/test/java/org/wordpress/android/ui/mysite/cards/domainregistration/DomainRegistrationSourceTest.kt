@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.mysite.cards.domainregistration
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.TestScope
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -19,7 +20,6 @@ import org.wordpress.android.fluxc.store.SiteStore.PlansError
 import org.wordpress.android.fluxc.store.SiteStore.PlansErrorType
 import org.wordpress.android.fluxc.store.SiteStore.PlansErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.utils.AppLogWrapper
-import org.wordpress.android.testScope
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.DomainCreditAvailable
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.plans.PlansConstants.PREMIUM_PLAN_ID
@@ -103,7 +103,7 @@ class DomainRegistrationSourceTest : BaseUnitTest() {
     fun `when build is invoked, then refresh is true`() = test {
         source.refresh.observeForever { isRefreshing.add(it) }
 
-        source.build(testScope(), siteLocalId)
+        source.build(TestScope(coroutinesTestRule.testDispatcher), siteLocalId)
 
         assertThat(isRefreshing.last()).isTrue
     }
@@ -122,7 +122,7 @@ class DomainRegistrationSourceTest : BaseUnitTest() {
         setupSite(site = site, currentPlan = buildPlan(hasDomainCredit = true))
         source.refresh.observeForever { isRefreshing.add(it) }
 
-        source.build(testScope(), siteLocalId).observeForever { }
+        source.build(TestScope(coroutinesTestRule.testDispatcher), siteLocalId).observeForever { }
         source.refresh()
 
         assertThat(isRefreshing.last()).isFalse
@@ -138,7 +138,7 @@ class DomainRegistrationSourceTest : BaseUnitTest() {
         buildOnPlansFetchedEvent(site, currentPlan, error)?.let { event ->
             whenever(dispatcher.dispatch(any())).then { source.onPlansFetched(event) }
         }
-        source.build(testScope(), siteLocalId).observeForever { result.add(it) }
+        source.build(TestScope(coroutinesTestRule.testDispatcher), siteLocalId).observeForever { result.add(it) }
     }
 
     private fun buildOnPlansFetchedEvent(

@@ -2,6 +2,7 @@ package org.wordpress.android.ui.reader.discover
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.test.TestScope
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -24,7 +25,6 @@ import org.wordpress.android.datasets.ReaderBlogTableWrapper
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload.SubscriptionAction
 import org.wordpress.android.models.ReaderPost
-import org.wordpress.android.testScope
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenEditorForReblog
@@ -121,7 +121,7 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
                 readerBlogTableWrapper,
                 coroutinesTestRule.testDispatcher
         )
-        actionHandler.initScope(testScope())
+        actionHandler.initScope(TestScope(coroutinesTestRule.testDispatcher))
         whenever(appPrefsWrapper.shouldShowBookmarksSavedLocallyDialog()).thenReturn(false)
         whenever(htmlMessageUtils.getHtmlMessageFromStringFormatResId(anyInt(), anyOrNull())).thenReturn(mock())
         whenever(readerBlogTableWrapper.getReaderBlog(any(), any())).thenReturn(mock())

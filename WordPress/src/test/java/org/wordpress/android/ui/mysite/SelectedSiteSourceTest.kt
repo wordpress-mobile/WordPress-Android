@@ -2,6 +2,7 @@ package org.wordpress.android.ui.mysite
 
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.TestScope
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -15,7 +16,6 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged
-import org.wordpress.android.testScope
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.SelectedSite
 
 @ExperimentalCoroutinesApi
@@ -43,7 +43,7 @@ class SelectedSiteSourceTest : BaseUnitTest() {
     fun `when a new site is selected, then source data is not null`() = test {
         onSiteChange.value = site
 
-        source.build(testScope(), siteLocalId).observeForever { result.add(it) }
+        source.build(TestScope(coroutinesTestRule.testDispatcher), siteLocalId).observeForever { result.add(it) }
 
         assertThat(result.last().site).isNotNull
     }
@@ -73,7 +73,7 @@ class SelectedSiteSourceTest : BaseUnitTest() {
 
         assertThat(isRefreshing.last()).isTrue
 
-        source.build(testScope(), siteLocalId).observeForever { result.add(it) }
+        source.build(TestScope(coroutinesTestRule.testDispatcher), siteLocalId).observeForever { result.add(it) }
 
         assertThat(isRefreshing.last()).isFalse
     }

@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.mysite.dynamiccards
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.TestScope
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -14,7 +15,6 @@ import org.wordpress.android.fluxc.model.DynamicCardType.GROW_QUICK_START
 import org.wordpress.android.fluxc.model.DynamicCardsModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.DynamicCardStore
-import org.wordpress.android.testScope
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.DynamicCardsUpdate
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 
@@ -39,7 +39,9 @@ class DynamicCardsSourceTest : BaseUnitTest() {
         initDynamicCardsSource(hasSelectedSite = true)
 
         var result: DynamicCardsUpdate? = null
-        dynamicCardsSource.build(testScope(), siteLocalId).observeForever { result = it }
+        dynamicCardsSource.build(TestScope(coroutinesTestRule.testDispatcher), siteLocalId).observeForever {
+            result = it
+        }
 
         assertThat(result?.pinnedDynamicCard).isEqualTo(pinnedItem)
         assertThat(result?.cards).isEqualTo(dynamicCardTypes)
@@ -104,7 +106,7 @@ class DynamicCardsSourceTest : BaseUnitTest() {
         initDynamicCardsSource(hasSelectedSite = true)
         dynamicCardsSource.refresh.observeForever { isRefreshing.add(it) }
 
-        dynamicCardsSource.build(testScope(), siteLocalId)
+        dynamicCardsSource.build(TestScope(coroutinesTestRule.testDispatcher), siteLocalId)
 
         assertThat(isRefreshing.last()).isTrue
     }
@@ -124,7 +126,7 @@ class DynamicCardsSourceTest : BaseUnitTest() {
         initDynamicCardsSource(hasSelectedSite = true)
         dynamicCardsSource.refresh.observeForever { isRefreshing.add(it) }
 
-        dynamicCardsSource.build(testScope(), siteLocalId).observeForever { }
+        dynamicCardsSource.build(TestScope(coroutinesTestRule.testDispatcher), siteLocalId).observeForever { }
         dynamicCardsSource.refresh()
 
         assertThat(isRefreshing.last()).isFalse

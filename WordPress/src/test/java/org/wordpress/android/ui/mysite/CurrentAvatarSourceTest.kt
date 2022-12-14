@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.mysite
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.TestScope
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -9,7 +10,6 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.store.AccountStore
-import org.wordpress.android.testScope
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CurrentAvatarUrl
 
 @ExperimentalCoroutinesApi
@@ -28,7 +28,9 @@ class CurrentAvatarSourceTest : BaseUnitTest() {
     @Test
     fun `current avatar is empty on start`() = test {
         var result: CurrentAvatarUrl? = null
-        currentAvatarSource.build(testScope()).observeForever { it?.let { result = it } }
+        currentAvatarSource.build(TestScope(coroutinesTestRule.testDispatcher)).observeForever {
+            it?.let { result = it }
+        }
 
         assertThat(result!!.url).isEqualTo("")
     }
@@ -40,7 +42,9 @@ class CurrentAvatarSourceTest : BaseUnitTest() {
         whenever(accountModel.avatarUrl).thenReturn(avatarUrl)
 
         var result: CurrentAvatarUrl? = null
-        currentAvatarSource.build(testScope()).observeForever { it?.let { result = it } }
+        currentAvatarSource.build(TestScope(coroutinesTestRule.testDispatcher)).observeForever {
+            it?.let { result = it }
+        }
 
         currentAvatarSource.refresh()
 
@@ -51,7 +55,7 @@ class CurrentAvatarSourceTest : BaseUnitTest() {
     fun `when buildSource is invoked, then refresh is true`() = test {
         currentAvatarSource.refresh.observeForever { isRefreshing.add(it) }
 
-        currentAvatarSource.build(testScope())
+        currentAvatarSource.build(TestScope(coroutinesTestRule.testDispatcher))
 
         assertThat(isRefreshing.last()).isTrue
     }
@@ -72,7 +76,7 @@ class CurrentAvatarSourceTest : BaseUnitTest() {
         whenever(accountModel.avatarUrl).thenReturn(avatarUrl)
         currentAvatarSource.refresh.observeForever { isRefreshing.add(it) }
 
-        currentAvatarSource.build(testScope()).observeForever { }
+        currentAvatarSource.build(TestScope(coroutinesTestRule.testDispatcher)).observeForever { }
         currentAvatarSource.refresh()
 
         assertThat(isRefreshing.last()).isFalse

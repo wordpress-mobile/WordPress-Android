@@ -2,6 +2,7 @@ package org.wordpress.android.util.experiments
 
 import dagger.Lazy
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.TestScope
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -24,7 +25,6 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.ExperimentStore
 import org.wordpress.android.fluxc.store.ExperimentStore.OnAssignmentsFetched
 import org.wordpress.android.fluxc.utils.AppLogWrapper
-import org.wordpress.android.testScope
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import java.util.Date
 
@@ -41,7 +41,14 @@ class ExPlatTest : BaseUnitTest() {
 
     @Before
     fun setUp() {
-        exPlat = ExPlat(experiments, experimentStore, appLog, accountStore, analyticsTracker, testScope())
+        exPlat = ExPlat(
+                experiments,
+                experimentStore,
+                appLog,
+                accountStore,
+                analyticsTracker,
+                TestScope(coroutinesTestRule.testDispatcher)
+        )
         dummyExperiment = object : Experiment(DUMMY_EXPERIMENT_NAME, exPlat) {}
         whenever(accountStore.hasAccessToken()).thenReturn(true)
         whenever(analyticsTracker.getAnonID()).thenReturn(DUMMY_ANON_ID)
