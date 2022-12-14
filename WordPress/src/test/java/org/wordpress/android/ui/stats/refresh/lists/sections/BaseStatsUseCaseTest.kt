@@ -2,6 +2,7 @@ package org.wordpress.android.ui.stats.refresh.lists.sections
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.advanceUntilIdle
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.After
 import org.junit.Before
@@ -47,8 +48,9 @@ class BaseStatsUseCaseTest : BaseUnitTest() {
         assertThat(result).isEmpty()
 
         block.fetch(false, false)
+        advanceUntilIdle()
 
-        assertData(1, localData)
+        assertData(0, localData)
     }
 
     @Test
@@ -57,6 +59,7 @@ class BaseStatsUseCaseTest : BaseUnitTest() {
         whenever(localDataProvider.get()).thenReturn(null)
 
         block.fetch(false, false)
+        advanceUntilIdle()
 
         assertThat(result).hasSize(1)
         assertThat(result[0]!!.data).isNull()
@@ -68,19 +71,21 @@ class BaseStatsUseCaseTest : BaseUnitTest() {
         assertThat(result).isEmpty()
 
         block.fetch(true, false)
+        advanceUntilIdle()
 
-        assertThat(result.size).isEqualTo(2)
+        assertThat(result.size).isEqualTo(1)
         assertData(0, localData)
-        assertThat(result[1]?.state).isEqualTo(UseCaseState.SUCCESS)
     }
 
     @Test
     fun `live data value is cleared`() = test {
         block.fetch(false, false)
+        advanceUntilIdle()
 
-        assertData(1, localData)
+        assertData(0, localData)
 
         block.clear()
+        advanceUntilIdle()
 
         assertThat(block.liveData.value?.state).isEqualTo(UseCaseState.LOADING)
     }
