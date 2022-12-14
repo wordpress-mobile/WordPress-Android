@@ -5,6 +5,7 @@ import android.os.Parcelable
 import androidx.annotation.DrawableRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.parcelize.Parcelize
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
@@ -31,6 +32,7 @@ import javax.inject.Named
 
 private const val RETRY_DELAY = 300L
 
+@HiltViewModel
 class ScanHistoryViewModel @Inject constructor(
     private val scanTracker: ScanTracker,
     private val fetchScanHistoryUseCase: FetchScanHistoryUseCase,

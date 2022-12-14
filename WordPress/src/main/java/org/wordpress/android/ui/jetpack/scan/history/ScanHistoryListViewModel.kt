@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.map
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
@@ -33,6 +34,7 @@ import javax.inject.Named
 
 private const val SKELETON_LOADING_ITEM_COUNT = 10
 
+@HiltViewModel
 class ScanHistoryListViewModel @Inject constructor(
     private val scanThreatItemBuilder: ThreatItemBuilder,
     private val scanTracker: ScanTracker,
