@@ -16,6 +16,7 @@ import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Feature
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Feature.State.DISABLED
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Feature.State.ENABLED
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Feature.State.UNKNOWN
+import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Field
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Header
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Row
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiState
@@ -140,6 +141,7 @@ class DebugSettingsViewModelTest : BaseUnitTest() {
             val developedItems = mutableListOf<Feature>()
             val buttons = mutableListOf<Button>()
             val rows = mutableListOf<Row>()
+            val remoteFields = mutableListOf<Field>()
             for (uiItem in this.uiItems) {
                 when (uiItem) {
                     is Header -> headers.add(uiItem)
@@ -156,6 +158,7 @@ class DebugSettingsViewModelTest : BaseUnitTest() {
                     is Row -> {
                         rows.add(uiItem)
                     }
+                    is Field -> remoteFields.add(uiItem)
                 }
             }
             assertThat(headers).hasSize(4)
