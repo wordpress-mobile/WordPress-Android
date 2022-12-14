@@ -20,6 +20,7 @@ class AppConfigParametrizedTest(
     private val params: Params
 ) {
     private val featureFlagConfig: FeatureFlagConfig = mock()
+    private val remoteFieldConfigRepository: RemoteFieldConfigRepository = mock()
     private val analyticsTracker: AnalyticsTrackerWrapper = mock()
     private val featureConfig: FeatureConfig = mock()
     private val manualFeatureConfig: ManualFeatureConfig = mock()
@@ -27,7 +28,7 @@ class AppConfigParametrizedTest(
 
     @Before
     fun setUp() {
-        appConfig = AppConfig(featureFlagConfig, analyticsTracker, manualFeatureConfig)
+        appConfig = AppConfig(featureFlagConfig, remoteFieldConfigRepository, analyticsTracker, manualFeatureConfig)
     }
 
     @Test
