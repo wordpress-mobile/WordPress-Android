@@ -263,7 +263,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     @Inject JetpackAppMigrationFlowUtils mJetpackAppMigrationFlowUtils;
     @Inject DeepLinkOpenWebLinksWithJetpackHelper mDeepLinkOpenWebLinksWithJetpackHelper;
     @Inject OpenWebLinksWithJetpackFlowFeatureConfig mOpenWebLinksWithJetpackFlowFeatureConfig;
-    @Inject QRCodeAuthFlowFeatureConfig qrCodeAuthFlowFeatureConfig;
+    @Inject QRCodeAuthFlowFeatureConfig mQrCodeAuthFlowFeatureConfig;
 
     @Inject BuildConfigWrapper mBuildConfigWrapper;
 
@@ -956,7 +956,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
         if (mAccountStore.hasAccessToken()) {
             // Update account to update the notification unseen status
             mDispatcher.dispatch(AccountActionBuilder.newFetchAccountAction());
-            if (qrCodeAuthFlowFeatureConfig.isEnabled()) {
+            if (mQrCodeAuthFlowFeatureConfig.isEnabled()) {
                 // Fetch account settings to update the qr code login menu item visibility in Me screen
                 mDispatcher.dispatch(AccountActionBuilder.newFetchSettingsAction());
             }
