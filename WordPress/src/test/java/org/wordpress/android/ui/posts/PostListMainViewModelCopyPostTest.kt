@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.posts
 
 import androidx.lifecycle.Observer
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -61,8 +60,8 @@ class PostListMainViewModelCopyPostTest : BaseUnitTest() {
                 prefs = mock(),
                 previewStateHelper = mock(),
                 analyticsTracker = mock(),
-                mainDispatcher = Dispatchers.Unconfined,
-                bgDispatcher = Dispatchers.Unconfined,
+                mainDispatcher = testDispatcher(),
+                bgDispatcher = testDispatcher(),
                 postListEventListenerFactory = mock(),
                 uploadStarter = mock(),
                 uploadActionUseCase = mock(),

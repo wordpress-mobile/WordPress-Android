@@ -2,7 +2,6 @@ package org.wordpress.android.viewmodel.pages
 
 import android.content.Intent
 import androidx.lifecycle.MutableLiveData
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -110,8 +109,8 @@ class PagesViewModelTest : BaseUnitTest() {
                 analyticsTracker = mock(),
                 uploadStatusTracker = mock(),
                 autoSaveConflictResolver = mock(),
-                uiDispatcher = Dispatchers.Unconfined,
-                defaultDispatcher = Dispatchers.Unconfined,
+                uiDispatcher = testDispatcher(),
+                defaultDispatcher = testDispatcher(),
                 eventBusWrapper = mock(),
                 uploadStarter = uploadStarter,
                 pageListEventListenerFactory = mock(),

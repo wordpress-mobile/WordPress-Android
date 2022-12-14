@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases
 
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -66,7 +65,7 @@ class FileDownloadsUseCaseTest : BaseUnitTest() {
     fun setUp() {
         useCase = FileDownloadsUseCase(
                 statsGranularity,
-                Dispatchers.Unconfined,
+                testDispatcher(),
                 testDispatcher(),
                 store,
                 siteModelProvider,

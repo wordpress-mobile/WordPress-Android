@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -66,7 +65,7 @@ class TotalCommentsUseCaseTest : BaseUnitTest() {
     @Before
     fun setUp() {
         useCase = TotalCommentsUseCase(
-                Dispatchers.Unconfined,
+                testDispatcher(),
                 testDispatcher(),
                 store,
                 statsSiteProvider,

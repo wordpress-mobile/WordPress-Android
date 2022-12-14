@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -51,7 +50,7 @@ class PublicizeUseCaseTest : BaseUnitTest() {
     @Before
     fun setUp() {
         useCase = PublicizeUseCase(
-                Dispatchers.Unconfined,
+                testDispatcher(),
                 testDispatcher(),
                 insightsStore,
                 statsSiteProvider,

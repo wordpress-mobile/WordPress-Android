@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.prefs.homepage
 
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flow
 import org.assertj.core.api.Assertions.assertThat
@@ -55,8 +54,8 @@ class HomepageSettingsViewModelTest : BaseUnitTest() {
     @Before
     fun setUp() {
         viewModel = HomepageSettingsViewModel(
-                Dispatchers.Unconfined,
-                Dispatchers.Unconfined,
+                testDispatcher(),
+                testDispatcher(),
                 dispatcher,
                 homepageSettingsDataLoader,
                 siteStore,

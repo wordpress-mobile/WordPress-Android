@@ -6,7 +6,6 @@ import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ProcessLifecycleOwner
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions
 import org.junit.Test
@@ -503,8 +502,8 @@ class UploadStarterTest : BaseUnitTest() {
             postStore = postStore,
             pageStore = pageStore,
             siteStore = siteStore,
-            bgDispatcher = Dispatchers.Unconfined,
-            ioDispatcher = Dispatchers.Unconfined,
+            bgDispatcher = testDispatcher(),
+            ioDispatcher = testDispatcher(),
             networkUtilsWrapper = createMockedNetworkUtilsWrapper(),
             connectionStatus = connectionStatus,
             uploadServiceFacade = uploadServiceFacade,

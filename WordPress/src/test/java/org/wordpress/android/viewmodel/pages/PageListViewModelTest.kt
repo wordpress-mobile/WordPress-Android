@@ -1,7 +1,6 @@
 package org.wordpress.android.viewmodel.pages
 
 import androidx.lifecycle.MutableLiveData
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -66,7 +65,7 @@ class PageListViewModelTest : BaseUnitTest() {
                 dispatcher,
                 localeManagerWrapper,
                 accountStore,
-                Dispatchers.Unconfined
+                testDispatcher()
         )
 
         whenever(pageItemProgressUiStateUseCase.getProgressStateForPage(any())).thenReturn(

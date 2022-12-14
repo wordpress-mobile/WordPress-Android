@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.stats.refresh.lists.detail
 
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -62,7 +61,7 @@ class PostMonthsAndYearsUseCaseTest : BaseUnitTest() {
     @Before
     fun setUp() {
         useCase = PostMonthsAndYearsUseCase(
-                Dispatchers.Unconfined,
+                testDispatcher(),
                 testDispatcher(),
                 statsSiteProvider,
                 statsPostProvider,

@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases
 
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -69,7 +68,7 @@ class AuthorsUseCaseTest : BaseUnitTest() {
     fun setUp() {
         useCase = AuthorsUseCase(
                 statsGranularity,
-                Dispatchers.Unconfined,
+                testDispatcher(),
                 testDispatcher(),
                 store,
                 statsSiteProvider,

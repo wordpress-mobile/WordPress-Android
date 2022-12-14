@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.stats.refresh.utils
 
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -18,9 +17,13 @@ import org.wordpress.android.fluxc.store.StatsStore.StatsType
 class NewsCardHandlerTest : BaseUnitTest() {
     @Mock private lateinit var statsStore: StatsStore
     private lateinit var newsCardHandler: NewsCardHandler
+
     @Before
     fun setUp() {
-        newsCardHandler = NewsCardHandler(Dispatchers.Unconfined, statsStore)
+        newsCardHandler = NewsCardHandler(
+                testDispatcher(),
+                statsStore
+        )
     }
 
     @Test

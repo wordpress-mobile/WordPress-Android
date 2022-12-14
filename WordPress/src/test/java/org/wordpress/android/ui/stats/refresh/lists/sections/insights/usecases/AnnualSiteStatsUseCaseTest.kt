@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -54,7 +53,7 @@ class AnnualSiteStatsUseCaseTest : BaseUnitTest() {
     @Before
     fun setUp() {
         useCase = AnnualSiteStatsUseCase(
-                Dispatchers.Unconfined,
+                testDispatcher(),
                 testDispatcher(),
                 insightsStore,
                 statsSiteProvider,
@@ -130,7 +129,7 @@ class AnnualSiteStatsUseCaseTest : BaseUnitTest() {
     @Test
     fun `hide title and view more block in view all mode`() = test {
         useCase = AnnualSiteStatsUseCase(
-                Dispatchers.Unconfined,
+                testDispatcher(),
                 testDispatcher(),
                 insightsStore,
                 statsSiteProvider,

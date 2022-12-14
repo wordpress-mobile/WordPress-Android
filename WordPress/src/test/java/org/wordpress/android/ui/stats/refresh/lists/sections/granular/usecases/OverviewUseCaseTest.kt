@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases
 
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -73,7 +72,7 @@ class OverviewUseCaseTest : BaseUnitTest() {
                 statsSiteProvider,
                 statsDateFormatter,
                 overviewMapper,
-                Dispatchers.Unconfined,
+                testDispatcher(),
                 testDispatcher(),
                 analyticsTrackerWrapper,
                 statsWidgetUpdaters,

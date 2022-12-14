@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStore
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -408,7 +407,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         trackWithTabSource = mutableListOf()
         tabNavigation = mutableListOf()
         bloggingPromptsLearnMore = mutableListOf()
-        launch(Dispatchers.Default) {
+        launch(testDispatcher()) {
             viewModel.uiModel.observeForever {
                 uiModels.add(it)
             }

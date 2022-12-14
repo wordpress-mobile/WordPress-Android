@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.stats.refresh.lists.widget.configuration
 
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -31,9 +30,15 @@ class StatsSiteSelectionViewModelTest : BaseUnitTest() {
     private val nonJetpackSiteName = "Non-Jetpack"
     private val siteUrl = "wordpress.com"
     private val iconUrl = "icon.jpg"
+
     @Before
     fun setUp() {
-        viewModel = StatsSiteSelectionViewModel(Dispatchers.Unconfined, siteStore, accountStore, appPrefsWrapper)
+        viewModel = StatsSiteSelectionViewModel(
+                testDispatcher(),
+                siteStore,
+                accountStore,
+                appPrefsWrapper
+        )
         wpComSite = SiteModel()
         wpComSite.siteId = siteId
         wpComSite.name = siteName

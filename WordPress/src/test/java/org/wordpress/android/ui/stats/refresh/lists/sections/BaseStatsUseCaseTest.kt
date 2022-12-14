@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections
 
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import org.assertj.core.api.Assertions.assertThat
@@ -103,7 +102,7 @@ class BaseStatsUseCaseTest : BaseUnitTest() {
         private val loadingItems: List<BlockListItem>
     ) : BaseStatsUseCase<String, Int>(
             ALL_TIME_STATS,
-            Dispatchers.Unconfined,
+            UnconfinedTestDispatcher(),
             UnconfinedTestDispatcher(),
             0,
             listOf()

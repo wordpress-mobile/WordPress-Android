@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.uploads
 
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -71,8 +70,8 @@ class UploadStarterConcurrentTest : BaseUnitTest() {
             postStore = postStore,
             pageStore = pageStore,
             siteStore = mock(),
-            bgDispatcher = Dispatchers.Default,
-            ioDispatcher = Dispatchers.IO,
+            bgDispatcher = testDispatcher(),
+            ioDispatcher = testDispatcher(),
             networkUtilsWrapper = createMockedNetworkUtilsWrapper(),
             connectionStatus = mock(),
             uploadServiceFacade = uploadServiceFacade,

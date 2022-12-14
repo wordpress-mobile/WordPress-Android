@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.stats.refresh.lists.widget.configuration
 
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions
 import org.junit.Before
@@ -19,9 +18,14 @@ class StatsDataTypeSelectionViewModelTest : BaseUnitTest() {
     @Mock private lateinit var appPrefsWrapper: AppPrefsWrapper
     @Mock private lateinit var accountStore: AccountStore
     private lateinit var viewModel: StatsDataTypeSelectionViewModel
+
     @Before
     fun setUp() {
-        viewModel = StatsDataTypeSelectionViewModel(Dispatchers.Unconfined, accountStore, appPrefsWrapper)
+        viewModel = StatsDataTypeSelectionViewModel(
+                testDispatcher(),
+                accountStore,
+                appPrefsWrapper
+        )
     }
 
     @Test

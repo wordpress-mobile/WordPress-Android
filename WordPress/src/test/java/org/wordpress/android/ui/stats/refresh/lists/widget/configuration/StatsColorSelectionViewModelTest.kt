@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.stats.refresh.lists.widget.configuration
 
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
@@ -22,9 +21,14 @@ class StatsColorSelectionViewModelTest : BaseUnitTest() {
     @Mock private lateinit var appPrefsWrapper: AppPrefsWrapper
     @Mock private lateinit var accountStore: AccountStore
     private lateinit var viewModel: StatsColorSelectionViewModel
+
     @Before
     fun setUp() {
-        viewModel = StatsColorSelectionViewModel(Dispatchers.Unconfined, accountStore, appPrefsWrapper)
+        viewModel = StatsColorSelectionViewModel(
+                testDispatcher(),
+                accountStore,
+                appPrefsWrapper
+        )
     }
 
     @Test

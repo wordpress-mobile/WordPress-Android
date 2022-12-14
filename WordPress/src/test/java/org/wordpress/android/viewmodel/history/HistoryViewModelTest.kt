@@ -1,6 +1,5 @@
 package org.wordpress.android.viewmodel.history
 
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
@@ -77,8 +76,8 @@ class HistoryViewModelTest : BaseUnitTest() {
             resourceProvider = mock(),
             networkUtils = mock(),
             postStore = postStore,
-            uiDispatcher = Dispatchers.Unconfined,
-            bgDispatcher = Dispatchers.Unconfined,
+            uiDispatcher = testDispatcher(),
+            bgDispatcher = testDispatcher(),
             connectionStatus = mock()
     )
 }
