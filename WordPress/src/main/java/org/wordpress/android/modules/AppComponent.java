@@ -2,9 +2,6 @@ package org.wordpress.android.modules;
 
 import com.automattic.android.tracks.crashlogging.CrashLogging;
 
-import org.wordpress.android.push.GCMMessageService;
-import org.wordpress.android.push.GCMRegistrationIntentService;
-import org.wordpress.android.push.NotificationsProcessingService;
 import org.wordpress.android.ui.AddQuickPressShortcutActivity;
 import org.wordpress.android.ui.CommentFullScreenDialogFragment;
 import org.wordpress.android.ui.JetpackConnectionResultActivity;
@@ -65,7 +62,6 @@ import org.wordpress.android.ui.media.MediaGridFragment;
 import org.wordpress.android.ui.media.MediaPreviewActivity;
 import org.wordpress.android.ui.media.MediaPreviewFragment;
 import org.wordpress.android.ui.media.MediaSettingsActivity;
-import org.wordpress.android.ui.media.services.MediaDeleteService;
 import org.wordpress.android.ui.mediapicker.MediaPickerActivity;
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment;
 import org.wordpress.android.ui.mlp.ModalLayoutPickerFragment;
@@ -165,9 +161,7 @@ import org.wordpress.android.ui.reader.adapters.ReaderTagAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderUserAdapter;
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverFragment;
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsFragment;
-import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverJobService;
 import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic;
-import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverService;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic;
 import org.wordpress.android.ui.reader.views.ReaderCommentsPostHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderExpandableTagsView;
@@ -178,7 +172,6 @@ import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderSiteSearchResultView;
 import org.wordpress.android.ui.reader.views.ReaderTagHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderWebView;
-import org.wordpress.android.ui.sitecreation.services.SiteCreationService;
 import org.wordpress.android.ui.sitecreation.theme.DesignPreviewFragment;
 import org.wordpress.android.ui.stats.StatsConnectJetpackActivity;
 import org.wordpress.android.ui.stats.refresh.lists.StatsListFragment;
@@ -203,7 +196,6 @@ import org.wordpress.android.ui.themes.ThemeBrowserFragment;
 import org.wordpress.android.ui.uploads.MediaUploadHandler;
 import org.wordpress.android.ui.uploads.MediaUploadReadyProcessor;
 import org.wordpress.android.ui.uploads.PostUploadHandler;
-import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementDialogFragment;
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementListAdapter;
 import org.wordpress.android.util.WPWebViewClient;
@@ -218,10 +210,6 @@ import dagger.hilt.components.SingletonComponent;
 public interface AppComponent {
     void inject(WPMainActivity object);
 
-    void inject(SiteCreationService object);
-
-    void inject(UploadService object);
-
     void inject(MediaUploadHandler object);
 
     void inject(PostUploadHandler object);
@@ -235,10 +223,6 @@ public interface AppComponent {
     void inject(JetpackConnectionResultActivity object);
 
     void inject(StatsConnectJetpackActivity object);
-
-    void inject(GCMMessageService object);
-
-    void inject(GCMRegistrationIntentService object);
 
     void inject(ShareIntentReceiverActivity object);
 
@@ -340,8 +324,6 @@ public interface AppComponent {
 
     void inject(NotificationsDetailActivity object);
 
-    void inject(NotificationsProcessingService object);
-
     void inject(NotificationsPendingDraftsReceiver object);
 
     void inject(NotificationsDetailListFragment object);
@@ -399,8 +381,6 @@ public interface AppComponent {
     void inject(NotesAdapter object);
 
     void inject(ThemeBrowserFragment object);
-
-    void inject(MediaDeleteService object);
 
     void inject(SelectCategoriesActivity object);
 
@@ -545,10 +525,6 @@ public interface AppComponent {
     void inject(ReaderDiscoverLogic object);
 
     void inject(PostListCreateMenuFragment object);
-
-    void inject(ReaderDiscoverJobService object);
-
-    void inject(ReaderDiscoverService object);
 
     void inject(SuggestionActivity object);
 

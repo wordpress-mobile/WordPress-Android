@@ -16,9 +16,11 @@ class JetpackMigrationActivity : AppCompatActivity() {
         with(ActivityJetpackMigrationBinding.inflate(layoutInflater)) {
             setContentView(root)
             val showDeleteWpState = intent.getBooleanExtra(KEY_SHOW_DELETE_WP_STATE, false)
-            supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container, JetpackMigrationFragment.newInstance(showDeleteWpState))
-                    .commit()
+            if (savedInstanceState == null) {
+                supportFragmentManager.beginTransaction()
+                        .replace(R.id.fragment_container, JetpackMigrationFragment.newInstance(showDeleteWpState))
+                        .commit()
+            }
         }
     }
 

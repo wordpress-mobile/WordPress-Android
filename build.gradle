@@ -92,7 +92,7 @@ ext {
     androidxTestExtJunitVersion = '1.1.4'
     androidxTestUiAutomatorVersion = '2.2.0'
     screengrabVersion = '2.1.1'
-    squareupMockWebServerVersion = '2.7.5'
+    squareupMockWebServerVersion = '4.9.3'
     wiremockVersion = '2.26.3'
     wiremockHttpClientVersion = '4.3.5.1'
 
