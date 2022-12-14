@@ -350,7 +350,7 @@ class FollowersUseCaseTest : BaseUnitTest() {
     private fun List<BlockListItem>.assertViewAllFollowersSecondLoad() {
         assertThat(this).hasSize(14)
 
-        val follower = this[13] as ListItemWithIcon
+        val follower = this[12] as ListItemWithIcon
         assertThat(follower.showDivider).isEqualTo(false)
     }
 
