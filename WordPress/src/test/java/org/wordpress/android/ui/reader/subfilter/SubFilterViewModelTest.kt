@@ -2,7 +2,6 @@ package org.wordpress.android.ui.reader.subfilter
 
 import android.os.Bundle
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -17,7 +16,6 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.models.ReaderTag
@@ -47,7 +45,6 @@ import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.EventBusWrapper
 import java.util.EnumSet
 
-@InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class SubFilterViewModelTest : BaseUnitTest() {
@@ -72,8 +69,8 @@ class SubFilterViewModelTest : BaseUnitTest() {
         whenever(savedTag.label).thenReturn("tag-label")
 
         viewModel = SubFilterViewModel(
-                TEST_DISPATCHER,
-                TEST_DISPATCHER,
+                coroutinesTestRule.testDispatcher,
+                coroutinesTestRule.testDispatcher,
                 appPrefsWrapper,
                 subfilterListItemMapper,
                 eventBusWrapper,
@@ -92,8 +89,8 @@ class SubFilterViewModelTest : BaseUnitTest() {
         whenever(subfilterListItemMapper.fromJson(eq(json), any(), any())).thenReturn(filter)
 
         viewModel = SubFilterViewModel(
-                TEST_DISPATCHER,
-                TEST_DISPATCHER,
+                coroutinesTestRule.testDispatcher,
+                coroutinesTestRule.testDispatcher,
                 appPrefsWrapper,
                 subfilterListItemMapper,
                 eventBusWrapper,

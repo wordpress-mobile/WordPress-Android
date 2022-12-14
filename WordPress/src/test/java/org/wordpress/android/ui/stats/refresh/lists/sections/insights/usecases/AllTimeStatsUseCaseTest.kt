@@ -2,7 +2,6 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -15,7 +14,6 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.InsightsAllTimeModel
 import org.wordpress.android.fluxc.store.StatsStore.InsightType
@@ -47,12 +45,12 @@ class AllTimeStatsUseCaseTest : BaseUnitTest() {
     private val bestDay = "2018-11-25"
     private val bestDayTransformed = "Nov 25, 2018"
     private val siteId = 1L
-    @InternalCoroutinesApi
+
     @Before
     fun setUp() {
         useCase = AllTimeStatsUseCase(
                 Dispatchers.Unconfined,
-                TEST_DISPATCHER,
+                coroutinesTestRule.testDispatcher,
                 insightsStore,
                 statsSiteProvider,
                 statsDateFormatter,

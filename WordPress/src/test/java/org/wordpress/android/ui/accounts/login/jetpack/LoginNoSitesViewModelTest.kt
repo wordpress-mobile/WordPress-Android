@@ -2,7 +2,6 @@ package org.wordpress.android.ui.accounts.login.jetpack
 
 import android.os.Bundle
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -12,7 +11,6 @@ import org.mockito.kotlin.argThat
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.store.AccountStore
@@ -28,7 +26,6 @@ private const val USERNAME = "username"
 private const val DISPLAY_NAME = "display_name"
 private const val AVATAR_URL = "avatar_url"
 
-@InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 class LoginNoSitesViewModelTest : BaseUnitTest() {
     @Mock lateinit var unifiedLoginTracker: UnifiedLoginTracker
@@ -42,8 +39,8 @@ class LoginNoSitesViewModelTest : BaseUnitTest() {
         viewModel = LoginNoSitesViewModel(
                 unifiedLoginTracker,
                 accountStore,
-                TEST_DISPATCHER,
-                TEST_DISPATCHER
+                coroutinesTestRule.testDispatcher,
+                coroutinesTestRule.testDispatcher
         )
     }
 

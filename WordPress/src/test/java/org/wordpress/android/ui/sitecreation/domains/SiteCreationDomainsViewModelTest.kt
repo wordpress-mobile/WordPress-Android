@@ -3,7 +3,6 @@ package org.wordpress.android.ui.sitecreation.domains
 import androidx.lifecycle.Observer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -23,7 +22,6 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainSuggestionResponse
 import org.wordpress.android.fluxc.store.SiteStore.OnSuggestedDomains
@@ -42,7 +40,6 @@ private const val MULTI_RESULT_DOMAIN_FETCH_RESULT_SIZE = 20
 private val MULTI_RESULT_DOMAIN_FETCH_QUERY = "multi_result_query" to MULTI_RESULT_DOMAIN_FETCH_RESULT_SIZE
 private val EMPTY_RESULT_DOMAIN_FETCH_QUERY = "empty_result_query" to 0
 
-@InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class SiteCreationDomainsViewModelTest : BaseUnitTest() {
@@ -66,8 +63,8 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
                 dispatcher = dispatcher,
                 fetchDomainsUseCase = fetchDomainsUseCase,
                 tracker = tracker,
-                bgDispatcher = TEST_DISPATCHER,
-                mainDispatcher = TEST_DISPATCHER
+                bgDispatcher = coroutinesTestRule.testDispatcher,
+                mainDispatcher = coroutinesTestRule.testDispatcher
         )
         viewModel.uiState.observeForever(uiStateObserver)
         viewModel.createSiteBtnClicked.observeForever(createSiteBtnObserver)

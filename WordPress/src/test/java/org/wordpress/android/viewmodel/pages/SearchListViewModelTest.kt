@@ -2,7 +2,6 @@ package org.wordpress.android.viewmodel.pages
 
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -15,7 +14,6 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R.string
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.page.PageModel
@@ -34,7 +32,6 @@ import org.wordpress.android.viewmodel.uistate.ProgressBarUiState
 import java.util.Date
 import java.util.SortedMap
 
-@InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class SearchListViewModelTest : BaseUnitTest() {
@@ -60,7 +57,7 @@ class SearchListViewModelTest : BaseUnitTest() {
                 pageListItemActionsUseCase,
                 pageItemProgressUiStateUseCase,
                 resourceProvider,
-                TEST_DISPATCHER
+                coroutinesTestRule.testDispatcher
         )
         searchPages = MutableLiveData()
 

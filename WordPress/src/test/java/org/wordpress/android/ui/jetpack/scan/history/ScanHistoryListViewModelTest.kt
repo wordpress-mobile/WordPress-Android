@@ -2,7 +2,6 @@ package org.wordpress.android.ui.jetpack.scan.history
 
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -17,7 +16,6 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.GenericThreatModel
@@ -39,7 +37,6 @@ import java.util.Calendar
 
 private const val ON_ITEM_CLICKED_PARAM_POSITION = 1
 
-@InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class ScanHistoryListViewModelTest : BaseUnitTest() {
@@ -57,7 +54,7 @@ class ScanHistoryListViewModelTest : BaseUnitTest() {
         viewModel = ScanHistoryListViewModel(
                 scanThreatItemBuilder,
                 scanTracker,
-                TEST_DISPATCHER
+                coroutinesTestRule.testDispatcher
         )
         val threats = listOf(
                 GenericThreatModel(genericThreatModel.baseThreatModel.copy(status = ThreatStatus.FIXED)),

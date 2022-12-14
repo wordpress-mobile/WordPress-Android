@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.main
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -12,7 +11,6 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.WordPress
 import org.wordpress.android.models.recommend.RecommendApiCallsProvider
 import org.wordpress.android.models.recommend.RecommendApiCallsProvider.RecommendAppName
@@ -25,7 +23,6 @@ import org.wordpress.android.util.analytics.AnalyticsUtils.RecommendAppSource
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.viewmodel.Event
 
-@InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 class MeViewModelTest : BaseUnitTest() {
     @Mock lateinit var wordPress: WordPress
@@ -40,8 +37,8 @@ class MeViewModelTest : BaseUnitTest() {
     @Before
     fun setUp() {
         viewModel = MeViewModel(
-                TEST_DISPATCHER,
-                TEST_DISPATCHER,
+                coroutinesTestRule.testDispatcher,
+                coroutinesTestRule.testDispatcher,
                 selectedSiteRepository,
                 recommendApiCallsProvider,
                 analyticsUtilsWrapper

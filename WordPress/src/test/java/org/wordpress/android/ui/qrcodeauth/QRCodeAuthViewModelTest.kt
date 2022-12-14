@@ -2,7 +2,6 @@ package org.wordpress.android.ui.qrcodeauth
 
 import android.os.Bundle
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.TestScope
@@ -63,7 +62,6 @@ const val VALID_EXPIRED_MESSAGE = "qr code data expired"
 const val INVALID_EXPIRED_MESSAGE = "invalid qr code data expired"
 
 @Suppress("LargeClass")
-@InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 class QRCodeAuthViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: QRCodeAuthViewModel

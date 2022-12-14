@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.reader.usecases
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -21,7 +20,6 @@ import java.net.HttpURLConnection
 
 private const val REQUEST_BLOG_LISTENER_PARAM_POSITION = 2
 
-@InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 class ReaderFetchPostUseCaseTest : BaseUnitTest() {
     @Mock private lateinit var networkUtilsWrapper: NetworkUtilsWrapper

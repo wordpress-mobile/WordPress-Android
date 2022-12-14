@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -13,7 +12,6 @@ import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.BloggingRemindersModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.bloggingprompts.BloggingPromptModel
@@ -50,7 +48,6 @@ private val PROMPT = BloggingPromptModel(
         respondentsCount = 5,
         respondentsAvatarUrls = listOf()
 )
-@InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 class BloggingPromptCardSourceTest : BaseUnitTest() {
     @Mock private lateinit var selectedSiteRepository: SelectedSiteRepository
@@ -90,7 +87,7 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
                 bloggingPromptsFeatureConfig,
                 appPrefsWrapper,
                 bloggingRemindersStore,
-                TEST_DISPATCHER
+                coroutinesTestRule.testDispatcher
         )
     }
 

@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.accounts.login
 
-import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -8,7 +7,6 @@ import org.mockito.Mock
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.ui.accounts.LoginNavigationEvents
 import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowEmailLoginScreen
 import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowLoginViaSiteAddressScreen
@@ -18,7 +16,6 @@ import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.Event
 
-@InternalCoroutinesApi
 class LoginPrologueViewModelTest : BaseUnitTest() {
     @Mock lateinit var unifiedLoginTracker: UnifiedLoginTracker
     @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
@@ -31,7 +28,7 @@ class LoginPrologueViewModelTest : BaseUnitTest() {
                 unifiedLoginTracker,
                 analyticsTrackerWrapper,
                 buildConfigWrapper,
-                TEST_DISPATCHER
+                coroutinesTestRule.testDispatcher
         )
     }
 

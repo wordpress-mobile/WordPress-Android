@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.sitecreation.services
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -13,7 +12,6 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.store.SiteStore.NewSiteError
 import org.wordpress.android.fluxc.store.SiteStore.NewSiteErrorType.GENERIC_ERROR
@@ -44,7 +42,6 @@ private val CREATE_SITE_STATE = SiteCreationServiceState(CREATE_SITE)
 private val SUCCESS_STATE = SiteCreationServiceState(SUCCESS, Pair(NEW_SITE_REMOTE_ID, NEW_SITE_REMOTE_URL))
 private val FAILURE_STATE = SiteCreationServiceState(FAILURE)
 
-@InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class SiteCreationServiceManagerTest : BaseUnitTest() {
@@ -61,7 +58,12 @@ class SiteCreationServiceManagerTest : BaseUnitTest() {
 
     @Before
     fun setUp() {
-        manager = SiteCreationServiceManager(useCase, dispatcher, tracker, TEST_DISPATCHER)
+        manager = SiteCreationServiceManager(
+                useCase,
+                dispatcher,
+                tracker,
+                coroutinesTestRule.testDispatcher
+        )
         successEvent = OnNewSiteCreated(newSiteRemoteId = NEW_SITE_REMOTE_ID, url = NEW_SITE_REMOTE_URL)
         siteExistsErrorEvent = OnNewSiteCreated(newSiteRemoteId = NEW_SITE_REMOTE_ID, url = NEW_SITE_REMOTE_URL)
         genericErrorEvent.error = NewSiteError(GENERIC_ERROR, "")

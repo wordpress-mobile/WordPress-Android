@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.jetpack.scan.details
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -50,7 +49,6 @@ private const val TEST_SITE_NAME = "test site name"
 private const val TEST_SITE_ID = 1L
 private const val SERVER_CREDS_LINK = "${Constants.URL_JETPACK_SETTINGS}/$TEST_SITE_ID}"
 
-@InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 class ThreatDetailsViewModelTest : BaseUnitTest() {
     @Mock private lateinit var site: SiteModel

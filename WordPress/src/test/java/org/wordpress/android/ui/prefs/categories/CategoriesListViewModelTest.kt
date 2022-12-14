@@ -2,7 +2,6 @@ package org.wordpress.android.ui.prefs.categories
 
 import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
 import org.junit.Before
 import org.junit.Test
 import org.mockito.kotlin.mock
@@ -11,7 +10,6 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.action.TaxonomyAction.FETCH_CATEGORIES
 import org.wordpress.android.fluxc.model.SiteModel
@@ -27,7 +25,6 @@ import org.wordpress.android.ui.prefs.categories.list.UiState.Error.NoConnection
 import org.wordpress.android.ui.prefs.categories.list.UiState.Loading
 import org.wordpress.android.util.NetworkUtilsWrapper
 
-@InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 class CategoriesListViewModelTest : BaseUnitTest() {
     private val getCategoriesUseCase: GetCategoriesUseCase = mock()
@@ -44,7 +41,7 @@ class CategoriesListViewModelTest : BaseUnitTest() {
         viewModel = CategoriesListViewModel(
                 getCategoriesUseCase,
                 networkUtilsWrapper,
-                TEST_DISPATCHER,
+                coroutinesTestRule.testDispatcher,
                 dispatcher
         )
         viewModel.uiState.observeForever { if (it != null) uiStates += it }

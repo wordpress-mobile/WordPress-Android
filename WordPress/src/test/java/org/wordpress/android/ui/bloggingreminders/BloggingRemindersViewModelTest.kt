@@ -2,7 +2,6 @@ package org.wordpress.android.ui.bloggingreminders
 
 import androidx.annotation.StringRes
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flowOf
 import org.assertj.core.api.Assertions.assertThat
@@ -18,7 +17,6 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.R.string
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.eventToList
 import org.wordpress.android.fluxc.model.BloggingRemindersModel
 import org.wordpress.android.fluxc.model.BloggingRemindersModel.Day.FRIDAY
@@ -65,11 +63,10 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
     private lateinit var events: MutableList<Boolean>
     private lateinit var uiState: MutableList<UiState>
 
-    @InternalCoroutinesApi
     @Before
     fun setUp() {
         viewModel = BloggingRemindersViewModel(
-                TEST_DISPATCHER,
+                coroutinesTestRule.testDispatcher,
                 bloggingRemindersManager,
                 bloggingRemindersStore,
                 prologueBuilder,

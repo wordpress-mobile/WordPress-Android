@@ -3,7 +3,6 @@ package org.wordpress.android.ui.reader.viewmodels
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -26,7 +25,6 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.datasets.wrappers.ReaderCommentTableWrapper
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.fluxc.model.AccountModel
@@ -122,7 +120,6 @@ private const val ON_RELATED_POST_ITEM_CLICKED_PARAM_POSITION = 3
 private const val INTERCEPTED_URI = "intercepted uri"
 
 @Suppress("LargeClass")
-@InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 class ReaderPostDetailViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: ReaderPostDetailViewModel
@@ -186,9 +183,9 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
                 readerTracker,
                 eventBusWrapper,
                 wpUrlUtilsWrapper,
-                TEST_DISPATCHER,
-                TEST_DISPATCHER,
-                TEST_DISPATCHER,
+                coroutinesTestRule.testDispatcher,
+                coroutinesTestRule.testDispatcher,
+                coroutinesTestRule.testDispatcher,
                 getLikesHandler,
                 likesEnhancementsFeatureConfig,
                 engagementUtils,

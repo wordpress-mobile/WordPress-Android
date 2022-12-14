@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.reader.usecases
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Assert
 import org.junit.Before
@@ -33,7 +32,7 @@ import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase.S
 import org.wordpress.android.util.NetworkUtilsWrapper
 
 private const val ERROR = "Error"
-@InternalCoroutinesApi
+
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class ReaderSiteNotificationsUseCaseTest : BaseUnitTest() {

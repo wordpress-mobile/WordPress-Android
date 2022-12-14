@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.comments.viewmodels
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -15,7 +14,6 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.datasets.wrappers.ReaderCommentTableWrapper
 import org.wordpress.android.fluxc.model.SiteModel
@@ -48,7 +46,6 @@ import org.wordpress.android.util.analytics.AnalyticsUtils.AnalyticsCommentActio
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 
-@InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
     @Mock lateinit var commentsStore: CommentsStore
@@ -90,8 +87,8 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
                 .thenReturn(READER_COMMENT_ENTITY)
 
         viewModel = UnifiedCommentsEditViewModel(
-                mainDispatcher = TEST_DISPATCHER,
-                bgDispatcher = TEST_DISPATCHER,
+                mainDispatcher = coroutinesTestRule.testDispatcher,
+                bgDispatcher = coroutinesTestRule.testDispatcher,
                 commentsStore = commentsStore,
                 resourceProvider = resourceProvider,
                 networkUtilsWrapper = networkUtilsWrapper,

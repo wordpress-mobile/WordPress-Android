@@ -2,7 +2,6 @@ package org.wordpress.android.ui.jetpack.backup.download
 
 import android.os.Bundle
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.flow
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -16,7 +15,6 @@ import org.mockito.kotlin.argThat
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadNavigationEvents.DownloadFile
@@ -50,7 +48,6 @@ import org.wordpress.android.util.wizard.WizardNavigationTarget
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import java.util.Date
 
-@InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 class BackupDownloadViewModelTest : BaseUnitTest() {
     @Mock lateinit var wizardManager: WizardManager<BackupDownloadStep>
@@ -96,7 +93,7 @@ class BackupDownloadViewModelTest : BaseUnitTest() {
                 stateListItemBuilder,
                 postBackupDownloadUseCase,
                 backupDownloadStatusUseCase,
-                TEST_DISPATCHER,
+                coroutinesTestRule.testDispatcher,
                 percentFormatter
         )
         whenever(getActivityLogItemUseCase.get(anyOrNull())).thenReturn(fakeActivityLogModel)

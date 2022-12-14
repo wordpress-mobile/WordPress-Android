@@ -2,7 +2,6 @@ package org.wordpress.android.ui.reader.usecases
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.toList
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -32,7 +31,6 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 private const val FOLLOW_BLOG_ACTION_LISTENER_PARAM_POSITION = 3
 private const val SOURCE = "source"
 
-@InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class ReaderSiteFollowUseCaseTest : BaseUnitTest() {

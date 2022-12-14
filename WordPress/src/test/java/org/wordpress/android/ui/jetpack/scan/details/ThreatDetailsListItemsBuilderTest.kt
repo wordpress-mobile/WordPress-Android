@@ -2,7 +2,6 @@ package org.wordpress.android.ui.jetpack.scan.details
 
 import android.text.SpannedString
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -46,7 +45,6 @@ private const val SERVER_CREDS_MSG_WITH_CLICKABLE_LINK =
         "<a href=\"${Constants.URL_JETPACK_SETTINGS}/$TEST_SITE_ID}\">Enter your server credentials&lt</a> " +
                 "to fix threat."
 
-@InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
     @Mock

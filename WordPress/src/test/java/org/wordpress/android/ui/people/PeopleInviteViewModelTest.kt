@@ -3,7 +3,6 @@ package org.wordpress.android.ui.people
 import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -16,7 +15,6 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.models.InvitePeopleUtils
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
@@ -32,7 +30,6 @@ import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.Event
 
-@InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 class PeopleInviteViewModelTest : BaseUnitTest() {
     @Mock lateinit var inviteLinksHandler: InviteLinksHandler
@@ -65,7 +62,7 @@ class PeopleInviteViewModelTest : BaseUnitTest() {
 
         viewModel = PeopleInviteViewModel(
                 inviteLinksHandler,
-                TEST_DISPATCHER,
+                coroutinesTestRule.testDispatcher,
                 dateTimeUtilsWrapper,
                 contextProvider,
                 invitePeopleUtils,

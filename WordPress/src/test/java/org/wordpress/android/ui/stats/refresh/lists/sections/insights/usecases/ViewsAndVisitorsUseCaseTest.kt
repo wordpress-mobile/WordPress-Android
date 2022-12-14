@@ -2,7 +2,6 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions
 import org.junit.Before
 import org.junit.Test
@@ -15,7 +14,6 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R.string
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_VIEWS_AND_VISITORS_ERROR
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.LimitMode.Top
@@ -70,7 +68,6 @@ class ViewsAndVisitorsUseCaseTest : BaseUnitTest() {
     private val statsGranularity = DAYS
     private val model = VisitsAndViewsModel(modelPeriod, listOf(periodData))
 
-    @InternalCoroutinesApi
     @Before
     fun setUp() {
         useCase = ViewsAndVisitorsUseCase(
@@ -82,7 +79,7 @@ class ViewsAndVisitorsUseCaseTest : BaseUnitTest() {
                 statsDateFormatter,
                 viewsAndVisitorsMapper,
                 Dispatchers.Unconfined,
-                TEST_DISPATCHER,
+                coroutinesTestRule.testDispatcher,
                 analyticsTrackerWrapper,
                 statsWidgetUpdaters,
                 localeManagerWrapper,

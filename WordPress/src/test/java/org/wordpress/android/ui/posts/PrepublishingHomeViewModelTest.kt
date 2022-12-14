@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.posts
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -14,7 +13,6 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.post.PostStatus.PRIVATE
@@ -45,7 +43,6 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
     @Mock lateinit var site: SiteModel
 
     @Before
-    @InternalCoroutinesApi
     @Suppress("UNCHECKED_CAST")
     fun setUp() {
         viewModel = PrepublishingHomeViewModel(
@@ -56,7 +53,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
                 storyRepositoryWrapper,
                 updateStoryTitleUseCase,
                 getCategoriesUseCase,
-                TEST_DISPATCHER
+                coroutinesTestRule.testDispatcher
         )
         whenever(
                 getButtonUiStateUseCase.getUiState(

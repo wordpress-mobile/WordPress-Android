@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.reader
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.flow
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -11,7 +10,6 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource.READER_THREADED_COMMENTS
 import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase
@@ -19,7 +17,6 @@ import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.Foll
 import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.FollowCommentsState.FollowStateChanged
 import org.wordpress.android.ui.utils.UiString.UiStringText
 
-@InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class ReaderFollowCommentsHandlerTest : BaseUnitTest() {
@@ -34,7 +31,10 @@ class ReaderFollowCommentsHandlerTest : BaseUnitTest() {
 
     @Before
     fun setup() {
-        followCommentsHandler = ReaderFollowCommentsHandler(readerCommentsFollowUseCase, TEST_DISPATCHER)
+        followCommentsHandler = ReaderFollowCommentsHandler(
+                readerCommentsFollowUseCase,
+                coroutinesTestRule.testDispatcher
+        )
     }
 
     @Test

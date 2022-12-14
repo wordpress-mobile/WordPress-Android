@@ -2,7 +2,6 @@ package org.wordpress.android.ui.reader.viewmodels
 
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -16,7 +15,6 @@ import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
@@ -29,7 +27,6 @@ import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.Foll
 import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.FollowCommentsState.FollowStateChanged
 import org.wordpress.android.viewmodel.Event
 
-@InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 class ConversationNotificationsViewModelTest : BaseUnitTest() {
     @Mock lateinit var followCommentsHandler: ReaderFollowCommentsHandler
@@ -54,7 +51,7 @@ class ConversationNotificationsViewModelTest : BaseUnitTest() {
         viewModel = ConversationNotificationsViewModel(
                 followCommentsHandler,
                 readerPostTableWrapper,
-                TEST_DISPATCHER
+                coroutinesTestRule.testDispatcher
         )
     }
 

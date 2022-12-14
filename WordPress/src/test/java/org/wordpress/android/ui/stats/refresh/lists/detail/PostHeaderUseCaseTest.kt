@@ -2,7 +2,6 @@ package org.wordpress.android.ui.stats.refresh.lists.detail
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -10,7 +9,6 @@ import org.mockito.Mock
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.ui.stats.StatsConstants
 import org.wordpress.android.ui.stats.refresh.NavigationTarget
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewAttachment
@@ -31,12 +29,12 @@ class PostHeaderUseCaseTest : BaseUnitTest() {
     private val postUrl: String = "post_url.com"
     private val postPostType: String = StatsConstants.ITEM_TYPE_POST
     private val attachmentPostType: String = StatsConstants.ITEM_TYPE_ATTACHMENT
-    @InternalCoroutinesApi
+
     @Before
     fun setUp() {
         useCase = PostHeaderUseCase(
                 Dispatchers.Unconfined,
-                TEST_DISPATCHER,
+                coroutinesTestRule.testDispatcher,
                 statsPostProvider,
                 tracker
         )

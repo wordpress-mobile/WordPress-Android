@@ -2,7 +2,6 @@ package org.wordpress.android.ui.posts.editor
 
 import android.content.Context
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -12,7 +11,6 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.editor.gutenberg.DialogVisibility
 import org.wordpress.android.editor.gutenberg.DialogVisibility.Hidden
 import org.wordpress.android.editor.gutenberg.DialogVisibility.Showing
@@ -55,11 +53,10 @@ class StorePostViewModelTest : BaseUnitTest() {
     private val localSiteId = 1
     private val postId = 2
 
-    @InternalCoroutinesApi
     @Before
     fun setUp() {
         viewModel = StorePostViewModel(
-                TEST_DISPATCHER,
+                coroutinesTestRule.testDispatcher,
                 siteStore,
                 postUtils,
                 uploadService,

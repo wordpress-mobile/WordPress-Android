@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.jetpack.backup.download.usecases
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.toList
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -10,7 +9,6 @@ import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.action.ActivityLogAction.FETCH_BACKUP_DOWNLOAD_STATE
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
@@ -28,7 +26,6 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 import java.util.Calendar
 import java.util.Date
 
-@InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 class GetBackupDownloadStatusUseCaseTest : BaseUnitTest() {
     private lateinit var useCase: GetBackupDownloadStatusUseCase
@@ -38,7 +35,11 @@ class GetBackupDownloadStatusUseCaseTest : BaseUnitTest() {
 
     @Before
     fun setup() = test {
-        useCase = GetBackupDownloadStatusUseCase(networkUtilsWrapper, activityLogStore, TEST_DISPATCHER)
+        useCase = GetBackupDownloadStatusUseCase(
+                networkUtilsWrapper,
+                activityLogStore,
+                coroutinesTestRule.testDispatcher
+        )
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
         whenever(activityLogStore.fetchBackupDownloadState(any()))
                 .thenReturn(OnBackupDownloadStatusFetched(FETCH_BACKUP_DOWNLOAD_STATE))

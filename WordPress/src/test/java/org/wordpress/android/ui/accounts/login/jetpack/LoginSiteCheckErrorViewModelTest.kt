@@ -1,24 +1,23 @@
 package org.wordpress.android.ui.accounts.login.jetpack
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.ui.accounts.LoginNavigationEvents
 import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowInstructions
 import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowSignInForResultJetpackOnly
 
-@InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 class LoginSiteCheckErrorViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: LoginSiteCheckErrorViewModel
 
     @Before
     fun setUp() {
-        viewModel = LoginSiteCheckErrorViewModel(TEST_DISPATCHER)
+        viewModel = LoginSiteCheckErrorViewModel(
+                coroutinesTestRule.testDispatcher
+        )
     }
 
     private data class Observers(

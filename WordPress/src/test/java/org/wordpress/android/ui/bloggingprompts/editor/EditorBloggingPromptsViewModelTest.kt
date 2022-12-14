@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.bloggingprompts.editor
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -13,7 +12,6 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.bloggingprompts.BloggingPromptModel
 import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore
@@ -23,7 +21,6 @@ import org.wordpress.android.ui.posts.EditorBloggingPromptsViewModel
 import org.wordpress.android.ui.posts.EditorBloggingPromptsViewModel.EditorLoadedPrompt
 import java.util.Date
 
-@InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 class EditorBloggingPromptsViewModelTest : BaseUnitTest() {
     @Mock lateinit var siteModel: SiteModel
@@ -53,7 +50,7 @@ class EditorBloggingPromptsViewModelTest : BaseUnitTest() {
     fun setUp() {
         viewModel = EditorBloggingPromptsViewModel(
                 bloggingPromptsStore,
-                TEST_DISPATCHER
+                coroutinesTestRule.testDispatcher
         )
 
         viewModel.onBloggingPromptLoaded.observeForever {

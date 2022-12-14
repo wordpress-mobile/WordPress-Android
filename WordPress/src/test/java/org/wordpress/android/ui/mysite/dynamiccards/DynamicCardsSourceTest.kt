@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.mysite.dynamiccards
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -30,7 +29,6 @@ class DynamicCardsSourceTest : BaseUnitTest() {
     private val pinnedItem = GROW_QUICK_START
     private val dynamicCardTypes = listOf(CUSTOMIZE_QUICK_START, GROW_QUICK_START)
 
-    @InternalCoroutinesApi
     @Before
     fun setUp() = test {
         isRefreshing = mutableListOf()

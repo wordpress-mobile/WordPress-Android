@@ -3,7 +3,6 @@ package org.wordpress.android.ui.posts
 import androidx.lifecycle.Observer
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -44,7 +43,6 @@ class PostListMainViewModelCopyPostTest : BaseUnitTest() {
         setPostFormat("mockedPostFormat")
     }
 
-    @InternalCoroutinesApi
     @Before
     fun setUp() {
         postStore = PostStore(

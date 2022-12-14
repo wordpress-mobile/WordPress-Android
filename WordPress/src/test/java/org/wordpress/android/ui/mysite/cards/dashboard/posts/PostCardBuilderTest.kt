@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.mysite.cards.dashboard.posts
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -38,7 +37,6 @@ private const val FEATURED_IMAGE_URL = "featuredImage"
 private val POST_DATE = SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse("2021-12-06 12:34:56")!!
 
 // This class contains placeholder tests until mock data is removed
-@InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 class PostCardBuilderTest : BaseUnitTest() {
     @Mock private lateinit var localeManagerWrapper: LocaleManagerWrapper

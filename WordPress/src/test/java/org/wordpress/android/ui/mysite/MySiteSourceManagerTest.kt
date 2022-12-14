@@ -2,7 +2,6 @@ package org.wordpress.android.ui.mysite
 
 import androidx.lifecycle.MediatorLiveData
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -55,7 +54,6 @@ class MySiteSourceManagerTest : BaseUnitTest() {
     private lateinit var selectRefreshedMySiteSources: List<MySiteSource<*>>
     private lateinit var siteDependentMySiteSources: List<MySiteSource<*>>
 
-    @InternalCoroutinesApi
     @Before
     fun setUp() = test {
         selectedSite.value = null

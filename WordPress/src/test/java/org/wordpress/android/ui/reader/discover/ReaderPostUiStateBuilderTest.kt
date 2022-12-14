@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.reader.discover
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -18,7 +17,6 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.models.ReaderBlog
 import org.wordpress.android.models.ReaderCardType
@@ -61,7 +59,6 @@ import org.wordpress.android.util.image.ImageType
 import java.util.Date
 
 @Suppress("LargeClass")
-@InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class ReaderPostUiStateBuilderTest : BaseUnitTest() {
@@ -86,7 +83,7 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
                 readerImageScannerProvider,
                 readerUtilsWrapper,
                 readerPostTagsUiStateBuilder,
-                TEST_DISPATCHER
+                coroutinesTestRule.testDispatcher
         )
         whenever(dateTimeUtilsWrapper.javaDateToTimeSpan(anyOrNull())).thenReturn("")
         whenever(gravatarUtilsWrapper.fixGravatarUrlWithResource(anyOrNull(), anyInt())).thenReturn("")

@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.mysite.cards.domainregistration
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -12,7 +11,6 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.PlanModel
 import org.wordpress.android.fluxc.model.SiteModel
@@ -39,13 +37,12 @@ class DomainRegistrationSourceTest : BaseUnitTest() {
     private lateinit var source: DomainRegistrationSource
     private lateinit var isRefreshing: MutableList<Boolean>
 
-    @InternalCoroutinesApi
     @Before
     fun setUp() {
         site.id = siteLocalId
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         source = DomainRegistrationSource(
-                TEST_DISPATCHER,
+                coroutinesTestRule.testDispatcher,
                 dispatcher,
                 selectedSiteRepository,
                 appLogWrapper,

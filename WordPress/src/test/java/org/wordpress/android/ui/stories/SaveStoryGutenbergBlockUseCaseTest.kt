@@ -4,7 +4,6 @@ import android.content.Context
 import com.automattic.android.tracks.crashlogging.CrashLogging
 import com.wordpress.stories.compose.story.StoryFrameItem
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions
 import org.junit.Before
 import org.junit.Test
@@ -17,7 +16,6 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.PostStore
@@ -41,7 +39,6 @@ class SaveStoryGutenbergBlockUseCaseTest : BaseUnitTest() {
     @Mock lateinit var mediaFile: MediaFile
     @Mock lateinit var mediaFile2: MediaFile
 
-    @InternalCoroutinesApi
     @Before
     fun setUp() {
         saveStoryGutenbergBlockUseCase = SaveStoryGutenbergBlockUseCase(storiesPrefs, crashLogging)
@@ -49,8 +46,8 @@ class SaveStoryGutenbergBlockUseCaseTest : BaseUnitTest() {
                 mock(),
                 postStore,
                 mock(),
-                TEST_DISPATCHER,
-                TEST_DISPATCHER
+                coroutinesTestRule.testDispatcher,
+                coroutinesTestRule.testDispatcher
         )
     }
 

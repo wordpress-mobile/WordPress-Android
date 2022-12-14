@@ -3,7 +3,6 @@ package org.wordpress.android.viewmodel.storage
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Observer
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
@@ -11,12 +10,10 @@ import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.util.StorageUtilsProvider
 import org.wordpress.android.util.StorageUtilsProvider.Source
 import org.wordpress.android.viewmodel.Event
 
-@InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 class StorageUtilsViewModelTest : BaseUnitTest() {
     @Mock lateinit var storageUtilsProvider: StorageUtilsProvider
@@ -29,7 +26,7 @@ class StorageUtilsViewModelTest : BaseUnitTest() {
     @Before
     fun setUp() {
         viewModel = StorageUtilsViewModel(
-                TEST_DISPATCHER,
+                coroutinesTestRule.testDispatcher,
                 storageUtilsProvider
         )
     }

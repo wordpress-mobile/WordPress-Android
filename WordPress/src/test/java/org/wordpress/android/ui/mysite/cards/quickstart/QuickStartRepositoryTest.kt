@@ -3,7 +3,6 @@ package org.wordpress.android.ui.mysite.cards.quickstart
 import androidx.core.text.HtmlCompat
 import com.google.android.material.snackbar.Snackbar.Callback
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -17,7 +16,6 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.DynamicCardStore
@@ -82,13 +80,12 @@ class QuickStartRepositoryTest : BaseUnitTest() {
 
     private val nonSiteMenuTasks = QuickStartTask.getAllTasks().subtract(siteMenuTasks)
 
-    @InternalCoroutinesApi
     @Before
     fun setUp() = test {
         whenever(appPrefsWrapper.getLastSelectedQuickStartTypeForSite(any())).thenReturn(quickStartType)
         whenever(quickStartExistingUsersV2FeatureConfig.isEnabled()).thenReturn(false)
         quickStartRepository = QuickStartRepository(
-                TEST_DISPATCHER,
+                coroutinesTestRule.testDispatcher,
                 quickStartStore,
                 quickStartUtilsWrapper,
                 appPrefsWrapper,

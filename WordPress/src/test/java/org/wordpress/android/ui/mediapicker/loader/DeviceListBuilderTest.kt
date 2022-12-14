@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.mediapicker.loader
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -9,7 +8,6 @@ import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.mediapicker.MediaItem.Identifier.LocalUri
 import org.wordpress.android.ui.mediapicker.MediaType
@@ -22,7 +20,6 @@ import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.util.MediaUtilsWrapper
 import org.wordpress.android.util.UriWrapper
 
-@InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 class DeviceListBuilderTest : BaseUnitTest() {
     @Mock lateinit var localeManagerWrapper: LocaleManagerWrapper
@@ -314,7 +311,7 @@ class DeviceListBuilderTest : BaseUnitTest() {
                 deviceMediaLoader,
                 mediaUtilsWrapper,
                 site,
-                TEST_DISPATCHER,
+                coroutinesTestRule.testDispatcher,
                 allowedTypes,
                 pageSize
         )

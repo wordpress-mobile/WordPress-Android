@@ -3,7 +3,6 @@ package org.wordpress.android.ui.reader
 import android.content.Context
 import android.content.res.Resources
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -47,7 +46,6 @@ import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Date
 
-@InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class ReaderPostDetailUiStateBuilderTest : BaseUnitTest() {

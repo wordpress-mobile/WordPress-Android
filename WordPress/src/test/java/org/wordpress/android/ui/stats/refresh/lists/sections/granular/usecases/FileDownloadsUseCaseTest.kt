@@ -2,7 +2,6 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -11,7 +10,6 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.LimitMode.Top
 import org.wordpress.android.fluxc.model.stats.time.FileDownloadsModel
@@ -63,13 +61,13 @@ class FileDownloadsUseCaseTest : BaseUnitTest() {
     private lateinit var useCase: FileDownloadsUseCase
     private lateinit var selectedDate: Date
     private val contentDescription = "file, downloads"
-    @InternalCoroutinesApi
+
     @Before
     fun setUp() {
         useCase = FileDownloadsUseCase(
                 statsGranularity,
                 Dispatchers.Unconfined,
-                TEST_DISPATCHER,
+                coroutinesTestRule.testDispatcher,
                 store,
                 siteModelProvider,
                 selectedDateProvider,

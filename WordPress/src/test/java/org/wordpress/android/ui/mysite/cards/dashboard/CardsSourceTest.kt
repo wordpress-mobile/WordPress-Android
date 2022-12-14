@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.mysite.cards.dashboard
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -10,7 +9,6 @@ import org.mockito.Mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
@@ -76,7 +74,6 @@ private val CARDS_MODEL: List<CardModel> = listOf(
 private val DEFAULT_CARD_TYPE = listOf(CardModel.Type.POSTS)
 private val STATS_FEATURED_ENABLED_CARD_TYPES = listOf(CardModel.Type.TODAYS_STATS, CardModel.Type.POSTS)
 
-@InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 class CardsSourceTest : BaseUnitTest() {
     @Mock private lateinit var selectedSiteRepository: SelectedSiteRepository
@@ -104,7 +101,7 @@ class CardsSourceTest : BaseUnitTest() {
                 selectedSiteRepository,
                 cardsStore,
                 todaysStatsCardFeatureConfig,
-                TEST_DISPATCHER
+                coroutinesTestRule.testDispatcher
         )
     }
 

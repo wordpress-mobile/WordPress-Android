@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.reader.repository.usecases
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.json.JSONArray
 import org.json.JSONObject
@@ -15,7 +14,6 @@ import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.datasets.ReaderBlogTableWrapper
 import org.wordpress.android.datasets.ReaderDiscoverCardsTableWrapper
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
@@ -28,7 +26,6 @@ import org.wordpress.android.models.discover.ReaderDiscoverCard.WelcomeBannerCar
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.ReaderConstants
 
-@InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class GetDiscoverCardsUseCaseTest : BaseUnitTest() {
@@ -53,7 +50,7 @@ class GetDiscoverCardsUseCaseTest : BaseUnitTest() {
                 readerBlogTableWrapper,
                 appLogWrapper,
                 appPrefsWrapper,
-                TEST_DISPATCHER
+                coroutinesTestRule.testDispatcher
         )
         whenever(parseDiscoverCardsJsonUseCase.convertListOfJsonArraysIntoSingleJsonArray(anyOrNull()))
                 .thenReturn(mockedJsonArray)

@@ -4,18 +4,15 @@ import androidx.lifecycle.Observer
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
-import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.ArgumentCaptor
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.WordPress
 import org.wordpress.android.viewmodel.Event
 
-@InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 class HelpViewModelTest : BaseUnitTest() {
     @Mock lateinit var wordPress: WordPress
@@ -26,8 +23,8 @@ class HelpViewModelTest : BaseUnitTest() {
     @Before
     fun setUp() {
         viewModel = HelpViewModel(
-                mainDispatcher = TEST_DISPATCHER,
-                bgDispatcher = TEST_DISPATCHER,
+                mainDispatcher = coroutinesTestRule.testDispatcher,
+                bgDispatcher = coroutinesTestRule.testDispatcher,
         )
     }
 

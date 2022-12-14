@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.reader.discover
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -21,7 +20,6 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.datasets.ReaderBlogTableWrapper
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload.SubscriptionAction
@@ -82,7 +80,6 @@ import org.wordpress.android.viewmodel.ResourceProvider
 private const val SOURCE = "source"
 
 @Suppress("LargeClass")
-@InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
@@ -122,7 +119,7 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
                 mock(),
                 seenStatusToggleUseCase,
                 readerBlogTableWrapper,
-                TEST_DISPATCHER
+                coroutinesTestRule.testDispatcher
         )
         actionHandler.initScope(testScope())
         whenever(appPrefsWrapper.shouldShowBookmarksSavedLocallyDialog()).thenReturn(false)

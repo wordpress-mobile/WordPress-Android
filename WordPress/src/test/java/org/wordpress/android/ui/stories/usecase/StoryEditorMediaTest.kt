@@ -3,7 +3,7 @@ package org.wordpress.android.ui.stories.usecase
 import android.net.Uri
 import androidx.lifecycle.Observer
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.mockito.ArgumentMatchers.anyBoolean
@@ -15,7 +15,6 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.editor.media.AddExistingMediaToPostUseCase
@@ -27,7 +26,6 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.MediaUtilsWrapper
 import org.wordpress.android.viewmodel.Event
 
-@InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 class StoryEditorMediaTest : BaseUnitTest() {
     @Test
@@ -173,7 +171,7 @@ class StoryEditorMediaTest : BaseUnitTest() {
                     mediaUtilsWrapper,
                     addLocalMediaToPostUseCase,
                     addExistingMediaToPostUseCase,
-                    TEST_DISPATCHER
+                    UnconfinedTestDispatcher()
             )
             editorMedia.start(siteModel, editorMediaListener)
             return editorMedia

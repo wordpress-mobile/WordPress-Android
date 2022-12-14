@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.people
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.flow
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -10,7 +9,6 @@ import org.mockito.Mock
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.people.InviteLinksUseCase.InviteLinksState
 import org.wordpress.android.ui.people.InviteLinksUseCase.InviteLinksState.InviteLinksData
@@ -20,7 +18,6 @@ import org.wordpress.android.ui.people.InviteLinksUseCase.UseCaseScenarioContext
 import org.wordpress.android.ui.people.InviteLinksUseCase.UseCaseScenarioContext.MANAGING_AVAILABLE_LINKS
 import org.wordpress.android.ui.utils.UiString.UiStringText
 
-@InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 class InviteLinksHandlerTest : BaseUnitTest() {
     @Mock lateinit var inviteLinksUseCase: InviteLinksUseCase
@@ -34,7 +31,7 @@ class InviteLinksHandlerTest : BaseUnitTest() {
     fun setUp() {
         inviteLinksHandler = InviteLinksHandler(
                 inviteLinksUseCase,
-                TEST_DISPATCHER
+                coroutinesTestRule.testDispatcher
         )
         setupObservers()
     }

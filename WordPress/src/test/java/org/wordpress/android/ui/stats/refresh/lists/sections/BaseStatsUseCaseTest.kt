@@ -2,7 +2,7 @@ package org.wordpress.android.ui.stats.refresh.lists.sections
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.After
 import org.junit.Before
@@ -11,7 +11,6 @@ import org.mockito.Mock
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.ALL_TIME_STATS
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
@@ -20,7 +19,6 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Text
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import javax.inject.Provider
 
-@InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 class BaseStatsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var localDataProvider: Provider<String?>
@@ -99,7 +97,6 @@ class BaseStatsUseCaseTest : BaseUnitTest() {
         assertThat(firstItem.text).isEqualTo(data)
     }
 
-    @InternalCoroutinesApi
     class TestUseCase(
         private val localDataProvider: Provider<String?>,
         private val remoteDataProvider: Provider<String?>,
@@ -107,7 +104,7 @@ class BaseStatsUseCaseTest : BaseUnitTest() {
     ) : BaseStatsUseCase<String, Int>(
             ALL_TIME_STATS,
             Dispatchers.Unconfined,
-            TEST_DISPATCHER,
+            UnconfinedTestDispatcher(),
             0,
             listOf()
     ) {

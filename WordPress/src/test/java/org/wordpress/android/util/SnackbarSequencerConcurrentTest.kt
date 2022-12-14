@@ -4,11 +4,7 @@ import android.app.Activity
 import android.view.View
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.advanceTimeBy
-import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -28,7 +24,6 @@ import org.wordpress.android.widgets.WPSnackbarWrapper
 private const val TEST_MESSAGE_TEMPLATE = "This is test message number "
 private const val SNACKBAR_DURATION_MS = 500L
 
-@InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class SnackbarSequencerConcurrentTest : BaseUnitTest() {
@@ -40,21 +35,21 @@ class SnackbarSequencerConcurrentTest : BaseUnitTest() {
     private val uiHelper: UiHelpers = UiHelpers()
     private lateinit var sequencer: SnackbarSequencer
 
-    private val job = Job()
-    private val dispatcher = TestCoroutineDispatcher()
-    private val coroutineContext = job + dispatcher
-
     @Before
     fun setUp() {
         whenever(activity.isFinishing).thenReturn(false)
         whenever(view.context).thenReturn(activity)
         whenever(wpSnackbarWrapper.make(any(), any(), any())).thenReturn(wpSnackbar)
 
-        sequencer = SnackbarSequencer(uiHelper, wpSnackbarWrapper, dispatcher)
+        sequencer = SnackbarSequencer(
+                uiHelper,
+                wpSnackbarWrapper,
+                coroutinesTestRule.testDispatcher
+        )
     }
 
     @Test
-    fun `snackbars are shown in sequence with the correct duration`() = runBlockingTest(coroutineContext) {
+    fun `snackbars are shown in sequence with the correct duration`() = test {
         // Given
         val items = getItems(2)
 
@@ -73,7 +68,7 @@ class SnackbarSequencerConcurrentTest : BaseUnitTest() {
     }
 
     @Test
-    fun `snackbars are not shown until previous duration elapsed`() = runBlockingTest(coroutineContext) {
+    fun `snackbars are not shown until previous duration elapsed`() = test {
         // Given
         val items = getItems(2)
 
@@ -96,7 +91,7 @@ class SnackbarSequencerConcurrentTest : BaseUnitTest() {
     }
 
     @Test
-    fun `snackbars beyond capacity are not shown`() = runBlockingTest(coroutineContext) {
+    fun `snackbars beyond capacity are not shown`() = test {
         // Given
         val items = getItems(10)
 

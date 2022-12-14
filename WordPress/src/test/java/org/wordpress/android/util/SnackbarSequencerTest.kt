@@ -4,7 +4,6 @@ import android.app.Activity
 import android.view.View
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -20,7 +19,6 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.SnackbarItem.Info
@@ -29,7 +27,6 @@ import java.lang.ref.WeakReference
 
 private const val TEST_MESSAGE = "This is a test message"
 
-@InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class SnackbarSequencerTest : BaseUnitTest() {
@@ -49,7 +46,11 @@ class SnackbarSequencerTest : BaseUnitTest() {
         whenever(view.context).thenReturn(activity)
         whenever(wpSnackbarWrapper.make(any(), any(), any())).thenReturn(wpSnackbar)
 
-        sequencer = SnackbarSequencer(uiHelper, wpSnackbarWrapper, TEST_DISPATCHER)
+        sequencer = SnackbarSequencer(
+                uiHelper,
+                wpSnackbarWrapper,
+                coroutinesTestRule.testDispatcher
+        )
 
         item = SnackbarItem(
                 Info(

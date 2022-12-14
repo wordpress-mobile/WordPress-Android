@@ -2,7 +2,6 @@ package org.wordpress.android.ui.reader.viewmodels
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Ignore
@@ -16,7 +15,6 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask
@@ -47,7 +45,6 @@ import java.util.Date
 
 private const val DUMMY_CURRENT_TIME: Long = 10000000000
 
-@InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class ReaderViewModelTest : BaseUnitTest() {
@@ -73,8 +70,8 @@ class ReaderViewModelTest : BaseUnitTest() {
     @Before
     fun setup() {
         viewModel = ReaderViewModel(
-                TEST_DISPATCHER,
-                TEST_DISPATCHER,
+                coroutinesTestRule.testDispatcher,
+                coroutinesTestRule.testDispatcher,
                 appPrefsWrapper,
                 dateProvider,
                 loadReaderTabsUseCase,

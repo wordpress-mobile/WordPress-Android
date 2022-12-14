@@ -2,7 +2,6 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Ignore
@@ -12,7 +11,6 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.LimitMode.Top
 import org.wordpress.android.fluxc.model.stats.time.ReferrersModel
@@ -60,7 +58,6 @@ private val statsGranularity = DAYS
 private val selectedDate = Date(0)
 private val limitMode = Top(ITEMS_TO_LOAD)
 
-@InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 class ReferrersUseCaseTest : BaseUnitTest() {
     @Mock lateinit var store: ReferrersStore
@@ -112,13 +109,12 @@ class ReferrersUseCaseTest : BaseUnitTest() {
     private val totalLabel = "total"
     private val contentDescription = "title, views"
 
-    @InternalCoroutinesApi
     @Before
     fun setUp() {
         useCase = ReferrersUseCase(
                 statsGranularity,
                 Dispatchers.Unconfined,
-                TEST_DISPATCHER,
+                coroutinesTestRule.testDispatcher,
                 store,
                 statsSiteProvider,
                 selectedDateProvider,
@@ -215,7 +211,7 @@ class ReferrersUseCaseTest : BaseUnitTest() {
         useCase = ReferrersUseCase(
                 statsGranularity,
                 Dispatchers.Unconfined,
-                TEST_DISPATCHER,
+                coroutinesTestRule.testDispatcher,
                 store,
                 statsSiteProvider,
                 selectedDateProvider,

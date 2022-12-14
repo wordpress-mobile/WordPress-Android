@@ -2,7 +2,6 @@ package org.wordpress.android.viewmodel.pages
 
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -13,11 +12,9 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R.string
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.ui.pages.PageItem
 import org.wordpress.android.ui.pages.PageItem.Empty
 
-@InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class PageParentSearchViewModelTest : BaseUnitTest() {
@@ -28,7 +25,9 @@ class PageParentSearchViewModelTest : BaseUnitTest() {
 
     @Before
     fun setUp() {
-        viewModel = PageParentSearchViewModel(TEST_DISPATCHER)
+        viewModel = PageParentSearchViewModel(
+                coroutinesTestRule.testDispatcher
+        )
         searchPages = MutableLiveData()
         whenever(pageParentViewModel.searchPages).thenReturn(searchPages)
         viewModel.start(pageParentViewModel)

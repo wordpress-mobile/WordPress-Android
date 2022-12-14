@@ -6,7 +6,6 @@ import com.tenor.android.core.model.impl.MediaCollection
 import com.tenor.android.core.model.impl.Result
 import com.tenor.android.core.response.impl.GifsResponse
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions
 import org.junit.Before
 import org.junit.Test
@@ -28,7 +27,6 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.UriUtilsWrapper
 import org.wordpress.android.util.UriWrapper
 
-@InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 class GifMediaDataSourceTest : BaseUnitTest() {
     @Mock lateinit var context: Context

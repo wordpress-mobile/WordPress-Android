@@ -2,7 +2,6 @@ package org.wordpress.android.ui.reader.repository
 
 import androidx.lifecycle.Observer
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.withContext
 import org.assertj.core.api.Assertions
 import org.junit.Before
@@ -35,7 +34,6 @@ import org.wordpress.android.util.EventBusWrapper
 
 private const val NUMBER_OF_ITEMS = 10L
 
-@InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class ReaderDiscoverDataProviderTest : BaseUnitTest() {

@@ -3,7 +3,6 @@ package org.wordpress.android.ui.deeplinks
 import android.content.Context
 import android.net.Uri
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -14,7 +13,6 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DEEP_LINKED
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.deeplinks.DeepLinkEntryPoint.DEFAULT
@@ -42,11 +40,10 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
     private var isFinished = false
     private lateinit var navigateActions: MutableList<NavigateAction>
 
-    @InternalCoroutinesApi
     @Before
     fun setUp() {
         viewModel = DeepLinkingIntentReceiverViewModel(
-                TEST_DISPATCHER,
+                coroutinesTestRule.testDispatcher,
                 deepLinkHandlers,
                 deepLinkUriUtils,
                 accountStore,

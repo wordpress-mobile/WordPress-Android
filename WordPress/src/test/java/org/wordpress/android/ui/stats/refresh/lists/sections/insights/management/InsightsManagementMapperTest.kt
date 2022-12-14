@@ -1,13 +1,11 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.insights.management
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.store.StatsStore.InsightType
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.ALL_TIME_STATS
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.ANNUAL_SITE_STATS
@@ -29,10 +27,12 @@ class InsightsManagementMapperTest : BaseUnitTest() {
     private lateinit var insightsManagementMapper: InsightsManagementMapper
     private val insightTypeCount = 10 // POSTS_AND_PAGES_INSIGHTS.size + ACTIVITY_INSIGHTS.size + GENERAL_INSIGHTS.size
     private val sectionsCount = 3
-    @InternalCoroutinesApi
+
     @Before
     fun setUp() {
-        insightsManagementMapper = InsightsManagementMapper(TEST_DISPATCHER)
+        insightsManagementMapper = InsightsManagementMapper(
+                coroutinesTestRule.testDispatcher
+        )
     }
 
     @Test

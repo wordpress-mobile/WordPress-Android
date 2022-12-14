@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.jetpack.restore.usecases
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.toList
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -12,7 +11,6 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.action.ActivityLogAction.FETCH_REWIND_STATE
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
@@ -40,7 +38,6 @@ private const val CURRENT_ENTRY = "current entry"
 
 private val PUBLISHED = Date()
 
-@InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class GetRestoreStatusUseCaseTest : BaseUnitTest() {
@@ -52,7 +49,11 @@ class GetRestoreStatusUseCaseTest : BaseUnitTest() {
 
     @Before
     fun setup() = test {
-        useCase = GetRestoreStatusUseCase(networkUtilsWrapper, activityLogStore, TEST_DISPATCHER)
+        useCase = GetRestoreStatusUseCase(
+                networkUtilsWrapper,
+                activityLogStore,
+                coroutinesTestRule.testDispatcher
+        )
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
         whenever(activityLogStore.fetchActivitiesRewind(any())).thenReturn(OnRewindStatusFetched(FETCH_REWIND_STATE))
         whenever(activityLogStore.getActivityLogItemByRewindId(REWIND_ID)).thenReturn(activityLogModel())

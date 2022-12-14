@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.domains
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -11,7 +10,6 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.PlanModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpcom.site.Domain
@@ -44,7 +42,6 @@ class DomainsDashboardViewModelTest : BaseUnitTest() {
 
     private val uiModel = mutableListOf<DomainsDashboardItem>()
 
-    @InternalCoroutinesApi
     @Before
     fun setUp() {
         viewModel = DomainsDashboardViewModel(
@@ -52,7 +49,7 @@ class DomainsDashboardViewModelTest : BaseUnitTest() {
                 analyticsTracker,
                 htmlMessageUtils,
                 fetchPlansUseCase,
-                TEST_DISPATCHER
+                coroutinesTestRule.testDispatcher
         )
 
         viewModel.uiModel.observeForever { if (it != null) uiModel += it }

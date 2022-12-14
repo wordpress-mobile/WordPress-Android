@@ -3,7 +3,6 @@ package org.wordpress.android.ui.posts
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -16,7 +15,6 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.PostModel
@@ -37,7 +35,6 @@ class PostListMainViewModelTest : BaseUnitTest() {
     @Mock lateinit var savePostToDbUseCase: SavePostToDbUseCase
     private lateinit var viewModel: PostListMainViewModel
 
-    @InternalCoroutinesApi
     @Before
     fun setUp() {
         val prefs = mock<AppPrefsWrapper> {
@@ -171,11 +168,16 @@ class PostListMainViewModelTest : BaseUnitTest() {
         verify(editPostRepository, times(0)).loadPostByLocalPostId(any())
     }
 
-    @InternalCoroutinesApi
     @Test
     fun `if post in EditPostRepository is modified then the savePostToDbUseCase should update the post`() {
         // arrange
-        val editPostRepository = EditPostRepository(mock(), mock(), mock(), TEST_DISPATCHER, TEST_DISPATCHER)
+        val editPostRepository = EditPostRepository(
+                mock(),
+                mock(),
+                mock(),
+                coroutinesTestRule.testDispatcher,
+                coroutinesTestRule.testDispatcher
+        )
         editPostRepository.set { mock() }
         val action = { _: PostModel -> true }
 

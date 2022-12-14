@@ -1,7 +1,6 @@
 package org.wordpress.android.viewmodel.posts
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -13,7 +12,6 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.list.PagedListWrapper
 import org.wordpress.android.fluxc.model.list.PostListDescriptor.PostListDescriptorForXmlRpcSite
@@ -27,7 +25,6 @@ import org.wordpress.android.ui.uploads.UploadStarter
 private const val DEFAULT_PHOTON_DIMENSIONS = -9
 private val DEFAULT_AUTHOR_FILTER = AuthorFilterSelection.EVERYONE
 
-@InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 class PostListViewModelTest : BaseUnitTest() {
     @Mock private lateinit var site: SiteModel
@@ -62,8 +59,8 @@ class PostListViewModelTest : BaseUnitTest() {
                 readerUtilsWrapper = mock(),
                 connectionStatus = mock(),
                 uploadUtilsWrapper = mock(),
-                uiDispatcher = TEST_DISPATCHER,
-                bgDispatcher = TEST_DISPATCHER
+                uiDispatcher = coroutinesTestRule.testDispatcher,
+                bgDispatcher = coroutinesTestRule.testDispatcher
         )
     }
 

@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.reader.usecases
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.toList
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -23,7 +22,6 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 
 private const val SOURCE = "source"
 
-@InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class ReaderPostBookmarkUseCaseTest : BaseUnitTest() {

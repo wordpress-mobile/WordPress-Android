@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.mediapicker.loader
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.ObjectAssert
 import org.junit.Before
@@ -14,7 +13,6 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.action.MediaAction.FETCH_MEDIA_LIST
 import org.wordpress.android.fluxc.annotations.action.Action
@@ -42,7 +40,6 @@ import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import java.util.Date
 
-@InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 class MediaLibraryDataSourceTest : BaseUnitTest() {
     @Mock lateinit var mediaStore: MediaStore
@@ -60,7 +57,7 @@ class MediaLibraryDataSourceTest : BaseUnitTest() {
         mediaLibraryDataSourceFactory = MediaLibraryDataSourceFactory(
                 mediaStore,
                 dispatcher,
-                TEST_DISPATCHER,
+                coroutinesTestRule.testDispatcher,
                 networkUtilsWrapper,
                 dateTimeUtilsWrapper
         )

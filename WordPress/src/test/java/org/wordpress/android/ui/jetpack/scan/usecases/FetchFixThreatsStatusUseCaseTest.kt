@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.jetpack.scan.usecases
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.advanceTimeBy
 import org.assertj.core.api.Assertions.assertThat
@@ -13,7 +12,6 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.action.ScanAction.FETCH_FIX_THREATS_STATUS
 import org.wordpress.android.fluxc.model.scan.threat.FixThreatStatusModel
 import org.wordpress.android.fluxc.model.scan.threat.FixThreatStatusModel.FixStatus
@@ -27,7 +25,6 @@ import org.wordpress.android.ui.jetpack.scan.usecases.FetchFixThreatsStatusUseCa
 import org.wordpress.android.ui.jetpack.scan.usecases.FetchFixThreatsStatusUseCase.FetchFixThreatsState.NotStarted
 import org.wordpress.android.util.NetworkUtilsWrapper
 
-@InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 class FetchFixThreatsStatusUseCaseTest : BaseUnitTest() {
     private lateinit var useCase: FetchFixThreatsStatusUseCase
@@ -50,7 +47,11 @@ class FetchFixThreatsStatusUseCaseTest : BaseUnitTest() {
 
     @Before
     fun setup() {
-        useCase = FetchFixThreatsStatusUseCase(networkUtilsWrapper, scanStore, TEST_DISPATCHER)
+        useCase = FetchFixThreatsStatusUseCase(
+                networkUtilsWrapper,
+                scanStore,
+                coroutinesTestRule.testDispatcher
+        )
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
     }
 

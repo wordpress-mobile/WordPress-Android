@@ -3,7 +3,7 @@ package org.wordpress.android.ui.posts.editor.media
 import android.net.Uri
 import androidx.lifecycle.Observer
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.mockito.ArgumentMatchers.any
@@ -18,7 +18,6 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.MediaModel
@@ -35,7 +34,6 @@ import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
 
-@InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 class EditorMediaTest : BaseUnitTest() {
     @Test
@@ -410,8 +408,8 @@ class EditorMediaTest : BaseUnitTest() {
                     reattachUploadingMediaUseCase,
                     analyticsUtilsWrapper,
                     analyticsTrackerWrapper,
-                    TEST_DISPATCHER,
-                    TEST_DISPATCHER
+                    UnconfinedTestDispatcher(),
+                    UnconfinedTestDispatcher()
             )
             editorMedia.start(siteModel, editorMediaListener)
             return editorMedia

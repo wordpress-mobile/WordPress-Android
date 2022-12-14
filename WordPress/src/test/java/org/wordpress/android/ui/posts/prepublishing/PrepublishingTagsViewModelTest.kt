@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.posts.prepublishing
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -13,13 +12,11 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.ui.posts.PrepublishingTagsViewModel
 import org.wordpress.android.ui.posts.UpdatePostTagsUseCase
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.viewmodel.Event
 
-@InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 class PrepublishingTagsViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: PrepublishingTagsViewModel
@@ -27,7 +24,11 @@ class PrepublishingTagsViewModelTest : BaseUnitTest() {
 
     @Before
     fun setup() {
-        viewModel = PrepublishingTagsViewModel(mock(), updatePostTagsUseCase, TEST_DISPATCHER)
+        viewModel = PrepublishingTagsViewModel(
+                mock(),
+                updatePostTagsUseCase,
+                coroutinesTestRule.testDispatcher
+        )
     }
 
     @Test

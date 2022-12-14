@@ -2,7 +2,6 @@ package org.wordpress.android.ui.stats.refresh.lists.detail
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -14,7 +13,6 @@ import org.mockito.kotlin.eq
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.PostDetailStatsModel
 import org.wordpress.android.fluxc.model.stats.PostDetailStatsModel.Day
@@ -61,12 +59,11 @@ class PostAverageViewsPerDayUseCaseTest : BaseUnitTest() {
     private val postId: Long = 1L
     private val year = Year(2010, listOf(Month(1, 100)), 150)
 
-    @InternalCoroutinesApi
     @Before
     fun setUp() {
         useCase = PostAverageViewsPerDayUseCase(
                 Dispatchers.Unconfined,
-                TEST_DISPATCHER,
+                coroutinesTestRule.testDispatcher,
                 statsSiteProvider,
                 statsPostProvider,
                 store,

@@ -1,7 +1,6 @@
 package org.wordpress.android.viewmodel.comments
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
@@ -17,7 +16,6 @@ import org.mockito.kotlin.eq
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R.string
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.CommentStore.CommentError
 import org.wordpress.android.fluxc.store.CommentStore.CommentErrorType.GENERIC_ERROR
@@ -76,7 +74,6 @@ class UnifiedCommentListViewModelTest : BaseUnitTest() {
 
     val site = SiteModel().also { it.id = 5 }.also { it.name = "Test Site" }
 
-    @InternalCoroutinesApi
     @Before
     fun setUp() = test {
         whenever(dateTimeUtilsWrapper.javaDateToTimeSpan(anyOrNull())).thenReturn("Apr 19")
@@ -111,8 +108,8 @@ class UnifiedCommentListViewModelTest : BaseUnitTest() {
                 selectedSiteRepository,
                 networkUtilsWrapper,
                 analyticsTrackerWrapper,
-                TEST_DISPATCHER,
-                TEST_DISPATCHER,
+                coroutinesTestRule.testDispatcher,
+                coroutinesTestRule.testDispatcher,
                 unifiedCommentsListHandler,
                 localCommentCacheUpdateHandler
         )

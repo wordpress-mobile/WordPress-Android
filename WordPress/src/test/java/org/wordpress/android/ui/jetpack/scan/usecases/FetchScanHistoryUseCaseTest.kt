@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.jetpack.scan.usecases
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -11,7 +10,6 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.action.ScanAction.FETCH_SCAN_HISTORY
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel
@@ -24,7 +22,6 @@ import org.wordpress.android.ui.jetpack.scan.usecases.FetchScanHistoryUseCase.Fe
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.ScanTracker
 
-@InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 class FetchScanHistoryUseCaseTest : BaseUnitTest() {
     private lateinit var fetchScanHistoryUseCase: FetchScanHistoryUseCase
@@ -36,7 +33,12 @@ class FetchScanHistoryUseCaseTest : BaseUnitTest() {
 
     @Before
     fun setUp() {
-        fetchScanHistoryUseCase = FetchScanHistoryUseCase(networkUtilsWrapper, scanStore, scanTracker, TEST_DISPATCHER)
+        fetchScanHistoryUseCase = FetchScanHistoryUseCase(
+                networkUtilsWrapper,
+                scanStore,
+                scanTracker,
+                coroutinesTestRule.testDispatcher
+        )
 
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
     }

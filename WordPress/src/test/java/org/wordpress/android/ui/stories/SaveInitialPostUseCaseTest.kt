@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.stories
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -13,7 +12,6 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.post.PostStatus
@@ -29,11 +27,16 @@ class SaveInitialPostUseCaseTest : BaseUnitTest() {
     @Mock lateinit var savePostToDbUseCase: SavePostToDbUseCase
     @Mock lateinit var postStore: PostStore
 
-    @InternalCoroutinesApi
     @Before
     fun setup() {
         saveInitialPostUseCase = SaveInitialPostUseCase(postStore, savePostToDbUseCase)
-        editPostRepository = EditPostRepository(mock(), mock(), mock(), TEST_DISPATCHER, TEST_DISPATCHER)
+        editPostRepository = EditPostRepository(
+                mock(),
+                mock(),
+                mock(),
+                coroutinesTestRule.testDispatcher,
+                coroutinesTestRule.testDispatcher
+        )
         whenever(postStore.instantiatePostModel(anyOrNull(), any(), anyOrNull(), anyOrNull())).thenReturn(PostModel())
     }
 

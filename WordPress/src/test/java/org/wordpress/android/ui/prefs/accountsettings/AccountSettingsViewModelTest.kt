@@ -2,7 +2,6 @@ package org.wordpress.android.ui.prefs.accountsettings
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 import org.assertj.core.api.Assertions.assertThat
@@ -13,7 +12,6 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R.string
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore.AccountError
@@ -30,7 +28,6 @@ import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 
-@InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 class AccountSettingsViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: AccountSettingsViewModel
@@ -381,7 +378,7 @@ class AccountSettingsViewModelTest : BaseUnitTest() {
         test {
             uiStateChanges.clear()
             initialiseViewModel()
-            val job = launch(TEST_DISPATCHER) {
+            val job = launch(coroutinesTestRule.testDispatcher) {
                 viewModel.accountSettingsUiState.toList(uiStateChanges)
             }
             this.block()
@@ -403,7 +400,7 @@ class AccountSettingsViewModelTest : BaseUnitTest() {
         viewModel = AccountSettingsViewModel(
                 resourceProvider,
                 networkUtilsWrapper,
-                TEST_DISPATCHER,
+                coroutinesTestRule.testDispatcher,
                 fetchAccountSettingsUseCase,
                 pushAccountSettingsUseCase,
                 getAccountUseCase,

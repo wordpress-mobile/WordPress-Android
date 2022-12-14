@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.engagement
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.flow
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -13,7 +12,6 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.LikeModel.LikeType.COMMENT_LIKE
 import org.wordpress.android.fluxc.model.LikeModel.LikeType.POST_LIKE
 import org.wordpress.android.ui.engagement.GetLikesUseCase.FailureType
@@ -28,7 +26,6 @@ import org.wordpress.android.ui.engagement.utils.getDefaultLikers
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.UiString.UiStringText
 
-@InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class GetLikesHandlerTest : BaseUnitTest() {
@@ -50,7 +47,10 @@ class GetLikesHandlerTest : BaseUnitTest() {
 
     @Before
     fun setup() {
-        getLikesHandler = GetLikesHandler(getLikesUseCase, TEST_DISPATCHER)
+        getLikesHandler = GetLikesHandler(
+                getLikesUseCase,
+                coroutinesTestRule.testDispatcher
+        )
     }
 
     @Test

@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.sitecreation.theme
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -18,7 +17,6 @@ import org.wordpress.android.ui.layoutpicker.LayoutCategoryModel
 import org.wordpress.android.ui.layoutpicker.LayoutModel
 import org.wordpress.android.viewmodel.ResourceProvider
 
-@InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class SiteDesignRecommendationProviderTest : BaseUnitTest() {

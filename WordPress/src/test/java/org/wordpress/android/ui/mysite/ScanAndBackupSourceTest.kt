@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.mysite
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.flow
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -12,14 +11,12 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.testScope
 import org.wordpress.android.ui.jetpack.JetpackCapabilitiesUseCase
 import org.wordpress.android.ui.jetpack.JetpackCapabilitiesUseCase.JetpackPurchasedProducts
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.JetpackCapabilities
 
-@InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 class ScanAndBackupSourceTest : BaseUnitTest() {
     @Mock lateinit var selectedSiteRepository: SelectedSiteRepository
@@ -162,7 +159,7 @@ class ScanAndBackupSourceTest : BaseUnitTest() {
             )
         }
         scanAndBackupSource = ScanAndBackupSource(
-                TEST_DISPATCHER,
+                coroutinesTestRule.testDispatcher,
                 selectedSiteRepository,
                 jetpackCapabilitiesUseCase
         )

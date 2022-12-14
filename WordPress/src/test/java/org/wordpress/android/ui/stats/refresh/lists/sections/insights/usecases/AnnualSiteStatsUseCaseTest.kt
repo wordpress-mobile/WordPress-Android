@@ -2,7 +2,6 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -12,7 +11,6 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.YearsInsightsModel
 import org.wordpress.android.fluxc.model.stats.YearsInsightsModel.YearInsights
@@ -41,7 +39,6 @@ import org.wordpress.android.viewmodel.Event
 import java.util.Calendar
 import java.util.Locale
 
-@InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 class AnnualSiteStatsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var insightsStore: MostPopularInsightsStore
@@ -58,7 +55,7 @@ class AnnualSiteStatsUseCaseTest : BaseUnitTest() {
     fun setUp() {
         useCase = AnnualSiteStatsUseCase(
                 Dispatchers.Unconfined,
-                TEST_DISPATCHER,
+                coroutinesTestRule.testDispatcher,
                 insightsStore,
                 statsSiteProvider,
                 selectedDateProvider,
@@ -134,7 +131,7 @@ class AnnualSiteStatsUseCaseTest : BaseUnitTest() {
     fun `hide title and view more block in view all mode`() = test {
         useCase = AnnualSiteStatsUseCase(
                 Dispatchers.Unconfined,
-                TEST_DISPATCHER,
+                coroutinesTestRule.testDispatcher,
                 insightsStore,
                 statsSiteProvider,
                 selectedDateProvider,

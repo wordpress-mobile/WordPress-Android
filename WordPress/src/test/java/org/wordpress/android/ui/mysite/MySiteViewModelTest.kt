@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.assertj.core.api.Assertions.assertThat
@@ -31,7 +30,6 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.DynamicCardType
@@ -330,14 +328,12 @@ class MySiteViewModelTest : BaseUnitTest() {
             bloggingPromptsUpdate
     )
 
-    @InternalCoroutinesApi
     @Suppress("LongMethod")
     @Before
     fun setUp() {
         init()
     }
 
-    @InternalCoroutinesApi
     @Suppress("LongMethod")
     fun init(
         isMySiteDashboardTabsFeatureFlagEnabled: Boolean = true,
@@ -362,8 +358,8 @@ class MySiteViewModelTest : BaseUnitTest() {
                 .thenReturn(QuickStartNewSiteTask.VIEW_SITE)
         viewModel = MySiteViewModel(
                 networkUtilsWrapper,
-                TEST_DISPATCHER,
-                TEST_DISPATCHER,
+                coroutinesTestRule.testDispatcher,
+                coroutinesTestRule.testDispatcher,
                 analyticsTrackerWrapper,
                 siteItemsBuilder,
                 accountStore,
@@ -483,7 +479,6 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     /* SITE STATE */
 
-    @InternalCoroutinesApi
     @Test
     fun `given my site tabs feature flag not enabled, when site is selected, then tabs are not visible`() {
         init(isMySiteDashboardTabsFeatureFlagEnabled = false)
@@ -569,7 +564,6 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     /* SELECTED SITE - DEFAULT TAB */
 
-    @InternalCoroutinesApi
     @Test
     fun `given tabs not enabled, when site is selected, then default tab is not set`() {
         init(isMySiteDashboardTabsFeatureFlagEnabled = false)
@@ -1610,7 +1604,6 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     /* DASHBOARD BLOGGING PROMPT CARD */
 
-    @InternalCoroutinesApi
     @Test
     fun `blogging prompt card is added to the dashboard when FF is ON`() = test {
         init(isBloggingPromptsFeatureConfigEnabled = true)
@@ -1626,7 +1619,6 @@ class MySiteViewModelTest : BaseUnitTest() {
         )
     }
 
-    @InternalCoroutinesApi
     @Test
     fun `blogging prompt card is not added to the dashboard when FF is OFF`() = test {
         init(isBloggingPromptsFeatureConfigEnabled = false)
@@ -2115,7 +2107,6 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     /* ORDERED LIST */
 
-    @InternalCoroutinesApi
     @Test
     fun `given info item exist, when cardAndItems list is ordered, then info item succeeds site info card`() {
         initSelectedSite(showStaleMessage = true)
@@ -2127,7 +2118,6 @@ class MySiteViewModelTest : BaseUnitTest() {
         assertThat(infoItemIndex).isEqualTo(siteInfoCardIndex + 1)
     }
 
-    @InternalCoroutinesApi
     @Test
     fun `given no post cards exist, when cardAndItems list is ordered, then dynamic card follow all cards`() {
         site.setIsWPCom(false)
@@ -2143,7 +2133,6 @@ class MySiteViewModelTest : BaseUnitTest() {
         assertThat(siteMenuCardsAndItems[indexOfLastCard + 1]).isInstanceOf(DynamicCard::class.java)
     }
 
-    @InternalCoroutinesApi
     @Test
     fun `given shouldShowJetpackBranding is true, then the Jetpack badge is visible last`() {
         init(shouldShowJetpackBranding = true)
@@ -2156,7 +2145,6 @@ class MySiteViewModelTest : BaseUnitTest() {
         assertThat(getDashboardTabLastItems().last()).isInstanceOf(JetpackBadge::class.java)
     }
 
-    @InternalCoroutinesApi
     @Test
     fun `given shouldShowJetpackBranding is false, then no Jetpack badge is visible`() {
         init(shouldShowJetpackBranding = false)
@@ -2268,7 +2256,6 @@ class MySiteViewModelTest : BaseUnitTest() {
         verify(contentMigrationAnalyticsTracker).trackPleaseDeleteWordPressCardTapped()
     }
 
-    @InternalCoroutinesApi
     @Test
     fun `given dashboard cards exist, when cardAndItems list is ordered, then dynamic cards precede dashboard cards`() {
         initSelectedSite(isQuickStartDynamicCardEnabled = true)
@@ -2289,7 +2276,6 @@ class MySiteViewModelTest : BaseUnitTest() {
         assertThat(getSiteMenuTabLastItems().isNotEmpty())
     }
 
-    @InternalCoroutinesApi
     @Test
     fun `given selected site with tabs disabled, when all cards and items, then qs card exists`() {
         init(isMySiteDashboardTabsFeatureFlagEnabled = false)
@@ -2519,7 +2505,6 @@ class MySiteViewModelTest : BaseUnitTest() {
         assertThat(trackWithTabSource.last().stat).isEqualTo(Stat.MY_SITE_PULL_TO_REFRESH)
     }
 
-    @InternalCoroutinesApi
     @Test
     fun `given tabs are disabled, when pull to refresh invoked, then track with tab source is not requested`() {
         init(isMySiteDashboardTabsFeatureFlagEnabled = false)
@@ -2530,7 +2515,6 @@ class MySiteViewModelTest : BaseUnitTest() {
         assertThat(trackWithTabSource).isEmpty()
     }
 
-    @InternalCoroutinesApi
     @Test
     fun `given tabs are disabled, when pull to refresh invoked, then pull-to-refresh is tracked`() {
         init(isMySiteDashboardTabsFeatureFlagEnabled = false)
@@ -2577,7 +2561,6 @@ class MySiteViewModelTest : BaseUnitTest() {
         assertThat(trackWithTabSource.last().stat).isEqualTo(Stat.QUICK_ACTION_MEDIA_TAPPED)
     }
 
-    @InternalCoroutinesApi
     @Test
     fun `given tabs are disabled, when quick link stats tapped, then track with tab source is not requested`() {
         init(isMySiteDashboardTabsFeatureFlagEnabled = false)
@@ -2589,7 +2572,6 @@ class MySiteViewModelTest : BaseUnitTest() {
         assertThat(analyticsTrackerWrapper.track(Stat.QUICK_ACTION_STATS_TAPPED))
     }
 
-    @InternalCoroutinesApi
     @Test
     fun `given tabs are disabled, when quick link pages tapped, then track with tab source is not requested`() {
         init(isMySiteDashboardTabsFeatureFlagEnabled = false)
@@ -2601,7 +2583,6 @@ class MySiteViewModelTest : BaseUnitTest() {
         assertThat(analyticsTrackerWrapper.track(Stat.QUICK_ACTION_PAGES_TAPPED))
     }
 
-    @InternalCoroutinesApi
     @Test
     fun `given tabs are disabled, when quick link posts tapped, then track with tab source is not requested`() {
         init(isMySiteDashboardTabsFeatureFlagEnabled = false)
@@ -2613,7 +2594,6 @@ class MySiteViewModelTest : BaseUnitTest() {
         assertThat(analyticsTrackerWrapper.track(Stat.QUICK_ACTION_POSTS_TAPPED))
     }
 
-    @InternalCoroutinesApi
     @Test
     fun `given tabs are disabled, when quick link media tapped, then track with tab source is not requested`() {
         init(isMySiteDashboardTabsFeatureFlagEnabled = false)
