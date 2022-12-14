@@ -5,9 +5,10 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.ScanFragmentBinding
@@ -34,18 +35,17 @@ import org.wordpress.android.viewmodel.observeEvent
 import org.wordpress.android.widgets.WPSnackbar
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class ScanFragment : Fragment(R.layout.scan_fragment) {
     @Inject lateinit var imageManager: ImageManager
     @Inject lateinit var uiHelpers: UiHelpers
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-    private lateinit var viewModel: ScanViewModel
     private lateinit var listView: EmptyViewRecyclerView
     private var fixThreatsConfirmationDialog: AlertDialog? = null
+    private val viewModel: ScanViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         with(ScanFragmentBinding.bind(view)) {
-            initDagger()
             initRecyclerView()
             listView = recyclerView
             initViewModel(getSite(savedInstanceState))
@@ -57,10 +57,6 @@ class ScanFragment : Fragment(R.layout.scan_fragment) {
         if (activity is ScrollableViewInitializedListener) {
             (activity as ScrollableViewInitializedListener).onScrollableViewInitialized(listView.id)
         }
-    }
-
-    private fun initDagger() {
-        (requireActivity().application as WordPress).component().inject(this)
     }
 
     private fun ScanFragmentBinding.initRecyclerView() {
@@ -82,7 +78,6 @@ class ScanFragment : Fragment(R.layout.scan_fragment) {
     }
 
     private fun ScanFragmentBinding.initViewModel(site: SiteModel) {
-        viewModel = ViewModelProvider(this@ScanFragment, viewModelFactory).get(ScanViewModel::class.java)
         setupObservers()
         viewModel.start(site)
     }

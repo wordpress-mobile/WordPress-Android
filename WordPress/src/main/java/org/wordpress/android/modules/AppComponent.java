@@ -44,7 +44,6 @@ import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadActivity;
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadFragment;
 import org.wordpress.android.ui.jetpack.restore.RestoreActivity;
 import org.wordpress.android.ui.jetpack.restore.RestoreFragment;
-import org.wordpress.android.ui.jetpack.scan.ScanFragment;
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsFragment;
 import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryFragment;
 import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryListFragment;
@@ -393,8 +392,6 @@ public interface AppComponent {
     void inject(ActivityLogListFragment object);
 
     void inject(ActivityLogDetailFragment object);
-
-    void inject(ScanFragment object);
 
     void inject(ScanHistoryFragment object);
 
