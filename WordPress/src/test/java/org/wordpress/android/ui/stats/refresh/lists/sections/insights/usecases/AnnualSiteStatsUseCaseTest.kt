@@ -93,7 +93,7 @@ class AnnualSiteStatsUseCaseTest : BaseUnitTest() {
         selectedDate.set(Calendar.YEAR, 2019)
         selectedDate.set(Calendar.MONTH, Calendar.DECEMBER)
         selectedDate.set(Calendar.DAY_OF_MONTH, 31)
-        verify(selectedDateProvider, times(2)).selectDate(selectedDate.time, listOf(selectedDate.time), ANNUAL_STATS)
+        verify(selectedDateProvider, times(1)).selectDate(selectedDate.time, listOf(selectedDate.time), ANNUAL_STATS)
     }
 
     @Test
