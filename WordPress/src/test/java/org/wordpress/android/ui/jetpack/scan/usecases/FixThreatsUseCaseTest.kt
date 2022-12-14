@@ -31,7 +31,7 @@ class FixThreatsUseCaseTest : BaseUnitTest() {
         useCase = FixThreatsUseCase(
                 networkUtilsWrapper,
                 scanStore,
-                coroutinesTestRule.testDispatcher
+                testDispatcher()
         )
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
     }

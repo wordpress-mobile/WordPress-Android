@@ -87,8 +87,8 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
                 .thenReturn(READER_COMMENT_ENTITY)
 
         viewModel = UnifiedCommentsEditViewModel(
-                mainDispatcher = coroutinesTestRule.testDispatcher,
-                bgDispatcher = coroutinesTestRule.testDispatcher,
+                mainDispatcher = testDispatcher(),
+                bgDispatcher = testDispatcher(),
                 commentsStore = commentsStore,
                 resourceProvider = resourceProvider,
                 networkUtilsWrapper = networkUtilsWrapper,

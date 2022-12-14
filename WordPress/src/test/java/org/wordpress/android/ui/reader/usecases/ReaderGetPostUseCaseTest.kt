@@ -37,7 +37,7 @@ class ReaderGetPostUseCaseTest : BaseUnitTest() {
     @Before
     fun setUp() {
         useCase = ReaderGetPostUseCase(
-                coroutinesTestRule.testDispatcher,
+                testDispatcher(),
                 readerPostTableWrapper
         )
     }

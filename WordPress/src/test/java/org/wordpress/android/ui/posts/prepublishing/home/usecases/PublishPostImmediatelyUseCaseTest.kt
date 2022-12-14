@@ -27,8 +27,8 @@ class PublishPostImmediatelyUseCaseTest : BaseUnitTest() {
                 mock(),
                 mock(),
                 mock(),
-                coroutinesTestRule.testDispatcher,
-                coroutinesTestRule.testDispatcher
+                testDispatcher(),
+                testDispatcher()
         )
         editPostRepository.set { PostModel() }
     }

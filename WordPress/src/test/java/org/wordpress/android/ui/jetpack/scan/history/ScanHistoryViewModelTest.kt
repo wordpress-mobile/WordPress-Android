@@ -36,7 +36,7 @@ class ScanHistoryViewModelTest : BaseUnitTest() {
         viewModel = ScanHistoryViewModel(
                 scanTracker,
                 fetchScanHistoryUseCase,
-                coroutinesTestRule.testDispatcher
+                testDispatcher()
         )
         whenever(fetchScanHistoryUseCase.fetch(site))
                 .thenReturn(FetchScanHistoryUseCase.FetchScanHistoryState.Success(listOf(mock())))

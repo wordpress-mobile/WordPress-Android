@@ -67,7 +67,7 @@ class CountryViewsUseCaseTest : BaseUnitTest() {
         useCase = CountryViewsUseCase(
                 statsGranularity,
                 Dispatchers.Unconfined,
-                coroutinesTestRule.testDispatcher,
+                testDispatcher(),
                 store,
                 statsSiteProvider,
                 selectedDateProvider,

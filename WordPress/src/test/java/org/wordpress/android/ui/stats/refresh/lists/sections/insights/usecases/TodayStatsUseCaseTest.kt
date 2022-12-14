@@ -50,7 +50,7 @@ class TodayStatsUseCaseTest : BaseUnitTest() {
     fun setUp() {
         useCase = TodayStatsUseCase(
                 Dispatchers.Unconfined,
-                coroutinesTestRule.testDispatcher,
+                testDispatcher(),
                 insightsStore,
                 statsSiteProvider,
                 statsWidgetUpdaters,

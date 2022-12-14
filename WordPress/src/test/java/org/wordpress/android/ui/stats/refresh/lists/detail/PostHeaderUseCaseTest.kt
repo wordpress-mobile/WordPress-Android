@@ -34,7 +34,7 @@ class PostHeaderUseCaseTest : BaseUnitTest() {
     fun setUp() {
         useCase = PostHeaderUseCase(
                 Dispatchers.Unconfined,
-                coroutinesTestRule.testDispatcher,
+                testDispatcher(),
                 statsPostProvider,
                 tracker
         )

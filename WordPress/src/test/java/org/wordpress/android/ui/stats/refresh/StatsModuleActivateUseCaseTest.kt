@@ -31,7 +31,7 @@ class StatsModuleActivateUseCaseTest : BaseUnitTest() {
         useCase = StatsModuleActivateUseCase(
                 networkUtilsWrapper,
                 jetpackStore,
-                coroutinesTestRule.testDispatcher
+                testDispatcher()
         )
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
     }

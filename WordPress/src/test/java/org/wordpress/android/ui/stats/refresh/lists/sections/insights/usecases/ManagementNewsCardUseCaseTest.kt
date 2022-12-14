@@ -32,7 +32,7 @@ class ManagementNewsCardUseCaseTest : BaseUnitTest() {
     fun setUp() {
         useCase = ManagementNewsCardUseCase(
                 Dispatchers.Unconfined,
-                coroutinesTestRule.testDispatcher,
+                testDispatcher(),
                 resourceProvider,
                 newsCardHandler,
                 analyticsTrackerWrapper

@@ -35,7 +35,7 @@ class StartScanUseCaseTest : BaseUnitTest() {
         useCase = StartScanUseCase(
                 networkUtilsWrapper,
                 scanStore,
-                coroutinesTestRule.testDispatcher
+                testDispatcher()
         )
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
         whenever(scanStore.getScanStateForSite(site)).thenReturn(scanStateModel)

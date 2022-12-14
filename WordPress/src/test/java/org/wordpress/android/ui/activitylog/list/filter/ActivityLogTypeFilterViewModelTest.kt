@@ -40,8 +40,8 @@ class ActivityLogTypeFilterViewModelTest : BaseUnitTest() {
     fun setUp() {
         viewModel = ActivityLogTypeFilterViewModel(
                 activityLogStore,
-                coroutinesTestRule.testDispatcher,
-                coroutinesTestRule.testDispatcher
+                testDispatcher(),
+                testDispatcher()
         )
     }
 

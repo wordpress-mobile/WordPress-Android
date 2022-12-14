@@ -53,8 +53,8 @@ class PhotoPickerViewModelTest : BaseUnitTest() {
     @Suppress("DEPRECATION")
     fun setUp() {
         viewModel = PhotoPickerViewModel(
-                coroutinesTestRule.testDispatcher,
-                coroutinesTestRule.testDispatcher,
+                testDispatcher(),
+                testDispatcher(),
                 deviceMediaListBuilder,
                 analyticsUtilsWrapper,
                 analyticsTrackerWrapper,

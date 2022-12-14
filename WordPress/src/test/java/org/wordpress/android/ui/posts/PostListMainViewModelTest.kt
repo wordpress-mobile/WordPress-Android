@@ -175,8 +175,8 @@ class PostListMainViewModelTest : BaseUnitTest() {
                 mock(),
                 mock(),
                 mock(),
-                coroutinesTestRule.testDispatcher,
-                coroutinesTestRule.testDispatcher
+                testDispatcher(),
+                testDispatcher()
         )
         editPostRepository.set { mock() }
         val action = { _: PostModel -> true }

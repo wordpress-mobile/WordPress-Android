@@ -31,7 +31,7 @@ class InviteLinksHandlerTest : BaseUnitTest() {
     fun setUp() {
         inviteLinksHandler = InviteLinksHandler(
                 inviteLinksUseCase,
-                coroutinesTestRule.testDispatcher
+                testDispatcher()
         )
         setupObservers()
     }

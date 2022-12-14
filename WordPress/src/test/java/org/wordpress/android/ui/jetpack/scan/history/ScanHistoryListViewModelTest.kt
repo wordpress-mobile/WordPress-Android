@@ -54,7 +54,7 @@ class ScanHistoryListViewModelTest : BaseUnitTest() {
         viewModel = ScanHistoryListViewModel(
                 scanThreatItemBuilder,
                 scanTracker,
-                coroutinesTestRule.testDispatcher
+                testDispatcher()
         )
         val threats = listOf(
                 GenericThreatModel(genericThreatModel.baseThreatModel.copy(status = ThreatStatus.FIXED)),

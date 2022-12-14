@@ -44,7 +44,7 @@ class GifMediaInsertUseCaseTest : BaseUnitTest() {
                 context,
                 site,
                 dispatcher,
-                coroutinesTestRule.testDispatcher,
+                testDispatcher(),
                 wpMediaUtilsWrapper,
                 fluxCUtilsWrapper,
                 mimeTypeMapUtilsWrapper

@@ -311,7 +311,7 @@ class DeviceListBuilderTest : BaseUnitTest() {
                 deviceMediaLoader,
                 mediaUtilsWrapper,
                 site,
-                coroutinesTestRule.testDispatcher,
+                testDispatcher(),
                 allowedTypes,
                 pageSize
         )

@@ -23,8 +23,8 @@ class HelpViewModelTest : BaseUnitTest() {
     @Before
     fun setUp() {
         viewModel = HelpViewModel(
-                mainDispatcher = coroutinesTestRule.testDispatcher,
-                bgDispatcher = coroutinesTestRule.testDispatcher,
+                mainDispatcher = testDispatcher(),
+                bgDispatcher = testDispatcher(),
         )
     }
 

@@ -35,7 +35,7 @@ class PostBackupDownloadUseCaseTest : BaseUnitTest() {
         useCase = PostBackupDownloadUseCase(
                 networkUtilsWrapper,
                 activityLogStore,
-                coroutinesTestRule.testDispatcher
+                testDispatcher()
         )
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
     }

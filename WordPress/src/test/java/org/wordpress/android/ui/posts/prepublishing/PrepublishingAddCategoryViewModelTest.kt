@@ -41,7 +41,7 @@ class PrepublishingAddCategoryViewModelTest : BaseUnitTest() {
                 getCategoriesUseCase,
                 networkUtilsWrapper,
                 resourceProvider,
-                coroutinesTestRule.testDispatcher
+                testDispatcher()
         )
 
         whenever(getCategoriesUseCase.getSiteCategories(any()))

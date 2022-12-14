@@ -39,8 +39,8 @@ class LoginNoSitesViewModelTest : BaseUnitTest() {
         viewModel = LoginNoSitesViewModel(
                 unifiedLoginTracker,
                 accountStore,
-                coroutinesTestRule.testDispatcher,
-                coroutinesTestRule.testDispatcher
+                testDispatcher(),
+                testDispatcher()
         )
     }
 

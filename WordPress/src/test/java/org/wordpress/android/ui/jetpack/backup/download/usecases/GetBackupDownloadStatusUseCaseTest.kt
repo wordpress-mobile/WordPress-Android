@@ -38,7 +38,7 @@ class GetBackupDownloadStatusUseCaseTest : BaseUnitTest() {
         useCase = GetBackupDownloadStatusUseCase(
                 networkUtilsWrapper,
                 activityLogStore,
-                coroutinesTestRule.testDispatcher
+                testDispatcher()
         )
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
         whenever(activityLogStore.fetchBackupDownloadState(any()))

@@ -33,7 +33,7 @@ class ReaderFollowCommentsHandlerTest : BaseUnitTest() {
     fun setup() {
         followCommentsHandler = ReaderFollowCommentsHandler(
                 readerCommentsFollowUseCase,
-                coroutinesTestRule.testDispatcher
+                testDispatcher()
         )
     }
 

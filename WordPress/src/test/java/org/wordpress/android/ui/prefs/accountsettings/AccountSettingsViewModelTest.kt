@@ -378,7 +378,7 @@ class AccountSettingsViewModelTest : BaseUnitTest() {
         test {
             uiStateChanges.clear()
             initialiseViewModel()
-            val job = launch(coroutinesTestRule.testDispatcher) {
+            val job = launch(testDispatcher()) {
                 viewModel.accountSettingsUiState.toList(uiStateChanges)
             }
             this.block()
@@ -400,7 +400,7 @@ class AccountSettingsViewModelTest : BaseUnitTest() {
         viewModel = AccountSettingsViewModel(
                 resourceProvider,
                 networkUtilsWrapper,
-                coroutinesTestRule.testDispatcher,
+                testDispatcher(),
                 fetchAccountSettingsUseCase,
                 pushAccountSettingsUseCase,
                 getAccountUseCase,

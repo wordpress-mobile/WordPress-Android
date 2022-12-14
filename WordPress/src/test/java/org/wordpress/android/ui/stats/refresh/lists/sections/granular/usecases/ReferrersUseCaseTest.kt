@@ -114,7 +114,7 @@ class ReferrersUseCaseTest : BaseUnitTest() {
         useCase = ReferrersUseCase(
                 statsGranularity,
                 Dispatchers.Unconfined,
-                coroutinesTestRule.testDispatcher,
+                testDispatcher(),
                 store,
                 statsSiteProvider,
                 selectedDateProvider,
@@ -211,7 +211,7 @@ class ReferrersUseCaseTest : BaseUnitTest() {
         useCase = ReferrersUseCase(
                 statsGranularity,
                 Dispatchers.Unconfined,
-                coroutinesTestRule.testDispatcher,
+                testDispatcher(),
                 store,
                 statsSiteProvider,
                 selectedDateProvider,

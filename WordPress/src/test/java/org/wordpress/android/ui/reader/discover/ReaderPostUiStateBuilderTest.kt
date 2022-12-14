@@ -83,7 +83,7 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
                 readerImageScannerProvider,
                 readerUtilsWrapper,
                 readerPostTagsUiStateBuilder,
-                coroutinesTestRule.testDispatcher
+                testDispatcher()
         )
         whenever(dateTimeUtilsWrapper.javaDateToTimeSpan(anyOrNull())).thenReturn("")
         whenever(gravatarUtilsWrapper.fixGravatarUrlWithResource(anyOrNull(), anyInt())).thenReturn("")

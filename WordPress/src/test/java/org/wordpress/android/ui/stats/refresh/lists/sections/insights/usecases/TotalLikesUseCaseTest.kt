@@ -69,7 +69,7 @@ class TotalLikesUseCaseTest : BaseUnitTest() {
     fun setUp() {
         useCase = TotalLikesUseCase(
                 Dispatchers.Unconfined,
-                coroutinesTestRule.testDispatcher,
+                testDispatcher(),
                 store,
                 latestPostStore,
                 statsSiteProvider,

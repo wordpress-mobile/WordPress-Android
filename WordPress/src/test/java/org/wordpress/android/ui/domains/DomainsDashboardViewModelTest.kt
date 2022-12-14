@@ -49,7 +49,7 @@ class DomainsDashboardViewModelTest : BaseUnitTest() {
                 analyticsTracker,
                 htmlMessageUtils,
                 fetchPlansUseCase,
-                coroutinesTestRule.testDispatcher
+                testDispatcher()
         )
 
         viewModel.uiModel.observeForever { if (it != null) uiModel += it }

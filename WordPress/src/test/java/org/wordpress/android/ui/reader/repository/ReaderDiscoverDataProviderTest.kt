@@ -48,8 +48,8 @@ class ReaderDiscoverDataProviderTest : BaseUnitTest() {
     @Before
     fun setUp() {
         dataProvider = ReaderDiscoverDataProvider(
-                coroutinesTestRule.testDispatcher,
-                coroutinesTestRule.testDispatcher,
+                testDispatcher(),
+                testDispatcher(),
                 eventBusWrapper,
                 readerTagWrapper,
                 getDiscoverCardsUseCase,
@@ -159,7 +159,7 @@ class ReaderDiscoverDataProviderTest : BaseUnitTest() {
         Assertions.assertThat(requireNotNull(started)).isEqualTo(Started(REQUEST_MORE))
 
         // Pause the dispatcher
-        withContext(coroutinesTestRule.testDispatcher) {
+        withContext(testDispatcher()) {
             dataProvider.loadMoreCards()
 
             val noUnhandledContent = dataProvider.communicationChannel.value?.getContentIfNotHandled()

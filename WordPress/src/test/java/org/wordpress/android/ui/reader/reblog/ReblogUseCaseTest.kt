@@ -27,7 +27,7 @@ class ReblogUseCaseTest : BaseUnitTest() {
     fun setUp() = test {
         reblogUseCase = ReblogUseCase(
                 siteStore,
-                coroutinesTestRule.testDispatcher
+                testDispatcher()
         )
     }
 

@@ -74,7 +74,7 @@ class OverviewUseCaseTest : BaseUnitTest() {
                 statsDateFormatter,
                 overviewMapper,
                 Dispatchers.Unconfined,
-                coroutinesTestRule.testDispatcher,
+                testDispatcher(),
                 analyticsTrackerWrapper,
                 statsWidgetUpdaters,
                 localeManagerWrapper,

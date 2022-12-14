@@ -52,7 +52,7 @@ class GetRestoreStatusUseCaseTest : BaseUnitTest() {
         useCase = GetRestoreStatusUseCase(
                 networkUtilsWrapper,
                 activityLogStore,
-                coroutinesTestRule.testDispatcher
+                testDispatcher()
         )
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
         whenever(activityLogStore.fetchActivitiesRewind(any())).thenReturn(OnRewindStatusFetched(FETCH_REWIND_STATE))

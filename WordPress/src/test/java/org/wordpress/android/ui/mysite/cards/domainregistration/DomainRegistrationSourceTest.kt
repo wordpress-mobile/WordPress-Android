@@ -41,7 +41,7 @@ class DomainRegistrationSourceTest : BaseUnitTest() {
         site.id = siteLocalId
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         source = DomainRegistrationSource(
-                coroutinesTestRule.testDispatcher,
+                testDispatcher(),
                 dispatcher,
                 selectedSiteRepository,
                 appLogWrapper,

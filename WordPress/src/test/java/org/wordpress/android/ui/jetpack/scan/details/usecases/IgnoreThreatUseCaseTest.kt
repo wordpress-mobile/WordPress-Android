@@ -31,7 +31,7 @@ class IgnoreThreatUseCaseTest : BaseUnitTest() {
         useCase = IgnoreThreatUseCase(
                 networkUtilsWrapper,
                 scanStore,
-                coroutinesTestRule.testDispatcher
+                testDispatcher()
         )
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
     }

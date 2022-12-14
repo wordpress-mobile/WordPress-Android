@@ -57,7 +57,7 @@ class MostPopularInsightsUseCaseTest : BaseUnitTest() {
     fun setUp() {
         useCase = MostPopularInsightsUseCase(
                 Dispatchers.Unconfined,
-                coroutinesTestRule.testDispatcher,
+                testDispatcher(),
                 insightsStore,
                 postStore,
                 statsSiteProvider,

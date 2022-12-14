@@ -118,7 +118,7 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
                 mock(),
                 seenStatusToggleUseCase,
                 readerBlogTableWrapper,
-                coroutinesTestRule.testDispatcher
+                testDispatcher()
         )
         actionHandler.initScope(testScope())
         whenever(appPrefsWrapper.shouldShowBookmarksSavedLocallyDialog()).thenReturn(false)

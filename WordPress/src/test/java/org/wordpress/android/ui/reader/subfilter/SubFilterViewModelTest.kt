@@ -69,8 +69,8 @@ class SubFilterViewModelTest : BaseUnitTest() {
         whenever(savedTag.label).thenReturn("tag-label")
 
         viewModel = SubFilterViewModel(
-                coroutinesTestRule.testDispatcher,
-                coroutinesTestRule.testDispatcher,
+                testDispatcher(),
+                testDispatcher(),
                 appPrefsWrapper,
                 subfilterListItemMapper,
                 eventBusWrapper,
@@ -89,8 +89,8 @@ class SubFilterViewModelTest : BaseUnitTest() {
         whenever(subfilterListItemMapper.fromJson(eq(json), any(), any())).thenReturn(filter)
 
         viewModel = SubFilterViewModel(
-                coroutinesTestRule.testDispatcher,
-                coroutinesTestRule.testDispatcher,
+                testDispatcher(),
+                testDispatcher(),
                 appPrefsWrapper,
                 subfilterListItemMapper,
                 eventBusWrapper,

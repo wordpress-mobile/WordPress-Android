@@ -15,7 +15,7 @@ class ReaderCommentListViewModelTest : BaseUnitTest() {
     @Before
     fun setUp() {
         viewModel = ReaderCommentListViewModel(
-                coroutinesTestRule.testDispatcher
+                testDispatcher()
         )
     }
 

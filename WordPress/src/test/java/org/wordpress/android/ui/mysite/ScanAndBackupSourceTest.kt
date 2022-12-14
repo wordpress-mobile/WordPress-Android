@@ -170,7 +170,7 @@ class ScanAndBackupSourceTest : BaseUnitTest() {
             )
         }
         scanAndBackupSource = ScanAndBackupSource(
-                coroutinesTestRule.testDispatcher,
+                testDispatcher(),
                 selectedSiteRepository,
                 jetpackCapabilitiesUseCase
         )

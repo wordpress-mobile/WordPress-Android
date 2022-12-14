@@ -125,8 +125,8 @@ class ReaderDiscoverViewModelTest : BaseUnitTest() {
                 readerTracker,
                 displayUtilsWrapper,
                 getFollowedTagsUseCase,
-                coroutinesTestRule.testDispatcher,
-                coroutinesTestRule.testDispatcher
+                testDispatcher(),
+                testDispatcher()
         )
         whenever(readerDiscoverDataProvider.discoverFeed).thenReturn(fakeDiscoverFeed)
         whenever(readerPostCardActionsHandler.navigationEvents).thenReturn(fakeNavigationFeed)

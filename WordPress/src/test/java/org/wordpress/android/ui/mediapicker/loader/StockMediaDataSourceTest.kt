@@ -48,7 +48,7 @@ class StockMediaDataSourceTest : BaseUnitTest() {
     fun setUp() {
         stockMediaDataSource = StockMediaDataSource(
                 stockMediaStore,
-                coroutinesTestRule.testDispatcher,
+                testDispatcher(),
                 networkUtilsWrapper
         )
     }

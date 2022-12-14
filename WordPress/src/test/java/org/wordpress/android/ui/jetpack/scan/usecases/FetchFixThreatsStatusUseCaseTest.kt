@@ -50,7 +50,7 @@ class FetchFixThreatsStatusUseCaseTest : BaseUnitTest() {
         useCase = FetchFixThreatsStatusUseCase(
                 networkUtilsWrapper,
                 scanStore,
-                coroutinesTestRule.testDispatcher
+                testDispatcher()
         )
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
     }

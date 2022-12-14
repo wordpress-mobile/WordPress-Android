@@ -46,8 +46,8 @@ class SaveStoryGutenbergBlockUseCaseTest : BaseUnitTest() {
                 mock(),
                 postStore,
                 mock(),
-                coroutinesTestRule.testDispatcher,
-                coroutinesTestRule.testDispatcher
+                testDispatcher(),
+                testDispatcher()
         )
     }
 

@@ -27,7 +27,7 @@ class PrepublishingTagsViewModelTest : BaseUnitTest() {
         viewModel = PrepublishingTagsViewModel(
                 mock(),
                 updatePostTagsUseCase,
-                coroutinesTestRule.testDispatcher
+                testDispatcher()
         )
     }
 

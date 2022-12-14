@@ -70,7 +70,7 @@ class AuthorsUseCaseTest : BaseUnitTest() {
         useCase = AuthorsUseCase(
                 statsGranularity,
                 Dispatchers.Unconfined,
-                coroutinesTestRule.testDispatcher,
+                testDispatcher(),
                 store,
                 statsSiteProvider,
                 selectedDateProvider,

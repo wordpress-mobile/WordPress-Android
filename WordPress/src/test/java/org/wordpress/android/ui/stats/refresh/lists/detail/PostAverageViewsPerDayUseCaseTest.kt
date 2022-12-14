@@ -63,7 +63,7 @@ class PostAverageViewsPerDayUseCaseTest : BaseUnitTest() {
     fun setUp() {
         useCase = PostAverageViewsPerDayUseCase(
                 Dispatchers.Unconfined,
-                coroutinesTestRule.testDispatcher,
+                testDispatcher(),
                 statsSiteProvider,
                 statsPostProvider,
                 store,

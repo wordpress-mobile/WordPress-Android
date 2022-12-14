@@ -68,7 +68,7 @@ class BloggingPromptsOnboardingViewModelTest : BaseUnitTest() {
             selectedSiteRepository,
             bloggingPromptsStore,
             analyticsTracker,
-            coroutinesTestRule.testDispatcher,
+            testDispatcher(),
             getIsFirstBloggingPromptsOnboardingUseCase,
             saveFirstBloggingPromptsOnboardingUseCase
     )

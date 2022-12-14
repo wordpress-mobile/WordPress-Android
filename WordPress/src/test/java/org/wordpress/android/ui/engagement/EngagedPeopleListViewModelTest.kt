@@ -78,8 +78,8 @@ class EngagedPeopleListViewModelTest : BaseUnitTest() {
         whenever(getLikesHandler.likesStatusUpdate).thenReturn(getLikesState)
 
         viewModel = EngagedPeopleListViewModel(
-                coroutinesTestRule.testDispatcher,
-                coroutinesTestRule.testDispatcher,
+                testDispatcher(),
+                testDispatcher(),
                 getLikesHandler,
                 readerUtilsWrapper,
                 engagementUtils,

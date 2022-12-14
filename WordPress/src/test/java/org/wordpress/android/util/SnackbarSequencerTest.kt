@@ -49,7 +49,7 @@ class SnackbarSequencerTest : BaseUnitTest() {
         sequencer = SnackbarSequencer(
                 uiHelper,
                 wpSnackbarWrapper,
-                coroutinesTestRule.testDispatcher
+                testDispatcher()
         )
 
         item = SnackbarItem(

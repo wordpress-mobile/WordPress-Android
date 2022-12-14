@@ -58,7 +58,7 @@ class PostRestoreUseCaseTest : BaseUnitTest() {
         useCase = PostRestoreUseCase(
                 networkUtilsWrapper,
                 activityLogStore,
-                coroutinesTestRule.testDispatcher
+                testDispatcher()
         )
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
         whenever(activityLogStore.fetchActivitiesRewind(any())).thenReturn(

@@ -80,8 +80,8 @@ class SitePreviewViewModelTest : BaseUnitTest() {
                 networkUtils,
                 urlUtils,
                 tracker,
-                coroutinesTestRule.testDispatcher,
-                coroutinesTestRule.testDispatcher
+                testDispatcher(),
+                testDispatcher()
         )
         viewModel.uiState.observeForever(uiStateObserver)
         viewModel.startCreateSiteService.observeForever(startServiceObserver)

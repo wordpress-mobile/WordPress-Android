@@ -30,8 +30,8 @@ class UpdatePostStatusUseCaseTest : BaseUnitTest() {
                 mock(),
                 mock(),
                 mock(),
-                coroutinesTestRule.testDispatcher,
-                coroutinesTestRule.testDispatcher
+                testDispatcher(),
+                testDispatcher()
         )
     }
 

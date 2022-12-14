@@ -33,8 +33,8 @@ class PageParentViewModelTest : BaseUnitTest() {
         viewModel = PageParentViewModel(
                 pageStore,
                 resourceProvider,
-                coroutinesTestRule.testDispatcher,
-                coroutinesTestRule.testDispatcher
+                testDispatcher(),
+                testDispatcher()
         )
 
         runBlocking {

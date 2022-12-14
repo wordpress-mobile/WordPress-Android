@@ -38,7 +38,7 @@ class FetchScanStateUseCaseTest : BaseUnitTest() {
         useCase = FetchScanStateUseCase(
                 networkUtilsWrapper,
                 scanStore,
-                coroutinesTestRule.testDispatcher
+                testDispatcher()
         )
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
         whenever(scanStore.getScanStateForSite(site)).thenReturn(scanStateModel)

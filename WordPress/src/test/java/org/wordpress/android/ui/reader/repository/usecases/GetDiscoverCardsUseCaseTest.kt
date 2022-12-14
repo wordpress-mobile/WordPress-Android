@@ -50,7 +50,7 @@ class GetDiscoverCardsUseCaseTest : BaseUnitTest() {
                 readerBlogTableWrapper,
                 appLogWrapper,
                 appPrefsWrapper,
-                coroutinesTestRule.testDispatcher
+                testDispatcher()
         )
         whenever(parseDiscoverCardsJsonUseCase.convertListOfJsonArraysIntoSingleJsonArray(anyOrNull()))
                 .thenReturn(mockedJsonArray)

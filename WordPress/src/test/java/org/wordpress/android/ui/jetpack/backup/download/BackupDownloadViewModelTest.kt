@@ -93,7 +93,7 @@ class BackupDownloadViewModelTest : BaseUnitTest() {
                 stateListItemBuilder,
                 postBackupDownloadUseCase,
                 backupDownloadStatusUseCase,
-                coroutinesTestRule.testDispatcher,
+                testDispatcher(),
                 percentFormatter
         )
         whenever(getActivityLogItemUseCase.get(anyOrNull())).thenReturn(fakeActivityLogModel)

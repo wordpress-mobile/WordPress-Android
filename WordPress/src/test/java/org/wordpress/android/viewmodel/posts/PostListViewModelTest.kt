@@ -59,8 +59,8 @@ class PostListViewModelTest : BaseUnitTest() {
                 readerUtilsWrapper = mock(),
                 connectionStatus = mock(),
                 uploadUtilsWrapper = mock(),
-                uiDispatcher = coroutinesTestRule.testDispatcher,
-                bgDispatcher = coroutinesTestRule.testDispatcher
+                uiDispatcher = testDispatcher(),
+                bgDispatcher = testDispatcher()
         )
     }
 

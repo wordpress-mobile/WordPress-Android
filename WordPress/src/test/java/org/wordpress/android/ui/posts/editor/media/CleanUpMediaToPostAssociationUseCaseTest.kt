@@ -111,7 +111,7 @@ class CleanUpMediaToPostAssociationUseCaseTest(private val containsGutenbergBloc
             uploadStore,
             createAztecEditorWrapper(mediaInPost),
             createPostUtilsWrapper(mediaInPost, containsGutenbergBlocks),
-            coroutinesTestRule.testDispatcher
+            testDispatcher()
     )
 
     companion object {

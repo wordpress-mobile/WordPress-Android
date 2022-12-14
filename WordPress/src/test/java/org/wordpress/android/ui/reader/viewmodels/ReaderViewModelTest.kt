@@ -70,8 +70,8 @@ class ReaderViewModelTest : BaseUnitTest() {
     @Before
     fun setup() {
         viewModel = ReaderViewModel(
-                coroutinesTestRule.testDispatcher,
-                coroutinesTestRule.testDispatcher,
+                testDispatcher(),
+                testDispatcher(),
                 appPrefsWrapper,
                 dateProvider,
                 loadReaderTabsUseCase,

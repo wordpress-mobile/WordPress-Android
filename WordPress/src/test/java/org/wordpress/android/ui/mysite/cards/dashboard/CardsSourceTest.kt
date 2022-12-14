@@ -100,7 +100,7 @@ class CardsSourceTest : BaseUnitTest() {
                 selectedSiteRepository,
                 cardsStore,
                 todaysStatsCardFeatureConfig,
-                coroutinesTestRule.testDispatcher
+                testDispatcher()
         )
     }
 

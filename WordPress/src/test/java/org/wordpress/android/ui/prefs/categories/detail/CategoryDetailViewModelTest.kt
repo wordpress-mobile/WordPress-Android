@@ -54,7 +54,7 @@ class CategoryDetailViewModelTest : BaseUnitTest() {
     fun setUp() {
         setUpMockResponse()
         viewModel = CategoryDetailViewModel(
-                coroutinesTestRule.testDispatcher,
+                testDispatcher(),
                 networkUtilsWrapper,
                 getCategoriesUseCase,
                 addCategoryUseCase,

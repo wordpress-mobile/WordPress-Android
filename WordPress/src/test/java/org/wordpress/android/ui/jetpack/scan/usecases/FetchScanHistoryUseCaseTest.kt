@@ -37,7 +37,7 @@ class FetchScanHistoryUseCaseTest : BaseUnitTest() {
                 networkUtilsWrapper,
                 scanStore,
                 scanTracker,
-                coroutinesTestRule.testDispatcher
+                testDispatcher()
         )
 
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)

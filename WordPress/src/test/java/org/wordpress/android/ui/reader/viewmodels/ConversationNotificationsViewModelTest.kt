@@ -51,7 +51,7 @@ class ConversationNotificationsViewModelTest : BaseUnitTest() {
         viewModel = ConversationNotificationsViewModel(
                 followCommentsHandler,
                 readerPostTableWrapper,
-                coroutinesTestRule.testDispatcher
+                testDispatcher()
         )
     }
 

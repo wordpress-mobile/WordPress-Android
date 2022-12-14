@@ -63,7 +63,7 @@ class PostMonthsAndYearsUseCaseTest : BaseUnitTest() {
     fun setUp() {
         useCase = PostMonthsAndYearsUseCase(
                 Dispatchers.Unconfined,
-                coroutinesTestRule.testDispatcher,
+                testDispatcher(),
                 statsSiteProvider,
                 statsPostProvider,
                 store,

@@ -49,7 +49,7 @@ class GetLikesHandlerTest : BaseUnitTest() {
     fun setup() {
         getLikesHandler = GetLikesHandler(
                 getLikesUseCase,
-                coroutinesTestRule.testDispatcher
+                testDispatcher()
         )
     }
 

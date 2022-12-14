@@ -105,8 +105,8 @@ class MediaPickerViewModelTest : BaseUnitTest() {
     @Before
     fun setUp() {
         viewModel = MediaPickerViewModel(
-                coroutinesTestRule.testDispatcher,
-                coroutinesTestRule.testDispatcher,
+                testDispatcher(),
+                testDispatcher(),
                 mediaLoaderFactory,
                 mediaInsertHandlerFactory,
                 mediaPickerTracker,

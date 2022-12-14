@@ -67,7 +67,7 @@ class TotalCommentsUseCaseTest : BaseUnitTest() {
     fun setUp() {
         useCase = TotalCommentsUseCase(
                 Dispatchers.Unconfined,
-                coroutinesTestRule.testDispatcher,
+                testDispatcher(),
                 store,
                 statsSiteProvider,
                 resourceProvider,

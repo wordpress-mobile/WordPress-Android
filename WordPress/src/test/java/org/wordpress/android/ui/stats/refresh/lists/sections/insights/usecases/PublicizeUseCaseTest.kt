@@ -52,7 +52,7 @@ class PublicizeUseCaseTest : BaseUnitTest() {
     fun setUp() {
         useCase = PublicizeUseCase(
                 Dispatchers.Unconfined,
-                coroutinesTestRule.testDispatcher,
+                testDispatcher(),
                 insightsStore,
                 statsSiteProvider,
                 serviceMapper,

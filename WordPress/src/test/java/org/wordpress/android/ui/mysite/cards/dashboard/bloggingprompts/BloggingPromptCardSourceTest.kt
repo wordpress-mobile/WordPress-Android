@@ -86,7 +86,7 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
                 bloggingPromptsFeatureConfig,
                 appPrefsWrapper,
                 bloggingRemindersStore,
-                coroutinesTestRule.testDispatcher
+                testDispatcher()
         )
     }
 

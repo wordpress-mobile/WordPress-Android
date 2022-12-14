@@ -75,7 +75,7 @@ class FollowersUseCaseTest : BaseUnitTest() {
     fun setUp() {
         useCaseFactory = FollowersUseCaseFactory(
                 Dispatchers.Unconfined,
-                coroutinesTestRule.testDispatcher,
+                testDispatcher(),
                 insightsStore,
                 statsSiteProvider,
                 statsSinceLabelFormatter,

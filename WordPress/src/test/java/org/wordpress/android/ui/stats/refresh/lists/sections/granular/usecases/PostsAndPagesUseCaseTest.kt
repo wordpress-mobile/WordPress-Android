@@ -64,7 +64,7 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
         useCase = PostsAndPagesUseCase(
                 statsGranularity,
                 Dispatchers.Unconfined,
-                coroutinesTestRule.testDispatcher,
+                testDispatcher(),
                 store,
                 siteModelProvider,
                 selectedDateProvider,

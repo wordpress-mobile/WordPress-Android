@@ -44,7 +44,7 @@ class SnackbarSequencerConcurrentTest : BaseUnitTest() {
         sequencer = SnackbarSequencer(
                 uiHelper,
                 wpSnackbarWrapper,
-                coroutinesTestRule.testDispatcher
+                testDispatcher()
         )
     }
 

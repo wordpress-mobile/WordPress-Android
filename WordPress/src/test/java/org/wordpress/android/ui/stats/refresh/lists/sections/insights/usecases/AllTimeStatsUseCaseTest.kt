@@ -50,7 +50,7 @@ class AllTimeStatsUseCaseTest : BaseUnitTest() {
     fun setUp() {
         useCase = AllTimeStatsUseCase(
                 Dispatchers.Unconfined,
-                coroutinesTestRule.testDispatcher,
+                testDispatcher(),
                 insightsStore,
                 statsSiteProvider,
                 statsDateFormatter,

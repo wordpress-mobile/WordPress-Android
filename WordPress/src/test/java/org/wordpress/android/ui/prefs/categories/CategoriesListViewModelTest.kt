@@ -41,7 +41,7 @@ class CategoriesListViewModelTest : BaseUnitTest() {
         viewModel = CategoriesListViewModel(
                 getCategoriesUseCase,
                 networkUtilsWrapper,
-                coroutinesTestRule.testDispatcher,
+                testDispatcher(),
                 dispatcher
         )
         viewModel.uiState.observeForever { if (it != null) uiStates += it }

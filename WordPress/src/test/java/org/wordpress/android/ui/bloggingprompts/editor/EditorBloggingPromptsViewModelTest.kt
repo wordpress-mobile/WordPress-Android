@@ -50,7 +50,7 @@ class EditorBloggingPromptsViewModelTest : BaseUnitTest() {
     fun setUp() {
         viewModel = EditorBloggingPromptsViewModel(
                 bloggingPromptsStore,
-                coroutinesTestRule.testDispatcher
+                testDispatcher()
         )
 
         viewModel.onBloggingPromptLoaded.observeForever {

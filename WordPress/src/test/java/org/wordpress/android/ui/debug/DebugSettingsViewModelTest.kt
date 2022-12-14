@@ -39,8 +39,8 @@ class DebugSettingsViewModelTest : BaseUnitTest() {
     @Before
     fun setUp() {
         viewModel = DebugSettingsViewModel(
-                coroutinesTestRule.testDispatcher,
-                coroutinesTestRule.testDispatcher,
+                testDispatcher(),
+                testDispatcher(),
                 manualFeatureConfig,
                 featureFlagConfig,
                 debugUtils,

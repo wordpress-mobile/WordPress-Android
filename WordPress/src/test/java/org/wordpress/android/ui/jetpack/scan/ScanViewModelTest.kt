@@ -97,7 +97,7 @@ class ScanViewModelTest : BaseUnitTest() {
                 scanStore,
                 scanTracker,
                 htmlMessageUtils,
-                coroutinesTestRule.testDispatcher
+                testDispatcher()
         )
         whenever(fetchScanStateUseCase.fetchScanState(site)).thenReturn(flowOf(Success(fakeScanStateModel)))
         whenever(scanStateItemsBuilder.buildScanStateListItems(any(), any(), any(), any(), any(), any(), any(), any()))

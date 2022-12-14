@@ -56,7 +56,7 @@ class DomainSuggestionsViewModelTest : BaseUnitTest() {
                 debouncer,
                 siteDomainsFeatureConfig,
                 createCartUseCase,
-                coroutinesTestRule.testDispatcher
+                testDispatcher()
         )
 
         whenever(debouncer.debounce(any(), any(), any(), any())).thenAnswer { invocation ->

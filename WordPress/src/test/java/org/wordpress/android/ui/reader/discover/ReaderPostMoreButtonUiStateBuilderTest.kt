@@ -39,7 +39,7 @@ class ReaderPostMoreButtonUiStateBuilderTest : BaseUnitTest() {
                 readerBlogTableWrapper,
                 readerUtilsWrapper,
                 mSeenUnseenWithCounterFeatureConfig,
-                coroutinesTestRule.testDispatcher
+                testDispatcher()
         )
     }
 

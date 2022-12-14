@@ -43,7 +43,7 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
     @Before
     fun setUp() {
         viewModel = DeepLinkingIntentReceiverViewModel(
-                coroutinesTestRule.testDispatcher,
+                testDispatcher(),
                 deepLinkHandlers,
                 deepLinkUriUtils,
                 accountStore,

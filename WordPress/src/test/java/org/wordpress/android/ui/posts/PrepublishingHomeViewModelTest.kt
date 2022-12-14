@@ -53,7 +53,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
                 storyRepositoryWrapper,
                 updateStoryTitleUseCase,
                 getCategoriesUseCase,
-                coroutinesTestRule.testDispatcher
+                testDispatcher()
         )
         whenever(
                 getButtonUiStateUseCase.getUiState(

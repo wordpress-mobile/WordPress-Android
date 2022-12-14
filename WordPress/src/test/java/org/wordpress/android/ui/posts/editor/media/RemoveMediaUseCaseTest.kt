@@ -40,7 +40,7 @@ class RemoveMediaUseCaseTest : BaseUnitTest() {
                 dispatcher,
                 mediaUtilsWrapper,
                 uploadServiceFacade,
-                coroutinesTestRule.testDispatcher
+                testDispatcher()
         )
         whenever(mediaStore.getMediaWithLocalId(anyInt())).thenReturn(MediaModel().apply {
             uploadState = "non-empty-state"

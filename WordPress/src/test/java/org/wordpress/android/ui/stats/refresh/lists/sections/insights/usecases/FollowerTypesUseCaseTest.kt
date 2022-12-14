@@ -57,7 +57,7 @@ class FollowerTypesUseCaseTest : BaseUnitTest() {
     fun setUp() {
         useCase = FollowerTypesUseCase(
                 Dispatchers.Unconfined,
-                coroutinesTestRule.testDispatcher,
+                testDispatcher(),
                 followersStore,
                 publicizeStore,
                 statsSiteProvider,

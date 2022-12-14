@@ -55,8 +55,8 @@ class StoryComposerViewModelTest : BaseUnitTest() {
                 mock(),
                 postStore,
                 mock(),
-                coroutinesTestRule.testDispatcher,
-                coroutinesTestRule.testDispatcher
+                testDispatcher(),
+                testDispatcher()
         )
     }
 

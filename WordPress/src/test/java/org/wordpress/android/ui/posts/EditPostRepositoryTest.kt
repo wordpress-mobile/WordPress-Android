@@ -39,8 +39,8 @@ class EditPostRepositoryTest : BaseUnitTest() {
                 localeManager,
                 postStore,
                 postUtils,
-                coroutinesTestRule.testDispatcher,
-                coroutinesTestRule.testDispatcher
+                testDispatcher(),
+                testDispatcher()
         )
     }
 

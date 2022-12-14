@@ -26,7 +26,7 @@ class PageParentSearchViewModelTest : BaseUnitTest() {
     @Before
     fun setUp() {
         viewModel = PageParentSearchViewModel(
-                coroutinesTestRule.testDispatcher
+                testDispatcher()
         )
         searchPages = MutableLiveData()
         whenever(pageParentViewModel.searchPages).thenReturn(searchPages)

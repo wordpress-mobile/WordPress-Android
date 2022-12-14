@@ -26,7 +26,7 @@ class StorageUtilsViewModelTest : BaseUnitTest() {
     @Before
     fun setUp() {
         viewModel = StorageUtilsViewModel(
-                coroutinesTestRule.testDispatcher,
+                testDispatcher(),
                 storageUtilsProvider
         )
     }

@@ -56,7 +56,7 @@ class StorePostViewModelTest : BaseUnitTest() {
     @Before
     fun setUp() {
         viewModel = StorePostViewModel(
-                coroutinesTestRule.testDispatcher,
+                testDispatcher(),
                 siteStore,
                 postUtils,
                 uploadService,

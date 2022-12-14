@@ -57,7 +57,7 @@ class MediaLibraryDataSourceTest : BaseUnitTest() {
         mediaLibraryDataSourceFactory = MediaLibraryDataSourceFactory(
                 mediaStore,
                 dispatcher,
-                coroutinesTestRule.testDispatcher,
+                testDispatcher(),
                 networkUtilsWrapper,
                 dateTimeUtilsWrapper
         )

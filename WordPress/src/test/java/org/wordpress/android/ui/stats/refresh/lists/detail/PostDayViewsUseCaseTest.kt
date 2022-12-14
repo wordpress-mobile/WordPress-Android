@@ -54,7 +54,7 @@ class PostDayViewsUseCaseTest : BaseUnitTest() {
     fun setUp() {
         useCase = PostDayViewsUseCase(
                 Dispatchers.Unconfined,
-                coroutinesTestRule.testDispatcher,
+                testDispatcher(),
                 mapper,
                 statsDateFormatter,
                 selectedDateProvider,

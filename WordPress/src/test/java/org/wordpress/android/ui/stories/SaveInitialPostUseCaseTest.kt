@@ -34,8 +34,8 @@ class SaveInitialPostUseCaseTest : BaseUnitTest() {
                 mock(),
                 mock(),
                 mock(),
-                coroutinesTestRule.testDispatcher,
-                coroutinesTestRule.testDispatcher
+                testDispatcher(),
+                testDispatcher()
         )
         whenever(postStore.instantiatePostModel(anyOrNull(), any(), anyOrNull(), anyOrNull())).thenReturn(PostModel())
     }

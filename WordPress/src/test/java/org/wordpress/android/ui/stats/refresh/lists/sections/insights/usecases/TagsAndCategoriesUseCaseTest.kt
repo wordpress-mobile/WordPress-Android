@@ -64,7 +64,7 @@ class TagsAndCategoriesUseCaseTest : BaseUnitTest() {
     fun setUp() {
         useCase = TagsAndCategoriesUseCase(
                 Dispatchers.Unconfined,
-                coroutinesTestRule.testDispatcher,
+                testDispatcher(),
                 insightsStore,
                 statsSiteProvider,
                 resourceProvider,

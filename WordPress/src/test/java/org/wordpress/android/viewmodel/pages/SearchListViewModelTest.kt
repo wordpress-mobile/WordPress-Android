@@ -57,7 +57,7 @@ class SearchListViewModelTest : BaseUnitTest() {
                 pageListItemActionsUseCase,
                 pageItemProgressUiStateUseCase,
                 resourceProvider,
-                coroutinesTestRule.testDispatcher
+                testDispatcher()
         )
         searchPages = MutableLiveData()
 

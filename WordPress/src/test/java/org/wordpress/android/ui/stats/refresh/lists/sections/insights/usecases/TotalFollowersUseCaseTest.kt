@@ -45,7 +45,7 @@ class TotalFollowersUseCaseTest : BaseUnitTest() {
     fun setUp() {
         useCase = TotalFollowersUseCase(
                 Dispatchers.Unconfined,
-                coroutinesTestRule.testDispatcher,
+                testDispatcher(),
                 insightsStore,
                 statsSiteProvider,
                 resourceProvider,

@@ -66,7 +66,7 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
     @Before
     fun setUp() {
         viewModel = BloggingRemindersViewModel(
-                coroutinesTestRule.testDispatcher,
+                testDispatcher(),
                 bloggingRemindersManager,
                 bloggingRemindersStore,
                 prologueBuilder,

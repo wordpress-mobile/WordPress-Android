@@ -63,7 +63,7 @@ class VideoPlaysUseCaseTest : BaseUnitTest() {
         useCase = VideoPlaysUseCase(
                 statsGranularity,
                 Dispatchers.Unconfined,
-                coroutinesTestRule.testDispatcher,
+                testDispatcher(),
                 store,
                 siteModelProvider,
                 selectedDateProvider,

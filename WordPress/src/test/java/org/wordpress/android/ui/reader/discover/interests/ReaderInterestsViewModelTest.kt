@@ -109,7 +109,7 @@ class ReaderInterestsViewModelTest : BaseUnitTest() {
                 whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
 
                 // Pause dispatcher so we can verify progress bar initial state
-                withContext(coroutinesTestRule.testDispatcher) {
+                withContext(testDispatcher()) {
                     // Trigger data load
                     initViewModel()
 
@@ -128,7 +128,7 @@ class ReaderInterestsViewModelTest : BaseUnitTest() {
                 whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
 
                 // Pause dispatcher so we can verify title initial state
-                withContext(coroutinesTestRule.testDispatcher) {
+                withContext(testDispatcher()) {
                     // Trigger data load
                     initViewModel()
 
@@ -195,7 +195,7 @@ class ReaderInterestsViewModelTest : BaseUnitTest() {
                 whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
 
                 // Pause dispatcher so we can verify done button initial state
-                withContext(coroutinesTestRule.testDispatcher) {
+                withContext(testDispatcher()) {
                     // Trigger data load
                     initViewModel(EntryPoint.DISCOVER)
                 }
@@ -212,7 +212,7 @@ class ReaderInterestsViewModelTest : BaseUnitTest() {
                 whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
 
                 // Pause dispatcher so we can verify done button initial state
-                withContext(coroutinesTestRule.testDispatcher) {
+                withContext(testDispatcher()) {
                     // Trigger data load
                     initViewModel(EntryPoint.SETTINGS)
                 }
@@ -229,7 +229,7 @@ class ReaderInterestsViewModelTest : BaseUnitTest() {
                 whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
 
                 // Pause dispatcher so we can verify done button initial state
-                withContext(coroutinesTestRule.testDispatcher) {
+                withContext(testDispatcher()) {
                     // Trigger data load
                     initViewModel(EntryPoint.DISCOVER)
 
@@ -252,7 +252,7 @@ class ReaderInterestsViewModelTest : BaseUnitTest() {
                 whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
 
                 // Pause dispatcher so we can verify done button initial state
-                withContext(coroutinesTestRule.testDispatcher) {
+                withContext(testDispatcher()) {
                     // Trigger data load
                     initViewModel(EntryPoint.SETTINGS)
 

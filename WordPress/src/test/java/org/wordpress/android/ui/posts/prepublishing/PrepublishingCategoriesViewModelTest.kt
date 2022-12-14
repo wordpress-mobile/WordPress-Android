@@ -57,7 +57,7 @@ class PrepublishingCategoriesViewModelTest : BaseUnitTest() {
                 addCategoryUseCase,
                 analyticsTrackerWrapper,
                 networkUtilsWrapper,
-                coroutinesTestRule.testDispatcher
+                testDispatcher()
         )
 
         whenever(getCategoriesUseCase.getPostCategories(anyOrNull()))

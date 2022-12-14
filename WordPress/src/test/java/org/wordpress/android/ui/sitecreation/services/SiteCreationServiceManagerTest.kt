@@ -62,7 +62,7 @@ class SiteCreationServiceManagerTest : BaseUnitTest() {
                 useCase,
                 dispatcher,
                 tracker,
-                coroutinesTestRule.testDispatcher
+                testDispatcher()
         )
         successEvent = OnNewSiteCreated(newSiteRemoteId = NEW_SITE_REMOTE_ID, url = NEW_SITE_REMOTE_URL)
         siteExistsErrorEvent = OnNewSiteCreated(newSiteRemoteId = NEW_SITE_REMOTE_ID, url = NEW_SITE_REMOTE_URL)

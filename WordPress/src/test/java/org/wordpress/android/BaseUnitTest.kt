@@ -20,10 +20,12 @@ abstract class BaseUnitTest(testDispatcher: TestDispatcher = UnconfinedTestDispa
     @Rule @JvmField
     val coroutinesTestRule = CoroutineTestRule(testDispatcher)
 
-    protected fun testScope() = TestScope(coroutinesTestRule.testDispatcher)
+    protected fun testDispatcher() = coroutinesTestRule.testDispatcher
+
+    protected fun testScope() = TestScope(testDispatcher())
 
     protected fun test(block: suspend TestScope.() -> Unit) =
-            runTest(coroutinesTestRule.testDispatcher) {
+            runTest(testDispatcher()) {
                 block()
             }
 }

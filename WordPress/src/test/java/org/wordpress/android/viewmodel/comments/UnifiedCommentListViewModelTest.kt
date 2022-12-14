@@ -107,8 +107,8 @@ class UnifiedCommentListViewModelTest : BaseUnitTest() {
                 selectedSiteRepository,
                 networkUtilsWrapper,
                 analyticsTrackerWrapper,
-                coroutinesTestRule.testDispatcher,
-                coroutinesTestRule.testDispatcher,
+                testDispatcher(),
+                testDispatcher(),
                 unifiedCommentsListHandler,
                 localCommentCacheUpdateHandler
         )

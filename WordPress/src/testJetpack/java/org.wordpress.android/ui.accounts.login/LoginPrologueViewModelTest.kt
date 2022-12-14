@@ -28,7 +28,7 @@ class LoginPrologueViewModelTest : BaseUnitTest() {
                 unifiedLoginTracker,
                 analyticsTrackerWrapper,
                 buildConfigWrapper,
-                coroutinesTestRule.testDispatcher
+                testDispatcher()
         )
     }
 

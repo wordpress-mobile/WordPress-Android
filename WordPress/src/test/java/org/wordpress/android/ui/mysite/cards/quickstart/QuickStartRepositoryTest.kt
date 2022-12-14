@@ -85,7 +85,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
         whenever(appPrefsWrapper.getLastSelectedQuickStartTypeForSite(any())).thenReturn(quickStartType)
         whenever(quickStartExistingUsersV2FeatureConfig.isEnabled()).thenReturn(false)
         quickStartRepository = QuickStartRepository(
-                coroutinesTestRule.testDispatcher,
+                testDispatcher(),
                 quickStartStore,
                 quickStartUtilsWrapper,
                 appPrefsWrapper,

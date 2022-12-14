@@ -79,7 +79,7 @@ class ViewsAndVisitorsUseCaseTest : BaseUnitTest() {
                 statsDateFormatter,
                 viewsAndVisitorsMapper,
                 Dispatchers.Unconfined,
-                coroutinesTestRule.testDispatcher,
+                testDispatcher(),
                 analyticsTrackerWrapper,
                 statsWidgetUpdaters,
                 localeManagerWrapper,

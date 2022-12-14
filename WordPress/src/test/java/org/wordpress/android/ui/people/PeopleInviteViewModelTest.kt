@@ -62,7 +62,7 @@ class PeopleInviteViewModelTest : BaseUnitTest() {
 
         viewModel = PeopleInviteViewModel(
                 inviteLinksHandler,
-                coroutinesTestRule.testDispatcher,
+                testDispatcher(),
                 dateTimeUtilsWrapper,
                 contextProvider,
                 invitePeopleUtils,

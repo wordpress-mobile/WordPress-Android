@@ -63,8 +63,8 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
                 dispatcher = dispatcher,
                 fetchDomainsUseCase = fetchDomainsUseCase,
                 tracker = tracker,
-                bgDispatcher = coroutinesTestRule.testDispatcher,
-                mainDispatcher = coroutinesTestRule.testDispatcher
+                bgDispatcher = testDispatcher(),
+                mainDispatcher = testDispatcher()
         )
         viewModel.uiState.observeForever(uiStateObserver)
         viewModel.createSiteBtnClicked.observeForever(createSiteBtnObserver)

@@ -21,8 +21,8 @@ class UpdateStoryPostTitleUseCaseTest : BaseUnitTest() {
                 mock(),
                 mock(),
                 mock(),
-                coroutinesTestRule.testDispatcher,
-                coroutinesTestRule.testDispatcher
+                testDispatcher(),
+                testDispatcher()
         )
         editPostRepository.set { PostModel() }
     }

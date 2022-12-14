@@ -119,7 +119,7 @@ class RestoreViewModelTest : BaseUnitTest() {
                 stateListItemBuilder,
                 postRestoreUseCase,
                 restoreStatusUseCase,
-                coroutinesTestRule.testDispatcher,
+                testDispatcher(),
                 percentFormatter
         )
         whenever(getActivityLogItemUseCase.get(anyOrNull())).thenReturn(fakeActivityLogModel)

@@ -88,7 +88,7 @@ class QuickStartCardSourceTest : BaseUnitTest() {
         whenever(quickStartExistingUsersV2FeatureConfig.isEnabled()).thenReturn(false)
         whenever(quickStartUtilsWrapper.isQuickStartAvailableForTheSite(site)).thenReturn(true)
         quickStartRepository = QuickStartRepository(
-                coroutinesTestRule.testDispatcher,
+                testDispatcher(),
                 quickStartStore,
                 quickStartUtilsWrapper,
                 appPrefsWrapper,

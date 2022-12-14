@@ -45,7 +45,7 @@ class AutoSavePostIfNotDraftUseCaseTest : BaseUnitTest() {
         val useCase = AutoSavePostIfNotDraftUseCase(
                 mock(),
                 postStore,
-                coroutinesTestRule.testDispatcher
+                testDispatcher()
         )
         val post = PostModel()
         post.setIsLocalDraft(true)
@@ -119,7 +119,7 @@ class AutoSavePostIfNotDraftUseCaseTest : BaseUnitTest() {
         val useCase = AutoSavePostIfNotDraftUseCase(
                 dispatcher = dispatcher,
                 postStore = postStore,
-                bgDispatcher = coroutinesTestRule.testDispatcher
+                bgDispatcher = testDispatcher()
         )
         whenever(dispatcher.dispatch(argWhere<Action<Void>> { it.type == PostAction.FETCH_POST_STATUS })).then {
             useCase.onPostStatusFetched(onPostStatusFetched)

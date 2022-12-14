@@ -66,7 +66,7 @@ class PostRecentWeeksUseCaseTest : BaseUnitTest() {
     fun setUp() {
         useCase = PostRecentWeeksUseCase(
                 Dispatchers.Unconfined,
-                coroutinesTestRule.testDispatcher,
+                testDispatcher(),
                 statsSiteProvider,
                 statsPostProvider,
                 store,

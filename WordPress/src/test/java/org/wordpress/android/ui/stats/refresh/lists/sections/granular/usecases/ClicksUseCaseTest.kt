@@ -72,7 +72,7 @@ class ClicksUseCaseTest : BaseUnitTest() {
         useCase = ClicksUseCase(
                 statsGranularity,
                 Dispatchers.Unconfined,
-                coroutinesTestRule.testDispatcher,
+                testDispatcher(),
                 store,
                 statsSiteProvider,
                 selectedDateProvider,

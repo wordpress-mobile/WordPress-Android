@@ -358,8 +358,8 @@ class MySiteViewModelTest : BaseUnitTest() {
                 .thenReturn(QuickStartNewSiteTask.VIEW_SITE)
         viewModel = MySiteViewModel(
                 networkUtilsWrapper,
-                coroutinesTestRule.testDispatcher,
-                coroutinesTestRule.testDispatcher,
+                testDispatcher(),
+                testDispatcher(),
                 analyticsTrackerWrapper,
                 siteItemsBuilder,
                 accountStore,

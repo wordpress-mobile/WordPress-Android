@@ -37,8 +37,8 @@ class MeViewModelTest : BaseUnitTest() {
     @Before
     fun setUp() {
         viewModel = MeViewModel(
-                coroutinesTestRule.testDispatcher,
-                coroutinesTestRule.testDispatcher,
+                testDispatcher(),
+                testDispatcher(),
                 selectedSiteRepository,
                 recommendApiCallsProvider,
                 analyticsUtilsWrapper
