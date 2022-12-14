@@ -8,6 +8,7 @@ import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
@@ -72,6 +73,7 @@ class ApplicationPasswordManagerTests {
             )
 
             assertEquals(ApplicationPasswordCreationResult.Created(testCredentials), result)
+            verify(applicationPasswordsStore).saveCredentials(siteDomain, testCredentials)
         }
 
     @Test

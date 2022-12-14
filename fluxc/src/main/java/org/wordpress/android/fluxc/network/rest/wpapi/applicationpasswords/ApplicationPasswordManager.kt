@@ -46,7 +46,7 @@ internal class ApplicationPasswordManager @Inject constructor(
             createApplicationPassword(site, usernamePayload.userName).also {
                 if (it is ApplicationPasswordCreationResult.Created) {
                     applicationPasswordsStore.saveCredentials(
-                        usernamePayload.userName,
+                        site.domainName,
                         it.credentials
                     )
                 }
@@ -170,5 +170,5 @@ internal class ApplicationPasswordManager @Inject constructor(
     }
 
     private val SiteModel.domainName
-        get() = UrlUtils.removeScheme(url)
+        get() = UrlUtils.removeScheme(url).trim('/')
 }
