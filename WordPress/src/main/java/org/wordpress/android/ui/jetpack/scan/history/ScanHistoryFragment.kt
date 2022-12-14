@@ -5,7 +5,7 @@ import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
@@ -30,11 +30,10 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class ScanHistoryFragment : Fragment(R.layout.scan_history_fragment), ScrollableViewInitializedListener {
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var uiHelpers: UiHelpers
     @Inject lateinit var localeManagerWrapper: LocaleManagerWrapper
     @Inject lateinit var jetpackBrandingUtils: JetpackBrandingUtils
-    private lateinit var viewModel: ScanHistoryViewModel
+    private val viewModel: ScanHistoryViewModel by viewModels()
     private var binding: ScanHistoryFragmentBinding? = null
 
     private val onTabSelectedListener = object : OnTabSelectedListener {
@@ -63,7 +62,6 @@ class ScanHistoryFragment : Fragment(R.layout.scan_history_fragment), Scrollable
     }
 
     private fun ScanHistoryFragmentBinding.initViewModel(site: SiteModel) {
-        viewModel = ViewModelProvider(this@ScanHistoryFragment, viewModelFactory).get(ScanHistoryViewModel::class.java)
         setupObservers()
         viewModel.start(site)
     }
