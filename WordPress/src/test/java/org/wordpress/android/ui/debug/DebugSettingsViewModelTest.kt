@@ -129,7 +129,7 @@ class DebugSettingsViewModelTest : BaseUnitTest() {
         }
     }
 
-    @Suppress("NestedBlockDepth")
+    @Suppress("NestedBlockDepth", "ComplexMethod", "NestedBlockDepth")
     private fun assertUiState(
         expectedState: Feature.State? = null,
         enabledFeature: String? = null,
