@@ -38,10 +38,11 @@ class RemoteConfigProcessor : AbstractProcessor() {
             remoteFeatureNames.add(element.asType().asTypeName())
             annotation.remoteField to annotation.defaultValue.toString()
         } ?: listOf()
-        val remoteFields = roundEnvironment?.getElementsAnnotatedWith(RemoteFieldDefaultGenerater::class.java)?.map { element ->
-            val annotation = element.getAnnotation(RemoteFieldDefaultGenerater::class.java)
-            annotation.remoteField to annotation.defaultValue
-        }?: listOf()
+        val remoteFields = roundEnvironment?.getElementsAnnotatedWith(RemoteFieldDefaultGenerater::class.java)
+                ?.map { element ->
+                    val annotation = element.getAnnotation(RemoteFieldDefaultGenerater::class.java)
+                    annotation.remoteField to annotation.defaultValue
+                } ?: listOf()
         val featuresInDevelopment = roundEnvironment?.getElementsAnnotatedWith(FeatureInDevelopment::class.java)
                 ?.map { element ->
                     element.asType().toString()

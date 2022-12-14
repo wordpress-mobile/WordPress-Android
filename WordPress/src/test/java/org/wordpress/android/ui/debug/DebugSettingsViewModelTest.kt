@@ -23,6 +23,7 @@ import org.wordpress.android.ui.notifications.NotificationManagerWrapper
 import org.wordpress.android.util.DebugUtils
 import org.wordpress.android.util.config.ManualFeatureConfig
 import org.wordpress.android.util.config.FeatureFlagConfig
+import org.wordpress.android.util.config.RemoteFieldConfigRepository
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.workers.weeklyroundup.WeeklyRoundupNotifier
 
@@ -33,6 +34,7 @@ class DebugSettingsViewModelTest : BaseUnitTest() {
     @Mock lateinit var weeklyRoundupNotifier: WeeklyRoundupNotifier
     @Mock lateinit var notificationManager: NotificationManagerWrapper
     @Mock lateinit var contextProvider: ContextProvider
+    @Mock lateinit var remoteFieldConfigRepository: RemoteFieldConfigRepository
     private lateinit var viewModel: DebugSettingsViewModel
     private val uiStates = mutableListOf<UiState>()
 
@@ -44,6 +46,7 @@ class DebugSettingsViewModelTest : BaseUnitTest() {
                 TEST_DISPATCHER,
                 manualFeatureConfig,
                 featureFlagConfig,
+                remoteFieldConfigRepository,
                 debugUtils,
                 weeklyRoundupNotifier,
                 notificationManager,
