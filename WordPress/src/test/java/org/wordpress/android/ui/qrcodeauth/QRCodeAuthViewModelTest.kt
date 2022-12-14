@@ -5,7 +5,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.TestScope
-import kotlinx.coroutines.test.runBlockingTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -611,11 +610,11 @@ class QRCodeAuthViewModelTest : BaseUnitTest() {
         uiStates: MutableList<QRCodeAuthUiState> = mutableListOf(),
         actionEvents: MutableList<QRCodeAuthActionEvent> = mutableListOf(),
         testBody: suspend TestScope.() -> Unit
-    ) = runBlockingTest {
-            val uiStatesJob = launch { viewModel.uiState.toList(uiStates) }
-            val actionEventsJob = launch { viewModel.actionEvents.toList(actionEvents) }
-            testBody(TestScope(coroutinesTestRule.testDispatcher))
-            uiStatesJob.cancel()
-            actionEventsJob.cancel()
+    ) = test {
+        val uiStatesJob = launch { viewModel.uiState.toList(uiStates) }
+        val actionEventsJob = launch { viewModel.actionEvents.toList(actionEvents) }
+        testBody(TestScope(coroutinesTestRule.testDispatcher))
+        uiStatesJob.cancel()
+        actionEventsJob.cancel()
     }
 }

@@ -4,7 +4,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.test.runBlockingTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -118,7 +117,7 @@ class UnifiedCommentListViewModelTest : BaseUnitTest() {
     // Comment list state test
 
     @Test
-    fun `when VM starts list shows loading screen and then comments`() = runBlockingTest {
+    fun `when VM starts list shows loading screen and then comments`() = test {
         val result = mutableListOf<CommentsUiModel>()
 
         val job = launch {
@@ -142,7 +141,7 @@ class UnifiedCommentListViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `reloading comment list shows PTR indicator and loads comments`() = runBlockingTest {
+    fun `reloading comment list shows PTR indicator and loads comments`() = test {
         val result = mutableListOf<CommentsUiModel>()
 
         val job = launch {
@@ -164,7 +163,7 @@ class UnifiedCommentListViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `calling reload shows error toast when network is not available`() = runBlockingTest {
+    fun `calling reload shows error toast when network is not available`() = test {
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
 
         viewModel.start(ALL)
@@ -187,7 +186,7 @@ class UnifiedCommentListViewModelTest : BaseUnitTest() {
     // Paging Test
 
     @Test
-    fun `comment list contains load more row when there are more comments`() = runBlockingTest {
+    fun `comment list contains load more row when there are more comments`() = test {
         whenever((commentStore.fetchCommentsPage(any(), any(), any(), any(), any())))
                 .thenReturn(CommentsActionPayload(PagingData(comments = testComments.take(30), hasMore = true)))
 
@@ -208,7 +207,7 @@ class UnifiedCommentListViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `comment list does not contain load more row when there are no more comments`() = runBlockingTest {
+    fun `comment list does not contain load more row when there are no more comments`() = test {
         whenever(commentStore.fetchCommentsPage(any(), any(), any(), any(), any())).thenReturn(
                 CommentsActionPayload(
                         PagingData(comments = testComments.take(15), hasMore = false)
@@ -230,7 +229,7 @@ class UnifiedCommentListViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when load more action is triggered more comments are loaded`() = runBlockingTest {
+    fun `when load more action is triggered more comments are loaded`() = test {
         val result = mutableListOf<CommentsUiModel>()
         val job = launch {
             viewModel.uiState.collectLatest {
@@ -257,7 +256,7 @@ class UnifiedCommentListViewModelTest : BaseUnitTest() {
     // Paging and Footer error tests
 
     @Test
-    fun `footer shows retry button and error snackbar when there is an error when loading more`() = runBlockingTest {
+    fun `footer shows retry button and error snackbar when there is an error when loading more`() = test {
         val result = mutableListOf<CommentsUiModel>()
         val job = launch {
             viewModel.uiState.collectLatest {
@@ -306,7 +305,7 @@ class UnifiedCommentListViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `tapping retry button in footer shows error snackbar when there is no internet`() = runBlockingTest {
+    fun `tapping retry button in footer shows error snackbar when there is no internet`() = test {
         whenever(commentStore.getCommentsForSite(anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull()))
                 .thenReturn(testComments.take(30))
 

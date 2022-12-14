@@ -3,7 +3,6 @@ package org.wordpress.android.ui.comments.usecases
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.test.runBlockingTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -70,347 +69,340 @@ class ModerateCommentsWithUndoUseCaseTest : BaseUnitTest() {
     // OnModerateComment
 
     @Test
-    fun `OnModerateComment action moderates comment locally and emits success when there are no errors`() =
-            runBlockingTest {
-                whenever(commentStore.moderateCommentLocally(eq(site), eq(1), eq(UNAPPROVED)))
-                        .thenReturn(
-                                CommentsActionPayload(
-                                        CommentsActionData(
-                                                comments = listOf(approvedComment.copy(status = UNAPPROVED.toString())),
-                                                rowsAffected = 1
-                                        )
+    fun `OnModerateComment action moderates comment locally and emits success when there are no errors`() = test {
+        whenever(commentStore.moderateCommentLocally(eq(site), eq(1), eq(UNAPPROVED)))
+                .thenReturn(
+                        CommentsActionPayload(
+                                CommentsActionData(
+                                        comments = listOf(approvedComment.copy(status = UNAPPROVED.toString())),
+                                        rowsAffected = 1
                                 )
                         )
-
-                val result = mutableListOf<UseCaseResult<CommentsUseCaseType, CommentError, Any>>()
-
-                val job = launch {
-                    moderateCommentWithUndoUseCase.subscribe().collectLatest {
-                        result.add(it)
-                    }
-                }
-
-                moderateCommentWithUndoUseCase.manageAction(
-                        OnModerateComment(ModerateCommentParameters(site, 1, UNAPPROVED))
                 )
 
-                assertThat(result).size().isEqualTo(1)
+        val result = mutableListOf<UseCaseResult<CommentsUseCaseType, CommentError, Any>>()
 
-                val successResult = result.first()
-
-                assertThat(successResult).isInstanceOf(UseCaseResult.Success::class.java)
-                assertThat(successResult.type).isEqualTo(MODERATE_USE_CASE)
-
-                val resultData = (successResult as UseCaseResult.Success).data
-
-                assertThat(resultData).isInstanceOf(SingleCommentModerationResult::class.java)
-                assertThat((resultData as SingleCommentModerationResult).newStatus).isEqualTo(UNAPPROVED)
-                assertThat(resultData.oldStatus).isEqualTo(APPROVED)
-                assertThat(resultData.remoteCommentId).isEqualTo(1)
-
-                verify(commentStore, times(1)).getCommentByLocalSiteAndRemoteId(site.id, 1)
-
-                verify(commentStore, times(1)).moderateCommentLocally(site, 1, UNAPPROVED)
-
-                verify(localCommentCacheUpdateHandler, times(1)).requestCommentsUpdate()
-
-                job.cancel()
+        val job = launch {
+            moderateCommentWithUndoUseCase.subscribe().collectLatest {
+                result.add(it)
             }
+        }
+
+        moderateCommentWithUndoUseCase.manageAction(
+                OnModerateComment(ModerateCommentParameters(site, 1, UNAPPROVED))
+        )
+
+        assertThat(result).size().isEqualTo(1)
+
+        val successResult = result.first()
+
+        assertThat(successResult).isInstanceOf(UseCaseResult.Success::class.java)
+        assertThat(successResult.type).isEqualTo(MODERATE_USE_CASE)
+
+        val resultData = (successResult as UseCaseResult.Success).data
+
+        assertThat(resultData).isInstanceOf(SingleCommentModerationResult::class.java)
+        assertThat((resultData as SingleCommentModerationResult).newStatus).isEqualTo(UNAPPROVED)
+        assertThat(resultData.oldStatus).isEqualTo(APPROVED)
+        assertThat(resultData.remoteCommentId).isEqualTo(1)
+
+        verify(commentStore, times(1)).getCommentByLocalSiteAndRemoteId(site.id, 1)
+
+        verify(commentStore, times(1)).moderateCommentLocally(site, 1, UNAPPROVED)
+
+        verify(localCommentCacheUpdateHandler, times(1)).requestCommentsUpdate()
+
+        job.cancel()
+    }
 
     @Test
-    fun `OnModerateComment action emits error even when error is encountered`() =
-            runBlockingTest {
-                val error = CommentError(INVALID_INPUT, "test error message")
+    fun `OnModerateComment action emits error even when error is encountered`() = test {
+        val error = CommentError(INVALID_INPUT, "test error message")
 
-                whenever(commentStore.moderateCommentLocally(eq(site), eq(1), eq(UNAPPROVED)))
-                        .thenReturn(CommentsActionPayload(error))
+        whenever(commentStore.moderateCommentLocally(eq(site), eq(1), eq(UNAPPROVED)))
+                .thenReturn(CommentsActionPayload(error))
 
-                val result = mutableListOf<UseCaseResult<CommentsUseCaseType, CommentError, Any>>()
+        val result = mutableListOf<UseCaseResult<CommentsUseCaseType, CommentError, Any>>()
 
-                val job = launch {
-                    moderateCommentWithUndoUseCase.subscribe().collectLatest {
-                        result.add(it)
-                    }
-                }
-
-                moderateCommentWithUndoUseCase.manageAction(
-                        OnModerateComment(ModerateCommentParameters(site, 1, UNAPPROVED))
-                )
-
-                assertThat(result).size().isEqualTo(1)
-
-                val errorResult = result[0]
-
-                assertThat(errorResult).isInstanceOf(UseCaseResult.Failure::class.java)
-                assertThat(errorResult.type).isEqualTo(MODERATE_USE_CASE)
-                assertThat((errorResult as UseCaseResult.Failure).cachedData).isEqualTo(DoNotCare)
-                assertThat(errorResult.error.type).isEqualTo(INVALID_INPUT)
-                assertThat(errorResult.error.message).isEqualTo("test error message")
-
-                verify(commentStore, times(1)).getCommentByLocalSiteAndRemoteId(site.id, 1)
-
-                verify(commentStore, times(1)).moderateCommentLocally(site, 1, UNAPPROVED)
-
-                verify(localCommentCacheUpdateHandler, times(0)).requestCommentsUpdate()
-
-                job.cancel()
+        val job = launch {
+            moderateCommentWithUndoUseCase.subscribe().collectLatest {
+                result.add(it)
             }
+        }
+
+        moderateCommentWithUndoUseCase.manageAction(
+                OnModerateComment(ModerateCommentParameters(site, 1, UNAPPROVED))
+        )
+
+        assertThat(result).size().isEqualTo(1)
+
+        val errorResult = result[0]
+
+        assertThat(errorResult).isInstanceOf(UseCaseResult.Failure::class.java)
+        assertThat(errorResult.type).isEqualTo(MODERATE_USE_CASE)
+        assertThat((errorResult as UseCaseResult.Failure).cachedData).isEqualTo(DoNotCare)
+        assertThat(errorResult.error.type).isEqualTo(INVALID_INPUT)
+        assertThat(errorResult.error.message).isEqualTo("test error message")
+
+        verify(commentStore, times(1)).getCommentByLocalSiteAndRemoteId(site.id, 1)
+
+        verify(commentStore, times(1)).moderateCommentLocally(site, 1, UNAPPROVED)
+
+        verify(localCommentCacheUpdateHandler, times(0)).requestCommentsUpdate()
+
+        job.cancel()
+    }
 
     // OnPushComment
 
     @Test
-    fun `OnPushComment action moderates comment locally and remotely and emits success when there are no errors`() =
-            runBlockingTest {
-                whenever(commentStore.moderateCommentLocally(eq(site), eq(1), eq(UNAPPROVED)))
-                        .thenReturn(
-                                CommentsActionPayload(
-                                        CommentsActionData(
-                                                comments = listOf(approvedComment.copy(status = UNAPPROVED.toString())),
-                                                rowsAffected = 1
-                                        )
+    fun `OnPushComment action moderates locally and remotely and emits success when there are no errors`() = test {
+        whenever(commentStore.moderateCommentLocally(eq(site), eq(1), eq(UNAPPROVED)))
+                .thenReturn(
+                        CommentsActionPayload(
+                                CommentsActionData(
+                                        comments = listOf(approvedComment.copy(status = UNAPPROVED.toString())),
+                                        rowsAffected = 1
                                 )
                         )
-
-                whenever(commentStore.pushLocalCommentByRemoteId(eq(site), eq(1)))
-                        .thenReturn(
-                                CommentsActionPayload(
-                                        CommentsActionData(
-                                                listOf(approvedComment.copy(status = UNAPPROVED.toString())),
-                                                1
-                                        )
-                                )
-                        )
-
-                val result = mutableListOf<UseCaseResult<CommentsUseCaseType, CommentError, Any>>()
-
-                val job = launch {
-                    moderateCommentWithUndoUseCase.subscribe().collectLatest {
-                        result.add(it)
-                    }
-                }
-
-                moderateCommentWithUndoUseCase.manageAction(
-                        OnPushComment(ModerateWithFallbackParameters(site, 1, UNAPPROVED, APPROVED))
                 )
 
-                assertThat(result).size().isEqualTo(1)
+        whenever(commentStore.pushLocalCommentByRemoteId(eq(site), eq(1)))
+                .thenReturn(
+                        CommentsActionPayload(
+                                CommentsActionData(
+                                        listOf(approvedComment.copy(status = UNAPPROVED.toString())),
+                                        1
+                                )
+                        )
+                )
 
-                val successResult = result[0]
+        val result = mutableListOf<UseCaseResult<CommentsUseCaseType, CommentError, Any>>()
 
-                assertThat(successResult).isInstanceOf(UseCaseResult.Success::class.java)
-                assertThat(successResult.type).isEqualTo(MODERATE_USE_CASE)
-                assertThat((successResult as UseCaseResult.Success).data).isEqualTo(DoNotCare)
-
-                verify(commentStore, times(1)).pushLocalCommentByRemoteId(site, 1)
-                verify(commentStore, times(1)).moderateCommentLocally(site, 1, UNAPPROVED)
-                verify(commentStore, never()).deleteComment(eq(site), any(), anyOrNull())
-
-                // called twice - after local moderation, and after remote moderation
-                verify(localCommentCacheUpdateHandler, times(2)).requestCommentsUpdate()
-
-                job.cancel()
+        val job = launch {
+            moderateCommentWithUndoUseCase.subscribe().collectLatest {
+                result.add(it)
             }
+        }
+
+        moderateCommentWithUndoUseCase.manageAction(
+                OnPushComment(ModerateWithFallbackParameters(site, 1, UNAPPROVED, APPROVED))
+        )
+
+        assertThat(result).size().isEqualTo(1)
+
+        val successResult = result[0]
+
+        assertThat(successResult).isInstanceOf(UseCaseResult.Success::class.java)
+        assertThat(successResult.type).isEqualTo(MODERATE_USE_CASE)
+        assertThat((successResult as UseCaseResult.Success).data).isEqualTo(DoNotCare)
+
+        verify(commentStore, times(1)).pushLocalCommentByRemoteId(site, 1)
+        verify(commentStore, times(1)).moderateCommentLocally(site, 1, UNAPPROVED)
+        verify(commentStore, never()).deleteComment(eq(site), any(), anyOrNull())
+
+        // called twice - after local moderation, and after remote moderation
+        verify(localCommentCacheUpdateHandler, times(2)).requestCommentsUpdate()
+
+        job.cancel()
+    }
 
     @Test
-    fun `OnPushComment calls deleteComment method of the store when comment is being deleted`() =
-            runBlockingTest {
-                whenever(commentStore.moderateCommentLocally(eq(site), eq(3), eq(DELETED)))
-                        .thenReturn(
-                                CommentsActionPayload(
-                                        CommentsActionData(
-                                                comments = listOf(trashedComment.copy(status = DELETED.toString())),
-                                                rowsAffected = 1
-                                        )
+    fun `OnPushComment calls deleteComment method of the store when comment is being deleted`() = test {
+        whenever(commentStore.moderateCommentLocally(eq(site), eq(3), eq(DELETED)))
+                .thenReturn(
+                        CommentsActionPayload(
+                                CommentsActionData(
+                                        comments = listOf(trashedComment.copy(status = DELETED.toString())),
+                                        rowsAffected = 1
                                 )
                         )
-
-                whenever(commentStore.deleteComment(eq(site), eq(3), anyOrNull()))
-                        .thenReturn(
-                                CommentsActionPayload(
-                                        CommentsActionData(
-                                                listOf(trashedComment.copy(status = DELETED.toString())),
-                                                1
-                                        )
-                                )
-                        )
-
-                val result = mutableListOf<UseCaseResult<CommentsUseCaseType, CommentError, Any>>()
-
-                val job = launch {
-                    moderateCommentWithUndoUseCase.subscribe().collectLatest {
-                        result.add(it)
-                    }
-                }
-
-                moderateCommentWithUndoUseCase.manageAction(
-                        OnPushComment(ModerateWithFallbackParameters(site, 3, DELETED, TRASH))
                 )
 
-                assertThat(result).size().isEqualTo(1)
+        whenever(commentStore.deleteComment(eq(site), eq(3), anyOrNull()))
+                .thenReturn(
+                        CommentsActionPayload(
+                                CommentsActionData(
+                                        listOf(trashedComment.copy(status = DELETED.toString())),
+                                        1
+                                )
+                        )
+                )
 
-                val successResult = result[0]
+        val result = mutableListOf<UseCaseResult<CommentsUseCaseType, CommentError, Any>>()
 
-                assertThat(successResult).isInstanceOf(UseCaseResult.Success::class.java)
-                assertThat(successResult.type).isEqualTo(MODERATE_USE_CASE)
-                assertThat((successResult as UseCaseResult.Success).data).isEqualTo(DoNotCare)
-
-                verify(commentStore, never()).pushLocalCommentByRemoteId(eq(site), any())
-                verify(commentStore, times(1)).deleteComment(site, 3, null)
-                verify(commentStore, times(1)).moderateCommentLocally(site, 3, DELETED)
-
-                // called twice - after local moderation, and after remote moderation
-                verify(localCommentCacheUpdateHandler, times(2)).requestCommentsUpdate()
-
-                job.cancel()
+        val job = launch {
+            moderateCommentWithUndoUseCase.subscribe().collectLatest {
+                result.add(it)
             }
+        }
+
+        moderateCommentWithUndoUseCase.manageAction(
+                OnPushComment(ModerateWithFallbackParameters(site, 3, DELETED, TRASH))
+        )
+
+        assertThat(result).size().isEqualTo(1)
+
+        val successResult = result[0]
+
+        assertThat(successResult).isInstanceOf(UseCaseResult.Success::class.java)
+        assertThat(successResult.type).isEqualTo(MODERATE_USE_CASE)
+        assertThat((successResult as UseCaseResult.Success).data).isEqualTo(DoNotCare)
+
+        verify(commentStore, never()).pushLocalCommentByRemoteId(eq(site), any())
+        verify(commentStore, times(1)).deleteComment(site, 3, null)
+        verify(commentStore, times(1)).moderateCommentLocally(site, 3, DELETED)
+
+        // called twice - after local moderation, and after remote moderation
+        verify(localCommentCacheUpdateHandler, times(2)).requestCommentsUpdate()
+
+        job.cancel()
+    }
 
     @Test
-    fun `moderation is rolled back and correct event is emitted when error is encountered when deleting comment`() =
-            runBlockingTest {
-                val error = CommentError(INVALID_INPUT, "test error message")
+    fun `moderation is rolled back and correct event is emitted when error is encountered deleting comment`() = test {
+        val error = CommentError(INVALID_INPUT, "test error message")
 
-                whenever(commentStore.moderateCommentLocally(eq(site), eq(3), eq(DELETED)))
-                        .thenReturn(
-                                CommentsActionPayload(
-                                        CommentsActionData(
-                                                comments = listOf(trashedComment.copy(status = DELETED.toString())),
-                                                rowsAffected = 1
-                                        )
+        whenever(commentStore.moderateCommentLocally(eq(site), eq(3), eq(DELETED)))
+                .thenReturn(
+                        CommentsActionPayload(
+                                CommentsActionData(
+                                        comments = listOf(trashedComment.copy(status = DELETED.toString())),
+                                        rowsAffected = 1
                                 )
                         )
-
-                whenever(commentStore.deleteComment(eq(site), eq(3), anyOrNull()))
-                        .thenReturn(CommentsActionPayload(error))
-
-                val result = mutableListOf<UseCaseResult<CommentsUseCaseType, CommentError, Any>>()
-
-                val job = launch {
-                    moderateCommentWithUndoUseCase.subscribe().collectLatest {
-                        result.add(it)
-                    }
-                }
-
-                moderateCommentWithUndoUseCase.manageAction(
-                        OnPushComment(ModerateWithFallbackParameters(site, 3, DELETED, TRASH))
                 )
 
-                assertThat(result).size().isEqualTo(1)
+        whenever(commentStore.deleteComment(eq(site), eq(3), anyOrNull()))
+                .thenReturn(CommentsActionPayload(error))
 
-                val errorResult = result[0]
+        val result = mutableListOf<UseCaseResult<CommentsUseCaseType, CommentError, Any>>()
 
-                assertThat(errorResult).isInstanceOf(UseCaseResult.Failure::class.java)
-                assertThat(errorResult.type).isEqualTo(MODERATE_USE_CASE)
-                assertThat((errorResult as UseCaseResult.Failure).cachedData).isEqualTo(DoNotCare)
-                assertThat(errorResult.error.type).isEqualTo(INVALID_INPUT)
-                assertThat(errorResult.error.message).isEqualTo("test error message")
-
-                verify(commentStore, never()).pushLocalCommentByRemoteId(eq(site), any())
-                verify(commentStore, times(1)).deleteComment(site, 3, null)
-                verify(commentStore, times(1)).moderateCommentLocally(site, 3, DELETED)
-
-                // rolling back moderation after error
-
-                verify(commentStore, times(1)).moderateCommentLocally(site, 3, TRASH)
-
-                // called twice - after local moderation, and after remote moderation
-                verify(localCommentCacheUpdateHandler, times(2)).requestCommentsUpdate()
-
-                job.cancel()
+        val job = launch {
+            moderateCommentWithUndoUseCase.subscribe().collectLatest {
+                result.add(it)
             }
+        }
+
+        moderateCommentWithUndoUseCase.manageAction(
+                OnPushComment(ModerateWithFallbackParameters(site, 3, DELETED, TRASH))
+        )
+
+        assertThat(result).size().isEqualTo(1)
+
+        val errorResult = result[0]
+
+        assertThat(errorResult).isInstanceOf(UseCaseResult.Failure::class.java)
+        assertThat(errorResult.type).isEqualTo(MODERATE_USE_CASE)
+        assertThat((errorResult as UseCaseResult.Failure).cachedData).isEqualTo(DoNotCare)
+        assertThat(errorResult.error.type).isEqualTo(INVALID_INPUT)
+        assertThat(errorResult.error.message).isEqualTo("test error message")
+
+        verify(commentStore, never()).pushLocalCommentByRemoteId(eq(site), any())
+        verify(commentStore, times(1)).deleteComment(site, 3, null)
+        verify(commentStore, times(1)).moderateCommentLocally(site, 3, DELETED)
+
+        // rolling back moderation after error
+
+        verify(commentStore, times(1)).moderateCommentLocally(site, 3, TRASH)
+
+        // called twice - after local moderation, and after remote moderation
+        verify(localCommentCacheUpdateHandler, times(2)).requestCommentsUpdate()
+
+        job.cancel()
+    }
 
     @Test
-    fun `moderation is rolled back and correct event is emitted when error is encountered when moderating comment`() =
-            runBlockingTest {
-                val error = CommentError(INVALID_INPUT, "test error message")
+    fun `moderation is rolled back and correct event is emitted when error is encountered moderating comment`() = test {
+        val error = CommentError(INVALID_INPUT, "test error message")
 
-                whenever(commentStore.moderateCommentLocally(eq(site), eq(1), eq(UNAPPROVED)))
-                        .thenReturn(
-                                CommentsActionPayload(
-                                        CommentsActionData(
-                                                comments = listOf(approvedComment.copy(status = UNAPPROVED.toString())),
-                                                rowsAffected = 1
-                                        )
+        whenever(commentStore.moderateCommentLocally(eq(site), eq(1), eq(UNAPPROVED)))
+                .thenReturn(
+                        CommentsActionPayload(
+                                CommentsActionData(
+                                        comments = listOf(approvedComment.copy(status = UNAPPROVED.toString())),
+                                        rowsAffected = 1
                                 )
                         )
-
-                whenever(commentStore.pushLocalCommentByRemoteId(eq(site), eq(1)))
-                        .thenReturn(CommentsActionPayload(error))
-
-                val result = mutableListOf<UseCaseResult<CommentsUseCaseType, CommentError, Any>>()
-
-                val job = launch {
-                    moderateCommentWithUndoUseCase.subscribe().collectLatest {
-                        result.add(it)
-                    }
-                }
-
-                moderateCommentWithUndoUseCase.manageAction(
-                        OnPushComment(ModerateWithFallbackParameters(site, 1, UNAPPROVED, APPROVED))
                 )
 
-                assertThat(result).size().isEqualTo(1)
+        whenever(commentStore.pushLocalCommentByRemoteId(eq(site), eq(1)))
+                .thenReturn(CommentsActionPayload(error))
 
-                val errorResult = result[0]
+        val result = mutableListOf<UseCaseResult<CommentsUseCaseType, CommentError, Any>>()
 
-                assertThat(errorResult).isInstanceOf(UseCaseResult.Failure::class.java)
-                assertThat(errorResult.type).isEqualTo(MODERATE_USE_CASE)
-                assertThat((errorResult as UseCaseResult.Failure).cachedData).isEqualTo(DoNotCare)
-                assertThat(errorResult.error.type).isEqualTo(INVALID_INPUT)
-                assertThat(errorResult.error.message).isEqualTo("test error message")
-
-                verify(commentStore, times(1)).pushLocalCommentByRemoteId(eq(site), any())
-                verify(commentStore, never()).deleteComment(eq(site), any(), anyOrNull())
-                verify(commentStore, times(1)).pushLocalCommentByRemoteId(site, 1)
-                verify(commentStore, times(1)).moderateCommentLocally(site, 1, UNAPPROVED)
-
-                // rolling back moderation after error
-
-                verify(commentStore, times(1)).moderateCommentLocally(site, 1, APPROVED)
-
-                // called twice - after local moderation, and after remote moderation
-                verify(localCommentCacheUpdateHandler, times(2)).requestCommentsUpdate()
-
-                job.cancel()
+        val job = launch {
+            moderateCommentWithUndoUseCase.subscribe().collectLatest {
+                result.add(it)
             }
+        }
+
+        moderateCommentWithUndoUseCase.manageAction(
+                OnPushComment(ModerateWithFallbackParameters(site, 1, UNAPPROVED, APPROVED))
+        )
+
+        assertThat(result).size().isEqualTo(1)
+
+        val errorResult = result[0]
+
+        assertThat(errorResult).isInstanceOf(UseCaseResult.Failure::class.java)
+        assertThat(errorResult.type).isEqualTo(MODERATE_USE_CASE)
+        assertThat((errorResult as UseCaseResult.Failure).cachedData).isEqualTo(DoNotCare)
+        assertThat(errorResult.error.type).isEqualTo(INVALID_INPUT)
+        assertThat(errorResult.error.message).isEqualTo("test error message")
+
+        verify(commentStore, times(1)).pushLocalCommentByRemoteId(eq(site), any())
+        verify(commentStore, never()).deleteComment(eq(site), any(), anyOrNull())
+        verify(commentStore, times(1)).pushLocalCommentByRemoteId(site, 1)
+        verify(commentStore, times(1)).moderateCommentLocally(site, 1, UNAPPROVED)
+
+        // rolling back moderation after error
+
+        verify(commentStore, times(1)).moderateCommentLocally(site, 1, APPROVED)
+
+        // called twice - after local moderation, and after remote moderation
+        verify(localCommentCacheUpdateHandler, times(2)).requestCommentsUpdate()
+
+        job.cancel()
+    }
 
     // OnUndoModerateComment
 
     @Test
-    fun `undoing moderation rolls back local comment status and emits success`() =
-            runBlockingTest {
-                whenever(commentStore.moderateCommentLocally(eq(site), eq(3), eq(APPROVED)))
-                        .thenReturn(
-                                CommentsActionPayload(
-                                        CommentsActionData(
-                                                comments = listOf(trashedComment.copy(status = APPROVED.toString())),
-                                                rowsAffected = 1
-                                        )
+    fun `undoing moderation rolls back local comment status and emits success`() = test {
+        whenever(commentStore.moderateCommentLocally(eq(site), eq(3), eq(APPROVED)))
+                .thenReturn(
+                        CommentsActionPayload(
+                                CommentsActionData(
+                                        comments = listOf(trashedComment.copy(status = APPROVED.toString())),
+                                        rowsAffected = 1
                                 )
                         )
-
-                val result = mutableListOf<UseCaseResult<CommentsUseCaseType, CommentError, Any>>()
-
-                val job = launch {
-                    moderateCommentWithUndoUseCase.subscribe().collectLatest {
-                        result.add(it)
-                    }
-                }
-
-                moderateCommentWithUndoUseCase.manageAction(
-                        OnUndoModerateComment(ModerateWithFallbackParameters(site, 3, TRASH, APPROVED))
                 )
 
-                assertThat(result).size().isEqualTo(1)
+        val result = mutableListOf<UseCaseResult<CommentsUseCaseType, CommentError, Any>>()
 
-                val successResult = result[0]
-
-                assertThat(successResult).isInstanceOf(UseCaseResult.Success::class.java)
-                assertThat(successResult.type).isEqualTo(MODERATE_USE_CASE)
-                assertThat((successResult as UseCaseResult.Success).data).isEqualTo(DoNotCare)
-
-                verify(commentStore, times(1)).moderateCommentLocally(site, 3, APPROVED)
-                verify(localCommentCacheUpdateHandler, times(1)).requestCommentsUpdate()
-
-                job.cancel()
+        val job = launch {
+            moderateCommentWithUndoUseCase.subscribe().collectLatest {
+                result.add(it)
             }
+        }
+
+        moderateCommentWithUndoUseCase.manageAction(
+                OnUndoModerateComment(ModerateWithFallbackParameters(site, 3, TRASH, APPROVED))
+        )
+
+        assertThat(result).size().isEqualTo(1)
+
+        val successResult = result[0]
+
+        assertThat(successResult).isInstanceOf(UseCaseResult.Success::class.java)
+        assertThat(successResult.type).isEqualTo(MODERATE_USE_CASE)
+        assertThat((successResult as UseCaseResult.Success).data).isEqualTo(DoNotCare)
+
+        verify(commentStore, times(1)).moderateCommentLocally(site, 3, APPROVED)
+        verify(localCommentCacheUpdateHandler, times(1)).requestCommentsUpdate()
+
+        job.cancel()
+    }
 }
