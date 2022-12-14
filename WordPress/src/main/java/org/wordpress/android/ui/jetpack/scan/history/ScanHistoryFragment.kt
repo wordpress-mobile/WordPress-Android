@@ -11,6 +11,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.android.material.tabs.TabLayout.Tab
 import com.google.android.material.tabs.TabLayoutMediator
+import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.FullscreenErrorWithRetryBinding
@@ -27,6 +28,7 @@ import org.wordpress.android.util.JetpackBrandingUtils.Screen.SCAN
 import org.wordpress.android.util.LocaleManagerWrapper
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class ScanHistoryFragment : Fragment(R.layout.scan_history_fragment), ScrollableViewInitializedListener {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var uiHelpers: UiHelpers
@@ -50,7 +52,6 @@ class ScanHistoryFragment : Fragment(R.layout.scan_history_fragment), Scrollable
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = ScanHistoryFragmentBinding.bind(view).apply {
-            initDagger()
             initViewModel(getSite(savedInstanceState))
             initToolbar()
         }
@@ -59,10 +60,6 @@ class ScanHistoryFragment : Fragment(R.layout.scan_history_fragment), Scrollable
     override fun onDestroyView() {
         super.onDestroyView()
         binding = null
-    }
-
-    private fun initDagger() {
-        (requireActivity().application as WordPress).component().inject(this)
     }
 
     private fun ScanHistoryFragmentBinding.initViewModel(site: SiteModel) {
