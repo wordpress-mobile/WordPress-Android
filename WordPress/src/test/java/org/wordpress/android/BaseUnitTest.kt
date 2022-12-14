@@ -5,6 +5,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestDispatcher
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.Rule
 import org.junit.runner.RunWith
@@ -22,4 +23,6 @@ abstract class BaseUnitTest(testDispatcher: TestDispatcher = UnconfinedTestDispa
     protected fun testScope() = TestScope(testDispatcher())
 
     protected fun test(block: suspend TestScope.() -> Unit) = runTest(testDispatcher()) { block() }
+
+    protected fun advanceUntilIdle() = testScope().advanceUntilIdle()
 }

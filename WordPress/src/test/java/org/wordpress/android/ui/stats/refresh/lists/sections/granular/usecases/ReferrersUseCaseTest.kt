@@ -147,7 +147,7 @@ class ReferrersUseCaseTest : BaseUnitTest() {
         whenever(statsUtils.toFormattedString(any<Int>(), any())).then { (it.arguments[0] as Int).toString() }
     }
 
-    @Ignore @Test
+    @Test
     fun `maps referrers to UI model`() = test {
         val forced = false
         val model = ReferrersModel(10, totalViews, listOf(wordPressReferrer, group, searchReferrer), false)
@@ -205,7 +205,7 @@ class ReferrersUseCaseTest : BaseUnitTest() {
         return expandableItem
     }
 
-    @Ignore @Test
+    @Test
     fun `adds view more button when hasMore`() = test {
         useCase = ReferrersUseCase(
                 statsGranularity,
@@ -247,7 +247,7 @@ class ReferrersUseCaseTest : BaseUnitTest() {
         }
     }
 
-    @Ignore @Test
+    @Test
     fun `maps empty referrers to UI model`() = test {
         val forced = false
         whenever(store.fetchReferrers(site,
@@ -265,7 +265,7 @@ class ReferrersUseCaseTest : BaseUnitTest() {
         }
     }
 
-    @Ignore @Test
+    @Test
     fun `maps error item to UI model`() = test {
         val forced = false
         val message = "Generic error"
@@ -364,6 +364,7 @@ class ReferrersUseCaseTest : BaseUnitTest() {
         var result: UseCaseModel? = null
         useCase.liveData.observeForever { result = it }
         useCase.fetch(refresh, forced)
+        advanceUntilIdle()
         return checkNotNull(result)
     }
 }

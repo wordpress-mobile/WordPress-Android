@@ -81,6 +81,7 @@ class ManagementNewsCardUseCaseTest : BaseUnitTest() {
         var result: UseCaseModel? = null
         useCase.liveData.observeForever { result = it }
         useCase.fetch(refresh = false, forced = false)
+        advanceUntilIdle()
         return checkNotNull(result)
     }
 }
