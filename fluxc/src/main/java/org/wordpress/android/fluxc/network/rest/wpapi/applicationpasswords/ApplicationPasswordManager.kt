@@ -4,7 +4,7 @@ import android.content.Context
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.module.ApplicationPasswordClientId
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
-import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.UNKNOWN
+import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPINetworkError
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError
 import org.wordpress.android.util.AppLog
@@ -23,9 +23,18 @@ internal class ApplicationPasswordManager @Inject constructor(
 ) {
     private val applicationPasswordsStore = ApplicationPasswordsStore(context, applicationName)
 
+    @Suppress("ReturnCount")
     internal suspend fun getApplicationCredentials(
         site: SiteModel
     ): ApplicationPasswordCreationResult {
+        if (site.isWPCom) return ApplicationPasswordCreationResult.NotSupported(
+            WPAPINetworkError(
+                BaseNetworkError(
+                    GenericErrorType.UNKNOWN,
+                    "Simple WPCom sites don't support application passwords"
+                )
+            )
+        )
         val existingPassword = applicationPasswordsStore.getCredentials(site.domainName)
         if (existingPassword != null) {
             return ApplicationPasswordCreationResult.Existing(existingPassword)
@@ -139,7 +148,7 @@ internal class ApplicationPasswordManager @Inject constructor(
                     AppLog.w(AppLog.T.MAIN, "Application password deletion failed")
                     ApplicationPasswordDeletionResult.Failure(
                         BaseNetworkError(
-                            UNKNOWN,
+                            GenericErrorType.UNKNOWN,
                             "Deletion not confirmed by API"
                         )
                     )
