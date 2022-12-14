@@ -46,4 +46,12 @@ class JetpackFeatureRemovalBrandingUtilTest {
 
         assertTrue(shouldShowBranding)
     }
+
+    @Test
+    fun `given phase one not started, when phase one branding is checked, should return false`() {
+        whenever(jetpackFeatureRemovalPhaseHelper.getCurrentPhase()).thenReturn(null)
+        val shouldShowBranding = jetpackFeatureRemovalBrandingUtil.shouldShowPhaseOneBranding()
+
+        assertFalse(shouldShowBranding)
+    }
 }
