@@ -5,6 +5,7 @@ import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.adapter.FragmentStateAdapter
@@ -33,7 +34,7 @@ class ScanHistoryFragment : Fragment(R.layout.scan_history_fragment), Scrollable
     @Inject lateinit var uiHelpers: UiHelpers
     @Inject lateinit var localeManagerWrapper: LocaleManagerWrapper
     @Inject lateinit var jetpackBrandingUtils: JetpackBrandingUtils
-    private val viewModel: ScanHistoryViewModel by viewModels()
+    private val viewModel: ScanHistoryViewModel by activityViewModels()
     private var binding: ScanHistoryFragmentBinding? = null
 
     private val onTabSelectedListener = object : OnTabSelectedListener {
