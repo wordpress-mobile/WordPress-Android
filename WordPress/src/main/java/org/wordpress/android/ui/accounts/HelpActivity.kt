@@ -7,17 +7,25 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.text.TextUtils
 import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.core.view.isVisible
 import dagger.hilt.android.AndroidEntryPoint
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode.MAIN
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.databinding.HelpActivityBinding
+import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.action.AccountAction.FETCH_ACCOUNT
+import org.wordpress.android.fluxc.generated.AccountActionBuilder
+import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.support.SupportHelper
 import org.wordpress.android.support.ZendeskExtraTags
@@ -28,6 +36,8 @@ import org.wordpress.android.ui.AppLogViewerActivity
 import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
 import org.wordpress.android.ui.prefs.AppPrefs
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T.API
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.image.ImageType.AVATAR_WITHOUT_BACKGROUND
 import org.wordpress.android.viewmodel.observeEvent
@@ -41,6 +51,8 @@ class HelpActivity : LocaleAwareActivity() {
     @Inject lateinit var supportHelper: SupportHelper
     @Inject lateinit var zendeskHelper: ZendeskHelper
     @Inject lateinit var meGravatarLoader: MeGravatarLoader
+    @Inject lateinit var mDispatcher: Dispatcher
+
     private lateinit var binding: HelpActivityBinding
     @Suppress("DEPRECATION") private var signingOutProgressDialog: ProgressDialog? = null
 
@@ -120,6 +132,16 @@ class HelpActivity : LocaleAwareActivity() {
         binding.refreshContactEmailText()
     }
 
+    override fun onStart() {
+        super.onStart()
+        mDispatcher.register(this)
+    }
+
+    override fun onStop() {
+        mDispatcher.unregister(this)
+        super.onStop()
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == android.R.id.home) {
             onBackPressed()
@@ -173,13 +195,35 @@ class HelpActivity : LocaleAwareActivity() {
 
         if (accountStore.hasAccessToken()) {
             val defaultAccount = accountStore.account
-            logOutButtonContainer.isVisible = true
-            userDetailsContainer.isVisible = true
-            loadAvatar(defaultAccount.avatarUrl.orEmpty())
-            userDisplayName.text = defaultAccount.displayName.ifEmpty { defaultAccount.userName }
-            userName.text = getString(R.string.at_username, defaultAccount.userName)
-            logOutButton.setOnClickListener { logOut() }
-            observeViewModelEvents()
+            if (TextUtils.isEmpty(defaultAccount.userName)) {
+                mDispatcher.dispatch(AccountActionBuilder.newFetchAccountAction())
+            } else {
+                loadAccountDataForJetpackMigrationHelp(defaultAccount)
+            }
+        }
+    }
+
+    private fun HelpActivityBinding.loadAccountDataForJetpackMigrationHelp(account: AccountModel) {
+        logOutButtonContainer.isVisible = true
+        userDetailsContainer.isVisible = true
+        loadAvatar(account.avatarUrl.orEmpty())
+        userDisplayName.text = account.displayName.ifEmpty { account.userName }
+        userName.text = getString(R.string.at_username, account.userName)
+        logOutButton.setOnClickListener { logOut() }
+        observeViewModelEvents()
+    }
+
+    @Subscribe(threadMode = MAIN)
+    fun onAccountChanged(event: OnAccountChanged) {
+        if (event.isError) {
+            val error = "${event.error.type} - ${event.error.message}"
+            AppLog.e(API, "HelpActivity.onAccountChanged error: $error")
+            return
+        }
+        if (originFromExtras == Origin.JETPACK_MIGRATION_HELP &&
+                event.causeOfChange == FETCH_ACCOUNT &&
+                !TextUtils.isEmpty(accountStore.account.userName)) {
+            binding.loadAccountDataForJetpackMigrationHelp(accountStore.account)
         }
     }
 

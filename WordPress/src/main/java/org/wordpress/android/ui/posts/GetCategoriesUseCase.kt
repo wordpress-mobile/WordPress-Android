@@ -58,7 +58,7 @@ class GetCategoriesUseCase @Inject constructor(
         return StringEscapeUtils.unescapeHtml4(formattedCategories)
     }
 
-    private fun getCategoriesForSite(siteModel: SiteModel): List<TermModel> {
+    fun getCategoriesForSite(siteModel: SiteModel): List<TermModel> {
         return taxonomyStore.getCategoriesForSite(siteModel)
     }
 }

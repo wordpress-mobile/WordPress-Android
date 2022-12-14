@@ -30,12 +30,6 @@ repositories {
         }
     }
     maven {
-        url "https://a8c-libs.s3.amazonaws.com/android/hermes-mirror"
-        content {
-            includeGroup "org.wordpress-mobile"
-        }
-    }
-    maven {
         url "https://a8c-libs.s3.amazonaws.com/android/react-native-mirror"
         content {
             includeGroup "com.facebook.react"
@@ -269,10 +263,13 @@ android {
         // MPAndroidChart uses androidX - remove this line when we migrate everything to androidX
         exclude 'META-INF/proguard/androidx-annotations.pro'
 
-        // Exclude React Native's JSC and Hermes debug binaries
+        // Exclude React Native's JSC and Fabric JNI
         exclude '**/libjscexecutor.so'
-        exclude '**/libhermes-inspector.so'
-        exclude '**/libhermes-executor-debug.so'
+        exclude '**/libfabricjni.so'
+
+        // Avoid React Native's JNI duplicated classes
+        pickFirst '**/libc++_shared.so'
+        pickFirst '**/libfbjni.so'
 
         pickFirst 'META-INF/-no-jdk.kotlin_module'
 
@@ -291,7 +288,7 @@ android {
         compose true
 
         composeOptions {
-            kotlinCompilerExtensionVersion = androidxComposeVersion
+            kotlinCompilerExtensionVersion = androidxComposeCompilerVersion
         }
     }
 }
@@ -351,18 +348,22 @@ dependencies {
         exclude group: 'org.wordpress', module: 'utils'
     }
     implementation "$gradle.ext.aboutAutomatticBinaryPath:$automatticAboutVersion"
-    implementation "$gradle.ext.storiesAndroidPath:$automatticStoriesVersion"
+    implementation ("$gradle.ext.storiesAndroidPath:$automatticStoriesVersion") {
+        exclude group: 'androidx.navigation', module: 'navigation-fragment-ktx'
+        exclude group: 'androidx.navigation', module: 'navigation-ui-ktx'
+    }
     implementation "$gradle.ext.storiesAndroidMp4ComposePath:$automatticStoriesVersion"
 
     implementation "com.automattic:Automattic-Tracks-Android:$automatticTracksVersion"
     implementation ("com.automattic:rest:$automatticRestVersion") {
         exclude group: 'com.mcxiaoke.volley'
     }
-    implementation "org.wordpress:graphview:$wordPressGraphviewVersion"
     implementation "org.wordpress:persistentedittext:$wordPressPersistentEditTextVersion"
-    implementation "org.wordpress:emailchecker2:$wordPressEmailChecker2Version"
 
+    // To enable Android Studio specific features for Jetpack Compose.
     debugImplementation "androidx.compose.ui:ui-tooling:$androidxComposeVersion"
+    implementation "androidx.compose.ui:ui-tooling-preview:$androidxComposeVersion"
+    // To enable Stetho, a debug bridge that enables the Chrome Developer Tools for debug purposes.
     debugImplementation "com.facebook.stetho:stetho:$stethoVersion"
     debugImplementation "com.facebook.stetho:stetho-okhttp3:$stethoVersion"
 
@@ -370,12 +371,9 @@ dependencies {
     implementation "androidx.core:core:$androidxCoreVersion"
     implementation "androidx.core:core-ktx:$androidxCoreVersion"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$androidxLifecycleVersion"
-    implementation "androidx.legacy:legacy-support-core-ui:$androidXLegacySupportCoreUiVersion"
     implementation "androidx.fragment:fragment:$androidxFragmentVersion"
     implementation "androidx.fragment:fragment-ktx:$androidxFragmentVersion"
     implementation "androidx.multidex:multidex:$androidXMultidexVersion"
-    implementation "androidx.legacy:legacy-support-v4:$androidXLegacySupportV4Version"
-    implementation "androidx.exifinterface:exifinterface:$androidXExifInterfaceVersion"
     implementation "androidx.media:media:$androidxMediaVersion"
     implementation "androidx.appcompat:appcompat:$androidxAppcompatVersion"
     implementation "androidx.cardview:cardview:$androidxCardviewVersion"
@@ -399,6 +397,7 @@ dependencies {
     implementation "com.android.installreferrer:installreferrer:$androidInstallReferrerVersion"
     implementation "com.github.chrisbanes:PhotoView:$chrisbanesPhotoviewVersion"
     implementation "org.greenrobot:eventbus:$eventBusVersion"
+    implementation "org.greenrobot:eventbus-java:$eventBusVersion"
     implementation "com.squareup.okio:okio:$squareupOkioVersion"
     implementation "org.apache.commons:commons-text:$apacheCommonsTextVersion"
     implementation "com.airbnb.android:lottie:$lottieVersion"
@@ -411,12 +410,16 @@ dependencies {
     implementation "com.github.bumptech.glide:glide:$glideVersion"
     kapt "com.github.bumptech.glide:compiler:$glideVersion"
     implementation "com.github.bumptech.glide:volley-integration:$glideVolleyVersion"
-    implementation "androidx.compose.ui:ui:$androidxComposeVersion"
-    implementation "androidx.compose.foundation:foundation:$androidxComposeVersion"
-    implementation "androidx.compose.material:material:$androidxComposeVersion"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:$androidxLifecycleVersion"
-    implementation "androidx.compose.ui:ui-tooling-preview:$androidxComposeVersion"
+    implementation "androidx.compose.runtime:runtime:$androidxComposeVersion"
     implementation "androidx.compose.runtime:runtime-livedata:$androidxComposeVersion"
+    implementation "androidx.compose.foundation:foundation:$androidxComposeVersion"
+    implementation "androidx.compose.foundation:foundation-layout:$androidxComposeVersion"
+    implementation "androidx.compose.ui:ui:$androidxComposeVersion"
+    implementation "androidx.compose.ui:ui-graphics:$androidxComposeVersion"
+    implementation "androidx.compose.ui:ui-text:$androidxComposeVersion"
+    implementation "androidx.compose.ui:ui-unit:$androidxComposeVersion"
+    implementation "androidx.compose.material:material:$androidxComposeVersion"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:$androidxComposeLifecycleVersion"
     implementation "io.coil-kt:coil-compose:$coilComposeVersion"
     implementation ('com.github.indexos.media-for-mobile:android:43a9026f0973a2f0a74fa813132f6a16f7499c3a')
     implementation (group: 'com.zendesk', name: 'support', version: "$zendeskVersion") {
@@ -450,34 +453,29 @@ dependencies {
     testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$gradle.ext.kotlinVersion"
     testImplementation "org.assertj:assertj-core:$assertjVersion"
     testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$kotlinxCoroutinesVersion"
-    testImplementation "androidx.test:core:$androidxTestCoreVersion"
-    testImplementation('org.bouncycastle:bcprov-jdk15on') {
-        version {
-            strictly "$bouncycastleVersion"
-        }
-    }
 
     androidTestImplementation project(path:':libs:mocks')
 
     androidTestImplementation "org.mockito:mockito-android:$mockitoVersion"
     androidTestImplementation "org.mockito.kotlin:mockito-kotlin:$mockitoKotlinVersion"
-    androidTestImplementation "com.squareup.okhttp:mockwebserver:$squareupMockWebServerVersion"
+    androidTestImplementation "com.squareup.okhttp3:mockwebserver:$squareupMockWebServerVersion"
+    androidTestImplementation "androidx.test.uiautomator:uiautomator:$androidxTestUiAutomatorVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$androidxTestEspressoVersion", {
         exclude group: 'com.android.support', module: 'support-annotations'
     }
-    androidTestImplementation "androidx.test.uiautomator:uiautomator:$androidxTestUiAutomatorVersion"
     androidTestImplementation("androidx.test.espresso:espresso-contrib:$androidxTestEspressoVersion") {
         exclude group: 'com.android.support', module: 'appcompat'
         exclude group: 'com.android.support', module: 'support-v4'
         exclude module: 'recyclerview-v7'
     }
+    androidTestImplementation "androidx.test.espresso:espresso-accessibility:$androidxTestEspressoVersion"
     androidTestImplementation("com.github.tomakehurst:wiremock:$wiremockVersion") {
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'
         exclude group: 'org.apache.commons', module: 'commons-lang3'
         exclude group: 'asm', module: 'asm'
         exclude group: 'org.json', module: 'json'
     }
-    androidTestImplementation "org.apache.httpcomponents:httpclient-android:$apacheHttpClientAndroidVersion"
+    androidTestImplementation "org.apache.httpcomponents:httpclient-android:$wiremockHttpClientVersion"
     androidTestImplementation "androidx.test:runner:$androidxTestCoreVersion"
     androidTestImplementation "androidx.test:rules:$androidxTestCoreVersion"
     androidTestImplementation "androidx.test.ext:junit:$androidxTestExtJunitVersion"
@@ -492,8 +490,6 @@ dependencies {
     androidTestImplementation "androidx.room:room-runtime:$androidxRoomVersion"
     kapt "androidx.room:room-compiler:$androidxRoomVersion"
     androidTestImplementation "androidx.room:room-ktx:$androidxRoomVersion"
-    // Enables accessibility checks in Espresso
-    androidTestImplementation "androidx.test.espresso:espresso-accessibility:$androidxTestEspressoAccessibilityVersion"
 
     // Enables Java 8+ API desugaring support
     coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:$androidDesugarVersion"

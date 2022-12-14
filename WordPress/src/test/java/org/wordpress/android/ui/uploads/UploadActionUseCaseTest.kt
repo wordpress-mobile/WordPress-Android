@@ -17,6 +17,7 @@ import org.wordpress.android.ui.posts.PostUtilsWrapper
 import org.wordpress.android.ui.uploads.UploadActionUseCase.UploadAction
 import org.wordpress.android.util.DateTimeUtils
 import java.util.Date
+import java.util.function.Consumer
 
 private val POST_STATE_DRAFT = PostStatus.DRAFT.toString()
 
@@ -109,11 +110,11 @@ class UploadActionUseCaseTest {
         val siteModel: SiteModel = createSiteModel()
 
         // Act and Assert
-        assertThat(posts).allSatisfy { post ->
+        assertThat(posts).allSatisfy(Consumer { post ->
             val action = uploadActionUseCase.getAutoUploadAction(post, siteModel)
 
             assertThat(action).isEqualTo(UploadAction.DO_NOTHING)
-        }
+        })
     }
 
     @Test

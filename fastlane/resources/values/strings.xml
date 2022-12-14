@@ -1522,8 +1522,8 @@
     <string name="search_sites">Search sites</string>
     <string name="notifications_no_search_results">No sites matched \'%s\'</string>
     <string name="notification_sound_has_invalid_path">The chosen sound has invalid path. Please choose another.</string>
-    <string name="notification_disable_broadcast_permission_label">disable WordPress notifications</string>
-    <string name="notification_disable_broadcast_permission_desc">Allows the app to disable WordPress notifications.</string>
+    <string name="notification_disable_broadcast_permission_label" tools:ignore="UnusedResources">disable WordPress notifications</string>
+    <string name="notification_disable_broadcast_permission_desc" tools:ignore="UnusedResources">Allows the app to disable WordPress notifications.</string>
 
     <string name="notification_settings_followed_dialog_email_posts_switch">Email me new posts</string>
     <string name="notification_settings_followed_dialog_notification_posts_description">Receive notifications for new posts from this site</string>
