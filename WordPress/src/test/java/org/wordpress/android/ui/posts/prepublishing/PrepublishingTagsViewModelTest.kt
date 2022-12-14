@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.posts.prepublishing
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.advanceUntilIdle
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -63,6 +64,7 @@ class PrepublishingTagsViewModelTest : BaseUnitTest() {
 
         viewModel.start(mock())
         viewModel.onTagsSelected(expectedTags)
+        advanceUntilIdle()
 
         assertThat(captor.value).isEqualTo(expectedTags)
     }

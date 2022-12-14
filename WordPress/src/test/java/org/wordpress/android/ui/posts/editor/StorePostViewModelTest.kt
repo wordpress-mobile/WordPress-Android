@@ -2,6 +2,7 @@ package org.wordpress.android.ui.posts.editor
 
 import android.content.Context
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.advanceUntilIdle
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -83,7 +84,7 @@ class StorePostViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `delays save call`() {
+    fun `delays save call`() = test {
         var event: Event<Unit>? = null
         viewModel.onSavePostTriggered.observeForever {
             event = it
@@ -91,6 +92,7 @@ class StorePostViewModelTest : BaseUnitTest() {
         assertThat(event).isNull()
 
         viewModel.savePostWithDelay()
+        advanceUntilIdle()
 
         assertThat(event).isNotNull()
     }

@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModelStore
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.advanceUntilIdle
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Assert.assertTrue
 import org.junit.Before
@@ -1388,7 +1389,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given dashboard tab has qs focus point, when tab is changed, then dashboard pending task is active`() {
+    fun `given dashboard tab has qs focus point, when tab is changed, then dashboard pending task is active`() = test {
         initSelectedSite(
                 isMySiteTabsBuildConfigEnabled = true,
                 initialScreen = MySiteTabType.DASHBOARD.label
@@ -1397,6 +1398,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         quickStartTabStep.value = QuickStartTabStep(true, pendingTask, MySiteTabType.DASHBOARD)
 
         viewModel.onTabChanged(viewModel.orderedTabTypes.indexOf(MySiteTabType.DASHBOARD))
+        advanceUntilIdle()
 
         verify(quickStartRepository).setActiveTask(pendingTask)
     }

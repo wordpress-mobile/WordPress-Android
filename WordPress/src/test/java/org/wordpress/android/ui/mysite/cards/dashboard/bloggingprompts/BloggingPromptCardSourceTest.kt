@@ -2,6 +2,7 @@ package org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.test.advanceUntilIdle
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -47,6 +48,7 @@ private val PROMPT = BloggingPromptModel(
         respondentsCount = 5,
         respondentsAvatarUrls = listOf()
 )
+
 @ExperimentalCoroutinesApi
 class BloggingPromptCardSourceTest : BaseUnitTest() {
     @Mock private lateinit var selectedSiteRepository: SelectedSiteRepository
@@ -145,6 +147,7 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
         bloggingPromptCardSource.refresh.observeForever { }
 
         bloggingPromptCardSource.build(testScope(), SITE_LOCAL_ID).observeForever { }
+        advanceUntilIdle()
 
         verify(bloggingPromptsStore).fetchPrompts(eq(siteModel), eq(20), any())
     }
@@ -331,12 +334,13 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
         bloggingPromptCardSource.build(testScope(), SITE_LOCAL_ID).observeForever { }
 
         bloggingPromptCardSource.refresh()
+        advanceUntilIdle()
 
         assertThat(result.size).isEqualTo(5)
         assertThat(result[0]).isFalse // init
         assertThat(result[1]).isTrue // build(...) -> refresh()
-        assertThat(result[2]).isFalse // build(...) -> bloggingPromptCardSource.fetchPrompts(...) -> success
-        assertThat(result[3]).isTrue // refresh()
+        assertThat(result[2]).isTrue // build(...) -> bloggingPromptCardSource.fetchPrompts(...) -> success
+        assertThat(result[3]).isFalse // refresh()
         assertThat(result[4]).isFalse // refreshData(...) -> bloggingPromptCardSource.fetchPrompts(...) -> success
     }
 
@@ -351,10 +355,10 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
         bloggingPromptCardSource.build(testScope(), SITE_LOCAL_ID).observeForever { }
 
         bloggingPromptCardSource.refreshTodayPrompt()
+        advanceUntilIdle()
 
-        assertThat(singlePromptRefreshResult.size).isEqualTo(2)
+        assertThat(singlePromptRefreshResult.size).isEqualTo(1)
         assertThat(singlePromptRefreshResult[0]).isFalse // init
-        assertThat(singlePromptRefreshResult[1]).isTrue // refreshTodayPrompt
     }
 
     @Test
@@ -382,12 +386,13 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
         bloggingPromptCardSource.build(testScope(), SITE_LOCAL_ID).observeForever { }
 
         bloggingPromptCardSource.refresh()
+        advanceUntilIdle()
 
         assertThat(result.size).isEqualTo(5)
         assertThat(result[0]).isFalse // init
         assertThat(result[1]).isTrue // build(...) -> refresh()
-        assertThat(result[2]).isFalse // build(...) -> bloggingPromptCardSource.fetchPrompts(...) -> success
-        assertThat(result[3]).isTrue // refresh()
+        assertThat(result[2]).isTrue // build(...) -> bloggingPromptCardSource.fetchPrompts(...) -> success
+        assertThat(result[3]).isFalse // refresh()
         assertThat(result[4]).isFalse // refreshData(...) -> bloggingPromptCardSource.fetchPrompts(...) -> success
     }
 
@@ -402,12 +407,13 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
         bloggingPromptCardSource.build(testScope(), SITE_LOCAL_ID).observeForever { }
 
         bloggingPromptCardSource.refresh()
+        advanceUntilIdle()
 
         assertThat(result.size).isEqualTo(5)
         assertThat(result[0]).isFalse // init
         assertThat(result[1]).isTrue // build(...) -> refresh()
-        assertThat(result[2]).isFalse // build(...) -> bloggingPromptCardSource.fetchPrompts(...) -> error
-        assertThat(result[3]).isTrue // refresh()
+        assertThat(result[2]).isTrue // build(...) -> bloggingPromptCardSource.fetchPrompts(...) -> error
+        assertThat(result[3]).isFalse // refresh()
         assertThat(result[4]).isFalse // refreshData(...) -> bloggingPromptCardSource.fetchPrompts(...) -> error
     }
 }

@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.reader
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.advanceUntilIdle
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -20,7 +21,7 @@ class ReaderCommentListViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `emits scroll event on scroll`() {
+    fun `emits scroll event on scroll`() = test {
         var scrollEvent: Event<ScrollPosition>? = null
         viewModel.scrollTo.observeForever {
             scrollEvent = it
@@ -30,6 +31,7 @@ class ReaderCommentListViewModelTest : BaseUnitTest() {
         val isSmooth = true
 
         viewModel.scrollToPosition(expectedPosition, isSmooth)
+        advanceUntilIdle()
 
         val scrollPosition = scrollEvent?.getContentIfNotHandled()!!
 

@@ -3,6 +3,7 @@ package org.wordpress.android.viewmodel.storage
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Observer
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.advanceUntilIdle
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
@@ -32,9 +33,10 @@ class StorageUtilsViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `view model emits checkStorageWarning event when it is the first start`() {
+    fun `view model emits checkStorageWarning event when it is the first start`() = test {
         viewModel.checkStorageWarning.observeForever(checkStorageWarningObserver)
         viewModel.start(true)
+        advanceUntilIdle()
 
         verify(checkStorageWarningObserver, times(1)).onChanged(anyOrNull())
     }

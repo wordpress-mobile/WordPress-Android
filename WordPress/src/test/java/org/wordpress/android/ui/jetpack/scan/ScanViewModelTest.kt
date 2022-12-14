@@ -2,7 +2,7 @@ package org.wordpress.android.ui.jetpack.scan
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.test.advanceTimeBy
+import kotlinx.coroutines.test.advanceUntilIdle
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -258,7 +258,7 @@ class ScanViewModelTest : BaseUnitTest() {
         val uiStates = init().uiStates
 
         (uiStates.last() as ErrorUiState).action?.invoke()
-        advanceTimeBy(RETRY_DELAY)
+        advanceUntilIdle()
 
         verify(fetchScanStateUseCase, times(2)).fetchScanState(site)
     }

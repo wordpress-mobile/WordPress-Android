@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.jetpack.scan.history
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.advanceUntilIdle
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -94,6 +95,7 @@ class ScanHistoryViewModelTest : BaseUnitTest() {
         whenever(fetchScanHistoryUseCase.fetch(site))
                 .thenReturn(FetchScanHistoryUseCase.FetchScanHistoryState.Success(listOf(mock())))
         (observers.uiStates.last() as NoConnection).retry.invoke()
+        advanceUntilIdle()
 
         assertThat(viewModel.threats.value!!.size).isEqualTo(1)
     }
@@ -107,6 +109,7 @@ class ScanHistoryViewModelTest : BaseUnitTest() {
         whenever(fetchScanHistoryUseCase.fetch(site))
                 .thenReturn(FetchScanHistoryUseCase.FetchScanHistoryState.Success(listOf(mock())))
         (observers.uiStates.last() as RequestFailed).retry.invoke()
+        advanceUntilIdle()
 
         assertThat(viewModel.threats.value!!.size).isEqualTo(1)
     }

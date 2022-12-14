@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.main
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.advanceUntilIdle
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -77,6 +78,7 @@ class MeViewModelTest : BaseUnitTest() {
         )).thenReturn(DEFAULT_SUCCESS_API_RESPONSE)
 
         viewModel.onRecommendTheApp()
+        advanceUntilIdle()
 
         verify(recommendApiCallsProvider, times(1)).getRecommendTemplate(anyString(), eq(RecommendAppSource.ME))
 
@@ -98,6 +100,7 @@ class MeViewModelTest : BaseUnitTest() {
         )).thenReturn(Failure(noNetError))
 
         viewModel.onRecommendTheApp()
+        advanceUntilIdle()
 
         assertThat(recommendUiState).isEqualTo(listOf(
                 RecommendAppUiState(showLoading = true),
@@ -113,6 +116,7 @@ class MeViewModelTest : BaseUnitTest() {
         )).thenReturn(DEFAULT_FAILURE_API_RESPONSE)
 
         viewModel.onRecommendTheApp()
+        advanceUntilIdle()
 
         assertThat(recommendUiState).isEqualTo(listOf(
                 RecommendAppUiState(showLoading = true),
@@ -131,13 +135,10 @@ class MeViewModelTest : BaseUnitTest() {
         viewModel.onRecommendTheApp()
         // second call should use the already available template
         viewModel.onRecommendTheApp()
+        advanceUntilIdle()
 
         assertThat(recommendUiState).isEqualTo(listOf(
                 RecommendAppUiState(showLoading = true),
-                RecommendAppUiState(
-                        message = DEFAULT_SUCCESS_API_RESPONSE.templateData.message,
-                        link = DEFAULT_SUCCESS_API_RESPONSE.templateData.link
-                ),
                 RecommendAppUiState(
                         message = DEFAULT_SUCCESS_API_RESPONSE.templateData.message,
                         link = DEFAULT_SUCCESS_API_RESPONSE.templateData.link
@@ -155,6 +156,7 @@ class MeViewModelTest : BaseUnitTest() {
         )).thenReturn(DEFAULT_SUCCESS_API_RESPONSE)
 
         viewModel.onRecommendTheApp()
+        advanceUntilIdle()
 
         verify(analyticsUtilsWrapper, times(1)).trackRecommendAppEngaged(eq(RecommendAppSource.ME))
     }

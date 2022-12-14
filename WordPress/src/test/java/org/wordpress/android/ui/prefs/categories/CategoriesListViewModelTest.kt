@@ -2,6 +2,7 @@ package org.wordpress.android.ui.prefs.categories
 
 import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.advanceUntilIdle
 import org.junit.Before
 import org.junit.Test
 import org.mockito.kotlin.mock
@@ -112,47 +113,51 @@ class CategoriesListViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given error occurs, when retry is invoked, then loading is displayed`() {
+    fun `given error occurs, when retry is invoked, then loading is displayed`() = test {
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
         viewModel.start(siteModel)
 
         viewModel.onTaxonomyChanged(getGenericTaxonomyError())
         (uiStates.last() as GenericError).action.invoke()
+        advanceUntilIdle()
 
         verify(getCategoriesUseCase, times(2)).fetchSiteCategories(siteModel)
         assertTrue(uiStates.last() is Loading)
     }
 
     @Test
-    fun `given api error occurs, when retry is invoked on no network, then no network is displayed`() {
+    fun `given api error occurs, when retry is invoked on no network, then no network is displayed`() = test {
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true).thenReturn(false)
         viewModel.start(siteModel)
 
         viewModel.onTaxonomyChanged(getGenericTaxonomyError())
         (uiStates.last() as GenericError).action.invoke()
+        advanceUntilIdle()
 
         verify(getCategoriesUseCase, times(1)).fetchSiteCategories(siteModel)
         assertTrue(uiStates.last() is NoConnection)
     }
 
     @Test
-    fun `given no network, when retry is invoked, then no connection error is displayed`() {
+    fun `given no network, when retry is invoked, then no connection error is displayed`() = test {
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
         viewModel.start(siteModel)
 
         (uiStates.last() as NoConnection).action.invoke()
+        advanceUntilIdle()
 
         verify(getCategoriesUseCase, never()).fetchSiteCategories(siteModel)
         assertTrue(uiStates.last() is NoConnection)
     }
 
     @Test
-    fun `given network available, when retry is invoked, then list of items from network is displayed`() {
+    fun `given network available, when retry is invoked, then list of items from network is displayed`() = test {
         whenever(getCategoriesUseCase.getSiteCategories(siteModel)).thenReturn(arrayListOf(), mock())
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false).thenReturn(true)
         viewModel.start(siteModel)
 
         (uiStates.last() as NoConnection).action.invoke()
+        advanceUntilIdle()
 
         verify(getCategoriesUseCase, times(1)).fetchSiteCategories(siteModel)
         viewModel.onTaxonomyChanged(getTaxonomyChangedCallback())

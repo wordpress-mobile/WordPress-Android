@@ -118,6 +118,8 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
         viewModel.start()
         viewModel.updateQuery(MULTI_RESULT_DOMAIN_FETCH_QUERY.first)
         val captor = ArgumentCaptor.forClass(DomainsUiState::class.java)
+        advanceUntilIdle()
+
         verify(uiStateObserver, times(3)).onChanged(captor.capture())
         verifyInitialContentUiState(captor.secondValue, showProgress = true, showClearButton = true)
     }
@@ -126,46 +128,53 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
      * Verifies the UI state for after the user enters a non-empty query which results in no domain suggestions.
      */
     @Test
-    fun verifyNonEmptyUpdateQueryUiStateAfterResponseWithEmptyResults() =
-            testWithSuccessResponse(queryResultSizePair = EMPTY_RESULT_DOMAIN_FETCH_QUERY) {
-                viewModel.start()
-                viewModel.updateQuery(EMPTY_RESULT_DOMAIN_FETCH_QUERY.first)
-                val captor = ArgumentCaptor.forClass(DomainsUiState::class.java)
-                verify(uiStateObserver, times(3)).onChanged(captor.capture())
-                verifyEmptyItemsContentUiState(
-                        captor.thirdValue,
-                        showClearButton = true
-                )
-            }
+    fun verifyNonEmptyUpdateQueryUiStateAfterResponseWithEmptyResults() = testWithSuccessResponse(
+            queryResultSizePair = EMPTY_RESULT_DOMAIN_FETCH_QUERY
+    ) {
+        viewModel.start()
+        viewModel.updateQuery(EMPTY_RESULT_DOMAIN_FETCH_QUERY.first)
+        val captor = ArgumentCaptor.forClass(DomainsUiState::class.java)
+        advanceUntilIdle()
+
+        verify(uiStateObserver, times(3)).onChanged(captor.capture())
+        verifyEmptyItemsContentUiState(
+                captor.thirdValue,
+                showClearButton = true
+        )
+    }
 
     /**
      * Verifies the UI state for after the user enters a non-empty query which results in multiple domain suggestions.
      */
     @Test
-    fun verifyNonEmptyUpdateQueryUiStateAfterResponseWithMultipleResults() =
-            testWithSuccessResponse {
-                viewModel.start()
-                viewModel.updateQuery(MULTI_RESULT_DOMAIN_FETCH_QUERY.first)
-                val captor = ArgumentCaptor.forClass(DomainsUiState::class.java)
-                verify(uiStateObserver, times(3)).onChanged(captor.capture())
-                verifyVisibleItemsContentUiState(captor.thirdValue, showClearButton = true)
-            }
+    fun verifyNonEmptyUpdateQueryUiStateAfterResponseWithMultipleResults() = testWithSuccessResponse {
+        viewModel.start()
+        viewModel.updateQuery(MULTI_RESULT_DOMAIN_FETCH_QUERY.first)
+        val captor = ArgumentCaptor.forClass(DomainsUiState::class.java)
+        advanceUntilIdle()
+
+        verify(uiStateObserver, times(3)).onChanged(captor.capture())
+        verifyVisibleItemsContentUiState(captor.thirdValue, showClearButton = true)
+    }
 
     /**
      * Verifies the UI state for after the user enters a query that is unavailable which results in the domain
      * unavailability list item being shown in the domain suggestions.
      */
     @Test
-    fun verifyDomainUnavailableUiStateAfterResponseWithMultipleResults() =
-            testWithSuccessResponse(isDomainAvailableInSuggestions = false) {
-                viewModel.start()
-                viewModel.updateQuery(MULTI_RESULT_DOMAIN_FETCH_QUERY.first)
-                val captor = ArgumentCaptor.forClass(DomainsUiState::class.java)
-                verify(uiStateObserver, times(3)).onChanged(captor.capture())
-                verifyContentAndDomainValidityUiStatesAreVisible(
-                        captor.thirdValue
-                )
-            }
+    fun verifyDomainUnavailableUiStateAfterResponseWithMultipleResults() = testWithSuccessResponse(
+            isDomainAvailableInSuggestions = false
+    ) {
+        viewModel.start()
+        viewModel.updateQuery(MULTI_RESULT_DOMAIN_FETCH_QUERY.first)
+        val captor = ArgumentCaptor.forClass(DomainsUiState::class.java)
+        advanceUntilIdle()
+
+        verify(uiStateObserver, times(3)).onChanged(captor.capture())
+        verifyContentAndDomainValidityUiStatesAreVisible(
+                captor.thirdValue
+        )
+    }
 
     /**
      * Verifies the UI state for after the user enters a non-empty query which results in error.
@@ -185,6 +194,7 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
 
         viewModel.start()
         viewModel.updateQuery(queryResultErrorPair.first)
+        advanceUntilIdle()
 
         val captor = ArgumentCaptor.forClass(DomainsUiState::class.java)
         verify(uiStateObserver, times(3)).onChanged(captor.capture())
@@ -215,6 +225,7 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
 
         viewModel.start()
         viewModel.updateQuery(queryResultErrorPair.first)
+        advanceUntilIdle()
 
         val captor = ArgumentCaptor.forClass(DomainsUiState::class.java)
         verify(uiStateObserver, times(3)).onChanged(captor.capture())
@@ -235,7 +246,9 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
         viewModel.updateQuery(MULTI_RESULT_DOMAIN_FETCH_QUERY.first)
         viewModel.updateQuery("")
         val captor = ArgumentCaptor.forClass(DomainsUiState::class.java)
-        verify(uiStateObserver, times(4)).onChanged(captor.capture())
+        advanceUntilIdle()
+
+        verify(uiStateObserver, times(3)).onChanged(captor.capture())
         verifyInitialContentUiState(captor.lastValue)
     }
 

@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.posts
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.advanceUntilIdle
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -352,27 +353,29 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `verify that if storyTitleChanged then setCurrentStoryTitle is called`() {
+    fun `verify that if storyTitleChanged then setCurrentStoryTitle is called`() = test {
         val storyTitle = "Story Title"
 
         viewModel.start(editPostRepository, site, true)
         getStoryTitleUiState()?.onStoryTitleChanged?.invoke(storyTitle)
+        advanceUntilIdle()
 
         verify(storyRepositoryWrapper).setCurrentStoryTitle(eq(storyTitle))
     }
 
     @Test
-    fun `verify that if storyTitleChanged then updateStoryPostTitleUseCase is called`() {
+    fun `verify that if storyTitleChanged then updateStoryPostTitleUseCase is called`() = test {
         val storyTitle = "Story Title"
 
         viewModel.start(editPostRepository, site, true)
         getStoryTitleUiState()?.onStoryTitleChanged?.invoke(storyTitle)
+        advanceUntilIdle()
 
         verify(updateStoryTitleUseCase).updateStoryTitle(eq(storyTitle), any())
     }
 
     @Test
-    fun `verify story title is correctly updated when title is changed and publish is tapped `() {
+    fun `verify story title is correctly updated when title is changed and publish is tapped `() = test {
         // arrange
         var event: Event<PublishPost>? = null
         val storyTitle = "Story Title"
@@ -385,6 +388,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
         getStoryTitleUiState()?.onStoryTitleChanged?.invoke(storyTitle)
         val buttonUiState = getButtonUiState()
         buttonUiState?.onButtonClicked?.invoke(true)
+        advanceUntilIdle()
 
         // assert
         assertThat(event).isNotNull

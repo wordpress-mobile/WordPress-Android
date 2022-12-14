@@ -4,6 +4,7 @@ import android.content.Context
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.test.advanceUntilIdle
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -439,10 +440,10 @@ class MediaPickerViewModelTest : BaseUnitTest() {
     fun `on search searches for results`() = test {
         val query = "dog"
         setupViewModel(listOf(firstItem), singleSelectMediaPickerSetup, filter = query)
-
         assertThat(uiStates).hasSize(2)
 
         viewModel.onSearch(query)
+        advanceUntilIdle()
 
         verify(mediaPickerTracker).trackSearch(singleSelectMediaPickerSetup)
         assertThat(uiStates).hasSize(2)

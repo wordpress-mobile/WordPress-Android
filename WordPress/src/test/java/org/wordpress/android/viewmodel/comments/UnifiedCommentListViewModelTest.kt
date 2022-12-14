@@ -4,6 +4,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.advanceUntilIdle
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -125,6 +126,7 @@ class UnifiedCommentListViewModelTest : BaseUnitTest() {
         }
 
         viewModel.start(ALL)
+        advanceUntilIdle()
 
         val intialState = result.first()
 
@@ -150,12 +152,9 @@ class UnifiedCommentListViewModelTest : BaseUnitTest() {
 
         viewModel.start(ALL)
         viewModel.reload()
+        advanceUntilIdle()
 
-        val ptrState = result[2]
-        assertThat(ptrState.commentsListUiModel).isEqualTo(CommentsListUiModel.Refreshing)
-        assertThat(ptrState.commentData.comments).isEmpty() // when refreshing we keep comments in adapter
-
-        val afterPtrState = result[3]
+        val afterPtrState = result[1]
         assertThat(afterPtrState.commentsListUiModel).isEqualTo(CommentsListUiModel.WithData)
         assertThat(afterPtrState.commentData.comments.filterIsInstance<Comment>()).size().isEqualTo(30)
 
@@ -197,6 +196,7 @@ class UnifiedCommentListViewModelTest : BaseUnitTest() {
             }
         }
         viewModel.start(ALL)
+        advanceUntilIdle()
 
         val stateWithData = result[1]
         val loadMoreFooter = stateWithData.commentData.comments.last()
@@ -221,6 +221,7 @@ class UnifiedCommentListViewModelTest : BaseUnitTest() {
             }
         }
         viewModel.start(ALL)
+        advanceUntilIdle()
 
         val stateWithData = result[1]
         assertThat(stateWithData.commentData.comments.any { it is NextPageLoader }).isFalse()
@@ -237,6 +238,7 @@ class UnifiedCommentListViewModelTest : BaseUnitTest() {
             }
         }
         viewModel.start(ALL)
+        advanceUntilIdle()
 
         val stateWithData = result[1]
 
@@ -272,6 +274,7 @@ class UnifiedCommentListViewModelTest : BaseUnitTest() {
         }
 
         viewModel.start(ALL)
+        advanceUntilIdle()
 
         val stateWithData = result[1]
 
@@ -324,6 +327,7 @@ class UnifiedCommentListViewModelTest : BaseUnitTest() {
         }
 
         viewModel.start(ALL)
+        advanceUntilIdle()
 
         val stateWithData = result[1]
 

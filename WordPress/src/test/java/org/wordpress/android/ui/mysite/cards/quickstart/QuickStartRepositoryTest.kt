@@ -3,6 +3,7 @@ package org.wordpress.android.ui.mysite.cards.quickstart
 import androidx.core.text.HtmlCompat
 import com.google.android.material.snackbar.Snackbar.Callback
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.advanceUntilIdle
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -348,6 +349,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
         whenever(quickStartType.isEveryQuickStartTaskDone(quickStartStore, site.id.toLong())).thenReturn(true)
 
         quickStartRepository.completeTask(QuickStartNewSiteTask.CHECK_STATS)
+        advanceUntilIdle()
 
         assertThat(snackbars).isNotEmpty
     }

@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.comments.viewmodels
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.advanceUntilIdle
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -133,6 +134,7 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
     @Test
     fun `Should show and hide progress after start`() = test {
         viewModel.start(site, siteCommentIdentifier)
+        advanceUntilIdle()
 
         assertThat(uiState[0].showProgress).isTrue
         assertThat(uiState[2].showProgress).isFalse
@@ -155,6 +157,8 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
         whenever(getCommentUseCase.execute(site, remoteCommentId))
                 .thenReturn(null)
         viewModel.start(site, siteCommentIdentifier)
+        advanceUntilIdle()
+
         assertThat(uiState[1].editedComment).isEqualTo(CommentEssentials())
     }
 
@@ -162,6 +166,8 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
     fun `Should map CommentIdentifier to default CommentEssentials if CommentIdentifier not handled`() = test {
         // ReaderCommentIdentifier is not supported by this class yet
         viewModel.start(site, ReaderCommentIdentifier(0L, 0L, 0L))
+        advanceUntilIdle()
+
         assertThat(uiState[1].editedComment).isEqualTo(CommentEssentials())
     }
 
