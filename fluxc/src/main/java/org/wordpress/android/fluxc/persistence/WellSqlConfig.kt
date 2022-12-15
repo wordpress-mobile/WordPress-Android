@@ -36,7 +36,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 179
+        return 180
     }
 
     override fun getDbName(): String {
@@ -1887,6 +1887,9 @@ open class WellSqlConfig : DefaultWellConfig {
                 }
                 178 -> migrate(version) {
                     db.execSQL("ALTER TABLE EditorTheme ADD LIST_BLOCK_V2 BOOLEAN")
+                }
+                179 -> migrate(version) {
+                    db.execSQL("ALTER TABLE AccountModel ADD TWO_STEP_ENABLED BOOLEAN")
                 }
             }
         }
