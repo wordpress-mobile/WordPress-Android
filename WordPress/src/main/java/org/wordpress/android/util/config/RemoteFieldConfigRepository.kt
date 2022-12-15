@@ -71,6 +71,6 @@ class RemoteFieldConfigRepository
     }
 
     fun getValue(field: String): String {
-        return remoteFields.find { it.key == field }?.key ?: ""
+        return remoteFields.find { it.key == field }?.value ?: ""
     }
 }
