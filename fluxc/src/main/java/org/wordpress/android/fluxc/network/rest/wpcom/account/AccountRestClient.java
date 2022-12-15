@@ -1145,6 +1145,7 @@ public class AccountRestClient extends BaseWPComRestClient {
         account.setNewEmail(from.new_user_email);
         account.setAvatarUrl(from.avatar_URL);
         account.setPendingEmailChange(from.user_email_change_pending);
+        account.setTwoStepEnabled(from.two_step_enabled);
         account.setUsernameCanBeChanged(from.user_login_can_be_changed);
         account.setTracksOptOut(from.tracks_opt_out);
         account.setWebAddress(from.user_URL);
@@ -1173,6 +1174,10 @@ public class AccountRestClient extends BaseWPComRestClient {
         if (from.containsKey("user_email")) accountModel.setEmail((String) from.get("user_email"));
         if (from.containsKey("user_email_change_pending")) {
             accountModel.setPendingEmailChange((Boolean) from.get("user_email_change_pending"));
+        }
+        if (from.containsKey("two_step_enabled")) {
+            Object twoStepEnabledValue = from.get("two_step_enabled");
+            accountModel.setTwoStepEnabled(twoStepEnabledValue instanceof Boolean && (Boolean) twoStepEnabledValue);
         }
         if (from.containsKey("tracks_opt_out")) {
             accountModel.setTracksOptOut((Boolean) from.get("tracks_opt_out"));

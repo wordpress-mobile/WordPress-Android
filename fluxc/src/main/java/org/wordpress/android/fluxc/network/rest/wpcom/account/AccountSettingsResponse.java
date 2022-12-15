@@ -15,6 +15,7 @@ public class AccountSettingsResponse implements Response {
     public String last_name;
     public String description;
     public String new_user_email;
+    public boolean two_step_enabled;
     public boolean user_email_change_pending;
     public boolean user_login_can_be_changed;
     public String user_URL;
