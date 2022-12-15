@@ -2,8 +2,8 @@ package org.wordpress.android.ui.reader.repository
 
 import androidx.lifecycle.Observer
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.withContext
-import org.assertj.core.api.Assertions
+import kotlinx.coroutines.test.advanceUntilIdle
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -66,7 +66,7 @@ class ReaderDiscoverDataProviderTest : BaseUnitTest() {
 
         dataProvider.refreshCards()
 
-        Assertions.assertThat(requireNotNull(dataProvider.communicationChannel.value?.peekContent()))
+        assertThat(requireNotNull(dataProvider.communicationChannel.value?.peekContent()))
                 .isEqualTo(Started(REQUEST_FIRST_PAGE))
     }
 
@@ -79,7 +79,7 @@ class ReaderDiscoverDataProviderTest : BaseUnitTest() {
 
         dataProvider.onCardsUpdated(event)
 
-        Assertions.assertThat(requireNotNull(dataProvider.communicationChannel.value?.peekContent()))
+        assertThat(requireNotNull(dataProvider.communicationChannel.value?.peekContent()))
                 .isEqualTo(RemoteRequestFailure(REQUEST_FIRST_PAGE))
     }
 
@@ -92,7 +92,7 @@ class ReaderDiscoverDataProviderTest : BaseUnitTest() {
 
         dataProvider.onCardsUpdated(event)
 
-        Assertions.assertThat(requireNotNull(dataProvider.communicationChannel.value?.peekContent()))
+        assertThat(requireNotNull(dataProvider.communicationChannel.value?.peekContent()))
                 .isEqualTo(Success(REQUEST_FIRST_PAGE))
     }
 
@@ -105,7 +105,7 @@ class ReaderDiscoverDataProviderTest : BaseUnitTest() {
 
         dataProvider.onCardsUpdated(event)
 
-        Assertions.assertThat(requireNotNull(dataProvider.communicationChannel.value?.peekContent()))
+        assertThat(requireNotNull(dataProvider.communicationChannel.value?.peekContent()))
                 .isEqualTo(Success(REQUEST_FIRST_PAGE))
     }
 
@@ -116,7 +116,7 @@ class ReaderDiscoverDataProviderTest : BaseUnitTest() {
 
         dataProvider.discoverFeed.observeForever { }
 
-        Assertions.assertThat(dataProvider.discoverFeed.value).isNull()
+        assertThat(dataProvider.discoverFeed.value).isNull()
     }
 
     @Test
@@ -125,8 +125,9 @@ class ReaderDiscoverDataProviderTest : BaseUnitTest() {
         whenever(getDiscoverCardsUseCase.get()).thenReturn(createDummyReaderCardsList())
 
         dataProvider.discoverFeed.observeForever { }
+        advanceUntilIdle()
 
-        Assertions.assertThat(dataProvider.discoverFeed.value).isNotNull
+        assertThat(dataProvider.discoverFeed.value).isNotNull
     }
 
     @Test
@@ -140,10 +141,11 @@ class ReaderDiscoverDataProviderTest : BaseUnitTest() {
         val event = FetchDiscoverCardsEnded(REQUEST_FIRST_PAGE, HAS_NEW)
 
         dataProvider.onCardsUpdated(event)
+        advanceUntilIdle()
 
-        Assertions.assertThat(requireNotNull(dataProvider.discoverFeed.value))
+        assertThat(requireNotNull(dataProvider.discoverFeed.value))
                 .isInstanceOf(ReaderDiscoverCards::class.java)
-        Assertions.assertThat(requireNotNull(dataProvider.discoverFeed.value).cards.size)
+        assertThat(requireNotNull(dataProvider.discoverFeed.value).cards.size)
                 .isEqualTo(NUMBER_OF_ITEMS)
     }
 
@@ -156,16 +158,12 @@ class ReaderDiscoverDataProviderTest : BaseUnitTest() {
         dataProvider.loadMoreCards()
 
         val started = dataProvider.communicationChannel.value?.getContentIfNotHandled()
-        Assertions.assertThat(requireNotNull(started)).isEqualTo(Started(REQUEST_MORE))
+        assertThat(requireNotNull(started)).isEqualTo(Started(REQUEST_MORE))
 
-        // Pause the dispatcher
-        withContext(testDispatcher()) {
-            dataProvider.loadMoreCards()
+        dataProvider.loadMoreCards()
 
-            val noUnhandledContent = dataProvider.communicationChannel.value?.getContentIfNotHandled()
-            Assertions.assertThat(noUnhandledContent).isNull()
-        }
-        // Resume pending coroutine so next tests don't get hung up
+        val noUnhandledContent = dataProvider.communicationChannel.value?.getContentIfNotHandled()
+        assertThat(noUnhandledContent).isNull()
     }
 
     // The following test the loadData(), which is kicked off when discoverFeed obtains observers
@@ -179,7 +177,7 @@ class ReaderDiscoverDataProviderTest : BaseUnitTest() {
         dataProvider.discoverFeed.observeForever { }
 
         val started = dataProvider.communicationChannel.value?.getContentIfNotHandled()
-        Assertions.assertThat(requireNotNull(started)).isEqualTo(Started(REQUEST_FIRST_PAGE))
+        assertThat(requireNotNull(started)).isEqualTo(Started(REQUEST_FIRST_PAGE))
     }
 
     @Test
@@ -191,7 +189,7 @@ class ReaderDiscoverDataProviderTest : BaseUnitTest() {
         dataProvider.discoverFeed.observeForever { }
 
         val started = dataProvider.communicationChannel.value?.getContentIfNotHandled()
-        Assertions.assertThat(started).isNull()
+        assertThat(started).isNull()
     }
 
     @Test
@@ -204,9 +202,10 @@ class ReaderDiscoverDataProviderTest : BaseUnitTest() {
 
         // Add observer
         dataProvider.discoverFeed.observeForever { }
+        advanceUntilIdle()
 
         val data = dataProvider.discoverFeed.value
-        Assertions.assertThat(data).isNotNull
+        assertThat(data).isNotNull
     }
 
     @Test
@@ -229,12 +228,13 @@ class ReaderDiscoverDataProviderTest : BaseUnitTest() {
 
         // add an observer
         dataProvider.discoverFeed.observeForever { }
+        advanceUntilIdle()
 
         // Validate that data exists in the feed
         val data = dataProvider.discoverFeed.value
-        Assertions.assertThat(data).isNotNull
+        assertThat(data).isNotNull
 
-        Assertions.assertThat(data?.cards?.size).isEqualTo(NUMBER_OF_ITEMS)
+        assertThat(data?.cards?.size).isEqualTo(NUMBER_OF_ITEMS)
     }
 
     @Test
