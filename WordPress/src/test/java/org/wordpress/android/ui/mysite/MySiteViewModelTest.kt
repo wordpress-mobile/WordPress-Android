@@ -143,6 +143,7 @@ import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.WPMediaUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.BloggingPromptsFeatureConfig
+import org.wordpress.android.util.config.BloggingPromptsListFeatureConfig
 import org.wordpress.android.util.config.LandOnTheEditorFeatureConfig
 import org.wordpress.android.util.config.MySiteDashboardTabsFeatureConfig
 import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
@@ -185,6 +186,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var buildConfigWrapper: BuildConfigWrapper
     @Mock lateinit var mySiteDashboardTabsFeatureConfig: MySiteDashboardTabsFeatureConfig
     @Mock lateinit var bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig
+    @Mock lateinit var bloggingPromptsListFeatureConfig: BloggingPromptsListFeatureConfig
     @Mock lateinit var contentMigrationAnalyticsTracker: ContentMigrationAnalyticsTracker
     @Mock lateinit var jetpackBrandingUtils: JetpackBrandingUtils
     @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
@@ -341,6 +343,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun init(
         isMySiteDashboardTabsFeatureFlagEnabled: Boolean = true,
         isBloggingPromptsFeatureConfigEnabled: Boolean = true,
+        isBloggingPromptsListFeatureConfigEnabled: Boolean = true,
         shouldShowJetpackBranding: Boolean = true
     ) = test {
         onSiteChange.value = null
@@ -348,6 +351,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         onSiteSelected.value = null
         selectedSite.value = null
         whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(isBloggingPromptsFeatureConfigEnabled)
+        whenever(bloggingPromptsListFeatureConfig.isEnabled()).thenReturn(isBloggingPromptsListFeatureConfigEnabled)
         whenever(mySiteDashboardTabsFeatureConfig.isEnabled()).thenReturn(isMySiteDashboardTabsFeatureFlagEnabled)
         whenever(jetpackBrandingUtils.shouldShowJetpackBranding()).thenReturn(shouldShowJetpackBranding)
         whenever(mySiteSourceManager.build(any(), anyOrNull())).thenReturn(partialStates)
@@ -391,6 +395,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 buildConfigWrapper,
                 mySiteDashboardTabsFeatureConfig,
                 bloggingPromptsFeatureConfig,
+                bloggingPromptsListFeatureConfig,
                 jetpackBrandingUtils,
                 appPrefsWrapper,
                 bloggingPromptsCardAnalyticsTracker,
@@ -1629,13 +1634,46 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Test
     fun `blogging prompt card is not added to the dashboard when FF is OFF`() = test {
         init(isBloggingPromptsFeatureConfigEnabled = false)
-
         initSelectedSite()
 
         verify(cardsBuilder).build(
                 any(), any(), any(),
                 argWhere {
                     it.bloggingPromptCardBuilderParams.bloggingPrompt == null
+                },
+                any(),
+                any()
+        )
+    }
+
+    @Suppress("SimplifyBooleanWithConstants")
+    @InternalCoroutinesApi
+    @Test
+    fun `given blogging prompt card, when prompts list FF is ON, view more action is shown`() = test {
+        init(isBloggingPromptsListFeatureConfigEnabled = true)
+        initSelectedSite()
+
+        verify(cardsBuilder, times(2)).build(
+                any(), any(), any(),
+                argWhere {
+                    it.bloggingPromptCardBuilderParams.showViewMoreAction == true
+                },
+                any(),
+                any()
+        )
+    }
+
+    @Suppress("SimplifyBooleanWithConstants")
+    @InternalCoroutinesApi
+    @Test
+    fun `given blogging prompt card, when prompts list FF is OFF, view more action is not shown`() = test {
+        init(isBloggingPromptsListFeatureConfigEnabled = false)
+        initSelectedSite()
+
+        verify(cardsBuilder).build(
+                any(), any(), any(),
+                argWhere {
+                    it.bloggingPromptCardBuilderParams.showViewMoreAction == false
                 },
                 any(),
                 any()
@@ -3070,9 +3108,10 @@ class MySiteViewModelTest : BaseUnitTest() {
                 isAnswered = false,
                 promptId = bloggingPromptId,
                 attribution = BloggingPromptAttribution.DAY_ONE,
+                showViewMoreAction = params.bloggingPromptCardBuilderParams.showViewMoreAction,
                 onShareClick = onBloggingPromptShareClicked as ((message: String) -> Unit),
                 onAnswerClick = onBloggingPromptAnswerClicked as ((promptId: Int) -> Unit),
-                onSkipClick = onBloggingPromptSkipClicked as (() -> Unit)
+                onSkipClick = onBloggingPromptSkipClicked as (() -> Unit),
         )
     }
 
