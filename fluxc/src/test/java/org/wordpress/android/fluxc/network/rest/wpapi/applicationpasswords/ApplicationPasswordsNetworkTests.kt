@@ -28,7 +28,7 @@ import kotlin.test.assertIs
 
 @ExperimentalCoroutinesApi
 @RunWith(RobolectricTestRunner::class)
-class ApplicationPasswordNetworkTests {
+class ApplicationPasswordsNetworkTests {
     private val testSite = SiteModel().apply {
         url = "http://test-site.com"
     }
@@ -40,34 +40,34 @@ class ApplicationPasswordNetworkTests {
     private val requestQueue: RequestQueue = mock()
     private val userAgent: UserAgent = mock()
     private val listener: ApplicationPasswordsListener = mock()
-    private val applicationPasswordManager: ApplicationPasswordManager = mock()
-    private lateinit var network: ApplicationPasswordNetwork
+    private val mApplicationPasswordsManager: ApplicationPasswordsManager = mock()
+    private lateinit var network: ApplicationPasswordsNetwork
 
     @Before
     fun setup() {
-        network = ApplicationPasswordNetwork(
+        network = ApplicationPasswordsNetwork(
             requestQueue = requestQueue,
             userAgent = userAgent,
             listener = Optional.of(listener)
         ).apply {
-            applicationPasswordManager = this@ApplicationPasswordNetworkTests.applicationPasswordManager
+            mApplicationPasswordsManager = this@ApplicationPasswordsNetworkTests.mApplicationPasswordsManager
         }
     }
 
     @Test
     fun `when sending a new request, then fetch the application password`() = runBlockingTest {
         givenSuccessResponse()
-        whenever(applicationPasswordManager.getApplicationCredentials(testSite))
+        whenever(mApplicationPasswordsManager.getApplicationCredentials(testSite))
             .thenReturn(ApplicationPasswordCreationResult.Created(testCredentials))
 
         network.executeGsonRequest(testSite, HttpMethod.GET, "path", TestResponse::class.java)
 
-        verify(applicationPasswordManager).getApplicationCredentials(testSite)
+        verify(mApplicationPasswordsManager).getApplicationCredentials(testSite)
     }
 
     @Test
     fun `given a locally existing password, when password is revoked, then regenerate a new one`() = runBlockingTest {
-        whenever(applicationPasswordManager.getApplicationCredentials(testSite))
+        whenever(mApplicationPasswordsManager.getApplicationCredentials(testSite))
             .thenReturn(ApplicationPasswordCreationResult.Existing(testCredentials))
             .thenReturn(ApplicationPasswordCreationResult.Created(testCredentials))
         val networkError = VolleyError(NetworkResponse(401, byteArrayOf(), true, 0, emptyList()))
@@ -75,15 +75,15 @@ class ApplicationPasswordNetworkTests {
 
         network.executeGsonRequest(testSite, HttpMethod.GET, "path", TestResponse::class.java)
 
-        verify(applicationPasswordManager).deleteLocalApplicationPassword(testSite)
-        verify(applicationPasswordManager, times(2)).getApplicationCredentials(testSite)
+        verify(mApplicationPasswordsManager).deleteLocalApplicationPassword(testSite)
+        verify(mApplicationPasswordsManager, times(2)).getApplicationCredentials(testSite)
     }
 
     @Test
     fun `given request succeeds, when request is executed, then return the response`() = runBlockingTest {
         val expectedResponse = TestResponse("value")
         givenSuccessResponse(expectedResponse)
-        whenever(applicationPasswordManager.getApplicationCredentials(testSite))
+        whenever(mApplicationPasswordsManager.getApplicationCredentials(testSite))
             .thenReturn(ApplicationPasswordCreationResult.Existing(testCredentials))
 
         val response = network.executeGsonRequest(testSite, HttpMethod.GET, "path", TestResponse::class.java)
@@ -96,7 +96,7 @@ class ApplicationPasswordNetworkTests {
     fun `given request fails, when request is executed, then return the error`() = runBlockingTest {
         val networkError = VolleyError(NetworkResponse(500, byteArrayOf(), true, 0, emptyList()))
         givenErrorResponse(networkError)
-        whenever(applicationPasswordManager.getApplicationCredentials(testSite))
+        whenever(mApplicationPasswordsManager.getApplicationCredentials(testSite))
             .thenReturn(ApplicationPasswordCreationResult.Existing(testCredentials))
 
         val response = network.executeGsonRequest(testSite, HttpMethod.GET, "path", TestResponse::class.java)
@@ -109,7 +109,7 @@ class ApplicationPasswordNetworkTests {
     fun `given site doesn't support application passwords, when a new request, then notify listener`() =
         runBlockingTest {
             val networkError = BaseNetworkError(VolleyError(NetworkResponse(501, byteArrayOf(), true, 0, emptyList())))
-            whenever(applicationPasswordManager.getApplicationCredentials(testSite))
+            whenever(mApplicationPasswordsManager.getApplicationCredentials(testSite))
                 .thenReturn(ApplicationPasswordCreationResult.NotSupported(BaseNetworkError(networkError)))
 
             network.executeGsonRequest(testSite, HttpMethod.GET, "path", TestResponse::class.java)
@@ -121,7 +121,7 @@ class ApplicationPasswordNetworkTests {
     fun `when a new password is created, then notify listener`() =
         runBlockingTest {
             givenSuccessResponse()
-            whenever(applicationPasswordManager.getApplicationCredentials(testSite))
+            whenever(mApplicationPasswordsManager.getApplicationCredentials(testSite))
                 .thenReturn(ApplicationPasswordCreationResult.Created(testCredentials))
 
             network.executeGsonRequest(testSite, HttpMethod.GET, "path", TestResponse::class.java)
