@@ -8,7 +8,8 @@ APP_SPECIFIC_VALUES = {
     glotpress_metadata_project: 'https://translate.wordpress.org/projects/apps/android/release-notes/',
     package_name: 'org.wordpress.android',
     bundle_name_prefix: 'wpandroid',
-    screenshots_test_class: 'org.wordpress.android.ui.screenshots.WPScreenshotTest'
+    screenshots_test_class: 'org.wordpress.android.ui.screenshots.WPScreenshotTest',
+    screenshot_config_file: 'wordpress-config.json'
   },
   jetpack: {
     display_name: 'Jetpack',
@@ -17,7 +18,8 @@ APP_SPECIFIC_VALUES = {
     glotpress_metadata_project: 'https://translate.wordpress.com/projects/jetpack/apps/android/release-notes/',
     package_name: 'com.jetpack.android',
     bundle_name_prefix: 'jpandroid',
-    screenshots_test_class: 'org.wordpress.android.ui.screenshots.JPScreenshotTest'
+    screenshots_test_class: 'org.wordpress.android.ui.screenshots.JPScreenshotTest',
+    screenshot_config_file: 'jetpack-config.json'
   }
 }.freeze
 

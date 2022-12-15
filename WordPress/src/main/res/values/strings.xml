@@ -550,13 +550,21 @@
     <!-- category management -->
     <string name="categories">Categories</string>
     <string name="add_new_category">Add new category</string>
+    <string name="update_category">Update category</string>
     <string name="category_name">Category name</string>
     <string name="category_parent">Parent category (optional):</string>
     <string name="adding_cat">Adding category</string>
+    <string name="updating_cat">Updating category</string>
+    <string name="deleting_cat">Deleting category</string>
     <string name="adding_cat_failed">Adding category failed</string>
     <string name="adding_cat_success">Category added successfully</string>
+    <string name="updating_cat_failed">Updating category failed</string>
+    <string name="updating_cat_success">Category updated successfully</string>
+    <string name="deleting_cat_failed">Deleting category failed</string>
+    <string name="deleting_cat_success">Category deleted successfully</string>
     <string name="cat_name_required">The category name field is required</string>
     <string name="top_level_category_name">Top level</string>
+    <string name="dlg_confirm_delete_category">Permanently delete \'%s\' Category?</string>
 
 
     <!-- action from share intents -->
@@ -931,6 +939,7 @@
     <string name="preference_open_debug_settings" translatable="false">Debug settings</string>
     <string name="debug_settings_remote_features" translatable="false">Remote features</string>
     <string name="debug_settings_features_in_development" translatable="false">Features in development</string>
+    <string name="debug_settings_remote_field_configs" translatable="false">Remote Field configs</string>
     <string name="debug_settings_restart_app" translatable="false">Restart the app</string>
     <string name="debug_settings_missing_developed_feature" translatable="false">Don\'t see a feature you\'re working on? Check that your feature config file is annotated with the FeatureInDevelopment annotation.</string>
     <string name="debug_settings_tools" translatable="false">Tools</string>
@@ -1522,8 +1531,8 @@
     <string name="search_sites">Search sites</string>
     <string name="notifications_no_search_results">No sites matched \'%s\'</string>
     <string name="notification_sound_has_invalid_path">The chosen sound has invalid path. Please choose another.</string>
-    <string name="notification_disable_broadcast_permission_label">disable WordPress notifications</string>
-    <string name="notification_disable_broadcast_permission_desc">Allows the app to disable WordPress notifications.</string>
+    <string name="notification_disable_broadcast_permission_label" tools:ignore="UnusedResources">disable WordPress notifications</string>
+    <string name="notification_disable_broadcast_permission_desc" tools:ignore="UnusedResources">Allows the app to disable WordPress notifications.</string>
 
     <string name="notification_settings_followed_dialog_email_posts_switch">Email me new posts</string>
     <string name="notification_settings_followed_dialog_notification_posts_description">Receive notifications for new posts from this site</string>
@@ -4304,7 +4313,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="wp_jetpack_continue_without_jetpack">Continue without Jetpack</string>
 
     <string name="wp_jetpack_deep_link_overlay_title">Open links in Jetpack?</string>
-    <string name="wp_jetpack_deep_link_overlay_description">It looks like you have the Jetpack app installed.\n\nWould you like to open links in the Jetpack app in the future?\n\nYou can always change this in App Settings > Open links in Jetpack</string>
+    <string name="wp_jetpack_deep_link_overlay_description">It looks like you have the Jetpack app installed.\n\nWould you like to open links in the Jetpack app in the future?\n\nYou can always change this in App Settings &gt; Open links in Jetpack</string>
     <string name="wp_jetpack_deep_link_open_in_jetpack" translatable="false">@string/preference_open_links_in_jetpack</string>
     <string name="wp_jetpack_deep_link_open_in_wordpress">Open links in WordPress</string>
 </resources>

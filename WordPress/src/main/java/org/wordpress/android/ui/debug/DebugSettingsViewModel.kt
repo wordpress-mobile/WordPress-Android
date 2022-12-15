@@ -12,6 +12,7 @@ import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Feature
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Feature.State.DISABLED
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Feature.State.ENABLED
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Feature.State.UNKNOWN
+import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Field
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Header
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Row
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.ToggleAction
@@ -26,7 +27,9 @@ import org.wordpress.android.util.DebugUtils
 import org.wordpress.android.util.config.FeaturesInDevelopment
 import org.wordpress.android.util.config.ManualFeatureConfig
 import org.wordpress.android.util.config.FeatureFlagConfig
-import org.wordpress.android.util.config.RemoteConfigDefaults
+import org.wordpress.android.util.config.RemoteFeatureConfigDefaults
+import org.wordpress.android.util.config.RemoteFieldConfigDefaults
+import org.wordpress.android.util.config.RemoteFieldConfigRepository
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -40,6 +43,7 @@ class DebugSettingsViewModel
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val manualFeatureConfig: ManualFeatureConfig,
     private val featureFlagConfig: FeatureFlagConfig,
+    private val remoteFieldConfigRepository: RemoteFieldConfigRepository,
     private val debugUtils: DebugUtils,
     private val weeklyRoundupNotifier: WeeklyRoundupNotifier,
     private val notificationManager: NotificationManagerWrapper,
@@ -69,6 +73,11 @@ class DebugSettingsViewModel
             uiItems.add(Header(R.string.debug_settings_features_in_development))
             uiItems.addAll(developedFeatures)
         }
+        val remoteFieldConfigs = buildRemoteFieldConfigs()
+        if (remoteFieldConfigs.isNotEmpty()) {
+            uiItems.add(Header(R.string.debug_settings_remote_field_configs))
+            uiItems.addAll(remoteFieldConfigs)
+        }
         uiItems.add(Header(R.string.debug_settings_missing_developed_feature))
         if (hasChange) {
             uiItems.add(Button(R.string.debug_settings_restart_app, debugUtils::restartApp))
@@ -97,11 +106,11 @@ class DebugSettingsViewModel
                 null
             }
             Feature(name, value, ToggleAction(name, value?.not() ?: true, this::toggleFeature))
-        }.sortedBy { it.title}
+        }.sortedBy { it.title }
     }
 
     private fun buildRemoteFeatures(): List<Feature> {
-        return RemoteConfigDefaults.remoteConfigDefaults.mapNotNull { (key, defaultValue) ->
+        return RemoteFeatureConfigDefaults.remoteFeatureConfigDefaults.mapNotNull { (key, defaultValue) ->
             val value = if (manualFeatureConfig.hasManualSetup(key)) {
                 manualFeatureConfig.isManuallyEnabled(key)
             } else {
@@ -116,6 +125,16 @@ class DebugSettingsViewModel
                 null
             }
         }.sortedBy { it.title }
+    }
+
+    private fun buildRemoteFieldConfigs(): List<Field> {
+        val remoteConfigFields = remoteFieldConfigRepository.remoteFields
+        return RemoteFieldConfigDefaults.remoteFieldConfigDefaults.mapNotNull { remoteField ->
+            val remoteConfig = remoteConfigFields.find { remoteField.key == it.key }
+            remoteConfig?.let {
+                Field(remoteField.key, remoteConfig.value.toString(), remoteConfig.source.toString())
+            }
+        }.sortedBy { it.remoteFieldKey }
     }
 
     private fun toggleFeature(remoteKey: String, value: Boolean) {
@@ -144,6 +163,9 @@ class DebugSettingsViewModel
             enum class State { ENABLED, DISABLED, UNKNOWN }
         }
 
+        data class Field(val remoteFieldKey: String, val remoteFieldValue: String, val remoteFieldSource: String) :
+                UiItem(Type.FIELD)
+
         data class Row(val title: Int, val onClick: ListItemInteraction) : UiItem(ROW)
 
         data class ToggleAction(
@@ -155,7 +177,7 @@ class DebugSettingsViewModel
         }
 
         enum class Type {
-            HEADER, FEATURE, BUTTON, ROW
+            HEADER, FEATURE, BUTTON, ROW, FIELD
         }
     }
 

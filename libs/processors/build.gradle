@@ -4,11 +4,12 @@ plugins {
 }
 
 dependencies {
-    implementation project(':libs:annotations')
-    implementation "com.google.auto.service:auto-service:$autoServiceVersion"
-    kapt "com.google.auto.service:auto-service:$autoServiceVersion"
-    implementation "com.squareup:kotlinpoet:$kotlinPoetVersion"
+    implementation project(":libs:annotations")
 
-    testImplementation "junit:junit:$jUnitVersion"
-    testImplementation "org.assertj:assertj-core:$assertJVersion"
+    implementation "com.google.auto.service:auto-service:$googleAutoServiceVersion"
+    kapt "com.google.auto.service:auto-service:$googleAutoServiceVersion"
+    implementation "com.squareup:kotlinpoet:$squareupKotlinPoetVersion"
+
+    testImplementation "junit:junit:$junitVersion"
+    testImplementation "org.assertj:assertj-core:$assertjVersion"
 }

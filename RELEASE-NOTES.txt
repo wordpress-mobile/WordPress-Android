@@ -1,5 +1,11 @@
 *** PLEASE FOLLOW THIS FORMAT: [<priority indicator, more stars = higher priority>] <description> [<PR URL>]
 
+21.4
+-----
+* [**] Adds the functionality to Add, Edit and Delete categories from site settings. [https://github.com/wordpress-mobile/WordPress-Android/pull/17652]
+* [**] [internal] Upgrade React Native from 0.66.2 to 0.69.4 [https://github.com/wordpress-mobile/gutenberg-mobile/pull/5193]
+* [*] Reader: Fix translations not applying on some texts when the language is changed via App Settings. [https://github.com/wordpress-mobile/WordPress-Android/pull/17524]
+
 21.3
 -----
 * [***] Adds a smooth, opt-in transition to the Jetpack app. [https://github.com/wordpress-mobile/WordPress-Android/pull/17538]

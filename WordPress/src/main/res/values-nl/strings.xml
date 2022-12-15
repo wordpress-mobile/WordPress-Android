@@ -1,11 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-11-25 13:03:19+0000
+Translation-Revision-Date: 2022-11-30 18:54:10+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: nl
 -->
 <resources>
+    <string name="wp_jetpack_deep_link_overlay_description">Het lijkt erop dat je de Jetpack-app geïnstalleerd hebt.\n\nWil je links in de toekomst in de Jetpack-app openen?\n\nJe kan dit altijd veranderen in App-instellingen &gt; Links openen in Jetpack</string>
+    <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_two_description">Jetpack biedt statistieken, meldingen en meer om je te helpen de WordPress-site van je dromen te bouwen.\n\nDe WordPress-app ondersteunt het maken van een nieuwe site niet meer.</string>
+    <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_one_description">Jetpack biedt statistieken, meldingen en meer om je te helpen de WordPress-site van je dromen te bouwen.</string>
+    <string name="wp_jetpack_feature_removal_site_creation_overlay_title">Maak een nieuwe WordPress-site met de Jetpack-app</string>
+    <string name="deep_linking_urilinks_alias_label">uri-links</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_notifications">Schakel over naar de Jetpack-app om  realtime meldingen te blijven ontvangen op je apparaat.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_reader">Schakel over naar de Jetpack-app om je favoriete sites en berichten te vinden, te volgen en een like te geven met Reader.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_stats">Schakel over naar de Jetpack-app om te zien hoe je bezoekersaantallen toenemen met statistieken en inzichten.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_notifications">Ontvang meldingen met de Jetpack-app</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_reader">Volg sites met de Jetpack-app</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_stats">Bekijk je statistieken met de nieuwe Jetpack-app</string>
+    <string name="preference_open_links_in_jetpack_setting_change_disable_error">Kan links openen in Jetpack niet uitschakelen</string>
+    <string name="preference_open_links_in_jetpack_setting_change_enable_error">Kan links openen in Jetpack niet inschakelen</string>
+    <string name="preference_open_links_in_jetpack">Links openen in Jetpack</string>
+    <string name="jp_migration_got_it_button">Duidelijk</string>
+    <string name="jp_migration_delete_message">&lt;b&gt;Verwijder de WordPress-app&lt;/b&gt; om&lt;br&gt;gegevensconflicten te vermijden.</string>
+    <string name="jp_migration_delete_subtitle">Het lijkt erop dat je de WordPress-app nog steeds geïnstalleerd hebt. We raden je aan om de WordPress-app te verwijderen om gegevensconflicten te vermijden.</string>
+    <string name="jp_migration_delete_title">Je hebt de WordPress-app niet meer nodig</string>
+    <string name="jp_migration_network_error_message">We kunnen je gegevens en instellingen niet overdragen zonder netwerkverbinding.</string>
+    <string name="jp_migration_network_error_subtitle">Controleer of je een netwerkverbinding hebt en probeer het opnieuw.</string>
+    <string name="jp_migration_generic_error_message">Probeer het later opnieuw of neem contact op met de klantenservice.</string>
+    <string name="jp_migration_generic_error_subtitle">Er is iets misgegaan. Je gegevens zijn veilig, maar we kunnen ze op dit moment niet overdragen.</string>
+    <string name="jp_migration_generic_error_title">Oeps, er is iets fout gegaan…</string>
+    <string name="jp_migration_try_again_button">Opnieuw proberen</string>
+    <string name="jp_migration_finish_button">Afronden</string>
+    <string name="jp_migration_remove_wp_app_icon_content_description">Verwijder pictogram WordPress-app</string>
+    <string name="jp_migration_done_delete_wp_message">&lt;b&gt;Verwijder de WordPress-app&lt;/b&gt; om&lt;br&gt;gegevensconflicten te vermijden.</string>
+    <string name="jp_migration_done_title">Bedankt dat je bent overgestapt naar Jetpack!</string>
+    <string name="jp_migration_notifications_disabled_in_wp_message">We zullen meldingen van de WordPress-app uitschakelen.</string>
+    <string name="jp_migration_notifications_title">Je krijgt nu meldingen van Jetpack</string>
+    <string name="jp_migration_success_card_message">Verwijder de WordPress-app</string>
+    <string name="wordpress_help_center_button">WordPress help centrum</string>
+    <string name="notification_disable_broadcast_permission_desc">Staat de app toe om meldingen van WordPress uit te schakelen.</string>
+    <string name="notification_disable_broadcast_permission_label">meldingen van WordPress uitschakelen</string>
     <string name="jp_migration_help_button">Hulp nodig?</string>
     <string name="jp_migration_continue_button">Doorgaan</string>
     <string name="jp_migration_welcome_site_found_message">We hebben je site gevonden. Ga door met het overdragen van je gegevens en meld je automatisch aan bij Jetpack.</string>
@@ -2254,7 +2288,7 @@ Language: nl
     <string name="signup_epilogue_hint_display">Weergavenaam</string>
     <string name="signup_epilogue_error_button_positive">Opnieuw proberen</string>
     <string name="signup_epilogue_error_button_negative">Terug draaien</string>
-    <string name="signup_epilogue_error_generic">Er waren wat problemen bij het updaten van jouw account. Je kan het opnieuw proberen of je veranderingen terug draaien om door te gaan.</string>
+    <string name="signup_epilogue_error_generic">Er waren wat problemen bij het updaten van je account. Je kan het opnieuw proberen of je veranderingen terug draaien om door te gaan.</string>
     <string name="signup_epilogue_error_avatar">Er waren problemen met het uploaden van je avatar.</string>
     <string name="plugin_needs_update">Update nodig </string>
     <string name="plugin_caption_search">Zoek plugins</string>

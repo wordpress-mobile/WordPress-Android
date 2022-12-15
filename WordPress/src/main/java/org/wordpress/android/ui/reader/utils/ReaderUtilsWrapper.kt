@@ -1,10 +1,10 @@
 package org.wordpress.android.ui.reader.utils
 
-import android.content.Context
 import dagger.Reusable
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagType
 import org.wordpress.android.ui.reader.services.update.TagUpdateClientUtilsProvider
+import org.wordpress.android.viewmodel.ContextProvider
 import javax.inject.Inject
 
 /**
@@ -15,7 +15,7 @@ import javax.inject.Inject
  */
 @Reusable
 class ReaderUtilsWrapper @Inject constructor(
-    private val appContext: Context,
+    private val contextProvider: ContextProvider,
     private val tagUpdateClientUtilsProvider: TagUpdateClientUtilsProvider
 ) {
     fun getResizedImageUrl(imageUrl: String?, width: Int, height: Int, isPrivate: Boolean, isAtomic: Boolean): String? =
@@ -32,10 +32,10 @@ class ReaderUtilsWrapper @Inject constructor(
             ReaderUtils.getTagFromTagName(tagName, tagType)
 
     fun getDefaultTagFromDbOrCreateInMemory() =
-            ReaderUtils.getDefaultTagFromDbOrCreateInMemory(appContext, tagUpdateClientUtilsProvider)
+            ReaderUtils.getDefaultTagFromDbOrCreateInMemory(contextProvider.getContext(), tagUpdateClientUtilsProvider)
 
     fun getLongLikeLabelText(numLikes: Int, isLikedByCurrentUser: Boolean): String =
-            ReaderUtils.getLongLikeLabelText(appContext, numLikes, isLikedByCurrentUser)
+            ReaderUtils.getLongLikeLabelText(contextProvider.getContext(), numLikes, isLikedByCurrentUser)
 
     fun isExternalFeed(blogId: Long, feedId: Long): Boolean = ReaderUtils.isExternalFeed(blogId, feedId)
 
@@ -54,7 +54,7 @@ class ReaderUtilsWrapper @Inject constructor(
     ) = ReaderUtils.commentExists(blogId, postId, commentId)
 
     fun getTextForCommentSnippet(numComments: Int): String? = ReaderUtils.getTextForCommentSnippet(
-            appContext,
+            contextProvider.getContext(),
             numComments
     )
 }

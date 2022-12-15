@@ -36,14 +36,15 @@ import org.wordpress.android.ui.notifications.NotificationEvents.NotificationsCh
 import org.wordpress.android.ui.notifications.NotificationEvents.NotificationsRefreshCompleted
 import org.wordpress.android.ui.notifications.NotificationEvents.NotificationsRefreshError
 import org.wordpress.android.ui.notifications.NotificationEvents.NotificationsUnseenStatus
+import org.wordpress.android.ui.notifications.NotificationsListFragment.Companion.TabPosition
+import org.wordpress.android.ui.notifications.NotificationsListFragment.Companion.TabPosition.All
+import org.wordpress.android.ui.notifications.NotificationsListFragment.Companion.TabPosition.Comment
+import org.wordpress.android.ui.notifications.NotificationsListFragment.Companion.TabPosition.Follow
+import org.wordpress.android.ui.notifications.NotificationsListFragment.Companion.TabPosition.Like
+import org.wordpress.android.ui.notifications.NotificationsListFragment.Companion.TabPosition.Unread
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter.DataLoadedListener
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter.FILTERS
-import org.wordpress.android.ui.notifications.adapters.NotesAdapter.FILTERS.FILTER_ALL
-import org.wordpress.android.ui.notifications.adapters.NotesAdapter.FILTERS.FILTER_COMMENT
-import org.wordpress.android.ui.notifications.adapters.NotesAdapter.FILTERS.FILTER_FOLLOW
-import org.wordpress.android.ui.notifications.adapters.NotesAdapter.FILTERS.FILTER_LIKE
-import org.wordpress.android.ui.notifications.adapters.NotesAdapter.FILTERS.FILTER_UNREAD
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter
 import org.wordpress.android.ui.notifications.utils.NotificationsActions
 import org.wordpress.android.util.AniUtils
@@ -86,16 +87,9 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
         val adapter = createOrGetNotesAdapter()
         binding?.notificationsList?.adapter = adapter
         if (savedInstanceState != null) {
-            tabPosition = savedInstanceState.getInt(KEY_TAB_POSITION, NotificationsListFragment.TAB_POSITION_ALL)
+            tabPosition = savedInstanceState.getInt(KEY_TAB_POSITION, All.ordinal)
         }
-        when (tabPosition) {
-            NotificationsListFragment.TAB_POSITION_ALL -> adapter.setFilter(FILTER_ALL)
-            NotificationsListFragment.TAB_POSITION_COMMENT -> adapter.setFilter(FILTER_COMMENT)
-            NotificationsListFragment.TAB_POSITION_FOLLOW -> adapter.setFilter(FILTER_FOLLOW)
-            NotificationsListFragment.TAB_POSITION_LIKE -> adapter.setFilter(FILTER_LIKE)
-            NotificationsListFragment.TAB_POSITION_UNREAD -> adapter.setFilter(FILTER_UNREAD)
-            else -> adapter.setFilter(FILTER_ALL)
-        }
+        (TabPosition.values().getOrNull(tabPosition) ?: All).let { adapter.setFilter(it.filter) }
     }
 
     @Suppress("DEPRECATION", "OVERRIDE_DEPRECATION")
@@ -121,7 +115,7 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         arguments?.let {
-            tabPosition = it.getInt(KEY_TAB_POSITION, NotificationsListFragment.TAB_POSITION_ALL)
+            tabPosition = it.getInt(KEY_TAB_POSITION, All.ordinal)
         }
         binding = NotificationsListFragmentPageBinding.bind(view).apply {
             notificationsList.layoutManager = LinearLayoutManager(activity)
@@ -288,7 +282,7 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
             ActivityLauncher.showSignInForResult(activity)
             return
         }
-        if (tabPosition == NotificationsListFragment.TAB_POSITION_UNREAD) {
+        if (tabPosition == Unread.ordinal) {
             ActivityLauncher.addNewPostForResult(activity, selectedSite, false, POST_FROM_NOTIFS_EMPTY_VIEW, -1, null)
         } else if (activity is WPMainActivity) {
             (requireActivity() as WPMainActivity).setReaderPageActive()
@@ -329,27 +323,27 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
         var descriptionResId = 0
         var buttonResId = 0
         when (tabPosition) {
-            NotificationsListFragment.TAB_POSITION_ALL -> {
+            All.ordinal -> {
                 titleResId = R.string.notifications_empty_all
                 descriptionResId = R.string.notifications_empty_action_all
                 buttonResId = R.string.notifications_empty_view_reader
             }
-            NotificationsListFragment.TAB_POSITION_COMMENT -> {
+            Comment.ordinal -> {
                 titleResId = R.string.notifications_empty_comments
                 descriptionResId = R.string.notifications_empty_action_comments
                 buttonResId = R.string.notifications_empty_view_reader
             }
-            NotificationsListFragment.TAB_POSITION_FOLLOW -> {
+            Follow.ordinal -> {
                 titleResId = R.string.notifications_empty_followers
                 descriptionResId = R.string.notifications_empty_action_followers_likes
                 buttonResId = R.string.notifications_empty_view_reader
             }
-            NotificationsListFragment.TAB_POSITION_LIKE -> {
+            Like.ordinal -> {
                 titleResId = R.string.notifications_empty_likes
                 descriptionResId = R.string.notifications_empty_action_followers_likes
                 buttonResId = R.string.notifications_empty_view_reader
             }
-            NotificationsListFragment.TAB_POSITION_UNREAD -> {
+            Unread.ordinal -> {
                 if (selectedSite == null) {
                     titleResId = R.string.notifications_empty_unread
                 } else {

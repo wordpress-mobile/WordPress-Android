@@ -16,6 +16,7 @@ import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Feature
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Feature.State.DISABLED
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Feature.State.ENABLED
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Feature.State.UNKNOWN
+import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Field
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Header
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Row
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiState
@@ -23,6 +24,7 @@ import org.wordpress.android.ui.notifications.NotificationManagerWrapper
 import org.wordpress.android.util.DebugUtils
 import org.wordpress.android.util.config.ManualFeatureConfig
 import org.wordpress.android.util.config.FeatureFlagConfig
+import org.wordpress.android.util.config.RemoteFieldConfigRepository
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.workers.weeklyroundup.WeeklyRoundupNotifier
 
@@ -33,6 +35,7 @@ class DebugSettingsViewModelTest : BaseUnitTest() {
     @Mock lateinit var weeklyRoundupNotifier: WeeklyRoundupNotifier
     @Mock lateinit var notificationManager: NotificationManagerWrapper
     @Mock lateinit var contextProvider: ContextProvider
+    @Mock lateinit var remoteFieldConfigRepository: RemoteFieldConfigRepository
     private lateinit var viewModel: DebugSettingsViewModel
     private val uiStates = mutableListOf<UiState>()
 
@@ -44,6 +47,7 @@ class DebugSettingsViewModelTest : BaseUnitTest() {
                 TEST_DISPATCHER,
                 manualFeatureConfig,
                 featureFlagConfig,
+                remoteFieldConfigRepository,
                 debugUtils,
                 weeklyRoundupNotifier,
                 notificationManager,
@@ -125,7 +129,7 @@ class DebugSettingsViewModelTest : BaseUnitTest() {
         }
     }
 
-    @Suppress("NestedBlockDepth")
+    @Suppress("NestedBlockDepth", "ComplexMethod", "NestedBlockDepth")
     private fun assertUiState(
         expectedState: Feature.State? = null,
         enabledFeature: String? = null,
@@ -137,6 +141,7 @@ class DebugSettingsViewModelTest : BaseUnitTest() {
             val developedItems = mutableListOf<Feature>()
             val buttons = mutableListOf<Button>()
             val rows = mutableListOf<Row>()
+            val remoteFields = mutableListOf<Field>()
             for (uiItem in this.uiItems) {
                 when (uiItem) {
                     is Header -> headers.add(uiItem)
@@ -153,6 +158,7 @@ class DebugSettingsViewModelTest : BaseUnitTest() {
                     is Row -> {
                         rows.add(uiItem)
                     }
+                    is Field -> remoteFields.add(uiItem)
                 }
             }
             assertThat(headers).hasSize(4)

@@ -153,38 +153,48 @@ platform :android do
     )
   end
 
-  #####################################################################################
-  # download_metadata_strings
-  # -----------------------------------------------------------------------------------
-  # This lane downloads the translated metadata (release notes, app store strings, title, etc.)
-  # from GlotPress and updates the local files
-  # -----------------------------------------------------------------------------------
-  # Usage:
-  # fastlane download_metadata_strings build_number:<build_number> version:<version>
+  # Downloads the translated metadata (release notes, app store strings, title, etc.)
+  # from GlotPress, and updates the local `.txt` files with them.
   #
-  # Example:
-  # fastlane download_metadata_strings build_number:573 version:10.3
-  #####################################################################################
+  # @option [String|Symbol] app The app to take screenshots for. Must be `wordpress` or `jetpack`
+  # @option [String] version The `versionName` of the app, used to extract the release notes from the right GlotPress key. Defaults to current `versionName`.
+  # @option [Int] build_number The `versionCode` of the app, used to save the release notes to the right `changelogs/*.txt` file. Defaults to current `versionCode`.
+  # @option [Boolean] skip_release_notes If set to true, will not download release notes. Defaults to `false`. This can be useful when all you want to download
+  #         is screenshots translations and metadata not linked to a specific version (in which case `version` and `build_number` parameters are optional).
+  # @option [Boolean] skip_commit If set to true, will skip the `git add`, `git commit` and `git push` operations. Default to false.
+  # @option [Boolean] skip_git_push If set to true, will skip the `git push` at the end. Default to false. Inferred to `true` if `skip_commit` is `true`.
+  #
   desc 'Downloads translated metadata from GlotPress'
   lane :download_metadata_strings do |options|
-    version = options.fetch(:version, android_get_app_version)
-    build_number = options.fetch(:build_number, android_get_release_version['code'])
+    skip_release_notes = options.fetch(:skip_release_notes, false)
+    version = skip_release_notes ? nil : options.fetch(:version, android_get_app_version)
+    build_number = skip_release_notes ? nil : options.fetch(:build_number, android_get_release_version['code'])
 
+    skip_commit = options.fetch(:skip_commit, false)
+    skip_git_push = options.fetch(:skip_git_push, false)
+    
     # If no `app:` is specified, call this for both WordPress and Jetpack
-    apps = options[:app].nil? ? %i[wordpress jetpack] : Array(options[:app]&.downcase&.to_sym)
+    apps = options[:app].nil? ? %i[wordpress jetpack] : Array(options[:app]&.to_s&.downcase&.to_sym)
 
     apps.each do |app|
       app_values = APP_SPECIFIC_VALUES[app]
+      metadata_source_dir = File.join(PROJECT_ROOT_FOLDER, 'WordPress', app_values[:metadata_dir])
 
-      version_suffix = version.split('.').join
       files = {
-        "release_note_#{version_suffix}" => { desc: "changelogs/#{build_number}.txt", max_size: 500, alternate_key: "release_note_short_#{version_suffix}" },
         play_store_app_title: { desc: 'title.txt', max_size: 30 },
         play_store_promo: { desc: 'short_description.txt', max_size: 80 },
         play_store_desc: { desc: 'full_description.txt', max_size: 4000 }
       }
-
-      delete_old_changelogs(app: app, build: build_number)
+      unless skip_release_notes
+        delete_old_changelogs(app: app, build: build_number)
+        version_suffix = version.split('.').join
+        files["release_note_#{version_suffix}"] = { desc: "changelogs/#{build_number}.txt", max_size: 500, alternate_key: "release_note_short_#{version_suffix}" }
+      end
+      # Add key mappings for `screenshots_*` files too
+      Dir.glob('screenshot_*.txt', base: metadata_source_dir).each do |f|
+        key = "play_store_#{File.basename(f, '.txt')}"
+        files[key] = { desc: f }
+      end
 
       download_path = File.join(FASTLANE_FOLDER, app_values[:metadata_dir], 'android')
       locales = { wordpress: WP_RELEASE_NOTES_LOCALES, jetpack: JP_RELEASE_NOTES_LOCALES }[app]
@@ -198,17 +208,19 @@ platform :android do
 
       # Copy the source `.txt` files (used as source of truth when we generated the `.po`) to the `fastlane/*metadata/android/en-US` dir,
       # as `en-US` is the source language, and isn't exported from GlotPress during `gp_downloadmetadata`
-      metadata_source_dir = File.join(PROJECT_ROOT_FOLDER, 'WordPress', app_values[:metadata_dir])
-      FileUtils.cp(File.join(metadata_source_dir, 'release_notes.txt'), File.join(download_path, 'en-US', 'changelogs', "#{build_number}.txt"))
-      FileUtils.cp(
-        ['title.txt', 'short_description.txt', 'full_description.txt'].map { |f| File.join(metadata_source_dir, f) },
-        File.join(download_path, 'en-US')
-      )
-    
-      git_add(path: download_path)
-      git_commit(path: download_path, message: "Update #{app_values[:display_name]} metadata translations for #{version}", allow_nothing_to_commit: true)
+      files.each do |key, h|
+        source_file = key.to_s.start_with?('release_note_') ? 'release_notes.txt' : h[:desc]
+        FileUtils.cp(File.join(metadata_source_dir, source_file), File.join(download_path, 'en-US', h[:desc]))
+      end
+      
+      unless skip_commit
+        git_add(path: download_path)
+        message = "Update #{app_values[:display_name]} metadata translations"
+        message += " for #{version}" unless version.nil?
+        git_commit(path: download_path, message: message, allow_nothing_to_commit: true)
+      end
     end
-    push_to_git_remote
+    push_to_git_remote unless skip_commit || skip_git_push
   end
 
   ########################################################################
@@ -245,14 +257,14 @@ platform :android do
     },
     {
       name: "Stories Library",
-      import_key: "storiesVersion",
+      import_key: "automatticStoriesVersion",
       repository: "Automattic/stories-android",
       strings_file_path: "stories/src/main/res/values/strings.xml",
       source_id: 'stories'
     },
     {
       name: "About Library",
-      import_key: "aboutAutomatticVersion",
+      import_key: "automatticAboutVersion",
       repository: "Automattic/about-automattic-android",
       strings_file_path: "library/src/main/res/values/strings.xml",
       source_id: 'about'

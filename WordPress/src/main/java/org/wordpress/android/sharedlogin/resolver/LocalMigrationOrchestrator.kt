@@ -17,10 +17,12 @@ import org.wordpress.android.localcontentmigration.LocalMigrationResult.Companio
 import org.wordpress.android.localcontentmigration.LocalMigrationResult.Failure
 import org.wordpress.android.localcontentmigration.LocalMigrationState
 import org.wordpress.android.localcontentmigration.LocalMigrationState.Finished
-import org.wordpress.android.localcontentmigration.LocalMigrationState.Finished.DeleteOnly
+import org.wordpress.android.localcontentmigration.LocalMigrationState.Finished.Ineligible
+import org.wordpress.android.localcontentmigration.LocalMigrationState.Migrating
 import org.wordpress.android.localcontentmigration.LocalPostsHelper
 import org.wordpress.android.localcontentmigration.SharedLoginHelper
 import org.wordpress.android.localcontentmigration.SitesMigrationHelper
+import org.wordpress.android.localcontentmigration.WelcomeScreenData
 import org.wordpress.android.localcontentmigration.emitTo
 import org.wordpress.android.localcontentmigration.orElse
 import org.wordpress.android.localcontentmigration.otherwise
@@ -41,11 +43,7 @@ class LocalMigrationOrchestrator @Inject constructor(
     private val localPostsHelper: LocalPostsHelper,
     private val eligibilityHelper: EligibilityHelper,
 ) {
-    fun tryLocalMigration(migrationStateFlow: MutableStateFlow<LocalMigrationState>, showDeleteOnly: Boolean = false) {
-        if (showDeleteOnly) {
-            migrationStateFlow.value = DeleteOnly
-            return
-        }
+    fun tryLocalMigration(migrationStateFlow: MutableStateFlow<LocalMigrationState>) {
         eligibilityHelper.validate()
                 .then(sharedLoginHelper::login).emitTo(migrationStateFlow)
                 .then(sitesMigrationHelper::migrateSites).emitTo(migrationStateFlow)
@@ -53,11 +51,18 @@ class LocalMigrationOrchestrator @Inject constructor(
                 .then(readerSavedPostsHelper::migrateReaderSavedPosts)
                 .then(localPostsHelper::migratePosts)
                 .orElse { error ->
-                    migrationStateFlow.value = Finished.Failure(error)
+                    migrationStateFlow.value = when (error) {
+                        is Ineligibility -> Ineligible
+                        else -> Finished.Failure(error)
+                    }
                     Failure(error)
                 }
                 .then {
-                    migrationStateFlow.value = Finished.Successful
+                    with (migrationStateFlow) {
+                        value = Finished.Successful(
+                                (value as? Migrating)?.data ?: WelcomeScreenData()
+                        )
+                    }
                     EmptyResult
                 }
                 .otherwise(::handleErrors)

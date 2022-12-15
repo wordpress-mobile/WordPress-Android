@@ -1,11 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-11-15 21:01:47+0000
+Translation-Revision-Date: 2022-11-30 07:59:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: sv_SE
 -->
 <resources>
+    <string name="wp_jetpack_deep_link_open_in_wordpress">Öppna länkar i WordPress</string>
+    <string name="wp_jetpack_deep_link_overlay_description">Du verkar ha Jetpack-appen installerad.\n\nVill du i fortsättningen öppna länkar i Jetpack-appen i stället?\n\nDu kan ändra denna inställning när som helst via appinställningar &gt; Öppna länkar i Jetpack</string>
+    <string name="wp_jetpack_deep_link_overlay_title">Öppna länkar i Jetpack?</string>
+    <string name="wp_jetpack_continue_without_jetpack">Fortsätt utan Jetpack</string>
+    <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_two_description">Jetpack visar statistik, aviseringar med mera för att hjälpa dig bygga dina drömmars WordPress-webbplats och få fler besökare.\n\nStödet för att skapa en ny webbplats finns inte kvar i WordPress-appen.</string>
+    <string name="wp_jetpack_feature_removal_site_creation_overlay_phase_one_description">Jetpack visar statistik, aviseringar med mera för att hjälpa dig bygga dina drömmars WordPress-webbplats och få fler besökare.</string>
+    <string name="wp_jetpack_feature_removal_site_creation_overlay_title">Skapa en ny WordPress-webbplats med Jetpack-appen</string>
+    <string name="deep_linking_weblinks_alias_label">weblinks</string>
+    <string name="deep_linking_urilinks_alias_label">urilinks</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_notifications">Byt till Jetpack-appen för att fortsätta ta emot aviseringar i realtid på din enhet.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_reader">Byt till Jetpack-appen för att hitta, följa och gilla alla dina favoritwebbplatser och inlägg med läsare.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_stats">Byt till Jetpack-appen för att se insikter och statistik över hur webbplatsens trafik ökar.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_notifications">Få dina aviseringar med Jetpack-appen</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_reader">Följ vilken webbplats som helst med Jetpack-appen</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_stats">Få din statistik med den nya Jetpack-appen</string>
+    <string name="preference_open_links_in_jetpack_setting_change_disable_error">Det gick inte att inaktivera öppning av länkar i Jetpack</string>
+    <string name="preference_open_links_in_jetpack_setting_change_enable_error">Det gick inte att aktivera öppning av länkar i Jetpack</string>
+    <string name="preference_open_links_in_jetpack">Öppna länkar i Jetpack</string>
+    <string name="jp_migration_need_help_button">Behöver du hjälp?</string>
+    <string name="jp_migration_got_it_button">Jag förstår</string>
+    <string name="jp_migration_delete_message">&lt;b&gt;Ta bort WordPress-appen&lt;/b&gt; &lt;br&gt;för att undvika datakonflikter.</string>
+    <string name="jp_migration_delete_subtitle">Det verkar som att du fortfarande har WordPress-appen installerad. Vi rekommenderar att du tar bort WordPress-appen för att undvika datakonflikter.</string>
+    <string name="jp_migration_delete_title">Du behöver inte längre WordPress-appen</string>
+    <string name="jp_migration_network_error_message">Vi kan inte överföra dina data och inställningar utan en nätverksanslutning.</string>
+    <string name="jp_migration_network_error_subtitle">Kontrollera att din internetanslutning fungerar och försök igen.</string>
+    <string name="jp_migration_network_error_title">Det går inte att ansluta till Internet.</string>
+    <string name="jp_migration_generic_error_message">Kontakta supporten eller försök igen senare.</string>
+    <string name="jp_migration_generic_error_subtitle">Något oväntat har inträffat. Dina data är i trygghet, men just nu fungerar inte överföringen.</string>
+    <string name="jp_migration_generic_error_title">Aj då, något gick fel …</string>
+    <string name="jp_migration_try_again_button">Försök igen</string>
+    <string name="jp_migration_finish_button">Slutför</string>
+    <string name="jp_migration_remove_wp_app_icon_content_description">Ta bort WordPress-appens ikon</string>
+    <string name="jp_migration_done_delete_wp_message">&lt;b&gt;Ta bort WordPress-appen&lt;/b&gt; &lt;br&gt;för att undvika datakonflikter.</string>
+    <string name="jp_migration_done_subtitle">Vi har flyttat över alla data och dina inställningar, så allt är precis som förut.</string>
+    <string name="jp_migration_done_title">Tack för att du bytt till Jetpack!</string>
+    <string name="jp_migration_notifications_disabled_in_wp_message">Aviseringar från WordPress-appent kommer att stängas av.</string>
+    <string name="jp_migration_notifications_subtitle">Du kommer att få samma aviseringar som tidigare, men nu från Jetpack-appen.</string>
+    <string name="jp_migration_notifications_title">Aviseringar kommer nu från Jetpack</string>
+    <string name="jp_migration_success_card_message">Ta bort WordPress-appen</string>
+    <string name="wordpress_help_center_button">WordPress hjälpcenter</string>
+    <string name="support_title">Support</string>
+    <string name="notification_disable_broadcast_permission_desc">Tillåter att appen inaktiverar WordPress-aviseringar.</string>
+    <string name="notification_disable_broadcast_permission_label">inaktivera WordPress-aviseringar</string>
     <string name="jp_migration_help_button">Behöver du hjälp?</string>
     <string name="jp_migration_continue_button">Fortsätt</string>
     <string name="jp_migration_welcome_site_found_message">Vi har hittat din webbplats. Gå vidare för att automatiskt överföra dina data och logga in till Jetpack.</string>

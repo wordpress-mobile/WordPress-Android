@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.utils
 
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.localcontentmigration.ContentMigrationAnalyticsTracker
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.BuildConfigWrapper
@@ -19,11 +20,13 @@ class JetpackAppMigrationFlowUtils @Inject constructor(
     private val accountStore: AccountStore,
     private val appStatus: AppStatus,
     private val wordPressPublicData: WordPressPublicData,
+    private val contentMigrationAnalyticsTracker: ContentMigrationAnalyticsTracker,
 ) {
     private val minimumSupportedVersion = "21.3" // non semantic minimum supported version
 
     fun shouldShowMigrationFlow() = buildConfigWrapper.isJetpackApp
             && jetpackMigrationFlowFeatureConfig.isEnabled()
+            && appPrefsWrapper.isJetpackMigrationEligible()
             && appPrefsWrapper.getIsFirstTrySharedLoginJetpack()
             && !accountStore.hasAccessToken()
             && isWordPressInstalled()
@@ -37,6 +40,8 @@ class JetpackAppMigrationFlowUtils @Inject constructor(
 
     private fun isWordPressCompatible(): Boolean {
         val wordPressVersion = wordPressPublicData.nonSemanticPackageVersion()
-        return wordPressVersion != null && Version(wordPressVersion) >= Version(minimumSupportedVersion)
+        val isCompatible = wordPressVersion != null && Version(wordPressVersion) >= Version(minimumSupportedVersion)
+        contentMigrationAnalyticsTracker.trackWordPressAppDetected(isCompatible)
+        return isCompatible
     }
 }
