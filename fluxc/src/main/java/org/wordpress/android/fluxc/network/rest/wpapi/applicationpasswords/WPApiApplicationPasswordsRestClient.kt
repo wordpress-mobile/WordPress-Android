@@ -19,7 +19,7 @@ import javax.inject.Named
 import javax.inject.Singleton
 
 @Singleton
-internal class WPApiApplicationPasswordRestClient @Inject constructor(
+internal class WPApiApplicationPasswordsRestClient @Inject constructor(
     private val wpApiGsonRequestBuilder: WPAPIGsonRequestBuilder,
     private val wpApiAuthenticator: WPAPIAuthenticator,
     dispatcher: Dispatcher,

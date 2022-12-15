@@ -10,4 +10,4 @@ import kotlin.annotation.AnnotationRetention.RUNTIME
 @Qualifier
 @MustBeDocumented
 @Retention(RUNTIME)
-annotation class ApplicationPasswordClientId
+annotation class ApplicationPasswordsClientId
