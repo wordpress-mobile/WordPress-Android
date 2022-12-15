@@ -203,9 +203,9 @@ class MySiteViewModel @Inject constructor(
        as they're already built on site select. */
     private var isSiteSelected = false
 
-    private val isMySiteDashboardTabsFeatureConfigEnabled = mySiteDashboardTabsFeatureConfig.isEnabled()
-    private val isBloggingPromptsFeatureConfigEnabled = bloggingPromptsFeatureConfig.isEnabled()
-    private val isBloggingPromptsListFeatureConfigEnabled = bloggingPromptsListFeatureConfig.isEnabled()
+    private val isMySiteDashboardTabsFeatureConfigEnabled by lazy { mySiteDashboardTabsFeatureConfig.isEnabled() }
+    private val isBloggingPromptsFeatureConfigEnabled by lazy { bloggingPromptsFeatureConfig.isEnabled() }
+    private val isBloggingPromptsListFeatureConfigEnabled by lazy { bloggingPromptsListFeatureConfig.isEnabled() }
 
     val isMySiteTabsEnabled: Boolean
         get() = isMySiteDashboardTabsFeatureConfigEnabled &&
