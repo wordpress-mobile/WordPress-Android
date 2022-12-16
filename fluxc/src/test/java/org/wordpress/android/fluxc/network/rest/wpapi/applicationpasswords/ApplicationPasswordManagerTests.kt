@@ -28,18 +28,18 @@ class ApplicationPasswordManagerTests {
         password = "password"
     )
     private val applicationPasswordsStore: ApplicationPasswordsStore = mock()
-    private val jetpackApplicationPasswordRestClient: JetpackApplicationPasswordRestClient = mock()
-    private val wpApiApplicationPasswordRestClient: WPApiApplicationPasswordRestClient = mock()
+    private val mJetpackApplicationPasswordsRestClient: JetpackApplicationPasswordsRestClient = mock()
+    private val mWpApiApplicationPasswordsRestClient: WPApiApplicationPasswordsRestClient = mock()
 
-    private lateinit var applicationPasswordManager: ApplicationPasswordManager
+    private lateinit var mApplicationPasswordsManager: ApplicationPasswordsManager
 
     @Before
     fun setup() {
-        applicationPasswordManager = ApplicationPasswordManager(
+        mApplicationPasswordsManager = ApplicationPasswordsManager(
             applicationPasswordsStore = applicationPasswordsStore,
             applicationName = applicationName,
-            jetpackApplicationPasswordRestClient = jetpackApplicationPasswordRestClient,
-            wpApiApplicationPasswordRestClient = wpApiApplicationPasswordRestClient,
+            jetpackApplicationPasswordsRestClient = mJetpackApplicationPasswordsRestClient,
+            wpApiApplicationPasswordsRestClient = mWpApiApplicationPasswordsRestClient,
             appLogWrapper = mock()
         )
     }
@@ -48,7 +48,7 @@ class ApplicationPasswordManagerTests {
     fun `given a local password exists, when we ask for a password, then return it`() = runBlockingTest {
         whenever(applicationPasswordsStore.getCredentials(siteDomain)).thenReturn(testCredentials)
 
-        val result = applicationPasswordManager.getApplicationCredentials(
+        val result = mApplicationPasswordsManager.getApplicationCredentials(
             testSite
         )
 
@@ -63,12 +63,12 @@ class ApplicationPasswordManagerTests {
             }
 
             whenever(applicationPasswordsStore.getCredentials(siteDomain)).thenReturn(null)
-            whenever(jetpackApplicationPasswordRestClient.fetchWPAdminUsername(site))
+            whenever(mJetpackApplicationPasswordsRestClient.fetchWPAdminUsername(site))
                 .thenReturn(UsernameFetchPayload(testCredentials.userName))
-            whenever(jetpackApplicationPasswordRestClient.createApplicationPassword(site, applicationName))
+            whenever(mJetpackApplicationPasswordsRestClient.createApplicationPassword(site, applicationName))
                 .thenReturn(ApplicationPasswordCreationPayload(testCredentials.password))
 
-            val result = applicationPasswordManager.getApplicationCredentials(
+            val result = mApplicationPasswordsManager.getApplicationCredentials(
                 testSite
             )
 
@@ -85,10 +85,10 @@ class ApplicationPasswordManagerTests {
             }
 
             whenever(applicationPasswordsStore.getCredentials(siteDomain)).thenReturn(null)
-            whenever(wpApiApplicationPasswordRestClient.createApplicationPassword(site, applicationName))
+            whenever(mWpApiApplicationPasswordsRestClient.createApplicationPassword(site, applicationName))
                 .thenReturn(ApplicationPasswordCreationPayload(testCredentials.password))
 
-            val result = applicationPasswordManager.getApplicationCredentials(
+            val result = mApplicationPasswordsManager.getApplicationCredentials(
                 testSite
             )
 
@@ -104,12 +104,12 @@ class ApplicationPasswordManagerTests {
             val networkError = BaseNetworkError(VolleyError(NetworkResponse(404, null, true, 0, emptyList())))
 
             whenever(applicationPasswordsStore.getCredentials(siteDomain)).thenReturn(null)
-            whenever(jetpackApplicationPasswordRestClient.fetchWPAdminUsername(site))
+            whenever(mJetpackApplicationPasswordsRestClient.fetchWPAdminUsername(site))
                 .thenReturn(UsernameFetchPayload(testCredentials.userName))
-            whenever(jetpackApplicationPasswordRestClient.createApplicationPassword(site, applicationName))
+            whenever(mJetpackApplicationPasswordsRestClient.createApplicationPassword(site, applicationName))
                 .thenReturn(ApplicationPasswordCreationPayload(networkError))
 
-            val result = applicationPasswordManager.getApplicationCredentials(
+            val result = mApplicationPasswordsManager.getApplicationCredentials(
                 testSite
             )
 
@@ -127,12 +127,12 @@ class ApplicationPasswordManagerTests {
             }
 
             whenever(applicationPasswordsStore.getCredentials(siteDomain)).thenReturn(null)
-            whenever(jetpackApplicationPasswordRestClient.fetchWPAdminUsername(site))
+            whenever(mJetpackApplicationPasswordsRestClient.fetchWPAdminUsername(site))
                 .thenReturn(UsernameFetchPayload(testCredentials.userName))
-            whenever(jetpackApplicationPasswordRestClient.createApplicationPassword(site, applicationName))
+            whenever(mJetpackApplicationPasswordsRestClient.createApplicationPassword(site, applicationName))
                 .thenReturn(ApplicationPasswordCreationPayload(networkError))
 
-            val result = applicationPasswordManager.getApplicationCredentials(
+            val result = mApplicationPasswordsManager.getApplicationCredentials(
                 testSite
             )
 
@@ -149,10 +149,10 @@ class ApplicationPasswordManagerTests {
             val networkError = BaseNetworkError(VolleyError(NetworkResponse(404, null, true, 0, emptyList())))
 
             whenever(applicationPasswordsStore.getCredentials(siteDomain)).thenReturn(null)
-            whenever(wpApiApplicationPasswordRestClient.createApplicationPassword(site, applicationName))
+            whenever(mWpApiApplicationPasswordsRestClient.createApplicationPassword(site, applicationName))
                 .thenReturn(ApplicationPasswordCreationPayload(networkError))
 
-            val result = applicationPasswordManager.getApplicationCredentials(
+            val result = mApplicationPasswordsManager.getApplicationCredentials(
                 testSite
             )
 
@@ -171,10 +171,10 @@ class ApplicationPasswordManagerTests {
             }
 
             whenever(applicationPasswordsStore.getCredentials(siteDomain)).thenReturn(null)
-            whenever(wpApiApplicationPasswordRestClient.createApplicationPassword(site, applicationName))
+            whenever(mWpApiApplicationPasswordsRestClient.createApplicationPassword(site, applicationName))
                 .thenReturn(ApplicationPasswordCreationPayload(networkError))
 
-            val result = applicationPasswordManager.getApplicationCredentials(
+            val result = mApplicationPasswordsManager.getApplicationCredentials(
                 testSite
             )
 
@@ -188,10 +188,10 @@ class ApplicationPasswordManagerTests {
                 origin = SiteModel.ORIGIN_WPCOM_REST
             }
 
-            whenever(jetpackApplicationPasswordRestClient.deleteApplicationPassword(site, applicationName))
+            whenever(mJetpackApplicationPasswordsRestClient.deleteApplicationPassword(site, applicationName))
                 .thenReturn(ApplicationPasswordDeletionPayload(isDeleted = true))
 
-            val result = applicationPasswordManager.deleteApplicationCredentials(
+            val result = mApplicationPasswordsManager.deleteApplicationCredentials(
                 testSite
             )
 
@@ -206,10 +206,10 @@ class ApplicationPasswordManagerTests {
                 username = testCredentials.userName
             }
 
-            whenever(wpApiApplicationPasswordRestClient.deleteApplicationPassword(site, applicationName))
+            whenever(mWpApiApplicationPasswordsRestClient.deleteApplicationPassword(site, applicationName))
                 .thenReturn(ApplicationPasswordDeletionPayload(isDeleted = true))
 
-            val result = applicationPasswordManager.deleteApplicationCredentials(
+            val result = mApplicationPasswordsManager.deleteApplicationCredentials(
                 testSite
             )
 
