@@ -1,7 +1,7 @@
 package org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords
 
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.module.ApplicationPasswordClientId
+import org.wordpress.android.fluxc.module.ApplicationPasswordsClientId
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPINetworkError
@@ -15,11 +15,11 @@ private const val CONFLICT = 409
 private const val NOT_FOUND = 404
 private const val APPLICATION_PASSWORDS_DISABLED_ERROR_CODE = "application_passwords_disabled"
 
-internal class ApplicationPasswordManager @Inject constructor(
+internal class ApplicationPasswordsManager @Inject constructor(
     private val applicationPasswordsStore: ApplicationPasswordsStore,
-    @ApplicationPasswordClientId private val applicationName: String,
-    private val jetpackApplicationPasswordRestClient: JetpackApplicationPasswordRestClient,
-    private val wpApiApplicationPasswordRestClient: WPApiApplicationPasswordRestClient,
+    @ApplicationPasswordsClientId private val applicationName: String,
+    private val jetpackApplicationPasswordsRestClient: JetpackApplicationPasswordsRestClient,
+    private val wpApiApplicationPasswordsRestClient: WPApiApplicationPasswordsRestClient,
     private val appLogWrapper: AppLogWrapper
 ) {
     @Suppress("ReturnCount")
@@ -56,7 +56,7 @@ internal class ApplicationPasswordManager @Inject constructor(
 
     private suspend fun getOrFetchUsername(site: SiteModel): UsernameFetchPayload {
         return if (site.origin == SiteModel.ORIGIN_WPCOM_REST) {
-            jetpackApplicationPasswordRestClient.fetchWPAdminUsername(site)
+            jetpackApplicationPasswordsRestClient.fetchWPAdminUsername(site)
         } else {
             UsernameFetchPayload(site.username)
         }
@@ -67,12 +67,12 @@ internal class ApplicationPasswordManager @Inject constructor(
         username: String
     ): ApplicationPasswordCreationResult {
         val payload = if (site.origin == SiteModel.ORIGIN_WPCOM_REST) {
-            jetpackApplicationPasswordRestClient.createApplicationPassword(
+            jetpackApplicationPasswordsRestClient.createApplicationPassword(
                 site = site,
                 applicationName = applicationName
             )
         } else {
-            wpApiApplicationPasswordRestClient.createApplicationPassword(
+            wpApiApplicationPasswordsRestClient.createApplicationPassword(
                 site = site,
                 applicationName = applicationName
             )
@@ -126,12 +126,12 @@ internal class ApplicationPasswordManager @Inject constructor(
         site: SiteModel
     ): ApplicationPasswordDeletionResult {
         val payload = if (site.origin == SiteModel.ORIGIN_WPCOM_REST) {
-            jetpackApplicationPasswordRestClient.deleteApplicationPassword(
+            jetpackApplicationPasswordsRestClient.deleteApplicationPassword(
                 site = site,
                 applicationName = applicationName
             )
         } else {
-            wpApiApplicationPasswordRestClient.deleteApplicationPassword(
+            wpApiApplicationPasswordsRestClient.deleteApplicationPassword(
                 site = site,
                 applicationName = applicationName
             )
