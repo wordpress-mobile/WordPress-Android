@@ -30,6 +30,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    testOptions {
+        unitTests.includeAndroidResources = true
+    }
 }
 
 androidExtensions {
@@ -103,6 +107,17 @@ dependencies {
     // Encrypted Logging
     api "com.goterl:lazysodium-android:5.0.2@aar"
     api "net.java.dev.jna:jna:5.5.0@aar"
+
+    // Unit tests
+    testImplementation sharedLibs.junit
+    testImplementation sharedLibs.kotlin.test.junit
+    testImplementation sharedLibs.kotlinx.coroutines.test
+    testImplementation sharedLibs.androidx.test.core
+    testImplementation sharedLibs.robolectric
+    testImplementation sharedLibs.mockito.core
+    testImplementation sharedLibs.mockito.kotlin
+    testImplementation sharedLibs.mockito.inline
+    testImplementation sharedLibs.assertj.core
 }
 
 project.afterEvaluate {
