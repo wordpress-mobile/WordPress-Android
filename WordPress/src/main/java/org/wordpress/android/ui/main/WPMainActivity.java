@@ -385,7 +385,11 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 if (mIsMagicLinkLogin) {
                     authTokenToSet = getAuthToken();
                 } else {
-                    showSignInForResultBasedOnIsJetpackAppBuildConfig(this);
+                    if (mJetpackAppMigrationFlowUtils.shouldShowMigrationFlow()) {
+                        mJetpackAppMigrationFlowUtils.startJetpackMigrationFlow();
+                    } else {
+                        showSignInForResultBasedOnIsJetpackAppBuildConfig(this);
+                    }
                     finish();
                 }
             }
@@ -460,10 +464,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
         if (!mSelectedSiteRepository.hasSelectedSite()) {
             initSelectedSite();
-        }
-
-        if (mJetpackAppMigrationFlowUtils.shouldShowMigrationFlow()) {
-            mJetpackAppMigrationFlowUtils.startJetpackMigrationFlow();
         }
     }
 
