@@ -6,18 +6,28 @@ import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
 import org.wordpress.android.fluxc.module.ApplicationPasswordsClientId
 import org.wordpress.android.util.AppLog
+import java.util.Optional
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 internal class ApplicationPasswordsStore @Inject constructor(
     private val context: Context,
-    @ApplicationPasswordsClientId private val applicationName: String,
+    @ApplicationPasswordsClientId private val applicationNameOptional: Optional<String>,
 ) {
     companion object {
         private const val USERNAME_PREFERENCE_KEY_PREFIX = "username_"
         private const val PASSWORD_PREFERENCE_KEY_PREFIX = "app_password_"
     }
+
+    private val applicationName
+        get() = applicationNameOptional.orElseThrow {
+            NoSuchElementException(
+                "Please make sure to inject a String instance with " +
+                    "the annotation @${ApplicationPasswordsClientId::class.simpleName} to the Dagger graph" +
+                    "to be able to use the Application Passwords feature"
+            )
+        }
 
     private val encryptedPreferences by lazy {
         initEncryptedPrefs()

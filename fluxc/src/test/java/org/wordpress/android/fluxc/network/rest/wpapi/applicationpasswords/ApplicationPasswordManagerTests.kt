@@ -14,6 +14,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError
+import java.util.Optional
 import kotlin.test.assertEquals
 
 @ExperimentalCoroutinesApi
@@ -37,7 +38,7 @@ class ApplicationPasswordManagerTests {
     fun setup() {
         mApplicationPasswordsManager = ApplicationPasswordsManager(
             applicationPasswordsStore = applicationPasswordsStore,
-            applicationName = applicationName,
+            applicationNameOptional = Optional.of(applicationName),
             jetpackApplicationPasswordsRestClient = mJetpackApplicationPasswordsRestClient,
             wpApiApplicationPasswordsRestClient = mWpApiApplicationPasswordsRestClient,
             appLogWrapper = mock()
