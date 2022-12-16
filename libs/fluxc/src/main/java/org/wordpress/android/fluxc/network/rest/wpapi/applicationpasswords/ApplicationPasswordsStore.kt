@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
-import org.wordpress.android.fluxc.module.ApplicationPasswordClientId
+import org.wordpress.android.fluxc.module.ApplicationPasswordsClientId
 import org.wordpress.android.util.AppLog
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -12,7 +12,7 @@ import javax.inject.Singleton
 @Singleton
 internal class ApplicationPasswordsStore @Inject constructor(
     private val context: Context,
-    @ApplicationPasswordClientId private val applicationName: String,
+    @ApplicationPasswordsClientId private val applicationName: String,
 ) {
     companion object {
         private const val USERNAME_PREFERENCE_KEY_PREFIX = "username_"
