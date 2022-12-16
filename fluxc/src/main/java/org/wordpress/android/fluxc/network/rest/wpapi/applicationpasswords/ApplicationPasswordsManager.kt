@@ -9,19 +9,34 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGson
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.UrlUtils
+import java.util.Optional
 import javax.inject.Inject
 
 private const val CONFLICT = 409
 private const val NOT_FOUND = 404
 private const val APPLICATION_PASSWORDS_DISABLED_ERROR_CODE = "application_passwords_disabled"
 
+/**
+ * Note: the [ApplicationPasswordsClientId] is provided as [Optional] because we want to keep the feature optional and
+ * to not force the client apps to provide it. With this change, we will keep Dagger happy, and we move from a compile
+ * error to a runtime error if it's missing.
+ */
 internal class ApplicationPasswordsManager @Inject constructor(
     private val applicationPasswordsStore: ApplicationPasswordsStore,
-    @ApplicationPasswordsClientId private val applicationName: String,
+    @ApplicationPasswordsClientId private val applicationNameOptional: Optional<String>,
     private val jetpackApplicationPasswordsRestClient: JetpackApplicationPasswordsRestClient,
     private val wpApiApplicationPasswordsRestClient: WPApiApplicationPasswordsRestClient,
     private val appLogWrapper: AppLogWrapper
 ) {
+    private val applicationName
+        get() = applicationNameOptional.orElseThrow {
+            NoSuchElementException(
+                "Please make sure to inject a String instance with " +
+                    "the annotation @${ApplicationPasswordsClientId::class.simpleName} to the Dagger graph" +
+                    "to be able to use the Application Passwords feature"
+            )
+        }
+
     @Suppress("ReturnCount")
     suspend fun getApplicationCredentials(
         site: SiteModel
