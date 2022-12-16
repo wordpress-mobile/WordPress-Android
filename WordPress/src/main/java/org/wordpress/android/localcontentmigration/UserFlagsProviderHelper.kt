@@ -36,7 +36,6 @@ class UserFlagsProviderHelper @Inject constructor(
     }
 
     private val userFlagsKeysSet: Set<String> = setOf(
-            DeletablePrefKey.MAIN_PAGE_INDEX.name,
             DeletablePrefKey.IMAGE_OPTIMIZE_ENABLED.name,
             DeletablePrefKey.IMAGE_OPTIMIZE_WIDTH.name,
             DeletablePrefKey.IMAGE_OPTIMIZE_QUALITY.name,
