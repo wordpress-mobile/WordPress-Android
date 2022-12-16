@@ -72,6 +72,10 @@ import org.wordpress.android.fluxc.model.RoleModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.SitesModel
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
+import org.wordpress.android.fluxc.network.rest.wpapi.WPAPINetworkError
+import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.ApplicationPasswordDeletionResult
+import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.ApplicationPasswordsManager
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Error
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Success
 import org.wordpress.android.fluxc.network.rest.wpcom.site.Domain
@@ -111,6 +115,7 @@ import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.AppLog.T.API
 import java.util.Locale
 import javax.inject.Inject
+import javax.inject.Provider
 import javax.inject.Singleton
 
 /**
@@ -130,6 +135,9 @@ open class SiteStore @Inject constructor(
     private val siteSqlUtils: SiteSqlUtils,
     private val coroutineEngine: CoroutineEngine
 ) : Store(dispatcher) {
+
+    @Inject internal lateinit var applicationPasswordsManagerProvider: Provider<ApplicationPasswordsManager>
+
     // Payloads
     data class CompleteQuickStartPayload(
         @JvmField val site: SiteModel,
@@ -699,6 +707,26 @@ open class SiteStore @Inject constructor(
     ) : Payload<SiteError>() {
         constructor(site: SiteModel, error: SiteError) : this(site) {
             this.error = error
+        }
+    }
+
+    data class OnApplicationPasswordDeleted(val site: SiteModel) : OnChanged<OnApplicationPasswordDeleteError>() {
+        constructor(site: SiteModel, error: BaseNetworkError): this(site) {
+            this.error = OnApplicationPasswordDeleteError(error)
+        }
+    }
+
+    class OnApplicationPasswordDeleteError(error: BaseNetworkError) : OnChangedError {
+        var errorCode: String? = null
+        var message: String
+
+        init {
+            if (error is WPAPINetworkError) {
+                errorCode = error.errorCode
+            } else if (error is WPComGsonNetworkError) {
+                errorCode = error.apiError
+            }
+            message = error.message
         }
     }
 
@@ -1933,4 +1961,12 @@ open class SiteStore @Inject constructor(
                             }
                         }
             }
+
+    suspend fun deleteApplicationPassword(site: SiteModel): OnApplicationPasswordDeleted =
+        coroutineEngine.withDefaultContext(T.API, this, "Delete Application Password") {
+            when (val result = applicationPasswordsManagerProvider.get().deleteApplicationCredentials(site)) {
+                is ApplicationPasswordDeletionResult.Success -> OnApplicationPasswordDeleted(site)
+                is ApplicationPasswordDeletionResult.Failure -> OnApplicationPasswordDeleted(site, result.error)
+            }
+        }
 }
