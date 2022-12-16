@@ -64,33 +64,33 @@ class BloggingPromptCardBuilderTest : BaseUnitTest() {
 
     @Test
     fun `given blogging prompt, when card is built, then return card`() {
-        val statCard = buildBloggingPromptCard(bloggingPrompt)
+        val statCard = buildBloggingPromptCardBuilderParams(bloggingPrompt)
 
         assertThat(statCard).isNotNull()
     }
 
     @Test
     fun `given blogging prompt, when card is built showing view more action, then return matching card`() {
-        val statCard = buildBloggingPromptCard(bloggingPrompt, showViewMoreAction = true)
+        val statCard = buildBloggingPromptCardBuilderParams(bloggingPrompt, showViewMoreAction = true)
 
         assertThat(statCard).isEqualTo(bloggingPromptCard(showViewMoreAction = true))
     }
 
     @Test
     fun `given blogging prompt, when card is built not showing view more action, then return matching card`() {
-        val statCard = buildBloggingPromptCard(bloggingPrompt, showViewMoreAction = false)
+        val statCard = buildBloggingPromptCardBuilderParams(bloggingPrompt, showViewMoreAction = false)
 
         assertThat(statCard).isEqualTo(bloggingPromptCard(showViewMoreAction = false))
     }
 
     @Test
     fun `given no blogging prompt, when card is built, then return null`() {
-        val statCard = buildBloggingPromptCard(null)
+        val statCard = buildBloggingPromptCardBuilderParams(null)
 
         assertThat(statCard).isNull()
     }
 
-    private fun buildBloggingPromptCard(
+    private fun buildBloggingPromptCardBuilderParams(
         bloggingPrompt: BloggingPromptModel?,
         showViewMoreAction: Boolean = false
     ) = builder.build(
