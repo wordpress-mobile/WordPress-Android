@@ -77,6 +77,11 @@ class JetpackMigrationFragment : Fragment() {
         }
     }
 
+    override fun onDetach() {
+        super.onDetach()
+        (requireActivity().application as? WordPress)?.let { viewModel.cleanUpIfNeeded(it) }
+    }
+
     private fun handleActionEvents(actionEvent: JetpackMigrationActionEvent) {
         when (actionEvent) {
             is CompleteFlow, FallbackToLogin -> ActivityLauncher.showMainActivity(requireContext())
