@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.multidex.MultiDexApplication
 import com.android.volley.RequestQueue
 import dagger.hilt.EntryPoints
+import kotlinx.coroutines.MainScope
 import org.wordpress.android.AppInitializer.StoryNotificationTrackerProvider
 import org.wordpress.android.fluxc.tools.FluxCImageLoader
 import org.wordpress.android.modules.AppComponent
@@ -77,5 +78,7 @@ abstract class WordPress : MultiDexApplication() {
 
         @JvmStatic
         fun getUserAgent() = AppInitializer.userAgent
+
+        val applicationScope = MainScope()
     }
 }
