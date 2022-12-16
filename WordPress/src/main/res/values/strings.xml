@@ -4307,4 +4307,10 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="wp_jetpack_deep_link_overlay_description">It looks like you have the Jetpack app installed.\n\nWould you like to open links in the Jetpack app in the future?\n\nYou can always change this in App Settings &gt; Open links in Jetpack</string>
     <string name="wp_jetpack_deep_link_open_in_jetpack" translatable="false">@string/preference_open_links_in_jetpack</string>
     <string name="wp_jetpack_deep_link_open_in_wordpress">Open links in WordPress</string>
+
+    <!-- Jetpack Feature Card -->
+    <string name="jetpack_feature_card_content">Stats, Reader, Notifications and other features will soon move to the Jetpack mobile app.</string>
+    <string name="jetpack_feature_card_learn_more" translatable="false">@string/learn_more</string>
+    <string name="jetpack_feature_card_menu_item_remind_me_later">Remind me later</string>
+    <string name="jetpack_feature_card_menu_item_hide_this">Hide this</string>
 </resources>
