@@ -24,13 +24,13 @@ private const val AUTHORIZATION_HEADER = "Authorization"
 private const val UNAUTHORIZED = 401
 
 @Singleton
-class ApplicationPasswordNetwork @Inject constructor(
+class ApplicationPasswordsNetwork @Inject constructor(
     @Named("no-cookies") private val requestQueue: RequestQueue,
     private val userAgent: UserAgent,
     private val listener: Optional<ApplicationPasswordsListener>
 ) {
     // We can't use construction injection for this variable, as its class is internal
-    @Inject internal lateinit var applicationPasswordManager: ApplicationPasswordManager
+    @Inject internal lateinit var mApplicationPasswordsManager: ApplicationPasswordsManager
 
     @Suppress("ReturnCount")
     suspend fun <T> executeGsonRequest(
@@ -41,7 +41,7 @@ class ApplicationPasswordNetwork @Inject constructor(
         params: Map<String, String> = emptyMap(),
         body: Map<String, Any> = emptyMap()
     ): WPAPIResponse<T> {
-        val credentialsResult = applicationPasswordManager.getApplicationCredentials(site)
+        val credentialsResult = mApplicationPasswordsManager.getApplicationCredentials(site)
         val credentials = when (credentialsResult) {
             is ApplicationPasswordCreationResult.Existing -> credentialsResult.credentials
             is ApplicationPasswordCreationResult.Created -> {
@@ -96,7 +96,7 @@ class ApplicationPasswordNetwork @Inject constructor(
                 "Authentication failure using application password, maybe revoked?" +
                     " Delete the saved one then retry"
             )
-            applicationPasswordManager.deleteLocalApplicationPassword(site)
+            mApplicationPasswordsManager.deleteLocalApplicationPassword(site)
             executeGsonRequest(site, method, path, clazz, params, body)
         } else {
             response
@@ -104,7 +104,7 @@ class ApplicationPasswordNetwork @Inject constructor(
     }
 
     suspend fun deleteApplicationPassword(site: SiteModel) {
-        applicationPasswordManager.deleteApplicationCredentials(site)
+        mApplicationPasswordsManager.deleteApplicationCredentials(site)
     }
 
     suspend fun <T> executeGetGsonRequest(
