@@ -135,7 +135,6 @@ open class SiteStore @Inject constructor(
     private val siteSqlUtils: SiteSqlUtils,
     private val coroutineEngine: CoroutineEngine
 ) : Store(dispatcher) {
-
     @Inject internal lateinit var applicationPasswordsManagerProvider: Provider<ApplicationPasswordsManager>
 
     // Payloads
