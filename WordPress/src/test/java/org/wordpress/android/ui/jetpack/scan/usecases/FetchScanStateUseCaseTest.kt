@@ -25,6 +25,7 @@ import org.wordpress.android.test
 import org.wordpress.android.ui.jetpack.scan.usecases.FetchScanStateUseCase.FetchScanState.Failure
 import org.wordpress.android.ui.jetpack.scan.usecases.FetchScanStateUseCase.FetchScanState.Success
 import org.wordpress.android.util.NetworkUtilsWrapper
+import java.util.function.Consumer
 
 @InternalCoroutinesApi
 class FetchScanStateUseCaseTest : BaseUnitTest() {
@@ -148,6 +149,6 @@ class FetchScanStateUseCaseTest : BaseUnitTest() {
 
         val result = useCase.fetchScanState(site = site).toList(mutableListOf())
 
-        assertThat(result).allSatisfy { it is Success }
+        assertThat(result).allSatisfy(Consumer { it is Success })
     }
 }

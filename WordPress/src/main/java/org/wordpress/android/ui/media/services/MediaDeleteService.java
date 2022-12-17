@@ -9,7 +9,6 @@ import androidx.annotation.NonNull;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
@@ -25,10 +24,13 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
 /**
  * A service for deleting media. Only one media item is deleted at a time.
  */
 
+@AndroidEntryPoint
 public class MediaDeleteService extends Service {
     public static final String SITE_KEY = "mediaSite";
     public static final String MEDIA_LIST_KEY = "mediaList";
@@ -62,7 +64,6 @@ public class MediaDeleteService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        ((WordPress) getApplication()).component().inject(this);
         mDispatcher.register(this);
         mCurrentDelete = null;
     }

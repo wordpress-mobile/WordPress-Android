@@ -11,6 +11,10 @@ class QRCodeAuthFlowFeatureConfig
         BuildConfig.QRCODE_AUTH_FLOW,
         QRCODE_AUTH_FLOW_REMOTE_FIELD
 ) {
+    override fun isEnabled(): Boolean {
+        return super.isEnabled() && BuildConfig.ENABLE_QRCODE_AUTH_FLOW
+    }
+
     companion object {
         const val QRCODE_AUTH_FLOW_REMOTE_FIELD = "qrcode_auth_flow_remote_field"
     }

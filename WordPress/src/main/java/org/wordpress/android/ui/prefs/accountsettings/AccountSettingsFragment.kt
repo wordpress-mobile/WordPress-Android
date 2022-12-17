@@ -200,6 +200,7 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
                 summary = state.primarySite?.siteName
                 entries = state.siteNames
                 entryValues = state.siteIds
+                canShowDialog = state.canShowChoosePrimarySiteDialog
                 setDetails(state.homeURLOrHostNames)
                 refreshAdapter()
             }

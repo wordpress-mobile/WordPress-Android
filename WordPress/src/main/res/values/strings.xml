@@ -550,13 +550,21 @@
     <!-- category management -->
     <string name="categories">Categories</string>
     <string name="add_new_category">Add new category</string>
+    <string name="update_category">Update category</string>
     <string name="category_name">Category name</string>
     <string name="category_parent">Parent category (optional):</string>
     <string name="adding_cat">Adding category</string>
+    <string name="updating_cat">Updating category</string>
+    <string name="deleting_cat">Deleting category</string>
     <string name="adding_cat_failed">Adding category failed</string>
     <string name="adding_cat_success">Category added successfully</string>
+    <string name="updating_cat_failed">Updating category failed</string>
+    <string name="updating_cat_success">Category updated successfully</string>
+    <string name="deleting_cat_failed">Deleting category failed</string>
+    <string name="deleting_cat_success">Category deleted successfully</string>
     <string name="cat_name_required">The category name field is required</string>
     <string name="top_level_category_name">Top level</string>
+    <string name="dlg_confirm_delete_category">Permanently delete \'%s\' Category?</string>
 
 
     <!-- action from share intents -->
@@ -4259,7 +4267,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="jp_migration_notifications_disabled_in_wp_message">We\'ll turn off notifications from the WordPress app.</string>
     <string name="jp_migration_done_title">Thanks for switching to Jetpack!</string>
     <string name="jp_migration_done_subtitle">We’ve transferred all your data and settings. Everything is right where you left it.</string>
-    <string name="jp_migration_done_delete_wp_message">Please &lt;b&gt;delete the WordPress app&lt;/b&gt; to&lt;br&gt;avoid data conflicts.</string>
+    <string name="jp_migration_done_delete_wp_message">Please &lt;b&gt;delete the WordPress app&lt;/b&gt; to avoid data conflicts.</string>
     <string name="jp_migration_remove_wp_app_icon_content_description">Remove WordPress App icon</string>
     <string name="jp_migration_finish_button">Finish</string>
     <string name="jp_migration_try_again_button">Try again</string>
@@ -4271,7 +4279,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="jp_migration_network_error_message">We are unable to transfer your data and settings without a network connection.</string>
     <string name="jp_migration_delete_title">You no longer need the WordPress app</string>
     <string name="jp_migration_delete_subtitle">It looks like you still have the WordPress app installed. We recommend you delete the WordPress app to avoid data conflicts.</string>
-    <string name="jp_migration_delete_message">Please &lt;b&gt;delete the WordPress app&lt;/b&gt; to&lt;br&gt;avoid data conflicts.</string>
+    <string name="jp_migration_delete_message">Please &lt;b&gt;delete the WordPress app&lt;/b&gt; to avoid data conflicts.</string>
     <string name="jp_migration_got_it_button">Got it</string>
     <string name="jp_migration_need_help_button">Need help?</string>
 

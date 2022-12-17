@@ -4,10 +4,10 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.os.IBinder
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
-import org.wordpress.android.WordPress
 import org.wordpress.android.ui.reader.services.ServiceCompletionListener
 import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.DiscoverTasks
 import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverServiceStarter.ARG_DISCOVER_TASK
@@ -21,9 +21,10 @@ import kotlin.coroutines.CoroutineContext
 /**
  * Service which updates data for discover tab in Reader, relies on EventBus to notify of changes.
  */
+@AndroidEntryPoint
 class ReaderDiscoverService : Service(), ServiceCompletionListener, CoroutineScope {
     @Inject @field:Named("IO_THREAD") lateinit var ioDispatcher: CoroutineDispatcher
-    private lateinit var readerDiscoverLogic: ReaderDiscoverLogic
+    @Inject lateinit var readerDiscoverLogic: ReaderDiscoverLogic
 
     private var job: Job = Job()
 
@@ -40,9 +41,6 @@ class ReaderDiscoverService : Service(), ServiceCompletionListener, CoroutineSco
 
     override fun onCreate() {
         super.onCreate()
-        val component = (application as WordPress).component()
-        component.inject(this)
-        readerDiscoverLogic = ReaderDiscoverLogic(this, this, component)
         AppLog.i(READER, "reader discover service > created")
     }
 
@@ -55,7 +53,7 @@ class ReaderDiscoverService : Service(), ServiceCompletionListener, CoroutineSco
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         if (intent != null && intent.hasExtra(ARG_DISCOVER_TASK)) {
             val task = intent.getSerializableExtra(ARG_DISCOVER_TASK) as DiscoverTasks
-            readerDiscoverLogic.performTasks(task, null)
+            readerDiscoverLogic.performTasks(task, null, this, this)
         }
         return START_NOT_STICKY
     }
