@@ -36,7 +36,7 @@ sealed class JetpackFeatureOverlayComponentVisibility(
 data class JetpackFeatureOverlayContent(
     @RawRes val illustration: Int,
     @StringRes val title: Int,
-    @StringRes val caption: UiString,
+    val caption: UiString,
     @StringRes val migrationText: Int? = null,
     @StringRes val migrationInfoText: Int? = null,
     @StringRes val primaryButtonText: Int,
