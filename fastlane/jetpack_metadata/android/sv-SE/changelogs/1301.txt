@@ -1,0 +1,4 @@
+21.3:
+- Text in the QR code scanning process is translated into your app’s language.
+- The Notification Settings switch disables weekly roundup, blogging reminder, and site notifications.
+- We fixed a bug in My Site > Comments that crashed the app for self-hosted sites with certain plugins.
