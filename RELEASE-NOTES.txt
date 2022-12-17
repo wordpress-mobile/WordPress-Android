@@ -1,5 +1,9 @@
 *** PLEASE FOLLOW THIS FORMAT: [<priority indicator, more stars = higher priority>] <description> [<PR URL>]
 
+21.5
+-----
+
+
 21.4
 -----
 * [**] Adds the functionality to Add, Edit and Delete categories from site settings. [https://github.com/wordpress-mobile/WordPress-Android/pull/17652]
