@@ -127,7 +127,7 @@ android {
         buildConfigField "boolean", "JETPACK_FEATURE_REMOVAL_PHASE_THREE", "false"
         buildConfigField "boolean", "JETPACK_FEATURE_REMOVAL_PHASE_FOUR", "false"
         buildConfigField "boolean", "JETPACK_FEATURE_REMOVAL_NEW_USERS", "false"
-        buildConfigField "boolean", "PREVENT_DUPLICATE_NOTIFS_REMOTE_FIELD", "true"
+        buildConfigField "boolean", "PREVENT_DUPLICATE_NOTIFS_REMOTE_FIELD", "false"
         buildConfigField "boolean", "OPEN_WEB_LINKS_WITH_JETPACK_FLOW", "false"
 
         // Override these constants in jetpack product flavor to enable/ disable features

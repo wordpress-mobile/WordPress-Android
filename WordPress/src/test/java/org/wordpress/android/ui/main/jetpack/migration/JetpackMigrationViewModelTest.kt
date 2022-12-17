@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.main.jetpack.migration
 
+import androidx.lifecycle.Observer
 import kotlinx.coroutines.flow.first
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -39,6 +40,7 @@ import org.wordpress.android.viewmodel.ContextProvider
 
 @RunWith(MockitoJUnitRunner::class)
 class JetpackMigrationViewModelTest : BaseUnitTest() {
+    private val refreshAppThemeObserver: Observer<Unit> = mock()
     private val siteUtilsWrapper: SiteUtilsWrapper = mock()
     private val gravatarUtilsWrapper: GravatarUtilsWrapper = mock()
     private val appPrefsWrapper: AppPrefsWrapper = mock()
@@ -63,6 +65,7 @@ class JetpackMigrationViewModelTest : BaseUnitTest() {
     @Before
     fun setUp() {
         whenever(gravatarUtilsWrapper.fixGravatarUrlWithResource(any(), any())).thenReturn("")
+        classToTest.refreshAppTheme.observeForever(refreshAppThemeObserver)
     }
 
     // region ViewModel
@@ -138,6 +141,15 @@ class JetpackMigrationViewModelTest : BaseUnitTest() {
         successScreen.primaryActionButton.onClick.invoke()
 
         verify(contentMigrationAnalyticsTracker).trackThanksScreenFinishButtonTapped()
+    }
+
+    @Test
+    fun `Should emit refresh app theme when finish button is tapped on success screen`() {
+        val successScreen = classToTest.initSuccessScreenUi()
+
+        successScreen.primaryActionButton.onClick.invoke()
+
+        verify(refreshAppThemeObserver).onChanged(Unit)
     }
 
     @Test
