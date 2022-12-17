@@ -1,0 +1,4 @@
+21.3 :
+- Le texte du processus de scan est traduit dans la langue de votre application.
+- Le bouton bascule des réglages de notification désactive les résumés hebdomadaires, les rappels de blog et les notifications du site.
+- Nous avons corrigé un bug dans Mon site > Commentaires qui faisait planter l’application pour les sites auto-hébergés avec certaines extensions.

@@ -1,0 +1,3 @@
+21.3:
+– Nu kan du utan bekymmer migrera webbplatsens innehåll till Jetpack-appen.
+– Omkopplingen för aviseringsinställningarna inaktiverar veckosammanfattningar, bloggningspåminnelser och webbplatsaviseringar.

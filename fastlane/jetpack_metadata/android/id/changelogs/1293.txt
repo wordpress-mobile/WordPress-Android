@@ -1,2 +1,0 @@
-21.2:
-Jika statistik situs telah diaktifkan, Anda tidak akan melihat petunjuk untuk mengaktifkannya lagi saat mengetuk widget statistik di layar beranda perangkat. Bagus.

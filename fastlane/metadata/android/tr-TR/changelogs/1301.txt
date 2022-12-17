@@ -1,0 +1,3 @@
+21.3:
+- Artık site içeriğinizi Jetpack uygulamasına sorunsuzca taşıyabilirsiniz.
+- Bildirim Ayarları düğmesi, haftalık özeti, blog hatırlatıcısını ve site bildirimlerini devre dışı bırakır.
