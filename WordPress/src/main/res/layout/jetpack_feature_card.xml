@@ -18,7 +18,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:importantForAccessibility="no"
-            android:src="@drawable/ic_wordpress_jetpack_logo"
+            android:src="@drawable/ic_jetpack_final_notice"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -34,6 +34,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:tint="?attr/wpColorOnSurfaceMedium"
+            tools:ignore="TouchTargetSizeCheck"
             tools:visibility="visible" />
 
         <com.google.android.material.textview.MaterialTextView
@@ -49,17 +50,17 @@
             tools:text="@string/jetpack_feature_card_content" />
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/link_label"
-            style="@style/MySiteCardFooterLinkItem"
+            android:id="@+id/my_site_jetpack_feature_card_learn_more"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingEnd="@dimen/margin_none"
-            android:paddingStart="@dimen/margin_none"
+            android:paddingBottom="@dimen/margin_medium"
+            android:paddingTop="@dimen/margin_medium"
+            android:textAppearance="?attr/textAppearanceBody2"
+            android:textColor="@color/primary_emphasis_medium_selector"
+            android:text="@string/jetpack_feature_card_learn_more"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/my_site_jetpack_feature_card_content"
             tools:text="@string/jetpack_feature_card_learn_more" />
-
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 </com.google.android.material.card.MaterialCardView>
