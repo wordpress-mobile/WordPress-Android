@@ -277,9 +277,9 @@ class JetpackFeatureOverlayContentBuilder @Inject constructor(
     }
 
     private fun convertDateFormat(date: String): String {
-        //Format 2020-12-22
+        // Format 2020-12-22
         val originalFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-        //Format Decemeber 22, 2020
+        // Format Decemeber 22, 2020
         val targetFormat = DateTimeFormatter.ofPattern("MMMM dd, yyyy")
         return LocalDate.parse(date, originalFormat).format(targetFormat)
     }
