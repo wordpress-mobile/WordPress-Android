@@ -6,9 +6,14 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.ComposeView
+import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.ui.compose.theme.AppTheme
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class BloggingPromptsListActivity : AppCompatActivity() {
+    @Inject lateinit var tracker: BloggingPromptsListAnalyticsTracker
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -16,6 +21,7 @@ class BloggingPromptsListActivity : AppCompatActivity() {
                 BloggingPromptsListScreen(::onBackPressed)
             }
         }
+        tracker.trackScreenShown()
     }
 
     // TODO it might be safer bringing in the androidx.activity:activity-compose lib
