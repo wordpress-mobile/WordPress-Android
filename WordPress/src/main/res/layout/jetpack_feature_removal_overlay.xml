@@ -145,7 +145,7 @@
             android:minHeight="@dimen/margin_extra_extra_large"
             android:textAllCaps="false"
             android:textAppearance="?attr/textAppearanceSubtitle2"
-            android:textColor="@color/jetpack_green_50"
+            android:textColor="@color/jp_feature_removal_overlay_secondary_button_color"
             app:autoSizeMaxTextSize="@dimen/text_sz_medium"
             app:autoSizeStepGranularity="4sp"
             app:autoSizeTextType="uniform"
