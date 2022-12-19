@@ -204,9 +204,9 @@ class MySiteViewModelTest : BaseUnitTest() {
     private lateinit var dynamicCardMenu: MutableList<DynamicCardMenuModel>
     private lateinit var navigationActions: MutableList<SiteNavigationAction>
     private lateinit var showSwipeRefreshLayout: MutableList<Boolean>
-    private lateinit var shareRequests: MutableList<String>
+    private lateinit var bloggingPromptsShareRequests: MutableList<String>
     private lateinit var bloggingPromptsLearnMore: MutableList<Unit>
-    private var answerRequests: Int = 0
+    private var bloggingPromptsAnswerRequests: Int = 0
     private var bloggingPromptsViewMoreRequests: Int = 0
     private lateinit var trackWithTabSource: MutableList<MySiteTrackWithTabSource>
     private lateinit var tabNavigation: MutableList<TabNavigation>
@@ -405,11 +405,11 @@ class MySiteViewModelTest : BaseUnitTest() {
         navigationActions = mutableListOf()
         dynamicCardMenu = mutableListOf()
         showSwipeRefreshLayout = mutableListOf()
-        shareRequests = mutableListOf()
+        bloggingPromptsShareRequests = mutableListOf()
         trackWithTabSource = mutableListOf()
         tabNavigation = mutableListOf()
         bloggingPromptsLearnMore = mutableListOf()
-        answerRequests = 0
+        bloggingPromptsAnswerRequests = 0
         bloggingPromptsViewMoreRequests = 0
         launch(Dispatchers.Default) {
             viewModel.uiModel.observeForever {
@@ -441,14 +441,14 @@ class MySiteViewModelTest : BaseUnitTest() {
                 dynamicCardMenu.add(it)
             }
         }
-        viewModel.onShare.observeForever { event ->
+        viewModel.onShareBloggingPrompt.observeForever { event ->
             event?.getContentIfNotHandled()?.let {
-                shareRequests.add(it)
+                bloggingPromptsShareRequests.add(it)
             }
         }
         viewModel.onAnswerBloggingPrompt.observeForever { event ->
             event?.getContentIfNotHandled()?.let {
-                answerRequests++
+                bloggingPromptsAnswerRequests++
             }
         }
         viewModel.onTrackWithTabSource.observeForever { event ->
@@ -1680,7 +1680,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         requireNotNull(onBloggingPromptShareClicked).invoke(expectedShareMessage)
 
-        assertThat(shareRequests.last()).isEqualTo(expectedShareMessage)
+        assertThat(bloggingPromptsShareRequests.last()).isEqualTo(expectedShareMessage)
     }
 
     @Test
@@ -1689,7 +1689,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         requireNotNull(onBloggingPromptAnswerClicked).invoke(123)
 
-        assertTrue(answerRequests == 1)
+        assertTrue(bloggingPromptsAnswerRequests == 1)
     }
 
     @Test

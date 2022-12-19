@@ -181,9 +181,9 @@ class MySiteViewModel @Inject constructor(
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
     private val _onMediaUpload = MutableLiveData<Event<MediaModel>>()
     private val _activeTaskPosition = MutableLiveData<Pair<QuickStartTask, Int>>()
-    private val _onShare = MutableLiveData<Event<String>>()
     private val _onTrackWithTabSource = MutableLiveData<Event<MySiteTrackWithTabSource>>()
     private val _selectTab = MutableLiveData<Event<TabNavigation>>()
+    private val _onShareBloggingPrompt = MutableLiveData<Event<String>>()
     private val _onAnswerBloggingPrompt = SingleLiveEvent<Event<Pair<SiteModel, PromptID>>>()
     private val _onBloggingPromptsLearnMore = SingleLiveEvent<Event<Unit>>()
     private val _onBloggingPromptsViewMore = SingleLiveEvent<Event<Unit>>()
@@ -250,7 +250,7 @@ class MySiteViewModel @Inject constructor(
     val onNavigation = merge(_onNavigation, siteStoriesHandler.onNavigation)
     val onMediaUpload = _onMediaUpload as LiveData<Event<MediaModel>>
     val onUploadedItem = siteIconUploadHandler.onUploadedItem
-    val onShare = _onShare
+    val onShareBloggingPrompt = _onShareBloggingPrompt as LiveData<Event<String>>
     val onAnswerBloggingPrompt = _onAnswerBloggingPrompt as LiveData<Event<Pair<SiteModel, Int>>>
     val onBloggingPromptsLearnMore = _onBloggingPromptsLearnMore as LiveData<Event<Unit>>
     val onBloggingPromptsViewMore = _onBloggingPromptsViewMore as LiveData<Event<Unit>>
@@ -1253,7 +1253,7 @@ class MySiteViewModel @Inject constructor(
     }
 
     private fun onBloggingPromptShareClick(message: String) {
-        onShare.postValue(Event(message))
+        _onShareBloggingPrompt.postValue(Event(message))
     }
 
     private fun onBloggingPromptAnswerClick(promptId: Int) {
