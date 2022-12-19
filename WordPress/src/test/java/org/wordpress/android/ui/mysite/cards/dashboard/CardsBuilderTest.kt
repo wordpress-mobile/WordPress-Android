@@ -200,7 +200,7 @@ class CardsBuilderTest : BaseUnitTest() {
                         todaysStatsCardBuilderParams = TodaysStatsCardBuilderParams(mock(), mock(), mock(), mock()),
                         postCardBuilderParams = PostCardBuilderParams(mock(), mock(), mock()),
                         bloggingPromptCardBuilderParams = BloggingPromptCardBuilderParams(
-                                mock(), false, mock(), mock(), mock()
+                                mock(), false, mock(), mock(), mock(), mock()
                         )
                 )
         )

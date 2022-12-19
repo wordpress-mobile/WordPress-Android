@@ -207,6 +207,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     private lateinit var shareRequests: MutableList<String>
     private lateinit var bloggingPromptsLearnMore: MutableList<Unit>
     private var answerRequests: Int = 0
+    private var bloggingPromptsViewMoreRequests: Int = 0
     private lateinit var trackWithTabSource: MutableList<MySiteTrackWithTabSource>
     private lateinit var tabNavigation: MutableList<TabNavigation>
     private val avatarUrl = "https://1.gravatar.com/avatar/1000?s=96&d=identicon"
@@ -258,6 +259,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     private var onBloggingPromptShareClicked: ((message: String) -> Unit)? = null
     private var onBloggingPromptAnswerClicked: ((promptId: Int) -> Unit)? = null
     private var onBloggingPromptSkipClicked: (() -> Unit)? = null
+    private var onBloggingPromptViewMoreClicked: (() -> Unit)? = null
     private val quickStartCategory: QuickStartCategory
         get() = QuickStartCategory(
                 taskType = QuickStartTaskType.CUSTOMIZE,
@@ -340,9 +342,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @InternalCoroutinesApi
     @Suppress("LongMethod")
-    fun init(
-
-    ) = test {
+    fun init() = test {
         onSiteChange.value = null
         onShowSiteIconProgressBar.value = null
         onSiteSelected.value = null
@@ -409,6 +409,8 @@ class MySiteViewModelTest : BaseUnitTest() {
         trackWithTabSource = mutableListOf()
         tabNavigation = mutableListOf()
         bloggingPromptsLearnMore = mutableListOf()
+        answerRequests = 0
+        bloggingPromptsViewMoreRequests = 0
         launch(Dispatchers.Default) {
             viewModel.uiModel.observeForever {
                 uiModels.add(it)
@@ -461,6 +463,11 @@ class MySiteViewModelTest : BaseUnitTest() {
         }
         viewModel.onBloggingPromptsLearnMore.observeForever {
             bloggingPromptsLearnMore.add(Unit)
+        }
+        viewModel.onBloggingPromptsViewMore.observeForever { event ->
+            event?.getContentIfNotHandled()?.let {
+                bloggingPromptsViewMoreRequests++
+            }
         }
         site = SiteModel()
         site.id = siteLocalId
@@ -1683,6 +1690,15 @@ class MySiteViewModelTest : BaseUnitTest() {
         requireNotNull(onBloggingPromptAnswerClicked).invoke(123)
 
         assertTrue(answerRequests == 1)
+    }
+
+    @Test
+    fun `given blogging prompt card, when view more button is clicked, view more action is called`() = test {
+        initSelectedSite()
+
+        requireNotNull(onBloggingPromptViewMoreClicked).invoke()
+
+        assertTrue(bloggingPromptsViewMoreRequests == 1)
     }
 
     @Test
@@ -3083,6 +3099,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         onBloggingPromptShareClicked = params.bloggingPromptCardBuilderParams.onShareClick
         onBloggingPromptAnswerClicked = params.bloggingPromptCardBuilderParams.onAnswerClick
         onBloggingPromptSkipClicked = params.bloggingPromptCardBuilderParams.onSkipClick
+        onBloggingPromptViewMoreClicked = params.bloggingPromptCardBuilderParams.onViewMoreClick
         return BloggingPromptCardWithData(
                 prompt = UiStringText("Test prompt"),
                 respondents = emptyList(),
@@ -3094,6 +3111,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 onShareClick = onBloggingPromptShareClicked as ((message: String) -> Unit),
                 onAnswerClick = onBloggingPromptAnswerClicked as ((promptId: Int) -> Unit),
                 onSkipClick = onBloggingPromptSkipClicked as (() -> Unit),
+                onViewMoreClick = onBloggingPromptViewMoreClicked as (() -> Unit),
         )
     }
 
