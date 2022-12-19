@@ -25,8 +25,6 @@ class BloggingPromptsListActivity : AppCompatActivity() {
     }
 
     companion object {
-        @JvmStatic fun createIntent(context: Context) = Intent(context, BloggingPromptsListActivity::class.java).apply {
-            // configure intent extras here
-        }
+        @JvmStatic fun createIntent(context: Context) = Intent(context, BloggingPromptsListActivity::class.java)
     }
 }
