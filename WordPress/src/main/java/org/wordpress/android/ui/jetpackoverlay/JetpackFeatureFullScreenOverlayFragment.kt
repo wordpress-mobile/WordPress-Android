@@ -28,8 +28,6 @@ import org.wordpress.android.util.extensions.exhaustive
 import org.wordpress.android.util.extensions.setVisible
 import javax.inject.Inject
 
-private const val JETPACK_MIGRATION_INFO_URL = "https://jetpack.com"
-
 @AndroidEntryPoint
 class JetpackFeatureFullScreenOverlayFragment : BottomSheetDialogFragment() {
     @Inject lateinit var activityLauncherWrapper: ActivityLauncherWrapper
