@@ -4300,7 +4300,6 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_notifications">Notifications are moving to Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description_with_deadline">Stats, Reader, Notifications and other Jetpack powered features will be removed from the WordPress app on %s.</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description_without_deadline">Stats, Reader, Notifications and other Jetpack powered features will be removed from the WordPress app soon.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_two__and_three_learn_more_about_migration">Switch to the Jetpack app to keep receiving  realtime notifications on your device.</string>
     <string name="wp_jetpack_feature_removal_overlay_migration_helper_text">Switching is free and only takes a minute.</string>
     <string name="wp_jetpack_feature_removal_overlay_learn_more_migration_text">Learn more at jetpack.com</string>
 
