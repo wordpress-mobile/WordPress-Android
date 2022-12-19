@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 
 import androidx.preference.PreferenceManager;
 
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
