@@ -186,6 +186,7 @@ class MySiteViewModel @Inject constructor(
     private val _selectTab = MutableLiveData<Event<TabNavigation>>()
     private val _onAnswerBloggingPrompt = SingleLiveEvent<Event<Pair<SiteModel, PromptID>>>()
     private val _onBloggingPromptsLearnMore = SingleLiveEvent<Event<Unit>>()
+    private val _onBloggingPromptsViewMore = SingleLiveEvent<Event<Unit>>()
 
     private val tabsUiState: LiveData<TabsUiState> = quickStartRepository.onQuickStartTabStep
             .switchMap { quickStartSiteMenuStep ->
@@ -252,6 +253,7 @@ class MySiteViewModel @Inject constructor(
     val onShare = _onShare
     val onAnswerBloggingPrompt = _onAnswerBloggingPrompt as LiveData<Event<Pair<SiteModel, Int>>>
     val onBloggingPromptsLearnMore = _onBloggingPromptsLearnMore as LiveData<Event<Unit>>
+    val onBloggingPromptsViewMore = _onBloggingPromptsViewMore as LiveData<Event<Unit>>
     val onTrackWithTabSource = _onTrackWithTabSource as LiveData<Event<MySiteTrackWithTabSource>>
     val selectTab: LiveData<Event<TabNavigation>> = _selectTab
     private var shouldMarkUpdateSiteTitleTaskComplete = false
@@ -481,7 +483,8 @@ class MySiteViewModel @Inject constructor(
                                 showViewMoreAction = isBloggingPromptsListFeatureConfigEnabled,
                                 onShareClick = this::onBloggingPromptShareClick,
                                 onAnswerClick = this::onBloggingPromptAnswerClick,
-                                onSkipClick = this::onBloggingPromptSkipClicked
+                                onSkipClick = this::onBloggingPromptSkipClicked,
+                                onViewMoreClick = this::onBloggingPromptViewMoreClicked
                         )
                 ),
                 QuickLinkRibbonBuilderParams(
@@ -1278,6 +1281,10 @@ class MySiteViewModel @Inject constructor(
 
             _onSnackbarMessage.postValue(Event(snackbar))
         }
+    }
+
+    private fun onBloggingPromptViewMoreClicked() {
+        _onBloggingPromptsViewMore.postValue(Event(Unit))
     }
 
     fun isRefreshing() = mySiteSourceManager.isRefreshing()

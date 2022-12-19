@@ -272,6 +272,9 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
         viewModel.onBloggingPromptsLearnMore.observeEvent(viewLifecycleOwner) {
             (activity as? BloggingPromptsOnboardingListener)?.onShowBloggingPromptsOnboarding()
         }
+        viewModel.onBloggingPromptsViewMore.observeEvent(viewLifecycleOwner) {
+            ActivityLauncher.showBloggingPromptsListActivity(activity)
+        }
     }
 
     @Suppress("ComplexMethod", "LongMethod")
