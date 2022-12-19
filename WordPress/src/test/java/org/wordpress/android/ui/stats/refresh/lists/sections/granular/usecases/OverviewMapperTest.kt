@@ -1,12 +1,12 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases
 
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.eq
-import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
+import org.mockito.kotlin.any
+import org.mockito.kotlin.eq
+import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel.PeriodData
@@ -73,8 +73,6 @@ class OverviewMapperTest : BaseUnitTest() {
         val selectedPosition = 2
         val uiState = UiState(selectedPosition)
         val positiveLabel = "+15 (300%)"
-        whenever(resourceProvider.getString(eq(R.string.stats_traffic_increase), eq("15"), eq("300")))
-                .thenReturn(positiveLabel)
         whenever(resourceProvider.getString(
                 eq(R.string.stats_overview_content_description),
                 eq(likes),
@@ -82,6 +80,8 @@ class OverviewMapperTest : BaseUnitTest() {
                 eq(printedDate),
                 eq(positiveLabel)
         )).thenReturn(positiveLabel)
+        whenever(statsUtils.buildChange(eq(previousLikes), eq(likes), positive = eq(true), any()))
+                .then { positiveLabel }
 
         val title = mapper.buildTitle(
                 selectedItem,
@@ -103,8 +103,6 @@ class OverviewMapperTest : BaseUnitTest() {
         val selectedPosition = 2
         val uiState = UiState(selectedPosition)
         val positiveLabel = "+20 (∞%)"
-        whenever(resourceProvider.getString(eq(R.string.stats_traffic_increase), eq("20"), eq("∞")))
-                .thenReturn(positiveLabel)
         whenever(resourceProvider.getString(
                 eq(R.string.stats_overview_content_description),
                 eq(likes),
@@ -112,6 +110,8 @@ class OverviewMapperTest : BaseUnitTest() {
                 eq(printedDate),
                 eq(positiveLabel)
         )).thenReturn(positiveLabel)
+        whenever(statsUtils.buildChange(eq(previousLikes), eq(likes), positive = eq(true), any()))
+                .then { positiveLabel }
 
         val title = mapper.buildTitle(
                 selectedItem,
@@ -133,8 +133,6 @@ class OverviewMapperTest : BaseUnitTest() {
         val selectedPosition = 2
         val uiState = UiState(selectedPosition)
         val negativeLabel = "-10 (-33%)"
-        whenever(resourceProvider.getString(eq(R.string.stats_traffic_change), eq("-10"), eq("-33")))
-                .thenReturn(negativeLabel)
         whenever(resourceProvider.getString(
                 eq(R.string.stats_overview_content_description),
                 eq(likes),
@@ -142,6 +140,8 @@ class OverviewMapperTest : BaseUnitTest() {
                 eq(printedDate),
                 eq(negativeLabel)
         )).thenReturn(negativeLabel)
+        whenever(statsUtils.buildChange(eq(previousLikes), eq(likes), positive = eq(false), any()))
+                .then { negativeLabel }
 
         val title = mapper.buildTitle(
                 selectedItem,
@@ -163,8 +163,6 @@ class OverviewMapperTest : BaseUnitTest() {
         val selectedPosition = 2
         val uiState = UiState(selectedPosition)
         val negativeLabel = "-20 (-100%)"
-        whenever(resourceProvider.getString(eq(R.string.stats_traffic_change), eq("-20"), eq("-100")))
-                .thenReturn(negativeLabel)
         whenever(resourceProvider.getString(
                 eq(R.string.stats_overview_content_description),
                 eq(newLikes),
@@ -172,6 +170,8 @@ class OverviewMapperTest : BaseUnitTest() {
                 eq(printedDate),
                 eq(negativeLabel)
         )).thenReturn(negativeLabel)
+        whenever(statsUtils.buildChange(eq(likes), eq(newLikes), positive = eq(false), any()))
+                .then { negativeLabel }
 
         val title = mapper.buildTitle(
                 newItem,
@@ -193,8 +193,6 @@ class OverviewMapperTest : BaseUnitTest() {
         val selectedPosition = 2
         val uiState = UiState(selectedPosition)
         val positiveLabel = "+0 (0%)"
-        whenever(resourceProvider.getString(eq(R.string.stats_traffic_increase), eq("0"), eq("0")))
-                .thenReturn(positiveLabel)
         whenever(resourceProvider.getString(
                 eq(R.string.stats_overview_content_description),
                 eq(likes),
@@ -202,6 +200,8 @@ class OverviewMapperTest : BaseUnitTest() {
                 eq(printedDate),
                 eq(positiveLabel)
         )).thenReturn(positiveLabel)
+        whenever(statsUtils.buildChange(eq(previousLikes), eq(likes), positive = eq(true), any()))
+                .then { positiveLabel }
 
         val title = mapper.buildTitle(
                 selectedItem,
@@ -224,8 +224,6 @@ class OverviewMapperTest : BaseUnitTest() {
         val selectedPosition = 2
         val uiState = UiState(selectedPosition)
         val negativeLabel = "-10 (-33%)"
-        whenever(resourceProvider.getString(eq(R.string.stats_traffic_change), eq("-10"), eq("-33")))
-                .thenReturn(negativeLabel)
         whenever(resourceProvider.getString(
                 eq(R.string.stats_overview_content_description),
                 eq(likes),
@@ -233,6 +231,8 @@ class OverviewMapperTest : BaseUnitTest() {
                 eq(printedDate),
                 eq(negativeLabel)
         )).thenReturn(negativeLabel)
+        whenever(statsUtils.buildChange(eq(previousLikes), eq(likes), positive = eq(false), any()))
+                .then { negativeLabel }
 
         val title = mapper.buildTitle(
                 selectedItem,

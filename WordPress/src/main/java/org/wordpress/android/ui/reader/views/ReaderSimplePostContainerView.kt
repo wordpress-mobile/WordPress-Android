@@ -53,6 +53,7 @@ class ReaderSimplePostContainerView @JvmOverloads constructor(
     /*
      * called by reader detail when scrolled into view, tracks railcar events for each post
      */
+    @Suppress("ForbiddenComment")
     fun trackRailcarRender() { // TODO: move tracking to view model
         for (railcarJson in railcarJsonStrings) {
             railcarJson?.let { readerTracker.trackRailcar(it) }

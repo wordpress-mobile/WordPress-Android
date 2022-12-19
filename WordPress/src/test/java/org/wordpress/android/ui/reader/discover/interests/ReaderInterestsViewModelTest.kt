@@ -1,15 +1,8 @@
 package org.wordpress.android.ui.reader.discover.interests
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.eq
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.times
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Rule
@@ -17,11 +10,18 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.any
+import org.mockito.kotlin.eq
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 import org.wordpress.android.MainCoroutineScopeRule
 import org.wordpress.android.R
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.models.ReaderTagType
+import org.wordpress.android.test
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsFragment.EntryPoint
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.DoneButtonUiState.DoneButtonDisabledUiState
@@ -329,6 +329,20 @@ class ReaderInterestsViewModelTest {
             }
 
     @Test
+    fun `when interest tag is toggled, then complete follow site quick start task if needed is invoked`() =
+            testWithEmptyUserTags {
+                val interests = getInterests()
+                whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
+                val selectInterestAtIndex = 2
+
+                initViewModel()
+                viewModel.onInterestAtIndexToggled(index = selectInterestAtIndex, isChecked = true)
+
+                // Then
+                verify(parentViewModel).completeQuickStartFollowSiteTaskIfNeeded()
+            }
+
+    @Test
     fun `done button shown in enabled state if an interest is in selected state`() =
             testWithEmptyUserTags {
                 // Given
@@ -604,21 +618,21 @@ class ReaderInterestsViewModelTest {
     )
 
     private fun <T> testWithEmptyUserTags(block: suspend CoroutineScope.() -> T) {
-        coroutineScope.runBlockingTest {
+        test {
             whenever(readerTagRepository.getUserTags()).thenReturn(SuccessWithData(ReaderTagList()))
             block()
         }
     }
 
     private fun <T> testWithFailedUserTags(block: suspend CoroutineScope.() -> T) {
-        coroutineScope.runBlockingTest {
+        test {
             whenever(readerTagRepository.getUserTags()).thenReturn(NetworkUnavailable)
             block()
         }
     }
 
     private fun <T> testWithNonEmptyUserTags(block: suspend CoroutineScope.() -> T) {
-        coroutineScope.runBlockingTest {
+        test {
             val nonEmptyUserTags = ReaderTagList().apply {
                 this.add(mock())
                 this.add(mock())

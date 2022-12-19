@@ -16,8 +16,11 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.RecyclerViewPrimaryButtonBottomSheetBinding
+import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingDialogFragment
+import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingDialogFragment.DialogType.INFORMATION
 import org.wordpress.android.ui.utils.UiHelpers
-import org.wordpress.android.util.disableAnimation
+import org.wordpress.android.util.extensions.disableAnimation
+import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
 class BloggingReminderBottomSheetFragment : BottomSheetDialogFragment() {
@@ -67,6 +70,14 @@ class BloggingReminderBottomSheetFragment : BottomSheetDialogFragment() {
                 }
             }
 
+            viewModel.showBloggingPromptHelpDialogVisible.observeEvent(viewLifecycleOwner) { isShowing: Boolean ->
+                if (isShowing) {
+                    BloggingPromptsOnboardingDialogFragment.newInstance(INFORMATION).show(
+                            parentFragmentManager, BloggingPromptsOnboardingDialogFragment.TAG
+                    )
+                }
+            }
+
             BloggingReminderUtils.observeTimePicker(
                     viewModel.isTimePickerShowing,
                     viewLifecycleOwner,
@@ -101,7 +112,6 @@ class BloggingReminderBottomSheetFragment : BottomSheetDialogFragment() {
     }
 
     companion object {
-        @JvmStatic
-        fun newInstance() = BloggingReminderBottomSheetFragment()
+        const val TAG = "BLOGGING_REMINDER_BOTTOM_SHEET_FRAGMENT"
     }
 }

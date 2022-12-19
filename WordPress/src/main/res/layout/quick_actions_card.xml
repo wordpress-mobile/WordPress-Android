@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/quick_actions_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -33,21 +32,6 @@
         app:layout_constraintEnd_toEndOf="@+id/quick_action_stats_button"
         app:layout_constraintStart_toStartOf="@+id/quick_action_stats_button"
         app:layout_constraintTop_toBottomOf="@+id/quick_action_stats_button" />
-
-    <org.wordpress.android.widgets.QuickStartFocusPoint
-        android:id="@+id/quick_start_stats_focus_point"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:contentDescription="@string/quick_start_focus_point_description"
-        android:elevation="@dimen/quick_start_focus_point_elevation"
-        app:layout_constraintBottom_toBottomOf="@+id/quick_action_stats_button"
-        app:layout_constraintEnd_toEndOf="@+id/quick_action_stats_button"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="@+id/quick_action_stats_button"
-        app:layout_constraintTop_toTopOf="@+id/quick_action_stats_button"
-        app:layout_constraintVertical_bias="0.0"
-        app:size="small"
-        tools:ignore="RtlSymmetry" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/quick_action_posts_button"
@@ -112,20 +96,5 @@
         app:layout_constraintEnd_toEndOf="@+id/quick_action_pages_button"
         app:layout_constraintStart_toStartOf="@+id/quick_action_pages_button"
         app:layout_constraintTop_toBottomOf="@+id/quick_action_pages_button" />
-
-    <org.wordpress.android.widgets.QuickStartFocusPoint
-        android:id="@+id/quick_start_pages_focus_point"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:contentDescription="@string/quick_start_focus_point_description"
-        android:elevation="@dimen/quick_start_focus_point_elevation"
-        app:layout_constraintBottom_toBottomOf="@+id/quick_action_pages_button"
-        app:layout_constraintEnd_toEndOf="@+id/quick_action_pages_button"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="@+id/quick_action_pages_button"
-        app:layout_constraintTop_toTopOf="@+id/quick_action_pages_button"
-        app:layout_constraintVertical_bias="0.0"
-        app:size="small"
-        tools:ignore="RtlSymmetry" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

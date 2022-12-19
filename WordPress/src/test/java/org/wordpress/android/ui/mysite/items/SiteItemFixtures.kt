@@ -4,6 +4,7 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.CategoryHeaderItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.ListItem
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
+import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.DOMAINS
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
@@ -20,7 +21,7 @@ val CONFIGURATION_HEADER = CategoryHeaderItem(
         UiStringRes(R.string.my_site_header_configuration)
 )
 val EXTERNAL_HEADER = CategoryHeaderItem(UiStringRes(R.string.my_site_header_external))
-val PLAN_NAME = "plan_name"
+const val PLAN_NAME = "plan_name"
 val PLAN_ITEM = ListItem(
         R.drawable.ic_plans_white_24dp,
         UiStringRes(R.string.plan),
@@ -108,4 +109,9 @@ val VIEW_SITE_ITEM = ListItem(
         UiStringRes(R.string.my_site_btn_view_site),
         secondaryIcon = R.drawable.ic_external_white_24dp,
         onClick = ListItemInteraction.create(ListItemAction.VIEW_SITE, SITE_ITEM_ACTION)
+)
+val DOMAINS_ITEM = ListItem(
+        R.drawable.ic_domains_white_24dp,
+        UiStringRes(R.string.my_site_btn_domains),
+        onClick = ListItemInteraction.create(DOMAINS, SITE_ITEM_ACTION)
 )

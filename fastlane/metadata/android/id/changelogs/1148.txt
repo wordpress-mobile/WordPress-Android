@@ -1,6 +1,0 @@
-18.9:
-- Sorot teks dengan warna apa pun di blok Paragraf.
-- Lihat dan berikan respons ke komentar setelah Anda memposkan konten di Pembaca.
-- Buat blok Galeri baru dengan desain baru untuk mengonversikan galeri lama secara otomatis agar sesuai.
-- Urungkan dan ulangi perubahan saat memformat teks tautan di blok.
-- Muat lebih cepat saat melakukan reblog pos dan membagikan teks dari aplikasi lain.

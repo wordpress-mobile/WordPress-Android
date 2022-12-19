@@ -1,16 +1,16 @@
 package org.wordpress.android.viewmodel.posts
 
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.eq
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.times
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
+import org.mockito.kotlin.any
+import org.mockito.kotlin.eq
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
@@ -26,13 +26,13 @@ import org.wordpress.android.ui.uploads.UploadStarter
 private const val DEFAULT_PHOTON_DIMENSIONS = -9
 private val DEFAULT_AUTHOR_FILTER = AuthorFilterSelection.EVERYONE
 
+@InternalCoroutinesApi
 class PostListViewModelTest : BaseUnitTest() {
     @Mock private lateinit var site: SiteModel
     @Mock private lateinit var uploadStarter: UploadStarter
 
     private lateinit var viewModel: PostListViewModel
 
-    @UseExperimental(InternalCoroutinesApi::class)
     @Before
     fun setUp() {
         val listStore = mock<ListStore>()

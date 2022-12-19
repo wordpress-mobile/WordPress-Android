@@ -1,14 +1,6 @@
 package org.wordpress.android.models.recommend
 
 import android.content.Context
-import com.nhaarman.mockitokotlin2.KArgumentCaptor
-import com.nhaarman.mockitokotlin2.argumentCaptor
-import com.nhaarman.mockitokotlin2.doAnswer
-import com.nhaarman.mockitokotlin2.eq
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.times
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
 import com.wordpress.rest.RestRequest
 import org.assertj.core.api.Assertions.assertThat
 import org.json.JSONObject
@@ -17,6 +9,14 @@ import org.junit.Test
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.ArgumentMatchers.startsWith
 import org.mockito.Mock
+import org.mockito.kotlin.KArgumentCaptor
+import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.doAnswer
+import org.mockito.kotlin.eq
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.models.recommend.RecommendApiCallsProvider.RecommendAppName.WordPress

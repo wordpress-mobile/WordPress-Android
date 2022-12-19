@@ -5,8 +5,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.databinding.ModalLayoutPickerCategoryBinding
 import org.wordpress.android.login.util.getColorStateListFromAttribute
-import org.wordpress.android.util.getColorFromAttribute
-import org.wordpress.android.util.setVisible
+import org.wordpress.android.util.extensions.getColorFromAttribute
+import org.wordpress.android.util.extensions.setVisible
 
 /**
  * Renders the Layout Category header buttons

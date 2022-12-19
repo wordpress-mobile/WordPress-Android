@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2016-12-01 04:20:36+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/3.0.0-alpha.2
+Generator: GlotPress/4.0.0-alpha.3
 Language: th
 -->
 <resources>
@@ -18,6 +18,7 @@ Language: th
     <string name="title_email_follower">อีเมลผู้ติดตาม</string>
     <string name="title_follower">ผู้ติดตาม</string>
     <string name="people_dropdown_item_viewers">ผู้ชม</string>
+    <string name="image_thumbnail">รูปย่อ</string>
     <string name="remove">ลบออก</string>
     <string name="search">ค้นหา</string>
     <string name="disabled">ปิดการใช้งาน</string>
@@ -203,7 +204,6 @@ Language: th
     <string name="stats_followers_a_minute_ago">นาทีที่แล้ว</string>
     <string name="stats_followers_seconds_ago">วินาทีที่แล้ว</string>
     <string name="themes_fetching">กำลังดึงข้อมูลธีม</string>
-    <string name="stats_view_publicize">การเผยแพร่</string>
     <string name="ssl_certificate_details">รายละเอียด</string>
     <string name="cab_selected">%d ถูกเลือก</string>
     <string name="comment_reply_to_user">ตอบกลับไปที่ %s</string>
@@ -282,6 +282,7 @@ Language: th
     <string name="cancel_edit">ยกเลิกการแก้ไข</string>
     <string name="post_settings">การตั้งค่าเรื่อง</string>
     <string name="link_enter_url_text">ลิงก์ข้อความ (ทางเลือก)</string>
+    <string name="create_a_link">สร้างลิงก์</string>
     <string name="page_settings">การตั้งค่าหน้า</string>
     <string name="local_draft">ฉบับร่างที่บันทึกในเครื่อง</string>
     <string name="select_categories">เลือกหมวดหมู่</string>
@@ -293,6 +294,7 @@ Language: th
     <string name="file_error_create">ไม่สามารถสร้างไฟล์ชั่วคราวสำหรับการอัปโหลดไฟล์สื่อ โปรดตรวจสอบว่าอุปกรณ์ของคุณมีพื้นที่ว่างเพียงพอสำหรับการอัปโหลด</string>
     <string name="local_changes">การเปลี่ยนแปลงบนอุปกรณ์</string>
     <string name="media_gallery_type_thumbnail_grid">ตารางรูปขนาดย่อ</string>
+    <string name="horizontal_alignment">การเรียงในแนวนอน</string>
     <string name="http_authorization_required">ต้องการการอนุญาติ</string>
     <string name="reader_title_applog">log แอพพลิเคชั่น</string>
     <string name="remove_account">ลบเว็บ</string>
@@ -301,6 +303,7 @@ Language: th
     <string name="reader_empty_posts_in_tag_updating">กำลังดึงข้อมูลเรื่อง…</string>
     <string name="comment_spammed">ความเห็นนี้ถูกบันทึกเป็นสแปม</string>
     <string name="cant_share_no_visible_blog">คุณสามารถแบ่งปันไปยังเวิร์ดเพรสได้ถ้าไม่มีบล็อกที่มองเห็นได้</string>
+    <string name="comment_unapproved">ไม่อนุมัติความเห็นแล้ว</string>
     <string name="reader_likes_multi">%,d คนชอบสิ่งนี้</string>
     <string name="reader_likes_you_and_multi">คุณและ %,d คนชอบสิ่งนี้</string>
     <string name="pick_photo">เลือกรูปภาพ</string>
@@ -358,11 +361,16 @@ Language: th
     <string name="log_in">เข้าสู่ระบบ</string>
     <string name="reader">ผู้อ่าน</string>
     <string name="pages">หน้า</string>
+    <string name="caption">ป้ายชื่อ (ทางเลือก)</string>
+    <string name="width">ความกว้าง</string>
     <string name="posts">เรื่อง</string>
     <string name="anonymous">นิรนาม</string>
+    <string name="featured">ใช้เป็นรูปเด่น</string>
+    <string name="featured_in_post">รวมรูปภาพในเนื้อหาเรื่อง</string>
     <string name="no_network_title">ไม่มีเครือข่ายใช้งานได้</string>
     <string name="ok">ตกลง</string>
     <string name="link_enter_url">URL</string>
+    <string name="uploading">กำลังอัปโหลด…</string>
     <string name="version">รุ่น</string>
     <string name="tos">เงื่อนไขบริการ</string>
     <string name="app_title">เวิร์ดเพรสสำหรับแอนดรอยด์</string>

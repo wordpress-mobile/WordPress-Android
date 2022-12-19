@@ -1,0 +1,40 @@
+{
+    "request": {
+        "method": "GET",
+        "urlPathPattern": "/rest/v1.1/sites/([0-9]+)/stats/search-terms/",
+        "queryParameters": {
+            "period": {
+                "equalTo": "day"
+            },
+            "max": {
+                "matches": "[0-9]+"
+            },
+            "date": {
+                "matches": "(.*)"
+            },
+            "locale": {
+                "matches": "(.*)"
+            }
+        }
+    },
+    "response": {
+        "status": 200,
+        "jsonBody": {
+            "date": "{{fnow format='yyyy-MM-dd'}}",
+            "period": "day",
+            "days": {
+                "{{fnow format='yyyy-MM-dd'}}": {
+                    "search_terms": [
+                        {
+                            "term": "Test",
+                            "views": 1
+                        }
+                    ],
+                    "encrypted_search_terms": 3,
+                    "other_search_terms": 0,
+                    "total_search_terms": 4
+                }
+            }
+        }
+    }
+}

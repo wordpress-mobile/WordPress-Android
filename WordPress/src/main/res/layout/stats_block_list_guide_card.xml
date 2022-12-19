@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/margin_extra_large"
+    android:layout_marginHorizontal="@dimen/margin_extra_large"
+    android:backgroundTint="?attr/wpColorSurfaceSecondary"
+    app:cardCornerRadius="@dimen/margin_medium_large">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="@dimen/margin_extra_large">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/guide_message"
+            style="@style/TextAppearance.LoginFlow.Body2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/unknown"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="@string/stats_insights_followers_guide_card" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>

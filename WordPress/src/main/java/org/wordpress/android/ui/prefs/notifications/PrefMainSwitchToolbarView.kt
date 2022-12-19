@@ -18,8 +18,8 @@ import androidx.core.view.ViewCompat
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.util.AppLog
-import org.wordpress.android.util.getColorFromAttribute
-import org.wordpress.android.util.redirectContextClickToLongPressListener
+import org.wordpress.android.util.extensions.getColorFromAttribute
+import org.wordpress.android.util.extensions.redirectContextClickToLongPressListener
 
 /**
  * Custom view for main switch in toolbar for preferences.
@@ -186,7 +186,10 @@ class PrefMainSwitchToolbarView @JvmOverloads constructor(
      * Loads initial state of the main switch and toolbar
      */
     fun loadInitialState(checkMain: Boolean) {
+        val tmpMainSwitchToolbarListener = mainSwitchToolbarListener
+        mainSwitchToolbarListener = null // Don't trigger the listener for the initialization
         setChecked(checkMain)
+        mainSwitchToolbarListener = tmpMainSwitchToolbarListener
         setToolbarTitle(checkMain)
         toolbarSwitch.visibility = View.VISIBLE
         updateToolbarSwitchForAccessibility()
@@ -212,7 +215,7 @@ class PrefMainSwitchToolbarView @JvmOverloads constructor(
         this.hintOff = hintOff
     }
 
-    @Suppress("MemberVisibilityCanBePrivate")
+    @Suppress("MemberVisibilityCanBePrivate", "UseCheckOrError")
     fun setViewStyle(viewStyleInt: Int) {
         if (viewStyleInt == this.viewStyle?.value) {
             return

@@ -3,6 +3,7 @@ package org.wordpress.android.ui.accounts.login
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
@@ -17,15 +18,18 @@ import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Flow
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Step.PROLOGUE
 import org.wordpress.android.ui.accounts.login.LoginPrologueViewModel.ButtonUiState.ContinueWithWpcomButtonState
 import org.wordpress.android.ui.accounts.login.LoginPrologueViewModel.ButtonUiState.EnterYourSiteAddressButtonState
+import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
 
+@HiltViewModel
 class LoginPrologueViewModel @Inject constructor(
     private val unifiedLoginTracker: UnifiedLoginTracker,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
+    private val buildConfigWrapper: BuildConfigWrapper,
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
     private val _navigationEvents = MediatorLiveData<Event<LoginNavigationEvents>>()
@@ -44,7 +48,14 @@ class LoginPrologueViewModel @Inject constructor(
 
         _uiState.value = UiState(
                 enterYourSiteAddressButtonState = EnterYourSiteAddressButtonState(::onEnterYourSiteAddressButtonClick),
-                continueWithWpcomButtonState = ContinueWithWpcomButtonState(::onContinueWithWpcomButtonClick)
+                continueWithWpcomButtonState = ContinueWithWpcomButtonState(
+                        title = if (buildConfigWrapper.isSignupEnabled) {
+                            R.string.continue_with_wpcom
+                        } else {
+                            R.string.continue_with_wpcom_no_signup
+                        },
+                        onClick = ::onContinueWithWpcomButtonClick
+                )
         )
     }
 
@@ -71,9 +82,10 @@ class LoginPrologueViewModel @Inject constructor(
         abstract val title: Int
         abstract val onClick: (() -> Unit)
 
-        data class ContinueWithWpcomButtonState(override val onClick: () -> Unit) : ButtonUiState() {
-            override val title = R.string.continue_with_wpcom_no_signup
-        }
+        data class ContinueWithWpcomButtonState(
+            override val title: Int,
+            override val onClick: () -> Unit
+        ) : ButtonUiState()
 
         data class EnterYourSiteAddressButtonState(override val onClick: () -> Unit) : ButtonUiState() {
             override val title = R.string.enter_your_site_address

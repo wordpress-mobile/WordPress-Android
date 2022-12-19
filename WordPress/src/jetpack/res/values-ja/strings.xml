@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Translation-Revision-Date: 2022-10-07 09:54:20+0000
+Plural-Forms: nplurals=1; plural=0;
+Generator: GlotPress/2.4.0-alpha
+Language: ja_JP
+-->
+<resources>
+    <string name="me_btn_share">Jetpack を友達とシェア</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_12">投稿者を追加</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_11">写真を投稿</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_10">セキュリティの問題を修正</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_9">Facebook で共有</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_8">プラグインを検索</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_7">バックアップから復元</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_6">コメントに返信</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_5">通知を確認</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_4">統計情報を見る</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_3">ブログに投稿</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_2">サイトを構築</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_1">プラグインを更新</string>
+    <string name="login_prologue_revamped_content_description_jetpack_logo">Jetpack のロゴ</string>
+    <string name="me_btn_about">Jetpack について</string>
+    <string name="sign_out_wpcom_confirm_with_no_changes">Jetpack からログアウトしますか ?</string>
+    <string name="me_disconnect_from_wordpress_com">Jetpack からログアウト</string>
+    <string name="support_ticket_subject">Android サポート版 Jetpack</string>
+    <string name="login_magic_links_sent_label">この端末でメールを確認して、Jetpack.com から届いたメールに記載されているリンクをタップしてください。</string>
+    <string name="continue_with_wpcom_no_signup">WordPress.com で続ける</string>
+    <string name="app_tagline">サイトのセキュリティとパフォーマンスをポケットの中に</string>
+    <string name="post_signup_interstitial_title">Jetpack へようこそ</string>
+    <string name="app_title">Android 版 Jetpack</string>
+</resources>

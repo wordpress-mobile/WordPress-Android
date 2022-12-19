@@ -55,6 +55,7 @@ import org.wordpress.android.widgets.PostListButtonType.BUTTON_VIEW
  * This is a temporary class to make the PostListViewModel more manageable. Please feel free to refactor it any way
  * you see fit.
  */
+@Suppress("LongParameterList")
 class PostActionHandler(
     private val dispatcher: Dispatcher,
     private val site: SiteModel,
@@ -323,6 +324,7 @@ class PostActionHandler(
         dispatcher.dispatch(PostActionBuilder.newDeletePostAction(RemotePostPayload(post, site)))
     }
 
+    @Suppress("UseCheckOrError")
     fun handlePostTrashed(localPostId: LocalId, isError: Boolean) {
         val criticalAction = criticalPostActionTracker.get(localPostId)
         if (criticalAction != TRASHING_POST && criticalAction != TRASHING_POST_WITH_LOCAL_CHANGES) {

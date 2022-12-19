@@ -20,7 +20,6 @@ import org.wordpress.android.ui.domains.DomainRegistrationNavigationAction.OpenD
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
-@Suppress("TooManyFunctions")
 class DomainRegistrationActivity : LocaleAwareActivity(), ScrollableViewInitializedListener {
     enum class DomainRegistrationPurpose {
         AUTOMATED_TRANSFER,

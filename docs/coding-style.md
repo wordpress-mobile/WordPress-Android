@@ -5,8 +5,7 @@ Our code style guidelines are based on the [Android Code Style Guidelines for Co
 * Line length is 120 characters
 * FIXME must not be committed in the repository use TODO instead. FIXME can be used in your own local repository only.
 
-On top of the Android linter rules (best run for this project using `./gradlew lintWordPressVanillaRelease`), we use two linters: [Checkstyle](http://checkstyle.sourceforge.net/) (for Java and some language-independent custom project rules), and [ktlint](https://github.com/pinterest/ktlint) (for Kotlin).
-
+On top of the Android linter rules (best run for this project using `./gradlew lintWordPressVanillaRelease`), we use two linters: [Checkstyle](http://checkstyle.sourceforge.net/) (for Java and some language-independent custom project rules), and [detekt](https://detekt.github.io/detekt/) (for Kotlin).
 ## Checkstyle
 
 You can run checkstyle via a gradle command:
@@ -27,18 +26,14 @@ Once installed, you can configure the plugin here:
 
 `Android Studio > Preferences... > Tools > Checkstyle`
 
-From there, add and enable the custom configuration file, located at [config/checkstyle.xml](https://github.com/wordpress-mobile/WordPress-Android/blob/develop/config/checkstyle.xml).
-
-## ktlint
-
-You can run ktlint using `./gradlew ktlint`, and you can also run `./gradlew ktlintFormat` for auto-formatting. There is no IDEA plugin (like Checkstyle's) at this time.
+From there, add and enable the custom configuration file, located at [config/checkstyle.xml](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/config/checkstyle.xml).
 
 ## Detekt
 
 You can run detekt via a gradle command:
 
 ```
-$ ./gradlew WordPress:detekt
+$ ./gradlew detekt
 ```
 
 It generates an HTML report in `WordPress/build/reports/detekt/detekt.html`.
@@ -53,4 +48,8 @@ Once installed, you can configure the plugin here:
 
 `Android Studio > Preferences... > Tools > Detekt`
 
-From there, add and enable the custom configuration file, located at [config/detekt/detekt.yml](https://github.com/wordpress-mobile/WordPress-Android/blob/develop/config/detekt/detekt.yml).
+From there, add and enable the custom configuration file, located at [config/detekt/detekt.yml](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/config/detekt/detekt.yml).
+
+If you want to use the **AutoCorrect** feature of the plugin, make sure that the option `Enable formatting (ktlint) rules` is enabled in the above settings, then you will be able to reformat any file according to detekt's rules using the refactor menu `AutoCorrect by Detekt Rules`.
+
+Please don’t add a new suppression line to the [baseline.xml](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/config/detekt/baseline.xml). Consider fixing the issue or suppressing locally if it’s necessary.

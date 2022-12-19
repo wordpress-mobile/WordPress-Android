@@ -15,5 +15,6 @@
         android:textAppearance="?attr/textAppearanceSubtitle1"
         android:checkMark="?android:attr/listChoiceIndicatorMultiple"
         android:gravity="center_vertical"
+        android:theme="@style/PostSettingsTheme"
         tools:text="Pony Category" />
 </org.wordpress.android.widgets.CheckedLinearLayout>

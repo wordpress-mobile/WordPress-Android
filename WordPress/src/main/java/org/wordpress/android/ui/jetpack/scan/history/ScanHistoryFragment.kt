@@ -5,11 +5,13 @@ import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.activityViewModels
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.android.material.tabs.TabLayout.Tab
 import com.google.android.material.tabs.TabLayoutMediator
+import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.FullscreenErrorWithRetryBinding
@@ -19,15 +21,19 @@ import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryViewModel.TabUiState
 import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryViewModel.UiState.ContentUiState
 import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryViewModel.UiState.ErrorUiState
+import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.util.JetpackBrandingUtils
+import org.wordpress.android.util.JetpackBrandingUtils.Screen.SCAN
 import org.wordpress.android.util.LocaleManagerWrapper
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class ScanHistoryFragment : Fragment(R.layout.scan_history_fragment), ScrollableViewInitializedListener {
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var uiHelpers: UiHelpers
     @Inject lateinit var localeManagerWrapper: LocaleManagerWrapper
-    private lateinit var viewModel: ScanHistoryViewModel
+    @Inject lateinit var jetpackBrandingUtils: JetpackBrandingUtils
+    private val viewModel: ScanHistoryViewModel by activityViewModels()
     private var binding: ScanHistoryFragmentBinding? = null
 
     private val onTabSelectedListener = object : OnTabSelectedListener {
@@ -45,7 +51,6 @@ class ScanHistoryFragment : Fragment(R.layout.scan_history_fragment), Scrollable
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = ScanHistoryFragmentBinding.bind(view).apply {
-            initDagger()
             initViewModel(getSite(savedInstanceState))
             initToolbar()
         }
@@ -56,12 +61,7 @@ class ScanHistoryFragment : Fragment(R.layout.scan_history_fragment), Scrollable
         binding = null
     }
 
-    private fun initDagger() {
-        (requireActivity().application as WordPress).component()?.inject(this)
-    }
-
     private fun ScanHistoryFragmentBinding.initViewModel(site: SiteModel) {
-        viewModel = ViewModelProvider(this@ScanHistoryFragment, viewModelFactory).get(ScanHistoryViewModel::class.java)
         setupObservers()
         viewModel.start(site)
     }
@@ -94,7 +94,7 @@ class ScanHistoryFragment : Fragment(R.layout.scan_history_fragment), Scrollable
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             tab.text = uiHelpers.getTextOfUiString(requireContext(), list[position].label)
                     .toString()
-                    .toUpperCase(localeManagerWrapper.getLocale())
+                    .uppercase(localeManagerWrapper.getLocale())
         }.attach()
         tabLayout.addOnTabSelectedListener(onTabSelectedListener)
     }
@@ -140,7 +140,30 @@ class ScanHistoryFragment : Fragment(R.layout.scan_history_fragment), Scrollable
         override fun createFragment(position: Int): Fragment = ScanHistoryListFragment.newInstance(items[position].type)
     }
 
-    override fun onScrollableViewInitialized(viewId: Int) {
-        binding?.appbarMain?.liftOnScrollTargetViewId = viewId
+    override fun onScrollableViewInitialized(containerId: Int) {
+        binding?.appbarMain?.liftOnScrollTargetViewId = containerId
+        initJetpackBanner(containerId)
+    }
+
+    private fun initJetpackBanner(scrollableContainerId: Int) {
+        if (jetpackBrandingUtils.shouldShowJetpackBrandingForPhaseOne()) {
+            binding?.root?.post {
+                val jetpackBannerView = binding?.jetpackBanner?.root ?: return@post
+                val scrollableView = binding?.root?.findViewById<View>(scrollableContainerId) as? RecyclerView
+                        ?: return@post
+
+                jetpackBrandingUtils.showJetpackBannerIfScrolledToTop(jetpackBannerView, scrollableView)
+                jetpackBrandingUtils.initJetpackBannerAnimation(jetpackBannerView, scrollableView)
+
+                if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
+                    binding?.jetpackBanner?.root?.setOnClickListener {
+                        jetpackBrandingUtils.trackBannerTapped(SCAN)
+                        JetpackPoweredBottomSheetFragment
+                                .newInstance()
+                                .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
+                    }
+                }
+            }
+        }
     }
 }

@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.posts.editor
 
 import androidx.core.util.Consumer
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -12,6 +13,8 @@ import javax.inject.Inject
 class XPostsCapabilityChecker @Inject constructor(
     private val xPostsStore: XPostsStore
 ) {
+    @Suppress("GlobalCoroutineUsage")
+    @OptIn(DelicateCoroutinesApi::class)
     fun retrieveCapability(site: SiteModel, callback: Consumer<Boolean>) {
         GlobalScope.launch(Dispatchers.IO) {
             val capability = isCapable(site)
@@ -34,7 +37,8 @@ class XPostsCapabilityChecker @Inject constructor(
                     if (saved.xPosts.isEmpty()) {
                         // Db was empty, so let's make the api call and ensure there aren't any new xpost suggestions.
                         // This call will be made every time the editor opens on sites that don't have any xpost
-                        // suggestions, but because the response will almost always be empty, it's not an expensive call.
+                        // suggestions, but because the response will almost always be empty, it's not an expensive
+                        // call.
                         fetchingReturnsXposts(site)
                     } else {
                         // We have xposts saved in the db, so set capability to true even though

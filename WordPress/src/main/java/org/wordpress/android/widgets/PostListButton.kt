@@ -10,8 +10,8 @@ import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.ColorUtils
-import org.wordpress.android.util.getColorFromAttribute
-import org.wordpress.android.util.getColorResIdFromAttribute
+import org.wordpress.android.util.extensions.getColorFromAttribute
+import org.wordpress.android.util.extensions.getColorResIdFromAttribute
 
 /*
  * buttons in footer of post cards
@@ -59,7 +59,7 @@ class PostListButton : LinearLayout {
         }
     }
 
-    @Suppress("MemberVisibilityCanBePrivate")
+    @Suppress("MemberVisibilityCanBePrivate", "UseCheckOrError")
     fun setButtonType(buttonTypeInt: Int) {
         if (buttonTypeInt == this.buttonType?.value) {
             return

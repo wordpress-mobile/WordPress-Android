@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools" xmlns:android="http://schemas.android.com/apk/res/android">
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <style name="Base.Wordpress" parent="Theme.MaterialComponents.DayNight.Bridge">
         <item name="colorPrimary">@color/colorPrimary</item>
@@ -110,7 +110,7 @@
         <item name="android:textColor">@color/on_surface_disabled_selector</item>
     </style>
 
-    <style name="DividerVertical">
+    <style name="DividerVertical" tools:ignore="UnusedResources">
         <item name="android:background">?android:attr/listDivider</item>
     </style>
 
@@ -118,7 +118,7 @@
         <item name="android:background">?android:attr/listDivider</item>
     </style>
 
-    <style name="DividerHorizontal">
+    <style name="DividerHorizontal" tools:ignore="UnusedResources">
         <item name="android:background">?android:attr/listDivider</item>
     </style>
 
@@ -126,6 +126,19 @@
         <item name="android:textColor">?attr/colorSecondaryVariant</item>
     </style>
 
+    <!--Post Settings Styles-->
+    <style name="PostSettingsTheme" parent="Base.Wordpress">
+        <item name="colorPrimary">@color/colorPrimaryEditor</item>
+        <item name="colorSecondary">@color/colorPrimaryEditor</item>
+        <item name="colorSecondaryVariant">@color/colorPrimaryEditor</item>
+        <item name="colorAccent">@color/colorPrimaryEditor</item>
+        <item name="colorControlActivated">@color/colorPrimaryEditor</item>
+    </style>
+
     <!-- Domains -->
     <style name="Domains.Button.Primary.Unelevated.OnPrimarySurface" parent="WordPress.Button.Primary.Unelevated" />
+
+    <style name="Wordpress.BottomBar" parent="WordPress.NoActionBar">
+        <item name="android:navigationBarColor">@color/background_dark_elevated</item>
+    </style>
 </resources>

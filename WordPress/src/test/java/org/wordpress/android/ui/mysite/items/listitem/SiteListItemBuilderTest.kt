@@ -1,12 +1,13 @@
 package org.wordpress.android.ui.mysite.items.listitem
 
-import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.whenever
 import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
@@ -25,6 +26,7 @@ import org.wordpress.android.ui.mysite.items.SITE_ITEM_ACTION
 import org.wordpress.android.ui.mysite.items.SITE_SETTINGS_ITEM
 import org.wordpress.android.ui.plugins.PluginUtilsWrapper
 import org.wordpress.android.ui.themes.ThemeBrowserUtils
+import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.SiteUtilsWrapper
 import org.wordpress.android.util.config.SiteDomainsFeatureConfig
 
@@ -33,6 +35,7 @@ class SiteListItemBuilderTest {
     @Mock lateinit var accountStore: AccountStore
     @Mock lateinit var pluginUtilsWrapper: PluginUtilsWrapper
     @Mock lateinit var siteUtilsWrapper: SiteUtilsWrapper
+    @Mock lateinit var buildConfigWrapper: BuildConfigWrapper
     @Mock lateinit var themeBrowserUtils: ThemeBrowserUtils
     @Mock lateinit var siteModel: SiteModel
     @Mock lateinit var siteDomainsFeatureConfig: SiteDomainsFeatureConfig
@@ -44,6 +47,7 @@ class SiteListItemBuilderTest {
                 accountStore,
                 pluginUtilsWrapper,
                 siteUtilsWrapper,
+                buildConfigWrapper,
                 themeBrowserUtils,
                 siteDomainsFeatureConfig
         )
@@ -152,6 +156,7 @@ class SiteListItemBuilderTest {
         assertThat(item).isNull()
     }
 
+    @Ignore("Ignored after a decision was made to hide the Plans screen.")
     @Test
     fun `plan item built when plan not empty, site can manage options, is not WP for teams and is WPcom`() {
         setupPlanItem(
@@ -168,6 +173,7 @@ class SiteListItemBuilderTest {
         assertThat(item).isEqualTo(PLAN_ITEM.copy(showFocusPoint = showFocusPoint))
     }
 
+    @Ignore("Ignored after a decision was made to hide the Plans screen.")
     @Test
     fun `plan item built when plan not empty, site can manage options, is not WP for teams and is AT`() {
         setupPlanItem(
@@ -183,6 +189,7 @@ class SiteListItemBuilderTest {
         assertThat(item).isEqualTo(PLAN_ITEM)
     }
 
+    @Ignore("Ignored after a decision was made to hide the Plans screen.")
     @Test
     fun `plan item not built when plan name is empty`() {
         setupPlanItem(planShortName = "")
@@ -192,6 +199,7 @@ class SiteListItemBuilderTest {
         assertThat(item).isNull()
     }
 
+    @Ignore("Ignored after a decision was made to hide the Plans screen.")
     @Test
     fun `plan item not built when site cannot manage options`() {
         setupPlanItem(canManageOptions = false)
@@ -201,6 +209,7 @@ class SiteListItemBuilderTest {
         assertThat(item).isNull()
     }
 
+    @Ignore("Ignored after a decision was made to hide the Plans screen.")
     @Test
     fun `plan item not built when site is WP for teams`() {
         setupPlanItem(isWpForTeams = true)
@@ -210,6 +219,7 @@ class SiteListItemBuilderTest {
         assertThat(item).isNull()
     }
 
+    @Ignore("Ignored after a decision was made to hide the Plans screen.")
     @Test
     fun `plan item not built when site is neither WP com nor AT`() {
         setupPlanItem(isWPCom = false, isAutomatedTransfer = false)
@@ -294,7 +304,7 @@ class SiteListItemBuilderTest {
     fun `pages item not built when not self-hosted admin and cannot edit pages`() {
         setupPagesItem(isSelfHostedAdmin = false, canEditPages = false)
 
-        val item = siteListItemBuilder.buildPagesItemIfAvailable(siteModel, SITE_ITEM_ACTION)
+        val item = siteListItemBuilder.buildPagesItemIfAvailable(siteModel, SITE_ITEM_ACTION, showFocusPoint = false)
 
         assertThat(item).isNull()
     }
@@ -302,19 +312,21 @@ class SiteListItemBuilderTest {
     @Test
     fun `pages item built when self-hosted admin`() {
         setupPagesItem(isSelfHostedAdmin = true)
+        val showFocusPoint = true
 
-        val item = siteListItemBuilder.buildPagesItemIfAvailable(siteModel, SITE_ITEM_ACTION)
+        val item = siteListItemBuilder.buildPagesItemIfAvailable(siteModel, SITE_ITEM_ACTION, showFocusPoint)
 
-        assertThat(item).isEqualTo(PAGES_ITEM)
+        assertThat(item).isEqualTo(PAGES_ITEM.copy(showFocusPoint = showFocusPoint))
     }
 
     @Test
     fun `pages item built when can edit pages`() {
         setupPagesItem(canEditPages = true)
+        val showFocusPoint = true
 
-        val item = siteListItemBuilder.buildPagesItemIfAvailable(siteModel, SITE_ITEM_ACTION)
+        val item = siteListItemBuilder.buildPagesItemIfAvailable(siteModel, SITE_ITEM_ACTION, showFocusPoint)
 
-        assertThat(item).isEqualTo(PAGES_ITEM)
+        assertThat(item).isEqualTo(PAGES_ITEM.copy(showFocusPoint = showFocusPoint))
     }
 
     private fun setupPagesItem(isSelfHostedAdmin: Boolean = false, canEditPages: Boolean = false) {

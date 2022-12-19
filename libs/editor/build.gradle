@@ -1,23 +1,104 @@
-buildscript {
-    repositories {
-        jcenter()
-        google()
+plugins {
+    id "com.android.library"
+    id "org.jetbrains.kotlin.android"
+    id "org.jetbrains.kotlin.plugin.parcelize"
+}
+
+repositories {
+    maven {
+        url "https://a8c-libs.s3.amazonaws.com/android"
+        content {
+            includeGroup "org.wordpress"
+            includeGroup "org.wordpress.aztec"
+            includeGroup "org.wordpress-mobile"
+            includeGroup "org.wordpress-mobile.gutenberg-mobile"
+            includeGroupByRegex "org.wordpress-mobile.react-native-libraries.*"
+        }
+    }
+    maven {
+        url "https://a8c-libs.s3.amazonaws.com/android/react-native-mirror"
+        content {
+            includeGroup "com.facebook.react"
+        }
+    }
+    google()
+    mavenCentral()
+    maven { url "https://www.jitpack.io" }
+}
+
+android {
+    compileSdkVersion rootProject.compileSdkVersion
+
+    defaultConfig {
+        minSdkVersion rootProject.minSdkVersion
+        targetSdkVersion rootProject.targetSdkVersion
+    }
+
+    // Avoid 'duplicate files during packaging of APK' errors
+    packagingOptions {
+        exclude 'LICENSE.txt'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/NOTICE.txt'
     }
 }
 
-allprojects {
-    apply plugin: 'checkstyle'
-
-    if (tasks.findByPath('checkstyle') == null) {
-        tasks.create(name: 'checkstyle', type: Checkstyle) {
-            source 'src'
-
-            classpath = files()
-        }
-
-        checkstyle {
-            toolVersion = '8.3'
-            configFile file("${project.rootDir}/config/checkstyle.xml")
+dependencies {
+    implementation ("$gradle.ext.wputilsBinaryPath") {
+        version {
+            strictly wordPressUtilsVersion
         }
     }
+    api ("$gradle.ext.aztecAndroidAztecPath") {
+        exclude group: "com.android.volley"
+        exclude group: 'org.wordpress', module: 'utils'
+        version {
+            strictly wordPressAztecVersion
+        }
+    }
+    api ("$gradle.ext.aztecAndroidWordPressShortcodesPath:$wordPressAztecVersion") {
+        version {
+            strictly wordPressAztecVersion
+        }
+    }
+    api ("$gradle.ext.aztecAndroidWordPressCommentsPath:$wordPressAztecVersion") {
+        version {
+            strictly wordPressAztecVersion
+        }
+    }
+    
+    // Forcing version due to https://github.com/facebook/SoLoader/issues/94
+    // To be removed with React Native 0.70+
+    implementation("com.facebook.soloader:soloader") {
+        version {
+            strictly '0.10.4'
+        }
+    }
+
+    implementation 'com.facebook.fresco:fresco:2.5.0'
+    implementation 'com.facebook.fresco:imagepipeline-okhttp3:2.5.0'
+    implementation 'com.facebook.fbjni:fbjni:0.2.2'
+    implementation 'com.facebook.react:hermes-engine:0.69.4:release@aar'
+    implementation 'com.facebook.react:react-native:0.69.4:release@aar'
+
+    // This dependency will be substituted if the `local-builds.gradle` file contains
+    // `localGutenbergMobilePath`. Details for this can be found in the `settings.gradle` file.
+    implementation ("$rootProject.gradle.ext.gutenbergMobileBinaryPath:$rootProject.ext.gutenbergMobileVersion") {
+        exclude module: 'hermes-engine'
+        exclude module: 'react-native'
+    }
+
+    // Required Aztec dependencies (they should be included but Jitpack seems to be stripping these out)
+    implementation "org.jsoup:jsoup:$jsoupVersion"
+    
+    implementation "org.wordpress:utils:$wordPressUtilsVersion"
+
+    implementation "androidx.appcompat:appcompat:$androidxAppcompatVersion"
+    implementation "androidx.preference:preference:$androidxPreferenceVersion"
+    implementation "com.google.android.material:material:$googleMaterialVersion"
+    implementation "com.android.volley:volley:$androidVolleyVersion"
+    implementation "com.google.code.gson:gson:$googleGsonVersion"
+
+    lintChecks "org.wordpress:lint:$wordPressLintVersion"
 }

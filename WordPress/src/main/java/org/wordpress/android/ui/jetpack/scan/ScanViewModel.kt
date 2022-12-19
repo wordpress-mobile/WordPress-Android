@@ -6,6 +6,7 @@ import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
@@ -21,6 +22,7 @@ import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.OpenFixThreats
 import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.ShowContactSupport
 import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.ShowJetpackSettings
 import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.ShowThreatDetails
+import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.VisitVaultPressDashboard
 import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState.ContentUiState
 import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState.ErrorUiState
 import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState.FullScreenLoadingUiState
@@ -50,6 +52,7 @@ import javax.inject.Named
 
 const val RETRY_DELAY = 300L
 
+@HiltViewModel
 class ScanViewModel @Inject constructor(
     private val scanStateListItemsBuilder: ScanStateListItemsBuilder,
     private val fetchScanStateUseCase: FetchScanStateUseCase,
@@ -133,6 +136,9 @@ class ScanViewModel @Inject constructor(
 
                         is FetchScanState.Failure.MultisiteNotSupported ->
                             updateUiState(ErrorUiState.MultisiteNotSupported)
+
+                        is FetchScanState.Failure.VaultPressActiveOnSite ->
+                            updateUiState(ErrorUiState.VaultPressActiveOnSite(::onVisitVaultPressDashboardClicked))
 
                         is FetchScanState.Failure.RemoteRequestFailure -> {
                             scanTracker.trackOnError(ErrorAction.FETCH_SCAN_STATE, ErrorCause.REMOTE)
@@ -271,6 +277,10 @@ class ScanViewModel @Inject constructor(
         launch { fetchScanState(isRetry = true) }
     }
 
+    private fun onVisitVaultPressDashboardClicked() {
+        updateNavigationEvent(VisitVaultPressDashboard(Constants.URL_VISIT_VAULTPRESS_DASHBOARD))
+    }
+
     private fun onContactSupportClicked() {
         updateNavigationEvent(ShowContactSupport(site))
     }
@@ -390,6 +400,14 @@ class ScanViewModel @Inject constructor(
                 @ColorRes override val imageColorResId = R.color.gray
                 override val title = UiStringRes(R.string.scan_multisite_not_supported_title)
                 override val subtitle = UiStringRes(R.string.scan_multisite_not_supported_subtitle)
+            }
+
+            data class VaultPressActiveOnSite(override val action: () -> Unit) : ErrorUiState() {
+                @DrawableRes override val image = R.drawable.ic_shield_warning_white
+                @ColorRes override val imageColorResId = R.color.error_60
+                override val title = UiStringRes(R.string.scan_vault_press_active_on_site_title)
+                override val subtitle = UiStringRes(R.string.scan_vault_press_active_on_site_subtitle)
+                override val buttonText = UiStringRes(R.string.scan_vault_press_active_on_site_button_text)
             }
         }
     }

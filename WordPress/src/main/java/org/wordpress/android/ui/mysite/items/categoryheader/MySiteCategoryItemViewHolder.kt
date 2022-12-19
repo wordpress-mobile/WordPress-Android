@@ -5,7 +5,7 @@ import org.wordpress.android.databinding.MySiteCategoryHeaderItemBinding
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.CategoryHeaderItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItemViewHolder
 import org.wordpress.android.ui.utils.UiHelpers
-import org.wordpress.android.util.viewBinding
+import org.wordpress.android.util.extensions.viewBinding
 
 class MySiteCategoryItemViewHolder(
     parent: ViewGroup,

@@ -27,6 +27,7 @@
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            android:visibility="gone"
             app:layout_constraintTop_toBottomOf="@id/my_site_card_toolbar" />
 
         <include
@@ -34,9 +35,20 @@
             layout="@layout/quick_start_task_type_item"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/quick_start_customize" />
+
+        <include
+            android:id="@+id/quick_start_get_to_know_app"
+            layout="@layout/new_quick_start_task_type_item"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/my_site_card_toolbar" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

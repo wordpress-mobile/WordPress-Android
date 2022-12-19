@@ -11,8 +11,8 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.Das
 import org.wordpress.android.ui.mysite.cards.dashboard.CardViewHolder
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString
+import org.wordpress.android.util.extensions.viewBinding
 import org.wordpress.android.util.image.ImageManager
-import org.wordpress.android.util.viewBinding
 
 sealed class PostCardViewHolder<T : ViewBinding>(
     override val binding: T
@@ -35,6 +35,7 @@ sealed class PostCardViewHolder<T : ViewBinding>(
             mySiteCardFooterLink.linkLabel.setOnClickListener {
                 postCard.footerLink.onClick.invoke(card.postCardType)
             }
+            itemView.setOnClickListener { postCard.onClick.click() }
         }
     }
 

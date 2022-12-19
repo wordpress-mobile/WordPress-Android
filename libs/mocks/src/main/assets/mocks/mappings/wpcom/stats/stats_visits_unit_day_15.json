@@ -1,0 +1,45 @@
+{
+    "request": {
+        "method": "GET",
+        "urlPathPattern": "/rest/v1.1/sites/([0-9]+)/stats/visits/",
+        "queryParameters": {
+            "unit": {
+                "equalTo": "day"
+            },
+            "quantity": {
+                "matches": "[0-9]+"
+            },
+            "date": {
+                "matches": "(.*)"
+            },
+            "locale": {
+                "matches": "(.*)"
+            }
+        }
+    },
+    "response": {
+        "status": 200,
+        "jsonBody": {
+            "date": "{{fnow format='yyyy-MM-dd'}}",
+            "unit": "day",
+            "fields": ["period", "views", "visitors", "likes", "reblogs", "comments", "posts"],
+            "data": [
+                ["{{fnow offset='-14 days' format='yyyy-MM-dd'}}", 32, 7, 12, 0, 0, 3],
+                ["{{fnow offset='-13 days' format='yyyy-MM-dd'}}", 16, 6, 0, 0, 2, 0],
+                ["{{fnow offset='-12 days' format='yyyy-MM-dd'}}", 89, 18, 13, 0, 11, 3],
+                ["{{fnow offset='-11 days' format='yyyy-MM-dd'}}", 17, 4, 1, 0, 2, 1],
+                ["{{fnow offset='-10 days' format='yyyy-MM-dd'}}", 2, 2, 0, 0, 0, 0],
+                ["{{fnow offset='-9 days' format='yyyy-MM-dd'}}", 95, 16, 13, 0, 5, 7],
+                ["{{fnow offset='-8 days' format='yyyy-MM-dd'}}", 114, 16, 16, 0, 5, 3],
+                ["{{fnow offset='-7 days' format='yyyy-MM-dd'}}", 115, 52, 20, 0, 3, 3],
+                ["{{fnow offset='-6 days' format='yyyy-MM-dd'}}", 83, 36, 13, 0, 4, 0],
+                ["{{fnow offset='-5 days' format='yyyy-MM-dd'}}", 46, 18, 4, 0, 9, 1],
+                ["{{fnow offset='-4 days' format='yyyy-MM-dd'}}", 3, 3, 0, 0, 0, 0],
+                ["{{fnow offset='-3 days' format='yyyy-MM-dd'}}", 1, 1, 0, 0, 0, 0],
+                ["{{fnow offset='-2 days' format='yyyy-MM-dd'}}", 42, 19, 14, 0, 0, 2],
+                ["{{fnow offset='-1 days' format='yyyy-MM-dd'}}", 93, 31, 10, 0, 7, 6],
+                ["{{fnow format='yyyy-MM-dd'}}", 97, 28, 14, 0, 11, 2]
+            ]
+        }
+    }
+}

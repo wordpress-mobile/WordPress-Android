@@ -1,0 +1,21 @@
+{
+    "request": {
+        "method": "GET",
+        "urlPathPattern": "/rest/v1.2/sites/([0-9]*)/posts/([0-9]*)/likes/"
+    },
+    "response": {
+        "status": 200,
+        "jsonBody": {
+            "found": 0,
+            "i_like": false,
+            "likes": [],
+            "meta": {
+                "links": {
+                    "help": "https://public-api.wordpress.com/rest/v1.2/sites/{{request.path.[3]}}/posts/439/likes/help",
+                    "post": "https://public-api.wordpress.com/rest/v1.1/sites/{{request.path.[3]}}/posts/439",
+                    "site": "https://public-api.wordpress.com/rest/v1.2/sites/{{request.path.[3]}}"
+                }
+            }
+        }
+    }
+}

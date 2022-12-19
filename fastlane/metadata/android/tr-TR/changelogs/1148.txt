@@ -1,6 +1,0 @@
-18.9:
-- Paragraf bloklarında metni herhangi bir renkle vurgulayın.
-- Okuyucudaki içeriğinizden sonra yorumları görün ve yanıtlayın.
-- Yeni tasarımla yeni Galeri blokları oluşturun ve eski galerileri eşleşecek şekilde otomatik olarak dönüştürün.
-- Bloklar halinde bağlantı metnini biçimlendirirken değişiklikleri geri alın ve yineleyin.
-- Gönderileri yeniden bloga eklerken ve diğer uygulamalardan metin paylaşırken daha hızlı yükleyin.

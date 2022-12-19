@@ -1,10 +1,6 @@
 package org.wordpress.android.ui.mysite
 
 import androidx.lifecycle.MediatorLiveData
-import com.nhaarman.mockitokotlin2.times
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -12,6 +8,9 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.DynamicCardType
@@ -22,22 +21,20 @@ import org.wordpress.android.ui.mysite.MySiteSource.MySiteRefreshSource
 import org.wordpress.android.ui.mysite.MySiteSource.SiteIndependentSource
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.SelectedSite
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsSource
+import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptCardSource
 import org.wordpress.android.ui.mysite.cards.domainregistration.DomainRegistrationSource
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardSource
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardsSource
-import org.wordpress.android.util.BuildConfigWrapper
-import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.util.config.MySiteDashboardPhase2FeatureConfig
+import org.wordpress.android.ui.quickstart.QuickStartTracker
 
 /* SITE */
 
 const val SITE_LOCAL_ID = 1
 
-@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class MySiteSourceManagerTest : BaseUnitTest() {
-    @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
+    @Mock lateinit var quickStartTracker: QuickStartTracker
     @Mock lateinit var domainRegistrationSource: DomainRegistrationSource
     @Mock lateinit var scanAndBackupSource: ScanAndBackupSource
     @Mock lateinit var currentAvatarSource: CurrentAvatarSource
@@ -46,8 +43,7 @@ class MySiteSourceManagerTest : BaseUnitTest() {
     @Mock lateinit var quickStartCardSource: QuickStartCardSource
     @Mock lateinit var siteIconProgressSource: SiteIconProgressSource
     @Mock lateinit var selectedSiteSource: SelectedSiteSource
-    @Mock lateinit var mySiteDashboardPhase2FeatureConfig: MySiteDashboardPhase2FeatureConfig
-    @Mock lateinit var builderConfigWrapper: BuildConfigWrapper
+    @Mock lateinit var bloggingPromptCardSource: BloggingPromptCardSource
     @Mock lateinit var selectedSiteRepository: SelectedSiteRepository
     @Mock lateinit var siteModel: SiteModel
     private lateinit var mySiteSourceManager: MySiteSourceManager
@@ -67,7 +63,7 @@ class MySiteSourceManagerTest : BaseUnitTest() {
         whenever(selectedSiteRepository.hasSelectedSite()).thenReturn(true)
 
         mySiteSourceManager = MySiteSourceManager(
-                analyticsTrackerWrapper,
+                quickStartTracker,
                 currentAvatarSource,
                 domainRegistrationSource,
                 dynamicCardsSource,
@@ -76,8 +72,7 @@ class MySiteSourceManagerTest : BaseUnitTest() {
                 selectedSiteSource,
                 cardsSource,
                 siteIconProgressSource,
-                mySiteDashboardPhase2FeatureConfig,
-                builderConfigWrapper,
+                bloggingPromptCardSource,
                 selectedSiteRepository
         )
 
@@ -117,52 +112,16 @@ class MySiteSourceManagerTest : BaseUnitTest() {
     /* ON REFRESH */
 
     @Test
-    fun `given with site local id and phase 2 enabled, when build, then all sources are built`() {
+    fun `given with site local id, when build, then all sources are built`() {
         val coroutineScope = testScope()
-        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
 
         mySiteSourceManager.build(coroutineScope, SITE_LOCAL_ID)
 
         allRefreshedMySiteSources.forEach { verify(it).build(coroutineScope, SITE_LOCAL_ID) }
-    }
-
-    @Test
-    fun `given with site local id and phase 2 disabled, when build, then all sources except cards source are built`() {
-        val coroutineScope = testScope()
-        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(false)
-
-        mySiteSourceManager.build(coroutineScope, SITE_LOCAL_ID)
-
-        allRefreshedMySiteSourcesExceptCardsSource.forEach { verify(it).build(coroutineScope, SITE_LOCAL_ID) }
-        verify(cardsSource, times(0)).build(coroutineScope, SITE_LOCAL_ID)
-    }
-
-    @Test
-    fun `given with site local id and wordpress app, when build, then all sources are built`() {
-        val coroutineScope = testScope()
-        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
-        whenever(builderConfigWrapper.isJetpackApp).thenReturn(false)
-
-        mySiteSourceManager.build(coroutineScope, SITE_LOCAL_ID)
-
-        allRefreshedMySiteSources.forEach { verify(it).build(coroutineScope, SITE_LOCAL_ID) }
-    }
-
-    @Test
-    fun `given with site local id and jetpack app, when build, then all sources except cards source are built`() {
-        val coroutineScope = testScope()
-        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
-        whenever(builderConfigWrapper.isJetpackApp).thenReturn(true)
-
-        mySiteSourceManager.build(coroutineScope, SITE_LOCAL_ID)
-
-        allRefreshedMySiteSourcesExceptCardsSource.forEach { verify(it).build(coroutineScope, SITE_LOCAL_ID) }
-        verify(cardsSource, times(0)).build(coroutineScope, SITE_LOCAL_ID)
     }
 
     @Test
     fun `given without site local id, when build, then all site independent sources are built`() {
-        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
         val coroutineScope = testScope()
 
         mySiteSourceManager.build(coroutineScope, null)
@@ -172,7 +131,6 @@ class MySiteSourceManagerTest : BaseUnitTest() {
 
     @Test
     fun `given without site local id, when build, then site dependent sources are not built`() {
-        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
         val coroutineScope = testScope()
 
         mySiteSourceManager.build(coroutineScope, null)
@@ -182,7 +140,6 @@ class MySiteSourceManagerTest : BaseUnitTest() {
 
     @Test
     fun `given without site local id, when refresh, then site independent sources are built`() {
-        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
         val coroutineScope = testScope()
         mySiteSourceManager.build(coroutineScope, null)
 
@@ -193,7 +150,6 @@ class MySiteSourceManagerTest : BaseUnitTest() {
 
     @Test
     fun `given without site local id, when refresh, then site dependent sources are not built`() {
-        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
         val coroutineScope = testScope()
         mySiteSourceManager.build(coroutineScope, null)
 
@@ -205,7 +161,6 @@ class MySiteSourceManagerTest : BaseUnitTest() {
     @Test
     fun `given non wpcom site, when build, then all sources except cards source are built`() {
         val coroutineScope = testScope()
-        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
         whenever(siteModel.isUsingWpComRestApi).thenReturn(false)
 
         mySiteSourceManager.build(coroutineScope, SITE_LOCAL_ID)
@@ -217,35 +172,14 @@ class MySiteSourceManagerTest : BaseUnitTest() {
     /* ON REFRESH */
 
     @Test
-    fun `given phase 2 is enabled, when refresh, then all sources are refreshed`() {
-        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
-
+    fun `when refresh, then all sources are refreshed`() {
         mySiteSourceManager.refresh()
 
         allRefreshedMySiteSources.filterIsInstance(MySiteRefreshSource::class.java).forEach { verify(it).refresh() }
     }
 
     @Test
-    fun `given phase 2 is disabled, when refresh, then select sources refresh`() {
-        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(false)
-
-        mySiteSourceManager.refresh()
-
-        selectRefreshedMySiteSources.filterIsInstance(MySiteRefreshSource::class.java).forEach { verify(it).refresh() }
-    }
-
-    @Test
-    fun `given phase 2 disabled, when refresh, then updateSiteSettings is invoked`() {
-        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(false)
-
-        mySiteSourceManager.refresh()
-
-        verify(selectedSiteSource).updateSiteSettingsIfNecessary()
-    }
-
-    @Test
-    fun `given phase 2 is enabled, when refreshing, then isRefreshing should return true`() {
-        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
+    fun `when refreshing, then isRefreshing should return true`() {
         allRefreshedMySiteSources.filterIsInstance(MySiteRefreshSource::class.java).forEach {
             whenever(it.isRefreshing()).thenReturn(true)
         }
@@ -256,8 +190,7 @@ class MySiteSourceManagerTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given phase 2 enabled, when is not refreshing, then isRefreshing should return false`() {
-        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
+    fun `when is not refreshing, then isRefreshing should return false`() {
         allRefreshedMySiteSources.filterIsInstance(MySiteRefreshSource::class.java).forEach {
             whenever(it.isRefreshing()).thenReturn(false)
         }
@@ -267,90 +200,31 @@ class MySiteSourceManagerTest : BaseUnitTest() {
         assertThat(result).isFalse
     }
 
-    @Test
-    fun `given phase 2 is disabled, when is refreshing, then isRefreshing should return false`() {
-        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(false)
-
-        val result = mySiteSourceManager.isRefreshing()
-
-        assertThat(result).isFalse
-    }
-
     /* ON RESUME */
 
     @Test
-    fun `given site not selected and phase 2 disabled, when on resume, then update site settings if necessary`() {
-        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(false)
-
-        mySiteSourceManager.onResume(false)
-
-        verify(selectedSiteSource).updateSiteSettingsIfNecessary()
-    }
-
-    @Test
-    fun `given site not selected and phase 2 disabled, when on resume, then refresh quick start`() {
-        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(false)
-
-        mySiteSourceManager.onResume(false)
-
-        verify(quickStartCardSource).refresh()
-    }
-
-    @Test
-    fun `given site not selected and phase 2 disabled, when on resume, then refresh current avatar`() {
-        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(false)
-
-        mySiteSourceManager.onResume(false)
-
-        verify(currentAvatarSource).refresh()
-    }
-
-    @Test
-    fun `given site selected and phase 2 disabled, when on resume, then update site settings if necessary`() {
+    fun `given site selected, when on resume, then update site settings if necessary`() {
         mySiteSourceManager.onResume(true)
 
         verify(selectedSiteSource).updateSiteSettingsIfNecessary()
     }
 
     @Test
-    fun `given site selected and phase 2 disabled, when on resume, then refresh quick start`() {
+    fun `given site selected, when on resume, then refresh quick start`() {
         mySiteSourceManager.onResume(true)
 
         verify(quickStartCardSource).refresh()
     }
 
     @Test
-    fun `given site selected and phase 2 disabled, when on resume, then refresh current avatar`() {
+    fun `given site selected, when on resume, then refresh current avatar`() {
         mySiteSourceManager.onResume(true)
 
         verify(currentAvatarSource).refresh()
     }
 
     @Test
-    fun `given site selected and phase 2 enabled, when on resume, then update site settings if necessary`() {
-        mySiteSourceManager.onResume(true)
-
-        verify(selectedSiteSource).updateSiteSettingsIfNecessary()
-    }
-
-    @Test
-    fun `given site selected and phase 2 enabled, when on resume, then refresh quick start`() {
-        mySiteSourceManager.onResume(true)
-
-        verify(quickStartCardSource).refresh()
-    }
-
-    @Test
-    fun `given site selected and phase 2 enabled, when on resume, then refresh current avatar`() {
-        mySiteSourceManager.onResume(true)
-
-        verify(currentAvatarSource).refresh()
-    }
-
-    @Test
-    fun `given site selected and phase 2 enabled, when on resume, then refresh is invoked`() {
-        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
-
+    fun `given site selected, when on resume, then refresh is invoked`() {
         mySiteSourceManager.onResume(false)
 
         allRefreshedMySiteSources.filterIsInstance(MySiteRefreshSource::class.java).forEach { verify(it).refresh() }
@@ -386,7 +260,7 @@ class MySiteSourceManagerTest : BaseUnitTest() {
         val id = DynamicCardType.CUSTOMIZE_QUICK_START
         mySiteSourceManager.onQuickStartMenuInteraction(DynamicCardMenuInteraction.Hide(id))
 
-        verify(analyticsTrackerWrapper).track(Stat.QUICK_START_HIDE_CARD_TAPPED)
+        verify(quickStartTracker).track(Stat.QUICK_START_HIDE_CARD_TAPPED)
         verify(dynamicCardsSource).hideItem(id)
     }
 
@@ -395,7 +269,7 @@ class MySiteSourceManagerTest : BaseUnitTest() {
         val id = DynamicCardType.CUSTOMIZE_QUICK_START
         mySiteSourceManager.onQuickStartMenuInteraction(DynamicCardMenuInteraction.Remove(id))
 
-        verify(analyticsTrackerWrapper).track(Stat.QUICK_START_REMOVE_CARD_TAPPED)
+        verify(quickStartTracker).track(Stat.QUICK_START_REMOVE_CARD_TAPPED)
         verify(dynamicCardsSource).removeItem(id)
     }
 
@@ -406,5 +280,21 @@ class MySiteSourceManagerTest : BaseUnitTest() {
         mySiteSourceManager.refreshQuickStart()
 
         verify(quickStartCardSource).refresh()
+    }
+
+    /* BLOGGING PROMPTS */
+
+    @Test
+    fun `refreshing blogging single blogging prompt calls refreshTodayPrompt() method of BP card source`() {
+        mySiteSourceManager.refreshBloggingPrompts(true)
+
+        verify(bloggingPromptCardSource).refreshTodayPrompt()
+    }
+
+    @Test
+    fun `refreshing all blogging prompts single blogging prompt calls refresh() method of BP card source`() {
+        mySiteSourceManager.refreshBloggingPrompts(false)
+
+        verify(bloggingPromptCardSource).refresh()
     }
 }

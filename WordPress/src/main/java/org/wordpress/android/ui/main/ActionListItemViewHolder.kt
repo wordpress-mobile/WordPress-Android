@@ -1,23 +1,25 @@
 package org.wordpress.android.ui.main
 
 import android.graphics.Typeface
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import org.wordpress.android.R
 import org.wordpress.android.R.dimen
+import org.wordpress.android.databinding.MainActionListItemBinding
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.NO_ACTION
 import org.wordpress.android.ui.main.MainActionListItem.CreateAction
 import org.wordpress.android.util.QuickStartUtils
+import org.wordpress.android.util.extensions.viewBinding
 import org.wordpress.android.util.image.ImageManager
 
 class ActionListItemViewHolder(
     internal val parent: ViewGroup,
     val imageManager: ImageManager
-) : ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.main_action_list_item, parent, false)) {
+) : AddContentViewHolder<MainActionListItemBinding>(
+        parent.viewBinding(MainActionListItemBinding::inflate)
+) {
     private val regularTypeface = Typeface.create("sans-serif", Typeface.NORMAL)
     private val mediumTypeface = Typeface.create("sans-serif-medium", Typeface.NORMAL)
 

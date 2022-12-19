@@ -171,6 +171,7 @@ data class PrepublishingNavigationTarget(
     val bundle: Bundle? = null
 )
 
+@Suppress("SerialVersionUIDInSerializableClass")
 data class PrepublishingAddCategoryRequest(
     val categoryText: String,
     val categoryParentId: Long

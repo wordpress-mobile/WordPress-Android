@@ -1,19 +1,17 @@
 package org.wordpress.android.ui.reader.usecases
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
-
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
-import org.wordpress.android.MainCoroutineScopeRule
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.test
 import org.wordpress.android.ui.reader.ReaderEvents.RelatedPostsUpdated
@@ -23,14 +21,11 @@ import org.wordpress.android.ui.reader.usecases.ReaderFetchRelatedPostsUseCase.F
 import org.wordpress.android.util.NetworkUtilsWrapper
 
 @InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class ReaderFetchRelatedPostsUseCaseTest {
     @Rule
     @JvmField val rule = InstantTaskExecutorRule()
-
-    @ExperimentalCoroutinesApi
-    @Rule
-    @JvmField val coroutineScope = MainCoroutineScopeRule()
 
     lateinit var useCase: ReaderFetchRelatedPostsUseCase
     @Mock lateinit var readerPostActionsWrapper: ReaderPostActionsWrapper

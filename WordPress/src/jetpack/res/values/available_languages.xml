@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Warning: Auto-generated file, do not edit.-->
+<resources xmlns:tools="http://schemas.android.com/tools">
+  <string-array name="available_languages" translatable="false" tools:ignore="InconsistentArrays">
+    <item>en_US</item>
+    <item>ar</item>
+    <item>de</item>
+    <item>es</item>
+    <item>fr</item>
+    <item>he</item>
+    <item>id</item>
+    <item>it</item>
+    <item>ja</item>
+    <item>ko</item>
+    <item>nl</item>
+    <item>pt_BR</item>
+    <item>ru</item>
+    <item>sv</item>
+    <item>tr</item>
+    <item>zh_CN</item>
+    <item>zh_TW</item>
+  </string-array>
+</resources>

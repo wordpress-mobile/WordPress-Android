@@ -5,15 +5,15 @@ import android.content.Context
 import android.content.Intent
 import android.database.Cursor
 import android.os.Environment
-import com.nhaarman.mockitokotlin2.KArgumentCaptor
-import com.nhaarman.mockitokotlin2.argumentCaptor
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.KArgumentCaptor
+import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 import org.wordpress.android.ui.utils.AuthenticationUtils
 import org.wordpress.android.ui.utils.DownloadManagerWrapper
 
@@ -35,6 +35,7 @@ class ReaderFileDownloadManagerTest {
     }
 
     @Test
+    @Suppress("DEPRECATION")
     fun `enqueues file for download`() {
         val url = "http://wordpress.com/file_name.pdf"
         val header = "Authentication"

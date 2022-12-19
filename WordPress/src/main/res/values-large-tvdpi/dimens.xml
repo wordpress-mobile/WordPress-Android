@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <dimen name="format_bar_height">50dp</dimen>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <dimen name="format_bar_height" tools:ignore="MissingDefaultResource">50dp</dimen>
 </resources>

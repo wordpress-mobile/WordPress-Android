@@ -1,51 +1,48 @@
 package org.wordpress.android.ui.sitecreation.theme
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.ViewCompat
+import androidx.core.view.isGone
+import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.AppBarLayout
+import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
-import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.HomePagePickerFragmentBinding
-import org.wordpress.android.ui.PreviewModeSelectorPopup
-import org.wordpress.android.ui.layoutpicker.CategoriesAdapter
 import org.wordpress.android.ui.layoutpicker.LayoutCategoryAdapter
 import org.wordpress.android.ui.layoutpicker.LayoutPickerUiState
 import org.wordpress.android.ui.layoutpicker.LayoutPickerViewModel.DesignPreviewAction.Dismiss
 import org.wordpress.android.ui.layoutpicker.LayoutPickerViewModel.DesignPreviewAction.Show
 import org.wordpress.android.ui.sitecreation.theme.DesignPreviewFragment.Companion.DESIGN_PREVIEW_TAG
 import org.wordpress.android.ui.utils.UiHelpers
-import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.ToastUtils
+import org.wordpress.android.util.config.SiteNameFeatureConfig
+import org.wordpress.android.util.extensions.setVisible
 import org.wordpress.android.util.image.ImageManager
-import org.wordpress.android.util.setVisible
-import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
 /**
  * Implements the Home Page Picker UI
  */
-@Suppress("TooManyFunctions")
+@AndroidEntryPoint
 class HomePagePickerFragment : Fragment() {
     @Inject lateinit var imageManager: ImageManager
     @Inject lateinit var displayUtils: DisplayUtilsWrapper
     @Inject internal lateinit var uiHelper: UiHelpers
+    @Inject lateinit var siteNameFeatureConfig: SiteNameFeatureConfig
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-    private lateinit var viewModel: HomePagePickerViewModel
-    private lateinit var previewModeSelectorPopup: PreviewModeSelectorPopup
+    @Inject lateinit var thumbDimensionProvider: SiteDesignPickerDimensionProvider
+    @Inject lateinit var recommendedDimensionProvider: SiteDesignRecommendedDimensionProvider
+    private val viewModel: HomePagePickerViewModel by activityViewModels()
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        (requireActivity().applicationContext as WordPress).component().inject(this)
-    }
+    private val siteIntent: String?
+        get() = arguments?.getString(ARG_SITE_INTENT)
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -58,61 +55,65 @@ class HomePagePickerFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel = ViewModelProvider(requireActivity(), viewModelFactory).get(HomePagePickerViewModel::class.java)
+        savedInstanceState?.let {
+            viewModel.loadSavedState(it)
+        }
 
         with(HomePagePickerFragmentBinding.bind(view)) {
-            categoriesRecyclerView.apply {
-                layoutManager = LinearLayoutManager(
-                        context,
-                        RecyclerView.HORIZONTAL,
-                        false
-                )
-                setRecycledViewPool(RecyclerView.RecycledViewPool())
-                adapter = CategoriesAdapter()
-                ViewCompat.setNestedScrollingEnabled(this, false)
-            }
-
+            modalLayoutPickerCategoriesSkeleton.root.isGone = true
+            categoriesRecyclerView.isGone = true
             layoutsRecyclerView.apply {
                 layoutManager = LinearLayoutManager(requireActivity())
-                adapter = LayoutCategoryAdapter(viewModel.nestedScrollStates)
+                adapter = LayoutCategoryAdapter(
+                        viewModel.nestedScrollStates,
+                        thumbDimensionProvider,
+                        recommendedDimensionProvider,
+                        showRowDividers = false,
+                        useLargeCategoryHeading = true,
+                        footerLayoutResId = R.layout.home_page_picker_footer
+                )
             }
 
             setupUi()
             setupViewModel()
             setupActionListeners()
-            previewModeSelectorPopup = PreviewModeSelectorPopup(
-                    requireActivity(),
-                    homePagePickerTitlebar.previewTypeSelectorButton
-            )
         }
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        viewModel.writeToBundle(outState)
+    }
+
     private fun HomePagePickerFragmentBinding.setupUi() {
-        homePagePickerTitlebar.title.visibility = if (isPhoneLandscape()) View.VISIBLE else View.INVISIBLE
-        modalLayoutPickerHeaderSection.modalLayoutPickerTitleRow?.header?.setText(R.string.hpp_title)
-        modalLayoutPickerHeaderSection.modalLayoutPickerSubtitleRow?.description?.setText(R.string.hpp_subtitle)
+        siteCreationThemeHeader.title?.setText(R.string.hpp_title)
+        siteCreationThemeHeader.subtitle?.isGone = true
+        modalLayoutPickerLayoutsSkeleton.layoutsSkeleton.updateLayoutParams {
+            height = recommendedDimensionProvider.rowHeight
+        }
+        modalLayoutPickerLayoutsSkeleton.skeletonCardView.updateLayoutParams {
+            height = recommendedDimensionProvider.previewHeight
+            width = recommendedDimensionProvider.previewWidth
+        }
     }
 
     private fun HomePagePickerFragmentBinding.setupViewModel() {
-        viewModel.uiState.observe(viewLifecycleOwner, { uiState ->
+        viewModel.uiState.observe(viewLifecycleOwner) { uiState ->
             setHeaderVisibility(uiState.isHeaderVisible)
-            setDescriptionVisibility(uiState.isDescriptionVisible)
             setContentVisibility(uiState.loadingSkeletonVisible, uiState.errorViewVisible)
-            setToolbarVisibility(uiState.isToolbarVisible)
             when (uiState) {
                 is LayoutPickerUiState.Loading -> { // Nothing more to do here
                 }
                 is LayoutPickerUiState.Content -> {
-                    (categoriesRecyclerView.adapter as CategoriesAdapter).setData(uiState.categories)
                     (layoutsRecyclerView.adapter as? LayoutCategoryAdapter)?.update(uiState.layoutCategories)
                 }
                 is LayoutPickerUiState.Error -> {
                     uiState.toast?.let { ToastUtils.showToast(requireContext(), it) }
                 }
             }
-        })
+        }
 
-        viewModel.onPreviewActionPressed.observe(viewLifecycleOwner, { action ->
+        viewModel.onPreviewActionPressed.observe(viewLifecycleOwner) { action ->
             activity?.supportFragmentManager?.let { fm ->
                 when (action) {
                     is Show -> {
@@ -121,63 +122,41 @@ class HomePagePickerFragment : Fragment() {
                     }
                     is Dismiss -> {
                         (fm.findFragmentByTag(DESIGN_PREVIEW_TAG) as? DesignPreviewFragment)?.dismiss()
+                        (viewModel.uiState.value as? LayoutPickerUiState.Content)?.let {
+                            viewModel.updateUiState(it.copy(selectedLayoutSlug = null))
+                            viewModel.loadLayouts()
+                        }
                     }
                 }
             }
-        })
+        }
 
-        viewModel.onThumbnailModeButtonPressed.observe(viewLifecycleOwner, {
-            previewModeSelectorPopup.show(viewModel)
-        })
-
-        viewModel.onCategorySelectionChanged.observeEvent(viewLifecycleOwner, {
-            layoutsRecyclerView.smoothScrollToPosition(0)
-        })
-
-        viewModel.start(displayUtils.isTablet())
+        viewModel.start(siteIntent, displayUtils.isTablet())
     }
 
     private fun HomePagePickerFragmentBinding.setHeaderVisibility(visible: Boolean) {
         uiHelper.fadeInfadeOutViews(
-                homePagePickerTitlebar.title,
-                modalLayoutPickerHeaderSection.modalLayoutPickerTitleRow?.header,
+                homePagePickerTitlebar.appBarTitle,
+                siteCreationThemeHeader.title,
                 visible
         )
     }
 
-    /**
-     * Sets the header description visibility
-     * @param visible if true the description is visible else invisible
-     */
-    private fun HomePagePickerFragmentBinding.setDescriptionVisibility(visible: Boolean) {
-        modalLayoutPickerHeaderSection.modalLayoutPickerSubtitleRow?.description?.visibility =
-                if (visible) View.VISIBLE else View.INVISIBLE
-    }
-
     private fun HomePagePickerFragmentBinding.setContentVisibility(skeleton: Boolean, error: Boolean) {
-        modalLayoutPickerCategoriesSkeleton.categoriesSkeleton.setVisible(skeleton)
-        categoriesRecyclerView.setVisible(!skeleton && !error)
         modalLayoutPickerLayoutsSkeleton.layoutsSkeleton.setVisible(skeleton)
         layoutsRecyclerView.setVisible(!skeleton && !error)
         errorView.setVisible(error)
     }
 
-    private fun HomePagePickerFragmentBinding.setToolbarVisibility(visible: Boolean) {
-        AniUtils.animateBottomBar(homePagePickerBottomToolbar.bottomToolbar, visible)
-    }
-
     private fun HomePagePickerFragmentBinding.setupActionListeners() {
-        homePagePickerBottomToolbar.previewButton.setOnClickListener { viewModel.onPreviewTapped() }
-        homePagePickerBottomToolbar.chooseButton.setOnClickListener { viewModel.onChooseTapped() }
         homePagePickerTitlebar.skipButton.setOnClickListener { viewModel.onSkippedTapped() }
         errorView.button.setOnClickListener { viewModel.onRetryClicked() }
         homePagePickerTitlebar.backButton.setOnClickListener { viewModel.onBackPressed() }
-        homePagePickerTitlebar.previewTypeSelectorButton.setOnClickListener { viewModel.onThumbnailModePressed() }
         setScrollListener()
     }
 
     private fun HomePagePickerFragmentBinding.setScrollListener() {
-        if (isPhoneLandscape()) return // Always visible
+        if (displayUtils.isPhoneLandscape()) return // Always visible
         val scrollThreshold = resources.getDimension(R.dimen.picker_header_scroll_snap_threshold).toInt()
         appBarLayout.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { _, verticalOffset ->
             viewModel.onAppBarOffsetChanged(verticalOffset, scrollThreshold)
@@ -185,5 +164,17 @@ class HomePagePickerFragment : Fragment() {
         viewModel.onAppBarOffsetChanged(0, scrollThreshold)
     }
 
-    private fun isPhoneLandscape() = displayUtils.isLandscapeBySize() && !displayUtils.isTablet()
+    companion object {
+        private const val ARG_SITE_INTENT = "arg_site_intent"
+
+        fun newInstance(siteIntent: String?): HomePagePickerFragment {
+            val bundle = Bundle().apply {
+                putString(ARG_SITE_INTENT, siteIntent)
+            }
+
+            return HomePagePickerFragment().apply {
+                arguments = bundle
+            }
+        }
+    }
 }

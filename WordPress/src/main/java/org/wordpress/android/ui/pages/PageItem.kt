@@ -12,6 +12,7 @@ import org.wordpress.android.viewmodel.uistate.ProgressBarUiState
 import java.util.Date
 
 sealed class PageItem(open val type: Type) {
+    @Suppress("LongParameterList")
     abstract class Page(
         open val remoteId: Long,
         open val localId: Int,
@@ -32,6 +33,7 @@ sealed class PageItem(open val type: Type) {
         open var showQuickStartFocusPoint: Boolean
     ) : PageItem(PAGE)
 
+    @Suppress("DataClassShouldBeImmutable")
     data class PublishedPage(
         override val remoteId: Long,
         override val localId: Int,
@@ -67,6 +69,7 @@ sealed class PageItem(open val type: Type) {
             showQuickStartFocusPoint = showQuickStartFocusPoint
     )
 
+    @Suppress("DataClassShouldBeImmutable")
     data class DraftPage(
         override val remoteId: Long,
         override val localId: Int,
@@ -100,6 +103,7 @@ sealed class PageItem(open val type: Type) {
             showQuickStartFocusPoint = showQuickStartFocusPoint
     )
 
+    @Suppress("DataClassShouldBeImmutable")
     data class ScheduledPage(
         override val remoteId: Long,
         override val localId: Int,
@@ -133,6 +137,7 @@ sealed class PageItem(open val type: Type) {
             showQuickStartFocusPoint = showQuickStartFocusPoint
     )
 
+    @Suppress("DataClassShouldBeImmutable")
     data class TrashedPage(
         override val remoteId: Long,
         override val localId: Int,
@@ -166,6 +171,7 @@ sealed class PageItem(open val type: Type) {
             showQuickStartFocusPoint = showQuickStartFocusPoint
     )
 
+    @Suppress("DataClassShouldBeImmutable")
     data class ParentPage(
         val id: Long,
         val title: String,
@@ -197,6 +203,7 @@ sealed class PageItem(open val type: Type) {
         SET_AS_HOMEPAGE(R.id.set_as_homepage),
         SET_AS_POSTS_PAGE(R.id.set_as_posts_page),
         COPY(R.id.copy),
+        COPY_LINK(R.id.copy_page_link),
         PUBLISH_NOW(R.id.publish_now),
         MOVE_TO_DRAFT(R.id.move_to_draft),
         DELETE_PERMANENTLY(R.id.delete_permanently),

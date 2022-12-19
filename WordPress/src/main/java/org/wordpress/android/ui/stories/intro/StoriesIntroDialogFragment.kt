@@ -6,19 +6,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.Window
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import org.wordpress.android.R
-import org.wordpress.android.R.attr
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.StoriesIntroDialogFragmentBinding
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher
-import org.wordpress.android.util.getColorFromAttribute
-import org.wordpress.android.util.isDarkTheme
+import org.wordpress.android.util.extensions.setStatusBarAsSurfaceColor
 import javax.inject.Inject
 
 class StoriesIntroDialogFragment : DialogFragment() {
@@ -47,15 +44,7 @@ class StoriesIntroDialogFragment : DialogFragment() {
         val dialog = super.onCreateDialog(savedInstanceState)
         viewModel = ViewModelProvider(this, viewModelFactory)
                 .get(StoriesIntroViewModel::class.java)
-
-        val window: Window? = dialog.window
-        window?.let {
-            window.statusBarColor = dialog.context.getColorFromAttribute(attr.colorSurface)
-            if (!resources.configuration.isDarkTheme()) {
-                window.decorView.systemUiVisibility = window.decorView
-                        .systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-            }
-        }
+        dialog.setStatusBarAsSurfaceColor()
         return dialog
     }
 

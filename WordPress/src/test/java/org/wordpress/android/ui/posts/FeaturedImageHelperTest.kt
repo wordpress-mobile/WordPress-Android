@@ -1,15 +1,5 @@
 package org.wordpress.android.ui.posts
 
-import com.nhaarman.mockitokotlin2.KArgumentCaptor
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.anyOrNull
-import com.nhaarman.mockitokotlin2.argThat
-import com.nhaarman.mockitokotlin2.argumentCaptor
-import com.nhaarman.mockitokotlin2.eq
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.never
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -17,6 +7,16 @@ import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.KArgumentCaptor
+import org.mockito.kotlin.any
+import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.argThat
+import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.eq
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.never
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.action.MediaAction
 import org.wordpress.android.fluxc.annotations.action.Action
@@ -348,6 +348,26 @@ class FeaturedImageHelperTest {
                 anyInt(),
                 eq(siteAccessibilityInfo)
         )
+    }
+
+    @Test
+    fun `createCurrent-State uses media url for self-hosted sites`() {
+        // Arrange
+        val post: PostImmutableModel = mock()
+        whenever(post.hasFeaturedImage()).thenReturn(true)
+
+        val media: MediaModel = mock()
+        whenever(media.url).thenReturn("https://testing.com/url.jpg")
+        whenever(mediaStore.getSiteMediaWithId(anyOrNull(), anyLong())).thenReturn(media)
+
+        val site = createSiteModel().apply {
+            setIsSelfHostedAdmin(true)
+        }
+
+        // Act
+        val featuredImage = featuredImageHelper.createCurrentFeaturedImageState(site, post)
+        // Assert
+        assertThat(featuredImage.mediaUri).isEqualTo("https://testing.com/url.jpg")
     }
 
     companion object Fixtures {

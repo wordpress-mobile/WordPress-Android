@@ -1,19 +1,18 @@
 package org.wordpress.android.viewmodel.history
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.nhaarman.mockitokotlin2.argWhere
-import com.nhaarman.mockitokotlin2.doReturn
-import com.nhaarman.mockitokotlin2.eq
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.times
-import com.nhaarman.mockitokotlin2.verify
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.argWhere
+import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.eq
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.action.PostAction
 import org.wordpress.android.fluxc.model.PostModel
@@ -74,7 +73,6 @@ class HistoryViewModelTest {
         assertThat(viewModel.listStatus.value).isEqualTo(HistoryListStatus.DONE)
     }
 
-    @UseExperimental(ExperimentalCoroutinesApi::class)
     private fun createHistoryVieWModel() = HistoryViewModel(
             dispatcher = dispatcher,
             resourceProvider = mock(),

@@ -1,19 +1,18 @@
 package org.wordpress.android.ui.mediapicker.insert
 
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.toList
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
+import org.mockito.kotlin.any
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.MediaStore.OnStockMediaUploaded
-import org.wordpress.android.fluxc.store.StockMediaItem
 import org.wordpress.android.fluxc.store.StockMediaStore
 import org.wordpress.android.fluxc.store.StockMediaUploadItem
 import org.wordpress.android.test
@@ -29,15 +28,6 @@ class StockMediaInsertUseCaseTest : BaseUnitTest() {
     private val url = "wordpress://url"
     private val title = "title"
     private val name = "name"
-    private val thumbnail = "image.jpg"
-    private val stockMediaItem = StockMediaItem(
-            "id",
-            name,
-            title,
-            url,
-            "123",
-            thumbnail
-    )
 
     @Before
     fun setUp() {

@@ -75,7 +75,10 @@ fastlane/report.xml
 fastlane/README.md
 fastlane/metadata/android/screenshots.html
 fastlane/metadata/android/*/images/
-fastlane/screenshots
+fastlane/jetpack_metadata/android/screenshots.html
+fastlane/jetpack_metadata/android/*/images/
+fastlane/screenshots/wordpress/
+fastlane/screenshots/jetpack/
 default.profraw
 
 # Bundler

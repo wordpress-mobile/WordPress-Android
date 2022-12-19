@@ -1,0 +1,50 @@
+{
+    "request": {
+        "method": "GET",
+        "urlPathPattern": "/rest/v1.1/sites/([0-9]+)/stats/top-posts/",
+        "queryParameters": {
+            "period": {
+                "equalTo": "day"
+            },
+            "max": {
+                "matches": "[0-9]+"
+            },
+            "date": {
+                "matches": "(.*)"
+            },
+            "locale": {
+                "matches": "(.*)"
+            }
+        }
+    },
+    "response": {
+        "status": 200,
+        "jsonBody": {
+            "date": "{{now format='yyyy-MM-dd'}}",
+            "days": {
+                "{{now format='yyyy-MM-dd'}}": {
+                    "postviews": [{
+                        "id": 1267,
+                        "href": "http://penguin.com",
+                        "date": "2022-01-12 15:33:01",
+                        "title": "How to cook water?",
+                        "type": "post",
+                        "views": 25,
+                        "video_play": false
+                    }, {
+                        "id": 0,
+                        "href": "http://penguin.com",
+                        "date": null,
+                        "title": "Mechagodzilla VS Megashark.",
+                        "type": "homepage",
+                        "views": 21,
+                        "video_play": false
+                    }],
+                    "total_views": "97",
+                    "other_views": 7
+                }
+            },
+            "period": "day"
+        }
+    }
+}

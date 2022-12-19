@@ -4,14 +4,14 @@ import android.text.TextUtils
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.post.PostStatus
-import org.wordpress.android.ui.stats.refresh.utils.DateUtils
+import org.wordpress.android.ui.stats.refresh.utils.StatsDateUtils
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 
 class PostSettingsUtils
 @Inject constructor(
     private val resourceProvider: ResourceProvider,
-    private val dateUtils: DateUtils,
+    private val statsDateUtils: StatsDateUtils,
     private val postUtilsWrapper: PostUtilsWrapper
 ) {
     fun getPublishDateLabel(
@@ -21,7 +21,7 @@ class PostSettingsUtils
         val dateCreated = postModel.dateCreated
         val status = PostStatus.fromPost(postModel)
         if (!TextUtils.isEmpty(dateCreated)) {
-            val formattedDate = dateUtils.formatDateTime(dateCreated)
+            val formattedDate = statsDateUtils.formatDateTime(dateCreated)
 
             if (postModel.isLocalDraft) {
                 if (postUtilsWrapper.isPublishDateInThePast(postModel.dateCreated)) {

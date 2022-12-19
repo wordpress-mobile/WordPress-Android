@@ -1,15 +1,15 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.eq
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
+import org.mockito.kotlin.any
+import org.mockito.kotlin.eq
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
@@ -216,7 +216,8 @@ class LatestPostSummaryUseCaseTest : BaseUnitTest() {
                 viewsCount,
                 0,
                 0,
-                dayViews
+                dayViews,
+                ""
         )
     }
 }

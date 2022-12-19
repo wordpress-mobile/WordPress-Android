@@ -8,7 +8,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -137,8 +136,8 @@ class HistoryViewModel @Inject constructor(
                 val updatedRevisions = mutableListOf<HistoryListItem>()
                 revisionsList.clear()
 
-                existingRevisions.forEach { it ->
-                    var mutableRevision = it
+                existingRevisions.forEach { existingRevision ->
+                    var mutableRevision = existingRevision
 
                     if (mutableRevision is Revision) {
                         // we shouldn't directly update items in MutableLiveData, as they will be updated downstream
@@ -223,10 +222,20 @@ class HistoryViewModel @Inject constructor(
         fetchRevisions()
     }
 
+    private fun saveRevisionsToLocalDB(post: PostModel, revisions: List<RevisionModel>) {
+        revisions.forEach {
+            postStore.setLocalRevision(it, site, post)
+        }
+    }
+
+    private fun removeRevisionsFromLocalDB(post: PostModel) {
+        postStore.deleteLocalRevisionOfAPostOrPage(post)
+    }
+
     data class ShowDialogEvent(val historyListItem: HistoryListItem, val revisionsList: List<Revision>)
 
+    @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    @SuppressWarnings("unused")
     fun onRevisionsFetched(event: OnRevisionsFetched) {
         if (event.isError) {
             AppLog.e(T.API, "An error occurred while fetching History revisions")
@@ -238,6 +247,8 @@ class HistoryViewModel @Inject constructor(
         } else {
             _listStatus.value = HistoryListStatus.DONE
             createRevisionsList(event.revisionsModel.revisions)
+            removeRevisionsFromLocalDB(event.post)
+            saveRevisionsToLocalDB(event.post, event.revisionsModel.revisions)
         }
     }
 }

@@ -1,9 +1,6 @@
 package org.wordpress.android.ui.engagement
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.nhaarman.mockitokotlin2.times
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.flow
 import org.assertj.core.api.Assertions.assertThat
@@ -13,6 +10,9 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.LikeModel.LikeType.COMMENT_LIKE
 import org.wordpress.android.fluxc.model.LikeModel.LikeType.POST_LIKE
@@ -46,7 +46,6 @@ class GetLikesHandlerTest {
     private val commentId = 10000L
     private val expectedNumLikes = 6
     private val defaultPageLenght = 20
-    private val noLikesLimit = -1
     private val pageInfo = PagingInfo(
             20,
             1

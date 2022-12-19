@@ -10,7 +10,7 @@ import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.addItemDivider
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.image.ImageManager
-import org.wordpress.android.util.viewBinding
+import org.wordpress.android.util.extensions.viewBinding
 
 class ReaderRecommendedBlogsCardViewHolder(
     parentView: ViewGroup,

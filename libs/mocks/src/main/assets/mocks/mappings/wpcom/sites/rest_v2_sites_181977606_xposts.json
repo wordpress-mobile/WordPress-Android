@@ -1,0 +1,16 @@
+{
+    "request": {
+        "method": "GET",
+        "urlPath": "/wpcom/v2/sites/181977606/xposts/"
+    },
+    "response": {
+        "status": 200,
+        "jsonBody": {
+            "code": "xposts_require_o2_enabled",
+            "message": "Xposts are only available on sites with the o2-plugin enabled.",
+            "data": {
+                "status": 400
+            }
+        }
+    }
+}

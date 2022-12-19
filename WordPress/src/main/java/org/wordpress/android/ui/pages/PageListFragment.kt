@@ -8,22 +8,14 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSmoothScroller
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.snackbar.Snackbar
-import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.PagesListFragmentBinding
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.ui.ViewPagerFragment
-import org.wordpress.android.ui.quickstart.QuickStartEvent
 import org.wordpress.android.ui.utils.UiHelpers
-import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.QuickStartUtilsWrapper
-import org.wordpress.android.util.SnackbarItem
-import org.wordpress.android.util.SnackbarItem.Info
 import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.viewmodel.pages.PageListViewModel
@@ -32,7 +24,6 @@ import org.wordpress.android.viewmodel.pages.PagesViewModel
 import org.wordpress.android.widgets.RecyclerItemDecoration
 import javax.inject.Inject
 
-@Suppress("TooManyFunctions")
 class PageListFragment : ViewPagerFragment(R.layout.pages_list_fragment) {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject internal lateinit var imageManager: ImageManager
@@ -123,10 +114,6 @@ class PageListFragment : ViewPagerFragment(R.layout.pages_list_fragment) {
                 recyclerView.layoutManager?.startSmoothScroll(smoothScroller)
             }
         })
-
-        viewModel.quickStartEvent.observe(viewLifecycleOwner, { event ->
-            if (event == null) snackbarSequencer.dismissLastSnackbar() else showSnackbar()
-        })
     }
 
     private fun PagesListFragmentBinding.setPages(
@@ -138,7 +125,7 @@ class PageListFragment : ViewPagerFragment(R.layout.pages_list_fragment) {
         if (recyclerView.adapter == null) {
             adapter = PageListAdapter(
                     { action, page -> viewModel.onMenuAction(action, page, requireContext()) },
-                    { page -> viewModel.onItemTapped(page, requireContext()) },
+                    { page -> viewModel.onItemTapped(page) },
                     { viewModel.onEmptyListNewPageButtonTapped() },
                     isSitePhotonCapable,
                     isSitePrivateAt,
@@ -154,37 +141,5 @@ class PageListFragment : ViewPagerFragment(R.layout.pages_list_fragment) {
 
     fun scrollToPage(localPageId: Int) {
         viewModel.onScrollToPageRequested(localPageId)
-    }
-
-    override fun onStart() {
-        super.onStart()
-        EventBus.getDefault().register(this)
-    }
-
-    override fun onStop() {
-        super.onStop()
-        EventBus.getDefault().unregister(this)
-    }
-
-    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
-    @SuppressWarnings("unused")
-    fun onEvent(event: QuickStartEvent) {
-        if (!isAdded || view == null) {
-            return
-        }
-
-        EventBus.getDefault().removeStickyEvent(event)
-        viewModel.onQuickStartEvent(event)
-    }
-
-    fun PagesListFragmentBinding.showSnackbar() {
-        view?.post {
-            val title = quickStartUtilsWrapper.stylizeQuickStartPrompt(
-                    requireContext(),
-                    R.string.quick_start_dialog_edit_homepage_message_pages_short,
-                    R.drawable.ic_homepage_16dp
-            )
-            snackbarSequencer.enqueue(SnackbarItem(Info(recyclerView, UiStringText(title), Snackbar.LENGTH_LONG)))
-        }
     }
 }

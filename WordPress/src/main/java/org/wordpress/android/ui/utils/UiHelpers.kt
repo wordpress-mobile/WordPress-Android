@@ -1,24 +1,26 @@
 package org.wordpress.android.ui.utils
 
-import org.wordpress.android.R
 import android.app.Dialog
 import android.content.Context
+import android.graphics.Point
 import android.view.View
 import android.view.WindowManager.LayoutParams
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import org.wordpress.android.R
 import org.wordpress.android.ui.utils.UiDimen.UIDimenDPInt
 import org.wordpress.android.ui.utils.UiDimen.UIDimenRes
 import org.wordpress.android.ui.utils.UiString.UiStringRes
-import org.wordpress.android.ui.utils.UiString.UiStringText
-import org.wordpress.android.util.DisplayUtils
-import javax.inject.Inject
-import android.graphics.Point
+import org.wordpress.android.ui.utils.UiString.UiStringPluralRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
+import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AniUtils.Duration
+import org.wordpress.android.util.DisplayUtils
+import org.wordpress.android.util.StringUtils
+import javax.inject.Inject
 
 class UiHelpers @Inject constructor() {
     fun getPxOfUiDimen(context: Context, uiDimen: UiDimen): Int =
@@ -39,6 +41,16 @@ class UiHelpers @Inject constructor() {
                                     value
                             )
                         }.toTypedArray()
+                )
+                // Current localization process does not support <plurals> resource strings,
+                // so we need to use multiple string resources. Switch to @PluralRes in UiStringPluralRes and
+                // use context.resources.getQuantityString here when <plurals> is supported by localization process.
+                is UiStringPluralRes -> StringUtils.getQuantityString(
+                        context,
+                        uiString.zeroRes,
+                        uiString.oneRes,
+                        uiString.otherRes,
+                        uiString.count
                 )
             }
 
@@ -86,6 +98,7 @@ class UiHelpers @Inject constructor() {
     }
 
     companion object {
+        @Suppress("DEPRECATION")
         fun adjustDialogSize(dialog: Dialog) {
             val window = requireNotNull(dialog.window)
             val size = Point()

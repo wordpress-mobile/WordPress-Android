@@ -8,8 +8,8 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:fillViewport="true"
-        android:paddingStart="@dimen/feature_announcement_content_margin"
-        android:paddingEnd="@dimen/feature_announcement_content_margin"
+        android:paddingStart="@dimen/dialog_fragment_content_margin"
+        android:paddingEnd="@dimen/dialog_fragment_content_margin"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         app:layout_constraintBottom_toTopOf="@+id/create_story_intro_button_container"
         app:layout_constraintTop_toTopOf="parent">

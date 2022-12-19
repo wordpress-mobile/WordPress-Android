@@ -6,13 +6,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.Window
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.annotation.DrawableRes
-import androidx.appcompat.app.AppCompatDialog
 import androidx.appcompat.app.AppCompatDialogFragment
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
@@ -23,7 +21,6 @@ import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.widgets.WPTextView
 import javax.inject.Inject
 
-@Suppress("TooManyFunctions")
 class QuickStartPromptDialogFragment : AppCompatDialogFragment() {
     companion object {
         private const val STATE_KEY_DRAWABLE_RES_ID = "state_key_drawable"
@@ -47,18 +44,13 @@ class QuickStartPromptDialogFragment : AppCompatDialogFragment() {
     @Inject lateinit var imageManager: ImageManager
     @Inject lateinit var selectedSiteRepository: SelectedSiteRepository
 
-    override fun getTheme() = R.style.WordPress_FullscreenDialog
+    override fun getTheme() = R.style.WordPress_FullscreenDialog_NoTitle
 
     interface QuickStartPromptClickInterface {
         fun onNegativeClicked(instanceTag: String)
         fun onPositiveClicked(instanceTag: String)
     }
 
-    override fun setupDialog(dialog: Dialog, style: Int) {
-        (dialog as AppCompatDialog).supportRequestWindowFeature(Window.FEATURE_NO_TITLE)
-    }
-
-    @Suppress("LongParameterList")
     @JvmOverloads
     fun initialize(
         tag: String,

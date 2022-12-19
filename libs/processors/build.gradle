@@ -1,0 +1,15 @@
+plugins {
+    id "org.jetbrains.kotlin.jvm"
+    id "org.jetbrains.kotlin.kapt"
+}
+
+dependencies {
+    implementation project(":libs:annotations")
+
+    implementation "com.google.auto.service:auto-service:$googleAutoServiceVersion"
+    kapt "com.google.auto.service:auto-service:$googleAutoServiceVersion"
+    implementation "com.squareup:kotlinpoet:$squareupKotlinPoetVersion"
+
+    testImplementation "junit:junit:$junitVersion"
+    testImplementation "org.assertj:assertj-core:$assertjVersion"
+}

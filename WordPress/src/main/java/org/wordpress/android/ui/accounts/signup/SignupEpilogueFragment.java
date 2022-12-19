@@ -41,6 +41,7 @@ import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.action.AccountAction;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
@@ -56,6 +57,7 @@ import org.wordpress.android.networking.GravatarApi;
 import org.wordpress.android.ui.FullScreenDialogFragment;
 import org.wordpress.android.ui.FullScreenDialogFragment.OnConfirmListener;
 import org.wordpress.android.ui.FullScreenDialogFragment.OnDismissListener;
+import org.wordpress.android.ui.FullScreenDialogFragment.OnShownListener;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Click;
@@ -63,18 +65,17 @@ import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Step;
 import org.wordpress.android.ui.photopicker.MediaPickerConstants;
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
-import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource;
 import org.wordpress.android.ui.prefs.AppPrefsWrapper;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.ContextExtensionsKt;
+import org.wordpress.android.util.extensions.ContextExtensionsKt;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.ViewUtilsKt;
+import org.wordpress.android.util.extensions.ViewExtensionsKt;
 import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageManager.RequestListener;
@@ -87,6 +88,7 @@ import java.net.URISyntaxException;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -94,7 +96,7 @@ import static org.wordpress.android.analytics.AnalyticsTracker.Stat.SIGNUP_EMAIL
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.SIGNUP_EMAIL_EPILOGUE_GRAVATAR_SHOT_NEW;
 
 public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogueListener>
-        implements OnConfirmListener, OnDismissListener {
+        implements OnConfirmListener, OnDismissListener, OnShownListener {
     private EditText mEditTextDisplayName;
     private EditText mEditTextUsername;
     private FullScreenDialogFragment mDialog;
@@ -133,6 +135,9 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
     private static final String KEY_IS_UPDATING_PASSWORD = "KEY_IS_UPDATING_PASSWORD";
     private static final String KEY_HAS_UPDATED_PASSWORD = "KEY_HAS_UPDATED_PASSWORD";
     private static final String KEY_HAS_MADE_UPDATES = "KEY_HAS_MADE_UPDATES";
+
+    private static final String SOURCE = "source";
+    private static final String SOURCE_SIGNUP_EPILOGUE = "signup_epilogue";
 
     public static final String TAG = "signup_epilogue_fragment_tag";
 
@@ -197,7 +202,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
                 return true;
             }
         });
-        ViewUtilsKt.redirectContextClickToLongPressListener(headerAvatarLayout);
+        ViewExtensionsKt.redirectContextClickToLongPressListener(headerAvatarLayout);
         mHeaderAvatarAdd = rootView.findViewById(R.id.login_epilogue_header_avatar_add);
         mHeaderAvatarAdd.setVisibility(mIsEmailSignup ? View.VISIBLE : View.GONE);
         mHeaderAvatar = rootView.findViewById(R.id.login_epilogue_header_avatar);
@@ -359,6 +364,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
@@ -372,8 +378,10 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
                                         data.getStringArrayExtra(MediaPickerConstants.EXTRA_MEDIA_URIS);
 
                                 if (mediaUriStringsArray != null && mediaUriStringsArray.length > 0) {
-                                    PhotoPickerMediaSource source = PhotoPickerMediaSource.fromString(
-                                            data.getStringExtra(MediaPickerConstants.EXTRA_MEDIA_SOURCE));
+                                    PhotoPickerActivity.PhotoPickerMediaSource source =
+                                            PhotoPickerActivity.PhotoPickerMediaSource.fromString(
+                                                    data.getStringExtra(MediaPickerConstants.EXTRA_MEDIA_SOURCE)
+                                            );
                                     AnalyticsTracker.Stat stat =
                                             source == PhotoPickerActivity.PhotoPickerMediaSource.ANDROID_CAMERA
                                                     ? SIGNUP_EMAIL_EPILOGUE_GRAVATAR_SHOT_NEW
@@ -447,7 +455,17 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
 
     @Override
     public void onDismiss() {
+        Map<String, String> props = new HashMap<>();
+        props.put(SOURCE, SOURCE_SIGNUP_EPILOGUE);
+        AnalyticsTracker.track(Stat.CHANGE_USERNAME_DISMISSED, props);
         mDialog = null;
+    }
+
+    @Override
+    public void onShown() {
+        Map<String, String> props = new HashMap<>();
+        props.put(SOURCE, SOURCE_SIGNUP_EPILOGUE);
+        AnalyticsTracker.track(AnalyticsTracker.Stat.CHANGE_USERNAME_DISPLAYED, props);
     }
 
     @Override
@@ -582,6 +600,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
                 .setToolbarTheme(R.style.ThemeOverlay_LoginFlow_Toolbar)
                 .setOnConfirmListener(this)
                 .setOnDismissListener(this)
+                .setOnShownListener(this)
                 .setContent(UsernameChangerFullScreenDialogFragment.class, bundle)
                 .build();
 

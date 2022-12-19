@@ -6,33 +6,34 @@ import android.widget.TextView
 import org.wordpress.android.R.anim
 import org.wordpress.android.R.drawable
 import org.wordpress.android.R.string
-import org.wordpress.android.ui.photopicker.PhotoPickerUiItem.ClickAction
-import org.wordpress.android.ui.photopicker.PhotoPickerUiItem.ToggleAction
 import org.wordpress.android.util.AccessibilityUtils
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AniUtils.Duration.SHORT
 import org.wordpress.android.util.PhotoPickerUtils
 import org.wordpress.android.util.ViewUtils
 import org.wordpress.android.util.image.ImageManager
-import org.wordpress.android.util.redirectContextClickToLongPressListener
+import org.wordpress.android.util.extensions.redirectContextClickToLongPressListener
 import java.util.Locale
 
 @Deprecated("This class is being refactored, if you implement any change, please also update " +
         "{@link org.wordpress.android.ui.mediapicker.ThumbnailViewUtils}")
 class ThumbnailViewUtils(val imageManager: ImageManager) {
+    @Suppress("DEPRECATION", "LongParameterList")
     fun setupListeners(
         imgThumbnail: ImageView,
+        isVideo: Boolean,
         isSelected: Boolean,
-        toggleAction: ToggleAction,
-        clickAction: ClickAction,
+        toggleAction: PhotoPickerUiItem.ToggleAction,
+        clickAction: PhotoPickerUiItem.ClickAction,
         animateSelection: Boolean
     ) {
         addImageSelectedToAccessibilityFocusedEvent(imgThumbnail, isSelected)
         imgThumbnail.setOnClickListener {
             toggleAction.toggle()
-            PhotoPickerUtils.announceSelectedImageForAccessibility(
+            PhotoPickerUtils.announceSelectedMediaForAccessibility(
                     imgThumbnail,
-                    isSelected
+                    isVideo,
+                    !isSelected
             )
         }
         imgThumbnail.setOnLongClickListener {
@@ -158,7 +159,8 @@ class ThumbnailViewUtils(val imageManager: ImageManager) {
         )
     }
 
-    fun setupVideoOverlay(videoOverlay: ImageView, clickAction: ClickAction) {
+    @Suppress("DEPRECATION")
+    fun setupVideoOverlay(videoOverlay: ImageView, clickAction: PhotoPickerUiItem.ClickAction) {
         videoOverlay.visibility = View.VISIBLE
         videoOverlay.setOnClickListener { clickAction.click() }
     }

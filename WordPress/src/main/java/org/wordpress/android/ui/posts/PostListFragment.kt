@@ -135,7 +135,7 @@ class PostListFragment : ViewPagerFragment() {
 
         viewModel = ViewModelProvider(this, viewModelFactory).get(PostListViewModel::class.java)
 
-        val displayWidth = DisplayUtils.getDisplayPixelWidth(context)
+        val displayWidth = DisplayUtils.getWindowPixelWidth(requireContext())
         val contentSpacing = nonNullActivity.resources.getDimensionPixelSize(R.dimen.content_margin)
 
         // since the MainViewModel has been already started, we need to manually update the authorFilterSelection value

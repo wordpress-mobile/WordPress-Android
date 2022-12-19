@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 
 import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderCommentList;
-import org.wordpress.android.util.AppLog;
 
 /*
  * utility class which accepts a list of comments and then creates a "level list" from it
@@ -33,16 +32,6 @@ public class ReaderCommentLeveler {
         int level = 0;
         while (walkCommentsAtLevel(result, level)) {
             level++;
-        }
-
-        // check for orphans (child comments whose parents weren't found above) and give them
-        // a non-zero level so they're indented by ReaderCommentAdapter
-        for (ReaderComment comment : result) {
-            if (comment.level == 0 && comment.parentId != 0) {
-                comment.level = 1;
-                result.add(comment);
-                AppLog.d(AppLog.T.READER, "Orphan comment encountered");
-            }
         }
 
         return result;

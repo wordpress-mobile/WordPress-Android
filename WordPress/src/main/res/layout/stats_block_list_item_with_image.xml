@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/margin_extra_large"
+    android:layout_marginStart="@dimen/margin_extra_large"
+    android:layout_marginEnd="@dimen/margin_extra_large">
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/stats_image"
+        android:visibility="gone"
+        style="@style/ShapeAppearance.MaterialComponents.MediumComponent"
+        android:layout_width="@dimen/margin_68dp"
+        android:layout_height="@dimen/margin_68dp"
+        android:contentDescription="@null"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:src="@drawable/bg_rectangle_placeholder_radius_4dp"/>
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/stats_title"
+        style="@style/TextAppearance.MaterialComponents.Subtitle1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:maxLines="2"
+        android:layout_marginEnd="@dimen/margin_extra_large"
+        app:layout_goneMarginEnd="@dimen/margin_none"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/stats_image"
+        tools:text="Fun activities with friends in Kyoto, Japan" />
+
+    <org.wordpress.android.widgets.MaterialTextViewWithNumerals
+        android:id="@+id/stats_sub_title"
+        style="@style/StatsBlockText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_small"
+        android:layout_marginEnd="@dimen/margin_extra_large"
+        app:layout_constraintEnd_toStartOf="@id/stats_image"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/stats_title"
+        tools:text="Published 11 hours ago" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

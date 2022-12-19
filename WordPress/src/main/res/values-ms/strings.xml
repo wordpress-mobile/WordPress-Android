@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2017-12-20 12:00:16+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/3.0.0-alpha.2
+Generator: GlotPress/4.0.0-alpha.3
 Language: ms
 -->
 <resources>
@@ -139,6 +139,7 @@ Language: ms
     <string name="turn_on">Hidupkan</string>
     <string name="error_media_parse_error">Respons tidak disangka dari pelayan</string>
     <string name="upload_finished_toast">Tidak boleh memuat naik kerana ianya telahpun selesai</string>
+    <string name="media_insert_unimplemented">Maaf! Ciri belum lagi dilaksanakan :(</string>
     <string name="menu_redo">Buat Semula</string>
     <string name="post_title">Tajuk</string>
     <string name="menu_undo">Kembali ke asal</string>
@@ -226,10 +227,8 @@ Language: ms
     <string name="connection_service_description">Sambung untuk berkongsi kiriman blog anda ke %s secara automatik.</string>
     <string name="share_btn_disconnect">Putuskan</string>
     <string name="share_btn_reconnect">Sambung Semula</string>
-    <string name="connection_service_label">Umumkan ke %s</string>
     <string name="connections_description">Sambung perkhidmatan media sosial kegemaran anda untuk berkongsi kiriman dengan rakan-rakan secara automatik.</string>
     <string name="connected_accounts_label">Akaun yang telah disambung</string>
-    <string name="connections_label">Sambungan</string>
     <string name="tabbar_accessibility_label_notifications">Pemberitahuan. Urus pemberitahuan anda.</string>
     <string name="sharing">Berkongsi</string>
     <string name="tabbar_accessibility_label_reader">Pembaca. Ikut kandungan dari laman lain.</string>
@@ -365,12 +364,19 @@ Language: ms
     <string name="error_fetch_email_followers_list">Tidak boleh mendapatkan pengikut emel laman</string>
     <string name="error_fetch_followers_list">Tidak boleh mendapatkan pengikut laman</string>
     <string name="editor_failed_uploads_switch_html">Sebahagian muat naik media telah gagal. Anda tidak boleh menukar ke mod HTML\ndalam keadaan ini. in this state. Buang semua muat naik yang gagal dan bersambung?</string>
+    <string name="visual_editor">Penyunting visual</string>
+    <string name="image_thumbnail">Imej kecil</string>
     <string name="image_caption">Sari Kata</string>
+    <string name="image_alt_text">Teks alt</string>
     <string name="image_link_to">Paut ke</string>
     <string name="image_width">Lebar</string>
     <string name="image_settings_save_toast">Penukaran disimpan</string>
     <string name="image_settings_dismiss_dialog_title">Buang penukaran yang tidak disimpan?</string>
     <string name="stop_upload_dialog_title">Berhenti memuat naik?</string>
+    <string name="alert_error_adding_media">Ralat berlaku semasa menyisip media</string>
+    <string name="alert_action_while_uploading">Anda sedang memuat naik media. Sila tunggu sehingga ianya selesai.</string>
+    <string name="alert_insert_image_html_mode">Tidak dapat menyisip media terus dalam mod HTML. Sila tukar kembali ke mod visual.</string>
+    <string name="uploading_gallery_placeholder">Memuat naik galeri…</string>
     <string name="invite_error_for_username">%1$s: %2$s</string>
     <string name="invite_error_some_failed">Jemputan dihantar tetapi ralat berlaku!</string>
     <string name="invite_sent">Jemputan berjaya dihantar</string>
@@ -431,6 +437,7 @@ Language: ms
     <string name="start_over">Mula Semula</string>
     <string name="editor_remove_failed_uploads">Buangkan muatnaik yang gagal</string>
     <string name="site_settings_advanced_header">Lanjutan</string>
+    <string name="button_skip">Langkau</string>
     <string name="xmlrpc_missing_method_error">Tidak boleh berhubung. Kaedah XML-RPC yang diperlukan tiada pada pelayan.</string>
     <string name="post_format_status">Status</string>
     <string name="post_format_video">Video</string>
@@ -712,7 +719,6 @@ Language: ms
     <string name="stats_views">Pandangan</string>
     <string name="stats_visitors">Pelawat</string>
     <string name="stats_view_videos">Video</string>
-    <string name="stats_view_publicize">Publisiti</string>
     <string name="stats_view_top_posts_and_pages">Kiriman &amp; Halaman</string>
     <string name="stats_followers_seconds_ago">beberapa saat lalu</string>
     <string name="ssl_certificate_details">Perincian</string>
@@ -768,6 +774,7 @@ Language: ms
     <string name="media_gallery_type_thumbnail_grid">Grid gambar kenit</string>
     <string name="cannot_delete_multi_media_items">Sesetengah media tidak boleh dihapuskan pada masa ini. Cuba sebentar lagi.</string>
     <string name="link_enter_url_text">Teks pautan (pilihan)</string>
+    <string name="create_a_link">Cipta pautan</string>
     <string name="local_draft">Draf setempat</string>
     <string name="select_categories">Pilih kategori</string>
     <string name="cancel_edit">Batal edit</string>
@@ -776,6 +783,7 @@ Language: ms
     <string name="dlg_confirm_trash_comments">Hantar ke sampah?</string>
     <string name="trash">Sampah</string>
     <string name="saving_changes">Simpan perubahan</string>
+    <string name="horizontal_alignment">Jajaran melintang</string>
     <string name="comment_status_approved">Diluluskan</string>
     <string name="comment_status_unapproved">Menunggu</string>
     <string name="comment_status_spam">Spam</string>
@@ -872,12 +880,17 @@ Language: ms
     <string name="password">Kata laluan</string>
     <string name="log_in">Log masuk</string>
     <string name="reader">Pembaca</string>
+    <string name="featured">Guna sebagai imej yang diketengahkan</string>
+    <string name="featured_in_post">Sertakan imej dalam kandungan kiriman</string>
     <string name="no_network_title">Tiada rangkaian yang tersedia</string>
     <string name="pages">Laman</string>
+    <string name="caption">Sari kata (pilihan)</string>
+    <string name="width">Lebar</string>
     <string name="posts">Kiriman</string>
     <string name="anonymous">Tak bernama</string>
     <string name="ok">OK</string>
     <string name="link_enter_url">URL</string>
+    <string name="uploading">Memuat naik…</string>
     <string name="version">Versi</string>
     <string name="tos">Terma Perkhidmatan</string>
     <string name="app_title">WordPress untuk Android</string>

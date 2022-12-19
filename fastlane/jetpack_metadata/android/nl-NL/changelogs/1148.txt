@@ -1,6 +1,0 @@
-18.9:
-- Markeer tekst in iedere kleur in paragraafblokken.
-- Creëer nieuwe galerijblokken met het nieuwe ontwerp, en pas oude galerijen aan zodat ze matchen.
-- Maak veranderingen ongedaan of juist opnieuw tijdens het formatteren van linktekst in blokken.
-- Snellere laadtijden tijdens het rebloggen van berichten en het delen van tekst uit andere apps.
-- Zie de achtergrondkleur in gepreformatteerde blokken op sites met standaardthema’s.

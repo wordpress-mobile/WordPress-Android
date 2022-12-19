@@ -4,11 +4,6 @@ import android.app.Activity
 import android.view.View
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.android.material.snackbar.Snackbar
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.times
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
-import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.Job
@@ -20,16 +15,21 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.any
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoMoreInteractions
+import org.mockito.kotlin.whenever
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.SnackbarItem.Info
 import org.wordpress.android.widgets.WPSnackbarWrapper
 
-private val TEST_MESSAGE_TEMPLATE = "This is test message number "
-private val SNACKBAR_DURATION_MS = 500L
+private const val TEST_MESSAGE_TEMPLATE = "This is test message number "
+private const val SNACKBAR_DURATION_MS = 500L
 
-@ExperimentalCoroutinesApi
 @InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class SnackbarSequencerConcurrentTest {
     @get:Rule val rule = InstantTaskExecutorRule()
@@ -78,7 +78,6 @@ class SnackbarSequencerConcurrentTest {
     fun `snackbars are not shown until previous duration elapsed`() = runBlockingTest(coroutineContext) {
         // Given
         val items = getItems(2)
-        val durations = getDurations(items)
 
         // When
         for (item in items) {
@@ -112,12 +111,6 @@ class SnackbarSequencerConcurrentTest {
         advanceTimeBy(SNACKBAR_DURATION_MS * items.size)
         verify(wpSnackbar, times(QUEUE_SIZE_LIMIT + 1)).show()
         verifyNoMoreInteractions(wpSnackbar)
-    }
-
-    private fun getDurations(items: List<SnackbarItem>): List<Long> {
-        return items.map {
-            it.getSnackbarDurationMs()
-        }
     }
 
     private fun getItems(numItems: Int): List<SnackbarItem> {

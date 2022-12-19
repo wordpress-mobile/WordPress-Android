@@ -1,15 +1,12 @@
 package org.wordpress.android.util.config
 
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.verifyZeroInteractions
-import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
-import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.AppConfig.FeatureState
 import org.wordpress.android.util.config.AppConfig.FeatureState.BuildConfigValue
@@ -22,7 +19,7 @@ import org.wordpress.android.util.config.AppConfig.FeatureState.StaticValue
 class AppConfigParametrizedTest(
     private val params: Params
 ) {
-    private val remoteConfig: RemoteConfig = mock()
+    private val featureFlagConfig: FeatureFlagConfig = mock()
     private val analyticsTracker: AnalyticsTrackerWrapper = mock()
     private val featureConfig: FeatureConfig = mock()
     private val manualFeatureConfig: ManualFeatureConfig = mock()
@@ -30,33 +27,21 @@ class AppConfigParametrizedTest(
 
     @Before
     fun setUp() {
-        appConfig = AppConfig(remoteConfig, analyticsTracker, manualFeatureConfig)
+        appConfig = AppConfig(featureFlagConfig, analyticsTracker, manualFeatureConfig)
     }
 
     @Test
-    fun `shows correct value of isEnabled based on params and tracks the decision`() {
+    fun `shows correct value of isEnabled based on params`() {
         setupFeatureConfig()
 
         assertThat(appConfig.isEnabled(featureConfig)).isEqualTo(params.result.isEnabled)
-
-        if (params.remoteField != null) {
-            verify(analyticsTracker).track(Stat.FEATURE_FLAG_VALUE, params.remoteField, params.result)
-        } else {
-            verifyZeroInteractions(analyticsTracker)
-        }
     }
 
     @Test
-    fun `shows correct value of feature set based on params and tracks the decision`() {
+    fun `shows correct value of feature set based on params`() {
         setupFeatureConfig()
 
         assertThat(appConfig.featureState(featureConfig)).isEqualTo(params.result)
-
-        if (params.remoteField != null) {
-            verify(analyticsTracker).track(Stat.FEATURE_FLAG_VALUE, params.remoteField, params.result)
-        } else {
-            verifyZeroInteractions(analyticsTracker)
-        }
     }
 
     private fun setupFeatureConfig() {
@@ -64,13 +49,19 @@ class AppConfigParametrizedTest(
         whenever(manualFeatureConfig.isManuallyEnabled(featureConfig)).thenReturn(params.isManuallyEnabled)
         whenever(featureConfig.buildConfigValue).thenReturn(params.buildConfigValue)
         whenever(featureConfig.remoteField).thenReturn(params.remoteField)
-        whenever(remoteConfig.isEnabled(REMOTE_FIELD)).thenReturn(params.remoteConfigValue)
-        whenever(remoteConfig.getFeatureState(REMOTE_FIELD)).thenReturn(params.remoteFeatureState)
+        whenever(featureFlagConfig.isEnabled(REMOTE_FIELD)).thenReturn(params.remoteConfigValue)
+        whenever(
+                featureFlagConfig.getFeatureState(
+                        REMOTE_FIELD,
+                        featureConfig.buildConfigValue
+                )
+        ).thenReturn(params.remoteFeatureState)
     }
 
     companion object {
         @JvmStatic
         @Parameterized.Parameters
+        @Suppress("LongMethod")
         fun parameters() = listOf(
                 // Manual override shows the flag as enabled
                 arrayOf(

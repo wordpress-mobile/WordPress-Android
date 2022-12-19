@@ -1,45 +1,40 @@
 Med WordPress för Android har du möjligheten till webbpublicering i fickan. Det är ett verktyg för att skapa webbplatser, och mycket mer!
 
 SKAPA
-- Ge dina stora idéer ett hem på webben. WordPress för Android är ett verktyg för att bygga webbplatser och bloggar. Skapa din egen webbplats med hjälp av appen.
-- Välj önskat utseende och utformning bland ett stort urval WordPress-teman och anpassa sedan med bilder, färger och typsnitt som gör webbplatsen till din alldeles egna.
-- En inbyggd snabbstartsguide hjälper dig genom den grundläggande konfigurationen för en lyckad webbplats. (Vi är inte bara en webbplatsskapare utan även din samarbetspartner och stödtrupp!)
-
-STATISTIK
-- Kolla webbplatsens statistik i realtid för att hålla koll på aktiviteten.
-- Se vilka inlägg och sidor som får flest besök över längre tid genom att studera insikter för varje dag, varje vecka, varje månad och varje år.
-- På besökskartan ser du från vilka länder dina besökare kommer.
-
-NOTISER
-- Få notiser om kommentarer, gillamarkeringar och nya följare, så att du direkt får veta när någon lämnar en reaktion på din webbplats.
-- Svara på nya kommentarer direkt när de läggs in för att hålla konversationen igång och uppmärksamma dina läsare.
+- Visa dina stora idéer på webben. WordPress för Android är ett verktyg för att skapa webbplatser och bloggar.
+- Välj utseende och utformning bland många WordPress-teman och anpassa sedan med bilder, färger och typsnitt så att webbplatsen blir din egen.
+- En inbyggd snabbstartsguide hjälper dig genom den grundläggande konfigurationen för en lyckad webbplats.
 
 PUBLICERA
 - Skapa uppdateringar, berättelser, fotorapporter, tillkännagivanden – allt möjligt! – i redigeraren.
-- Gör dina inlägg och sidor levande med hjälp av fotografier och videoklipp från din kamera och dina album. Eller hitta den perfekta illustrationen med appens inbyggda samling proffsbilder som är fria att använda.
-- Spara idéer som utkast och plocka fram dem igen när inspirationen kommer tillbaka, eller schemalägg inlägg för framtida publicering för att webbplatsen hela tiden ska kännas uppdaterad och intressant.
-- Lägg till etiketter och kategoriera för att hjälpa nya läsare upptäcka dina inlägg, och håll koll på hur din läsekrets växer.
+- Gör dina inlägg och sidor levande med fotografier och videoklipp från kameran och dina album. Eller hitta den perfekta illustrationen med appens inbyggda samling proffsbilder som är fria att använda.
+- Spara idéer som utkast och plocka fram dem igen när inspirationen återkommer, eller schemalägg inlägg för framtida publicering för att hålla webbplatsen ständigt uppdaterad och intressant.
+- Lägg till etiketter och kategorier för att hjälpa nya läsare upptäcka dina inlägg, och se din läsekrets växa.
+
+STATISTIK
+- Kolla webbplatsens statistik i realtid för att se vad som händer.
+- Se vilka inlägg och sidor som får flest besök över längre tid via insikter per dag, vecka, månad och år.
+
+NOTISER
+- Få notiser om kommentarer, gillamarkeringar och nya följare, så att du direkt vet om någon lämnar en reaktion på din webbplats.
+- Svara på nya kommentarer direkt för att hålla diskussionen igång och uppmärksamma dina läsare.
 
 LÄSAREN
-- WordPress är inte bara en bloggmaskin – använd det till att kommunicera inom en gemenskap av författare i WordPress-läsaren. Utforska tusentals ämnen via etiketter, hitta nya författare och organisationer och följ dem som väcker ditt intresse.
-- Lägg undan inlägg som fascinerar dig med funktionen för att Spara till senare.
+- Utforska tusentals ämnen via etiketter, hitta nya författare och organisationer och följ dem som väcker ditt intresse.
+- Lägg undan inlägg som fascinerar dig med funktionen ”Spara till senare”.
 
 DELA
-- Konfigurera automatisk delning för att låta dina följare på sociala media få veta när du publicerat ett nytt inlägg. Publicera automatiskt notiser på Facebook, Twitter m.fl.
+- Konfigurera automatisk delning till sociala media för att informera följare om nya inlägg.
 - Lägg till knappar för delning på sociala nätverk i dina inlägg, så att dina besökare kan dela dem med sina kontakter och dina fans kan bli dina ambassadörer.
 
 Varför WordPress?
 
-Det finns många bloggtjänster, webbplatsbyggare och sociala nätverk att välja mellan. Varför bör du skapa din webbplats just med WordPress?
+Det finns många bloggtjänster, webbplatsbyggare och sociala nätverk att välja mellan. Varför välja just WordPress?
 
-WordPress driver mer än en tredjedel av webben. Det används av hobbybloggare, företag av alla storlekar, e-butiker och till och med några av de största webbplatserna för nyheter på internet. Sannolikheten är stor att många av dina favoritwebbplatser körs med hjälp av WordPress.
+WordPress driver mer än en tredjedel av webben. Det används av hobbybloggare, företag av alla storlekar, e-butiker och även några av de största nyhetstjänsterna internet. Sannolikheten är stor att många av dina favoritwebbplatser använder WordPress.
 
-Med WordPress äger du själv ditt innehåll. Andra sociala nätverk betraktar dig som en handelsvara och tar äganderätten över det innehåll du publicerar. Men med WordPress är allt innehåll du publicerar ditt eget, och du kan ta det med dig vart du själv skulle vilja.
+Med WordPress äger du ditt eget innehåll. Andra sociala nätverk betraktar dig som en handelsvara och tar äganderätt över ditt innehåll. Men med WordPress är allt innehåll du publicerar ditt eget, och du kan ta det med dig vart du själv skulle vilja.
 
-WordPress är en webbplatsskapare med öppen källkod, vilket innebär att alla kan se hur det fungerar och till och med bidra själva. Andra tjänster och sociala nätverk använder proprietära, slutna system, där du aldrig vet riktigt säkert hur de fungerar eller vad de faktiskt gör. Och risken finns att de försvinner en dag!
-
-Oavsett om du behöver en webbplatsbyggare för att skapa en egen webbplats, eller en enkel bloggmaskin kan WordPress vara till hjälp. Det ger dig vackra deignmöjligheter, kraftfulla funktioner och friheten att bygga just det du själv vill ha.
-
-WordPress för Android stödjer webbplatser du driftar själv, som använder WordPress 4.0 eller senare, och alla webbplatser hos WordPress.com. På samma sätt som WordPress självt, är WordPress för Android öppen källkod. Läs mer på https://wp.me/P7jrAc-tJ. Behöver du hjälp med appen? Twittra till oss på @WPAndroid, eller gå till vårt supportforum på https://android.forums.wordpress.org/forum/troubleshooting 
+Oavsett om du behöver en webbplatsbyggare för att skapa en egen webbplats, eller en enkel blogg är WordPress rätt. Det har stora designmöjligheter, kraftfulla funktioner och friheten att bygga det du själv vill ha.
 
 Integritetsinformation för användare i Kalifornien: https://wp.me/Pe4R-d/#california-consumer-privacy-act-ccpa.

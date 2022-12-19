@@ -5,6 +5,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
+import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
@@ -13,6 +14,7 @@ import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowEmailLoginScr
 import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowLoginViaSiteAddressScreen
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker
 import org.wordpress.android.ui.accounts.login.LoginPrologueViewModel.UiState
+import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.Event
 
@@ -20,19 +22,36 @@ import org.wordpress.android.viewmodel.Event
 class LoginPrologueViewModelTest : BaseUnitTest() {
     @Mock lateinit var unifiedLoginTracker: UnifiedLoginTracker
     @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
+    @Mock lateinit var buildConfigWrapper: BuildConfigWrapper
     private lateinit var viewModel: LoginPrologueViewModel
 
     @Before
     fun setUp() {
-        viewModel = LoginPrologueViewModel(unifiedLoginTracker, analyticsTrackerWrapper, TEST_DISPATCHER)
+        viewModel = LoginPrologueViewModel(
+                unifiedLoginTracker,
+                analyticsTrackerWrapper,
+                buildConfigWrapper,
+                TEST_DISPATCHER
+        )
     }
 
     @Test
-    fun `when view starts, then continue with wpcom button is displayed with correct title`() {
+    fun `given signup disabled, when view starts, then continue with wpcom button is displayed with correct title`() {
+        whenever(buildConfigWrapper.isSignupEnabled).thenReturn(false)
         val observers = init()
 
         assertThat(observers.uiStates.last().continueWithWpcomButtonState.title)
                 .isEqualTo(R.string.continue_with_wpcom_no_signup)
+    }
+
+    @Test
+    fun `given signup enabled, when view starts, then continue with wpcom button is displayed with correct title`() {
+        whenever(buildConfigWrapper.isSignupEnabled).thenReturn(true)
+
+        val observers = init()
+
+        assertThat(observers.uiStates.last().continueWithWpcomButtonState.title)
+                .isEqualTo(R.string.continue_with_wpcom)
     }
 
     @Test

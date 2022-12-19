@@ -5,15 +5,18 @@ import android.text.TextUtils;
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderCommentTable;
 import org.wordpress.android.datasets.ReaderLikeTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderUserTable;
+import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderUser;
+import org.wordpress.android.ui.reader.ReaderEvents;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
@@ -63,6 +66,7 @@ public class ReaderCommentActions {
         newComment.blogId = post.blogId;
         newComment.parentId = replyToCommentId;
         newComment.pageNumber = pageNumber;
+        newComment.setStatus(CommentStatus.APPROVED.toString());
         newComment.setText(commentText);
 
         Date dtPublished = new Date();
@@ -181,5 +185,35 @@ public class ReaderCommentActions {
 
         WordPress.getRestClientUtilsV1_1().post(path, listener, errorListener);
         return true;
+    }
+
+    public static void moderateComment(final ReaderComment comment, final CommentStatus newStatus) {
+        if (comment == null) {
+            return;
+        }
+
+        Map<String, String> params = new HashMap<>();
+        params.put("content", comment.getText());
+        params.put("date", comment.getPublished());
+        params.put("status", newStatus.toString());
+
+        final String path = "sites/" + comment.blogId + "/comments/" + comment.commentId;
+
+        RestRequest.Listener listener = jsonObject -> {
+            ReaderComment newComment = ReaderComment.fromJson(jsonObject, comment.blogId);
+            ReaderCommentTable.addOrUpdateComment(newComment);
+            if (CommentStatus.fromString(newComment.getStatus()) != CommentStatus.APPROVED) {
+                ReaderPostTable.decrementNumCommentsForPost(comment.blogId, comment.postId);
+            }
+            EventBus.getDefault().post(new ReaderEvents.CommentModerated(true, comment.commentId));
+        };
+        RestRequest.ErrorListener errorListener = volleyError -> {
+            AppLog.w(T.READER, "comment moderation failed");
+            AppLog.e(T.READER, volleyError);
+            EventBus.getDefault().post(new ReaderEvents.CommentModerated(false, comment.commentId));
+        };
+
+        AppLog.i(T.READER, "moderating comment");
+        WordPress.getRestClientUtilsV1_1().post(path, params, null, listener, errorListener);
     }
 }

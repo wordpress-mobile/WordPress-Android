@@ -22,9 +22,6 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.mediapicker.MediaItem.Identifier
 import org.wordpress.android.ui.mediapicker.MediaItem.Identifier.LocalUri
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIcon
-import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIcon.ChooseFromAndroidDevice
-import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIcon.SwitchSource
-import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIcon.WpStoriesCapture
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.DEVICE
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.GIF_LIBRARY
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.STOCK_LIBRARY
@@ -83,15 +80,15 @@ class MediaPickerTracker
 
     fun trackIconClick(icon: MediaPickerIcon, mediaPickerSetup: MediaPickerSetup) {
         when (icon) {
-            is WpStoriesCapture -> analyticsTrackerWrapper.track(
+            is MediaPickerIcon.WpStoriesCapture -> analyticsTrackerWrapper.track(
                     MEDIA_PICKER_OPEN_WP_STORIES_CAPTURE,
                     mediaPickerSetup.toProperties()
             )
-            is ChooseFromAndroidDevice -> analyticsTrackerWrapper.track(
+            is MediaPickerIcon.ChooseFromAndroidDevice -> analyticsTrackerWrapper.track(
                     MEDIA_PICKER_OPEN_DEVICE_LIBRARY,
                     mediaPickerSetup.toProperties()
             )
-            is SwitchSource -> {
+            is MediaPickerIcon.SwitchSource -> {
                 val event = when (icon.dataSource) {
                     DEVICE -> MEDIA_PICKER_OPEN_DEVICE_LIBRARY
                     WP_LIBRARY -> MEDIA_PICKER_OPEN_WP_MEDIA
@@ -100,6 +97,7 @@ class MediaPickerTracker
                 }
                 analyticsTrackerWrapper.track(event, mediaPickerSetup.toProperties())
             }
+            is MediaPickerIcon.CapturePhoto -> Unit // Do nothing
         }
     }
 

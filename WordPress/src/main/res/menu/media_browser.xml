@@ -11,8 +11,8 @@
 
     <item
         android:id="@+id/menu_new_media"
-        android:icon="@drawable/ic_plus_white_24dp"
-        app:showAsAction="ifRoom"
+        app:actionLayout="@layout/media_browser_new_media_menu_action_layout"
+        app:showAsAction="always"
         android:title="@string/new_media" />
 
 </menu>

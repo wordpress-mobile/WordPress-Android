@@ -43,6 +43,12 @@ class AnalyticsTrackerWrapper
         AnalyticsUtils.trackWithSiteDetails(this, stat, site, properties)
     }
 
+    fun track(stat: Stat, site: SiteModel?, feature: FeatureConfig) {
+        AnalyticsUtils.trackWithSiteDetails(this, stat, site, feature.toParams().toMutableMap<String, Any>())
+    }
+
+    fun getAnonID(): String? = AnalyticsTracker.getAnonID()
+
     /**
      * A convenience method for logging an error event with some additional meta data.
      * @param stat The stat to track.

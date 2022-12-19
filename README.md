@@ -1,10 +1,7 @@
 # WordPress for Android #
 
-[![CircleCI](https://circleci.com/gh/wordpress-mobile/WordPress-Android.svg?style=svg)](https://circleci.com/gh/wordpress-mobile/WordPress-Android)
-
-If you're just looking to install WordPress for Android, you can find
-it on [Google Play](https://play.google.com/store/apps/details?id=org.wordpress.android&referrer=utm_source%3Dgithub%26utm_medium%3Dwebsite). If you're a developer wanting to contribute, read on.
-
+If you're just looking to install WordPress for Android, you can find it on [Google Play](https://play.google.com/store/apps/details?id=org.wordpress.android&referrer=utm_source%3Dgithub%26utm_medium%3Dwebsite).
+If you're a developer wanting to contribute, read on.
 
 ## Build Instructions ##
 
@@ -31,9 +28,9 @@ application and verify that the API calls being made are valid. You can
 create an application or view details for your existing applications with
 our [WordPress.com applications manager][5].
 
-When creating your application, you should select "Native client" for the
-application type. The applications manager currently requires a "redirect URL",
-but this isn't used for mobile apps. Just use "https://localhost".
+When creating your application, you should select "Native client" for the application type.
+The "**Website URL**", "**Redirect URLs**", and "**Javascript Origins**" fields are required but not used for
+the mobile apps. Just use "**[https://localhost](https://localhost)**".
 
 Once you've created your application in the [applications manager][5], you'll
 need to edit the `./gradle.properties` file and change the

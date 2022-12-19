@@ -10,7 +10,9 @@ import org.wordpress.android.fluxc.network.rest.wpcom.theme.StarterDesignCategor
 @SuppressLint("ParcelCreator")
 class LayoutCategoryModel(
     private val starterDesignCategory: StarterDesignCategory? = null,
-    private val blockLayoutCategory: GutenbergLayoutCategory? = null
+    private val blockLayoutCategory: GutenbergLayoutCategory? = null,
+    val isRecommended: Boolean = false,
+    val randomizeOrder: Boolean = false
 ) : Parcelable {
     val slug: String
         get() = starterDesignCategory?.slug ?: blockLayoutCategory?.slug ?: ""
@@ -23,7 +25,14 @@ class LayoutCategoryModel(
 }
 
 @JvmName("starterDesignToLayoutCategories")
-fun List<StarterDesignCategory>.toLayoutCategories() = map { LayoutCategoryModel(starterDesignCategory = it) }
+fun List<StarterDesignCategory>.toLayoutCategories(recommended: Boolean = false, randomizeOrder: Boolean = false) =
+        map {
+            LayoutCategoryModel(
+                    starterDesignCategory = it,
+                    isRecommended = recommended,
+                    randomizeOrder = randomizeOrder
+            )
+        }
 
 @JvmName("gutenbergLayoutToLayoutCategories")
 fun List<GutenbergLayoutCategory>.toLayoutCategories() = map { LayoutCategoryModel(blockLayoutCategory = it) }

@@ -1,11 +1,7 @@
 package org.wordpress.android.ui.suggestion
 
 import androidx.lifecycle.MutableLiveData
-import com.nhaarman.mockitokotlin2.doNothing
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.spy
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
+import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.Job
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -13,6 +9,11 @@ import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
+import org.mockito.kotlin.doNothing
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.spy
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.XPostSiteModel
@@ -21,6 +22,7 @@ import org.wordpress.android.fluxc.store.XPostsStore
 import org.wordpress.android.test
 import org.wordpress.android.util.NoDelayCoroutineDispatcher
 
+@InternalCoroutinesApi
 class XPostsSuggestionSourceTest : BaseUnitTest() {
     @Mock lateinit var mockXPostsStore: XPostsStore
     @Mock lateinit var mockSite: SiteModel

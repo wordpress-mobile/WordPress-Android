@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/jetpack_badge_footer"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="@dimen/jetpack_badge_footer_bottom_spacing">
+
+    <include
+        android:id="@+id/footer_jetpack_badge"
+        layout="@layout/jetpack_badge"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+</FrameLayout>

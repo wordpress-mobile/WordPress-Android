@@ -1,17 +1,16 @@
 package org.wordpress.android.ui.jetpack.backup.download.usecases
 
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
+import org.mockito.kotlin.any
+import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.action.ActivityLogAction.BACKUP_DOWNLOAD
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.activity.BackupDownloadStatusModel
 import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.fluxc.store.ActivityLogStore.BackupDownloadError
 import org.wordpress.android.fluxc.store.ActivityLogStore.BackupDownloadErrorType.API_ERROR
@@ -25,7 +24,6 @@ import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestSta
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Failure.RemoteRequestFailure
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Success
 import org.wordpress.android.util.NetworkUtilsWrapper
-import java.util.Date
 
 @InternalCoroutinesApi
 class PostBackupDownloadUseCaseTest : BaseUnitTest() {
@@ -149,16 +147,5 @@ class PostBackupDownloadUseCaseTest : BaseUnitTest() {
             sqls = true,
             roots = true,
             contents = true
-    )
-
-    private val statusModel = BackupDownloadStatusModel(
-            downloadId = downloadId,
-            rewindId = rewindId,
-            backupPoint = Date(1609690147756),
-            startedAt = Date(1609690147756),
-            progress = null,
-            downloadCount = 0,
-            validUntil = Date(1609690147756),
-            url = "www.wordpress.com"
     )
 }

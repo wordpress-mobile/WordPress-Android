@@ -1,21 +1,27 @@
 package org.wordpress.android.ui.deeplinks;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelProvider;
 
-import org.wordpress.android.WordPress;
+import org.wordpress.android.ui.ActivityLauncherWrapper;
 import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.RequestCodes;
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayFragment;
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayViewModel;
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureOverlayActions.ForwardToJetpack;
+import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource;
+import org.wordpress.android.util.PackageManagerWrapper;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UriWrapper;
 
 import javax.inject.Inject;
 
 import static org.wordpress.android.WordPress.getContext;
+
+import dagger.hilt.android.AndroidEntryPoint;
 
 /**
  * An activity to handle deep linking and intercepting links like:
@@ -24,44 +30,34 @@ import static org.wordpress.android.WordPress.getContext;
  * <p>
  * Redirects users to the reader activity along with IDs passed in the intent
  */
+@AndroidEntryPoint
 public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
-    private static final String URI_KEY = "uri_key";
-
     @Inject DeepLinkNavigator mDeeplinkNavigator;
     @Inject DeepLinkUriUtils mDeepLinkUriUtils;
     @Inject ViewModelProvider.Factory mViewModelFactory;
+    @Inject PackageManagerWrapper mPackageManagerWrapper;
+    @Inject ActivityLauncherWrapper mActivityLauncherWrapper;
     private DeepLinkingIntentReceiverViewModel mViewModel;
+    private JetpackFeatureFullScreenOverlayViewModel mJetpackFullScreenViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((WordPress) getApplication()).component().inject(this);
-        mViewModel = new ViewModelProvider(this, mViewModelFactory).get(DeepLinkingIntentReceiverViewModel.class);
-        String action = null;
-        Uri uri;
-        if (savedInstanceState == null) {
-            action = getIntent().getAction();
-            uri = getIntent().getData();
-        } else {
-            uri = savedInstanceState.getParcelable(URI_KEY);
-        }
-
+        mViewModel = new ViewModelProvider(this).get(DeepLinkingIntentReceiverViewModel.class);
+        mJetpackFullScreenViewModel = new ViewModelProvider(this).get(JetpackFeatureFullScreenOverlayViewModel.class);
         setupObservers();
 
-        UriWrapper uriWrapper = null;
-        if (uri != null) {
-            uriWrapper = new UriWrapper(uri);
-        }
-        mViewModel.start(action, uriWrapper);
+        mViewModel.start(
+                getIntent().getAction(),
+                (getIntent().getData() == null) ? null : new UriWrapper(getIntent().getData()),
+                extractEntryPoint(getIntent()),
+                savedInstanceState);
     }
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
+        mViewModel.writeToBundle(outState);
         super.onSaveInstanceState(outState);
-        UriWrapper cachedUri = mViewModel.getCachedUri();
-        if (cachedUri != null) {
-            outState.putParcelable(URI_KEY, cachedUri.getUri());
-        }
     }
 
     private void setupObservers() {
@@ -79,6 +75,35 @@ public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
             ToastUtils.showToast(getContext(), toastMessage);
             return null;
         }));
+        mViewModel.getShowOpenWebLinksWithJetpackOverlay().observe(this,
+                showOverlay -> showOverlay.applyIfNotHandled(unit -> {
+                    showOverlay();
+                    return null;
+                }));
+
+        observeOverlayEvents();
+    }
+
+    private void observeOverlayEvents() {
+        mJetpackFullScreenViewModel.getAction().observe(this,
+                action -> {
+                    if (action instanceof ForwardToJetpack) {
+                        mViewModel.forwardDeepLinkToJetpack();
+                    } else {
+                        mViewModel.handleRequest();
+                    }
+                });
+    }
+
+    private void showOverlay() {
+        JetpackFeatureFullScreenOverlayFragment
+                .newInstance(null, false, true, SiteCreationSource.UNSPECIFIED)
+                .show(getSupportFragmentManager(), JetpackFeatureFullScreenOverlayFragment.TAG);
+    }
+
+
+    private DeepLinkEntryPoint extractEntryPoint(Intent intent) {
+        return DeepLinkEntryPoint.fromResId(mPackageManagerWrapper.getActivityLabelResFromIntent(intent));
     }
 
     @Override

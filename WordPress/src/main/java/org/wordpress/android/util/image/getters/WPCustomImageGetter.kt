@@ -12,18 +12,18 @@ import org.wordpress.android.util.StringUtils
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType
 import java.lang.ref.WeakReference
-import java.util.HashSet
 import javax.inject.Inject
 
 /**
- * ImageGetter for Html.fromHtml(). Retrieves images for HTML img tags using Glide library.
+ * ImageGetter for HtmlCompat.fromHtml(...). Retrieves images for HTML img tags using Glide library.
  *
  *
  * See {@link android.text.Html} for more details.
  */
-class WPCustomImageGetter(
+class WPCustomImageGetter @JvmOverloads constructor(
     textView: TextView,
-    private val maxWidth: Int
+    private val maxWidth: Int,
+    private val maxEmojiWidth: Int = 0
 ) : Html.ImageGetter {
     private val textView: WeakReference<TextView> = WeakReference(textView)
 
@@ -73,12 +73,19 @@ class WPCustomImageGetter(
             source = "http:$source"
         }
 
-        if (maxWidth > 0) {
-            source = PhotonUtils.getPhotonImageUrl(source, maxWidth, 0)
+        // we need to set a separate width to custom emoji
+        val targetWidth = if (source.contains(".wp.com") && source.contains("emojis")) {
+            maxEmojiWidth
+        } else {
+            maxWidth
+        }
+
+        if (targetWidth > 0) {
+            source = PhotonUtils.getPhotonImageUrl(source, targetWidth, 0)
         }
 
         return textView.get()?.let {
-            val target = WPRemoteResourceViewTarget(it, maxWidth)
+            val target = WPRemoteResourceViewTarget(it, targetWidth)
             imageManager.loadIntoCustomTarget(target, ImageType.UNKNOWN, source)
             targets.add(target)
 

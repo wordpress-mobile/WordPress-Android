@@ -8,6 +8,7 @@
     <color name="white_translucent_40">#66ffffff</color>
     <color name="white_translucent_50">#80ffffff</color>
     <color name="white_translucent_65">#a6ffffff</color>
+    <color name="white_translucent_80">#CCFFFFFF</color>
 
     <!-- Use for old Stats.  Will be removed soon. -->
     <color name="grey_lighten_30_translucent_50">#80e9eff3</color>

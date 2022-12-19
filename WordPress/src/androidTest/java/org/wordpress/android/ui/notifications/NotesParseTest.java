@@ -2,11 +2,18 @@ package org.wordpress.android.ui.notifications;
 
 import android.text.Spanned;
 
-import junit.framework.TestCase;
-
+import org.junit.Test;
 import org.wordpress.android.util.HtmlUtils;
 
-public class NotesParseTest extends TestCase {
+import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertNotNull;
+import static junit.framework.TestCase.assertTrue;
+
+import dagger.hilt.android.testing.HiltAndroidTest;
+
+@HiltAndroidTest
+public class NotesParseTest {
+    @Test
     public void testParagraphInListItem1() {
         String text = "<li><p>Paragraph in li</p></li>";
         Spanned spanned = HtmlUtils.fromHtml(text);
@@ -15,6 +22,7 @@ public class NotesParseTest extends TestCase {
     }
 
     // Trying to reproduce https://github.com/wordpress-mobile/WordPress-Android/issues/900
+    @Test
     public void testSpanInListItem1() {
         String text =
                 "<ul><li><span>Current Record: </span><span>20</span></li><li><span>Old Record: </span>"
@@ -23,6 +31,7 @@ public class NotesParseTest extends TestCase {
         assertEquals("Current Record: 20\nOld Record: 1\n", spanned.toString());
     }
 
+    @Test
     public void testSpanInListItemFullTest() {
         String text = "<p>Au Mercredi 18 septembre 2013 vous avez pulvérisé votre précédent record de follows "
                       + "enregistrés en un seul jour, sur votre blog <a href=\"http://taliwutblog.wordpress.com\" "

@@ -10,13 +10,19 @@ import javax.inject.Inject
 
 @Reusable
 class EditorActionsProvider @Inject constructor() {
-    fun getPrimaryAction(postStatus: PostStatus, userCanPublish: Boolean): PrimaryEditorAction {
+    @JvmOverloads fun getPrimaryAction(
+        postStatus: PostStatus,
+        userCanPublish: Boolean,
+        isLandingEditor: Boolean = false
+    ): PrimaryEditorAction {
         return if (userCanPublish) {
             when (postStatus) {
                 PostStatus.SCHEDULED -> PrimaryEditorAction.SCHEDULE
                 PostStatus.DRAFT -> PrimaryEditorAction.PUBLISH_NOW
                 PostStatus.PENDING, PostStatus.TRASHED -> PrimaryEditorAction.SAVE
-                PostStatus.PRIVATE, PostStatus.PUBLISHED, PostStatus.UNKNOWN -> PrimaryEditorAction.UPDATE
+                PostStatus.PUBLISHED ->
+                    if (isLandingEditor) PrimaryEditorAction.CONTINUE else PrimaryEditorAction.UPDATE
+                PostStatus.PRIVATE, PostStatus.UNKNOWN -> PrimaryEditorAction.UPDATE
             }
         } else {
             // User doesn't have publishing permissions
@@ -79,6 +85,7 @@ enum class PrimaryEditorAction(@StringRes val titleResource: Int) {
     PUBLISH_NOW(R.string.button_publish),
     SCHEDULE(R.string.schedule_verb),
     UPDATE(R.string.update_verb),
+    CONTINUE(R.string.continue_label),
     SAVE(R.string.save);
 }
 

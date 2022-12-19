@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2017-03-25 17:35:05+0000
 Plural-Forms: nplurals=4; plural=(n==1) ? 0 : (n==2) ? 1 : (n != 8 && n != 11) ? 2 : 3;
-Generator: GlotPress/3.0.0-alpha.2
+Generator: GlotPress/4.0.0-alpha.3
 Language: cy_GB
 -->
 <resources>
@@ -81,12 +81,19 @@ Language: cy_GB
     <string name="error_fetch_email_followers_list">Methu adfer dilynwr e-bost y wefan</string>
     <string name="error_fetch_followers_list">Methu adfer dilynwr y wefan</string>
     <string name="editor_failed_uploads_switch_html">Mae rhai lwythi cyfryngau wedi methu. Nid oes modd newid i\'r modd HTML\n       yn y cyflwr hwn. Tynnu pob cyfrwng sydd wedi methu a pharhau?</string>
+    <string name="visual_editor">Golygydd gweledol</string>
+    <string name="image_thumbnail">Llun bach delwedd</string>
     <string name="image_settings_save_toast">Mae\'r newidiadau wedi eu cadw</string>
     <string name="image_caption">Egluryn</string>
+    <string name="image_alt_text">Testun Amgen</string>
     <string name="image_link_to">Cyswllt i</string>
     <string name="image_width">Lled</string>
     <string name="image_settings_dismiss_dialog_title">Dileu\'r newidiadau heb eu cadw?</string>
     <string name="stop_upload_dialog_title">Atal y llwytho?</string>
+    <string name="alert_error_adding_media">Digwyddodd gwall wrth fewnosod y cyfrwng</string>
+    <string name="alert_action_while_uploading">Rydych wrthi\'n llwytho cyfrwng. Arhoswch nes i hyn orffen.</string>
+    <string name="alert_insert_image_html_mode">Nid oes modd mewnosod y cyfrwng yn uniongyrchol yn y modd HTML.Ewch i\'r modd gweledol</string>
+    <string name="uploading_gallery_placeholder">Llwytho\'r oriel…</string>
     <string name="invite_sent">wedi anfon gwahoddiad yn llwyddiannus</string>
     <string name="tap_to_try_again">Tapiwch i geisio eto!</string>
     <string name="invite_error_some_failed">Wedi anfon y gwahoddiad ond digwyddodd gwall(au)!</string>
@@ -147,6 +154,7 @@ Language: cy_GB
     <string name="start_over">Cychwyn Eto</string>
     <string name="editor_remove_failed_uploads">Tynnu llwythi sydd wedi methu</string>
     <string name="site_settings_advanced_header">Uwch</string>
+    <string name="button_skip">Hepgor</string>
     <string name="xmlrpc_missing_method_error">Doedd dim modd cysylltu. Mae\'r dulliau XML-RPC angenrheidiol ar goll o\'r gweinydd.</string>
     <string name="post_format_status">Statws</string>
     <string name="post_format_video">Fideo</string>
@@ -417,7 +425,6 @@ Language: cy_GB
     <string name="stats_followers_seconds_ago">eiliad yn ôl</string>
     <string name="stats_view_top_posts_and_pages">Cofnod a Thudalen</string>
     <string name="stats_view_videos">Fideos</string>
-    <string name="stats_view_publicize">Publicize</string>
     <string name="stats_view_followers">Dilynwyr</string>
     <string name="stats_view_countries">Gwledydd</string>
     <string name="stats_likes">Hoffi</string>
@@ -483,8 +490,10 @@ Language: cy_GB
     <string name="media_error_no_permission">Nid oes gennych ganiatâd i weld y llyfrgell cyfryngau</string>
     <string name="cannot_delete_multi_media_items">Nid oes modd dileu rhai cyfryngau ar hyn o bryd. Ceisiwch eto yn nes ymlaen.</string>
     <string name="link_enter_url_text">Testun dolen (dewisol)</string>
+    <string name="create_a_link">Creu dolen</string>
     <string name="page_settings">Gosodiadau tudalen</string>
     <string name="local_draft">Drafft lleol</string>
+    <string name="horizontal_alignment">Alinio llorweddol</string>
     <string name="post_settings">Gosodiadau cofnodion</string>
     <string name="comment_status_approved">Cymeradwy</string>
     <string name="comment_status_unapproved">Dan ystyriaeth</string>
@@ -578,12 +587,17 @@ Language: cy_GB
     <string name="password">Cyfrinair</string>
     <string name="username">Enw defnyddiwr</string>
     <string name="reader">Darllennydd</string>
+    <string name="featured">Defnyddio fel delwedd nodwedd</string>
+    <string name="featured_in_post">Cynnwys delwedd yng nghynnwys y cofnod</string>
     <string name="no_network_title">Dim rhwydwaith ar gael</string>
     <string name="pages">Tudalennau</string>
+    <string name="caption">Egluryn (dewisol)</string>
+    <string name="width">Lled</string>
     <string name="posts">Cofnodion</string>
     <string name="anonymous">Di-enw</string>
     <string name="ok">Iawn</string>
     <string name="link_enter_url">URL</string>
+    <string name="uploading">Llwytho…</string>
     <string name="version">Fersiwn</string>
     <string name="tos">Amodau Gwasanaeth</string>
     <string name="app_title">WordPress ar gyfer Android</string>

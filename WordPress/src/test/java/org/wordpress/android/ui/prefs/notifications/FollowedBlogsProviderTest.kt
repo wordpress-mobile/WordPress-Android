@@ -1,12 +1,12 @@
 package org.wordpress.android.ui.prefs.notifications
 
-import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.whenever
 import org.wordpress.android.datasets.ReaderBlogTableWrapper
 import org.wordpress.android.fluxc.model.SubscriptionModel
 import org.wordpress.android.fluxc.store.AccountStore
@@ -231,9 +231,7 @@ class FollowedBlogsProviderTest {
         subscriptionModel.emailPostsFrequency = emailFrequency
         subscriptionModel.shouldEmailComments = shouldEmailComments
         subscriptionModel.url = subscriptionUrl
-        feedId?.let {
-            subscriptionModel.feedId = it
-        }
+        subscriptionModel.feedId = feedId
         whenever(urlUtils.getHost(subscriptionUrl)).thenReturn(subscriptionUrlHost)
         return subscriptionModel
     }

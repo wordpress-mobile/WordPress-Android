@@ -22,6 +22,7 @@ import org.wordpress.android.ui.stats.StatsViewType.INSIGHTS_ALL_TIME
 import org.wordpress.android.ui.stats.StatsViewType.INSIGHTS_LATEST_POST_SUMMARY
 import org.wordpress.android.ui.stats.StatsViewType.INSIGHTS_MOST_POPULAR
 import org.wordpress.android.ui.stats.StatsViewType.INSIGHTS_TODAY
+import org.wordpress.android.ui.stats.StatsViewType.INSIGHTS_VIEWS_AND_VISITORS
 import org.wordpress.android.ui.stats.StatsViewType.PUBLICIZE
 import org.wordpress.android.ui.stats.StatsViewType.REFERRERS
 import org.wordpress.android.ui.stats.StatsViewType.SEARCH_TERMS
@@ -52,6 +53,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.M
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.PublicizeUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TagsAndCategoriesUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TodayStatsUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.ViewsAndVisitorsUseCase
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateSelector
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.toStatsSection
@@ -67,7 +69,7 @@ class StatsViewAllViewModelFactory(
     private val dateSelector: StatsDateSelector,
     @StringRes private val titleResource: Int
 ) : ViewModelProvider.Factory {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(StatsViewAllViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
             return StatsViewAllViewModel(
@@ -170,6 +172,10 @@ class StatsViewAllViewModelFactory(
             insightsUseCases: List<BaseStatsUseCase<*, *>>
         ): Pair<BaseStatsUseCase<*, *>, Int> {
             return when (type) {
+                INSIGHTS_VIEWS_AND_VISITORS -> Pair(
+                        insightsUseCases.first { it is ViewsAndVisitorsUseCase },
+                        R.string.stats_insights_views_and_visitors
+                )
                 FOLLOWERS -> Pair(
                         insightsUseCases.first { it is FollowersUseCase },
                         R.string.stats_view_followers

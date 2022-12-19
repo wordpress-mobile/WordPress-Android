@@ -2,11 +2,11 @@ package org.wordpress.android.ui.prefs;
 
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.preference.PreferenceManager;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.preference.PreferenceManager;
 
 import com.google.gson.Gson;
 
@@ -21,8 +21,11 @@ import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.mysite.SelectedSiteRepository;
+import org.wordpress.android.ui.mysite.tabs.MySiteTabType;
 import org.wordpress.android.ui.posts.AuthorFilterSelection;
 import org.wordpress.android.ui.posts.PostListViewLayoutType;
+import org.wordpress.android.ui.quickstart.QuickStartType;
+import org.wordpress.android.ui.quickstart.QuickStartType.NewSiteQuickStartType;
 import org.wordpress.android.ui.reader.tracker.ReaderTab;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.StringUtils;
@@ -30,6 +33,7 @@ import org.wordpress.android.util.WPMediaUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -136,6 +140,7 @@ public class AppPrefs {
 
         IS_QUICK_START_NOTICE_REQUIRED,
         LAST_SKIPPED_QUICK_START_TASK,
+        LAST_SELECTED_QUICK_START_TYPE,
 
         POST_LIST_AUTHOR_FILTER,
         POST_LIST_VIEW_LAYOUT_TYPE,
@@ -167,7 +172,11 @@ public class AppPrefs {
         PINNED_DYNAMIC_CARD,
         BLOGGING_REMINDERS_SHOWN,
         SHOULD_SCHEDULE_CREATE_SITE_NOTIFICATION,
-        SHOULD_SHOW_WEEKLY_ROUNDUP_NOTIFICATION
+        SHOULD_SHOW_WEEKLY_ROUNDUP_NOTIFICATION,
+
+        SKIPPED_BLOGGING_PROMPT_DAY,
+        OPEN_WEB_LINKS_WITH_JETPACK_OVERLAY_LAST_SHOWN_TIMESTAMP,
+        OPEN_WEB_LINKS_WITH_JETPACK,
     }
 
     /**
@@ -262,10 +271,38 @@ public class AppPrefs {
 
         // Tracks which block types are considered "new" via impression counts
         GUTENBERG_BLOCK_TYPE_IMPRESSIONS,
+
+        // Used to identify the App Settings for initial screen that is updated when the variant is assigned
+        wp_pref_initial_screen,
+
+        // Indicates if this is the first time the user sees the blogging prompts onboarding dialog
+        IS_FIRST_TIME_BLOGGING_PROMPTS_ONBOARDING,
+
+        // Indicates if this is the first time we try to login to Jetpack automatically
+        IS_FIRST_TRY_LOGIN_JETPACK,
+
+        // Indicates if this is the first time we try to get the user flags in Jetpack automatically
+        IS_FIRST_TRY_USER_FLAGS_JETPACK,
+
+        // Indicates if this is the first time we try sync the blogging reminders in Jetpack automatically
+        IS_FIRST_TRY_BLOGGING_REMINDERS_SYNC_JETPACK,
+
+        // Indicates if this is the first time we try to get the reader saved posts in Jetpack automatically
+        IS_FIRST_TRY_READER_SAVED_POSTS_JETPACK,
+
+        // Indicates if the user has completed the Jetpack migration flow
+        IS_JETPACK_MIGRATION_COMPLETED,
+
+        // Indicates if the user is eligible for the Jetpack migration flow
+        IS_JETPACK_MIGRATION_ELIGIBLE,
     }
 
-    private static SharedPreferences prefs() {
+    static SharedPreferences prefs() {
         return PreferenceManager.getDefaultSharedPreferences(WordPress.getContext());
+    }
+
+    static Map<String, ?> getAllPrefs() {
+        return prefs().getAll();
     }
 
     private static String getString(PrefKey key) {
@@ -276,7 +313,7 @@ public class AppPrefs {
         return prefs().getString(key.name(), defaultValue);
     }
 
-    private static void setString(PrefKey key, String value) {
+    public static void setString(PrefKey key, String value) {
         SharedPreferences.Editor editor = prefs().edit();
         if (TextUtils.isEmpty(value)) {
             editor.remove(key.name());
@@ -303,6 +340,10 @@ public class AppPrefs {
         setString(key, Long.toString(value));
     }
 
+    public static void putLong(final PrefKey key, final long value) {
+        prefs().edit().putLong(key.name(), value) .apply();
+    }
+
     private static int getInt(PrefKey key, int def) {
         try {
             String value = getString(key);
@@ -319,6 +360,10 @@ public class AppPrefs {
         return getInt(key, 0);
     }
 
+    public static void putInt(final PrefKey key, final int value) {
+        prefs().edit().putInt(key.name(), value) .apply();
+    }
+
     public static void setInt(PrefKey key, int value) {
         setString(key, Integer.toString(value));
     }
@@ -328,8 +373,16 @@ public class AppPrefs {
         return Boolean.parseBoolean(value);
     }
 
+    public static void putBoolean(final PrefKey key, final boolean value) {
+        prefs().edit().putBoolean(key.name(), value) .apply();
+    }
+
     public static void setBoolean(PrefKey key, boolean value) {
         setString(key, Boolean.toString(value));
+    }
+
+    public static void putStringSet(final PrefKey key, final Set<String> value) {
+        prefs().edit().putStringSet(key.name(), value) .apply();
     }
 
     private static void remove(PrefKey key) {
@@ -1227,12 +1280,12 @@ public class AppPrefs {
                && getBoolean(UndeletablePrefKey.SHOULD_UPDATE_BOOKMARKED_POSTS_PSEUDO_ID, true);
     }
 
-    public static QuickStartTask getLastSkippedQuickStartTask() {
+    public static QuickStartTask getLastSkippedQuickStartTask(QuickStartType quickStartType) {
         String taskName = getString(DeletablePrefKey.LAST_SKIPPED_QUICK_START_TASK);
         if (TextUtils.isEmpty(taskName)) {
             return null;
         }
-        return QuickStartTask.Companion.fromString(taskName);
+        return quickStartType.getTaskFromString(taskName);
     }
 
     public static void setLastSkippedQuickStartTask(@Nullable QuickStartTask task) {
@@ -1241,6 +1294,24 @@ public class AppPrefs {
             return;
         }
         setString(DeletablePrefKey.LAST_SKIPPED_QUICK_START_TASK, task.toString());
+    }
+
+    public static void setLastSelectedQuickStartTypeForSite(QuickStartType quickStartType, long siteLocalId) {
+        Editor editor = prefs().edit();
+        editor.putString(
+                DeletablePrefKey.LAST_SELECTED_QUICK_START_TYPE + String.valueOf(siteLocalId),
+                quickStartType.getLabel()
+        );
+        editor.apply();
+    }
+
+    public static QuickStartType getLastSelectedQuickStartTypeForSite(long siteLocalId) {
+        return QuickStartType.Companion.fromLabel(
+                prefs().getString(
+                        DeletablePrefKey.LAST_SELECTED_QUICK_START_TYPE + String.valueOf(siteLocalId),
+                        NewSiteQuickStartType.INSTANCE.getLabel()
+                )
+        );
     }
 
     public static void setManualFeatureConfig(boolean isEnabled, String featureKey) {
@@ -1339,5 +1410,104 @@ public class AppPrefs {
             capabilities.add(JetpackCapability.Companion.fromString(item));
         }
         return capabilities;
+    }
+
+    public static Date getSkippedPromptDay(int siteId) {
+        long promptSkippedMillis = prefs().getLong(getSkippedBloggingPromptDayConfigKey(siteId), 0);
+        if (promptSkippedMillis == 0) {
+            return null;
+        }
+        return new Date(promptSkippedMillis);
+    }
+
+    public static void setSkippedPromptDay(@Nullable Date date, int siteId) {
+        if (date == null) {
+            prefs().edit().remove(getSkippedBloggingPromptDayConfigKey(siteId)).apply();
+            return;
+        }
+        prefs().edit().putLong(getSkippedBloggingPromptDayConfigKey(siteId), date.getTime()).apply();
+    }
+
+    @NonNull private static String getSkippedBloggingPromptDayConfigKey(int siteId) {
+        return DeletablePrefKey.SKIPPED_BLOGGING_PROMPT_DAY.name() + siteId;
+    }
+
+    public static String getMySiteInitialScreen(boolean isJetpackApp) {
+        return getString(
+                UndeletablePrefKey.wp_pref_initial_screen,
+                isJetpackApp ? MySiteTabType.DASHBOARD.getLabel() : MySiteTabType.SITE_MENU.getLabel()
+        );
+    }
+
+    public static Boolean getIsFirstBloggingPromptsOnboarding() {
+        return getBoolean(UndeletablePrefKey.IS_FIRST_TIME_BLOGGING_PROMPTS_ONBOARDING, true);
+    }
+
+    public static void saveFirstBloggingPromptsOnboarding(final boolean isFirstTime) {
+        setBoolean(UndeletablePrefKey.IS_FIRST_TIME_BLOGGING_PROMPTS_ONBOARDING, isFirstTime);
+    }
+
+    public static Boolean getIsFirstTrySharedLoginJetpack() {
+        return getBoolean(UndeletablePrefKey.IS_FIRST_TRY_LOGIN_JETPACK, true);
+    }
+
+    public static void saveIsFirstTrySharedLoginJetpack(final boolean isFirstTry) {
+        setBoolean(UndeletablePrefKey.IS_FIRST_TRY_LOGIN_JETPACK, isFirstTry);
+    }
+
+    public static Boolean getIsFirstTryUserFlagsJetpack() {
+        return getBoolean(UndeletablePrefKey.IS_FIRST_TRY_USER_FLAGS_JETPACK, true);
+    }
+
+    public static void saveIsFirstTryUserFlagsJetpack(final boolean isFirstTry) {
+        setBoolean(UndeletablePrefKey.IS_FIRST_TRY_USER_FLAGS_JETPACK, isFirstTry);
+    }
+
+    public static Boolean getIsFirstTryBloggingRemindersSyncJetpack() {
+        return getBoolean(UndeletablePrefKey.IS_FIRST_TRY_BLOGGING_REMINDERS_SYNC_JETPACK, true);
+    }
+
+    public static void saveIsFirstTryBloggingRemindersSyncJetpack(final boolean isFirstTry) {
+        setBoolean(UndeletablePrefKey.IS_FIRST_TRY_BLOGGING_REMINDERS_SYNC_JETPACK, isFirstTry);
+    }
+
+    public static Boolean getIsFirstTryReaderSavedPostsJetpack() {
+        return getBoolean(UndeletablePrefKey.IS_FIRST_TRY_READER_SAVED_POSTS_JETPACK, true);
+    }
+
+    public static void saveIsFirstTryReaderSavedPostsJetpack(final boolean isFirstTry) {
+        setBoolean(UndeletablePrefKey.IS_FIRST_TRY_READER_SAVED_POSTS_JETPACK, isFirstTry);
+    }
+
+    public static boolean getIsJetpackMigrationCompleted() {
+        return getBoolean(UndeletablePrefKey.IS_JETPACK_MIGRATION_COMPLETED, false);
+    }
+
+    public static void setIsJetpackMigrationCompleted(final boolean isCompleted) {
+        setBoolean(UndeletablePrefKey.IS_JETPACK_MIGRATION_COMPLETED, isCompleted);
+    }
+
+    public static boolean getIsJetpackMigrationEligible() {
+        return getBoolean(UndeletablePrefKey.IS_JETPACK_MIGRATION_ELIGIBLE, true);
+    }
+
+    public static void setIsJetpackMigrationEligible(final boolean isEligible) {
+        setBoolean(UndeletablePrefKey.IS_JETPACK_MIGRATION_ELIGIBLE, isEligible);
+    }
+
+    public static Long getOpenWebLinksWithJetpackOverlayLastShownTimestamp() {
+        return getLong(DeletablePrefKey.OPEN_WEB_LINKS_WITH_JETPACK_OVERLAY_LAST_SHOWN_TIMESTAMP, 0L);
+    }
+
+    public static void setOpenWebLinksWithJetpackOverlayLastShownTimestamp(final Long overlayLastShownTimestamp) {
+        setLong(DeletablePrefKey.OPEN_WEB_LINKS_WITH_JETPACK_OVERLAY_LAST_SHOWN_TIMESTAMP, overlayLastShownTimestamp);
+    }
+
+    public static Boolean getIsOpenWebLinksWithJetpack() {
+        return getBoolean(DeletablePrefKey.OPEN_WEB_LINKS_WITH_JETPACK, false);
+    }
+
+    public static void setIsOpenWebLinksWithJetpack(final boolean isOpenWebLinksWithJetpack) {
+        setBoolean(DeletablePrefKey.OPEN_WEB_LINKS_WITH_JETPACK, isOpenWebLinksWithJetpack);
     }
 }

@@ -9,7 +9,7 @@ import org.wordpress.android.databinding.PrepublishingCategoriesRowBinding
 import org.wordpress.android.ui.posts.PrepublishingCategoriesViewModel.PrepublishingCategoriesListItemUiState
 import org.wordpress.android.ui.utils.UiDimen.UIDimenRes
 import org.wordpress.android.ui.utils.UiHelpers
-import org.wordpress.android.util.viewBinding
+import org.wordpress.android.util.extensions.viewBinding
 
 sealed class PrepublishingCategoriesViewHolder<T : ViewBinding>(
     internal val binding: T

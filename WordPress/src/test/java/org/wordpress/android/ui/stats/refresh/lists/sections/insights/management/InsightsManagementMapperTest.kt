@@ -10,7 +10,6 @@ import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.store.StatsStore.InsightType
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.ALL_TIME_STATS
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.ANNUAL_SITE_STATS
-import org.wordpress.android.fluxc.store.StatsStore.InsightType.COMMENTS
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.FOLLOWERS
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.FOLLOWER_TOTALS
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.LATEST_POST_SUMMARY
@@ -27,7 +26,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management
 
 class InsightsManagementMapperTest : BaseUnitTest() {
     private lateinit var insightsManagementMapper: InsightsManagementMapper
-    private val insightTypeCount = InsightType.values().count()
+    private val insightTypeCount = 10 // POSTS_AND_PAGES_INSIGHTS.size + ACTIVITY_INSIGHTS.size + GENERAL_INSIGHTS.size
     private val sectionsCount = 3
     @InternalCoroutinesApi
     @Before
@@ -55,10 +54,9 @@ class InsightsManagementMapperTest : BaseUnitTest() {
         assertInsight(result[7], POSTING_ACTIVITY, true)
         assertInsight(result[8], TAGS_AND_CATEGORIES, true)
         assertHeader(result[9], R.string.stats_insights_management_activity)
-        assertInsight(result[10], COMMENTS, true)
-        assertInsight(result[11], FOLLOWERS, true)
-        assertInsight(result[12], FOLLOWER_TOTALS, true)
-        assertInsight(result[13], PUBLICIZE, true)
+        assertInsight(result[10], FOLLOWERS, true)
+        assertInsight(result[11], FOLLOWER_TOTALS, true)
+        assertInsight(result[12], PUBLICIZE, true)
     }
 
     @Test
@@ -81,10 +79,9 @@ class InsightsManagementMapperTest : BaseUnitTest() {
         assertInsight(result[7], POSTING_ACTIVITY, false)
         assertInsight(result[8], TAGS_AND_CATEGORIES, false)
         assertHeader(result[9], R.string.stats_insights_management_activity)
-        assertInsight(result[10], COMMENTS, false)
-        assertInsight(result[11], FOLLOWERS, false)
-        assertInsight(result[12], FOLLOWER_TOTALS, false)
-        assertInsight(result[13], PUBLICIZE, true)
+        assertInsight(result[10], FOLLOWERS, false)
+        assertInsight(result[11], FOLLOWER_TOTALS, false)
+        assertInsight(result[12], PUBLICIZE, true)
     }
 
     @Test
@@ -104,10 +101,9 @@ class InsightsManagementMapperTest : BaseUnitTest() {
         assertInsight(result[7], POSTING_ACTIVITY, false)
         assertInsight(result[8], TAGS_AND_CATEGORIES, false)
         assertHeader(result[9], R.string.stats_insights_management_activity)
-        assertInsight(result[10], COMMENTS, false)
-        assertInsight(result[11], FOLLOWERS, false)
-        assertInsight(result[12], FOLLOWER_TOTALS, false)
-        assertInsight(result[13], PUBLICIZE, false)
+        assertInsight(result[10], FOLLOWERS, false)
+        assertInsight(result[11], FOLLOWER_TOTALS, false)
+        assertInsight(result[12], PUBLICIZE, false)
     }
 
     private fun assertHeader(item: InsightListItem, text: Int) {

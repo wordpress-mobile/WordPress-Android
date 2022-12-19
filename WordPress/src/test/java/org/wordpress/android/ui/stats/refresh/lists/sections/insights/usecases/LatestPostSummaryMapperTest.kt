@@ -1,8 +1,5 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.eq
-import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -10,10 +7,13 @@ import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.any
+import org.mockito.kotlin.eq
+import org.mockito.kotlin.whenever
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.stats.InsightsLatestPostModel
-import org.wordpress.android.ui.stats.StatsUtilsWrapper
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
+import org.wordpress.android.ui.stats.refresh.utils.StatsSinceLabelFormatter
 import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Date
@@ -21,7 +21,7 @@ import java.util.Date
 @RunWith(MockitoJUnitRunner::class)
 class LatestPostSummaryMapperTest {
     @Mock lateinit var resourceProvider: ResourceProvider
-    @Mock lateinit var statsUtilsWrapper: StatsUtilsWrapper
+    @Mock lateinit var statsSinceLabelFormatter: StatsSinceLabelFormatter
     @Mock lateinit var statsUtils: StatsUtils
     @Mock lateinit var statsDateFormatter: StatsDateFormatter
     private lateinit var mapper: LatestPostSummaryMapper
@@ -30,10 +30,11 @@ class LatestPostSummaryMapperTest {
     private val siteId = 1L
     private val postId = 10L
     private val postURL = "url"
+    private val featuredImageURL = ""
     @Before
     fun setUp() {
         mapper = LatestPostSummaryMapper(
-                statsUtilsWrapper,
+                statsSinceLabelFormatter,
                 resourceProvider,
                 statsDateFormatter,
                 statsUtils
@@ -54,10 +55,21 @@ class LatestPostSummaryMapperTest {
     @Test
     fun `builds message with no engagement and link`() {
         val viewCount = 0
-        val model = InsightsLatestPostModel(siteId, postTitle, postURL, date, postId, viewCount, 0, 0, listOf())
+        val model = InsightsLatestPostModel(
+                siteId,
+                postTitle,
+                postURL,
+                date,
+                postId,
+                viewCount,
+                0,
+                0,
+                listOf(),
+                featuredImageURL
+        )
 
         val sinceTimeLabel = "10 mins"
-        whenever(statsUtilsWrapper.getSinceLabelLowerCase(date)).thenReturn(sinceTimeLabel)
+        whenever(statsSinceLabelFormatter.getSinceLabelLowerCase(date)).thenReturn(sinceTimeLabel)
         val messageWithNoEngagement = "message with no engagement"
         whenever(
                 resourceProvider.getString(
@@ -86,10 +98,21 @@ class LatestPostSummaryMapperTest {
     @Test
     fun `builds message with engagement`() {
         val viewCount = 10
-        val model = InsightsLatestPostModel(siteId, postTitle, postURL, date, postId, viewCount, 0, 0, listOf())
+        val model = InsightsLatestPostModel(
+                siteId,
+                postTitle,
+                postURL,
+                date,
+                postId,
+                viewCount,
+                0,
+                0,
+                listOf(),
+                featuredImageURL
+        )
 
         val sinceTimeLabel = "10 mins"
-        whenever(statsUtilsWrapper.getSinceLabelLowerCase(date)).thenReturn(sinceTimeLabel)
+        whenever(statsSinceLabelFormatter.getSinceLabelLowerCase(date)).thenReturn(sinceTimeLabel)
         val messageWithEngagement = "message with no engagement"
         whenever(
                 resourceProvider.getString(
@@ -145,10 +168,21 @@ class LatestPostSummaryMapperTest {
         val postTitleWithHtml = "<b>Title</b> with <font color=\"red\">HTML</color>"
 
         val viewCount = 0
-        val model = InsightsLatestPostModel(siteId, postTitleWithHtml, postURL, date, postId, viewCount, 0, 0, listOf())
+        val model = InsightsLatestPostModel(
+                siteId,
+                postTitleWithHtml,
+                postURL,
+                date,
+                postId,
+                viewCount,
+                0,
+                0,
+                listOf(),
+                featuredImageURL
+        )
 
         val sinceTimeLabel = "10 mins"
-        whenever(statsUtilsWrapper.getSinceLabelLowerCase(date)).thenReturn(sinceTimeLabel)
+        whenever(statsSinceLabelFormatter.getSinceLabelLowerCase(date)).thenReturn(sinceTimeLabel)
 
         whenever(
                 resourceProvider.getString(

@@ -5,9 +5,9 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
+import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
-import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.JetpackLoginEmptyViewBinding
 import org.wordpress.android.login.LoginListener
 import org.wordpress.android.ui.ActivityLauncher
@@ -16,9 +16,10 @@ import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowSignInForResu
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Step
 import org.wordpress.android.ui.utils.HtmlMessageUtils
+import org.wordpress.android.util.ActivityUtils
 import javax.inject.Inject
 
-@Suppress("TooManyFunctions")
+@AndroidEntryPoint
 class LoginSiteCheckErrorFragment : Fragment(R.layout.jetpack_login_empty_view) {
     companion object {
         const val TAG = "LoginSiteCheckErrorFragment"
@@ -33,12 +34,11 @@ class LoginSiteCheckErrorFragment : Fragment(R.layout.jetpack_login_empty_view) 
         }
     }
 
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var unifiedLoginTracker: UnifiedLoginTracker
     @Inject lateinit var htmlMessageUtils: HtmlMessageUtils
     private var loginListener: LoginListener? = null
     private var siteAddress: String? = null
-    private lateinit var viewModel: LoginSiteCheckErrorViewModel
+    private val viewModel: LoginSiteCheckErrorViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,23 +51,13 @@ class LoginSiteCheckErrorFragment : Fragment(R.layout.jetpack_login_empty_view) 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        initDagger()
         initBackPressHandler()
-        initViewModel()
         with(JetpackLoginEmptyViewBinding.bind(view)) {
+            ActivityUtils.hideKeyboardForced(view)
             initErrorMessageView()
             initClickListeners()
         }
         initObservers()
-    }
-
-    private fun initDagger() {
-        (requireActivity().application as WordPress).component().inject(this)
-    }
-
-    private fun initViewModel() {
-        viewModel = ViewModelProvider(this@LoginSiteCheckErrorFragment, viewModelFactory)
-                .get(LoginSiteCheckErrorViewModel::class.java)
     }
 
     private fun JetpackLoginEmptyViewBinding.initErrorMessageView() {

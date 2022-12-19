@@ -1,0 +1,39 @@
+{
+    "request": {
+        "method": "POST",
+        "urlPathPattern": "/rest/v1.1/sites/([0-9]*)/posts/([0-9]*)/likes/mine/delete"
+    },
+    "response": {
+        "status": 200,
+        "jsonBody": {
+            "success": true,
+            "i_like": false,
+            "like_count": 0,
+            "site_ID": "{{request.path.[3]}}",
+            "post_ID": "{{request.path.[5]}}",
+            "meta": {
+                "links": {
+                    "help": "https://public-api.wordpress.com/rest/v1.1/sites/{{request.path.[3]}}/posts/{{request.path.[5]}}/likes/help",
+                    "post": "https://public-api.wordpress.com/rest/v1.1/sites/{{request.path.[3]}}/posts/{{request.path.[5]}}",
+                    "site": "https://public-api.wordpress.com/rest/v1.1/sites/{{request.path.[3]}}"
+                }
+            },
+            "liker": {
+                "ID": 152748359,
+                "login": "e2eflowtestingmobile",
+                "email": false,
+                "name": "e2eflowtestingmobile",
+                "first_name": "",
+                "last_name": "",
+                "nice_name": "e2eflowtestingmobile",
+                "URL": "",
+                "avatar_URL": "https://1.gravatar.com/avatar/7a4015c11be6a342f65e0e169092d402?s=96&d=identicon&r=G",
+                "profile_URL": "http://en.gravatar.com/e2eflowtestingmobile",
+                "ip_address": false,
+                "site_ID": "{{request.path.[3]}}/",
+                "site_visible": true,
+                "default_avatar": false
+            }
+        }
+    }
+}

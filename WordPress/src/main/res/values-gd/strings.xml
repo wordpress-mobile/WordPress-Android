@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2016-08-23 18:32:37+0000
 Plural-Forms: nplurals=4; plural=(n == 1 || n == 11) ? 0 : ((n == 2 || n == 12) ? 1 : ((n >= 3 && n <= 10 || n >= 13 && n <= 19) ? 2 : 3));
-Generator: GlotPress/3.0.0-alpha.2
+Generator: GlotPress/4.0.0-alpha.3
 Language: gd_GB
 -->
 <resources>
@@ -22,12 +22,19 @@ Language: gd_GB
     <string name="error_fetch_email_followers_list">Cha b’ urrainn dhuinn na daoine a leanas an làrach slighe puist-d fhaighinn</string>
     <string name="error_fetch_followers_list">Cha b’ urrainn dhuinn luchd-leantainn na làraich fhaighinn</string>
     <string name="editor_failed_uploads_switch_html">Cha deach gach meadhan a luchdadh suas. Chan urrainn dhut leum gun mhodh\n        HTML is cùisean mar seo. A bheil thu airson na dh’fhàillig a thoirt air falbh is leantainn air adhart?</string>
+    <string name="visual_editor">An deasaiche lèirsinneach</string>
+    <string name="image_thumbnail">Dealbhagan deilbh</string>
     <string name="image_settings_save_toast">Chaidh na h-atharraichean a shàbhaladh</string>
     <string name="image_caption">Caipsean</string>
+    <string name="image_alt_text">Roghainn teacsa</string>
     <string name="image_link_to">Ceangal ri</string>
     <string name="image_width">Leud</string>
     <string name="image_settings_dismiss_dialog_title">A bheil thu airson na h-atharraichean nach deach a shàbhaladh a thilgeil air falbh?</string>
     <string name="stop_upload_dialog_title">A bheil thu airson sgur dhen luchdadh suas?</string>
+    <string name="alert_error_adding_media">Thachair mearachd fhad ’s a bha sinn a’ cur a-steach a’ mheadhain</string>
+    <string name="alert_action_while_uploading">Tha thu a’ luchdadh suas meadhanan. Fuirich ort gus am bi sin deiseil.</string>
+    <string name="alert_insert_image_html_mode">Chan urrainn dhut meadhanan a chur a-steach mar sin sa mhodh HTML. Cleachd am modh lèirsinneach airson sin.</string>
+    <string name="uploading_gallery_placeholder">A’ luchdadh suas a’ ghailearaidh…</string>
     <string name="invite_error_some_failed">Chaidh an cuireadh a chur ach thachair co-dhiù aon mhearachd!</string>
     <string name="invite_error_for_username">%1$s: %2$s</string>
     <string name="invite_sent">Chaidh an cuireadh a chur</string>
@@ -87,7 +94,6 @@ Language: gd_GB
     <string name="stats_followers_seconds_ago">diog(an) air ais</string>
     <string name="stats_view_top_posts_and_pages">Puist ⁊ duilleagan</string>
     <string name="stats_view_videos">Videothan</string>
-    <string name="stats_view_publicize">Publicize</string>
     <string name="stats_view_followers">Luchd-leantainn</string>
     <string name="stats_view_countries">Dùthchannan</string>
     <string name="stats_likes">Daoine as toil leotha</string>
@@ -151,8 +157,10 @@ Language: gd_GB
     <string name="media_error_no_permission">Chan eil cead agad coimhead air leabhar-lann nam meadhanan</string>
     <string name="cannot_delete_multi_media_items">Tha meadhanan ann ach gabh an sguabadh às an-dràsta fhèin. Feuch ris a-rithist an ceann greis.</string>
     <string name="link_enter_url_text">Teacsa a’ cheangail (roghainneil)</string>
+    <string name="create_a_link">Cruthaich ceangal</string>
     <string name="page_settings">Roghainnean na duilleige</string>
     <string name="local_draft">Dreachd ionadail</string>
+    <string name="horizontal_alignment">Co-thaobhadh còmhnard</string>
     <string name="post_settings">Roghainnean a’ phuist</string>
     <string name="comment_status_approved">Air aontachadh</string>
     <string name="comment_status_unapproved">Ri dhèanamh</string>
@@ -189,6 +197,7 @@ Language: gd_GB
     <string name="notifications_empty_all">Chan eil brath ann… fhathast.</string>
     <string name="share_link">Co-roinn an ceangal</string>
     <string name="reader_empty_posts_in_tag_updating">A\' faighinn nam post…</string>
+    <string name="comment_unapproved">Chaidh an t-aonta a thoirt far a\' bheachd</string>
     <string name="reader_likes_you_and_multi">Thuirt thusa agus %,d eile gur toigh leibh seo</string>
     <string name="reader_likes_multi">\'S toigh le %,d daoine seo</string>
     <string name="comment_spammed">Chaidh comharra spama a chur ris a\' bheachd</string>
@@ -246,12 +255,17 @@ Language: gd_GB
     <string name="username">Ainm-cleachdaiche</string>
     <string name="log_in">Clàraich a-steach</string>
     <string name="reader">Leughadair</string>
+    <string name="featured">Cleachd mar dhealbh brosnaichte</string>
+    <string name="featured_in_post">Gabh a-steach an dealbh ann an susbaint a\' phuist</string>
     <string name="no_network_title">Chan eil lìonra ri fhaighinn</string>
     <string name="pages">Duilleagan</string>
+    <string name="caption">Caipsean (roghainneil)</string>
+    <string name="width">Leud</string>
     <string name="posts">Puist</string>
     <string name="anonymous">Gun urra</string>
     <string name="ok">Ceart ma-thà</string>
     <string name="link_enter_url">URL</string>
+    <string name="uploading">’Ga luchdadh suas…</string>
     <string name="version">Tionndadh</string>
     <string name="tos">Teirmichean na seirbheise</string>
     <string name="app_title">WordPress airson Android</string>

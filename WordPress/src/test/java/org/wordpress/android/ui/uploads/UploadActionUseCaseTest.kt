@@ -1,14 +1,14 @@
 package org.wordpress.android.ui.uploads
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.any
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.post.PostStatus
@@ -17,6 +17,7 @@ import org.wordpress.android.ui.posts.PostUtilsWrapper
 import org.wordpress.android.ui.uploads.UploadActionUseCase.UploadAction
 import org.wordpress.android.util.DateTimeUtils
 import java.util.Date
+import java.util.function.Consumer
 
 private val POST_STATE_DRAFT = PostStatus.DRAFT.toString()
 
@@ -109,11 +110,11 @@ class UploadActionUseCaseTest {
         val siteModel: SiteModel = createSiteModel()
 
         // Act and Assert
-        assertThat(posts).allSatisfy { post ->
+        assertThat(posts).allSatisfy(Consumer { post ->
             val action = uploadActionUseCase.getAutoUploadAction(post, siteModel)
 
             assertThat(action).isEqualTo(UploadAction.DO_NOTHING)
-        }
+        })
     }
 
     @Test

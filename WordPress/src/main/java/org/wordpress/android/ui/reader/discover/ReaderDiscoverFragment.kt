@@ -24,8 +24,7 @@ import org.wordpress.android.ui.reader.ReaderActivityLauncher
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.OpenUrlType
 import org.wordpress.android.ui.reader.ReaderPostWebViewCachingFragment
 import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource.READER_POST_CARD
-import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ContentUiState
-import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.EmptyUiState
+import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenEditorForReblog
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenPost
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.SharePost
@@ -38,6 +37,7 @@ import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPosts
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReaderComments
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReaderSubs
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReportPost
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReportUser
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSitePickerForResult
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowVideoViewer
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
@@ -92,19 +92,20 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
 
         viewModel.uiState.observe(viewLifecycleOwner, {
             when (it) {
-                is ContentUiState -> {
+                is DiscoverUiState.ContentUiState -> {
                     (recyclerView.adapter as ReaderDiscoverAdapter).update(it.cards)
                     if (it.scrollToTop) {
                         recyclerView.scrollToPosition(0)
                     }
                 }
-                is EmptyUiState -> {
+                is DiscoverUiState.EmptyUiState -> {
                     uiHelpers.setTextOrHide(actionableEmptyView.title, it.titleResId)
                     uiHelpers.setTextOrHide(actionableEmptyView.subtitle, it.subTitleRes)
                     uiHelpers.setImageOrHide(actionableEmptyView.image, it.illustrationResId)
                     uiHelpers.setTextOrHide(actionableEmptyView.button, it.buttonResId)
                     actionableEmptyView.button.setOnClickListener { _ -> it.action.invoke() }
                 }
+                is DiscoverUiState.LoadingUiState -> Unit // Do nothing
             }
 
             uiHelpers.updateVisibility(recyclerView, it.contentVisiblity)
@@ -159,6 +160,11 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
         is ShowReportPost -> ReaderActivityLauncher.openUrl(
                 context,
                 readerUtilsWrapper.getReportPostUrl(event.url),
+                OpenUrlType.INTERNAL
+        )
+        is ShowReportUser -> ReaderActivityLauncher.openUrl(
+                context,
+                readerUtilsWrapper.getReportUserUrl(event.url, event.authorId),
                 OpenUrlType.INTERNAL
         )
         is ShowReaderSubs -> ReaderActivityLauncher.showReaderSubs(context)
@@ -221,6 +227,7 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
         return binding?.recyclerView
     }
 
+    @Suppress("DEPRECATION", "OVERRIDE_DEPRECATION")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == RequestCodes.SITE_PICKER && resultCode == Activity.RESULT_OK && data != null) {

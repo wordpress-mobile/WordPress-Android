@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package org.wordpress.android.ui.posts
 
 import android.app.Activity
@@ -57,8 +59,8 @@ import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.SnackbarItem
 import org.wordpress.android.util.SnackbarSequencer
-import org.wordpress.android.util.redirectContextClickToLongPressListener
-import org.wordpress.android.util.setLiftOnScrollTargetViewIdAndRequestLayout
+import org.wordpress.android.util.extensions.redirectContextClickToLongPressListener
+import org.wordpress.android.util.extensions.setLiftOnScrollTargetViewIdAndRequestLayout
 import org.wordpress.android.viewmodel.observeEvent
 import org.wordpress.android.viewmodel.posts.PostListCreateMenuViewModel
 import javax.inject.Inject
@@ -105,7 +107,7 @@ class PostsListActivity : LocaleAwareActivity(),
 
     private var restorePreviousSearch = false
 
-    private var progressDialog: ProgressDialog? = null
+    @Suppress("DEPRECATION") private var progressDialog: ProgressDialog? = null
 
     private var onPageChangeListener: OnPageChangeListener = object : OnPageChangeListener {
         override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
@@ -259,9 +261,10 @@ class PostsListActivity : LocaleAwareActivity(),
             when (createAction) {
                 ActionType.CREATE_NEW_POST -> viewModel.newPost()
                 ActionType.CREATE_NEW_STORY -> viewModel.newStoryPost()
-                ActionType.CREATE_NEW_PAGE -> Unit
-                ActionType.NO_ACTION -> Unit
-                null -> Unit
+                ActionType.CREATE_NEW_PAGE -> Unit // Do nothing
+                ActionType.NO_ACTION -> Unit // Do nothing
+                ActionType.ANSWER_BLOGGING_PROMPT -> Unit // Do nothing
+                null -> Unit // Do nothing
             }
         })
 
@@ -276,7 +279,7 @@ class PostsListActivity : LocaleAwareActivity(),
         currentBottomSheetPostId: LocalId
     ) {
         viewModel = ViewModelProvider(this@PostsListActivity, viewModelFactory).get(PostListMainViewModel::class.java)
-        viewModel.start(site, initPreviewState, currentBottomSheetPostId, editPostRepository, this@PostsListActivity)
+        viewModel.start(site, initPreviewState, currentBottomSheetPostId, editPostRepository)
 
         viewModel.viewState.observe(this@PostsListActivity, { state ->
             state?.let {
@@ -456,6 +459,7 @@ class PostsListActivity : LocaleAwareActivity(),
         postListCreateMenuViewModel.onResume()
     }
 
+    @Suppress("DEPRECATION", "OVERRIDE_DEPRECATION")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
@@ -509,21 +513,19 @@ class PostsListActivity : LocaleAwareActivity(),
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         super.onCreateOptionsMenu(menu)
-        menu?.let {
-            menuInflater.inflate(R.menu.posts_list_toggle_view_layout, it)
-            toggleViewLayoutMenuItem = it.findItem(R.id.toggle_post_list_item_layout)
-            viewModel.viewLayoutTypeMenuUiState.observe(this, { menuUiState ->
-                menuUiState?.let {
-                    updateMenuIcon(menuUiState.iconRes, toggleViewLayoutMenuItem)
-                    updateMenuTitle(menuUiState.title, toggleViewLayoutMenuItem)
-                }
-            })
+        menuInflater.inflate(R.menu.posts_list_toggle_view_layout, menu)
+        toggleViewLayoutMenuItem = menu.findItem(R.id.toggle_post_list_item_layout)
+        viewModel.viewLayoutTypeMenuUiState.observe(this, { menuUiState ->
+            menuUiState?.let {
+                updateMenuIcon(menuUiState.iconRes, toggleViewLayoutMenuItem)
+                updateMenuTitle(menuUiState.title, toggleViewLayoutMenuItem)
+            }
+        })
 
-            searchActionButton = it.findItem(R.id.toggle_post_search)
+        searchActionButton = menu.findItem(R.id.toggle_post_search)
 
-            initSearchFragment()
-            binding.initSearchView()
-        }
+        initSearchFragment()
+        binding.initSearchView()
         return true
     }
 

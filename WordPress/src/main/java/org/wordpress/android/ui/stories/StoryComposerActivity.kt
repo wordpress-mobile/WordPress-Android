@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package org.wordpress.android.ui.stories
 
 import android.app.Activity
@@ -123,7 +125,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
 
     private lateinit var viewModel: StoryComposerViewModel
 
-    private var addingMediaToEditorProgressDialog: ProgressDialog? = null
+    @Suppress("DEPRECATION") private var addingMediaToEditorProgressDialog: ProgressDialog? = null
     private val frameIdsToRemove = ArrayList<String>()
 
     override fun getSite() = site
@@ -153,7 +155,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         setMetadataProvider(this)
         setStoryDiscardListener(this)
         setStoriesAnalyticsListener(StoriesAnalyticsReceiver())
-        setNotificationTrackerProvider((application as WordPress).getStoryNotificationTrackerProvider())
+        setNotificationTrackerProvider((application as WordPress).storyNotificationTrackerProvider)
         setPrepublishingEventProvider(this)
         setPermissionDialogProvider(this)
         setGenericAnnouncementDialogProvider(this)
@@ -194,8 +196,9 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
             }
         }
 
-        val postEditorAnalyticsSession =
-                savedInstanceState?.getSerializable(STATE_KEY_EDITOR_SESSION_DATA) as PostEditorAnalyticsSession?
+        val postEditorAnalyticsSession = savedInstanceState?.let { bundle ->
+            PostEditorAnalyticsSession.fromBundle(bundle, STATE_KEY_EDITOR_SESSION_DATA, analyticsTrackerWrapper)
+        }
 
         viewModel = ViewModelProvider(this, viewModelFactory)
                 .get(StoryComposerViewModel::class.java)
@@ -296,7 +299,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         viewModel.writeToBundle(outState)
     }
 
-    @Suppress("NestedBlockDepth")
+    @Suppress("DEPRECATION", "OVERRIDE_DEPRECATION", "NestedBlockDepth")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         viewModel.onStoryComposerAnalyticsSessionStartTimeReset()
         super.onActivityResult(requestCode, resultCode, data)
@@ -618,8 +621,8 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
                     frame.id = storyMediaFileData.id
                     storyMediaFileDataList.add(storyMediaFileData)
                 }
-                // if the frame.id is populated and is not a temporary id, this should be an actual MediaModel mediaId so,
-                // let's use that to obtain the mediaFile and then replace it with the temporary frame.id
+                // if the frame.id is populated and is not a temporary id, this should be an actual MediaModel mediaId
+                // so, let's use that to obtain the mediaFile and then replace it with the temporary frame.id
                 else -> {
                     frame.id?.let {
                         if (it.startsWith(TEMPORARY_ID_PREFIX)) {
@@ -682,6 +685,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         }
     }
 
+    @Suppress("unused", "UNUSED_PARAMETER")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onStoryLoadEnd(event: StoryLoadEnd) {
         // once the Story has been loaded by the Composer, we should mark the composing session start as the

@@ -1,12 +1,12 @@
 package org.wordpress.android.ui.mediapicker.loader
 
-import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.whenever
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup
@@ -17,8 +17,6 @@ import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.STOCK_LI
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.WP_LIBRARY
 import org.wordpress.android.ui.mediapicker.loader.DeviceListBuilder.DeviceListBuilderFactory
 import org.wordpress.android.ui.mediapicker.loader.MediaLibraryDataSource.MediaLibraryDataSourceFactory
-import org.wordpress.android.util.LocaleManagerWrapper
-import org.wordpress.android.util.NetworkUtilsWrapper
 
 @RunWith(MockitoJUnitRunner::class)
 class MediaLoaderFactoryTest {
@@ -28,8 +26,6 @@ class MediaLoaderFactoryTest {
     @Mock lateinit var mediaLibraryDataSource: MediaLibraryDataSource
     @Mock lateinit var stockMediaDataSource: StockMediaDataSource
     @Mock lateinit var gifMediaDataSource: GifMediaDataSource
-    @Mock lateinit var localeManagerWrapper: LocaleManagerWrapper
-    @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
     @Mock lateinit var site: SiteModel
     private lateinit var mediaLoaderFactory: MediaLoaderFactory
 
@@ -39,9 +35,7 @@ class MediaLoaderFactoryTest {
                 deviceListBuilderFactory,
                 mediaLibraryDataSourceFactory,
                 stockMediaDataSource,
-                gifMediaDataSource,
-                localeManagerWrapper,
-                networkUtilsWrapper
+                gifMediaDataSource
         )
     }
 
@@ -63,13 +57,7 @@ class MediaLoaderFactoryTest {
         whenever(deviceListBuilderFactory.build(setOf(), site)).thenReturn(deviceListBuilder)
         val mediaLoader = mediaLoaderFactory.build(mediaPickerSetup, site)
 
-        assertThat(mediaLoader).isEqualTo(
-                MediaLoader(
-                        deviceListBuilder,
-                        localeManagerWrapper,
-                        networkUtilsWrapper
-                )
-        )
+        assertThat(mediaLoader).isEqualTo(MediaLoader(deviceListBuilder))
     }
 
     @Test
@@ -91,13 +79,7 @@ class MediaLoaderFactoryTest {
 
         val mediaLoader = mediaLoaderFactory.build(mediaPickerSetup, site)
 
-        assertThat(mediaLoader).isEqualTo(
-                MediaLoader(
-                        mediaLibraryDataSource,
-                        localeManagerWrapper,
-                        networkUtilsWrapper
-                )
-        )
+        assertThat(mediaLoader).isEqualTo(MediaLoader(mediaLibraryDataSource))
     }
 
     @Test
@@ -118,13 +100,7 @@ class MediaLoaderFactoryTest {
 
         val mediaLoader = mediaLoaderFactory.build(mediaPickerSetup, site)
 
-        assertThat(mediaLoader).isEqualTo(
-                MediaLoader(
-                        stockMediaDataSource,
-                        localeManagerWrapper,
-                        networkUtilsWrapper
-                )
-        )
+        assertThat(mediaLoader).isEqualTo(MediaLoader(stockMediaDataSource))
     }
 
     @Test
@@ -145,12 +121,6 @@ class MediaLoaderFactoryTest {
 
         val mediaLoader = mediaLoaderFactory.build(mediaPickerSetup, site)
 
-        assertThat(mediaLoader).isEqualTo(
-                MediaLoader(
-                        gifMediaDataSource,
-                        localeManagerWrapper,
-                        networkUtilsWrapper
-                )
-        )
+        assertThat(mediaLoader).isEqualTo(MediaLoader(gifMediaDataSource))
     }
 }

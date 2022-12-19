@@ -9,7 +9,8 @@ class SiteItemsTracker @Inject constructor(
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
 ) {
     enum class Type(val label: String) {
-        POSTS("posts")
+        POSTS("posts"),
+        STATS("stats")
     }
 
     fun trackSiteItemClicked(listItemAction: ListItemAction) = trackSiteItemClicked(listItemAction.toTypeValue())
@@ -23,6 +24,7 @@ class SiteItemsTracker @Inject constructor(
     private fun ListItemAction.toTypeValue(): Type? {
         return when (this) {
             ListItemAction.POSTS -> Type.POSTS
+            ListItemAction.STATS -> Type.STATS
             else -> null
         }
     }

@@ -6,11 +6,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <org.wordpress.android.widgets.WPViewPager
+    <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/view_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+    <include
+        android:id="@+id/jetpack_banner"
+        layout="@layout/jetpack_banner" />
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/app_bar"
@@ -111,5 +115,4 @@
         </androidx.core.widget.NestedScrollView>
 
     </LinearLayout>
-
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

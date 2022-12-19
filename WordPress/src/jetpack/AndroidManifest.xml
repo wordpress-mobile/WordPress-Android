@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-permission android:name="org.wordpress.android.permission.DISABLE_NOTIFICATIONS"/>
+    <uses-permission android:name="org.wordpress.android.beta.permission.DISABLE_NOTIFICATIONS"/>
+    <uses-permission android:name="org.wordpress.android.prealpha.permission.DISABLE_NOTIFICATIONS"/>
+
+    <application>
+        <!-- Deep Linking Activity -->
+        <activity android:name="org.wordpress.android.ui.deeplinks.DeepLinkingIntentReceiverActivity"
+            android:exported="true">
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="apps.wordpress.com"
+                    android:pathPattern="/get/.*"
+                    android:scheme="https" />
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="viewpost"
+                    android:scheme="jetpack" />
+                <data
+                    android:host="stats"
+                    android:scheme="jetpack" />
+                <data
+                    android:host="read"
+                    android:scheme="jetpack" />
+                <data
+                    android:host="post"
+                    android:scheme="jetpack" />
+                <data
+                    android:host="notifications"
+                    android:scheme="jetpack" />
+                <data
+                    android:host="home"
+                    android:scheme="jetpack" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".ui.stats.refresh.lists.widget.weeks.StatsWeekWidgetConfigureActivity"
+            android:label="@string/stats_widget_views_title"
+            android:theme="@style/WordPress.NoActionBar"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
+
+        <receiver
+            android:name="org.wordpress.android.ui.stats.refresh.lists.widget.weeks.StatsWeekWidget"
+            android:label="@string/stats_widget_weekly_views_name"
+            android:enabled="true"
+            android:exported="false"
+            tools:ignore="ManifestResource">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/stats_week_views_widget_info"/>
+        </receiver>
+    </application>
+
+</manifest>

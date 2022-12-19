@@ -2,24 +2,10 @@
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="UnusedResources">
     <!--  Try no to put any colors here, unless you know what you are doing. Try Use styles instead. -->
 
-    <!--Overloaded Aztec colors. Remove after Aztec is phased out.-->
-
-    <color name="format_bar_background">#282828</color>  <!-- 4dp elevated surface -->
-    <color name="format_bar_divider">?android:attr/listDivider</color>
-    <color name="text">@color/material_on_surface_emphasis_high_type</color>
-    <color name="title_color">@color/text</color>
-    <color name="hint_text">@color/material_on_surface_emphasis_medium</color>
-    <color name="bullet">@color/text</color>
-    <color name="quote_background">#222222</color> <!-- 2dp elevated surface -->
-    <color name="code_background">@color/quote_background</color>
-    <color name="quote">@color/text</color>
-    <color name="media_button_background_tint_selector">
-        @color/primary_on_surface_disabled_selector
-    </color>
-
     <!-- Switch to attribute after dropping support for api 21-23 -->
     <color name="placeholder">#1AFFFFFF</color>
     <color name="p2_author_bg_stroke">#1E1E1E</color>
+    <color name="bottom_bar_notification_badge">@color/background_dark_elevated</color>
 
     <!-- Login Prologue -->
     <color name="promo_indicator_color_default">@color/white_translucent_20</color>
@@ -32,9 +18,19 @@
     <color name="login_prologue_background_circle_orange">@color/red_60</color>
     <color name="login_prologue_background_circle_pink">@color/purple_60</color>
 
+    <!-- Login Prologue Revamped -->
+    <color name="login_prologue_revamped_background">@color/gray_80</color>
+    <color name="login_prologue_revamped_icon">@color/white</color>
+
     <!-- Post History -->
 
     <color name="post_history_underlying_background">@color/gray_100</color>
+
+    <!-- Jetpack awareness in WordPress App -->
+    <color name="jetpack_banner_background">@color/jetpack_green_90</color>
+    <color name="jetpack_banner_divider">@color/gray_80</color>
+    <color name="jetpack_badge_background">@color/jetpack_green_90</color>
+    <color name="jetpack_powered_bottom_sheet_background">@color/jetpack_green_100</color>
 
     <!-- Reader -->
 
@@ -66,6 +62,10 @@
     <color name="context_line_highlighted_row_background">@color/red_80</color>
 
     <!-- Quick Start Task Cards -->
+    <color name="quick_start_task_card_background">@color/material_on_surface_emphasis_low</color>
+    <color name="quick_start_task_card_completed_checkmark">@color/material_on_surface_disabled</color>
+
+    <!-- Quick Start Task Dynamic Cards -->
     <color name="quick_start_task_card_illustration_background">#2C2C2E</color>
     <color name="quick_start_task_card_illustration_surface">@color/gray_0</color>
     <color name="quick_start_task_card_illustration_details">@color/gray_50</color>
@@ -96,4 +96,10 @@
     <color name="reader_topics_you_might_like_chip_orange_stroke">@color/orange_100</color>
     <color name="reader_topics_you_might_like_chip_orange_font">@color/orange_40</color>
     <color name="reader_topics_you_might_like_chip_orange_fill">@color/orange_90</color>
+
+    <!-- Site creation  -->
+    <color name="site_creation_intent_item_emoji_bg">#3d3d3d</color>
+
+    <!-- Jetpack Migration -->
+    <color name="bg_jp_migration_buttons_panel">#E6121212</color>
 </resources>

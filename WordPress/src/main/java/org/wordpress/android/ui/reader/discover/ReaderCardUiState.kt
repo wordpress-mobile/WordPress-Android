@@ -175,11 +175,13 @@ enum class ReaderPostCardActionType {
     SHARE,
     VISIT_SITE,
     BLOCK_SITE,
+    BLOCK_USER,
     LIKE,
     BOOKMARK,
     REBLOG,
     COMMENTS,
     REPORT_POST,
+    REPORT_USER,
     TOGGLE_SEEN_STATUS,
     SPACER_NO_ACTION
 }

@@ -484,6 +484,16 @@ public class ReaderPostTable {
         setNumCommentsForPost(blogId, postId, numComments);
     }
 
+    public static void decrementNumCommentsForPost(long blogId, long postId) {
+        int numComments = getNumCommentsForPost(blogId, postId);
+        if (numComments > 0) {
+            numComments--;
+            setNumCommentsForPost(blogId, postId, numComments);
+        } else {
+            AppLog.d(AppLog.T.READER, "Failed to decrement the number of post comments because they are 0");
+        }
+    }
+
     /*
      * returns the #likes known to exist for this post (ie: #likes the server says this post has), which
      * may differ from ReaderPostTable.getNumLikesForPost (which returns # local likes for this post)
@@ -613,6 +623,15 @@ public class ReaderPostTable {
     public static int deletePostsInBlog(long blogId) {
         String[] args = {Long.toString(blogId)};
         int rowsDeleted = ReaderDatabase.getWritableDb().delete("tbl_posts", "blog_id = ?", args);
+        if (rowsDeleted > 0) {
+            EventBus.getDefault().post(ReaderPostTableActionEnded.INSTANCE);
+        }
+        return rowsDeleted;
+    }
+
+    public static int deletePostsForAuthor(long authorId) {
+        String[] args = {Long.toString(authorId)};
+        int rowsDeleted = ReaderDatabase.getWritableDb().delete("tbl_posts", "author_id = ?", args);
         if (rowsDeleted > 0) {
             EventBus.getDefault().post(ReaderPostTableActionEnded.INSTANCE);
         }
@@ -885,6 +904,10 @@ public class ReaderPostTable {
             ReaderBlogIdPostId postWithGapMarker = getGapMarkerIdsForTag(tag);
 
             for (ReaderPost post : posts) {
+                // Skip blocked content
+                if (BlockedAuthorTable.isBlockedAuthor(post)) continue;
+                if (ReaderBlockedBlogTable.isBlockedBlog(post)) continue;
+
                 // keep the gapMarker flag
                 boolean hasGapMarker = postWithGapMarker != null && postWithGapMarker.getPostId() == post.postId
                                        && postWithGapMarker.getBlogId() == post.blogId;
@@ -1006,6 +1029,16 @@ public class ReaderPostTable {
     public static Map<Pair<String, ReaderTagType>, ReaderPostList> getTagPostMap(long blogId) {
         String sql = "SELECT * FROM tbl_posts WHERE blog_id=?";
         Cursor cursor = ReaderDatabase.getReadableDb().rawQuery(sql, new String[]{Long.toString(blogId)});
+        try {
+            return getTagPostMapFromCursor(cursor);
+        } finally {
+            SqlUtils.closeCursor(cursor);
+        }
+    }
+
+    public static Map<Pair<String, ReaderTagType>, ReaderPostList> getAuthorPostMap(long authorId) {
+        String sql = "SELECT * FROM tbl_posts WHERE author_id=?";
+        Cursor cursor = ReaderDatabase.getReadableDb().rawQuery(sql, new String[]{Long.toString(authorId)});
         try {
             return getTagPostMapFromCursor(cursor);
         } finally {

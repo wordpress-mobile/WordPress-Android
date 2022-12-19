@@ -1,20 +1,43 @@
 package org.wordpress.android.networking;
 
-import android.test.InstrumentationTestCase;
+import android.content.Context;
+
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import javax.inject.Inject;
+
+import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertTrue;
+
+import dagger.hilt.android.testing.HiltAndroidRule;
+import dagger.hilt.android.testing.HiltAndroidTest;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okio.Buffer;
 
-public class GravatarApiTest extends InstrumentationTestCase {
+@HiltAndroidTest
+public class GravatarApiTest {
+    @Rule
+    public HiltAndroidRule hiltRule = new HiltAndroidRule(this);
+
+    @Inject Context mContext;
+
+    @Before
+    public void setUp() {
+        hiltRule.inject();
+    }
+
+    @Test
     public void testGravatarUploadRequest() throws IOException {
         final String fileContent = "abcdefg";
 
-        File tempFile = new File(getInstrumentation().getTargetContext().getCacheDir(), "tempFile.jpg");
+        File tempFile = new File(mContext.getCacheDir(), "tempFile.jpg");
         FileOutputStream fos = new FileOutputStream(tempFile);
         fos.write(fileContent.getBytes());
         fos.flush();

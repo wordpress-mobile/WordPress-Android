@@ -163,6 +163,27 @@
             <View style="@style/MeListSectionDividerView" />
 
             <LinearLayout
+                android:id="@+id/row_scan_login_code"
+                style="@style/MeListRowLayout"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <ImageView
+                    android:id="@+id/me_scan_login_code_icon"
+                    style="@style/MeListRowIcon"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_baseline_qr_code_scanner_white_24dp" />
+
+                <org.wordpress.android.widgets.WPTextView
+                    android:id="@+id/me_scan_login_code_text_view"
+                    style="@style/MeListRowTextView"
+                    android:text="@string/me_btn_scan_login_code" />
+
+            </LinearLayout>
+
+            <View style="@style/MeListSectionDividerView" />
+
+            <LinearLayout
                 android:id="@+id/row_app_settings"
                 style="@style/MeListRowLayout">
 
@@ -279,6 +300,29 @@
 
             <View style="@style/MeListSectionDividerView" />
 
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/jetpack_badge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="@dimen/jetpack_badge_footer_bottom_spacing"
+                android:layout_marginTop="@dimen/me_jetpack_badge_top_margin"
+                android:importantForAccessibility="no"
+                android:paddingEnd="15dp"
+                android:paddingStart="5dp"
+                android:paddingVertical="5dp"
+                android:text="@string/wp_jetpack_powered"
+                android:textAppearance="?attr/textAppearanceBody1"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_sz_large"
+                android:visibility="gone"
+                app:backgroundTint="@color/jetpack_badge_background"
+                app:cornerRadius="20dp"
+                app:icon="@drawable/ic_jetpack_logo_24dp"
+                app:iconPadding="10dp"
+                app:iconTint="@null"
+                tools:ignore="TextContrastCheck"
+                tools:visibility="visible" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

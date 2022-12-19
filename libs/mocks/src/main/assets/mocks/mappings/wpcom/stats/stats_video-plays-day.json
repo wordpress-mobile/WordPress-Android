@@ -1,0 +1,44 @@
+{
+    "request": {
+        "method": "GET",
+        "urlPathPattern": "/rest/v1.1/sites/([0-9]+)/stats/video-plays/",
+        "queryParameters": {
+            "period": {
+                "equalTo": "day"
+            },
+            "max": {
+                "matches": "[0-9]+"
+            },
+            "date": {
+                "matches": "(.*)"
+            },
+            "locale": {
+                "matches": "(.*)"
+            }
+        }
+    },
+    "response": {
+        "status": 200,
+        "jsonBody": {
+            "date": "{{now format='yyyy-MM-dd'}}",
+            "period": "day",
+            "days": {
+                "{{now format='yyyy-MM-dd'}}": {
+                    "plays": [{
+                        "post_id": 1104,
+                        "url": "http://penguin.com",
+                        "title": "Rickroll",
+                        "plays": 11
+                    }, {
+                        "post_id": 1230,
+                        "url": "http://penguin.com",
+                        "title": "VIDEO_TS",
+                        "plays": 5
+                    }],
+                    "other_plays": 0,
+                    "total_plays": 5
+                }
+            }
+        }
+    }
+}

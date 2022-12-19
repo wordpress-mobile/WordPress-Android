@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/fragment_container_view"
-        android:name="org.wordpress.android.ui.prefs.categories.CategoriesListFragment"
+        android:name="org.wordpress.android.ui.prefs.categories.list.CategoriesListFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />

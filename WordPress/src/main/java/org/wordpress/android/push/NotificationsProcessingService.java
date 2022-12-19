@@ -4,7 +4,6 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -37,13 +36,12 @@ import org.wordpress.android.fluxc.store.CommentStore.RemoteLikeCommentPayload;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.comments.unified.CommentsStoreAdapter;
-import org.wordpress.android.ui.main.WPMainActivity;
-import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker;
 import org.wordpress.android.ui.notifications.receivers.NotificationsPendingDraftsReceiver;
 import org.wordpress.android.ui.notifications.utils.NotificationsActions;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils;
+import org.wordpress.android.ui.quickstart.QuickStartTracker;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.LocaleManager;
@@ -60,6 +58,8 @@ import javax.inject.Inject;
 import static org.wordpress.android.push.NotificationPushIds.GROUP_NOTIFICATION_ID;
 import static org.wordpress.android.push.NotificationPushIds.QUICK_START_REMINDER_NOTIFICATION_ID;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
 /**
  * service which makes it possible to process Notifications quick actions in the background,
  * such as:
@@ -70,6 +70,7 @@ import static org.wordpress.android.push.NotificationPushIds.QUICK_START_REMINDE
  * - pending draft notification ignore & dismissal
  */
 
+@AndroidEntryPoint
 public class NotificationsProcessingService extends Service {
     public static final String ARG_ACTION_TYPE = "action_type";
     public static final String ARG_ACTION_LIKE = "action_like";
@@ -95,6 +96,7 @@ public class NotificationsProcessingService extends Service {
     @Inject SiteStore mSiteStore;
     @Inject SystemNotificationsTracker mSystemNotificationsTracker;
     @Inject GCMMessageHandler mGCMMessageHandler;
+    @Inject QuickStartTracker mQuickStartTracker;
 
     /*
     * Use this if you want the service to handle a background note Like.
@@ -135,7 +137,8 @@ public class NotificationsProcessingService extends Service {
         intent.putExtra(ARG_NOTIFICATION_TYPE, notificationType);
         intent.addCategory(ARG_ACTION_NOTIFICATION_DISMISS);
 
-        return PendingIntent.getService(context, pushId, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        return PendingIntent
+                .getService(context, pushId, intent, PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_IMMUTABLE);
     }
 
     public static void stopService(Context context) {
@@ -155,7 +158,6 @@ public class NotificationsProcessingService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        ((WordPress) getApplication()).component().inject(this);
         mCommentsStoreAdapter.register(this);
         AppLog.i(AppLog.T.NOTIFS, "notifications action processing service > created");
     }
@@ -229,7 +231,7 @@ public class NotificationsProcessingService extends Service {
                     if (notificationId == GROUP_NOTIFICATION_ID) {
                         mGCMMessageHandler.clearNotifications();
                     } else if (notificationId == QUICK_START_REMINDER_NOTIFICATION_ID) {
-                        AnalyticsTracker.track(Stat.QUICK_START_NOTIFICATION_DISMISSED);
+                        mQuickStartTracker.track(Stat.QUICK_START_NOTIFICATION_DISMISSED);
                     } else {
                         mGCMMessageHandler.removeNotification(notificationId);
                         // Dismiss the grouped notification if a user dismisses all notifications from a wear device
@@ -261,7 +263,7 @@ public class NotificationsProcessingService extends Service {
                     return;
                 }
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && mActionType.equals(ARG_ACTION_REPLY)) {
+                if (mActionType.equals(ARG_ACTION_REPLY)) {
                     // we don't need showing the infinite progress bar in case of REPLY on Android N,
                     // because we've got inline-reply there with its own spinner to show progress
                     // no op
@@ -610,49 +612,31 @@ public class NotificationsProcessingService extends Service {
                 return;
             }
 
-            if (!TextUtils.isEmpty(mReplyText)) {
-                SiteModel site = mSiteStore.getSiteBySiteId(mNote.getSiteId());
-                if (site == null) {
-                    AppLog.e(T.NOTIFS, "Impossible to reply to a comment on a site that is not in the App."
-                                       + " SiteId: " + mNote.getSiteId());
-                    requestFailed(ARG_ACTION_APPROVE);
-                    return;
-                }
+            if (TextUtils.isEmpty(mReplyText)) return;
 
-                // Pseudo comment (built from the note)
-                CommentModel comment = mNote.buildComment();
-
-                // Pseudo comment reply
-                CommentModel reply = new CommentModel();
-                reply.setContent(mReplyText);
-
-                // Push the reply
-                RemoteCreateCommentPayload payload = new RemoteCreateCommentPayload(site, comment, reply);
-                mCommentsStoreAdapter.dispatch(CommentActionBuilder.newCreateNewCommentAction(payload));
-
-                // Bump analytics
-                AnalyticsUtils.trackCommentReplyWithDetails(true,
-                        site, comment, AnalyticsCommentActionSource.NOTIFICATIONS);
-                AnalyticsUtils.trackQuickActionTouched(QuickActionTrackPropertyValue.REPLY_TO, site, comment);
-            } else {
-                // cancel the current notification
-                NativeNotificationsUtils.dismissNotification(mPushId, mContext);
-                NativeNotificationsUtils.hideStatusBar(mContext);
-                // and just trigger the Activity to allow the user to write a reply
-                startReplyToCommentActivity();
+            SiteModel site = mSiteStore.getSiteBySiteId(mNote.getSiteId());
+            if (site == null) {
+                AppLog.e(T.NOTIFS, "Impossible to reply to a comment on a site that is not in the App."
+                                   + " SiteId: " + mNote.getSiteId());
+                requestFailed(ARG_ACTION_APPROVE);
+                return;
             }
-        }
 
-        private void startReplyToCommentActivity() {
-            Intent intent = new Intent(mContext, WPMainActivity.class);
-            intent.putExtra(WPMainActivity.ARG_OPENED_FROM_PUSH, true);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
-                            | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            intent.setAction("android.intent.action.MAIN");
-            intent.addCategory("android.intent.category.LAUNCHER");
-            intent.putExtra(NotificationsListFragment.NOTE_ID_EXTRA, mNoteId);
-            intent.putExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA, true);
-            startActivity(intent);
+            // Pseudo comment (built from the note)
+            CommentModel comment = mNote.buildComment();
+
+            // Pseudo comment reply
+            CommentModel reply = new CommentModel();
+            reply.setContent(mReplyText);
+
+            // Push the reply
+            RemoteCreateCommentPayload payload = new RemoteCreateCommentPayload(site, comment, reply);
+            mCommentsStoreAdapter.dispatch(CommentActionBuilder.newCreateNewCommentAction(payload));
+
+            // Bump analytics
+            AnalyticsUtils.trackCommentReplyWithDetails(true,
+                    site, comment, AnalyticsCommentActionSource.NOTIFICATIONS);
+            AnalyticsUtils.trackQuickActionTouched(QuickActionTrackPropertyValue.REPLY_TO, site, comment);
         }
 
         private void resetOriginalNotification() {

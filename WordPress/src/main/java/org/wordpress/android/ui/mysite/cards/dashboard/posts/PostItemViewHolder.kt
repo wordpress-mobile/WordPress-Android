@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.mysite.cards.dashboard.posts
 
-import android.view.View
 import android.view.ViewGroup
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
@@ -11,8 +10,8 @@ import org.wordpress.android.ui.utils.UiDimen.UIDimenRes
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.PHOTO_ROUNDED_CORNERS
-import org.wordpress.android.util.setVisible
-import org.wordpress.android.util.viewBinding
+import org.wordpress.android.util.extensions.setVisible
+import org.wordpress.android.util.extensions.viewBinding
 
 class PostItemViewHolder(
     parent: ViewGroup,
@@ -33,7 +32,7 @@ class PostItemViewHolder(
                         UIDimenRes(R.dimen.my_site_post_item_image_corner_radius)
                 )
         )
-        featuredImage.visibility = if (postItem.featuredImageUrl == null) View.INVISIBLE else View.VISIBLE
+        featuredImage.setVisible(postItem.featuredImageUrl != null)
         iconTime.setVisible(postItem.isTimeIconVisible)
         itemView.setOnClickListener { postItem.onClick.click() }
     }

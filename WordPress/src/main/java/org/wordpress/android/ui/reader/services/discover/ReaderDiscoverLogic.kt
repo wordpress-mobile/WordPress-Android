@@ -10,7 +10,6 @@ import org.json.JSONArray
 import org.json.JSONObject
 import org.wordpress.android.WordPress
 import org.wordpress.android.datasets.ReaderBlogTable
-import org.wordpress.android.datasets.ReaderBlogTableWrapper
 import org.wordpress.android.datasets.ReaderDiscoverCardsTable
 import org.wordpress.android.datasets.ReaderPostTable
 import org.wordpress.android.datasets.wrappers.ReaderTagTableWrapper
@@ -22,7 +21,6 @@ import org.wordpress.android.models.discover.ReaderDiscoverCard
 import org.wordpress.android.models.discover.ReaderDiscoverCard.InterestsYouMayLikeCard
 import org.wordpress.android.models.discover.ReaderDiscoverCard.ReaderPostCard
 import org.wordpress.android.models.discover.ReaderDiscoverCard.ReaderRecommendedBlogsCard
-import org.wordpress.android.modules.AppComponent
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.ReaderConstants.JSON_CARDS
 import org.wordpress.android.ui.reader.ReaderConstants.JSON_CARD_DATA
@@ -48,44 +46,41 @@ import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.Dis
 import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.DiscoverTasks.REQUEST_MORE
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.READER
-import java.util.HashMap
 import javax.inject.Inject
 
 /**
  * This class contains logic related to fetching data for the discover tab in the Reader.
  */
-class ReaderDiscoverLogic(
-    private val completionListener: ServiceCompletionListener,
-    private val coroutineScope: CoroutineScope,
-    appComponent: AppComponent
+class ReaderDiscoverLogic @Inject constructor(
+    private val parseDiscoverCardsJsonUseCase: ParseDiscoverCardsJsonUseCase,
+    private val readerTagTableWrapper: ReaderTagTableWrapper,
+    private val getFollowedTagsUseCase: GetFollowedTagsUseCase,
+    private val getDiscoverCardsUseCase: GetDiscoverCardsUseCase,
+    private val appPrefsWrapper: AppPrefsWrapper,
 ) {
-    init {
-        appComponent.inject(this)
-    }
-
-    @Inject lateinit var parseDiscoverCardsJsonUseCase: ParseDiscoverCardsJsonUseCase
-    @Inject lateinit var appPrefsWrapper: AppPrefsWrapper
-    @Inject lateinit var readerTagTableWrapper: ReaderTagTableWrapper
-    @Inject lateinit var getFollowedTagsUseCase: GetFollowedTagsUseCase
-    @Inject lateinit var readerBlogTableWrapper: ReaderBlogTableWrapper
-    @Inject lateinit var getDiscoverCardsUseCase: GetDiscoverCardsUseCase
-
     enum class DiscoverTasks {
         REQUEST_MORE, REQUEST_FIRST_PAGE
     }
 
     private var listenerCompanion: JobParameters? = null
+    private var coroutineScope: CoroutineScope? = null
 
-    fun performTasks(task: DiscoverTasks, companion: JobParameters?) {
+    fun performTasks(
+        task: DiscoverTasks,
+        companion: JobParameters?,
+        scope: CoroutineScope,
+        completionListener: ServiceCompletionListener
+    ) {
         listenerCompanion = companion
-        requestDataForDiscover(task, UpdateResultListener {
+        coroutineScope = scope
+        requestDataForDiscover(task) {
             EventBus.getDefault().post(FetchDiscoverCardsEnded(task, it))
             completionListener.onCompleted(listenerCompanion)
-        })
+        }
     }
 
     private fun requestDataForDiscover(taskType: DiscoverTasks, resultListener: UpdateResultListener) {
-        coroutineScope.launch {
+        coroutineScope?.launch {
             val params = HashMap<String, String>()
             params["tags"] = getFollowedTagsUseCase.get().joinToString { it.tagSlug }
 
@@ -112,7 +107,7 @@ class ReaderDiscoverLogic(
             }
 
             val listener = Listener { jsonObject ->
-                coroutineScope.launch {
+                coroutineScope?.launch {
                     handleRequestDiscoverDataResponse(taskType, jsonObject, resultListener)
                 }
             }
@@ -136,27 +131,27 @@ class ReaderDiscoverLogic(
         if (taskType == REQUEST_FIRST_PAGE) {
             clearCache()
         }
-        val fullCardsJson = json.optJSONArray(JSON_CARDS)
+        json.optJSONArray(JSON_CARDS)?.let { fullCardsJson ->
+            // Parse the json into cards model objects
+            val cards = parseCards(fullCardsJson)
+            insertPostsIntoDb(cards.filterIsInstance<ReaderPostCard>().map { it.post })
+            insertBlogsIntoDb(cards.filterIsInstance<ReaderRecommendedBlogsCard>().map { it.blogs }.flatten())
 
-        // Parse the json into cards model objects
-        val cards = parseCards(fullCardsJson)
-        insertPostsIntoDb(cards.filterIsInstance<ReaderPostCard>().map { it.post })
-        insertBlogsIntoDb(cards.filterIsInstance<ReaderRecommendedBlogsCard>().map { it.blogs }.flatten())
+            // Simplify the json. The simplified version is used in the upper layers to load the data from the db.
+            val simplifiedCardsJson = createSimplifiedJson(fullCardsJson)
+            insertCardsJsonIntoDb(simplifiedCardsJson)
 
-        // Simplify the json. The simplified version is used in the upper layers to load the data from the db.
-        val simplifiedCardsJson = createSimplifiedJson(fullCardsJson)
-        insertCardsJsonIntoDb(simplifiedCardsJson)
+            val nextPageHandle = parseDiscoverCardsJsonUseCase.parseNextPageHandle(json)
+            appPrefsWrapper.readerCardsPageHandle = nextPageHandle
 
-        val nextPageHandle = parseDiscoverCardsJsonUseCase.parseNextPageHandle(json)
-        appPrefsWrapper.readerCardsPageHandle = nextPageHandle
+            if (cards.isEmpty()) {
+                readerTagTableWrapper.clearTagLastUpdated(ReaderTag.createDiscoverPostCardsTag())
+            } else {
+                readerTagTableWrapper.setTagLastUpdated(ReaderTag.createDiscoverPostCardsTag())
+            }
 
-        if (cards.isEmpty()) {
-            readerTagTableWrapper.clearTagLastUpdated(ReaderTag.createDiscoverPostCardsTag())
-        } else {
-            readerTagTableWrapper.setTagLastUpdated(ReaderTag.createDiscoverPostCardsTag())
+            resultListener.onUpdateResult(HAS_NEW)
         }
-
-        resultListener.onUpdateResult(HAS_NEW)
     }
 
     private fun parseCards(cardsJsonArray: JSONArray): ArrayList<ReaderDiscoverCard> {
@@ -201,6 +196,7 @@ class ReaderDiscoverLogic(
      * It for example copies only ids from post object as we don't need to store the gigantic post in the json
      * as it's already stored in the db.
      */
+    @Suppress("NestedBlockDepth")
     private fun createSimplifiedJson(cardsJsonArray: JSONArray): JSONArray {
         var index = 0
         val simplifiedJson = JSONArray()
@@ -208,9 +204,10 @@ class ReaderDiscoverLogic(
             val cardJson = cardsJsonArray.getJSONObject(i)
             when (cardJson.getString(JSON_CARD_TYPE)) {
                 JSON_CARD_RECOMMENDED_BLOGS -> {
-                    val recommendedBlogsCardJson = cardJson.optJSONArray(JSON_CARD_DATA)
-                    if (recommendedBlogsCardJson.length() > 0) {
-                        simplifiedJson.put(index++, createSimplifiedRecommendedBlogsCardJson(cardJson))
+                    cardJson.optJSONArray(JSON_CARD_DATA)?.let { recommendedBlogsCardJson ->
+                        if (recommendedBlogsCardJson.length() > 0) {
+                            simplifiedJson.put(index++, createSimplifiedRecommendedBlogsCardJson(cardJson))
+                        }
                     }
                 }
                 JSON_CARD_INTERESTS_YOU_MAY_LIKE -> {
@@ -242,6 +239,7 @@ class ReaderDiscoverLogic(
         return simplifiedCardJson
     }
 
+    @Suppress("NestedBlockDepth")
     private fun createSimplifiedRecommendedBlogsCardJson(originalCardJson: JSONObject): JSONObject {
         return JSONObject().apply {
             JSONArray().apply {

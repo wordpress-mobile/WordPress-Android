@@ -20,7 +20,7 @@ import org.wordpress.android.ui.layoutpicker.LayoutPickerUiState.Content
 import org.wordpress.android.ui.layoutpicker.LayoutPickerUiState.Error
 import org.wordpress.android.ui.layoutpicker.LayoutPickerUiState.Loading
 import org.wordpress.android.ui.layoutpicker.LayoutPickerViewModel
-import org.wordpress.android.ui.layoutpicker.ThumbDimensionProvider
+import org.wordpress.android.ui.mlp.ModalLayoutPickerDimensionProvider
 import org.wordpress.android.ui.layoutpicker.toLayoutCategories
 import org.wordpress.android.ui.layoutpicker.toLayoutModels
 import org.wordpress.android.ui.mlp.ModalLayoutPickerTracker
@@ -42,7 +42,7 @@ class ModalLayoutPickerViewModel @Inject constructor(
     private val siteStore: SiteStore,
     private val selectedSiteRepository: SelectedSiteRepository,
     private val supportedBlocksProvider: SupportedBlocksProvider,
-    private val thumbDimensionProvider: ThumbDimensionProvider,
+    private val thumbDimensionProvider: ModalLayoutPickerDimensionProvider,
     private val displayUtilsWrapper: DisplayUtilsWrapper,
     override val networkUtils: NetworkUtilsWrapper,
     private val analyticsTracker: ModalLayoutPickerTracker,
@@ -66,6 +66,7 @@ class ModalLayoutPickerViewModel @Inject constructor(
     }
 
     override val useCachedData: Boolean = true
+    override val shouldUseMobileThumbnail = false
 
     override val selectedLayout: LayoutModel?
         get() = (uiState.value as? Content)?.let { state ->

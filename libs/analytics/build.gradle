@@ -1,0 +1,32 @@
+plugins {
+    id "com.android.library"
+}
+
+repositories {
+    maven {
+        url "https://a8c-libs.s3.amazonaws.com/android"
+        content {
+            includeGroup "org.wordpress"
+            includeGroup "com.automattic"
+            includeGroup "com.automattic.tracks"
+        }
+    }
+}
+
+dependencies {
+    implementation "com.automattic:Automattic-Tracks-Android:$automatticTracksVersion"
+    implementation "org.wordpress:utils:$wordPressUtilsVersion"
+
+    implementation "androidx.preference:preference:$androidxPreferenceVersion"
+
+    lintChecks "org.wordpress:lint:$wordPressLintVersion"
+}
+
+android {
+    compileSdkVersion rootProject.compileSdkVersion
+
+    defaultConfig {
+        minSdkVersion rootProject.minSdkVersion
+        targetSdkVersion rootProject.targetSdkVersion
+    }
+}

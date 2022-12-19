@@ -127,7 +127,7 @@ class StoryComposerViewModel @Inject constructor(
     }
 
     fun onStoryComposerStartAnalyticsSession() {
-        this.postEditorAnalyticsSession?.start(null, null)
+        this.postEditorAnalyticsSession?.start(null, null, null)
     }
 
     fun onStoryComposerAnalyticsSessionStartTimeReset() {

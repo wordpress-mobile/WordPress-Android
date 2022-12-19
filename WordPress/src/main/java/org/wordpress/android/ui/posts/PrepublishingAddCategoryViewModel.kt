@@ -32,8 +32,8 @@ class PrepublishingAddCategoryViewModel @Inject constructor(
     private var closeKeyboard = true
     private lateinit var siteModel: SiteModel
 
-    private val _navigateBack = MutableLiveData<Bundle>()
-    val navigateBack: LiveData<Bundle> = _navigateBack
+    private val _navigateBack = MutableLiveData<Bundle?>()
+    val navigateBack: LiveData<Bundle?> = _navigateBack
 
     private val _dismissKeyboard = MutableLiveData<Event<Unit>>()
     val dismissKeyboard: LiveData<Event<Unit>> = _dismissKeyboard

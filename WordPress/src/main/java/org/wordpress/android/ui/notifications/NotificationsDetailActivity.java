@@ -57,7 +57,7 @@ import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
 import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource;
 import org.wordpress.android.ui.reader.tracker.ReaderTracker;
 import org.wordpress.android.ui.stats.StatsViewType;
-import org.wordpress.android.util.AppBarLayoutExtensionsKt;
+import org.wordpress.android.util.extensions.AppBarLayoutExtensionsKt;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -74,12 +74,15 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
 import static org.wordpress.android.models.Note.NOTE_COMMENT_LIKE_TYPE;
 import static org.wordpress.android.models.Note.NOTE_COMMENT_TYPE;
 import static org.wordpress.android.models.Note.NOTE_FOLLOW_TYPE;
 import static org.wordpress.android.models.Note.NOTE_LIKE_TYPE;
 import static org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter.IS_TAPPED_ON_NOTIFICATION;
 
+@AndroidEntryPoint
 public class NotificationsDetailActivity extends LocaleAwareActivity implements
         CommentActions.OnNoteCommentActionListener,
         BasicFragmentDialog.BasicDialogPositiveClickInterface, ScrollableViewInitializedListener {

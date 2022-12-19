@@ -1,13 +1,13 @@
 package org.wordpress.android.ui.stories.usecase
 
 import android.content.Context
-import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.whenever
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.fluxc.model.SiteModel
@@ -36,6 +36,7 @@ class LoadStoryFromStoriesPrefsUseCaseTest {
     }
 
     @Test
+    @Suppress("UNCHECKED_CAST")
     fun `obtain empty media ids list from empty mediaFiles array`() {
         // Given
         val mediaFiles: ArrayList<HashMap<String, Any>> = setupMediaFiles(emptyList = true)
@@ -50,6 +51,7 @@ class LoadStoryFromStoriesPrefsUseCaseTest {
     }
 
     @Test
+    @Suppress("UNCHECKED_CAST")
     fun `obtain media ids list from non empty mediaFiles array`() {
         // Given
         val mediaFiles: ArrayList<HashMap<String, Any>> = setupMediaFiles(emptyList = false)

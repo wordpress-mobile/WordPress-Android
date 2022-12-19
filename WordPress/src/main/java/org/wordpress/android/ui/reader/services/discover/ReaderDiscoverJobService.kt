@@ -3,10 +3,10 @@ package org.wordpress.android.ui.reader.services.discover
 import android.app.job.JobParameters
 import android.app.job.JobService
 import android.content.Context
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
-import org.wordpress.android.WordPress
 import org.wordpress.android.ui.reader.services.ServiceCompletionListener
 import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.DiscoverTasks
 import org.wordpress.android.util.AppLog
@@ -16,9 +16,10 @@ import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.CoroutineContext
 
+@AndroidEntryPoint
 class ReaderDiscoverJobService : JobService(), ServiceCompletionListener, CoroutineScope {
     @Inject @field:Named("IO_THREAD") lateinit var ioDispatcher: CoroutineDispatcher
-    private lateinit var readerDiscoverLogic: ReaderDiscoverLogic
+    @Inject lateinit var readerDiscoverLogic: ReaderDiscoverLogic
 
     private var job: Job = Job()
 
@@ -34,7 +35,7 @@ class ReaderDiscoverJobService : JobService(), ServiceCompletionListener, Corout
 
         val task = DiscoverTasks.values()[(params.extras[ReaderDiscoverServiceStarter.ARG_DISCOVER_TASK] as Int)]
 
-        readerDiscoverLogic.performTasks(task, params)
+        readerDiscoverLogic.performTasks(task, params, this, this)
         return true
     }
 
@@ -46,9 +47,6 @@ class ReaderDiscoverJobService : JobService(), ServiceCompletionListener, Corout
 
     override fun onCreate() {
         super.onCreate()
-        val component = (application as WordPress).component()
-        component.inject(this)
-        readerDiscoverLogic = ReaderDiscoverLogic(this, this, component)
         AppLog.i(READER, "reader discover job service > created")
     }
 

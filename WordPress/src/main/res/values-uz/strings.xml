@@ -2,11 +2,12 @@
 <!--
 Translation-Revision-Date: 2018-03-05 11:25:08+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/3.0.0-alpha.2
+Generator: GlotPress/4.0.0-alpha.3
 Language: uz
 -->
 <resources>
     <string name="reader_empty_posts_in_tag_updating">Postlar yuklanmoqda…</string>
+    <string name="comment_unapproved">Mulohaza inkor qilindi</string>
     <string name="reader_likes_you_and_multi">Siz hamda %,d kishi buni yoqtiradi</string>
     <string name="reader_likes_multi">%,d kishi buni yoqtiradi</string>
     <string name="comment_spammed">Mulohaza spam sifatida belgilandi</string>
@@ -65,11 +66,16 @@ Language: uz
     <string name="username">Foydalanuvchi nomi</string>
     <string name="reader">Rider</string>
     <string name="anonymous">Anonim</string>
+    <string name="featured">Yuz rasm sifatida foydalanish</string>
+    <string name="featured_in_post">Postga rasm qo‘shish</string>
     <string name="no_network_title">Netvork mavjud emas</string>
     <string name="pages">Sahifalar</string>
+    <string name="width">En</string>
     <string name="posts">Postlar</string>
+    <string name="caption">Titr (ixtiyoriy)</string>
     <string name="ok">OK</string>
     <string name="link_enter_url">URL</string>
+    <string name="uploading">Yuklanmoqda</string>
     <string name="version">Versiya</string>
     <string name="tos">Xizmat shartlari</string>
     <string name="app_title">WordPress for Android</string>

@@ -25,6 +25,7 @@ import org.wordpress.android.ui.themes.ThemeBrowserUtils
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.SiteUtilsWrapper
 import org.wordpress.android.util.config.SiteDomainsFeatureConfig
@@ -32,11 +33,11 @@ import java.util.GregorianCalendar
 import java.util.TimeZone
 import javax.inject.Inject
 
-@Suppress("TooManyFunctions")
 class SiteListItemBuilder @Inject constructor(
     private val accountStore: AccountStore,
     private val pluginUtilsWrapper: PluginUtilsWrapper,
     private val siteUtilsWrapper: SiteUtilsWrapper,
+    private val buildConfigWrapper: BuildConfigWrapper,
     private val themeBrowserUtils: ThemeBrowserUtils,
     private val siteDomainsFeatureConfig: SiteDomainsFeatureConfig
 ) {
@@ -108,12 +109,17 @@ class SiteListItemBuilder @Inject constructor(
         } else null
     }
 
-    fun buildPagesItemIfAvailable(site: SiteModel, onClick: (ListItemAction) -> Unit): ListItem? {
+    fun buildPagesItemIfAvailable(
+        site: SiteModel,
+        onClick: (ListItemAction) -> Unit,
+        showFocusPoint: Boolean
+    ): ListItem? {
         return if (site.isSelfHostedAdmin || site.hasCapabilityEditPages) {
             ListItem(
                     R.drawable.ic_pages_white_24dp,
                     UiStringRes(R.string.my_site_btn_site_pages),
-                    onClick = ListItemInteraction.create(PAGES, onClick)
+                    onClick = ListItemInteraction.create(PAGES, onClick),
+                    showFocusPoint = showFocusPoint
             )
         } else null
     }
@@ -165,7 +171,11 @@ class SiteListItemBuilder @Inject constructor(
     }
 
     fun buildDomainsItemIfAvailable(site: SiteModel, onClick: (ListItemAction) -> Unit): ListItem? {
-        return if (hasManageOptionsCapability(site) || isNotAccessedViaWPComRest(site)) {
+        return if (
+                buildConfigWrapper.isJetpackApp &&
+                siteDomainsFeatureConfig.isEnabled() &&
+                site.hasCapabilityManageOptions
+        ) {
             ListItem(
                     R.drawable.ic_domains_white_24dp,
                     UiStringRes(R.string.my_site_btn_domains),
@@ -173,12 +183,6 @@ class SiteListItemBuilder @Inject constructor(
             )
         } else null
     }
-
-    private fun hasManageOptionsCapability(site: SiteModel) =
-            siteDomainsFeatureConfig.isEnabled() && site.hasCapabilityManageOptions
-
-    private fun isNotAccessedViaWPComRest(site: SiteModel) =
-            siteDomainsFeatureConfig.isEnabled() && !siteUtilsWrapper.isAccessedViaWPComRest(site)
 
     fun buildSiteSettingsItemIfAvailable(site: SiteModel, onClick: (ListItemAction) -> Unit): ListItem? {
         return if (site.hasCapabilityManageOptions || !siteUtilsWrapper.isAccessedViaWPComRest(site)) {

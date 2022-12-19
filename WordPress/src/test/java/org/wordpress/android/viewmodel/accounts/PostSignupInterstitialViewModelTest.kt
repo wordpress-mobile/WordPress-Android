@@ -2,13 +2,13 @@ package org.wordpress.android.viewmodel.accounts
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.verify
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.WELCOME_NO_SITES_INTERSTITIAL_ADD_SELF_HOSTED_SITE_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.WELCOME_NO_SITES_INTERSTITIAL_CREATE_NEW_SITE_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.WELCOME_NO_SITES_INTERSTITIAL_DISMISSED
@@ -23,7 +23,8 @@ import org.wordpress.android.viewmodel.accounts.PostSignupInterstitialViewModel.
 
 @RunWith(MockitoJUnitRunner::class)
 class PostSignupInterstitialViewModelTest {
-    @Rule @JvmField val rule = InstantTaskExecutorRule()
+    @Rule
+    @JvmField val rule = InstantTaskExecutorRule()
 
     private val appPrefs: AppPrefsWrapper = mock()
     private val unifiedLoginTracker: UnifiedLoginTracker = mock()

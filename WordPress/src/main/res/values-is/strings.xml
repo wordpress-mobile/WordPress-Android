@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2017-05-01 23:08:27+0000
 Plural-Forms: nplurals=2; plural=n % 10 != 1 || n % 100 == 11;
-Generator: GlotPress/3.0.0-alpha.2
+Generator: GlotPress/4.0.0-alpha.3
 Language: is
 -->
 <resources>
@@ -114,12 +114,19 @@ Language: is
     <string name="error_fetch_email_followers_list">Gat ekki sótt fylgjendur í tölvupósti</string>
     <string name="error_fetch_followers_list">Gat ekki sótt fylgjendur vefs</string>
     <string name="editor_failed_uploads_switch_html">Einhver skráarupphöl mistókust. Þú getur ekki skipt í HTML ham\n        eins og er. Fjarlægja öll misheppnuð upphöl og halda áfram?</string>
+    <string name="image_thumbnail">Þumla</string>
+    <string name="visual_editor">Sjónrænn ritill</string>
     <string name="image_caption">Myndatexti</string>
     <string name="image_width">Breidd</string>
+    <string name="image_alt_text">Skýringartexti</string>
     <string name="image_link_to">Tengill í</string>
     <string name="image_settings_save_toast">Breytingar vistaðar</string>
     <string name="image_settings_dismiss_dialog_title">Hætta við óvistaðar breytingar?</string>
     <string name="stop_upload_dialog_title">Hætta upphleðslu?</string>
+    <string name="alert_error_adding_media">Villa kom upp við að fella inn skrá</string>
+    <string name="alert_action_while_uploading">Þú ert að hala upp skrá eins og er. Vinsamlegast bíðið þangað til því er lokið.</string>
+    <string name="alert_insert_image_html_mode">Þú getur ekki fellt inn skrá í HTML ham. Vinsamlegast skiptu aftur yfir í sjónrænan ham.</string>
+    <string name="uploading_gallery_placeholder">Hleð upp myndasafni…</string>
     <string name="invite_error_for_username">%1$s: %2$s</string>
     <string name="invite_sent">Boð sent</string>
     <string name="invite_error_some_failed">Boð sent en með villu(m)!</string>
@@ -180,6 +187,7 @@ Language: is
     <string name="me_btn_app_settings">Stillingar forrits</string>
     <string name="editor_remove_failed_uploads">Fjarlægja misheppnuð upphöl</string>
     <string name="site_settings_advanced_header">Ítarlegra</string>
+    <string name="button_skip">Sleppa</string>
     <string name="xmlrpc_missing_method_error">Gat ekki tengst. Nauðsynlega XML-RPC virkni vantar á netþjóninn.</string>
     <string name="alignment_center">Miðja</string>
     <string name="post_format_status">Staða</string>
@@ -450,7 +458,6 @@ Language: is
     <string name="stats_followers_a_minute_ago">fyrir mínútu síðan</string>
     <string name="stats_view_countries">Lönd</string>
     <string name="stats_view_videos">Myndbönd</string>
-    <string name="stats_view_publicize">Birta</string>
     <string name="stats_timeframe_years">Ár</string>
     <string name="stats_views">Flettingar</string>
     <string name="stats_likes">Líkar við</string>
@@ -519,6 +526,7 @@ Language: is
     <string name="fatal_db_error">Villa kom upp við að stofna gagnagrunn smáforrits. Reyndu að setja smáforritið aftur upp.</string>
     <string name="reader_title_applog">Atburðarskrá forrits</string>
     <string name="connection_error">Tengingarvilla</string>
+    <string name="create_a_link">Búa til tengil</string>
     <string name="content_required">Athugasemdar er krafist</string>
     <string name="toast_comment_unedited">Athugasemd var ekki breytt</string>
     <string name="comment_status_unapproved">Í bið</string>
@@ -535,6 +543,7 @@ Language: is
     <string name="cannot_delete_multi_media_items">Ekki var hægt að eyða öllum skrám í þetta sinn. Reyndu aftur síðar.</string>
     <string name="dlg_confirm_trash_comments">Henda í ruslatunnu?</string>
     <string name="error_blog_hidden">Þetta blogg er falið og ekki hægt að sækja það. Virkjaðu það aftur í stillingum og reyndu aftur.</string>
+    <string name="horizontal_alignment">Lárétt jöfnun</string>
     <string name="local_draft">Staðvær drög</string>
     <string name="new_media">Ný skrá</string>
     <string name="new_post">Ný færsla</string>
@@ -612,12 +621,17 @@ Language: is
     <string name="password">Lykilorð</string>
     <string name="username">Notandanafn</string>
     <string name="reader">Lesari</string>
+    <string name="caption">Myndatexti (valkvæmt)</string>
     <string name="anonymous">Nafnlaust</string>
     <string name="pages">Síður</string>
+    <string name="width">Breidd</string>
     <string name="posts">Færslur</string>
     <string name="no_network_title">Ekkert net tiltækt</string>
+    <string name="featured_in_post">Hafa mynd með í efni færslu</string>
+    <string name="featured">Nota sem einkennismynd</string>
     <string name="ok">Í lagi</string>
     <string name="link_enter_url">Slóð</string>
+    <string name="uploading">Hleð upp…</string>
     <string name="version">Útgáfa</string>
     <string name="tos">Notendaskilmálar</string>
     <string name="app_title">WordPress fyrir Android</string>

@@ -2,25 +2,29 @@ package org.wordpress.android.ui.screenshots;
 
 import android.provider.Settings;
 
+import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.DataInteraction;
+import androidx.test.espresso.Espresso;
 import androidx.test.espresso.ViewInteraction;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
-import androidx.test.rule.ActivityTestRule;
 
 import com.google.android.libraries.cloudtesting.screenshots.ScreenShotter;
 
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.rules.RuleChain;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.e2e.pages.MySitesPage;
-import org.wordpress.android.e2e.pages.SitePickerPage;
+import org.wordpress.android.e2e.pages.PostsListPage;
 import org.wordpress.android.support.BaseTest;
 import org.wordpress.android.support.DemoModeEnabler;
 import org.wordpress.android.ui.WPLaunchActivity;
+import org.wordpress.android.util.UiTestingUtils;
+import org.wordpress.android.util.image.ImageType;
+
+import java.util.Locale;
 
 import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
@@ -36,45 +40,100 @@ import static org.hamcrest.Matchers.anything;
 import static org.hamcrest.Matchers.is;
 import static org.wordpress.android.support.WPSupportUtils.childAtPosition;
 import static org.wordpress.android.support.WPSupportUtils.clickOn;
+import static org.wordpress.android.support.WPSupportUtils.clickOnViewWithTag;
 import static org.wordpress.android.support.WPSupportUtils.getCurrentActivity;
+import static org.wordpress.android.support.WPSupportUtils.getTranslatedString;
 import static org.wordpress.android.support.WPSupportUtils.idleFor;
 import static org.wordpress.android.support.WPSupportUtils.isElementDisplayed;
+import static org.wordpress.android.support.WPSupportUtils.isTabletScreen;
+import static org.wordpress.android.support.WPSupportUtils.isTextDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.pressBackUntilElementIsDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.setNightMode;
-import static org.wordpress.android.support.WPSupportUtils.swipeLeftOnViewPager;
-import static org.wordpress.android.support.WPSupportUtils.swipeRightOnViewPager;
+import static org.wordpress.android.support.WPSupportUtils.waitForAtLeastOneElementWithIdToBeDisplayed;
+import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDisplayedWithoutFailure;
+import static org.wordpress.android.support.WPSupportUtils.waitForImagesOfTypeWithPlaceholder;
 
+import dagger.hilt.android.testing.HiltAndroidTest;
 import tools.fastlane.screengrab.Screengrab;
 import tools.fastlane.screengrab.UiAutomatorScreenshotStrategy;
+import tools.fastlane.screengrab.locale.LocaleTestRule;
 
 @LargeTest
-@RunWith(AndroidJUnit4.class)
+@HiltAndroidTest
 public class JPScreenshotTest extends BaseTest {
     @ClassRule
-    public static final WPLocaleTestRule LOCALE_TEST_RULE = new WPLocaleTestRule();
+    public static final RuleChain LOCALE_TEST_RULES = RuleChain
+            // Run fastlane's official LocaleTestRule (which switches device language + sets up screengrab) first
+            .outerRule(new LocaleTestRule())
+            // Run our own rule (which handles our in-app locale switching logic) second
+            .around(new WPLocaleTestRule());
 
+    // Note: running this as a static @ClassRule as part of the above RuleChain doesn't seem to work
+    // (apparently that would make those run too early?), but running it as @Rule does fix the issue.
+    // Since we only have one test case in that test class (and that the code to change the IME is fast),
+    // that shouldn't really be problem in practice.
     @Rule
-    public ActivityTestRule<WPLaunchActivity> mActivityTestRule = new ActivityTestRule<>(WPLaunchActivity.class,
-            false, false);
+    public ImeTestRule IME_TEST_RULE = new ImeTestRule();
+
+    private static final String JETPACK_SCREENSHOT_SITE_URL = "yourjetpack.blog";
 
     private DemoModeEnabler mDemoModeEnabler = new DemoModeEnabler();
+
+    public enum Screenshots {
+        ACTIVITY_LOG(false, "activity-log", 0),
+        BACKUP_DOWNLOAD(false, "backup-download", 0),
+        BLOGGING_REMINDERS(false, "blogging-reminders", 0),
+        CHOOSE_A_LAYOUT(true, "choose-a-layout", 3),
+        CREATE_NEW_OPTIONS(true, "create-new-options", 2),
+        EDIT_POST(false, "edit-blog-post", 0),
+        MEDIA(false, "media", 0),
+        MY_SITE(false, "my-site", 0),
+        NOTIFICATIONS(true, "notifications", 5),
+        SITE_TOPIC(true, "whats-your-website-about", 1),
+        SCAN(false, "scan", 0),
+        STATS(true, "stats", 4);
+
+        public final boolean enabled;
+        public final String screenshotName;
+        public final int sequence;
+
+        Screenshots(boolean enabled, String screenshotName, int sequence) {
+            this.enabled = enabled;
+            this.screenshotName = screenshotName;
+            this.sequence = sequence;
+        }
+
+        public static String buildScreenshotName(Screenshots screen) {
+            return String.format(Locale.US, "%d-%s", screen.sequence, screen.screenshotName);
+        }
+    }
 
     @Test
     public void jPScreenshotTest() {
         if (BuildConfig.IS_JETPACK_APP) {
-            mActivityTestRule.launchActivity(null);
+            ActivityScenario.launch(WPLaunchActivity.class);
             Screengrab.setDefaultScreenshotStrategy(new UiAutomatorScreenshotStrategy());
 
             // Enable Demo Mode
             mDemoModeEnabler.enable();
+
+            setLightModeAndWait();
+
             wpLogin();
 
-            navigateMySite();
-            navigateActivityLog();
-            navigateScan();
-            navigateBackupDownload();
-            navigateStats();
+            generateActivityLog();
+            generateBackupDownload();
+            generateBloggingReminders();
+            generateBlogPost();
+            generateChooseALayout();
+            generateCreateNewOptions();
+            generateMedia();
+            generateMySite();
+            generateNotifications();
+            generateScan();
+            generateSiteTopic();
+            generateStats();
 
             // Turn Demo Mode off on the emulator when we're done
             mDemoModeEnabler.disable();
@@ -82,43 +141,156 @@ public class JPScreenshotTest extends BaseTest {
         }
     }
 
-    public void navigateMySite() {
-        // Click on the "Sites" tab and take a screenshot
-        clickOn(R.id.nav_sites);
+    // Enabled screenshots
+    private void generateCreateNewOptions() {
+        if (!Screenshots.CREATE_NEW_OPTIONS.enabled) return;
 
-        // Choose "Switch Site"
-        clickOn(R.id.switch_site);
+        checkAndNavigateToSiteIfNotShowing();
 
-        (new SitePickerPage()).chooseSiteWithURL("yourjetpack.blog");
+        (new MySitesPage()).addBloggingPrompts();
+
+        // Navigate back to dashboard
+        pressBackUntilElementIsDisplayed(R.id.nav_sites);
+        (new MySitesPage()).createPost();
 
         waitForElementToBeDisplayedWithoutFailure(R.id.recycler_view);
 
-        setNightModeAndWait(false);
-        takeScreenshot("1-bring-your-jetpack-with-you");
+        takeScreenshot(Screenshots.buildScreenshotName(Screenshots.CREATE_NEW_OPTIONS));
+
+        // Exit back to the main activity
+        pressBackUntilElementIsDisplayed(R.id.nav_sites);
     }
 
-    private void navigateActivityLog() {
-        moveToActivityLog();
+    private void generateChooseALayout() {
+        if (!Screenshots.CHOOSE_A_LAYOUT.enabled) return;
 
-        setNightModeAndWait(false);
-        takeScreenshot("2-keep-tabs-on-your-site-activity");
+        checkAndNavigateToSiteIfNotShowing();
+
+        // Click on the "Sites" tab in the nav, then click the SiteInfo dropdown
+        clickOn(R.id.nav_sites);
+        clickOn(R.id.fab_button);
+
+        // Wait for bottom sheet to load
+        idleFor(2000);
+
+        // Select Site Page
+        clickOn(onView(withText(getTranslatedString(R.string.my_site_bottom_sheet_add_page))));
+        idleFor(2000);
+
+        takeScreenshot(Screenshots.buildScreenshotName(Screenshots.CHOOSE_A_LAYOUT));
+
+        // Exit the view and return
+        pressBackUntilElementIsDisplayed(R.id.nav_sites);
+    }
+
+    private void generateNotifications() {
+        if (!Screenshots.NOTIFICATIONS.enabled) return;
+
+        checkAndNavigateToSiteIfNotShowing();
+
+        // Click on the "Notifications" tab in the nav
+        clickOn(R.id.nav_notifications);
+
+        waitForAtLeastOneElementWithIdToBeDisplayed(R.id.note_content_container);
+        waitForImagesOfTypeWithPlaceholder(R.id.note_avatar, ImageType.AVATAR);
+
+        // Wait for the images to load
+        idleFor(6000);
+
+        takeScreenshot(Screenshots.buildScreenshotName(Screenshots.NOTIFICATIONS));
+
+        // Exit the notifications activity
+        pressBackUntilElementIsDisplayed(R.id.nav_sites);
+    }
+
+    private void generateSiteTopic() {
+        if (!Screenshots.SITE_TOPIC.enabled) return;
+
+        checkAndNavigateToSiteIfNotShowing();
+
+        // Click on the "Sites" tab in the nav, then click the SiteInfo dropdown
+        clickOn(R.id.nav_sites);
+        (new MySitesPage()).startNewSite();
+
+        // Wait for page to load
+        idleFor(2000);
+
+        takeScreenshot(Screenshots.buildScreenshotName(Screenshots.SITE_TOPIC));
+
+        // Exit the view and return
+        pressBackUntilElementIsDisplayed(R.id.nav_sites);
+    }
+
+    private void generateStats() {
+        if (!Screenshots.STATS.enabled) return;
+
+        checkAndNavigateToSiteIfNotShowing();
+
+        // Click on the "Sites" tab in the nav, then click the "Menu" tab, then choose "Stats"
+        clickOn(R.id.nav_sites);
+        (new MySitesPage()).goToStats().dismissUpdateAlertDialogFragmentIfDisplayed();
+
+        UiTestingUtils.swipeToAvoidGrayOverlayIgnoringFailures(R.id.statsPager);
+
+        if (isElementDisplayed(R.id.button_negative)) {
+            clickOn(R.id.button_negative);
+        }
+
+        // click on the Month tab
+        onView(allOf(withText(R.string.stats_timeframe_months),
+                isDescendantOfA(withId(R.id.tabLayout)))).perform(click());
+
+        idleFor(8000);
+
+        takeScreenshot(Screenshots.buildScreenshotName(Screenshots.STATS));
+
+        // Exit the Stats Activity
+        pressBackUntilElementIsDisplayed(R.id.nav_sites);
+    }
+
+    // Disabled screenshots
+    private void generateActivityLog() {
+        if (!Screenshots.ACTIVITY_LOG.enabled) return;
+
+        checkAndNavigateToSiteIfNotShowing();
+
+        // Click on the "Sites" tab in the nav, then click the "Menu" tab, then choose "Activity Log"
+        clickOn(R.id.nav_sites);
+        (new MySitesPage()).goToActivityLog();
+
+        waitForElementToBeDisplayedWithoutFailure(R.id.swipe_refresh_layout);
+
+        // Wait for the activity log to load
+        idleFor(8000);
+
+        takeScreenshot(Screenshots.buildScreenshotName(Screenshots.ACTIVITY_LOG));
 
         // Exit the Activity Log Activity
         pressBackUntilElementIsDisplayed(R.id.nav_sites);
     }
 
-    private void navigateScan() {
-        moveToScan();
+    private void generateMySite() {
+        if (!Screenshots.MY_SITE.enabled) return;
 
-        setNightModeAndWait(false);
-        takeScreenshot("3-scan-for-issues-on-the-go");
+        checkAndNavigateToSiteIfNotShowing();
 
-        // Exit the Activity scan activity
-        pressBackUntilElementIsDisplayed(R.id.nav_sites);
+        waitForElementToBeDisplayedWithoutFailure(R.id.recycler_view);
+
+        takeScreenshot(Screenshots.buildScreenshotName(Screenshots.MY_SITE));
     }
 
-    private void navigateBackupDownload() {
-        moveToBackup();
+    private void generateBackupDownload() {
+        if (!Screenshots.BACKUP_DOWNLOAD.enabled) return;
+
+        checkAndNavigateToSiteIfNotShowing();
+
+        clickOn(R.id.nav_sites);
+        (new MySitesPage()).goToBackup();
+
+        waitForElementToBeDisplayedWithoutFailure(R.id.log_list_view);
+
+        // Wait for backup to load
+        idleFor(8000);
 
         ViewInteraction appCompatImageButton = onView(
                 allOf(withId(R.id.action_button), withContentDescription("Activity Log action button"),
@@ -139,75 +311,126 @@ public class JPScreenshotTest extends BaseTest {
         linearLayout.perform(click());
 
 
-        setNightModeAndWait(false);
-        takeScreenshot("4-back-up-your-site-at-any-moment");
+        takeScreenshot(Screenshots.buildScreenshotName(Screenshots.BACKUP_DOWNLOAD));
 
         // Exit the backup download activity
         pressBackUntilElementIsDisplayed(R.id.nav_sites);
     }
 
-    private void navigateStats() {
-        moveToStats();
-        swipeToAvoidGrayOverlay(R.id.statsPager);
+    private void generateBlogPost() {
+        if (!Screenshots.EDIT_POST.enabled) return;
 
-        if (isElementDisplayed(R.id.button_negative)) {
-            clickOn(R.id.button_negative);
-        }
+        checkAndNavigateToSiteIfNotShowing("fourpawsdoggrooming.wordpress.com");
+        (new MySitesPage()).goToPosts();
 
-        // click on the Month tab
-        onView(allOf(withText(R.string.stats_timeframe_months),
-                isDescendantOfA(withId(R.id.tabLayout)))).perform(click());
+        idleFor(3000);
 
-        idleFor(8000);
+        PostsListPage.goToDrafts();
 
-        setNightModeAndWait(false);
-        takeScreenshot("5-site-stats-in-your-pocket");
+        // Get a screenshot of the editor with the block library expanded
+        // Wait for the editor to load all images
+        idleFor(5000);
 
-        // Exit the Stats Activity
+        screenshotPostWithName("Our Services",
+                Screenshots.buildScreenshotName(Screenshots.EDIT_POST),
+                false,
+                !isTabletScreen());
+
+        // Exit back to the main activity
         pressBackUntilElementIsDisplayed(R.id.nav_sites);
     }
 
-    private void moveToActivityLog() {
-        // Click on the "Sites" tab in the nav, then choose "Activity Log"
+    private void generateBloggingReminders() {
+        if (!Screenshots.BLOGGING_REMINDERS.enabled) return;
+
+        checkAndNavigateToSiteIfNotShowing();
+
+        // Click on the "Sites" tab in the nav, then click the "Menu" tab, then choose "Scan"
         clickOn(R.id.nav_sites);
-        (new MySitesPage()).clickActivityLog();
+        (new MySitesPage()).goToBloggingReminders();
 
-        waitForElementToBeDisplayedWithoutFailure(R.id.swipe_refresh_layout);
+        waitForElementToBeDisplayedWithoutFailure(R.id.content_recycler_view);
 
-        // Wait for the activity log to load
+        // Wait for scan to load
         idleFor(8000);
+
+        takeScreenshot(Screenshots.buildScreenshotName(Screenshots.BLOGGING_REMINDERS));
+
+        // Exit the Activity scan activity
+        pressBackUntilElementIsDisplayed(R.id.nav_sites);
     }
 
-    private void moveToScan() {
-        // Click on the "Sites" tab in the nav, then choose "Scan"
+    private void generateMedia() {
+        if (!Screenshots.MEDIA.enabled) return;
+
+        checkAndNavigateToSiteIfNotShowing();
+
+        // Click on the "Sites" tab in the nav, then click the "Menu" tab, then choose "Media"
         clickOn(R.id.nav_sites);
-        (new MySitesPage()).clickScan();
+        (new MySitesPage()).goToMedia();
+
+        waitForElementToBeDisplayedWithoutFailure(R.id.media_browser_container);
+
+        idleFor(2000);
+
+        // To do should add the logic for gallery of images
+        // Right now on navigating to the media no images will be present in gallery
+        takeScreenshot(Screenshots.buildScreenshotName(Screenshots.MEDIA));
+
+        pressBackUntilElementIsDisplayed(R.id.nav_sites);
+    }
+
+    private void generateScan() {
+        if (!Screenshots.SCAN.enabled) return;
+
+        checkAndNavigateToSiteIfNotShowing();
+
+        // Click on the "Sites" tab in the nav, then click the "Menu" tab, then choose "Scan"
+        clickOn(R.id.nav_sites);
+        (new MySitesPage()).goToScan();
 
         waitForElementToBeDisplayedWithoutFailure(R.id.recycler_view);
 
         // Wait for scan to load
         idleFor(8000);
+
+        takeScreenshot(Screenshots.buildScreenshotName(Screenshots.SCAN));
+
+        // Exit the Activity scan activity
+        pressBackUntilElementIsDisplayed(R.id.nav_sites);
     }
 
-    private void moveToBackup() {
-        clickOn(R.id.nav_sites);
-        (new MySitesPage()).clickBackup();
+    // Helper methods
+    private void screenshotPostWithName(String name,
+                                        String screenshotName,
+                                        boolean hideKeyboard,
+                                        boolean openBlockList) {
+        idleFor(2000);
 
-        waitForElementToBeDisplayedWithoutFailure(R.id.log_list_view);
+        PostsListPage.scrollToTop();
+        PostsListPage.tapPostWithName(name);
 
-        // Wait for backup to load
-        idleFor(8000);
+        waitForElementToBeDisplayed(R.id.editor_activity);
+
+        // Wait for the editor to load all images
+        idleFor(7000);
+
+        if (hideKeyboard) {
+            Espresso.closeSoftKeyboard();
+        }
+
+        if (openBlockList) {
+            clickOnViewWithTag("add-block-button");
+            idleFor(2000);
+        }
+
+        takeScreenshot(screenshotName);
+        pressBackUntilElementIsDisplayed(R.id.tabLayout);
     }
 
-    private void moveToStats() {
-        // Click on the "Sites" tab in the nav, then choose "Stats"
-        clickOn(R.id.nav_sites);
-        (new MySitesPage()).clickStats();
-
-        waitForElementToBeDisplayedWithoutFailure(R.id.image_thumbnail);
-
-        // Wait for the stats to load
-        idleFor(8000);
+    private void setLightModeAndWait() {
+        setNightMode(false);
+        idleFor(5000);
     }
 
     private void takeScreenshot(String screenshotName) {
@@ -232,19 +455,15 @@ public class JPScreenshotTest extends BaseTest {
         return "true".equals(testLabSetting);
     }
 
-    // In some cases there's a gray overlay on view pager screens when taking screenshots
-    // this function swipes left and then right as a workaround to clear it
-    // resourceID should be the ID of the viewPager
-    private void swipeToAvoidGrayOverlay(int resourceID) {
-        // Workaround to avoid gray overlay
-        swipeLeftOnViewPager(resourceID);
-        idleFor(1000);
-        swipeRightOnViewPager(resourceID);
-        idleFor(1000);
+    private void checkAndNavigateToSiteIfNotShowing() {
+        checkAndNavigateToSiteIfNotShowing(JETPACK_SCREENSHOT_SITE_URL);
     }
 
-    private void setNightModeAndWait(boolean isNightMode) {
-        setNightMode(isNightMode);
-        idleFor(5000);
+    private void checkAndNavigateToSiteIfNotShowing(String url) {
+        pressBackUntilElementIsDisplayed(R.id.nav_sites);
+
+        if (isTextDisplayed(url)) return;
+
+        (new MySitesPage()).switchToSite(url);
     }
 }

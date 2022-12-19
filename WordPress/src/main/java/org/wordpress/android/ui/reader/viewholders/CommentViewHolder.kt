@@ -10,7 +10,7 @@ import org.wordpress.android.ui.reader.utils.ThreadedCommentsUtils
 import org.wordpress.android.ui.reader.views.uistates.CommentSnippetItemState
 import org.wordpress.android.ui.reader.views.uistates.CommentSnippetItemState.CommentState
 import org.wordpress.android.util.image.ImageManager
-import org.wordpress.android.util.image.ImageType.AVATAR
+import org.wordpress.android.util.image.ImageType
 
 class CommentViewHolder(
     parent: ViewGroup,
@@ -23,7 +23,6 @@ class CommentViewHolder(
     override fun onBind(itemUiState: CommentSnippetItemState) = with(binding) {
         val state = itemUiState as CommentState
 
-        shareCommentButton.visibility = View.GONE
         actionsContainer.visibility = View.GONE
         divider.visibility = View.GONE
 
@@ -36,14 +35,17 @@ class CommentViewHolder(
 
         textCommentAuthor.text = state.authorName
         textCommentDate.text = state.datePublished
-        imageManager.loadIntoCircle(imageCommentAvatar, AVATAR, state.avatarUrl)
+        @Suppress("DEPRECATION")
+        imageManager.loadIntoCircle(imageCommentAvatar, ImageType.AVATAR, state.avatarUrl)
         authorBadge.visibility = if (state.showAuthorBadge) View.VISIBLE else View.GONE
+        commentActionButtonContainer.visibility = View.GONE
 
         threadedCommentsUtils.setLinksClickable(textCommentText, state.isPrivatePost)
         CommentUtils.displayHtmlComment(
                 textCommentText,
                 state.commentText,
                 threadedCommentsUtils.getMaxWidthForContent(),
+                textCommentText.lineHeight,
                 itemView.resources.getString(R.string.comment_unable_to_show_error)
         )
     }

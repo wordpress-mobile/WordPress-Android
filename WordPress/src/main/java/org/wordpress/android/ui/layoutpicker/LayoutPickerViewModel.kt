@@ -64,8 +64,13 @@ abstract class LayoutPickerViewModel(
         }
 
     abstract val useCachedData: Boolean
+    abstract val shouldUseMobileThumbnail: Boolean
+    open val thumbnailTapOpensPreview = false
 
     var nestedScrollStates: Bundle = Bundle()
+
+    // Map that holds the ordered/randomised layouts list per category (key: slug)
+    val orderedLayouts: MutableMap<String, List<LayoutModel>> = mutableMapOf()
 
     abstract fun fetchLayouts(preferCache: Boolean = false)
 
@@ -141,7 +146,7 @@ abstract class LayoutPickerViewModel(
         }
     }
 
-    private fun loadLayouts() {
+    fun loadLayouts() {
         val state = uiState.value as? Content ?: Content()
         launch(bgDispatcher) {
             val listItems = ArrayList<LayoutCategoryUiState>()
@@ -153,18 +158,30 @@ abstract class LayoutPickerViewModel(
             }
 
             selectedCategories.forEach { category ->
-
-                val layouts = layouts.getFilteredLayouts(category.slug).map { layout ->
+                val ordered = orderedLayouts[category.slug] ?: if (category.randomizeOrder) {
+                    val randomised = layouts.getFilteredLayouts(category.slug).shuffled()
+                    orderedLayouts[category.slug] = randomised
+                    randomised
+                } else {
+                    val ordered = layouts.getFilteredLayouts(category.slug)
+                    orderedLayouts[category.slug] = ordered
+                    ordered
+                }
+                val layouts = ordered.map { layout ->
+                    val preview = when (_previewMode.value) {
+                        MOBILE -> layout.previewMobile
+                        TABLET -> layout.previewTablet
+                        else -> layout.preview
+                    }
+                    val thumbnailPreview = if (shouldUseMobileThumbnail) layout.previewMobile else preview
                     LayoutListItemUiState(
                             slug = layout.slug,
                             title = layout.title,
-                            preview = when (_previewMode.value) {
-                                MOBILE -> layout.previewMobile
-                                TABLET -> layout.previewTablet
-                                else -> layout.preview
-                            },
+                            preview = preview,
+                            mShotPreview = thumbnailPreview,
                             selected = layout.slug == state.selectedLayoutSlug,
-                            onItemTapped = { onLayoutTapped(layoutSlug = layout.slug) },
+                            tapOpensPreview = thumbnailTapOpensPreview,
+                            onItemTapped = { onLayoutTapped(layoutSlug = layout.slug, category.isRecommended) },
                             onThumbnailReady = { onThumbnailReady(layoutSlug = layout.slug) }
                     )
                 }
@@ -173,7 +190,8 @@ abstract class LayoutPickerViewModel(
                                 category.slug,
                                 category.title,
                                 category.description,
-                                layouts
+                                layouts,
+                                category.isRecommended
                         )
                 )
             }
@@ -187,7 +205,7 @@ abstract class LayoutPickerViewModel(
      * Layout tapped
      * @param layoutSlug the slug of the tapped layout
      */
-    fun onLayoutTapped(layoutSlug: String) {
+    open fun onLayoutTapped(layoutSlug: String, isRecommended: Boolean = false) {
         (uiState.value as? Content)?.let { state ->
             if (!state.loadedThumbnailSlugs.contains(layoutSlug)) return // No action
             if (layoutSlug == state.selectedLayoutSlug) { // deselect
@@ -304,6 +322,7 @@ abstract class LayoutPickerViewModel(
     }
 
     private fun resetState(selected: String?, selectedCategories: ArrayList<String>, previewMode: String) {
+        if (isLoading) return
         val state = uiState.value as? Content ?: Content()
         updateUiState(
                 state.copy(

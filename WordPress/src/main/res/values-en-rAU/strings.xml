@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2019-11-20 03:34:20+0000
+Translation-Revision-Date: 2022-09-28 09:53:56+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/3.0.0-alpha.2
+Generator: GlotPress/4.0.0-alpha.3
 Language: en_AU
 -->
 <resources>
+    <string name="post_publishing_set_up_blogging_reminders_message">Your post is publishing… in the meantime, you can set up blogging reminders on days you want to post.</string>
+    <string name="login_empty_view_avatar_content_description">Your profile photo</string>
+    <string name="activity_log_backup_finished_snackbar_message_no_dates">Your site has been successfully backed up</string>
+    <string name="activity_log_backup_finished_snackbar_message">Your site has been successfully backed up\nBacked up from %1$s %2$s</string>
+    <string name="activity_log_backup_started_snackbar_message">Your site is being backed up\nBacking up from %1$s %2$s</string>
+    <string name="restore_complete_header">Your site has been restored</string>
+    <string name="backup_empty_subtitle">Your first backup will appear here within 24 hours and you will receive a notification once the backup has been completed</string>
+    <string name="backup_empty_title">Your first backup will be ready soon</string>
+    <string name="scan_idle_threats_found_title">Your site may be at risk</string>
+    <string name="dialog_discard_story_message">Your story post will not be saved as a draft.</string>
+    <string name="new_site_creation_creating_site_loading_subtitle">Your site will be ready shortly</string>
+    <string name="editor_uploading_page">Your page is uploading</string>
     <string name="reader_empty_saved_posts_content_description">Tap the Add to Save Posts button to save a post to your list.</string>
     <string name="reader_acessibility_list_loaded">\"The list has loaded with %1$d items.\"</string>
     <string name="notifications_tab_dialog_switch_desc">Notifications</string>
@@ -38,7 +50,6 @@ Language: en_AU
     <string name="post_waiting_for_connection_draft_cancel">We won\'t save the latest changes to your draft.</string>
     <string name="dialog_confirm_autosave_dont_restore_button">The version from this app</string>
     <string name="dialog_confirm_autosave_restore_button">The version from another device</string>
-    <string name="dialog_confirm_autosave_body_second_part">From this app\nSaved on %s\n\nFrom another device\nSaved on %s\n</string>
     <string name="button_delete_permanently">Delete Permanently</string>
     <string name="post_waiting_for_connection_draft">We\'ll save your draft when your device is back online</string>
     <string name="post_waiting_for_connection_private">We\'ll publish your private post when your device is back online.</string>
@@ -85,7 +96,6 @@ Language: en_AU
     <string name="share_desc">Share</string>
     <string name="navigate_back_desc">Go back</string>
     <string name="navigate_forward_desc">Go forward</string>
-    <string name="calendar_scheduled_post_description">\"%s\" scheduled for publishing on \"%s\" in your WordPress app \n %s</string>
     <string name="calendar_scheduled_post_title">WordPress Scheduled Post: \"%s\"</string>
     <string name="notification_post_will_be_published_in_ten_minutes">\"%s\" will be published in 10 minutes</string>
     <string name="notification_post_will_be_published_in_one_hour">\"%s\" will be published in 1 hour</string>
@@ -186,6 +196,7 @@ Language: en_AU
     <string name="stats_management_news_card_message">Choose what stats to see, and focus on the data you care most about. Tap %1$s at the bottom of Insights to customise your stats.</string>
     <string name="stats_manage_your_stats">Manage Your Stats</string>
     <string name="history_fetching_revisions">Fetching revisions…</string>
+    <string name="editor_failed_to_insert_media_tap_for_options">Failed to insert media.\nPlease tap for options.</string>
     <string name="editor_failed_to_insert_media_tap_to_retry">Failed to insert media.\nPlease tap to retry.</string>
     <string name="editor_uploading_draft">Your draft is uploading</string>
     <string name="post_uploading_draft">Uploading draft</string>
@@ -251,7 +262,6 @@ Language: en_AU
     <string name="app_rating_rate_later">Later</string>
     <string name="app_rating_rate_now">Rate now</string>
     <string name="app_rating_message">Nice to see you again! If you’re digging the app, we’d love a rating on the Google Play Store.</string>
-    <string name="app_rating_title">Enjoying WordPress?</string>
     <string name="editor_post_converted_back_to_draft">Post converted back to draft</string>
     <string name="stats_insights_posting_activity">Posting Activity</string>
     <string name="stats_site_not_loaded_yet">Site not loaded yet</string>
@@ -271,33 +281,19 @@ Language: en_AU
     <string name="menu_switch_to_gutenberg_editor">Switch to block editor</string>
     <string name="exit">exit</string>
     <string name="quick_start_sites">Next Steps</string>
-    <string name="quick_start_complete_tasks_header">Complete (%d)</string>
-    <string name="quick_start_dialog_view_site_message">Enjoy your finished product!</string>
     <string name="quick_start_dialog_upload_icon_message">Your visitors will see your icon in their browser. Add a custom icon for a polished, pro look.</string>
-    <string name="quick_start_dialog_explore_plans_message_short">Tap %1$s Plan %2$s to see your current plan and other available plans</string>
-    <string name="quick_start_dialog_check_stats_message_short">Tap %1$s Stats %2$s to see how your site is performing.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Tap %1$s Your Site Icon %2$s to upload a new one</string>
-    <string name="quick_start_dialog_explore_plans_title">Explore plans</string>
-    <string name="quick_start_dialog_explore_plans_message">Learn about the marketing and SEO tools in our paid plans.</string>
     <string name="quick_start_dialog_enable_sharing_title">Enable post sharing</string>
     <string name="quick_start_dialog_enable_sharing_message">Automatically share new posts to your social media accounts.</string>
     <string name="quick_start_dialog_check_stats_title">Check your site stats</string>
-    <string name="quick_start_dialog_check_stats_message">Keep up to date on your site\'s performance.</string>
     <string name="quick_start_dialog_remove_next_steps_message">Removing Next Steps will hide all tours on this site. This action cannot be undone.</string>
     <string name="quick_start_dialog_remove_next_steps_title">Remove Next Steps</string>
     <string name="quick_start_remove_next_steps_menu_title">Remove this</string>
-    <string name="quick_start_complete_view_subtitle">Congratulations on completing your list. A job well done.</string>
-    <string name="quick_start_complete_view_title">All tasks complete!</string>
     <string name="quick_start_task_skip_menu_title">Skip task</string>
-    <string name="quick_start_completed_tasks_header_chevron_collapse_desc">collapse</string>
-    <string name="quick_start_completed_tasks_header_chevron_expand_desc">expand</string>
     <string name="notification_channel_reminder_title">Reminder</string>
     <string name="stats_select_next_period_description">Select next period</string>
     <string name="stats_select_previous_period_description">Select previous period</string>
-    <string name="stats_most_popular_percent_views">%1$d%% of views</string>
     <string name="stats_insights_popular">Most Popular Time</string>
-    <string name="stats_traffic_change">%1$s (%2$s%%)</string>
-    <string name="stats_traffic_increase">+%1$s (%2$s%%)</string>
     <string name="new_site_creation_site_preview_content_description">Showing site preview</string>
     <string name="new_site_creation_clear_all_content_description">Clear</string>
     <string name="site_created_but_not_fetched_snackbar_message">It seems like you\'re on a slow connection. If you don\'t see your new site in the list, try refreshing.</string>
@@ -325,7 +321,6 @@ Language: en_AU
     <string name="toast_conflict_updating_post">Updating post</string>
     <string name="dialog_confirm_load_remote_post_discard_web">Discard Web</string>
     <string name="dialog_confirm_load_remote_post_discard_local">Discard Local</string>
-    <string name="dialog_confirm_load_remote_post_body_2">Local\nSaved on %s\n\nWeb\nSaved on %s\n</string>
     <string name="dialog_confirm_load_remote_post_body">This post has two versions that are in conflict. Select the version you would like to discard.\n\n</string>
     <string name="dialog_confirm_load_remote_post_title">Resolve sync conflict</string>
     <string name="stats_no_data_for_period">No data for this period</string>
@@ -362,7 +357,6 @@ Language: en_AU
     <string name="stats_insights_latest_post_message">It’s been %1$s since %2$s was published. Here’s how the post performed so far:</string>
     <string name="stats_insights_tags_and_categories">Tags and Categories</string>
     <string name="stats_insights_latest_post_with_no_engagement">It\'s been %1$s since %2$s was published. Get the ball rolling and increase your post views by sharing your post:</string>
-    <string name="stats_insights_latest_post_empty">You haven\'t published any posts yet. Once you start publishing, your latest post\'s summary will appear here:</string>
     <string name="stats_insights_all_time_stats">All-time</string>
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
     <string name="stats_publicize_followers_label">Followers</string>
@@ -450,16 +444,12 @@ Language: en_AU
     <string name="quick_start_list_create_site_title">Create your site</string>
     <string name="quick_start_list_create_site_subtitle">Get your site up and running.</string>
     <string name="quick_start_dialog_view_site_title">View your site</string>
-    <string name="quick_start_dialog_view_site_message_short">Tap %1$s View Site %2$s to preview your site</string>
     <string name="quick_start_dialog_share_site_title">Share your site</string>
     <string name="quick_start_dialog_share_site_message">Connect to your social media accounts – your site will automatically share new posts.</string>
     <string name="quick_start_dialog_enable_sharing_message_short_connections">Tap the %1$s Connections %2$s to add your social media accounts</string>
     <string name="quick_start_dialog_enable_sharing_message_short_sharing">Tap %1$s Sharing %2$s to continue</string>
     <string name="quick_start_dialog_publish_post_message_short">Tap %1$s Create Post %2$s to create a new post</string>
     <string name="quick_start_dialog_publish_post_title">Publish a post</string>
-    <string name="quick_start_dialog_follow_sites_message_short_reader">Tap %1$s Reader %2$s to continue</string>
-    <string name="quick_start_dialog_follow_sites_title">Follow other sites</string>
-    <string name="quick_start_dialog_follow_sites_message">Find sites that inspire you, and follow them to get updates when they post.</string>
     <string name="my_site_create_new_site_title">You don\'t have any sites</string>
     <string name="quick_start_button_negative">Not now</string>
     <string name="quick_start_button_positive">Go</string>
@@ -599,7 +589,6 @@ Language: en_AU
     <string name="notification_settings_category_followed_sites">Followed Sites</string>
     <string name="content_description_person_reading_device_notification">Person reading device with notifications</string>
     <string name="content_description_people_looking_charts">People looking at graphs and charts</string>
-    <string name="comment_title">%s on %s</string>
     <string name="dialog_confirm_delete_permanently_post">Are you sure you\'d like to permanently delete this post?</string>
     <string name="notification_channel_important_title">Important</string>
     <string name="notification_channel_general_title">General</string>
@@ -976,6 +965,7 @@ Language: en_AU
     <string name="post_title">Title</string>
     <string name="menu_redo">Redo</string>
     <string name="menu_undo">Undo</string>
+    <string name="media_insert_unimplemented">Apologies! Feature not implemented yet :(</string>
     <string name="error_media_small">Media too small to show</string>
     <string name="editor_dropped_unsupported_files">Warning: not all dropped items are supported!</string>
     <string name="editor_dropped_title_images_not_allowed">Dropping images in the Title is not allowed</string>
@@ -1060,10 +1050,8 @@ Language: en_AU
     <string name="share_btn_disconnect">Disconnect</string>
     <string name="share_btn_connect">Connect</string>
     <string name="connection_service_description">Connect to automatically share your blog posts to %s.</string>
-    <string name="connection_service_label">Publicise to %s</string>
     <string name="connected_accounts_label">Connected accounts</string>
     <string name="connections_description">Connect your favourite social media services to automatically share new posts with friends.</string>
-    <string name="connections_label">Connections</string>
     <string name="sharing">Sharing</string>
     <string name="tabbar_accessibility_label_notifications">Notifications. Manage your notifications.</string>
     <string name="tabbar_accessibility_label_reader">Reader. Follow content from other sites.</string>
@@ -1201,12 +1189,19 @@ Language: en_AU
     <string name="error_fetch_email_followers_list">Couldn\'t retrieve site email followers</string>
     <string name="error_fetch_followers_list">Couldn\'t retrieve site followers</string>
     <string name="editor_failed_uploads_switch_html">Some media uploads have failed. You can\'t switch to HTML mode\n        in this state. Remove all failed uploads and continue?</string>
+    <string name="visual_editor">Visual editor</string>
+    <string name="image_thumbnail">Image thumbnail</string>
     <string name="image_settings_save_toast">Changes saved</string>
     <string name="image_caption">Caption</string>
+    <string name="image_alt_text">Alt text</string>
     <string name="image_link_to">Link to</string>
     <string name="image_width">Width</string>
     <string name="image_settings_dismiss_dialog_title">Discard unsaved changes?</string>
     <string name="stop_upload_dialog_title">Stop uploading?</string>
+    <string name="alert_error_adding_media">An error occurred while inserting media</string>
+    <string name="alert_action_while_uploading">You are currently uploading media. Please wait until this completes.</string>
+    <string name="alert_insert_image_html_mode">Can\'t insert media directly in HTML mode. Please switch back to visual mode.</string>
+    <string name="uploading_gallery_placeholder">Uploading gallery…</string>
     <string name="invite_error_for_username">%1$s: %2$s</string>
     <string name="invite_sent">Invite sent successfully</string>
     <string name="tap_to_try_again">Tap to try again!</string>
@@ -1273,6 +1268,7 @@ Language: en_AU
     <string name="comments_empty_list_filtered_trashed">No trashed comments</string>
     <string name="comments_empty_list_filtered_pending">No pending comments</string>
     <string name="comments_empty_list_filtered_approved">No approved comments</string>
+    <string name="button_skip">Skip</string>
     <string name="xmlrpc_missing_method_error">Couldn\'t connect. Required XML-RPC methods are missing on the server.</string>
     <string name="post_format_status">Status</string>
     <string name="post_format_video">Video</string>
@@ -1564,7 +1560,6 @@ Language: en_AU
     <string name="stats_followers_seconds_ago">seconds ago</string>
     <string name="stats_view_top_posts_and_pages">Posts &amp; Pages</string>
     <string name="stats_view_videos">Videos</string>
-    <string name="stats_view_publicize">Publicize</string>
     <string name="stats_view_followers">Followers</string>
     <string name="stats_view_countries">Countries</string>
     <string name="stats_likes">Likes</string>
@@ -1640,8 +1635,10 @@ Language: en_AU
     <string name="media_error_no_permission">You don\'t have permission to view the media library</string>
     <string name="cannot_delete_multi_media_items">Some media can\'t be deleted at this time. Try again later.</string>
     <string name="link_enter_url_text">Link text (optional)</string>
+    <string name="create_a_link">Create a link</string>
     <string name="page_settings">Page settings</string>
     <string name="local_draft">Local draft</string>
+    <string name="horizontal_alignment">Horizontal alignment</string>
     <string name="post_settings">Post settings</string>
     <string name="comment_status_approved">Approved</string>
     <string name="comment_status_unapproved">Pending</string>
@@ -1742,12 +1739,17 @@ Language: en_AU
     <string name="username">Username</string>
     <string name="log_in">Log In</string>
     <string name="reader">Reader</string>
+    <string name="featured">Use as featured image</string>
+    <string name="featured_in_post">Include image in post content</string>
     <string name="no_network_title">No network available</string>
     <string name="pages">Pages</string>
+    <string name="caption">Caption (optional)</string>
+    <string name="width">Width</string>
     <string name="posts">Posts</string>
     <string name="anonymous">Anonymous</string>
     <string name="ok">OK</string>
     <string name="link_enter_url">URL</string>
+    <string name="uploading">Uploading…</string>
     <string name="version">Version</string>
     <string name="tos">Terms of Service</string>
     <string name="app_title">WordPress for Android</string>

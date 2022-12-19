@@ -1,0 +1,32 @@
+plugins {
+    id "com.android.library"
+}
+
+android {
+    compileSdkVersion rootProject.compileSdkVersion
+
+    defaultConfig {
+        minSdkVersion rootProject.minSdkVersion
+        targetSdkVersion rootProject.targetSdkVersion
+    }
+}
+
+repositories {
+    maven {
+        url "https://a8c-libs.s3.amazonaws.com/android"
+        content {
+            includeGroup "org.wordpress"
+        }
+    }
+}
+
+dependencies {
+    implementation ("com.automattic:rest:$automatticRestVersion") {
+        exclude group: 'com.mcxiaoke.volley'
+    }
+    implementation "org.wordpress:utils:$wordPressUtilsVersion"
+
+    implementation "com.android.volley:volley:$androidVolleyVersion"
+
+    lintChecks "org.wordpress:lint:$wordPressLintVersion"
+}

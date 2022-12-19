@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
+import android.os.Bundle;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
@@ -27,7 +28,7 @@ import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId;
 import org.wordpress.android.fluxc.model.PostImmutableModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.fluxc.model.page.PageModel;
+import org.wordpress.android.fluxc.model.bloggingprompts.BloggingPromptModel;
 import org.wordpress.android.fluxc.network.utils.StatsGranularity;
 import org.wordpress.android.imageeditor.EditImageActivity;
 import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.EditImageData;
@@ -66,6 +67,7 @@ import org.wordpress.android.ui.main.MeActivity;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.main.SitePickerAdapter.SitePickerMode;
 import org.wordpress.android.ui.main.WPMainActivity;
+import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.pages.PageParentActivity;
@@ -81,24 +83,29 @@ import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.JetpackSecuritySettingsActivity;
 import org.wordpress.android.ui.posts.PostListType;
 import org.wordpress.android.ui.posts.PostUtils;
+import org.wordpress.android.ui.posts.PostUtils.EntryPoint;
 import org.wordpress.android.ui.posts.PostsListActivity;
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewType;
 import org.wordpress.android.ui.prefs.AccountSettingsActivity;
 import org.wordpress.android.ui.prefs.AppSettingsActivity;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
 import org.wordpress.android.ui.prefs.MyProfileActivity;
-import org.wordpress.android.ui.prefs.categories.CategoriesListActivity;
+import org.wordpress.android.ui.prefs.categories.detail.CategoryDetailActivity;
+import org.wordpress.android.ui.prefs.categories.list.CategoriesListActivity;
 import org.wordpress.android.ui.prefs.notifications.NotificationsSettingsActivity;
 import org.wordpress.android.ui.publicize.PublicizeListActivity;
+import org.wordpress.android.ui.qrcodeauth.QRCodeAuthActivity;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.sitecreation.SiteCreationActivity;
+import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource;
 import org.wordpress.android.ui.stats.StatsConnectJetpackActivity;
 import org.wordpress.android.ui.stats.StatsConstants;
 import org.wordpress.android.ui.stats.StatsTimeframe;
 import org.wordpress.android.ui.stats.StatsViewType;
 import org.wordpress.android.ui.stats.refresh.StatsActivity;
 import org.wordpress.android.ui.stats.refresh.StatsViewAllActivity;
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection;
 import org.wordpress.android.ui.stats.refresh.lists.detail.StatsDetailActivity;
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider.SelectedDate;
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementActivity;
@@ -110,6 +117,7 @@ import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.UriWrapper;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
@@ -130,7 +138,6 @@ import static org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTIC
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_ACCESS_ERROR;
 import static org.wordpress.android.editor.gutenberg.GutenbergEditorFragment.ARG_STORY_BLOCK_ID;
 import static org.wordpress.android.imageeditor.preview.PreviewImageFragment.ARG_EDIT_IMAGE_DATA;
-import static org.wordpress.android.login.LoginMode.JETPACK_LOGIN_ONLY;
 import static org.wordpress.android.login.LoginMode.WPCOM_LOGIN_ONLY;
 import static org.wordpress.android.push.NotificationsProcessingService.ARG_NOTIFICATION_TYPE;
 import static org.wordpress.android.ui.WPWebViewActivity.ENCODING_UTF8;
@@ -151,6 +158,12 @@ public class ActivityLauncher {
     public static final String SOURCE_TRACK_EVENT_PROPERTY_KEY = "source";
     public static final String BACKUP_TRACK_EVENT_PROPERTY_VALUE = "backup";
     public static final String ACTIVITY_LOG_TRACK_EVENT_PROPERTY_VALUE = "activity_log";
+    public static final String CATEGORY_DETAIL_ID = "category_detail_key";
+
+    public static void showMainActivity(Context context) {
+        Intent intent = getMainActivityInNewStack(context);
+        context.startActivity(intent);
+    }
 
     public static void showMainActivityAndLoginEpilogue(Activity activity, ArrayList<Integer> oldSitesIds,
                                                         boolean doLoginUpdate) {
@@ -356,6 +369,34 @@ public class ActivityLauncher {
         context.startActivity(intent);
     }
 
+    public static Intent openEditorWithBloggingPrompt(
+            @NonNull final Context context,
+            final int promptId,
+            final EntryPoint entryPoint
+    ) {
+        final Intent intent = getMainActivityInNewStack(context);
+        intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_EDITOR);
+        intent.putExtra(WPMainActivity.ARG_EDITOR_PROMPT_ID, promptId);
+        intent.putExtra(WPMainActivity.ARG_EDITOR_ORIGIN, entryPoint);
+        return intent;
+    }
+
+    public static Intent openEditorWithPromptAndDismissNotificationIntent(
+        @NonNull final Context context,
+        final int notificationId,
+        final BloggingPromptModel bloggingPrompt,
+        @Nullable final Stat stat,
+        final EntryPoint entryPoint
+    ) {
+        final Intent intent = getMainActivityInNewStack(context);
+        intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_EDITOR);
+        intent.putExtra(WPMainActivity.ARG_EDITOR_PROMPT_ID, bloggingPrompt.getId());
+        intent.putExtra(WPMainActivity.ARG_DISMISS_NOTIFICATION, notificationId);
+        intent.putExtra(WPMainActivity.ARG_EDITOR_ORIGIN, entryPoint);
+        intent.putExtra(WPMainActivity.ARG_STAT_TO_TRACK, stat);
+        return intent;
+    }
+
     public static void openEditorForSiteInNewStack(Context context, @NonNull SiteModel site) {
         TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(context);
         Intent mainActivityIntent = getMainActivityInNewStack(context);
@@ -423,7 +464,7 @@ public class ActivityLauncher {
         editorIntent.putExtra(EditPostActivity.EXTRA_REBLOG_POST_CITATION, post.getUrl());
         editorIntent.setAction(EditPostActivity.ACTION_REBLOG);
 
-        addNewPostForResult(editorIntent, activity, site, false, reblogSource);
+        addNewPostForResult(editorIntent, activity, site, false, reblogSource, -1, null);
     }
 
     public static void viewStatsInNewStack(Context context, SiteModel site) {
@@ -628,13 +669,14 @@ public class ActivityLauncher {
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_PAGES, site);
     }
 
-    public static void viewPageParentForResult(@NonNull Fragment fragment, @NonNull PageModel page) {
+    public static void viewPageParentForResult(@NonNull Fragment fragment, @NonNull SiteModel site,
+                                               @NonNull Long pageRemoteId) {
         Intent intent = new Intent(fragment.getContext(), PageParentActivity.class);
-        intent.putExtra(WordPress.SITE, page.getSite());
-        intent.putExtra(EXTRA_PAGE_REMOTE_ID_KEY, page.getRemoteId());
+        intent.putExtra(WordPress.SITE, site);
+        intent.putExtra(EXTRA_PAGE_REMOTE_ID_KEY, pageRemoteId);
         fragment.startActivityForResult(intent, RequestCodes.PAGE_PARENT);
 
-        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_PAGE_PARENT, page.getSite());
+        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_PAGE_PARENT, site);
     }
 
     public static void viewUnifiedComments(Context context, SiteModel site) {
@@ -869,9 +911,13 @@ public class ActivityLauncher {
             Activity activity,
             SiteModel site,
             boolean isPromo,
-            PagePostCreationSourcesDetail source
+            PagePostCreationSourcesDetail source,
+            final int promptId,
+            final EntryPoint entryPoint
     ) {
-        addNewPostForResult(new Intent(activity, EditPostActivity.class), activity, site, isPromo, source);
+        addNewPostForResult(
+            new Intent(activity, EditPostActivity.class), activity, site, isPromo, source, promptId, entryPoint
+        );
     }
 
     public static void addNewPostForResult(
@@ -879,7 +925,9 @@ public class ActivityLauncher {
             Activity activity,
             SiteModel site,
             boolean isPromo,
-            PagePostCreationSourcesDetail source
+            PagePostCreationSourcesDetail source,
+            final int promptId,
+            final EntryPoint entryPoint
     ) {
         if (site == null) {
             return;
@@ -889,6 +937,8 @@ public class ActivityLauncher {
         intent.putExtra(EditPostActivity.EXTRA_IS_PAGE, false);
         intent.putExtra(EditPostActivity.EXTRA_IS_PROMO, isPromo);
         intent.putExtra(AnalyticsUtils.EXTRA_CREATION_SOURCE_DETAIL, source);
+        intent.putExtra(EditPostActivity.EXTRA_PROMPT_ID, promptId);
+        intent.putExtra(EditPostActivity.EXTRA_ENTRY_POINT, entryPoint);
         activity.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
 
@@ -1036,18 +1086,28 @@ public class ActivityLauncher {
     public static void editPageForResult(@NonNull Fragment fragment, @NonNull SiteModel site,
                                          int pageLocalId, boolean loadAutoSaveRevision) {
         Intent intent = new Intent(fragment.getContext(), EditPostActivity.class);
-        intent.putExtra(WordPress.SITE, site);
-        intent.putExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, pageLocalId);
-        intent.putExtra(EditPostActivity.EXTRA_LOAD_AUTO_SAVE_REVISION, loadAutoSaveRevision);
-        fragment.startActivityForResult(intent, RequestCodes.EDIT_POST);
+        editPageForResult(intent, fragment, site, pageLocalId, loadAutoSaveRevision, RequestCodes.EDIT_POST);
     }
 
     public static void editPageForResult(Intent intent, @NonNull Fragment fragment, @NonNull SiteModel site,
                                          int pageLocalId, boolean loadAutoSaveRevision) {
+        editPageForResult(intent, fragment, site, pageLocalId, loadAutoSaveRevision, RequestCodes.EDIT_POST);
+    }
+
+    public static void editLandingPageForResult(@NonNull Fragment fragment, @NonNull SiteModel site, int homeLocalId,
+                                                boolean isNewSite) {
+        Intent intent = new Intent(fragment.getContext(), EditPostActivity.class);
+        intent.putExtra(EditPostActivity.EXTRA_IS_LANDING_EDITOR, true);
+        intent.putExtra(EditPostActivity.EXTRA_IS_LANDING_EDITOR_OPENED_FOR_NEW_SITE, isNewSite);
+        editPageForResult(intent, fragment, site, homeLocalId, false, RequestCodes.EDIT_LANDING_PAGE);
+    }
+
+    public static void editPageForResult(Intent intent, @NonNull Fragment fragment, @NonNull SiteModel site,
+                                         int pageLocalId, boolean loadAutoSaveRevision, int requestCode) {
         intent.putExtra(WordPress.SITE, site);
         intent.putExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, pageLocalId);
         intent.putExtra(EditPostActivity.EXTRA_LOAD_AUTO_SAVE_REVISION, loadAutoSaveRevision);
-        fragment.startActivityForResult(intent, RequestCodes.EDIT_POST);
+        fragment.startActivityForResult(intent, requestCode);
     }
 
     public static void addNewPageForResult(
@@ -1087,10 +1147,16 @@ public class ActivityLauncher {
         fragment.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
 
-    public static void viewHistoryDetailForResult(Activity activity, Revision revision, List<Revision> revisions) {
+    public static void viewHistoryDetailForResult(@NonNull final Activity activity, @NonNull final Revision revision,
+                                                  @NonNull final long[] previousRevisionsIds, final long postId,
+                                                  final long siteId) {
         Intent intent = new Intent(activity, HistoryDetailActivity.class);
-        intent.putExtra(HistoryDetailContainerFragment.EXTRA_REVISION, revision);
-        intent.putParcelableArrayListExtra(HistoryDetailContainerFragment.EXTRA_REVISIONS, new ArrayList<>(revisions));
+        intent.putExtra(HistoryDetailContainerFragment.EXTRA_CURRENT_REVISION, revision);
+        final Bundle extras = new Bundle();
+        extras.putLongArray(HistoryDetailContainerFragment.EXTRA_PREVIOUS_REVISIONS_IDS, previousRevisionsIds);
+        extras.putLong(HistoryDetailContainerFragment.EXTRA_POST_ID, postId);
+        extras.putLong(HistoryDetailContainerFragment.EXTRA_SITE_ID, siteId);
+        intent.putExtras(extras);
         activity.startActivityForResult(intent, RequestCodes.HISTORY_DETAIL);
     }
 
@@ -1138,8 +1204,7 @@ public class ActivityLauncher {
                     shareSubject,
                     true,
                     startPreviewForResult);
-        } else if (remotePreviewType == RemotePreviewType.REMOTE_PREVIEW_WITH_REMOTE_AUTO_SAVE && site.isWPComAtomic()
-                   && !site.isPrivateWPComAtomic()) {
+        } else if (site.isWPComAtomic() && !site.isPrivateWPComAtomic()) {
             openAtomicBlogPostPreview(
                     context,
                     url,
@@ -1314,26 +1379,46 @@ public class ActivityLauncher {
         context.startActivity(intent);
     }
 
-    public static void newBlogForResult(Activity activity) {
+    public static void newBlogForResult(Activity activity, SiteCreationSource source) {
         Intent intent = new Intent(activity, SiteCreationActivity.class);
+        intent.putExtra(SiteCreationActivity.ARG_CREATE_SITE_SOURCE, source.getLabel());
         activity.startActivityForResult(intent, RequestCodes.CREATE_SITE);
     }
 
-    public static void showMainActivityAndSiteCreationActivity(Activity activity) {
+    public static void showMainActivityAndSiteCreationActivity(Activity activity, SiteCreationSource source) {
         // If we just wanted to have WPMainActivity in the back stack after starting SiteCreationActivity, we could have
         // used a TaskStackBuilder to do so. However, since we want to handle the SiteCreationActivity result in
         // WPMainActivity, we must start it this way.
-        final Intent intent = createMainActivityAndSiteCreationActivityIntent(activity, null);
+        final Intent intent = createMainActivityAndSiteCreationActivityIntent(activity, null, source);
         activity.startActivity(intent);
     }
 
     @NonNull
     public static Intent createMainActivityAndSiteCreationActivityIntent(Context context,
-                                                                         @Nullable NotificationType notificationType) {
+                                                                         @Nullable NotificationType notificationType,
+                                                                         SiteCreationSource source) {
         final Intent intent = new Intent(context, WPMainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         intent.putExtra(WPMainActivity.ARG_SHOW_SITE_CREATION, true);
+        intent.putExtra(WPMainActivity.ARG_SITE_CREATION_SOURCE, source.getLabel());
+        if (notificationType != null) {
+            intent.putExtra(ARG_NOTIFICATION_TYPE, notificationType);
+        }
+        return intent;
+    }
+
+    @NonNull
+    public static Intent createMainActivityAndShowBloggingPromptsOnboardingActivityIntent(
+            final Context context,
+            @Nullable final NotificationType notificationType,
+            final int notificationId
+    ) {
+        final Intent intent = new Intent(context, WPMainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        intent.putExtra(WPMainActivity.ARG_BLOGGING_PROMPTS_ONBOARDING, true);
+        intent.putExtra(WPMainActivity.ARG_DISMISS_NOTIFICATION, notificationId);
         if (notificationType != null) {
             intent.putExtra(ARG_NOTIFICATION_TYPE, notificationType);
         }
@@ -1363,7 +1448,6 @@ public class ActivityLauncher {
         Intent intent = new Intent(activity, LoginActivity.class);
         intent.setFlags(
                 Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        JETPACK_LOGIN_ONLY.putInto(intent);
         activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
     }
 
@@ -1371,12 +1455,12 @@ public class ActivityLauncher {
             Activity activity,
             boolean doLoginUpdate,
             ArrayList<Integer> oldSitesIds,
-            boolean isJetpackApp
+            boolean isSiteCreationEnabled
     ) {
         Intent intent = new Intent(activity, LoginEpilogueActivity.class);
         intent.putExtra(LoginEpilogueActivity.EXTRA_DO_LOGIN_UPDATE, doLoginUpdate);
         intent.putIntegerArrayListExtra(LoginEpilogueActivity.ARG_OLD_SITES_IDS, oldSitesIds);
-        if (!isJetpackApp) {
+        if (isSiteCreationEnabled) {
             activity.startActivityForResult(intent, RequestCodes.LOGIN_EPILOGUE);
         } else {
             activity.startActivity(intent);
@@ -1429,6 +1513,42 @@ public class ActivityLauncher {
         StatsDetailActivity.Companion
                 .start(context, site, post.getRemotePostId(), StatsConstants.ITEM_TYPE_POST, post.getTitle(),
                         post.getLink());
+    }
+
+    public static void viewInsightsDetail(
+            Context context,
+            StatsSection statsSection,
+            StatsViewType statsViewType,
+            StatsGranularity granularity,
+            SelectedDate selectedDate,
+            int localSiteId
+    ) {
+        StatsDetailActivity.startForInsightsDetail(
+                context,
+                statsSection,
+                statsViewType,
+                granularity,
+                selectedDate,
+                localSiteId
+        );
+    }
+
+    public static void showSetBloggingReminders(Context context, SiteModel site) {
+        final Intent intent = getMainActivityInNewStack(context);
+        intent.putExtra(WPMainActivity.ARG_OPEN_BLOGGING_REMINDERS, true);
+        intent.putExtra(WPMainActivity.ARG_SELECTED_SITE, site.getId());
+        context.startActivity(intent);
+    }
+
+    public static void showSchedulingPost(Context context, SiteModel site) {
+        Intent intent = PostsListActivity.buildIntent(
+                context,
+                site,
+                PostListType.DRAFTS,
+                false,
+                null
+        );
+        context.startActivity(intent);
     }
 
     public static void viewMediaPickerForResult(Activity activity,
@@ -1611,7 +1731,50 @@ public class ActivityLauncher {
         context.startActivity(intent);
     }
 
+    public static void showCategoryDetail(@NonNull Context context, @Nullable Long categoryId) {
+        Intent intent = new Intent(context, CategoryDetailActivity.class);
+        intent.putExtra(CATEGORY_DETAIL_ID, categoryId);
+        context.startActivity(intent);
+    }
+
     public static void viewDebugCookies(@NonNull Context context) {
         context.startActivity(new Intent(context, DebugCookiesActivity.class));
+    }
+
+    public static void startQRCodeAuthFlow(@NonNull Context context) {
+        QRCodeAuthActivity.start(context);
+    }
+
+    public static void startQRCodeAuthFlowInNewStack(@NonNull Context context, @NonNull String uri) {
+        TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(context);
+
+        Intent mainActivityIntent = getMainActivityInNewStack(context);
+        mainActivityIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+
+        Intent qrcodeAuthFlowIntent = QRCodeAuthActivity.newIntent(context, uri, true);
+
+        taskStackBuilder.addNextIntent(mainActivityIntent);
+        taskStackBuilder.addNextIntent(qrcodeAuthFlowIntent);
+
+        taskStackBuilder.startActivities();
+    }
+
+    public static void showLoginPrologue(@NonNull Context context) {
+        Intent intent = new Intent(context, LoginActivity.class);
+        context.startActivity(intent);
+    }
+
+    public static void startJetpackMigrationFlow(@NonNull Context context) {
+        Intent intent = new Intent(context, JetpackMigrationActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
+    }
+
+    public static void openJetpackForDeeplink(@NonNull Context context, String action, UriWrapper uri) {
+        Intent intent = new Intent();
+        intent.setAction(action);
+        intent.setData(uri.getUri());
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
     }
 }

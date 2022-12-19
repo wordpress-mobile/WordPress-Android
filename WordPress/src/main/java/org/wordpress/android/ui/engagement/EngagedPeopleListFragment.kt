@@ -91,20 +91,18 @@ class EngagedPeopleListFragment : Fragment() {
         recycler.layoutManager = layoutManager
 
         userProfileViewModel.onBottomSheetAction.observeEvent(viewLifecycleOwner, { state ->
-            val fragmentManager = childFragmentManager
-            fragmentManager?.let {
-                var bottomSheet = it.findFragmentByTag(USER_PROFILE_BOTTOM_SHEET_TAG) as? UserProfileBottomSheetFragment
+            var bottomSheet = childFragmentManager.findFragmentByTag(USER_PROFILE_BOTTOM_SHEET_TAG)
+                    as? UserProfileBottomSheetFragment
 
-                when (state) {
-                    ShowBottomSheet -> {
-                        if (bottomSheet == null) {
-                            bottomSheet = UserProfileBottomSheetFragment.newInstance(USER_PROFILE_VM_KEY)
-                            bottomSheet.show(fragmentManager, USER_PROFILE_BOTTOM_SHEET_TAG)
-                        }
+            when (state) {
+                ShowBottomSheet -> {
+                    if (bottomSheet == null) {
+                        bottomSheet = UserProfileBottomSheetFragment.newInstance(USER_PROFILE_VM_KEY)
+                        bottomSheet.show(childFragmentManager, USER_PROFILE_BOTTOM_SHEET_TAG)
                     }
-                    HideBottomSheet -> {
-                        bottomSheet?.apply { this.dismiss() }
-                    }
+                }
+                HideBottomSheet -> {
+                    bottomSheet?.apply { this.dismiss() }
                 }
             }
         })
@@ -136,6 +134,7 @@ class EngagedPeopleListFragment : Fragment() {
         viewModel.start(listScenario!!)
     }
 
+    @Suppress("ForbiddenComment")
     private fun manageNavigation(event: EngagedListNavigationEvent) {
         with(requireActivity()) {
             if (this.isFinishing) return@with

@@ -1,0 +1,137 @@
+<resources>
+    <string name="post_content">Content</string>
+    <string name="post_title">Title</string>
+
+    <string name="cancel">Cancel</string>
+    <string name="delete">Delete</string>
+    <string name="save">Save</string>
+    <string name="discard">Discard</string>
+    <string name="edit">Edit</string>
+    <string name="tap_to_try_again">Tap to try again!</string>
+    <string name="uploading">Uploading…</string>
+    <string name="uploading_gallery_placeholder">Uploading gallery…</string>
+
+    <string name="alert_insert_image_html_mode">Can\'t insert media directly in HTML mode. Please switch back to visual mode.</string>
+    <string name="alert_action_while_uploading">You are currently uploading media. Please wait until this completes.</string>
+    <string name="alert_error_adding_media">An error occurred while inserting media</string>
+
+    <string name="stop_upload_dialog_title">Stop uploading?</string>
+    <string name="upload_finished_toast">Can\'t stop the upload because it\'s already finished</string>
+
+    <string name="stop_save_dialog_title">Files saving</string>
+    <string name="stop_save_dialog_message">Please wait until all files have been saved</string>
+    <string name="stop_save_dialog_ok_button">OK</string>
+
+    <!-- link view -->
+    <string name="link_enter_url">URL</string>
+    <string name="link_enter_url_text">Link text (optional)</string>
+    <string name="create_a_link">Create a link</string>
+
+    <!-- image settings -->
+    <string name="image_settings">Image settings</string>
+    <string name="title">Title</string>
+    <string name="width">Width</string>
+    <string name="featured">Use as featured image</string>
+    <string name="featured_in_post">Include image in post content</string>
+    <string name="image_alignment">Alignment</string>
+    <string name="horizontal_alignment">Horizontal alignment</string>
+    <string name="caption">Caption (optional)</string>
+
+    <string name="image_settings_dismiss_dialog_title">Discard unsaved changes?</string>
+    <string name="image_settings_save_toast">Changes saved</string>
+
+    <string name="pixel_suffix">%dpx</string>
+
+    <string name="image_caption">Caption</string>
+    <string name="image_alt_text">Alt text</string>
+    <string name="image_link_to">Link to</string>
+    <string name="image_width">Width</string>
+
+    <string name="alignment_none">None</string>
+    <string name="alignment_left">Left</string>
+    <string name="alignment_center">Center</string>
+    <string name="alignment_right">Right</string>
+
+    <string-array name="alignment_key_array" translatable="false">
+        <item>none</item>
+        <item>left</item>
+        <item>center</item>
+        <item>right</item>
+    </string-array>
+
+    <string-array name="alignment_array" translatable="false">
+        <item>@string/alignment_none</item>
+        <item>@string/alignment_left</item>
+        <item>@string/alignment_center</item>
+        <item>@string/alignment_right</item>
+    </string-array>
+
+    <string name="media_bar_description_camera">Take Photo or Video with camera</string>
+    <string name="media_bar_description_gallery">Pick a media from gallery</string>
+    <string name="media_bar_description_library">Pick a media from WordPress media library</string>
+
+    <string name="visual_editor">Visual editor</string>
+    <string name="image_thumbnail">Image thumbnail</string>
+
+    <string name="editor_failed_uploads_switch_html">Some media uploads have failed. You can\'t switch to HTML mode
+        in this state. Remove all failed uploads and continue?</string>
+    <string name="editor_remove_failed_uploads">Remove failed uploads</string>
+
+    <string name="editor_dropped_text_error">Error occurred while dropping text</string>
+    <string name="editor_dropped_title_images_not_allowed">Dropping images in the Title is not allowed</string>
+    <string name="editor_dropped_html_images_not_allowed">Dropping images while in HTML mode is not allowed</string>
+    <string name="editor_dropped_unsupported_files">Warning: not all dropped items are supported!</string>
+    <string name="editor_failed_to_insert_media_tap_to_retry">Failed to insert media.\nPlease tap to retry.</string>
+    <string name="editor_failed_to_insert_media_tap_for_options">Failed to insert media.\nPlease tap for options.</string>
+
+    <string name="dialog_content_info_title">Content structure</string>
+    <string name="dialog_content_info_body">Blocks: %1$d\nWords: %2$d\nCharacters: %3$d</string>
+    <string name="toast_content_info_failed">Failed to get content structure</string>
+    <string name="toast_content_info_editor_not_ready">Editor is still loading</string>
+
+    <!-- Aztec -->
+    <string name="editor_content_hint">Share your story here&#8230;</string>
+
+    <string name="editor_title_beta">Beta</string>
+
+    <string name="dialog_title">Insert link</string>
+    <string name="dialog_edit_hint">http(s)://</string>
+    <string name="dialog_button_ok">OK</string>
+    <string name="dialog_button_cancel">Cancel</string>
+
+    <string name="menu_undo">Undo</string>
+    <string name="menu_redo">Redo</string>
+    <string name="menu_debug">Debug Menu</string>
+
+    <string name="media_insert_unimplemented">Apologies! Feature not implemented yet :(</string>
+    <string name="error_media_load">Unable to load media</string>
+    <string name="error_media_small">Media too small to show</string>
+
+    <string name="stop_upload_dialog_button_yes">Yes</string>
+    <string name="stop_upload_dialog_button_no">No</string>
+
+    <string name="retry_failed_upload_title">Couldn\'t upload file</string>
+    <string name="retry_failed_upload_yes">Retry</string>
+    <string name="retry_failed_upload_remove">Remove upload</string>
+    <string name="retry_failed_upload_retry_all">Retry all</string>
+
+    <string name="long_post_dlg_saving">Saving</string>
+
+    <string name="menu_toolbar_title">Edit %s block</string>
+
+    <!-- Aztec Try Block Editor Dialog -->
+    <string name="pref_key_seen_classic_editor_deprecation_notice" translatable="false">wp_pref_seen_classic_editor_deprecation_notice</string>
+    <string name="dialog_title_try_block_editor" translatable="true">Try the new Block Editor</string>
+    <string name="dialog_body_try_block_editor" translatable="true">We’ll be removing the classic editor for new posts soon, but this won’t affect editing any of your existing posts or pages. Get a head start by enabling the Block Editor now in site settings.</string>
+    <string name="dialog_dismiss_try_block_editor" translatable="true">Dismiss</string>
+
+    <!-- Featured image replacement -->
+    <string name="featured_image_replace_dialog_title">Replace current featured image?</string>
+    <string name="featured_image_replace_dialog_description">You already have a featured image set. Do you want to replace it with the new image?</string>
+    <string name="featured_image_replace_dialog_confirm">Replace featured image</string>
+    <string name="featured_image_replace_dialog_cancel">Keep current</string>
+
+    <string name="featured_image_confirmation_notice">Set as featured image</string>
+    <string name="featured_image_removed_notice">Removed as featured image</string>
+
+</resources>

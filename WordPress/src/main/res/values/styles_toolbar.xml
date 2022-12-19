@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Login -->
-    <style name="Widget.LoginFlow.Toolbar" parent="Widget.MaterialComponents.Toolbar.Surface">
+    <style name="Widget.LoginFlow.Toolbar" parent="Widget.MaterialComponents.Toolbar.Surface" tools:ignore="UnusedResources">
         <item name="titleTextAppearance">@style/TextAppearance.App.Toolbar.Title</item>
         <item name="android:theme">@style/ThemeOverlay.LoginFlow.Toolbar</item>
     </style>

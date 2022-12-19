@@ -1,6 +1,0 @@
-18.9:
-- Markiere Text im Absatzblöcken mit einer beliebigen Farbe.
-- Schau dir unter dem Inhalt deines Beitrags im Reader Kommentare an und beantworte sie.
-- Erstelle neue Galerieblöcke mit neuem Design und konvertiere alte Galerien automatisch, damit sie dazu passen.
-- Mache Änderungen beim Formatieren von Linktext in Blöcken rückgängig oder stelle sie wieder her.
-- Lade Inhalte schneller, wenn du Beiträge rebloggst oder Text aus anderen Apps teilst.

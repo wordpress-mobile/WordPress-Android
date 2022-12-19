@@ -31,6 +31,7 @@ class UploadUtilsWrapper @Inject constructor(
         return UploadUtils.userCanPublish(site)
     }
 
+    @Suppress("LongParameterList")
     fun onMediaUploadedSnackbarHandler(
         activity: Activity?,
         snackbarAttachView: View?,

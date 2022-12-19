@@ -17,7 +17,6 @@ import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel.Scr
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
 
-@Suppress("TooManyFunctions")
 class BloggingRemindersAnalyticsTracker @Inject constructor(
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val siteStore: SiteStore
@@ -62,7 +61,14 @@ class BloggingRemindersAnalyticsTracker @Inject constructor(
 
     fun trackRemindersCancelled() = track(BLOGGING_REMINDERS_CANCELLED)
 
-    fun trackNotificationReceived() = track(BLOGGING_REMINDERS_NOTIFICATION_RECEIVED)
+    fun trackNotificationReceived(promptIncluded: Boolean) = track(
+            BLOGGING_REMINDERS_NOTIFICATION_RECEIVED, mapOf(PROMPT_INCLUDED to "$promptIncluded")
+    )
+
+    fun trackRemindersIncludePromptPressed(promptEnabled: Boolean) =
+            track(Stat.BLOGGING_REMINDERS_INCLUDE_PROMPT_TAPPED, mapOf(PROMPT_ENABLED_KEY to "$promptEnabled"))
+
+    fun trackRemindersIncludePromptHelpPressed() = track(Stat.BLOGGING_REMINDERS_INCLUDE_PROMPT_HELP_TAPPED)
 
     private fun track(stat: Stat, properties: Map<String, Any?> = emptyMap()) = analyticsTracker.track(
             stat,
@@ -82,7 +88,8 @@ class BloggingRemindersAnalyticsTracker @Inject constructor(
     enum class Source(val trackingName: String) {
         PUBLISH_FLOW("publish_flow"),
         BLOG_SETTINGS("blog_settings"),
-        NOTIFICATION_SETTINGS("notification_settings")
+        NOTIFICATION_SETTINGS("notification_settings"),
+        BLOGGING_PROMPTS_ONBOARDING("blogging_prompts_onboarding"),
     }
 
     companion object {
@@ -90,7 +97,9 @@ class BloggingRemindersAnalyticsTracker @Inject constructor(
         private const val SCREEN_KEY = "screen"
         private const val BUTTON_KEY = "button"
         private const val SOURCE_KEY = "source"
+        private const val PROMPT_ENABLED_KEY = "enabled"
         private const val DAYS_OF_WEEK_COUNT_KEY = "days_of_week_count"
         private const val SELECTED_TIME_KEY = "selected_time"
+        private const val PROMPT_INCLUDED = "prompt_included"
     }
 }

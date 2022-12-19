@@ -59,7 +59,7 @@ public class ReaderThumbnailStrip extends LinearLayout {
         mView = (ViewGroup) inflate(context, R.layout.reader_thumbnail_strip, this);
         mThumbnailHeight = context.getResources().getDimensionPixelSize(R.dimen.reader_thumbnail_strip_image_height);
 
-        int displayWidth = DisplayUtils.getDisplayPixelWidth(context);
+        int displayWidth = DisplayUtils.getWindowPixelWidth(context);
         int margins = context.getResources().getDimensionPixelSize(R.dimen.reader_card_content_padding) * 2;
         mThumbnailWidth = (displayWidth - margins) / THUMBNAIL_STRIP_IMG_COUNT;
     }

@@ -1,6 +1,0 @@
-18.9:
-– Framhäv text med valfri färg i styckblock.
-– Läs och besvara kommentarer i Läsaren under inläggets innehåll.
-– Skapa nya gallierblock i det nya utförandet och konvertera automatiskt äldre gallerier så att de blir likadana.
-– Ångra och gör om ändringar i formateringen av länkad text i block.
-– Snabbare sidladdning när du rebloggar inlägg eller delar text från andra appar.

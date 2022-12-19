@@ -1,12 +1,6 @@
 package org.wordpress.android.ui.bloggingreminders
 
 import androidx.annotation.StringRes
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.doAnswer
-import com.nhaarman.mockitokotlin2.eq
-import com.nhaarman.mockitokotlin2.times
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flowOf
@@ -14,6 +8,12 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
+import org.mockito.kotlin.any
+import org.mockito.kotlin.doAnswer
+import org.mockito.kotlin.eq
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.R.string
@@ -113,6 +113,13 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `shows bottom sheet on onBloggingPromptSchedulingRequested`() {
+        viewModel.onBloggingPromptSchedulingRequested(siteId)
+
+        assertThat(events).containsExactly(true)
+    }
+
+    @Test
     fun `shows prologue ui state on PROLOGUE`() {
         val uiItems = initPrologueBuilder()
         whenever(bloggingRemindersManager.shouldShowBloggingRemindersPrompt(siteId)).thenReturn(true)
@@ -136,7 +143,9 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
     fun `date selection selected`() = test {
         val model = initEmptyStore()
         val daySelectionScreen = listOf<BloggingRemindersItem>()
-        whenever(daySelectionBuilder.buildSelection(eq(model), any(), any())).thenReturn(daySelectionScreen)
+        whenever(daySelectionBuilder.buildSelection(eq(model), any(), any(), any(), any())).thenReturn(
+                daySelectionScreen
+        )
         whenever(bloggingRemindersStore.hasModifiedBloggingReminders(siteId)).thenReturn(true)
 
         viewModel.onBlogSettingsItemClicked(siteId)
@@ -162,7 +171,8 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
                                 siteId,
                                 setOf(DayOfWeek.MONDAY, DayOfWeek.SUNDAY),
                                 hour,
-                                minute
+                                minute,
+                                false
                         )
                 )
         ).thenReturn(dayLabel)
@@ -414,7 +424,7 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
     private fun initEmptyStore(): BloggingRemindersUiModel {
         val emptyModel = BloggingRemindersModel(siteId)
         whenever(bloggingRemindersStore.bloggingRemindersModel(siteId)).thenReturn(flowOf(emptyModel))
-        return BloggingRemindersUiModel(siteId, hour = hour, minute = minute)
+        return BloggingRemindersUiModel(siteId, hour = hour, minute = minute, isPromptIncluded = false)
     }
 
     private fun assertPrologue() {
@@ -463,7 +473,7 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
                                     }
                     )
             )
-        }.whenever(daySelectionBuilder).buildSelection(any(), any(), any())
+        }.whenever(daySelectionBuilder).buildSelection(any(), any(), any(), any(), any())
 
         doAnswer {
             val model = it.getArgument<BloggingRemindersUiModel>(0)

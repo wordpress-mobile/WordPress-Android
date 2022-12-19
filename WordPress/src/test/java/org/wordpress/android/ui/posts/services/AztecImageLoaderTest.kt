@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package org.wordpress.android.ui.posts.services
 
 import android.content.Context
@@ -5,13 +7,13 @@ import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.util.DisplayMetrics
 import com.bumptech.glide.request.target.BaseTarget
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.times
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mockito.mock
+import org.mockito.kotlin.any
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.aztec.Html.ImageGetter
 
@@ -83,7 +85,7 @@ class AztecImageLoaderTest {
         whenever(imageManager.loadAsBitmapIntoCustomTarget(any(), any(), any(), any()))
                 .thenAnswer { invocation ->
                     run {
-                        @Suppress("UNCHECKED_CAST")
+                        @Suppress("DEPRECATION", "UNCHECKED_CAST")
                         (invocation.arguments[1] as BaseTarget<Bitmap>).onLoadFailed(mock(Drawable::class.java))
                     }
                 }
@@ -93,7 +95,7 @@ class AztecImageLoaderTest {
         whenever(imageManager.loadAsBitmapIntoCustomTarget(any(), any(), any(), any()))
                 .thenAnswer { invocation ->
                     run {
-                        @Suppress("UNCHECKED_CAST")
+                        @Suppress("DEPRECATION", "UNCHECKED_CAST")
                         (invocation.arguments[1] as BaseTarget<Bitmap>).onResourceReady(bitmap, null)
                     }
                 }
@@ -103,7 +105,7 @@ class AztecImageLoaderTest {
         whenever(imageManager.loadAsBitmapIntoCustomTarget(any(), any(), any(), any()))
                 .thenAnswer { invocation ->
                     run {
-                        @Suppress("UNCHECKED_CAST")
+                        @Suppress("DEPRECATION", "UNCHECKED_CAST")
                         (invocation.arguments[1] as BaseTarget<Bitmap>).onLoadStarted(mock(Drawable::class.java))
                     }
                 }

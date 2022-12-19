@@ -4,7 +4,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
-import androidx.lifecycle.ViewModelProvider
+import androidx.activity.viewModels
+import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.StatsListActivityBinding
 import org.wordpress.android.fluxc.model.SiteModel
@@ -13,15 +14,18 @@ import org.wordpress.android.push.NotificationsProcessingService.ARG_NOTIFICATIO
 import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.stats.StatsTimeframe
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
+import org.wordpress.android.util.JetpackBrandingUtils
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class StatsActivity : LocaleAwareActivity() {
     @Inject lateinit var statsSiteProvider: StatsSiteProvider
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-    private lateinit var viewModel: StatsViewModel
+    @Inject lateinit var jetpackBrandingUtils: JetpackBrandingUtils
+    private val viewModel: StatsViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (application as WordPress).component().inject(this)
+
         setContentView(StatsListActivityBinding.inflate(layoutInflater).root)
     }
 
@@ -37,7 +41,6 @@ class StatsActivity : LocaleAwareActivity() {
         intent?.let {
             val siteId = intent.getIntExtra(WordPress.LOCAL_SITE_ID, -1)
             if (siteId > -1) {
-                viewModel = ViewModelProvider(this, viewModelFactory).get(StatsViewModel::class.java)
                 viewModel.start(intent, restart = true)
             }
         }

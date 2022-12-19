@@ -40,10 +40,10 @@ class SelectedDateProvider
             YEARS to SelectedDate(loading = true)
     )
 
-    private val selectedDateChanged = MutableLiveData<SectionChange>()
+    private val selectedDateChanged = MutableLiveData<SectionChange?>()
 
-    fun granularSelectedDateChanged(statsSection: StatsSection): LiveData<SectionChange> {
-        return selectedDateChanged.filter { it.selectedSection == statsSection }
+    fun granularSelectedDateChanged(statsSection: StatsSection): LiveData<SectionChange?> {
+        return selectedDateChanged.filter { it?.selectedSection == statsSection }
     }
 
     fun selectDate(date: Date, statsSection: StatsSection) {

@@ -2,8 +2,10 @@ package org.wordpress.android.modules;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.SharedPreferences;
 
 import androidx.lifecycle.LiveData;
+import androidx.preference.PreferenceManager;
 
 import com.tenor.android.core.network.ApiClient;
 import com.tenor.android.core.network.ApiService;
@@ -13,6 +15,7 @@ import org.wordpress.android.BuildConfig;
 import org.wordpress.android.ui.CommentFullScreenDialogFragment;
 import org.wordpress.android.ui.accounts.signup.SettingsUsernameChangerFragment;
 import org.wordpress.android.ui.accounts.signup.UsernameChangerFullScreenDialogFragment;
+import org.wordpress.android.ui.debug.DebugSettingsFragment;
 import org.wordpress.android.ui.domains.DomainRegistrationDetailsFragment.CountryPickerDialogFragment;
 import org.wordpress.android.ui.domains.DomainRegistrationDetailsFragment.StatePickerDialogFragment;
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadStep;
@@ -25,7 +28,6 @@ import org.wordpress.android.ui.reader.ReaderPostWebViewCachingFragment;
 import org.wordpress.android.ui.reader.subfilter.SubfilterPageFragment;
 import org.wordpress.android.ui.sitecreation.SiteCreationStep;
 import org.wordpress.android.ui.sitecreation.SiteCreationStepsProvider;
-import org.wordpress.android.ui.stats.refresh.StatsFragment;
 import org.wordpress.android.ui.stats.refresh.StatsViewAllFragment;
 import org.wordpress.android.ui.stats.refresh.lists.StatsListFragment;
 import org.wordpress.android.ui.stats.refresh.lists.detail.StatsDetailFragment;
@@ -35,7 +37,6 @@ import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWi
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetDataTypeSelectionDialogFragment;
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetSiteSelectionDialogFragment;
 import org.wordpress.android.ui.stats.refresh.lists.widget.minified.StatsMinifiedWidgetConfigureFragment;
-import org.wordpress.android.ui.debug.DebugSettingsFragment;
 import org.wordpress.android.util.wizard.WizardManager;
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus;
 import org.wordpress.android.viewmodel.helpers.ConnectionStatusLiveData;
@@ -43,9 +44,14 @@ import org.wordpress.android.viewmodel.helpers.ConnectionStatusLiveData;
 import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
+import dagger.android.AndroidInjectionModule;
 import dagger.android.ContributesAndroidInjector;
+import dagger.hilt.InstallIn;
+import dagger.hilt.android.qualifiers.ApplicationContext;
+import dagger.hilt.components.SingletonComponent;
 
-@Module
+@InstallIn(SingletonComponent.class)
+@Module(includes = AndroidInjectionModule.class)
 public abstract class ApplicationModule {
     // Expose Application as an injectable context
     @Binds
@@ -59,9 +65,6 @@ public abstract class ApplicationModule {
 
     @ContributesAndroidInjector
     abstract InsightsManagementFragment contributeInsightsManagementFragment();
-
-    @ContributesAndroidInjector
-    abstract StatsFragment contributeStatsFragment();
 
     @ContributesAndroidInjector
     abstract StatsDetailFragment contributeStatsDetailFragment();
@@ -109,18 +112,23 @@ public abstract class ApplicationModule {
     abstract BasicDialog contributeBasicDialog();
 
     @Provides
+    public static SharedPreferences provideSharedPrefs(@ApplicationContext Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context);
+    }
+
+    @Provides
     public static WizardManager<SiteCreationStep> provideWizardManager(
             SiteCreationStepsProvider stepsProvider) {
         return new WizardManager<>(stepsProvider.getSteps());
     }
 
     @Provides
-    static LiveData<ConnectionStatus> provideConnectionStatusLiveData(Context context) {
+    static LiveData<ConnectionStatus> provideConnectionStatusLiveData(@ApplicationContext Context context) {
         return new ConnectionStatusLiveData.Factory(context).create();
     }
 
     @Provides
-    static TenorGifClient provideTenorGifClient(Context context) {
+    static TenorGifClient provideTenorGifClient(@ApplicationContext Context context) {
         ApiService.IBuilder<IApiClient> builder = new ApiService.Builder<>(context, IApiClient.class);
         builder.apiKey(BuildConfig.TENOR_API_KEY);
         ApiClient.init(context, builder);

@@ -14,12 +14,14 @@ import org.wordpress.android.util.PhotoPickerUtils
 import org.wordpress.android.util.ViewUtils
 import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.image.ImageManager
-import org.wordpress.android.util.redirectContextClickToLongPressListener
+import org.wordpress.android.util.extensions.redirectContextClickToLongPressListener
 import java.util.Locale
 
 class MediaThumbnailViewUtils(val imageManager: ImageManager) {
+    @Suppress("LongParameterList")
     fun setupListeners(
         imgThumbnail: ImageView,
+        isVideo: Boolean,
         isSelected: Boolean,
         toggleAction: ToggleAction,
         clickAction: ClickAction,
@@ -28,9 +30,10 @@ class MediaThumbnailViewUtils(val imageManager: ImageManager) {
         addImageSelectedToAccessibilityFocusedEvent(imgThumbnail, isSelected)
         imgThumbnail.setOnClickListener {
             toggleAction.toggle()
-            PhotoPickerUtils.announceSelectedImageForAccessibility(
+            PhotoPickerUtils.announceSelectedMediaForAccessibility(
                     imgThumbnail,
-                    isSelected
+                    isVideo,
+                    !isSelected
             )
         }
         imgThumbnail.setOnLongClickListener {
@@ -41,6 +44,7 @@ class MediaThumbnailViewUtils(val imageManager: ImageManager) {
         displaySelection(animateSelection, isSelected, imgThumbnail)
     }
 
+    @Suppress("LongParameterList")
     fun setupFileImageView(
         container: View,
         imgThumbnail: ImageView,
@@ -62,9 +66,10 @@ class MediaThumbnailViewUtils(val imageManager: ImageManager) {
         addImageSelectedToAccessibilityFocusedEvent(imgThumbnail, isSelected)
         container.setOnClickListener {
             toggleAction.toggle()
-            PhotoPickerUtils.announceSelectedImageForAccessibility(
+            PhotoPickerUtils.announceSelectedMediaForAccessibility(
                     imgThumbnail,
-                    isSelected
+                    false,
+                    !isSelected
             )
         }
         container.setOnLongClickListener {

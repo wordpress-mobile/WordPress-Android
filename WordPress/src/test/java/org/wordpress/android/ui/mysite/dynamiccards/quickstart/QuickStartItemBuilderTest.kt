@@ -1,30 +1,43 @@
 package org.wordpress.android.ui.mysite.dynamiccards.quickstart
 
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.whenever
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.DynamicCardType.CUSTOMIZE_QUICK_START
 import org.wordpress.android.fluxc.model.DynamicCardType.GROW_QUICK_START
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.PUBLISH_POST
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.VIEW_SITE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.PUBLISH_POST
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.VIEW_SITE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.CUSTOMIZE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GROW
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.DynamicCard.QuickStartDynamicCard.QuickStartTaskCard
+import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuFragment.DynamicCardMenuModel
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails.PUBLISH_POST_TUTORIAL
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails.UPDATE_SITE_TITLE
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails.VIEW_SITE_TUTORIAL
+import org.wordpress.android.ui.quickstart.QuickStartType.NewSiteQuickStartType
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 
 @RunWith(MockitoJUnitRunner::class)
 class QuickStartItemBuilderTest {
-    private val builder = QuickStartItemBuilder()
+    @Mock lateinit var quickStartRepository: QuickStartRepository
+    private lateinit var builder: QuickStartItemBuilder
     private val onQuickStartTaskCardClick: (QuickStartTask) -> Unit = {}
+
+    @Before
+    fun setUp() {
+        whenever(quickStartRepository.quickStartType).thenReturn(NewSiteQuickStartType)
+        builder = QuickStartItemBuilder(quickStartRepository)
+    }
 
     @Test
     fun `builds a customize category into quick start card`() {
@@ -101,13 +114,13 @@ class QuickStartItemBuilderTest {
                         ListItemInteraction.create(VIEW_SITE, onQuickStartTaskCardClick)
                 ),
                 QuickStartTaskCard(
-                        QuickStartTask.UPDATE_SITE_TITLE,
+                        QuickStartNewSiteTask.UPDATE_SITE_TITLE,
                         UiStringRes(UPDATE_SITE_TITLE.titleResId),
                         UiStringRes(UPDATE_SITE_TITLE.subtitleResId),
                         R.drawable.img_illustration_quick_start_task_set_site_title,
                         R.color.green_20,
                         true,
-                        ListItemInteraction.create(QuickStartTask.UPDATE_SITE_TITLE, onQuickStartTaskCardClick)
+                        ListItemInteraction.create(QuickStartNewSiteTask.UPDATE_SITE_TITLE, onQuickStartTaskCardClick)
                 )
         )
     }
@@ -141,13 +154,13 @@ class QuickStartItemBuilderTest {
         assertThat(quickStartCard.progress).isEqualTo(100)
         assertThat(quickStartCard.taskCards).containsExactly(
                 QuickStartTaskCard(
-                        QuickStartTask.UPDATE_SITE_TITLE,
+                        QuickStartNewSiteTask.UPDATE_SITE_TITLE,
                         UiStringRes(UPDATE_SITE_TITLE.titleResId),
                         UiStringRes(UPDATE_SITE_TITLE.subtitleResId),
                         R.drawable.img_illustration_quick_start_task_set_site_title,
                         R.color.green_20,
                         true,
-                        ListItemInteraction.create(QuickStartTask.UPDATE_SITE_TITLE, onQuickStartTaskCardClick)
+                        ListItemInteraction.create(QuickStartNewSiteTask.UPDATE_SITE_TITLE, onQuickStartTaskCardClick)
                 )
         )
     }

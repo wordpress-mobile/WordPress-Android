@@ -1,12 +1,12 @@
 package org.wordpress.android.ui.bloggingreminders
 
-import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.whenever
 import org.wordpress.android.R.drawable
 import org.wordpress.android.R.string
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.EmphasizedText
@@ -46,7 +46,7 @@ class EpilogueBuilderTest {
 
     @Test
     fun `builds UI model with no selected days`() {
-        val bloggingRemindersModel = BloggingRemindersUiModel(1, setOf(), hour, minute)
+        val bloggingRemindersModel = BloggingRemindersUiModel(1, setOf(), hour, minute, false)
         val uiModel = epilogueBuilder.buildUiItems(bloggingRemindersModel)
 
         assertModelWithNoSelection(uiModel)
@@ -58,7 +58,8 @@ class EpilogueBuilderTest {
                 1,
                 setOf(DayOfWeek.WEDNESDAY, DayOfWeek.SUNDAY),
                 hour,
-                minute
+                minute,
+                false
         )
         val dayLabel = "twice"
         whenever(dayLabelUtils.buildLowercaseNTimesLabel(bloggingRemindersModel))
@@ -88,7 +89,8 @@ class EpilogueBuilderTest {
                 1,
                 DayOfWeek.values().toSet(),
                 hour,
-                minute
+                minute,
+                false
         )
         val message = "You'll get reminders to blog <b>everyday</b> at <b>10:00 am</b>."
         whenever(

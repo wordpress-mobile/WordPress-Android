@@ -25,6 +25,7 @@ import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.UrlUtils;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -132,12 +133,27 @@ public class ReaderUtils {
             return "";
         }
 
-        return title.trim()
-                    .replaceAll("&[^\\s]*;", "") // remove html entities
-                    .replaceAll("[\\.\\s]+", "-") // replace periods and whitespace with a dash
-                    .replaceAll("[^\\p{L}\\p{Nd}\\-]+",
-                            "") // remove remaining non-alphanum/non-dash chars (Unicode aware)
-                    .replaceAll("--", "-"); // reduce double dashes potentially added above
+        String trimmedTitle = title.trim();
+        if (isValidUrlEncodedString(trimmedTitle)) {
+            return trimmedTitle;
+        } else {
+            return trimmedTitle
+                        .replaceAll("&[^\\s]*;", "") // remove html entities
+                        .replaceAll("[\\.\\s]+", "-") // replace periods and whitespace with a dash
+                        .replaceAll("[^\\p{L}\\p{Nd}\\-]+",
+                                "") // remove remaining non-alphanum/non-dash chars (Unicode aware)
+                        .replaceAll("--", "-"); // reduce double dashes potentially added above
+        }
+    }
+
+    @NonNull
+    private static boolean isValidUrlEncodedString(String title) {
+        try {
+            URI.create(title);
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
+        return true;
     }
 
     /*
@@ -517,6 +533,10 @@ public class ReaderUtils {
 
     public static String getReportPostUrl(String blogUrl) {
         return "https://wordpress.com/abuse/?report_url=" + blogUrl;
+    }
+
+    public static String getReportUserUrl(String blogUrl, long userId) {
+        return getReportPostUrl(blogUrl) + "&report_user_id=" + userId;
     }
 
     public static boolean postExists(long blogId, long postId) {

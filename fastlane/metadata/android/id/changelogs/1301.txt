@@ -1,0 +1,3 @@
+21.3:
+- Anda sekarang dapat memindahkan situs Anda ke aplikasi Jetpack tanpa kendala.
+- Pengaturan Pemberitahuan menonaktifkan/mengaktifkan pemberitahuan koleksi mingguan, pengingat blogging, dan situs.

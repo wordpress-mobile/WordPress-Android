@@ -82,6 +82,13 @@ class UiModelMapper
         return mapStatsWithOverview(PostDetailType.POST_OVERVIEW, useCaseModels, showError)
     }
 
+    fun mapViewsVisitorsDetailStats(
+        useCaseModels: List<UseCaseModel>,
+        showError: (Int) -> Unit
+    ): UiModel {
+        return mapStatsWithOverview(TimeStatsType.OVERVIEW, useCaseModels, showError)
+    }
+
     private fun mapStatsWithOverview(
         overViewType: StatsType,
         useCaseModels: List<UseCaseModel>,

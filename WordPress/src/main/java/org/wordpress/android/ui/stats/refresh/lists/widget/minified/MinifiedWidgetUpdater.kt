@@ -67,6 +67,7 @@ class MinifiedWidgetUpdater
             DARK -> R.layout.stats_widget_minified_dark
         }
         val views = RemoteViews(context.packageName, layout)
+        views.setViewVisibility(R.id.widget_title_container, View.VISIBLE)
         widgetUtils.setSiteIcon(siteModel, context, views, appWidgetId)
         val hasAccessToken = accountStore.hasAccessToken()
         if (networkAvailable && hasAccessToken && siteModel != null && dataType != null) {
@@ -91,6 +92,7 @@ class MinifiedWidgetUpdater
 
     override fun componentName(context: Context) = ComponentName(context, StatsMinifiedWidget::class.java)
 
+    @Suppress("LongParameterList")
     private fun showValue(
         appWidgetManager: AppWidgetManager,
         appWidgetId: Int,
@@ -106,6 +108,7 @@ class MinifiedWidgetUpdater
         }
     }
 
+    @Suppress("LongParameterList")
     private fun loadValue(
         appWidgetManager: AppWidgetManager,
         appWidgetId: Int,

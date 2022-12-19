@@ -1,9 +1,47 @@
-Bénéficiez d’outils de sécurité et de performance puissants avec Jetpack pour Android.
+Jetpack pour WordPress
 
-Rétablissez votre site où que vous soyez en cas de problème. Détectez les menaces et supprimez-les d’un simple appui. Gardez un œil sur l’activité du site pour voir qui a modifié quoi et quand. Consultez vos statistiques pour voir de quels nouveaux pays sont originaires les visiteurs du jour.
+Publiez sur le Web partout où vous allez. Jetpack est tellement plus qu’un créateur de site Web !
 
-L’application prend également en charge les fonctionnalités WordPress que vous attendez. Rédigez un haïku spontané depuis votre canapé. Prenez une photo et publiez-la pendant votre pause déjeuner. Répondez à vos derniers commentaires.
+CRÉER
 
-Jetpack pour Android prend en charge les sites WordPress utilisant Jetpack et un compte connecté à WordPress.com.
+Donnez à vos grandes idées une place sur le Web. Jetpack pour Android est un créateur de site Web et de blog optimisé par WordPress. Utilisez-le pour créer votre site Web.
+Choisissez l’apparence souhaitée parmi une vaste sélection de thèmes WordPress, puis personnalisez votre site à votre image avec des photos, couleurs et polices.
+Les conseils intégrés lors de la prise en main vous guideront à travers les bases de la configuration de votre nouveau site Web afin d’en faire un succès. (Nous ne sommes pas juste un créateur de site Web. Nous sommes votre partenaire et votre équipe de soutien !)
 
-View the Privacy Notice for California Users at https://automattic.com/privacy/#california-consumer-privacy-act-ccpa.
+STATISTIQUES ET TENDANCES
+
+Consultez les statistiques de votre site Web en temps réel pour suivre son activité.
+Surveillez quelles publications et pages reçoivent le plus de trafic au fil du temps en explorant les tendances journalières, hebdomadaires, mensuelles et annuelles.
+Utilisez la carte du trafic pour voir de quels pays sont originaires vos visiteurs.
+
+NOTIFICATIONS
+
+Recevez des notifications à propos des commentaires, des mentions J’aime et des nouveaux abonnés pour que vous puissiez voir les gens réagir à votre site Web en direct.
+Répondez aux nouveaux commentaires au fur et à mesure qu’ils apparaissent pour entretenir la conversation et remercier vos lecteurs.
+
+PUBLIER
+
+Créez des mises à jour, des stories, des photoreportages, des annonces — tout ce que vous voulez ! — avec l’éditeur.
+Donnez vie à vos articles et pages avec vos propres photos et vidéos, ou trouvez l’image parfaite dans la collection de photographies professionnelles gratuites proposées dans l’application.
+Enregistrez vos idées en mode brouillon et revenez-y lorsque l’inspiration vous revient, ou programmez de nouveaux articles pour plus tard afin de garder votre site attrayant.
+Ajoutez des étiquettes et des catégories pour inviter les nouveaux lecteurs à découvrir vos articles, et admirez votre public grandir.
+
+OUTILS DE SÉCURITÉ ET DE PERFORMANCES
+
+Rétablissez votre site depuis n’importe quelle sauvegarde si quelque chose se passe mal.
+Recherchez des menaces et corrigez-les d’une simple touche.
+Gardez un œil sur l’activité du site pour voir qui a modifié quoi et quand.
+
+LECTEUR
+
+Jetpack est plus qu’un créateur de blog. Utilisez-le pour entrer en relation avec une communauté d’écrivains dans le Lecteur WordPress.com. Explorez des milliers de sujets par étiquette, découvrez de nouveaux auteurs et organisations, et suivez celles et ceux qui vous intéressent.
+Conservez les publications qui vous fascinent avec la fonctionnalité Enregistrer pour plus tard.
+
+PARTAGER
+
+Configurez le partage automatique pour avertir vos abonnés sur les réseaux sociaux lorsque vous publiez un nouvel article. Partagez automatiquement votre contenu sur Facebook, Twitter, etc.
+Ajoutez des boutons de partage à vos articles pour que vos visiteurs puissent les diffuser sur leurs réseaux sociaux, et laissez vos fans devenir vos ambassadeurs.
+
+Lire la suite sur https://jetpack.com/mobile
+
+Avis de confidentialité pour les utilisateurs californiens : https://automattic.com/privacy/#california-consumer-privacy-act-ccpa

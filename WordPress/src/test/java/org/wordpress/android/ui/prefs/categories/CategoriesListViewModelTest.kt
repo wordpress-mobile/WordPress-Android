@@ -1,14 +1,14 @@
 package org.wordpress.android.ui.prefs.categories
 
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.never
-import com.nhaarman.mockitokotlin2.times
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
 import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.junit.Before
 import org.junit.Test
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.never
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.Dispatcher
@@ -18,11 +18,12 @@ import org.wordpress.android.fluxc.store.TaxonomyStore.OnTaxonomyChanged
 import org.wordpress.android.fluxc.store.TaxonomyStore.TaxonomyError
 import org.wordpress.android.fluxc.store.TaxonomyStore.TaxonomyErrorType.GENERIC_ERROR
 import org.wordpress.android.ui.posts.GetCategoriesUseCase
-import org.wordpress.android.ui.prefs.categories.CategoriesListViewModel.UiState
-import org.wordpress.android.ui.prefs.categories.CategoriesListViewModel.UiState.Content
-import org.wordpress.android.ui.prefs.categories.CategoriesListViewModel.UiState.Error.GenericError
-import org.wordpress.android.ui.prefs.categories.CategoriesListViewModel.UiState.Error.NoConnection
-import org.wordpress.android.ui.prefs.categories.CategoriesListViewModel.UiState.Loading
+import org.wordpress.android.ui.prefs.categories.list.CategoriesListViewModel
+import org.wordpress.android.ui.prefs.categories.list.UiState
+import org.wordpress.android.ui.prefs.categories.list.UiState.Content
+import org.wordpress.android.ui.prefs.categories.list.UiState.Error.GenericError
+import org.wordpress.android.ui.prefs.categories.list.UiState.Error.NoConnection
+import org.wordpress.android.ui.prefs.categories.list.UiState.Loading
 import org.wordpress.android.util.NetworkUtilsWrapper
 
 @InternalCoroutinesApi

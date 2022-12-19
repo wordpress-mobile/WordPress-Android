@@ -45,7 +45,7 @@ const val MAX_SITE_CHECK_TRIES = 10
 
 class DomainRegistrationDetailsViewModel @Inject constructor(
     private val dispatcher: Dispatcher,
-    private val transactionsStore: TransactionsStore, // needed for events to work
+    @Suppress("unused") private val transactionsStore: TransactionsStore, // needed for events to work
     private val siteStore: SiteStore,
     private val analyticsTracker: AnalyticsTrackerWrapper,
     @param:Named(UI_THREAD) private val uiDispatcher: CoroutineDispatcher
@@ -58,7 +58,7 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
     private var siteCheckTries = 0
 
     private var supportedCountries: List<SupportedDomainCountry>? = null
-    private val _supportedStates = MutableLiveData<List<SupportedStateResponse>>()
+    private val _supportedStates = MutableLiveData<List<SupportedStateResponse>?>()
 
     private val _uiState = MutableLiveData<DomainRegistrationDetailsUiState>()
     val uiState: LiveData<DomainRegistrationDetailsUiState>
@@ -188,7 +188,7 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
                             isStateProgressIndicatorVisible = false,
                             isDomainRegistrationButtonEnabled = true
                     )
-            _showErrorMessage.value = event.error.message
+            event.error?.message?.let { _showErrorMessage.value = it }
             AppLog.e(T.DOMAIN_REGISTRATION, "An error occurred while fetching supported countries")
         } else {
             _uiState.value = uiState.value?.copy(
@@ -255,7 +255,7 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onPrimaryDomainDesignated(event: OnPrimaryDomainDesignated) {
         if (event.isError) { // in case of error we notify used and proceed to next step
-            _showErrorMessage.value = event.error.message
+            event.error?.message?.let { _showErrorMessage.value = it }
             AppLog.e(
                     T.DOMAIN_REGISTRATION,
                     "An error occurred while redeeming a shopping cart : " + event.error.type +
@@ -273,7 +273,7 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
                     T.DOMAIN_REGISTRATION,
                     "An error occurred while updating site details : " + event.error.message
             )
-            _showErrorMessage.value = event.error.message
+            event.error?.message?.let { _showErrorMessage.value = it }
             finishRegistration()
             return
         }

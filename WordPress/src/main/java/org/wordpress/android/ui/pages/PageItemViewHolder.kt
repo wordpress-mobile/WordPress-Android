@@ -27,19 +27,16 @@ import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.ImageUtils
 import org.wordpress.android.util.QuickStartUtils
-import org.wordpress.android.util.capitalizeWithLocaleWithoutLint
-import org.wordpress.android.util.currentLocale
-import org.wordpress.android.util.getDrawableFromAttribute
+import org.wordpress.android.util.extensions.capitalizeWithLocaleWithoutLint
+import org.wordpress.android.util.extensions.currentLocale
+import org.wordpress.android.util.extensions.getDrawableFromAttribute
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType
-import org.wordpress.android.util.setVisible
+import org.wordpress.android.util.extensions.setVisible
 import org.wordpress.android.viewmodel.uistate.ProgressBarUiState
-import org.wordpress.android.viewmodel.uistate.ProgressBarUiState.Determinate
-import org.wordpress.android.viewmodel.uistate.ProgressBarUiState.Indeterminate
 import java.util.Date
 import java.util.Locale
 
-@Suppress("MultiLineIfElse")
 sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layout: Int) :
         RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(layout, parent, false)) {
     abstract fun onBind(pageItem: PageItem)
@@ -72,7 +69,6 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
             const val FEATURED_IMAGE_THUMBNAIL_SIZE_DP = 40
         }
 
-        @ExperimentalStdlibApi
         override fun onBind(pageItem: PageItem) {
             (pageItem as Page).let { page ->
                 val indentWidth = DisplayUtils.dpToPx(parent.context, 16 * page.indent)
@@ -80,10 +76,11 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
                 marginLayoutParams.leftMargin = indentWidth
                 pageItemContainer.layoutParams = marginLayoutParams
 
-                pageTitle.text = if (page.title.isEmpty())
+                pageTitle.text = if (page.title.isEmpty()) {
                     parent.context.getString(R.string.untitled_in_parentheses)
-                else
+                } else {
                     page.title
+                }
 
                 showSubtitle(page.date, page.author, page.subtitle, page.icon)
 
@@ -135,11 +132,12 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
         private fun updateProgressBarState(progressBarUiState: ProgressBarUiState) {
             uiHelper.updateVisibility(uploadProgressBar, progressBarUiState.visibility)
             when (progressBarUiState) {
-                Indeterminate -> uploadProgressBar.isIndeterminate = true
-                is Determinate -> {
+                is ProgressBarUiState.Indeterminate -> uploadProgressBar.isIndeterminate = true
+                is ProgressBarUiState.Determinate -> {
                     uploadProgressBar.isIndeterminate = false
                     uploadProgressBar.progress = progressBarUiState.progress
                 }
+                is ProgressBarUiState.Hidden -> Unit // Do nothing
             }
         }
 
@@ -187,7 +185,6 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
             }
         }
 
-        @ExperimentalStdlibApi
         private fun showSubtitle(inputDate: Date, author: String?, subtitle: Int?, icon: Int?) {
             val date = if (inputDate == Date(0)) Date() else inputDate
             val stringDate = DateTimeUtils.javaDateToTimeSpan(date, parent.context)
@@ -248,10 +245,11 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
 
         override fun onBind(pageItem: PageItem) {
             (pageItem as ParentPage).apply {
-                pageTitle.text = if (pageItem.title.isEmpty())
+                pageTitle.text = if (pageItem.title.isEmpty()) {
                     parent.context.getString(R.string.untitled_in_parentheses)
-                else
+                } else {
                     pageItem.title
+                }
                 radioButton.isChecked = pageItem.isSelected
                 itemView.setOnClickListener {
                     onParentSelected(pageItem)

@@ -26,7 +26,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.ViewUtilsKt;
+import org.wordpress.android.util.extensions.ViewExtensionsKt;
 
 import java.lang.ref.WeakReference;
 
@@ -66,6 +66,7 @@ public class ReaderTagAdapter extends RecyclerView.Adapter<ReaderTagAdapter.TagV
         return mWeakContext.get();
     }
 
+    @SuppressWarnings("deprecation")
     public void refresh() {
         if (mIsTaskRunning) {
             AppLog.w(T.READER, "tag task is already running");
@@ -144,7 +145,7 @@ public class ReaderTagAdapter extends RecyclerView.Adapter<ReaderTagAdapter.TagV
             mTxtTagName = (TextView) view.findViewById(R.id.text_topic);
             mBtnRemove = (ImageButton) view.findViewById(R.id.btn_remove);
             ReaderUtils.setBackgroundToRoundRipple(mBtnRemove);
-            ViewUtilsKt.expandTouchTargetArea(mBtnRemove, R.dimen.reader_remove_button_extra_padding, false);
+            ViewExtensionsKt.expandTouchTargetArea(mBtnRemove, R.dimen.reader_remove_button_extra_padding, false);
         }
     }
 
@@ -153,6 +154,7 @@ public class ReaderTagAdapter extends RecyclerView.Adapter<ReaderTagAdapter.TagV
      */
     private boolean mIsTaskRunning = false;
 
+    @SuppressWarnings("deprecation")
     @SuppressLint("StaticFieldLeak")
     private class LoadTagsTask extends AsyncTask<Void, Void, ReaderTagList> {
         @Override

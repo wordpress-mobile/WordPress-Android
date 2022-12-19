@@ -17,7 +17,6 @@ import android.preference.PreferenceGroup;
 import android.preference.PreferenceScreen;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
-import android.util.Pair;
 import android.util.SparseBooleanArray;
 import android.view.ActionMode;
 import android.view.HapticFeedbackConstants;
@@ -52,7 +51,6 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.text.StringEscapeUtils;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -86,8 +84,7 @@ import org.wordpress.android.ui.prefs.homepage.HomepageSettingsDialog;
 import org.wordpress.android.ui.prefs.timezone.SiteSettingsTimezoneBottomSheet;
 import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.ContextExtensionsKt;
-import org.wordpress.android.util.ContextUtilsKt;
+import org.wordpress.android.util.ArrayUtils;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
@@ -96,13 +93,15 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.ValidationUtils;
-import org.wordpress.android.util.ViewUtilsKt;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPPrefUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils.BlockEditorEnabledSource;
+import org.wordpress.android.util.config.BloggingPromptsFeatureConfig;
 import org.wordpress.android.util.config.BloggingRemindersFeatureConfig;
 import org.wordpress.android.util.config.ManageCategoriesFeatureConfig;
+import org.wordpress.android.util.extensions.ContextExtensionsKt;
+import org.wordpress.android.util.extensions.ViewExtensionsKt;
 import org.wordpress.android.widgets.WPSnackbar;
 
 import java.util.HashMap;
@@ -113,6 +112,8 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import static org.wordpress.android.ui.prefs.WPComSiteSettings.supportsJetpackSiteAcceleratorSettings;
+
+import kotlin.Triple;
 
 /**
  * Allows interfacing with WordPress site settings. Works with WP.com and WP.org v4.5+ (pending).
@@ -184,6 +185,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     @Inject ZendeskHelper mZendeskHelper;
     @Inject ViewModelProvider.Factory mViewModelFactory;
     @Inject BloggingRemindersFeatureConfig mBloggingRemindersFeatureConfig;
+    @Inject BloggingPromptsFeatureConfig mBloggingPromptsFeatureConfig;
     @Inject ManageCategoriesFeatureConfig mManageCategoriesFeatureConfig;
     @Inject UiHelpers mUiHelpers;
 
@@ -410,6 +412,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (data != null) {
             switch (requestCode) {
@@ -911,7 +914,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         }
 
         // customize list dividers
-        prefList.setDivider(ContextUtilsKt.getDrawableFromAttribute(getActivity(), android.R.attr.listDivider));
+        prefList.setDivider(ContextExtensionsKt.getDrawableFromAttribute(getActivity(), android.R.attr.listDivider));
         prefList.setDividerHeight(res.getDimensionPixelSize(R.dimen.site_settings_divider_height));
         // handle long clicks on preferences to display hints
         prefList.setOnItemLongClickListener(this);
@@ -1209,6 +1212,10 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (!mBloggingRemindersFeatureConfig.isEnabled()) {
             removeBloggingRemindersSettings();
         } else {
+            if (mBloggingPromptsFeatureConfig.isEnabled()) {
+                mBloggingRemindersPref.setTitle(R.string.site_settings_blogging_reminders_and_prompts_title);
+            }
+
             mBloggingRemindersViewModel = new ViewModelProvider(getAppCompatActivity(), mViewModelFactory)
                     .get(BloggingRemindersViewModel.class);
             BloggingReminderUtils.observeBottomSheet(
@@ -1649,15 +1656,16 @@ public class SiteSettingsFragment extends PreferenceFragment
             return;
         }
 
-        Pair<String[], String[]> pair = LocaleManager
+        Triple<String[], String[], String[]> supportedLocales = LocaleManager
                 .createSortedLanguageDisplayStrings(mLanguagePref.getEntryValues(), LocaleManager.languageLocale(null));
-        if (pair != null) {
-            String[] sortedEntries = pair.first;
-            String[] sortedValues = pair.second;
+        if (supportedLocales != null) {
+            String[] sortedEntries = supportedLocales.component1();
+            String[] sortedValues = supportedLocales.component2();
+            String[] localizedEntries = supportedLocales.component3();
 
             mLanguagePref.setEntries(sortedEntries);
             mLanguagePref.setEntryValues(sortedValues);
-            mLanguagePref.setDetails(LocaleManager.createLanguageDetailDisplayStrings(sortedValues));
+            mLanguagePref.setDetails(localizedEntries);
         }
     }
 
@@ -1801,7 +1809,7 @@ public class SiteSettingsFragment extends PreferenceFragment
             Toast.makeText(view1.getContext(), R.string.add, Toast.LENGTH_SHORT).show();
             return true;
         });
-        ViewUtilsKt.redirectContextClickToLongPressListener(button);
+        ViewExtensionsKt.redirectContextClickToLongPressListener(button);
 
         return view;
     }
@@ -1935,7 +1943,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     /**
      * This removes all preferences from the General preference group, except for Blogging Reminders – in practice it
      * is removed as well, but then added back.
-     *
+     * <p>
      * In the future, we should consider either moving the Blogging Reminders preference to its own group or
      * replace this approach with something more scalable and efficient.
      */

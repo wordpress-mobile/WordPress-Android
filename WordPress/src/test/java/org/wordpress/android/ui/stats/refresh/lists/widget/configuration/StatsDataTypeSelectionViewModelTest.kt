@@ -1,12 +1,13 @@
 package org.wordpress.android.ui.stats.refresh.lists.widget.configuration
 
-import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
 import org.assertj.core.api.Assertions
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
+import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
@@ -45,6 +46,11 @@ class StatsDataTypeSelectionViewModelTest : BaseUnitTest() {
         viewModel.openDataTypeDialog()
 
         Assertions.assertThat(notification).isNotNull
-        Assertions.assertThat(notification?.getContentIfNotHandled()).isEqualTo(R.string.stats_widget_log_in_message)
+        val message = if (BuildConfig.IS_JETPACK_APP) {
+            R.string.stats_widget_log_in_to_add_message
+        } else {
+            R.string.stats_widget_log_in_message
+        }
+        Assertions.assertThat(notification?.getContentIfNotHandled()).isEqualTo(message)
     }
 }

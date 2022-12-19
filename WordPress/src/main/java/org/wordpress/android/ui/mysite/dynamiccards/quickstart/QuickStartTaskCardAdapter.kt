@@ -9,7 +9,7 @@ import org.wordpress.android.databinding.QuickStartTaskCardBinding
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.DynamicCard.QuickStartDynamicCard.QuickStartTaskCard
 import org.wordpress.android.ui.mysite.dynamiccards.quickstart.QuickStartTaskCardAdapter.QuickStartTaskCardViewHolder
 import org.wordpress.android.ui.utils.UiHelpers
-import org.wordpress.android.util.viewBinding
+import org.wordpress.android.util.extensions.viewBinding
 
 class QuickStartTaskCardAdapter(private val uiHelpers: UiHelpers) : Adapter<QuickStartTaskCardViewHolder>() {
     private var items = listOf<QuickStartTaskCard>()

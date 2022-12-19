@@ -1,17 +1,16 @@
 package org.wordpress.android.ui.jetpack.scan.usecases
 
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.anyOrNull
-import com.nhaarman.mockitokotlin2.times
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.toList
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
+import org.mockito.kotlin.any
+import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.action.ScanAction.FETCH_SCAN_STATE
@@ -26,8 +25,8 @@ import org.wordpress.android.test
 import org.wordpress.android.ui.jetpack.scan.usecases.FetchScanStateUseCase.FetchScanState.Failure
 import org.wordpress.android.ui.jetpack.scan.usecases.FetchScanStateUseCase.FetchScanState.Success
 import org.wordpress.android.util.NetworkUtilsWrapper
+import java.util.function.Consumer
 
-@ExperimentalCoroutinesApi
 @InternalCoroutinesApi
 class FetchScanStateUseCaseTest : BaseUnitTest() {
     private lateinit var useCase: FetchScanStateUseCase
@@ -150,6 +149,6 @@ class FetchScanStateUseCaseTest : BaseUnitTest() {
 
         val result = useCase.fetchScanState(site = site).toList(mutableListOf())
 
-        assertThat(result).allSatisfy { it is Success }
+        assertThat(result).allSatisfy(Consumer { it is Success })
     }
 }

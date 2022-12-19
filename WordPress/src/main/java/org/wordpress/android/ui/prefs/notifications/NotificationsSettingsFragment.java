@@ -12,10 +12,10 @@ import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
-import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
 import android.provider.Settings;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -29,6 +29,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.view.ViewCompat;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.preference.PreferenceManager;
 
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
@@ -43,6 +44,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
+import org.wordpress.android.databinding.JetpackBadgeFooterBinding;
 import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
@@ -59,8 +61,10 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.NotificationsSettings;
 import org.wordpress.android.models.NotificationsSettings.Channel;
 import org.wordpress.android.models.NotificationsSettings.Type;
+import org.wordpress.android.ui.WPLaunchActivity;
 import org.wordpress.android.ui.bloggingreminders.BloggingReminderUtils;
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel;
+import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment;
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.prefs.notifications.FollowedBlogsProvider.PreferenceModel;
@@ -71,12 +75,14 @@ import org.wordpress.android.ui.utils.UiString;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.BuildConfigWrapper;
-import org.wordpress.android.util.ContextExtensionsKt;
+import org.wordpress.android.util.JetpackBrandingUtils;
+import org.wordpress.android.util.JetpackBrandingUtils.Screen;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.config.BloggingRemindersFeatureConfig;
+import org.wordpress.android.util.extensions.ContextExtensionsKt;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -132,6 +138,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment
     @Inject BuildConfigWrapper mBuildConfigWrapper;
     @Inject ViewModelProvider.Factory mViewModelFactory;
     @Inject BloggingRemindersFeatureConfig mBloggingRemindersFeatureConfig;
+    @Inject JetpackBrandingUtils mJetpackBrandingUtils;
     @Inject UiHelpers mUiHelpers;
 
     private BloggingRemindersViewModel mBloggingRemindersViewModel;
@@ -147,7 +154,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment
         addPreferencesFromResource(R.xml.notifications_settings);
         setHasOptionsMenu(true);
         removeSightAndSoundsForAPI26();
-        removeFollowedBlogsPreferenceForJetpackApp();
+        removeFollowedBlogsPreferenceForIfDisabled();
 
         // Bump Analytics
         if (savedInstanceState == null) {
@@ -169,8 +176,8 @@ public class NotificationsSettingsFragment extends PreferenceFragment
         }
     }
 
-    private void removeFollowedBlogsPreferenceForJetpackApp() {
-        if (mBuildConfigWrapper.isJetpackApp()) {
+    private void removeFollowedBlogsPreferenceForIfDisabled() {
+        if (!mBuildConfigWrapper.isFollowedSitesSettingsEnabled()) {
             PreferenceScreen preferenceScreen =
                 (PreferenceScreen) findPreference(getActivity().getString(R.string.wp_pref_notifications_root));
 
@@ -183,6 +190,17 @@ public class NotificationsSettingsFragment extends PreferenceFragment
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        boolean isLoggedIn = mAccountStore.hasAccessToken();
+        if (!isLoggedIn) {
+            // Not logged in users can start Notification Settings from App info > Notifications menu.
+            // If there isn't a logged in user, just show the entry screen.
+            Intent intent = new Intent(getContext(), WPLaunchActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            getActivity().finish();
+            return;
+        }
 
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getActivity());
         mDeviceId = settings.getString(NotificationsUtils.WPCOM_PUSH_DEVICE_SERVER_ID, "");
@@ -202,10 +220,26 @@ public class NotificationsSettingsFragment extends PreferenceFragment
         final ListView lv = (ListView) view.findViewById(android.R.id.list);
         if (lv != null) {
             ViewCompat.setNestedScrollingEnabled(lv, true);
+            addJetpackBadgeAsFooterIfEnabled(lv);
         }
         initBloggingReminders();
     }
 
+    private void addJetpackBadgeAsFooterIfEnabled(ListView listView) {
+        if (mJetpackBrandingUtils.shouldShowJetpackBranding()) {
+            LayoutInflater inflater = LayoutInflater.from(getContext());
+            final JetpackBadgeFooterBinding binding = JetpackBadgeFooterBinding.inflate(inflater);
+            if (mJetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
+                binding.footerJetpackBadge.jetpackPoweredBadge.setOnClickListener(v -> {
+                    mJetpackBrandingUtils.trackBadgeTapped(Screen.NOTIFICATIONS_SETTINGS);
+                    new JetpackPoweredBottomSheetFragment().show(
+                            ((AppCompatActivity) getActivity()).getSupportFragmentManager(),
+                            JetpackPoweredBottomSheetFragment.TAG);
+                });
+            }
+            listView.addFooterView(binding.getRoot(), null, false);
+        }
+    }
 
     @Override
     public void onStart() {
@@ -887,8 +921,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (key.equals(getString(R.string.pref_key_notification_pending_drafts))) {
             if (getActivity() != null) {
-                SharedPreferences prefs =
-                        androidx.preference.PreferenceManager.getDefaultSharedPreferences(getActivity());
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
                 boolean shouldNotifyOfPendingDrafts = prefs.getBoolean("wp_pref_notification_pending_drafts", true);
                 if (shouldNotifyOfPendingDrafts) {
                     AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_PENDING_DRAFTS_SETTINGS_ENABLED);

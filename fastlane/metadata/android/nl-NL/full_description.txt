@@ -1,45 +1,40 @@
-WordPress voor Android brengt de kracht van online publiceren binnen handbereik. Het is een sitemaker en nog zo veel meer!
+WordPress voor Android brengt de kracht van webpublicaties in je zak. Het is een sitemaker en nog veel meer!
 
-MAKEN
-- Geef je grote ideeën een plekje op het web. WordPress voor Android is een sitebouwer en een blogmaker. Gebruik het om je site te maken.
-- Kies de juiste look en feel uit een brede selectie WordPress-thema's en pas deze aan met foto's, kleuren en lettertypen in je unieke stijl.
-- Met de ingebouwde snelle tips loop je snel door de basisprincipes van de installatie en kun je gaan knallen met je nieuwe site. (We zijn niet alleen een sitemaker, maar je partner en grootste fan!)
-
-STATISTIEKEN
-- Bekijk de statistieken van je site in real-time om de activiteit op je site te volgen.
-- Volg welke berichten en pagina's in de loop van de tijd het meeste verkeer krijgen door dagelijkse, wekelijkse, maandelijkse en jaarlijkse inzichten te analyseren.
-- Gebruik de verkeerskaart om te zien uit welke landen je bezoekers komen.
-
-KENNISGEVINGEN
-- Ontvang kennisgevingen over reacties, vind-ik-leuks en nieuwe volgers, zodat je kunt zien hoe mensen reageren op je site.
-- Reageer op nieuwe reacties zodra ze verschijnen om het gesprek vlot te laten verlopen en je lezers te erkennen.
+CREËREN
+- Geef je grote ideeën een thuis op het web. WordPress voor Android is een sitebouwer en een blogmaker.
+- Kies de juiste look en feel uit een brede selectie van WordPress thema's en pas deze vervolgens aan met foto's, kleuren en lettertypen zodat het helemaal bij je past.
+- Ingebouwde snelstart tips leiden je door de basisbeginselen van de installatie om je nieuwe site klaar te maken voor succes.
 
 PUBLICEREN
-- Maak updates, verhalen, fotoverslagen, aankondigingen en wat je maar wilt! -- met de editor.
-- Breng je berichten en pagina's tot leven met foto's en video's uit je camera en albums of vind de perfecte foto in de collectie royaltyvrije professionele foto's in de app.
-- Bewaar ideeën als concepten en kom er later op terug als je meer inspiratie hebt of plan nieuwe berichten voor een later moment, zodat je site altijd actueel en aantrekkelijk is.
-- Voeg tags en categorieën toe om nieuwe lezers naar je berichten te leiden en kijk toe hoe je publiek groeit.
+- Maak updates, verhalen, foto-essays aankondigingen - alles! -- Met de editor.
+- Breng je berichten en pagina's tot leven met foto's en video's van je camera en albums, of zoek het perfecte beeld met de in-app collectie van gratis te gebruiken professionele fotografie.
+- Bewaar ideeën als conceptversie en kom erop terug als je inspiratie terug is, of plan nieuwe berichten in voor de toekomst zodat je site altijd fris en boeiend is.
+- Voeg tags en categorieën toe om nieuwe lezers te helpen je berichten te ontdekken, en zie hoe je publiek groeit.
+
+STATS
+- Bekijk de statistieken van je site in real time om de activiteit op je site bij te houden.
+- Volg welke berichten en pagina's het meeste verkeer krijgen door de dagelijkse, wekelijkse, maandelijkse en jaarlijkse statistieken te bekijken.
+
+MELDINGEN
+- Ontvang meldingen over reacties, vind-ik-leuks en nieuwe volgers, zodat je kunt zien hoe mensen reageren op je site terwijl het gebeurt.
+- Beantwoord nieuwe opmerkingen zodra ze verschijnen om het gesprek gaande te houden en je lezers te erkennen.
 
 READER
-- WordPress is meer dan een blogmaker. Gebruik het om in contact te komen met een community van schrijvers in de WordPress Reader. Verken duizenden onderwerpen per tag, ontdek nieuwe auteurs en organisaties en volg mensen die je interesseren.
-- Bewaar de berichten die je fascineren met de functie Opslaan voor later.
+- Verken duizenden onderwerpen per tag, ontdek nieuwe auteurs en organisaties, en volg degenen die je interesse wekken.
+- Bewaar de berichten die je fascineren met de functie Bewaar voor later.
 
 DELEN
-- Stel automatische delen in om je volgers op sociale media te laten weten wanneer je een nieuw bericht publiceert. Plaats automatisch dezelfde berichten op Facebook, Twitter en meer.
-- Voeg knoppen voor delen op social media toe aan je berichten zodat je bezoekers ze kunnen delen met hun netwerk. Laat je fans jouw promotie doen.
+- Stel automatisch delen in, om je volgers op sociale media te laten weten wanneer je een nieuw bericht publiceert.
+- Voeg sociaal delen knoppen toe aan je berichten zodat je bezoekers ze kunnen delen met hun netwerk, en laat je fans je ambassadeurs worden.
 
 Waarom WordPress?
 
-Er zijn talloze bloggingservices, sitebouwers en sociale netwerken. Waarom zou je je site maken met WordPress?
+Er zijn veel blogdiensten, site bouwers, en sociale netwerken. Waarom zou je je site met WordPress maken?
 
-WordPress stuurt meer dan een derde van alle sites op het web aan. Het wordt gebruikt door hobbyblogs, bedrijven van elke omvang, webwinkels en zelfs de grootste nieuwssites. De kans is groot dat veel van je favoriete sites op WordPress draaien.
+WordPress is goed voor meer dan een derde van het internet. Het wordt gebruikt door hobby blogs, bedrijven van alle maten, online winkels, zelfs de grootste nieuwssites op het internet. De kans is groot dat veel van je favoriete sites op WordPress draaien.
 
-Met WordPress blijf je eigenaar van je inhoud. Op andere sociale netwerken word je als handelswaar behandeld en ben je niet de eigenaar van de inhoud van je berichten. Maar met WordPress zijn je publicaties helemaal van jou en kun je ze overal meenemen.
+Met WordPress, ben je eigenaar van je eigen inhoud. Andere sociale netwerken behandelen je als handelswaar, en gaan ervan uit dat je eigenaar bent van de inhoud die je plaatst. Maar met WordPress is alles wat je publiceert van jou, en je kunt het met je meenemen waarnaartoe je maar wil.
 
-WordPress is een open source sitemaker, wat inhoudt dat iedereen kan zien hoe het is gemaakt en er zelfs aan kan bijdragen. Andere services en sociale netwerken zijn eigen, gesloten systemen. Je weet nooit zeker hoe ze precies werken of wat ze doen. En ze kunnen zomaar verdwijnen!
+Of je nu een sitebouwer nodig hebt om je site te maken, of een eenvoudige blogmaker, WordPress kan je helpen. Het geeft je prachtige ontwerpen, krachtige functies, en de vrijheid om alles te bouwen wat je maar wilt.
 
-Of je nu een sitebouwer nodig hebt om je site te maken of een eenvoudige blogmaker, WordPress is het antwoord! Je krijgt mooie designs, krachtige functies en de vrijheid om alles te bouwen wat je maar wilt.
-
-WordPress voor Android ondersteunt zelfgehoste sites met WordPress 4.0 en hoger en alle sites op WordPress.com. Net als WordPress is WordPress voor Android open source. Lees meer op  https://wp.me/P7jrAc-tJ. Heb je hulp nodig met de app? Stuur een tweet naar @WPAndroid, of bezoek onze forums op https://android.forums.wordpress.org/forum/troubleshooting.
-
-California users privacy notice: https://wp.me/Pe4R-d/#california-consumer-privacy-act-ccpa.
+Californische gebruikers privacy verklaring: https://wp.me/Pe4R-d/#california-consumer-privacy-act-ccpa.

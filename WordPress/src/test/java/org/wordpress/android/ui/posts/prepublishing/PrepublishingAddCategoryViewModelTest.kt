@@ -1,10 +1,6 @@
 package org.wordpress.android.ui.posts.prepublishing
 
 import android.os.Bundle
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.times
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -12,6 +8,10 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.any
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
@@ -159,7 +159,7 @@ class PrepublishingAddCategoryViewModelTest : BaseUnitTest() {
         val uiStates = mutableListOf<UiState>()
         viewModel.uiState.observeForever { uiStates.add(it) }
 
-        val navigateBack = mutableListOf<Bundle>()
+        val navigateBack = mutableListOf<Bundle?>()
         viewModel.navigateBack.observeForever { navigateBack.add(it) }
 
         val dismissKeyboard = mutableListOf<Event<Unit>>()
@@ -183,7 +183,7 @@ class PrepublishingAddCategoryViewModelTest : BaseUnitTest() {
     // set up observers
     private data class Observers(
         val uiStates: List<UiState>,
-        val navigateBack: List<Bundle>,
+        val navigateBack: List<Bundle?>,
         val dismissKeyboard: List<Event<Unit>>,
         val toolbarTitleUiState: List<UiString>,
         val snackbarMsgs: List<Event<SnackbarMessageHolder>>

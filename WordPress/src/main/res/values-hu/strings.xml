@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2021-02-17 12:52:29+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/3.0.0-alpha.2
+Generator: GlotPress/4.0.0-alpha.3
 Language: hu
 -->
 <resources>
@@ -94,13 +94,18 @@ Language: hu
     <string name="username">Felhasználó név</string>
     <string name="log_in">Bejelentkezés</string>
     <string name="reader">Olvasó</string>
+    <string name="featured">Használat kiemelt képként</string>
     <string name="pages">Oldalak</string>
     <string name="no_network_title">Nincs elérhető hálózat</string>
+    <string name="width">Szélesség</string>
     <string name="anonymous">Névtelen</string>
+    <string name="caption">Felirat (nem kötelező)</string>
+    <string name="featured_in_post">Kép beillesztése a bejegyzés tartalmába</string>
     <string name="posts">Bejegyzés</string>
     <string name="ok">OK</string>
     <string name="done">kész</string>
     <string name="link_enter_url">URL</string>
+    <string name="uploading">Feltöltés…</string>
     <string name="tos">Szolgáltatási feltételek</string>
     <string name="version">verzió</string>
     <string name="app_title">WordPress for Android</string>

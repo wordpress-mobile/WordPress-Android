@@ -1,1 +1,21 @@
+plugins {
+    id "com.android.library"
+}
 
+android {
+    compileSdkVersion rootProject.compileSdkVersion
+    defaultConfig {
+        minSdkVersion rootProject.minSdkVersion
+        targetSdkVersion rootProject.targetSdkVersion
+    }
+}
+
+dependencies {
+    implementation("com.github.tomakehurst:wiremock:$wiremockVersion") {
+        exclude group: 'org.apache.httpcomponents', module: 'httpclient'
+        exclude group: 'org.apache.commons', module: 'commons-lang3'
+        exclude group: 'asm', module: 'asm'
+        exclude group: 'org.json', module: 'json'
+    }
+    implementation "org.apache.httpcomponents:httpclient-android:$wiremockHttpClientVersion"
+}

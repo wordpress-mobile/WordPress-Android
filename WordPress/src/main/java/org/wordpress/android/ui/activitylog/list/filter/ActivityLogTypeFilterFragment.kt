@@ -22,7 +22,7 @@ import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterVie
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel.UiState.FullscreenLoading
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.ColorUtils
-import org.wordpress.android.util.getColorResIdFromAttribute
+import org.wordpress.android.util.extensions.getColorResIdFromAttribute
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel
 import org.wordpress.android.viewmodel.activitylog.DateRange
 import org.wordpress.android.viewmodel.observeEvent
@@ -85,6 +85,7 @@ class ActivityLogTypeFilterFragment : DialogFragment() {
         initAdapter()
     }
 
+    @Suppress("UseCheckOrError")
     private fun ActivityLogTypeFilterFragmentBinding.initViewModel() {
         viewModel = ViewModelProvider(this@ActivityLogTypeFilterFragment, viewModelFactory)
                 .get(ActivityLogTypeFilterViewModel::class.java)

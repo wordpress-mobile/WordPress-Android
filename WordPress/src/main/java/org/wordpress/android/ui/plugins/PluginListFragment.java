@@ -32,7 +32,7 @@ import org.wordpress.android.fluxc.model.plugin.ImmutablePluginModel;
 import org.wordpress.android.models.networkresource.ListState;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.ColorUtils;
-import org.wordpress.android.util.ContextExtensionsKt;
+import org.wordpress.android.util.extensions.ContextExtensionsKt;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -80,6 +80,7 @@ public class PluginListFragment extends Fragment {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         // this enables us to clear the search icon in onCreateOptionsMenu when the list isn't showing search results

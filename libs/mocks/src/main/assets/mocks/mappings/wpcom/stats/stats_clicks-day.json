@@ -1,0 +1,80 @@
+{
+    "request": {
+        "method": "GET",
+        "urlPathPattern": "/rest/v1.1/sites/([0-9]+)/stats/clicks/",
+        "queryParameters": {
+            "period": {
+                "equalTo": "day"
+            },
+            "max": {
+                "matches": "[0-9]+"
+            },
+            "date": {
+                "matches": "(.*)"
+            },
+            "locale": {
+                "matches": "(.*)"
+            }
+        }
+    },
+    "response": {
+        "status": 200,
+        "jsonBody": {
+            "date": "{{now format='yyyy-MM-dd'}}",
+            "days": {
+                "{{now format='yyyy-MM-dd'}}": {
+                    "clicks": [{
+                        "icon": null,
+                        "url": null,
+                        "name": "penguin.com",
+                        "views": 15,
+                        "children": [{
+                            "url": "https://penguin.com/2021/07/29",
+                            "name": "penguin.com/2021/07/29",
+                            "views": 8
+                        }, {
+                            "url": "https://penguin.com/2021/12/30",
+                            "name": "penguin.com/2021/12/30",
+                            "views": 4
+                        }, {
+                            "url": "https://penguin.com/2021/12/14",
+                            "name": "penguin.com/2021/12/14",
+                            "views": 3
+                        }]
+                    }, {
+                        "icon": null,
+                        "url": null,
+                        "name": "docs.google.com",
+                        "views": 6,
+                        "children": [{
+                            "url": "https://docs.google.com",
+                            "name": "docs.google.com",
+                            "views": 5
+                        }, {
+                            "url": "https://docs.google.com",
+                            "name": "docs.google.com",
+                            "views": 1
+                        }]
+                    }, {
+                        "icon": null,
+                        "url": null,
+                        "name": "github.com",
+                        "views": 4,
+                        "children": [{
+                            "url": "https://github.com/wordpress-mobile/WordPress-Android",
+                            "name": "github.com/wordpress-mobile/WordPress-Android",
+                            "views": 3
+                        }, {
+                            "url": "https://github.com/orgs/wordpress-mobile",
+                            "name": "github.com/orgs/wordpress-mobile",
+                            "views": 1
+                        }]
+                    }],
+                    "other_clicks": 0,
+                    "total_clicks": 32
+                }
+            },
+            "period": "day"
+        }
+    }
+}

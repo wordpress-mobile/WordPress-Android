@@ -1,45 +1,40 @@
-WordPress para Android pone el poder de la publicación web en tu bolsillo. ¡Es un creador de webs y mucho más!
+WordPress para Android te permite llevar contigo el poder para publicar en la web. Es mucho más que un creador de sitios web.
 
-CREA
-- Dale a tus grandes ideas un hogar en la web. WordPress para Android es un constructor de webs y un creador de blogs. Úsalo para crear tu web.
-- Elige el aspecto adecuado de una amplia selección de temas para WordPress y personalízalo con fotos, colores y fuentes para que sea único para ti.
-- Los consejos de inicio rápido incorporados te guían a través de los conceptos básicos de configuración para configurar tu nueva web con éxito. (No somos solo un creador de webs, ¡somos tu compañero y tu equipo de animadores!)
+CREAR
+- Da a tus grandes ideas un hogar en la web. WordPress para Android es un creador de sitios web y de blogs.
+- Escoge el aspecto perfecto entre una amplia selección de temas de WordPress y personalízalo con fotos, colores y fuentes para que sea único.
+- Los consejos de inicio rápido integrados te guiarán a través de los aspectos básicos de la configuración para que tu nuevo sitio web arrase en Internet.
+
+PUBLICAR
+- Con el editor, podrás crear cualquier cosa: desde actualizaciones e historias hasta anuncios de ensayos fotográficos.
+- Da vida a tus entradas y páginas con fotos y videos de tu cámara y álbumes, o encuentra la imagen perfecta con la colección de fotografías profesionales de uso gratuito que encontrarás en la aplicación. 
+- Guarda las ideas como borradores para recuperarlas cuando te llegue la inspiración, o programa nuevas entradas para más adelante para que tu sitio siempre esté actualizado y sea atractivo.
+- Añade etiquetas y categorías para que sea más fácil encontrar tus entradas y conseguir nuevos lectores, y observa cómo crece tu audiencia.
 
 ESTADÍSTICAS
-- Comprueba las estadísticas de tu web en tiempo real para hacer un seguimiento de la actividad en tu sitio.
-- Realiza un seguimiento de las entradas y páginas que generan más tráfico a través del tiempo mediante la exploración de información diaria, semanal, mensual y anual.
-- Utiliza el mapa de tráfico para ver de qué países vienen tus visitantes.
+- Consulta estadísticas del sitio web en tiempo real para supervisar la actividad del sitio.
+- Comprueba qué entradas y páginas reciben más tráfico a lo largo del tiempo con las estadísticas diarias, semanales, mensuales y anuales.
 
-AVISOS
-- Recibe avisos sobre comentarios, me gusta y nuevos seguidores para que puedas ver a la gente reaccionar a tu web en el momento en que sucede.
-- Responde a los nuevos comentarios a medida que aparecen para mantener la conversación fluida y agradecer a tus lectores.
-
-PUBLICA
-- Crea actualizaciones, historias, anuncios de ensayos fotográficos, ¡cualquier cosa! -- con el editor.
-- Da vida a tus entradas y páginas con fotos y vídeos de tu cámara y álbumes o encuentra la imagen perfecta con la colección de fotografías profesionales gratuitas.
-- Guarda las ideas como borradores y vuelve a ellas cuando vuelva tu musa o programa nuevas entradas para el futuro para que tu sitio esté siempre fresco y atractivo.
-- Añada etiquetas y categorías para ayudar a los nuevos lectores a descubrir tus entradas y ver cómo crece tu audiencia.
+NOTIFICACIONES
+- Recibe notificaciones sobre comentarios, Me gusta y nuevos seguidores para que puedas ver las reacciones a tu sitio web en el momento en que se producen.
+- Contesta a los nuevos comentarios a medida que aparezcan para que la conversación sea fluida y los lectores reciban una respuesta.
 
 LECTOR
-- WordPress es más que un creador de blogs - úsalo para conectarte con una comunidad de escritores en WordPress Reader. Explora miles de temas por etiqueta, descubre nuevos autores y organizaciones y sigue a aquellos que despiertan tu interés.
-- Aférrate a las entradas que te fascinen con la función de guardar para más tarde.
+- Explora miles de temas por etiquetas, descubre nuevos autores y organizaciones, y sigue a los que más te interesen.
+- Conserva tus entradas favoritas con la función Guardar para luego.
 
-COMPARTE
-- Configura el uso compartido automatizado para avisar a tus seguidores en los medios sociales cuando publiques una nueva entrada. Lanza automáticamente tus entradas a Facebook, Twitter y más.
-- Añade botones de compartición social a tus entradas para que tus visitantes puedan compartirlas con su red y deja que tus fans se conviertan en tus embajadores.
+COMPARTIR
+- Configura la función de compartir automáticamente y avisa a tus seguidores en las redes sociales cada vez que publiques una nueva entrada.
+- Añade botones para que tus visitantes puedan compartir tus entradas en las redes sociales: así tus fans serán tus embajadores.
 
 ¿Por qué WordPress?
 
-Hay muchos servicios de blogs, creadores de webs y redes sociales por ahí. ¿Por qué crear tu web con WordPress?
+Hay un montón de servicios de blogs, creadores de sitios web y redes sociales en el mundo. ¿Por qué crear tu sitio web con WordPress?
 
-WordPress hace funcionar un tercio de la web. Lo utilizan blogs de aficionados, empresas de todos los tamaños, tiendas online e incluso los sitios de noticias más grandes de Internet. Lo más probable es que muchas de tus webs favoritas se ejecuten en WordPress.
+Un tercio de la web utiliza WordPress. Lo usan blogs de aficionados, empresas de todos los tamaños, tiendas online, incluso los sitios más grandes de noticias de Internet. Hay muchas probabilidades de que tus sitios web favoritos funcionen con WordPress.
 
-Con WordPress posees tu propio contenido. Otras redes sociales te tratan como mercancía y asumen la propiedad del contenido que publicas. Pero con WordPress todo lo que publiques es tuyo y puedes llevártelo contigo a donde quieras.
+Con WordPress, tú eres el propietario de tu contenido. Otras redes sociales te ofrecen "comodidad" y asumen la propiedad del contenido que publicas. Sin embargo, con WordPress todo el contenido que publiques es de tu propiedad y puedes llevarlo contigo donde quieras.
 
-WordPress es un creador de webs de código abierto, lo que significa que cualquiera puede ver cómo se hace e incluso contribuir.  Otros servicios y redes sociales son sistemas propietarios y cerrados; nunca se puede estar seguro de cómo funcionan o qué están haciendo, ¡y pueden desaparecer!
+Tanto si necesitas un creador de sitios web para crear el tuyo como si necesitas un simple creador de blogs, WordPress puede ayudarte. Te ofrece preciosos diseños, funciones potentes y la libertad de crear lo que quieras.
 
-Tanto si necesitas un constructor de webs para crear tu web, como un simple creador de blogs, WordPress puede ayudarte. Te da bonitos diseños, características poderosas y la libertad de crear lo que quieras.
-
-WordPress para Android es compatible con los sitios autoalojados que ejecutan WordPress 4.0 y posteriores y con todos los sitios de WordPress.com. Al igual que WordPress, WordPress para Android es de código abierto. Obtén más información en https://wp.me/P7jrAc-tJ. ¿Necesitas ayuda con la aplicación? Envíanos un tuit a @WPAndroid, o visita nuestros foros en https://android.forums.wordpress.org/forum/troubleshooting.
-
-Aviso de privacidad para los usuarios de California: https://wp.me/Pe4R-d/#california-consumer-privacy-act-ccpa.
+Aviso de privacidad para usuarios de California: https://wp.me/Pe4R-d/#california-consumer-privacy-act-ccpa.

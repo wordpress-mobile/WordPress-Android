@@ -1,10 +1,10 @@
 package org.wordpress.android.viewmodel.pages
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus
@@ -58,7 +58,7 @@ class SearchListViewModel
         pagesViewModel.searchPages.removeObserver(searchObserver)
     }
 
-    private val searchObserver = Observer<SortedMap<PageListType, List<PageModel>>> { pages ->
+    private val searchObserver = Observer<SortedMap<PageListType, List<PageModel>>?> { pages ->
         if (pages != null) {
             loadFoundPages(pages)
 
@@ -68,8 +68,8 @@ class SearchListViewModel
         }
     }
 
-    fun onMenuAction(action: Action, pageItem: Page): Boolean {
-        return pagesViewModel.onMenuAction(action, pageItem)
+    fun onMenuAction(action: Action, pageItem: Page, context: Context? = null): Boolean {
+        return pagesViewModel.onMenuAction(action, pageItem, context)
     }
 
     fun onItemTapped(pageItem: Page) {

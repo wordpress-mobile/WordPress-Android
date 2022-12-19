@@ -7,11 +7,6 @@
     <issue id="RtlSymmetry" severity="warning" />
     <issue id="UseSparseArrays" severity="warning" />
 
-    <issue id="NewApi">
-        <warning path="src/main/res/values/reader_styles.xml" />
-        <warning path="src/main/res/values/styles.xml" />
-    </issue>
-
     <!-- ERROR -->
     <issue id="SimpleDateFormat" severity="error" />
     <issue id="RtlCompat" severity="error" />
@@ -20,7 +15,9 @@
     <issue id="InconsistentArrays" severity="error" />
     <issue id="HardcodedText" severity="error" />
     <issue id="IconDuplicates" severity="error" />
-    <issue id="IconDipSize" severity="error" />
+    <issue id="IconDipSize" severity="error">
+        <ignore path="**/libs/editor/src/main/res/drawable-*/format_bar_chevron.png" />
+    </issue>
     <issue id="InconsistentArrays" severity="error" />
     <issue id="StringFormatCount" severity="error" />
     <issue id="ScrollViewSize" severity="error" />
@@ -83,7 +80,7 @@
     </issue>
 
     <issue id="UnusedResources" severity="error">
-        <ignore path="**/WordPressEditor/**" />
+        <ignore path="**/libs/editor/**" />
         <ignore path="**/.gradle/caches/**" />
         <ignore path="**/generated/**" />
         <ignore regexp=".*\/values\-([a-z]|[A-Z]|\-){2,6}\/strings\.xml$"/>

@@ -7,7 +7,7 @@ import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderRecommen
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.BLAVATAR_CIRCULAR
-import org.wordpress.android.util.viewBinding
+import org.wordpress.android.util.extensions.viewBinding
 
 class ReaderRecommendedBlogViewHolder(
     parent: ViewGroup,

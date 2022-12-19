@@ -1,0 +1,31 @@
+{
+    "request": {
+        "method": "GET",
+        "urlPath": "/rest/v1.1/sites/UNEXISTING/stats/top-authors/"
+    },
+    "response": {
+        "status": 200,
+        "jsonBody": {
+            "date": "{{fnow format='yyyy-MM-dd'}}",
+            "days": {
+                "{{fnow format='yyyy-MM-dd'}}": {
+                    "authors": [
+                        {
+                            "name": "e2eflowtestingmobile",
+                            "avatar": "https://1.gravatar.com/avatar/7a4015c11be6a342f65e0e169092d402?s=96&d=identicon",
+                            "views": 145,
+                            "posts": [],
+                            "follow_data": {}
+                        }
+                    ]
+                }
+            },
+            "period": "day"
+        },
+        "headers": {
+            "Content-Type": "application/json",
+            "Connection": "keep-alive",
+            "Cache-Control": "no-cache, must-revalidate, max-age=0"
+        }
+    }
+}

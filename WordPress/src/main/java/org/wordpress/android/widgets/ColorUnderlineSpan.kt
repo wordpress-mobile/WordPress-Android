@@ -5,6 +5,7 @@ import android.text.style.CharacterStyle
 import android.text.style.UpdateAppearance
 
 class ColorUnderlineSpan(var color: Int) : CharacterStyle(), UpdateAppearance {
+    @Suppress("SwallowedException")
     override fun updateDrawState(tp: TextPaint) {
         try {
             // we have to resort to reflection instead of custom span, because of the bug in LineBackgroundSpan

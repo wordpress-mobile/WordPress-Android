@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageButton
+        android:id="@+id/backButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/negative_margin_medium"
+        android:backgroundTint="@color/transparent"
+        android:contentDescription="@string/navigate_back_desc"
+        android:src="@drawable/ic_arrow_left_white_24dp"
+        android:tint="?attr/colorOnSurface" />
+
+    <TextView
+        android:id="@+id/appBarTitle"
+        style="@style/ModalLayoutPickerHeader"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:textAlignment="textStart"
+        android:text="@string/new_site_creation_intents_title" />
+
+    <Button
+        android:id="@+id/skipButton"
+        style="@style/SiteCreationSkipButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:text="@string/button_skip" />
+</LinearLayout>

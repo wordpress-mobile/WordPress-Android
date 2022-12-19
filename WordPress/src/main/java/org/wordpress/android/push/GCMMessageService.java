@@ -1,5 +1,6 @@
 package org.wordpress.android.push;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -7,7 +8,6 @@ import androidx.annotation.NonNull;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
-import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
@@ -22,6 +22,9 @@ import javax.inject.Inject;
 
 import static org.wordpress.android.push.GCMMessageHandler.PUSH_TYPE_ZENDESK;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class GCMMessageService extends FirebaseMessagingService {
     public static final String EXTRA_VOICE_OR_INLINE_REPLY = "extra_voice_or_inline_reply";
 
@@ -34,12 +37,6 @@ public class GCMMessageService extends FirebaseMessagingService {
     @Inject ZendeskHelper mZendeskHelper;
     @Inject SystemNotificationsTracker mSystemNotificationsTracker;
     @Inject GCMMessageHandler mGCMMessageHandler;
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        ((WordPress) getApplication()).component().inject(this);
-    }
 
     private void synchronizedHandleDefaultPush(@NonNull Map<String, String> data) {
         // ACTIVE_NOTIFICATIONS_MAP being static, we can't just synchronize the method
@@ -84,5 +81,18 @@ public class GCMMessageService extends FirebaseMessagingService {
         }
 
         synchronizedHandleDefaultPush(data);
+    }
+
+    /**
+     * Called if InstanceID token is updated. This may occur if the security of
+     * the previous token had been compromised. Note that this is also called
+     * when the InstanceID token is initially generated, so this is where
+     * you retrieve the token.
+     */
+
+    @Override public void onNewToken(@NonNull String s) {
+        super.onNewToken(s);
+        GCMRegistrationIntentService.enqueueWork(this,
+                new Intent(this, GCMRegistrationIntentService.class));
     }
 }

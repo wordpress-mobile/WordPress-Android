@@ -24,22 +24,6 @@ import org.wordpress.android.ui.media.MediaBrowserType.AZTEC_EDITOR_PICKER
 import org.wordpress.android.ui.media.MediaBrowserType.GRAVATAR_IMAGE_PICKER
 import org.wordpress.android.ui.media.MediaBrowserType.SITE_ICON_PICKER
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.ProgressDialogUiModel
-import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon
-import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon.ANDROID_CAPTURE_PHOTO
-import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon.ANDROID_CAPTURE_VIDEO
-import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon.ANDROID_CHOOSE_PHOTO
-import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon.ANDROID_CHOOSE_PHOTO_OR_VIDEO
-import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon.ANDROID_CHOOSE_VIDEO
-import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon.GIF
-import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon.STOCK_MEDIA
-import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon.WP_MEDIA
-import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon.WP_STORIES_CAPTURE
-import org.wordpress.android.ui.photopicker.PhotoPickerUiItem.ClickAction
-import org.wordpress.android.ui.photopicker.PhotoPickerUiItem.ToggleAction
-import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.BottomBarUiModel.BottomBar.INSERT_EDIT
-import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.BottomBarUiModel.BottomBar.MEDIA_SOURCE
-import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.BottomBarUiModel.BottomBar.NONE
-import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.PopupMenuUiModel.PopupMenuItem
 import org.wordpress.android.ui.posts.editor.media.CopyMediaToAppStorageUseCase
 import org.wordpress.android.ui.posts.editor.media.GetMediaModelUseCase
 import org.wordpress.android.ui.utils.UiString
@@ -58,7 +42,6 @@ import org.wordpress.android.util.merge
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.ScopedViewModel
-import java.util.HashMap
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -69,7 +52,7 @@ import javax.inject.Named
 class PhotoPickerViewModel @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
-    private val deviceMediaListBuilder: DeviceMediaListBuilder,
+    @Suppress("DEPRECATION") private val deviceMediaListBuilder: DeviceMediaListBuilder,
     private val analyticsUtilsWrapper: AnalyticsUtilsWrapper,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     private val permissionsHandler: PermissionsHandler,
@@ -80,8 +63,8 @@ class PhotoPickerViewModel @Inject constructor(
     private val _navigateToPreview = MutableLiveData<Event<UriWrapper>>()
     private val _onInsert = MutableLiveData<Event<List<UriWrapper>>>()
     private val _showPopupMenu = MutableLiveData<Event<PopupMenuUiModel>>()
-    private val _photoPickerItems = MutableLiveData<List<PhotoPickerItem>>()
-    private val _selectedIds = MutableLiveData<List<Long>>()
+    @Suppress("DEPRECATION") private val _photoPickerItems = MutableLiveData<List<PhotoPickerItem>>()
+    private val _selectedIds = MutableLiveData<List<Long>?>()
     private val _onIconClicked = MutableLiveData<Event<IconClickEvent>>()
     private val _onPermissionsRequested = MutableLiveData<Event<PermissionsRequested>>()
     private val _softAskRequest = MutableLiveData<SoftAskRequest>()
@@ -94,9 +77,9 @@ class PhotoPickerViewModel @Inject constructor(
     val onShowPopupMenu: LiveData<Event<PopupMenuUiModel>> = _showPopupMenu
     val onPermissionsRequested: LiveData<Event<PermissionsRequested>> = _onPermissionsRequested
 
-    val selectedIds: LiveData<List<Long>> = _selectedIds
+    val selectedIds: LiveData<List<Long>?> = _selectedIds
 
-    val uiState: LiveData<PhotoPickerUiState> = merge(
+    @Suppress("DEPRECATION") val uiState: LiveData<PhotoPickerUiState> = merge(
             _photoPickerItems.distinct(),
             _selectedIds.distinct(),
             _softAskRequest,
@@ -111,17 +94,18 @@ class PhotoPickerViewModel @Inject constructor(
                 ),
                 buildSoftAskView(softAskRequest),
                 FabUiModel(browserType.isWPStoriesPicker && selectedIds.isNullOrEmpty()) {
-                    clickIcon(WP_STORIES_CAPTURE)
+                    clickIcon(PhotoPickerFragment.PhotoPickerIcon.WP_STORIES_CAPTURE)
                 },
                 buildActionModeUiModel(selectedIds),
                 progressDialogModel ?: ProgressDialogUiModel.Hidden
         )
     }
 
-    var lastTappedIcon: PhotoPickerIcon? = null
+    @Suppress("DEPRECATION") var lastTappedIcon: PhotoPickerFragment.PhotoPickerIcon? = null
     private lateinit var browserType: MediaBrowserType
     private var site: SiteModel? = null
 
+    @Suppress("DEPRECATION")
     private fun buildPhotoPickerUiModel(
         data: List<PhotoPickerItem>?,
         selectedIds: List<Long>?
@@ -130,8 +114,8 @@ class PhotoPickerViewModel @Inject constructor(
         return if (data != null) {
             val uiItems = data.map {
                 val showOrderCounter = browserType.canMultiselect()
-                val toggleAction = ToggleAction(it.id, showOrderCounter, this::toggleItem)
-                val clickAction = ClickAction(it.id, it.uri, it.isVideo, this::clickItem)
+                val toggleAction = PhotoPickerUiItem.ToggleAction(it.id, showOrderCounter, this::toggleItem)
+                val clickAction = PhotoPickerUiItem.ClickAction(it.uri, it.isVideo, this::clickItem)
                 val (selectedOrder, isSelected) = if (selectedIds != null && selectedIds.contains(it.id)) {
                     isVideoSelected = isVideoSelected || it.isVideo
                     val selectedOrder = if (showOrderCounter) selectedIds.indexOf(it.id) + 1 else null
@@ -196,6 +180,7 @@ class PhotoPickerViewModel @Inject constructor(
         )
     }
 
+    @Suppress("DEPRECATION")
     private fun buildBottomBar(
         photoPickerItems: List<PhotoPickerItem>?,
         selectedIds: List<Long>?,
@@ -204,10 +189,10 @@ class PhotoPickerViewModel @Inject constructor(
         val count = selectedIds?.size ?: 0
         val isVideoSelected = photoPickerItems?.any { it.isVideo && selectedIds?.contains(it.id) == true } ?: false
         val defaultBottomBar = when {
-            showSoftAskViewModel -> NONE
-            count <= 0 -> MEDIA_SOURCE
-            browserType.isGutenbergPicker -> INSERT_EDIT
-            else -> NONE
+            showSoftAskViewModel -> BottomBarUiModel.BottomBar.NONE
+            count <= 0 -> BottomBarUiModel.BottomBar.MEDIA_SOURCE
+            browserType.isGutenbergPicker -> BottomBarUiModel.BottomBar.INSERT_EDIT
+            else -> BottomBarUiModel.BottomBar.NONE
         }
 
         val insertEditTextBarVisible = count != 0 && browserType.isGutenbergPicker && !isVideoSelected
@@ -221,7 +206,7 @@ class PhotoPickerViewModel @Inject constructor(
                 canShowInsertEditBottomBar = browserType.isGutenbergPicker,
                 onIconPickerClicked = { v ->
                     if (browserType == GRAVATAR_IMAGE_PICKER || browserType == SITE_ICON_PICKER) {
-                        clickIcon(ANDROID_CHOOSE_PHOTO)
+                        clickIcon(PhotoPickerFragment.PhotoPickerIcon.ANDROID_CHOOSE_PHOTO)
                     } else {
                         performActionOrShowPopup(v)
                     }
@@ -248,15 +233,14 @@ class PhotoPickerViewModel @Inject constructor(
         }
     }
 
+    @Suppress("DEPRECATION")
     fun start(
         selectedIds: List<Long>?,
         browserType: MediaBrowserType,
-        lastTappedIcon: PhotoPickerIcon?,
+        lastTappedIcon: PhotoPickerFragment.PhotoPickerIcon?,
         site: SiteModel?
     ) {
-        selectedIds?.let {
-            _selectedIds.value = selectedIds
-        }
+        _selectedIds.value = selectedIds
         this.browserType = browserType
         this.lastTappedIcon = lastTappedIcon
         this.site = site
@@ -284,14 +268,14 @@ class PhotoPickerViewModel @Inject constructor(
         _selectedIds.postValue(updatedIds)
     }
 
-    private fun clickItem(id: Long, uri: UriWrapper?, isVideo: Boolean) {
-        trackOpenPreviewScreenEvent(id, uri, isVideo)
+    private fun clickItem(uri: UriWrapper?, isVideo: Boolean) {
+        trackOpenPreviewScreenEvent(uri, isVideo)
         uri?.let {
             _navigateToPreview.postValue(Event(it))
         }
     }
 
-    private fun trackOpenPreviewScreenEvent(id: Long, uri: UriWrapper?, isVideo: Boolean) {
+    private fun trackOpenPreviewScreenEvent(uri: UriWrapper?, isVideo: Boolean) {
         launch(bgDispatcher) {
             val properties = analyticsUtilsWrapper.getMediaProperties(
                     isVideo,
@@ -324,8 +308,12 @@ class PhotoPickerViewModel @Inject constructor(
 
     fun clickOnLastTappedIcon() = clickIcon(lastTappedIcon!!)
 
-    fun clickIcon(icon: PhotoPickerIcon) {
-        if (icon == ANDROID_CAPTURE_PHOTO || icon == ANDROID_CAPTURE_VIDEO || icon == WP_STORIES_CAPTURE) {
+    @Suppress("DEPRECATION")
+    fun clickIcon(icon: PhotoPickerFragment.PhotoPickerIcon) {
+        if (icon == PhotoPickerFragment.PhotoPickerIcon.ANDROID_CAPTURE_PHOTO ||
+                icon == PhotoPickerFragment.PhotoPickerIcon.ANDROID_CAPTURE_VIDEO ||
+                icon == PhotoPickerFragment.PhotoPickerIcon.WP_STORIES_CAPTURE
+        ) {
             if (!permissionsHandler.hasPermissionsToAccessPhotos()) {
                 _onPermissionsRequested.value = Event(PermissionsRequested.CAMERA)
                 lastTappedIcon = icon
@@ -333,30 +321,29 @@ class PhotoPickerViewModel @Inject constructor(
             }
         }
         when (icon) {
-            ANDROID_CAPTURE_PHOTO -> trackSelectedOtherSourceEvents(
+            PhotoPickerFragment.PhotoPickerIcon.ANDROID_CAPTURE_PHOTO -> trackSelectedOtherSourceEvents(
                     MEDIA_PICKER_OPEN_CAPTURE_MEDIA,
                     false
             )
-            ANDROID_CAPTURE_VIDEO -> trackSelectedOtherSourceEvents(
+            PhotoPickerFragment.PhotoPickerIcon.ANDROID_CAPTURE_VIDEO -> trackSelectedOtherSourceEvents(
                     MEDIA_PICKER_OPEN_CAPTURE_MEDIA,
                     true
             )
-            ANDROID_CHOOSE_PHOTO -> trackSelectedOtherSourceEvents(
+            PhotoPickerFragment.PhotoPickerIcon.ANDROID_CHOOSE_PHOTO -> trackSelectedOtherSourceEvents(
                     MEDIA_PICKER_OPEN_DEVICE_LIBRARY,
                     false
             )
-            ANDROID_CHOOSE_VIDEO -> trackSelectedOtherSourceEvents(
+            PhotoPickerFragment.PhotoPickerIcon.ANDROID_CHOOSE_VIDEO -> trackSelectedOtherSourceEvents(
                     MEDIA_PICKER_OPEN_DEVICE_LIBRARY,
                     true
             )
-            WP_MEDIA -> AnalyticsTracker.track(MEDIA_PICKER_OPEN_WP_MEDIA)
-            STOCK_MEDIA -> {
-            }
-            GIF -> {
-            }
-            WP_STORIES_CAPTURE -> AnalyticsTracker.track(MEDIA_PICKER_OPEN_WP_STORIES_CAPTURE)
-            ANDROID_CHOOSE_PHOTO_OR_VIDEO -> {
-            }
+            PhotoPickerFragment.PhotoPickerIcon.WP_MEDIA -> AnalyticsTracker.track(MEDIA_PICKER_OPEN_WP_MEDIA)
+            PhotoPickerFragment.PhotoPickerIcon.STOCK_MEDIA -> Unit // Do nothing
+            PhotoPickerFragment.PhotoPickerIcon.GIF -> Unit // Do nothing
+            PhotoPickerFragment.PhotoPickerIcon.WP_STORIES_CAPTURE -> AnalyticsTracker.track(
+                    MEDIA_PICKER_OPEN_WP_STORIES_CAPTURE
+            )
+            PhotoPickerFragment.PhotoPickerIcon.ANDROID_CHOOSE_PHOTO_OR_VIDEO -> Unit // Do nothing
         }
         _onIconClicked.postValue(Event(IconClickEvent(icon, browserType.canMultiselect())))
     }
@@ -367,13 +354,14 @@ class PhotoPickerViewModel @Inject constructor(
         AnalyticsTracker.track(stat, properties)
     }
 
+    @Suppress("DEPRECATION")
     fun onCameraClicked(viewWrapper: ViewWrapper) {
         if (browserType.isImagePicker && browserType.isVideoPicker) {
             showCameraPopupMenu(viewWrapper)
         } else if (browserType.isImagePicker) {
-            clickIcon(ANDROID_CAPTURE_PHOTO)
+            clickIcon(PhotoPickerFragment.PhotoPickerIcon.ANDROID_CAPTURE_PHOTO)
         } else if (browserType.isVideoPicker) {
-            clickIcon(ANDROID_CAPTURE_VIDEO)
+            clickIcon(PhotoPickerFragment.PhotoPickerIcon.ANDROID_CAPTURE_VIDEO)
         } else {
             AppLog.e(
                     MEDIA,
@@ -383,48 +371,38 @@ class PhotoPickerViewModel @Inject constructor(
         }
     }
 
+    @Suppress("DEPRECATION")
     fun showCameraPopupMenu(viewWrapper: ViewWrapper) {
-        val capturePhotoItem = PopupMenuItem(UiStringRes(R.string.photo_picker_capture_photo)) {
-            clickIcon(
-                    ANDROID_CAPTURE_PHOTO
-            )
+        val capturePhotoItem = PopupMenuUiModel.PopupMenuItem(UiStringRes(R.string.photo_picker_capture_photo)) {
+            clickIcon(PhotoPickerFragment.PhotoPickerIcon.ANDROID_CAPTURE_PHOTO)
         }
-        val captureVideoItem = PopupMenuItem(UiStringRes(R.string.photo_picker_capture_video)) {
-            clickIcon(
-                    ANDROID_CAPTURE_VIDEO
-            )
+        val captureVideoItem = PopupMenuUiModel.PopupMenuItem(UiStringRes(R.string.photo_picker_capture_video)) {
+            clickIcon(PhotoPickerFragment.PhotoPickerIcon.ANDROID_CAPTURE_VIDEO)
         }
         _showPopupMenu.value = Event(PopupMenuUiModel(viewWrapper, listOf(capturePhotoItem, captureVideoItem)))
     }
 
+    @Suppress("DEPRECATION")
     fun performActionOrShowPopup(viewWrapper: ViewWrapper) {
-        val items = mutableListOf<PopupMenuItem>()
+        val items = mutableListOf<PopupMenuUiModel.PopupMenuItem>()
         if (browserType.isImagePicker) {
-            items.add(PopupMenuItem(UiStringRes(R.string.photo_picker_choose_photo)) {
-                clickIcon(
-                        ANDROID_CHOOSE_PHOTO
-                )
+            items.add(PopupMenuUiModel.PopupMenuItem(UiStringRes(R.string.photo_picker_choose_photo)) {
+                clickIcon(PhotoPickerFragment.PhotoPickerIcon.ANDROID_CHOOSE_PHOTO)
             })
         }
         if (browserType.isVideoPicker) {
-            items.add(PopupMenuItem(UiStringRes(R.string.photo_picker_choose_video)) {
-                clickIcon(
-                        ANDROID_CHOOSE_VIDEO
-                )
+            items.add(PopupMenuUiModel.PopupMenuItem(UiStringRes(R.string.photo_picker_choose_video)) {
+                clickIcon(PhotoPickerFragment.PhotoPickerIcon.ANDROID_CHOOSE_VIDEO)
             })
         }
         if (site != null && !browserType.isGutenbergPicker) {
-            items.add(PopupMenuItem(UiStringRes(R.string.photo_picker_stock_media)) {
-                clickIcon(
-                        STOCK_MEDIA
-                )
+            items.add(PopupMenuUiModel.PopupMenuItem(UiStringRes(R.string.photo_picker_stock_media)) {
+                clickIcon(PhotoPickerFragment.PhotoPickerIcon.STOCK_MEDIA)
             })
             // only show GIF picker from Tenor if this is NOT the WPStories picker
             if (!browserType.isWPStoriesPicker) {
-                items.add(PopupMenuItem(UiStringRes(R.string.photo_picker_gif)) {
-                    clickIcon(
-                            GIF
-                    )
+                items.add(PopupMenuUiModel.PopupMenuItem(UiStringRes(R.string.photo_picker_gif)) {
+                    clickIcon(PhotoPickerFragment.PhotoPickerIcon.GIF)
                 })
             }
         }
@@ -512,6 +490,7 @@ class PhotoPickerViewModel @Inject constructor(
         val progressDialogUiModel: ProgressDialogUiModel
     )
 
+    @Suppress("DEPRECATION")
     sealed class PhotoListUiModel {
         data class Data(val items: List<PhotoPickerUiItem>) :
                 PhotoListUiModel()
@@ -551,7 +530,11 @@ class PhotoPickerViewModel @Inject constructor(
         object Hidden : ActionModeUiModel()
     }
 
-    data class IconClickEvent(val icon: PhotoPickerIcon, val allowMultipleSelection: Boolean)
+    @Suppress("DEPRECATION")
+    data class IconClickEvent(
+        val icon: PhotoPickerFragment.PhotoPickerIcon,
+        val allowMultipleSelection: Boolean
+        )
 
     enum class PermissionsRequested {
         CAMERA, STORAGE

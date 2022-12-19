@@ -27,11 +27,11 @@ import org.wordpress.android.ui.mysite.SelectedSiteRepository;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.BuildConfigWrapper;
-import org.wordpress.android.util.ContextExtensionsKt;
+import org.wordpress.android.util.extensions.ContextExtensionsKt;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.StringUtils;
-import org.wordpress.android.util.ViewUtilsKt;
+import org.wordpress.android.util.extensions.ViewExtensionsKt;
 import org.wordpress.android.util.image.BlavatarShape;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
@@ -74,10 +74,15 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public enum SitePickerMode {
         DEFAULT_MODE,
         REBLOG_SELECT_MODE,
-        REBLOG_CONTINUE_MODE;
+        REBLOG_CONTINUE_MODE,
+        BLOGGING_PROMPTS_MODE;
 
         public boolean isReblogMode() {
             return this == REBLOG_SELECT_MODE || this == REBLOG_CONTINUE_MODE;
+        }
+
+        public boolean isBloggingPromptsMode() {
+            return this == BLOGGING_PROMPTS_MODE;
         }
     }
 
@@ -393,7 +398,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     }
                     return false;
                 });
-                ViewUtilsKt.redirectContextClickToLongPressListener(holder.itemView);
+                ViewExtensionsKt.redirectContextClickToLongPressListener(holder.itemView);
             }
         }
 
@@ -472,7 +477,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     private boolean isNewLoginEpilogueScreenEnabled() {
-        return !mBuildConfigWrapper.isJetpackApp()
+        return mBuildConfigWrapper.isSiteCreationEnabled()
                && !mShowAndReturn;
     }
 
@@ -649,6 +654,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         return changeSet;
     }
 
+    @SuppressWarnings("deprecation")
     void loadSites() {
         new LoadSitesTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -679,7 +685,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     public List<SiteModel> getBlogsForCurrentView() {
-        if (mSitePickerMode.isReblogMode()) {
+        if (mSitePickerMode.isReblogMode() || mSitePickerMode.isBloggingPromptsMode()) {
             // If we are reblogging we only want to select or search into the WPCom visible sites.
             return mSiteStore.getVisibleSitesAccessedViaWPCom();
         } else if (mIsInSearchMode) {
@@ -705,6 +711,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     /*
      * AsyncTask which loads sites from database and populates the adapter
      */
+    @SuppressWarnings("deprecation")
     @SuppressLint("StaticFieldLeak")
     private class LoadSitesTask extends AsyncTask<Void, Void, SiteList[]> {
         @Override

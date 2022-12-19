@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.reader;
 
 import android.app.Activity;
-import android.graphics.Point;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -87,8 +87,8 @@ public class ReaderPhotoViewerFragment extends Fragment {
     private void showImage() {
         if (isAdded() && !TextUtils.isEmpty(mImageUrl)) {
             // use max of width/height so image is cached the same regardless of orientation
-            Point pt = DisplayUtils.getDisplayPixelSize(getActivity());
-            int hiResWidth = Math.max(pt.x, pt.y);
+            Rect pt = DisplayUtils.getWindowSize(requireActivity());
+            int hiResWidth = Math.max(pt.height(), pt.width());
             // don't use AT media proxy here
             mPhotoView.setImageUrl(mImageUrl, hiResWidth, mIsPrivate, false, mPhotoViewListener);
         }

@@ -105,7 +105,7 @@ class UnifiedCommentLevelerTest {
                     localSiteId = 0,
                     postTitle = "",
                     publishedTimestamp = 0L,
-                    remoteParentCommentId = 0,
+                    authorId = 0,
                     remotePostId = 0L,
                     remoteSiteId = 0L,
                     status = "",

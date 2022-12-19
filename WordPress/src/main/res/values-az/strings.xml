@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2015-12-08 01:00:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/3.0.0-alpha.2
+Generator: GlotPress/4.0.0-alpha.3
 Language: az
 -->
 <resources>
@@ -78,7 +78,6 @@ Language: az
     <string name="stats_followers_seconds_ago">saniyə öncə</string>
     <string name="stats_view_top_posts_and_pages">Yazı və Səhifələr</string>
     <string name="stats_view_videos">Videolar</string>
-    <string name="stats_view_publicize">Bəyan</string>
     <string name="stats_view_followers">İzləyici</string>
     <string name="stats_view_countries">Ölkələr</string>
     <string name="stats_likes">Bəyənmə</string>
@@ -163,6 +162,7 @@ Language: az
     <string name="trash">Zibil</string>
     <string name="page_settings">Səhifə parametrləri</string>
     <string name="local_draft">Yerli qaralama</string>
+    <string name="horizontal_alignment">Üfüqi qruplaşma</string>
     <string name="post_settings">Yazı parametrləri</string>
     <string name="comment_status_approved">Təsdiqlənən</string>
     <string name="comment_status_unapproved">Gözləyir</string>
@@ -175,6 +175,7 @@ Language: az
     <string name="media_error_no_permission">Media kitabxanasına baxma izniniz yoxdur</string>
     <string name="cannot_delete_multi_media_items">Bəzi media faylları silinmədi. Daha sonra təkrar yoxlayın.</string>
     <string name="link_enter_url_text">Bağlantı mətni (seçimə bağlı)</string>
+    <string name="create_a_link">Bağlantı yarat</string>
     <string name="remove_account">Saytı sil</string>
     <string name="notifications_empty_all">Bildiriş yoxdur…</string>
     <string name="share_link">Bağlantını paylaş</string>
@@ -239,6 +240,10 @@ Language: az
     <string name="posts">Yazılar</string>
     <string name="no_network_title">Şəbəkə əlçatan deyil</string>
     <string name="pages">Səhifələr</string>
+    <string name="caption">Başlıq(istəyə bağlı)</string>
+    <string name="width">genişlik</string>
+    <string name="featured">Fərdi təsvir olaraq istifadə edin</string>
+    <string name="featured_in_post">Təsviri yazı mətninə əlavə et</string>
     <string name="ok">OK</string>
     <string name="link_enter_url">URL</string>
     <string name="version">Versiya</string>

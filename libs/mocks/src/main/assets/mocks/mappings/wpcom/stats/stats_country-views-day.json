@@ -1,0 +1,46 @@
+{
+    "request": {
+        "method": "GET",
+        "urlPathPattern": "/rest/v1.1/sites/([0-9]+)/stats/country-views/",
+        "queryParameters": {
+            "period": {
+                "equalTo": "day"
+            },
+            "max": {
+                "matches": "[0-9]+"
+            },
+            "date": {
+                "matches": "(.*)"
+            },
+            "locale": {
+                "matches": "(.*)"
+            }
+        }
+    },
+    "response": {
+        "status": 200,
+        "jsonBody": {
+            "date": "{{now format='yyyy-MM-dd'}}",
+            "days": {
+                "{{now format='yyyy-MM-dd'}}": {
+                    "views": [
+                        {
+                            "country_code": "US",
+                            "views": 7
+                        }            
+                    ],
+                    "other_views": 0,
+                    "total_views": 17
+                }
+            },
+            "country-info": {
+                "US": {
+                    "flag_icon": "https://secure.gravatar.com/blavatar/5a83891a81b057fed56930a6aaaf7b3c?s=48",
+                    "flat_flag_icon": "https://secure.gravatar.com/blavatar/9f4faa5ad0c723474f7a6d810172447c?s=48",
+                    "country_full": "United States",
+                    "map_region": "021"
+                }
+            }
+        }
+    }
+}

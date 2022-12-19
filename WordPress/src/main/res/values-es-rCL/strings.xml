@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2020-05-09 06:46:56+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/3.0.0-alpha.2
+Generator: GlotPress/4.0.0-alpha.3
 Language: es_CL
 -->
 <resources>
@@ -42,7 +42,6 @@ Language: es_CL
     <string name="app_rating_rate_later">Más tarde</string>
     <string name="app_rating_rate_now">Califica ahora</string>
     <string name="app_rating_message">¡Encantado de verte de nuevo! Si está cavando la aplicación, nos encantaría una calificación en la Google Play Store.</string>
-    <string name="app_rating_title">¿Disfrutando de WordPress?</string>
     <string name="editor_post_converted_back_to_draft">Post convertido de nuevo a borrador</string>
     <string name="stats_insights_posting_activity">Actividad de Publicación</string>
     <string name="stats_site_not_loaded_yet">Sitio aún no cargado</string>
@@ -62,33 +61,19 @@ Language: es_CL
     <string name="menu_switch_to_gutenberg_editor">Cambiar al editor de bloques</string>
     <string name="exit">salir</string>
     <string name="quick_start_sites">Siguientes pasos</string>
-    <string name="quick_start_complete_tasks_header">Completo (%d)</string>
-    <string name="quick_start_dialog_view_site_message">¡Disfruta de tu producto terminado!</string>
     <string name="quick_start_dialog_upload_icon_message">Tus visitantes verán tu ícono en su navegador. Agrega un ícono personalizado para un look pulido y profesional.</string>
-    <string name="quick_start_dialog_explore_plans_message_short">Puntea %1$s Plan %2$s para ver su plan actual y otros planes disponibles</string>
-    <string name="quick_start_dialog_check_stats_message_short">Toca %1$s Estadísticas %2$s para ver cómo está funcionando tu sitio.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Puntea %1$sEl Icono de tu Sitio%2$s para cargar uno nuevo</string>
-    <string name="quick_start_dialog_explore_plans_title">Explora los planes</string>
-    <string name="quick_start_dialog_explore_plans_message">Obtén información sobre las herramientas de marketing y SEO en nuestros planes pagados.</string>
     <string name="quick_start_dialog_enable_sharing_title">Habilita el compartir publicaciones</string>
     <string name="quick_start_dialog_enable_sharing_message">Comparte automáticamente nuevas publicaciones en tus cuentas de redes sociales.</string>
     <string name="quick_start_dialog_check_stats_title">Consulta las estadísticas de tu sitio</string>
-    <string name="quick_start_dialog_check_stats_message">Manténte al día sobre el rendimiento de tu sitio.</string>
     <string name="quick_start_dialog_remove_next_steps_message">Si eliminas los Siguientes Pasos ocultarás todas las guías de este sitio. Esto no se puede deshacer.</string>
     <string name="quick_start_dialog_remove_next_steps_title">Eliminar Siguientes Pasos</string>
     <string name="quick_start_remove_next_steps_menu_title">Quitar esto</string>
-    <string name="quick_start_complete_view_subtitle">Felicitaciones por completar tu lista. Un trabajo bien hecho.</string>
-    <string name="quick_start_completed_tasks_header_chevron_collapse_desc">plegar</string>
-    <string name="quick_start_complete_view_title">¡Todas las tareas completadas!</string>
     <string name="quick_start_task_skip_menu_title">Omitir tarea</string>
-    <string name="quick_start_completed_tasks_header_chevron_expand_desc">expandir</string>
     <string name="notification_channel_reminder_title">Recordatorio</string>
-    <string name="stats_most_popular_percent_views">%1$d%% de vistas</string>
     <string name="stats_select_next_period_description">Seleccione el siguiente período</string>
     <string name="stats_select_previous_period_description">Seleccione el período anterior</string>
     <string name="stats_insights_popular">Tiempo Más Popular</string>
-    <string name="stats_traffic_change">%1$s (%2$s%%)</string>
-    <string name="stats_traffic_increase">+%1$s (%2$s%%)</string>
     <string name="new_site_creation_clear_all_content_description">Limpiar</string>
     <string name="notification_new_site_creation_failed">Hubo un problema</string>
     <string name="new_site_creation_site_preview_content_description">Mostrando vista previa del sitio</string>
@@ -115,7 +100,6 @@ Language: es_CL
     <string name="snackbar_conflict_local_version_discarded">Versión local descartada</string>
     <string name="toast_conflict_updating_post">Actualizando entrada</string>
     <string name="dialog_confirm_load_remote_post_discard_web">Descartar Web</string>
-    <string name="dialog_confirm_load_remote_post_body_2">Local\nGuardado en %s\n\nWeb\nGuardado en %s\n</string>
     <string name="dialog_confirm_load_remote_post_body">Este post tiene dos versiones que están en conflicto. Selecciona la versión que quieras descartar.\n\n</string>
     <string name="dialog_confirm_load_remote_post_discard_local">Descartar local</string>
     <string name="dialog_confirm_load_remote_post_title">Resolver conflicto de sincronización</string>
@@ -153,7 +137,6 @@ Language: es_CL
     <string name="stats_insights_latest_post_message">Ha pasado %1$s desde que %2$s fue publicado. Así es la performance de la entrada hasta ahora:</string>
     <string name="stats_insights_tags_and_categories">Etiquetas y Categorías</string>
     <string name="stats_insights_latest_post_with_no_engagement">Ha pasado %1$s desde que %2$s fue publicado. Haz rodar la pelota e incrementa las vistas de tu entrada al compartirlo:</string>
-    <string name="stats_insights_latest_post_empty">Aún no has publicado ninguna publicación. Una vez que empieces a publicar, aparecerá aquí el resumen de tu últimas entradas:</string>
     <string name="stats_insights_all_time_stats">Todo-el-tiempo</string>
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
     <string name="stats_publicize_followers_label">Seguidores</string>
@@ -240,16 +223,12 @@ Language: es_CL
     <string name="quick_start_list_create_site_title">Crea tu sitio</string>
     <string name="quick_start_list_create_site_subtitle">Obtén tu sitio y hazlo funcionar.</string>
     <string name="quick_start_dialog_view_site_title">Ve tu sitio</string>
-    <string name="quick_start_dialog_view_site_message_short">Toca %1$s Ver el Sitio %2$s para previsualizar tu sitio</string>
     <string name="quick_start_dialog_share_site_title">Comparte tu sitio</string>
     <string name="quick_start_dialog_share_site_message">Conéctate a tus cuentas de medios sociales – tu sitio compartirá automáticamente nuevos mensajes.</string>
     <string name="quick_start_dialog_enable_sharing_message_short_sharing">Tap %1$s Compartir %2$s para continuar</string>
     <string name="quick_start_dialog_enable_sharing_message_short_connections">Pulsa en %1$s Conexiones %2$s para agregar tus cuentas de medios sociales</string>
     <string name="quick_start_dialog_publish_post_title">Publicar una entrada</string>
     <string name="quick_start_dialog_publish_post_message_short">Tap %1$s Crear Entrada %2$s para crear una nueva entrada</string>
-    <string name="quick_start_dialog_follow_sites_title">Seguir otros sitios</string>
-    <string name="quick_start_dialog_follow_sites_message_short_reader">Tap %1$s Lector %2$s para continuar</string>
-    <string name="quick_start_dialog_follow_sites_message">Encuentra sitios que te inspiren y síguelos para recibir actualizaciones cuando publiquen.</string>
     <string name="quick_start_button_positive">Ir</string>
     <string name="quick_start_button_negative_short">Cancelar</string>
     <string name="quick_start_button_negative">No ahora</string>
@@ -381,7 +360,6 @@ Language: es_CL
     <string name="notification_settings_followed_dialog_notification_posts_description">Recibir notificaciones de nuevos entradas de este sitio</string>
     <string name="notification_settings_followed_dialog_title">Notificaciones</string>
     <string name="plugin_install_first_plugin_confirmation_dialog_title">Instalar plugin</string>
-    <string name="comment_title">%s en %s</string>
     <string name="content_description_people_looking_charts">Gente que mira los gráficos</string>
     <string name="content_description_person_reading_device_notification">Persona que lee el dispositivo con notificaciones</string>
     <string name="dialog_confirm_delete_permanently_post">¿Confirma que deseas eliminar permanentemente esta entrada?</string>
@@ -843,10 +821,8 @@ Language: es_CL
     <string name="connection_service_description">Conéctate para compartir automáticamente tus entradas del blog a %s.</string>
     <string name="share_btn_connect">Conectar</string>
     <string name="share_btn_reconnect">Reconectar</string>
-    <string name="connection_service_label">Publicar a %s</string>
     <string name="connected_accounts_label">Cuentas conectadas</string>
     <string name="connections_description">Conecta tus servicios de medios sociales favoritos y comparte automáticamente las entradas nuevas con tus amigos.</string>
-    <string name="connections_label">Conexiones</string>
     <string name="sharing">Compartir</string>
     <string name="tabbar_accessibility_label_notifications">Notificaciones. Administra tus notificaciones.</string>
     <string name="tabbar_accessibility_label_reader">Lector. Sigue el contenido de otros sitios.</string>
@@ -983,12 +959,19 @@ Language: es_CL
     <string name="error_fetch_email_followers_list">No se pudo recuperar a los seguidores del sitio por email</string>
     <string name="error_fetch_followers_list">No se pudo recuperar a los seguidores del sitio</string>
     <string name="editor_failed_uploads_switch_html">Algunas cargas de archivos fallaron. Puedes cambiar a modo HTML en este estado. ¿Eliminar los archivos que fallaron y continuar?</string>
+    <string name="visual_editor">Editor Visual</string>
+    <string name="image_thumbnail">Miniatura de imagen</string>
     <string name="image_settings_save_toast">Cambios guardados</string>
     <string name="image_caption">Leyenda</string>
+    <string name="image_alt_text">Texto alternativo</string>
     <string name="image_link_to">Enlace a</string>
     <string name="image_width">Ancho</string>
     <string name="image_settings_dismiss_dialog_title">¿Descartar los cambios no guardados?</string>
     <string name="stop_upload_dialog_title">¿Detener la cargar?</string>
+    <string name="alert_error_adding_media">Se produjo un error al cargar los archivos</string>
+    <string name="alert_action_while_uploading">Actualmente estás subiendo archivos. Por favor, espera hasta que termine.</string>
+    <string name="alert_insert_image_html_mode">No se puede insertar medios directamente en modo HTML. Por favor, cambia al modo visual.</string>
+    <string name="uploading_gallery_placeholder">Cargando Galería…</string>
     <string name="invite_sent">Invitación enviada exitosamente</string>
     <string name="tap_to_try_again">¡Toca para volver a intentarlo!</string>
     <string name="invite_error_for_username">%1$s: %2$s</string>
@@ -1345,7 +1328,6 @@ Language: es_CL
     <string name="stats_followers_a_minute_ago">hace un minuto</string>
     <string name="stats_followers_seconds_ago">hace unos segundos</string>
     <string name="stats_view_videos">Vídeos</string>
-    <string name="stats_view_publicize">Difundir</string>
     <string name="stats_view_followers">Seguidores</string>
     <string name="stats_view_countries">Países</string>
     <string name="stats_likes">Me gusta</string>
@@ -1421,8 +1403,10 @@ Language: es_CL
     <string name="media_gallery_type_thumbnail_grid">Malla (red) de miniaturas</string>
     <string name="media_error_no_permission">No tienes permiso para ver la librería multimedia</string>
     <string name="link_enter_url_text">Texto del enlace (opcional)</string>
+    <string name="create_a_link">Crear un enlace</string>
     <string name="page_settings">Ajustes de página</string>
     <string name="local_draft">Borrador local</string>
+    <string name="horizontal_alignment">Alineación horizontal</string>
     <string name="post_settings">Ajustes de entrada</string>
     <string name="comment_status_approved">Aprobado</string>
     <string name="comment_status_unapproved">Pendiente</string>
@@ -1524,13 +1508,18 @@ Language: es_CL
     <string name="username">Nombre de usuario</string>
     <string name="log_in">Iniciar sesión</string>
     <string name="reader">Lector</string>
+    <string name="featured">Usar como imagen destacada</string>
+    <string name="featured_in_post">Incluír imagen en el contenido del mensaje</string>
     <string name="no_network_title">No hay red disponible</string>
     <string name="pages">Páginas</string>
+    <string name="caption">Leyenda (opcional)</string>
+    <string name="width">Ancho</string>
     <string name="posts">Entradas</string>
     <string name="anonymous">Anónimo</string>
     <string name="ok">OK</string>
     <string name="done">hecho</string>
     <string name="link_enter_url">URL</string>
+    <string name="uploading">Subiendo…</string>
     <string name="version">Versión</string>
     <string name="app_title">WordPress para Android</string>
     <string name="tos">Términos de Servicio</string>

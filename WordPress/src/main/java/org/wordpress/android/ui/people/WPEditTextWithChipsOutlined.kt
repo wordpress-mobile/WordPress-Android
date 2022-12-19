@@ -32,7 +32,7 @@ import com.google.android.material.textview.MaterialTextView
 import org.wordpress.android.R
 import org.wordpress.android.databinding.WpEditTextWithChipsOutlinedBinding
 import org.wordpress.android.util.RtlUtils
-import org.wordpress.android.util.getColorResIdFromAttribute
+import org.wordpress.android.util.extensions.getColorResIdFromAttribute
 import java.util.LinkedHashMap
 
 /**
@@ -276,7 +276,7 @@ class WPEditTextWithChipsOutlined @JvmOverloads constructor(
     }
 
     private fun setListeners() {
-        editor.setOnFocusChangeListener { v, hasFocus ->
+        editor.setOnFocusChangeListener { _, hasFocus ->
             val canAnimate = hint.width > 0 && label.width > 0 && hint.height > 0 && label.height > 0
             if (canAnimate) {
                 styleView(hasFocus, hasItemsOrText(), true)
@@ -421,9 +421,7 @@ class WPEditTextWithChipsOutlined @JvmOverloads constructor(
     }
 
     private fun throwExceptionIfChipifyNotEnabled() {
-        if (!chipifyEnabled) throw IllegalArgumentException(
-                "Please set chipifyEnabled to true in order to use chips feature"
-        )
+        require(chipifyEnabled) { "Please set chipifyEnabled to true in order to use chips feature" }
     }
 
     // This should be fast enough for our use case, so we get fresh data always
@@ -688,6 +686,7 @@ class WPEditTextWithChipsOutlined @JvmOverloads constructor(
         var chipsData = mutableListOf<ChipData>()
 
         constructor(superState: Parcelable?) : super(superState) {}
+        @Suppress("unused")
         private constructor(`in`: Parcel) : super(`in`) {
             this.labelState = HelperTextState.values()[`in`.readInt()]
             this.isFocused = `in`.readInt() == 1

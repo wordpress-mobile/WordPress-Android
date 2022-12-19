@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2018-12-10 19:56:03+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/3.0.0-alpha.2
+Generator: GlotPress/4.0.0-alpha.3
 Language: bg
 -->
 <resources>
@@ -130,6 +130,7 @@ Language: bg
     <string name="post_title">Заглавие</string>
     <string name="menu_redo">Стъпка напред</string>
     <string name="menu_undo">Стъпка назад</string>
+    <string name="media_insert_unimplemented">За съжаление тази функционалност не е налична все още :(</string>
     <string name="error_media_small">Файлът е твърде малък, за да се покаже</string>
     <string name="editor_content_hint">Споделете вашата история тук…</string>
     <string name="post_status_pending_review">Очаква коментар</string>
@@ -304,12 +305,19 @@ Language: bg
     <string name="error_fetch_email_followers_list">Неуспешно показване на последователите по имейл.</string>
     <string name="error_fetch_followers_list">Неуспешно показване на последователите на сайта</string>
     <string name="editor_failed_uploads_switch_html">Някои файлове не се качиха. Преминете в режим HTML\n        на сайта. Премахване на всички неуспешно качени файлове и напред?</string>
+    <string name="visual_editor">Визуален редактор</string>
+    <string name="image_thumbnail">Малка картинка</string>
+    <string name="image_alt_text">Алт текст</string>
     <string name="image_link_to">Връзка към</string>
     <string name="image_width">Ширина</string>
     <string name="image_settings_save_toast">Промените са запазени</string>
     <string name="image_caption">Описание</string>
     <string name="image_settings_dismiss_dialog_title">Отказ от промените?</string>
     <string name="stop_upload_dialog_title">Спиране на качването?</string>
+    <string name="alert_error_adding_media">Грешка при добавянето на файла</string>
+    <string name="alert_action_while_uploading">В момента качвате файл. Изчакайте докато процесът приключи.</string>
+    <string name="alert_insert_image_html_mode">Файлове не могат да се добавят в режим HTML. Превключете обратно към визуален режим.</string>
+    <string name="uploading_gallery_placeholder">Качване на галерията…</string>
     <string name="invite_sent">Успешно изпращане на поканата</string>
     <string name="invite_error_for_username">%1$s: %2$s</string>
     <string name="tap_to_try_again">Тап за повторен опит</string>
@@ -370,6 +378,7 @@ Language: bg
     <string name="me_btn_app_settings">Настройки на приложението</string>
     <string name="editor_remove_failed_uploads">Премахване на неуспешно качените файлове</string>
     <string name="site_settings_advanced_header">Разширени</string>
+    <string name="button_skip">Пропускане</string>
     <string name="xmlrpc_missing_method_error">Грешка при свързването. Задължителни XML-RPC методи липсват на този сървър.</string>
     <string name="post_format_status">Състояние</string>
     <string name="post_format_video">Видео клип</string>
@@ -650,7 +659,6 @@ Language: bg
     <string name="stats_view_followers">Последователи</string>
     <string name="stats_followers_months">%1$d месеца</string>
     <string name="stats_followers_a_minute_ago">преди минута</string>
-    <string name="stats_view_publicize">Publicize</string>
     <string name="stats_likes">Харесвания</string>
     <string name="stats_followers_seconds_ago">секунди</string>
     <string name="stats_view_countries">Държави</string>
@@ -714,6 +722,7 @@ Language: bg
     <string name="new_post">Нова публикация</string>
     <string name="category_name">Име на категорията</string>
     <string name="image_settings">Настройки на изображението</string>
+    <string name="horizontal_alignment">Хоризонтална подредба</string>
     <string name="connection_error">Грешка при свързване</string>
     <string name="error_blog_hidden">Този блог е скрит и не може да бъде зареден. Пуснете го отново от настройките и опитайте отново.</string>
     <string name="post_settings">Настройки на публикацията</string>
@@ -733,6 +742,7 @@ Language: bg
     <string name="cancel_edit">Отказване</string>
     <string name="learn_more">Още</string>
     <string name="cannot_delete_multi_media_items">Някои от файловете не могат да бъдат изтрити в момента. Опитайте по-късно.</string>
+    <string name="create_a_link">Създаване на връзка</string>
     <string name="edit_comment">Редактиране на коментар</string>
     <string name="mnu_comment_approve">Одобряване</string>
     <string name="mnu_comment_unapprove">Неодобряване</string>
@@ -812,10 +822,15 @@ Language: bg
     <string name="reader">Читател</string>
     <string name="no_network_title">Няма активна мрежа</string>
     <string name="pages">Страници</string>
+    <string name="caption">Надпис (незадължителен)</string>
+    <string name="width">Ширина</string>
     <string name="posts">Публикации</string>
     <string name="anonymous">Анонимен</string>
+    <string name="featured">Задаване като основно изображение на публикацията</string>
+    <string name="featured_in_post">Използване на снимката в съдържанието на публикацията</string>
     <string name="ok">ОК</string>
     <string name="link_enter_url">URL</string>
+    <string name="uploading">Качва се…</string>
     <string name="version">Версия</string>
     <string name="tos">Условия за ползване</string>
     <string name="app_title">WordPress за Android</string>

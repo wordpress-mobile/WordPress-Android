@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2015-01-28 14:24:38+0000
 Plural-Forms: nplurals=2; plural=n % 10 != 1 || n % 100 == 11;
-Generator: GlotPress/3.0.0-alpha.2
+Generator: GlotPress/4.0.0-alpha.3
 Language: mk
 -->
 <resources>
@@ -21,7 +21,6 @@ Language: mk
     <string name="stats_followers_a_minute_ago">пред една минута</string>
     <string name="stats_view_videos">Видеа</string>
     <string name="stats_likes">Допаѓања</string>
-    <string name="stats_view_publicize">Објавување</string>
     <string name="stats_view_top_posts_and_pages">Написи и страници</string>
     <string name="stats_followers_months">%1$d месеци</string>
     <string name="stats_visitors">Посетители</string>
@@ -81,9 +80,11 @@ Language: mk
     <string name="cancel_edit">Откажи промени</string>
     <string name="post_not_found">Настана грешка при вчитување на написот. Освежи ги написите и обиди се повторно.</string>
     <string name="learn_more">Научи повеќе</string>
+    <string name="create_a_link">Креирај врска</string>
     <string name="page_settings">Подесувања на страницата</string>
     <string name="http_authorization_required">Ауторизација е потребна</string>
     <string name="mnu_comment_spam">Спам</string>
+    <string name="horizontal_alignment">Хоризонтално порамнување</string>
     <string name="dlg_confirm_trash_comments">Испрати во корпа?</string>
     <string name="post_settings">Подесувања на напис</string>
     <string name="comment_status_approved">Одобрено</string>
@@ -173,10 +174,14 @@ Language: mk
     <string name="password">Лозинка</string>
     <string name="username">Корисничко име</string>
     <string name="reader">Читач</string>
+    <string name="width">Широчина</string>
     <string name="anonymous">Анонимно</string>
     <string name="posts">Написи</string>
+    <string name="caption">Наслов (изборно)</string>
     <string name="pages">Страници</string>
     <string name="no_network_title">Не е достапна мрежа</string>
+    <string name="featured_in_post">Вклучете ги сликите во содржината на написот</string>
+    <string name="featured">Користи како избрана слика</string>
     <string name="ok">Добро</string>
     <string name="link_enter_url">URL</string>
     <string name="tos">Услови за користење</string>

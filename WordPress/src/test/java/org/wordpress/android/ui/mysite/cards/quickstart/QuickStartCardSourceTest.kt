@@ -1,16 +1,16 @@
 package org.wordpress.android.ui.mysite.cards.quickstart
 
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.anyOrNull
-import com.nhaarman.mockitokotlin2.never
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.verifyZeroInteractions
-import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
+import org.mockito.kotlin.any
+import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.never
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoInteractions
+import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.Dispatcher
@@ -21,12 +21,11 @@ import org.wordpress.android.fluxc.model.SiteHomepageSettings.ShowOnFront
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.DynamicCardStore
 import org.wordpress.android.fluxc.store.QuickStartStore
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.CREATE_SITE
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.ENABLE_POST_SHARING
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.PUBLISH_POST
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.UPDATE_SITE_TITLE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CREATE_SITE
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EDIT_HOMEPAGE
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.ENABLE_POST_SHARING
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.PUBLISH_POST
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPDATE_SITE_TITLE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.CUSTOMIZE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GROW
 import org.wordpress.android.test
@@ -40,13 +39,17 @@ import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails.CREATE_SITE_TUTORIAL
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails.PUBLISH_POST_TUTORIAL
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails.SHARE_SITE_TUTORIAL
+import org.wordpress.android.ui.quickstart.QuickStartTracker
+import org.wordpress.android.ui.quickstart.QuickStartType.NewSiteQuickStartType
 import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.HtmlCompatWrapper
 import org.wordpress.android.util.QuickStartUtilsWrapper
-import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.config.MySiteDashboardTabsFeatureConfig
 import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
+import org.wordpress.android.util.config.QuickStartExistingUsersV2FeatureConfig
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.ResourceProvider
 
@@ -56,7 +59,6 @@ class QuickStartCardSourceTest : BaseUnitTest() {
     @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
     @Mock lateinit var selectedSiteRepository: SelectedSiteRepository
     @Mock lateinit var resourceProvider: ResourceProvider
-    @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
     @Mock lateinit var dispatcher: Dispatcher
     @Mock lateinit var eventBus: EventBusWrapper
     @Mock lateinit var dynamicCardStore: DynamicCardStore
@@ -64,6 +66,10 @@ class QuickStartCardSourceTest : BaseUnitTest() {
     @Mock lateinit var quickStartDynamicCardsFeatureConfig: QuickStartDynamicCardsFeatureConfig
     @Mock lateinit var contextProvider: ContextProvider
     @Mock lateinit var htmlMessageUtils: HtmlMessageUtils
+    @Mock lateinit var buildConfigWrapper: BuildConfigWrapper
+    @Mock lateinit var mySiteDashboardTabsFeatureConfig: MySiteDashboardTabsFeatureConfig
+    @Mock lateinit var quickStartExistingUsersV2FeatureConfig: QuickStartExistingUsersV2FeatureConfig
+    @Mock lateinit var quickStartTracker: QuickStartTracker
     private lateinit var site: SiteModel
     private lateinit var quickStartRepository: QuickStartRepository
     private lateinit var quickStartCardSource: QuickStartCardSource
@@ -71,6 +77,7 @@ class QuickStartCardSourceTest : BaseUnitTest() {
     private lateinit var quickStartPrompts: MutableList<QuickStartMySitePrompts>
     private lateinit var result: MutableList<QuickStartUpdate>
     private val siteLocalId = 1
+    private val quickStartType = NewSiteQuickStartType
 
     private lateinit var isRefreshing: MutableList<Boolean>
 
@@ -80,6 +87,9 @@ class QuickStartCardSourceTest : BaseUnitTest() {
         site = SiteModel()
         site.id = siteLocalId
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
+        whenever(appPrefsWrapper.getLastSelectedQuickStartTypeForSite(any())).thenReturn(NewSiteQuickStartType)
+        whenever(quickStartExistingUsersV2FeatureConfig.isEnabled()).thenReturn(false)
+        whenever(quickStartUtilsWrapper.isQuickStartAvailableForTheSite(site)).thenReturn(true)
         quickStartRepository = QuickStartRepository(
                 TEST_DISPATCHER,
                 quickStartStore,
@@ -87,14 +97,17 @@ class QuickStartCardSourceTest : BaseUnitTest() {
                 appPrefsWrapper,
                 selectedSiteRepository,
                 resourceProvider,
-                analyticsTrackerWrapper,
                 dispatcher,
                 eventBus,
                 dynamicCardStore,
                 htmlCompat,
                 quickStartDynamicCardsFeatureConfig,
                 contextProvider,
-                htmlMessageUtils
+                htmlMessageUtils,
+                quickStartTracker,
+                buildConfigWrapper,
+                mySiteDashboardTabsFeatureConfig,
+                quickStartExistingUsersV2FeatureConfig
         )
         quickStartCardSource = QuickStartCardSource(
                 quickStartRepository,
@@ -266,7 +279,7 @@ class QuickStartCardSourceTest : BaseUnitTest() {
         quickStartRepository.setActiveTask(PUBLISH_POST)
         quickStartRepository.requestNextStepOfTask(ENABLE_POST_SHARING)
 
-        verifyZeroInteractions(eventBus)
+        verifyNoInteractions(eventBus)
         val update = result.last()
         assertThat(update.activeTask).isEqualTo(PUBLISH_POST)
     }
@@ -280,35 +293,6 @@ class QuickStartCardSourceTest : BaseUnitTest() {
 
         val update = result.last()
         assertThat(update.activeTask).isNull()
-    }
-
-    @Test
-    fun `marks EDIT_HOMEPAGE task as done when site showing Posts instead of Homepage`() = test {
-        initStore()
-
-        val updatedSiteId = 2
-        site.id = updatedSiteId
-        site.showOnFront = ShowOnFront.POSTS.value
-        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
-        whenever(quickStartStore.hasDoneTask(updatedSiteId.toLong(), EDIT_HOMEPAGE)).thenReturn(false)
-
-        quickStartCardSource.build(testScope(), site.id)
-        quickStartCardSource.refresh()
-
-        verify(quickStartStore).setDoneTask(updatedSiteId.toLong(), EDIT_HOMEPAGE, true)
-    }
-
-    @Test
-    fun `does not mark EDIT_HOMEPAGE task as done when site showing Homepage`() = test {
-        val updatedSiteLocalId = 2
-        site.id = updatedSiteLocalId
-        site.showOnFront = ShowOnFront.PAGE.value
-        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
-
-        quickStartCardSource.build(testScope(), site.id)
-        quickStartCardSource.refresh()
-
-        verify(quickStartStore, never()).setDoneTask(updatedSiteLocalId.toLong(), EDIT_HOMEPAGE, true)
     }
 
     @Test
@@ -344,7 +328,6 @@ class QuickStartCardSourceTest : BaseUnitTest() {
         site.id = updatedSiteId
         site.showOnFront = ShowOnFront.POSTS.value
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
-        whenever(quickStartStore.hasDoneTask(updatedSiteId.toLong(), EDIT_HOMEPAGE)).thenReturn(false)
         quickStartCardSource.refresh.observeForever { isRefreshing.add(it) }
 
         quickStartCardSource.build(testScope(), site.id)
@@ -352,6 +335,28 @@ class QuickStartCardSourceTest : BaseUnitTest() {
         quickStartCardSource.refresh()
 
         assertThat(isRefreshing.last()).isFalse
+    }
+
+    @Test
+    fun `given quick start available for site, when source is refreshed, then non empty categories returned`() = test {
+        whenever(quickStartUtilsWrapper.isQuickStartAvailableForTheSite(site)).thenReturn(true)
+        initStore()
+
+        quickStartCardSource.refresh()
+
+        val update = result.last()
+        assertThat(update.categories).isNotEmpty
+    }
+
+    @Test
+    fun `given quick start not available for site, when source is refreshed, then empty categories returned`() = test {
+        whenever(quickStartUtilsWrapper.isQuickStartAvailableForTheSite(site)).thenReturn(false)
+        initStore()
+
+        quickStartCardSource.refresh()
+
+        val update = result.last()
+        assertThat(update.categories).isEmpty()
     }
 
     private fun triggerQSRefreshAfterSameTypeTasksAreComplete() {
@@ -383,7 +388,7 @@ class QuickStartCardSourceTest : BaseUnitTest() {
                         )
                 )
         )
-        whenever(quickStartUtilsWrapper.isQuickStartInProgress(siteLocalId)).thenReturn(true)
+        whenever(quickStartType.isQuickStartInProgress(quickStartStore, siteLocalId.toLong())).thenReturn(true)
         whenever(appPrefsWrapper.isQuickStartNoticeRequired()).thenReturn(true)
         whenever(quickStartStore.getUncompletedTasksByType(siteLocalId.toLong(), CUSTOMIZE)).thenReturn(
                 listOf(
@@ -402,7 +407,7 @@ class QuickStartCardSourceTest : BaseUnitTest() {
                 )
         ).thenReturn(listOf(ENABLE_POST_SHARING))
         whenever(quickStartStore.getCompletedTasksByType(siteLocalId.toLong(), GROW)).thenReturn(listOf(PUBLISH_POST))
-        whenever(quickStartUtilsWrapper.getNextUncompletedQuickStartTask(siteLocalId.toLong()))
+        whenever(quickStartUtilsWrapper.getNextUncompletedQuickStartTask(quickStartType, siteLocalId.toLong()))
                 .thenReturn(nextUncompletedTask)
         whenever(htmlMessageUtils.getHtmlMessageFromStringFormat(anyOrNull())).thenReturn("")
         initBuild()

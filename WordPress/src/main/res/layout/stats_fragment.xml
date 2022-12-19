@@ -19,12 +19,16 @@
             android:layout_below="@id/toolbar"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-            <androidx.viewpager.widget.ViewPager
+            <androidx.viewpager2.widget.ViewPager2
                 android:id="@+id/statsPager"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 
         </org.wordpress.android.util.widgets.CustomSwipeRefreshLayout>
+
+        <include
+            android:id="@+id/jetpack_banner"
+            layout="@layout/jetpack_banner" />
 
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/app_bar_layout"

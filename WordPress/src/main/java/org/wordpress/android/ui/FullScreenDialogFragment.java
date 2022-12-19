@@ -34,7 +34,7 @@ import com.google.android.material.appbar.AppBarLayout;
 
 import org.wordpress.android.R;
 import org.wordpress.android.util.ColorUtils;
-import org.wordpress.android.util.ContextExtensionsKt;
+import org.wordpress.android.util.extensions.ContextExtensionsKt;
 
 /**
  * A {@link DialogFragment} implementing the full-screen dialog pattern defined in the
@@ -46,6 +46,7 @@ public class FullScreenDialogFragment extends DialogFragment {
     private FullScreenDialogController mController;
     private OnConfirmListener mOnConfirmListener;
     private OnDismissListener mOnDismissListener;
+    private OnShownListener mOnShownListener;
     private String mAction;
     private MenuItem mActionItem;
     private String mSubtitle;
@@ -91,12 +92,17 @@ public class FullScreenDialogFragment extends DialogFragment {
         void onDismiss();
     }
 
+    public interface OnShownListener {
+        void onShown();
+    }
+
     protected static FullScreenDialogFragment newInstance(Builder builder) {
         FullScreenDialogFragment dialog = new FullScreenDialogFragment();
         dialog.setArguments(setArguments(builder));
         dialog.setContent(Fragment.instantiate(builder.mContext, builder.mClass.getName(), builder.mArguments));
         dialog.setOnConfirmListener(builder.mOnConfirmListener);
         dialog.setOnDismissListener(builder.mOnDismissListener);
+        dialog.setOnShownListener(builder.mOnShownListener);
         dialog.setHideActivityBar(builder.mHideActivityBar);
         dialog.setLiftOnScroll(builder.mIsLiftOnScroll);
         return dialog;
@@ -217,6 +223,7 @@ public class FullScreenDialogFragment extends DialogFragment {
     @Override
     public int show(FragmentTransaction transaction, String tag) {
         initBuilderArguments();
+        shown();
         transaction.setCustomAnimations(R.anim.full_screen_dialog_fragment_slide_up, 0, 0,
                 R.anim.full_screen_dialog_fragment_slide_down);
         return transaction.add(android.R.id.content, this, tag).addToBackStack(null).commit();
@@ -228,6 +235,12 @@ public class FullScreenDialogFragment extends DialogFragment {
         }
 
         dismiss();
+    }
+
+    protected void shown() {
+        if (mOnShownListener != null) {
+            mOnShownListener.onShown();
+        }
     }
 
     /**
@@ -384,6 +397,16 @@ public class FullScreenDialogFragment extends DialogFragment {
     }
 
     /**
+     * Set callback to call when dialog is shown due to shown requested.
+     *
+     * @param listener {@link OnShownListener} interface to call on shown executed
+     */
+    public void setOnShownListener(@Nullable OnShownListener listener) {
+        this.mOnShownListener = listener;
+    }
+
+
+    /**
      * Set {@link FullScreenDialogFragment} subtitle text.
      *
      * @param text {@link String} to set as subtitle text
@@ -447,6 +470,7 @@ public class FullScreenDialogFragment extends DialogFragment {
         Context mContext;
         OnConfirmListener mOnConfirmListener;
         OnDismissListener mOnDismissListener;
+        OnShownListener mOnShownListener;
         String mAction = "";
         String mSubtitle = "";
         String mTitle = "";
@@ -603,6 +627,17 @@ public class FullScreenDialogFragment extends DialogFragment {
          */
         public Builder setOnDismissListener(@Nullable OnDismissListener listener) {
             this.mOnDismissListener = listener;
+            return this;
+        }
+
+        /**
+         * Set callback to call when dialog is shown.
+         *
+         * @param listener {@link OnShownListener} interface to call on shown
+         * @return {@link Builder} object to allow for chaining of calls to set methods
+         */
+        public Builder setOnShownListener(@Nullable OnShownListener listener) {
+            this.mOnShownListener = listener;
             return this;
         }
 

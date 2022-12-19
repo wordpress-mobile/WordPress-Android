@@ -90,6 +90,7 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         mClickListener = listener;
     }
 
+    @SuppressWarnings("deprecation")
     public void refresh() {
         if (mIsTaskRunning) {
             AppLog.w(T.READER, "load blogs task is already running");
@@ -263,6 +264,7 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
+    @SuppressWarnings("deprecation")
     @SuppressLint("StaticFieldLeak")
     private class LoadBlogsTask extends AsyncTask<Void, Void, Boolean> {
         private ReaderBlogList mTmpFollowedBlogs;

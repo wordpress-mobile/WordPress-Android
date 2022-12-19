@@ -8,7 +8,6 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.text.Layout;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -22,6 +21,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.preference.PreferenceManager;
 
 import com.android.volley.VolleyError;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -170,6 +170,10 @@ public class NotificationsUtils {
 
     static FormattableContent mapJsonToFormattableContent(FormattableContentMapper mapper, JSONObject blockObject) {
         return mapper.mapToFormattableContent(blockObject.toString());
+    }
+
+    public static void cancelAllNotifications(Context context) {
+        NotificationManagerCompat.from(context).cancelAll();
     }
 
     static SpannableStringBuilder getSpannableContentForRanges(
@@ -330,7 +334,8 @@ public class NotificationsUtils {
         // Note: notifications_max_image_size seems to be the max size an ImageSpan can handle,
         // otherwise it would load blank white
         WPCustomImageGetter imageGetter = new WPCustomImageGetter(textView,
-                context.getResources().getDimensionPixelSize(R.dimen.notifications_max_image_size));
+                context.getResources().getDimensionPixelSize(R.dimen.notifications_max_image_size),
+                textView.getLineHeight());
 
         int indexAdjustment = 0;
         String imagePlaceholder;

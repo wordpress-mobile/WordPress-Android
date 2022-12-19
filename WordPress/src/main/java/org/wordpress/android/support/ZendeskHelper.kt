@@ -18,7 +18,6 @@ import org.wordpress.android.login.BuildConfig
 import org.wordpress.android.ui.accounts.HelpActivity.Origin
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils
 import org.wordpress.android.ui.prefs.AppPrefs
-import org.wordpress.android.util.currentLocale
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.BuildConfigWrapper
@@ -27,8 +26,9 @@ import org.wordpress.android.util.LanguageUtils
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.PackageUtils
 import org.wordpress.android.util.SiteUtils
-import org.wordpress.android.util.logInformation
-import org.wordpress.android.util.stateLogInformation
+import org.wordpress.android.util.extensions.currentLocale
+import org.wordpress.android.util.extensions.logInformation
+import org.wordpress.android.util.extensions.stateLogInformation
 import org.wordpress.android.util.validateEmail
 import zendesk.configurations.Configuration
 import zendesk.core.AnonymousIdentity
@@ -336,7 +336,6 @@ class ZendeskHelper(
 /**
  * This is a helper function which builds a `UiConfig` through helpers to be used during ticket creation.
  */
-@Suppress("LongParameterList")
 private fun buildZendeskConfig(
     context: Context,
     allSites: List<SiteModel>?,
@@ -476,7 +475,7 @@ private fun buildZendeskTags(
  * could prove useful for the Happiness Engineers while debugging the users' issues.
  */
 private fun getNetworkInformation(context: Context): String {
-    val networkType = when (NetworkUtils.getActiveNetworkInfo(context)?.type) {
+    @Suppress("DEPRECATION") val networkType = when (NetworkUtils.getActiveNetworkInfo(context)?.type) {
         ConnectivityManager.TYPE_WIFI -> ZendeskConstants.networkWifi
         ConnectivityManager.TYPE_MOBILE -> ZendeskConstants.networkWWAN
         else -> ZendeskConstants.unknownValue
@@ -487,7 +486,7 @@ private fun getNetworkInformation(context: Context): String {
     return listOf(
             "${ZendeskConstants.networkTypeLabel} $networkType",
             "${ZendeskConstants.networkCarrierLabel} $carrierName",
-            "${ZendeskConstants.networkCountryCodeLabel} ${countryCodeLabel.toUpperCase(context.currentLocale)}"
+            "${ZendeskConstants.networkCountryCodeLabel} ${countryCodeLabel.uppercase(context.currentLocale)}"
     ).joinToString(separator = "\n")
 }
 

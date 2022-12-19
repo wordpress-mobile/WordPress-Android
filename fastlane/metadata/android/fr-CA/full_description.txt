@@ -1,43 +1,40 @@
-WordPress pour Android vous donne accès à la puissance de la publication sur le Web. Il s’agit d’un créateur de sites Web et plus encore !
+WordPress pour Android vous permet de publier sur le Web partout où vous vous trouvez. C’est tellement plus qu’un créateur de site Web !
 
 CRÉER
-- Permet d’héberger vos idées sur le Web. WordPress pour Android est un créateur de sites Web et de blogs. Utilisez-le pour créer votre site Web.
-- Sélectionnez l’apparence qui vous convient parmi les nombreux thèmes WordPress disponibles, puis personnalisez-le avec des photos, des couleurs et des polices pour qu’il vous ressemble et soit unique.
-- Des conseils de démarrage rapide sont intégrés pour vous guider tout au long de la configuration de base de votre nouveau site Web et garantir son succès. (Nous ne vous aidons pas seulement à créer votre site Web. Nous sommes votre partenaire et assurons l’animation !)
-
-STATS
-- Consultez les statistiques de votre site Web en temps réel pour suivre l’activité sur votre site.
-- Suivez les articles et pages attirant le plus de trafic au fil du temps grâce aux tendances quotidiennes, hebdomadaires, mensuelles et annuelles.
-- Utilisez la carte de trafic pour voir de quels pays sont originaires vos visiteurs.
-
-NOTIFICATIONS
-- Recevez des notifications sur les commentaires, les mentions J’aime et les nouveaux abonnés afin de connaître la réaction des visiteurs sur votre site Web en temps réel.
-- Répondez aux nouveaux commentaires dès leur publication. Les discussions restent fluides et vos lecteurs vous seront reconnaissants.
+- Hébergez vos plus grandes idées sur le Web. WordPress pour Android est un créateur de sites Web et de blogs.
+- Choisissez l’apparence souhaitée parmi une vaste sélection de thèmes WordPress, puis personnalisez votre site à votre image avec des photos, couleurs et polices.
+- Les conseils intégrés lors de la prise en main vous guideront à travers les étapes de base de la configuration de votre nouveau site Web afin d’en faire un succès.
 
 PUBLIER
-- Créez des mises à jour, des histoires, des essais photos et des annonces... Tout ce que vous voulez ! -- grâce à l’éditeur.
-- Donnez vie à vos articles et pages avec des photos et des vidéos personnelles ou recherchez l’image parfaite dans la collection intégrée de photos professionnelles gratuites.
-- Enregistrez vos idées sous forme de brouillons afin de les réutiliser lorsque l’inspiration vous revient ou programmez de nouveaux articles afin que votre site soit toujours agréable et intéressant à consulter.
-- Ajoutez des étiquettes et des catégories pour permettre aux nouveaux lecteurs de découvrir vos articles et regardez votre public grossir.
+- Créez des mises à jour, des stories, des photoreportages, des annonces. Absolument tout ce que vous voulez  grâce à l’éditeur.
+- Donnez vie à vos articles et pages avec vos propres photos et vidéos, ou trouvez l’image parfaite dans la bibliothèque de photographies professionnelles gratuites intégrée à l’application.
+- Enregistrez vos idées en mode brouillon et revenez-y lorsque l’inspiration vous revient ou programmez de nouveaux articles à publier plus tard afin que votre site reste attrayant grâce à des publications régulières.
+- Ajoutez des étiquettes et des catégories pour inviter les nouveaux lecteurs à découvrir vos articles, et admirez votre public grandir.
+
+STATISTIQUES
+- Consultez les statistiques de votre site Web en temps réel pour suivre son activité.
+- Surveillez quelles publications et pages reçoivent le plus de trafic au fil du temps en explorant les tendances journalières, hebdomadaires, mensuelles et annuelles.
+
+NOTIFICATIONS
+- Recevez des notifications à propos des commentaires, des mentions J’aime et des nouveaux abonnés pour que vous puissiez voir les gens réagir à votre site Web en direct.
+- Répondez aux nouveaux commentaires au fur et à mesure qu’ils apparaissent pour entretenir la conversation et remercier vos lecteurs.
 
 LECTEUR
-- WordPress est plus qu’un outil de création de blog. Utilisez-le pour communiquer avec une communauté de rédacteurs dans le Lecteur de WordPress. Découvrez des milliers de rubriques par étiquette, de nouveaux auteurs et de nouvelles entreprises, et abonnez-vous aux sites qui vous intéressent.
-- Conservez les articles qui vous passionnent avec la fonctionnalité Enregistrer pour plus tard.
+Explorez des milliers de thèmes classés par étiquette, découvrez de nouveaux auteurs et organisations, et suivez celles et ceux qui vous intéressent.
+- Conservez les publications qui vous fascinent avec la fonctionnalité Enregistrer pour plus tard.
 
 PARTAGER
-- Configurez le partage automatique pour prévenir vos abonnés sur les réseaux sociaux de la publication d’un nouvel article. Publication croisée automatiquement sur Facebook, Twitter, et plus encore.
-- Ajoutez des boutons de partage sur les réseaux sociaux à vos articles pour permettre à vos visiteurs de les partager avec leur réseau et faire de vos fans des ambassadeurs.
+- Configurez le partage automatique pour avertir vos abonnés sur les réseaux sociaux lorsque vous publiez un nouvel article.
+- Ajoutez des boutons de partage à vos articles pour que vos visiteurs puissent les diffuser sur leurs réseaux sociaux, et laissez vos fans devenir vos ambassadeurs.
 
 Pourquoi WordPress ?
 
-Il existe de nombreux services de blogging, créateurs de sites Web et réseaux sociaux. Pourquoi créer votre site Web avec WordPress ?
+Il existe de nombreux services de blogs, créateurs de sites Web et réseaux sociaux. Pourquoi créer votre site Web avec WordPress ?
 
-WordPress propulse plus du tiers du Web. Son utilisation couvre les blogs de loisirs, les entreprises de toutes tailles, les boutiques en ligne et même les plus grands sites d’informations sur Internet. Il est probable que la plupart de vos sites Web préférés fonctionnent sous WordPress.
+WordPress propulse plus d’un tiers du Web. Il est utilisé par des blogs de loisirs, des entreprises de toutes tailles, des boutiques en ligne, et même les plus grands sites d’information sur Internet. La plupart de vos sites Web préférés fonctionnent probablement sous WordPress.
 
-Avec WordPress, vous restez propriétaire de votre contenu. D’autres réseaux sociaux vous considèrent comme une marchandise et s’approprient le contenu que vous publiez. Avec WordPress, tout ce que vous publiez vous appartient et vous pouvez le récupérer quand vous le voulez.
+Avec WordPress, vous êtes propriétaire de votre contenu. Les autres réseaux sociaux vous considèrent comme une ressource et s’approprient le contenu de vos publications. Avec WordPress, tout ce que vous publiez vous appartient. De plus, vous pouvez l’utiliser où bon vous semble.
 
-WordPress est un outil de création de sites Web open source. Cela signifie que tout le monde peut voir comment il est conçu et même contribuer à sa conception. D’autres services et réseaux sociaux sont propriétaires. Ce sont des systèmes fermés. Vous ne saurez jamais vraiment comme il fonctionne et ce qu’ils font. En outre, ils peuvent disparaître !
+Si vous avez besoin d’un créateur de sites Web pour créer votre site, ou simplement d’un créateur de blogs, WordPress peut vous aider. WordPress met à votre disposition de magnifiques designs, de puissantes fonctionnalités et la liberté de créer tout ce que vous voulez.
 
-Que vous ayez besoin d’un outil de création de sites Web pour créer votre site Web ou d’un simple outil de création de blogs, WordPress est là pour vous. Il propose de magnifiques designs et de puissantes fonctionnalités tout en vous offrant la liberté de créer tout ce que vous voulez.
-
-WordPress pour Android prend en charge les sites auto-hébergés fonctionnant sous WordPress 4.0 et versions ultérieures, et tous les sites sur WordPress.com. Comme WordPress, WordPress pour Android est open source. Consultez https://apps.wordpress.com/contribute/ pour en savoir plus. Besoin d’aide avec l’application ? Envoyez-nous un tweet à @WPAndroid ou visitez nos forums sur https://android.forums.wordpress.org/forum/troubleshooting.
+Avis de confidentialité pour les utilisateurs californiens : https://wp.me/Pe4R-d/#california-consumer-privacy-act-ccpa.

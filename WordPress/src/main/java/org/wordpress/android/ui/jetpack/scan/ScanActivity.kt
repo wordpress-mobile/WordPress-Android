@@ -4,14 +4,26 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.RecyclerView
+import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.ScanActivityBinding
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.ScrollableViewInitializedListener
+import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment
+import org.wordpress.android.util.JetpackBrandingUtils
+import org.wordpress.android.util.JetpackBrandingUtils.Screen.SCAN
+import javax.inject.Inject
 
-class ScanActivity : AppCompatActivity() {
+@AndroidEntryPoint
+class ScanActivity : AppCompatActivity(), ScrollableViewInitializedListener {
+    @Inject lateinit var jetpackBrandingUtils: JetpackBrandingUtils
+    private var binding: ScanActivityBinding? = null
+
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         (supportFragmentManager.findFragmentById(R.id.fragment_container_view) as? ScanFragment)?.let {
@@ -23,12 +35,38 @@ class ScanActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         with(ScanActivityBinding.inflate(layoutInflater)) {
             setContentView(root)
-
+            binding = this
             setSupportActionBar(toolbarMain)
         }
         supportActionBar?.let {
             it.setHomeButtonEnabled(true)
             it.setDisplayHomeAsUpEnabled(true)
+        }
+    }
+
+    override fun onScrollableViewInitialized(containerId: Int) {
+        initJetpackBanner(containerId)
+    }
+
+    private fun initJetpackBanner(scrollableContainerId: Int) {
+        if (jetpackBrandingUtils.shouldShowJetpackBrandingForPhaseOne()) {
+            binding?.root?.post {
+                val jetpackBannerView = binding?.jetpackBanner?.root ?: return@post
+                val scrollableView = binding?.root?.findViewById<View>(scrollableContainerId) as? RecyclerView
+                        ?: return@post
+
+                jetpackBrandingUtils.showJetpackBannerIfScrolledToTop(jetpackBannerView, scrollableView)
+                jetpackBrandingUtils.initJetpackBannerAnimation(jetpackBannerView, scrollableView)
+
+                if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
+                    binding?.jetpackBanner?.root?.setOnClickListener {
+                        jetpackBrandingUtils.trackBannerTapped(SCAN)
+                        JetpackPoweredBottomSheetFragment
+                                .newInstance()
+                                .show(supportFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
+                    }
+                }
+            }
         }
     }
 

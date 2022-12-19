@@ -8,7 +8,10 @@ import org.wordpress.android.ui.accounts.login.LoginAnalyticsTracker;
 
 import dagger.Module;
 import dagger.Provides;
+import dagger.hilt.InstallIn;
+import dagger.hilt.components.SingletonComponent;
 
+@InstallIn(SingletonComponent.class)
 @Module
 public class LoginAnalyticsModule {
     @Provides

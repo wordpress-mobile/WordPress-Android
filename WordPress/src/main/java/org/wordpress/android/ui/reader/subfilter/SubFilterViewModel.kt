@@ -1,15 +1,16 @@
 package org.wordpress.android.ui.reader.subfilter
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.datasets.ReaderBlogTable
 import org.wordpress.android.datasets.ReaderTagTable
 import org.wordpress.android.fluxc.store.AccountStore
@@ -222,6 +223,7 @@ class SubFilterViewModel @Inject constructor(
     }
 
     fun onBottomSheetCancelled() {
+        readerTracker.track(Stat.READER_FILTER_SHEET_DISMISSED)
         _bottomSheetUiState.value = Event(BottomSheetHidden)
     }
 
@@ -247,10 +249,11 @@ class SubFilterViewModel @Inject constructor(
             ))
             SubfilterListItem.ItemType.SITE -> {
                 val currentFeedId = (subfilterListItem as Site).blog.feedId
-                val currentBlogId = if (subfilterListItem.blog.hasFeedUrl())
+                val currentBlogId = if (subfilterListItem.blog.hasFeedUrl()) {
                     currentFeedId
-                else
+                } else {
                     subfilterListItem.blog.blogId
+                }
 
                 _readerModeInfo.value = (ReaderModeInfo(
                         null,
@@ -278,6 +281,7 @@ class SubFilterViewModel @Inject constructor(
     }
 
     fun onSubfilterSelected(subfilterListItem: SubfilterListItem) {
+        readerTracker.track(Stat.READER_FILTER_SHEET_ITEM_SELECTED)
         changeSubfilter(subfilterListItem, true, mTagFragmentStartedWith)
     }
 
@@ -285,13 +289,10 @@ class SubFilterViewModel @Inject constructor(
         changeSubfilter(getCurrentSubfilterValue(), false, mTagFragmentStartedWith)
     }
 
+    @SuppressLint("NullSafeMutableLiveData")
     fun onSubfilterPageUpdated(category: SubfilterCategory, count: Int) {
         val currentValue = _filtersMatchCount.value
-
-        currentValue?.let {
-            it.put(category, count)
-        }
-
+        currentValue?.put(category, count)
         _filtersMatchCount.postValue(currentValue)
     }
 
@@ -343,6 +344,10 @@ class SubFilterViewModel @Inject constructor(
         }
     }
 
+    fun trackOnPageSelected(tab: String) {
+        readerTracker.track(Stat.READER_FILTER_SHEET_TAB_SELECTED, mutableMapOf(TRACK_TAB to tab))
+    }
+
     fun onSaveInstanceState(outState: Bundle) {
         outState.putString(
                 ARG_CURRENT_SUBFILTER_JSON, getCurrentSubfilterJson()
@@ -350,12 +355,14 @@ class SubFilterViewModel @Inject constructor(
         outState.putBoolean(ARG_IS_FIRST_LOAD, isFirstLoad)
     }
 
+    @Suppress("unused", "UNUSED_PARAMETER")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onEventMainThread(event: ReaderEvents.FollowedTagsChanged) {
         AppLog.d(T.READER, "Subfilter bottom sheet > followed tags changed")
         loadSubFilters()
     }
 
+    @Suppress("unused", "UNUSED_PARAMETER")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onEventMainThread(event: ReaderEvents.FollowedBlogsChanged) {
         AppLog.d(T.READER, "Subfilter bottom sheet > followed blogs changed")
@@ -372,5 +379,7 @@ class SubFilterViewModel @Inject constructor(
 
         const val ARG_CURRENT_SUBFILTER_JSON = "current_subfilter_json"
         const val ARG_IS_FIRST_LOAD = "is_first_load"
+
+        const val TRACK_TAB = "tab"
     }
 }

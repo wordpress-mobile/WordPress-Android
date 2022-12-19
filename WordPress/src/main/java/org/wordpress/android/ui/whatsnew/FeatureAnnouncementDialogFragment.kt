@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.Window
 import android.widget.TextView
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
@@ -14,11 +13,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.R
-import org.wordpress.android.R.attr
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.WPWebViewActivity
-import org.wordpress.android.util.getColorFromAttribute
-import org.wordpress.android.util.isDarkTheme
+import org.wordpress.android.util.extensions.setStatusBarAsSurfaceColor
 import javax.inject.Inject
 
 class FeatureAnnouncementDialogFragment : DialogFragment() {
@@ -37,15 +34,7 @@ class FeatureAnnouncementDialogFragment : DialogFragment() {
         val dialog = super.onCreateDialog(savedInstanceState)
         viewModel = ViewModelProvider(this, viewModelFactory)
                 .get(FeatureAnnouncementViewModel::class.java)
-
-        val window: Window? = dialog.window
-        window?.let {
-            window.statusBarColor = dialog.context.getColorFromAttribute(attr.colorSurface)
-            if (!resources.configuration.isDarkTheme()) {
-                window.decorView.systemUiVisibility = window.decorView
-                        .systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-            }
-        }
+        dialog.setStatusBarAsSurfaceColor()
         return dialog
     }
 
@@ -62,6 +51,11 @@ class FeatureAnnouncementDialogFragment : DialogFragment() {
         recyclerView.layoutManager = LinearLayoutManager(recyclerView.context)
         val featureAdapter = FeatureAnnouncementListAdapter(this)
         recyclerView.adapter = featureAdapter
+
+        val titleTextView = view.findViewById<TextView>(R.id.feature_announcement_dialog_label)
+        val appName = getString(R.string.app_name)
+        val title = getString(R.string.feature_announcement_dialog_label, appName)
+        titleTextView.text = title
 
         viewModel.uiModel.observe(this, Observer {
             it?.let { uiModel ->

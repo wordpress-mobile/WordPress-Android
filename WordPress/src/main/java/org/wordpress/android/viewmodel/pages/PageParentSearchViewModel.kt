@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.pages.PageItem
@@ -38,7 +37,7 @@ class PageParentSearchViewModel
         pageParentViewModel.searchPages.removeObserver(searchObserver)
     }
 
-    private val searchObserver = Observer<List<PageItem>> { pageItems ->
+    private val searchObserver = Observer<List<PageItem>?> { pageItems ->
         if (pageItems != null) {
             loadFoundPages(pageItems)
         } else {

@@ -8,8 +8,7 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.BACKGROUND
 import org.greenrobot.eventbus.ThreadMode.MAIN
 import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.RemoteAutoSavePost
-import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.UpdatePost
+import org.wordpress.android.fluxc.model.CauseOfOnPostChanged
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.fluxc.model.SiteModel
@@ -33,6 +32,7 @@ import kotlin.coroutines.CoroutineContext
 /**
  * This is a temporary class to make the PagesViewModel more manageable. It was inspired by the PostListEventListener
  */
+@Suppress("LongParameterList")
 class PageListEventListener(
     private val dispatcher: Dispatcher,
     private val bgDispatcher: CoroutineDispatcher,
@@ -76,7 +76,7 @@ class PageListEventListener(
         launch {
             when (event.causeOfChange) {
                 // Fetched post list event will be handled by OnListChanged
-                is RemoteAutoSavePost -> {
+                is CauseOfOnPostChanged.RemoteAutoSavePost -> {
                     if (event.isError) {
                         AppLog.d(
                                 T.POSTS, "REMOTE_AUTO_SAVE_POST failed: " +
@@ -84,14 +84,16 @@ class PageListEventListener(
                         )
                     }
 
-                    uploadStatusChanged(LocalId((event.causeOfChange as RemoteAutoSavePost).localPostId))
+                    uploadStatusChanged(
+                            LocalId((event.causeOfChange as CauseOfOnPostChanged.RemoteAutoSavePost).localPostId)
+                    )
                     handleRemoteAutoSave.invoke(
-                            LocalId((event.causeOfChange as RemoteAutoSavePost).localPostId),
+                            LocalId((event.causeOfChange as CauseOfOnPostChanged.RemoteAutoSavePost).localPostId),
                             event.isError
                     )
                 }
 
-                is UpdatePost -> {
+                is CauseOfOnPostChanged.UpdatePost -> {
                     if (event.isError) {
                         AppLog.e(
                                 T.POSTS,
@@ -99,8 +101,15 @@ class PageListEventListener(
                                         " message: ${event.error.message}"
                         )
                     }
-                    uploadStatusChanged(LocalId((event.causeOfChange as UpdatePost).localPostId))
+                    uploadStatusChanged(LocalId((event.causeOfChange as CauseOfOnPostChanged.UpdatePost).localPostId))
                 }
+                is CauseOfOnPostChanged.DeletePost -> Unit // Do nothing
+                is CauseOfOnPostChanged.RestorePost -> Unit // Do nothing
+                is CauseOfOnPostChanged.FetchPages -> Unit // Do nothing
+                is CauseOfOnPostChanged.FetchPosts -> Unit // Do nothing
+                is CauseOfOnPostChanged.RemoveAllPosts -> Unit // Do nothing
+                is CauseOfOnPostChanged.RemovePost -> Unit // Do nothing
+                is CauseOfOnPostChanged.FetchPostLikes -> Unit // Do nothing
             }
         }
     }
@@ -155,7 +164,7 @@ class PageListEventListener(
     @Suppress("unused")
     @Subscribe(threadMode = BACKGROUND)
     fun onEventBackgroundThread(event: ProgressEvent) {
-        if (event.media != null && site.id == event.media.localSiteId) {
+        if (site.id == event.media.localSiteId) {
             uploadStatusChanged(LocalId(event.media.localPostId))
         }
     }
@@ -170,7 +179,7 @@ class PageListEventListener(
         }
     }
 
-    @SuppressWarnings("unused")
+    @Suppress("unused")
     @Subscribe(threadMode = MAIN)
     fun onSiteChanged(event: OnSiteChanged) {
         if (!event.isError && siteStore.hasSiteWithLocalId(site.id)) {
@@ -189,6 +198,7 @@ class PageListEventListener(
     }
 
     class Factory @Inject constructor() {
+        @Suppress("LongParameterList")
         fun createAndStartListening(
             dispatcher: Dispatcher,
             bgDispatcher: CoroutineDispatcher,

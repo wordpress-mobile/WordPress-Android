@@ -1,7 +1,6 @@
 package org.wordpress.android.util.config
 
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
+import kotlinx.coroutines.CoroutineScope
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatIllegalArgumentException
 import org.junit.Before
@@ -9,16 +8,19 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.ExperimentConfig.Variant
 
 @RunWith(MockitoJUnitRunner::class)
 class AppConfigTest {
-    @Mock lateinit var remoteConfig: RemoteConfig
+    @Mock lateinit var featureFlagConfig: FeatureFlagConfig
     @Mock lateinit var analyticsTracker: AnalyticsTrackerWrapper
     @Mock lateinit var experimentConfig: ExperimentConfig
     @Mock lateinit var manualFeatureConfig: ManualFeatureConfig
+    @Mock lateinit var appScope: CoroutineScope
     private lateinit var appConfig: AppConfig
     private val remoteField = "remote_field"
     private val experimentVariantA = "variantA"
@@ -26,14 +28,14 @@ class AppConfigTest {
 
     @Before
     fun setUp() {
-        appConfig = AppConfig(remoteConfig, analyticsTracker, manualFeatureConfig)
+        appConfig = AppConfig(featureFlagConfig, analyticsTracker, manualFeatureConfig)
     }
 
     @Test
     fun `refresh passes the call to remote config`() {
-        appConfig.refresh()
+        appConfig.refresh(appScope)
 
-        verify(remoteConfig).refresh()
+        verify(featureFlagConfig).refresh(appScope)
     }
 
     @Test
@@ -81,6 +83,6 @@ class AppConfigTest {
     private fun setupExperimentConfig(remoteConfigValue: String, experimentVariants: List<Variant>) {
         whenever(experimentConfig.remoteField).thenReturn(remoteField)
         whenever(experimentConfig.variants).thenReturn(experimentVariants)
-        whenever(remoteConfig.getString(remoteField)).thenReturn(remoteConfigValue)
+        whenever(featureFlagConfig.getString(remoteField)).thenReturn(remoteConfigValue)
     }
 }

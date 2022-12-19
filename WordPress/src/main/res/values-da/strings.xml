@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2021-08-01 11:11:29+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/3.0.0-alpha.2
+Generator: GlotPress/4.0.0-alpha.3
 Language: da_DK
 -->
 <resources>
@@ -44,6 +44,7 @@ Language: da_DK
     <string name="site_settings_export_content_title">Eksporter indhold</string>
     <string name="contact_support">Kontakt support</string>
     <string name="site_settings_advanced_header">Avanceret</string>
+    <string name="button_skip">Spring over</string>
     <string name="alignment_center">Centreret</string>
     <string name="post_format_video">Video</string>
     <string name="post_format_status">Status</string>
@@ -139,7 +140,6 @@ Language: da_DK
     <string name="stats_views">Visninger</string>
     <string name="stats_visitors">Besøgende</string>
     <string name="stats_view_top_posts_and_pages">Indlæg &amp; sider</string>
-    <string name="stats_view_publicize">publicize</string>
     <string name="ssl_certificate_details">Detaljer</string>
     <string name="cab_selected">%d markeret</string>
     <string name="browse_our_faq_button">Gennemse vores FAQ</string>
@@ -199,6 +199,7 @@ Language: da_DK
     <string name="error_moderate_comment">Kunne ikke moderere</string>
     <string name="error_edit_comment">Kunne ikke redigere kommentaren</string>
     <string name="error_load_comment">Kunne ikke loade kommentaren</string>
+    <string name="create_a_link">Opret et link</string>
     <string name="select_categories">Vælg kategorier</string>
     <string name="connection_error">Forbindelsesfejl</string>
     <string name="learn_more">Lær mere</string>
@@ -230,6 +231,7 @@ Language: da_DK
     <string name="open_source_licenses">Open source-licenser</string>
     <string name="cancel_edit">Fortryd redigering</string>
     <string name="reader_title_applog">Applikationslog</string>
+    <string name="horizontal_alignment">Vandret justering</string>
     <string name="link_enter_url_text">Linktekst (valgfri)</string>
     <string name="local_changes">Lokale ændringer</string>
     <string name="sure_to_cancel_edit_comment">Annuller redigering af denne kommentar?</string>
@@ -301,11 +303,16 @@ Language: da_DK
     <string name="username">Brugernavn</string>
     <string name="reader">Læser</string>
     <string name="pages">Sider</string>
+    <string name="width">Bredde</string>
     <string name="posts">Indlæg</string>
     <string name="anonymous">Anonym</string>
     <string name="no_network_title">Intet netværk tilgængeligt</string>
+    <string name="caption">Billedtekst (valgfri)</string>
+    <string name="featured">Brug som fremhævet billede</string>
+    <string name="featured_in_post">Inkluder billede i indhold</string>
     <string name="ok">OK</string>
     <string name="link_enter_url">URL</string>
+    <string name="uploading">Uploader</string>
     <string name="version">Version</string>
     <string name="app_title">WordPress til Android</string>
     <string name="tos">Brugskrav</string>

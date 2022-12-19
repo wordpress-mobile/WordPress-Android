@@ -4,7 +4,7 @@ import android.view.View
 import android.view.ViewGroup
 import org.wordpress.android.databinding.LoadOrActionItemBinding
 import org.wordpress.android.ui.comments.unified.UnifiedCommentListItem.NextPageLoader
-import org.wordpress.android.util.viewBinding
+import org.wordpress.android.util.extensions.viewBinding
 
 class LoadStateViewHolder(parent: ViewGroup) : UnifiedCommentListViewHolder<LoadOrActionItemBinding>(
         parent.viewBinding(LoadOrActionItemBinding::inflate)

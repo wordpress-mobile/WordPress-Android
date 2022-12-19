@@ -1,9 +1,9 @@
 package org.wordpress.android.workers.reminder
 
 import android.app.PendingIntent
-import android.app.PendingIntent.FLAG_CANCEL_CURRENT
 import androidx.core.app.NotificationCompat.CATEGORY_REMINDER
 import androidx.core.app.NotificationCompat.PRIORITY_DEFAULT
+import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
@@ -43,7 +43,7 @@ class ReminderNotifier @Inject constructor(
                                     actionsShownByDefault = true,
                                     notificationType = BLOGGING_REMINDERS
                             ),
-                            FLAG_CANCEL_CURRENT
+                            PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE
                     )
                 },
                 contentTitle = resourceProvider.getString(R.string.blogging_reminders_notification_title, siteName),
@@ -52,14 +52,18 @@ class ReminderNotifier @Inject constructor(
                 category = CATEGORY_REMINDER,
                 autoCancel = true,
                 colorized = true,
-                color = resourceProvider.getColor(R.color.blue_50),
+                color = if (BuildConfig.IS_JETPACK_APP) {
+                    resourceProvider.getColor(R.color.jetpack_green)
+                } else {
+                    resourceProvider.getColor(R.color.blue_50)
+                },
                 smallIcon = R.drawable.ic_app_white_24dp
         )
 
         reminderNotificationManager.notify(REMINDER_NOTIFICATION_ID + siteId, reminderNotification)
 
         analyticsTracker.setSite(siteId)
-        analyticsTracker.trackNotificationReceived()
+        analyticsTracker.trackNotificationReceived(false)
     }
 
     fun shouldNotify(siteId: Int) =

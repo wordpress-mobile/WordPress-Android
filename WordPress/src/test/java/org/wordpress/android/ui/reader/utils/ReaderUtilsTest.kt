@@ -1,11 +1,11 @@
 package org.wordpress.android.ui.reader.utils
 
-import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.whenever
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.models.ReaderTagType.BOOKMARKED
@@ -81,7 +81,7 @@ class ReaderUtilsTest {
     fun `when blogId == feedId then this is a feed`() {
         val feedId: Long = 100
         val blogId: Long = 100
-        var result = ReaderUtils.isExternalFeed(blogId, feedId)
+        val result = ReaderUtils.isExternalFeed(blogId, feedId)
         assertThat(result).isEqualTo(true)
     }
 
@@ -89,7 +89,7 @@ class ReaderUtilsTest {
     fun `when blogId == 0 and feedId is not equal to 0 then this is a feed`() {
         val feedId: Long = 100
         val blogId: Long = 0
-        var result = ReaderUtils.isExternalFeed(blogId, feedId)
+        val result = ReaderUtils.isExternalFeed(blogId, feedId)
         assertThat(result).isEqualTo(true)
     }
 
@@ -97,7 +97,7 @@ class ReaderUtilsTest {
     fun `when blogId is != 0 and feedId !=0 this is not a feed`() {
         val feedId: Long = 100
         val blogId: Long = 150
-        var result = ReaderUtils.isExternalFeed(blogId, feedId)
+        val result = ReaderUtils.isExternalFeed(blogId, feedId)
         assertThat(result).isEqualTo(false)
     }
 
@@ -105,7 +105,28 @@ class ReaderUtilsTest {
     fun `when blogId is != 0 and feedId ==0 this is not a feed`() {
         val feedId: Long = 0
         val blogId: Long = 150
-        var result = ReaderUtils.isExternalFeed(blogId, feedId)
+        val result = ReaderUtils.isExternalFeed(blogId, feedId)
         assertThat(result).isEqualTo(false)
+    }
+
+    @Test
+    fun `given valid url encoded string, when sanitize string is invoked, then string is not sanitized`() {
+        val urlEncodedString = "%e7%be%8e%e9%a3%9f"
+        val result = ReaderUtils.sanitizeWithDashes(urlEncodedString)
+        assertThat(result).isEqualTo(urlEncodedString)
+    }
+
+    @Test
+    fun `given string with spaces, when sanitize string is invoked, then string is sanitized`() {
+        val stringWithSpaces = "string with spaces"
+        val result = ReaderUtils.sanitizeWithDashes(stringWithSpaces)
+        assertThat(result).isEqualTo("string-with-spaces")
+    }
+
+    @Test
+    fun `given non-alphanum string without url encoding, when sanitize string is invoked, then string is sanitized `() {
+        val nonUrlEncodedString = "non%url*encoded<?string"
+        val result = ReaderUtils.sanitizeWithDashes(nonUrlEncodedString)
+        assertThat(result).isEqualTo("nonurlencodedstring")
     }
 }

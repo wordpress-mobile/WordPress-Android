@@ -14,7 +14,7 @@ import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.stories.intro.StoriesIntroDialogFragment
 import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.util.AppLog
-import org.wordpress.android.util.clipboardManager
+import org.wordpress.android.util.extensions.clipboardManager
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
 
 sealed class PostListAction {
@@ -50,6 +50,7 @@ sealed class PostListAction {
     class DismissPendingNotification(val pushId: Int) : PostListAction()
 }
 
+@Suppress("TooGenericExceptionCaught")
 fun handlePostListAction(
     activity: FragmentActivity,
     action: PostListAction,
@@ -62,7 +63,7 @@ fun handlePostListAction(
             ActivityLauncher.editPostOrPageForResult(activity, action.site, action.post, action.loadAutoSaveRevision)
         }
         is PostListAction.NewPost -> {
-            ActivityLauncher.addNewPostForResult(activity, action.site, action.isPromo, POST_FROM_POSTS_LIST)
+            ActivityLauncher.addNewPostForResult(activity, action.site, action.isPromo, POST_FROM_POSTS_LIST, -1, null)
         }
         is PostListAction.NewStoryPost -> {
             if (AppPrefs.shouldShowStoriesIntro()) {

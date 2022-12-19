@@ -31,7 +31,7 @@ class GetButtonUiStateUseCase @Inject constructor(
         return when (editorAction) {
             PrimaryEditorAction.PUBLISH_NOW -> PublishButtonUiState(onButtonClicked)
             PrimaryEditorAction.SCHEDULE -> ScheduleButtonUiState(onButtonClicked)
-            PrimaryEditorAction.UPDATE -> UpdateButtonUiState(onButtonClicked)
+            PrimaryEditorAction.UPDATE, PrimaryEditorAction.CONTINUE -> UpdateButtonUiState(onButtonClicked)
             PrimaryEditorAction.SUBMIT_FOR_REVIEW -> SubmitButtonUiState(onButtonClicked)
             PrimaryEditorAction.SAVE -> SaveButtonUiState(onButtonClicked)
         }

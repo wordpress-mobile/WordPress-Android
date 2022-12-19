@@ -7,6 +7,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard.Qui
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickStartCardBuilderParams
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
 import org.wordpress.android.ui.utils.ListItemInteraction
+import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
@@ -16,6 +17,7 @@ import kotlin.math.roundToInt
 class QuickStartCardBuilder @Inject constructor() {
     fun build(params: QuickStartCardBuilderParams) = QuickStartCard(
             title = UiStringRes(R.string.quick_start_sites),
+            toolbarVisible = shouldShowCardToolbar(params.quickStartCategories),
             onRemoveMenuItemClick = ListItemInteraction.create(params.onQuickStartBlockRemoveMenuItemClick),
             taskTypeItems = params.quickStartCategories.map {
                 buildQuickStartTaskTypeItem(
@@ -25,6 +27,13 @@ class QuickStartCardBuilder @Inject constructor() {
             }
     )
 
+    private fun shouldShowCardToolbar(quickStartCategories: List<QuickStartCategory>) =
+            !isNewQuickStartType(quickStartCategories)
+
+    private fun isNewQuickStartType(quickStartCategories: List<QuickStartCategory>): Boolean {
+        return quickStartCategories.any { it.taskType == QuickStartTaskType.GET_TO_KNOW_APP }
+    }
+
     private fun buildQuickStartTaskTypeItem(
         category: QuickStartCategory,
         onItemClick: (QuickStartTaskType) -> Unit
@@ -32,29 +41,60 @@ class QuickStartCardBuilder @Inject constructor() {
         val quickStartTaskType = category.taskType
         val countCompleted = category.completedTasks.size
         val countUncompleted = category.uncompletedTasks.size
+        val progress = getProgress(countCompleted, countCompleted + countUncompleted)
+        val isNewQuickStartType = category.taskType == QuickStartTaskType.GET_TO_KNOW_APP
 
         return QuickStartTaskTypeItem(
                 quickStartTaskType = quickStartTaskType,
                 title = UiStringRes(getTitle(quickStartTaskType)),
                 titleEnabled = countUncompleted > 0,
-                subtitle = UiStringResWithParams(
-                        R.string.quick_start_sites_type_tasks_completed,
-                        listOf(
-                                UiStringText("$countCompleted"),
-                                UiStringText("${countCompleted + countUncompleted}")
-                        )
+                subtitle = getSubtitle(
+                        isNewQuickStartType,
+                        progress,
+                        countCompleted,
+                        countCompleted + countUncompleted
                 ),
                 strikeThroughTitle = countUncompleted == 0,
-                progressColor = R.color.colorPrimary,
-                progress = getProgress(countCompleted, countCompleted + countUncompleted),
+                progressColor = getProgressColor(progress, isNewQuickStartType),
+                progress = progress,
                 onClick = ListItemInteraction.create(quickStartTaskType, onItemClick)
         )
+    }
+
+    private fun getSubtitle(
+        isNewQuickStartType: Boolean,
+        progress: Int,
+        countCompleted: Int,
+        totalCount: Int
+    ): UiString {
+        return if (progress == PERCENT_HUNDRED && isNewQuickStartType) {
+            UiStringRes(
+                    R.string.quick_start_sites_type_all_tasks_completed
+            )
+        } else {
+            UiStringResWithParams(
+                    R.string.quick_start_sites_type_tasks_completed,
+                    listOf(
+                            UiStringText("$countCompleted"),
+                            UiStringText("$totalCount")
+                    )
+            )
+        }
+    }
+
+    fun getProgressColor(progress: Int, isNewQuickStartType: Boolean): Int {
+        return if (progress == PERCENT_HUNDRED && isNewQuickStartType) {
+            R.color.green_40
+        } else {
+            R.color.colorPrimary
+        }
     }
 
     fun getTitle(taskType: QuickStartTaskType): Int {
         return when (taskType) {
             QuickStartTaskType.CUSTOMIZE -> R.string.quick_start_sites_type_customize
             QuickStartTaskType.GROW -> R.string.quick_start_sites_type_grow
+            QuickStartTaskType.GET_TO_KNOW_APP -> R.string.quick_start_sites_type_get_to_know_app
             QuickStartTaskType.UNKNOWN -> throw IllegalArgumentException(UNEXPECTED_QUICK_START_TYPE)
         }
     }

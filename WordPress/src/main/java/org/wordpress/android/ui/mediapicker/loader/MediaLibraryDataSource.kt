@@ -36,6 +36,7 @@ import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
+@Suppress("LongParameterList")
 class MediaLibraryDataSource(
     private val mediaStore: MediaStore,
     private val dispatcher: Dispatcher,
@@ -43,8 +44,8 @@ class MediaLibraryDataSource(
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val dateTimeUtilsWrapper: DateTimeUtilsWrapper,
     private val siteModel: SiteModel,
-    private val mediaTypes: Set<MediaType>
-) : MediaSource {
+    override val mediaTypes: Set<MediaType>
+) : MediaSource, MediaSourceWithTypes {
     init {
         dispatcher.register(this)
     }

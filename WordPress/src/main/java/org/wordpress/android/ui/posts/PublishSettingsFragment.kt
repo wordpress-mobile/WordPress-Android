@@ -52,32 +52,89 @@ abstract class PublishSettingsFragment : Fragment() {
         val dateAndTimeContainer = rootView.findViewById<LinearLayout>(R.id.publish_time_and_date_container)
         val publishNotification = rootView.findViewById<TextView>(R.id.publish_notification)
         val publishNotificationTitle = rootView.findViewById<TextView>(R.id.publish_notification_title)
+
+
+        AccessibilityUtils.disableHintAnnouncement(dateAndTime)
+        AccessibilityUtils.disableHintAnnouncement(publishNotification)
+        dateAndTimeContainer.setOnClickListener { showPostDateSelectionDialog() }
+        setupContent(rootView, viewModel)
+
+        observeOnDatePicked()
+        observeOnPublishedDateChanged()
+        observeOnNotificationTime()
+        observeOnUiModel(dateAndTime, publishNotificationTitle, publishNotification, rootView)
+        observeOnShowNotificationDialog()
+        observeOnToast()
+        observerOnNotificationAdded()
+        observeOnAddToCalendar()
+
+        viewModel.start(getPostRepository())
+        return rootView
+    }
+
+    private fun observeOnAddToCalendar() {
+        viewModel.onAddToCalendar.observeEvent(viewLifecycleOwner) { calendarEvent ->
+            val calIntent = Intent(Intent.ACTION_INSERT)
+            calIntent.data = Events.CONTENT_URI
+            calIntent.type = "vnd.android.cursor.item/event"
+            calIntent.putExtra(Events.TITLE, calendarEvent.title)
+            calIntent.putExtra(Events.DESCRIPTION, calendarEvent.description)
+            calIntent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, calendarEvent.startTime)
+            startActivity(calIntent)
+        }
+    }
+
+    private fun observerOnNotificationAdded() {
+        viewModel.onNotificationAdded.observeEvent(viewLifecycleOwner) { notification ->
+            activity?.let {
+                NotificationManagerCompat.from(it).cancel(notification.id)
+                val notificationIntent = Intent(it, PublishNotificationReceiver::class.java)
+                notificationIntent.putExtra(PublishNotificationReceiver.NOTIFICATION_ID, notification.id)
+                val pendingIntent = PendingIntent.getBroadcast(
+                        it,
+                        notification.id,
+                        notificationIntent,
+                        PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE
+                )
+
+                val alarmManager = it.getSystemService(ALARM_SERVICE) as AlarmManager
+                alarmManager.set(
+                        AlarmManager.RTC_WAKEUP,
+                        notification.scheduledTime,
+                        pendingIntent
+                )
+            }
+        }
+    }
+
+    private fun observeOnToast() {
+        viewModel.onToast.observeEvent(viewLifecycleOwner) {
+            ToastUtils.showToast(
+                    context,
+                    it,
+                    SHORT,
+                    Gravity.TOP
+            )
+        }
+    }
+
+    private fun observeOnShowNotificationDialog() {
+        viewModel.onShowNotificationDialog.observeEvent(viewLifecycleOwner) { notificationTime ->
+            showNotificationTimeSelectionDialog(notificationTime)
+        }
+    }
+
+    private fun observeOnUiModel(
+        dateAndTime: TextView,
+        publishNotificationTitle: TextView,
+        publishNotification: TextView,
+        rootView: ViewGroup,
+    ) {
         val publishNotificationContainer = rootView.findViewById<LinearLayout>(R.id.publish_notification_container)
         val addToCalendarContainer = rootView.findViewById<LinearLayout>(R.id.post_add_to_calendar_container)
         val addToCalendar = rootView.findViewById<TextView>(R.id.post_add_to_calendar)
 
-        AccessibilityUtils.disableHintAnnouncement(dateAndTime)
-        AccessibilityUtils.disableHintAnnouncement(publishNotification)
-
-        dateAndTimeContainer.setOnClickListener { showPostDateSelectionDialog() }
-
-        setupContent(rootView, viewModel)
-
-        viewModel.onDatePicked.observeEvent(viewLifecycleOwner, {
-            showPostTimeSelectionDialog()
-        })
-        viewModel.onPublishedDateChanged.observeEvent(viewLifecycleOwner, { date ->
-            viewModel.updatePost(date, getPostRepository())
-            trackPostScheduled()
-        })
-        viewModel.onNotificationTime.observe(viewLifecycleOwner, {
-            it?.let { notificationTime ->
-                getPostRepository()?.let { postRepository ->
-                    viewModel.scheduleNotification(postRepository, notificationTime)
-                }
-            }
-        })
-        viewModel.onUiModel.observe(viewLifecycleOwner, {
+        viewModel.onUiModel.observe(viewLifecycleOwner) {
             it?.let { uiModel ->
                 dateAndTime.text = uiModel.publishDateLabel
                 publishNotificationTitle.isEnabled = uiModel.notificationEnabled
@@ -104,49 +161,31 @@ abstract class PublishSettingsFragment : Fragment() {
                 publishNotificationContainer.visibility = if (uiModel.notificationVisible) View.VISIBLE else View.GONE
                 addToCalendarContainer.visibility = if (uiModel.notificationVisible) View.VISIBLE else View.GONE
             }
-        })
-        viewModel.onShowNotificationDialog.observeEvent(viewLifecycleOwner, { notificationTime ->
-            showNotificationTimeSelectionDialog(notificationTime)
-        })
-        viewModel.onToast.observeEvent(viewLifecycleOwner, {
-            ToastUtils.showToast(
-                    context,
-                    it,
-                    SHORT,
-                    Gravity.TOP
-            )
-        })
-        viewModel.onNotificationAdded.observeEvent(viewLifecycleOwner, { notification ->
-            activity?.let {
-                NotificationManagerCompat.from(it).cancel(notification.id)
-                val notificationIntent = Intent(it, PublishNotificationReceiver::class.java)
-                notificationIntent.putExtra(PublishNotificationReceiver.NOTIFICATION_ID, notification.id)
-                val pendingIntent = PendingIntent.getBroadcast(
-                        it,
-                        notification.id,
-                        notificationIntent,
-                        PendingIntent.FLAG_CANCEL_CURRENT
-                )
+        }
+    }
 
-                val alarmManager = it.getSystemService(ALARM_SERVICE) as AlarmManager
-                alarmManager.set(
-                        AlarmManager.RTC_WAKEUP,
-                        notification.scheduledTime,
-                        pendingIntent
-                )
+
+    private fun observeOnNotificationTime() {
+        viewModel.onNotificationTime.observe(viewLifecycleOwner) {
+            it?.let { notificationTime ->
+                getPostRepository()?.let { postRepository ->
+                    viewModel.scheduleNotification(postRepository, notificationTime)
+                }
             }
-        })
-        viewModel.onAddToCalendar.observeEvent(viewLifecycleOwner, { calendarEvent ->
-            val calIntent = Intent(Intent.ACTION_INSERT)
-            calIntent.data = Events.CONTENT_URI
-            calIntent.type = "vnd.android.cursor.item/event"
-            calIntent.putExtra(Events.TITLE, calendarEvent.title)
-            calIntent.putExtra(Events.DESCRIPTION, calendarEvent.description)
-            calIntent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, calendarEvent.startTime)
-            startActivity(calIntent)
-        })
-        viewModel.start(getPostRepository())
-        return rootView
+        }
+    }
+
+    private fun observeOnPublishedDateChanged() {
+        viewModel.onPublishedDateChanged.observeEvent(viewLifecycleOwner) { date ->
+            viewModel.updatePost(date, getPostRepository())
+            trackPostScheduled()
+        }
+    }
+
+    private fun observeOnDatePicked() {
+        viewModel.onDatePicked.observeEvent(viewLifecycleOwner) {
+            showPostTimeSelectionDialog()
+        }
     }
 
     private fun trackPostScheduled() {

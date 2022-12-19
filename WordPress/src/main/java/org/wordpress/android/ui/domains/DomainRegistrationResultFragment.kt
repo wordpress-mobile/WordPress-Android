@@ -11,9 +11,9 @@ import androidx.lifecycle.ViewModelProvider
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.DomainRegistrationResultFragmentBinding
-import org.wordpress.android.util.getColorFromAttribute
-import org.wordpress.android.util.setLightNavigationBar
-import org.wordpress.android.util.setLightStatusBar
+import org.wordpress.android.util.extensions.getColorFromAttribute
+import org.wordpress.android.util.extensions.setLightNavigationBar
+import org.wordpress.android.util.extensions.setLightStatusBar
 import javax.inject.Inject
 
 class DomainRegistrationResultFragment : Fragment(R.layout.domain_registration_result_fragment) {

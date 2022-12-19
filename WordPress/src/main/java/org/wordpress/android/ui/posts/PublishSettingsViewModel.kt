@@ -53,12 +53,14 @@ constructor(
     val onPostStatusChanged: LiveData<PostStatus> = _onPostStatusChanged
     private val _onUiModel = MutableLiveData<PublishUiModel>()
     val onUiModel: LiveData<PublishUiModel> = _onUiModel
-    private val _onToast = MutableLiveData<Event<String>>()
+
+    @Suppress("VariableNaming")
+    protected val _onToast = MutableLiveData<Event<String>>()
     val onToast: LiveData<Event<String>> = _onToast
     private val _onShowNotificationDialog = MutableLiveData<Event<Period?>>()
     val onShowNotificationDialog: LiveData<Event<Period?>> = _onShowNotificationDialog
-    private val _onNotificationTime = MutableLiveData<Period>()
-    val onNotificationTime: LiveData<Period> = _onNotificationTime
+    private val _onNotificationTime = MutableLiveData<Period?>()
+    val onNotificationTime: LiveData<Period?> = _onNotificationTime
     private val _onNotificationAdded = MutableLiveData<Event<Notification>>()
     val onNotificationAdded: LiveData<Event<Notification>> = _onNotificationAdded
     private val _onAddToCalendar = MutableLiveData<Event<CalendarEvent>>()
@@ -187,10 +189,12 @@ constructor(
                 R.string.calendar_scheduled_post_title,
                 postRepository.title
         )
+        val appName = resourceProvider.getString(R.string.app_name)
         val description = resourceProvider.getString(
                 R.string.calendar_scheduled_post_description,
                 postRepository.title,
                 site?.name ?: site?.url ?: "",
+                appName,
                 postRepository.link
         )
         _onAddToCalendar.value = Event(CalendarEvent(title, description, startTime))

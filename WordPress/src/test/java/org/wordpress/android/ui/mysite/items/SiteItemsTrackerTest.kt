@@ -1,13 +1,13 @@
 package org.wordpress.android.ui.mysite.items
 
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.times
-import com.nhaarman.mockitokotlin2.verify
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.any
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.ui.mysite.items.SiteItemsTracker.Type
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
@@ -30,6 +30,13 @@ class SiteItemsTrackerTest {
         siteItemsTracker.trackSiteItemClicked(ListItemAction.POSTS)
 
         verifySiteItemClickedTracked(Type.POSTS)
+    }
+
+    @Test
+    fun `when site item stats is clicked, then menu item tapped stats is tracked`() {
+        siteItemsTracker.trackSiteItemClicked(ListItemAction.STATS)
+
+        verifySiteItemClickedTracked(Type.STATS)
     }
 
     @Test

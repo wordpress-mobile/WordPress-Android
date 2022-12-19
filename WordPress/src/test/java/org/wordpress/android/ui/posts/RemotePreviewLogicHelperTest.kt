@@ -1,13 +1,6 @@
 package org.wordpress.android.ui.posts
 
 import android.app.Activity
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.doReturn
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.never
-import com.nhaarman.mockitokotlin2.times
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -15,6 +8,13 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito.lenient
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.any
+import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.never
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncherWrapper
@@ -68,13 +68,30 @@ class RemotePreviewLogicHelperTest {
         doReturn(true).whenever(post).isLocallyChanged
         doReturn("Test title for test purposes").whenever(post).title
         doReturn(999999).whenever(post).contentHashcode()
+        doReturn("").whenever(post).dateCreated
     }
 
     @Test
-    fun `preview not available for self hosted sites not using WPComRestApi on a post with modifications`() {
+    fun `preview available for self hosted sites not using WPComRestApi on a draft post with modifications`() {
         // Given
         doReturn(false).whenever(site).isUsingWpComRestApi
         doReturn(true).whenever(post).isLocallyChanged
+        doReturn("draft").whenever(post).status
+
+        // When
+        val result = remotePreviewLogicHelper.runPostPreviewLogic(activity, site, post, helperFunctions)
+
+        // Then
+        assertThat(result).isEqualTo(RemotePreviewLogicHelper.PreviewLogicOperationResult.GENERATING_PREVIEW)
+        verify(helperFunctions, times(1)).startUploading(true, post)
+    }
+
+    @Test
+    fun `preview not available for self hosted sites not using WPComRestApi on a non-draft post with modifications`() {
+        // Given
+        doReturn(false).whenever(site).isUsingWpComRestApi
+        doReturn(true).whenever(post).isLocallyChanged
+        doReturn("publish").whenever(post).status
 
         // When
         val result = remotePreviewLogicHelper.runPostPreviewLogic(activity, site, post, mock())

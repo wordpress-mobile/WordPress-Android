@@ -1,9 +1,5 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.times
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
@@ -12,6 +8,10 @@ import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
+import org.mockito.kotlin.any
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
@@ -142,7 +142,7 @@ class AllTimeStatsUseCaseTest : BaseUnitTest() {
             assertThat(this.startColumn.value).isEqualTo(posts.toString())
             assertThat(this.endColumn.label).isEqualTo(R.string.stats_insights_best_ever)
             assertThat(this.endColumn.value).isEqualTo(viewsBestDayTotal.toString())
-            assertThat(this.endColumn.tooltip).isEqualTo(bestDayTransformed)
+            assertThat(this.endColumn.highest).isEqualTo(bestDayTransformed)
         }
         verify(statsWidgetUpdaters, times(2)).updateAllTimeWidget(siteId)
     }

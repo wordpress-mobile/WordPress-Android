@@ -7,9 +7,6 @@ import android.content.IntentFilter
 import android.net.ConnectivityManager
 import androidx.lifecycle.LiveData
 import org.wordpress.android.util.distinct
-import org.wordpress.android.viewmodel.helpers.ConnectionStatus.AVAILABLE
-import org.wordpress.android.viewmodel.helpers.ConnectionStatus.UNAVAILABLE
-import org.wordpress.android.viewmodel.helpers.ConnectionStatusLiveData.Factory
 import javax.inject.Inject
 
 enum class ConnectionStatus {
@@ -26,6 +23,7 @@ enum class ConnectionStatus {
  * IMPORTANT: It needs to be observed for the changes to be posted.
  */
 class ConnectionStatusLiveData private constructor(private val context: Context) : LiveData<ConnectionStatus>() {
+    @Suppress("DEPRECATION")
     override fun onActive() {
         super.onActive()
         val intentFilter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
@@ -37,12 +35,16 @@ class ConnectionStatusLiveData private constructor(private val context: Context)
         context.unregisterReceiver(networkReceiver)
     }
 
-    private val networkReceiver = object : BroadcastReceiver() {
+    @Suppress("DEPRECATION") private val networkReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager?
             val networkInfo = connectivityManager?.activeNetworkInfo
 
-            val nextValue: ConnectionStatus = if (networkInfo?.isConnected == true) AVAILABLE else UNAVAILABLE
+            val nextValue: ConnectionStatus = if (networkInfo?.isConnected == true){
+                ConnectionStatus.AVAILABLE
+            } else {
+                ConnectionStatus.UNAVAILABLE
+            }
             postValue(nextValue)
         }
     }

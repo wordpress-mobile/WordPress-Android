@@ -11,7 +11,7 @@ import org.wordpress.android.R
 
 data class WeeklyRoundupNotification(
     val id: Int,
-    @StringRes val channel: Int = R.string.notification_channel_reminder_id,
+    @StringRes val channel: Int = R.string.notification_channel_weekly_roundup_id,
     val contentIntentBuilder: () -> PendingIntent,
     val contentTitle: String,
     val contentText: String,

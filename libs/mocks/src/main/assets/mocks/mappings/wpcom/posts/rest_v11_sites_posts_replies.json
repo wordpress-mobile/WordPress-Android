@@ -1,0 +1,14 @@
+{
+    "request": {
+        "method": "GET",
+        "urlPathPattern": "/rest/v1.1/sites/([0-9]*)/posts/([0-9]*)/replies/"
+    },
+    "response": {
+        "status": 200,
+        "jsonBody": {
+            "found": 0,
+            "site_ID": "{{request.path.[3]}}",
+            "comments": []
+        }
+    }
+}

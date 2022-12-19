@@ -54,11 +54,11 @@ class GetCategoriesUseCase @Inject constructor(
     private fun formatCategories(categoryList: List<TermModel>): String {
         if (categoryList.isEmpty()) return ""
 
-        val formattedCategories = categoryList.joinToString { it -> it.name }
+        val formattedCategories = categoryList.joinToString { it.name }
         return StringEscapeUtils.unescapeHtml4(formattedCategories)
     }
 
-    private fun getCategoriesForSite(siteModel: SiteModel): List<TermModel> {
+    fun getCategoriesForSite(siteModel: SiteModel): List<TermModel> {
         return taxonomyStore.getCategoriesForSite(siteModel)
     }
 }

@@ -50,7 +50,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.ViewUtilsKt;
+import org.wordpress.android.util.extensions.ViewExtensionsKt;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -130,7 +130,7 @@ public class SiteSettingsTagListActivity extends LocaleAwareActivity
             Toast.makeText(view.getContext(), R.string.site_settings_tags_empty_button, Toast.LENGTH_SHORT).show();
             return true;
         });
-        ViewUtilsKt.redirectContextClickToLongPressListener(mFabView);
+        ViewExtensionsKt.redirectContextClickToLongPressListener(mFabView);
 
         // hide the FAB the first time the fragment is created in order to animate it in onResume()
         if (savedInstanceState == null) {

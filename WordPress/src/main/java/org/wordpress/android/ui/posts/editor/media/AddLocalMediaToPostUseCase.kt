@@ -55,39 +55,27 @@ class AddLocalMediaToPostUseCase @Inject constructor(
         doUploadAfterAdding: Boolean = true,
         trackEvent: Boolean = true
     ): Boolean {
-        var result = false
-
-        if (site.hasFreePlan) {
-            uriList.map {
-                val videoDurationAllowed = mediaUtilsWrapper.isVideoFile(it) &&
-                        mediaUtilsWrapper.isAllowedVideoDurationForFreeSites(context, it)
-
-                if (videoDurationAllowed) {
-                    result = processMediaUri(
-                            uriList,
-                            site,
-                            freshlyTaken,
-                            editorMediaListener,
-                            doUploadAfterAdding,
-                            trackEvent)
-                } else {
-                    editorMediaListener.showVideoDurationLimitWarning(it.path.toString())
-                }
+        val allowedUris = uriList.filter {
+            // filter out long video files on free sites
+            if (mediaUtilsWrapper.isProhibitedVideoDuration(context, site, it)) {
+                // put out a notice to the user that the particular video file was rejected
+                editorMediaListener.showVideoDurationLimitWarning(it.path.toString())
+                return@filter false
             }
-        } else {
-            result = processMediaUri(
-                    uriList,
-                    site,
-                    freshlyTaken,
-                    editorMediaListener,
-                    doUploadAfterAdding,
-                    trackEvent)
+
+            return@filter true
         }
 
-        return result
+        return processMediaUris(
+                allowedUris,
+                site,
+                freshlyTaken,
+                editorMediaListener,
+                doUploadAfterAdding,
+                trackEvent)
     }
 
-    private suspend fun processMediaUri(
+    private suspend fun processMediaUris(
         uriList: List<Uri>,
         site: SiteModel,
         freshlyTaken: Boolean,

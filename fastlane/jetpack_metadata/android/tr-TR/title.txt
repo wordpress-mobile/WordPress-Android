@@ -1,1 +1,1 @@
-Jetpack: WP Güvenlik ve Hız
+Jetpack, Web Sitesi Oluşturucu

@@ -1,32 +1,24 @@
 package org.wordpress.android.viewmodel.posts
 
-import com.nhaarman.mockitokotlin2.anyOrNull
-import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.whenever
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.post.PostStatus
-import org.wordpress.android.fluxc.model.post.PostStatus.DRAFT
-import org.wordpress.android.fluxc.model.post.PostStatus.PENDING
-import org.wordpress.android.fluxc.model.post.PostStatus.PRIVATE
-import org.wordpress.android.fluxc.model.post.PostStatus.PUBLISHED
-import org.wordpress.android.fluxc.model.post.PostStatus.SCHEDULED
 import org.wordpress.android.fluxc.store.MediaStore.MediaError
 import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType
-import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType.AUTHORIZATION_REQUIRED
 import org.wordpress.android.fluxc.store.PostStore.PostError
-import org.wordpress.android.fluxc.store.PostStore.PostErrorType.GENERIC_ERROR
+import org.wordpress.android.fluxc.store.PostStore.PostErrorType
 import org.wordpress.android.fluxc.store.UploadStore.UploadError
 import org.wordpress.android.ui.posts.AuthorFilterSelection
-import org.wordpress.android.ui.posts.AuthorFilterSelection.EVERYONE
-import org.wordpress.android.ui.posts.AuthorFilterSelection.ME
 import org.wordpress.android.ui.posts.PostModelUploadStatusTracker
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -45,13 +37,14 @@ import org.wordpress.android.widgets.PostListButtonType
 
 private const val FORMATTER_DATE = "January 1st, 1:35pm"
 
-private val POST_STATE_PUBLISH = PUBLISHED.toString()
-private val POST_STATE_SCHEDULED = SCHEDULED.toString()
-private val POST_STATE_PRIVATE = PRIVATE.toString()
-private val POST_STATE_PENDING = PENDING.toString()
-private val POST_STATE_DRAFT = DRAFT.toString()
+private val POST_STATE_PUBLISH = PostStatus.PUBLISHED.toString()
+private val POST_STATE_SCHEDULED = PostStatus.SCHEDULED.toString()
+private val POST_STATE_PRIVATE = PostStatus.PRIVATE.toString()
+private val POST_STATE_PENDING = PostStatus.PENDING.toString()
+private val POST_STATE_DRAFT = PostStatus.DRAFT.toString()
 private val POST_STATE_TRASHED = PostStatus.TRASHED.toString()
 
+@Suppress("LargeClass")
 @RunWith(MockitoJUnitRunner::class)
 class PostListItemUiStateHelperTest {
     @Mock private lateinit var appPrefsWrapper: AppPrefsWrapper
@@ -497,7 +490,7 @@ class PostListItemUiStateHelperTest {
                 )
         ).thenReturn(
                 createFailedUploadUiState(
-                        UploadError(MediaError(AUTHORIZATION_REQUIRED)),
+                        UploadError(MediaError(MediaErrorType.AUTHORIZATION_REQUIRED)),
                         isEligibleForAutoUpload = true
                 )
         )
@@ -605,7 +598,7 @@ class PostListItemUiStateHelperTest {
     @Test
     fun `error uploading media label shown when the media upload fails`() {
         whenever(uploadUiStateUseCase.createUploadUiState(anyOrNull(), anyOrNull(), anyOrNull())).thenReturn(
-                createFailedUploadUiState(uploadError = UploadError(MediaError(AUTHORIZATION_REQUIRED)))
+                createFailedUploadUiState(uploadError = UploadError(MediaError(MediaErrorType.AUTHORIZATION_REQUIRED)))
         )
         val state = createPostListItemUiState()
         assertThat(state.data.statuses).contains(UiStringRes(R.string.error_media_recover_post))
@@ -615,7 +608,7 @@ class PostListItemUiStateHelperTest {
     fun `generic error message shown when upload fails from unknown reason`() {
         val errorMsg = "testing error message"
         whenever(uploadUiStateUseCase.createUploadUiState(anyOrNull(), anyOrNull(), anyOrNull())).thenReturn(
-                createFailedUploadUiState(uploadError = UploadError(PostError(GENERIC_ERROR, errorMsg)))
+                createFailedUploadUiState(uploadError = UploadError(PostError(PostErrorType.GENERIC_ERROR, errorMsg)))
         )
         val state = createPostListItemUiState()
         assertThat(state.data.statuses).contains(UiStringRes(R.string.error_generic_error))
@@ -624,7 +617,7 @@ class PostListItemUiStateHelperTest {
     @Test
     fun `given a mix of info and error statuses, only the error status is shown`() {
         whenever(uploadUiStateUseCase.createUploadUiState(anyOrNull(), anyOrNull(), anyOrNull())).thenReturn(
-                createFailedUploadUiState(uploadError = UploadError(MediaError(AUTHORIZATION_REQUIRED)))
+                createFailedUploadUiState(uploadError = UploadError(MediaError(MediaErrorType.AUTHORIZATION_REQUIRED)))
         )
         val state = createPostListItemUiState(
                 post = createPostModel(isLocallyChanged = true, status = POST_STATE_PRIVATE)
@@ -642,11 +635,8 @@ class PostListItemUiStateHelperTest {
                 )
         ).thenReturn(
                 createFailedUploadUiState(
-                        uploadError = UploadError(
-                                MediaError(
-                                        AUTHORIZATION_REQUIRED
-                                )
-                        ), isEligibleForAutoUpload = true
+                        uploadError = UploadError(MediaError(MediaErrorType.AUTHORIZATION_REQUIRED)),
+                        isEligibleForAutoUpload = true
                 )
         )
         val state = createPostListItemUiState(
@@ -660,7 +650,7 @@ class PostListItemUiStateHelperTest {
     fun `media upload error shown with specific message for pending post not eligible for auto-upload`() {
         whenever(uploadUiStateUseCase.createUploadUiState(anyOrNull(), anyOrNull(), anyOrNull())).thenReturn(
                 createFailedUploadUiState(
-                        uploadError = UploadError(MediaError(AUTHORIZATION_REQUIRED)),
+                        uploadError = UploadError(MediaError(MediaErrorType.AUTHORIZATION_REQUIRED)),
                         isEligibleForAutoUpload = false,
                         retryWillPushChanges = true
                 )
@@ -675,7 +665,7 @@ class PostListItemUiStateHelperTest {
     fun `media upload error shown with specific message for scheduled post eligible for auto-upload`() {
         whenever(uploadUiStateUseCase.createUploadUiState(anyOrNull(), anyOrNull(), anyOrNull())).thenReturn(
                 createFailedUploadUiState(
-                        uploadError = UploadError(MediaError(AUTHORIZATION_REQUIRED)),
+                        uploadError = UploadError(MediaError(MediaErrorType.AUTHORIZATION_REQUIRED)),
                         isEligibleForAutoUpload = true
                 )
         )
@@ -690,7 +680,7 @@ class PostListItemUiStateHelperTest {
     fun `media upload error shown with specific message for scheduled post not eligible for auto-upload`() {
         whenever(uploadUiStateUseCase.createUploadUiState(anyOrNull(), anyOrNull(), anyOrNull())).thenReturn(
                 createFailedUploadUiState(
-                        uploadError = UploadError(MediaError(AUTHORIZATION_REQUIRED)),
+                        uploadError = UploadError(MediaError(MediaErrorType.AUTHORIZATION_REQUIRED)),
                         isEligibleForAutoUpload = false,
                         retryWillPushChanges = true
                 )
@@ -705,7 +695,7 @@ class PostListItemUiStateHelperTest {
     fun `retrying media upload shown for draft eligible for auto-upload`() {
         whenever(uploadUiStateUseCase.createUploadUiState(anyOrNull(), anyOrNull(), anyOrNull())).thenReturn(
                 createFailedUploadUiState(
-                        uploadError = UploadError(MediaError(AUTHORIZATION_REQUIRED)),
+                        uploadError = UploadError(MediaError(MediaErrorType.AUTHORIZATION_REQUIRED)),
                         isEligibleForAutoUpload = true
                 )
         )
@@ -719,7 +709,7 @@ class PostListItemUiStateHelperTest {
     fun `base media upload error shown for draft not eligible for auto-upload`() {
         whenever(uploadUiStateUseCase.createUploadUiState(anyOrNull(), anyOrNull(), anyOrNull())).thenReturn(
                 createFailedUploadUiState(
-                        uploadError = UploadError(MediaError(AUTHORIZATION_REQUIRED)),
+                        uploadError = UploadError(MediaError(MediaErrorType.AUTHORIZATION_REQUIRED)),
                         isEligibleForAutoUpload = false,
                         retryWillPushChanges = false
                 )
@@ -734,7 +724,7 @@ class PostListItemUiStateHelperTest {
     fun `base upload error shown on GENERIC ERROR and not eligible for auto upload`() {
         whenever(uploadUiStateUseCase.createUploadUiState(anyOrNull(), anyOrNull(), anyOrNull())).thenReturn(
                 createFailedUploadUiState(
-                        uploadError = UploadError(PostError(GENERIC_ERROR)),
+                        uploadError = UploadError(PostError(PostErrorType.GENERIC_ERROR)),
                         isEligibleForAutoUpload = false,
                         retryWillPushChanges = false
                 )
@@ -749,7 +739,7 @@ class PostListItemUiStateHelperTest {
     fun `retrying upload shown for draft eligible for auto-upload`() {
         whenever(uploadUiStateUseCase.createUploadUiState(anyOrNull(), anyOrNull(), anyOrNull())).thenReturn(
                 createFailedUploadUiState(
-                        uploadError = UploadError(PostError(GENERIC_ERROR)),
+                        uploadError = UploadError(PostError(PostErrorType.GENERIC_ERROR)),
                         isEligibleForAutoUpload = true,
                         retryWillPushChanges = true
                 )
@@ -822,7 +812,7 @@ class PostListItemUiStateHelperTest {
     @Test
     fun `show overlay when performing critical action`() {
         val state = createPostListItemUiState(performingCriticalAction = true)
-        assertThat(state.data.showOverlay).isTrue()
+        assertThat(state.data.showOverlay).isTrue
     }
 
     @Test
@@ -831,7 +821,7 @@ class PostListItemUiStateHelperTest {
                 UploadingPost(false)
         )
         val state = createPostListItemUiState()
-        assertThat(state.data.showOverlay).isTrue()
+        assertThat(state.data.showOverlay).isTrue
     }
 
     @Test
@@ -865,7 +855,7 @@ class PostListItemUiStateHelperTest {
     @Test
     fun `pending publish post label shown when post eligible for auto-upload`() {
         whenever(uploadUiStateUseCase.createUploadUiState(anyOrNull(), anyOrNull(), anyOrNull())).thenReturn(
-                UploadWaitingForConnection(PUBLISHED)
+                UploadWaitingForConnection(PostStatus.PUBLISHED)
         )
         val state = createPostListItemUiState(
                 post = createPostModel(isLocallyChanged = true, status = POST_STATE_PUBLISH)
@@ -877,7 +867,7 @@ class PostListItemUiStateHelperTest {
     @Test
     fun `pending schedule label shown when post eligible for auto-upload`() {
         whenever(uploadUiStateUseCase.createUploadUiState(anyOrNull(), anyOrNull(), anyOrNull())).thenReturn(
-                UploadWaitingForConnection(SCHEDULED)
+                UploadWaitingForConnection(PostStatus.SCHEDULED)
         )
         val state = createPostListItemUiState(
                 post = createPostModel(isLocallyChanged = true, status = POST_STATE_SCHEDULED)
@@ -890,7 +880,7 @@ class PostListItemUiStateHelperTest {
     @Test
     fun `pending publish private post label shown when post eligible for auto-upload`() {
         whenever(uploadUiStateUseCase.createUploadUiState(anyOrNull(), anyOrNull(), anyOrNull())).thenReturn(
-                UploadWaitingForConnection(PRIVATE)
+                UploadWaitingForConnection(PostStatus.PRIVATE)
         )
         val state = createPostListItemUiState(
                 post = createPostModel(isLocallyChanged = true, status = POST_STATE_PRIVATE)
@@ -903,7 +893,7 @@ class PostListItemUiStateHelperTest {
     @Test
     fun `pending submit post label shown when post eligible for auto-upload`() {
         whenever(uploadUiStateUseCase.createUploadUiState(anyOrNull(), anyOrNull(), anyOrNull())).thenReturn(
-                UploadWaitingForConnection(PENDING)
+                UploadWaitingForConnection(PostStatus.PENDING)
         )
         val state = createPostListItemUiState(
                 post = createPostModel(isLocallyChanged = true, status = POST_STATE_PENDING)
@@ -916,7 +906,7 @@ class PostListItemUiStateHelperTest {
     @Test
     fun `local changes post label shown when draft eligible for auto-upload`() {
         whenever(uploadUiStateUseCase.createUploadUiState(anyOrNull(), anyOrNull(), anyOrNull())).thenReturn(
-                UploadWaitingForConnection(DRAFT)
+                UploadWaitingForConnection(PostStatus.DRAFT)
         )
         val state = createPostListItemUiState(
                 post = createPostModel(isLocallyChanged = true, status = POST_STATE_DRAFT)
@@ -975,7 +965,7 @@ class PostListItemUiStateHelperTest {
         // Arrange
         val authorDisplayName = "John Novak"
         val state = createPostListItemUiState(
-                authorFilterSelection = EVERYONE,
+                authorFilterSelection = AuthorFilterSelection.EVERYONE,
                 post = createPostModel(
                         authorDisplayName = authorDisplayName
                 ), formattedDate = FORMATTER_DATE
@@ -992,7 +982,7 @@ class PostListItemUiStateHelperTest {
         // Arrange
         val authorDisplayName = "John Novak"
         val state = createPostListItemUiState(
-                authorFilterSelection = ME,
+                authorFilterSelection = AuthorFilterSelection.ME,
                 post = createPostModel(
                         authorDisplayName = authorDisplayName
                 ), formattedDate = FORMATTER_DATE
@@ -1019,7 +1009,7 @@ class PostListItemUiStateHelperTest {
     }
 
     @Test
-    fun `when a post is locally changed and is local draft only "Local draft" label is displayed`() {
+    fun `when a post is locally changed and is local draft only 'Local draft' label is displayed`() {
         // Arrange
         val state = createPostListItemUiState(
                 post = createPostModel(isLocallyChanged = true, isLocalDraft = true)
@@ -1030,7 +1020,7 @@ class PostListItemUiStateHelperTest {
     }
 
     @Test
-    fun `when a post is sticky and no errors ocurred, the "Sticky" label is displayed`() {
+    fun `when a post is sticky and no errors occurred, the 'Sticky' label is displayed`() {
         // Arrange
         val state = createPostListItemUiState(
                 post = createPostModel(sticky = true)
@@ -1041,7 +1031,7 @@ class PostListItemUiStateHelperTest {
     }
 
     @Test
-    fun `when a post is sticky and private, the labels "Private" and "Sticky" are displayed`() {
+    fun `when a post is sticky and private, the labels 'Private' and 'Sticky' are displayed`() {
         // Arrange
         val state = createPostListItemUiState(
                 post = createPostModel(status = POST_STATE_PRIVATE, sticky = true)
@@ -1069,7 +1059,7 @@ class PostListItemUiStateHelperTest {
     }
 
     private fun createPostListItemUiState(
-        authorFilterSelection: AuthorFilterSelection = EVERYONE,
+        authorFilterSelection: AuthorFilterSelection = AuthorFilterSelection.EVERYONE,
         post: PostModel = PostModel(),
         site: SiteModel = SiteModel(),
         unhandledConflicts: Boolean = false,
@@ -1109,5 +1099,5 @@ class PostListItemUiStateHelperTest {
         )
     }
 
-    private fun createGenericError(): UploadError = UploadError(PostError(GENERIC_ERROR))
+    private fun createGenericError(): UploadError = UploadError(PostError(PostErrorType.GENERIC_ERROR))
 }

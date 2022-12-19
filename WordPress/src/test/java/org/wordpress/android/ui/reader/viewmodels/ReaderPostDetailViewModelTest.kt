@@ -1,15 +1,6 @@
 package org.wordpress.android.ui.reader.viewmodels
 
 import androidx.lifecycle.MutableLiveData
-import com.nhaarman.mockitokotlin2.KArgumentCaptor
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.anyOrNull
-import com.nhaarman.mockitokotlin2.argumentCaptor
-import com.nhaarman.mockitokotlin2.eq
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.times
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
@@ -22,6 +13,16 @@ import org.mockito.ArgumentMatchers.anyList
 import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mock
+import org.mockito.kotlin.KArgumentCaptor
+import org.mockito.kotlin.any
+import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.eq
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.never
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
@@ -36,6 +37,8 @@ import org.wordpress.android.models.ReaderComment
 import org.wordpress.android.models.ReaderCommentList
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.test
+import org.wordpress.android.ui.avatars.TrainOfAvatarsItem.AvatarItem
+import org.wordpress.android.ui.avatars.TrainOfAvatarsItem.TrailingLabelTextItem
 import org.wordpress.android.ui.engagement.EngageItem.Liker
 import org.wordpress.android.ui.engagement.EngagementUtils
 import org.wordpress.android.ui.engagement.GetLikesHandler
@@ -47,8 +50,6 @@ import org.wordpress.android.ui.engagement.utils.GetLikesTestConfig.TEST_CONFIG_
 import org.wordpress.android.ui.engagement.utils.getGetLikesState
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.ReaderPostDetailUiStateBuilder
-import org.wordpress.android.ui.reader.adapters.TrainOfFacesItem.BloggersLikingTextItem
-import org.wordpress.android.ui.reader.adapters.TrainOfFacesItem.FaceItem
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenEditorForReblog
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenUrl
@@ -121,6 +122,7 @@ private const val ON_RELATED_POST_ITEM_CLICKED_PARAM_POSITION = 3
 private const val INTERCEPTED_URI = "intercepted uri"
 
 @InternalCoroutinesApi
+@Suppress("LargeClass")
 class ReaderPostDetailViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: ReaderPostDetailViewModel
 
@@ -166,6 +168,7 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
     private lateinit var relatedPosts: ReaderSimplePostList
 
     @Before
+    @Suppress("LongMethod")
     fun setUp() = test {
         viewModel = ReaderPostDetailViewModel(
                 readerPostCardActionsHandler,
@@ -885,7 +888,7 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
     @Test
     fun `ui state show likers faces when data available`() {
         val likesState = getGetLikesState(TEST_CONFIG_1) as LikesData
-        val likers = MutableList(5) { mock<FaceItem>() }
+        val likers = MutableList(5) { mock<AvatarItem>() }
         val testTextString = "10 bloggers like this."
 
         getLikesState.value = likesState
@@ -902,7 +905,14 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
         assertThat(likeObserver).isNotEmpty
         with(likeObserver.first()) {
             assertThat(showLoading).isFalse
-            assertThat(engageItemsList).isEqualTo(likers + BloggersLikingTextItem(UiStringText(testTextString)))
+            assertThat(engageItemsList).isEqualTo(
+                    likers + TrailingLabelTextItem(
+                            UiStringText(
+                                    testTextString
+                            ),
+                            R.attr.wpColorOnSurfaceMedium
+                    )
+            )
             assertThat(showEmptyState).isFalse
             assertThat(emptyStateTitle).isNull()
         }
@@ -976,6 +986,26 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
         }
     }
 
+    @Test
+    fun `onRefreshCommentsData does not start comment snippet service for external posts`() {
+        val externalPost = createDummyReaderPost(1, isWpComPost = false)
+        whenever(
+                readerPostTableWrapper.getBlogPost(
+                        anyOrNull(),
+                        anyOrNull(),
+                        anyOrNull()
+                )
+        ).thenReturn(externalPost)
+
+        viewModel.onRefreshCommentsData(1, 1)
+
+        verify(readerCommentServiceStarterWrapper, never()).startServiceForCommentSnippet(
+                anyOrNull(),
+                anyOrNull(),
+                anyOrNull()
+        )
+    }
+
     private fun <T> testWithoutLocalPost(block: suspend CoroutineScope.() -> T) {
         test {
             whenever(readerGetPostUseCase.get(any(), any(), any())).thenReturn(Pair(null, false))
@@ -983,16 +1013,17 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
         }
     }
 
-    private fun createDummyReaderPost(id: Long, isWpComPost: Boolean = true): ReaderPost = ReaderPost().apply {
-        this.postId = id
-        this.blogId = id * 100
-        this.feedId = id * 1000
-        this.title = "DummyPost"
-        this.featuredVideo = id.toString()
-        this.featuredImage = "/featured_image/$id/url"
-        this.isExternal = !isWpComPost
-        this.numReplies = 1
-    }
+    private fun createDummyReaderPost(id: Long, isWpComPost: Boolean = true): ReaderPost =
+            ReaderPost().apply {
+                this.postId = id
+                this.blogId = id * 100
+                this.feedId = id * 1000
+                this.title = "DummyPost"
+                this.featuredVideo = id.toString()
+                this.featuredImage = "/featured_image/$id/url"
+                this.isExternal = !isWpComPost
+                this.numReplies = 1
+            }
 
     private fun createDummyReaderPostCommentSnippetList(): ReaderCommentList =
             ReaderCommentList().apply {

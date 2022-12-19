@@ -1,6 +1,0 @@
-18.9:
-- Destaque o texto com qualquer cor nos blocos de parágrafo.
-- Crie novos blocos de galeria com o novo design e converta automaticamente galerias antigas para que combinem.
-- Desfaça e refaça as alterações ao formatar o texto do link em blocos.
-- Carregue mais rápido ao bloquear posts e compartilhar texto de outros aplicativos.
-- Veja cores de fundo em blocos pré-formatados em sites com temas padrão.

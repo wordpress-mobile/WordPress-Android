@@ -6,7 +6,7 @@ import android.widget.TextView
 import org.wordpress.android.R
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.util.ColorUtils
-import org.wordpress.android.util.getColorResIdFromAttribute
+import org.wordpress.android.util.extensions.getColorResIdFromAttribute
 
 class LinkViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         parent,

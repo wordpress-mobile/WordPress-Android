@@ -1,15 +1,15 @@
 package org.wordpress.android.ui.jetpack.scan.details
 
 import android.text.SpannedString
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
+import org.mockito.kotlin.any
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.Constants
 import org.wordpress.android.R
@@ -104,7 +104,7 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
         whenever(dateFormatWrapper.getLongDateFormat()).thenReturn(dateFormat)
         whenever(dateFormat.format(ThreatTestData.genericThreatModel.baseThreatModel.firstDetected))
                 .thenReturn(TEST_FOUND_ON_DATE)
-        whenever(dateFormat.format(ThreatTestData.genericThreatModel.baseThreatModel.fixedOn))
+        whenever(dateFormat.format(ThreatTestData.genericThreatModel.baseThreatModel.fixedOn!!))
                 .thenReturn(TEST_FIXED_ON_DATE)
     }
 

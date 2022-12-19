@@ -11,14 +11,17 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Value
 import org.wordpress.android.ui.stats.refresh.utils.HUNDRED_THOUSAND
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
+import org.wordpress.android.util.text.PercentFormatter
 import org.wordpress.android.viewmodel.ResourceProvider
+import java.math.RoundingMode.HALF_UP
 import javax.inject.Inject
 
 class PostDayViewsMapper
 @Inject constructor(
     private val resourceProvider: ResourceProvider,
     private val statsUtils: StatsUtils,
-    private val statsDateFormatter: StatsDateFormatter
+    private val statsDateFormatter: StatsDateFormatter,
+    private val percentFormatter: PercentFormatter
 ) {
     fun buildTitle(
         selectedItem: Day,
@@ -63,7 +66,10 @@ class PostDayViewsMapper
             val percentage = when (previousValue) {
                 value -> "0"
                 0 -> "∞"
-                else -> mapIntToString((difference * 100 / previousValue), isFormattedNumber)
+                else -> {
+                    val percentageValue = difference.toFloat() / previousValue
+                    percentFormatter.format(value = percentageValue, rounding = HALF_UP)
+                }
             }
             val formattedDifference = mapIntToString(difference, isFormattedNumber)
             if (positive) {

@@ -1,8 +1,5 @@
 package org.wordpress.android.ui.jetpack.restore.usecases
 
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.whenever
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.toList
 import org.assertj.core.api.Assertions.assertThat
@@ -11,6 +8,8 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.any
+import org.mockito.kotlin.whenever
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.action.ActivityLogAction.FETCH_REWIND_STATE
 import org.wordpress.android.fluxc.model.SiteModel
@@ -41,7 +40,6 @@ private const val CURRENT_ENTRY = "current entry"
 private val PUBLISHED = Date()
 
 @InternalCoroutinesApi
-@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class GetRestoreStatusUseCaseTest {
     private lateinit var useCase: GetRestoreStatusUseCase

@@ -12,7 +12,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ScrollView;
@@ -33,6 +32,8 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.editor.EditorMediaUtils;
+import org.wordpress.android.fluxc.model.revisions.RevisionModel;
+import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.ui.history.HistoryListItem.Revision;
 import org.wordpress.android.ui.posts.services.AztecImageLoader;
 import org.wordpress.android.util.AniUtils;
@@ -53,6 +54,7 @@ import org.wordpress.aztec.plugins.wpcomments.HiddenGutenbergPlugin;
 import org.wordpress.aztec.plugins.wpcomments.WordPressCommentsPlugin;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -73,17 +75,26 @@ public class HistoryDetailContainerFragment extends Fragment {
     private boolean mIsChevronClicked = false;
     private boolean mIsFragmentRecreated = false;
 
-    public static final String EXTRA_REVISION = "EXTRA_REVISION";
-    public static final String EXTRA_REVISIONS = "EXTRA_REVISIONS";
+    public static final String EXTRA_CURRENT_REVISION = "EXTRA_CURRENT_REVISION";
+    public static final String EXTRA_PREVIOUS_REVISIONS_IDS = "EXTRA_PREVIOUS_REVISIONS_IDS";
+    public static final String EXTRA_POST_ID = "EXTRA_POST_ID";
+    public static final String EXTRA_SITE_ID = "EXTRA_SITE_ID";
     public static final String KEY_REVISION = "KEY_REVISION";
     public static final String KEY_IS_IN_VISUAL_PREVIEW = "KEY_IS_IN_VISUAL_PREVIEW";
 
     @Inject ImageManager mImageManager;
 
-    public static HistoryDetailContainerFragment newInstance(Revision revision, ArrayList<Revision> revisions) {
+    @Inject PostStore mPostStore;
+
+    public static HistoryDetailContainerFragment newInstance(final Revision revision,
+                                                             final long[] previousRevisionsIds,
+                                                             final long postId,
+                                                             final long siteId) {
         Bundle args = new Bundle();
-        args.putParcelable(EXTRA_REVISION, revision);
-        args.putParcelableArrayList(EXTRA_REVISIONS, revisions);
+        args.putParcelable(EXTRA_CURRENT_REVISION, revision);
+        args.putLongArray(EXTRA_PREVIOUS_REVISIONS_IDS, previousRevisionsIds);
+        args.putLong(EXTRA_POST_ID, postId);
+        args.putLong(EXTRA_SITE_ID, siteId);
         HistoryDetailContainerFragment fragment = new HistoryDetailContainerFragment();
         fragment.setArguments(args);
         return fragment;
@@ -95,13 +106,14 @@ public class HistoryDetailContainerFragment extends Fragment {
 
         mIsFragmentRecreated = savedInstanceState != null;
 
-        if (getArguments() != null) {
-            mRevision = getArguments().getParcelable(EXTRA_REVISION);
-            mRevisions = getArguments().getParcelableArrayList(EXTRA_REVISIONS);
-        }
+        mapRevisions();
 
         if (mRevisions != null) {
-            mPosition = mRevisions.indexOf(mRevision);
+            for (final Revision revision : mRevisions) {
+                if (revision.getRevisionId() == mRevision.getRevisionId()) {
+                    mPosition = mRevisions.indexOf(revision);
+                }
+            }
         } else {
             throw new IllegalArgumentException("Revisions list extra is null in HistoryDetailContainerFragment");
         }
@@ -118,21 +130,15 @@ public class HistoryDetailContainerFragment extends Fragment {
         mTotalDeletions = rootView.findViewById(R.id.diff_deletions);
 
         mNextButton = rootView.findViewById(R.id.next);
-        mNextButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mIsChevronClicked = true;
-                mViewPager.setCurrentItem(mPosition + 1, true);
-            }
+        mNextButton.setOnClickListener(view -> {
+            mIsChevronClicked = true;
+            mViewPager.setCurrentItem(mPosition + 1, true);
         });
 
         mPreviousButton = rootView.findViewById(R.id.previous);
-        mPreviousButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mIsChevronClicked = true;
-                mViewPager.setCurrentItem(mPosition - 1, true);
-            }
+        mPreviousButton.setOnClickListener(view -> {
+            mIsChevronClicked = true;
+            mViewPager.setCurrentItem(mPosition - 1, true);
         });
 
         mVisualTitle = rootView.findViewById(R.id.visual_title);
@@ -172,7 +178,36 @@ public class HistoryDetailContainerFragment extends Fragment {
         return rootView;
     }
 
+    private void mapRevisions() {
+        if (getArguments() != null) {
+            mRevision = getArguments().getParcelable(EXTRA_CURRENT_REVISION);
+
+            final long[] previousRevisionsIds = getArguments().getLongArray(EXTRA_PREVIOUS_REVISIONS_IDS);
+            final List<RevisionModel> revisionModels = new ArrayList<>();
+            final long postId = getArguments().getLong(EXTRA_POST_ID);
+            final long siteId = getArguments().getLong(EXTRA_SITE_ID);
+            for (final long revisionId : previousRevisionsIds) {
+                revisionModels.add(mPostStore.getRevisionById(revisionId, postId, siteId));
+            }
+            mRevisions = mapRevisionModelsToRevisions(revisionModels);
+        }
+    }
+
+    @Nullable
+    private ArrayList<Revision> mapRevisionModelsToRevisions(@Nullable final List<RevisionModel> revisionModels) {
+        if (revisionModels == null) {
+            return null;
+        }
+        final ArrayList<Revision> revisions = new ArrayList<>();
+        for (int i = 0; i < revisionModels.size(); i++) {
+            final RevisionModel current = revisionModels.get(i);
+            revisions.add(new Revision(current));
+        }
+        return revisions;
+    }
+
     @Override
+    @SuppressWarnings("deprecation")
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         showHistoryTimeStampInToolbar();

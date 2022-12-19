@@ -107,8 +107,8 @@ class ReaderHtmlUtilsTest {
         var lastMatchUrl = ""
         while (matcher.find()) {
             count++
-            lastMatchUrl = matcher.group(1)
-            lastMatchWidth = matcher.group(2)
+            lastMatchUrl = matcher.group(1) ?: ""
+            lastMatchWidth = matcher.group(2) ?: ""
         }
         assertEquals("1050", lastMatchWidth)
         assertEquals("https://i1.wp.com/image-scaled.jpg?w=1050", lastMatchUrl)

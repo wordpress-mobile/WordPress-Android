@@ -5,7 +5,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.view.MotionEvent
-import androidx.core.view.MotionEventCompat
 import androidx.core.view.NestedScrollingChild3
 import androidx.core.view.NestedScrollingChildHelper
 import androidx.core.view.ViewCompat
@@ -35,13 +34,12 @@ class NestedWebView @JvmOverloads constructor(
     override fun onTouchEvent(ev: MotionEvent): Boolean {
         var returnValue = false
         val event = MotionEvent.obtain(ev)
-        val action = MotionEventCompat.getActionMasked(event)
-        if (action == MotionEvent.ACTION_DOWN) {
+        if (event.actionMasked == MotionEvent.ACTION_DOWN) {
             nestedOffsetY = 0
         }
         val eventY = event.y.toInt()
         event.offsetLocation(0f, nestedOffsetY.toFloat())
-        when (action) {
+        when (event.actionMasked) {
             MotionEvent.ACTION_MOVE -> {
                 var totalScrollOffset = 0
                 var deltaY = lastY - eventY

@@ -19,7 +19,6 @@ import androidx.fragment.app.Fragment;
 
 import com.github.chrisbanes.photoview.PhotoView;
 import com.github.chrisbanes.photoview.PhotoViewAttacher;
-import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.source.MediaSource;
@@ -255,8 +254,8 @@ public class MediaPreviewFragment extends Fragment {
 
         imageView.setVisibility(View.VISIBLE);
         if ((mSite == null || SiteUtils.isPhotonCapable(mSite)) && !UrlUtils.isContentUri(mediaUri)) {
-            int maxWidth = Math.max(DisplayUtils.getDisplayPixelWidth(getActivity()),
-                    DisplayUtils.getDisplayPixelHeight(getActivity()));
+            int maxWidth = Math.max(DisplayUtils.getWindowPixelWidth(requireActivity()),
+                    DisplayUtils.getWindowPixelHeight(requireActivity()));
 
             boolean isPrivateAtomicSite = mSite != null && mSite.isPrivateWPComAtomic();
             mediaUri = PhotonUtils.getPhotonImageUrl(mediaUri, maxWidth, 0, isPrivateAtomicSite);
@@ -294,7 +293,7 @@ public class MediaPreviewFragment extends Fragment {
     }
 
     private void initializePlayer() {
-        mPlayer = ExoPlayerFactory.newSimpleInstance(requireContext());
+        mPlayer = (new SimpleExoPlayer.Builder(requireContext())).build();
         mPlayer.addListener(new PlayerEventListener());
 
         if (mIsVideo) {

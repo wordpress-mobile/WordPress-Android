@@ -2,8 +2,9 @@ package org.wordpress.android.ui.jetpack.scan.history
 
 import android.os.Bundle
 import android.view.View
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelStoreOwner
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
+import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.ScanHistoryListFragmentBinding
@@ -20,20 +21,19 @@ import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class ScanHistoryListFragment : ViewPagerFragment(R.layout.scan_history_list_fragment) {
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var imageManager: ImageManager
     @Inject lateinit var uiHelpers: UiHelpers
 
-    private lateinit var viewModel: ScanHistoryListViewModel
-    private lateinit var parentViewModel: ScanHistoryViewModel
+    private val viewModel: ScanHistoryListViewModel by viewModels()
+    private val parentViewModel: ScanHistoryViewModel by activityViewModels()
 
     private var binding: ScanHistoryListFragmentBinding? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = ScanHistoryListFragmentBinding.bind(view).apply {
-            initDagger()
             initRecyclerView()
             initViewModel(getSite(savedInstanceState), getTabType())
         }
@@ -44,23 +44,12 @@ class ScanHistoryListFragment : ViewPagerFragment(R.layout.scan_history_list_fra
         binding = null
     }
 
-    private fun initDagger() {
-        (requireActivity().application as WordPress).component()?.inject(this)
-    }
-
     private fun ScanHistoryListFragmentBinding.initRecyclerView() {
         recyclerView.adapter = ScanAdapter(imageManager, uiHelpers)
         recyclerView.itemAnimator = null
     }
 
     private fun ScanHistoryListFragmentBinding.initViewModel(site: SiteModel, tabType: ScanHistoryTabType) {
-        viewModel = ViewModelProvider(
-                this@ScanHistoryListFragment,
-                viewModelFactory
-        ).get(ScanHistoryListViewModel::class.java)
-        parentViewModel = ViewModelProvider(parentFragment as ViewModelStoreOwner, viewModelFactory).get(
-                ScanHistoryViewModel::class.java
-        )
         viewModel.start(tabType, site, parentViewModel)
         setupObservers()
     }

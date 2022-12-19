@@ -13,7 +13,6 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
 import android.preference.SwitchPreference;
 import android.text.TextUtils;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,11 +25,13 @@ import androidx.core.view.ViewCompat;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
+import org.wordpress.android.databinding.JetpackBadgeFooterBinding;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.action.AccountAction;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
@@ -43,6 +44,11 @@ import org.wordpress.android.fluxc.store.WhatsNewStore.OnWhatsNewFetched;
 import org.wordpress.android.fluxc.store.WhatsNewStore.WhatsNewAppId;
 import org.wordpress.android.fluxc.store.WhatsNewStore.WhatsNewFetchPayload;
 import org.wordpress.android.ui.debug.DebugSettingsActivity;
+import org.wordpress.android.ui.deeplinks.DeepLinkOpenWebLinksWithJetpackHelper;
+import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment;
+import org.wordpress.android.ui.mysite.tabs.MySiteTabType;
+import org.wordpress.android.ui.prefs.language.LocalePickerBottomSheet;
+import org.wordpress.android.ui.prefs.language.LocalePickerBottomSheet.LocalePickerCallback;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementDialogFragment;
@@ -50,14 +56,19 @@ import org.wordpress.android.ui.whatsnew.FeatureAnnouncementProvider;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppThemeUtils;
 import org.wordpress.android.util.BuildConfigWrapper;
+import org.wordpress.android.util.JetpackBrandingUtils;
+import org.wordpress.android.util.JetpackBrandingUtils.Screen;
 import org.wordpress.android.util.LocaleManager;
+import org.wordpress.android.util.LocaleProvider;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPPrefUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
+import org.wordpress.android.util.config.MySiteDashboardTabsFeatureConfig;
 import org.wordpress.android.viewmodel.ContextProvider;
 
+import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Locale;
@@ -66,11 +77,12 @@ import java.util.Map;
 import javax.inject.Inject;
 
 public class AppSettingsFragment extends PreferenceFragment
-        implements OnPreferenceClickListener, Preference.OnPreferenceChangeListener {
+        implements OnPreferenceClickListener, Preference.OnPreferenceChangeListener, LocalePickerCallback {
     public static final int LANGUAGE_CHANGED = 1000;
 
-    private DetailListPreference mLanguagePreference;
+    private WPPreference mLanguagePreference;
     private ListPreference mAppThemePreference;
+    private ListPreference mInitialScreenPreference;
 
     // This Device settings
     private WPSwitchPreference mOptimizedImage;
@@ -81,6 +93,8 @@ public class AppSettingsFragment extends PreferenceFragment
     private DetailListPreference mVideoEncorderBitratePref;
     private PreferenceScreen mPrivacySettings;
     private WPSwitchPreference mStripImageLocation;
+    private WPSwitchPreference mReportCrashPref;
+    private WPSwitchPreference mOpenWebLinksWithJetpack;
 
     private Preference mWhatsNew;
 
@@ -90,6 +104,13 @@ public class AppSettingsFragment extends PreferenceFragment
     @Inject ContextProvider mContextProvider;
     @Inject FeatureAnnouncementProvider mFeatureAnnouncementProvider;
     @Inject BuildConfigWrapper mBuildConfigWrapper;
+    @Inject MySiteDashboardTabsFeatureConfig mMySiteDashboardTabsFeatureConfig;
+    @Inject JetpackBrandingUtils mJetpackBrandingUtils;
+    @Inject LocaleProvider mLocaleProvider;
+    @Inject DeepLinkOpenWebLinksWithJetpackHelper mOpenWebLinksWithJetpackHelper;
+
+    private static final String TRACK_STYLE = "style";
+    private static final String TRACK_ENABLED = "enabled";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -108,6 +129,7 @@ public class AppSettingsFragment extends PreferenceFragment
                         if (newValue == null) {
                             return false;
                         }
+
                         boolean hasUserOptedOut = !(boolean) newValue;
                         AnalyticsUtils.updateAnalyticsPreference(
                                 getActivity(),
@@ -121,11 +143,16 @@ public class AppSettingsFragment extends PreferenceFragment
         );
         updateAnalyticsSyncUI();
 
-        mLanguagePreference = (DetailListPreference) findPreference(getString(R.string.pref_key_language));
+        mLanguagePreference = (WPPreference) findPreference(getString(R.string.pref_key_language));
         mLanguagePreference.setOnPreferenceChangeListener(this);
+        mLanguagePreference.setOnPreferenceClickListener(this);
+        mLanguagePreference.setSummary(mLocaleProvider.getAppLanguageDisplayString());
 
         mAppThemePreference = (ListPreference) findPreference(getString(R.string.pref_key_app_theme));
         mAppThemePreference.setOnPreferenceChangeListener(this);
+
+        mInitialScreenPreference = (ListPreference) findPreference(getString(R.string.pref_key_initial_screen));
+        mInitialScreenPreference.setOnPreferenceChangeListener(this);
 
         findPreference(getString(R.string.pref_key_language))
                 .setOnPreferenceClickListener(this);
@@ -158,6 +185,12 @@ public class AppSettingsFragment extends PreferenceFragment
         mStripImageLocation =
                 (WPSwitchPreference) WPPrefUtils
                         .getPrefAndSetChangeListener(this, R.string.pref_key_strip_image_location, this);
+        mReportCrashPref = (WPSwitchPreference) WPPrefUtils
+                .getPrefAndSetChangeListener(this, R.string.pref_key_send_crash, this);
+
+        mOpenWebLinksWithJetpack =
+                (WPSwitchPreference) WPPrefUtils
+                        .getPrefAndSetChangeListener(this, R.string.pref_key_open_web_links_with_jetpack, this);
 
         // Set Local settings
         mOptimizedImage.setChecked(AppPrefs.isImageOptimize());
@@ -178,6 +211,8 @@ public class AppSettingsFragment extends PreferenceFragment
 
         mStripImageLocation.setChecked(AppPrefs.isStripImageLocation());
 
+        mOpenWebLinksWithJetpack.setChecked(AppPrefs.getIsOpenWebLinksWithJetpack());
+
         mWhatsNew = findPreference(getString(R.string.pref_key_whats_new));
 
         removeWhatsNewPreference();
@@ -190,6 +225,14 @@ public class AppSettingsFragment extends PreferenceFragment
         if (!BuildConfig.ENABLE_DEBUG_SETTINGS) {
             removeDebugSettingsCategory();
         }
+
+        if (!mMySiteDashboardTabsFeatureConfig.isEnabled()) {
+            removeInitialScreen();
+        }
+
+        if (!mOpenWebLinksWithJetpackHelper.shouldShowAppSetting()) {
+            removeOpenWebLinksWithJetpack();
+        }
     }
 
     @Override
@@ -200,8 +243,24 @@ public class AppSettingsFragment extends PreferenceFragment
         final ListView listOfPreferences = view.findViewById(android.R.id.list);
         if (listOfPreferences != null) {
             ViewCompat.setNestedScrollingEnabled(listOfPreferences, true);
+            addJetpackBadgeAsFooterIfEnabled(inflater, listOfPreferences);
         }
         return view;
+    }
+
+    private void addJetpackBadgeAsFooterIfEnabled(LayoutInflater inflater, ListView listView) {
+        if (mJetpackBrandingUtils.shouldShowJetpackBranding()) {
+            final JetpackBadgeFooterBinding binding = JetpackBadgeFooterBinding.inflate(inflater);
+            if (mJetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
+                binding.footerJetpackBadge.jetpackPoweredBadge.setOnClickListener(v -> {
+                    mJetpackBrandingUtils.trackBadgeTapped(Screen.APP_SETTINGS);
+                    new JetpackPoweredBottomSheetFragment().show(
+                            ((AppCompatActivity) getActivity()).getSupportFragmentManager(),
+                            JetpackPoweredBottomSheetFragment.TAG);
+                });
+            }
+            listView.addFooterView(binding.getRoot(), null, false);
+        }
     }
 
     private void removeExperimentalCategory() {
@@ -232,6 +291,22 @@ public class AppSettingsFragment extends PreferenceFragment
         preferenceScreen.addPreference(mWhatsNew);
     }
 
+    private void removeInitialScreen() {
+        Preference initialScreenPreference =
+                findPreference(getString(R.string.pref_key_initial_screen));
+        PreferenceScreen preferenceScreen =
+                (PreferenceScreen) findPreference(getString(R.string.pref_key_app_settings_root));
+        preferenceScreen.removePreference(initialScreenPreference);
+    }
+
+    private void removeOpenWebLinksWithJetpack() {
+        Preference openWebLinksWithJetpackPreference =
+                findPreference(getString(R.string.pref_key_open_web_links_with_jetpack));
+        PreferenceScreen preferenceScreen =
+                (PreferenceScreen) findPreference(getString(R.string.pref_key_app_settings_root));
+        preferenceScreen.removePreference(openWebLinksWithJetpackPreference);
+    }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -254,8 +329,7 @@ public class AppSettingsFragment extends PreferenceFragment
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        updateLanguagePreference(getResources().getConfiguration().locale.toString());
+        reattachLocalePickerCallback();
         // flush gathered events (if any)
         AnalyticsTracker.flush();
     }
@@ -277,7 +351,7 @@ public class AppSettingsFragment extends PreferenceFragment
         WhatsNewAnnouncementModel latestAnnouncement = event.getWhatsNewItems().get(0);
         mWhatsNew.setSummary(getString(R.string.version_with_name_param, latestAnnouncement.getAppVersionName()));
         mWhatsNew.setOnPreferenceClickListener(this);
-        if (!BuildConfig.IS_JETPACK_APP) {
+        if (mBuildConfigWrapper.isWhatsNewFeatureEnabled()) {
             addWhatsNewPreference();
         }
     }
@@ -333,6 +407,8 @@ public class AppSettingsFragment extends PreferenceFragment
             return handlePrivacyClick();
         } else if (preference == mWhatsNew) {
             return handleFeatureAnnouncementClick();
+        } else if (preference == mLanguagePreference) {
+            return handleAppLocalePickerClick();
         }
 
         return false;
@@ -359,31 +435,53 @@ public class AppSettingsFragment extends PreferenceFragment
             setDetailListPreferenceValue(mImageMaxSizePref,
                     newValue.toString(),
                     getLabelForImageMaxSizeValue(AppPrefs.getImageOptimizeMaxSize()));
+            AnalyticsTracker.track(AnalyticsTracker.Stat.APP_SETTINGS_MAX_IMAGE_SIZE_CHANGED);
         } else if (preference == mImageQualityPref) {
             AppPrefs.setImageOptimizeQuality(Integer.parseInt(newValue.toString()));
             setDetailListPreferenceValue(mImageQualityPref,
                     newValue.toString(),
                     getLabelForImageQualityValue(AppPrefs.getImageOptimizeQuality()));
+            AnalyticsTracker.track(AnalyticsTracker.Stat.APP_SETTINGS_IMAGE_QUALITY_CHANGED);
         } else if (preference == mOptimizedVideo) {
             AppPrefs.setVideoOptimize((Boolean) newValue);
             mVideoEncorderBitratePref.setEnabled((Boolean) newValue);
+            AnalyticsTracker.track(AnalyticsTracker.Stat.APP_SETTINGS_VIDEO_OPTIMIZATION_CHANGED, Collections
+                    .singletonMap(TRACK_ENABLED, newValue));
         } else if (preference == mVideoWidthPref) {
             int newWidth = Integer.parseInt(newValue.toString());
             AppPrefs.setVideoOptimizeWidth(newWidth);
             setDetailListPreferenceValue(mVideoWidthPref,
                     newValue.toString(),
                     getLabelForVideoMaxWidthValue(AppPrefs.getVideoOptimizeWidth()));
+            AnalyticsTracker.track(AnalyticsTracker.Stat.APP_SETTINGS_MAX_VIDEO_SIZE_CHANGED);
         } else if (preference == mVideoEncorderBitratePref) {
             AppPrefs.setVideoOptimizeQuality(Integer.parseInt(newValue.toString()));
             setDetailListPreferenceValue(mVideoEncorderBitratePref,
                     newValue.toString(),
                     getLabelForVideoEncoderBitrateValue(AppPrefs.getVideoOptimizeQuality()));
+            AnalyticsTracker.track(AnalyticsTracker.Stat.APP_SETTINGS_VIDEO_QUALITY_CHANGED);
         } else if (preference == mStripImageLocation) {
             AppPrefs.setStripImageLocation((Boolean) newValue);
+            AnalyticsTracker.track(AnalyticsTracker.Stat.APP_SETTINGS_REMOVE_LOCATION_FROM_MEDIA_CHANGED, Collections
+                    .singletonMap(TRACK_ENABLED, newValue));
         } else if (preference == mAppThemePreference) {
             AppThemeUtils.Companion.setAppTheme(getActivity(), (String) newValue);
+            AnalyticsTracker.track(AnalyticsTracker.Stat.APP_SETTINGS_APPEARANCE_CHANGED, Collections
+                    .singletonMap(TRACK_STYLE, (String) newValue));
             // restart activity to make sure changes are applied to PreferenceScreen
             getActivity().recreate();
+        } else if (preference == mInitialScreenPreference) {
+            String trackValue = newValue.equals(MySiteTabType.SITE_MENU.getLabel())
+                    ? MySiteTabType.SITE_MENU.getTrackingLabel()
+                    : MySiteTabType.DASHBOARD.getTrackingLabel();
+            Map<String, Object> properties = new HashMap<>();
+            properties.put("selected", trackValue);
+            AnalyticsTracker.track(Stat.APP_SETTINGS_INITIAL_SCREEN_CHANGED, properties);
+        } else if (preference == mReportCrashPref) {
+            AnalyticsTracker.track(Stat.PRIVACY_SETTINGS_REPORT_CRASHES_TOGGLED, Collections
+                    .singletonMap(TRACK_ENABLED, newValue));
+        } else if (preference == mOpenWebLinksWithJetpack) {
+            handleOpenLinksInJetpack((Boolean) newValue);
         }
         return true;
     }
@@ -407,7 +505,6 @@ public class AppSettingsFragment extends PreferenceFragment
 
         LocaleManager.setNewLocale(WordPress.getContext(), languageCode);
         WordPress.updateContextLocale();
-        updateLanguagePreference(languageCode);
         mContextProvider.refreshContext();
 
         // Track language change on Analytics because we have both the device language and app selected language
@@ -430,33 +527,6 @@ public class AppSettingsFragment extends PreferenceFragment
         ReaderUpdateServiceStarter.startService(WordPress.getContext(), EnumSet.of(ReaderUpdateLogic.UpdateTask.TAGS));
     }
 
-    private void updateLanguagePreference(String languageCode) {
-        if (mLanguagePreference == null || TextUtils.isEmpty(languageCode)) {
-            return;
-        }
-
-        Locale languageLocale = LocaleManager.languageLocale(languageCode);
-        String[] availableLocales = getResources().getStringArray(R.array.available_languages);
-
-        Pair<String[], String[]> pair =
-                LocaleManager.createSortedLanguageDisplayStrings(availableLocales, languageLocale);
-        // check for a possible NPE
-        if (pair == null) {
-            return;
-        }
-
-        String[] sortedEntries = pair.first;
-        String[] sortedValues = pair.second;
-
-        mLanguagePreference.setEntries(sortedEntries);
-        mLanguagePreference.setEntryValues(sortedValues);
-        mLanguagePreference.setDetails(LocaleManager.createLanguageDetailDisplayStrings(sortedValues));
-
-        mLanguagePreference.setValue(languageCode);
-        mLanguagePreference.setSummary(LocaleManager.getLanguageString(languageCode, languageLocale));
-        mLanguagePreference.refreshAdapter();
-    }
-
     private boolean handleDebugSettingsPreferenceClick() {
         startActivity(new Intent(getActivity(), DebugSettingsActivity.class));
         return true;
@@ -475,6 +545,7 @@ public class AppSettingsFragment extends PreferenceFragment
             startActivity(intent);
         }
 
+        AnalyticsTracker.track(Stat.APP_SETTINGS_OPEN_DEVICE_SETTINGS_TAPPED);
         return true;
     }
 
@@ -533,14 +604,19 @@ public class AppSettingsFragment extends PreferenceFragment
     }
 
     private boolean handlePrivacyClick() {
+        AnalyticsTracker.track(Stat.APP_SETTINGS_PRIVACY_SETTINGS_TAPPED);
+
         if (mPrivacySettings == null || !isAdded()) {
             return false;
         }
+
         String title = getString(R.string.preference_privacy_settings);
         Dialog dialog = mPrivacySettings.getDialog();
         if (dialog != null) {
             WPActivityUtils.addToolbarToDialog(this, dialog, title);
         }
+
+        AnalyticsTracker.track(Stat.PRIVACY_SETTINGS_OPENED);
         return true;
     }
 
@@ -555,6 +631,55 @@ public class AppSettingsFragment extends PreferenceFragment
             throw new IllegalArgumentException(
                     "Parent activity is not AppCompatActivity. FeatureAnnouncementDialogFragment must be called "
                     + "using support fragment manager from AppCompatActivity.");
+        }
+    }
+
+    private boolean handleAppLocalePickerClick() {
+        if (getActivity() instanceof AppCompatActivity) {
+            LocalePickerBottomSheet bottomSheet = LocalePickerBottomSheet.newInstance();
+            bottomSheet.setLocalePickerCallback(this);
+            bottomSheet.show(((AppCompatActivity) getActivity()).getSupportFragmentManager(),
+                    LocalePickerBottomSheet.TAG);
+            return true;
+        } else {
+            throw new IllegalArgumentException(
+                    "Parent activity is not AppCompatActivity. LocalePickerBottomSheet must be called "
+                    + "using support fragment manager from AppCompatActivity.");
+        }
+    }
+
+    private void reattachLocalePickerCallback() {
+        if (getActivity() instanceof AppCompatActivity) {
+            LocalePickerBottomSheet bottomSheet = (LocalePickerBottomSheet) (((AppCompatActivity) getActivity()))
+                    .getSupportFragmentManager().findFragmentByTag(LocalePickerBottomSheet.TAG);
+            if (bottomSheet != null) {
+                bottomSheet.setLocalePickerCallback(this);
+            }
+        }
+    }
+
+    @Override
+    public void onLocaleSelected(@NotNull String languageCode) {
+        onPreferenceChange(mLanguagePreference, languageCode);
+    }
+
+    private void handleOpenLinksInJetpack(Boolean newValue) {
+        try {
+            if (newValue) {
+                mOpenWebLinksWithJetpackHelper.disableDeepLinks();
+            } else {
+                mOpenWebLinksWithJetpackHelper.enableDeepLinks();
+            }
+            AppPrefs.setIsOpenWebLinksWithJetpack(newValue);
+            AnalyticsTracker.track(AnalyticsTracker.Stat.APP_SETTINGS_OPEN_WEB_LINKS_WITH_JETPACK_CHANGED, Collections
+                    .singletonMap(TRACK_ENABLED, newValue));
+        } catch (Exception e) {
+            ToastUtils.showToast(
+                    getActivity(),
+                    (newValue ? R.string.preference_open_links_in_jetpack_setting_change_enable_error
+                            : R.string.preference_open_links_in_jetpack_setting_change_disable_error),
+                    ToastUtils.Duration.LONG);
+            AppLog.e(AppLog.T.UTILS, "Unable to enable or disable open with Jetpack components ", e);
         }
     }
 }

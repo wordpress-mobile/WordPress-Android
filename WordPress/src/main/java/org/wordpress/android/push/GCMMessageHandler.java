@@ -8,7 +8,6 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
@@ -16,6 +15,7 @@ import androidx.collection.ArrayMap;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.app.RemoteInput;
+import androidx.preference.PreferenceManager;
 
 import org.apache.commons.text.StringEscapeUtils;
 import org.greenrobot.eventbus.EventBus;
@@ -100,8 +100,7 @@ public class GCMMessageHandler {
     private final ArrayMap<Integer, Bundle> mActiveNotificationsMap;
     private final NotificationHelper mNotificationHelper;
 
-    @Inject
-    GCMMessageHandler(SystemNotificationsTracker systemNotificationsTracker) {
+    @Inject GCMMessageHandler(SystemNotificationsTracker systemNotificationsTracker) {
         mActiveNotificationsMap = new ArrayMap<>();
         mNotificationHelper = new NotificationHelper(this, systemNotificationsTracker);
     }
@@ -352,8 +351,6 @@ public class GCMMessageHandler {
             // Try to build the note object from the PN payload, and save it to the DB.
             NotificationsUtils.buildNoteObjectFromBundleAndSaveIt(data);
             EventBus.getDefault().post(new NotificationEvents.NotificationsChanged(true));
-            // Always do this, since a note can be updated on the server after a PN is sent
-            NotificationsActions.downloadNoteAndUpdateDB(wpcomNoteID, null, null);
 
             String noteType = StringUtils.notNullStr(data.getString(PUSH_ARG_TYPE));
 
@@ -389,23 +386,8 @@ public class GCMMessageHandler {
             AppPrefs.setLastPushNotificationWpcomNoteId(wpcomNoteID);
 
             // Update notification content for the same noteId if it is already showing
-            int pushId = 0;
-            for (Integer id : mGCMMessageHandler.mActiveNotificationsMap.keySet()) {
-                if (id == null) {
-                    continue;
-                }
-                Bundle noteBundle = mGCMMessageHandler.mActiveNotificationsMap.get(id);
-                if (noteBundle != null && noteBundle.getString(PUSH_ARG_NOTE_ID, "").equals(wpcomNoteID)) {
-                    pushId = id;
-                    mGCMMessageHandler.mActiveNotificationsMap.put(pushId, data);
-                    break;
-                }
-            }
-
-            if (pushId == 0) {
-                pushId = PUSH_NOTIFICATION_ID + mGCMMessageHandler.mActiveNotificationsMap.size();
-                mGCMMessageHandler.mActiveNotificationsMap.put(pushId, data);
-            }
+            int pushId = getPushIdForWpcomeNoteID(wpcomNoteID);
+            mGCMMessageHandler.mActiveNotificationsMap.put(pushId, data);
 
             // Bump Analytics for PNs if "Show notifications" setting is checked (default). Skip otherwise.
             if (NotificationsUtils.isNotificationsEnabled(context)) {
@@ -431,11 +413,44 @@ public class GCMMessageHandler {
                 builder.setLargeIcon(largeIconBitmap);
             }
 
+            // Always do this, since a note can be updated on the server after a PN is sent
+            NotificationsActions.downloadNoteAndUpdateDB(
+                    wpcomNoteID,
+                    success -> showNotificationForNoteData(context, data, builder),
+                    error -> showNotificationForNoteData(context, data, builder)
+            );
+        }
+
+        private void showNotificationForNoteData(Context context, Bundle noteData, NotificationCompat.Builder builder) {
+            String noteType = StringUtils.notNullStr(noteData.getString(PUSH_ARG_TYPE));
+            String wpcomNoteID = noteData.getString(PUSH_ARG_NOTE_ID, "");
+            String message = StringEscapeUtils.unescapeHtml4(noteData.getString(PUSH_ARG_MSG));
+            int pushId = getPushIdForWpcomeNoteID(wpcomNoteID);
+
             showSingleNotificationForBuilder(context, builder, noteType, wpcomNoteID, pushId, true);
 
             // Also add a group summary notification, which is required for non-wearable devices
             // Do not need to play the sound again. We've already played it in the individual builder.
             showGroupNotificationForBuilder(context, builder, wpcomNoteID, message);
+        }
+
+        private int getPushIdForWpcomeNoteID(String wpcomNoteID) {
+            int pushId = 0;
+            for (Integer id : mGCMMessageHandler.mActiveNotificationsMap.keySet()) {
+                if (id == null) {
+                    continue;
+                }
+                Bundle noteBundle = mGCMMessageHandler.mActiveNotificationsMap.get(id);
+                if (noteBundle != null && noteBundle.getString(PUSH_ARG_NOTE_ID, "").equals(wpcomNoteID)) {
+                    pushId = id;
+                    break;
+                }
+            }
+
+            if (pushId == 0) {
+                pushId = PUSH_NOTIFICATION_ID + mGCMMessageHandler.mActiveNotificationsMap.size();
+            }
+            return pushId;
         }
 
         private void showSimpleNotification(Context context, String title, String message, Intent resultIntent,
@@ -458,7 +473,10 @@ public class GCMMessageHandler {
                 // if the comment is lacking approval, offer moderation actions
                 if (note.getCommentStatus() == CommentStatus.UNAPPROVED) {
                     if (note.canModerate()) {
-                        addCommentApproveActionForCommentNotification(context, builder, noteId);
+                        // TODO
+                        // Enable comment approve action after fixing content lost after approval.
+                        // Issue: https://github.com/wordpress-mobile/WordPress-Android/issues/17026
+                        // addCommentApproveActionForCommentNotification(context, builder, noteId);
                     }
                 } else {
                     // else offer REPLY / LIKE actions
@@ -544,27 +562,23 @@ public class GCMMessageHandler {
         }
 
         private PendingIntent getCommentActionPendingIntent(Context context, Intent intent) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                return getCommentActionPendingIntentForService(context, intent);
-            } else {
-                return getCommentActionPendingIntentForActivity(context, intent);
-            }
+            return getCommentActionPendingIntentForService(context, intent);
         }
 
         private PendingIntent getCommentActionPendingIntentForService(Context context, Intent intent) {
-            return PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-        }
+            int flags = PendingIntent.FLAG_CANCEL_CURRENT;
+            if (Build.VERSION.SDK_INT >= 31) flags |= PendingIntent.FLAG_MUTABLE;
 
-        private PendingIntent getCommentActionPendingIntentForActivity(Context context, Intent intent) {
-            return PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+            return PendingIntent.getService(
+                    context,
+                    0,
+                    intent,
+                    flags
+            );
         }
 
         private Intent getCommentActionReplyIntent(Context context, String noteId) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                return getCommentActionIntentForService(context);
-            } else {
-                return getCommentActionIntentForActivity(context, noteId);
-            }
+            return getCommentActionIntentForService(context);
         }
 
         private Intent getCommentActionIntent(Context context) {
@@ -573,18 +587,6 @@ public class GCMMessageHandler {
 
         private Intent getCommentActionIntentForService(Context context) {
             return new Intent(context, NotificationsProcessingService.class);
-        }
-
-        private Intent getCommentActionIntentForActivity(Context context, String noteId) {
-            Intent intent = new Intent(context, WPMainActivity.class);
-            intent.putExtra(WPMainActivity.ARG_OPENED_FROM_PUSH, true);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
-                            | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            intent.setAction("android.intent.action.MAIN");
-            intent.addCategory("android.intent.category.LAUNCHER");
-            intent.putExtra(NotificationsListFragment.NOTE_ID_EXTRA, noteId);
-            intent.putExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA, true);
-            return intent;
         }
 
         private Bitmap getLargeIconBitmap(Context context, String iconUrl, boolean shouldCircularizeIcon) {
@@ -797,9 +799,13 @@ public class GCMMessageHandler {
                 builder.setCategory(NotificationCompat.CATEGORY_SOCIAL);
 
                 resultIntent.putExtra(ARG_NOTIFICATION_TYPE, notificationType);
-                PendingIntent pendingIntent = PendingIntent.getActivity(context, pushId, resultIntent,
-                        PendingIntent.FLAG_CANCEL_CURRENT
-                        | PendingIntent.FLAG_UPDATE_CURRENT);
+                PendingIntent pendingIntent = PendingIntent.getActivity(
+                        context,
+                        pushId,
+                        resultIntent,
+                        PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT
+                        | PendingIntent.FLAG_IMMUTABLE
+                );
                 builder.setContentIntent(pendingIntent);
                 NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
                 notificationManager.notify(pushId, builder.build());
@@ -992,9 +998,12 @@ public class GCMMessageHandler {
                     .setOnlyAlertOnce(true)
                     .setPriority(NotificationCompat.PRIORITY_MAX);
 
-            PendingIntent pendingIntent =
-                    PendingIntent.getActivity(context, AUTH_PUSH_REQUEST_CODE_OPEN_DIALOG, pushAuthIntent,
-                            PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT);
+            PendingIntent pendingIntent = PendingIntent.getActivity(
+                    context,
+                    AUTH_PUSH_REQUEST_CODE_OPEN_DIALOG,
+                    pushAuthIntent,
+                    PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+            );
             builder.setContentIntent(pendingIntent);
 
 
@@ -1013,9 +1022,12 @@ public class GCMMessageHandler {
             authApproveIntent.setAction("android.intent.action.MAIN");
             authApproveIntent.addCategory("android.intent.category.LAUNCHER");
 
-            PendingIntent authApprovePendingIntent =
-                    PendingIntent.getActivity(context, AUTH_PUSH_REQUEST_CODE_APPROVE, authApproveIntent,
-                            PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT);
+            PendingIntent authApprovePendingIntent = PendingIntent.getActivity(
+                    context,
+                    AUTH_PUSH_REQUEST_CODE_APPROVE,
+                    authApproveIntent,
+                    PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+            );
 
             builder.addAction(R.drawable.ic_checkmark_white_24dp, context.getText(R.string.approve),
                     authApprovePendingIntent);
@@ -1024,10 +1036,12 @@ public class GCMMessageHandler {
             Intent authIgnoreIntent = new Intent(context, NotificationsProcessingService.class);
             authIgnoreIntent.putExtra(NotificationsProcessingService.ARG_ACTION_TYPE,
                     NotificationsProcessingService.ARG_ACTION_AUTH_IGNORE);
-            PendingIntent authIgnorePendingIntent = PendingIntent.getService(context,
+            PendingIntent authIgnorePendingIntent = PendingIntent.getService(
+                    context,
                     AUTH_PUSH_REQUEST_CODE_IGNORE,
                     authIgnoreIntent,
-                    PendingIntent.FLAG_CANCEL_CURRENT);
+                    PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_IMMUTABLE
+            );
             builder.addAction(R.drawable.ic_close_white_24dp, context.getText(R.string.ignore),
                     authIgnorePendingIntent);
 
