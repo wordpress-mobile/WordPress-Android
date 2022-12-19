@@ -93,7 +93,7 @@ class JetpackFeatureRemovalOverlayUtilTest {
 
     @Test
     @Suppress("MaxLineLength")
-    fun `given feature removal in phase two, when shouldShowFeatureSpecificJetpackOverlay invoked, then return false`() {
+    fun `given feature removal in phase four, when shouldShowFeatureSpecificJetpackOverlay invoked, then return false`() {
         setupMockForWpComSite()
         whenever(jetpackFeatureRemovalPhaseHelper.getCurrentPhase()).thenReturn(PhaseFour)
 
