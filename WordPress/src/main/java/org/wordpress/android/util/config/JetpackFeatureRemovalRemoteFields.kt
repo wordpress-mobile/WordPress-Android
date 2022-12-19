@@ -4,7 +4,7 @@ import org.wordpress.android.annotation.RemoteFieldDefaultGenerater
 import javax.inject.Inject
 
 const val JP_DEADLINE_REMOTE_FIELD = "jp-deadline"
-const val JP_DEADLINE_DEFAULT = "2022-12-31"
+const val JP_DEADLINE_DEFAULT = ""
 
 @RemoteFieldDefaultGenerater(remoteField = JP_DEADLINE_REMOTE_FIELD, defaultValue = JP_DEADLINE_DEFAULT)
 class JPDeadlineConfig @Inject constructor(appConfig: AppConfig) :
