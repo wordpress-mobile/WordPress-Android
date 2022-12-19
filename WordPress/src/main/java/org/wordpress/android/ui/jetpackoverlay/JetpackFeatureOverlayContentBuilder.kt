@@ -11,6 +11,8 @@ import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.config.JPDeadlineConfig
 import org.wordpress.android.util.config.PhaseThreeBlogPostLinkConfig
 import org.wordpress.android.util.config.PhaseTwoBlogPostLinkConfig
@@ -152,15 +154,19 @@ class JetpackFeatureOverlayContentBuilder @Inject constructor(
 
     private fun getCaptionForPhaseTwoAndThree(jpDeadlineDate: String): UiString {
         return if (jpDeadlineDate.isEmpty()) getPhaseTwoAndThreeCaptionWithoutDeadline()
-        else getPhaseTwoAndThreeCaptionWithDeadline(jpDeadlineDate)
+        else {
+            val deadlineDate = convertDateFormat(jpDeadlineDate)
+            if (deadlineDate.isNullOrEmpty())
+                return getPhaseTwoAndThreeCaptionWithoutDeadline()
+            getPhaseTwoAndThreeCaptionWithDeadline(jpDeadlineDate)
+        }
     }
 
     private fun getPhaseTwoAndThreeCaptionWithDeadline(jpDeadlineDate: String): UiString {
-        val deadlineDate = convertDateFormat(jpDeadlineDate)
         return UiStringText(
                 htmlMessageUtils.getHtmlMessageFromStringFormatResId(
                         R.string.wp_jetpack_feature_removal_overlay_phase_two_and_three_description_with_deadline,
-                        "<b>$deadlineDate</b>"
+                        "<b>$jpDeadlineDate</b>"
                 )
         )
     }
@@ -276,12 +282,14 @@ class JetpackFeatureOverlayContentBuilder @Inject constructor(
         )
     }
 
-    private fun convertDateFormat(date: String): String {
+    private fun convertDateFormat(date: String): String? {
         // Format 2020-12-22
         val originalFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd")
         // Format Decemeber 22, 2020
         val targetFormat = DateTimeFormatter.ofPattern("MMMM dd, yyyy")
-        return LocalDate.parse(date, originalFormat).format(targetFormat)
+        return runCatching { LocalDate.parse(date, originalFormat).format(targetFormat) }
+                .onFailure { AppLog.e(T.UTILS, "Jetpack focus overlay – Couldn't parse date: $date", it) }
+                .getOrNull()
     }
 }
 
