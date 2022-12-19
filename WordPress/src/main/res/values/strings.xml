@@ -1863,7 +1863,6 @@
     <string name="image_size_full_css_class" translatable="false">size-full</string>
 
     <!-- About View -->
-    <string name="app_title">WordPress for Android</string>
     <string name="version_with_name_param">Version %s</string>
 
     <!-- Remote Post&Page has conflicts with local post -->
