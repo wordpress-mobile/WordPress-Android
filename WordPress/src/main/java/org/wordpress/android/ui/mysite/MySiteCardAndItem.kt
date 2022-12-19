@@ -13,6 +13,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.DOMAIN_REGISTRATIO
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.SINGLE_ACTION_CARD
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.INFO_ITEM
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.JETPACK_BADGE
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.JETPACK_FEATURE_CARD
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.LIST_ITEM
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.QUICK_ACTIONS_CARD
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.QUICK_LINK_RIBBON
@@ -40,6 +41,7 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
         DASHBOARD_CARDS,
         JETPACK_BADGE,
         SINGLE_ACTION_CARD,
+        JETPACK_FEATURE_CARD
     }
 
     enum class DashboardCardType {
@@ -124,6 +126,14 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                 val onClick: ListItemInteraction
             )
         }
+
+        data class JetpackFeatureCard(
+            val onClick: ListItemInteraction,
+            val onRemindMeLaterItemClick: ListItemInteraction,
+            val onHideMenuItemClick: ListItemInteraction,
+            val onLearnMoreClick: ListItemInteraction,
+            val onMoreMenuClick: ListItemInteraction
+        ) : Card(JETPACK_FEATURE_CARD)
 
         data class DashboardCards(
             val cards: List<DashboardCard>
