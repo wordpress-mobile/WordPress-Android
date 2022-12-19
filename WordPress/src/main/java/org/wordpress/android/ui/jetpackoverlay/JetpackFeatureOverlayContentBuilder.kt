@@ -100,13 +100,15 @@ class JetpackFeatureOverlayContentBuilder @Inject constructor(
     private fun getStateForPhaseTwoStats(
         params: JetpackFeatureOverlayContentBuilderParams,
         jpDeadlineDate: String,
-        phaseTwoBlogPostLinkConfig: String
+        blogPostLink: String
     ): JetpackFeatureOverlayContent {
         return JetpackFeatureOverlayContent(
                 illustration = if (params.isRtl) R.raw.jp_stats_rtl else R.raw.jp_stats_left,
                 title = R.string.wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats,
                 caption = getCaptionForPhaseTwoAndThree(jpDeadlineDate),
-                migrationInfoText = R.string.wp_jetpack_feature_removal_overlay_learn_more_migration_text,
+                migrationInfoText = if (blogPostLink.isNotEmpty())
+                    R.string.wp_jetpack_feature_removal_overlay_learn_more_migration_text else null,
+                migrationInfoUrl = blogPostLink.ifEmpty { null },
                 primaryButtonText = R.string.wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app,
                 secondaryButtonText = R.string.wp_jetpack_continue_to_stats
         )
@@ -116,13 +118,15 @@ class JetpackFeatureOverlayContentBuilder @Inject constructor(
     private fun getStateForPhaseTwoReader(
         params: JetpackFeatureOverlayContentBuilderParams,
         jpDeadlineDate: String,
-        phaseTwoBlogPostLinkConfig: String
+        blogPostLink: String
     ): JetpackFeatureOverlayContent {
         return JetpackFeatureOverlayContent(
                 illustration = if (params.isRtl) R.raw.jp_reader_rtl else R.raw.jp_reader_left,
                 title = R.string.wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader,
                 caption = getCaptionForPhaseTwoAndThree(jpDeadlineDate),
-                migrationInfoText = R.string.wp_jetpack_feature_removal_overlay_learn_more_migration_text,
+                migrationInfoText = if (blogPostLink.isNotEmpty())
+                    R.string.wp_jetpack_feature_removal_overlay_learn_more_migration_text else null,
+                migrationInfoUrl = blogPostLink.ifEmpty { null },
                 primaryButtonText = R.string.wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app,
                 secondaryButtonText = R.string.wp_jetpack_continue_to_reader
         )
@@ -132,13 +136,15 @@ class JetpackFeatureOverlayContentBuilder @Inject constructor(
     private fun getStateForPhaseTwoNotifications(
         params: JetpackFeatureOverlayContentBuilderParams,
         jpDeadlineDate: String,
-        phaseTwoBlogPostLinkConfig: String
+        blogPostLink: String
     ): JetpackFeatureOverlayContent {
         return JetpackFeatureOverlayContent(
                 illustration = if (params.isRtl) R.raw.jp_notifications_rtl else R.raw.jp_notifications_left,
                 title = R.string.wp_jetpack_feature_removal_overlay_phase_two_and_three_title_notifications,
                 caption = getCaptionForPhaseTwoAndThree(jpDeadlineDate),
-                migrationInfoText = R.string.wp_jetpack_feature_removal_overlay_learn_more_migration_text,
+                migrationInfoText = if (blogPostLink.isNotEmpty())
+                    R.string.wp_jetpack_feature_removal_overlay_learn_more_migration_text else null,
+                migrationInfoUrl = blogPostLink.ifEmpty { null },
                 primaryButtonText = R.string.wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app,
                 secondaryButtonText = R.string.wp_jetpack_continue_to_notifications
         )
@@ -154,8 +160,8 @@ class JetpackFeatureOverlayContentBuilder @Inject constructor(
         return UiStringText(
                 htmlMessageUtils.getHtmlMessageFromStringFormatResId(
                         R.string.wp_jetpack_feature_removal_overlay_phase_two_and_three_description_with_deadline,
-                                "<b>$deadlineDate</b>"
-                        )
+                        "<b>$deadlineDate</b>"
+                )
         )
     }
 

@@ -23,6 +23,7 @@ import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource.UNSPECIFIED
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.RtlUtils
+import org.wordpress.android.util.UrlUtils
 import org.wordpress.android.util.extensions.exhaustive
 import org.wordpress.android.util.extensions.setVisible
 import javax.inject.Inject
@@ -126,24 +127,29 @@ class JetpackFeatureFullScreenOverlayFragment : BottomSheetDialogFragment() {
     ) {
         updateVisibility(jetpackPoweredOverlayUIState.componentVisibility)
         updateContent(jetpackPoweredOverlayUIState.overlayContent)
-        setClickListener(jetpackPoweredOverlayUIState.componentVisibility)
+        setClickListener(
+                jetpackPoweredOverlayUIState.componentVisibility,
+                jetpackPoweredOverlayUIState.overlayContent.migrationInfoUrl
+        )
     }
 
     private fun JetpackFeatureRemovalOverlayBinding.setClickListener(
-        componentVisibility: JetpackFeatureOverlayComponentVisibility
+        componentVisibility: JetpackFeatureOverlayComponentVisibility,
+        migrationInfoRedirectUrl: String? = null
     ) {
         primaryButton.setOnClickListener {
             viewModel.openJetpackAppDownloadLink()
         }
         if (componentVisibility.closeButton) closeButton.setOnClickListener { viewModel.closeBottomSheet() }
         if (componentVisibility.secondaryButton) secondaryButton.setOnClickListener { viewModel.continueToFeature() }
-        if (componentVisibility.migrationInfoText)
+        if (componentVisibility.migrationInfoText && !migrationInfoRedirectUrl.isNullOrEmpty()) {
             migrationInfoText.setOnClickListener {
                 WPWebViewActivity.openURL(
                         requireContext(),
-                        JETPACK_MIGRATION_INFO_URL
+                        UrlUtils.addUrlSchemeIfNeeded(migrationInfoRedirectUrl, true)
                 )
             }
+        }
     }
 
     private fun JetpackFeatureRemovalOverlayBinding.updateVisibility(

@@ -39,6 +39,7 @@ data class JetpackFeatureOverlayContent(
     val caption: UiString,
     @StringRes val migrationText: Int? = null,
     @StringRes val migrationInfoText: Int? = null,
+    val migrationInfoUrl: String? = null,
     @StringRes val primaryButtonText: Int,
     @StringRes val secondaryButtonText: Int? = null
 )
