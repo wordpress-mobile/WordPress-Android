@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 
 import androidx.preference.PreferenceManager;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -985,6 +986,7 @@ public final class AnalyticsTracker {
         JETPACK_REMOVE_FEATURE_OVERLAY_LINK_TAPPED,
         JETPACK_REMOVE_FEATURE_OVERLAY_BUTTON_GET_JETPACK_APP_TAPPED,
         JETPACK_REMOVE_FEATURE_OVERLAY_DISMISSED,
+        JETPACK_REMOVE_FEATURE_OVERLAY_LEARN_MORE_TAPPED,
         JETPACK_REMOVE_SITE_CREATION_OVERLAY_DISPLAYED,
         JETPACK_REMOVE_SITE_CREATION_OVERLAY_BUTTON_GET_JETPACK_APP_TAPPED,
         JETPACK_REMOVE_SITE_CREATION_OVERLAY_DISMISSED,

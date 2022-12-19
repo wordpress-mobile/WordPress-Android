@@ -17,6 +17,7 @@ import org.wordpress.android.ui.ActivityLauncherWrapper.Companion.JETPACK_PACKAG
 import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureOverlayActions.DismissDialog
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureOverlayActions.ForwardToJetpack
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureOverlayActions.OpenMigrationInfoLink
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureOverlayActions.OpenPlayStore
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureOverlayScreenType
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
@@ -116,6 +117,14 @@ class JetpackFeatureFullScreenOverlayFragment : BottomSheetDialogFragment() {
                 is ForwardToJetpack -> {
                     dismiss()
                 }
+                is OpenMigrationInfoLink -> {
+                    activity?.let {
+                        WPWebViewActivity.openURL(
+                                requireContext(),
+                                UrlUtils.addUrlSchemeIfNeeded(action.url, true)
+                        )
+                    }
+                }
             }.exhaustive
         }
     }
@@ -142,10 +151,7 @@ class JetpackFeatureFullScreenOverlayFragment : BottomSheetDialogFragment() {
         if (componentVisibility.secondaryButton) secondaryButton.setOnClickListener { viewModel.continueToFeature() }
         if (componentVisibility.migrationInfoText && !migrationInfoRedirectUrl.isNullOrEmpty()) {
             migrationInfoText.setOnClickListener {
-                WPWebViewActivity.openURL(
-                        requireContext(),
-                        UrlUtils.addUrlSchemeIfNeeded(migrationInfoRedirectUrl, true)
-                )
+                viewModel.openJetpackMigrationInfoLink(migrationInfoRedirectUrl)
             }
         }
     }

@@ -244,6 +244,16 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
         )
     }
 
+    fun trackLearnMoreAboutMigrationClicked(screenType: JetpackFeatureOverlayScreenType) {
+        analyticsTrackerWrapper.track(
+                AnalyticsTracker.Stat.JETPACK_REMOVE_FEATURE_OVERLAY_LEARN_MORE_TAPPED,
+                mapOf(
+                        CURRENT_PHASE_KEY to jetpackFeatureRemovalPhaseHelper.getCurrentPhase()?.trackingName,
+                        SCREEN_TYPE_KEY to screenType.trackingName
+                )
+        )
+    }
+
     enum class JetpackOverlayDismissalType(val trackingName: String) {
         CLOSE_BUTTON("close"),
         CONTINUE_BUTTON("continue")

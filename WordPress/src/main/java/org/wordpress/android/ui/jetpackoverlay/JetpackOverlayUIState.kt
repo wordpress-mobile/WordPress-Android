@@ -53,5 +53,6 @@ sealed class JetpackFeatureOverlayActions {
     object OpenPlayStore : JetpackFeatureOverlayActions()
     object DismissDialog : JetpackFeatureOverlayActions()
     object ForwardToJetpack : JetpackFeatureOverlayActions()
+    data class OpenMigrationInfoLink(val url:String) : JetpackFeatureOverlayActions()
 }
 
