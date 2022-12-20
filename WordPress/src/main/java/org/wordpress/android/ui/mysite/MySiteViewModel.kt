@@ -1253,13 +1253,13 @@ class MySiteViewModel @Inject constructor(
     }
 
     private fun onBloggingPromptShareClick(message: String) {
-        _onShareBloggingPrompt.postValue(Event(message))
+        _onShareBloggingPrompt.value = Event(message)
     }
 
     private fun onBloggingPromptAnswerClick(promptId: Int) {
         bloggingPromptsCardAnalyticsTracker.trackMySiteCardAnswerPromptClicked()
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
-        _onAnswerBloggingPrompt.postValue(Event(Pair(selectedSite, promptId)))
+        _onAnswerBloggingPrompt.value = Event(Pair(selectedSite, promptId))
     }
 
     private fun onBloggingPromptSkipClicked() {
@@ -1279,12 +1279,12 @@ class MySiteViewModel @Inject constructor(
                     isImportant = true
             )
 
-            _onSnackbarMessage.postValue(Event(snackbar))
+            _onSnackbarMessage.value = Event(snackbar)
         }
     }
 
     private fun onBloggingPromptViewMoreClicked() {
-        _onBloggingPromptsViewMore.postValue(Event(Unit))
+        _onBloggingPromptsViewMore.value = Event(Unit)
     }
 
     fun isRefreshing() = mySiteSourceManager.isRefreshing()
