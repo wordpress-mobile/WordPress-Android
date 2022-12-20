@@ -66,42 +66,59 @@ class BloggingPromptCardBuilderTest : BaseUnitTest() {
 
     @Test
     fun `given blogging prompt, when card is built, then return card`() {
-        val statCard = buildBloggingPromptCard(bloggingPrompt)
+        val statCard = buildBloggingPromptCardBuilderParams(bloggingPrompt)
 
         assertThat(statCard).isNotNull()
     }
 
     @Test
-    fun `given blogging prompt, when card is built, then return matching card`() {
-        val statCard = buildBloggingPromptCard(bloggingPrompt)
+    fun `given blogging prompt, when card is built showing view more action, then return matching card`() {
+        val statCard = buildBloggingPromptCardBuilderParams(bloggingPrompt, showViewMoreAction = true)
 
-        assertThat(statCard).isEqualTo(bloggingPromptCard)
+        assertThat(statCard).isEqualTo(bloggingPromptCard(showViewMoreAction = true))
+    }
+
+    @Test
+    fun `given blogging prompt, when card is built not showing view more action, then return matching card`() {
+        val statCard = buildBloggingPromptCardBuilderParams(bloggingPrompt, showViewMoreAction = false)
+
+        assertThat(statCard).isEqualTo(bloggingPromptCard(showViewMoreAction = false))
     }
 
     @Test
     fun `given no blogging prompt, when card is built, then return null`() {
-        val statCard = buildBloggingPromptCard(null)
+        val statCard = buildBloggingPromptCardBuilderParams(null)
 
         assertThat(statCard).isNull()
     }
 
-    private fun buildBloggingPromptCard(bloggingPrompt: BloggingPromptModel?) = builder.build(
-            BloggingPromptCardBuilderParams(bloggingPrompt, onShareClick, onAnswerClick, onSkipClick)
+    private fun buildBloggingPromptCardBuilderParams(
+        bloggingPrompt: BloggingPromptModel?,
+        showViewMoreAction: Boolean = false
+    ) = builder.build(
+            BloggingPromptCardBuilderParams(
+                    bloggingPrompt,
+                    showViewMoreAction,
+                    onShareClick,
+                    onAnswerClick,
+                    onSkipClick
+            )
     )
 
     private val onShareClick: (message: String) -> Unit = { }
     private val onAnswerClick: (promptId: Int) -> Unit = { }
     private val onSkipClick: () -> Unit = { }
 
-    private val bloggingPromptCard = BloggingPromptCardWithData(
+    private fun bloggingPromptCard(showViewMoreAction: Boolean = false) = BloggingPromptCardWithData(
             prompt = UiStringText(PROMPT_TITLE),
             respondents = RESPONDENTS_IN_CARD,
             numberOfAnswers = NUMBER_OF_RESPONDENTS,
             false,
             promptId = 123,
+            attribution = BloggingPromptAttribution.DAY_ONE,
+            showViewMoreAction = showViewMoreAction,
             onShareClick = onShareClick,
             onAnswerClick = onAnswerClick,
-            attribution = BloggingPromptAttribution.DAY_ONE,
-            onSkipClick = onSkipClick
+            onSkipClick = onSkipClick,
     )
 }

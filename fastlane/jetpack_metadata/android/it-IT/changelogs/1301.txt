@@ -1,0 +1,4 @@
+21.3:
+- Il testo nel processo di scansione del codice QR viene tradotto nella lingua dell'app.
+- L'interruttore Impostazioni di notifica disattiva il resoconto settimanale, il promemoria relativo al blog e le notifiche del sito.
+- Abbiamo corretto un bug in Il mio sito > Commenti che provocava l'arresto anomalo dell'app per i siti ospitati personalmente con determinati plugin.

@@ -1,0 +1,4 @@
+21.3:
+- QR kod tarama işlemindeki metin, uygulamanızın diline çevrildi.
+- Bildirim Ayarları düğmesi, haftalık özeti, blog hatırlatıcısını ve site bildirimlerini devre dışı bırakır.
+- Belirli eklentilere sahip, kullanıcı tarafından barındırılan sitelerde uygulamanın çökmesine neden olan Sitem > Yorumlar bölümündeki bir hatayı düzelttik.

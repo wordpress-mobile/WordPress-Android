@@ -1,0 +1,3 @@
+21.3:
+- Agora você pode migrar o conteúdo do seu site para o aplicativo do Jetpack sem problemas.
+- A opção Configurações de notificação desativa o resumo semanal, o lembrete de publicação e as notificações do site.

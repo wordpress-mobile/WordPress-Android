@@ -141,6 +141,7 @@ import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.WPMediaUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.BloggingPromptsFeatureConfig
+import org.wordpress.android.util.config.BloggingPromptsListFeatureConfig
 import org.wordpress.android.util.config.LandOnTheEditorFeatureConfig
 import org.wordpress.android.util.config.MySiteDashboardTabsFeatureConfig
 import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
@@ -184,6 +185,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var buildConfigWrapper: BuildConfigWrapper
     @Mock lateinit var mySiteDashboardTabsFeatureConfig: MySiteDashboardTabsFeatureConfig
     @Mock lateinit var bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig
+    @Mock lateinit var bloggingPromptsListFeatureConfig: BloggingPromptsListFeatureConfig
     @Mock lateinit var contentMigrationAnalyticsTracker: ContentMigrationAnalyticsTracker
     @Mock lateinit var jetpackBrandingUtils: JetpackBrandingUtils
     @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
@@ -336,17 +338,12 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Suppress("LongMethod")
     fun init(
-        isMySiteDashboardTabsFeatureFlagEnabled: Boolean = true,
-        isBloggingPromptsFeatureConfigEnabled: Boolean = true,
-        shouldShowJetpackBranding: Boolean = true
+
     ) = test {
         onSiteChange.value = null
         onShowSiteIconProgressBar.value = null
         onSiteSelected.value = null
         selectedSite.value = null
-        whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(isBloggingPromptsFeatureConfigEnabled)
-        whenever(mySiteDashboardTabsFeatureConfig.isEnabled()).thenReturn(isMySiteDashboardTabsFeatureFlagEnabled)
-        whenever(jetpackBrandingUtils.shouldShowJetpackBranding()).thenReturn(shouldShowJetpackBranding)
         whenever(mySiteSourceManager.build(any(), anyOrNull())).thenReturn(partialStates)
         whenever(selectedSiteRepository.siteSelected).thenReturn(onSiteSelected)
         whenever(quickStartRepository.activeTask).thenReturn(activeTask)
@@ -388,6 +385,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 buildConfigWrapper,
                 mySiteDashboardTabsFeatureConfig,
                 bloggingPromptsFeatureConfig,
+                bloggingPromptsListFeatureConfig,
                 jetpackBrandingUtils,
                 appPrefsWrapper,
                 bloggingPromptsCardAnalyticsTracker,
@@ -481,9 +479,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given my site tabs feature flag not enabled, when site is selected, then tabs are not visible`() {
-        init(isMySiteDashboardTabsFeatureFlagEnabled = false)
-
-        initSelectedSite()
+        initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = false)
 
         assertThat((uiModels.last().state as SiteSelected).tabsUiState.showTabs).isFalse
     }
@@ -566,9 +562,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given tabs not enabled, when site is selected, then default tab is not set`() {
-        init(isMySiteDashboardTabsFeatureFlagEnabled = false)
-
-        initSelectedSite(isMySiteTabsBuildConfigEnabled = false)
+        initSelectedSite(isMySiteTabsBuildConfigEnabled = false, isMySiteDashboardTabsFeatureFlagEnabled = false)
 
         assertThat(tabNavigation).isEmpty()
     }
@@ -1607,10 +1601,9 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `blogging prompt card is added to the dashboard when FF is ON`() = test {
-        init(isBloggingPromptsFeatureConfigEnabled = true)
-        initSelectedSite()
+        initSelectedSite(isBloggingPromptsFeatureConfigEnabled = true)
 
-        verify(cardsBuilder, times(2)).build(
+        verify(cardsBuilder).build(
                 any(), any(), any(),
                 argWhere {
                     it.bloggingPromptCardBuilderParams.bloggingPrompt != null
@@ -1622,14 +1615,44 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `blogging prompt card is not added to the dashboard when FF is OFF`() = test {
-        init(isBloggingPromptsFeatureConfigEnabled = false)
-
-        initSelectedSite()
+        initSelectedSite(isBloggingPromptsFeatureConfigEnabled = false)
 
         verify(cardsBuilder).build(
                 any(), any(), any(),
                 argWhere {
                     it.bloggingPromptCardBuilderParams.bloggingPrompt == null
+                },
+                any(),
+                any()
+        )
+    }
+
+    @Suppress("SimplifyBooleanWithConstants")
+    @InternalCoroutinesApi
+    @Test
+    fun `given blogging prompt card, when prompts list FF is ON, view more action is shown`() = test {
+        initSelectedSite(isBloggingPromptsListFeatureConfigEnabled = true)
+
+        verify(cardsBuilder).build(
+                any(), any(), any(),
+                argWhere {
+                    it.bloggingPromptCardBuilderParams.showViewMoreAction == true
+                },
+                any(),
+                any()
+        )
+    }
+
+    @Suppress("SimplifyBooleanWithConstants")
+    @InternalCoroutinesApi
+    @Test
+    fun `given blogging prompt card, when prompts list FF is OFF, view more action is not shown`() = test {
+        initSelectedSite(isBloggingPromptsListFeatureConfigEnabled = false)
+
+        verify(cardsBuilder).build(
+                any(), any(), any(),
+                argWhere {
+                    it.bloggingPromptCardBuilderParams.showViewMoreAction == false
                 },
                 any(),
                 any()
@@ -2136,10 +2159,9 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given shouldShowJetpackBranding is true, then the Jetpack badge is visible last`() {
-        init(shouldShowJetpackBranding = true)
         whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
 
-        initSelectedSite()
+        initSelectedSite(shouldShowJetpackBranding = true)
 
         assertThat(getSiteMenuTabLastItems().last()).isNotInstanceOf(JetpackBadge::class.java)
         assertThat(getLastItems().last()).isInstanceOf(JetpackBadge::class.java)
@@ -2148,10 +2170,9 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given shouldShowJetpackBranding is false, then no Jetpack badge is visible`() {
-        init(shouldShowJetpackBranding = false)
         whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
 
-        initSelectedSite()
+        initSelectedSite(shouldShowJetpackBranding = false)
 
         assertThat(getSiteMenuTabLastItems().last()).isNotInstanceOf(JetpackBadge::class.java)
         assertThat(getLastItems().last()).isNotInstanceOf(JetpackBadge::class.java)
@@ -2279,9 +2300,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given selected site with tabs disabled, when all cards and items, then qs card exists`() {
-        init(isMySiteDashboardTabsFeatureFlagEnabled = false)
-
-        initSelectedSite()
+        initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = false)
 
         assertThat(getLastItems().filterIsInstance(QuickStartCard::class.java)).isNotEmpty
     }
@@ -2508,8 +2527,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given tabs are disabled, when pull to refresh invoked, then track with tab source is not requested`() {
-        init(isMySiteDashboardTabsFeatureFlagEnabled = false)
-        initSelectedSite(isMySiteTabsBuildConfigEnabled = false)
+        initSelectedSite(isMySiteTabsBuildConfigEnabled = false, isMySiteDashboardTabsFeatureFlagEnabled = false)
 
         viewModel.refresh(true)
 
@@ -2518,9 +2536,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given tabs are disabled, when pull to refresh invoked, then pull-to-refresh is tracked`() {
-        init(isMySiteDashboardTabsFeatureFlagEnabled = false)
-
-        initSelectedSite(isMySiteTabsBuildConfigEnabled = false)
+        initSelectedSite(isMySiteTabsBuildConfigEnabled = false, isMySiteDashboardTabsFeatureFlagEnabled = false)
 
         viewModel.refresh(true)
         assertThat(analyticsTrackerWrapper.track(Stat.MY_SITE_PULL_TO_REFRESH))
@@ -2564,8 +2580,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given tabs are disabled, when quick link stats tapped, then track with tab source is not requested`() {
-        init(isMySiteDashboardTabsFeatureFlagEnabled = false)
-        initSelectedSite(isMySiteTabsBuildConfigEnabled = false)
+        initSelectedSite(isMySiteTabsBuildConfigEnabled = false, isMySiteDashboardTabsFeatureFlagEnabled = false)
 
         requireNotNull(quickActionsStatsClickAction).invoke()
 
@@ -2575,8 +2590,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given tabs are disabled, when quick link pages tapped, then track with tab source is not requested`() {
-        init(isMySiteDashboardTabsFeatureFlagEnabled = false)
-        initSelectedSite(isMySiteTabsBuildConfigEnabled = false)
+        initSelectedSite(isMySiteTabsBuildConfigEnabled = false, isMySiteDashboardTabsFeatureFlagEnabled = false)
 
         requireNotNull(quickActionsPagesClickAction).invoke()
 
@@ -2586,8 +2600,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given tabs are disabled, when quick link posts tapped, then track with tab source is not requested`() {
-        init(isMySiteDashboardTabsFeatureFlagEnabled = false)
-        initSelectedSite(isMySiteTabsBuildConfigEnabled = false)
+        initSelectedSite(isMySiteTabsBuildConfigEnabled = false, isMySiteDashboardTabsFeatureFlagEnabled = false)
 
         requireNotNull(quickActionsPostsClickAction).invoke()
 
@@ -2597,8 +2610,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given tabs are disabled, when quick link media tapped, then track with tab source is not requested`() {
-        init(isMySiteDashboardTabsFeatureFlagEnabled = false)
-        initSelectedSite(isMySiteTabsBuildConfigEnabled = false)
+        initSelectedSite(isMySiteTabsBuildConfigEnabled = false, isMySiteDashboardTabsFeatureFlagEnabled = false)
 
         requireNotNull(quickActionsMediaClickAction).invoke()
 
@@ -2804,7 +2816,11 @@ class MySiteViewModelTest : BaseUnitTest() {
         isQuickStartInProgress: Boolean = false,
         showStaleMessage: Boolean = false,
         initialScreen: String = MySiteTabType.SITE_MENU.label,
-        isSiteUsingWpComRestApi: Boolean = true
+        isSiteUsingWpComRestApi: Boolean = true,
+        isMySiteDashboardTabsFeatureFlagEnabled: Boolean = true,
+        isBloggingPromptsFeatureConfigEnabled: Boolean = true,
+        isBloggingPromptsListFeatureConfigEnabled: Boolean = true,
+        shouldShowJetpackBranding: Boolean = true
     ) {
         setUpDynamicCardsBuilder(isQuickStartDynamicCardEnabled)
         whenever(
@@ -2815,6 +2831,10 @@ class MySiteViewModelTest : BaseUnitTest() {
         )
         whenever(buildConfigWrapper.isMySiteTabsEnabled).thenReturn(isMySiteTabsBuildConfigEnabled)
         whenever(appPrefsWrapper.getMySiteInitialScreen(any())).thenReturn(initialScreen)
+        whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(isBloggingPromptsFeatureConfigEnabled)
+        whenever(bloggingPromptsListFeatureConfig.isEnabled()).thenReturn(isBloggingPromptsListFeatureConfigEnabled)
+        whenever(mySiteDashboardTabsFeatureConfig.isEnabled()).thenReturn(isMySiteDashboardTabsFeatureFlagEnabled)
+        whenever(jetpackBrandingUtils.shouldShowJetpackBranding()).thenReturn(shouldShowJetpackBranding)
         if (isSiteUsingWpComRestApi) {
             site.setIsWPCom(true)
             site.setIsJetpackConnected(true)
@@ -3052,9 +3072,10 @@ class MySiteViewModelTest : BaseUnitTest() {
                 isAnswered = false,
                 promptId = bloggingPromptId,
                 attribution = BloggingPromptAttribution.DAY_ONE,
+                showViewMoreAction = params.bloggingPromptCardBuilderParams.showViewMoreAction,
                 onShareClick = onBloggingPromptShareClicked as ((message: String) -> Unit),
                 onAnswerClick = onBloggingPromptAnswerClicked as ((promptId: Int) -> Unit),
-                onSkipClick = onBloggingPromptSkipClicked as (() -> Unit)
+                onSkipClick = onBloggingPromptSkipClicked as (() -> Unit),
         )
     }
 

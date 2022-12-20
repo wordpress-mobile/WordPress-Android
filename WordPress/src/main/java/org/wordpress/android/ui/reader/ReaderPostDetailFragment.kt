@@ -755,6 +755,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         }
     }
 
+    @Suppress("ComplexMethod", "LongMethod")
     private fun ReaderNavigationEvents.handleNavigationEvent() {
         when (this) {
             is ReaderNavigationEvents.ShowMediaPreview -> MediaPreviewActivity
@@ -782,6 +783,12 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
             is ReaderNavigationEvents.ShowReportPost ->
                 ReaderActivityLauncher.openUrl(context, readerUtilsWrapper.getReportPostUrl(url), OpenUrlType.INTERNAL)
+
+            is ReaderNavigationEvents.ShowReportUser -> ReaderActivityLauncher.openUrl(
+                    context,
+                    readerUtilsWrapper.getReportUserUrl(url, authorId),
+                    OpenUrlType.INTERNAL
+            )
 
             is ReaderNavigationEvents.ShowReaderComments -> ReaderActivityLauncher.showReaderCommentsForResult(
                     this@ReaderPostDetailFragment,

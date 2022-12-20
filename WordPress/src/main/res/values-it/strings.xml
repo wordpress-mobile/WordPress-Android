@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-11-29 16:54:09+0000
+Translation-Revision-Date: 2022-12-12 23:01:59+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: it
@@ -72,7 +72,7 @@ Language: it
     <string name="stats_widget_log_in_to_add_message">Accedi all\'app Jetpack per aggiungere un widget.</string>
     <string name="stats_view_publicize">Connessioni di Jetpack Social</string>
     <string name="login_magic_links_email_sent">Abbiamo appena inviato un link magico a</string>
-    <string name="login_magic_links_sent_label_short">Controlla la tua e-mail su questo dispositivo!</string>
+    <string name="login_magic_links_sent_label_short">Controlla la tua email su questo dispositivo!</string>
     <string name="or_use_password">Usa la password per accedere</string>
     <string name="wp_jetpack_powered_notifications_powered_by_jetpack_caption">Non perderti gli ultimi aggiornamenti sui nuovi commenti, sul traffico del sito, sui rapporti sulla sicurezza e molto altro.</string>
     <string name="wp_jetpack_powered_notifications_powered_by_jetpack">Le notifiche vengono gestite da Jetpack</string>
@@ -323,7 +323,7 @@ Language: it
     <string name="notification_channel_weekly_roundup_title">Resoconto settimanale</string>
     <string name="my_site_dashboard_tab_title">Home</string>
     <string name="adding_cat">Aggiunta della categoria</string>
-    <string name="login_select_email_client">Quale app per e-mail utilizzi?</string>
+    <string name="login_select_email_client">Quale app per email utilizzi?</string>
     <string name="login_error_xml_rpc_auth_error_communicating">Si è verificato un problema durante la comunicazione con il sito. È stato restituito un codice di errore HTTP .</string>
     <string name="login_error_xml_rpc_cannot_read_site_auth_required">Le chiamate XML-RPC sembrano bloccate su questo sito (codice di errore 401). Se il tentativo di accesso fallisce, tocca l\'icona della guida per visualizzare le FAQ.</string>
     <string name="login_error_xml_rpc_cannot_read_site">Impossibile leggere il sito WordPress associato a questo URL. Tocca l\'icona della guida per visualizzare le domande frequenti.</string>
@@ -431,7 +431,7 @@ Language: it
     <string name="post_settings_mark_as_sticky_options_header">Contrassegna come in evidenza</string>
     <string name="reader_follow_comments_unfollow_conversation">Smetti di seguire la conversazione</string>
     <string name="reader_follow_comments_enable_push_notifications">Attiva le notifiche in-app</string>
-    <string name="reader_follow_comments_message">Stai seguendo questa conversazione. Riceverai notifiche tramite e-mail quando vengono pubblicati nuovi commenti.</string>
+    <string name="reader_follow_comments_message">Stai seguendo questa conversazione. Riceverai notifiche tramite email quando vengono pubblicati nuovi commenti.</string>
     <string name="reader_follow_comments_bottom_sheet_description">Gestisci le opzioni relative al seguire una conversazione, finestra popup</string>
     <string name="reader_follow_comments_could_not_unsubscribe_from_push_error">Impossibile disattivare le notifiche in-app</string>
     <string name="reader_follow_comments_could_not_subscribe_to_push_error">Impossibile attivare le notifiche in-app</string>
@@ -456,10 +456,10 @@ Language: it
     <string name="comment_edit_cancel_dialog_message">Desideri eliminare?</string>
     <string name="comment_edit_cancel_dialog_title">Sono presenti modifiche non salvate</string>
     <string name="comment_edit_comment_error">Il campo Commento non può essere vuoto</string>
-    <string name="comment_edit_user_email_error">E-mail utente non valida</string>
+    <string name="comment_edit_user_email_error">Email utente non valida</string>
     <string name="comment_edit_web_address_error">Indirizzo web non valido</string>
     <string name="comment_edit_user_name_error">Il nome utente non può essere vuoto</string>
-    <string name="comment_edit_email_address">Indirizzo e-mail</string>
+    <string name="comment_edit_email_address">Indirizzo email</string>
     <string name="comment_edit_web_address">Indirizzo web</string>
     <string name="comment_edit_comment">Commento</string>
     <string name="comment_edit_user_name">Nome</string>
@@ -2528,7 +2528,7 @@ Language: it
     <string name="requesting_otp">Richiesta codice di verifica tramite SMS.</string>
     <string name="login_text_otp">Inviami invece un messaggio con un codice</string>
     <string name="enter_verification_code">Ci sei quasi! Inserisci il codice di verifica dalla tua app di autenticazione.</string>
-    <string name="open_mail">Apri e-mail</string>
+    <string name="open_mail">Apri email</string>
     <string name="next">Successivo</string>
     <string name="enter_email_wordpress_com">Accedi a WordPress.com utilizzando un indirizzo email per gestire tutti i tuoi siti WordPress.com.</string>
     <string name="image_optimization_promo_desc">L\'ottimizzazione dell\'immagine restringe l\'immagine per un caricamento più veloce.\n\nPuoi modificare questa opzione in qualsiasi momento nelle impostazioni del sito.</string>
