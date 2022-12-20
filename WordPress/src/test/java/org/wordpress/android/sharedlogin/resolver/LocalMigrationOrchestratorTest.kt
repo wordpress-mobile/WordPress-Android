@@ -1,5 +1,6 @@
 package org.wordpress.android.sharedlogin.resolver
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -48,6 +49,7 @@ import org.wordpress.android.sharedlogin.SharedLoginAnalyticsTracker.ErrorType.W
 import org.wordpress.android.userflags.resolver.UserFlagsHelper
 import kotlin.test.assertTrue
 
+@ExperimentalCoroutinesApi
 class LocalMigrationOrchestratorTest : BaseUnitTest() {
     private val sharedLoginAnalyticsTracker: SharedLoginAnalyticsTracker = mock()
     private val migrationAnalyticsTracker: ContentMigrationAnalyticsTracker = mock()

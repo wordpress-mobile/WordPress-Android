@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.engagement
 
 import androidx.lifecycle.MutableLiveData
-import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -12,8 +12,6 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.TEST_DISPATCHER
-import org.wordpress.android.test
 import org.wordpress.android.ui.engagement.AuthorName.AuthorNameString
 import org.wordpress.android.ui.engagement.EngageItem.LikedItem
 import org.wordpress.android.ui.engagement.EngageItem.Liker
@@ -47,7 +45,7 @@ import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.viewmodel.Event
 
-@InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 class EngagedPeopleListViewModelTest : BaseUnitTest() {
     @Mock lateinit var getLikesHandler: GetLikesHandler
     @Mock lateinit var readerUtilsWrapper: ReaderUtilsWrapper
@@ -80,8 +78,8 @@ class EngagedPeopleListViewModelTest : BaseUnitTest() {
         whenever(getLikesHandler.likesStatusUpdate).thenReturn(getLikesState)
 
         viewModel = EngagedPeopleListViewModel(
-                TEST_DISPATCHER,
-                TEST_DISPATCHER,
+                testDispatcher(),
+                testDispatcher(),
                 getLikesHandler,
                 readerUtilsWrapper,
                 engagementUtils,

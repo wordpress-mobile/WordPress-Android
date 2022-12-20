@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.posts.editor
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -13,8 +14,8 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.XPostsResult
 import org.wordpress.android.fluxc.store.XPostsResult.Companion
 import org.wordpress.android.fluxc.store.XPostsStore
-import org.wordpress.android.test
 
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class XPostsCapabilityCheckerTest : BaseUnitTest() {
     @Mock lateinit var mockXPostsStore: XPostsStore

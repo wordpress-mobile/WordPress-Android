@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.mysite.cards.domainregistration
 
-import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -11,7 +11,6 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.PlanModel
 import org.wordpress.android.fluxc.model.SiteModel
@@ -20,13 +19,12 @@ import org.wordpress.android.fluxc.store.SiteStore.PlansError
 import org.wordpress.android.fluxc.store.SiteStore.PlansErrorType
 import org.wordpress.android.fluxc.store.SiteStore.PlansErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.utils.AppLogWrapper
-import org.wordpress.android.test
-import org.wordpress.android.testScope
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.DomainCreditAvailable
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.plans.PlansConstants.PREMIUM_PLAN_ID
 import org.wordpress.android.util.SiteUtilsWrapper
 
+@ExperimentalCoroutinesApi
 class DomainRegistrationSourceTest : BaseUnitTest() {
     @Mock lateinit var dispatcher: Dispatcher
     @Mock lateinit var selectedSiteRepository: SelectedSiteRepository
@@ -38,13 +36,12 @@ class DomainRegistrationSourceTest : BaseUnitTest() {
     private lateinit var source: DomainRegistrationSource
     private lateinit var isRefreshing: MutableList<Boolean>
 
-    @InternalCoroutinesApi
     @Before
     fun setUp() {
         site.id = siteLocalId
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         source = DomainRegistrationSource(
-                TEST_DISPATCHER,
+                testDispatcher(),
                 dispatcher,
                 selectedSiteRepository,
                 appLogWrapper,

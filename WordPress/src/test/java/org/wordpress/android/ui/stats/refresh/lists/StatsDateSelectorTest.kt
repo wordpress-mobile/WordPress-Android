@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.stats.refresh.lists
 
 import androidx.lifecycle.MutableLiveData
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions
 import org.junit.Before
 import org.junit.Test
@@ -18,6 +19,7 @@ import org.wordpress.android.ui.stats.refresh.utils.StatsDateSelector
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import java.util.Date
 
+@ExperimentalCoroutinesApi
 class StatsDateSelectorTest : BaseUnitTest() {
     @Mock lateinit var selectedDateProvider: SelectedDateProvider
     @Mock lateinit var statsDateFormatter: StatsDateFormatter

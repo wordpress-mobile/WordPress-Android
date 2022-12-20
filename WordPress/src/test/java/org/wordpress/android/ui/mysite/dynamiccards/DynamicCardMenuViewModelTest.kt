@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.mysite.dynamiccards
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -14,6 +15,7 @@ import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.Dyn
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction.Remove
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction.Unpin
 
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class DynamicCardMenuViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: DynamicCardMenuViewModel

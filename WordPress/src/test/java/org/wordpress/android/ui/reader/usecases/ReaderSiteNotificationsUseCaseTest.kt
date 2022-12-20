@@ -1,11 +1,9 @@
 package org.wordpress.android.ui.reader.usecases
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Assert
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
@@ -18,6 +16,7 @@ import org.mockito.kotlin.doNothing
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.datasets.ReaderBlogTableWrapper
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.action.AccountAction
@@ -26,7 +25,6 @@ import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPay
 import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload.SubscriptionAction
 import org.wordpress.android.fluxc.store.AccountStore.OnSubscriptionUpdated
 import org.wordpress.android.fluxc.store.AccountStore.SubscriptionError
-import org.wordpress.android.test
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase.SiteNotificationState.Failed.NoNetwork
 import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase.SiteNotificationState.Failed.RequestFailed
@@ -34,12 +32,10 @@ import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase.S
 import org.wordpress.android.util.NetworkUtilsWrapper
 
 private const val ERROR = "Error"
-@InternalCoroutinesApi
-@RunWith(MockitoJUnitRunner::class)
-class ReaderSiteNotificationsUseCaseTest {
-    @Rule
-    @JvmField val rule = InstantTaskExecutorRule()
 
+@ExperimentalCoroutinesApi
+@RunWith(MockitoJUnitRunner::class)
+class ReaderSiteNotificationsUseCaseTest : BaseUnitTest() {
     lateinit var useCase: ReaderSiteNotificationsUseCase
     @Mock lateinit var dispatcher: Dispatcher
     @Mock lateinit var readerTracker: ReaderTracker

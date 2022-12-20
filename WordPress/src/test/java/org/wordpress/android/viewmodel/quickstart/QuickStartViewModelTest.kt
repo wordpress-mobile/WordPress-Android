@@ -1,11 +1,10 @@
 package org.wordpress.android.viewmodel.quickstart
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.After
 import org.junit.Assert
 import org.junit.Assert.assertEquals
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
@@ -13,16 +12,15 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.whenever
+import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.ENABLE_POST_SHARING
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.ui.quickstart.QuickStartTaskState
 
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
-class QuickStartViewModelTest {
-    @Rule
-    @JvmField val rule = InstantTaskExecutorRule()
-
+class QuickStartViewModelTest : BaseUnitTest() {
     @Mock private lateinit var store: QuickStartStore
     private val siteId = 1L
     private lateinit var viewModel: QuickStartViewModel

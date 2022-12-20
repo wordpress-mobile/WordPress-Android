@@ -7,7 +7,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
 import org.junit.Before
 import org.junit.Ignore
-import org.junit.Rule
 import org.junit.Test
 import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
@@ -16,7 +15,6 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.MainCoroutineScopeRule
 import org.wordpress.android.bloggingreminders.BloggingRemindersSyncAnalyticsTracker
 import org.wordpress.android.bloggingreminders.BloggingRemindersSyncAnalyticsTracker.ErrorType.QueryBloggingRemindersError
 import org.wordpress.android.bloggingreminders.JetpackBloggingRemindersSyncFlag
@@ -27,7 +25,6 @@ import org.wordpress.android.fluxc.store.BloggingRemindersStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.localcontentmigration.LocalMigrationContentResolver
 import org.wordpress.android.resolver.ContentResolverWrapper
-import org.wordpress.android.test
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersModelMapper
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersUiModel
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
@@ -41,9 +38,6 @@ import java.time.DayOfWeek
 @Ignore("Disabled for now: will refactor in another PR after unification.")
 @ExperimentalCoroutinesApi
 class BloggingRemindersResolverTest : BaseUnitTest() {
-    @Rule
-    @JvmField val coroutineScope = MainCoroutineScopeRule()
-
     private val jetpackBloggingRemindersSyncFlag: JetpackBloggingRemindersSyncFlag = mock()
     private val contextProvider: ContextProvider = mock()
     private val wordPressPublicData: WordPressPublicData = mock()
@@ -61,7 +55,7 @@ class BloggingRemindersResolverTest : BaseUnitTest() {
             bloggingRemindersSyncAnalyticsTracker,
             siteStore,
             bloggingRemindersStore,
-            coroutineScope,
+            testScope(),
             reminderScheduler,
             bloggingRemindersModelMapper,
             localMigrationContentResolver,

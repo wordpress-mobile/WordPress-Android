@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -40,6 +41,7 @@ private val RESPONDENTS = listOf(
         "http://avatar3.url"
 )
 
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class BloggingPromptCardBuilderTest : BaseUnitTest() {
     private lateinit var builder: BloggingPromptCardBuilder

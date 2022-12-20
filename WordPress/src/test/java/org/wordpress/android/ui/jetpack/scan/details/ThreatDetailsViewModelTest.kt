@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.jetpack.scan.details
 
-import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -15,7 +15,6 @@ import org.wordpress.android.Constants
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.ScanStore
-import org.wordpress.android.test
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ActionButtonState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.DescriptionState
@@ -50,7 +49,7 @@ private const val TEST_SITE_NAME = "test site name"
 private const val TEST_SITE_ID = 1L
 private const val SERVER_CREDS_LINK = "${Constants.URL_JETPACK_SETTINGS}/$TEST_SITE_ID}"
 
-@InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 class ThreatDetailsViewModelTest : BaseUnitTest() {
     @Mock private lateinit var site: SiteModel
     @Mock private lateinit var getThreatModelUseCase: GetThreatModelUseCase

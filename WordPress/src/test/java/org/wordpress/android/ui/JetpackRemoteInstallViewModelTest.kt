@@ -1,9 +1,8 @@
 package org.wordpress.android.ui
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
@@ -13,6 +12,7 @@ import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.action.JetpackAction
@@ -24,18 +24,15 @@ import org.wordpress.android.fluxc.store.JetpackStore.JetpackInstallError
 import org.wordpress.android.fluxc.store.JetpackStore.JetpackInstallErrorType
 import org.wordpress.android.fluxc.store.JetpackStore.OnJetpackInstalled
 import org.wordpress.android.fluxc.store.SiteStore
-import org.wordpress.android.test
 import org.wordpress.android.ui.JetpackRemoteInstallViewModel.JetpackResultActionData
 import org.wordpress.android.ui.JetpackRemoteInstallViewState.Error
 import org.wordpress.android.ui.JetpackRemoteInstallViewState.Installed
 import org.wordpress.android.ui.JetpackRemoteInstallViewState.Installing
 import org.wordpress.android.ui.JetpackRemoteInstallViewState.Start
 
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
-class JetpackRemoteInstallViewModelTest {
-    @Rule
-    @JvmField val rule = InstantTaskExecutorRule()
-
+class JetpackRemoteInstallViewModelTest : BaseUnitTest() {
     @Mock private lateinit var dispatcher: Dispatcher
     @Mock private lateinit var jetpackStore: JetpackStore
     @Mock private lateinit var accountStore: AccountStore

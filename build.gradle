@@ -72,7 +72,7 @@ ext {
     googlePlayServicesAuthVersion = '20.3.0'
     googlePlayServicesCodeScannerVersion = '16.0.0-beta1'
     jsoupVersion = '1.10.3'
-    kotlinxCoroutinesVersion = '1.5.2'
+    kotlinxCoroutinesVersion = '1.6.4'
     lottieVersion = '3.4.0'
     philjayMpAndroidChartVersion = 'v3.1.0'
     squareupKotlinPoetVersion = '1.6.0'

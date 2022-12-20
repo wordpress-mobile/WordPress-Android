@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases
 
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -10,7 +9,6 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.time.PostAndPageViewsModel
@@ -24,7 +22,6 @@ import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.StatsStore.TimeStatsType
 import org.wordpress.android.fluxc.store.stats.time.PostAndPageViewsStore
-import org.wordpress.android.test
 import org.wordpress.android.ui.stats.refresh.NavigationTarget
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewPostsAndPages
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK
@@ -49,6 +46,7 @@ private const val ITEMS_TO_LOAD = 6
 private val statsGranularity = DAYS
 private val selectedDate = Date(0)
 
+@ExperimentalCoroutinesApi
 class PostsAndPagesUseCaseTest : BaseUnitTest() {
     @Mock lateinit var store: PostAndPageViewsStore
     @Mock lateinit var siteModelProvider: StatsSiteProvider
@@ -59,13 +57,13 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
     @Mock lateinit var statsUtils: StatsUtils
     private lateinit var useCase: PostsAndPagesUseCase
     private val contentDescription = "title, views"
-    @InternalCoroutinesApi
+
     @Before
     fun setUp() {
         useCase = PostsAndPagesUseCase(
                 statsGranularity,
-                Dispatchers.Unconfined,
-                TEST_DISPATCHER,
+                testDispatcher(),
+                testDispatcher(),
                 store,
                 siteModelProvider,
                 selectedDateProvider,
@@ -402,6 +400,7 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
         var result: UseCaseModel? = null
         useCase.liveData.observeForever { result = it }
         useCase.fetch(refresh, forced)
+        advanceUntilIdle()
         return checkNotNull(result)
     }
 }

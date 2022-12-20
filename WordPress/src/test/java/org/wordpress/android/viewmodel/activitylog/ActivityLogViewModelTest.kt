@@ -1,7 +1,7 @@
 package org.wordpress.android.viewmodel.activitylog
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.core.util.Pair
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flow
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Assert.assertEquals
@@ -9,7 +9,6 @@ import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers.anyLong
@@ -25,6 +24,7 @@ import org.mockito.kotlin.never
 import org.mockito.kotlin.reset
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.action.ActivityLogAction
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
@@ -34,7 +34,6 @@ import org.wordpress.android.fluxc.model.activity.ActivityTypeModel
 import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchActivityLogPayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.OnActivityLogFetched
-import org.wordpress.android.test
 import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents
 import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents.DownloadBackupFile
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem
@@ -98,11 +97,9 @@ private val DOWNLOAD_PUBLISHED = Date()
 private val DOWNLOAD_VALID_UNTIL = Date()
 
 @Suppress("LargeClass")
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
-class ActivityLogViewModelTest {
-    @Rule
-    @JvmField val rule = InstantTaskExecutorRule()
-
+class ActivityLogViewModelTest : BaseUnitTest() {
     @Mock private lateinit var store: ActivityLogStore
     @Mock private lateinit var site: SiteModel
     @Mock private lateinit var getRestoreStatusUseCase: GetRestoreStatusUseCase

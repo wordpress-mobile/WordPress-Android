@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.activitylog.list.filter
 
 import androidx.core.util.Pair
-import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -13,7 +13,6 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.action.ActivityLogAction.FETCH_ACTIVITY_TYPES
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.fluxc.model.activity.ActivityTypeModel
@@ -22,7 +21,6 @@ import org.wordpress.android.fluxc.store.ActivityLogStore.ActivityTypesError
 import org.wordpress.android.fluxc.store.ActivityLogStore.ActivityTypesErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchActivityTypesPayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.OnActivityTypesFetched
-import org.wordpress.android.test
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel.ListItemUiState
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel.ListItemUiState.ActivityType
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel.UiState
@@ -32,7 +30,7 @@ import org.wordpress.android.viewmodel.activitylog.DateRange
 
 private const val REMOTE_SITE_ID = 0L
 
-@InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 class ActivityLogTypeFilterViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: ActivityLogTypeFilterViewModel
     @Mock private lateinit var parentViewModel: ActivityLogViewModel
@@ -40,7 +38,11 @@ class ActivityLogTypeFilterViewModelTest : BaseUnitTest() {
 
     @Before
     fun setUp() {
-        viewModel = ActivityLogTypeFilterViewModel(activityLogStore, TEST_DISPATCHER, TEST_DISPATCHER)
+        viewModel = ActivityLogTypeFilterViewModel(
+                activityLogStore,
+                testDispatcher(),
+                testDispatcher()
+        )
     }
 
     @Test

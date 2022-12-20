@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.jetpack.restore.builders
 
-import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -13,7 +13,6 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.Constants
 import org.wordpress.android.R
-import org.wordpress.android.test
 import org.wordpress.android.ui.jetpack.common.CheckboxSpannableLabel
 import org.wordpress.android.ui.jetpack.common.JetpackBackupRestoreListItemState.FootnoteState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
@@ -30,7 +29,7 @@ private const val SERVER_CREDS_MSG_WITH_CLICKABLE_LINK =
         "<a href=\"$SERVER_CREDS_LINK\">Enter your server credentials&lt</a> " +
                 "to enable one click site restores from backups."
 
-@InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 class RestoreStateListItemBuilderTest : BaseUnitTest() {
     private lateinit var builder: RestoreStateListItemBuilder
 

@@ -1,8 +1,7 @@
 package org.wordpress.android.ui.posts
 
 import androidx.lifecycle.MutableLiveData
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -15,7 +14,6 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.PostModel
@@ -26,6 +24,7 @@ import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.uploads.UploadStarter
 import org.wordpress.android.viewmodel.Event
 
+@ExperimentalCoroutinesApi
 class PostListMainViewModelTest : BaseUnitTest() {
     @Mock lateinit var site: SiteModel
     private val currentBottomSheetPostId = LocalId(0)
@@ -35,7 +34,6 @@ class PostListMainViewModelTest : BaseUnitTest() {
     @Mock lateinit var savePostToDbUseCase: SavePostToDbUseCase
     private lateinit var viewModel: PostListMainViewModel
 
-    @InternalCoroutinesApi
     @Before
     fun setUp() {
         val prefs = mock<AppPrefsWrapper> {
@@ -54,8 +52,8 @@ class PostListMainViewModelTest : BaseUnitTest() {
                 prefs = prefs,
                 previewStateHelper = mock(),
                 analyticsTracker = mock(),
-                mainDispatcher = Dispatchers.Unconfined,
-                bgDispatcher = Dispatchers.Unconfined,
+                mainDispatcher = testDispatcher(),
+                bgDispatcher = testDispatcher(),
                 postListEventListenerFactory = mock(),
                 uploadStarter = uploadStarter,
                 uploadActionUseCase = mock(),
@@ -169,11 +167,16 @@ class PostListMainViewModelTest : BaseUnitTest() {
         verify(editPostRepository, times(0)).loadPostByLocalPostId(any())
     }
 
-    @InternalCoroutinesApi
     @Test
     fun `if post in EditPostRepository is modified then the savePostToDbUseCase should update the post`() {
         // arrange
-        val editPostRepository = EditPostRepository(mock(), mock(), mock(), TEST_DISPATCHER, TEST_DISPATCHER)
+        val editPostRepository = EditPostRepository(
+                mock(),
+                mock(),
+                mock(),
+                testDispatcher(),
+                testDispatcher()
+        )
         editPostRepository.set { mock() }
         val action = { _: PostModel -> true }
 
