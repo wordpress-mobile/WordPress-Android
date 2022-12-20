@@ -449,7 +449,8 @@ class MySiteViewModel @Inject constructor(
             // todo: enhance this to include checking app pref for hide and remind later prefs
             val isWordPressApp = !buildConfigWrapper.isJetpackApp
             val isPhase3 = jetpackFeatureRemovalPhaseHelper.getCurrentPhase() == JetpackFeatureRemovalPhase.PhaseThree
-            isWordPressApp && isPhase3
+            val shouldHideJetpackFeatureCard = appPrefsWrapper.getShouldHideJetpackFeatureCard()
+            isWordPressApp && isPhase3 && !shouldHideJetpackFeatureCard
         }
 
         val migrationSuccessCard = SingleActionCard(
@@ -1319,7 +1320,7 @@ class MySiteViewModel @Inject constructor(
                 mapOf(PHASE to jetpackFeatureRemovalPhaseHelper.getCurrentPhase()?.trackingName)
         )
         // todo: - create the event to refresh the feed
-        // todo: - set a value in the apps prefs to not show the card
+        appPrefsWrapper.setShouldHideJetpackFeatureCard(true)
     }
 
     private fun onJetpackFeatureCardLearnMoreClick() {
