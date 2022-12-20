@@ -1427,7 +1427,7 @@ public class ActivityLauncher {
     }
 
     public static void showBloggingPromptsListActivity(final Activity activity) {
-        Intent intent = BloggingPromptsListActivity.createIntent(activity);
+        final Intent intent = BloggingPromptsListActivity.createIntent(activity);
         activity.startActivity(intent);
     }
 
