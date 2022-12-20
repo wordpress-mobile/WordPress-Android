@@ -1599,6 +1599,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "abtest_start";
             case FEATURE_FLAGS_SYNCED_STATE:
                 return "feature_flags_synced_state";
+            case REMOTE_FIELD_CONFIG_SYNCED_STATE:
+                return "remote_field_config_synced_state";
             case EXPERIMENT_VARIANT_SET:
                 return "experiment_variant_set";
             case TRAIN_TRACKS_RENDER:

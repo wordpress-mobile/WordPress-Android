@@ -17,6 +17,7 @@ import org.wordpress.android.util.config.ExperimentConfig.Variant
 @RunWith(MockitoJUnitRunner::class)
 class AppConfigTest {
     @Mock lateinit var featureFlagConfig: FeatureFlagConfig
+    @Mock lateinit var remoteFieldConfigRepository: RemoteFieldConfigRepository
     @Mock lateinit var analyticsTracker: AnalyticsTrackerWrapper
     @Mock lateinit var experimentConfig: ExperimentConfig
     @Mock lateinit var manualFeatureConfig: ManualFeatureConfig
@@ -28,7 +29,7 @@ class AppConfigTest {
 
     @Before
     fun setUp() {
-        appConfig = AppConfig(featureFlagConfig, analyticsTracker, manualFeatureConfig)
+        appConfig = AppConfig(featureFlagConfig, remoteFieldConfigRepository, analyticsTracker, manualFeatureConfig)
     }
 
     @Test
