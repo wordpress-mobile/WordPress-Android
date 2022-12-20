@@ -232,6 +232,7 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                         val isAnswered: Boolean,
                         val promptId: Int,
                         val attribution: BloggingPromptAttribution,
+                        val showViewMoreAction: Boolean,
                         val onShareClick: (String) -> Unit,
                         val onAnswerClick: (PromptID) -> Unit,
                         val onSkipClick: () -> Unit

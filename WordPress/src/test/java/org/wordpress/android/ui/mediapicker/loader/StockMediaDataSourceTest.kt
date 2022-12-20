@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.mediapicker.loader
 
-import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -11,13 +11,11 @@ import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.StockMediaModel
 import org.wordpress.android.fluxc.store.StockMediaItem
 import org.wordpress.android.fluxc.store.StockMediaStore
 import org.wordpress.android.fluxc.store.StockMediaStore.OnStockMediaListFetched
-import org.wordpress.android.test
 import org.wordpress.android.ui.mediapicker.MediaItem
 import org.wordpress.android.ui.mediapicker.MediaItem.Identifier.StockMediaIdentifier
 import org.wordpress.android.ui.mediapicker.MediaType.IMAGE
@@ -27,7 +25,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.NetworkUtilsWrapper
 
-@InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 class StockMediaDataSourceTest : BaseUnitTest() {
     @Mock lateinit var site: SiteModel
     @Mock lateinit var stockMediaStore: StockMediaStore
@@ -48,7 +46,11 @@ class StockMediaDataSourceTest : BaseUnitTest() {
 
     @Before
     fun setUp() {
-        stockMediaDataSource = StockMediaDataSource(stockMediaStore, TEST_DISPATCHER, networkUtilsWrapper)
+        stockMediaDataSource = StockMediaDataSource(
+                stockMediaStore,
+                testDispatcher(),
+                networkUtilsWrapper
+        )
     }
 
     @Test

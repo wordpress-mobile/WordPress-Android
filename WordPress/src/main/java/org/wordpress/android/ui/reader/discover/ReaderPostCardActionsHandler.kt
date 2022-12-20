@@ -29,14 +29,17 @@ import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBookm
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostDetail
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReaderComments
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReportPost
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReportUser
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowVideoViewer
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BLOCK_SITE
+import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BLOCK_USER
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BOOKMARK
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.COMMENTS
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.FOLLOW
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.LIKE
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.REBLOG
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.REPORT_POST
+import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.REPORT_USER
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.SHARE
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.SITE_NOTIFICATIONS
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.SPACER_NO_ACTION
@@ -45,6 +48,8 @@ import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.VISIT_S
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
 import org.wordpress.android.ui.reader.repository.usecases.BlockBlogUseCase
 import org.wordpress.android.ui.reader.repository.usecases.BlockSiteState
+import org.wordpress.android.ui.reader.repository.usecases.BlockUserState
+import org.wordpress.android.ui.reader.repository.usecases.BlockUserUseCase
 import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase
 import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase.PostLikeState
 import org.wordpress.android.ui.reader.repository.usecases.UndoBlockBlogUseCase
@@ -82,6 +87,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
     private val bookmarkUseCase: ReaderPostBookmarkUseCase,
     private val followUseCase: ReaderSiteFollowUseCase,
     private val blockBlogUseCase: BlockBlogUseCase,
+    private val blockUserUseCase: BlockUserUseCase,
     private val likeUseCase: PostLikeUseCase,
     private val siteNotificationsUseCase: ReaderSiteNotificationsUseCase,
     private val undoBlockBlogUseCase: UndoBlockBlogUseCase,
@@ -169,6 +175,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
         return isSiteFetched
     }
 
+    @Suppress("ComplexMethod")
     private suspend fun handleAction(
         post: ReaderPost,
         type: ReaderPostCardActionType,
@@ -181,11 +188,13 @@ class ReaderPostCardActionsHandler @Inject constructor(
             SHARE -> handleShareClicked(post, source)
             VISIT_SITE -> handleVisitSiteClicked(post)
             BLOCK_SITE -> handleBlockSiteClicked(post.blogId, post.feedId, source)
+            BLOCK_USER -> handleBlockUserClicked(post.authorId, post.feedId)
             LIKE -> handleLikeClicked(post, source)
             BOOKMARK -> handleBookmarkClicked(post, isBookmarkList, source)
             REBLOG -> handleReblogClicked(post)
             COMMENTS -> handleCommentsClicked(post.postId, post.blogId, source)
             REPORT_POST -> handleReportPostClicked(post)
+            REPORT_USER -> handleReportUserClicked(post)
             TOGGLE_SEEN_STATUS -> handleToggleSeenStatusClicked(post, source)
             SPACER_NO_ACTION -> Unit // Do nothing
         }
@@ -234,6 +243,19 @@ class ReaderPostCardActionsHandler @Inject constructor(
                     post.isJetpack
             )
             _navigationEvents.postValue(Event(ShowReportPost(post.blogUrl)))
+        }
+    }
+
+    suspend fun handleReportUserClicked(post: ReaderPost) {
+        withContext(bgDispatcher) {
+            readerTracker.trackBlogPostAuthor(
+                    AnalyticsTracker.Stat.READER_USER_REPORTED,
+                    post.blogId,
+                    post.postId,
+                    post.isJetpack,
+                    post.authorId
+            )
+            _navigationEvents.postValue(Event(ShowReportUser(post.blogUrl, post.authorId)))
         }
     }
 
@@ -407,6 +429,33 @@ class ReaderPostCardActionsHandler @Inject constructor(
                             Event(SnackbarMessageHolder(UiStringRes(R.string.reader_toast_err_block_blog)))
                     )
                 }
+            }
+        }
+    }
+
+    private suspend fun handleBlockUserClicked(
+        authorId: Long,
+        feedId: Long,
+    ) {
+        blockUserUseCase.blockUser(authorId, feedId).collect {
+            when (it) {
+                is BlockUserState.UserBlockedInLocalDb -> {
+                    _refreshPosts.postValue(Event(Unit))
+                    _snackbarEvents.postValue(
+                            Event(
+                                    SnackbarMessageHolder(
+                                            UiStringRes(R.string.reader_toast_user_blocked),
+                                            UiStringRes(R.string.undo),
+                                            {
+                                                coroutineScope.launch {
+                                                    blockUserUseCase.undoBlockUser(it.blockedUserData)
+                                                    _refreshPosts.postValue(Event(Unit))
+                                                }
+                                            })
+                            )
+                    )
+                }
+                BlockUserState.Failed.AlreadyRunning -> Unit // do nothing
             }
         }
     }

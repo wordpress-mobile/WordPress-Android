@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -12,14 +11,12 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.InsightsLatestPostModel
 import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.stats.insights.LatestPostInsightsStore
-import org.wordpress.android.test
 import org.wordpress.android.ui.stats.refresh.NavigationTarget
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.SharePost
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewPostDetailStats
@@ -38,6 +35,7 @@ import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import java.util.Date
 
+@ExperimentalCoroutinesApi
 class LatestPostSummaryUseCaseTest : BaseUnitTest() {
     @Mock lateinit var insightsStore: LatestPostInsightsStore
     @Mock lateinit var latestPostSummaryMapper: LatestPostSummaryMapper
@@ -48,12 +46,12 @@ class LatestPostSummaryUseCaseTest : BaseUnitTest() {
     @Mock lateinit var contentDescriptionHelper: ContentDescriptionHelper
     @Mock lateinit var statsUtils: StatsUtils
     private lateinit var useCase: LatestPostSummaryUseCase
-    @InternalCoroutinesApi
+
     @Before
     fun setUp() = test {
         useCase = LatestPostSummaryUseCase(
-                Dispatchers.Unconfined,
-                TEST_DISPATCHER,
+                testDispatcher(),
+                testDispatcher(),
                 insightsStore,
                 statsSiteProvider,
                 latestPostSummaryMapper,
@@ -192,6 +190,7 @@ class LatestPostSummaryUseCaseTest : BaseUnitTest() {
         var result: UseCaseModel? = null
         useCase.liveData.observeForever { result = it }
         useCase.fetch(refresh, forced)
+        advanceUntilIdle()
         return result
     }
 

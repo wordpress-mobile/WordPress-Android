@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.posts.prepublishing.visibility.usecases
 
-import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -9,7 +9,6 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.model.post.PostStatus.PRIVATE
@@ -17,17 +16,23 @@ import org.wordpress.android.ui.posts.EditPostRepository
 import org.wordpress.android.ui.posts.PostUtilsWrapper
 import org.wordpress.android.util.DateTimeUtilsWrapper
 
+@ExperimentalCoroutinesApi
 class UpdatePostStatusUseCaseTest : BaseUnitTest() {
     private lateinit var editPostRepository: EditPostRepository
     private lateinit var updatePostStatusUseCase: UpdatePostStatusUseCase
     @Mock lateinit var dateTimeUtilsWrapper: DateTimeUtilsWrapper
     @Mock lateinit var postUtilsWrapper: PostUtilsWrapper
 
-    @InternalCoroutinesApi
     @Before
     fun setup() {
         updatePostStatusUseCase = UpdatePostStatusUseCase(dateTimeUtilsWrapper, postUtilsWrapper)
-        editPostRepository = EditPostRepository(mock(), mock(), mock(), TEST_DISPATCHER, TEST_DISPATCHER)
+        editPostRepository = EditPostRepository(
+                mock(),
+                mock(),
+                mock(),
+                testDispatcher(),
+                testDispatcher()
+        )
     }
 
     @Test

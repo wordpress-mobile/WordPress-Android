@@ -14,11 +14,13 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSitePickerForResult
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BLOCK_SITE
+import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BLOCK_USER
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BOOKMARK
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.FOLLOW
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.LIKE
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.REBLOG
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.REPORT_POST
+import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.REPORT_USER
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.SITE_NOTIFICATIONS
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.TOGGLE_SEEN_STATUS
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionsHandler
@@ -142,6 +144,21 @@ class ReaderPostListViewModel @Inject constructor(
         }
     }
 
+    fun onBlockUserButtonClicked(
+        post: ReaderPost,
+        bookmarksList: Boolean,
+        source: String
+    ) {
+        launch {
+            readerPostCardActionsHandler.onAction(
+                    post,
+                    BLOCK_USER,
+                    bookmarksList,
+                    source = source
+            )
+        }
+    }
+
     fun onBookmarkButtonClicked(
         blogId: Long,
         postId: Long,
@@ -217,6 +234,21 @@ class ReaderPostListViewModel @Inject constructor(
             readerPostCardActionsHandler.onAction(
                     post,
                     REPORT_POST,
+                    bookmarksList,
+                    source = source
+            )
+        }
+    }
+
+    fun onReportUserButtonClicked(
+        post: ReaderPost,
+        bookmarksList: Boolean,
+        source: String
+    ) {
+        launch(bgDispatcher) {
+            readerPostCardActionsHandler.onAction(
+                    post,
+                    REPORT_USER,
                     bookmarksList,
                     source = source
             )

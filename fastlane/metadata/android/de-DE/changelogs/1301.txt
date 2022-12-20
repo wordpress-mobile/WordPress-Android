@@ -1,0 +1,3 @@
+21.3:
+- Du kannst den Inhalt deiner Website jetzt problemlos in die Jetpack-App migrieren.
+- Der Schalter für die Benachrichtigungseinstellungen deaktiviert die wöchentliche Zusammenfassung, die Blog-Erinnerung und die Website-Benachrichtigungen.

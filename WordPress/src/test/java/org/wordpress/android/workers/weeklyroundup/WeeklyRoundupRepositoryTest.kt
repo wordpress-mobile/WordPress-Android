@@ -1,5 +1,6 @@
 package org.wordpress.android.workers.weeklyroundup
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -17,8 +18,8 @@ import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.stats.time.VisitsAndViewsStore
-import org.wordpress.android.test
 
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class WeeklyRoundupRepositoryTest : BaseUnitTest() {
     private lateinit var weeklyRoundupRepository: WeeklyRoundupRepository

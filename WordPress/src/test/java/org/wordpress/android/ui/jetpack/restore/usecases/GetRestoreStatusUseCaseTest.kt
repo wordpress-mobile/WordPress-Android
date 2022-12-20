@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.jetpack.restore.usecases
 
-import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.toList
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -10,7 +10,7 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
-import org.wordpress.android.TEST_DISPATCHER
+import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.action.ActivityLogAction.FETCH_REWIND_STATE
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
@@ -22,7 +22,6 @@ import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.fluxc.store.ActivityLogStore.OnRewindStatusFetched
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindStatusError
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindStatusErrorType.GENERIC_ERROR
-import org.wordpress.android.test
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.AwaitingCredentials
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.Complete
@@ -39,9 +38,9 @@ private const val CURRENT_ENTRY = "current entry"
 
 private val PUBLISHED = Date()
 
-@InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
-class GetRestoreStatusUseCaseTest {
+class GetRestoreStatusUseCaseTest : BaseUnitTest() {
     private lateinit var useCase: GetRestoreStatusUseCase
 
     @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
@@ -50,7 +49,11 @@ class GetRestoreStatusUseCaseTest {
 
     @Before
     fun setup() = test {
-        useCase = GetRestoreStatusUseCase(networkUtilsWrapper, activityLogStore, TEST_DISPATCHER)
+        useCase = GetRestoreStatusUseCase(
+                networkUtilsWrapper,
+                activityLogStore,
+                testDispatcher()
+        )
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
         whenever(activityLogStore.fetchActivitiesRewind(any())).thenReturn(OnRewindStatusFetched(FETCH_REWIND_STATE))
         whenever(activityLogStore.getActivityLogItemByRewindId(REWIND_ID)).thenReturn(activityLogModel())

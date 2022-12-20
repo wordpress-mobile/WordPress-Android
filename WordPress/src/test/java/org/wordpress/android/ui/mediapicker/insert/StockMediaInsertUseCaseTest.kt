@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.mediapicker.insert
 
-import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.toList
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -15,12 +15,11 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.MediaStore.OnStockMediaUploaded
 import org.wordpress.android.fluxc.store.StockMediaStore
 import org.wordpress.android.fluxc.store.StockMediaUploadItem
-import org.wordpress.android.test
 import org.wordpress.android.ui.mediapicker.MediaItem.Identifier
 import org.wordpress.android.ui.mediapicker.MediaItem.Identifier.RemoteId
 import org.wordpress.android.ui.mediapicker.insert.MediaInsertHandler.InsertModel
 
-@InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 class StockMediaInsertUseCaseTest : BaseUnitTest() {
     @Mock lateinit var site: SiteModel
     @Mock lateinit var stockMediaStore: StockMediaStore

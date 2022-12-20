@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-11-30 14:54:28+0000
+Translation-Revision-Date: 2022-12-10 18:03:27+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: de
@@ -3230,7 +3230,7 @@ Language: de
     <string name="wordpress_blog">WordPress-Blog</string>
     <string name="image_settings">Bild-Einstellungen</string>
     <string name="local_changes">Lokale Änderungen</string>
-    <string name="privacy_policy">Datenschutzbestimmung</string>
+    <string name="privacy_policy">Datenschutzerklärung</string>
     <string name="new_media">Neue Mediendatei</string>
     <string name="new_post">Neuer Beitrag</string>
     <string name="notifications_empty_all">Keine Benachrichtigung bisher.</string>

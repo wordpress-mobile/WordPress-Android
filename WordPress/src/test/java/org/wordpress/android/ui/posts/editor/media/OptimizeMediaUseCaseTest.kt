@@ -1,7 +1,8 @@
 package org.wordpress.android.ui.posts.editor.media
 
 import android.net.Uri
-import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -9,14 +10,12 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.test
 import org.wordpress.android.ui.posts.editor.EditorTracker
 import org.wordpress.android.util.MediaUtilsWrapper
 
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
-@InternalCoroutinesApi
 class OptimizeMediaUseCaseTest : BaseUnitTest() {
     @Test
     fun `Uri filtered out when getRealPathFromURI returns null`() = test {
@@ -141,9 +140,11 @@ class OptimizeMediaUseCaseTest : BaseUnitTest() {
         private fun createOptimizeMediaUseCase(
             editorTracker: EditorTracker = mock(),
             mediaUtilsWrapper: MediaUtilsWrapper = createMediaUtilsWrapper()
-        ): OptimizeMediaUseCase {
-            return OptimizeMediaUseCase(editorTracker, mediaUtilsWrapper, TEST_DISPATCHER)
-        }
+        ) = OptimizeMediaUseCase(
+                editorTracker,
+                mediaUtilsWrapper,
+                UnconfinedTestDispatcher()
+        )
 
         private fun createMediaUtilsWrapper(
             resultForGetRealPath: Pair<Uri, String?>? = null,

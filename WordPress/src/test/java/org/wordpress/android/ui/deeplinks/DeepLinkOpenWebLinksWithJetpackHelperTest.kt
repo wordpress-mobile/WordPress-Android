@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.deeplinks
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -19,6 +20,7 @@ import org.wordpress.android.util.PackageManagerWrapper
 import org.wordpress.android.util.config.OpenWebLinksWithJetpackFlowFeatureConfig
 import java.util.Date
 
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class DeepLinkOpenWebLinksWithJetpackHelperTest : BaseUnitTest() {
     @Mock lateinit var openWebLinksWithJetpackFlowFeatureConfig: OpenWebLinksWithJetpackFlowFeatureConfig

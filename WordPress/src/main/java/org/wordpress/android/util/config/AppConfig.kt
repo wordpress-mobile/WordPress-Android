@@ -13,6 +13,7 @@ import javax.inject.Singleton
 class AppConfig
 @Inject constructor(
     private val featureFlagConfig: FeatureFlagConfig,
+    private val remoteFieldConfigRepository: RemoteFieldConfigRepository,
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val manualFeatureConfig: ManualFeatureConfig
 ) {
@@ -21,14 +22,15 @@ class AppConfig
      * while using the app. We should only reload the flags when the application is created.
      */
     private val experimentValues = mutableMapOf<String, String>()
-    private val remoteConfigCheck = RemoteConfigCheck(this)
+    private val remoteFeatureConfigCheck = RemoteFeatureConfigCheck(this)
 
     /**
      * This method initialized the config
      */
     fun init(appScope: CoroutineScope) {
         featureFlagConfig.init(appScope)
-        remoteConfigCheck.checkRemoteFields()
+        remoteFeatureConfigCheck.checkRemoteFields()
+        remoteFieldConfigRepository.init()
     }
 
     /**
@@ -36,6 +38,7 @@ class AppConfig
      */
     fun refresh(appScope: CoroutineScope) {
         featureFlagConfig.refresh(appScope)
+        remoteFieldConfigRepository.refresh()
     }
 
     /**
@@ -54,6 +57,10 @@ class AppConfig
      */
     fun featureState(feature: FeatureConfig): FeatureState {
         return buildFeatureState(feature)
+    }
+
+    fun getRemoteFieldConfigValue(remoteField: String): String {
+        return remoteFieldConfigRepository.getValue(remoteField)
     }
 
     private fun buildFeatureState(feature: FeatureConfig): FeatureState {

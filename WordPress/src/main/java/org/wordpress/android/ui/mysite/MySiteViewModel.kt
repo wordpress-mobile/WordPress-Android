@@ -116,6 +116,7 @@ import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.WPMediaUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.BloggingPromptsFeatureConfig
+import org.wordpress.android.util.config.BloggingPromptsListFeatureConfig
 import org.wordpress.android.util.config.LandOnTheEditorFeatureConfig
 import org.wordpress.android.util.config.MySiteDashboardTabsFeatureConfig
 import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
@@ -167,6 +168,7 @@ class MySiteViewModel @Inject constructor(
     private val buildConfigWrapper: BuildConfigWrapper,
     mySiteDashboardTabsFeatureConfig: MySiteDashboardTabsFeatureConfig,
     bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig,
+    bloggingPromptsListFeatureConfig: BloggingPromptsListFeatureConfig,
     private val jetpackBrandingUtils: JetpackBrandingUtils,
     private val appPrefsWrapper: AppPrefsWrapper,
     private val bloggingPromptsCardAnalyticsTracker: BloggingPromptsCardAnalyticsTracker,
@@ -208,8 +210,9 @@ class MySiteViewModel @Inject constructor(
        as they're already built on site select. */
     private var isSiteSelected = false
 
-    private val isMySiteDashboardTabsFeatureConfigEnabled = mySiteDashboardTabsFeatureConfig.isEnabled()
-    private val isBloggingPromptsFeatureConfigEnabled = bloggingPromptsFeatureConfig.isEnabled()
+    private val isMySiteDashboardTabsFeatureConfigEnabled by lazy { mySiteDashboardTabsFeatureConfig.isEnabled() }
+    private val isBloggingPromptsFeatureConfigEnabled by lazy { bloggingPromptsFeatureConfig.isEnabled() }
+    private val isBloggingPromptsListFeatureConfigEnabled by lazy { bloggingPromptsListFeatureConfig.isEnabled() }
 
     val isMySiteTabsEnabled: Boolean
         get() = isMySiteDashboardTabsFeatureConfigEnabled &&
@@ -495,6 +498,7 @@ class MySiteViewModel @Inject constructor(
                                 bloggingPrompt = if (isBloggingPromptsFeatureConfigEnabled) {
                                     bloggingPromptUpdate?.promptModel
                                 } else null,
+                                showViewMoreAction = isBloggingPromptsListFeatureConfigEnabled,
                                 onShareClick = this::onBloggingPromptShareClick,
                                 onAnswerClick = this::onBloggingPromptAnswerClick,
                                 onSkipClick = this::onBloggingPromptSkipClicked

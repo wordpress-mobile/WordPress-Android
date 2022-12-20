@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.lists.detail
 
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -9,8 +8,6 @@ import org.mockito.Mock
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
-import org.wordpress.android.TEST_DISPATCHER
-import org.wordpress.android.test
 import org.wordpress.android.ui.stats.StatsConstants
 import org.wordpress.android.ui.stats.refresh.NavigationTarget
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewAttachment
@@ -21,6 +18,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Refer
 import org.wordpress.android.ui.stats.refresh.utils.StatsPostProvider
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 
+@ExperimentalCoroutinesApi
 class PostHeaderUseCaseTest : BaseUnitTest() {
     @Mock lateinit var statsPostProvider: StatsPostProvider
     @Mock lateinit var tracker: AnalyticsTrackerWrapper
@@ -30,12 +28,12 @@ class PostHeaderUseCaseTest : BaseUnitTest() {
     private val postUrl: String = "post_url.com"
     private val postPostType: String = StatsConstants.ITEM_TYPE_POST
     private val attachmentPostType: String = StatsConstants.ITEM_TYPE_ATTACHMENT
-    @InternalCoroutinesApi
+
     @Before
     fun setUp() {
         useCase = PostHeaderUseCase(
-                Dispatchers.Unconfined,
-                TEST_DISPATCHER,
+                testDispatcher(),
+                testDispatcher(),
                 statsPostProvider,
                 tracker
         )
@@ -121,6 +119,7 @@ class PostHeaderUseCaseTest : BaseUnitTest() {
         var result: UseCaseModel? = null
         useCase.liveData.observeForever { result = it }
         useCase.fetch(refresh, forced)
+        advanceUntilIdle()
         return checkNotNull(result)
     }
 }

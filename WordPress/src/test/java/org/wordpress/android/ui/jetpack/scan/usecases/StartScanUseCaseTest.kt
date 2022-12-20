@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.jetpack.scan.usecases
 
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.toList
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -11,7 +11,6 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.action.ScanAction.START_SCAN
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.scan.ScanStateModel
@@ -20,11 +19,10 @@ import org.wordpress.android.fluxc.store.ScanStore
 import org.wordpress.android.fluxc.store.ScanStore.OnScanStarted
 import org.wordpress.android.fluxc.store.ScanStore.ScanStartError
 import org.wordpress.android.fluxc.store.ScanStore.ScanStartErrorType
-import org.wordpress.android.test
 import org.wordpress.android.ui.jetpack.scan.usecases.StartScanUseCase.StartScanState
 import org.wordpress.android.util.NetworkUtilsWrapper
 
-@InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 class StartScanUseCaseTest : BaseUnitTest() {
     private lateinit var useCase: StartScanUseCase
     @Mock private lateinit var site: SiteModel
@@ -34,7 +32,11 @@ class StartScanUseCaseTest : BaseUnitTest() {
 
     @Before
     fun setup() = test {
-        useCase = StartScanUseCase(networkUtilsWrapper, scanStore, TEST_DISPATCHER)
+        useCase = StartScanUseCase(
+                networkUtilsWrapper,
+                scanStore,
+                testDispatcher()
+        )
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
         whenever(scanStore.getScanStateForSite(site)).thenReturn(scanStateModel)
     }

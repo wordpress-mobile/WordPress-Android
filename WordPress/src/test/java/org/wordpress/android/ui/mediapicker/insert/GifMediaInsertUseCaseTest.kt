@@ -2,7 +2,7 @@ package org.wordpress.android.ui.mediapicker.insert
 
 import android.content.Context
 import android.webkit.MimeTypeMap
-import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.toList
 import org.assertj.core.api.Assertions
 import org.junit.Before
@@ -14,11 +14,9 @@ import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.test
 import org.wordpress.android.ui.mediapicker.MediaItem.Identifier.GifMediaIdentifier
 import org.wordpress.android.ui.mediapicker.MediaItem.Identifier.LocalId
 import org.wordpress.android.ui.mediapicker.insert.MediaInsertHandler.InsertModel.Progress
@@ -28,7 +26,7 @@ import org.wordpress.android.util.MimeTypeMapUtilsWrapper
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.WPMediaUtilsWrapper
 
-@InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 class GifMediaInsertUseCaseTest : BaseUnitTest() {
     @Mock lateinit var context: Context
     @Mock lateinit var site: SiteModel
@@ -46,7 +44,7 @@ class GifMediaInsertUseCaseTest : BaseUnitTest() {
                 context,
                 site,
                 dispatcher,
-                TEST_DISPATCHER,
+                testDispatcher(),
                 wpMediaUtilsWrapper,
                 fluxCUtilsWrapper,
                 mimeTypeMapUtilsWrapper

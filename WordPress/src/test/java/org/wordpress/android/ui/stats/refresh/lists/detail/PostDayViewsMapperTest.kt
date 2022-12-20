@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.lists.detail
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -20,6 +21,7 @@ import org.wordpress.android.viewmodel.ResourceProvider
 import java.math.RoundingMode
 import java.math.RoundingMode.HALF_UP
 
+@ExperimentalCoroutinesApi
 class PostDayViewsMapperTest : BaseUnitTest() {
     @Mock lateinit var statsDateFormatter: StatsDateFormatter
     @Mock lateinit var resourceProvider: ResourceProvider

@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.mysite
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -20,6 +21,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.prefs.SiteSettingsInterfaceWrapper
 
+@ExperimentalCoroutinesApi
 class SelectedSiteRepositoryTest : BaseUnitTest() {
     @Mock lateinit var dispatcher: Dispatcher
     @Mock lateinit var siteSettingsInterfaceFactory: SiteSettingsInterfaceWrapper.Factory

@@ -3,6 +3,7 @@ package org.wordpress.android.resolver
 import android.database.SQLException
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteStatement
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -16,6 +17,7 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.QuickStartTaskModel
 import org.wordpress.android.fluxc.model.SiteModel
 
+@ExperimentalCoroutinesApi
 class ResolverUtilityTest : BaseUnitTest() {
     private val dbWrapper: DbWrapper = mock()
     private val sqliteDatabase: SQLiteDatabase = mock()

@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.posts
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -31,6 +32,7 @@ import java.util.Calendar
 import java.util.Locale
 import java.util.TimeZone
 
+@ExperimentalCoroutinesApi
 class PublishSettingsViewModelTest : BaseUnitTest() {
     @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var postSettingsUtils: PostSettingsUtils

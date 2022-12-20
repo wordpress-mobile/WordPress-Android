@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.posts.editor.media
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
@@ -17,9 +18,9 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState.QUEUED
-import org.wordpress.android.test
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class RetryFailedMediaUploadUseCaseTest : BaseUnitTest() {
     @Test

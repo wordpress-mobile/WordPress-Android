@@ -654,6 +654,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "reader_article_rendered";
             case READER_BLOG_BLOCKED:
                 return "reader_blog_blocked";
+            case READER_USER_BLOCKED:
+                return "reader_user_blocked";
             case READER_BLOG_FOLLOWED:
                 return "reader_site_followed";
             case READER_BLOG_PREVIEWED:
@@ -1597,6 +1599,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "abtest_start";
             case FEATURE_FLAGS_SYNCED_STATE:
                 return "feature_flags_synced_state";
+            case REMOTE_FIELD_CONFIG_SYNCED_STATE:
+                return "remote_field_config_synced_state";
             case EXPERIMENT_VARIANT_SET:
                 return "experiment_variant_set";
             case TRAIN_TRACKS_RENDER:
@@ -2046,6 +2050,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "encrypted_logging_upload_failed";
             case READER_POST_REPORTED:
                 return "reader_post_reported";
+            case READER_USER_REPORTED:
+                return "reader_user_reported";
             case SUGGESTION_SESSION_FINISHED:
                 return "suggestion_session_finished";
             case COMMENT_APPROVED:
