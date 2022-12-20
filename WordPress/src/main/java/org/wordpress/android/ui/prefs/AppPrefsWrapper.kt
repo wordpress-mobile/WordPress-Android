@@ -270,6 +270,10 @@ class AppPrefsWrapper @Inject constructor() {
     fun setIsOpenWebLinksWithJetpack(isOpenWebLinksWithJetpack: Boolean) =
             AppPrefs.setIsOpenWebLinksWithJetpack(isOpenWebLinksWithJetpack)
 
+    fun getShouldHideJetpackFeatureCard(): Boolean = AppPrefs.getShouldHideJetpackFeatureCard()
+
+    fun setShouldHideJetpackFeatureCard(isHidden: Boolean) = AppPrefs.setShouldHideJetpackFeatureCard(isHidden)
+
     fun getAllPrefs(): Map<String, Any?> = AppPrefs.getAllPrefs()
 
     fun setString(prefKey: PrefKey, value: String) {

@@ -177,6 +177,7 @@ public class AppPrefs {
         SKIPPED_BLOGGING_PROMPT_DAY,
         OPEN_WEB_LINKS_WITH_JETPACK_OVERLAY_LAST_SHOWN_TIMESTAMP,
         OPEN_WEB_LINKS_WITH_JETPACK,
+        SHOULD_HIDE_JETPACK_FEATURE_CARD,
     }
 
     /**
@@ -1509,5 +1510,13 @@ public class AppPrefs {
 
     public static void setIsOpenWebLinksWithJetpack(final boolean isOpenWebLinksWithJetpack) {
         setBoolean(DeletablePrefKey.OPEN_WEB_LINKS_WITH_JETPACK, isOpenWebLinksWithJetpack);
+    }
+
+    public static Boolean getShouldHideJetpackFeatureCard() {
+        return getBoolean(DeletablePrefKey.SHOULD_HIDE_JETPACK_FEATURE_CARD, false);
+    }
+
+    public static void setShouldHideJetpackFeatureCard(final boolean isHidden) {
+        setBoolean(DeletablePrefKey.SHOULD_HIDE_JETPACK_FEATURE_CARD, isHidden);
     }
 }
