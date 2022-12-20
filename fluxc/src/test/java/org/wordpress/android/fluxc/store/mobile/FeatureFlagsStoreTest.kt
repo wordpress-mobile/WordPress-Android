@@ -6,6 +6,8 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.whenever
 import org.wordpress.android.fluxc.network.rest.wpcom.mobile.FeatureFlagsError
 import org.wordpress.android.fluxc.network.rest.wpcom.mobile.FeatureFlagsErrorType.GENERIC_ERROR
@@ -48,6 +50,7 @@ class FeatureFlagsStoreTest {
             platform = PLATFORM_PARAM
         )
 
+        verify(featureFlagConfigDao).insert(successResponse)
         assertNotNull(response.featureFlags)
         assertEquals(FeatureFlagsResult(successResponse), response)
     }
@@ -65,6 +68,7 @@ class FeatureFlagsStoreTest {
             platform = PLATFORM_PARAM
         )
 
+        verifyNoInteractions(featureFlagConfigDao)
         assertNull(response.featureFlags)
         assertEquals(FeatureFlagsResult(errorResult), response)
     }
