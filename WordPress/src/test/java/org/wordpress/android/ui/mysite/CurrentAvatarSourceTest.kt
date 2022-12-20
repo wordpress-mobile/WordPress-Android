@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.mysite
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -8,10 +9,9 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.store.AccountStore
-import org.wordpress.android.test
-import org.wordpress.android.testScope
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CurrentAvatarUrl
 
+@ExperimentalCoroutinesApi
 class CurrentAvatarSourceTest : BaseUnitTest() {
     @Mock lateinit var accountStore: AccountStore
     @Mock lateinit var accountModel: AccountModel
@@ -27,7 +27,9 @@ class CurrentAvatarSourceTest : BaseUnitTest() {
     @Test
     fun `current avatar is empty on start`() = test {
         var result: CurrentAvatarUrl? = null
-        currentAvatarSource.build(testScope()).observeForever { it?.let { result = it } }
+        currentAvatarSource.build(testScope()).observeForever {
+            it?.let { result = it }
+        }
 
         assertThat(result!!.url).isEqualTo("")
     }
@@ -39,7 +41,9 @@ class CurrentAvatarSourceTest : BaseUnitTest() {
         whenever(accountModel.avatarUrl).thenReturn(avatarUrl)
 
         var result: CurrentAvatarUrl? = null
-        currentAvatarSource.build(testScope()).observeForever { it?.let { result = it } }
+        currentAvatarSource.build(testScope()).observeForever {
+            it?.let { result = it }
+        }
 
         currentAvatarSource.refresh()
 

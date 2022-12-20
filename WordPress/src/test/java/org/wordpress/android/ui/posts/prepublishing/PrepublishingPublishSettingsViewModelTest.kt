@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.posts.prepublishing
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -15,6 +16,7 @@ import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Calendar
 import java.util.Locale
 
+@ExperimentalCoroutinesApi
 class PrepublishingPublishSettingsViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: PrepublishingPublishSettingsViewModel
     @Mock lateinit var localeManagerWrapper: LocaleManagerWrapper

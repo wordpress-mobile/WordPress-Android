@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases
 
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -10,7 +9,6 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.anyNullable
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.LimitMode
@@ -23,7 +21,6 @@ import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.StatsStore.TimeStatsType
 import org.wordpress.android.fluxc.store.stats.time.ClicksStore
-import org.wordpress.android.test
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState
@@ -52,6 +49,7 @@ private val limitMode = LimitMode.Top(ITEMS_TO_LOAD)
 private val statsGranularity = DAYS
 private val selectedDate = Date(0)
 
+@ExperimentalCoroutinesApi
 class ClicksUseCaseTest : BaseUnitTest() {
     @Mock lateinit var store: ClicksStore
     @Mock lateinit var statsSiteProvider: StatsSiteProvider
@@ -67,13 +65,13 @@ class ClicksUseCaseTest : BaseUnitTest() {
     private val click = Click("Click 1", 20, "click.jpg", "click.com")
     private val group = Group("group2", "Group 2", "group2.jpg", "group2.com", secondGroupViews, listOf(click))
     private val contentDescription = "title, views"
-    @InternalCoroutinesApi
+
     @Before
     fun setUp() {
         useCase = ClicksUseCase(
                 statsGranularity,
-                Dispatchers.Unconfined,
-                TEST_DISPATCHER,
+                testDispatcher(),
+                testDispatcher(),
                 store,
                 statsSiteProvider,
                 selectedDateProvider,
@@ -277,6 +275,7 @@ class ClicksUseCaseTest : BaseUnitTest() {
         var result: UseCaseModel? = null
         useCase.liveData.observeForever { result = it }
         useCase.fetch(refresh, forced)
+        advanceUntilIdle()
         return checkNotNull(result)
     }
 }

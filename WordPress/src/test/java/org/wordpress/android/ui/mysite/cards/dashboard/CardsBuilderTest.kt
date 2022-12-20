@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.mysite.cards.dashboard
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -30,6 +31,7 @@ import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType.DRAFT
 import org.wordpress.android.ui.mysite.cards.dashboard.todaysstats.TodaysStatsCardBuilder
 import org.wordpress.android.ui.utils.UiString.UiStringText
 
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class CardsBuilderTest : BaseUnitTest() {
     @Mock lateinit var todaysStatsCardBuilder: TodaysStatsCardBuilder
@@ -200,7 +202,7 @@ class CardsBuilderTest : BaseUnitTest() {
                         todaysStatsCardBuilderParams = TodaysStatsCardBuilderParams(mock(), mock(), mock(), mock()),
                         postCardBuilderParams = PostCardBuilderParams(mock(), mock(), mock()),
                         bloggingPromptCardBuilderParams = BloggingPromptCardBuilderParams(
-                                mock(), mock(), mock(), mock()
+                                mock(), false, mock(), mock(), mock()
                         )
                 )
         )

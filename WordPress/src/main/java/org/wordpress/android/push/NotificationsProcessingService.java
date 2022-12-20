@@ -58,6 +58,8 @@ import javax.inject.Inject;
 import static org.wordpress.android.push.NotificationPushIds.GROUP_NOTIFICATION_ID;
 import static org.wordpress.android.push.NotificationPushIds.QUICK_START_REMINDER_NOTIFICATION_ID;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
 /**
  * service which makes it possible to process Notifications quick actions in the background,
  * such as:
@@ -68,6 +70,7 @@ import static org.wordpress.android.push.NotificationPushIds.QUICK_START_REMINDE
  * - pending draft notification ignore & dismissal
  */
 
+@AndroidEntryPoint
 public class NotificationsProcessingService extends Service {
     public static final String ARG_ACTION_TYPE = "action_type";
     public static final String ARG_ACTION_LIKE = "action_like";
@@ -155,7 +158,6 @@ public class NotificationsProcessingService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        ((WordPress) getApplication()).component().inject(this);
         mCommentsStoreAdapter.register(this);
         AppLog.i(AppLog.T.NOTIFS, "notifications action processing service > created");
     }

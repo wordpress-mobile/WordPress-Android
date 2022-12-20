@@ -11,8 +11,10 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.SecondaryAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.SpacerNoAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BLOCK_SITE
+import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BLOCK_USER
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.FOLLOW
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.REPORT_POST
+import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.REPORT_USER
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.SHARE
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.SITE_NOTIFICATIONS
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.TOGGLE_SEEN_STATUS
@@ -53,8 +55,10 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
         menuItems.add(buildShare(onButtonClicked))
         menuItems.add(buildFollow(isPostFollowed, onButtonClicked))
         menuItems.add(SpacerNoAction())
-        checkAndAddMenuItemForBlockSite(menuItems, isPostFollowed, onButtonClicked)
+        menuItems.add(buildBlockSite(onButtonClicked))
         menuItems.add(buildReportPost(onButtonClicked))
+        menuItems.add(buildReportUser(onButtonClicked))
+        checkAndAddMenuItemForBlockUser(menuItems, onButtonClicked)
 
         return menuItems
     }
@@ -178,18 +182,27 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
             )
         }
 
-    private fun checkAndAddMenuItemForBlockSite(
-        menuItems: MutableList<ReaderPostCardAction>,
-        isPostFollowed: Boolean,
-        onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit
-    ) {
-        if (!isPostFollowed) menuItems.add(buildBlockSite(onButtonClicked))
-    }
-
     private fun buildBlockSite(onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit) =
             SecondaryAction(
                     type = BLOCK_SITE,
                     label = UiStringRes(R.string.reader_menu_block_blog),
+                    labelColor = R.attr.wpColorError,
+                    iconRes = R.drawable.ic_block_white_24dp,
+                    iconColor = R.attr.wpColorError,
+                    onClicked = onButtonClicked
+            )
+
+    private fun checkAndAddMenuItemForBlockUser(
+        menuItems: MutableList<ReaderPostCardAction>,
+        onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit
+    ) {
+        menuItems.add(buildBlockUser(onButtonClicked))
+    }
+
+    private fun buildBlockUser(onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit) =
+            SecondaryAction(
+                    type = BLOCK_USER,
+                    label = UiStringRes(R.string.reader_menu_block_user),
                     labelColor = R.attr.wpColorError,
                     iconRes = R.drawable.ic_block_white_24dp,
                     iconColor = R.attr.wpColorError,
@@ -201,7 +214,17 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
                     type = REPORT_POST,
                     label = UiStringRes(R.string.reader_menu_report_post),
                     labelColor = R.attr.wpColorError,
-                    iconRes = R.drawable.ic_block_white_24dp,
+                    iconRes = R.drawable.ic_flag_white_24dp,
+                    iconColor = R.attr.wpColorError,
+                    onClicked = onButtonClicked
+            )
+
+    private fun buildReportUser(onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit) =
+            SecondaryAction(
+                    type = REPORT_USER,
+                    label = UiStringRes(R.string.reader_menu_report_user),
+                    labelColor = R.attr.wpColorError,
+                    iconRes = R.drawable.ic_flag_white_24dp,
                     iconColor = R.attr.wpColorError,
                     onClicked = onButtonClicked
             )

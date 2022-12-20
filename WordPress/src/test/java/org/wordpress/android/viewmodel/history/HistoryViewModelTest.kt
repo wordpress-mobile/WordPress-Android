@@ -1,9 +1,7 @@
 package org.wordpress.android.viewmodel.history
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
@@ -13,6 +11,7 @@ import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
+import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.action.PostAction
 import org.wordpress.android.fluxc.model.PostModel
@@ -21,10 +20,9 @@ import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.PostStore.FetchRevisionsPayload
 import org.wordpress.android.viewmodel.history.HistoryViewModel.HistoryListStatus
 
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
-class HistoryViewModelTest {
-    @get:Rule val rule = InstantTaskExecutorRule()
-
+class HistoryViewModelTest : BaseUnitTest() {
     private val defaultPost = PostModel().apply {
         setId(1_569)
     }
@@ -78,8 +76,8 @@ class HistoryViewModelTest {
             resourceProvider = mock(),
             networkUtils = mock(),
             postStore = postStore,
-            uiDispatcher = Dispatchers.Unconfined,
-            bgDispatcher = Dispatchers.Unconfined,
+            uiDispatcher = testDispatcher(),
+            bgDispatcher = testDispatcher(),
             connectionStatus = mock()
     )
 }

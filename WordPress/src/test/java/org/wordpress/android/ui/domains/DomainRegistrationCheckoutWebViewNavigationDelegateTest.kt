@@ -1,10 +1,12 @@
 package org.wordpress.android.ui.domains
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.ui.domains.DomainRegistrationCheckoutWebViewNavigationDelegate.Url
 
+@ExperimentalCoroutinesApi
 class DomainRegistrationCheckoutWebViewNavigationDelegateTest : BaseUnitTest() {
     private val navigationDelegate = DomainRegistrationCheckoutWebViewNavigationDelegate
 

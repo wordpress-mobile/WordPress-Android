@@ -1,10 +1,8 @@
 package org.wordpress.android.ui.reader.discover
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers.anyLong
@@ -12,23 +10,19 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.whenever
+import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.datasets.ReaderBlogTableWrapper
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.models.ReaderPost
-import org.wordpress.android.test
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.SecondaryAction
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.config.SeenUnseenWithCounterFeatureConfig
 
-@InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
-class ReaderPostMoreButtonUiStateBuilderTest {
-    @Rule
-    @JvmField val rule = InstantTaskExecutorRule()
-
+class ReaderPostMoreButtonUiStateBuilderTest : BaseUnitTest() {
     private val dummyOnClick: (Long, Long, ReaderPostCardActionType) -> Unit = { _, _, _ -> }
     private lateinit var builder: ReaderPostMoreButtonUiStateBuilder
     @Mock lateinit var readerPostTableWrapper: ReaderPostTableWrapper
@@ -45,7 +39,7 @@ class ReaderPostMoreButtonUiStateBuilderTest {
                 readerBlogTableWrapper,
                 readerUtilsWrapper,
                 mSeenUnseenWithCounterFeatureConfig,
-                TEST_DISPATCHER
+                testDispatcher()
         )
     }
 
@@ -170,13 +164,13 @@ class ReaderPostMoreButtonUiStateBuilderTest {
     }
 
     @Test
-    fun `does not contain block site action when post is followed`() = test {
+    fun `contains block site action when post is followed`() = test {
         // Arrange
         val post = init(isFollowed = true)
         // Act
         val menuItems = builder.buildMoreMenuItems(post, dummyOnClick)
         // Assert
-        assertThat(menuItems.find { it.type == ReaderPostCardActionType.BLOCK_SITE }).isNull()
+        assertThat(menuItems.find { it.type == ReaderPostCardActionType.BLOCK_SITE }).isNotNull
     }
 
     @Test
@@ -239,6 +233,16 @@ class ReaderPostMoreButtonUiStateBuilderTest {
         val menuItems = builder.buildMoreMenuItems(post, dummyOnClick)
         // Assert
         assertThat(menuItems.find { it.type == ReaderPostCardActionType.REPORT_POST }).isNotNull
+    }
+
+    @Test
+    fun `contains report user action`() = test {
+        // Arrange
+        val post = init()
+        // Act
+        val menuItems = builder.buildMoreMenuItems(post, dummyOnClick)
+        // Assert
+        assertThat(menuItems.find { it.type == ReaderPostCardActionType.REPORT_USER }).isNotNull
     }
 
     @Test

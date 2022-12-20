@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-11-30 11:54:10+0000
+Translation-Revision-Date: 2022-12-06 04:38:17+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.3
 Language: id
@@ -39,6 +39,7 @@ Language: id
     <string name="jp_migration_finish_button">Selesai</string>
     <string name="jp_migration_remove_wp_app_icon_content_description">Hapus ikon Aplikasi WordPress</string>
     <string name="jp_migration_done_delete_wp_message">Harap &lt;b&gt;hapus aplikasi WordPress&lt;/b&gt; untuk&lt;br&gt;mencegah terjadinya konflik data.</string>
+    <string name="jp_migration_done_subtitle">Kami telah mentransfer semua data dan pengaturan Anda. Semua percis seperti terakhir Anda tinggalkan.</string>
     <string name="jp_migration_done_title">Terima kasih telah beralih ke Jetpack!</string>
     <string name="jp_migration_notifications_disabled_in_wp_message">Kami akan menonaktifkan pemberitahuan dari aplikasi WordPress.</string>
     <string name="jp_migration_notifications_subtitle">Anda akan tetap menerima pemberitahuan tersebut, tetapi dari aplikasi Jetpack.</string>

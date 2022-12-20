@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.bloggingprompts.onboarding
 
 import androidx.lifecycle.Observer
-import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
 import org.assertj.core.api.Assertions
 import org.junit.Assert.assertNotNull
@@ -17,13 +17,11 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.bloggingprompts.BloggingPromptModel
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore
 import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore.BloggingPromptsResult
-import org.wordpress.android.test
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingAction.DismissDialog
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingAction.DoNothing
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingAction.OpenEditor
@@ -40,7 +38,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.viewmodel.Event
 import java.util.Date
 
-@InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 class BloggingPromptsOnboardingViewModelTest : BaseUnitTest() {
     private val uiStateMapper = BloggingPromptsOnboardingUiStateMapper()
     private val siteStore: SiteStore = mock()
@@ -70,7 +68,7 @@ class BloggingPromptsOnboardingViewModelTest : BaseUnitTest() {
             selectedSiteRepository,
             bloggingPromptsStore,
             analyticsTracker,
-            TEST_DISPATCHER,
+            testDispatcher(),
             getIsFirstBloggingPromptsOnboardingUseCase,
             saveFirstBloggingPromptsOnboardingUseCase
     )

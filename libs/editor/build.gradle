@@ -21,16 +21,9 @@ repositories {
             includeGroup "com.facebook.react"
         }
     }
-    maven {
-        url "https://a8c-libs.s3.amazonaws.com/android/hermes-mirror"
-        content {
-            includeGroup "org.wordpress-mobile"
-        }
-    }
     google()
     mavenCentral()
     maven { url "https://www.jitpack.io" }
-    maven { url "https://a8c-libs.s3.amazonaws.com/android/hermes-mirror" }
 }
 
 android {
@@ -74,10 +67,31 @@ dependencies {
             strictly wordPressAztecVersion
         }
     }
+    
+    // Forcing version due to https://github.com/facebook/SoLoader/issues/94
+    // To be removed with React Native 0.70+
+    implementation("com.facebook.soloader:soloader") {
+        version {
+            strictly '0.10.4'
+        }
+    }
+
+    implementation 'com.facebook.fresco:fresco:2.5.0'
+    implementation 'com.facebook.fresco:imagepipeline-okhttp3:2.5.0'
+    implementation 'com.facebook.fbjni:fbjni:0.2.2'
+    implementation 'com.facebook.react:hermes-engine:0.69.4:release@aar'
+    implementation 'com.facebook.react:react-native:0.69.4:release@aar'
+
     // This dependency will be substituted if the `local-builds.gradle` file contains
     // `localGutenbergMobilePath`. Details for this can be found in the `settings.gradle` file.
-    implementation "$rootProject.gradle.ext.gutenbergMobileBinaryPath:$rootProject.ext.gutenbergMobileVersion"
+    implementation ("$rootProject.gradle.ext.gutenbergMobileBinaryPath:$rootProject.ext.gutenbergMobileVersion") {
+        exclude module: 'hermes-engine'
+        exclude module: 'react-native'
+    }
 
+    // Required Aztec dependencies (they should be included but Jitpack seems to be stripping these out)
+    implementation "org.jsoup:jsoup:$jsoupVersion"
+    
     implementation "org.wordpress:utils:$wordPressUtilsVersion"
 
     implementation "androidx.lifecycle:lifecycle-common:$androidxLifecycleVersion"

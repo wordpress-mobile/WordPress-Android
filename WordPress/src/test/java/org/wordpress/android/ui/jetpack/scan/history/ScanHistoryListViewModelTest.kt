@@ -1,11 +1,9 @@
 package org.wordpress.android.ui.jetpack.scan.history
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
-import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers.anyBoolean
@@ -17,12 +15,11 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
-import org.wordpress.android.TEST_DISPATCHER
+import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.GenericThreatModel
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus
-import org.wordpress.android.test
 import org.wordpress.android.ui.jetpack.scan.ScanListItemState.ThreatDateItemState
 import org.wordpress.android.ui.jetpack.scan.ScanListItemState.ThreatItemLoadingSkeletonState
 import org.wordpress.android.ui.jetpack.scan.ScanListItemState.ThreatItemState
@@ -40,12 +37,9 @@ import java.util.Calendar
 
 private const val ON_ITEM_CLICKED_PARAM_POSITION = 1
 
-@InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
-class ScanHistoryListViewModelTest {
-    @Rule
-    @JvmField val rule = InstantTaskExecutorRule()
-
+class ScanHistoryListViewModelTest : BaseUnitTest() {
     @Mock private lateinit var scanThreatItemBuilder: ThreatItemBuilder
     @Mock private lateinit var scanHistoryViewModel: ScanHistoryViewModel
     @Mock private lateinit var scanTracker: ScanTracker
@@ -60,7 +54,7 @@ class ScanHistoryListViewModelTest {
         viewModel = ScanHistoryListViewModel(
                 scanThreatItemBuilder,
                 scanTracker,
-                TEST_DISPATCHER
+                testDispatcher()
         )
         val threats = listOf(
                 GenericThreatModel(genericThreatModel.baseThreatModel.copy(status = ThreatStatus.FIXED)),

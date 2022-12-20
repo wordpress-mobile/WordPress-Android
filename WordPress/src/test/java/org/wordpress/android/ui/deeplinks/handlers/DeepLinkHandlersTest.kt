@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.deeplinks.handlers
 
 import androidx.lifecycle.MutableLiveData
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -12,6 +13,7 @@ import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenE
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.viewmodel.Event
 
+@ExperimentalCoroutinesApi
 class DeepLinkHandlersTest : BaseUnitTest() {
     @Mock lateinit var editorLinkHandler: EditorLinkHandler
     @Mock lateinit var statsLinkHandler: StatsLinkHandler

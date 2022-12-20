@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.posts.editor.media
 
-import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -14,20 +14,19 @@ import org.mockito.kotlin.never
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
-import org.wordpress.android.TEST_DISPATCHER
+import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.store.MediaStore
-import org.wordpress.android.test
 import org.wordpress.android.ui.uploads.UploadServiceFacade
 import org.wordpress.android.util.MediaUtilsWrapper
 
 private const val DUMMY_MEDIA_ID = "1"
 
-@InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
-class RemoveMediaUseCaseTest {
+class RemoveMediaUseCaseTest : BaseUnitTest() {
     private lateinit var removeMediaUseCase: RemoveMediaUseCase
     private val mediaStore: MediaStore = mock()
     private val dispatcher: Dispatcher = mock()
@@ -41,7 +40,7 @@ class RemoveMediaUseCaseTest {
                 dispatcher,
                 mediaUtilsWrapper,
                 uploadServiceFacade,
-                TEST_DISPATCHER
+                testDispatcher()
         )
         whenever(mediaStore.getMediaWithLocalId(anyInt())).thenReturn(MediaModel().apply {
             uploadState = "non-empty-state"

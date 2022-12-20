@@ -1,12 +1,12 @@
 package org.wordpress.android.util
 
 import androidx.lifecycle.MutableLiveData
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.TestScope
-import org.wordpress.android.test
 
+@ExperimentalCoroutinesApi
 class LiveDataUtilsTest : BaseUnitTest() {
     @Test
     fun `mergeNotNull merges 2 sources`() {
@@ -30,7 +30,11 @@ class LiveDataUtilsTest : BaseUnitTest() {
         val sourceA = MutableLiveData<Int>()
         val sourceB = MutableLiveData<String>()
 
-        val mergedSources = mergeAsyncNotNull(TestScope, sourceA, sourceB) { i, s ->
+        val mergedSources = mergeAsyncNotNull(
+                testScope(),
+                sourceA,
+                sourceB
+        ) { i, s ->
             "$s: $i"
         }
         mergedSources.observeForever { }

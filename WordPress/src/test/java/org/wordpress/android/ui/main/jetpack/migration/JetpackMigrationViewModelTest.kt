@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.main.jetpack.migration
 
+import androidx.lifecycle.Observer
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -17,7 +19,6 @@ import org.wordpress.android.localcontentmigration.ContentMigrationAnalyticsTrac
 import org.wordpress.android.localcontentmigration.MigrationEmailHelper
 import org.wordpress.android.localcontentmigration.WelcomeScreenData
 import org.wordpress.android.sharedlogin.resolver.LocalMigrationOrchestrator
-import org.wordpress.android.test
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.DeletePrimaryButton
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.DeleteSecondaryButton
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.DonePrimaryButton
@@ -37,8 +38,10 @@ import org.wordpress.android.util.SiteUtilsWrapper
 import org.wordpress.android.util.config.PreventDuplicateNotifsFeatureConfig
 import org.wordpress.android.viewmodel.ContextProvider
 
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class JetpackMigrationViewModelTest : BaseUnitTest() {
+    private val refreshAppThemeObserver: Observer<Unit> = mock()
     private val siteUtilsWrapper: SiteUtilsWrapper = mock()
     private val gravatarUtilsWrapper: GravatarUtilsWrapper = mock()
     private val appPrefsWrapper: AppPrefsWrapper = mock()
@@ -48,21 +51,24 @@ class JetpackMigrationViewModelTest : BaseUnitTest() {
     private val contentMigrationAnalyticsTracker: ContentMigrationAnalyticsTracker = mock()
     private val contextProvider: ContextProvider = mock()
     private val accountStore: AccountStore = mock()
-    private val classToTest = JetpackMigrationViewModel(
-            siteUtilsWrapper = siteUtilsWrapper,
-            gravatarUtilsWrapper = gravatarUtilsWrapper,
-            contextProvider = contextProvider,
-            preventDuplicateNotifsFeatureConfig = preventDuplicateNotifsFeatureConfig,
-            appPrefsWrapper = appPrefsWrapper,
-            localMigrationOrchestrator = localMigrationOrchestrator,
-            migrationEmailHelper = migrationEmailHelper,
-            migrationAnalyticsTracker = contentMigrationAnalyticsTracker,
-            accountStore = accountStore,
-    )
+
+    private lateinit var classToTest: JetpackMigrationViewModel
 
     @Before
     fun setUp() {
         whenever(gravatarUtilsWrapper.fixGravatarUrlWithResource(any(), any())).thenReturn("")
+        classToTest = JetpackMigrationViewModel(
+                siteUtilsWrapper = siteUtilsWrapper,
+                gravatarUtilsWrapper = gravatarUtilsWrapper,
+                contextProvider = contextProvider,
+                preventDuplicateNotifsFeatureConfig = preventDuplicateNotifsFeatureConfig,
+                appPrefsWrapper = appPrefsWrapper,
+                localMigrationOrchestrator = localMigrationOrchestrator,
+                migrationEmailHelper = migrationEmailHelper,
+                migrationAnalyticsTracker = contentMigrationAnalyticsTracker,
+                accountStore = accountStore,
+        )
+        classToTest.refreshAppTheme.observeForever(refreshAppThemeObserver)
     }
 
     // region ViewModel
@@ -138,6 +144,15 @@ class JetpackMigrationViewModelTest : BaseUnitTest() {
         successScreen.primaryActionButton.onClick.invoke()
 
         verify(contentMigrationAnalyticsTracker).trackThanksScreenFinishButtonTapped()
+    }
+
+    @Test
+    fun `Should emit refresh app theme when finish button is tapped on success screen`() {
+        val successScreen = classToTest.initSuccessScreenUi()
+
+        successScreen.primaryActionButton.onClick.invoke()
+
+        verify(refreshAppThemeObserver).onChanged(Unit)
     }
 
     @Test

@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -10,9 +9,7 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
-import org.wordpress.android.test
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BigTitle
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.DialogButtons
@@ -23,17 +20,18 @@ import org.wordpress.android.ui.stats.refresh.utils.NewsCardHandler
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 
+@ExperimentalCoroutinesApi
 class ManagementNewsCardUseCaseTest : BaseUnitTest() {
     @Mock private lateinit var resourceProvider: ResourceProvider
     @Mock private lateinit var newsCardHandler: NewsCardHandler
     @Mock private lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
     private lateinit var useCase: ManagementNewsCardUseCase
-    @InternalCoroutinesApi
+
     @Before
     fun setUp() {
         useCase = ManagementNewsCardUseCase(
-                Dispatchers.Unconfined,
-                TEST_DISPATCHER,
+                testDispatcher(),
+                testDispatcher(),
                 resourceProvider,
                 newsCardHandler,
                 analyticsTrackerWrapper
@@ -83,6 +81,7 @@ class ManagementNewsCardUseCaseTest : BaseUnitTest() {
         var result: UseCaseModel? = null
         useCase.liveData.observeForever { result = it }
         useCase.fetch(refresh = false, forced = false)
+        advanceUntilIdle()
         return checkNotNull(result)
     }
 }

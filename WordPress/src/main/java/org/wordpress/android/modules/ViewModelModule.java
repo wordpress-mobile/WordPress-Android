@@ -23,10 +23,7 @@ import org.wordpress.android.ui.engagement.UserProfileViewModel;
 import org.wordpress.android.ui.featureintroduction.FeatureIntroductionViewModel;
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModel;
 import org.wordpress.android.ui.jetpack.restore.RestoreViewModel;
-import org.wordpress.android.ui.jetpack.scan.ScanViewModel;
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsViewModel;
-import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryListViewModel;
-import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryViewModel;
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel;
 import org.wordpress.android.ui.mysite.MySiteViewModel;
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel;
@@ -45,8 +42,6 @@ import org.wordpress.android.ui.posts.PrepublishingViewModel;
 import org.wordpress.android.ui.posts.editor.StorePostViewModel;
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingPublishSettingsViewModel;
 import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel;
-import org.wordpress.android.ui.prefs.categories.detail.CategoryDetailViewModel;
-import org.wordpress.android.ui.prefs.categories.list.CategoriesListViewModel;
 import org.wordpress.android.ui.prefs.homepage.HomepageSettingsViewModel;
 import org.wordpress.android.ui.prefs.language.LocalePickerViewModel;
 import org.wordpress.android.ui.prefs.timezone.SiteSettingsTimezoneViewModel;
@@ -415,21 +410,6 @@ abstract class ViewModelModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(ScanViewModel.class)
-    abstract ViewModel scanViewModel(ScanViewModel viewModel);
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(ScanHistoryViewModel.class)
-    abstract ViewModel scanHistoryViewModel(ScanHistoryViewModel viewModel);
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(ScanHistoryListViewModel.class)
-    abstract ViewModel scanHistoryListViewModel(ScanHistoryListViewModel viewModel);
-
-    @Binds
-    @IntoMap
     @ViewModelKey(ThreatDetailsViewModel.class)
     abstract ViewModel threatDetailsViewModel(ThreatDetailsViewModel viewModel);
 
@@ -508,18 +488,8 @@ abstract class ViewModelModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(CategoriesListViewModel.class)
-    abstract ViewModel categoriesViewModel(CategoriesListViewModel viewModel);
-
-    @Binds
-    @IntoMap
     @ViewModelKey(LocalePickerViewModel.class)
     abstract ViewModel localePickerViewModel(LocalePickerViewModel viewModel);
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(CategoryDetailViewModel.class)
-    abstract ViewModel categoryDetailViewModel(CategoryDetailViewModel viewModel);
 
     @Binds
     @IntoMap

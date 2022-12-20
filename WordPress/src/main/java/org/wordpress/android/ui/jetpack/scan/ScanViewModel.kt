@@ -6,6 +6,7 @@ import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
@@ -51,6 +52,7 @@ import javax.inject.Named
 
 const val RETRY_DELAY = 300L
 
+@HiltViewModel
 class ScanViewModel @Inject constructor(
     private val scanStateListItemsBuilder: ScanStateListItemsBuilder,
     private val fetchScanStateUseCase: FetchScanStateUseCase,

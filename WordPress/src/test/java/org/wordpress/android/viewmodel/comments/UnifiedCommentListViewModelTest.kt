@@ -1,14 +1,12 @@
 package org.wordpress.android.viewmodel.comments
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.advanceUntilIdle
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
@@ -17,9 +15,7 @@ import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.MainCoroutineScopeRule
 import org.wordpress.android.R.string
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.CommentStore.CommentError
 import org.wordpress.android.fluxc.store.CommentStore.CommentErrorType.GENERIC_ERROR
@@ -34,7 +30,6 @@ import org.wordpress.android.models.usecases.ModerateCommentsResourceProvider
 import org.wordpress.android.models.usecases.PaginateCommentsResourceProvider
 import org.wordpress.android.models.usecases.PaginateCommentsUseCase
 import org.wordpress.android.models.usecases.UnifiedCommentsListHandler
-import org.wordpress.android.test
 import org.wordpress.android.ui.comments.unified.CommentFilter.ALL
 import org.wordpress.android.ui.comments.unified.CommentListUiModelHelper
 import org.wordpress.android.ui.comments.unified.CommentListUiModelHelper.CommentList
@@ -57,9 +52,6 @@ import org.wordpress.android.viewmodel.ResourceProvider
 
 @ExperimentalCoroutinesApi
 class UnifiedCommentListViewModelTest : BaseUnitTest() {
-    @Rule
-    @JvmField val coroutineScope = MainCoroutineScopeRule()
-
     private lateinit var viewModel: UnifiedCommentListViewModel
     private lateinit var unifiedCommentsListHandler: UnifiedCommentsListHandler
     private lateinit var commentListUiModelHelper: CommentListUiModelHelper
@@ -82,7 +74,6 @@ class UnifiedCommentListViewModelTest : BaseUnitTest() {
 
     val site = SiteModel().also { it.id = 5 }.also { it.name = "Test Site" }
 
-    @InternalCoroutinesApi
     @Before
     fun setUp() = test {
         whenever(dateTimeUtilsWrapper.javaDateToTimeSpan(anyOrNull())).thenReturn("Apr 19")
@@ -117,8 +108,8 @@ class UnifiedCommentListViewModelTest : BaseUnitTest() {
                 selectedSiteRepository,
                 networkUtilsWrapper,
                 analyticsTrackerWrapper,
-                TEST_DISPATCHER,
-                TEST_DISPATCHER,
+                testDispatcher(),
+                testDispatcher(),
                 unifiedCommentsListHandler,
                 localCommentCacheUpdateHandler
         )
@@ -127,7 +118,7 @@ class UnifiedCommentListViewModelTest : BaseUnitTest() {
     // Comment list state test
 
     @Test
-    fun `when VM starts list shows loading screen and then comments`() = runBlockingTest {
+    fun `when VM starts list shows loading screen and then comments`() = test {
         val result = mutableListOf<CommentsUiModel>()
 
         val job = launch {
@@ -135,6 +126,7 @@ class UnifiedCommentListViewModelTest : BaseUnitTest() {
         }
 
         viewModel.start(ALL)
+        advanceUntilIdle()
 
         val intialState = result.first()
 
@@ -151,7 +143,7 @@ class UnifiedCommentListViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `reloading comment list shows PTR indicator and loads comments`() = runBlockingTest {
+    fun `reloading comment list shows PTR indicator and loads comments`() = test {
         val result = mutableListOf<CommentsUiModel>()
 
         val job = launch {
@@ -160,12 +152,9 @@ class UnifiedCommentListViewModelTest : BaseUnitTest() {
 
         viewModel.start(ALL)
         viewModel.reload()
+        advanceUntilIdle()
 
-        val ptrState = result[2]
-        assertThat(ptrState.commentsListUiModel).isEqualTo(CommentsListUiModel.Refreshing)
-        assertThat(ptrState.commentData.comments).isEmpty() // when refreshing we keep comments in adapter
-
-        val afterPtrState = result[3]
+        val afterPtrState = result[1]
         assertThat(afterPtrState.commentsListUiModel).isEqualTo(CommentsListUiModel.WithData)
         assertThat(afterPtrState.commentData.comments.filterIsInstance<Comment>()).size().isEqualTo(30)
 
@@ -173,7 +162,7 @@ class UnifiedCommentListViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `calling reload shows error toast when network is not available`() = runBlockingTest {
+    fun `calling reload shows error toast when network is not available`() = test {
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
 
         viewModel.start(ALL)
@@ -196,7 +185,7 @@ class UnifiedCommentListViewModelTest : BaseUnitTest() {
     // Paging Test
 
     @Test
-    fun `comment list contains load more row when there are more comments`() = runBlockingTest {
+    fun `comment list contains load more row when there are more comments`() = test {
         whenever((commentStore.fetchCommentsPage(any(), any(), any(), any(), any())))
                 .thenReturn(CommentsActionPayload(PagingData(comments = testComments.take(30), hasMore = true)))
 
@@ -207,6 +196,7 @@ class UnifiedCommentListViewModelTest : BaseUnitTest() {
             }
         }
         viewModel.start(ALL)
+        advanceUntilIdle()
 
         val stateWithData = result[1]
         val loadMoreFooter = stateWithData.commentData.comments.last()
@@ -217,7 +207,7 @@ class UnifiedCommentListViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `comment list does not contain load more row when there are no more comments`() = runBlockingTest {
+    fun `comment list does not contain load more row when there are no more comments`() = test {
         whenever(commentStore.fetchCommentsPage(any(), any(), any(), any(), any())).thenReturn(
                 CommentsActionPayload(
                         PagingData(comments = testComments.take(15), hasMore = false)
@@ -231,6 +221,7 @@ class UnifiedCommentListViewModelTest : BaseUnitTest() {
             }
         }
         viewModel.start(ALL)
+        advanceUntilIdle()
 
         val stateWithData = result[1]
         assertThat(stateWithData.commentData.comments.any { it is NextPageLoader }).isFalse()
@@ -239,7 +230,7 @@ class UnifiedCommentListViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when load more action is triggered more comments are loaded`() = runBlockingTest {
+    fun `when load more action is triggered more comments are loaded`() = test {
         val result = mutableListOf<CommentsUiModel>()
         val job = launch {
             viewModel.uiState.collectLatest {
@@ -247,6 +238,7 @@ class UnifiedCommentListViewModelTest : BaseUnitTest() {
             }
         }
         viewModel.start(ALL)
+        advanceUntilIdle()
 
         val stateWithData = result[1]
 
@@ -266,7 +258,7 @@ class UnifiedCommentListViewModelTest : BaseUnitTest() {
     // Paging and Footer error tests
 
     @Test
-    fun `footer shows retry button and error snackbar when there is an error when loading more`() = runBlockingTest {
+    fun `footer shows retry button and error snackbar when there is an error when loading more`() = test {
         val result = mutableListOf<CommentsUiModel>()
         val job = launch {
             viewModel.uiState.collectLatest {
@@ -282,6 +274,7 @@ class UnifiedCommentListViewModelTest : BaseUnitTest() {
         }
 
         viewModel.start(ALL)
+        advanceUntilIdle()
 
         val stateWithData = result[1]
 
@@ -315,7 +308,7 @@ class UnifiedCommentListViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `tapping retry button in footer shows error snackbar when there is no internet`() = runBlockingTest {
+    fun `tapping retry button in footer shows error snackbar when there is no internet`() = test {
         whenever(commentStore.getCommentsForSite(anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull()))
                 .thenReturn(testComments.take(30))
 
@@ -334,6 +327,7 @@ class UnifiedCommentListViewModelTest : BaseUnitTest() {
         }
 
         viewModel.start(ALL)
+        advanceUntilIdle()
 
         val stateWithData = result[1]
 

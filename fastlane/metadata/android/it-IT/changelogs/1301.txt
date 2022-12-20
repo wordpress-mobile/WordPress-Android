@@ -1,0 +1,4 @@
+21.3:
+- Ora potete migrare i contenuti del vostro sito all'applicazione Jetpack senza problemi.
+- Il selettore delle impostazioni di notifica disattiva il riassunto settimanale, il promemoria del blog e le notifiche del sito.
+

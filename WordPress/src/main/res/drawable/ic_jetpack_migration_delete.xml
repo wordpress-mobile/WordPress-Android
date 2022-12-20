@@ -16,5 +16,5 @@
       android:pathData="M90.5,1.5L90.5,1.5A34,34 0,0 1,124.5 35.5L124.5,35.5A34,34 0,0 1,90.5 69.5L90.5,69.5A34,34 0,0 1,56.5 35.5L56.5,35.5A34,34 0,0 1,90.5 1.5z"
       android:strokeWidth="3"
       android:fillColor="#00000000"
-      android:strokeColor="#ffffff"/>
+      android:strokeColor="@color/jetpack_powered_bottom_sheet_background"/>
 </vector>

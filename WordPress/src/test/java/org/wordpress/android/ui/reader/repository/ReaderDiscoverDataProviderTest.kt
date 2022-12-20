@@ -1,26 +1,20 @@
 package org.wordpress.android.ui.reader.repository
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
-import kotlinx.coroutines.test.pauseDispatcher
-import kotlinx.coroutines.test.resumeDispatcher
-import org.assertj.core.api.Assertions
+import kotlinx.coroutines.test.advanceUntilIdle
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
-import org.wordpress.android.MainCoroutineScopeRule
-import org.wordpress.android.TEST_DISPATCHER
+import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.discover.ReaderDiscoverCard.ReaderPostCard
 import org.wordpress.android.models.discover.ReaderDiscoverCards
-import org.wordpress.android.test
 import org.wordpress.android.ui.reader.ReaderEvents.FetchDiscoverCardsEnded
 import org.wordpress.android.ui.reader.ReaderEvents.FollowedTagsChanged
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.FAILED
@@ -40,17 +34,9 @@ import org.wordpress.android.util.EventBusWrapper
 
 private const val NUMBER_OF_ITEMS = 10L
 
-@InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
-class ReaderDiscoverDataProviderTest {
-    @Rule
-    @JvmField
-    val rule = InstantTaskExecutorRule()
-
-    @Rule
-    @JvmField val coroutineScope = MainCoroutineScopeRule()
-
+class ReaderDiscoverDataProviderTest : BaseUnitTest() {
     private lateinit var dataProvider: ReaderDiscoverDataProvider
 
     @Mock private lateinit var eventBusWrapper: EventBusWrapper
@@ -62,8 +48,8 @@ class ReaderDiscoverDataProviderTest {
     @Before
     fun setUp() {
         dataProvider = ReaderDiscoverDataProvider(
-                TEST_DISPATCHER,
-                TEST_DISPATCHER,
+                testDispatcher(),
+                testDispatcher(),
                 eventBusWrapper,
                 readerTagWrapper,
                 getDiscoverCardsUseCase,
@@ -80,7 +66,7 @@ class ReaderDiscoverDataProviderTest {
 
         dataProvider.refreshCards()
 
-        Assertions.assertThat(requireNotNull(dataProvider.communicationChannel.value?.peekContent()))
+        assertThat(requireNotNull(dataProvider.communicationChannel.value?.peekContent()))
                 .isEqualTo(Started(REQUEST_FIRST_PAGE))
     }
 
@@ -93,7 +79,7 @@ class ReaderDiscoverDataProviderTest {
 
         dataProvider.onCardsUpdated(event)
 
-        Assertions.assertThat(requireNotNull(dataProvider.communicationChannel.value?.peekContent()))
+        assertThat(requireNotNull(dataProvider.communicationChannel.value?.peekContent()))
                 .isEqualTo(RemoteRequestFailure(REQUEST_FIRST_PAGE))
     }
 
@@ -106,7 +92,7 @@ class ReaderDiscoverDataProviderTest {
 
         dataProvider.onCardsUpdated(event)
 
-        Assertions.assertThat(requireNotNull(dataProvider.communicationChannel.value?.peekContent()))
+        assertThat(requireNotNull(dataProvider.communicationChannel.value?.peekContent()))
                 .isEqualTo(Success(REQUEST_FIRST_PAGE))
     }
 
@@ -119,7 +105,7 @@ class ReaderDiscoverDataProviderTest {
 
         dataProvider.onCardsUpdated(event)
 
-        Assertions.assertThat(requireNotNull(dataProvider.communicationChannel.value?.peekContent()))
+        assertThat(requireNotNull(dataProvider.communicationChannel.value?.peekContent()))
                 .isEqualTo(Success(REQUEST_FIRST_PAGE))
     }
 
@@ -130,7 +116,7 @@ class ReaderDiscoverDataProviderTest {
 
         dataProvider.discoverFeed.observeForever { }
 
-        Assertions.assertThat(dataProvider.discoverFeed.value).isNull()
+        assertThat(dataProvider.discoverFeed.value).isNull()
     }
 
     @Test
@@ -139,8 +125,9 @@ class ReaderDiscoverDataProviderTest {
         whenever(getDiscoverCardsUseCase.get()).thenReturn(createDummyReaderCardsList())
 
         dataProvider.discoverFeed.observeForever { }
+        advanceUntilIdle()
 
-        Assertions.assertThat(dataProvider.discoverFeed.value).isNotNull
+        assertThat(dataProvider.discoverFeed.value).isNotNull
     }
 
     @Test
@@ -154,10 +141,11 @@ class ReaderDiscoverDataProviderTest {
         val event = FetchDiscoverCardsEnded(REQUEST_FIRST_PAGE, HAS_NEW)
 
         dataProvider.onCardsUpdated(event)
+        advanceUntilIdle()
 
-        Assertions.assertThat(requireNotNull(dataProvider.discoverFeed.value))
+        assertThat(requireNotNull(dataProvider.discoverFeed.value))
                 .isInstanceOf(ReaderDiscoverCards::class.java)
-        Assertions.assertThat(requireNotNull(dataProvider.discoverFeed.value).cards.size)
+        assertThat(requireNotNull(dataProvider.discoverFeed.value).cards.size)
                 .isEqualTo(NUMBER_OF_ITEMS)
     }
 
@@ -170,18 +158,12 @@ class ReaderDiscoverDataProviderTest {
         dataProvider.loadMoreCards()
 
         val started = dataProvider.communicationChannel.value?.getContentIfNotHandled()
-        Assertions.assertThat(requireNotNull(started)).isEqualTo(Started(REQUEST_MORE))
-
-        // Pause the dispatcher
-        coroutineScope.pauseDispatcher()
+        assertThat(requireNotNull(started)).isEqualTo(Started(REQUEST_MORE))
 
         dataProvider.loadMoreCards()
 
         val noUnhandledContent = dataProvider.communicationChannel.value?.getContentIfNotHandled()
-        Assertions.assertThat(noUnhandledContent).isNull()
-
-        // Resume pending coroutine so next tests don't get hung up
-        coroutineScope.resumeDispatcher()
+        assertThat(noUnhandledContent).isNull()
     }
 
     // The following test the loadData(), which is kicked off when discoverFeed obtains observers
@@ -195,7 +177,7 @@ class ReaderDiscoverDataProviderTest {
         dataProvider.discoverFeed.observeForever { }
 
         val started = dataProvider.communicationChannel.value?.getContentIfNotHandled()
-        Assertions.assertThat(requireNotNull(started)).isEqualTo(Started(REQUEST_FIRST_PAGE))
+        assertThat(requireNotNull(started)).isEqualTo(Started(REQUEST_FIRST_PAGE))
     }
 
     @Test
@@ -207,7 +189,7 @@ class ReaderDiscoverDataProviderTest {
         dataProvider.discoverFeed.observeForever { }
 
         val started = dataProvider.communicationChannel.value?.getContentIfNotHandled()
-        Assertions.assertThat(started).isNull()
+        assertThat(started).isNull()
     }
 
     @Test
@@ -220,9 +202,10 @@ class ReaderDiscoverDataProviderTest {
 
         // Add observer
         dataProvider.discoverFeed.observeForever { }
+        advanceUntilIdle()
 
         val data = dataProvider.discoverFeed.value
-        Assertions.assertThat(data).isNotNull
+        assertThat(data).isNotNull
     }
 
     @Test
@@ -245,12 +228,13 @@ class ReaderDiscoverDataProviderTest {
 
         // add an observer
         dataProvider.discoverFeed.observeForever { }
+        advanceUntilIdle()
 
         // Validate that data exists in the feed
         val data = dataProvider.discoverFeed.value
-        Assertions.assertThat(data).isNotNull
+        assertThat(data).isNotNull
 
-        Assertions.assertThat(data?.cards?.size).isEqualTo(NUMBER_OF_ITEMS)
+        assertThat(data?.cards?.size).isEqualTo(NUMBER_OF_ITEMS)
     }
 
     @Test

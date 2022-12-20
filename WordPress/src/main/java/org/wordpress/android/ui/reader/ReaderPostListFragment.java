@@ -98,6 +98,7 @@ import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBookm
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBookmarkedTab;
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowNoSitesToReblog;
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReportPost;
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReportUser;
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSitePickerForResult;
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType;
 import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter;
@@ -463,6 +464,12 @@ public class ReaderPostListFragment extends ViewPagerFragment
                         ReaderActivityLauncher.openUrl(
                                 getContext(),
                                 ReaderUtils.getReportPostUrl(data.getUrl()),
+                                INTERNAL);
+                    } else if (navTarget instanceof ShowReportUser) {
+                        ShowReportUser data = (ShowReportUser) navTarget;
+                        ReaderActivityLauncher.openUrl(
+                                getContext(),
+                                ReaderUtils.getReportUserUrl(data.getUrl(), data.getAuthorId()),
                                 INTERNAL);
                     } else {
                         throw new IllegalStateException("Action not supported in ReaderPostListFragment " + navTarget);
@@ -2639,8 +2646,22 @@ public class ReaderPostListFragment extends ViewPagerFragment
                         mPostAdapter.getSource()
                 );
                 break;
+            case REPORT_USER:
+                mViewModel.onReportUserButtonClicked(
+                        post,
+                        isBookmarksList(),
+                        mPostAdapter.getSource()
+                );
+                break;
             case BLOCK_SITE:
                 mViewModel.onBlockSiteButtonClicked(
+                        post,
+                        isBookmarksList(),
+                        mPostAdapter.getSource()
+                );
+                break;
+            case BLOCK_USER:
+                mViewModel.onBlockUserButtonClicked(
                         post,
                         isBookmarksList(),
                         mPostAdapter.getSource()

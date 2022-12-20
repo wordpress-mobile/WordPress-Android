@@ -145,6 +145,7 @@ import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.service.InstallationReferrerServiceStarter;
 import org.wordpress.android.util.config.MySiteDashboardTodaysStatsCardFeatureConfig;
 import org.wordpress.android.util.config.OpenWebLinksWithJetpackFlowFeatureConfig;
+import org.wordpress.android.util.config.QRCodeAuthFlowFeatureConfig;
 import org.wordpress.android.util.extensions.ViewExtensionsKt;
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel;
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel.FocusPointInfo;
@@ -262,6 +263,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     @Inject JetpackAppMigrationFlowUtils mJetpackAppMigrationFlowUtils;
     @Inject DeepLinkOpenWebLinksWithJetpackHelper mDeepLinkOpenWebLinksWithJetpackHelper;
     @Inject OpenWebLinksWithJetpackFlowFeatureConfig mOpenWebLinksWithJetpackFlowFeatureConfig;
+    @Inject QRCodeAuthFlowFeatureConfig mQrCodeAuthFlowFeatureConfig;
 
     @Inject BuildConfigWrapper mBuildConfigWrapper;
 
@@ -951,9 +953,13 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
         checkQuickStartNotificationStatus();
 
-        // Update account to update the notification unseen status
         if (mAccountStore.hasAccessToken()) {
+            // Update account to update the notification unseen status
             mDispatcher.dispatch(AccountActionBuilder.newFetchAccountAction());
+            if (mQrCodeAuthFlowFeatureConfig.isEnabled()) {
+                // Fetch account settings to update the qr code login menu item visibility in Me screen
+                mDispatcher.dispatch(AccountActionBuilder.newFetchSettingsAction());
+            }
         }
 
         ProfilingUtils.split("WPMainActivity.onResume");
