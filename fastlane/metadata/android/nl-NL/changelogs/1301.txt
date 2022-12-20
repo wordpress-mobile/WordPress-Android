@@ -1,0 +1,3 @@
+21.3:
+- Je kunt de content op je site nu eenvoudig migreren naar de Jetpack-app.
+- De schakelaar voor meldingsinstellingen schakelt wekelijks overzicht, blogherinnering en sitemeldingen uit.

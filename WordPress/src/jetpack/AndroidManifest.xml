@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="org.wordpress.android.permission.DISABLE_NOTIFICATIONS"/>
+    <uses-permission android:name="org.wordpress.android.beta.permission.DISABLE_NOTIFICATIONS"/>
+    <uses-permission android:name="org.wordpress.android.prealpha.permission.DISABLE_NOTIFICATIONS"/>
 
     <application>
         <!-- Deep Linking Activity -->

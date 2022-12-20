@@ -23,10 +23,7 @@ import org.wordpress.android.ui.engagement.UserProfileViewModel;
 import org.wordpress.android.ui.featureintroduction.FeatureIntroductionViewModel;
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModel;
 import org.wordpress.android.ui.jetpack.restore.RestoreViewModel;
-import org.wordpress.android.ui.jetpack.scan.ScanViewModel;
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsViewModel;
-import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryListViewModel;
-import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryViewModel;
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel;
 import org.wordpress.android.ui.mysite.MySiteViewModel;
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel;
@@ -410,21 +407,6 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(ActivityLogTypeFilterViewModel.class)
     abstract ViewModel activityLogTypeFilterViewModel(ActivityLogTypeFilterViewModel viewModel);
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(ScanViewModel.class)
-    abstract ViewModel scanViewModel(ScanViewModel viewModel);
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(ScanHistoryViewModel.class)
-    abstract ViewModel scanHistoryViewModel(ScanHistoryViewModel viewModel);
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(ScanHistoryListViewModel.class)
-    abstract ViewModel scanHistoryListViewModel(ScanHistoryListViewModel viewModel);
 
     @Binds
     @IntoMap

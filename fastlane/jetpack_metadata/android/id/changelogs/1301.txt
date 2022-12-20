@@ -1,0 +1,4 @@
+21.3:
+- Teks yang ditampilkan saat proses pemindaian kode QR kini sesuai dengan bahasa aplikasi.
+- Pengaturan Pemberitahuan kini dapat digunakan untuk menonaktifkan ringkasan mingguan, pengingat blogging, dan pemberitahuan situs.
+- Kami sudah memperbaiki bug di menu Situs Saya > Komentar yang menyebabkan aplikasi crash jika tertaut dengan situs hosting sendiri yang dipasangi plugin tertentu.

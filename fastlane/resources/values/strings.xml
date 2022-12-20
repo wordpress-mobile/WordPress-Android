@@ -2044,8 +2044,10 @@
     <string name="reader_menu_tags">Edit topics and sites</string>
     <string name="reader_menu_block_blog">Block this site</string>
     <string name="reader_menu_report_post">Report this post</string>
+    <string name="reader_menu_report_user">Report this user</string>
     <string name="reader_menu_mark_as_seen">Mark as seen</string>
     <string name="reader_menu_mark_as_unseen">Mark as unseen</string>
+    <string name="reader_menu_block_user">Block user</string>
 
     <!-- button text -->
     <string name="reader_btn_share">Share</string>
@@ -2139,6 +2141,7 @@
     <string name="reader_toast_err_unfollow_blog">Unable to unfollow this site</string>
     <string name="reader_toast_blog_blocked" tools:ignore="UnusedResources">Posts from this site will no longer be shown</string>
     <string name="reader_toast_err_block_blog" tools:ignore="UnusedResources">Unable to block this site</string>
+    <string name="reader_toast_user_blocked">Posts from this user will no longer be shown</string>
     <string name="reader_toast_err_generic">Unable to perform this action</string>
     <string name="reader_toast_err_cannot_like_post">Failed to like this post</string>
     <string name="reader_toast_err_comment_not_found">Comment not found!</string>

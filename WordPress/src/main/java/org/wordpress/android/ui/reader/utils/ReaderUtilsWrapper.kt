@@ -41,6 +41,8 @@ class ReaderUtilsWrapper @Inject constructor(
 
     fun getReportPostUrl(blogUrl: String): String = ReaderUtils.getReportPostUrl(blogUrl)
 
+    fun getReportUserUrl(blogUrl: String, userId: Long): String = ReaderUtils.getReportUserUrl(blogUrl, userId)
+
     fun postAndCommentExists(blogId: Long, postId: Long, commentId: Long): Boolean {
         return ReaderUtils.postAndCommentExists(blogId, postId, commentId)
     }

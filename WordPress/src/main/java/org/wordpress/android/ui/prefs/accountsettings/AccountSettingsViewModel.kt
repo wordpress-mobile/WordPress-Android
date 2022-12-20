@@ -262,6 +262,9 @@ class AccountSettingsViewModel @Inject constructor(
     data class SiteUiModel(val siteName: String, val siteId: Long, val homeURLOrHostName: String)
 
     data class PrimarySiteSettingsUiState(val primarySite: SiteUiModel? = null, val sites: List<SiteUiModel>?) {
+        val canShowChoosePrimarySiteDialog
+            get() = sites?.size ?: 0 > ONE_SITE
+
         val siteNames
             get() = sites?.map { it.siteName }?.toTypedArray()
 

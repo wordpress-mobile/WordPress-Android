@@ -6,6 +6,7 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalBrandingUtil
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.JetpackPoweredBottomSheetFeatureConfig
@@ -15,6 +16,7 @@ import javax.inject.Inject
 class JetpackBrandingUtils @Inject constructor(
     private val jetpackPoweredFeatureConfig: JetpackPoweredFeatureConfig,
     private val jetpackPoweredBottomSheetFeatureConfig: JetpackPoweredBottomSheetFeatureConfig,
+    private val jetpackFeatureRemovalBrandingUtil: JetpackFeatureRemovalBrandingUtil,
     private val selectedSiteRepository: SelectedSiteRepository,
     private val siteUtilsWrapper: SiteUtilsWrapper,
     private val buildConfigWrapper: BuildConfigWrapper,
@@ -22,6 +24,10 @@ class JetpackBrandingUtils @Inject constructor(
 ) {
     fun shouldShowJetpackBranding(): Boolean {
         return isWpComSite() && jetpackPoweredFeatureConfig.isEnabled() && !buildConfigWrapper.isJetpackApp
+    }
+
+    fun shouldShowJetpackBrandingForPhaseOne(): Boolean {
+        return shouldShowJetpackBranding() && jetpackFeatureRemovalBrandingUtil.shouldShowPhaseOneBranding()
     }
 
     fun shouldShowJetpackPoweredBottomSheet(): Boolean {
@@ -102,7 +108,8 @@ class JetpackBrandingUtils @Inject constructor(
         READER_POST_DETAIL("reader_post_detail"),
         READER_SEARCH("reader_search"),
         SHARE("share"),
-        STATS("stats")
+        STATS("stats"),
+        SCAN("scan")
     }
 
     companion object {
