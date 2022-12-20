@@ -4,6 +4,7 @@ import com.android.volley.RequestQueue
 import kotlinx.coroutines.suspendCancellableCoroutine
 import okhttp3.Credentials
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.network.BaseRequest
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.network.HttpMethod
 import org.wordpress.android.fluxc.network.UserAgent
@@ -39,7 +40,10 @@ class ApplicationPasswordsNetwork @Inject constructor(
         path: String,
         clazz: Class<T>,
         params: Map<String, String> = emptyMap(),
-        body: Map<String, Any> = emptyMap()
+        body: Map<String, Any> = emptyMap(),
+        enableCaching: Boolean = false,
+        cacheTimeToLive: Int = BaseRequest.DEFAULT_CACHE_LIFETIME,
+        forced: Boolean = false
     ): WPAPIResponse<T> {
         val credentialsResult = mApplicationPasswordsManager.getApplicationCredentials(site)
         val credentials = when (credentialsResult) {
@@ -81,6 +85,12 @@ class ApplicationPasswordsNetwork @Inject constructor(
             request.addHeader(AUTHORIZATION_HEADER, authorizationHeader)
             request.setUserAgent(userAgent.userAgent)
 
+            if (enableCaching) {
+                request.enableCaching(cacheTimeToLive)
+            }
+            if (forced) {
+                request.setShouldForceUpdate()
+            }
             requestQueue.add(request)
 
             continuation.invokeOnCancellation {
@@ -90,7 +100,8 @@ class ApplicationPasswordsNetwork @Inject constructor(
 
         return if (credentialsResult is ApplicationPasswordCreationResult.Existing &&
             response is WPAPIResponse.Error &&
-            response.error.volleyError?.networkResponse?.statusCode == UNAUTHORIZED) {
+            response.error.volleyError?.networkResponse?.statusCode == UNAUTHORIZED
+        ) {
             AppLog.w(
                 AppLog.T.MAIN,
                 "Authentication failure using application password, maybe revoked?" +
@@ -111,8 +122,20 @@ class ApplicationPasswordsNetwork @Inject constructor(
         site: SiteModel,
         path: String,
         clazz: Class<T>,
-        params: Map<String, String> = emptyMap()
-    ) = executeGsonRequest(site, HttpMethod.GET, path, clazz, params)
+        params: Map<String, String> = emptyMap(),
+        enableCaching: Boolean = false,
+        cacheTimeToLive: Int = BaseRequest.DEFAULT_CACHE_LIFETIME,
+        forced: Boolean = false
+    ) = executeGsonRequest(
+        site = site,
+        method = HttpMethod.GET,
+        path = path,
+        clazz = clazz,
+        params = params,
+        enableCaching = enableCaching,
+        cacheTimeToLive = cacheTimeToLive,
+        forced = forced
+    )
 
     suspend fun <T> executePostGsonRequest(
         site: SiteModel,
